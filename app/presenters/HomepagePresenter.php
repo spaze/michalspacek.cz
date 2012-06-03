@@ -10,6 +10,8 @@ class HomepagePresenter extends BasePresenter
 
 	public function renderDefault()
 	{
+		$this->template->trainings = $this->trainings;
+
 		$database = $this->getContext()->nette->database->default;
 
 		$articles = $database->table('articles')->order('date DESC')->limit(3);

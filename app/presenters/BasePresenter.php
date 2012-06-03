@@ -112,24 +112,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		),
 	);
 
-	private function getTrainings()
-	{
-		$trainings = array();
-		foreach ($this->trainings as $value) {
-			$trainings[] = array(
-				'action' => $value['action'],
-				'name' => $value['name'],
-				'date' => $value['date'],
-				'tentative' => $value['tentative'],
-			);
-		}
-
-		return $trainings;
-	}
-
 	public function beforeRender()
 	{
-		$this->template->trainings = $this->getTrainings();
 		$this->template->debugMode = $this->context->parameters['debugMode'];
 	}
 }

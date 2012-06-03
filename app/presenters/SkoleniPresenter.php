@@ -20,6 +20,7 @@ class SkoleniPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Školení';
+		$this->template->trainings = $this->trainings;
 	}
 
 	public function actionUvodDoPhp()
