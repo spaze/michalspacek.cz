@@ -10,14 +10,26 @@ use \Nette\Application\UI\Form,
  */
 class SkoleniPresenter extends BasePresenter
 {
+	/**
+	 * Currently processed training.
+	 *
+	 * @var integer
+	 */
+	private $trainingId;
+
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Školení';
 	}
 
+	public function actionUvodDoPhp()
+	{
+		$this->trainingId = self::TRAINING_PHP;
+	}
+
 	public function renderUvodDoPhp()
 	{
-		$this->assignTemplateVariables(BasePresenter::TRAINING_PHP);
+		$this->assignTemplateVariables();
 		$this->template->pastTrainings = array(
 			'spacek' => array(
 				'2012-05-09',
@@ -33,9 +45,14 @@ class SkoleniPresenter extends BasePresenter
 		);
 	}
 
+	public function actionProgramovaniVPhp5()
+	{
+		$this->trainingId = self::TRAINING_PHP5;
+	}
+
 	public function renderProgramovaniVPhp5()
 	{
-		$this->assignTemplateVariables(BasePresenter::TRAINING_PHP5);
+		$this->assignTemplateVariables();
 		$this->template->pastTrainings = array(
 			'spacek' => array(
 				'2011-05-10',
@@ -52,9 +69,14 @@ class SkoleniPresenter extends BasePresenter
 		);
 	}
 
+	public function actionBezpecnostPhpAplikaci()
+	{
+		$this->trainingId = self::TRAINING_SECURITY;
+	}
+
 	public function renderBezpecnostPhpAplikaci()
 	{
-		$this->assignTemplateVariables(BasePresenter::TRAINING_SECURITY);
+		$this->assignTemplateVariables();
 		$this->template->pastTrainings = array(
 			'spacek' => array(
 				'2011-05-11',
@@ -71,9 +93,14 @@ class SkoleniPresenter extends BasePresenter
 		);
 	}
 
+	public function actionVykonnostWebovychAplikaci()
+	{
+		$this->trainingId = self::TRAINING_PERFORMANCE;
+	}
+
 	public function renderVykonnostWebovychAplikaci()
 	{
-		$this->assignTemplateVariables(BasePresenter::TRAINING_PERFORMANCE);
+		$this->assignTemplateVariables();
 		$this->template->pastTrainings = array(
 			'spacek' => array(
 				'2011-05-14',
@@ -87,16 +114,16 @@ class SkoleniPresenter extends BasePresenter
 		);
 	}
 
-	private function assignTemplateVariables($trainingId)
+	private function assignTemplateVariables()
 	{
-		$this->template->trainingId = $trainingId;
-		$this->template->pageTitle = 'Školení ' . $this->trainings[$trainingId]['name'];
-		$this->template->date = $this->trainings[$trainingId]['date'];
-		$this->template->tentative = $this->trainings[$trainingId]['tentative'];
-		$this->template->originalUrl = $this->trainings[$trainingId]['originalUrl'];
-		$this->template->placeName = $this->trainings[$trainingId]['placeName'];
-		$this->template->placeUrl = $this->trainings[$trainingId]['placeUrl'];
-		$this->template->placeAddress = $this->trainings[$trainingId]['placeAddress'];
+		$this->template->trainingId = $this->trainingId;
+		$this->template->pageTitle = 'Školení ' . $this->trainings[$this->trainingId]['name'];
+		$this->template->date = $this->trainings[$this->trainingId]['date'];
+		$this->template->tentative = $this->trainings[$this->trainingId]['tentative'];
+		$this->template->originalUrl = $this->trainings[$this->trainingId]['originalUrl'];
+		$this->template->placeName = $this->trainings[$this->trainingId]['placeName'];
+		$this->template->placeUrl = $this->trainings[$this->trainingId]['placeUrl'];
+		$this->template->placeAddress = $this->trainings[$this->trainingId]['placeAddress'];
 	}
 
 
@@ -115,31 +142,35 @@ class SkoleniPresenter extends BasePresenter
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
 			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je sto znaků', 100);
-		$form->addGroup('Fakturační údaje');
-		$form->addText('company', 'Obchodní jméno:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je tři znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je sto znaků', 100);
-		$form->addText('street', 'Ulice a číslo:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je tři znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je sto znaků', 100);
-		$form->addText('city', 'Město:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka města je dva znaky', 2)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka města je sto znaků', 100);
-		$form->addText('zip', 'PSČ:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je sto znaků', 100);
-		$form->addText('companyId', 'IČ:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je tři znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je sto znaků', 100);
-		$form->addText('companyTaxId', 'DIČ:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je tři znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je sto znaků', 100);
+
+		if (isset($this->trainings[$this->trainingId]['date'])) {
+			$form->addGroup('Fakturační údaje');
+			$form->addText('company', 'Obchodní jméno:')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je tři znaky', 3)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je sto znaků', 100);
+			$form->addText('street', 'Ulice a číslo:')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je tři znaky', 3)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je sto znaků', 100);
+			$form->addText('city', 'Město:')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka města je dva znaky', 2)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka města je sto znaků', 100);
+			$form->addText('zip', 'PSČ:')
+				->addCondition(Form::FILLED)
+				->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
+				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je sto znaků', 100);
+			$form->addText('companyId', 'IČ:')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je tři znaky', 3)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je sto znaků', 100);
+			$form->addText('companyTaxId', 'DIČ:')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je tři znaky', 3)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je sto znaků', 100);
+		}
+
 		$form->setCurrentGroup(null);
 		$form->addText('note', 'Poznámka:')
 			->addCondition(Form::FILLED)
