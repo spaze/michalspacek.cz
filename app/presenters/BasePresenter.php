@@ -21,8 +21,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		self::TRAINING_PHP => array(
 			'action' => 'uvodDoPhp',
 			'name' => 'Úvod do PHP',
-			'date' => null,
-			'tentative' => 'září 2012',
+			'date' => null,  // or YYYY-MM-DD
+			'tentative' => 'září 2012',  // or null
 			'placeName' => 'Internet Info',
 			'placeUrl' => 'http://www.skolici-mistnost.cz/',
 			'placeAddress' => 'Milady Horákové 109/116, Praha 6',
@@ -31,8 +31,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		self::TRAINING_PHP5 => array(
 			'action' => 'programovaniVPhp5',
 			'name' => 'Programování v PHP 5',
-			'date' => null,
-			'tentative' => 'září 2012',
+			'date' => null,  // or YYYY-MM-DD
+			'tentative' => 'září 2012',  // or null
 			'placeName' => 'Internet Info',
 			'placeUrl' => 'http://www.skolici-mistnost.cz/',
 			'placeAddress' => 'Milady Horákové 109/116, Praha 6',
@@ -41,8 +41,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		self::TRAINING_SECURITY => array(
 			'action' => 'bezpecnostPhpAplikaci',
 			'name' => 'Bezpečnost PHP aplikací',
-			'date' => null,
-			'tentative' => 'září 2012',
+			'date' => null,  // or YYYY-MM-DD
+			'tentative' => 'září 2012',  // or null
 			'placeName' => 'Classic 7, budova N',
 			'placeUrl' => 'http://www.classic7.cz/cs/faze-1/lokalita',
 			'placeAddress' => 'Jankovcova 1037/49, Praha 7',
@@ -51,8 +51,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		self::TRAINING_PERFORMANCE => array(
 			'action' => 'vykonnostWebovychAplikaci',
 			'name' => 'Výkonnost webových aplikací',
-			'date' => null,
-			'tentative' => 'září 2012',
+			'date' => null,  // or YYYY-MM-DD
+			'tentative' => 'září 2012',  // or null
 			'placeName' => 'Classic 7, budova N',
 			'placeUrl' => 'http://www.classic7.cz/cs/faze-1/lokalita',
 			'placeAddress' => 'Jankovcova 1037/49, Praha 7',
