@@ -30,19 +30,6 @@ class SkoleniPresenter extends BasePresenter
 	public function renderUvodDoPhp()
 	{
 		$this->assignTemplateVariables();
-		$this->template->pastTrainings = array(
-			'spacek' => array(
-				'2012-05-09',
-				'2011-12-07',
-			),
-			'vrana' => array(
-				'2011-09-07', '2011-04-20',
-				'2010-12-01', '2010-03-02',
-				'2009-12-01', '2009-09-14', '2009-06-25', '2009-04-22', '2009-01-20',
-				'2008-12-02', '2008-10-13', '2008-02-29',
-				'2007-10-25', '2007-02-26',
-			),
-		);
 	}
 
 	public function actionProgramovaniVPhp5()
@@ -53,20 +40,6 @@ class SkoleniPresenter extends BasePresenter
 	public function renderProgramovaniVPhp5()
 	{
 		$this->assignTemplateVariables();
-		$this->template->pastTrainings = array(
-			'spacek' => array(
-				'2011-05-10',
-				'2011-12-08',
-			),
-			'vrana' => array(
-				'2011-09-08', '2011-04-21',
-				'2010-12-02', '2010-06-08', '2010-03-03',
-				'2009-12-02', '2009-09-29', '2009-09-15', '2009-06-26', '2009-04-23', '2009-01-21',
-				'2008-12-03', '2008-10-14', '2008-04-08',
-				'2007-10-26',
-				'2006-11-16', '2006-06-12',
-			),
-		);
 	}
 
 	public function actionBezpecnostPhpAplikaci()
@@ -77,20 +50,6 @@ class SkoleniPresenter extends BasePresenter
 	public function renderBezpecnostPhpAplikaci()
 	{
 		$this->assignTemplateVariables();
-		$this->template->pastTrainings = array(
-			'spacek' => array(
-				'2011-05-11',
-				'2011-12-09',
-			),
-			'vrana' => array(
-				'2011-09-16', '2011-09-05', '2011-04-29',
-				'2010-12-09', '2010-10-08', '2010-06-11', '2010-03-12', '2010-03-09',
-				'2009-12-08', '2009-09-17', '2009-06-08', '2009-03-12', '2009-03-10',
-				'2008-12-08', '2008-10-21', '2008-06-24', '2008-02-28', '2008-02-25',
-				'2007-10-29', '2007-10-23', '2007-06-26', '2007-04-16',
-				'2006-10-27', '2006-06-22', '2006-04-25',
-			),
-		);
 	}
 
 	public function actionVykonnostWebovychAplikaci()
@@ -101,17 +60,6 @@ class SkoleniPresenter extends BasePresenter
 	public function renderVykonnostWebovychAplikaci()
 	{
 		$this->assignTemplateVariables();
-		$this->template->pastTrainings = array(
-			'spacek' => array(
-				'2011-05-14',
-			),
-			'vrana' => array(
-				'2011-09-14', '2011-04-27',
-				'2010-12-07', '2010-03-10',
-				'2009-09-21', '2009-03-11',
-				'2008-12-09', '2008-10-22', '2008-06-27',
-			),
-		);
 	}
 
 	private function assignTemplateVariables()
@@ -124,8 +72,8 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->placeName = $this->trainings[$this->trainingId]['placeName'];
 		$this->template->placeUrl = $this->trainings[$this->trainingId]['placeUrl'];
 		$this->template->placeAddress = $this->trainings[$this->trainingId]['placeAddress'];
+		$this->template->pastTrainings = $this->trainings[$this->trainingId]['pastTrainings'];
 	}
-
 
 	protected function createComponentApplication($name)
 	{
@@ -177,6 +125,7 @@ class SkoleniPresenter extends BasePresenter
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je tisíc znaků', 1000);
 		$form->addSubmit('signUp', isset($this->template->date) ? 'Registrovat se' : 'Odeslat');
 		$form->onSuccess[] = callback($this, 'submittedApplication');
+
 		return $form;
 	}
 
