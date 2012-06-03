@@ -102,51 +102,51 @@ class SkoleniPresenter extends BasePresenter
 
 	protected function createComponentApplication($name)
 	{
-	    $form = new Form($this, $name);
-	    $form->setAction($form->getAction() . '#prihlaska');
-	    $form->addHidden('trainingId');
-	    $form->addHidden('date');
-	    $form->addGroup('Účastník');
-	    $form->addText('name', 'Jméno a příjmení:')
-	    	->setRequired('Zadejte prosím jméno a příjmení')
-	    	->addRule(Form::MIN_LENGTH, 'Minimální délka jména a příjmení je tři znaky', 3)
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka jména a příjmení je sto znaků', 100);
-	    $form->addText('email', 'E-mail:')
-	    	->setRequired('Zadejte prosím e-mailovou adresu')
-	    	->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je sto znaků', 100);
-	    $form->addGroup('Fakturační údaje');
-	    $form->addText('company', 'Obchodní jméno:')
-	    	->addCondition(Form::FILLED)
-	    	->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je tři znaky', 3)
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je sto znaků', 100);
-	    $form->addText('street', 'Ulice a číslo:')
-	    	->addCondition(Form::FILLED)
-	    	->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je tři znaky', 3)
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je sto znaků', 100);
-	    $form->addText('city', 'Město:')
-	    	->addCondition(Form::FILLED)
-	    	->addRule(Form::MIN_LENGTH, 'Minimální délka města je dva znaky', 2)
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka města je sto znaků', 100);
-	    $form->addText('zip', 'PSČ:')
-	    	->addCondition(Form::FILLED)
+		$form = new Form($this, $name);
+		$form->setAction($form->getAction() . '#prihlaska');
+		$form->addHidden('trainingId');
+		$form->addHidden('date');
+		$form->addGroup('Účastník');
+		$form->addText('name', 'Jméno a příjmení:')
+			->setRequired('Zadejte prosím jméno a příjmení')
+			->addRule(Form::MIN_LENGTH, 'Minimální délka jména a příjmení je tři znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka jména a příjmení je sto znaků', 100);
+		$form->addText('email', 'E-mail:')
+			->setRequired('Zadejte prosím e-mailovou adresu')
+			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
+			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je sto znaků', 100);
+		$form->addGroup('Fakturační údaje');
+		$form->addText('company', 'Obchodní jméno:')
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je tři znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je sto znaků', 100);
+		$form->addText('street', 'Ulice a číslo:')
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je tři znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je sto znaků', 100);
+		$form->addText('city', 'Město:')
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka města je dva znaky', 2)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka města je sto znaků', 100);
+		$form->addText('zip', 'PSČ:')
+			->addCondition(Form::FILLED)
 			->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je sto znaků', 100);
-	    $form->addText('companyId', 'IČ:')
-	    	->addCondition(Form::FILLED)
-	    	->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je tři znaky', 3)
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je sto znaků', 100);
-	    $form->addText('companyTaxId', 'DIČ:')
-	    	->addCondition(Form::FILLED)
-	    	->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je tři znaky', 3)
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je sto znaků', 100);
-    	$form->setCurrentGroup(null);
-	    $form->addText('note', 'Poznámka:')
-	    	->addCondition(Form::FILLED)
-	    	->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je tisíc znaků', 1000);
-	    $form->addSubmit('signUp', isset($this->template->date) ? 'Registrovat se' : 'Odeslat');
-	    $form->onSuccess[] = callback($this, 'submittedApplication');
-	    return $form;
+			->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je sto znaků', 100);
+		$form->addText('companyId', 'IČ:')
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je tři znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je sto znaků', 100);
+		$form->addText('companyTaxId', 'DIČ:')
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je tři znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je sto znaků', 100);
+		$form->setCurrentGroup(null);
+		$form->addText('note', 'Poznámka:')
+			->addCondition(Form::FILLED)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je tisíc znaků', 1000);
+		$form->addSubmit('signUp', isset($this->template->date) ? 'Registrovat se' : 'Odeslat');
+		$form->onSuccess[] = callback($this, 'submittedApplication');
+		return $form;
 	}
 
 	public function submittedApplication($form)
