@@ -1,0 +1,11 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+{/define}
+
+{define #content}
+<p n:foreach="$articles as $article">
+    <a href="{$article->href}"><strong>{$article->title}</strong></a>
+    <small>({!$article->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$article->source->href}">{$article->source->name}</a>)</small>
+    <p><small>{$article->excerpt} <a href="{$article->href}">→</a></small></p>
+</p>
+{/define}

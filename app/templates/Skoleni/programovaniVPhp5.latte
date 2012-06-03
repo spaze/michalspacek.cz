@@ -1,0 +1,68 @@
+{define #content}
+{includeblock "default.latte"}
+<p>Školení <a n:href="Skoleni:uvodDoPhp"><strong>Úvod do PHP</strong></a> společně s <strong>Programováním v PHP 5</strong> pořádám ve spolupráci s <a href="http://www.root.cz/skoleni/">Akademií Root.cz</a>. Dříve toto školení vedl <a href="http://www.vrana.cz">Jakub Vrána</a>. Můžete se na ně přihlásit i na těchto stránkách. <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
+
+<h2 id="napln">Náplň</h2>
+<ul>
+<li>Objektový model &ndash; dědičnost, statické metody, abstraktní třídy, rozhraní, magické metody, klonování</li>
+<li>Výjimky</li>
+<li>Práce s databázemi &ndash; MySQLi, SQLite, PDO</li>
+<li>Práce s XML &ndash; SimpleXML, DOM, XMLReader, SOAP</li>
+<li>SPL, Reflection, JSON</li>
+<li>Kompatibilita s PHP 4, výhled na budoucnost PHP</li>
+</ul>
+<hr />
+
+<h2 id="predpoklady">Předpoklady</h2>
+<p>Měli byste znát PHP v rozsahu školení <a n:href="Skoleni:uvodDoPhp">Úvod do PHP</a></p>
+<hr />
+
+<h2 id="urcenopro">Určeno pro</h2>
+<p>Školení je určeno pro autory webových aplikací.</p>
+<hr />
+
+<h2 id="datum">Datum a čas</h2>
+<p><strong>{ifset $date}{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{else}{$tentative}{/ifset}</strong>, 10:00 &ndash; 17:00, hodinová přestávka na oběd</p>
+{ifset $tentative}
+	<p>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</p>
+{/ifset}
+<p><small>{include #pastTrainings}</small></p>
+<hr />
+
+<h2 id="misto">Místo</h2>
+<p>
+<strong><a href="{$placeUrl}">{$placeName}</a>, {$placeAddress}</strong><br />
+Školící místnost je klimatizována, k dispozici je bezdrátové připojení k Internetu.
+</p>
+<hr />
+
+<h2 id="kapacita">Kapacita</h2>
+<p>Nejvýše 15 účastníků</p>
+<hr />
+
+<h2 id="vybaveni">Vybavení</h2>
+<p>K dispozici je vlastní PC pro každého účastníka. Pokud máte notebook, můžete si ho přinést. Oběd, káva, čaj a minerálka je v ceně školení.</p>
+<hr />
+
+<h2 id="cena">Cena</h2>
+<p><strong>3450 Kč</strong>, cena je konečná, nejsem plátce DPH, 30% sleva pro studenty</p>
+<hr />
+
+<h2 id="materialy">Materiály</h2>
+<p>Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.</p>
+<hr />
+
+<h2 id="ohlasy">Ohlasy na školení</h2>
+<p><strong>Vladimír Ptáček</strong></p>
+<blockquote><p>Se školení jsem byl velmi spokojen. Odborně bylo na velmi vysoké úrovni. Jako učitel bych  snad měl jen jednu miniaturní poznámku, že by možná bylo dobré dát nějaká společná cvičení hned po vysvětlení základů na začátku školení. Jinak nejlepší školení co jsem v poslední době absolvoval. Děkuji.</p></blockquote>
+
+<p><strong>Jiří Královec, W.A.T.C.H. CZ</strong></p>
+<blockquote><p>Mé pocity ze školení Úvod do PHP a Programování v PHP 5 jsou kladné. Oceňuji kvalifikovanost a názornost výkladu, kde jsem i já, jako úplný začátečník v PHP, získal povědomost o širokých možnostech jazyka PHP, včetně jeho zvláštností. Samozřejmě, že za 2 dny ze mě není programátor PHP, ale kurz mě nasměroval a dále už bude záležet na mě, jak využiji těchto vědomostí k jejich plynulému rozšiřování. Věřím, že za čas, se stanu opravdu programátorem v PHP <kbd>:-)</kbd></p></blockquote>
+<hr />
+
+<h2 id="prihlaska">{ifset $tentative}Nezávazná přihláška{else}Přihláška{/ifset}</h2>
+{ifset $tentative}
+	<p>Přesné datum zatím neznám. Můžete vyplnit tuto nezávaznou přihlášku a dám vám vědět, až datum budu znát.</p>
+{/ifset}
+{include #application, trainingId => $trainingId, date => $date}
+{/define}

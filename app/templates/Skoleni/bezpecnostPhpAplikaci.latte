@@ -1,0 +1,79 @@
+{define #content}
+{includeblock "default.latte"}
+<p>Bezpečnost webových aplikací mě zajímá a baví mě ji zkoumat. Je to citlivé téma a občas mě tato zábava dostává do problémů. Rád se s vámi podělím o svoje zkušenosti a naučím vás, jak webové aplikace zabezpečit a jak je na bezpečnost testovat. Dříve toto školení vedl <a href="http://www.vrana.cz">Jakub Vrána</a>. <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
+
+<h2 id="napln">Náplň</h2>
+<p>Popis, rizika a obrana proti útokům, které jsou vedeny proti webovým aplikacím:</p>
+<ul>
+<li>Full Path Disclosure</li>
+<li>Cross&ndash;Site Scripting (XSS)</li>
+<li>SQL Injection</li>
+<li>Podstrčení proměnných</li>
+<li>Vkládání souborů</li>
+<li>Cross-Site Request Forgery, Clickjacking</li>
+<li>Session Hijacking, Session Fixation</li>
+</ul>
+<p>Další probíraná témata:</p>
+<ul>
+<li>Ukládání citlivých informací (hesla, kreditní karty)</li>
+<li>Využití HTTPS</li>
+<li>Zneužití formulářů pro odesílání nevyžádané pošty</li>
+<li>Konfigurace serveru</li>
+</ul>
+<hr />
+
+<h2 id="predpoklady">Předpoklady</h2>
+<p>Stačí základní znalost HTML, JavaScriptu, PHP a SQL</p>
+<hr />
+
+<h2 id="urcenopro">Určeno pro</h2>
+<p>Školení je určeno jak pro stávající tvůrce webových aplikací, tak pro uchazeče o pozici vývojáře PHP, kterým dá konkurenční výhodu.</p>
+<hr />
+
+<h2 id="datum">Datum a čas</h2>
+<p><strong>{ifset $date}{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{else}{$tentative}{/ifset}</strong>, 10:00 &ndash; 17:00, hodinová přestávka na oběd</p>
+{ifset $tentative}
+	<p>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</p>
+{/ifset}
+<p><small>{include #pastTrainings}</small></p>
+<hr />
+
+<h2 id="misto">Místo</h2>
+<p>
+<strong><a href="{$placeUrl}">{$placeName}</a>, {$placeAddress}</strong><br />
+Školící místnost je klimatizována, k dispozici je bezdrátové připojení k Internetu.
+</p>
+<hr />
+
+<h2 id="kapacita">Kapacita</h2>
+<p>Nejvýše 12 účastníků</p>
+<hr />
+
+<h2 id="vybaveni">Vybavení</h2>
+<p>K dispozici je vlastní PC pro každého účastníka. Pokud máte notebook, můžete si ho přinést. Oběd, káva, čaj a minerálka je v ceně školení.</p>
+<hr />
+
+<h2 id="cena">Cena</h2>
+<p><strong>3990 Kč</strong>, cena je konečná, nejsem plátce DPH, 30% sleva pro studenty</p>
+<hr />
+
+<h2 id="materialy">Materiály</h2>
+<p>Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.</p>
+<hr />
+
+<h2 id="ohlasy">Ohlasy na školení</h2>
+<p><strong>Jakub Tesárek, Cybergenics s.r.o.</strong></p>
+<blockquote><p>Díky prakticky zaměřenému školení Michala Špačka jsem se naučil nejen uvažovat o bezpečnosti svých PHP aplikací jako případný útočník ale také provádět testy, které bezpečnost prověří ze všech stran. Po tomto školení se pro mě zabezpečování aplikací stalo zábavou. Školení bylo vysoce profesionální ale nechyběl ani osobní přístup, což je vždy velmi cenné. Školení mohu vřele doporučit jak začátečníkům, tak i zkušeným PHP programátorům.</p></blockquote>
+
+<p><strong>Roman Štefek, DERIVA Solutions s.r.o.</strong></p>
+<blockquote><p>Školení plně splnilo  má očekávání. Kromě samotné odbornosti na úrovni, mě
+příjemně překvapily Vaše mnohé osobní zkušenosti, které tak ukazují, že
+bezpečností je třeba se seriózně zabývat.</p></blockquote>
+<hr />
+
+<h2 id="prihlaska">{ifset $tentative}Nezávazná přihláška{else}Přihláška{/ifset}</h2>
+{ifset $tentative}
+	<p>Přesné datum zatím neznám. Můžete vyplnit tuto nezávaznou přihlášku a dám vám vědět, až datum budu znát.</p>
+{/ifset}
+{include #application, trainingId => $trainingId, date => $date}
+{/define}

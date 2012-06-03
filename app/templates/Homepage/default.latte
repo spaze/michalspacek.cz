@@ -1,0 +1,32 @@
+{define #content}
+<h2 id="skoleni">Přijďte na má školení</h2>
+{includeblock "../Skoleni/default.latte"}
+{include #list}
+<p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+<hr />
+<h2><span id="elephpant" class="icon icon32"></span>Dodávám Elephpanty</h2>
+<p>Teď zrovna žádné modré slony s logem PHP nemám, ale až znovu otevřu objednávky dám vám vědět. Stačí, když vyplníte formulář na <a href="http://www.elephpant.cz/">www.elephpant.cz</a>.</p>
+<hr />
+<h2 id="clanky">Nejnovější články</h2>
+<ul>
+    <li n:foreach="$articles as $article">
+        <a href="{$article->href}"><strong>{$article->title}</strong></a>
+        <small>({!$article->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$article->source->href}">{$article->source->name}</a>)</small>
+        <p><small>{$article->excerpt} <a href="{$article->href}">→</a></small></p>
+    </li>
+</ul>
+<a n:href="Clanky:">Všechny články</a>
+<hr />
+<h2 id="prednasky">(Občas) přednáším</h2>
+<ul>
+    <li n:foreach="$talks as $talk">
+        {if $talk->href}<a href="{$talk->href}">{/if}<strong>{$talk->title}</strong>{if $talk->href}</a>{/if}<br />
+        <small>
+            {!$talk->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$talk->event_href}">{$talk->event}</a>
+            <a n:if="$talk->slides_href" href="{$talk->slides_href}"><span class="icon icon16 slides"></span>Prezentace</a>
+            <a n:if="$talk->video_href" href="{$talk->video_href}"><span class="icon icon16 video"></span>Video</a>
+        </small>
+    </li>
+</ul>
+<a n:href="Prednasky:">Všechny přednášky</a>
+{/define}

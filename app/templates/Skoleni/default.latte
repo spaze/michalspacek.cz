@@ -1,0 +1,83 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+{/define}
+
+{define #list}
+<ul>
+ 	{foreach $trainings as $item}
+ 		{var $link = 'Skoleni:' . $item[action]}
+	    <li><a n:href="{$link}"><strong>{$item[name]}</strong></a> <small>({ifset $item[date]}{!$item[date]|date:'j. n. Y'|replace:' ':'&nbsp;'}{else}{$item[tentative]}{/ifset})</small></li>
+	{/foreach}
+</ul>
+{/define}
+
+{define #application}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+{form application}
+<fieldset id="chyby" n:if="$form->hasErrors()">
+	<legend><strong>Chyby</strong></legend>
+	<strong>Přihláška nebyla odeslána, předtím než se ji pokusíte odeslat znovu, opravte následující chyby:</strong>
+	<ul>
+		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+	</ul>
+</fieldset>
+{input trainingId value => $trainingId}
+{input date value => $date}
+<fieldset id="ucastnik">
+	<legend>Účastník</legend>
+	<table>
+		<tr>
+			<th>{label name /}</th><td>{input name}</td>
+			<th>{label email /}</th><td>{input email}</td>
+		</tr>
+	</table>
+</fieldset>
+{ifset $date}
+<fieldset>
+	<legend>Fakturační údaje</legend>
+	<table>
+		<tr>
+			<th>{label company /}</th><td>{input company}</td>
+			<th>{label street /}</th><td>{input street}</td>
+		</tr>
+		<tr>
+			<th>{label city /}</th><td>{input city}</td>
+			<th>{label zip /}</th><td>{input zip}</td>
+		</tr>
+		<tr>
+			<th>{label companyId /}</th><td>{input companyId}</td>
+			<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>
+		</tr>
+	</table>
+</fieldset>
+{/ifset}
+
+<p><strong>{label note /}</strong>{input note}</p>
+<p>{input signUp}</p>
+{/form application}
+
+{ifset $date}
+<p>Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem do druhého pracovního dne společně s potvrzením registrace.</p>
+<p>Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, &hellip;), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu.</p>
+{else}
+<p>Zadané údaje budou použity pro zaslání pozvánky na příští termín.</a>
+{/ifset}
+<p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+{/define}
+
+{define #pastTrainings}
+	{foreach $pastTrainings[spacek] as $date}
+	{first}Již uskutečněné termíny:{/first}
+	{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{sep}, {/sep}{last}.{/last}
+	{/foreach}
+	{foreach $pastTrainings[vrana] as $date}
+	{first}Již uskutečněné termíny, které školil <a href="{$originalUrl}">Jakub Vrána</a>:{/first}
+	{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{sep}, {/sep}{last}.{/last}
+	{/foreach}
+{/define}
+
+{define #content}
+Zvu vás na školení, která pořádám. Dříve je vedl <a href="http://www.vrana.cz">Jakub Vrána</a> a já jsem je po něm <a href="http://php.vrana.cz/predstavuji-nove-skolitele.php">převzal</a>.
+{include #list}
+<p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+{/define}

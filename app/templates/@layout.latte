@@ -1,0 +1,46 @@
+{**
+ * The michalspacek.cz layout template.
+ *
+ * @copyright  Copyright (c) 2012 Michal Špaček
+ * @package    michalspacek.cz
+ *
+ * @param string   $basePath web base path
+ * @param array    $flashes  flash messages
+ *}
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <meta http-equiv="Content-Language" content="cs" />
+    <title>{isset($pageTitle) ? $pageTitle . " | "}Michal Špaček</title>
+    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/i/css/screen.css" type="text/css">
+    <script type="text/javascript" src="{$basePath}/i/js/netteForms.js"></script>
+    <script type="text/javascript" n:if="!$debugMode">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23432180-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+</head>
+<body>
+{block #body}
+    <div id="container">
+    <div id="header">
+    <a n:href="Homepage:"><img src="{$basePath}/i/images/michal-spacek.jpg" width="50" height="50" alt="Michal Špaček" /></a>
+    <h1>{$pageTitle}</h1>
+    </div>
+    <hr />
+    {ifset #menu}<div id="menu">{include #menu}</div><hr />{/ifset}
+    {include #content}
+    <hr />
+    </div>
+{/block}
+</body>
+</html>

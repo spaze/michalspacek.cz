@@ -1,0 +1,91 @@
+body {
+    font: 1em/1.5 Arial, sans-serif;
+    color: #222;
+    background-color: #FFF;
+}
+hr {
+    color: #EEE;
+    background-color: #EEE;
+    height: 2px;
+    border: 0px;
+}
+fieldset {
+    margin: 1em 0;
+    border: 2px solid #EEE;
+}
+legend {
+    padding: 0px 10px;
+    background-color: #EEE;
+}
+h1, h2, h1 a, h2 a {
+    text-decoration: none;
+    color: #337;
+}
+h2, p { text-align: left; }
+ul {
+    text-align: left;
+    padding: 0px 1em;
+}
+img { border: 0; }
+#container {
+    max-width: 800px;
+    margin: 2em auto;
+}
+#header { text-align: center; padding-right: 50px;}
+#header img { float: left; }
+.icon {
+    background: url('/i/images/icons.png') no-repeat top left;
+    display: inline-block;
+    vertical-align: middle;
+}
+.icon16 {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+.icon32 {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+}
+#elephpant { background-position: 0px -18px; }
+.slides { background-position: 0px 0px; }
+.video { background-position: -16px 0px; }
+#menu {
+    font-size: 85%;
+    text-align: left;
+}
+.left { text-align: left; }
+.center { text-align: center; }
+#frm-application table { border-spacing: 0px; }
+#frm-application th, #frm-application td {
+    width: 150px;
+    padding: 5px 0px;
+}
+#frm-application th { text-align: right; }
+#frm-application input { width: 170px; }
+#frm-application label { margin-right: 5px; }
+#frm-application #frmapplication-note { width: 400px; }
+#chyby ul { margin: 0px; }
+#chyby {
+    color: #F34;
+    background-color: #FEE;
+    margin: 1em 0;
+    border: 2px solid #F56;
+}
+#chyby legend {
+    color: #FFF;
+    background-color: #F56;
+}
+div.flash {
+    color: #CA0;
+    background-color: #FFD;
+    padding: 1em;
+    margin: 1em 0;
+    border: 2px solid #EC2;
+}
+div.error {
+    color: #F34;
+    background-color: #FEE;
+    border: 2px solid #F56;
+}

@@ -1,0 +1,69 @@
+{define #content}
+{includeblock "default.latte"}
+<p>Školení <strong>Úvod do PHP</strong> společně s <a n:href="Skoleni:programovaniVPhp5"><strong>Programováním v PHP 5</strong></a> pořádám ve spolupráci s <a href="http://www.root.cz/skoleni/">Akademií Root.cz</a>. Dříve toto školení vedl <a href="http://www.vrana.cz">Jakub Vrána</a>. Můžete se na ně přihlásit i na těchto stránkách. <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
+
+<h2 id="napln">Náplň</h2>
+<ul>
+	<li>Základní syntaxe, vkládání do HTML</li>
+	<li>Komentáře, operátory, proměnné, typy</li>
+	<li>Komunikace s uživatelem přes formuláře, session</li>
+	<li>Vestavěné a vlastní funkce, třídy a objekty</li>
+	<li>Řídící struktury <kbd>if</kbd>, <kbd>switch</kbd>, cykly <kbd>while</kbd>, <kbd>do</kbd>, <kbd>for</kbd>, <kbd>foreach</kbd></li>
+	<li>Vyčlenění a propojení jednotlivých částí aplikace</li>
+	<li>Práce s databází MySQL</li>
+	<li>Nastavení, knihovny PECL a PEAR, dokumentace</li>
+	<li>Šablonovací systémy</li>
+	<li>Příkazový řádek, desktopové aplikace</li>
+</ul>
+<hr />
+
+<h2 id="predpoklady">Předpoklady</h2>
+<p>Na toto školení byste měli přijít se znalostí HTML a alespoň základní znalostí syntaxe SQL, kterou se můžete naučit na školení <a href="http://php.vrana.cz/skoleni-navrh-a-pouzivani-mysql-databaze.php">Antonína Faltýnka</a>.</p>
+<hr />
+
+<h2 id="urcenopro">Určeno pro</h2>
+<p>Školení je určeno pro autory webových aplikací.</p>
+<hr />
+
+<h2 id="datum">Datum a čas</h2>
+<p><strong>{ifset $date}{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{else}{$tentative}{/ifset}</strong>, 10:00 &ndash; 17:00, hodinová přestávka na oběd</p>
+{ifset $tentative}
+	<p>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</p>
+{/ifset}
+<p><small>{include #pastTrainings}</small></p>
+<hr />
+
+<h2 id="misto">Místo</h2>
+<p>
+<strong><a href="{$placeUrl}">{$placeName}</a>, {$placeAddress}</strong><br />
+Školící místnost je klimatizována, k dispozici je bezdrátové připojení k Internetu.
+</p>
+<hr />
+
+<h2 id="kapacita">Kapacita</h2>
+<p>Nejvýše 15 účastníků</p>
+<hr />
+
+<h2 id="vybaveni">Vybavení</h2>
+<p>K dispozici je vlastní PC pro každého účastníka. Pokud máte notebook, můžete si ho přinést. Oběd, káva, čaj a minerálka je v ceně školení.</p>
+<hr />
+
+<h2 id="cena">Cena</h2>
+<p><strong>2450 Kč</strong>, cena je konečná, nejsem plátce DPH, 20% sleva pro studenty</p>
+<hr />
+
+<h2 id="materialy">Materiály</h2>
+<p>Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.</p>
+<hr />
+
+<h2 id="ohlasy">Ohlasy na školení</h2>
+<p><strong>Jiří Královec, W.A.T.C.H. CZ</strong></p>
+<blockquote><p>Mé pocity ze školení Úvod do PHP a <a n:href="Skoleni:programovaniVPhp5">Programování v PHP 5</a> jsou kladné. Oceňuji kvalifikovanost a názornost výkladu, kde jsem i já, jako úplný začátečník v PHP, získal povědomost o širokých možnostech jazyka PHP, včetně jeho zvláštností. Samozřejmě, že za 2 dny ze mě není programátor PHP, ale kurz mě nasměroval a dále už bude záležet na mě, jak využiji těchto vědomostí k jejich plynulému rozšiřování. Věřím, že za čas, se stanu opravdu programátorem v PHP <kbd>:-)</kbd></p></blockquote>
+<hr />
+
+<h2 id="prihlaska">{ifset $tentative}Nezávazná přihláška{else}Přihláška{/ifset}</h2>
+{ifset $tentative}
+	<p>Přesné datum zatím neznám. Můžete vyplnit tuto nezávaznou přihlášku a dám vám vědět, až datum budu znát.</p>
+{/ifset}
+{include #application, trainingId => $trainingId, date => $date}
+{/define}
