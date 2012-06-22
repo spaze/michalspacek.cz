@@ -12,12 +12,10 @@ class HomepagePresenter extends BasePresenter
 	{
 		$this->template->trainings = $this->trainings;
 
-		$database = $this->getContext()->nette->database->default;
-
-		$articles = $database->table('articles')->order('date DESC')->limit(3);
+		$articles = $this->context->createArticles()->order('date DESC')->limit(3);
 		$this->template->articles = $articles;
 
-		$talks = $database->table('talks')->order('date DESC')->limit(5);
+		$talks = $this->context->createTalks()->order('date DESC')->limit(5);
 		$this->template->talks = $talks;
 	}
 

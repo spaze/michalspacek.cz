@@ -12,8 +12,7 @@ class ClankyPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Články';
 
-		$database = $this->getContext()->nette->database->default;
-		$articles = $database->table('articles')->order('date DESC');
+		$articles = $this->context->createArticles()->order('date DESC');
 		$this->template->articles = $articles;
 	}
 

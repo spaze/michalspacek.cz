@@ -20,6 +20,12 @@ common:
 	services:
 		database: @Nette\Database\Connection
 
+	factories:
+		articles: Articles(@database)
+		talks: Talks(@database)
+		trainingApplications: TrainingApplications(@database)
+		trainingInvitations: TrainingInvitations(@database)
+
 production < common:
 	nette:
 		database:

@@ -12,8 +12,7 @@ class PrednaskyPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Přednášky';
 
-		$database = $this->getContext()->nette->database->default;
-		$talks = $database->table('talks')->order('date DESC');
+		$talks = $this->context->createTalks()->order('date DESC');
 		$this->template->talks = $talks;
 	}
 

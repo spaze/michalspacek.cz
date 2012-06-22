@@ -134,10 +134,9 @@ class SkoleniPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 		try {
-			$database = $this->getContext()->nette->database->default;
 			$datetime = new DateTime();
 			if (empty($values['date'])) {
-				$database->exec('INSERT INTO training_invitations', array(
+				$this->context->createTrainingInvitations()->insert(array(
 					'key_training' => $values['trainingId'],
 					'name' => $values['name'],
 					'email' => $values['email'],
@@ -147,7 +146,7 @@ class SkoleniPresenter extends BasePresenter
 				));
 				$this->flashMessage('Díky, přihláška odeslána! Dám vám vědět, jakmile budu znát přesný termín.');
 			} else {
-				$database->exec('INSERT INTO training_applications', array(
+				$this->context->createTrainingApplications()->insert(array(
 					'key_training' => $values['trainingId'],
 					'date' => $values['date'],
 					'name' => $values['name'],
