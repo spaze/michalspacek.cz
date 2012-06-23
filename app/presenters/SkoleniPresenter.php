@@ -68,7 +68,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->trainingId = $this->trainingId;
 		$this->template->pageTitle = 'Školení ' . $this->trainings[$this->trainingId]['name'];
 		$this->template->date = $this->trainings[$this->trainingId]['date'];
-		$this->template->tentative = $this->trainings[$this->trainingId]['tentative'];
+		$this->template->tentative = (empty($this->template->date) ? $this->trainings[$this->trainingId]['tentative'] : null);
 		$this->template->originalUrl = $this->trainings[$this->trainingId]['originalUrl'];
 		$this->template->placeName = $this->trainings[$this->trainingId]['placeName'];
 		$this->template->placeUrl = $this->trainings[$this->trainingId]['placeUrl'];
