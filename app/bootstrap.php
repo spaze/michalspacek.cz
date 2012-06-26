@@ -36,6 +36,11 @@ $container = $configurator->createContainer();
 // Setup router
 $container->router[] = new Route('<presenter>[/<action>]', 'Homepage:default');
 
+$httpResponse = $container->httpResponse;
+$container->application->onStartup[] = function() use ($httpResponse) {
+	$httpResponse->setHeader('X-Content-Type-Options', 'nosniff');
+	$httpResponse->setHeader('X-XSS-Protection', '1; mode=block');
+};
 
 // Configure and run the application!
 $container->application->run();

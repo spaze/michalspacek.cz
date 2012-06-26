@@ -13,6 +13,9 @@ common:
 		application:
 			errorPresenter: Error
 
+		security:
+			frames: false
+
 		session:
 			name: yourluckynumbers
 			expiration: 14 days
