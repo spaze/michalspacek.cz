@@ -5,7 +5,7 @@ abstract class BaseModel extends \Nette\Database\Table\Selection
 
 	const TEXY_NAMESPACE = 'TexyFormatted';
 
-	protected $formattedKeys = array();
+	protected $formattedProperties = array();
 
 	private $cache;
 
@@ -18,16 +18,17 @@ abstract class BaseModel extends \Nette\Database\Table\Selection
 
 	protected function createRow(array $row)
 	{
-		foreach ($this->formattedKeys as $key) {
-			$original = $row[$key];
-			$formatted = $this->cache->load(hash('md5', $original), function() use ($original) {
+		foreach ($this->formattedProperties as $property) {
+			$original = $row[$property];
+			// Nette Cache itself generates the key by hashing the key passed in load() so we can use whatever we want
+			$formatted = $this->cache->load($original, function() use ($original) {
 				Texy::$advertisingNotice = false;
 				$texy = new Texy();
 				$texy->encoding = 'utf-8';
 				$texy->allowedTags = Texy::NONE;
 				return preg_replace('~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1', $texy->process($original));
 			});
-			$row[$key . self::TEXY_NAMESPACE] = $formatted;
+			$row[$property . self::TEXY_NAMESPACE] = $formatted;
 		}
 		return parent::createRow($row);
 	}

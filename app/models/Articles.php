@@ -9,7 +9,7 @@ class Articles extends BaseModel
 {
 	const TABLE_NAME = 'articles';
 
-	protected $formattedKeys = array(
+	protected $formattedProperties = array(
 		'excerpt',
 	);
 }
