@@ -24,10 +24,12 @@ common:
 		database: @Nette\Database\Connection
 
 	factories:
-		articles: Articles(@database, @cacheStorage)
-		talks: Talks(@database, @cacheStorage)
-		trainingApplications: TrainingApplications(@database, @cacheStorage)
-		trainingInvitations: TrainingInvitations(@database, @cacheStorage)
+		articles: Articles
+		talks: Talks
+		trainings: Trainings
+		trainingDates: TrainingDates
+		trainingApplications: TrainingApplications
+		trainingInvitations: TrainingInvitations
 
 production < common:
 	nette:
