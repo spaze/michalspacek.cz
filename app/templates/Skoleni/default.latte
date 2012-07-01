@@ -4,9 +4,9 @@
 
 {define #list}
 <ul>
- 	{foreach $trainings as $item}
- 		{var $link = 'Skoleni:' . $item[action]}
-	    <li><a n:href="{$link}"><strong>{$item[name]}</strong></a> <small>({ifset $item[date]}{!$item[date]|date:'j. n. Y'|replace:' ':'&nbsp;'}{else}{$item[tentative]}{/ifset})</small></li>
+ 	{foreach $upcomingTrainings as $item}
+ 		{var $link = 'Skoleni:' . $item->training->action}
+	    <li><a n:href="{$link}"><strong>{$item->training->name}</strong></a> <small>({ifset $item->tentative}{!$item->start|localdate:'cs':'%B %Y'|replace:' ':'&nbsp;'}{else}{!$item->start|date:'j. n. Y'|replace:' ':'&nbsp;'}{/ifset})</small></li>
 	{/foreach}
 </ul>
 {/define}

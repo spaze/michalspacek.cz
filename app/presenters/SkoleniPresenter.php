@@ -20,7 +20,9 @@ class SkoleniPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Školení';
-		$this->template->trainings = $this->trainings;
+
+		$upcomingTrainings = $this->context->createTrainingDates()->where('end > NOW()')->order('key_training ASC');
+		$this->template->upcomingTrainings = $upcomingTrainings;
 	}
 
 	public function actionUvodDoPhp()
