@@ -116,4 +116,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	{
 		$this->template->debugMode = $this->context->parameters['debugMode'];
 	}
+
+	protected function createTemplate($class = null)
+	{
+		$template = parent::createTemplate($class);
+		$template->registerHelperLoader(callback(new \Bare\Nette\Templating\Helpers($this->getContext()), 'loader'));
+		return $template;
+	}
 }
