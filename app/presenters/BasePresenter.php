@@ -52,7 +52,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 			'originalUrl' => 'http://php.vrana.cz/skoleni-programovani-v-php-5.php',
 			'pastTrainings' => array(
 				'spacek' => array(
-					'2011-05-10',
+					'2012-05-10',
 					'2011-12-08',
 				),
 				'vrana' => array(
@@ -76,7 +76,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 			'originalUrl' => 'http://php.vrana.cz/skoleni-bezpecnost-php-aplikaci.php',
 			'pastTrainings' => array(
 				'spacek' => array(
-					'2011-05-11',
+					'2012-05-11',
 					'2011-12-09',
 				),
 				'vrana' => array(
@@ -100,7 +100,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 			'originalUrl' => 'http://php.vrana.cz/skoleni-vykonnost-webovych-aplikaci.php',
 			'pastTrainings' => array(
 				'spacek' => array(
-					'2011-05-14',
+					'2012-05-14',
 				),
 				'vrana' => array(
 					'2011-09-14', '2011-04-27',
