@@ -14,10 +14,10 @@
 <hr />
 
 <h2 id="datum">Datum a čas</h2>
-<p><strong>{ifset $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/ifset}</strong>, {$start|date:'H:i'} &ndash; {$end|date:'H:i'}, hodinová přestávka na oběd</p>
-{ifset $tentative}
+<p><strong>{if $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/if}</strong>, {$start|date:'H:i'} &ndash; {$end|date:'H:i'}, hodinová přestávka na oběd</p>
+{if $tentative}
 	<p>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</p>
-{/ifset}
+{/if}
 <p><small>
 	{foreach $pastTrainingsMe as $date}
 		{first}Již uskutečněné termíny:{/first}
@@ -50,10 +50,10 @@
 <p>{!$materials|texy}</p>
 <hr />
 
-<h2 id="prihlaska">{ifset $tentative}Nezávazná přihláška{else}Přihláška{/ifset}</h2>
-{ifset $tentative}
+<h2 id="prihlaska">{if $tentative}Nezávazná přihláška{else}Přihláška{/if}</h2>
+{if $tentative}
 	<p>Přesné datum zatím neznám. Můžete vyplnit tuto nezávaznou přihlášku a dám vám vědět, až datum budu znát.</p>
-{/ifset}
+{/if}
 
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form application}
@@ -74,7 +74,7 @@
 		</tr>
 	</table>
 </fieldset>
-{ifset $tentative}
+{if $tentative}
 {else}
 <fieldset>
 	<legend>Fakturační údaje</legend>
@@ -93,17 +93,17 @@
 		</tr>
 	</table>
 </fieldset>
-{/ifset}
+{/if}
 
 <p><strong>{label note /}</strong>{input note}</p>
 <p>{input signUp}</p>
 {/form application}
 
-{ifset $tentative}
+{if $tentative}
 <p>Zadané údaje budou použity pro zaslání pozvánky na příští termín.</a>
 {else}
 <p>Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem do druhého pracovního dne společně s potvrzením registrace.</p>
 <p>Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, &hellip;), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu.</p>
-{/ifset}
+{/if}
 <p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
 {/define}
