@@ -17,6 +17,7 @@ class SkoleniPresenter extends BasePresenter
 	 */
 	private $trainingId;
 
+
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Školení';
@@ -25,58 +26,33 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $upcomingTrainings;
 	}
 
-	public function actionUvodDoPhp()
+
+	public function actionSkoleni($name)
 	{
-		$this->trainingId = self::TRAINING_PHP;
+		$training = $this->context->createTrainingDates()->where('training.action', $name)->where('end > NOW()')->limit(1)->fetch();
+
+		$this->template->trainingId       = $training->id_date;
+		$this->template->pageTitle        = 'Školení ' . $training->training->name;
+		$this->template->description      = $training->training->description;
+		$this->template->content          = $training->training->content;
+		$this->template->prerequisites    = $training->training->prerequisites;
+		$this->template->audience         = $training->training->audience;
+		$this->template->start            = $training->start;
+		$this->template->end              = $training->end;
+		$this->template->tentative        = $training->tentative;
+		$this->template->originalUrl      = $training->training->original_url;
+		$this->template->capacity         = $training->training->capacity;
+		$this->template->services         = $training->training->services;
+		$this->template->price            = $training->training->price;
+		$this->template->studentDiscount  = $training->training->student_discount;
+		$this->template->materials        = $training->training->materials;
+		$this->template->venueUrl         = $training->venue->url;
+		$this->template->venueName        = $training->venue->name;
+		$this->template->venueAddress     = $training->venue->address;
+		$this->template->venueDescription = $training->venue->description;
+		$this->template->pastTrainings    = $this->trainings[3]['pastTrainings']; // TODO fuck this off
 	}
 
-	public function renderUvodDoPhp()
-	{
-		$this->assignTemplateVariables();
-	}
-
-	public function actionProgramovaniVPhp5()
-	{
-		$this->trainingId = self::TRAINING_PHP5;
-	}
-
-	public function renderProgramovaniVPhp5()
-	{
-		$this->assignTemplateVariables();
-	}
-
-	public function actionBezpecnostPhpAplikaci()
-	{
-		$this->trainingId = self::TRAINING_SECURITY;
-	}
-
-	public function renderBezpecnostPhpAplikaci()
-	{
-		$this->assignTemplateVariables();
-	}
-
-	public function actionVykonnostWebovychAplikaci()
-	{
-		$this->trainingId = self::TRAINING_PERFORMANCE;
-	}
-
-	public function renderVykonnostWebovychAplikaci()
-	{
-		$this->assignTemplateVariables();
-	}
-
-	private function assignTemplateVariables()
-	{
-		$this->template->trainingId = $this->trainingId;
-		$this->template->pageTitle = 'Školení ' . $this->trainings[$this->trainingId]['name'];
-		$this->template->date = $this->trainings[$this->trainingId]['date'];
-		$this->template->tentative = (empty($this->template->date) ? $this->trainings[$this->trainingId]['tentative'] : null);
-		$this->template->originalUrl = $this->trainings[$this->trainingId]['originalUrl'];
-		$this->template->placeName = $this->trainings[$this->trainingId]['placeName'];
-		$this->template->placeUrl = $this->trainings[$this->trainingId]['placeUrl'];
-		$this->template->placeAddress = $this->trainings[$this->trainingId]['placeAddress'];
-		$this->template->pastTrainings = $this->trainings[$this->trainingId]['pastTrainings'];
-	}
 
 	protected function createComponentApplication($name)
 	{

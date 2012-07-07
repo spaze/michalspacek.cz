@@ -1,0 +1,109 @@
+{define #content}
+<p>{!$description|texy} <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
+
+<h2 id="napln">Náplň</h2>
+{!$content|texy}
+<hr />
+
+<h2 id="predpoklady">Předpoklady</h2>
+<p>{!$prerequisites|texy}</p>
+<hr />
+
+<h2 id="urcenopro">Určeno pro</h2>
+<p>{!$audience|texy}</p>
+<hr />
+
+<h2 id="datum">Datum a čas</h2>
+<p><strong>{ifset $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/ifset}</strong>, {$start|date:'H:i'} &ndash; {$end|date:'H:i'}, hodinová přestávka na oběd</p>
+{ifset $tentative}
+	<p>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</p>
+{/ifset}
+<p><small>
+	{foreach $pastTrainings[spacek] as $date}
+		{first}Již uskutečněné termíny:{/first}
+		{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{sep}, {/sep}{last}.{/last}
+	{/foreach}
+	{foreach $pastTrainings[vrana] as $date}
+		{first}Již uskutečněné termíny, které školil <a href="{$originalUrl}">Jakub Vrána</a>:{/first}
+		{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{sep}, {/sep}{last}.{/last}
+	{/foreach}
+</small></p>
+<hr />
+
+<h2 id="misto">Místo</h2>
+<p><strong><a href="{$venueUrl}">{$venueName}</a>, {$venueAddress}</strong><br />{!$venueDescription|texy}</p>
+<hr />
+
+<h2 id="kapacita">Kapacita</h2>
+<p>Nejvýše {$capacity} účastníků</p>
+<hr />
+
+<h2 id="vybaveni">Vybavení</h2>
+<p>{!$services|texy}</p>
+<hr />
+
+<h2 id="cena">Cena</h2>
+<p><strong>{$price} Kč</strong>, cena je konečná, nejsem plátce DPH{ifset $studentDiscount}, {$studentDiscount}% sleva pro studenty{/ifset}</p>
+<hr />
+
+<h2 id="materialy">Materiály</h2>
+<p>{!$materials|texy}</p>
+<hr />
+
+<h2 id="prihlaska">{ifset $tentative}Nezávazná přihláška{else}Přihláška{/ifset}</h2>
+{ifset $tentative}
+	<p>Přesné datum zatím neznám. Můžete vyplnit tuto nezávaznou přihlášku a dám vám vědět, až datum budu znát.</p>
+{/ifset}
+
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+{form application}
+<fieldset id="chyby" n:if="$form->hasErrors()">
+	<legend><strong>Chyby</strong></legend>
+	<strong>Přihláška nebyla odeslána, předtím než se ji pokusíte odeslat znovu, opravte následující chyby:</strong>
+	<ul>
+		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+	</ul>
+</fieldset>
+{input trainingId value => $trainingId}
+<fieldset id="ucastnik">
+	<legend>Účastník</legend>
+	<table>
+		<tr>
+			<th>{label name /}</th><td>{input name}</td>
+			<th>{label email /}</th><td>{input email}</td>
+		</tr>
+	</table>
+</fieldset>
+{ifset $tentative}
+{else}
+<fieldset>
+	<legend>Fakturační údaje</legend>
+	<table>
+		<tr>
+			<th>{label company /}</th><td>{input company}</td>
+			<th>{label street /}</th><td>{input street}</td>
+		</tr>
+		<tr>
+			<th>{label city /}</th><td>{input city}</td>
+			<th>{label zip /}</th><td>{input zip}</td>
+		</tr>
+		<tr>
+			<th>{label companyId /}</th><td>{input companyId}</td>
+			<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>
+		</tr>
+	</table>
+</fieldset>
+{/ifset}
+
+<p><strong>{label note /}</strong>{input note}</p>
+<p>{input signUp}</p>
+{/form application}
+
+{ifset $tentative}
+<p>Zadané údaje budou použity pro zaslání pozvánky na příští termín.</a>
+{else}
+<p>Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem do druhého pracovního dne společně s potvrzením registrace.</p>
+<p>Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, &hellip;), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu.</p>
+{/ifset}
+<p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+{/define}
