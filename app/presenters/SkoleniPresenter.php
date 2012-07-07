@@ -154,7 +154,7 @@ class SkoleniPresenter extends BasePresenter
 		$form->addText('note', 'Poznámka:')
 			->addCondition(Form::FILLED)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je tisíc znaků', 1000);
-		$form->addSubmit('signUp', isset($this->template->date) ? 'Registrovat se' : 'Odeslat');
+		$form->addSubmit('signUp', $this->tentative ? 'Odeslat' : 'Registrovat se');
 		$form->onSuccess[] = callback($this, 'submittedApplication');
 
 		return $form;
