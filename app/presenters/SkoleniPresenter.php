@@ -102,7 +102,7 @@ class SkoleniPresenter extends BasePresenter
 			->order('start DESC')
 			->fetchPairs('id_date', 'start');
 
-		$this->template->pastTrainingsJakub = $this->pastTrainingsVrana[$name];
+		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 	}
 
 
