@@ -19,11 +19,11 @@
 	<p>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</p>
 {/ifset}
 <p><small>
-	{foreach $pastTrainings[spacek] as $date}
+	{foreach $pastTrainingsMe as $date}
 		{first}Již uskutečněné termíny:{/first}
 		{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{sep}, {/sep}{last}.{/last}
 	{/foreach}
-	{foreach $pastTrainings[vrana] as $date}
+	{foreach $pastTrainingsJakub as $date}
 		{first}Již uskutečněné termíny, které školil <a href="{$originalUrl}">Jakub Vrána</a>:{/first}
 		{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{sep}, {/sep}{last}.{/last}
 	{/foreach}
