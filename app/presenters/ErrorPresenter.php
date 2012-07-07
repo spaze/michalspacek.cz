@@ -11,6 +11,7 @@ use Nette\Diagnostics\Debugger,
 class ErrorPresenter extends BasePresenter
 {
 
+
 	/**
 	 * @param  Exception
 	 * @return void
@@ -30,5 +31,6 @@ class ErrorPresenter extends BasePresenter
 		}
 		$this->template->errorCode = $this->getView();
 	}
+
 
 }

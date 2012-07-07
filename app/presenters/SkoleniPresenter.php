@@ -10,13 +10,13 @@ use \Nette\Application\UI\Form,
  */
 class SkoleniPresenter extends BasePresenter
 {
+
 	/**
 	 * Currently processed training info.
 	 *
 	 * @var boolean
 	 */
 	private $tentative;
-
 
 	/**
 	 * Past trainings done by Jakub.
@@ -160,6 +160,7 @@ class SkoleniPresenter extends BasePresenter
 		return $form;
 	}
 
+
 	public function submittedApplication($form)
 	{
 		$values = $form->getValues();
@@ -200,4 +201,6 @@ class SkoleniPresenter extends BasePresenter
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
 		}
 	}
+
+
 }

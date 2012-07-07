@@ -8,12 +8,12 @@
 class ClankyPresenter extends BasePresenter
 {
 
+
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Články';
-
-		$articles = $this->context->createArticles()->order('date DESC');
-		$this->template->articles = $articles;
+		$this->template->articles  = $this->context->createArticles()->order('date DESC');
 	}
+
 
 }
