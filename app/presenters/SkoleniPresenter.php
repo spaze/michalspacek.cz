@@ -166,7 +166,7 @@ class SkoleniPresenter extends BasePresenter
 		$values = $form->getValues();
 		try {
 			$datetime = new DateTime();
-			if (empty($values['date'])) {
+			if ($this->tentative) {
 				$this->context->createTrainingInvitations()->insert(array(
 					'key_training' => $values['trainingId'],
 					'name' => $values['name'],
@@ -179,7 +179,6 @@ class SkoleniPresenter extends BasePresenter
 			} else {
 				$this->context->createTrainingApplications()->insert(array(
 					'key_training' => $values['trainingId'],
-					'date' => $values['date'],
 					'name' => $values['name'],
 					'email' => $values['email'],
 					'company' => $values['company'],
