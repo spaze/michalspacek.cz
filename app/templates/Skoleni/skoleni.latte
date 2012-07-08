@@ -24,14 +24,14 @@
 		{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{sep}, {/sep}{last}.{/last}
 	{/foreach}
 	{foreach $pastTrainingsJakub as $date}
-		{first}Již uskutečněné termíny, které školil <a href="{$originalUrl}">Jakub Vrána</a>:{/first}
+		{first}Již uskutečněné termíny, které školil <a href="{$originalHref}">Jakub Vrána</a>:{/first}
 		{!$date|date:'j. n. Y'|replace:' ':'&nbsp;'}{sep}, {/sep}{last}.{/last}
 	{/foreach}
 </small></p>
 <hr />
 
 <h2 id="misto">Místo</h2>
-<p><strong><a href="{$venueUrl}">{$venueName}</a>, {$venueAddress}</strong><br />{!$venueDescription|texy}</p>
+<p><strong><a href="{$venueHref}">{$venueName}</a>, {$venueAddress}</strong><br />{!$venueDescription|texy}</p>
 <hr />
 
 <h2 id="kapacita">Kapacita</h2>

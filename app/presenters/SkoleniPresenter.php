@@ -85,13 +85,13 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->start            = $training->start;
 		$this->template->end              = $training->end;
 		$this->template->tentative        = $this->tentative;
-		$this->template->originalUrl      = $training->training->original_url;
+		$this->template->originalHref     = $training->training->original_href;
 		$this->template->capacity         = $training->training->capacity;
 		$this->template->services         = $training->training->services;
 		$this->template->price            = $training->training->price;
 		$this->template->studentDiscount  = $training->training->student_discount;
 		$this->template->materials        = $training->training->materials;
-		$this->template->venueUrl         = $training->venue->url;
+		$this->template->venueHref        = $training->venue->href;
 		$this->template->venueName        = $training->venue->name;
 		$this->template->venueAddress     = $training->venue->address;
 		$this->template->venueDescription = $training->venue->description;
