@@ -50,6 +50,12 @@
 <p>{!$materials|texy}</p>
 <hr />
 
+<h2 id="ohlasy">Ohlasy na školení</h2>
+{foreach $reviews as $review}
+	<p><strong>{$review[name]}{ifset $review[company]}, {$review[company]}{/ifset}</strong></p>
+	<blockquote><p>{!$review[review]|texy}</p></blockquote>
+{/foreach}
+
 <h2 id="prihlaska">{if $tentative}Nezávazná přihláška{else}Přihláška{/if}</h2>
 {if $tentative}
 	<p>Přesné datum zatím neznám. Můžete vyplnit tuto nezávaznou přihlášku a dám vám vědět, až datum budu znát.</p>

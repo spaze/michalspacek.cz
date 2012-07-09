@@ -30,6 +30,7 @@ common:
 		trainingDates: TrainingDates
 		trainingApplications: TrainingApplications
 		trainingInvitations: TrainingInvitations
+		trainingReviews: TrainingReviews
 
 production < common:
 	nette:

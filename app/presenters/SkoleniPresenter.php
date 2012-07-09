@@ -103,6 +103,19 @@ class SkoleniPresenter extends BasePresenter
 			->fetchPairs('id_date', 'start');
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
+
+		$this->template->reviews = array(
+			array(
+				'name' => 'name1',
+				'company' => null,
+				'review' => 'foo **bar**',
+			),
+			array(
+				'name' => 'name2',
+				'company' => 'company',
+				'review' => 'waldo `:-)`',
+			),
+		);
 	}
 
 
