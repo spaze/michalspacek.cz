@@ -77,4 +77,44 @@ class Trainings extends BaseModel
 	}
 
 
+	public function addInvitation($trainingId, $name, $email, $note)
+	{
+		$datetime = new \DateTime();
+		return $this->database->query(
+			'INSERT INTO training_invitations',
+			array(
+				'key_training'     => $trainingId,
+				'name'             => $name,
+				'email'            => $email,
+				'note'             => $note,
+				'created'          => $datetime,
+				'created_timezone' => $datetime->getTimezone()->getName(),
+			)
+		);
+	}
+
+
+	public function addApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	{
+		$datetime = new \DateTime();
+		return $this->database->query(
+			'INSERT INTO training_applications',
+			array(
+				'key_training'     => $trainingId,
+				'name'             => $name,
+				'email'            => $email,
+				'company'          => $company,
+				'street'           => $street,
+				'city'             => $city,
+				'zip'              => $zip,
+				'company_id'       => $companyId,
+				'company_tax_id'   => $companyTaxId,
+				'note'             => $note,
+				'created'          => $datetime,
+				'created_timezone' => $datetime->getTimezone()->getName(),
+			)
+		);
+	}
+
+
 }

@@ -174,30 +174,26 @@ class SkoleniPresenter extends BasePresenter
 		try {
 			$datetime = new DateTime();
 			if ($this->tentative[$name]) {
-				$this->context->createTrainingInvitations()->insert(array(
-					'key_training' => $values['trainingId'],
-					'name' => $values['name'],
-					'email' => $values['email'],
-					'note' => $values['note'],
-					'created' => $datetime,
-					'created_timezone' => $datetime->getTimezone()->getName(),
-				));
+				$this->context->createTrainings()->addInvitation(
+					$values['trainingId'],
+					$values['name'],
+					$values['email'],
+					$values['note']
+				);
 				$this->flashMessage('Díky, přihláška odeslána! Dám vám vědět, jakmile budu znát přesný termín.');
 			} else {
-				$this->context->createTrainingApplications()->insert(array(
-					'key_training' => $values['trainingId'],
-					'name' => $values['name'],
-					'email' => $values['email'],
-					'company' => $values['company'],
-					'street' => $values['street'],
-					'city' => $values['city'],
-					'zip' => $values['zip'],
-					'company_id' => $values['companyId'],
-					'company_tax_id' => $values['companyTaxId'],
-					'note' => $values['note'],
-					'created' => $datetime,
-					'created_timezone' => $datetime->getTimezone()->getName(),
-				));
+				$this->context->createTrainings()->addApplication(
+					$values['trainingId'],
+					$values['name'],
+					$values['email'],
+					$values['company'],
+					$values['street'],
+					$values['city'],
+					$values['zip'],
+					$values['companyId'],
+					$values['companyTaxId'],
+					$values['note']
+				);
 				$this->flashMessage('Díky, přihláška odeslána! Potvrzení společně s fakturou vám přijde do druhého pracovního dne.');
 			}
 			$this->redirect($this->getName() . ':' . $name);
