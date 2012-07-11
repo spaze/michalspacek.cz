@@ -24,8 +24,8 @@ common:
 		database: @Nette\Database\Connection
 
 	factories:
-		articles: \MichalSpacekCz\Articles
-		talks: \MichalSpacekCz\Talks
+		articles:  \MichalSpacekCz\Articles
+		talks:     \MichalSpacekCz\Talks
 		trainings: \MichalSpacekCz\Trainings
 
 production < common:
