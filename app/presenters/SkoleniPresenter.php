@@ -12,11 +12,11 @@ class SkoleniPresenter extends BasePresenter
 {
 
 	/**
-	 * Currently processed training info.
+	 * Some training info.
 	 *
 	 * @var boolean
 	 */
-	private $tentative;
+	private $tentative = array();
 
 	/**
 	 * Past trainings done by Jakub.
@@ -60,47 +60,39 @@ class SkoleniPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Školení';
 
-		$this->template->upcomingTrainings = $this->context->createTrainingDates()
-			->where('end > NOW()')
-			->order('key_training ASC');
+		$this->template->upcomingTrainings = $this->context->createTrainings()->getUpcoming();
 	}
 
 
 	public function actionSkoleni($name)
 	{
-		$training = $this->context->createTrainingDates()
-			->where('training.action', $name)
-			->where('end > NOW()')
-			->limit(1)
-			->fetch();
+		$trainings = $this->context->createTrainings();
+		$training = $trainings->get($name);
 
-		$this->tentative = (boolean)$training->tentative;
+		$this->tentative[$name] = (boolean)$training->tentative;
 
-		$this->template->trainingId       = $training->id_date;
-		$this->template->pageTitle        = 'Školení ' . $training->training->name;
-		$this->template->description      = $training->training->description;
-		$this->template->content          = $training->training->content;
-		$this->template->prerequisites    = $training->training->prerequisites;
-		$this->template->audience         = $training->training->audience;
+		$this->template->name             = $training->action;
+		$this->template->trainingId       = $training->dateId;
+		$this->template->pageTitle        = 'Školení ' . $training->name;
+		$this->template->description      = $training->description;
+		$this->template->content          = $training->content;
+		$this->template->prerequisites    = $training->prerequisites;
+		$this->template->audience         = $training->audience;
 		$this->template->start            = $training->start;
 		$this->template->end              = $training->end;
-		$this->template->tentative        = $this->tentative;
-		$this->template->originalHref     = $training->training->original_href;
-		$this->template->capacity         = $training->training->capacity;
-		$this->template->services         = $training->training->services;
-		$this->template->price            = $training->training->price;
-		$this->template->studentDiscount  = $training->training->student_discount;
-		$this->template->materials        = $training->training->materials;
-		$this->template->venueHref        = $training->venue->href;
-		$this->template->venueName        = $training->venue->name;
-		$this->template->venueAddress     = $training->venue->address;
-		$this->template->venueDescription = $training->venue->description;
+		$this->template->tentative        = $this->tentative[$name];
+		$this->template->originalHref     = $training->originalHref;
+		$this->template->capacity         = $training->capacity;
+		$this->template->services         = $training->services;
+		$this->template->price            = $training->price;
+		$this->template->studentDiscount  = $training->studentDiscount;
+		$this->template->materials        = $training->materials;
+		$this->template->venueHref        = $training->venueHref;
+		$this->template->venueName        = $training->venueName;
+		$this->template->venueAddress     = $training->venueAddress;
+		$this->template->venueDescription = $training->venueDescription;
 
-		$this->template->pastTrainingsMe = $this->context->createTrainingDates()
-			->where('training.action', $name)
-			->where('end < NOW()')
-			->order('start DESC')
-			->fetchPairs('id_date', 'start');
+		$this->template->pastTrainingsMe = $trainings->getPastTrainings($name);
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
@@ -119,9 +111,10 @@ class SkoleniPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication($name)
+	protected function createComponentApplication($formName)
 	{
-		$form = new Form($this, $name);
+		$form = new Form($this, $formName);
+		$name = $form->parent->params['name'];
 		$form->setAction($form->getAction() . '#prihlaska');
 		$form->addHidden('trainingId');
 		$form->addHidden('date');
@@ -135,7 +128,7 @@ class SkoleniPresenter extends BasePresenter
 			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
 			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je sto znaků', 100);
 
-		if (!$this->tentative) {
+		if (!$this->tentative[$name]) {
 			$form->addGroup('Fakturační údaje');
 			$form->addText('company', 'Obchodní jméno:')
 				->addCondition(Form::FILLED)
@@ -167,7 +160,7 @@ class SkoleniPresenter extends BasePresenter
 		$form->addText('note', 'Poznámka:')
 			->addCondition(Form::FILLED)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je tisíc znaků', 1000);
-		$form->addSubmit('signUp', $this->tentative ? 'Odeslat' : 'Registrovat se');
+		$form->addSubmit('signUp', $this->tentative[$name] ? 'Odeslat' : 'Registrovat se');
 		$form->onSuccess[] = callback($this, 'submittedApplication');
 
 		return $form;
@@ -177,9 +170,10 @@ class SkoleniPresenter extends BasePresenter
 	public function submittedApplication($form)
 	{
 		$values = $form->getValues();
+		$name   = $form->parent->params['name'];
 		try {
 			$datetime = new DateTime();
-			if ($this->tentative) {
+			if ($this->tentative[$name]) {
 				$this->context->createTrainingInvitations()->insert(array(
 					'key_training' => $values['trainingId'],
 					'name' => $values['name'],
@@ -206,8 +200,7 @@ class SkoleniPresenter extends BasePresenter
 				));
 				$this->flashMessage('Díky, přihláška odeslána! Potvrzení společně s fakturou vám přijde do druhého pracovního dne.');
 			}
-			$action = $form->parent->params['name'];
-			$this->redirect($this->getName() . ':' . $action);
+			$this->redirect($this->getName() . ':' . $name);
 		} catch (PDOException $e) {
  			Debugger::log($e, Debugger::ERROR);
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');

@@ -1,12 +1,16 @@
 <?php
-abstract class BaseModel extends \Nette\Database\Table\Selection
+namespace MichalSpacekCz;
+
+abstract class BaseModel extends \Nette\Object
 {
-	const TABLE_NAME = null;
+
+	/** @var \Nette\Database\Connection */
+	protected $database;
 
 
 	public function __construct(\Nette\Database\Connection $connection)
 	{
-		parent::__construct(static::TABLE_NAME, $connection);
+		$this->database = $connection;
 	}
 
 

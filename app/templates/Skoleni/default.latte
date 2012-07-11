@@ -5,8 +5,8 @@
 {define #list}
 <ul>
  	{foreach $upcomingTrainings as $item}
- 		{var $link = 'Skoleni:' . $item->training->action}
-	    <li><a n:href="{$link}"><strong>{$item->training->name}</strong></a> <small>({ifset $item->tentative}{$item->start|localdate:'cs':'%B %Y'}{else}{$item->start|date:'j. n. Y'}{/ifset})</small></li>
+ 		{var $link = 'Skoleni:' . $item->action}
+	    <li><a n:href="{$link}"><strong>{$item->name}</strong></a> <small>({ifset $item->tentative}{$item->start|localdate:'cs':'%B %Y'}{else}{$item->start|date:'j. n. Y'}{/ifset})</small></li>
 	{/foreach}
 </ul>
 {/define}

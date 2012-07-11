@@ -6,9 +6,9 @@
 <p n:foreach="$talks as $talk">
     {if $talk->href}<a href="{$talk->href}">{/if}<strong>{$talk->title}</strong>{if $talk->href}</a>{/if}<br />
     <small>
-    	{!$talk->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$talk->event_href}">{$talk->event}</a>
-        <a n:if="$talk->slides_href" href="{$talk->slides_href}"><span class="icon icon16 slides"></span>Prezentace</a>
-        <a n:if="$talk->video_href" href="{$talk->video_href}"><span class="icon icon16 video"></span>Video</a>
+    	{!$talk->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$talk->eventHref}">{$talk->event}</a>
+        <a n:if="$talk->slidesHref" href="{$talk->slidesHref}"><span class="icon icon16 slides"></span>Prezentace</a>
+        <a n:if="$talk->videoHref" href="{$talk->videoHref}"><span class="icon icon16 video"></span>Video</a>
     </small>
 </p>
 &hellip;a další na <a href="http://www.slideshare.net/spaze/presentations">SlideShare</a>

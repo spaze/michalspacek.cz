@@ -24,13 +24,9 @@ common:
 		database: @Nette\Database\Connection
 
 	factories:
-		articles: Articles
-		talks: Talks
-		trainings: Trainings
-		trainingDates: TrainingDates
-		trainingApplications: TrainingApplications
-		trainingInvitations: TrainingInvitations
-		trainingReviews: TrainingReviews
+		articles: \MichalSpacekCz\Articles
+		talks: \MichalSpacekCz\Talks
+		trainings: \MichalSpacekCz\Trainings
 
 production < common:
 	nette:
