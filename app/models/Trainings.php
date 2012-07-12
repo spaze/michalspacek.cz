@@ -13,7 +13,7 @@ class Trainings extends BaseModel
 
 	public function getUpcoming()
 	{
-		return $this->database->fetchAll(
+		$result = $this->database->fetchAll(
 			'SELECT
 				t.action,
 				t.name,
@@ -25,12 +25,18 @@ class Trainings extends BaseModel
 				d.end > NOW()
 			ORDER BY t.id_training'
 		);
+
+		foreach ($result as &$row) {
+			$row['tentative'] = (boolean)$row['tentative'];
+		}
+
+		return $result;
 	}
 
 
 	public function get($name)
 	{
-		return $this->database->fetch(
+		$result = $this->database->fetch(
 			'SELECT
 				t.action,
 				d.id_date AS dateId,
@@ -60,6 +66,10 @@ class Trainings extends BaseModel
 			LIMIT 1',
 			$name
 		);
+
+		$result['tentative'] = (boolean)$result['tentative'];
+
+		return $result;
 	}
 
 

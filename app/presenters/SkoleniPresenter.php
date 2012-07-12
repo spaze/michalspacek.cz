@@ -69,7 +69,7 @@ class SkoleniPresenter extends BasePresenter
 		$trainings = $this->context->createTrainings();
 		$training = $trainings->get($name);
 
-		$this->tentative[$name] = (boolean)$training->tentative;
+		$this->tentative[$name] = $training->tentative;
 
 		$this->template->name             = $training->action;
 		$this->template->trainingId       = $training->dateId;
@@ -80,7 +80,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->audience         = $training->audience;
 		$this->template->start            = $training->start;
 		$this->template->end              = $training->end;
-		$this->template->tentative        = $this->tentative[$name];
+		$this->template->tentative        = $training->tentative;
 		$this->template->originalHref     = $training->originalHref;
 		$this->template->capacity         = $training->capacity;
 		$this->template->services         = $training->services;
