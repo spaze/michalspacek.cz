@@ -120,4 +120,26 @@ class Trainings extends BaseModel
 	}
 
 
+	public function getReviews($name, $limit = null)
+	{
+		$query = 'SELECT
+				r.name,
+				r.company,
+				r.review
+			FROM
+				training_reviews r
+				JOIN training_dates d ON r.key_date = d.id_date
+				JOIN trainings t ON t.id_training = d.key_training
+			WHERE
+				t.action = ?
+			ORDER BY r.added';
+
+		if ($limit !== null) {
+			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
+		}
+
+		return $this->database->fetchAll($query, $name);
+	}
+
+
 }

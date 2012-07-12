@@ -96,18 +96,7 @@ class SkoleniPresenter extends BasePresenter
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
-		$this->template->reviews = array(
-			array(
-				'name' => 'name1',
-				'company' => null,
-				'review' => 'foo **bar**',
-			),
-			array(
-				'name' => 'name2',
-				'company' => 'company',
-				'review' => 'waldo `:-)`',
-			),
-		);
+		$this->template->reviews = $trainings->getReviews($name);
 	}
 
 
