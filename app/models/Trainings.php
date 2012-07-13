@@ -21,9 +21,18 @@ class Trainings extends BaseModel
 				d.start
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
-			WHERE
-				d.end > NOW()
-			ORDER BY t.id_training'
+				JOIN (
+					SELECT
+						MIN(d.start) AS start
+					FROM
+						training_dates d
+					WHERE
+						d.end > NOW()
+					GROUP BY
+						d.key_training
+				) d2 ON d2.start = d.start
+			ORDER BY
+				t.id_training, d.start'
 		);
 
 		foreach ($result as &$row) {
@@ -63,6 +72,8 @@ class Trainings extends BaseModel
 				JOIN training_venues v ON d.key_venue = v.id_venue
 			WHERE t.action = ?
 				AND d.end > NOW()
+			ORDER BY
+				d.start
 			LIMIT 1',
 			$name
 		);
