@@ -10,6 +10,9 @@ namespace MichalSpacekCz;
 class Trainings extends BaseModel
 {
 
+	const STATUS_CREATED   = 'CREATED';
+	const STATUS_TENTATIVE = 'TENTATIVE';
+	const STATUS_SIGNED_UP = 'SIGNED_UP';
 
 	public function getUpcoming()
 	{
@@ -103,41 +106,57 @@ class Trainings extends BaseModel
 
 	public function addInvitation($trainingId, $name, $email, $note)
 	{
+		$statusId = $this->getStatusId(self::STATUS_CREATED);
 		$datetime = new \DateTime();
-		return $this->database->query(
-			'INSERT INTO training_invitations',
+
+		$this->database->beginTransaction();
+		$this->database->query(
+			'INSERT INTO training_applications',
 			array(
-				'key_training'     => $trainingId,
-				'name'             => $name,
-				'email'            => $email,
-				'note'             => $note,
-				'created'          => $datetime,
-				'created_timezone' => $datetime->getTimezone()->getName(),
+				'key_date'             => $trainingId,
+				'name'                 => $name,
+				'email'                => $email,
+				'note'                 => $note,
+				'key_status'           => $statusId,
+				'status_time'          => $datetime,
+				'status_time_timezone' => $datetime->getTimezone()->getName(),
 			)
 		);
+		$this->setStatus($this->database->lastInsertId(), self::STATUS_TENTATIVE);
+		$this->database->commit();
+
+		return true;
 	}
 
 
 	public function addApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
+		$statusId = $this->getStatusId(self::STATUS_CREATED);
 		$datetime = new \DateTime();
-		return $this->database->query(
+
+		$this->database->beginTransaction();
+		$this->database->query(
 			'INSERT INTO training_applications',
 			array(
-				'key_training'     => $trainingId,
-				'name'             => $name,
-				'email'            => $email,
-				'company'          => $company,
-				'street'           => $street,
-				'city'             => $city,
-				'zip'              => $zip,
-				'company_id'       => $companyId,
-				'company_tax_id'   => $companyTaxId,
-				'note'             => $note,
-				'created'          => $datetime,
-				'created_timezone' => $datetime->getTimezone()->getName(),
+				'key_date'             => $trainingId,
+				'name'                 => $name,
+				'email'                => $email,
+				'company'              => $company,
+				'street'               => $street,
+				'city'                 => $city,
+				'zip'                  => $zip,
+				'company_id'           => $companyId,
+				'company_tax_id'       => $companyTaxId,
+				'note'                 => $note,
+				'key_status'           => $statusId,
+				'status_time'          => $datetime,
+				'status_time_timezone' => $datetime->getTimezone()->getName(),
 			)
 		);
+		$this->setStatus($this->database->lastInsertId(), self::STATUS_SIGNED_UP);
+		$this->database->commit();
+
+		return true;
 	}
 
 
@@ -160,6 +179,51 @@ class Trainings extends BaseModel
 		}
 
 		return $this->database->fetchAll($query, $name);
+	}
+
+
+	private function setStatus($applicationId, $status)
+	{
+		$statusId = $this->getStatusId($status);
+
+		$prevStatus = $this->database->fetch(
+			'SELECT
+				key_status AS statusId,
+				status_time AS statusTime,
+				status_time_timezone AS statusTimeTimeZone
+			FROM
+				training_applications
+			WHERE
+				id_application = ?',
+			$applicationId
+		);
+
+		$datetime = new \DateTime();
+		$this->database->query(
+			'UPDATE training_applications SET ? WHERE id_application = ?',
+			array(
+				'key_status'           => $statusId,
+				'status_time'          => $datetime,
+				'status_time_timezone' => $datetime->getTimezone()->getName(),
+			),
+			$applicationId
+		);
+
+		return $this->database->query(
+			'INSERT INTO training_application_status_history',
+			array(
+				'key_application'      => $applicationId,
+				'key_status'           => $prevStatus->statusId,
+				'status_time'          => $prevStatus->statusTime,
+				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
+			)
+		);
+	}
+
+
+	private function getStatusId($status)
+	{
+		return $this->database->fetchColumn('SELECT id_status FROM training_application_status WHERE status = ?', $status);
 	}
 
 
