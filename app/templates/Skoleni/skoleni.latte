@@ -66,48 +66,48 @@
 
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {if $showForm}
-{form application}
-<fieldset id="chyby" n:if="$form->hasErrors()">
-	<legend><strong>Chyby</strong></legend>
-	<strong>Přihláška nebyla odeslána, předtím než se ji pokusíte odeslat znovu, opravte následující chyby:</strong>
-	<ul>
-		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
-	</ul>
-</fieldset>
-{input trainingId value => $trainingId}
-<fieldset id="ucastnik">
-	<legend>Účastník</legend>
-	<table>
-		<tr>
-			<th>{label name /}</th><td>{input name}</td>
-			<th>{label email /}</th><td>{input email}</td>
-		</tr>
-	</table>
-</fieldset>
-{if $tentative}
-{else}
-<fieldset>
-	<legend>Fakturační údaje</legend>
-	<table>
-		<tr>
-			<th>{label company /}</th><td>{input company}</td>
-			<th>{label street /}</th><td>{input street}</td>
-		</tr>
-		<tr>
-			<th>{label city /}</th><td>{input city}</td>
-			<th>{label zip /}</th><td>{input zip}</td>
-		</tr>
-		<tr>
-			<th>{label companyId /}</th><td>{input companyId}</td>
-			<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>
-		</tr>
-	</table>
-</fieldset>
-{/if}
+	{form application}
+	<fieldset id="chyby" n:if="$form->hasErrors()">
+		<legend><strong>Chyby</strong></legend>
+		<strong>Přihláška nebyla odeslána, předtím než se ji pokusíte odeslat znovu, opravte následující chyby:</strong>
+		<ul>
+			<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+		</ul>
+	</fieldset>
+	{input trainingId value => $trainingId}
+	<fieldset id="ucastnik">
+		<legend>Účastník</legend>
+		<table>
+			<tr>
+				<th>{label name /}</th><td>{input name}</td>
+				<th>{label email /}</th><td>{input email}</td>
+			</tr>
+		</table>
+	</fieldset>
+	{if $tentative}
+	{else}
+	<fieldset>
+		<legend>Fakturační údaje</legend>
+		<table>
+			<tr>
+				<th>{label company /}</th><td>{input company}</td>
+				<th>{label street /}</th><td>{input street}</td>
+			</tr>
+			<tr>
+				<th>{label city /}</th><td>{input city}</td>
+				<th>{label zip /}</th><td>{input zip}</td>
+			</tr>
+			<tr>
+				<th>{label companyId /}</th><td>{input companyId}</td>
+				<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>
+			</tr>
+		</table>
+	</fieldset>
+	{/if}
 
-<p><strong>{label note /}</strong>{input note}</p>
-<p>{input signUp}</p>
-{/form application}
+	<p><strong>{label note /}</strong>{input note}</p>
+	<p>{input signUp}</p>
+	{/form application}
 {else}
 	{form application}
 	<fieldset id="ucastnik">
