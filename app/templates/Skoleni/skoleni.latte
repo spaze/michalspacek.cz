@@ -65,6 +65,7 @@
 {/if}
 
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+{if $showForm}
 {form application}
 <fieldset id="chyby" n:if="$form->hasErrors()">
 	<legend><strong>Chyby</strong></legend>
@@ -107,6 +108,41 @@
 <p><strong>{label note /}</strong>{input note}</p>
 <p>{input signUp}</p>
 {/form application}
+{else}
+	{form application}
+	<fieldset id="ucastnik">
+		<legend>Účastník</legend>
+		<table>
+			<tr>
+				<th>{$form[name]->label}</th><td>{$form[name]->value}</td>
+				<th>{$form[email]->label}</th><td>{$form[email]->value}</td>
+			</tr>
+		</table>
+	</fieldset>
+	{if $tentative}
+	{else}
+	<fieldset>
+		<legend>Fakturační údaje</legend>
+		<table>
+			<tr>
+				<th>{$form[company]->label}</th><td>{$form[company]->value}</td>
+				<th>{$form[street]->label}</th><td>{$form[street]->value}</td>
+			</tr>
+			<tr>
+				<th>{$form[city]->label}</th><td>{$form[city]->value}</td>
+				<th>{$form[zip]->label}</th><td>{$form[zip]->value}</td>
+			</tr>
+			<tr>
+				<th>{$form[companyId]->label}</th><td>{$form[companyId]->value}</td>
+				<th>{$form[companyTaxId]->label}</th><td>{$form[companyTaxId]->value}</td>
+			</tr>
+		</table>
+	</fieldset>
+	{/if}
+	<p><strong>{$form[note]->label}</strong>{$form[note]->value}</p>
+	<p><a n:href="Skoleni:">Přihlašte se i na ostatní školení!</a></p>
+	{/form application}
+{/if}
 
 {if $tentative}
 <p>Zadané údaje budou použity pro zaslání pozvánky na příští termín.</a>

@@ -97,11 +97,28 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
 		$this->template->reviews = $trainings->getReviews($name);
+
+		// hide the form when all the flash message are not errors
+		$this->template->showForm = true;
+		foreach ($this->template->flashes as $flash) {
+			$this->template->showForm = false;
+			if ($flash->type == 'error') {
+				$this->template->showForm = true;
+				break;
+			}
+		}
+
+		// we want to access form fields' labels and values even when not actually showing the form
+		if (!$this->template->showForm) {
+			$this->template->form = $this->createComponentApplication('application');
+		}
 	}
 
 
 	protected function createComponentApplication($formName)
 	{
+		$session = $this->context->session->getSection('training');
+
 		$form = new Form($this, $formName);
 		$name = $form->parent->params['name'];
 		$form->setAction($form->getAction() . '#prihlaska');
@@ -109,10 +126,12 @@ class SkoleniPresenter extends BasePresenter
 		$form->addHidden('date');
 		$form->addGroup('Účastník');
 		$form->addText('name', 'Jméno a příjmení:')
+			->setDefaultValue($session->name)
 			->setRequired('Zadejte prosím jméno a příjmení')
 			->addRule(Form::MIN_LENGTH, 'Minimální délka jména a příjmení je %d znaky', 3)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka jména a příjmení je %d znaků', 100);
 		$form->addText('email', 'E-mail:')
+			->setDefaultValue($session->email)
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
 			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 100);
@@ -120,26 +139,32 @@ class SkoleniPresenter extends BasePresenter
 		if (!$this->tentative[$name]) {
 			$form->addGroup('Fakturační údaje');
 			$form->addText('company', 'Obchodní jméno:')
+				->setDefaultValue($session->company)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
 				->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 100);
 			$form->addText('street', 'Ulice a číslo:')
+				->setDefaultValue($session->street)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
 				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 100);
 			$form->addText('city', 'Město:')
+				->setDefaultValue($session->city)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka města je dva znaky', 2)
 				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 100);
 			$form->addText('zip', 'PSČ:')
+				->setDefaultValue($session->zip)
 				->addCondition(Form::FILLED)
 				->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
 				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 100);
 			$form->addText('companyId', 'IČ:')
+				->setDefaultValue($session->companyId)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 3)
 				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 100);
 			$form->addText('companyTaxId', 'DIČ:')
+				->setDefaultValue($session->companyTaxId)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 3)
 				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 100);
@@ -147,6 +172,7 @@ class SkoleniPresenter extends BasePresenter
 
 		$form->setCurrentGroup(null);
 		$form->addText('note', 'Poznámka:')
+			->setDefaultValue($session->note)
 			->addCondition(Form::FILLED)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 1000);
 		$form->addSubmit('signUp', $this->tentative[$name] ? 'Odeslat' : 'Registrovat se');
@@ -158,6 +184,8 @@ class SkoleniPresenter extends BasePresenter
 
 	public function submittedApplication($form)
 	{
+		$session = $this->context->session->getSection('training');
+
 		$values = $form->getValues();
 		$name   = $form->parent->params['name'];
 		try {
@@ -170,6 +198,9 @@ class SkoleniPresenter extends BasePresenter
 					$values['note']
 				);
 				$this->flashMessage('Díky, přihláška odeslána! Dám vám vědět, jakmile budu znát přesný termín.');
+				$session->name  = $values['name'];
+				$session->email = $values['email'];
+				$session->note  = $values['note'];
 			} else {
 				$this->context->createTrainings()->addApplication(
 					$values['trainingId'],
@@ -184,6 +215,15 @@ class SkoleniPresenter extends BasePresenter
 					$values['note']
 				);
 				$this->flashMessage('Díky, přihláška odeslána! Potvrzení společně s fakturou vám přijde do druhého pracovního dne.');
+				$session->name         = $values['name'];
+				$session->email        = $values['email'];
+				$session->company      = $values['company'];
+				$session->street       = $values['street'];
+				$session->city         = $values['city'];
+				$session->zip          = $values['zip'];
+				$session->companyId    = $values['companyId'];
+				$session->companyTaxId = $values['companyTaxId'];
+				$session->note         = $values['note'];
 			}
 			$this->redirect($this->getName() . ':' . $name);
 		} catch (PDOException $e) {
