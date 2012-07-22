@@ -62,9 +62,11 @@ img { border: 0; }
     width: 150px;
     padding: 5px 0px;
 }
-#frm-application th { text-align: right; }
+#frm-application th {
+    text-align: right;
+    padding-right: 5px;
+}
 #frm-application input { width: 170px; }
-#frm-application label { margin-right: 5px; }
 #frm-application #frmapplication-note { width: 400px; }
 #chyby ul { margin: 0px; }
 #chyby {
