@@ -115,6 +115,31 @@ class SkoleniPresenter extends BasePresenter
 	}
 
 
+	public function actionSkoleniPrefill($name, $token)
+	{
+		$trainings   = $this->context->createTrainings();
+		$application = $trainings->getApplicationByToken($token);
+
+		if (!$application) {
+			$this->redirect($this->getName() . ':' . $name);
+		}
+
+		$session = $this->context->session->getSection('training');
+
+		$session->name         = $application->name;
+		$session->email        = $application->email;
+		$session->company      = $application->company;
+		$session->street       = $application->street;
+		$session->city         = $application->city;
+		$session->zip          = $application->zip;
+		$session->companyId    = $application->companyId;
+		$session->companyTaxId = $application->companyTaxId;
+		$session->note         = $application->note;
+
+		$this->redirect($this->getName() . ':' . $application->action);
+	}
+
+
 	protected function createComponentApplication($formName)
 	{
 		$session = $this->context->session->getSection('training');

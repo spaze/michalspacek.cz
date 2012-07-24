@@ -245,4 +245,32 @@ class Trainings extends BaseModel
 	}
 
 
+	public function getApplicationByToken($token)
+	{
+		$result = $this->database->fetch(
+			'SELECT
+				t.action,
+				a.id_application AS applicationId,
+				a.name,
+				a.email,
+				a.company,
+				a.street,
+				a.city,
+				a.zip,
+				a.company_id AS companyId,
+				a.company_tax_id AS companyTaxId,
+				a.note
+			FROM
+				training_applications a
+				JOIN training_dates d ON a.key_date = d.id_date
+				JOIN trainings t ON d.key_training = t.id_training
+			WHERE
+				access_token = ?',
+			$token
+		);
+
+		return $result;
+	}
+
+
 }
