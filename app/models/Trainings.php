@@ -81,7 +81,9 @@ class Trainings extends BaseModel
 			$name
 		);
 
-		$result['tentative'] = (boolean)$result['tentative'];
+		if (isset($result['tentative'])) {
+			$result['tentative'] = (boolean)$result['tentative'];
+		}
 
 		return $result;
 	}
