@@ -104,25 +104,40 @@ class Trainings extends BaseModel
 	}
 
 
+	private function insertData($data)
+	{
+		$data['access_token'] = $this->generateAccessCode();
+		try {
+			$this->database->query('INSERT INTO training_applications', $data);
+			$this->setStatus($this->database->lastInsertId(), self::STATUS_TENTATIVE);
+		} catch (\PDOException $e) {
+			if ($e->getCode() == '23000') {
+				// regenerate the access code and try harder this time
+				return $this->insertData($data);
+			} else {
+				throw $e;
+			}
+		}
+		return $data['access_token'];
+	}
+
+
 	public function addInvitation($trainingId, $name, $email, $note)
 	{
 		$statusId = $this->getStatusId(self::STATUS_CREATED);
 		$datetime = new \DateTime();
 
 		$this->database->beginTransaction();
-		$this->database->query(
-			'INSERT INTO training_applications',
-			array(
-				'key_date'             => $trainingId,
-				'name'                 => $name,
-				'email'                => $email,
-				'note'                 => $note,
-				'key_status'           => $statusId,
-				'status_time'          => $datetime,
-				'status_time_timezone' => $datetime->getTimezone()->getName(),
-			)
+		$data = array(
+			'key_date'             => $trainingId,
+			'name'                 => $name,
+			'email'                => $email,
+			'note'                 => $note,
+			'key_status'           => $statusId,
+			'status_time'          => $datetime,
+			'status_time_timezone' => $datetime->getTimezone()->getName(),
 		);
-		$this->setStatus($this->database->lastInsertId(), self::STATUS_TENTATIVE);
+		$code = $this->insertData($data);
 		$this->database->commit();
 
 		return true;
@@ -135,25 +150,22 @@ class Trainings extends BaseModel
 		$datetime = new \DateTime();
 
 		$this->database->beginTransaction();
-		$this->database->query(
-			'INSERT INTO training_applications',
-			array(
-				'key_date'             => $trainingId,
-				'name'                 => $name,
-				'email'                => $email,
-				'company'              => $company,
-				'street'               => $street,
-				'city'                 => $city,
-				'zip'                  => $zip,
-				'company_id'           => $companyId,
-				'company_tax_id'       => $companyTaxId,
-				'note'                 => $note,
-				'key_status'           => $statusId,
-				'status_time'          => $datetime,
-				'status_time_timezone' => $datetime->getTimezone()->getName(),
-			)
+		$data = array(
+			'key_date'             => $trainingId,
+			'name'                 => $name,
+			'email'                => $email,
+			'company'              => $company,
+			'street'               => $street,
+			'city'                 => $city,
+			'zip'                  => $zip,
+			'company_id'           => $companyId,
+			'company_tax_id'       => $companyTaxId,
+			'note'                 => $note,
+			'key_status'           => $statusId,
+			'status_time'          => $datetime,
+			'status_time_timezone' => $datetime->getTimezone()->getName(),
 		);
-		$this->setStatus($this->database->lastInsertId(), self::STATUS_SIGNED_UP);
+		$code = $this->insertData($data);
 		$this->database->commit();
 
 		return true;
@@ -179,6 +191,12 @@ class Trainings extends BaseModel
 		}
 
 		return $this->database->fetchAll($query, $name);
+	}
+
+
+	private function generateAccessCode()
+	{
+		return \Nette\Utils\Strings::random();
 	}
 
 
