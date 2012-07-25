@@ -69,6 +69,10 @@ class SkoleniPresenter extends BasePresenter
 		$trainings = $this->context->createTrainings();
 		$training = $trainings->get($name);
 
+		if (!$training) {
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		}
+
 		$this->tentative[$name] = $training->tentative;
 
 		$this->template->name             = $training->action;
@@ -117,9 +121,13 @@ class SkoleniPresenter extends BasePresenter
 
 	public function actionSkoleniPrefill($name, $token)
 	{
-		$trainings   = $this->context->createTrainings();
-		$application = $trainings->getApplicationByToken($token);
+		$trainings = $this->context->createTrainings();
+		$training  = $trainings->get($name);
+		if (!$training) {
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		}
 
+		$application = $trainings->getApplicationByToken($token);
 		if (!$application) {
 			$this->redirect($this->getName() . ':' . $name);
 		}
