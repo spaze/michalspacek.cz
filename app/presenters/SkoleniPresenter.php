@@ -156,7 +156,6 @@ class SkoleniPresenter extends BasePresenter
 		$name = $form->parent->params['name'];
 		$form->setAction($form->getAction() . '#prihlaska');
 		$form->addHidden('trainingId');
-		$form->addHidden('date');
 		$form->addGroup('Účastník');
 		$form->addText('name', 'Jméno a příjmení:')
 			->setDefaultValue($session->name)
