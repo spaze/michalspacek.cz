@@ -174,6 +174,30 @@ class Trainings extends BaseModel
 	}
 
 
+	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	{
+		$this->database->beginTransaction();
+		$this->database->query(
+			'UPDATE training_applications SET ? WHERE id_application = ?',
+			array(
+				'name'           => $name,
+				'email'          => $email,
+				'company'        => $company,
+				'street'         => $street,
+				'city'           => $city,
+				'zip'            => $zip,
+				'company_id'     => $companyId,
+				'company_tax_id' => $companyTaxId,
+				'note'           => $note,
+			),
+			$applicationId
+		);
+		$this->setStatus($applicationId, self::STATUS_SIGNED_UP);
+		$this->database->commit();
+		return true;
+	}
+
+
 	public function getReviews($name, $limit = null)
 	{
 		$query = 'SELECT
@@ -252,6 +276,7 @@ class Trainings extends BaseModel
 		$result = $this->database->fetch(
 			'SELECT
 				t.action,
+				d.id_date AS dateId,
 				a.id_application AS applicationId,
 				a.name,
 				a.email,

@@ -134,6 +134,10 @@ class SkoleniPresenter extends BasePresenter
 
 		$session = $this->context->session->getSection('training');
 
+		$data                 = (array)$session->application;
+		$data[$name]          = array('id' => $application->applicationId, 'dateId' => $application->dateId);
+		$session->application = $data;
+
 		$session->name         = $application->name;
 		$session->email        = $application->email;
 		$session->company      = $application->company;
@@ -155,7 +159,7 @@ class SkoleniPresenter extends BasePresenter
 		$form = new Form($this, $formName);
 		$name = $form->parent->params['name'];
 		$form->setAction($form->getAction() . '#prihlaska');
-		$form->addHidden('trainingId');
+		$form->addHidden('trainingId');  // trainingId is actually dateId, oh well
 		$form->addGroup('Účastník');
 		$form->addText('name', 'Jméno a příjmení:')
 			->setDefaultValue($session->name)
@@ -234,18 +238,34 @@ class SkoleniPresenter extends BasePresenter
 				$session->email = $values['email'];
 				$session->note  = $values['note'];
 			} else {
-				$this->context->createTrainings()->addApplication(
-					$values['trainingId'],
-					$values['name'],
-					$values['email'],
-					$values['company'],
-					$values['street'],
-					$values['city'],
-					$values['zip'],
-					$values['companyId'],
-					$values['companyTaxId'],
-					$values['note']
-				);
+				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values['trainingId']) {
+					$this->context->createTrainings()->updateApplication(
+						$session->application[$name]['id'],
+						$values['name'],
+						$values['email'],
+						$values['company'],
+						$values['street'],
+						$values['city'],
+						$values['zip'],
+						$values['companyId'],
+						$values['companyTaxId'],
+						$values['note']
+					);
+					unset($session->applicationId[$name]);
+				} else {
+					$this->context->createTrainings()->addApplication(
+						$values['trainingId'],
+						$values['name'],
+						$values['email'],
+						$values['company'],
+						$values['street'],
+						$values['city'],
+						$values['zip'],
+						$values['companyId'],
+						$values['companyTaxId'],
+						$values['note']
+					);
+				}
 				$this->flashMessage('Díky, přihláška odeslána! Potvrzení společně s fakturou vám přijde do druhého pracovního dne.');
 				$session->name         = $values['name'];
 				$session->email        = $values['email'];
