@@ -117,6 +117,7 @@ class Trainings extends BaseModel
 			if ($e->getCode() == '23000') {
 				if ($e->errorInfo[1] == '1062') {  // Integrity constraint violation: 1062 Duplicate entry '...' for key 'access_code_UNIQUE'
 					// regenerate the access code and try harder this time
+					\Nette\Diagnostics\Debugger::log("Regenerating access token, {$data['access_token']} already exists. Full data: ", implode(', ', $data));
 					return $this->insertData($data);
 				}
 			}
