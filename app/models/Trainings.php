@@ -16,8 +16,8 @@ class Trainings extends BaseModel
 
 	public function getUpcoming()
 	{
-		$result = $this->database->fetchAll(
-			'SELECT
+		$query = 'SELECT
+				d.id_date AS dateId,
 				t.action,
 				t.name,
 				d.tentative,
@@ -35,11 +35,12 @@ class Trainings extends BaseModel
 						d.key_training
 				) d2 ON d2.start = d.start
 			ORDER BY
-				t.id_training, d.start'
-		);
+				t.id_training, d.start';
 
-		foreach ($result as &$row) {
-			$row['tentative'] = (boolean)$row['tentative'];
+		$result = array();
+		foreach ($this->database->fetchAll($query) as $row) {
+			$row['tentative']       = (boolean)$row['tentative'];
+			$result[$row['dateId']] = $row;
 		}
 
 		return $result;
@@ -114,11 +115,12 @@ class Trainings extends BaseModel
 			$this->setStatus($this->database->lastInsertId(), self::STATUS_TENTATIVE);
 		} catch (\PDOException $e) {
 			if ($e->getCode() == '23000') {
-				// regenerate the access code and try harder this time
-				return $this->insertData($data);
-			} else {
-				throw $e;
+				if ($e->errorInfo[1] == '1062') {  // Integrity constraint violation: 1062 Duplicate entry '...' for key 'access_code_UNIQUE'
+					// regenerate the access code and try harder this time
+					return $this->insertData($data);
+				}
 			}
+			throw $e;
 		}
 		return $data['access_token'];
 	}

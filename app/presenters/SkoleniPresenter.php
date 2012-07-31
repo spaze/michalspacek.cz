@@ -224,6 +224,29 @@ class SkoleniPresenter extends BasePresenter
 
 		$values = $form->getValues();
 		$name   = $form->parent->params['name'];
+
+		$upcoming = $this->context->createTrainings()->getUpcoming();
+		if (!isset($upcoming[$values['trainingId']])) {
+			$logValues = $logSession = array();
+			if (isset($session->application[$name])) {
+				foreach ($session->application[$name] as $key => $value) {
+					$logSession[] = "{$key} => \"{$value}\"";
+				}
+			}
+			foreach ($values as $key => $value) {
+				$logValues[] = "{$key} => \"{$value}\"";
+			}
+			Debugger::log(sprintf('Training date id %s is not an upcoming training, should be one of %s (application session data for %s: %s, form values: %s)',
+				$values['trainingId'],
+				implode(', ', array_keys($upcoming)),
+				$name,
+				(empty($logSession) ? 'empty' : implode(', ', $logSession)),
+				implode(', ', $logValues)
+			));
+			$this->flashMessage('Je mi líto, ale v zadané datum se žádné školení nekoná. Pokud to chcete změnit, napište mi!', 'error');
+			return;
+		}
+
 		try {
 			$datetime = new DateTime();
 			if ($this->tentative[$name]) {
