@@ -279,7 +279,7 @@ class SkoleniPresenter extends BasePresenter
 			}
 			$this->redirect($this->getName() . ':' . $name);
 		} catch (PDOException $e) {
- 			Debugger::log($e, Debugger::ERROR);
+			Debugger::log($e, Debugger::ERROR);
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
 		}
 	}
