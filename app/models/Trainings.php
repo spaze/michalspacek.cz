@@ -204,12 +204,13 @@ class Trainings extends BaseModel
 	public function getReviews($name, $limit = null)
 	{
 		$query = 'SELECT
-				r.name,
-				r.company,
+				COALESCE(r.name, a.name) AS name,
+				COALESCE(r.company, a.company) AS company,
 				r.review
 			FROM
 				training_reviews r
-				JOIN training_dates d ON r.key_date = d.id_date
+				LEFT JOIN training_applications a ON r.key_application = a.id_application
+				JOIN training_dates d ON COALESCE(r.key_date, a.key_date) = d.id_date
 				JOIN trainings t ON t.id_training = d.key_training
 			WHERE
 				t.action = ?
