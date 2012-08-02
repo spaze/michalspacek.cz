@@ -206,7 +206,8 @@ class Trainings extends BaseModel
 		$query = 'SELECT
 				COALESCE(r.name, a.name) AS name,
 				COALESCE(r.company, a.company) AS company,
-				r.review
+				r.review,
+				r.href
 			FROM
 				training_reviews r
 				LEFT JOIN training_applications a ON r.key_application = a.id_application
