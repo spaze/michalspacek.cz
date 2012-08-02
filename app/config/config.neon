@@ -21,9 +21,7 @@ common:
 			expiration: 14 days
 
 	services:
-		database: @Nette\Database\Connection
-
-	factories:
+		database:  @Nette\Database\Connection
 		articles:  \MichalSpacekCz\Articles
 		talks:     \MichalSpacekCz\Talks
 		trainings: \MichalSpacekCz\Trainings

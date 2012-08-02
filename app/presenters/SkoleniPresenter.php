@@ -60,13 +60,13 @@ class SkoleniPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Školení';
 
-		$this->template->upcomingTrainings = $this->context->createTrainings()->getUpcoming();
+		$this->template->upcomingTrainings = $this->getService('trainings')->getUpcoming();
 	}
 
 
 	public function actionSkoleni($name)
 	{
-		$trainings = $this->context->createTrainings();
+		$trainings = $this->getService('trainings');
 		$training = $trainings->get($name);
 
 		if (!$training) {
@@ -121,7 +121,7 @@ class SkoleniPresenter extends BasePresenter
 
 	public function actionPrefillApplication($name, $token)
 	{
-		$trainings = $this->context->createTrainings();
+		$trainings = $this->getService('trainings');
 		$training  = $trainings->get($name);
 		if (!$training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
@@ -225,7 +225,7 @@ class SkoleniPresenter extends BasePresenter
 		$values = $form->getValues();
 		$name   = $form->parent->params['name'];
 
-		$upcoming = $this->context->createTrainings()->getUpcoming();
+		$upcoming = $this->getService('trainings')->getUpcoming();
 		if (!isset($upcoming[$values['trainingId']])) {
 			$logValues = $logSession = array();
 			if (isset($session->application[$name])) {
@@ -250,7 +250,7 @@ class SkoleniPresenter extends BasePresenter
 		try {
 			$datetime = new DateTime();
 			if ($this->tentative[$name]) {
-				$this->context->createTrainings()->addInvitation(
+				$this->getService('trainings')->addInvitation(
 					$values['trainingId'],
 					$values['name'],
 					$values['email'],
@@ -262,7 +262,7 @@ class SkoleniPresenter extends BasePresenter
 				$session->note  = $values['note'];
 			} else {
 				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values['trainingId']) {
-					$this->context->createTrainings()->updateApplication(
+					$this->getService('trainings')->updateApplication(
 						$session->application[$name]['id'],
 						$values['name'],
 						$values['email'],
@@ -276,7 +276,7 @@ class SkoleniPresenter extends BasePresenter
 					);
 					unset($session->applicationId[$name]);
 				} else {
-					$this->context->createTrainings()->addApplication(
+					$this->getService('trainings')->addApplication(
 						$values['trainingId'],
 						$values['name'],
 						$values['email'],
