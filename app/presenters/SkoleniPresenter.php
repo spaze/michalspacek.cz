@@ -119,7 +119,7 @@ class SkoleniPresenter extends BasePresenter
 	}
 
 
-	public function actionPrefillApplication($name, $token)
+	public function actionPrihlaska($name, $param)
 	{
 		$trainings = $this->getService('trainings');
 		$training  = $trainings->get($name);
@@ -127,7 +127,7 @@ class SkoleniPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$application = $trainings->getApplicationByToken($token);
+		$application = $trainings->getApplicationByToken($param);
 		if (!$application) {
 			$this->redirect($this->getName() . ':' . $name);
 		}
