@@ -215,7 +215,7 @@ class Trainings extends BaseModel
 				JOIN trainings t ON t.id_training = d.key_training
 			WHERE
 				t.action = ?
-			ORDER BY r.added';
+			ORDER BY r.added DESC';
 
 		if ($limit !== null) {
 			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
