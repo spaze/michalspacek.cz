@@ -132,7 +132,7 @@ class SkoleniPresenter extends BasePresenter
 			$this->redirect($this->getName() . ':' . $name);
 		}
 
-		$session = $this->context->session->getSection('training');
+		$session = $this->getSession('training');
 
 		$data                 = (array)$session->application;
 		$data[$name]          = array('id' => $application->applicationId, 'dateId' => $application->dateId);
@@ -154,7 +154,7 @@ class SkoleniPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$session = $this->context->session->getSection('training');
+		$session = $this->getSession('training');
 
 		$form = new Form($this, $formName);
 		$name = $form->parent->params['name'];
@@ -220,7 +220,7 @@ class SkoleniPresenter extends BasePresenter
 
 	public function submittedApplication($form)
 	{
-		$session = $this->context->session->getSection('training');
+		$session = $this->getSession('training');
 
 		$values = $form->getValues();
 		$name   = $form->parent->params['name'];
