@@ -119,7 +119,7 @@ class SkoleniPresenter extends BasePresenter
 	}
 
 
-	public function actionSkoleniPrefill($name, $token)
+	public function actionPrefillApplication($name, $token)
 	{
 		$trainings = $this->context->createTrainings();
 		$training  = $trainings->get($name);
