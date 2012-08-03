@@ -35,7 +35,7 @@ $container = $configurator->createContainer();
 
 // Setup router
 Route::addStyle('name', 'action');  // let the name param be converted like the action param (foo-bar => fooBar)
-$container->router[] = new Route('skoleni/<name>[/<action>/<param>]', 'Skoleni:skoleni');
+$container->router[] = new Route('skoleni/<name>[/<action>[/<param>]]', 'Skoleni:skoleni');
 $container->router[] = new Route('<presenter>[/<action>]', 'Homepage:default');
 
 $httpResponse = $container->httpResponse;

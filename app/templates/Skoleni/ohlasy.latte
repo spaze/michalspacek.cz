@@ -1,0 +1,17 @@
+{define #content}
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Skoleni:">Školení</a>
+&raquo; <a n:href="Skoleni:{$name}">{$title}</a>
+{/define}
+
+<p>{!$description|texy} <small>(<a n:href="Skoleni:{$name}#prihlaska">přihláška</a>)</small></p>
+{if $reviews}
+	<h2 id="ohlasy">Ohlasy na školení</h2>
+	{foreach $reviews as $review}
+		<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
+		<blockquote><p>{!$review->review|texy} <a n:if="$review->href" href="{$review->href}">→</a></p></blockquote>
+	{/foreach}
+	<p>Přidejte se k těmto účastníkům a <a n:href="Skoleni:{$name}#prihlaska">přihlašte se</a> na školení <a n:href="Skoleni:{$name}">{$title}</a>!</p>.
+{/if}
+{/define}

@@ -56,6 +56,7 @@
 	<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
 	<blockquote><p>{!$review->review|texy} <a n:if="$review->href" href="{$review->href}">→</a></p></blockquote>
 {/foreach}
+<a n:href="Skoleni:ohlasy $name">Všechny ohlasy</a>
 <hr />
 {/if}
 

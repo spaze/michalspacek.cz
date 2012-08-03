@@ -100,7 +100,7 @@ class SkoleniPresenter extends BasePresenter
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
-		$this->template->reviews = $trainings->getReviews($name);
+		$this->template->reviews = $trainings->getReviews($name, 3);
 
 		// hide the form when all the flash message are not errors
 		$this->template->showForm = true;
@@ -305,6 +305,26 @@ class SkoleniPresenter extends BasePresenter
 			Debugger::log($e, Debugger::ERROR);
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
 		}
+	}
+
+
+	public function actionOhlasy($name, $param)
+	{
+		if ($param !== null) {
+			throw new \Nette\Application\BadRequestException('No param here, please', \Nette\Http\Response::S404_NOT_FOUND);
+		}
+
+		$trainings = $this->getService('trainings');
+		$training = $trainings->get($name);
+		if (!$training) {
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		}
+
+		$this->template->name             = $training->action;
+		$this->template->pageTitle        = 'Ohlasy na školení ' . $training->name;
+		$this->template->title            = $training->name;
+		$this->template->description      = $training->description;
+		$this->template->reviews = $trainings->getReviews($name);
 	}
 
 
