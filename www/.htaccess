@@ -4,6 +4,7 @@ RewriteEngine On
 RewriteRule ^i/.+ - [L]
 RewriteRule ^favicon.ico$ - [L]
 RewriteRule ^robots.txt$ - [L]
+RewriteRule ^thisShouldNotExist$ - [L]
 # RewriteRule ^donut_track_me.html$ - [L]
 
 # phpinfo() easter egg
