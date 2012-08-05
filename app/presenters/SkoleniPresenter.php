@@ -66,6 +66,9 @@ class SkoleniPresenter extends BasePresenter
 
 	public function actionSkoleni($name)
 	{
+		$session = $this->getSession();
+		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
+
 		$trainings = $this->getService('trainings');
 		$training = $trainings->get($name);
 
