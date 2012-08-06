@@ -20,6 +20,7 @@ legend {
 h1, h2, h1 a, h2 a {
     text-decoration: none;
     color: #337;
+    text-shadow: 1px 1px 2px rgba(51, 51, 119, 0.2);
 }
 h2, p { text-align: left; }
 ul {
