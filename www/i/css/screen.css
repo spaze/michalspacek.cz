@@ -51,7 +51,7 @@ img { border: 0; }
 }
 #header img {
     float: left;
-    border-right: 1px solid #EEE;
+    border-right: 1px solid #CCC;
     padding-right: 20px;
 }
 #header h1 {
@@ -64,6 +64,15 @@ img { border: 0; }
     background-color: #FFF;
     padding: 0.5em 0px;
 }
+#footer {
+    border-top: 1px solid #CCC;
+    color: #777;
+    font-size: 0.8em;
+    padding: 1em 0px;
+}
+#footer a { color: #555; }
+#footer-name { float: left; }
+#footer-links { float: right; }
 .icon {
     background: url('/i/images/icons.png') no-repeat top left;
     display: inline-block;
@@ -89,6 +98,7 @@ img { border: 0; }
 }
 .left { text-align: left; }
 .center { text-align: center; }
+.clear { clear: both; }
 #frm-application table { border-spacing: 0px; }
 #frm-application th, #frm-application td {
     width: 150px;
