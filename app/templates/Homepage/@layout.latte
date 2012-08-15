@@ -1,11 +1,11 @@
 {layout "../@layout.latte"}
-{define #body}
-    <div id="container">
+{block #body}
+    <div class="container">
     <div id="header">
     <a n:href="Homepage:"><img src="{$basePath}/i/images/michal-spacek.jpg" width="50" height="50" alt="Michal Špaček" /></a>
     <h1>Michal Špaček</h1>
     </div>
-    <p>Umím vyvíjet webové aplikace a zajímá mě jejich bezpečnost. Nebojím se o tom mluvit veřejně, čímž se občas dostávám do nesnází. Hledám hranice tak, že je posouvám.</p>
+    <p id="tagline">Umím vyvíjet webové aplikace a zajímá mě jejich bezpečnost. Nebojím se o tom mluvit veřejně, čímž se občas dostávám do nesnází. Hledám hranice tak, že je posouvám.</p>
     <hr />
     <div class="center">
     <a href="http://www.linkedin.com/in/spaze">LinkedIn</a>
@@ -15,6 +15,5 @@
     </div>
     <hr />
     {include #content}
-    <hr />
     </div>
-{/define}
+{/block}

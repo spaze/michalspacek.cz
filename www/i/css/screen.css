@@ -1,13 +1,16 @@
 body {
     font: 1em/1.5 Arial, sans-serif;
     color: #222;
-    background-color: #FFF;
+    background-color: #EEE;
+    margin: 0px;
 }
 hr {
     color: #EEE;
     background-color: #EEE;
     height: 2px;
     border: 0px;
+    clear: both;
+    margin: 0px;
 }
 fieldset {
     margin: 1em 0;
@@ -18,9 +21,19 @@ legend {
     background-color: #EEE;
 }
 h1, h2, h1 a, h2 a {
+    padding: 0px;
+    margin: 0px;
     text-decoration: none;
     color: #337;
     text-shadow: 1px 1px 2px rgba(51, 51, 119, 0.2);
+}
+h1 {
+    font-size: 1.9em;
+    margin: 20px 0px;
+}
+h2 {
+    font-size: 1.5em;
+    margin: 20px 0px;
 }
 h2, p { text-align: left; }
 ul {
@@ -28,12 +41,29 @@ ul {
     padding: 0px 1em;
 }
 img { border: 0; }
-#container {
+.container {
     max-width: 800px;
-    margin: 2em auto;
+    margin: 0px auto;
 }
-#header { text-align: center; padding-right: 50px;}
-#header img { float: left; }
+#header {
+    text-align: left;
+    padding: 1em 0px;
+}
+#header img {
+    float: left;
+    border-right: 1px solid #EEE;
+    padding-right: 20px;
+}
+#header h1 {
+    padding-left: 90px;
+    line-height: 50px;
+    margin: 0px;
+}
+#tagline { margin-top: 0px; }
+#main {
+    background-color: #FFF;
+    padding: 0.5em 0px;
+}
 .icon {
     background: url('/i/images/icons.png') no-repeat top left;
     display: inline-block;
@@ -55,6 +85,7 @@ img { border: 0; }
 #menu {
     font-size: 85%;
     text-align: left;
+    padding: 10px 0px;
 }
 .left { text-align: left; }
 .center { text-align: center; }

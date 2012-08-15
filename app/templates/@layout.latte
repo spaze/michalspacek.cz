@@ -30,8 +30,9 @@
     </script>
 </head>
 <body>
+<div id="main">
 {block #body}
-    <div id="container">
+    <div class="container">
     <div id="header">
     <a n:href="Homepage:"><img src="{$basePath}/i/images/michal-spacek.jpg" width="50" height="50" alt="Michal Špaček" /></a>
     <h1>{$pageTitle}</h1>
@@ -39,8 +40,8 @@
     <hr />
     {ifset #menu}<div id="menu">{include #menu}</div><hr />{/ifset}
     {include #content}
-    <hr />
     </div>
 {/block}
+</div>
 </body>
 </html>
