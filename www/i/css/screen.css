@@ -91,6 +91,10 @@ img { border: 0; }
 #elephpant { background-position: 0px -18px; }
 .slides { background-position: 0px 0px; }
 .video { background-position: -16px 0px; }
+#linkedin { background-position: -32px 0px; }
+#twitter { background-position: -32px -16px; }
+#facebook { background-position: -48px 0px; }
+#email { background-position: -48px -16px; }
 #menu {
     font-size: 85%;
     text-align: left;
