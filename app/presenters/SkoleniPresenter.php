@@ -130,12 +130,24 @@ class SkoleniPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
+		$session = $this->getSession('training');
+
 		$application = $trainings->getApplicationByToken($param);
 		if (!$application) {
+			unset(
+				$session->application,
+				$session->name,
+				$session->email,
+				$session->company,
+				$session->street,
+				$session->city,
+				$session->zip,
+				$session->companyId,
+				$session->companyTaxId,
+				$session->note
+			);
 			$this->redirect($this->getName() . ':' . $name);
 		}
-
-		$session = $this->getSession('training');
 
 		$data                 = (array)$session->application;
 		$data[$name]          = array('id' => $application->applicationId, 'dateId' => $application->dateId);
