@@ -277,7 +277,7 @@ class SkoleniPresenter extends BasePresenter
 						$values['companyTaxId'],
 						$values['note']
 					);
-					unset($session->applicationId[$name]);
+					$session->application[$name] = null;
 				} else {
 					$this->getService('trainings')->addApplication(
 						$values['trainingId'],
