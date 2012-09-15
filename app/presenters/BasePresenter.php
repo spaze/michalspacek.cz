@@ -8,6 +8,57 @@
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
+	/**
+	 * @var \MichalSpacekCz\Articles
+	 */
+	protected $articles;
+
+	/**
+	 * @var \MichalSpacekCz\Talks
+	 */
+	protected $talks;
+
+	/**
+	 * @var \MichalSpacekCz\Trainings
+	 */
+	protected $trainings;
+
+
+	/**
+	 * @param \MichalSpacekCz\Articles
+	 */
+	public function injectArticles(\MichalSpacekCz\Articles $articles)
+	{
+		if ($this->articles) {
+			throw new Nette\InvalidStateException('Articles has already been set');
+		}
+		$this->articles = $articles;
+	}
+
+
+	/**
+	 * @param \MichalSpacekCz\Talks
+	 */
+	public function injectTalks(\MichalSpacekCz\Talks $talks)
+	{
+		if ($this->talks) {
+			throw new Nette\InvalidStateException('Talks has already been set');
+		}
+		$this->talks = $talks;
+	}
+
+
+	/**
+	 * @param \MichalSpacekCz\Trainings
+	 */
+	public function injectTrainings(\MichalSpacekCz\Trainings $trainings)
+	{
+		if ($this->trainings) {
+			throw new Nette\InvalidStateException('Trainings has already been set');
+		}
+		$this->trainings = $trainings;
+	}
+
 
 	public function beforeRender()
 	{

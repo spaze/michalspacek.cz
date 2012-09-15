@@ -60,7 +60,7 @@ class SkoleniPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Školení';
 
-		$this->template->upcomingTrainings = $this->getService('trainings')->getUpcoming();
+		$this->template->upcomingTrainings = $this->trainings->getUpcoming();
 	}
 
 
@@ -69,8 +69,7 @@ class SkoleniPresenter extends BasePresenter
 		$session = $this->getSession();
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
-		$trainings = $this->getService('trainings');
-		$training = $trainings->get($name);
+		$training = $this->trainings->get($name);
 
 		if (!$training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
@@ -99,11 +98,11 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->venueAddress     = $training->venueAddress;
 		$this->template->venueDescription = $training->venueDescription;
 
-		$this->template->pastTrainingsMe = $trainings->getPastTrainings($name);
+		$this->template->pastTrainingsMe = $this->trainings->getPastTrainings($name);
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
-		$this->template->reviews = $trainings->getReviews($name, 3);
+		$this->template->reviews = $this->trainings->getReviews($name, 3);
 
 		// hide the form when all the flash message are not errors
 		$this->template->showForm = true;
@@ -124,15 +123,14 @@ class SkoleniPresenter extends BasePresenter
 
 	public function actionPrihlaska($name, $param)
 	{
-		$trainings = $this->getService('trainings');
-		$training  = $trainings->get($name);
+		$training  = $this->trainings->get($name);
 		if (!$training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$session = $this->getSession('training');
 
-		$application = $trainings->getApplicationByToken($param);
+		$application = $this->trainings->getApplicationByToken($param);
 		if (!$application) {
 			unset(
 				$session->application,
@@ -240,7 +238,7 @@ class SkoleniPresenter extends BasePresenter
 		$values = $form->getValues();
 		$name   = $form->parent->params['name'];
 
-		$upcoming = $this->getService('trainings')->getUpcoming();
+		$upcoming = $this->trainings->getUpcoming();
 		if (!isset($upcoming[$values['trainingId']])) {
 			$logValues = $logSession = array();
 			if (isset($session->application[$name])) {
@@ -265,7 +263,7 @@ class SkoleniPresenter extends BasePresenter
 		try {
 			$datetime = new DateTime();
 			if ($this->tentative[$name]) {
-				$this->getService('trainings')->addInvitation(
+				$this->trainings->addInvitation(
 					$values['trainingId'],
 					$values['name'],
 					$values['email'],
@@ -277,7 +275,7 @@ class SkoleniPresenter extends BasePresenter
 				$session->note  = $values['note'];
 			} else {
 				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values['trainingId']) {
-					$this->getService('trainings')->updateApplication(
+					$this->trainings->updateApplication(
 						$session->application[$name]['id'],
 						$values['name'],
 						$values['email'],
@@ -291,7 +289,7 @@ class SkoleniPresenter extends BasePresenter
 					);
 					$session->application[$name] = null;
 				} else {
-					$this->getService('trainings')->addApplication(
+					$this->trainings->addApplication(
 						$values['trainingId'],
 						$values['name'],
 						$values['email'],
@@ -329,8 +327,7 @@ class SkoleniPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException('No param here, please', \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$trainings = $this->getService('trainings');
-		$training = $trainings->get($name);
+		$training = $this->trainings->get($name);
 		if (!$training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
@@ -339,7 +336,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->pageTitle        = 'Ohlasy na školení ' . $training->name;
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
-		$this->template->reviews = $trainings->getReviews($name);
+		$this->template->reviews = $this->trainings->getReviews($name);
 	}
 
 

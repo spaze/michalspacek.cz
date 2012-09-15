@@ -12,7 +12,7 @@ class ClankyPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Články';
-		$this->template->articles  = $this->getService('articles')->getAll();
+		$this->template->articles  = $this->articles->getAll();
 	}
 
 
