@@ -24,16 +24,13 @@ class Trainings extends BaseModel
 				d.start
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
-				JOIN (
-					SELECT
-						MIN(d.start) AS start
-					FROM
-						training_dates d
-					WHERE
-						d.end > NOW()
-					GROUP BY
-						d.key_training
-				) d2 ON d2.start = d.start
+			WHERE d.start = (
+				SELECT MIN(d2.start)
+				FROM training_dates d2
+				WHERE d2.end > NOW()
+					AND d.key_training = d2.key_training
+				GROUP BY d2.key_training
+			)
 			ORDER BY
 				t.id_training, d.start';
 
