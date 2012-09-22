@@ -109,7 +109,6 @@ class Trainings extends BaseModel
 		$data['access_token'] = $this->generateAccessCode();
 		try {
 			$this->database->query('INSERT INTO training_applications', $data);
-			$this->setStatus($this->database->lastInsertId(), self::STATUS_TENTATIVE);
 		} catch (\PDOException $e) {
 			if ($e->getCode() == '23000') {
 				if ($e->errorInfo[1] == '1062') {  // Integrity constraint violation: 1062 Duplicate entry '...' for key 'access_code_UNIQUE'
@@ -140,6 +139,7 @@ class Trainings extends BaseModel
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 		);
 		$code = $this->insertData($data);
+		$this->setStatus($this->database->lastInsertId(), self::STATUS_TENTATIVE);
 		$this->database->commit();
 
 		return true;
@@ -168,6 +168,7 @@ class Trainings extends BaseModel
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 		);
 		$code = $this->insertData($data);
+		$this->setStatus($this->database->lastInsertId(), self::STATUS_SIGNED_UP);
 		$this->database->commit();
 
 		return true;
