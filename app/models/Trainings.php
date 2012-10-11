@@ -16,27 +16,30 @@ class Trainings extends BaseModel
 
 	public function getUpcoming()
 	{
-		$query = 'SELECT
+		$query = "SELECT
 				d.id_date AS dateId,
 				t.action,
 				t.name,
-				d.tentative,
+				s.status,
 				d.start
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_date_status s ON d.key_status = s.id_status
 			WHERE d.start = (
 				SELECT MIN(d2.start)
 				FROM training_dates d2
+					JOIN training_date_status s2 ON d2.key_status = s2.id_status
 				WHERE d2.end > NOW()
 					AND d.key_training = d2.key_training
+					AND s2.status IN ('TENTATIVE', 'CONFIRMED')
 				GROUP BY d2.key_training
 			)
 			ORDER BY
-				t.id_training, d.start';
+				t.id_training, d.start";
 
 		$result = array();
 		foreach ($this->database->fetchAll($query) as $row) {
-			$row['tentative']       = (boolean)$row['tentative'];
+			$row['tentative']       = ($row['status'] == self::STATUS_TENTATIVE);
 			$result[$row['dateId']] = $row;
 		}
 
@@ -47,7 +50,7 @@ class Trainings extends BaseModel
 	public function get($name)
 	{
 		$result = $this->database->fetch(
-			'SELECT
+			"SELECT
 				t.action,
 				d.id_date AS dateId,
 				t.name,
@@ -57,7 +60,7 @@ class Trainings extends BaseModel
 				t.audience,
 				d.start,
 				d.end,
-				d.tentative,
+				s.status,
 				t.original_href AS originalHref,
 				t.capacity,
 				t.services,
@@ -71,17 +74,17 @@ class Trainings extends BaseModel
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
 			WHERE t.action = ?
 				AND d.end > NOW()
+				AND s.status IN ('TENTATIVE', 'CONFIRMED')
 			ORDER BY
 				d.start
-			LIMIT 1',
+			LIMIT 1",
 			$name
 		);
 
-		if (isset($result['tentative'])) {
-			$result['tentative'] = (boolean)$result['tentative'];
-		}
+		$result['tentative'] = ($result['status'] == self::STATUS_TENTATIVE);
 
 		return $result;
 	}
@@ -90,15 +93,17 @@ class Trainings extends BaseModel
 	public function getPastTrainings($name)
 	{
 		return $this->database->fetchPairs(
-			'SELECT
+			"SELECT
 				d.id_date AS dateId,
 				d.start
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_date_status s ON d.key_status = s.id_status
 			WHERE t.action = ?
 				AND d.end < NOW()
+				AND s.status = 'CONFIRMED'
 			ORDER BY
-				start DESC',
+				start DESC",
 			$name
 		);
 	}
