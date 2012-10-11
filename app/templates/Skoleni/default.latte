@@ -6,7 +6,7 @@
 <ul>
  	{foreach $upcomingTrainings as $item}
  		{var $link = 'Skoleni:' . $item->action}
-	    <li><a n:href="{$link}"><strong>{$item->name}</strong></a> <small>({if $item->tentative}{$item->start|localdate:'cs':'%B %Y'}{else}{$item->start|date:'j. n. Y'}{/if})</small></li>
+	    <li><a n:href="{$link}"><strong>{$item->name}</strong></a> <small>({if $item->tentative}{$item->start|localdate:'cs':'%B %Y'}{else}<strong>{$item->start|date:'j. n. Y'}</strong>{/if})</small></li>
 	{/foreach}
 </ul>
 {/define}
