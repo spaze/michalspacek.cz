@@ -20,7 +20,7 @@
 <h2 id="prednasky">(Občas) přednáším</h2>
 <ul>
     <li n:foreach="$talks as $talk">
-        {if $talk->href}<a href="{$talk->href}">{/if}<strong>{$talk->title}</strong>{if $talk->href}</a>{/if}<br />
+        <strong>{$talk->title}</strong>{if $talk->href} <a href="{$talk->href}">→</a>{/if}<br />
         <small>
             {!$talk->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$talk->eventHref}">{$talk->event}</a>
             <a n:if="$talk->slidesHref" href="{$talk->slidesHref}"><span class="icon icon16 slides"></span>Prezentace</a>
