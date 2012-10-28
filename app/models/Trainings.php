@@ -84,7 +84,9 @@ class Trainings extends BaseModel
 			$name
 		);
 
-		$result['tentative'] = ($result['status'] == self::STATUS_TENTATIVE);
+		if ($result) {
+			$result['tentative'] = ($result['status'] == self::STATUS_TENTATIVE);
+		}
 
 		return $result;
 	}
