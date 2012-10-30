@@ -25,6 +25,7 @@ common:
 		articles:  \MichalSpacekCz\Articles
 		talks:     \MichalSpacekCz\Talks
 		trainings: \MichalSpacekCz\Trainings
+		interviews: \MichalSpacekCz\interviews
 
 production < common:
 	nette:

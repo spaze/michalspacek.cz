@@ -29,4 +29,15 @@
     </li>
 </ul>
 <p><a n:href="Prednasky:">Všechny přednášky</a></p>
+<hr />
+<h2 id="rozhovory">Odpovídám na otázky</h2>
+<ul>
+    <li n:foreach="$interviews as $interview">
+        <strong>{$interview->title}</strong>{if $interview->href} <a href="{$interview->href}">→</a>{/if}<br />
+        <small>
+            {!$interview->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$interview->sourceHref}">{$interview->sourceName}</a>
+            <a n:if="$interview->videoHref" href="{$interview->videoHref}"><span class="icon icon16 video"></span>Video</a>
+        </small>
+    </li>
+</ul>
 {/define}

@@ -14,6 +14,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->articles          = $this->articles->getAll(3);
 		$this->template->talks             = $this->talks->getAll(5);
 		$this->template->upcomingTrainings = $this->trainings->getUpcoming();
+		$this->template->interviews        = $this->interviews->getAll(5);
 	}
 
 
