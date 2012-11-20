@@ -1,5 +1,6 @@
-{define #content}
-<h2 id="skoleni">Přijďte na má školení</h2>
+h{define #content}
+<h2 id="skoleni">Školím</h2>
+<p>Zvu vás na následující školení, která pořádám a vedu:</p>
 {includeblock "../Skoleni/default.latte"}
 {include #list}
 <p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
@@ -7,7 +8,7 @@
 <h2><span id="elephpant" class="icon icon32"></span>Dodávám Elephpanty</h2>
 <p>Teď zrovna žádné modré slony s logem PHP nemám, ale až znovu otevřu objednávky dám vám vědět. Stačí, když vyplníte formulář na <a href="http://www.elephpant.cz/">www.elephpant.cz</a>.</p>
 <hr />
-<h2 id="clanky">Nejnovější články</h2>
+<h2 id="clanky">Píšu články</h2>
 <ul>
     <li n:foreach="$articles as $article">
         <a href="{$article->href}"><strong>{$article->title}</strong></a>
@@ -17,7 +18,7 @@
 </ul>
 <p><a n:href="Clanky:">Všechny články</a></p>
 <hr />
-<h2 id="prednasky">(Občas) přednáším</h2>
+<h2 id="prednasky">Přednáším</h2>
 <ul>
     <li n:foreach="$talks as $talk">
         <strong>{$talk->title}</strong>{if $talk->href} <a href="{$talk->href}">→</a>{/if}<br />
