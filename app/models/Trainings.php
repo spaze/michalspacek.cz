@@ -13,6 +13,7 @@ class Trainings extends BaseModel
 	const STATUS_CREATED   = 'CREATED';
 	const STATUS_TENTATIVE = 'TENTATIVE';
 	const STATUS_SIGNED_UP = 'SIGNED_UP';
+	const TRAINING_APPLICATION_SOURCE  = 'michal-spacek';
 
 	public function getUpcoming()
 	{
@@ -144,6 +145,7 @@ class Trainings extends BaseModel
 			'key_status'           => $statusId,
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
+			'key_source'           => $this->getTrainingApplicationSource(),
 		);
 		$code = $this->insertData($data);
 		$this->setStatus($this->database->lastInsertId(), self::STATUS_TENTATIVE);
@@ -173,6 +175,7 @@ class Trainings extends BaseModel
 			'key_status'           => $statusId,
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
+			'key_source'           => $this->getTrainingApplicationSource(),
 		);
 		$code = $this->insertData($data);
 		$this->setStatus($this->database->lastInsertId(), self::STATUS_SIGNED_UP);
@@ -307,6 +310,12 @@ class Trainings extends BaseModel
 		);
 
 		return $result;
+	}
+
+
+	private function getTrainingApplicationSource()
+	{
+		return $this->database->fetchColumn('SELECT id_source FROM training_application_sources WHERE alias = ?', self::TRAINING_APPLICATION_SOURCE);
 	}
 
 
