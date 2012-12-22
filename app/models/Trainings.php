@@ -219,7 +219,7 @@ class Trainings extends BaseModel
 			FROM
 				training_reviews r
 				LEFT JOIN training_applications a ON r.key_application = a.id_application
-				JOIN training_dates d ON COALESCE(r.key_date, a.key_date) = d.id_date
+				JOIN training_dates d ON a.key_date = d.id_date
 				JOIN trainings t ON t.id_training = d.key_training
 			WHERE
 				t.action = ?
