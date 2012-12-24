@@ -33,6 +33,7 @@ class Trainings extends BaseModel
 				WHERE d2.end > NOW()
 					AND d.key_training = d2.key_training
 					AND s2.status IN ('TENTATIVE', 'CONFIRMED')
+					AND d2.public
 				GROUP BY d2.key_training
 			)
 			ORDER BY
@@ -79,6 +80,7 @@ class Trainings extends BaseModel
 			WHERE t.action = ?
 				AND d.end > NOW()
 				AND s.status IN ('TENTATIVE', 'CONFIRMED')
+				AND d.public
 			ORDER BY
 				d.start
 			LIMIT 1",
@@ -105,6 +107,7 @@ class Trainings extends BaseModel
 			WHERE t.action = ?
 				AND d.end < NOW()
 				AND s.status = 'CONFIRMED'
+				AND d.public
 			ORDER BY
 				start DESC",
 			$name
