@@ -31,7 +31,7 @@
 <hr />
 
 <h2 id="misto">Místo</h2>
-<p><strong><a href="{$venueHref}">{$venueName}</a>, {$venueAddress}</strong><br />{!$venueDescription|texy}</p>
+<p><strong><a href="{$venueHref}">{$venueName}</a>, {$venueAddress}</strong>{if $venueDescription}<br />{!$venueDescription|texy}{/if}</p>
 <hr />
 
 <h2 id="kapacita">Kapacita</h2>
