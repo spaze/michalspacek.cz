@@ -178,12 +178,12 @@ class SkoleniPresenter extends BasePresenter
 			->setDefaultValue($session->name)
 			->setRequired('Zadejte prosím jméno a příjmení')
 			->addRule(Form::MIN_LENGTH, 'Minimální délka jména a příjmení je %d znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka jména a příjmení je %d znaků', 100);
+			->addRule(Form::MAX_LENGTH, 'Maximální délka jména a příjmení je %d znaků', 200);
 		$form->addText('email', 'E-mail:')
 			->setDefaultValue($session->email)
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 100);
+			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200);
 
 		if (!$this->tentative[$name]) {
 			$form->addGroup('Fakturační údaje');
@@ -191,39 +191,39 @@ class SkoleniPresenter extends BasePresenter
 				->setDefaultValue($session->company)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 100);
+				->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 200);
 			$form->addText('street', 'Ulice a číslo:')
 				->setDefaultValue($session->street)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 100);
+				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200);
 			$form->addText('city', 'Město:')
 				->setDefaultValue($session->city)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka města je dva znaky', 2)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 100);
+				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
 			$form->addText('zip', 'PSČ:')
 				->setDefaultValue($session->zip)
 				->addCondition(Form::FILLED)
 				->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
-				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 100);
+				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
 			$form->addText('companyId', 'IČ:')
 				->setDefaultValue($session->companyId)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 100);
+				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
 			$form->addText('companyTaxId', 'DIČ:')
 				->setDefaultValue($session->companyTaxId)
 				->addCondition(Form::FILLED)
 				->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 100);
+				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
 		}
 
 		$form->setCurrentGroup(null);
 		$form->addText('note', 'Poznámka:')
 			->setDefaultValue($session->note)
 			->addCondition(Form::FILLED)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 1000);
+			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
 		$form->addSubmit('signUp', $this->tentative[$name] ? 'Odeslat' : 'Registrovat se');
 		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplication');
 
