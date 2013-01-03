@@ -16,8 +16,10 @@ if (!headers_sent()) {
 
 $configurator = new Nette\Config\Configurator;
 
+$environment = (isset($_SERVER['ENVIRONMENT']) ? $_SERVER['ENVIRONMENT'] : 'production');
+
 // Enable Nette Debugger for error visualisation & logging
-$configurator->setDebugMode(ENVIRONMENT == 'development');
+$configurator->setDebugMode($environment == 'development');
 $configurator->enableDebugger(__DIR__ . '/../log');
 
 // Enable RobotLoader - this will load all classes automatically
@@ -28,7 +30,7 @@ $configurator->createRobotLoader()
 	->register();
 
 // Create Dependency Injection container from config.neon file
-$configurator->addConfig(__DIR__ . '/config/config.neon', ENVIRONMENT);
+$configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
 $configurator->addConfig(__DIR__ . '/config/config.local.neon', $configurator::NONE); // none section
 $container = $configurator->createContainer();
 
