@@ -30,17 +30,5 @@ common:
 		interviews: \MichalSpacekCz\Interviews
 
 production < common:
-	nette:
-		database:
-			default:
-				dsn: 'mysql:host=db5.tojeono.cz;dbname=cz_michalspacek'
-				user: michalspacek
-				password: fFmCaxfw
 
 development < common:
-	nette:
-		database:
-			default:
-				dsn: 'mysql:host=localhost;dbname=cz_michalspacek'
-				user: root
-				password: fbL7nkZTCR

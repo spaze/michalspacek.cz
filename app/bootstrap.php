@@ -14,7 +14,6 @@ if (!headers_sent()) {
 	header('X-Powered-By: Failure');
 }
 
-// Configure application
 $configurator = new Nette\Config\Configurator;
 
 // Enable Nette Debugger for error visualisation & logging
@@ -24,12 +23,13 @@ $configurator->enableDebugger(__DIR__ . '/../log');
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(__DIR__ . '/../temp');
 $configurator->createRobotLoader()
-	->addDirectory(APP_DIR)
-	->addDirectory(LIBS_DIR)
+	->addDirectory(__DIR__)
+	->addDirectory(__DIR__ . '/../libs')
 	->register();
 
 // Create Dependency Injection container from config.neon file
 $configurator->addConfig(__DIR__ . '/config/config.neon', ENVIRONMENT);
+$configurator->addConfig(__DIR__ . '/config/config.local.neon', $configurator::NONE); // none section
 $container = $configurator->createContainer();
 
 $httpResponse = $container->httpResponse;
@@ -38,5 +38,4 @@ $container->application->onStartup[] = function() use ($httpResponse) {
 	$httpResponse->setHeader('X-XSS-Protection', '1; mode=block');
 };
 
-// Configure and run the application!
-$container->application->run();
+return $container;
