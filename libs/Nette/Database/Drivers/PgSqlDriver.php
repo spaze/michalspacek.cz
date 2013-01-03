@@ -50,6 +50,16 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 
 
 	/**
+	 * Formats boolean for use in a SQL statement.
+	 */
+	public function formatBool($value)
+	{
+		return $value ? 'TRUE' : 'FALSE';
+	}
+
+
+
+	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
 	public function formatDateTime(\DateTime $value)
@@ -106,12 +116,16 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		$tables = array();
 		foreach ($this->connection->query("
 			SELECT
-				table_name AS name,
-				table_type = 'VIEW' AS view
+				c.relname::varchar AS name,
+				c.relkind = 'v' AS view
 			FROM
-				information_schema.tables
+				pg_catalog.pg_class AS c
+				JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace
 			WHERE
-				table_schema = current_schema()
+				c.relkind IN ('r', 'v')
+				AND n.nspname = current_schema()
+			ORDER BY
+				c.relname
 		") as $row) {
 			$tables[] = (array) $row;
 		}
@@ -129,30 +143,37 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		$columns = array();
 		foreach ($this->connection->query("
 			SELECT
-				c.column_name AS name,
-				c.table_name AS table,
-				upper(c.udt_name) AS nativetype,
-				greatest(c.character_maximum_length, c.numeric_precision) AS size,
+				a.attname::varchar AS name,
+				c.relname::varchar AS table,
+				upper(t.typname) AS nativetype,
+				NULL AS size,
 				FALSE AS unsigned,
-				c.is_nullable = 'YES' AS nullable,
-				c.column_default AS default,
-				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AND strpos(c.column_default, 'nextval') = 1 AS autoincrement,
-				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AS primary
+				NOT (a.attnotnull OR t.typtype = 'd' AND t.typnotnull) AS nullable,
+				ad.adsrc::varchar AS default,
+				coalesce(co.contype = 'p' AND strpos(ad.adsrc, 'nextval') = 1, FALSE) AS autoincrement,
+				coalesce(co.contype = 'p', FALSE) AS primary,
+				substring(ad.adsrc from 'nextval[(]''\"?([^''\"]+)') AS sequence
 			FROM
-				information_schema.columns AS c
-				LEFT JOIN information_schema.constraint_column_usage AS ccu USING(table_catalog, table_schema, table_name, column_name)
-				LEFT JOIN information_schema.table_constraints AS tc USING(constraint_catalog, constraint_schema, constraint_name)
+				pg_catalog.pg_attribute AS a
+				JOIN pg_catalog.pg_class AS c ON a.attrelid = c.oid
+				JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace
+				JOIN pg_catalog.pg_type AS t ON a.atttypid = t.oid
+				LEFT JOIN pg_catalog.pg_attrdef AS ad ON ad.adrelid = c.oid AND ad.adnum = a.attnum
+				LEFT JOIN pg_catalog.pg_constraint AS co ON co.connamespace = n.oid AND contype = 'p' AND co.conrelid = c.oid AND a.attnum = ANY(co.conkey)
 			WHERE
-				c.table_name = {$this->connection->quote($table)}
-				AND
-				c.table_schema = current_schema()
-				AND
-				(tc.constraint_type IS NULL OR tc.constraint_type = 'PRIMARY KEY')
+				c.relkind IN ('r', 'v')
+				AND c.relname::varchar = {$this->connection->quote($table)}
+				AND n.nspname = current_schema()
+				AND a.attnum > 0
+				AND NOT a.attisdropped
 			ORDER BY
-				c.ordinal_position
+				a.attnum
 		") as $row) {
-			$row['vendor'] = array();
-			$columns[] = (array) $row;
+			$column = (array) $row;
+			$column['vendor'] = $column;
+			unset($column['sequence']);
+
+			$columns[] = $column;
 		}
 
 		return $columns;
@@ -165,26 +186,23 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getIndexes($table)
 	{
-		/* There is no information about all indexes in information_schema, so pg catalog must be used */
 		$indexes = array();
 		foreach ($this->connection->query("
 			SELECT
-				c2.relname AS name,
-				indisunique AS unique,
-				indisprimary AS primary,
-				attname AS column
+				c2.relname::varchar AS name,
+				i.indisunique AS unique,
+				i.indisprimary AS primary,
+				a.attname::varchar AS column
 			FROM
-				pg_class AS c1
-				JOIN pg_namespace ON c1.relnamespace = pg_namespace.oid
-				JOIN pg_index ON c1.oid = indrelid
-				JOIN pg_class AS c2 ON indexrelid = c2.oid
-				LEFT JOIN pg_attribute ON c1.oid = attrelid AND attnum = ANY(indkey)
+				pg_catalog.pg_class AS c1
+				JOIN pg_catalog.pg_namespace AS n ON c1.relnamespace = n.oid
+				JOIN pg_catalog.pg_index AS i ON c1.oid = i.indrelid
+				JOIN pg_catalog.pg_class AS c2 ON i.indexrelid = c2.oid
+				LEFT JOIN pg_catalog.pg_attribute AS a ON c1.oid = a.attrelid AND a.attnum = ANY(i.indkey)
 			WHERE
-				nspname = current_schema()
-				AND
-				c1.relkind = 'r'
-				AND
-				c1.relname = {$this->connection->quote($table)}
+				n.nspname = current_schema()
+				AND c1.relkind = 'r'
+				AND c1.relname = {$this->connection->quote($table)}
 		") as $row) {
 			$indexes[$row['name']]['name'] = $row['name'];
 			$indexes[$row['name']]['unique'] = $row['unique'];
@@ -202,15 +220,24 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getForeignKeys($table)
 	{
+		/* Does't work with multicolumn foreign keys */
 		return $this->connection->query("
-			SELECT tc.table_name AS name, kcu.column_name AS local, ccu.table_name AS table, ccu.column_name AS foreign
-			FROM information_schema.table_constraints AS tc
-			JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name AND tc.constraint_schema = kcu.constraint_schema
-			JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name AND ccu.constraint_schema = tc.constraint_schema
+			SELECT
+				co.conname::varchar AS name,
+				al.attname::varchar AS local,
+				cf.relname::varchar AS table,
+				af.attname::varchar AS foreign
+			FROM
+				pg_catalog.pg_constraint AS co
+				JOIN pg_catalog.pg_namespace AS n ON co.connamespace = n.oid
+				JOIN pg_catalog.pg_class AS cl ON co.conrelid = cl.oid
+				JOIN pg_catalog.pg_class AS cf ON co.confrelid = cf.oid
+				JOIN pg_catalog.pg_attribute AS al ON al.attrelid = cl.oid AND al.attnum = co.conkey[1]
+				JOIN pg_catalog.pg_attribute AS af ON af.attrelid = cf.oid AND af.attnum = co.confkey[1]
 			WHERE
-				constraint_type = 'FOREIGN KEY' AND
-				tc.table_name = {$this->connection->quote($table)} AND
-				tc.constraint_schema = current_schema()
+				n.nspname = current_schema()
+				AND co.contype = 'f'
+				AND cl.relname = {$this->connection->quote($table)}
 		")->fetchAll();
 	}
 
@@ -221,7 +248,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::META;
+		return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SEQUENCE;
 	}
 
 }

@@ -48,7 +48,7 @@ class Connection extends PDO
 
 
 
-	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, $driverClass = NULL)
+	public function __construct($dsn, $username = NULL, $password = NULL, array $options = NULL, $driverClass = NULL)
 	{
 		parent::__construct($this->dsn = $dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -77,8 +77,7 @@ class Connection extends PDO
 
 
 	/**
-	 * Sets database reflection
-	 * @param  IReflection  database reflection object
+	 * Sets database reflection.
 	 * @return Connection   provides a fluent interface
 	 */
 	public function setDatabaseReflection(IReflection $databaseReflection)
@@ -102,8 +101,7 @@ class Connection extends PDO
 
 
 	/**
-	 * Sets cache storage engine
-	 * @param  Nette\Caching\IStorage $storage
+	 * Sets cache storage engine.
 	 * @return Connection   provides a fluent interface
 	 */
 	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)

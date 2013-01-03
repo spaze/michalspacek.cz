@@ -240,7 +240,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\Localization\ITranslator
 	 * @return BaseControl  provides a fluent interface
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -341,7 +340,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function loadHttpData()
 	{
 		$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
-		$this->setValue(Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, NULL));
+		$this->setValue(Nette\Utils\Arrays::get((array) $this->getForm()->getHttpData(), $path, NULL));
 	}
 
 
@@ -609,7 +608,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Valid validator: is control valid?
-	 * @param  Nette\Forms\IControl
 	 * @return bool
 	 */
 	public static function validateValid(IControl $control)

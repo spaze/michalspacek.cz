@@ -33,9 +33,6 @@ class Session extends Nette\Object
 	/** Default file lifetime is 3 hours */
 	const DEFAULT_FILE_LIFETIME = 10800;
 
-	/** Regenerate session ID every 30 minutes */
-	const REGENERATE_INTERVAL = 1800;
-
 	/** @var bool  has been session ID regenerated? */
 	private $regenerated;
 
@@ -94,11 +91,18 @@ class Session extends Nette\Object
 
 		$this->configure($this->options);
 
-		Nette\Diagnostics\Debugger::tryError();
+		set_error_handler(function($severity, $message) use (& $error) { // session_start returns FALSE on failure since PHP 5.3.0.
+			if (($severity & error_reporting()) === $severity) {
+				$error = $message;
+				restore_error_handler();
+			}
+		});
 		session_start();
-		if (Nette\Diagnostics\Debugger::catchError($e) && !session_id()) {
+		$this->response->removeDuplicateCookies();
+		restore_error_handler();
+		if ($error && !session_id()) {
 			@session_write_close(); // this is needed
-			throw new Nette\InvalidStateException('session_start(): ' . $e->getMessage(), 0, $e);
+			throw new Nette\InvalidStateException("session_start(): $error");
 		}
 
 		self::$started = TRUE;
@@ -113,18 +117,12 @@ class Session extends Nette\Object
 
 		// initialize structures
 		$nf = & $_SESSION['__NF'];
-		if (empty($nf)) { // new session
-			$nf = array('C' => 0);
-		} else {
-			$nf['C']++;
-		}
+		@$nf['C']++;
 
-		// session regenerate every 30 minutes
-		$nfTime = & $nf['Time'];
-		$time = time();
-		if ($time - $nfTime > self::REGENERATE_INTERVAL) {
-			$this->regenerated = $this->regenerated || isset($nfTime);
-			$nfTime = $time;
+		// regenerate empty session
+		if (empty($nf['Time'])) {
+			$nf['Time'] = time();
+			$this->regenerated = TRUE;
 		}
 
 		// browser closing detection
@@ -244,6 +242,7 @@ class Session extends Nette\Object
 			$backup = $_SESSION;
 			session_start();
 			$_SESSION = $backup;
+			$this->response->removeDuplicateCookies();
 		}
 		$this->regenerated = TRUE;
 	}
@@ -268,7 +267,7 @@ class Session extends Nette\Object
 	 */
 	public function setName($name)
 	{
-		if (!is_string($name) || !preg_match('#[^0-9.][^.]*$#A', $name)) {
+		if (!is_string($name) || !preg_match('#[^0-9.][^.]*\z#A', $name)) {
 			throw new Nette\InvalidArgumentException('Session name must be a string and cannot contain dot.');
 		}
 

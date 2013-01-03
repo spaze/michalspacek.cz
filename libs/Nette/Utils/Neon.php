@@ -26,12 +26,26 @@ class Neon extends Nette\Object
 
 	/** @var array */
 	private static $patterns = array(
-		'\'[^\'\n]*\'|"(?:\\\\.|[^"\\\\\n])*"', // string
-		'-(?=\s|$)|:(?=[\s,\]})]|$)|[,=[\]{}()]', // symbol
-		'?:#.*', // comment
-		'\n[\t ]*', // new line + indent
-		'[^#"\',=[\]{}()\x00-\x20!`](?:[^#,:=\]})(\x00-\x1F]+|:(?![\s,\]})]|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
-		'?:[\t ]+', // whitespace
+		'
+			\'[^\'\n]*\' |
+			"(?: \\\\. | [^"\\\\\n] )*"
+		', // string
+		'
+			-(?= \s | $ ) |
+			:(?= [\s,\]})] | $ ) |
+			[,=[\]{}()]
+		', // symbol
+		'?:\#.*', // comment
+		'\n[\t\ ]*', // new line + indent
+		'
+			[^#"\',=[\]{}()\x00-\x20!`]
+			(?:
+				[^,:=\]})(\x00-\x20]+ |
+				:(?! [\s,\]})] | $ ) |
+				[\ \t]+ [^#,:=\]})(\x00-\x20]
+			)*
+		', // literal / boolean / integer / float
+		'?:[\t\ ]+', // whitespace
 	);
 
 	/** @var Tokenizer */
@@ -96,8 +110,8 @@ class Neon extends Nette\Object
 			}
 
 		} elseif (is_string($var) && !is_numeric($var)
-			&& !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)$~i', $var)
-			&& preg_match('~^' . self::$patterns[4] . '$~', $var)
+			&& !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)\z~i', $var)
+			&& preg_match('~^' . self::$patterns[4] . '\z~x', $var)
 		) {
 			return $var;
 
@@ -123,9 +137,12 @@ class Neon extends Nette\Object
 			throw new Nette\InvalidArgumentException("Argument must be a string, " . gettype($input) . " given.");
 		}
 		if (!self::$tokenizer) {
-			self::$tokenizer = new Tokenizer(self::$patterns, 'mi');
+			self::$tokenizer = new Tokenizer(self::$patterns, 'mix');
 		}
 
+		if (substr($input, 0, 3) === "\xEF\xBB\xBF") { // BOM
+			$input = substr($input, 3);
+		}
 		$input = str_replace("\r", '', $input);
 		self::$tokenizer->tokenize($input);
 
@@ -281,7 +298,7 @@ class Neon extends Nette\Object
 					$value = NULL;
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
-				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?$#A', $t)) {
+				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?\z#A', $t)) {
 					$value = new Nette\DateTime($t);
 				} else { // literal
 					$value = $t;
@@ -326,7 +343,7 @@ class Neon extends Nette\Object
 
 	private function cbString($m)
 	{
-		static $mapping = array('t' => "\t", 'n' => "\n", '"' => '"', '\\' => '\\',  '/' => '/', '_' => "\xc2\xa0");
+		static $mapping = array('t' => "\t", 'n' => "\n", 'r' => "\r", 'f' => "\x0C", 'b' => "\x08", '"' => '"', '\\' => '\\',  '/' => '/', '_' => "\xc2\xa0");
 		$sq = $m[0];
 		if (isset($mapping[$sq[1]])) {
 			return $mapping[$sq[1]];
@@ -355,7 +372,7 @@ class Neon extends Nette\Object
 
 
 /**
- * The exception that indicates error of NEON decoding.
+ * Representation of 'foo(bar=1)' literal
  */
 class NeonEntity extends \stdClass
 {

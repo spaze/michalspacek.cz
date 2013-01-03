@@ -204,7 +204,7 @@ final class Helpers
 	{
 		return '<pre class="nette-dump">' . preg_replace_callback(
 			'#^( *)((?>[^(\r\n]{1,200}))\((\d+)\) <code>#m',
-			function ($m) use ($collapsed) {
+			function($m) use ($collapsed) {
 				return "$m[1]<a href='#' rel='next'>$m[2]($m[3]) "
 					. (($m[1] || !$collapsed) && ($m[3] < 7)
 					? '<abbr>&#x25bc;</abbr> </a><code>'
@@ -222,8 +222,8 @@ final class Helpers
 		foreach ($trace as $i => $item) {
 			if (isset($item['function']) && $item['function'] === end($m)
 				&& isset($item['class']) === isset($m[1])
-				&& (!isset($item['class']) || $item['class'] === $m[0] || is_subclass_of($item['class'], $m[0])))
-			{
+				&& (!isset($item['class']) || $item['class'] === $m[0] || $m[0] === '*' || is_subclass_of($item['class'], $m[0]))
+			) {
 				$index = $i;
 				return $item;
 			}

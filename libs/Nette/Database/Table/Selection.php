@@ -12,6 +12,7 @@
 namespace Nette\Database\Table;
 
 use Nette,
+	Nette\Database\ISupplementalDriver,
 	PDO;
 
 
@@ -30,6 +31,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var Nette\Database\Connection */
 	protected $connection;
 
+	/** @var Nette\Caching\Cache */
+	protected $cache;
+
 	/** @var SqlBuilder */
 	protected $sqlBuilder;
 
@@ -39,11 +43,17 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var string primary key field name */
 	protected $primary;
 
+	/** @var string|bool primary column sequence name, FALSE for autodetection */
+	protected $primarySequence = FALSE;
+
 	/** @var ActiveRow[] data read from database in [primary key => ActiveRow] format */
 	protected $rows;
 
 	/** @var ActiveRow[] modifiable data in [primary key => ActiveRow] format */
 	protected $data;
+
+	/** @var bool */
+	protected $dataRefreshed = FALSE;
 
 	/** @var Selection[] */
 	protected $referenced = array();
@@ -58,10 +68,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	protected $aggregation = array();
 
 	/** @var array of touched columns */
-	protected $accessed;
+	protected $accessedColumns;
 
 	/** @var array of earlier touched columns */
-	protected $prevAccessed;
+	protected $previousAccessedColumns;
 
 	/** @var bool should instance observe accessed columns caching */
 	protected $observeCache = FALSE;
@@ -83,8 +93,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		$this->name = $table;
 		$this->connection = $connection;
-		$this->primary = $connection->getDatabaseReflection()->getPrimary($table);
-		$this->sqlBuilder = new SqlBuilder($this);
+		$reflection = $connection->getDatabaseReflection();
+		$this->primary = $reflection->getPrimary($table);
+		$this->sqlBuilder = new SqlBuilder($table, $connection, $reflection);
+		$this->cache = $connection->getCache();
 	}
 
 
@@ -99,7 +111,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function __clone()
 	{
 		$this->sqlBuilder = clone $this->sqlBuilder;
-		$this->sqlBuilder->setSelection($this);
 	}
 
 
@@ -125,7 +136,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * @return string
+	 * @return string|array
 	 */
 	public function getPrimary()
 	{
@@ -137,26 +148,61 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/**
 	 * @return string
 	 */
-	public function getSql()
+	public function getPrimarySequence()
 	{
-		return $this->sqlBuilder->buildSelectQuery();
+		if ($this->primarySequence === FALSE) {
+			$this->primarySequence = NULL;
+
+			$driver = $this->connection->getSupplementalDriver();
+			if ($driver->isSupported(ISupplementalDriver::SUPPORT_SEQUENCE)) {
+				foreach ($driver->getColumns($this->name) as $column) {
+					if ($column['name'] === $this->primary) {
+						$this->primarySequence = $column['vendor']['sequence'];
+						break;
+					}
+				}
+			}
+		}
+
+		return $this->primarySequence;
 	}
 
 
 
 	/**
-	 * Loads cache of previous accessed columns and returns it
+	 * @param  string
+	 * @return Selection provides a fluent interface
+	 */
+	public function setPrimarySequence($sequence)
+	{
+		$this->primarySequence = $sequence;
+		return $this;
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getSql()
+	{
+		return $this->sqlBuilder->buildSelectQuery($this->getPreviousAccessedColumns());
+	}
+
+
+
+	/**
+	 * Loads cache of previous accessed columns and returns it.
 	 * @internal
 	 * @return array|false
 	 */
-	public function getPreviousAccessed()
+	public function getPreviousAccessedColumns()
 	{
-		$cache = $this->connection->getCache();
-		if ($this->rows === NULL && $cache && !is_string($this->prevAccessed)) {
-			$this->accessed = $this->prevAccessed = $cache->load(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions()));
+		if ($this->cache && $this->previousAccessedColumns === NULL) {
+			$this->accessedColumns = $this->previousAccessedColumns = $this->cache->load(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions()));
 		}
 
-		return $this->prevAccessed;
+		return array_keys(array_filter((array) $this->previousAccessedColumns));
 	}
 
 
@@ -184,8 +230,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function get($key)
 	{
 		$clone = clone $this;
-		$clone->where($this->primary, $key);
-		return $clone->fetch();
+		return $clone->find($key)->fetch();
 	}
 
 
@@ -246,7 +291,17 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function find($key)
 	{
-		return $this->where($this->primary, $key);
+		if (is_array($this->primary) && Nette\Utils\Validators::isList($key)) {
+			foreach ($this->primary as $i => $primary) {
+				$this->where($primary, $key[$i]);
+			}
+		} elseif (is_array($key)) { // key contains column names
+			$this->where($key);
+		} else {
+			$this->where($this->primary, $key);
+		}
+
+		return $this;
 	}
 
 
@@ -424,28 +479,33 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->observeCache = TRUE;
 
 		try {
-			$result = $this->query($this->sqlBuilder->buildSelectQuery());
+			$result = $this->query($this->getSql());
 
 		} catch (\PDOException $exception) {
-			if (!$this->sqlBuilder->getSelect() && $this->prevAccessed) {
-				$this->prevAccessed = '';
-				$this->accessed = array();
-				$result = $this->query($this->sqlBuilder->buildSelectQuery());
+			if (!$this->sqlBuilder->getSelect() && $this->previousAccessedColumns) {
+				$this->previousAccessedColumns = FALSE;
+				$this->accessedColumns = array();
+				$result = $this->query($this->getSql());
 			} else {
 				throw $exception;
 			}
 		}
 
 		$this->rows = array();
+		$usedPrimary = TRUE;
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 		foreach ($result as $key => $row) {
-			$row = $result->normalizeRow($row);
-			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = $this->createRow($row);
+			$row = $this->createRow($result->normalizeRow($row));
+			$primary = $row->getSignature(FALSE);
+			$usedPrimary = $usedPrimary && $primary;
+			$this->rows[$primary ?: $key] = $row;
 		}
 		$this->data = $this->rows;
 
-		if (isset($row[$this->primary]) && !is_string($this->accessed)) {
-			$this->accessed[$this->primary] = TRUE;
+		if ($usedPrimary && $this->accessedColumns !== FALSE) {
+			foreach ((array) $this->primary as $primary) {
+				$this->accessedColumns[$primary] = TRUE;
+			}
 		}
 	}
 
@@ -493,15 +553,15 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function saveCacheState()
 	{
-		if ($this->observeCache && ($cache = $this->connection->getCache()) && !$this->sqlBuilder->getSelect() && $this->accessed != $this->prevAccessed) {
-			$cache->save(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions()), $this->accessed);
+		if ($this->observeCache && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns != $this->previousAccessedColumns) {
+			$this->cache->save(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions()), $this->accessedColumns);
 		}
 	}
 
 
 
 	/**
-	 * Returns Selection parent for caching
+	 * Returns Selection parent for caching.
 	 * @return Selection
 	 */
 	protected function getRefTable(& $refPath)
@@ -513,33 +573,50 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	/**
 	 * @internal
-	 * @param  string column name
-	 * @param  bool|NULL TRUE - cache, FALSE - don't cache, NULL - remove
-	 * @return bool
+	 * @param  string|NULL column name or (NULL to reload all columns & disable columns cache)
+	 * @param  bool
 	 */
-	public function access($key, $cache = TRUE)
+	public function accessColumn($key, $selectColumn = TRUE)
 	{
-		if ($cache === NULL) {
-			if (is_array($this->accessed)) {
-				$this->accessed[$key] = FALSE;
-			}
-			return FALSE;
+		if (!$this->cache) {
+			return;
 		}
 
 		if ($key === NULL) {
-			$this->accessed = '';
-
-		} elseif (!is_string($this->accessed)) {
-			$this->accessed[$key] = $cache;
+			$this->accessedColumns = FALSE;
+		} elseif ($this->accessedColumns !== FALSE) {
+			$this->accessedColumns[$key] = $selectColumn;
 		}
 
-		if ($cache && !$this->sqlBuilder->getSelect() && $this->prevAccessed && ($key === NULL || !isset($this->prevAccessed[$key]))) {
-			$this->prevAccessed = '';
+		if ($selectColumn && !$this->sqlBuilder->getSelect() && $this->previousAccessedColumns && ($key === NULL || !isset($this->previousAccessedColumns[$key]))) {
+			$this->previousAccessedColumns = FALSE;
 			$this->emptyResultSet();
-			return TRUE;
+			$this->dataRefreshed = TRUE;
 		}
+	}
 
-		return FALSE;
+
+
+	/**
+	 * @internal
+	 * @param  string
+	 */
+	public function removeAccessColumn($key)
+	{
+		if ($this->cache && is_array($this->accessedColumns)) {
+			$this->accessedColumns[$key] = FALSE;
+		}
+	}
+
+
+
+	/**
+	 * Returns if selection requeried for more columns.
+	 * @return bool
+	 */
+	public function getDataRefreshed()
+	{
+		return $this->dataRefreshed;
 	}
 
 
@@ -569,14 +646,16 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			return $return->rowCount();
 		}
 
-		if (!isset($data[$this->primary]) && ($id = $this->connection->lastInsertId())) {
+		if (!is_array($this->primary) && !isset($data[$this->primary]) && ($id = $this->connection->lastInsertId($this->getPrimarySequence()))) {
 			$data[$this->primary] = $id;
-			return $this->rows[$id] = $this->createRow($data);
-
-		} else {
-			return $this->createRow($data);
-
 		}
+
+		$row = $this->createRow($data);
+		if ($signature = $row->getSignature(FALSE)) {
+			$this->rows[$signature] = $row;
+		}
+
+		return $row;
 	}
 
 
@@ -700,7 +779,11 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @return ActiveRow */
 	public function current()
 	{
-		return $this->data[current($this->keys)];
+		if (($key = current($this->keys)) !== FALSE) {
+			return $this->data[$key];
+		} else {
+			return FALSE;
+		}
 	}
 
 

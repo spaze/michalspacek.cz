@@ -54,6 +54,16 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 
 
 	/**
+	 * Formats boolean for use in a SQL statement.
+	 */
+	public function formatBool($value)
+	{
+		return $value ? '1' : '0';
+	}
+
+
+
+	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
 	public function formatDateTime(\DateTime $value)
@@ -129,7 +139,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		$columns = array();
 		foreach ($this->connection->query("PRAGMA table_info({$this->delimite($table)})") as $row) {
 			$column = $row['name'];
-			$pattern = "/(\"$column\"|\[$column\]|$column)\s+[^,]+\s+PRIMARY\s+KEY\s+AUTOINCREMENT/Ui";
+			$pattern = "/(\"$column\"|\[$column\]|$column)\\s+[^,]+\\s+PRIMARY\\s+KEY\\s+AUTOINCREMENT/Ui";
 			$type = explode('(', $row['type']);
 			$columns[] = array(
 				'name' => $column,

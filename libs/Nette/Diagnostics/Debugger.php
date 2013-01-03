@@ -243,7 +243,8 @@ final class Debugger
 		if (is_string($logDirectory)) {
 			self::$logDirectory = realpath($logDirectory);
 			if (self::$logDirectory === FALSE) {
-				throw new Nette\DirectoryNotFoundException("Directory '$logDirectory' is not found.");
+				echo __METHOD__ . "() error: Log directory is not found or is not directory.\n";
+				exit(254);
 			}
 		} elseif ($logDirectory === FALSE) {
 			self::$logDirectory = FALSE;
@@ -262,12 +263,14 @@ final class Debugger
 			ini_set('log_errors', FALSE);
 
 		} elseif (ini_get('display_errors') != !self::$productionMode && ini_get('display_errors') !== (self::$productionMode ? 'stderr' : 'stdout')) { // intentionally ==
-			throw new Nette\NotSupportedException('Function ini_set() must be enabled.');
+			echo __METHOD__ . "() error: Unable to set 'display_errors' because function ini_set() is disabled.\n";
+			exit(254);
 		}
 
 		if ($email) {
 			if (!is_string($email)) {
-				throw new Nette\InvalidArgumentException('Email address must be a string.');
+				echo __METHOD__ . "() error: Email address must be a string.\n";
+				exit(254);
 			}
 			self::$email = $email;
 		}
@@ -432,8 +435,8 @@ final class Debugger
 						self::$bar->render();
 					}
 
-				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
-					$file = self::log($exception);
+				} elseif (!self::fireLog($exception)) { // AJAX or non-HTML mode
+					$file = self::log($exception, self::ERROR);
 					if (!headers_sent()) {
 						header("X-Nette-Error-Log: $file");
 					}
@@ -454,7 +457,7 @@ final class Debugger
 		}
 
 		self::$enabled = FALSE; // un-register shutdown function
-		exit(255);
+		exit(254);
 	}
 
 
@@ -482,6 +485,10 @@ final class Debugger
 		}
 
 		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
+			if (Helpers::findTrace(debug_backtrace(FALSE), '*::__toString')) {
+				$previous = isset($context['e']) && $context['e'] instanceof \Exception ? $context['e'] : NULL;
+				self::_exceptionHandler(new Nette\FatalErrorException($message, 0, $severity, $file, $line, $context, $previous));
+			}
 			throw new Nette\FatalErrorException($message, 0, $severity, $file, $line, $context);
 
 		} elseif (($severity & error_reporting()) !== $severity) {
@@ -513,7 +520,7 @@ final class Debugger
 			return NULL;
 
 		} else {
-			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line), self::WARNING);
+			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
 			return !self::isHtmlMode() || (!self::$bar && !$ok) ? FALSE : NULL;
 		}
 
@@ -589,19 +596,19 @@ final class Debugger
 
 		if (!$return) {
 			$trace = debug_backtrace(FALSE);
-			$i = Helpers::findTrace($trace, 'dump') ? 1 : 0;
-			if (isset($trace[$i]['file'], $trace[$i]['line']) && is_file($trace[$i]['file'])) {
-				$lines = file($trace[$i]['file']);
-				preg_match('#dump\((.*)\)#', $lines[$trace[$i]['line'] - 1], $m);
+			$item = Helpers::findTrace($trace, 'dump') ?: Helpers::findTrace($trace, __CLASS__ . '::dump');
+			if (isset($item['file'], $item['line']) && is_file($item['file'])) {
+				$lines = file($item['file']);
+				preg_match('#dump\((.*)\)#', $lines[$item['line'] - 1], $m);
 				$output = substr_replace(
 					$output,
-					' title="' . htmlspecialchars((isset($m[0]) ? "$m[0] \n" : '') . "in file {$trace[$i]['file']} on line {$trace[$i]['line']}") . '"',
+					' title="' . htmlspecialchars((isset($m[0]) ? "$m[0] \n" : '') . "in file {$item['file']} on line {$item['line']}") . '"',
 					4, 0);
 
 				if (self::$showLocation) {
 					$output = substr_replace(
 						$output,
-						' <small>in ' . Helpers::editorLink($trace[$i]['file'], $trace[$i]['line']) . ":{$trace[$i]['line']}</small>",
+						' <small>in ' . Helpers::editorLink($item['file'], $item['line']) . ":{$item['line']}</small>",
 						-8, 0);
 				}
 			}

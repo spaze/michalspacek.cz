@@ -130,7 +130,7 @@ class Template extends Nette\Object implements ITemplate
 			if ($args && $args[0]) {
 				throw $e;
 			} else {
-				Nette\Diagnostics\Debugger::toStringException($e);
+				trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 			}
 		}
 	}
@@ -267,7 +267,6 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\Localization\ITranslator
 	 * @return Template  provides a fluent interface
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -402,7 +401,6 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Set cache storage.
-	 * @param  Nette\Caching\Cache
 	 * @return Template  provides a fluent interface
 	 */
 	public function setCacheStorage(Caching\IStorage $storage)

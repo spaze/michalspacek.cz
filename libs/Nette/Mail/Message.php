@@ -184,7 +184,7 @@ class Message extends MimePart
 	 */
 	private function formatEmail($email, $name)
 	{
-		if (!$name && preg_match('#^(.+) +<(.*)>$#', $email, $matches)) {
+		if (!$name && preg_match('#^(.+) +<(.*)>\z#', $email, $matches)) {
 			return array($matches[2] => $matches[1]);
 		} else {
 			return array($email => $name);
@@ -304,7 +304,7 @@ class Message extends MimePart
 	{
 		$part = new MimePart;
 		if ($content === NULL) {
-			$content = file_get_contents($file);
+			$content = @file_get_contents($file); // intentionally @
 			if ($content === FALSE) {
 				throw new Nette\FileNotFoundException("Unable to read file '$file'.");
 			}
@@ -337,7 +337,6 @@ class Message extends MimePart
 
 	/**
 	 * Sets the mailer.
-	 * @param  IMailer
 	 * @return Message  provides a fluent interface
 	 */
 	public function setMailer(IMailer $mailer)

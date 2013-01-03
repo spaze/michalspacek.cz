@@ -198,6 +198,7 @@ class ClassType extends \ReflectionClass
 	}
 
 
+
 	/**
 	 * @return Method[]
 	 */
@@ -218,6 +219,7 @@ class ClassType extends \ReflectionClass
 	{
 		return ($ref = parent::getParentClass()) ? new static($ref->getName()) : NULL;
 	}
+
 
 
 	/**

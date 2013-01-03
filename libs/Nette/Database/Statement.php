@@ -112,7 +112,9 @@ class Statement extends \PDOStatement
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
 			} elseif ($type === IReflection::FIELD_FLOAT) {
-				$row[$key] = (string) ($tmp = (float) $value) === $value ? $tmp : $value;
+				$value = strpos($value, '.') === FALSE ? $value : rtrim(rtrim($value, '0'), '.');
+				$float = (float) $value;
+				$row[$key] = (string) $float === $value ? $float : $value;
 
 			} elseif ($type === IReflection::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
@@ -132,7 +134,7 @@ class Statement extends \PDOStatement
 	{
 		if ($this->types === NULL) {
 			$this->types = array();
-			if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::META)) { // workaround for PHP bugs #53782, #54695
+			if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META)) { // workaround for PHP bugs #53782, #54695
 				$col = 0;
 				while ($meta = $this->getColumnMeta($col++)) {
 					if (isset($meta['native_type'])) {

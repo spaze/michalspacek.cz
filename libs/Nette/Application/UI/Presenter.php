@@ -160,7 +160,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @param  Nette\Application\Request
 	 * @return Nette\Application\IResponse
 	 */
 	public function run(Application\Request $request)
@@ -168,7 +167,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		try {
 			// STARTUP
 			$this->request = $request;
-			$this->payload = (object) NULL;
+			$this->payload = new \stdClass;
 			$this->setParent($this->getParent(), $request->getPresenterName());
 
 			$this->initGlobalParameters();
@@ -266,7 +265,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @param  Nette\Application\IResponse  optional catched exception
+	 * @param  Nette\Application\IResponse
 	 * @return void
 	 */
 	protected function shutdown($response)
@@ -382,7 +381,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function changeAction($action)
 	{
-		if (is_string($action) && Nette\Utils\Strings::match($action, '#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#')) {
+		if (is_string($action) && Nette\Utils\Strings::match($action, '#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*\z#')) {
 			$this->action = $action;
 			$this->view = $action;
 
@@ -463,7 +462,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			}
 
 			if (!$template->getFile()) {
-				$file = preg_replace('#^.*([/\\\\].{1,70})$#U', "\xE2\x80\xA6\$1", reset($files));
+				$file = preg_replace('#^.*([/\\\\].{1,70})\z#U', "\xE2\x80\xA6\$1", reset($files));
 				$file = strtr($file, '/', DIRECTORY_SEPARATOR);
 				$this->error("Page not found. Missing template '$file'.");
 			}
@@ -491,7 +490,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		}
 
 		if ($this->layout) {
-			$file = preg_replace('#^.*([/\\\\].{1,70})$#U', "\xE2\x80\xA6\$1", reset($files));
+			$file = preg_replace('#^.*([/\\\\].{1,70})\z#U', "\xE2\x80\xA6\$1", reset($files));
 			$file = strtr($file, '/', DIRECTORY_SEPARATOR);
 			throw new Nette\FileNotFoundException("Layout not found. Missing template '$file'.");
 		}
@@ -616,7 +615,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Sends response and terminates presenter.
-	 * @param  Nette\Application\IResponse
 	 * @return void
 	 * @throws Nette\Application\AbortException
 	 */
@@ -995,7 +993,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		);
 		$this->lastCreatedRequestFlag = array('current' => $current);
 
-		if ($mode === 'forward') {
+		if ($mode === 'forward' || $mode === 'test') {
 			return;
 		}
 
@@ -1054,7 +1052,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 				continue;
 			}
 
-			$def = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : NULL;
+			$def = $param->isDefaultValueAvailable() && $param->isOptional() ? $param->getDefaultValue() : NULL; // see PHP bug #62988
 			$type = $param->isArray() ? 'array' : gettype($def);
 			if (!PresenterComponentReflection::convertType($args[$name], $type)) {
 				throw new InvalidLinkException("Invalid value for parameter '$name' in method $class::$method(), expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
@@ -1075,11 +1073,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Invalid link handler. Descendant can override this method to change default behaviour.
-	 * @param  InvalidLinkException
 	 * @return string
 	 * @throws InvalidLinkException
 	 */
-	protected function handleInvalidLink($e)
+	protected function handleInvalidLink(InvalidLinkException $e)
 	{
 		if ($this->invalidLinkMode === self::INVALID_LINK_SILENT) {
 			return '#';
@@ -1259,10 +1256,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 		}
 
 		foreach ($params as $key => $value) {
-			if (!preg_match('#^((?:[a-z0-9_]+-)*)((?!\d+$)[a-z0-9_]+)$#i', $key, $matches)) {
-				$this->error("'Invalid parameter name '$key'");
-			}
-			if (!$matches[1]) {
+			if (!preg_match('#^((?:[a-z0-9_]+-)*)((?!\d+\z)[a-z0-9_]+)\z#i', $key, $matches)) {
+				continue;
+			} elseif (!$matches[1]) {
 				$selfParams[$key] = $value;
 			} else {
 				$this->globalParams[substr($matches[1], 0, -1)][$matches[2]] = $value;

@@ -51,7 +51,7 @@ class GroupedSelection extends Selection
 
 
 	/**
-	 * Sets active group
+	 * Sets active group.
 	 * @internal
 	 * @param  int  primary key of grouped rows
 	 * @return GroupedSelection
@@ -90,7 +90,7 @@ class GroupedSelection extends Selection
 	{
 		if (!$this->sqlBuilder->getOrder()) {
 			// improve index utilization
-			$this->sqlBuilder->addOrder("$this->name.$this->column" . (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : ''));
+			$this->sqlBuilder->addOrder("$this->name.$this->column" . (preg_match('~\bDESC\z~i', $columns) ? ' DESC' : ''));
 		}
 
 		return parent::order($columns);
@@ -104,7 +104,7 @@ class GroupedSelection extends Selection
 
 	public function aggregation($function)
 	{
-		$aggregation = & $this->getRefTable($refPath)->aggregation[$refPath . $function . $this->sqlBuilder->buildSelectQuery() . json_encode($this->sqlBuilder->getParameters())];
+		$aggregation = & $this->getRefTable($refPath)->aggregation[$refPath . $function . $this->getSql() . json_encode($this->sqlBuilder->getParameters())];
 
 		if ($aggregation === NULL) {
 			$aggregation = array();
@@ -147,12 +147,12 @@ class GroupedSelection extends Selection
 			return;
 		}
 
-		$hash = md5($this->sqlBuilder->buildSelectQuery() . json_encode($this->sqlBuilder->getParameters()));
+		$hash = md5($this->getSql() . json_encode($this->sqlBuilder->getParameters()));
 
 		$referencing = & $this->getRefTable($refPath)->referencing[$refPath . $hash];
 		$this->rows = & $referencing['rows'];
 		$this->referenced = & $referencing['refs'];
-		$this->accessed = & $referencing['accessed'];
+		$this->accessedColumns = & $referencing['accessed'];
 		$refData = & $referencing['data'];
 
 		if ($refData === NULL) {
@@ -165,7 +165,7 @@ class GroupedSelection extends Selection
 			$this->sqlBuilder->setLimit($limit, NULL);
 			$refData = array();
 			$offset = array();
-			foreach ($this->rows as $key => $row) {
+			foreach ((array) $this->rows as $key => $row) {
 				$ref = & $refData[$row[$this->column]];
 				$skip = & $offset[$row[$this->column]];
 				if ($limit === NULL || $rows <= 1 || (count($ref) < $limit && $skip >= $this->sqlBuilder->getOffset())) {
@@ -186,6 +186,7 @@ class GroupedSelection extends Selection
 				$row->setTable($this); // injects correct parent GroupedSelection
 			}
 			reset($this->data);
+			$this->checkReferenced = TRUE;
 		}
 	}
 
@@ -232,7 +233,7 @@ class GroupedSelection extends Selection
 	{
 		$builder = $this->sqlBuilder;
 
-		$this->sqlBuilder = new SqlBuilder($this);
+		$this->sqlBuilder = clone $this->sqlBuilder;
 		$this->where($this->column, $this->active);
 		$return = parent::update($data);
 
@@ -246,7 +247,7 @@ class GroupedSelection extends Selection
 	{
 		$builder = $this->sqlBuilder;
 
-		$this->sqlBuilder = new SqlBuilder($this);
+		$this->sqlBuilder = clone $this->sqlBuilder;
 		$this->where($this->column, $this->active);
 		$return = parent::delete();
 

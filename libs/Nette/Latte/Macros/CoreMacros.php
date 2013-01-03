@@ -389,8 +389,6 @@ class CoreMacros extends MacroSet
 
 	/**
 	 * Initializes local & global storage in template.
-	 * @param
-	 * @param  string
 	 * @return \stdClass
 	 */
 	public static function initRuntime(Nette\Templating\ITemplate $template, $templateId)
@@ -400,13 +398,13 @@ class CoreMacros extends MacroSet
 			$local = $template->_l;
 			unset($template->_l);
 		} else {
-			$local = (object) NULL;
+			$local = new \stdClass;
 		}
 		$local->templates[$templateId] = $template;
 
 		// global storage
 		if (!isset($template->_g)) {
-			$template->_g = (object) NULL;
+			$template->_g = new \stdClass;
 		}
 
 		return array($local, $template->_g);
