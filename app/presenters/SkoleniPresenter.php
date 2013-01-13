@@ -200,7 +200,7 @@ class SkoleniPresenter extends BasePresenter
 			$form->addText('city', 'Město:')
 				->setDefaultValue($session->city)
 				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka města je dva znaky', 2)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
 				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
 			$form->addText('zip', 'PSČ:')
 				->setDefaultValue($session->zip)
