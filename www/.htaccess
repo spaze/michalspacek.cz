@@ -25,5 +25,7 @@ RewriteRule ^$ cve-2012-1823.phps [L]
     ForceType application/x-httpd-php-source
 </Files>
 
+RewriteRule ^[,.]+$ / [R=301,L]
+
 RewriteCond %{ENV:REDIRECT_STATUS} ^$
 RewriteRule .* index.php [L]
