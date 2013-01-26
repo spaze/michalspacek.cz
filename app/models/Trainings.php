@@ -58,6 +58,7 @@ class Trainings extends BaseModel
 				t.name,
 				t.description,
 				t.content,
+				t.upsell,
 				t.prerequisites,
 				t.audience,
 				d.start,

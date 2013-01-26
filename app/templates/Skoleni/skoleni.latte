@@ -1,6 +1,8 @@
 {define #content}
 <p>{!$description|texy} <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
 
+<p n:if="$upsell">{!$upsell|texy}</p>
+
 <h2 id="napln">Náplň</h2>
 {!$content|texy}
 <hr />
