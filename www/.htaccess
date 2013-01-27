@@ -25,7 +25,8 @@ RewriteRule ^$ cve-2012-1823.phps [L]
     ForceType application/x-httpd-php-source
 </Files>
 
-RewriteRule ^[,.]+$ / [R=301,L]
+# Strip trailing punctuation
+RewriteRule (.*?)[,.]+$ /$1 [R=301,L]
 
 # Some bot does not recognize HTTP-to-HTTPS links and is requesting http://.../foo/https://.../ instead
 RewriteRule (https:)//?(.*)$ $1//$2 [R=301,L]
