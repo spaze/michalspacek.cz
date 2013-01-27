@@ -29,10 +29,10 @@ RewriteRule ^$ cve-2012-1823.phps [L]
 </Files>
 
 # Strip trailing punctuation
-RewriteRule (.*?)[,.]+$ /$1 [R=301,L]
+RewriteRule (.*?)[,.]+$ /$1 [R=301,NE,L]
 
 # Some bot does not recognize HTTP-to-HTTPS links and is requesting http://.../foo/https://.../ instead
-RewriteRule (https:)//?(.*)$ $1//$2 [R=301,L]
+RewriteRule (https:)//?(.*)$ $1//$2 [R=301,NE,L]
 
 RewriteCond %{ENV:REDIRECT_STATUS} ^$
 RewriteRule .* index.php [L]
