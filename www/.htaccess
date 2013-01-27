@@ -21,8 +21,9 @@ RewriteCond %{QUERY_STRING} ^=PHP
 RewriteRule (.*) $1?
 
 # PHP CGI RCE easter egg, see http://eindbazen.net/2012/05/php-cgi-advisory-cve-2012-1823/
-RewriteCond %{QUERY_STRING} ^(\+?)-s$
-RewriteRule ^$ cve-2012-1823.phps [L]
+RewriteCond %{QUERY_STRING} ^(\+?)-s$ [OR]
+RewriteCond %{QUERY_STRING} ^(\+?)-d
+RewriteRule .* cve-2012-1823.phps [L]
 # T flag does not work in per-directory context when the substitution is not - (dash)
 <Files cve-2012-1823.phps>
     ForceType application/x-httpd-php-source
