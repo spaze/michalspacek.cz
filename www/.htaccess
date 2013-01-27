@@ -27,5 +27,8 @@ RewriteRule ^$ cve-2012-1823.phps [L]
 
 RewriteRule ^[,.]+$ / [R=301,L]
 
+# Some bot does not recognize HTTP-to-HTTPS links and is requesting http://.../foo/https://.../ instead
+RewriteRule (https:)//?(.*)$ $1//$2 [R=301,L]
+
 RewriteCond %{ENV:REDIRECT_STATUS} ^$
 RewriteRule .* index.php [L]
