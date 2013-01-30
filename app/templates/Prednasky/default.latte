@@ -6,7 +6,7 @@
 <p n:foreach="$talks as $talk">
     <strong>{$talk->title}</strong>{if $talk->href} <a href="{$talk->href}">→</a>{/if}<br />
     <small>
-    	{!$talk->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$talk->eventHref}">{$talk->event}</a>
+    	<span class="date">{$talk->date|date:'j. n. Y'}</span>, <a href="{$talk->eventHref}">{$talk->event}</a>
         <a n:if="$talk->slidesHref" href="{$talk->slidesHref}"><span class="icon icon16 slides"></span>Slajdy</a>
         <a n:if="$talk->videoHref" href="{$talk->videoHref}"><span class="icon icon16 video"></span>Záznam</a>
     </small>

@@ -89,6 +89,7 @@ abbr.dtstart, abbr.dtend { border: none; }
     height: 32px;
     margin-right: 8px;
 }
+.date { white-space: nowrap; }
 #elephpant { background-position: 0px -18px; }
 .slides { background-position: 0px 0px; }
 .video { background-position: -16px 0px; }

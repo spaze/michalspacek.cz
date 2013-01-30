@@ -5,7 +5,7 @@
 {define #content}
 <p n:foreach="$articles as $article">
     <a href="{$article->href}"><strong>{$article->title}</strong></a>
-    <small>({!$article->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
+    <small>(<span class="date">{$article->date|date:'j. n. Y'}</span>, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
     <p><small>{$article->excerpt} <a href="{$article->href}">→</a></small></p>
 </p>
 {/define}

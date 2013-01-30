@@ -12,7 +12,7 @@
 <ul>
     <li n:foreach="$articles as $article">
         <a href="{$article->href}"><strong>{$article->title}</strong></a>
-        <small>({!$article->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
+        <small>(<span class="date">{$article->date|date:'j. n. Y'}</span>, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
         <p><small>{$article->excerpt} <a href="{$article->href}">→</a></small></p>
     </li>
 </ul>
@@ -23,7 +23,7 @@
     <li n:foreach="$talks as $talk">
         <strong>{$talk->title}</strong>{if $talk->href} <a href="{$talk->href}">→</a>{/if}<br />
         <small>
-            {!$talk->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$talk->eventHref}">{$talk->event}</a>
+            <span class="date">{$talk->date|date:'j. n. Y'}</span>, <a href="{$talk->eventHref}">{$talk->event}</a>
             <a n:if="$talk->slidesHref" href="{$talk->slidesHref}"><span class="icon icon16 slides"></span>Slajdy</a>
             <a n:if="$talk->videoHref" href="{$talk->videoHref}"><span class="icon icon16 video"></span>Záznam</a>
         </small>
@@ -36,7 +36,7 @@
     <li n:foreach="$interviews as $interview">
         <strong>{$interview->title}</strong>{if $interview->href} <a href="{$interview->href}">→</a>{/if}<br />
         <small>
-            {!$interview->date|date:'j. n. Y'|replace:' ':'&nbsp;'}, <a href="{$interview->sourceHref}">{$interview->sourceName}</a>
+            <span class="date">{$interview->date|date:'j. n. Y'}</span>, <a href="{$interview->sourceHref}">{$interview->sourceName}</a>
             <a n:if="$interview->videoHref" href="{$interview->videoHref}"><span class="icon icon16 video"></span>Záznam</a>
         </small>
     </li>
