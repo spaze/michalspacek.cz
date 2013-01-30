@@ -1,22 +1,22 @@
 {define #content}
-<p>{!$description|texy} <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
+<p>{$description} <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
 
 <div class="vevent">
 <h2 id="nazev">Název školení</h2>
 <p><strong class="summary">{$title}</strong></p>
 
 <h2 id="napln">Náplň</h2>
-<div class="description">{!$content|texy}</div>
+<div class="description">{$content}</div>
 
-<p n:if="$upsell" id="upoutavka"><span class="icon icon16"></span>{!$upsell|texy}</p>
+<p n:if="$upsell" id="upoutavka"><span class="icon icon16"></span>{$upsell}</p>
 <hr />
 
 <h2 id="predpoklady">Předpoklady</h2>
-<p>{!$prerequisites|texy}</p>
+<p>{$prerequisites}</p>
 <hr />
 
 <h2 id="urcenopro">Určeno pro</h2>
-<p>{!$audience|texy}</p>
+<p>{$audience}</p>
 <hr />
 
 <h2 id="datum">Datum a čas</h2>
@@ -42,7 +42,7 @@
 
 <h2 id="misto">Místo</h2>
 <p class="location"><strong><a href="{$venueHref}">{$venueName}</a>, {$venueAddress}</strong></p>
-{if $venueDescription}<p>{!$venueDescription|texy}</p>{/if}
+{if $venueDescription}<p>{$venueDescription}</p>{/if}
 <hr />
 
 <h2 id="kapacita">Kapacita</h2>
@@ -50,7 +50,7 @@
 <hr />
 
 <h2 id="vybaveni">Vybavení</h2>
-<p>{!$services|texy}</p>
+<p>{$services}</p>
 <hr />
 
 <h2 id="cena">Cena</h2>
@@ -58,7 +58,7 @@
 <hr />
 
 <h2 id="materialy">Materiály</h2>
-<p>{!$materials|texy}</p>
+<p>{$materials}</p>
 </div>
 <hr />
 
@@ -66,7 +66,7 @@
 <h2 id="ohlasy">Ohlasy na školení</h2>
 {foreach $reviews as $review}
 	<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
-	<blockquote><p>{!$review->review|texy} <a n:if="$review->href" href="{$review->href}">→</a></p></blockquote>
+	<blockquote><p>{$review->review} <a n:if="$review->href" href="{$review->href}">→</a></p></blockquote>
 {/foreach}
 <p><a n:href="Skoleni:ohlasy $name">Všechny ohlasy</a></p>
 <hr />

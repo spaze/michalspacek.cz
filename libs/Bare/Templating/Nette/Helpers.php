@@ -3,10 +3,6 @@ namespace Bare\Nette\Templating;
 
 class Helpers extends \Nette\Object
 {
-	const TEXY_NAMESPACE = 'TexyFormatted';
-
-	/** @var Nette\DI\Container */
-	private $context;
 
 	private $localDateSubstitution = array(
 		'%B' => '%m',
@@ -32,12 +28,6 @@ class Helpers extends \Nette\Object
 	);
 
 
-	public function __construct(\Nette\DI\Container $context)
-	{
-		$this->context = $context;
-	}
-
-
 	public function loader($helper)
 	{
 		if (method_exists($this, $helper)) {
@@ -57,22 +47,6 @@ class Helpers extends \Nette\Object
 		}
 
 		return \Nette\Templating\Helpers::date($time, strtr($format, $replace));
-	}
-
-
-	public function texy($text)
-	{
-		$cache = new \Nette\Caching\Cache($this->context->getService('cacheStorage'), self::TEXY_NAMESPACE);
-
-		// Nette Cache itself generates the key by hashing the key passed in load() so we can use whatever we want
-		$formatted = $cache->load($text, function() use ($text) {
-			\Texy::$advertisingNotice = false;
-			$texy = new \Texy();
-			$texy->encoding = 'utf-8';
-			$texy->allowedTags = \Texy::NONE;
-			return preg_replace('~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1', $texy->process($text));
-		});
-		return $formatted;
 	}
 
 

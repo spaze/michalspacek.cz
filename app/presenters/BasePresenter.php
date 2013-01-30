@@ -23,7 +23,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	 */
 	protected $trainings;
 
-
 	/**
 	 * @var \MichalSpacekCz\Interviews
 	 */

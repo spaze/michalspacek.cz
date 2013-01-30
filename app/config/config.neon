@@ -24,6 +24,7 @@ common:
 		database: @Nette\Database\Connection
 		routerFactory: RouterFactory
 		router: @routerFactory::createRouter
+		texyFormatter: \Bare\Formatter\Texy
 		articles:  \MichalSpacekCz\Articles
 		talks:     \MichalSpacekCz\Talks
 		trainings: \MichalSpacekCz\Trainings

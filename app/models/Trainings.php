@@ -90,6 +90,14 @@ class Trainings extends BaseModel
 
 		if ($result) {
 			$result['tentative'] = ($result['status'] == self::STATUS_TENTATIVE);
+			$result['description'] = $this->texyFormatter->format($result['description']);
+			$result['content'] = $this->texyFormatter->format($result['content']);
+			$result['upsell'] = $this->texyFormatter->format($result['upsell']);
+			$result['prerequisites'] = $this->texyFormatter->format($result['prerequisites']);
+			$result['audience'] = $this->texyFormatter->format($result['audience']);
+			$result['services'] = $this->texyFormatter->format($result['services']);
+			$result['materials'] = $this->texyFormatter->format($result['materials']);
+			$result['venueDescription'] = $this->texyFormatter->format($result['venueDescription']);
 		}
 
 		return $result;
@@ -233,7 +241,11 @@ class Trainings extends BaseModel
 			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		return $this->database->fetchAll($query, $name);
+		$reviews = $this->database->fetchAll($query, $name);
+		foreach ($reviews as &$review) {
+			$review['review'] = $this->texyFormatter->format($review['review']);
+		}
+		return $reviews;
 	}
 
 

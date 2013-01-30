@@ -28,7 +28,11 @@ class Articles extends BaseModel
 			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		return $this->database->fetchAll($query);
+		$articles = $this->database->fetchAll($query);
+		foreach ($articles as &$article) {
+			$article['excerpt'] = $this->texyFormatter->format($article['excerpt']);
+		}
+		return $articles;
 	}
 
 
