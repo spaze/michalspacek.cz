@@ -1,8 +1,9 @@
 {define #content}
 <p>{!$description|texy} <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
 
+<div class="vevent">
 <h2 id="nazev">Název školení</h2>
-<p><strong>{$title}</strong></p>
+<p><strong class="summary">{$title}</strong></p>
 
 <h2 id="napln">Náplň</h2>
 {!$content|texy}
@@ -19,7 +20,11 @@
 <hr />
 
 <h2 id="datum">Datum a čas</h2>
-<p><strong>{if $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/if}</strong>, {$start|date:'H:i'} &ndash; {$end|date:'H:i'}, hodinová přestávka na oběd</p>
+<p>
+	<strong>{if $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/if}</strong>,
+	<abbr title="{$start|date:DateTime::ISO8601}" class="dtstart">{$start|date:'H:i'}</abbr> &ndash; <abbr title="{$end|date:DateTime::ISO8601}" class="dtend">{$end|date:'H:i'}</abbr>,
+	hodinová přestávka na oběd
+</p>
 {if $tentative}
 	<p>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</p>
 {/if}
@@ -36,7 +41,8 @@
 <hr />
 
 <h2 id="misto">Místo</h2>
-<p><strong><a href="{$venueHref}">{$venueName}</a>, {$venueAddress}</strong>{if $venueDescription}<br />{!$venueDescription|texy}{/if}</p>
+<p class="location"><strong><a href="{$venueHref}">{$venueName}</a>, {$venueAddress}</strong></p>
+{if $venueDescription}<p>{!$venueDescription|texy}</p>{/if}
 <hr />
 
 <h2 id="kapacita">Kapacita</h2>
@@ -53,6 +59,7 @@
 
 <h2 id="materialy">Materiály</h2>
 <p>{!$materials|texy}</p>
+</div>
 <hr />
 
 {if $reviews}
