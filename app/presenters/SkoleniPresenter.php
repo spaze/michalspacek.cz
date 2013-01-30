@@ -80,6 +80,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->name             = $training->action;
 		$this->template->trainingId       = $training->dateId;
 		$this->template->pageTitle        = 'Školení ' . $training->name;
+		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
 		$this->template->content          = $training->content;
 		$this->template->upsell           = $training->upsell;
