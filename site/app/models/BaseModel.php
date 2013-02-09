@@ -11,7 +11,7 @@ abstract class BaseModel extends \Nette\Object
 	protected $texyFormatter;
 
 
-	public function __construct(\Nette\Database\Connection $connection, \Bare\Formatter\Texy $texyFormatter)
+	public function __construct(\Nette\Database\Connection $connection, \Bare\Next\Formatter\Texy $texyFormatter)
 	{
 		$this->database = $connection;
 		$this->texyFormatter = $texyFormatter;
