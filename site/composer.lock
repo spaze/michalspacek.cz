@@ -139,10 +139,15 @@
             "require": {
                 "nette/nette": "2.0.*"
             },
-            "time": "2013-02-09 16:02:19",
+            "time": "2013-02-09 20:11:43",
             "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Bare\\Next": "lib"
+                }
+            },
             "support": {
-                "source": "https://github.com/spaze/bare-next/tree/master",
+                "source": "https://github.com/spaze/bare-next/tree/v0.1.0",
                 "issues": "https://github.com/spaze/bare-next/issues"
             }
         }
