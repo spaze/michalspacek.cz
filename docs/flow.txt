@@ -1,0 +1,52 @@
+# Training date flow
+1 CREATED
+2 TENTATIVE
+3 CONFIRMED
+4 CANCELED
+
+# Training application flow (for tentative dates)
+1 CREATED
+2 TENTATIVE
+3 INVITED
+4 SIGNED_UP
+5 INVOICE_SENT
+6 NOTIFIED
+7 ATTENDED
+8 MATERIALS_SENT
+9 ACCESS_TOKEN_USED
+10 CANCELED
+11 REFUNDED
+12 CREDIT
+13 IMPORTED
+14 NON_PUBLIC_TRAINING
+
+# Training application flow
+1 CREATED
+4 SIGNED_UP
+5 INVOICE_SENT
+6 NOTIFIED
+7 ATTENDED
+8 MATERIALS_SENT
+9 ACCESS_TOKEN_USED
+10 CANCELED
+11 REFUNDED
+12 CREDIT
+13 IMPORTED
+14 NON_PUBLIC_TRAINING
+
+# Update application status query
+CALL set_training_application_status(XXX, 'ATTENDED', '2012-12-14 10:00:00', 'Europe/Prague', @status, @status_text, @old_id_status, @old_status, @old_status_time, @old_status_time_timezone)
+# or
+SET @id_application = XXX;
+SET @id_status = XXX;
+SET @status_time = 'XXX';
+BEGIN;
+INSERT INTO training_application_status_history (key_application, key_status, status_time, status_time_timezone)
+	SELECT @id_application, key_status, status_time, status_time_timezone FROM training_applications WHERE id_application = @id_application;
+UPDATE training_applications SET key_status = @id_status, status_time = @status_time WHERE id_application = @id_application;
+COMMIT;
+
+# Update paid details
+SET @paid = XXX;
+SET @invoice_id = XXX;
+UPDATE `training_applications` SET `paid` = @paid, `paid_timezone` = 'Europe/Prague' WHERE `invoice_id` = @invoice_id;
