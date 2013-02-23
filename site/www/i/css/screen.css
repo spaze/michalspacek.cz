@@ -93,6 +93,7 @@ abbr.dtstart, abbr.dtend { border: none; }
 #elephpant { background-position: 0px -18px; }
 .slides { background-position: 0px 0px; }
 .video { background-position: -16px 0px; }
+.audio { background-position: -48px -32px; }
 #linkedin { background-position: -32px 0px; }
 #twitter { background-position: -32px -16px; }
 #facebook { background-position: -48px 0px; }

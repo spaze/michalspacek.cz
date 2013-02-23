@@ -37,6 +37,7 @@
         <strong>{$interview->title}</strong>{if $interview->href} <a href="{$interview->href}">→</a>{/if}<br />
         <small>
             <span class="date">{$interview->date|date:'j. n. Y'}</span>, <a href="{$interview->sourceHref}">{$interview->sourceName}</a>
+            <a n:if="$interview->audioHref" href="{$interview->audioHref}"><span class="icon icon16 audio"></span>Záznam</a>
             <a n:if="$interview->videoHref" href="{$interview->videoHref}"><span class="icon icon16 video"></span>Záznam</a>
         </small>
     </li>
