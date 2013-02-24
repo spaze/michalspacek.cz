@@ -24,6 +24,7 @@ class RozhovoryPresenter extends BasePresenter
 		}
 
 		$this->template->pageTitle = 'Rozhovor ' . $interview->title;
+		$this->template->description = $interview->description;
 		$this->template->href = $interview->href;
 		$this->template->date = $interview->date;
 		$this->template->audioHref = $interview->audioHref;

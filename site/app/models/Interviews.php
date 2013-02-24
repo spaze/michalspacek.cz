@@ -35,10 +35,11 @@ class Interviews extends BaseModel
 
 	public function get($name)
 	{
-		return $this->database->fetch(
+		$result = $this->database->fetch(
 			'SELECT
 				action,
 				title,
+				description,
 				date,
 				href,
 				video_href AS videoHref,
@@ -49,6 +50,12 @@ class Interviews extends BaseModel
 			WHERE action = ?',
 			$name
 		);
+
+		if ($result) {
+			$result['description'] = $this->texyFormatter->format($result['description']);
+		}
+
+		return $result;
 	}
 
 
