@@ -14,6 +14,7 @@ class Talks extends BaseModel
 	public function getAll($limit = null)
 	{
 		$query = 'SELECT
+				action,
 				title,
 				date,
 				href,
@@ -29,6 +30,25 @@ class Talks extends BaseModel
 		}
 
 		return $this->database->fetchAll($query);
+	}
+
+
+	public function get($name)
+	{
+		return $this->database->fetch(
+			'SELECT
+				action,
+				title,
+				date,
+				href,
+				slides_href AS slidesHref,
+				video_href AS videoHref,
+				event,
+				event_href AS eventHref
+			FROM talks
+			WHERE action = ?',
+			$name
+		);
 	}
 
 
