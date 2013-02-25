@@ -1,15 +1,15 @@
 {define #content}
 <p>{$description}</p>
-<h2 id="datum-akce">Datum a pro koho</h2>
+<h3 id="datum-akce">Datum a pro koho</h3>
 <p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$sourceHref}">{$sourceName}</a></p>
 
 {if $href}
-    <h2 id="detail">Detail rozhovoru</h2>
+    <h3 id="detail">Detail rozhovoru</h3>
     <p><a href="{$href}">Detail rozhovoru na webu</a></p>
 {/if}
 
 {if $audioHref || $videoHref}
-    <h2 id="materialy">Materiály</h2>
+    <h3 id="materialy">Materiály</h3>
     <p>
         <a n:if="$audioHref" href="{$audioHref}"><span class="icon icon16 audio"></span>Záznam</a>
         <a n:if="$videoHref" href="{$videoHref}"><span class="icon icon16 video"></span>Záznam</a>

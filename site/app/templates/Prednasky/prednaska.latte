@@ -1,14 +1,14 @@
 {define #content}
-<h2 id="datum-akce">Datum a akce</h2>
+<h3 id="datum-akce">Datum a akce</h3>
 <p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$eventHref}">{$event}</a></p>
 
 {if $href}
-    <h2 id="detail">Detail přednášky</h2>
+    <h3 id="detail">Detail přednášky</h3>
     <p><a href="{$href}">Detail přednášky na webu akce</a></p>
 {/if}
 
 {if $slidesHref || $videoHref}
-    <h2 id="materialy">Materiály</h2>
+    <h3 id="materialy">Materiály</h3>
     <p>
         <a n:if="$slidesHref" href="{$slidesHref}"><span class="icon icon16 slides"></span>Slajdy</a>
         <a n:if="$videoHref" href="{$videoHref}"><span class="icon icon16 video"></span>Záznam</a>
