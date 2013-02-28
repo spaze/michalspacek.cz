@@ -3,6 +3,15 @@
 {/define}
 
 {define #content}
+<h3>Budu přednášet</h3>
+<p n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
+    {var $link = 'Prednasky:' . $talk->action}
+    <a n:href="{$link}"><strong>{$talk->title}</strong></a><br />
+    <small><strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}</small>
+</p>
+<p n:if="$upcomingTalks">Rád budu přednášet i na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+<p n:if="!$upcomingTalks">&hellip;třeba na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+<h3>Přednášel jsem</h3>
 <p n:foreach="$talks as $talk">
     {var $link = 'Prednasky:' . $talk->action}
     <a n:href="{$link}"><strong>{$talk->title}</strong></a><br />

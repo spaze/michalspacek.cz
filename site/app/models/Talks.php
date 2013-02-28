@@ -23,11 +23,29 @@ class Talks extends BaseModel
 				event,
 				event_href AS eventHref
 			FROM talks
+			WHERE date <= NOW()
 			ORDER BY date DESC';
 
 		if ($limit !== null) {
 			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
+
+		return $this->database->fetchAll($query);
+	}
+
+
+	public function getUpcoming()
+	{
+		$query = 'SELECT
+				action,
+				title,
+				date,
+				href,
+				event,
+				event_href AS eventHref
+			FROM talks
+			WHERE date > NOW()
+			ORDER BY date';
 
 		return $this->database->fetchAll($query);
 	}

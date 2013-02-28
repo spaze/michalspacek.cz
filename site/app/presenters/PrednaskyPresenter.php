@@ -13,6 +13,7 @@ class PrednaskyPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Přednášky';
 		$this->template->talks     = $this->talks->getAll();
+		$this->template->upcomingTalks = $this->talks->getUpcoming();
 	}
 
 

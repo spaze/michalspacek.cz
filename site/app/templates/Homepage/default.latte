@@ -19,6 +19,17 @@
 <p><a n:href="Clanky:">Všechny články</a></p>
 <hr />
 <h2 id="prednasky">Přednáším</h2>
+<h3>Budu přednášet</h3>
+<ul n:if="$upcomingTalks">
+    <li n:foreach="$upcomingTalks as $talk">
+        {var $link = 'Prednasky:' . $talk->action}
+        <a n:href="$link"><strong>{$talk->title}</strong></a><br />
+        <small><strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}</small>
+    </li>
+</ul>
+<p n:if="$upcomingTalks">Rád budu přednášet i na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+<p n:if="!$upcomingTalks">&hellip;třeba na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+<h3>Přednášel jsem</h3>
 <ul>
     <li n:foreach="$talks as $talk">
         {var $link = 'Prednasky:' . $talk->action}
