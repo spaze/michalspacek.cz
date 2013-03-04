@@ -1,5 +1,5 @@
 {define #content}
-<p>{$description}</p>
+<p n:if="$description">{$description}</p>
 <h2 id="datum-akce">Datum a pro koho</h2>
 <p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$sourceHref}">{$sourceName}</a></p>
 

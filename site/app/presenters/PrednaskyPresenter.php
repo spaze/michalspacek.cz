@@ -25,6 +25,7 @@ class PrednaskyPresenter extends BasePresenter
 		}
 
 		$this->template->pageTitle = 'Přednáška ' . $talk->title;
+		$this->template->description = $talk->description;
 		$this->template->href = $talk->href;
 		$this->template->date = $talk->date;
 		$this->template->eventHref = $talk->eventHref;

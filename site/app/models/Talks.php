@@ -53,10 +53,11 @@ class Talks extends BaseModel
 
 	public function get($name)
 	{
-		return $this->database->fetch(
+		$result = $this->database->fetch(
 			'SELECT
 				action,
 				title,
+				description,
 				date,
 				href,
 				slides_href AS slidesHref,
@@ -69,6 +70,12 @@ class Talks extends BaseModel
 			WHERE action = ?',
 			$name
 		);
+
+		if ($result) {
+			$result['description'] = $this->texyFormatter->format($result['description']);
+		}
+
+		return $result;
 	}
 
 
