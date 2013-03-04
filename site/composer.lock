@@ -6,16 +6,15 @@
             "version": "v2.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/dg/texy",
+                "url": "https://github.com/dg/texy.git",
                 "reference": "v2.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/dg/texy/zipball/v2.2.0",
+                "url": "https://api.github.com/repos/dg/texy/zipball/v2.2.0",
                 "reference": "v2.2.0",
                 "shasum": ""
             },
-            "time": "2012-03-30 14:57:36",
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -37,16 +36,17 @@
             "description": "Texy converts plain text in easy to read Texy syntax into structurally valid (X)HTML. It supports adding of images, links, nested lists, tables and has full support for CSS. Texy supports hyphenation of long words (which reflects language rules), clickable emails and URL (emails are obfuscated against spambots), national typographic single and double quotation marks, ellipses, em dashes, dimension sign, nonbreakable spaces (e.g. in phone numbers), acronyms, arrows and many others. Texy code can optionally contain HTML tags.",
             "homepage": "http://texy.info",
             "keywords": [
-                "text",
-                "markdown",
                 "html",
+                "markdown",
+                "markup language",
+                "plain text",
+                "text",
+                "textile",
                 "texy",
                 "wiki",
-                "plain text",
-                "xhtml",
-                "markup language",
-                "textile"
-            ]
+                "xhtml"
+            ],
+            "time": "2012-03-30 21:57:36"
         },
         {
             "name": "nette/nette",
@@ -63,21 +63,20 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
                 "ext-iconv": "*",
-                "ext-tokenizer": "*"
+                "ext-tokenizer": "*",
+                "php": ">=5.3.0"
             },
             "require-dev": {
                 "nette/tester": "@dev"
             },
             "suggest": {
-                "ext-mbstring": "*",
-                "ext-pdo": "*",
-                "ext-memcache": "*",
+                "ext-fileinfo": "*",
                 "ext-gd": "*",
-                "ext-fileinfo": "*"
+                "ext-mbstring": "*",
+                "ext-memcache": "*",
+                "ext-pdo": "*"
             },
-            "time": "2013-01-01 20:42:38",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -108,19 +107,20 @@
             "description": "Nette Framework - innovative framework for fast and easy development of secured web applications in PHP. Write less, have cleaner code and your work will bring you joy.",
             "homepage": "http://nette.org",
             "keywords": [
-                "templating",
-                "framework",
+                "Forms",
                 "database",
                 "dbal",
                 "debugging",
-                "mvc",
-                "micro",
-                "Forms",
+                "framework",
+                "images",
                 "latte",
-                "neon",
                 "mailing",
-                "images"
-            ]
+                "micro",
+                "mvc",
+                "neon",
+                "templating"
+            ],
+            "time": "2013-01-01 20:42:38"
         },
         {
             "name": "spaze/bare-next",
@@ -139,7 +139,6 @@
             "require": {
                 "nette/nette": "2.0.*"
             },
-            "time": "2013-02-09 20:11:43",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -149,15 +148,24 @@
             "support": {
                 "source": "https://github.com/spaze/bare-next/tree/v0.1.0",
                 "issues": "https://github.com/spaze/bare-next/issues"
-            }
+            },
+            "time": "2013-03-04 12:05:26"
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+
+    ],
     "aliases": [
 
     ],
     "minimum-stability": "stable",
     "stability-flags": [
+
+    ],
+    "platform": {
+        "php": ">= 5.3.7"
+    },
+    "platform-dev": [
 
     ]
 }
