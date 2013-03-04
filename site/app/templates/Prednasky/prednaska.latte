@@ -1,17 +1,29 @@
 {define #content}
-<h3 id="datum-akce">Datum a akce</h3>
+<h2 id="datum-akce">Datum a akce</h2>
 <p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$eventHref}">{$event}</a></p>
 
 {if $href}
-    <h3 id="detail">Detail přednášky</h3>
+    <h2 id="detail">Detail přednášky</h2>
     <p><a href="{$href}">Detail přednášky na webu akce</a></p>
 {/if}
 
-{if $slidesHref || $videoHref}
-    <h3 id="materialy">Materiály</h3>
-    <p>
-        <a n:if="$slidesHref" href="{$slidesHref}"><span class="icon icon16 slides"></span>Slajdy</a>
-        <a n:if="$videoHref" href="{$videoHref}"><span class="icon icon16 video"></span>Záznam</a>
-    </p>
-{/if}
+<h2 n:if="$slidesHref" id="slajdy">Slajdy</h2>
+<div n:if="$slidesEmbed && $slidesEmbedType" id="slajdy-embed">
+	{if $slidesEmbedType == 'slideshare'}
+		<iframe src="{$slidesEmbed}" width="800" height="636" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+	{elseif $slidesEmbedType == 'speakerdeck'}
+		<script async class="speakerdeck-embed" data-id="{$slidesEmbed}" src="//speakerdeck.com/assets/embed.js"></script>
+	{/if}
+</div>
+<p n:if="$slidesHref"><a href="{$slidesHref}"><span class="icon icon16 slides"></span>{$slidesHref}</a></p>
+
+<h2 n:if="$videoHref" id="zaznam">Záznam</h2>
+<div n:if="$videoEmbed && $videoEmbedType" id="zaznam-embed">
+	{if $videoEmbedType == 'vimeo'}
+		<iframe src="{$videoEmbed}" width="800" height="450" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+	{elseif $videoEmbedType == 'youtube'}
+		<iframe src="http://www.youtube-nocookie.com/embed/Ym4-YSozIrg" width="800" height="600" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+	{/if}
+</div>
+<p n:if="$videoHref"><a href="{$videoHref}"><span class="icon icon16 video"></span>{$videoHref}</a></p>
 {/define}

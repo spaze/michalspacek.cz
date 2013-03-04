@@ -36,8 +36,8 @@
         <a n:href="$link"><strong>{$talk->title}</strong></a><br />
         <small>
             <span class="date">{$talk->date|date:'j. n. Y'}</span>, {$talk->event}
-            <a n:if="$talk->slidesHref" href="{$talk->slidesHref}"><span class="icon icon16 slides"></span>Slajdy</a>
-            <a n:if="$talk->videoHref" href="{$talk->videoHref}"><span class="icon icon16 video"></span>Záznam</a>
+            <span n:if="$talk->slidesHref" class="icon icon16 slides" title="Slajdy"></span>
+            <span n:if="$talk->videoHref" class="icon icon16 video" title="Záznam"></span>
         </small>
     </li>
 </ul>

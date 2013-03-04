@@ -150,3 +150,8 @@ div.error {
     font-size: small;
 }
 #upoutavka a { color: #555; }
+#slajdy-embed iframe, #zaznam-embed iframe {
+    border: 0px;
+    margin: 0px;
+    overflow: hidden;
+}

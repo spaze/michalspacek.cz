@@ -60,13 +60,49 @@ class Talks extends BaseModel
 				date,
 				href,
 				slides_href AS slidesHref,
+				slides_embed AS slidesEmbed,
 				video_href AS videoHref,
+				video_embed AS videoEmbed,
 				event,
 				event_href AS eventHref
 			FROM talks
 			WHERE action = ?',
 			$name
 		);
+	}
+
+
+	public function getSlidesEmbedType($href)
+	{
+		$type = false;
+
+		switch (parse_url($href, PHP_URL_HOST)) {
+			case 'www.slideshare.net':
+				$type = 'slideshare';
+				break;
+			case 'speakerdeck.com':
+				$type = 'speakerdeck';
+				break;
+		}
+
+		return $type;
+	}
+
+
+	public function getVideoEmbedType($href)
+	{
+		$type = false;
+
+		switch (parse_url($href, PHP_URL_HOST)) {
+			case 'www.youtube.com':
+				$type = 'youtube';
+				break;
+			case 'vimeo.com':
+				$type = 'vimeo';
+				break;
+		}
+
+		return $type;
 	}
 
 
