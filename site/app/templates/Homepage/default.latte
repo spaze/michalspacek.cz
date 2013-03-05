@@ -1,7 +1,10 @@
 {define #content}
+{includeblock "../embed.latte"}
+{includeblock "../Prednasky/default.latte"}
+{includeblock "../Rozhovory/default.latte"}
+{includeblock "../Skoleni/default.latte"}
 <h2 id="skoleni">Školím</h2>
 <p>Zvu vás na následující školení, která pořádám a vedu:</p>
-{includeblock "../Skoleni/default.latte"}
 {include #list}
 <p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
 <hr />
@@ -22,9 +25,7 @@
 <h3>Budu přednášet</h3>
 <ul n:if="$upcomingTalks">
     <li n:foreach="$upcomingTalks as $talk">
-        {var $link = 'Prednasky:' . $talk->action}
-        <a n:href="$link"><strong>{$talk->title}</strong></a><br />
-        <small><strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}</small>
+        {include #itemTalk, talk => $talk}
     </li>
 </ul>
 <p n:if="$upcomingTalks">Rád budu přednášet i na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
@@ -32,13 +33,7 @@
 <h3>Přednášel jsem</h3>
 <ul>
     <li n:foreach="$talks as $talk">
-        {var $link = 'Prednasky:' . $talk->action}
-        <a n:href="$link"><strong>{$talk->title}</strong></a><br />
-        <small>
-            <span class="date">{$talk->date|date:'j. n. Y'}</span>, {$talk->event}
-            <span n:if="$talk->slidesHref" class="icon icon16 slides" title="Slajdy"></span>
-            <span n:if="$talk->videoHref" class="icon icon16 video" title="Záznam"></span>
-        </small>
+        {include #itemTalk, talk => $talk}
     </li>
 </ul>
 <p><a n:href="Prednasky:">Všechny přednášky</a></p>
@@ -46,13 +41,7 @@
 <h2 id="rozhovory">Odpovídám na otázky</h2>
 <ul>
     <li n:foreach="$interviews as $interview">
-        {var $link = 'Rozhovory:' . $interview->action}
-        <a n:href="{$link}"><strong>{$interview->title}</strong></a><br />
-        <small>
-            <span class="date">{$interview->date|date:'j. n. Y'}</span>, {$interview->sourceName}
-            <span n:if="$interview->audioHref" class="icon icon16 audio" title="Záznam"></span>
-            <span n:if="$interview->videoHref" class="icon icon16 video" title="Záznam"></span>
-        </small>
+        {include #itemInterview, interview => $interview}
     </li>
 </ul>
 {/define}

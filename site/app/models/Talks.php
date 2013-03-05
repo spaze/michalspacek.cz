@@ -41,6 +41,8 @@ class Talks extends BaseModel
 				title,
 				date,
 				href,
+				slides_href AS slidesHref,
+				video_href AS videoHref,
 				event,
 				event_href AS eventHref
 			FROM talks

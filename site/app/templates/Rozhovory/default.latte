@@ -2,14 +2,18 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
-{define #content}
-<p n:foreach="$interviews as $interview">
+{define #itemInterview}
     {var $link = 'Rozhovory:' . $interview->action}
     <a n:href="{$link}"><strong>{$interview->title}</strong></a><br />
     <small>
-        <span class="date">{$interview->date|date:'j. n. Y'}</span>, {$interview->sourceName}
+        <strong class="date">{$interview->date|date:'j. n. Y'}</strong>, {$interview->sourceName}
         <span n:if="$interview->audioHref" class="icon icon16 audio" title="Záznam"></span>
         <span n:if="$interview->videoHref" class="icon icon16 video" title="Záznam"></span>
     </small>
+{/define}
+
+{define #content}
+<p n:foreach="$interviews as $interview">
+    {include #itemInterview}
 </p>
 {/define}

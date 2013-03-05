@@ -2,24 +2,26 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
+{define #itemTalk}
+    {var $link = 'Prednasky:' . $talk->action}
+    <a n:href="$link"><strong>{$talk->title}</strong></a><br />
+    <small>
+        <strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}
+        <span n:if="$talk->slidesHref" class="icon icon16 slides" title="Slajdy"></span>
+        <span n:if="$talk->videoHref" class="icon icon16 video" title="Záznam"></span>
+    </small>
+{/define}
+
 {define #content}
 <h2>Budu přednášet</h2>
 <p n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
-    {var $link = 'Prednasky:' . $talk->action}
-    <a n:href="{$link}"><strong>{$talk->title}</strong></a><br />
-    <small><strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}</small>
+    {include #itemTalk}
 </p>
 <p n:if="$upcomingTalks">Rád budu přednášet i na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
 <p n:if="!$upcomingTalks">&hellip;třeba na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
 <h2>Přednášel jsem</h2>
 <p n:foreach="$talks as $talk">
-    {var $link = 'Prednasky:' . $talk->action}
-    <a n:href="{$link}"><strong>{$talk->title}</strong></a><br />
-    <small>
-        <span class="date">{$talk->date|date:'j. n. Y'}</span>, {$talk->event}
-        <span n:if="$talk->slidesHref" class="icon icon16 slides" title="Slajdy"></span>
-        <span n:if="$talk->videoHref" class="icon icon16 video" title="Záznam"></span>
-    </small>
+    {include #itemTalk}
 </p>
 &hellip;a další na <a href="http://www.slideshare.net/spaze/presentations">SlideShare</a> nebo <a href="https://speakerdeck.com/u/spaze">Speaker Deck</a>
 {/define}
