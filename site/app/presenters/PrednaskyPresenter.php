@@ -32,10 +32,10 @@ class PrednaskyPresenter extends BasePresenter
 		$this->template->event = $talk->event;
 		$this->template->slidesHref = $talk->slidesHref;
 		$this->template->slidesEmbed = $talk->slidesEmbed;
-		$this->template->slidesEmbedType = $this->talks->getSlidesEmbedType($talk->slidesHref);
+		$this->template->slidesEmbedType = $this->getSlidesEmbedType($talk->slidesHref);
 		$this->template->videoHref = $talk->videoHref;
 		$this->template->videoEmbed = $talk->videoEmbed;
-		$this->template->videoEmbedType = $this->talks->getVideoEmbedType($talk->videoHref);
+		$this->template->videoEmbedType = $this->getVideoEmbedType($talk->videoHref);
 	}
 
 }

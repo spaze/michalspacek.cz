@@ -50,8 +50,8 @@
         <a n:href="{$link}"><strong>{$interview->title}</strong></a><br />
         <small>
             <span class="date">{$interview->date|date:'j. n. Y'}</span>, {$interview->sourceName}
-            <a n:if="$interview->audioHref" href="{$interview->audioHref}"><span class="icon icon16 audio"></span>Záznam</a>
-            <a n:if="$interview->videoHref" href="{$interview->videoHref}"><span class="icon icon16 video"></span>Záznam</a>
+            <span n:if="$interview->audioHref" class="icon icon16 audio" title="Záznam"></span>
+            <span n:if="$interview->videoHref" class="icon icon16 video" title="Záznam"></span>
         </small>
     </li>
 </ul>

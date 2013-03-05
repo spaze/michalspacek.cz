@@ -92,4 +92,38 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
+	public function getSlidesEmbedType($href)
+	{
+		$type = false;
+
+		switch (parse_url($href, PHP_URL_HOST)) {
+			case 'www.slideshare.net':
+				$type = 'slideshare';
+				break;
+			case 'speakerdeck.com':
+				$type = 'speakerdeck';
+				break;
+		}
+
+		return $type;
+	}
+
+
+	public function getVideoEmbedType($href)
+	{
+		$type = false;
+
+		switch (parse_url($href, PHP_URL_HOST)) {
+			case 'www.youtube.com':
+				$type = 'youtube';
+				break;
+			case 'vimeo.com':
+				$type = 'vimeo';
+				break;
+		}
+
+		return $type;
+	}
+
+
 }
