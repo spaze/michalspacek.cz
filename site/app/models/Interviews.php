@@ -42,8 +42,9 @@ class Interviews extends BaseModel
 				description,
 				date,
 				href,
-				video_href AS videoHref,
 				audio_href AS audioHref,
+				video_href AS videoHref,
+				video_embed AS videoEmbed,
 				source_name AS sourceName,
 				source_href AS sourceHref
 			FROM interviews
