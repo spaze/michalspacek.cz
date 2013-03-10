@@ -59,13 +59,15 @@ class SkoleniPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Školení';
-
 		$this->template->upcomingTrainings = $this->trainings->getUpcoming();
+		$this->template->displayLastAvailableSeats = $this->trainings->displayLastAvailableSeats();
 	}
 
 
 	public function actionSkoleni($name)
 	{
+		$this->template->displayLastAvailableSeats = $this->trainings->displayLastAvailableSeats();
+
 		$session = $this->getSession();
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 

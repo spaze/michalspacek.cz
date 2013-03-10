@@ -3,6 +3,7 @@
 {/define}
 
 {define #list}
+<div n:if="$displayLastAvailableSeats" class="flash notice"><strong>Ještě zbývá posledních pár míst, přihlašte se!</strong></div>
 <ul>
  	{foreach $upcomingTrainings as $item}
  		{var $link = 'Skoleni:' . $item->action}

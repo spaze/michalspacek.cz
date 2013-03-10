@@ -145,6 +145,11 @@ div.error {
     background-color: #FEE;
     border: 2px solid #F56;
 }
+div.notice {
+    color: #88D;
+    background-color: #EEF;
+    border: 1px solid #DDF;
+}
 #upoutavka {
     color: #777;
     font-size: small;
