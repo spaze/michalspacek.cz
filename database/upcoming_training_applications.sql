@@ -38,5 +38,5 @@ WHERE
 			AND d2.public
 		GROUP BY d2.key_training
 	)
-	AND s.status IN ('CREATED', 'TENTATIVE', 'INVITED', 'SIGNED_UP', 'INVOICE_SENT', 'NOTIFIED')
+	AND s.status IN ('CREATED', 'TENTATIVE', 'INVITED', 'SIGNED_UP', 'INVOICE_SENT', 'NOTIFIED', 'IMPORTED')
 ORDER BY d.start, t.id_training;
