@@ -15,56 +15,41 @@ class Trainings extends BaseModel
 	const STATUS_SIGNED_UP = 'SIGNED_UP';
 	const TRAINING_APPLICATION_SOURCE  = 'michal-spacek';
 
-	const LAST_AVAILABLE_SEATS_THRESHOLD_DAYS = 7;
-
-	private $upcoming;
+	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
 
 	public function getUpcoming()
 	{
-		if (!isset($this->upcoming)) {
-			$query = "SELECT
-					d.id_date AS dateId,
-					t.action,
-					t.name,
-					s.status,
-					d.start
-				FROM training_dates d
-					JOIN trainings t ON d.key_training = t.id_training
-					JOIN training_date_status s ON d.key_status = s.id_status
-				WHERE d.start = (
-					SELECT MIN(d2.start)
-					FROM training_dates d2
-						JOIN training_date_status s2 ON d2.key_status = s2.id_status
-					WHERE d2.end > NOW()
-						AND d.key_training = d2.key_training
-						AND s2.status IN ('TENTATIVE', 'CONFIRMED')
-						AND d2.public
-					GROUP BY d2.key_training
-				)
-				ORDER BY
-					t.id_training, d.start";
+		$query = "SELECT
+				d.id_date AS dateId,
+				t.action,
+				t.name,
+				s.status,
+				d.start
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_date_status s ON d.key_status = s.id_status
+			WHERE d.start = (
+				SELECT MIN(d2.start)
+				FROM training_dates d2
+					JOIN training_date_status s2 ON d2.key_status = s2.id_status
+				WHERE d2.end > NOW()
+					AND d.key_training = d2.key_training
+					AND s2.status IN ('TENTATIVE', 'CONFIRMED')
+					AND d2.public
+				GROUP BY d2.key_training
+			)
+			ORDER BY
+				t.id_training, d.start";
 
-			$this->upcoming = array();
-			foreach ($this->database->fetchAll($query) as $row) {
-				$row['tentative']       = ($row['status'] == self::STATUS_TENTATIVE);
-				$this->upcoming[$row['dateId']] = $row;
-			}
+		$upcoming = array();
+		foreach ($this->database->fetchAll($query) as $row) {
+			$row['tentative']         = ($row['status'] == self::STATUS_TENTATIVE);
+			$row['lastFreeSeats']     = $this->lastFreeSeats($row['start']);
+			$upcoming[$row['dateId']] = $row;
 		}
 
-		return $this->upcoming;
-	}
-
-
-	public function displayLastAvailableSeats()
-	{
-		foreach ($this->getUpcoming() as $training) {
-			$diff = $training->start->diff(new \DateTime());
-			if ($diff->days <= self::LAST_AVAILABLE_SEATS_THRESHOLD_DAYS)  {
-				return true;
-			}
-		}
-		return false;
+		return $upcoming;
 	}
 
 
@@ -117,9 +102,29 @@ class Trainings extends BaseModel
 			$result['services'] = $this->texyFormatter->format($result['services']);
 			$result['materials'] = $this->texyFormatter->format($result['materials']);
 			$result['venueDescription'] = $this->texyFormatter->format($result['venueDescription']);
+			$result['lastFreeSeats'] = $this->lastFreeSeats($result['start']);
 		}
 
 		return $result;
+	}
+
+
+	protected function lastFreeSeats(\DateTime $start)
+	{
+		return ($start->diff(new \DateTime())->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS);
+	}
+
+
+	public function lastFreeSeatsAny(array $trainings)
+	{
+		$lastFreeSeats = false;
+		foreach ($trainings as $training) {
+			if ($training->lastFreeSeats) {
+				$lastFreeSeats = true;
+				break;
+			}
+		}
+		return $lastFreeSeats;
 	}
 
 

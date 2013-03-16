@@ -1,7 +1,7 @@
 {define #content}
 <p>{$description} <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
 
-<div n:if="$displayLastAvailableSeats" class="flash notice"><strong>Ještě zbývá posledních pár míst, přihlašte se!</strong></div>
+<div n:if="$lastFreeSeats" class="flash notice"><strong>Ještě zbývá posledních pár míst, přihlašte se!</strong></div>
 
 <div class="vevent">
 <h2 id="nazev">Název školení</h2>
