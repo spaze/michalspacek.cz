@@ -111,7 +111,8 @@ class Trainings extends BaseModel
 
 	protected function lastFreeSeats(\DateTime $start)
 	{
-		return ($start->diff(new \DateTime())->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS);
+		$now = new \DateTime();
+		return ($start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $start > $now);
 	}
 
 
