@@ -1,0 +1,14 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Skoleni:">Školení</a>
+&raquo; <a n:href="Skoleni:{$trainingName}">{$trainingTitle}</a>
+{/define}
+
+{define #content}
+<p>
+Díky za účast na školení {$trainingTitle} dne {$trainingDate|date:'j. n. Y'}. Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili.</p>
+<ul>
+	<li n:foreach="$files as $file"><a n:href="Soubory:soubor $file->filename">{$file->filename}</a></li>
+</ul>
+<p>Rád Vás přivítám i na nějakém dalším školení, které <a n:href="Skoleni:">pořádám</a>.</p>
+{/define}

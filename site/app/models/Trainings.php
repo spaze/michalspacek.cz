@@ -13,6 +13,8 @@ class Trainings extends BaseModel
 	const STATUS_CREATED   = 'CREATED';
 	const STATUS_TENTATIVE = 'TENTATIVE';
 	const STATUS_SIGNED_UP = 'SIGNED_UP';
+	const STATUS_MATERIALS_SENT = 'MATERIALS_SENT';
+	const STATUS_ACCESS_TOKEN_USED = 'ACCESS_TOKEN_USED';
 	const TRAINING_APPLICATION_SOURCE  = 'michal-spacek';
 
 	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
@@ -325,6 +327,37 @@ class Trainings extends BaseModel
 	}
 
 
+	public function getApplicationById($id)
+	{
+		$result = $this->database->fetch(
+			'SELECT
+				t.action,
+				d.id_date AS dateId,
+				a.id_application AS applicationId,
+				s.status,
+				a.name,
+				a.email,
+				a.company,
+				a.street,
+				a.city,
+				a.zip,
+				a.company_id AS companyId,
+				a.company_tax_id AS companyTaxId,
+				a.note
+			FROM
+				training_applications a
+				JOIN training_dates d ON a.key_date = d.id_date
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_application_status s ON a.key_status = s.id_status
+			WHERE
+				id_application = ?',
+			$id
+		);
+
+		return $result;
+	}
+
+
 	public function getApplicationByToken($token)
 	{
 		$result = $this->database->fetch(
@@ -357,6 +390,32 @@ class Trainings extends BaseModel
 	private function getTrainingApplicationSource()
 	{
 		return $this->database->fetchColumn('SELECT id_source FROM training_application_sources WHERE alias = ?', self::TRAINING_APPLICATION_SOURCE);
+	}
+
+
+	public function getFiles($applicationId)
+	{
+		if ($this->getApplicationById($applicationId)->status != self::STATUS_ACCESS_TOKEN_USED) {
+			$this->setStatus($applicationId, self::STATUS_ACCESS_TOKEN_USED);
+		}
+
+		$result = $this->database->fetchAll(
+			'SELECT
+				f.filename
+			FROM 
+				files f
+				JOIN training_materials m ON f.id_file = m.key_file
+				JOIN training_applications a ON m.key_application = a.id_application
+				JOIN training_application_status s ON a.key_status = s.id_status
+			WHERE
+				a.id_application = ?
+				AND s.status IN (?, ?)',
+			$applicationId,
+			self::STATUS_MATERIALS_SENT,
+			self::STATUS_ACCESS_TOKEN_USED
+		);
+
+		return $result;
 	}
 
 

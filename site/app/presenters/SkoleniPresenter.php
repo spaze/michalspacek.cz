@@ -343,4 +343,43 @@ class SkoleniPresenter extends BasePresenter
 	}
 
 
+	public function actionSoubory($name, $param)
+	{
+		$session = $this->getSession('application');
+
+		if ($param !== null) {
+			$application = $this->trainings->getApplicationByToken($param);
+			$session->token = $param;
+			$session->applicationId = ($application ? $application->applicationId : null);
+			$this->redirect($this->getName() . ':soubory', $name);
+		}
+
+		if (!$session->applicationId) {
+			if ($session->token) {
+				throw new \Nette\Application\BadRequestException("Invalid token {$session->token}", \Nette\Http\Response::S404_NOT_FOUND);
+			} else {
+				throw new \Nette\Application\BadRequestException('Need access token', \Nette\Http\Response::S404_NOT_FOUND);
+			}
+		} else {
+			$training = $this->trainings->get($name);
+			if (!$training) {
+				throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			}
+
+			$files = $this->trainings->getFiles($session->applicationId);
+			if (!$files) {
+				throw new \Nette\Application\BadRequestException("No files for token {$session->token}", \Nette\Http\Response::S404_NOT_FOUND);
+			}
+
+			$this->template->trainingTitle = $training->name;
+			$this->template->trainingName = $training->action;
+			$this->template->trainingDate = $training->start;
+
+			$this->template->pageTitle = 'Materiály ze školení ' . $training->name;
+			$this->template->files = $files;
+		}
+	
+	}
+
+
 }
