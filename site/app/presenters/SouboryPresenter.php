@@ -37,7 +37,7 @@ class SouboryPresenter extends BasePresenter
 
 	protected function sendFile($id, $file)
 	{
-		$this->files->logDownload($id, $this->getHttpRequest()->getRemoteAddress(), (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
+		$this->files->logDownload($id, $this->getHttpRequest()->getRemoteAddress(), (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null));
 		$this->sendResponse(new FileResponse($file, null, \Nette\Utils\MimeTypeDetector::fromFile($file)));
 	}
 
