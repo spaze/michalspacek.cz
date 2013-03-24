@@ -334,6 +334,7 @@ class Trainings extends BaseModel
 				t.action,
 				d.id_date AS dateId,
 				a.id_application AS applicationId,
+				d.start AS trainingStart,
 				s.status,
 				a.name,
 				a.email,
@@ -411,6 +412,34 @@ class Trainings extends BaseModel
 				a.id_application = ?
 				AND s.status IN (?, ?)',
 			$applicationId,
+			self::STATUS_MATERIALS_SENT,
+			self::STATUS_ACCESS_TOKEN_USED
+		);
+
+		return $result;
+	}
+
+
+	public function getFile($applicationId, $token, $filename)
+	{
+		$result = $this->database->fetch(
+			'SELECT
+				f.filename AS fileName,
+				CAST(DATE(d.start) AS char) AS dirName
+			FROM 
+				files f
+				JOIN training_materials m ON f.id_file = m.key_file
+				JOIN training_applications a ON m.key_application = a.id_application
+				JOIN training_application_status s ON a.key_status = s.id_status
+				JOIN training_dates d ON a.key_date = d.id_date
+			WHERE
+				a.id_application = ?
+				AND a.access_token = ?
+				AND f.filename = ?
+				AND s.status IN (?, ?)',
+			$applicationId,
+			$token,
+			$filename,
 			self::STATUS_MATERIALS_SENT,
 			self::STATUS_ACCESS_TOKEN_USED
 		);
