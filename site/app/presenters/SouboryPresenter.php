@@ -1,4 +1,8 @@
 <?php
+use \Nette\Application\BadRequestException,
+	\Nette\Application\Responses\FileResponse,
+	\Nette\Http\Response;
+
 /**
  * Soubory presenter.
  *
@@ -13,16 +17,16 @@ class SouboryPresenter extends BasePresenter
 	{
 		$session = $this->getSession('application');
 		if (!$session->applicationId) {
-			throw new \Nette\Application\BadRequestException("Unknown application id, missing or invalid token", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
 		}
 
 		$file = $this->trainings->getFile($session->applicationId, $session->token, $filename);
 		if (!$file) {
-			throw new \Nette\Application\BadRequestException("No file {$filename} for application id {$session->applicationId}", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
-		echo "download files/skoleni/{$file->dirName}/{$file->fileName}";
-		$this->terminate();
+		$path = "{$file->dirName}/{$file->fileName}";
+		$this->sendResponse(new FileResponse($path, null, \Nette\Utils\MimeTypeDetector::fromFile($path)));
 	}
 
 

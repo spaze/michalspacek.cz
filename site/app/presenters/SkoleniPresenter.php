@@ -374,7 +374,7 @@ class SkoleniPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 		foreach ($files as $file) {
-			// $this->files->getInfo();
+			$file->info = $this->files->getInfo("{$file->dirName}/{$file->fileName}");
 		}
 
 		$this->template->trainingTitle = $training->name;

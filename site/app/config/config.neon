@@ -26,8 +26,12 @@ common:
 		router: @routerFactory::createRouter
 		texyFormatter: \Bare\Next\Formatter\Texy
 		articles:  \MichalSpacekCz\Articles
+		files:     \MichalSpacekCz\Files
 		talks:     \MichalSpacekCz\Talks
-		trainings: \MichalSpacekCz\Trainings
+		trainings:
+			class: \MichalSpacekCz\Trainings
+			setup:
+				- setFilesDir('../files/trainings')
 		interviews: \MichalSpacekCz\Interviews
 
 production < common:

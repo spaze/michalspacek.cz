@@ -19,6 +19,8 @@ class Trainings extends BaseModel
 
 	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
+	protected $filesDir;
+
 
 	public function getUpcoming()
 	{
@@ -394,20 +396,31 @@ class Trainings extends BaseModel
 	}
 
 
+	public function setFilesDir($dir)
+	{
+		if ($dir[strlen($dir) - 1] != '/') {
+			$dir .= '/';
+		}
+		$this->filesDir = $dir;
+	}
+
+
 	public function getFiles($applicationId)
 	{
 		if ($this->getApplicationById($applicationId)->status != self::STATUS_ACCESS_TOKEN_USED) {
 			$this->setStatus($applicationId, self::STATUS_ACCESS_TOKEN_USED);
 		}
 
-		$result = $this->database->fetchAll(
+		$files = $this->database->fetchAll(
 			'SELECT
-				f.filename
+				f.filename AS fileName,
+				CAST(DATE(d.start) AS char) AS dirName
 			FROM 
 				files f
 				JOIN training_materials m ON f.id_file = m.key_file
 				JOIN training_applications a ON m.key_application = a.id_application
 				JOIN training_application_status s ON a.key_status = s.id_status
+				JOIN training_dates d ON a.key_date = d.id_date
 			WHERE
 				a.id_application = ?
 				AND s.status IN (?, ?)',
@@ -416,13 +429,17 @@ class Trainings extends BaseModel
 			self::STATUS_ACCESS_TOKEN_USED
 		);
 
-		return $result;
+		foreach ($files as $file) {
+			$file->dirName = $this->filesDir . $file->dirName;
+		}
+
+		return $files;
 	}
 
 
 	public function getFile($applicationId, $token, $filename)
 	{
-		$result = $this->database->fetch(
+		$file = $this->database->fetch(
 			'SELECT
 				f.filename AS fileName,
 				CAST(DATE(d.start) AS char) AS dirName
@@ -444,7 +461,11 @@ class Trainings extends BaseModel
 			self::STATUS_ACCESS_TOKEN_USED
 		);
 
-		return $result;
+		if ($file) {
+			$file->dirName = $this->filesDir . $file->dirName;
+		}
+
+		return $file;
 	}
 
 

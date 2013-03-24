@@ -14,6 +14,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	protected $articles;
 
 	/**
+	 * @var \MichalSpacekCz\Files
+	 */
+	protected $files;
+
+	/**
 	 * @var \MichalSpacekCz\Talks
 	 */
 	protected $talks;
@@ -38,6 +43,18 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 			throw new Nette\InvalidStateException('Articles has already been set');
 		}
 		$this->articles = $articles;
+	}
+
+
+	/**
+	 * @param \MichalSpacekCz\Files
+	 */
+	public function injectFiles(\MichalSpacekCz\Files $files)
+	{
+		if ($this->files) {
+			throw new Nette\InvalidStateException('Files has already been set');
+		}
+		$this->files = $files;
 	}
 
 
