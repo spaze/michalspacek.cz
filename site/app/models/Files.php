@@ -18,4 +18,17 @@ class Files extends BaseModel
 	}
 
 
+	public function logDownload($id, $ipAddress, $userAgent)
+	{
+		$datetime = new \DateTime();
+		$this->database->query('INSERT INTO file_downloads', array(
+			'key_file'      => $id,
+			'ip'            => $ipAddress,
+			'user_agent'    => $userAgent,
+			'time'          => $datetime,
+			'time_timezone' => $datetime->getTimezone()->getName(),
+		));
+	}
+
+
 }

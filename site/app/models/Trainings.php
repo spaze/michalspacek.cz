@@ -413,6 +413,7 @@ class Trainings extends BaseModel
 
 		$files = $this->database->fetchAll(
 			'SELECT
+				f.id_file AS fileId,
 				f.filename AS fileName,
 				CAST(DATE(d.start) AS char) AS dirName
 			FROM 
@@ -441,6 +442,7 @@ class Trainings extends BaseModel
 	{
 		$file = $this->database->fetch(
 			'SELECT
+				f.id_file AS fileId,
 				f.filename AS fileName,
 				CAST(DATE(d.start) AS char) AS dirName
 			FROM 

@@ -25,13 +25,20 @@ class SouboryPresenter extends BasePresenter
 			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
-		$path = "{$file->dirName}/{$file->fileName}";
-		$this->sendResponse(new FileResponse($path, null, \Nette\Utils\MimeTypeDetector::fromFile($path)));
+		$this->sendFile($file->fileId, "{$file->dirName}/{$file->fileName}");
 	}
 
 
 	public function actionSoubor($filename)
 	{
+		throw new BadRequestException("Cannot download {$filename}", Response::S404_NOT_FOUND);
+	}
+
+
+	protected function sendFile($id, $file)
+	{
+		$this->files->logDownload($id, $this->getHttpRequest()->getRemoteAddress(), (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
+		$this->sendResponse(new FileResponse($file, null, \Nette\Utils\MimeTypeDetector::fromFile($file)));
 	}
 
 
