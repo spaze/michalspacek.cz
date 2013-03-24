@@ -352,7 +352,7 @@ class SkoleniPresenter extends BasePresenter
 			$application = $this->trainings->getApplicationByToken($param);
 			$session->token = $param;
 			$session->applicationId = ($application ? $application->applicationId : null);
-			$this->redirect($this->getName() . ':soubory', $name);
+			$this->redirect($this->getName() . ':soubory', $application->action);
 		}
 
 		if (!$session->applicationId || !$session->token) {
