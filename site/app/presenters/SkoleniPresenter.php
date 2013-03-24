@@ -1,6 +1,7 @@
 <?php
 use \Nette\Application\UI\Form,
-	\Nette\Diagnostics\Debugger;
+	\Nette\Diagnostics\Debugger,
+	\Nette\Http\Response;
 
 /**
  * Školení presenter.
@@ -72,7 +73,7 @@ class SkoleniPresenter extends BasePresenter
 		$training = $this->trainings->get($name);
 
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$this->tentative[$name] = $training->tentative;
@@ -128,7 +129,7 @@ class SkoleniPresenter extends BasePresenter
 	{
 		$training  = $this->trainings->get($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$session = $this->getSession('training');
@@ -327,12 +328,12 @@ class SkoleniPresenter extends BasePresenter
 	public function actionOhlasy($name, $param)
 	{
 		if ($param !== null) {
-			throw new \Nette\Application\BadRequestException('No param here, please', \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
 		}
 
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$this->template->name             = $training->action;
@@ -355,22 +356,22 @@ class SkoleniPresenter extends BasePresenter
 		}
 
 		if (!$session->applicationId || !$session->token) {
-			throw new \Nette\Application\BadRequestException("Unknown application id, missing or invalid token", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
 		}
 
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$application = $this->trainings->getApplicationById($session->applicationId);
 		if (!$application) {
-			throw new \Nette\Application\BadRequestException("No training application for id {$session->applicationId}", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("No training application for id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
 		$files = $this->trainings->getFiles($session->applicationId);
 		if (!$files) {
-			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 		foreach ($files as $file) {
 			// $this->files->getInfo();
