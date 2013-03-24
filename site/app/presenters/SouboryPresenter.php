@@ -9,7 +9,7 @@ class SouboryPresenter extends BasePresenter
 {
 
 
-	public function actionSkoleni($date, $filename)
+	public function actionSkoleni($filename)
 	{
 		echo 'download';
 		$this->terminate();
