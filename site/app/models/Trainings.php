@@ -13,6 +13,7 @@ class Trainings extends BaseModel
 	const STATUS_CREATED   = 'CREATED';
 	const STATUS_TENTATIVE = 'TENTATIVE';
 	const STATUS_SIGNED_UP = 'SIGNED_UP';
+	const STATUS_ATTENDED = 'ATTENDED';
 	const STATUS_MATERIALS_SENT = 'MATERIALS_SENT';
 	const STATUS_ACCESS_TOKEN_USED = 'ACCESS_TOKEN_USED';
 	const TRAINING_APPLICATION_SOURCE  = 'michal-spacek';
@@ -424,8 +425,9 @@ class Trainings extends BaseModel
 				JOIN training_dates d ON a.key_date = d.id_date
 			WHERE
 				a.id_application = ?
-				AND s.status IN (?, ?)',
+				AND s.status IN (?, ?, ?)',
 			$applicationId,
+			self::STATUS_ATTENDED,
 			self::STATUS_MATERIALS_SENT,
 			self::STATUS_ACCESS_TOKEN_USED
 		);
@@ -455,10 +457,11 @@ class Trainings extends BaseModel
 				a.id_application = ?
 				AND a.access_token = ?
 				AND f.filename = ?
-				AND s.status IN (?, ?)',
+				AND s.status IN (?, ?, ?)',
 			$applicationId,
 			$token,
 			$filename,
+			self::STATUS_ATTENDED,
 			self::STATUS_MATERIALS_SENT,
 			self::STATUS_ACCESS_TOKEN_USED
 		);
