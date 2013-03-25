@@ -44,6 +44,7 @@ ul {
     text-align: left;
     padding: 0px 1em;
 }
+small { color: #555; }
 img { border: none; }
 abbr.dtstart, abbr.dtend { border: none; }
 .container {
