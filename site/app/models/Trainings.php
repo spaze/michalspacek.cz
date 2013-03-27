@@ -265,6 +265,7 @@ class Trainings extends BaseModel
 				JOIN trainings t ON t.id_training = d.key_training
 			WHERE
 				t.action = ?
+				AND NOT r.hidden
 			ORDER BY r.added DESC';
 
 		if ($limit !== null) {
