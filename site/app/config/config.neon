@@ -25,6 +25,7 @@ common:
 		routerFactory: RouterFactory
 		router: @routerFactory::createRouter
 		texyFormatter: \Bare\Next\Formatter\Texy
+		redirections:  \MichalSpacekCz\Redirections
 		articles:  \MichalSpacekCz\Articles
 		files:     \MichalSpacekCz\Files
 		talks:     \MichalSpacekCz\Talks

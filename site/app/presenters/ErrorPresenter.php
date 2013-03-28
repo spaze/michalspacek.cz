@@ -11,13 +11,35 @@ use Nette\Diagnostics\Debugger,
 class ErrorPresenter extends BasePresenter
 {
 
+	/**
+	 * @var \MichalSpacekCz\Redirections
+	 */
+	protected $redirections;
+
+
+	/**
+	 * @param \MichalSpacekCz\Redirections
+	 */
+	public function injectRedirections(\MichalSpacekCz\Redirections $redirections)
+	{
+		if ($this->redirections) {
+			throw new Nette\InvalidStateException('Redirections has already been set');
+		}
+		$this->redirections = $redirections;
+	}
+
 
 	/**
 	 * @param  Exception
 	 * @return void
 	 */
-	public function renderDefault($exception)
+	public function actionDefault($exception)
 	{
+		$destination = $this->redirections->getDestination($this->getHttpRequest()->getUrl());
+		if ($destination) {
+			$this->redirectUrl($destination, \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
+		}
+
 		if ($exception instanceof NA\BadRequestException) {
 			$code = $exception->getCode();
 			// load template 403.latte or 404.latte or ... 4xx.latte
