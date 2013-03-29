@@ -69,7 +69,7 @@
 <h2>Ohlasy na školení</h2>
 {foreach $reviews as $review}
 	<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
-	<blockquote><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">více&hellip;</a>)</small></p></blockquote>
+	<blockquote><p><small>{$review->review} <span n:if="$review->href">(<a href="{$review->href}">více&hellip;</a>)</span></small></p></blockquote>
 {/foreach}
 </div>
 <p><a n:href="Skoleni:ohlasy $name">Všechny ohlasy</a></p>
