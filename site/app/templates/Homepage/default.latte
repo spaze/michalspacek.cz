@@ -16,7 +16,7 @@
     <li n:foreach="$articles as $article">
         <a href="{$article->href}"><strong>{$article->title}</strong></a>
         <small>(<span class="date">{$article->date|date:'j. n. Y'}</span>, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
-        <p><small>{$article->excerpt} <a href="{$article->href}">→</a></small></p>
+        <p><small>{$article->excerpt} (<a href="{$article->href}">celý článek&hellip;</a>)</small></p>
     </li>
 </ul>
 <p><a n:href="Clanky:">Všechny články</a></p>
