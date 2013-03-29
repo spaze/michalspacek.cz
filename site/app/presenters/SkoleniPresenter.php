@@ -121,6 +121,7 @@ class SkoleniPresenter extends BasePresenter
 		// we want to access form fields' labels and values even when not actually showing the form
 		if (!$this->template->showForm) {
 			$this->template->form = $this->createComponentApplication('application');
+			$this->template->trackPageview = $this->getHttpRequest()->getUrl()->getPath() . '/potvrzeni';
 		}
 	}
 
