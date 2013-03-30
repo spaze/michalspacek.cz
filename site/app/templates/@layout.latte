@@ -20,11 +20,7 @@
     <script type="text/javascript" n:if="!$debugMode">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-23432180-1']);
-      {if isset($trackPageview)}
-      _gaq.push(['_trackPageview', '{$trackPageview}']);
-      {else}
       _gaq.push(['_trackPageview']);
-      {/if}
 
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
