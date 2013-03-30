@@ -19,6 +19,9 @@ class SkoleniPresenter extends BasePresenter
 	 */
 	private $tentative = array();
 
+	/** @var \Nette\Database\Row */
+	private $training;
+
 	/**
 	 * Past trainings done by Jakub.
 	 *
@@ -70,37 +73,37 @@ class SkoleniPresenter extends BasePresenter
 		$session = $this->getSession();
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
-		$training = $this->trainings->get($name);
+		$this->training = $this->trainings->get($name);
 
-		if (!$training) {
+		if (!$this->training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
-		$this->tentative[$name] = $training->tentative;
+		$this->tentative[$name] = $this->training->tentative;
 
-		$this->template->name             = $training->action;
-		$this->template->trainingId       = $training->dateId;
-		$this->template->pageTitle        = 'Školení ' . $training->name;
-		$this->template->title            = $training->name;
-		$this->template->description      = $training->description;
-		$this->template->content          = $training->content;
-		$this->template->upsell           = $training->upsell;
-		$this->template->prerequisites    = $training->prerequisites;
-		$this->template->audience         = $training->audience;
-		$this->template->start            = $training->start;
-		$this->template->end              = $training->end;
-		$this->template->tentative        = $training->tentative;
-		$this->template->originalHref     = $training->originalHref;
-		$this->template->capacity         = $training->capacity;
-		$this->template->services         = $training->services;
-		$this->template->price            = $training->price;
-		$this->template->studentDiscount  = $training->studentDiscount;
-		$this->template->materials        = $training->materials;
-		$this->template->venueHref        = $training->venueHref;
-		$this->template->venueName        = $training->venueName;
-		$this->template->venueAddress     = $training->venueAddress;
-		$this->template->venueDescription = $training->venueDescription;
-		$this->template->lastFreeSeats    = $training->lastFreeSeats;
+		$this->template->name             = $this->training->action;
+		$this->template->trainingId       = $this->training->dateId;
+		$this->template->pageTitle        = 'Školení ' . $this->training->name;
+		$this->template->title            = $this->training->name;
+		$this->template->description      = $this->training->description;
+		$this->template->content          = $this->training->content;
+		$this->template->upsell           = $this->training->upsell;
+		$this->template->prerequisites    = $this->training->prerequisites;
+		$this->template->audience         = $this->training->audience;
+		$this->template->start            = $this->training->start;
+		$this->template->end              = $this->training->end;
+		$this->template->tentative        = $this->training->tentative;
+		$this->template->originalHref     = $this->training->originalHref;
+		$this->template->capacity         = $this->training->capacity;
+		$this->template->services         = $this->training->services;
+		$this->template->price            = $this->training->price;
+		$this->template->studentDiscount  = $this->training->studentDiscount;
+		$this->template->materials        = $this->training->materials;
+		$this->template->venueHref        = $this->training->venueHref;
+		$this->template->venueName        = $this->training->venueName;
+		$this->template->venueAddress     = $this->training->venueAddress;
+		$this->template->venueDescription = $this->training->venueDescription;
+		$this->template->lastFreeSeats    = $this->training->lastFreeSeats;
 
 		$this->template->pastTrainingsMe = $this->trainings->getPastTrainings($name);
 
@@ -280,7 +283,7 @@ class SkoleniPresenter extends BasePresenter
 				$session->note  = $values['note'];
 			} else {
 				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values['trainingId']) {
-					$this->trainings->updateApplication(
+					$applicationId = $this->trainings->updateApplication(
 						$session->application[$name]['id'],
 						$values['name'],
 						$values['email'],
@@ -294,7 +297,7 @@ class SkoleniPresenter extends BasePresenter
 					);
 					$session->application[$name] = null;
 				} else {
-					$this->trainings->addApplication(
+					$applicationId = $this->trainings->addApplication(
 						$values['trainingId'],
 						$values['name'],
 						$values['email'],
@@ -308,6 +311,18 @@ class SkoleniPresenter extends BasePresenter
 					);
 				}
 				$this->flashMessage('Díky, přihláška odeslána! Potvrzení společně s fakturou vám přijde do druhého pracovního dne.');
+				$this->trainings->sendSignUpMail(
+					$applicationId,
+					$this->createTemplate()->setFile(dirname(__DIR__) . '/templates/Skoleni/signUpMail.latte'),
+					$values['email'],
+					$values['name'],
+					$this->training->start,
+					$name,
+					$this->training->name,
+					$this->training->venueName,
+					$this->training->venueAddress
+				);
+
 				$session->name         = $values['name'];
 				$session->email        = $values['email'];
 				$session->company      = $values['company'];

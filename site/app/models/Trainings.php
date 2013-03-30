@@ -190,10 +190,11 @@ class Trainings extends BaseModel
 			'key_source'           => $this->getTrainingApplicationSource(),
 		);
 		$code = $this->insertData($data);
-		$this->setStatus($this->database->lastInsertId(), self::STATUS_TENTATIVE);
+		$applicationId = $this->database->lastInsertId();
+		$this->setStatus($applicationId, self::STATUS_TENTATIVE);
 		$this->database->commit();
 
-		return true;
+		return $applicationId;
 	}
 
 
@@ -220,10 +221,11 @@ class Trainings extends BaseModel
 			'key_source'           => $this->getTrainingApplicationSource(),
 		);
 		$code = $this->insertData($data);
-		$this->setStatus($this->database->lastInsertId(), self::STATUS_SIGNED_UP);
+		$applicationId = $this->database->lastInsertId();
+		$this->setStatus($applicationId, self::STATUS_SIGNED_UP);
 		$this->database->commit();
 
-		return true;
+		return $applicationId;
 	}
 
 
@@ -247,7 +249,7 @@ class Trainings extends BaseModel
 		);
 		$this->setStatus($applicationId, self::STATUS_SIGNED_UP);
 		$this->database->commit();
-		return true;
+		return $applicationId;
 	}
 
 
@@ -472,6 +474,24 @@ class Trainings extends BaseModel
 		}
 
 		return $file;
+	}
+
+
+	public function sendSignUpMail($applicationId, $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueAddress)
+	{
+		\Nette\Diagnostics\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$training}");
+
+		$template->training     = $training;
+		$template->trainingName = $trainingName;
+		$template->start        = $start;
+		$template->venueName    = $venueName;
+		$template->venueAddress = $venueAddress;
+
+		$mail = new \Nette\Mail\Message();
+		$mail->addTo($recipientAddress, $recipientName)
+			->setBody($template)
+			->clearHeader('X-Mailer')  // Hide Nette Mailer banner
+			->send();
 	}
 
 
