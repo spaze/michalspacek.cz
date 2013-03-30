@@ -22,6 +22,8 @@ class Trainings extends BaseModel
 
 	protected $filesDir;
 
+	protected $emailFrom;
+
 
 	public function getUpcoming()
 	{
@@ -488,10 +490,18 @@ class Trainings extends BaseModel
 		$template->venueAddress = $venueAddress;
 
 		$mail = new \Nette\Mail\Message();
-		$mail->addTo($recipientAddress, $recipientName)
+		$mail->setFrom($this->emailFrom)
+			->addTo($recipientAddress, $recipientName)
+			->addBcc($this->emailFrom)
 			->setBody($template)
 			->clearHeader('X-Mailer')  // Hide Nette Mailer banner
 			->send();
+	}
+
+
+	public function setEmailFrom($from)
+	{
+		$this->emailFrom = $from;
 	}
 
 
