@@ -1,0 +1,49 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Skoleni:">Školení</a>
+&raquo; <a n:href="Skoleni:{$name}">{$title}</a>
+{/define}
+
+{define #content}
+{includeblock "../Skoleni/default.latte"}
+<p>{$description}</p>
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+{form application}
+<fieldset id="ucastnik">
+	<legend>Účastník</legend>
+	<table>
+		<tr>
+			<th>{$form[name]->caption}</th><td>{$form[name]->value}</td>
+			<th>{$form[email]->caption}</th><td>{$form[email]->value}</td>
+		</tr>
+	</table>
+</fieldset>
+{if $tentative}
+{else}
+<fieldset>
+	<legend>Fakturační údaje</legend>
+	<table>
+		<tr>
+			<th>{$form[company]->caption}</th><td>{$form[company]->value}</td>
+			<th>{$form[street]->caption}</th><td>{$form[street]->value}</td>
+		</tr>
+		<tr>
+			<th>{$form[city]->caption}</th><td>{$form[city]->value}</td>
+			<th>{$form[zip]->caption}</th><td>{$form[zip]->value}</td>
+		</tr>
+		<tr>
+			<th>{$form[companyId]->caption}</th><td>{$form[companyId]->value}</td>
+			<th>{$form[companyTaxId]->caption}</th><td>{$form[companyTaxId]->value}</td>
+		</tr>
+	</table>
+</fieldset>
+{/if}
+<p><strong>{$form[note]->caption}</strong> {$form[note]->value}</p>
+{/form application}
+<hr />
+<p><a n:href="Skoleni:prihlaska#prihlaska $name">Přihlašte dalšího účastníka</a></p>
+
+<p>Přijďte i na další školení, která pořádám a vedu:</p>
+{include #list}
+
+{/define}

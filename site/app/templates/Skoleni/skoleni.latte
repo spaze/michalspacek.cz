@@ -82,84 +82,48 @@
 {/if}
 
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{if $showForm}
-	{form application}
-	<fieldset id="chyby" n:if="$form->hasErrors()">
-		<legend><strong>Chyby</strong></legend>
-		<strong>Přihláška nebyla odeslána, předtím než se ji pokusíte odeslat znovu, opravte následující chyby:</strong>
-		<ul>
-			<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
-		</ul>
-	</fieldset>
-	{input trainingId value => $trainingId}
-	<fieldset id="ucastnik">
-		<legend>Účastník</legend>
-		<table>
-			<tr>
-				<th>{label name /}</th><td>{input name}</td>
-				<th>{label email /}</th><td>{input email}</td>
-			</tr>
-		</table>
-	</fieldset>
-	{if $tentative}
-	{else}
-	<fieldset>
-		<legend>Fakturační údaje</legend>
-		<table>
-			<tr>
-				<th>{label company /}</th><td>{input company}</td>
-				<th>{label street /}</th><td>{input street}</td>
-			</tr>
-			<tr>
-				<th>{label city /}</th><td>{input city}</td>
-				<th>{label zip /}</th><td>{input zip}</td>
-			</tr>
-			<tr>
-				<th>{label companyId /}</th><td>{input companyId}</td>
-				<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>
-			</tr>
-		</table>
-	</fieldset>
-	{/if}
 
-	<p><strong>{label note /}</strong> {input note}</p>
-	<p>{input signUp}</p>
-	{/form application}
+{form application}
+<fieldset id="chyby" n:if="$form->hasErrors()">
+	<legend><strong>Chyby</strong></legend>
+	<strong>Přihláška nebyla odeslána, předtím než se ji pokusíte odeslat znovu, opravte následující chyby:</strong>
+	<ul>
+		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+	</ul>
+</fieldset>
+{input trainingId value => $trainingId}
+<fieldset id="ucastnik">
+	<legend>Účastník</legend>
+	<table>
+		<tr>
+			<th>{label name /}</th><td>{input name}</td>
+			<th>{label email /}</th><td>{input email}</td>
+		</tr>
+	</table>
+</fieldset>
+{if $tentative}
 {else}
-	{form application}
-	<fieldset id="ucastnik">
-		<legend>Účastník</legend>
-		<table>
-			<tr>
-				<th>{$form[name]->caption}</th><td>{$form[name]->value}</td>
-				<th>{$form[email]->caption}</th><td>{$form[email]->value}</td>
-			</tr>
-		</table>
-	</fieldset>
-	{if $tentative}
-	{else}
-	<fieldset>
-		<legend>Fakturační údaje</legend>
-		<table>
-			<tr>
-				<th>{$form[company]->caption}</th><td>{$form[company]->value}</td>
-				<th>{$form[street]->caption}</th><td>{$form[street]->value}</td>
-			</tr>
-			<tr>
-				<th>{$form[city]->caption}</th><td>{$form[city]->value}</td>
-				<th>{$form[zip]->caption}</th><td>{$form[zip]->value}</td>
-			</tr>
-			<tr>
-				<th>{$form[companyId]->caption}</th><td>{$form[companyId]->value}</td>
-				<th>{$form[companyTaxId]->caption}</th><td>{$form[companyTaxId]->value}</td>
-			</tr>
-		</table>
-	</fieldset>
-	{/if}
-	<p><strong>{$form[note]->caption}</strong> {$form[note]->value}</p>
-	<p><a n:href="Skoleni:">Přihlašte se i na ostatní školení</a> nebo <a n:href="Skoleni:prihlaska#prihlaska $name">přihlašte dalšího účastníka</a></p>
-	{/form application}
+<fieldset>
+	<legend>Fakturační údaje</legend>
+	<table>
+		<tr>
+			<th>{label company /}</th><td>{input company}</td>
+			<th>{label street /}</th><td>{input street}</td>
+		</tr>
+		<tr>
+			<th>{label city /}</th><td>{input city}</td>
+			<th>{label zip /}</th><td>{input zip}</td>
+		</tr>
+		<tr>
+			<th>{label companyId /}</th><td>{input companyId}</td>
+			<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>
+		</tr>
+	</table>
+</fieldset>
 {/if}
+<p><strong>{label note /}</strong> {input note}</p>
+<p>{input signUp}</p>
+{/form application}
 
 {if $tentative}
 <p><small>Zadané údaje budou použity pro zaslání pozvánky na příští termín.</small></p>

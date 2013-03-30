@@ -110,22 +110,6 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
 		$this->template->reviews = $this->trainings->getReviews($name, 3);
-
-		// hide the form when all the flash message are not errors
-		$this->template->showForm = true;
-		foreach ($this->template->flashes as $flash) {
-			$this->template->showForm = false;
-			if ($flash->type == 'error') {
-				$this->template->showForm = true;
-				break;
-			}
-		}
-
-		// we want to access form fields' labels and values even when not actually showing the form
-		if (!$this->template->showForm) {
-			$this->template->form = $this->createComponentApplication('application');
-			$this->template->trackPageview = $this->getHttpRequest()->getUrl()->getPath() . '/potvrzeni';
-		}
 	}
 
 
@@ -179,7 +163,6 @@ class SkoleniPresenter extends BasePresenter
 
 		$form = new Form($this, $formName);
 		$name = $form->parent->params['name'];
-		$form->setAction($form->getAction() . '#prihlaska');
 		$form->addHidden('trainingId');  // trainingId is actually dateId, oh well
 		$form->addGroup('Účastník');
 		$form->addText('name', 'Jméno a příjmení:')
@@ -310,7 +293,6 @@ class SkoleniPresenter extends BasePresenter
 						$values['note']
 					);
 				}
-				$this->flashMessage('Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní.');
 				$this->trainings->sendSignUpMail(
 					$applicationId,
 					$this->createTemplate()->setFile(dirname(__DIR__) . '/templates/Skoleni/signUpMail.latte'),
@@ -333,7 +315,7 @@ class SkoleniPresenter extends BasePresenter
 				$session->companyTaxId = $values['companyTaxId'];
 				$session->note         = $values['note'];
 			}
-			$this->redirect($this->getName() . ':' . $name);
+			$this->redirect($this->getName() . ':potvrzeni', $name);
 		} catch (PDOException $e) {
 			Debugger::log($e, Debugger::ERROR);
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
@@ -403,6 +385,41 @@ class SkoleniPresenter extends BasePresenter
 
 		$this->template->pageTitle = 'Materiály ze školení ' . $training->name;
 		$this->template->files = $files;
+	}
+
+
+	public function actionPotvrzeni($name, $param)
+	{
+		if ($param !== null) {
+			throw new \Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
+		}
+
+		$training = $this->trainings->get($name);
+		if (!$training) {
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+		}
+
+		$session = $this->getSession('training');
+		if (!isset($session->name)) {
+			$this->redirect($this->getName() . ':' . $name);
+		}
+
+		$this->tentative[$name] = $training->tentative;
+
+		$this->flashMessage('Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní.');
+
+		$this->template->name             = $training->action;
+		$this->template->pageTitle        = 'Přihláška na ' . $training->name;
+		$this->template->title            = $training->name;
+		$this->template->description      = $training->description;
+		$this->template->tentative        = $training->tentative;
+		$this->template->lastFreeSeats    = $training->lastFreeSeats;
+
+		$upcoming = $this->trainings->getUpcoming();
+		unset($upcoming[$training->dateId]);
+		$this->template->upcomingTrainings = $upcoming;
+
+		$this->template->form = $this->createComponentApplication('application');
 	}
 
 
