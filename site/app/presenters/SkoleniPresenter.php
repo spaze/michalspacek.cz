@@ -310,7 +310,7 @@ class SkoleniPresenter extends BasePresenter
 						$values['note']
 					);
 				}
-				$this->flashMessage('Díky, přihláška odeslána! Potvrzení společně s fakturou vám přijde do druhého pracovního dne.');
+				$this->flashMessage('Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní.');
 				$this->trainings->sendSignUpMail(
 					$applicationId,
 					$this->createTemplate()->setFile(dirname(__DIR__) . '/templates/Skoleni/signUpMail.latte'),
