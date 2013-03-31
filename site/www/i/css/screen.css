@@ -162,4 +162,4 @@ div.notice {
     overflow: hidden;
 }
 #ohlasy hr { height: 1px; }
-#ohlasy .reply { font-size: small; }
+#ohlasy .reply { color: #777; }
