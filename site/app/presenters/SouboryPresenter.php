@@ -25,7 +25,9 @@ class SouboryPresenter extends BasePresenter
 			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
-		$this->sendFile($file->fileId, "{$file->dirName}/{$file->fileName}");
+		$downloadId = $this->files->logDownload($file->fileId);
+		$this->trainings->logFileDownload($session->applicationId, $downloadId);
+		$this->sendFile("{$file->dirName}/{$file->fileName}");
 	}
 
 
@@ -35,9 +37,8 @@ class SouboryPresenter extends BasePresenter
 	}
 
 
-	protected function sendFile($id, $file)
+	protected function sendFile($file)
 	{
-		$this->files->logDownload($id, $this->getHttpRequest()->getRemoteAddress(), (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null));
 		$this->sendResponse(new FileResponse($file, null, \Nette\Utils\MimeTypeDetector::fromFile($file)));
 	}
 

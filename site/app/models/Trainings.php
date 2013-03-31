@@ -505,4 +505,13 @@ class Trainings extends BaseModel
 	}
 
 
+	public function logFileDownload($applicationId, $downloadId)
+	{
+		$this->database->query('INSERT INTO training_material_downloads', array(
+			'key_application'   => $applicationId,
+			'key_file_download' => $downloadId,
+		));
+	}
+
+
 }
