@@ -38,24 +38,42 @@ class Trainings extends BaseModel
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_date_status s ON d.key_status = s.id_status
 				JOIN training_venues v ON d.key_venue = v.id_venue
-			WHERE d.start = (
-				SELECT MIN(d2.start)
-				FROM training_dates d2
-					JOIN training_date_status s2 ON d2.key_status = s2.id_status
-				WHERE d2.end > NOW()
-					AND d.key_training = d2.key_training
-					AND s2.status IN ('TENTATIVE', 'CONFIRMED')
-					AND d2.public
-				GROUP BY d2.key_training
-			)
+				JOIN (
+					SELECT
+						t2.action,
+						d2.key_venue,
+						MIN(d2.start) AS start
+					FROM
+						trainings t2
+						JOIN training_dates d2 ON t2.id_training = d2.key_training
+						JOIN training_date_status s2 ON d2.key_status = s2.id_status
+					WHERE
+						d2.public
+						AND d2.end > NOW()
+						AND s2.status IN ('TENTATIVE', 'CONFIRMED')
+					GROUP BY
+						t2.action, d2.key_venue
+				) u ON t.action = u.action AND v.id_venue = u.key_venue AND d.start = u.start
 			ORDER BY
 				t.id_training, d.start";
 
 		$upcoming = array();
 		foreach ($this->database->fetchAll($query) as $row) {
-			$row['tentative']         = ($row['status'] == self::STATUS_TENTATIVE);
-			$row['lastFreeSeats']     = $this->lastFreeSeats($row['start']);
-			$upcoming[$row['dateId']] = $row;
+			$date = array(
+				'tentative'     => ($row['status'] == self::STATUS_TENTATIVE),
+				'lastFreeSeats' => $this->lastFreeSeats($row['start']),
+				'start'         => $row['start'],
+				'status'        => $row['status'],
+				'city'          => $row['city'],
+			);
+			$upcoming[$row['action']] = array(
+				'action' => $row['action'],
+				'name'   => $row['name'],
+				'dates'  => (isset($upcoming[$row['action']]['dates'])
+					? $upcoming[$row['action']]['dates'] += array($row['dateId'] => $date)
+					: array($row['dateId'] => $date)
+				),
+			);
 		}
 
 		return $upcoming;
@@ -129,9 +147,11 @@ class Trainings extends BaseModel
 	{
 		$lastFreeSeats = false;
 		foreach ($trainings as $training) {
-			if ($training->lastFreeSeats) {
-				$lastFreeSeats = true;
-				break;
+			foreach ($training['dates'] as $date) {
+				if ($date['lastFreeSeats']) {
+					$lastFreeSeats = true;
+					break;
+				}
 			}
 		}
 		return $lastFreeSeats;

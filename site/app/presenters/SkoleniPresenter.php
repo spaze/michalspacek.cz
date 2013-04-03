@@ -229,29 +229,9 @@ class SkoleniPresenter extends BasePresenter
 		$values = $form->getValues();
 		$name   = $form->parent->params['name'];
 
-		$upcoming = $this->trainings->getUpcoming();
-		if (!isset($upcoming[$values['trainingId']])) {
-			$logValues = $logSession = array();
-			if (isset($session->application[$name])) {
-				foreach ($session->application[$name] as $key => $value) {
-					$logSession[] = "{$key} => \"{$value}\"";
-				}
-			}
-			foreach ($values as $key => $value) {
-				$logValues[] = "{$key} => \"{$value}\"";
-			}
-			Debugger::log(sprintf('Training date id %s is not an upcoming training, should be one of %s (application session data for %s: %s, form values: %s)',
-				$values['trainingId'],
-				implode(', ', array_keys($upcoming)),
-				$name,
-				(empty($logSession) ? 'empty' : implode(', ', $logSession)),
-				implode(', ', $logValues)
-			));
-			$this->flashMessage('Je mi líto, ale v zadané datum se žádné školení nekoná. Pokud to chcete změnit, napište mi!', 'error');
-			return;
-		}
-
 		try {
+			$this->checkTrainingDate($values, $name);
+
 			$datetime = new DateTime();
 			if ($this->tentative[$name]) {
 				$this->trainings->addInvitation(
@@ -319,6 +299,39 @@ class SkoleniPresenter extends BasePresenter
 		} catch (PDOException $e) {
 			Debugger::log($e, Debugger::ERROR);
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
+		}
+	}
+
+
+	private function checkTrainingDate(\Nette\ArrayHash $values, $name)
+	{
+		$session = $this->getSession('training');
+		$upcoming = $this->trainings->getUpcoming();
+
+		$dateIds = array();
+		foreach ($upcoming as $training) {
+			foreach ($training['dates'] as $id => $date) {
+				$dateIds[] = $id;
+			}
+		}
+		if (!in_array($values['trainingId'], $dateIds)) {
+			$logValues = $logSession = array();
+			if (isset($session->application[$name])) {
+				foreach ($session->application[$name] as $key => $value) {
+					$logSession[] = "{$key} => \"{$value}\"";
+				}
+			}
+			foreach ($values as $key => $value) {
+				$logValues[] = "{$key} => \"{$value}\"";
+			}
+			$message = sprintf('Training date id %s is not an upcoming training, should be one of %s (application session data for %s: %s, form values: %s)',
+				$values['trainingId'],
+				implode(', ', $dateIds),
+				$name,
+				(empty($logSession) ? 'empty' : implode(', ', $logSession)),
+				implode(', ', $logValues)
+			);
+			throw new OutOfBoundsException($message);
 		}
 	}
 
@@ -416,7 +429,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->lastFreeSeats    = $training->lastFreeSeats;
 
 		$upcoming = $this->trainings->getUpcoming();
-		unset($upcoming[$training->dateId]);
+		unset($upcoming[$name]);
 		$this->template->upcomingTrainings = $upcoming;
 
 		$this->template->form = $this->createComponentApplication('application');
