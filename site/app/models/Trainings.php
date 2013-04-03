@@ -32,10 +32,12 @@ class Trainings extends BaseModel
 				t.action,
 				t.name,
 				s.status,
-				d.start
+				d.start,
+				v.city
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_date_status s ON d.key_status = s.id_status
+				JOIN training_venues v ON d.key_venue = v.id_venue
 			WHERE d.start = (
 				SELECT MIN(d2.start)
 				FROM training_dates d2
