@@ -24,7 +24,8 @@ class PrednaskyPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = 'Přednáška ' . $talk->title;
+		$this->template->pageTitle = "Přednáška {$talk->title} ({$talk->event})";
+		$this->template->pageHeader = "Přednáška {$talk->title}";
 		$this->template->description = $talk->description;
 		$this->template->href = $talk->href;
 		$this->template->date = $talk->date;
