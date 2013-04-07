@@ -1,3 +1,11 @@
+{define #script}
+$(document).ready(function() {
+	$('#termin a[href="#prihlaska"]').click(function() {
+		$('#frmapplication-trainingId').val($(this).data('id'));
+	});
+});
+{/define}
+
 {define #content}
 <p>{$description} <small>(<a href="#prihlaska">přihláška níže</a>)</small></p>
 
@@ -21,14 +29,16 @@
 <p>{$audience}</p>
 <hr />
 
-<h2 id="termin">{if count($dates) > 1}Termíny a místa{else}Termín a místo{/if}</h2>
+<div id="termin">
+<h2>{if count($dates) > 1}Termíny a místa{else}Termín a místo{/if}</h2>
 {foreach $dates as $date}
 	<p>
 		<strong>{if $date->tentative}{$date->start|localdate:'cs':'%B %Y'}{else}{$date->start|date:'j. n. Y'}{/if}</strong>
 		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>,
 		hodinová přestávka na oběd
+		<small>(<a href="#prihlaska" data-id="{$date->dateId}">přihlásit</a>)</small>
 		{if $date->tentative}
-			<br /><small>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</small>
+			<br /><small><strong>Předběžný termín</strong> &mdash; přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát.</small>
 		{/if}
 	</p>
 	<blockquote>
@@ -36,6 +46,7 @@
 	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
 	</blockquote>
 {/foreach}
+</div>
 <p><small>
 	{foreach $pastTrainingsMe as $date}
 		{first}Již uskutečněné termíny:{/first}
@@ -122,7 +133,7 @@
 <p>{input signUp}</p>
 {/form application}
 
-<p><small>Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky na příští termín.</small></p>
+<p><small>Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín.</small></p>
 <p><small>Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, &hellip;), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu.</small></p>
 <p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
 {/define}
