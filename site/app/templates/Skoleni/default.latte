@@ -11,13 +11,8 @@
 			<a n:href="{$link}"><strong>{$item[name]}</strong></a>
 			<small>
 				{foreach $item[dates] as $date}
-					{first}({/first}{block|trim}
-						{if $date[tentative]}
-							{$date[start]|localdate:'cs':'%B %Y'}
-						{else}
-							<strong>{$date[start]|date:'j. n. Y'}</strong>
-						{/if}
-					{/block} {$date[city]}{sep}, {/sep}{last}){/last}
+					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>
+					{$date[city]}{sep}, {/sep}{last}){/last}
 				{/foreach}
 			</small>
 		</li>
