@@ -175,7 +175,7 @@ class SkoleniPresenter extends BasePresenter
 		$name = $form->parent->params['name'];
 		$form->addSelect('trainingId', 'Termín školení:', $dates)  // trainingId is actually dateId, oh well
 			->setRequired('Vyberte prosím termín a místo školení')
-			->setPrompt(count($dates) > 1 ? 'Vyberte termín a místo' : false);
+			->setPrompt(count($dates) > 1 ? '- vyberte termín a místo -' : false);
 		$form->addGroup('Účastník');
 		$form->addText('name', 'Jméno a příjmení:')
 			->setDefaultValue($session->name)
