@@ -45,6 +45,11 @@ ul {
     padding: 0px 1em;
 }
 small { color: #555; }
+blockquote {
+    margin: 1em 0px 1em 10px;
+    padding-left: 20px;
+    border-left: 2px solid #EEE;
+}
 img { border: none; }
 abbr.dtstart, abbr.dtend { border: none; }
 .container {

@@ -21,15 +21,21 @@
 <p>{$audience}</p>
 <hr />
 
-<h2 id="datum">Datum a čas</h2>
-<p>
-	<strong>{if $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/if}</strong>,
-	<abbr title="{$start|date:DateTime::ISO8601}" class="dtstart">{$start|date:'H:i'}</abbr> &ndash; <abbr title="{$end|date:DateTime::ISO8601}" class="dtend">{$end|date:'H:i'}</abbr>,
-	hodinová přestávka na oběd
-</p>
-{if $tentative}
-	<p>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</p>
-{/if}
+<h2 id="termin">Termín a místo</h2>
+{foreach $dates as $date}
+	<p>
+		<strong>{if $date->tentative}{$date->start|localdate:'cs':'%B %Y'}{else}{$date->start|date:'j. n. Y'}{/if}</strong>
+		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>,
+		hodinová přestávka na oběd
+		{if $date->tentative}
+			<br /><small>Přesné datum zatím neznám. Můžete vyplnit <a href="#prihlaska">nezávaznou přihlášku</a> a dám vám vědět, až datum budu znát.</small>
+		{/if}
+	</p>
+	<blockquote>
+	<p class="location"><strong><a href="{$date->venueHref}">{$date->venueName}</a>, {$date->venueAddress}</strong></p>
+	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
+	</blockquote>
+{/foreach}
 <p><small>
 	{foreach $pastTrainingsMe as $date}
 		{first}Již uskutečněné termíny:{/first}
@@ -42,17 +48,8 @@
 </small></p>
 <hr />
 
-<h2 id="misto">Místo</h2>
-<p class="location"><strong><a href="{$venueHref}">{$venueName}</a>, {$venueAddress}</strong></p>
-{if $venueDescription}<p>{$venueDescription}</p>{/if}
-<hr />
-
 <h2 id="kapacita">Kapacita</h2>
 <p>Nejvýše {$capacity} účastníků</p>
-<hr />
-
-<h2 id="vybaveni">Vybavení</h2>
-<p>{$services}</p>
 <hr />
 
 <h2 id="cena">Cena</h2>

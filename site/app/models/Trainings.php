@@ -60,20 +60,20 @@ class Trainings extends BaseModel
 		$upcoming = array();
 		foreach ($this->database->fetchAll($query) as $row) {
 			$date = array(
-				'tentative'     => ($row['status'] == self::STATUS_TENTATIVE),
-				'lastFreeSeats' => $this->lastFreeSeats($row['start']),
-				'start'         => $row['start'],
-				'status'        => $row['status'],
-				'city'          => $row['city'],
+				'tentative'     => ($row->status == self::STATUS_TENTATIVE),
+				'lastFreeSeats' => $this->lastFreeSeats($row->start),
+				'start'         => $row->start,
+				'status'        => $row->status,
+				'city'          => $row->city,
 			);
-			$upcoming[$row['action']] = array(
-				'action' => $row['action'],
-				'name'   => $row['name'],
-				'dates'  => (isset($upcoming[$row['action']]['dates'])
-					? $upcoming[$row['action']]['dates'] += array($row['dateId'] => $date)
-					: array($row['dateId'] => $date)
+			$upcoming[$row->action] = \Nette\ArrayHash::from(array(
+				'action' => $row->action,
+				'name'   => $row->name,
+				'dates'  => (isset($upcoming[$row->action]->dates)
+					? $upcoming[$row->action]->dates = (array)$upcoming[$row->action]->dates + array($row->dateId => $date)
+					: array($row->dateId => $date)
 				),
-			);
+			));
 		}
 
 		return $upcoming;
@@ -83,24 +83,48 @@ class Trainings extends BaseModel
 	public function get($name)
 	{
 		$result = $this->database->fetch(
+			'SELECT
+				action,
+				name,
+				description,
+				content,
+				upsell,
+				prerequisites,
+				audience,
+				original_href AS originalHref,
+				capacity,
+				services,
+				price,
+				student_discount AS studentDiscount,
+				materials
+			FROM trainings
+			WHERE action = ?',
+			$name
+		);
+
+		if ($result) {
+			$result->description   = $this->texyFormatter->format($result->description);
+			$result->content       = $this->texyFormatter->format($result->content);
+			$result->upsell        = $this->texyFormatter->format($result->upsell);
+			$result->prerequisites = $this->texyFormatter->format($result->prerequisites);
+			$result->audience      = $this->texyFormatter->format($result->audience);
+			$result->services      = $this->texyFormatter->format($result->services);
+			$result->materials     = $this->texyFormatter->format($result->materials);
+		}
+
+		return $result;
+	}
+
+
+	public function getDates($name)
+	{
+		$result = $this->database->fetchAll(
 			"SELECT
-				t.action,
 				d.id_date AS dateId,
-				t.name,
-				t.description,
-				t.content,
-				t.upsell,
-				t.prerequisites,
-				t.audience,
 				d.start,
 				d.end,
 				s.status,
-				t.original_href AS originalHref,
-				t.capacity,
-				t.services,
-				t.price,
-				t.student_discount AS studentDiscount,
-				t.materials,
+				v.city,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.address AS venueAddress,
@@ -109,29 +133,32 @@ class Trainings extends BaseModel
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
-			WHERE t.action = ?
-				AND d.end > NOW()
-				AND s.status IN ('TENTATIVE', 'CONFIRMED')
-				AND d.public
+				JOIN (
+					SELECT
+						t2.action,
+						d2.key_venue,
+						MIN(d2.start) AS start
+					FROM
+						trainings t2
+						JOIN training_dates d2 ON t2.id_training = d2.key_training
+						JOIN training_date_status s2 ON d2.key_status = s2.id_status
+					WHERE
+						d2.public
+						AND t2.action = ?
+						AND d2.end > NOW()
+						AND s2.status IN ('TENTATIVE', 'CONFIRMED')
+					GROUP BY
+						t2.action, d2.key_venue
+				) u ON t.action = u.action AND v.id_venue = u.key_venue AND d.start = u.start
 			ORDER BY
-				d.start
-			LIMIT 1",
+				d.start",
 			$name
 		);
-
-		if ($result) {
-			$result['tentative'] = ($result['status'] == self::STATUS_TENTATIVE);
-			$result['description'] = $this->texyFormatter->format($result['description']);
-			$result['content'] = $this->texyFormatter->format($result['content']);
-			$result['upsell'] = $this->texyFormatter->format($result['upsell']);
-			$result['prerequisites'] = $this->texyFormatter->format($result['prerequisites']);
-			$result['audience'] = $this->texyFormatter->format($result['audience']);
-			$result['services'] = $this->texyFormatter->format($result['services']);
-			$result['materials'] = $this->texyFormatter->format($result['materials']);
-			$result['venueDescription'] = $this->texyFormatter->format($result['venueDescription']);
-			$result['lastFreeSeats'] = $this->lastFreeSeats($result['start']);
+		foreach ($result as $row) {
+			$row->tentative        = ($row->status == self::STATUS_TENTATIVE);
+			$row->lastFreeSeats    = $this->lastFreeSeats($row->start);
+			$row->venueDescription = $this->texyFormatter->format($row->venueDescription);
 		}
-
 		return $result;
 	}
 
@@ -143,15 +170,25 @@ class Trainings extends BaseModel
 	}
 
 
-	public function lastFreeSeatsAny(array $trainings)
+	public function lastFreeSeatsAnyTraining(array $trainings)
 	{
 		$lastFreeSeats = false;
 		foreach ($trainings as $training) {
-			foreach ($training['dates'] as $date) {
-				if ($date['lastFreeSeats']) {
-					$lastFreeSeats = true;
-					break;
-				}
+			if ($this->lastFreeSeatsAnyDate((array)$training->dates)) {
+				break;
+			}
+		}
+		return $lastFreeSeats;
+	}
+
+
+	public function lastFreeSeatsAnyDate(array $dates)
+	{
+		$lastFreeSeats = false;
+		foreach ($dates as $date) {
+			if ($date->lastFreeSeats) {
+				$lastFreeSeats = true;
+				break;
 			}
 		}
 		return $lastFreeSeats;

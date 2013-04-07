@@ -64,7 +64,7 @@ class SkoleniPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Školení';
 		$this->template->upcomingTrainings = $this->trainings->getUpcoming();
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAny($this->template->upcomingTrainings);
+		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
 
 
@@ -74,15 +74,18 @@ class SkoleniPresenter extends BasePresenter
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
 		$this->training = $this->trainings->get($name);
-
 		if (!$this->training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
+		$dates = $this->trainings->getDates($name);
+		if (empty($dates)) {
+			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
+		}
 
-		$this->tentative[$name] = $this->training->tentative;
+		$this->tentative[$name] = false && $this->training->tentative;
 
 		$this->template->name             = $this->training->action;
-		$this->template->trainingId       = $this->training->dateId;
+		$this->template->trainingId       = 1; //$this->training->dateId;
 		$this->template->pageTitle        = 'Školení ' . $this->training->name;
 		$this->template->title            = $this->training->name;
 		$this->template->description      = $this->training->description;
@@ -90,20 +93,14 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->upsell           = $this->training->upsell;
 		$this->template->prerequisites    = $this->training->prerequisites;
 		$this->template->audience         = $this->training->audience;
-		$this->template->start            = $this->training->start;
-		$this->template->end              = $this->training->end;
-		$this->template->tentative        = $this->training->tentative;
+		$this->template->tentative        = false; // $this->training->tentative;
 		$this->template->originalHref     = $this->training->originalHref;
 		$this->template->capacity         = $this->training->capacity;
-		$this->template->services         = $this->training->services;
 		$this->template->price            = $this->training->price;
 		$this->template->studentDiscount  = $this->training->studentDiscount;
 		$this->template->materials        = $this->training->materials;
-		$this->template->venueHref        = $this->training->venueHref;
-		$this->template->venueName        = $this->training->venueName;
-		$this->template->venueAddress     = $this->training->venueAddress;
-		$this->template->venueDescription = $this->training->venueDescription;
-		$this->template->lastFreeSeats    = $this->training->lastFreeSeats;
+		$this->template->lastFreeSeats    = $this->trainings->lastFreeSeatsAnyDate($dates);
+		$this->template->dates            = $dates;
 
 		$this->template->pastTrainingsMe = $this->trainings->getPastTrainings($name);
 
