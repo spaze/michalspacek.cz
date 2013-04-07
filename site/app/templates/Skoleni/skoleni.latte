@@ -21,7 +21,7 @@
 <p>{$audience}</p>
 <hr />
 
-<h2 id="termin">Termín a místo</h2>
+<h2 id="termin">{if count($dates) > 1}Termíny a místa{else}Termín a místo{/if}</h2>
 {foreach $dates as $date}
 	<p>
 		<strong>{if $date->tentative}{$date->start|localdate:'cs':'%B %Y'}{else}{$date->start|date:'j. n. Y'}{/if}</strong>
@@ -73,11 +73,7 @@
 <hr />
 {/if}
 
-<h2 id="prihlaska">{if $tentative}Nezávazná přihláška{else}Přihláška{/if}</h2>
-{if $tentative}
-	<p>Přesné datum zatím neznám. Můžete vyplnit tuto nezávaznou přihlášku a dám vám vědět, až datum budu znát.</p>
-{/if}
-
+<h2 id="prihlaska">Přihláška</h2>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 
 {form application}
@@ -88,7 +84,14 @@
 		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
 	</ul>
 </fieldset>
-{input trainingId value => $trainingId}
+<fieldset>
+	<legend>Termín</legend>
+	<table>
+		<tr>
+			<th>{label trainingId /}</th><td>{input trainingId}</td>
+		</tr>
+	</table>
+</fieldset>
 <fieldset id="ucastnik">
 	<legend>Účastník</legend>
 	<table>
@@ -98,8 +101,6 @@
 		</tr>
 	</table>
 </fieldset>
-{if $tentative}
-{else}
 <fieldset>
 	<legend>Fakturační údaje</legend>
 	<table>
@@ -117,16 +118,11 @@
 		</tr>
 	</table>
 </fieldset>
-{/if}
 <p><strong>{label note /}</strong> {input note}</p>
 <p>{input signUp}</p>
 {/form application}
 
-{if $tentative}
-<p><small>Zadané údaje budou použity pro zaslání pozvánky na příští termín.</small></p>
-{else}
-<p><small>Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní.</small></p>
+<p><small>Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky na příští termín.</small></p>
 <p><small>Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, &hellip;), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu.</small></p>
-{/if}
 <p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
 {/define}

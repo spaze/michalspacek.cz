@@ -22,6 +22,9 @@ class SkoleniPresenter extends BasePresenter
 	/** @var \Nette\Database\Row */
 	private $training;
 
+	/** @var array */
+	private $dates;
+
 	/**
 	 * Past trainings done by Jakub.
 	 *
@@ -77,15 +80,15 @@ class SkoleniPresenter extends BasePresenter
 		if (!$this->training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
-		$dates = $this->trainings->getDates($name);
-		if (empty($dates)) {
+		$this->dates = $this->trainings->getDates($name);
+		if (empty($this->dates)) {
 			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
 		}
 
 		$this->tentative[$name] = false && $this->training->tentative;
 
 		$this->template->name             = $this->training->action;
-		$this->template->trainingId       = 1; //$this->training->dateId;
+		// $this->template->trainingId       = 1; //$this->training->dateId;
 		$this->template->pageTitle        = 'Školení ' . $this->training->name;
 		$this->template->title            = $this->training->name;
 		$this->template->description      = $this->training->description;
@@ -93,14 +96,13 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->upsell           = $this->training->upsell;
 		$this->template->prerequisites    = $this->training->prerequisites;
 		$this->template->audience         = $this->training->audience;
-		$this->template->tentative        = false; // $this->training->tentative;
 		$this->template->originalHref     = $this->training->originalHref;
 		$this->template->capacity         = $this->training->capacity;
 		$this->template->price            = $this->training->price;
 		$this->template->studentDiscount  = $this->training->studentDiscount;
 		$this->template->materials        = $this->training->materials;
-		$this->template->lastFreeSeats    = $this->trainings->lastFreeSeatsAnyDate($dates);
-		$this->template->dates            = $dates;
+		$this->template->lastFreeSeats    = $this->trainings->lastFreeSeatsAnyDate($this->dates);
+		$this->template->dates            = $this->dates;
 
 		$this->template->pastTrainingsMe = $this->trainings->getPastTrainings($name);
 
@@ -156,11 +158,24 @@ class SkoleniPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
+		$dates = array();
+		$helpers = new \Bare\Next\Templating\Helpers();
+		foreach ($this->dates as $date) {
+			if ($date->tentative) {
+				$start = $helpers->localDate($date->start, 'cs', '%B %Y');
+			} else {
+				$start = \Nette\Templating\Helpers::date($date->start, 'j. n. Y');
+			}
+			$dates[$date->dateId] =  "{$start}, {$date->city}" . ($date->tentative ? ' (předběžný termín)' : "");
+		}
+
 		$session = $this->getSession('training');
 
 		$form = new Form($this, $formName);
 		$name = $form->parent->params['name'];
-		$form->addHidden('trainingId');  // trainingId is actually dateId, oh well
+		$form->addSelect('trainingId', 'Termín školení:', $dates)  // trainingId is actually dateId, oh well
+			->setRequired('Vyberte prosím termín a místo školení')
+			->setPrompt(count($dates) > 1 ? 'Vyberte termín a místo' : false);
 		$form->addGroup('Účastník');
 		$form->addText('name', 'Jméno a příjmení:')
 			->setDefaultValue($session->name)
