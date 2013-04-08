@@ -314,16 +314,8 @@ class SkoleniPresenter extends BasePresenter
 
 	private function checkTrainingDate(\Nette\ArrayHash $values, $name)
 	{
-		$session = $this->getSession('training');
-		$upcoming = $this->trainings->getUpcoming();
-
-		$dateIds = array();
-		foreach ($upcoming as $training) {
-			foreach ($training['dates'] as $id => $date) {
-				$dateIds[] = $id;
-			}
-		}
-		if (!in_array($values->trainingId, $dateIds)) {
+		if (!isset($this->dates[$values->trainingId])) {
+			$session = $this->getSession('training');
 			$logValues = $logSession = array();
 			if (isset($session->application[$name])) {
 				foreach ($session->application[$name] as $key => $value) {
