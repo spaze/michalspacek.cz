@@ -9,6 +9,15 @@
 <p>{$description}</p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form application}
+<fieldset>
+	<legend>Termín</legend>
+	<table>
+		<tr>
+			<th>{$form[trainingId]->caption}</th>
+			<td>{if $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/if}, {$city}{if $tentative} (předběžný termín){/if}</td>
+		</tr>
+	</table>
+</fieldset>
 <fieldset id="ucastnik">
 	<legend>Účastník</legend>
 	<table>
@@ -18,8 +27,6 @@
 		</tr>
 	</table>
 </fieldset>
-{if $tentative}
-{else}
 <fieldset>
 	<legend>Fakturační údaje</legend>
 	<table>
@@ -37,7 +44,6 @@
 		</tr>
 	</table>
 </fieldset>
-{/if}
 <p><strong>{$form[note]->caption}</strong> {$form[note]->value}</p>
 {/form application}
 <hr />

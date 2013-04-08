@@ -121,6 +121,7 @@ abbr.dtstart, abbr.dtend { border: none; }
 #frm-application th, #frm-application td {
     width: 150px;
     padding: 5px 0px;
+    white-space: nowrap;
 }
 #frm-application th {
     text-align: right;

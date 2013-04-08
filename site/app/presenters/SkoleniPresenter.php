@@ -85,10 +85,7 @@ class SkoleniPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
 		}
 
-		$this->tentative[$name] = false && $this->training->tentative;
-
 		$this->template->name             = $this->training->action;
-		// $this->template->trainingId       = 1; //$this->training->dateId;
 		$this->template->pageTitle        = 'Školení ' . $this->training->name;
 		$this->template->title            = $this->training->name;
 		$this->template->description      = $this->training->description;
@@ -188,46 +185,44 @@ class SkoleniPresenter extends BasePresenter
 			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
 			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200);
 
-		if (!$this->tentative[$name]) {
-			$form->addGroup('Fakturační údaje');
-			$form->addText('company', 'Obchodní jméno:')
-				->setDefaultValue($session->company)
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 200);
-			$form->addText('street', 'Ulice a číslo:')
-				->setDefaultValue($session->street)
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200);
-			$form->addText('city', 'Město:')
-				->setDefaultValue($session->city)
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
-			$form->addText('zip', 'PSČ:')
-				->setDefaultValue($session->zip)
-				->addCondition(Form::FILLED)
-				->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
-				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
-			$form->addText('companyId', 'IČ:')
-				->setDefaultValue($session->companyId)
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
-			$form->addText('companyTaxId', 'DIČ:')
-				->setDefaultValue($session->companyTaxId)
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
-		}
+		$form->addGroup('Fakturační údaje');
+		$form->addText('company', 'Obchodní jméno:')
+			->setDefaultValue($session->company)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 200);
+		$form->addText('street', 'Ulice a číslo:')
+			->setDefaultValue($session->street)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200);
+		$form->addText('city', 'Město:')
+			->setDefaultValue($session->city)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
+		$form->addText('zip', 'PSČ:')
+			->setDefaultValue($session->zip)
+			->addCondition(Form::FILLED)
+			->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
+			->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
+		$form->addText('companyId', 'IČ:')
+			->setDefaultValue($session->companyId)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
+		$form->addText('companyTaxId', 'DIČ:')
+			->setDefaultValue($session->companyTaxId)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 3)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
 
 		$form->setCurrentGroup(null);
 		$form->addText('note', 'Poznámka:')
 			->setDefaultValue($session->note)
 			->addCondition(Form::FILLED)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
-		$form->addSubmit('signUp', $this->tentative[$name] ? 'Odeslat' : 'Registrovat se');
+		$form->addSubmit('signUp', 'Odeslat');
 		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplication');
 
 		return $form;
@@ -245,17 +240,19 @@ class SkoleniPresenter extends BasePresenter
 			$this->checkTrainingDate($values, $name);
 
 			$datetime = new DateTime();
-			if ($this->tentative[$name]) {
+			if ($this->dates[$values->trainingId]->tentative) {
 				$this->trainings->addInvitation(
 					$values['trainingId'],
 					$values['name'],
 					$values['email'],
+					$values['company'],
+					$values['street'],
+					$values['city'],
+					$values['zip'],
+					$values['companyId'],
+					$values['companyTaxId'],
 					$values['note']
 				);
-				$this->flashMessage('Díky, přihláška odeslána! Dám vám vědět, jakmile budu znát přesný termín.');
-				$session->name  = $values['name'];
-				$session->email = $values['email'];
-				$session->note  = $values['note'];
 			} else {
 				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values['trainingId']) {
 					$applicationId = $this->trainings->updateApplication(
@@ -296,17 +293,17 @@ class SkoleniPresenter extends BasePresenter
 					$this->training->venueName,
 					$this->training->venueAddress
 				);
-
-				$session->name         = $values['name'];
-				$session->email        = $values['email'];
-				$session->company      = $values['company'];
-				$session->street       = $values['street'];
-				$session->city         = $values['city'];
-				$session->zip          = $values['zip'];
-				$session->companyId    = $values['companyId'];
-				$session->companyTaxId = $values['companyTaxId'];
-				$session->note         = $values['note'];
 			}
+			$session->trainingId   = $values['trainingId'];
+			$session->name         = $values['name'];
+			$session->email        = $values['email'];
+			$session->company      = $values['company'];
+			$session->street       = $values['street'];
+			$session->city         = $values['city'];
+			$session->zip          = $values['zip'];
+			$session->companyId    = $values['companyId'];
+			$session->companyTaxId = $values['companyTaxId'];
+			$session->note         = $values['note'];
 			$this->redirect($this->getName() . ':potvrzeni', $name);
 		} catch (PDOException $e) {
 			Debugger::log($e, Debugger::ERROR);
@@ -423,22 +420,31 @@ class SkoleniPresenter extends BasePresenter
 		if (!$training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
+		$this->dates = $this->trainings->getDates($name);
+		if (empty($this->dates)) {
+			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
+		}
 
 		$session = $this->getSession('training');
-		if (!isset($session->name)) {
+		if (!isset($session->trainingId)) {
 			$this->redirect($this->getName() . ':' . $name);
 		}
 
-		$this->tentative[$name] = $training->tentative;
-
-		$this->flashMessage('Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní.');
+		$date = $this->dates[$session->trainingId];
+		if ($date->tentative) {
+			$this->flashMessage('Díky, přihláška odeslána! Dám vám vědět, jakmile budu znát přesný termín.');
+		} else {
+			$this->flashMessage('Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní.');
+		}
 
 		$this->template->name             = $training->action;
 		$this->template->pageTitle        = 'Přihláška na ' . $training->name;
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
-		$this->template->tentative        = $training->tentative;
-		$this->template->lastFreeSeats    = $training->lastFreeSeats;
+		$this->template->lastFreeSeats    = false;
+		$this->template->start            = $date->start;
+		$this->template->city             = $date->city;
+		$this->template->tentative        = $date->tentative;
 
 		$upcoming = $this->trainings->getUpcoming();
 		unset($upcoming[$name]);

@@ -154,12 +154,14 @@ class Trainings extends BaseModel
 				d.start",
 			$name
 		);
+		$dates = array();
 		foreach ($result as $row) {
 			$row->tentative        = ($row->status == self::STATUS_TENTATIVE);
 			$row->lastFreeSeats    = $this->lastFreeSeats($row->start);
 			$row->venueDescription = $this->texyFormatter->format($row->venueDescription);
+			$dates[$row->dateId]   = $row;
 		}
-		return $result;
+		return $dates;
 	}
 
 
@@ -234,7 +236,7 @@ class Trainings extends BaseModel
 	}
 
 
-	public function addInvitation($trainingId, $name, $email, $note)
+	public function addInvitation($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
 		$statusId = $this->getStatusId(self::STATUS_CREATED);
 		$datetime = new \DateTime();
@@ -244,6 +246,12 @@ class Trainings extends BaseModel
 			'key_date'             => $trainingId,
 			'name'                 => $name,
 			'email'                => $email,
+			'company'              => $company,
+			'street'               => $street,
+			'city'                 => $city,
+			'zip'                  => $zip,
+			'company_id'           => $companyId,
+			'company_tax_id'       => $companyTaxId,
 			'note'                 => $note,
 			'key_status'           => $statusId,
 			'status_time'          => $datetime,
