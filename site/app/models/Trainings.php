@@ -93,7 +93,6 @@ class Trainings extends BaseModel
 				audience,
 				original_href AS originalHref,
 				capacity,
-				services,
 				price,
 				student_discount AS studentDiscount,
 				materials
@@ -108,7 +107,6 @@ class Trainings extends BaseModel
 			$result->upsell        = $this->texyFormatter->format($result->upsell);
 			$result->prerequisites = $this->texyFormatter->format($result->prerequisites);
 			$result->audience      = $this->texyFormatter->format($result->audience);
-			$result->services      = $this->texyFormatter->format($result->services);
 			$result->materials     = $this->texyFormatter->format($result->materials);
 		}
 
