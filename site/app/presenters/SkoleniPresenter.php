@@ -239,71 +239,71 @@ class SkoleniPresenter extends BasePresenter
 		try {
 			$this->checkTrainingDate($values, $name);
 
-			$datetime = new DateTime();
-			if ($this->dates[$values->trainingId]->tentative) {
+			$date = $this->dates[$values->trainingId];
+			if ($date->tentative) {
 				$this->trainings->addInvitation(
-					$values['trainingId'],
-					$values['name'],
-					$values['email'],
-					$values['company'],
-					$values['street'],
-					$values['city'],
-					$values['zip'],
-					$values['companyId'],
-					$values['companyTaxId'],
-					$values['note']
+					$values->trainingId,
+					$values->name,
+					$values->email,
+					$values->company,
+					$values->street,
+					$values->city,
+					$values->zip,
+					$values->companyId,
+					$values->companyTaxId,
+					$values->note
 				);
 			} else {
-				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values['trainingId']) {
+				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values->trainingId) {
 					$applicationId = $this->trainings->updateApplication(
 						$session->application[$name]['id'],
-						$values['name'],
-						$values['email'],
-						$values['company'],
-						$values['street'],
-						$values['city'],
-						$values['zip'],
-						$values['companyId'],
-						$values['companyTaxId'],
-						$values['note']
+						$values->name,
+						$values->email,
+						$values->company,
+						$values->street,
+						$values->city,
+						$values->zip,
+						$values->companyId,
+						$values->companyTaxId,
+						$values->note
 					);
 					$session->application[$name] = null;
 				} else {
 					$applicationId = $this->trainings->addApplication(
-						$values['trainingId'],
-						$values['name'],
-						$values['email'],
-						$values['company'],
-						$values['street'],
-						$values['city'],
-						$values['zip'],
-						$values['companyId'],
-						$values['companyTaxId'],
-						$values['note']
+						$values->trainingId,
+						$values->name,
+						$values->email,
+						$values->company,
+						$values->street,
+						$values->city,
+						$values->zip,
+						$values->companyId,
+						$values->companyTaxId,
+						$values->note
 					);
 				}
 				$this->trainings->sendSignUpMail(
 					$applicationId,
 					$this->createTemplate()->setFile(dirname(__DIR__) . '/templates/Skoleni/signUpMail.latte'),
-					$values['email'],
-					$values['name'],
-					$this->dates[$values->trainingId]->start,
+					$values->email,
+					$values->name,
+					$date->start,
 					$name,
 					$this->training->name,
-					$this->dates[$values->trainingId]->venueName,
-					$this->dates[$values->trainingId]->venueAddress
+					$date->venueName,
+					$date->venueAddress
 				);
 			}
-			$session->trainingId   = $values['trainingId'];
-			$session->name         = $values['name'];
-			$session->email        = $values['email'];
-			$session->company      = $values['company'];
-			$session->street       = $values['street'];
-			$session->city         = $values['city'];
-			$session->zip          = $values['zip'];
-			$session->companyId    = $values['companyId'];
-			$session->companyTaxId = $values['companyTaxId'];
-			$session->note         = $values['note'];
+			$session->trainingId   = $values->trainingId;
+			$session->name         = $values->name;
+			$session->email        = $values->email;
+			$session->company      = $values->company;
+			$session->street       = $values->street;
+			$session->city         = $values->city;
+			$session->zip          = $values->zip;
+			$session->companyId    = $values->companyId;
+			$session->companyTaxId = $values->companyTaxId;
+			$session->note         = $values->note;
 			$this->redirect($this->getName() . ':potvrzeni', $name);
 		} catch (PDOException $e) {
 			Debugger::log($e, Debugger::ERROR);
@@ -323,7 +323,7 @@ class SkoleniPresenter extends BasePresenter
 				$dateIds[] = $id;
 			}
 		}
-		if (!in_array($values['trainingId'], $dateIds)) {
+		if (!in_array($values->trainingId, $dateIds)) {
 			$logValues = $logSession = array();
 			if (isset($session->application[$name])) {
 				foreach ($session->application[$name] as $key => $value) {
@@ -334,7 +334,7 @@ class SkoleniPresenter extends BasePresenter
 				$logValues[] = "{$key} => \"{$value}\"";
 			}
 			$message = sprintf('Training date id %s is not an upcoming training, should be one of %s (application session data for %s: %s, form values: %s)',
-				$values['trainingId'],
+				$values->trainingId,
 				implode(', ', $dateIds),
 				$name,
 				(empty($logSession) ? 'empty' : implode(', ', $logSession)),
