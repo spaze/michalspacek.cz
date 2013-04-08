@@ -128,11 +128,13 @@ class Trainings extends BaseModel
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.address AS venueAddress,
-				v.description AS venueDescription
+				v.description AS venueDescription,
+				c.description AS cooperationDescription
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
+				LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
 				JOIN (
 					SELECT
 						t2.action,
@@ -159,6 +161,7 @@ class Trainings extends BaseModel
 			$row->tentative        = ($row->status == self::STATUS_TENTATIVE);
 			$row->lastFreeSeats    = $this->lastFreeSeats($row->start);
 			$row->venueDescription = $this->texyFormatter->format($row->venueDescription);
+			$row->cooperationDescription = $this->texyFormatter->format($row->cooperationDescription);
 			$dates[$row->dateId]   = $row;
 		}
 		return $dates;

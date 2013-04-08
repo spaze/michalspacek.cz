@@ -45,6 +45,7 @@ $(document).ready(function() {
 		{if $date->tentative}
 			<br /><small><strong>Předběžný termín</strong> &mdash; přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát.</small>
 		{/if}
+		{if $date->cooperationDescription}<br /><small>{$date->cooperationDescription}</small>{/if}
 	</p>
 	<blockquote>
 	<p class="location"><strong><a href="{$date->venueHref}">{$date->venueName}</a>, {$date->venueAddress}</strong></p>
