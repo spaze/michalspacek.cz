@@ -157,11 +157,11 @@ div.notice {
     background-color: #EEF;
     border: 1px solid #DDF;
 }
-#upoutavka {
+#upoutavka, #uskutecnene-terminy {
     color: #777;
     font-size: small;
 }
-#upoutavka a { color: #555; }
+#upoutavka a, #uskutecnene-terminy a { color: #555; }
 #slajdy-embed iframe, #zaznam-embed iframe {
     border: 0px;
     margin: 0px;
