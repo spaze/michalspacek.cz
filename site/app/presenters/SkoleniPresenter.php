@@ -287,11 +287,11 @@ class SkoleniPresenter extends BasePresenter
 					$this->createTemplate()->setFile(dirname(__DIR__) . '/templates/Skoleni/signUpMail.latte'),
 					$values['email'],
 					$values['name'],
-					$this->training->start,
+					$this->dates[$values->trainingId]->start,
 					$name,
 					$this->training->name,
-					$this->training->venueName,
-					$this->training->venueAddress
+					$this->dates[$values->trainingId]->venueName,
+					$this->dates[$values->trainingId]->venueAddress
 				);
 			}
 			$session->trainingId   = $values['trainingId'];
