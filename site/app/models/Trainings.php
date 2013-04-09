@@ -338,7 +338,7 @@ class Trainings extends BaseModel
 			WHERE
 				t.action = ?
 				AND NOT r.hidden
-			ORDER BY r.added DESC';
+			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
 
 		if ($limit !== null) {
 			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
