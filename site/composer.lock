@@ -1,4 +1,8 @@
 {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
     "hash": "f88a19e34861591fd911c4b6d7e4c709",
     "packages": [
         {
@@ -149,7 +153,7 @@
                 "source": "https://github.com/spaze/bare-next/tree/v0.1.0",
                 "issues": "https://github.com/spaze/bare-next/issues"
             },
-            "time": "2013-03-04 12:05:26"
+            "time": "2013-04-10 16:18:36"
         }
     ],
     "packages-dev": [
