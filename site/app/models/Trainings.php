@@ -178,6 +178,7 @@ class Trainings extends BaseModel
 		$lastFreeSeats = false;
 		foreach ($trainings as $training) {
 			if ($this->lastFreeSeatsAnyDate((array)$training->dates)) {
+				$lastFreeSeats = true;
 				break;
 			}
 		}
