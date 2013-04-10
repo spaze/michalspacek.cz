@@ -12,13 +12,6 @@ use \Nette\Application\UI\Form,
 class SkoleniPresenter extends BasePresenter
 {
 
-	/**
-	 * Some training info.
-	 *
-	 * @var boolean
-	 */
-	private $tentative = array();
-
 	/** @var \Nette\Database\Row */
 	private $training;
 
@@ -170,9 +163,16 @@ class SkoleniPresenter extends BasePresenter
 
 		$form = new Form($this, $formName);
 		$name = $form->parent->params['name'];
-		$form->addSelect('trainingId', 'Termín školení:', $dates)  // trainingId is actually dateId, oh well
-			->setRequired('Vyberte prosím termín a místo školení')
-			->setPrompt(count($dates) > 1 ? '- vyberte termín a místo -' : false);
+		$label = 'Termín školení:';
+		// trainingId is actually dateId, oh well
+		if (count($this->dates) > 1) {
+			$form->addSelect('trainingId', $label, $dates)
+				->setRequired('Vyberte prosím termín a místo školení')
+				->setPrompt('- vyberte termín a místo -');
+		} else {
+			$field = new \Bare\Next\Forms\Controls\HiddenFieldWithLabel($label, $date->dateId, $dates[$date->dateId]);
+			$form->addComponent($field, 'trainingId');
+		}
 		$form->addGroup('Účastník');
 		$form->addText('name', 'Jméno a příjmení:')
 			->setDefaultValue($session->name)
