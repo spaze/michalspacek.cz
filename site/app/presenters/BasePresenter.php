@@ -40,7 +40,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function injectArticles(\MichalSpacekCz\Articles $articles)
 	{
 		if ($this->articles) {
-			throw new Nette\InvalidStateException('Articles has already been set');
+			throw new \Nette\InvalidStateException('Articles has already been set');
 		}
 		$this->articles = $articles;
 	}
@@ -52,7 +52,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function injectFiles(\MichalSpacekCz\Files $files)
 	{
 		if ($this->files) {
-			throw new Nette\InvalidStateException('Files has already been set');
+			throw new \Nette\InvalidStateException('Files has already been set');
 		}
 		$this->files = $files;
 	}
@@ -64,7 +64,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function injectTalks(\MichalSpacekCz\Talks $talks)
 	{
 		if ($this->talks) {
-			throw new Nette\InvalidStateException('Talks has already been set');
+			throw new \Nette\InvalidStateException('Talks has already been set');
 		}
 		$this->talks = $talks;
 	}
@@ -76,7 +76,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function injectTrainings(\MichalSpacekCz\Trainings $trainings)
 	{
 		if ($this->trainings) {
-			throw new Nette\InvalidStateException('Trainings has already been set');
+			throw new \Nette\InvalidStateException('Trainings has already been set');
 		}
 		$this->trainings = $trainings;
 	}
@@ -88,7 +88,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function injectInterviews(\MichalSpacekCz\Interviews $interviews)
 	{
 		if ($this->interviews) {
-			throw new Nette\InvalidStateException('Interviews has already been set');
+			throw new \Nette\InvalidStateException('Interviews has already been set');
 		}
 		$this->interviews = $interviews;
 	}
