@@ -1,0 +1,8 @@
+Hello, stranger.
+
+My name is Michal Špaček -- good luck reading that.
+I do anything and everything development, web security, performance. Also this site.
+E-mail: mail@michalspacek.cz
+Twitter: @spazef0rze -- follow me
+
+This site uses language called Czech, which is like HTML 3.7 but worse.
