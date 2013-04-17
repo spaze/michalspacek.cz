@@ -2,10 +2,14 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
-{define #content}
-<p n:foreach="$articles as $article">
+{define #itemArticle}
     <a href="{$article->href}"><strong>{$article->title}</strong></a>
     <small>(<span class="date">{$article->date|date:'j. n. Y'}</span>, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
     <blockquote><p><small>{$article->excerpt} (<a href="{$article->href}">celý článek&hellip;</a>)</small></p></blockquote>
+{/define}
+
+{define #content}
+<p n:foreach="$articles as $article">
+    {include #itemArticle}
 </p>
 {/define}
