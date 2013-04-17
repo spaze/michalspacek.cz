@@ -4,10 +4,10 @@ $(document).ready(function() {
 		$('#frmapplication-trainingId').val($(this).data('id'));
 	});
 	$('#uskutecnene-terminy a[href="#uskutecnene-terminy"]').click(function() {
-		$('#uskutecnene-terminy > span').fadeToggle('fast');
+		$('#uskutecnene-terminy > small > span').fadeToggle('fast');
 		return false;
 	});
-	$('#uskutecnene-terminy > span').hide();
+	$('#uskutecnene-terminy > small > span').hide();
 });
 {/define}
 
@@ -23,7 +23,7 @@ $(document).ready(function() {
 <h2 id="napln">Náplň</h2>
 <div class="description">{$content}</div>
 
-<p n:if="$upsell" id="upoutavka"><span class="icon icon16"></span>{$upsell}</p>
+<p n:if="$upsell" id="upoutavka"><span class="icon icon16"></span><small>{$upsell}</small></p>
 <hr />
 
 <h2 id="predpoklady">Předpoklady</h2>
@@ -54,6 +54,7 @@ $(document).ready(function() {
 {/foreach}
 </div>
 <p id="uskutecnene-terminy">
+	<small>
 	<a href="#uskutecnene-terminy">Již uskutečněné termíny</a><span>{foreach $pastTrainingsMe as $date}{first}:{/first}
 		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}
 	{/foreach}
@@ -62,6 +63,7 @@ $(document).ready(function() {
 		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}
 	{/foreach}
 	</span>
+	</small>
 </p>
 <hr />
 

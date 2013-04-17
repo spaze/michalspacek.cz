@@ -44,7 +44,8 @@ ul {
     text-align: left;
     padding: 0px 1em;
 }
-small { color: #555; }
+small { color: #666; }
+small a { color: #444; }
 blockquote {
     margin: 1em 0px 1em 10px;
     padding-left: 20px;
@@ -77,11 +78,11 @@ abbr.dtstart, abbr.dtend { border: none; }
 }
 #footer {
     border-top: 1px solid #CCC;
-    color: #777;
+    color: #666;
     font-size: 0.8em;
     padding: 1em 0px;
 }
-#footer a { color: #555; }
+#footer a { color: #444; }
 #footer-name { float: left; }
 #footer-links { float: right; }
 .icon {
@@ -157,15 +158,14 @@ div.notice {
     background-color: #EEF;
     border: 1px solid #DDF;
 }
-#upoutavka, #uskutecnene-terminy {
-    color: #777;
-    font-size: small;
-}
-#upoutavka a, #uskutecnene-terminy a { color: #555; }
 #slajdy-embed iframe, #zaznam-embed iframe {
     border: 0px;
     margin: 0px;
     overflow: hidden;
 }
 #ohlasy hr { height: 1px; }
-#ohlasy .reply { font-size: small; }
+#ohlasy .reply {
+    font-size: small;
+    color: #666;
+}
+#ohlasy .reply a { color: #444; }
