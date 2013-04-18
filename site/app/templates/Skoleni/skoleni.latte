@@ -4,10 +4,10 @@ $(document).ready(function() {
 		$('#frmapplication-trainingId').val($(this).data('id'));
 	});
 	$('#uskutecnene-terminy a[href="#uskutecnene-terminy"]').click(function() {
-		$('#uskutecnene-terminy > small > span').fadeToggle('fast');
+		$('#uskutecnene-terminy-container').fadeToggle('fast');
 		return false;
 	});
-	$('#uskutecnene-terminy > small > span').hide();
+	$('#uskutecnene-terminy-container').hide();
 });
 {/define}
 
@@ -55,7 +55,7 @@ $(document).ready(function() {
 </div>
 <p id="uskutecnene-terminy">
 	<small>
-	<a href="#uskutecnene-terminy">Již uskutečněné termíny</a><span>{foreach $pastTrainingsMe as $date}{first}:{/first}
+	<a href="#uskutecnene-terminy">Již uskutečněné termíny</a><span id="uskutecnene-terminy-container">{foreach $pastTrainingsMe as $date}{first}:{/first}
 		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}
 	{/foreach}
 	{foreach $pastTrainingsJakub as $date}
