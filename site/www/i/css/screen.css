@@ -44,8 +44,9 @@ ul {
     text-align: left;
     padding: 0px 1em;
 }
-small { color: #666; }
-small a { color: #444; }
+small, .small { color: #666; }
+small a, .small a { color: #444; }
+.small { font-size: small; }
 blockquote {
     margin: 1em 0px 1em 10px;
     padding-left: 20px;
@@ -164,8 +165,3 @@ div.notice {
     overflow: hidden;
 }
 #ohlasy hr { height: 1px; }
-#ohlasy .reply {
-    font-size: small;
-    color: #666;
-}
-#ohlasy .reply a { color: #444; }
