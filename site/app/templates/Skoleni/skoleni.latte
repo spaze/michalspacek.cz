@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 <div n:if="$lastFreeSeats" class="flash notice"><strong>Ještě zbývá posledních pár míst, přihlašte se!</strong></div>
 
-<div class="vcalendar">
+<div class="vevent">
 <h2 id="nazev">Název školení</h2>
 <p><strong class="summary">{$title}</strong></p>
 
@@ -36,7 +36,7 @@ $(document).ready(function() {
 
 <div id="termin">
 <h2>{if count($dates) > 1}Termíny a místa{else}Termín a místo{/if}</h2>
-<div n:foreach="$dates as $date" class="vevent">
+{foreach $dates as $date}
 	<p>
 		<strong>{if $date->tentative}{$date->start|localdate:'cs':'%B %Y'}{else}{$date->start|date:'j. n. Y'}{/if}</strong>
 		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>,
@@ -51,7 +51,7 @@ $(document).ready(function() {
 	<p class="location"><strong><a href="{$date->venueHref}">{$date->venueName}</a>, {$date->venueAddress}</strong></p>
 	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
 	</blockquote>
-</div>
+{/foreach}
 </div>
 <p id="uskutecnene-terminy">
 	<small>
