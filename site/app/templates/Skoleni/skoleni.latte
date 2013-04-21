@@ -48,10 +48,10 @@ $(document).ready(function() {
 		{/if}
 		{if $date->cooperationDescription}<br /><small>{$date->cooperationDescription}</small>{/if}
 	</p>
-	<blockquote>
+	<div class="indent">
 	<p class="location"><strong><a href="{$date->venueHref}">{$date->venueName}</a>, {$date->venueAddress}</strong></p>
 	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
-	</blockquote>
+	</div>
 </div>
 </div>
 <p id="uskutecnene-terminy">
@@ -86,7 +86,7 @@ $(document).ready(function() {
 <h2>Ohlasy na školení</h2>
 {foreach $reviews as $review}
 	<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
-	<blockquote><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">více&hellip;</a>)</small></p></blockquote>
+	<p class="indent">{$review->review} <small n:if="$review->href">(<a href="{$review->href}">více&hellip;</a>)</small></p>
 {/foreach}
 </div>
 <p><a n:href="Skoleni:ohlasy $name">Všechny ohlasy</a></p>

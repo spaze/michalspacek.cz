@@ -47,7 +47,7 @@ ul {
 small, .small { color: #666; }
 small a, .small a { color: #444; }
 .small { font-size: small; }
-blockquote {
+.indent {
     margin: 1em 0px 1em 10px;
     padding-left: 20px;
     border-left: 2px solid #EEE;
