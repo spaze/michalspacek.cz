@@ -18,10 +18,10 @@ $(document).ready(function() {
 
 <div class="vcalendar">
 <h2 id="nazev">Název školení</h2>
-<p><strong class="summary" id="title">{$title}</strong></p>
+<p><strong class="summary">{$title}</strong></p>
 
 <h2 id="napln">Náplň</h2>
-<div class="description" id="content">{$content}</div>
+<div class="description">{$content}</div>
 
 <p n:if="$upsell" id="upoutavka"><span class="icon icon16"></span><small>{$upsell}</small></p>
 <hr />
@@ -42,7 +42,6 @@ $(document).ready(function() {
 		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>,
 		hodinová přestávka na oběd
 		<small>(<a href="#prihlaska" data-id="{$date->dateId}">přihlásit</a>)</small>
-		<small id="includes"><a href="#title" class="include">název</a>, <a href="#content" class="include">náplň</a></small>
 		{if $date->tentative}
 			<br /><small><strong>Předběžný termín</strong> &mdash; přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát.</small>
 		{/if}
