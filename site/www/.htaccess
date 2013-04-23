@@ -2,15 +2,15 @@ php_flag display_errors off
 
 RewriteEngine On
 RewriteRule ^i/.+ - [L]
-RewriteRule ^favicon.ico$ - [L]
-RewriteRule ^robots.txt$ - [L]
-RewriteRule ^humans.txt$ - [L]
+RewriteRule ^favicon\.ico$ - [L]
+RewriteRule ^robots\.txt$ - [L]
+RewriteRule ^humans\.txt$ - [L]
 RewriteRule ^thisShouldNotExist$ - [L]
-RewriteRule ^crossdomain.xml$ - [L]
-RewriteRule ^apple-touch-icon.png$ - [L]
-RewriteRule ^apple-touch-icon-precomposed.png$ - [L]
-RewriteRule xmlrpc.php$ - [L]
-RewriteRule wp-login.php$ - [L]
+RewriteRule ^crossdomain\.xml$ - [L]
+RewriteRule ^apple-touch-icon\.png$ - [L]
+RewriteRule ^apple-touch-icon-precomposed\.png$ - [L]
+RewriteRule xmlrpc\.php$ - [L]
+RewriteRule wp-login\.php$ - [L]
 
 # RewriteRule ^donut_track_me.html$ - [L]
 
