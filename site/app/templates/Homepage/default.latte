@@ -13,9 +13,9 @@
 <p>Teď zrovna žádné modré slony s logem PHP nemám, ale až znovu otevřu objednávky dám vám vědět. Stačí, když vyplníte formulář na <a href="http://www.elephpant.cz/">www.elephpant.cz</a>.</p>
 <hr />
 <h2 id="clanky">Píšu články</h2>
-<p n:foreach="$articles as $article">
+<div n:foreach="$articles as $article">
     {include #itemArticle, article => $article}
-</p>
+</div>
 <p><a n:href="Clanky:">Všechny články</a></p>
 <hr />
 <h2 id="prednasky">Přednáším</h2>
