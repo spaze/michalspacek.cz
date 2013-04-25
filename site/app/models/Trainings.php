@@ -33,7 +33,7 @@ class Trainings extends BaseModel
 				t.name,
 				s.status,
 				d.start,
-				v.city
+				v.city as venueCity
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_date_status s ON d.key_status = s.id_status
@@ -64,7 +64,7 @@ class Trainings extends BaseModel
 				'lastFreeSeats' => $this->lastFreeSeats($row->start),
 				'start'         => $row->start,
 				'status'        => $row->status,
-				'city'          => $row->city,
+				'venueCity'     => $row->venueCity,
 			);
 			$upcoming[$row->action] = \Nette\ArrayHash::from(array(
 				'action' => $row->action,
@@ -122,10 +122,10 @@ class Trainings extends BaseModel
 				d.start,
 				d.end,
 				s.status,
-				v.city,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.address AS venueAddress,
+				v.city AS venueCity,
 				v.description AS venueDescription,
 				c.description AS cooperationDescription
 			FROM training_dates d
@@ -548,7 +548,7 @@ class Trainings extends BaseModel
 	}
 
 
-	public function sendSignUpMail($applicationId, $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueAddress)
+	public function sendSignUpMail($applicationId, $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueAddress, $venueCity)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$training}");
 
@@ -557,6 +557,7 @@ class Trainings extends BaseModel
 		$template->start        = $start;
 		$template->venueName    = $venueName;
 		$template->venueAddress = $venueAddress;
+		$template->venueCity    = $venueCity;
 
 		$mail = new \Nette\Mail\Message();
 		$mail->setFrom($this->emailFrom)

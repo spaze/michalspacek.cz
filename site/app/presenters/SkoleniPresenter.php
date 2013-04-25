@@ -156,7 +156,7 @@ class SkoleniPresenter extends BasePresenter
 			} else {
 				$start = \Nette\Templating\Helpers::date($date->start, 'j. n. Y');
 			}
-			$dates[$date->dateId] = "{$start} {$date->city}" . ($date->tentative ? ' (předběžný termín)' : "");
+			$dates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (předběžný termín)' : "");
 		}
 
 		$session = $this->getSession('training');
@@ -291,7 +291,8 @@ class SkoleniPresenter extends BasePresenter
 					$name,
 					$this->training->name,
 					$date->venueName,
-					$date->venueAddress
+					$date->venueAddress,
+					$date->venueCity
 				);
 			}
 			$session->trainingId   = $values->trainingId;
@@ -435,7 +436,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->description      = $training->description;
 		$this->template->lastFreeSeats    = false;
 		$this->template->start            = $date->start;
-		$this->template->city             = $date->city;
+		$this->template->venueCity        = $date->venueCity;
 		$this->template->tentative        = $date->tentative;
 
 		$upcoming = $this->trainings->getUpcoming();

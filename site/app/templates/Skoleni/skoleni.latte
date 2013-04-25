@@ -39,7 +39,7 @@ $(document).ready(function() {
 <div n:foreach="$dates as $date" class="vevent">
 	<p>
 		<strong>{if $date->tentative}{$date->start|localdate:'cs':'%B %Y'}{else}{$date->start|date:'j. n. Y'}{/if}</strong>
-		<span class="summary">{$date->city}</span>,
+		<span class="summary">{$date->venueCity}</span>,
 		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>,
 		hodinová přestávka na oběd
 		<small>(<a href="#prihlaska" data-id="{$date->dateId}" class="url">přihlásit</a>)</small>
@@ -49,7 +49,7 @@ $(document).ready(function() {
 		{if $date->cooperationDescription}<br /><small>{$date->cooperationDescription}</small>{/if}
 	</p>
 	<div class="indent">
-	<p class="location"><strong><a href="{$date->venueHref}">{$date->venueName}</a>, {$date->venueAddress}</strong></p>
+	<p class="location"><strong><a href="{$date->venueHref}">{$date->venueName}</a>, {$date->venueAddress}, {$date->venueCity}</strong></p>
 	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
 	</div>
 </div>
