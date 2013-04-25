@@ -124,6 +124,7 @@ class Trainings extends BaseModel
 				s.status,
 				v.href AS venueHref,
 				v.name AS venueName,
+				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,
 				v.city AS venueCity,
 				v.description AS venueDescription,
@@ -548,7 +549,7 @@ class Trainings extends BaseModel
 	}
 
 
-	public function sendSignUpMail($applicationId, $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueAddress, $venueCity)
+	public function sendSignUpMail($applicationId, $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$training}");
 
@@ -556,6 +557,7 @@ class Trainings extends BaseModel
 		$template->trainingName = $trainingName;
 		$template->start        = $start;
 		$template->venueName    = $venueName;
+		$template->venueNameExtended = $venueNameExtended;
 		$template->venueAddress = $venueAddress;
 		$template->venueCity    = $venueCity;
 

@@ -3,7 +3,7 @@ Dobrý den,
 
 potvrzuji Vaši registraci na školení {$trainingName},
 které se koná {$start|date:'j. n. Y'} od {$start|date:'H:i'} na adrese
-{$venueName}, {$venueAddress}, {$venueCity}.
+{$venueName}{if $venueNameExtended}, {$venueNameExtended}{/if}, {$venueAddress}, {$venueCity}.
 
 Více informací o školení na
 {var $link = '//Skoleni:' . $training}

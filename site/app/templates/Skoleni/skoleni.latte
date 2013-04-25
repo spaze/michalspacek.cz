@@ -49,7 +49,7 @@ $(document).ready(function() {
 		{if $date->cooperationDescription}<br /><small>{$date->cooperationDescription}</small>{/if}
 	</p>
 	<div class="indent">
-	<p class="location"><strong><a href="{$date->venueHref}">{$date->venueName}</a>, {$date->venueAddress}, {$date->venueCity}</strong></p>
+	<p class="location"><strong><a href="{$date->venueHref}">{$date->venueName}</a>{if $date->venueNameExtended}, {$date->venueNameExtended}{/if}, {$date->venueAddress}, {$date->venueCity}</strong></p>
 	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
 	</div>
 </div>

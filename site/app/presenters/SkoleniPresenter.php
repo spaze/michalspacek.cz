@@ -291,6 +291,7 @@ class SkoleniPresenter extends BasePresenter
 					$name,
 					$this->training->name,
 					$date->venueName,
+					$date->venueNameExtended,
 					$date->venueAddress,
 					$date->venueCity
 				);
