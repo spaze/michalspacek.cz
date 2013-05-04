@@ -50,3 +50,10 @@ COMMIT;
 SET @paid = XXX;
 SET @invoice_id = XXX;
 UPDATE `training_applications` SET `paid` = @paid, `paid_timezone` = 'Europe/Prague' WHERE `invoice_id` = @invoice_id;
+
+# Adding files
+-- create directory in files/trainings named using YYYY-MM-DD formatted training date
+-- add files
+INSERT INTO files (filename, added, added_timezone) VALUES ('vykonnost.zip', NOW(), 'Europe/Prague');
+INSERT INTO training_materials (key_file, key_application) VALUES (ID_FILE, ID_APPLICATION);
+-- link http://www.michalspacek.cz/skoleni/TRAINING/soubory/TOKEN
