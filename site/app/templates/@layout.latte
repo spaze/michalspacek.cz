@@ -3,9 +3,6 @@
  *
  * @copyright  Copyright (c) 2012 Michal Špaček
  * @package    michalspacek.cz
- *
- * @param string   $basePath web base path
- * @param array    $flashes  flash messages
  *}
 
 <!DOCTYPE html>
@@ -14,9 +11,9 @@
     <meta charset="utf-8" />
     <meta name="robots" content="{$robots}" n:ifset="$robots" />
     <title>{isset($pageTitle) ? $pageTitle . " | "}Michal Špaček</title>
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/i/css/screen.css" type="text/css">
-    <script type="text/javascript" src="{$basePath}/i/js/netteForms.js"></script>
-    <script type="text/javascript" src="{$basePath}/i/js/jquery-2.0.0.min.js"></script>
+    <link rel="stylesheet" media="screen,projection,tv" href="/i/css/screen.css" type="text/css">
+    <script type="text/javascript" src="/i/js/netteForms.js"></script>
+    <script type="text/javascript" src="/i/js/jquery-2.0.0.min.js"></script>
     <script type="text/javascript" n:if="!$debugMode">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-23432180-1']);
@@ -35,7 +32,7 @@
 {block #body}
     <div class="container">
     <div id="header">
-    <a n:href="Homepage:"><img src="{$basePath}/i/images/michal-spacek.jpg" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
+    <a n:href="Homepage:"><img src="/i/images/michal-spacek.jpg" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
     {default $pageHeader = $pageTitle}
     <h1>{$pageHeader}</h1>
     </div>
