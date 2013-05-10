@@ -12,9 +12,9 @@
     <meta name="robots" content="{$robots}" n:ifset="$robots" />
     <title>{isset($pageTitle) ? $pageTitle . " | "}Michal Špaček</title>
     <link rel="stylesheet" media="screen,projection,tv" href="/i/css/screen.css" type="text/css">
-    <script type="text/javascript" src="/i/js/netteForms.js"></script>
-    <script type="text/javascript" src="/i/js/jquery-2.0.0.min.js"></script>
-    <script type="text/javascript" n:if="!$debugMode">
+    <script src="/i/js/netteForms.js"></script>
+    <script src="/i/js/jquery-2.0.0.min.js"></script>
+    <script n:if="!$debugMode">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-23432180-1']);
       _gaq.push(['_trackPageview']);
