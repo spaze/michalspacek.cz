@@ -209,12 +209,12 @@ class SkoleniPresenter extends BasePresenter
 		$form->addText('companyId', 'IČ:')
 			->setDefaultValue($session->companyId)
 			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 3)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 6)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
 		$form->addText('companyTaxId', 'DIČ:')
 			->setDefaultValue($session->companyTaxId)
 			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 3)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
 
 		$form->setCurrentGroup(null);
