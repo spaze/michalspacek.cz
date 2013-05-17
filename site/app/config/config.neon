@@ -35,6 +35,7 @@ common:
 				- setFilesDir('../files/trainings')
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 		interviews: \MichalSpacekCz\Interviews
+		trainingApplications: \MichalSpacekCz\TrainingApplications
 
 production < common:
 
