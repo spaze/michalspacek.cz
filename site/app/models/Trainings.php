@@ -16,6 +16,8 @@ class Trainings extends BaseModel
 	const STATUS_ATTENDED = 'ATTENDED';
 	const STATUS_MATERIALS_SENT = 'MATERIALS_SENT';
 	const STATUS_ACCESS_TOKEN_USED = 'ACCESS_TOKEN_USED';
+	const STATUS_IMPORTED = 'IMPORTED';
+	const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';
 	const TRAINING_APPLICATION_SOURCE  = 'michal-spacek';
 
 	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
@@ -23,6 +25,13 @@ class Trainings extends BaseModel
 	protected $filesDir;
 
 	protected $emailFrom;
+
+	protected $initialStatuses = array(
+		self::STATUS_TENTATIVE,
+		self::STATUS_SIGNED_UP,
+		self::STATUS_IMPORTED,
+		self::STATUS_NON_PUBLIC_TRAINING
+	);
 
 
 	public function getUpcoming()
@@ -60,6 +69,7 @@ class Trainings extends BaseModel
 		$upcoming = array();
 		foreach ($this->database->fetchAll($query) as $row) {
 			$date = array(
+				'dateId'        => $row->dateId,
 				'tentative'     => ($row->status == self::STATUS_TENTATIVE),
 				'lastFreeSeats' => $this->lastFreeSeats($row->start),
 				'start'         => $row->start,
@@ -241,37 +251,48 @@ class Trainings extends BaseModel
 
 	public function addInvitation($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
-		$statusId = $this->getStatusId(self::STATUS_CREATED);
-		$datetime = new \DateTime();
-
-		$this->database->beginTransaction();
-		$data = array(
-			'key_date'             => $trainingId,
-			'name'                 => $name,
-			'email'                => $email,
-			'company'              => $company,
-			'street'               => $street,
-			'city'                 => $city,
-			'zip'                  => $zip,
-			'company_id'           => $companyId,
-			'company_tax_id'       => $companyTaxId,
-			'note'                 => $note,
-			'key_status'           => $statusId,
-			'status_time'          => $datetime,
-			'status_time_timezone' => $datetime->getTimezone()->getName(),
-			'key_source'           => $this->getTrainingApplicationSource(),
+		return $this->insertApplication(
+			$trainingId,
+			$name,
+			$email,
+			$company,
+			$street,
+			$city,
+			$zip,
+			$companyId,
+			$companyTaxId,
+			$note,
+			self::STATUS_TENTATIVE,
+			self::TRAINING_APPLICATION_SOURCE
 		);
-		$code = $this->insertData($data);
-		$applicationId = $this->database->lastInsertId();
-		$this->setStatus($applicationId, self::STATUS_TENTATIVE);
-		$this->database->commit();
-
-		return $applicationId;
 	}
 
 
 	public function addApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
+		return $this->insertApplication(
+			$trainingId,
+			$name,
+			$email,
+			$company,
+			$street,
+			$city,
+			$zip,
+			$companyId,
+			$companyTaxId,
+			$note,
+			self::STATUS_SIGNED_UP,
+			self::TRAINING_APPLICATION_SOURCE
+		);
+	}
+
+
+	public function insertApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source)
+	{
+		if (!in_array($status, $this->getInitialStatuses())) {
+			throw new \RuntimeException("Invalid initial status {$status}");
+		}
+
 		$statusId = $this->getStatusId(self::STATUS_CREATED);
 		$datetime = new \DateTime();
 
@@ -290,11 +311,11 @@ class Trainings extends BaseModel
 			'key_status'           => $statusId,
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
-			'key_source'           => $this->getTrainingApplicationSource(),
+			'key_source'           => $this->getTrainingApplicationSource($source),
 		);
 		$code = $this->insertData($data);
 		$applicationId = $this->database->lastInsertId();
-		$this->setStatus($applicationId, self::STATUS_SIGNED_UP);
+		$this->setStatus($applicationId, $status);
 		$this->database->commit();
 
 		return $applicationId;
@@ -322,6 +343,12 @@ class Trainings extends BaseModel
 		$this->setStatus($applicationId, self::STATUS_SIGNED_UP);
 		$this->database->commit();
 		return $applicationId;
+	}
+
+
+	public function getInitialStatuses()
+	{
+		return $this->initialStatuses;
 	}
 
 
@@ -466,9 +493,22 @@ class Trainings extends BaseModel
 	}
 
 
-	private function getTrainingApplicationSource()
+	private function getTrainingApplicationSource($source)
 	{
-		return $this->database->fetchColumn('SELECT id_source FROM training_application_sources WHERE alias = ?', self::TRAINING_APPLICATION_SOURCE);
+		return $this->database->fetchColumn('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
+	}
+
+
+	public function getTrainingApplicationSources()
+	{
+		return $this->database->fetchAll(
+			'SELECT
+				id_source AS sourceId,
+				alias,
+				name
+			FROM
+				training_application_sources'
+		);
 	}
 
 
