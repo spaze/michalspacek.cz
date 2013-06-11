@@ -156,7 +156,7 @@ class SkoleniPresenter extends BasePresenter
 			} else {
 				$start = \Nette\Templating\Helpers::date($date->start, 'j. n. Y');
 			}
-			$dates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (předběžný termín)' : "");
+			$dates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (předběžný termín)' : '');
 		}
 
 		$session = $this->getSession('training');
