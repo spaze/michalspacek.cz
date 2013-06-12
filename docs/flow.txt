@@ -35,7 +35,7 @@
 14 NON_PUBLIC_TRAINING
 
 # Update application status query
-CALL set_training_application_status(XXX, 'ATTENDED', '2012-12-14 10:00:00', 'Europe/Prague', @status, @status_text, @old_id_status, @old_status, @old_status_time, @old_status_time_timezone)
+CALL set_training_application_status(XXX, 'ATTENDED', '2012-12-14 10:00:00', 'Europe/Prague', @status, @status_text, @old_id_status, @old_status, @old_status_time, @old_status_time_timezone);
 # or
 SET @id_application = XXX;
 SET @id_status = XXX;
