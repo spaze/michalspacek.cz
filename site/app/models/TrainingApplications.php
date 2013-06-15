@@ -38,9 +38,11 @@ class TrainingApplications extends BaseModel
 			'SELECT
 				a.id_application AS id,
 				a.name,
-				a.email
+				a.email,
+				s.status
 			FROM
 				training_applications a
+				JOIN training_application_status s ON a.key_status = s.id_status
 			WHERE
 				key_date = ?',
 			$dateId

@@ -16,6 +16,13 @@ class UcastniciPresenter extends \BasePresenter
 	/** @var array */
 	private $dates;
 
+	/** @var array */
+	private $hasFiles = array(
+		Trainings::STATUS_ATTENDED,
+		Trainings::STATUS_MATERIALS_SENT,
+		Trainings::STATUS_ACCESS_TOKEN_USED,
+	);
+
 
 	public function actionNovy()
 	{
@@ -25,19 +32,29 @@ class UcastniciPresenter extends \BasePresenter
 
 	public function actionTermin($param)
 	{
+		$applications = $this->trainingApplications->getByDate($param);
+		foreach ($applications as $application) {
+			$application->hasFiles = in_array($application->status, $this->hasFiles);
+		}
+
 		$this->template->pageTitle = 'Účastníci zájezdu';
-		$this->template->applications = $this->trainingApplications->getByDate($param);
+		$this->template->applications = $applications;
 	}
 
 
 	public function actionSoubory($param)
 	{
-		$this->template->pageTitle = 'Soubory';
+		$application = $this->trainings->getApplicationById($param);
+		if (!in_array($application->status, $this->hasFiles)) {
+			$this->redirect('termin', $application->dateId);
+		}
 
 		$files = $this->trainings->getFiles($param);
 		foreach ($files as $file) {
 			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
 		}
+
+		$this->template->pageTitle = 'Soubory';
 		$this->template->files = $files;
 	}
 
