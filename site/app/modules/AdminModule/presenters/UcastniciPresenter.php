@@ -23,9 +23,29 @@ class UcastniciPresenter extends \BasePresenter
 	}
 
 
+	public function actionTermin($param)
+	{
+		$this->template->pageTitle = 'Účastníci zájezdu';
+		$this->template->applications = $this->trainingApplications->getByDate($param);
+	}
+
+
+	public function actionSoubory($param)
+	{
+		$this->template->pageTitle = 'Soubory';
+
+		$files = $this->trainings->getFiles($param);
+		foreach ($files as $file) {
+			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
+		}
+		$this->template->files = $files;
+	}
+
+
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Import';
+		$this->template->trainings = $this->trainings->getAllTrainings();
 	}
 
 

@@ -1,0 +1,6 @@
+{define #content}
+<ol n:inner-foreach="$files as $file">
+	<li>{$file->date}/{$file->fileName} <strong n:if="!$file->exists">does not exist</strong>
+</ol>
+
+{/define}

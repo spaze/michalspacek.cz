@@ -1,7 +1,8 @@
 <?php
 use \Nette\Application\UI\Form,
 	\Nette\Diagnostics\Debugger,
-	\Nette\Http\Response;
+	\Nette\Http\Response,
+	\MichalSpacekCz\Trainings;
 
 /**
  * Školení presenter.
@@ -94,7 +95,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->lastFreeSeats    = $this->trainings->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates            = $this->dates;
 
-		$this->template->pastTrainingsMe = $this->trainings->getPastTrainings($name);
+		$this->template->pastTrainingsMe = $this->trainings->getPastDates($name);
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
@@ -387,7 +388,10 @@ class SkoleniPresenter extends BasePresenter
 			$this->redirect($this->getName() . ':soubory', $application->action);
 		}
 
-		$files = $this->trainings->getFiles($session->applicationId);
+		$files = $this->trainings->getFiles($application->applicationId);
+		if ($application->status != Trainings::STATUS_ACCESS_TOKEN_USED) {
+			$this->trainings->setStatus($application->applicationId, Trainings::STATUS_ACCESS_TOKEN_USED);
+		}
 		if (!$files) {
 			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}

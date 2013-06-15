@@ -210,7 +210,7 @@ class Trainings extends BaseModel
 	}
 
 
-	public function getPastTrainings($name)
+	public function getPastDates($name)
 	{
 		return $this->database->fetchPairs(
 			"SELECT
@@ -227,6 +227,33 @@ class Trainings extends BaseModel
 				start DESC",
 			$name
 		);
+	}
+
+
+	public function getAllTrainings()
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				d.id_date AS dateId,
+				t.action,
+				t.name,
+				d.start,
+				d.end,
+				s.status,
+				v.href AS venueHref,
+				v.name AS venueName,
+				v.name_extended AS venueNameExtended,
+				v.city AS venueCity
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_venues v ON d.key_venue = v.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
+			WHERE
+				d.end < NOW()
+			ORDER BY
+				d.start'
+		);
+		return $result;
 	}
 
 
@@ -387,7 +414,7 @@ class Trainings extends BaseModel
 	}
 
 
-	private function setStatus($applicationId, $status)
+	public function setStatus($applicationId, $status)
 	{
 		$statusId = $this->getStatusId($status);
 
@@ -523,15 +550,11 @@ class Trainings extends BaseModel
 
 	public function getFiles($applicationId)
 	{
-		if ($this->getApplicationById($applicationId)->status != self::STATUS_ACCESS_TOKEN_USED) {
-			$this->setStatus($applicationId, self::STATUS_ACCESS_TOKEN_USED);
-		}
-
 		$files = $this->database->fetchAll(
 			'SELECT
 				f.id_file AS fileId,
 				f.filename AS fileName,
-				CAST(DATE(d.start) AS char) AS dirName
+				CAST(DATE(d.start) AS char) AS date
 			FROM 
 				files f
 				JOIN training_materials m ON f.id_file = m.key_file
@@ -548,7 +571,7 @@ class Trainings extends BaseModel
 		);
 
 		foreach ($files as $file) {
-			$file->dirName = $this->filesDir . $file->dirName;
+			$file->dirName = $this->filesDir . $file->date;
 		}
 
 		return $files;
@@ -561,7 +584,7 @@ class Trainings extends BaseModel
 			'SELECT
 				f.id_file AS fileId,
 				f.filename AS fileName,
-				CAST(DATE(d.start) AS char) AS dirName
+				CAST(DATE(d.start) AS char) AS date
 			FROM 
 				files f
 				JOIN training_materials m ON f.id_file = m.key_file
@@ -582,7 +605,7 @@ class Trainings extends BaseModel
 		);
 
 		if ($file) {
-			$file->dirName = $this->filesDir . $file->dirName;
+			$file->dirName = $this->filesDir . $file->date;
 		}
 
 		return $file;

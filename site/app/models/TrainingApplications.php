@@ -32,4 +32,20 @@ class TrainingApplications extends BaseModel
 	}
 
 
+	public function getByDate($dateId)
+	{
+		return $this->database->fetchAll(
+			'SELECT
+				a.id_application AS id,
+				a.name,
+				a.email
+			FROM
+				training_applications a
+			WHERE
+				key_date = ?',
+			$dateId
+		);
+	}
+
+
 }
