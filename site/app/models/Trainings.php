@@ -248,8 +248,6 @@ class Trainings extends BaseModel
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
-			WHERE
-				d.end < NOW()
 			ORDER BY
 				d.start'
 		);
