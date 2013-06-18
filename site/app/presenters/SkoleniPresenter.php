@@ -99,7 +99,7 @@ class SkoleniPresenter extends BasePresenter
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
-		$this->template->reviews = $this->trainings->getReviews($name, 3);
+		$this->template->reviews = $this->trainingApplications->getReviews($name, 3);
 	}
 
 
@@ -355,7 +355,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->pageTitle        = 'Ohlasy na školení ' . $training->name;
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
-		$this->template->reviews = $this->trainings->getReviews($name);
+		$this->template->reviews = $this->trainingApplications->getReviews($name);
 	}
 
 

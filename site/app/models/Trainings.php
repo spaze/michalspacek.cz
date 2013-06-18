@@ -377,35 +377,6 @@ class Trainings extends BaseModel
 	}
 
 
-	public function getReviews($name, $limit = null)
-	{
-		$query = 'SELECT
-				COALESCE(r.name, a.name) AS name,
-				COALESCE(r.company, a.company) AS company,
-				r.review,
-				r.href
-			FROM
-				training_reviews r
-				LEFT JOIN training_applications a ON r.key_application = a.id_application
-				JOIN training_dates d ON a.key_date = d.id_date
-				JOIN trainings t ON t.id_training = d.key_training
-			WHERE
-				t.action = ?
-				AND NOT r.hidden
-			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
-
-		if ($limit !== null) {
-			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
-		}
-
-		$reviews = $this->database->fetchAll($query, $name);
-		foreach ($reviews as &$review) {
-			$review['review'] = $this->texyFormatter->format($review['review']);
-		}
-		return $reviews;
-	}
-
-
 	private function generateAccessCode()
 	{
 		return \Nette\Utils\Strings::random(mt_rand(32, 64), '0-9a-zA-Z');

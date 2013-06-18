@@ -16,8 +16,11 @@ class UcastniciPresenter extends \BasePresenter
 	/** @var array */
 	private $dates;
 
+	/** @var \Nette\Database\Row */
+	private $review;
+
 	/** @var array */
-	private $hasFiles = array(
+	private $attendedStatuses = array(
 		Trainings::STATUS_ATTENDED,
 		Trainings::STATUS_MATERIALS_SENT,
 		Trainings::STATUS_ACCESS_TOKEN_USED,
@@ -34,7 +37,7 @@ class UcastniciPresenter extends \BasePresenter
 	{
 		$applications = $this->trainingApplications->getByDate($param);
 		foreach ($applications as $application) {
-			$application->hasFiles = in_array($application->status, $this->hasFiles);
+			$application->attended = in_array($application->status, $this->attendedStatuses);
 		}
 
 		$this->template->pageTitle = 'Účastníci zájezdu';
@@ -45,7 +48,7 @@ class UcastniciPresenter extends \BasePresenter
 	public function actionSoubory($param)
 	{
 		$application = $this->trainings->getApplicationById($param);
-		if (!in_array($application->status, $this->hasFiles)) {
+		if (!in_array($application->status, $this->attendedStatuses)) {
 			$this->redirect('termin', $application->dateId);
 		}
 
@@ -56,6 +59,13 @@ class UcastniciPresenter extends \BasePresenter
 
 		$this->template->pageTitle = 'Soubory';
 		$this->template->files = $files;
+	}
+
+
+	public function actionOhlasy($param)
+	{
+		$this->template->pageTitle = 'Ohlasy';
+		$this->review = $this->trainingApplications->getReviewByApplicationId($param);
 	}
 
 
@@ -198,6 +208,30 @@ class UcastniciPresenter extends \BasePresenter
 			Debugger::log($e, Debugger::ERROR);
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
 		}
+	}
+
+
+	protected function createComponentReview($formName)
+	{
+		$form = new Form($this, $formName);
+		$form->addCheckbox('overwriteName', 'Přepsat jméno:')
+			->setDefaultValue(isset($this->review->name) && $this->review->name != null);
+		$form->addText('name', 'Jméno:')
+			->setDefaultValue(isset($this->review->name) ? $this->review->name : '');
+		$form->addCheckbox('overwriteCompany', 'Přepsat firmu:')
+			->setDefaultValue(isset($this->review->company) && $this->review->company != null);
+		$form->addText('company', 'Firma:')
+			->setDefaultValue(isset($this->review->company) ? $this->review->company : '');
+		$form->addTextArea('review', 'Ohlas:')
+			->setDefaultValue(isset($this->review->review) ? $this->review->review : '');
+		$form->addText('href', 'Odkaz:')
+			->setDefaultValue(isset($this->review->href) ? $this->review->href : '');
+		$form->addCheckbox('hidden', 'Skrýt:')
+			->setDefaultValue(isset($this->review->hidden) ? $this->review->hidden : '');
+		$form->addSubmit('save', 'Uložit');
+		$form->onSuccess[] = new \Nette\Callback($this, 'submittedReview');
+
+		return $form;
 	}
 
 
