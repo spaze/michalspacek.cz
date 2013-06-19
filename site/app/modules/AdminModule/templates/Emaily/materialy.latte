@@ -8,6 +8,7 @@ $(document).ready(function() {
 
 {define #content}
 <p n:foreach="$applications as $application">
+	<div><strong>{$iterator->counter}.</strong></div>
 	<div><input type="text" class="selectAll" value="{$application->name} <{$application->email}>"></div>
 	<div><input type="text" class="selectAll" value="Materiály ze školení {$application->trainingName}"></div>
 	<div>
