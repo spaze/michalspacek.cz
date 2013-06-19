@@ -19,6 +19,8 @@ class UcastniciPresenter extends \BasePresenter
 	/** @var \Nette\Database\Row */
 	private $review;
 
+	private $applicationId;
+
 	/** @var array */
 	private $attendedStatuses = array(
 		Trainings::STATUS_ATTENDED,
@@ -58,14 +60,20 @@ class UcastniciPresenter extends \BasePresenter
 		}
 
 		$this->template->pageTitle = 'Soubory';
-		$this->template->files = $files;
+		$this->template->files     = $files;
 	}
 
 
 	public function actionOhlasy($param)
 	{
-		$this->template->pageTitle = 'Ohlasy';
-		$this->review = $this->trainingApplications->getReviewByApplicationId($param);
+		$this->applicationId = $param;
+		$this->review = $this->trainingApplications->getReviewByApplicationId($this->applicationId);
+
+		$this->template->pageTitle          = 'Ohlasy';
+		$this->template->applicationName    = $this->review->applicationName;
+		$this->template->applicationCompany = $this->review->applicationCompany;
+		$this->template->trainingStart      = $this->review->trainingStart;
+		$this->template->trainingName       = $this->review->trainingName;
 	}
 
 
@@ -215,23 +223,40 @@ class UcastniciPresenter extends \BasePresenter
 	{
 		$form = new Form($this, $formName);
 		$form->addCheckbox('overwriteName', 'Přepsat jméno:')
-			->setDefaultValue(isset($this->review->name) && $this->review->name != null);
+			->setDefaultValue($this->review->name != null);
 		$form->addText('name', 'Jméno:')
-			->setDefaultValue(isset($this->review->name) ? $this->review->name : '');
+			->setDefaultValue($this->review->name);
 		$form->addCheckbox('overwriteCompany', 'Přepsat firmu:')
-			->setDefaultValue(isset($this->review->company) && $this->review->company != null);
+			->setDefaultValue($this->review->company != null);
 		$form->addText('company', 'Firma:')
-			->setDefaultValue(isset($this->review->company) ? $this->review->company : '');
+			->setDefaultValue($this->review->company);
 		$form->addTextArea('review', 'Ohlas:')
-			->setDefaultValue(isset($this->review->review) ? $this->review->review : '');
+			->setDefaultValue($this->review->review);
 		$form->addText('href', 'Odkaz:')
-			->setDefaultValue(isset($this->review->href) ? $this->review->href : '');
+			->setDefaultValue($this->review->href);
 		$form->addCheckbox('hidden', 'Skrýt:')
-			->setDefaultValue(isset($this->review->hidden) ? $this->review->hidden : '');
+			->setDefaultValue($this->review->hidden);
 		$form->addSubmit('save', 'Uložit');
 		$form->onSuccess[] = new \Nette\Callback($this, 'submittedReview');
 
 		return $form;
+	}
+
+
+	public function submittedReview($form)
+	{
+		$values = $form->getValues();
+
+		$this->trainingApplications->addUpdateReview(
+			$this->applicationId,
+			$values->overwriteName ? $values->name : null,
+			$values->overwriteCompany ? $values->company : null,
+			$values->review,
+			$values->href,
+			$values->hidden
+		);
+
+		$this->redirect('termin', $this->review->dateId);
 	}
 
 
