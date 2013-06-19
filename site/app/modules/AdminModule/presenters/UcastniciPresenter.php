@@ -37,13 +37,16 @@ class UcastniciPresenter extends \BasePresenter
 
 	public function actionTermin($param)
 	{
+		$training = $this->trainings->getByDate($param);
 		$applications = $this->trainingApplications->getByDate($param);
 		foreach ($applications as $application) {
 			$application->attended = in_array($application->status, $this->attendedStatuses);
 		}
 
-		$this->template->pageTitle = 'Účastníci zájezdu';
-		$this->template->applications = $applications;
+		$this->template->pageTitle     = 'Účastníci zájezdu';
+		$this->template->trainingStart = $training->start;
+		$this->template->trainingName  = $training->name;
+		$this->template->applications  = $applications;
 	}
 
 
@@ -61,6 +64,9 @@ class UcastniciPresenter extends \BasePresenter
 
 		$this->template->pageTitle = 'Soubory';
 		$this->template->files     = $files;
+		$this->template->trainingStart = $application->trainingStart;
+		$this->template->trainingName  = $application->trainingName;
+		$this->template->name          = $application->name;
 	}
 
 

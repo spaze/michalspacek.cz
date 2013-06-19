@@ -1,4 +1,5 @@
 {define #content}
+<p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'}</p>
 <ol n:inner-foreach="$files as $file">
 	<li>{$file->date}/{$file->fileName} <strong n:if="!$file->exists">does not exist</strong>
 </ol>

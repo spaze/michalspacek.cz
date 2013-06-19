@@ -255,6 +255,32 @@ class Trainings extends BaseModel
 	}
 
 
+	public function getByDate($dateId)
+	{
+		$result = $this->database->fetch(
+			'SELECT
+				d.id_date AS dateId,
+				t.action,
+				t.name,
+				d.start,
+				d.end,
+				s.status,
+				v.href AS venueHref,
+				v.name AS venueName,
+				v.name_extended AS venueNameExtended,
+				v.city AS venueCity
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_venues v ON d.key_venue = v.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
+			WHERE
+				d.id_date = ?',
+			$dateId
+		);
+		return $result;
+	}
+
+
 	private function insertData($data)
 	{
 		$data['access_token'] = $this->generateAccessCode();
@@ -434,6 +460,7 @@ class Trainings extends BaseModel
 			'SELECT
 				t.action,
 				d.id_date AS dateId,
+				t.name AS trainingName,
 				a.id_application AS applicationId,
 				d.start AS trainingStart,
 				s.status,
