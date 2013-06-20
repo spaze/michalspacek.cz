@@ -141,7 +141,7 @@ $(document).ready(function() {
 <h2>Ohlasy na školení</h2>
 {foreach $reviews as $review}
 	<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
-	<p class="indent">{$review->review} <small n:if="$review->href">(<a href="{$review->href}">více&hellip;</a>)</small></p>
+	<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">více&hellip;</a>)</small></p></div>
 {/foreach}
 </div>
 <p><a n:href="Skoleni:ohlasy $name">Všechny ohlasy</a></p>
