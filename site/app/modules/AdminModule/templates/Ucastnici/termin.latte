@@ -1,3 +1,9 @@
+{define #menu}
+&raquo; <a n:href=":Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+&raquo; <a n:href="Ucastnici:">Termíny</a>
+{/define}
+
 {define #content}
 <p>{$trainingName} {$trainingStart|date:'j. n. Y'}</p>
 <ol n:inner-foreach="$applications as $application">

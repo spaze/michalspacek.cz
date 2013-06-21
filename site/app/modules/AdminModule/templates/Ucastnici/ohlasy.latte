@@ -1,6 +1,13 @@
+{define #menu}
+&raquo; <a n:href=":Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+&raquo; <a n:href="Ucastnici:">Termíny</a>
+&raquo; <a n:href="termin $dateId">{$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</a>
+{/define}
+
 {define #content}
 {form review}
-<p>{$trainingName} {$trainingStart|date:'j. n. Y'}</p>
+<p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
 <p><div>{$applicationName}</div>{label overwriteName /}{input overwriteName} {input name}</p>
 <p><div>{$applicationCompany}</div>{label overwriteCompany /}{input overwriteCompany} {input company}</p>
 <p>{label review /}{input review}</p>

@@ -62,11 +62,15 @@ class UcastniciPresenter extends \BasePresenter
 			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
 		}
 
+		$date = $this->trainings->getByDate($application->dateId);
+
 		$this->template->pageTitle = 'Soubory';
 		$this->template->files     = $files;
-		$this->template->trainingStart = $application->trainingStart;
-		$this->template->trainingName  = $application->trainingName;
+		$this->template->trainingStart = $date->start;
+		$this->template->trainingName  = $date->name;
+		$this->template->trainingCity  = $date->venueCity;
 		$this->template->name          = $application->name;
+		$this->template->dateId        = $application->dateId;
 	}
 
 
@@ -75,11 +79,16 @@ class UcastniciPresenter extends \BasePresenter
 		$this->applicationId = $param;
 		$this->review = $this->trainingApplications->getReviewByApplicationId($this->applicationId);
 
+		$date = $this->trainings->getByDate($this->review->dateId);
+
 		$this->template->pageTitle          = 'Ohlasy';
 		$this->template->applicationName    = $this->review->applicationName;
 		$this->template->applicationCompany = $this->review->applicationCompany;
-		$this->template->trainingStart      = $this->review->trainingStart;
-		$this->template->trainingName       = $this->review->trainingName;
+		$this->template->trainingStart      = $date->start;
+		$this->template->trainingName       = $date->name;
+		$this->template->trainingCity  = $date->venueCity;
+		$this->template->name          = $this->review->applicationName;
+		$this->template->dateId        = $this->review->dateId;
 	}
 
 

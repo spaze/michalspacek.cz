@@ -89,13 +89,10 @@ class TrainingApplications extends BaseModel
 				r.review,
 				r.href,
 				r.hidden,
-				d.id_date AS dateId,
-				d.start trainingStart,
-				t.name AS trainingName
+				d.id_date AS dateId
 			FROM
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date
-				JOIN trainings t ON t.id_training = d.key_training
 				LEFT JOIN training_reviews r ON a.id_application = r.key_application
 			WHERE
 				a.id_application = ?',

@@ -460,7 +460,6 @@ class Trainings extends BaseModel
 			'SELECT
 				t.action,
 				d.id_date AS dateId,
-				t.name AS trainingName,
 				a.id_application AS applicationId,
 				d.start AS trainingStart,
 				s.status,
