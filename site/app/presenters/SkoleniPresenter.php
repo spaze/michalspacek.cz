@@ -238,6 +238,7 @@ class SkoleniPresenter extends BasePresenter
 		$name   = $form->parent->params['name'];
 
 		try {
+			$this->checkSpam($values, $name);
 			$this->checkTrainingDate($values, $name);
 
 			$date = $this->dates[$values->trainingId];
@@ -308,7 +309,10 @@ class SkoleniPresenter extends BasePresenter
 			$session->companyTaxId = $values->companyTaxId;
 			$session->note         = $values->note;
 			$this->redirect($this->getName() . ':potvrzeni', $name);
-		} catch (PDOException $e) {
+		} catch (\UnexpectedValueException $e) {
+			Debugger::log($e);
+			$this->flashMessage('Přihláška vypadá jako spam, takhle by to nešlo.', 'error');
+		} catch (\PDOException $e) {
 			Debugger::log($e, Debugger::ERROR);
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
 		}
@@ -318,25 +322,40 @@ class SkoleniPresenter extends BasePresenter
 	private function checkTrainingDate(\Nette\ArrayHash $values, $name)
 	{
 		if (!isset($this->dates[$values->trainingId])) {
-			$session = $this->getSession('training');
-			$logValues = $logSession = array();
-			if (isset($session->application[$name])) {
-				foreach ($session->application[$name] as $key => $value) {
-					$logSession[] = "{$key} => \"{$value}\"";
-				}
-			}
-			foreach ($values as $key => $value) {
-				$logValues[] = "{$key} => \"{$value}\"";
-			}
-			$message = sprintf('Training date id %s is not an upcoming training, should be one of %s (application session data for %s: %s, form values: %s)',
-				$values->trainingId,
-				implode(', ', $dateIds),
-				$name,
-				(empty($logSession) ? 'empty' : implode(', ', $logSession)),
-				implode(', ', $logValues)
-			);
-			throw new OutOfBoundsException($message);
+			$this->logData($values, $name);
+			$message = "Training date id {$values->trainingId} is not an upcoming training, should be one of " . implode(', ', $dateIds);
+			throw new \OutOfBoundsException($message);
 		}
+	}
+
+
+	private function checkSpam(\Nette\ArrayHash $values, $name)
+	{
+		if (preg_match('~\s+href="\s*https?://~', $values->note)) {
+			$this->logData($values, $name);
+			throw new \UnexpectedValueException('Spammy note: ' . $values->note);
+		}
+	}
+
+
+	private function logData(\Nette\ArrayHash $values, $name)
+	{
+		$session = $this->getSession('training');
+		$logValues = $logSession = array();
+		if (isset($session->application[$name])) {
+			foreach ($session->application[$name] as $key => $value) {
+				$logSession[] = "{$key} => \"{$value}\"";
+			}
+		}
+		foreach ($values as $key => $value) {
+			$logValues[] = "{$key} => \"{$value}\"";
+		}
+		$message = sprintf('Application session data for %s: %s, form values: %s',
+			$name,
+			(empty($logSession) ? 'empty' : implode(', ', $logSession)),
+			implode(', ', $logValues)
+		);
+		Debugger::log($message);
 	}
 
 
