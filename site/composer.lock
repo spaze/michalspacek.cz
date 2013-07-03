@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f88a19e34861591fd911c4b6d7e4c709",
+    "hash": "47a35d79c57ad315a651d6fe8ff39b6e",
     "packages": [
         {
             "name": "dg/texy",
