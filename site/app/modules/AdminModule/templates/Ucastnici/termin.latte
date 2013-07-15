@@ -9,5 +9,5 @@
 <ol n:inner-foreach="$applications as $application">
 	<li>{$application->name} ({$application->status}) <a n:if="$application->attended" n:href="Ucastnici:soubory $application->id">soubory</a> <a n:if="$application->attended" n:href="Ucastnici:ohlasy $application->id">ohlas</a></li>
 </ol>
-
+<p><a href="">přidat soubor</a></p>
 {/define}
