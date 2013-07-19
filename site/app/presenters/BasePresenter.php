@@ -38,6 +38,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	 */
 	protected $interviews;
 
+	/**
+	 * @var \MichalSpacekCz\UserManager
+	 */
+	protected $authenticator;
+
 
 	/**
 	 * @param \MichalSpacekCz\Articles
@@ -108,6 +113,18 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 			throw new \Nette\InvalidStateException('Interviews has already been set');
 		}
 		$this->interviews = $interviews;
+	}
+
+
+	/**
+	 * @param \MichalSpacekCz\UserManager
+	 */
+	public function injectAuthenticator(\MichalSpacekCz\UserManager $userManager)
+	{
+		if ($this->authenticator) {
+			throw new \Nette\InvalidStateException('Authenticator has already been set');
+		}
+		$this->authenticator = $userManager;
 	}
 
 

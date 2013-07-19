@@ -36,6 +36,7 @@ common:
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 		interviews: \MichalSpacekCz\Interviews
 		trainingApplications: \MichalSpacekCz\TrainingApplications
+		authenticator: \MichalSpacekCz\UserManager
 
 production < common:
 

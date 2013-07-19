@@ -7,7 +7,7 @@ namespace AdminModule;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HomepagePresenter extends \BasePresenter
+class HomepagePresenter extends BasePresenter
 {
 
 
