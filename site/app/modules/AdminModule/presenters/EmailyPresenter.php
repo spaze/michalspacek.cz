@@ -9,7 +9,7 @@ use \MichalSpacekCz\Trainings;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class EmailyPresenter extends \BasePresenter
+class EmailyPresenter extends BasePresenter
 {
 
 

@@ -13,7 +13,7 @@ class HomepagePresenter extends BasePresenter
 
 	public function actionDefault()
 	{
-		throw new \Nette\Application\BadRequestException('No admin for you my dear', \Nette\Http\Response::S404_NOT_FOUND);
+		$this->template->pageTitle = 'Administrace';
 	}
 
 

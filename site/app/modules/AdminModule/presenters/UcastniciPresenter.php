@@ -10,7 +10,7 @@ use \Nette\Application\UI\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class UcastniciPresenter extends \BasePresenter
+class UcastniciPresenter extends BasePresenter
 {
 
 	/** @var array */
