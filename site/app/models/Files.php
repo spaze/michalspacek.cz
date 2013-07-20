@@ -10,16 +10,6 @@ namespace MichalSpacekCz;
 class Files extends BaseModel
 {
 
-	/** @var \Nette\Http\IRequest */
-	protected $httpRequest;
-
-
-	public function __construct(\Nette\Database\Connection $connection, \Nette\Http\IRequest $httpRequest)
-	{
-		$this->database = $connection;
-		$this->httpRequest = $httpRequest;
-	}
-
 
 	public function getInfo($file)
 	{

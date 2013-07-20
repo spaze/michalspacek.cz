@@ -10,11 +10,15 @@ abstract class BaseModel extends \Nette\Object
 	/** @var \Bare\Formatter\Texy */
 	protected $texyFormatter;
 
+	/** @var \Nette\Http\IRequest */
+	protected $httpRequest;
 
-	public function __construct(\Nette\Database\Connection $connection, \Bare\Next\Formatter\Texy $texyFormatter)
+
+	public function __construct(\Nette\Database\Connection $connection, \Bare\Next\Formatter\Texy $texyFormatter, \Nette\Http\IRequest $httpRequest)
 	{
 		$this->database = $connection;
 		$this->texyFormatter = $texyFormatter;
+		$this->httpRequest = $httpRequest;
 	}
 
 

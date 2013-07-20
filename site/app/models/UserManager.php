@@ -72,4 +72,19 @@ class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
 	}
 
 
+	public function isForbidden()
+	{
+		$forbidden = $this->database->fetchColumn(
+			'SELECT
+				1
+			FROM
+				forbidden
+			WHERE
+				ip = ?',
+			$this->httpRequest->getRemoteAddress()
+		);
+		return (bool)$forbidden;
+	}
+
+
 }
