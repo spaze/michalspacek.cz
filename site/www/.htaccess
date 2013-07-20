@@ -1,6 +1,3 @@
-# Spammers
-Deny from 188.143.232.31
-
 php_flag display_errors off
 
 RewriteEngine On
