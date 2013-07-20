@@ -128,6 +128,21 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
+	protected function isForbidden()
+	{
+		return false;
+	}
+
+
+	protected function startup()
+	{
+		parent::startup();
+		if ($this->isForbidden()) {
+			$this->forward('Forbidden:');
+		}
+	}
+
+
 	public function beforeRender()
 	{
 		$parameters = $this->getContext()->getParameters();
