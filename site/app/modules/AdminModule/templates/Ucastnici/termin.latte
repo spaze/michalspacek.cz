@@ -4,10 +4,104 @@
 &raquo; <a n:href="Ucastnici:">Termíny</a>
 {/define}
 
+{define #script}
+$(document).ready(function() {
+	$('#pridat-ucastniky a[href="#pridat-ucastniky"]').click(function() {
+		$('#pridat-ucastniky-container').slideToggle('fast');
+		return false;
+	});
+	$('#pridat-ucastniky-container').hide();
+	var reindex = function(element, index) {
+		element.find('input').each(function() {
+			$(this).attr('name', function(i, value) {
+				return value.replace(/^applications\[\d+\]/, 'applications[' + index + ']');
+			});
+			$(this).attr('id', function(i, value) {
+				return value.replace(/^frmapplications-applications-\d+-/, 'frmapplications-applications-' + index + '-');
+			});
+			$(this).attr('data-nette-rules', $(this).attr('data-nette-rules').replace(/'applications\[\d+\]/, "'applications[" + index + ']'));
+		});
+	};
+	$('#pridat-ucastniky .add').click(function() {
+		$('#pridat-ucastniky .delete').show();
+		var index = 0;
+		tr = $(this).parent().parent();
+		tr.after(tr.clone(true));
+		tr.parent().children('tr').each(function() {
+			reindex($(this), index++);
+		});
+	});
+	$('#pridat-ucastniky .delete').click(function() {
+		var index = 0;
+		tr = $(this).parent().parent();
+		tr.addClass('highlight');
+		if (confirm('Odebrat účastníka?')) {
+			tbody = tr.parent();
+			tr.remove();
+			tbody.children('tr').each(function() {
+				reindex($(this), index++);
+			});
+			if (tbody.children('tr').length == 1) {
+				$('#pridat-ucastniky .delete').hide();
+			}
+		} else {
+			tr.removeClass('highlight');
+		}
+	});
+	$('#pridat-ucastniky .delete').hide();
+});
+{/define}
+
 {define #content}
 <p>{$trainingName} {$trainingStart|date:'j. n. Y'}</p>
 <ol n:inner-foreach="$applications as $application">
 	<li>{$application->name} ({$application->status}) <a n:if="$application->attended" n:href="Ucastnici:soubory $application->id">soubory</a> <a n:if="$application->attended" n:href="Ucastnici:ohlasy $application->id">ohlas</a></li>
 </ol>
+<hr>
+<div id="pridat-ucastniky">
+	<p><a href="#pridat-ucastniky">Přidat účastníky</a></p>
+	<div id="pridat-ucastniky-container">
+	{form applications}
+		<table>
+			{formContainer applications-0}
+			<thead>
+				<tr>
+					<th>{label name /}</th>
+					<th>{label email /}</th>
+					<th>{label company /}</th>
+					<th>{label street /}</th>
+					<th>{label city /}</th>
+					<th>{label zip /}</th>
+					<th>{label companyId /}</th>
+					<th>{label companyTaxId /}</th>
+					<th>{label note /}</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{input name}</td>
+					<td>{input email}</td>
+					<td>{input company}</td>
+					<td>{input street}</td>
+					<td>{input city}</td>
+					<td>{input zip}</td>
+					<td>{input companyId}</td>
+					<td>{input companyTaxId}</td>
+					<td>{input note}</td>
+					<td><code class="button add" title="Kopírovat">+</code></td>
+					<td><code class="button delete" title="Odebrat">-</code></td>
+				</tr>
+			</tbody>
+			{/formContainer}
+		</table>
+		<p><strong>{label date /}</strong> {input date}</p>
+		<p><strong>{label status /}</strong> {input status}</p>
+		<p><strong>{label source /}</strong> {input source}</p>
+		<p>{input submit}</p>
+		{/form applications}
+	</div>
+</div>
 <p><a href="">přidat soubor</a></p>
 {/define}

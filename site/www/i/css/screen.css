@@ -44,6 +44,7 @@ ul {
     text-align: left;
     padding: 0px 1em;
 }
+table { border-spacing: 0px; }
 small, .small { color: #666; }
 small a, .small a { color: #444; }
 .small { font-size: small; }
@@ -54,6 +55,7 @@ small a, .small a { color: #444; }
 }
 img { border: none; }
 abbr.dtstart, abbr.dtend { border: none; }
+.button { cursor: pointer; }
 .container {
     max-width: 800px;
     margin: 0px auto;
@@ -119,7 +121,6 @@ abbr.dtstart, abbr.dtend { border: none; }
 .left { text-align: left; }
 .center { text-align: center; }
 .clear { clear: both; }
-#frm-application table { border-spacing: 0px; }
 #frm-application th, #frm-application td {
     width: 150px;
     padding: 5px 0px;
@@ -165,3 +166,6 @@ div.notice {
     overflow: hidden;
 }
 #ohlasy hr { height: 1px; }
+#pridat-ucastniky-container table { font-size: 75%;}
+#pridat-ucastniky-container table input[type=text] { width: 78px; }
+#pridat-ucastniky-container table .highlight { background-color: yellow; }

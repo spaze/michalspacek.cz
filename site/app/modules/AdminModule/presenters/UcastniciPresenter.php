@@ -21,6 +21,8 @@ class UcastniciPresenter extends BasePresenter
 
 	private $applicationId;
 
+	private $dateId;
+
 	/** @var array */
 	private $attendedStatuses = array(
 		Trainings::STATUS_ATTENDED,
@@ -29,16 +31,11 @@ class UcastniciPresenter extends BasePresenter
 	);
 
 
-	public function actionNovy()
-	{
-		$this->template->pageTitle = 'Nový účastník';
-	}
-
-
 	public function actionTermin($param)
 	{
-		$training = $this->trainings->getByDate($param);
-		$applications = $this->trainingApplications->getByDate($param);
+		$this->dateId = $param;
+		$training = $this->trainings->getByDate($this->dateId);
+		$applications = $this->trainingApplications->getByDate($this->dateId);
 		foreach ($applications as $application) {
 			$application->attended = in_array($application->status, $this->attendedStatuses);
 		}
@@ -99,21 +96,9 @@ class UcastniciPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication($formName)
+	protected function createComponentApplications($formName)
 	{
 		$helpers = new \Bare\Next\Templating\Helpers();
-
-		$this->dates = $this->trainings->getUpcoming();
-		foreach ($this->dates as $training) {
-			foreach ($training->dates as $date) {
-				if ($date->tentative) {
-					$start = $helpers->localDate($date->start, 'cs', '%B %Y');
-				} else {
-					$start = \Nette\Templating\Helpers::date($date->start, 'j. n. Y');
-				}
-				$dates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (předběžný termín)' : '') . " - {$training->name}";
-			}
-		}
 
 		$sources = array();
 		foreach ($this->trainings->getTrainingApplicationSources() as $source) {
@@ -128,51 +113,53 @@ class UcastniciPresenter extends BasePresenter
 		$session = $this->getSession('application');
 
 		$form = new Form($this, $formName);
-		$form->addSelect('trainingId', 'Termín školení:', $dates)
-			->setDefaultValue($session->trainingId)
-			->setRequired('Vyberte prosím termín a místo školení')
-			->setPrompt('- vyberte termín a místo -');
 
-		$form->addGroup('Účastník');
-		$form->addText('name', 'Jméno a příjmení:')
-			->setRequired('Zadejte prosím jméno a příjmení')
-			->addRule(Form::MIN_LENGTH, 'Minimální délka jména a příjmení je %d znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka jména a příjmení je %d znaků', 200);
-		$form->addText('email', 'E-mail:')
-			->setRequired('Zadejte prosím e-mailovou adresu')
-			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200);
+		$applicationsContainer = $form->addContainer('applications');
+		$count = (isset($_POST['applications']) ? count($_POST['applications']) : 1);
+		for ($i = 0; $i < $count; $i++) {
+			$dataContainer = $applicationsContainer->addContainer($i);
+			$dataContainer->addText('name', 'Jméno')
+				->setRequired('Zadejte prosím jméno')
+				->addRule(Form::MIN_LENGTH, 'Minimální délka jména je %d znaky', 3)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
+			$dataContainer->addText('email', 'E-mail')
+				->setRequired('Zadejte prosím e-mailovou adresu')
+				->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
+				->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200);
+			$dataContainer->addText('company', 'Společnost')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka společnosti je %d znaky', 3)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka společnosti je %d znaků', 200);
+			$dataContainer->addText('street', 'Ulice')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka ulice je %d znaky', 3)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice je %d znaků', 200);
+			$dataContainer->addText('city', 'Město')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
+			$dataContainer->addText('zip', 'PSČ')
+				->addCondition(Form::FILLED)
+				->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
+				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
+			$dataContainer->addText('companyId', 'IČ')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 6)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
+			$dataContainer->addText('companyTaxId', 'DIČ')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
+			$dataContainer->addText('note', 'Poznámka')
+				->addCondition(Form::FILLED)
+				->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
+		}
 
-		$form->addGroup('Fakturační údaje');
-		$form->addText('company', 'Obchodní jméno:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 200);
-		$form->addText('street', 'Ulice a číslo:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200);
-		$form->addText('city', 'Město:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
-		$form->addText('zip', 'PSČ:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
-		$form->addText('companyId', 'IČ:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 6)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
-		$form->addText('companyTaxId', 'DIČ:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
-
-		$form->setCurrentGroup(null);
-		$form->addText('note', 'Poznámka:')
-			->addCondition(Form::FILLED)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
+		$form->addText('date', 'Datum:')
+			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS')
+			->setAttribute('title', 'Formát  YYYY-MM-DD HH:MM:SS')
+			->setRequired('Zadejte datum')
+			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS', '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}');
 		$form->addSelect('status', 'Status:', $statuses)
 			->setDefaultValue($session->status)
 			->setRequired('Vyberte status')
@@ -182,8 +169,8 @@ class UcastniciPresenter extends BasePresenter
 			->setRequired('Vyberte zdroj')
 			->setPrompt('- vyberte zdroj -');
 
-		$form->addSubmit('signUp', 'Odeslat');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplication');
+		$form->addSubmit('submit', 'Přidat');
+		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplications');
 
 		return $form;
 	}
@@ -202,35 +189,9 @@ class UcastniciPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplication($form)
+	public function submittedApplications($form)
 	{
-		$session = $this->getSession('application');
-
-		$values = $form->getValues();
-		$date = $this->findDate($values->trainingId);
-		try {
-			$this->trainings->insertApplication(
-				$values->trainingId,
-				$values->name,
-				$values->email,
-				$values->company,
-				$values->street,
-				$values->city,
-				$values->zip,
-				$values->companyId,
-				$values->companyTaxId,
-				$values->note,
-				($date->tentative ? Trainings::STATUS_TENTATIVE : $values->status),
-				$values->source
-			);
-			$session->trainingId = $values->trainingId;
-			$session->status     = $values->status;
-			$session->source     = $values->source;
-			$this->redirect($this->getAction());
-		} catch (PDOException $e) {
-			Debugger::log($e, Debugger::ERROR);
-			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
-		}
+		$this->redirect($this->getAction(), $this->dateId);
 	}
 
 

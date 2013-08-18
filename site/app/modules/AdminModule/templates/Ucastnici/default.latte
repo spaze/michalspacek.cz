@@ -2,8 +2,4 @@
 <ol n:inner-foreach="$trainings as $training">
 	<li><a n:href="ucastnici:termin $training->dateId">{$training->start|date:'j. n. Y'}</a> {$training->venueCity} {$training->name}</li>
 </ol>
-
-<ul>
-	<li><a n:href="novy">Nový účastník</a></li>
-</ul>
 {/define}
