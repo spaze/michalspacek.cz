@@ -25,18 +25,7 @@ class TrainingApplications extends BaseModel
 
 	protected $emailFrom;
 
-	private $initialStatuses = array(
-		self::STATUS_TENTATIVE,
-		self::STATUS_SIGNED_UP,
-		self::STATUS_IMPORTED,
-		self::STATUS_NON_PUBLIC_TRAINING
-	);
-
-	private $attendedStatuses = array(
-		self::STATUS_ATTENDED,
-		self::STATUS_MATERIALS_SENT,
-		self::STATUS_ACCESS_TOKEN_USED,
-	);
+	private $statuses = array();
 
 
 	public function getByStatus($status)
@@ -196,13 +185,41 @@ class TrainingApplications extends BaseModel
 
 	public function getInitialStatuses()
 	{
-		return $this->initialStatuses;
+		return $this->getChildrenStatuses(self::STATUS_CREATED);
 	}
 
 
 	public function getAttendedStatuses()
 	{
-		return $this->attendedStatuses;
+		return array($this->getStatusId(self::STATUS_ATTENDED) => self::STATUS_ATTENDED) + $this->getDescendantStatuses(self::STATUS_ATTENDED);
+	}
+
+
+	private function getChildrenStatuses($parent)
+	{
+		if (!isset($this->statuses[$parent])) {
+			$this->statuses[$parent] = $this->database->fetchPairs(
+				'SELECT
+					st.id_status,
+					st.status
+				FROM training_application_status_flow f
+					JOIN training_application_status sf ON sf.id_status = f.key_status_from
+					JOIN training_application_status st ON st.id_status = f.key_status_to
+				WHERE sf.status = ?',
+				$parent
+			);
+		}
+		return $this->statuses[$parent];
+	}
+
+
+	private function getDescendantStatuses($parent)
+	{
+		$statuses = $this->getChildrenStatuses($parent);
+		foreach ($statuses as $status) {
+			$statuses += $this->getDescendantStatuses($status);
+		}
+		return $statuses;
 	}
 
 
