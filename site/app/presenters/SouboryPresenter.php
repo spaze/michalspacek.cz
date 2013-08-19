@@ -20,13 +20,13 @@ class SouboryPresenter extends BasePresenter
 			throw new BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
 		}
 
-		$file = $this->trainings->getFile($session->applicationId, $session->token, $filename);
+		$file = $this->trainingApplications->getFile($session->applicationId, $session->token, $filename);
 		if (!$file) {
 			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
 		$downloadId = $this->files->logDownload($file->fileId);
-		$this->trainings->logFileDownload($session->applicationId, $downloadId);
+		$this->trainingApplications->logFileDownload($session->applicationId, $downloadId);
 		$this->sendFile("{$file->dirName}/{$file->fileName}");
 	}
 

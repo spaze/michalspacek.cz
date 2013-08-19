@@ -29,13 +29,13 @@ common:
 		articles:  \MichalSpacekCz\Articles
 		files:     \MichalSpacekCz\Files
 		talks:     \MichalSpacekCz\Talks
-		trainings:
-			class: \MichalSpacekCz\Trainings
+		trainings: \MichalSpacekCz\Trainings
+		interviews: \MichalSpacekCz\Interviews
+		trainingApplications:
+			class: \MichalSpacekCz\TrainingApplications
 			setup:
 				- setFilesDir('../files/trainings')
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
-		interviews: \MichalSpacekCz\Interviews
-		trainingApplications: \MichalSpacekCz\TrainingApplications
 		authenticator: \MichalSpacekCz\UserManager
 
 production < common:

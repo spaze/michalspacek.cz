@@ -1,7 +1,6 @@
 <?php
 namespace AdminModule;
 
-use \MichalSpacekCz\Trainings;
 use \Nette\Application\UI\Form;
 
 /**
@@ -23,21 +22,15 @@ class UcastniciPresenter extends BasePresenter
 
 	private $dateId;
 
-	/** @var array */
-	private $attendedStatuses = array(
-		Trainings::STATUS_ATTENDED,
-		Trainings::STATUS_MATERIALS_SENT,
-		Trainings::STATUS_ACCESS_TOKEN_USED,
-	);
-
 
 	public function actionTermin($param)
 	{
 		$this->dateId = $param;
 		$training = $this->trainings->getByDate($this->dateId);
 		$applications = $this->trainingApplications->getByDate($this->dateId);
+		$attendedStatuses = $this->trainingApplications->getAttendedStatuses();
 		foreach ($applications as $application) {
-			$application->attended = in_array($application->status, $this->attendedStatuses);
+			$application->attended = in_array($application->status, $attendedStatuses);
 		}
 
 		$this->template->pageTitle     = 'Účastníci zájezdu';
@@ -49,12 +42,12 @@ class UcastniciPresenter extends BasePresenter
 
 	public function actionSoubory($param)
 	{
-		$application = $this->trainings->getApplicationById($param);
-		if (!in_array($application->status, $this->attendedStatuses)) {
+		$application = $this->trainingApplications->getApplicationById($param);
+		if (!in_array($application->status, $this->trainingApplications->getAttendedStatuses())) {
 			$this->redirect('termin', $application->dateId);
 		}
 
-		$files = $this->trainings->getFiles($param);
+		$files = $this->trainingApplications->getFiles($param);
 		foreach ($files as $file) {
 			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
 		}
@@ -74,7 +67,7 @@ class UcastniciPresenter extends BasePresenter
 	public function actionOhlasy($param)
 	{
 		$this->applicationId = $param;
-		$this->review = $this->trainingApplications->getReviewByApplicationId($this->applicationId);
+		$this->review = $this->trainings->getReviewByApplicationId($this->applicationId);
 
 		$date = $this->trainings->getByDate($this->review->dateId);
 
@@ -102,16 +95,14 @@ class UcastniciPresenter extends BasePresenter
 		$helpers = new \Bare\Next\Templating\Helpers();
 
 		$sources = array();
-		foreach ($this->trainings->getTrainingApplicationSources() as $source) {
+		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {
 			$sources[$source->alias] = $source->name;
 		}
 
 		$statuses = array();
-		foreach ($this->trainings->getInitialStatuses() as $status) {
+		foreach ($this->trainingApplications->getInitialStatuses() as $status) {
 			$statuses[$status] = $status;
 		}
-
-		$session = $this->getSession('application');
 
 		$form = new Form($this, $formName);
 
@@ -162,11 +153,9 @@ class UcastniciPresenter extends BasePresenter
 			->setRequired('Zadejte datum')
 			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo NOW', '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
 		$form->addSelect('status', 'Status:', $statuses)
-			->setDefaultValue($session->status)
 			->setRequired('Vyberte status')
 			->setPrompt('- vyberte status -');
 		$form->addSelect('source', 'Zdroj:', $sources)
-			->setDefaultValue($session->source)
 			->setRequired('Vyberte zdroj')
 			->setPrompt('- vyberte zdroj -');
 
@@ -194,7 +183,7 @@ class UcastniciPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 		foreach ($values->applications as $application) {
-			$this->trainings->insertApplication(
+			$this->trainingApplications->insertApplication(
 				$this->dateId,
 				$application->name,
 				$application->email,
@@ -242,7 +231,7 @@ class UcastniciPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 
-		$this->trainingApplications->addUpdateReview(
+		$this->trainings->addUpdateReview(
 			$this->applicationId,
 			$values->overwriteName ? $values->name : null,
 			$values->overwriteCompany ? $values->company : null,

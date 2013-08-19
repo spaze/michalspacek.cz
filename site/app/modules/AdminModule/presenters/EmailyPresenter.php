@@ -1,7 +1,7 @@
 <?php
 namespace AdminModule;
 
-use \MichalSpacekCz\Trainings;
+use \MichalSpacekCz\TrainingApplications;
 
 /**
  * Emaily presenter.
@@ -17,7 +17,7 @@ class EmailyPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Materiály ze školení';
 
-		$this->template->applications = $this->trainingApplications->getByStatus(Trainings::STATUS_ATTENDED);
+		$this->template->applications = $this->trainingApplications->getByStatus(TrainingApplications::STATUS_ATTENDED);
 	}
 
 

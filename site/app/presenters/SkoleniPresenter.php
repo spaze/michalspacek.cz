@@ -2,7 +2,7 @@
 use \Nette\Application\UI\Form,
 	\Nette\Diagnostics\Debugger,
 	\Nette\Http\Response,
-	\MichalSpacekCz\Trainings;
+	\MichalSpacekCz\TrainingApplications;
 
 /**
  * Školení presenter.
@@ -99,7 +99,7 @@ class SkoleniPresenter extends BasePresenter
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
-		$this->template->reviews = $this->trainingApplications->getReviews($name, 3);
+		$this->template->reviews = $this->trainings->getReviews($name, 3);
 	}
 
 
@@ -112,7 +112,7 @@ class SkoleniPresenter extends BasePresenter
 
 		$session = $this->getSession('training');
 
-		$application = $this->trainings->getApplicationByToken($param);
+		$application = $this->trainingApplications->getApplicationByToken($param);
 		if (!$application) {
 			unset(
 				$session->application,
@@ -243,7 +243,7 @@ class SkoleniPresenter extends BasePresenter
 
 			$date = $this->dates[$values->trainingId];
 			if ($date->tentative) {
-				$this->trainings->addInvitation(
+				$this->trainingApplications->addInvitation(
 					$values->trainingId,
 					$values->name,
 					$values->email,
@@ -257,7 +257,7 @@ class SkoleniPresenter extends BasePresenter
 				);
 			} else {
 				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values->trainingId) {
-					$applicationId = $this->trainings->updateApplication(
+					$applicationId = $this->trainingApplications->updateApplication(
 						$session->application[$name]['id'],
 						$values->name,
 						$values->email,
@@ -271,7 +271,7 @@ class SkoleniPresenter extends BasePresenter
 					);
 					$session->application[$name] = null;
 				} else {
-					$applicationId = $this->trainings->addApplication(
+					$applicationId = $this->trainingApplications->addApplication(
 						$values->trainingId,
 						$values->name,
 						$values->email,
@@ -284,7 +284,7 @@ class SkoleniPresenter extends BasePresenter
 						$values->note
 					);
 				}
-				$this->trainings->sendSignUpMail(
+				$this->trainingApplications->sendSignUpMail(
 					$applicationId,
 					$this->createTemplate()->setFile(dirname(__DIR__) . '/templates/Skoleni/signUpMail.latte'),
 					$values->email,
@@ -374,7 +374,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->pageTitle        = 'Ohlasy na školení ' . $training->name;
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
-		$this->template->reviews = $this->trainingApplications->getReviews($name);
+		$this->template->reviews = $this->trainings->getReviews($name);
 	}
 
 
@@ -383,7 +383,7 @@ class SkoleniPresenter extends BasePresenter
 		$session = $this->getSession('application');
 
 		if ($param !== null) {
-			$application = $this->trainings->getApplicationByToken($param);
+			$application = $this->trainingApplications->getApplicationByToken($param);
 			$session->token = $param;
 			$session->applicationId = ($application ? $application->applicationId : null);
 			$this->redirect($this->getName() . ':soubory', ($application ? $application->action : $name));
@@ -398,7 +398,7 @@ class SkoleniPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
-		$application = $this->trainings->getApplicationById($session->applicationId);
+		$application = $this->trainingApplications->getApplicationById($session->applicationId);
 		if (!$application) {
 			throw new \Nette\Application\BadRequestException("No training application for id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
@@ -407,10 +407,8 @@ class SkoleniPresenter extends BasePresenter
 			$this->redirect($this->getName() . ':soubory', $application->action);
 		}
 
-		$files = $this->trainings->getFiles($application->applicationId);
-		if ($application->status != Trainings::STATUS_ACCESS_TOKEN_USED) {
-			$this->trainings->setStatus($application->applicationId, Trainings::STATUS_ACCESS_TOKEN_USED);
-		}
+		$files = $this->trainingApplications->getFiles($application->applicationId);
+		$this->trainingApplications->setAccessTokenUsed($application);
 		if (!$files) {
 			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
