@@ -156,10 +156,10 @@ class UcastniciPresenter extends BasePresenter
 		}
 
 		$form->addText('date', 'Datum:')
-			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS')
-			->setAttribute('title', 'Formát  YYYY-MM-DD HH:MM:SS')
+			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS nebo NOW')
+			->setAttribute('title', 'Formát  YYYY-MM-DD HH:MM:SS nebo NOW')
 			->setRequired('Zadejte datum')
-			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS', '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}');
+			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo NOW', '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
 		$form->addSelect('status', 'Status:', $statuses)
 			->setDefaultValue($session->status)
 			->setRequired('Vyberte status')
@@ -191,6 +191,24 @@ class UcastniciPresenter extends BasePresenter
 
 	public function submittedApplications($form)
 	{
+		$values = $form->getValues();
+		foreach ($values->applications as $application) {
+			$this->trainings->insertApplication(
+				$this->dateId,
+				$application->name,
+				$application->email,
+				$application->company,
+				$application->street,
+				$application->city,
+				$application->zip,
+				$application->companyId,
+				$application->companyTaxId,
+				$application->note,
+				$values->status,
+				$values->source,
+				$values->date
+			);
+		}
 		$this->redirect($this->getAction(), $this->dateId);
 	}
 

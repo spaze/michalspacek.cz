@@ -338,14 +338,14 @@ class Trainings extends BaseModel
 	}
 
 
-	public function insertApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source)
+	public function insertApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source, $date = null)
 	{
 		if (!in_array($status, $this->getInitialStatuses())) {
 			throw new \RuntimeException("Invalid initial status {$status}");
 		}
 
 		$statusId = $this->getStatusId(self::STATUS_CREATED);
-		$datetime = new \DateTime();
+		$datetime = new \DateTime($date);
 
 		$this->database->beginTransaction();
 		$data = array(
@@ -366,7 +366,7 @@ class Trainings extends BaseModel
 		);
 		$code = $this->insertData($data);
 		$applicationId = $this->database->lastInsertId();
-		$this->setStatus($applicationId, $status);
+		$this->setStatus($applicationId, $status, $date);
 		$this->database->commit();
 
 		return $applicationId;
@@ -409,7 +409,7 @@ class Trainings extends BaseModel
 	}
 
 
-	public function setStatus($applicationId, $status)
+	public function setStatus($applicationId, $status, $date = null)
 	{
 		$statusId = $this->getStatusId($status);
 
@@ -425,7 +425,7 @@ class Trainings extends BaseModel
 			$applicationId
 		);
 
-		$datetime = new \DateTime();
+		$datetime = new \DateTime($date);
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
