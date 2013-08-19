@@ -1,5 +1,5 @@
 {define #content}
 <ol n:inner-foreach="$trainings as $training">
-	<li><a n:href="ucastnici:termin $training->dateId">{$training->start|date:'j. n. Y'}</a> {$training->venueCity} {$training->name}</li>
+	<li><span n:tag-if="$training->start > $now" class="small"><a n:href="ucastnici:termin $training->dateId">{$training->start|date:'j. n. Y'}</a> {$training->venueCity} {$training->name}</span></li>
 </ol>
 {/define}

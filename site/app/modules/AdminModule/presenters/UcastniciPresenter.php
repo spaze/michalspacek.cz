@@ -93,6 +93,7 @@ class UcastniciPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Import';
 		$this->template->trainings = $this->trainings->getAllTrainings();
+		$this->template->now = new \DateTime();
 	}
 
 
