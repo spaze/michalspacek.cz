@@ -54,9 +54,36 @@ $(document).ready(function() {
 
 {define #content}
 <p>{$trainingName} {$trainingStart|date:'j. n. Y'}</p>
-<ol n:inner-foreach="$applications as $application">
-	<li>{$application->name} ({$application->status}) <a n:if="$application->attended" n:href="Ucastnici:soubory $application->id">soubory</a> <a n:if="$application->attended" n:href="Ucastnici:ohlasy $application->id">ohlas</a></li>
-</ol>
+{form statuses}
+<table>
+	<thead>
+		<th></th>
+		<th>Jméno</th>
+		<th>E-mail</th>
+		<th>Společnost</th>
+		<th>Status</th>
+		<th></th>
+		<th></th>
+		<th>Nový status</th>
+	</thead>
+	<tbody n:inner-foreach="$applications as $application">
+		<tr>
+			<td>{$iterator->getCounter()}.</td>
+			<td><strong>{$application->name}</strong></td>
+			<td><small>{$application->email}</small></td>
+			<td>{$application->company}</td>
+			<td><small><code>{$application->status}</code></small></td>
+			<td><small>{$application->statusTime}</small></td>
+			<td><small>&raquo;</small></td>
+			<td>{input applications-$application->id}</td>
+			<td><a n:if="$application->attended" n:href="Ucastnici:soubory $application->id"><small>soubory</small></a></td>
+			<td><a n:if="$application->attended" n:href="Ucastnici:ohlasy $application->id"><small>ohlas</small></a></td>
+		</tr>
+	</tbody>
+</table>
+<p>{label date /} {input date}</p>
+<p>{input submit}</p>
+{/form statuses}
 <hr>
 <div id="pridat-ucastniky">
 	<p><a href="#pridat-ucastniky">Přidat účastníky</a></p>

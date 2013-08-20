@@ -15,6 +15,9 @@ class UcastniciPresenter extends BasePresenter
 	/** @var array */
 	private $dates;
 
+	/** @var array */
+	private $applications;
+
 	/** @var \Nette\Database\Row */
 	private $review;
 
@@ -23,20 +26,31 @@ class UcastniciPresenter extends BasePresenter
 	private $dateId;
 
 
+	private function addDate($form, $name, $label)
+	{
+		$form->addText($name, $label)
+			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS nebo NOW')
+			->setAttribute('title', 'Formát  YYYY-MM-DD HH:MM:SS nebo NOW')
+			->setRequired('Zadejte datum')
+			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo NOW', '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
+	}
+
+
 	public function actionTermin($param)
 	{
 		$this->dateId = $param;
 		$training = $this->trainings->getByDate($this->dateId);
-		$applications = $this->trainingApplications->getByDate($this->dateId);
+		$this->applications = $this->trainingApplications->getByDate($this->dateId);
 		$attendedStatuses = $this->trainingApplications->getAttendedStatuses();
-		foreach ($applications as $application) {
+		foreach ($this->applications as $application) {
 			$application->attended = in_array($application->status, $attendedStatuses);
+			$application->childrenStatuses = $this->trainingApplications->getChildrenStatuses($application->status);
 		}
 
 		$this->template->pageTitle     = 'Účastníci zájezdu';
 		$this->template->trainingStart = $training->start;
 		$this->template->trainingName  = $training->name;
-		$this->template->applications  = $applications;
+		$this->template->applications  = $this->applications;
 	}
 
 
@@ -87,6 +101,41 @@ class UcastniciPresenter extends BasePresenter
 		$this->template->pageTitle = 'Import';
 		$this->template->trainings = $this->trainings->getAllTrainings();
 		$this->template->now = new \DateTime();
+	}
+
+
+	protected function createComponentStatuses($formName)
+	{
+		$form = new Form($this, $formName);
+		$container = $form->addContainer('applications');
+
+		foreach ($this->applications as $application) {
+			$select = $container->addSelect($application->id, 'Status')
+				->setPrompt('- změnit na -')
+				->setItems($application->childrenStatuses, false);
+			if (empty($application->childrenStatuses)) {
+				$select->setDisabled()
+					->setPrompt('nelze dále měnit');
+			}
+		}
+
+		$this->addDate($form, 'date', 'Datum:');
+		$form->addSubmit('submit', 'Změnit');
+		$form->onSuccess[] = new \Nette\Callback($this, 'submittedStatuses');
+
+		return $form;
+	}
+
+
+	public function submittedStatuses($form)
+	{
+		$values = $form->getValues();
+		foreach ($values->applications as $id => $status) {
+			if ($status) {
+				$this->trainingApplications->setStatus($id, $status, $values->date);
+			}
+		}
+		$this->redirect($this->getAction(), $this->dateId);
 	}
 
 
@@ -147,11 +196,7 @@ class UcastniciPresenter extends BasePresenter
 				->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
 		}
 
-		$form->addText('date', 'Datum:')
-			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS nebo NOW')
-			->setAttribute('title', 'Formát  YYYY-MM-DD HH:MM:SS nebo NOW')
-			->setRequired('Zadejte datum')
-			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo NOW', '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
+		$this->addDate($form, 'date', 'Datum:');
 		$form->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte status')
 			->setPrompt('- vyberte status -');

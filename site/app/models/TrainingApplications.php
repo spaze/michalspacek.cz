@@ -56,7 +56,9 @@ class TrainingApplications extends BaseModel
 				a.id_application AS id,
 				a.name,
 				a.email,
-				s.status
+				a.company,
+				s.status,
+				status_time AS statusTime
 			FROM
 				training_applications a
 				JOIN training_application_status s ON a.key_status = s.id_status
@@ -195,7 +197,7 @@ class TrainingApplications extends BaseModel
 	}
 
 
-	private function getChildrenStatuses($parent)
+	public function getChildrenStatuses($parent)
 	{
 		if (!isset($this->statuses[$parent])) {
 			$this->statuses[$parent] = $this->database->fetchPairs(
@@ -229,7 +231,7 @@ class TrainingApplications extends BaseModel
 	}
 
 
-	private function setStatus($applicationId, $status, $date = null)
+	public function setStatus($applicationId, $status, $date = null)
 	{
 		$statusId = $this->getStatusId($status);
 

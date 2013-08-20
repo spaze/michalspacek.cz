@@ -132,6 +132,7 @@ abbr.dtstart, abbr.dtend { border: none; }
 }
 #frm-application input { width: 170px; }
 #frm-application #frmapplication-note { width: 400px; }
+#frm-statuses select { color: #666; font-family: Consolas; }
 #chyby ul { margin: 0px; }
 #chyby {
     color: #F34;
