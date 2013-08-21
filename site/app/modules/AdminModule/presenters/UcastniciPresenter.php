@@ -19,20 +19,30 @@ class UcastniciPresenter extends BasePresenter
 	private $applications;
 
 	/** @var \Nette\Database\Row */
-	private $review;
+	private $application;
 
 	private $applicationId;
+
+	/** @var \Nette\Database\Row */
+	private $review;
 
 	private $dateId;
 
 
-	private function addDate($form, $name, $label)
+	private function addDate($form, $name, $label, $required = true, $defaultValue = null)
 	{
-		$form->addText($name, $label)
+		$text = $form->addText($name, $label);
+		if ($defaultValue) {
+			$text->setDefaultValue($defaultValue);
+		}
+		$text
 			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS nebo NOW')
 			->setAttribute('title', 'Formát  YYYY-MM-DD HH:MM:SS nebo NOW')
-			->setRequired('Zadejte datum')
+			->addCondition(Form::FILLED)
 			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo NOW', '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
+		if ($required) {
+			$text->setRequired('Zadejte datum');
+		}
 	}
 
 
@@ -93,6 +103,25 @@ class UcastniciPresenter extends BasePresenter
 		$this->template->trainingCity  = $date->venueCity;
 		$this->template->name          = $this->review->applicationName;
 		$this->template->dateId        = $this->review->dateId;
+	}
+
+
+	public function actionPrihlaska($param)
+	{
+		$this->applicationId = $param;
+		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
+		$this->dateId = $this->application->dateId;
+		$training = $this->trainings->getByDate($this->application->dateId);
+
+		$this->template->pageTitle     = "{$this->application->name}";
+		$this->template->applicationId = $this->applicationId;
+		$this->template->dateId        = $this->dateId;
+		$this->template->status        = $this->application->status;
+		$this->template->statusTime    = $this->application->statusTime;
+		$this->template->trainingName  = $training->name;
+		$this->template->trainingStart = $training->start;
+		$this->template->trainingCity  = $training->venueCity;
+		$this->template->attended      = in_array($this->application->status, $this->trainingApplications->getAttendedStatuses());
 	}
 
 
@@ -286,6 +315,98 @@ class UcastniciPresenter extends BasePresenter
 		);
 
 		$this->redirect('termin', $this->review->dateId);
+	}
+
+
+	protected function createComponentApplication($formName)
+	{
+		$rules = $this->trainingApplications->getDataRules();
+
+		$form = new Form($this, $formName);
+		$form->addText('name', 'Jméno:')
+			->setDefaultValue($this->application->name)
+			->setRequired('Zadejte prosím jméno')
+			->addRule(Form::MIN_LENGTH, 'Minimální délka jména je %d znaky', $rules['name'][Form::MIN_LENGTH])
+			->addRule(Form::MAX_LENGTH, 'Maximální délka jména je %d znaků', $rules['name'][Form::MAX_LENGTH]);
+		$form->addText('email', 'E-mail:')
+			->setDefaultValue($this->application->email)
+			->setRequired('Zadejte prosím e-mailovou adresu')
+			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
+			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', $rules['email'][Form::MAX_LENGTH]);
+		$form->addText('company', 'Společnost:')
+			->setDefaultValue($this->application->company)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka společnosti je %d znaky', $rules['company'][Form::MIN_LENGTH])
+			->addRule(Form::MAX_LENGTH, 'Maximální délka společnosti je %d znaků', $rules['company'][Form::MAX_LENGTH]);
+		$form->addText('street', 'Ulice:')
+			->setDefaultValue($this->application->street)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice je %d znaky', $rules['street'][Form::MIN_LENGTH])
+			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice je %d znaků', $rules['street'][Form::MAX_LENGTH]);
+		$form->addText('city', 'Město:')
+			->setDefaultValue($this->application->city)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', $rules['city'][Form::MIN_LENGTH])
+			->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', $rules['city'][Form::MAX_LENGTH]);
+		$form->addText('zip', 'PSČ:')
+			->setDefaultValue($this->application->zip)
+			->addCondition(Form::FILLED)
+			->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', $rules['zip'][Form::PATTERN])
+			->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', $rules['zip'][Form::MAX_LENGTH]);
+		$form->addText('companyId', 'IČ:')
+			->setDefaultValue($this->application->companyId)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', $rules['companyId'][Form::MIN_LENGTH])
+			->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', $rules['companyId'][Form::MAX_LENGTH]);
+		$form->addText('companyTaxId', 'DIČ:')
+			->setDefaultValue($this->application->companyTaxId)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', $rules['companyTaxId'][Form::MIN_LENGTH])
+			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', $rules['companyTaxId'][Form::MAX_LENGTH]);
+		$form->addText('note', 'Poznámka:')
+			->setDefaultValue($this->application->note)
+			->addCondition(Form::FILLED)
+			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $rules['note'][Form::MAX_LENGTH]);
+		$form->addText('price', 'Cena:')
+			->setType('number')
+			->setAttribute('title', 'Po případné slevě')
+			->setDefaultValue($this->application->price);
+		$form->addText('discount', 'Sleva:')
+			->setType('number')
+			->setDefaultValue($this->application->discount);
+		$form->addText('invoiceId', 'Faktura č.:')
+			->setType('number')
+			->setDefaultValue($this->application->invoiceId);
+		$this->addDate($form, 'paid', 'Zaplaceno', false, $this->application->paid);
+
+		$form->addSubmit('submit', 'Uložit');
+		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplication');
+
+		return $form;
+	}
+
+
+	public function submittedApplication($form)
+	{
+		$values = $form->getValues();
+
+		$this->trainingApplications->updateApplicationData(
+			$this->applicationId,
+			$values->name,
+			$values->email,
+			$values->company,
+			$values->street,
+			$values->city,
+			$values->zip,
+			$values->companyId,
+			$values->companyTaxId,
+			$values->note,
+			$values->price,
+			$values->discount,
+			$values->invoiceId,
+			$values->paid
+		);
+		$this->redirect('termin', $this->dateId);
 	}
 
 

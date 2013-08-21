@@ -1,6 +1,8 @@
 <?php
 namespace MichalSpacekCz;
 
+use \Nette\Application\UI\Form;
+
 /**
  * Training applications model.
  *
@@ -26,6 +28,18 @@ class TrainingApplications extends BaseModel
 	protected $emailFrom;
 
 	private $statuses = array();
+
+	private $dataRules = array(
+		'name'         => array(Form::MIN_LENGTH => 3, Form::MAX_LENGTH => 200),
+		'email'        => array(Form::MAX_LENGTH => 200),
+		'company'      => array(Form::MIN_LENGTH => 3, Form::MAX_LENGTH => 200),
+		'street'       => array(Form::MIN_LENGTH => 3, Form::MAX_LENGTH => 200),
+		'city'         => array(Form::MIN_LENGTH => 2, Form::MAX_LENGTH => 200),
+		'zip'          => array(Form::PATTERN => '([0-9]\s*){5}', Form::MAX_LENGTH => 200),
+		'companyId'    => array(Form::MIN_LENGTH => 6, Form::MAX_LENGTH => 200),
+		'companyTaxId' => array(Form::MIN_LENGTH => 6, Form::MAX_LENGTH => 200),
+		'note'         => array(Form::MAX_LENGTH => 2000),
+	);
 
 
 	public function getByStatus($status)
@@ -58,7 +72,7 @@ class TrainingApplications extends BaseModel
 				a.email,
 				a.company,
 				s.status,
-				status_time AS statusTime
+				a.status_time AS statusTime
 			FROM
 				training_applications a
 				JOIN training_application_status s ON a.key_status = s.id_status
@@ -164,6 +178,30 @@ class TrainingApplications extends BaseModel
 	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
 		$this->database->beginTransaction();
+		$this->updateApplicationData(
+			$applicationId,
+			$name,
+			$email,
+			$company,
+			$street,
+			$city,
+			$zip,
+			$companyId,
+			$companyTaxId,
+			$note
+		);
+		$this->setStatus($applicationId, self::STATUS_SIGNED_UP);
+		$this->database->commit();
+		return $applicationId;
+	}
+
+
+	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $price = null, $discount = null, $invoiceId = null, $paid = null)
+	{
+		if ($paid) {
+			$paid = new \DateTime($paid);
+		}
+
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
@@ -176,12 +214,14 @@ class TrainingApplications extends BaseModel
 				'company_id'     => $companyId,
 				'company_tax_id' => $companyTaxId,
 				'note'           => $note,
+				'price'          => ($price ?: null),
+				'discount'       => ($discount ?: null),
+				'invoice_id'     => ($invoiceId ?: null),
+				'paid'           => ($paid ?: null),
+				'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
 			),
 			$applicationId
 		);
-		$this->setStatus($applicationId, self::STATUS_SIGNED_UP);
-		$this->database->commit();
-		return $applicationId;
 	}
 
 
@@ -283,8 +323,8 @@ class TrainingApplications extends BaseModel
 				t.action,
 				d.id_date AS dateId,
 				a.id_application AS applicationId,
-				d.start AS trainingStart,
 				s.status,
+				a.status_time AS statusTime,
 				a.name,
 				a.email,
 				a.company,
@@ -293,7 +333,11 @@ class TrainingApplications extends BaseModel
 				a.zip,
 				a.company_id AS companyId,
 				a.company_tax_id AS companyTaxId,
-				a.note
+				a.note,
+				a.price,
+				a.discount,
+				a.invoice_id AS invoiceId,
+				a.paid
 			FROM
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date
@@ -471,6 +515,12 @@ class TrainingApplications extends BaseModel
 		if ($application->status != self::STATUS_ACCESS_TOKEN_USED) {
 			$this->setStatus($application->applicationId, self::STATUS_ACCESS_TOKEN_USED);
 		}
+	}
+
+
+	public function getDataRules()
+	{
+		return $this->dataRules;
 	}
 
 
