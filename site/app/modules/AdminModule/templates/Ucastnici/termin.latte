@@ -70,12 +70,12 @@ $(document).ready(function() {
 	</thead>
 	<tbody n:inner-foreach="$applications as $application">
 		<tr>
-			<td>{$iterator->getCounter()}.</td>
-			<td><a n:href="Ucastnici:prihlaska $application->id"><strong>{$application->name}</strong></a></td>
+			<td><small>{$iterator->getCounter()}.</small></td>
+			<td><a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></td>
 			<td><small>{$application->email}</small></td>
 			<td>{$application->company}</td>
 			<td><small><code>{$application->status}</code></small></td>
-			<td><small>{$application->statusTime}</small></td>
+			<td><small title="{$application->statusTime}">{$application->statusTime|date:'j. n. Y'}</small></td>
 			<td><small>&raquo;</small></td>
 			<td>{input applications-$application->id}</td>
 			<td><small><a n:if="$application->attended" n:href="Ucastnici:soubory $application->id">soubory</a></small></td>
