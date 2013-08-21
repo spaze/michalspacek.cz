@@ -44,7 +44,10 @@ ul {
     text-align: left;
     padding: 0px 1em;
 }
-table { border-spacing: 0px; }
+table {
+    border-spacing: 0px;
+    white-space: nowrap;
+}
 small, .small { color: #666; }
 small a, .small a { color: #444; }
 .small { font-size: small; }
