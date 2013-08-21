@@ -78,8 +78,6 @@ $(document).ready(function() {
 			<td><small title="{$application->statusTime}">{$application->statusTime|date:'j. n. Y'}</small></td>
 			<td><small>&raquo;</small></td>
 			<td>{input applications-$application->id}</td>
-			<td><small><a n:if="$application->attended" n:href="Ucastnici:soubory $application->id">soubory</a></small></td>
-			<td><small><a n:if="$application->attended" n:href="Ucastnici:ohlasy $application->id">ohlas</a></small></td>
 		</tr>
 	</tbody>
 </table>
