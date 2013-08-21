@@ -170,7 +170,7 @@ class UcastniciPresenter extends BasePresenter
 
 	protected function createComponentApplications($formName)
 	{
-		$helpers = new \Bare\Next\Templating\Helpers();
+		$rules = $this->trainingApplications->getDataRules();
 
 		$sources = array();
 		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {
@@ -190,39 +190,39 @@ class UcastniciPresenter extends BasePresenter
 			$dataContainer = $applicationsContainer->addContainer($i);
 			$dataContainer->addText('name', 'Jméno')
 				->setRequired('Zadejte prosím jméno')
-				->addRule(Form::MIN_LENGTH, 'Minimální délka jména je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
+				->addRule(Form::MIN_LENGTH, 'Minimální délka jména je %d znaky', $rules['name'][Form::MIN_LENGTH])
+				->addRule(Form::MAX_LENGTH, 'Maximální délka jména je %d znaků', $rules['name'][Form::MAX_LENGTH]);
 			$dataContainer->addText('email', 'E-mail')
 				->setRequired('Zadejte prosím e-mailovou adresu')
 				->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-				->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200);
+				->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', $rules['email'][Form::MAX_LENGTH]);
 			$dataContainer->addText('company', 'Společnost')
 				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka společnosti je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka společnosti je %d znaků', 200);
+				->addRule(Form::MIN_LENGTH, 'Minimální délka společnosti je %d znaky', $rules['company'][Form::MIN_LENGTH])
+				->addRule(Form::MAX_LENGTH, 'Maximální délka společnosti je %d znaků', $rules['company'][Form::MAX_LENGTH]);
 			$dataContainer->addText('street', 'Ulice')
 				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka ulice je %d znaky', 3)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice je %d znaků', 200);
+				->addRule(Form::MIN_LENGTH, 'Minimální délka ulice je %d znaky', $rules['street'][Form::MIN_LENGTH])
+				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice je %d znaků', $rules['street'][Form::MAX_LENGTH]);
 			$dataContainer->addText('city', 'Město')
 				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
+				->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', $rules['city'][Form::MIN_LENGTH])
+				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', $rules['city'][Form::MAX_LENGTH]);
 			$dataContainer->addText('zip', 'PSČ')
 				->addCondition(Form::FILLED)
-				->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
-				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
+				->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', $rules['zip'][Form::PATTERN])
+				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', $rules['zip'][Form::MAX_LENGTH]);
 			$dataContainer->addText('companyId', 'IČ')
 				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 6)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
+				->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', $rules['companyId'][Form::MIN_LENGTH])
+				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', $rules['companyId'][Form::MAX_LENGTH]);
 			$dataContainer->addText('companyTaxId', 'DIČ')
 				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
+				->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', $rules['companyTaxId'][Form::MIN_LENGTH])
+				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', $rules['companyTaxId'][Form::MAX_LENGTH]);
 			$dataContainer->addText('note', 'Poznámka')
 				->addCondition(Form::FILLED)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
+				->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $rules['note'][Form::MAX_LENGTH]);
 		}
 
 		$this->addDate($form, 'date', 'Datum:');
