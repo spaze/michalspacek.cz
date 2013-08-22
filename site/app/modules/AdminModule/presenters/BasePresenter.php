@@ -21,4 +21,10 @@ abstract class BasePresenter extends \BasePresenter
 	}
 
 
+	public function beforeRender()
+	{
+		$this->template->trackingCode = false;
+	}
+
+
 }

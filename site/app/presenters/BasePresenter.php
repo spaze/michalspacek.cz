@@ -140,7 +140,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function beforeRender()
 	{
 		$parameters = $this->getContext()->getParameters();
-		$this->template->debugMode = (isset($parameters['debugMode']) ? $parameters['debugMode'] : false);
+		$this->template->trackingCode = (isset($parameters['debugMode']) ? !$parameters['debugMode'] : true);
 	}
 
 
