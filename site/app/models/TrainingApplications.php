@@ -23,11 +23,20 @@ class TrainingApplications extends BaseModel
 
 	const DEFAULT_SOURCE  = 'michal-spacek';
 
+	/**
+	 * Files directory, ends with a slash.
+	 *
+	 * @var string
+	 */
 	protected $filesDir;
 
 	protected $emailFrom;
 
-	private $statuses = array();
+	private $childrenStatuses = array();
+
+	private $descendantStatuses = array();
+
+	private $statusIds = array();
 
 	private $dataRules = array(
 		'name'         => array(Form::MIN_LENGTH => 3, Form::MAX_LENGTH => 200),
@@ -239,8 +248,8 @@ class TrainingApplications extends BaseModel
 
 	public function getChildrenStatuses($parent)
 	{
-		if (!isset($this->statuses[$parent])) {
-			$this->statuses[$parent] = $this->database->fetchPairs(
+		if (!isset($this->childrenStatuses[$parent])) {
+			$this->childrenStatuses[$parent] = $this->database->fetchPairs(
 				'SELECT
 					st.id_status,
 					st.status
@@ -251,17 +260,20 @@ class TrainingApplications extends BaseModel
 				$parent
 			);
 		}
-		return $this->statuses[$parent];
+		return $this->childrenStatuses[$parent];
 	}
 
 
 	private function getDescendantStatuses($parent)
 	{
-		$statuses = $this->getChildrenStatuses($parent);
-		foreach ($statuses as $status) {
-			$statuses += $this->getDescendantStatuses($status);
+		if (!isset($this->descendantStatuses[$parent])) {
+			$statuses = $this->getChildrenStatuses($parent);
+			foreach ($statuses as $status) {
+				$statuses += $this->getDescendantStatuses($status);
+			}
+			$this->descendantStatuses[$parent] = $statuses;
 		}
-		return $statuses;
+		return $this->descendantStatuses[$parent];
 	}
 
 
@@ -312,7 +324,13 @@ class TrainingApplications extends BaseModel
 
 	private function getStatusId($status)
 	{
-		return $this->database->fetchColumn('SELECT id_status FROM training_application_status WHERE status = ?', $status);
+		if (!isset($this->statusIds[$status])) {
+			$this->statusIds[$status] = $this->database->fetchColumn(
+				'SELECT id_status FROM training_application_status WHERE status = ?',
+				$status
+			);
+		}
+		return $this->statusIds[$status];
 	}
 
 
@@ -470,6 +488,37 @@ class TrainingApplications extends BaseModel
 		}
 
 		return $file;
+	}
+
+
+	public function addFile(\Nette\Database\Row $training, \Nette\Http\FileUpload $file, array $applicationIds)
+	{
+		$name = basename($file->getSanitizedName());
+		$file->move($this->filesDir . $training->start->format('Y-m-d') . '/' . $name);
+
+		$datetime = new \DateTime();
+		$this->database->beginTransaction();
+
+		$this->database->query(
+			'INSERT INTO files',
+			array(
+				'filename'       => $name,
+				'added'          => $datetime,
+				'added_timezone' => $datetime->getTimezone()->getName(),
+			)
+		);
+		$fileId = $this->database->lastInsertId();
+		foreach ($applicationIds as $applicationId) {
+			$this->database->query(
+				'INSERT INTO training_materials',
+				array(
+					'key_file'        => $fileId,
+					'key_application' => $applicationId,
+				)
+			);
+		}
+		$this->database->commit();
+		return $name;
 	}
 
 

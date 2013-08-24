@@ -2,6 +2,7 @@
 namespace AdminModule;
 
 use \Nette\Application\UI\Form;
+use \Nette\Utils\Html;
 
 /**
  * Ucastnici presenter.
@@ -26,6 +27,9 @@ class UcastniciPresenter extends BasePresenter
 	/** @var \Nette\Database\Row */
 	private $review;
 
+	/** @var \Nette\Database\Row */
+	private $training;
+
 	private $dateId;
 
 
@@ -49,7 +53,7 @@ class UcastniciPresenter extends BasePresenter
 	public function actionTermin($param)
 	{
 		$this->dateId = $param;
-		$training = $this->trainings->getByDate($this->dateId);
+		$this->training = $this->trainings->getByDate($this->dateId);
 		$this->applications = $this->trainingApplications->getByDate($this->dateId);
 		$attendedStatuses = $this->trainingApplications->getAttendedStatuses();
 		foreach ($this->applications as $application) {
@@ -58,8 +62,8 @@ class UcastniciPresenter extends BasePresenter
 		}
 
 		$this->template->pageTitle     = 'Účastníci zájezdu';
-		$this->template->trainingStart = $training->start;
-		$this->template->trainingName  = $training->name;
+		$this->template->trainingStart = $this->training->start;
+		$this->template->trainingName  = $this->training->name;
 		$this->template->applications  = $this->applications;
 	}
 
@@ -407,6 +411,42 @@ class UcastniciPresenter extends BasePresenter
 			$values->paid
 		);
 		$this->redirect('termin', $this->dateId);
+	}
+
+
+	protected function createComponentFile($formName)
+	{
+		$form = new Form($this, $formName);
+		$form->addUpload('file', 'Soubor:');
+		$form->addSubmit('submit', 'Přidat');
+		$form->onSuccess[] = new \Nette\Callback($this, 'submittedFile');
+		return $form;
+	}
+
+
+	public function submittedFile($form)
+	{
+		$applicationIds = array();
+		foreach ($this->applications as $application) {
+			if ($application->attended) {
+				$applicationIds[] = $application->id;
+			}
+		}
+		$values = $form->getValues();
+		$name = $this->trainingApplications->addFile($this->training, $values->file, $applicationIds);
+
+		$statuses = array();
+		foreach ($this->trainingApplications->getAttendedStatuses() as $status) {
+			$statuses[] = Html::el('code')->setText($status);
+		}
+		$this->flashMessage(
+			Html::el()->add('Soubor ')
+				->add(Html::el('code')->setText($name))
+				->add(' přidán účastníkům ve stavech ' . implode(', ', $statuses)
+			)
+		);
+
+		$this->redirect($this->getAction(), $this->dateId);
 	}
 
 

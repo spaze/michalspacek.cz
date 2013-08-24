@@ -11,6 +11,7 @@ $(document).ready(function() {
 		return false;
 	});
 	$('#pridat-ucastniky-container').hide();
+
 	var reindex = function(element, index) {
 		element.find('input').each(function() {
 			$(this).attr('name', function(i, value) {
@@ -49,10 +50,17 @@ $(document).ready(function() {
 		}
 	});
 	$('#pridat-ucastniky .delete').hide();
+
+	$('#pridat-soubor a[href="#pridat-soubor"]').click(function() {
+		$('#pridat-soubor-container').slideToggle('fast');
+		return false;
+	});
+	$('#pridat-soubor-container').hide();
 });
 {/define}
 
 {define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <p>{$trainingName} {$trainingStart|date:'j. n. Y'}</p>
 {form statuses}
 <table>
@@ -130,5 +138,15 @@ $(document).ready(function() {
 		{/form applications}
 	</div>
 </div>
-<p><a href="">přidat soubor</a></p>
+<hr>
+<div id="pridat-soubor">
+	<p><a href="#pridat-soubor">Přidat soubor</a></p>
+	<div id="pridat-soubor-container">
+		<p>Přidá soubor všem účastíkům školení.</p>
+		{form file}
+		<p><strong>{label file /}</strong> {input file}</p>
+		<p>{input submit}</p>
+		{/form file}
+	</div>
+</div>
 {/define}
