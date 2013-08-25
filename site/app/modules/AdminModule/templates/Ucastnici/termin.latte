@@ -142,7 +142,10 @@ $(document).ready(function() {
 <div id="pridat-soubor">
 	<p><a href="#pridat-soubor">Přidat soubor</a></p>
 	<div id="pridat-soubor-container">
-		<p>Přidá soubor všem účastíkům školení.</p>
+		<p>
+			Přidá soubor všem účastíkům školení ve stavu
+			{foreach $attendedStatuses as $status}<small><code>{$status}</code></small>{sep}, {/sep}{/foreach}.
+		</p>
 		{form file}
 		<p><strong>{label file /}</strong> {input file}</p>
 		<p>{input submit}</p>

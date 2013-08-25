@@ -72,6 +72,7 @@ class UcastniciPresenter extends BasePresenter
 		$this->template->trainingStart = $this->training->start;
 		$this->template->trainingName  = $this->training->name;
 		$this->template->applications  = $this->applications;
+		$this->template->attendedStatuses = $attendedStatuses;
 	}
 
 
