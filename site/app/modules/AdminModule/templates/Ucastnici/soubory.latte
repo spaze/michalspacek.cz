@@ -6,9 +6,14 @@
 {/define}
 
 {define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
 <ol n:inner-foreach="$files as $file">
 	<li>{$file->date}/{$file->fileName} <strong n:if="!$file->exists">does not exist</strong>
 </ol>
-
+<hr>
+{form file}
+<p><strong>{label file /}</strong> {input file}</p>
+<p>{input submit}</p>
+{/form file}
 {/define}

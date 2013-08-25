@@ -19,6 +19,9 @@ class UcastniciPresenter extends BasePresenter
 	/** @var array */
 	private $applications;
 
+	/** @var array */
+	private $applicationIdsAttended;
+
 	/** @var \Nette\Database\Row */
 	private $application;
 
@@ -31,6 +34,8 @@ class UcastniciPresenter extends BasePresenter
 	private $training;
 
 	private $dateId;
+
+	private $redirectParam;
 
 
 	private function addDate($form, $name, $label, $required = true, $defaultValue = null)
@@ -52,12 +57,14 @@ class UcastniciPresenter extends BasePresenter
 
 	public function actionTermin($param)
 	{
-		$this->dateId = $param;
-		$this->training = $this->trainings->getByDate($this->dateId);
-		$this->applications = $this->trainingApplications->getByDate($this->dateId);
+		$this->redirectParam = $param;
+		$this->training = $this->trainings->getByDate($param);
+		$this->applications = $this->trainingApplications->getByDate($param);
 		$attendedStatuses = $this->trainingApplications->getAttendedStatuses();
 		foreach ($this->applications as $application) {
-			$application->attended = in_array($application->status, $attendedStatuses);
+			if ($application->attended = in_array($application->status, $attendedStatuses)) {
+				$this->applicationIdsAttended[] = $application->id;
+			}
 			$application->childrenStatuses = $this->trainingApplications->getChildrenStatuses($application->status);
 		}
 
@@ -70,23 +77,26 @@ class UcastniciPresenter extends BasePresenter
 
 	public function actionSoubory($param)
 	{
+		$this->redirectParam = $param;
 		$application = $this->trainingApplications->getApplicationById($param);
 		if (!in_array($application->status, $this->trainingApplications->getAttendedStatuses())) {
 			$this->redirect('termin', $application->dateId);
 		}
+
+		$this->applicationIdsAttended = array($application->applicationId);
 
 		$files = $this->trainingApplications->getFiles($param);
 		foreach ($files as $file) {
 			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
 		}
 
-		$date = $this->trainings->getByDate($application->dateId);
+		$this->training = $this->trainings->getByDate($application->dateId);
 
 		$this->template->pageTitle = 'Soubory';
 		$this->template->files     = $files;
-		$this->template->trainingStart = $date->start;
-		$this->template->trainingName  = $date->name;
-		$this->template->trainingCity  = $date->venueCity;
+		$this->template->trainingStart = $this->training->start;
+		$this->template->trainingName  = $this->training->name;
+		$this->template->trainingCity  = $this->training->venueCity;
 		$this->template->name          = $application->name;
 		$this->template->dateId        = $application->dateId;
 	}
@@ -426,27 +436,16 @@ class UcastniciPresenter extends BasePresenter
 
 	public function submittedFile($form)
 	{
-		$applicationIds = array();
-		foreach ($this->applications as $application) {
-			if ($application->attended) {
-				$applicationIds[] = $application->id;
-			}
-		}
 		$values = $form->getValues();
-		$name = $this->trainingApplications->addFile($this->training, $values->file, $applicationIds);
+		$name = $this->trainingApplications->addFile($this->training, $values->file, $this->applicationIdsAttended);
 
-		$statuses = array();
-		foreach ($this->trainingApplications->getAttendedStatuses() as $status) {
-			$statuses[] = Html::el('code')->setText($status);
-		}
 		$this->flashMessage(
 			Html::el()->add('Soubor ')
 				->add(Html::el('code')->setText($name))
-				->add(' přidán účastníkům ve stavech ' . implode(', ', $statuses)
-			)
+				->add(' byl přidán')
 		);
 
-		$this->redirect($this->getAction(), $this->dateId);
+		$this->redirect($this->getAction(), $this->redirectParam);
 	}
 
 
