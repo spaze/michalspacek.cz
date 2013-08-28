@@ -29,10 +29,11 @@ class RozhovoryPresenter extends BasePresenter
 		$this->template->date = $interview->date;
 		$this->template->audioHref = $interview->audioHref;
 		$this->template->videoHref = $interview->videoHref;
-		$this->template->videoEmbed = $interview->videoEmbed;
-		$this->template->videoEmbedType = $this->getVideoEmbedType($interview->videoHref);
 		$this->template->sourceName = $interview->sourceName;
 		$this->template->sourceHref = $interview->sourceHref;
+		foreach ($this->embed->getVideoTemplateVars($interview->videoHref, $interview->videoEmbed) as $key => $value) {
+			$this->template->$key = $value;
+		}
 	}
 
 }

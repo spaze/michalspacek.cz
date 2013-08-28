@@ -17,7 +17,7 @@ class PrednaskyPresenter extends BasePresenter
 	}
 
 
-	public function actionPrednaska($name)
+	public function actionPrednaska($name, $slide = null)
 	{
 		$talk = $this->talks->get($name);
 		if (!$talk) {
@@ -31,12 +31,20 @@ class PrednaskyPresenter extends BasePresenter
 		$this->template->date = $talk->date;
 		$this->template->eventHref = $talk->eventHref;
 		$this->template->event = $talk->event;
+
+		if ($slide !== null) {
+			$this->template->canonicalLink = $this->link("//$name");
+		}
+
 		$this->template->slidesHref = $talk->slidesHref;
-		$this->template->slidesEmbed = $talk->slidesEmbed;
-		$this->template->slidesEmbedType = $this->getSlidesEmbedType($talk->slidesHref);
+		foreach ($this->embed->getSlidesTemplateVars($talk->slidesHref, $talk->slidesEmbed, $slide) as $key => $value) {
+			$this->template->$key = $value;
+		}
+
 		$this->template->videoHref = $talk->videoHref;
-		$this->template->videoEmbed = $talk->videoEmbed;
-		$this->template->videoEmbedType = $this->getVideoEmbedType($talk->videoHref);
+		foreach ($this->embed->getVideoTemplateVars($talk->videoHref, $talk->videoEmbed) as $key => $value) {
+			$this->template->$key = $value;
+		}
 	}
 
 }

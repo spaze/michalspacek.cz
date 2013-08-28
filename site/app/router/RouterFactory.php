@@ -20,7 +20,7 @@ class RouterFactory
 		$router = new RouteList();
 		$router[] = new Route('admin/<presenter>[/<action>][/<param>]', array('module' => 'Admin', 'presenter' => 'Homepage', 'action' => 'default'), Route::SECURED);
 		$router[] = new Route('rozhovory/<name>', 'Rozhovory:rozhovor');
-		$router[] = new Route('prednasky/<name>', 'Prednasky:prednaska');
+		$router[] = new Route('prednasky/<name>[/<slide>]', 'Prednasky:prednaska');
 		$router[] = new Route('soubory[/<action>]/<filename>', 'Soubory:soubor');
 		$router[] = new Route('skoleni/<name>[/<action>[/<param>]]', 'Skoleni:skoleni');
 		$router[] = new Route('<presenter>[/<action>]', 'Homepage:default');

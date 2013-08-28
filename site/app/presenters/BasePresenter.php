@@ -43,6 +43,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	 */
 	protected $authenticator;
 
+	/**
+	 * @var \MichalSpacekCz\Embed
+	 */
+	protected $embed;
+
 
 	/**
 	 * @param \MichalSpacekCz\Articles
@@ -128,6 +133,18 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
+	/**
+	 * @param \MichalSpacekCz\Embed
+	 */
+	public function injectEmbed(\MichalSpacekCz\Embed $embed)
+	{
+		if ($this->embed) {
+			throw new \Nette\InvalidStateException('Embed has already been set');
+		}
+		$this->embed = $embed;
+	}
+
+
 	protected function startup()
 	{
 		parent::startup();
@@ -149,40 +166,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		$template = parent::createTemplate($class);
 		$template->registerHelperLoader(new \Nette\Callback(new \Bare\Next\Templating\Helpers($this->getContext()), 'loader'));
 		return $template;
-	}
-
-
-	public function getSlidesEmbedType($href)
-	{
-		$type = false;
-
-		switch (parse_url($href, PHP_URL_HOST)) {
-			case 'www.slideshare.net':
-				$type = 'slideshare';
-				break;
-			case 'speakerdeck.com':
-				$type = 'speakerdeck';
-				break;
-		}
-
-		return $type;
-	}
-
-
-	public function getVideoEmbedType($href)
-	{
-		$type = false;
-
-		switch (parse_url($href, PHP_URL_HOST)) {
-			case 'www.youtube.com':
-				$type = 'youtube';
-				break;
-			case 'vimeo.com':
-				$type = 'vimeo';
-				break;
-		}
-
-		return $type;
 	}
 
 

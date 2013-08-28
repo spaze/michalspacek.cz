@@ -37,6 +37,7 @@ common:
 				- setFilesDir('../files/trainings')
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 		authenticator: \MichalSpacekCz\UserManager
+		embed: \MichalSpacekCz\Embed
 
 production < common:
 

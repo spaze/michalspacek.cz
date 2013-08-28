@@ -1,18 +1,18 @@
 {define #embedSlides}
 <div n:if="$slidesEmbed && $slidesEmbedType" id="slajdy-embed">
-	{if $slidesEmbedType == 'slideshare'}
+	{if $slidesEmbedType == \MichalSpacekCz\Embed::EMBED_SLIDES_SLIDESHARE}
 		<iframe src="{$slidesEmbed}" width="800" height="636" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
-	{elseif $slidesEmbedType == 'speakerdeck'}
-		<script async class="speakerdeck-embed" data-id="{$slidesEmbed}" src="//speakerdeck.com/assets/embed.js"></script>
+	{elseif $slidesEmbedType == \MichalSpacekCz\Embed::EMBED_SLIDES_SPEAKERDECK}
+		<script async class="speakerdeck-embed" data-id="{$slidesEmbed}" {ifset $slidesDataSlide}data-slide="{$slidesDataSlide}"{/ifset} src="//speakerdeck.com/assets/embed.js"></script>
 	{/if}
 </div>
 {/define}
 
 {define #embedVideo}
 <div n:if="$videoEmbed && $videoEmbedType" id="zaznam-embed">
-	{if $videoEmbedType == 'vimeo'}
+	{if $videoEmbedType == \MichalSpacekCz\Embed::EMBED_VIDEO_VIMEO}
 		<iframe src="{$videoEmbed}" width="800" height="450" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
-	{elseif $videoEmbedType == 'youtube'}
+	{elseif $videoEmbedType == \MichalSpacekCz\Embed::EMBED_VIDEO_YOUTUBE}
 		<iframe src="{$videoEmbed}" width="800" height="600" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
 	{/if}
 </div>
