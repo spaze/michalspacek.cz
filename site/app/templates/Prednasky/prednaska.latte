@@ -1,19 +1,18 @@
 {define #content}
 {includeblock "../embed.latte"}
+<p n:if="$slidesHref" id="slajdy"></p>
+{include #embedSlides}
+<p n:if="$slidesHref"><small><a href="{$slidesHref}"><span class="icon icon16 slides" title="Slajdy"></span>{$slidesHref}</a></small></p>
+
+<p n:if="$videoHref" id="zaznam"></p>
+{include #embedVideo}
+<p n:if="$videoHref"><small><a href="{$videoHref}"><span class="icon icon16 video" title="Záznam"></span>{$videoHref}</a></small></p>
+
+<h2 n:if="$description || $href" id="detail">Detail přednášky</h2>
 <p n:if="$description">{$description}</p>
+<p n:if="$href"><a href="{$href}">Detail přednášky na webu akce</a></p>
+
 <h2 id="datum-akce">Datum a akce</h2>
 <p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$eventHref}">{$event}</a></p>
 
-{if $href}
-    <h2 id="detail">Detail přednášky</h2>
-    <p><a href="{$href}">Detail přednášky na webu akce</a></p>
-{/if}
-
-<h2 n:if="$slidesHref" id="slajdy">Slajdy</h2>
-{include #embedSlides}
-<p n:if="$slidesHref"><a href="{$slidesHref}"><span class="icon icon16 slides"></span>{$slidesHref}</a></p>
-
-<h2 n:if="$videoHref" id="zaznam">Záznam</h2>
-{include #embedVideo}
-<p n:if="$videoHref"><a href="{$videoHref}"><span class="icon icon16 video"></span>{$videoHref}</a></p>
 {/define}
