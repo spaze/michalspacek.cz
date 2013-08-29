@@ -145,6 +145,14 @@ class UcastniciPresenter extends BasePresenter
 		$this->template->pageTitle = 'Import';
 		$this->template->trainings = $this->trainings->getAllTrainings();
 		$this->template->now = new \DateTime();
+
+		$upcomingIds = array();
+		foreach ($this->trainings->getUpcoming() as $training) {
+			foreach ($training->dates as $date) {
+				$upcomingIds[] = $date->dateId;
+			}
+		}
+		$this->template->upcomingIds = $upcomingIds;
 	}
 
 
