@@ -48,6 +48,8 @@ $(document).ready(function() {
 	<li><a n:href="Emaily:materialy">Materiály</a></li>
 	<li><a n:href="Ucastnici:">Účastníci</a></li>
 	<li><a n:href="Uzivatel:zmenitHeslo">Změnit heslo</a></li>
+	<li n:if="!$trackingEnabled">Tracking pro tento prohlížeč je vyplý <a n:href="Tracking:enable">Zapnout tracking</a></li>
+	<li n:if="$trackingEnabled">Tracking pro tento prohlížeč je zaplý <a n:href="Tracking:disable">Vypnout tracking</a></li>
 	<li><a n:href="Sign:out">Odhlásit</a></li>
 </ul>
 {/define}

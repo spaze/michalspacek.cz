@@ -13,6 +13,9 @@ abstract class BaseModel extends \Nette\Object
 	/** @var \Nette\Http\IRequest */
 	protected $httpRequest;
 
+	/** @var \Nette\Http\IResponse */
+	protected $httpResponse;
+
 
 	public function __construct(\Nette\Database\Connection $connection, \Bare\Next\Formatter\Texy $texyFormatter, \Nette\Http\IRequest $httpRequest)
 	{

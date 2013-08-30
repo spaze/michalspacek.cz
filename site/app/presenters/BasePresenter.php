@@ -48,6 +48,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	 */
 	protected $embed;
 
+	/**
+	 * @var \MichalSpacekCz\WebTracking
+	 */
+	protected $webTracking;
+
 
 	/**
 	 * @param \MichalSpacekCz\Articles
@@ -145,6 +150,18 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
+	/**
+	 * @param \MichalSpacekCz\WebTracking
+	 */
+	public function injectWebTracking(\MichalSpacekCz\WebTracking $webTracking)
+	{
+		if ($this->webTracking) {
+			throw new \Nette\InvalidStateException('WebTracking has already been set');
+		}
+		$this->webTracking = $webTracking;
+	}
+
+
 	protected function startup()
 	{
 		parent::startup();
@@ -156,8 +173,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	public function beforeRender()
 	{
-		$parameters = $this->getContext()->getParameters();
-		$this->template->trackingCode = (isset($parameters['debugMode']) ? !$parameters['debugMode'] : true);
+		$this->template->trackingCode = $this->webTracking->isEnabled();
 	}
 
 

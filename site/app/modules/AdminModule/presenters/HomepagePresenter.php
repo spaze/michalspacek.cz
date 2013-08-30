@@ -22,6 +22,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->upcomingApplications = $applications;
 
 		$this->template->pageTitle = 'Administrace';
+		$this->template->trackingEnabled = $this->webTracking->isEnabled();
 	}
 
 

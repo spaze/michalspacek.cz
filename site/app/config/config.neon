@@ -38,6 +38,7 @@ common:
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 		authenticator: \MichalSpacekCz\UserManager
 		embed: \MichalSpacekCz\Embed
+		webTracking: \MichalSpacekCz\WebTracking
 
 production < common:
 
