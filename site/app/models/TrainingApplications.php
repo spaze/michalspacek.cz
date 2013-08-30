@@ -81,7 +81,8 @@ class TrainingApplications extends BaseModel
 				a.email,
 				a.company,
 				s.status,
-				a.status_time AS statusTime
+				a.status_time AS statusTime,
+				a.note
 			FROM
 				training_applications a
 				JOIN training_application_status s ON a.key_status = s.id_status

@@ -1,4 +1,46 @@
+{define #script}
+$(document).ready(function() {
+	$('p strong[data-date]').click(function() {
+		$('#date-' + $(this).data('date')).slideToggle('fast');
+		return false;
+	});
+	$('p strong[data-date]').parent().next().hide();
+});
+{/define}
+
 {define #content}
+{foreach $upcomingApplications as $training}
+	{foreach $training->dates as $date}
+		<p class="small"><a n:href="Ucastnici:termin $date->dateId">{$date->start|date:'j. n. Y'}</a> <strong data-date="{$date->dateId}">{$date->venueCity} {$training->name} ({$date->applications|length})</strong></p>
+
+		<table id="date-{$date->dateId}" class="indent">
+			<thead>
+				<tr>
+					<th></th>
+					<th><small>Jméno</small></th>
+					<th><small>E-mail</small></th>
+					<th><small>Společnost</small></th>
+					<th><small>Status</small></th>
+					<th></th>
+					<th><small>Poznámka</small></th>
+				</tr>
+			</thead>
+			<tbody n:inner-foreach="$date->applications as $application">
+				<tr>
+					<td><small>{$iterator->getCounter()}.</small></td>
+					<td><a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></td>
+					<td><small>{$application->email}</small></td>
+					<td>{$application->company}</td>
+					<td><small><code>{$application->status}</code></small></td>
+					<td><small title="{$application->statusTime}">{$application->statusTime|date:'j. n. Y'}</small></td>
+					<td><small title="{$application->note}">{$application->note|truncate:20}</small></td>
+				</tr>
+			</tbody>
+		</table>
+
+	{/foreach}
+{/foreach}
+
 <ul>
 	<li><a n:href="Emaily:materialy">Materiály</a></li>
 	<li><a n:href="Ucastnici:">Účastníci</a></li>
