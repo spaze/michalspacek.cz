@@ -400,7 +400,7 @@ class UcastniciPresenter extends BasePresenter
 		$form->addText('invoiceId', 'Faktura č.:')
 			->setType('number')
 			->setDefaultValue($this->application->invoiceId);
-		$this->addDate($form, 'paid', 'Zaplaceno', false, $this->application->paid);
+		$this->addDate($form, 'paid', 'Zaplaceno:', false, $this->application->paid);
 
 		$form->addSubmit('submit', 'Uložit');
 		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplication');
