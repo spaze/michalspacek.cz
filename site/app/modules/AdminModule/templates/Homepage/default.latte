@@ -1,10 +1,12 @@
 {define #script}
 $(document).ready(function() {
-	$('p strong[data-date]').click(function() {
-		$('#date-' + $(this).data('date')).slideToggle('fast');
-		return false;
-	});
-	$('p strong[data-date]').parent().next().hide();
+	$('p strong[data-date]')
+		.click(function() {
+			$('#date-' + $(this).data('date')).slideToggle('fast');
+			return false;
+		})
+		.css('cursor', 'pointer')
+		.parent().next().hide();
 });
 {/define}
 
