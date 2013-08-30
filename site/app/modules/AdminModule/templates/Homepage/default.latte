@@ -12,6 +12,7 @@ $(document).ready(function() {
 
 {define #content}
 {foreach $upcomingApplications as $training}
+	<div id="statuses">
 	{foreach $training->dates as $date}
 		<p class="small"><a n:href="Ucastnici:termin $date->dateId">{$date->start|date:'j. n. Y'}</a> <strong data-date="{$date->dateId}">{$date->venueCity} {$training->name} ({$date->applications|length})</strong></p>
 
@@ -39,8 +40,8 @@ $(document).ready(function() {
 				</tr>
 			</tbody>
 		</table>
-
 	{/foreach}
+	</div>
 {/foreach}
 
 <ul>

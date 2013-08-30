@@ -63,6 +63,7 @@ $(document).ready(function() {
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <p>{$trainingName} {$trainingStart|date:'j. n. Y'}</p>
 {form statuses}
+<div id="statuses">
 <table>
 	<thead>
 		<tr>
@@ -89,6 +90,7 @@ $(document).ready(function() {
 		</tr>
 	</tbody>
 </table>
+</div>
 <p>{label date /} {input date}</p>
 <p>{input submit}</p>
 {/form statuses}

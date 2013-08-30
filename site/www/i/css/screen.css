@@ -124,15 +124,14 @@ abbr.dtstart, abbr.dtend { border: none; }
 .left { text-align: left; }
 .center { text-align: center; }
 .clear { clear: both; }
+th, td { padding: 5px; }
+#pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
+#statuses th, #statuses td { padding: 1px 5px; }
 #frm-application th, #frm-application td {
     width: 150px;
-    padding: 5px 0px;
     white-space: nowrap;
 }
-#frm-application th {
-    text-align: right;
-    padding-right: 5px;
-}
+#frm-application th { text-align: right; }
 #frm-application input { width: 170px; }
 #frm-application #frmapplication-note { width: 400px; }
 #frm-statuses select { color: #666; font-family: Consolas; }
