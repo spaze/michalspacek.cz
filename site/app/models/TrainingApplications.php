@@ -12,14 +12,15 @@ use \Nette\Application\UI\Form;
 class TrainingApplications extends BaseModel
 {
 
-	const STATUS_CREATED   = 'CREATED';
-	const STATUS_TENTATIVE = 'TENTATIVE';
-	const STATUS_SIGNED_UP = 'SIGNED_UP';
-	const STATUS_ATTENDED = 'ATTENDED';
-	const STATUS_MATERIALS_SENT = 'MATERIALS_SENT';
-	const STATUS_ACCESS_TOKEN_USED = 'ACCESS_TOKEN_USED';
-	const STATUS_IMPORTED = 'IMPORTED';
-	const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';
+	const STATUS_CREATED             = 'CREATED';              // 1
+	const STATUS_TENTATIVE           = 'TENTATIVE';            // 2
+	const STATUS_SIGNED_UP           = 'SIGNED_UP';            // 4
+	const STATUS_ATTENDED            = 'ATTENDED';             // 7
+	const STATUS_MATERIALS_SENT      = 'MATERIALS_SENT';       // 8
+	const STATUS_ACCESS_TOKEN_USED   = 'ACCESS_TOKEN_USED';    // 9
+	const STATUS_CANCELED            = 'CANCELED';             // 10
+	const STATUS_IMPORTED            = 'IMPORTED';             // 13
+	const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';  // 14
 
 	const DEFAULT_SOURCE  = 'michal-spacek';
 
@@ -244,6 +245,12 @@ class TrainingApplications extends BaseModel
 	public function getAttendedStatuses()
 	{
 		return array($this->getStatusId(self::STATUS_ATTENDED) => self::STATUS_ATTENDED) + $this->getDescendantStatuses(self::STATUS_ATTENDED);
+	}
+
+
+	public function getDiscardedStatuses()
+	{
+		return array($this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED) + $this->getDescendantStatuses(self::STATUS_CANCELED);
 	}
 
 

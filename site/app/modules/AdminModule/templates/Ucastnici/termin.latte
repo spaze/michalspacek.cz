@@ -80,7 +80,7 @@ $(document).ready(function() {
 	<tbody n:inner-foreach="$applications as $application">
 		<tr>
 			<td><small>{$iterator->getCounter()}.</small></td>
-			<td><a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></td>
+			<td><small n:tag-if="$application->discarded"><a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></small></td>
 			<td><small>{$application->email}</small></td>
 			<td>{$application->company}</td>
 			<td><small><code>{$application->status}</code></small></td>

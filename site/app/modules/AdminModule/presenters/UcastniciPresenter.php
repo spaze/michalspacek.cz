@@ -61,8 +61,11 @@ class UcastniciPresenter extends BasePresenter
 		$this->training = $this->trainings->getByDate($param);
 		$this->applications = $this->trainingApplications->getByDate($param);
 		$attendedStatuses = $this->trainingApplications->getAttendedStatuses();
+		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
 		foreach ($this->applications as $application) {
-			if ($application->attended = in_array($application->status, $attendedStatuses)) {
+			$application->discarded = in_array($application->status, $discardedStatuses);
+			$application->attended = in_array($application->status, $attendedStatuses);
+			if ($application->attended) {
 				$this->applicationIdsAttended[] = $application->id;
 			}
 			$application->childrenStatuses = $this->trainingApplications->getChildrenStatuses($application->status);
