@@ -187,7 +187,7 @@ class UcastniciPresenter extends BasePresenter
 				$this->trainingApplications->setStatus($id, $status, $values->date);
 			}
 		}
-		$this->redirect($this->getAction(), $this->dateId);
+		$this->redirect($this->getAction(), $this->redirectParam);
 	}
 
 
