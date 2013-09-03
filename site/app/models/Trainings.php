@@ -23,6 +23,7 @@ class Trainings extends BaseModel
 				t.name,
 				s.status,
 				d.start,
+				d.public,
 				v.city as venueCity
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
@@ -54,6 +55,7 @@ class Trainings extends BaseModel
 				'tentative'     => ($row->status == self::STATUS_TENTATIVE),
 				'lastFreeSeats' => $this->lastFreeSeats($row->start),
 				'start'         => $row->start,
+				'public'        => $row->public,
 				'status'        => $row->status,
 				'venueCity'     => $row->venueCity,
 			);
@@ -220,6 +222,7 @@ class Trainings extends BaseModel
 				t.name,
 				d.start,
 				d.end,
+				d.public,
 				s.status,
 				v.href AS venueHref,
 				v.name AS venueName,
