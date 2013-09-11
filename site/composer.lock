@@ -54,16 +54,16 @@
         },
         {
             "name": "nette/nette",
-            "version": "v2.0.11",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/nette.git",
-                "reference": "v2.0.11"
+                "reference": "80a7e460badc3d71b1469bb23810ebf235b06b11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/nette/zipball/v2.0.11",
-                "reference": "v2.0.11",
+                "url": "https://api.github.com/repos/nette/nette/zipball/80a7e460badc3d71b1469bb23810ebf235b06b11",
+                "reference": "80a7e460badc3d71b1469bb23810ebf235b06b11",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 "neon",
                 "templating"
             ],
-            "time": "2013-07-11 20:39:27"
+            "time": "2013-08-07 23:14:19"
         },
         {
             "name": "spaze/bare-next",
