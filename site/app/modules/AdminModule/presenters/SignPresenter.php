@@ -28,10 +28,13 @@ class SignPresenter extends \BasePresenter
 
 	public function actionKnockKnock()
 	{
-		$session = $this->getSession('admin');
-		$session->knockKnock = \MichalSpacekCz\UserManager::KNOCK_KNOCK;
-
-		$this->redirect('in');
+		if ($this->user->isLoggedIn()) {
+			$this->redirect('Homepage:');
+		} else {
+			$session = $this->getSession('admin');
+			$session->knockKnock = \MichalSpacekCz\UserManager::KNOCK_KNOCK;
+			$this->redirect('in');
+		}
 	}
 
 
