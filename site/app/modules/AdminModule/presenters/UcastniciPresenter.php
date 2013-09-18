@@ -57,9 +57,10 @@ class UcastniciPresenter extends BasePresenter
 
 	public function actionTermin($param)
 	{
-		$this->redirectParam = $param;
-		$this->training = $this->trainings->getByDate($param);
-		$this->applications = $this->trainingApplications->getByDate($param);
+		$this->dateId = $param;
+		$this->redirectParam = $this->dateId;
+		$this->training = $this->trainings->getByDate($this->dateId);
+		$this->applications = $this->trainingApplications->getByDate($this->dateId);
 		$attendedStatuses = $this->trainingApplications->getAttendedStatuses();
 		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
 		foreach ($this->applications as $application) {
@@ -81,15 +82,16 @@ class UcastniciPresenter extends BasePresenter
 
 	public function actionSoubory($param)
 	{
-		$this->redirectParam = $param;
-		$application = $this->trainingApplications->getApplicationById($param);
+		$this->applicationId = $param;
+		$this->redirectParam = $this->applicationId;
+		$application = $this->trainingApplications->getApplicationById($this->applicationId);
 		if (!in_array($application->status, $this->trainingApplications->getAttendedStatuses())) {
 			$this->redirect('termin', $application->dateId);
 		}
 
 		$this->applicationIdsAttended = array($application->applicationId);
 
-		$files = $this->trainingApplications->getFiles($param);
+		$files = $this->trainingApplications->getFiles($this->applicationId);
 		foreach ($files as $file) {
 			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
 		}
@@ -190,7 +192,7 @@ class UcastniciPresenter extends BasePresenter
 				$this->trainingApplications->setStatus($id, $status, $values->date);
 			}
 		}
-		$this->redirect($this->getAction(), $this->redirectParam);
+		$this->redirect($this->getAction(), $this->dateId);
 	}
 
 
