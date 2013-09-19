@@ -74,7 +74,9 @@ class Talks extends BaseModel
 		);
 
 		if ($result) {
+			$result['title'] = $this->texyFormatter->format($result['title']);
 			$result['description'] = $this->texyFormatter->format($result['description']);
+			$result['event'] = $this->texyFormatter->format($result['event']);
 		}
 
 		return $result;

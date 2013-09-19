@@ -4,7 +4,7 @@
 
 {define #itemTalk}
     {var $link = 'Prednasky:' . $talk->action}
-    <a n:href="$link"><strong>{$talk->title}</strong></a><br />
+    <a n:href="$link" n:tag-if="$talk->action"><strong>{$talk->title}</strong></a><br />
     <small>
         <strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}
         <span n:if="$talk->slidesHref" class="icon icon16 slides" title="Slajdy"></span>
