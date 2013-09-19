@@ -30,7 +30,12 @@ class Talks extends BaseModel
 			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		return $this->database->fetchAll($query);
+		$result = $this->database->fetchAll($query);
+		foreach ($result as $row) {
+			$this->format($row);
+		}
+
+		return $result;
 	}
 
 
@@ -49,7 +54,12 @@ class Talks extends BaseModel
 			WHERE date > NOW()
 			ORDER BY date';
 
-		return $this->database->fetchAll($query);
+		$result = $this->database->fetchAll($query);
+		foreach ($result as $row) {
+			$this->format($row);
+		}
+
+		return $result;
 	}
 
 
@@ -74,12 +84,21 @@ class Talks extends BaseModel
 		);
 
 		if ($result) {
-			$result['title'] = $this->texyFormatter->format($result['title']);
-			$result['description'] = $this->texyFormatter->format($result['description']);
-			$result['event'] = $this->texyFormatter->format($result['event']);
+			$this->format($result);
 		}
 
 		return $result;
+	}
+
+
+	private function format(\Nette\Database\Row $row)
+	{
+		$format = array('title', 'description', 'event');
+		foreach ($format as $item) {
+			if (isset($row[$item])) {
+				$row[$item] = $this->texyFormatter->format($row[$item]);
+			}
+		}
 	}
 
 
