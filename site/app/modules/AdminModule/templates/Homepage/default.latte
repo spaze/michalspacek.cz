@@ -21,7 +21,7 @@ $(document).ready(function() {
 				{if $date->status == 'TENTATIVE'}&#x2731;{/if}
 				{if $date->status == 'CANCELED'}&#x2716;{/if}
 			</small>
-			<strong data-date="{$date->dateId}">{$training->name} {$date->venueCity}{if !$date->public}, {$training->venueName}{/if} ({$date->applications|length})</strong>
+			<strong data-date="{$date->dateId}">{$training->name} {$date->venueCity}{if !$date->public}, {$date->venueName}{/if} ({$date->applications|length})</strong>
 		</p>
 
 		<table id="date-{$date->dateId}" class="indent">

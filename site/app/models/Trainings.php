@@ -24,6 +24,7 @@ class Trainings extends BaseModel
 				s.status,
 				d.start,
 				d.public,
+				v.name AS venueName,
 				v.city as venueCity
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
@@ -57,6 +58,7 @@ class Trainings extends BaseModel
 				'start'         => $row->start,
 				'public'        => $row->public,
 				'status'        => $row->status,
+				'venueName'     => $row->venueName,
 				'venueCity'     => $row->venueCity,
 			);
 			$upcoming[$row->action] = \Nette\ArrayHash::from(array(
