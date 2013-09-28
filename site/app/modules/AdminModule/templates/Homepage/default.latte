@@ -14,7 +14,15 @@ $(document).ready(function() {
 {foreach $upcomingApplications as $training}
 	<div id="statuses">
 	{foreach $training->dates as $date}
-		<p class="small"><a n:href="Ucastnici:termin $date->dateId">{$date->start|date:'j. n. Y'}</a> <strong data-date="{$date->dateId}">{$training->name} {$date->venueCity}{if !$date->public}, {$training->venueName}{/if} ({$date->applications|length})</strong></p>
+		<p class="small">
+			<a n:href="Ucastnici:termin $date->dateId">{$date->start|date:'j. n. Y'}</a>
+			<small title="{$date->status}">
+				{if $date->status == 'CONFIRMED'}&#x2714;{/if}
+				{if $date->status == 'TENTATIVE'}&#x2731;{/if}
+				{if $date->status == 'CANCELED'}&#x2716;{/if}
+			</small>
+			<strong data-date="{$date->dateId}">{$training->name} {$date->venueCity}{if !$date->public}, {$training->venueName}{/if} ({$date->applications|length})</strong>
+		</p>
 
 		<table id="date-{$date->dateId}" class="indent">
 			<thead>
