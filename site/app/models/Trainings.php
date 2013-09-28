@@ -10,8 +10,6 @@ namespace MichalSpacekCz;
 class Trainings extends BaseModel
 {
 
-	const STATUS_TENTATIVE = 'TENTATIVE';
-
 	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
 
@@ -53,7 +51,7 @@ class Trainings extends BaseModel
 		foreach ($this->database->fetchAll($query) as $row) {
 			$date = array(
 				'dateId'        => $row->dateId,
-				'tentative'     => ($row->status == self::STATUS_TENTATIVE),
+				'tentative'     => ($row->status == TrainingApplications::STATUS_TENTATIVE),
 				'lastFreeSeats' => $this->lastFreeSeats($row->start),
 				'start'         => $row->start,
 				'public'        => $row->public,
@@ -152,7 +150,7 @@ class Trainings extends BaseModel
 		);
 		$dates = array();
 		foreach ($result as $row) {
-			$row->tentative        = ($row->status == self::STATUS_TENTATIVE);
+			$row->tentative        = ($row->status == TrainingApplications::STATUS_TENTATIVE);
 			$row->lastFreeSeats    = $this->lastFreeSeats($row->start);
 			$row->venueDescription = $this->texyFormatter->format($row->venueDescription);
 			$row->cooperationDescription = $this->texyFormatter->format($row->cooperationDescription);
