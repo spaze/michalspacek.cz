@@ -351,6 +351,7 @@ class TrainingApplications extends BaseModel
 			'SELECT
 				t.action,
 				d.id_date AS dateId,
+				d.start AS trainingStart,
 				a.id_application AS applicationId,
 				s.status,
 				a.status_time AS statusTime,
