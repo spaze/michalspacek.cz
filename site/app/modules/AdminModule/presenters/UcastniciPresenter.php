@@ -152,7 +152,7 @@ class UcastniciPresenter extends BasePresenter
 		$this->template->now = new \DateTime();
 
 		$upcomingIds = array();
-		foreach ($this->trainings->getUpcoming() as $training) {
+		foreach ($this->trainings->getPublicUpcoming() as $training) {
 			foreach ($training->dates as $date) {
 				$upcomingIds[] = $date->dateId;
 			}

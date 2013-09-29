@@ -60,7 +60,7 @@ class SkoleniPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Školení';
-		$this->template->upcomingTrainings = $this->trainings->getUpcoming();
+		$this->template->upcomingTrainings = $this->trainings->getPublicUpcoming();
 		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
 
@@ -463,7 +463,7 @@ class SkoleniPresenter extends BasePresenter
 		$this->template->venueCity        = $date->venueCity;
 		$this->template->tentative        = $date->tentative;
 
-		$upcoming = $this->trainings->getUpcoming();
+		$upcoming = $this->trainings->getPublicUpcoming();
 		unset($upcoming[$name]);
 		$this->template->upcomingTrainings = $upcoming;
 

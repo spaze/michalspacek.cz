@@ -11,17 +11,16 @@ $(document).ready(function() {
 {/define}
 
 {define #content}
-{foreach $upcomingApplications as $training}
-	<div id="statuses">
-	{foreach $training->dates as $date}
+<div id="statuses">
+{foreach $upcomingApplications as $date}
 		<p class="small">
 			<a n:href="Ucastnici:termin $date->dateId">{$date->start|date:'j. n. Y'}</a>
 			<small title="{$date->status}">
-				{if $date->status == 'CONFIRMED'}&#x2714;{/if}
-				{if $date->status == 'TENTATIVE'}&#x2731;{/if}
-				{if $date->status == 'CANCELED'}&#x2716;{/if}
+				{if $date->status == \MichalSpacekCz\TrainingDates::STATUS_CONFIRMED}&#x2714;{/if}
+				{if $date->status == \MichalSpacekCz\TrainingDates::STATUS_TENTATIVE}&#x2731;{/if}
+				{if $date->status == \MichalSpacekCz\TrainingDates::STATUS_CANCELED}&#x2716;{/if}
 			</small>
-			<strong data-date="{$date->dateId}">{$training->name} {$date->venueCity}{if !$date->public}, {$date->venueName}{/if} ({$date->applications|length})</strong>
+			<strong data-date="{$date->dateId}">{$date->trainingName} {$date->venueCity}{if !$date->public}, {$date->venueName}{/if} ({$date->applications|length})</strong>
 		</p>
 
 		<table id="date-{$date->dateId}" class="indent">
@@ -48,9 +47,8 @@ $(document).ready(function() {
 				</tr>
 			</tbody>
 		</table>
-	{/foreach}
-	</div>
 {/foreach}
+</div>
 
 <ul>
 	<li><a n:href="Emaily:materialy">Materiály</a></li>
