@@ -57,7 +57,7 @@ class Trainings extends BaseModel
 						JOIN training_dates d2 ON t2.id_training = d2.key_training
 						JOIN training_date_status s2 ON d2.key_status = s2.id_status
 					WHERE
-						(d2.public = ? OR FALSE = ?)
+						(d2.public != ? OR TRUE = ?)
 						AND d2.end > NOW()
 						AND s2.status IN (?, ?)
 					GROUP BY
@@ -248,7 +248,8 @@ class Trainings extends BaseModel
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
-				v.city AS venueCity
+				v.city AS venueCity,
+				(SELECT COUNT(1) FROM training_applications a WHERE a.key_date = d.id_date) AS count
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
