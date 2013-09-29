@@ -18,7 +18,7 @@ class RouterFactory
 	{
 		Route::addStyle('name', 'action');  // let the name param be converted like the action param (foo-bar => fooBar)
 		$router = new RouteList();
-		$router[] = new Route('admin/<presenter>[/<action>][/<param>]', array('module' => 'Admin', 'presenter' => 'Homepage', 'action' => 'default'), Route::SECURED);
+		$router[] = new Route('admin[/<presenter>][/<action>][/<param>]', array('module' => 'Admin', 'presenter' => 'Homepage', 'action' => 'default'), Route::SECURED);
 		$router[] = new Route('rozhovory/<name>', 'Rozhovory:rozhovor');
 		$router[] = new Route('prednasky/<name>[/<slide>]', 'Prednasky:prednaska');
 		$router[] = new Route('soubory[/<action>]/<filename>', 'Soubory:soubor');
