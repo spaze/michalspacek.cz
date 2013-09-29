@@ -15,7 +15,7 @@ class HomepagePresenter extends BasePresenter
 	{
 		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
 		$dates = array();
-		foreach ($this->trainings->getPublicUpcoming() as $training) {
+		foreach ($this->trainings->getAllUpcoming() as $training) {
 			foreach ($training->dates as $date) {
 				$date->trainingName = $training->name;
 				$applications = $this->trainingApplications->getByDate($date->dateId);

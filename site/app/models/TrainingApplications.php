@@ -83,7 +83,10 @@ class TrainingApplications extends BaseModel
 				a.company,
 				s.status,
 				a.status_time AS statusTime,
-				a.note
+				a.note,
+				a.price,
+				a.invoice_id AS invoiceId,
+				a.paid
 			FROM
 				training_applications a
 				JOIN training_application_status s ON a.key_status = s.id_status

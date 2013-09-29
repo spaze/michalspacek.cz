@@ -31,8 +31,8 @@ $(document).ready(function() {
 					<th><small>E-mail</small></th>
 					<th><small>Společnost</small></th>
 					<th><small>Status</small></th>
-					<th></th>
 					<th><small>Poznámka</small></th>
+					<th><small>Cena</small></th>
 				</tr>
 			</thead>
 			<tbody n:inner-foreach="$date->applications as $application">
@@ -41,9 +41,9 @@ $(document).ready(function() {
 					<td><a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></td>
 					<td><small>{$application->email}</small></td>
 					<td>{$application->company}</td>
-					<td><small><code>{$application->status}</code></small></td>
-					<td><small title="{$application->statusTime}">{$application->statusTime|date:'j. n. Y'}</small></td>
+					<td><small><code title="$application->statusTime|date:'j. n. Y H:i:s'">{$application->status}</code></small></td>
 					<td><small title="{$application->note}">{$application->note|truncate:20}</small></td>
+					<td><small title="Faktura č. {ifset $application->invoiceId}{$application->invoiceId}, {ifset $application->paid}zaplaceno {$application->paid|date:'j. n. Y H:i'}{else}nezaplaceno{/ifset}{else}&ndash;{/ifset}">{ifset $application->price}{$application->price} Kč{else}&ndash;{/ifset}</small></td>
 				</tr>
 			</tbody>
 		</table>

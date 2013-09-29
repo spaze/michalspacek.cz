@@ -18,7 +18,7 @@
 					{if $training->status == \MichalSpacekCz\TrainingDates::STATUS_CANCELED}&#x2716;{/if}
 				</small>
 			</td>
-			<td>{$training->name}</td>
+			<td>{$training->name} ({$training->count})</td>
 			<td><small>{$training->venueCity}{if !$training->public}, {$training->venueName}{/if}</small></td>
 		</tr>
 	</tbody>
