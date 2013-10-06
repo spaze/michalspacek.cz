@@ -12,7 +12,7 @@ class RozhovoryPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Rozhovory';
-		$this->template->interviews     = $this->interviews->getAll();
+		$this->template->interviews = $this->interviews->getAll();
 	}
 
 
@@ -24,6 +24,7 @@ class RozhovoryPresenter extends BasePresenter
 		}
 
 		$this->template->pageTitle = 'Rozhovor ' . $interview->title;
+		$this->template->pageHeader = $interview->title;
 		$this->template->description = $interview->description;
 		$this->template->href = $interview->href;
 		$this->template->date = $interview->date;
