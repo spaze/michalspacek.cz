@@ -32,7 +32,7 @@ class Trainings extends BaseModel
 	 *
 	 * @return array
 	 */
-	public function getUpcoming($all)
+	private function getUpcoming($all)
 	{
 		$query = "SELECT
 				d.id_date AS dateId,
