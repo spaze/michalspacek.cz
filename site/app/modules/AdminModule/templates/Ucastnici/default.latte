@@ -7,6 +7,30 @@ $(document).ready(function() {
 		})
 		.css('cursor', 'pointer')
 		.parent().next().hide();
+	$('<small>')
+		.append($('<a>', {
+				text: 'Zobrazit všechny',
+				href: '#statuses',
+				id: 'statusesShow',
+				click: function(event) {
+					event.preventDefault();
+					$('#statuses td[data-date]').parent().next().show();
+					$(this).hide();
+					$('#statusesHide').show();
+				}
+			}))
+		.append($('<a>', {
+				text: 'Skrýt všechny',
+				href: '#statuses',
+				id: 'statusesHide',
+				click: function(event) {
+					event.preventDefault();
+					$('#statuses td[data-date]').parent().next().hide();
+					$(this).hide();
+					$('#statusesShow').show();
+				}
+			}).hide())
+		.appendTo('#statuses-links');
 });
 {/define}
 
@@ -15,6 +39,7 @@ $(document).ready(function() {
 {/define}
 
 {define #list}
+<div id="statuses-links"></div>
 <table id="statuses">
 	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
