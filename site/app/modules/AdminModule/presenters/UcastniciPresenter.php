@@ -75,6 +75,9 @@ class UcastniciPresenter extends BasePresenter
 		$this->template->pageTitle     = 'Účastníci zájezdu';
 		$this->template->trainingStart = $this->training->start;
 		$this->template->trainingName  = $this->training->name;
+		$this->template->venueCity     = $this->training->venueCity;
+		$this->template->venueName     = $this->training->venueName;
+		$this->template->public        = $this->training->public;
 		$this->template->applications  = $this->applications;
 		$this->template->attendedStatuses = $attendedStatuses;
 	}

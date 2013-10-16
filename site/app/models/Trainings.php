@@ -282,6 +282,7 @@ class Trainings extends BaseModel
 				t.name,
 				d.start,
 				d.end,
+				d.public,
 				s.status,
 				v.href AS venueHref,
 				v.name AS venueName,
