@@ -19,6 +19,18 @@ class Trainings extends BaseModel
 	}
 
 
+	public function getPublicUpcomingIds()
+	{
+		$upcomingIds = array();
+		foreach ($this->getPublicUpcoming() as $training) {
+			foreach ($training->dates as $date) {
+				$upcomingIds[] = $date->dateId;
+			}
+		}
+		return $upcomingIds;
+	}
+
+
 	public function getAllUpcoming()
 	{
 		return $this->getUpcoming(true);
@@ -75,6 +87,7 @@ class Trainings extends BaseModel
 				'start'         => $row->start,
 				'public'        => $row->public,
 				'status'        => $row->status,
+				'name'          => $row->name,
 				'venueName'     => $row->venueName,
 				'venueCity'     => $row->venueCity,
 			);
@@ -248,8 +261,7 @@ class Trainings extends BaseModel
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
-				v.city AS venueCity,
-				(SELECT COUNT(1) FROM training_applications a WHERE a.key_date = d.id_date) AS count
+				v.city AS venueCity
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue

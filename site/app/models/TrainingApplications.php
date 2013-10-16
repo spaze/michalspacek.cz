@@ -97,6 +97,16 @@ class TrainingApplications extends BaseModel
 	}
 
 
+	public function getValidByDate($dateId)
+	{
+		$discardedStatuses = $this->getDiscardedStatuses();
+		return array_filter($this->getByDate($dateId), function($value) use ($discardedStatuses) {
+			return !in_array($value->status, $discardedStatuses);
+		});
+
+	}
+
+
 	private function insertData($data)
 	{
 		$data['access_token'] = $this->generateAccessCode();

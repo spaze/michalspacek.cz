@@ -17,16 +17,14 @@ class HomepagePresenter extends BasePresenter
 		$dates = array();
 		foreach ($this->trainings->getAllUpcoming() as $training) {
 			foreach ($training->dates as $date) {
-				$date->trainingName = $training->name;
-				$applications = $this->trainingApplications->getByDate($date->dateId);
-				$date->applications = array_filter($applications, function($value) use ($discardedStatuses) {
-					return !in_array($value->status, $discardedStatuses);
-				});
+				$date->applications = $this->trainingApplications->getValidByDate($date->dateId);
 				$dates[$date->start->getTimestamp()] = $date;
 			}
 		}
 		ksort($dates);
 		$this->template->upcomingApplications = $dates;
+		$this->template->now = new \DateTime();
+		$this->template->upcomingIds = $this->trainings->getPublicUpcomingIds();
 
 		$this->template->pageTitle = 'Administrace';
 		$this->template->trackingEnabled = $this->webTracking->isEnabled();

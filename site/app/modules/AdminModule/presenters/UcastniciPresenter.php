@@ -147,17 +147,16 @@ class UcastniciPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->pageTitle = 'Import';
-		$this->template->trainings = $this->trainings->getAllTrainings();
-		$this->template->now = new \DateTime();
-
-		$upcomingIds = array();
-		foreach ($this->trainings->getPublicUpcoming() as $training) {
-			foreach ($training->dates as $date) {
-				$upcomingIds[] = $date->dateId;
-			}
+		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
+		$trainings = $this->trainings->getAllTrainings();
+		foreach ($trainings as $training) {
+			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
 		}
-		$this->template->upcomingIds = $upcomingIds;
+
+		$this->template->pageTitle = 'Import';
+		$this->template->trainings = $trainings;
+		$this->template->now = new \DateTime();
+		$this->template->upcomingIds = $this->trainings->getPublicUpcomingIds();
 	}
 
 
