@@ -58,13 +58,21 @@ class TrainingApplications extends BaseModel
 			'SELECT
 				a.name,
 				a.email,
+				s.status,
+				a.status_time AS statusTime,
 				t.name AS trainingName,
 				t.action AS trainingAction,
+				d.start AS trainingStart,
+				v.name AS venueName,
+				v.name_extended AS venueNameExtended,
+				v.address AS venueAddress,
+				v.city AS venueCity,
 				a.access_token AS accessToken
 			FROM
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date
 				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_application_status s ON a.key_status = s.id_status
 			WHERE
 				s.status = ?',

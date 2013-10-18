@@ -12,13 +12,11 @@ $(document).ready(function() {
 });
 {/define}
 
-{define #content}
-<p n:foreach="$applications as $application">
-	<div><strong>{$iterator->counter}.</strong></div>
-	<div><input type="text" class="selectAll" value="{$application->name} <{$application->email}>"></div>
-	<div><input type="text" class="selectAll" value="Materiály ze školení {$application->trainingName}"></div>
-	<div>
-<textarea class="selectAll">
+{define #subjectAttended}
+Materiály ze školení {$application->trainingName}
+{/define}
+
+{define #bodyAttended}
 Dobrý den!
 
 Ještě jednou bych Vám chtěl poděkovat za účast na školení
@@ -40,7 +38,46 @@ Michal Špaček
 Michal Špaček
 http://www.michalspacek.cz
 http://twitter.com/spazef0rze
-</textarea>
-	</div>
+{/define}
+
+{define #subjectTentative}
+Pozvánka na školení {$application->trainingName}
+{/define}
+
+{define #bodyTentative}
+Dobrý den,
+
+posílám pozvánku na školení {$application->trainingName} na které jste se
+nezávazně přihlásil na mých webových stránkách dne {$application->statusTime|date:'j. n. Y'}.
+
+Termín školení je {$application->trainingStart|date:'j. n. Y'} od {$application->trainingStart|date:'H:i'}
+na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
+
+Přihlaste se prosím na adrese
+{link '//:Skoleni:prihlaska' $application->trainingAction, $application->accessToken}
+
+Registrační formulář bude předvyplněn údaji, které jste zadal při
+nezávazné registraci. Pokud z jakýchkoliv důvodů nemůžete na školení
+přijít, dejte mi vědět, abych mohl nabídnout místo dalším zájemcům.
+
+Pokud máte nějaký dotaz, neváhejte mi napsat.
+
+Těším se brzy na shledanou!
+Michal Špaček
+
+-- 
+Michal Špaček
+http://www.michalspacek.cz
+http://twitter.com/spazef0rze
+{/define}
+
+{define #content}
+<p n:foreach="$applications as $application">
+	{capture $subject}subject{$application->status|lower|firstupper}{/capture}
+	{capture $body}body{$application->status|lower|firstupper}{/capture}
+	<div><strong>{$iterator->counter}.</strong></div>
+	<div><input type="text" class="selectAll" value="{$application->name} <{$application->email}>"></div>
+	<div><input type="text" class="selectAll" value="{include #$subject, application => $application}"></div>
+	<div><textarea class="selectAll">{include #$body, application => $application}</textarea></div>
 </p>
 {/define}
