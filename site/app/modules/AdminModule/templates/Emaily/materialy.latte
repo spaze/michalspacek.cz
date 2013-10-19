@@ -68,8 +68,8 @@ http://twitter.com/spazef0rze
 	{capture $subject}subject{$application->status|lower|firstupper}{/capture}
 	{capture $body}body{$application->status|lower|firstupper}{/capture}
 	<div><strong>{$iterator->counter}.</strong></div>
-	<div><input type="text" class="selectAll" value="{$application->name} <{$application->email}>"></div>
-	<div><input type="text" class="selectAll" value="{include #$subject, application => $application}"></div>
-	<div><textarea class="selectAll">{include #$body, application => $application}</textarea></div>
+	<div><input type="text" class="selectAll big" value="{$application->name} <{$application->email}>"></div>
+	<div><input type="text" class="selectAll big" value="{include #$subject, application => $application}"></div>
+	<div><textarea class="selectAll big">{include #$body, application => $application}</textarea></div>
 </p>
 {/define}
