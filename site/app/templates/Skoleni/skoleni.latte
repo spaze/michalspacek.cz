@@ -11,9 +11,6 @@ $(document).ready(function() {
 });
 {/define}
 
-{define #formExtra}
-{/define}
-
 {define #form}
 {form application}
 <fieldset id="chyby" n:if="$form->hasErrors()">
@@ -58,7 +55,6 @@ $(document).ready(function() {
 	</table>
 </fieldset>
 <p><strong>{label note /}</strong> {input note}</p>
-{include #formExtra}
 <p>{input signUp}</p>
 {/form application}
 {/define}
