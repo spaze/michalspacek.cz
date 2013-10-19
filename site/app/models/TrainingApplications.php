@@ -60,6 +60,7 @@ class TrainingApplications extends BaseModel
 				a.email,
 				s.status,
 				a.status_time AS statusTime,
+				d.id_date AS dateId,
 				t.name AS trainingName,
 				t.action AS trainingAction,
 				d.start AS trainingStart,

@@ -1,7 +1,8 @@
 <?php
 namespace AdminModule;
 
-use \MichalSpacekCz\TrainingApplications;
+use \MichalSpacekCz\TrainingApplications,
+	\MichalSpacekCz\TrainingDates;
 
 /**
  * Emaily presenter.
@@ -17,10 +18,13 @@ class EmailyPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Materiály ze školení';
 
-		$this->template->applications = array_merge(
-			$this->trainingApplications->getByStatus(TrainingApplications::STATUS_TENTATIVE),
-			$this->trainingApplications->getByStatus(TrainingApplications::STATUS_ATTENDED)
-		);
+		$this->template->applications = $this->trainingApplications->getByStatus(TrainingApplications::STATUS_ATTENDED);
+
+		foreach ($this->trainingApplications->getByStatus(TrainingApplications::STATUS_TENTATIVE) as $application) {
+			if ($this->trainings->getByDate($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
+				$this->template->applications[] = $application;
+			}
+		}
 	}
 
 
