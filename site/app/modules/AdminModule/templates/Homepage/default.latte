@@ -1,8 +1,3 @@
-{define #script}
-{includeblock ../Ucastnici/default.latte}
-{include #scriptHideApplications}
-{/define}
-
 {define #content}
 {includeblock "../Ucastnici/default.latte"}
 <p>{include #list, trainings => $upcomingApplications}</p>
