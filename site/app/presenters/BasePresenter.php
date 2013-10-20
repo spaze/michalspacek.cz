@@ -34,6 +34,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	protected $trainingApplications;
 
 	/**
+	 * @var \MichalSpacekCz\TrainingDates
+	 */
+	protected $trainingDates;
+
+	/**
 	 * @var \MichalSpacekCz\Interviews
 	 */
 	protected $interviews;
@@ -111,6 +116,18 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 			throw new \Nette\InvalidStateException('TrainingApplications has already been set');
 		}
 		$this->trainingApplications = $trainingApplications;
+	}
+
+
+	/**
+	 * @param \MichalSpacekCz\TrainingDates
+	 */
+	public function injectTrainingDates(\MichalSpacekCz\TrainingDates $trainingDates)
+	{
+		if ($this->trainingDates) {
+			throw new \Nette\InvalidStateException('TrainingDates has already been set');
+		}
+		$this->trainingDates = $trainingDates;
 	}
 
 

@@ -21,7 +21,7 @@ class EmailyPresenter extends BasePresenter
 		$this->template->applications = $this->trainingApplications->getByStatus(TrainingApplications::STATUS_ATTENDED);
 
 		foreach ($this->trainingApplications->getByStatus(TrainingApplications::STATUS_TENTATIVE) as $application) {
-			if ($this->trainings->getByDate($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
+			if ($this->trainingDates->get($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
 				$this->template->applications[] = $application;
 			}
 		}

@@ -56,6 +56,7 @@ small a, .small a { color: #444; }
     padding-left: 20px;
     border-left: 2px solid #EEE;
 }
+.block { display: block; }
 input.big { width: 400px; }
 textarea.big {
     width: 700px;
@@ -174,7 +175,6 @@ div.notice {
     overflow: hidden;
 }
 #ohlasy hr { height: 1px; }
-#pridat-ucastniky a[href="#pridat-ucastniky"], #pridat-soubor a[href="#pridat-soubor"] { display: block; }
 #pridat-ucastniky-container table { font-size: 75%; }
 #pridat-ucastniky-container table input[type=text] { width: 78px; }
 #pridat-ucastniky-container table .highlight { background-color: yellow; }

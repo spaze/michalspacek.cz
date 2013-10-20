@@ -36,6 +36,7 @@ common:
 			setup:
 				- setFilesDir('../files/trainings')
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
+		trainingDates: \MichalSpacekCz\TrainingDates
 		authenticator: \MichalSpacekCz\UserManager
 		embed: \MichalSpacekCz\Embed
 		webTracking: \MichalSpacekCz\WebTracking

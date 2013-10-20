@@ -41,7 +41,7 @@
 {/form statuses}
 <hr>
 <div id="pridat-ucastniky">
-	<p><a href="#pridat-ucastniky">Přidat účastníky</a></p>
+	<p><a href="#pridat-ucastniky" class="block">Přidat účastníky</a></p>
 	<div id="pridat-ucastniky-container">
 	{form applications}
 		<table>
@@ -87,7 +87,7 @@
 </div>
 <hr>
 <div id="pridat-soubor">
-	<p><a href="#pridat-soubor">Přidat soubor</a></p>
+	<p><a href="#pridat-soubor" class="block">Přidat soubor</a></p>
 	<div id="pridat-soubor-container">
 		<p>
 			Přidá soubor všem účastíkům školení ve stavu
@@ -97,6 +97,22 @@
 		<p><strong>{label file /}</strong> {input file}</p>
 		<p>{input submit}</p>
 		{/form file}
+	</div>
+</div>
+<hr>
+<div id="upravit-termin">
+	<p><a href="#upravit-termin" class="block">Upravit termín</a></p>
+	<div id="upravit-termin-container">
+		{form date}
+		<p><strong>{label training /}</strong> {input training}</p>
+		<p><strong>{label venue /}</strong> {input venue}</p>
+		<p><strong>{label start /}</strong> {input start}</p>
+		<p><strong>{label end /}</strong> {input end}</p>
+		<p><strong>{label status /}</strong> {input status}</p>
+		<p><strong>{label public /}</strong> {input public}</p>
+		<p><strong>{label cooperation /}</strong> {input cooperation}</p>
+		<p>{input submit}</p>
+		{/form date}
 	</div>
 </div>
 {/define}

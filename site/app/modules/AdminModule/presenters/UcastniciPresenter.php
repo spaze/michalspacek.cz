@@ -2,7 +2,6 @@
 namespace AdminModule;
 
 use \Nette\Application\UI\Form;
-use \Nette\Utils\Html;
 
 /**
  * Ucastnici presenter.
@@ -59,7 +58,7 @@ class UcastniciPresenter extends BasePresenter
 	{
 		$this->dateId = $param;
 		$this->redirectParam = $this->dateId;
-		$this->training = $this->trainings->getByDate($this->dateId);
+		$this->training = $this->trainingDates->get($this->dateId);
 		$this->applications = $this->trainingApplications->getByDate($this->dateId);
 		$attendedStatuses = $this->trainingApplications->getAttendedStatuses();
 		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
@@ -99,7 +98,7 @@ class UcastniciPresenter extends BasePresenter
 			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
 		}
 
-		$this->training = $this->trainings->getByDate($application->dateId);
+		$this->training = $this->trainingDates->get($application->dateId);
 
 		$this->template->pageTitle = 'Soubory';
 		$this->template->files     = $files;
@@ -116,7 +115,7 @@ class UcastniciPresenter extends BasePresenter
 		$this->applicationId = $param;
 		$this->review = $this->trainings->getReviewByApplicationId($this->applicationId);
 
-		$date = $this->trainings->getByDate($this->review->dateId);
+		$date = $this->trainingDates->get($this->review->dateId);
 
 		$this->template->pageTitle          = 'Ohlasy';
 		$this->template->applicationName    = $this->review->applicationName;
@@ -134,7 +133,7 @@ class UcastniciPresenter extends BasePresenter
 		$this->applicationId = $param;
 		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
 		$this->dateId = $this->application->dateId;
-		$training = $this->trainings->getByDate($this->application->dateId);
+		$training = $this->trainingDates->get($this->application->dateId);
 
 		$this->template->pageTitle     = "{$this->application->name}";
 		$this->template->applicationId = $this->applicationId;
@@ -456,11 +455,37 @@ class UcastniciPresenter extends BasePresenter
 		$name = $this->trainingApplications->addFile($this->training, $values->file, $this->applicationIdsAttended);
 
 		$this->flashMessage(
-			Html::el()->add('Soubor ')
-				->add(Html::el('code')->setText($name))
+			\Nette\Utils\Html::el()->add('Soubor ')
+				->add(\Nette\Utils\Html::el('code')->setText($name))
 				->add(' byl přidán')
 		);
 
+		$this->redirect($this->getAction(), $this->redirectParam);
+	}
+
+
+	protected function createComponentDate($formName)
+	{
+		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates);
+		$form->setTrainingDate($this->trainingDates->get($this->dateId));
+		$form->onSuccess[] = new \Nette\Callback($this, 'submittedDate');
+	}
+
+
+	public function submittedDate($form)
+	{
+		$values = $form->getValues();
+		$this->trainingDates->update(
+			$this->dateId,
+			$values->training,
+			$values->venue,
+			$values->start,
+			$values->end,
+			$values->status,
+			$values->public,
+			$values->cooperation
+		);
+		$this->flashMessage('Termín upraven');
 		$this->redirect($this->getAction(), $this->redirectParam);
 	}
 

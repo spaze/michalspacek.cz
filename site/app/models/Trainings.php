@@ -273,28 +273,43 @@ class Trainings extends BaseModel
 	}
 
 
-	public function getByDate($dateId)
+	public function getNames()
 	{
-		$result = $this->database->fetch(
+		$result = $this->database->fetchAll(
 			'SELECT
-				d.id_date AS dateId,
-				t.action,
-				t.name,
-				d.start,
-				d.end,
-				d.public,
-				s.status,
-				v.href AS venueHref,
-				v.name AS venueName,
-				v.name_extended AS venueNameExtended,
-				v.city AS venueCity
-			FROM training_dates d
-				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_venues v ON d.key_venue = v.id_venue
-				JOIN training_date_status s ON d.key_status = s.id_status
-			WHERE
-				d.id_date = ?',
-			$dateId
+				t.id_training AS id,
+				t.name
+			FROM trainings t
+			ORDER BY
+				t.id_training'
+		);
+		return $result;
+	}
+
+
+	public function getVenues()
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				v.id_venue AS id,
+				v.name
+			FROM training_venues v
+			ORDER BY
+				v.id_venue'
+		);
+		return $result;
+	}
+
+
+	public function getCooperations()
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				c.id_cooperation AS id,
+				c.name
+			FROM training_cooperations c
+			ORDER BY
+				c.id_cooperation'
 		);
 		return $result;
 	}

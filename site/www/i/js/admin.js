@@ -54,6 +54,12 @@ $(document).ready(function() {
 	});
 	$('#pridat-soubor-container').hide();
 
+	$('#upravit-termin a[href="#upravit-termin"]').click(function() {
+		$('#upravit-termin-container').slideToggle('fast');
+		return false;
+	});
+	$('#upravit-termin-container').hide();
+
 	$('#statuses td[data-date]')
 		.click(function() {
 			$('#date-' + $(this).data('date')).slideToggle('fast');
