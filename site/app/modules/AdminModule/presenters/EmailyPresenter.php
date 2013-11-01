@@ -14,9 +14,9 @@ class EmailyPresenter extends BasePresenter
 {
 
 
-	public function actionMaterialy()
+	public function actionDefault()
 	{
-		$this->template->pageTitle = 'Materiály ze školení';
+		$this->template->pageTitle = 'E-maily k odeslání';
 
 		$this->template->applications = $this->trainingApplications->getByStatus(TrainingApplications::STATUS_ATTENDED);
 		foreach ($this->template->applications as $application) {
@@ -28,12 +28,6 @@ class EmailyPresenter extends BasePresenter
 				$this->template->applications[] = $application;
 			}
 		}
-	}
-
-
-	public function renderDefault()
-	{
-		$this->template->pageTitle = 'Emaily';
 	}
 
 

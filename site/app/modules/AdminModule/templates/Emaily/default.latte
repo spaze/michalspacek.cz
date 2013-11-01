@@ -1,7 +1,6 @@
 {define #menu}
 &raquo; <a n:href=":Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
-&raquo; <a n:href="Emaily:">Emaily</a>
 {/define}
 
 {define #subjectAttended}
@@ -81,6 +80,7 @@ http://twitter.com/spazef0rze
 {/define}
 
 {define #content}
+<p n:if="!$applications">Žádné e-maily k odeslání, hurá!</p>
 <p n:foreach="$applications as $application">
 	{capture $subject}subject{$application->status|lower|firstupper}{/capture}
 	{capture $body}body{$application->status|lower|firstupper}{/capture}
