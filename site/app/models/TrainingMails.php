@@ -35,9 +35,12 @@ class TrainingMails extends BaseModel
 		$this->trainingDates = $trainingDates;
 	}
 
-	public function sendSignUpMail($applicationId, $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
+
+	public function sendSignUpMail($applicationId, \Nette\Templating\FileTemplate $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
 	{
-		\Nette\Diagnostics\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$trainingAction}");
+		\Nette\Diagnostics\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$training}");
+
+		$template->setFile($this->templatesDir . 'trainingSignUp.latte');
 
 		$template->training     = $training;
 		$template->trainingName = $trainingName;
@@ -97,6 +100,7 @@ class TrainingMails extends BaseModel
 		$template->application = $application;
 		$this->sendMail($application->email, $application->name, $template);
 	}
+
 
 	public function sendMaterials(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template)
 	{
