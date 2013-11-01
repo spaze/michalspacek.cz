@@ -362,6 +362,8 @@ class UcastniciPresenter extends BasePresenter
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
 			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', $rules['email'][Form::MAX_LENGTH]);
+		$form->addCheckbox('familiar', 'Tykání:')
+			->setDefaultValue($this->application->familiar);
 		$form->addText('company', 'Společnost:')
 			->setDefaultValue($this->application->company)
 			->addCondition(Form::FILLED)
@@ -433,7 +435,8 @@ class UcastniciPresenter extends BasePresenter
 			$values->price,
 			$values->discount,
 			$values->invoiceId,
-			$values->paid
+			$values->paid,
+			$values->familiar
 		);
 		$this->redirect('termin', $this->dateId);
 	}

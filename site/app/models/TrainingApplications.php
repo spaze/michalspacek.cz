@@ -58,6 +58,7 @@ class TrainingApplications extends BaseModel
 			'SELECT
 				a.name,
 				a.email,
+				a.familiar,
 				s.status,
 				a.status_time AS statusTime,
 				d.id_date AS dateId,
@@ -229,7 +230,7 @@ class TrainingApplications extends BaseModel
 	}
 
 
-	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $price = null, $discount = null, $invoiceId = null, $paid = null)
+	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $price = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false)
 	{
 		if ($paid) {
 			$paid = new \DateTime($paid);
@@ -241,6 +242,7 @@ class TrainingApplications extends BaseModel
 				'name'           => $name,
 				'email'          => $email,
 				'company'        => $company,
+				'familiar'       => $familiar,
 				'street'         => $street,
 				'city'           => $city,
 				'zip'            => $zip,
@@ -376,6 +378,7 @@ class TrainingApplications extends BaseModel
 				a.status_time AS statusTime,
 				a.name,
 				a.email,
+				a.familiar,
 				a.company,
 				a.street,
 				a.city,

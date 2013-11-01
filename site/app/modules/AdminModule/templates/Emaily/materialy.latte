@@ -9,6 +9,15 @@ Materiály ze školení {$application->trainingName}
 {/define}
 
 {define #bodyAttended}
+{if $application->familiar}
+Ahoj!
+
+Ještě jednou bych ti chtěl poděkovat za účast na školení
+{$application->trainingName} a doufám, že splnilo tvoje očekávání.
+
+Na níže uvedeném odkazu si pro tvoji osobní potřebu můžeš stáhnout
+materiály, které jsme na školení použili.
+{else}
 Dobrý den!
 
 Ještě jednou bych Vám chtěl poděkovat za účast na školení
@@ -16,12 +25,20 @@ Ještě jednou bych Vám chtěl poděkovat za účast na školení
 
 Na níže uvedeném odkazu si pro Vaši osobní potřebu můžete stáhnout
 materiály, které jsme na školení použili.
+{/if}
 
 {link '//:Skoleni:soubory' $application->trainingAction, $application->accessToken}
+(pozor na zalomení odkazu)
 
+{if $application->familiar}
+Zároveň bych tě chtěl poprosit o krátké shrnutí tvého dojmu ze
+školení včetně případné kritiky. Pokud by ti to nevadilo, tak bych
+tento komentář později zveřejnil na svých stránkách.
+{else}
 Zároveň bych Vás chtěl poprosit o krátké shrnutí Vašeho dojmu ze
 školení včetně případné kritiky. Pokud by Vám to nevadilo, tak bych
 tento komentář později zveřejnil na svých stránkách.
+{/if}
 
 Díky,
 Michal Špaček
