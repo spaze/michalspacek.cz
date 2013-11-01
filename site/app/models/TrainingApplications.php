@@ -56,6 +56,7 @@ class TrainingApplications extends BaseModel
 	{
 		return $this->database->fetchAll(
 			'SELECT
+				a.id_application AS id,
 				a.name,
 				a.email,
 				a.familiar,

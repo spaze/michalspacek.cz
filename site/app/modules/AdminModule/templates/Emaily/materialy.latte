@@ -84,9 +84,13 @@ http://twitter.com/spazef0rze
 <p n:foreach="$applications as $application">
 	{capture $subject}subject{$application->status|lower|firstupper}{/capture}
 	{capture $body}body{$application->status|lower|firstupper}{/capture}
-	<div><strong>{$iterator->counter}.</strong></div>
-	<div><input type="text" class="selectAll big" value="{$application->name} <{$application->email}>"></div>
-	<div><input type="text" class="selectAll big" value="{include #$subject, application => $application}"></div>
-	<div><textarea class="selectAll big">{include #$body, application => $application}</textarea></div>
+	<div><strong>{$iterator->counter}.</strong> <a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></div>
+	{var $missingFiles = $application->status == \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED && !$application->files}
+	<div class="flash error" n:if="$missingFiles">
+		<strong>Není nahrán žádný soubor!</strong>
+	</div>
+	<div><input type="text" class="selectAll big" readonly="readonly" value="{$application->name} <{$application->email}>" n:attr="disabled => $missingFiles"></div>
+	<div><input type="text" class="selectAll big" readonly="readonly" value="{include #$subject, application => $application}" n:attr="disabled => $missingFiles"></div>
+	<div><textarea class="selectAll big" readonly="readonly" n:attr="disabled => $missingFiles">{include #$body, application => $application}</textarea></div>
 </p>
 {/define}

@@ -19,6 +19,9 @@ class EmailyPresenter extends BasePresenter
 		$this->template->pageTitle = 'Materiály ze školení';
 
 		$this->template->applications = $this->trainingApplications->getByStatus(TrainingApplications::STATUS_ATTENDED);
+		foreach ($this->template->applications as $application) {
+			$application->files = $this->trainingApplications->getFiles($application->id);
+		}
 
 		foreach ($this->trainingApplications->getByStatus(TrainingApplications::STATUS_TENTATIVE) as $application) {
 			if ($this->trainingDates->get($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
