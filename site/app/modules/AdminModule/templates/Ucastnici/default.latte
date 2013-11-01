@@ -4,22 +4,22 @@
 	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
 		<tr>
-			<td width="10"><small>{$iterator->getCounter()}.</small></td>
-			<td width="80">
+			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
+			<td class="dateCell">
 				<strong n:tag-if="$upcoming">
 				<small n:tag-if="!$upcoming && $training->start > $now">
 					<a n:href="ucastnici:termin $training->dateId">{$training->start|date:'j. n. Y'}</a>
 				</small>
 				</strong>
 			</td>
-			<td width="10">
+			<td class="iconCell">
 				<small title="{$training->status}">
 					{if $training->status == \MichalSpacekCz\TrainingDates::STATUS_CONFIRMED}&#x2714;{/if}
 					{if $training->status == \MichalSpacekCz\TrainingDates::STATUS_TENTATIVE}&#x2731;{/if}
 					{if $training->status == \MichalSpacekCz\TrainingDates::STATUS_CANCELED}&#x2716;{/if}
 				</small>
 			</td>
-			<td width="200" data-date="{$training->dateId}">{$training->name} ({$training->applications|length})</td>
+			<td class="nameCell" data-date="{$training->dateId}">{$training->name} ({$training->applications|length})</td>
 			<td><small>{$training->venueCity}{if !$training->public}, {$training->venueName}{/if}</small></td>
 		</tr>
 		<tr id="date-{$training->dateId}">
