@@ -37,6 +37,7 @@ class EmailyPresenter extends BasePresenter
 	public function submittedMails($form)
 	{
 		$values = $form->getValues();
+		$sent = false;
 		foreach ($values->applications as $id => $send) {
 			if (!$send || !isset($this->applications[$id])) {
 				continue;
@@ -45,14 +46,20 @@ class EmailyPresenter extends BasePresenter
 				case TrainingApplications::STATUS_TENTATIVE:
 					$this->trainingMails->sendInvitation($this->applications[$id], $this->createTemplate());
 					$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_INVITED);
+					$sent = true;
 					break;
 				case TrainingApplications::STATUS_ATTENDED:
 					$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate());
 					$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_MATERIALS_SENT);
+					$sent = true;
 					break;
 			}
 		}
-		$this->flashMessage('E-maily odeslány');
+		if ($sent) {
+			$this->flashMessage('E-maily odeslány');
+		} else {
+			$this->flashMessage('Nebyl odeslán žádný e-mail', 'notice');
+		}
 		$this->redirect('Homepage:');
 	}
 

@@ -163,6 +163,7 @@ div.flash {
     margin: 1em 0;
     border: 2px solid #EC2;
 }
+.error { color: #F34; }
 div.error {
     color: #F34;
     background-color: #FEE;

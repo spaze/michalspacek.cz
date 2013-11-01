@@ -18,6 +18,10 @@
 			<td><small>{$application->email}</small></td>
 			<td>{$application->company}</td>
 			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
+			<td>
+				{var $missingFiles = $application->status == \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED && !$application->files}
+				<strong n:if="$missingFiles" class="error">Není nahrán žádný soubor!</strong>
+			</td>
 		</tr>
 	</tbody>
 </table>

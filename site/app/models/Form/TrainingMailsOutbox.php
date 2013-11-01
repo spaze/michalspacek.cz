@@ -18,8 +18,10 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 		$container = $this->addContainer('applications');
 
 		foreach ($applications as $application) {
+			$missingFiles = ($application->status == \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED && !$application->files);
 			$container->addCheckbox($application->id)
-				->setDefaultValue(true);
+				->setDefaultValue(!$missingFiles)
+				->setDisabled($missingFiles);
 		}
 
 		$this->addSubmit('submit', 'Odeslat');
