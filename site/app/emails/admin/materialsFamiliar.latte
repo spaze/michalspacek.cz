@@ -1,0 +1,23 @@
+{var $mail->subject = 'Materiály ze školení ' . $application->trainingName}
+Ahoj!
+
+Ještě jednou bych ti chtěl poděkovat za účast na školení
+{$application->trainingName} a doufám, že splnilo tvoje očekávání.
+
+Na níže uvedeném odkazu si pro tvoji osobní potřebu můžeš stáhnout
+materiály, které jsme na školení použili.
+
+{link '//:Skoleni:soubory' $application->trainingAction, $application->accessToken}
+(pozor na zalomení odkazu)
+
+Zároveň bych tě chtěl poprosit o krátké shrnutí tvého dojmu ze
+školení včetně případné kritiky. Pokud by ti to nevadilo, tak bych
+tento komentář později zveřejnil na svých stránkách.
+
+Díky,
+Michal Špaček
+
+-- 
+Michal Špaček
+http://www.michalspacek.cz
+http://twitter.com/spazef0rze

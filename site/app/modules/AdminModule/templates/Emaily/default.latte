@@ -3,94 +3,26 @@
 &raquo; <a n:href="Homepage:">Administrace</a>
 {/define}
 
-{define #subjectAttended}
-Materiály ze školení {$application->trainingName}
-{/define}
-
-{define #bodyAttended}
-{if $application->familiar}
-Ahoj!
-
-Ještě jednou bych ti chtěl poděkovat za účast na školení
-{$application->trainingName} a doufám, že splnilo tvoje očekávání.
-
-Na níže uvedeném odkazu si pro tvoji osobní potřebu můžeš stáhnout
-materiály, které jsme na školení použili.
-{else}
-Dobrý den!
-
-Ještě jednou bych Vám chtěl poděkovat za účast na školení
-{$application->trainingName} a doufám, že splnilo Vaše očekávání.
-
-Na níže uvedeném odkazu si pro Vaši osobní potřebu můžete stáhnout
-materiály, které jsme na školení použili.
-{/if}
-
-{link '//:Skoleni:soubory' $application->trainingAction, $application->accessToken}
-(pozor na zalomení odkazu)
-
-{if $application->familiar}
-Zároveň bych tě chtěl poprosit o krátké shrnutí tvého dojmu ze
-školení včetně případné kritiky. Pokud by ti to nevadilo, tak bych
-tento komentář později zveřejnil na svých stránkách.
-{else}
-Zároveň bych Vás chtěl poprosit o krátké shrnutí Vašeho dojmu ze
-školení včetně případné kritiky. Pokud by Vám to nevadilo, tak bych
-tento komentář později zveřejnil na svých stránkách.
-{/if}
-
-Díky,
-Michal Špaček
-
--- 
-Michal Špaček
-http://www.michalspacek.cz
-http://twitter.com/spazef0rze
-{/define}
-
-{define #subjectTentative}
-Pozvánka na školení {$application->trainingName}
-{/define}
-
-{define #bodyTentative}
-Dobrý den,
-
-posílám pozvánku na školení {$application->trainingName} na které jste se
-nezávazně přihlásil na mých webových stránkách dne {$application->statusTime|date:'j. n. Y'}.
-
-Termín školení je {$application->trainingStart|date:'j. n. Y'} od {$application->trainingStart|date:'H:i'}
-na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
-
-Přihlaste se prosím na adrese
-{link '//:Skoleni:prihlaska' $application->trainingAction, $application->accessToken}
-
-Registrační formulář bude předvyplněn údaji, které jste zadal při
-nezávazné registraci. Pokud z jakýchkoliv důvodů nemůžete na školení
-přijít, dejte mi vědět, abych mohl nabídnout místo dalším zájemcům.
-
-Pokud máte nějaký dotaz, neváhejte mi napsat.
-
-Těším se brzy na shledanou!
-Michal Špaček
-
--- 
-Michal Špaček
-http://www.michalspacek.cz
-http://twitter.com/spazef0rze
-{/define}
-
 {define #content}
 <p n:if="!$applications">Žádné e-maily k odeslání, hurá!</p>
-<p n:foreach="$applications as $application">
-	{capture $subject}subject{$application->status|lower|firstupper}{/capture}
-	{capture $body}body{$application->status|lower|firstupper}{/capture}
-	<div><strong>{$iterator->counter}.</strong> <a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></div>
-	{var $missingFiles = $application->status == \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED && !$application->files}
-	<div class="flash error" n:if="$missingFiles">
-		<strong>Není nahrán žádný soubor!</strong>
-	</div>
-	<div><input type="text" class="selectAll big" readonly="readonly" value="{$application->name} <{$application->email}>" n:attr="disabled => $missingFiles"></div>
-	<div><input type="text" class="selectAll big" readonly="readonly" value="{include #$subject, application => $application}" n:attr="disabled => $missingFiles"></div>
-	<div><textarea class="selectAll big" readonly="readonly" n:attr="disabled => $missingFiles">{include #$body, application => $application}</textarea></div>
-</p>
+{if $applications}
+<p></p>
+{form mails}
+{formContainer applications}
+<table>
+	<tbody n:inner-foreach="$applications as $application">
+		<tr>
+			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
+			<td>{input $application->id}</td>
+			<td><a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></td>
+			<td><small>{$application->email}</small></td>
+			<td>{$application->company}</td>
+			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
+		</tr>
+	</tbody>
+</table>
+{/formContainer}
+<p>{input submit}</p>
+{/form}
+{/if}
 {/define}

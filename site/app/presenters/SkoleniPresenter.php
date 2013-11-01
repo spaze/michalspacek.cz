@@ -286,7 +286,7 @@ class SkoleniPresenter extends BasePresenter
 						$values->note
 					);
 				}
-				$this->trainingApplications->sendSignUpMail(
+				$this->trainingMails->sendSignUpMail(
 					$applicationId,
 					$this->createTemplate()->setFile(dirname(__DIR__) . '/templates/Skoleni/signUpMail.latte'),
 					$values->email,

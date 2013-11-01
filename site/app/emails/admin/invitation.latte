@@ -1,0 +1,26 @@
+{var $mail->subject = 'Pozvánka na školení ' . $application->trainingName}
+Dobrý den,
+
+posílám pozvánku na školení {$application->trainingName} na které jste se
+nezávazně přihlásil na mých webových stránkách dne {$application->statusTime|date:'j. n. Y'}.
+
+Termín školení je {$application->trainingStart|date:'j. n. Y'} od {$application->trainingStart|date:'H:i'}
+na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
+
+Přihlaste se prosím na adrese
+{link '//:Skoleni:prihlaska' $application->trainingAction, $application->accessToken}
+(pozor na zalomení odkazu)
+
+Registrační formulář bude předvyplněn údaji, které jste zadal při
+nezávazné registraci. Pokud z jakýchkoliv důvodů nemůžete na školení
+přijít, dejte mi vědět, abych mohl nabídnout místo dalším zájemcům.
+
+Pokud máte nějaký dotaz, neváhejte mi napsat.
+
+Těším se brzy na shledanou!
+Michal Špaček
+
+-- 
+Michal Špaček
+http://www.michalspacek.cz
+http://twitter.com/spazef0rze

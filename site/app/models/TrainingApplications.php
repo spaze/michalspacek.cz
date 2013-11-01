@@ -60,6 +60,7 @@ class TrainingApplications extends BaseModel
 				a.name,
 				a.email,
 				a.familiar,
+				a.company,
 				s.status,
 				a.status_time AS statusTime,
 				d.id_date AS dateId,
@@ -554,34 +555,6 @@ class TrainingApplications extends BaseModel
 		}
 		$this->database->commit();
 		return $name;
-	}
-
-
-	public function sendSignUpMail($applicationId, $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
-	{
-		\Nette\Diagnostics\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$training}");
-
-		$template->training     = $training;
-		$template->trainingName = $trainingName;
-		$template->start        = $start;
-		$template->venueName    = $venueName;
-		$template->venueNameExtended = $venueNameExtended;
-		$template->venueAddress = $venueAddress;
-		$template->venueCity    = $venueCity;
-
-		$mail = new \Nette\Mail\Message();
-		$mail->setFrom($this->emailFrom)
-			->addTo($recipientAddress, $recipientName)
-			->addBcc($this->emailFrom)
-			->setBody($template)
-			->clearHeader('X-Mailer')  // Hide Nette Mailer banner
-			->send();
-	}
-
-
-	public function setEmailFrom($from)
-	{
-		$this->emailFrom = $from;
 	}
 
 
