@@ -1,8 +1,7 @@
 <?php
 namespace AdminModule;
 
-use \MichalSpacekCz\TrainingApplications,
-	\MichalSpacekCz\TrainingDates;
+use \MichalSpacekCz\TrainingApplications;
 
 /**
  * Emaily presenter.
@@ -43,11 +42,13 @@ class EmailyPresenter extends BasePresenter
 				continue;
 			}
 			switch ($this->applications[$id]->status) {
-				case \MichalSpacekCz\TrainingApplications::STATUS_TENTATIVE:
+				case TrainingApplications::STATUS_TENTATIVE:
 					$this->trainingMails->sendInvitation($this->applications[$id], $this->createTemplate());
+					$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_INVITED);
 					break;
-				case \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED:
+				case TrainingApplications::STATUS_ATTENDED:
 					$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate());
+					$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_MATERIALS_SENT);
 					break;
 			}
 		}

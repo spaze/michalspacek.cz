@@ -14,6 +14,7 @@ class TrainingApplications extends BaseModel
 
 	const STATUS_CREATED             = 'CREATED';              // 1
 	const STATUS_TENTATIVE           = 'TENTATIVE';            // 2
+	const STATUS_INVITED             = 'INVITED';              // 3
 	const STATUS_SIGNED_UP           = 'SIGNED_UP';            // 4
 	const STATUS_ATTENDED            = 'ATTENDED';             // 7
 	const STATUS_MATERIALS_SENT      = 'MATERIALS_SENT';       // 8
