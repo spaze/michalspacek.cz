@@ -23,6 +23,7 @@ class RouterFactory
 		$router[] = new Route('prednasky/<name>[/<slide>]', 'Prednasky:prednaska');
 		$router[] = new Route('soubory[/<action>]/<filename>', 'Soubory:soubor');
 		$router[] = new Route('skoleni/<name>[/<action>[/<param>]]', 'Skoleni:skoleni');
+		$router[] = new Route('r/<action>/<token>', 'R:default');
 		$router[] = new Route('<presenter>[/<action>]', 'Homepage:default');
 		return $router;
 	}

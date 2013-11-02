@@ -314,7 +314,7 @@ class TrainingApplications extends BaseModel
 
 	private function generateAccessCode()
 	{
-		return \Nette\Utils\Strings::random(mt_rand(32, 64), '0-9a-zA-Z');
+		return \Nette\Utils\Strings::random(mt_rand(32, 48), '0-9a-zA-Z');
 	}
 
 
