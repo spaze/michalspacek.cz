@@ -252,7 +252,7 @@ class TrainingApplications extends BaseModel
 				'company_id'     => $companyId,
 				'company_tax_id' => $companyTaxId,
 				'note'           => $note,
-				'price'          => ($price ?: null),
+				'price'          => ($price || $discount ? $price : null),
 				'discount'       => ($discount ?: null),
 				'invoice_id'     => ($invoiceId ?: null),
 				'paid'           => ($paid ?: null),
