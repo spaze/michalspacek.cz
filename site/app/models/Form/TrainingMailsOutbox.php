@@ -1,6 +1,8 @@
 <?php
 namespace MichalSpacekCz\Form;
 
+use \MichalSpacekCz\TrainingApplications;
+
 /**
  * E-mails to send form.
  *
@@ -15,13 +17,51 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 	{
 		parent::__construct($parent, $name);
 	
-		$container = $this->addContainer('applications');
+		$applicationsContainer = $this->addContainer('applications');
 
 		foreach ($applications as $application) {
-			$missingFiles = ($application->status == \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED && !$application->files);
-			$container->addCheckbox($application->id)
-				->setDefaultValue(!$missingFiles)
-				->setDisabled($missingFiles);
+			$applicationIdsContainer = $applicationsContainer->addContainer($application->id);
+			$checked = true;
+			$disabled = false;
+			switch ($application->status) {
+				case TrainingApplications::STATUS_ATTENDED:
+					$checked = !$application->files;
+					$disabled = !$checked;
+					break;
+			}
+			$applicationIdsContainer->addCheckbox('send')
+				->setDefaultValue($checked)
+				->setDisabled($disabled);
+			switch ($application->status) {
+				case TrainingApplications::STATUS_SIGNED_UP:
+					$applicationIdsContainer->addText('invoiceId')
+						->setType('number')
+						->setAttribute('placeholder', 'Faktura č.')
+						->setAttribute('title', 'Faktura č.')
+						->setDefaultValue($application->invoiceId)
+						->addConditionOn($applicationIdsContainer['send'], self::FILLED)
+							->addRule(self::FILLED, 'Chybí číslo faktury');
+					$applicationIdsContainer->addUpload('invoice')
+						->setAttribute('title', 'Faktura v PDF')
+						->addConditionOn($applicationIdsContainer['send'], self::FILLED)
+							->addRule(self::FILLED, 'Chybí faktura')
+							->addRule(self::MIME_TYPE, 'Faktura není v PDF', 'application/pdf');
+					$applicationIdsContainer->addText('price')
+						->setType('number')
+						->setAttribute('class', 'price')
+						->setAttribute('placeholder', 'Cena v Kč po případné slevě')
+						->setAttribute('title', 'Cena v Kč po případné slevě')
+						->setDefaultValue($application->price)
+						->addConditionOn($applicationIdsContainer['send'], self::FILLED)
+							->addRule(self::FILLED, 'Chybí cena');
+					$applicationIdsContainer->addText('discount')
+						->setType('number')
+						->setAttribute('class', 'price')
+						->setAttribute('placeholder', 'Sleva v procentech')
+						->setAttribute('title', 'Sleva v procentech')
+						->setDefaultValue($application->discount);
+					break;
+			}
 		}
 
 		$this->addSubmit('submit', 'Odeslat');

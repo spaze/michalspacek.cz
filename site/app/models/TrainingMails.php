@@ -88,6 +88,10 @@ class TrainingMails extends BaseModel
 			}
 		}
 
+		foreach ($this->trainingApplications->getByStatus(TrainingApplications::STATUS_SIGNED_UP) as $application) {
+			$applications[] = $application;
+		}
+
 		return $applications;
 	}
 
@@ -116,9 +120,22 @@ class TrainingMails extends BaseModel
 	}
 
 
-	private function sendMail($recipientAddress, $recipientName, $template)
+	public function sendInvoice(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, \Nette\Http\FileUpload $invoice)
+	{
+		\Nette\Diagnostics\Debugger::log("Sending invoice email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
+
+		$template->setFile($this->templatesDir . 'admin/invoice.latte');
+		$template->application = $application;
+		$this->sendMail($application->email, $application->name, $template, array($invoice->getName() => $invoice->getTemporaryFile()));
+	}
+
+
+	private function sendMail($recipientAddress, $recipientName, $template, array $attachments = array())
 	{
 		$mail = new \Nette\Mail\Message();
+		foreach ($attachments as $name => $file) {
+			$mail->addAttachment($name, file_get_contents($file));
+		}
 		$mail->setFrom($this->emailFrom)
 			->addTo($recipientAddress, $recipientName)
 			->addBcc($this->emailFrom)

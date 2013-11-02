@@ -183,3 +183,7 @@ div.notice {
 #pridat-ucastniky-container table { font-size: 75%; }
 #pridat-ucastniky-container table input[type=text] { width: 78px; }
 #pridat-ucastniky-container table .highlight { background-color: yellow; }
+#frm-mails input { font-size: 60%; }
+#frm-mails input[type=number] { width: 75px; }
+#frm-mails input[type=number].price { width: 50px; }
+#frm-mails input[type=file] { width: 120px; }

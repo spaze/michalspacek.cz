@@ -8,20 +8,32 @@
 {if $applications}
 <p></p>
 {form mails}
+<fieldset id="chyby" n:if="$form->hasErrors()">
+	<legend><strong>Chyby</strong></legend>
+	<strong>E-maily neodeslány, protože:</strong>
+	<ul>
+		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+	</ul>
+</fieldset>
 {formContainer applications}
 <table>
 	<tbody n:inner-foreach="$applications as $application">
 		<tr>
+			{formContainer $application->id}
 			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
-			<td>{input $application->id}</td>
+			<td>{input send}</td>
 			<td><a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></td>
 			<td><small>{$application->email}</small></td>
 			<td>{$application->company}</td>
 			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
 			<td>
-				{var $missingFiles = $application->status == \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED && !$application->files}
-				<strong n:if="$missingFiles" class="error">Není nahrán žádný soubor!</strong>
+				{if $application->status == \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED}
+					<strong n:if="!$application->files" class="error">Není nahrán žádný soubor!</strong>
+				{elseif $application->status == \MichalSpacekCz\TrainingApplications::STATUS_SIGNED_UP}
+					{input invoiceId} {input invoice} {input price} {input discount}
+				{/if}
 			</td>
+			{/formContainer}
 		</tr>
 	</tbody>
 </table>

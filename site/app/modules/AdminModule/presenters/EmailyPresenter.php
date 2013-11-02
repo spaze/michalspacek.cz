@@ -38,8 +38,8 @@ class EmailyPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 		$sent = false;
-		foreach ($values->applications as $id => $send) {
-			if (!$send || !isset($this->applications[$id])) {
+		foreach ($values->applications as $id => $data) {
+			if (empty($data->send) || !isset($this->applications[$id])) {
 				continue;
 			}
 			switch ($this->applications[$id]->status) {
@@ -52,6 +52,14 @@ class EmailyPresenter extends BasePresenter
 					$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate());
 					$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_MATERIALS_SENT);
 					$sent = true;
+					break;
+				case TrainingApplications::STATUS_SIGNED_UP:
+					if ($data->invoice->isOk()) {
+						$this->trainingApplications->updateApplicationInvoiceData($id, $data->price, $data->discount, $data->invoiceId);
+						$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $data->invoice);
+						$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_INVOICE_SENT);
+						$sent = true;
+					}
 					break;
 			}
 		}

@@ -16,6 +16,8 @@ class TrainingApplications extends BaseModel
 	const STATUS_TENTATIVE           = 'TENTATIVE';            // 2
 	const STATUS_INVITED             = 'INVITED';              // 3
 	const STATUS_SIGNED_UP           = 'SIGNED_UP';            // 4
+	const STATUS_INVOICE_SENT        = 'INVOICE_SENT';         // 5
+	const STATUS_NOTIFIED            = 'NOTIFIED';             // 6
 	const STATUS_ATTENDED            = 'ATTENDED';             // 7
 	const STATUS_MATERIALS_SENT      = 'MATERIALS_SENT';       // 8
 	const STATUS_ACCESS_TOKEN_USED   = 'ACCESS_TOKEN_USED';    // 9
@@ -72,6 +74,9 @@ class TrainingApplications extends BaseModel
 				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,
 				v.city AS venueCity,
+				a.price,
+				a.discount,
+				a.invoice_id AS invoiceId,
 				a.access_token AS accessToken
 			FROM
 				training_applications a
@@ -257,6 +262,20 @@ class TrainingApplications extends BaseModel
 				'invoice_id'     => ($invoiceId ?: null),
 				'paid'           => ($paid ?: null),
 				'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
+			),
+			$applicationId
+		);
+	}
+
+
+	public function updateApplicationInvoiceData($applicationId, $price, $discount, $invoiceId)
+	{
+		$this->database->query(
+			'UPDATE training_applications SET ? WHERE id_application = ?',
+			array(
+				'price'      => ($price || $discount ? $price : null),
+				'discount'   => ($discount ?: null),
+				'invoice_id' => ($invoiceId ?: null),
 			),
 			$applicationId
 		);
