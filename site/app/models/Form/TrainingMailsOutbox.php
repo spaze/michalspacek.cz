@@ -25,7 +25,7 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 			$disabled = false;
 			switch ($application->status) {
 				case TrainingApplications::STATUS_ATTENDED:
-					$checked = !$application->files;
+					$checked = (bool)$application->files;
 					$disabled = !$checked;
 					break;
 			}
