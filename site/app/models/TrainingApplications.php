@@ -549,7 +549,7 @@ class TrainingApplications extends BaseModel
 
 	public function addFile(\Nette\Database\Row $training, \Nette\Http\FileUpload $file, array $applicationIds)
 	{
-		$name = basename($file->getSanitizedName());
+		$name = basename($file->getName());
 		$file->move($this->filesDir . $training->start->format('Y-m-d') . '/' . $name);
 
 		$datetime = new \DateTime();
