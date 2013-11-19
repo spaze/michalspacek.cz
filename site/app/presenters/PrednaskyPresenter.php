@@ -12,8 +12,13 @@ class PrednaskyPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Přednášky';
-		$this->template->talks     = $this->talks->getAll();
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
+
+		$talks = array();
+		foreach ($this->talks->getAll() as $talk) {
+			$talks[$talk->date->format('Y')][] = $talk;
+		}
+		$this->template->talks = $talks;
 	}
 
 
