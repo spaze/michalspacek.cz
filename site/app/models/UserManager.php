@@ -21,6 +21,9 @@ class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
 
 	public function setKey($key)
 	{
+		if (strlen($key) != 64 || !ctype_xdigit($key)) {
+			throw new \InvalidArgumentException('Key must be 64 characters long and only consist of hexadecimal characters');
+		}
 		$this->key = $key;
 	}
 
