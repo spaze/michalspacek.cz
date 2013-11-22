@@ -41,7 +41,10 @@ common:
 				- setTemplatesDir('../app/emails')
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 		trainingDates: \MichalSpacekCz\TrainingDates
-		authenticator: \MichalSpacekCz\UserManager
+		authenticator:
+			class: \MichalSpacekCz\UserManager
+			setup:
+				- setKey(%authenticator.key%)
 		embed: \MichalSpacekCz\Embed
 		webTracking: \MichalSpacekCz\WebTracking
 
