@@ -12,6 +12,10 @@ class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
 
 	const KNOCK_KNOCK = 'knockKnock';
 
+	const CIPHER_NAME = MCRYPT_RIJNDAEL_128;
+
+	const CIPHER_MODE = MCRYPT_MODE_CBC;
+
 	protected $key;
 
 
@@ -79,7 +83,7 @@ class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
 
 	private function getIvSize()
 	{
-		return $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+		return $ivSize = mcrypt_get_iv_size(self::CIPHER_NAME, self::CIPHER_MODE);
 	}
 
 
@@ -87,7 +91,7 @@ class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
 	{
 		$key = pack('H*', $this->key);
 		$iv = mcrypt_create_iv($this->getIvSize(), MCRYPT_RAND);
-		$encrypted = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $password, MCRYPT_MODE_CBC, $iv);
+		$encrypted = mcrypt_encrypt(self::CIPHER_NAME, $key, $password, self::CIPHER_MODE, $iv);
 		return base64_encode($iv . $encrypted);
 	}
 
@@ -98,7 +102,7 @@ class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
 		$key = pack('H*', $this->key);
 		$iv = substr($encrypted, 0, $this->getIvSize());
 		$encrypted = substr($encrypted, $this->getIvSize());
-		$decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $encrypted, MCRYPT_MODE_CBC, $iv);
+		$decrypted = mcrypt_decrypt(self::CIPHER_NAME, $key, $encrypted, self::CIPHER_MODE, $iv);
 		return rtrim($decrypted, "\0");
 	}
 
