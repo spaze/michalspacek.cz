@@ -69,12 +69,12 @@ class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
 
 	private function calculateHash($password, $salt = null)
 	{
-		return crypt($password, $salt ?: '$2y$07$' . \Nette\Utils\Strings::random(22));
+		return password_hash($password, PASSWORD_DEFAULT);
 	}
 
 	private function verifyHash($password, $hash)
 	{
-		return ($hash === $this->calculateHash($password, $hash));
+		return password_verify($password, $hash);
 	}
 
 	private function getIvSize()
