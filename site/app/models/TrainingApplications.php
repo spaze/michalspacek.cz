@@ -54,6 +54,14 @@ class TrainingApplications extends BaseModel
 		'note'         => array(Form::MAX_LENGTH => 2000),
 	);
 
+	private $statusCallbacks = array();
+
+	public function __construct(\Nette\Database\Connection $connection)
+	{
+		$this->database = $connection;
+		// $this->statusCallbacks[self::STATUS_NOTIFIED] = array($this, 'notifyCallback');
+	}
+
 
 	public function getByStatus($status)
 	{
@@ -364,7 +372,7 @@ class TrainingApplications extends BaseModel
 			$applicationId
 		);
 
-		return $this->database->query(
+		$result = $this->database->query(
 			'INSERT INTO training_application_status_history',
 			array(
 				'key_application'      => $applicationId,
@@ -373,6 +381,12 @@ class TrainingApplications extends BaseModel
 				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
 			)
 		);
+
+		if (isset($this->statusCallbacks[$status]) && is_callable($this->statusCallbacks[$status])) {
+			call_user_func($this->statusCallbacks[$status], $applicationId);
+		}
+
+		return $result;
 	}
 
 
@@ -598,6 +612,43 @@ class TrainingApplications extends BaseModel
 	public function getDataRules()
 	{
 		return $this->dataRules;
+	}
+
+
+	private function notifyCallback($applicationId)
+	{
+		$application = $this->getApplicationById($applicationId);
+		// if ($date->public)
+		$mapping = array(
+			'uvodDoPhp' => '4',
+			'programovaniVPhp5' => '3',
+			'bezpecnostPhpAplikaci' => '1',
+			'vykonnostWebovychAplikaci' => '7',
+		);
+		$postdata = http_build_query(array(
+			'jmeno' => $application->name,
+			'email' => $application->email,
+			'firma' => '',
+			'adresa' => '',
+			'mesto' => '',
+			'psc' => '',
+			'ico' => '',
+			'dic' => '',
+			'poznamka' => 'Michal Špaček',
+			'robot' => 'nospam',
+			'skoleni' => $mapping[$application->action],
+			'termin' => \Nette\Templating\Helpers::date($application->trainingStart, 'Y-m-d'),
+			'submit' => 'Registrovat se',
+		));
+		$options = array(
+			'http' => array(
+				'method' => 'post',
+				'header' => 'Content-type: application/x-www-form-urlencoded',
+				'content' => $postdata
+			)
+		);
+		$context = stream_context_create($options);
+		$result = file_get_contents('http://php.vrana.cz/skoleni.php', false, $context);
 	}
 
 
