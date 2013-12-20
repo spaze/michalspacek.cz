@@ -149,7 +149,6 @@ class UcastniciPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
 		$trainings = $this->trainings->getAllTrainings();
 		foreach ($trainings as $training) {
 			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
