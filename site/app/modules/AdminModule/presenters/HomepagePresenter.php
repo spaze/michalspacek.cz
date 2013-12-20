@@ -14,12 +14,16 @@ class HomepagePresenter extends BasePresenter
 	public function actionDefault()
 	{
 		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
-		$dates = array();
+		$trainings = $this->trainings->getAllTrainingsInterval('-1 week');
 		foreach ($this->trainings->getAllUpcoming() as $training) {
 			foreach ($training->dates as $date) {
-				$date->applications = $this->trainingApplications->getValidByDate($date->dateId);
-				$dates[$date->start->getTimestamp()] = $date;
+				$trainings[] = $date;
 			}
+		}
+		$dates = array();
+		foreach ($trainings as $date) {
+			$date->applications = $this->trainingApplications->getValidByDate($date->dateId);
+			$dates[$date->start->getTimestamp()] = $date;
 		}
 		ksort($dates);
 		$this->template->upcomingApplications = $dates;

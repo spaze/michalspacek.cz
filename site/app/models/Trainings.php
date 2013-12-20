@@ -273,6 +273,35 @@ class Trainings extends BaseModel
 	}
 
 
+	public function getAllTrainingsInterval($from, $to = null)
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				d.id_date AS dateId,
+				t.action,
+				t.name,
+				d.start,
+				d.end,
+				d.public,
+				s.status,
+				v.href AS venueHref,
+				v.name AS venueName,
+				v.name_extended AS venueNameExtended,
+				v.city AS venueCity
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_venues v ON d.key_venue = v.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
+			WHERE d.end BETWEEN ? AND ?
+			ORDER BY
+				d.start',
+			new \DateTime($from),
+			new \DateTime($to)
+		);
+		return $result;
+	}
+
+
 	public function getNames()
 	{
 		$result = $this->database->fetchAll(
