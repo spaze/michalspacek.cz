@@ -15,7 +15,7 @@ RewriteRule wp-login\.php$ - [L]
 # RewriteRule ^donut_track_me.html$ - [L]
 
 # phpinfo() easter egg
-RewriteRule ^info.php$ - [L,T=text/plain]
+RewriteRule ^info\.php$ - [L,T=text/plain]
 
 # Do not display PHP logos (Why here? Because expose_php only works in php.ini, that's why)
 RewriteCond %{QUERY_STRING} ^=PHP
