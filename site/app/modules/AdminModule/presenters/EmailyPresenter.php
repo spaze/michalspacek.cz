@@ -45,19 +45,19 @@ class EmailyPresenter extends BasePresenter
 			switch ($this->applications[$id]->status) {
 				case TrainingApplications::STATUS_TENTATIVE:
 					$this->trainingMails->sendInvitation($this->applications[$id], $this->createTemplate());
-					$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_INVITED);
+					$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVITED);
 					$sent = true;
 					break;
 				case TrainingApplications::STATUS_ATTENDED:
 					$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate());
-					$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_MATERIALS_SENT);
+					$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_MATERIALS_SENT);
 					$sent = true;
 					break;
 				case TrainingApplications::STATUS_SIGNED_UP:
 					if ($data->invoice->isOk()) {
 						$this->trainingApplications->updateApplicationInvoiceData($id, $data->price, $data->discount, $data->invoiceId);
 						$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $data->invoice);
-						$this->trainingApplications->setStatus($id, TrainingApplications::STATUS_INVOICE_SENT);
+						$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVOICE_SENT);
 						$sent = true;
 					}
 					break;

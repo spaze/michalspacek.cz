@@ -20,6 +20,14 @@ common:
 			name: yourluckynumbers
 			expiration: 14 days
 
+	parameters:
+		notifier:
+			vrana:
+				url: http://php.vrana.cz/skoleni.php
+				note: 'Michal Špaček'
+				noSpam: nospam
+				successMarker: 'Děkuji za přihlášku na školení'
+
 	services:
 		database: @Nette\Database\Connection
 		routerFactory: RouterFactory
@@ -47,7 +55,19 @@ common:
 				- setKey(%authenticator.key%)
 		embed: \MichalSpacekCz\Embed
 		webTracking: \MichalSpacekCz\WebTracking
+		vranaNotifier:
+			class: \MichalSpacekCz\Notifier\Vrana
+			setup:
+				- setUrl(%notifier.vrana.url%)
+				- setNote(%notifier.vrana.note%)
+				- setNoSpam(%notifier.vrana.noSpam%)
+				- setSuccessMarker(%notifier.vrana.successMarker%)
 
 production < common:
 
 development < common:
+	parameters:
+		notifier:
+			vrana:
+				url: http://localhost/echo.php
+				note: %notifier.vrana.successMarker%

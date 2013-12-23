@@ -189,7 +189,7 @@ class UcastniciPresenter extends BasePresenter
 		$values = $form->getValues();
 		foreach ($values->applications as $id => $status) {
 			if ($status) {
-				$this->trainingApplications->setStatus($id, $status, $values->date);
+				$this->trainingApplications->updateStatus($id, $status, $values->date);
 			}
 		}
 		$this->redirect($this->getAction(), $this->dateId);

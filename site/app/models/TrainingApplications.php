@@ -28,6 +28,18 @@ class TrainingApplications extends BaseModel
 	const DEFAULT_SOURCE  = 'michal-spacek';
 
 	/**
+	 * php.vrana.cz notifier.
+	 *
+	 * @var \MichalSpacekCz\Notifier\Vrana
+	 */
+	protected $vranaNotifier;
+
+	/**
+	 * @var \MichalSpacekCz\TrainingDates
+	 */
+	protected $trainingDates;
+
+	/**
 	 * Files directory, ends with a slash.
 	 *
 	 * @var string
@@ -56,10 +68,12 @@ class TrainingApplications extends BaseModel
 
 	private $statusCallbacks = array();
 
-	public function __construct(\Nette\Database\Connection $connection)
+	public function __construct(\Nette\Database\Connection $connection, \MichalSpacekCz\Notifier\Vrana $vranaNotifier, \MichalSpacekCz\TrainingDates $trainingDates)
 	{
 		$this->database = $connection;
-		// $this->statusCallbacks[self::STATUS_NOTIFIED] = array($this, 'notifyCallback');
+		$this->vranaNotifier = $vranaNotifier;
+		$this->trainingDates = $trainingDates;
+		$this->statusCallbacks[self::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
 
 
@@ -240,7 +254,7 @@ class TrainingApplications extends BaseModel
 			$companyTaxId,
 			$note
 		);
-		$this->setStatus($applicationId, self::STATUS_SIGNED_UP);
+		$this->setStatus($applicationId, self::STATUS_SIGNED_UP, null);
 		$this->database->commit();
 		return $applicationId;
 	}
@@ -345,7 +359,10 @@ class TrainingApplications extends BaseModel
 	}
 
 
-	public function setStatus($applicationId, $status, $date = null)
+	/**
+	 * Needs to be wrapped in transaction, not for public consumption, updateStatus() instead.
+	 */
+	protected function setStatus($applicationId, $status, $date)
 	{
 		$statusId = $this->getStatusId($status);
 
@@ -387,6 +404,18 @@ class TrainingApplications extends BaseModel
 		}
 
 		return $result;
+	}
+
+
+	public function updateStatus($applicationId, $status, $date = null)
+	{
+		$this->database->beginTransaction();
+		try {
+			$this->setStatus($applicationId, $status, $date);
+			$this->database->commit();
+		} catch (\Exception $e) {
+			$this->database->rollBack();
+		}
 	}
 
 
@@ -604,7 +633,9 @@ class TrainingApplications extends BaseModel
 	public function setAccessTokenUsed(\Nette\Database\Row $application)
 	{
 		if ($application->status != self::STATUS_ACCESS_TOKEN_USED) {
-			$this->setStatus($application->applicationId, self::STATUS_ACCESS_TOKEN_USED);
+			$this->database->beginTransaction();
+			$this->setStatus($application->applicationId, self::STATUS_ACCESS_TOKEN_USED, null);
+			$this->database->commit();
 		}
 	}
 
@@ -618,37 +649,10 @@ class TrainingApplications extends BaseModel
 	private function notifyCallback($applicationId)
 	{
 		$application = $this->getApplicationById($applicationId);
-		// if ($date->public)
-		$mapping = array(
-			'uvodDoPhp' => '4',
-			'programovaniVPhp5' => '3',
-			'bezpecnostPhpAplikaci' => '1',
-			'vykonnostWebovychAplikaci' => '7',
-		);
-		$postdata = http_build_query(array(
-			'jmeno' => $application->name,
-			'email' => $application->email,
-			'firma' => '',
-			'adresa' => '',
-			'mesto' => '',
-			'psc' => '',
-			'ico' => '',
-			'dic' => '',
-			'poznamka' => 'Michal Špaček',
-			'robot' => 'nospam',
-			'skoleni' => $mapping[$application->action],
-			'termin' => \Nette\Templating\Helpers::date($application->trainingStart, 'Y-m-d'),
-			'submit' => 'Registrovat se',
-		));
-		$options = array(
-			'http' => array(
-				'method' => 'POST',
-				'header' => 'Content-type: application/x-www-form-urlencoded',
-				'content' => $postdata
-			)
-		);
-		$context = stream_context_create($options);
-		$result = file_get_contents('http://php.vrana.cz/skoleni.php', false, $context);
+		$date = $this->trainingDates->get($application->dateId);
+		if ($date->public && !$date->cooperationId) {
+			$this->vranaNotifier->addTrainingApplication($application);
+		}
 	}
 
 
