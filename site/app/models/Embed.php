@@ -7,7 +7,7 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Embed extends BaseModel
+class Embed
 {
 
 	const EMBED_SLIDES_SLIDESHARE = 1;

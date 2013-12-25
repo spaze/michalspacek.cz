@@ -9,7 +9,7 @@ use \Nette\Application\UI\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplications extends BaseModel
+class TrainingApplications
 {
 
 	const STATUS_CREATED             = 'CREATED';              // 1
@@ -27,6 +27,9 @@ class TrainingApplications extends BaseModel
 
 	const DEFAULT_SOURCE  = 'michal-spacek';
 
+	/** @var \Nette\Database\Connection */
+	protected $database;
+
 	/**
 	 * php.vrana.cz notifier.
 	 *
@@ -34,9 +37,7 @@ class TrainingApplications extends BaseModel
 	 */
 	protected $vranaNotifier;
 
-	/**
-	 * @var \MichalSpacekCz\TrainingDates
-	 */
+	/** @var \MichalSpacekCz\TrainingDates */
 	protected $trainingDates;
 
 	/**
@@ -67,6 +68,7 @@ class TrainingApplications extends BaseModel
 	);
 
 	private $statusCallbacks = array();
+
 
 	public function __construct(\Nette\Database\Connection $connection, \MichalSpacekCz\Notifier\Vrana $vranaNotifier, \MichalSpacekCz\TrainingDates $trainingDates)
 	{

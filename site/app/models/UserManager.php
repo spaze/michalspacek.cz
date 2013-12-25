@@ -7,7 +7,7 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
+class UserManager implements \Nette\Security\IAuthenticator
 {
 
 	const KNOCK_KNOCK = 'knockKnock';
@@ -16,7 +16,20 @@ class UserManager extends BaseModel implements \Nette\Security\IAuthenticator
 
 	const CIPHER_MODE = MCRYPT_MODE_CBC;
 
+	/** @var \Nette\Database\Connection */
+	protected $database;
+
+	/** @var \Nette\Http\IRequest */
+	protected $httpRequest;
+
 	protected $key;
+
+
+	public function __construct(\Nette\Database\Connection $connection, \Nette\Http\IRequest $httpRequest)
+	{
+		$this->database = $connection;
+		$this->httpRequest = $httpRequest;
+	}
 
 
 	public function setKey($key)

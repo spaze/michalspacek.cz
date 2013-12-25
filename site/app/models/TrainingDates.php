@@ -7,7 +7,7 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingDates extends BaseModel
+class TrainingDates
 {
 
 	const STATUS_CREATED   = 'CREATED';    // 1
@@ -15,7 +15,16 @@ class TrainingDates extends BaseModel
 	const STATUS_CONFIRMED = 'CONFIRMED';  // 3
 	const STATUS_CANCELED  = 'CANCELED';   // 4
 
+	/** @var \Nette\Database\Connection */
+	protected $database;
+
 	private $statusIds = array();
+
+
+	public function __construct(\Nette\Database\Connection $connection)
+	{
+		$this->database = $connection;
+	}
 
 
 	public function get($dateId)

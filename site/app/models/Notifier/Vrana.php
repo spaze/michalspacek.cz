@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Notifier;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Vrana extends \MichalSpacekCz\BaseModel
+class Vrana
 {
 
 	/**

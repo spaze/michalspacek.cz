@@ -7,10 +7,23 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Trainings extends BaseModel
+class Trainings
 {
 
 	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
+
+	/** @var \Nette\Database\Connection */
+	protected $database;
+
+	/** @var \Bare\Formatter\Texy */
+	protected $texyFormatter;
+
+
+	public function __construct(\Nette\Database\Connection $connection, \Bare\Next\Formatter\Texy $texyFormatter)
+	{
+		$this->database = $connection;
+		$this->texyFormatter = $texyFormatter;
+	}
 
 
 	public function getPublicUpcoming()

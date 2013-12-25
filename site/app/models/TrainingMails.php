@@ -7,17 +7,13 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingMails extends BaseModel
+class TrainingMails
 {
 
-	/**
-	 * @var \MichalSpacekCz\TrainingApplications
-	 */
+	/** @var \MichalSpacekCz\TrainingApplications */
 	protected $trainingApplications;
 
-	/**
-	 * @var \MichalSpacekCz\TrainingDates
-	 */
+	/** @var \MichalSpacekCz\TrainingDates */
 	protected $trainingDates;
 
 	/**
@@ -28,9 +24,8 @@ class TrainingMails extends BaseModel
 	protected $templatesDir;
 
 
-	public function __construct(\Nette\Database\Connection $connection, \MichalSpacekCz\TrainingApplications $trainingApplications, \MichalSpacekCz\TrainingDates $trainingDates)
+	public function __construct(\MichalSpacekCz\TrainingApplications $trainingApplications, \MichalSpacekCz\TrainingDates $trainingDates)
 	{
-		$this->database = $connection;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 	}

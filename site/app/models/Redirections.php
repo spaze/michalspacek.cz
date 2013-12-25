@@ -7,8 +7,17 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Redirections extends BaseModel
+class Redirections
 {
+
+	/** @var \Nette\Database\Connection */
+	protected $database;
+
+
+	public function __construct(\Nette\Database\Connection $connection)
+	{
+		$this->database = $connection;
+	}
 
 
 	public function getDestination(\Nette\Http\UrlScript $sourceUrl)

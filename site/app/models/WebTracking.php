@@ -7,7 +7,7 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class WebTracking extends BaseModel
+class WebTracking
 {
 
 	const TRACKING_COOKIE = 'tracking';
@@ -15,6 +15,12 @@ class WebTracking extends BaseModel
 	const TRACKING_DISABLED = 'donut';
 
 	const TRACKING_PATH = '/';
+
+	/** @var \Nette\Http\IRequest */
+	protected $httpRequest;
+
+	/** @var \Nette\Http\IResponse */
+	protected $httpResponse;
 
 
 	public function __construct(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse)

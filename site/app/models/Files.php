@@ -7,8 +7,21 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Files extends BaseModel
+class Files
 {
+
+	/** @var \Nette\Database\Connection */
+	protected $database;
+
+	/** @var \Nette\Http\IRequest */
+	protected $httpRequest;
+
+
+	public function __construct(\Nette\Database\Connection $connection, \Nette\Http\IRequest $httpRequest)
+	{
+		$this->database = $connection;
+		$this->httpRequest = $httpRequest;
+	}
 
 
 	public function getInfo($file)

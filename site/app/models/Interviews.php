@@ -7,8 +7,21 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Interviews extends BaseModel
+class Interviews
 {
+
+	/** @var \Nette\Database\Connection */
+	protected $database;
+
+	/** @var \Bare\Formatter\Texy */
+	protected $texyFormatter;
+
+
+	public function __construct(\Nette\Database\Connection $connection, \Bare\Next\Formatter\Texy $texyFormatter)
+	{
+		$this->database = $connection;
+		$this->texyFormatter = $texyFormatter;
+	}
 
 
 	public function getAll($limit = null)
