@@ -15,11 +15,7 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		parent::startup();
 		if (!$this->user->isLoggedIn()) {
-			try {
-				$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
-			} catch (\Nette\Application\ForbiddenRequestException $e) {
-				$this->redirect(':Homepage:');
-			}
+			$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
 			$this->redirect('Sign:in');
 		}
 	}
