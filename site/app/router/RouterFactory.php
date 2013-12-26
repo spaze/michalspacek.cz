@@ -11,20 +11,13 @@ use Nette\Application\Routers\RouteList,
 class RouterFactory
 {
 
-	/**
-	 * Pattern for matching example.com in www.example.com.
-	 *
-	 * @var string
-	 */
-	const ROOT_DOMAIN_PATTERN = '/([^.]+\.[^.]+)$/';
-
-	/** @var \Nette\Http\IRequest */
-	protected $httpRequest;
+	/** @var string */
+	protected $rootDomain;
 
 
-	public function __construct(\Nette\Http\IRequest $httpRequest)
+	public function setRootDomain($rootDomain)
 	{
-		$this->httpRequest = $httpRequest;
+		$this->rootDomain = $rootDomain;
 	}
 
 
@@ -33,9 +26,8 @@ class RouterFactory
 	 */
 	public function createRouter()
 	{
-		$rootDomain = $this->getRootDomain();
-		$adminHost = "//admin.$rootDomain/";
-		$wwwHost = "//www.$rootDomain/";
+		$adminHost = "//admin.{$this->rootDomain}/";
+		$wwwHost = "//www.{$this->rootDomain}/";
 
 		Route::addStyle('name', 'action');  // let the name param be converted like the action param (foo-bar => fooBar)
 		$router = new RouteList();
@@ -47,17 +39,6 @@ class RouterFactory
 		$router[] = new Route($wwwHost . 'r/<action>/<token>', 'R:default');
 		$router[] = new Route($wwwHost . '<presenter>[/<action>]', 'Homepage:default');
 		return $router;
-	}
-
-
-	protected function getRootDomain()
-	{
-		$host = $this->httpRequest->getUrl()->getHost();
-		$matches = array();
-		if (preg_match(self::ROOT_DOMAIN_PATTERN, $host, $matches)) {
-			$host = $matches[1];
-		}
-		return $host;
 	}
 
 

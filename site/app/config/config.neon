@@ -28,7 +28,10 @@ common:
 
 	services:
 		database: @Nette\Database\Connection
-		routerFactory: RouterFactory
+		routerFactory:
+			class: RouterFactory
+			setup:
+				- setRootDomain(%domain.root%)
 		router: @routerFactory::createRouter
 		texyFormatter: \Bare\Next\Formatter\Texy
 		redirections:  \MichalSpacekCz\Redirections
