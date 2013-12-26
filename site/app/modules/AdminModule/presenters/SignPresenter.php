@@ -15,7 +15,11 @@ class SignPresenter extends \BasePresenter
 	 */
 	private function verify()
 	{
-		$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
+		try {
+			$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
+		} catch (\Nette\Application\ForbiddenRequestException $e) {
+			$this->redirect(':Homepage:');
+		}
 	}
 
 
