@@ -28,9 +28,21 @@ $configurator->createRobotLoader()
 	->addDirectory(__DIR__)
 	->register();
 
+// Root domain
+$rootDomain = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
+if (preg_match('/([^.]+\.[^.:]+)(?::[0-9]+)?$/', $rootDomain, $matches)) {
+	$rootDomain = $matches[1];
+}
+
 // Create Dependency Injection container from config.neon file
 $configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
-$configurator->addConfig(__DIR__ . '/config/config.local.neon', $configurator::NONE); // none section
+$configFiles = array(
+	__DIR__ . "/config/config.extra-{$rootDomain}.neon",
+	__DIR__ . '/config/config.local.neon',
+);
+foreach (array_filter($configFiles, 'is_file') as $filename) {
+	$configurator->addConfig($filename, $configurator::NONE);
+}
 $container = $configurator->createContainer();
 
 $httpResponse = $container->httpResponse;

@@ -62,12 +62,13 @@ common:
 				- setNote(%notifier.vrana.note%)
 				- setNoSpam(%notifier.vrana.noSpam%)
 				- setSuccessMarker(%notifier.vrana.successMarker%)
+		httpResponse:
+			setup:
+				- $cookieDomain(%domain.cookie%)
+		session:
+			setup:
+				- setCookieParameters(/, %domain.cookie%)
 
 production < common:
 
 development < common:
-	parameters:
-		notifier:
-			vrana:
-				url: http://localhost/echo.php
-				note: %notifier.vrana.successMarker%
