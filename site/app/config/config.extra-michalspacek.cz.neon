@@ -1,3 +1,4 @@
-domain:
-	root: michalspacek.cz
-	cookie: .michalspacek.cz
+parameters:
+	domain:
+		root: michalspacek.cz
+		cookie: .michalspacek.cz

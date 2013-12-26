@@ -23,8 +23,6 @@ common:
 	parameters:
 		notifier:
 			vrana:
-				url: http://php.vrana.cz/skoleni.php
-				note: 'Michal Špaček'
 				noSpam: nospam
 				successMarker: 'Děkuji za přihlášku na školení'
 

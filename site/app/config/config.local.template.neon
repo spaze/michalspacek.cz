@@ -1,0 +1,19 @@
+nette:
+	database:
+		default:
+			dsn: 'mysql:host=localhost;dbname=cz_michalspacek'
+			user: ...
+			password: ...
+
+parameters:
+	authenticator:
+		key: ...
+
+	notifier:
+		vrana:
+			url: http://php.vrana.cz/skoleni.php
+			note: 'Michal Špaček'
+
+	domain:
+		root: michalspacek.cz
+		cookie: .michalspacek.cz

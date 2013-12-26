@@ -1,3 +1,4 @@
-domain:
-	root: michalspacek.com
-	cookie: .michalspacek.com
+parameters:
+	domain:
+		root: michalspacek.com
+		cookie: .michalspacek.com
