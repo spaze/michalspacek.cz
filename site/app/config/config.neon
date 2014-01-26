@@ -25,6 +25,9 @@ common:
 			vrana:
 				noSpam: nospam
 				successMarker: 'Děkuji za přihlášku na školení'
+		domain:
+			defaultHost: www
+			staticRoot: %domain.root%
 
 	services:
 		database: @Nette\Database\Connection

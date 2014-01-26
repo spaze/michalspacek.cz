@@ -2,3 +2,5 @@ parameters:
 	domain:
 		root: michalspacek.com
 		cookie: .michalspacek.com
+		domain:
+			staticRoot: michalspacek.cz
