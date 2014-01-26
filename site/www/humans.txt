@@ -1,4 +1,4 @@
-Hello, stranger.
+﻿Hello, stranger.
 
 My name is Michal Špaček -- good luck reading that.
 I do anything and everything development, web security, performance. Also this site.
