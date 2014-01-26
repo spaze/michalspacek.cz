@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8" />
+	<title>Firmy 2.0</title>
+	<link rel="stylesheet" href="/i/css/select2.css" type="text/css">
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/i/js/jquery-2.0.3.min.js"><\/script>')</script>
+	<script src="/i/js/select2.min.js"></script>
+    <script src="/i/js/netteForms.js"></script>
+	<script>
+		$(document).ready(function() {
+			var allTags = {$allTags};
+			$('#search').select2({
+				tags: allTags,
+				separator: ' ',
+				tokenSeparators: [' ', '+'],
+				openOnEnter: false,
+				minimumInputLength: 2
+			});
+			$('#tags').select2({
+				tags: allTags,
+				separator: ' ',
+				tokenSeparators: [',', ' ', '+'],
+				openOnEnter: false,
+				minimumInputLength: 2
+			});
+		});
+	</script>
+</head>
+<body>
+
+<h2>Add</h2>
+{form media}
+<p>{label url /}{input url}</p>
+<p>{label title /}{input title}</p>
+<p>{label published /}{input published}</p>
+<p>{label tags /}{input tags}</p>
+<p>{input submit}</p>
+{/form}
+
+<h2>Search</h2>
+{form search}
+<p>{label search /}{input search}</p>
+<p>{input submit}</p>
+{/form}
+
+<h2>Result</h2>
+<p n:foreach="$urls as $url">
+	<a href="{$url->url}">{$url->title}</a><br>
+	<small>{foreach $url->tags as $tag}<a n:href="this $tag->tag">{$tag->tag}</a>{sep} {/sep}{/foreach}</small>
+</p>
+
+</body>
+</html>
