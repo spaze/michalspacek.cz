@@ -1,0 +1,13 @@
+php_flag display_errors off
+
+RewriteEngine On
+RewriteRule ^i/.+ - [L]
+RewriteRule ^favicon\.ico$ - [L]
+RewriteRule ^robots\.txt$ - [L]
+
+# Do not display PHP logos (Why here? Because expose_php only works in php.ini, that's why)
+RewriteCond %{QUERY_STRING} ^=PHP
+RewriteRule (.*) $1?
+
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteRule .* index.php [L]
