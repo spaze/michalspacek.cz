@@ -214,7 +214,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	protected function createTemplate($class = null)
 	{
 		$template = parent::createTemplate($class);
-		$template->registerHelperLoader(new \Nette\Callback(new \Bare\Next\Templating\Helpers($this->getContext()), 'loader'));
+		$template->registerHelperLoader([new \Bare\Next\Templating\Helpers($this->getContext()), 'loader']);
 		return $template;
 	}
 
