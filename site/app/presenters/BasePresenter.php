@@ -65,6 +65,12 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 
 	/**
+	 * @var \MichalSpacekCz\Helpers
+	 */
+	protected $helpers;
+
+
+	/**
 	 * @param \MichalSpacekCz\Articles
 	 */
 	public function injectArticles(\MichalSpacekCz\Articles $articles)
@@ -196,6 +202,18 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
+	/**
+	 * @param \MichalSpacekCz\Templating\Helpers
+	 */
+	public function injectHelpers(\MichalSpacekCz\Templating\Helpers $helpers)
+	{
+		if ($this->helpers) {
+			throw new \Nette\InvalidStateException('Helpers has already been set');
+		}
+		$this->helpers = $helpers;
+	}
+
+
 	protected function startup()
 	{
 		parent::startup();
@@ -215,7 +233,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	{
 		$template = parent::createTemplate($class);
 		$template->registerHelperLoader([new \Bare\Next\Templating\Helpers($this->getContext()), 'loader']);
-		$template->registerHelperLoader([new \MichalSpacekCz\Templating\Helpers($this->getContext(), $this->getHttpRequest()), 'loader']);
+		$template->registerHelperLoader([$this->helpers, 'loader']);
 		return $template;
 	}
 

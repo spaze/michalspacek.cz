@@ -5,9 +5,9 @@ class Helpers extends \Nette\Object
 {
 
 	/**
-	 * @var \Nette\DI\Container
+	 * @var string
 	 */
-	protected $context;
+	protected $staticRoot;
 	
 	/**
 	 * @var \Nette\Http\IRequest
@@ -15,9 +15,8 @@ class Helpers extends \Nette\Object
 	protected $httpRequest;
 
 
-	public function __construct(\Nette\DI\Container $context, \Nette\Http\IRequest $httpRequest)
+	public function __construct(\Nette\Http\IRequest $httpRequest)
 	{
-		$this->context = $context;
 		$this->httpRequest = $httpRequest;
 	}
 
@@ -34,9 +33,15 @@ class Helpers extends \Nette\Object
 	{
 		return sprintf('%s://%s/%s',
 			$this->httpRequest->getUrl()->getScheme(),
-			rtrim($this->context->params['domain']['sharedStaticRoot'], '/'),
+			rtrim($this->staticRoot, '/'),
 			ltrim($filename, '/')
 		);
+	}
+
+
+	public function setStaticRoot($staticRoot)
+	{
+		$this->staticRoot = $staticRoot;
 	}
 
 

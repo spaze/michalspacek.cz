@@ -71,6 +71,10 @@ common:
 		session:
 			setup:
 				- setCookieParameters(/, %domain.cookie%)
+		helpers:
+			class: \MichalSpacekCz\Templating\Helpers
+			setup:
+				- setStaticRoot(%domain.sharedStaticRoot%)
 
 production < common:
 
