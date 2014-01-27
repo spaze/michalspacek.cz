@@ -30,13 +30,12 @@ class Helpers extends \Nette\Object
 	}
 
 
-	public function staticUrl($filename, $host = null)
+	public function staticUrl($filename)
 	{
-		return sprintf('%s://%s.%s/%s',
+		return sprintf('%s://%s/%s',
 			$this->httpRequest->getUrl()->getScheme(),
-			($host ?: $this->context->params['domain']['defaultHost']),
-			$this->context->params['domain']['staticRoot'],
-			$filename
+			rtrim($this->context->params['domain']['sharedStaticRoot'], '/'),
+			ltrim($filename, '/')
 		);
 	}
 

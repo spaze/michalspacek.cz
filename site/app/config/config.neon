@@ -26,8 +26,7 @@ common:
 				noSpam: nospam
 				successMarker: 'Děkuji za přihlášku na školení'
 		domain:
-			defaultHost: www
-			staticRoot: %domain.root%
+			sharedStaticRoot: www.%domain.root%
 
 	services:
 		database: @Nette\Database\Connection

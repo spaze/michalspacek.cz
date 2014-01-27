@@ -3,4 +3,4 @@ parameters:
 		root: michalspacek.com
 		cookie: .michalspacek.com
 		domain:
-			staticRoot: michalspacek.cz
+			sharedStaticRoot: michalspacek.cz
