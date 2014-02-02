@@ -45,11 +45,11 @@ common:
 		trainingApplications:
 			class: \MichalSpacekCz\TrainingApplications
 			setup:
-				- setFilesDir('../files/trainings')
+				- setFilesDir('../../files/trainings')
 		trainingMails:
 			class: \MichalSpacekCz\TrainingMails
 			setup:
-				- setTemplatesDir('../app/emails')
+				- setTemplatesDir('../../app/emails')
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 		trainingDates: \MichalSpacekCz\TrainingDates
 		authenticator:
