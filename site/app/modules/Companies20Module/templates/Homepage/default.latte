@@ -14,7 +14,9 @@
     <script src="{='/i/js/netteForms.js'|staticUrl}"></script>
 	<script>
 		$(document).ready(function() {
-			$('#tags, #search').addClass('form-control');
+			$('#tags').addClass('form-control');
+			$('#search').addClass('form-control');
+
 			var allTags = {$allTags};
 			$('#search').select2({
 				tags: allTags,
@@ -32,51 +34,61 @@
 	</script>
 </head>
 <body>
-
-<div id="add-container" class="jumbotron">
-{form media class => 'form-horizontal'}
-<div class="form-group">
-	{label url class => 'col-sm-1 control-label' /}
-	<div class="col-sm-10">{input url class => 'form-control'}</div>
-</div>
-<div class="form-group">
-	{label title class => 'col-sm-1 control-label' /}
-	<div class="col-sm-10">{input title class => 'form-control'}</div>
-</div>
-<div class="form-group">
-	{label published class => 'col-sm-1 control-label' /}
-	<div class="col-sm-10">{input published class => 'form-control'}</div>
-</div>
-<div class="form-group">
-	{label tags class => 'col-sm-1 control-label' /}
-	<div class="col-sm-10">{input tags}</div>
-</div>
-<div class="form-group">
-	<div class="col-sm-1"></div>
-	<div class="col-sm-10">{input submit class => 'btn btn-default'}</div>
-</div>
-{/form}
+<div class="container">
+	<h1>Companies <small>2.0</small></h1>
 </div>
 
-<div id="search-container" class="jumbotron">
-{form search class => 'form-horizontal'}
-<div class="form-group">
-	<div class="col-sm-1"></div>
-	<div class="col-sm-10">{input search}</div>
+<div class="container">
+<div id="search-container" class="well">
+	{form search class => 'form-inline'}
+	<div class="input-group">
+		{input search}
+	<span class="input-group-btn">{input submit class => 'btn btn-default'}</span>
+	</div>
+	{/form}
+	<div class="clearfix"></div>
 </div>
-<div class="form-group">
-	<div class="col-sm-1"></div>
-	<div class="col-sm-10">{input submit class => 'btn btn-default'}</div>
-</div>
-{/form}
-</div>
-
-<div id="result-container" class="jumbotron">
-<p n:foreach="$urls as $url">
-	<a href="{$url->url}">{$url->title}</a><br>
-	<small>{foreach $url->tags as $tag}<code><a n:href="this $tag->tag">{$tag->tag}</a></code>{sep} {/sep}{/foreach}</small>
-</p>
 </div>
 
+<div class="container">
+<div id="add-container" class="panel panel-default">
+	<div class="panel-heading">Add</div>
+	<div class="panel-body">
+	{form media class => 'form-horizontal'}
+	<div class="form-group">
+		{label url class => 'col-sm-1 control-label' /}
+		<div class="col-sm-10">{input url class => 'form-control'}</div>
+	</div>
+	<div class="form-group">
+		{label title class => 'col-sm-1 control-label' /}
+		<div class="col-sm-10">{input title class => 'form-control'}</div>
+	</div>
+	<div class="form-group">
+		{label published class => 'col-sm-1 control-label' /}
+		<div class="col-sm-10">{input published class => 'form-control'}</div>
+	</div>
+	<div class="form-group">
+		{label tags class => 'col-sm-1 control-label' /}
+		<div class="col-sm-10">{input tags}</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-1"></div>
+		<div class="col-sm-10">{input submit class => 'btn btn-default'}</div>
+	</div>
+	{/form}
+	</div>
+</div>
+</div>
+
+<div class="container">
+<div id="result-container" class="panel panel-default">
+	<div class="panel-body">
+	<p n:foreach="$urls as $url">
+		<a href="{$url->url}">{$url->title}</a><br>
+		<small>{foreach $url->tags as $tag}<code><a n:href="this $tag->tag">{$tag->tag}</a></code>{sep} {/sep}{/foreach}</small>
+	</p>
+	</div>
+</div>
+</div>
 </body>
 </html>
