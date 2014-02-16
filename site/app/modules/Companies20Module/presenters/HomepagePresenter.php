@@ -45,7 +45,7 @@ class HomepagePresenter extends \BasePresenter
 			$urls[$url->id]->tags = array();
 		}
 		if (!empty($urls)) {
-			$urlTags = $this->database->fetchAll('SELECT ut.url_id AS urlId, t.tag FROM tags t JOIN url_tags ut ON t.id = ut.tag_id WHERE ut.url_id IN (?) ORDER BY tag', array_keys($urls));
+			$urlTags = $this->database->fetchAll('SELECT ut.url_id AS urlId, t.tag FROM tags t JOIN url_tags ut ON t.id = ut.tag_id WHERE ut.url_id IN (?) ORDER BY category_id, tag', array_keys($urls));
 			foreach ($urlTags as $tag) {
 				$urls[$tag->urlId]->tags[] = $tag;
 			}
