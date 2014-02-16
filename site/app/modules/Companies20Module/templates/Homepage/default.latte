@@ -13,6 +13,7 @@
 	<script src="{='i/select2/select2.min.js'|staticUrl}"></script>
 	<script src="{='i/bootstrap/js/bootstrap.min.js'|staticUrl}"></script>
     <script src="{='/i/js/netteForms.js'|staticUrl}"></script>
+	<script src="/i/js/jquery-ui-1.10.4.custom.min.js"></script>
 	<script>
 		$(document).ready(function() {
 			$('#tags').addClass('form-control');
@@ -30,6 +31,9 @@
 				separator: ' ',
 				tokenSeparators: [',', ' ', '+'],
 				openOnEnter: false
+			});
+			$('#add').draggable({
+				handle: '.modal-header'
 			});
 		});
 	</script>

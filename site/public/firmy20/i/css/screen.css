@@ -4,6 +4,12 @@
 .tags .language {
 	background-color: #E9FFE4;
 }
+.modal {
+	overflow: hidden;
+}
 #add .modal-footer {
 	margin-top: 0px;
+}
+#add .modal-header {
+	cursor: move;
 }
