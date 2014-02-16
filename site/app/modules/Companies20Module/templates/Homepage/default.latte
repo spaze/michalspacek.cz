@@ -84,7 +84,7 @@
 <div id="result-container" class="panel panel-default">
 	<div class="panel-body">
 	<p n:foreach="$urls as $url">
-		<a href="{$url->url}">{$url->title}</a><br>
+		<a href="{$url->url}"><strong>{$url->title}</strong></a><br>
 		<small>{foreach $url->tags as $tag}<code><a n:href="this $tag->tag">{$tag->tag}</a></code>{sep} {/sep}{/foreach}</small>
 	</p>
 	</div>
