@@ -1,3 +1,6 @@
+body {
+	background-color: #DDD;
+}
 .tags .company, .tags .product {
 	font-weight: bold;
 }
