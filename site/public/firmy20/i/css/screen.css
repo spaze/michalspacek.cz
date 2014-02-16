@@ -1,6 +1,12 @@
 body {
 	background-color: #DDD;
 }
+label.required {
+	font-weight: bold;
+}
+label.optional {
+	font-weight: normal;
+}
 .tags .company, .tags .product {
 	font-weight: bold;
 }

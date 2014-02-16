@@ -35,6 +35,7 @@
 			$('#add').draggable({
 				handle: '.modal-header'
 			});
+			$('#add [title]').tooltip();
 		});
 	</script>
 </head>
@@ -66,20 +67,20 @@
 		</div>
 		<div class="modal-body">
 			<div class="form-group">
-				{label url class => 'col-sm-1 control-label' /}
+				<div class="col-sm-1">{label url class => 'control-label required', data-toggle => 'tooltip', data-placement => 'left', title => 'Required' /}</div>
 				<div class="col-sm-11">{input url class => 'form-control'}</div>
 			</div>
 			<div class="form-group">
-				{label title class => 'col-sm-1 control-label' /}
+				<div class="col-sm-1">{label tags class => 'control-label required', data-toggle => 'tooltip', data-placement => 'left', title => 'Required' /}</div>
+				<div class="col-sm-11">{input tags}</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-1">{label title class => 'control-label optional' /}</div>
 				<div class="col-sm-11">{input title class => 'form-control'}</div>
 			</div>
 			<div class="form-group">
-				{label published class => 'col-sm-1 control-label' /}
+				<div class="col-sm-1">{label published class => 'control-label optional' /}</div>
 				<div class="col-sm-11">{input published class => 'form-control'}</div>
-			</div>
-			<div class="form-group">
-				{label tags class => 'col-sm-1 control-label' /}
-				<div class="col-sm-11">{input tags}</div>
 			</div>
 		</div>
 		<div class="modal-footer">
