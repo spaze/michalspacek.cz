@@ -4,8 +4,6 @@
 .tags .language {
 	background-color: #E9FFE4;
 }
-#add {
-	display: none;
-	width: 500px;
-	margin-bottom: 0px;
+#add .modal-footer {
+	margin-top: 0px;
 }
