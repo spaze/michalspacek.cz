@@ -53,7 +53,7 @@ class HomepagePresenter extends \BasePresenter
 				FROM
 					tags t
 					JOIN url_tags ut ON t.id = ut.tag_id
-					JOIN tag_categories tc ON t.category_id = tc.id
+					LEFT JOIN tag_categories tc ON t.category_id = tc.id
 				WHERE
 					ut.url_id IN (?)
 				ORDER BY
