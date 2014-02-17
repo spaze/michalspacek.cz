@@ -13,6 +13,9 @@ label.optional {
 .tags .language {
 	background-color: #E9FFE4;
 }
+.tags .media {
+	background-color: #EFEFFF;
+}
 .modal {
 	overflow: hidden;
 }
