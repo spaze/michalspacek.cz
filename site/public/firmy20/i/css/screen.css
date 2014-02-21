@@ -25,3 +25,6 @@ label.optional {
 #add .modal-header {
 	cursor: move;
 }
+#logo {
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
