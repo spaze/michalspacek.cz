@@ -40,22 +40,26 @@
 	</script>
 </head>
 <body>
-<div class="container">
-	<h1 class="pull-left"><em id="logo">Companies <small>2.0</small></em></h1>
-	<h2 class="pull-right"><small><a href="#add" accesskey="a" class="btn btn-sm btn-default" data-toggle="modal">Add</a></small></h2>
-</div>
-
-<div class="container">
-<div id="search-container" class="well">
-	{form search class => 'form-inline'}
-	<div class="input-group">
-		{input search}
-		<span class="input-group-btn">{input submit class => 'btn btn-primary'}</span>
+<header class="container">
+<div class="panel panel-default">
+	<div class="panel-body">
+		<div class="pull-left" id="logo-panel">
+			<h1 class="pull-left"><em id="logo">Companies <small>2.0</small></em></h1>
+		</div>
+		<div class="pull-left" id="search-panel">
+			{form search class => 'form-inline'}
+			<div class="input-group">
+				{input search}
+				<span class="input-group-btn">{input submit class => 'btn btn-primary'}</span>
+			</div>
+			{/form}
+		</div>
+		<div class="pull-right" id="buttons-panel">
+			<a href="#add" accesskey="a" class="btn btn-sm btn-default" data-toggle="modal">Add</a>
+		</div>
 	</div>
-	{/form}
-	<div class="clearfix"></div>
 </div>
-</div>
+</header>
 
 <div id="add" class="modal" tabindex="-1" role="dialog" aria-labelledby="add-label" aria-hidden="true">
 	<div class="modal-dialog">
