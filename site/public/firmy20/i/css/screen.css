@@ -44,9 +44,10 @@ header .panel h1 {
 	width: 300px;
 }
 #search-panel {
- 	max-width: 600px;
+ 	max-width: 482px;
 	margin: 13px;
 }
 #buttons-panel {
+	width: 300px;
 	margin: 15px 0px;
 }
