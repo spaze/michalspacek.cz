@@ -16,6 +16,12 @@ class UserManager implements \Nette\Security\IAuthenticator
 
 	const CIPHER_MODE = MCRYPT_MODE_CBC;
 
+	const RETURNING_USER_COOKIE = 'beenhere';
+
+	const RETURNING_USER_VALUE = 'donethat';
+
+	const RETURNING_USER_PATH = '/';
+
 	/** @var \Nette\Database\Connection */
 	protected $database;
 
@@ -43,7 +49,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 
 	public function verifySignInAuthorization($knockKnock)
 	{
-		if ($knockKnock != self::KNOCK_KNOCK) {
+		if ($knockKnock != self::KNOCK_KNOCK && !$this->isReturningUser()) {
 			throw new \Nette\Application\BadRequestException("Knock, knock. Who's there? GTFO!", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 	}
@@ -60,6 +66,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 	{
 		list($username, $password) = $credentials;
 		$user = $this->verifyPassword($username, $password);
+		$this->setReturningUser();
 		return new \Nette\Security\Identity($user->userId, array(), array('username' => $user->username));
 	}
 
@@ -142,6 +149,18 @@ class UserManager implements \Nette\Security\IAuthenticator
 			$this->httpRequest->getRemoteAddress()
 		);
 		return (bool)$forbidden;
+	}
+
+
+	private function setReturningUser()
+	{
+		$this->httpResponse->setCookie(self::RETURNING_USER_COOKIE, self::RETURNING_USER_VALUE, \Nette\Http\Response::PERMANENT, self::RETURNING_USER_PATH);
+	}
+
+
+	private function isReturningUser()
+	{
+		return ($this->httpRequest->getCookie(self::RETURNING_USER_COOKIE) != self::RETURNING_USER_VALUE);
 	}
 
 
