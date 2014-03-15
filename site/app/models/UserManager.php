@@ -28,13 +28,17 @@ class UserManager implements \Nette\Security\IAuthenticator
 	/** @var \Nette\Http\IRequest */
 	protected $httpRequest;
 
+	/** @var \Nette\Http\IResponse */
+	protected $httpResponse;
+
 	protected $key;
 
 
-	public function __construct(\Nette\Database\Connection $connection, \Nette\Http\IRequest $httpRequest)
+	public function __construct(\Nette\Database\Connection $connection, \Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse)
 	{
 		$this->database = $connection;
 		$this->httpRequest = $httpRequest;
+		$this->httpResponse = $httpResponse;
 	}
 
 
