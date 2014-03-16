@@ -56,6 +56,9 @@ class EmailyPresenter extends BasePresenter
 				case TrainingApplications::STATUS_SIGNED_UP:
 					if ($data->invoice->isOk()) {
 						$this->trainingApplications->updateApplicationInvoiceData($id, $data->price, $data->discount, $data->invoiceId);
+						$this->applications[$id]->price = $data->price;
+						$this->applications[$id]->discount = $data->discount;
+						$this->applications[$id]->invoiceId = $data->invoiceId;
 						$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $data->invoice);
 						$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVOICE_SENT);
 						$sent = true;
