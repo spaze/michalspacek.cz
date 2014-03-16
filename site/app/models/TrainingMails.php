@@ -115,13 +115,13 @@ class TrainingMails
 	}
 
 
-	public function sendInvoice(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, \Nette\Http\FileUpload $invoice)
+	public function sendInvoice(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, array $invoice)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending invoice email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
 		$template->setFile($this->templatesDir . 'admin/invoice.latte');
 		$template->application = $application;
-		$this->sendMail($application->email, $application->name, $template, array($invoice->getName() => $invoice->getTemporaryFile()));
+		$this->sendMail($application->email, $application->name, $template, $invoice);
 	}
 
 

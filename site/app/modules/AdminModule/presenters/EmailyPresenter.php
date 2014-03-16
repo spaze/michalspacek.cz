@@ -59,7 +59,10 @@ class EmailyPresenter extends BasePresenter
 						$this->applications[$id]->price = $data->price;
 						$this->applications[$id]->discount = $data->discount;
 						$this->applications[$id]->invoiceId = $data->invoiceId;
-						$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $data->invoice);
+
+						$invoice = array($data->invoice->getName() => $data->invoice->getTemporaryFile());
+						$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $invoice);
+
 						$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVOICE_SENT);
 						$sent = true;
 					}
