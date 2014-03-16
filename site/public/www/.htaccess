@@ -11,6 +11,7 @@ RewriteRule ^apple-touch-icon\.png$ - [L]
 RewriteRule ^apple-touch-icon-precomposed\.png$ - [L]
 RewriteRule xmlrpc\.php$ - [L]
 RewriteRule wp-login\.php$ - [L]
+RewriteRule \.html?$ - [L]
 
 # phpinfo() easter egg
 RewriteRule ^info\.php$ - [L,T=text/plain]
