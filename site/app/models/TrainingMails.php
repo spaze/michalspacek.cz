@@ -125,7 +125,7 @@ class TrainingMails
 	}
 
 
-	private function sendMail($recipientAddress, $recipientName, $template, array $attachments = array())
+	private function sendMail($recipientAddress, $recipientName, \Nette\Templating\FileTemplate $template, array $attachments = array())
 	{
 		$mail = new \Nette\Mail\Message();
 		foreach ($attachments as $name => $file) {
