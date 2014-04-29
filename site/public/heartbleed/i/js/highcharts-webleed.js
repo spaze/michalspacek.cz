@@ -1,7 +1,12 @@
 $(document).ready(function() {
 	data = [];
 	$('#points div').each(function () {
-		data.push($(this).data('point'));
+		p = $(this).data('point');
+		data.push({
+			x: Date.UTC(p.y, p.m, p.d),
+			y: p.v,
+			p: p.p
+		});
 	});
 	$('#chart').highcharts({
 		chart: {
