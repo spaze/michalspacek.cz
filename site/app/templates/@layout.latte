@@ -16,17 +16,7 @@
     <script>window.jQuery || document.write('<script src={='/i/js/jquery-2.0.3.min.js'|staticUrl}><\/script>')</script>
     <script src="{='/i/js/netteForms.js'|staticUrl}"></script>
     <script src="{='/i/js/scripts.js'|staticUrl}"></script>
-    <script n:if="$trackingCode">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-23432180-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
+    {include 'tracking.latte'}
     {ifset #scripts}{include #scripts}{/ifset}
     <link rel="canonical" href="{$canonicalLink}" n:ifset="$canonicalLink">
 </head>
