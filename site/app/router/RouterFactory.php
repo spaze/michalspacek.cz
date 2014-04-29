@@ -28,12 +28,14 @@ class RouterFactory
 	{
 		$adminHost = "//admin.{$this->rootDomain}/";
 		$companies20Host = "//firmy20.{$this->rootDomain}/";
+		$webleedHost = "//heartbleed.{$this->rootDomain}/";
 		$wwwHost = "//www.{$this->rootDomain}/";
 
 		Route::addStyle('name', 'action');  // let the name param be converted like the action param (foo-bar => fooBar)
 		$router = new RouteList();
 		$router[] = new Route($adminHost . '[<presenter>][/<action>][/<param>]', array('module' => 'Admin', 'presenter' => 'Homepage', 'action' => 'default'), Route::SECURED);
 		$router[] = new Route($companies20Host . '[<param>]', array('module' => 'Companies20', 'presenter' => 'Homepage', 'action' => 'default', 'param' => [Route::FILTER_IN => 'urldecode', Route::FILTER_OUT => 'urlencode']));
+		$router[] = new Route($webleedHost, array('module' => 'Webleed', 'presenter' => 'Homepage', 'action' => 'default'));
 		$router[] = new Route($wwwHost . 'rozhovory/<name>', 'Rozhovory:rozhovor');
 		$router[] = new Route($wwwHost . 'prednasky/<name>[/<slide>]', 'Prednasky:prednaska');
 		$router[] = new Route($wwwHost . 'soubory[/<action>]/<filename>', 'Soubory:soubor');

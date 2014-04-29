@@ -1,0 +1,9 @@
+php_flag display_errors off
+
+RewriteEngine On
+RewriteRule ^i/.+ - [L]
+RewriteRule ^favicon\.ico$ - [L]
+RewriteRule ^robots\.txt$ - [L]
+
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteRule .* index.php [L]

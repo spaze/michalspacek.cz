@@ -1,0 +1,51 @@
+html {
+	font-family: sans-serif;
+}
+body {
+	margin: 0;
+	color: #222;
+	background-color: #DDD;
+}
+h1 small {
+	color: #999;
+}
+h3, a {
+	color: #777;
+}
+#container {
+	margin: 2em auto;
+	width: 920px;
+}
+#chart {
+	padding-top: 50px;
+	clear: both;
+	width: 920px;
+	height: 300px;
+}
+#logo {
+	width: 100px;
+	height: 120px;
+	float: left;
+	margin: 0px 40px 0px 190px;
+}
+#header {
+	width: 400px;
+	height: 120px;
+	float: left;
+}
+#stats {
+	padding-top: 50px;
+	clear: both;
+	font-size: 4em;
+	text-align: center;
+}
+#stats small {
+	font-size: 0.25em;
+	color: #999;
+}
+#notes {
+	padding-top: 50px;
+	text-align: center;
+	font-size: 0.75em;
+	color: #999;
+}
