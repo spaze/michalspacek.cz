@@ -30,11 +30,11 @@ class HomepagePresenter extends \BasePresenter
 		foreach ($result as $row) {
 			$time = strtotime($row->date);
 			$points[] = \Nette\Utils\Json::encode(array(
-				'y' => date('Y', $time),
-				'm' => date('n', $time) - 1,  // Dear JS...
-				'd' => date('j', $time),
-				'v' => $row->vulnerable,
-				'p' => round($row->vulnerable / $row->total * 100, 2),
+				(int)date('Y', $time),
+				(int)date('n', $time) - 1,  // Dear JS...
+				(int)date('j', $time),
+				$row->vulnerable,
+				round($row->vulnerable / $row->total * 100, 2),
 			));
 			$vulnerable = $row->vulnerable;
 		}

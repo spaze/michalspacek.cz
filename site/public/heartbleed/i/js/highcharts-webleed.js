@@ -3,9 +3,9 @@ $(document).ready(function() {
 	$('#points div').each(function () {
 		p = $(this).data('point');
 		data.push({
-			x: Date.UTC(p.y, p.m, p.d),
-			y: p.v,
-			p: p.p
+			x: Date.UTC(p[0], p[1], p[2]),
+			y: p[3],
+			p: p[4]
 		});
 	});
 	$('#chart').highcharts({
