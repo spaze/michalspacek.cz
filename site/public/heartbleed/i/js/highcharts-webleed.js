@@ -10,6 +10,10 @@ $(document).ready(function() {
 		});
 	});
 	$('#chart').highcharts({
+		credits: {
+			text: 'heartbleed.michalspacek.cz',
+			href: 'http://heartbleed.michalspacek.cz',
+		},
 		chart: {
 			backgroundColor: '#DDD',
 			zoomType: 'x'
