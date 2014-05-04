@@ -1,5 +1,6 @@
 $(document).ready(function() {
-	data = [];
+	var month = '';
+	var data = [];
 	$('#points div').each(function () {
 		p = $(this).data('point');
 		data.push({
@@ -27,11 +28,21 @@ $(document).ready(function() {
 		},
 		xAxis: {
 			type: 'datetime',
-				dateTimeLabelFormats: {
-					month: '%b %e',
-					year: '%b',
-					day: '%b %e'
-				},
+			dateTimeLabelFormats: {
+				month: '%b %e',
+				year: '%b',
+				day: '%b %e'
+			},
+			labels: {
+				formatter: function() {
+					if (month != Highcharts.dateFormat('%b', this.value)) {
+						month = Highcharts.dateFormat('%b', this.value);
+						return Highcharts.dateFormat('%e<br>%b', this.value);
+					} else {
+						return Highcharts.dateFormat('%e', this.value);
+					}
+				}
+			},
 			tickInterval: 24 * 3600 * 1000
 		},
 		yAxis: {
