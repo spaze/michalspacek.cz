@@ -1,33 +1,58 @@
 $(document).ready(function() {
 	var month = '';
 	var data = [];
+	var hosts = [];
 	$('#points div').each(function () {
 		p = $(this).data('point');
-		data.push({
-			x: Date.UTC(p[0], p[1], p[2]),
-			y: p[3],
-			p: p[4]
-		});
+		port = $(this).data('port');
+		if (typeof data[port] == 'undefined') {
+			data[port] = [];
+		}
+		if (port == 'any') {
+			hosts[Date.UTC(p[0], p[1], p[2])] = {
+				y: p[3],
+				p: p[4]
+			};
+		} else {
+			data[port].push({
+				x: Date.UTC(p[0], p[1], p[2]),
+				y: p[3],
+				p: p[4]
+			});
+		}
 	});
 	$('#chart').highcharts({
 		credits: {
 			text: 'heartbleed.michalspacek.cz',
 			href: 'http://heartbleed.michalspacek.cz',
+			position: {
+				align: 'left',
+				x: 100,
+				y: -90
+			}
 		},
 		chart: {
 			backgroundColor: '#DDD',
 			zoomType: 'x'
 		},
 		title: {
-			text: 'Heart-bleeding CZ IP addresses, port 443 (HTTPS)'
+			text: 'Heart-bleeding CZ IP addresses'
 		},
 		tooltip: {
 			crosshairs: {
 				color: '#C0C0C0',
 				dashStyle: 'shortdot'
 			},
+			shared: true,
 			formatter: function() {
-				return Highcharts.dateFormat('%Y-%m-%d, %A', this.x) + '<br/>Vulnerable IPs: <strong>' + this.y + '</strong> (' + this.point.p + ' %)';
+				s = 'Vulnerable IPs on ' + Highcharts.dateFormat('%Y-%m-%d, %A', this.x);
+				$.each(this.points, function(i, point) {
+					s += '<br/><span style="color: ' + point.series.color + '">●</span> ' + point.series.name + ': <strong>' + point.y + '</strong> (' + this.point.p + ' %)';
+				});
+				if (typeof hosts[this.x] != 'undefined') {
+					s += '<br/>Any port (unique hosts): <strong>' + hosts[this.x].y + '</strong> (' + hosts[this.x].p + ' %)';
+				}
+				return s;
 			}
 		},
 		xAxis: {
@@ -51,7 +76,7 @@ $(document).ready(function() {
 		},
 		yAxis: {
 			title: {
-				text: 'IP addresses'
+				text: 'Vulnerable IP addresses'
 			},
 			type: 'logarithmic'
 		},
@@ -62,12 +87,12 @@ $(document).ready(function() {
 			}
 		},
 		legend: {
-			enabled: false
+			margin: 0
 		},
 		series: [
 			{
 				type: 'area',
-				name: 'Vulnerable IP addresses',
+				name: 'Port 443 (HTTPS)',
 				color: '#B90000',
 				fillColor: {
 					linearGradient: [0, 0, 0, 300],
@@ -76,8 +101,39 @@ $(document).ready(function() {
 						[1, Highcharts.Color('#B90000').setOpacity(0).get('rgba')]
 					]
 				},
-				data: data
-			}
+				data: data[443],
+				marker: {
+					symbol: 'circle'
+				}
+			},
+			{
+				type: 'line',
+				name: 'Port 993 (IMAPS)',
+				color: '#F7F7F7',
+				data: data[993],
+				marker: {
+					symbol: 'circle',
+					lineColor: '#D7141A'
+				}
+			},
+			{
+				type: 'line',
+				name: 'Port 995 (POP3S)',
+				color: '#D7141A',
+				data: data[995],
+				marker: {
+					symbol: 'circle'
+				}
+			},
+			{
+				type: 'line',
+				name: 'Port 465 (SMTPS)',
+				color: '#11457E',
+				data: data[465],
+				marker: {
+					symbol: 'circle'
+				}
+			},
 		]
    });
 });

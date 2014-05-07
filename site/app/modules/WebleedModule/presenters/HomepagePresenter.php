@@ -26,17 +26,20 @@ class HomepagePresenter extends \BasePresenter
 	public function actionDefault()
 	{
 		$points = array();
-		$result = $this->database->fetchAll('SELECT date, vulnerable, total FROM webleed ORDER BY date');
+		$vulnerable = null;
+		$result = $this->database->fetchAll('SELECT date, port, vulnerable, total FROM webleed ORDER BY date, port');
 		foreach ($result as $row) {
 			$time = strtotime($row->date);
-			$points[] = \Nette\Utils\Json::encode(array(
+			$points[$row->port ?: 'any'][] = \Nette\Utils\Json::encode(array(
 				(int)date('Y', $time),
 				(int)date('n', $time) - 1,  // Dear JS...
 				(int)date('j', $time),
 				$row->vulnerable,
 				round($row->vulnerable / $row->total * 100, 2),
 			));
-			$vulnerable = $row->vulnerable;
+			if ($row->port === null) {
+				$vulnerable = $row->vulnerable;
+			}
 		}
 		$disclosure = new \DateTime(self::HEARTBLEED_DISCLOSURE);
 		$daysSince = $disclosure->diff(new \DateTime('now'));
