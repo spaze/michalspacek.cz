@@ -38,6 +38,11 @@ $(document).ready(function() {
 		title: {
 			text: 'Heart-bleeding CZ IP addresses'
 		},
+		subtitle: {
+			text: 'Sudden drops indicate possible outages',
+			floating: true,
+			y: 55
+		},
 		tooltip: {
 			crosshairs: {
 				color: '#C0C0C0',
