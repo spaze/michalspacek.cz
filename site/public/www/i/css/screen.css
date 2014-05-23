@@ -122,6 +122,26 @@ abbr.dtstart, abbr.dtend { border: none; }
 #facebook { background-position: -48px 0px; }
 #email { background-position: -48px -16px; }
 #upoutavka span { background-position: -32px -32px; }
+#heartbleed {
+    background-position: -64px 0px;
+    margin-left: -6px;
+    margin-right: 2px;
+}
+#projekty h3 {
+    float: left;
+    line-height: 32px;
+    margin: 16px 0px;
+}
+#projekty ul {
+    float: left;
+    padding: 0px;
+    margin: 16px 0px;
+}
+#projekty ul li {
+    float: left;
+    list-style: none;
+    padding-left: 16px;
+}
 #menu {
     font-size: 85%;
     text-align: left;

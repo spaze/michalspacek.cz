@@ -4,15 +4,18 @@
 {includeblock "../Prednasky/default.latte"}
 {includeblock "../Rozhovory/default.latte"}
 {includeblock "../Skoleni/default.latte"}
-<p>Další projekty: <a n:href=":Webleed:Homepage:">Heartbleed v ČR</a></p>
+<div id="projekty">
+    <h3>Další projekty:</h3>
+    <ul>
+        <li><span id="heartbleed" class="icon icon32"></span><a n:href=":Webleed:Homepage:">Heartbleed v ČR</a></li>
+        <li><span id="elephpant" class="icon icon32"></span><a href="http://www.elephpant.cz/">PHP slon</a></li>
+    </ul>
+</div>
 <hr />
 <h2 id="skoleni">Školím</h2>
 <p>Zvu vás na následující školení, která pořádám a vedu:</p>
 {include #list}
 <p>Školím i individuálně a nabízím i školení a&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
-<hr />
-<h2><span id="elephpant" class="icon icon32"></span>Dodávám Elephpanty</h2>
-<p>Teď zrovna žádné modré slony s logem PHP nemám, ale až znovu otevřu objednávky dám vám vědět. Stačí, když vyplníte formulář na <a href="http://www.elephpant.cz/">www.elephpant.cz</a>.</p>
 <hr />
 <h2 id="clanky">Píšu články</h2>
 <div n:foreach="$articles as $article">
