@@ -11,6 +11,10 @@ adresa {$application->venueName}{if $application->venueNameExtended}, {$applicat
 V příloze naleznete fakturu na částku {$application->price} Kč,
 proplaťte ji, prosím, do stanoveného data.
 
+{if $additional}
+{$additional}
+
+{/if}
 Děkuji a brzy na shledanou!
 Michal Špaček
 

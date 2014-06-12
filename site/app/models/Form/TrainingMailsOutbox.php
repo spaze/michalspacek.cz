@@ -16,7 +16,7 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications)
 	{
 		parent::__construct($parent, $name);
-	
+
 		$applicationsContainer = $this->addContainer('applications');
 
 		foreach ($applications as $application) {
@@ -32,6 +32,10 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 			$applicationIdsContainer->addCheckbox('send')
 				->setDefaultValue($checked)
 				->setDisabled($disabled);
+			$applicationIdsContainer->addTextArea('additional', null)
+				->setAttribute('placeholder', 'Dodatečný text')
+				->setAttribute('cols', 80)
+				->setAttribute('rows', 3);
 			switch ($application->status) {
 				case TrainingApplications::STATUS_SIGNED_UP:
 					$applicationIdsContainer->addText('invoiceId')

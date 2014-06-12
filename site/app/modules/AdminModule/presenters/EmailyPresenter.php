@@ -42,14 +42,15 @@ class EmailyPresenter extends BasePresenter
 			if (empty($data->send) || !isset($this->applications[$id])) {
 				continue;
 			}
+			$additional = trim($data->additional);
 			switch ($this->applications[$id]->status) {
 				case TrainingApplications::STATUS_TENTATIVE:
-					$this->trainingMails->sendInvitation($this->applications[$id], $this->createTemplate());
+					$this->trainingMails->sendInvitation($this->applications[$id], $this->createTemplate(), $additional);
 					$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVITED);
 					$sent = true;
 					break;
 				case TrainingApplications::STATUS_ATTENDED:
-					$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate());
+					$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate(), $additional);
 					$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_MATERIALS_SENT);
 					$sent = true;
 					break;
@@ -61,7 +62,7 @@ class EmailyPresenter extends BasePresenter
 						$this->applications[$id]->invoiceId = $data->invoiceId;
 
 						$invoice = array($data->invoice->getName() => $data->invoice->getTemporaryFile());
-						$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $invoice);
+						$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $invoice, $additional);
 
 						$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVOICE_SENT);
 						$sent = true;

@@ -18,8 +18,8 @@
 {formContainer applications}
 <table>
 	<tbody n:inner-foreach="$applications as $application">
+		{formContainer $application->id}
 		<tr>
-			{formContainer $application->id}
 			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 			<td>{input send}</td>
 			<td><a n:href="Ucastnici:prihlaska $application->id">{$application->name}</a></td>
@@ -33,8 +33,13 @@
 					{input invoiceId} {input invoice} {input price} {input discount}
 				{/if}
 			</td>
-			{/formContainer}
 		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td colspan="5">{input additional}</td>
+		</tr>
+		{/formContainer}
 	</tbody>
 </table>
 {/formContainer}

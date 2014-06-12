@@ -91,17 +91,18 @@ class TrainingMails
 	}
 
 
-	public function sendInvitation(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template)
+	public function sendInvitation(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, $additional = null)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending invitation email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
 		$template->setFile($this->templatesDir . 'admin/invitation.latte');
 		$template->application = $application;
+		$template->additional = $additional;
 		$this->sendMail($application->email, $application->name, $template);
 	}
 
 
-	public function sendMaterials(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template)
+	public function sendMaterials(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, $additional = null)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending materials email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
@@ -111,16 +112,18 @@ class TrainingMails
 			$template->setFile($this->templatesDir . 'admin/materials.latte');
 		}
 		$template->application = $application;
+		$template->additional = $additional;
 		$this->sendMail($application->email, $application->name, $template);
 	}
 
 
-	public function sendInvoice(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, array $invoice)
+	public function sendInvoice(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, array $invoice, $additional = null)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending invoice email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
 		$template->setFile($this->templatesDir . 'admin/invoice.latte');
 		$template->application = $application;
+		$template->additional = $additional;
 		$this->sendMail($application->email, $application->name, $template, $invoice);
 	}
 
