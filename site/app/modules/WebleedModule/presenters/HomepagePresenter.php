@@ -41,7 +41,7 @@ class HomepagePresenter extends \BasePresenter
 			}
 		}
 		$disclosure = new \DateTime(self::HEARTBLEED_DISCLOSURE);
-		$daysSince = $disclosure->diff(new \DateTime('now'));
+		$daysSince = $disclosure->diff($row->date);
 		$this->template->points = $points;
 		$this->template->vulnerable = $vulnerable;
 		$this->template->daysSince = $daysSince->format('%a');
