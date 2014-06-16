@@ -29,11 +29,10 @@ class HomepagePresenter extends \BasePresenter
 		$vulnerable = null;
 		$result = $this->database->fetchAll('SELECT date, port, vulnerable, total FROM webleed ORDER BY date, port');
 		foreach ($result as $row) {
-			$time = strtotime($row->date);
 			$points[$row->port ?: 'any'][] = \Nette\Utils\Json::encode(array(
-				(int)date('Y', $time),
-				(int)date('n', $time) - 1,  // Dear JS...
-				(int)date('j', $time),
+				(int)$row->date->format('Y'),
+				(int)$row->date->format('n') - 1,  // Dear JS...
+				(int)$row->date->format('j'),
 				$row->vulnerable,
 				round($row->vulnerable / $row->total * 100, 2),
 			));
