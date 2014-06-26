@@ -18,6 +18,7 @@
     <script src="{='/i/js/scripts.js'|staticUrl}"></script>
     {include 'tracking.latte'}
     {ifset #scripts}{include #scripts}{/ifset}
+    {ifset #metas}{include #metas}{/ifset}
     <link rel="canonical" href="{$canonicalLink}" n:ifset="$canonicalLink">
 </head>
 <body>

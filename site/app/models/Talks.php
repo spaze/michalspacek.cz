@@ -90,7 +90,8 @@ class Talks
 				video_href AS videoHref,
 				video_embed AS videoEmbed,
 				event,
-				event_href AS eventHref
+				event_href AS eventHref,
+				og_image AS ogImage
 			FROM talks
 			WHERE action = ?',
 			$name
