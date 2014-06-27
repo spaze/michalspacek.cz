@@ -37,6 +37,7 @@ class PrednaskyPresenter extends BasePresenter
 		$this->template->eventHref = $talk->eventHref;
 		$this->template->event = $talk->event;
 		$this->template->ogImage = $talk->ogImage;
+		$this->template->transcript = $talk->transcript;
 
 		if ($slide !== null) {
 			$this->template->canonicalLink = $this->link("//$name");

@@ -20,4 +20,9 @@
 <h2 id="datum-akce">Datum a akce</h2>
 <p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$eventHref}">{$event}</a></p>
 
+{if $transcript}
+	<hr>
+	<p>{$transcript}</p>
+{/if}
+
 {/define}

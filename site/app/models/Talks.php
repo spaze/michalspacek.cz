@@ -91,7 +91,8 @@ class Talks
 				video_embed AS videoEmbed,
 				event,
 				event_href AS eventHref,
-				og_image AS ogImage
+				og_image AS ogImage,
+				transcript
 			FROM talks
 			WHERE action = ?',
 			$name
@@ -107,7 +108,7 @@ class Talks
 
 	private function format(\Nette\Database\Row $row)
 	{
-		$format = array('title', 'description', 'event');
+		$format = array('title', 'description', 'event', 'transcript');
 		foreach ($format as $item) {
 			if (isset($row[$item])) {
 				$row[$item] = $this->texyFormatter->format($row[$item]);
