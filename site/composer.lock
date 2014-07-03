@@ -4,33 +4,42 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "28718cf2760324f2dddbbcb90cb117c4",
+    "hash": "a3623165ca20a42fa7b4f7f9518a5648",
     "packages": [
         {
             "name": "dg/texy",
-            "version": "v2.2",
+            "version": "v2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "01f330d37528f006d1b87bafb45236fb636e52c6"
+                "reference": "8213d3646c3ab1a3eca52413a5be26acb29826fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/01f330d37528f006d1b87bafb45236fb636e52c6",
-                "reference": "01f330d37528f006d1b87bafb45236fb636e52c6",
+                "url": "https://api.github.com/repos/dg/texy/zipball/8213d3646c3ab1a3eca52413a5be26acb29826fc",
+                "reference": "8213d3646c3ab1a3eca52413a5be26acb29826fc",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "replace": {
+                "dg/texy": "self.version"
+            },
+            "require-dev": {
+                "nette/tester": "~1.2"
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "Texy/"
+                "files": [
+                    "src/texy.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3",
-                "GPLv2",
-                "GPLv3"
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
             ],
             "authors": [
                 {
@@ -51,7 +60,7 @@
                 "wiki",
                 "xhtml"
             ],
-            "time": "2013-07-15 12:17:21"
+            "time": "2014-06-20 18:38:38"
         },
         {
             "name": "nette/nette",
