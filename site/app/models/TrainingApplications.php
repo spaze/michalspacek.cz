@@ -424,7 +424,7 @@ class TrainingApplications
 	private function getStatusId($status)
 	{
 		if (!isset($this->statusIds[$status])) {
-			$this->statusIds[$status] = $this->database->fetchColumn(
+			$this->statusIds[$status] = $this->database->fetchField(
 				'SELECT id_status FROM training_application_status WHERE status = ?',
 				$status
 			);
@@ -502,7 +502,7 @@ class TrainingApplications
 
 	private function getTrainingApplicationSource($source)
 	{
-		return $this->database->fetchColumn('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
+		return $this->database->fetchField('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
 	}
 
 
@@ -535,7 +535,7 @@ class TrainingApplications
 				f.id_file AS fileId,
 				f.filename AS fileName,
 				CAST(DATE(d.start) AS char) AS date
-			FROM 
+			FROM
 				files f
 				JOIN training_materials m ON f.id_file = m.key_file
 				JOIN training_applications a ON m.key_application = a.id_application
@@ -565,7 +565,7 @@ class TrainingApplications
 				f.id_file AS fileId,
 				f.filename AS fileName,
 				CAST(DATE(d.start) AS char) AS date
-			FROM 
+			FROM
 				files f
 				JOIN training_materials m ON f.id_file = m.key_file
 				JOIN training_applications a ON m.key_application = a.id_application

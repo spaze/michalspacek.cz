@@ -93,7 +93,7 @@ class TrainingDates
 	public function getStatusId($status)
 	{
 		if (!isset($this->statusIds[$status])) {
-			$this->statusIds[$status] = $this->database->fetchColumn(
+			$this->statusIds[$status] = $this->database->fetchField(
 				'SELECT id_status FROM training_date_status WHERE status = ?',
 				$status
 			);
