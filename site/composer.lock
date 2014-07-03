@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "94c83cc22e29c30774ed9a88418711a8",
+    "hash": "238e4b456e747e60d2b3b3db68be9fb0",
     "packages": [
         {
             "name": "dg/texy",
@@ -1132,20 +1132,21 @@
         },
         {
             "name": "spaze/bare-next",
-            "version": "v0.1.0",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/bare-next.git",
-                "reference": "03a5ccdda62a7e1ff7eee104386025d21fbb0b82"
+                "reference": "cb4714a693a1d4b72bcb915d0e770064e6d52b7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/bare-next/zipball/03a5ccdda62a7e1ff7eee104386025d21fbb0b82",
-                "reference": "03a5ccdda62a7e1ff7eee104386025d21fbb0b82",
+                "url": "https://api.github.com/repos/spaze/bare-next/zipball/cb4714a693a1d4b72bcb915d0e770064e6d52b7f",
+                "reference": "cb4714a693a1d4b72bcb915d0e770064e6d52b7f",
                 "shasum": ""
             },
             "require": {
-                "nette/nette": ">= 2.0.0"
+                "dg/texy": "2.6.0",
+                "nette/nette": ">= 2.2.0"
             },
             "type": "library",
             "autoload": {
@@ -1154,10 +1155,10 @@
                 }
             },
             "support": {
-                "source": "https://github.com/spaze/bare-next/tree/v0.1.0",
+                "source": "https://github.com/spaze/bare-next/tree/v0.2.0",
                 "issues": "https://github.com/spaze/bare-next/issues"
             },
-            "time": "2014-07-03 16:07:49"
+            "time": "2014-07-03 16:28:48"
         },
         {
             "name": "tracy/tracy",
