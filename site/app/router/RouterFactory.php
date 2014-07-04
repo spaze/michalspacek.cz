@@ -1,8 +1,7 @@
 <?php
 
-use Nette\Application\Routers\RouteList,
-	Nette\Application\Routers\Route,
-	Nette\Application\Routers\SimpleRouter;
+use	Nette\Application\Routers\Route;
+use Nette\Application\Routers\RouteList;
 
 
 /**
@@ -10,6 +9,13 @@ use Nette\Application\Routers\RouteList,
  */
 class RouterFactory
 {
+
+	const ADMIN = 'admin';
+	const COMPANIES20 = 'firmy20';
+	const WEBLEED = 'heartbleed';
+	const WWW = 'www';
+
+	const ROOT_ONLY = '';
 
 	/** @var string */
 	protected $rootDomain;
@@ -26,23 +32,45 @@ class RouterFactory
 	 */
 	public function createRouter()
 	{
-		$adminHost = "//admin.{$this->rootDomain}/";
-		$companies20Host = "//firmy20.{$this->rootDomain}/";
-		$webleedHost = "//heartbleed.{$this->rootDomain}/";
-		$wwwHost = "//www.{$this->rootDomain}/";
-
 		Route::addStyle('name', 'action');  // let the name param be converted like the action param (foo-bar => fooBar)
 		$router = new RouteList();
-		$router[] = new Route($adminHost . '[<presenter>][/<action>][/<param>]', array('module' => 'Admin', 'presenter' => 'Homepage', 'action' => 'default'), Route::SECURED);
-		$router[] = new Route($companies20Host . '[<param>]', array('module' => 'Companies20', 'presenter' => 'Homepage', 'action' => 'default', 'param' => [Route::FILTER_IN => 'urldecode', Route::FILTER_OUT => 'urlencode']));
-		$router[] = new Route($webleedHost, array('module' => 'Webleed', 'presenter' => 'Homepage', 'action' => 'default'));
-		$router[] = new Route($wwwHost . 'rozhovory/<name>', 'Rozhovory:rozhovor');
-		$router[] = new Route($wwwHost . 'prednasky/<name>[/<slide>]', 'Prednasky:prednaska');
-		$router[] = new Route($wwwHost . 'soubory[/<action>]/<filename>', 'Soubory:soubor');
-		$router[] = new Route($wwwHost . 'skoleni/<name>[/<action>[/<param>]]', 'Skoleni:skoleni');
-		$router[] = new Route($wwwHost . 'r/<action>/<token>', 'R:default');
-		$router[] = new Route($wwwHost . '<presenter>[/<action>]', 'Homepage:default');
+		$router[] = $this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
+		$router[] = $this->addRoute(self::COMPANIES20, '[<param>]', 'Homepage', 'default');
+		$router[] = $this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
+		$router[] = $this->addRoute(self::WWW, 'rozhovory/<name>', 'Rozhovory', 'rozhovor');
+		$router[] = $this->addRoute(self::WWW, 'prednasky/<name>[/<slide>]', 'Prednasky', 'prednaska');
+		$router[] = $this->addRoute(self::WWW, 'soubory[/<action>]/<filename>', 'Soubory', 'soubor');
+		$router[] = $this->addRoute(self::WWW, 'skoleni/<name>[/<action>[/<param>]]', 'Skoleni', 'skoleni');
+		$router[] = $this->addRoute(self::WWW, 'r/<action>/<token>', 'R', 'default');
+		$router[] = $this->addRoute(self::WWW, '<presenter>[/<action>]', 'Homepage', 'default');
 		return $router;
+	}
+
+
+	private function addRoute($host, $mask, $defaultPresenter, $defaultAction)
+	{
+		$flags = 0;
+		$metadata = array(
+			'presenter' => array(
+				Route::VALUE => $defaultPresenter,
+			),
+			'action' => $defaultAction,
+		);
+		switch ($host) {
+			case self::ADMIN:
+				$metadata['module'] = 'Admin';
+				$flags = Route::SECURED;
+				break;
+			case self::COMPANIES20:
+				$metadata['module'] = 'Companies20';
+				$metadata['param'] = [Route::FILTER_IN => 'urldecode', Route::FILTER_OUT => 'urlencode'];
+				break;
+			case self::WEBLEED:
+				$metadata['module'] = 'Webleed';
+				break;
+		}
+
+		return new Route("//{$host}.{$this->rootDomain}/{$mask}", $metadata, $flags);
 	}
 
 
