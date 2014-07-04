@@ -1136,12 +1136,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/bare-next.git",
-                "reference": "cb4714a693a1d4b72bcb915d0e770064e6d52b7f"
+                "reference": "cd971774ab5835a6e56f4b15a5e5d3d855683884"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/bare-next/zipball/cb4714a693a1d4b72bcb915d0e770064e6d52b7f",
-                "reference": "cb4714a693a1d4b72bcb915d0e770064e6d52b7f",
+                "url": "https://api.github.com/repos/spaze/bare-next/zipball/cd971774ab5835a6e56f4b15a5e5d3d855683884",
+                "reference": "cd971774ab5835a6e56f4b15a5e5d3d855683884",
                 "shasum": ""
             },
             "require": {
@@ -1158,7 +1158,7 @@
                 "source": "https://github.com/spaze/bare-next/tree/v0.2.0",
                 "issues": "https://github.com/spaze/bare-next/issues"
             },
-            "time": "2014-07-03 16:28:48"
+            "time": "2014-07-04 02:18:41"
         },
         {
             "name": "tracy/tracy",
