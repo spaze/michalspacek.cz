@@ -163,7 +163,7 @@ td.nameCell { width: 200px; }
 #frm-application th { text-align: right; }
 #frm-application input { width: 170px; }
 #frm-application input[type=checkbox] { width: auto; }
-#frm-application #frmapplication-note { width: 400px; }
+#frm-application #frm-application-note { width: 400px; }
 #frm-statuses select { color: #666; font-family: Consolas; }
 #chyby ul { margin: 0px; }
 #chyby {

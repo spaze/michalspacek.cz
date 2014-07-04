@@ -8,11 +8,11 @@
 {define #content}
 {form review}
 <p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
-<p><div>{$applicationName}</div>{label overwriteName /}{input overwriteName} {input name}</p>
-<p><div>{$applicationCompany}</div>{label overwriteCompany /}{input overwriteCompany} {input company}</p>
+<p><div>{$applicationName}</div>{label overwriteName: /}{input overwriteName:} {input name}</p>
+<p><div>{$applicationCompany}</div>{label overwriteCompany: /}{input overwriteCompany:} {input company}</p>
 <p>{label review /}{input review}</p>
 <p>{label href /}{input href}</p>
-<p>{label hidden /}{input hidden}</p>
+<p>{label hidden: /}{input hidden:}</p>
 <p>{input save}</p>
 {/form review}
 
