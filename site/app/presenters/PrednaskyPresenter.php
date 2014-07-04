@@ -8,6 +8,24 @@
 class PrednaskyPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Talks */
+	protected $talks;
+
+	/** @var \MichalSpacekCz\Embed */
+	protected $embed;
+
+
+	/**
+	 * @param \MichalSpacekCz\Talks $talks
+	 * @param \MichalSpacekCz\Embed $embed
+	 */
+	public function __construct(\MichalSpacekCz\Talks $talks, \MichalSpacekCz\Embed $embed)
+	{
+		$this->talks = $talks;
+		$this->embed = $embed;
+		parent::__construct();
+	}
+
 
 	public function renderDefault()
 	{

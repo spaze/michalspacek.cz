@@ -10,6 +10,20 @@ namespace AdminModule;
 class SignPresenter extends \BasePresenter
 {
 
+	/** @var \MichalSpacekCz\UserManager */
+	protected $authenticator;
+
+
+	/**
+	 * @param \MichalSpacekCz\UserManager $authenticator
+	 */
+	public function __construct(\MichalSpacekCz\UserManager $authenticator)
+	{
+		$this->authenticator = $authenticator;
+		parent::__construct();
+	}
+
+
 	/**
 	 * Port-knocking-like login.
 	 */

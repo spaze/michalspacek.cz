@@ -12,6 +12,15 @@ use \Nette\Application\UI\Form;
 class UcastniciPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\TrainingApplications */
+	protected $trainingApplications;
+
+	/** @var \MichalSpacekCz\TrainingDates */
+	protected $trainingDates;
+
+	/** @var \MichalSpacekCz\Trainings */
+	protected $trainings;
+
 	/** @var array */
 	private $dates;
 
@@ -35,6 +44,24 @@ class UcastniciPresenter extends BasePresenter
 	private $dateId;
 
 	private $redirectParam;
+
+
+	/**
+	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 * @param \MichalSpacekCz\TrainingDates $trainingDates
+	 * @param \MichalSpacekCz\Trainings $trainings
+	 */
+	public function __construct(
+		\MichalSpacekCz\TrainingApplications $trainingApplications,
+		\MichalSpacekCz\TrainingDates $trainingDates,
+		\MichalSpacekCz\Trainings $trainings
+	)
+	{
+		$this->trainingApplications = $trainingApplications;
+		$this->trainingDates = $trainingDates;
+		$this->trainings = $trainings;
+		parent::__construct();
+	}
 
 
 	private function addDate($form, $name, $label, $required = true, $defaultValue = null)
