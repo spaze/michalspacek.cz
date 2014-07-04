@@ -45,7 +45,7 @@ class UzivatelPresenter extends BasePresenter
 			->setRequired('Zadejte prosím nové heslo pro kontrolu')
 			->addRule(Form::EQUAL, 'Hesla se neshodují', $form['newPassword']);
 		$form->addSubmit('save', 'Uložit');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedChangePassword');
+		$form->onSuccess[] = $this->submittedChangePassword;
 
 		return $form;
 	}

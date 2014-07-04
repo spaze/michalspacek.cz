@@ -48,7 +48,7 @@ class EmailyPresenter extends BasePresenter
 	protected function createComponentMails($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingMailsOutbox($this, $formName, $this->applications);
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedMails');
+		$form->onSuccess[] = $this->submittedMails;
 	}
 
 
