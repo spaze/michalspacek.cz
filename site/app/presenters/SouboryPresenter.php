@@ -57,7 +57,7 @@ class SouboryPresenter extends BasePresenter
 
 	protected function sendFile($file)
 	{
-		$this->sendResponse(new FileResponse($file, null, \Nette\Utils\MimeTypeDetector::fromFile($file)));
+		$this->sendResponse(new FileResponse($file, null, finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file)));
 	}
 
 
