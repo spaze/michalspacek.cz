@@ -41,7 +41,7 @@ class Files
 			'time'          => $datetime,
 			'time_timezone' => $datetime->getTimezone()->getName(),
 		));
-		return $this->database->lastInsertId();
+		return $this->database->getInsertId();
 	}
 
 

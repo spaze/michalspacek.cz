@@ -233,7 +233,7 @@ class TrainingApplications
 			'key_source'           => $this->getTrainingApplicationSource($source),
 		);
 		$code = $this->insertData($data);
-		$applicationId = $this->database->lastInsertId();
+		$applicationId = $this->database->getInsertId();
 		$this->setStatus($applicationId, $status, $date);
 		$this->database->commit();
 
@@ -608,7 +608,7 @@ class TrainingApplications
 				'added_timezone' => $datetime->getTimezone()->getName(),
 			)
 		);
-		$fileId = $this->database->lastInsertId();
+		$fileId = $this->database->getInsertId();
 		foreach ($applicationIds as $applicationId) {
 			$this->database->query(
 				'INSERT INTO training_materials',

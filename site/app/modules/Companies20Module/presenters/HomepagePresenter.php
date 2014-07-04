@@ -105,11 +105,11 @@ class HomepagePresenter extends \BasePresenter
 			'published' => new \DateTime($values->published),
 			'added'     => new \DateTime('now'),
 		));
-		$urlId = $this->database->lastInsertId();
+		$urlId = $this->database->getInsertId();
 		$tagIds = array();
 		foreach ($tags as $tag) {
 			$this->database->query('INSERT INTO tags ? ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)', array('tag' => $tag));
-			$this->database->query('INSERT INTO url_tags', ['url_id' => $urlId, 'tag_id' => $this->database->lastInsertId()]);
+			$this->database->query('INSERT INTO url_tags', ['url_id' => $urlId, 'tag_id' => $this->database->getInsertId()]);
 		}
 		$this->database->commit();
 		$this->redirect('this');
