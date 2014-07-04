@@ -14,8 +14,9 @@ abstract class BasePresenter extends \BasePresenter
 	protected function startup()
 	{
 		parent::startup();
+		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\UserManager::class);
 		if (!$this->user->isLoggedIn()) {
-			$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
+			$authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
 			$this->redirect('Sign:in');
 		}
 	}

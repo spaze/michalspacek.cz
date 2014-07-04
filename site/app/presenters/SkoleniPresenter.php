@@ -13,6 +13,18 @@ use \Nette\Application\UI\Form,
 class SkoleniPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Files */
+	protected $files;
+
+	/** @var \MichalSpacekCz\TrainingApplications */
+	protected $trainingApplications;
+
+	/** @var \MichalSpacekCz\TrainingMails */
+	protected $trainingMails;
+
+	/** @var \MichalSpacekCz\Trainings */
+	protected $trainings;
+
 	/** @var \Nette\Database\Row */
 	private $training;
 
@@ -55,6 +67,27 @@ class SkoleniPresenter extends BasePresenter
 			'2008-12-09', '2008-10-22', '2008-06-27',
 		),
 	);
+
+
+	/**
+	 * @param \MichalSpacekCz\Files
+	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 * @param \MichalSpacekCz\TrainingMails $trainingMails
+	 * @param \MichalSpacekCz\Trainings $trainings
+	 */
+	public function __construct(
+		\MichalSpacekCz\Files $files,
+		\MichalSpacekCz\TrainingApplications $trainingApplications,
+		\MichalSpacekCz\TrainingMails $trainingMails,
+		\MichalSpacekCz\Trainings $trainings
+	)
+	{
+		$this->files = $files;
+		$this->trainingApplications = $trainingApplications;
+		$this->trainingMails = $trainingMails;
+		$this->trainings = $trainings;
+		parent::__construct();
+	}
 
 
 	public function renderDefault()
@@ -226,7 +259,7 @@ class SkoleniPresenter extends BasePresenter
 			->addCondition(Form::FILLED)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $rules['note'][Form::MAX_LENGTH]);
 		$form->addSubmit('signUp', 'Odeslat');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplication');
+		$form->onSuccess[] = $this->submittedApplication;
 
 		return $form;
 	}

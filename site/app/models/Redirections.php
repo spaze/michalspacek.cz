@@ -22,7 +22,7 @@ class Redirections
 
 	public function getDestination(\Nette\Http\UrlScript $sourceUrl)
 	{
-		$destination = $this->database->fetchColumn('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath());
+		$destination = $this->database->fetchField('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath());
 		if ($destination) {
 			if (!parse_url($destination, PHP_URL_HOST)) {
 				$destinationUrl = clone $sourceUrl;

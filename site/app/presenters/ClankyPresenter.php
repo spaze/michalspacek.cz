@@ -8,6 +8,19 @@
 class ClankyPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Articles */
+	protected $articles;
+
+
+	/**
+	 * @param \MichalSpacekCz\Articles $articles
+	 */
+	public function __construct(\MichalSpacekCz\Articles $articles)
+	{
+		$this->articles = $articles;
+		parent::__construct();
+	}
+
 
 	public function renderDefault()
 	{

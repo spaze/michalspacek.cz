@@ -10,6 +10,9 @@ namespace MichalSpacekCz;
 class TrainingMails
 {
 
+	/** @var \Nette\Mail\SendmailMailer */
+	protected $mailer;
+
 	/** @var \MichalSpacekCz\TrainingApplications */
 	protected $trainingApplications;
 
@@ -24,14 +27,19 @@ class TrainingMails
 	protected $templatesDir;
 
 
-	public function __construct(\MichalSpacekCz\TrainingApplications $trainingApplications, \MichalSpacekCz\TrainingDates $trainingDates)
+	public function __construct(
+		\Nette\Mail\SendmailMailer $mailer,
+		\MichalSpacekCz\TrainingApplications $trainingApplications,
+		\MichalSpacekCz\TrainingDates $trainingDates
+	)
 	{
+		$this->mailer = $mailer;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 	}
 
 
-	public function sendSignUpMail($applicationId, \Nette\Templating\FileTemplate $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
+	public function sendSignUpMail($applicationId, \Nette\Bridges\ApplicationLatte\Template $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$training}");
 
@@ -50,8 +58,8 @@ class TrainingMails
 			->addTo($recipientAddress, $recipientName)
 			->addBcc($this->emailFrom)
 			->setBody($template)
-			->clearHeader('X-Mailer')  // Hide Nette Mailer banner
-			->send();
+			->clearHeader('X-Mailer');  // Hide Nette Mailer banner
+		$this->mailer->send($mail);
 	}
 
 
@@ -91,7 +99,7 @@ class TrainingMails
 	}
 
 
-	public function sendInvitation(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, $additional = null)
+	public function sendInvitation(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending invitation email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
@@ -102,7 +110,7 @@ class TrainingMails
 	}
 
 
-	public function sendMaterials(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, $additional = null)
+	public function sendMaterials(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending materials email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
@@ -117,7 +125,7 @@ class TrainingMails
 	}
 
 
-	public function sendInvoice(\Nette\Database\Row $application, \Nette\Templating\FileTemplate $template, array $invoice, $additional = null)
+	public function sendInvoice(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, array $invoice, $additional = null)
 	{
 		\Nette\Diagnostics\Debugger::log("Sending invoice email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
@@ -128,7 +136,7 @@ class TrainingMails
 	}
 
 
-	private function sendMail($recipientAddress, $recipientName, \Nette\Templating\FileTemplate $template, array $attachments = array())
+	private function sendMail($recipientAddress, $recipientName, \Nette\Bridges\ApplicationLatte\Template $template, array $attachments = array())
 	{
 		$mail = new \Nette\Mail\Message();
 		foreach ($attachments as $name => $file) {
@@ -138,8 +146,8 @@ class TrainingMails
 			->addTo($recipientAddress, $recipientName)
 			->addBcc($this->emailFrom)
 			->setBody($template)
-			->clearHeader('X-Mailer')  // Hide Nette Mailer banner
-			->send();
+			->clearHeader('X-Mailer');  // Hide Nette Mailer banner
+		$this->mailer->send($mail);
 	}
 
 

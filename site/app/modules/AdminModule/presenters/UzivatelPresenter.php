@@ -12,6 +12,19 @@ use \Nette\Application\UI\Form;
 class UzivatelPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\UserManager */
+	protected $authenticator;
+
+
+	/**
+	 * @param \MichalSpacekCz\UserManager $authenticator
+	 */
+	public function __construct(\MichalSpacekCz\UserManager $authenticator)
+	{
+		$this->authenticator = $authenticator;
+		parent::__construct();
+	}
+
 
 	public function actionZmenitHeslo()
 	{
@@ -32,7 +45,7 @@ class UzivatelPresenter extends BasePresenter
 			->setRequired('Zadejte prosím nové heslo pro kontrolu')
 			->addRule(Form::EQUAL, 'Hesla se neshodují', $form['newPassword']);
 		$form->addSubmit('save', 'Uložit');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedChangePassword');
+		$form->onSuccess[] = $this->submittedChangePassword;
 
 		return $form;
 	}

@@ -10,6 +10,39 @@ namespace AdminModule;
 class HomepagePresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\TrainingApplications */
+	protected $trainingApplications;
+
+	/** @var \MichalSpacekCz\TrainingMails */
+	protected $trainingMails;
+
+	/** @var \MichalSpacekCz\Trainings */
+	protected $trainings;
+
+	/** @var \MichalSpacekCz\WebTracking */
+	protected $webTracking;
+
+
+	/**
+	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 * @param \MichalSpacekCz\TrainingMails $trainingMails
+	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\WebTracking $webTracking
+	 */
+	public function __construct(
+		\MichalSpacekCz\TrainingApplications $trainingApplications,
+		\MichalSpacekCz\TrainingMails $trainingMails,
+		\MichalSpacekCz\Trainings $trainings,
+		\MichalSpacekCz\WebTracking $webTracking
+	)
+	{
+		$this->trainingApplications = $trainingApplications;
+		$this->trainingMails = $trainingMails;
+		$this->trainings = $trainings;
+		$this->webTracking = $webTracking;
+		parent::__construct();
+	}
+
 
 	public function actionDefault()
 	{

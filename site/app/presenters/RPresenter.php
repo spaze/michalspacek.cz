@@ -10,6 +10,19 @@ class RPresenter extends BasePresenter
 
 	const GOOD_NIGHT = 5;
 
+	/** @var \MichalSpacekCz\TrainingApplications */
+	protected $trainingApplications;
+
+
+	/**
+	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 */
+	public function __construct(\MichalSpacekCz\TrainingApplications $trainingApplications)
+	{
+		$this->trainingApplications = $trainingApplications;
+		parent::__construct();
+	}
+
 
 	public function actionS($token)
 	{

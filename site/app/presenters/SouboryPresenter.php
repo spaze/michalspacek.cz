@@ -12,6 +12,24 @@ use \Nette\Application\BadRequestException,
 class SouboryPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Files */
+	protected $files;
+
+	/** @var \MichalSpacekCz\TrainingApplications */
+	protected $trainingApplications;
+
+
+	/**
+	 * @param \MichalSpacekCz\Files
+	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 */
+	public function __construct(\MichalSpacekCz\Files $files, \MichalSpacekCz\TrainingApplications $trainingApplications)
+	{
+		$this->files = $files;
+		$this->trainingApplications = $trainingApplications;
+		parent::__construct();
+	}
+
 
 	public function actionSkoleni($filename)
 	{
@@ -39,7 +57,7 @@ class SouboryPresenter extends BasePresenter
 
 	protected function sendFile($file)
 	{
-		$this->sendResponse(new FileResponse($file, null, \Nette\Utils\MimeTypeDetector::fromFile($file)));
+		$this->sendResponse(new FileResponse($file, null, finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file)));
 	}
 
 

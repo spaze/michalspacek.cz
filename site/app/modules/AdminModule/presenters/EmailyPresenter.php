@@ -12,8 +12,26 @@ use \MichalSpacekCz\TrainingApplications;
 class EmailyPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\TrainingApplications */
+	protected $trainingApplications;
+
+	/** @var \MichalSpacekCz\TrainingMails */
+	protected $trainingMails;
+
 	/** @var array */
 	private $applications;
+
+
+	/**
+	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 * @param \MichalSpacekCz\TrainingMails $trainingMails
+	 */
+	public function __construct(\MichalSpacekCz\TrainingApplications $trainingApplications, \MichalSpacekCz\TrainingMails $trainingMails)
+	{
+		$this->trainingApplications = $trainingApplications;
+		$this->trainingMails = $trainingMails;
+		parent::__construct();
+	}
 
 
 	public function actionDefault()
@@ -30,7 +48,7 @@ class EmailyPresenter extends BasePresenter
 	protected function createComponentMails($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingMailsOutbox($this, $formName, $this->applications);
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedMails');
+		$form->onSuccess[] = $this->submittedMails;
 	}
 
 

@@ -8,6 +8,24 @@
 class RozhovoryPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Interviews */
+	protected $interviews;
+
+	/** @var \MichalSpacekCz\Embed */
+	protected $embed;
+
+
+	/**
+	 * @param \MichalSpacekCz\Interviews $interviews
+	 * @param \MichalSpacekCz\Embed $embed
+	 */
+	public function __construct(\MichalSpacekCz\Interviews $interviews, \MichalSpacekCz\Embed $embed)
+	{
+		$this->interviews = $interviews;
+		$this->embed = $embed;
+		parent::__construct();
+	}
+
 
 	public function renderDefault()
 	{

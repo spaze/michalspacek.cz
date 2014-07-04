@@ -12,6 +12,15 @@ use \Nette\Application\UI\Form;
 class UcastniciPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\TrainingApplications */
+	protected $trainingApplications;
+
+	/** @var \MichalSpacekCz\TrainingDates */
+	protected $trainingDates;
+
+	/** @var \MichalSpacekCz\Trainings */
+	protected $trainings;
+
 	/** @var array */
 	private $dates;
 
@@ -35,6 +44,24 @@ class UcastniciPresenter extends BasePresenter
 	private $dateId;
 
 	private $redirectParam;
+
+
+	/**
+	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 * @param \MichalSpacekCz\TrainingDates $trainingDates
+	 * @param \MichalSpacekCz\Trainings $trainings
+	 */
+	public function __construct(
+		\MichalSpacekCz\TrainingApplications $trainingApplications,
+		\MichalSpacekCz\TrainingDates $trainingDates,
+		\MichalSpacekCz\Trainings $trainings
+	)
+	{
+		$this->trainingApplications = $trainingApplications;
+		$this->trainingDates = $trainingDates;
+		$this->trainings = $trainings;
+		parent::__construct();
+	}
 
 
 	private function addDate($form, $name, $label, $required = true, $defaultValue = null)
@@ -178,7 +205,7 @@ class UcastniciPresenter extends BasePresenter
 
 		$this->addDate($form, 'date', 'Datum:');
 		$form->addSubmit('submit', 'Změnit');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedStatuses');
+		$form->onSuccess[] = $this->submittedStatuses;
 
 		return $form;
 	}
@@ -262,7 +289,7 @@ class UcastniciPresenter extends BasePresenter
 			->setPrompt('- vyberte zdroj -');
 
 		$form->addSubmit('submit', 'Přidat');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplications');
+		$form->onSuccess[] = $this->submittedApplications;
 
 		return $form;
 	}
@@ -323,7 +350,7 @@ class UcastniciPresenter extends BasePresenter
 		$form->addCheckbox('hidden', 'Skrýt:')
 			->setDefaultValue($this->review->hidden);
 		$form->addSubmit('save', 'Uložit');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedReview');
+		$form->onSuccess[] = $this->submittedReview;
 
 		return $form;
 	}
@@ -410,7 +437,7 @@ class UcastniciPresenter extends BasePresenter
 		$this->addDate($form, 'paid', 'Zaplaceno:', false, $this->application->paid);
 
 		$form->addSubmit('submit', 'Uložit');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedApplication');
+		$form->onSuccess[] = $this->submittedApplication;
 
 		return $form;
 	}
@@ -446,7 +473,7 @@ class UcastniciPresenter extends BasePresenter
 		$form = new Form($this, $formName);
 		$form->addUpload('file', 'Soubor:');
 		$form->addSubmit('submit', 'Přidat');
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedFile');
+		$form->onSuccess[] = $this->submittedFile;
 		return $form;
 	}
 
@@ -473,7 +500,7 @@ class UcastniciPresenter extends BasePresenter
 	{
 		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates);
 		$form->setTrainingDate($this->trainingDates->get($this->dateId));
-		$form->onSuccess[] = new \Nette\Callback($this, 'submittedDate');
+		$form->onSuccess[] = $this->submittedDate;
 	}
 
 

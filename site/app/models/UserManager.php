@@ -143,7 +143,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 
 	public function isForbidden()
 	{
-		$forbidden = $this->database->fetchColumn(
+		$forbidden = $this->database->fetchField(
 			'SELECT
 				1
 			FROM
