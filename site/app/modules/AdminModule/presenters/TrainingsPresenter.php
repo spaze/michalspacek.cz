@@ -98,7 +98,7 @@ class TrainingsPresenter extends BasePresenter
 			$application->childrenStatuses = $this->trainingApplications->getChildrenStatuses($application->status);
 		}
 
-		$this->template->pageTitle     = 'Účastníci zájezdu';
+		$this->template->pageTitle     = 'Účastníci';
 		$this->template->trainingStart = $this->training->start;
 		$this->template->trainingName  = $this->training->name;
 		$this->template->venueCity     = $this->training->venueCity;
@@ -181,7 +181,7 @@ class TrainingsPresenter extends BasePresenter
 			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
 		}
 
-		$this->template->pageTitle = 'Import';
+		$this->template->pageTitle = 'Školení';
 		$this->template->trainings = $trainings;
 		$this->template->now = new \DateTime();
 		$this->template->upcomingIds = $this->trainings->getPublicUpcomingIds();
