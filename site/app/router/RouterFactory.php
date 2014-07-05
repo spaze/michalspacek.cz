@@ -72,10 +72,6 @@ class RouterFactory
 				$metadata['presenter'][Route::FILTER_TABLE] = array(
 					'clanky' => 'Articles',
 					'kdo' => 'Who',
-					'prednasky' => 'Talks',
-					'rozhovory' => 'Interviews',
-					'skoleni' => 'Trainings',
-					'soubory' => 'Files',
 				);
 				break;
 		}
