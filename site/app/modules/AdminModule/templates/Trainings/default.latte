@@ -8,7 +8,7 @@
 			<td class="dateCell">
 				<strong n:tag-if="$upcoming">
 				<small n:tag-if="!$upcoming && $training->start > $now">
-					<a n:href="Applications:date $training->dateId">{$training->start|date:'j. n. Y'}</a>
+					<a n:href="Trainings:date $training->dateId">{$training->start|date:'j. n. Y'}</a>
 				</small>
 				</strong>
 			</td>
@@ -40,7 +40,7 @@
 						<tbody n:inner-foreach="$training->applications as $application">
 							<tr>
 								<td><small>{$iterator->getCounter()}.</small></td>
-								<td><a n:href="Applications:application $application->id">{$application->name}</a></td>
+								<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
 								<td><small>{$application->email}</small></td>
 								<td>{$application->company}</td>
 								<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>

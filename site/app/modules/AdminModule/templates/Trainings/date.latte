@@ -1,7 +1,7 @@
 {define #menu}
 &raquo; <a n:href=":Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
-&raquo; <a n:href="Applications:">Termíny</a>
+&raquo; <a n:href="Trainings:">Termíny</a>
 {/define}
 
 {define #content}
@@ -25,7 +25,7 @@
 	<tbody n:inner-foreach="$applications as $application">
 		<tr>
 			<td><small>{$iterator->getCounter()}.</small></td>
-			<td><small n:tag-if="$application->discarded"><a n:href="Applications:application $application->id">{$application->name}</a></small></td>
+			<td><small n:tag-if="$application->discarded"><a n:href="Trainings:application $application->id">{$application->name}</a></small></td>
 			<td><small>{$application->email}</small></td>
 			<td><small n:tag-if="$application->discarded">{$application->company}</small></td>
 			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>

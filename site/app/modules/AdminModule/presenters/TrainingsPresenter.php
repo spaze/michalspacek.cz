@@ -4,12 +4,12 @@ namespace AdminModule;
 use \Nette\Application\UI\Form;
 
 /**
- * Applications presenter.
+ * Trainings presenter.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class ApplicationsPresenter extends BasePresenter
+class TrainingsPresenter extends BasePresenter
 {
 
 	/** @var \MichalSpacekCz\TrainingApplications */
