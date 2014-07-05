@@ -37,10 +37,10 @@ class RouterFactory
 		$router[] = $this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::COMPANIES20, '[<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
-		$router[] = $this->addRoute(self::WWW, 'rozhovory/<name>', 'Rozhovory', 'rozhovor');
-		$router[] = $this->addRoute(self::WWW, 'prednasky/<name>[/<slide>]', 'Prednasky', 'prednaska');
-		$router[] = $this->addRoute(self::WWW, 'soubory[/<action>]/<filename>', 'Soubory', 'soubor');
-		$router[] = $this->addRoute(self::WWW, 'skoleni/<name>[/<action>[/<param>]]', 'Skoleni', 'skoleni');
+		$router[] = $this->addRoute(self::WWW, 'rozhovory/<name>', 'Interviews', 'rozhovor');
+		$router[] = $this->addRoute(self::WWW, 'prednasky/<name>[/<slide>]', 'Talks', 'prednaska');
+		$router[] = $this->addRoute(self::WWW, 'soubory[/<action>]/<filename>', 'Files', 'soubor');
+		$router[] = $this->addRoute(self::WWW, 'skoleni/<name>[/<action>[/<param>]]', 'Trainings', 'skoleni');
 		$router[] = $this->addRoute(self::WWW, 'r/<action>/<token>', 'R', 'default');
 		$router[] = $this->addRoute(self::WWW, '<presenter>[/<action>]', 'Homepage', 'default');
 		return $router;
@@ -67,6 +67,16 @@ class RouterFactory
 				break;
 			case self::WEBLEED:
 				$metadata['module'] = 'Webleed';
+				break;
+			case self::WWW:
+				$metadata['presenter'][Route::FILTER_TABLE] = array(
+					'clanky' => 'Articles',
+					'kdo' => 'Who',
+					'prednasky' => 'Talks',
+					'rozhovory' => 'Interviews',
+					'skoleni' => 'Trainings',
+					'soubory' => 'Files',
+				);
 				break;
 		}
 

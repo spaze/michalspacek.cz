@@ -5,7 +5,7 @@ potvrzuji Vaši registraci ze dne {$application->statusTime|date:'j. n. Y'} na �
 
 {$application->trainingName} ({$application->trainingStart|date:'j. n. Y'} od {$application->trainingStart|date:'H:i'})
 adresa {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
-{var $link = '//:Skoleni:' . $application->trainingAction}
+{var $link = '//:Trainings:' . $application->trainingAction}
 {link $link}
 
 V příloze naleznete fakturu na částku {$application->price} Kč,

@@ -1,9 +1,9 @@
 {define #content}
 {includeblock "../embed.latte"}
-{includeblock "../Clanky/default.latte"}
-{includeblock "../Prednasky/default.latte"}
-{includeblock "../Rozhovory/default.latte"}
-{includeblock "../Skoleni/default.latte"}
+{includeblock "../Articles/default.latte"}
+{includeblock "../Talks/default.latte"}
+{includeblock "../Interviews/default.latte"}
+{includeblock "../Trainings/default.latte"}
 <div id="projekty">
     <h3>Další projekty:</h3>
     <ul>
@@ -21,7 +21,7 @@
 <div n:foreach="$articles as $article">
     {include #itemArticle, article => $article}
 </div>
-<p><a n:href="Clanky:">Všechny články</a></p>
+<p><a n:href="Articles:">Všechny články</a></p>
 <hr />
 <h2 id="prednasky">Přednáším</h2>
 <h3>Budu přednášet</h3>
@@ -38,7 +38,7 @@
         {include #itemTalk, talk => $talk}
     </li>
 </ul>
-<p><a n:href="Prednasky:">Všechny přednášky</a></p>
+<p><a n:href="Talks:">Všechny přednášky</a></p>
 <hr />
 <h2 id="rozhovory">Odpovídám na otázky</h2>
 <ul>

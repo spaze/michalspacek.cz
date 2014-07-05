@@ -1,0 +1,122 @@
+{define #menu}
+&raquo; <a n:href=":Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+&raquo; <a n:href="Applications:">Termíny</a>
+{/define}
+
+{define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<p>{$trainingName} {$trainingStart|date:'j. n. Y'} <small>{$venueCity}{if !$public}, {$venueName}{/if}</small></p>
+{form statuses}
+<div id="statuses">
+<table>
+	<thead>
+		<tr>
+			<th></th>
+			<th>Jméno</th>
+			<th>E-mail</th>
+			<th>Společnost</th>
+			<th>Status</th>
+			<th></th>
+			<th>Nový status</th>
+			<th>Cena</th>
+		</tr>
+	</thead>
+	<tbody n:inner-foreach="$applications as $application">
+		<tr>
+			<td><small>{$iterator->getCounter()}.</small></td>
+			<td><small n:tag-if="$application->discarded"><a n:href="Applications:prihlaska $application->id">{$application->name}</a></small></td>
+			<td><small>{$application->email}</small></td>
+			<td><small n:tag-if="$application->discarded">{$application->company}</small></td>
+			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
+			<td><small>&raquo;</small></td>
+			<td>{input applications-$application->id}</td>
+			<td>
+				<small title="Faktura č. {ifset $application->invoiceId}{$application->invoiceId}, {ifset $application->paid}zaplaceno {$application->paid|date:'j. n. Y H:i'}{else}nezaplaceno{/ifset}{else}&ndash;{/ifset}">
+					{ifset $application->price}{$application->price} Kč{if !isset($application->paid)} <strong>!</strong>{/if}{else}&ndash;{/ifset}
+				</small>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<p>{label date /} {input date}</p>
+<p>{input submit}</p>
+{/form statuses}
+<hr>
+<div id="pridat-ucastniky">
+	<p><a href="#pridat-ucastniky" class="block">Přidat účastníky</a></p>
+	<div id="pridat-ucastniky-container">
+	{form applications}
+		<table>
+			{formContainer applications-0}
+			<thead>
+				<tr>
+					<th>{label name /}</th>
+					<th>{label email /}</th>
+					<th>{label company /}</th>
+					<th>{label street /}</th>
+					<th>{label city /}</th>
+					<th>{label zip /}</th>
+					<th>{label companyId /}</th>
+					<th>{label companyTaxId /}</th>
+					<th>{label note /}</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{input name}</td>
+					<td>{input email}</td>
+					<td>{input company}</td>
+					<td>{input street}</td>
+					<td>{input city}</td>
+					<td>{input zip}</td>
+					<td>{input companyId}</td>
+					<td>{input companyTaxId}</td>
+					<td>{input note}</td>
+					<td><code class="button add" title="Kopírovat">+</code></td>
+					<td><code class="button delete" title="Odebrat">-</code></td>
+				</tr>
+			</tbody>
+			{/formContainer}
+		</table>
+		<p><strong>{label date /}</strong> {input date}</p>
+		<p><strong>{label status /}</strong> {input status}</p>
+		<p><strong>{label source /}</strong> {input source}</p>
+		<p>{input submit}</p>
+		{/form applications}
+	</div>
+</div>
+<hr>
+<div id="pridat-soubor">
+	<p><a href="#pridat-soubor" class="block">Přidat soubor</a></p>
+	<div id="pridat-soubor-container">
+		<p>
+			Přidá soubor všem účastíkům školení ve stavu
+			{foreach $attendedStatuses as $status}<small><code>{$status}</code></small>{sep}, {/sep}{/foreach}.
+		</p>
+		{form file}
+		<p><strong>{label file /}</strong> {input file}</p>
+		<p>{input submit}</p>
+		{/form file}
+	</div>
+</div>
+<hr>
+<div id="upravit-termin">
+	<p><a href="#upravit-termin" class="block">Upravit termín</a></p>
+	<div id="upravit-termin-container">
+		{form date}
+		<p><strong>{label training /}</strong> {input training}</p>
+		<p><strong>{label venue /}</strong> {input venue}</p>
+		<p><strong>{label start /}</strong> {input start}</p>
+		<p><strong>{label end /}</strong> {input end}</p>
+		<p><strong>{label status /}</strong> {input status}</p>
+		<p><strong>{label public /}</strong> {input public}</p>
+		<p><strong>{label cooperation /}</strong> {input cooperation}</p>
+		<p>{input submit}</p>
+		{/form date}
+	</div>
+</div>
+{/define}

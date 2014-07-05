@@ -28,7 +28,7 @@ class RPresenter extends BasePresenter
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
-			$this->redirect(':Skoleni:soubory', $application->action, $token);
+			$this->redirect(':Trainings:soubory', $application->action, $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}
@@ -39,7 +39,7 @@ class RPresenter extends BasePresenter
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
-			$this->redirect(':Skoleni:prihlaska', $application->action, $token);
+			$this->redirect(':Trainings:prihlaska', $application->action, $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}
