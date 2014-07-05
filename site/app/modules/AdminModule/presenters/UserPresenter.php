@@ -26,7 +26,7 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	public function actionZmenitHeslo()
+	public function actionChangePassword()
 	{
 		$this->template->pageTitle = 'Změnit heslo';
 	}

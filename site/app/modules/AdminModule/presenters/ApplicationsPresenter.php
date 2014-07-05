@@ -81,7 +81,7 @@ class ApplicationsPresenter extends BasePresenter
 	}
 
 
-	public function actionTermin($param)
+	public function actionDate($param)
 	{
 		$this->dateId = $param;
 		$this->redirectParam = $this->dateId;
@@ -109,13 +109,13 @@ class ApplicationsPresenter extends BasePresenter
 	}
 
 
-	public function actionSoubory($param)
+	public function actionFiles($param)
 	{
 		$this->applicationId = $param;
 		$this->redirectParam = $this->applicationId;
 		$application = $this->trainingApplications->getApplicationById($this->applicationId);
 		if (!in_array($application->status, $this->trainingApplications->getAttendedStatuses())) {
-			$this->redirect('termin', $application->dateId);
+			$this->redirect('date', $application->dateId);
 		}
 
 		$this->applicationIdsAttended = array($application->applicationId);
@@ -137,7 +137,7 @@ class ApplicationsPresenter extends BasePresenter
 	}
 
 
-	public function actionOhlasy($param)
+	public function actionReview($param)
 	{
 		$this->applicationId = $param;
 		$this->review = $this->trainings->getReviewByApplicationId($this->applicationId);
@@ -155,7 +155,7 @@ class ApplicationsPresenter extends BasePresenter
 	}
 
 
-	public function actionPrihlaska($param)
+	public function actionApplication($param)
 	{
 		$this->applicationId = $param;
 		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
@@ -369,7 +369,7 @@ class ApplicationsPresenter extends BasePresenter
 			$values->hidden
 		);
 
-		$this->redirect('termin', $this->review->dateId);
+		$this->redirect('date', $this->review->dateId);
 	}
 
 
@@ -464,7 +464,7 @@ class ApplicationsPresenter extends BasePresenter
 			$values->paid,
 			$values->familiar
 		);
-		$this->redirect('termin', $this->dateId);
+		$this->redirect('date', $this->dateId);
 	}
 
 
