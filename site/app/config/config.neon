@@ -27,6 +27,23 @@ common:
 				successMarker: 'Děkuji za přihlášku na školení'
 		domain:
 			sharedStaticRoot: www.%domain.root%
+		translatedRoutes:
+			presenters:
+				www:
+					Interviews:
+						mask: rozhovory
+					Talks:
+						mask: prednasky
+					Files:
+						mask: soubory
+					Trainings:
+						mask: skoleni
+					Articles:
+						mask: clanky
+					Who:
+						mask: kdo
+					R:
+						mask: r
 
 	services:
 		database: @Nette\Database\Connection
@@ -34,6 +51,7 @@ common:
 			class: RouterFactory
 			setup:
 				- setRootDomain(%domain.root%)
+				- setTranslatedPresenters(%translatedRoutes.presenters%)
 		router: @routerFactory::createRouter
 		texyFormatter: \Bare\Next\Formatter\Texy
 		redirections:  \MichalSpacekCz\Redirections
