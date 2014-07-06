@@ -2,10 +2,10 @@
 {define #menu}
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Trainings:">Školení</a>
-&raquo; <a n:href="Trainings:{$name}">{$title}</a>
+&raquo; <a n:href="Trainings:training $name">{$title}</a>
 {/define}
 
-<p>{$description} <small>(<a n:href="Trainings:{$name}#prihlaska">přihláška</a>)</small></p>
+<p>{$description} <small>(<a n:href="Trainings:training#prihlaska $name">přihláška</a>)</small></p>
 {if $reviews}
 	<div id="ohlasy">
 	<h2>Ohlasy na školení</h2>
@@ -14,6 +14,6 @@
 		<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">více&hellip;</a>)</small></p></div>
 	{/foreach}
 	</div>
-	<p>Přidejte se k těmto účastníkům a <a n:href="Trainings:{$name}#prihlaska">přihlaste se</a> na školení <a n:href="Trainings:{$name}">{$title}</a>!</p>
+	<p>Přidejte se k těmto účastníkům a <a n:href="Trainings:training#prihlaska $name">přihlaste se</a> na školení <a n:href="Trainings:training $name">{$title}</a>!</p>
 {/if}
 {/define}

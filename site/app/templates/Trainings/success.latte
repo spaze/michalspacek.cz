@@ -1,7 +1,7 @@
 {define #menu}
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Trainings:">Školení</a>
-&raquo; <a n:href="Trainings:{$name}">{$title}</a>
+&raquo; <a n:href="Trainings:training $name">{$title}</a>
 {/define}
 
 {define #content}
@@ -47,7 +47,7 @@
 <p><strong>{$form[note]->caption}</strong> {$form[note]->value}</p>
 {/form application}
 <hr />
-<p><a n:href="Trainings:prihlaska#prihlaska $name">Přihlaste dalšího účastníka</a></p>
+<p><a n:href="Trainings:application#prihlaska $name">Přihlaste dalšího účastníka</a></p>
 
 <p>Přijďte i na další školení, která pořádám a vedu:</p>
 {include #list}

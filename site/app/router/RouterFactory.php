@@ -21,7 +21,13 @@ class RouterFactory
 	protected $rootDomain;
 
 	/** @var array */
-	protected $translatedPresenters;
+	protected $translatedRoutes;
+
+	/** @var array */
+	protected $translatedPresenters = array();
+
+	/** @var array */
+	protected $translatedActions = array();
 
 
 	public function setRootDomain($rootDomain)
@@ -30,9 +36,21 @@ class RouterFactory
 	}
 
 
-	public function setTranslatedPresenters(array $translatedPresenters)
+	public function setTranslatedRoutes(array $translatedRoutes)
 	{
-		$this->translatedPresenters = $translatedPresenters;
+		$this->translatedRoutes = $translatedRoutes;
+
+		foreach ($this->translatedRoutes as $host => $routes) {
+			foreach ($routes as $presenter => $items) {
+				$this->translatedPresenters[$host][$items['mask']] = $presenter;
+				$this->translatedActions[$host][$presenter] = array();
+				if (isset($items['actions'])) {
+					foreach ($items['actions'] as $action => $translated) {
+						$this->translatedActions[$host][$presenter][$translated] = $action;
+					}
+				}
+			}
+		}
 	}
 
 
@@ -49,22 +67,20 @@ class RouterFactory
 		$router[] = $this->addRoute(self::WWW, '/<name>', 'Interviews', 'rozhovor');
 		$router[] = $this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'prednaska');
 		$router[] = $this->addRoute(self::WWW, '[/<action>]/<filename>', 'Files', 'soubor');
-		$router[] = $this->addRoute(self::WWW, '/<name>[/<action>[/<param>]]', 'Trainings', 'skoleni');
+		$router[] = $this->addRoute(self::WWW, '/<name>[/<action>[/<param>]]', 'Trainings', 'training');
 		$router[] = $this->addRoute(self::WWW, '/<action>/<token>', 'R', 'default');
-		$router[] = $this->addRoute(self::WWW, '<presenter>[/<action>]', 'Homepage', 'default');
+		$router[] = $this->addRoute(self::WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 		return $router;
 	}
 
 
 	private function addRoute($host, $mask, $defaultPresenter, $defaultAction)
 	{
-		$maskPrefix = (isset($this->translatedPresenters[$host][$defaultPresenter]) ? $this->translatedPresenters[$host][$defaultPresenter]['mask'] : null);
+		$maskPrefix = (isset($this->translatedRoutes[$host][$defaultPresenter]) ? $this->translatedRoutes[$host][$defaultPresenter]['mask'] : null);
 		$flags = 0;
 		$metadata = array(
-			'presenter' => array(
-				Route::VALUE => $defaultPresenter,
-			),
-			'action' => $defaultAction,
+			'presenter' => [Route::VALUE => $defaultPresenter],
+			'action' => [Route::VALUE => $defaultAction],
 		);
 		switch ($host) {
 			case self::ADMIN:
@@ -79,11 +95,13 @@ class RouterFactory
 				$metadata['module'] = 'Webleed';
 				break;
 			case self::WWW:
-				$table = array();
-				foreach ($this->translatedPresenters[$host] as $presenter => $items) {
-					$table[$items['mask']] = $presenter;
+				if ($maskPrefix === null) {
+					$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$host];
+				} else {
+					$presenter = $this->translatedPresenters[$host][$maskPrefix];
+					$metadata['presenter'][Route::FILTER_TABLE] = array($maskPrefix => $presenter);
+					$metadata['action'][Route::FILTER_TABLE] = $this->translatedActions[$host][$presenter];
 				}
-				$metadata['presenter'][Route::FILTER_TABLE] = $table;
 				break;
 		}
 

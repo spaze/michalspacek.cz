@@ -30,6 +30,8 @@ common:
 		translatedRoutes:
 			presenters:
 				www:
+					Homepage:
+						mask:  # Intentionally left empty
 					Interviews:
 						mask: rozhovory
 					Talks:
@@ -38,6 +40,10 @@ common:
 						mask: soubory
 					Trainings:
 						mask: skoleni
+						actions:
+							reviews: ohlasy
+							success: potvrzeni
+							application: prihlaska
 					Articles:
 						mask: clanky
 					Who:
@@ -51,7 +57,7 @@ common:
 			class: RouterFactory
 			setup:
 				- setRootDomain(%domain.root%)
-				- setTranslatedPresenters(%translatedRoutes.presenters%)
+				- setTranslatedRoutes(%translatedRoutes.presenters%)
 		router: @routerFactory::createRouter
 		texyFormatter: \Bare\Next\Formatter\Texy
 		redirections:  \MichalSpacekCz\Redirections

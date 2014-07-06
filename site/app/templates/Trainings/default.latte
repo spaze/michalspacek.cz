@@ -6,9 +6,8 @@
 <div n:if="$lastFreeSeats" class="flash notice"><strong>Ještě zbývá posledních pár míst, přihlaste se!</strong></div>
 <ul>
  	{foreach $upcomingTrainings as $item}
- 		{var $link = 'Trainings:' . $item[action]}
 		<li>
-			<a n:href="{$link}"><strong>{$item[name]}</strong></a>
+			<a n:href="Trainings:training $item[action]"><strong>{$item[name]}</strong></a>
 			<small>
 				{foreach $item[dates] as $date}
 					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>

@@ -98,7 +98,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionSkoleni($name)
+	public function actionTraining($name)
 	{
 		$session = $this->getSession();
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
@@ -136,7 +136,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionPrihlaska($name, $param)
+	public function actionApplication($name, $param)
 	{
 		$training  = $this->trainings->get($name);
 		if (!$training) {
@@ -343,7 +343,7 @@ class TrainingsPresenter extends BasePresenter
 			$session->companyId    = $values->companyId;
 			$session->companyTaxId = $values->companyTaxId;
 			$session->note         = $values->note;
-			$this->redirect($this->getName() . ':potvrzeni', $name);
+			$this->redirect($this->getName() . ':success', $name);
 		} catch (\UnexpectedValueException $e) {
 			Debugger::log($e);
 			$this->flashMessage('Přihláška vypadá jako spam, takhle by to nešlo.', 'error');
@@ -394,7 +394,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionOhlasy($name, $param)
+	public function actionReviews($name, $param)
 	{
 		if ($param !== null) {
 			throw new \Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
@@ -460,7 +460,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionPotvrzeni($name, $param)
+	public function actionSuccess($name, $param)
 	{
 		if ($param !== null) {
 			throw new \Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
