@@ -40,7 +40,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function actionPrednaska($name, $slide = null)
+	public function actionTalk($name, $slide = null)
 	{
 		$talk = $this->talks->get($name);
 		if (!$talk) {

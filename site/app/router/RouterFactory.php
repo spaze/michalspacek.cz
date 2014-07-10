@@ -64,11 +64,11 @@ class RouterFactory
 		$router[] = $this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::COMPANIES20, '[<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
-		$router[] = $this->addRoute(self::WWW, '/<name>', 'Interviews', 'rozhovor');
-		$router[] = $this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'prednaska');
-		$router[] = $this->addRoute(self::WWW, '[/<action>]/<filename>', 'Files', 'soubor');
+		$router[] = $this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
+		$router[] = $this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
+		$router[] = $this->addRoute(self::WWW, '[/<action>]/<filename>', 'Files', 'file');
 		$router[] = $this->addRoute(self::WWW, '/<name>[/<action>[/<param>]]', 'Trainings', 'training');
-		$router[] = $this->addRoute(self::WWW, '/<action>/<token>', 'R', 'default');
+		$router[] = $this->addRoute(self::WWW, '/<action>/<token>', 'Redirect', 'default');
 		$router[] = $this->addRoute(self::WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 		return $router;
 	}

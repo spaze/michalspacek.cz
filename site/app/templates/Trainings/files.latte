@@ -8,7 +8,7 @@
 <p>
 Díky za účast na školení {$trainingTitle} dne {$trainingDate|date:'j. n. Y'}. Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili.</p>
 <ul>
-	<li n:foreach="$files as $file"><a n:href="Files:skoleni $file->fileName">{$file->fileName}</a> ({$file->info->getSize()|bytes})</li>
+	<li n:foreach="$files as $file"><a n:href="Files:training $file->fileName">{$file->fileName}</a> ({$file->info->getSize()|bytes})</li>
 </ul>
 <p>Rád Vás přivítám i na nějakém dalším školení, které <a n:href="Trainings:">pořádám</a>.</p>
 {/define}

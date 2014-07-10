@@ -159,7 +159,7 @@ class TrainingsPresenter extends BasePresenter
 				$session->companyTaxId,
 				$session->note
 			);
-			$this->redirect($this->getName() . ':' . $name);
+			$this->redirect('training', $name);
 		}
 
 		$data                 = (array)$session->application;
@@ -176,7 +176,7 @@ class TrainingsPresenter extends BasePresenter
 		$session->companyTaxId = $application->companyTaxId;
 		$session->note         = $application->note;
 
-		$this->redirect($this->getName() . ':' . $application->action);
+		$this->redirect('training', $application->action);
 	}
 
 
@@ -343,7 +343,7 @@ class TrainingsPresenter extends BasePresenter
 			$session->companyId    = $values->companyId;
 			$session->companyTaxId = $values->companyTaxId;
 			$session->note         = $values->note;
-			$this->redirect($this->getName() . ':success', $name);
+			$this->redirect('success', $name);
 		} catch (\UnexpectedValueException $e) {
 			Debugger::log($e);
 			$this->flashMessage('Přihláška vypadá jako spam, takhle by to nešlo.', 'error');
@@ -413,7 +413,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionSoubory($name, $param)
+	public function actionFiles($name, $param)
 	{
 		$session = $this->getSession('application');
 
@@ -421,7 +421,7 @@ class TrainingsPresenter extends BasePresenter
 			$application = $this->trainingApplications->getApplicationByToken($param);
 			$session->token = $param;
 			$session->applicationId = ($application ? $application->applicationId : null);
-			$this->redirect($this->getName() . ':soubory', ($application ? $application->action : $name));
+			$this->redirect('files', ($application ? $application->action : $name));
 		}
 
 		if (!$session->applicationId || !$session->token) {
@@ -439,7 +439,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		if ($application->action != $name) {
-			$this->redirect($this->getName() . ':soubory', $application->action);
+			$this->redirect('files', $application->action);
 		}
 
 		$files = $this->trainingApplications->getFiles($application->applicationId);
@@ -477,7 +477,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$session = $this->getSession('training');
 		if (!isset($session->trainingId)) {
-			$this->redirect($this->getName() . ':' . $name);
+			$this->redirect('training', $name);
 		}
 
 		$date = $this->dates[$session->trainingId];

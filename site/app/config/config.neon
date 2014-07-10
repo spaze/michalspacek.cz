@@ -38,18 +38,25 @@ common:
 						mask: prednasky
 					Files:
 						mask: soubory
+						actions:
+							training: skoleni
+							file: soubor
 					Trainings:
 						mask: skoleni
 						actions:
 							reviews: ohlasy
 							success: potvrzeni
 							application: prihlaska
+							files: soubory
 					Articles:
 						mask: clanky
 					Who:
 						mask: kdo
-					R:
+					Redirect:
 						mask: r
+						actions:
+							application: p
+							files: s
 
 	services:
 		database: @Nette\Database\Connection

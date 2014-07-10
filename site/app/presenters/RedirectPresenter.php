@@ -5,7 +5,7 @@
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class RPresenter extends BasePresenter
+class RedirectPresenter extends BasePresenter
 {
 
 	const GOOD_NIGHT = 5;
@@ -24,18 +24,18 @@ class RPresenter extends BasePresenter
 	}
 
 
-	public function actionS($token)
+	public function actionFiles($token)
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
-			$this->redirect(':Trainings:soubory', $application->action, $token);
+			$this->redirect(':Trainings:files', $application->action, $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}
 	}
 
 
-	public function actionP($token)
+	public function actionApplication($token)
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {

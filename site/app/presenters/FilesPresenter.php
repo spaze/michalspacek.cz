@@ -31,7 +31,7 @@ class FilesPresenter extends BasePresenter
 	}
 
 
-	public function actionSkoleni($filename)
+	public function actionTraining($filename)
 	{
 		$session = $this->getSession('application');
 		if (!$session->applicationId) {
@@ -49,7 +49,7 @@ class FilesPresenter extends BasePresenter
 	}
 
 
-	public function actionSoubor($filename)
+	public function actionFile($filename)
 	{
 		throw new BadRequestException("Cannot download {$filename}", Response::S404_NOT_FOUND);
 	}

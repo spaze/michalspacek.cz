@@ -34,7 +34,7 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	public function actionRozhovor($name)
+	public function actionInterview($name)
 	{
 		$interview = $this->interviews->get($name);
 		if (!$interview) {
