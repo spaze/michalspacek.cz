@@ -90,11 +90,11 @@ abbr.dtstart, abbr.dtend { border: none; }
 }
 #footer {
     border-top: 1px solid #CCC;
-    color: #666;
+    color: #999;
     font-size: 0.8em;
     padding: 1em 0px;
 }
-#footer a { color: #444; }
+#footer a { color: #999; }
 #footer-name { float: left; }
 #footer-links { float: right; }
 .icon {
@@ -117,13 +117,9 @@ abbr.dtstart, abbr.dtend { border: none; }
 .slides { background-position: 0px 0px; }
 .video { background-position: -16px 0px; }
 .audio { background-position: -48px -32px; }
-#linkedin { background-position: -32px 0px; }
-#twitter { background-position: -32px -16px; }
-#facebook { background-position: -48px 0px; }
-#email { background-position: -48px -16px; }
 #upoutavka span { background-position: -32px -32px; }
 #heartbleed {
-    background-position: -64px 0px;
+    background-position: -32px 0px;
     margin-left: -6px;
     margin-right: 2px;
 }
