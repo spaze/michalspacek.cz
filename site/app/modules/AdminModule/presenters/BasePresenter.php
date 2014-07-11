@@ -7,7 +7,7 @@ namespace AdminModule;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-abstract class BasePresenter extends \BasePresenter
+abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
 
@@ -25,6 +25,17 @@ abstract class BasePresenter extends \BasePresenter
 	public function beforeRender()
 	{
 		$this->template->trackingCode = false;
+	}
+
+
+	protected function createTemplate($class = null)
+	{
+		$helpers = $this->getContext()->getByType(\MichalSpacekCz\Templating\Helpers::class);
+
+		$template = parent::createTemplate($class);
+		$template->getLatte()->addFilter(null, [new \Bare\Next\Templating\Helpers(), 'loader']);
+		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
+		return $template;
 	}
 
 

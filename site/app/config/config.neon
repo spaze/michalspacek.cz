@@ -52,6 +52,8 @@ common:
 						mask: clanky
 					Who:
 						mask: kdo
+					Contact:
+						mask: kontakt
 					Redirect:
 						mask: r
 						actions:
@@ -106,6 +108,7 @@ common:
 			class: \MichalSpacekCz\Templating\Helpers
 			setup:
 				- setStaticRoot(%domain.sharedStaticRoot%)
+		translator: \MichalSpacekCz\DummyTranslator
 
 production < common:
 

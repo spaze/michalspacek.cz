@@ -16,9 +16,8 @@ class HomepagePresenter extends \BasePresenter
 	protected $database;
 
 
-	public function __construct(\Nette\DI\Container $context, \Nette\Database\Connection $connection)
+	public function __construct(\Nette\Database\Connection $connection)
 	{
-		parent::__construct($context);
 		$this->database = $connection;
 	}
 

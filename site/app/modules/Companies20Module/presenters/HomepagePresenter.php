@@ -7,7 +7,7 @@ namespace Companies20Module;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HomepagePresenter extends \BasePresenter
+class HomepagePresenter extends \Nette\Application\UI\Presenter
 {
 
 	/** @var \Nette\Database\Connection */
@@ -16,9 +16,8 @@ class HomepagePresenter extends \BasePresenter
 	/** @var array */
 	private $tags = array();
 
-	public function __construct(\Nette\DI\Container $context, \Nette\Database\Connection $connection)
+	public function __construct(\Nette\Database\Connection $connection)
 	{
-		parent::__construct($context);
 		$this->database = $connection;
 	}
 

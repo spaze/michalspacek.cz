@@ -8,6 +8,15 @@
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
+
+	public function __construct(\Nette\Localization\ITranslator $translator)
+	{
+		$this->translator = $translator;
+	}
+
 
 	protected function startup()
 	{
@@ -23,7 +32,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	{
 		$webTracking = $this->getContext()->getByType(\MichalSpacekCz\WebTracking::class);
 		$this->template->trackingCode = $webTracking->isEnabled();
-	}
+ 		$this->template->setTranslator($this->translator);
+ 	}
 
 
 	protected function createTemplate($class = null)
@@ -36,5 +46,10 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		return $template;
 	}
 
+
+    protected function translate($message, $count = null)
+	{
+		return $this->translator->translate($message, $count);
+	}
 
 }

@@ -207,3 +207,7 @@ div.notice {
 #frm-mails input[type=number] { width: 75px; }
 #frm-mails input[type=number].price { width: 50px; }
 #frm-mails input[type=file] { width: 120px; }
+#contact, #social {
+    float: left;
+    margin: 0px 4em 0px 0px;
+}
