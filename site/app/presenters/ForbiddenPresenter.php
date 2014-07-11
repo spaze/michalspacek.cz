@@ -9,4 +9,15 @@
  */
 class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 {
+
+
+	/**
+	 * @param \Nette\Localization\ITranslator $translator
+	 */
+	public function __construct(\Nette\Localization\ITranslator $translator)
+	{
+		parent::__construct($translator);
+	}
+
+
 }

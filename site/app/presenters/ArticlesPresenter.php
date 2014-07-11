@@ -13,12 +13,16 @@ class ArticlesPresenter extends BasePresenter
 
 
 	/**
+	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Articles $articles
 	 */
-	public function __construct(\MichalSpacekCz\Articles $articles)
+	public function __construct(
+		\Nette\Localization\ITranslator $translator,
+		\MichalSpacekCz\Articles $articles
+	)
 	{
 		$this->articles = $articles;
-		parent::__construct();
+		parent::__construct($translator);
 	}
 
 

@@ -16,14 +16,19 @@ class TalksPresenter extends BasePresenter
 
 
 	/**
+	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Talks $talks
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
-	public function __construct(\MichalSpacekCz\Talks $talks, \MichalSpacekCz\Embed $embed)
+	public function __construct(
+		\Nette\Localization\ITranslator $translator,
+		\MichalSpacekCz\Talks $talks,
+		\MichalSpacekCz\Embed $embed
+	)
 	{
 		$this->talks = $talks;
 		$this->embed = $embed;
-		parent::__construct();
+		parent::__construct($translator);
 	}
 
 
