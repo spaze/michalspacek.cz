@@ -7,7 +7,7 @@ namespace Companies20Module;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HomepagePresenter extends \Nette\Application\UI\Presenter
+class HomepagePresenter extends BasePresenter
 {
 
 	/** @var \Nette\Database\Connection */
@@ -63,7 +63,7 @@ class HomepagePresenter extends \Nette\Application\UI\Presenter
 				$urls[$tag->urlId]->tags[] = $tag;
 			}
 		}
-		$allTags = array_values($this->database->fetchPairs('SELECT id, tag FROM tags ORDER BY tag', \PDO::FETCH_COLUMN));
+		$allTags = array_values($this->database->fetchPairs('SELECT id, tag FROM tags ORDER BY tag'));
 
 		$this->template->tags = $this->tags;
 		$this->template->urls = $urls;
