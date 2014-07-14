@@ -1,0 +1,42 @@
+{define #content}
+<p>{$descriptionCompany}</p>
+
+<h2 id="nazev">Název školení</h2>
+<p><strong>{$title}</strong></p>
+<hr />
+
+<h2 id="napln">Náplň</h2>
+<div>{$content}</div>
+<p>Další informace a ohlasy na školení najdete na stránce veřejného školení <a n:href="Trainings:training $name">{$title}</a>.</p>
+<hr />
+
+<h2 id="firmy">Pro jednotlivce</h2>
+<p>Přihlašte se na <a n:href="Trainings:training $name">veřejný kurz v tomto rozsahu</a>.</p>
+<hr />
+
+<h2 id="lektor">{_'Lektor'}</h2>
+<p>{_'Michal Špaček'} <small>(<a n:href="Contact:">{_'kontakt na lektora'}</a>)</small></p>
+<hr />
+
+<h2 id="lektor">{_'Délka'}</h2>
+<p>
+	Školení je jednodenní, trvá 8 hodin, ale může se až o hodinu protáhnout.<br>
+	<small>Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.</small>
+</p>
+<hr />
+
+<h2 id="kapacita">Kapacita</h2>
+<p>Neomezena, ale nad 12 účastníků zbývá méně času na dotazy.</p>
+<hr />
+
+<h2 id="cena">Cena</h2>
+<p>
+	<strong>{$priceCompany} Kč</strong>, cena je konečná, nejsem plátce DPH, při velmi malém počtu účastníků poskytuji výraznou slevu.<br>
+	<small>Základní cena dvoudenního školení je {$priceCompany * 2} Kč.</small>
+</p>
+<hr />
+
+<h2 id="objednavka">Objednávka</h2>
+<p>Pro objednání školení mi <a href="mailto:mail&#x40;michalspacek.cz">napište e-mail</a> a navrhněte termín, který se vám hodí.</p>
+
+{/define}

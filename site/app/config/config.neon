@@ -48,6 +48,8 @@ common:
 							success: potvrzeni
 							application: prihlaska
 							files: soubory
+					CompanyTrainings:
+						mask: firemni-skoleni
 					Articles:
 						mask: clanky
 					Who:

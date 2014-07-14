@@ -54,11 +54,16 @@
 <div class="vcalendar">
 <h2 id="nazev">Název školení</h2>
 <p><strong>{$title}</strong></p>
+<hr />
 
 <h2 id="napln">Náplň</h2>
 <div>{$content}</div>
 
 <p n:if="$upsell" id="upoutavka"><span class="icon icon16"></span><small>{$upsell}</small></p>
+<hr />
+
+<h2 id="firmy">Pro firmy</h2>
+<p>Školení v tomto rozsahu je možné <a n:href="CompanyTrainings:training $name">uspořádat i ve vaší firmě</a>.</p>
 <hr />
 
 <h2 id="lektor">{_'Lektor'}</h2>
