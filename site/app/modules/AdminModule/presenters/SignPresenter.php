@@ -15,12 +15,13 @@ class SignPresenter extends \BasePresenter
 
 
 	/**
+	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\UserManager $authenticator
 	 */
-	public function __construct(\MichalSpacekCz\UserManager $authenticator)
+	public function __construct(\Nette\Localization\ITranslator $translator, \MichalSpacekCz\UserManager $authenticator)
 	{
 		$this->authenticator = $authenticator;
-		parent::__construct();
+		parent::__construct($translator);
 	}
 
 

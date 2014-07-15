@@ -24,12 +24,14 @@ class HomepagePresenter extends BasePresenter
 
 
 	/**
+	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
 	 * @param \MichalSpacekCz\TrainingMails $trainingMails
 	 * @param \MichalSpacekCz\Trainings $trainings
 	 * @param \MichalSpacekCz\WebTracking $webTracking
 	 */
 	public function __construct(
+		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
 		\MichalSpacekCz\TrainingMails $trainingMails,
 		\MichalSpacekCz\Trainings $trainings,
@@ -40,7 +42,7 @@ class HomepagePresenter extends BasePresenter
 		$this->trainingMails = $trainingMails;
 		$this->trainings = $trainings;
 		$this->webTracking = $webTracking;
-		parent::__construct();
+		parent::__construct($translator);
 	}
 
 

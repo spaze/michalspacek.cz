@@ -10,6 +10,18 @@ namespace AdminModule;
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
+
+	/**
+	 * @param \Nette\Localization\ITranslator $translator
+	 */
+	public function __construct(\Nette\Localization\ITranslator $translator)
+	{
+		$this->translator = $translator;
+	}
+
 
 	protected function startup()
 	{
@@ -25,6 +37,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function beforeRender()
 	{
 		$this->template->trackingCode = false;
+ 		$this->template->setTranslator($this->translator);
 	}
 
 

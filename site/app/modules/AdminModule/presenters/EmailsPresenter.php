@@ -23,14 +23,19 @@ class EmailsPresenter extends BasePresenter
 
 
 	/**
+	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
 	 * @param \MichalSpacekCz\TrainingMails $trainingMails
 	 */
-	public function __construct(\MichalSpacekCz\TrainingApplications $trainingApplications, \MichalSpacekCz\TrainingMails $trainingMails)
+	public function __construct(
+		\Nette\Localization\ITranslator $translator,
+		\MichalSpacekCz\TrainingApplications $trainingApplications,
+		\MichalSpacekCz\TrainingMails $trainingMails
+	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
-		parent::__construct();
+		parent::__construct($translator);
 	}
 
 
