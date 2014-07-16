@@ -15,7 +15,10 @@ class InfoPresenter extends BasePresenter
 	{
 		ob_start();
 		phpinfo();
-		$this->template->phpinfo = \Nette\Utils\Html::el()->setHtml(ob_get_clean());
+		$info = preg_replace('~^.*?(<table[^>]*>.*</table>).*$~s', '$1', ob_get_clean());
+
+		$this->template->pageTitle = 'phpinfo()';
+		$this->template->phpinfo = \Nette\Utils\Html::el()->setHtml($info);
 	}
 
 

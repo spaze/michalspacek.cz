@@ -1,0 +1,62 @@
+#phpinfo {
+	width: 600px;
+	margin: 1em auto;
+}
+#phpinfo table {
+	border-collapse: collapse;
+	white-space:normal;
+}
+#phpinfo .center { text-align: center; }
+#phpinfo .center table {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+}
+#phpinfo .center th { text-align: center !important; }
+#phpinfo td, th {
+	border: 1px solid #000000;
+	font-size: 75%;
+	vertical-align: baseline;
+}
+#phpinfo h1 {
+	color: #000;
+	text-shadow: none;
+	text-align: center;
+	margin: 0.5em auto;
+}
+#phpinfo h2, #phpinfo h2 a {
+	color: #000;
+	text-shadow: none;
+	text-align: center;
+}
+#phpinfo .p { text-align: left; }
+#phpinfo .e {
+	background-color: #CCCCFF;
+	font-weight: bold;
+	color: #000000;
+}
+#phpinfo .h {
+	background-color: #9999CC;
+	font-weight: bold;
+	color: #000000;
+}
+#phpinfo .v {
+	background-color: #CCCCCC;
+	color: #000000;
+}
+#phpinfo .vr {
+	background-color: #CCCCCC;
+	text-align: right;
+	color: #000000;
+}
+#phpinfo img {
+	float: right;
+	border: 0px;
+}
+#phpinfo hr {
+	width: 600px;
+	background-color: #CCCCCC;
+	border: 0px;
+	height: 1px;
+	color: #000000;
+}
