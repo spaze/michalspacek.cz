@@ -19,7 +19,7 @@
 			<th>Status</th>
 			<th></th>
 			<th>Nový status</th>
-			<th>Cena</th>
+			<th title="Cena bez DPH">Cena</th>
 		</tr>
 	</thead>
 	<tbody n:inner-foreach="$applications as $application">
@@ -32,8 +32,13 @@
 			<td><small>&raquo;</small></td>
 			<td>{input applications-$application->id}</td>
 			<td>
-				<small title="Faktura č. {ifset $application->invoiceId}{$application->invoiceId}, {ifset $application->paid}zaplaceno {$application->paid|date:'j. n. Y H:i'}{else}nezaplaceno{/ifset}{else}&ndash;{/ifset}">
-					{ifset $application->price}{$application->price} Kč{if !isset($application->paid)} <strong>!</strong>{/if}{else}&ndash;{/ifset}
+				{capture $title}
+					{ifset $application->priceVat}{$application->priceVat} Kč s DPH, {/ifset}
+					faktura č. {ifset $application->invoiceId}{$application->invoiceId},
+					{ifset $application->paid}zaplaceno {$application->paid|date:'j. n. Y H:i'}{else}nezaplaceno{/ifset}{else}–{/ifset}
+				{/capture}
+				<small title="{$title|strip}">
+					{ifset $application->price}{$application->price} Kč{if !isset($application->paid)} <strong>!</strong>{/if}{else}–{/ifset}
 				</small>
 			</td>
 		</tr>

@@ -53,8 +53,8 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 					$applicationIdsContainer->addText('price')
 						->setType('number')
 						->setAttribute('class', 'price')
-						->setAttribute('placeholder', 'Cena v Kč po případné slevě')
-						->setAttribute('title', 'Cena v Kč po případné slevě')
+						->setAttribute('placeholder', 'Cena v Kč bez DPH po případné slevě')
+						->setAttribute('title', 'Cena v Kč bez DPH po případné slevě')
 						->setDefaultValue($application->price)
 						->addConditionOn($applicationIdsContainer['send'], self::FILLED)
 							->addRule(self::FILLED, 'Chybí cena');

@@ -21,6 +21,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Trainings */
 	protected $trainings;
 
+	/** @var \MichalSpacekCz\Vat */
+	protected $vat;
+
 	/** @var array */
 	private $dates;
 
@@ -51,17 +54,20 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
 	 * @param \MichalSpacekCz\TrainingDates $trainingDates
 	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
 		\MichalSpacekCz\TrainingDates $trainingDates,
-		\MichalSpacekCz\Trainings $trainings
+		\MichalSpacekCz\Trainings $trainings,
+		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 		$this->trainings = $trainings;
+		$this->vat = $vat;
 		parent::__construct($translator);
 	}
 
@@ -426,10 +432,17 @@ class TrainingsPresenter extends BasePresenter
 			->setDefaultValue($this->application->note)
 			->addCondition(Form::FILLED)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $rules['note'][Form::MAX_LENGTH]);
-		$form->addText('price', 'Cena:')
+		$form->addText('price', 'Cena bez DPH:')
 			->setType('number')
 			->setAttribute('title', 'Po případné slevě')
 			->setDefaultValue($this->application->price);
+		$form->addText('vatRate', 'DPH:')
+			->setType('number')
+			->setDefaultValue($this->application->vatRate ? $this->application->vatRate * 100 : $this->vat->getRate() * 100);
+		$form->addText('priceVat', 'Cena s DPH:')
+			->setType('number')
+			->setAttribute('title', 'Po případné slevě')
+			->setDefaultValue($this->application->priceVat);
 		$form->addText('discount', 'Sleva:')
 			->setType('number')
 			->setDefaultValue($this->application->discount);
@@ -461,6 +474,8 @@ class TrainingsPresenter extends BasePresenter
 			$values->companyTaxId,
 			$values->note,
 			$values->price,
+			$values->vatRate / 100,
+			$values->priceVat,
 			$values->discount,
 			$values->invoiceId,
 			$values->paid,

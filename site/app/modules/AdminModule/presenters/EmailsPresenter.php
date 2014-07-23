@@ -18,6 +18,9 @@ class EmailsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\TrainingMails */
 	protected $trainingMails;
 
+	/** @var \MichalSpacekCz\Vat */
+	protected $vat;
+
 	/** @var array */
 	private $applications;
 
@@ -26,15 +29,18 @@ class EmailsPresenter extends BasePresenter
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
 	 * @param \MichalSpacekCz\TrainingMails $trainingMails
+	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
-		\MichalSpacekCz\TrainingMails $trainingMails
+		\MichalSpacekCz\TrainingMails $trainingMails,
+		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
+		$this->vat = $vat;
 		parent::__construct($translator);
 	}
 
@@ -79,8 +85,11 @@ class EmailsPresenter extends BasePresenter
 					break;
 				case TrainingApplications::STATUS_SIGNED_UP:
 					if ($data->invoice->isOk()) {
-						$this->trainingApplications->updateApplicationInvoiceData($id, $data->price, $data->discount, $data->invoiceId);
+						$priceVat = $this->vat->addVat($data->price);
+						$this->trainingApplications->updateApplicationInvoiceData($id, $data->price, $this->vat->getRate(), $priceVat, $data->discount, $data->invoiceId);
 						$this->applications[$id]->price = $data->price;
+						$this->applications[$id]->vatRate = $this->vat->getRate();
+						$this->applications[$id]->priceVat = $priceVat;
 						$this->applications[$id]->discount = $data->discount;
 						$this->applications[$id]->invoiceId = $data->invoiceId;
 

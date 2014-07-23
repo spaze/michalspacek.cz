@@ -99,6 +99,8 @@ class TrainingApplications
 				v.address AS venueAddress,
 				v.city AS venueCity,
 				a.price,
+				a.vat_rate AS vatRate,
+				a.price_vat AS priceVat,
 				a.discount,
 				a.invoice_id AS invoiceId,
 				a.access_token AS accessToken
@@ -127,6 +129,8 @@ class TrainingApplications
 				a.status_time AS statusTime,
 				a.note,
 				a.price,
+				a.vat_rate AS vatRate,
+				a.price_vat AS priceVat,
 				a.invoice_id AS invoiceId,
 				a.paid
 			FROM
@@ -262,7 +266,7 @@ class TrainingApplications
 	}
 
 
-	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $price = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false)
+	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false)
 	{
 		if ($paid) {
 			$paid = new \DateTime($paid);
@@ -282,6 +286,8 @@ class TrainingApplications
 				'company_tax_id' => $companyTaxId,
 				'note'           => $note,
 				'price'          => ($price || $discount ? $price : null),
+				'vat_rate'       => ($vatRate ?: null),
+				'price_vat'      => ($priceVat ?: null),
 				'discount'       => ($discount ?: null),
 				'invoice_id'     => ($invoiceId ?: null),
 				'paid'           => ($paid ?: null),
@@ -292,12 +298,14 @@ class TrainingApplications
 	}
 
 
-	public function updateApplicationInvoiceData($applicationId, $price, $discount, $invoiceId)
+	public function updateApplicationInvoiceData($applicationId, $price, $vatRate, $priceVat, $discount, $invoiceId)
 	{
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
 				'price'      => ($price || $discount ? $price : null),
+				'vat_rate'   => ($vatRate ?: null),
+				'price_vat'  => ($priceVat ?: null),
 				'discount'   => ($discount ?: null),
 				'invoice_id' => ($invoiceId ?: null),
 			),
@@ -454,6 +462,8 @@ class TrainingApplications
 				a.company_tax_id AS companyTaxId,
 				a.note,
 				a.price,
+				a.vat_rate AS vatRate,
+				a.price_vat AS priceVat,
 				a.discount,
 				a.invoice_id AS invoiceId,
 				a.paid

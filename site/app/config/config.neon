@@ -27,6 +27,7 @@ common:
 				successMarker: 'Děkuji za přihlášku na školení'
 		domain:
 			sharedStaticRoot: www.%domain.root%
+		vatRate: 0.21
 		translatedRoutes:
 			presenters:
 				www:
@@ -111,6 +112,10 @@ common:
 			setup:
 				- setStaticRoot(%domain.sharedStaticRoot%)
 		translator: \MichalSpacekCz\DummyTranslator
+		vat:
+			class: \MichalSpacekCz\Vat
+			setup:
+				- setRate(%vatRate%)
 
 production < common:
 

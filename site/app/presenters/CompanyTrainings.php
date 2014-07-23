@@ -11,16 +11,23 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Trainings */
 	protected $trainings;
 
+	/** @var \MichalSpacekCz\Vat */
+	protected $vat;
+
+
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\Trainings $trainings
+		\MichalSpacekCz\Trainings $trainings,
+		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->trainings = $trainings;
+		$this->vat = $vat;
 		parent::__construct($translator);
 	}
 
@@ -44,6 +51,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->descriptionCompany = $training->descriptionCompany;
 		$this->template->content = $training->content;
 		$this->template->priceCompany = $training->priceCompany;
+		$this->template->priceCompanyVat = $this->vat->addVat($training->priceCompany);
 	}
 
 

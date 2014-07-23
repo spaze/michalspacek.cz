@@ -25,6 +25,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Trainings */
 	protected $trainings;
 
+	/** @var \MichalSpacekCz\Vat */
+	protected $vat;
+
 	/** @var \Nette\Database\Row */
 	private $training;
 
@@ -75,19 +78,22 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
 	 * @param \MichalSpacekCz\TrainingMails $trainingMails
 	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\Files $files,
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
 		\MichalSpacekCz\TrainingMails $trainingMails,
-		\MichalSpacekCz\Trainings $trainings
+		\MichalSpacekCz\Trainings $trainings,
+		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->files = $files;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainings = $trainings;
+		$this->vat = $vat;
 		parent::__construct($translator);
 	}
 
@@ -125,6 +131,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->originalHref     = $this->training->originalHref;
 		$this->template->capacity         = $this->training->capacity;
 		$this->template->price            = $this->training->price;
+		$this->template->priceVat         = $this->vat->addVat($this->training->price);
 		$this->template->studentDiscount  = $this->training->studentDiscount;
 		$this->template->materials        = $this->training->materials;
 		$this->template->lastFreeSeats    = $this->trainings->lastFreeSeatsAnyDate($this->dates);
