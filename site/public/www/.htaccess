@@ -12,8 +12,7 @@ RewriteRule ^thisShouldNotExist$ - [L]
 RewriteRule ^crossdomain\.xml$ - [L]
 RewriteRule ^apple-touch-icon\.png$ - [L]
 RewriteRule ^apple-touch-icon-precomposed\.png$ - [L]
-RewriteRule xmlrpc\.php$ - [L]
-RewriteRule wp-login\.php$ - [L]
+RewriteRule \.php$ - [L]
 RewriteRule \.html?$ - [L]
 
 # phpinfo() easter egg
@@ -35,4 +34,4 @@ RewriteRule (.*?)[,.]+$ /$1 [R=301,NE,L]
 RewriteRule (https:)//?(.*)$ $1//$2 [R=301,NE,L]
 
 RewriteCond %{ENV:REDIRECT_STATUS} ^$
-RewriteRule .* index.php [L]
+RewriteRule .* app.php [L]
