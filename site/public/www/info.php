@@ -25,7 +25,7 @@ hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #0
 <body><div class="center">
 <table border="0" cellpadding="3" width="600">
 <tr class="h"><td>
-<a href="http://www.php.net/"><img border="0" src="/info.php?=PHPE9568F34-D428-11d2-A769-00AA001ACF42" alt="PHP Logo" /></a><h1 class="p">PHP Version 3.14159265</h1>
+<a href="http://www.php.net/"><img border="0" src="data:image/gif;base64,R0z5yP4nYc4J" alt="PHP Logo" /></a><h1 class="p">PHP Version 3.14159265</h1>
 </td></tr>
 </table><br />
 <table border="0" cellpadding="3" width="600">
