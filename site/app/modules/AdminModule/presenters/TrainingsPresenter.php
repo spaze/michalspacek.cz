@@ -79,10 +79,10 @@ class TrainingsPresenter extends BasePresenter
 			$text->setDefaultValue($defaultValue);
 		}
 		$text
-			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS nebo NOW')
-			->setAttribute('title', 'Formát  YYYY-MM-DD HH:MM:SS nebo NOW')
+			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW')
+			->setAttribute('title', 'Formát  YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW')
 			->addCondition(Form::FILLED)
-			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo NOW', '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
+			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
 		if ($required) {
 			$text->setRequired('Zadejte datum');
 		}
@@ -449,7 +449,13 @@ class TrainingsPresenter extends BasePresenter
 		$form->addText('invoiceId', 'Faktura č.:')
 			->setType('number')
 			->setDefaultValue($this->application->invoiceId);
-		$this->addDate($form, 'paid', 'Zaplaceno:', false, $this->application->paid);
+		$text = $form->addText('paid', 'Zaplaceno:');
+		$text->setDefaultValue($this->application->paid);
+		$text
+			->setAttribute('placeholder', 'YYYY-MM-DD nebo DD.MM.YYYY nebo NOW')
+			->setAttribute('title', 'Formát  YYYY-MM-DD nebo DD.MM.YYYY nebo NOW')
+			->addCondition(Form::FILLED)
+			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD nebo DD.MM.YYYY nebo NOW', '(\d{4}-\d{1,2}-\d{1,2})|(\d{1,2}\.\d{1,2}\.\d{4})|[Nn][Oo][Ww]');
 
 		$form->addSubmit('submit', 'Uložit');
 		$form->onSuccess[] = $this->submittedApplication;
