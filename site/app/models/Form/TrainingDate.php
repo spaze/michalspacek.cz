@@ -24,7 +24,7 @@ class TrainingDate extends \Nette\Application\UI\Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \MichalSpacekCz\Trainings $trainings, \MichalSpacekCz\TrainingDates $trainingDates)
 	{
 		parent::__construct($parent, $name);
-		
+
 		$this->trainings = $trainings;
 		$this->trainingDates = $trainingDates;
 
@@ -43,16 +43,16 @@ class TrainingDate extends \Nette\Application\UI\Form
 			->setRequired('Vyberte prosím místo');
 
 		$this->addText('start', 'Začátek:')
-			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS')
-			->setAttribute('title', 'Formát YYYY-MM-DD HH:MM:SS')
+			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
+			->setAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím začátek')
-			->addRule(self::PATTERN, 'Začátek musí být ve formátu YYYY-MM-DD HH:MM:SS', '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})');
+			->addRule(self::PATTERN, 'Začátek musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
 
 		$this->addText('end', 'Konec:')
-			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS')
-			->setAttribute('title', 'Formát YYYY-MM-DD HH:MM:SS')
+			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
+			->setAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím konec')
-			->addRule(self::PATTERN, 'Konec musí být ve formátu YYYY-MM-DD HH:MM:SS', '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})');
+			->addRule(self::PATTERN, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
 
 		$statuses = array();
 		foreach ($this->trainingDates->getStatuses() as $status) {
@@ -78,8 +78,8 @@ class TrainingDate extends \Nette\Application\UI\Form
 		$values = array(
 			'training' => $date->trainingId,
 			'venue' => $date->venueId,
-			'start' => $date->start,
-			'end' => $date->end,
+			'start' => $date->start->format('Y-m-d H:i'),
+			'end' => $date->end->format('Y-m-d H:i'),
 			'status' => $this->trainingDates->getStatusId($date->status),
 			'public' => $date->public,
 			'cooperation' => $date->cooperationId,
