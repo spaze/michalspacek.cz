@@ -15,7 +15,7 @@ $(document).ready(function() {
 				return value.replace(/^applications\[\d+\]/, 'applications[' + index + ']');
 			});
 			$(this).attr('id', function(i, value) {
-				return value.replace(/^frmapplications-applications-\d+-/, 'frmapplications-applications-' + index + '-');
+				return value.replace(/^frm-applications-applications-\d+-/, 'frm-applications-applications-' + index + '-');
 			});
 			$(this).attr('data-nette-rules', $(this).attr('data-nette-rules').replace(/'applications\[\d+\]/, "'applications[" + index + ']'));
 		});
