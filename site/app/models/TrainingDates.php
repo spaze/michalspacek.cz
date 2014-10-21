@@ -35,6 +35,7 @@ class TrainingDates
 				t.id_training AS trainingId,
 				t.action,
 				t.name,
+				t.price,
 				d.start,
 				d.end,
 				d.public,

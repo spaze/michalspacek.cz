@@ -168,16 +168,16 @@ class TrainingsPresenter extends BasePresenter
 		$this->applicationId = $param;
 		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
 		$this->dateId = $this->application->dateId;
-		$training = $this->trainingDates->get($this->application->dateId);
+		$this->training = $this->trainingDates->get($this->application->dateId);
 
 		$this->template->pageTitle     = "{$this->application->name}";
 		$this->template->applicationId = $this->applicationId;
 		$this->template->dateId        = $this->dateId;
 		$this->template->status        = $this->application->status;
 		$this->template->statusTime    = $this->application->statusTime;
-		$this->template->trainingName  = $training->name;
-		$this->template->trainingStart = $training->start;
-		$this->template->trainingCity  = $training->venueCity;
+		$this->template->trainingName  = $this->training->name;
+		$this->template->trainingStart = $this->training->start;
+		$this->template->trainingCity  = $this->training->venueCity;
 		$this->template->attended      = in_array($this->application->status, $this->trainingApplications->getAttendedStatuses());
 	}
 
@@ -435,14 +435,14 @@ class TrainingsPresenter extends BasePresenter
 		$form->addText('price', 'Cena bez DPH:')
 			->setType('number')
 			->setAttribute('title', 'Po případné slevě')
-			->setDefaultValue($this->application->price);
+			->setDefaultValue($this->application->price ? $this->application->price : $this->training->price);
 		$form->addText('vatRate', 'DPH:')
 			->setType('number')
 			->setDefaultValue($this->application->vatRate ? $this->application->vatRate * 100 : $this->vat->getRate() * 100);
 		$form->addText('priceVat', 'Cena s DPH:')
 			->setType('number')
 			->setAttribute('title', 'Po případné slevě')
-			->setDefaultValue($this->application->priceVat);
+			->setDefaultValue($this->application->priceVat ? $this->application->priceVat : $this->vat->addVat($this->training->price));
 		$form->addText('discount', 'Sleva:')
 			->setType('number')
 			->setDefaultValue($this->application->discount);
