@@ -30,7 +30,16 @@
 				{if $application->status == \MichalSpacekCz\TrainingApplications::STATUS_ATTENDED}
 					<strong n:if="!$application->files" class="error">Není nahrán žádný soubor!</strong>
 				{elseif $application->status == \MichalSpacekCz\TrainingApplications::STATUS_SIGNED_UP}
-					{input invoiceId} {input invoice} {input price} {input discount}
+					{if $application->price && $application->vatRate && $application->priceVat}
+						{input invoiceId}
+						{input invoice}
+						<span title="Cena v Kč bez DPH po případné slevě">{$application->price} Kč</span>
+						/
+						<span title="Cena v Kč s DPH po případné slevě">{$application->priceVat} Kč</span>
+						<small n:if="$application->discount" title="Sleva {$application->discount} %">{$application->discount} %</small>
+					{else}
+						<strong class="error">Není zadána cena, DPH nebo cena s DPH!</strong>
+					{/if}
 				{/if}
 			</td>
 		</tr>

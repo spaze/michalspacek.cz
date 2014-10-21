@@ -28,6 +28,10 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 					$checked = (bool)$application->files;
 					$disabled = !$checked;
 					break;
+				case TrainingApplications::STATUS_SIGNED_UP:
+					$checked = ($application->price && $application->vatRate && $application->priceVat);
+					$disabled = !$checked;
+					break;
 			}
 			$applicationIdsContainer->addCheckbox('send')
 				->setDefaultValue($checked)
@@ -50,20 +54,6 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 						->addConditionOn($applicationIdsContainer['send'], self::FILLED)
 							->addRule(self::FILLED, 'Chybí faktura')
 							->addRule(self::MIME_TYPE, 'Faktura není v PDF', 'application/pdf');
-					$applicationIdsContainer->addText('price')
-						->setType('number')
-						->setAttribute('class', 'price')
-						->setAttribute('placeholder', 'Cena v Kč bez DPH po případné slevě')
-						->setAttribute('title', 'Cena v Kč bez DPH po případné slevě')
-						->setDefaultValue($application->price)
-						->addConditionOn($applicationIdsContainer['send'], self::FILLED)
-							->addRule(self::FILLED, 'Chybí cena');
-					$applicationIdsContainer->addText('discount')
-						->setType('number')
-						->setAttribute('class', 'price')
-						->setAttribute('placeholder', 'Sleva v procentech')
-						->setAttribute('title', 'Sleva v procentech')
-						->setDefaultValue($application->discount);
 					break;
 			}
 		}

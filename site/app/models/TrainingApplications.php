@@ -298,15 +298,11 @@ class TrainingApplications
 	}
 
 
-	public function updateApplicationInvoiceData($applicationId, $price, $vatRate, $priceVat, $discount, $invoiceId)
+	public function updateApplicationInvoiceData($applicationId, $invoiceId)
 	{
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
-				'price'      => ($price || $discount ? $price : null),
-				'vat_rate'   => ($vatRate ?: null),
-				'price_vat'  => ($priceVat ?: null),
-				'discount'   => ($discount ?: null),
 				'invoice_id' => ($invoiceId ?: null),
 			),
 			$applicationId

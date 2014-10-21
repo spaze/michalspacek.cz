@@ -85,12 +85,7 @@ class EmailsPresenter extends BasePresenter
 					break;
 				case TrainingApplications::STATUS_SIGNED_UP:
 					if ($data->invoice->isOk()) {
-						$priceVat = $this->vat->addVat($data->price);
-						$this->trainingApplications->updateApplicationInvoiceData($id, $data->price, $this->vat->getRate(), $priceVat, $data->discount, $data->invoiceId);
-						$this->applications[$id]->price = $data->price;
-						$this->applications[$id]->vatRate = $this->vat->getRate();
-						$this->applications[$id]->priceVat = $priceVat;
-						$this->applications[$id]->discount = $data->discount;
+						$this->trainingApplications->updateApplicationInvoiceData($id, $data->invoiceId);
 						$this->applications[$id]->invoiceId = $data->invoiceId;
 
 						$invoice = array($data->invoice->getName() => $data->invoice->getTemporaryFile());
