@@ -12,11 +12,13 @@ RewriteRule ^thisShouldNotExist$ - [L]
 RewriteRule ^crossdomain\.xml$ - [L]
 RewriteRule ^apple-touch-icon\.png$ - [L]
 RewriteRule ^apple-touch-icon-precomposed\.png$ - [L]
-RewriteRule \.php$ - [L]
-RewriteRule \.html?$ - [L]
 
 # phpinfo() easter egg
 RewriteRule ^info\.php$ - [L,T=text/plain]
+
+# Stop scanner ending up in my logs
+RewriteRule \.php$ - [L]
+RewriteRule \.html?$ - [L]
 
 # PHP CGI RCE easter egg, see http://eindbazen.net/2012/05/php-cgi-advisory-cve-2012-1823/
 RewriteCond %{QUERY_STRING} ^(\+?)-s$ [OR]
