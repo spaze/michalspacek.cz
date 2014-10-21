@@ -1,2 +1,2 @@
 <?php
-require '../www/index.php';
+require '../www/app.php';
