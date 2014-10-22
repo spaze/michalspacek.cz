@@ -11,7 +11,7 @@ class RouterFactory
 {
 
 	const ADMIN = 'admin';
-	const COMPANIES20 = 'firmy20';
+	const COTEL = 'cotel';
 	const WEBLEED = 'heartbleed';
 	const WWW = 'www';
 
@@ -62,7 +62,7 @@ class RouterFactory
 		Route::addStyle('name', 'action');  // let the name param be converted like the action param (foo-bar => fooBar)
 		$router = new RouteList();
 		$router[] = $this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
-		$router[] = $this->addRoute(self::COMPANIES20, '[<param>]', 'Homepage', 'default');
+		$router[] = $this->addRoute(self::COTEL, '[<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$router[] = $this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
 		$router[] = $this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
@@ -88,7 +88,7 @@ class RouterFactory
 				$metadata['module'] = 'Admin';
 				$flags = Route::SECURED;
 				break;
-			case self::COMPANIES20:
+			case self::COTEL:
 				$metadata['module'] = 'Companies20';
 				$metadata['param'] = [Route::FILTER_IN => 'urldecode', Route::FILTER_OUT => 'urlencode'];
 				break;
