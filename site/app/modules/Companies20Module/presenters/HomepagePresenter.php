@@ -25,7 +25,7 @@ class HomepagePresenter extends BasePresenter
 	public function actionDefault($param)
 	{
 		$this->tags = array_filter(preg_split('/\s+/', $param));
-		$this->database->query('USE app_role_model');
+		$this->database->query('USE cz_michalspacek_cotel');
 		if (empty($this->tags)) {
 			$query = 'SELECT * FROM urls';
 		} else {
