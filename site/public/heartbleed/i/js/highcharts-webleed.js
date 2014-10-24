@@ -77,7 +77,7 @@ $(document).ready(function() {
 					}
 				}
 			},
-			tickInterval: 24 * 3600 * 1000
+			tickInterval: 7 * 24 * 3600 * 1000
 		},
 		yAxis: {
 			title: {
