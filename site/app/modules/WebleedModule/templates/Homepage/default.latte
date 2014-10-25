@@ -8,7 +8,7 @@
 	<script>window.jQuery || document.write('<script src={='/i/js/jquery-2.1.1.min.js'|staticUrl}><\/script>')</script>
 	<script src="{='/i/js/highcharts-custom.js'|staticUrl}"></script>
 	<script src="{='/i/js/highcharts-webleed.js'|staticUrl}"></script>
-	{include '../../../../templates/tracking.latte'}
+    <script n:if="$trackingCode" src="{='/i/js/analytics.js'|staticUrl}"></script>
 </head>
 <body>
 <div id="container">
