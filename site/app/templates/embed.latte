@@ -3,7 +3,7 @@
 	{if $slidesEmbedType == \MichalSpacekCz\Embed::EMBED_SLIDES_SLIDESHARE}
 		<iframe src="{$slidesEmbed}" width="800" height="636" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
 	{elseif $slidesEmbedType == \MichalSpacekCz\Embed::EMBED_SLIDES_SPEAKERDECK}
-		<script async class="speakerdeck-embed" data-id="{$slidesEmbed}" {ifset $slidesDataSlide}data-slide="{$slidesDataSlide}"{/ifset} src="//speakerdeck.com/assets/embed.js"></script>
+		<script async class="speakerdeck-embed" data-id="{$slidesEmbed}" {ifset $slidesDataSlide}data-slide="{$slidesDataSlide}"{/ifset} src="https://speakerdeck.com/assets/embed.js"></script>
 	{/if}
 </div>
 {/define}
