@@ -1,20 +1,20 @@
 {layout "../@layout.latte"}
 {var $robots = noindex}
 {block #body}
-    <div class="container">
-    <div id="header">
-    <a n:href="Homepage:"><img src="{='i/images/michal-spacek.jpg'|staticUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
-    <h1>{$pageTitle}</h1>
-    </div>
-    <hr />
-    <div id="menu" class="center">
-    {block #menu}
+	<div class="container">
+	<div id="header">
+	<a n:href="Homepage:"><img src="{='i/images/michal-spacek.jpg'|staticUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
+	<h1>{$pageTitle}</h1>
+	</div>
+	<hr />
+	<div id="menu" class="center">
+	{block #menu}
 		Zkuste jiné stránky: <a n:href="Homepage:">Titulní stránka</a>
 		&ndash; <a n:href="Trainings:">Školení</a>
-    {/block}
-    </div>
-    <hr />
-    <h2>Chyba {$errorCode}</h2>
-    {include #content}
-    </div>
+	{/block}
+	</div>
+	<hr />
+	<h2>Chyba {$errorCode}</h2>
+	{include #content}
+	</div>
 {/block}
