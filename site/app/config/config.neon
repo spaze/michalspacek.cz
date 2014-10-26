@@ -32,6 +32,15 @@ common:
 				successMarker: 'Děkuji za přihlášku na školení'
 		domain:
 			sharedStaticRoot: www.%domain.root%
+		contentSecurityPolicy:
+			www:
+				default-src: 'http://www.michalspacek.cz/i/'
+				script-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://speakerdeck.com/assets/'
+				frame-src: 'https://www.slideshare.net/slideshow/embed_code/ http://speakerdeck.com/player/ https://speakerdeck.com/player/ https://www.youtube-nocookie.com/embed/ https://player.vimeo.com/video/'
+				frame-ancestors: "'none'"
+			admin:
+				default-src: 'http://www.michalspacek.cz/i/'
+				img-src: 'http://www.michalspacek.cz/i/ data:'
 		vatRate: 0.21
 		translatedRoutes:
 			presenters:
@@ -121,6 +130,11 @@ common:
 			class: \MichalSpacekCz\Vat
 			setup:
 				- setRate(%vatRate%)
+		contentSecurityPolicy:
+			class: \MichalSpacekCz\ContentSecurityPolicy
+			setup:
+				- setRootDomain(%domain.root%)
+				- setPolicy(%contentSecurityPolicy%)
 
 production < common:
 

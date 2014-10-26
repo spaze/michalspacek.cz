@@ -21,6 +21,15 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	protected function startup()
 	{
 		parent::startup();
+
+		$contentSecurityPolicy = $this->getContext()->getByType(\MichalSpacekCz\ContentSecurityPolicy::class);
+		$header = $contentSecurityPolicy->getHeader();
+
+		if ($header !== false) {
+			$httpResponse = $this->getContext()->getByType(\Nette\Http\IResponse::class);
+			$httpResponse->setHeader('Content-Security-Policy', $header);
+		}
+
 		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\UserManager::class);
 		if ($authenticator->isForbidden()) {
 			$this->forward('Forbidden:');
@@ -32,8 +41,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	{
 		$webTracking = $this->getContext()->getByType(\MichalSpacekCz\WebTracking::class);
 		$this->template->trackingCode = $webTracking->isEnabled();
- 		$this->template->setTranslator($this->translator);
- 	}
+		$this->template->setTranslator($this->translator);
+	}
 
 
 	protected function createTemplate($class = null)
