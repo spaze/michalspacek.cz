@@ -43,6 +43,11 @@ class ContentSecurityPolicy
 	public function getHeader()
 	{
 		$host = $this->httpRequest->getUrl()->getHost();
+
+		if (!isset($this->policy[$host])) {
+			return false;
+		}
+
 		$policy = array();
 		foreach ($this->policy[$host] as $directive => $sources) {
 			$policy[] = "{$directive} {$sources}";
