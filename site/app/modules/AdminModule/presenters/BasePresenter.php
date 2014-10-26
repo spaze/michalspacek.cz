@@ -37,7 +37,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function beforeRender()
 	{
 		$this->template->trackingCode = false;
- 		$this->template->setTranslator($this->translator);
+		$this->template->setTranslator($this->translator);
 	}
 
 
