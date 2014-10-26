@@ -44,11 +44,4 @@ foreach (array_filter($configFiles, 'is_file') as $filename) {
 	$configurator->addConfig($filename, $configurator::NONE);
 }
 $container = $configurator->createContainer();
-
-$httpResponse = $container->httpResponse;
-$container->application->onStartup[] = function() use ($httpResponse) {
-	$httpResponse->setHeader('X-Content-Type-Options', 'nosniff');
-	$httpResponse->setHeader('X-XSS-Protection', '1; mode=block');
-};
-
 return $container;
