@@ -1,7 +1,4 @@
 <?php
-use Nette\Diagnostics\Debugger,
-	Nette\Application as NA;
-
 /**
  * Error presenter.
  *
@@ -11,9 +8,7 @@ use Nette\Diagnostics\Debugger,
 class ErrorPresenter extends BasePresenter
 {
 
-	/**
-	 * @var \MichalSpacekCz\Redirections
-	 */
+	/** @var \MichalSpacekCz\Redirections */
 	protected $redirections;
 
 
@@ -49,16 +44,16 @@ class ErrorPresenter extends BasePresenter
 			$this->redirectUrl($destination, \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
 		}
 
-		if ($exception instanceof NA\BadRequestException) {
+		if ($exception instanceof \Nette\Application\BadRequestException) {
 			$code = $exception->getCode();
 			// load template 403.latte or 404.latte or ... 4xx.latte
 			$this->setView(in_array($code, array(403, 404, 405, 410, 500)) ? $code : '4xx');
 			// log to access.log
-			Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
+			\Tracy\Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
 
 		} else {
 			$this->setView('500'); // load template 500.latte
-			Debugger::log($exception, Debugger::ERROR); // and log exception
+			\Tracy\Debugger::log($exception, \Tracy\Debugger::EXCEPTION); // and log exception
 		}
 		$this->template->errorCode = $this->getView();
 	}
