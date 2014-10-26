@@ -15,20 +15,9 @@ class ErrorPresenter extends BasePresenter
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\Localization\ITranslator $translator)
+	public function __construct(\Nette\Localization\ITranslator $translator, \MichalSpacekCz\Redirections $redirections)
 	{
 		parent::__construct($translator);
-	}
-
-
-	/**
-	 * @param \MichalSpacekCz\Redirections
-	 */
-	public function injectRedirections(\MichalSpacekCz\Redirections $redirections)
-	{
-		if ($this->redirections) {
-			throw new Nette\InvalidStateException('Redirections has already been set');
-		}
 		$this->redirections = $redirections;
 	}
 
