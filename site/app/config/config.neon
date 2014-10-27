@@ -41,6 +41,10 @@ common:
 			admin:
 				default-src: 'http://www.michalspacek.cz/i/'
 				img-src: 'http://www.michalspacek.cz/i/ data:'
+			heartbleed:
+				default-src: 'http://www.michalspacek.cz/i/'
+				script-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/'
+				style-src: "http://www.michalspacek.cz/i/ 'unsafe-inline'"
 		vatRate: 0.21
 		translatedRoutes:
 			presenters:
