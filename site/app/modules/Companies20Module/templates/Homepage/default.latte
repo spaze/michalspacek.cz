@@ -13,30 +13,8 @@
 	<script src="{='i/bootstrap/js/bootstrap.min.js'|staticUrl}"></script>
     <script src="{='/i/js/netteForms.js'|staticUrl}"></script>
 	<script src="{='/i/js/jquery-ui-1.10.4.custom.min.js'|staticUrl}"></script>
-	<script>
-		$(document).ready(function() {
-			$('#tags').addClass('form-control');
-			$('#search').addClass('form-control');
-
-			var allTags = {$allTags};
-			$('#search').select2({
-				tags: allTags,
-				separator: ' ',
-				tokenSeparators: [' ', '+'],
-				openOnEnter: false
-			});
-			$('#tags').select2({
-				tags: allTags,
-				separator: ' ',
-				tokenSeparators: [',', ' ', '+'],
-				openOnEnter: false
-			});
-			$('#add').draggable({
-				handle: '.modal-header'
-			});
-			$('#add [title]').tooltip();
-		});
-	</script>
+	<script src="{='i/js/cotel.js'|staticUrl}"></script>
+	<script id="all-tags" type="application/json">{$allTags}</script>
 </head>
 <body>
 <header class="container">
