@@ -35,7 +35,7 @@ common:
 		contentSecurityPolicy:
 			www:
 				default-src: 'http://www.michalspacek.cz/i/'
-				script-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://speakerdeck.com/assets/'
+				script-src: 'http://www.michalspacek.cz/i/ https://www.google-analytics.com/ https://speakerdeck.com/assets/'
 				frame-src: 'https://www.slideshare.net/slideshow/embed_code/ http://speakerdeck.com/player/ https://speakerdeck.com/player/ https://www.youtube-nocookie.com/embed/ https://player.vimeo.com/video/'
 				frame-ancestors: "'none'"
 				report-uri: http://www.michalspacek.cz/csp-report
@@ -45,7 +45,7 @@ common:
 				report-uri: http://www.michalspacek.cz/csp-report
 			heartbleed:
 				default-src: 'http://www.michalspacek.cz/i/'
-				script-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/'
+				script-src: 'http://www.michalspacek.cz/i/ https://www.google-analytics.com/'
 				style-src: "http://www.michalspacek.cz/i/ 'unsafe-inline'"
 				report-uri: http://www.michalspacek.cz/csp-report
 			cotel:
