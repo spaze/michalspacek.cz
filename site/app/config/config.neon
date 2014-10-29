@@ -34,23 +34,23 @@ common:
 			sharedStaticRoot: www.%domain.root%
 		contentSecurityPolicy:
 			www:
-				default-src: 'http://www.michalspacek.cz/i/'
-				img-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://www.google-analytics.com/'
-				script-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://www.google-analytics.com/ https://speakerdeck.com/assets/'
-				frame-src: 'https://www.slideshare.net/slideshow/embed_code/ http://speakerdeck.com/player/ https://speakerdeck.com/player/ https://www.youtube-nocookie.com/embed/ https://player.vimeo.com/video/'
+				default-src: 'http://www.michalspacek.cz'
+				img-src: 'http://www.michalspacek.cz http://www.google-analytics.com https://www.google-analytics.com'
+				script-src: 'http://www.michalspacek.cz http://www.google-analytics.com https://www.google-analytics.com https://speakerdeck.com'
+				frame-src: 'https://www.slideshare.net http://speakerdeck.com https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
 				report-uri: http://www.michalspacek.cz/csp-report
 			admin:
-				default-src: 'http://www.michalspacek.cz/i/'
-				img-src: 'http://www.michalspacek.cz/i/ data:'
+				default-src: 'http://www.michalspacek.cz'
+				img-src: 'http://www.michalspacek.cz data:'
 				report-uri: http://www.michalspacek.cz/csp-report
 			heartbleed:
-				default-src: 'http://www.michalspacek.cz/i/'
-				img-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://www.google-analytics.com/'
-				script-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://www.google-analytics.com/'
-				style-src: "http://www.michalspacek.cz/i/ 'unsafe-inline'"
+				default-src: 'http://www.michalspacek.cz'
+				img-src: 'http://www.michalspacek.cz http://www.google-analytics.com https://www.google-analytics.com'
+				script-src: 'http://www.michalspacek.cz http://www.google-analytics.com https://www.google-analytics.com'
+				style-src: "http://www.michalspacek.cz 'unsafe-inline'"
 				report-uri: http://www.michalspacek.cz/csp-report
 			cotel:
-				default-src: 'http://www.michalspacek.cz/i/'
+				default-src: 'http://www.michalspacek.cz'
 				report-uri: http://www.michalspacek.cz/csp-report
 		vatRate: 0.21
 		translatedRoutes:
