@@ -68,19 +68,20 @@ class ContentSecurityPolicy
 	{
 		$datetime = new \DateTime();
 		$this->database->query('INSERT INTO csp_reports', array(
-			'datetime' => $datetime,
-			'datetime_timezone' => $datetime->getTimezone()->getName(),
-			'user_agent' => $userAgent,
-			'blocked_uri' => $report->{'blocked-uri'},
-			'document_uri' => $report->{'document-uri'},
+			'ip'                  => $this->httpRequest->getRemoteAddress(),
+			'datetime'            => $datetime,
+			'datetime_timezone'   => $datetime->getTimezone()->getName(),
+			'user_agent'          => $userAgent,
+			'blocked_uri'         => $report->{'blocked-uri'},
+			'document_uri'        => $report->{'document-uri'},
 			'effective_directive' => (isset($report->{'effective-directive'}) ? $report->{'effective-directive'} : null),
-			'original_policy' => $report->{'original-policy'},
-			'referrer' => $report->{'referrer'},
-			'status_code' => (isset($report->{'status-code'}) ? $report->{'status-code'} : null),
-			'violated_directive' => $report->{'violated-directive'},
-			'source_file' => (isset($report->{'source-file'}) ? $report->{'source-file'} : null),
-			'line_number' => (isset($report->{'line-number'}) ? $report->{'line-number'} : null),
-			'column_number' => (isset($report->{'column-number'}) ? $report->{'column-number'} : null),
+			'original_policy'     => $report->{'original-policy'},
+			'referrer'            => $report->{'referrer'},
+			'status_code'         => (isset($report->{'status-code'}) ? $report->{'status-code'} : null),
+			'violated_directive'  => $report->{'violated-directive'},
+			'source_file'         => (isset($report->{'source-file'}) ? $report->{'source-file'} : null),
+			'line_number'         => (isset($report->{'line-number'}) ? $report->{'line-number'} : null),
+			'column_number'       => (isset($report->{'column-number'}) ? $report->{'column-number'} : null),
 		));
 	}
 
