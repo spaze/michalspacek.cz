@@ -66,23 +66,31 @@ class ContentSecurityPolicy
 	 */
 	public function storeReport($userAgent, \stdClass $report)
 	{
+		$columns = array(
+			'blocked-uri' => 'blocked_uri',
+			'document-uri' => 'document_uri',
+			'effective-directive' => 'effective_directive',
+			'original-policy' => 'original_policy',
+			'referrer' => 'referrer',
+			'status-code' => 'status_code',
+			'violated-directive' => 'violated_directive',
+			'source-file' => 'source_file',
+			'line-number' => 'line_number',
+			'column-number' => 'column_number',
+		);
+
 		$datetime = new \DateTime();
-		$this->database->query('INSERT INTO csp_reports', array(
-			'ip'                  => $this->httpRequest->getRemoteAddress(),
-			'datetime'            => $datetime,
-			'datetime_timezone'   => $datetime->getTimezone()->getName(),
-			'user_agent'          => $userAgent,
-			'blocked_uri'         => $report->{'blocked-uri'},
-			'document_uri'        => $report->{'document-uri'},
-			'effective_directive' => (isset($report->{'effective-directive'}) ? $report->{'effective-directive'} : null),
-			'original_policy'     => $report->{'original-policy'},
-			'referrer'            => $report->{'referrer'},
-			'status_code'         => (isset($report->{'status-code'}) ? $report->{'status-code'} : null),
-			'violated_directive'  => $report->{'violated-directive'},
-			'source_file'         => (isset($report->{'source-file'}) ? $report->{'source-file'} : null),
-			'line_number'         => (isset($report->{'line-number'}) ? $report->{'line-number'} : null),
-			'column_number'       => (isset($report->{'column-number'}) ? $report->{'column-number'} : null),
-		));
+		$data = array(
+			'ip' => $this->httpRequest->getRemoteAddress(),
+			'datetime' => $datetime,
+			'datetime_timezone' => $datetime->getTimezone()->getName(),
+			'user_agent' => $userAgent,
+		);
+		foreach ($columns as $key => $value) {
+			$data[$value] = (isset($report->$key) ? $report->$key : null);
+		}
+
+		$this->database->query('INSERT INTO csp_reports', $data);
 	}
 
 }
