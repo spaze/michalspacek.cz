@@ -34,24 +34,24 @@ common:
 			sharedStaticRoot: www.%domain.root%
 		contentSecurityPolicy:
 			www:
-				default-src: 'http://www.michalspacek.cz'
-				img-src: 'http://www.michalspacek.cz http://www.google-analytics.com https://www.google-analytics.com'
-				script-src: 'http://www.michalspacek.cz http://www.google-analytics.com https://www.google-analytics.com https://speakerdeck.com'
+				default-src: "'self'"
+				img-src: "'self' http://www.google-analytics.com https://www.google-analytics.com"
+				script-src: "'self' http://www.google-analytics.com https://www.google-analytics.com https://speakerdeck.com"
 				frame-src: 'https://www.slideshare.net http://speakerdeck.com https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
-				report-uri: http://www.michalspacek.cz/csp-report
+				report-uri: /csp-report
 			admin:
-				default-src: 'http://www.michalspacek.cz'
-				img-src: 'http://www.michalspacek.cz data:'
-				report-uri: http://www.michalspacek.cz/csp-report
+				default-src: http://www.%domain.root%
+				img-src: 'http://www.%domain.root% data:'
+				report-uri: http://www.%domain.root%/csp-report
 			heartbleed:
-				default-src: 'http://www.michalspacek.cz'
-				img-src: 'http://www.michalspacek.cz http://www.google-analytics.com https://www.google-analytics.com'
-				script-src: 'http://www.michalspacek.cz http://www.google-analytics.com https://www.google-analytics.com'
-				style-src: "http://www.michalspacek.cz 'unsafe-inline'"
-				report-uri: http://www.michalspacek.cz/csp-report
+				default-src: http://www.%domain.root%
+				img-src: 'http://www.%domain.root% http://www.google-analytics.com https://www.google-analytics.com'
+				script-src: 'http://www.%domain.root% http://www.google-analytics.com https://www.google-analytics.com'
+				style-src: "http://www.%domain.root% 'unsafe-inline'"
+				report-uri: http://www.%domain.root%/csp-report
 			cotel:
-				default-src: 'http://www.michalspacek.cz'
-				report-uri: http://www.michalspacek.cz/csp-report
+				default-src: 'http://www.%domain.root%'
+				report-uri: http://www.%domain.root%/csp-report
 		vatRate: 0.21
 		translatedRoutes:
 			presenters:
