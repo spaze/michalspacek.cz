@@ -38,23 +38,19 @@ common:
 				img-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://www.google-analytics.com/'
 				script-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://www.google-analytics.com/ https://speakerdeck.com/assets/'
 				frame-src: 'https://www.slideshare.net/slideshow/embed_code/ http://speakerdeck.com/player/ https://speakerdeck.com/player/ https://www.youtube-nocookie.com/embed/ https://player.vimeo.com/video/'
-				frame-ancestors: "'none'"
 				report-uri: http://www.michalspacek.cz/csp-report
 			admin:
 				default-src: 'http://www.michalspacek.cz/i/'
 				img-src: 'http://www.michalspacek.cz/i/ data:'
-				frame-ancestors: "'none'"
 				report-uri: http://www.michalspacek.cz/csp-report
 			heartbleed:
 				default-src: 'http://www.michalspacek.cz/i/'
 				img-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://www.google-analytics.com/'
 				script-src: 'http://www.michalspacek.cz/i/ http://www.google-analytics.com/ https://www.google-analytics.com/'
 				style-src: "http://www.michalspacek.cz/i/ 'unsafe-inline'"
-				frame-ancestors: "'none'"
 				report-uri: http://www.michalspacek.cz/csp-report
 			cotel:
 				default-src: 'http://www.michalspacek.cz/i/'
-				frame-ancestors: "'none'"
 				report-uri: http://www.michalspacek.cz/csp-report
 		vatRate: 0.21
 		translatedRoutes:
