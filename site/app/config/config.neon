@@ -15,6 +15,8 @@ common:
 
 		http:
 			headers:
+				X-Driven-By: Success
+				X-Powered-By: Failure
 				X-Content-Type-Options: nosniff
 				X-XSS-Protection: '1; mode=block'
 
