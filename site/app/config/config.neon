@@ -39,6 +39,7 @@ common:
 				default-src: "'self'"
 				img-src: "'self' http://www.google-analytics.com https://www.google-analytics.com"
 				script-src: "'self' http://www.google-analytics.com https://www.google-analytics.com https://speakerdeck.com"
+				style-src: "'self' 'unsafe-inline'"
 				frame-src: 'https://www.slideshare.net http://speakerdeck.com https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
 				report-uri: /csp-report
 			admin:
@@ -53,6 +54,7 @@ common:
 				report-uri: http://www.%domain.root%/csp-report
 			cotel:
 				default-src: 'http://www.%domain.root%'
+				style-src: "http://www.%domain.root% 'unsafe-inline'"
 				report-uri: http://www.%domain.root%/csp-report
 		vatRate: 0.21
 		translatedRoutes:

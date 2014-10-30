@@ -1,3 +1,2 @@
 User-agent: *
 Disallow: /info.php
-Disallow: /i/js/
