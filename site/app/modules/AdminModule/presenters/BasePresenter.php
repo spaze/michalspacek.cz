@@ -26,6 +26,15 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	protected function startup()
 	{
 		parent::startup();
+
+		$contentSecurityPolicy = $this->getContext()->getByType(\MichalSpacekCz\ContentSecurityPolicy::class);
+		$header = $contentSecurityPolicy->getHeader();
+
+		if ($header !== false) {
+			$httpResponse = $this->getContext()->getByType(\Nette\Http\IResponse::class);
+			$httpResponse->setHeader('Content-Security-Policy', $header);
+		}
+
 		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\UserManager::class);
 		if (!$this->user->isLoggedIn()) {
 			$authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
