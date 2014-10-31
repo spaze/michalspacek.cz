@@ -40,7 +40,7 @@ common:
 				img-src: "'self' http://www.google-analytics.com https://www.google-analytics.com"
 				script-src: "'self' http://www.google-analytics.com https://www.google-analytics.com https://speakerdeck.com"
 				style-src: "'self' 'unsafe-inline'"
-				frame-src: 'https://www.slideshare.net http://speakerdeck.com https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
+				frame-src: 'http://www.slideshare.net https://www.slideshare.net http://speakerdeck.com https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
 				report-uri: /csp-report
 			admin:
 				default-src: https://www.%domain.root%
