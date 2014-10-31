@@ -45,6 +45,7 @@ common:
 			admin:
 				default-src: https://www.%domain.root%
 				img-src: 'https://www.%domain.root% data:'
+				style-src: "https://www.%domain.root% 'unsafe-inline'"
 				report-uri: https://www.%domain.root%/csp-report
 			heartbleed:
 				default-src: http://www.%domain.root%
