@@ -90,7 +90,7 @@ class ContentSecurityPolicy
 			$data[$value] = (isset($report->$key) ? $report->$key : null);
 		}
 
-		$this->database->query('INSERT INTO csp_reports', $data);
+		$this->database->query('INSERT INTO reports_csp', $data);
 	}
 
 }
