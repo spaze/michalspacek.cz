@@ -1,11 +1,11 @@
 <?php
 /**
- * CspReport presenter.
+ * Report presenter.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class CspReportPresenter extends BasePresenter
+class ReportPresenter extends BasePresenter
 {
 
 	/** @var \Nette\Http\IRequest */
@@ -14,36 +14,36 @@ class CspReportPresenter extends BasePresenter
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
 
-	/** @var \MichalSpacekCz\ContentSecurityPolicy */
-	protected $contentSecurityPolicy;
+	/** @var \MichalSpacekCz\Reports */
+	protected $reports;
 
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \Nette\Http\IRequest $httpRequest
 	 * @param \Nette\Http\IResponse $httpResponse
-	 * @param \MichalSpacekCz\ContentSecurityPolicy $contentSecurityPolicy
+	 * @param \MichalSpacekCz\Reports $reports
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
-		\MichalSpacekCz\ContentSecurityPolicy $contentSecurityPolicy
+		\MichalSpacekCz\Reports $reports
 	)
 	{
 		parent::__construct($translator);
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
-		$this->contentSecurityPolicy = $contentSecurityPolicy;
+		$this->reports = $reports;
 	}
 
 
-	public function actionDefault()
+	public function actionCsp()
 	{
 		$report = \Nette\Utils\Json::decode(file_get_contents('php://input'));
 		$userAgent = $this->httpRequest->getHeader('User-Agent');
 		if (isset($report->{'csp-report'})) {
-			$this->contentSecurityPolicy->storeReport($userAgent, $report->{'csp-report'});
+			$this->reports->storeCspReport($userAgent, $report->{'csp-report'});
 		}
 		$this->terminate();
 	}

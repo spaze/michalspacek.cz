@@ -70,6 +70,7 @@ class RouterFactory
 		$router[] = $this->addRoute(self::WWW, '/<name>[/<action>[/<param>]]', 'Trainings', 'training');
 		$router[] = $this->addRoute(self::WWW, '/<name>[/<action>]', 'CompanyTrainings', 'training');
 		$router[] = $this->addRoute(self::WWW, '/<action>/<token>', 'Redirect', 'default');
+		$router[] = $this->addRoute(self::WWW, 'report[/<action>]', 'Report', 'default');
 		$router[] = $this->addRoute(self::WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 		return $router;
 	}

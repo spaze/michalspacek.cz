@@ -41,22 +41,22 @@ common:
 				script-src: "'self' http://www.google-analytics.com https://www.google-analytics.com https://speakerdeck.com"
 				style-src: "'self' 'unsafe-inline'"
 				frame-src: 'http://www.slideshare.net https://www.slideshare.net http://speakerdeck.com https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
-				report-uri: /csp-report
+				report-uri: /report/csp
 			admin:
 				default-src: https://www.%domain.root%
 				img-src: 'https://www.%domain.root% data:'
 				style-src: "https://www.%domain.root% 'unsafe-inline'"
-				report-uri: https://www.%domain.root%/csp-report
+				report-uri: https://www.%domain.root%/report/csp
 			heartbleed:
 				default-src: http://www.%domain.root%
 				img-src: 'http://www.%domain.root% http://www.google-analytics.com https://www.google-analytics.com'
 				script-src: 'http://www.%domain.root% http://www.google-analytics.com https://www.google-analytics.com'
 				style-src: "http://www.%domain.root% 'unsafe-inline'"
-				report-uri: http://www.%domain.root%/csp-report
+				report-uri: http://www.%domain.root%/report/csp
 			cotel:
 				default-src: 'http://www.%domain.root%'
 				style-src: "http://www.%domain.root% 'unsafe-inline'"
-				report-uri: http://www.%domain.root%/csp-report
+				report-uri: http://www.%domain.root%/report/csp
 		vatRate: 0.21
 		translatedRoutes:
 			presenters:
@@ -151,6 +151,7 @@ common:
 			setup:
 				- setRootDomain(%domain.root%)
 				- setPolicy(%contentSecurityPolicy%)
+		reports: \MichalSpacekCz\Reports
 
 production < common:
 
