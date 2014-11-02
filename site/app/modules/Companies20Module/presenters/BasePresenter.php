@@ -15,13 +15,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	{
 		parent::startup();
 
-		$contentSecurityPolicy = $this->getContext()->getByType(\MichalSpacekCz\ContentSecurityPolicy::class);
-		$header = $contentSecurityPolicy->getHeader();
-
-		if ($header !== false) {
-			$httpResponse = $this->getContext()->getByType(\Nette\Http\IResponse::class);
-			$httpResponse->setHeader('Content-Security-Policy', $header);
-		}
+		$startup = $this->getContext()->getByType(\MichalSpacekCz\Startup::class);
+		$startup->startup();
 	}
 
 

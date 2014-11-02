@@ -61,4 +61,29 @@ class Reports
 		$this->database->query('INSERT INTO reports_csp', $data);
 	}
 
+	/**
+	 * @param string $userAgent
+	 * @param \stdClass $report JSON data
+	 */
+	public function storeXssReport($userAgent, \stdClass $report)
+	{
+		$columns = array(
+			'request-url' => 'request_url',
+			'request-body' => 'request_body',
+		);
+
+		$datetime = new \DateTime();
+		$data = array(
+			'ip' => $this->httpRequest->getRemoteAddress(),
+			'datetime' => $datetime,
+			'datetime_timezone' => $datetime->getTimezone()->getName(),
+			'user_agent' => $userAgent,
+		);
+		foreach ($columns as $key => $value) {
+			$data[$value] = (isset($report->$key) ? $report->$key : null);
+		}
+
+		$this->database->query('INSERT INTO reports_xss', $data);
+	}
+
 }

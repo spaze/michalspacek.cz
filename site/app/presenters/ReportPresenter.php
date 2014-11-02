@@ -48,4 +48,14 @@ class ReportPresenter extends BasePresenter
 		$this->terminate();
 	}
 
+	public function actionXss()
+	{
+		$report = \Nette\Utils\Json::decode(file_get_contents('php://input'));
+		$userAgent = $this->httpRequest->getHeader('User-Agent');
+		if (isset($report->{'xss-report'})) {
+			$this->reports->storeXssReport($userAgent, $report->{'xss-report'});
+		}
+		$this->terminate();
+	}
+
 }
