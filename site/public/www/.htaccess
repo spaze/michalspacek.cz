@@ -3,6 +3,10 @@ php_flag display_errors off
 Options FollowSymLinks
 
 RewriteEngine On
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{SERVER_NAME}/$1 [R=301,L,NE]
+
 RewriteRule ^i/.+ - [L]
 RewriteRule ^favicon\.ico$ - [L]
 RewriteRule ^robots\.txt$ - [L]
