@@ -79,7 +79,7 @@ class RouterFactory
 	private function addRoute($host, $mask, $defaultPresenter, $defaultAction)
 	{
 		$maskPrefix = (isset($this->translatedRoutes[$host][$defaultPresenter]) ? $this->translatedRoutes[$host][$defaultPresenter]['mask'] : null);
-		$flags = 0;
+		$flags = Route::SECURED;
 		$metadata = array(
 			'presenter' => [Route::VALUE => $defaultPresenter],
 			'action' => [Route::VALUE => $defaultAction],
@@ -87,13 +87,14 @@ class RouterFactory
 		switch ($host) {
 			case self::ADMIN:
 				$metadata['module'] = 'Admin';
-				$flags = Route::SECURED;
 				break;
 			case self::COTEL:
+				$flags = 0;
 				$metadata['module'] = 'Companies20';
 				$metadata['param'] = [Route::FILTER_IN => 'urldecode', Route::FILTER_OUT => 'urlencode'];
 				break;
 			case self::WEBLEED:
+				$flags = 0;
 				$metadata['module'] = 'Webleed';
 				break;
 			case self::WWW:

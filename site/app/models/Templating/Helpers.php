@@ -9,17 +9,6 @@ class Helpers extends \Nette\Object
 	 */
 	protected $staticRoot;
 
-	/**
-	 * @var \Nette\Http\IRequest
-	 */
-	protected $httpRequest;
-
-
-	public function __construct(\Nette\Http\IRequest $httpRequest)
-	{
-		$this->httpRequest = $httpRequest;
-	}
-
 
 	public function loader($helper)
 	{
@@ -33,8 +22,7 @@ class Helpers extends \Nette\Object
 
 	public function staticUrl($filename)
 	{
-		return sprintf('%s://%s/%s',
-			$this->httpRequest->getUrl()->getScheme(),
+		return sprintf('%s/%s',
 			rtrim($this->staticRoot, '/'),
 			ltrim($filename, '/')
 		);
