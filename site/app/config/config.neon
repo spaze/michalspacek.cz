@@ -142,9 +142,10 @@ common:
 		httpResponse:
 			setup:
 				- $cookieDomain(%domain.cookie%)
+				- $cookieSecure(true)
 		session:
 			setup:
-				- setCookieParameters(/, %domain.cookie%)
+				- setCookieParameters(/, %domain.cookie%, true)
 		helpers:
 			class: \MichalSpacekCz\Templating\Helpers
 			setup:
