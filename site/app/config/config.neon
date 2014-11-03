@@ -49,8 +49,8 @@ common:
 				report-uri: https://www.%domain.root%/report/csp
 			heartbleed:
 				default-src: https://www.%domain.root%
-				img-src: 'https://www.%domain.root% http://www.google-analytics.com https://www.google-analytics.com'
-				script-src: 'https://www.%domain.root% http://www.google-analytics.com https://www.google-analytics.com'
+				img-src: 'https://www.%domain.root% https://www.google-analytics.com'
+				script-src: 'https://www.%domain.root% https://www.google-analytics.com'
 				style-src: "https://www.%domain.root% 'unsafe-inline'"
 				report-uri: https://www.%domain.root%/report/csp
 			cotel:

@@ -89,12 +89,10 @@ class RouterFactory
 				$metadata['module'] = 'Admin';
 				break;
 			case self::COTEL:
-				$flags = 0;
 				$metadata['module'] = 'Companies20';
 				$metadata['param'] = [Route::FILTER_IN => 'urldecode', Route::FILTER_OUT => 'urlencode'];
 				break;
 			case self::WEBLEED:
-				$flags = 0;
 				$metadata['module'] = 'Webleed';
 				break;
 			case self::WWW:
