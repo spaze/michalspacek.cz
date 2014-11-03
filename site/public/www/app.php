@@ -1,7 +1,11 @@
 <?php
+$https = (!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off'));
+if ($https) {
+	header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+}
+
 // All baz.waldo, foo.baz.waldo end up in the same dir
 $hostdir = basename(dirname($_SERVER['SCRIPT_FILENAME'])); // /public/www/app.php -> www
-$https = (!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off'));
 $uri = $_SERVER['REQUEST_URI'];
 // Is this (?:(foo.)|www.(bar.))?(baz.waldo)
 if (preg_match('/^(?:([^.]+\.)|www\.([^.]+\.))?([^.]+\.[^.]+)\z/', $_SERVER['HTTP_HOST'], $m)) {
