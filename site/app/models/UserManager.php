@@ -164,7 +164,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 
 	private function isReturningUser()
 	{
-		return ($this->httpRequest->getCookie(self::RETURNING_USER_COOKIE) != self::RETURNING_USER_VALUE);
+		return ($this->httpRequest->getCookie(self::RETURNING_USER_COOKIE) === self::RETURNING_USER_VALUE);
 	}
 
 
