@@ -102,7 +102,6 @@ common:
 							files: s
 
 	services:
-		database: @Nette\Database\Connection
 		routerFactory:
 			class: RouterFactory
 			setup:
