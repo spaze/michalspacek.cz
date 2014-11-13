@@ -10,7 +10,7 @@ namespace MichalSpacekCz;
 class TrainingMails
 {
 
-	/** @var \Nette\Mail\SendmailMailer */
+	/** @var \Nette\Mail\IMailer */
 	protected $mailer;
 
 	/** @var \MichalSpacekCz\TrainingApplications */
@@ -28,7 +28,7 @@ class TrainingMails
 
 
 	public function __construct(
-		\Nette\Mail\SendmailMailer $mailer,
+		\Nette\Mail\IMailer $mailer,
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
 		\MichalSpacekCz\TrainingDates $trainingDates
 	)
