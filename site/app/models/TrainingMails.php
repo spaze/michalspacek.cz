@@ -53,13 +53,7 @@ class TrainingMails
 		$template->venueAddress = $venueAddress;
 		$template->venueCity    = $venueCity;
 
-		$mail = new \Nette\Mail\Message();
-		$mail->setFrom($this->emailFrom)
-			->addTo($recipientAddress, $recipientName)
-			->addBcc($this->emailFrom)
-			->setBody($template)
-			->clearHeader('X-Mailer');  // Hide Nette Mailer banner
-		$this->mailer->send($mail);
+		$this->sendMail($recipientAddress, $recipientName, $template);
 	}
 
 
