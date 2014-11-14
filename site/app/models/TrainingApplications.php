@@ -24,6 +24,7 @@ class TrainingApplications
 	const STATUS_CANCELED            = 'CANCELED';             // 10
 	const STATUS_IMPORTED            = 'IMPORTED';             // 13
 	const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';  // 14
+	const STATUS_REMINDED            = 'REMINDED';             // 15
 
 	const DEFAULT_SOURCE  = 'michal-spacek';
 
@@ -98,6 +99,7 @@ class TrainingApplications
 				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,
 				v.city AS venueCity,
+				v.action AS venueAction,
 				a.price,
 				a.vat_rate AS vatRate,
 				a.price_vat AS priceVat,

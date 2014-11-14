@@ -1,0 +1,26 @@
+{capture $trainingStart}{$application->trainingStart|date:'j. n. Y'}{/capture}
+{var $mail->subject = 'Připomenutí školení ' . $application->trainingName . ' ' . $trainingStart}
+Dobrý den,
+
+rád bych vám připomněl, že dne {$application->trainingStart|date:'j. n. Y'} se koná školení
+{$application->trainingName}, na které jste přihlášeni.
+Školení proběhne na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
+
+Pohled na vchod: {='i/images/venues/' . $venue->entrance|staticUrl}
+
+{$venue->publicTransport|striptags}
+{$venue->parking|striptags}
+
+Mapa místa a další informace: {link //:Venues:venue $venue->action}
+
+Školení začíná v {$application->trainingStart|date:'H:i'}, v případě jakýchkoliv komplikací mě
+kontaktujte.
+
+{if $additional}
+{$additional}
+
+{/if}
+Těším se brzy na shledanou!
+Michal Špaček
+
+{include "../signature.latte"}

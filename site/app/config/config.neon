@@ -95,6 +95,8 @@ common:
 						mask: kdo
 					Contact:
 						mask: kontakt
+					Venues:
+						mask: kudy-tudy
 					Redirect:
 						mask: r
 						actions:
@@ -125,6 +127,7 @@ common:
 				- setTemplatesDir('../../app/emails')
 				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 		trainingDates: \MichalSpacekCz\TrainingDates
+		trainingVenues: \MichalSpacekCz\TrainingVenues
 		authenticator:
 			class: \MichalSpacekCz\UserManager
 			setup:

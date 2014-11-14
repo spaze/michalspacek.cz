@@ -19,6 +19,9 @@ class TrainingMails
 	/** @var \MichalSpacekCz\TrainingDates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\TrainingVenues */
+	protected $trainingVenues;
+
 	/**
 	 * Templates directory, ends with a slash.
 	 *
@@ -30,12 +33,14 @@ class TrainingMails
 	public function __construct(
 		\Nette\Mail\IMailer $mailer,
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
-		\MichalSpacekCz\TrainingDates $trainingDates
+		\MichalSpacekCz\TrainingDates $trainingDates,
+		\MichalSpacekCz\TrainingVenues $trainingVenues
 	)
 	{
 		$this->mailer = $mailer;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
+		$this->trainingVenues = $trainingVenues;
 	}
 
 
@@ -89,6 +94,10 @@ class TrainingMails
 			$applications[] = $application;
 		}
 
+		foreach ($this->trainingApplications->getByStatus(TrainingApplications::STATUS_NOTIFIED) as $application) {
+			$applications[] = $application;
+		}
+
 		return $applications;
 	}
 
@@ -127,6 +136,18 @@ class TrainingMails
 		$template->application = $application;
 		$template->additional = $additional;
 		$this->sendMail($application->email, $application->name, $template, $invoice);
+	}
+
+
+	public function sendReminder(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
+	{
+		\Nette\Diagnostics\Debugger::log("Sending reminder email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
+
+		$template->setFile($this->templatesDir . 'admin/reminder.latte');
+		$template->application = $application;
+		$template->venue = $this->trainingVenues->get($application->venueAction);
+		$template->additional = $additional;
+		$this->sendMail($application->email, $application->name, $template);
 	}
 
 

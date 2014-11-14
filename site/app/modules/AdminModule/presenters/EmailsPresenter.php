@@ -95,6 +95,11 @@ class EmailsPresenter extends BasePresenter
 						$sent = true;
 					}
 					break;
+				case TrainingApplications::STATUS_NOTIFIED:
+					$this->trainingMails->sendReminder($this->applications[$id], $this->createTemplate(), $additional);
+					$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_REMINDED);
+					$sent = true;
+					break;
 			}
 		}
 		if ($sent) {

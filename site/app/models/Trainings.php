@@ -66,6 +66,7 @@ class Trainings
 				s.status,
 				d.start,
 				d.public,
+				v.id_venue AS venueId,
 				v.name AS venueName,
 				v.city as venueCity
 			FROM training_dates d
@@ -101,6 +102,7 @@ class Trainings
 				'public'        => $row->public,
 				'status'        => $row->status,
 				'name'          => $row->name,
+				'venueId'       => $row->venueId,
 				'venueName'     => $row->venueName,
 				'venueCity'     => $row->venueCity,
 			);
