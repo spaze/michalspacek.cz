@@ -455,7 +455,7 @@ class TrainingsPresenter extends BasePresenter
 			->setAttribute('placeholder', 'YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW')
 			->setAttribute('title', 'Formát  YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW')
 			->addCondition(Form::FILLED)
-			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW', '((\d{4}-\d{1,2}-\d{1,2})(  \d{1,2}:\d{2}:\d{2}))?)|(\d{1,2}\.\d{1,2}\.\d{4})|[Nn][Oo][Ww]');
+			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW', '((\d{4}-\d{1,2}-\d{1,2})(  \d{1,2}:\d{2}:\d{2})?)|(\d{1,2}\.\d{1,2}\.\d{4})|[Nn][Oo][Ww]');
 
 		$form->addSubmit('submit', 'Uložit');
 		$form->onSuccess[] = $this->submittedApplication;
