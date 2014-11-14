@@ -171,6 +171,7 @@ class Trainings
 				v.address AS venueAddress,
 				v.city AS venueCity,
 				v.description AS venueDescription,
+				v.action AS venueAction,
 				c.description AS cooperationDescription
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training

@@ -90,7 +90,7 @@
 	</p>
 	<div class="indent">
 	<p class="location vcard"><strong>
-		<a href="{$date->venueHref}" class="fn org">{$date->venueName}</a>{if $date->venueNameExtended}, {$date->venueNameExtended}{/if},
+		<a n:href=":Venues:venue $date->venueAction" class="fn org">{$date->venueName}</a>{if $date->venueNameExtended}, {$date->venueNameExtended}{/if},
 		<span class="adr"><span class="street-address">{$date->venueAddress}</span>, <span class="locality">{$date->venueCity}</span></span>
 	</strong></p>
 	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
