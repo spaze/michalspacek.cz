@@ -1,0 +1,30 @@
+services:
+	- ArticlesPresenter
+	- CompanyTrainingsPresenter
+	- ContactPresenter
+	- ErrorPresenter
+	- FilesPresenter
+	- ForbiddenPresenter
+	- HomepagePresenter
+	- InterviewsPresenter
+	- RedirectPresenter
+	- ReportPresenter
+	- TalksPresenter
+	- TrainingsPresenter
+	- VenuesPresenter
+	- WhoPresenter
+
+	# admin module
+	- AdminModule\EmailsPresenter
+	- AdminModule\HomepagePresenter
+	- AdminModule\InfoPresenter
+	- AdminModule\SignPresenter
+	- AdminModule\TrackingPresenter
+	- AdminModule\TrainingsPresenter
+	- AdminModule\UserPresenter
+
+	# cotel module
+	- Companies20Module\HomepagePresenter
+
+	# webleed module
+	- WebleedModule\HomepagePresenter
