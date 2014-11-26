@@ -4,7 +4,7 @@ https://keybase.io/spaze
 
 I hereby claim:
 
-  * I am an admin of http://www.michalspacek.cz
+  * I am an admin of https://www.michalspacek.cz
   * I am spaze (https://keybase.io/spaze) on keybase.
   * I have a public key with fingerprint 4BD4 C403 AF2F 9FCC B151  FE61 B64B DD6E 464A B529
 
@@ -19,46 +19,53 @@ To claim this, I am signing this object:
             "uid": "0d1e89702eefb648b4b71e7d3cc99700",
             "username": "spaze"
         },
+        "revoke": {
+            "sig_ids": [
+                "b32b3dc90d6bca6ae68155f7f347ec9c52f6d8017adf63a9404c36f3934f659c0f"
+            ]
+        },
         "service": {
             "hostname": "www.michalspacek.cz",
-            "protocol": "http:"
+            "protocol": "https:"
         },
         "type": "web_service_binding",
         "version": 1
     },
-    "ctime": 1405210820,
+    "ctime": 1416965414,
     "expire_in": 157680000,
-    "prev": "79a0f534cc628107eeaaaec9224e63cd80db9914693666636c31062b06ae6ac0",
-    "seqno": 5,
+    "prev": "34c702bbca157c5bd7b2709202a4fd163bddfab232b3bbe9c7432e3be1820373",
+    "seqno": 15,
     "tag": "signature"
 }
 
 with the aforementioned key, yielding the PGP signature:
 
 -----BEGIN PGP MESSAGE-----
-Version: GnuPG v2.0.22 (MingW32)
+Version: GnuPG v1
 
-owGbwMvMwMW4zftunpvXVk3G0we+JTEEH7xwtlopKT+lUsmqWik7FUylZealpxYV
-FGXmlShZKZkkpZgkmxgYJ6YZpVmmJScnGZoapqWaGSaZAWVSzFJNzEwSk0yNLJV0
-lDLyi0E6gMYkJRan6mXmA8WAnPjMFKAoFvWlYAmDFMNUC0tzA6PU1DSgIoskkyRz
-w1TzFOPkZEugsAFIYXFqUV5ibipQdXFBYlWqUq2OElCoLDM5FeRgkL1Q6fLycr3c
-zOSMxBygwuTUbL3kKqD+gqL8kvzk/ByggoySkgIrkP6SygKwhtSkeKhR8UmZeSlA
-vwM1lKUWFWfm5ylZGQJVJpdkgsw2NDEwNTI0sDAy0FFKrSjILEqNzwSpMDU3szAA
-ApA1qWVAI80tEw3STI1NkpPNjCwMDcxTUxMTE1OTLY2MTFLNjJNTLAxSkiwtDU3M
-LI3NgMDYLNnY0MDMKMnALDHVLDEZ5OHi1MK8fCUrU6AzE9NBvs5Mz0ssKS0C+pyr
-k0mGhYGRi4GNlQkUfQxcnAKwSHW8xP8/2rCXb0nb431X5z9b6yB/SWftLgc1t7la
-3K59DslsU1g5lCM5mzhvPOt2MxWYELbqU5FXl5cze2zK0oOLNu1Mdno2LaRVpsPg
-okvosdQpNYqsfCl75PU/eN0NsJtyzcwiua8j7nGcc8EF/7tmVjvX5O27rLRM/MDa
-aWxm1Qsdf2aEBGw41fXWmbkx7Pt/DvOVXw4vCg9Oqa64ZcErEv32qX2AaeEJtqvR
-lw61Ge/gLDz/SDM5tvjmpYNTXnHxvAs6Z7LNhvnvn2JVx4q+Oamf+mt7q65fqRNy
-+y2lz6PQmvnofNBlvbvBJedLAxo6ilgvf3CTvLX12fWvQqbTvh7eKbFo7bIUpfD2
-SrPD22ZXL99W9Sdwzb7fvP/OxD2aFuJw6UfL/m7/6sX2iaszEutSnA28GE+uii+e
-e+DPolf1W+6/KeuTtLrs1eb9bImYSU75Us/KT3uijrkYb7ry37Fzi/tPL+3qFjd2
-x/nT86uTVv5aXVf2aYtXl/GzWb0fBR88XvlOq+EmQ53xPSulW9Zi2y7bphbNL3su
-MCljje+80mYf7Q2i+T88Vuo4s27Mdcm782vHy11W3Sryhcf+bevdLfv15Af197/T
-c8yq3iadLelfOifmaEyzsv2eTRoCFedjuEoPzXd+NMP7+B3+T/t8Hjh2vlga8qAj
-WH/ivNIOj9n1tSeqnU+bmwkWdDL7bDz2pOOJ3KIX0yZ93woA
-=WWRg
+owFtUn1MVWUcvnyEiqIozAYlxQEi5+Vyvs89N5TmRYpPYbECukDnfc97Lmdc7r2e
+e7k3oJbWMtkE+bDE4Vo1HEi2pksobExS24TZcGkBgsLIXYohyJzmEuk9zP7r/efd
++/s9v+d5fs/e5ogQQ3hQb86kMzP73Pag4T+BoagmJb2eAC65lrDUE1Vo9VJUpx1p
+bk11egkLwQKZhSzJSAqtiAqEgOIoBfEU4HFH5hHLsxLgaJEwEpUujz6BaYDkQSbV
+hWv4UaHKuPo/+JrVBilTyCwKJI2QgkFmwAKBQoLMQCjiMqkDPUhzStUIoz1uqQ4R
+7xsJDflcVUj361HtWMJDWN4mAEMDRoYiKfMASryEeDPFcYqgMKyAoAg5WuFlM0kJ
+kqzwjCSyJAsZXmFEhlV4ToSkQpRhbiznU+Equb7TU2m/32+qVmGl5MAmIKoywTrs
+za25vC7ocmBApdfr9lh0c95a9+oEAhVPuSqA6pRxsHjChzSP6nISFgojoVfVySmW
+4kWeYynWSKB33aqGKlQdwQm8mcRH10E+TMmwEEcF8Ha4BzkgC4AWSJEmaYlVZIpn
+cMiKBGg9CACQCAWWoREDEGWmSUZgCH27fU6Xzh2NjUp2PVTV7pS8NRoONrwh+PlQ
+Q1C4IeyZYP13GMLXRf73ZY4Ubnoc4R3Y3ff18uRyYtUjW8rWN3sex7yX/ZYtMLe+
+Wfmr8cFYHXfaXWCyHEKxX7TfzVFvZlwtviKPm591599k0wu+CczeLq3LS7olXTjf
+dHiw61b9sks43fYDijTesNlCsjLqeyKqNl/YueFY7ljiZ42TD3osqYMxHzguDbwT
+r61BGddavH9r6r3b6nSSf6qvcOlgnyHlSccnG9OGXmE5YgJmnGAHZ9542NMs8nf6
+w+7CXOeW2o1bB2aS3Q5/47XE7E8vfTcx1uBNbXrx5MCxvZlTqa/dOLAzMbegfehi
+1kps96lJojs5s0udO2xvqs0pXnoh9n71gQ/jHDkRlkob2znzVTl9wiSkl4xMbdeU
+vNBN64TncgNXyn98eSUkoXUo7/qW1MWOyw/Leifiog8OLsZEjXuKf2mj4y6P/aGk
+JxUP/8y2b04YuTPPfP/tjrOFRUfXCgVtmXPRoQuJgbki20LXjg17cz39Ps660AN+
+DbxkmDo6Mb9kKszvOLlreM3F4fKi7nPbvjxv4KbjH+1eSnBICeOLV69blY8dvy/H
+l4yWte6e9a2NThvr3FczOu8syT++PDsXMVN6xtiSfDw0Zv2r3cb9SwEiUrRu+ykp
+7fOGpO6mM4f2fxS255619Owp6/RvK/ftecktIxX+qNiUI53BjSHxWUx/Qu/wrn8E
+Kkp5fbS+1Tr75F8=
+=3uUB
 -----END PGP MESSAGE-----
 
 And finally, I am proving ownership of this host by posting or
