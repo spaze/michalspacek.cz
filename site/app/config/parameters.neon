@@ -1,0 +1,76 @@
+parameters:
+	notifier:
+		vrana:
+			noSpam: nospam
+			successMarker: 'Děkuji za přihlášku na školení'
+	domain:
+		sharedStaticRoot: https://www.%domain.root%
+	contentSecurityPolicy:
+		www:
+			default-src: "'self'"
+			img-src: "'self' https://www.google-analytics.com"
+			script-src: "'self' https://www.google-analytics.com https://speakerdeck.com"
+			style-src: "'self' 'unsafe-inline'"
+			frame-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
+			report-uri: /report/csp
+		admin:
+			default-src: https://www.%domain.root%
+			img-src: 'https://www.%domain.root% data:'
+			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			report-uri: https://www.%domain.root%/report/csp
+		heartbleed:
+			default-src: https://www.%domain.root%
+			img-src: 'https://www.%domain.root% https://www.google-analytics.com'
+			script-src: 'https://www.%domain.root% https://www.google-analytics.com'
+			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			report-uri: https://www.%domain.root%/report/csp
+		cotel:
+			default-src: 'https://www.%domain.root%'
+			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			report-uri: https://www.%domain.root%/report/csp
+	extraHeaders:
+		www:
+				X-XSS-Protection: '1; mode=block; report=/report/xss'
+		admin:
+				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
+		heartbleed:
+				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
+		cotel:
+				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
+	vatRate: 0.21
+	translatedRoutes:
+		presenters:
+			www:
+				Homepage:
+					mask:  # Intentionally left empty
+				Interviews:
+					mask: rozhovory
+				Talks:
+					mask: prednasky
+				Files:
+					mask: soubory
+					actions:
+						training: skoleni
+						file: soubor
+				Trainings:
+					mask: skoleni
+					actions:
+						reviews: ohlasy
+						success: potvrzeni
+						application: prihlaska
+						files: soubory
+				CompanyTrainings:
+					mask: firemni-skoleni
+				Articles:
+					mask: clanky
+				Who:
+					mask: kdo
+				Contact:
+					mask: kontakt
+				Venues:
+					mask: kudy-tudy
+				Redirect:
+					mask: r
+					actions:
+						application: p
+						files: s

@@ -1,0 +1,65 @@
+services:
+	routerFactory:
+		class: RouterFactory
+		setup:
+			- setRootDomain(%domain.root%)
+			- setTranslatedRoutes(%translatedRoutes.presenters%)
+	router: @routerFactory::createRouter
+	texyFormatter: \Bare\Next\Formatter\Texy
+	redirections:  \MichalSpacekCz\Redirections
+	articles:  \MichalSpacekCz\Articles
+	files:     \MichalSpacekCz\Files
+	talks:     \MichalSpacekCz\Talks
+	trainings: \MichalSpacekCz\Trainings
+	interviews: \MichalSpacekCz\Interviews
+	trainingApplications:
+		class: \MichalSpacekCz\TrainingApplications
+		setup:
+			- setFilesDir('../../files/trainings')
+	trainingMails:
+		class: \MichalSpacekCz\TrainingMails
+		setup:
+			- setTemplatesDir('../../app/emails')
+			- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
+	trainingDates: \MichalSpacekCz\TrainingDates
+	trainingVenues: \MichalSpacekCz\TrainingVenues
+	authenticator:
+		class: \MichalSpacekCz\UserManager
+		setup:
+			- setKey(%authenticator.key%)
+	embed: \MichalSpacekCz\Embed
+	webTracking: \MichalSpacekCz\WebTracking
+	vranaNotifier:
+		class: \MichalSpacekCz\Notifier\Vrana
+		setup:
+			- setUrl(%notifier.vrana.url%)
+			- setNote(%notifier.vrana.note%)
+			- setNoSpam(%notifier.vrana.noSpam%)
+			- setSuccessMarker(%notifier.vrana.successMarker%)
+	httpResponse:
+		setup:
+			- $cookieDomain(%domain.cookie%)
+			- $cookieSecure(true)
+	session:
+		setup:
+			- setCookieParameters(/, %domain.cookie%, true)
+	helpers:
+		class: \MichalSpacekCz\Templating\Helpers
+		setup:
+			- setStaticRoot(%domain.sharedStaticRoot%)
+	translator: \MichalSpacekCz\DummyTranslator
+	vat:
+		class: \MichalSpacekCz\Vat
+		setup:
+			- setRate(%vatRate%)
+	contentSecurityPolicy:
+		class: \MichalSpacekCz\ContentSecurityPolicy
+		setup:
+			- setRootDomain(%domain.root%)
+			- setPolicy(%contentSecurityPolicy%)
+	reports: \MichalSpacekCz\Reports
+	startup:
+		class: \MichalSpacekCz\Startup
+		setup:
+			- setRootDomain(%domain.root%)
+			- setExtraHeaders(%extraHeaders%)
