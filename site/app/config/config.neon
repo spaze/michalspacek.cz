@@ -4,171 +4,166 @@
 # If you don't protect this directory from direct web access, anybody will be able to see your passwords.
 # http://nette.org/security-warning
 #
-common:
-	php:
-		date.timezone: Europe/Prague
-		# zlib.output_compression: yes
+php:
+	date.timezone: Europe/Prague
+	# zlib.output_compression: yes
 
-	nette:
-		application:
-			errorPresenter: Error
+nette:
+	application:
+		errorPresenter: Error
 
-		http:
-			headers:
-				X-Driven-By: Success
-				X-Powered-By: Failure
-				X-Content-Type-Options: nosniff
+	http:
+		headers:
+			X-Driven-By: Success
+			X-Powered-By: Failure
+			X-Content-Type-Options: nosniff
 
-		security:
-			frames: false
+	security:
+		frames: false
 
-		session:
-			name: yourluckynumbers
-			expiration: 14 days
+	session:
+		name: yourluckynumbers
+		expiration: 14 days
 
-	parameters:
-		notifier:
-			vrana:
-				noSpam: nospam
-				successMarker: 'Děkuji za přihlášku na školení'
-		domain:
-			sharedStaticRoot: https://www.%domain.root%
-		contentSecurityPolicy:
+parameters:
+	notifier:
+		vrana:
+			noSpam: nospam
+			successMarker: 'Děkuji za přihlášku na školení'
+	domain:
+		sharedStaticRoot: https://www.%domain.root%
+	contentSecurityPolicy:
+		www:
+			default-src: "'self'"
+			img-src: "'self' https://www.google-analytics.com"
+			script-src: "'self' https://www.google-analytics.com https://speakerdeck.com"
+			style-src: "'self' 'unsafe-inline'"
+			frame-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
+			report-uri: /report/csp
+		admin:
+			default-src: https://www.%domain.root%
+			img-src: 'https://www.%domain.root% data:'
+			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			report-uri: https://www.%domain.root%/report/csp
+		heartbleed:
+			default-src: https://www.%domain.root%
+			img-src: 'https://www.%domain.root% https://www.google-analytics.com'
+			script-src: 'https://www.%domain.root% https://www.google-analytics.com'
+			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			report-uri: https://www.%domain.root%/report/csp
+		cotel:
+			default-src: 'https://www.%domain.root%'
+			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			report-uri: https://www.%domain.root%/report/csp
+	extraHeaders:
+		www:
+				X-XSS-Protection: '1; mode=block; report=/report/xss'
+		admin:
+				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
+		heartbleed:
+				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
+		cotel:
+				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
+	vatRate: 0.21
+	translatedRoutes:
+		presenters:
 			www:
-				default-src: "'self'"
-				img-src: "'self' https://www.google-analytics.com"
-				script-src: "'self' https://www.google-analytics.com https://speakerdeck.com"
-				style-src: "'self' 'unsafe-inline'"
-				frame-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
-				report-uri: /report/csp
-			admin:
-				default-src: https://www.%domain.root%
-				img-src: 'https://www.%domain.root% data:'
-				style-src: "https://www.%domain.root% 'unsafe-inline'"
-				report-uri: https://www.%domain.root%/report/csp
-			heartbleed:
-				default-src: https://www.%domain.root%
-				img-src: 'https://www.%domain.root% https://www.google-analytics.com'
-				script-src: 'https://www.%domain.root% https://www.google-analytics.com'
-				style-src: "https://www.%domain.root% 'unsafe-inline'"
-				report-uri: https://www.%domain.root%/report/csp
-			cotel:
-				default-src: 'https://www.%domain.root%'
-				style-src: "https://www.%domain.root% 'unsafe-inline'"
-				report-uri: https://www.%domain.root%/report/csp
-		extraHeaders:
-			www:
-					X-XSS-Protection: '1; mode=block; report=/report/xss'
-			admin:
-					X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
-			heartbleed:
-					X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
-			cotel:
-					X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
-		vatRate: 0.21
-		translatedRoutes:
-			presenters:
-				www:
-					Homepage:
-						mask:  # Intentionally left empty
-					Interviews:
-						mask: rozhovory
-					Talks:
-						mask: prednasky
-					Files:
-						mask: soubory
-						actions:
-							training: skoleni
-							file: soubor
-					Trainings:
-						mask: skoleni
-						actions:
-							reviews: ohlasy
-							success: potvrzeni
-							application: prihlaska
-							files: soubory
-					CompanyTrainings:
-						mask: firemni-skoleni
-					Articles:
-						mask: clanky
-					Who:
-						mask: kdo
-					Contact:
-						mask: kontakt
-					Venues:
-						mask: kudy-tudy
-					Redirect:
-						mask: r
-						actions:
-							application: p
-							files: s
+				Homepage:
+					mask:  # Intentionally left empty
+				Interviews:
+					mask: rozhovory
+				Talks:
+					mask: prednasky
+				Files:
+					mask: soubory
+					actions:
+						training: skoleni
+						file: soubor
+				Trainings:
+					mask: skoleni
+					actions:
+						reviews: ohlasy
+						success: potvrzeni
+						application: prihlaska
+						files: soubory
+				CompanyTrainings:
+					mask: firemni-skoleni
+				Articles:
+					mask: clanky
+				Who:
+					mask: kdo
+				Contact:
+					mask: kontakt
+				Venues:
+					mask: kudy-tudy
+				Redirect:
+					mask: r
+					actions:
+						application: p
+						files: s
 
-	services:
-		routerFactory:
-			class: RouterFactory
-			setup:
-				- setRootDomain(%domain.root%)
-				- setTranslatedRoutes(%translatedRoutes.presenters%)
-		router: @routerFactory::createRouter
-		texyFormatter: \Bare\Next\Formatter\Texy
-		redirections:  \MichalSpacekCz\Redirections
-		articles:  \MichalSpacekCz\Articles
-		files:     \MichalSpacekCz\Files
-		talks:     \MichalSpacekCz\Talks
-		trainings: \MichalSpacekCz\Trainings
-		interviews: \MichalSpacekCz\Interviews
-		trainingApplications:
-			class: \MichalSpacekCz\TrainingApplications
-			setup:
-				- setFilesDir('../../files/trainings')
-		trainingMails:
-			class: \MichalSpacekCz\TrainingMails
-			setup:
-				- setTemplatesDir('../../app/emails')
-				- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
-		trainingDates: \MichalSpacekCz\TrainingDates
-		trainingVenues: \MichalSpacekCz\TrainingVenues
-		authenticator:
-			class: \MichalSpacekCz\UserManager
-			setup:
-				- setKey(%authenticator.key%)
-		embed: \MichalSpacekCz\Embed
-		webTracking: \MichalSpacekCz\WebTracking
-		vranaNotifier:
-			class: \MichalSpacekCz\Notifier\Vrana
-			setup:
-				- setUrl(%notifier.vrana.url%)
-				- setNote(%notifier.vrana.note%)
-				- setNoSpam(%notifier.vrana.noSpam%)
-				- setSuccessMarker(%notifier.vrana.successMarker%)
-		httpResponse:
-			setup:
-				- $cookieDomain(%domain.cookie%)
-				- $cookieSecure(true)
-		session:
-			setup:
-				- setCookieParameters(/, %domain.cookie%, true)
-		helpers:
-			class: \MichalSpacekCz\Templating\Helpers
-			setup:
-				- setStaticRoot(%domain.sharedStaticRoot%)
-		translator: \MichalSpacekCz\DummyTranslator
-		vat:
-			class: \MichalSpacekCz\Vat
-			setup:
-				- setRate(%vatRate%)
-		contentSecurityPolicy:
-			class: \MichalSpacekCz\ContentSecurityPolicy
-			setup:
-				- setRootDomain(%domain.root%)
-				- setPolicy(%contentSecurityPolicy%)
-		reports: \MichalSpacekCz\Reports
-		startup:
-			class: \MichalSpacekCz\Startup
-			setup:
-				- setRootDomain(%domain.root%)
-				- setExtraHeaders(%extraHeaders%)
-
-production < common:
-
-development < common:
+services:
+	routerFactory:
+		class: RouterFactory
+		setup:
+			- setRootDomain(%domain.root%)
+			- setTranslatedRoutes(%translatedRoutes.presenters%)
+	router: @routerFactory::createRouter
+	texyFormatter: \Bare\Next\Formatter\Texy
+	redirections:  \MichalSpacekCz\Redirections
+	articles:  \MichalSpacekCz\Articles
+	files:     \MichalSpacekCz\Files
+	talks:     \MichalSpacekCz\Talks
+	trainings: \MichalSpacekCz\Trainings
+	interviews: \MichalSpacekCz\Interviews
+	trainingApplications:
+		class: \MichalSpacekCz\TrainingApplications
+		setup:
+			- setFilesDir('../../files/trainings')
+	trainingMails:
+		class: \MichalSpacekCz\TrainingMails
+		setup:
+			- setTemplatesDir('../../app/emails')
+			- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
+	trainingDates: \MichalSpacekCz\TrainingDates
+	trainingVenues: \MichalSpacekCz\TrainingVenues
+	authenticator:
+		class: \MichalSpacekCz\UserManager
+		setup:
+			- setKey(%authenticator.key%)
+	embed: \MichalSpacekCz\Embed
+	webTracking: \MichalSpacekCz\WebTracking
+	vranaNotifier:
+		class: \MichalSpacekCz\Notifier\Vrana
+		setup:
+			- setUrl(%notifier.vrana.url%)
+			- setNote(%notifier.vrana.note%)
+			- setNoSpam(%notifier.vrana.noSpam%)
+			- setSuccessMarker(%notifier.vrana.successMarker%)
+	httpResponse:
+		setup:
+			- $cookieDomain(%domain.cookie%)
+			- $cookieSecure(true)
+	session:
+		setup:
+			- setCookieParameters(/, %domain.cookie%, true)
+	helpers:
+		class: \MichalSpacekCz\Templating\Helpers
+		setup:
+			- setStaticRoot(%domain.sharedStaticRoot%)
+	translator: \MichalSpacekCz\DummyTranslator
+	vat:
+		class: \MichalSpacekCz\Vat
+		setup:
+			- setRate(%vatRate%)
+	contentSecurityPolicy:
+		class: \MichalSpacekCz\ContentSecurityPolicy
+		setup:
+			- setRootDomain(%domain.root%)
+			- setPolicy(%contentSecurityPolicy%)
+	reports: \MichalSpacekCz\Reports
+	startup:
+		class: \MichalSpacekCz\Startup
+		setup:
+			- setRootDomain(%domain.root%)
+			- setExtraHeaders(%extraHeaders%)

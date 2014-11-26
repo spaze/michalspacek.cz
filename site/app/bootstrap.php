@@ -28,9 +28,9 @@ if (preg_match('/([^.]+\.[^.:]+)(?::[0-9]+)?$/', $rootDomain, $matches)) {
 	$rootDomain = $matches[1];
 }
 
-// Create Dependency Injection container from config.neon file
-$configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
+// Create Dependency Injection container from config files
 $configFiles = array(
+	__DIR__ . '/config/config.neon',
 	__DIR__ . "/config/config.extra-{$rootDomain}.neon",
 	__DIR__ . '/config/config.local.neon',
 );
