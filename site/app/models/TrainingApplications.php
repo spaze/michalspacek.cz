@@ -52,6 +52,8 @@ class TrainingApplications
 
 	private $childrenStatuses = array();
 
+	private $parentStatuses = array();
+
 	private $descendantStatuses = array();
 
 	private $statusIds = array();
@@ -345,6 +347,24 @@ class TrainingApplications
 			);
 		}
 		return $this->childrenStatuses[$parent];
+	}
+
+
+	public function getParentStatuses($child)
+	{
+		if (!isset($this->parentStatuses[$child])) {
+			$this->parentStatuses[$child] = $this->database->fetchPairs(
+				'SELECT
+					sf.id_status,
+					sf.status
+				FROM training_application_status_flow f
+					JOIN training_application_status sf ON sf.id_status = f.key_status_from
+					JOIN training_application_status st ON st.id_status = f.key_status_to
+				WHERE st.status = ?',
+				$child
+			);
+		}
+		return $this->parentStatuses[$child];
 	}
 
 

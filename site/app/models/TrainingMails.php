@@ -79,23 +79,33 @@ class TrainingMails
 
 	public function getApplications()
 	{
-		$applications = $this->trainingApplications->getByStatus(TrainingApplications::STATUS_ATTENDED);
-		foreach ($applications as $application) {
-			$application->files = $this->trainingApplications->getFiles($application->id);
+		$applications = [];
+
+		foreach ($this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_INVITED) as $status) {
+			foreach ($this->trainingApplications->getByStatus($status) as $application) {
+				if ($this->trainingDates->get($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
+					$applications[] = $application;
+				}
+			}
 		}
 
-		foreach ($this->trainingApplications->getByStatus(TrainingApplications::STATUS_TENTATIVE) as $application) {
-			if ($this->trainingDates->get($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
+		foreach ($this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_MATERIALS_SENT) as $status) {
+			foreach ($this->trainingApplications->getByStatus($status) as $application) {
+				$application->files = $this->trainingApplications->getFiles($application->id);
 				$applications[] = $application;
 			}
 		}
 
-		foreach ($this->trainingApplications->getByStatus(TrainingApplications::STATUS_SIGNED_UP) as $application) {
-			$applications[] = $application;
+		foreach ($this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_INVOICE_SENT) as $status) {
+			foreach ($this->trainingApplications->getByStatus($status) as $application) {
+				$applications[] = $application;
+			}
 		}
 
-		foreach ($this->trainingApplications->getByStatus(TrainingApplications::STATUS_NOTIFIED) as $application) {
-			$applications[] = $application;
+		foreach ($this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_REMINDED) as $status) {
+			foreach ($this->trainingApplications->getByStatus($status) as $application) {
+				$applications[] = $application;
+			}
 		}
 
 		return $applications;
