@@ -66,7 +66,7 @@ class EmailsPresenter extends BasePresenter
 	public function submittedMails($form)
 	{
 		$values = $form->getValues();
-		$sent = false;
+		$sent = 0;
 		foreach ($values->applications as $id => $data) {
 			if (empty($data->send) || !isset($this->applications[$id])) {
 				continue;
@@ -76,13 +76,13 @@ class EmailsPresenter extends BasePresenter
 			if (in_array($this->applications[$id]->status, $this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_INVITED))) {
 				$this->trainingMails->sendInvitation($this->applications[$id], $this->createTemplate(), $additional);
 				$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVITED);
-				$sent = true;
+				$sent++;
 			}
 
 			if (in_array($this->applications[$id]->status, $this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_MATERIALS_SENT))) {
 				$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate(), $additional);
 				$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_MATERIALS_SENT);
-				$sent = true;
+				$sent++;
 			}
 
 			if (in_array($this->applications[$id]->status, $this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_INVOICE_SENT))) {
@@ -94,18 +94,18 @@ class EmailsPresenter extends BasePresenter
 					$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $invoice, $additional);
 
 					$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVOICE_SENT);
-					$sent = true;
+					$sent++;
 				}
 			}
 
 			if (in_array($this->applications[$id]->status, $this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_REMINDED))) {
 				$this->trainingMails->sendReminder($this->applications[$id], $this->createTemplate(), $additional);
 				$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_REMINDED);
-				$sent = true;
+				$sent++;
 			}
 		}
 		if ($sent) {
-			$this->flashMessage('E-maily odeslány');
+			$this->flashMessage('Počet odeslaných e-mailů: ' . $sent);
 		} else {
 			$this->flashMessage('Nebyl odeslán žádný e-mail', 'notice');
 		}
