@@ -13,6 +13,11 @@
 {include #embedVideo}
 <p n:if="$videoHref"><small><a href="{$videoHref}"><span class="icon icon16 video" title="Záznam"></span>{$videoHref}</a></small></p>
 
+<p n:if="$noEmbedImage">
+<img src="{='i/images/talks/' . $noEmbedImage|staticUrl}" width="800" height="600" alt="Náhled prvního slajdu" title="Náhled prvního slajdu"><br>
+</p>
+<p n:if="$noEmbedImage"><small>K přednášce nejsou k dispozici slajdy ani video. Alespoň prozatím.</small></p>
+
 <h2 n:if="$description || $href" id="detail">Detail přednášky</h2>
 <p n:if="$description">{$description}</p>
 <p n:if="$href"><a href="{$href}">Detail přednášky na webu akce</a></p>

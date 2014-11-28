@@ -92,6 +92,7 @@ class Talks
 				event,
 				event_href AS eventHref,
 				og_image AS ogImage,
+				no_embed_image AS noEmbedImage,
 				transcript
 			FROM talks
 			WHERE action = ?',
