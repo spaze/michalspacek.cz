@@ -12,10 +12,6 @@ class UserManager implements \Nette\Security\IAuthenticator
 
 	const KNOCK_KNOCK = 'knockKnock';
 
-	const CIPHER_NAME = MCRYPT_RIJNDAEL_128;
-
-	const CIPHER_MODE = MCRYPT_MODE_CBC;
-
 	const RETURNING_USER_COOKIE = 'beenhere';
 
 	const RETURNING_USER_VALUE = 'donethat';
@@ -31,23 +27,21 @@ class UserManager implements \Nette\Security\IAuthenticator
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
 
-	protected $key;
+	/** @var \MichalSpacekCz\Encryption */
+	protected $encryption;
 
 
-	public function __construct(\Nette\Database\Connection $connection, \Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse)
+	public function __construct(
+		\Nette\Database\Connection $connection,
+		\Nette\Http\IRequest $httpRequest,
+		\Nette\Http\IResponse $httpResponse,
+		\MichalSpacekCz\Encryption $encryption
+	)
 	{
 		$this->database = $connection;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
-	}
-
-
-	public function setKey($key)
-	{
-		if (strlen($key) != 64 || !ctype_xdigit($key)) {
-			throw new \InvalidArgumentException('Key must be 64 characters long and only consist of hexadecimal characters');
-		}
-		$this->key = $key;
+		$this->encryption = $encryption;
 	}
 
 
@@ -91,53 +85,30 @@ class UserManager implements \Nette\Security\IAuthenticator
 		if (!$user) {
 			throw new \Nette\Security\AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		}
-		if (!$this->verifyHash($password, $this->decryptPassword($user->password))) {
+		if (!$this->verifyHash($password, $this->encryption->decrypt($user->password, Encryption::GROUP_PASSWORD))) {
 			throw new \Nette\Security\AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
 		}
 		return $user;
 	}
 
 
-	private function calculateHash($password, $salt = null)
+	private function calculateHash($password)
 	{
 		return password_hash($password, PASSWORD_DEFAULT);
 	}
+
 
 	private function verifyHash($password, $hash)
 	{
 		return password_verify($password, $hash);
 	}
 
-	private function getIvSize()
-	{
-		return $ivSize = mcrypt_get_iv_size(self::CIPHER_NAME, self::CIPHER_MODE);
-	}
-
-
-	protected function encryptPassword($password)
-	{
-		$key = pack('H*', $this->key);
-		$iv = mcrypt_create_iv($this->getIvSize(), MCRYPT_RAND);
-		$encrypted = mcrypt_encrypt(self::CIPHER_NAME, $key, $password, self::CIPHER_MODE, $iv);
-		return base64_encode($iv . $encrypted);
-	}
-
-
-	protected function decryptPassword($password)
-	{
-		$encrypted = base64_decode($password);
-		$key = pack('H*', $this->key);
-		$iv = substr($encrypted, 0, $this->getIvSize());
-		$encrypted = substr($encrypted, $this->getIvSize());
-		$decrypted = mcrypt_decrypt(self::CIPHER_NAME, $key, $encrypted, self::CIPHER_MODE, $iv);
-		return rtrim($decrypted, "\0");
-	}
-
 
 	public function changePassword($username, $password, $newPassword)
 	{
 		$user = $this->verifyPassword($username, $password);
-		$this->database->query('UPDATE users SET password = ? WHERE id_user = ?', $this->encryptPassword($this->calculateHash($newPassword)), $user->userId);
+		$encrypted = $this->encryption->encrypt($this->calculateHash($newPassword), Encryption::GROUP_PASSWORD);
+		$this->database->query('UPDATE users SET password = ? WHERE id_user = ?', $encrypted, $user->userId);
 	}
 
 

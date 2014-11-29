@@ -23,10 +23,7 @@ services:
 			- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 	trainingDates: \MichalSpacekCz\TrainingDates
 	trainingVenues: \MichalSpacekCz\TrainingVenues
-	authenticator:
-		class: \MichalSpacekCz\UserManager
-		setup:
-			- setKey(%authenticator.key%)
+	authenticator: \MichalSpacekCz\UserManager
 	embed: \MichalSpacekCz\Embed
 	webTracking: \MichalSpacekCz\WebTracking
 	vranaNotifier:
@@ -63,3 +60,8 @@ services:
 		setup:
 			- setRootDomain(%domain.root%)
 			- setExtraHeaders(%extraHeaders%)
+	encryption:
+		class: \MichalSpacekCz\Encryption
+		setup:
+			- setKeys(%encryption.keys%)
+			- setActiveKeyIds(%encryption.activeKeyIds%)

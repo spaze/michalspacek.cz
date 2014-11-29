@@ -17,3 +17,10 @@ parameters:
 	domain:
 		root: michalspacek.cz
 		cookie: .michalspacek.cz
+
+	encryption:
+		keys:
+			password:
+				dev1: abadcafec15c0d06f00dcafed00ddeadbeefdeadc0de0000000ff1cedefec8ed # [0-9A-F]{64}
+		activeKeyIds:
+			password: dev1
