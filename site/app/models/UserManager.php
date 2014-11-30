@@ -27,21 +27,21 @@ class UserManager implements \Nette\Security\IAuthenticator
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
 
-	/** @var \MichalSpacekCz\Encryption */
-	protected $encryption;
+	/** @var \MichalSpacekCz\PasswordEncryption */
+	protected $passwordEncryption;
 
 
 	public function __construct(
 		\Nette\Database\Connection $connection,
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
-		\MichalSpacekCz\Encryption $encryption
+		\MichalSpacekCz\PasswordEncryption $passwordEncryption
 	)
 	{
 		$this->database = $connection;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
-		$this->encryption = $encryption;
+		$this->passwordEncryption = $passwordEncryption;
 	}
 
 
@@ -85,7 +85,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 		if (!$user) {
 			throw new \Nette\Security\AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		}
-		if (!$this->verifyHash($password, $this->encryption->decrypt($user->password, Encryption::GROUP_PASSWORD))) {
+		if (!$this->verifyHash($password, $this->passwordEncryption->decrypt($user->password))) {
 			throw new \Nette\Security\AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
 		}
 		return $user;
@@ -107,7 +107,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 	public function changePassword($username, $password, $newPassword)
 	{
 		$user = $this->verifyPassword($username, $password);
-		$encrypted = $this->encryption->encrypt($this->calculateHash($newPassword), Encryption::GROUP_PASSWORD);
+		$encrypted = $this->passwordEncryption->encrypt($this->calculateHash($newPassword));
 		$this->database->query('UPDATE users SET password = ? WHERE id_user = ?', $encrypted, $user->userId);
 	}
 

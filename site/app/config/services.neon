@@ -65,3 +65,4 @@ services:
 		setup:
 			- setKeys(%encryption.keys%)
 			- setActiveKeyIds(%encryption.activeKeyIds%)
+	passwordEncryption: \MichalSpacekCz\PasswordEncryption

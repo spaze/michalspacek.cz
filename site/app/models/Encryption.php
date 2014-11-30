@@ -7,16 +7,10 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Encryption
+class Encryption extends \Nette\Object
 {
 
-	const CIPHER_NAME = MCRYPT_RIJNDAEL_128;
-
-	const CIPHER_MODE = MCRYPT_MODE_CBC;
-
 	const KEY_IV_CIPHERTEXT_SEPARATOR = ';';
-
-	const GROUP_PASSWORD = 'password';
 
 	/** @var string[] */
 	private $keys;
@@ -44,21 +38,21 @@ class Encryption
 	}
 
 
-	public function encrypt($data, $group)
+	public function encrypt($data, $group, $cipherName, $cipherMode)
 	{
 		$keyId = $this->getActiveKeyId($group);
 		$key = $this->getKey($group, $keyId);
-		$iv = mcrypt_create_iv(mcrypt_get_iv_size(self::CIPHER_NAME, self::CIPHER_MODE), MCRYPT_DEV_URANDOM);
-		$cipherText = mcrypt_encrypt(self::CIPHER_NAME, $key, $data, self::CIPHER_MODE, $iv);
+		$iv = mcrypt_create_iv(mcrypt_get_iv_size($cipherName, $cipherMode), MCRYPT_DEV_URANDOM);
+		$cipherText = mcrypt_encrypt($cipherName, $key, $data, $cipherMode, $iv);
 		return $this->formatKeyIvCipherText($keyId, $iv, $cipherText);
 	}
 
 
-	public function decrypt($data, $group)
+	public function decrypt($data, $group, $cipherName, $cipherMode)
 	{
 		list($keyId, $iv, $cipherText) = $this->parseKeyIvCipherText($data);
 		$key = $this->getKey($group, $keyId);
-		$clearText = mcrypt_decrypt(self::CIPHER_NAME, $key, $cipherText, self::CIPHER_MODE, $iv);
+		$clearText = mcrypt_decrypt($cipherName, $key, $cipherText, $cipherMode, $iv);
 		return rtrim($clearText, "\0");
 	}
 
