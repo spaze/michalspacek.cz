@@ -16,25 +16,25 @@ class PasswordEncryption extends \Nette\Object
 
 	const CIPHER_MODE = MCRYPT_MODE_CBC;
 
-	/** @var \MichalSpacekCz\Encryption */
-	protected $encryption;
+	/** @var \MichalSpacekCz\StaticKeyEncryption */
+	protected $staticKeyEncryption;
 
 
-	public function __construct(\MichalSpacekCz\Encryption $encryption)
+	public function __construct(\MichalSpacekCz\StaticKeyEncryption $staticKeyEncryption)
 	{
-		$this->encryption = $encryption;
+		$this->staticKeyEncryption = $staticKeyEncryption;
 	}
 
 
 	public function encrypt($data)
 	{
-		return $this->encryption->encrypt($data, self::GROUP, self::CIPHER_NAME, self::CIPHER_MODE);
+		return $this->staticKeyEncryption->encrypt($data, self::GROUP, self::CIPHER_NAME, self::CIPHER_MODE);
 	}
 
 
 	public function decrypt($data)
 	{
-		return $this->encryption->decrypt($data, self::GROUP, self::CIPHER_NAME, self::CIPHER_MODE);
+		return $this->staticKeyEncryption->decrypt($data, self::GROUP, self::CIPHER_NAME, self::CIPHER_MODE);
 	}
 
 }
