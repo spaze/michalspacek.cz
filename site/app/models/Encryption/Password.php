@@ -1,13 +1,13 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Encryption;
 
 /**
- * PasswordEncryption service.
+ * Password encryption service.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class PasswordEncryption extends \Nette\Object
+class Password extends \Nette\Object
 {
 
 	const GROUP = 'password';

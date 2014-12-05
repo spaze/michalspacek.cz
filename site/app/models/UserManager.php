@@ -27,7 +27,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
 
-	/** @var \MichalSpacekCz\PasswordEncryption */
+	/** @var \MichalSpacekCz\Encryption\Password */
 	protected $passwordEncryption;
 
 
@@ -35,7 +35,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 		\Nette\Database\Connection $connection,
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
-		\MichalSpacekCz\PasswordEncryption $passwordEncryption
+		\MichalSpacekCz\Encryption\Password $passwordEncryption
 	)
 	{
 		$this->database = $connection;
