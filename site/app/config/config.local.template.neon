@@ -22,5 +22,8 @@ parameters:
 		keys:
 			password:
 				dev1: abadcafec15c0d06f00dcafed00ddeadbeefdeadc0de0000000ff1cedefec8ed # [0-9A-F]{64}
+			email:
+				dev1: cafebabe25da1768d69ee80717cc2f3094876e5f65f18436ba2a727af2b78137 # [0-9A-F]{64}
 		activeKeyIds:
 			password: dev1
+			email: dev1

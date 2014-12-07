@@ -67,3 +67,4 @@ services:
 			- setKeys(%encryption.keys%)
 			- setActiveKeyIds(%encryption.activeKeyIds%)
 	passwordEncryption: \MichalSpacekCz\Encryption\Password
+	emailEncryption: \MichalSpacekCz\Encryption\Email

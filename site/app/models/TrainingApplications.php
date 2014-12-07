@@ -41,6 +41,9 @@ class TrainingApplications
 	/** @var \MichalSpacekCz\TrainingDates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\Encryption\Email */
+	protected $emailEncryption;
+
 	/**
 	 * Files directory, ends with a slash.
 	 *
@@ -73,18 +76,24 @@ class TrainingApplications
 	private $statusCallbacks = array();
 
 
-	public function __construct(\Nette\Database\Connection $connection, \MichalSpacekCz\Notifier\Vrana $vranaNotifier, \MichalSpacekCz\TrainingDates $trainingDates)
+	public function __construct(
+		\Nette\Database\Connection $connection,
+		\MichalSpacekCz\Notifier\Vrana $vranaNotifier,
+		\MichalSpacekCz\TrainingDates $trainingDates,
+		\MichalSpacekCz\Encryption\Email $emailEncryption
+	)
 	{
 		$this->database = $connection;
 		$this->vranaNotifier = $vranaNotifier;
 		$this->trainingDates = $trainingDates;
+		$this->emailEncryption = $emailEncryption;
 		$this->statusCallbacks[self::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
 
 
 	public function getByStatus($status)
 	{
-		return $this->database->fetchAll(
+		$result = $this->database->fetchAll(
 			'SELECT
 				a.id_application AS id,
 				a.name,
@@ -118,12 +127,20 @@ class TrainingApplications
 				s.status = ?',
 			$status
 		);
+
+		if ($result) {
+			foreach ($result as $row) {
+				$row->email = $this->emailEncryption->decrypt($row->email);
+			}
+		}
+
+		return $result;
 	}
 
 
 	public function getByDate($dateId)
 	{
-		return $this->database->fetchAll(
+		$result = $this->database->fetchAll(
 			'SELECT
 				a.id_application AS id,
 				a.name,
@@ -144,6 +161,14 @@ class TrainingApplications
 				key_date = ?',
 			$dateId
 		);
+
+		if ($result) {
+			foreach ($result as $row) {
+				$row->email = $this->emailEncryption->decrypt($row->email);
+			}
+		}
+
+		return $result;
 	}
 
 
@@ -227,7 +252,7 @@ class TrainingApplications
 		$data = array(
 			'key_date'             => $trainingId,
 			'name'                 => $name,
-			'email'                => $email,
+			'email'                => $this->emailEncryption->encrypt($email),
 			'company'              => $company,
 			'street'               => $street,
 			'city'                 => $city,
@@ -280,7 +305,7 @@ class TrainingApplications
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
 				'name'           => $name,
-				'email'          => $email,
+				'email'          => $this->emailEncryption->encrypt($email),
 				'company'        => $company,
 				'familiar'       => $familiar,
 				'street'         => $street,
@@ -495,6 +520,10 @@ class TrainingApplications
 			$id
 		);
 
+		if ($result) {
+			$result->email = $this->emailEncryption->decrypt($result->email);
+		}
+
 		return $result;
 	}
 
@@ -523,6 +552,10 @@ class TrainingApplications
 				access_token = ?',
 			$token
 		);
+
+		if ($result) {
+			$result->email = $this->emailEncryption->decrypt($result->email);
+		}
 
 		return $result;
 	}
