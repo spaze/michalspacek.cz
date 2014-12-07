@@ -719,15 +719,4 @@ class TrainingApplications
 	}
 
 
-	public function encryptEmails()
-	{
-		$emails = $this->database->fetchAll("SELECT id_application as applicationId, email FROM training_applications WHERE email LIKE '%@%'");
-		foreach ($emails as $row) {
-			$this->database->query(
-				'UPDATE training_applications SET ? WHERE id_application = ?',
-				array('email' => $this->emailEncryption->encrypt($row->email)),
-				$row->applicationId
-			);
-		}
-	}
 }

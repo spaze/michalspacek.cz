@@ -182,12 +182,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionDefault()
-	{
-		$emails = $this->trainingApplications->encryptEmails();
-	}
-
-
 	public function renderDefault()
 	{
 		$trainings = $this->trainings->getAllTrainings();
