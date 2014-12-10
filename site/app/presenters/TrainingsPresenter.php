@@ -196,11 +196,8 @@ class TrainingsPresenter extends BasePresenter
 		$dates = array();
 		$helpers = new \Bare\Next\Templating\Helpers();
 		foreach ($this->dates as $date) {
-			if ($date->tentative) {
-				$start = $helpers->localDate($date->start, 'cs', '%B %Y');
-			} else {
-				$start = \Nette\Templating\Helpers::date($date->start, 'j. n. Y');
-			}
+			$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
+			$start = $helpers->localDate($date->start, 'cs', $format);
 			$dates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (předběžný termín)' : '');
 		}
 
