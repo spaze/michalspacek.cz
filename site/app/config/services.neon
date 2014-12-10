@@ -40,6 +40,7 @@ services:
 	session:
 		setup:
 			- setCookieParameters(/, %domain.cookie%, true)
+	bareHelpers: \Bare\Next\Templating\Helpers
 	helpers:
 		class: \MichalSpacekCz\Templating\Helpers
 		setup:

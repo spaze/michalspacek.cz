@@ -28,6 +28,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
+	/** @var \Bare\Next\Templating\Helpers */
+	protected $bareHelpers;
+
 	/** @var \Nette\Database\Row */
 	private $training;
 
@@ -79,6 +82,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\TrainingMails $trainingMails
 	 * @param \MichalSpacekCz\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
+	 * @param \Bare\Next\Templating\Helpers $bareHelpers
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
@@ -86,7 +90,8 @@ class TrainingsPresenter extends BasePresenter
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
 		\MichalSpacekCz\TrainingMails $trainingMails,
 		\MichalSpacekCz\Trainings $trainings,
-		\MichalSpacekCz\Vat $vat
+		\MichalSpacekCz\Vat $vat,
+		\Bare\Next\Templating\Helpers $bareHelpers
 	)
 	{
 		$this->files = $files;
@@ -94,6 +99,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingMails = $trainingMails;
 		$this->trainings = $trainings;
 		$this->vat = $vat;
+		$this->bareHelpers = $bareHelpers;
 		parent::__construct($translator);
 	}
 
@@ -194,10 +200,9 @@ class TrainingsPresenter extends BasePresenter
 		$rules = $this->trainingApplications->getDataRules();
 
 		$dates = array();
-		$helpers = new \Bare\Next\Templating\Helpers();
 		foreach ($this->dates as $date) {
 			$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
-			$start = $helpers->localDate($date->start, 'cs', $format);
+			$start = $this->bareHelpers->localDate($date->start, 'cs', $format);
 			$dates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (předběžný termín)' : '');
 		}
 
