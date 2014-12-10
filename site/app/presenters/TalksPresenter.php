@@ -14,20 +14,26 @@ class TalksPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Embed */
 	protected $embed;
 
+	/** @var \MichalSpacekCz\Templating\Helpers */
+	protected $helpers;
+
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Talks $talks
 	 * @param \MichalSpacekCz\Embed $embed
+	 * @param \MichalSpacekCz\Templating\Helpers $helpers
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\Talks $talks,
-		\MichalSpacekCz\Embed $embed
+		\MichalSpacekCz\Embed $embed,
+		\MichalSpacekCz\Templating\Helpers $helpers
 	)
 	{
 		$this->talks = $talks;
 		$this->embed = $embed;
+		$this->helpers = $helpers;
 		parent::__construct($translator);
 	}
 
@@ -59,7 +65,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->date = $talk->date;
 		$this->template->eventHref = $talk->eventHref;
 		$this->template->event = $talk->event;
-		$this->template->ogImage = $talk->ogImage;
+		$this->template->ogImage = $this->getOgImage($talk->ogImage);
 		$this->template->noEmbedImage = $talk->noEmbedImage;
 		$this->template->transcript = $talk->transcript;
 
@@ -76,6 +82,16 @@ class TalksPresenter extends BasePresenter
 		foreach ($this->embed->getVideoTemplateVars($talk->videoHref, $talk->videoEmbed) as $key => $value) {
 			$this->template->$key = $value;
 		}
+	}
+
+
+	private function getOgImage($image)
+	{
+		$host = parse_url($image, PHP_URL_HOST);
+		if ($host === null) {
+			$image = $this->helpers->staticUrl($image);
+		}
+		return $image;
 	}
 
 }
