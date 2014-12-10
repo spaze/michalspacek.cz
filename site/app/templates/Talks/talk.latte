@@ -1,6 +1,6 @@
 {define #metas}
 <meta n:if="$ogImage" property="og:image" content="{$ogImage}">
-<meta n:if="$pageTitle" property="og:title" content="{$pageTitle|striptags}">
+<meta n:if="$pageTitle" property="og:title" content="{$pageTitle}">
 <meta n:if="$description" property="og:description" content="{$description|striptags|strip|truncate:160}">
 {/define}
 {define #content}

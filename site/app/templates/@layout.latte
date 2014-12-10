@@ -10,7 +10,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="robots" content="{$robots}" n:ifset="$robots" />
-	<title>{isset($pageTitle) ? $pageTitle . " | "}Michal Špaček</title>
+	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Michal Špaček</title>
 	<link rel="stylesheet" media="screen,projection,tv" href="{='/i/css/screen.css'|staticUrl}" type="text/css">
 	<script src="{='/i/js/jquery-2.1.1.min.js'|staticUrl}"></script>
 	<script src="{='/i/js/netteForms.js'|staticUrl}"></script>

@@ -58,7 +58,8 @@ class TalksPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = 'Přednáška ' . strip_tags($talk->title) . " ({$talk->event})";
+		$title = \Nette\Utils\Html::el()->setText('Přednáška ')->add(strip_tags($talk->title))->add(' (')->add($talk->event)->add(')');
+		$this->template->pageTitle =  $title;
 		$this->template->pageHeader = $talk->title;
 		$this->template->description = $talk->description;
 		$this->template->href = $talk->href;
