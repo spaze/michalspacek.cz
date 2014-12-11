@@ -23,8 +23,13 @@ if (preg_match('/^(?:([^.]+\.)|www\.([^.]+\.))?([^.]+\.[^.]+)\z/', $_SERVER['HTT
 // Uncomment this line if you must temporarily take down your site for maintenance.
 // require '.maintenance.php';
 
-// Let bootstrap create Dependency Injection container.
-$container = require __DIR__ . '/../../app/bootstrap.php';
+$rootDir = realpath(__DIR__ . '/../..');
 
-// Run application.
-$container->application->run();
+require $rootDir . '/app/models/Application/Bootstrap.php';
+
+$appDir = $rootDir . '/app';
+$logDir = $rootDir . '/log';
+$tempDir = $rootDir . '/temp';
+
+$bootstrap = new \MichalSpacekCz\Application\Bootstrap($appDir, $logDir, $tempDir);
+$bootstrap->run();
