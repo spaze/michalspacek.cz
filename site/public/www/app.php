@@ -1,4 +1,6 @@
 <?php
+use \MichalSpacekCz\Application\Bootstrap;
+
 $https = (!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off'));
 if ($https) {
 	header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
@@ -30,6 +32,7 @@ require $rootDir . '/app/models/Application/Bootstrap.php';
 $appDir = $rootDir . '/app';
 $logDir = $rootDir . '/log';
 $tempDir = $rootDir . '/temp';
+$environment = (isset($_SERVER['ENVIRONMENT']) ? $_SERVER['ENVIRONMENT'] : Bootstrap::MODE_PRODUCTION);
 
-$bootstrap = new \MichalSpacekCz\Application\Bootstrap($appDir, $logDir, $tempDir);
+$bootstrap = new Bootstrap($appDir, $logDir, $tempDir, $environment);
 $bootstrap->run();

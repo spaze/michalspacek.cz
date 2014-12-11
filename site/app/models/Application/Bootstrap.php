@@ -14,6 +14,12 @@ class Bootstrap extends \Nette\Object
 {
 
 	/** @var string */
+	const MODE_PRODUCTION = 'production';
+
+	/** @var string */
+	const MODE_DEVELOPMENT = 'development';
+
+	/** @var string */
 	private $appDir;
 
 	/** @var string */
@@ -22,51 +28,76 @@ class Bootstrap extends \Nette\Object
 	/** @var string */
 	private $tempDir;
 
+	/** @var string */
+	private $environment;
 
-	public function __construct($appDir, $logDir, $tempDir)
+
+	/**
+	 * @param string $appDir
+	 * @param string $logDir
+	 * @param string $tempDir
+	 * @param string $environment
+	 */
+	public function __construct($appDir, $logDir, $tempDir, $environment)
 	{
 		$this->appDir = $appDir;
 		$this->logDir = $logDir;
 		$this->tempDir = $tempDir;
+		$this->environment = $environment;
 	}
 
 
 	public function run()
 	{
-		$configurator = new \Nette\Config\Configurator;
+		$configurator = new \Nette\Config\Configurator();
 
-		$environment = (isset($_SERVER['ENVIRONMENT']) ? $_SERVER['ENVIRONMENT'] : 'production');
-
-		// Enable Nette Debugger for error visualisation & logging
-		$configurator->setDebugMode($environment == 'development');
+		$configurator->setDebugMode($this->isDebugMode());
 		$configurator->enableDebugger($this->logDir);
-
-		// Enable RobotLoader - this will load all classes automatically
 		$configurator->setTempDirectory($this->tempDir);
+
 		$configurator->createRobotLoader()
 			->addDirectory($this->appDir)
 			->register();
 
+		$existingFiles = array_filter($this->getConfigurationFiles(), function ($path) {
+			return is_file($path);
+		});
+		foreach ($existingFiles as $filename) {
+			$configurator->addConfig($filename, $configurator::NONE);
+		}
+
+		$container = $configurator->createContainer();
+		$container->application->run();
+	}
+
+
+	private function getConfigurationFiles()
+	{
+		return array(
+			$this->appDir . '/config/config.neon',
+			$this->appDir . '/config/parameters.neon',
+			$this->appDir . '/config/presenters.neon',
+			$this->appDir . '/config/services.neon',
+			$this->appDir . '/config/config.extra-' . $this->getRootDomain() . '.neon',
+			$this->appDir . '/config/config.local.neon',
+		);
+	}
+
+
+	private function getRootDomain()
+	{
 		// Root domain
 		$rootDomain = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
 		if (preg_match('/([^.]+\.[^.:]+)(?::[0-9]+)?$/', $rootDomain, $matches)) {
 			$rootDomain = $matches[1];
 		}
+		return $rootDomain;
+	}
 
-		// Create Dependency Injection container from config files
-		$configFiles = array(
-			$this->appDir . '/config/config.neon',
-			$this->appDir . '/config/parameters.neon',
-			$this->appDir . '/config/presenters.neon',
-			$this->appDir . '/config/services.neon',
-			$this->appDir . "/config/config.extra-{$rootDomain}.neon",
-			$this->appDir . '/config/config.local.neon',
-		);
-		foreach (array_filter($configFiles, 'is_file') as $filename) {
-			$configurator->addConfig($filename, $configurator::NONE);
-		}
-		$container = $configurator->createContainer();
-		$container->application->run();
+
+	private function isDebugMode()
+	{
+		return ($this->environment === self::MODE_DEVELOPMENT);
 	}
 
 }
