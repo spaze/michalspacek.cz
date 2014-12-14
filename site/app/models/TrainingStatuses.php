@@ -2,7 +2,7 @@
 namespace MichalSpacekCz;
 
 /**
- * Training statuses model.
+ * Training application statuses model.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
