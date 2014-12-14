@@ -48,7 +48,6 @@ class HomepagePresenter extends BasePresenter
 
 	public function actionDefault()
 	{
-		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
 		$trainings = $this->trainings->getAllTrainingsInterval('-1 week');
 		foreach ($this->trainings->getAllUpcoming() as $training) {
 			foreach ($training->dates as $date) {
