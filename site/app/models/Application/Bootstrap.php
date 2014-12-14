@@ -19,6 +19,12 @@ class Bootstrap extends \Nette\Object
 	/** @var string */
 	const MODE_DEVELOPMENT = 'development';
 
+	/** @var \Nette\Http\Request */
+	private $httpRequest;
+
+	/** @var \Nette\Http\Response */
+	private $httpResponse;
+
 	/** @var string */
 	private $appDir;
 
@@ -67,6 +73,13 @@ class Bootstrap extends \Nette\Object
 		}
 
 		$container = $configurator->createContainer();
+
+		$this->httpRequest = $container->httpRequest;
+		$this->httpResponse = $container->httpResponse;
+
+		$this->setHstsHeader();
+		$this->redirectToSecure();
+
 		$container->application->run();
 	}
 
@@ -98,6 +111,34 @@ class Bootstrap extends \Nette\Object
 	private function isDebugMode()
 	{
 		return ($this->environment === self::MODE_DEVELOPMENT);
+	}
+
+
+	private function setHstsHeader()
+	{
+		if ($this->httpRequest->isSecured()) {
+			$this->httpResponse->setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+		}
+	}
+
+
+	private function redirectToSecure()
+	{
+		// All baz.waldo, foo.baz.waldo end up in the same dir
+		$hostdir = basename(dirname($_SERVER['SCRIPT_FILENAME'])); // /public/www/app.php -> www
+		$uri = $_SERVER['REQUEST_URI'];
+		// Is this (?:(foo.)|www.(bar.))?(baz.waldo)
+		if (preg_match('/^(?:([^.]+\.)|www\.([^.]+\.))?([^.]+\.[^.]+)\z/', $_SERVER['HTTP_HOST'], $m)) {
+			if (($m[1] !== "{$hostdir}." || !$this->httpRequest->isSecured()) && empty($m[2])) {
+				// baz.waldo or foo.baz.waldo -> www.baz.waldo if foo is not known, also HTTP -> HTTPS
+				$this->httpResponse->redirect("https://{$hostdir}.{$m[3]}{$uri}");
+				exit;
+			} elseif (empty($m[1])) {
+				// www.bar.baz.waldo -> https://bar.baz.waldo
+				$this->httpResponse->redirect("https://{$m[2]}{$m[3]}{$uri}");
+				exit;
+			}
+		}
 	}
 
 }
