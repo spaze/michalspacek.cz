@@ -41,6 +41,9 @@ class TrainingApplications
 	/** @var \MichalSpacekCz\TrainingDates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\TrainingStatuses */
+	protected $trainingStatuses;
+
 	/** @var \MichalSpacekCz\Encryption\Email */
 	protected $emailEncryption;
 
@@ -52,14 +55,6 @@ class TrainingApplications
 	protected $filesDir;
 
 	protected $emailFrom;
-
-	private $childrenStatuses = array();
-
-	private $parentStatuses = array();
-
-	private $descendantStatuses = array();
-
-	private $statusIds = array();
 
 	private $dataRules = array(
 		'name'         => array(Form::MIN_LENGTH => 3, Form::MAX_LENGTH => 200),
@@ -80,12 +75,14 @@ class TrainingApplications
 		\Nette\Database\Connection $connection,
 		\MichalSpacekCz\Notifier\Vrana $vranaNotifier,
 		\MichalSpacekCz\TrainingDates $trainingDates,
+		\MichalSpacekCz\TrainingStatuses $trainingStatuses,
 		\MichalSpacekCz\Encryption\Email $emailEncryption
 	)
 	{
 		$this->database = $connection;
 		$this->vranaNotifier = $vranaNotifier;
 		$this->trainingDates = $trainingDates;
+		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
 		$this->statusCallbacks[self::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
@@ -174,7 +171,7 @@ class TrainingApplications
 
 	public function getValidByDate($dateId)
 	{
-		$discardedStatuses = $this->getDiscardedStatuses();
+		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
 		return array_filter($this->getByDate($dateId), function($value) use ($discardedStatuses) {
 			return !in_array($value->status, $discardedStatuses);
 		});
@@ -245,7 +242,7 @@ class TrainingApplications
 			throw new \RuntimeException("Invalid initial status {$status}");
 		}
 
-		$statusId = $this->getStatusId(self::STATUS_CREATED);
+		$statusId = $this->trainingStatuses->getStatusId(self::STATUS_CREATED);
 		$datetime = new \DateTime($date);
 
 		$this->database->beginTransaction();
@@ -339,73 +336,6 @@ class TrainingApplications
 	}
 
 
-	public function getInitialStatuses()
-	{
-		return $this->getChildrenStatuses(self::STATUS_CREATED);
-	}
-
-
-	public function getAttendedStatuses()
-	{
-		return array($this->getStatusId(self::STATUS_ATTENDED) => self::STATUS_ATTENDED) + $this->getDescendantStatuses(self::STATUS_ATTENDED);
-	}
-
-
-	public function getDiscardedStatuses()
-	{
-		return array($this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED) + $this->getDescendantStatuses(self::STATUS_CANCELED);
-	}
-
-
-	public function getChildrenStatuses($parent)
-	{
-		if (!isset($this->childrenStatuses[$parent])) {
-			$this->childrenStatuses[$parent] = $this->database->fetchPairs(
-				'SELECT
-					st.id_status,
-					st.status
-				FROM training_application_status_flow f
-					JOIN training_application_status sf ON sf.id_status = f.key_status_from
-					JOIN training_application_status st ON st.id_status = f.key_status_to
-				WHERE sf.status = ?',
-				$parent
-			);
-		}
-		return $this->childrenStatuses[$parent];
-	}
-
-
-	public function getParentStatuses($child)
-	{
-		if (!isset($this->parentStatuses[$child])) {
-			$this->parentStatuses[$child] = $this->database->fetchPairs(
-				'SELECT
-					sf.id_status,
-					sf.status
-				FROM training_application_status_flow f
-					JOIN training_application_status sf ON sf.id_status = f.key_status_from
-					JOIN training_application_status st ON st.id_status = f.key_status_to
-				WHERE st.status = ?',
-				$child
-			);
-		}
-		return $this->parentStatuses[$child];
-	}
-
-
-	private function getDescendantStatuses($parent)
-	{
-		if (!isset($this->descendantStatuses[$parent])) {
-			$statuses = $this->getChildrenStatuses($parent);
-			foreach ($statuses as $status) {
-				$statuses += $this->getDescendantStatuses($status);
-			}
-			$this->descendantStatuses[$parent] = $statuses;
-		}
-		return $this->descendantStatuses[$parent];
-	}
-
-
 	private function generateAccessCode()
 	{
 		return \Nette\Utils\Strings::random(mt_rand(32, 48), '0-9a-zA-Z');
@@ -417,7 +347,7 @@ class TrainingApplications
 	 */
 	protected function setStatus($applicationId, $status, $date)
 	{
-		$statusId = $this->getStatusId($status);
+		$statusId = $this->trainingStatuses->getStatusId($status);
 
 		$prevStatus = $this->database->fetch(
 			'SELECT
@@ -469,18 +399,6 @@ class TrainingApplications
 		} catch (\Exception $e) {
 			$this->database->rollBack();
 		}
-	}
-
-
-	private function getStatusId($status)
-	{
-		if (!isset($this->statusIds[$status])) {
-			$this->statusIds[$status] = $this->database->fetchField(
-				'SELECT id_status FROM training_application_status WHERE status = ?',
-				$status
-			);
-		}
-		return $this->statusIds[$status];
 	}
 
 

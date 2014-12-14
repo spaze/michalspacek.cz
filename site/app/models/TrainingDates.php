@@ -18,12 +18,22 @@ class TrainingDates
 	/** @var \Nette\Database\Connection */
 	protected $database;
 
+	/** @var \MichalSpacekCz\TrainingStatuses */
+	protected $trainingStatuses;
+
 	private $statusIds = array();
 
-
-	public function __construct(\Nette\Database\Connection $connection)
+	/**
+	 * @param \Nette\Database\Connection $connection
+	 * @param \MichalSpacekCz\TrainingStatuses $trainingStatuses
+	 */
+	public function __construct(
+		\Nette\Database\Connection $connection,
+		\MichalSpacekCz\TrainingStatuses $trainingStatuses
+	)
 	{
 		$this->database = $connection;
+		$this->trainingStatuses = $trainingStatuses;
 	}
 
 

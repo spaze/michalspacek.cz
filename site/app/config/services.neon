@@ -23,6 +23,7 @@ services:
 			- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 	trainingDates: \MichalSpacekCz\TrainingDates
 	trainingVenues: \MichalSpacekCz\TrainingVenues
+	trainingStatuses: \MichalSpacekCz\TrainingStatuses
 	authenticator: \MichalSpacekCz\UserManager
 	embed: \MichalSpacekCz\Embed
 	webTracking: \MichalSpacekCz\WebTracking

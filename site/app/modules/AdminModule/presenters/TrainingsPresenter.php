@@ -18,6 +18,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\TrainingDates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\TrainingStatuses */
+	protected $trainingStatuses;
+
 	/** @var \MichalSpacekCz\Trainings */
 	protected $trainings;
 
@@ -53,6 +56,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
 	 * @param \MichalSpacekCz\TrainingDates $trainingDates
+	 * @param \MichalSpacekCz\TrainingStatuses $trainingStatuses
 	 * @param \MichalSpacekCz\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
@@ -60,12 +64,14 @@ class TrainingsPresenter extends BasePresenter
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
 		\MichalSpacekCz\TrainingDates $trainingDates,
+		\MichalSpacekCz\TrainingStatuses $trainingStatuses,
 		\MichalSpacekCz\Trainings $trainings,
 		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
+		$this->trainingStatuses = $trainingStatuses;
 		$this->trainings = $trainings;
 		$this->vat = $vat;
 		parent::__construct($translator);
@@ -95,15 +101,15 @@ class TrainingsPresenter extends BasePresenter
 		$this->redirectParam = $this->dateId;
 		$this->training = $this->trainingDates->get($this->dateId);
 		$this->applications = $this->trainingApplications->getByDate($this->dateId);
-		$attendedStatuses = $this->trainingApplications->getAttendedStatuses();
-		$discardedStatuses = $this->trainingApplications->getDiscardedStatuses();
+		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
+		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
 		foreach ($this->applications as $application) {
 			$application->discarded = in_array($application->status, $discardedStatuses);
 			$application->attended = in_array($application->status, $attendedStatuses);
 			if ($application->attended) {
 				$this->applicationIdsAttended[] = $application->id;
 			}
-			$application->childrenStatuses = $this->trainingApplications->getChildrenStatuses($application->status);
+			$application->childrenStatuses = $this->trainingStatuses->getChildrenStatuses($application->status);
 		}
 
 		$this->template->pageTitle     = 'Účastníci';
@@ -122,7 +128,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->applicationId = $param;
 		$this->redirectParam = $this->applicationId;
 		$application = $this->trainingApplications->getApplicationById($this->applicationId);
-		if (!in_array($application->status, $this->trainingApplications->getAttendedStatuses())) {
+		if (!in_array($application->status, $this->trainingStatuses->getAttendedStatuses())) {
 			$this->redirect('date', $application->dateId);
 		}
 
@@ -178,7 +184,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingName  = $this->training->name;
 		$this->template->trainingStart = $this->training->start;
 		$this->template->trainingCity  = $this->training->venueCity;
-		$this->template->attended      = in_array($this->application->status, $this->trainingApplications->getAttendedStatuses());
+		$this->template->attended      = in_array($this->application->status, $this->trainingStatuses->getAttendedStatuses());
 	}
 
 
@@ -241,7 +247,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$statuses = array();
-		foreach ($this->trainingApplications->getInitialStatuses() as $status) {
+		foreach ($this->trainingStatuses->getInitialStatuses() as $status) {
 			$statuses[$status] = $status;
 		}
 

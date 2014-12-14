@@ -19,6 +19,9 @@ class TrainingMails
 	/** @var \MichalSpacekCz\TrainingDates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\TrainingStatuses */
+	protected $trainingStatuses;
+
 	/** @var \MichalSpacekCz\TrainingVenues */
 	protected $trainingVenues;
 
@@ -34,12 +37,14 @@ class TrainingMails
 		\Nette\Mail\IMailer $mailer,
 		\MichalSpacekCz\TrainingApplications $trainingApplications,
 		\MichalSpacekCz\TrainingDates $trainingDates,
+		\MichalSpacekCz\TrainingStatuses $trainingStatuses,
 		\MichalSpacekCz\TrainingVenues $trainingVenues
 	)
 	{
 		$this->mailer = $mailer;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
+		$this->trainingStatuses = $trainingStatuses;
 		$this->trainingVenues = $trainingVenues;
 	}
 
@@ -81,7 +86,7 @@ class TrainingMails
 	{
 		$applications = [];
 
-		foreach ($this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_INVITED) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if ($this->trainingDates->get($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
 					$applications[] = $application;
@@ -89,20 +94,20 @@ class TrainingMails
 			}
 		}
 
-		foreach ($this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_MATERIALS_SENT) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$application->files = $this->trainingApplications->getFiles($application->id);
 				$applications[] = $application;
 			}
 		}
 
-		foreach ($this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_INVOICE_SENT) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_INVOICE_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$applications[] = $application;
 			}
 		}
 
-		foreach ($this->trainingApplications->getParentStatuses(TrainingApplications::STATUS_REMINDED) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$applications[] = $application;
 			}
