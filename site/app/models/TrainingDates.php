@@ -69,6 +69,43 @@ class TrainingDates
 	}
 
 
+	public function getWithUnpaid()
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				d.id_date AS dateId,
+				t.action,
+				t.name,
+				d.start,
+				d.end,
+				d.public,
+				s.status,
+				v.href AS venueHref,
+				v.name AS venueName,
+				v.name_extended AS venueNameExtended,
+				v.city AS venueCity
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_venues v ON d.key_venue = v.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
+			WHERE EXISTS (
+				SELECT
+					1
+				FROM
+					training_applications a
+				WHERE
+					a.key_date = d.id_date
+					AND a.paid IS NULL
+					AND a.key_status NOT IN (?)
+			)
+			ORDER BY
+				d.start',
+			array_keys($this->trainingStatuses->getDiscardedStatuses())
+		);
+		return $result;
+	}
+
+
 	public function update($dateId, $training, $venue, $start, $end, $status, $public, $cooperation)
 	{
 		$this->database->query(

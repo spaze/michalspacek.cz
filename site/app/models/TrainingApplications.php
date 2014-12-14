@@ -175,7 +175,14 @@ class TrainingApplications
 		return array_filter($this->getByDate($dateId), function($value) use ($discardedStatuses) {
 			return !in_array($value->status, $discardedStatuses);
 		});
+	}
 
+
+	public function getValidUnpaidByDate($dateId)
+	{
+		return array_filter($this->getValidByDate($dateId), function($value) {
+			return !isset($value->paid);
+		});
 	}
 
 

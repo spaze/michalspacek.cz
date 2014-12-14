@@ -1,0 +1,9 @@
+{define #menu}
+&raquo; <a n:href=":Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+{/define}
+
+{define #content}
+{includeblock "../Trainings/default.latte"}
+{include #list, trainings => $unpaidApplications}
+{/define}
