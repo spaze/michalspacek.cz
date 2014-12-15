@@ -1,7 +1,7 @@
 <?php
 namespace MichalSpacekCz\Form;
 
-use \MichalSpacekCz\TrainingApplications;
+use \MichalSpacekCz\Training;
 
 /**
  * E-mails to send form.
@@ -24,11 +24,11 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 			$checked = true;
 			$disabled = false;
 			switch ($application->status) {
-				case TrainingStatuses::STATUS_ATTENDED:
+				case Training\Statuses::STATUS_ATTENDED:
 					$checked = (bool)$application->files;
 					$disabled = !$checked;
 					break;
-				case TrainingStatuses::STATUS_SIGNED_UP:
+				case Training\Statuses::STATUS_SIGNED_UP:
 					$checked = ($application->price && $application->vatRate && $application->priceVat);
 					$disabled = !$checked;
 					break;
@@ -41,7 +41,7 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 				->setAttribute('cols', 80)
 				->setAttribute('rows', 3);
 			switch ($application->status) {
-				case TrainingStatuses::STATUS_SIGNED_UP:
+				case Training\Statuses::STATUS_SIGNED_UP:
 					$applicationIdsContainer->addText('invoiceId')
 						->setType('number')
 						->setAttribute('placeholder', 'Faktura č.')

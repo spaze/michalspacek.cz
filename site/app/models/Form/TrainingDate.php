@@ -1,6 +1,8 @@
 <?php
 namespace MichalSpacekCz\Form;
 
+use \MichalSpacekCz\Training;
+
 /**
  * Training date form.
  *
@@ -11,17 +13,17 @@ class TrainingDate extends \Nette\Application\UI\Form
 {
 
 	/**
-	 * @var \MichalSpacekCz\Trainings
+	 * @var \MichalSpacekCz\Training\Trainings
 	 */
 	protected $trainings;
 
 	/**
-	 * @var \MichalSpacekCz\TrainingDates
+	 * @var \MichalSpacekCz\Training\Dates
 	 */
 	protected $trainingDates;
 
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \MichalSpacekCz\Trainings $trainings, \MichalSpacekCz\TrainingDates $trainingDates)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, Training\Trainings $trainings, Training\Dates $trainingDates)
 	{
 		parent::__construct($parent, $name);
 

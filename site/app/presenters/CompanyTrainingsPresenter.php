@@ -8,7 +8,7 @@
 class CompanyTrainingsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Trainings */
+	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
 	/** @var \MichalSpacekCz\Vat */
@@ -17,12 +17,12 @@ class CompanyTrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\Trainings $trainings,
+		\MichalSpacekCz\Training\Trainings $trainings,
 		\MichalSpacekCz\Vat $vat
 	)
 	{

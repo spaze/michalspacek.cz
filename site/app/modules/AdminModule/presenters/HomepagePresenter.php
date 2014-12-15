@@ -1,6 +1,8 @@
 <?php
 namespace AdminModule;
 
+use \MichalSpacekCz\Training;
+
 /**
  * Homepage presenter.
  *
@@ -10,13 +12,13 @@ namespace AdminModule;
 class HomepagePresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\TrainingApplications */
+	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\TrainingMails */
+	/** @var \MichalSpacekCz\Training\Mails */
 	protected $trainingMails;
 
-	/** @var \MichalSpacekCz\Trainings */
+	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
 	/** @var \MichalSpacekCz\WebTracking */
@@ -25,16 +27,16 @@ class HomepagePresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
-	 * @param \MichalSpacekCz\TrainingMails $trainingMails
-	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
+	 * @param \MichalSpacekCz\Training\Mails $trainingMails
+	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\WebTracking $webTracking
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\TrainingApplications $trainingApplications,
-		\MichalSpacekCz\TrainingMails $trainingMails,
-		\MichalSpacekCz\Trainings $trainings,
+		Training\Applications $trainingApplications,
+		Training\Mails $trainingMails,
+		Training\Trainings $trainings,
 		\MichalSpacekCz\WebTracking $webTracking
 	)
 	{

@@ -1,5 +1,5 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Training;
 
 /**
  * Trainings model.
@@ -93,10 +93,10 @@ class Trainings
 				t.id_training, d.start";
 
 		$upcoming = array();
-		foreach ($this->database->fetchAll($query, $all, $all, TrainingDates::STATUS_TENTATIVE, TrainingDates::STATUS_CONFIRMED) as $row) {
+		foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED) as $row) {
 			$date = array(
 				'dateId'        => $row->dateId,
-				'tentative'     => ($row->status == TrainingDates::STATUS_TENTATIVE),
+				'tentative'     => ($row->status == Dates::STATUS_TENTATIVE),
 				'lastFreeSeats' => $this->lastFreeSeats($row->start),
 				'start'         => $row->start,
 				'public'        => $row->public,
@@ -198,12 +198,12 @@ class Trainings
 			ORDER BY
 				d.start",
 			$name,
-			TrainingDates::STATUS_TENTATIVE,
-			TrainingDates::STATUS_CONFIRMED
+			Dates::STATUS_TENTATIVE,
+			Dates::STATUS_CONFIRMED
 		);
 		$dates = array();
 		foreach ($result as $row) {
-			$row->tentative        = ($row->status == TrainingDates::STATUS_TENTATIVE);
+			$row->tentative        = ($row->status == Dates::STATUS_TENTATIVE);
 			$row->lastFreeSeats    = $this->lastFreeSeats($row->start);
 			$row->venueDescription = $this->texyFormatter->format($row->venueDescription);
 			$row->cooperationDescription = $this->texyFormatter->format($row->cooperationDescription);

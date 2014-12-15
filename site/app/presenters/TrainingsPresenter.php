@@ -1,8 +1,8 @@
 <?php
+use	\MichalSpacekCz\Training;
 use \Nette\Application\UI\Form,
 	\Nette\Diagnostics\Debugger,
-	\Nette\Http\Response,
-	\MichalSpacekCz\TrainingApplications;
+	\Nette\Http\Response;
 
 /**
  * Trainings presenter.
@@ -16,13 +16,13 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Files */
 	protected $files;
 
-	/** @var \MichalSpacekCz\TrainingApplications */
+	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\TrainingMails */
+	/** @var \MichalSpacekCz\Training\Mails */
 	protected $trainingMails;
 
-	/** @var \MichalSpacekCz\Trainings */
+	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
 	/** @var \MichalSpacekCz\Vat */
@@ -78,18 +78,18 @@ class TrainingsPresenter extends BasePresenter
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Files
-	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
-	 * @param \MichalSpacekCz\TrainingMails $trainingMails
-	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
+	 * @param \MichalSpacekCz\Training\Mails $trainingMails
+	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Bare\Next\Templating\Helpers $bareHelpers
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\Files $files,
-		\MichalSpacekCz\TrainingApplications $trainingApplications,
-		\MichalSpacekCz\TrainingMails $trainingMails,
-		\MichalSpacekCz\Trainings $trainings,
+		Training\Applications $trainingApplications,
+		Training\Mails $trainingMails,
+		Training\Trainings $trainings,
 		\MichalSpacekCz\Vat $vat,
 		\Bare\Next\Templating\Helpers $bareHelpers
 	)

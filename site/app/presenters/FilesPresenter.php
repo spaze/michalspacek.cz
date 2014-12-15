@@ -15,19 +15,19 @@ class FilesPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Files */
 	protected $files;
 
-	/** @var \MichalSpacekCz\TrainingApplications */
+	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Files
-	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\Files $files,
-		\MichalSpacekCz\TrainingApplications $trainingApplications
+		\MichalSpacekCz\Training\Applications $trainingApplications
 	)
 	{
 		$this->files = $files;

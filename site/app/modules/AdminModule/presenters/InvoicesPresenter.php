@@ -1,6 +1,8 @@
 <?php
 namespace AdminModule;
 
+use MichalSpacekCz\Training;
+
 /**
  * Invoices presenter.
  *
@@ -10,27 +12,27 @@ namespace AdminModule;
 class InvoicesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\TrainingApplications */
+	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\TrainingDates */
+	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Trainings */
+	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
-	 * @param \MichalSpacekCz\TrainingDates $trainingDates
-	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\TrainingApplications $trainingApplications,
-		\MichalSpacekCz\TrainingDates $trainingDates,
-		\MichalSpacekCz\Trainings $trainings
+		Training\Applications $trainingApplications,
+		Training\Dates $trainingDates,
+		Training\Trainings $trainings
 	)
 	{
 		$this->trainingApplications = $trainingApplications;

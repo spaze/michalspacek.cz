@@ -1,6 +1,7 @@
 <?php
 namespace AdminModule;
 
+use \MichalSpacekCz\Training;
 use \Nette\Application\UI\Form;
 
 /**
@@ -12,16 +13,16 @@ use \Nette\Application\UI\Form;
 class TrainingsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\TrainingApplications */
+	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\TrainingDates */
+	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\TrainingStatuses */
+	/** @var \MichalSpacekCz\Training\Statuses */
 	protected $trainingStatuses;
 
-	/** @var \MichalSpacekCz\Trainings */
+	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
 	/** @var \MichalSpacekCz\Vat */
@@ -54,18 +55,18 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
-	 * @param \MichalSpacekCz\TrainingDates $trainingDates
-	 * @param \MichalSpacekCz\TrainingStatuses $trainingStatuses
-	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
+	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\TrainingApplications $trainingApplications,
-		\MichalSpacekCz\TrainingDates $trainingDates,
-		\MichalSpacekCz\TrainingStatuses $trainingStatuses,
-		\MichalSpacekCz\Trainings $trainings,
+		Training\Applications $trainingApplications,
+		Training\Dates $trainingDates,
+		Training\Statuses $trainingStatuses,
+		Training\Trainings $trainings,
 		\MichalSpacekCz\Vat $vat
 	)
 	{

@@ -1,4 +1,6 @@
 <?php
+use \MichalSpacekCz\Training;
+
 /**
  * TrainingVenues presenter.
  *
@@ -8,10 +10,10 @@
 class VenuesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Trainings */
+	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
-	/** @var \MichalSpacekCz\TrainingVenues */
+	/** @var \MichalSpacekCz\Training\Venues */
 	protected $trainingVenues;
 
 	/** @var \MichalSpacekCz\Embed */
@@ -20,14 +22,14 @@ class VenuesPresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\Trainings $trainings
-	 * @param \MichalSpacekCz\TrainingVenues $trainingVenues
+	 * @param \MichalSpacekCz\Training\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\Trainings $trainings,
-		\MichalSpacekCz\TrainingVenues $trainingVenues,
+		Training\Trainings $trainings,
+		Training\Venues $trainingVenues,
 		\MichalSpacekCz\Embed $embed
 	)
 	{

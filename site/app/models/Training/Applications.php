@@ -1,5 +1,5 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Training;
 
 use \Nette\Application\UI\Form;
 
@@ -9,7 +9,7 @@ use \Nette\Application\UI\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplications
+class Applications
 {
 
 	const DEFAULT_SOURCE  = 'michal-spacek';
@@ -24,10 +24,10 @@ class TrainingApplications
 	 */
 	protected $vranaNotifier;
 
-	/** @var \MichalSpacekCz\TrainingDates */
+	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\TrainingStatuses */
+	/** @var \MichalSpacekCz\Training\Statuses */
 	protected $trainingStatuses;
 
 	/** @var \MichalSpacekCz\Encryption\Email */
@@ -60,8 +60,8 @@ class TrainingApplications
 	public function __construct(
 		\Nette\Database\Connection $connection,
 		\MichalSpacekCz\Notifier\Vrana $vranaNotifier,
-		\MichalSpacekCz\TrainingDates $trainingDates,
-		\MichalSpacekCz\TrainingStatuses $trainingStatuses,
+		Dates $trainingDates,
+		Statuses $trainingStatuses,
 		\MichalSpacekCz\Encryption\Email $emailEncryption
 	)
 	{
@@ -70,7 +70,7 @@ class TrainingApplications
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
-		$this->statusCallbacks[TrainingStatuses::STATUS_NOTIFIED] = array($this, 'notifyCallback');
+		$this->statusCallbacks[Statuses::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
 
 
@@ -204,7 +204,7 @@ class TrainingApplications
 			$companyId,
 			$companyTaxId,
 			$note,
-			TrainingStatuses::STATUS_TENTATIVE,
+			Statuses::STATUS_TENTATIVE,
 			self::DEFAULT_SOURCE
 		);
 	}
@@ -223,7 +223,7 @@ class TrainingApplications
 			$companyId,
 			$companyTaxId,
 			$note,
-			TrainingStatuses::STATUS_SIGNED_UP,
+			Statuses::STATUS_SIGNED_UP,
 			self::DEFAULT_SOURCE
 		);
 	}
@@ -235,7 +235,7 @@ class TrainingApplications
 			throw new \RuntimeException("Invalid initial status {$status}");
 		}
 
-		$statusId = $this->trainingStatuses->getStatusId(TrainingStatuses::STATUS_CREATED);
+		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new \DateTime($date);
 
 		$this->database->beginTransaction();
@@ -279,7 +279,7 @@ class TrainingApplications
 			$companyTaxId,
 			$note
 		);
-		$this->setStatus($applicationId, TrainingStatuses::STATUS_SIGNED_UP, null);
+		$this->setStatus($applicationId, Statuses::STATUS_SIGNED_UP, null);
 		$this->database->commit();
 		return $applicationId;
 	}
@@ -517,9 +517,9 @@ class TrainingApplications
 				a.id_application = ?
 				AND s.status IN (?, ?, ?)',
 			$applicationId,
-			TrainingStatuses::STATUS_ATTENDED,
-			TrainingStatuses::STATUS_MATERIALS_SENT,
-			TrainingStatuses::STATUS_ACCESS_TOKEN_USED
+			Statuses::STATUS_ATTENDED,
+			Statuses::STATUS_MATERIALS_SENT,
+			Statuses::STATUS_ACCESS_TOKEN_USED
 		);
 
 		foreach ($files as $file) {
@@ -551,9 +551,9 @@ class TrainingApplications
 			$applicationId,
 			$token,
 			$filename,
-			TrainingStatuses::STATUS_ATTENDED,
-			TrainingStatuses::STATUS_MATERIALS_SENT,
-			TrainingStatuses::STATUS_ACCESS_TOKEN_USED
+			Statuses::STATUS_ATTENDED,
+			Statuses::STATUS_MATERIALS_SENT,
+			Statuses::STATUS_ACCESS_TOKEN_USED
 		);
 
 		if ($file) {
@@ -606,9 +606,9 @@ class TrainingApplications
 
 	public function setAccessTokenUsed(\Nette\Database\Row $application)
 	{
-		if ($application->status != TrainingStatuses::STATUS_ACCESS_TOKEN_USED) {
+		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
 			$this->database->beginTransaction();
-			$this->setStatus($application->applicationId, TrainingStatuses::STATUS_ACCESS_TOKEN_USED, null);
+			$this->setStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED, null);
 			$this->database->commit();
 		}
 	}

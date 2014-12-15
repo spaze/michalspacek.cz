@@ -1,5 +1,5 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Training;
 
 /**
  * Training mails model.
@@ -7,22 +7,22 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingMails
+class Mails
 {
 
 	/** @var \Nette\Mail\IMailer */
 	protected $mailer;
 
-	/** @var \MichalSpacekCz\TrainingApplications */
+	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\TrainingDates */
+	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\TrainingStatuses */
+	/** @var \MichalSpacekCz\Training\Statuses */
 	protected $trainingStatuses;
 
-	/** @var \MichalSpacekCz\TrainingVenues */
+	/** @var \MichalSpacekCz\Training\Venues */
 	protected $trainingVenues;
 
 	/**
@@ -35,10 +35,10 @@ class TrainingMails
 
 	public function __construct(
 		\Nette\Mail\IMailer $mailer,
-		\MichalSpacekCz\TrainingApplications $trainingApplications,
-		\MichalSpacekCz\TrainingDates $trainingDates,
-		\MichalSpacekCz\TrainingStatuses $trainingStatuses,
-		\MichalSpacekCz\TrainingVenues $trainingVenues
+		Applications $trainingApplications,
+		Dates $trainingDates,
+		Statuses $trainingStatuses,
+		Venues $trainingVenues
 	)
 	{
 		$this->mailer = $mailer;
@@ -86,28 +86,28 @@ class TrainingMails
 	{
 		$applications = [];
 
-		foreach ($this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_INVITED) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($this->trainingDates->get($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
+				if ($this->trainingDates->get($application->dateId)->status == Dates::STATUS_CONFIRMED) {
 					$applications[] = $application;
 				}
 			}
 		}
 
-		foreach ($this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_MATERIALS_SENT) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$application->files = $this->trainingApplications->getFiles($application->id);
 				$applications[] = $application;
 			}
 		}
 
-		foreach ($this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_INVOICE_SENT) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVOICE_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$applications[] = $application;
 			}
 		}
 
-		foreach ($this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_REMINDED) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$applications[] = $application;
 			}

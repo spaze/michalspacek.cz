@@ -1,5 +1,5 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Training;
 
 /**
  * Training dates model.
@@ -7,7 +7,7 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingDates
+class Dates
 {
 
 	const STATUS_CREATED   = 'CREATED';    // 1
@@ -18,18 +18,18 @@ class TrainingDates
 	/** @var \Nette\Database\Connection */
 	protected $database;
 
-	/** @var \MichalSpacekCz\TrainingStatuses */
+	/** @var \MichalSpacekCz\Training\Statuses */
 	protected $trainingStatuses;
 
 	private $statusIds = array();
 
 	/**
 	 * @param \Nette\Database\Connection $connection
-	 * @param \MichalSpacekCz\TrainingStatuses $trainingStatuses
+	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
 	 */
 	public function __construct(
 		\Nette\Database\Connection $connection,
-		\MichalSpacekCz\TrainingStatuses $trainingStatuses
+		Statuses $trainingStatuses
 	)
 	{
 		$this->database = $connection;

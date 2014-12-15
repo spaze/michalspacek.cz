@@ -10,17 +10,17 @@ class RedirectPresenter extends BasePresenter
 
 	const GOOD_NIGHT = 5;
 
-	/** @var \MichalSpacekCz\TrainingApplications */
+	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\TrainingApplications $trainingApplications
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\TrainingApplications $trainingApplications
+		\MichalSpacekCz\Training\Applications $trainingApplications
 	)
 	{
 		$this->trainingApplications = $trainingApplications;

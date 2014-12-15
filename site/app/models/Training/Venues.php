@@ -1,5 +1,5 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Training;
 
 /**
  * Training venues model.
@@ -7,7 +7,7 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingVenues
+class Venues
 {
 
 	/** @var \Nette\Database\Connection */

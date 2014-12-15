@@ -1,5 +1,5 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Training;
 
 /**
  * Training application statuses model.
@@ -7,7 +7,7 @@ namespace MichalSpacekCz;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingStatuses
+class Statuses
 {
 
 	const STATUS_CREATED             = 'CREATED';              // 1

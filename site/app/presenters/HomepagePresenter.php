@@ -17,7 +17,7 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Talks */
 	protected $talks;
 
-	/** @var \MichalSpacekCz\Trainings */
+	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
 
@@ -26,14 +26,14 @@ class HomepagePresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Articles $articles
 	 * @param \MichalSpacekCz\Interviews $interviews
 	 * @param \MichalSpacekCz\Talks $talks
-	 * @param \MichalSpacekCz\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\Articles $articles,
 		\MichalSpacekCz\Interviews $interviews,
 		\MichalSpacekCz\Talks $talks,
-		\MichalSpacekCz\Trainings $trainings
+		\MichalSpacekCz\Training\Trainings $trainings
 	)
 	{
 		$this->articles = $articles;

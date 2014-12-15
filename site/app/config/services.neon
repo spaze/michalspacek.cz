@@ -10,20 +10,20 @@ services:
 	articles:  \MichalSpacekCz\Articles
 	files:     \MichalSpacekCz\Files
 	talks:     \MichalSpacekCz\Talks
-	trainings: \MichalSpacekCz\Trainings
+	trainings: \MichalSpacekCz\Training\Trainings
 	interviews: \MichalSpacekCz\Interviews
 	trainingApplications:
-		class: \MichalSpacekCz\TrainingApplications
+		class: \MichalSpacekCz\Training\Applications
 		setup:
 			- setFilesDir('../../files/trainings')
 	trainingMails:
-		class: \MichalSpacekCz\TrainingMails
+		class: \MichalSpacekCz\Training\Mails
 		setup:
 			- setTemplatesDir('../../app/emails')
 			- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
-	trainingDates: \MichalSpacekCz\TrainingDates
-	trainingVenues: \MichalSpacekCz\TrainingVenues
-	trainingStatuses: \MichalSpacekCz\TrainingStatuses
+	trainingDates: \MichalSpacekCz\Training\Dates
+	trainingVenues: \MichalSpacekCz\Training\Venues
+	trainingStatuses: \MichalSpacekCz\Training\Statuses
 	authenticator: \MichalSpacekCz\UserManager
 	embed: \MichalSpacekCz\Embed
 	webTracking: \MichalSpacekCz\WebTracking

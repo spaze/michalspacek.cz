@@ -14,9 +14,9 @@
 			</td>
 			<td class="iconCell">
 				<small title="{$training->status}">
-					{if $training->status == \MichalSpacekCz\TrainingDates::STATUS_CONFIRMED}&#x2714;{/if}
-					{if $training->status == \MichalSpacekCz\TrainingDates::STATUS_TENTATIVE}&#x2731;{/if}
-					{if $training->status == \MichalSpacekCz\TrainingDates::STATUS_CANCELED}&#x2716;{/if}
+					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED}&#x2714;{/if}
+					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_TENTATIVE}&#x2731;{/if}
+					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CANCELED}&#x2716;{/if}
 				</small>
 			</td>
 			<td class="nameCell" data-date="{$training->dateId}">{$training->name} ({$training->applications|count})</td>
