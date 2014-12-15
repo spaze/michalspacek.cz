@@ -10,6 +10,20 @@ namespace MichalSpacekCz;
 class TrainingStatuses
 {
 
+	const STATUS_CREATED             = 'CREATED';              // 1
+	const STATUS_TENTATIVE           = 'TENTATIVE';            // 2
+	const STATUS_INVITED             = 'INVITED';              // 3
+	const STATUS_SIGNED_UP           = 'SIGNED_UP';            // 4
+	const STATUS_INVOICE_SENT        = 'INVOICE_SENT';         // 5
+	const STATUS_NOTIFIED            = 'NOTIFIED';             // 6
+	const STATUS_ATTENDED            = 'ATTENDED';             // 7
+	const STATUS_MATERIALS_SENT      = 'MATERIALS_SENT';       // 8
+	const STATUS_ACCESS_TOKEN_USED   = 'ACCESS_TOKEN_USED';    // 9
+	const STATUS_CANCELED            = 'CANCELED';             // 10
+	const STATUS_IMPORTED            = 'IMPORTED';             // 13
+	const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';  // 14
+	const STATUS_REMINDED            = 'REMINDED';             // 15
+
 	/** @var \Nette\Database\Connection */
 	protected $database;
 
@@ -44,19 +58,19 @@ class TrainingStatuses
 
 	public function getAttendedStatuses()
 	{
-		return array($this->getStatusId(TrainingApplications::STATUS_ATTENDED) => TrainingApplications::STATUS_ATTENDED) + $this->getDescendantStatuses(TrainingApplications::STATUS_ATTENDED);
+		return array($this->getStatusId(self::STATUS_ATTENDED) => self::STATUS_ATTENDED) + $this->getDescendantStatuses(self::STATUS_ATTENDED);
 	}
 
 
 	public function getDiscardedStatuses()
 	{
-		return array($this->getStatusId(TrainingApplications::STATUS_CANCELED) => TrainingApplications::STATUS_CANCELED) + $this->getDescendantStatuses(TrainingApplications::STATUS_CANCELED);
+		return array($this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED) + $this->getDescendantStatuses(self::STATUS_CANCELED);
 	}
 
 
 	public function getInitialStatuses()
 	{
-		return $this->getChildrenStatuses(TrainingApplications::STATUS_CREATED);
+		return $this->getChildrenStatuses(self::STATUS_CREATED);
 	}
 
 

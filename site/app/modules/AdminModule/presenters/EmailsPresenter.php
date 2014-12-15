@@ -79,19 +79,19 @@ class EmailsPresenter extends BasePresenter
 			}
 			$additional = trim($data->additional);
 
-			if (in_array($this->applications[$id]->status, $this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_INVITED))) {
+			if (in_array($this->applications[$id]->status, $this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_INVITED))) {
 				$this->trainingMails->sendInvitation($this->applications[$id], $this->createTemplate(), $additional);
-				$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVITED);
+				$this->trainingApplications->updateStatus($id, TrainingStatuses::STATUS_INVITED);
 				$sent++;
 			}
 
-			if (in_array($this->applications[$id]->status, $this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_MATERIALS_SENT))) {
+			if (in_array($this->applications[$id]->status, $this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_MATERIALS_SENT))) {
 				$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate(), $additional);
-				$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_MATERIALS_SENT);
+				$this->trainingApplications->updateStatus($id, TrainingStatuses::STATUS_MATERIALS_SENT);
 				$sent++;
 			}
 
-			if (in_array($this->applications[$id]->status, $this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_INVOICE_SENT))) {
+			if (in_array($this->applications[$id]->status, $this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_INVOICE_SENT))) {
 				if ($data->invoice->isOk()) {
 					$this->trainingApplications->updateApplicationInvoiceData($id, $data->invoiceId);
 					$this->applications[$id]->invoiceId = $data->invoiceId;
@@ -99,14 +99,14 @@ class EmailsPresenter extends BasePresenter
 					$invoice = array($data->invoice->getName() => $data->invoice->getTemporaryFile());
 					$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $invoice, $additional);
 
-					$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_INVOICE_SENT);
+					$this->trainingApplications->updateStatus($id, TrainingStatuses::STATUS_INVOICE_SENT);
 					$sent++;
 				}
 			}
 
-			if (in_array($this->applications[$id]->status, $this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_REMINDED))) {
+			if (in_array($this->applications[$id]->status, $this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_REMINDED))) {
 				$this->trainingMails->sendReminder($this->applications[$id], $this->createTemplate(), $additional);
-				$this->trainingApplications->updateStatus($id, TrainingApplications::STATUS_REMINDED);
+				$this->trainingApplications->updateStatus($id, TrainingStatuses::STATUS_REMINDED);
 				$sent++;
 			}
 		}

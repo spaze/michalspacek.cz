@@ -86,7 +86,7 @@ class TrainingMails
 	{
 		$applications = [];
 
-		foreach ($this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_INVITED) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if ($this->trainingDates->get($application->dateId)->status == TrainingDates::STATUS_CONFIRMED) {
 					$applications[] = $application;
@@ -94,20 +94,20 @@ class TrainingMails
 			}
 		}
 
-		foreach ($this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_MATERIALS_SENT) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$application->files = $this->trainingApplications->getFiles($application->id);
 				$applications[] = $application;
 			}
 		}
 
-		foreach ($this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_INVOICE_SENT) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_INVOICE_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$applications[] = $application;
 			}
 		}
 
-		foreach ($this->trainingStatuses->getParentStatuses(TrainingApplications::STATUS_REMINDED) as $status) {
+		foreach ($this->trainingStatuses->getParentStatuses(TrainingStatuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$applications[] = $application;
 			}
