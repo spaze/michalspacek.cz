@@ -1,7 +1,6 @@
 <?php
 use	\MichalSpacekCz\Training;
-use \Nette\Application\UI\Form,
-	\Nette\Diagnostics\Debugger,
+use \Nette\Diagnostics\Debugger,
 	\Nette\Http\Response;
 
 /**
@@ -209,86 +208,13 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$rules = $this->trainingApplications->getDataRules();
-
-		$dates = array();
-		foreach ($this->dates as $date) {
-			$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
-			$start = $this->bareHelpers->localDate($date->start, 'cs', $format);
-			$dates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (předběžný termín)' : '');
-		}
-
-		$session = $this->getSession('training');
-
-		$form = new Form($this, $formName);
-		$name = $form->parent->params['name'];
-		$label = 'Termín školení:';
-		// trainingId is actually dateId, oh well
-		if (count($this->dates) > 1) {
-			$form->addSelect('trainingId', $label, $dates)
-				->setRequired('Vyberte prosím termín a místo školení')
-				->setPrompt('- vyberte termín a místo -');
-		} else {
-			$field = new \Bare\Next\Forms\Controls\HiddenFieldWithLabel($label, $date->dateId, $dates[$date->dateId]);
-			$form->addComponent($field, 'trainingId');
-		}
-		$form->addGroup('Účastník');
-		$form->addText('name', 'Jméno a příjmení:')
-			->setDefaultValue($session->name)
-			->setRequired('Zadejte prosím jméno a příjmení')
-			->addRule(Form::MIN_LENGTH, 'Minimální délka jména a příjmení je %d znaky', $rules['name'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka jména a příjmení je %d znaků', $rules['name'][Form::MAX_LENGTH]);
-		$form->addText('email', 'E-mail:')
-			->setDefaultValue($session->email)
-			->setRequired('Zadejte prosím e-mailovou adresu')
-			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', $rules['email'][Form::MAX_LENGTH]);
-
-		$form->addGroup('Fakturační údaje');
-		$form->addText('company', 'Obchodní jméno:')
-			->setDefaultValue($session->company)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', $rules['company'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', $rules['company'][Form::MAX_LENGTH]);
-		$form->addText('street', 'Ulice a číslo:')
-			->setDefaultValue($session->street)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', $rules['street'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', $rules['street'][Form::MAX_LENGTH]);
-		$form->addText('city', 'Město:')
-			->setDefaultValue($session->city)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', $rules['city'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', $rules['city'][Form::MAX_LENGTH]);
-		$form->addText('zip', 'PSČ:')
-			->setDefaultValue($session->zip)
-			->addCondition(Form::FILLED)
-			->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', $rules['zip'][Form::PATTERN])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', $rules['zip'][Form::MAX_LENGTH]);
-		$form->addText('companyId', 'IČ:')
-			->setDefaultValue($session->companyId)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', $rules['companyId'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', $rules['companyId'][Form::MAX_LENGTH]);
-		$form->addText('companyTaxId', 'DIČ:')
-			->setDefaultValue($session->companyTaxId)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', $rules['companyTaxId'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', $rules['companyTaxId'][Form::MAX_LENGTH]);
-
-		$form->setCurrentGroup(null);
-		$form->addText('note', 'Poznámka:')
-			->setDefaultValue($session->note)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $rules['note'][Form::MAX_LENGTH]);
-		$form->addSubmit('signUp', 'Odeslat');
+		$form = new \MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->bareHelpers);
+		$form->setApplicationFromSession($this->getSession('training'));
 		$form->onSuccess[] = $this->submittedApplication;
-
-		return $form;
 	}
 
 
-	public function submittedApplication($form)
+	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplication $form)
 	{
 		$session = $this->getSession('training');
 
