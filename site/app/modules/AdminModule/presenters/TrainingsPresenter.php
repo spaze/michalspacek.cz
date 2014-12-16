@@ -31,9 +31,6 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Files */
 	protected $trainingFiles;
 
-	/** @var \MichalSpacekCz\Vat */
-	protected $vat;
-
 	/** @var array */
 	private $dates;
 
@@ -67,7 +64,6 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
-	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
@@ -76,8 +72,7 @@ class TrainingsPresenter extends BasePresenter
 		Training\Statuses $trainingStatuses,
 		Training\Trainings $trainings,
 		Training\Venues $trainingVenues,
-		Training\Files $trainingFiles,
-		\MichalSpacekCz\Vat $vat
+		Training\Files $trainingFiles
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
@@ -86,7 +81,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
-		$this->vat = $vat;
 		parent::__construct($translator);
 	}
 
@@ -340,6 +334,7 @@ class TrainingsPresenter extends BasePresenter
 		$values = $form->getValues();
 		foreach ($values->applications as $application) {
 			$this->trainingApplications->insertApplication(
+				$this->training,
 				$this->dateId,
 				$application->name,
 				$application->email,
@@ -454,14 +449,14 @@ class TrainingsPresenter extends BasePresenter
 		$form->addText('price', 'Cena bez DPH:')
 			->setType('number')
 			->setAttribute('title', 'Po případné slevě')
-			->setDefaultValue($this->application->price ? $this->application->price : $this->training->price);
+			->setDefaultValue($this->application->price);
 		$form->addText('vatRate', 'DPH:')
 			->setType('number')
-			->setDefaultValue($this->application->vatRate ? $this->application->vatRate * 100 : $this->vat->getRate() * 100);
+			->setDefaultValue($this->application->vatRate * 100);
 		$form->addText('priceVat', 'Cena s DPH:')
 			->setType('number')
 			->setAttribute('title', 'Po případné slevě')
-			->setDefaultValue($this->application->priceVat ? $this->application->priceVat : $this->vat->addVat($this->training->price));
+			->setDefaultValue($this->application->priceVat);
 		$form->addText('discount', 'Sleva:')
 			->setType('number')
 			->setDefaultValue($this->application->discount);

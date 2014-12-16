@@ -29,6 +29,9 @@ class Applications
 	/** @var \MichalSpacekCz\Encryption\Email */
 	protected $emailEncryption;
 
+	/** @var \MichalSpacekCz\Vat */
+	protected $vat;
+
 	protected $emailFrom;
 
 	private $dataRules = array(
@@ -51,7 +54,8 @@ class Applications
 		\MichalSpacekCz\Notifier\Vrana $vranaNotifier,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
-		\MichalSpacekCz\Encryption\Email $emailEncryption
+		\MichalSpacekCz\Encryption\Email $emailEncryption,
+		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->database = $connection;
@@ -59,6 +63,7 @@ class Applications
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
+		$this->vat = $vat;
 		$this->statusCallbacks[Statuses::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
 
@@ -180,9 +185,10 @@ class Applications
 	}
 
 
-	public function addInvitation($dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	public function addInvitation(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
 		return $this->insertApplication(
+			$training,
 			$dateId,
 			$name,
 			$email,
@@ -199,9 +205,10 @@ class Applications
 	}
 
 
-	public function addApplication($dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	public function addApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
 		return $this->insertApplication(
+			$training,
 			$dateId,
 			$name,
 			$email,
@@ -218,7 +225,7 @@ class Applications
 	}
 
 
-	public function insertApplication($dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source, $date = null)
+	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source, $date = null)
 	{
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
 			throw new \RuntimeException("Invalid initial status {$status}");
@@ -226,6 +233,14 @@ class Applications
 
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new \DateTime($date);
+
+		if (stripos($note, 'student') === false) {
+			$price = $training->price;
+			$discount = null;
+		} else {
+			$price = $training->price * (100 - $training->studentDiscount) / 100;
+			$discount = $training->studentDiscount;
+		}
 
 		$data = array(
 			'key_date'             => $dateId,
@@ -242,6 +257,10 @@ class Applications
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 			'key_source'           => $this->getTrainingApplicationSource($source),
+			'price'                => $price,
+			'vat_rate'             => $this->vat->getRate(),
+			'price_vat'            => $this->vat->addVat($price),
+			'discount'             => $discount,
 		);
 		return $this->trainingStatuses->updateStatusCallback(function () use ($data) {
 			$this->insertData($data);

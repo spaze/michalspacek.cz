@@ -48,6 +48,7 @@ class Dates
 				t.action,
 				t.name,
 				t.price,
+				t.student_discount AS studentDiscount,
 				d.start,
 				d.end,
 				d.public,

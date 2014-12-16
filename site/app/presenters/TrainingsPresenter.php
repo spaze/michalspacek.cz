@@ -302,6 +302,7 @@ class TrainingsPresenter extends BasePresenter
 			$date = $this->dates[$values->trainingId];
 			if ($date->tentative) {
 				$this->trainingApplications->addInvitation(
+					$this->training,
 					$values->trainingId,
 					$values->name,
 					$values->email,
@@ -330,6 +331,7 @@ class TrainingsPresenter extends BasePresenter
 					$session->application[$name] = null;
 				} else {
 					$applicationId = $this->trainingApplications->addApplication(
+						$this->training,
 						$values->trainingId,
 						$values->name,
 						$values->email,
