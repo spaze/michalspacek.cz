@@ -87,10 +87,10 @@ class SignPresenter extends \BasePresenter
 
 		try {
 			$this->user->login($values->username, $values->password);
-			\Nette\Diagnostics\Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
+			\Tracy\Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
 			$this->redirect('Homepage:');
 		} catch (\Nette\Security\AuthenticationException $e) {
-			\Nette\Diagnostics\Debugger::log("Failed sign-in attempt: {$e->getMessage()} ({$values->username}, {$values->password}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
+			\Tracy\Debugger::log("Failed sign-in attempt: {$e->getMessage()} ({$values->username}, {$values->password}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
 			$form->addError('Špatné uživatelské jméno nebo heslo');
 		}
 	}

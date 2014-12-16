@@ -1,7 +1,6 @@
 <?php
-use	\MichalSpacekCz\Training;
-use \Nette\Diagnostics\Debugger,
-	\Nette\Http\Response;
+use \MichalSpacekCz\Training;
+use \Nette\Http\Response;
 
 /**
  * Trainings presenter.
@@ -296,10 +295,10 @@ class TrainingsPresenter extends BasePresenter
 			$session->note         = $values->note;
 			$this->redirect('success', $name);
 		} catch (\UnexpectedValueException $e) {
-			Debugger::log($e);
+			\Tracy\Debugger::log($e);
 			$this->flashMessage('Přihláška vypadá jako spam, takhle by to nešlo.', 'error');
 		} catch (\PDOException $e) {
-			Debugger::log($e, Debugger::ERROR);
+			\Tracy\Debugger::log($e, \Tracy\Debugger::ERROR);
 			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
 		}
 	}
@@ -341,7 +340,7 @@ class TrainingsPresenter extends BasePresenter
 			(empty($logSession) ? 'empty' : implode(', ', $logSession)),
 			implode(', ', $logValues)
 		);
-		Debugger::log($message);
+		\Tracy\Debugger::log($message);
 	}
 
 

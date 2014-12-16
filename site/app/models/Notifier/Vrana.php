@@ -106,7 +106,7 @@ class Vrana
 		$context = stream_context_create($options);
 		$result = file_get_contents($this->url, false, $context);
 		if (strpos($result, $this->successMarker) === false) {
-			\Nette\Diagnostics\Debugger::log(sprintf('Success marker "%s" not found in "%s"', $this->successMarker, $result), 'notifier');
+			\Tracy\Debugger::log(sprintf('Success marker "%s" not found in "%s"', $this->successMarker, $result), 'notifier');
 			throw new \UnexpectedValueException('Success marker not found');
 		}
 	}

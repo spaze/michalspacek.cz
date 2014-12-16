@@ -56,7 +56,7 @@ class Mails
 
 	public function sendSignUpMail($applicationId, \Nette\Bridges\ApplicationLatte\Template $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
 	{
-		\Nette\Diagnostics\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$training}");
+		\Tracy\Debugger::log("Sending sign-up email to {$recipientName} <{$recipientAddress}>, application id: {$applicationId}, training: {$training}");
 
 		$template->setFile($this->templatesDir . 'trainingSignUp.latte');
 
@@ -124,7 +124,7 @@ class Mails
 
 	public function sendInvitation(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
 	{
-		\Nette\Diagnostics\Debugger::log("Sending invitation email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
+		\Tracy\Debugger::log("Sending invitation email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
 		$template->setFile($this->templatesDir . 'admin/invitation.latte');
 		$template->application = $application;
@@ -135,7 +135,7 @@ class Mails
 
 	public function sendMaterials(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
 	{
-		\Nette\Diagnostics\Debugger::log("Sending materials email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
+		\Tracy\Debugger::log("Sending materials email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
 		if ($application->familiar) {
 			$template->setFile($this->templatesDir . 'admin/materialsFamiliar.latte');
@@ -150,7 +150,7 @@ class Mails
 
 	public function sendInvoice(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, array $invoice, $additional = null)
 	{
-		\Nette\Diagnostics\Debugger::log("Sending invoice email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
+		\Tracy\Debugger::log("Sending invoice email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
 		$template->setFile($this->templatesDir . 'admin/invoice.latte');
 		$template->application = $application;
@@ -161,7 +161,7 @@ class Mails
 
 	public function sendReminder(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
 	{
-		\Nette\Diagnostics\Debugger::log("Sending reminder email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
+		\Tracy\Debugger::log("Sending reminder email to {$application->name} <{$application->email}>, application id: {$application->id}, training: {$application->trainingAction}");
 
 		$template->setFile($this->templatesDir . 'admin/reminder.latte');
 		$template->application = $application;
