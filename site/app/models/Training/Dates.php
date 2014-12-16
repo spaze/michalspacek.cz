@@ -275,7 +275,7 @@ class Dates
 	}
 
 
-	protected function lastFreeSeats(\DateTime $start)
+	public function lastFreeSeats(\DateTime $start)
 	{
 		$now = new \DateTime();
 		return ($start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $start > $now);
