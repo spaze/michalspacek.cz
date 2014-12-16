@@ -38,24 +38,13 @@ class UserPresenter extends BasePresenter
 
 	protected function createComponentChangePassword($formName)
 	{
-		$form = new Form($this, $formName);
-
-		$form->addPassword('password', 'Současné heslo:')
-			->setRequired('Zadejte prosím současné heslo');
-		$form->addPassword('newPassword', 'Nové heslo:')
-			->setRequired('Zadejte prosím nové heslo')
-			->addRule(Form::MIN_LENGTH, 'Nové heslo musí mít alespoň %d znaků', 6);
-		$form->addPassword('newPasswordVerify', 'Nové heslo pro kontrolu:')
-			->setRequired('Zadejte prosím nové heslo pro kontrolu')
-			->addRule(Form::EQUAL, 'Hesla se neshodují', $form['newPassword']);
-		$form->addSubmit('save', 'Uložit');
+		$form = new \MichalSpacekCz\Form\ChangePassword($this, $formName);
 		$form->onSuccess[] = $this->submittedChangePassword;
-
 		return $form;
 	}
 
 
-	public function submittedChangePassword($form)
+	public function submittedChangePassword(\MichalSpacekCz\Form\ChangePassword $form)
 	{
 		$values = $form->getValues();
 
