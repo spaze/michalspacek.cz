@@ -13,19 +13,6 @@ class TrainingApplication extends \Nette\Application\UI\Form
 	/** @var \Bare\Next\Templating\Helpers */
 	protected $bareHelpers;
 
-	protected $rules = array(
-		'name'         => array(self::MIN_LENGTH => 3, self::MAX_LENGTH => 200),
-		'email'        => array(self::MAX_LENGTH => 200),
-		'company'      => array(self::MIN_LENGTH => 3, self::MAX_LENGTH => 200),
-		'street'       => array(self::MIN_LENGTH => 3, self::MAX_LENGTH => 200),
-		'city'         => array(self::MIN_LENGTH => 2, self::MAX_LENGTH => 200),
-		'zip'          => array(self::PATTERN => '([0-9]\s*){5}', self::MAX_LENGTH => 200),
-		'companyId'    => array(self::MIN_LENGTH => 6, self::MAX_LENGTH => 200),
-		'companyTaxId' => array(self::MIN_LENGTH => 6, self::MAX_LENGTH => 200),
-		'note'         => array(self::MAX_LENGTH => 2000),
-	);
-
-
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
@@ -74,12 +61,12 @@ class TrainingApplication extends \Nette\Application\UI\Form
 		$this->addGroup('Účastník');
 		$this->addText('name', 'Jméno a příjmení:')
 			->setRequired('Zadejte prosím jméno a příjmení')
-			->addRule(self::MIN_LENGTH, 'Minimální délka jména a příjmení je %d znaky', $this->rules['name'][self::MIN_LENGTH])
-			->addRule(self::MAX_LENGTH, 'Maximální délka jména a příjmení je %d znaků', $this->rules['name'][self::MAX_LENGTH]);
+			->addRule(self::MIN_LENGTH, 'Minimální délka jména a příjmení je %d znaky', 3)
+			->addRule(self::MAX_LENGTH, 'Maximální délka jména a příjmení je %d znaků', 200);
 		$this->addText('email', 'E-mail:')
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(self::EMAIL, 'Zadejte platnou e-mailovou adresu')
-			->addRule(self::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', $this->rules['email'][self::MAX_LENGTH]);
+			->addRule(self::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200);
 		$this->setCurrentGroup(null);
 	}
 
@@ -89,28 +76,28 @@ class TrainingApplication extends \Nette\Application\UI\Form
 		$this->addGroup('Fakturační údaje');
 		$this->addText('company', 'Obchodní jméno:')
 			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', $this->rules['company'][self::MIN_LENGTH])
-			->addRule(self::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', $this->rules['company'][self::MAX_LENGTH]);
+			->addRule(self::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
+			->addRule(self::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 200);
 		$this->addText('street', 'Ulice a číslo:')
 			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', $this->rules['street'][self::MIN_LENGTH])
-			->addRule(self::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', $this->rules['street'][self::MAX_LENGTH]);
+			->addRule(self::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
+			->addRule(self::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200);
 		$this->addText('city', 'Město:')
 			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka města je %d znaky', $this->rules['city'][self::MIN_LENGTH])
-			->addRule(self::MAX_LENGTH, 'Maximální délka města je %d znaků', $this->rules['city'][self::MAX_LENGTH]);
+			->addRule(self::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
+			->addRule(self::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
 		$this->addText('zip', 'PSČ:')
 			->addCondition(self::FILLED)
-			->addRule(self::PATTERN, 'PSČ musí mít 5 číslic', $this->rules['zip'][self::PATTERN])
-			->addRule(self::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', $this->rules['zip'][self::MAX_LENGTH]);
+			->addRule(self::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
+			->addRule(self::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
 		$this->addText('companyId', 'IČ:')
 			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka IČ je %d znaky', $this->rules['companyId'][self::MIN_LENGTH])
-			->addRule(self::MAX_LENGTH, 'Maximální délka IČ je %d znaků', $this->rules['companyId'][self::MAX_LENGTH]);
+			->addRule(self::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 6)
+			->addRule(self::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
 		$this->addText('companyTaxId', 'DIČ:')
 			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', $this->rules['companyTaxId'][self::MIN_LENGTH])
-			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', $this->rules['companyTaxId'][self::MAX_LENGTH]);
+			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
+			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
 		$this->setCurrentGroup(null);
 	}
 
@@ -119,7 +106,7 @@ class TrainingApplication extends \Nette\Application\UI\Form
 	{
 		$this->addText('note', 'Poznámka:')
 			->addCondition(self::FILLED)
-			->addRule(self::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $this->rules['note'][self::MAX_LENGTH]);
+			->addRule(self::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
 	}
 
 
