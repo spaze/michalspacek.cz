@@ -20,6 +20,9 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\Training\Trainings */
+	protected $trainings;
+
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
@@ -33,13 +36,15 @@ class HomepagePresenter extends BasePresenter
 		\MichalSpacekCz\Articles $articles,
 		\MichalSpacekCz\Interviews $interviews,
 		\MichalSpacekCz\Talks $talks,
-		\MichalSpacekCz\Training\Dates $trainingDates
+		\MichalSpacekCz\Training\Dates $trainingDates,
+		\MichalSpacekCz\Training\Trainings $trainings
 	)
 	{
 		$this->articles = $articles;
 		$this->interviews = $interviews;
 		$this->talks = $talks;
 		$this->trainingDates = $trainingDates;
+		$this->trainings = $trainings;
 		parent::__construct($translator);
 	}
 
@@ -51,7 +56,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->upcomingTalks     = $this->talks->getUpcoming();
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$this->template->interviews        = $this->interviews->getAll(5);
-		$this->template->lastFreeSeats     = $this->trainingDates->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
+		$this->template->lastFreeSeats     = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
 
 }
