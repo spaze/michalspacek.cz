@@ -220,7 +220,7 @@ class Applications
 
 	public function insertApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source, $date = null)
 	{
-		if (!in_array($status, $this->getInitialStatuses())) {
+		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
 			throw new \RuntimeException("Invalid initial status {$status}");
 		}
 
