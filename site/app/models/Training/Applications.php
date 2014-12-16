@@ -227,7 +227,6 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new \DateTime($date);
 
-		$this->database->beginTransaction();
 		$data = array(
 			'key_date'             => $trainingId,
 			'name'                 => $name,
@@ -244,32 +243,29 @@ class Applications
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 			'key_source'           => $this->getTrainingApplicationSource($source),
 		);
-		$code = $this->insertData($data);
-		$applicationId = $this->database->getInsertId();
-		$this->setStatus($applicationId, $status, $date);
-		$this->database->commit();
-
-		return $applicationId;
+		return $this->updateStatusCallback(function () use ($data) {
+			$this->insertData($data);
+			return $this->database->getInsertId();
+		}, $status, $date);
 	}
 
 
 	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
-		$this->database->beginTransaction();
-		$this->updateApplicationData(
-			$applicationId,
-			$name,
-			$email,
-			$company,
-			$street,
-			$city,
-			$zip,
-			$companyId,
-			$companyTaxId,
-			$note
-		);
-		$this->setStatus($applicationId, Statuses::STATUS_SIGNED_UP, null);
-		$this->database->commit();
+		$this->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note) {
+			$this->updateApplicationData(
+				$applicationId,
+				$name,
+				$email,
+				$company,
+				$street,
+				$city,
+				$zip,
+				$companyId,
+				$companyTaxId,
+				$note
+			);
+		});
 		return $applicationId;
 	}
 
@@ -325,9 +321,9 @@ class Applications
 
 
 	/**
-	 * Needs to be wrapped in transaction, not for public consumption, updateStatus() instead.
+	 * Needs to be wrapped in transaction, not for public consumption, updateStatus() or updateStatusCallback() instead.
 	 */
-	protected function setStatus($applicationId, $status, $date)
+	private function setStatus($applicationId, $status, $date)
 	{
 		$statusId = $this->trainingStatuses->getStatusId($status);
 
@@ -381,6 +377,34 @@ class Applications
 		} catch (\Exception $e) {
 			$this->database->rollBack();
 		}
+	}
+
+
+	public function updateStatusCallback(callable $callback, $status, $date)
+	{
+		$this->database->beginTransaction();
+		try {
+			$applicationId = $callback();
+			$this->setStatus($applicationId, $status, $date);
+			$this->database->commit();
+		} catch (\Exception $e) {
+			$this->database->rollBack();
+		}
+		return $applicationId;
+	}
+
+
+	public function updateStatusReturnCallback($applicationId, $status, $date, callable $callback)
+	{
+		$this->database->beginTransaction();
+		try {
+			$result = $callback();
+			$this->setStatus($applicationId, $status, $date);
+			$this->database->commit();
+		} catch (\Exception $e) {
+			$this->database->rollBack();
+		}
+		return $result;
 	}
 
 
@@ -483,9 +507,7 @@ class Applications
 	public function setAccessTokenUsed(\Nette\Database\Row $application)
 	{
 		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
-			$this->database->beginTransaction();
-			$this->setStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED, null);
-			$this->database->commit();
+			$this->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
 		}
 	}
 
