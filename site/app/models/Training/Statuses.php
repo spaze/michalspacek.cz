@@ -200,6 +200,7 @@ class Statuses
 
 	public function updateStatusReturnCallback($applicationId, $status, $date, callable $callback)
 	{
+		$result = null;
 		$this->database->beginTransaction();
 		try {
 			$result = $callback();
