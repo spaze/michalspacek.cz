@@ -184,20 +184,6 @@ class Trainings
 	}
 
 
-	public function getVenues()
-	{
-		$result = $this->database->fetchAll(
-			'SELECT
-				v.id_venue AS id,
-				v.name
-			FROM training_venues v
-			ORDER BY
-				v.id_venue'
-		);
-		return $result;
-	}
-
-
 	public function getCooperations()
 	{
 		$result = $this->database->fetchAll(

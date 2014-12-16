@@ -22,13 +22,23 @@ class TrainingDate extends \Nette\Application\UI\Form
 	 */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\Training\Venues */
+	protected $trainingVenues;
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, Training\Trainings $trainings, Training\Dates $trainingDates)
+
+	public function __construct(
+		\Nette\ComponentModel\IContainer $parent,
+		$name,
+		Training\Trainings $trainings,
+		Training\Dates $trainingDates,
+		Training\Venues $trainingVenues
+	)
 	{
 		parent::__construct($parent, $name);
 
 		$this->trainings = $trainings;
 		$this->trainingDates = $trainingDates;
+		$this->trainingVenues = $trainingVenues;
 
 		$trainings = array();
 		foreach ($this->trainings->getNames() as $training) {
@@ -38,7 +48,7 @@ class TrainingDate extends \Nette\Application\UI\Form
 			->setRequired('Vyberte prosím školení');
 
 		$venues = array();
-		foreach ($this->trainings->getVenues() as $venue) {
+		foreach ($this->trainingVenues->getAll() as $venue) {
 			$venues[$venue->id] = $venue->name;
 		}
 		$this->addSelect('venue', 'Místo:', $venues)

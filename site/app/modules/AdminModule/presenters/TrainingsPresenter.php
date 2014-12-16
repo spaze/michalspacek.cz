@@ -25,6 +25,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
+	/** @var \MichalSpacekCz\Training\Venues */
+	protected $trainingVenues;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -59,6 +62,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
@@ -67,6 +71,7 @@ class TrainingsPresenter extends BasePresenter
 		Training\Dates $trainingDates,
 		Training\Statuses $trainingStatuses,
 		Training\Trainings $trainings,
+		Training\Venues $trainingVenues,
 		\MichalSpacekCz\Vat $vat
 	)
 	{
@@ -74,6 +79,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->trainings = $trainings;
+		$this->trainingVenues = $trainingVenues;
 		$this->vat = $vat;
 		parent::__construct($translator);
 	}
@@ -528,7 +534,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentDate($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates);
+		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
 		$form->setTrainingDate($this->trainingDates->get($this->dateId));
 		$form->onSuccess[] = $this->submittedDate;
 	}
