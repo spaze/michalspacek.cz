@@ -60,22 +60,15 @@ class SignPresenter extends \BasePresenter
 	}
 
 
-	protected function createComponentSignIn()
+	protected function createComponentSignIn($formName)
 	{
-		$form = new \Nette\Application\UI\Form;
-		$form->addText('username', 'Uživatel:')
-			->setRequired('Zadejte prosím uživatele');
-		$form->addPassword('password', 'Heslo:')
-			->setRequired('Zadejte prosím heslo');
-		$form->addCheckbox('remember', 'Zůstat přihlášen');
-		$form->addSubmit('signin', 'Přihlásit');
-
+		$form = new \MichalSpacekCz\Form\SignIn($this, $formName);
 		$form->onSuccess[] = $this->submittedSignIn;
 		return $form;
 	}
 
 
-	public function submittedSignIn($form)
+	public function submittedSignIn(\MichalSpacekCz\Form\SignIn $form)
 	{
 		$values = $form->getValues();
 
