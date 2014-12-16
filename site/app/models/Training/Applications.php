@@ -243,7 +243,7 @@ class Applications
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 			'key_source'           => $this->getTrainingApplicationSource($source),
 		);
-		return $this->updateStatusCallback(function () use ($data) {
+		return $this->trainingStatuses->updateStatusCallback(function () use ($data) {
 			$this->insertData($data);
 			return $this->database->getInsertId();
 		}, $status, $date);
@@ -252,7 +252,7 @@ class Applications
 
 	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
-		$this->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note) {
+		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note) {
 			$this->updateApplicationData(
 				$applicationId,
 				$name,
@@ -317,94 +317,6 @@ class Applications
 	private function generateAccessCode()
 	{
 		return \Nette\Utils\Strings::random(mt_rand(32, 48), '0-9a-zA-Z');
-	}
-
-
-	/**
-	 * Needs to be wrapped in transaction, not for public consumption, updateStatus() or updateStatusCallback() instead.
-	 */
-	private function setStatus($applicationId, $status, $date)
-	{
-		$statusId = $this->trainingStatuses->getStatusId($status);
-
-		$prevStatus = $this->database->fetch(
-			'SELECT
-				key_status AS statusId,
-				status_time AS statusTime,
-				status_time_timezone AS statusTimeTimeZone
-			FROM
-				training_applications
-			WHERE
-				id_application = ?',
-			$applicationId
-		);
-
-		$datetime = new \DateTime($date);
-		$this->database->query(
-			'UPDATE training_applications SET ? WHERE id_application = ?',
-			array(
-				'key_status'           => $statusId,
-				'status_time'          => $datetime,
-				'status_time_timezone' => $datetime->getTimezone()->getName(),
-			),
-			$applicationId
-		);
-
-		$result = $this->database->query(
-			'INSERT INTO training_application_status_history',
-			array(
-				'key_application'      => $applicationId,
-				'key_status'           => $prevStatus->statusId,
-				'status_time'          => $prevStatus->statusTime,
-				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
-			)
-		);
-
-		if (isset($this->statusCallbacks[$status]) && is_callable($this->statusCallbacks[$status])) {
-			call_user_func($this->statusCallbacks[$status], $applicationId);
-		}
-
-		return $result;
-	}
-
-
-	public function updateStatus($applicationId, $status, $date = null)
-	{
-		$this->database->beginTransaction();
-		try {
-			$this->setStatus($applicationId, $status, $date);
-			$this->database->commit();
-		} catch (\Exception $e) {
-			$this->database->rollBack();
-		}
-	}
-
-
-	public function updateStatusCallback(callable $callback, $status, $date)
-	{
-		$this->database->beginTransaction();
-		try {
-			$applicationId = $callback();
-			$this->setStatus($applicationId, $status, $date);
-			$this->database->commit();
-		} catch (\Exception $e) {
-			$this->database->rollBack();
-		}
-		return $applicationId;
-	}
-
-
-	public function updateStatusReturnCallback($applicationId, $status, $date, callable $callback)
-	{
-		$this->database->beginTransaction();
-		try {
-			$result = $callback();
-			$this->setStatus($applicationId, $status, $date);
-			$this->database->commit();
-		} catch (\Exception $e) {
-			$this->database->rollBack();
-		}
-		return $result;
 	}
 
 
@@ -507,7 +419,7 @@ class Applications
 	public function setAccessTokenUsed(\Nette\Database\Row $application)
 	{
 		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
-			$this->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
+			$this->trainingStatuses->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
 		}
 	}
 

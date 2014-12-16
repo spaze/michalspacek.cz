@@ -243,7 +243,7 @@ class TrainingsPresenter extends BasePresenter
 		$values = $form->getValues();
 		foreach ($values->applications as $id => $status) {
 			if ($status) {
-				$this->trainingApplications->updateStatus($id, $status, $values->date);
+				$this->trainingStatuses->updateStatus($id, $status, $values->date);
 			}
 		}
 		$this->redirect($this->getAction(), $this->dateId);

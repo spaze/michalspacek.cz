@@ -122,4 +122,93 @@ class Statuses
 		return $this->descendantStatuses[$parent];
 	}
 
+
+	/**
+	 * Needs to be wrapped in transaction, not for public consumption,
+	 * use updateStatus(), updateStatusCallback() or updateStatusReturnCallback() instead.
+	 */
+	private function setStatus($applicationId, $status, $date)
+	{
+		$statusId = $this->getStatusId($status);
+
+		$prevStatus = $this->database->fetch(
+			'SELECT
+				key_status AS statusId,
+				status_time AS statusTime,
+				status_time_timezone AS statusTimeTimeZone
+			FROM
+				training_applications
+			WHERE
+				id_application = ?',
+			$applicationId
+		);
+
+		$datetime = new \DateTime($date);
+		$this->database->query(
+			'UPDATE training_applications SET ? WHERE id_application = ?',
+			array(
+				'key_status'           => $statusId,
+				'status_time'          => $datetime,
+				'status_time_timezone' => $datetime->getTimezone()->getName(),
+			),
+			$applicationId
+		);
+
+		$result = $this->database->query(
+			'INSERT INTO training_application_status_history',
+			array(
+				'key_application'      => $applicationId,
+				'key_status'           => $prevStatus->statusId,
+				'status_time'          => $prevStatus->statusTime,
+				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
+			)
+		);
+
+		if (isset($this->statusCallbacks[$status]) && is_callable($this->statusCallbacks[$status])) {
+			call_user_func($this->statusCallbacks[$status], $applicationId);
+		}
+
+		return $result;
+	}
+
+
+	public function updateStatus($applicationId, $status, $date = null)
+	{
+		$this->database->beginTransaction();
+		try {
+			$this->setStatus($applicationId, $status, $date);
+			$this->database->commit();
+		} catch (\Exception $e) {
+			$this->database->rollBack();
+		}
+	}
+
+
+	public function updateStatusCallback(callable $callback, $status, $date)
+	{
+		$this->database->beginTransaction();
+		try {
+			$applicationId = $callback();
+			$this->setStatus($applicationId, $status, $date);
+			$this->database->commit();
+		} catch (\Exception $e) {
+			$this->database->rollBack();
+		}
+		return $applicationId;
+	}
+
+
+	public function updateStatusReturnCallback($applicationId, $status, $date, callable $callback)
+	{
+		$this->database->beginTransaction();
+		try {
+			$result = $callback();
+			$this->setStatus($applicationId, $status, $date);
+			$this->database->commit();
+		} catch (\Exception $e) {
+			$this->database->rollBack();
+		}
+		return $result;
+	}
+
 }
