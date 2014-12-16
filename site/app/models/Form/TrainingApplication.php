@@ -1,8 +1,6 @@
 <?php
 namespace MichalSpacekCz\Form;
 
-use \MichalSpacekCz\Training;
-
 /**
  * Training application form.
  *
@@ -15,10 +13,7 @@ class TrainingApplication extends \Nette\Application\UI\Form
 	/** @var \Bare\Next\Templating\Helpers */
 	protected $bareHelpers;
 
-	/** @var \MichalSpacekCz\Training\Venues */
-	protected $trainingVenues;
-
-	private $rules = array(
+	protected $rules = array(
 		'name'         => array(self::MIN_LENGTH => 3, self::MAX_LENGTH => 200),
 		'email'        => array(self::MAX_LENGTH => 200),
 		'company'      => array(self::MIN_LENGTH => 3, self::MAX_LENGTH => 200),
@@ -65,6 +60,17 @@ class TrainingApplication extends \Nette\Application\UI\Form
 			$field = new \Bare\Next\Forms\Controls\HiddenFieldWithLabel($label, $date->dateId, $inputDates[$date->dateId]);
 			$this->addComponent($field, 'trainingId');
 		}
+
+		$this->addAttendee();
+		$this->addCompany();
+		$this->addNote();
+
+		$this->addSubmit('signUp', 'Odeslat');
+	}
+
+
+	protected function addAttendee()
+	{
 		$this->addGroup('Účastník');
 		$this->addText('name', 'Jméno a příjmení:')
 			->setRequired('Zadejte prosím jméno a příjmení')
@@ -74,7 +80,12 @@ class TrainingApplication extends \Nette\Application\UI\Form
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(self::EMAIL, 'Zadejte platnou e-mailovou adresu')
 			->addRule(self::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', $this->rules['email'][self::MAX_LENGTH]);
+		$this->setCurrentGroup(null);
+	}
 
+
+	protected function addCompany()
+	{
 		$this->addGroup('Fakturační údaje');
 		$this->addText('company', 'Obchodní jméno:')
 			->addCondition(self::FILLED)
@@ -100,12 +111,15 @@ class TrainingApplication extends \Nette\Application\UI\Form
 			->addCondition(self::FILLED)
 			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', $this->rules['companyTaxId'][self::MIN_LENGTH])
 			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', $this->rules['companyTaxId'][self::MAX_LENGTH]);
-
 		$this->setCurrentGroup(null);
+	}
+
+
+	protected function addNote()
+	{
 		$this->addText('note', 'Poznámka:')
 			->addCondition(self::FILLED)
 			->addRule(self::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $this->rules['note'][self::MAX_LENGTH]);
-		$this->addSubmit('signUp', 'Odeslat');
 	}
 
 

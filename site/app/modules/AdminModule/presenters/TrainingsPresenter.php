@@ -397,88 +397,14 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$rules = $this->trainingApplications->getDataRules();
-
-		$form = new Form($this, $formName);
-		$form->addText('name', 'Jméno:')
-			->setDefaultValue($this->application->name)
-			->setRequired('Zadejte prosím jméno')
-			->addRule(Form::MIN_LENGTH, 'Minimální délka jména je %d znaky', $rules['name'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka jména je %d znaků', $rules['name'][Form::MAX_LENGTH]);
-		$form->addText('email', 'E-mail:')
-			->setDefaultValue($this->application->email)
-			->setRequired('Zadejte prosím e-mailovou adresu')
-			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', $rules['email'][Form::MAX_LENGTH]);
-		$form->addCheckbox('familiar', 'Tykání:')
-			->setDefaultValue($this->application->familiar);
-		$form->addText('company', 'Společnost:')
-			->setDefaultValue($this->application->company)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka společnosti je %d znaky', $rules['company'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka společnosti je %d znaků', $rules['company'][Form::MAX_LENGTH]);
-		$form->addText('street', 'Ulice:')
-			->setDefaultValue($this->application->street)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice je %d znaky', $rules['street'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice je %d znaků', $rules['street'][Form::MAX_LENGTH]);
-		$form->addText('city', 'Město:')
-			->setDefaultValue($this->application->city)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', $rules['city'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', $rules['city'][Form::MAX_LENGTH]);
-		$form->addText('zip', 'PSČ:')
-			->setDefaultValue($this->application->zip)
-			->addCondition(Form::FILLED)
-			->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', $rules['zip'][Form::PATTERN])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', $rules['zip'][Form::MAX_LENGTH]);
-		$form->addText('companyId', 'IČ:')
-			->setDefaultValue($this->application->companyId)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', $rules['companyId'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', $rules['companyId'][Form::MAX_LENGTH]);
-		$form->addText('companyTaxId', 'DIČ:')
-			->setDefaultValue($this->application->companyTaxId)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', $rules['companyTaxId'][Form::MIN_LENGTH])
-			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', $rules['companyTaxId'][Form::MAX_LENGTH]);
-		$form->addText('note', 'Poznámka:')
-			->setDefaultValue($this->application->note)
-			->addCondition(Form::FILLED)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $rules['note'][Form::MAX_LENGTH]);
-		$form->addText('price', 'Cena bez DPH:')
-			->setType('number')
-			->setAttribute('title', 'Po případné slevě')
-			->setDefaultValue($this->application->price);
-		$form->addText('vatRate', 'DPH:')
-			->setType('number')
-			->setDefaultValue($this->application->vatRate * 100);
-		$form->addText('priceVat', 'Cena s DPH:')
-			->setType('number')
-			->setAttribute('title', 'Po případné slevě')
-			->setDefaultValue($this->application->priceVat);
-		$form->addText('discount', 'Sleva:')
-			->setType('number')
-			->setDefaultValue($this->application->discount);
-		$form->addText('invoiceId', 'Faktura č.:')
-			->setType('number')
-			->setDefaultValue($this->application->invoiceId);
-		$text = $form->addText('paid', 'Zaplaceno:');
-		$text->setDefaultValue($this->application->paid);
-		$text
-			->setAttribute('placeholder', 'YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW')
-			->setAttribute('title', 'Formát  YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW')
-			->addCondition(Form::FILLED)
-			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW', '((\d{4}-\d{1,2}-\d{1,2})( \d{1,2}:\d{2}:\d{2})?)|(\d{1,2}\.\d{1,2}\.\d{4})|[Nn][Oo][Ww]');
-
-		$form->addSubmit('submit', 'Uložit');
+		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName);
+		$form->setApplication($this->application);
 		$form->onSuccess[] = $this->submittedApplication;
-
 		return $form;
 	}
 
 
-	public function submittedApplication($form)
+	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplicationAdmin $form)
 	{
 		$values = $form->getValues();
 
