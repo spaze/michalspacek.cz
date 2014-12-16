@@ -86,14 +86,14 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
-	public function submittedSearch($form)
+	public function submittedSearch(\Companies20\Form\SearchForm $form)
 	{
 		$values = $form->getValues();
 		$this->redirect('default', $values->search);
 	}
 
 
-	public function submittedMedia($form)
+	public function submittedMedia(\Companies20\Form\MediaForm $form)
 	{
 		$values = $form->getValues();
 		$tags = array_filter(preg_split('/\s+/', $values->tags));
