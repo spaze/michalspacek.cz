@@ -47,5 +47,4 @@ class WebTracking
 		$this->httpResponse->setCookie(self::TRACKING_COOKIE, self::TRACKING_DISABLED, \Nette\Http\Response::PERMANENT, self::TRACKING_PATH);
 	}
 
-
 }

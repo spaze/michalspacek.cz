@@ -48,5 +48,4 @@ class Articles
 		return $articles;
 	}
 
-
 }

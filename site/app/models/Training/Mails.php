@@ -180,5 +180,4 @@ class Mails
 		$this->mailer->send($mail);
 	}
 
-
 }

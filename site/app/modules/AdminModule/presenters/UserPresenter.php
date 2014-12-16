@@ -63,5 +63,4 @@ class UserPresenter extends BasePresenter
 		$this->redirect('Homepage:');
 	}
 
-
 }

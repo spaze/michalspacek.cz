@@ -24,5 +24,4 @@ class Encryption extends \Nette\Object
 		return rtrim($clearText, "\0");
 	}
 
-
 }

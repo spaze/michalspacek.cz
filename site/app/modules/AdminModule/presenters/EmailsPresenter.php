@@ -118,5 +118,4 @@ class EmailsPresenter extends BasePresenter
 		$this->redirect('Homepage:');
 	}
 
-
 }

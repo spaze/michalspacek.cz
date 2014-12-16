@@ -95,5 +95,4 @@ class StaticKeyEncryption extends \Nette\Object
 		return implode(self::KEY_IV_CIPHERTEXT_SEPARATOR, array(base64_encode($keyId), base64_encode($iv), base64_encode($cipherText)));
 	}
 
-
 }

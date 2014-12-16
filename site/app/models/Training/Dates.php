@@ -117,7 +117,7 @@ class Dates
 				'key_venue'       => $venue,
 				'start'           => new \DateTime($start),
 				'end'             => new \DateTime($end),
-				'key_status'          => $status,
+				'key_status'      => $status,
 				'public'          => $public,
 				'key_cooperation' => (empty($cooperation) ? null : $cooperation),
 			),

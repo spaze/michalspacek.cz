@@ -12,7 +12,6 @@ use \MichalSpacekCz\Training;
 class TrainingMailsOutbox extends \Nette\Application\UI\Form
 {
 
-
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications)
 	{
 		parent::__construct($parent, $name);
@@ -60,6 +59,5 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 
 		$this->addSubmit('submit', 'Odeslat');
 	}
-
 
 }

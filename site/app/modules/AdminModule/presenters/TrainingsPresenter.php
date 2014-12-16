@@ -557,5 +557,4 @@ class TrainingsPresenter extends BasePresenter
 		$this->redirect($this->getAction(), $this->redirectParam);
 	}
 
-
 }

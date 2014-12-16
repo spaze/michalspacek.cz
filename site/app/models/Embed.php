@@ -88,5 +88,4 @@ class Embed
 		return $type;
 	}
 
-
 }

@@ -12,14 +12,10 @@ use \MichalSpacekCz\Training;
 class TrainingDate extends \Nette\Application\UI\Form
 {
 
-	/**
-	 * @var \MichalSpacekCz\Training\Trainings
-	 */
+	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
-	/**
-	 * @var \MichalSpacekCz\Training\Dates
-	 */
+	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
 	/** @var \MichalSpacekCz\Training\Venues */
@@ -101,6 +97,5 @@ class TrainingDate extends \Nette\Application\UI\Form
 
 		return $this;
 	}
-
 
 }

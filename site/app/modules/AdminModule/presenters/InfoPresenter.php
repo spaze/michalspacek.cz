@@ -10,7 +10,6 @@ namespace AdminModule;
 class InfoPresenter extends BasePresenter
 {
 
-
 	public function renderPhp()
 	{
 		ob_start();
@@ -20,6 +19,5 @@ class InfoPresenter extends BasePresenter
 		$this->template->pageTitle = 'phpinfo()';
 		$this->template->phpinfo = \Nette\Utils\Html::el()->setHtml($info);
 	}
-
 
 }

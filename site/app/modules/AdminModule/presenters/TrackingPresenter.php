@@ -41,5 +41,4 @@ class TrackingPresenter extends BasePresenter
 		$this->redirect('Homepage:');
 	}
 
-
 }

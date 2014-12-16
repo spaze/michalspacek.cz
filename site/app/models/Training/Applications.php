@@ -17,11 +17,7 @@ class Applications
 	/** @var \Nette\Database\Connection */
 	protected $database;
 
-	/**
-	 * php.vrana.cz notifier.
-	 *
-	 * @var \MichalSpacekCz\Notifier\Vrana
-	 */
+	/** @var \MichalSpacekCz\Notifier\Vrana */
 	protected $vranaNotifier;
 
 	/** @var \MichalSpacekCz\Training\Dates */
@@ -628,6 +624,5 @@ class Applications
 			$this->vranaNotifier->addTrainingApplication($application);
 		}
 	}
-
 
 }

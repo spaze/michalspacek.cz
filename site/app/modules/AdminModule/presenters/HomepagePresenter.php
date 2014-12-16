@@ -71,5 +71,4 @@ class HomepagePresenter extends BasePresenter
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 	}
 
-
 }

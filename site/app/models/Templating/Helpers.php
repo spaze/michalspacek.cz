@@ -4,9 +4,7 @@ namespace MichalSpacekCz\Templating;
 class Helpers extends \Nette\Object
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $staticRoot;
 
 
@@ -33,6 +31,5 @@ class Helpers extends \Nette\Object
 	{
 		$this->staticRoot = $staticRoot;
 	}
-
 
 }

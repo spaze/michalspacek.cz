@@ -44,5 +44,4 @@ class Files
 		return $this->database->getInsertId();
 	}
 
-
 }

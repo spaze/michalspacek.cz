@@ -138,5 +138,4 @@ class UserManager implements \Nette\Security\IAuthenticator
 		return ($this->httpRequest->getCookie(self::RETURNING_USER_COOKIE) === self::RETURNING_USER_VALUE);
 	}
 
-
 }

@@ -10,11 +10,7 @@ namespace MichalSpacekCz;
 class Vat
 {
 
-	/**
-	 * VAT rate.
-	 *
-	 * @var float
-	 */
+	/** @var float */
 	protected $rate;
 
 
@@ -43,6 +39,5 @@ class Vat
 	{
 		return round($price * (1 + $this->rate));
 	}
-
 
 }

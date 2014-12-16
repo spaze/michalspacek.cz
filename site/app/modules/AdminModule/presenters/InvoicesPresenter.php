@@ -51,5 +51,4 @@ class InvoicesPresenter extends BasePresenter
 		$this->template->pageTitle = 'Nezaplacené faktury';
 	}
 
-
 }

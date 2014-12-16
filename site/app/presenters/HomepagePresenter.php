@@ -54,5 +54,4 @@ class HomepagePresenter extends BasePresenter
 		$this->template->lastFreeSeats     = $this->trainingDates->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
 
-
 }

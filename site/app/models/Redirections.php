@@ -33,5 +33,4 @@ class Redirections
 		return $destination;
 	}
 
-
 }
