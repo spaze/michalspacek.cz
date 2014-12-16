@@ -69,7 +69,7 @@ class EmailsPresenter extends BasePresenter
 	}
 
 
-	public function submittedMails($form)
+	public function submittedMails(\MichalSpacekCz\Form\TrainingMailsOutbox $form)
 	{
 		$values = $form->getValues();
 		$sent = 0;

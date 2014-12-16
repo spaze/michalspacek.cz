@@ -541,7 +541,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedDate($form)
+	public function submittedDate(\MichalSpacekCz\Form\TrainingDate $form)
 	{
 		$values = $form->getValues();
 		$this->trainingDates->update(
