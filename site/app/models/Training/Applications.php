@@ -180,10 +180,10 @@ class Applications
 	}
 
 
-	public function addInvitation($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	public function addInvitation($dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
 		return $this->insertApplication(
-			$trainingId,
+			$dateId,
 			$name,
 			$email,
 			$company,
@@ -199,10 +199,10 @@ class Applications
 	}
 
 
-	public function addApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	public function addApplication($dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
 	{
 		return $this->insertApplication(
-			$trainingId,
+			$dateId,
 			$name,
 			$email,
 			$company,
@@ -218,7 +218,7 @@ class Applications
 	}
 
 
-	public function insertApplication($trainingId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source, $date = null)
+	public function insertApplication($dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source, $date = null)
 	{
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
 			throw new \RuntimeException("Invalid initial status {$status}");
@@ -228,7 +228,7 @@ class Applications
 		$datetime = new \DateTime($date);
 
 		$data = array(
-			'key_date'             => $trainingId,
+			'key_date'             => $dateId,
 			'name'                 => $name,
 			'email'                => $this->emailEncryption->encrypt($email),
 			'company'              => $company,
