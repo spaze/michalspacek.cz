@@ -17,8 +17,8 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Talks */
 	protected $talks;
 
-	/** @var \MichalSpacekCz\Training\Trainings */
-	protected $trainings;
+	/** @var \MichalSpacekCz\Training\Dates */
+	protected $trainingDates;
 
 
 	/**
@@ -26,20 +26,20 @@ class HomepagePresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Articles $articles
 	 * @param \MichalSpacekCz\Interviews $interviews
 	 * @param \MichalSpacekCz\Talks $talks
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\Articles $articles,
 		\MichalSpacekCz\Interviews $interviews,
 		\MichalSpacekCz\Talks $talks,
-		\MichalSpacekCz\Training\Trainings $trainings
+		\MichalSpacekCz\Training\Dates $trainingDates
 	)
 	{
 		$this->articles = $articles;
 		$this->interviews = $interviews;
 		$this->talks = $talks;
-		$this->trainings = $trainings;
+		$this->trainingDates = $trainingDates;
 		parent::__construct($translator);
 	}
 
@@ -49,9 +49,9 @@ class HomepagePresenter extends BasePresenter
 		$this->template->articles          = $this->articles->getAll(3);
 		$this->template->talks             = $this->talks->getAll(5);
 		$this->template->upcomingTalks     = $this->talks->getUpcoming();
-		$this->template->upcomingTrainings = $this->trainings->getPublicUpcoming();
+		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$this->template->interviews        = $this->interviews->getAll(5);
-		$this->template->lastFreeSeats     = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
+		$this->template->lastFreeSeats     = $this->trainingDates->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
 
 

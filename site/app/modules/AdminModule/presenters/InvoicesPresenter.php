@@ -18,26 +18,20 @@ class InvoicesPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Trainings */
-	protected $trainings;
-
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		Training\Applications $trainingApplications,
-		Training\Dates $trainingDates,
-		Training\Trainings $trainings
+		Training\Dates $trainingDates
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
-		$this->trainings = $trainings;
 		parent::__construct($translator);
 	}
 
@@ -52,7 +46,7 @@ class InvoicesPresenter extends BasePresenter
 		ksort($dates);
 		$this->template->unpaidApplications = $dates;
 		$this->template->now = new \DateTime();
-		$this->template->upcomingIds = $this->trainings->getPublicUpcomingIds();
+		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 
 		$this->template->pageTitle = 'Nezaplacené faktury';
 	}

@@ -18,8 +18,8 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Mails */
 	protected $trainingMails;
 
-	/** @var \MichalSpacekCz\Training\Trainings */
-	protected $trainings;
+	/** @var \MichalSpacekCz\Training\Dates */
+	protected $trainingDates;
 
 	/** @var \MichalSpacekCz\WebTracking */
 	protected $webTracking;
@@ -29,20 +29,20 @@ class HomepagePresenter extends BasePresenter
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\WebTracking $webTracking
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
-		Training\Trainings $trainings,
+		Training\Dates $trainingDates,
 		\MichalSpacekCz\WebTracking $webTracking
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
-		$this->trainings = $trainings;
+		$this->trainingDates = $trainingDates;
 		$this->webTracking = $webTracking;
 		parent::__construct($translator);
 	}
@@ -50,8 +50,8 @@ class HomepagePresenter extends BasePresenter
 
 	public function actionDefault()
 	{
-		$trainings = $this->trainings->getAllTrainingsInterval('-1 week');
-		foreach ($this->trainings->getAllUpcoming() as $training) {
+		$trainings = $this->trainingDates->getAllTrainingsInterval('-1 week');
+		foreach ($this->trainingDates->getAllUpcoming() as $training) {
 			foreach ($training->dates as $date) {
 				$trainings[] = $date;
 			}
@@ -64,7 +64,7 @@ class HomepagePresenter extends BasePresenter
 		ksort($dates);
 		$this->template->upcomingApplications = $dates;
 		$this->template->now = new \DateTime();
-		$this->template->upcomingIds = $this->trainings->getPublicUpcomingIds();
+		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 
 		$this->template->pageTitle = 'Administrace';
 		$this->template->trackingEnabled = $this->webTracking->isEnabled();

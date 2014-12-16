@@ -199,7 +199,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pageTitle = 'Školení';
 		$this->template->trainings = $trainings;
 		$this->template->now = new \DateTime();
-		$this->template->upcomingIds = $this->trainings->getPublicUpcomingIds();
+		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 	}
 
 

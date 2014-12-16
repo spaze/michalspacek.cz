@@ -15,6 +15,8 @@ class Dates
 	const STATUS_CONFIRMED = 'CONFIRMED';  // 3
 	const STATUS_CANCELED  = 'CANCELED';   // 4
 
+	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
+
 	/** @var \Nette\Database\Connection */
 	protected $database;
 
@@ -149,5 +151,167 @@ class Dates
 		return $this->statusIds[$status];
 	}
 
+
+	public function getPublicUpcoming()
+	{
+		return $this->getUpcoming(false);
+	}
+
+
+	public function getPublicUpcomingIds()
+	{
+		$upcomingIds = array();
+		foreach ($this->getPublicUpcoming() as $training) {
+			foreach ($training->dates as $date) {
+				$upcomingIds[] = $date->dateId;
+			}
+		}
+		return $upcomingIds;
+	}
+
+
+	public function getAllUpcoming()
+	{
+		return $this->getUpcoming(true);
+	}
+
+
+	/**
+	 * Get upcoming trainings.
+	 *
+	 * @param boolean $all Whether to include non-public trainings
+	 *
+	 * @return array
+	 */
+	private function getUpcoming($all)
+	{
+		$query = "SELECT
+				d.id_date AS dateId,
+				t.action,
+				t.name,
+				s.status,
+				d.start,
+				d.public,
+				v.id_venue AS venueId,
+				v.name AS venueName,
+				v.city as venueCity
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_date_status s ON d.key_status = s.id_status
+				JOIN training_venues v ON d.key_venue = v.id_venue
+				JOIN (
+					SELECT
+						t2.action,
+						d2.key_venue,
+						MIN(d2.start) AS start
+					FROM
+						trainings t2
+						JOIN training_dates d2 ON t2.id_training = d2.key_training
+						JOIN training_date_status s2 ON d2.key_status = s2.id_status
+					WHERE
+						(d2.public != ? OR TRUE = ?)
+						AND d2.end > NOW()
+						AND s2.status IN (?, ?)
+					GROUP BY
+						t2.action, d2.key_venue
+				) u ON t.action = u.action AND v.id_venue = u.key_venue AND d.start = u.start
+			ORDER BY
+				t.id_training, d.start";
+
+		$upcoming = array();
+		foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED) as $row) {
+			$date = array(
+				'dateId'        => $row->dateId,
+				'tentative'     => ($row->status == Dates::STATUS_TENTATIVE),
+				'lastFreeSeats' => $this->lastFreeSeats($row->start),
+				'start'         => $row->start,
+				'public'        => $row->public,
+				'status'        => $row->status,
+				'name'          => $row->name,
+				'venueId'       => $row->venueId,
+				'venueName'     => $row->venueName,
+				'venueCity'     => $row->venueCity,
+			);
+			$upcoming[$row->action] = \Nette\ArrayHash::from(array(
+				'action' => $row->action,
+				'name'   => $row->name,
+				'dates'  => (isset($upcoming[$row->action]->dates)
+					? $upcoming[$row->action]->dates = (array)$upcoming[$row->action]->dates + array($row->dateId => $date)
+					: array($row->dateId => $date)
+				),
+			));
+		}
+
+		return $upcoming;
+	}
+
+
+	public function getAllTrainingsInterval($from, $to = null)
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				d.id_date AS dateId,
+				t.action,
+				t.name,
+				d.start,
+				d.end,
+				d.public,
+				s.status,
+				v.href AS venueHref,
+				v.name AS venueName,
+				v.name_extended AS venueNameExtended,
+				v.city AS venueCity
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_venues v ON d.key_venue = v.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
+			WHERE d.end BETWEEN ? AND ?
+			ORDER BY
+				d.start',
+			new \DateTime($from),
+			new \DateTime($to)
+		);
+		return $result;
+	}
+
+
+	protected function lastFreeSeats(\DateTime $start)
+	{
+		$now = new \DateTime();
+		return ($start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $start > $now);
+	}
+
+
+	public function lastFreeSeatsAnyDate(array $dates)
+	{
+		$lastFreeSeats = false;
+		foreach ($dates as $date) {
+			if ($date->lastFreeSeats) {
+				$lastFreeSeats = true;
+				break;
+			}
+		}
+		return $lastFreeSeats;
+	}
+
+
+	public function getPastDates($name)
+	{
+		return $this->database->fetchPairs(
+			"SELECT
+				d.id_date AS dateId,
+				d.start
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_date_status s ON d.key_status = s.id_status
+			WHERE t.action = ?
+				AND d.end < NOW()
+				AND s.status = 'CONFIRMED'
+				AND d.public
+			ORDER BY
+				start DESC",
+			$name
+		);
+	}
 
 }

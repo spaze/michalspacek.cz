@@ -22,6 +22,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Mails */
 	protected $trainingMails;
 
+	/** @var \MichalSpacekCz\Training\Dates */
+	protected $trainingDates;
+
 	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
@@ -80,6 +83,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Files
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Bare\Next\Templating\Helpers $bareHelpers
@@ -89,6 +93,7 @@ class TrainingsPresenter extends BasePresenter
 		\MichalSpacekCz\Files $files,
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
+		Training\Dates $trainingDates,
 		Training\Trainings $trainings,
 		\MichalSpacekCz\Vat $vat,
 		\Bare\Next\Templating\Helpers $bareHelpers
@@ -97,6 +102,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->files = $files;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
+		$this->trainingDates = $trainingDates;
 		$this->trainings = $trainings;
 		$this->vat = $vat;
 		$this->bareHelpers = $bareHelpers;
@@ -107,8 +113,8 @@ class TrainingsPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = 'Školení';
-		$this->template->upcomingTrainings = $this->trainings->getPublicUpcoming();
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
+		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+		$this->template->lastFreeSeats = $this->trainingDates->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
 
 
@@ -140,10 +146,10 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->priceVat         = $this->vat->addVat($this->training->price);
 		$this->template->studentDiscount  = $this->training->studentDiscount;
 		$this->template->materials        = $this->training->materials;
-		$this->template->lastFreeSeats    = $this->trainings->lastFreeSeatsAnyDate($this->dates);
+		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates            = $this->dates;
 
-		$this->template->pastTrainingsMe = $this->trainings->getPastDates($name);
+		$this->template->pastTrainingsMe = $this->trainingDates->getPastDates($name);
 
 		$this->template->pastTrainingsJakub = $this->pastTrainingsJakub[$name];
 
@@ -507,7 +513,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->venueCity        = $date->venueCity;
 		$this->template->tentative        = $date->tentative;
 
-		$upcoming = $this->trainings->getPublicUpcoming();
+		$upcoming = $this->trainingDates->getPublicUpcoming();
 		unset($upcoming[$name]);
 		$this->template->upcomingTrainings = $upcoming;
 

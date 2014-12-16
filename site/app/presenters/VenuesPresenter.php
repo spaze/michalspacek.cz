@@ -10,8 +10,8 @@ use \MichalSpacekCz\Training;
 class VenuesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Training\Trainings */
-	protected $trainings;
+	/** @var \MichalSpacekCz\Training\Dates */
+	protected $trainingDates;
 
 	/** @var \MichalSpacekCz\Training\Venues */
 	protected $trainingVenues;
@@ -22,18 +22,18 @@ class VenuesPresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		Training\Trainings $trainings,
+		Training\Dates $trainingDates,
 		Training\Venues $trainingVenues,
 		\MichalSpacekCz\Embed $embed
 	)
 	{
-		$this->trainings = $trainings;
+		$this->trainingDates = $trainingDates;
 		$this->trainingVenues = $trainingVenues;
 		$this->embed = $embed;
 		parent::__construct($translator);
@@ -61,7 +61,7 @@ class VenuesPresenter extends BasePresenter
 		$this->template->publicTransport = $venue->publicTransport;
 
 		$trainings = array();
-		foreach ($this->trainings->getPublicUpcoming() as $training) {
+		foreach ($this->trainingDates->getPublicUpcoming() as $training) {
 			$dates = array();
 			foreach ($training->dates as $date) {
 				if ($date->venueId === $venue->id) {
@@ -74,7 +74,7 @@ class VenuesPresenter extends BasePresenter
 			}
 		}
 
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($trainings);
+		$this->template->lastFreeSeats = $this->trainingDates->lastFreeSeatsAnyTraining($trainings);
 		$this->template->upcomingTrainings = $trainings;
 	}
 
