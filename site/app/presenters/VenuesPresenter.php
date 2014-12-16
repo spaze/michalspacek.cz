@@ -16,6 +16,9 @@ class VenuesPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Venues */
 	protected $trainingVenues;
 
+	/** @var \MichalSpacekCz\Training\Trainings */
+	protected $trainings;
+
 	/** @var \MichalSpacekCz\Embed */
 	protected $embed;
 
@@ -24,17 +27,20 @@ class VenuesPresenter extends BasePresenter
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
+	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		Training\Dates $trainingDates,
 		Training\Venues $trainingVenues,
+		Training\Trainings $trainings,
 		\MichalSpacekCz\Embed $embed
 	)
 	{
 		$this->trainingDates = $trainingDates;
 		$this->trainingVenues = $trainingVenues;
+		$this->trainings = $trainings;
 		$this->embed = $embed;
 		parent::__construct($translator);
 	}
@@ -74,7 +80,7 @@ class VenuesPresenter extends BasePresenter
 			}
 		}
 
-		$this->template->lastFreeSeats = $this->trainingDates->lastFreeSeatsAnyTraining($trainings);
+		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($trainings);
 		$this->template->upcomingTrainings = $trainings;
 	}
 

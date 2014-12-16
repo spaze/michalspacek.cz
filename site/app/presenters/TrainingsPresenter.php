@@ -120,7 +120,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Školení';
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
-		$this->template->lastFreeSeats = $this->trainingDates->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
+		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
 
 
