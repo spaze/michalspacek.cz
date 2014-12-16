@@ -25,6 +25,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\Training\Files */
+	protected $trainingFiles;
+
 	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
@@ -84,6 +87,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Bare\Next\Templating\Helpers $bareHelpers
@@ -94,6 +98,7 @@ class TrainingsPresenter extends BasePresenter
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
 		Training\Dates $trainingDates,
+		Training\Files $trainingFiles,
 		Training\Trainings $trainings,
 		\MichalSpacekCz\Vat $vat,
 		\Bare\Next\Templating\Helpers $bareHelpers
@@ -103,6 +108,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;
+		$this->trainingFiles = $trainingFiles;
 		$this->trainings = $trainings;
 		$this->vat = $vat;
 		$this->bareHelpers = $bareHelpers;
@@ -459,7 +465,7 @@ class TrainingsPresenter extends BasePresenter
 			$this->redirect('files', $application->action);
 		}
 
-		$files = $this->trainingApplications->getFiles($application->applicationId);
+		$files = $this->trainingFiles->getFiles($application->applicationId);
 		$this->trainingApplications->setAccessTokenUsed($application);
 		if (!$files) {
 			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);

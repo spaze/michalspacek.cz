@@ -28,6 +28,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Venues */
 	protected $trainingVenues;
 
+	/** @var \MichalSpacekCz\Training\Files */
+	protected $trainingFiles;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -63,6 +66,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
+	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
@@ -72,6 +76,7 @@ class TrainingsPresenter extends BasePresenter
 		Training\Statuses $trainingStatuses,
 		Training\Trainings $trainings,
 		Training\Venues $trainingVenues,
+		Training\Files $trainingFiles,
 		\MichalSpacekCz\Vat $vat
 	)
 	{
@@ -80,6 +85,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingStatuses = $trainingStatuses;
 		$this->trainings = $trainings;
 		$this->trainingVenues = $trainingVenues;
+		$this->trainingFiles = $trainingFiles;
 		$this->vat = $vat;
 		parent::__construct($translator);
 	}
@@ -141,7 +147,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->applicationIdsAttended = array($application->applicationId);
 
-		$files = $this->trainingApplications->getFiles($this->applicationId);
+		$files = $this->trainingFiles->getFiles($this->applicationId);
 		foreach ($files as $file) {
 			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
 		}

@@ -12,10 +12,7 @@ services:
 	talks:     \MichalSpacekCz\Talks
 	trainings: \MichalSpacekCz\Training\Trainings
 	interviews: \MichalSpacekCz\Interviews
-	trainingApplications:
-		class: \MichalSpacekCz\Training\Applications
-		setup:
-			- setFilesDir('../../files/trainings')
+	trainingApplications: \MichalSpacekCz\Training\Applications
 	trainingMails:
 		class: \MichalSpacekCz\Training\Mails
 		setup:
@@ -24,6 +21,10 @@ services:
 	trainingDates: \MichalSpacekCz\Training\Dates
 	trainingVenues: \MichalSpacekCz\Training\Venues
 	trainingStatuses: \MichalSpacekCz\Training\Statuses
+	trainingFiles:
+		class: \MichalSpacekCz\Training\Files
+		setup:
+			- setFilesDir('../../files/trainings')
 	authenticator: \MichalSpacekCz\UserManager
 	embed: \MichalSpacekCz\Embed
 	webTracking: \MichalSpacekCz\WebTracking

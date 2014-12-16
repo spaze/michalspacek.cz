@@ -25,6 +25,9 @@ class Mails
 	/** @var \MichalSpacekCz\Training\Venues */
 	protected $trainingVenues;
 
+	/** @var \MichalSpacekCz\Training\Files */
+	protected $trainingFiles;
+
 	/**
 	 * Templates directory, ends with a slash.
 	 *
@@ -38,7 +41,8 @@ class Mails
 		Applications $trainingApplications,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
-		Venues $trainingVenues
+		Venues $trainingVenues,
+		Files $trainingFiles
 	)
 	{
 		$this->mailer = $mailer;
@@ -46,6 +50,7 @@ class Mails
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->trainingVenues = $trainingVenues;
+		$this->trainingFiles = $trainingFiles;
 	}
 
 
@@ -96,7 +101,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				$application->files = $this->trainingApplications->getFiles($application->id);
+				$application->files = $this->trainingFiles->getFiles($application->id);
 				$applications[] = $application;
 			}
 		}
