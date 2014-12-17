@@ -2,7 +2,6 @@
 namespace AdminModule;
 
 use \MichalSpacekCz\Training;
-use \Nette\Application\UI\Form;
 
 /**
  * Trainings presenter.
@@ -333,15 +332,13 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentFile($formName)
 	{
-		$form = new Form($this, $formName);
-		$form->addUpload('file', 'Soubor:');
-		$form->addSubmit('submit', 'Přidat');
+		$form = new \MichalSpacekCz\Form\TrainingFile($this, $formName);
 		$form->onSuccess[] = $this->submittedFile;
 		return $form;
 	}
 
 
-	public function submittedFile($form)
+	public function submittedFile(\MichalSpacekCz\Form\TrainingFile $form)
 	{
 		$values = $form->getValues();
 		if ($values->file->isOk()) {
