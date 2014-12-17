@@ -361,6 +361,7 @@ class TrainingsPresenter extends BasePresenter
 		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
 		$form->setTrainingDate($this->trainingDates->get($this->dateId));
 		$form->onSuccess[] = $this->submittedDate;
+		return $form;
 	}
 
 
