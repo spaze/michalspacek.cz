@@ -85,23 +85,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	private function addDate($form, $name, $label, $required = true, $defaultValue = null)
-	{
-		$text = $form->addText($name, $label);
-		if ($defaultValue) {
-			$text->setDefaultValue($defaultValue);
-		}
-		$text
-			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW')
-			->setAttribute('title', 'Formát YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW')
-			->addCondition(Form::FILLED)
-			->addRule(Form::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
-		if ($required) {
-			$text->setRequired('Zadejte datum');
-		}
-	}
-
-
 	public function actionDate($param)
 	{
 		$this->dateId = $param;
@@ -211,28 +194,13 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentStatuses($formName)
 	{
-		$form = new Form($this, $formName);
-		$container = $form->addContainer('applications');
-
-		foreach ($this->applications as $application) {
-			$select = $container->addSelect($application->id, 'Status')
-				->setPrompt('- změnit na -')
-				->setItems($application->childrenStatuses, false);
-			if (empty($application->childrenStatuses)) {
-				$select->setDisabled()
-					->setPrompt('nelze dále měnit');
-			}
-		}
-
-		$this->addDate($form, 'date', 'Datum:');
-		$form->addSubmit('submit', 'Změnit');
+		$form = new \MichalSpacekCz\Form\TrainingStatuses($this, $formName, $this->applications);
 		$form->onSuccess[] = $this->submittedStatuses;
-
 		return $form;
 	}
 
 
-	public function submittedStatuses($form)
+	public function submittedStatuses(\MichalSpacekCz\Form\TrainingStatuses $form)
 	{
 		$values = $form->getValues();
 		foreach ($values->applications as $id => $status) {
