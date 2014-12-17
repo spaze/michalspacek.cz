@@ -34,18 +34,6 @@ class Applications
 
 	protected $emailFrom;
 
-	private $dataRules = array(
-		'name'         => array(Form::MIN_LENGTH => 3, Form::MAX_LENGTH => 200),
-		'email'        => array(Form::MAX_LENGTH => 200),
-		'company'      => array(Form::MIN_LENGTH => 3, Form::MAX_LENGTH => 200),
-		'street'       => array(Form::MIN_LENGTH => 3, Form::MAX_LENGTH => 200),
-		'city'         => array(Form::MIN_LENGTH => 2, Form::MAX_LENGTH => 200),
-		'zip'          => array(Form::PATTERN => '([0-9]\s*){5}', Form::MAX_LENGTH => 200),
-		'companyId'    => array(Form::MIN_LENGTH => 6, Form::MAX_LENGTH => 200),
-		'companyTaxId' => array(Form::MIN_LENGTH => 6, Form::MAX_LENGTH => 200),
-		'note'         => array(Form::MAX_LENGTH => 2000),
-	);
-
 	private $statusCallbacks = array();
 
 
@@ -440,12 +428,6 @@ class Applications
 		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
 			$this->trainingStatuses->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
 		}
-	}
-
-
-	public function getDataRules()
-	{
-		return $this->dataRules;
 	}
 
 

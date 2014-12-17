@@ -246,8 +246,6 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplications($formName)
 	{
-		$rules = $this->trainingApplications->getDataRules();
-
 		$sources = array();
 		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {
 			$sources[$source->alias] = $source->name;
@@ -258,60 +256,9 @@ class TrainingsPresenter extends BasePresenter
 			$statuses[$status] = $status;
 		}
 
-		$form = new Form($this, $formName);
-
-		$applicationsContainer = $form->addContainer('applications');
 		$count = (isset($_POST['applications']) ? count($_POST['applications']) : 1);
-		for ($i = 0; $i < $count; $i++) {
-			$dataContainer = $applicationsContainer->addContainer($i);
-			$dataContainer->addText('name', 'Jméno')
-				->setRequired('Zadejte prosím jméno')
-				->addRule(Form::MIN_LENGTH, 'Minimální délka jména je %d znaky', $rules['name'][Form::MIN_LENGTH])
-				->addRule(Form::MAX_LENGTH, 'Maximální délka jména je %d znaků', $rules['name'][Form::MAX_LENGTH]);
-			$dataContainer->addText('email', 'E-mail')
-				->setRequired('Zadejte prosím e-mailovou adresu')
-				->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-				->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', $rules['email'][Form::MAX_LENGTH]);
-			$dataContainer->addText('company', 'Společnost')
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka společnosti je %d znaky', $rules['company'][Form::MIN_LENGTH])
-				->addRule(Form::MAX_LENGTH, 'Maximální délka společnosti je %d znaků', $rules['company'][Form::MAX_LENGTH]);
-			$dataContainer->addText('street', 'Ulice')
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka ulice je %d znaky', $rules['street'][Form::MIN_LENGTH])
-				->addRule(Form::MAX_LENGTH, 'Maximální délka ulice je %d znaků', $rules['street'][Form::MAX_LENGTH]);
-			$dataContainer->addText('city', 'Město')
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', $rules['city'][Form::MIN_LENGTH])
-				->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', $rules['city'][Form::MAX_LENGTH]);
-			$dataContainer->addText('zip', 'PSČ')
-				->addCondition(Form::FILLED)
-				->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', $rules['zip'][Form::PATTERN])
-				->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', $rules['zip'][Form::MAX_LENGTH]);
-			$dataContainer->addText('companyId', 'IČ')
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka IČ je %d znaky', $rules['companyId'][Form::MIN_LENGTH])
-				->addRule(Form::MAX_LENGTH, 'Maximální délka IČ je %d znaků', $rules['companyId'][Form::MAX_LENGTH]);
-			$dataContainer->addText('companyTaxId', 'DIČ')
-				->addCondition(Form::FILLED)
-				->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', $rules['companyTaxId'][Form::MIN_LENGTH])
-				->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', $rules['companyTaxId'][Form::MAX_LENGTH]);
-			$dataContainer->addText('note', 'Poznámka')
-				->addCondition(Form::FILLED)
-				->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', $rules['note'][Form::MAX_LENGTH]);
-		}
-
-		$this->addDate($form, 'date', 'Datum:');
-		$form->addSelect('status', 'Status:', $statuses)
-			->setRequired('Vyberte status')
-			->setPrompt('- vyberte status -');
-		$form->addSelect('source', 'Zdroj:', $sources)
-			->setRequired('Vyberte zdroj')
-			->setPrompt('- vyberte zdroj -');
-
-		$form->addSubmit('submit', 'Přidat');
+		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, $count, $sources, $statuses);
 		$form->onSuccess[] = $this->submittedApplications;
-
 		return $form;
 	}
 
@@ -329,7 +276,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplications($form)
+	public function submittedApplications(\MichalSpacekCz\Form\TrainingApplicationMultiple $form)
 	{
 		$values = $form->getValues();
 		foreach ($values->applications as $application) {

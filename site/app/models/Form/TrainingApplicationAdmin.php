@@ -18,16 +18,16 @@ class TrainingApplicationAdmin extends TrainingApplication
 	{
 		\Nette\Application\UI\Form::__construct($parent, $name);
 
-		$this->addAttendee();
+		$this->addAttendee($this);
 		$this->addCheckbox('familiar', 'Tykání:');
-		$this->addCompany();
-		$this->addNote();
-		$this->addPaymentInfo();
+		$this->addCompany($this);
+		$this->addNote($this);
+		$this->addPaymentInfo($this);
 		$this->addSubmit('submit', 'Uložit');
 	}
 
 
-	protected function addPaymentInfo()
+	protected function addPaymentInfo(\Nette\Forms\Container $container)
 	{
 		$this->addText('price', 'Cena bez DPH:')
 			->setType('number')
