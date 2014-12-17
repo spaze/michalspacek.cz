@@ -271,29 +271,14 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentReview($formName)
 	{
-		$form = new Form($this, $formName);
-		$form->addCheckbox('overwriteName', 'Přepsat jméno:')
-			->setDefaultValue($this->review->name != null);
-		$form->addText('name', 'Jméno:')
-			->setDefaultValue($this->review->name);
-		$form->addCheckbox('overwriteCompany', 'Přepsat firmu:')
-			->setDefaultValue($this->review->company != null);
-		$form->addText('company', 'Firma:')
-			->setDefaultValue($this->review->company);
-		$form->addTextArea('review', 'Ohlas:')
-			->setDefaultValue($this->review->review);
-		$form->addText('href', 'Odkaz:')
-			->setDefaultValue($this->review->href);
-		$form->addCheckbox('hidden', 'Skrýt:')
-			->setDefaultValue($this->review->hidden);
-		$form->addSubmit('save', 'Uložit');
+		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName);
+		$form->setReview($this->review);
 		$form->onSuccess[] = $this->submittedReview;
-
 		return $form;
 	}
 
 
-	public function submittedReview($form)
+	public function submittedReview(\MichalSpacekCz\Form\TrainingReview $form)
 	{
 		$values = $form->getValues();
 
