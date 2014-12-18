@@ -5,5 +5,16 @@
 
 {define #content}
 {includeblock "../Trainings/default.latte"}
+<p></p>
 {include #list, trainings => $unpaidApplications}
+<p></p>
+<hr>
+<div>
+	<p>Zaplatit fakturu</p>
+	{form invoice}
+	<p><strong>{label invoice /}</strong> {input invoice}</p>
+	<p><strong>{label paid /}</strong> {input paid}</p>
+	<p>{input submit}</p>
+	{/form invoice}
+</div>
 {/define}

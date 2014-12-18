@@ -51,4 +51,17 @@ class InvoicesPresenter extends BasePresenter
 		$this->template->pageTitle = 'Nezaplacené faktury';
 	}
 
+
+	protected function createComponentInvoice($formName)
+	{
+		$form = new \MichalSpacekCz\Form\TrainingInvoice($this, $formName);
+		$form->onSuccess[] = $this->submittedApplication;
+	}
+
+
+	public function submittedApplication(\MichalSpacekCz\Form\TrainingInvoice $form)
+	{
+
+	}
+
 }
