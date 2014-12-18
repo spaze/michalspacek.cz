@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplication extends \Nette\Application\UI\Form
+class TrainingApplication extends Form
 {
 
 	/** @var \Bare\Next\Templating\Helpers */

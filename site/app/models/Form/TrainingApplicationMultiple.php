@@ -32,12 +32,7 @@ class TrainingApplicationMultiple extends TrainingApplication
 			$dataContainer->getComponent('street')->caption = 'Ulice:';
 		}
 
-		$this->addText('date', 'Datum:')
-			->setAttribute('placeholder', 'YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW')
-			->setAttribute('title', 'Formát YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW')
-			->addCondition(Self::FILLED)
-			->addRule(Self::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2}:\d{2})|[Nn][Oo][Ww]');
-
+		$this->addStatusDate('date', 'Datum:', true);
 		$this->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte status')
 			->setPrompt('- vyberte status -');

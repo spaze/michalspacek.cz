@@ -41,11 +41,7 @@ class TrainingApplicationAdmin extends TrainingApplication
 			->setType('number');
 		$this->addText('invoiceId', 'Faktura č.:')
 			->setType('number');
-		$this->addText('paid', 'Zaplaceno:')
-			->setAttribute('placeholder', 'YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW')
-			->setAttribute('title', 'Formát  YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW')
-			->addCondition(self::FILLED)
-			->addRule(self::PATTERN, 'Datum musí být ve formátu YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW', '((\d{4}-\d{1,2}-\d{1,2})( \d{1,2}:\d{2}:\d{2})?)|(\d{1,2}\.\d{1,2}\.\d{4})|[Nn][Oo][Ww]');
+		$this->addPaidDate('paid', 'Zaplaceno:', false);
 	}
 
 
