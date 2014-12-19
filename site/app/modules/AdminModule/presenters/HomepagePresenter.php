@@ -69,6 +69,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->pageTitle = 'Administrace';
 		$this->template->trackingEnabled = $this->webTracking->isEnabled();
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
+		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
 	}
 
 }

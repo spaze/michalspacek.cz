@@ -154,6 +154,22 @@ class Applications
 	}
 
 
+	public function getValidUnpaidCount()
+	{
+		$result = $this->database->fetchField(
+			'SELECT
+				COUNT(1)
+			FROM
+				training_applications
+			WHERE
+				key_status NOT IN(?)
+				AND paid IS NULL',
+			array_keys($this->trainingStatuses->getDiscardedStatuses())
+		);
+		return $result;
+	}
+
+
 	private function insertData($data)
 	{
 		$data['access_token'] = $this->generateAccessCode();
