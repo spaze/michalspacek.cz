@@ -61,7 +61,14 @@ class InvoicesPresenter extends BasePresenter
 
 	public function submittedApplication(\MichalSpacekCz\Form\TrainingInvoice $form)
 	{
-
+		$values = $form->getValues();
+		$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);
+		if ($count) {
+			$this->flashMessage('Počet zaplacených přihlášek: ' . $count);
+		} else {
+			$this->flashMessage('Nebyla zaplacena žádná přihláška', 'notice');
+		}
+		$this->redirect('this');
 	}
 
 }

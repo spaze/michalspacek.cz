@@ -404,6 +404,24 @@ class Applications
 	}
 
 
+	public function setPaidDate($invoiceId, $paid)
+	{
+		if ($paid) {
+			$paid = new \DateTime($paid);
+		}
+
+		$result = $this->database->query(
+			'UPDATE training_applications SET ? WHERE invoice_id = ?',
+			array(
+				'paid'           => ($paid ?: null),
+				'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
+			),
+			$invoiceId
+		);
+		return $result->getRowCount();
+	}
+
+
 	private function getTrainingApplicationSource($source)
 	{
 		return $this->database->fetchField('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
