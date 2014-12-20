@@ -24,7 +24,7 @@ class Statuses
 	const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';  // 14
 	const STATUS_REMINDED            = 'REMINDED';             // 15
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	private $statusIds = array();
@@ -36,11 +36,11 @@ class Statuses
 	private $descendantStatuses = array();
 
 	/**
-	 * @param \Nette\Database\Connection $connection
+	 * @param \Nette\Database\Context $context
 	 */
-	public function __construct(\Nette\Database\Connection $connection)
+	public function __construct(\Nette\Database\Context $context)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 	}
 
 

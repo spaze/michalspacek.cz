@@ -10,16 +10,16 @@ namespace MichalSpacekCz;
 class Talks
 {
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var \Bare\Formatter\Texy */
 	protected $texyFormatter;
 
 
-	public function __construct(\Nette\Database\Connection $connection, \Bare\Next\Formatter\Texy $texyFormatter)
+	public function __construct(\Nette\Database\Context $context, \Bare\Next\Formatter\Texy $texyFormatter)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 	}
 
@@ -40,7 +40,7 @@ class Talks
 			ORDER BY date DESC';
 
 		if ($limit !== null) {
-			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
+			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
 		$result = $this->database->fetchAll($query);

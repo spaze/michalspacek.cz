@@ -12,13 +12,13 @@ class HomepagePresenter extends \BasePresenter
 
 	const HEARTBLEED_DISCLOSURE = '2014-04-07';
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 
-	public function __construct(\Nette\Database\Connection $connection)
+	public function __construct(\Nette\Database\Context $context)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 	}
 
 

@@ -10,13 +10,13 @@ namespace MichalSpacekCz;
 class Redirections
 {
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 
-	public function __construct(\Nette\Database\Connection $connection)
+	public function __construct(\Nette\Database\Context $context)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 	}
 
 

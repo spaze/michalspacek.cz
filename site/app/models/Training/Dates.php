@@ -17,7 +17,7 @@ class Dates
 
 	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var \MichalSpacekCz\Training\Statuses */
@@ -26,15 +26,15 @@ class Dates
 	private $statusIds = array();
 
 	/**
-	 * @param \Nette\Database\Connection $connection
+	 * @param \Nette\Database\Context $context
 	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
 	 */
 	public function __construct(
-		\Nette\Database\Connection $connection,
+		\Nette\Database\Context $context,
 		Statuses $trainingStatuses
 	)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;
 	}
 

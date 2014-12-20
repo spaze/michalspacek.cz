@@ -10,15 +10,15 @@ namespace Companies20Module;
 class HomepagePresenter extends BasePresenter
 {
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var array */
 	private $tags = array();
 
-	public function __construct(\Nette\Database\Connection $connection)
+	public function __construct(\Nette\Database\Context $context)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 	}
 
 

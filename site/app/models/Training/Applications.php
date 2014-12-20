@@ -14,7 +14,7 @@ class Applications
 
 	const DEFAULT_SOURCE  = 'michal-spacek';
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var \MichalSpacekCz\Notifier\Vrana */
@@ -38,7 +38,7 @@ class Applications
 
 
 	public function __construct(
-		\Nette\Database\Connection $connection,
+		\Nette\Database\Context $context,
 		\MichalSpacekCz\Notifier\Vrana $vranaNotifier,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
@@ -46,7 +46,7 @@ class Applications
 		\MichalSpacekCz\Vat $vat
 	)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 		$this->vranaNotifier = $vranaNotifier;
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;

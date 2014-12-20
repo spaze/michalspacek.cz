@@ -10,7 +10,7 @@ namespace MichalSpacekCz\Training;
 class Trainings
 {
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var \Bare\Formatter\Texy */
@@ -21,17 +21,17 @@ class Trainings
 
 
 	/**
-	 * @param \Nette\Database\Connection $connection
+	 * @param \Nette\Database\Context $context
 	 * @param \Bare\Next\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 */
 	public function __construct(
-		\Nette\Database\Connection $connection,
+		\Nette\Database\Context $context,
 		\Bare\Next\Formatter\Texy $texyFormatter,
 		Dates $trainingDates
 	)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingDates = $trainingDates;
 	}
@@ -216,7 +216,7 @@ class Trainings
 			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
 
 		if ($limit !== null) {
-			$this->database->getSupplementalDriver()->applyLimit($query, $limit, null);
+			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
 		$reviews = $this->database->fetchAll($query, $name);

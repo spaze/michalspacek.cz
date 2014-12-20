@@ -10,7 +10,7 @@ namespace MichalSpacekCz\Training;
 class Files
 {
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/**
@@ -21,9 +21,9 @@ class Files
 	protected $filesDir;
 
 
-	public function __construct(\Nette\Database\Connection $connection)
+	public function __construct(\Nette\Database\Context $context)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 	}
 
 

@@ -10,16 +10,16 @@ namespace MichalSpacekCz;
 class Files
 {
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var \Nette\Http\IRequest */
 	protected $httpRequest;
 
 
-	public function __construct(\Nette\Database\Connection $connection, \Nette\Http\IRequest $httpRequest)
+	public function __construct(\Nette\Database\Context $context, \Nette\Http\IRequest $httpRequest)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 		$this->httpRequest = $httpRequest;
 	}
 

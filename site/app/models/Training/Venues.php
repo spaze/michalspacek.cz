@@ -10,16 +10,16 @@ namespace MichalSpacekCz\Training;
 class Venues
 {
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var \Bare\Formatter\Texy */
 	protected $texyFormatter;
 
 
-	public function __construct(\Nette\Database\Connection $connection, \Bare\Next\Formatter\Texy $texyFormatter)
+	public function __construct(\Nette\Database\Context $context, \Bare\Next\Formatter\Texy $texyFormatter)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 	}
 

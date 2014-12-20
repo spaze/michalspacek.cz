@@ -10,7 +10,7 @@ namespace MichalSpacekCz;
 class Reports
 {
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var \Nette\Http\IRequest */
@@ -18,12 +18,12 @@ class Reports
 
 
 	/**
-	 * @param \Nette\Database\Connection $connection
+	 * @param \Nette\Database\Context $context
 	 * @param \Nette\Http\IRequest $httpRequest
 	 */
-	public function __construct(\Nette\Database\Connection $connection, \Nette\Http\IRequest $httpRequest)
+	public function __construct(\Nette\Database\Context $context, \Nette\Http\IRequest $httpRequest)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 		$this->httpRequest = $httpRequest;
 	}
 

@@ -18,7 +18,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 
 	const RETURNING_USER_PATH = '/';
 
-	/** @var \Nette\Database\Connection */
+	/** @var \Nette\Database\Context */
 	protected $database;
 
 	/** @var \Nette\Http\IRequest */
@@ -32,13 +32,13 @@ class UserManager implements \Nette\Security\IAuthenticator
 
 
 	public function __construct(
-		\Nette\Database\Connection $connection,
+		\Nette\Database\Context $context,
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
 		\MichalSpacekCz\Encryption\Password $passwordEncryption
 	)
 	{
-		$this->database = $connection;
+		$this->database = $context;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->passwordEncryption = $passwordEncryption;
