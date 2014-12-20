@@ -21,6 +21,7 @@ class TrainingApplicationAdmin extends TrainingApplication
 		$this->addAttendee($this);
 		$this->addCheckbox('familiar', 'Tykání:');
 		$this->addCompany($this);
+		$this->addCountry($this);
 		$this->addNote($this);
 		$this->addPaymentInfo($this);
 		$this->addSubmit('submit', 'Uložit');

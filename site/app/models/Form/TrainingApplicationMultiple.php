@@ -32,6 +32,7 @@ class TrainingApplicationMultiple extends TrainingApplication
 			$dataContainer->getComponent('street')->caption = 'Ulice:';
 		}
 
+		$this->addCountry($this);
 		$this->addStatusDate('date', 'Datum:', true);
 		$this->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte status')

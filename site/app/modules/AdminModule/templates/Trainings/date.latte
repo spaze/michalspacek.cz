@@ -59,12 +59,12 @@
 				<tr>
 					<th>{label name /}</th>
 					<th>{label email /}</th>
+					<th>{label companyId /}</th>
+					<th>{label companyTaxId /}</th>
 					<th>{label company /}</th>
 					<th>{label street /}</th>
 					<th>{label city /}</th>
 					<th>{label zip /}</th>
-					<th>{label companyId /}</th>
-					<th>{label companyTaxId /}</th>
 					<th>{label note /}</th>
 					<th></th>
 					<th></th>
@@ -74,12 +74,12 @@
 				<tr>
 					<td>{input name}</td>
 					<td>{input email}</td>
+					<td>{input companyId}</td>
+					<td>{input companyTaxId}</td>
 					<td>{input company}</td>
 					<td>{input street}</td>
 					<td>{input city}</td>
 					<td>{input zip}</td>
-					<td>{input companyId}</td>
-					<td>{input companyTaxId}</td>
 					<td>{input note}</td>
 					<td><code class="button add" title="Kopírovat">+</code></td>
 					<td><code class="button delete" title="Odebrat">-</code></td>
@@ -87,6 +87,7 @@
 			</tbody>
 			{/formContainer}
 		</table>
+		<p><strong>{label country /}</strong> {input country}</p>
 		<p><strong>{label date /}</strong> {input date}</p>
 		<p><strong>{label status /}</strong> {input status}</p>
 		<p><strong>{label source /}</strong> {input source}</p>

@@ -51,6 +51,7 @@ class TrainingApplication extends Form
 		$this->addAttendee($this);
 		$this->addCompany($this);
 		$this->addNote($this);
+		$this->addCountry($this);
 
 		$this->addSubmit('signUp', 'Odeslat');
 	}
@@ -71,6 +72,14 @@ class TrainingApplication extends Form
 
 	protected function addCompany(\Nette\Forms\Container $container)
 	{
+		$container->addText('companyId', 'IČ:')
+			->addCondition(self::FILLED)
+			->addRule(self::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 6)
+			->addRule(self::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
+		$container->addText('companyTaxId', 'DIČ:')
+			->addCondition(self::FILLED)
+			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
+			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
 		$container->addText('company', 'Obchodní jméno:')
 			->addCondition(self::FILLED)
 			->addRule(self::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
@@ -87,14 +96,6 @@ class TrainingApplication extends Form
 			->addCondition(self::FILLED)
 			->addRule(self::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
 			->addRule(self::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
-		$container->addText('companyId', 'IČ:')
-			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 6)
-			->addRule(self::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
-		$container->addText('companyTaxId', 'DIČ:')
-			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
-			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
 	}
 
 
@@ -103,6 +104,13 @@ class TrainingApplication extends Form
 		$container->addText('note', 'Poznámka:')
 			->addCondition(self::FILLED)
 			->addRule(self::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
+	}
+
+
+	protected function addCountry(\Nette\Forms\Container $container)
+	{
+		$container->addSelect('country', 'Země:', ['cz' => 'Česká republika', 'sk' => 'Slovensko'])
+			->setRequired('Vyberte prosím zemi');
 	}
 
 
