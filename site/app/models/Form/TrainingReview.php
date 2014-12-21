@@ -13,6 +13,7 @@ class TrainingReview extends \Nette\Application\UI\Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
 	{
 		\Nette\Application\UI\Form::__construct($parent, $name);
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addCheckbox('overwriteName', 'Přepsat jméno:');
 		$this->addText('name', 'Jméno:');

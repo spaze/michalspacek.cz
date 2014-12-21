@@ -27,6 +27,7 @@ class TrainingApplication extends Form
 	)
 	{
 		parent::__construct($parent, $name);
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->bareHelpers = $bareHelpers;
 

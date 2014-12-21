@@ -31,6 +31,7 @@ class TrainingDate extends \Nette\Application\UI\Form
 	)
 	{
 		parent::__construct($parent, $name);
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->trainings = $trainings;
 		$this->trainingDates = $trainingDates;

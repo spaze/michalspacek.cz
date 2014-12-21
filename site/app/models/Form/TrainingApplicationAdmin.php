@@ -17,6 +17,7 @@ class TrainingApplicationAdmin extends TrainingApplication
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
 	{
 		\Nette\Application\UI\Form::__construct($parent, $name);
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addAttendee($this);
 		$this->addCheckbox('familiar', 'Tykání:');

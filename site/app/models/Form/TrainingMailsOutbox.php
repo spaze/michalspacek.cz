@@ -15,6 +15,7 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications)
 	{
 		parent::__construct($parent, $name);
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$applicationsContainer = $this->addContainer('applications');
 

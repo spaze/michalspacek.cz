@@ -13,6 +13,7 @@ class TrainingInvoice extends Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
 	{
 		\Nette\Application\UI\Form::__construct($parent, $name);
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addText('invoice', 'Faktura:')
 			->setRequired('Zadejte prosím číslo faktury');

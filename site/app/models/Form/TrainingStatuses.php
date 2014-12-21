@@ -13,6 +13,7 @@ class TrainingStatuses extends Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications)
 	{
 		parent::__construct($parent, $name);
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$container = $this->addContainer('applications');
 

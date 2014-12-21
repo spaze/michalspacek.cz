@@ -20,6 +20,7 @@ class TrainingApplicationMultiple extends TrainingApplication
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, $count, $sources, $statuses)
 	{
 		\Nette\Application\UI\Form::__construct($parent, $name);
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$applicationsContainer = $this->addContainer('applications');
 		for ($i = 0; $i < $count; $i++) {
