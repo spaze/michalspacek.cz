@@ -180,6 +180,7 @@ class TrainingsPresenter extends BasePresenter
 				$session->street,
 				$session->city,
 				$session->zip,
+				$session->country,
 				$session->companyId,
 				$session->companyTaxId,
 				$session->note
@@ -197,6 +198,7 @@ class TrainingsPresenter extends BasePresenter
 		$session->street       = $application->street;
 		$session->city         = $application->city;
 		$session->zip          = $application->zip;
+		$session->country      = $application->country;
 		$session->companyId    = $application->companyId;
 		$session->companyTaxId = $application->companyTaxId;
 		$session->note         = $application->note;
@@ -235,6 +237,7 @@ class TrainingsPresenter extends BasePresenter
 					$values->street,
 					$values->city,
 					$values->zip,
+					$values->country,
 					$values->companyId,
 					$values->companyTaxId,
 					$values->note
@@ -249,6 +252,7 @@ class TrainingsPresenter extends BasePresenter
 						$values->street,
 						$values->city,
 						$values->zip,
+						$values->country,
 						$values->companyId,
 						$values->companyTaxId,
 						$values->note
@@ -264,6 +268,7 @@ class TrainingsPresenter extends BasePresenter
 						$values->street,
 						$values->city,
 						$values->zip,
+						$values->country,
 						$values->companyId,
 						$values->companyTaxId,
 						$values->note
@@ -290,6 +295,7 @@ class TrainingsPresenter extends BasePresenter
 			$session->street       = $values->street;
 			$session->city         = $values->city;
 			$session->zip          = $values->zip;
+			$session->country      = $values->country;
 			$session->companyId    = $values->companyId;
 			$session->companyTaxId = $values->companyTaxId;
 			$session->note         = $values->note;

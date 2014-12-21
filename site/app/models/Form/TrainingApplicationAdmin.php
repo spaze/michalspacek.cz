@@ -59,6 +59,7 @@ class TrainingApplicationAdmin extends TrainingApplication
 			'street' => $application->street,
 			'city' => $application->city,
 			'zip' => $application->zip,
+			'country' => $application->country,
 			'companyId' => $application->companyId,
 			'companyTaxId' => $application->companyTaxId,
 			'note' => $application->note,

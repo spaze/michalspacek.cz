@@ -189,7 +189,7 @@ class Applications
 	}
 
 
-	public function addInvitation(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	public function addInvitation(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
 	{
 		return $this->insertApplication(
 			$training,
@@ -200,6 +200,7 @@ class Applications
 			$street,
 			$city,
 			$zip,
+			$country,
 			$companyId,
 			$companyTaxId,
 			$note,
@@ -209,7 +210,7 @@ class Applications
 	}
 
 
-	public function addApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	public function addApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
 	{
 		return $this->insertApplication(
 			$training,
@@ -220,6 +221,7 @@ class Applications
 			$street,
 			$city,
 			$zip,
+			$country,
 			$companyId,
 			$companyTaxId,
 			$note,
@@ -229,7 +231,7 @@ class Applications
 	}
 
 
-	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $status, $source, $date = null)
+	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $status, $source, $date = null)
 	{
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
 			throw new \RuntimeException("Invalid initial status {$status}");
@@ -254,6 +256,7 @@ class Applications
 			'street'               => $street,
 			'city'                 => $city,
 			'zip'                  => $zip,
+			'country'              => $country,
 			'company_id'           => $companyId,
 			'company_tax_id'       => $companyTaxId,
 			'note'                 => $note,
@@ -273,9 +276,9 @@ class Applications
 	}
 
 
-	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note)
+	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
 	{
-		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note) {
+		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note) {
 			$this->updateApplicationData(
 				$applicationId,
 				$name,
@@ -284,6 +287,7 @@ class Applications
 				$street,
 				$city,
 				$zip,
+				$country,
 				$companyId,
 				$companyTaxId,
 				$note
@@ -293,7 +297,7 @@ class Applications
 	}
 
 
-	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $companyId, $companyTaxId, $note, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false)
+	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false)
 	{
 		if ($paid) {
 			$paid = new \DateTime($paid);
@@ -309,6 +313,7 @@ class Applications
 				'street'         => $street,
 				'city'           => $city,
 				'zip'            => $zip,
+				'country'        => $country,
 				'company_id'     => $companyId,
 				'company_tax_id' => $companyTaxId,
 				'note'           => $note,
@@ -360,6 +365,7 @@ class Applications
 				a.street,
 				a.city,
 				a.zip,
+				a.country,
 				a.company_id AS companyId,
 				a.company_tax_id AS companyTaxId,
 				a.note,
@@ -400,6 +406,7 @@ class Applications
 				a.street,
 				a.city,
 				a.zip,
+				a.country,
 				a.company_id AS companyId,
 				a.company_tax_id AS companyTaxId,
 				a.note

@@ -31,6 +31,10 @@
 	<legend>Fakturační údaje</legend>
 	<table>
 		<tr>
+			<th>{$form[companyId]->caption}</th><td>{$form[companyId]->value}</td>
+			<th>{$form[companyTaxId]->caption}</th><td>{$form[companyTaxId]->value}</td>
+		</tr>
+		<tr>
 			<th>{$form[company]->caption}</th><td>{$form[company]->value}</td>
 			<th>{$form[street]->caption}</th><td>{$form[street]->value}</td>
 		</tr>
@@ -39,8 +43,7 @@
 			<th>{$form[zip]->caption}</th><td>{$form[zip]->value}</td>
 		</tr>
 		<tr>
-			<th>{$form[companyId]->caption}</th><td>{$form[companyId]->value}</td>
-			<th>{$form[companyTaxId]->caption}</th><td>{$form[companyTaxId]->value}</td>
+			<th>{$form[country]->caption}</th><td>{$form[country]->selectedItem}</td>
 		</tr>
 	</table>
 </fieldset>
