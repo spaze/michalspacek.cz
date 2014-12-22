@@ -99,6 +99,7 @@ class Dates
 				WHERE
 					a.key_date = d.id_date
 					AND a.paid IS NULL
+					AND a.invoice_id IS NOT NULL
 					AND a.key_status NOT IN (?)
 			)
 			ORDER BY

@@ -149,7 +149,7 @@ class Applications
 	public function getValidUnpaidByDate($dateId)
 	{
 		return array_filter($this->getValidByDate($dateId), function($value) {
-			return !isset($value->paid);
+			return (isset($value->invoiceId) && !isset($value->paid));
 		});
 	}
 
@@ -163,6 +163,7 @@ class Applications
 				training_applications
 			WHERE
 				key_status NOT IN(?)
+				AND invoice_id IS NOT NULL
 				AND paid IS NULL',
 			array_keys($this->trainingStatuses->getDiscardedStatuses())
 		);
