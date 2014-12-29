@@ -15,23 +15,23 @@ class FilesPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Files */
 	protected $files;
 
-	/** @var \MichalSpacekCz\Training\Applications */
-	protected $trainingApplications;
+	/** @var \MichalSpacekCz\Training\Files */
+	protected $trainingFiles;
 
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Files
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
+	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
 		\MichalSpacekCz\Files $files,
-		\MichalSpacekCz\Training\Applications $trainingApplications
+		\MichalSpacekCz\Training\Files $trainingFiles
 	)
 	{
 		$this->files = $files;
-		$this->trainingApplications = $trainingApplications;
+		$this->trainingFiles = $trainingFiles;
 		parent::__construct($translator);
 	}
 
@@ -43,13 +43,13 @@ class FilesPresenter extends BasePresenter
 			throw new BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
 		}
 
-		$file = $this->trainingApplications->getFile($session->applicationId, $session->token, $filename);
+		$file = $this->trainingFiles->getFile($session->applicationId, $session->token, $filename);
 		if (!$file) {
 			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
 		$downloadId = $this->files->logDownload($file->fileId);
-		$this->trainingApplications->logFileDownload($session->applicationId, $downloadId);
+		$this->trainingFiles->logDownload($session->applicationId, $downloadId);
 		$this->sendFile("{$file->dirName}/{$file->fileName}");
 	}
 

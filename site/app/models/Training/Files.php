@@ -131,7 +131,7 @@ class Files
 	}
 
 
-	public function logFileDownload($applicationId, $downloadId)
+	public function logDownload($applicationId, $downloadId)
 	{
 		$this->database->query('INSERT INTO training_material_downloads', array(
 			'key_application'   => $applicationId,
