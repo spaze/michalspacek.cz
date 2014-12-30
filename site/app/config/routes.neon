@@ -32,6 +32,8 @@ parameters:
 					mask: kudy-tudy
 				CompanyInfo:
 					mask: firma
+				Report:
+					mask:  # Intentionally left empty
 				Redirect:
 					mask: r
 					actions:
