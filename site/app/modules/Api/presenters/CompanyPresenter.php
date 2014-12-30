@@ -1,11 +1,13 @@
 <?php
+namespace ApiModule;
+
 /**
- * CompanyInfo presenter.
+ * Company presenter.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class CompanyInfoPresenter extends BasePresenter
+class CompanyPresenter extends \BasePresenter
 {
 
 	/** @var \MichalSpacekCz\CompanyInfo\Info */

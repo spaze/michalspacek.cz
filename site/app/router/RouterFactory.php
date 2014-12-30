@@ -11,6 +11,7 @@ class RouterFactory
 {
 
 	const ADMIN = 'admin';
+	const API = 'api';
 	const COTEL = 'cotel';
 	const WEBLEED = 'webleed';
 	const HEARTBLEED = 'heartbleed';
@@ -66,6 +67,7 @@ class RouterFactory
 		$router[] = $this->addRoute(self::COTEL, '[<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$router[] = $this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
+		$router[] = $this->addRoute(self::API, '/<presenter>/<country>/<companyId>', 'Company', 'default');
 		$router[] = $this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
 		$router[] = $this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
 		$router[] = $this->addRoute(self::WWW, '[/<action>]/<filename>', 'Files', 'file');
@@ -74,21 +76,26 @@ class RouterFactory
 		$router[] = $this->addRoute(self::WWW, '/<action>/<token>', 'Redirect', 'default');
 		$router[] = $this->addRoute(self::WWW, 'report[/<action>]', 'Report', 'default');
 		$router[] = $this->addRoute(self::WWW, '/<name>', 'Venues', 'venue');
-		$router[] = $this->addRoute(self::WWW, '/<country>/<companyId>', 'CompanyInfo', 'default');
 		$router[] = $this->addRoute(self::WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 		return $router;
 	}
 
 
-	private function addRoute($host, $mask, $defaultPresenter, $defaultAction)
+	private function addRoute($module, $mask, $defaultPresenter, $defaultAction)
 	{
-		$maskPrefix = (isset($this->translatedRoutes[$host][$defaultPresenter]) ? $this->translatedRoutes[$host][$defaultPresenter]['mask'] : null);
+		$maskPrefix = (isset($this->translatedRoutes[$module][$defaultPresenter]) ? $this->translatedRoutes[$module][$defaultPresenter]['mask'] : null);
 		$flags = Route::SECURED;
 		$metadata = array(
 			'presenter' => [Route::VALUE => $defaultPresenter],
 			'action' => [Route::VALUE => $defaultAction],
 		);
+		$host = $module;
 		switch ($host) {
+			case self::API:
+				$host = self::WWW;
+				$metadata['module'] = 'Api';
+				$maskPrefix = self::API;
+				break;
 			case self::ADMIN:
 				$metadata['module'] = 'Admin';
 				break;
@@ -104,11 +111,11 @@ class RouterFactory
 				break;
 			case self::WWW:
 				if ($maskPrefix === null) {
-					$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$host];
+					$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$module];
 				} else {
-					$presenter = $this->translatedPresenters[$host][$maskPrefix];
+					$presenter = $this->translatedPresenters[$module][$maskPrefix];
 					$metadata['presenter'][Route::FILTER_TABLE] = array($maskPrefix => $presenter);
-					$metadata['action'][Route::FILTER_TABLE] = $this->translatedActions[$host][$presenter];
+					$metadata['action'][Route::FILTER_TABLE] = $this->translatedActions[$module][$presenter];
 				}
 				break;
 		}

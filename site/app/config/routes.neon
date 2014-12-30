@@ -30,8 +30,6 @@ parameters:
 					mask: kontakt
 				Venues:
 					mask: kudy-tudy
-				CompanyInfo:
-					mask: firma
 				Report:
 					mask:  # Intentionally left empty
 				Redirect:

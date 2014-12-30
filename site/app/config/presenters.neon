@@ -1,6 +1,5 @@
 services:
 	- ArticlesPresenter
-	- CompanyInfoPresenter
 	- CompanyTrainingsPresenter
 	- ContactPresenter
 	- ErrorPresenter
@@ -14,6 +13,9 @@ services:
 	- TrainingsPresenter
 	- VenuesPresenter
 	- WhoPresenter
+
+	# api module
+	- ApiModule\CompanyPresenter
 
 	# admin module
 	- AdminModule\EmailsPresenter
