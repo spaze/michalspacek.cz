@@ -89,6 +89,7 @@ class Bootstrap extends \Nette\Object
 		return array(
 			$this->appDir . '/config/config.neon',
 			$this->appDir . '/config/parameters.neon',
+			$this->appDir . '/config/routes.neon',
 			$this->appDir . '/config/presenters.neon',
 			$this->appDir . '/config/services.neon',
 			$this->appDir . '/config/config.extra-' . $this->getRootDomain() . '.neon',
