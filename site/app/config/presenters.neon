@@ -1,5 +1,6 @@
 services:
 	- ArticlesPresenter
+	- CompanyInfoPresenter
 	- CompanyTrainingsPresenter
 	- ContactPresenter
 	- ErrorPresenter

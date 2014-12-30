@@ -71,3 +71,8 @@ services:
 			- setActiveKeyIds(%encryption.activeKeyIds%)
 	passwordEncryption: \MichalSpacekCz\Encryption\Password
 	emailEncryption: \MichalSpacekCz\Encryption\Email
+	companyInfo: \MichalSpacekCz\CompanyInfo\Info
+	ares:
+		class: \MichalSpacekCz\CompanyInfo\Ares
+		setup:
+			- setUrl(%ares.url%)
