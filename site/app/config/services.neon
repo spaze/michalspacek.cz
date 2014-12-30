@@ -76,3 +76,7 @@ services:
 		class: \MichalSpacekCz\CompanyInfo\Ares
 		setup:
 			- setUrl(%ares.url%)
+	registerUz:
+		class: \MichalSpacekCz\CompanyInfo\RegisterUz
+		setup:
+			- setRootUrl(%registerUz.rootUrl%)

@@ -16,16 +16,23 @@ class Info
 
 	const STATUS_ERROR = 500;
 
-
 	/** @var \MichalSpacekCz\CompanyInfo\Ares */
 	private $ares;
+
+	/** @var \MichalSpacekCz\CompanyInfo\RegisterUz */
+	private $registerUz;
+
 
 	/**
 	 * @param \MichalSpacekCz\CompanyInfo\Ares $ares
 	 */
-	public function __construct(\MichalSpacekCz\CompanyInfo\Ares $ares)
+	public function __construct(
+		\MichalSpacekCz\CompanyInfo\Ares $ares,
+		\MichalSpacekCz\CompanyInfo\RegisterUz $registerUz
+	)
 	{
 		$this->ares = $ares;
+		$this->registerUz = $registerUz;
 	}
 
 
@@ -34,6 +41,20 @@ class Info
 		switch ($country) {
 			case 'cz':
 				$data = $this->ares->getData($companyId);
+				switch ($data->status) {
+					case Ares::STATUS_ERROR:
+						$data->status = self::STATUS_ERROR;
+						break;
+					case Ares::STATUS_FOUND:
+						$data->status = self::STATUS_FOUND;
+						break;
+					case Ares::STATUS_NOT_FOUND:
+						$data->status = self::STATUS_NOT_FOUND;
+						break;
+				}
+				break;
+			case 'sk':
+				$data = $this->registerUz->getData($companyId);
 				switch ($data->status) {
 					case Ares::STATUS_ERROR:
 						$data->status = self::STATUS_ERROR;
