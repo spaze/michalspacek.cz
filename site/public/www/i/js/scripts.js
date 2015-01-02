@@ -15,6 +15,7 @@ $(document).ready(function() {
 		$('#loadDataAgain a').click(Application.loadData);
 	};
 	Application.loadData = function(event) {
+		Application.loaded = false;
 		$('#loadDataControls > span').hide();
 		$('#loadDataWait').show();
 		event.preventDefault();
@@ -27,6 +28,7 @@ $(document).ready(function() {
 			timeout: 5000
 		});
 		load.done(function(data) {
+			Application.loaded = true;
 			if (data.status == 200) {
 				$.each(['companyId', 'companyTaxId', 'company', 'street', 'city', 'zip', 'country'], function(key, value) {
 					$('#frm-application-' + value).val(data[value]);
@@ -41,8 +43,10 @@ $(document).ready(function() {
 			}
 		});
 		load.fail(function() {
-			Application.loadDataControls();
-			$('#loadDataError').show();
+			if (!Application.loaded) {
+				Application.loadDataControls();
+				$('#loadDataError').show();
+			}
 		});
 	};
 	$('#loadData').click(Application.loadData);
