@@ -26,21 +26,31 @@
 </fieldset>
 <fieldset>
 	<legend>Fakturační údaje <small>(nepovinné)</small></legend>
-	<table>
+	<table id="company">
 		<tr>
-			<th>{label companyId /}</th><td>{input companyId}</td>
-			<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>
+			<th>{label country /}</th><td>{input country}</td>
+		</tr>
+		<tr>
+			<th>{label companyId /}</th>
+			<td class="short">
+				{input companyId}
+				<small id="loadDataControls">
+					<span id="loadData" data-url="{link :Api:Company:}"><a href="" title="načíst další údaje z rejstříku dle IČO">načíst zbytek</a></span>
+					<span id="loadDataWait">čekejte&hellip;</span>
+					<span id="loadDataNotFound">nenalezeno, </span>
+					<span id="loadDataError">chyba, </span>
+					<span id="loadDataAgain"><a href="" title="načíst další údaje z rejstříku dle IČO">znovu</a></span>
+				</small>
+			</td>
+			<th class="short">{label companyTaxId /}</th><td>{input companyTaxId}</td>
 		</tr>
 		<tr>
 			<th>{label company /}</th><td>{input company}</td>
-			<th>{label street /}</th><td>{input street}</td>
+			<th class="short">{label street /}</th><td>{input street}</td>
 		</tr>
 		<tr>
 			<th>{label city /}</th><td>{input city}</td>
-			<th>{label zip /}</th><td>{input zip}</td>
-		</tr>
-		<tr>
-			<th>{label country /}</th><td>{input country}</td>
+			<th class="short">{label zip /}</th><td>{input zip}</td>
 		</tr>
 	</table>
 </fieldset>
