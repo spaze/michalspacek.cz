@@ -33,7 +33,10 @@ class CompanyPresenter extends \BasePresenter
 	 */
 	public function actionDefault($country, $companyId)
 	{
-		// if $this->isJson
+		if (!$this->isAjax()) {
+			throw new \Nette\Application\BadRequestException('Not an AJAX call');
+		}
+
 		// verify token from session added on training page
 		try {
 			$info = $this->companyInfo->getData($country, $companyId);
