@@ -37,7 +37,6 @@ class CompanyPresenter extends \BasePresenter
 			throw new \Nette\Application\BadRequestException('Not an AJAX call');
 		}
 
-		// verify token from session added on training page
 		try {
 			$info = $this->companyInfo->getData($country, $companyId);
 		} catch (\RuntimeException $e) {
