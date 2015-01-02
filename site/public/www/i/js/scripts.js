@@ -8,14 +8,14 @@ $(document).ready(function() {
 	});
 	$('#uskutecnene-terminy-container').hide();
 
-	var Application = {};
-	Application.loadDataControls = function() {
+	var APPLICATION = APPLICATION || {};
+	APPLICATION.loadDataControls = function() {
 		$('#loadDataControls > span').hide();
 		$('#loadDataAgain').show();
-		$('#loadDataAgain a').click(Application.loadData);
+		$('#loadDataAgain a').click(APPLICATION.loadData);
 	};
-	Application.loadData = function(event) {
-		Application.loaded = false;
+	APPLICATION.loadData = function(event) {
+		APPLICATION.loaded = false;
 		$('#loadDataControls > span').hide();
 		$('#loadDataWait').show();
 		event.preventDefault();
@@ -28,27 +28,27 @@ $(document).ready(function() {
 			timeout: 5000
 		});
 		load.done(function(data) {
-			Application.loaded = true;
+			APPLICATION.loaded = true;
 			if (data.status == 200) {
 				$.each(['companyId', 'companyTaxId', 'company', 'street', 'city', 'zip', 'country'], function(key, value) {
 					$('#frm-application-' + value).val(data[value]);
 				});
-				Application.loadDataControls();
+				APPLICATION.loadDataControls();
 			} else if (data.status == 400) {
-				Application.loadDataControls();
+				APPLICATION.loadDataControls();
 				$('#loadDataNotFound').show();
 			} else {
-				Application.loadDataControls();
+				APPLICATION.loadDataControls();
 				$('#loadDataError').show();
 			}
 		});
 		load.fail(function() {
-			if (!Application.loaded) {
-				Application.loadDataControls();
+			if (!APPLICATION.loaded) {
+				APPLICATION.loadDataControls();
 				$('#loadDataError').show();
 			}
 		});
 	};
-	$('#loadData').click(Application.loadData);
+	$('#loadData').click(APPLICATION.loadData);
 	$('#loadData').show();
 });
