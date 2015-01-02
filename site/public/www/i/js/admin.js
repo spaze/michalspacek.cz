@@ -9,7 +9,8 @@ $(document).ready(function() {
 	});
 	$('#pridat-ucastniky-container').hide();
 
-	var reindex = function(element, index) {
+	var Applications = {};
+	Applications.reindex = function(element, index) {
 		element.find('input').each(function() {
 			$(this).attr('name', function(i, value) {
 				return value.replace(/^applications\[\d+\]/, 'applications[' + index + ']');
@@ -26,7 +27,7 @@ $(document).ready(function() {
 		tr = $(this).parent().parent();
 		tr.after(tr.clone(true));
 		tr.parent().children('tr').each(function() {
-			reindex($(this), index++);
+			Applications.reindex($(this), index++);
 		});
 	});
 	$('#pridat-ucastniky .delete').click(function() {
@@ -37,7 +38,7 @@ $(document).ready(function() {
 			tbody = tr.parent();
 			tr.remove();
 			tbody.children('tr').each(function() {
-				reindex($(this), index++);
+				Applications.reindex($(this), index++);
 			});
 			if (tbody.children('tr').length == 1) {
 				$('#pridat-ucastniky .delete').hide();
