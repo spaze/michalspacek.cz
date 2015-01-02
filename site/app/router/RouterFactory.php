@@ -67,7 +67,7 @@ class RouterFactory
 		$router[] = $this->addRoute(self::COTEL, '[<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$router[] = $this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
-		$router[] = $this->addRoute(self::API, '/<presenter>/<country>/<companyId>', 'Company', 'default');
+		$router[] = $this->addRoute(self::API, '/<presenter>', 'Default', 'default');
 		$router[] = $this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
 		$router[] = $this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
 		$router[] = $this->addRoute(self::WWW, '[/<action>]/<filename>', 'Files', 'file');
