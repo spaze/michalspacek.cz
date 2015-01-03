@@ -1,3 +1,6 @@
+translation:
+    default: cs_CZ
+
 parameters:
 	domain:
 		root: michalspacek.cz

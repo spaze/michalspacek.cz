@@ -1,0 +1,2 @@
+extensions:
+	translation: Kdyby\Translation\DI\TranslationExtension

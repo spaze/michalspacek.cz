@@ -24,3 +24,11 @@ nette:
 	session:
 		name: yourluckynumbers
 		expiration: 14 days
+
+translation:
+	default: cs_CZ
+	whitelist: [cs, en]
+	resolvers:
+		header: off
+		request: off
+		session: off

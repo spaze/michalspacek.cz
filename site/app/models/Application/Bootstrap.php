@@ -56,6 +56,7 @@ class Bootstrap extends \Nette\Object
 	public function run()
 	{
 		$configurator = new \Nette\Config\Configurator();
+		$configurator->addParameters(['appDir' => $this->appDir]);
 
 		$configurator->setDebugMode($this->isDebugMode());
 		$configurator->enableDebugger($this->logDir);
@@ -87,6 +88,7 @@ class Bootstrap extends \Nette\Object
 	private function getConfigurationFiles()
 	{
 		return array(
+			$this->appDir . '/config/extensions.neon',
 			$this->appDir . '/config/config.neon',
 			$this->appDir . '/config/parameters.neon',
 			$this->appDir . '/config/routes.neon',

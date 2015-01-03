@@ -47,7 +47,6 @@ services:
 		class: \MichalSpacekCz\Templating\Helpers
 		setup:
 			- setStaticRoot(%domain.sharedStaticRoot%)
-	translator: \MichalSpacekCz\DummyTranslator
 	vat:
 		class: \MichalSpacekCz\Vat
 		setup:
