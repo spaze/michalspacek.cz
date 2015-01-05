@@ -1,6 +1,98 @@
+title:
+	who: "Kdo?"
+header:
+	who: "Kdo je Michal Špaček?"
 label:
 	contact: Kontakt
 	facebook: Facebook
 	linkedin: LinkedIn
+	now: Jsem
+	before: Byl jsem
+	developer:
+		start: ""
+		developer: "Vývojář"
+		end: ", Zend Certified Engineer"
+	node5shareholder:
+		start: "Drobný akcionář prostoru "
+		node5: "Node5"
+		end: ""
+	skyper:
+		start: "Zaměstnanec v pražské kanceláři "
+		skype: "Skype"
+		end: ""
+	slevomat:
+		start: "Vývojář ve "
+		slevomat: "Slevomatu"
+		end: ""
+	ipo48:
+		start: "Spolupořadatel "
+		ipo48: "IPO48"
+		end: ""
+	simpletest:
+		start: "Rádce v projektu "
+		simpletest: "SimpleTest.IO"
+		end: ""
+	tojeono:
+		start: "Spoluzakladatel webhostingu "
+		tojeono: "tojeono.cz"
+		end: ""
 contact:
 	twitter: @spazef0rze
+who:
+	developer:
+		1: "Zajímá mě web, bezpečnost a výkon. Stavím, bořím a testuji webové aplikace."
+		2:
+			start: "Vše, co jsem se jako vývojář naučil moc rád předávám dál na svých "
+			link: "školeních"
+			end: "."
+		3: "Webové vývojáře chci naučit stavět bezpečnější a výkonnější weby a webové aplikace."
+	node5shareholder:
+		1: "Mohl jsem si koupit auto, ale zjistil jsem, že už jedno mám."
+		2:
+			start: ""
+			link: "Node5"
+			end: " je pražský co-workingový prostor kombinující byznys inkubátor a startup akcelerátor"
+		3: "Nejsem zaměstnanec Node5, nemám žádnou výkonnou funkci, za Node5 nevystupuji ani nepořádám žádnou akci."
+		4: "Jen pomáhám, když je potřeba a to jak samotnému Node5, tak jeho návštěvníkům."
+	skyper:
+		1: "Úžasných pět let a pět měsíců od prvního pracovního dne v estonském Tallinnu až do listopadu 2012,"
+		2: "během kterých jsem se naučil spoustu nových věci, nejenom co se týká vývoje služby pro stovky miliónů uživatelů,"
+		3: "ale i samotného chodu a růstu firmy a kanceláře od pár lidí po stovku kolegů."
+	slevomat:
+		1: "Od září 2013 do konce června 2014 jsem pracoval pro jednu z nejrychleji rostoucích firem v ČR."
+		2:
+			start: "O tom, jak jsme zabezpečovali data Slevomatu i zákazníků se dozvíte v prezentaci "
+			link: "Jak jsme zlepšili zabezpečení Slevomatu"
+			end: "."
+	ipo48:
+		1: "V únoru 2011 se v Praze na akci IPO48 sešlo více jak stovka vývojářů, designérů a podnikatelů zaměřujících se na moderní technologie."
+		2: "Měli během 48 hodin vytvořit svůj tým, vyvinout prototyp aplikace a sestavit obchodní model, který by uspěl ve tvrdé konkurenci na globálním trhu."
+		3:
+			start: "O akci si můžete přečíst třeba na "
+			zdrojak: "Zdrojáku"
+			middle1: ", u "
+			davidgrudl: "Davida Grudla"
+			middle2: " nebo u "
+			johnvanhara: "Johna Vanhary"
+			end: "."
+	simpletest:
+		1:
+			start: ""
+			link: "SimpleTest.IO"
+			end: " byl nástroj, který na vašem webu pravidelně hledal špatné odkazy, chybějící obrázky a další prvky."
+		2:
+			start: "Původním nápadem bylo postavit "
+			selenium: "Selenium v cloudu"
+			middle: ", ale nepovedlo se nám překonat překážky, které dnešní dynamický web takovému projektu staví do cesty a tak jsme to na jaře roku 2014 "
+			gameover: "zabalili"
+			end: "."
+	tojeono:
+		1: "Koncem roku 2003 jsme se s kolegy rozhodli pro pořízení vlastních serverů,"
+		2:
+			start: "které jsme pod značkou "
+			link: "tojeono.cz"
+			end: " nabídli k využívání i dalším zákazníkům, kteří požadovali individuální nastavení služeb."
+		3: "Přibližně po roce jsem projekt opustil a v současné době s ním mám společné jen to, že na serverech tojeono.cz provozuji snad všechny svoje weby."
+	more:
+		start: "Více o mě a mých dobrodužstvích naleznete na "
+		end: "."

@@ -20,8 +20,8 @@ class WhoPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->pageTitle  = 'Kdo?';
-		$this->template->pageHeader = 'Kdo je Michal Špaček?';
+		$this->template->pageTitle  = $this->translator->translate('messages.title.who');
+		$this->template->pageHeader = $this->translator->translate('messages.header.who');
 	}
 
 
