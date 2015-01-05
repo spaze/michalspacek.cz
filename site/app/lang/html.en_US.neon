@@ -1,3 +1,7 @@
 id:
 	now: now
 	before: before
+	trainings: trainings
+	articles: articles
+	talks: talks
+	interviews: interviews

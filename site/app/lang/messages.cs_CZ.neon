@@ -51,6 +51,17 @@ label:
 		start: "Spoluzakladatel webhostingu "
 		tojeono: "tojeono.cz"
 		end: ""
+	otherprojects: "Další projekty"
+	heartbleedcz: "Heartbleed v ČR"
+	elephpantcz: "PHP slon"
+	trainings: Školím
+	articles: Píšu články
+	allarticles: Všechny články
+	talks: Přednáším
+	upcomingtalks: Budu přednášet
+	pasttalks: Přednášel jsem
+	alltalks: Všechny přednášky
+	interviews: Odpovídám na otázky
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -115,3 +126,22 @@ who:
 	more:
 		start: "Více o mě a mých dobrodužstvích naleznete na "
 		end: "."
+homepage:
+	tagline: "Vyvíjím webové aplikace a zajímá mě jejich bezpečnost. Nebojím se o tom mluvit veřejně, hledám hranice tak, že je posouvám. Chci naučit webové vývojáře stavět bezpečnější a výkonnější weby a aplikace."
+	aboutme: "více o mě"
+	contact: kontakt
+	trainings: "Zvu vás na následující školení, která pořádám a vedu"
+	companytrainings:
+		start: "Školení mohu uspořádat také "
+		link: "u vás ve firmě"
+		end: "."
+	consultancy:
+		start: "Nabízím i konzultaci pro vaši firmu, "
+		link: "napište mi"
+		end: "!"
+	talksyourevent:
+		start:
+			1: "Rád budu přednášet i na vaší akci nebo konferenci, "
+			2: "…třeba na vaší akci nebo konferenci, "
+		link: "napište mi"
+		end: "!"

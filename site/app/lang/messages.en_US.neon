@@ -51,6 +51,17 @@ label:
 		start: "Co-founder of hosting service "
 		tojeono: "tojeono.cz"
 		end: ""
+	otherprojects: "Other projects"
+	heartbleedcz: "Heartbleed in CZ"
+	elephpantcz: "ElePHPant"
+	trainings: My trainings
+	articles: My articles
+	allarticles: All articles
+	talks: My talks
+	upcomingtalks: Upcoming talks
+	pasttalks: Talks
+	alltalks: All talks
+	interviews: Me answering questions
 contact:
 	twitter: @spazef0rze
 	uponrequest: "upon request"
@@ -115,3 +126,22 @@ who:
 	more:
 		start: "More about me and my experience at "
 		end: "."
+homepage:
+	tagline: "I build web applications and I'm into web application security. I like to speak about secure development. My mission is to teach web developers how to build secure and fast web applications and why."
+	aboutme: "more about me"
+	contact: contact
+	trainings: "Come to my public trainings, everybody's welcome"
+	companytrainings:
+		start: "I can also prepare an in-house training, "
+		link: "in your company"
+		end: "."
+	consultancy:
+		start: "I also offer consulting for your business, "
+		link: "contact me"
+		end: "!"
+	talksyourevent:
+		start:
+			1: "I'll happily do a talk at your event or conference, "
+			2: "…at your event or conference, "
+		link: "let me know"
+		end: "!"

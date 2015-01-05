@@ -4,42 +4,45 @@
 {includeblock "../Interviews/default.latte"}
 {includeblock "../Trainings/default.latte"}
 <div id="projekty">
-	<h3>Další projekty:</h3>
+	<h3>{_messages.label.otherprojects}:</h3>
 	<ul>
-		<li><a n:href=":Webleed:Homepage:" title="Project &quot;We Bleed&quot;"><span id="heartbleed" class="icon icon32"></span>Heartbleed v ČR</a></li>
-		<li><a href="http://www.elephpant.cz/" title="Elephpant"><span id="elephpant" class="icon icon32"></span>PHP slon</a></li>
+		<li><a n:href=":Webleed:Homepage:" title="Project &quot;We Bleed&quot;"><span id="heartbleed" class="icon icon32"></span>{_messages.label.heartbleedcz}</a></li>
+		<li><a href="http://www.elephpant.cz/" title="Elephpant"><span id="elephpant" class="icon icon32"></span>{_messages.label.elephpantcz}</a></li>
 	</ul>
 </div>
 <hr />
-<h2 id="skoleni">Školím</h2>
-<p>Zvu vás na následující školení, která pořádám a vedu:</p>
+<h2 id="{_html.id.trainings}">{_messages.label.trainings}</h2>
+<p>{_messages.homepage.trainings}:</p>
 {include #list}
-<p>Školení mohu uspořádat také <a n:href="CompanyTrainings:">u vás ve firmě</a>. Nabízím i&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+<p>
+	{_messages.homepage.companytrainings.start}<a n:href="CompanyTrainings:">{_messages.homepage.companytrainings.link}</a>{_messages.homepage.companytrainings.end}
+	{_messages.homepage.consultancy.start}<a href="mailto:mail&#x40;michalspacek.cz">{_messages.homepage.consultancy.link}</a>{_messages.homepage.consultancy.end}
+</p>
 <hr />
-<h2 id="clanky">Píšu články</h2>
+<h2 id="{_html.id.articles}">{_messages.label.articles}</h2>
 <div n:foreach="$articles as $article">
 	{include #itemArticle, article => $article}
 </div>
-<p><a n:href="Articles:">Všechny články</a></p>
+<p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
 <hr />
-<h2 id="prednasky">Přednáším</h2>
-<h3>Budu přednášet</h3>
+<h2 id="{_html.id.talks}">{_messages.label.talks}</h2>
+<h3>{_messages.label.upcomingtalks}</h3>
 <ul n:if="$upcomingTalks">
 	<li n:foreach="$upcomingTalks as $talk">
 		{include #itemTalk, talk => $talk}
 	</li>
 </ul>
-<p n:if="$upcomingTalks">Rád budu přednášet i na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
-<p n:if="!$upcomingTalks">&hellip;třeba na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
-<h3>Přednášel jsem</h3>
+<p n:if="$upcomingTalks">{_messages.homepage.talksyourevent.start.1}<a href="mailto:mail&#x40;michalspacek.cz">{_messages.homepage.talksyourevent.link}</a>{_messages.homepage.talksyourevent.end}</p>
+<p n:if="!$upcomingTalks">{_messages.homepage.talksyourevent.start.2}<a href="mailto:mail&#x40;michalspacek.cz">{_messages.homepage.talksyourevent.link}</a>{_messages.homepage.talksyourevent.end}</p>
+<h3>{_messages.label.pasttalks}</h3>
 <ul>
 	<li n:foreach="$talks as $talk">
 		{include #itemTalk, talk => $talk}
 	</li>
 </ul>
-<p><a n:href="Talks:">Všechny přednášky</a></p>
+<p><a n:href="Talks:">{_messages.label.alltalks}</a></p>
 <hr />
-<h2 id="rozhovory">Odpovídám na otázky</h2>
+<h2 id="{_html.id.interviews}">{_messages.label.interviews}</h2>
 <ul>
 	<li n:foreach="$interviews as $interview">
 		{include #itemInterview, interview => $interview}
