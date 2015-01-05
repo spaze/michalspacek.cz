@@ -1,6 +1,7 @@
 title:
 	who: "Who?"
 	contact: Contact
+	articles: "Articles"
 header:
 	who: "Who is Michal Špaček?"
 label:
@@ -62,6 +63,7 @@ label:
 	pasttalks: Talks
 	alltalks: All talks
 	interviews: Me answering questions
+	writtenarticles: "Articles I've written"
 contact:
 	twitter: @spazef0rze
 	uponrequest: "upon request"
@@ -145,3 +147,5 @@ homepage:
 			2: "…at your event or conference, "
 		link: "let me know"
 		end: "!"
+articles:
+	readmore: "read more…"

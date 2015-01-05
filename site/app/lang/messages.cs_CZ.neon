@@ -1,6 +1,7 @@
 title:
 	who: "Kdo?"
 	contact: Kontakt
+	articles: "Články"
 header:
 	who: "Kdo je Michal Špaček?"
 label:
@@ -62,6 +63,7 @@ label:
 	pasttalks: Přednášel jsem
 	alltalks: Všechny přednášky
 	interviews: Odpovídám na otázky
+	writtenarticles: Napsal jsem
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -145,3 +147,5 @@ homepage:
 			2: "…třeba na vaší akci nebo konferenci, "
 		link: "napište mi"
 		end: "!"
+articles:
+	readmore: "celý článek…"

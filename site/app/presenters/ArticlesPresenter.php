@@ -28,7 +28,7 @@ class ArticlesPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->pageTitle = 'Články';
+		$this->template->pageTitle = $this->translator->translate('messages.title.articles');
 		$this->template->articles  = $this->articles->getAll();
 	}
 

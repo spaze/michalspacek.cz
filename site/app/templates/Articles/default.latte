@@ -5,11 +5,11 @@
 {define #itemArticle}
 	<a href="{$article->href}"><strong>{$article->title}</strong></a>
 	<small>(<span class="date">{$article->date|date:'j. n. Y'}</span>, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
-	<p class="indent"><small>{$article->excerpt} (<a href="{$article->href}">celý článek&hellip;</a>)</small></p>
+	<p class="indent"><small>{$article->excerpt} (<a href="{$article->href}">{_messages.articles.readmore}</a>)</small></p>
 {/define}
 
 {define #content}
-<h2>Napsal jsem</h2>
+<h2>{_messages.label.writtenarticles}</h2>
 <div n:foreach="$articles as $article">
 	{include #itemArticle}
 </div>
