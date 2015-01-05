@@ -1,11 +1,26 @@
 title:
 	who: "Who?"
+	contact: Contact
 header:
 	who: "Who is Michal Špaček?"
 label:
 	contact: Contact
+	twitter: Twitter
 	facebook: Facebook
 	linkedin: LinkedIn
+	email: E-mail
+	phone: Telefon
+	skype: Skype
+	billingaddress: Billing address
+	companyid: "Company id"
+	companyvatid: "VAT id"
+	bankaccount: Bank account
+	iban: IBAN
+	swift: BIC/SWIFT
+	litecoin: Litecoin
+	openpgpkeyid: OpenPGP key id
+	fingerprint: Fingerprint
+	keybase: Keybase
 	now: Now
 	before: Before
 	developer:
@@ -38,6 +53,10 @@ label:
 		end: ""
 contact:
 	twitter: @spazef0rze
+	uponrequest: "upon request"
+	skypename: spazef0rze
+	billingaddress: "České Vrbné 2315, České Budějovice 37011, Czech Republic"
+	vatpayer: VAT payer
 who:
 	developer:
 		1: "I'm into web, security, and performance. I build, break, and test web applications."

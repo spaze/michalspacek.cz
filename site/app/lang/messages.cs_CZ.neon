@@ -1,11 +1,26 @@
 title:
 	who: "Kdo?"
+	contact: Kontakt
 header:
 	who: "Kdo je Michal Špaček?"
 label:
 	contact: Kontakt
+	twitter: Twitter
 	facebook: Facebook
 	linkedin: LinkedIn
+	email: E-mail
+	phone: Telefon
+	skype: Skype
+	billingaddress: Fakturační adresa
+	companyid: IČ
+	companyvatid: DIČ
+	bankaccount: Bankovní spojení
+	iban: IBAN
+	swift: BIC kód/SWIFT
+	litecoin: Litecoin
+	openpgpkeyid: OpenPGP key id
+	fingerprint: Fingerprint
+	keybase: Keybase
 	now: Jsem
 	before: Byl jsem
 	developer:
@@ -38,6 +53,10 @@ label:
 		end: ""
 contact:
 	twitter: @spazef0rze
+	uponrequest: "na vyžádání"
+	skypename: spazef0rze
+	billingaddress: "České Vrbné 2315, České Budějovice 37011"
+	vatpayer: plátce DPH
 who:
 	developer:
 		1: "Zajímá mě web, bezpečnost a výkon. Stavím, bořím a testuji webové aplikace."

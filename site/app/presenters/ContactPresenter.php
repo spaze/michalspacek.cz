@@ -20,7 +20,7 @@ class ContactPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->pageTitle  = $this->translator->translate('Kontakt');
+		$this->template->pageTitle  = $this->translator->translate('messages.title.contact');
 	}
 
 
