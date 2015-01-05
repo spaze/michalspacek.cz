@@ -50,10 +50,4 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		return $template;
 	}
 
-
-    protected function translate($message, $count = null)
-	{
-		return $this->translator->translate($message, $count);
-	}
-
 }
