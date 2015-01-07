@@ -26,34 +26,13 @@ label:
 	keybase: Keybase
 	now: Jsem
 	before: Byl jsem
-	developer:
-		start: ""
-		developer: "Vývojář"
-		end: ", Zend Certified Engineer"
-	node5shareholder:
-		start: "Drobný akcionář prostoru "
-		node5: "Node5"
-		end: ""
-	skyper:
-		start: "Zaměstnanec v pražské kanceláři "
-		skype: "Skype"
-		end: ""
-	slevomat:
-		start: "Vývojář ve "
-		slevomat: "Slevomatu"
-		end: ""
-	ipo48:
-		start: "Spolupořadatel "
-		ipo48: "IPO48"
-		end: ""
-	simpletest:
-		start: "Rádce v projektu "
-		simpletest: "SimpleTest.IO"
-		end: ""
-	tojeono:
-		start: "Spoluzakladatel webhostingu "
-		tojeono: "tojeono.cz"
-		end: ""
+	developer: "**Vývojář**, Zend Certified Engineer"
+	node5shareholder: "Drobný akcionář prostoru **Node5**"
+	skyper: "Zaměstnanec v pražské kanceláři **Skype**"
+	slevomat: "Vývojář ve **Slevomatu**"
+	ipo48: "Spolupořadatel **IPO48**"
+	simpletest: "Rádce v projektu **SimpleTest.IO**"
+	tojeono: "Spoluzakladatel webhostingu **tojeono.cz**"
 	otherprojects: "Další projekty"
 	heartbleedcz: "Heartbleed v ČR"
 	elephpantcz: "PHP slon"
@@ -75,83 +54,41 @@ contact:
 who:
 	developer:
 		1: "Zajímá mě web, bezpečnost a výkon. Stavím, bořím a testuji webové aplikace."
-		2:
-			start: "Vše, co jsem se jako vývojář naučil moc rád předávám dál na svých "
-			link: "školeních"
-			end: "."
+		2: "Vše, co jsem se jako vývojář naučil moc rád předávám dál na svých \"školeních\":[%s]."
 		3: "Webové vývojáře chci naučit stavět bezpečnější a výkonnější weby a webové aplikace."
 	node5shareholder:
 		1: "Mohl jsem si koupit auto, ale zjistil jsem, že už jedno mám."
-		2:
-			start: ""
-			link: "Node5"
-			end: " je pražský co-workingový prostor kombinující byznys inkubátor a startup akcelerátor"
+		2: "\"Node5\":[%s] je pražský co-workingový prostor kombinující byznys inkubátor a startup akcelerátor."
 		3: "Nejsem zaměstnanec Node5, nemám žádnou výkonnou funkci, za Node5 nevystupuji ani nepořádám žádnou akci."
 		4: "Jen pomáhám, když je potřeba a to jak samotnému Node5, tak jeho návštěvníkům."
-	skyper:
-		1: "Úžasných pět let a pět měsíců od prvního pracovního dne v estonském Tallinnu až do listopadu 2012,"
-		2: "během kterých jsem se naučil spoustu nových věci, nejenom co se týká vývoje služby pro stovky miliónů uživatelů,"
-		3: "ale i samotného chodu a růstu firmy a kanceláře od pár lidí po stovku kolegů."
+	skyper: "Úžasných pět let a pět měsíců od prvního pracovního dne v estonském Tallinnu až do listopadu 2012, během kterých jsem se naučil spoustu nových věci, nejenom co se týká vývoje služby pro stovky miliónů uživatelů, ale i samotného chodu a růstu firmy a kanceláře od pár lidí po stovku kolegů."
 	slevomat:
 		1: "Od září 2013 do konce června 2014 jsem pracoval pro jednu z nejrychleji rostoucích firem v ČR."
-		2:
-			start: "O tom, jak jsme zabezpečovali data Slevomatu i zákazníků se dozvíte v prezentaci "
-			link: "Jak jsme zlepšili zabezpečení Slevomatu"
-			end: "."
+		2: "O tom, jak jsme zabezpečovali data Slevomatu i zákazníků se dozvíte v prezentaci \"Jak jsme zlepšili zabezpečení Slevomatu\":[%s]."
 	ipo48:
 		1: "V únoru 2011 se v Praze na akci IPO48 sešlo více jak stovka vývojářů, designérů a podnikatelů zaměřujících se na moderní technologie."
 		2: "Měli během 48 hodin vytvořit svůj tým, vyvinout prototyp aplikace a sestavit obchodní model, který by uspěl ve tvrdé konkurenci na globálním trhu."
-		3:
-			start: "O akci si můžete přečíst třeba na "
-			zdrojak: "Zdrojáku"
-			middle1: ", u "
-			davidgrudl: "Davida Grudla"
-			middle2: " nebo u "
-			johnvanhara: "Johna Vanhary"
-			end: "."
+		3: "O akci si můžete přečíst třeba na \"Zdrojáku\":[%s], u \"Davida Grudla\":[%s] nebo u \"Johna Vanhary\":[%s]."
 	simpletest:
-		1:
-			start: ""
-			link: "SimpleTest.IO"
-			end: " byl nástroj, který na vašem webu pravidelně hledal špatné odkazy, chybějící obrázky a další prvky."
-		2:
-			start: "Původním nápadem bylo postavit "
-			selenium: "Selenium v cloudu"
-			middle: ", ale nepovedlo se nám překonat překážky, které dnešní dynamický web takovému projektu staví do cesty a tak jsme to na jaře roku 2014 "
-			gameover: "zabalili"
-			end: "."
+		1: "\"SimpleTest.IO\":[%s] byl nástroj, který na vašem webu pravidelně hledal špatné odkazy, chybějící obrázky a další prvky."
+		2: "Původním nápadem bylo postavit //Selenium v cloudu//, ale nepovedlo se nám překonat překážky, které dnešní dynamický web takovému projektu staví do cesty a tak jsme to na jaře roku 2014 //zabalili//."
 	tojeono:
-		1: "Koncem roku 2003 jsme se s kolegy rozhodli pro pořízení vlastních serverů,"
-		2:
-			start: "které jsme pod značkou "
-			link: "tojeono.cz"
-			end: " nabídli k využívání i dalším zákazníkům, kteří požadovali individuální nastavení služeb."
-		3: "Přibližně po roce jsem projekt opustil a v současné době s ním mám společné jen to, že na serverech tojeono.cz provozuji snad všechny svoje weby."
-	more:
-		start: "Více o mě a mých dobrodužstvích naleznete na "
-		end: "."
+		1: "Koncem roku 2003 jsme se s kolegy rozhodli pro pořízení vlastních serverů, které jsme pod značkou \"tojeono.cz\":[%s] nabídli k využívání i dalším zákazníkům, kteří požadovali individuální nastavení služeb."
+		2: "Přibližně po roce jsem projekt opustil a v současné době s ním mám společné jen to, že na serverech tojeono.cz provozuji snad všechny svoje weby."
+	more: "Více o mě a mých dobrodužstvích naleznete na \"LinkedIn\":[%s]."
 homepage:
 	tagline: "Vyvíjím webové aplikace a zajímá mě jejich bezpečnost. Nebojím se o tom mluvit veřejně, hledám hranice tak, že je posouvám. Chci naučit webové vývojáře stavět bezpečnější a výkonnější weby a aplikace."
 	aboutme: "více o mě"
 	contact: kontakt
 	trainings: "Zvu vás na následující školení, která pořádám a vedu"
-	companytrainings:
-		start: "Školení mohu uspořádat také "
-		link: "u vás ve firmě"
-		end: "."
-	consultancy:
-		start: "Nabízím i konzultaci pro vaši firmu, "
-		link: "napište mi"
-		end: "!"
+	companytrainings: "Školení mohu uspořádat také \"u vás ve firmě\":[%s]."
+	consultancy: "Nabízím i konzultaci pro vaši firmu, \"napište mi\":[%s]!"
 	talksyourevent:
-		start:
-			1: "Rád budu přednášet i na vaší akci nebo konferenci, "
-			2: "…třeba na vaší akci nebo konferenci, "
-		link: "napište mi"
-		end: "!"
+		upcoming: "Rád budu přednášet i na vaší akci nebo konferenci, \"napište mi\":[%s]!"
+		noupcoming: "…třeba na vaší akci nebo konferenci, \"napište mi\":[%s]!"
 articles:
 	readmore: "celý článek…"
 companytrainings:
 	offer: "Chcete uspořádat školení u vás ve firmě v termínu, který vám vyhovuje? Velmi rád přijedu za vámi do vašeho sídla nebo kamkoliv jinam. Firmám nabízím následující školení, ale můžeme také sestavit kurz na míru, přesně podle vašich požadavků a znalostí vašich vývojářů."
-	publictraining: 'Své vývojáře můžete samozřejmě přihlásit i na "veřejný termín mých školení":[%s].'
-	consulting: 'Nabízím i konzultace pro vaši firmu, "napište mi:[%s]!'
+	publictraining: "Své vývojáře můžete samozřejmě přihlásit i na \"veřejný termín mých školení\":[%s]."
+	consulting: "Nabízím i konzultace pro vaši firmu, \"napište mi\":[%s]!"

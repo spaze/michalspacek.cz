@@ -15,8 +15,8 @@
 <p>{_messages.homepage.trainings}:</p>
 {include #list}
 <p>
-	{_messages.homepage.companytrainings.start}<a n:href="CompanyTrainings:">{_messages.homepage.companytrainings.link}</a>{_messages.homepage.companytrainings.end}
-	{_messages.homepage.consultancy.start}<a href="mailto:mail&#x40;michalspacek.cz">{_messages.homepage.consultancy.link}</a>{_messages.homepage.consultancy.end}
+	{_messages.homepage.companytrainings|format:'link:CompanyTrainings:'}
+	{_messages.homepage.consultancy|format:'mail@michalspacek.cz'}
 </p>
 <hr />
 <h2 id="{_html.id.articles}">{_messages.label.articles}</h2>
@@ -32,8 +32,8 @@
 		{include #itemTalk, talk => $talk}
 	</li>
 </ul>
-<p n:if="$upcomingTalks">{_messages.homepage.talksyourevent.start.1}<a href="mailto:mail&#x40;michalspacek.cz">{_messages.homepage.talksyourevent.link}</a>{_messages.homepage.talksyourevent.end}</p>
-<p n:if="!$upcomingTalks">{_messages.homepage.talksyourevent.start.2}<a href="mailto:mail&#x40;michalspacek.cz">{_messages.homepage.talksyourevent.link}</a>{_messages.homepage.talksyourevent.end}</p>
+<p n:if="$upcomingTalks">{_messages.homepage.talksyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
+<p n:if="!$upcomingTalks">{_messages.homepage.talksyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
 <h3>{_messages.label.pasttalks}</h3>
 <ul>
 	<li n:foreach="$talks as $talk">

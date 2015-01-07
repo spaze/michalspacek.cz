@@ -26,34 +26,13 @@ label:
 	keybase: Keybase
 	now: Now
 	before: Before
-	developer:
-		start: "A "
-		developer: "developer"
-		end: ", Zend Certified Engineer"
-	node5shareholder:
-		start: ""
-		node5: "Node5"
-		end: " minor shareholder"
-	skyper:
-		start: ""
-		skype: "A Skyper"
-		end: " based in Prague, Czech Republic"
-	slevomat:
-		start: "A developer in "
-		slevomat: "Slevomat.cz"
-		end: ""
-	ipo48:
-		start: "Co-organizer of "
-		ipo48: "IPO48"
-		end: ""
-	simpletest:
-		start: "Adviser/mentor for "
-		simpletest: "SimpleTest.IO"
-		end: ""
-	tojeono:
-		start: "Co-founder of hosting service "
-		tojeono: "tojeono.cz"
-		end: ""
+	developer: "A **developer**, Zend Certified Engineer"
+	node5shareholder: "**Node5** minor shareholder"
+	skyper: "A **Skyper** based in Prague, Czech Republic"
+	slevomat: "A developer in **Slevomat.cz**"
+	ipo48: "Co-organizer of **IPO48**"
+	simpletest: "Adviser/mentor for **SimpleTest.IO**"
+	tojeono: "Co-founder of hosting service **tojeono.cz**"
 	otherprojects: "Other projects"
 	heartbleedcz: "Heartbleed in CZ"
 	elephpantcz: "ElePHPant"
@@ -75,83 +54,41 @@ contact:
 who:
 	developer:
 		1: "I'm into web, security, and performance. I build, break, and test web applications."
-		2:
-			start: "As a developer, I've learned a lot and I like to pass my knowledge and experience on my "
-			link: "trainings"
-			end: "."
+		2: "As a developer, I've learned a lot and I like to pass my knowledge and experience on my \"trainings\":[%s]."
 		3: "I want to show other web developers why and how to build secure and fast web applications."
 	node5shareholder:
 		1: "I could buy a car but I realized I already have one."
-		2:
-			start: ""
-			link: "Node5"
-			end: " is a co-working space/business incubator/startup accelerator based in Prague, Czech Republic."
+		2: "\"Node5\":[%s] is a co-working space/business incubator/startup accelerator based in Prague, Czech Republic."
 		3: "I'm not employed by Node5, don't have any executive role, I don't talk on behalf of Node5 and don't organize any event."
 		4: "I just help when help is needed, be it for Node5 itself or people around it."
-	skyper:
-		1: "Absolutely awesome 5 years and 5 months since my Day One in Tallinn, Estonia until November 2012"
-		2: "in which I've learned gazillion of new things about how to build a service for hundreds of millions of users,"
-		3: "how to build a company, and how to grow an office from few people up to a hundred."
+	skyper: "Absolutely awesome 5 years and 5 months since my Day One in Tallinn, Estonia until November 2012 in which I've learned gazillion of new things about how to build a service for hundreds of millions of users, how to build a company, and how to grow an office from few people up to a hundred."
 	slevomat:
 		1: "I was working for one of the fastest growing on-line companies in the Czech Republic from September 2013 to June 2014."
-		2:
-			start: "I've done a talk about how we've secured the application and user data. The slides from the talk are on-line and the talk is called "
-			link: "How we have improved the security of Slevomat.cz"
-			end: " (in Czech only)."
+		2: "I've done a talk about how we've secured the application and user data. The slides from the talk are on-line and the talk is called \"How we have improved the security of Slevomat.cz\":[%s] (in Czech only)."
 	ipo48:
 		1: "The IPO48 event held at February 2011 hosted 100+ developers, designers, and entrepreneurs all with focus on modern technology."
 		2: "They had to find their teammates, build an application prototype and create a business model that would succeed in the fierce competition in the global market."
-		3:
-			start: "You can read about the event in "
-			zdrojak: "Zdroják"
-			middle1: ", at "
-			davidgrudl: "David Grudl"
-			middle2: ", and at "
-			johnvanhara: "John Vanhara"
-			end: " (all in Czech only)."
+		3: "You can read about the event in \"Zdroják\":[%s], at \"David Grudl\":[%s], and at \"John Vanhara\":[%s] (all in Czech only)."
 	simpletest:
-		1:
-			start: ""
-			link: "SimpleTest.IO"
-			end: " was an on-line tool to regularly scan your web for broken links, missing images, and other issues."
-		2:
-			start: "Originally we've intended to build "
-			selenium: "Selenium in the cloud"
-			middle: ", but with this project we've failed to overcome the obstacles of today's dynamic web, so we've "
-			gameover: "shut it down"
-			end: " in spring 2014."
+		1: "\"SimpleTest.IO\":[%s] was an on-line tool to regularly scan your web for broken links, missing images, and other issues."
+		2: "Originally we've intended to build //Selenium in the cloud//, but with this project we've failed to overcome the obstacles of today's dynamic web, so we've shut it down in spring 2014."
 	tojeono:
-		1: "In late 2003, my colleagues and I decided to purchase our own servers,"
-		2:
-			start: "which we've offered under the brand name "
-			link: "tojeono.cz"
-			end: " to use by our clients and other customers who required customized hosting services."
-		3: "I left the project after about a year and currently almost all my web sites are served from tojeono.cz servers but that's it."
-	more:
-		start: "More about me and my experience at "
-		end: "."
+		1: "In late 2003, my colleagues and I decided to purchase our own servers, which we've offered under the brand name \"tojeono.cz\":[%s] to use by our clients and other customers who required customized hosting services."
+		2: "I left the project after about a year and currently almost all my web sites are served from tojeono.cz servers but that's it."
+	more: "More about me and my experience at \"LinkedIn\":[%s]."
 homepage:
 	tagline: "I build web applications and I'm into web application security. I like to speak about secure development. My mission is to teach web developers how to build secure and fast web applications and why."
 	aboutme: "more about me"
 	contact: contact
 	trainings: "Come to my public trainings, everybody's welcome"
-	companytrainings:
-		start: "I can also prepare an in-house training, "
-		link: "in your company"
-		end: "."
-	consultancy:
-		start: "I also offer consulting for your business, "
-		link: "contact me"
-		end: "!"
+	companytrainings: "I can also prepare an in-house training, \"in your company\":[%s]."
+	consultancy: "I also offer consulting for your business, \"contact me\":[%s]!"
 	talksyourevent:
-		start:
-			1: "I'll happily do a talk at your event or conference, "
-			2: "…at your event or conference, "
-		link: "let me know"
-		end: "!"
+		upcoming: "I'll happily do a talk at your event or conference, \"let me know\":[%s]!"
+		noupcoming: "…at your event or conference, \"let me know\":[%s]!"
 articles:
 	readmore: "read more…"
 companytrainings:
 	offer: "Want to arrange a training at your company on the date you choose? I'll come to visit you at your location or anywhere else. I offer the following trainings but we can also prepare a course tailored to your requirements and knowledge of your developers."
-	publictraining: 'If you want, you can sign-up your developers to my "public trainings":[%s] as well.'
-	consulting: 'I also offer consulting for your business, please "e-mail me":[%s]!'
+	publictraining: "If you want, you can sign-up your developers to my \"public trainings\":[%s] as well."
+	consulting: "I also offer consulting for your business, please \"e-mail me\":[%s]!"
