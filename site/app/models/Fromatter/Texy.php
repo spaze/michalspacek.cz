@@ -69,7 +69,8 @@ class Texy extends \Bare\Next\Formatter\Texy
 		}
 
 		if (strncmp($link->URL, 'link:', 5) === 0) {
-			$link->URL = $this->application->getPresenter()->link(substr($link->URL, 5));
+			$args = preg_split('/[\s,]/', substr($link->URL, 5));
+			$link->URL = $this->application->getPresenter()->link(array_shift($args), $args);
 		}
 
 		return $invocation->proceed();
