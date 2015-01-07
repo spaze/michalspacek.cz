@@ -2,6 +2,8 @@ title:
 	who: "Who?"
 	contact: Contact
 	articles: "Articles"
+	companytrainings: "In-house trainings"
+	companytraining: "In-house training %s"
 header:
 	who: "Who is Michal Špaček?"
 label:
@@ -149,3 +151,7 @@ homepage:
 		end: "!"
 articles:
 	readmore: "read more…"
+companytrainings:
+	offer: "Want to arrange a training at your company on the date you choose? I'll come to visit you at your location or anywhere else. I offer the following trainings but we can also prepare a course tailored to your requirements and knowledge of your developers."
+	publictraining: 'If you want, you can sign-up your developers to my "public trainings":[%s] as well.'
+	consulting: 'I also offer consulting for your business, please "e-mail me":[%s]!'

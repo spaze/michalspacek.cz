@@ -4,14 +4,13 @@
 
 {define #content}
 <p>
-	Chcete uspořádat školení u vás ve firmě v termínu, který vám vyhovuje? Velmi rád přijedu za vámi do vašeho sídla nebo kamkoliv jinam.
-	Firmám nabízím následující školení, ale můžeme také sestavit kurz na míru, přesně podle vašich požadavků a znalostí vašich vývojářů.
+	{_messages.companytrainings.offer}
 </p>
 <ul>
 	{foreach $trainings as $item}
 		<li><a n:href="CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
 	{/foreach}
 </ul>
-<p>Své vývojáře můžete samozřejmě přihlásit i na <a n:href="Trainings:">veřejný termín mých školení.</a></p>
-<p>Nabízím i konzultace pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+<p>{_messages.companytrainings.publictraining|format:'link:Trainings:'}</p>
+<p>{_messages.companytrainings.consulting|format:'mail@michalspacek.cz'}</p>
 {/define}

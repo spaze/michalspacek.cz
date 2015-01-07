@@ -2,6 +2,8 @@ title:
 	who: "Kdo?"
 	contact: Kontakt
 	articles: "Články"
+	companytrainings: "Školení pro firmy"
+	companytraining: "Firemní školení %s"
 header:
 	who: "Kdo je Michal Špaček?"
 label:
@@ -149,3 +151,7 @@ homepage:
 		end: "!"
 articles:
 	readmore: "celý článek…"
+companytrainings:
+	offer: "Chcete uspořádat školení u vás ve firmě v termínu, který vám vyhovuje? Velmi rád přijedu za vámi do vašeho sídla nebo kamkoliv jinam. Firmám nabízím následující školení, ale můžeme také sestavit kurz na míru, přesně podle vašich požadavků a znalostí vašich vývojářů."
+	publictraining: 'Své vývojáře můžete samozřejmě přihlásit i na "veřejný termín mých školení":[%s].'
+	consulting: 'Nabízím i konzultace pro vaši firmu, "napište mi:[%s]!'
