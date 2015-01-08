@@ -45,6 +45,14 @@ label:
 	alltalks: Všechny přednášky
 	interviews: Odpovídám na otázky
 	writtenarticles: Napsal jsem
+	companytrainings: Firemní školení
+	trainingname: Název školení
+	trainingcontent: Náplň
+	traininglecturer: Lektor
+	traininglength: Délka
+	trainingcapacity: Kapacita
+	trainingprice: Cena
+	trainingorder: Objednávka
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -92,3 +100,11 @@ companytrainings:
 	offer: "Chcete uspořádat školení u vás ve firmě v termínu, který vám vyhovuje? Velmi rád přijedu za vámi do vašeho sídla nebo kamkoliv jinam. Firmám nabízím následující školení, ale můžeme také sestavit kurz na míru, přesně podle vašich požadavků a znalostí vašich vývojářů."
 	publictraining: "Své vývojáře můžete samozřejmě přihlásit i na \"veřejný termín mých školení\":[%s]."
 	consulting: "Nabízím i konzultace pro vaši firmu, \"napište mi\":[%s]!"
+	moreinfo: "Další informace a ohlasy na školení najdete na stránce veřejného školení \"%s\":[%s]."
+	lecturercontact: "kontakt na lektora"
+	length: "Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout."
+	extralength: "Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní."
+	capacity: "Neomezena, ale nad 12 účastníků zbývá méně času na dotazy."
+	price: "**%s Kč** bez DPH, %s Kč s DPH, při velmi malém počtu účastníků poskytuji výraznou slevu."
+	extraprice: "Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH."
+	signup: "Pro objednání školení mi \"napište e-mail\":[%s] a navrhněte termín, který se vám hodí."
