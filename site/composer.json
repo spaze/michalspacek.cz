@@ -1,7 +1,7 @@
 {
 	"require": {
 		"php": ">= 5.3.7",
-		"nette/nette": "2.2.6",
+		"nette/nette": "2.2.7",
 		"dg/texy": "2.6.0",
 		"spaze/bare-next": "0.2.*",
 		"kdyby/translation": "~2.0"
