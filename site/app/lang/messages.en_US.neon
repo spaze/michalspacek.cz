@@ -36,14 +36,14 @@ label:
 	otherprojects: "Other projects"
 	heartbleedcz: "Heartbleed in CZ"
 	elephpantcz: "ElePHPant"
-	trainings: My trainings
-	articles: My articles
+	mytrainings: My trainings
+	myarticles: My articles
 	allarticles: All articles
-	talks: My talks
+	mytalks: My talks
 	upcomingtalks: Upcoming talks
 	pasttalks: Talks
 	alltalks: All talks
-	interviews: Me answering questions
+	myinterviews: Me answering questions
 	writtenarticles: "Articles I've written"
 	companytrainings: In-house trainings
 	trainingname: Course name

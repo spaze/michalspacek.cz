@@ -11,7 +11,7 @@
 	</ul>
 </div>
 <hr />
-<h2 id="{_html.id.trainings}">{_messages.label.trainings}</h2>
+<h2 id="{_html.id.trainings}">{_messages.label.mytrainings}</h2>
 <p>{_messages.homepage.trainings}:</p>
 {include #list}
 <p>
@@ -19,13 +19,13 @@
 	{_messages.homepage.consultancy|format:'mail@michalspacek.cz'}
 </p>
 <hr />
-<h2 id="{_html.id.articles}">{_messages.label.articles}</h2>
+<h2 id="{_html.id.articles}">{_messages.label.myarticles}</h2>
 <div n:foreach="$articles as $article">
 	{include #itemArticle, article => $article}
 </div>
 <p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
 <hr />
-<h2 id="{_html.id.talks}">{_messages.label.talks}</h2>
+<h2 id="{_html.id.talks}">{_messages.label.mytalks}</h2>
 <h3>{_messages.label.upcomingtalks}</h3>
 <ul n:if="$upcomingTalks">
 	<li n:foreach="$upcomingTalks as $talk">
@@ -42,7 +42,7 @@
 </ul>
 <p><a n:href="Talks:">{_messages.label.alltalks}</a></p>
 <hr />
-<h2 id="{_html.id.interviews}">{_messages.label.interviews}</h2>
+<h2 id="{_html.id.interviews}">{_messages.label.myinterviews}</h2>
 <ul>
 	<li n:foreach="$interviews as $interview">
 		{include #itemInterview, interview => $interview}

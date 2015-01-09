@@ -36,14 +36,14 @@ label:
 	otherprojects: "Další projekty"
 	heartbleedcz: "Heartbleed v ČR"
 	elephpantcz: "PHP slon"
-	trainings: Školím
-	articles: Píšu články
+	mytrainings: Školím
+	myarticles: Píšu články
 	allarticles: Všechny články
-	talks: Přednáším
+	mytalks: Přednáším
 	upcomingtalks: Budu přednášet
 	pasttalks: Přednášel jsem
 	alltalks: Všechny přednášky
-	interviews: Odpovídám na otázky
+	myinterviews: Odpovídám na otázky
 	writtenarticles: Napsal jsem
 	companytrainings: Firemní školení
 	trainingname: Název školení
