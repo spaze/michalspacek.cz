@@ -53,6 +53,9 @@ label:
 	trainingcapacity: Capacity
 	trainingprice: Price
 	trainingorder: Sign-up
+	error: Error
+	homepage: Home page
+	trainings: Trainings
 contact:
 	twitter: @spazef0rze
 	uponrequest: "upon request"
@@ -108,3 +111,5 @@ companytrainings:
 	price: "**%s Kč**, %s Kč incl. VAT, significant discounts with a very small number of participants."
 	extraprice: "Base price for two-day training is %s Kč, %s Kč incl. VAT."
 	signup: "To order an in-house training, just pick a date and \"drop me an e-mail\":[%s] to sort out other details."
+error:
+	tryother: "Try other pages"

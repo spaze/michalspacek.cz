@@ -53,6 +53,9 @@ label:
 	trainingcapacity: Kapacita
 	trainingprice: Cena
 	trainingorder: Objednávka
+	error: Chyba
+	homepage: Titulní stránka
+	trainings: Školení
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -108,3 +111,5 @@ companytrainings:
 	price: "**%s Kč** bez DPH, %s Kč s DPH, při velmi malém počtu účastníků poskytuji výraznou slevu."
 	extraprice: "Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH."
 	signup: "Pro objednání školení mi \"napište e-mail\":[%s] a navrhněte termín, který se vám hodí."
+error:
+	tryother: "Zkuste jiné stránky"

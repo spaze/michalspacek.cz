@@ -9,12 +9,12 @@
 	<hr />
 	<div id="menu" class="center">
 	{block #menu}
-		Zkuste jiné stránky: <a n:href="Homepage:">Titulní stránka</a>
-		&ndash; <a n:href="Trainings:">Školení</a>
+		{_messages.error.tryother}: <a n:href="Homepage:">{_messages.label.homepage}</a>
+		&ndash; <a n:href="Trainings:">{_messages.label.trainings}</a>
 	{/block}
 	</div>
 	<hr />
-	<h2>Chyba {$errorCode}</h2>
+	<h2>{_messages.label.error} {$errorCode}</h2>
 	{include #content}
 	</div>
 {/block}
