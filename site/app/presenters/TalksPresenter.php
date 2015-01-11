@@ -1,4 +1,6 @@
 <?php
+use \Nette\Utils\Html;
+
 /**
  * Talks presenter.
  *
@@ -58,7 +60,12 @@ class TalksPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$title = \Nette\Utils\Html::el()->setText('Přednáška ')->add(strip_tags($talk->title))->add(' (')->add($talk->event)->add(')');
+		$title = Html::el()
+			->setText('Přednáška ')
+			->add(Html::el()->setText(strip_tags($talk->title)))
+			->add(Html::el()->setText(' ('))
+			->add(Html::el()->setText($talk->event))  // event is actually an Html object already coming from TexyFormatter, don't concat with anything else
+			->add(Html::el()->setText(')'));
 		$this->template->pageTitle =  $title;
 		$this->template->pageHeader = $talk->title;
 		$this->template->description = $talk->description;

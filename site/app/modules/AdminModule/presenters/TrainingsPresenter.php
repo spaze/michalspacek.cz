@@ -2,6 +2,7 @@
 namespace AdminModule;
 
 use \MichalSpacekCz\Training;
+use \Nette\Utils\Html;
 
 /**
  * Trainings presenter.
@@ -346,9 +347,9 @@ class TrainingsPresenter extends BasePresenter
 		if ($values->file->isOk()) {
 			$name = $this->trainingApplications->addFile($this->training, $values->file, $this->applicationIdsAttended);
 			$this->flashMessage(
-				\Nette\Utils\Html::el()->add('Soubor ')
-					->add(\Nette\Utils\Html::el('code')->setText($name))
-					->add(' byl přidán')
+				Html::el()->setText('Soubor ')
+					->add(Html::el('code')->setText($name))
+					->add(Html::el()->setText(' byl přidán'))
 			);
 		} else {
 			$this->flashMessage('Soubor nebyl vybrán nebo došlo k nějaké chybě při nahrávání', 'error');
