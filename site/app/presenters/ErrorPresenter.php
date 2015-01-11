@@ -35,16 +35,17 @@ class ErrorPresenter extends BasePresenter
 
 		if ($exception instanceof \Nette\Application\BadRequestException) {
 			$code = $exception->getCode();
-			// load template 403.latte or 404.latte or ... 4xx.latte
-			$this->setView(in_array($code, array(403, 404, 405, 410, 500)) ? $code : '4xx');
+			$code = (in_array($code, [403, 404, 405, 410, 500]) ? $code : '4xx');
 			// log to access.log
-			\Tracy\Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
-
+			\Tracy\Debugger::log("HTTP code {$exception->getCode()}: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
 		} else {
-			$this->setView('500'); // load template 500.latte
+			$code = '500';
 			\Tracy\Debugger::log($exception, \Tracy\Debugger::EXCEPTION); // and log exception
 		}
-		$this->template->errorCode = $this->getView();
+
+		$this->template->errorCode = $code;
+		$this->template->pageTitle = $this->translator->translate("messages.error.{$code}.title");
+		$this->template->note =  $this->translator->translate("messages.error.{$code}.note");
 	}
 
 
