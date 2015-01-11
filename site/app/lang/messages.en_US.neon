@@ -131,3 +131,6 @@ error:
 	500:
 		title: "That's Špaček's fault!"
 		note: "The server encountered an internal error and was unable to complete your request."
+forbidden:
+	title: "Forbidden"
+	spam: "Access forbidden for repeated spammy crap."

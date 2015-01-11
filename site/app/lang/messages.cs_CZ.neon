@@ -131,3 +131,6 @@ error:
 	500:
 		title: "Za to může Špaček!"
 		note: "Nastala vnitřní chyba a server nebyl schopen dokončit Váš požadavek."
+forbidden:
+	title: "Nepovoleno"
+	spam: "Přístup zakázán kvůli opakovanému spamování."
