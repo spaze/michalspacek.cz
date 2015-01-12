@@ -10,9 +10,13 @@ $(document).ready(function() {
 
 	var APPLICATION = APPLICATION || {};
 	APPLICATION.loadData = function(event) {
+		event.preventDefault();
+		if ($('#frm-application-country').val() == '' || $('#frm-application-companyId').val().replace(/ /g, '') == '') {
+			alert($('#errorCountryCompanyMissing').text());
+			return;
+		}
 		$('#loadDataControls > span').hide();
 		$('#loadDataWait').show();
-		event.preventDefault();
 		var load = $.ajax({
 			url: $('#loadData').data('url'),
 			data: {
