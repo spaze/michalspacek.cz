@@ -5,7 +5,10 @@ services:
 			- setRootDomain(%domain.root%)
 			- setTranslatedRoutes(%translatedRoutes.presenters%)
 	router: @routerFactory::createRouter
-	texyFormatter: \MichalSpacekCz\Formatter\Texy
+	texyFormatter:
+		class: \MichalSpacekCz\Formatter\Texy
+		setup:
+			- addHandlers()
 	redirections:  \MichalSpacekCz\Redirections
 	articles:  \MichalSpacekCz\Articles
 	files:     \MichalSpacekCz\Files

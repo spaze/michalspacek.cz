@@ -1232,12 +1232,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/bare-next.git",
-                "reference": "9a294d2ee7717e285252d5bd51e938884593154d"
+                "reference": "cf35f8048c2dda3f33d23bca923f8d85fbed48cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/bare-next/zipball/9a294d2ee7717e285252d5bd51e938884593154d",
-                "reference": "9a294d2ee7717e285252d5bd51e938884593154d",
+                "url": "https://api.github.com/repos/spaze/bare-next/zipball/cf35f8048c2dda3f33d23bca923f8d85fbed48cf",
+                "reference": "cf35f8048c2dda3f33d23bca923f8d85fbed48cf",
                 "shasum": ""
             },
             "require": {
@@ -1254,7 +1254,7 @@
                 "source": "https://github.com/spaze/bare-next/tree/v0.2.0",
                 "issues": "https://github.com/spaze/bare-next/issues"
             },
-            "time": "2015-01-07 15:31:14"
+            "time": "2015-01-12 01:14:14"
         },
         {
             "name": "symfony/config",

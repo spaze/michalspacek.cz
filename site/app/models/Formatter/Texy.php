@@ -48,9 +48,9 @@ class Texy extends \Bare\Next\Formatter\Texy
 	/**
 	 * @param \Texy $texy
 	 */
-	protected function addHandlers(\Texy $texy)
+	public function addHandlers()
 	{
-		$texy->addHandler('phrase', [$this, 'phraseHandler']);
+		$this->addHandler('phrase', [$this, 'phraseHandler']);
 	}
 
 
