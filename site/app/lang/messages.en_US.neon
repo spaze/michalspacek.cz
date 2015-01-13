@@ -6,6 +6,13 @@ title:
 	companytraining: "In-house training %s"
 	interviews: Interviews
 	interview: "Interview %s"
+	error403: "Here be dragons. And Špaček!"
+	error404: "Looks like Špaček does not have this!"
+	error405: "This does not work with Špaček!"
+	error410: "I was here, Špaček!"
+	error4xx: "Špaček doesn't know how to do this!"
+	error500: "That's Špaček's fault!"
+	forbidden: "Forbidden"
 header:
 	who: "Who is Michal Špaček?"
 label:
@@ -123,26 +130,13 @@ companytrainings:
 	signup: "To order an in-house training, just pick a date and \"drop me an e-mail\":[%s] to sort out other details."
 error:
 	tryother: "Try other pages"
-	403:
-		title: "Here be dragons. And Špaček!"
-		note: "You don't have permission to view this page. It's either read-only or not readable."
-	404:
-		title: "Looks like Špaček does not have this!"
-		note: "The page you requested could not be found. The address is incorrect, or that the page no longer exists."
-	405:
-		title: "This does not work with Špaček!"
-		note: "The requested method is not allowed for the URL."
-	410:
-		title: "I was here, Špaček!"
-		note: "The requested URL is no longer available on this server and there's nowhere to be redirected to."
-	4xx:
-		title: "Špaček doesn't know how to do this!"
-		note: "Your browser sent a request that this server could not understand or process."
-	500:
-		title: "That's Špaček's fault!"
-		note: "The server encountered an internal error and was unable to complete your request."
+	403: "You don't have permission to view this page. It's either read-only or not readable."
+	404: "The page you requested could not be found. The address is incorrect, or that the page no longer exists."
+	405: "The requested method is not allowed for the URL."
+	410: "The requested URL is no longer available on this server and there's nowhere to be redirected to."
+	4xx: "Your browser sent a request that this server could not understand or process."
+	500: "The server encountered an internal error and was unable to complete your request."
 forbidden:
-	title: "Forbidden"
 	spam: "Access forbidden for repeated spammy crap."
 interview:
 	detail: "Interview detail on the web"

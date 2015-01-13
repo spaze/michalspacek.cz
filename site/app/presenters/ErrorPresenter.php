@@ -44,8 +44,8 @@ class ErrorPresenter extends BasePresenter
 		}
 
 		$this->template->errorCode = $code;
-		$this->template->pageTitle = $this->translator->translate("messages.error.{$code}.title");
-		$this->template->note =  $this->translator->translate("messages.error.{$code}.note");
+		$this->template->pageTitle = $this->translator->translate("messages.title.error{$code}");
+		$this->template->note =  $this->translator->translate("messages.error.{$code}");
 	}
 
 

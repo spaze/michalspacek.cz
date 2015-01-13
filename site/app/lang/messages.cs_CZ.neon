@@ -6,6 +6,13 @@ title:
 	companytraining: "Firemní školení %s"
 	interviews: Rozhovory
 	interview: Rozhovor %s
+	error403: "Tady je Špačkovo!"
+	error404: "Tak tohle tu Špaček nemá!"
+	error405: "Tohle u Špačka nejde!"
+	error410: "Byl jsem tu, Špaček!"
+	error4xx: "Tohle Špaček neumí!"
+	error500: "Za to může Špaček!"
+	forbidden: "Nepovoleno"
 header:
 	who: "Kdo je Michal Špaček?"
 label:
@@ -123,26 +130,13 @@ companytrainings:
 	signup: "Pro objednání školení mi \"napište e-mail\":[%s] a navrhněte termín, který se vám hodí."
 error:
 	tryother: "Zkuste jiné stránky"
-	403:
-		title: "Tady je Špačkovo!"
-		note: "Nemáte právo pro přístup k požadovanému objektu. Buď je chráněn proti čtení, nebo není serverem čitelný."
-	404:
-		title: "Tak tohle tu Špaček nemá!"
-		note: "Požadovaná stránka nebyla na tomto serveru nalezena. Adresa této stránky je chybná nebo stránka neexistuje."
-	405:
-		title: "Tohle u Špačka nejde!"
-		note: "Metoda není pro požadované URL povolena."
-	410:
-		title: "Byl jsem tu, Špaček!"
-		note: "Požadované URL již není na tomto serveru k dispozici, ani není k dispozici žádná adresa k přesměrování."
-	4xx:
-		title: "Tohle Špaček neumí!"
-		note: "Váš prohlížeč vyslal požadavek, kterému tento server nerozuměl."
-	500:
-		title: "Za to může Špaček!"
-		note: "Nastala vnitřní chyba a server nebyl schopen dokončit Váš požadavek."
+	403: "Nemáte právo pro přístup k požadovanému objektu. Buď je chráněn proti čtení, nebo není serverem čitelný."
+	404: "Požadovaná stránka nebyla na tomto serveru nalezena. Adresa této stránky je chybná nebo stránka neexistuje."
+	405: "Metoda není pro požadované URL povolena."
+	410: "Požadované URL již není na tomto serveru k dispozici, ani není k dispozici žádná adresa k přesměrování."
+	4xx: "Váš prohlížeč vyslal požadavek, kterému tento server nerozuměl."
+	500: "Nastala vnitřní chyba a server nebyl schopen dokončit Váš požadavek."
 forbidden:
-	title: "Nepovoleno"
 	spam: "Přístup zakázán kvůli opakovanému spamování."
 interview:
 	detail: "Detail rozhovoru na webu"
