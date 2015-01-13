@@ -4,6 +4,8 @@ title:
 	articles: "Articles"
 	companytrainings: "In-house trainings"
 	companytraining: "In-house training %s"
+	interviews: Interviews
+	interview: "Interview %s"
 header:
 	who: "Who is Michal Špaček?"
 label:
@@ -58,6 +60,12 @@ label:
 	error: Error
 	homepage: Home page
 	trainings: Trainings
+	interviews: Interviews
+	audiorecording: "Audio recording"
+	videorecording: "Video recording"
+	dateforwhom: "Date and for whom"
+	interviewdetail: "Interview detail"
+	recording: "Recording"
 contact:
 	twitter: @spazef0rze
 	uponrequest: "upon request"
@@ -136,3 +144,5 @@ error:
 forbidden:
 	title: "Forbidden"
 	spam: "Access forbidden for repeated spammy crap."
+interview:
+	detail: "Interview detail on the web"

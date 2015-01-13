@@ -4,6 +4,8 @@ title:
 	articles: "Články"
 	companytrainings: "Školení pro firmy"
 	companytraining: "Firemní školení %s"
+	interviews: Rozhovory
+	interview: Rozhovor %s
 header:
 	who: "Kdo je Michal Špaček?"
 label:
@@ -58,6 +60,12 @@ label:
 	error: Chyba
 	homepage: Titulní stránka
 	trainings: Školení
+	interviews: Rozhovory
+	audiorecording: "Audio záznam"
+	videorecording: "Video záznam"
+	dateforwhom: "Datum a pro koho"
+	interviewdetail: "Detail rozhovoru"
+	recording: "Záznam"
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -136,3 +144,5 @@ error:
 forbidden:
 	title: "Nepovoleno"
 	spam: "Přístup zakázán kvůli opakovanému spamování."
+interview:
+	detail: "Detail rozhovoru na webu"

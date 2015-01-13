@@ -5,3 +5,6 @@ id:
 	articles: articles
 	talks: talks
 	interviews: interviews
+	eventdate: event-date
+	recording: recording
+	detail: detail

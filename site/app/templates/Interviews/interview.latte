@@ -1,16 +1,16 @@
 {define #content}
 {includeblock "../embed.latte"}
 <p n:if="$description">{$description}</p>
-<h2 id="datum-akce">Datum a pro koho</h2>
+<h2 id="{_html.id.eventdate}">{_messages.label.dateforwhom}</h2>
 <p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$sourceHref}">{$sourceName}</a></p>
 
 {if $href}
-	<h2 id="detail">Detail rozhovoru</h2>
-	<p><a href="{$href}">Detail rozhovoru na webu</a></p>
+	<h2 id="{_html.id.detail}">{_messages.label.interviewdetail}</h2>
+	<p><a href="{$href}">{_messages.interview.detail}</a></p>
 {/if}
 
-<h2 n:if="$audioHref || $videoHref" id="zaznam">Záznam</h2>
-<p n:if="$audioHref"><a href="{$audioHref}"><span class="icon icon16 audio"></span>{$audioHref}</a></p>
+<h2 n:if="$audioHref || $videoHref" id="{_html.id.recording}">{_messages.label.recording}</h2>
+<p n:if="$audioHref"><a href="{$audioHref}"><span class="icon icon16 audio" title="{_messages.label.audiorecording}"></span>{$audioHref}</a></p>
 {include #embedVideo}
-<p n:if="$videoHref"><a href="{$videoHref}"><span class="icon icon16 video"></span>{$videoHref}</a></p>
+<p n:if="$videoHref"><a href="{$videoHref}"><span class="icon icon16 video" title="{_messages.label.videorecording}"></span>{$videoHref}</a></p>
 {/define}

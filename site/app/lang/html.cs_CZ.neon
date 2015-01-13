@@ -5,3 +5,6 @@ id:
 	articles: clanky
 	talks: prednasky
 	interviews: rozhovory
+	eventdate: datum-akce
+	recording: zaznam
+	detail: detail

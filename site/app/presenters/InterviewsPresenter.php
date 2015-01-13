@@ -8,6 +8,9 @@
 class InterviewsPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Formatter\Texy */
+	protected $texyFormatter;
+
 	/** @var \MichalSpacekCz\Interviews */
 	protected $interviews;
 
@@ -17,15 +20,18 @@ class InterviewsPresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
+	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Interviews $interviews
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Interviews $interviews,
 		\MichalSpacekCz\Embed $embed
 	)
 	{
+		$this->texyFormatter = $texyFormatter;
 		$this->interviews = $interviews;
 		$this->embed = $embed;
 		parent::__construct($translator);
@@ -34,7 +40,7 @@ class InterviewsPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->pageTitle = 'Rozhovory';
+		$this->template->pageTitle = $this->translator->translate('messages.title.interviews');
 		$this->template->interviews = $this->interviews->getAll();
 	}
 
@@ -46,7 +52,7 @@ class InterviewsPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't been interviewed by {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = 'Rozhovor ' . $interview->title;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [$interview->title]);
 		$this->template->pageHeader = $interview->title;
 		$this->template->description = $interview->description;
 		$this->template->href = $interview->href;
