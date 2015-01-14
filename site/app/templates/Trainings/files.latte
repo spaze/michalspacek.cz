@@ -1,7 +1,9 @@
 {define #menu}
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Trainings:">Školení</a>
+{if $trainingName}
 &raquo; <a n:href="Trainings:training $trainingName">{$trainingTitle}</a>
+{/if}
 {/define}
 
 {define #content}

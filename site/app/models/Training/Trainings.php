@@ -37,7 +37,38 @@ class Trainings
 	}
 
 
+	/**
+	 * Get predefined training info.
+	 *
+	 * @param string $name
+	 * @return \Nette\Database\Row
+	 */
 	public function get($name)
+	{
+		return $this->getTraining($name, false);
+	}
+
+
+	/**
+	 * Get training info including custom trainings.
+	 *
+	 * @param string $name
+	 * @return \Nette\Database\Row
+	 */
+	public function getIncludingCustom($name)
+	{
+		return $this->getTraining($name, true);
+	}
+
+
+	/**
+	 * Get training info.
+	 *
+	 * @param string $name
+	 * @param boolean $includeCustom
+	 * @return \Nette\Database\Row
+	 */
+	private function getTraining($name, $includeCustom)
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -54,10 +85,15 @@ class Trainings
 				price,
 				price_company AS priceCompany,
 				student_discount AS studentDiscount,
-				materials
+				materials,
+				custom
 			FROM trainings
-			WHERE action = ?',
-			$name
+			WHERE
+				action = ?
+				AND (custom = ? OR TRUE = ?)',
+			$name,
+			$includeCustom,
+			$includeCustom
 		);
 
 		if ($result) {
@@ -169,6 +205,9 @@ class Trainings
 	}
 
 
+	/**
+	 * Get all training names without custom training names.
+	 */
 	public function getNames()
 	{
 		$result = $this->database->fetchAll(
@@ -176,6 +215,27 @@ class Trainings
 				t.id_training AS id,
 				t.action,
 				t.name
+			FROM trainings t
+			WHERE
+				NOT t.custom
+			ORDER BY
+				t.id_training'
+		);
+		return $result;
+	}
+
+
+	/**
+	 * Get all training names including custom training names.
+	 */
+	public function getNamesIncludingCustom()
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				t.id_training AS id,
+				t.action,
+				t.name,
+				t.custom
 			FROM trainings t
 			ORDER BY
 				t.id_training'

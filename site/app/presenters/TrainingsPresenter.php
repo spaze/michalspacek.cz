@@ -347,7 +347,7 @@ class TrainingsPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
 		}
 
-		$training = $this->trainings->get($name);
+		$training = $this->trainings->getIncludingCustom($name);
 		if (!$training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
@@ -371,7 +371,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->template->trainingTitle = $training->name;
-		$this->template->trainingName = $training->action;
+		$this->template->trainingName = ($training->custom ? null : $training->action);
 		$this->template->trainingDate = $application->trainingStart;
 
 		$this->template->pageTitle = 'Materiály ze školení ' . $training->name;

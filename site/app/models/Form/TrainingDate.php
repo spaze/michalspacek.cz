@@ -38,8 +38,9 @@ class TrainingDate extends \Nette\Application\UI\Form
 		$this->trainingVenues = $trainingVenues;
 
 		$trainings = array();
-		foreach ($this->trainings->getNames() as $training) {
-			$trainings[$training->id] = $training->name;
+		foreach ($this->trainings->getNamesIncludingCustom() as $training) {
+			$key = ($training->custom ? 'Na zakázku' : 'Standardní');
+			$trainings[$key][$training->id] = $training->name;
 		}
 		$this->addSelect('training', 'Školení:', $trainings)
 			->setRequired('Vyberte prosím školení');
