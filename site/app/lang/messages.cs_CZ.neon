@@ -36,6 +36,7 @@ label:
 	now: Jsem
 	before: Byl jsem
 	developer: "**Vývojář**, Zend Certified Engineer"
+	webtop100juror: "Porotce a garant v soutěži **WebTop100**"
 	node5shareholder: "Drobný akcionář prostoru **Node5**"
 	skyper: "Zaměstnanec v pražské kanceláři **Skype**"
 	slevomat: "Vývojář ve **Slevomatu**"
@@ -84,6 +85,9 @@ who:
 		1: "Zajímá mě web, bezpečnost a výkon. Stavím, bořím a testuji webové aplikace."
 		2: "Vše, co jsem se jako vývojář naučil moc rád předávám dál na svých \"školeních\":[%s]."
 		3: "Webové vývojáře chci naučit stavět bezpečnější a výkonnější weby a webové aplikace."
+	webtop100juror:
+		1: "Od roku 2011 jsem porotcem a od roku 2014 i odborným garantem pro oblast technické řešení a bezpečnost ve \"WebTop100\":[%s], největší soutěži firemních webů a digitálních řešení v ČR."
+		2: "O zkušenostech s hodnocením a o výsledcích jsem napsal několik \"článků\":[%s]."
 	node5shareholder:
 		1: "Mohl jsem si koupit auto, ale zjistil jsem, že už jedno mám."
 		2: "\"Node5\":[%s] je pražský co-workingový prostor kombinující byznys inkubátor a startup akcelerátor."

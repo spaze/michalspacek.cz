@@ -36,6 +36,7 @@ label:
 	now: Now
 	before: Before
 	developer: "A **developer**, Zend Certified Engineer"
+	webtop100juror: "**WebTop100** juror a guarantor"
 	node5shareholder: "**Node5** minor shareholder"
 	skyper: "A **Skyper** based in Prague, Czech Republic"
 	slevomat: "A developer in **Slevomat.cz**"
@@ -84,6 +85,9 @@ who:
 		1: "I'm into web, security, and performance. I build, break, and test web applications."
 		2: "As a developer, I've learned a lot and I like to pass my knowledge and experience on my \"trainings\":[%s]."
 		3: "I want to show other web developers why and how to build secure and fast web applications."
+	webtop100juror:
+		1: "Since 2011, I'm a juror and since 2014 also a guarantor for the area of technical solution and security for \"WebTop100\":[%s], the largest competition of company websites in the Czech Republic."
+		2: "I wrote several \"articles\":[%s] about the experience with the evaluation and also about the results."
 	node5shareholder:
 		1: "I could buy a car but I realized I already have one."
 		2: "\"Node5\":[%s] is a co-working space/business incubator/startup accelerator based in Prague, Czech Republic."
