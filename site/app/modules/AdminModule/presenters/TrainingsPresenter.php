@@ -345,7 +345,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 		if ($values->file->isOk()) {
-			$name = $this->trainingApplications->addFile($this->training, $values->file, $this->applicationIdsAttended);
+			$name = $this->trainingFiles->addFile($this->training, $values->file, $this->applicationIdsAttended);
 			$this->flashMessage(
 				Html::el()->setText('Soubor ')
 					->add(Html::el('code')->setText($name))
