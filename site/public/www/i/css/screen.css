@@ -193,7 +193,7 @@ div.notice {
     background-color: #EEF;
     border: 1px solid #DDF;
 }
-#slajdy-embed iframe, #zaznam-embed iframe {
+#slides-embed iframe, #video-embed iframe {
     border: 0px;
     margin: 0px;
     overflow: hidden;
