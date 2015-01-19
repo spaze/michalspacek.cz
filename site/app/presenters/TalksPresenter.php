@@ -10,6 +10,9 @@ use \Nette\Utils\Html;
 class TalksPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Formatter\Texy */
+	protected $texyFormatter;
+
 	/** @var \MichalSpacekCz\Talks */
 	protected $talks;
 
@@ -22,17 +25,20 @@ class TalksPresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
+	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Talks $talks
 	 * @param \MichalSpacekCz\Embed $embed
 	 * @param \MichalSpacekCz\Templating\Helpers $helpers
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Talks $talks,
 		\MichalSpacekCz\Embed $embed,
 		\MichalSpacekCz\Templating\Helpers $helpers
 	)
 	{
+		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;
 		$this->embed = $embed;
 		$this->helpers = $helpers;
@@ -42,7 +48,7 @@ class TalksPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->pageTitle = 'Přednášky';
+		$this->template->pageTitle = $this->translator->translate('messages.title.talks');
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
 
 		$talks = array();
@@ -60,13 +66,7 @@ class TalksPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$title = Html::el()
-			->setText('Přednáška ')
-			->add(Html::el()->setText(strip_tags($talk->title)))
-			->add(Html::el()->setText(' ('))
-			->add(Html::el()->setText($talk->event))  // event is actually an Html object already coming from TexyFormatter, don't concat with anything else
-			->add(Html::el()->setText(')'));
-		$this->template->pageTitle =  $title;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [$talk->title, $talk->event]);
 		$this->template->pageHeader = $talk->title;
 		$this->template->description = $talk->description;
 		$this->template->href = $talk->href;

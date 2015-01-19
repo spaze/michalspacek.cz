@@ -5,24 +5,24 @@
 {/define}
 {define #content}
 {includeblock "../embed.latte"}
-<p n:if="$slidesHref" id="slajdy"></p>
+<p n:if="$slidesHref" id="{_html.id.slides}"></p>
 {include #embedSlides}
-<p n:if="$slidesHref"><small><a href="{$slidesHref}"><span class="icon icon16 slides" title="Slajdy"></span>{$slidesHref}</a></small></p>
+<p n:if="$slidesHref"><small><a href="{$slidesHref}"><span class="icon icon16 slides" title="{_messages.label.slides}"></span>{$slidesHref}</a></small></p>
 
-<p n:if="$videoHref" id="zaznam"></p>
+<p n:if="$videoHref" id="{_html.id.recording}"></p>
 {include #embedVideo}
-<p n:if="$videoHref"><small><a href="{$videoHref}"><span class="icon icon16 video" title="Záznam"></span>{$videoHref}</a></small></p>
+<p n:if="$videoHref"><small><a href="{$videoHref}"><span class="icon icon16 video" title="{_messages.label.recording}"></span>{$videoHref}</a></small></p>
 
 {if $noEmbedImage && !$slidesHref && !$videoHref}
-	<p><img src="{=$noEmbedImage|staticUrl}" width="800" height="600" alt="Náhled prvního slajdu" title="Náhled prvního slajdu"><br></p>
-	<p><small>K přednášce nejsou k dispozici slajdy ani video. Alespoň prozatím.</small></p>
+	<p><img src="{=$noEmbedImage|staticUrl}" width="800" height="600" alt="{_messages.talks.preview}" title="{_messages.talks.preview}"><br></p>
+	<p><small>{_messages.talks.nomedia}</small></p>
 {/if}
 
-<h2 n:if="$description || $href" id="detail">Detail přednášky</h2>
+<h2 n:if="$description || $href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
 <p n:if="$description">{$description}</p>
-<p n:if="$href"><a href="{$href}">Detail přednášky na webu akce</a></p>
+<p n:if="$href"><a href="{$href}">{_messages.talks.detailevent}</a></p>
 
-<h2 id="datum-akce">Datum a akce</h2>
+<h2 id="{_html.id.eventdate}">{_messages.talks.dateevent}</h2>
 <p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$eventHref}">{$event}</a></p>
 
 {if $transcript}

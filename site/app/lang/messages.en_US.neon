@@ -6,6 +6,8 @@ title:
 	companytraining: "In-house training %s"
 	interviews: Interviews
 	interview: "Interview %s"
+	talks: Talks
+	talk: "Talk %s (%s)"
 	error403: "Here be dragons. And Špaček!"
 	error404: "Looks like Špaček does not have this!"
 	error405: "This does not work with Špaček!"
@@ -74,6 +76,8 @@ label:
 	dateforwhom: "Date and for whom"
 	interviewdetail: "Interview detail"
 	recording: "Recording"
+	talks: Talks
+	slides: Slides
 contact:
 	twitter: @spazef0rze
 	uponrequest: "upon request"
@@ -115,9 +119,6 @@ homepage:
 	trainings: "Come to my public trainings, everybody's welcome"
 	companytrainings: "I can also prepare an in-house training, \"in your company\":[%s]."
 	consultancy: "I also offer consulting for your business, \"contact me\":[%s]!"
-	talksyourevent:
-		upcoming: "I'll happily do a talk at your event or conference, \"let me know\":[%s]!"
-		noupcoming: "…at your event or conference, \"let me know\":[%s]!"
 articles:
 	readmore: "read more…"
 companytrainings:
@@ -144,3 +145,14 @@ forbidden:
 	spam: "Access forbidden for repeated spammy crap."
 interview:
 	detail: "Interview detail on the web"
+talks:
+	atyourevent:
+		upcoming: "I'll happily do a talk at your event or conference, \"let me know\":[%s]!"
+		noupcoming: "…at your event or conference, \"let me know\":[%s]!"
+	wastalking: "…\"in a cinema\":[%s], \"in a casino in Las Vegas\":[%s], \"in a former fallout shelter\":[%s] in Prague, Czech Republic, in pubs, at conferences, both in Czech and in English."
+	more: "…and more at \"SlideShare\":[%s] and \"Speaker Deck\":[%s]"
+	preview: "First slide preview"
+	nomedia: "No slides nor video available. At least for now."
+	detail: "Talk detail"
+	detailevent: "Details on the event website"
+	dateevent: "Date and event"

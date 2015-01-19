@@ -6,24 +6,21 @@
 	<a n:href="Talks:talk $talk->action" n:tag-if="$talk->action"><strong>{$talk->title}</strong></a><br />
 	<small>
 		<strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}
-		<span n:if="$talk->slidesHref" class="icon icon16 slides" title="Slajdy"></span>
-		<span n:if="$talk->videoHref" class="icon icon16 video" title="Záznam"></span>
+		<span n:if="$talk->slidesHref" class="icon icon16 slides" title="{_messages.label.slides}"></span>
+		<span n:if="$talk->videoHref" class="icon icon16 video" title="{_messages.label.videorecording}"></span>
 	</small>
 {/define}
 
 {define #content}
-<h2>Budu přednášet</h2>
+<h2>{_messages.label.upcomingtalks}</h2>
 <p n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
 	{include #itemTalk}
 </p>
-<p n:if="$upcomingTalks">Rád budu přednášet i na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
-<p n:if="!$upcomingTalks">&hellip;třeba na vaší akci nebo konferenci, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
-<h2>Přednášel jsem</h2>
+<p n:if="$upcomingTalks">{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
+<p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
+<h2>{_messages.label.pasttalks}</h2>
 <p>
-	&hellip;<a n:href="Talks:talk technickeChybyVasPripraviOPenizeWebtop100">v kině</a>,
-	<a n:href="Talks:talk hashStoreProfitPasswords">v kasínu v Las Vegas</a>,
-	<a n:href="Talks:talk identituBysteNeukradliIdentityManagement">v bývalém atomovém krytu</a> v Praze,
-	v hospodách, na konferencích, česky i anglicky.
+	{_messages.talks.wastalking|format:'link:Talks:talk technickeChybyVasPripraviOPenizeWebtop100':'link:Talks:talk hashStoreProfitPasswords':'link:Talks:talk identituBysteNeukradliIdentityManagement'}
 </p>
 {foreach $talks as $year => $items}
 	<h3>{$year}</h3>
@@ -31,5 +28,5 @@
 		{include #itemTalk}
 	</p>
 {/foreach}
-&hellip;a další na <a href="http://www.slideshare.net/spaze/presentations">SlideShare</a> nebo <a href="https://speakerdeck.com/u/spaze">Speaker Deck</a>
+{_messages.talks.more|format:'http://www.slideshare.net/spaze/presentations':'https://speakerdeck.com/u/spaze'}
 {/define}

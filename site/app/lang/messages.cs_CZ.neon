@@ -6,6 +6,8 @@ title:
 	companytraining: "Firemní školení %s"
 	interviews: Rozhovory
 	interview: Rozhovor %s
+	talks: Přednášky
+	talk: "Přednáška %s (%s)"
 	error403: "Tady je Špačkovo!"
 	error404: "Tak tohle tu Špaček nemá!"
 	error405: "Tohle u Špačka nejde!"
@@ -74,6 +76,8 @@ label:
 	dateforwhom: "Datum a pro koho"
 	interviewdetail: "Detail rozhovoru"
 	recording: "Záznam"
+	talks: Přednášky
+	slides: Slajdy
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -115,9 +119,6 @@ homepage:
 	trainings: "Zvu vás na následující školení, která pořádám a vedu"
 	companytrainings: "Školení mohu uspořádat také \"u vás ve firmě\":[%s]."
 	consultancy: "Nabízím i konzultaci pro vaši firmu, \"napište mi\":[%s]!"
-	talksyourevent:
-		upcoming: "Rád budu přednášet i na vaší akci nebo konferenci, \"napište mi\":[%s]!"
-		noupcoming: "…třeba na vaší akci nebo konferenci, \"napište mi\":[%s]!"
 articles:
 	readmore: "celý článek…"
 companytrainings:
@@ -144,3 +145,14 @@ forbidden:
 	spam: "Přístup zakázán kvůli opakovanému spamování."
 interview:
 	detail: "Detail rozhovoru na webu"
+talks:
+	atyourevent:
+		upcoming: "Rád budu přednášet i na vaší akci nebo konferenci, \"napište mi\":[%s]!"
+		noupcoming: "…třeba na vaší akci nebo konferenci, \"napište mi\":[%s]!"
+	wastalking: "…\"v kině\":[%s], \"v kasínu v Las Vegas\":[%s], \"v bývalém atomovém krytu\":[%s] v Praze, v hospodách, na konferencích, česky i anglicky."
+	more: "…a další na \"SlideShare\":[%s] nebo \"Speaker Deck\":[%s]"
+	preview: "Náhled prvního slajdu"
+	nomedia: "K přednášce nejsou k dispozici slajdy ani video. Alespoň prozatím."
+	detail: "Detail přednášky"
+	detailevent: "Detail přednášky na webu akce"
+	dateevent: "Datum a akce"

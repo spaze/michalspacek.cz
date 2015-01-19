@@ -32,8 +32,8 @@
 		{include #itemTalk, talk => $talk}
 	</li>
 </ul>
-<p n:if="$upcomingTalks">{_messages.homepage.talksyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
-<p n:if="!$upcomingTalks">{_messages.homepage.talksyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
+<p n:if="$upcomingTalks">{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
+<p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
 <h3>{_messages.label.pasttalks}</h3>
 <ul>
 	<li n:foreach="$talks as $talk">
