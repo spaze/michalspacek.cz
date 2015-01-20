@@ -11,6 +11,9 @@ use \Nette\Http\Response;
 class TrainingsPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Formatter\Texy */
+	protected $texyFormatter;
+
 	/** @var \MichalSpacekCz\Files */
 	protected $files;
 
@@ -44,6 +47,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
+	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Files
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
@@ -55,6 +59,7 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Files $files,
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
@@ -65,6 +70,7 @@ class TrainingsPresenter extends BasePresenter
 		\Bare\Next\Templating\Helpers $bareHelpers
 	)
 	{
+		$this->texyFormatter = $texyFormatter;
 		$this->files = $files;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
@@ -79,7 +85,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->pageTitle = 'Školení';
+		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
@@ -100,7 +106,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->template->name             = $this->training->action;
-		$this->template->pageTitle        = 'Školení ' . $this->training->name;
+		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.training', [$this->training->name]);
 		$this->template->title            = $this->training->name;
 		$this->template->description      = $this->training->description;
 		$this->template->content          = $this->training->content;
@@ -172,7 +178,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->bareHelpers);
+		$form = new \MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->translator, $this->bareHelpers);
 		$form->setApplicationFromSession($this->getSession('training'));
 		$form->onSuccess[] = $this->submittedApplication;
 	}
@@ -265,10 +271,10 @@ class TrainingsPresenter extends BasePresenter
 			$this->redirect('success', $name);
 		} catch (\UnexpectedValueException $e) {
 			\Tracy\Debugger::log($e);
-			$this->flashMessage('Přihláška vypadá jako spam, takhle by to nešlo.', 'error');
+			$this->flashMessage($this->translator->translate('messages.trainings.spammyapplication'), 'error');
 		} catch (\PDOException $e) {
 			\Tracy\Debugger::log($e, \Tracy\Debugger::ERROR);
-			$this->flashMessage('Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu.', 'error');
+			$this->flashMessage($this->translator->translate('messages.trainings.errorapplication'), 'error');
 		}
 	}
 
@@ -325,7 +331,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->template->name             = $training->action;
-		$this->template->pageTitle        = 'Ohlasy na školení ' . $training->name;
+		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
 		$this->template->reviews = $this->trainings->getReviews($name);
@@ -374,7 +380,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingName = ($training->custom ? null : $training->action);
 		$this->template->trainingDate = $application->trainingStart;
 
-		$this->template->pageTitle = 'Materiály ze školení ' . $training->name;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingmaterials', [$training->name]);
 		$this->template->files = $files;
 	}
 
@@ -401,13 +407,13 @@ class TrainingsPresenter extends BasePresenter
 
 		$date = $this->dates[$session->trainingId];
 		if ($date->tentative) {
-			$this->flashMessage('Díky, přihláška odeslána! Dám vám vědět, jakmile budu znát přesný termín.');
+			$this->flashMessage($this->translator->translate('messages.trainings.submitted.tentative'));
 		} else {
-			$this->flashMessage('Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní.');
+			$this->flashMessage($this->translator->translate('messages.trainings.submitted.confirmed'));
 		}
 
 		$this->template->name             = $training->action;
-		$this->template->pageTitle        = 'Přihláška na ' . $training->name;
+		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingapplication', [$training->name]);
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
 		$this->template->lastFreeSeats    = false;

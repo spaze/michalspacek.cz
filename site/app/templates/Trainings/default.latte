@@ -3,7 +3,7 @@
 {/define}
 
 {define #list}
-<div n:if="$lastFreeSeats" class="flash notice"><strong>Ještě zbývá posledních pár míst, přihlaste se!</strong></div>
+<div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
 <ul>
  	{foreach $upcomingTrainings as $item}
 		<li>
@@ -20,14 +20,17 @@
 {/define}
 
 {define #content}
-<p>Zvu vás na školení, která pořádám. Dříve je vedl <a href="http://www.vrana.cz">Jakub Vrána</a> a já jsem je po něm <a href="http://php.vrana.cz/predstavuji-nove-skolitele.php">převzal</a>.</p>
+<p>{_messages.trainings.welcome|format:'http://www.vrana.cz':'http://php.vrana.cz/predstavuji-nove-skolitele.php'}</p>
 {include #list}
-<p>Školení mohu uspořádat také <a n:href="CompanyTrainings:">u vás ve firmě</a>. Nabízím i&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!</p>
+<p>
+	{_messages.trainings.companytraining|format:'link:CompanyTrainings:'}
+	{_messages.trainings.consultancy|format:'mailto:mail@michalspacek.cz'}
+</p>
 <hr />
-<p><small>Rádi byste se naučili něco dalšího? Doporučuji absolvovat třeba tato <strong>partnerská školení</strong>:</small></p>
+<p><small>{_messages.trainings.partnertrainings.intro|format}</small></p>
 <ul>
-	<li><small><a href="http://php.vrana.cz/skoleni-navrh-a-pouzivani-mysql-databaze.php">Návrh a používání MySQL databáze</a> a navazující <a href="http://php.vrana.cz/skoleni-konfigurace-a-vykonnost-mysql.php">Konfigurace a výkonnost MySQL</a> od Antonína Faltýnka</small></li>
-	<li><small><a href="http://www.skoleniphp.cz/skoleni-nette-vyvoj-webovych-aplikaci">Vývoj webových aplikací v Nette Framework</a> od Davida Grudla</small></li>
-	<li><small><a href="http://akademie.medio.cz/vyvoj-webovych-aplikaci">Pokročilý vývoj a testování aplikací</a> od Václava Purcharta a Ondřeje Mirtese v rámci <a href="http://akademie.medio.cz/">Medio Akademie</a></small></li>
+	<li><small>{_messages.trainings.partnertrainings.mysql|format:'http://php.vrana.cz/skoleni-navrh-a-pouzivani-mysql-databaze.php':'http://php.vrana.cz/skoleni-konfigurace-a-vykonnost-mysql.php'}</small></li>
+	<li><small>{_messages.trainings.partnertrainings.nette|format:'http://www.skoleniphp.cz/skoleni-nette-vyvoj-webovych-aplikaci'}</small></li>
+	<li><small>{_messages.trainings.partnertrainings.advanceddevelopment|format:'http://akademie.medio.cz/vyvoj-webovych-aplikaci':'http://akademie.medio.cz/'}</small></li>
 </ul>
 {/define}

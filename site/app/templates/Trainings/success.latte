@@ -1,6 +1,6 @@
 {define #menu}
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
-&raquo; <a n:href="Trainings:">Školení</a>
+&raquo; <a n:href="Trainings:">{_messages.label.trainings}</a>
 &raquo; <a n:href="Trainings:training $name">{$title}</a>
 {/define}
 
@@ -10,16 +10,16 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form application}
 <fieldset>
-	<legend>Termín</legend>
+	<legend>{_messages.label.date}</legend>
 	<table>
 		<tr>
 			<th>{$form[trainingId]->caption}</th>
-			<td>{if $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/if}, {$venueCity}{if $tentative} (předběžný termín){/if}</td>
+			<td>{if $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/if}, {$venueCity}{if $tentative} ({_messages.label.tentativedate}){/if}</td>
 		</tr>
 	</table>
 </fieldset>
-<fieldset id="ucastnik">
-	<legend>Účastník</legend>
+<fieldset id="{_html.id.participant}">
+	<legend>{_messages.label.participant}</legend>
 	<table>
 		<tr>
 			<th>{$form[name]->caption}</th><td>{$form[name]->value}</td>
@@ -28,7 +28,7 @@
 	</table>
 </fieldset>
 <fieldset>
-	<legend>Fakturační údaje <small>(nepovinné)</small></legend>
+	<legend>{_messages.label.companydetails} <small>({_messages.label.optional})</small></legend>
 	<table>
 		<tr>
 			<th>{$form[companyId]->caption}</th><td>{$form[companyId]->value}</td>
@@ -50,9 +50,12 @@
 <p><strong>{$form[note]->caption}</strong> {$form[note]->value}</p>
 {/form application}
 <hr />
-<p><a n:href="Trainings:application#prihlaska $name">Přihlaste dalšího účastníka</a></p>
+<p>
+	{capture $link}Trainings:application#{_html.id.application}{/capture}
+	<a n:href="$link $name">{_messages.trainings.addanother}</a>
+</p>
 
-<p>Přijďte i na další školení, která pořádám a vedu:</p>
+<p>{_messages.trainings.cometoothertrainings}</p>
 {include #list}
 
 {/define}

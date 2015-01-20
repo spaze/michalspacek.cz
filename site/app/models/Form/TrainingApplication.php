@@ -10,6 +10,9 @@ namespace MichalSpacekCz\Form;
 class TrainingApplication extends Form
 {
 
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 	/** @var \Bare\Next\Templating\Helpers */
 	protected $bareHelpers;
 
@@ -17,25 +20,28 @@ class TrainingApplication extends Form
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 * @param array $dates
+	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \Bare\Next\Templating\Helpers $bareHelpers
 	 */
 	public function __construct(
 		\Nette\ComponentModel\IContainer $parent,
 		$name,
 		array $dates,
+		\Nette\Localization\ITranslator $translator,
 		\Bare\Next\Templating\Helpers $bareHelpers
 	)
 	{
 		parent::__construct($parent, $name);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
+		$this->translator = $translator;
 		$this->bareHelpers = $bareHelpers;
 
 		$inputDates = array();
 		foreach ($dates as $date) {
 			$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
 			$start = $this->bareHelpers->localDate($date->start, 'cs', $format);
-			$inputDates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (předběžný termín)' : '');
+			$inputDates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '');
 		}
 
 		$label = 'Termín školení:';

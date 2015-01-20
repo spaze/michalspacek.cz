@@ -8,6 +8,11 @@ title:
 	interview: Rozhovor %s
 	talks: Přednášky
 	talk: "Přednáška %s (%s)"
+	trainings: "Školení"
+	training: "Školení %s"
+	trainingreviews: "Ohlasy na školení %s"
+	trainingmaterials: "Materiály ze školení %s"
+	trainingapplication: "Přihláška na %s"
 	error403: "Tady je Špačkovo!"
 	error404: "Tak tohle tu Špaček nemá!"
 	error405: "Tohle u Špačka nejde!"
@@ -78,6 +83,17 @@ label:
 	recording: "Záznam"
 	talks: Přednášky
 	slides: Slajdy
+	application: "přihláška"
+	trainingreviews: "Ohlasy na školení"
+	date: "Termín"
+	tentativedate: "předběžný termín"
+	participant: "Účastník"
+	companydetails: "Fakturační údaje"
+	optional: "nepovinné"
+	errors: "Chyby"
+	prerequisites: "Předpoklady"
+	intendedfor: "Určeno pro"
+	signup: "přihlásit"
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -156,3 +172,42 @@ talks:
 	detail: "Detail přednášky"
 	detailevent: "Detail přednášky na webu akce"
 	dateevent: "Datum a akce"
+trainings:
+	spammyapplication: "Přihláška vypadá jako spam, takhle by to nešlo."
+	errorapplication: "Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu."
+	submitted:
+		tentative: "Díky, přihláška odeslána! Dám vám vědět, jakmile budu znát přesný termín."
+		confirmed: "Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní."
+	fewseatsleft: "Ještě zbývá posledních pár míst, přihlaste se!"
+	welcome: "Zvu vás na školení, která pořádám. Dříve je vedl \"Jakub Vrána\":[%s] a já jsem je po něm \"převzal\":[%s]."
+	companytraining: "Školení mohu uspořádat také \"u vás ve firmě\":[%s]."
+	consultancy: "Nabízím i konzultaci pro vaši firmu, \"napište mi\":[%s]!"
+	partnertrainings:
+		intro: "Rádi byste se naučili něco dalšího? Doporučuji absolvovat třeba tato **partnerská školení**:"
+		mysql: "\"Návrh a používání MySQL databáze\":[%s] a navazující \"Konfigurace a výkonnost MySQL\":[%s] od Antonína Faltýnka"
+		nette: "\"Vývoj webových aplikací v Nette Framework\":[%s] od Davida Grudla"
+		advanceddevelopment: "\"Pokročilý vývoj a testování aplikací\":[%s] od Václava Purcharta a Ondřeje Mirtese v rámci \"Medio Akademie\":[%s]"
+	files:
+		thankyou: "Díky za účast na školení %s dne %s."
+		download: "Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili."
+	moretrainings: "Rád Vás přivítám i na nějakém dalším školení, které \"pořádám\":[%s]."
+	more: "více…"
+	jointhem: "Přidejte se k těmto účastníkům a \"přihlaste se\":[%s] na školení \"%s\":[%s]!"
+	addanother: "Přihlaste dalšího účastníka"
+	cometoothertrainings: "Přijďte i na další školení, která pořádám a vedu:"
+	signuperrors: "Přihláška nebyla odeslána, předtím než se ji pokusíte odeslat znovu, opravte následující chyby:"
+	loaddata:
+		title: "načíst další údaje z rejstříku dle IČO"
+		loadrest: "načíst zbytek"
+		wait: "čekejte…"
+		notfound: "nenalezeno,"
+		error: "chyba,"
+		again: "znovu"
+		countrycompanymissing: "Nejdříve vyberte zemi a zadejte IČ"
+	lecturercontact: "kontakt na lektora"
+	date:
+		one: "Termín a místo"
+		more: "Termíny a místa"
+	lunchbreak: "hodinová přestávka na oběd"
+	tentativedate: "**Předběžný termín** - přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát."
+	extendedtime: "Školení se dle situace může až o hodinu protáhnout."

@@ -9,3 +9,18 @@ id:
 	recording: zaznam
 	detail: detail
 	slides: slajdy
+	application: prihlaska
+	reviews: ohlasy
+	participant: ucastnik
+	errors: chyby
+	title: nazev
+	content: napln
+	upsell: upoutavka
+	lecturer: lektor
+	prerequisites: predpoklady
+	intendedfor: urceno-pro
+	date: termin
+	pastdates: uskutecnene-terminy
+	capacity: kapacita
+	price: cena
+	materials: materialy

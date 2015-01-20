@@ -9,3 +9,18 @@ id:
 	recording: recording
 	detail: detail
 	slides: slides
+	application: application
+	reviews: reviews
+	participant: participant
+	errors: errors
+	title: title
+	content: content
+	upsell: upsell
+	lecturer: lecturer
+	prerequisites: prerequisites
+	intendedfor: intended-for
+	date: date
+	pastdates: past-dates
+	capacity: capacity
+	price: price
+	materials: materials

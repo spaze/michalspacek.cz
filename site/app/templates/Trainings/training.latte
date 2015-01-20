@@ -1,22 +1,22 @@
 {define #form}
 {form application}
-<fieldset id="chyby" n:if="$form->hasErrors()">
-	<legend><strong>Chyby</strong></legend>
-	<strong>Přihláška nebyla odeslána, předtím než se ji pokusíte odeslat znovu, opravte následující chyby:</strong>
+<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
+	<legend><strong>{_messages.label.errors}</strong></legend>
+	<strong>{_messages.trainings.signuperrors}</strong>
 	<ul>
 		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
 	</ul>
 </fieldset>
 <fieldset>
-	<legend>Termín</legend>
+	<legend>{_messages.label.date}</legend>
 	<table>
 		<tr>
 			<th>{label trainingId /}</th><td>{input trainingId}</td>
 		</tr>
 	</table>
 </fieldset>
-<fieldset id="ucastnik">
-	<legend>Účastník</legend>
+<fieldset id="{_html.id.participant}">
+	<legend>{_messages.label.participant}</legend>
 	<table>
 		<tr>
 			<th>{label name /}</th><td>{input name}</td>
@@ -25,7 +25,7 @@
 	</table>
 </fieldset>
 <fieldset>
-	<legend>Fakturační údaje <small>(nepovinné)</small></legend>
+	<legend>{_messages.label.companydetails} <small>({_messages.label.optional})</small></legend>
 	<table id="company">
 		<tr>
 			<th>{label country /}</th><td>{input country}</td>
@@ -35,12 +35,12 @@
 			<td class="short">
 				{input companyId}
 				<small id="loadDataControls">
-					<span id="loadData" data-url="{link :Api:Company:}"><a href="" title="načíst další údaje z rejstříku dle IČO">načíst zbytek</a></span>
-					<span id="loadDataWait">čekejte&hellip;</span>
-					<span id="loadDataNotFound">nenalezeno, </span>
-					<span id="loadDataError">chyba, </span>
-					<span id="loadDataAgain"><a href="" title="načíst další údaje z rejstříku dle IČO">znovu</a></span>
-					<span id="errorCountryCompanyMissing">Nejdříve vyberte zemi a zadejte IČ</span>
+					<span id="loadData" data-url="{link :Api:Company:}"><a href="" title="{_messages.trainings.loaddata.title}">{_messages.trainings.loaddata.loadrest}</a></span>
+					<span id="loadDataWait">{_messages.trainings.loaddata.wait}</span>
+					<span id="loadDataNotFound">{_messages.trainings.loaddata.notfound} </span>
+					<span id="loadDataError">{_messages.trainings.loaddata.error} </span>
+					<span id="loadDataAgain"><a href="" title="{_messages.trainings.loaddata.title}">{_messages.trainings.loaddata.again}</a></span>
+					<span id="errorCountryCompanyMissing">{_messages.trainings.loaddata.countrycompanymissing}</span>
 				</small>
 			</td>
 			<th class="short">{label companyTaxId /}</th><td>{input companyTaxId}</td>
@@ -63,42 +63,42 @@
 {define #content}
 <p>{$description}</p>
 
-<div n:if="$lastFreeSeats" class="flash notice"><strong>Ještě zbývá posledních pár míst, přihlaste se!</strong></div>
+<div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
 
 <div class="vcalendar">
-<h2 id="nazev">Název školení</h2>
+<h2 id="{_html.id.title}">{_messages.label.trainingname}</h2>
 <p><strong>{$title}</strong></p>
 <hr />
 
-<h2 id="napln">Náplň</h2>
+<h2 id="{_html.id.content}">{_messages.label.trainingcontent}</h2>
 <div>{$content}</div>
 
-<p n:if="$upsell" id="upoutavka"><span class="icon icon16"></span><small>{$upsell}</small></p>
+<p n:if="$upsell" id="{_html.id.upsell}"><span class="icon icon16"></span><small>{$upsell}</small></p>
 <hr />
 
-<h2 id="lektor">{_'Lektor'}</h2>
-<p>{_'Michal Špaček'} <small>(<a n:href="Contact:">{_'kontakt na lektora'}</a>)</small></p>
+<h2 id="{_html.id.lecturer}">{_messages.label.traininglecturer}</h2>
+<p>Michal Špaček <small>(<a n:href="Contact:">{_messages.trainings.lecturercontact}</a>)</small></p>
 <hr />
 
-<h2 id="predpoklady">Předpoklady</h2>
+<h2 id="{_html.id.prerequisites}">{_messages.label.prerequisites}</h2>
 <p>{$prerequisites}</p>
 <hr />
 
-<h2 id="urcenopro">Určeno pro</h2>
+<h2 id="{_html.id.intendedfor}">{_messages.label.intendedfor}</h2>
 <p>{$audience}</p>
 <hr />
 
-<div id="termin">
-<h2>{if count($dates) > 1}Termíny a místa{else}Termín a místo{/if}</h2>
+<div id="{_html.id.date}">
+<h2>{if count($dates) > 1}{_messages.trainings.date.more}{else}{_messages.trainings.date.one}{/if}</h2>
 <div n:foreach="$dates as $date" class="vevent">
 	<p>
 		<strong>{if $date->tentative}{$date->start|localdate:'cs':'%B %Y'}{else}{$date->start|date:'j. n. Y'}{/if}</strong>
 		<span class="summary">{$date->venueCity}</span>,
 		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>,
-		hodinová přestávka na oběd
-		<small>(<a href="#prihlaska" data-id="{$date->dateId}" class="url">přihlásit</a>)</small>
+		{_messages.trainings.lunchbreak}
+		<small>(<a href="#{_html.id.application}" data-id="{$date->dateId}" class="url">{_messages.label.signup}</a>)</small>
 		{if $date->tentative}
-			<br /><small><strong>Předběžný termín</strong> &mdash; přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát.</small>
+			<br /><small>{_messages.trainings.tentativedate|format}</small>
 		{/if}
 		{if $date->cooperationDescription}<br /><small>{$date->cooperationDescription}</small>{/if}
 	</p>
@@ -110,11 +110,11 @@
 	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
 	</div>
 </div>
-<p><small>Školení se dle situace může až o hodinu protáhnout.</small></p>
+<p><small>{_messages.trainings.extendedtime}</small></p>
 </div>
-<p id="uskutecnene-terminy">
+<p id="{_html.id.pastdates}">
 	<small>
-	<a href="#uskutecnene-terminy">Již uskutečněné termíny</a><span id="uskutecnene-terminy-container">{foreach $pastTrainingsMe as $date}{first}:{/first}
+	<a href="#{_html.id.pastdates}" id="pastDates-link">Již uskutečněné termíny</a><span id="pastDates-container">{foreach $pastTrainingsMe as $date}{first}:{/first}
 		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}
 	{/foreach}
 	{foreach $pastTrainingsJakub as $date}
@@ -126,21 +126,21 @@
 </p>
 <hr />
 
-<h2 id="kapacita">Kapacita</h2>
+<h2 id="{_html.id.capacity}">Kapacita</h2>
 <p>Nejvýše {$capacity} účastníků</p>
 <hr />
 
-<h2 id="cena">Cena</h2>
+<h2 id="{_html.id.price}">Cena</h2>
 <p><strong>{$price} Kč</strong> bez DPH, {$priceVat} Kč s DPH{ifset $studentDiscount}, {$studentDiscount}% sleva pro studenty{/ifset}</p>
 <hr />
 
-<h2 id="materialy">Materiály</h2>
+<h2 id="{_html.id.materials}">Materiály</h2>
 <p>{$materials}</p>
 </div>
 <hr />
 
 {if $reviews}
-<div id="ohlasy">
+<div id="{_html.id.reviews}">
 <h2>Ohlasy na školení</h2>
 {foreach $reviews as $review}
 	<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
@@ -151,7 +151,7 @@
 <hr />
 {/if}
 
-<h2 id="prihlaska">Přihláška</h2>
+<h2 id="{_html.id.application}">Přihláška</h2>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 
 {include #form}
