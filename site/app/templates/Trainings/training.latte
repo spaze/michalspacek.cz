@@ -114,11 +114,11 @@
 </div>
 <p id="{_html.id.pastdates}">
 	<small>
-	<a href="#{_html.id.pastdates}" id="pastDates-link">Již uskutečněné termíny</a><span id="pastDates-container">{foreach $pastTrainingsMe as $date}{first}:{/first}
+	<a href="#{_html.id.pastdates}" id="pastDates-link">{_messages.trainings.pastdates}</a><span id="pastDates-container">{foreach $pastTrainingsMe as $date}{first}:{/first}
 		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}
 	{/foreach}
 	{foreach $pastTrainingsJakub as $date}
-		{first}Termíny, které školil <a href="{$originalHref}">Jakub Vrána</a>:{/first}
+		{first}{_messages.trainings.pastdatesvrana|format:$originalHref}{/first}
 		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}
 	{/foreach}
 	</span>
@@ -126,41 +126,41 @@
 </p>
 <hr />
 
-<h2 id="{_html.id.capacity}">Kapacita</h2>
-<p>Nejvýše {$capacity} účastníků</p>
+<h2 id="{_html.id.capacity}">{_messages.label.trainingcapacity}</h2>
+<p>{_messages.trainings.capacity|format:$capacity}</p>
 <hr />
 
-<h2 id="{_html.id.price}">Cena</h2>
-<p><strong>{$price} Kč</strong> bez DPH, {$priceVat} Kč s DPH{ifset $studentDiscount}, {$studentDiscount}% sleva pro studenty{/ifset}</p>
+<h2 id="{_html.id.price}">{_messages.label.trainingprice}</h2>
+<p>{_messages.trainings.price|format:$price:$priceVat}{ifset $studentDiscount}, {_messages.trainings.studentdiscount|format:$studentDiscount}{/ifset}</p>
 <hr />
 
-<h2 id="{_html.id.materials}">Materiály</h2>
+<h2 id="{_html.id.materials}">{_messages.label.materials}</h2>
 <p>{$materials}</p>
 </div>
 <hr />
 
 {if $reviews}
 <div id="{_html.id.reviews}">
-<h2>Ohlasy na školení</h2>
+<h2>{_messages.label.trainingreviews}</h2>
 {foreach $reviews as $review}
 	<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
-	<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">více&hellip;</a>)</small></p></div>
+	<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
 {/foreach}
 </div>
-<p><a n:href="Trainings:reviews $name">Všechny ohlasy</a></p>
+<p><a n:href="Trainings:reviews $name">{_messages.trainings.allreviews}</a></p>
 <hr />
 {/if}
 
-<h2 id="{_html.id.application}">Přihláška</h2>
+<h2 id="{_html.id.application}">{_messages.label.application}</h2>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 
 {include #form}
 
-<p><small>Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín.</small></p>
-<p><small>Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, &hellip;), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu.</small></p>
+<p><small>{_messages.trainings.datainvoice}</small></p>
+<p><small>{_messages.trainings.conditions}</small></p>
 
 <p>
-	Školení v tomto rozsahu je možné <a n:href="CompanyTrainings:training $name">uspořádat i ve vaší firmě</a>.
-	Nabízím i&nbsp;konzultaci pro vaši firmu, <a href="mailto:mail&#x40;michalspacek.cz">napište mi</a>!
+	{_messages.trainings.companythistraining|format:"CompanyTrainings:training $name"}
+	{_messages.trainings.consultancy|format:'mailto:mail@michalspacek.cz'}
 </p>
 {/define}

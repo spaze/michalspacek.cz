@@ -83,7 +83,8 @@ label:
 	recording: "Záznam"
 	talks: Přednášky
 	slides: Slajdy
-	application: "přihláška"
+	application: "Přihláška"
+	lowercaseapplication: "přihláška"
 	trainingreviews: "Ohlasy na školení"
 	date: "Termín"
 	tentativedate: "předběžný termín"
@@ -94,6 +95,7 @@ label:
 	prerequisites: "Předpoklady"
 	intendedfor: "Určeno pro"
 	signup: "přihlásit"
+	materials: "Materiály"
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -211,3 +213,12 @@ trainings:
 	lunchbreak: "hodinová přestávka na oběd"
 	tentativedate: "**Předběžný termín** - přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát."
 	extendedtime: "Školení se dle situace může až o hodinu protáhnout."
+	pastdates: "Již uskutečněné termíny"
+	pastdatesvrana: "Termíny, které školil \"Jakub Vrána\":[%s]:"
+	capacity: "Nejvýše %s účastníků"
+	price: "**%s Kč** bez DPH, %s Kč s DPH"
+	studentdiscount: "%s%% sleva pro studenty"
+	allreviews: "Všechny ohlasy"
+	datainvoice: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
+	conditions: "Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, …), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu."
+	companythistraining: "Školení v tomto rozsahu je možné \"uspořádat i ve vaší firmě\":[%s]."

@@ -8,7 +8,7 @@
 <p>
 	{$description}
 	{capture $link}Trainings:training#{_html.id.application}{/capture}
-	<small>(<a n:href="$link $name">{_messages.label.application}</a>)</small>
+	<small>(<a n:href="$link $name">{_messages.label.lowercaseapplication}</a>)</small>
 </p>
 {if $reviews}
 	<div id="{_html.id.reviews}">
