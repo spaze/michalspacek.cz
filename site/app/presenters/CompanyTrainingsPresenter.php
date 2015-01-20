@@ -49,7 +49,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	{
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 		$this->template->name = $training->action;
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->name]);
