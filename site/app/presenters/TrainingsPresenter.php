@@ -283,7 +283,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		if (!isset($this->dates[$values->trainingId])) {
 			$this->logData($values, $name);
-			$message = "Training date id {$values->trainingId} is not an upcoming training, should be one of " . implode(', ', $dateIds);
+			$message = "Training date id {$values->trainingId} is not an upcoming training, should be one of " . implode(', ', array_keys($this->dates));
 			throw new \OutOfBoundsException($message);
 		}
 	}
