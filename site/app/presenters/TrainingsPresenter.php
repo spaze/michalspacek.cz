@@ -405,6 +405,11 @@ class TrainingsPresenter extends BasePresenter
 			$this->redirect('training', $name);
 		}
 
+		if (!isset($this->dates[$session->trainingId])) {
+			$date = $this->trainingDates->get($session->trainingId);
+			$this->redirect('success', $date->action);
+		}
+
 		$date = $this->dates[$session->trainingId];
 		if ($date->tentative) {
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.tentative'));
