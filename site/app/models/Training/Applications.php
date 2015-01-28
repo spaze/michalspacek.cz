@@ -190,7 +190,7 @@ class Applications
 	}
 
 
-	public function addInvitation(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
+	public function addInvitation(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
 	{
 		return $this->insertApplication(
 			$training,
@@ -205,13 +205,14 @@ class Applications
 			$companyId,
 			$companyTaxId,
 			$note,
+			$equipment,
 			Statuses::STATUS_TENTATIVE,
 			self::DEFAULT_SOURCE
 		);
 	}
 
 
-	public function addApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
+	public function addApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
 	{
 		return $this->insertApplication(
 			$training,
@@ -226,13 +227,14 @@ class Applications
 			$companyId,
 			$companyTaxId,
 			$note,
+			$equipment,
 			Statuses::STATUS_SIGNED_UP,
 			self::DEFAULT_SOURCE
 		);
 	}
 
 
-	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $status, $source, $date = null)
+	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $status, $source, $date = null)
 	{
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
 			throw new \RuntimeException("Invalid initial status {$status}");
@@ -261,6 +263,7 @@ class Applications
 			'company_id'           => $companyId,
 			'company_tax_id'       => $companyTaxId,
 			'note'                 => $note,
+			'equipment'            => $equipment,
 			'key_status'           => $statusId,
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
@@ -277,9 +280,9 @@ class Applications
 	}
 
 
-	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
+	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
 	{
-		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note) {
+		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment) {
 			$this->updateApplicationData(
 				$applicationId,
 				$name,
@@ -291,14 +294,15 @@ class Applications
 				$country,
 				$companyId,
 				$companyTaxId,
-				$note
+				$note,
+				$equipment
 			);
 		});
 		return $applicationId;
 	}
 
 
-	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false)
+	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false)
 	{
 		if ($paid) {
 			$paid = new \DateTime($paid);
@@ -318,6 +322,7 @@ class Applications
 				'company_id'     => $companyId,
 				'company_tax_id' => $companyTaxId,
 				'note'           => $note,
+				'equipment'      => $equipment,
 				'price'          => ($price || $discount ? $price : null),
 				'vat_rate'       => ($vatRate ?: null),
 				'price_vat'      => ($priceVat ?: null),
@@ -375,7 +380,8 @@ class Applications
 				a.price_vat AS priceVat,
 				a.discount,
 				a.invoice_id AS invoiceId,
-				a.paid
+				a.paid,
+				a.equipment
 			FROM
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date
@@ -410,7 +416,8 @@ class Applications
 				a.country,
 				a.company_id AS companyId,
 				a.company_tax_id AS companyTaxId,
-				a.note
+				a.note,
+				a.equipment
 			FROM
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date

@@ -13,13 +13,19 @@ class TrainingApplicationAdmin extends TrainingApplication
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
+	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \Nette\Localization\ITranslator $translator)
 	{
 		\Nette\Application\UI\Form::__construct($parent, $name);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
+		$this->translator = $translator;
+
 		$this->addAttendee($this);
+		$this->addAttributes($this);
+		$this->getComponent('equipment')->caption = 'Vlastní počítač:';
+
 		$this->addCheckbox('familiar', 'Tykání:');
 		$this->addCompany($this);
 		$this->addCountry($this);
@@ -70,6 +76,7 @@ class TrainingApplicationAdmin extends TrainingApplication
 			'discount' => $application->discount,
 			'invoiceId' => $application->invoiceId,
 			'paid' => $application->paid,
+			'equipment' => $application->equipment,
 		);
 		$this->setDefaults($values);
 		return $this;

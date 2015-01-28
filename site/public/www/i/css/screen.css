@@ -211,3 +211,8 @@ div.notice {
     margin: 0px 4em 0px 0px;
 }
 #loadDataControls > span { display: none; }
+#equipment input { width: auto; }
+#equipment div {
+    float: left;
+    margin: 0 0.4em;
+}

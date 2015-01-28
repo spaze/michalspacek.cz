@@ -261,6 +261,7 @@ class TrainingsPresenter extends BasePresenter
 				$application->companyId,
 				$application->companyTaxId,
 				$application->note,
+				$application->equipment,
 				$values->status,
 				$values->source,
 				$values->date
@@ -298,7 +299,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName);
+		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName, $this->translator);
 		$form->setApplication($this->application);
 		$form->onSuccess[] = $this->submittedApplication;
 		return $form;
@@ -321,6 +322,7 @@ class TrainingsPresenter extends BasePresenter
 			$values->companyId,
 			$values->companyTaxId,
 			$values->note,
+			$values->equipment,
 			$values->price,
 			$values->vatRate / 100,
 			$values->priceVat,

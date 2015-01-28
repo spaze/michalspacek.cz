@@ -56,6 +56,7 @@ class TrainingApplication extends Form
 		}
 
 		$this->addAttendee($this);
+		$this->addAttributes($this);
 		$this->addCompany($this);
 		$this->addNote($this);
 		$this->addCountry($this);
@@ -74,6 +75,18 @@ class TrainingApplication extends Form
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(self::EMAIL, 'Zadejte platnou e-mailovou adresu')
 			->addRule(self::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200);
+	}
+
+
+	protected function addAttributes(\Nette\Forms\Container $container)
+	{
+		$options = array(
+			0 => $this->translator->translate('messages.label.no'),
+			1 => $this->translator->translate('messages.label.yes'),
+		);
+		$container->addRadioList('equipment', 'Přinesete si vlastní počítač?', $options)
+			->setRequired('Přinesete si vlastní počítač?')
+			->getSeparatorPrototype()->setName('div');
 	}
 
 
@@ -137,6 +150,7 @@ class TrainingApplication extends Form
 			'companyId' => $application->companyId,
 			'companyTaxId' => $application->companyTaxId,
 			'note' => $application->note,
+			'equipment' => $application->equipment,
 		);
 		$this->setDefaults($values);
 		return $this;

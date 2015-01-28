@@ -18,7 +18,9 @@ $(document).ready(function() {
 			$(this).attr('id', function(i, value) {
 				return value.replace(/^frm-applications-applications-\d+-/, 'frm-applications-applications-' + index + '-');
 			});
-			$(this).attr('data-nette-rules', $(this).attr('data-nette-rules').replace(/'applications\[\d+\]/, "'applications[" + index + ']'));
+			if ($(this).attr('data-nette-rules') !== undefined) {
+				$(this).attr('data-nette-rules', $(this).attr('data-nette-rules').replace(/'applications\[\d+\]/, "'applications[" + index + ']'));
+			}
 		});
 	};
 	$('#pridat-ucastniky .add').click(function() {

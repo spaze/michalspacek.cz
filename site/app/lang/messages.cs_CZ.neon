@@ -23,6 +23,8 @@ title:
 header:
 	who: "Kdo je Michal Špaček?"
 label:
+	yes: "ano"
+	no: "ne"
 	contact: Kontakt
 	twitter: Twitter
 	facebook: Facebook
