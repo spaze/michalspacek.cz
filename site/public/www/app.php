@@ -1,8 +1,9 @@
 <?php
 use \MichalSpacekCz\Application\Bootstrap;
 
-// Uncomment this line if you must temporarily take down your site for maintenance.
-// require '.maintenance.php';
+if (file_exists('./maintenance.php')) {
+	require 'maintenance.php';
+}
 
 $rootDir = realpath(__DIR__ . '/../..');
 
