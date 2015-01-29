@@ -283,19 +283,22 @@ class Applications
 	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
 	{
 		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment) {
-			$this->updateApplicationData(
-				$applicationId,
-				$name,
-				$email,
-				$company,
-				$street,
-				$city,
-				$zip,
-				$country,
-				$companyId,
-				$companyTaxId,
-				$note,
-				$equipment
+			$this->database->query(
+				'UPDATE training_applications SET ? WHERE id_application = ?',
+				array(
+					'name'           => $name,
+					'email'          => $this->emailEncryption->encrypt($email),
+					'company'        => $company,
+					'street'         => $street,
+					'city'           => $city,
+					'zip'            => $zip,
+					'country'        => $country,
+					'company_id'     => $companyId,
+					'company_tax_id' => $companyTaxId,
+					'note'           => $note,
+					'equipment'      => $equipment,
+				),
+				$applicationId
 			);
 		});
 		return $applicationId;
