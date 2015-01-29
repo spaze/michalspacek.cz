@@ -71,7 +71,7 @@ class TrainingApplicationAdmin extends TrainingApplication
 			'companyTaxId' => $application->companyTaxId,
 			'note' => $application->note,
 			'price' => $application->price,
-			'vatRate' => $application->vatRate * 100,
+			'vatRate' => ($application->vatRate ? $application->vatRate * 100 : $application->vatRate),
 			'priceVat' => $application->priceVat,
 			'discount' => $application->discount,
 			'invoiceId' => $application->invoiceId,
