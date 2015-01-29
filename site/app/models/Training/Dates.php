@@ -128,6 +128,24 @@ class Dates
 	}
 
 
+	public function add($training, $venue, $start, $end, $status, $public, $cooperation)
+	{
+		$this->database->query(
+			'INSERT INTO training_dates',
+			array(
+				'key_training'    => $training,
+				'key_venue'       => $venue,
+				'start'           => new \DateTime($start),
+				'end'             => new \DateTime($end),
+				'key_status'      => $status,
+				'public'          => $public,
+				'key_cooperation' => (empty($cooperation) ? null : $cooperation),
+			)
+		);
+		return $this->database->getInsertId();
+	}
+
+
 	public function getStatuses()
 	{
 		$result = $this->database->fetchAll(
