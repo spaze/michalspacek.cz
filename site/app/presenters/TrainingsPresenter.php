@@ -152,7 +152,8 @@ class TrainingsPresenter extends BasePresenter
 				$session->country,
 				$session->companyId,
 				$session->companyTaxId,
-				$session->note
+				$session->note,
+				$session->equipment
 			);
 			$this->redirect('training', $name);
 		}
@@ -171,6 +172,7 @@ class TrainingsPresenter extends BasePresenter
 		$session->companyId    = $application->companyId;
 		$session->companyTaxId = $application->companyTaxId;
 		$session->note         = $application->note;
+		$session->equipment    = $application->equipment;
 
 		$this->redirect('training', $application->action);
 	}
