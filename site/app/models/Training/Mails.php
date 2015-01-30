@@ -10,6 +10,8 @@ namespace MichalSpacekCz\Training;
 class Mails
 {
 
+	const REMINDER_DAYS = 4;
+
 	/** @var \Nette\Mail\IMailer */
 	protected $mailer;
 
@@ -114,7 +116,9 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				$applications[] = $application;
+				if ($application->trainingStart->diff(new \DateTime('now'))->format('%d') <= self::REMINDER_DAYS) {
+					$applications[] = $application;
+				}
 			}
 		}
 
