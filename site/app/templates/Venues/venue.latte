@@ -1,24 +1,24 @@
 {define #content}
 {includeblock "../Trainings/default.latte"}
-<h3>Název a adresa</h3>
+<h3>{_messages.venues.nameaddress}</h3>
 {var $search = $address . ', ' . $city}
-<p><strong><a href="{$href}">{$name}</a>{if $nameExtended}, {$nameExtended}{/if}, {$address}, {$city}</strong> (<a href="https://www.google.com/maps/search/{$search|url}">mapa</a>)</p>
+<p><strong><a href="{$href}">{$name}</a>{if $nameExtended}, {$nameExtended}{/if}, {$address}, {$city}</strong> (<a href="https://www.google.com/maps/search/{$search|url}">{_messages.label.map}</a>)</p>
 
-<h3>Pohled na vchod</h3>
+<h3>{_messages.venues.entrance}</h3>
 <p>
-<img src="{='i/images/venues/' . $entrance|staticUrl}" width="800" height="450" alt="Pohled na vchod" title="Pohled na vchod"><br>
-<small>(<a href="{$streetview}">streetview</a>)</small>
+<img src="{='i/images/venues/' . $entrance|staticUrl}" width="800" height="450" alt="{_messages.venues.entrance}" title="{_messages.venues.entrance}"><br>
+<small>(<a href="{$streetview}">{_messages.venues.streetview}</a>)</small>
 </p>
 
-<h3>Doprava a parkování</h3>
+<h3>{_messages.venues.transportationparking}</h3>
 <p>
 {$parking}
 {$publicTransport}
 </p>
 
-<h3>Pořádaná školení v tomto místě</h3>
+<h3>{_messages.venues.trainingshere}</h3>
 {if empty($upcomingTrainings)}
-<p>Momentálně zde neplánuji uspořádat žádné veřejné školení. <a n:href="Contact:">Napište mi</a>, pokud si myslíte, že bych měl.</p>
+<p>{_messages.venues.notraininghere|format:"link:Contact:"}</p>
 {else}
 {include #list}
 {/if}

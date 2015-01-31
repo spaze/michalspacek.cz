@@ -10,6 +10,9 @@ use \MichalSpacekCz\Training;
 class VenuesPresenter extends BasePresenter
 {
 
+	/** @var \MichalSpacekCz\Formatter\Texy */
+	protected $texyFormatter;
+
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
@@ -25,6 +28,7 @@ class VenuesPresenter extends BasePresenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
+	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
@@ -32,12 +36,14 @@ class VenuesPresenter extends BasePresenter
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		Training\Dates $trainingDates,
 		Training\Venues $trainingVenues,
 		Training\Trainings $trainings,
 		\MichalSpacekCz\Embed $embed
 	)
 	{
+		$this->texyFormatter = $texyFormatter;
 		$this->trainingDates = $trainingDates;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainings = $trainings;
@@ -53,7 +59,7 @@ class VenuesPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("Where in the world is {$name}?", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = 'Školírna ' . $venue->name;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->name]);
 		$this->template->name = $venue->name;
 		$this->template->nameExtended = $venue->nameExtended;
 		$this->template->href = $venue->href;

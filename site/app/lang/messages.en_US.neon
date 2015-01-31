@@ -20,6 +20,7 @@ title:
 	error4xx: "Špaček doesn't know how to do this!"
 	error500: "That's Špaček's fault!"
 	forbidden: "Forbidden"
+	venue: "Venue %s"
 header:
 	who: "Who is Michal Špaček?"
 label:
@@ -98,6 +99,7 @@ label:
 	intendedfor: "Target audience"
 	signup: "sign-up"
 	materials: "Materials"
+	map: "map"
 contact:
 	twitter: @spazef0rze
 	uponrequest: "upon request"
@@ -224,3 +226,10 @@ trainings:
 	datainvoice: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
 	conditions: "Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, …), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu."
 	companythistraining: "Školení v tomto rozsahu je možné \"uspořádat i ve vaší firmě\":[%s]."
+venues:
+	nameaddress: "Name and address"
+	entrance: "Entrance"
+	streetview: "streetview"
+	transportationparking: "Transportation and parking"
+	trainingshere: "Trainings at this venue"
+	notraininghere: "At the moment, I have no plan to organize a training here. \"Let me know\":[%s] if you think I should have one."

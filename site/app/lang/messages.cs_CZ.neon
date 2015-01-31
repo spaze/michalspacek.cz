@@ -20,6 +20,7 @@ title:
 	error4xx: "Tohle Špaček neumí!"
 	error500: "Za to může Špaček!"
 	forbidden: "Nepovoleno"
+	venue: "Školírna %s"
 header:
 	who: "Kdo je Michal Špaček?"
 label:
@@ -98,6 +99,7 @@ label:
 	intendedfor: "Určeno pro"
 	signup: "přihlásit"
 	materials: "Materiály"
+	map: "mapa"
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -224,3 +226,10 @@ trainings:
 	datainvoice: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
 	conditions: "Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, …), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu."
 	companythistraining: "Školení v tomto rozsahu je možné \"uspořádat i ve vaší firmě\":[%s]."
+venues:
+	nameaddress: "Název a adresa"
+	entrance: "Pohled na vchod"
+	streetview: "streetview"
+	transportationparking: "Doprava a parkování"
+	trainingshere: "Pořádaná školení v tomto místě"
+	notraininghere: "Momentálně zde neplánuji uspořádat žádné veřejné školení. \"Napište mi\":[%s], pokud si myslíte, že bych měl."
