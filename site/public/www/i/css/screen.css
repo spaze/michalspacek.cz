@@ -164,6 +164,14 @@ td.nameCell { width: 200px; }
 #frm-application input[type=checkbox] { width: auto; }
 #frm-application #frm-application-note { width: 400px; }
 #frm-statuses select { color: #666; font-family: Consolas; }
+#frm-review th {
+    text-align: right;
+    vertical-align: top;
+}
+#frm-review textarea {
+    width: 600px;
+    height: 150px;
+}
 #chyby ul { margin: 0px; }
 #chyby {
     color: #F34;

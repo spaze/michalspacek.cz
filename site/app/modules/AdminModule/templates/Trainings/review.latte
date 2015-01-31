@@ -6,14 +6,34 @@
 {/define}
 
 {define #content}
-{form review}
 <p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
-<p><div>{$applicationName}</div>{label overwriteName: /}{input overwriteName:} {input name}</p>
-<p><div>{$applicationCompany}</div>{label overwriteCompany: /}{input overwriteCompany:} {input company}</p>
-<p>{label review /}{input review}</p>
-<p>{label href /}{input href}</p>
-<p>{label hidden: /}{input hidden:}</p>
-<p>{input save}</p>
+{form review}
+<table>
+	<tr>
+		<th>Jméno z přihlášky:</th><td>{$applicationName}</td>
+	</tr>
+	<tr>
+		<th>{label overwriteName: /}</th><td>{input overwriteName:} {input name}</td>
+	</tr>
+	<tr>
+		<th>Firma z přihlášky:</th><td>{$applicationCompany}</td>
+	</tr>
+	<tr>
+		<th>{label overwriteCompany: /}</th><td>{input overwriteCompany:} {input company}</td>
+	</tr>
+	<tr>
+		<th>{label review /}</th><td>{input review}</td>
+	</tr>
+	<tr>
+		<th>{label href /}</th><td>{input href}</td>
+	</tr>
+	<tr>
+		<th>{label hidden: /}</th><td>{input hidden:}</td>
+	</tr>
+	<tr>
+		<th></th><td>{input save}</td>
+	</tr>
+</table>
 {/form review}
 
 {/define}
