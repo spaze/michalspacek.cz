@@ -288,6 +288,7 @@ class TrainingsPresenter extends BasePresenter
 			$this->applicationId,
 			$values->overwriteName ? $values->name : null,
 			$values->overwriteCompany ? $values->company : null,
+			$values->jobTitle ?: null,
 			$values->review,
 			$values->href,
 			$values->hidden

@@ -19,6 +19,7 @@ class TrainingReview extends \Nette\Application\UI\Form
 		$this->addText('name', 'Jméno:');
 		$this->addCheckbox('overwriteCompany', 'Přepsat firmu:');
 		$this->addText('company', 'Firma:');
+		$this->addText('jobTitle', 'Pozice:');
 		$this->addTextArea('review', 'Ohlas:');
 		$this->addText('href', 'Odkaz:');
 		$this->addCheckbox('hidden', 'Skrýt:');
@@ -33,6 +34,7 @@ class TrainingReview extends \Nette\Application\UI\Form
 			'name' => $review->name,
 			'overwriteCompany' => ($review->company !== null),
 			'company' => $review->company,
+			'jobTitle' => $review->jobTitle,
 			'review' => $review->review,
 			'href' => $review->href,
 			'hidden' => $review->hidden,

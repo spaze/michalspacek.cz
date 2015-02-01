@@ -263,6 +263,7 @@ class Trainings
 		$query = 'SELECT
 				COALESCE(r.name, a.name) AS name,
 				COALESCE(r.company, a.company) AS company,
+				r.job_title AS jobTitle,
 				r.review,
 				r.href
 			FROM
@@ -294,6 +295,7 @@ class Trainings
 				r.name,
 				a.company AS applicationCompany,
 				r.company,
+				r.job_title AS jobTitle,
 				r.review,
 				r.href,
 				r.hidden,
@@ -309,7 +311,7 @@ class Trainings
 	}
 
 
-	public function addUpdateReview($applicationId, $name, $company, $review, $href, $hidden)
+	public function addUpdateReview($applicationId, $name, $company, $jobTitle, $review, $href, $hidden)
 	{
 		$datetime = new \DateTime();
 		return $this->database->query(
@@ -320,6 +322,7 @@ class Trainings
 					'key_application' => $applicationId,
 					'name' => $name,
 					'company' => $company,
+					'job_title' => $jobTitle,
 					'review' => $review,
 					'href' => $href,
 					'hidden' => $hidden,
@@ -329,6 +332,7 @@ class Trainings
 				array(
 					'name' => $name,
 					'company' => $company,
+					'job_title' => $jobTitle,
 					'review' => $review,
 					'href' => $href,
 					'hidden' => $hidden,
