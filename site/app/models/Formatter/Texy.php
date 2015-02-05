@@ -120,11 +120,14 @@ class Texy extends \Bare\Next\Formatter\Texy
 
 
 	/**
-	 * @param string $text
+	 * @param string|null $text
 	 * @return \Nette\Utils\Html
 	 */
 	public function format($text)
 	{
+		if (empty($text)) {
+			return Html::el();
+		}
 		$result = parent::format($text);
 		return $this->replace($result);
 	}
