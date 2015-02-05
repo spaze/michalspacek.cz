@@ -25,6 +25,9 @@ class Dates
 
 	private $statusIds = array();
 
+	private $upcomingDates = array();
+
+
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
@@ -205,64 +208,67 @@ class Dates
 	 */
 	private function getUpcoming($all)
 	{
-		$query = "SELECT
-				d.id_date AS dateId,
-				t.action,
-				t.name,
-				s.status,
-				d.start,
-				d.public,
-				v.id_venue AS venueId,
-				v.name AS venueName,
-				v.city as venueCity
-			FROM training_dates d
-				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_date_status s ON d.key_status = s.id_status
-				JOIN training_venues v ON d.key_venue = v.id_venue
-				JOIN (
-					SELECT
-						t2.action,
-						d2.key_venue,
-						MIN(d2.start) AS start
-					FROM
-						trainings t2
-						JOIN training_dates d2 ON t2.id_training = d2.key_training
-						JOIN training_date_status s2 ON d2.key_status = s2.id_status
-					WHERE
-						(d2.public != ? OR TRUE = ?)
-						AND d2.end > NOW()
-						AND s2.status IN (?, ?)
-					GROUP BY
-						t2.action, d2.key_venue
-				) u ON t.action = u.action AND v.id_venue = u.key_venue AND d.start = u.start
-			ORDER BY
-				t.id_training, d.start";
+		if (!isset($this->upcomingDates[$all])) {
+			$query = "SELECT
+					d.id_date AS dateId,
+					t.action,
+					t.name,
+					s.status,
+					d.start,
+					d.public,
+					v.id_venue AS venueId,
+					v.name AS venueName,
+					v.city as venueCity
+				FROM training_dates d
+					JOIN trainings t ON d.key_training = t.id_training
+					JOIN training_date_status s ON d.key_status = s.id_status
+					JOIN training_venues v ON d.key_venue = v.id_venue
+					JOIN (
+						SELECT
+							t2.action,
+							d2.key_venue,
+							MIN(d2.start) AS start
+						FROM
+							trainings t2
+							JOIN training_dates d2 ON t2.id_training = d2.key_training
+							JOIN training_date_status s2 ON d2.key_status = s2.id_status
+						WHERE
+							(d2.public != ? OR TRUE = ?)
+							AND d2.end > NOW()
+							AND s2.status IN (?, ?)
+						GROUP BY
+							t2.action, d2.key_venue
+					) u ON t.action = u.action AND v.id_venue = u.key_venue AND d.start = u.start
+				ORDER BY
+					t.id_training, d.start";
 
-		$upcoming = array();
-		foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED) as $row) {
-			$date = array(
-				'dateId'        => $row->dateId,
-				'tentative'     => ($row->status == Dates::STATUS_TENTATIVE),
-				'lastFreeSeats' => $this->lastFreeSeats($row->start),
-				'start'         => $row->start,
-				'public'        => $row->public,
-				'status'        => $row->status,
-				'name'          => $row->name,
-				'venueId'       => $row->venueId,
-				'venueName'     => $row->venueName,
-				'venueCity'     => $row->venueCity,
-			);
-			$upcoming[$row->action] = \Nette\ArrayHash::from(array(
-				'action' => $row->action,
-				'name'   => $row->name,
-				'dates'  => (isset($upcoming[$row->action]->dates)
-					? $upcoming[$row->action]->dates = (array)$upcoming[$row->action]->dates + array($row->dateId => $date)
-					: array($row->dateId => $date)
-				),
-			));
+			$upcoming = array();
+			foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED) as $row) {
+				$date = array(
+					'dateId'        => $row->dateId,
+					'tentative'     => ($row->status == Dates::STATUS_TENTATIVE),
+					'lastFreeSeats' => $this->lastFreeSeats($row->start),
+					'start'         => $row->start,
+					'public'        => $row->public,
+					'status'        => $row->status,
+					'name'          => $row->name,
+					'venueId'       => $row->venueId,
+					'venueName'     => $row->venueName,
+					'venueCity'     => $row->venueCity,
+				);
+				$upcoming[$row->action] = \Nette\ArrayHash::from(array(
+					'action' => $row->action,
+					'name'   => $row->name,
+					'dates'  => (isset($upcoming[$row->action]->dates)
+						? $upcoming[$row->action]->dates = (array)$upcoming[$row->action]->dates + array($row->dateId => $date)
+						: array($row->dateId => $date)
+					),
+				));
+			}
+			$this->upcomingDates[$all] = $upcoming;
 		}
 
-		return $upcoming;
+		return $this->upcomingDates[$all];
 	}
 
 
