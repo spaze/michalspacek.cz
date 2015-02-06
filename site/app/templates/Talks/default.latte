@@ -12,6 +12,10 @@
 {/define}
 
 {define #content}
+<h2>{_messages.label.favorite}</h2>
+{foreach $favoriteTalks as $talk}
+	<li>{$talk}</li>
+{/foreach}
 <h2>{_messages.label.upcomingtalks}</h2>
 <p n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
 	{include #itemTalk}

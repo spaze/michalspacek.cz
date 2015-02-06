@@ -49,6 +49,7 @@ class TalksPresenter extends BasePresenter
 	public function renderDefault()
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.talks');
+		$this->template->favoriteTalks = $this->talks->getFavorites();
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
 
 		$talks = array();

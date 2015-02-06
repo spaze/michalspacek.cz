@@ -117,4 +117,23 @@ class Talks
 		}
 	}
 
+
+	public function getFavorites()
+	{
+		$query = 'SELECT
+				action,
+				title,
+				favorite
+			FROM talks
+			WHERE favorite IS NOT NULL
+			ORDER BY date DESC';
+
+		$result = array();
+		foreach ($this->database->fetchAll($query) as $row) {
+			$result[] = $this->texyFormatter->substitute($row['favorite'], [$row['title'], $row['action']]);
+		}
+
+		return $result;
+	}
+
 }
