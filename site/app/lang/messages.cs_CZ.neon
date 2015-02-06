@@ -154,6 +154,7 @@ companytrainings:
 	publictraining: "Své vývojáře můžete samozřejmě přihlásit i na \"veřejný termín mých školení\":[%s]."
 	consulting: "Nabízím i konzultace pro vaši firmu, \"napište mi\":[%s]!"
 	moreinfo: "Další informace a ohlasy na školení najdete na stránce veřejného školení \"%s\":[%s]."
+	lecturerwho: "o lektorovi"
 	lecturercontact: "kontakt na lektora"
 	length: "Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout."
 	extralength: "Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní."
@@ -216,6 +217,7 @@ trainings:
 		error: "chyba,"
 		again: "znovu"
 		countrycompanymissing: "Nejdříve vyberte zemi a zadejte IČ"
+	lecturerwho: "o lektorovi"
 	lecturercontact: "kontakt na lektora"
 	date:
 		one: "Termín a místo"

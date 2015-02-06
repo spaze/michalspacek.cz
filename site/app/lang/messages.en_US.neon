@@ -154,7 +154,8 @@ companytrainings:
 	publictraining: "If you want, you can sign-up your developers to my \"public trainings\":[%s] as well."
 	consulting: "I also offer consulting for your business, please \"e-mail me\":[%s]!"
 	moreinfo: "Find more information and reviews on the page about public training \"%s\":[%s]."
-	lecturercontact: "contact lecturer"
+	lecturerwho: "about the lecturer"
+	lecturercontact: "contact the lecturer"
 	length: "Training is a one-day and lasts 8 hours with breaks but according to the situation can be longer by an extra hour."
 	extralength: "If you are interested in more practical examples and exercises, we can organize a two-day training."
 	capacity: "Unlimited but over 12 people we'll have less time for questions."
@@ -216,6 +217,7 @@ trainings:
 		error: "error,"
 		again: "again"
 		countrycompanymissing: "Nejdříve vyberte zemi a zadejte IČ"
+	lecturerwho: "about the lecturer"
 	lecturercontact: "contact the lecturer"
 	date:
 		one: "Date and venue"
