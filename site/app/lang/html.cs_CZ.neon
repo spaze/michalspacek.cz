@@ -15,7 +15,6 @@ id:
 	errors: chyby
 	title: nazev
 	content: napln
-	upsell: upoutavka
 	lecturer: lektor
 	prerequisites: predpoklady
 	intendedfor: urceno-pro

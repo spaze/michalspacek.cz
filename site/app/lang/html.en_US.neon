@@ -15,7 +15,6 @@ id:
 	errors: errors
 	title: title
 	content: content
-	upsell: upsell
 	lecturer: lecturer
 	prerequisites: prerequisites
 	intendedfor: intended-for

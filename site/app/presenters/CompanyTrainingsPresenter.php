@@ -56,6 +56,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->title = $training->name;
 		$this->template->descriptionCompany = $training->descriptionCompany;
 		$this->template->content = $training->content;
+		$this->template->upsellCompany = $training->upsellCompany;
 		$this->template->priceCompany = $training->priceCompany;
 		$this->template->priceCompanyVat = $this->vat->addVat($training->priceCompany);
 	}

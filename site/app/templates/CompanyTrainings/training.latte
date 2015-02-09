@@ -1,5 +1,6 @@
 {define #content}
 <p>{$descriptionCompany}</p>
+<p n:if="$upsellCompany" id="upsell"><span class="icon icon16"></span><small>{$upsellCompany}</small></p>
 
 <h2 id="nazev">{_messages.label.trainingname}</h2>
 <p><strong>{$title}</strong></p>

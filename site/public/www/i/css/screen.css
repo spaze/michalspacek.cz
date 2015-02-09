@@ -117,7 +117,7 @@ abbr.dtstart, abbr.dtend { border: none; }
 .slides { background-position: 0px 0px; }
 .video { background-position: -16px 0px; }
 .audio { background-position: -48px -32px; }
-#upoutavka span { background-position: -32px -32px; }
+#upsell span { background-position: -32px -32px; }
 #heartbleed {
     background-position: -32px 0px;
     margin-left: -6px;
