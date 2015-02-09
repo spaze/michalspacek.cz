@@ -20,6 +20,8 @@ id:
 	intendedfor: intended-for
 	date: date
 	pastdates: past-dates
+	length: length
 	capacity: capacity
 	price: price
 	materials: materials
+	order: order

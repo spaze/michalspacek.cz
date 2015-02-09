@@ -2,16 +2,16 @@
 <p>{$descriptionCompany}</p>
 <p n:if="$upsellCompany" id="upsell"><span class="icon icon16"></span><small>{$upsellCompany}</small></p>
 
-<h2 id="nazev">{_messages.label.trainingname}</h2>
+<h2 id="{_html.id.title}">{_messages.label.trainingname}</h2>
 <p><strong>{$title}</strong></p>
 <hr />
 
-<h2 id="napln">{_messages.label.trainingcontent}</h2>
+<h2 id="{_html.id.content}">{_messages.label.trainingcontent}</h2>
 <div>{$content}</div>
 <p>{_messages.companytrainings.moreinfo|format:$title:"link:Trainings:training $name"}</p>
 <hr />
 
-<h2 id="lektor">{_messages.label.traininglecturer}</h2>
+<h2 id="{_html.id.lecturer}">{_messages.label.traininglecturer}</h2>
 <p>Michal Špaček <small>(<a n:href="Who:">{_messages.companytrainings.lecturerwho}</a>, <a n:href="Contact:">{_messages.companytrainings.lecturercontact}</a>)</small></p>
 <hr />
 
@@ -23,18 +23,18 @@
 <p>{$audience}</p>
 <hr />
 
-<h2 id="lektor">{_messages.label.traininglength}</h2>
+<h2 id="{_html.id.length}">{_messages.label.traininglength}</h2>
 <p>
 	{_messages.companytrainings.length}<br>
 	<small>{_messages.companytrainings.extralength}</small>
 </p>
 <hr />
 
-<h2 id="kapacita">{_messages.label.trainingcapacity}</h2>
+<h2 id="{_html.id.capacity}">{_messages.label.trainingcapacity}</h2>
 <p>{_messages.companytrainings.capacity}</p>
 <hr />
 
-<h2 id="cena">{_messages.label.trainingprice}</h2>
+<h2 id="{_html.id.price}">{_messages.label.trainingprice}</h2>
 <p>
 	{_messages.companytrainings.price|format:$priceCompany:$priceCompanyVat}<br>
 	<small>{_messages.companytrainings.extraprice|format:$priceCompany * 2:$priceCompanyVat * 2}</small>
@@ -45,7 +45,7 @@
 <p>{$materials}</p>
 <hr />
 
-<h2 id="objednavka">{_messages.label.trainingorder}</h2>
+<h2 id="{_html.id.order}">{_messages.label.trainingorder}</h2>
 <p>{_messages.companytrainings.signup|format:'mail@michalspacek.cz'}</p>
 
 {/define}

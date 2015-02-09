@@ -20,6 +20,8 @@ id:
 	intendedfor: urceno-pro
 	date: termin
 	pastdates: uskutecnene-terminy
+	length: delka
 	capacity: kapacita
 	price: cena
 	materials: materialy
+	order: objednavka
