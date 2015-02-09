@@ -15,6 +15,14 @@
 <p>Michal Špaček <small>(<a n:href="Who:">{_messages.companytrainings.lecturerwho}</a>, <a n:href="Contact:">{_messages.companytrainings.lecturercontact}</a>)</small></p>
 <hr />
 
+<h2 id="{_html.id.prerequisites}">{_messages.label.prerequisites}</h2>
+<p>{$prerequisites}</p>
+<hr />
+
+<h2 id="{_html.id.intendedfor}">{_messages.label.intendedfor}</h2>
+<p>{$audience}</p>
+<hr />
+
 <h2 id="lektor">{_messages.label.traininglength}</h2>
 <p>
 	{_messages.companytrainings.length}<br>
@@ -31,6 +39,10 @@
 	{_messages.companytrainings.price|format:$priceCompany:$priceCompanyVat}<br>
 	<small>{_messages.companytrainings.extraprice|format:$priceCompany * 2:$priceCompanyVat * 2}</small>
 </p>
+<hr />
+
+<h2 id="{_html.id.materials}">{_messages.label.materials}</h2>
+<p>{$materials}</p>
 <hr />
 
 <h2 id="objednavka">{_messages.label.trainingorder}</h2>
