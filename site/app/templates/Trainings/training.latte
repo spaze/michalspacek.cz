@@ -146,7 +146,7 @@
 <div id="{_html.id.reviews}">
 <h2>{_messages.label.trainingreviews}</h2>
 {foreach $reviews as $review}
-	<p><strong>{$review->name}{if $review->company}, {$review->company}{/if}</strong></p>
+	<p><strong>{$review->name}{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
 	<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
 {/foreach}
 </div>
