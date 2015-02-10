@@ -153,7 +153,7 @@ companytrainings:
 	offer: "Want to arrange a training at your company on the date you choose? I'll come to visit you at your location or anywhere else. I offer the following trainings but we can also prepare a course tailored to your requirements and knowledge of your developers."
 	publictraining: "If you want, you can sign-up your developers to my \"public trainings\":[%s] as well."
 	consulting: "I also offer consulting for your business, please \"e-mail me\":[%s]!"
-	moreinfo: "Find more information and reviews on the page about public training \"%s\":[%s]."
+	morereviews: "Find more reviews on \"the public training reviews page\":[%s]."
 	lecturerwho: "about the lecturer"
 	lecturercontact: "contact the lecturer"
 	length: "Training is a one-day and lasts 8 hours with breaks but according to the situation can be longer by an extra hour."

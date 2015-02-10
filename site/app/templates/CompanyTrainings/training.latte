@@ -8,7 +8,6 @@
 
 <h2 id="{_html.id.content}">{_messages.label.trainingcontent}</h2>
 <div>{$content}</div>
-<p>{_messages.companytrainings.moreinfo|format:$title:"link:Trainings:training $name"}</p>
 <hr />
 
 <h2 id="{_html.id.lecturer}">{_messages.label.traininglecturer}</h2>
@@ -44,6 +43,18 @@
 <h2 id="{_html.id.materials}">{_messages.label.materials}</h2>
 <p>{$materials}</p>
 <hr />
+
+{if $reviews}
+<div id="{_html.id.reviews}">
+<h2>{_messages.label.trainingreviews}</h2>
+{foreach $reviews as $review}
+	<p><strong>{$review->name}{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
+	<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
+{/foreach}
+</div>
+<p>{_messages.companytrainings.morereviews|format:"link:Trainings:reviews $name"}</p>
+<hr />
+{/if}
 
 <h2 id="{_html.id.order}">{_messages.label.trainingorder}</h2>
 <p>{_messages.companytrainings.signup|format:'mail@michalspacek.cz'}</p>
