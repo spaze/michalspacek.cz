@@ -69,6 +69,7 @@ label:
 	myinterviews: Odpovídám na otázky
 	writtenarticles: Napsal jsem
 	companytrainings: Firemní školení
+	lowercasecompanytraining: "firemní školení"
 	trainingname: Název školení
 	trainingcontent: Náplň
 	traininglecturer: Lektor

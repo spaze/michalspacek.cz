@@ -69,6 +69,7 @@ label:
 	myinterviews: Me answering questions
 	writtenarticles: "Articles I've written"
 	companytrainings: In-house trainings
+	lowercasecompanytraining: "in-house training"
 	trainingname: Course name
 	trainingcontent: Content
 	traininglecturer: Lecturer
