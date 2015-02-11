@@ -115,7 +115,7 @@
 </div>
 <p><small>{_messages.trainings.extendedtime}</small></p>
 </div>
-<p id="{_html.id.pastdates}">
+<p n:if="$pastTrainingsMe || $pastTrainingsJakub" id="{_html.id.pastdates}">
 	<small>
 	<a href="#{_html.id.pastdates}" id="pastDates-link">{_messages.trainings.pastdates}</a><span id="pastDates-container">{foreach $pastTrainingsMe as $date}{first}:{/first}
 		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}

@@ -374,7 +374,7 @@ class Dates
 				'2008-12-09', '2008-10-22', '2008-06-27',
 			),
 		);
-		return $dates[$name];
+		return (isset($dates[$name]) ? $dates[$name] : array());
 	}
 
 }
