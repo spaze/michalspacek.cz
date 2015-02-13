@@ -1,5 +1,5 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Encryption;
 
 /**
  * Encryption service.

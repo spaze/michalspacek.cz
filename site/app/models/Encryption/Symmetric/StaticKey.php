@@ -1,13 +1,13 @@
 <?php
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Encryption\Symmetric;
 
 /**
- * StaticKeyEncryption service.
+ * StaticKey encryption service.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class StaticKeyEncryption extends \Nette\Object
+class StaticKey extends \Nette\Object
 {
 
 	const KEY_IV_CIPHERTEXT_SEPARATOR = ';';
@@ -22,7 +22,7 @@ class StaticKeyEncryption extends \Nette\Object
 	protected $encryption;
 
 
-	public function __construct(\MichalSpacekCz\Encryption $encryption)
+	public function __construct(\MichalSpacekCz\Encryption\Encryption $encryption)
 	{
 		$this->encryption = $encryption;
 	}

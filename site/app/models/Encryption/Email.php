@@ -16,11 +16,11 @@ class Email extends \Nette\Object
 
 	const CIPHER_MODE = MCRYPT_MODE_CBC;
 
-	/** @var \MichalSpacekCz\StaticKeyEncryption */
+	/** @var \MichalSpacekCz\Encryption\Symmetric\StaticKey */
 	protected $staticKeyEncryption;
 
 
-	public function __construct(\MichalSpacekCz\StaticKeyEncryption $staticKeyEncryption)
+	public function __construct(\MichalSpacekCz\Encryption\Symmetric\StaticKey $staticKeyEncryption)
 	{
 		$this->staticKeyEncryption = $staticKeyEncryption;
 	}
