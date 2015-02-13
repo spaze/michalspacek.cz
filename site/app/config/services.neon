@@ -65,8 +65,9 @@ services:
 		setup:
 			- setRootDomain(%domain.root%)
 			- setExtraHeaders(%extraHeaders%)
-	encryption: \MichalSpacekCz\Encryption\Encryption
+	encryption: \MichalSpacekCz\Encryption\Encryption(@mCryptEncryption)
 	mCryptEncryption: \MichalSpacekCz\Encryption\Adapter\MCrypt
+	openSslEncryption: \MichalSpacekCz\Encryption\Adapter\OpenSsl
 	staticKeyEncryption:
 		class: \MichalSpacekCz\Encryption\Symmetric\StaticKey
 		setup:
