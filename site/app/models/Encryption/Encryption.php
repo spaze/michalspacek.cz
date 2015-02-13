@@ -10,18 +10,30 @@ namespace MichalSpacekCz\Encryption;
 class Encryption extends \Nette\Object
 {
 
-	public function encrypt($clearText, $key, $cipherName, $cipherMode)
+	/** @var string */
+	const CIPHER_AES_256_CBC = 'AES-256-CBC';
+
+	/** @var \MichalSpacekCz\Encryption\Adapter\AdapterInterface */
+	protected $adapter;
+
+
+	public function __construct(\MichalSpacekCz\Encryption\Adapter\AdapterInterface $adapter)
 	{
-		$iv = mcrypt_create_iv(mcrypt_get_iv_size($cipherName, $cipherMode), MCRYPT_DEV_URANDOM);
-		$cipherText = mcrypt_encrypt($cipherName, $key, $clearText, $cipherMode, $iv);
+		$this->adapter = $adapter;
+	}
+
+
+	public function encrypt($clearText, $key, $cipher)
+	{
+		$iv = $this->adapter->createIv($this->adapter->getIvLength($cipher));
+		$cipherText = $this->adapter->encrypt($clearText, $key, $cipher, $iv);
 		return array($iv, $cipherText);
 	}
 
 
-	public function decrypt($cipherText, $key, $iv, $cipherName, $cipherMode)
+	public function decrypt($cipherText, $key, $cipher, $iv)
 	{
-		$clearText = mcrypt_decrypt($cipherName, $key, $cipherText, $cipherMode, $iv);
-		return rtrim($clearText, "\0");
+		return $this->adapter->decrypt($cipherText, $key, $cipher, $iv);
 	}
 
 }

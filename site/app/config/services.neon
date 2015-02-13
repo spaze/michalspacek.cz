@@ -66,6 +66,7 @@ services:
 			- setRootDomain(%domain.root%)
 			- setExtraHeaders(%extraHeaders%)
 	encryption: \MichalSpacekCz\Encryption\Encryption
+	mCryptEncryption: \MichalSpacekCz\Encryption\Adapter\MCrypt
 	staticKeyEncryption:
 		class: \MichalSpacekCz\Encryption\Symmetric\StaticKey
 		setup:

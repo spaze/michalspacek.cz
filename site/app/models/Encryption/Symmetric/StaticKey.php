@@ -47,20 +47,20 @@ class StaticKey extends \Nette\Object
 	}
 
 
-	public function encrypt($data, $group, $cipherName, $cipherMode)
+	public function encrypt($data, $group, $cipher)
 	{
 		$keyId = $this->getActiveKeyId($group);
 		$key = $this->getKey($group, $keyId);
-		list($iv, $cipherText) = $this->encryption->encrypt($data, $key, $cipherName, $cipherMode);
+		list($iv, $cipherText) = $this->encryption->encrypt($data, $key, $cipher);
 		return $this->formatKeyIvCipherText($keyId, $iv, $cipherText);
 	}
 
 
-	public function decrypt($data, $group, $cipherName, $cipherMode)
+	public function decrypt($data, $group, $cipher)
 	{
 		list($keyId, $iv, $cipherText) = $this->parseKeyIvCipherText($data);
 		$key = $this->getKey($group, $keyId);
-		return $this->encryption->decrypt($cipherText, $key, $iv, $cipherName, $cipherMode);
+		return $this->encryption->decrypt($cipherText, $key, $cipher, $iv);
 	}
 
 
