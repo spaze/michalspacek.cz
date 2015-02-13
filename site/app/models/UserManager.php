@@ -69,7 +69,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 	}
 
 
-	public function verifyPassword($username, $password)
+	private function verifyPassword($username, $password)
 	{
 		$user = $this->database->fetch(
 			'SELECT
