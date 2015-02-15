@@ -15,7 +15,7 @@ services:
 	talks:     \MichalSpacekCz\Talks
 	trainings: \MichalSpacekCz\Training\Trainings
 	interviews: \MichalSpacekCz\Interviews
-	trainingApplications: \MichalSpacekCz\Training\Applications
+	trainingApplications: \MichalSpacekCz\Training\Applications(@database.default.context, @vranaNotifier, @trainingDates, @trainingStatuses, @emailEncryption, @emailEncryptionOpenSsl, @vat)
 	trainingMails:
 		class: \MichalSpacekCz\Training\Mails
 		setup:
@@ -28,7 +28,7 @@ services:
 		class: \MichalSpacekCz\Training\Files
 		setup:
 			- setFilesDir('../../files/trainings')
-	authenticator: \MichalSpacekCz\UserManager
+	authenticator: \MichalSpacekCz\UserManager(@database.default.context, @httpRequest, @httpResponse, @passwordEncryption, @passwordEncryptionOpenSsl)
 	embed: \MichalSpacekCz\Embed
 	webTracking: \MichalSpacekCz\WebTracking
 	vranaNotifier:
@@ -70,11 +70,12 @@ services:
 	openSslEncryption: \MichalSpacekCz\Encryption\Adapter\OpenSsl
 	staticKeyEncryption:
 		class: \MichalSpacekCz\Encryption\Symmetric\StaticKey
+		arguments: [@encryption]
 		setup:
 			- setKeys(%encryption.keys%)
 			- setActiveKeyIds(%encryption.activeKeyIds%)
-	passwordEncryption: \MichalSpacekCz\Encryption\Password
-	emailEncryption: \MichalSpacekCz\Encryption\Email
+	passwordEncryption: \MichalSpacekCz\Encryption\Password(@staticKeyEncryption)
+	emailEncryption: \MichalSpacekCz\Encryption\Email(@staticKeyEncryption)
 	companyInfo: \MichalSpacekCz\CompanyInfo\Info
 	ares:
 		class: \MichalSpacekCz\CompanyInfo\Ares
@@ -84,3 +85,9 @@ services:
 		class: \MichalSpacekCz\CompanyInfo\RegisterUz
 		setup:
 			- setRootUrl(%registerUz.rootUrl%)
+
+	encryptionOpenSsl: \MichalSpacekCz\Encryption\Encryption(@openSslEncryption)
+	staticKeyEncryptionOpenSsl < staticKeyEncryption:
+		arguments: [@encryptionOpenSsl]
+	passwordEncryptionOpenSsl: \MichalSpacekCz\Encryption\Password(@staticKeyEncryptionOpenSsl)
+	emailEncryptionOpenSsl: \MichalSpacekCz\Encryption\Email(@staticKeyEncryptionOpenSsl)

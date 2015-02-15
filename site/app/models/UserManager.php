@@ -30,18 +30,23 @@ class UserManager implements \Nette\Security\IAuthenticator
 	/** @var \MichalSpacekCz\Encryption\Password */
 	protected $passwordEncryption;
 
+	/** @var \MichalSpacekCz\Encryption\Password */
+	protected $passwordEncryptionOpenSsl;
+
 
 	public function __construct(
 		\Nette\Database\Context $context,
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
-		\MichalSpacekCz\Encryption\Password $passwordEncryption
+		\MichalSpacekCz\Encryption\Password $passwordEncryption,
+		\MichalSpacekCz\Encryption\Password $passwordEncryptionOpenSsl
 	)
 	{
 		$this->database = $context;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->passwordEncryption = $passwordEncryption;
+		$this->passwordEncryptionOpenSsl = $passwordEncryptionOpenSsl;
 	}
 
 
@@ -136,6 +141,26 @@ class UserManager implements \Nette\Security\IAuthenticator
 	private function isReturningUser()
 	{
 		return ($this->httpRequest->getCookie(self::RETURNING_USER_COOKIE) === self::RETURNING_USER_VALUE);
+	}
+
+
+	public function reEncryptPasswords()
+	{
+		$users = $this->database->fetchAll(
+			'SELECT
+				id_user AS userId,
+				password
+			FROM
+				users'
+		);
+		foreach ($users as $user) {
+			$this->database->query(
+				'UPDATE users SET ? WHERE id_user = ?',
+				array('password' => $this->passwordEncryptionOpenSsl->encrypt($this->passwordEncryption->decrypt($user->password))),
+				$user->userId
+			);
+		}
+
 	}
 
 }
