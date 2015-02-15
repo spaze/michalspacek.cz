@@ -29,9 +29,6 @@ class Applications
 	/** @var \MichalSpacekCz\Encryption\Email */
 	protected $emailEncryption;
 
-	/** @var \MichalSpacekCz\Encryption\Email */
-	protected $emailEncryptionOpenSsl;
-
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -46,7 +43,6 @@ class Applications
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		\MichalSpacekCz\Encryption\Email $emailEncryption,
-		\MichalSpacekCz\Encryption\Email $emailEncryptionOpenSsl,
 		\MichalSpacekCz\Vat $vat
 	)
 	{
@@ -55,7 +51,6 @@ class Applications
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
-		$this->emailEncryptionOpenSsl = $emailEncryptionOpenSsl;
 		$this->vat = $vat;
 		$this->statusCallbacks[Statuses::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
@@ -494,19 +489,6 @@ class Applications
 		$date = $this->trainingDates->get($application->dateId);
 		if ($date->public && !$date->cooperationId) {
 			$this->vranaNotifier->addTrainingApplication($application);
-		}
-	}
-
-
-	public function reEncryptEmails()
-	{
-		$emails = $this->database->fetchAll('SELECT id_application as applicationId, email FROM training_applications');
-		foreach ($emails as $email) {
-			$this->database->query(
-				'UPDATE training_applications SET ? WHERE id_application = ?',
-				array('email' => $this->emailEncryptionOpenSsl->encrypt($this->emailEncryption->decrypt($email->email))),
-				$email->applicationId
-			);
 		}
 	}
 

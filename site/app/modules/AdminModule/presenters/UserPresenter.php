@@ -15,8 +15,6 @@ class UserPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\UserManager */
 	protected $authenticator;
 
-	protected $trainingApplications;
-
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
@@ -24,12 +22,10 @@ class UserPresenter extends BasePresenter
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\UserManager $authenticator,
-		\MichalSpacekCz\Training\Applications $trainingApplications
+		\MichalSpacekCz\UserManager $authenticator
 	)
 	{
 		$this->authenticator = $authenticator;
-		$this->trainingApplications = $trainingApplications;
 		parent::__construct($translator);
 	}
 
@@ -54,13 +50,6 @@ class UserPresenter extends BasePresenter
 
 		$this->authenticator->changePassword($this->user->getIdentity()->username, $values['password'], $values['newPassword']);
 		$this->redirect('Homepage:');
-	}
-
-
-	public function actionDefault()
-	{
-		$this->authenticator->reEncryptPasswords();
-		$this->trainingApplications->reEncryptEmails();
 	}
 
 }
