@@ -6,7 +6,11 @@
 
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-<p>{$trainingName} {$trainingStart|date:'j. n. Y'} <small>{$venueCity}{if !$public}, {$venueName}{/if}</small></p>
+<p>
+{$trainingName} {$trainingStart|date:'j. n. Y'}
+<small>{$venueCity}{if !$public}, {$venueName}{/if}</small>
+<small n:if="!$venueEquipped" title="Vlastních počítačů: {$equipment}, zajistit {$validCount - $equipment}">(PC: {$equipment}+<strong>{$validCount - $equipment}</strong>)</small>
+</p>
 {form statuses}
 <div id="statuses">
 <table>
@@ -15,6 +19,7 @@
 			<th></th>
 			<th>Jméno</th>
 			<th>E-mail</th>
+			<th title="Vlastní počítač">PC</th>
 			<th>Společnost</th>
 			<th>Status</th>
 			<th></th>
@@ -27,6 +32,7 @@
 			<td><small>{$iterator->getCounter()}.</small></td>
 			<td><small n:tag-if="$application->discarded"><a n:href="Trainings:application $application->id">{$application->name}</a></small></td>
 			<td><small>{$application->email}</small></td>
+			<td><small>{if $application->equipment}&#x2714;{else}&#x2716;{/if}</small></td>
 			<td><small n:tag-if="$application->discarded">{$application->company}</small></td>
 			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
 			<td><small>&raquo;</small></td>

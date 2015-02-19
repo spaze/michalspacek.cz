@@ -41,6 +41,8 @@ class InvoicesPresenter extends BasePresenter
 		$dates = array();
 		foreach ($this->trainingDates->getWithUnpaid() as $date) {
 			$date->applications = $this->trainingApplications->getValidUnpaidByDate($date->dateId);
+			$date->validCount = count($date->applications);
+			$date->equipment = $this->trainingApplications->countEquipment($date->applications);
 			$dates[$date->start->getTimestamp()] = $date;
 		}
 		ksort($dates);

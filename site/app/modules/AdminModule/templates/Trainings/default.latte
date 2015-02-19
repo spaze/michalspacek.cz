@@ -19,11 +19,12 @@
 					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CANCELED}&#x2716;{/if}
 				</small>
 			</td>
-			<td class="nameCell" data-date="{$training->dateId}">{$training->name} ({$training->applications|count})</td>
+			<td class="nameCell" data-date="{$training->dateId}">{$training->name} ({$training->validCount})</td>
 			<td><small>{$training->venueCity}{if !$training->public}, {$training->venueName}{/if}</small></td>
+			<td><small n:if="!$training->venueEquipped" title="Vlastních počítačů: {$training->equipment}, zajistit {$training->validCount - $training->equipment}">(PC: {$training->equipment}+<strong>{$training->validCount - $training->equipment}</strong>)</small></td>
 		</tr>
 		<tr id="date-{$training->dateId}">
-			<td colspan="5">
+			<td colspan="6">
 				{if $training->applications}
 					<table class="indent">
 						<thead>
@@ -31,6 +32,7 @@
 								<th></th>
 								<th><small>Jméno</small></th>
 								<th><small>E-mail</small></th>
+								<th><small title="Vlastní počítač">PC</small></th>
 								<th><small>Společnost</small></th>
 								<th><small>Status</small></th>
 								<th><small>Poznámka</small></th>
@@ -42,6 +44,7 @@
 								<td><small>{$iterator->getCounter()}.</small></td>
 								<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
 								<td><small>{$application->email}</small></td>
+								<td><small>{if $application->equipment}&#x2714;{else}&#x2716;{/if}</small></td>
 								<td>{$application->company}</td>
 								<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
 								<td><small title="{$application->note}">{$application->note|truncate:20}</small></td>

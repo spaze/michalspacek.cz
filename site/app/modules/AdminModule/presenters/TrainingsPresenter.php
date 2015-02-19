@@ -93,8 +93,12 @@ class TrainingsPresenter extends BasePresenter
 		$this->applications = $this->trainingApplications->getByDate($this->dateId);
 		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
+		$validCount = 0;
 		foreach ($this->applications as $application) {
 			$application->discarded = in_array($application->status, $discardedStatuses);
+			if (!$application->discarded) {
+				$validCount++;
+			}
 			$application->attended = in_array($application->status, $attendedStatuses);
 			if ($application->attended) {
 				$this->applicationIdsAttended[] = $application->id;
@@ -107,8 +111,11 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingName  = $this->training->name;
 		$this->template->venueCity     = $this->training->venueCity;
 		$this->template->venueName     = $this->training->venueName;
+		$this->template->venueEquipped = $this->training->venueEquipped;
 		$this->template->public        = $this->training->public;
 		$this->template->applications  = $this->applications;
+		$this->template->validCount    = $validCount;
+		$this->template->equipment     = $this->trainingApplications->countEquipment($this->applications);
 		$this->template->attendedStatuses = $attendedStatuses;
 	}
 
@@ -183,6 +190,8 @@ class TrainingsPresenter extends BasePresenter
 		$trainings = $this->trainings->getAllTrainings();
 		foreach ($trainings as $training) {
 			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
+			$training->validCount = count($training->applications);
+			$training->equipment = $this->trainingApplications->countEquipment($training->applications);
 		}
 
 		$this->template->pageTitle = 'Školení';

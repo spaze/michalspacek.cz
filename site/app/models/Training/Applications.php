@@ -118,7 +118,8 @@ class Applications
 				a.vat_rate AS vatRate,
 				a.price_vat AS priceVat,
 				a.invoice_id AS invoiceId,
-				a.paid
+				a.paid,
+				a.equipment
 			FROM
 				training_applications a
 				JOIN training_application_status s ON a.key_status = s.id_status
@@ -490,6 +491,18 @@ class Applications
 		if ($date->public && !$date->cooperationId) {
 			$this->vranaNotifier->addTrainingApplication($application);
 		}
+	}
+
+
+	public function countEquipment(array $applications)
+	{
+		$equipment = 0;
+		foreach ($applications as $application) {
+			if ($application->equipment && (!isset($application->discarded) || !$application->discarded)) {
+				$equipment++;
+			}
+		}
+		return $equipment;
 	}
 
 }
