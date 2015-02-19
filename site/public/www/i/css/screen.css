@@ -152,6 +152,8 @@ td.dateCell { width: 80px; }
 td.nameCell { width: 200px; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
 #statuses th, #statuses td { padding: 1px 5px; }
+#statuses tr.discarded { opacity: 0.3; }
+#statuses tr.discarded:hover { opacity: 0.7; }
 #frm-application th, #frm-application td {
     width: 150px;
     white-space: nowrap;

@@ -28,7 +28,7 @@
 		</tr>
 	</thead>
 	<tbody n:inner-foreach="$applications as $application">
-		<tr>
+		<tr n:class="$application->discarded ? discarded">
 			<td><small>{$iterator->getCounter()}.</small></td>
 			<td><small n:tag-if="$application->discarded"><a n:href="Trainings:application $application->id">{$application->name}</a></small></td>
 			<td><small>{$application->email}</small></td>
