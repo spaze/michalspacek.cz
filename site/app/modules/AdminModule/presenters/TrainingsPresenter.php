@@ -90,14 +90,17 @@ class TrainingsPresenter extends BasePresenter
 		$this->dateId = $param;
 		$this->redirectParam = $this->dateId;
 		$this->training = $this->trainingDates->get($this->dateId);
-		$this->applications = $this->trainingApplications->getByDate($this->dateId);
 		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
 		$validCount = 0;
-		foreach ($this->applications as $application) {
+		$applications = $discarded = [];
+		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
 			$application->discarded = in_array($application->status, $discardedStatuses);
 			if (!$application->discarded) {
 				$validCount++;
+				$applications[] = $application;
+			} else {
+				$discarded[] = $application;
 			}
 			$application->attended = in_array($application->status, $attendedStatuses);
 			if ($application->attended) {
@@ -105,6 +108,7 @@ class TrainingsPresenter extends BasePresenter
 			}
 			$application->childrenStatuses = $this->trainingStatuses->getChildrenStatuses($application->status);
 		}
+		$this->applications = array_merge($applications, $discarded);
 
 		$this->template->pageTitle     = 'Účastníci';
 		$this->template->trainingStart = $this->training->start;
