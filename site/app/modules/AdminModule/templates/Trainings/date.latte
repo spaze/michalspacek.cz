@@ -30,10 +30,10 @@
 	<tbody n:inner-foreach="$applications as $application">
 		<tr n:class="$application->discarded ? discarded">
 			<td><small>{$iterator->getCounter()}.</small></td>
-			<td><small n:tag-if="$application->discarded"><a n:href="Trainings:application $application->id">{$application->name}</a></small></td>
+			<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
 			<td><small>{$application->email}</small></td>
 			<td><small>{if $application->equipment}&#x2714;{else}&#x2716;{/if}</small></td>
-			<td><small n:tag-if="$application->discarded">{$application->company}</small></td>
+			<td>{$application->company}</td>
 			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
 			<td><small>&raquo;</small></td>
 			<td>{input applications-$application->id}</td>
