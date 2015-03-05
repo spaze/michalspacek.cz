@@ -1,6 +1,6 @@
 services:
 	routerFactory:
-		class: RouterFactory
+		class: \MichalSpacekCz\Application\RouterFactory
 		setup:
 			- setRootDomain(%domain.root%)
 			- setTranslatedRoutes(%translatedRoutes.presenters%)

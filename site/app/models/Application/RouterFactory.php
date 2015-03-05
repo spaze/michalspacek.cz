@@ -1,8 +1,8 @@
 <?php
+namespace MichalSpacekCz\Application;
 
 use	Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
-
 
 /**
  * Router factory.
@@ -57,7 +57,7 @@ class RouterFactory
 
 
 	/**
-	 * @return Nette\Application\IRouter
+	 * @return \Nette\Application\IRouter
 	 */
 	public function createRouter()
 	{
