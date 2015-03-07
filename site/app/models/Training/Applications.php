@@ -34,8 +34,6 @@ class Applications
 
 	protected $emailFrom;
 
-	private $statusCallbacks = array();
-
 
 	public function __construct(
 		\Nette\Database\Context $context,
@@ -52,7 +50,6 @@ class Applications
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
 		$this->vat = $vat;
-		$this->statusCallbacks[Statuses::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
 
 

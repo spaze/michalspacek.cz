@@ -35,12 +35,16 @@ class Statuses
 
 	private $descendantStatuses = array();
 
+	private $statusCallbacks = array();
+
+
 	/**
 	 * @param \Nette\Database\Context $context
 	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
+		$this->statusCallbacks[Statuses::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
 
 
