@@ -27,17 +27,18 @@ class Talks
 	public function getAll($limit = null)
 	{
 		$query = 'SELECT
-				action,
-				title,
-				date,
-				href,
-				slides_href AS slidesHref,
-				video_href AS videoHref,
-				event,
-				event_href AS eventHref
-			FROM talks
-			WHERE date <= NOW()
-			ORDER BY date DESC';
+				t.action,
+				t.title,
+				t.date,
+				t.href,
+				COALESCE(t.slides_href, t2.slides_href) AS slidesHref,
+				t.video_href AS videoHref,
+				t.event,
+				t.event_href AS eventHref
+			FROM talks t
+				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
+			WHERE t.date <= NOW()
+			ORDER BY t.date DESC';
 
 		if ($limit !== null) {
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
@@ -55,17 +56,18 @@ class Talks
 	public function getUpcoming()
 	{
 		$query = 'SELECT
-				action,
-				title,
-				date,
-				href,
-				slides_href AS slidesHref,
-				video_href AS videoHref,
-				event,
-				event_href AS eventHref
-			FROM talks
-			WHERE date > NOW()
-			ORDER BY date';
+				t.action,
+				t.title,
+				t.date,
+				t.href,
+				COALESCE(t.slides_href, t2.slides_href) AS slidesHref,
+				t.video_href AS videoHref,
+				t.event,
+				t.event_href AS eventHref
+			FROM talks t
+				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
+			WHERE t.date > NOW()
+			ORDER BY t.date';
 
 		$result = $this->database->fetchAll($query);
 		foreach ($result as $row) {
@@ -80,22 +82,23 @@ class Talks
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				action,
-				title,
-				description,
-				date,
-				href,
-				slides_href AS slidesHref,
-				slides_embed AS slidesEmbed,
-				video_href AS videoHref,
-				video_embed AS videoEmbed,
-				event,
-				event_href AS eventHref,
-				og_image AS ogImage,
-				no_embed_image AS noEmbedImage,
-				transcript
-			FROM talks
-			WHERE action = ?',
+				t.action,
+				t.title,
+				t.description,
+				t.date,
+				t.href,
+				COALESCE(t.slides_href, t2.slides_href) AS slidesHref,
+				COALESCE(t.slides_embed, t2.slides_embed) AS slidesEmbed,
+				t.video_href AS videoHref,
+				t.video_embed AS videoEmbed,
+				t.event,
+				t.event_href AS eventHref,
+				COALESCE(t.og_image, t2.og_image) AS ogImage,
+				t.no_embed_image AS noEmbedImage,
+				COALESCE(t.transcript, t2.transcript) AS transcript
+			FROM talks t
+				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
+			WHERE t.action = ?',
 			$name
 		);
 
