@@ -174,7 +174,7 @@ class TrainingsPresenter extends BasePresenter
 		$session->note         = $application->note;
 		$session->equipment    = $application->equipment;
 
-		$this->redirect('training', $application->action);
+		$this->redirect('training', $application->trainingAction);
 	}
 
 
@@ -352,7 +352,7 @@ class TrainingsPresenter extends BasePresenter
 			$application = $this->trainingApplications->getApplicationByToken($param);
 			$session->token = $param;
 			$session->applicationId = ($application ? $application->applicationId : null);
-			$this->redirect('files', ($application ? $application->action : $name));
+			$this->redirect('files', ($application ? $application->trainingAction : $name));
 		}
 
 		if (!$session->applicationId || !$session->token) {
@@ -369,8 +369,8 @@ class TrainingsPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("No training application for id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
-		if ($application->action != $name) {
-			$this->redirect('files', $application->action);
+		if ($application->trainingAction != $name) {
+			$this->redirect('files', $application->trainingAction);
 		}
 
 		$files = $this->trainingFiles->getFiles($application->applicationId);

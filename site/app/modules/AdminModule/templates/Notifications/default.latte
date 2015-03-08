@@ -1,0 +1,49 @@
+{define #menu}
+&raquo; <a n:href=":Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+{/define}
+
+{define #content}
+<p n:if="!$applications">Žádné notifikace k odeslání, hurá!</p>
+{if $applications}
+<p></p>
+{form notifications}
+<fieldset id="chyby" n:if="$form->hasErrors()">
+	<legend><strong>Chyby</strong></legend>
+	<strong>Notifikace neodeslány, protože:</strong>
+	<ul>
+		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+	</ul>
+</fieldset>
+{formContainer applications}
+<table>
+	<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th>Jméno</th>
+			<th>E-mail</th>
+			<th>Status</th>
+			<th>Zaplaceno</th>
+			<th>Termín</th>
+		</tr>
+	</thead>
+	<tbody n:inner-foreach="$applications as $application">
+		<tr>
+			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
+			<td>{input $application->id}</td>
+			<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
+			<td><small>{$application->email}</small></td>
+			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
+			<td>{ifset $application->paid}{$application->paid|date:'j. n. Y'}{else}&#x2716;{/ifset}</td>
+			<td>
+				<a n:href="Trainings:date $application->dateId">{$application->trainingName} {$application->trainingStart|date:'j. n. Y'} {$application->venueCity}</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+{/formContainer}
+<p>{input submit}</p>
+{/form}
+{/if}
+{/define}

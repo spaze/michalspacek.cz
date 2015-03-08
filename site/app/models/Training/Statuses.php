@@ -35,8 +35,6 @@ class Statuses
 
 	private $descendantStatuses = array();
 
-	private $statusCallbacks = array();
-
 
 	/**
 	 * @param \Nette\Database\Context $context
@@ -44,7 +42,6 @@ class Statuses
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
-		$this->statusCallbacks[Statuses::STATUS_NOTIFIED] = array($this, 'notifyCallback');
 	}
 
 
@@ -167,10 +164,6 @@ class Statuses
 				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
 			)
 		);
-
-		if (isset($this->statusCallbacks[$status]) && is_callable($this->statusCallbacks[$status])) {
-			call_user_func($this->statusCallbacks[$status], $applicationId);
-		}
 
 		return $result;
 	}

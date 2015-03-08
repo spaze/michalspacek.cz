@@ -24,6 +24,7 @@ services:
 	trainingDates: \MichalSpacekCz\Training\Dates
 	trainingVenues: \MichalSpacekCz\Training\Venues
 	trainingStatuses: \MichalSpacekCz\Training\Statuses
+	trainingNotifications: \MichalSpacekCz\Training\Notifications
 	trainingFiles:
 		class: \MichalSpacekCz\Training\Files
 		setup:

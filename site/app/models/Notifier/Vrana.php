@@ -92,7 +92,7 @@ class Vrana
 			'dic'      => '',
 			'poznamka' => $this->note,
 			'robot'    => $this->noSpam,
-			'skoleni'  => $this->trainingMapping[$application->action],
+			'skoleni'  => $this->trainingMapping[$application->trainingAction],
 			'termin'   => $application->trainingStart->format('Y-m-d'),
 			'submit'   => 'Registrovat se',
 		);

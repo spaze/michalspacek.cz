@@ -17,9 +17,6 @@ class Applications
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Notifier\Vrana */
-	protected $vranaNotifier;
-
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
@@ -37,7 +34,6 @@ class Applications
 
 	public function __construct(
 		\Nette\Database\Context $context,
-		\MichalSpacekCz\Notifier\Vrana $vranaNotifier,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		\MichalSpacekCz\Encryption\Email $emailEncryption,
@@ -45,7 +41,6 @@ class Applications
 	)
 	{
 		$this->database = $context;
-		$this->vranaNotifier = $vranaNotifier;
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
@@ -78,6 +73,7 @@ class Applications
 				a.price_vat AS priceVat,
 				a.discount,
 				a.invoice_id AS invoiceId,
+				a.paid,
 				a.access_token AS accessToken
 			FROM
 				training_applications a
@@ -359,7 +355,7 @@ class Applications
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				t.action,
+				t.action AS trainingAction,
 				d.id_date AS dateId,
 				d.start AS trainingStart,
 				a.id_application AS applicationId,
@@ -405,7 +401,7 @@ class Applications
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				t.action,
+				t.action AS trainingAction,
 				d.id_date AS dateId,
 				a.id_application AS applicationId,
 				a.name,
@@ -477,16 +473,6 @@ class Applications
 	{
 		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
 			$this->trainingStatuses->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
-		}
-	}
-
-
-	private function notifyCallback($applicationId)
-	{
-		$application = $this->getApplicationById($applicationId);
-		$date = $this->trainingDates->get($application->dateId);
-		if ($date->public && !$date->cooperationId) {
-			$this->vranaNotifier->addTrainingApplication($application);
 		}
 	}
 
