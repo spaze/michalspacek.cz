@@ -48,7 +48,7 @@ class UserManager implements \Nette\Security\IAuthenticator
 	public function verifySignInAuthorization($knockKnock)
 	{
 		if ($knockKnock != self::KNOCK_KNOCK && !$this->isReturningUser()) {
-			throw new \Nette\Application\BadRequestException("Knock, knock. Who's there? GTFO!", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \MichalSpacekCz\UserManager\UnauthorizedSignInException("Knock, knock. Who's there? GTFO!", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 	}
 

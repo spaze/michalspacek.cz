@@ -30,7 +30,11 @@ class SignPresenter extends \BasePresenter
 	 */
 	private function verify()
 	{
-		$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
+		try {
+			$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
+		} catch (\MichalSpacekCz\UserManager\UnauthorizedSignInException $e) {
+			$this->forward('Honeypot:signIn');
+		}
 	}
 
 

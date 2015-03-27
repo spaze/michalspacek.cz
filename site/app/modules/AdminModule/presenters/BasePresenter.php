@@ -30,10 +30,14 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		$startup = $this->getContext()->getByType(\MichalSpacekCz\Startup::class);
 		$startup->startup();
 
-		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\UserManager::class);
-		if (!$this->user->isLoggedIn()) {
-			$authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
-			$this->redirect('Sign:in');
+		try {
+			$authenticator = $this->getContext()->getByType(\MichalSpacekCz\UserManager::class);
+			if (!$this->user->isLoggedIn()) {
+				$authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
+				$this->redirect('Sign:in');
+			}
+		} catch (\MichalSpacekCz\UserManager\UnauthorizedSignInException $e) {
+			$this->redirect('Honeypot:signIn');
 		}
 	}
 
