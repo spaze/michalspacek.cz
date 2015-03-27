@@ -87,7 +87,7 @@ class SignPresenter extends \BasePresenter
 			\Tracy\Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
 			$this->redirect('Homepage:');
 		} catch (\Nette\Security\AuthenticationException $e) {
-			\Tracy\Debugger::log("Failed sign-in attempt: {$e->getMessage()} ({$values->username}, {$values->password}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
+			\Tracy\Debugger::log("Failed sign-in attempt: {$e->getMessage()} ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
 			$form->addError('Špatné uživatelské jméno nebo heslo');
 		}
 	}
