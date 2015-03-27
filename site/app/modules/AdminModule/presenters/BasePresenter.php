@@ -31,12 +31,12 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		$startup->startup();
 
 		try {
-			$authenticator = $this->getContext()->getByType(\MichalSpacekCz\UserManager::class);
+			$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 			if (!$this->user->isLoggedIn()) {
 				$authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
 				$this->redirect('Sign:in');
 			}
-		} catch (\MichalSpacekCz\UserManager\UnauthorizedSignInException $e) {
+		} catch (\MichalSpacekCz\User\UnauthorizedSignInException $e) {
 			$this->redirect('Honeypot:signIn');
 		}
 	}

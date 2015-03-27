@@ -29,7 +29,7 @@ services:
 		class: \MichalSpacekCz\Training\Files
 		setup:
 			- setFilesDir('../../files/trainings')
-	authenticator: \MichalSpacekCz\UserManager
+	authenticator: \MichalSpacekCz\User\Manager
 	embed: \MichalSpacekCz\Embed
 	webTracking: \MichalSpacekCz\WebTracking
 	vranaNotifier:

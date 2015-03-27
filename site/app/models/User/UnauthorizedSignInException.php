@@ -1,5 +1,5 @@
 <?php
-namespace MichalSpacekCz\UserManager;
+namespace MichalSpacekCz\User;
 
 /**
  * UnauthorizedSignInException exception.

@@ -12,17 +12,17 @@ use \Nette\Application\UI\Form;
 class UserPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\UserManager */
+	/** @var \MichalSpacekCz\User\Manager */
 	protected $authenticator;
 
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\UserManager $authenticator
+	 * @param \MichalSpacekCz\User\Manager $authenticator
 	 */
 	public function __construct(
 		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\UserManager $authenticator
+		\MichalSpacekCz\User\Manager $authenticator
 	)
 	{
 		$this->authenticator = $authenticator;

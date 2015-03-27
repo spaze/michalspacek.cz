@@ -10,15 +10,15 @@ namespace AdminModule;
 class SignPresenter extends \BasePresenter
 {
 
-	/** @var \MichalSpacekCz\UserManager */
+	/** @var \MichalSpacekCz\User\Manager */
 	protected $authenticator;
 
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \MichalSpacekCz\UserManager $authenticator
+	 * @param \MichalSpacekCz\User\Manager $authenticator
 	 */
-	public function __construct(\Nette\Localization\ITranslator $translator, \MichalSpacekCz\UserManager $authenticator)
+	public function __construct(\Nette\Localization\ITranslator $translator, \MichalSpacekCz\User\Manager $authenticator)
 	{
 		$this->authenticator = $authenticator;
 		parent::__construct($translator);
@@ -32,7 +32,7 @@ class SignPresenter extends \BasePresenter
 	{
 		try {
 			$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
-		} catch (\MichalSpacekCz\UserManager\UnauthorizedSignInException $e) {
+		} catch (\MichalSpacekCz\User\UnauthorizedSignInException $e) {
 			$this->forward('Honeypot:signIn');
 		}
 	}
@@ -51,7 +51,7 @@ class SignPresenter extends \BasePresenter
 			$this->redirect('Homepage:');
 		} else {
 			$session = $this->getSession('admin');
-			$session->knockKnock = \MichalSpacekCz\UserManager::KNOCK_KNOCK;
+			$session->knockKnock = \MichalSpacekCz\User\Manager::KNOCK_KNOCK;
 			$this->redirect('in');
 		}
 	}
