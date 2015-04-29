@@ -181,8 +181,6 @@ talks:
 		noupcoming: "…at your event or conference, \"let me know\":[%s]!"
 	wastalking: "…\"in a cinema\":[%s], \"in a casino in Las Vegas\":[%s], \"in a former fallout shelter\":[%s] in Prague, Czech Republic, in pubs, at conferences, both in Czech and in English."
 	more: "…and more at \"SlideShare\":[%s] and \"Speaker Deck\":[%s]"
-	preview: "First slide preview"
-	nomedia: "No slides nor video available. At least for now."
 	detail: "Talk detail"
 	detailevent: "Details on the event website"
 	dateevent: "Date and event"

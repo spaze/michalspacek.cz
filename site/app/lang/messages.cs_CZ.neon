@@ -181,8 +181,6 @@ talks:
 		noupcoming: "…třeba na vaší akci nebo konferenci, \"napište mi\":[%s]!"
 	wastalking: "…\"v kině\":[%s], \"v kasínu v Las Vegas\":[%s], \"v bývalém atomovém krytu\":[%s] v Praze, v hospodách, na konferencích, česky i anglicky."
 	more: "…a další na \"SlideShare\":[%s] nebo \"Speaker Deck\":[%s]"
-	preview: "Náhled prvního slajdu"
-	nomedia: "K přednášce nejsou k dispozici slajdy ani video. Alespoň prozatím."
 	detail: "Detail přednášky"
 	detailevent: "Detail přednášky na webu akce"
 	dateevent: "Datum a akce"

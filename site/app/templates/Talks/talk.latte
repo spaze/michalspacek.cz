@@ -13,11 +13,6 @@
 {include #embedVideo}
 <p n:if="$videoHref"><small><a href="{$videoHref}"><span class="icon icon16 video" title="{_messages.label.recording}"></span>{$videoHref}</a></small></p>
 
-{if $noEmbedImage && !$slidesHref && !$videoHref}
-	<p><img src="{=$noEmbedImage|staticUrl}" width="800" height="600" alt="{_messages.talks.preview}" title="{_messages.talks.preview}"><br></p>
-	<p><small>{_messages.talks.nomedia}</small></p>
-{/if}
-
 <h2 n:if="$description || $href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
 <p n:if="$description">{$description}</p>
 <p n:if="$href"><a href="{$href}">{_messages.talks.detailevent}</a></p>
