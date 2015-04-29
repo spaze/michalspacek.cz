@@ -95,10 +95,6 @@ class TalksPresenter extends BasePresenter
 
 	private function getOgImage($image)
 	{
-		$host = parse_url($image, PHP_URL_HOST);
-		if ($host === null) {
-			$image = $this->helpers->staticUrl($image);
-		}
 		return $image;
 	}
 
