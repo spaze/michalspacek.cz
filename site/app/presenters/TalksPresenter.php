@@ -78,7 +78,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->transcript = $talk->transcript;
 
 		if ($slide !== null) {
-			$this->template->canonicalLink = $this->link("//$name");
+			$this->template->canonicalLink = $this->link('//Talks:talk', $name);
 		}
 
 		$this->template->slidesHref = $talk->slidesHref;
