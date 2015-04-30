@@ -61,7 +61,6 @@ class RouterFactory
 	 */
 	public function createRouter()
 	{
-		Route::addStyle('name', 'action');  // let the name param be converted like the action param (foo-bar => fooBar)
 		$router = new RouteList();
 		$router[] = $this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::COTEL, '[<param>]', 'Homepage', 'default');
