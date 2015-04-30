@@ -17,7 +17,7 @@ class Encryption extends \Nette\Object
 	protected $adapter;
 
 
-	public function __construct(\MichalSpacekCz\Encryption\Adapter\AdapterInterface $adapter)
+	public function __construct(Adapter\AdapterInterface $adapter)
 	{
 		$this->adapter = $adapter;
 	}

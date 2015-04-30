@@ -10,7 +10,7 @@ namespace MichalSpacekCz\Training;
 class Notifications
 {
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
 	public function __construct(

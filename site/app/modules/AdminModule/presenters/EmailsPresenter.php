@@ -1,7 +1,7 @@
 <?php
 namespace AdminModule;
 
-use \MichalSpacekCz\Training;
+use MichalSpacekCz\Training;
 
 /**
  * Emails presenter.

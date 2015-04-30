@@ -20,7 +20,7 @@ class Dates
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Training\Statuses */
+	/** @var Statuses */
 	protected $trainingStatuses;
 
 	private $statusIds = array();
@@ -30,7 +30,7 @@ class Dates
 
 	/**
 	 * @param \Nette\Database\Context $context
-	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
+	 * @param Statuses $trainingStatuses
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
@@ -260,7 +260,7 @@ class Dates
 					'venueCity'     => $row->venueCity,
 					'venueEquipped' => $row->venueEquipped,
 				);
-				$upcoming[$row->action] = \Nette\ArrayHash::from(array(
+				$upcoming[$row->action] = \Nette\Utils\ArrayHash::from(array(
 					'action' => $row->action,
 					'name'   => $row->name,
 					'dates'  => (isset($upcoming[$row->action]->dates)

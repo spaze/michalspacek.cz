@@ -16,14 +16,14 @@ class Trainings
 	/** @var \Bare\Formatter\Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
 
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param \Bare\Next\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param Dates $trainingDates
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,

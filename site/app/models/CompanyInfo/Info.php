@@ -16,19 +16,19 @@ class Info
 
 	const STATUS_ERROR = 500;
 
-	/** @var \MichalSpacekCz\CompanyInfo\Ares */
+	/** @var Ares */
 	private $ares;
 
-	/** @var \MichalSpacekCz\CompanyInfo\RegisterUz */
+	/** @var RegisterUz */
 	private $registerUz;
 
 
 	/**
-	 * @param \MichalSpacekCz\CompanyInfo\Ares $ares
+	 * @param Ares $ares
 	 */
 	public function __construct(
-		\MichalSpacekCz\CompanyInfo\Ares $ares,
-		\MichalSpacekCz\CompanyInfo\RegisterUz $registerUz
+		Ares $ares,
+		RegisterUz $registerUz
 	)
 	{
 		$this->ares = $ares;

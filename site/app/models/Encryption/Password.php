@@ -18,7 +18,7 @@ class Password extends \Nette\Object
 	protected $staticKeyEncryption;
 
 
-	public function __construct(\MichalSpacekCz\Encryption\Symmetric\StaticKey $staticKeyEncryption)
+	public function __construct(Symmetric\StaticKey $staticKeyEncryption)
 	{
 		$this->staticKeyEncryption = $staticKeyEncryption;
 	}

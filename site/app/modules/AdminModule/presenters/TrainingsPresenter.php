@@ -1,8 +1,8 @@
 <?php
 namespace AdminModule;
 
-use \MichalSpacekCz\Training;
-use \Nette\Utils\Html;
+use MichalSpacekCz\Training;
+use Nette\Utils\Html;
 
 /**
  * Trainings presenter.

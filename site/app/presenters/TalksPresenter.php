@@ -1,5 +1,5 @@
 <?php
-use \Nette\Utils\Html;
+use Nette\Utils\Html;
 
 /**
  * Talks presenter.
@@ -31,11 +31,11 @@ class TalksPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Templating\Helpers $helpers
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Talks $talks,
-		\MichalSpacekCz\Embed $embed,
-		\MichalSpacekCz\Templating\Helpers $helpers
+		Nette\Localization\ITranslator $translator,
+		MichalSpacekCz\Formatter\Texy $texyFormatter,
+		MichalSpacekCz\Talks $talks,
+		MichalSpacekCz\Embed $embed,
+		MichalSpacekCz\Templating\Helpers $helpers
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -64,7 +64,7 @@ class TalksPresenter extends BasePresenter
 	{
 		$talk = $this->talks->get($name);
 		if (!$talk) {
-			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new Nette\Application\BadRequestException("I haven't talked about {$name}, yet", Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($talk->title), $talk->event]);

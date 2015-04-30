@@ -32,12 +32,12 @@ class HomepagePresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\Articles $articles,
-		\MichalSpacekCz\Interviews $interviews,
-		\MichalSpacekCz\Talks $talks,
-		\MichalSpacekCz\Training\Dates $trainingDates,
-		\MichalSpacekCz\Training\Trainings $trainings
+		Nette\Localization\ITranslator $translator,
+		MichalSpacekCz\Articles $articles,
+		MichalSpacekCz\Interviews $interviews,
+		MichalSpacekCz\Talks $talks,
+		MichalSpacekCz\Training\Dates $trainingDates,
+		MichalSpacekCz\Training\Trainings $trainings
 	)
 	{
 		$this->articles = $articles;

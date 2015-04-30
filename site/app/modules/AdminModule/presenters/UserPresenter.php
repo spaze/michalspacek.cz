@@ -1,7 +1,7 @@
 <?php
 namespace AdminModule;
 
-use \Nette\Application\UI\Form;
+use Nette\Application\UI\Form;
 
 /**
  * User presenter.

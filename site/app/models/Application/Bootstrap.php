@@ -55,7 +55,7 @@ class Bootstrap extends \Nette\Object
 
 	public function run()
 	{
-		$configurator = new \Nette\Config\Configurator();
+		$configurator = new \Nette\Configurator();
 		$configurator->addParameters(['appDir' => $this->appDir]);
 
 		$configurator->setDebugMode($this->isDebugMode());

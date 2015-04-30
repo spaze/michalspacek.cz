@@ -1,7 +1,7 @@
 <?php
 namespace MichalSpacekCz\Formatter;
 
-use \Nette\Utils\Html;
+use Nette\Utils\Html;
 
 class Texy extends \Bare\Next\Formatter\Texy
 {
@@ -48,7 +48,7 @@ class Texy extends \Bare\Next\Formatter\Texy
 	/**
 	 * @param string $format
 	 * @param string $args
-	 * @return \Nette\Utils\Html
+	 * @return Html
 	 */
 	public function substitute($format, $args)
 	{
@@ -121,7 +121,7 @@ class Texy extends \Bare\Next\Formatter\Texy
 
 	/**
 	 * @param string|null $text
-	 * @return \Nette\Utils\Html
+	 * @return Html
 	 */
 	public function format($text)
 	{
@@ -134,8 +134,8 @@ class Texy extends \Bare\Next\Formatter\Texy
 
 
 	/**
-	 * @param \Nette\Utils\Html $result
-	 * @return \Nette\Utils\Html
+	 * @param Html $result
+	 * @return Html
 	 */
 	private function replace(Html $result)
 	{

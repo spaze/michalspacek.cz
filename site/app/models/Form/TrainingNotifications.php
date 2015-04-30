@@ -1,7 +1,7 @@
 <?php
 namespace MichalSpacekCz\Form;
 
-use \MichalSpacekCz\Training;
+use MichalSpacekCz\Training;
 
 /**
  * Notifications to send form.

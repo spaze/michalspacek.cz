@@ -1,7 +1,7 @@
 <?php
-use \Nette\Application\BadRequestException,
-	\Nette\Application\Responses\FileResponse,
-	\Nette\Http\Response;
+use Nette\Application\BadRequestException,
+	Nette\Application\Responses\FileResponse,
+	Nette\Http\Response;
 
 /**
  * Files presenter.
@@ -25,9 +25,9 @@ class FilesPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\Files $files,
-		\MichalSpacekCz\Training\Files $trainingFiles
+		Nette\Localization\ITranslator $translator,
+		MichalSpacekCz\Files $files,
+		MichalSpacekCz\Training\Files $trainingFiles
 	)
 	{
 		$this->files = $files;

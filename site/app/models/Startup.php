@@ -22,19 +22,19 @@ class Startup
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
 
-	/** @var \MichalSpacekCz\ContentSecurityPolicy */
+	/** @var ContentSecurityPolicy */
 	protected $contentSecurityPolicy;
 
 
 	/**
 	 * @param \Nette\Http\IRequest $httpRequest
 	 * @param \Nette\Http\IResponse $httpResponse
-	 * @param \MichalSpacekCz\Reports $reports
+	 * @param Reports $reports
 	 */
 	public function __construct(
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
-		\MichalSpacekCz\ContentSecurityPolicy $contentSecurityPolicy
+		ContentSecurityPolicy $contentSecurityPolicy
 	)
 	{
 		$this->httpRequest = $httpRequest;

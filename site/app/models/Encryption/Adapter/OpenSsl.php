@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Encryption\Adapter;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class OpenSsl implements \MichalSpacekCz\Encryption\Adapter\AdapterInterface
+class OpenSsl implements AdapterInterface
 {
 
 	public function encrypt($clearText, $key, $cipher, $iv)

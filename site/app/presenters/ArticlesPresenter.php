@@ -17,8 +17,8 @@ class ArticlesPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Articles $articles
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\Articles $articles
+		Nette\Localization\ITranslator $translator,
+		MichalSpacekCz\Articles $articles
 	)
 	{
 		$this->articles = $articles;

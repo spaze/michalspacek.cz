@@ -48,7 +48,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function verifySignInAuthorization($knockKnock)
 	{
 		if ($knockKnock != self::KNOCK_KNOCK && !$this->isReturningUser()) {
-			throw new \MichalSpacekCz\User\UnauthorizedSignInException("Knock, knock. Who's there? GTFO!", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new UnauthorizedSignInException("Knock, knock. Who's there? GTFO!", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 	}
 

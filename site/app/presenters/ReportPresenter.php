@@ -25,10 +25,10 @@ class ReportPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Reports $reports
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
-		\Nette\Http\IRequest $httpRequest,
-		\Nette\Http\IResponse $httpResponse,
-		\MichalSpacekCz\Reports $reports
+		Nette\Localization\ITranslator $translator,
+		Nette\Http\IRequest $httpRequest,
+		Nette\Http\IResponse $httpResponse,
+		MichalSpacekCz\Reports $reports
 	)
 	{
 		parent::__construct($translator);
@@ -40,7 +40,7 @@ class ReportPresenter extends BasePresenter
 
 	public function actionCsp()
 	{
-		$report = \Nette\Utils\Json::decode(file_get_contents('php://input'));
+		$report = Nette\Utils\Json::decode(file_get_contents('php://input'));
 		$userAgent = $this->httpRequest->getHeader('User-Agent');
 		if (isset($report->{'csp-report'})) {
 			$this->reports->storeCspReport($userAgent, $report->{'csp-report'});
@@ -50,7 +50,7 @@ class ReportPresenter extends BasePresenter
 
 	public function actionXss()
 	{
-		$report = \Nette\Utils\Json::decode(file_get_contents('php://input'));
+		$report = Nette\Utils\Json::decode(file_get_contents('php://input'));
 		$userAgent = $this->httpRequest->getHeader('User-Agent');
 		if (isset($report->{'xss-report'})) {
 			$this->reports->storeXssReport($userAgent, $report->{'xss-report'});

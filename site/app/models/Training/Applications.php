@@ -1,7 +1,7 @@
 <?php
 namespace MichalSpacekCz\Training;
 
-use \Nette\Application\UI\Form;
+use Nette\Application\UI\Form;
 
 /**
  * Training applications model.
@@ -17,10 +17,10 @@ class Applications
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Statuses */
+	/** @var Statuses */
 	protected $trainingStatuses;
 
 	/** @var \MichalSpacekCz\Encryption\Email */

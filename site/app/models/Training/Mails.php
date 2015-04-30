@@ -15,19 +15,19 @@ class Mails
 	/** @var \Nette\Mail\IMailer */
 	protected $mailer;
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Statuses */
+	/** @var Statuses */
 	protected $trainingStatuses;
 
-	/** @var \MichalSpacekCz\Training\Venues */
+	/** @var Venues */
 	protected $trainingVenues;
 
-	/** @var \MichalSpacekCz\Training\Files */
+	/** @var Files */
 	protected $trainingFiles;
 
 	/** @var \Bare\Next\Templating\Helpers */
