@@ -30,6 +30,9 @@ class Mails
 	/** @var \MichalSpacekCz\Training\Files */
 	protected $trainingFiles;
 
+	/** @var \Bare\Next\Templating\Helpers */
+	protected $bareHelpers;
+
 	/**
 	 * Templates directory, ends with a slash.
 	 *
@@ -44,7 +47,8 @@ class Mails
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		Venues $trainingVenues,
-		Files $trainingFiles
+		Files $trainingFiles,
+		\Bare\Next\Templating\Helpers $bareHelpers
 	)
 	{
 		$this->mailer = $mailer;
@@ -53,6 +57,7 @@ class Mails
 		$this->trainingStatuses = $trainingStatuses;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
+		$this->bareHelpers = $bareHelpers;
 	}
 
 
@@ -70,7 +75,8 @@ class Mails
 		$template->venueAddress = $venueAddress;
 		$template->venueCity    = $venueCity;
 
-		$this->sendMail($recipientAddress, $recipientName, $template);
+		$subject = 'Potvrzení registrace na školení ' . $trainingName;
+		$this->sendMail($recipientAddress, $recipientName, $subject, $template);
 	}
 
 
@@ -133,7 +139,8 @@ class Mails
 		$template->setFile($this->templatesDir . 'admin/invitation.latte');
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $template);
+		$subject = 'Pozvánka na školení ' . $application->trainingName;
+		$this->sendMail($application->email, $application->name, $subject, $template);
 	}
 
 
@@ -148,7 +155,8 @@ class Mails
 		}
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $template);
+		$subject = 'Materiály ze školení ' . $application->trainingName;
+		$this->sendMail($application->email, $application->name, $subject, $template);
 	}
 
 
@@ -159,7 +167,8 @@ class Mails
 		$template->setFile($this->templatesDir . 'admin/invoice.latte');
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $template, $invoice);
+		$subject = 'Potvrzení registrace na školení ' . $application->trainingName . ' a faktura';
+		$this->sendMail($application->email, $application->name, $subject, $template, $invoice);
 	}
 
 
@@ -171,11 +180,14 @@ class Mails
 		$template->application = $application;
 		$template->venue = $this->trainingVenues->get($application->venueAction);
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $template);
+
+		$start = $this->bareHelpers->localDate($application->trainingStart, 'cs', 'j. n. Y');
+		$subject = 'Připomenutí školení ' . $application->trainingName . ' ' . $start;
+		$this->sendMail($application->email, $application->name, $subject, $template);
 	}
 
 
-	private function sendMail($recipientAddress, $recipientName, \Nette\Bridges\ApplicationLatte\Template $template, array $attachments = array())
+	private function sendMail($recipientAddress, $recipientName, $subject, \Nette\Bridges\ApplicationLatte\Template $template, array $attachments = array())
 	{
 		$mail = new \Nette\Mail\Message();
 		foreach ($attachments as $name => $file) {
@@ -184,6 +196,7 @@ class Mails
 		$mail->setFrom($this->emailFrom)
 			->addTo($recipientAddress, $recipientName)
 			->addBcc($this->emailFrom)
+			->setSubject($subject)
 			->setBody($template)
 			->clearHeader('X-Mailer');  // Hide Nette Mailer banner
 		$this->mailer->send($mail);
