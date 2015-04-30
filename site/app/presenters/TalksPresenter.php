@@ -74,7 +74,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->date = $talk->date;
 		$this->template->eventHref = $talk->eventHref;
 		$this->template->event = $talk->event;
-		$this->template->ogImage = $this->getOgImage($talk->ogImage);
+		$this->template->ogImage = $this->getOgImage($talk->ogImage, $slide);
 		$this->template->transcript = $talk->transcript;
 
 		if ($slide !== null) {
@@ -93,9 +93,13 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	private function getOgImage($image)
+	private function getOgImage($image, $slide)
 	{
-		return $image;
+		if ($slide === null) {
+			$slide = 1;
+		}
+
+		return sprintf($image, $slide);
 	}
 
 }
