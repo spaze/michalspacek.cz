@@ -32,7 +32,7 @@ class Email extends \Nette\Object
 
 	public function decrypt($data)
 	{
-		return $this->staticKeyEncryption->decrypt($data, self::GROUP, self::CIPHER);
+		return $this->staticKeyEncryption->decrypt($data, self::GROUP);
 	}
 
 }

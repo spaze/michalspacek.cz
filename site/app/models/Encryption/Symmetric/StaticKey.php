@@ -56,7 +56,7 @@ class StaticKey extends \Nette\Object
 	}
 
 
-	public function decrypt($data, $group, $cipher)
+	public function decrypt($data, $group)
 	{
 		list($cipher, $keyId, $iv, $cipherText) = $this->parseKeyIvCipherText($data);
 		$key = $this->getKey($group, $keyId);
