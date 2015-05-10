@@ -10,7 +10,7 @@ namespace MichalSpacekCz\Encryption\Symmetric;
 class StaticKey extends \Nette\Object
 {
 
-	const KEY_IV_CIPHERTEXT_SEPARATOR = ';';
+	const KEY_IV_CIPHERTEXT_SEPARATOR = '$';
 
 	/** @var string[] */
 	private $keys;
@@ -52,13 +52,13 @@ class StaticKey extends \Nette\Object
 		$keyId = $this->getActiveKeyId($group);
 		$key = $this->getKey($group, $keyId);
 		list($iv, $cipherText) = $this->encryption->encrypt($data, $key, $cipher);
-		return $this->formatKeyIvCipherText($keyId, $iv, $cipherText);
+		return $this->formatKeyIvCipherText($cipher, $keyId, $iv, $cipherText);
 	}
 
 
 	public function decrypt($data, $group, $cipher)
 	{
-		list($keyId, $iv, $cipherText) = $this->parseKeyIvCipherText($data);
+		list($cipher, $keyId, $iv, $cipherText) = $this->parseKeyIvCipherText($data);
 		$key = $this->getKey($group, $keyId);
 		return $this->encryption->decrypt($cipherText, $key, $cipher, $iv);
 	}
@@ -83,16 +83,16 @@ class StaticKey extends \Nette\Object
 	private function parseKeyIvCipherText($data)
 	{
 		$data = explode(self::KEY_IV_CIPHERTEXT_SEPARATOR, $data);
-		if (count($data) !== 3) {
-			throw new \OutOfBoundsException('Data must have key, iv, and ciphertext. Now look at the Oxford comma!');
+		if (count($data) !== 5) {
+			throw new \OutOfBoundsException('Data must have cipher, key, iv, and ciphertext. Now look at the Oxford comma!');
 		}
-		return array_map('base64_decode', $data);
+		return array($data[1], base64_decode($data[2]), base64_decode($data[3]), base64_decode($data[4]));
 	}
 
 
-	private function formatKeyIvCipherText($keyId, $iv, $cipherText)
+	private function formatKeyIvCipherText($cipher, $keyId, $iv, $cipherText)
 	{
-		return implode(self::KEY_IV_CIPHERTEXT_SEPARATOR, array(base64_encode($keyId), base64_encode($iv), base64_encode($cipherText)));
+		return implode(self::KEY_IV_CIPHERTEXT_SEPARATOR, array($cipher, base64_encode($keyId), base64_encode($iv), base64_encode($cipherText)));
 	}
 
 }
