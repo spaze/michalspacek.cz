@@ -3,7 +3,7 @@ namespace MichalSpacekCz\Formatter;
 
 use Nette\Utils\Html;
 
-class Texy extends \Bare\Next\Formatter\Texy
+class Texy extends \Netxten\Formatter\Texy
 {
 
 	/** @var string */
@@ -18,8 +18,8 @@ class Texy extends \Bare\Next\Formatter\Texy
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var \Bare\Next\Templating\Helpers */
-	protected $bareHelpers;
+	/** @var \Netxten\Templating\Helpers */
+	protected $netxtenHelpers;
 
 
 	/**
@@ -27,20 +27,20 @@ class Texy extends \Bare\Next\Formatter\Texy
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \Nette\Application\Application $application
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \Bare\Next\Templating\Helpers $bareHelpers
+	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 */
 	public function __construct(
 		\Nette\Caching\IStorage $cacheStorage,
 		\Nette\Localization\ITranslator $translator,
 		\Nette\Application\Application $application,
 		\MichalSpacekCz\Training\Dates $trainingDates,
-		\Bare\Next\Templating\Helpers $bareHelpers
+		\Netxten\Templating\Helpers $netxtenHelpers
 	)
 	{
 		$this->translator = $translator;
 		$this->application = $application;
 		$this->trainingDates = $trainingDates;
-		$this->bareHelpers = $bareHelpers;
+		$this->netxtenHelpers = $netxtenHelpers;
 		parent::__construct($cacheStorage);
 	}
 
@@ -165,7 +165,7 @@ class Texy extends \Bare\Next\Formatter\Texy
 		} else {
 			foreach ($upcoming[$name]['dates'] as $date) {
 				$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
-				$start = $this->bareHelpers->localDate($date->start, 'cs', $format);
+				$start = $this->netxtenHelpers->localDate($date->start, 'cs', $format);
 				$el = Html::el()
 					->add(Html::el('strong')->setText($start))
 					->add(Html::el()->setText(' '))

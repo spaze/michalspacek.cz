@@ -13,34 +13,34 @@ class TrainingApplication extends Form
 	/** @var \Nette\Localization\ITranslator */
 	protected $translator;
 
-	/** @var \Bare\Next\Templating\Helpers */
-	protected $bareHelpers;
+	/** @var \Netxten\Templating\Helpers */
+	protected $netxtenHelpers;
 
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 * @param array $dates
 	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \Bare\Next\Templating\Helpers $bareHelpers
+	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 */
 	public function __construct(
 		\Nette\ComponentModel\IContainer $parent,
 		$name,
 		array $dates,
 		\Nette\Localization\ITranslator $translator,
-		\Bare\Next\Templating\Helpers $bareHelpers
+		\Netxten\Templating\Helpers $netxtenHelpers
 	)
 	{
 		parent::__construct($parent, $name);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->translator = $translator;
-		$this->bareHelpers = $bareHelpers;
+		$this->netxtenHelpers = $netxtenHelpers;
 
 		$inputDates = array();
 		foreach ($dates as $date) {
 			$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
-			$start = $this->bareHelpers->localDate($date->start, 'cs', $format);
+			$start = $this->netxtenHelpers->localDate($date->start, 'cs', $format);
 			$inputDates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '');
 		}
 
@@ -51,7 +51,7 @@ class TrainingApplication extends Form
 				->setRequired('Vyberte prosím termín a místo školení')
 				->setPrompt('- vyberte termín a místo -');
 		} else {
-			$field = new \Bare\Next\Forms\Controls\HiddenFieldWithLabel($label, $date->dateId, $inputDates[$date->dateId]);
+			$field = new \Netxten\Forms\Controls\HiddenFieldWithLabel($label, $date->dateId, $inputDates[$date->dateId]);
 			$this->addComponent($field, 'trainingId');
 		}
 

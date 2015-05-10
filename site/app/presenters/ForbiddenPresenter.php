@@ -40,7 +40,7 @@ class ForbiddenPresenter extends Nette\Application\UI\Presenter
 		$helpers = $this->getContext()->getByType(MichalSpacekCz\Templating\Helpers::class);
 
 		$template = parent::createTemplate($class);
-		$template->getLatte()->addFilter(null, [new Bare\Next\Templating\Helpers(), 'loader']);
+		$template->getLatte()->addFilter(null, [new Netxten\Templating\Helpers(), 'loader']);
 		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
 		return $template;
 	}

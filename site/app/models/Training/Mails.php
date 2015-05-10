@@ -30,8 +30,8 @@ class Mails
 	/** @var Files */
 	protected $trainingFiles;
 
-	/** @var \Bare\Next\Templating\Helpers */
-	protected $bareHelpers;
+	/** @var \Netxten\Templating\Helpers */
+	protected $netxtenHelpers;
 
 	/**
 	 * Templates directory, ends with a slash.
@@ -48,7 +48,7 @@ class Mails
 		Statuses $trainingStatuses,
 		Venues $trainingVenues,
 		Files $trainingFiles,
-		\Bare\Next\Templating\Helpers $bareHelpers
+		\Netxten\Templating\Helpers $netxtenHelpers
 	)
 	{
 		$this->mailer = $mailer;
@@ -57,7 +57,7 @@ class Mails
 		$this->trainingStatuses = $trainingStatuses;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
-		$this->bareHelpers = $bareHelpers;
+		$this->netxtenHelpers = $netxtenHelpers;
 	}
 
 
@@ -181,7 +181,7 @@ class Mails
 		$template->venue = $this->trainingVenues->get($application->venueAction);
 		$template->additional = $additional;
 
-		$start = $this->bareHelpers->localDate($application->trainingStart, 'cs', 'j. n. Y');
+		$start = $this->netxtenHelpers->localDate($application->trainingStart, 'cs', 'j. n. Y');
 		$subject = 'Připomenutí školení ' . $application->trainingName . ' ' . $start;
 		$this->sendMail($application->email, $application->name, $subject, $template);
 	}

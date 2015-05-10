@@ -35,8 +35,8 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
-	/** @var \Bare\Next\Templating\Helpers */
-	protected $bareHelpers;
+	/** @var \Netxten\Templating\Helpers */
+	protected $netxtenHelpers;
 
 	/** @var \Nette\Database\Row */
 	private $training;
@@ -55,7 +55,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
-	 * @param \Bare\Next\Templating\Helpers $bareHelpers
+	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 */
 	public function __construct(
 		Nette\Localization\ITranslator $translator,
@@ -67,7 +67,7 @@ class TrainingsPresenter extends BasePresenter
 		Training\Files $trainingFiles,
 		Training\Trainings $trainings,
 		MichalSpacekCz\Vat $vat,
-		Bare\Next\Templating\Helpers $bareHelpers
+		Netxten\Templating\Helpers $netxtenHelpers
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -78,7 +78,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingFiles = $trainingFiles;
 		$this->trainings = $trainings;
 		$this->vat = $vat;
-		$this->bareHelpers = $bareHelpers;
+		$this->netxtenHelpers = $netxtenHelpers;
 		parent::__construct($translator);
 	}
 
@@ -180,7 +180,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$form = new MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->translator, $this->bareHelpers);
+		$form = new MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
 		$form->setApplicationFromSession($this->getSession('training'));
 		$form->onSuccess[] = $this->submittedApplication;
 	}

@@ -13,7 +13,7 @@ class Trainings
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var \Bare\Formatter\Texy */
+	/** @var \Netxten\Formatter\Texy */
 	protected $texyFormatter;
 
 	/** @var Dates */
@@ -22,12 +22,12 @@ class Trainings
 
 	/**
 	 * @param \Nette\Database\Context $context
-	 * @param \Bare\Next\Formatter\Texy $texyFormatter
+	 * @param \Netxten\Formatter\Texy $texyFormatter
 	 * @param Dates $trainingDates
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
-		\Bare\Next\Formatter\Texy $texyFormatter,
+		\Netxten\Formatter\Texy $texyFormatter,
 		Dates $trainingDates
 	)
 	{

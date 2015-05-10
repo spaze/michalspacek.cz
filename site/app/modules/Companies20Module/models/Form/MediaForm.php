@@ -12,7 +12,7 @@ class MediaForm extends \Nette\Application\UI\Form
 			->setRequired('Need URL');
 		$this->addText('title', 'Title:');
 		$this->addText('published', 'Date:');
-		$field = new \Bare\Next\Forms\Controls\HiddenFieldWithLabel('Tags:');
+		$field = new \Netxten\Forms\Controls\HiddenFieldWithLabel('Tags:');
 		$field->setHtmlId('tags');
 		$this->addComponent($field, 'tags');
 		$this->addSubmit('submit', 'Add');

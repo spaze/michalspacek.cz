@@ -46,7 +46,7 @@ services:
 	session:
 		setup:
 			- setCookieParameters(/, %domain.cookie%, true)
-	bareHelpers: \Bare\Next\Templating\Helpers
+	netxtenHelpers: \Netxten\Templating\Helpers
 	helpers:
 		class: \MichalSpacekCz\Templating\Helpers
 		setup:

@@ -14,13 +14,13 @@
 		"latte/latte": "~2.3.1",
 		"tracy/tracy": "~2.3.1",
 		"texy/texy": "2.6.0",
-		"spaze/bare-next": "0.2.*",
+		"spaze/netxten": "0.3.*",
 		"kdyby/translation": "~2.0"
 	},
 	"repositories": [
 		{
 			"type": "vcs",
-			"url":  "https://github.com/spaze/bare-next.git"
+			"url":  "https://github.com/spaze/netxten.git"
 		}
 	]
 }
