@@ -92,7 +92,13 @@ class StaticKey extends \Nette\Object
 
 	private function formatKeyIvCipherText($cipher, $keyId, $iv, $cipherText)
 	{
-		return implode(self::KEY_IV_CIPHERTEXT_SEPARATOR, array($cipher, base64_encode($keyId), base64_encode($iv), base64_encode($cipherText)));
+		$data = array(
+			strtolower($cipher),
+			base64_encode($keyId),
+			base64_encode($iv),
+			base64_encode($cipherText),
+		);
+		return self::KEY_IV_CIPHERTEXT_SEPARATOR . implode(self::KEY_IV_CIPHERTEXT_SEPARATOR, $data);
 	}
 
 }
