@@ -12,8 +12,6 @@ class Password extends \Nette\Object
 
 	const GROUP = 'password';
 
-	const CIPHER = Encryption::CIPHER_AES_256_CBC;
-
 	/** @var \MichalSpacekCz\Encryption\Symmetric\StaticKey */
 	protected $staticKeyEncryption;
 
@@ -26,7 +24,7 @@ class Password extends \Nette\Object
 
 	public function encrypt($data)
 	{
-		return $this->staticKeyEncryption->encrypt($data, self::GROUP, self::CIPHER);
+		return $this->staticKeyEncryption->encrypt($data, self::GROUP);
 	}
 
 

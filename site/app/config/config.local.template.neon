@@ -21,9 +21,9 @@ parameters:
 	encryption:
 		keys:
 			password:
-				dev1: abadcafec15c0d06f00dcafed00ddeadbeefdeadc0de0000000ff1cedefec8ed # [0-9A-F]{64}
+				dev1: "\xab\xad\xca\xfe\xc1\x5c\x0d\x06\xf0\x0d\xca\xfe\xd0\x0d\xbe\xef" # \x[0-9A-F]{32}
 			email:
-				dev1: cafebabe25da1768d69ee80717cc2f3094876e5f65f18436ba2a727af2b78137 # [0-9A-F]{64}
+				dev1: "\xca\xfe\xba\xbe\x25\xda\x17\x68\xd6\x9e\xe8\x07\x17\xcc\x2f\x30" # \x[0-9A-F]{32}
 		activeKeyIds:
 			password: dev1
 			email: dev1

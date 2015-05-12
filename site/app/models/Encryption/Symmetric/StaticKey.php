@@ -30,13 +30,6 @@ class StaticKey extends \Nette\Object
 
 	public function setKeys($keys)
 	{
-		foreach ($keys as $group) {
-			foreach ($group as $key) {
-				if (strlen($key) != 64 || !ctype_xdigit($key)) {
-					throw new \InvalidArgumentException('Key must be 64 characters long and only consist of hexadecimal characters');
-				}
-			}
-		}
 		$this->keys = $keys;
 	}
 
@@ -47,12 +40,30 @@ class StaticKey extends \Nette\Object
 	}
 
 
-	public function encrypt($data, $group, $cipher)
+	/**
+	 * Encrypt data.
+	 *
+	 * It's safe to throw exceptions here as the stack trace will not contain the key,
+	 * because the key is not passed as a parameter to the function.
+	 *
+	 * @param string $data The plaintext
+	 * @param string $group The group from which to read the key
+	 * @return string
+	 */
+	public function encrypt($data, $group)
 	{
 		$keyId = $this->getActiveKeyId($group);
 		$key = $this->getKey($group, $keyId);
-		list($iv, $cipherText) = $this->encryption->encrypt($data, $key, $cipher);
-		return $this->formatKeyIvCipherText($cipher, $keyId, $iv, $cipherText);
+
+		try {
+			$cipherText = \Crypto::Encrypt($data, $key);
+		} catch (\CryptoTestFailedException $e) {
+			throw new \RuntimeException('Crypto test failed because: ' . $e->getMessage());
+		} catch (\CannotPerformOperationException $e) {
+			throw new \RuntimeException('Cannot encrypt because: ' . $e->getMessage());
+		}
+
+		return $this->formatKeyCipherText($keyId, $cipherText);
 	}
 
 
@@ -67,7 +78,7 @@ class StaticKey extends \Nette\Object
 	private function getKey($group, $keyId)
 	{
 		if (isset($this->keys[$group][$keyId])) {
-			return pack('H64', $this->keys[$group][$keyId]);
+			return $this->keys[$group][$keyId];
 		} else {
 			throw new \OutOfRangeException('Unknown encryption key id: ' . $keyId);
 		}
@@ -90,12 +101,10 @@ class StaticKey extends \Nette\Object
 	}
 
 
-	private function formatKeyIvCipherText($cipher, $keyId, $iv, $cipherText)
+	private function formatKeyCipherText($keyId, $cipherText)
 	{
 		$data = array(
-			strtolower($cipher),
 			base64_encode($keyId),
-			base64_encode($iv),
 			base64_encode($cipherText),
 		);
 		return self::KEY_IV_CIPHERTEXT_SEPARATOR . implode(self::KEY_IV_CIPHERTEXT_SEPARATOR, $data);
