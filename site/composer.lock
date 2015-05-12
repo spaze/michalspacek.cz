@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "274d047b9e4b1ddef525f4dec16adafc",
+    "hash": "8eb32b9a190e949393a0d06818c9dda1",
     "packages": [
+        {
+            "name": "defuse/php-encryption",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/defuse/php-encryption.git",
+                "reference": "ecef0ac5f2714c8a9a3330f2e8f62b069d4b9ca1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/defuse/php-encryption/zipball/ecef0ac5f2714c8a9a3330f2e8f62b069d4b9ca1",
+                "reference": "ecef0ac5f2714c8a9a3330f2e8f62b069d4b9ca1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Crypto.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Hornby",
+                    "email": "havoc@defuse.ca"
+                }
+            ],
+            "description": "Secure PHP Encryption Library",
+            "keywords": [
+                "aes",
+                "authenticated encryption",
+                "cipher",
+                "crypto",
+                "cryptography",
+                "encrypt",
+                "encryption",
+                "openssl",
+                "security",
+                "symmetric key cryptography"
+            ],
+            "time": "2015-05-11 20:55:25"
+        },
         {
             "name": "kdyby/translation",
             "version": "v2.2.0",
@@ -1405,7 +1454,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "defuse/php-encryption": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

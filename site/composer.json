@@ -16,7 +16,8 @@
 		"tracy/tracy": "~2.3.1",
 		"texy/texy": "2.6.0",
 		"spaze/netxten": "0.3.*",
-		"kdyby/translation": "~2.0"
+		"kdyby/translation": "~2.0",
+		"defuse/php-encryption": "dev-master"
 	},
 	"repositories": [
 		{
