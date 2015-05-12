@@ -69,9 +69,20 @@ class StaticKey extends \Nette\Object
 
 	public function decrypt($data, $group)
 	{
-		list($cipher, $keyId, $iv, $cipherText) = $this->parseKeyIvCipherText($data);
+		list($keyId, $cipherText) = $this->parseKeyCipherText($data);
 		$key = $this->getKey($group, $keyId);
-		return $this->encryption->decrypt($cipherText, $key, $cipher, $iv);
+
+		try {
+			$plainText = \Crypto::Decrypt($cipherText, $key);
+		} catch (\InvalidCiphertextException $e) {
+			throw new \RuntimeException('The ciphertext has been tampered with!');
+		} catch (\CryptoTestFailedException $e) {
+			throw new \RuntimeException('Crypto test failed because: ' . $e->getMessage());
+		} catch (\CannotPerformOperationException $e) {
+			throw new \RuntimeException('Cannot encrypt because: ' . $e->getMessage());
+		}
+
+		return $plainText;
 	}
 
 
@@ -91,13 +102,13 @@ class StaticKey extends \Nette\Object
 	}
 
 
-	private function parseKeyIvCipherText($data)
+	private function parseKeyCipherText($data)
 	{
 		$data = explode(self::KEY_IV_CIPHERTEXT_SEPARATOR, $data);
-		if (count($data) !== 5) {
+		if (count($data) !== 3) {
 			throw new \OutOfBoundsException('Data must have cipher, key, iv, and ciphertext. Now look at the Oxford comma!');
 		}
-		return array($data[1], base64_decode($data[2]), base64_decode($data[3]), base64_decode($data[4]));
+		return array(base64_decode($data[1]), base64_decode($data[2]));
 	}
 
 
