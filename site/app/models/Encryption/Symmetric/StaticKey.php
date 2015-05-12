@@ -18,15 +18,6 @@ class StaticKey extends \Nette\Object
 	/** @var string[] */
 	private $activeKeyIds;
 
-	/** @var \MichalSpacekCz\Encryption */
-	protected $encryption;
-
-
-	public function __construct(\MichalSpacekCz\Encryption\Encryption $encryption)
-	{
-		$this->encryption = $encryption;
-	}
-
 
 	public function setKeys($keys)
 	{
