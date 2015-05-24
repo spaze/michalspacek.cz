@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/defuse/php-encryption.git",
-                "reference": "ecef0ac5f2714c8a9a3330f2e8f62b069d4b9ca1"
+                "reference": "78dfc8103f044c62facaf141a16cbab4d15e0d9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/defuse/php-encryption/zipball/ecef0ac5f2714c8a9a3330f2e8f62b069d4b9ca1",
-                "reference": "ecef0ac5f2714c8a9a3330f2e8f62b069d4b9ca1",
+                "url": "https://api.github.com/repos/defuse/php-encryption/zipball/78dfc8103f044c62facaf141a16cbab4d15e0d9e",
+                "reference": "78dfc8103f044c62facaf141a16cbab4d15e0d9e",
                 "shasum": ""
             },
             "require": {
@@ -53,7 +53,7 @@
                 "security",
                 "symmetric key cryptography"
             ],
-            "time": "2015-05-11 20:55:25"
+            "time": "2015-05-14 23:46:39"
         },
         {
             "name": "kdyby/translation",
@@ -278,16 +278,16 @@
         },
         {
             "name": "nette/bootstrap",
-            "version": "v2.3.1",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/bootstrap.git",
-                "reference": "e24c5000c022336b8c0a6409bfd8d1ff63ede8f6"
+                "reference": "f8fb4c73807c6888d904ea8c04324f2d94169c52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/bootstrap/zipball/e24c5000c022336b8c0a6409bfd8d1ff63ede8f6",
-                "reference": "e24c5000c022336b8c0a6409bfd8d1ff63ede8f6",
+                "url": "https://api.github.com/repos/nette/bootstrap/zipball/f8fb4c73807c6888d904ea8c04324f2d94169c52",
+                "reference": "f8fb4c73807c6888d904ea8c04324f2d94169c52",
                 "shasum": ""
             },
             "require": {
@@ -317,11 +317,6 @@
                 "tracy/tracy": "to use Configurator::enableDebugger()"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.3-dev"
-                }
-            },
             "autoload": {
                 "classmap": [
                     "src/"
@@ -345,7 +340,7 @@
             ],
             "description": "Nette Bootstrap",
             "homepage": "http://nette.org",
-            "time": "2015-03-09 23:19:17"
+            "time": "2015-05-21 14:47:56"
         },
         {
             "name": "nette/caching",
