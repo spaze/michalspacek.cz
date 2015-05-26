@@ -94,7 +94,9 @@ class Talks
 				t.event,
 				t.event_href AS eventHref,
 				COALESCE(t.og_image, t2.og_image) AS ogImage,
-				COALESCE(t.transcript, t2.transcript) AS transcript
+				COALESCE(t.transcript, t2.transcript) AS transcript,
+				t2.action AS origAction,
+				t2.title AS origTitle
 			FROM talks t
 				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
 			WHERE t.action = ?',

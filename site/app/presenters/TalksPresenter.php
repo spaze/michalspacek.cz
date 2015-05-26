@@ -76,6 +76,8 @@ class TalksPresenter extends BasePresenter
 		$this->template->event = $talk->event;
 		$this->template->ogImage = $this->getOgImage($talk->ogImage, $slide);
 		$this->template->transcript = $talk->transcript;
+		$this->template->origAction = $talk->origAction;
+		$this->template->origTitle = $talk->origTitle;
 
 		if ($slide !== null) {
 			$this->template->canonicalLink = $this->link('//Talks:talk', $name);
