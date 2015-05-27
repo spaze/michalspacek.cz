@@ -27,9 +27,11 @@
 <hr />
 <h2 id="{_html.id.talks}">{_messages.label.mytalks}</h2>
 <h3>{_messages.label.favorite}</h3>
+<ul>
 {foreach $favoriteTalks as $talk}
 	<li>{$talk}</li>
 {/foreach}
+</ul>
 <h3>{_messages.label.upcomingtalks}</h3>
 <p class="indent" n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
 	{include #itemTalk, talk => $talk}
