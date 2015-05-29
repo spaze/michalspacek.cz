@@ -16,16 +16,22 @@
 	</ul>
 </fieldset>
 {formContainer applications}
-<table>
+<table id="emails">
 	<tbody n:inner-foreach="$applications as $application">
 		{formContainer $application->id}
-		<tr>
+		<tr class="row">
 			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 			<td>{input send}</td>
 			<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
 			<td><small>{$application->email}</small></td>
 			<td>{$application->company}</td>
 			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
+			<td>
+				<small class="button">
+					<span n:class="$form[applications][$application->id][additional]->value ? hidden" title="Rozbalit">▼</span>
+					<span n:class="!$form[applications][$application->id][additional]->value ? hidden" title="Sbalit">▲</span>
+				</small>
+			</td>
 			<td>
 				{if $application->status == \MichalSpacekCz\Training\Statuses::STATUS_ATTENDED}
 					<strong n:if="!$application->files" class="error">Není nahrán žádný soubor!</strong>
@@ -43,10 +49,10 @@
 				{/if}
 			</td>
 		</tr>
-		<tr>
+		<tr n:class="expand-container, !$form[applications][$application->id][additional]->value ? hidden">
 			<td></td>
 			<td></td>
-			<td colspan="5">{input additional}</td>
+			<td colspan="6">{input additional}</td>
 		</tr>
 		{/formContainer}
 	</tbody>

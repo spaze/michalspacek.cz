@@ -94,4 +94,9 @@ $(document).ready(function() {
 				}
 			}).hide())
 		.appendTo('#statuses-links');
+
+	$('#emails .button').click(function() {
+		$(this).closest('tr').nextUntil('.row', '.expand-container').fadeToggle('fast');
+		$(this).find('span').toggle();
+	});
 });

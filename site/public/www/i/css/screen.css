@@ -57,6 +57,7 @@ small a, .small a { color: #444; }
     border-left: 2px solid #EEE;
 }
 .block { display: block; }
+.hidden { display: none; }
 input.big { width: 400px; }
 textarea.big {
     width: 700px;
@@ -228,3 +229,4 @@ div.notice {
     float: left;
     margin: 0 0.4em;
 }
+#emails .button { opacity: 0.3; }
