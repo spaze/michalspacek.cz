@@ -237,7 +237,10 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new \DateTime($date);
 
-		if (stripos($note, 'student') === false) {
+		if ($status === Statuses::STATUS_NON_PUBLIC_TRAINING) {
+			$price = null;
+			$discount = null;
+		} elseif (stripos($note, 'student') === false) {
 			$price = $training->price;
 			$discount = null;
 		} else {
@@ -264,7 +267,7 @@ class Applications
 			'key_source'           => $this->getTrainingApplicationSource($source),
 			'price'                => $price,
 			'vat_rate'             => $this->vat->getRate(),
-			'price_vat'            => $this->vat->addVat($price),
+			'price_vat'            => ($price === null ? null : $this->vat->addVat($price)),
 			'discount'             => $discount,
 		);
 		return $this->trainingStatuses->updateStatusCallback(function () use ($data) {
