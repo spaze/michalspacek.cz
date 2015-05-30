@@ -4,6 +4,8 @@
 {/define}
 
 {define #content}
+<p n:if="!$unpaidApplications">Žádné nezaplacené faktury, hurá!</p>
+{if $unpaidApplications}
 {includeblock "../Trainings/default.latte"}
 <p></p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
@@ -18,4 +20,5 @@
 	<p>{input submit}</p>
 	{/form invoice}
 </div>
+{/if}
 {/define}
