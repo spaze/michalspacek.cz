@@ -1,5 +1,8 @@
 {define #list}
-<div id="statuses-links"></div>
+<div id="statuses-links" class="small button">
+	<span id="statusesShow">Zobrazit všechny</span>
+	<span id="statusesHide" class="hidden">Skrýt všechny</span>
+</div>
 <table id="statuses">
 	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
@@ -23,7 +26,7 @@
 			<td><small>{$training->venueCity}{if !$training->public}, {$training->venueName}{/if}</small></td>
 			<td><small n:if="!$training->venueEquipped" title="Vlastních počítačů: {$training->equipment}, zajistit {$training->validCount - $training->equipment}">(PC: {$training->equipment}+<strong>{$training->validCount - $training->equipment}</strong>)</small></td>
 		</tr>
-		<tr id="date-{$training->dateId}">
+		<tr id="date-{$training->dateId}" class="hidden">
 			<td colspan="6">
 				{if $training->applications}
 					<table class="indent">

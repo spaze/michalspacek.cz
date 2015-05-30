@@ -68,32 +68,17 @@ $(document).ready(function() {
 			$('#date-' + $(this).data('date')).slideToggle('fast');
 			return false;
 		})
-		.css('cursor', 'pointer')
-		.parent().next().hide();
-	$('<small>')
-		.append($('<a>', {
-				text: 'Zobrazit všechny',
-				href: '#statuses',
-				id: 'statusesShow',
-				click: function(event) {
-					event.preventDefault();
-					$('#statuses td[data-date]').parent().next().show();
-					$(this).hide();
-					$('#statusesHide').show();
-				}
-			}))
-		.append($('<a>', {
-				text: 'Skrýt všechny',
-				href: '#statuses',
-				id: 'statusesHide',
-				click: function(event) {
-					event.preventDefault();
-					$('#statuses td[data-date]').parent().next().hide();
-					$(this).hide();
-					$('#statusesShow').show();
-				}
-			}).hide())
-		.appendTo('#statuses-links');
+		.css('cursor', 'pointer');
+
+	$('#statusesShow').click(function(event) {
+		$('#statuses td[data-date]').parent().next().show();
+		$('#statuses-links').find('span').toggle();
+	});
+
+	$('#statusesHide').click(function(event) {
+		$('#statuses td[data-date]').parent().next().hide();
+		$('#statuses-links').find('span').toggle();
+	});
 
 	$('#emails .button').click(function() {
 		$(this).closest('tr').nextUntil('.row', '.expand-container').fadeToggle('fast');
