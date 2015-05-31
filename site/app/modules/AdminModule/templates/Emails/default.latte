@@ -17,6 +17,13 @@
 </fieldset>
 {formContainer applications}
 <table id="emails">
+	<thead>
+		<tr>
+			<td colspan="1"></td>
+			<td><small class="button"><span id="checkAll" title="Vybrat vše">&#x2611;</span><span id="uncheckAll" title="Zrušit výběr">&#x2610;</span></small></td>
+			<td colspan="5"></td>
+		</tr>
+	</thead>
 	<tbody n:inner-foreach="$applications as $application">
 		{formContainer $application->id}
 		<tr class="row">

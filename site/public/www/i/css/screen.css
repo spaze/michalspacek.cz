@@ -229,4 +229,4 @@ div.notice {
     float: left;
     margin: 0 0.4em;
 }
-#emails .button { opacity: 0.3; }
+#emails tbody .button { opacity: 0.3; }

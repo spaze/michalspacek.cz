@@ -70,18 +70,29 @@ $(document).ready(function() {
 		})
 		.css('cursor', 'pointer');
 
-	$('#statusesShow').click(function(event) {
+	$('#statusesShow').click(function() {
 		$('#statuses td[data-date]').parent().next().show();
 		$('#statuses-links').find('span').toggle();
 	});
 
-	$('#statusesHide').click(function(event) {
+	$('#statusesHide').click(function() {
 		$('#statuses td[data-date]').parent().next().hide();
 		$('#statuses-links').find('span').toggle();
 	});
 
-	$('#emails .button').click(function() {
+	$('#emails tbody .button').click(function() {
 		$(this).closest('tr').nextUntil('.row', '.expand-container').fadeToggle('fast');
 		$(this).find('span').toggle();
 	});
+
+	$('#emails #checkAll').click(function(event) {
+		event.preventDefault();
+		$('#emails .row .send').prop('checked', true).attr('checked', true);
+	});
+
+	$('#emails #uncheckAll').click(function(event) {
+		event.preventDefault();
+		$('#emails .row .send').prop('checked', false).attr('checked', false);
+	});
+
 });

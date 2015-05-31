@@ -35,7 +35,8 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 			}
 			$applicationIdsContainer->addCheckbox('send')
 				->setDefaultValue($checked)
-				->setDisabled($disabled);
+				->setDisabled($disabled)
+				->setAttribute('class', 'send');
 			$applicationIdsContainer->addTextArea('additional', null)
 				->setAttribute('placeholder', 'Dodatečný text')
 				->setAttribute('cols', 80)
