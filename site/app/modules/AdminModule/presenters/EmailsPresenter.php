@@ -56,6 +56,18 @@ class EmailsPresenter extends BasePresenter
 		$this->template->pageTitle = 'E-maily k odeslání';
 		$this->applications = array();
 		foreach ($this->trainingMails->getApplications() as $application) {
+			if (in_array($application->status, $this->trainingStatuses->getParentStatuses(Training\Statuses::STATUS_INVITED))) {
+				$application->nextStatus = Training\Statuses::STATUS_INVITED;
+			}
+			if (in_array($application->status, $this->trainingStatuses->getParentStatuses(Training\Statuses::STATUS_MATERIALS_SENT))) {
+				$application->nextStatus = Training\Statuses::STATUS_MATERIALS_SENT;
+			}
+			if (in_array($application->status, $this->trainingStatuses->getParentStatuses(Training\Statuses::STATUS_INVOICE_SENT))) {
+				$application->nextStatus = Training\Statuses::STATUS_INVOICE_SENT;
+			}
+			if (in_array($application->status, $this->trainingStatuses->getParentStatuses(Training\Statuses::STATUS_REMINDED))) {
+				$application->nextStatus = Training\Statuses::STATUS_REMINDED;
+			}
 			$this->applications[$application->id] = $application;
 		}
 		$this->template->applications = $this->applications;
