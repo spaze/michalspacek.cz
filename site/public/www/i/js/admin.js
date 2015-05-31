@@ -65,7 +65,7 @@ $(document).ready(function() {
 
 	$('#statuses td[data-date]')
 		.click(function() {
-			$('#date-' + $(this).data('date')).slideToggle('fast');
+			$('#date-' + $(this).data('date')).toggle();
 			return false;
 		})
 		.css('cursor', 'pointer');
@@ -81,7 +81,7 @@ $(document).ready(function() {
 	});
 
 	$('#emails tbody .button').click(function() {
-		$(this).closest('tr').nextUntil('.row', '.expand-container').fadeToggle('fast');
+		$(this).closest('tr').nextUntil('.row', '.expand-container').toggle();
 		$(this).find('span').toggle();
 	});
 
