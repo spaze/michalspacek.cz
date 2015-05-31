@@ -23,6 +23,8 @@ nette:
 
 	session:
 		name: yourluckynumbers
+		hash_function: sha512
+		hash_bits_per_character: 6
 		expiration: 14 days
 
 translation:
