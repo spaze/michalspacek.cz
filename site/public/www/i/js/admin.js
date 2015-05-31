@@ -82,7 +82,6 @@ $(document).ready(function() {
 
 	$('#emails tbody .button').click(function() {
 		$(this).closest('tr').nextUntil('.row', '.expand-container').toggle();
-		$(this).find('span').toggle();
 	});
 
 	$('#emails #checkAll').click(function(event) {
