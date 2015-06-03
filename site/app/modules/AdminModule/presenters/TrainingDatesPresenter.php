@@ -23,13 +23,11 @@ class TrainingDatesPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
 		Training\Trainings $trainings,
 		Training\Dates $trainingDates,
 		Training\Venues $trainingVenues
@@ -38,7 +36,6 @@ class TrainingDatesPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->trainingDates = $trainingDates;
 		$this->trainingVenues = $trainingVenues;
-		parent::__construct($translator);
 	}
 
 

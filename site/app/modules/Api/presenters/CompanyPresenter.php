@@ -14,16 +14,11 @@ class CompanyPresenter extends \BasePresenter
 	protected $companyInfo;
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
 	 */
-	public function __construct(
-		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\CompanyInfo\Info $companyInfo
-	)
+	public function __construct(\MichalSpacekCz\CompanyInfo\Info $companyInfo)
 	{
 		$this->companyInfo = $companyInfo;
-		parent::__construct($translator);
 	}
 
 

@@ -27,7 +27,6 @@ class VenuesPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
@@ -35,7 +34,6 @@ class VenuesPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
 		MichalSpacekCz\Formatter\Texy $texyFormatter,
 		Training\Dates $trainingDates,
 		Training\Venues $trainingVenues,
@@ -48,7 +46,6 @@ class VenuesPresenter extends BasePresenter
 		$this->trainingVenues = $trainingVenues;
 		$this->trainings = $trainings;
 		$this->embed = $embed;
-		parent::__construct($translator);
 	}
 
 

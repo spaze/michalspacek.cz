@@ -19,13 +19,11 @@ class CompanyTrainingsPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
 		MichalSpacekCz\Formatter\Texy $texyFormatter,
 		MichalSpacekCz\Training\Trainings $trainings,
 		MichalSpacekCz\Vat $vat
@@ -34,7 +32,6 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->texyFormatter = $texyFormatter;
 		$this->trainings = $trainings;
 		$this->vat = $vat;
-		parent::__construct($translator);
 	}
 
 

@@ -46,7 +46,6 @@ class TrainingsPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Files
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
@@ -58,7 +57,6 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 */
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
 		MichalSpacekCz\Formatter\Texy $texyFormatter,
 		MichalSpacekCz\Files $files,
 		Training\Applications $trainingApplications,
@@ -79,7 +77,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
-		parent::__construct($translator);
 	}
 
 

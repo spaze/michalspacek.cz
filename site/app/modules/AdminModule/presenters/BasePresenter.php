@@ -10,17 +10,11 @@ namespace AdminModule;
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
-	/** @var \Nette\Localization\ITranslator */
-	protected $translator;
-
-
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
+	 * @var \Nette\Localization\ITranslator
+	 * @inject
 	 */
-	public function __construct(\Nette\Localization\ITranslator $translator)
-	{
-		$this->translator = $translator;
-	}
+	public $translator;
 
 
 	protected function startup()

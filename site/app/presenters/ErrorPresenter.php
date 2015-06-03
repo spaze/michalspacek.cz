@@ -13,11 +13,10 @@ class ErrorPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
+	 * @param \MichalSpacekCz\Redirections $translator
 	 */
-	public function __construct(Nette\Localization\ITranslator $translator, MichalSpacekCz\Redirections $redirections)
+	public function __construct(MichalSpacekCz\Redirections $redirections)
 	{
-		parent::__construct($translator);
 		$this->redirections = $redirections;
 	}
 

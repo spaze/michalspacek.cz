@@ -24,14 +24,12 @@ class TalksPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Talks $talks
 	 * @param \MichalSpacekCz\Embed $embed
 	 * @param \MichalSpacekCz\Templating\Helpers $helpers
 	 */
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
 		MichalSpacekCz\Formatter\Texy $texyFormatter,
 		MichalSpacekCz\Talks $talks,
 		MichalSpacekCz\Embed $embed,
@@ -42,7 +40,6 @@ class TalksPresenter extends BasePresenter
 		$this->talks = $talks;
 		$this->embed = $embed;
 		$this->helpers = $helpers;
-		parent::__construct($translator);
 	}
 
 

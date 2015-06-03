@@ -15,16 +15,11 @@ class RedirectPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 */
-	public function __construct(
-		Nette\Localization\ITranslator $translator,
-		MichalSpacekCz\Training\Applications $trainingApplications
-	)
+	public function __construct(MichalSpacekCz\Training\Applications $trainingApplications)
 	{
 		$this->trainingApplications = $trainingApplications;
-		parent::__construct($translator);
 	}
 
 

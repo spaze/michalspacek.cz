@@ -25,14 +25,12 @@ class HomepagePresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Articles $articles
 	 * @param \MichalSpacekCz\Interviews $interviews
 	 * @param \MichalSpacekCz\Talks $talks
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 */
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
 		MichalSpacekCz\Articles $articles,
 		MichalSpacekCz\Interviews $interviews,
 		MichalSpacekCz\Talks $talks,
@@ -45,7 +43,6 @@ class HomepagePresenter extends BasePresenter
 		$this->talks = $talks;
 		$this->trainingDates = $trainingDates;
 		$this->trainings = $trainings;
-		parent::__construct($translator);
 	}
 
 

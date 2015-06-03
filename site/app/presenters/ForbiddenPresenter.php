@@ -19,6 +19,7 @@ class ForbiddenPresenter extends Nette\Application\UI\Presenter
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
+	 * @param \Nette\Http\IResponse $httpResponse
 	 */
 	public function __construct(Nette\Localization\ITranslator $translator, Nette\Http\IResponse $httpResponse)
 	{

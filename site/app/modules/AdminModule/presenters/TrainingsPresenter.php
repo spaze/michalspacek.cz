@@ -57,7 +57,6 @@ class TrainingsPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
@@ -66,7 +65,6 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
 		Training\Applications $trainingApplications,
 		Training\Dates $trainingDates,
 		Training\Statuses $trainingStatuses,
@@ -81,7 +79,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
-		parent::__construct($translator);
 	}
 
 

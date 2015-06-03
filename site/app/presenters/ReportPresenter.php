@@ -19,19 +19,16 @@ class ReportPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \Nette\Http\IRequest $httpRequest
 	 * @param \Nette\Http\IResponse $httpResponse
 	 * @param \MichalSpacekCz\Reports $reports
 	 */
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
 		Nette\Http\IRequest $httpRequest,
 		Nette\Http\IResponse $httpResponse,
 		MichalSpacekCz\Reports $reports
 	)
 	{
-		parent::__construct($translator);
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->reports = $reports;

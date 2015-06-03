@@ -20,19 +20,16 @@ class InvoicesPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
 		Training\Applications $trainingApplications,
 		Training\Dates $trainingDates
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
-		parent::__construct($translator);
 	}
 
 

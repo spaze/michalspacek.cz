@@ -15,16 +15,11 @@ class TrackingPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\WebTracking $webTracking
 	 */
-	public function __construct(
-		\Nette\Localization\ITranslator $translator,
-		\MichalSpacekCz\WebTracking $webTracking
-	)
+	public function __construct(\MichalSpacekCz\WebTracking $webTracking)
 	{
 		$this->webTracking = $webTracking;
-		parent::__construct($translator);
 	}
 
 

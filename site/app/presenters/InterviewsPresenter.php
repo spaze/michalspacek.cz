@@ -19,13 +19,11 @@ class InterviewsPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Interviews $interviews
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
 		MichalSpacekCz\Formatter\Texy $texyFormatter,
 		MichalSpacekCz\Interviews $interviews,
 		MichalSpacekCz\Embed $embed
@@ -34,7 +32,6 @@ class InterviewsPresenter extends BasePresenter
 		$this->texyFormatter = $texyFormatter;
 		$this->interviews = $interviews;
 		$this->embed = $embed;
-		parent::__construct($translator);
 	}
 
 

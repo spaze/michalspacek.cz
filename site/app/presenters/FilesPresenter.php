@@ -20,19 +20,16 @@ class FilesPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Files
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 */
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
 		MichalSpacekCz\Files $files,
 		MichalSpacekCz\Training\Files $trainingFiles
 	)
 	{
 		$this->files = $files;
 		$this->trainingFiles = $trainingFiles;
-		parent::__construct($translator);
 	}
 
 

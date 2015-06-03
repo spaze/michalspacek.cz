@@ -26,13 +26,11 @@ class NotificationsPresenter extends BasePresenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \MichalSpacekCz\Training\Notifications $trainingNotifications,
 	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
 	 * @param \MichalSpacekCz\Notifier\Vrana $vranaNotifier
 	 */
 	public function __construct(
-		\Nette\Localization\ITranslator $translator,
 		Training\Notifications $trainingNotifications,
 		Training\Statuses $trainingStatuses,
 		\MichalSpacekCz\Notifier\Vrana $vranaNotifier
@@ -41,7 +39,6 @@ class NotificationsPresenter extends BasePresenter
 		$this->trainingNotifications = $trainingNotifications;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->vranaNotifier = $vranaNotifier;
-		parent::__construct($translator);
 	}
 
 	public function actionDefault()

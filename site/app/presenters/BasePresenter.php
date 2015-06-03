@@ -8,14 +8,11 @@
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
 
-	/** @var \Nette\Localization\ITranslator */
-	protected $translator;
-
-
-	public function __construct(Nette\Localization\ITranslator $translator)
-	{
-		$this->translator = $translator;
-	}
+	/**
+	 * @var \Nette\Localization\ITranslator
+	 * @inject
+	 */
+	public $translator;
 
 
 	protected function startup()
