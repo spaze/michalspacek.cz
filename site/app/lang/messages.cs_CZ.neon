@@ -34,7 +34,7 @@ label:
 	phone: Telefon
 	skype: Skype
 	billingaddress: Fakturační adresa
-	companyid: IČ
+	companyid: IČO
 	companyvatid: DIČ
 	bankaccount: Bankovní spojení
 	iban: IBAN
@@ -216,7 +216,7 @@ trainings:
 		notfound: "nenalezeno,"
 		error: "chyba,"
 		again: "znovu"
-		countrycompanymissing: "Nejdříve vyberte zemi a zadejte IČ"
+		countrycompanymissing: "Nejdříve vyberte zemi a zadejte IČO"
 	lecturerwho: "o lektorovi"
 	lecturercontact: "kontakt na lektora"
 	date:

@@ -216,7 +216,7 @@ trainings:
 		notfound: "not found,"
 		error: "error,"
 		again: "again"
-		countrycompanymissing: "Nejdříve vyberte zemi a zadejte IČ"
+		countrycompanymissing: "Nejdříve vyberte zemi a zadejte IČO"
 	lecturerwho: "about the lecturer"
 	lecturercontact: "contact the lecturer"
 	date:

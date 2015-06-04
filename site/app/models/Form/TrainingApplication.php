@@ -92,10 +92,10 @@ class TrainingApplication extends Form
 
 	protected function addCompany(\Nette\Forms\Container $container)
 	{
-		$container->addText('companyId', 'IČ:')
+		$container->addText('companyId', 'IČO:')
 			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka IČ je %d znaky', 6)
-			->addRule(self::MAX_LENGTH, 'Maximální délka IČ je %d znaků', 200);
+			->addRule(self::MIN_LENGTH, 'Minimální délka IČO je %d znaky', 6)
+			->addRule(self::MAX_LENGTH, 'Maximální délka IČO je %d znaků', 200);
 		$container->addText('companyTaxId', 'DIČ:')
 			->addCondition(self::FILLED)
 			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
