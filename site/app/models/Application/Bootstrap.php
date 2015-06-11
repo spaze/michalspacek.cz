@@ -75,13 +75,13 @@ class Bootstrap extends \Nette\Object
 
 		$container = $configurator->createContainer();
 
-		$this->httpRequest = $container->getByType('\Nette\Http\IRequest');
-		$this->httpResponse = $container->getByType('\Nette\Http\IResponse');
+		$this->httpRequest = $container->getByType(\Nette\Http\IRequest::class);
+		$this->httpResponse = $container->getByType(\Nette\Http\IResponse::class);
 
 		$this->setHstsHeader();
 		$this->redirectToSecure();
 
-		$container->getByType('Nette\Application\Application')->run();
+		$container->getByType(\Nette\Application\Application::class)->run();
 	}
 
 
