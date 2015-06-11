@@ -2,12 +2,12 @@
 namespace MichalSpacekCz;
 
 /**
- * Startup service.
+ * SecurityHeaders service.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Startup
+class SecurityHeaders
 {
 
 	/** @var string */
@@ -57,7 +57,7 @@ class Startup
 	}
 
 
-	public function startup()
+	public function sendHeaders()
 	{
 		$header = $this->contentSecurityPolicy->getHeader();
 		if ($header !== false) {

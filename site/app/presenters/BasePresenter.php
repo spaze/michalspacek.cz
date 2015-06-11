@@ -19,8 +19,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	{
 		parent::startup();
 
-		$startup = $this->getContext()->getByType(MichalSpacekCz\Startup::class);
-		$startup->startup();
+		$securityHeaders = $this->getContext()->getByType(MichalSpacekCz\SecurityHeaders::class);
+		$securityHeaders->sendHeaders();
 
 		$authenticator = $this->getContext()->getByType(MichalSpacekCz\User\Manager::class);
 		if ($authenticator->isForbidden()) {

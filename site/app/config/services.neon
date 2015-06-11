@@ -61,8 +61,8 @@ services:
 			- setRootDomain(%domain.root%)
 			- setPolicy(%contentSecurityPolicy%)
 	reports: \MichalSpacekCz\Reports
-	startup:
-		class: \MichalSpacekCz\Startup
+	securityHeaders:
+		class: \MichalSpacekCz\SecurityHeaders
 		setup:
 			- setRootDomain(%domain.root%)
 			- setExtraHeaders(%extraHeaders%)
