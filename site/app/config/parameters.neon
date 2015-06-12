@@ -4,6 +4,7 @@ parameters:
 			noSpam: nospam
 			successMarker: 'Děkuji za přihlášku na školení'
 	domain:
+		default: www
 		sharedStaticRoot: https://www.%domain.root%
 	contentSecurityPolicy:
 		www:

@@ -58,12 +58,12 @@ services:
 	contentSecurityPolicy:
 		class: \MichalSpacekCz\ContentSecurityPolicy
 		setup:
-			- setRootDomain(%domain.root%)
 			- setPolicy(%contentSecurityPolicy%)
 	reports: \MichalSpacekCz\Reports
 	securityHeaders:
 		class: \MichalSpacekCz\SecurityHeaders
 		setup:
+			- setDefaultDomain(%domain.default%)
 			- setRootDomain(%domain.root%)
 			- setExtraHeaders(%extraHeaders%)
 	staticKeyEncryption:
