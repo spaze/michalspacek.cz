@@ -59,6 +59,10 @@ class SecurityHeaders
 
 	public function sendHeaders()
 	{
+		if ($this->httpRequest->isSecured()) {
+			$this->httpResponse->setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+		}
+
 		$header = $this->contentSecurityPolicy->getHeader();
 		if ($header !== false) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);

@@ -11,15 +11,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
 
-	protected function startup()
-	{
-		parent::startup();
-
-		$startup = $this->getContext()->getByType(\MichalSpacekCz\Startup::class);
-		$startup->startup();
-	}
-
-
 	protected function createTemplate($class = null)
 	{
 		$helpers = $this->getContext()->getByType(\MichalSpacekCz\Templating\Helpers::class);

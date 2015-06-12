@@ -21,9 +21,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	{
 		parent::startup();
 
-		$startup = $this->getContext()->getByType(\MichalSpacekCz\Startup::class);
-		$startup->startup();
-
 		try {
 			$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 			if (!$this->user->isLoggedIn()) {

@@ -78,7 +78,9 @@ class Bootstrap extends \Nette\Object
 		$this->httpRequest = $container->getByType(\Nette\Http\IRequest::class);
 		$this->httpResponse = $container->getByType(\Nette\Http\IResponse::class);
 
-		$this->setHstsHeader();
+		$securityHeaders = $container->getByType(\MichalSpacekCz\SecurityHeaders::class);
+		$securityHeaders->sendHeaders();
+
 		$this->redirectToSecure();
 
 		$container->getByType(\Nette\Application\Application::class)->run();
@@ -114,14 +116,6 @@ class Bootstrap extends \Nette\Object
 	private function isDebugMode()
 	{
 		return ($this->environment === self::MODE_DEVELOPMENT);
-	}
-
-
-	private function setHstsHeader()
-	{
-		if ($this->httpRequest->isSecured()) {
-			$this->httpResponse->setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-		}
 	}
 
 
