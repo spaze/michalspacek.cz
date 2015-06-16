@@ -58,6 +58,7 @@ small a, .small a { color: #444; }
 }
 .block { display: block; }
 .hidden { display: none; }
+.strikethrough { text-decoration: line-through; }
 input.big { width: 400px; }
 textarea.big {
     width: 700px;
