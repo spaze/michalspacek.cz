@@ -64,6 +64,10 @@ class TalksPresenter extends BasePresenter
 			throw new Nette\Application\BadRequestException("I haven't talked about {$name}, yet", Nette\Http\Response::S404_NOT_FOUND);
 		}
 
+		if ($talk->supersededByAction) {
+			$this->flashMessage($this->texyFormatter->translate('messages.talks.supersededby', [$talk->supersededByTitle, $talk->supersededByAction]));
+		}
+
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($talk->title), $talk->event]);
 		$this->template->pageHeader = $talk->title;
 		$this->template->description = $talk->description;

@@ -185,6 +185,7 @@ talks:
 	detail: "Detail přednášky"
 	detailevent: "Detail přednášky na webu akce"
 	dateevent: "Datum a akce"
+	supersededby: "Tato přednáška byla doplněna a nahrazena novější \"%s\":[%s], prohlédněte si raději tu."
 trainings:
 	spammyapplication: "Přihláška vypadá jako spam, takhle by to nešlo."
 	errorapplication: "Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu."

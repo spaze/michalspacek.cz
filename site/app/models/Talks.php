@@ -96,9 +96,12 @@ class Talks
 				COALESCE(t.og_image, t2.og_image) AS ogImage,
 				COALESCE(t.transcript, t2.transcript) AS transcript,
 				t2.action AS origAction,
-				t2.title AS origTitle
+				t2.title AS origTitle,
+				t3.action AS supersededByAction,
+				t3.title AS supersededByTitle
 			FROM talks t
 				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
+				LEFT JOIN talks t3 ON t.key_superseded_by = t3.id_talk
 			WHERE t.action = ?',
 			$name
 		);

@@ -4,6 +4,7 @@
 <meta n:if="$description" property="og:description" content="{$description|striptags|strip|truncate:160}">
 {/define}
 {define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {includeblock "../embed.latte"}
 <p n:if="$slidesHref" id="{_html.id.slides}"></p>
 {include #embedSlides}

@@ -185,6 +185,7 @@ talks:
 	detail: "Talk detail"
 	detailevent: "Details on the event website"
 	dateevent: "Date and event"
+	supersededby: "This talk has been amended and superseded by \"%s\":[%s], view that one."
 trainings:
 	spammyapplication: "The application looks like spam, this is a no-go."
 	errorapplication: "Oops, something went wrong. The application was not submitted, please try again in a while."
