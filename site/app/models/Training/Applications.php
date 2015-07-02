@@ -237,7 +237,7 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new \DateTime($date);
 
-		if ($status === Statuses::STATUS_NON_PUBLIC_TRAINING) {
+		if ($status === Statuses::STATUS_NON_PUBLIC_TRAINING || $source !== self::DEFAULT_SOURCE) {
 			$price = null;
 			$discount = null;
 		} elseif (stripos($note, 'student') === false) {
