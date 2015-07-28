@@ -18,6 +18,23 @@ parameters:
 		root: michalspacek.cz
 		cookie: .michalspacek.cz
 
+	contentSecurityPolicy:
+		www:
+			img-src: "'self' https://www.google-analytics.com data:"
+			script-src: "'self' https://www.google-analytics.com https://speakerdeck.com 'unsafe-inline' 'unsafe-eval'"
+			report-uri: /report/csp
+		admin:
+			script-src: "https://www.%domain.root% 'unsafe-inline' 'unsafe-eval'"
+			report-uri: https://www.%domain.root%/report/csp
+		heartbleed:
+			img-src: 'https://www.%domain.root% https://www.google-analytics.com data:'
+			script-src: "https://www.%domain.root% https://www.google-analytics.com 'unsafe-inline' 'unsafe-eval'"
+			report-uri: https://www.%domain.root%/report/csp
+		cotel:
+			script-src: "https://www.%domain.root% 'unsafe-inline' 'unsafe-eval'"
+			img-src: "https://www.%domain.root% data:"
+			report-uri: https://www.%domain.root%/report/csp
+
 	encryption:
 		keys:
 			password:
