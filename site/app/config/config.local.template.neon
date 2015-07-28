@@ -6,9 +6,6 @@ nette:
 			password: ...
 
 parameters:
-	authenticator:
-		key: ...
-
 	notifier:
 		vrana:
 			url: http://php.vrana.cz/skoleni.php
