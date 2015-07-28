@@ -14,25 +14,25 @@ parameters:
 			style-src: "'self' 'unsafe-inline'"
 			child-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
 			form-action: "'self'"
-			report-uri: /report/csp
+			report-uri: https://report-uri.io/report/me
 		admin:
 			default-src: https://www.%domain.root%
 			img-src: 'https://www.%domain.root% data:'
 			style-src: "https://www.%domain.root% 'unsafe-inline'"
 			form-action: "'self'"
-			report-uri: https://www.%domain.root%/report/csp
+			report-uri: https://report-uri.io/report/me
 		heartbleed:
 			default-src: https://www.%domain.root%
 			img-src: 'https://www.%domain.root% https://www.google-analytics.com'
 			script-src: 'https://www.%domain.root% https://www.google-analytics.com'
 			style-src: "https://www.%domain.root% 'unsafe-inline'"
 			form-action: "'none'"
-			report-uri: https://www.%domain.root%/report/csp
+			report-uri: https://report-uri.io/report/me
 		cotel:
 			default-src: 'https://www.%domain.root%'
 			style-src: "https://www.%domain.root% 'unsafe-inline'"
 			form-action: "'self'"
-			report-uri: https://www.%domain.root%/report/csp
+			report-uri: https://report-uri.io/report/me
 	extraHeaders:
 		www:
 				X-XSS-Protection: '1; mode=block; report=/report/xss'
