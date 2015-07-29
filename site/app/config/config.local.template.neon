@@ -16,6 +16,7 @@ parameters:
 		cookie: .michalspacek.cz
 
 	reporting:
+		enabledLocally: true
 		contentSecurityPolicy: https://www.%domain.root%/report/csp
 		xXssProtection: https://www.%domain.root%/report/xss
 

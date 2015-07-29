@@ -37,6 +37,8 @@ class ReportPresenter extends BasePresenter
 
 	public function actionCsp()
 	{
+		$this->checkEnabledLocally();
+
 		$report = Nette\Utils\Json::decode(file_get_contents('php://input'));
 		$userAgent = $this->httpRequest->getHeader('User-Agent');
 		if (isset($report->{'csp-report'})) {
@@ -45,14 +47,26 @@ class ReportPresenter extends BasePresenter
 		$this->terminate();
 	}
 
+
 	public function actionXss()
 	{
+		$this->checkEnabledLocally();
+
 		$report = Nette\Utils\Json::decode(file_get_contents('php://input'));
 		$userAgent = $this->httpRequest->getHeader('User-Agent');
 		if (isset($report->{'xss-report'})) {
 			$this->reports->storeXssReport($userAgent, $report->{'xss-report'});
 		}
 		$this->terminate();
+	}
+
+
+	private function checkEnabledLocally()
+	{
+
+		if (!$this->reports->enabledLocally) {
+			throw new Nette\Application\BadRequestException('Local CSP reporting not enabled', Nette\Http\Response::S404_NOT_FOUND);
+		}
 	}
 
 }

@@ -10,6 +10,9 @@ namespace MichalSpacekCz;
 class Reports
 {
 
+	/** @var boolean */
+	public $enabledLocally;
+
 	/** @var \Nette\Database\Context */
 	protected $database;
 
