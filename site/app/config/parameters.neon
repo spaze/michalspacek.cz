@@ -6,6 +6,9 @@ parameters:
 	domain:
 		default: www
 		sharedStaticRoot: https://www.%domain.root%
+	reporting:
+		contentSecurityPolicy: https://report-uri.io/report/me
+		xXssProtection: https://report-uri.io/report/me
 	contentSecurityPolicy:
 		www:
 			default-src: "'self'"
@@ -14,32 +17,32 @@ parameters:
 			style-src: "'self' 'unsafe-inline'"
 			child-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
 			form-action: "'self'"
-			report-uri: https://report-uri.io/report/me
+			report-uri: %reporting.contentSecurityPolicy%
 		admin:
 			default-src: https://www.%domain.root%
 			img-src: 'https://www.%domain.root% data:'
 			style-src: "https://www.%domain.root% 'unsafe-inline'"
 			form-action: "'self'"
-			report-uri: https://report-uri.io/report/me
+			report-uri: %reporting.contentSecurityPolicy%
 		heartbleed:
 			default-src: https://www.%domain.root%
 			img-src: 'https://www.%domain.root% https://www.google-analytics.com'
 			script-src: 'https://www.%domain.root% https://www.google-analytics.com'
 			style-src: "https://www.%domain.root% 'unsafe-inline'"
 			form-action: "'none'"
-			report-uri: https://report-uri.io/report/me
+			report-uri: %reporting.contentSecurityPolicy%
 		cotel:
 			default-src: 'https://www.%domain.root%'
 			style-src: "https://www.%domain.root% 'unsafe-inline'"
 			form-action: "'self'"
-			report-uri: https://report-uri.io/report/me
+			report-uri: %reporting.contentSecurityPolicy%
 	extraHeaders:
 		www:
-				X-XSS-Protection: '1; mode=block; report=/report/xss'
+				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
 		admin:
-				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
+				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
 		heartbleed:
-				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
+				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
 		cotel:
 				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
 	vatRate: 0.21
