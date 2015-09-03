@@ -16,7 +16,7 @@ parameters:
 			img-src: "'self' https://www.google-analytics.com"
 			script-src: "'self' https://www.google-analytics.com https://speakerdeck.com"
 			style-src: "'self' 'unsafe-inline'"
-			child-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
+			frame-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com'
 			form-action: "'self'"
 			report-uri: %reporting.contentSecurityPolicy%
 		admin:
