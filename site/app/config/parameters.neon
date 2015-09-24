@@ -22,7 +22,6 @@ parameters:
 		admin:
 			default-src: https://www.%domain.root%
 			img-src: 'https://www.%domain.root% data:'
-			style-src: "https://www.%domain.root% 'unsafe-inline'"
 			form-action: "'self'"
 			report-uri: %reporting.contentSecurityPolicy%
 		heartbleed:
