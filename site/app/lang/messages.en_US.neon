@@ -116,7 +116,7 @@ who:
 		3: "As a developer, I've learned a lot and I like to pass my knowledge and experience on my \"trainings\":[%s]."
 		4: "I want to show other web developers why and how to build secure and fast web applications."
 	speaker:
-		1: "I've been speaking at more than 30 conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA."
+		1: "I've been speaking at more than 40 conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
 		2: "Check the list of all my \"Talks\":[%s]."
 	webtop100juror:
 		1: "Since 2011, I'm a juror and since 2014 also a guarantor for the area of technical solution and security for \"WebTop100\":[%s], the largest competition of company websites in the Czech Republic."
