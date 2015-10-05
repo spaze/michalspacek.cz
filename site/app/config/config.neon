@@ -14,8 +14,7 @@ nette:
 
 	http:
 		headers:
-			X-Driven-By: Success
-			X-Powered-By: Failure
+			X-Powered-By: "<img src=x onerror=alert('Automagic escaping, maybe?')>"
 			X-Content-Type-Options: nosniff
 
 	security:
