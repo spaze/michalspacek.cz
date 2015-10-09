@@ -10,7 +10,6 @@
 {include #embedSlides}
 <p n:if="$slidesHref">
 	<small><a href="{$slidesHref}"><span class="icon icon16 slides" title="{_messages.label.slides}"></span>{$slidesHref}</a></small>
-	<small n:if="$origAction"><em>({_messages.talks.slidesorigin|format:$origTitle:"link:Talks:talk $origAction"})</em></small>
 </p>
 
 <p n:if="$videoHref" id="{_html.id.recording}"></p>

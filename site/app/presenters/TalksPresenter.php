@@ -68,6 +68,10 @@ class TalksPresenter extends BasePresenter
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.supersededby', [$talk->supersededByTitle, $talk->supersededByAction]));
 		}
 
+		if ($talk->origAction) {
+			$this->flashMessage($this->texyFormatter->translate('messages.talks.slidesorigin', [$talk->origTitle, $talk->origAction]), 'notice');
+		}
+
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($talk->title), $talk->event]);
 		$this->template->pageHeader = $talk->title;
 		$this->template->description = $talk->description;
@@ -77,8 +81,6 @@ class TalksPresenter extends BasePresenter
 		$this->template->event = $talk->event;
 		$this->template->ogImage = $this->getOgImage($talk->ogImage, $slide);
 		$this->template->transcript = $talk->transcript;
-		$this->template->origAction = $talk->origAction;
-		$this->template->origTitle = $talk->origTitle;
 
 		if ($slide !== null) {
 			$this->template->canonicalLink = $this->link('//Talks:talk', $name);

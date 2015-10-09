@@ -6,7 +6,7 @@
 	<a n:href="Talks:talk $talk->action" n:tag-if="$talk->action"><strong>{$talk->title}</strong></a><br />
 	<small>
 		<strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}
-		<span n:if="$talk->slidesHref" class="icon icon16 slides" title="{_messages.label.slides}"></span>
+		<span n:if="$talk->hasSlides" class="icon icon16 slides" title="{_messages.label.slides}"></span>
 		<span n:if="$talk->videoHref" class="icon icon16 video" title="{_messages.label.videorecording}"></span>
 	</small>
 {/define}
