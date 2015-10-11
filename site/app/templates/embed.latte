@@ -14,6 +14,8 @@
 		<iframe src="{$videoEmbed}" width="800" height="450" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
 	{elseif $videoEmbedType == \MichalSpacekCz\Embed::EMBED_VIDEO_YOUTUBE}
 		<iframe src="{$videoEmbed}" width="800" height="600" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+	{elseif $videoEmbedType == \MichalSpacekCz\Embed::EMBED_VIDEO_SLIDESLIVE}
+		<script type="text/javascript" src="{='/i/js/slideslive-embed.js'|staticUrl}" id="sle81767" data-id="38894504"></script>
 	{/if}
 </div>
 {/define}

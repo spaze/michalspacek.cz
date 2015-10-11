@@ -18,6 +18,8 @@ class Embed
 
 	const EMBED_VIDEO_YOUTUBE = 2;
 
+	const EMBED_VIDEO_SLIDESLIVE = 3;
+
 
 	public function getSlidesTemplateVars($href, $embedHref, $slide)
 	{
@@ -82,6 +84,9 @@ class Embed
 				break;
 			case 'vimeo.com':
 				$type = self::EMBED_VIDEO_VIMEO;
+				break;
+			case 'slideslive.com':
+				$type = self::EMBED_VIDEO_SLIDESLIVE;
 				break;
 		}
 
