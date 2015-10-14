@@ -30,7 +30,7 @@ class ContentSecurityPolicy
 
 		$policy = array();
 		foreach ($this->policy[$host] as $directive => $sources) {
-			$policy[] = "{$directive} {$sources}";
+			$policy[] = trim("{$directive} {$sources}");
 		}
 		return (isset($this->policy[$host]) ? implode('; ', $policy) : false);
 	}
