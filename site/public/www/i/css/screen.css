@@ -15,6 +15,7 @@ hr {
 fieldset {
     margin: 1em 0;
     border: 2px solid #EEE;
+    background-color: #FFF;
 }
 legend {
     padding: 0px 10px;
