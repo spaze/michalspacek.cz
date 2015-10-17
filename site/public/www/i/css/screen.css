@@ -88,13 +88,13 @@ abbr.dtstart, abbr.dtend { border: none; }
 #tagline { margin-top: 0px; }
 #main {
     background-color: #FFF;
-    padding: 0.5em 0px;
+    padding: 0.5em;
 }
 #footer {
     border-top: 1px solid #CCC;
     color: #999;
     font-size: 0.8em;
-    padding: 1em 0px;
+    padding: 1em 0.5em;
 }
 #footer a { color: #999; }
 #footer-name { float: left; }
