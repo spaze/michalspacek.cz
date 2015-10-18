@@ -145,4 +145,24 @@ class Talks
 		return $result;
 	}
 
+
+	/**
+	 * Return slide number by given alias.
+	 *
+	 * @param string|null $alias
+	 * @return integer|string|null Slide number or given alias if not found or null if no alias given
+	 */
+	public function getSlideNo($alias)
+	{
+		if ($alias === null) {
+			$slideNo = null;
+		} else {
+			$slideNo = $this->database->fetchField('SELECT number FROM talk_slides WHERE alias = ?', $alias);
+			if (!$slideNo) {
+				$slideNo = $alias;
+			}
+		}
+		return $slideNo;
+	}
+
 }

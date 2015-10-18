@@ -64,6 +64,8 @@ class TalksPresenter extends BasePresenter
 			throw new Nette\Application\BadRequestException("I haven't talked about {$name}, yet", Nette\Http\Response::S404_NOT_FOUND);
 		}
 
+		$slideNo = $this->talks->getSlideNo($slide);
+
 		if ($talk->supersededByAction) {
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.supersededby', [$talk->supersededByTitle, "link:Talks:talk {$talk->supersededByAction}"]));
 		}
@@ -79,15 +81,15 @@ class TalksPresenter extends BasePresenter
 		$this->template->date = $talk->date;
 		$this->template->eventHref = $talk->eventHref;
 		$this->template->event = $talk->event;
-		$this->template->ogImage = $this->getOgImage($talk->ogImage, $slide);
+		$this->template->ogImage = $this->getOgImage($talk->ogImage, $slideNo);
 		$this->template->transcript = $talk->transcript;
 
-		if ($slide !== null) {
+		if ($slideNo !== null) {
 			$this->template->canonicalLink = $this->link('//Talks:talk', $name);
 		}
 
 		$this->template->slidesHref = $talk->slidesHref;
-		foreach ($this->embed->getSlidesTemplateVars($talk->slidesHref, $talk->slidesEmbed, $slide) as $key => $value) {
+		foreach ($this->embed->getSlidesTemplateVars($talk->slidesHref, $talk->slidesEmbed, $slideNo) as $key => $value) {
 			$this->template->$key = $value;
 		}
 
