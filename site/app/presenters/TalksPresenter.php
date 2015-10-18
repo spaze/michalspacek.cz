@@ -65,11 +65,11 @@ class TalksPresenter extends BasePresenter
 		}
 
 		if ($talk->supersededByAction) {
-			$this->flashMessage($this->texyFormatter->translate('messages.talks.supersededby', [$talk->supersededByTitle, $talk->supersededByAction]));
+			$this->flashMessage($this->texyFormatter->translate('messages.talks.supersededby', [$talk->supersededByTitle, "link:Talks:talk {$talk->supersededByAction}"]));
 		}
 
 		if ($talk->origAction) {
-			$this->flashMessage($this->texyFormatter->translate('messages.talks.slidesorigin', [$talk->origTitle, $talk->origAction]), 'notice');
+			$this->flashMessage($this->texyFormatter->translate('messages.talks.slidesorigin', [$talk->origTitle, "link:Talks:talk {$talk->origAction}"]), 'notice');
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($talk->title), $talk->event]);
