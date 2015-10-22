@@ -8,7 +8,6 @@ services:
 	- HomepagePresenter
 	- InterviewsPresenter
 	- RedirectPresenter
-	- ReportPresenter
 	- TalksPresenter
 	- TrainingsPresenter
 	- VenuesPresenter

@@ -7,7 +7,6 @@ parameters:
 		default: www
 		sharedStaticRoot: https://www.%domain.root%
 	reporting:
-		enabledLocally: false
 		contentSecurityPolicy: https://report-uri.io/report/me
 		xXssProtection: https://report-uri.io/report/me
 	contentSecurityPolicy:

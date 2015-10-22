@@ -59,10 +59,6 @@ services:
 		class: \MichalSpacekCz\ContentSecurityPolicy
 		setup:
 			- setPolicy(%contentSecurityPolicy%)
-	reports:
-		class: \MichalSpacekCz\Reports
-		setup:
-			- $enabledLocally(%reporting.enabledLocally%)
 	securityHeaders:
 		class: \MichalSpacekCz\SecurityHeaders
 		setup:
