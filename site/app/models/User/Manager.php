@@ -45,14 +45,6 @@ class Manager implements \Nette\Security\IAuthenticator
 	}
 
 
-	public function verifySignInAuthorization()
-	{
-		if (!$this->isReturningUser()) {
-			throw new UnauthorizedSignInException("Knock, knock. Who's there? GTFO!", \Nette\Http\Response::S404_NOT_FOUND);
-		}
-	}
-
-
 	/**
 	 * Performs an authentication.
 	 *
@@ -64,7 +56,6 @@ class Manager implements \Nette\Security\IAuthenticator
 	{
 		list($username, $password) = $credentials;
 		$user = $this->verifyPassword($username, $password);
-		$this->setReturningUser();
 		return new \Nette\Security\Identity($user->userId, array(), array('username' => $user->username));
 	}
 
@@ -127,13 +118,13 @@ class Manager implements \Nette\Security\IAuthenticator
 	}
 
 
-	private function setReturningUser()
+	public function setReturningUser()
 	{
 		$this->httpResponse->setCookie($this->returningUserCookie, $this->returningUserValue, \Nette\Http\Response::PERMANENT, self::RETURNING_USER_PATH);
 	}
 
 
-	private function isReturningUser()
+	public function isReturningUser()
 	{
 		return ($this->httpRequest->getCookie($this->returningUserCookie) === $this->returningUserValue);
 	}
@@ -148,6 +139,12 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function setReturningUserValue($value)
 	{
 		$this->returningUserValue = $value;
+	}
+
+
+	public function isReturningUserValue($value)
+	{
+		return ($this->returningUserValue === $value);
 	}
 
 }
