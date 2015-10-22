@@ -10,10 +10,6 @@ namespace MichalSpacekCz\User;
 class Manager implements \Nette\Security\IAuthenticator
 {
 
-	const RETURNING_USER_COOKIE = 'beenhere';
-
-	const RETURNING_USER_VALUE = 'donethat';
-
 	const RETURNING_USER_PATH = '/';
 
 	/** @var \Nette\Database\Context */
@@ -27,6 +23,12 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	/** @var \MichalSpacekCz\Encryption\Password */
 	protected $passwordEncryption;
+
+	/** @var string */
+	private $returningUserCookie;
+
+	/** @var string */
+	private $returningUserValue;
 
 
 	public function __construct(
@@ -127,13 +129,25 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	private function setReturningUser()
 	{
-		$this->httpResponse->setCookie(self::RETURNING_USER_COOKIE, self::RETURNING_USER_VALUE, \Nette\Http\Response::PERMANENT, self::RETURNING_USER_PATH);
+		$this->httpResponse->setCookie($this->returningUserCookie, $this->returningUserValue, \Nette\Http\Response::PERMANENT, self::RETURNING_USER_PATH);
 	}
 
 
 	private function isReturningUser()
 	{
-		return ($this->httpRequest->getCookie(self::RETURNING_USER_COOKIE) === self::RETURNING_USER_VALUE);
+		return ($this->httpRequest->getCookie($this->returningUserCookie) === $this->returningUserValue);
+	}
+
+
+	public function setReturningUserCookie($cookie)
+	{
+		$this->returningUserCookie = $cookie;
+	}
+
+
+	public function setReturningUserValue($value)
+	{
+		$this->returningUserValue = $value;
 	}
 
 }

@@ -29,7 +29,11 @@ services:
 		class: \MichalSpacekCz\Training\Files
 		setup:
 			- setFilesDir('../../files/trainings')
-	authenticator: \MichalSpacekCz\User\Manager
+	authenticator:
+		class: \MichalSpacekCz\User\Manager
+		setup:
+			- setReturningUserCookie(%returningUser.cookie%)
+			- setReturningUserValue(%returningUser.value%)
 	embed: \MichalSpacekCz\Embed
 	webTracking: \MichalSpacekCz\WebTracking
 	vranaNotifier:

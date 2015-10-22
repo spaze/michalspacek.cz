@@ -33,6 +33,10 @@ parameters:
 			script-src: "https://www.%domain.root% 'unsafe-inline' 'unsafe-eval'"
 			img-src: "https://www.%domain.root% data:"
 
+	returningUser:
+		cookie: cafebabe
+		value: waldoxyzzy
+
 	encryption:
 		keys:
 			password:
