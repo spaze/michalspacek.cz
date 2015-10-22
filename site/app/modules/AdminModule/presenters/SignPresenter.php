@@ -29,7 +29,7 @@ class SignPresenter extends \BasePresenter
 	private function verify()
 	{
 		try {
-			$this->authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
+			$this->authenticator->verifySignInAuthorization();
 		} catch (\MichalSpacekCz\User\UnauthorizedSignInException $e) {
 			$this->forward('Honeypot:signIn');
 		}
@@ -45,13 +45,7 @@ class SignPresenter extends \BasePresenter
 
 	public function actionKnockKnock()
 	{
-		if ($this->user->isLoggedIn()) {
-			$this->redirect('Homepage:');
-		} else {
-			$session = $this->getSession('admin');
-			$session->knockKnock = \MichalSpacekCz\User\Manager::KNOCK_KNOCK;
-			$this->redirect('in');
-		}
+		$this->redirect($this->user->isLoggedIn() ? 'Homepage:' : 'in');
 	}
 
 

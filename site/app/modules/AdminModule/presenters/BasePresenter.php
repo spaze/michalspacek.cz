@@ -24,7 +24,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		try {
 			$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 			if (!$this->user->isLoggedIn()) {
-				$authenticator->verifySignInAuthorization($this->getSession('admin')->knockKnock);
+				$authenticator->verifySignInAuthorization();
 				$this->redirect('Sign:in');
 			}
 		} catch (\MichalSpacekCz\User\UnauthorizedSignInException $e) {

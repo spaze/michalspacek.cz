@@ -10,8 +10,6 @@ namespace MichalSpacekCz\User;
 class Manager implements \Nette\Security\IAuthenticator
 {
 
-	const KNOCK_KNOCK = 'knockKnock';
-
 	const RETURNING_USER_COOKIE = 'beenhere';
 
 	const RETURNING_USER_VALUE = 'donethat';
@@ -45,9 +43,9 @@ class Manager implements \Nette\Security\IAuthenticator
 	}
 
 
-	public function verifySignInAuthorization($knockKnock)
+	public function verifySignInAuthorization()
 	{
-		if ($knockKnock != self::KNOCK_KNOCK && !$this->isReturningUser()) {
+		if (!$this->isReturningUser()) {
 			throw new UnauthorizedSignInException("Knock, knock. Who's there? GTFO!", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 	}
