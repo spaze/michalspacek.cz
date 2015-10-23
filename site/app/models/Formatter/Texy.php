@@ -74,12 +74,12 @@ class Texy extends \Netxten\Formatter\Texy
 
 
 	/**
-	 * @param TexyHandlerInvocation  handler invocation
+	 * @param \Texy\HandlerInvocation  handler invocation
 	 * @param string
 	 * @param string
-	 * @param TexyModifier
-	 * @param TexyLink
-	 * @return TexyHtml|string|FALSE
+	 * @param \Texy\Modifier
+	 * @param \Texy\Link
+	 * @return \Texy\HtmlElement|string|FALSE
 	 */
 	function phraseHandler($invocation, $phrase, $content, $modifier, $link)
 	{
@@ -96,9 +96,9 @@ class Texy extends \Netxten\Formatter\Texy
 			$texy = $invocation->getTexy();
 			$name = substr($link->URL, 9);
 			$link->URL = $this->application->getPresenter()->link('Trainings:training', $name);
-			$el = \TexyHtml::el();
+			$el = \Texy\HtmlElement::el();
 			$el->add($texy->phraseModule->solve(null, $phrase, $content, $modifier, $link));
-			$el->add($texy->protect($this->getTrainingSuffix($name), \Texy::CONTENT_TEXTUAL));
+			$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
 			return $el;
 		}
 
