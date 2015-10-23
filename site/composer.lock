@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8eb32b9a190e949393a0d06818c9dda1",
-    "content-hash": "bf673df040b4df1dec06880b79ddee72",
+    "hash": "dd8ea8f17b219db75492391ac32ff1b9",
+    "content-hash": "cb268c836ee9d7fe7106716e2dec29f7",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1072,16 +1072,16 @@
         },
         {
             "name": "spaze/netxten",
-            "version": "v0.3.0",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "c4ea986facc4808db2eb03bdb3139b8424880a94"
+                "reference": "e97dfcf0f0ec5cf739ce9c934d8c27f4f4aaf64a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/c4ea986facc4808db2eb03bdb3139b8424880a94",
-                "reference": "c4ea986facc4808db2eb03bdb3139b8424880a94",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/e97dfcf0f0ec5cf739ce9c934d8c27f4f4aaf64a",
+                "reference": "e97dfcf0f0ec5cf739ce9c934d8c27f4f4aaf64a",
                 "shasum": ""
             },
             "require": {
@@ -1091,7 +1091,7 @@
                 "nette/forms": ">= 2.3.0",
                 "nette/http": ">= 2.3.0",
                 "nette/utils": ">= 2.3.0",
-                "texy/texy": "2.6.0"
+                "texy/texy": ">= 2.8.0"
             },
             "type": "library",
             "autoload": {
@@ -1100,10 +1100,10 @@
                 }
             },
             "support": {
-                "source": "https://github.com/spaze/netxten/tree/v0.3.0",
+                "source": "https://github.com/spaze/netxten/tree/v0.4.0",
                 "issues": "https://github.com/spaze/netxten/issues"
             },
-            "time": "2015-05-10 02:21:43"
+            "time": "2015-10-23 00:44:37"
         },
         {
             "name": "symfony/config",
@@ -1267,29 +1267,32 @@
         },
         {
             "name": "texy/texy",
-            "version": "v2.6",
+            "version": "v2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "8213d3646c3ab1a3eca52413a5be26acb29826fc"
+                "reference": "cd7be41a3e2389979157bd31a8f87176755162ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/8213d3646c3ab1a3eca52413a5be26acb29826fc",
-                "reference": "8213d3646c3ab1a3eca52413a5be26acb29826fc",
+                "url": "https://api.github.com/repos/dg/texy/zipball/cd7be41a3e2389979157bd31a8f87176755162ad",
+                "reference": "cd7be41a3e2389979157bd31a8f87176755162ad",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.0"
+                "php": ">=5.4.4"
             },
             "replace": {
                 "dg/texy": "self.version"
             },
             "require-dev": {
-                "nette/tester": "~1.2"
+                "nette/tester": "~1.5"
             },
             "type": "library",
             "autoload": {
+                "classmap": [
+                    "src/"
+                ],
                 "files": [
                     "src/texy.php"
                 ]
@@ -1303,7 +1306,7 @@
             "authors": [
                 {
                     "name": "David Grudl",
-                    "homepage": "http://davidgrudl.com"
+                    "homepage": "https://davidgrudl.com"
                 }
             ],
             "description": "Texy converts plain text in easy to read Texy syntax into structurally valid (X)HTML. It supports adding of images, links, nested lists, tables and has full support for CSS. Texy supports hyphenation of long words (which reflects language rules), clickable emails and URL (emails are obfuscated against spambots), national typographic single and double quotation marks, ellipses, em dashes, dimension sign, nonbreakable spaces (e.g. in phone numbers), acronyms, arrows and many others. Texy code can optionally contain HTML tags.",
@@ -1319,7 +1322,7 @@
                 "wiki",
                 "xhtml"
             ],
-            "time": "2014-06-20 18:38:38"
+            "time": "2015-10-20 20:56:43"
         },
         {
             "name": "tracy/tracy",
