@@ -1,6 +1,8 @@
 <?php
 namespace MichalSpacekCz\Encryption\Symmetric;
 
+use \Defuse\Crypto;
+
 /**
  * StaticKey encryption service.
  *
@@ -47,10 +49,10 @@ class StaticKey extends \Nette\Object
 		$key = $this->getKey($group, $keyId);
 
 		try {
-			$cipherText = \Crypto::Encrypt($data, $key);
-		} catch (\CryptoTestFailedException $e) {
+			$cipherText = Crypto\Crypto::encrypt($data, $key);
+		} catch (Crypto\Exception\CryptoTestFailedException $e) {
 			throw new \RuntimeException('Crypto test failed because: ' . $e->getMessage());
-		} catch (\CannotPerformOperationException $e) {
+		} catch (Crypto\Exception\CannotPerformOperationException $e) {
 			throw new \RuntimeException('Cannot encrypt because: ' . $e->getMessage());
 		}
 
@@ -64,12 +66,12 @@ class StaticKey extends \Nette\Object
 		$key = $this->getKey($group, $keyId);
 
 		try {
-			$plainText = \Crypto::Decrypt($cipherText, $key);
-		} catch (\InvalidCiphertextException $e) {
+			$plainText = Crypto\Crypto::decrypt($cipherText, $key);
+		} catch (Crypto\Exception\InvalidCiphertextException $e) {
 			throw new \RuntimeException('The ciphertext has been tampered with!');
-		} catch (\CryptoTestFailedException $e) {
+		} catch (Crypto\Exception\CryptoTestFailedException $e) {
 			throw new \RuntimeException('Crypto test failed because: ' . $e->getMessage());
-		} catch (\CannotPerformOperationException $e) {
+		} catch (Crypto\Exception\CannotPerformOperationException $e) {
 			throw new \RuntimeException('Cannot encrypt because: ' . $e->getMessage());
 		}
 
