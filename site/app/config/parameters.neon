@@ -35,13 +35,6 @@ parameters:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		cotel:
-			default-src: 'https://www.%domain.root%'
-			style-src: "https://www.%domain.root% 'unsafe-inline'"
-			form-action: "'self'"
-			upgrade-insecure-requests:
-			block-all-mixed-content:
-			report-uri: %reporting.contentSecurityPolicy%
 	extraHeaders:
 		www:
 				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
@@ -49,8 +42,6 @@ parameters:
 				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
 		heartbleed:
 				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
-		cotel:
-				X-XSS-Protection: '1; mode=block; report=https://www.%domain.root%/report/xss'
 	vatRate: 0.21
 	ares:
 		url: 'https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'

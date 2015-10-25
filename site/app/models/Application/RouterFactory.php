@@ -12,7 +12,6 @@ class RouterFactory
 
 	const ADMIN = 'admin';
 	const API = 'api';
-	const COTEL = 'cotel';
 	const WEBLEED = 'webleed';
 	const HEARTBLEED = 'heartbleed';
 	const WWW = 'www';
@@ -63,7 +62,6 @@ class RouterFactory
 	{
 		$router = new RouteList();
 		$router[] = $this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
-		$router[] = $this->addRoute(self::COTEL, '[<param>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$router[] = $this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$router[] = $this->addRoute(self::API, '/<presenter>', 'Default', 'default');
@@ -97,10 +95,6 @@ class RouterFactory
 				break;
 			case self::ADMIN:
 				$metadata['module'] = 'Admin';
-				break;
-			case self::COTEL:
-				$metadata['module'] = 'Companies20';
-				$metadata['param'] = [Route::FILTER_IN => 'urldecode', Route::FILTER_OUT => 'urlencode'];
 				break;
 			case self::WEBLEED:
 				$flags = Route::ONE_WAY;
