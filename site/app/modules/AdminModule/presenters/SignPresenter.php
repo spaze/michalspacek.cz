@@ -10,6 +10,9 @@ namespace AdminModule;
 class SignPresenter extends \BasePresenter
 {
 
+	/** @persistent */
+	public $backlink = '';
+
 	/** @var \MichalSpacekCz\User\Manager */
 	protected $authenticator;
 
@@ -79,6 +82,7 @@ class SignPresenter extends \BasePresenter
 		try {
 			$this->user->login($values->username, $values->password);
 			\Tracy\Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
+			$this->restoreRequest($this->backlink);
 			$this->redirect('Homepage:');
 		} catch (\Nette\Security\AuthenticationException $e) {
 			\Tracy\Debugger::log("Failed sign-in attempt: {$e->getMessage()} ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');

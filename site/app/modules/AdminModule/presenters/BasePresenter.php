@@ -23,7 +23,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 		if (!$this->user->isLoggedIn()) {
-			$this->redirect($authenticator->isReturningUser() ? 'Sign:in' : 'Honeypot:signIn');
+			if ($authenticator->isReturningUser()) {
+				$this->redirect('Sign:in', array('backlink' => $this->storeRequest()));
+			} else {
+				$this->redirect('Honeypot:signIn');
+			}
 		}
 	}
 
