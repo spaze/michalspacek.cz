@@ -1,28 +1,37 @@
 #phpinfo {
-	width: 600px;
+	color: #222;
+	font-family: sans-serif;
 	margin: 1em auto;
+	text-align: center;
 }
+#phpinfo a:link {
+	color: #009;
+	text-decoration: none;
+	background-color: #fff;
+}
+#phpinfo a:hover { text-decoration: underline; }
 #phpinfo table {
 	border-collapse: collapse;
-	white-space:normal;
-}
-#phpinfo .center { text-align: center; }
-#phpinfo .center table {
-	margin-left: auto;
-	margin-right: auto;
+	white-space: normal;
+	border: 0;
+	width: 800px;
+	box-shadow: 1px 2px 3px #CCC;
+	margin: 1em auto;
 	text-align: left;
 }
-#phpinfo .center th { text-align: center !important; }
+#phpinfo th { text-align: center !important; }
 #phpinfo td, th {
-	border: 1px solid #000000;
+	border: 1px solid #666;
 	font-size: 75%;
 	vertical-align: baseline;
+	padding: 4px 5px;
 }
 #phpinfo h1 {
 	color: #000;
 	text-shadow: none;
 	text-align: center;
 	margin: 0.5em auto;
+	font-size: 150%;
 }
 #phpinfo h2, #phpinfo h2 a {
 	color: #000;
@@ -31,34 +40,29 @@
 }
 #phpinfo .p { text-align: left; }
 #phpinfo .e {
-	background-color: #CCCCFF;
+	background-color: #CCF;
+	width: 300px;
 	font-weight: bold;
-	color: #000000;
 }
 #phpinfo .h {
-	background-color: #9999CC;
+	background-color: #99C;
 	font-weight: bold;
-	color: #000000;
 }
 #phpinfo .v {
-	background-color: #CCCCCC;
-	color: #000000;
+	background-color: #DDD;
+	max-width: 200px;
+	overflow-x: auto;
 }
-#phpinfo .vr {
-	background-color: #CCCCCC;
-	text-align: right;
-	color: #000000;
-}
+#phpinfo .v i { color: #999; }
 #phpinfo img {
 	float: right;
 	border: 0px;
 }
 #phpinfo hr {
-	width: 600px;
-	background-color: #CCCCCC;
+	width: 800px;
+	background-color: #CCC;
 	border: 0px;
 	height: 1px;
-	color: #000000;
 }
 #phpinfo .color-FF8000 { color: #FF8000; }
 #phpinfo .color-0000BB { color: #0000BB; }
