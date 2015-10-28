@@ -47,3 +47,5 @@ parameters:
 		url: 'https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
 	registerUz:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
+	returningUser:
+		permanentLoginInterval: 14 days

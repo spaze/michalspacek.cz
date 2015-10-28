@@ -32,6 +32,7 @@ services:
 	authenticator:
 		class: \MichalSpacekCz\User\Manager
 		setup:
+			- setPermanentLoginInterval(%returningUser.permanentLoginInterval%)
 			- setReturningUserCookie(%returningUser.cookie%)
 			- setReturningUserValue(%returningUser.value%)
 	embed: \MichalSpacekCz\Embed

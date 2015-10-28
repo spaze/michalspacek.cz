@@ -57,6 +57,13 @@ class SignPresenter extends \BasePresenter
 	public function actionIn()
 	{
 		$this->verify();
+		if (($token = $this->authenticator->verifyPermanentLogin()) !== false) {
+			$this->user->login($this->authenticator->getIdentity($token->userId, $token->username));
+			$this->authenticator->clearPermanentLogin($this->user);
+			$this->authenticator->storePermanentLogin($this->user);
+			$this->restoreRequest($this->backlink);
+			$this->redirect('Homepage:');
+		}
 		$this->template->pageTitle = 'Přihlásit se';
 	}
 
@@ -73,15 +80,15 @@ class SignPresenter extends \BasePresenter
 	{
 		$values = $form->getValues();
 
-		if ($values->remember) {
-			$this->user->setExpiration('14 days', false);
-		} else {
-			$this->user->setExpiration('30 minutes', true);
-		}
-
+		$this->user->setExpiration('30 minutes', true);
 		try {
 			$this->user->login($values->username, $values->password);
 			\Tracy\Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
+			if ($values->remember) {
+				$this->authenticator->storePermanentLogin($this->user);
+			} else {
+				$this->authenticator->clearPermanentLogin($this->user);
+			}
 			$this->restoreRequest($this->backlink);
 			$this->redirect('Homepage:');
 		} catch (\Nette\Security\AuthenticationException $e) {
@@ -94,6 +101,7 @@ class SignPresenter extends \BasePresenter
 	public function actionOut()
 	{
 		$this->verify();
+		$this->authenticator->clearPermanentLogin($this->user);
 		$this->user->logout();
 		$this->flashMessage('Byli jste odhlášeni');
 		$this->redirect('in');

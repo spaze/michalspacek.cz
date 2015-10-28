@@ -42,8 +42,7 @@ class UserPresenter extends BasePresenter
 	public function submittedChangePassword(\MichalSpacekCz\Form\ChangePassword $form)
 	{
 		$values = $form->getValues();
-
-		$this->authenticator->changePassword($this->user->getIdentity()->username, $values['password'], $values['newPassword']);
+		$this->authenticator->changePassword($this->user, $values['password'], $values['newPassword']);
 		$this->redirect('Homepage:');
 	}
 
