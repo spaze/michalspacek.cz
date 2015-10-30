@@ -30,7 +30,7 @@ parameters:
 					mask: kontakt
 				Venues:
 					mask: kudy-tudy
-				Report:
+				EasterEgg:
 					mask:  # Intentionally left empty
 				Redirect:
 					mask: r
