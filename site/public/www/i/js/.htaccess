@@ -1,4 +1,0 @@
-<Files jquery-*.js>
-    ExpiresActive On
-    ExpiresDefault "access plus 1 year"
-</Files>
