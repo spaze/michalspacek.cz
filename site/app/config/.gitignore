@@ -1,2 +1,2 @@
 config.local.neon
-config.remote.neon
+config.remote*.neon
