@@ -128,11 +128,11 @@ class Bootstrap extends \Nette\Object
 		if (preg_match('/^(?:([^.]+\.)|www\.([^.]+\.))?([^.]+\.[^.]+)\z/', $_SERVER['HTTP_HOST'], $m)) {
 			if (($m[1] !== "{$hostdir}." || !$this->httpRequest->isSecured()) && empty($m[2])) {
 				// baz.waldo or foo.baz.waldo -> www.baz.waldo if foo is not known, also HTTP -> HTTPS
-				$this->httpResponse->redirect("https://{$hostdir}.{$m[3]}{$uri}");
+				$this->httpResponse->redirect("https://{$hostdir}.{$m[3]}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
 				exit;
 			} elseif (empty($m[1])) {
 				// www.bar.baz.waldo -> https://bar.baz.waldo
-				$this->httpResponse->redirect("https://{$m[2]}{$m[3]}{$uri}");
+				$this->httpResponse->redirect("https://{$m[2]}{$m[3]}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
 				exit;
 			}
 		}
