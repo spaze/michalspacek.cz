@@ -15,7 +15,7 @@ nette:
 	http:
 		headers:
 			Server: "<script>alert('Inline JavaScript is bad, m\\'kay?')</script>"
-			X-Powered-By: "<img src=x onerror=alert('Automagic escaping, maybe?')>"
+			X-Powered-By: "<img src=x onerror=\"alert('Automagic escaping, maybe?')\">"
 			X-Content-Type-Options: nosniff
 
 	security:
