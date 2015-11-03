@@ -15,7 +15,7 @@ $(document).ready(function() {
 			alert($('#errorCountryCompanyMissing').text());
 			return;
 		}
-		$('#loadDataControls > span').hide();
+		$('#loadDataControls span').hide();
 		$('#loadDataWait').show();
 		var load = $.ajax({
 			url: $('#loadData').data('url'),
@@ -26,7 +26,7 @@ $(document).ready(function() {
 			timeout: 5000
 		});
 		load.done(function(data) {
-			$('#loadDataControls > span').hide();
+			$('#loadDataControls span').hide();
 			$('#loadDataAgain').show();
 			if (data.status == 200) {
 				$.each(['companyId', 'companyTaxId', 'company', 'street', 'city', 'zip', 'country'], function(key, value) {
@@ -39,7 +39,7 @@ $(document).ready(function() {
 			}
 		});
 		load.fail(function() {
-			$('#loadDataControls > span').hide();
+			$('#loadDataControls span').hide();
 			$('#loadDataAgain').show();
 			$('#loadDataError').show();
 		});
