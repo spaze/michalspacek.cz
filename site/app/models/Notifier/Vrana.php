@@ -16,10 +16,10 @@ class Vrana
 	 * @var array
 	 */
 	protected $trainingMapping = array(
-		'uvodDoPhp' => '4',
-		'programovaniVPhp5' => '3',
-		'bezpecnostPhpAplikaci' => '1',
-		'vykonnostWebovychAplikaci' => '7',
+		'uvod-do-php' => '4',
+		'programovani-v-php5' => '3',
+		'bezpecnost-php-aplikaci' => '1',
+		'vykonnost-webovych-aplikaci' => '7',
 	);
 
 	/**
