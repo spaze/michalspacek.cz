@@ -38,6 +38,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \Netxten\Templating\Helpers */
 	protected $netxtenHelpers;
 
+	/** @var \MichalSpacekCz\CompanyInfo\Info */
+	protected $companyInfo;
+
 	/** @var \Nette\Database\Row */
 	private $training;
 
@@ -55,6 +58,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
+	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
 	 */
 	public function __construct(
 		MichalSpacekCz\Formatter\Texy $texyFormatter,
@@ -65,7 +69,8 @@ class TrainingsPresenter extends BasePresenter
 		Training\Files $trainingFiles,
 		Training\Trainings $trainings,
 		MichalSpacekCz\Vat $vat,
-		Netxten\Templating\Helpers $netxtenHelpers
+		Netxten\Templating\Helpers $netxtenHelpers,
+		MichalSpacekCz\CompanyInfo\Info $companyInfo
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -77,6 +82,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
+		$this->companyInfo = $companyInfo;
 	}
 
 
@@ -124,6 +130,8 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pastTrainingsJakub = $this->trainingDates->getPastDatesByJakub($name);
 
 		$this->template->reviews = $this->trainings->getReviews($name, 3);
+
+		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
 	}
 
 

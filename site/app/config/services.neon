@@ -77,7 +77,10 @@ services:
 			- setActiveKeyIds(%encryption.activeKeyIds%)
 	passwordEncryption: \MichalSpacekCz\Encryption\Password
 	emailEncryption: \MichalSpacekCz\Encryption\Email
-	companyInfo: \MichalSpacekCz\CompanyInfo\Info
+	companyInfo:
+		class: \MichalSpacekCz\CompanyInfo\Info
+		setup:
+			- setLoadCompanyDataVisible(%loadCompanyDataVisible%)
 	ares:
 		class: \MichalSpacekCz\CompanyInfo\Ares
 		setup:

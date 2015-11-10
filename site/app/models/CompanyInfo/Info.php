@@ -22,6 +22,9 @@ class Info
 	/** @var RegisterUz */
 	private $registerUz;
 
+	/** @var boolean */
+	private $loadCompanyDataVisible = true;
+
 
 	/**
 	 * @param Ares $ares
@@ -72,6 +75,24 @@ class Info
 				break;
 		}
 		return $data;
+	}
+
+
+	/**
+	 * @param boolean $visible
+	 */
+	public function setLoadCompanyDataVisible($visible)
+	{
+		$this->loadCompanyDataVisible = $visible;
+	}
+
+
+	/**
+	 * @return boolean
+	 */
+	public function isLoadCompanyDataVisible()
+	{
+		return $this->loadCompanyDataVisible;
 	}
 
 }

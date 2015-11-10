@@ -43,6 +43,7 @@ parameters:
 		heartbleed:
 				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
 	vatRate: 0.21
+	loadCompanyDataVisible: false
 	ares:
 		url: 'http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
 	registerUz:
