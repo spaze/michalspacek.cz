@@ -64,6 +64,10 @@ services:
 		class: \MichalSpacekCz\ContentSecurityPolicy
 		setup:
 			- setPolicy(%contentSecurityPolicy%)
+	publicKeyPins:
+		class: \MichalSpacekCz\PublicKeyPins
+		setup:
+			- setPins(%publicKeyPins%)
 	securityHeaders:
 		class: \MichalSpacekCz\SecurityHeaders
 		setup:

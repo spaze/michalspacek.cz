@@ -8,6 +8,7 @@ parameters:
 		sharedStaticRoot: https://www.%domain.root%
 	reporting:
 		contentSecurityPolicy: https://report-uri.io/report/me
+		publicKeyPins: %reporting.contentSecurityPolicy%
 		xXssProtection: https://report-uri.io/report/me
 	contentSecurityPolicy:
 		www:
@@ -35,6 +36,17 @@ parameters:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
+	publicKeyPins:
+		www:
+			pins:
+				- "3bVocQCvVq54eZkK2+vZf6dCYvr9kj+vsU4z0mbn3gU="  # production
+				- "u6l/n/3zinL6L9SAayWa0tXu2dX+6J77WB/deOyKx1I="  # backup 1
+				- "ET3FsZD2D9FewsIQe8t6986ajvmFXaBzNJDXYBnXLMw="  # backup 2, printed on paper
+			max-age: 600
+			includeSubdomains:
+			report-uri: %reporting.publicKeyPins%
+		admin: %publicKeyPins.www%
+		heartbleed: %publicKeyPins.www%
 	extraHeaders:
 		www:
 				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'

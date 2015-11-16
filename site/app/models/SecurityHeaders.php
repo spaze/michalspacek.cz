@@ -28,21 +28,27 @@ class SecurityHeaders
 	/** @var ContentSecurityPolicy */
 	protected $contentSecurityPolicy;
 
+	/** @var PublicKeyPins */
+	protected $publicKeyPins;
+
 
 	/**
 	 * @param \Nette\Http\IRequest $httpRequest
 	 * @param \Nette\Http\IResponse $httpResponse
-	 * @param Reports $reports
+	 * @param \MichalSpacek\ContentSecurityPolicy $contentSecurityPolicy
+	 * @param \MichalSpacek\PublicKeyPins $publicKeyPins
 	 */
 	public function __construct(
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
-		ContentSecurityPolicy $contentSecurityPolicy
+		ContentSecurityPolicy $contentSecurityPolicy,
+		PublicKeyPins $publicKeyPins
 	)
 	{
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
+		$this->publicKeyPins = $publicKeyPins;
 	}
 
 
@@ -81,6 +87,11 @@ class SecurityHeaders
 		$header = $this->contentSecurityPolicy->getHeader($host);
 		if ($header !== false) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
+		}
+
+		$header = $this->publicKeyPins->getHeader($host);
+		if ($header !== false) {
+			$this->httpResponse->setHeader('Public-Key-Pins-Report-Only', $header);
 		}
 
 		if (isset($this->extraHeaders[$host])) {
