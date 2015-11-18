@@ -109,7 +109,7 @@ class Bootstrap extends \Nette\Object
 		if (preg_match('/([^.]+\.[^.:]+)(?::[0-9]+)?$/', $rootDomain, $matches)) {
 			$rootDomain = $matches[1];
 		}
-		return $rootDomain;
+		return strtolower($rootDomain);
 	}
 
 
