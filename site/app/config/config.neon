@@ -26,6 +26,7 @@ nette:
 		hash_function: sha512
 		hash_bits_per_character: 6
 		expiration: 14 days
+		use_strict_mode: true
 
 translation:
 	default: cs_CZ
