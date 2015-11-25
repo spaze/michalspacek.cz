@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplication extends Form
+class TrainingApplication extends TrainingForm
 {
 
 	/** @var \Nette\Localization\ITranslator */

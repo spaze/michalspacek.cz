@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingStatuses extends Form
+class TrainingStatuses extends TrainingForm
 {
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications)
