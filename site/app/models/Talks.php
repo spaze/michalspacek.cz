@@ -29,12 +29,14 @@ class Talks
 		$query = 'SELECT
 				t.action,
 				t.title,
+				t.title AS titleTexy,
 				t.date,
 				t.href,
 				COALESCE(LENGTH(t.slides_href) > 0, LENGTH(t2.slides_href) > 0, 0) AS hasSlides,
 				t.slides_href,
 				t.video_href AS videoHref,
 				t.event,
+				t.event AS eventTexy,
 				t.event_href AS eventHref
 			FROM talks t
 				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
@@ -59,12 +61,14 @@ class Talks
 		$query = 'SELECT
 				t.action,
 				t.title,
+				t.title AS titleTexy,
 				t.date,
 				t.href,
 				COALESCE(LENGTH(t.slides_href) > 0, LENGTH(t2.slides_href) > 0, 0) AS hasSlides,
 				t.slides_href,
 				t.video_href AS videoHref,
 				t.event,
+				t.event AS eventTexy,
 				t.event_href AS eventHref
 			FROM talks t
 				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
@@ -84,9 +88,12 @@ class Talks
 	{
 		$result = $this->database->fetch(
 			'SELECT
+				t.id_talk AS talkId,
 				t.action,
 				t.title,
+				t.title AS titleTexy,
 				t.description,
+				t.description AS descriptionTexy,
 				t.date,
 				t.href,
 				t.slides_href AS slidesHref,
@@ -94,9 +101,12 @@ class Talks
 				t.video_href AS videoHref,
 				t.video_embed AS videoEmbed,
 				t.event,
+				t.event AS eventTexy,
 				t.event_href AS eventHref,
 				t.og_image AS ogImage,
 				t.transcript,
+				t.transcript AS transcriptTexy,
+				t.favorite,
 				t2.action AS origAction,
 				t2.title AS origTitle,
 				t3.action AS supersededByAction,
@@ -163,6 +173,54 @@ class Talks
 			}
 		}
 		return $slideNo;
+	}
+
+
+	/**
+	 * Update talk data.
+	 *
+	 * @param string $origAction
+	 * @param string $action
+	 * @param string $title
+	 * @param string $description
+	 * @param string $date
+	 * @param string $href
+	 * @param string $origSlides
+	 * @param string $slidesHref
+	 * @param string $slidesEmbed
+	 * @param string $videoHref
+	 * @param string $videoEmbed
+	 * @param string $event
+	 * @param string $eventHref
+	 * @param string $ogImage
+	 * @param string $transcript
+	 * @param string $favorite
+	 * @param string $supersededBy
+	 */
+	public function update($origAction, $action, $title, $description, $date, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
+	{
+		$this->database->query(
+			'UPDATE talks SET ? WHERE action = ?',
+			array(
+				'action' => (empty($action) ? null : $action),
+				'title' => $title,
+				'description' => (empty($description) ? null : $description),
+				'date' => new \DateTime($date),
+				'href' => (empty($href) ? null : $href),
+				'key_talk_slides' => (empty($origSlides) ? null : $this->get($origSlides)->talkId),
+				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
+				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
+				'video_href' => (empty($videoHref) ? null : $videoHref),
+				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
+				'event' => $event,
+				'event_href' => (empty($eventHref) ? null : $eventHref),
+				'og_image' => (empty($ogImage) ? null : $ogImage),
+				'transcript' => (empty($transcript) ? null : $transcript),
+				'favorite' => (empty($favorite) ? null : $favorite),
+				'key_superseded_by' => (empty($supersededBy) ? null : $this->get($supersededBy)->talkId),
+			),
+			$origAction
+		);
 	}
 
 }
