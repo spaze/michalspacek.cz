@@ -202,7 +202,7 @@ class Trainings
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
 			ORDER BY
-				d.start'
+				d.start DESC'
 		);
 		return $result;
 	}

@@ -7,7 +7,7 @@
 	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
 		<tr class="summary">
-			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
+			<td class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
 			<td class="dateCell">
 				<strong n:tag-if="$upcoming">
 				<small n:tag-if="!$upcoming && $training->start > $now">
