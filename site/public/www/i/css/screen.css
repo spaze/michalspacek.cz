@@ -168,7 +168,7 @@ td.nameCell { width: 200px; }
     width: 150px;
     white-space: nowrap;
 }
-#frm-application th, #frm-editTalk th { text-align: right; }
+#frm-application th, #frm-editTalk th, #frm-addDate th { text-align: right; }
 #frm-application input, #frm-application select { width: 170px; }
 #frm-editTalk input, #frm-editTalk select, #frm-editTalk textarea { width: 440px; }
 #frm-application td.short input, #frm-editTalk td.short input { width: 85px; }

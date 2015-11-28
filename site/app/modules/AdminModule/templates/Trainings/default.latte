@@ -1,8 +1,8 @@
 {define #list}
-<div id="statuses-links" class="small button">
+<p id="statuses-links" class="small button">
 	<span id="statusesShow">Zobrazit všechny</span>
 	<span id="statusesHide" class="hidden">Skrýt všechny</span>
-</div>
+</p>
 <table id="statuses">
 	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
@@ -75,5 +75,24 @@
 
 {define #content}
 <p></p>
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<div id="pridat-termin">
+	<p><a href="#pridat-termin" class="block">Přidat termín</a></p>
+	<div id="pridat-termin-container">
+	{form addDate}
+	<table>
+	<tr><th>{label training /}</th><td>{input training}</td></tr>
+	<tr><th>{label venue /}</th><td>{input venue}</td></tr>
+	<tr><th>{label start /}</th><td>{input start}</td></tr>
+	<tr><th>{label end /}</th><td>{input end}</td></tr>
+	<tr><th>{label status /}</th><td>{input status}</td></tr>
+	<tr><th>{label public: /}</th><td>{input public:}</td></tr>
+	<tr><th>{label cooperation /}</th><td>{input cooperation}</td></tr>
+	<tr><th></th><td><p>{input submit}</p></td></tr>
+	</table>
+	{/form addDate}
+	</div>
+</div>
+<hr>
 {include #list}
 {/define}

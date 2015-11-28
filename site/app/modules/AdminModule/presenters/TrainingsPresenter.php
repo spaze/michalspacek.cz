@@ -398,4 +398,28 @@ class TrainingsPresenter extends BasePresenter
 		$this->redirect($this->getAction(), $this->redirectParam);
 	}
 
+
+	protected function createComponentAddDate($formName)
+	{
+		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
+		$form->onSuccess[] = $this->submittedAddDate;
+		return $form;
+	}
+
+
+	public function submittedAddDate(\MichalSpacekCz\Form\TrainingDate $form)
+	{
+		$values = $form->getValues();
+		$this->trainingDates->add(
+			$values->training,
+			$values->venue,
+			$values->start,
+			$values->end,
+			$values->status,
+			$values->public,
+			$values->cooperation
+		);
+		$this->redirect('Trainings:');
+	}
+
 }

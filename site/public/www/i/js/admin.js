@@ -63,6 +63,12 @@ $(document).ready(function() {
 	});
 	$('#upravit-termin-container').hide();
 
+	$('#pridat-termin a[href="#pridat-termin"]').click(function() {
+		$('#pridat-termin-container').slideToggle('fast');
+		return false;
+	});
+	$('#pridat-termin-container').hide();
+
 	$('#statuses td[data-date]')
 		.click(function() {
 			$('#date-' + $(this).data('date')).toggle();
