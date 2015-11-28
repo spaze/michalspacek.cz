@@ -67,7 +67,6 @@ $(document).ready(function() {
 		$('#pridat-termin-container').slideToggle('fast');
 		return false;
 	});
-	$('#pridat-termin-container').hide();
 
 	$('#statuses td[data-date]')
 		.click(function() {
