@@ -73,14 +73,9 @@
 </table>
 {/define}
 
-{define #content}
-<p></p>
-<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-<div id="pridat-termin">
-	<p><a href="#pridat-termin" class="block">Přidat termín</a></p>
-	<div id="pridat-termin-container" class="hidden">
-	{form addDate}
-	<table>
+{define #dateForm}
+{form $form class => aligned}
+<table>
 	<tr><th>{label training /}</th><td>{input training}</td></tr>
 	<tr><th>{label venue /}</th><td>{input venue}</td></tr>
 	<tr><th>{label start /}</th><td>{input start}</td></tr>
@@ -89,8 +84,17 @@
 	<tr><th>{label public: /}</th><td>{input public:}</td></tr>
 	<tr><th>{label cooperation /}</th><td>{input cooperation}</td></tr>
 	<tr><th></th><td><p>{input submit}</p></td></tr>
-	</table>
-	{/form addDate}
+</table>
+{/form $form}
+{/define}
+
+{define #content}
+<p></p>
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<div id="pridat-termin">
+	<p><a href="#pridat-termin" class="block">Přidat termín</a></p>
+	<div id="pridat-termin-container" class="hidden">
+	{include #dateForm, form => addDate}
 	</div>
 </div>
 <hr>

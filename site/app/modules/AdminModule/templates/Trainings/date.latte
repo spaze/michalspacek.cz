@@ -5,6 +5,7 @@
 {/define}
 
 {define #content}
+{includeblock "default.latte"}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <p>
 {$trainingName} {$trainingStart|date:'j. n. Y'}
@@ -121,16 +122,7 @@
 <div id="upravit-termin">
 	<p><a href="#upravit-termin" class="block">Upravit termín</a></p>
 	<div id="upravit-termin-container">
-		{form date}
-		<p><strong>{label training /}</strong> {input training}</p>
-		<p><strong>{label venue /}</strong> {input venue}</p>
-		<p><strong>{label start /}</strong> {input start}</p>
-		<p><strong>{label end /}</strong> {input end}</p>
-		<p><strong>{label status /}</strong> {input status}</p>
-		<p><strong>{label public: /}</strong> {input public:}</p>
-		<p><strong>{label cooperation /}</strong> {input cooperation}</p>
-		<p>{input submit}</p>
-		{/form date}
+		{include #dateForm, form => date}
 	</div>
 </div>
 {/define}

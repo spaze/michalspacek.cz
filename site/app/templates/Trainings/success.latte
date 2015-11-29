@@ -8,7 +8,7 @@
 {includeblock "../Trainings/default.latte"}
 <p>{$description}</p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{form application}
+{form application class => aligned}
 <fieldset>
 	<legend>{_messages.label.date}</legend>
 	<table>
