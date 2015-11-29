@@ -68,6 +68,11 @@ $(document).ready(function() {
 		return false;
 	});
 
+	$('#pridat-prednasku a[href="#pridat-prednasku"]').click(function() {
+		$('#pridat-prednasku-container').slideToggle('fast');
+		return false;
+	});
+
 	$('#statuses td[data-date]')
 		.click(function() {
 			$('#date-' + $(this).data('date')).toggle();

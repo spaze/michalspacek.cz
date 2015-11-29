@@ -172,9 +172,9 @@ form.aligned th {
     text-align: right;
     vertical-align: top;
 }
+td.short input, form.wide td.short input, #frm-application td.short input { width: 85px; }
+form.wide input, form.wide select, form.wide textarea { width: 440px; }
 #frm-application input, #frm-application select { width: 170px; }
-#frm-editTalk input, #frm-editTalk select, #frm-editTalk textarea { width: 440px; }
-#frm-application td.short input, #frm-editTalk td.short input { width: 85px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }
 #frm-application input[type=checkbox] { width: auto; }

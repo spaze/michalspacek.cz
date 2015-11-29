@@ -7,7 +7,73 @@
 	</small></li>
 {/define}
 
+{define #talkForm}
+{form $form class => "aligned wide"}
+<table>
+	<tr>
+		<th>{label action /}</th><td>{input action}<br><small>nevyplňujte, pokud nechcete samostatnou stránku pro přednášku</small></td>
+	</tr>
+	<tr>
+		<th>{label title /}</th><td>{input title}<br><small><a n:ifset="$talkAction" n:href=":Talks:talk $talkAction">zobrazit přednášku</a></small></td>
+	</tr>
+	<tr>
+		<th>{label description /}</th><td>{input description}</td>
+	</tr>
+	<tr>
+		<th>{label date /}</th><td>{input date}</td>
+	</tr>
+	<tr>
+		<th>{label href /}</th><td>{input href}</td>
+	</tr>
+	<tr>
+		<th>{label origSlides /}</th><td>{input origSlides}</td>
+	</tr>
+	<tr>
+		<th>{label slidesHref /}</th><td>{input slidesHref}</td>
+	</tr>
+	<tr>
+		<th>{label slidesEmbed /}</th><td>{input slidesEmbed}</td>
+	</tr>
+	<tr>
+		<th>{label videoHref /}</th><td>{input videoHref}</td>
+	</tr>
+	<tr>
+		<th>{label videoEmbed /}</th><td>{input videoEmbed}</td>
+	</tr>
+	<tr>
+		<th>{label event /}</th><td>{input event}</td>
+	</tr>
+	<tr>
+		<th>{label eventHref /}</th><td>{input eventHref}</td>
+	</tr>
+	<tr>
+		<th>{label ogImage /}</th><td>{input ogImage}<br><small>místo čísla slajdu v URL použijte <code>%d</code></small></td>
+	</tr>
+	<tr>
+		<th>{label transcript /}</th><td>{input transcript}</td>
+	</tr>
+	<tr>
+		<th>{label favorite /}</th><td>{input favorite}</td>
+	</tr>
+	<tr>
+		<th>{label supersededBy /}</th><td>{input supersededBy}</td>
+	</tr>
+	<tr>
+		<th></th><td class="short"><p>{input submit}</p></td>
+	</tr>
+</table>
+{/form $form}
+{/define}
+
 {define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<div id="pridat-prednasku">
+	<p><a href="#pridat-prednasku" class="block">Přidat přednášku</a></p>
+	<div id="pridat-prednasku-container" class="hidden">
+	{include #talkForm, form => addTalk}
+	</div>
+</div>
+<hr>
 <ol reversed>
 {foreach $upcomingTalks as $talk}
 	{var $upcoming = true}

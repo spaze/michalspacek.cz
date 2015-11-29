@@ -87,7 +87,41 @@ class TalksPresenter extends BasePresenter
 			$values->favorite,
 			$values->supersededBy
 		);
-		$this->flashMessage('Termín upraven');
+		$this->flashMessage('Přednáška upravena');
+		$this->redirect('Talks:');
+	}
+
+
+	protected function createComponentAddTalk($formName)
+	{
+		$form = new \MichalSpacekCz\Form\Talk($this, $formName, null, $this->talks);
+		$form->onSuccess[] = $this->submittedAddTalk;
+		return $form;
+	}
+
+
+	public function submittedAddTalk(\MichalSpacekCz\Form\Talk $form)
+	{
+		$values = $form->getValues();
+		$this->talks->add(
+			$values->action,
+			$values->title,
+			$values->description,
+			$values->date,
+			$values->href,
+			$values->origSlides,
+			$values->slidesHref,
+			$values->slidesEmbed,
+			$values->videoHref,
+			$values->videoEmbed,
+			$values->event,
+			$values->eventHref,
+			$values->ogImage,
+			$values->transcript,
+			$values->favorite,
+			$values->supersededBy
+		);
+		$this->flashMessage('Přednáška přidána');
 		$this->redirect('Talks:');
 	}
 

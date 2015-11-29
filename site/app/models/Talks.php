@@ -223,4 +223,50 @@ class Talks
 		);
 	}
 
+
+	/**
+	 * Insert talk data.
+	 *
+	 * @param string $action
+	 * @param string $title
+	 * @param string $description
+	 * @param string $date
+	 * @param string $href
+	 * @param string $origSlides
+	 * @param string $slidesHref
+	 * @param string $slidesEmbed
+	 * @param string $videoHref
+	 * @param string $videoEmbed
+	 * @param string $event
+	 * @param string $eventHref
+	 * @param string $ogImage
+	 * @param string $transcript
+	 * @param string $favorite
+	 * @param string $supersededBy
+	 */
+	public function add($action, $title, $description, $date, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
+	{
+		$this->database->query(
+			'INSERT INTO talks',
+			array(
+				'action' => (empty($action) ? null : $action),
+				'title' => $title,
+				'description' => (empty($description) ? null : $description),
+				'date' => new \DateTime($date),
+				'href' => (empty($href) ? null : $href),
+				'key_talk_slides' => (empty($origSlides) ? null : $this->get($origSlides)->talkId),
+				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
+				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
+				'video_href' => (empty($videoHref) ? null : $videoHref),
+				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
+				'event' => $event,
+				'event_href' => (empty($eventHref) ? null : $eventHref),
+				'og_image' => (empty($ogImage) ? null : $ogImage),
+				'transcript' => (empty($transcript) ? null : $transcript),
+				'favorite' => (empty($favorite) ? null : $favorite),
+				'key_superseded_by' => (empty($supersededBy) ? null : $this->get($supersededBy)->talkId),
+			)
+		);
+	}
+
 }
