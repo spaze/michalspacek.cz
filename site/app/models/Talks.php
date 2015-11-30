@@ -269,4 +269,57 @@ class Talks
 		);
 	}
 
+
+	/**
+	 * Get slides for talk.
+	 *
+	 * @param string $name Talk name
+	 * @return array of \Nette\Database\Row
+	 */
+	public function getSlides($name)
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				ts.alias,
+				ts.number
+			FROM talk_slides ts
+				JOIN talks t ON ts.key_talk = t.id_talk
+			WHERE t.action = ?
+			ORDER BY ts.number',
+			$name
+		);
+		return $result;
+	}
+
+
+	/**
+	 * Insert slide.
+	 *
+	 * @param string $action
+	 * @param string $alias
+	 * @param string $number
+	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
+	 * @throws \PDOException
+	 */
+	public function addSlide($action, $alias, $number)
+	{
+		try {
+			$this->database->query(
+				'INSERT INTO talk_slides',
+				array(
+					'key_talk' => $this->get($action)->talkId,
+					'alias' => $alias,
+					'number' => $number,
+				)
+			);
+		} catch (\PDOException $e) {
+			if ($e->getCode() == '23000') {
+				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
+					throw new \UnexpectedValueException($e->getMessage(), $number);
+				}
+			}
+			throw $e;
+		}
+	}
+
 }

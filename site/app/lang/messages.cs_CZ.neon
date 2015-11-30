@@ -21,6 +21,8 @@ title:
 	error500: "Za to může Špaček!"
 	forbidden: "Nepovoleno"
 	venue: "Školírna %s"
+	admin:
+		talkslides: "Slajdy z přednášky %s (%s)"
 header:
 	who: "Kdo je Michal Špaček?"
 label:
@@ -186,6 +188,9 @@ talks:
 	detailevent: "Detail přednášky na webu akce"
 	dateevent: "Datum a akce"
 	supersededby: "Tato přednáška byla doplněna a nahrazena novější \"%s\":[%s], prohlédněte si raději tu."
+	admin:
+		slideadded: "Slajd přidán"
+		duplicatealias: "Pro slajd %s již existuje alias"
 trainings:
 	spammyapplication: "Přihláška vypadá jako spam, takhle by to nešlo."
 	errorapplication: "Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu."

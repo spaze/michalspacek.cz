@@ -6,5 +6,10 @@
 
 {define #content}
 {includeblock "default.latte"}
+{define #formExtra}
+	<tr>
+		<th></th><td><small><a n:href="slides $talkAction">slajdy</a></small></td>
+	</tr>
+{/define}
 {include #talkForm, form => editTalk}
 {/define}

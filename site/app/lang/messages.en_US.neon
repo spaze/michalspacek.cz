@@ -21,6 +21,8 @@ title:
 	error500: "That's Špaček's fault!"
 	forbidden: "Forbidden"
 	venue: "Venue %s"
+	admin:
+		talkslides: "Slides from %s (%s)"
 header:
 	who: "Who is Michal Špaček?"
 label:
@@ -186,6 +188,9 @@ talks:
 	detailevent: "Details on the event website"
 	dateevent: "Date and event"
 	supersededby: "This talk has been amended and superseded by \"%s\":[%s], view that one."
+	admin:
+		slideadded: "Slide added"
+		duplicatealias: "Alias for slide %s already exists"
 trainings:
 	spammyapplication: "The application looks like spam, this is a no-go."
 	errorapplication: "Oops, something went wrong. The application was not submitted, please try again in a while."

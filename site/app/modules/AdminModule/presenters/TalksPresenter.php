@@ -56,6 +56,22 @@ class TalksPresenter extends BasePresenter
 	}
 
 
+	public function actionSlides($param)
+	{
+		$this->talkAction = $param;
+
+		$talk = $this->talks->get($this->talkAction);
+		if (!$talk) {
+			throw new Nette\Application\BadRequestException("I haven't talked about {$this->talkAction}, yet", Nette\Http\Response::S404_NOT_FOUND);
+		}
+
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.admin.talkslides', [strip_tags($talk->title), $talk->event]);
+		$this->template->talkTitle = $talk->title;
+		$this->template->slides = $this->talks->getSlides($this->talkAction);
+		$this->template->talkAction = $this->talkAction;
+	}
+
+
 	protected function createComponentEditTalk($formName)
 	{
 		$form = new \MichalSpacekCz\Form\Talk($this, $formName, $this->talkAction, $this->talks);
@@ -123,6 +139,27 @@ class TalksPresenter extends BasePresenter
 		);
 		$this->flashMessage('Přednáška přidána');
 		$this->redirect('Talks:');
+	}
+
+
+	protected function createComponentAddSlide($formName)
+	{
+		$form = new \MichalSpacekCz\Form\TalkSlide($this, $formName);
+		$form->onSuccess[] = $this->submittedAddSlide;
+		return $form;
+	}
+
+
+	public function submittedAddSlide(\MichalSpacekCz\Form\TalkSlide $form)
+	{
+		$values = $form->getValues();
+		try {
+			$this->talks->addSlide($this->talkAction, $values->alias, $values->number);
+			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.slideadded'));
+		} catch (\UnexpectedValueException $e) {
+			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.duplicatealias', [$e->getCode()]), 'error');
+		}
+		$this->redirect('Talks:slides', $this->talkAction);
 	}
 
 }

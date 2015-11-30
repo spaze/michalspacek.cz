@@ -1,0 +1,18 @@
+{define #menu}
+&raquo; <a n:href=":Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+&raquo; <a n:href="Talks:">{_messages.title.talks}</a>
+&raquo; <a n:href="Talks:talk $talkAction">{$talkTitle}</a>
+{/define}
+
+{define #content}
+<p></p>
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<table>
+	<tr><th class="right">Číslo</th><th class="left">Alias</th></tr>
+	<tr n:foreach="$slides as $slide"><td class="right">{$slide->number}.</td><td><a n:href=":Talks:talk $talkAction, $slide->alias">{$slide->alias}</a></td></tr>
+	{form addSlide}
+	<tr><td class="short">{input number}</td><td class="short">{input alias} {input submit}</td></tr>
+	{/form addSlide}
+</table>
+{/define}
