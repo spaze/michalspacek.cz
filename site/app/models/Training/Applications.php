@@ -172,7 +172,7 @@ class Applications
 			$this->database->query('INSERT INTO training_applications', $data);
 		} catch (\PDOException $e) {
 			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == '1062') {  // Integrity constraint violation: 1062 Duplicate entry '...' for key 'access_code_UNIQUE'
+				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
 					// regenerate the access code and try harder this time
 					\Tracy\Debugger::log("Regenerating access token, {$data['access_token']} already exists. Full data: " . implode(', ', $data));
 					return $this->insertData($data);
