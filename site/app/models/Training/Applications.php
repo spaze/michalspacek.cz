@@ -82,7 +82,9 @@ class Applications
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_application_status s ON a.key_status = s.id_status
 			WHERE
-				s.status = ?',
+				s.status = ?
+			ORDER BY
+				d.start, a.status_time',
 			$status
 		);
 
