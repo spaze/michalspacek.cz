@@ -89,23 +89,24 @@ class Bootstrap extends \Nette\Object
 
 	private function getConfigurationFiles()
 	{
-		return array(
+		return array_unique(array(
 			$this->appDir . '/config/extensions.neon',
 			$this->appDir . '/config/config.neon',
 			$this->appDir . '/config/parameters.neon',
 			$this->appDir . '/config/routes.neon',
 			$this->appDir . '/config/presenters.neon',
 			$this->appDir . '/config/services.neon',
-			$this->appDir . '/config/config.extra-' . $this->getRootDomain() . '.neon',
+			$this->appDir . '/config/config.extra-' . $this->getRootDomain('HTTP_HOST') . '.neon',
+			$this->appDir . '/config/config.extra-' . $this->getRootDomain('SERVER_NAME') . '.neon',
 			$this->appDir . '/config/config.local.neon',
-		);
+		));
 	}
 
 
-	private function getRootDomain()
+	private function getRootDomain($key)
 	{
 		// Root domain
-		$rootDomain = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
+		$rootDomain = (isset($_SERVER[$key]) ? $_SERVER[$key] : '');
 		if (preg_match('/([^.]+\.[^.:]+)(?::[0-9]+)?$/', $rootDomain, $matches)) {
 			$rootDomain = $matches[1];
 		}
