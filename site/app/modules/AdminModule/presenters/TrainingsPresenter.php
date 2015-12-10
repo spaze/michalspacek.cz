@@ -174,7 +174,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->dateId = $this->application->dateId;
 		$this->training = $this->trainingDates->get($this->application->dateId);
 
-		$this->template->pageTitle     = "{$this->application->name}";
+		$this->template->pageTitle     = $this->application->name;
 		$this->template->applicationId = $this->applicationId;
 		$this->template->dateId        = $this->dateId;
 		$this->template->status        = $this->application->status;
