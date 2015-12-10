@@ -114,10 +114,12 @@ class Applications
 				a.price_vat AS priceVat,
 				a.invoice_id AS invoiceId,
 				a.paid,
-				a.equipment
+				a.equipment,
+				sr.name AS sourceName
 			FROM
 				training_applications a
 				JOIN training_application_status s ON a.key_status = s.id_status
+				JOIN training_application_sources sr ON a.key_source = sr.id_source
 			WHERE
 				key_date = ?',
 			$dateId
@@ -126,6 +128,7 @@ class Applications
 		if ($result) {
 			foreach ($result as $row) {
 				$row->email = $this->emailEncryption->decrypt($row->email);
+				$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
 			}
 		}
 
@@ -493,6 +496,25 @@ class Applications
 			}
 		}
 		return $equipment;
+	}
+
+
+	/**
+	 * Shorten source name.
+	 *
+	 * Removes Czech private limited company designation, if any, and uses only initials from the original name.
+	 * Example:
+	 *   Michal Špaček -> MŠ
+	 *   Internet Info, s.r.o. -> II
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	private function getSourceNameInitials($name)
+	{
+		$name = preg_replace('/,? s\.r\.o./', '', $name);
+		preg_match_all('/(?<=\s|\b)\pL/u', $name, $matches);
+		return strtoupper(implode('', current($matches)));
 	}
 
 }

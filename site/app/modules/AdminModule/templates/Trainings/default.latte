@@ -52,6 +52,7 @@
 								<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
 								<td><small title="{$application->note}">{$application->note|truncate:20}</small></td>
 								<td>
+									<small><code title="Zdroj {$application->sourceName}">{$application->sourceNameInitials}</code></small>
 									{capture $title}
 										{ifset $application->priceVat}{$application->priceVat} Kč s DPH, {/ifset}
 										faktura č. {ifset $application->invoiceId}{$application->invoiceId},
