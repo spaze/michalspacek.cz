@@ -383,12 +383,14 @@ class Applications
 				a.discount,
 				a.invoice_id AS invoiceId,
 				a.paid,
-				a.equipment
+				a.equipment,
+				sr.name AS sourceName
 			FROM
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_application_status s ON a.key_status = s.id_status
+				JOIN training_application_sources sr ON a.key_source = sr.id_source
 			WHERE
 				id_application = ?',
 			$id
