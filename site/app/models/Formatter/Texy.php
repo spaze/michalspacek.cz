@@ -97,7 +97,7 @@ class Texy extends \Netxten\Formatter\Texy
 			$name = substr($link->URL, 9);
 			$link->URL = $this->application->getPresenter()->link(':Trainings:training', $name);
 			$el = \Texy\HtmlElement::el();
-			$el->add($texy->phraseModule->solve(null, $phrase, $content, $modifier, $link));
+			$el->add($texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link));
 			$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
 			return $el;
 		}
