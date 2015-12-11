@@ -43,3 +43,6 @@ parameters:
 		activeKeyIds:
 			password: dev1
 			email: dev1
+
+services:
+	cache.journal: \Nette\Caching\Storages\SQLiteJournal(':memory:') # file-based SQLiteJournal (default in nette/caching 2.4+) throws "SQLSTATE[HY000]: General error: 10 disk I/O error" under VirtualBox
