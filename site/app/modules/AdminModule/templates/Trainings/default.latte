@@ -22,7 +22,7 @@
 					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CANCELED}&#x2716;{/if}
 				</small>
 			</td>
-			<td class="nameCell" data-date="{$training->dateId}">{$training->name} ({$training->validCount})</td>
+			<td class="nameCell" data-date="{$training->dateId}">{$training->name}{if $training->public || $training->validCount > 0} ({$training->validCount}){/if}</td>
 			<td><small>{$training->venueCity}{if !$training->public}, {$training->venueName}{/if}</small></td>
 			<td><small n:if="!$training->venueEquipped" title="Vlastních počítačů: {$training->equipment}, zajistit {$training->validCount - $training->equipment}">(PC: {$training->equipment}+<strong>{$training->validCount - $training->equipment}</strong>)</small></td>
 		</tr>
@@ -66,7 +66,7 @@
 						</tbody>
 					</table>
 				{else}
-					<span class="indent"><small>Žádní přihlášení účastníci</small></span>
+					<span class="indent"><small>{if $training->public}Žádní přihlášení účastníci{else}Neznámý počet účastníků firemního školení{/if}</small></span>
 				{/if}
 			</td>
 		</tr>
