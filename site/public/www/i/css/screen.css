@@ -77,6 +77,7 @@ abbr.dtstart, abbr.dtend { border: none; }
     max-width: 800px;
     margin: 0px auto;
 }
+.container-wide { max-width: 1200px; }
 #header {
     text-align: left;
     padding: 1em 0px;

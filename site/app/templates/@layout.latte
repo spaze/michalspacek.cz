@@ -27,8 +27,9 @@
 </head>
 <body>
 <div id="main">
+{default $containerClass = 'container'}
 {block #body}
-	<div class="container">
+	<div class="{$containerClass}">
 	<div id="header">
 	<a n:href="Homepage:"><img src="{='/i/images/michal-spacek.jpg'|staticUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
 	{default $pageHeader = $pageTitle}
@@ -41,7 +42,7 @@
 {/block}
 </div>
 <div id="footer">
-<div class="container">
+<div class="{$containerClass}">
 	<div id="footer-name"><strong>Michal Špaček</strong></div>
 	<div id="footer-links">
 		<a n:href=":Contact:">{_messages.label.contact}</a>
