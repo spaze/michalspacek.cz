@@ -181,7 +181,7 @@ talks:
 	atyourevent:
 		upcoming: "I'll happily do a talk at your event or conference, \"let me know\":[%s]!"
 		noupcoming: "…at your event or conference, \"let me know\":[%s]!"
-	wastalking: "…\"in a cinema\":[%s], \"in a casino in Las Vegas\":[%s], \"in a former fallout shelter\":[%s] in Prague, Czech Republic, in pubs, at conferences, both in Czech and in English."
+	wastalking: "…\"in a cinema\":[%s], \"in a casino in Las Vegas\":[%s] (and \"again\":[%s] and \"again\":[%s]), \"in a former fallout shelter\":[%s] in Prague, Czech Republic, in pubs, at conferences, both in Czech and in English."
 	more: "…and more at \"SlideShare\":[%s] and \"Speaker Deck\":[%s]"
 	slidesorigin: "Find slides in a similar talk titled \"%s\":[%s]"
 	detail: "Talk detail"
