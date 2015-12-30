@@ -2,6 +2,8 @@
 <meta n:if="$ogImage" property="og:image" content="{$ogImage}">
 <meta n:if="$pageTitle" property="og:title" content="{$pageTitle}">
 <meta n:if="$description" property="og:description" content="{$description|striptags|strip|truncate:160}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@spazef0rze">
 {/define}
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
