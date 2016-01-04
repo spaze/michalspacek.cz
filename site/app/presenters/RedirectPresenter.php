@@ -1,4 +1,6 @@
 <?php
+namespace App\Presenters;
+
 /**
  * A redirection presenter.
  *
@@ -17,7 +19,7 @@ class RedirectPresenter extends BasePresenter
 	/**
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 */
-	public function __construct(MichalSpacekCz\Training\Applications $trainingApplications)
+	public function __construct(\MichalSpacekCz\Training\Applications $trainingApplications)
 	{
 		$this->trainingApplications = $trainingApplications;
 	}

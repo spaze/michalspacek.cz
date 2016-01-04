@@ -1,5 +1,5 @@
 <?php
-namespace AdminModule;
+namespace App\AdminModule\Presenters;
 
 /**
  * Sign in/out presenter.
@@ -7,7 +7,7 @@ namespace AdminModule;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class SignPresenter extends \BasePresenter
+class SignPresenter extends \App\Presenters\BasePresenter
 {
 
 	/** @persistent */

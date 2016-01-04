@@ -1,5 +1,5 @@
 <?php
-namespace AdminModule;
+namespace App\AdminModule\Presenters;
 
 /**
  * Honeypot presenter.
@@ -7,7 +7,7 @@ namespace AdminModule;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HoneypotPresenter extends \BasePresenter
+class HoneypotPresenter extends \App\Presenters\BasePresenter
 {
 
 	public function actionSignIn()

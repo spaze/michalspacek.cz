@@ -19,7 +19,7 @@ abstract class Form extends \Nette\Application\UI\Form
 	 * @param integer $maxLength maximum number of characters the user may enter
 	 * @param string $format Format for the title attribute
 	 * @param string $pattern Validation pattern
-	 * @return Nette\Forms\Controls\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	protected function addDate($name, $label = null, $required = false, $cols = null, $maxLength = null, $format = null, $pattern = null)
 	{

@@ -1,4 +1,6 @@
 <?php
+namespace App\Presenters;
+
 use MichalSpacekCz\Training;
 
 /**
@@ -34,11 +36,11 @@ class VenuesPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
-		MichalSpacekCz\Formatter\Texy $texyFormatter,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		Training\Dates $trainingDates,
 		Training\Venues $trainingVenues,
 		Training\Trainings $trainings,
-		MichalSpacekCz\Embed $embed
+		\MichalSpacekCz\Embed $embed
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -53,7 +55,7 @@ class VenuesPresenter extends BasePresenter
 	{
 		$venue = $this->trainingVenues->get($name);
 		if (!$venue) {
-			throw new Nette\Application\BadRequestException("Where in the world is {$name}?", Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("Where in the world is {$name}?", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->name]);

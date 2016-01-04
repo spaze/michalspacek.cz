@@ -1,5 +1,5 @@
 <?php
-namespace AdminModule;
+namespace App\AdminModule\Presenters;
 
 /**
  * Base class for all admin module presenters.

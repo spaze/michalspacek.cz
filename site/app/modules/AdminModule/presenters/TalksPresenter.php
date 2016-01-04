@@ -1,5 +1,5 @@
 <?php
-namespace AdminModule;
+namespace App\AdminModule\Presenters;
 
 /**
  * Talks presenter.
@@ -48,7 +48,7 @@ class TalksPresenter extends BasePresenter
 
 		$talk = $this->talks->get($this->talkAction);
 		if (!$talk) {
-			throw new Nette\Application\BadRequestException("I haven't talked about {$this->talkAction}, yet", Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I haven't talked about {$this->talkAction}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($talk->title), $talk->event]);
@@ -62,7 +62,7 @@ class TalksPresenter extends BasePresenter
 
 		$talk = $this->talks->get($this->talkAction);
 		if (!$talk) {
-			throw new Nette\Application\BadRequestException("I haven't talked about {$this->talkAction}, yet", Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I haven't talked about {$this->talkAction}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.admin.talkslides', [strip_tags($talk->title), $talk->event]);

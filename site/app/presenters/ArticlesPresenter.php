@@ -1,4 +1,6 @@
 <?php
+namespace App\Presenters;
+
 /**
  * Articles presenter.
  *
@@ -15,7 +17,7 @@ class ArticlesPresenter extends BasePresenter
 	/**
 	 * @param \MichalSpacekCz\Articles $articles
 	 */
-	public function __construct(MichalSpacekCz\Articles $articles)
+	public function __construct(\MichalSpacekCz\Articles $articles)
 	{
 		$this->articles = $articles;
 	}

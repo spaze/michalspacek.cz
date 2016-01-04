@@ -118,7 +118,7 @@ class Talk extends \MichalSpacekCz\Form\Form
 	 * @param boolean required
 	 * @param integer width of the control (deprecated)
 	 * @param integer maximum number of characters the user may enter
-	 * @return Nette\Forms\Controls\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	protected function addTalkDate($name, $label = null, $required = false, $cols = null, $maxLength = null)
 	{

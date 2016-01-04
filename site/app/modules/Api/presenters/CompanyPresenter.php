@@ -1,5 +1,5 @@
 <?php
-namespace ApiModule;
+namespace App\ApiModule\Presenters;
 
 /**
  * Company presenter.
@@ -7,7 +7,7 @@ namespace ApiModule;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class CompanyPresenter extends \BasePresenter
+class CompanyPresenter extends \App\Presenters\BasePresenter
 {
 
 	/** @var \MichalSpacekCz\CompanyInfo\Info */

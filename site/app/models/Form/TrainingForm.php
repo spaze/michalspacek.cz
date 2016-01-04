@@ -17,7 +17,7 @@ abstract class TrainingForm extends Form
 	 * @param boolean required
 	 * @param integer width of the control (deprecated)
 	 * @param integer maximum number of characters the user may enter
-	 * @return Nette\Forms\Controls\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	protected function addPaidDate($name, $label = null, $required = false, $cols = null, $maxLength = null)
 	{
@@ -40,7 +40,7 @@ abstract class TrainingForm extends Form
 	 * @param boolean required
 	 * @param integer width of the control (deprecated)
 	 * @param integer maximum number of characters the user may enter
-	 * @return Nette\Forms\Controls\TextInput
+	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	protected function addStatusDate($name, $label = null, $required = false, $cols = null, $maxLength = null)
 	{

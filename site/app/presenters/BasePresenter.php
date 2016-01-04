@@ -1,11 +1,13 @@
 <?php
+namespace App\Presenters;
+
 /**
  * Base class for all application presenters.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-abstract class BasePresenter extends Nette\Application\UI\Presenter
+abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
 	/**
@@ -19,7 +21,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	{
 		parent::startup();
 
-		$authenticator = $this->getContext()->getByType(MichalSpacekCz\User\Manager::class);
+		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 		if ($authenticator->isForbidden()) {
 			$this->forward('Forbidden:');
 		}
@@ -28,7 +30,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	public function beforeRender()
 	{
-		$webTracking = $this->getContext()->getByType(MichalSpacekCz\WebTracking::class);
+		$webTracking = $this->getContext()->getByType(\MichalSpacekCz\WebTracking::class);
 		$this->template->trackingCode = $webTracking->isEnabled();
 		$this->template->setTranslator($this->translator);
 	}
@@ -36,10 +38,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	protected function createTemplate($class = null)
 	{
-		$helpers = $this->getContext()->getByType(MichalSpacekCz\Templating\Helpers::class);
+		$helpers = $this->getContext()->getByType(\MichalSpacekCz\Templating\Helpers::class);
 
 		$template = parent::createTemplate($class);
-		$template->getLatte()->addFilter(null, [new Netxten\Templating\Helpers(), 'loader']);
+		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers(), 'loader']);
 		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
 		return $template;
 	}

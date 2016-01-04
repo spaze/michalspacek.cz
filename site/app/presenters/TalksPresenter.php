@@ -1,4 +1,6 @@
 <?php
+namespace App\Presenters;
+
 use Nette\Utils\Html;
 
 /**
@@ -30,10 +32,10 @@ class TalksPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Templating\Helpers $helpers
 	 */
 	public function __construct(
-		MichalSpacekCz\Formatter\Texy $texyFormatter,
-		MichalSpacekCz\Talks $talks,
-		MichalSpacekCz\Embed $embed,
-		MichalSpacekCz\Templating\Helpers $helpers
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
+		\MichalSpacekCz\Talks $talks,
+		\MichalSpacekCz\Embed $embed,
+		\MichalSpacekCz\Templating\Helpers $helpers
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -61,7 +63,7 @@ class TalksPresenter extends BasePresenter
 	{
 		$talk = $this->talks->get($name);
 		if (!$talk) {
-			throw new Nette\Application\BadRequestException("I haven't talked about {$name}, yet", Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$slideNo = $this->talks->getSlideNo($slide);

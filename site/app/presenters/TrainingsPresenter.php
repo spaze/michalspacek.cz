@@ -1,4 +1,6 @@
 <?php
+namespace App\Presenters;
+
 use MichalSpacekCz\Training;
 use Nette\Http\Response;
 
@@ -61,16 +63,16 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
 	 */
 	public function __construct(
-		MichalSpacekCz\Formatter\Texy $texyFormatter,
-		MichalSpacekCz\Files $files,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
+		\MichalSpacekCz\Files $files,
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
 		Training\Dates $trainingDates,
 		Training\Files $trainingFiles,
 		Training\Trainings $trainings,
-		MichalSpacekCz\Vat $vat,
-		Netxten\Templating\Helpers $netxtenHelpers,
-		MichalSpacekCz\CompanyInfo\Info $companyInfo
+		\MichalSpacekCz\Vat $vat,
+		\Netxten\Templating\Helpers $netxtenHelpers,
+		\MichalSpacekCz\CompanyInfo\Info $companyInfo
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -101,11 +103,11 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->training = $this->trainings->get($name);
 		if (!$this->training) {
-			throw new Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 		$this->dates = $this->trainings->getDates($name);
 		if (empty($this->dates)) {
-			throw new Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
+			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
 		}
 
 		$this->template->name             = $this->training->action;
@@ -139,7 +141,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$training  = $this->trainings->get($name);
 		if (!$training) {
-			throw new Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$session = $this->getSession('training');
@@ -185,13 +187,13 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$form = new MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
+		$form = new \MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
 		$form->setApplicationFromSession($this->getSession('training'));
 		$form->onSuccess[] = $this->submittedApplication;
 	}
 
 
-	public function submittedApplication(MichalSpacekCz\Form\TrainingApplication $form)
+	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplication $form)
 	{
 		$session = $this->getSession('training');
 
@@ -281,35 +283,35 @@ class TrainingsPresenter extends BasePresenter
 			$session->equipment    = $values->equipment;
 			$this->redirect('success', $name);
 		} catch (UnexpectedValueException $e) {
-			Tracy\Debugger::log($e);
+			\Tracy\Debugger::log($e);
 			$this->flashMessage($this->translator->translate('messages.trainings.spammyapplication'), 'error');
 		} catch (PDOException $e) {
-			Tracy\Debugger::log($e, Tracy\Debugger::ERROR);
+			\Tracy\Debugger::log($e, \Tracy\Debugger::ERROR);
 			$this->flashMessage($this->translator->translate('messages.trainings.errorapplication'), 'error');
 		}
 	}
 
 
-	private function checkTrainingDate(Nette\Utils\ArrayHash $values, $name)
+	private function checkTrainingDate(\Nette\Utils\ArrayHash $values, $name)
 	{
 		if (!isset($this->dates[$values->trainingId])) {
 			$this->logData($values, $name);
 			$message = "Training date id {$values->trainingId} is not an upcoming training, should be one of " . implode(', ', array_keys($this->dates));
-			throw new OutOfBoundsException($message);
+			throw new \OutOfBoundsException($message);
 		}
 	}
 
 
-	private function checkSpam(Nette\Utils\ArrayHash $values, $name)
+	private function checkSpam(\Nette\Utils\ArrayHash $values, $name)
 	{
 		if (preg_match('~\s+href="\s*https?://~', $values->note)) {
 			$this->logData($values, $name);
-			throw new UnexpectedValueException('Spammy note: ' . $values->note);
+			throw new \UnexpectedValueException('Spammy note: ' . $values->note);
 		}
 	}
 
 
-	private function logData(Nette\Utils\ArrayHash $values, $name)
+	private function logData(\Nette\Utils\ArrayHash $values, $name)
 	{
 		$session = $this->getSession('training');
 		$logValues = $logSession = array();
@@ -326,19 +328,19 @@ class TrainingsPresenter extends BasePresenter
 			(empty($logSession) ? 'empty' : implode(', ', $logSession)),
 			implode(', ', $logValues)
 		);
-		Tracy\Debugger::log($message);
+		\Tracy\Debugger::log($message);
 	}
 
 
 	public function actionReviews($name, $param)
 	{
 		if ($param !== null) {
-			throw new Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
 		}
 
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$this->template->name             = $training->action;
@@ -361,17 +363,17 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		if (!$session->applicationId || !$session->token) {
-			throw new Nette\Application\BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
 		}
 
 		$training = $this->trainings->getIncludingCustom($name);
 		if (!$training) {
-			throw new Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$application = $this->trainingApplications->getApplicationById($session->applicationId);
 		if (!$application) {
-			throw new Nette\Application\BadRequestException("No training application for id {$session->applicationId}", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("No training application for id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
 		if ($application->trainingAction != $name) {
@@ -381,7 +383,7 @@ class TrainingsPresenter extends BasePresenter
 		$files = $this->trainingFiles->getFiles($application->applicationId);
 		$this->trainingApplications->setAccessTokenUsed($application);
 		if (!$files) {
-			throw new Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 		foreach ($files as $file) {
 			$file->info = $this->files->getInfo("{$file->dirName}/{$file->fileName}");
@@ -399,16 +401,16 @@ class TrainingsPresenter extends BasePresenter
 	public function actionSuccess($name, $param)
 	{
 		if ($param !== null) {
-			throw new Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
 		}
 
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 		$this->dates = $this->trainings->getDates($name);
 		if (empty($this->dates)) {
-			throw new Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
+			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
 		}
 
 		$session = $this->getSession('training');

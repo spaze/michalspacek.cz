@@ -1,29 +1,29 @@
 services:
-	- ArticlesPresenter
-	- CompanyTrainingsPresenter
-	- ContactPresenter
-	- ErrorPresenter
-	- FilesPresenter
-	- ForbiddenPresenter
-	- HomepagePresenter
-	- InterviewsPresenter
-	- RedirectPresenter
-	- TalksPresenter
-	- TrainingsPresenter
-	- VenuesPresenter
-	- WhoPresenter
+	- \App\Presenters\ArticlesPresenter
+	- \App\Presenters\CompanyTrainingsPresenter
+	- \App\Presenters\ContactPresenter
+	- \App\Presenters\ErrorPresenter
+	- \App\Presenters\FilesPresenter
+	- \App\Presenters\ForbiddenPresenter
+	- \App\Presenters\HomepagePresenter
+	- \App\Presenters\InterviewsPresenter
+	- \App\Presenters\RedirectPresenter
+	- \App\Presenters\TalksPresenter
+	- \App\Presenters\TrainingsPresenter
+	- \App\Presenters\VenuesPresenter
+	- \App\Presenters\WhoPresenter
 
 	# api module
-	- ApiModule\CompanyPresenter
+	- \App\ApiModule\Presenters\CompanyPresenter
 
 	# admin module
-	- AdminModule\EmailsPresenter
-	- AdminModule\HomepagePresenter
-	- AdminModule\InfoPresenter
-	- AdminModule\SignPresenter
-	- AdminModule\TrackingPresenter
-	- AdminModule\TrainingsPresenter
-	- AdminModule\UserPresenter
+	- \App\AdminModule\Presenters\EmailsPresenter
+	- \App\AdminModule\Presenters\HomepagePresenter
+	- \App\AdminModule\Presenters\InfoPresenter
+	- \App\AdminModule\Presenters\SignPresenter
+	- \App\AdminModule\Presenters\TrackingPresenter
+	- \App\AdminModule\Presenters\TrainingsPresenter
+	- \App\AdminModule\Presenters\UserPresenter
 
 	# webleed module
-	- WebleedModule\HomepagePresenter
+	- \App\WebleedModule\Presenters\HomepagePresenter

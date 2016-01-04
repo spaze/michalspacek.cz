@@ -1,4 +1,6 @@
 <?php
+namespace App\Presenters;
+
 /**
  * Company Trainings presenter.
  *
@@ -24,9 +26,9 @@ class CompanyTrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
-		MichalSpacekCz\Formatter\Texy $texyFormatter,
-		MichalSpacekCz\Training\Trainings $trainings,
-		MichalSpacekCz\Vat $vat
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
+		\MichalSpacekCz\Training\Trainings $trainings,
+		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -46,7 +48,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	{
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new Nette\Application\BadRequestException("I don't do {$name} training, yet", Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 		$this->template->name = $training->action;
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->name]);

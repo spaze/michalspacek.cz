@@ -1,4 +1,6 @@
 <?php
+namespace App\Presenters;
+
 use Nette\Application\BadRequestException,
 	Nette\Application\Responses\FileResponse,
 	Nette\Http\Response;
@@ -24,8 +26,8 @@ class FilesPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 */
 	public function __construct(
-		MichalSpacekCz\Files $files,
-		MichalSpacekCz\Training\Files $trainingFiles
+		\MichalSpacekCz\Files $files,
+		\MichalSpacekCz\Training\Files $trainingFiles
 	)
 	{
 		$this->files = $files;

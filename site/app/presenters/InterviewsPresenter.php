@@ -1,4 +1,6 @@
 <?php
+namespace App\Presenters;
+
 /**
  * Interviews presenter.
  *
@@ -24,9 +26,9 @@ class InterviewsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
-		MichalSpacekCz\Formatter\Texy $texyFormatter,
-		MichalSpacekCz\Interviews $interviews,
-		MichalSpacekCz\Embed $embed
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
+		\MichalSpacekCz\Interviews $interviews,
+		\MichalSpacekCz\Embed $embed
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -46,7 +48,7 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$interview = $this->interviews->get($name);
 		if (!$interview) {
-			throw new Nette\Application\BadRequestException("I haven't been interviewed by {$name}, yet", Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I haven't been interviewed by {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [$interview->title]);

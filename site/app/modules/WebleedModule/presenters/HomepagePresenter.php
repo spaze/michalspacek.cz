@@ -1,5 +1,5 @@
 <?php
-namespace WebleedModule;
+namespace App\WebleedModule\Presenters;
 
 /**
  * Homepage presenter.
@@ -7,7 +7,7 @@ namespace WebleedModule;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HomepagePresenter extends \BasePresenter
+class HomepagePresenter extends \App\Presenters\BasePresenter
 {
 
 	const HEARTBLEED_DISCLOSURE = '2014-04-07';
