@@ -1,9 +1,8 @@
-nette:
-	database:
-		default:
-			dsn: 'mysql:host=localhost;dbname=cz_michalspacek'
-			user: ...
-			password: ...
+database:
+	default:
+		dsn: 'mysql:host=localhost;dbname=cz_michalspacek'
+		user: ...
+		password: ...
 
 parameters:
 	notifier:

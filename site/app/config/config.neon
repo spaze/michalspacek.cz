@@ -8,25 +8,22 @@ php:
 	date.timezone: Europe/Prague
 	# zlib.output_compression: yes
 
-nette:
-	application:
-		errorPresenter: Error
+application:
+	errorPresenter: Error
 
-	http:
-		headers:
-			Server: "<script>alert('Inline JavaScript is bad, m\\'kay?')</script>"
-			X-Powered-By: "<img src=x onerror=\"alert('Automagic escaping, maybe?')\">"
-			X-Content-Type-Options: nosniff
+http:
+	headers:
+		Server: "<script>alert('Inline JavaScript is bad, m\\'kay?')</script>"
+		X-Powered-By: "<img src=x onerror=\"alert('Automagic escaping, maybe?')\">"
+		X-Content-Type-Options: nosniff
+	frames: false
 
-	security:
-		frames: false
-
-	session:
-		name: yourluckynumbers
-		hash_function: sha512
-		hash_bits_per_character: 6
-		expiration: 14 days
-		use_strict_mode: true
+session:
+	name: yourluckynumbers
+	hash_function: sha512
+	hash_bits_per_character: 6
+	expiration: 14 days
+	use_strict_mode: true
 
 translation:
 	default: cs_CZ
