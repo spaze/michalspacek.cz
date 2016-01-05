@@ -1,7 +1,7 @@
 <?php
 namespace MichalSpacekCz\Application;
 
-use	Nette\Application\Routers\Route;
+use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 
 /**
