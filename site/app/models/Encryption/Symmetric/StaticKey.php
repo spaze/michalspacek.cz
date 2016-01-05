@@ -1,7 +1,7 @@
 <?php
 namespace MichalSpacekCz\Encryption\Symmetric;
 
-use \Defuse\Crypto;
+use Defuse\Crypto;
 
 /**
  * StaticKey encryption service.

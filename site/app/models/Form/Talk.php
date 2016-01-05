@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Talk extends \MichalSpacekCz\Form\Form
+class Talk extends Form
 {
 
 	/** @var \MichalSpacekCz\Talks */

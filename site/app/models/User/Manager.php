@@ -1,7 +1,7 @@
 <?php
 namespace MichalSpacekCz\User;
 
-use \Nette\Security\User;
+use Nette\Security\User;
 
 /**
  * Manager model.
@@ -199,7 +199,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 *
 	 * Selector and token are regenerated if selector already exists in the table.
 	 *
-	 * @param \Nette\Security\User $user
+	 * @param User $user
 	 * @return string Concatenation of selector, separator, token
 	 */
 	private function insertToken(User $user)
@@ -233,7 +233,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	/**
 	 * Store permanent login token in database and send a cookie to the browser.
 	 *
-	 * @param \Nette\Security\User $user
+	 * @param User $user
 	 */
 	public function storePermanentLogin(User $user)
 	{
@@ -245,7 +245,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	/**
 	 * Delete all permanent login tokens and delete the cookie in the browser.
 	 *
-	 * @param \Nette\Security\User $user
+	 * @param User $user
 	 */
 	public function clearPermanentLogin(User $user) {
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ?', $user->getId());
