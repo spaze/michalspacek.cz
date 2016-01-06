@@ -142,10 +142,10 @@ who:
 	tojeono:
 		1: "Koncem roku 2003 jsme se s kolegy rozhodli pro pořízení vlastních serverů, které jsme pod značkou \"tojeono.cz\":[%s] nabídli k využívání i dalším zákazníkům, kteří požadovali individuální nastavení služeb."
 		2: "Přibližně po roce jsem projekt opustil a v současné době s ním mám společné jen to, že na serverech tojeono.cz provozuji snad všechny svoje weby."
-	more: "Více o mě a mých dobrodužstvích naleznete na \"LinkedIn\":[%s]."
+	more: "Více o mně a mých dobrodužstvích naleznete na \"LinkedIn\":[%s]."
 homepage:
 	tagline: "Vyvíjím webové aplikace a zajímá mě jejich bezpečnost. Nebojím se o tom mluvit veřejně, hledám hranice tak, že je posouvám. Chci naučit webové vývojáře stavět bezpečnější a výkonnější weby a aplikace."
-	aboutme: "více o mě"
+	aboutme: "více o mně"
 	contact: kontakt
 	trainings: "Zvu vás na následující školení, která pořádám a vedu"
 	companytrainings: "Školení mohu uspořádat také \"u vás ve firmě\":[%s]."
