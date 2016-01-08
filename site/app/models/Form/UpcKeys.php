@@ -19,7 +19,7 @@ class UpcKeys extends \Nette\Application\UI\Form
 	{
 		parent::__construct($parent, $name);
 		$this->addText('ssid', 'SSID:')
-			->setAttribute('placeholder', 'UPC1234567')
+			->setAttribute('placeholder', $upcKeys->getSsidPlaceholder())
 			->setDefaultValue($ssid)
 			->setRequired('Please enter an SSID')
 			->addRule(Form::PATTERN, 'SSID has to start with "UPC"', '\s*' . $upcKeys->getSsidPattern());

@@ -38,6 +38,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 				$this->template->error = 'SSID has to start with "UPC"';
 			}
 		}
+		$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 	}
 
 

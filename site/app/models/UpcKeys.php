@@ -14,6 +14,9 @@ class UpcKeys
 	const SSID_PATTERN = '([Uu][Pp][Cc]).*';
 
 	/** @var string */
+	const SSID_PLACEHOLDER = 'UPC1234567';
+
+	/** @var string */
 	protected $url;
 
 	/** @var string */
@@ -87,6 +90,17 @@ class UpcKeys
 	{
 		// Inspired by Nette\Forms\Validator::validatePattern()
 		return (bool)\Nette\Utils\Strings::match($ssid, sprintf("\x01^(%s)\\z\x01u", self::SSID_PATTERN));
+	}
+
+
+	/**
+	 * Return SSID placeholder.
+	 *
+	 * @return string
+	 */
+	public function getSsidPlaceholder()
+	{
+		return self::SSID_PLACEHOLDER;
 	}
 
 
