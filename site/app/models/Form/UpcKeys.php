@@ -22,7 +22,7 @@ class UpcKeys extends \Nette\Application\UI\Form
 			->setAttribute('placeholder', $upcKeys->getSsidPlaceholder())
 			->setDefaultValue($ssid)
 			->setRequired('Please enter an SSID')
-			->addRule(Form::PATTERN, 'SSID has to start with "UPC"', '\s*' . $upcKeys->getSsidPattern());
+			->addRule(Form::PATTERN, 'Wi-Fi network name has to start with "UPC"', '\s*' . $upcKeys->getUpcSsidPattern());
 		$this->addSubmit('submit', 'Get keys')
 			->setHtmlId('submit')
 			->setAttribute('data-alt', 'Wait…');

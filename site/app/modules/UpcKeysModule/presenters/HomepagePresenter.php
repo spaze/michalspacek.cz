@@ -27,15 +27,24 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	}
 
 
+	/**
+	 * Default action handler.
+	 *
+	 * Doesn't use flash messages because I want the errors to be gone after post-redirect-get.
+	 *
+	 * @param string|NULL $ssid
+	 */
 	public function actionDefault($ssid = null)
 	{
 		$this->ssid = $ssid;
 		if ($this->ssid !== null) {
-			if ($this->upcKeys->isSsidValid($this->ssid)) {
+			if ($this->upcKeys->isUpcSsid($this->ssid)) {
+				if (!$this->upcKeys->isValidSsid($this->ssid)) {
+					$this->template->error = 'Wi-Fi network name is not UPC + 7 numbers, the password might not be listed below';
+				}
 				$this->template->keys = $this->upcKeys->getKeys($this->ssid);
 			} else {
-				// No flash message because I want this to be gone after post-redirect-get
-				$this->template->error = 'SSID has to start with "UPC"';
+				$this->template->error = 'Wi-Fi network name has to start with "UPC"';
 			}
 		}
 		$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
