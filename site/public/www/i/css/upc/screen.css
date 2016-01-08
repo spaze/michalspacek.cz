@@ -1,0 +1,35 @@
+body { font: 1em/1.5 Arial, sans-serif; }
+body {
+	margin: 0px;
+	color: #249;
+	background-color: #EFF2FB;
+}
+h3 { color: #777; }
+#container {
+	margin: 2em auto;
+	padding: 0.5em;
+	max-width: 920px;
+}
+#result {
+	margin: 2em 0px;
+	padding: 2em;
+	color: #333;
+	background-color: #FFF;
+}
+#result form { text-align: center; }
+#frm-ssid-ssid { width: 100px; }
+#result table { margin: 0px auto; }
+#result tbody { font-size: 120%; }
+#result td {
+	width: 6em;
+	padding: 1px 2em;
+	text-align: center;
+}
+#result .nr {
+	color: #AAA;
+	width: 2em;
+	padding: 1px 0.2em;
+	text-align: right;
+}
+#result .dark { background-color: #EEE; }
+#submit { width: 6em; }

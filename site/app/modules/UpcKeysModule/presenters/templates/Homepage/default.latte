@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+	<title>UPC Wi-Fi Keys</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="{='/i/css/upc/screen.css'|staticUrl}" type="text/css">
+	<script src="{='/i/js/jquery-2.1.4.min.js'|staticUrl}"></script>
+	<script src="{='/i/js/upckeys.js'|staticUrl}"></script>
+    <script n:if="$trackingCode" src="{='/i/js/analytics.js'|staticUrl}" async defer></script>
+</head>
+<body>
+<div id="container">
+	<div id="header">
+		<h1>UPC Wi-Fi Keys</h1>
+		<h3>Online WPA2 passphrase recovery tool for <code>UPC1234567</code> devices</h3>
+	</div>
+
+	<p>
+		Test your Wi-Fi router by entering your wireless network name (SSID), eg. <code>UPC1234567</code>.
+		You'll get back a list of possible passwords, or keys, if your key is present, <strong>change it immediately</strong>.
+		If not present, <strong>change it as soon as possible</strong>.
+		Also, change your router admin password, we know it's <code>admin</code> anyway.
+	</p>
+	<p><strong>DO NOT USE DEFAULT PASSWORDS!</strong></p>
+	<p>
+		<a href="http://support.virginmedia.ie/app/answers/detail/a_id/406/~/change-wireless-password">How can I change the wireless password?</a>
+		/
+		<a href="http://www.upc.cz/pece-o-zakazniky/internet/wifi/jak-zmenim-heslo-k-bezdratove-siti/" lang="cs">Jak změním heslo k bezdrátové síti?</a> (in Czech)
+	</p>
+	<div id="result">
+		<div>
+		{form ssid}
+		{label ssid /} {input ssid} {input submit}
+		{/form}
+		</div>
+		<table id="result" n:if="isset($keys)">
+		<thead>
+		<tr>
+			<th class="nr">#.</th>
+			<th>Serial</th>
+			<th>Password/Key</th>
+		</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$keys as $serial => $key" n:class="$iterator->odd ? dark">
+				<td class="nr"><code>{$iterator->counter}.</code></td>
+				<td><code>{$serial}</code></td>
+				<td><code>{$key}</code></td>
+			</tr>
+		</tbody>
+		</table>
+	</div>
+	<p>
+		<small><em>Disclaimer: This site is here to help users secure their wireless network by educating them. Use only to test your own wireless network.
+		Don't be a jerk and do not use the keys to &quot;hack&quot; your neighbors.
+		Tell them to change their default passwords instead.</em></small>
+	</p>
+	<p><small>A project from <a href="https://www.michalspacek.cz/">Michal Špaček</a>, <a href="https://twitter.com/spazef0rze">@spazef0rze</a>. Uses <a href="https://haxx.in/upc_keys.c"><code>upc_keys.c</code></a> by <a href="https://haxx.in/">blasty</a> for the recovery, thanks.</small></p>
+</div>
+</body>
+</html>

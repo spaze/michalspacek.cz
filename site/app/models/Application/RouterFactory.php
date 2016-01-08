@@ -14,6 +14,7 @@ class RouterFactory
 	const API = 'api';
 	const WEBLEED = 'webleed';
 	const HEARTBLEED = 'heartbleed';
+	const UPC = 'upc';
 	const WWW = 'www';
 
 	const ROOT_ONLY = '';
@@ -65,6 +66,7 @@ class RouterFactory
 		$router[] = $this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$router[] = $this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$router[] = $this->addRoute(self::API, '/<presenter>', 'Default', 'default');
+		$router[] = $this->addRoute(self::UPC, '[<ssid>]', 'Homepage', 'default');
 		$router[] = $this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
 		$router[] = $this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
 		$router[] = $this->addRoute(self::WWW, '[/<action>]/<filename>', 'Files', 'file');
@@ -101,6 +103,9 @@ class RouterFactory
 				// no break;
 			case self::HEARTBLEED:
 				$metadata['module'] = 'Webleed';
+				break;
+			case self::UPC:
+				$metadata['module'] = 'UpcKeys';
 				break;
 			case self::WWW:
 				if ($maskPrefix === null) {
