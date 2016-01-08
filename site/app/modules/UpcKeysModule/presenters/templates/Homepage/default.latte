@@ -29,6 +29,7 @@
 		<a href="http://www.upc.cz/pece-o-zakazniky/internet/wifi/jak-zmenim-heslo-k-bezdratove-siti/" lang="cs">Jak změním heslo k bezdrátové síti?</a> (in Czech)
 	</p>
 	<div id="result">
+		<div n:ifset="$error" class="error"><strong>{$error}</strong></div>
 		<div>
 		{form ssid}
 		{label ssid /} {input ssid} {input submit}

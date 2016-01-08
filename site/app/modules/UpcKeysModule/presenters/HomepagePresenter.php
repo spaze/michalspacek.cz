@@ -1,8 +1,6 @@
 <?php
 namespace App\UpcKeysModule\Presenters;
 
-use \Nette\Application\UI\Form;
-
 /**
  * Homepage presenter.
  *
@@ -33,29 +31,25 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	{
 		$this->ssid = $ssid;
 		if ($this->ssid !== null) {
-			$this->template->keys = $this->upcKeys->getKeys($this->ssid);
+			if ($this->upcKeys->isSsidValid($this->ssid)) {
+				$this->template->keys = $this->upcKeys->getKeys($this->ssid);
+			} else {
+				// No flash message because I want this to be gone after post-redirect-get
+				$this->template->error = 'SSID has to start with "UPC"';
+			}
 		}
 	}
 
 
 	protected function createComponentSsid($formName)
 	{
-		$form = new Form($this, $formName);
-		$form->addText('ssid', 'SSID:')
-			->setAttribute('placeholder', 'UPC1234567')
-			->setDefaultValue($this->ssid)
-			->setRequired('Please enter an SSID')
-			->addRule(Form::PATTERN, 'SSID has to start with "UPC"', '\s*([Uu][Pp][Cc]).*');
-		$form->addSubmit('submit', 'Get keys')
-			->setHtmlId('submit')
-			->setAttribute('data-alt', 'Wait…');
+		$form = new \MichalSpacekCz\Form\UpcKeys($this, $formName, $this->ssid, $this->upcKeys);
 		$form->onSuccess[] = $this->submittedSsid;
-
 		return $form;
 	}
 
 
-	public function submittedSsid(Form $form)
+	public function submittedSsid(\MichalSpacekCz\Form\UpcKeys $form)
 	{
 		$values = $form->getValues();
 		$ssid = trim($values->ssid);
