@@ -94,7 +94,7 @@ services:
 		setup:
 			- setRootUrl(%registerUz.rootUrl%)
 	upcKeys:
-		class: \MichalSpacekCz\UpcKeys
+		class: \MichalSpacekCz\UpcKeys(@database.upcKeys.context)
 		setup:
 			- setUrl(%awsLambda.upcKeys.url%)
 			- setApiKey(%awsLambda.upcKeys.apiKey%)

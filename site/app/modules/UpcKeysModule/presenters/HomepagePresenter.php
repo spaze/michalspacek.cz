@@ -63,6 +63,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	{
 		$values = $form->getValues();
 		$ssid = trim($values->ssid);
+		$this->upcKeys->saveKeys($ssid);
 		$this->redirect('this', $ssid);
 	}
 
