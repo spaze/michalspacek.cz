@@ -10,6 +10,18 @@ h3 { color: #777; }
 	padding: 0.5em;
 	max-width: 920px;
 }
+#logo {
+	width: 100px;
+	height: 120px;
+	float: left;
+	margin: 20px 40px 0 0;
+}
+#header {
+	max-width: 600px;
+	height: 120px;
+	float: left;
+}
+#desc { clear: both; }
 #result {
 	margin: 2em 0px;
 	padding: 2em;
