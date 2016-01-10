@@ -11,9 +11,6 @@ class UpcKeys
 {
 
 	/** @var string */
-	const SSID_UPC_PATTERN = '([Uu][Pp][Cc]).*';
-
-	/** @var string */
 	const SSID_VALID_PATTERN = '([Uu][Pp][Cc])[0-9]{7}';
 
 	/** @var string */
@@ -213,26 +210,13 @@ class UpcKeys
 
 
 	/**
-	 * Return SSID validation pattern to detect whether the SSID is a UPC one.
+	 * Return SSID validation pattern to detect whether the SSID is a valid one.
 	 *
 	 * @return string
 	 */
-	public function getUpcSsidPattern()
+	public function getValidSsidPattern()
 	{
-		return self::SSID_UPC_PATTERN;
-	}
-
-
-	/**
-	 * Check whether the SSID is UPC SSID.
-	 *
-	 * @param string
-	 * @return string
-	 */
-	public function isUpcSsid($ssid)
-	{
-		// Inspired by Nette\Forms\Validator::validatePattern()
-		return (bool)\Nette\Utils\Strings::match($ssid, sprintf("\x01^(%s)\\z\x01u", self::SSID_UPC_PATTERN));
+		return self::SSID_VALID_PATTERN;
 	}
 
 

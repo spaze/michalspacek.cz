@@ -38,13 +38,10 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	{
 		$this->ssid = $ssid;
 		if ($this->ssid !== null) {
-			if ($this->upcKeys->isUpcSsid($this->ssid)) {
-				if (!$this->upcKeys->isValidSsid($this->ssid)) {
-					$this->template->error = 'Wi-Fi network name is not UPC + 7 numbers, the password might not be listed below';
-				}
+			if ($this->upcKeys->isValidSsid($this->ssid)) {
 				$this->template->keys = $this->upcKeys->getKeys($this->ssid);
 			} else {
-				$this->template->error = 'Wi-Fi network name has to start with "UPC"';
+				$this->template->error = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
 			}
 		}
 		$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
