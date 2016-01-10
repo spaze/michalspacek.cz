@@ -57,6 +57,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 					}
 				}
 				$this->template->keys = $keys;
+				$this->template->ssid = $this->ssid;
 			} else {
 				$this->template->error = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
 			}
