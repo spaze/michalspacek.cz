@@ -18,8 +18,12 @@ h3 { color: #777; }
 }
 #header {
 	max-width: 600px;
-	height: 120px;
 	float: left;
+}
+#tagline {
+	max-width: 600px;
+	float: left;
+	margin-top: 0;
 }
 #desc { clear: both; }
 #result {
