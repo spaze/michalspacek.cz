@@ -19,6 +19,12 @@ class UpcKeys
 	/** @var string */
 	const SSID_PLACEHOLDER = 'UPC1234567';
 
+	/** @var integer */
+	const SSID_TYPE_24GHZ = 1;
+
+	/** @var integer */
+	const SSID_TYPE_5GHZ = 2;
+
 	/** @var \Nette\Database\Context */
 	protected $database;
 
@@ -127,17 +133,18 @@ class UpcKeys
 		$rows = $this->database->fetchAll(
 			'SELECT
 				k.serial,
-				k.key
+				k.key,
+				k.type
 			FROM
 				`keys` k
 				JOIN ssids s ON k.key_ssid = s.id_ssid
 			WHERE s.ssid = ?
-			ORDER BY k.id_key',
+			ORDER BY k.type, k.id_key',
 			$ssid
 		);
 		$result = array();
 		foreach ($rows as $row) {
-			$result[] = $this->buildKey($row->serial, $row->key, 123);
+			$result[] = $this->buildKey($row->serial, $row->key, $row->type);
 		}
 		return $result;
 	}
@@ -191,6 +198,7 @@ class UpcKeys
 						'key_ssid' => $ssidId,
 						'serial' => $key->serial,
 						'key' => $key->key,
+						'type' => $key->type,
 					)
 				);
 			}
@@ -256,12 +264,24 @@ class UpcKeys
 	 * Build key object.
 	 *
 	 * @param string
-	 * @param key
-	 * @param type
+	 * @param string
+	 * @param integer
 	 * @return \stdClass
 	 */
 	private function buildKey($serial, $key, $type)
 	{
+		switch ($type) {
+			case self::SSID_TYPE_24GHZ:
+				$type = '2.4 GHz';
+				break;
+			case self::SSID_TYPE_5GHZ:
+				$type = '5 GHz';
+				break;
+			default:
+				throw new \RuntimeException('Unknown network type ' . $type);
+				break;
+		}
+
 		$result = new \stdClass();
 		$result->serial = $serial;
 		$result->key = $key;

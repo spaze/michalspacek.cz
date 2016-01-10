@@ -41,6 +41,7 @@
 			<th class="nr">#.</th>
 			<th>Serial</th>
 			<th>Password/Key</th>
+			<th class="type">Type</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -48,6 +49,7 @@
 				<td class="nr"><code>{$iterator->counter}.</code></td>
 				<td><code>{$key->serial}</code></td>
 				<td><code>{$key->key}</code></td>
+				<td class="type"><small>{$key->type}</small></td>
 			</tr>
 		</tbody>
 		</table>

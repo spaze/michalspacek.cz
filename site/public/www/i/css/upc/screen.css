@@ -43,6 +43,11 @@ h3 { color: #777; }
 	padding: 1px 0.2em;
 	text-align: right;
 }
+#result .type {
+	width: 4em;
+	padding: 1px 0.2em;
+	font-size: 90%;
+}
 #result .dark { background-color: #EEE; }
 #submit { width: 6em; }
 div.error {
