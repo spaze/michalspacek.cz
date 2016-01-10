@@ -113,9 +113,10 @@ class UpcKeys
 			}
 
 			list($serial, $key, $type) = explode(',', $line);
-			$keys[] = $this->buildKey($serial, $key, $type);
+			$keys[$type][] = $this->buildKey($serial, $key, $type);
 		}
-		return $keys;
+		ksort($keys);
+		return array_merge(...$keys);
 	}
 
 
