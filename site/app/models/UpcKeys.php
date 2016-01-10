@@ -254,18 +254,6 @@ class UpcKeys
 	 */
 	private function buildKey($serial, $key, $type)
 	{
-		switch ($type) {
-			case self::SSID_TYPE_24GHZ:
-				$type = '2.4 GHz';
-				break;
-			case self::SSID_TYPE_5GHZ:
-				$type = '5 GHz';
-				break;
-			default:
-				throw new \RuntimeException('Unknown network type ' . $type);
-				break;
-		}
-
 		$result = new \stdClass();
 		$result->serial = $serial;
 		$result->key = $key;

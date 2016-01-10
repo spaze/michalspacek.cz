@@ -39,7 +39,21 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 		$this->ssid = $ssid;
 		if ($this->ssid !== null) {
 			if ($this->upcKeys->isValidSsid($this->ssid)) {
-				$this->template->keys = $this->upcKeys->getKeys($this->ssid);
+				$keys = $this->upcKeys->getKeys($this->ssid);
+				foreach ($keys as $key) {
+					switch ($key->type) {
+						case \MichalSpacekCz\UpcKeys::SSID_TYPE_24GHZ:
+							$key->type = '2.4 GHz';
+							break;
+						case \MichalSpacekCz\UpcKeys::SSID_TYPE_5GHZ:
+							$key->type = '5 GHz';
+							break;
+						default:
+							throw new \RuntimeException('Unknown network type ' . $type);
+							break;
+					}
+				}
+				$this->template->keys = $keys;
 			} else {
 				$this->template->error = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
 			}
