@@ -38,6 +38,9 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	{
 		$this->ssid = $ssid;
 		if ($this->ssid !== null) {
+			if ($this->ssid !== strtoupper($this->ssid)) {
+				$this->redirect('this', strtoupper($this->ssid));
+			}
 			if ($this->upcKeys->isValidSsid($this->ssid)) {
 				$keys = $this->upcKeys->getKeys($this->ssid);
 				foreach ($keys as $key) {
@@ -73,7 +76,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	public function submittedSsid(\MichalSpacekCz\Form\UpcKeys $form)
 	{
 		$values = $form->getValues();
-		$ssid = trim($values->ssid);
+		$ssid = strtoupper(trim($values->ssid));
 		$this->upcKeys->saveKeys($ssid);
 		$this->redirect('this', $ssid);
 	}
