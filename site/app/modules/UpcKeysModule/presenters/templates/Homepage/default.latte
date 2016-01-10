@@ -44,10 +44,10 @@
 		</tr>
 		</thead>
 		<tbody>
-			<tr n:foreach="$keys as $serial => $key" n:class="$iterator->odd ? dark">
+			<tr n:foreach="$keys as $key" n:class="$iterator->odd ? dark">
 				<td class="nr"><code>{$iterator->counter}.</code></td>
-				<td><code>{$serial}</code></td>
-				<td><code>{$key}</code></td>
+				<td><code>{$key->serial}</code></td>
+				<td><code>{$key->key}</code></td>
 			</tr>
 		</tbody>
 		</table>

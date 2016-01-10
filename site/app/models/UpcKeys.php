@@ -66,7 +66,7 @@ class UpcKeys
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @param string
-	 * @return array (serial, key)
+	 * @return array of \stdClass (serial, key, type)
 	 */
 	public function getKeys($ssid)
 	{
@@ -96,7 +96,7 @@ class UpcKeys
 	 * Get possible keys and serial for an SSID.
 	 *
 	 * @param string
-	 * @return array (serial, key)
+	 * @return array of \stdClass (serial, key, type)
 	 */
 	private function generateKeys($ssid)
 	{
@@ -109,8 +109,8 @@ class UpcKeys
 				continue;
 			}
 
-			list($serial, $key) = explode(',', $line);
-			$keys[$serial] = $key;
+			list($serial, $key, $type) = explode(',', $line);
+			$keys[] = $this->buildKey($serial, $key, $type);
 		}
 		return $keys;
 	}
@@ -120,7 +120,7 @@ class UpcKeys
 	 * Fetch keys from database.
 	 *
 	 * @param string
-	 * @return array (serial, key)
+	 * @return array of \stdClass (serial, key, type)
 	 */
 	private function fetchKeys($ssid)
 	{
@@ -137,7 +137,7 @@ class UpcKeys
 		);
 		$result = array();
 		foreach ($rows as $row) {
-			$result[$row->serial] = $row->key;
+			$result[] = $this->buildKey($row->serial, $row->key, 123);
 		}
 		return $result;
 	}
@@ -168,7 +168,7 @@ class UpcKeys
 	 * Store keys to database.
 	 *
 	 * @param string
-	 * @param array (serial, key)
+	 * @param array of \stdClass (serial, key, type)
 	 */
 	private function storeKeys($ssid, $keys)
 	{
@@ -184,13 +184,13 @@ class UpcKeys
 				)
 			);
 			$ssidId = $this->database->getInsertId();
-			foreach ($keys as $serial => $key) {
+			foreach ($keys as $key) {
 				$this->database->query(
 					'INSERT INTO `keys`',
 					array(
 						'key_ssid' => $ssidId,
-						'serial' => $serial,
-						'key' => $key,
+						'serial' => $key->serial,
+						'key' => $key->key,
 					)
 				);
 			}
@@ -249,6 +249,24 @@ class UpcKeys
 	public function getSsidPlaceholder()
 	{
 		return self::SSID_PLACEHOLDER;
+	}
+
+
+	/**
+	 * Build key object.
+	 *
+	 * @param string
+	 * @param key
+	 * @param type
+	 * @return \stdClass
+	 */
+	private function buildKey($serial, $key, $type)
+	{
+		$result = new \stdClass();
+		$result->serial = $serial;
+		$result->key = $key;
+		$result->type = $type;
+		return $result;
 	}
 
 
