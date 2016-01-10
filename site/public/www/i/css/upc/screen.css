@@ -61,3 +61,8 @@ div.error {
     color: #F34;
     background-color: #FEE;
 }
+#note {
+	text-align: center;
+	margin: 0 auto;
+	color: #249;
+}
