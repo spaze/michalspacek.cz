@@ -28,7 +28,7 @@ h3 { color: #777; }
 #desc { clear: both; }
 #result {
 	margin: 2em 0px;
-	padding: 2em;
+	padding: 2em 0;
 	color: #333;
 	background-color: #FFF;
 }
@@ -38,7 +38,7 @@ h3 { color: #777; }
 #result tbody { font-size: 120%; }
 #result td {
 	width: 6em;
-	padding: 1px 2em;
+	padding: 1px 1em;
 	text-align: center;
 }
 #result .nr {
