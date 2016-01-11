@@ -48,7 +48,7 @@ parameters:
 			email: dev1
 
 	awsLambda:
-		upcKeys: "https://example.amazonaws.com/stage/upc_keys/%s"
+		upcKeys: "https://example.amazonaws.com/stage/upc_keys/%s/%s"
 		apiKey: "britishteaatfiveoclockisnotacoffee"
 
 

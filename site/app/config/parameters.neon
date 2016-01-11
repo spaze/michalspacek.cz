@@ -62,3 +62,10 @@ parameters:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	returningUser:
 		permanentLoginInterval: 14 days
+	awsLambda:
+		upcKeys:
+			prefixes:
+				- SAAP
+				- SAPP  # TC7200 used in CZ
+				- UAAP  # Ubee devices
+				- SBAP  # TC7200 S/N prefix used by UPC SK

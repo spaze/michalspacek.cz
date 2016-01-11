@@ -98,3 +98,4 @@ services:
 		setup:
 			- setUrl(%awsLambda.upcKeys.url%)
 			- setApiKey(%awsLambda.upcKeys.apiKey%)
+			- setPrefixes(%awsLambda.upcKeys.prefixes%)

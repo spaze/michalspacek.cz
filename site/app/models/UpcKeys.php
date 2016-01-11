@@ -31,6 +31,9 @@ class UpcKeys
 	/** @var string */
 	protected $apiKey;
 
+	/** @var array of strings */
+	protected $prefixes;
+
 
 	/**
 	 * @param \Nette\Database\Context $context
@@ -60,6 +63,17 @@ class UpcKeys
 	public function setApiKey($apiKey)
 	{
 		$this->apiKey = $apiKey;
+	}
+
+
+	/**
+	 * Set serial number prefixes to generate keys for.
+	 *
+	 * @param array
+	 */
+	public function setPrefixes($prefixes)
+	{
+		$this->prefixes = $prefixes;
 	}
 
 
@@ -103,7 +117,7 @@ class UpcKeys
 	 */
 	private function generateKeys($ssid)
 	{
-		$url = sprintf($this->url, $ssid);
+		$url = sprintf($this->url, $ssid, implode(',', $this->prefixes));
 		$data = file_get_contents($url, false, stream_context_create(['http' => ['header' => 'X-API-Key: ' . $this->apiKey]]));
 		$data = \Nette\Utils\Json::decode($data);
 		$keys = array();
