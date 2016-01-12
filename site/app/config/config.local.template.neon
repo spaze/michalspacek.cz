@@ -32,6 +32,10 @@ parameters:
 		heartbleed:
 			img-src: 'https://www.%domain.root% https://www.google-analytics.com data:'
 			script-src: "https://www.%domain.root% https://www.google-analytics.com 'unsafe-inline' 'unsafe-eval'"
+		upc:
+			img-src: 'https://www.%domain.root% https://www.google-analytics.com data:'
+			script-src: "https://www.%domain.root% https://www.google-analytics.com 'unsafe-inline' 'unsafe-eval'"
+			style-src: "https://www.%domain.root% 'unsafe-inline'"
 
 	returningUser:
 		cookie: cafebabe

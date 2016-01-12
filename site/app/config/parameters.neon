@@ -36,6 +36,14 @@ parameters:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
+		upc:
+			default-src: https://www.%domain.root%
+			img-src: 'https://www.%domain.root% https://www.google-analytics.com'
+			script-src: 'https://www.%domain.root% https://www.google-analytics.com'
+			form-action: "'self'"
+			upgrade-insecure-requests:
+			block-all-mixed-content:
+			report-uri: %reporting.contentSecurityPolicy%
 	publicKeyPins:
 		www:
 			pins:
@@ -47,13 +55,13 @@ parameters:
 			report-uri: %reporting.publicKeyPins%
 		admin: %publicKeyPins.www%
 		heartbleed: %publicKeyPins.www%
+		upc: %publicKeyPins.www%
 	extraHeaders:
 		www:
 				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
-		admin:
-				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
-		heartbleed:
-				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
+		admin: %extraHeaders.www%
+		heartbleed: %extraHeaders.www%
+		upc: %extraHeaders.www%
 	vatRate: 0.21
 	loadCompanyDataVisible: true
 	ares:
