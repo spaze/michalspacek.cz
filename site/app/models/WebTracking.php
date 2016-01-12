@@ -10,10 +10,6 @@ namespace MichalSpacekCz;
 class WebTracking
 {
 
-	const TRACKING_COOKIE = 'tracking';
-
-	const TRACKING_DISABLED = 'donut';
-
 	const TRACKING_PATH = '/';
 
 	/** @var \Nette\Http\IRequest */
@@ -21,6 +17,12 @@ class WebTracking
 
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
+
+	/** @var string */
+	private $cookie;
+
+	/** @var string */
+	private $value;
 
 
 	public function __construct(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse)
@@ -30,21 +32,33 @@ class WebTracking
 	}
 
 
+	public function setCookie($cookie)
+	{
+		$this->cookie = $cookie;
+	}
+
+
+	public function setValue($value)
+	{
+		$this->value = $value;
+	}
+
+
 	public function isEnabled()
 	{
-		return ($this->httpRequest->getCookie(self::TRACKING_COOKIE) != self::TRACKING_DISABLED);
+		return ($this->httpRequest->getCookie($this->cookie) != $this->value);
 	}
 
 
 	public function enable()
 	{
-		$this->httpResponse->deleteCookie(self::TRACKING_COOKIE, self::TRACKING_PATH);
+		$this->httpResponse->deleteCookie($this->cookie, self::TRACKING_PATH);
 	}
 
 
 	public function disable()
 	{
-		$this->httpResponse->setCookie(self::TRACKING_COOKIE, self::TRACKING_DISABLED, \Nette\Http\Response::PERMANENT, self::TRACKING_PATH);
+		$this->httpResponse->setCookie($this->cookie, $this->value, \Nette\Http\Response::PERMANENT, self::TRACKING_PATH);
 	}
 
 }

@@ -36,7 +36,11 @@ services:
 			- setReturningUserCookie(%returningUser.cookie%)
 			- setReturningUserValue(%returningUser.value%)
 	embed: \MichalSpacekCz\Embed
-	webTracking: \MichalSpacekCz\WebTracking
+	webTracking:
+		class: \MichalSpacekCz\WebTracking
+		setup:
+			- setCookie(%webTracking.cookie%)
+			- setValue(%webTracking.value%)
 	vranaNotifier:
 		class: \MichalSpacekCz\Notifier\Vrana
 		setup:

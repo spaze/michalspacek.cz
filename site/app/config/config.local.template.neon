@@ -44,6 +44,10 @@ parameters:
 		cookie: cafebabe
 		value: waldoxyzzy
 
+	webTracking:
+		cookie: qux
+		value: quux
+
 	encryption:
 		keys:
 			password:
