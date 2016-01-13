@@ -56,7 +56,7 @@ h3 { color: #777; }
 #submit { width: 6em; }
 div.error {
     padding: 1em;
-    margin-bottom: 1em;
+    margin: 0 1em 1em 1em;
     text-align: center;
     color: #F34;
     background-color: #FEE;
