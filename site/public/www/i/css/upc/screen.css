@@ -34,7 +34,7 @@ h3 { color: #777; }
 }
 #result form { text-align: center; }
 #frm-ssid-ssid { width: 100px; }
-#result table { margin: 0px auto; }
+#result table { margin: 2em auto; }
 #result tbody { font-size: 120%; }
 #result td {
 	width: 6em;

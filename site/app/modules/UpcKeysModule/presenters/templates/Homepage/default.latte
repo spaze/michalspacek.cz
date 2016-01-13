@@ -39,7 +39,7 @@
 		{/form}
 		</div>
 		<p id="note"><small>Works only for networks named &quot;UPC&quot; + 7 numbers, eg. <code>{$placeholder}</code>.</small></p>
-		<table id="result" n:if="isset($keys)">
+		<table n:if="isset($keys)">
 		<thead>
 		<tr>
 			<th class="nr">#.</th>
@@ -47,9 +47,20 @@
 			<th>Password/Key</th>
 			<th class="type">Type</th>
 		</tr>
+		<tr>
+			<td class="nr"></td>
+			<td></td>
+			<td></td>
+			<td class="type">
+				<select id="filterType">
+					<option value="">all</option>
+					<option n:foreach="$filterTypes as $id => $type" value="type-{$id}">{$type}</option>
+				</select>
+			</td>
+		</tr>
 		</thead>
 		<tbody>
-			<tr n:foreach="$keys as $key" n:class="$iterator->odd ? dark">
+			<tr n:foreach="$keys as $key" class="type-{$key->typeId}{if $iterator->odd} dark{/if}">
 				<td class="nr"><code>{$iterator->counter}.</code></td>
 				<td><code>{$key->serial}</code></td>
 				<td><code>{$key->key}</code></td>

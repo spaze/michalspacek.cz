@@ -16,4 +16,18 @@ $(document).ready(function() {
 			submitted = false;
 		}, 5000);
 	});
+	$('#filterType').change(function() {
+		$('#result tbody tr').show();
+		var filterClass = $(this).val();
+		if (filterClass) {
+			$('#result tbody tr').not('.' + filterClass).hide();
+		}
+        $('#result tbody tr:visible:even').addClass('dark');
+        $('#result tbody tr:visible:odd').removeClass('dark');
+        
+        var i = 1;
+        $('#result tbody td.nr:visible code').text(function() {
+        	return i++ + '.';
+        });
+	});
 });
