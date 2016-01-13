@@ -130,7 +130,7 @@ class UpcKeys
 			$keys[$type][] = $this->buildKey($serial, $key, $type);
 		}
 		ksort($keys);
-		return array_merge(...$keys);
+		return ($keys ? array_merge(...$keys) : array());
 	}
 
 
@@ -188,9 +188,14 @@ class UpcKeys
 	 *
 	 * @param string
 	 * @param array of \stdClass (serial, key, type)
+	 * @return boolean false if no keys to store, true otherwise
 	 */
-	private function storeKeys($ssid, $keys)
+	private function storeKeys($ssid, array $keys)
 	{
+		if (!$keys) {
+			return false;
+		}
+
 		$datetime = new \DateTime();
 		$this->database->beginTransaction();
 		try {
@@ -221,6 +226,8 @@ class UpcKeys
 				throw $e;
 			}
 		}
+
+		return true;
 	}
 
 
