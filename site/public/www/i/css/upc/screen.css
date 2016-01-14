@@ -37,10 +37,10 @@ h3 { color: #777; }
 #result table { margin: 2em auto; }
 #result tbody, #result tfoot { font-size: 120%; }
 #result td {
-	width: 6em;
-	padding: 1px 1em;
+	width: 9em;
 	text-align: center;
 }
+#result td.key { width: 6em; }
 #result .nr {
 	color: #AAA;
 	width: 2em;
