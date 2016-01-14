@@ -73,7 +73,7 @@ parameters:
 	awsLambda:
 		upcKeys:
 			prefixes:
-				- SAAP
-				- SAPP  # TC7200 used in CZ
-				- UAAP  # Ubee devices
-				- SBAP  # TC7200 S/N prefix used by UPC SK
+				SAAP: "Technicolor"
+				SAPP: "Technicolor CZ"
+				SBAP: "Technicolor SK"
+				UAAP: "Ubee"

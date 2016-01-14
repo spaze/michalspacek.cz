@@ -16,11 +16,15 @@ $(document).ready(function() {
 			submitted = false;
 		}, 5000);
 	});
-	$('#filterType').change(function() {
+	$('#filterType, #filterPrefix').change(function() {
+		var filterType = $('#filterType').val();
+		var filterPrefix = $('#filterPrefix').val();
 		$('#result tbody tr').show();
-		var filterClass = $(this).val();
-		if (filterClass) {
-			$('#result tbody tr').not('.' + filterClass).hide();
+		if (filterType) {
+			$('#result tbody tr').not('.' + filterType).hide();
+		}
+		if (filterPrefix) {
+			$('#result tbody tr').not('.' + filterPrefix).hide();
 		}
         $('#result tbody tr:visible:even').addClass('dark');
         $('#result tbody tr:visible:odd').removeClass('dark');

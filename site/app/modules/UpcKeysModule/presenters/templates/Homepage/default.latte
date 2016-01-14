@@ -49,18 +49,23 @@
 		</tr>
 		<tr>
 			<td class="nr"></td>
-			<td></td>
+			<td>
+				<select id="filterPrefix">
+					<option value="">all</option>
+					<option n:foreach="$filterPrefixes as $id => $prefix" value="p{$id}">{$id} {$prefix}</option>
+				</select>
+			</td>
 			<td></td>
 			<td class="type">
 				<select id="filterType">
 					<option value="">all</option>
-					<option n:foreach="$filterTypes as $id => $type" value="type-{$id}">{$type}</option>
+					<option n:foreach="$filterTypes as $id => $type" value="t{$id}">{$type}</option>
 				</select>
 			</td>
 		</tr>
 		</thead>
 		<tbody>
-			<tr n:foreach="$keys as $key" class="type-{$key->typeId}{if $iterator->odd} dark{/if}">
+			<tr n:foreach="$keys as $key" class="p{$key->serialPrefix} t{$key->typeId}{if $iterator->odd} dark{/if}">
 				<td class="nr"><code>{$iterator->counter}.</code></td>
 				<td><code>{$key->serial}</code></td>
 				<td><code>{$key->key}</code></td>

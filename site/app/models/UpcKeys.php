@@ -69,11 +69,22 @@ class UpcKeys
 	/**
 	 * Set serial number prefixes to generate keys for.
 	 *
-	 * @param array
+	 * @param array (prefix => description)
 	 */
 	public function setPrefixes($prefixes)
 	{
 		$this->prefixes = $prefixes;
+	}
+
+
+	/**
+	 * Get serial number prefixes to generate keys for.
+	 *
+	 * @return array (prefix => description)
+	 */
+	public function getPrefixes()
+	{
+		return $this->prefixes;
 	}
 
 
@@ -117,7 +128,7 @@ class UpcKeys
 	 */
 	private function generateKeys($ssid)
 	{
-		$url = sprintf($this->url, $ssid, implode(',', $this->prefixes));
+		$url = sprintf($this->url, $ssid, implode(',', array_keys($this->prefixes)));
 		$data = file_get_contents($url, false, stream_context_create(['http' => ['header' => 'X-API-Key: ' . $this->apiKey]]));
 		$data = \Nette\Utils\Json::decode($data);
 		$keys = array();
@@ -127,7 +138,7 @@ class UpcKeys
 			}
 
 			list($serial, $key, $type) = explode(',', $line);
-			$keys[$type][] = $this->buildKey($serial, $key, $type);
+			$keys["{$type}-{$serial}"][] = $this->buildKey($serial, $key, $type);
 		}
 		ksort($keys);
 		return ($keys ? array_merge(...$keys) : array());
@@ -150,14 +161,14 @@ class UpcKeys
 			FROM
 				`keys` k
 				JOIN ssids s ON k.key_ssid = s.id_ssid
-			WHERE s.ssid = ?
-			ORDER BY k.type, k.id_key',
+			WHERE s.ssid = ?',
 			$ssid
 		);
 		$result = array();
 		foreach ($rows as $row) {
-			$result[] = $this->buildKey($row->serial, $row->key, $row->type);
+			$result["{$row->type}-{$row->serial}"] = $this->buildKey($row->serial, $row->key, $row->type);
 		}
+		ksort($result);
 		return $result;
 	}
 
