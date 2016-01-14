@@ -138,10 +138,10 @@ class UpcKeys
 			}
 
 			list($serial, $key, $type) = explode(',', $line);
-			$keys["{$type}-{$serial}"][] = $this->buildKey($serial, $key, $type);
+			$keys["{$type}-{$serial}"] = $this->buildKey($serial, $key, $type);
 		}
 		ksort($keys);
-		return ($keys ? array_merge(...$keys) : array());
+		return array_values($keys);
 	}
 
 
@@ -169,7 +169,7 @@ class UpcKeys
 			$result["{$row->type}-{$row->serial}"] = $this->buildKey($row->serial, $row->key, $row->type);
 		}
 		ksort($result);
-		return $result;
+		return array_values($result);
 	}
 
 
