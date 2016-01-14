@@ -26,21 +26,22 @@ $(document).ready(function() {
 		if (!re.test(filterType) || !re.test(filterPrefix) || !re.test(filterKey)) {
 			return false;
 		}
-		$('#result tbody tr').show();
+		tr = $('#result tbody tr');
+		tr.show();
 		if (filterType) {
-			$('#result tbody tr').not('.' + filterType).hide();
+			tr.not('.' + filterType).hide();
 		}
 		if (filterPrefix) {
-			$('#result tbody tr').not('.' + filterPrefix).hide();
+			tr.not('.' + filterPrefix).hide();
 		}
 		if (filterKey) {
-			$('#result tbody tr').filter(function() {
+			tr.filter(function() {
 				return !(new RegExp(filterKey, 'i')).test($(this).find('td.key code').text());
 			}).hide();
 		}
         $('#result tbody tr:visible:even').addClass('dark');
         $('#result tbody tr:visible:odd').removeClass('dark');
-        
+    	$('#footer').toggle(tr.siblings(':visible').length === 0);
         var i = 1;
         $('#result tbody td.nr:visible code').text(function() {
         	return i++ + '.';

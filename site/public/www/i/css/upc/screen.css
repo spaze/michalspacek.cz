@@ -35,7 +35,7 @@ h3 { color: #777; }
 #result form { text-align: center; }
 #frm-ssid-ssid { width: 100px; }
 #result table { margin: 2em auto; }
-#result tbody { font-size: 120%; }
+#result tbody, #result tfoot { font-size: 120%; }
 #result td {
 	width: 6em;
 	padding: 1px 1em;
@@ -68,3 +68,9 @@ div.error {
 }
 #filterPrefix, #filterKey { width: 100px; }
 #filterType { width: 60px; }
+#footer {
+	display: none;
+    color: #F34;
+    background-color: #FEE;
+}
+#footer .nr, #footer .type { background-color: #FFF; }
