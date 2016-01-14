@@ -22,6 +22,10 @@ $(document).ready(function() {
 		var filterType = $('#filterType').val();
 		var filterPrefix = $('#filterPrefix').val();
 		var filterKey = $('#filterKey').val();
+		re = new RegExp('^[0-9a-z]*$', 'i');
+		if (!re.test(filterType) || !re.test(filterPrefix) || !re.test(filterKey)) {
+			return false;
+		}
 		$('#result tbody tr').show();
 		if (filterType) {
 			$('#result tbody tr').not('.' + filterType).hide();
