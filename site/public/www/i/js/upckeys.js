@@ -1,5 +1,7 @@
 $(document).ready(function() {
 	var submitted = false;
+	var timer;
+	var orig;
 	$('#frm-ssid').submit(function() {
 		if (submitted) {
 			return false;
@@ -16,15 +18,21 @@ $(document).ready(function() {
 			submitted = false;
 		}, 5000);
 	});
-	$('#filterType, #filterPrefix').change(function() {
+	$('#filterType, #filterPrefix, #filterKey').change(function() {
 		var filterType = $('#filterType').val();
 		var filterPrefix = $('#filterPrefix').val();
+		var filterKey = $('#filterKey').val();
 		$('#result tbody tr').show();
 		if (filterType) {
 			$('#result tbody tr').not('.' + filterType).hide();
 		}
 		if (filterPrefix) {
 			$('#result tbody tr').not('.' + filterPrefix).hide();
+		}
+		if (filterKey) {
+			$('#result tbody tr').filter(function() {
+				return !(new RegExp(filterKey, 'i')).test($(this).find('td.key code').text());
+			}).hide();
 		}
         $('#result tbody tr:visible:even').addClass('dark');
         $('#result tbody tr:visible:odd').removeClass('dark');
@@ -33,5 +41,15 @@ $(document).ready(function() {
         $('#result tbody td.nr:visible code').text(function() {
         	return i++ + '.';
         });
+	});
+	$('#filterKey').keyup(function() {
+		clearTimeout(timer);
+		timer = setTimeout(function() {
+			if (orig === $('#filterKey').val()) {
+				return false;
+			}
+			orig = $('#filterKey').val();
+			$('#filterKey').change();
+		}, 100);
 	});
 });

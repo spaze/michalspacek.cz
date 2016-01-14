@@ -42,20 +42,20 @@
 		<table n:if="isset($keys)">
 		<thead>
 		<tr>
-			<th class="nr">#.</th>
+			<td class="nr"></td>
 			<th>Serial</th>
 			<th>Password/Key</th>
 			<th class="type">Type</th>
 		</tr>
 		<tr>
-			<td class="nr"></td>
+			<th class="nr">#.</th>
 			<td>
 				<select id="filterPrefix">
 					<option value="">all</option>
 					<option n:foreach="$filterPrefixes as $id => $prefix" value="p{$id}">{$id} {$prefix}</option>
 				</select>
 			</td>
-			<td></td>
+			<td><input type="text" id="filterKey" placeholder="all"></td>
 			<td class="type">
 				<select id="filterType">
 					<option value="">all</option>
@@ -68,7 +68,7 @@
 			<tr n:foreach="$keys as $key" class="p{$key->serialPrefix} t{$key->typeId}{if $iterator->odd} dark{/if}">
 				<td class="nr"><code>{$iterator->counter}.</code></td>
 				<td><code>{$key->serial}</code></td>
-				<td><code>{$key->key}</code></td>
+				<td class="key"><code>{$key->key}</code></td>
 				<td class="type"><small>{$key->type}</small></td>
 			</tr>
 		</tbody>

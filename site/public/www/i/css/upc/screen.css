@@ -66,3 +66,5 @@ div.error {
 	margin: 0 auto;
 	color: #249;
 }
+#filterPrefix, #filterKey { width: 100px; }
+#filterType { width: 60px; }
