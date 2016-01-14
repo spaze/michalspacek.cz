@@ -56,11 +56,11 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 				}
 				$this->template->ssid = $this->ssid;
 				$this->template->filterTypes = $this->types;
-				$this->template->filterPrefixes = $this->upcKeys->getPrefixes();
 			} else {
 				$this->template->error = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
 			}
 		}
+		$this->template->prefixes = $this->upcKeys->getPrefixes();
 		$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 	}
 

@@ -31,6 +31,12 @@
 		/
 		<a href="http://www.upc.cz/pece-o-zakazniky/internet/wifi/jak-zmenim-heslo-k-bezdratove-siti/" lang="cs">Jak změním heslo k bezdrátové síti?</a> (in Czech)
 	</p>
+	<p>
+		Currently, generated keys will only work if your router's serial number starts with one of the following prefixes:
+		{foreach $prefixes as $id => $prefix}
+			<code>{$id}</code> ({$prefix}){sep}, {/sep}{last}.{/last}
+		{/foreach}
+	</p>
 	<div id="result">
 		<div n:ifset="$error" class="error"><strong>{$error}</strong></div>
 		<div>
@@ -52,7 +58,7 @@
 			<td>
 				<select id="filterPrefix">
 					<option value="">all</option>
-					<option n:foreach="$filterPrefixes as $id => $prefix" value="p{$id}">{$id} {$prefix}</option>
+					<option n:foreach="$prefixes as $id => $prefix" value="p{$id}">{$id} {$prefix}</option>
 				</select>
 			</td>
 			<td><input type="text" id="filterKey" placeholder="all"></td>
