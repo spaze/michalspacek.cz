@@ -35,3 +35,5 @@ parameters:
 					actions:
 						application: p
 						files: s
+				Photo:
+					mask: foto

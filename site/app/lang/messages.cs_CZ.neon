@@ -21,6 +21,7 @@ title:
 	error500: "Za to může Špaček!"
 	forbidden: "Nepovoleno"
 	venue: "Školírna %s"
+	photo: "Foto"
 	admin:
 		talkslides: "Slajdy z přednášky %s (%s)"
 header:
@@ -249,3 +250,17 @@ venues:
 	transportationparking: "Doprava a parkování"
 	trainingshere: "Pořádaná školení v tomto místě"
 	notraininghere: "Momentálně zde neplánuji uspořádat žádné veřejné školení. \"Napište mi\":[%s], pokud si myslíte, že bych měl."
+photo:
+	downloadsizes: "Velikosti ke stažení:"
+	trademark:
+		header: "Poznávací znamení"
+		desc: "Prosím používejte **tuto fotografii**, je to můj //trademark//, moje poznávací znamení. Používám ji na \"Twitteru\":[%s], na \"Facebooku\":[%s] i jinde na webu, aby si mě lidé s těmito účty vždy spojili. Takto skvěle mě vyfotil \"Lukáš Hudeček\":[%s]."
+	lecturer:
+		header: "Lektorská"
+		desc: "Zdá se vám předchozí fotka příliš veselá? Zkuste použít tuto. Je z \"Code Campu\":[%s] a pořídil ji \"Josef Havlín\":[%s]."
+	office:
+		header: "Kancelářská"
+		desc: "Tato fotografie vznikla v pražských kancelářích Skype, když jsem tam pracoval."
+	talk:
+		header: "Přednášková"
+		desc: "Takto mě zachytil fotograf na WebTop100, když jsem vyprávěl o \"rychlosti a zabezpečení webu\":[%s]."

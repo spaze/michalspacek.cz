@@ -21,6 +21,7 @@ title:
 	error500: "That's Špaček's fault!"
 	forbidden: "Forbidden"
 	venue: "Venue %s"
+	photo: "Photo"
 	admin:
 		talkslides: "Slides from %s (%s)"
 header:
@@ -249,3 +250,17 @@ venues:
 	transportationparking: "Transportation and parking"
 	trainingshere: "Trainings at this venue"
 	notraininghere: "At the moment, I have no plan to organize a training here. \"Let me know\":[%s] if you think I should have one."
+photo:
+	downloadsizes: "Download sizes:"
+	trademark:
+		header: "Trademark"
+		desc: "Please use **this photo**, it's like my //trademark//. I use it on \"Twitter\":[%s], on \"Facebook\":[%s], and elsewhere on the web, so that people can recognize me easily. This great picture was shot by \"Lukáš Hudeček\":[%s]."
+	lecturer:
+		header: "As a lecturer"
+		desc: "Too optimistic? Use this one. It's from \"Code Camp\":[%s] and was taken by \"Josef Havlín\":[%s]."
+	office:
+		header: "In the office"
+		desc: "Taken in Skype Prague office back in the day."
+	talk:
+		header: "Speaking"
+		desc: "This photo was shot at WebTop100, when I was talking about \"web performance and security\":[%s]."
