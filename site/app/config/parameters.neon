@@ -73,7 +73,7 @@ parameters:
 	awsLambda:
 		upcKeys:
 			prefixes:
-				SAAP: "Technicolor"
-				SAPP: "Technicolor CZ"
-				SBAP: "Technicolor SK"
-				UAAP: "Ubee"
+				- SAAP
+				- SAPP
+				- SBAP
+				- UAAP

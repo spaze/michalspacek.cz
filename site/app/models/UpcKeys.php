@@ -69,7 +69,7 @@ class UpcKeys
 	/**
 	 * Set serial number prefixes to generate keys for.
 	 *
-	 * @param array (prefix => description)
+	 * @param array of prefixes
 	 */
 	public function setPrefixes($prefixes)
 	{
@@ -80,7 +80,7 @@ class UpcKeys
 	/**
 	 * Get serial number prefixes to generate keys for.
 	 *
-	 * @return array (prefix => description)
+	 * @return array of prefixes
 	 */
 	public function getPrefixes()
 	{
@@ -128,7 +128,7 @@ class UpcKeys
 	 */
 	private function generateKeys($ssid)
 	{
-		$url = sprintf($this->url, $ssid, implode(',', array_keys($this->prefixes)));
+		$url = sprintf($this->url, $ssid, implode(',', $this->prefixes));
 		$data = file_get_contents($url, false, stream_context_create(['http' => ['header' => 'X-API-Key: ' . $this->apiKey]]));
 		$data = \Nette\Utils\Json::decode($data);
 		$keys = array();

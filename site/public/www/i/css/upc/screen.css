@@ -66,8 +66,7 @@ div.error {
 	margin: 0 auto;
 	color: #249;
 }
-#filterPrefix, #filterKey { width: 100px; }
-#filterType { width: 60px; }
+#filterPrefix, #filterKey, #filterType { width: 80px; }
 #footer {
 	display: none;
     color: #F34;

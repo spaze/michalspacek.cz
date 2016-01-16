@@ -33,8 +33,8 @@
 	</p>
 	<p>
 		Currently, generated keys will only work if your router's serial number starts with one of the following prefixes:
-		{foreach $prefixes as $id => $prefix}
-			<code>{$id}</code> ({$prefix}){sep}, {/sep}{last}.{/last}
+		{foreach $prefixes as $prefix}
+			<code>{$prefix}</code>{sep}, {/sep}{last}.{/last}
 		{/foreach}
 	</p>
 	<div id="result">
@@ -58,7 +58,7 @@
 			<td>
 				<select id="filterPrefix">
 					<option value="">all</option>
-					<option n:foreach="$prefixes as $id => $prefix" value="p{$id}">{$id} {$prefix}</option>
+					<option n:foreach="$prefixes as $prefix" value="p{$prefix}">{$prefix}</option>
 				</select>
 			</td>
 			<td><input type="text" id="filterKey" placeholder="all"></td>

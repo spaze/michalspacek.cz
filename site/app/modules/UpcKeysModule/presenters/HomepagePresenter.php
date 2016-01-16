@@ -73,6 +73,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	 */
 	protected function enrichKeys(array $keys)
 	{
+		$prefixes = $this->upcKeys->getPrefixes();
 		foreach ($keys as $key) {
 			if (!isset($this->types[$key->type])) {
 				throw new \RuntimeException('Unknown network type ' . $key->type);
@@ -83,8 +84,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 			$matches = array();
 			preg_match('/^[a-z]+/i', $key->serial, $matches);
 			$prefix = current($matches);
-			$prefixes = $this->upcKeys->getPrefixes();
-			if (!isset($prefixes[$prefix])) {
+			if (!in_array($prefix, $prefixes)) {
 				throw new \RuntimeException('Unknown prefix for serial ' . $key->serial);
 			}
 			$key->serialPrefix = $prefix;
