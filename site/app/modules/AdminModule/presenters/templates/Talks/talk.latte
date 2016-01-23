@@ -8,7 +8,7 @@
 {includeblock "default.latte"}
 {define #formExtra}
 	<tr>
-		<th></th><td><small><a n:href="slides $talkAction">slajdy</a></small></td>
+		<th></th><td><small><a n:href="slides $talk->talkId">slajdy</a></small></td>
 	</tr>
 {/define}
 {include #talkForm, form => editTalk}

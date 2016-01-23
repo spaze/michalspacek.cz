@@ -1,5 +1,5 @@
 {define #itemTalk}
-	<li><a n:href="Talks:talk $talk->action" n:tag-if="$talk->action"><strong n:tag-if="$upcoming">{$talk->title}</strong></a>
+	<li><a n:href="Talks:talk $talk->talkId"><strong n:tag-if="$upcoming">{$talk->title}</strong></a>
 	<small>
 		<strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}
 		<span n:if="$talk->hasSlides" class="icon icon16 slides" title="{_messages.label.slides}"></span>
@@ -14,7 +14,7 @@
 		<th>{label action /}</th><td>{input action}<br><small>nevyplňujte, pokud nechcete samostatnou stránku pro přednášku</small></td>
 	</tr>
 	<tr>
-		<th>{label title /}</th><td>{input title}<br><small><a n:ifset="$talkAction" n:href=":Talks:talk $talkAction">zobrazit přednášku</a></small></td>
+		<th>{label title /}</th><td>{input title}<br><small><a n:ifset="$talk->action" n:href=":Talks:talk $talk->action">zobrazit přednášku</a></small></td>
 	</tr>
 	<tr>
 		<th>{label description /}</th><td>{input description}</td>

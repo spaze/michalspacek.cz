@@ -16,8 +16,8 @@ class TalksPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Talks */
 	protected $talks;
 
-	/** @var string */
-	private $talkAction;
+	/** @var \Nette\Database\Row */
+	private $talk;
 
 
 	/**
@@ -44,38 +44,34 @@ class TalksPresenter extends BasePresenter
 
 	public function actionTalk($param)
 	{
-		$this->talkAction = $param;
-
-		$talk = $this->talks->get($this->talkAction);
-		if (!$talk) {
-			throw new \Nette\Application\BadRequestException("I haven't talked about {$this->talkAction}, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		$this->talk = $this->talks->getById($param);
+		if (!$this->talk) {
+			throw new \Nette\Application\BadRequestException("I haven't talked about id {$param}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($talk->title), $talk->event]);
-		$this->template->talkAction = $this->talkAction;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($this->talk->title), $this->talk->event]);
+		$this->template->talk = $this->talk;
 	}
 
 
 	public function actionSlides($param)
 	{
-		$this->talkAction = $param;
-
-		$talk = $this->talks->get($this->talkAction);
-		if (!$talk) {
-			throw new \Nette\Application\BadRequestException("I haven't talked about {$this->talkAction}, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		$this->talk = $this->talks->getById($param);
+		if (!$this->talk) {
+			throw new \Nette\Application\BadRequestException("I haven't talked about id {$param}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.admin.talkslides', [strip_tags($talk->title), $talk->event]);
-		$this->template->talkTitle = $talk->title;
-		$this->template->slides = $this->talks->getSlides($this->talkAction);
-		$this->template->talkAction = $this->talkAction;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.admin.talkslides', [strip_tags($this->talk->title), $this->talk->event]);
+		$this->template->talkTitle = $this->talk->title;
+		$this->template->slides = $this->talks->getSlides($this->talk->talkId);
+		$this->template->talk = $this->talk;
 	}
 
 
 	protected function createComponentEditTalk($formName)
 	{
-		$form = new \MichalSpacekCz\Form\Talk($this, $formName, $this->talkAction, $this->talks);
-		$form->setTalk($this->talks->get($this->talkAction));
+		$form = new \MichalSpacekCz\Form\Talk($this, $formName, $this->talk->action, $this->talks);
+		$form->setTalk($this->talks->getById($this->talk->talkId));
 		$form->onSuccess[] = $this->submittedEditTalk;
 		return $form;
 	}
@@ -85,7 +81,7 @@ class TalksPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 		$this->talks->update(
-			$this->talkAction,
+			$this->talk->talkId,
 			$values->action,
 			$values->title,
 			$values->description,
@@ -154,12 +150,12 @@ class TalksPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 		try {
-			$this->talks->addSlide($this->talkAction, $values->alias, $values->number);
+			$this->talks->addSlide($this->talk->talkId, $values->alias, $values->number);
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.slideadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.duplicatealias', [$e->getCode()]), 'error');
 		}
-		$this->redirect('Talks:slides', $this->talkAction);
+		$this->redirect('Talks:slides', $this->talk->talkId);
 	}
 
 }

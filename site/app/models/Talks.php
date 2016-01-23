@@ -27,6 +27,7 @@ class Talks
 	public function getAll($limit = null)
 	{
 		$query = 'SELECT
+				t.id_talk AS talkId,
 				t.action,
 				t.title,
 				t.title AS titleTexy,
@@ -59,6 +60,7 @@ class Talks
 	public function getUpcoming()
 	{
 		$query = 'SELECT
+				t.id_talk AS talkId,
 				t.action,
 				t.title,
 				t.title AS titleTexy,
@@ -126,6 +128,48 @@ class Talks
 	}
 
 
+	public function getById($id)
+	{
+		$result = $this->database->fetch(
+			'SELECT
+				t.id_talk AS talkId,
+				t.action,
+				t.title,
+				t.title AS titleTexy,
+				t.description,
+				t.description AS descriptionTexy,
+				t.date,
+				t.href,
+				t.slides_href AS slidesHref,
+				t.slides_embed AS slidesEmbed,
+				t.video_href AS videoHref,
+				t.video_embed AS videoEmbed,
+				t.event,
+				t.event AS eventTexy,
+				t.event_href AS eventHref,
+				t.og_image AS ogImage,
+				t.transcript,
+				t.transcript AS transcriptTexy,
+				t.favorite,
+				t2.action AS origAction,
+				t2.title AS origTitle,
+				t3.action AS supersededByAction,
+				t3.title AS supersededByTitle
+			FROM talks t
+				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
+				LEFT JOIN talks t3 ON t.key_superseded_by = t3.id_talk
+			WHERE t.id_talk = ?',
+			$id
+		);
+
+		if ($result) {
+			$this->format($result);
+		}
+
+		return $result;
+	}
+
+
 	private function format(\Nette\Database\Row $row)
 	{
 		$format = array('title', 'description', 'event', 'transcript');
@@ -179,7 +223,7 @@ class Talks
 	/**
 	 * Update talk data.
 	 *
-	 * @param string $origAction
+	 * @param integer $id
 	 * @param string $action
 	 * @param string $title
 	 * @param string $description
@@ -197,10 +241,10 @@ class Talks
 	 * @param string $favorite
 	 * @param string $supersededBy
 	 */
-	public function update($origAction, $action, $title, $description, $date, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
+	public function update($id, $action, $title, $description, $date, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
 	{
 		$this->database->query(
-			'UPDATE talks SET ? WHERE action = ?',
+			'UPDATE talks SET ? WHERE id_talk = ?',
 			array(
 				'action' => (empty($action) ? null : $action),
 				'title' => $title,
@@ -219,7 +263,7 @@ class Talks
 				'favorite' => (empty($favorite) ? null : $favorite),
 				'key_superseded_by' => (empty($supersededBy) ? null : $this->get($supersededBy)->talkId),
 			),
-			$origAction
+			$id
 		);
 	}
 
@@ -273,20 +317,19 @@ class Talks
 	/**
 	 * Get slides for talk.
 	 *
-	 * @param string $name Talk name
+	 * @param integer $talkId Talk id
 	 * @return array of \Nette\Database\Row
 	 */
-	public function getSlides($name)
+	public function getSlides($talkId)
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
-				ts.alias,
-				ts.number
-			FROM talk_slides ts
-				JOIN talks t ON ts.key_talk = t.id_talk
-			WHERE t.action = ?
-			ORDER BY ts.number',
-			$name
+				alias,
+				number
+			FROM talk_slides
+			WHERE key_talk = ?
+			ORDER BY number',
+			$talkId
 		);
 		return $result;
 	}
@@ -295,19 +338,19 @@ class Talks
 	/**
 	 * Insert slide.
 	 *
-	 * @param string $action
+	 * @param integer $talkId
 	 * @param string $alias
 	 * @param string $number
 	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws \PDOException
 	 */
-	public function addSlide($action, $alias, $number)
+	public function addSlide($talkId, $alias, $number)
 	{
 		try {
 			$this->database->query(
 				'INSERT INTO talk_slides',
 				array(
-					'key_talk' => $this->get($action)->talkId,
+					'key_talk' => $talkId,
 					'alias' => $alias,
 					'number' => $number,
 				)
