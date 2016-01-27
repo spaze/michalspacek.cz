@@ -137,6 +137,11 @@ abbr.dtstart, abbr.dtend { border: none; }
     margin-left: -6px;
     margin-right: 2px;
 }
+#bankshttps {
+    background-position: -32px -48px;
+    margin-left: -6px;
+    margin-right: 2px;
+}
 #projekty h3 {
     float: left;
     line-height: 32px;

@@ -58,6 +58,8 @@ label:
 	simpletest: "Rádce v projektu **SimpleTest.IO**"
 	tojeono: "Spoluzakladatel webhostingu **tojeono.cz**"
 	otherprojects: "Další projekty"
+	bankshttps: "HTTPS na bankách"
+	banksczhttps: "HTTPS na českých bankách"
 	upckeys: "UPC Wi-Fi hesla"
 	heartbleedcz: "Heartbleed v ČR"
 	webleed: "Projekt \"We Bleed\""
