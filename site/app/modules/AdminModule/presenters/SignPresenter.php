@@ -57,6 +57,7 @@ class SignPresenter extends \App\Presenters\BasePresenter
 	public function actionIn()
 	{
 		$this->verify();
+		$this->getSession()->start();
 		if (($token = $this->authenticator->verifyPermanentLogin()) !== false) {
 			$this->user->login($this->authenticator->getIdentity($token->userId, $token->username));
 			$this->authenticator->clearPermanentLogin($this->user);

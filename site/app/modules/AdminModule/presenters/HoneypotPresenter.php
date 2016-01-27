@@ -12,9 +12,7 @@ class HoneypotPresenter extends \App\Presenters\BasePresenter
 
 	public function actionSignIn()
 	{
-		$session = $this->getSession();
-		$session->start();
-
+		$session = $this->getSession()->start();
 		$this->template->pageTitle = 'Přihlásit se';
 	}
 
