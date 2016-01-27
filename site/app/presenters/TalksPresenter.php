@@ -66,7 +66,7 @@ class TalksPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$slideNo = $this->talks->getSlideNo($slide);
+		$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
 
 		if ($talk->supersededByAction) {
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.supersededby', [$talk->supersededByTitle, "link:Talks:talk {$talk->supersededByAction}"]));
