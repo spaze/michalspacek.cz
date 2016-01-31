@@ -8,3 +8,6 @@ parameters:
 		cookie: .%domain.root%
 		sharedStaticRoot: https://www.michalspacek.cz
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%
+
+includes:
+	- routes-en_US.neon
