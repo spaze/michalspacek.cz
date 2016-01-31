@@ -21,9 +21,9 @@ parameters:
 
 	contentSecurityPolicy:
 		www:
-			img-src: "'self' https://www.google-analytics.com data:"
-			script-src: "'self' https://www.google-analytics.com https://speakerdeck.com 'unsafe-inline' 'unsafe-eval'"
-			style-src: "'self' 'unsafe-inline'"
+			img-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com data:"
+			script-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com https://speakerdeck.com 'unsafe-inline' 'unsafe-eval'"
+			style-src: "%domain.contentSecurityPolicySelf% 'unsafe-inline'"
 		admin:
 			script-src: "https://www.%domain.root% 'unsafe-inline' 'unsafe-eval'"
 			style-src: "https://www.%domain.root% 'unsafe-inline'"

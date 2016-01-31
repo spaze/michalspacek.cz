@@ -3,8 +3,8 @@ translation:
 
 parameters:
 	domain:
-		root: michalspacek.com
+		root: michalspacek.com.local
 		fqdn: www.%domain.root%
 		cookie: .%domain.root%
-		sharedStaticRoot: https://www.michalspacek.cz
+		sharedStaticRoot: https://www.michalspacek.cz.local
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%

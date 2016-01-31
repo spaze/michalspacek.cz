@@ -12,11 +12,11 @@ parameters:
 		xXssProtection: https://report-uri.io/report/me
 	contentSecurityPolicy:
 		www:
-			default-src: "'self'"
-			img-src: "'self' https://www.google-analytics.com"
-			script-src: "'self' https://www.google-analytics.com https://speakerdeck.com"
+			default-src: %domain.contentSecurityPolicySelf%
+			img-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com"
+			script-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com https://speakerdeck.com"
 			frame-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com https://slideslive.com'
-			form-action: "'self'"
+			form-action: %domain.contentSecurityPolicySelf%
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
