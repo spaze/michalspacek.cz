@@ -6,3 +6,7 @@ parameters:
 		root: michalspacek.cz.local
 		fqdn: admin.%domain.root%
 		cookie: .%domain.root%
+		contentSecurityPolicySelf: %domain.sharedStaticRoot%
+
+includes:
+	- routes-cs_CZ.neon

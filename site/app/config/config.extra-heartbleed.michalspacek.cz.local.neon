@@ -6,3 +6,7 @@ parameters:
 		root: michalspacek.cz.local
 		fqdn: heartbleed.%domain.root%
 		cookie: .%domain.root%
+		contentSecurityPolicySelf: %domain.sharedStaticRoot%
+
+includes:
+	- routes-en_US.neon
