@@ -16,7 +16,7 @@ parameters:
 			img-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com"
 			script-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com https://speakerdeck.com"
 			frame-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com https://slideslive.com'
-			form-action: %domain.contentSecurityPolicySelf%
+			form-action: "'self'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
