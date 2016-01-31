@@ -22,6 +22,9 @@ class Bootstrap extends \Nette\Object
 	/** @var \Nette\Http\Request */
 	private $httpRequest;
 
+	/** @var \Nette\DI\Container */
+	private $container;
+
 	/** @var \Nette\Http\Response */
 	private $httpResponse;
 
@@ -73,17 +76,17 @@ class Bootstrap extends \Nette\Object
 			$configurator->addConfig($filename, $configurator::NONE);
 		}
 
-		$container = $configurator->createContainer();
+		$this->container = $configurator->createContainer();
 
-		$this->httpRequest = $container->getByType(\Nette\Http\IRequest::class);
-		$this->httpResponse = $container->getByType(\Nette\Http\IResponse::class);
+		$this->httpRequest = $this->container->getByType(\Nette\Http\IRequest::class);
+		$this->httpResponse = $this->container->getByType(\Nette\Http\IResponse::class);
 
-		$securityHeaders = $container->getByType(\MichalSpacekCz\SecurityHeaders::class);
+		$securityHeaders = $this->container->getByType(\MichalSpacekCz\SecurityHeaders::class);
 		$securityHeaders->sendHeaders();
 
 		$this->redirectToSecure();
 
-		$container->getByType(\Nette\Application\Application::class)->run();
+		$this->container->getByType(\Nette\Application\Application::class)->run();
 	}
 
 
@@ -96,21 +99,9 @@ class Bootstrap extends \Nette\Object
 			$this->appDir . '/config/routes.neon',
 			$this->appDir . '/config/presenters.neon',
 			$this->appDir . '/config/services.neon',
-			$this->appDir . '/config/config.extra-' . $this->getRootDomain('HTTP_HOST') . '.neon',
-			$this->appDir . '/config/config.extra-' . $this->getRootDomain('SERVER_NAME') . '.neon',
+			$this->appDir . '/config/config.extra-' . $_SERVER['SERVER_NAME'] . '.neon',
 			$this->appDir . '/config/config.local.neon',
 		));
-	}
-
-
-	private function getRootDomain($key)
-	{
-		// Root domain
-		$rootDomain = (isset($_SERVER[$key]) ? $_SERVER[$key] : '');
-		if (preg_match('/([^.]+\.[^.:]+)(?::[0-9]+)?$/', $rootDomain, $matches)) {
-			$rootDomain = $matches[1];
-		}
-		return strtolower($rootDomain);
 	}
 
 
@@ -122,20 +113,11 @@ class Bootstrap extends \Nette\Object
 
 	private function redirectToSecure()
 	{
-		// All baz.waldo, foo.baz.waldo end up in the same dir
-		$hostdir = basename(dirname($_SERVER['SCRIPT_FILENAME'])); // /public/www/app.php -> www
+		$fqdn = $this->container->getParameters()['domain']['fqdn'];
 		$uri = $_SERVER['REQUEST_URI'];
-		// Is this (?:(foo.)|www.(bar.))?(baz.waldo)
-		if (preg_match('/^(?:([^.]+\.)|www\.([^.]+\.))?([^.]+\.[^.]+)\z/', $_SERVER['HTTP_HOST'], $m)) {
-			if (($m[1] !== "{$hostdir}." || !$this->httpRequest->isSecured()) && empty($m[2])) {
-				// baz.waldo or foo.baz.waldo -> www.baz.waldo if foo is not known, also HTTP -> HTTPS
-				$this->httpResponse->redirect("https://{$hostdir}.{$m[3]}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
-				exit;
-			} elseif (empty($m[1])) {
-				// www.bar.baz.waldo -> https://bar.baz.waldo
-				$this->httpResponse->redirect("https://{$m[2]}{$m[3]}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
-				exit;
-			}
+		if ($_SERVER['HTTP_HOST'] !== $fqdn) {
+			$this->httpResponse->redirect("https://{$fqdn}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
+			exit();
 		}
 	}
 

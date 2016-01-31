@@ -19,10 +19,6 @@ parameters:
 			url: http://php.vrana.cz/skoleni.php
 			note: 'Michal Špaček'
 
-	domain:
-		root: michalspacek.cz
-		cookie: .michalspacek.cz
-
 	contentSecurityPolicy:
 		www:
 			img-src: "'self' https://www.google-analytics.com data:"

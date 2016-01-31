@@ -4,6 +4,6 @@ translation:
 parameters:
 	domain:
 		root: michalspacek.com
-		cookie: .michalspacek.com
-		domain:
-			sharedStaticRoot: michalspacek.cz
+		fqdn: www.%domain.root%
+		cookie: .%domain.root%
+		sharedStaticRoot: michalspacek.cz

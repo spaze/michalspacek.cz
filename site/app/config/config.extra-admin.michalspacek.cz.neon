@@ -4,5 +4,5 @@ translation:
 parameters:
 	domain:
 		root: michalspacek.cz
-		fqdn: www.%domain.root%
+		fqdn: admin.%domain.root%
 		cookie: .%domain.root%

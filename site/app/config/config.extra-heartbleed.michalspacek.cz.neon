@@ -1,8 +1,8 @@
 translation:
-	default: cs_CZ
+	default: en_US
 
 parameters:
 	domain:
 		root: michalspacek.cz
-		fqdn: www.%domain.root%
+		fqdn: heartbleed.%domain.root%
 		cookie: .%domain.root%

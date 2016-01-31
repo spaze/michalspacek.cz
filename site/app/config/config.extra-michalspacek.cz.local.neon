@@ -3,6 +3,6 @@ translation:
 
 parameters:
 	domain:
-		root: michalspacek.cz
+		root: michalspacek.cz.local
 		fqdn: www.%domain.root%
 		cookie: .%domain.root%
