@@ -41,7 +41,7 @@ class Texy extends \Netxten\Formatter\Texy
 		$this->application = $application;
 		$this->trainingDates = $trainingDates;
 		$this->netxtenHelpers = $netxtenHelpers;
-		parent::__construct($cacheStorage);
+		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
 	}
 
 

@@ -1076,12 +1076,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "e97dfcf0f0ec5cf739ce9c934d8c27f4f4aaf64a"
+                "reference": "e23f0a3a02264e30c92ff1c4cada47141a330d14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/e97dfcf0f0ec5cf739ce9c934d8c27f4f4aaf64a",
-                "reference": "e97dfcf0f0ec5cf739ce9c934d8c27f4f4aaf64a",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/e23f0a3a02264e30c92ff1c4cada47141a330d14",
+                "reference": "e23f0a3a02264e30c92ff1c4cada47141a330d14",
                 "shasum": ""
             },
             "require": {
@@ -1103,7 +1103,7 @@
                 "source": "https://github.com/spaze/netxten/tree/v0.4.0",
                 "issues": "https://github.com/spaze/netxten/issues"
             },
-            "time": "2015-10-23 00:44:37"
+            "time": "2016-02-02 00:52:00"
         },
         {
             "name": "symfony/config",
