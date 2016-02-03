@@ -16,8 +16,8 @@ mail:
 parameters:
 	notifier:
 		vrana:
-			url: http://php.vrana.cz/skoleni.php
-			note: 'Michal Špaček'
+			url: http://echo.local/
+			note: %notifier.vrana.successMarker%
 
 	contentSecurityPolicy:
 		www:
