@@ -14,7 +14,6 @@ class RouterFactory
 
 	const ADMIN = 'admin';
 	const API = 'api';
-	const WEBLEED = 'webleed';
 	const HEARTBLEED = 'heartbleed';
 	const UPC = 'upc';
 	const WWW = 'www';
@@ -102,7 +101,6 @@ class RouterFactory
 	{
 		$this->router = new RouteList();
 		$this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
-		$this->addRoute(self::WEBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$this->addRoute(self::API, '/<presenter>', 'Default', 'default');
 		$this->addRoute(self::UPC, '[<ssid>]', 'Homepage', 'default');
@@ -138,9 +136,6 @@ class RouterFactory
 				case self::ADMIN:
 					$metadata['module'] = 'Admin';
 					break;
-				case self::WEBLEED:
-					$flags = Route::ONE_WAY;
-					// no break;
 				case self::HEARTBLEED:
 					$metadata['module'] = 'Webleed';
 					break;
