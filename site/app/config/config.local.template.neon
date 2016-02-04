@@ -14,6 +14,11 @@ mail:
 	port: 25
 
 parameters:
+	locales:
+		rootDomainMapping:
+			cs_CZ: michalspacek.cz.local
+			en_US: michalspacek.com.local
+
 	notifier:
 		vrana:
 			url: http://echo.local/

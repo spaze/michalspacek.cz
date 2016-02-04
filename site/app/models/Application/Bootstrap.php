@@ -98,6 +98,7 @@ class Bootstrap extends \Nette\Object
 			$this->appDir . '/config/parameters.neon',
 			$this->appDir . '/config/presenters.neon',
 			$this->appDir . '/config/services.neon',
+			$this->appDir . '/config/routes.neon',
 			$this->appDir . '/config/config.extra-' . $_SERVER['SERVER_NAME'] . '.neon',
 			$this->appDir . '/config/config.local.neon',
 		));

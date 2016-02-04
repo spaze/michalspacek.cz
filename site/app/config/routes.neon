@@ -1,0 +1,79 @@
+parameters:
+	translatedRoutes:
+		presenters:
+			www:
+				Homepage:
+					mask:
+						cs_CZ:  # Intentionally left empty
+						en_US:  # Intentionally left empty
+				Interviews:
+					mask:
+						cs_CZ: rozhovory
+						en_US: interviews
+				Talks:
+					mask:
+						cs_CZ: prednasky
+						en_US: talks
+				Files:
+					mask:
+						cs_CZ: soubory
+						en_US: files
+					actions:
+						training:
+							cs_CZ: skoleni
+							en_US: training
+						file:
+							cs_CZ: soubor
+							en_US: file
+				Trainings:
+					mask:
+						cs_CZ: skoleni
+						en_US: trainings
+					actions:
+						reviews:
+							cs_CZ: ohlasy
+							en_US: reviews
+						success:
+							cs_CZ: potvrzeni
+							en_US: success
+						application:
+							cs_CZ: prihlaska
+							en_US: application
+						files:
+							cs_CZ: soubory
+							en_US: files
+				CompanyTrainings:
+					mask:
+						cs_CZ: firemni-skoleni
+						en_US: inhouse-trainings
+				Articles:
+					mask:
+						cs_CZ: clanky
+						en_US: articles
+				Who:
+					mask:
+						cs_CZ: kdo
+						en_US: who
+				Contact:
+					mask:
+						cs_CZ: kontakt
+						en_US: contact
+				Venues:
+					mask:
+						cs_CZ: kudy-tudy
+						en_US: venues
+				Redirect:
+					mask:
+						cs_CZ: r
+						en_US: r
+					actions:
+						application:
+							cs_CZ: p
+							en_US: a
+						files:
+							cs_CZ: s
+							en_US: f
+				Photo:
+					mask:
+						cs_CZ: foto
+						en_US: photo

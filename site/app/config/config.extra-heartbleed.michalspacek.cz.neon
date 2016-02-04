@@ -7,6 +7,3 @@ parameters:
 		fqdn: heartbleed.%domain.root%
 		cookie: .%domain.root%
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%
-
-includes:
-	- routes-en_US.neon
