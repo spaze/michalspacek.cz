@@ -6,6 +6,7 @@ services:
 			- setLocaleRootDomainMapping(%locales.rootDomainMapping%)
 			- setTranslatedRoutes(%translatedRoutes.presenters%)
 	router: @routerFactory::createRouter
+	localeLinkGenerator: \MichalSpacekCz\Application\LocaleLinkGenerator
 	texyFormatter:
 		class: \MichalSpacekCz\Formatter\Texy
 		setup:

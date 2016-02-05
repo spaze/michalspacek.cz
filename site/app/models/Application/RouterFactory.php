@@ -98,15 +98,22 @@ class RouterFactory
 
 
 	/**
+	 * Get locale routers.
+	 *
+	 * @return array of \Nette\Application\IRouter
+	 */
+	public function getLocaleRouters()
+	{
+		return $this->localeRouters;
+	}
+
+
+	/**
 	 * @return \Nette\Application\IRouter
 	 */
 	public function createRouter()
 	{
 		$this->router = new RouteList();
-		foreach (array_keys($this->rootDomainMapping) as $locale) {
-			$this->localeRouters[$locale] = new RouteList();
-		}
-
 		$this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$this->addRoute(self::API, '/<presenter>', 'Default', 'default');
@@ -120,7 +127,6 @@ class RouterFactory
 		$this->addRoute(self::WWW, 'report[/<action>]', 'Report', 'default');
 		$this->addRoute(self::WWW, '/<name>', 'Venues', 'venue');
 		$this->addRoute(self::WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
-
 		return $this->router;
 	}
 
@@ -160,13 +166,25 @@ class RouterFactory
 					}
 					break;
 			}
+			$this->addToRouter(new Route("//{$host}.{$this->rootDomainMapping[$locale]}/{$maskPrefix}{$mask}", $metadata, $flags), $locale, $module);
+		}
+	}
 
-			$route = new Route("//{$host}.{$this->rootDomainMapping[$locale]}/{$maskPrefix}{$mask}", $metadata, $flags);
-			if (count($this->supportedLocales[$module]) > 1 && $locale !== $this->translator->getLocale()) {
-				$this->localeRouters[$locale][] = $route;
-			} else {
-				$this->router[] = $route;
+
+	/**
+	 * @param \Nette\Application\Routers\Route $route
+	 * @param string $locale
+	 * @param string $module
+	 */
+	private function addToRouter(\Nette\Application\Routers\Route $route, $locale, $module)
+	{
+		if (count($this->supportedLocales[$module]) > 1 && $locale !== $this->translator->getLocale()) {
+			if (!isset($this->localeRouters[$locale])) {
+				$this->localeRouters[$locale] = new RouteList();
 			}
+			$this->localeRouters[$locale][] = $route;
+		} else {
+			$this->router[] = $route;
 		}
 	}
 
