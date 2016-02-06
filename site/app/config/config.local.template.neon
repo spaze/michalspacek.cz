@@ -16,8 +16,8 @@ mail:
 parameters:
 	locales:
 		rootDomainMapping:
-			cs_CZ: michalspacek.cz.local
-			en_US: michalspacek.com.local
+			cz: michalspacek.cz.local
+			com: michalspacek.com.local
 
 	notifier:
 		vrana:

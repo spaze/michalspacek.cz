@@ -133,7 +133,7 @@ class RouterFactory
 
 	private function addRoute($module, $mask, $defaultPresenter, $defaultAction)
 	{
-		foreach ($this->supportedLocales[$module] as $locale) {
+		foreach ($this->supportedLocales[$module] as $locale => $tld) {
 			$maskPrefix = (isset($this->translatedRoutes[$module][$defaultPresenter]) ? $this->translatedRoutes[$module][$defaultPresenter]['mask'][$locale] : null);
 			$flags = Route::SECURED;
 			$metadata = array(
@@ -166,7 +166,7 @@ class RouterFactory
 					}
 					break;
 			}
-			$this->addToRouter(new Route("//{$host}.{$this->rootDomainMapping[$locale]}/{$maskPrefix}{$mask}", $metadata, $flags), $locale, $module);
+			$this->addToRouter(new Route("//{$host}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata, $flags), $locale, $module);
 		}
 	}
 

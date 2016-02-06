@@ -2,19 +2,19 @@ parameters:
 	locales:
 		supported:
 			admin:
-				- cs_CZ
+				cs_CZ: cz
 			api:
-				- en_US
+				en_US: cz
 			heartbleed:
-				- en_US
+				en_US: cz
 			upc:
-				- en_US
+				en_US: cz
 			www:
-				- cs_CZ
-				- en_US
+				cs_CZ: cz
+				en_US: com
 		rootDomainMapping:
-			cs_CZ: michalspacek.cz
-			en_US: michalspacek.com
+			cz: michalspacek.cz
+			com: michalspacek.com
 	notifier:
 		vrana:
 			noSpam: nospam
