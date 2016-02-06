@@ -13,12 +13,18 @@ class CompanyPresenter extends \App\Presenters\BasePresenter
 	/** @var \MichalSpacekCz\CompanyInfo\Info */
 	protected $companyInfo;
 
+	/** @var \MichalSpacekCz\SecurityHeaders */
+	protected $securityHeaders;
+
+
 	/**
 	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
+	 * @param \MichalSpacekCz\SecurityHeaders $securityHeaders
 	 */
-	public function __construct(\MichalSpacekCz\CompanyInfo\Info $companyInfo)
+	public function __construct(\MichalSpacekCz\CompanyInfo\Info $companyInfo, \MichalSpacekCz\SecurityHeaders $securityHeaders)
 	{
 		$this->companyInfo = $companyInfo;
+		$this->securityHeaders = $securityHeaders;
 	}
 
 
@@ -31,6 +37,8 @@ class CompanyPresenter extends \App\Presenters\BasePresenter
 		if (!$this->isAjax()) {
 			throw new \Nette\Application\BadRequestException('Not an AJAX call');
 		}
+
+		$this->securityHeaders->accessControlAllowOrigin('https', \MichalSpacekCz\Application\RouterFactory::WWW);
 
 		try {
 			$info = $this->companyInfo->getData($country, $companyId);

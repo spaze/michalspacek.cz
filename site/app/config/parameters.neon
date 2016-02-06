@@ -32,6 +32,7 @@ parameters:
 			img-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com"
 			script-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com https://speakerdeck.com"
 			frame-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com https://slideslive.com'
+			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
 			form-action: "'self'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
@@ -42,6 +43,10 @@ parameters:
 			form-action: "'self'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
+			report-uri: %reporting.contentSecurityPolicy%
+		api:
+			default-src: "'none'"
+			form-action: "'none'"
 			report-uri: %reporting.contentSecurityPolicy%
 		heartbleed:
 			default-src: %domain.contentSecurityPolicySelf%
@@ -70,12 +75,16 @@ parameters:
 			includeSubdomains:
 			report-uri: %reporting.publicKeyPins%
 		admin: %publicKeyPins.www%
+		api: %publicKeyPins.www%
 		heartbleed: %publicKeyPins.www%
 		upc: %publicKeyPins.www%
 	extraHeaders:
 		www:
-				X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
+			X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
 		admin: %extraHeaders.www%
+		api:
+			X-XSS-Protection: %extraHeaders.www.X-XSS-Protection%
+			Vary: Origin
 		heartbleed: %extraHeaders.www%
 		upc: %extraHeaders.www%
 	vatRate: 0.21

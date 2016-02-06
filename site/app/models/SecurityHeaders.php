@@ -31,6 +31,9 @@ class SecurityHeaders
 	/** @var PublicKeyPins */
 	protected $publicKeyPins;
 
+	/** @var \MichalSpacekCz\Application\RouterFactory */
+	private $routerFactory;
+
 
 	/**
 	 * @param \Nette\Http\IRequest $httpRequest
@@ -42,13 +45,15 @@ class SecurityHeaders
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
 		ContentSecurityPolicy $contentSecurityPolicy,
-		PublicKeyPins $publicKeyPins
+		PublicKeyPins $publicKeyPins,
+		\MichalSpacekCz\Application\RouterFactory $routerFactory
 	)
 	{
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 		$this->publicKeyPins = $publicKeyPins;
+		$this->routerFactory = $routerFactory;
 	}
 
 
@@ -97,6 +102,25 @@ class SecurityHeaders
 		if (isset($this->extraHeaders[$host])) {
 			foreach ($this->extraHeaders[$host] as $name => $value) {
 				$this->httpResponse->setHeader($name, $value);
+			}
+		}
+	}
+
+
+	/**
+	 * Generates Access-Control-Allow-Origin header, if there's a Origin request header.
+	 *
+	 * @param string $scheme URL scheme
+	 * @param string $host URL host
+	 */
+	public function accessControlAllowOrigin($scheme, $host)
+	{
+		$origin = $this->httpRequest->getHeader('Origin');
+		if ($origin !== null) {
+			foreach ($this->routerFactory->getLocaleRootDomainMapping() as $tld) {
+				if ("{$scheme}://{$host}.{$tld}" === $origin) {
+					$this->httpResponse->setHeader('Access-Control-Allow-Origin', $origin);
+				}
 			}
 		}
 	}

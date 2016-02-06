@@ -66,13 +66,24 @@ class RouterFactory
 
 
 	/**
-	 * Set locale to root domain mapping
+	 * Set locale to root domain mapping.
 	 *
 	 * @param array $rootDomainMapping locale => root domain
 	 */
 	public function setLocaleRootDomainMapping($rootDomainMapping)
 	{
 		$this->rootDomainMapping = $rootDomainMapping;
+	}
+
+
+	/**
+	 * Get locale to root domain mapping.
+	 *
+	 * @return array $rootDomainMapping locale => root domain
+	 */
+	public function getLocaleRootDomainMapping()
+	{
+		return $this->rootDomainMapping;
 	}
 
 
@@ -116,7 +127,7 @@ class RouterFactory
 		$this->router = new RouteList();
 		$this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
-		$this->addRoute(self::API, '/<presenter>', 'Default', 'default');
+		$this->addRoute(self::API, '<presenter>', 'Default', 'default');
 		$this->addRoute(self::UPC, '[<ssid>]', 'Homepage', 'default');
 		$this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
 		$this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
@@ -143,9 +154,7 @@ class RouterFactory
 			$host = $module;
 			switch ($host) {
 				case self::API:
-					$host = self::WWW;
 					$metadata['module'] = 'Api';
-					$maskPrefix = self::API;
 					break;
 				case self::ADMIN:
 					$metadata['module'] = 'Admin';
