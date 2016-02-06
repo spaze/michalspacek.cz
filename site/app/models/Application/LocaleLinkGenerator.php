@@ -1,24 +1,32 @@
 <?php
 namespace MichalSpacekCz\Application;
 
+/**
+ * Generates links to locales other than current.
+ */
 class LocaleLinkGenerator
 {
 
 	/** @var \MichalSpacekCz\Application\RouterFactory */
-	protected $routerFactory;
+	private $routerFactory;
 
 	/** @var \Nette\Http\Request */
-	protected $httpRequest;
+	private $httpRequest;
+
+	/** @var \Nette\Application\IPresenterFactory */
+	private $presenterFactory;
 
 
 	/**
 	 * @param \MichalSpacekCz\Application\RouterFactory $routerFactory
 	 * @param \Nette\Http\Request $httpRequest
+	 * @param \Nette\Application\IPresenterFactory
 	 */
-	public function __construct(RouterFactory $routerFactory, \Nette\Http\Request $httpRequest)
+	public function __construct(RouterFactory $routerFactory, \Nette\Http\Request $httpRequest, \Nette\Application\IPresenterFactory $presenterFactory)
 	{
 		$this->routerFactory = $routerFactory;
 		$this->httpRequest = $httpRequest;
+		$this->presenterFactory = $presenterFactory;
 	}
 
 
@@ -33,7 +41,7 @@ class LocaleLinkGenerator
 	{
 		$links = array();
 		foreach ($this->routerFactory->getLocaleRouters() as $locale => $router) {
-			$linkGenerator = new \Nette\Application\LinkGenerator($router, $this->httpRequest->getUrl());
+			$linkGenerator = new \Nette\Application\LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
 			$links[$locale] = $linkGenerator->link($destination, $params);
 		}
 		return $links;
