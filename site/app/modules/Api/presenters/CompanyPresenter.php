@@ -34,10 +34,6 @@ class CompanyPresenter extends \App\Presenters\BasePresenter
 	 */
 	public function actionDefault($country, $companyId)
 	{
-		if (!$this->isAjax()) {
-			throw new \Nette\Application\BadRequestException('Not an AJAX call');
-		}
-
 		$this->securityHeaders->accessControlAllowOrigin('https', \MichalSpacekCz\Application\RouterFactory::WWW);
 
 		try {
