@@ -18,7 +18,6 @@ title:
 	error405: "This does not work with Špaček!"
 	error410: "I was here, Špaček!"
 	error4xx: "Špaček doesn't know how to do this!"
-	error500: "That's Špaček's fault!"
 	forbidden: "Forbidden"
 	venue: "Venue %s"
 	photo: "Photo"
@@ -176,7 +175,6 @@ error:
 	405: "The requested method is not allowed for the URL."
 	410: "The requested URL is no longer available on this server and there's nowhere to be redirected to."
 	4xx: "Your browser sent a request that this server could not understand or process."
-	500: "The server encountered an internal error and was unable to complete your request."
 forbidden:
 	spam: "Access forbidden for repeated spammy crap."
 interview:

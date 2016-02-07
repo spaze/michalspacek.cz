@@ -3,6 +3,7 @@ services:
 	- \App\Presenters\CompanyTrainingsPresenter
 	- \App\Presenters\ContactPresenter
 	- \App\Presenters\ErrorPresenter
+	- \App\Presenters\ErrorGenericPresenter
 	- \App\Presenters\FilesPresenter
 	- \App\Presenters\ForbiddenPresenter
 	- \App\Presenters\HomepagePresenter

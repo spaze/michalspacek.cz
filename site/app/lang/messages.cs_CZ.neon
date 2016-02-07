@@ -18,7 +18,6 @@ title:
 	error405: "Tohle u Špačka nejde!"
 	error410: "Byl jsem tu, Špaček!"
 	error4xx: "Tohle Špaček neumí!"
-	error500: "Za to může Špaček!"
 	forbidden: "Nepovoleno"
 	venue: "Školírna %s"
 	photo: "Foto"
@@ -176,7 +175,6 @@ error:
 	405: "Metoda není pro požadované URL povolena."
 	410: "Požadované URL již není na tomto serveru k dispozici, ani není k dispozici žádná adresa k přesměrování."
 	4xx: "Váš prohlížeč vyslal požadavek, kterému tento server nerozuměl."
-	500: "Nastala vnitřní chyba a server nebyl schopen dokončit Váš požadavek."
 forbidden:
 	spam: "Přístup zakázán kvůli opakovanému spamování."
 interview:

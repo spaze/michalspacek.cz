@@ -3,7 +3,7 @@ php:
 	# zlib.output_compression: yes
 
 application:
-	errorPresenter: Error
+	errorPresenter: ErrorGeneric
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
