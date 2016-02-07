@@ -45,8 +45,10 @@ parameters:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 		api:
-			default-src: "'none'"
+			default-src: %domain.contentSecurityPolicySelf%
 			form-action: "'none'"
+			upgrade-insecure-requests:
+			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 		heartbleed:
 			default-src: %domain.contentSecurityPolicySelf%
