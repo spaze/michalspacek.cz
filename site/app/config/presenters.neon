@@ -27,3 +27,6 @@ services:
 
 	# webleed module
 	- \App\WebleedModule\Presenters\HomepagePresenter
+
+	# upc module
+	- \App\UpcKeysModule\Presenters\HomepagePresenter
