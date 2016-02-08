@@ -39,22 +39,23 @@ class CompanyTrainings
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				action,
-				name,
-				description_company AS description,
-				content,
-				upsell_company AS upsell,
-				prerequisites,
-				audience,
-				original_href AS originalHref,
-				capacity,
-				price_company AS price,
-				student_discount AS studentDiscount,
-				materials,
-				custom
-			FROM trainings
+				t.action,
+				t.name,
+				ct.description,
+				t.content,
+				ct.upsell,
+				t.prerequisites,
+				t.audience,
+				t.original_href AS originalHref,
+				t.capacity,
+				ct.price,
+				t.student_discount AS studentDiscount,
+				t.materials,
+				t.custom
+			FROM trainings t
+				JOIN company_trainings ct ON t.id_training = ct.key_training
 			WHERE
-				action = ?',
+				t.action = ?',
 			$name
 		);
 
