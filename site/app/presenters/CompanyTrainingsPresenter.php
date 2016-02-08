@@ -16,6 +16,9 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
+	/** @var \MichalSpacekCz\Training\CompanyTrainings */
+	protected $companyTrainings;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -23,16 +26,19 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Training\Trainings $trainings,
+		\MichalSpacekCz\Training\CompanyTrainings $companyTrainings,
 		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->trainings = $trainings;
+		$this->companyTrainings = $companyTrainings;
 		$this->vat = $vat;
 	}
 
@@ -46,20 +52,20 @@ class CompanyTrainingsPresenter extends BasePresenter
 
 	public function actionTraining($name)
 	{
-		$training = $this->trainings->get($name);
+		$training = $this->companyTrainings->getInfo($name);
 		if (!$training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 		$this->template->name = $training->action;
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->name]);
 		$this->template->title = $training->name;
-		$this->template->descriptionCompany = $training->descriptionCompany;
+		$this->template->description = $training->description;
 		$this->template->content = $training->content;
-		$this->template->upsellCompany = $training->upsellCompany;
+		$this->template->upsell = $training->upsell;
 		$this->template->prerequisites = $training->prerequisites;
 		$this->template->audience = $training->audience;
-		$this->template->priceCompany = $training->priceCompany;
-		$this->template->priceCompanyVat = $this->vat->addVat($training->priceCompany);
+		$this->template->price = $training->price;
+		$this->template->priceVat = $this->vat->addVat($training->price);
 		$this->template->materials = $training->materials;
 		$this->template->reviews = $this->trainings->getReviews($name, 3);
 	}

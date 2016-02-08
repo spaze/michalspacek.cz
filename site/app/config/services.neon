@@ -16,6 +16,7 @@ services:
 	files:     \MichalSpacekCz\Files
 	talks:     \MichalSpacekCz\Talks
 	trainings: \MichalSpacekCz\Training\Trainings
+	companyTrainings: \MichalSpacekCz\Training\CompanyTrainings
 	interviews: \MichalSpacekCz\Interviews
 	trainingApplications: \MichalSpacekCz\Training\Applications
 	trainingMails:

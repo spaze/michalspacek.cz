@@ -1,6 +1,6 @@
 {define #content}
-<p>{$descriptionCompany}</p>
-<p id="upsell"><span class="icon icon16"></span><small>{$upsellCompany}</small></p>
+<p>{$description}</p>
+<p id="upsell"><span class="icon icon16"></span><small>{$upsell}</small></p>
 
 <h2 id="{_html.id.title}">{_messages.label.trainingname}</h2>
 <p><strong>{$title}</strong></p>
@@ -35,8 +35,8 @@
 
 <h2 id="{_html.id.price}">{_messages.label.trainingprice}</h2>
 <p>
-	{_messages.companytrainings.price|format:$priceCompany:$priceCompanyVat}<br>
-	<small>{_messages.companytrainings.extraprice|format:$priceCompany * 2:$priceCompanyVat * 2}</small>
+	{_messages.companytrainings.price|format:$price:$priceVat}<br>
+	<small>{_messages.companytrainings.extraprice|format:$price * 2:$priceVat * 2}</small>
 </p>
 <hr />
 

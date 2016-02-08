@@ -75,16 +75,13 @@ class Trainings
 				action,
 				name,
 				description,
-				description_company AS descriptionCompany,
 				content,
 				upsell,
-				upsell_company AS upsellCompany,
 				prerequisites,
 				audience,
 				original_href AS originalHref,
 				capacity,
 				price,
-				price_company AS priceCompany,
 				student_discount AS studentDiscount,
 				materials,
 				custom
@@ -99,10 +96,8 @@ class Trainings
 
 		if ($result) {
 			$result->description   = $this->texyFormatter->format($result->description);
-			$result->descriptionCompany = $this->texyFormatter->format($result->descriptionCompany);
 			$result->content       = $this->texyFormatter->format($result->content);
 			$result->upsell        = $this->texyFormatter->format($result->upsell);
-			$result->upsellCompany = $this->texyFormatter->format($result->upsellCompany);
 			$result->prerequisites = $this->texyFormatter->format($result->prerequisites);
 			$result->audience      = $this->texyFormatter->format($result->audience);
 			$result->materials     = $this->texyFormatter->format($result->materials);
