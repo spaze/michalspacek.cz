@@ -63,6 +63,7 @@
 	background-color: #CCC;
 	border: 0px;
 	height: 1px;
+	margin: auto;
 }
 #phpinfo .color-FF8000 { color: #FF8000; }
 #phpinfo .color-0000BB { color: #0000BB; }
