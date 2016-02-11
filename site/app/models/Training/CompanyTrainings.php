@@ -51,7 +51,10 @@ class CompanyTrainings
 				ct.price,
 				t.student_discount AS studentDiscount,
 				t.materials,
-				t.custom
+				t.custom,
+				ct.duration,
+				ct.double_duration AS doubleDuration,
+				ct.double_duration_price AS doubleDurationPrice
 			FROM trainings t
 				JOIN company_trainings ct ON t.id_training = ct.key_training
 			WHERE

@@ -163,11 +163,8 @@ companytrainings:
 	morereviews: "Další ohlasy najdete na \"stránce s ohlasy na veřejné školení\":[%s]."
 	lecturerwho: "o lektorovi"
 	lecturercontact: "kontakt na lektora"
-	length: "Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout."
-	extralength: "Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní."
 	capacity: "Neomezena, ale nad 12 účastníků zbývá méně času na dotazy."
 	price: "**%s Kč** bez DPH, %s Kč s DPH, při velmi malém počtu účastníků poskytuji výraznou slevu."
-	extraprice: "Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH."
 	signup: "Pro objednání školení mi \"napište e-mail\":[%s] a navrhněte termín, který se vám hodí."
 error:
 	tryother: "Zkuste jiné stránky"

@@ -163,11 +163,8 @@ companytrainings:
 	morereviews: "Find more reviews on \"the public training reviews page\":[%s]."
 	lecturerwho: "about the lecturer"
 	lecturercontact: "contact the lecturer"
-	length: "Training is a one-day and lasts 8 hours with breaks but according to the situation can be longer by an extra hour."
-	extralength: "If you are interested in more practical examples and exercises, we can organize a two-day training."
 	capacity: "Unlimited but over 12 people we'll have less time for questions."
 	price: "**%s Kč**, %s Kč incl. VAT, significant discounts with a very small number of participants."
-	extraprice: "Base price for two-day training is %s Kč, %s Kč incl. VAT."
 	signup: "To order an in-house training, just pick a date and \"drop me an e-mail\":[%s] to sort out other details."
 error:
 	tryother: "Try other pages"
