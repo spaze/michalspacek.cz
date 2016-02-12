@@ -113,7 +113,14 @@
 	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
 	</div>
 </div>
-<p><small>{_messages.trainings.extendedtime}</small></p>
+<p>
+{if count($dates)}
+	<small>{_messages.trainings.extendedtime}</small>
+{else}
+	{_messages.trainings.nodateyet.long|format:'mail@michalspacek.cz'}
+	{_messages.trainings.companythistraining|format:"link:CompanyTrainings:training $name"}
+{/if}
+</p>
 </div>
 <p n:if="$pastTrainingsMe || $pastTrainingsJakub" id="{_html.id.pastdates}">
 	<small>
@@ -154,13 +161,14 @@
 <hr />
 {/if}
 
+{if count($dates)}
 <h2 id="{_html.id.application}">{_messages.label.application}</h2>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-
 {include #form}
-
 <p><small>{_messages.trainings.datainvoice}</small></p>
 <p><small>{_messages.trainings.conditions}</small></p>
+<hr>
+{/if}
 
 <p>
 	{_messages.trainings.companythistraining|format:"link:CompanyTrainings:training $name"}

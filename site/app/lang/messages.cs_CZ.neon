@@ -240,7 +240,9 @@ trainings:
 	datainvoice: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
 	conditions: "Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, …), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu."
 	companythistraining: "Školení v tomto rozsahu je možné \"uspořádat i ve vaší firmě\":[%s]."
-	nodateyet: "termín zatím nevypsán"
+	nodateyet:
+		short: "termín zatím nevypsán"
+		long: "Žádný termín není zatím stanoven. \"Napište mi\":[%s], pokud byste o školení měli zájem."
 venues:
 	nameaddress: "Název a adresa"
 	entrance: "Pohled na vchod"

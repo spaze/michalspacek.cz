@@ -161,7 +161,7 @@ class Texy extends \Netxten\Formatter\Texy
 		$upcoming = $this->trainingDates->getPublicUpcoming();
 		$dates = array();
 		if (!isset($upcoming[$name]) || empty($upcoming[$name]['dates'])) {
-			$dates[] = $this->translator->translate('messages.trainings.nodateyet');
+			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
 		} else {
 			foreach ($upcoming[$name]['dates'] as $date) {
 				$format = ($date->tentative ? '%B %Y' : 'j. n. Y');

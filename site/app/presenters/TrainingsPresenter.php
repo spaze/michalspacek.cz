@@ -106,9 +106,6 @@ class TrainingsPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 		$this->dates = $this->trainings->getDates($name);
-		if (empty($this->dates)) {
-			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
-		}
 
 		$this->template->name             = $this->training->action;
 		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.training', [$this->training->name]);
