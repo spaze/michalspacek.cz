@@ -34,6 +34,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
+	/** @var \MichalSpacekCz\Training\CompanyTrainings */
+	protected $companyTrainings;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -58,6 +61,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
+	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
@@ -70,6 +74,7 @@ class TrainingsPresenter extends BasePresenter
 		Training\Dates $trainingDates,
 		Training\Files $trainingFiles,
 		Training\Trainings $trainings,
+		Training\CompanyTrainings $companyTrainings,
 		\MichalSpacekCz\Vat $vat,
 		\Netxten\Templating\Helpers $netxtenHelpers,
 		\MichalSpacekCz\CompanyInfo\Info $companyInfo
@@ -82,6 +87,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingDates = $trainingDates;
 		$this->trainingFiles = $trainingFiles;
 		$this->trainings = $trainings;
+		$this->companyTrainings = $companyTrainings;
 		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->companyInfo = $companyInfo;
@@ -92,6 +98,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
 		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 	}
 

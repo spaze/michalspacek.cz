@@ -16,15 +16,24 @@ class CompanyTrainings
 	/** @var \Netxten\Formatter\Texy */
 	protected $texyFormatter;
 
+	/** @var \MichalSpacekCz\Training\Dates */
+	protected $trainingDates;
+
 
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param \Netxten\Formatter\Texy $texyFormatter
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 */
-	public function __construct(\Nette\Database\Context $context, \Netxten\Formatter\Texy $texyFormatter)
+	public function __construct(
+		\Nette\Database\Context $context,
+		\Netxten\Formatter\Texy $texyFormatter,
+		\MichalSpacekCz\Training\Dates $trainingDates
+	)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
+		$this->trainingDates = $trainingDates;
 	}
 
 
@@ -72,6 +81,33 @@ class CompanyTrainings
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 * Get company trainings without any public trainings
+	 *
+	 * @return \Nette\Database\Row
+	 */
+	public function getWithoutPublicUpcoming()
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				t.action,
+				t.name
+			FROM trainings t
+				JOIN company_trainings ct ON t.id_training = ct.key_training'
+		);
+		$public = $this->trainingDates->getPublicUpcoming();
+
+		$trainings = array();
+		foreach ($result as $training) {
+			if (!isset($public[$training->action])) {
+				$trainings[$training->action] = $training;
+			}
+		}
+
+		return $trainings;
 	}
 
 

@@ -19,13 +19,22 @@
 </ul>
 {/define}
 
+{define #company}
+<ul>
+ 	{foreach $companyTrainings as $item}
+		<li><a n:href="CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
+	{/foreach}
+</ul>
+{/define}
+
 {define #content}
+<h3>{_messages.label.publictrainings}</h3>
 <p>{_messages.trainings.welcome|format:'http://www.vrana.cz':'http://php.vrana.cz/predstavuji-nove-skolitele.php'}</p>
 {include #list}
-<p>
-	{_messages.trainings.companytraining|format:'link:CompanyTrainings:'}
-	{_messages.trainings.consultancy|format:'mailto:mail@michalspacek.cz'}
-</p>
+<h3>{_messages.label.companytrainings}</h3>
+<p>{_messages.trainings.companyextratraining|format:'link:CompanyTrainings:'}</p>
+{include #company}
+<p>{_messages.trainings.consultancy|format:'mailto:mail@michalspacek.cz'}</p>
 <hr />
 <p><small>{_messages.trainings.partnertrainings.intro|format}</small></p>
 <ul>

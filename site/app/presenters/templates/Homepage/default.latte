@@ -14,12 +14,13 @@
 </div>
 <hr />
 <h2 id="{_html.id.trainings}">{_messages.label.mytrainings}</h2>
+<h3>{_messages.label.publictrainings}</h3>
 <p>{_messages.homepage.trainings}:</p>
 {include #list}
-<p>
-	{_messages.homepage.companytrainings|format:'link:CompanyTrainings:'}
-	{_messages.homepage.consultancy|format:'mail@michalspacek.cz'}
-</p>
+<h3>{_messages.label.companytrainings}</h3>
+<p>{_messages.trainings.companyextratraining|format:'link:CompanyTrainings:'}</p>
+{include #company}
+<p>{_messages.trainings.consultancy|format:'mailto:mail@michalspacek.cz'}</p>
 <hr />
 <h2 id="{_html.id.articles}">{_messages.label.myarticles}</h2>
 <div n:foreach="$articles as $article">

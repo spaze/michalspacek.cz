@@ -74,6 +74,7 @@ label:
 	alltalks: Všechny přednášky
 	myinterviews: Odpovídám na otázky
 	writtenarticles: Napsal jsem
+	publictrainings: Veřejná školení
 	companytrainings: Firemní školení
 	lowercasecompanytraining: "firemní školení"
 	trainingname: Název školení
@@ -200,6 +201,7 @@ trainings:
 	fewseatsleft: "Ještě zbývá posledních pár míst, přihlaste se!"
 	welcome: "Zvu vás na školení, která pořádám. Dříve je vedl \"Jakub Vrána\":[%s] a já jsem je po něm \"převzal\":[%s]."
 	companytraining: "Školení mohu uspořádat také \"u vás ve firmě\":[%s]."
+	companyextratraining: "Jakékoliv veřejné školení mohu uspořádat také \"u vás ve firmě\":[%s]. Společnostem nabízím navíc i tyto kurzy:"
 	consultancy: "Nabízím i konzultaci pro vaši firmu, \"napište mi\":[%s]!"
 	partnertrainings:
 		intro: "Rádi byste se naučili něco dalšího? Doporučuji absolvovat třeba tato **partnerská školení**:"
