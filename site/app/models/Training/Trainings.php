@@ -72,6 +72,7 @@ class Trainings
 	{
 		$result = $this->database->fetch(
 			'SELECT
+				id_training AS trainingId,
 				action,
 				name,
 				description,

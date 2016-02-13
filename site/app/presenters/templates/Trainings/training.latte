@@ -63,6 +63,28 @@
 {/form application}
 {/define}
 
+{define #formPreliminary}
+{form applicationPreliminary class => aligned}
+<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
+	<legend><strong>{_messages.label.errors}</strong></legend>
+	<strong>{_messages.trainings.signuperrors}</strong>
+	<ul>
+		<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+	</ul>
+</fieldset>
+<fieldset id="{_html.id.participant}">
+	<legend>{_messages.label.participant}</legend>
+	<table>
+		<tr>
+			<th>{label name /}</th><td>{input name}</td>
+			<th>{label email /}</th><td>{input email}</td>
+		</tr>
+	</table>
+</fieldset>
+<p>{input signUp}</p>
+{/form applicationPreliminary}
+{/define}
+
 {define #content}
 <p>{$description}</p>
 
@@ -117,7 +139,8 @@
 {if count($dates)}
 	<small>{_messages.trainings.extendedtime}</small>
 {else}
-	{_messages.trainings.nodateyet.long|format:'mail@michalspacek.cz'}
+	{capture $anchor}#{_html.id.application}{/capture}
+	{_messages.trainings.nodateyet.long|format:$anchor}
 	{_messages.trainings.companythistraining|format:"link:CompanyTrainings:training $name"}
 {/if}
 </p>
@@ -167,6 +190,12 @@
 {include #form}
 <p><small>{_messages.trainings.datainvoice}</small></p>
 <p><small>{_messages.trainings.conditions}</small></p>
+<hr>
+{else}
+<h2 id="{_html.id.application}">{_messages.label.preliminaryapplication}</h2>
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+{include #formPreliminary}
+<p><small>{_messages.trainings.sendinginvite}</small></p>
 <hr>
 {/if}
 

@@ -97,6 +97,7 @@ label:
 	slides: Slides
 	application: "Sign-up"
 	lowercaseapplication: "sign-up"
+	preliminaryapplication: "Preliminary sign-up"
 	trainingreviews: "Training reviews"
 	date: "Date"
 	tentativedate: "tentative date"
@@ -198,6 +199,7 @@ trainings:
 	submitted:
 		tentative: "Thanks for signing-up! I'll let you know once I have the final date."
 		confirmed: "Thanks for signing-up! Confirmation e-mail is on it's way, invoice will follow in few days."
+		preliminary: "Thanks for preliminarily signing up! I'll let you know once I have a date set."
 	fewseatsleft: "Few last places left, sign-up now!"
 	welcome: "Zvu vás na školení, která pořádám. Dříve je vedl \"Jakub Vrána\":[%s] a já jsem je po něm \"převzal\":[%s]."
 	companytraining: "Školení mohu uspořádat také \"u vás ve firmě\":[%s]."
@@ -241,10 +243,11 @@ trainings:
 	allreviews: "All reviews"
 	datainvoice: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
 	conditions: "Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, …), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu."
+	sendinginvite: "Na zadanou e-mailovou adresu zašlu pozvánku, jakmile termín tohoto školení vypíšu. Na nic jiného nebude použita."
 	companythistraining: "Školení v tomto rozsahu je možné \"uspořádat i ve vaší firmě\":[%s]."
 	nodateyet:
 		short: "termín zatím nevypsán"
-		long: "Žádný termín není zatím stanoven. \"Napište mi\":[%s], pokud byste o školení měli zájem."
+		long: "Žádný termín není zatím stanoven. \"Dejte mi níže vědět\":[%s], pokud byste o školení měli zájem."
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"

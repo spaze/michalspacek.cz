@@ -296,6 +296,23 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	protected function createComponentApplicationPreliminary($formName)
+	{
+		$form = new \MichalSpacekCz\Form\TrainingApplicationPreliminary($this, $formName);
+		$form->onSuccess[] = $this->submittedApplicationPreliminary;
+	}
+
+
+	public function submittedApplicationPreliminary(\MichalSpacekCz\Form\TrainingApplicationPreliminary $form)
+	{
+		$values = $form->getValues();
+		$name   = $form->parent->params['name'];
+		$this->trainingApplications->addPreliminaryInvitation($this->training, $values->name, $values->email);
+		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
+		$this->redirect('training#' . $this->translator->translate('html.id.application'), $name);
+	}
+
+
 	private function checkTrainingDate(\Nette\Utils\ArrayHash $values, $name)
 	{
 		if (!isset($this->dates[$values->trainingId])) {

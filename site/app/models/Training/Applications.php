@@ -233,6 +233,20 @@ class Applications
 	}
 
 
+	/**
+	 * Add preliminary invitation, to a training with no date set.
+	 *
+	 * @param \Nette\Database\Row $training
+	 * @param string $name
+	 * @param string $email
+	 * @return integer application id
+	 */
+	public function addPreliminaryInvitation(\Nette\Database\Row $training, $name, $email)
+	{
+		return $this->insertApplication($training, null, $name, $email, null, null, null, null, null, null, null, null, null, Statuses::STATUS_TENTATIVE, self::DEFAULT_SOURCE);
+	}
+
+
 	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $status, $source, $date = null)
 	{
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
@@ -242,7 +256,7 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new \DateTime($date);
 
-		if ($status === Statuses::STATUS_NON_PUBLIC_TRAINING || $source !== self::DEFAULT_SOURCE) {
+		if ($status === Statuses::STATUS_NON_PUBLIC_TRAINING || $source !== self::DEFAULT_SOURCE || $dateId === null) {
 			$price = null;
 			$discount = null;
 		} elseif (stripos($note, 'student') === false) {
@@ -275,6 +289,9 @@ class Applications
 			'price_vat'            => ($price === null ? null : $this->vat->addVat($price)),
 			'discount'             => $discount,
 		);
+		if ($dateId === null) {
+			$data['key_training'] = $training->trainingId;
+		}
 		return $this->trainingStatuses->updateStatusCallback(function () use ($data) {
 			$this->insertData($data);
 			return $this->database->getInsertId();
