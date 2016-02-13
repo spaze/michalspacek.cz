@@ -197,8 +197,8 @@ trainings:
 	spammyapplication: "The application looks like spam, this is a no-go."
 	errorapplication: "Oops, something went wrong. The application was not submitted, please try again in a while."
 	submitted:
-		tentative: "Thanks for signing-up! I'll let you know once I have the final date."
-		confirmed: "Thanks for signing-up! Confirmation e-mail is on it's way, invoice will follow in few days."
+		tentative: "Thanks for signing up! I'll let you know once I have the final date."
+		confirmed: "Thanks for signing up! Confirmation e-mail is on it's way, invoice will follow in few days."
 		preliminary: "Thanks for preliminarily signing up! I'll let you know once I have a date set."
 	fewseatsleft: "Few last places left, sign-up now!"
 	welcome: "Zvu vás na školení, která pořádám. Dříve je vedl \"Jakub Vrána\":[%s] a já jsem je po něm \"převzal\":[%s]."
