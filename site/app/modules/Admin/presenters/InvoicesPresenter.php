@@ -53,7 +53,7 @@ class InvoicesPresenter extends BasePresenter
 
 	protected function createComponentInvoice($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingInvoice($this, $formName);
+		$form = new \MichalSpacekCz\Form\TrainingInvoice($this, $formName, $this->translator);
 		$form->onSuccess[] = $this->submittedApplication;
 	}
 

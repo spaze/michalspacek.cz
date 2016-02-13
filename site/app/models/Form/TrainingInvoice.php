@@ -10,9 +10,9 @@ namespace MichalSpacekCz\Form;
 class TrainingInvoice extends TrainingForm
 {
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \Nette\Localization\ITranslator $translator)
 	{
-		\Nette\Application\UI\Form::__construct($parent, $name);
+		\Nette\Application\UI\Form::__construct($parent, $name, $translator);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addText('invoice', 'Faktura:')

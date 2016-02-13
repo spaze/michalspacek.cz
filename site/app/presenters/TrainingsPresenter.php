@@ -298,7 +298,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplicationPreliminary($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingApplicationPreliminary($this, $formName);
+		$form = new \MichalSpacekCz\Form\TrainingApplicationPreliminary($this, $formName, $this->translator);
 		$form->onSuccess[] = $this->submittedApplicationPreliminary;
 	}
 

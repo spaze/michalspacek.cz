@@ -10,9 +10,9 @@ namespace MichalSpacekCz\Form;
 class TrainingStatuses extends TrainingForm
 {
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications, \Nette\Localization\ITranslator $translator)
 	{
-		parent::__construct($parent, $name);
+		parent::__construct($parent, $name, $translator);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$container = $this->addContainer('applications');

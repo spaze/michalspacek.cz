@@ -31,7 +31,7 @@ class TrainingApplication extends TrainingForm
 		\Netxten\Templating\Helpers $netxtenHelpers
 	)
 	{
-		parent::__construct($parent, $name);
+		parent::__construct($parent, $name, $translator);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->translator = $translator;
@@ -62,62 +62,6 @@ class TrainingApplication extends TrainingForm
 		$this->addCountry($this);
 
 		$this->addSubmit('signUp', 'Odeslat');
-	}
-
-
-	protected function addAttributes(\Nette\Forms\Container $container)
-	{
-		$options = array(
-			0 => $this->translator->translate('messages.label.no'),
-			1 => $this->translator->translate('messages.label.yes'),
-		);
-		$container->addRadioList('equipment', 'Přinesete si vlastní počítač?', $options)
-			->setRequired('Přinesete si vlastní počítač?')
-			->getSeparatorPrototype()->setName('div');
-	}
-
-
-	protected function addCompany(\Nette\Forms\Container $container)
-	{
-		$container->addText('companyId', 'IČO:')
-			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka IČO je %d znaky', 6)
-			->addRule(self::MAX_LENGTH, 'Maximální délka IČO je %d znaků', 200);
-		$container->addText('companyTaxId', 'DIČ:')
-			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
-			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
-		$container->addText('company', 'Obchodní jméno:')
-			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
-			->addRule(self::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 200);
-		$container->addText('street', 'Ulice a číslo:')
-			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
-			->addRule(self::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200);
-		$container->addText('city', 'Město:')
-			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
-			->addRule(self::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
-		$container->addText('zip', 'PSČ:')
-			->addCondition(self::FILLED)
-			->addRule(self::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
-			->addRule(self::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
-	}
-
-
-	protected function addNote(\Nette\Forms\Container $container)
-	{
-		$container->addText('note', 'Poznámka:')
-			->addCondition(self::FILLED)
-			->addRule(self::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
-	}
-
-
-	protected function addCountry(\Nette\Forms\Container $container)
-	{
-		$container->addSelect('country', 'Země:', ['cz' => 'Česká republika', 'sk' => 'Slovensko'])
-			->setRequired('Vyberte prosím zemi');
 	}
 
 

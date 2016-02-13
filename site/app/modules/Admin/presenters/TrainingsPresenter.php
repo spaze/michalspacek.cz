@@ -205,7 +205,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentStatuses($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingStatuses($this, $formName, $this->applications);
+		$form = new \MichalSpacekCz\Form\TrainingStatuses($this, $formName, $this->applications, $this->translator);
 		$form->onSuccess[] = $this->submittedStatuses;
 		return $form;
 	}
@@ -236,7 +236,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$count = (isset($_POST['applications']) ? count($_POST['applications']) : 1);
-		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, $count, $sources, $statuses);
+		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, $count, $sources, $statuses, $this->translator);
 		$form->onSuccess[] = $this->submittedApplications;
 		return $form;
 	}
