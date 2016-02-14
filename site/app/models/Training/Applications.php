@@ -256,16 +256,7 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new \DateTime($date);
 
-		if ($status === Statuses::STATUS_NON_PUBLIC_TRAINING || $source !== self::DEFAULT_SOURCE || $dateId === null) {
-			$price = null;
-			$discount = null;
-		} elseif (stripos($note, 'student') === false) {
-			$price = $training->price;
-			$discount = null;
-		} else {
-			$price = $training->price * (100 - $training->studentDiscount) / 100;
-			$discount = $training->studentDiscount;
-		}
+		list($price, $vatRate, $priceVat, $discount) = $this->resolvePriceDiscountVat($training, $status, $source, $note);
 
 		$data = array(
 			'key_date'             => $dateId,
@@ -285,8 +276,8 @@ class Applications
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 			'key_source'           => $this->getTrainingApplicationSource($source),
 			'price'                => $price,
-			'vat_rate'             => $this->vat->getRate(),
-			'price_vat'            => ($price === null ? null : $this->vat->addVat($price)),
+			'vat_rate'             => $vatRate,
+			'price_vat'            => $priceVat,
 			'discount'             => $discount,
 		);
 		if ($dateId === null) {
@@ -299,9 +290,11 @@ class Applications
 	}
 
 
-	public function updateApplication($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
+	public function updateApplication(\Nette\Database\Row $training, $applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
 	{
-		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment) {
+		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($training, $applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment) {
+			$source = $this->getSourceByApplicationId($applicationId)->alias;
+			list($price, $vatRate, $priceVat, $discount) = $this->resolvePriceDiscountVat($training, Statuses::STATUS_SIGNED_UP, $source, $note);
 			$this->database->query(
 				'UPDATE training_applications SET ? WHERE id_application = ?',
 				array(
@@ -316,6 +309,10 @@ class Applications
 					'company_tax_id' => $companyTaxId,
 					'note'           => $note,
 					'equipment'      => $equipment,
+					'price'          => $price,
+					'vat_rate'       => $vatRate,
+					'price_vat'      => $priceVat,
+					'discount'       => $discount,
 				),
 				$applicationId
 			);
@@ -366,6 +363,60 @@ class Applications
 				'invoice_id' => ($invoiceId ?: null),
 			),
 			$applicationId
+		);
+	}
+
+
+	/**
+	 * Resolves price, VAT rate, discount.
+	 *
+	 * @param \Nette\Database\Row $training
+	 * @param integer $status
+	 * @param integer $source
+	 * @param string $note
+	 * @return array with price, VAT rate, price inluding VAT, discount
+	 */
+	private function resolvePriceDiscountVat(\Nette\Database\Row $training, $status, $source, $note)
+	{
+		if (in_array($status, [Statuses::STATUS_NON_PUBLIC_TRAINING, Statuses::STATUS_TENTATIVE]) || $source !== self::DEFAULT_SOURCE) {
+			$price = null;
+			$discount = null;
+		} elseif (stripos($note, 'student') === false) {
+			$price = $training->price;
+			$discount = null;
+		} else {
+			$price = $training->price * (100 - $training->studentDiscount) / 100;
+			$discount = $training->studentDiscount;
+		}
+
+		if ($price === null) {
+			$vatRate = null;
+			$priceVat = null;
+		} else {
+			$vatRate = $this->vat->getRate();
+			$priceVat = $this->vat->addVat($price);
+		}
+
+		return [$price, $vatRate, $priceVat, $discount];
+	}
+
+
+	/**
+	 * Get source for application by id
+	 * @param integer $id application id
+	 * @return \Nette\Database\Row
+	 */
+	private function getSourceByApplicationId($id)
+	{
+		return $this->database->fetch(
+			'SELECT
+				s.alias
+			FROM
+				training_applications a
+				JOIN training_application_sources s ON a.key_source = s.id_source
+			WHERE
+				a.id_application = ?',
+			$id
 		);
 	}
 

@@ -228,6 +228,7 @@ class TrainingsPresenter extends BasePresenter
 			} else {
 				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values->trainingId) {
 					$applicationId = $this->trainingApplications->updateApplication(
+						$this->training,
 						$session->application[$name]['id'],
 						$values->name,
 						$values->email,
