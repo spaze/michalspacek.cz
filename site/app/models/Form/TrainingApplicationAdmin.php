@@ -79,6 +79,9 @@ class TrainingApplicationAdmin extends TrainingForm
 			'equipment' => $application->equipment,
 		);
 		$this->setDefaults($values);
+		if (!isset($application->dateId)) {
+			$this->getComponent('equipment')->setRequired(false);
+		}
 		return $this;
 	}
 

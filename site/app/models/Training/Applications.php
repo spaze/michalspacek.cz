@@ -458,8 +458,8 @@ class Applications
 				sr.name AS sourceName
 			FROM
 				training_applications a
-				JOIN training_dates d ON a.key_date = d.id_date
-				JOIN trainings t ON d.key_training = t.id_training
+				LEFT JOIN training_dates d ON a.key_date = d.id_date
+				JOIN trainings t ON (d.key_training = t.id_training OR a.key_training = t.id_training)
 				JOIN training_application_status s ON a.key_status = s.id_status
 				JOIN training_application_sources sr ON a.key_source = sr.id_source
 			WHERE
@@ -472,6 +472,77 @@ class Applications
 		}
 
 		return $result;
+	}
+
+
+	public function getPreliminary()
+	{
+		$trainings = array();
+		$result = $this->database->fetchAll(
+			'SELECT
+				t.id_training AS idTraining,
+				t.action,
+				t.name
+			FROM trainings t
+				JOIN training_applications a ON a.key_training = t.id_training
+			WHERE
+				a.key_date IS NULL'
+		);
+		foreach ($result as $row) {
+			$row->applications = array();
+			$trainings[$row->idTraining] = $row;
+		}
+
+		$applications = $this->database->fetchAll(
+			'SELECT
+				a.id_application AS id,
+				a.key_training AS idTraining,
+				a.name,
+				a.email,
+				a.company,
+				s.status,
+				a.status_time AS statusTime,
+				a.note,
+				a.price,
+				a.vat_rate AS vatRate,
+				a.price_vat AS priceVat,
+				a.invoice_id AS invoiceId,
+				a.paid,
+				a.equipment,
+				sr.name AS sourceName
+			FROM
+				training_applications a
+				JOIN training_application_status s ON a.key_status = s.id_status
+				JOIN training_application_sources sr ON a.key_source = sr.id_source
+			WHERE
+				a.key_date IS NULL'
+		);
+
+		if ($applications) {
+			foreach ($applications as $row) {
+				$row->email = $this->emailEncryption->decrypt($row->email);
+				$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
+				$trainings[$row->idTraining]->applications[] = $row;
+			}
+		}
+
+		return $trainings;
+	}
+
+
+	public function getPreliminaryCounts()
+	{
+		$upcoming = array_keys($this->trainingDates->getPublicUpcoming());
+
+		$total = $dateSet = 0;
+		foreach ($this->getPreliminary() as $training) {
+			if (in_array($training->action, $upcoming)) {
+				$dateSet += count($training->applications);
+			}
+			$total += count($training->applications);
+		}
+
+		return array($total, $dateSet);
 	}
 
 

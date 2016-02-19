@@ -171,8 +171,15 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->applicationId = $param;
 		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
-		$this->dateId = $this->application->dateId;
-		$this->training = $this->trainingDates->get($this->application->dateId);
+		if (isset($this->application->dateId)) {
+			$this->dateId = $this->application->dateId;
+			$this->training = $this->trainingDates->get($this->dateId);
+			$start = $this->training->start;
+			$city = $this->training->venueCity;
+		} else {
+			$this->dateId = $start = $city = null;
+			$this->training = $this->trainings->getIncludingCustom($this->application->trainingAction);
+		}
 
 		$this->template->pageTitle     = $this->application->name;
 		$this->template->applicationId = $this->applicationId;
@@ -180,10 +187,18 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->status        = $this->application->status;
 		$this->template->statusTime    = $this->application->statusTime;
 		$this->template->trainingName  = $this->training->name;
-		$this->template->trainingStart = $this->training->start;
-		$this->template->trainingCity  = $this->training->venueCity;
+		$this->template->trainingStart = $start;
+		$this->template->trainingCity  = $city;
 		$this->template->sourceName    = $this->application->sourceName;
 		$this->template->attended      = in_array($this->application->status, $this->trainingStatuses->getAttendedStatuses());
+	}
+
+
+	public function actionPreliminary($param)
+	{
+		$this->template->pageTitle = 'Předběžné přihlášky';
+		$this->template->preliminaryApplications = $this->trainingApplications->getPreliminary();
+		$this->template->upcoming = $this->trainingDates->getPublicUpcoming();
 	}
 
 
@@ -343,7 +358,11 @@ class TrainingsPresenter extends BasePresenter
 			$values->paid,
 			$values->familiar
 		);
-		$this->redirect('date', $this->dateId);
+		if (isset($this->dateId)) {
+			$this->redirect('date', $this->dateId);
+		} else {
+			$this->redirect('preliminary', $this->applicationId);
+		}
 	}
 
 

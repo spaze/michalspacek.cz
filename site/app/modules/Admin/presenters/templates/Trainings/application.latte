@@ -1,8 +1,12 @@
 {define #menu}
 &raquo; <a n:href=":Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
+{if $trainingStart}
 &raquo; <a n:href="Trainings:">Termíny</a>
 &raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</a>
+{else}
+&raquo; <a n:href="preliminary">Předběžné přihlášky</a>
+{/if}
 {/define}
 
 {define #content}
@@ -12,7 +16,7 @@
 		<th>Školení:</th><td>{$trainingName}</td>
 	</tr>
 	<tr>
-		<th>Datum:</th><td>{$trainingStart|date:'j. n. Y'}, {$trainingCity}</td>
+		<th>Datum:</th><td>{if $trainingStart}{$trainingStart|date:'j. n. Y'}, {$trainingCity}{else}–{/if}</td>
 	</tr>
 	<tr>
 		<th>{label name /}</th><td>{input name}</td>

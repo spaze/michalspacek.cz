@@ -76,6 +76,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 		$this->template->notificationsToSend = count($this->trainingNotifications->getPaidApplications());
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
+		list($this->template->preliminaryTotal, $this->template->preliminaryDateSet) = $this->trainingApplications->getPreliminaryCounts();
 	}
 
 }

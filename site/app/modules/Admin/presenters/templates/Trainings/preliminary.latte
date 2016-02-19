@@ -1,0 +1,39 @@
+{define #menu}
+&raquo; <a n:href=":Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+{/define}
+
+{define #content}
+<p n:if="!$preliminaryApplications">Žádné předběžné přihlášky, hurá!</p>
+{if $preliminaryApplications}
+<p></p>
+<table id="applications">
+	<thead>
+		<tr>
+			<th></th>
+			<th><small>Jméno</small></th>
+			<th><small>E-mail</small></th>
+			<th><small>Status</small></th>
+		</tr>
+	</thead>
+	<tbody>
+		{foreach $preliminaryApplications as $training}
+		<tr>
+			<td colspan="5">
+				<strong n:tag-if="isset($upcoming[$training->action])">{$training->name}</strong>
+				{if isset($upcoming[$training->action])}
+					(Vypsané termíny: <a n:foreach="$upcoming[$training->action]['dates'] as $date" n:href="Trainings:date $date->dateId">{$date->start|date:'j. n. Y'}</a>)
+				{/if}
+			</td>
+		</tr>
+		<tr n:foreach="$training->applications as $application">
+			<td><small>{$iterator->getCounter()}.</small></td>
+			<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
+			<td><small>{$application->email}</small></td>
+			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
+		</tr>
+		{/foreach}
+	</tbody>
+</table>
+{/if}
+{/define}
