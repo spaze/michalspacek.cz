@@ -10,17 +10,23 @@ namespace MichalSpacekCz\Form;
 class TrainingApplicationAdmin extends TrainingForm
 {
 
+	/** @var \MichalSpacekCz\Training\Dates */
+	protected $trainingDates;
+
+
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \Nette\Localization\ITranslator $translator)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \MichalSpacekCz\Training\Dates $trainingDates, \Nette\Localization\ITranslator $translator)
 	{
 		parent::__construct($parent, $name, $translator);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->translator = $translator;
+		$this->trainingDates = $trainingDates;
 
 		$this->addAttendee($this);
 		$this->addAttributes($this);
@@ -80,6 +86,16 @@ class TrainingApplicationAdmin extends TrainingForm
 		);
 		$this->setDefaults($values);
 		if (!isset($application->dateId)) {
+			$dates = $this->trainingDates->getPublicUpcoming();
+			$upcoming = array();
+			if (isset($dates[$application->trainingAction])) {
+				foreach ($dates[$application->trainingAction]->dates as $date) {
+					$upcoming[$date->dateId] = $date->start;
+				}
+			}
+			$this->addSelect('date', 'Datum:', $upcoming)
+				->setPrompt($upcoming ? '- zvolte termín -' : 'Žádný vypsaný termín')
+				->setDisabled(!$upcoming);
 			$this->getComponent('equipment')->setRequired(false);
 		}
 		return $this;

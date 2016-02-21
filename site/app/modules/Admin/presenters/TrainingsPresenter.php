@@ -326,7 +326,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName, $this->translator);
+		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName, $this->trainingDates, $this->translator);
 		$form->setApplication($this->application);
 		$form->onSuccess[] = $this->submittedApplication;
 		return $form;
@@ -356,9 +356,10 @@ class TrainingsPresenter extends BasePresenter
 			$values->discount,
 			$values->invoiceId,
 			$values->paid,
-			$values->familiar
+			$values->familiar,
+			(isset($values->date) ? $values->date : false)
 		);
-		if (isset($this->dateId)) {
+		if (isset($this->dateId) || isset($values->date)) {
 			$this->redirect('date', $this->dateId);
 		} else {
 			$this->redirect('preliminary', $this->applicationId);

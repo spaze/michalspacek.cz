@@ -321,37 +321,37 @@ class Applications
 	}
 
 
-	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false)
+	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false, $dateId = false)
 	{
 		if ($paid) {
 			$paid = new \DateTime($paid);
 		}
 
-		$this->database->query(
-			'UPDATE training_applications SET ? WHERE id_application = ?',
-			array(
-				'name'           => $name,
-				'email'          => $this->emailEncryption->encrypt($email),
-				'company'        => $company,
-				'familiar'       => $familiar,
-				'street'         => $street,
-				'city'           => $city,
-				'zip'            => $zip,
-				'country'        => $country,
-				'company_id'     => $companyId,
-				'company_tax_id' => $companyTaxId,
-				'note'           => $note,
-				'equipment'      => $equipment,
-				'price'          => ($price || $discount ? $price : null),
-				'vat_rate'       => ($vatRate ?: null),
-				'price_vat'      => ($priceVat ?: null),
-				'discount'       => ($discount ?: null),
-				'invoice_id'     => ($invoiceId ?: null),
-				'paid'           => ($paid ?: null),
-				'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
-			),
-			$applicationId
+		$data = array(
+			'name'           => $name,
+			'email'          => $this->emailEncryption->encrypt($email),
+			'company'        => $company,
+			'familiar'       => $familiar,
+			'street'         => $street,
+			'city'           => $city,
+			'zip'            => $zip,
+			'country'        => $country,
+			'company_id'     => $companyId,
+			'company_tax_id' => $companyTaxId,
+			'note'           => $note,
+			'equipment'      => $equipment,
+			'price'          => ($price || $discount ? $price : null),
+			'vat_rate'       => ($vatRate ?: null),
+			'price_vat'      => ($priceVat ?: null),
+			'discount'       => ($discount ?: null),
+			'invoice_id'     => ($invoiceId ?: null),
+			'paid'           => ($paid ?: null),
+			'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
 		);
+		if ($dateId !== false) {
+			$data['key_date'] = $dateId;
+		}
+		$this->database->query('UPDATE training_applications SET ? WHERE id_application = ?', $data, $applicationId);
 	}
 
 

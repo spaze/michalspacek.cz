@@ -16,7 +16,7 @@
 		<th>Školení:</th><td>{$trainingName}</td>
 	</tr>
 	<tr>
-		<th>Datum:</th><td>{if $trainingStart}{$trainingStart|date:'j. n. Y'}, {$trainingCity}{else}–{/if}</td>
+		<th>Datum:</th><td>{if $trainingStart}{$trainingStart|date:'j. n. Y'}, {$trainingCity}{else}{input date}{/if}</td>
 	</tr>
 	<tr>
 		<th>{label name /}</th><td>{input name}</td>
