@@ -74,7 +74,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->pageTitle = 'Administrace';
 		$this->template->trackingEnabled = $this->webTracking->isEnabled();
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
-		$this->template->notificationsToSend = count($this->trainingNotifications->getPaidApplications());
+		list($this->template->notificationsToSendTotal, $this->template->notificationsToSendPaid) = $this->trainingNotifications->getCounts();
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
 		list($this->template->preliminaryTotal, $this->template->preliminaryDateSet) = $this->trainingApplications->getPreliminaryCounts();
 	}

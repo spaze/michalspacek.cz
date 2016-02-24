@@ -40,11 +40,13 @@ class Notifications
 	}
 
 
-	public function getPaidApplications()
+	public function getCounts()
 	{
-		return array_filter($this->getApplications(), function ($application) {
+		$applications = $this->getApplications();
+		$paid = array_filter($applications, function ($application) {
 			return isset($application->paid);
 		});
+		return array(count($applications), count($paid));
 	}
 
 }
