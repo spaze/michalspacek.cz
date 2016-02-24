@@ -23,12 +23,13 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 			$applicationIdsContainer = $applicationsContainer->addContainer($application->id);
 			$checked = true;
 			$disabled = false;
-			switch ($application->status) {
-				case Training\Statuses::STATUS_ATTENDED:
+			switch ($application->nextStatus) {
+				case Training\Statuses::STATUS_MATERIALS_SENT:
 					$checked = (bool)$application->files;
 					$disabled = !$checked;
 					break;
-				case Training\Statuses::STATUS_SIGNED_UP:
+				case Training\Statuses::STATUS_INVOICE_SENT:
+				case Training\Statuses::STATUS_INVOICE_SENT_AFTER:
 					$checked = ($application->price && $application->vatRate && $application->priceVat);
 					$disabled = !$checked;
 					break;
@@ -41,8 +42,9 @@ class TrainingMailsOutbox extends \Nette\Application\UI\Form
 				->setAttribute('placeholder', 'Dodatečný text')
 				->setAttribute('cols', 80)
 				->setAttribute('rows', 3);
-			switch ($application->status) {
-				case Training\Statuses::STATUS_SIGNED_UP:
+			switch ($application->nextStatus) {
+				case Training\Statuses::STATUS_INVOICE_SENT:
+				case Training\Statuses::STATUS_INVOICE_SENT_AFTER:
 					$applicationIdsContainer->addText('invoiceId')
 						->setType('number')
 						->setAttribute('placeholder', 'Faktura č.')

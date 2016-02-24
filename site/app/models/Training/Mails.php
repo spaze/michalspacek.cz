@@ -120,6 +120,12 @@ class Mails
 			}
 		}
 
+		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVOICE_SENT_AFTER) as $status) {
+			foreach ($this->trainingApplications->getByStatus($status) as $application) {
+				$applications[] = $application;
+			}
+		}
+
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if ($application->trainingStart->diff(new \DateTime('now'))->format('%d') <= self::REMINDER_DAYS) {
@@ -164,7 +170,7 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
-		$template->setFile($this->templatesDir . 'admin/invoice.latte');
+		$template->setFile($this->templatesDir . ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER ? 'admin/invoiceAfter.latte' : 'admin/invoice.latte'));
 		$template->application = $application;
 		$template->additional = $additional;
 		$subject = 'Potvrzení registrace na školení ' . $application->trainingName . ' a faktura';

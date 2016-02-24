@@ -34,9 +34,9 @@
 			<td>{$application->trainingName} <small>{$application->trainingStart|date:'j. n.'} {$application->venueCity}</small></td>
 			<td><small><code><span title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</span> → {$application->nextStatus}</code></small></td>
 			<td>
-				{if $application->status == \MichalSpacekCz\Training\Statuses::STATUS_ATTENDED}
+				{if $application->nextStatus == \MichalSpacekCz\Training\Statuses::STATUS_MATERIALS_SENT}
 					<strong n:if="!$application->files" class="error">Není nahrán žádný soubor!</strong>
-				{elseif $application->status == \MichalSpacekCz\Training\Statuses::STATUS_SIGNED_UP}
+				{elseif in_array($application->nextStatus, [\MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT, \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER])}
 					{if $application->price && $application->vatRate && $application->priceVat}
 						{input invoiceId}
 						{input invoice}

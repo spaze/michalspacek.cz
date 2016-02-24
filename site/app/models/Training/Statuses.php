@@ -23,6 +23,8 @@ class Statuses
 	const STATUS_IMPORTED            = 'IMPORTED';             // 13
 	const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';  // 14
 	const STATUS_REMINDED            = 'REMINDED';             // 15
+	const STATUS_PAID_AFTER          = 'PAID_AFTER';           // 16
+	const STATUS_INVOICE_SENT_AFTER  = 'INVOICE_SENT_AFTER';   // 17
 
 	/** @var \Nette\Database\Context */
 	protected $database;
