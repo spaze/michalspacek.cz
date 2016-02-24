@@ -13,6 +13,18 @@ class Notifications
 	/** @var Applications */
 	protected $trainingApplications;
 
+	/** @var Dates */
+	protected $trainingDates;
+
+	/** @var Statuses */
+	protected $trainingStatuses;
+
+
+	/**
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
+	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
+	 */
 	public function __construct(
 		Applications $trainingApplications,
 		Dates $trainingDates,
