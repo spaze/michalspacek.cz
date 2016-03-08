@@ -112,6 +112,8 @@ label:
 	map: "mapa"
 	favorite: "Oblíbené"
 	download: Stáhnout
+	encrypt: Zašifrovat
+	copy: Kopírovat
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
@@ -120,6 +122,13 @@ contact:
 	vatpayer: plátce DPH
 	encryptedmessages: Šifrované zprávy
 	mypgpkey: Můj PGP klíč
+	newmessage: Nová zpráva
+	copied: "Zašifrovaný text je nyní ve schránce, vložte ho do e-mailu a pošlete mi ho."
+	copythis: "Zkopírujte zašifrovaný text, vložte ho do e-mailu a pošlete mi ho."
+	howto:
+		1: "Do formuláře níže napište text, který mi chcete poslat, zašifrujte ho, zkopírujte a vložte do e-mailové zprávy a tu mi pošlete na \"%s\":[%s]."
+		2: "Zpráva je šifrována ve vašem prohlížeči a přenos takového textu je bezpečný, mohu ho rozšifrovat pouze já. Zkontrolujte že se stránka načetla po HTTPS a prohlížeč nehlásí žádné chyby certifikátu."
+		3: "Pamatujte, že pokud nemám váš veřejný PGP klíč, tak vám nemohu bezpečným způsobem odpovědět."
 who:
 	developer:
 		1: "Zajímá mě web, bezpečnost a výkon. Stavím, bořím a testuji webové aplikace."

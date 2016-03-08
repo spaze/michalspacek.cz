@@ -2,6 +2,10 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
+{define #scripts}
+<script src="{='/i/js/openpgp.min.js'|staticUrl}"></script>
+{/define}
+
 {define #content}
 <p><h3>Michal Špaček</h3></p>
 <p id="contact">
@@ -31,12 +35,21 @@
 </p>
 <h3>{_messages.contact.encryptedmessages}</h3>
 <p>
+	{_messages.contact.howto.1|format:'mail@michalspacek.cz':'mail@michalspacek.cz'}
+	{_messages.contact.howto.2}
+	{_messages.contact.howto.3}
+</p>
+<p>
+	<textarea id="message"></textarea><br>
+	<button id="encrypt" data-encrypt="{_messages.label.encrypt}" data-copy="{_messages.label.copy}">{_messages.label.encrypt}</button>
+	<small id="copied">{_messages.contact.copied} <span class="button">{_messages.contact.newmessage}</span></small>
+	<small id="copythis">{_messages.contact.copythis} <span class="button">{_messages.contact.newmessage}</span></small>
+</p>
+<h3>{_messages.contact.mypgpkey}</h3>
+<p>
 	<strong>{_messages.label.openpgpkeyid}</strong>: <a href="http://p80.pool.sks-keyservers.net/pks/lookup?op=index&amp;search=0xB64BDD6E464AB529">0xB64BDD6E464AB529</a> (<a href="{$keyFile}">{_messages.label.download}</a>)<br>
 	<strong>{_messages.label.fingerprint}</strong>: 4BD4 C403 AF2F 9FCC B151 FE61 B64B DD6E 464A B529<br>
 	<strong>{_messages.label.keybase}</strong>: <a href="https://keybase.io/spaze">spaze</a>
 </p>
-<h4>{_messages.contact.mypgpkey}</h4>
-<p>
-	<pre id="pubkey">{$key}</pre>
-</p>
+<p><pre id="pubkey">{$key}</pre></p>
 {/define}

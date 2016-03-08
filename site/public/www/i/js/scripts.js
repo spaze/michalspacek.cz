@@ -47,4 +47,40 @@ $(document).ready(function() {
 	$('#loadData a').click(APPLICATION.loadData);
 	$('#loadDataAgain a').click(APPLICATION.loadData);
 	$('#loadData').show();
+
+	var ENCRYPTION = ENCRYPTION || {};
+	ENCRYPTION.feedback = $(document.queryCommandSupported('copy') ? '#copied' : '#copythis');
+	ENCRYPTION.reset = function() {
+		$('#encrypt').text($('#encrypt').data('encrypt'));
+		$('#encrypt').off('click').click(ENCRYPTION.handler);
+		ENCRYPTION.feedback.fadeOut('fast');
+	};
+	ENCRYPTION.handler = function() {
+		openpgp.config.commentstring = location.href;
+		options = {
+			data: $('#message').val(),
+			publicKeys: openpgp.key.readArmored($('#pubkey').text()).keys,
+		};
+		openpgp.encrypt(options).then(function(ciphertext) {
+			$('#message').val(ciphertext.data);
+			$('#encrypt').text($('#encrypt').data('copy'));
+			$('#encrypt').off('click').click(function() {
+				$('#message').select();
+				if (document.queryCommandSupported('copy')) {
+					document.execCommand('copy');
+				}
+				ENCRYPTION.feedback.fadeIn('fast');
+			});
+		});
+	};
+	$('#copied .button, #copythis .button').click(function() {
+		$('#message').val('');
+		ENCRYPTION.reset();
+	});
+	$('#message').on('input', function(e) {
+		if (e.target.value === '') {
+			ENCRYPTION.reset();
+		}
+	});
+	$('#encrypt').one('click', ENCRYPTION.handler);
 });

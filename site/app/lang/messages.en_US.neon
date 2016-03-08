@@ -112,6 +112,8 @@ label:
 	map: "map"
 	favorite: "Favorites"
 	download: Download
+	encrypt: Encrypt
+	copy: Copy
 contact:
 	twitter: @spazef0rze
 	uponrequest: "upon request"
@@ -120,6 +122,13 @@ contact:
 	vatpayer: VAT payer
 	encryptedmessages: Encrypted messages
 	mypgpkey: My PGP key
+	newmessage: New message
+	copied: "Encrypted message is now in the clipboard, paste it to an email and send it to me."
+	copythis: "Copy the encrypted message, paste it to an email and send it to me."
+	howto:
+		1: "Enter your message to the form below, encrypt it, copy and paste it to en e-mail message, and send it to \"%s\":[%s]."
+		2: "Your message is encrypted in your browser, transmission of such text is secure, only me can decrypt it. Check that the page was loaded over HTTPS and there were no certificate errors."
+		3: "Please remember that I can't securely reply back if I don't have your public PGP key."
 who:
 	developer:
 		1: "I'm into web, security, and performance. I build, break, and test web applications."
