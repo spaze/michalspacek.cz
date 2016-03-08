@@ -250,3 +250,8 @@ div.notice {
     float: left;
     margin: 0 0.4em;
 }
+#pubkey {
+    background-color: #F7F7FF;
+    padding: 2em;
+    font-size: smaller;
+}

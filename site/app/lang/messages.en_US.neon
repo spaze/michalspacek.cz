@@ -111,12 +111,15 @@ label:
 	materials: "Materials"
 	map: "map"
 	favorite: "Favorites"
+	download: Download
 contact:
 	twitter: @spazef0rze
 	uponrequest: "upon request"
 	skypename: spazef0rze
 	billingaddress: "České Vrbné 2315, České Budějovice 37011, Czech Republic"
 	vatpayer: VAT payer
+	encryptedmessages: Encrypted messages
+	mypgpkey: My PGP key
 who:
 	developer:
 		1: "I'm into web, security, and performance. I build, break, and test web applications."

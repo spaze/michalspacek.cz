@@ -111,12 +111,15 @@ label:
 	materials: "Materiály"
 	map: "mapa"
 	favorite: "Oblíbené"
+	download: Stáhnout
 contact:
 	twitter: @spazef0rze
 	uponrequest: "na vyžádání"
 	skypename: spazef0rze
 	billingaddress: "České Vrbné 2315, České Budějovice 37011"
 	vatpayer: plátce DPH
+	encryptedmessages: Šifrované zprávy
+	mypgpkey: Můj PGP klíč
 who:
 	developer:
 		1: "Zajímá mě web, bezpečnost a výkon. Stavím, bořím a testuji webové aplikace."
