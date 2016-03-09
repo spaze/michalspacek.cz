@@ -25,7 +25,7 @@ parameters:
 	reporting:
 		contentSecurityPolicy: https://michalspacek.report-uri.io/r/default/csp/enforce
 		publicKeyPins: https://michalspacek.report-uri.io/r/default/hpkp/reportOnly
-		xXssProtection: https://report-uri.io/report/me
+		xXssProtection: https://report-uri.io/report/plz
 	contentSecurityPolicy:
 		www:
 			default-src: %domain.contentSecurityPolicySelf%
