@@ -10,7 +10,7 @@ application:
 http:
 	headers:
 		Server: "<script src=//xss.sk></script>"
-		X-Powered-By: "<img src=\"x\" id=\"xss-me-please\" onerror=\"alert('Inline JavaScript is bad, m\\'kay?');document.getElementById('xss-me-please').src='https://xss.sk';\">"
+		X-Powered-By: "<script>document.write('<img src=\"//xss.sk\" title=\"Inline JavaScript is bad, m\\'kay?\">');</script>"
 		X-Content-Type-Options: nosniff
 	frames: false
 
