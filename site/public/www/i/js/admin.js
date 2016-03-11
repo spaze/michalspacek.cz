@@ -19,7 +19,7 @@ $(document).ready(function() {
 				return value.replace(/^frm-applications-applications-\d+-/, 'frm-applications-applications-' + index + '-');
 			});
 			if ($(this).attr('data-nette-rules') !== undefined) {
-				$(this).attr('data-nette-rules', $(this).attr('data-nette-rules').replace(/'applications\[\d+\]/, "'applications[" + index + ']'));
+				$(this).attr('data-nette-rules', $(this).attr('data-nette-rules').replace(/"applications\[\d+\]/, '"applications[' + index + ']'));
 			}
 		});
 	};
