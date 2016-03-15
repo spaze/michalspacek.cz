@@ -103,7 +103,7 @@ class TrainingsPresenter extends BasePresenter
 			if ($application->attended) {
 				$this->applicationIdsAttended[] = $application->id;
 			}
-			$application->childrenStatuses = $this->trainingStatuses->getChildrenStatuses($application->status);
+			$application->childrenStatuses = $this->trainingStatuses->getChildrenStatusesForApplicationId($application->status, $application->id);
 		}
 		$this->applications = array_merge($applications, $discarded);
 

@@ -37,6 +37,8 @@ class Statuses
 
 	private $descendantStatuses = array();
 
+	private $statusHistory = array();
+
 
 	/**
 	 * @param \Nette\Database\Context $context
@@ -110,6 +112,17 @@ class Statuses
 			);
 		}
 		return $this->parentStatuses[$child];
+	}
+
+
+	public function getChildrenStatusesForApplicationId($parent, $applicationId)
+	{
+		$children = $this->getChildrenStatuses($parent);
+		if ($parent === self::STATUS_ATTENDED) {
+			$status = ($this->historyContainsStatus(self::STATUS_PAID_AFTER, $applicationId) ? self::STATUS_MATERIALS_SENT : self::STATUS_INVOICE_SENT_AFTER);
+			unset($children[$this->getStatusId($status)]);
+		}
+		return $children;
 	}
 
 
@@ -210,5 +223,42 @@ class Statuses
 		}
 		return $result;
 	}
+
+
+	private function getStatusHistory($applicationId)
+	{
+		if (!isset($this->statusHistory[$applicationId])) {
+			$this->statusHistory[$applicationId] = $this->database->fetchAll(
+				'SELECT
+					h.key_status AS statusId,
+					s.status,
+					h.status_time AS statusTime,
+					h.status_time_timezone AS statusTimeTimeZone
+				FROM training_application_status s
+					JOIN training_application_status_history h ON h.key_status = s.id_status
+				WHERE h.key_application = ?',
+				$applicationId
+			);
+			foreach ($this->statusHistory[$applicationId] as &$row) {
+				$row->statusTime->setTimezone(new \DateTimeZone($row->statusTimeTimeZone));
+				unset($row->statusTimeTimeZone);
+			}
+		}
+		return $this->statusHistory[$applicationId];
+	}
+
+
+	public function historyContainsStatus($status, $applicationId)
+	{
+		$result = false;
+		foreach ($this->getStatusHistory($applicationId) as $history) {
+			if ($history->status === $status) {
+				$result = true;
+				break;
+			}
+		}
+		return $result;
+	}
+
 
 }

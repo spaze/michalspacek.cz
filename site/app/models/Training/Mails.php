@@ -102,34 +102,43 @@ class Mails
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if ($this->trainingDates->get($application->dateId)->status == Dates::STATUS_CONFIRMED) {
-					$applications[] = $application;
+					$application->nextStatus = Statuses::STATUS_INVITED;
+					$applications[$application->id] = $application;
 				}
 			}
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				$application->files = $this->trainingFiles->getFiles($application->id);
-				$applications[] = $application;
+				if ($status !== Statuses::STATUS_ATTENDED || ($status === Statuses::STATUS_ATTENDED && !$this->trainingStatuses->historyContainsStatus(Statuses::STATUS_PAID_AFTER, $application->id))) {
+					$application->files = $this->trainingFiles->getFiles($application->id);
+					$application->nextStatus = Statuses::STATUS_MATERIALS_SENT;
+					$applications[$application->id] = $application;
+				}
 			}
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVOICE_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				$applications[] = $application;
+				$application->nextStatus = Statuses::STATUS_INVOICE_SENT;
+				$applications[$application->id] = $application;
 			}
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVOICE_SENT_AFTER) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				$applications[] = $application;
+				if ($status !== Statuses::STATUS_ATTENDED || ($status === Statuses::STATUS_ATTENDED && $this->trainingStatuses->historyContainsStatus(Statuses::STATUS_PAID_AFTER, $application->id))) {
+					$application->nextStatus = Statuses::STATUS_INVOICE_SENT_AFTER;
+					$applications[$application->id] = $application;
+				}
 			}
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if ($application->trainingStart->diff(new \DateTime('now'))->format('%d') <= self::REMINDER_DAYS) {
-					$applications[] = $application;
+					$application->nextStatus = Statuses::STATUS_REMINDED;
+					$applications[$application->id] = $application;
 				}
 			}
 		}
