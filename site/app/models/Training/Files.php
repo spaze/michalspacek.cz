@@ -13,6 +13,9 @@ class Files
 	/** @var \Nette\Database\Context */
 	protected $database;
 
+	/** @var Statuses */
+	protected $trainingStatuses;
+
 	/**
 	 * Files directory, ends with a slash.
 	 *
@@ -21,9 +24,14 @@ class Files
 	protected $filesDir;
 
 
-	public function __construct(\Nette\Database\Context $context)
+	/**
+	 * @param \Nette\Database\Context $context
+	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
+	 */
+	public function __construct(\Nette\Database\Context $context, Statuses $trainingStatuses)
 	{
 		$this->database = $context;
+		$this->trainingStatuses = $trainingStatuses;
 	}
 
 
@@ -51,11 +59,9 @@ class Files
 				JOIN training_dates d ON a.key_date = d.id_date
 			WHERE
 				a.id_application = ?
-				AND s.status IN (?, ?, ?)',
+				AND s.status IN (?)',
 			$applicationId,
-			Statuses::STATUS_ATTENDED,
-			Statuses::STATUS_MATERIALS_SENT,
-			Statuses::STATUS_ACCESS_TOKEN_USED
+			$this->trainingStatuses->getAttendedStatuses()
 		);
 
 		foreach ($files as $file) {
