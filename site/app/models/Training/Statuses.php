@@ -225,7 +225,7 @@ class Statuses
 	}
 
 
-	private function getStatusHistory($applicationId)
+	public function getStatusHistory($applicationId)
 	{
 		if (!isset($this->statusHistory[$applicationId])) {
 			$this->statusHistory[$applicationId] = $this->database->fetchAll(

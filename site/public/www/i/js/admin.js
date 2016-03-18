@@ -104,4 +104,9 @@ $(document).ready(function() {
 		$('#emails .row .send').prop('checked', false).attr('checked', false);
 	});
 
+	$('#statusHistory-link').click(function(event) {
+		event.preventDefault();
+		$('#statusHistory-container').slideToggle('fast');
+	});
+	$('#statusHistory-container').hide();
 });

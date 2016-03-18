@@ -31,7 +31,13 @@
 		<th>{label familiar: /}</th><td>{input familiar:}</td>
 	</tr>
 	<tr>
-		<th>Status:</th><td><small><code>{$status}</code> ({$statusTime})</small></td>
+		<th>Status:</th>
+		<td>
+			<small><code>{$status}</code> ({$statusTime}) <a href="#historie" id="statusHistory-link">Historie</a></small><br>
+			<span id="statusHistory-container" n:inner-foreach="$history as $record">
+				<small><code>{$record->status}</code> ({$record->statusTime})</small><br>
+			</span>
+		</td>
 	</tr>
 	<tr>
 		<th>Zdroj:</th><td><small>{$sourceName}</small></td>
