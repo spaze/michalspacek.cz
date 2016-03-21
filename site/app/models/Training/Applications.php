@@ -63,6 +63,7 @@ class Applications
 				t.name AS trainingName,
 				t.action AS trainingAction,
 				d.start AS trainingStart,
+				d.public AS publicDate,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,

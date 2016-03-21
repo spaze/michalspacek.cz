@@ -42,8 +42,7 @@ class Notifications
 		$applications = array();
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_NOTIFIED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				$date = $this->trainingDates->get($application->dateId);
-				if ($date->public) {
+				if ($application->publicDate) {
 					$applications[] = $application;
 				}
 			}

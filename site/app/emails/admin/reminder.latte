@@ -4,6 +4,7 @@ rád bych vám připomněl, že dne {$application->trainingStart|date:'j. n. Y'}
 {$application->trainingName}, na které jste přihlášeni.
 Školení proběhne na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
 
+{if $application->publicDate}
 Pohled na vchod: {='i/images/venues/' . $venue->entrance|staticUrl}
 
 {$venue->publicTransport|striptags}
@@ -11,6 +12,7 @@ Pohled na vchod: {='i/images/venues/' . $venue->entrance|staticUrl}
 
 Mapa místa a další informace: {link //:Venues:venue $venue->action}
 
+{/if}
 Školení začíná v {$application->trainingStart|date:'H:i'}, v případě jakýchkoliv komplikací mě
 kontaktujte.
 
