@@ -23,9 +23,9 @@ parameters:
 		default: www
 		sharedStaticRoot: https://www.%domain.root%
 	reporting:
-		contentSecurityPolicy: https://michalspacek.report-uri.io/r/default/csp/enforce
-		publicKeyPins: https://michalspacek.report-uri.io/r/default/hpkp/reportOnly
-		xXssProtection: https://report-uri.io/report/plz
+		contentSecurityPolicy: https://plz.report-uri.io/r/default/csp/enforce
+		publicKeyPins: https://plz.report-uri.io/r/default/hpkp/reportOnly
+		xXssProtection: https://plz.report-uri.io/
 	contentSecurityPolicy:
 		www:
 			default-src: %domain.contentSecurityPolicySelf%
