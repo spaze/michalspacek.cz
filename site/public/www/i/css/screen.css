@@ -173,9 +173,9 @@ td.nameCell { width: 200px; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
 #statuses th, #statuses td, #applications th, #applications td { padding: 1px 5px; }
 #statuses tr.summary:hover { background-color: #F0F0F0; }
-#applications tr:hover { background-color: #F0F0F0; }
-#applications tr.discarded { opacity: 0.3; }
-#applications tr.discarded:hover { opacity: 0.7; }
+#applications tbody tr:hover { background-color: #F0F0F0; }
+#applications tbody tr.discarded { opacity: 0.3; }
+#applications tbody tr.discarded:hover { opacity: 0.7; }
 #frm-application th, #frm-application td,
 #frm-applicationPreliminary th, #frm-applicationPreliminary td {
     width: 150px;
