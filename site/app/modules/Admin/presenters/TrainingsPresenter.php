@@ -222,14 +222,14 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentStatuses($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingStatuses($this, $formName, $this->applications, $this->translator);
-		$form->onSuccess[] = $this->submittedStatuses;
+		$form->getComponent('submit')->onClick[] = $this->submittedStatuses;
 		return $form;
 	}
 
 
-	public function submittedStatuses(\MichalSpacekCz\Form\TrainingStatuses $form)
+	public function submittedStatuses(\Nette\Forms\Controls\SubmitButton $button)
 	{
-		$values = $form->getValues();
+		$values = $button->getForm()->getValues();
 		foreach ($values->applications as $id => $status) {
 			if ($status) {
 				$this->trainingStatuses->updateStatus($id, $status, $values->date);

@@ -90,6 +90,18 @@ $(document).ready(function() {
 		$('#statuses-links').find('span').toggle();
 	});
 
+	$('.preset').click(function(event) {
+		event.preventDefault();
+		var preset = $(this).data('preset');
+		$('#frm-statuses-date').val($(this).data('start'));
+		$('#applications .status option').each(function() {
+			if (this.value == preset) {
+				$(this).parent().val(preset);
+				return;
+			}
+		});
+	});
+
 	$('#emails tbody .button').click(function() {
 		$(this).closest('tr').nextUntil('.row', '.expand-container').toggle();
 	});

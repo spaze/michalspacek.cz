@@ -37,7 +37,7 @@
 			<td>{$application->company}</td>
 			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
 			<td><small>&raquo;</small></td>
-			<td>{input applications-$application->id}</td>
+			<td>{input applications-$application->id class => status}</td>
 			<td>
 				<small><code title="Zdroj {$application->sourceName}">{$application->sourceNameInitials}</code></small>
 				{capture $title}
@@ -53,8 +53,10 @@
 	</tbody>
 </table>
 </div>
-<p>{label date /} {input date}</p>
-<p>{input submit}</p>
+<p>{label date /} {input date} {input submit}</p>
+<p>
+	<button class="preset" data-preset="{\MichalSpacekCz\Training\Statuses::STATUS_ATTENDED}" data-start="{$trainingStart}">Přednastavit <small><code>{\MichalSpacekCz\Training\Statuses::STATUS_ATTENDED}</code></small></button>
+</p>
 {/form statuses}
 <hr>
 <div id="pridat-ucastniky">
