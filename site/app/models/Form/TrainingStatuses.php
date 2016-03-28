@@ -28,6 +28,7 @@ class TrainingStatuses extends TrainingForm
 		}
 		$this->addStatusDate('date', 'Datum:', true);
 		$this->addSubmit('submit', 'Změnit');
+		$this->addSubmit('familiar', 'Tykat všem')->setValidationScope(false);
 	}
 
 }

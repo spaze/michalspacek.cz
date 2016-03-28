@@ -657,4 +657,16 @@ class Applications
 		return strtoupper(implode('', current($matches)));
 	}
 
+
+	/**
+	 * Set familiar flag for the application.
+	 *
+	 * @param integer $applicationId
+	 */
+	public function setFamiliar($applicationId)
+	{
+		$this->database->query('UPDATE training_applications SET familiar = TRUE WHERE id_application = ?', $applicationId);
+	}
+
+
 }

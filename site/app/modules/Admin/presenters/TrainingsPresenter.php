@@ -223,6 +223,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$form = new \MichalSpacekCz\Form\TrainingStatuses($this, $formName, $this->applications, $this->translator);
 		$form->getComponent('submit')->onClick[] = $this->submittedStatuses;
+		$form->getComponent('familiar')->onClick[] = $this->submittedFamiliar;
 		return $form;
 	}
 
@@ -235,6 +236,33 @@ class TrainingsPresenter extends BasePresenter
 				$this->trainingStatuses->updateStatus($id, $status, $values->date);
 			}
 		}
+		$this->redirect($this->getAction(), $this->dateId);
+	}
+
+
+	public function submittedFamiliar(\Nette\Forms\Controls\SubmitButton $button)
+	{
+		$values = $button->getForm()->getValues(true);  // array_keys() does not work with ArrayHash object
+		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
+		$total = 0;
+		foreach (array_keys($values['applications']) as $id) {
+			$application = $this->trainingApplications->getApplicationById($id);
+			if (in_array($application->status, $attendedStatuses) && !$application->familiar) {
+				$this->trainingApplications->setFamiliar($id);
+				$total++;
+			}
+		}
+
+		$statuses = array();
+		foreach ($attendedStatuses as $status) {
+			$statuses[] = Html::el('code')->setText($status);
+		}
+		$this->flashMessage(
+			Html::el()
+				->setText('Tykání nastaveno pro ' . $total . ' účastníků ve stavu ')
+				->add(implode(', ', $statuses))
+		);
+
 		$this->redirect($this->getAction(), $this->dateId);
 	}
 
