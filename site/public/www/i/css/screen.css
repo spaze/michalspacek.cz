@@ -170,6 +170,7 @@ th, td { padding: 5px; }
 td.positionCell, td.iconCell { width: 10px; }
 td.dateCell { width: 80px; }
 td.nameCell { width: 200px; }
+tr.dateLine td { border-top: 2px solid #EEE; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
 #statuses th, #statuses td, #applications th, #applications td { padding: 1px 5px; }
 #statuses tr.summary:hover { background-color: #F0F0F0; }

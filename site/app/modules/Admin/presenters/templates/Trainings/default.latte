@@ -4,9 +4,11 @@
 	<span id="statusesHide" class="hidden">Skrýt všechny</span>
 </p>
 <table id="statuses">
+	{var $dateLineDisplayed = false}
 	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
-		<tr class="summary">
+		<tr n:class="summary, $training->start < $now && !$dateLineDisplayed ? dateLine">
+			{var $dateLineDisplayed = $training->start < $now}
 			<td class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
 			<td class="dateCell">
 				<strong n:tag-if="$upcoming">
