@@ -220,7 +220,7 @@ trainings:
 	partnertrainings:
 		intro: "Rádi byste se naučili něco dalšího? Doporučuji absolvovat třeba tato **partnerská školení**:"
 		mysql: "\"Návrh a používání MySQL databáze\":[%s] a navazující \"Konfigurace a výkonnost MySQL\":[%s] od Antonína Faltýnka"
-		nette: "\"Vývoj webových aplikací v Nette Framework\":[%s] od Davida Grudla"
+		nette: "\"Vývoj webových aplikací v Nette Framework\":[%s] a "\"Mistrovství v Nette\":[%s] od Davida Grudla"
 		advanceddevelopment: "\"Pokročilý vývoj a testování aplikací\":[%s] od Václava Purcharta a Ondřeje Mirtese v rámci \"Medio Akademie\":[%s]"
 	files:
 		thankyou: "Díky za účast na školení %s dne %s."
