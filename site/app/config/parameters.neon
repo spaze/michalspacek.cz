@@ -55,7 +55,7 @@ parameters:
 			img-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com'
 			script-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com'
 			style-src: "%domain.contentSecurityPolicySelf% 'unsafe-inline'"
-			form-action: "'none'"
+			form-action: "https://export.highcharts.com"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
