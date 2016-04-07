@@ -55,7 +55,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 			'Do you even scan?',
 			'Wow. So heart. Much bleed.',
 			'<script>alert(\'XSS\');</script>',
-			\Nette\Utils\Html::el()->setHtml('<a href="https://www.youtube.com/watch?v=BROWqjuTM0g">admin</a>'),
+			\Nette\Utils\Html::el()->setHtml('<a href="https://www.youtube.com/watch?v=DLzxrzFCyOs">admin</a>'),
 		);
 		return $smallPrint[array_rand($smallPrint)];
 	}
