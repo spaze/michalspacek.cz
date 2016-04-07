@@ -24,12 +24,15 @@ $(document).ready(function() {
 	$('#chart').highcharts({
 		credits: {
 			text: 'heartbleed.michalspacek.cz',
-			href: 'http://heartbleed.michalspacek.cz',
+			href: 'https://heartbleed.michalspacek.cz',
 			position: {
 				align: 'left',
 				x: 100,
 				y: -90
 			}
+		},
+		exporting: {
+			url: 'https://export.highcharts.com'
 		},
 		chart: {
 			backgroundColor: '#DDD',
