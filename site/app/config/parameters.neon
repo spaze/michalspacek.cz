@@ -52,7 +52,7 @@ parameters:
 			report-uri: %reporting.contentSecurityPolicy%
 		heartbleed:
 			default-src: %domain.contentSecurityPolicySelf%
-			img-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com'
+			img-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com blob:'
 			script-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com'
 			style-src: "%domain.contentSecurityPolicySelf% 'unsafe-inline'"
 			form-action: "https://export.highcharts.com"
