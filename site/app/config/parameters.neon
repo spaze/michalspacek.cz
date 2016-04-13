@@ -31,7 +31,8 @@ parameters:
 			default-src: %domain.contentSecurityPolicySelf%
 			img-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com"
 			script-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com https://speakerdeck.com"
-			frame-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com https://slideslive.com'
+			child-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com https://slideslive.com'
+			frame-src: %contentSecurityPolicy.www.child-src%
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
 			form-action: "'self'"
 			upgrade-insecure-requests:
