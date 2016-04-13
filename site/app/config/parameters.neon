@@ -33,6 +33,7 @@ parameters:
 			script-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com https://speakerdeck.com"
 			child-src: 'https://www.slideshare.net https://speakerdeck.com https://www.youtube-nocookie.com https://player.vimeo.com https://slideslive.com'
 			frame-src: %contentSecurityPolicy.www.child-src%
+			frame-ancestors: "'none'"
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
 			form-action: "'self'"
 			upgrade-insecure-requests:
@@ -41,12 +42,14 @@ parameters:
 		admin:
 			default-src: %domain.contentSecurityPolicySelf%
 			img-src: '%domain.contentSecurityPolicySelf% data:'
+			frame-ancestors: "'none'"
 			form-action: "'self'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 		api:
 			default-src: %domain.contentSecurityPolicySelf%
+			frame-ancestors: "'none'"
 			form-action: "'none'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
@@ -56,6 +59,7 @@ parameters:
 			img-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com blob:'
 			script-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com'
 			style-src: "%domain.contentSecurityPolicySelf% 'unsafe-inline'"
+			frame-ancestors: "'none'"
 			form-action: "https://export.highcharts.com"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
@@ -64,6 +68,7 @@ parameters:
 			default-src: %domain.contentSecurityPolicySelf%
 			img-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com'
 			script-src: '%domain.contentSecurityPolicySelf% https://www.google-analytics.com'
+			frame-ancestors: "'none'"
 			form-action: "'self'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
