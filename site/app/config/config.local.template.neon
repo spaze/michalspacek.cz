@@ -26,24 +26,64 @@ parameters:
 
 	contentSecurityPolicy:
 		www:
-			img-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com data:"
-			script-src: "%domain.contentSecurityPolicySelf% https://www.google-analytics.com https://speakerdeck.com 'unsafe-inline' 'unsafe-eval'"
-			style-src: "%domain.contentSecurityPolicySelf% 'unsafe-inline'"
+			img-src:
+				- %domain.contentSecurityPolicySelf%
+				- https://www.google-analytics.com
+				- 'data:'
+			script-src:
+				- %domain.contentSecurityPolicySelf%
+				- https://www.google-analytics.com
+				- https://speakerdeck.com
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
+				- %domain.contentSecurityPolicySelf%
+				- "'unsafe-inline'"
 		admin:
-			script-src: "https://www.%domain.root% 'unsafe-inline' 'unsafe-eval'"
-			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			script-src:
+				- https://www.%domain.root%
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
+				- https://www.%domain.root%
+				- "'unsafe-inline'"
 		api:
-			img-src: "%domain.contentSecurityPolicySelf% data:"
-			script-src: "https://www.%domain.root% 'unsafe-inline' 'unsafe-eval'"
-			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			img-src:
+				- %domain.contentSecurityPolicySelf%
+				- 'data:'
+			script-src:
+				- https://www.%domain.root%
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
+				- https://www.%domain.root%
+				- "'unsafe-inline'"
 		heartbleed:
-			img-src: 'https://www.%domain.root% https://www.google-analytics.com data:'
-			script-src: "https://www.%domain.root% https://www.google-analytics.com 'unsafe-inline' 'unsafe-eval'"
-			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			img-src:
+				- https://www.%domain.root%
+				- https://www.google-analytics.com
+				- 'data:'
+			script-src:
+				- https://www.%domain.root%
+				- https://www.google-analytics.com
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
+				- https://www.%domain.root%
+				- "'unsafe-inline'"
 		upc:
-			img-src: 'https://www.%domain.root% https://www.google-analytics.com data:'
-			script-src: "https://www.%domain.root% https://www.google-analytics.com 'unsafe-inline' 'unsafe-eval'"
-			style-src: "https://www.%domain.root% 'unsafe-inline'"
+			img-src:
+				- https://www.%domain.root%
+				- https://www.google-analytics.com
+				- 'data:'
+			script-src:
+				- https://www.%domain.root%
+				- https://www.google-analytics.com
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
+				- https://www.%domain.root%
+				- "'unsafe-inline'"
 
 	returningUser:
 		cookie: cafebabe
