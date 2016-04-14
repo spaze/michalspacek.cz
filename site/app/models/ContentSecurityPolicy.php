@@ -11,7 +11,7 @@ class ContentSecurityPolicy
 {
 
 	/** @var string */
-	const DEFAULT_PRESENTER = 'default';
+	const DEFAULT_PRESENTER = 'homepage';
 
 	/** @var array of host => array of policies */
 	protected $policy = array();
@@ -28,27 +28,23 @@ class ContentSecurityPolicy
 	/**
 	 * Get Content-Security-Policy header value.
 	 *
-	 * @param  string $host
 	 * @param  string $presenter
 	 * @return string
 	 */
-	public function getHeader($host, $presenter)
+	public function getHeader($presenter)
 	{
-		if (!isset($this->policy[$host])) {
-			return false;
-		}
-
 		$policy = array();
-		foreach (($this->policy[$host][strtolower($presenter)] ?? $this->policy[$host][self::DEFAULT_PRESENTER]) as $directive => $sources) {
+		$presenter = strtolower(str_replace(':', '_', $presenter));
+		foreach (($this->policy[$presenter] ?? $this->policy[self::DEFAULT_PRESENTER]) as $directive => $sources) {
 			if (is_int($directive)) {
 				foreach ($sources as $key => $value) {
-					$policy[] = trim("$key " . $this->flattenSources($value));
+					$policy[$key] = trim("$key " . $this->flattenSources($value));
 				}
 			} else {
-				$policy[] = trim("$directive " . $this->flattenSources($sources));
+				$policy[$directive] = trim("$directive " . $this->flattenSources($sources));
 			}
 		}
-		return (isset($this->policy[$host]) ? implode('; ', $policy) : false);
+		return implode('; ', $policy);
 	}
 
 
@@ -61,7 +57,11 @@ class ContentSecurityPolicy
 	private function flattenSources($sources)
 	{
 		if (is_array($sources)) {
-			$sources = implode(' ', $sources);
+			$items = [];
+			array_walk_recursive($sources, function($value) use (&$items) {
+				$items[] = $value;
+			});
+			$sources = implode(' ', $items);
 		}
 		return $sources;
 	}

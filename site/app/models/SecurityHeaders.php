@@ -34,9 +34,6 @@ class SecurityHeaders
 	/** @var \MichalSpacekCz\Application\RouterFactory */
 	private $routerFactory;
 
-	/** @var string */
-	private $host;
-
 
 	/**
 	 * @param \Nette\Http\IRequest $httpRequest
@@ -105,7 +102,7 @@ class SecurityHeaders
 	 */
 	public function sendCspHeader($presenter)
 	{
-		$header = $this->contentSecurityPolicy->getHeader($this->getHost(), $presenter);
+		$header = $this->contentSecurityPolicy->getHeader($presenter);
 		if ($header !== false) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}
@@ -119,14 +116,12 @@ class SecurityHeaders
 	 */
 	private function getHost()
 	{
-		if ($this->host === null) {
-			if ($this->httpRequest->getUrl()->getHost() === $this->rootDomain) {
-				$this->host = $this->defaultDomain;
-			} else {
-				$this->host = str_replace(".{$this->rootDomain}", '', $this->httpRequest->getUrl()->getHost());
-			}
+		if ($this->httpRequest->getUrl()->getHost() === $this->rootDomain) {
+			$host = $this->defaultDomain;
+		} else {
+			$host = str_replace(".{$this->rootDomain}", '', $this->httpRequest->getUrl()->getHost());
 		}
-		return $this->host;
+		return $host;
 	}
 
 
