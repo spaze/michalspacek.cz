@@ -34,6 +34,9 @@ class SecurityHeaders
 	/** @var \MichalSpacekCz\Application\RouterFactory */
 	private $routerFactory;
 
+	/** @var string */
+	private $host;
+
 
 	/**
 	 * @param \Nette\Http\IRequest $httpRequest
@@ -79,21 +82,11 @@ class SecurityHeaders
 
 	public function sendHeaders()
 	{
-		if ($this->httpRequest->getUrl()->getHost() === $this->rootDomain) {
-			$host = $this->defaultDomain;
-		} else {
-			$host = str_replace(".{$this->rootDomain}", '', $this->httpRequest->getUrl()->getHost());
-		}
-
 		if ($this->httpRequest->isSecured()) {
 			$this->httpResponse->setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 		}
 
-		$header = $this->contentSecurityPolicy->getHeader($host);
-		if ($header !== false) {
-			$this->httpResponse->setHeader('Content-Security-Policy', $header);
-		}
-
+		$host = $this->getHost();
 		$header = $this->publicKeyPins->getHeader($host);
 		if ($header !== false) {
 			$this->httpResponse->setHeader('Public-Key-Pins-Report-Only', $header);
@@ -104,6 +97,36 @@ class SecurityHeaders
 				$this->httpResponse->setHeader($name, $value);
 			}
 		}
+	}
+
+
+	/**
+	 * Send Content Security Policy header.
+	 */
+	public function sendCspHeader($presenter)
+	{
+		$header = $this->contentSecurityPolicy->getHeader($this->getHost(), $presenter);
+		if ($header !== false) {
+			$this->httpResponse->setHeader('Content-Security-Policy', $header);
+		}
+	}
+
+
+	/**
+	 * Get host.
+	 *
+	 * @return string
+	 */
+	private function getHost()
+	{
+		if ($this->host === null) {
+			if ($this->httpRequest->getUrl()->getHost() === $this->rootDomain) {
+				$this->host = $this->defaultDomain;
+			} else {
+				$this->host = str_replace(".{$this->rootDomain}", '', $this->httpRequest->getUrl()->getHost());
+			}
+		}
+		return $this->host;
 	}
 
 

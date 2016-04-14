@@ -28,6 +28,9 @@ class Bootstrap extends \Nette\Object
 	/** @var \Nette\Http\Response */
 	private $httpResponse;
 
+	/** @var \MichalSpacekCz\SecurityHeaders */
+	private $securityHeaders;
+
 	/** @var string */
 	private $appDir;
 
@@ -81,12 +84,16 @@ class Bootstrap extends \Nette\Object
 		$this->httpRequest = $this->container->getByType(\Nette\Http\IRequest::class);
 		$this->httpResponse = $this->container->getByType(\Nette\Http\IResponse::class);
 
-		$securityHeaders = $this->container->getByType(\MichalSpacekCz\SecurityHeaders::class);
-		$securityHeaders->sendHeaders();
+		$this->securityHeaders = $this->container->getByType(\MichalSpacekCz\SecurityHeaders::class);
+		$this->securityHeaders->sendHeaders();
 
 		$this->redirectToSecure();
 
-		$this->container->getByType(\Nette\Application\Application::class)->run();
+		$application = $this->container->getByType(\Nette\Application\Application::class);
+		$application->onRequest[] = function(\Nette\Application\Application $sender, \Nette\Application\Request $request) {
+			$this->securityHeaders->sendCspHeader($request->getPresenterName());
+		};
+		$application->run();
 	}
 
 
@@ -116,6 +123,7 @@ class Bootstrap extends \Nette\Object
 		$fqdn = $this->container->getParameters()['domain']['fqdn'];
 		$uri = $_SERVER['REQUEST_URI'];
 		if ($_SERVER['HTTP_HOST'] !== $fqdn) {
+			$this->securityHeaders->sendCspHeader(\MichalSpacekCz\ContentSecurityPolicy::DEFAULT_PRESENTER);
 			$this->httpResponse->redirect("https://{$fqdn}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
 			exit();
 		}
