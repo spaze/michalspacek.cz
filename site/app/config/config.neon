@@ -20,6 +20,7 @@ session:
 	hash_bits_per_character: 6
 	expiration: 14 days
 	use_strict_mode: true
+	cookie_secure: true  # Overwritten by setCookieParameters() in session service setup
 
 translation:
 	default: cs_CZ
