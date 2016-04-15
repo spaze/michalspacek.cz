@@ -19,6 +19,12 @@ class Bootstrap extends \Nette\Object
 	/** @var string */
 	const MODE_DEVELOPMENT = 'development';
 
+	/** @var string */
+	const DEFAULT_PRESENTER = 'Homepage';
+
+	/** @var string */
+	const DEFAULT_ACTION = \Nette\Application\UI\Presenter::DEFAULT_ACTION;
+
 	/** @var \Nette\Http\Request */
 	private $httpRequest;
 
@@ -91,7 +97,7 @@ class Bootstrap extends \Nette\Object
 
 		$application = $this->container->getByType(\Nette\Application\Application::class);
 		$application->onRequest[] = function(\Nette\Application\Application $sender, \Nette\Application\Request $request) {
-			$this->securityHeaders->sendCspHeader($request->getPresenterName());
+			$this->securityHeaders->sendCspHeader($request->getPresenterName(), $request->getParameter(\Nette\Application\UI\Presenter::ACTION_KEY));
 		};
 		$application->run();
 	}
@@ -123,7 +129,7 @@ class Bootstrap extends \Nette\Object
 		$fqdn = $this->container->getParameters()['domain']['fqdn'];
 		$uri = $_SERVER['REQUEST_URI'];
 		if ($_SERVER['HTTP_HOST'] !== $fqdn) {
-			$this->securityHeaders->sendCspHeader(\MichalSpacekCz\ContentSecurityPolicy::DEFAULT_PRESENTER);
+			$this->securityHeaders->sendCspHeader(self::DEFAULT_PRESENTER, self::DEFAULT_ACTION);
 			$this->httpResponse->redirect("https://{$fqdn}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
 			exit();
 		}

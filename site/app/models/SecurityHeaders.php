@@ -99,10 +99,13 @@ class SecurityHeaders
 
 	/**
 	 * Send Content Security Policy header.
+	 *
+	 * @param  string $presenter
+	 * @param  string $action
 	 */
-	public function sendCspHeader($presenter)
+	public function sendCspHeader($presenter, $action)
 	{
-		$header = $this->contentSecurityPolicy->getHeader($presenter);
+		$header = $this->contentSecurityPolicy->getHeader($presenter, $action);
 		if ($header !== false) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}

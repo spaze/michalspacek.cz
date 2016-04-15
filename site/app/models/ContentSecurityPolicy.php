@@ -10,9 +10,6 @@ namespace MichalSpacekCz;
 class ContentSecurityPolicy
 {
 
-	/** @var string */
-	const DEFAULT_PRESENTER = 'homepage';
-
 	/** @var array of host => array of policies */
 	protected $policy = array();
 
@@ -29,9 +26,10 @@ class ContentSecurityPolicy
 	 * Get Content-Security-Policy header value.
 	 *
 	 * @param  string $presenter
+	 * @param  string $action
 	 * @return string
 	 */
-	public function getHeader($presenter)
+	public function getHeader($presenter, $action)
 	{
 		$policy = array();
 		$presenter = strtolower(str_replace(':', '_', $presenter));
