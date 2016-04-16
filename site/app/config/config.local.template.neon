@@ -24,7 +24,7 @@ parameters:
 			url: http://echo.local/
 			note: %notifier.vrana.successMarker%
 
-	contentSecurityPolicy: # list values are added to the existing values, they do not replace them
+	contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them
 		default_default:
 			img-src:
 				- 'data:'
@@ -32,46 +32,38 @@ parameters:
 				- "'unsafe-inline'"
 				- "'unsafe-eval'"
 			style-src:
-				- %domain.contentSecurityPolicySelf%
 				- "'unsafe-inline'"
 		admin_default_default:
 			img-src:
-				- %domain.contentSecurityPolicySelf%
 				- 'data:'
 			script-src:
-				- %domain.contentSecurityPolicySelf%
 				- "'unsafe-inline'"
 				- "'unsafe-eval'"
 			style-src:
-				- %domain.contentSecurityPolicySelf%
 				- "'unsafe-inline'"
-		admin_info_php:
-			- %contentSecurityPolicy.admin_default_default%
 		api_default_default:
 			img-src:
-				- %domain.contentSecurityPolicySelf%
 				- 'data:'
 			script-src:
-				- %domain.contentSecurityPolicySelf%
 				- "'unsafe-inline'"
 				- "'unsafe-eval'"
 			style-src:
-				- %domain.contentSecurityPolicySelf%
 				- "'unsafe-inline'"
-		heartbleed_default_default:
-			img-src:
-				- 'data:'
-			script-src:
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
-		upc_default_default:
+		webleed_default_default:
 			img-src:
 				- 'data:'
 			script-src:
 				- "'unsafe-inline'"
 				- "'unsafe-eval'"
 			style-src:
-				- %domain.contentSecurityPolicySelf%
+				- "'unsafe-inline'"
+		upckeys_default_default:
+			img-src:
+				- 'data:'
+			script-src:
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
 				- "'unsafe-inline'"
 
 	returningUser:

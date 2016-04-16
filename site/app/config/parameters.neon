@@ -28,13 +28,15 @@ parameters:
 		xXssProtection: https://plz.report-uri.io/
 	contentSecurityPolicy:
 		default_default:
-			default-src: %domain.contentSecurityPolicySelf%
+			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
 				- https://www.google-analytics.com
 			script-src:
 				- %domain.contentSecurityPolicySelf%
 				- https://www.google-analytics.com
+			style-src:
+				- %domain.contentSecurityPolicySelf%
 			frame-ancestors: "'none'"
 			form-action: "'self'"
 			upgrade-insecure-requests:
@@ -62,7 +64,13 @@ parameters:
 			- %contentSecurityPolicy.default_default%
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
 		admin_default_default:
-			default-src: %domain.contentSecurityPolicySelf%
+			default-src: "'none'"
+			img-src:
+				- %domain.contentSecurityPolicySelf%
+			script-src:
+				- %domain.contentSecurityPolicySelf%
+			style-src:
+				- %domain.contentSecurityPolicySelf%
 			frame-ancestors: "'none'"
 			form-action: "'self'"
 			upgrade-insecure-requests:
@@ -74,14 +82,20 @@ parameters:
 				- %domain.contentSecurityPolicySelf%
 				- 'data:'
 		api_default_default:
-			default-src: %domain.contentSecurityPolicySelf%
+			default-src: "'none'"
+			img-src:
+				- %domain.contentSecurityPolicySelf%
+			script-src:
+				- %domain.contentSecurityPolicySelf%
+			style-src:
+				- %domain.contentSecurityPolicySelf%
 			frame-ancestors: "'none'"
 			form-action: "'none'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 		webleed_default_default:
-			default-src: %domain.contentSecurityPolicySelf%
+			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
 				- https://www.google-analytics.com
@@ -98,13 +112,15 @@ parameters:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 		upckeys_default_default:
-			default-src: %domain.contentSecurityPolicySelf%
+			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
 				- https://www.google-analytics.com
 			script-src:
 				- %domain.contentSecurityPolicySelf%
 				- https://www.google-analytics.com
+			style-src:
+				- %domain.contentSecurityPolicySelf%
 			frame-ancestors: "'none'"
 			form-action: "'self'"
 			upgrade-insecure-requests:
