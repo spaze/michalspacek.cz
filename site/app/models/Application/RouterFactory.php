@@ -151,8 +151,7 @@ class RouterFactory
 				'presenter' => [Route::VALUE => $defaultPresenter],
 				'action' => [Route::VALUE => $defaultAction],
 			);
-			$host = $module;
-			switch ($host) {
+			switch ($module) {
 				case self::API:
 					$metadata['module'] = 'Api';
 					break;
@@ -175,7 +174,7 @@ class RouterFactory
 					}
 					break;
 			}
-			$this->addToRouter(new Route("//{$host}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata, $flags), $locale, $module);
+			$this->addToRouter(new Route("//{$module}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata, $flags), $locale, $module);
 		}
 	}
 
