@@ -25,7 +25,7 @@ parameters:
 			note: %notifier.vrana.successMarker%
 
 	contentSecurityPolicy: # list values are added to the existing values, they do not replace them
-		homepage:
+		default_default:
 			img-src:
 				- 'data:'
 			script-src:
@@ -34,20 +34,7 @@ parameters:
 			style-src:
 				- %domain.contentSecurityPolicySelf%
 				- "'unsafe-inline'"
-		admin_homepage:
-			img-src:
-				- %domain.contentSecurityPolicySelf%
-				- 'data:'
-			script-src:
-				- %domain.contentSecurityPolicySelf%
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
-			style-src:
-				- %domain.contentSecurityPolicySelf%
-				- "'unsafe-inline'"
-		admin_info:
-			- %contentSecurityPolicy.admin_homepage%
-		api_homepage:
+		admin_default_default:
 			img-src:
 				- %domain.contentSecurityPolicySelf%
 				- 'data:'
@@ -58,13 +45,26 @@ parameters:
 			style-src:
 				- %domain.contentSecurityPolicySelf%
 				- "'unsafe-inline'"
-		heartbleed_homepage:
+		admin_info_php:
+			- %contentSecurityPolicy.admin_default_default%
+		api_default_default:
+			img-src:
+				- %domain.contentSecurityPolicySelf%
+				- 'data:'
+			script-src:
+				- %domain.contentSecurityPolicySelf%
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
+				- %domain.contentSecurityPolicySelf%
+				- "'unsafe-inline'"
+		heartbleed_default_default:
 			img-src:
 				- 'data:'
 			script-src:
 				- "'unsafe-inline'"
 				- "'unsafe-eval'"
-		upc_homepage:
+		upc_default_default:
 			img-src:
 				- 'data:'
 			script-src:

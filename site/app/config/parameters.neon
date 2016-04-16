@@ -27,7 +27,7 @@ parameters:
 		publicKeyPins: https://plz.report-uri.io/r/default/hpkp/reportOnly
 		xXssProtection: https://plz.report-uri.io/
 	contentSecurityPolicy:
-		homepage:
+		default_default:
 			default-src: %domain.contentSecurityPolicySelf%
 			img-src:
 				- %domain.contentSecurityPolicySelf%
@@ -40,10 +40,10 @@ parameters:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		talks:
-			- %contentSecurityPolicy.homepage%
+		talks_talk:
+			- %contentSecurityPolicy.default_default%
 			script-src:
-				- %contentSecurityPolicy.homepage.script-src%
+				- %contentSecurityPolicy.default_default.script-src%
 				- https://speakerdeck.com
 			child-src:
 				- https://www.slideshare.net
@@ -51,36 +51,36 @@ parameters:
 				- https://www.youtube-nocookie.com
 				- https://player.vimeo.com
 				- https://slideslive.com
-			frame-src: %contentSecurityPolicy.talks.child-src%
-		interviews:
-			- %contentSecurityPolicy.homepage%
+			frame-src: %contentSecurityPolicy.talks_talk.child-src%
+		interviews_interview:
+			- %contentSecurityPolicy.default_default%
 			child-src:
 				- https://www.youtube-nocookie.com
 				- https://player.vimeo.com
-			frame-src: %contentSecurityPolicy.interviews.child-src%
-		trainings:
-			- %contentSecurityPolicy.homepage%
+			frame-src: %contentSecurityPolicy.interviews_interview.child-src%
+		trainings_training:
+			- %contentSecurityPolicy.default_default%
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
-		admin_homepage:
+		admin_default_default:
 			default-src: %domain.contentSecurityPolicySelf%
 			frame-ancestors: "'none'"
 			form-action: "'self'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		admin_info:
-			- %contentSecurityPolicy.admin_homepage%
+		admin_info_php:
+			- %contentSecurityPolicy.admin_default_default%
 			img-src:
 				- %domain.contentSecurityPolicySelf%
 				- 'data:'
-		api_homepage:
+		api_default_default:
 			default-src: %domain.contentSecurityPolicySelf%
 			frame-ancestors: "'none'"
 			form-action: "'none'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		webleed_homepage:
+		webleed_default_default:
 			default-src: %domain.contentSecurityPolicySelf%
 			img-src:
 				- %domain.contentSecurityPolicySelf%
@@ -97,7 +97,7 @@ parameters:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		upckeys_homepage:
+		upckeys_default_default:
 			default-src: %domain.contentSecurityPolicySelf%
 			img-src:
 				- %domain.contentSecurityPolicySelf%

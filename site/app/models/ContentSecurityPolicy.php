@@ -10,6 +10,9 @@ namespace MichalSpacekCz;
 class ContentSecurityPolicy
 {
 
+	/** @var string */
+	const DEFAULT_PART = 'default';
+
 	/** @var array of host => array of policies */
 	protected $policy = array();
 
@@ -32,8 +35,7 @@ class ContentSecurityPolicy
 	public function getHeader($presenter, $action)
 	{
 		$policy = array();
-		$presenter = strtolower(str_replace(':', '_', $presenter));
-		foreach (($this->policy[$presenter] ?? $this->policy[self::DEFAULT_PRESENTER]) as $directive => $sources) {
+		foreach ($this->policy[$this->findConfigKey($presenter, $action)] as $directive => $sources) {
 			if (is_int($directive)) {
 				foreach ($sources as $key => $value) {
 					$policy[$key] = trim("$key " . $this->flattenSources($value));
@@ -62,6 +64,27 @@ class ContentSecurityPolicy
 			$sources = implode(' ', $items);
 		}
 		return $sources;
+	}
+
+
+	/**
+	 * Find CPS policy config key.
+	 *
+	 * @param  string $presenter
+	 * @param  string $action
+	 * @return string
+	 */
+	private function findConfigKey($presenter, $action)
+	{
+		$parts = explode(':', strtolower($presenter));
+		$parts[] = strtolower($action);
+		for ($i = count($parts) - 1; $i >= 0; $i--) {
+			if (isset($this->policy[implode('_', $parts)])) {
+				break;
+			}
+			$parts[$i] = self::DEFAULT_PART;
+		}
+		return implode('_', $parts);
 	}
 
 }
