@@ -83,12 +83,6 @@ parameters:
 				- 'data:'
 		api_default_default:
 			default-src: "'none'"
-			img-src:
-				- %domain.contentSecurityPolicySelf%
-			script-src:
-				- %domain.contentSecurityPolicySelf%
-			style-src:
-				- %domain.contentSecurityPolicySelf%
 			frame-ancestors: "'none'"
 			form-action: "'none'"
 			upgrade-insecure-requests:
