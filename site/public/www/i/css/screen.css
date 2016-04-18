@@ -142,10 +142,11 @@ abbr.dtstart, abbr.dtend { border: none; }
     margin-left: -6px;
     margin-right: 2px;
 }
-#projekty h3 {
+#projekty div {
     float: left;
     line-height: 32px;
     margin: 16px 0px;
+    color: #595959;
 }
 #projekty ul {
     float: left;
