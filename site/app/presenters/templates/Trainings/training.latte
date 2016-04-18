@@ -19,8 +19,8 @@
 	<legend>{_messages.label.participant}</legend>
 	<table>
 		<tr>
-			<th>{label name /}</th><td>{input name}</td>
-			<th>{label email /}</th><td>{input email}</td>
+			<th scope="row" id="th-name">{label name /}</th><td headers="th-name">{input name}</td>
+			<th scope="row" id="th-email">{label email /}</th><td headers="th-email">{input email}</td>
 		</tr>
 		<tr id="equipment">
 			<td colspan="4"><div><strong>{label equipment /}</strong></div> {input equipment}</td>
@@ -31,11 +31,11 @@
 	<legend>{_messages.label.companydetails} <small>({_messages.label.optional})</small></legend>
 	<table id="company">
 		<tr>
-			<th>{label country /}</th><td colspan="3">{input country}</td>
+			<th scope="row" id="th-country">{label country /}</th><td colspan="3" headers="th-country">{input country}</td>
 		</tr>
 		<tr>
-			<th>{label companyId /}</th>
-			<td class="short">
+			<th scope="row" id="th-id">{label companyId /}</th>
+			<td class="short" headers="th-id">
 				{input companyId}
 				<small id="loadDataControls" n:if="$loadCompanyDataVisible">
 					<span id="loadData" data-url="{link :Api:Company:}"><a href="" title="{_messages.trainings.loaddata.title}">{_messages.trainings.loaddata.loadrest}</a></span>
@@ -46,15 +46,15 @@
 					<span id="errorCountryCompanyMissing">{_messages.trainings.loaddata.countrycompanymissing}</span>
 				</small>
 			</td>
-			<th class="short">{label companyTaxId /}</th><td>{input companyTaxId}</td>
+			<th class="short" scope="row" id="th-taxid">{label companyTaxId /}</th><td headers="th-taxid">{input companyTaxId}</td>
 		</tr>
 		<tr>
-			<th>{label company /}</th><td>{input company}</td>
-			<th class="short">{label street /}</th><td>{input street}</td>
+			<th scope="row" id="th-company">{label company /}</th><td headers="th-company">{input company}</td>
+			<th class="short" scope="row" id="th-street">{label street /}</th><td headers="th-street">{input street}</td>
 		</tr>
 		<tr>
-			<th>{label city /}</th><td>{input city}</td>
-			<th class="short">{label zip /}</th><td>{input zip}</td>
+			<th scope="row" id="th-city">{label city /}</th><td headers="th-city">{input city}</td>
+			<th class="short" scope="row" id="th-zip">{label zip /}</th><td headers="th-zip">{input zip}</td>
 		</tr>
 	</table>
 </fieldset>
@@ -76,8 +76,8 @@
 	<legend>{_messages.label.participant}</legend>
 	<table>
 		<tr>
-			<th>{label name /}</th><td>{input name}</td>
-			<th>{label email /}</th><td>{input email}</td>
+			<th scope="row" id="th-name">{label name /}</th><td headers="th-name">{input name}</td>
+			<th scope="row" id="th-email">{label email /}</th><td headers="th-email">{input email}</td>
 		</tr>
 	</table>
 </fieldset>

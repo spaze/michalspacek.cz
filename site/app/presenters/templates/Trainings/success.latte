@@ -22,8 +22,8 @@
 	<legend>{_messages.label.participant}</legend>
 	<table>
 		<tr>
-			<th>{$form[name]->caption}</th><td>{$form[name]->value}</td>
-			<th>{$form[email]->caption}</th><td>{$form[email]->value}</td>
+			<th scope="row" id="th-name">{$form[name]->caption}</th><td headers="th-name">{$form[name]->value}</td>
+			<th scope="row" id="th-email">{$form[email]->caption}</th><td headers="th-email">{$form[email]->value}</td>
 		</tr>
 		<tr id="equipment">
 			<td colspan="4"><div><strong>{$form[equipment]->caption}</strong></div> {$form[equipment]->selectedItem}</td>
@@ -34,19 +34,19 @@
 	<legend>{_messages.label.companydetails} <small>({_messages.label.optional})</small></legend>
 	<table>
 		<tr>
-			<th>{$form[companyId]->caption}</th><td>{$form[companyId]->value}</td>
-			<th>{$form[companyTaxId]->caption}</th><td>{$form[companyTaxId]->value}</td>
+			<th scope="row" id="th-id">{$form[companyId]->caption}</th><td headers="th-id">{$form[companyId]->value}</td>
+			<th scope="row" id="th-taxid">{$form[companyTaxId]->caption}</th><td headers="th-taxid">{$form[companyTaxId]->value}</td>
 		</tr>
 		<tr>
-			<th>{$form[company]->caption}</th><td>{$form[company]->value}</td>
-			<th>{$form[street]->caption}</th><td>{$form[street]->value}</td>
+			<th scope="row" id="th-company">{$form[company]->caption}</th><td headers="th-company">{$form[company]->value}</td>
+			<th scope="row" id="th-street">{$form[street]->caption}</th><td headers="th-street">{$form[street]->value}</td>
 		</tr>
 		<tr>
-			<th>{$form[city]->caption}</th><td>{$form[city]->value}</td>
-			<th>{$form[zip]->caption}</th><td>{$form[zip]->value}</td>
+			<th scope="row" id="th-city">{$form[city]->caption}</th><td headers="th-city">{$form[city]->value}</td>
+			<th scope="row" id="th-zip">{$form[zip]->caption}</th><td headers="th-zip">{$form[zip]->value}</td>
 		</tr>
 		<tr>
-			<th>{$form[country]->caption}</th><td>{$form[country]->selectedItem}</td>
+			<th scope="row" id="th-country">{$form[country]->caption}</th><td headers="th-country">{$form[country]->selectedItem}</td>
 		</tr>
 	</table>
 </fieldset>
