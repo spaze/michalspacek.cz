@@ -23,7 +23,7 @@ $(document).ready(function() {
 				country: $('#frm-application-country').val(),
 				companyId: $('#frm-application-companyId').val().replace(/ /g, ''),
 			},
-			timeout: 5000
+			timeout: 10000
 		});
 		load.done(function(data) {
 			$('#loadDataControls span').hide();
