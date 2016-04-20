@@ -172,10 +172,14 @@ class Talks
 
 	private function format(\Nette\Database\Row $row)
 	{
-		$format = array('title', 'description', 'event', 'transcript');
-		foreach ($format as $item) {
+		foreach (['title', 'event'] as $item) {
 			if (isset($row[$item])) {
 				$row[$item] = $this->texyFormatter->format($row[$item]);
+			}
+		}
+		foreach (['description', 'transcript'] as $item) {
+			if (isset($row[$item])) {
+				$row[$item] = $this->texyFormatter->formatBlock($row[$item]);
 			}
 		}
 	}

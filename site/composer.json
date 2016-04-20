@@ -14,7 +14,7 @@
 		"latte/latte": "~2.3",
 		"tracy/tracy": "~2.3",
 		"texy/texy": "~2.8",
-		"spaze/netxten": "~0.4",
+		"spaze/netxten": "~0.5",
 		"kdyby/translation": "~2.0",
 		"defuse/php-encryption": "dev-master"
 	},

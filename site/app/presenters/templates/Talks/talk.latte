@@ -19,7 +19,7 @@
 <p n:if="$videoHref"><small><a href="{$videoHref}"><span class="icon icon16 video" title="{_messages.label.recording}"></span>{$videoHref}</a></small></p>
 
 <h2 n:if="$description || $href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
-<p n:if="$description">{$description}</p>
+{if $description}{$description}{/if}
 <p n:if="$href"><a href="{$href}">{_messages.talks.detailevent}</a></p>
 
 <h2 id="{_html.id.eventdate}">{_messages.talks.dateevent}</h2>
@@ -27,7 +27,7 @@
 
 {if $transcript}
 	<hr>
-	<p>{$transcript}</p>
+	{$transcript}
 {/if}
 
 {/define}
