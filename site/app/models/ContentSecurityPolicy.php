@@ -11,7 +11,7 @@ class ContentSecurityPolicy
 {
 
 	/** @var string */
-	const DEFAULT_PART = 'default';
+	const DEFAULT_PART = 'DEFAULT';
 
 	/** @var array of host => array of policies */
 	protected $policy = array();

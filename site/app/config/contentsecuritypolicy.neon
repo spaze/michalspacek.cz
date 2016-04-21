@@ -1,6 +1,6 @@
 parameters:
 	contentSecurityPolicy:
-		default_default:
+		DEFAULT_DEFAULT:
 			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
@@ -16,9 +16,9 @@ parameters:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 		talks_talk:
-			- %contentSecurityPolicy.default_default%
+			- %contentSecurityPolicy.DEFAULT_DEFAULT%
 			script-src:
-				- %contentSecurityPolicy.default_default.script-src%
+				- %contentSecurityPolicy.DEFAULT_DEFAULT.script-src%
 				- https://speakerdeck.com
 			child-src:
 				- https://www.slideshare.net
@@ -28,15 +28,15 @@ parameters:
 				- https://slideslive.com
 			frame-src: %contentSecurityPolicy.talks_talk.child-src%
 		interviews_interview:
-			- %contentSecurityPolicy.default_default%
+			- %contentSecurityPolicy.DEFAULT_DEFAULT%
 			child-src:
 				- https://www.youtube-nocookie.com
 				- https://player.vimeo.com
 			frame-src: %contentSecurityPolicy.interviews_interview.child-src%
 		trainings_training:
-			- %contentSecurityPolicy.default_default%
+			- %contentSecurityPolicy.DEFAULT_DEFAULT%
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
-		admin_default_default:
+		admin_DEFAULT_DEFAULT:
 			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
@@ -50,18 +50,18 @@ parameters:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 		admin_info_php:
-			- %contentSecurityPolicy.admin_default_default%
+			- %contentSecurityPolicy.admin_DEFAULT_DEFAULT%
 			img-src:
 				- %domain.contentSecurityPolicySelf%
 				- 'data:'
-		api_default_default:
+		api_DEFAULT_DEFAULT:
 			default-src: "'none'"
 			frame-ancestors: "'none'"
 			form-action: "'none'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		webleed_default_default:
+		webleed_DEFAULT_DEFAULT:
 			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
@@ -78,7 +78,7 @@ parameters:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		upckeys_default_default:
+		upckeys_DEFAULT_DEFAULT:
 			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
