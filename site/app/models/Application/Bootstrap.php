@@ -102,6 +102,7 @@ class Bootstrap extends \Nette\Object
 		return array_unique(array(
 			$this->appDir . '/config/extensions.neon',
 			$this->appDir . '/config/config.neon',
+			$this->appDir . '/config/contentsecuritypolicy.neon',
 			$this->appDir . '/config/parameters.neon',
 			$this->appDir . '/config/presenters.neon',
 			$this->appDir . '/config/services.neon',
