@@ -13,14 +13,19 @@ class ContentSecurityPolicy
 	/** @var string */
 	const DEFAULT_PART = 'DEFAULT';
 
-	/** @var array of host => array of policies */
+	/** @var array of key => array of policies */
 	protected $policy = array();
 
 
-	public function setPolicy($policy)
+	/**
+	 * Set policy.
+	 *
+	 * @param array (key => array of policies)
+	 */
+	public function setPolicy(array $policy)
 	{
-		foreach ($policy as $host => $sources) {
-			$this->policy[$host] = $sources;
+		foreach ($policy as $key => $sources) {
+			$this->policy[$key] = $sources;
 		}
 	}
 
