@@ -40,6 +40,9 @@ class Mails
 	 */
 	protected $templatesDir;
 
+	/** @var string */
+	protected $emailFrom;
+
 
 	public function __construct(
 		\Nette\Mail\IMailer $mailer,

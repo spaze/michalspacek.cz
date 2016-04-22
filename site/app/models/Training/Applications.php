@@ -29,8 +29,6 @@ class Applications
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
-	protected $emailFrom;
-
 
 	public function __construct(
 		\Nette\Database\Context $context,
