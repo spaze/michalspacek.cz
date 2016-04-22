@@ -43,6 +43,9 @@ class Mails
 	/** @var string */
 	protected $emailFrom;
 
+	/** @var string */
+	protected $phoneNumber;
+
 
 	public function __construct(
 		\Nette\Mail\IMailer $mailer,
@@ -95,6 +98,12 @@ class Mails
 	public function setEmailFrom($from)
 	{
 		$this->emailFrom = $from;
+	}
+
+
+	public function setPhoneNumber($number)
+	{
+		$this->phoneNumber = $number;
 	}
 
 
@@ -197,6 +206,7 @@ class Mails
 		$template->setFile($this->templatesDir . 'admin/reminder.latte');
 		$template->application = $application;
 		$template->venue = $this->trainingVenues->get($application->venueAction);
+		$template->phoneNumber = $this->phoneNumber;
 		$template->additional = $additional;
 
 		$start = $this->netxtenHelpers->localDate($application->trainingStart, 'cs', 'j. n. Y');

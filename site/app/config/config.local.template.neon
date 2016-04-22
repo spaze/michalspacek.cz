@@ -19,6 +19,9 @@ parameters:
 			cz: michalspacek.cz.local
 			com: michalspacek.com.local
 
+	contact:
+		phoneNumber: 123456789
+
 	notifier:
 		vrana:
 			url: http://echo.local/
