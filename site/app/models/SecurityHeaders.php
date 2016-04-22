@@ -25,7 +25,7 @@ class SecurityHeaders
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
 
-	/** @var ContentSecurityPolicy */
+	/** @var \Spaze\CspConfig\ContentSecurityPolicy */
 	protected $contentSecurityPolicy;
 
 	/** @var PublicKeyPins */
@@ -38,13 +38,13 @@ class SecurityHeaders
 	/**
 	 * @param \Nette\Http\IRequest $httpRequest
 	 * @param \Nette\Http\IResponse $httpResponse
-	 * @param \MichalSpacek\ContentSecurityPolicy $contentSecurityPolicy
+	 * @param \Spaze\CspConfig\ContentSecurityPolicy $contentSecurityPolicy
 	 * @param \MichalSpacek\PublicKeyPins $publicKeyPins
 	 */
 	public function __construct(
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
-		ContentSecurityPolicy $contentSecurityPolicy,
+		\Spaze\CspConfig\ContentSecurityPolicy $contentSecurityPolicy,
 		PublicKeyPins $publicKeyPins,
 		\MichalSpacekCz\Application\RouterFactory $routerFactory
 	)

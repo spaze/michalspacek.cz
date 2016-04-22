@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8a35b5f1fe9298457ac1926fd47caba8",
-    "content-hash": "f5e4ec00da15385259104d072aa02b87",
+    "hash": "4371fd7f832bbf1f6064a3055dd03ed8",
+    "content-hash": "03447f8aa3fcc65cf826eb9be79f028f",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1113,6 +1113,40 @@
             "time": "2012-12-21 11:40:51"
         },
         {
+            "name": "spaze/csp-config",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/csp-config.git",
+                "reference": "37c013d749c453677edc3a75d0133a857b0b3bf3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/37c013d749c453677edc3a75d0133a857b0b3bf3",
+                "reference": "37c013d749c453677edc3a75d0133a857b0b3bf3",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spaze\\CspConfig\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.cz"
+                }
+            ],
+            "description": "Build Content Security Policy from a config file",
+            "time": "2016-04-22 03:28:22"
+        },
+        {
             "name": "spaze/netxten",
             "version": "v0.5.0",
             "source": {
@@ -1491,6 +1525,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "spaze/csp-config": 20,
         "defuse/php-encryption": 20
     },
     "prefer-stable": false,

@@ -69,7 +69,7 @@ services:
 		setup:
 			- setRate(%vatRate%)
 	contentSecurityPolicy:
-		class: \MichalSpacekCz\ContentSecurityPolicy
+		class: \Spaze\CspConfig\ContentSecurityPolicy
 		setup:
 			- setPolicy(%contentSecurityPolicy%)
 	publicKeyPins:
