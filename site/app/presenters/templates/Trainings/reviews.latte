@@ -1,10 +1,15 @@
-{define #content}
 {define #menu}
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Trainings:">{_messages.label.trainings}</a>
 &raquo; <a n:href="Trainings:training $name">{$title}</a>
 {/define}
 
+{define #itemReview}
+	<p><strong>{$review->name}{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
+	<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
+{/define}
+
+{define #content}
 <p>
 	{$description}
 	{capture $link}Trainings:training#{_html.id.application}{/capture}
@@ -14,8 +19,7 @@
 	<div id="{_html.id.reviews}">
 	<h2>{_messages.label.trainingreviews}</h2>
 	{foreach $reviews as $review}
-		<p><strong>{$review->name}{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
-		<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
+		{include #itemReview}
 	{/foreach}
 	</div>
 	<p>

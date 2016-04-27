@@ -5,7 +5,8 @@
 {/define}
 
 {define #content}
-{includeblock "../Trainings/default.latte"}
+{includeblock "default.latte"}
+{includeblock "reviews.latte"}
 <p>{$description}</p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form application class => aligned}
@@ -58,7 +59,19 @@
 	<a n:href="$link $name">{_messages.trainings.addanother}</a>
 </p>
 
+<h2>{_messages.label.othertrainings}</h2>
 <p>{_messages.trainings.cometoothertrainings}</p>
 {include #list}
+
+{if $reviews}
+<hr />
+<div id="{_html.id.reviews}">
+<h2>{_messages.label.participantsfeedback}</h2>
+{foreach $reviews as $review}
+	{include #itemReview, review => $review}
+{/foreach}
+</div>
+<p><a n:href="Trainings:reviews $name">{_messages.trainings.allreviews}</a></p>
+{/if}
 
 {/define}

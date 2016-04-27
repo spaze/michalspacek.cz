@@ -466,6 +466,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $upcoming;
 
 		$this->template->form = $this->createComponentApplication('application');
+		$this->template->reviews = $this->trainings->getReviews($name, 3);
 	}
 
 

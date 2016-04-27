@@ -100,6 +100,8 @@ label:
 	lowercaseapplication: "přihláška"
 	preliminaryapplication: "Nezávazná přihláška"
 	trainingreviews: "Ohlasy na školení"
+	participantsfeedback: "Hodnocení účastníků"
+	othertrainings: "Další školení"
 	date: "Termín"
 	tentativedate: "předběžný termín"
 	participant: "Účastník"
