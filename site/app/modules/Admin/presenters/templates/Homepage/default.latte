@@ -2,7 +2,7 @@
 {includeblock "../Trainings/default.latte"}
 <p></p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{include #list, trainings => $upcomingApplications}
+{include #list, trainings => $upcomingApplications, order => 'asc'}
 
 <ul>
 	<li><a n:href="Emails:">E-maily k odeslání</a> ({$emailsToSend})</li>

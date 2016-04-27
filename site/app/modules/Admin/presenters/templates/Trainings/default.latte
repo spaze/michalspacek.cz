@@ -9,7 +9,8 @@
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
 		<tr n:class="summary, $training->start < $now && !$dateLineDisplayed ? dateLine">
 			{var $dateLineDisplayed = $training->start < $now}
-			<td class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
+			<td n:if="$order == 'desc'" class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
+			<td n:if="$order == 'asc'" class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 			<td class="dateCell">
 				<strong n:tag-if="$upcoming">
 				<small n:tag-if="!$upcoming && $training->start > $now">
@@ -101,5 +102,5 @@
 	</div>
 </div>
 <hr>
-{include #list}
+{include #list, order => 'desc'}
 {/define}
