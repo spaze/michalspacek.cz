@@ -34,23 +34,23 @@
 	<legend>{_messages.label.companydetails} <small>({_messages.label.optional})</small></legend>
 	<table>
 		<tr>
-			<th scope="row" id="th-id">{$form[companyId]->caption}</th><td headers="th-id">{$form[companyId]->value}</td>
-			<th scope="row" id="th-taxid">{$form[companyTaxId]->caption}</th><td headers="th-taxid">{$form[companyTaxId]->value}</td>
+			<th scope="row" id="th-id">{$form[companyId]->caption}</th><td headers="th-id">{$form[companyId]->value}<small n:if="!$form[companyId]->value">—</small></td>
+			<th scope="row" id="th-taxid">{$form[companyTaxId]->caption}</th><td headers="th-taxid">{$form[companyTaxId]->value}<small n:if="!$form[companyTaxId]->value">—</small></td>
 		</tr>
 		<tr>
-			<th scope="row" id="th-company">{$form[company]->caption}</th><td headers="th-company">{$form[company]->value}</td>
-			<th scope="row" id="th-street">{$form[street]->caption}</th><td headers="th-street">{$form[street]->value}</td>
+			<th scope="row" id="th-company">{$form[company]->caption}</th><td headers="th-company">{$form[company]->value}<small n:if="!$form[company]->value">—</small></td>
+			<th scope="row" id="th-street">{$form[street]->caption}</th><td headers="th-street">{$form[street]->value}<small n:if="!$form[street]->value">—</small></td>
 		</tr>
 		<tr>
-			<th scope="row" id="th-city">{$form[city]->caption}</th><td headers="th-city">{$form[city]->value}</td>
-			<th scope="row" id="th-zip">{$form[zip]->caption}</th><td headers="th-zip">{$form[zip]->value}</td>
+			<th scope="row" id="th-city">{$form[city]->caption}</th><td headers="th-city">{$form[city]->value}<small n:if="!$form[city]->value">—</small></td>
+			<th scope="row" id="th-zip">{$form[zip]->caption}</th><td headers="th-zip">{$form[zip]->value}<small n:if="!$form[zip]->value">—</small></td>
 		</tr>
 		<tr>
-			<th scope="row" id="th-country">{$form[country]->caption}</th><td headers="th-country">{$form[country]->selectedItem}</td>
+			<th scope="row" id="th-country">{$form[country]->caption}</th><td headers="th-country">{$form[country]->selectedItem}<small n:if="!$form[country]->selectedItem">—</small></td>
 		</tr>
 	</table>
 </fieldset>
-<p><strong>{$form[note]->caption}</strong> {$form[note]->value}</p>
+<p><strong>{$form[note]->caption}</strong> {$form[note]->value}<small n:if="!$form[note]->value">—</small></p>
 {/form application}
 <hr />
 <p>
