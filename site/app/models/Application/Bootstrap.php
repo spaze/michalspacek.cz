@@ -124,7 +124,7 @@ class Bootstrap extends \Nette\Object
 		$fqdn = $this->container->getParameters()['domain']['fqdn'];
 		$uri = $_SERVER['REQUEST_URI'];
 		if ($_SERVER['HTTP_HOST'] !== $fqdn) {
-			$this->securityHeaders->sendCspHeader(\Spaze\CspConfig\ContentSecurityPolicy::DEFAULT_PART, \Spaze\CspConfig\ContentSecurityPolicy::DEFAULT_PART);
+			$this->securityHeaders->sendCspHeader(\Spaze\ContentSecurityPolicy\Config::DEFAULT_PART, \Spaze\ContentSecurityPolicy\Config::DEFAULT_PART);
 			$this->httpResponse->redirect("https://{$fqdn}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
 			exit();
 		}
