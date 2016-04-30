@@ -34,6 +34,12 @@ class SecurityHeaders
 	/** @var \MichalSpacekCz\Application\RouterFactory */
 	private $routerFactory;
 
+	/** @var string */
+	private $presenterName;
+
+	/** @var string*/
+	private $actionName;
+
 
 	/**
 	 * @param \Nette\Http\IRequest $httpRequest
@@ -79,6 +85,11 @@ class SecurityHeaders
 
 	public function sendHeaders()
 	{
+		$header = $this->contentSecurityPolicy->getHeader($this->presenterName, $this->actionName);
+		if ($header !== false) {
+			$this->httpResponse->setHeader('Content-Security-Policy', $header);
+		}
+
 		if ($this->httpRequest->isSecured()) {
 			$this->httpResponse->setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 		}
@@ -98,17 +109,29 @@ class SecurityHeaders
 
 
 	/**
-	 * Send Content Security Policy header.
+	 * Set Content Security Policy.
 	 *
-	 * @param  string $presenter
-	 * @param  string $action
+	 * @param string $presenter
+	 * @param string $action
+	 * @return self
 	 */
-	public function sendCspHeader($presenter, $action)
+	public function setCsp($presenterName, $actionName)
 	{
-		$header = $this->contentSecurityPolicy->getHeader($presenter, $action);
-		if ($header !== false) {
-			$this->httpResponse->setHeader('Content-Security-Policy', $header);
-		}
+		$this->presenterName = $presenterName;
+		$this->actionName = $actionName;
+		return $this;
+	}
+
+
+	/**
+	 * Set default Content Security Policy.
+	 *
+	 * @return self
+	 */
+	public function setDefaultCsp()
+	{
+		$this->presenterName = $this->actionName = $this->contentSecurityPolicy->getDefaultKey();
+		return $this;
 	}
 
 

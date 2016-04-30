@@ -85,13 +85,14 @@ class Bootstrap extends \Nette\Object
 		$this->httpResponse = $this->container->getByType(\Nette\Http\IResponse::class);
 
 		$this->securityHeaders = $this->container->getByType(\MichalSpacekCz\SecurityHeaders::class);
-		$this->securityHeaders->sendHeaders();
-
 		$this->redirectToSecure();
 
 		$application = $this->container->getByType(\Nette\Application\Application::class);
 		$application->onRequest[] = function(\Nette\Application\Application $sender, \Nette\Application\Request $request) {
-			$this->securityHeaders->sendCspHeader($request->getPresenterName(), $request->getParameter(\Nette\Application\UI\Presenter::ACTION_KEY));
+			$this->securityHeaders->setCsp($request->getPresenterName(), $request->getParameter(\Nette\Application\UI\Presenter::ACTION_KEY));
+		};
+		$application->onResponse[] = function(\Nette\Application\Application $sender, \Nette\Application\IResponse $request) {
+			$this->securityHeaders->sendHeaders();
 		};
 		$application->run();
 	}
@@ -124,7 +125,7 @@ class Bootstrap extends \Nette\Object
 		$fqdn = $this->container->getParameters()['domain']['fqdn'];
 		$uri = $_SERVER['REQUEST_URI'];
 		if ($_SERVER['HTTP_HOST'] !== $fqdn) {
-			$this->securityHeaders->sendCspHeader(\Spaze\ContentSecurityPolicy\Config::DEFAULT_PART, \Spaze\ContentSecurityPolicy\Config::DEFAULT_PART);
+			$this->securityHeaders->setDefaultCsp()->sendHeaders();
 			$this->httpResponse->redirect("https://{$fqdn}{$uri}", \Nette\Http\IResponse::S301_MOVED_PERMANENTLY);
 			exit();
 		}

@@ -1118,12 +1118,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "9c98d0af70b9c2388ad688447a57f8e267929fee"
+                "reference": "60b0ce2211d5f0a66cef5dbced289c60a769c2ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/9c98d0af70b9c2388ad688447a57f8e267929fee",
-                "reference": "9c98d0af70b9c2388ad688447a57f8e267929fee",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/60b0ce2211d5f0a66cef5dbced289c60a769c2ff",
+                "reference": "60b0ce2211d5f0a66cef5dbced289c60a769c2ff",
                 "shasum": ""
             },
             "type": "library",
@@ -1144,7 +1144,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2016-04-28 23:49:09"
+            "time": "2016-04-30 00:56:25"
         },
         {
             "name": "spaze/netxten",
