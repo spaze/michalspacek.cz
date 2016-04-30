@@ -1,95 +1,103 @@
 parameters:
 	contentSecurityPolicy:
-		DEFAULT_DEFAULT:
-			default-src: "'none'"
-			img-src:
-				- %domain.contentSecurityPolicySelf%
-				- https://www.google-analytics.com
-			script-src:
-				- %domain.contentSecurityPolicySelf%
-				- https://www.google-analytics.com
-			style-src:
-				- %domain.contentSecurityPolicySelf%
-			frame-ancestors: "'none'"
-			form-action: "'self'"
-			upgrade-insecure-requests:
-			block-all-mixed-content:
-			report-uri: %reporting.contentSecurityPolicy%
-		talks_talk:
-			- %contentSecurityPolicy.DEFAULT_DEFAULT%
-			script-src:
-				- %contentSecurityPolicy.DEFAULT_DEFAULT.script-src%
-				- https://speakerdeck.com
-			child-src:
-				- https://www.slideshare.net
-				- https://speakerdeck.com
-				- https://www.youtube-nocookie.com
-				- https://player.vimeo.com
-				- https://slideslive.com
-			frame-src: %contentSecurityPolicy.talks_talk.child-src%
-		interviews_interview:
-			- %contentSecurityPolicy.DEFAULT_DEFAULT%
-			child-src:
-				- https://www.youtube-nocookie.com
-				- https://player.vimeo.com
-			frame-src: %contentSecurityPolicy.interviews_interview.child-src%
-		trainings_training:
-			- %contentSecurityPolicy.DEFAULT_DEFAULT%
-			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
-		admin_DEFAULT_DEFAULT:
-			default-src: "'none'"
-			img-src:
-				- %domain.contentSecurityPolicySelf%
-			script-src:
-				- %domain.contentSecurityPolicySelf%
-			style-src:
-				- %domain.contentSecurityPolicySelf%
-			frame-ancestors: "'none'"
-			form-action: "'self'"
-			upgrade-insecure-requests:
-			block-all-mixed-content:
-			report-uri: %reporting.contentSecurityPolicy%
-		admin_info_php:
-			- %contentSecurityPolicy.admin_DEFAULT_DEFAULT%
-			img-src:
-				- %domain.contentSecurityPolicySelf%
-				- 'data:'
-		api_DEFAULT_DEFAULT:
-			default-src: "'none'"
-			frame-ancestors: "'none'"
-			form-action: "'none'"
-			upgrade-insecure-requests:
-			block-all-mixed-content:
-			report-uri: %reporting.contentSecurityPolicy%
-		webleed_DEFAULT_DEFAULT:
-			default-src: "'none'"
-			img-src:
-				- %domain.contentSecurityPolicySelf%
-				- https://www.google-analytics.com
-				- 'blob:'
-			script-src:
-				- %domain.contentSecurityPolicySelf%
-				- https://www.google-analytics.com
-			style-src:
-				- %domain.contentSecurityPolicySelf%
-				- "'unsafe-inline'"
-			frame-ancestors: "'none'"
-			form-action: "https://export.highcharts.com"
-			upgrade-insecure-requests:
-			block-all-mixed-content:
-			report-uri: %reporting.contentSecurityPolicy%
-		upckeys_DEFAULT_DEFAULT:
-			default-src: "'none'"
-			img-src:
-				- %domain.contentSecurityPolicySelf%
-				- https://www.google-analytics.com
-			script-src:
-				- %domain.contentSecurityPolicySelf%
-				- https://www.google-analytics.com
-			style-src:
-				- %domain.contentSecurityPolicySelf%
-			frame-ancestors: "'none'"
-			form-action: "'self'"
-			upgrade-insecure-requests:
-			block-all-mixed-content:
-			report-uri: %reporting.contentSecurityPolicy%
+		values:
+				ga: https://www.google-analytics.com
+				youtube: https://www.youtube-nocookie.com
+				speakerdeck: https://speakerdeck.com
+				slideshare: https://www.slideshare.net
+				vimeo: https://player.vimeo.com
+				slideslive: https://slideslive.com
+		policies:
+			DEFAULT_DEFAULT:
+				default-src: "'none'"
+				img-src:
+					- %domain.contentSecurityPolicySelf%
+					- %contentSecurityPolicy.values.ga%
+				script-src:
+					- %domain.contentSecurityPolicySelf%
+					- %contentSecurityPolicy.values.ga%
+				style-src:
+					- %domain.contentSecurityPolicySelf%
+				frame-ancestors: "'none'"
+				form-action: "'self'"
+				upgrade-insecure-requests:
+				block-all-mixed-content:
+				report-uri: %reporting.contentSecurityPolicy%
+			talks_talk:
+				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
+				script-src:
+					- %contentSecurityPolicy.policies.DEFAULT_DEFAULT.script-src%
+					- %contentSecurityPolicy.values.speakerdeck%
+				child-src:
+					- %contentSecurityPolicy.values.slideshare%
+					- %contentSecurityPolicy.values.speakerdeck%
+					- %contentSecurityPolicy.values.youtube%
+					- %contentSecurityPolicy.values.vimeo%
+					- %contentSecurityPolicy.values.slideslive%
+				frame-src: %contentSecurityPolicy.policies.talks_talk.child-src%
+			interviews_interview:
+				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
+				child-src:
+					- %contentSecurityPolicy.values.youtube%
+					- %contentSecurityPolicy.values.vimeo%
+				frame-src: %contentSecurityPolicy.policies.interviews_interview.child-src%
+			trainings_training:
+				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
+				connect-src: 'https://api.%locales.rootDomainMapping.cz%'
+			admin_DEFAULT_DEFAULT:
+				default-src: "'none'"
+				img-src:
+					- %domain.contentSecurityPolicySelf%
+				script-src:
+					- %domain.contentSecurityPolicySelf%
+				style-src:
+					- %domain.contentSecurityPolicySelf%
+				frame-ancestors: "'none'"
+				form-action: "'self'"
+				upgrade-insecure-requests:
+				block-all-mixed-content:
+				report-uri: %reporting.contentSecurityPolicy%
+			admin_info_php:
+				- %contentSecurityPolicy.policies.admin_DEFAULT_DEFAULT%
+				img-src:
+					- %domain.contentSecurityPolicySelf%
+					- 'data:'
+			api_DEFAULT_DEFAULT:
+				default-src: "'none'"
+				frame-ancestors: "'none'"
+				form-action: "'none'"
+				upgrade-insecure-requests:
+				block-all-mixed-content:
+				report-uri: %reporting.contentSecurityPolicy%
+			webleed_DEFAULT_DEFAULT:
+				default-src: "'none'"
+				img-src:
+					- %domain.contentSecurityPolicySelf%
+					- %contentSecurityPolicy.values.ga%
+					- 'blob:'
+				script-src:
+					- %domain.contentSecurityPolicySelf%
+					- %contentSecurityPolicy.values.ga%
+				style-src:
+					- %domain.contentSecurityPolicySelf%
+					- "'unsafe-inline'"
+				frame-ancestors: "'none'"
+				form-action: "https://export.highcharts.com"
+				upgrade-insecure-requests:
+				block-all-mixed-content:
+				report-uri: %reporting.contentSecurityPolicy%
+			upckeys_DEFAULT_DEFAULT:
+				default-src: "'none'"
+				img-src:
+					- %domain.contentSecurityPolicySelf%
+					- %contentSecurityPolicy.values.ga%
+				script-src:
+					- %domain.contentSecurityPolicySelf%
+					- %contentSecurityPolicy.values.ga%
+				style-src:
+					- %domain.contentSecurityPolicySelf%
+				frame-ancestors: "'none'"
+				form-action: "'self'"
+				upgrade-insecure-requests:
+				block-all-mixed-content:
+				report-uri: %reporting.contentSecurityPolicy%

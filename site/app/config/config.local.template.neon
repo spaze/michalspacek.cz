@@ -28,46 +28,47 @@ parameters:
 			note: %notifier.vrana.successMarker%
 
 	contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them
-		DEFAULT_DEFAULT:
-			img-src:
-				- 'data:'
-			script-src:
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
-			style-src:
-				- "'unsafe-inline'"
-		admin_DEFAULT_DEFAULT:
-			img-src:
-				- 'data:'
-			script-src:
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
-			style-src:
-				- "'unsafe-inline'"
-		api_DEFAULT_DEFAULT:
-			img-src:
-				- 'data:'
-			script-src:
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
-			style-src:
-				- "'unsafe-inline'"
-		webleed_DEFAULT_DEFAULT:
-			img-src:
-				- 'data:'
-			script-src:
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
-			style-src:
-				- "'unsafe-inline'"
-		upckeys_DEFAULT_DEFAULT:
-			img-src:
-				- 'data:'
-			script-src:
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
-			style-src:
-				- "'unsafe-inline'"
+		policies:
+			DEFAULT_DEFAULT:
+				img-src:
+					- 'data:'
+				script-src:
+					- "'unsafe-inline'"
+					- "'unsafe-eval'"
+				style-src:
+					- "'unsafe-inline'"
+			admin_DEFAULT_DEFAULT:
+				img-src:
+					- 'data:'
+				script-src:
+					- "'unsafe-inline'"
+					- "'unsafe-eval'"
+				style-src:
+					- "'unsafe-inline'"
+			api_DEFAULT_DEFAULT:
+				img-src:
+					- 'data:'
+				script-src:
+					- "'unsafe-inline'"
+					- "'unsafe-eval'"
+				style-src:
+					- "'unsafe-inline'"
+			webleed_DEFAULT_DEFAULT:
+				img-src:
+					- 'data:'
+				script-src:
+					- "'unsafe-inline'"
+					- "'unsafe-eval'"
+				style-src:
+					- "'unsafe-inline'"
+			upckeys_DEFAULT_DEFAULT:
+				img-src:
+					- 'data:'
+				script-src:
+					- "'unsafe-inline'"
+					- "'unsafe-eval'"
+				style-src:
+					- "'unsafe-inline'"
 
 	returningUser:
 		cookie: cafebabe

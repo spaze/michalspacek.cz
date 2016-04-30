@@ -71,7 +71,7 @@ services:
 	contentSecurityPolicy:
 		class: \Spaze\ContentSecurityPolicy\Config
 		setup:
-			- setPolicy(%contentSecurityPolicy%)
+			- setPolicy(%contentSecurityPolicy.policies%)
 	publicKeyPins:
 		class: \MichalSpacekCz\PublicKeyPins
 		setup:
