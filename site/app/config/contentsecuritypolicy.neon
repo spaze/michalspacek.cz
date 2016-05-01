@@ -34,13 +34,11 @@ parameters:
 					- %contentSecurityPolicy.values.youtube%
 					- %contentSecurityPolicy.values.vimeo%
 					- %contentSecurityPolicy.values.slideslive%
-				frame-src: %contentSecurityPolicy.policies.talks_talk.child-src%
 			interviews_interview:
 				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
 				child-src:
 					- %contentSecurityPolicy.values.youtube%
 					- %contentSecurityPolicy.values.vimeo%
-				frame-src: %contentSecurityPolicy.policies.interviews_interview.child-src%
 			trainings_training:
 				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
 				connect-src: 'https://api.%locales.rootDomainMapping.cz%'
