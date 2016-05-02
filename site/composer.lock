@@ -1118,13 +1118,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "ba658a0d9acd75eb0838a1eea0d6e1b3c8c5d703"
+                "reference": "890ecb1fad1d36524dbbc4a1b244d1f98a4a14e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/ba658a0d9acd75eb0838a1eea0d6e1b3c8c5d703",
-                "reference": "ba658a0d9acd75eb0838a1eea0d6e1b3c8c5d703",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/890ecb1fad1d36524dbbc4a1b244d1f98a4a14e9",
+                "reference": "890ecb1fad1d36524dbbc4a1b244d1f98a4a14e9",
                 "shasum": ""
+            },
+            "require": {
+                "nette/di": "~2.3"
             },
             "type": "library",
             "autoload": {
@@ -1144,7 +1147,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2016-05-01 22:03:40"
+            "time": "2016-05-02 16:21:24"
         },
         {
             "name": "spaze/netxten",
@@ -1183,16 +1186,16 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.4",
+            "version": "v2.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "5273f4724dc5288fe7a33cb08077ab9852621f2c"
+                "reference": "edbbcf33cffa2a85104fc80de8dc052cc51596bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/5273f4724dc5288fe7a33cb08077ab9852621f2c",
-                "reference": "5273f4724dc5288fe7a33cb08077ab9852621f2c",
+                "url": "https://api.github.com/repos/symfony/config/zipball/edbbcf33cffa2a85104fc80de8dc052cc51596bb",
+                "reference": "edbbcf33cffa2a85104fc80de8dc052cc51596bb",
                 "shasum": ""
             },
             "require": {
@@ -1232,7 +1235,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-04 07:54:35"
+            "time": "2016-04-20 18:52:26"
         },
         {
             "name": "symfony/filesystem",
@@ -1344,7 +1347,7 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.8.4",
+            "version": "v2.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
