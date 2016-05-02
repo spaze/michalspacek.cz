@@ -38,26 +38,11 @@ parameters:
 				upgrade-insecure-requests:
 				block-all-mixed-content:
 				report-uri: %reporting.contentSecurityPolicy%
-			trainings_training:
-				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
+			trainings_training < DEFAULT_DEFAULT:
 				connect-src: 'https://api.%locales.rootDomainMapping.cz%'
-			admin_DEFAULT_DEFAULT:
-				default-src: "'none'"
+			admin_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
+			admin_info_php < DEFAULT_DEFAULT:
 				img-src:
-					- %domain.contentSecurityPolicySelf%
-				script-src:
-					- %domain.contentSecurityPolicySelf%
-				style-src:
-					- %domain.contentSecurityPolicySelf%
-				frame-ancestors: "'none'"
-				form-action: "'self'"
-				upgrade-insecure-requests:
-				block-all-mixed-content:
-				report-uri: %reporting.contentSecurityPolicy%
-			admin_info_php:
-				- %contentSecurityPolicy.policies.admin_DEFAULT_DEFAULT%
-				img-src:
-					- %domain.contentSecurityPolicySelf%
 					- 'data:'
 			api_DEFAULT_DEFAULT:
 				default-src: "'none'"
@@ -66,31 +51,10 @@ parameters:
 				upgrade-insecure-requests:
 				block-all-mixed-content:
 				report-uri: %reporting.contentSecurityPolicy%
-			webleed_DEFAULT_DEFAULT:
-				default-src: "'none'"
+			webleed_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
 				img-src:
-					- %domain.contentSecurityPolicySelf%
 					- 'blob:'
-				script-src:
-					- %domain.contentSecurityPolicySelf%
 				style-src:
-					- %domain.contentSecurityPolicySelf%
 					- "'unsafe-inline'"
-				frame-ancestors: "'none'"
 				form-action: "https://export.highcharts.com"
-				upgrade-insecure-requests:
-				block-all-mixed-content:
-				report-uri: %reporting.contentSecurityPolicy%
-			upckeys_DEFAULT_DEFAULT:
-				default-src: "'none'"
-				img-src:
-					- %domain.contentSecurityPolicySelf%
-				script-src:
-					- %domain.contentSecurityPolicySelf%
-				style-src:
-					- %domain.contentSecurityPolicySelf%
-				frame-ancestors: "'none'"
-				form-action: "'self'"
-				upgrade-insecure-requests:
-				block-all-mixed-content:
-				report-uri: %reporting.contentSecurityPolicy%
+			upckeys_DEFAULT_DEFAULT < DEFAULT_DEFAULT:

@@ -37,31 +37,8 @@ parameters:
 					- "'unsafe-eval'"
 				style-src:
 					- "'unsafe-inline'"
-			admin_DEFAULT_DEFAULT:
-				img-src:
-					- 'data:'
-				script-src:
-					- "'unsafe-inline'"
-					- "'unsafe-eval'"
-				style-src:
-					- "'unsafe-inline'"
+			admin_info_php < DEFAULT_DEFAULT:
 			api_DEFAULT_DEFAULT:
-				img-src:
-					- 'data:'
-				script-src:
-					- "'unsafe-inline'"
-					- "'unsafe-eval'"
-				style-src:
-					- "'unsafe-inline'"
-			webleed_DEFAULT_DEFAULT:
-				img-src:
-					- 'data:'
-				script-src:
-					- "'unsafe-inline'"
-					- "'unsafe-eval'"
-				style-src:
-					- "'unsafe-inline'"
-			upckeys_DEFAULT_DEFAULT:
 				img-src:
 					- 'data:'
 				script-src:
