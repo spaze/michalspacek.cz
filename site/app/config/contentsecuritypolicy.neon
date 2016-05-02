@@ -1,8 +1,12 @@
 parameters:
 	contentSecurityPolicy:
 		values:
-				ga: https://www.google-analytics.com
 		snippets:
+				ga:
+					img-src:
+						- https://www.google-analytics.com
+					script-src:
+						- https://www.google-analytics.com
 				slideshare:
 						child-src:
 							- https://www.slideshare.net
@@ -25,10 +29,8 @@ parameters:
 				default-src: "'none'"
 				img-src:
 					- %domain.contentSecurityPolicySelf%
-					- %contentSecurityPolicy.values.ga%
 				script-src:
 					- %domain.contentSecurityPolicySelf%
-					- %contentSecurityPolicy.values.ga%
 				style-src:
 					- %domain.contentSecurityPolicySelf%
 				frame-ancestors: "'none'"
@@ -68,11 +70,9 @@ parameters:
 				default-src: "'none'"
 				img-src:
 					- %domain.contentSecurityPolicySelf%
-					- %contentSecurityPolicy.values.ga%
 					- 'blob:'
 				script-src:
 					- %domain.contentSecurityPolicySelf%
-					- %contentSecurityPolicy.values.ga%
 				style-src:
 					- %domain.contentSecurityPolicySelf%
 					- "'unsafe-inline'"
@@ -85,10 +85,8 @@ parameters:
 				default-src: "'none'"
 				img-src:
 					- %domain.contentSecurityPolicySelf%
-					- %contentSecurityPolicy.values.ga%
 				script-src:
 					- %domain.contentSecurityPolicySelf%
-					- %contentSecurityPolicy.values.ga%
 				style-src:
 					- %domain.contentSecurityPolicySelf%
 				frame-ancestors: "'none'"

@@ -31,7 +31,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function beforeRender()
 	{
 		$webTracking = $this->getContext()->getByType(\MichalSpacekCz\WebTracking::class);
-		$this->template->trackingCode = $webTracking->isEnabled();
+		/** @var \Spaze\ContentSecurityPolicy\Config */
+		$contentSecurityPolicy = $this->getContext()->getByType(\Spaze\ContentSecurityPolicy\Config::class);
+		if ($this->template->trackingCode = $webTracking->isEnabled()) {
+			$contentSecurityPolicy->addSnippet('ga');
+		}
 		$this->template->setTranslator($this->translator);
 	}
 
