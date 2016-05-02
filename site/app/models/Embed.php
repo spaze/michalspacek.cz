@@ -10,20 +10,19 @@ namespace MichalSpacekCz;
 class Embed
 {
 
-	const EMBED_SLIDES_SLIDESHARE = 1;
+	const EMBED_SLIDES_SLIDESHARE = 'slideshare';
 
-	const EMBED_SLIDES_SPEAKERDECK = 2;
+	const EMBED_SLIDES_SPEAKERDECK = 'speakerdeck';
 
-	const EMBED_VIDEO_VIMEO = 1;
+	const EMBED_VIDEO_VIMEO = 'vimeo';
 
-	const EMBED_VIDEO_YOUTUBE = 2;
+	const EMBED_VIDEO_YOUTUBE = 'youtube';
 
-	const EMBED_VIDEO_SLIDESLIVE = 3;
+	const EMBED_VIDEO_SLIDESLIVE = 'slideslive';
 
 
-	public function getSlidesTemplateVars($href, $embedHref, $slide)
+	public function getSlidesTemplateVars($type, $embedHref, $slide)
 	{
-		$type = $this->getSlidesType($href);
 		$dataSlide = null;
 
 		if ($slide !== null) {
@@ -42,22 +41,12 @@ class Embed
 
 		return array(
 			'slidesEmbed'     => $embedHref,
-			'slidesEmbedType' => $type,
 			'slidesDataSlide' => $dataSlide,
 		);
 	}
 
 
-	public function getVideoTemplateVars($href, $embedHref)
-	{
-		return array(
-			'videoEmbed'     => $embedHref,
-			'videoEmbedType' => $this->getVideoType($href),
-		);
-	}
-
-
-	private function getSlidesType($href)
+	public function getSlidesType($href)
 	{
 		$type = false;
 
@@ -74,7 +63,7 @@ class Embed
 	}
 
 
-	private function getVideoType($href)
+	public function getVideoType($href)
 	{
 		$type = false;
 

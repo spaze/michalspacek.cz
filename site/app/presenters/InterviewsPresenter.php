@@ -19,21 +19,27 @@ class InterviewsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Embed */
 	protected $embed;
 
+	/** @var \Spaze\ContentSecurityPolicy\Config */
+	protected $contentSecurityPolicy;
+
 
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Interviews $interviews
 	 * @param \MichalSpacekCz\Embed $embed
+	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Interviews $interviews,
-		\MichalSpacekCz\Embed $embed
+		\MichalSpacekCz\Embed $embed,
+		\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->interviews = $interviews;
 		$this->embed = $embed;
+		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 
@@ -60,9 +66,13 @@ class InterviewsPresenter extends BasePresenter
 		$this->template->videoHref = $interview->videoHref;
 		$this->template->sourceName = $interview->sourceName;
 		$this->template->sourceHref = $interview->sourceHref;
-		foreach ($this->embed->getVideoTemplateVars($interview->videoHref, $interview->videoEmbed) as $key => $value) {
-			$this->template->$key = $value;
+
+		$type = $this->embed->getVideoType($interview->videoHref);
+		if ($type !== false) {
+			$this->contentSecurityPolicy->addSnippet($type);
 		}
+		$this->template->videoEmbedType = $type;
+		$this->template->videoEmbed = $interview->videoEmbed;
 	}
 
 }

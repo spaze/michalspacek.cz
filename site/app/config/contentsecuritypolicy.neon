@@ -2,11 +2,24 @@ parameters:
 	contentSecurityPolicy:
 		values:
 				ga: https://www.google-analytics.com
-				youtube: https://www.youtube-nocookie.com
-				speakerdeck: https://speakerdeck.com
-				slideshare: https://www.slideshare.net
-				vimeo: https://player.vimeo.com
-				slideslive: https://slideslive.com
+		snippets:
+				slideshare:
+						child-src:
+							- https://www.slideshare.net
+				speakerdeck:
+						script-src:
+							- https://speakerdeck.com
+						child-src:
+							- https://speakerdeck.com
+				youtube:
+						child-src:
+							- https://www.youtube-nocookie.com
+				vimeo:
+						child-src:
+							- https://player.vimeo.com
+				slideslive:
+						child-src:
+							- https://slideslive.com
 		policies:
 			DEFAULT_DEFAULT:
 				default-src: "'none'"
@@ -23,22 +36,6 @@ parameters:
 				upgrade-insecure-requests:
 				block-all-mixed-content:
 				report-uri: %reporting.contentSecurityPolicy%
-			talks_talk:
-				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
-				script-src:
-					- %contentSecurityPolicy.policies.DEFAULT_DEFAULT.script-src%
-					- %contentSecurityPolicy.values.speakerdeck%
-				child-src:
-					- %contentSecurityPolicy.values.slideshare%
-					- %contentSecurityPolicy.values.speakerdeck%
-					- %contentSecurityPolicy.values.youtube%
-					- %contentSecurityPolicy.values.vimeo%
-					- %contentSecurityPolicy.values.slideslive%
-			interviews_interview:
-				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
-				child-src:
-					- %contentSecurityPolicy.values.youtube%
-					- %contentSecurityPolicy.values.vimeo%
 			trainings_training:
 				- %contentSecurityPolicy.policies.DEFAULT_DEFAULT%
 				connect-src: 'https://api.%locales.rootDomainMapping.cz%'

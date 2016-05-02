@@ -72,6 +72,7 @@ services:
 		class: \Spaze\ContentSecurityPolicy\Config
 		setup:
 			- setPolicy(%contentSecurityPolicy.policies%)
+			- setSnippets(%contentSecurityPolicy.snippets%)
 			- supportLegacyBrowsers()
 	publicKeyPins:
 		class: \MichalSpacekCz\PublicKeyPins
