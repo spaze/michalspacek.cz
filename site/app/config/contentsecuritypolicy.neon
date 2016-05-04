@@ -1,6 +1,5 @@
 parameters:
 	contentSecurityPolicy:
-		values:
 		snippets:
 				ga:
 					img-src:
