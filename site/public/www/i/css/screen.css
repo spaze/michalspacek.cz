@@ -277,3 +277,17 @@ div.notice {
         overflow-x: scroll;
     }
 }
+@media (max-width: 680px) {
+    #frm-application th, #frm-application td, #frm-application #company td,
+    #frm-applicationPreliminary th, #frm-applicationPreliminary td {
+        text-align: left;
+        display: block;
+        width: 95%;
+    }
+    #frm-application table, #frm-application table label,
+    #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 100%; }
+    #equipment div { float: none; }
+    #equipment div input { width: 3em; }
+    #frm-application #frm-application-note { width: 98%; }
+    #frm-application input[type=submit] { width: 170px; }
+}
