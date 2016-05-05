@@ -1118,16 +1118,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "23b644b5c7641d365c4ec0c4c63b83a092756bea"
+                "reference": "1178f0dad35bd9f38b627885ceb4a5606b7a717e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/23b644b5c7641d365c4ec0c4c63b83a092756bea",
-                "reference": "23b644b5c7641d365c4ec0c4c63b83a092756bea",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/1178f0dad35bd9f38b627885ceb4a5606b7a717e",
+                "reference": "1178f0dad35bd9f38b627885ceb4a5606b7a717e",
                 "shasum": ""
             },
             "require": {
                 "nette/di": "~2.3"
+            },
+            "require-dev": {
+                "nette/bootstrap": "^2.3",
+                "nette/tester": "^1.7"
             },
             "type": "library",
             "autoload": {
@@ -1147,7 +1151,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2016-05-02 20:06:48"
+            "time": "2016-05-05 22:45:52"
         },
         {
             "name": "spaze/netxten",
@@ -1239,16 +1243,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.0.4",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "f82499a459dcade2ea56df94cc58b19c8bde3d20"
+                "reference": "74fec3511b62cb934b64bce1d96f06fffa4beafd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/f82499a459dcade2ea56df94cc58b19c8bde3d20",
-                "reference": "f82499a459dcade2ea56df94cc58b19c8bde3d20",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/74fec3511b62cb934b64bce1d96f06fffa4beafd",
+                "reference": "74fec3511b62cb934b64bce1d96f06fffa4beafd",
                 "shasum": ""
             },
             "require": {
@@ -1284,7 +1288,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-27 10:24:39"
+            "time": "2016-04-12 18:09:53"
         },
         {
             "name": "symfony/polyfill-mbstring",

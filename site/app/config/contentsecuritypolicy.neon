@@ -1,59 +1,59 @@
-parameters:
-	contentSecurityPolicy:
-		snippets:
-			ga:
-				img-src:
-					- https://www.google-analytics.com
-				script-src:
-					- https://www.google-analytics.com
-			slideshare:
-					child-src:
-						- https://www.slideshare.net
-			speakerdeck:
-					script-src:
-						- https://speakerdeck.com
-					child-src:
-						- https://speakerdeck.com
-			youtube:
-					child-src:
-						- https://www.youtube-nocookie.com
-			vimeo:
-					child-src:
-						- https://player.vimeo.com
-			slideslive:
-					child-src:
-						- https://slideslive.com
-		policies:
-			DEFAULT_DEFAULT:
-				default-src: "'none'"
-				img-src:
-					- %domain.contentSecurityPolicySelf%
-				script-src:
-					- %domain.contentSecurityPolicySelf%
-				style-src:
-					- %domain.contentSecurityPolicySelf%
-				frame-ancestors: "'none'"
-				form-action: "'self'"
-				upgrade-insecure-requests:
-				block-all-mixed-content:
-				report-uri: %reporting.contentSecurityPolicy%
-			trainings_training < DEFAULT_DEFAULT:
-				connect-src: 'https://api.%locales.rootDomainMapping.cz%'
-			admin_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
-			admin_info_php < DEFAULT_DEFAULT:
-				img-src:
-					- 'data:'
-			api_DEFAULT_DEFAULT:
-				default-src: "'none'"
-				frame-ancestors: "'none'"
-				form-action: "'none'"
-				upgrade-insecure-requests:
-				block-all-mixed-content:
-				report-uri: %reporting.contentSecurityPolicy%
-			webleed_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
-				img-src:
-					- 'blob:'
-				style-src:
-					- "'unsafe-inline'"
-				form-action: "https://export.highcharts.com"
-			upckeys_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
+contentSecurityPolicy:
+	supportLegacyBrowsers: true
+	snippets:
+		ga:
+			img-src:
+				- https://www.google-analytics.com
+			script-src:
+				- https://www.google-analytics.com
+		slideshare:
+			child-src:
+				- https://www.slideshare.net
+		speakerdeck:
+			script-src:
+				- https://speakerdeck.com
+			child-src:
+				- https://speakerdeck.com
+		youtube:
+			child-src:
+				- https://www.youtube-nocookie.com
+		vimeo:
+			child-src:
+				- https://player.vimeo.com
+		slideslive:
+			child-src:
+				- https://slideslive.com
+	policies:
+		DEFAULT_DEFAULT:
+			default-src: "'none'"
+			img-src:
+				- %domain.contentSecurityPolicySelf%
+			script-src:
+				- %domain.contentSecurityPolicySelf%
+			style-src:
+				- %domain.contentSecurityPolicySelf%
+			frame-ancestors: "'none'"
+			form-action: "'self'"
+			upgrade-insecure-requests:
+			block-all-mixed-content:
+			report-uri: %reporting.contentSecurityPolicy%
+		trainings_training < DEFAULT_DEFAULT:
+			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
+		admin_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
+		admin_info_php < DEFAULT_DEFAULT:
+			img-src:
+				- 'data:'
+		api_DEFAULT_DEFAULT:
+			default-src: "'none'"
+			frame-ancestors: "'none'"
+			form-action: "'none'"
+			upgrade-insecure-requests:
+			block-all-mixed-content:
+			report-uri: %reporting.contentSecurityPolicy%
+		webleed_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
+			img-src:
+				- 'blob:'
+			style-src:
+				- "'unsafe-inline'"
+			form-action: "https://export.highcharts.com"
+		upckeys_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
