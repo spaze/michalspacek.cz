@@ -102,6 +102,7 @@ abbr.dtstart, abbr.dtend { border: none; }
     color: #4F4F4F;
     font-size: 0.8em;
     padding: 1em 0.5em;
+    line-height: 2;
 }
 #footer a { color: #4F4F4F; }
 #footer-name { float: left; }
