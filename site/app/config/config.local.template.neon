@@ -13,6 +13,26 @@ mail:
 	host: localhost
 	port: 25
 
+contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them
+	policies:
+		*.*:
+			img-src:
+				- 'data:'
+			script-src:
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
+				- "'unsafe-inline'"
+		admin.info.php < *.*:
+		api.*.*:
+			img-src:
+				- 'data:'
+			script-src:
+				- "'unsafe-inline'"
+				- "'unsafe-eval'"
+			style-src:
+				- "'unsafe-inline'"
+
 parameters:
 	locales:
 		rootDomainMapping:
@@ -26,26 +46,6 @@ parameters:
 		vrana:
 			url: http://echo.local/
 			note: %notifier.vrana.successMarker%
-
-	contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them
-		policies:
-			DEFAULT_DEFAULT:
-				img-src:
-					- 'data:'
-				script-src:
-					- "'unsafe-inline'"
-					- "'unsafe-eval'"
-				style-src:
-					- "'unsafe-inline'"
-			admin_info_php < DEFAULT_DEFAULT:
-			api_DEFAULT_DEFAULT:
-				img-src:
-					- 'data:'
-				script-src:
-					- "'unsafe-inline'"
-					- "'unsafe-eval'"
-				style-src:
-					- "'unsafe-inline'"
 
 	returningUser:
 		cookie: cafebabe

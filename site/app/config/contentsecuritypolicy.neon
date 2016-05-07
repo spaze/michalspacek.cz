@@ -24,7 +24,7 @@ contentSecurityPolicy:
 			child-src:
 				- https://slideslive.com
 	policies:
-		DEFAULT_DEFAULT:
+		*.*:
 			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
@@ -37,23 +37,23 @@ contentSecurityPolicy:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		trainings_training < DEFAULT_DEFAULT:
+		trainings.training < *.*:
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
-		admin_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
-		admin_info_php < DEFAULT_DEFAULT:
+		admin.*.* < *.*:
+		admin.info.php < *.*:
 			img-src:
 				- 'data:'
-		api_DEFAULT_DEFAULT:
+		api.*.*:
 			default-src: "'none'"
 			frame-ancestors: "'none'"
 			form-action: "'none'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		webleed_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
+		webleed.*.* < *.*:
 			img-src:
 				- 'blob:'
 			style-src:
 				- "'unsafe-inline'"
 			form-action: "https://export.highcharts.com"
-		upckeys_DEFAULT_DEFAULT < DEFAULT_DEFAULT:
+		upckeys.*.* < *.*:
