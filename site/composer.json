@@ -16,6 +16,7 @@
 		"texy/texy": "~2.8",
 		"spaze/netxten": "~0.5",
 		"spaze/csp-config": "dev-master",
+		"spaze/sri-macros": "dev-master",
 		"kdyby/translation": "~2.0",
 		"defuse/php-encryption": "dev-master"
 	},

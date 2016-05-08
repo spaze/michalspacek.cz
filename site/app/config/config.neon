@@ -29,3 +29,10 @@ translation:
 		header: off
 		request: off
 		session: off
+
+subresourceIntegrity:
+	localPrefix:
+		url: %domain.sharedStaticRoot%
+		path: ../www
+	resources:
+		jquery: /i/js/jquery-2.2.2.min.js

@@ -1,3 +1,4 @@
 extensions:
 	translation: Kdyby\Translation\DI\TranslationExtension
 	contentSecurityPolicy: Spaze\ContentSecurityPolicy\Bridges\Nette\ConfigExtension
+	subresourceIntegrity: Spaze\SubresourceIntegrity\Bridges\Nette\Extension

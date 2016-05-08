@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4371fd7f832bbf1f6064a3055dd03ed8",
-    "content-hash": "03447f8aa3fcc65cf826eb9be79f028f",
+    "hash": "779f97c0a240a8fd7169de2ad4068784",
+    "content-hash": "653b5d06df2e9366219a6cf18c228f0f",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1189,6 +1189,40 @@
             "time": "2016-04-20 19:46:08"
         },
         {
+            "name": "spaze/sri-macros",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/sri-macros.git",
+                "reference": "5e6f576ec51c02db7fb814628d61e9a4f4c986af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/5e6f576ec51c02db7fb814628d61e9a4f4c986af",
+                "reference": "5e6f576ec51c02db7fb814628d61e9a4f4c986af",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spaze\\SubresourceIntegrity\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.cz"
+                }
+            ],
+            "description": "Subresource Integrity macros for Latte template engine",
+            "time": "2016-05-08 15:39:55"
+        },
+        {
             "name": "symfony/config",
             "version": "v2.8.5",
             "source": {
@@ -1533,6 +1567,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "spaze/csp-config": 20,
+        "spaze/sri-macros": 20,
         "defuse/php-encryption": 20
     },
     "prefer-stable": false,
