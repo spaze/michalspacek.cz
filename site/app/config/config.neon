@@ -36,3 +36,10 @@ subresourceIntegrity:
 		path: ../www
 	resources:
 		jquery: /i/js/jquery-2.2.2.min.js
+		netteForms: /i/js/netteForms.js
+		scripts: /i/js/scripts.js
+		admin: /i/js/admin.js
+		upckeys: /i/js/upckeys.js
+		openpgp: /i/js/openpgp.min.js
+		highcharts-custom: /i/js/highcharts-custom.js
+		highcharts-webleed: /i/js/highcharts-webleed.js
