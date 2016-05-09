@@ -43,3 +43,4 @@ subresourceIntegrity:
 		openpgp: /i/js/openpgp.min.js
 		highcharts-custom: /i/js/highcharts-custom.js
 		highcharts-webleed: /i/js/highcharts-webleed.js
+		slideslive-embed: /i/js/slideslive-embed.js
