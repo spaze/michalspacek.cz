@@ -18,7 +18,7 @@
 	{script jquery}
 	{script netteForms}
 	{script scripts}
-	<script n:if="$trackingCode" src="{='/i/js/analytics.js'|staticUrl}" async defer></script>
+	{if $trackingCode}{script googleanalytics async, defer}{/if}
 	{ifset #scripts}{include #scripts}{/ifset}
 	{ifset #styles}{include #styles}{/ifset}
 	{ifset #metas}{include #metas}{/ifset}

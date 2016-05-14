@@ -46,3 +46,4 @@ subresourceIntegrity:
 		highcharts-custom: /i/js/highcharts-custom.js
 		highcharts-webleed: /i/js/highcharts-webleed.js
 		slideslive-embed: /i/js/slideslive-embed.js
+		googleanalytics: /i/js/analytics.js

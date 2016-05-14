@@ -7,7 +7,7 @@
 	{script jquery}
 	{script highcharts-custom}
 	{script highcharts-webleed}
-	<script n:if="$trackingCode" src="{='/i/js/analytics.js'|staticUrl}" async defer></script>
+	{if $trackingCode}{script googleanalytics async, defer}{/if}
 </head>
 <body>
 <div id="container">
