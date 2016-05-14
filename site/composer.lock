@@ -1194,12 +1194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "605fb7585c62038b286a978a7a543533b3fd004d"
+                "reference": "9978cef64de9805c6519792f8ea231de8b62c301"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/605fb7585c62038b286a978a7a543533b3fd004d",
-                "reference": "605fb7585c62038b286a978a7a543533b3fd004d",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/9978cef64de9805c6519792f8ea231de8b62c301",
+                "reference": "9978cef64de9805c6519792f8ea231de8b62c301",
                 "shasum": ""
             },
             "type": "library",
@@ -1220,11 +1220,11 @@
                 }
             ],
             "description": "Subresource Integrity macros for Latte template engine",
-            "time": "2016-05-09 02:28:24"
+            "time": "2016-05-14 19:46:58"
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.5",
+            "version": "v2.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
@@ -1277,7 +1277,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -1385,7 +1385,7 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.8.5",
+            "version": "v2.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
