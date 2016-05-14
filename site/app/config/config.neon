@@ -31,6 +31,8 @@ translation:
 		session: off
 
 subresourceIntegrity:
+	hashingAlgos:
+		- sha256
 	localPrefix:
 		url: %domain.sharedStaticRoot%
 		path: ../www
