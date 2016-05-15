@@ -47,3 +47,7 @@ subresourceIntegrity:
 		highcharts-webleed: /i/js/highcharts-webleed.js
 		slideslive-embed: /i/js/slideslive-embed.js
 		googleanalytics: /i/js/analytics.js
+		screen-main: /i/css/screen.css
+		screen-upc: /i/css/upc/screen.css
+		screen-webleed: /i/css/webleed/screen.css
+		info-admin: /i/css/admin/info.css

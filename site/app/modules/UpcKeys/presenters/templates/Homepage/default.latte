@@ -4,7 +4,7 @@
 	<meta charset="utf-8" />
 	<title>UPC Wi-Fi Keys{if isset($ssid)} for {$ssid}{/if}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="{='/i/css/upc/screen.css'|staticUrl}" type="text/css">
+	{stylesheet screen-upc}
 	{script jquery}
 	{script upckeys}
 	{if $trackingCode}{script googleanalytics async, defer}{/if}
