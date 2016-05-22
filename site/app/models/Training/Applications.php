@@ -15,7 +15,6 @@ class Applications
 
 	const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
 	const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
-	const DEFAULT_SOURCE = self::SOURCE_MICHAL_SPACEK;
 
 	/** @var \Nette\Database\Context */
 	protected $database;
@@ -380,7 +379,7 @@ class Applications
 	 */
 	private function resolvePriceDiscountVat(\Nette\Database\Row $training, $status, $source, $note)
 	{
-		if (in_array($status, [Statuses::STATUS_NON_PUBLIC_TRAINING, Statuses::STATUS_TENTATIVE]) || $source !== self::DEFAULT_SOURCE) {
+		if (in_array($status, [Statuses::STATUS_NON_PUBLIC_TRAINING, Statuses::STATUS_TENTATIVE])) {
 			$price = null;
 			$discount = null;
 		} elseif (stripos($note, 'student') === false) {
