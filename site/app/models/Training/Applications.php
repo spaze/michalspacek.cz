@@ -2,6 +2,7 @@
 namespace MichalSpacekCz\Training;
 
 use Nette\Application\UI\Form;
+use Nette\Utils\Strings;
 
 /**
  * Training applications model.
@@ -12,7 +13,9 @@ use Nette\Application\UI\Form;
 class Applications
 {
 
-	const DEFAULT_SOURCE  = 'michal-spacek';
+	const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
+	const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
+	const DEFAULT_SOURCE = self::SOURCE_MICHAL_SPACEK;
 
 	/** @var \Nette\Database\Context */
 	protected $database;
@@ -205,7 +208,7 @@ class Applications
 			$note,
 			$equipment,
 			Statuses::STATUS_TENTATIVE,
-			self::DEFAULT_SOURCE
+			$this->resolveSource($note)
 		);
 	}
 
@@ -227,7 +230,7 @@ class Applications
 			$note,
 			$equipment,
 			Statuses::STATUS_SIGNED_UP,
-			self::DEFAULT_SOURCE
+			$this->resolveSource($note)
 		);
 	}
 
@@ -242,7 +245,7 @@ class Applications
 	 */
 	public function addPreliminaryInvitation(\Nette\Database\Row $training, $name, $email)
 	{
-		return $this->insertApplication($training, null, $name, $email, null, null, null, null, null, null, null, null, null, Statuses::STATUS_TENTATIVE, self::DEFAULT_SOURCE);
+		return $this->insertApplication($training, null, $name, $email, null, null, null, null, null, null, null, null, null, Statuses::STATUS_TENTATIVE, $this->resolveSource(null));
 	}
 
 
@@ -397,6 +400,23 @@ class Applications
 		}
 
 		return [$price, $vatRate, $priceVat, $discount];
+	}
+
+
+	/**
+	 * Resolves training source.
+	 *
+	 * @param string|null $note
+	 * @return string
+	 */
+	private function resolveSource($note)
+	{
+		if (Strings::contains(Strings::lower((string)$note), 'jakub vrána')) {
+			$source = self::SOURCE_JAKUB_VRANA;
+		} else {
+			$source = self::SOURCE_MICHAL_SPACEK;
+		}
+		return $source;
 	}
 
 
