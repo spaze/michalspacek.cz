@@ -33,6 +33,7 @@ services:
 		class: \MichalSpacekCz\Training\Files
 		setup:
 			- setFilesDir('../../files/trainings')
+	vranaResolver: MichalSpacekCz\Training\Resolver\Vrana
 	authenticator:
 		class: \MichalSpacekCz\User\Manager
 		setup:

@@ -2,7 +2,6 @@
 namespace MichalSpacekCz\Training;
 
 use Nette\Application\UI\Form;
-use Nette\Utils\Strings;
 
 /**
  * Training applications model.
@@ -31,13 +30,17 @@ class Applications
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
+	/** @var \MichalSpacekCz\Training\Resolver\Vrana */
+	protected $vranaResolver;
+
 
 	public function __construct(
 		\Nette\Database\Context $context,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		\MichalSpacekCz\Encryption\Email $emailEncryption,
-		\MichalSpacekCz\Vat $vat
+		\MichalSpacekCz\Vat $vat,
+		\MichalSpacekCz\Training\Resolver\Vrana $vranaResolver
 	)
 	{
 		$this->database = $context;
@@ -45,6 +48,7 @@ class Applications
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
 		$this->vat = $vat;
+		$this->vranaResolver = $vranaResolver;
 	}
 
 
@@ -410,7 +414,7 @@ class Applications
 	 */
 	private function resolveSource($note)
 	{
-		if (Strings::contains(Strings::lower((string)$note), 'jakub vrána')) {
+		if ($this->vranaResolver->isTrainingApplicationOwner($note)) {
 			$source = self::SOURCE_JAKUB_VRANA;
 		} else {
 			$source = self::SOURCE_MICHAL_SPACEK;
