@@ -5,7 +5,7 @@
 </p>
 <table id="statuses">
 	{var $dateLineDisplayed = false}
-	<tbody n:inner-foreach="$trainings as $training">
+	<tbody n:inner-foreach="$trainings as $training" n:class="$order">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
 		<tr n:class="summary, $training->start < $now && !$dateLineDisplayed ? dateLine">
 			{var $dateLineDisplayed = $training->start < $now}
