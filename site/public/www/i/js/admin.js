@@ -73,6 +73,11 @@ $(document).ready(function() {
 		return false;
 	});
 
+	$('#pridat-rozhovor a[href="#pridat-rozhovor"]').click(function() {
+		$('#pridat-rozhovor-container').slideToggle('fast');
+		return false;
+	});
+
 	$('#statuses td[data-date]')
 		.click(function() {
 			$('#date-' + $(this).data('date')).toggle();

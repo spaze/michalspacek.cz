@@ -1,0 +1,10 @@
+{define #menu}
+&raquo; <a n:href=":Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+&raquo; <a n:href="Interviews:">{_messages.title.interviews}</a>
+{/define}
+
+{define #content}
+{includeblock "default.latte"}
+{include #interviewForm, form => editInterview}
+{/define}

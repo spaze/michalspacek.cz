@@ -1,0 +1,67 @@
+{define #itemInterview}
+	<li><a n:href="Interviews:interview $interview->interviewId">{$interview->title}</a>
+	<small>
+		<strong class="date">{$interview->date|date:'j. n. Y'}</strong>, {$interview->sourceName}
+		<span n:if="$interview->audioHref" class="icon icon16 audio" title="{_messages.label.audiorecording}"></span>
+		<span n:if="$interview->videoHref" class="icon icon16 video" title="{_messages.label.videorecording}"></span>
+	</small></li>
+{/define}
+
+{define #interviewForm}
+{form $form class => "aligned wide"}
+<table>
+	<tr>
+		<th>{label action /}</th><td>{input action}<br></td>
+	</tr>
+	<tr>
+		<th>{label title /}</th><td>{input title}<br><small><a n:ifset="$interview->action" n:href=":Interviews:interview $interview->action">zobrazit rozhovor</a></small></td>
+	</tr>
+	<tr>
+		<th>{label description /}</th><td>{input description}</td>
+	</tr>
+	<tr>
+		<th>{label date /}</th><td>{input date}</td>
+	</tr>
+	<tr>
+		<th>{label href /}</th><td>{input href}</td>
+	</tr>
+	<tr>
+		<th>{label audioHref /}</th><td>{input audioHref}</td>
+	</tr>
+	<tr>
+		<th>{label audioEmbed /}</th><td>{input audioEmbed}</td>
+	</tr>
+	<tr>
+		<th>{label videoHref /}</th><td>{input videoHref}</td>
+	</tr>
+	<tr>
+		<th>{label videoEmbed /}</th><td>{input videoEmbed}</td>
+	</tr>
+	<tr>
+		<th>{label sourceName /}</th><td>{input sourceName}</td>
+	</tr>
+	<tr>
+		<th>{label sourceHref /}</th><td>{input sourceHref}</td>
+	</tr>
+	<tr>
+		<th></th><td class="short"><p>{input submit}</p></td>
+	</tr>
+</table>
+{/form $form}
+{/define}
+
+{define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<div id="pridat-rozhovor">
+	<p><a href="#pridat-rozhovor" class="block">Přidat rozhovor</a></p>
+	<div id="pridat-rozhovor-container" class="hidden">
+	{include #interviewForm, form => addInterview}
+	</div>
+</div>
+<hr>
+<ol reversed>
+{foreach $interviews as $interview}
+	{include #itemInterview}
+{/foreach}
+<ol>
+{/define}
