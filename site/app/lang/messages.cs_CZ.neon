@@ -216,7 +216,7 @@ trainings:
 		confirmed: "Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní. Pokud do školení zbývá ještě dost času, může mi to trvat o chvilku déle."
 		preliminary: "Díky, nezávazná přihláška odeslána! Dám vám vědět, jakmile termín školení vypíšu."
 	fewseatsleft: "Ještě zbývá posledních pár míst, přihlaste se!"
-	welcome: "Zvu vás na školení, která pořádám. Dříve je vedl \"Jakub Vrána\":[%s] a já jsem je po něm \"převzal\":[%s]."
+	welcome: "Zvu vás na školení, která pořádám:"
 	companytraining: "Školení mohu uspořádat také \"u vás ve firmě\":[%s]."
 	companyextratraining: "Jakékoliv veřejné školení mohu uspořádat také \"u vás ve firmě\":[%s]. Společnostem nabízím navíc i tyto kurzy:"
 	consultancy: "Nabízím i konzultaci pro vaši firmu, \"napište mi\":[%s]!"
