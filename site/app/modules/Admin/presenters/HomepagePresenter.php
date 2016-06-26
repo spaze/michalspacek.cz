@@ -21,9 +21,6 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Notifications */
-	protected $trainingNotifications;
-
 	/** @var \MichalSpacekCz\WebTracking */
 	protected $webTracking;
 
@@ -32,21 +29,18 @@ class HomepagePresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Training\Notifications $trainingNotifications
 	 * @param \MichalSpacekCz\WebTracking $webTracking
 	 */
 	public function __construct(
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
 		Training\Dates $trainingDates,
-		Training\Notifications $trainingNotifications,
 		\MichalSpacekCz\WebTracking $webTracking
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;
-		$this->trainingNotifications = $trainingNotifications;
 		$this->webTracking = $webTracking;
 	}
 
@@ -74,7 +68,6 @@ class HomepagePresenter extends BasePresenter
 		$this->template->pageTitle = 'Administrace';
 		$this->template->trackingEnabled = $this->webTracking->isEnabled();
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
-		list($this->template->notificationsToSendTotal, $this->template->notificationsToSendPaid) = $this->trainingNotifications->getCounts();
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
 		list($this->template->preliminaryTotal, $this->template->preliminaryDateSet) = $this->trainingApplications->getPreliminaryCounts();
 	}

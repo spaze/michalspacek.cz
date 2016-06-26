@@ -42,11 +42,6 @@ parameters:
 	contact:
 		phoneNumber: 123456789
 
-	notifier:
-		vrana:
-			url: http://echo.local/
-			note: %notifier.vrana.successMarker%
-
 	returningUser:
 		cookie: cafebabe
 		value: waldoxyzzy

@@ -15,10 +15,6 @@ parameters:
 		rootDomainMapping:
 			cz: michalspacek.cz
 			com: michalspacek.com
-	notifier:
-		vrana:
-			noSpam: nospam
-			successMarker: 'Děkuji za přihlášku na školení'
 	domain:
 		default: www
 		sharedStaticRoot: https://www.%domain.root%
