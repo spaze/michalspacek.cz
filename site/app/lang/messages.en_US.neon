@@ -261,7 +261,7 @@ trainings:
 	nodateyet:
 		short: "termín zatím nevypsán"
 		long: "Žádný termín není zatím stanoven. \"Dejte mi níže vědět\":[%s], pokud byste o školení měli zájem."
-	regularlyeveryquarter: "Trainings in Prague are held regularly every quarter, always around the middle of March, June, September, and December, in other cities irregularly."
+	regularlyeveryquarter: "Trainings in Prague are held regularly every quarter, always in the middle of March, June, September, and December, in other cities irregularly."
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"
