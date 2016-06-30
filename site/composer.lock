@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "779f97c0a240a8fd7169de2ad4068784",
-    "content-hash": "653b5d06df2e9366219a6cf18c228f0f",
+    "hash": "b399e22bceb93abec2ccd5fcac55f1d1",
+    "content-hash": "6674feb89c3c60d65af65c7c32a829d1",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1155,16 +1155,16 @@
         },
         {
             "name": "spaze/netxten",
-            "version": "v0.5.0",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "f7fd7fba0d97efa7122c411984433bdf588b9d48"
+                "reference": "9d927617c58b4375c407eae025b8d3aa9730c2ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/f7fd7fba0d97efa7122c411984433bdf588b9d48",
-                "reference": "f7fd7fba0d97efa7122c411984433bdf588b9d48",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/9d927617c58b4375c407eae025b8d3aa9730c2ca",
+                "reference": "9d927617c58b4375c407eae025b8d3aa9730c2ca",
                 "shasum": ""
             },
             "require": {
@@ -1183,10 +1183,10 @@
                 }
             },
             "support": {
-                "source": "https://github.com/spaze/netxten/tree/v0.5.0",
+                "source": "https://github.com/spaze/netxten/tree/v0.6.0",
                 "issues": "https://github.com/spaze/netxten/issues"
             },
-            "time": "2016-04-20 19:46:08"
+            "time": "2016-06-30 18:30:37"
         },
         {
             "name": "spaze/sri-macros",
@@ -1194,12 +1194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "1f6b6dc662e11a3c729572a15c270acea3c5adf2"
+                "reference": "bb65b9adfa1264db46efdd4d6a7208dbeca21732"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/1f6b6dc662e11a3c729572a15c270acea3c5adf2",
-                "reference": "1f6b6dc662e11a3c729572a15c270acea3c5adf2",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/bb65b9adfa1264db46efdd4d6a7208dbeca21732",
+                "reference": "bb65b9adfa1264db46efdd4d6a7208dbeca21732",
                 "shasum": ""
             },
             "require-dev": {
@@ -1223,7 +1223,7 @@
                 }
             ],
             "description": "Subresource Integrity macros for Latte template engine",
-            "time": "2016-06-25 18:04:28"
+            "time": "2016-06-29 17:04:09"
         },
         {
             "name": "symfony/config",
