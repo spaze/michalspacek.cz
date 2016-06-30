@@ -19,7 +19,6 @@ id:
 	prerequisites: predpoklady
 	intendedfor: urceno-pro
 	date: termin
-	pastdates: uskutecnene-terminy
 	length: delka
 	capacity: kapacita
 	price: cena

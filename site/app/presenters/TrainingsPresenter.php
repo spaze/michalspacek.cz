@@ -131,10 +131,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates            = $this->dates;
 
-		$this->template->pastTrainingsMe = $this->trainingDates->getPastDates($name);
-
-		$this->template->pastTrainingsJakub = $this->trainingDates->getPastDatesByJakub($name);
-
 		$this->template->reviews = $this->trainings->getReviews($name, 3);
 
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();

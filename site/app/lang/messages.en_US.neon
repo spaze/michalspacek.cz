@@ -250,8 +250,6 @@ trainings:
 	lunchbreak: "one hour lunch break"
 	tentativedate: "**Předběžný termín** - přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát."
 	extendedtime: "According to the situation, the course can be longer by an extra hour."
-	pastdates: "Past dates"
-	pastdatesvrana: "Courses led by \"Jakub Vrána\":[%s]:"
 	capacity: "Maximum of %s participants"
 	price: "**%s Kč**, %s Kč incl. VAT"
 	studentdiscount: "%s%% discount for students"

@@ -19,7 +19,6 @@ id:
 	prerequisites: prerequisites
 	intendedfor: intended-for
 	date: date
-	pastdates: past-dates
 	length: length
 	capacity: capacity
 	price: price

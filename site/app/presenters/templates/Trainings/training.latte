@@ -146,18 +146,6 @@
 {/if}
 </p>
 </div>
-<p n:if="$pastTrainingsMe || $pastTrainingsJakub" id="{_html.id.pastdates}">
-	<small>
-	<a href="#{_html.id.pastdates}" id="pastDates-link">{_messages.trainings.pastdates}</a><span id="pastDates-container">{foreach $pastTrainingsMe as $date}{first}:{/first}
-		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}
-	{/foreach}
-	{foreach $pastTrainingsJakub as $date}
-		{first}{_messages.trainings.pastdatesvrana|format:$originalHref}{/first}
-		<span class="date">{$date|date:'j. n. Y'}</span>{sep}, {/sep}{last}.{/last}
-	{/foreach}
-	</span>
-	</small>
-</p>
 <hr />
 
 <h2 id="{_html.id.capacity}">{_messages.label.trainingcapacity}</h2>

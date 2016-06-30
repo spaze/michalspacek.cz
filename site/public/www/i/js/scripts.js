@@ -2,11 +2,6 @@ $(document).ready(function() {
 	$('#termin a[href="#prihlaska"]').click(function() {
 		$('#frm-application-trainingId').val($(this).data('id'));
 	});
-	$('#pastDates-link').click(function() {
-		$('#pastDates-container').fadeToggle('fast');
-		return false;
-	});
-	$('#pastDates-container').hide();
 
 	var APPLICATION = APPLICATION || {};
 	APPLICATION.loadData = function(event) {
