@@ -125,6 +125,8 @@
 		<small>(<a href="#{_html.id.application}" data-id="{$date->dateId}" class="url">{_messages.label.signup}</a>)</small>
 		{if $date->tentative}
 			<br /><small>{_messages.trainings.tentativedate|format}</small>
+		{else}
+			<br><small>{_messages.trainings.extendedtime}</small>
 		{/if}
 		{if $date->cooperationDescription}<br /><small>{$date->cooperationDescription}</small>{/if}
 	</p>
@@ -137,14 +139,13 @@
 	</div>
 </div>
 <p>
-{if count($dates)}
-	<small>{_messages.trainings.extendedtime}</small>
-{else}
+{if !$dates}
 	{capture $anchor}#{_html.id.application}{/capture}
 	{_messages.trainings.nodateyet.long|format:$anchor}
 	{_messages.trainings.companythistraining|format:"link:CompanyTrainings:training $name"}
 {/if}
 </p>
+<p><small>{_messages.trainings.regularlyeveryquarter}</small></p>
 </div>
 <hr />
 
