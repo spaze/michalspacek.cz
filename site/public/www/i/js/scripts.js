@@ -77,5 +77,19 @@ $(document).ready(function() {
 			ENCRYPTION.reset();
 		}
 	});
-	$('#encrypt').one('click', ENCRYPTION.handler);
+
+	if ($('#openpgp-preload').length) {
+		document.getElementsByTagName('head')[0].appendChild(
+			$(document.createElement('script'))
+				.prop('async', true)
+				.attr('integrity', $('#openpgp-preload').attr('integrity'))
+				.attr('src', $('#openpgp-preload').attr('href'))
+				.on('load', function(){
+					$('#encrypt')
+						.one('click', ENCRYPTION.handler)
+						.removeAttr('title')
+						.prop('disabled', false);
+				})[0]
+		);
+	}
 });
