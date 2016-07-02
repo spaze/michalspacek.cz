@@ -39,7 +39,7 @@ subresourceIntegrity:
 		build: /i/build
 	localMode: build
 	resources:
-		jquery: /i/js/jquery-2.2.2.min.js
+		jquery: /i/js/jquery-3.0.0.min.js
 		netteForms: /i/js/netteForms.js
 		scripts: /i/js/scripts.js
 		admin: /i/js/admin.js
