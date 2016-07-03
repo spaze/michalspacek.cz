@@ -57,4 +57,7 @@ $(document).ready(function() {
 			$('#filterKey').change();
 		}, 100);
 	});
+	$('#filterType, #filterPrefix, #filterKey')
+		.removeAttr('title')
+		.prop('disabled', false);
 });

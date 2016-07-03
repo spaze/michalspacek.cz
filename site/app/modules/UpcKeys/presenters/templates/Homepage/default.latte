@@ -5,8 +5,7 @@
 	<title>UPC Wi-Fi Keys{if isset($ssid)} for {$ssid}{/if}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{stylesheet screen-upc}
-	{script jquery}
-	{script upckeys}
+	{script jquery+upckeys async, defer}
 	{if $trackingCode}{script googleanalytics async, defer}{/if}
 	<meta property="og:image" content="{='/i/images/upc/screenshot.jpg'|staticUrl}">
 	<meta property="og:title" content="UPC Wi-Fi Keys{if isset($ssid)} for {$ssid}{/if}">
@@ -57,14 +56,14 @@
 		<tr>
 			<th class="nr">#.</th>
 			<td>
-				<select id="filterPrefix">
+				<select id="filterPrefix" disabled title="Loading, please wait">
 					<option value="">all</option>
 					<option n:foreach="$prefixes as $prefix" value="p{$prefix}">{$prefix}</option>
 				</select>
 			</td>
-			<td><input type="text" id="filterKey" placeholder="all"></td>
+			<td><input type="text" id="filterKey" placeholder="all" disabled title="Loading, please wait"></td>
 			<td class="type">
-				<select id="filterType">
+				<select id="filterType" disabled title="Loading, please wait">
 					<option value="">all</option>
 					<option n:foreach="$filterTypes as $id => $type" value="t{$id}">{$type}</option>
 				</select>
