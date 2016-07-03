@@ -39,13 +39,13 @@ $(document).ready(function() {
 				return !(new RegExp(filterKey, 'i')).test($(this).find('td.key code').text());
 			}).hide();
 		}
-        $('#result tbody tr:visible:even').addClass('dark');
-        $('#result tbody tr:visible:odd').removeClass('dark');
-    	$('#footer').toggle(tr.siblings(':visible').length === 0);
-        var i = 1;
-        $('#result tbody td.nr:visible code').text(function() {
-        	return i++ + '.';
-        });
+		$('#result tbody tr:visible:even').addClass('dark');
+		$('#result tbody tr:visible:odd').removeClass('dark');
+		$('#footer').toggle(tr.siblings(':visible').length === 0);
+		var i = 1;
+		$('#result tbody td.nr:visible code').text(function() {
+			return i++ + '.';
+		});
 	});
 	$('#filterKey').keyup(function() {
 		clearTimeout(timer);
