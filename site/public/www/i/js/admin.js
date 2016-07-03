@@ -1,8 +1,4 @@
 $(document).ready(function() {
-	$('.selectAll').focus(function(e){
-		e.target.select()
-	});
-
 	$('#pridat-ucastniky a[href="#pridat-ucastniky"]').click(function() {
 		$('#pridat-ucastniky-container').slideToggle('fast');
 		return false;
