@@ -2,10 +2,6 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
-{define #scripts}
-{preload openpgp as=>script, id=>openpgp-preload}
-{/define}
-
 {define #content}
 <p><h3>Michal Špaček</h3></p>
 <p id="contact">
@@ -41,7 +37,15 @@
 </p>
 <p>
 	<textarea id="message"></textarea><br>
-	<button id="encrypt" data-encrypt="{_messages.label.encrypt}" data-copy="{_messages.label.copy}" disabled title="{_messages.contact.loading}">{_messages.label.encrypt}</button>
+	<button
+		id="encrypt"
+		data-encrypt="{_messages.label.encrypt}"
+		data-copy="{_messages.label.copy}"
+		data-lib="{$encryptionLib}"
+		data-integrity="{$encryptionIntegrity}"
+		disabled
+		title="{_messages.contact.loading}"
+	>{_messages.label.encrypt}</button>
 	<small id="copied">{_messages.contact.copied} <span class="button">{_messages.contact.newmessage}</span></small>
 	<small id="copythis">{_messages.contact.copythis} <span class="button">{_messages.contact.newmessage}</span></small>
 </p>

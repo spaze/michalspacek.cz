@@ -78,12 +78,12 @@ $(document).ready(function() {
 		}
 	});
 
-	if ($('#openpgp-preload').length) {
+	if ($('#encrypt').length) {
 		document.getElementsByTagName('head')[0].appendChild(
 			$(document.createElement('script'))
 				.prop('async', true)
-				.attr('integrity', $('#openpgp-preload').attr('integrity'))
-				.attr('src', $('#openpgp-preload').attr('href'))
+				.attr('integrity', $('#encrypt').data('integrity'))
+				.attr('src', $('#encrypt').data('lib'))
 				.on('load', function(){
 					$('#encrypt')
 						.one('click', ENCRYPTION.handler)
