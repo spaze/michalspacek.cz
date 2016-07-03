@@ -15,9 +15,8 @@
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Michal Špaček</title>
 	{stylesheet screen-main}
 	<link rel="preload" as="image" href="{='/i/images/icons.png'|staticUrl}">
-	{script jquery}
-	{script netteForms}
-	{script scripts}
+	{script jquery+scripts async, defer}
+	{script netteForms async, defer}
 	{if $trackingCode}{script googleanalytics async, defer}{/if}
 	{ifset #scripts}{include #scripts}{/ifset}
 	{ifset #styles}{include #styles}{/ifset}
