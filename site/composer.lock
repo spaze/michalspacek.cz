@@ -1194,12 +1194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "d2f0e03158cd86cf153f73fd3a84295cafd2cfad"
+                "reference": "8cf7ac017609cb8713703fb1dd2aaf0b3266127a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/d2f0e03158cd86cf153f73fd3a84295cafd2cfad",
-                "reference": "d2f0e03158cd86cf153f73fd3a84295cafd2cfad",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/8cf7ac017609cb8713703fb1dd2aaf0b3266127a",
+                "reference": "8cf7ac017609cb8713703fb1dd2aaf0b3266127a",
                 "shasum": ""
             },
             "require-dev": {
@@ -1223,7 +1223,7 @@
                 }
             ],
             "description": "Subresource Integrity macros for Latte template engine",
-            "time": "2016-07-03 02:30:50"
+            "time": "2016-07-03 14:17:47"
         },
         {
             "name": "symfony/config",
