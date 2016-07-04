@@ -175,6 +175,7 @@ td.nameCell { width: 200px; }
 .desc tr.dateLine td { border-top: 2px solid #EEE; }
 .asc tr.dateLine td { border-bottom: 2px solid #EEE; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
+#pridat-ucastniky .delete { display: hidden; }
 #statuses th, #statuses td, #applications th, #applications td { padding: 1px 5px; }
 #statuses tr.summary:hover { background-color: #F0F0F0; }
 #applications tbody tr:hover { background-color: #F0F0F0; }
@@ -239,6 +240,8 @@ div.notice {
 #pridat-ucastniky-container table { font-size: 75%; }
 #pridat-ucastniky-container table input[type=text] { width: 78px; }
 #pridat-ucastniky-container table .highlight { background-color: yellow; }
+#pridat-ucastniky-container, #pridat-soubor-container, #upravit-termin-container, #pridat-termin-container,
+#pridat-prednasku-container, #pridat-rozhovor-container, #statusHistory-container { display: none; }
 #emails tbody tr.row:hover { background-color: #F0F0F0; }
 #frm-mails input { font-size: 60%; }
 #frm-mails input[type=number] { width: 75px; }

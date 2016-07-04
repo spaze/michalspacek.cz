@@ -54,7 +54,7 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-rozhovor">
 	<p><a href="#pridat-rozhovor" class="block">Přidat rozhovor</a></p>
-	<div id="pridat-rozhovor-container" class="hidden">
+	<div id="pridat-rozhovor-container">
 	{include #interviewForm, form => addInterview}
 	</div>
 </div>

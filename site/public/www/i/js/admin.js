@@ -3,7 +3,6 @@ $(document).ready(function() {
 		$('#pridat-ucastniky-container').slideToggle('fast');
 		return false;
 	});
-	$('#pridat-ucastniky-container').hide();
 
 	var Applications = {};
 	Applications.reindex = function(element, index) {
@@ -45,19 +44,16 @@ $(document).ready(function() {
 			tr.removeClass('highlight');
 		}
 	});
-	$('#pridat-ucastniky .delete').hide();
 
 	$('#pridat-soubor a[href="#pridat-soubor"]').click(function() {
 		$('#pridat-soubor-container').slideToggle('fast');
 		return false;
 	});
-	$('#pridat-soubor-container').hide();
 
 	$('#upravit-termin a[href="#upravit-termin"]').click(function() {
 		$('#upravit-termin-container').slideToggle('fast');
 		return false;
 	});
-	$('#upravit-termin-container').hide();
 
 	$('#pridat-termin a[href="#pridat-termin"]').click(function() {
 		$('#pridat-termin-container').slideToggle('fast');
@@ -121,5 +117,4 @@ $(document).ready(function() {
 		event.preventDefault();
 		$('#statusHistory-container').slideToggle('fast');
 	});
-	$('#statusHistory-container').hide();
 });
