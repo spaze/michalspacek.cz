@@ -40,8 +40,8 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 parameters:
 	locales:
 		rootDomainMapping:
-			cz: michalspacek.cz.local
-			com: michalspacek.com.local
+			cz: michalspacek.cz.test
+			com: michalspacek.com.test
 
 	contact:
 		phoneNumber: 123456789

@@ -3,7 +3,7 @@ translation:
 
 parameters:
 	domain:
-		root: michalspacek.cz.local
+		root: michalspacek.cz.test
 		fqdn: api.%domain.root%
 		cookie: .%domain.root%
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%

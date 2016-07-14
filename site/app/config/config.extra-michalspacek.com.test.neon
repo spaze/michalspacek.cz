@@ -3,7 +3,8 @@ translation:
 
 parameters:
 	domain:
-		root: michalspacek.cz.local
-		fqdn: heartbleed.%domain.root%
+		root: michalspacek.com.test
+		fqdn: www.%domain.root%
 		cookie: .%domain.root%
+		sharedStaticRoot: https://www.michalspacek.cz.test
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%

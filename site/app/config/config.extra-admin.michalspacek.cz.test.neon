@@ -1,9 +1,9 @@
 translation:
-	default: en_US
+	default: cs_CZ
 
 parameters:
 	domain:
-		root: michalspacek.cz.local
-		fqdn: upc.%domain.root%
+		root: michalspacek.cz.test
+		fqdn: admin.%domain.root%
 		cookie: .%domain.root%
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%
