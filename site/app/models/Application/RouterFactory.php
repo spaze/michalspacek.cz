@@ -15,6 +15,7 @@ class RouterFactory
 	const ADMIN = 'admin';
 	const API = 'api';
 	const HEARTBLEED = 'heartbleed';
+	const PULSE = 'pulse';
 	const UPC = 'upc';
 	const WWW = 'www';
 
@@ -128,6 +129,7 @@ class RouterFactory
 		$this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$this->addRoute(self::API, '<presenter>', 'Default', 'default');
+		$this->addRoute(self::PULSE, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::UPC, '[<ssid>]', 'Homepage', 'default');
 		$this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
 		$this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
@@ -163,6 +165,9 @@ class RouterFactory
 					break;
 				case self::UPC:
 					$metadata['module'] = 'UpcKeys';
+					break;
+				case self::PULSE:
+					$metadata['module'] = 'Pulse';
 					break;
 				case self::WWW:
 					if ($maskPrefix === null) {

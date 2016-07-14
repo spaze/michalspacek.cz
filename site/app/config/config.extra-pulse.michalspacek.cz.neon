@@ -1,0 +1,9 @@
+translation:
+	default: en_US
+
+parameters:
+	domain:
+		root: michalspacek.cz
+		fqdn: pulse.%domain.root%
+		cookie: .%domain.root%
+		contentSecurityPolicySelf: %domain.sharedStaticRoot%

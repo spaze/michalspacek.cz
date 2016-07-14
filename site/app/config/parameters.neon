@@ -7,6 +7,8 @@ parameters:
 				en_US: cz
 			heartbleed:
 				en_US: cz
+			pulse:
+				en_US: cz
 			upc:
 				en_US: cz
 			www:
