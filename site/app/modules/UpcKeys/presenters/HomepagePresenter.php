@@ -13,9 +13,6 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	/** @var string */
 	protected $ssid;
 
-	/** @var \Nette\Database\Context */
-	protected $database;
-
 	/** @var \MichalSpacekCz\UpcKeys */
 	protected $upcKeys;
 
@@ -26,9 +23,8 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	);
 
 
-	public function __construct(\Nette\Database\Context $context, \MichalSpacekCz\UpcKeys $upcKeys)
+	public function __construct(\MichalSpacekCz\UpcKeys $upcKeys)
 	{
-		$this->database = $context;
 		$this->upcKeys = $upcKeys;
 	}
 
