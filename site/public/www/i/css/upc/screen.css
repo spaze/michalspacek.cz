@@ -1,5 +1,5 @@
-body { font: 1em/1.5 Arial, sans-serif; }
 body {
+	font: 1em/1.5 Arial, sans-serif;
 	margin: 0px;
 	color: #249;
 	background-color: #EFF2FB;
@@ -55,11 +55,11 @@ h3 { color: #777; }
 #result .dark { background-color: #EEE; }
 #submit { width: 6em; }
 div.error {
-    padding: 1em;
-    margin: 0 1em 1em 1em;
-    text-align: center;
-    color: #F34;
-    background-color: #FEE;
+	padding: 1em;
+	margin: 0 1em 1em 1em;
+	text-align: center;
+	color: #F34;
+	background-color: #FEE;
 }
 #note {
 	text-align: center;
@@ -73,7 +73,7 @@ div.error {
 }
 #footer {
 	display: none;
-    color: #F34;
-    background-color: #FEE;
+	color: #F34;
+	background-color: #FEE;
 }
 #footer .nr, #footer .type { background-color: #FFF; }
