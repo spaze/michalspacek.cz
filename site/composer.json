@@ -25,5 +25,8 @@
 			"type": "vcs",
 			"url":  "https://github.com/spaze/netxten.git"
 		}
-	]
+	],
+	"require-dev": {
+		"nette/tester": "^1.7"
+	}
 }

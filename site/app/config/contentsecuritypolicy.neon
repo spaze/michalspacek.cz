@@ -56,4 +56,5 @@ contentSecurityPolicy:
 			style-src:
 				- "'unsafe-inline'"
 			form-action: "https://export.highcharts.com"
+		pulse.*.* < *.*:
 		upckeys.*.* < *.*:

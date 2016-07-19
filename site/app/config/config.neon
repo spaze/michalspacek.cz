@@ -45,11 +45,13 @@ subresourceIntegrity:
 		admin: /i/js/admin.js
 		upckeys: /i/js/upckeys.js
 		openpgp: /i/js/openpgp.min.js
+		pulse: /i/js/pulse.js
 		highcharts-custom: /i/js/highcharts-custom.js
 		highcharts-webleed: /i/js/highcharts-webleed.js
 		slideslive-embed: /i/js/slideslive-embed.js
 		googleanalytics: /i/js/analytics.js
 		screen-main: /i/css/screen.css
 		screen-upc: /i/css/upc/screen.css
+		screen-pulse: /i/css/pulse/screen.css
 		screen-webleed: /i/css/webleed/screen.css
 		info-admin: /i/css/admin/info.css

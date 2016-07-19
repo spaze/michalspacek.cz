@@ -11,6 +11,12 @@ database:
 		password: ...
 		options:
 			PDO::ATTR_EMULATE_PREPARES: false
+	pulse:
+		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_pulse'
+		user: ...
+		password: ...
+		options:
+			PDO::ATTR_EMULATE_PREPARES: false
 
 mail:
 	smtp: true
