@@ -25,7 +25,12 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 	 */
 	public function actionStorages($param = null)
 	{
-		$this->template->data = $this->passwords->getStorageData($param);
+		if ($param === null) {
+			$data = $this->passwords->getAllStorages();
+		} else {
+			$data = $this->passwords->getStorages($param);
+		}
+		$this->template->data = $data;
 	}
 
 }

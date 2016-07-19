@@ -28,12 +28,11 @@ class Passwords
 
 
 	/**
-	 * Get passwords storage data.
+	 * Get all passwords storage data.
 	 *
-	 * @param string|null $filter
 	 * @return \stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStorageData($filter = null)
+	public function getAllStorages()
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -57,15 +56,67 @@ class Passwords
 				JOIN password_disclosures_password_storages pdps ON pdps.key_password_storages = ps.id
 				JOIN password_disclosures pd ON pdps.key_password_disclosures = pd.id
 				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
-			WHERE s.alias = COALESCE(?, s.alias)
 			ORDER BY
 				c.name,
 				s.url,
 				ps.from DESC,
 				pd.published';
 
+		return $this->processStorages($this->database->fetchAll($query));
+	}
+
+
+	/**
+	 * Get passwords storage data for a site.
+	 *
+	 * @param string $site
+	 * @return \stdClass with companies, sites, algos, storages properties
+	 */
+	public function getStorages($site)
+	{
+		$query = 'SELECT
+				c.id AS companyId,
+				c.name AS companyName,
+				s.id AS siteId,
+				s.url AS siteUrl,
+				pa.id AS algoId,
+				pa.alias AS algoAlias,
+				pa.algo AS algoName,
+				pa.salted AS algoSalted,
+				pa.stretched AS algoStretched,
+				ps.from,
+				pd.url AS disclosureUrl,
+				pdt.alias AS disclosureTypeAlias,
+				pdt.type AS disclosureType,
+				ps.attributes
+			FROM companies c
+				LEFT JOIN sites s ON s.key_companies = c.id
+				JOIN password_storages ps ON ps.key_sites = s.id OR ps.key_companies = c.id
+				JOIN password_algos pa ON pa.id = ps.key_password_algos
+				JOIN password_disclosures_password_storages pdps ON pdps.key_password_storages = ps.id
+				JOIN password_disclosures pd ON pdps.key_password_disclosures = pd.id
+				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
+			WHERE s.alias = ?
+			ORDER BY
+				c.name,
+				s.url,
+				ps.from DESC,
+				pd.published';
+
+		return $this->processStorages($this->database->fetchAll($query, $site));
+	}
+
+
+	/**
+	 * Process passwords storage data.
+	 *
+	 * @param array $data
+	 * @return \stdClass with companies, sites, algos, storages properties
+	 */
+	private function processStorages(array $data)
+	{
 		$storages = new \stdClass();
-		foreach ($this->database->fetchAll($query, $filter) as $row) {
+		foreach ($data as $row) {
 			$storages->companies[$row->companyId] = $row->companyName;
 
 			if (!isset($storages->sites[$row->siteId])) {
