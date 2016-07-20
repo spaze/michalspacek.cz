@@ -51,10 +51,7 @@ ol { margin: 0; }
 	padding: 1em 1em 0.5em 1em;
 	margin: 0;
 }
-.inner-container .history {
-	display: none;
-	margin: 0 0 0 0.5em;
-}
+.inner-container .history { margin: 0 0 0 0.5em; }
 .inner-container .algo { margin: 0; }
 .inner-container .algo-container p { margin-left: 0.5em; }
 .inner-container .site-container {
@@ -111,5 +108,4 @@ ol { margin: 0; }
 	color: #CCC;
 }
 .open-button.open::after { content: " ▼"; }
-.arrow-down::after { content: " ▼"; }
 .hidden { display: none; }
