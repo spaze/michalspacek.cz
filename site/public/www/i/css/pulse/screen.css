@@ -4,6 +4,12 @@ body {
 	color: #222;
 	background-color: #EFEFEF;
 }
+h1 {
+	margin: 0.25em 0 1em 0;
+	font-size: 2.5em
+	line-height: 1em;
+}
+ol { margin: 0; }
 #header { margin: 0.5em 0; }
 #header h1 {
 	margin: 0;
@@ -11,17 +17,17 @@ body {
 	line-height: 1em;
 }
 #header p {
-	margin-top: 0.2em;
+	margin: 0.2em 0 1em 0;
 	float: left;
 }
-#header .rating {
+.guide .rating {
 	margin: 0.3em 0;
 }
 #guide-button {
 	float: right;
 	margin-top: 0.2em;
 }
-#guide {
+.guide {
 	padding: 1em;
 	background-color: #FAFAFA;
 }
@@ -35,7 +41,7 @@ body {
 	padding: 1em;
 	margin: 1em 0;
 }
-.company-container h2, #guide h2 { margin: 0; padding: 0;}
+.company-container h2, .guide h2 { margin: 0; padding: 0;}
 .company-container h3 { margin: 0.5em 0; }
 .company-container div { margin: 0.5em 0; }
 .company-container p { margin: 0; }

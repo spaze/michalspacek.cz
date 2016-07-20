@@ -19,6 +19,7 @@ class Passwords
 
 	/**
 	 * @param \Nette\Database\Context $context
+	 * @param \MichalSpacekCz\Pulse\Passwords\Rating $rating
 	 */
 	public function __construct(\Nette\Database\Context $context, Passwords\Rating $rating)
 	{
@@ -186,6 +187,48 @@ class Passwords
 			}
 		}
 		return $result . 'password' . str_repeat(')', $count);
+	}
+
+
+	/**
+	 * Get slow hashes.
+	 *
+	 * @return array of alias => name
+	 */
+	public function getSlowHashes()
+	{
+		return $this->database->fetchPairs(
+			'SELECT alias, algo FROM password_algos WHERE alias IN (?) ORDER BY algo',
+			$this->rating->getSlowHashes()
+		);
+	}
+
+
+	/**
+	 * Get visible disclosures.
+	 *
+	 * @return array of alias => name
+	 */
+	public function getVisibleDisclosures()
+	{
+		return $this->database->fetchPairs(
+			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
+			$this->rating->getVisibleDisclosures()
+		);
+	}
+
+
+	/**
+	 * Get invisible disclosures.
+	 *
+	 * @return array of alias => name
+	 */
+	public function getInvisibleDisclosures()
+	{
+		return $this->database->fetchPairs(
+			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
+			$this->rating->getInvisibleDisclosures()
+		);
 	}
 
 }

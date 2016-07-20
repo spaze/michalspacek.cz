@@ -130,4 +130,15 @@ class Rating
 		return $this->invisibleDisclosures;
 	}
 
+
+	/**
+	 * Get array of visible disclosures' aliases
+	 *
+	 * @return array
+	 */
+	public function getVisibleDisclosures()
+	{
+		return $this->visibleDisclosures;
+	}
+
 }

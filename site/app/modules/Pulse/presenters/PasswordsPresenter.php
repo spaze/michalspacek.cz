@@ -34,8 +34,22 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 		} else {
 			$data = $this->passwords->getStorages($param);
 		}
+		$this->template->pageTitle = 'Password storage disclosures';
 		$this->template->data = $data;
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+	}
+
+
+	/**
+	 * Storages action handler.
+	 */
+	public function actionStoragesRating()
+	{
+		$this->template->pageTitle = 'Password storage rating';
+		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+		$this->template->slowHashes = $this->passwords->getSlowHashes();
+		$this->template->visibleDisclosures = $this->passwords->getVisibleDisclosures();
+		$this->template->invisibleDisclosures = $this->passwords->getInvisibleDisclosures();
 	}
 
 }

@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<title>Password storage disclosures | Pulse</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	{stylesheet screen-pulse}
-	{script jquery+pulse async, defer}
-</head>
-<body>
-<div id="container">
+{define #content}
 <div id="header">
 	<h1>Password storage disclosures</h1>
 	<p><em>How securely do they store user passwords &amp; how good are they at letting us know?</em></p>
-	<div id="guide-button"><a href="" class="open-button">Rating guide</a></div>
+	<div id="guide-button"><a n:href="storages-rating" class="open-button">Rating guide</a></div>
 	<div class="clear"></div>
-	<div id="guide" class="hidden">
+	<div class="guide hidden">
 		<h2>Rating guide</h2>
 		<div n:foreach="$ratingGuide as $rating => $info" class="rating"><strong class="left rating-{$rating|lower}">{$rating}</strong> {$info}</div>
+		<div><a n:href="storages-rating">more&hellip;</a></div>
 	</div>
 </div>
 {foreach $data->storages as $companyId => $sites}
@@ -53,6 +44,4 @@
 	</div>
 {/block}
 {/foreach}
-</div>
-</body>
-</html>
+{/define}

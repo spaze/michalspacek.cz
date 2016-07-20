@@ -1,0 +1,19 @@
+{define #content}
+<h1>Password storage disclosures rating guide</h1>
+<div class="guide">
+	<h2>Rating guide</h2>
+	<div n:foreach="$ratingGuide as $rating => $info" class="rating"><strong class="left rating-{$rating|lower}">{$rating}</strong> {$info}</div>
+</div>
+<div class="guide">
+	<h2>Slow hashes</h2>
+	<ol><li n:foreach="$slowHashes as $algo">{$algo}</li></ol>
+</div>
+<div class="guide">
+	<h2>"On-site" disclosures</h2>
+	<ol><li n:foreach="$visibleDisclosures as $disclosure">{$disclosure}</li></ol>
+</div>
+<div class="guide">
+	<h2>Invisible disclosures</h2>
+	<ol><li n:foreach="$invisibleDisclosures as $disclosure">{$disclosure}</li></ol>
+</div>
+{/define}
