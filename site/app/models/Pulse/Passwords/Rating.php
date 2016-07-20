@@ -10,6 +10,14 @@ namespace MichalSpacekCz\Pulse\Passwords;
 class Rating
 {
 
+	/** @internal rating grades */
+	const RATING_A = 'A';
+	const RATING_B = 'B';
+	const RATING_C = 'C';
+	const RATING_D = 'D';
+	const RATING_E = 'E';
+	const RATING_F = 'F';
+
 	/** @internal algo type */
 	const ALGO_ARGON2 = 'argon2';
 	const ALGO_BCRYPT = 'bcrypt';
@@ -46,24 +54,37 @@ class Rating
 	{
 		if (in_array($algo->alias, $this->getSlowHashes())) {
 			if (isset($algo->disclosureTypes[self::DISCLO_DOCS])) {
-				return 'A';
+				return self::RATING_A;
 			} else {
 				foreach ($this->getInvisibleDisclosures() as $disclosure) {
 					if (isset($algo->disclosureTypes[$disclosure])) {
-						return 'B';
+						return self::RATING_B;
 					}
 				}
 				throw new \RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->alias, implode(', ', $algo->disclosureTypes)));
 			}
 		} elseif ($algo->salted && $algo->stretched) {
-			return 'C';
+			return self::RATING_C;
 		} elseif ($algo->salted) {
-			return 'D';
+			return self::RATING_D;
 		} elseif ($algo->alias !== self::ALGO_PLAINTEXT) {
-			return 'E';
+			return self::RATING_E;
 		} else {
-			return 'F';
+			return self::RATING_F;
 		}
+	}
+
+
+	public function getRatingGuide()
+	{
+		return [
+			self::RATING_A => 'Site uses a slow hashing function, this is disclosed "on-site", in the docs, FAQ, etc.',
+			self::RATING_B => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
+			self::RATING_C => 'Passwords hashed with an unsuitable function but at least they are salted and stretched with multiple iterations.',
+			self::RATING_D => 'Inappropriate function used to hash passwords but passwords are salted, at least.',
+			self::RATING_E => 'Unsalted passwords hashed with one iteration of unsuitable function.',
+			self::RATING_F => 'Passwords stored in plaintext, in their original, readable form.',
+		];
 	}
 
 

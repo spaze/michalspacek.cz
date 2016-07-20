@@ -4,6 +4,27 @@ body {
 	color: #222;
 	background-color: #EFEFEF;
 }
+#header { margin: 0.5em 0; }
+#header h1 {
+	margin: 0;
+	font-size: 2.5em
+	line-height: 1em;
+}
+#header p {
+	margin-top: 0.2em;
+	float: left;
+}
+#header .rating {
+	margin: 0.3em 0;
+}
+#guide-button {
+	float: right;
+	margin-top: 0.2em;
+}
+#guide {
+	padding: 1em;
+	background-color: #FAFAFA;
+}
 #container {
 	margin: 0 auto;
 	padding: 1em;
@@ -14,7 +35,7 @@ body {
 	padding: 1em;
 	margin: 1em 0;
 }
-.company-container h2 { margin: 0; padding: 0;}
+.company-container h2, #guide h2 { margin: 0; padding: 0;}
 .company-container h3 { margin: 0.5em 0; }
 .company-container div { margin: 0.5em 0; }
 .company-container p { margin: 0; }
@@ -35,20 +56,19 @@ body {
 	margin-bottom: 0;
 }
 .clear { clear: both; }
-.site { float: left; }
-.rating { float: right; }
+.left { float: left; }
+.right { float: right; }
 .rating strong {
     width: 1.5em;
     height: 1.5em;
     display: block;
-    float: right;
     text-align: center;
     background-color: hsl(0, 0%, 50%);
     border: 1px solid hsl(0, 0%, 40%);
     border-radius: 2px;
     box-sizing: border-box;
 	color: #FFF;
-	margin-left: 0.3em;
+	margin: 0 0.3em;
 }
 .rating .rating-a {
 	background-color: hsl(120, 100%, 35%);

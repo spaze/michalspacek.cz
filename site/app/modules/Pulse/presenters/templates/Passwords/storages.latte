@@ -9,23 +9,32 @@
 </head>
 <body>
 <div id="container">
-<h1>Password storage disclosures</h1>
+<div id="header">
+	<h1>Password storage disclosures</h1>
+	<p><em>How securely do they store user passwords &amp; how good are they at letting us know?</em></p>
+	<div id="guide-button"><a href="" class="open-button">Rating guide</a></div>
+	<div class="clear"></div>
+	<div id="guide" class="hidden">
+		<h2>Rating guide</h2>
+		<div n:foreach="$ratingGuide as $rating => $info" class="rating"><strong class="left rating-{$rating|lower}">{$rating}</strong> {$info}</div>
+	</div>
+</div>
 {foreach $data->storages as $companyId => $sites}
 {block|strip}
 	<div class="company-container">
 	<h2>{$data->companies[$companyId]}</h2>
 	{foreach $sites as $siteId => $algos}
 		<div class="site-container">
-			<div class="site">
+			<div class="left">
 				<a n:if="$data->sites[$siteId]->url" href="{$data->sites[$siteId]->url}">{$data->sites[$siteId]->host}</a>
 				<p n:if="!$data->sites[$siteId]->url">All sites</p>
 			</div>
-			<div class="rating">Rating <strong class="rating-{$data->sites[$siteId]->rating|lower}">{$data->sites[$siteId]->rating}</strong></div>
+			<div class="right rating">Rating <strong class="right rating-{$data->sites[$siteId]->rating|lower}" title="{$ratingGuide[$data->sites[$siteId]->rating]}">{$data->sites[$siteId]->rating}</strong></div>
 			<div class="clear"></div>
 		</div>
 		<div class="algo-container">
 		{foreach $algos as $algo}
-			{if $iterator->counter === 2}<div><a href="" class="open-button">History</a></div><div class="history">{/if}
+			{if $iterator->counter === 2}<div><a href="" class="open-button">History</a></div><div class="history hidden">{/if}
 				<div class="algo"><strong>{$data->algos[$algo->id]}</strong>{if $algo->from} (since {$algo->from|date:'F Y'}){/if}</div>
 				<div>
 				{if $algo->disclosures}

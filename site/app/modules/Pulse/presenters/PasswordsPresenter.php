@@ -13,10 +13,14 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 	/** @var \MichalSpacekCz\Pulse\Passwords */
 	protected $passwords;
 
+	/** @var \MichalSpacekCz\Pulse\Passwords\Rating */
+	protected $passwordsRating;
 
-	public function __construct(\MichalSpacekCz\Pulse\Passwords $passwords)
+
+	public function __construct(\MichalSpacekCz\Pulse\Passwords $passwords, \MichalSpacekCz\Pulse\Passwords\Rating $passwordsRating)
 	{
 		$this->passwords = $passwords;
+		$this->passwordsRating = $passwordsRating;
 	}
 
 
@@ -31,6 +35,7 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 			$data = $this->passwords->getStorages($param);
 		}
 		$this->template->data = $data;
+		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
 	}
 
 }
