@@ -26,6 +26,8 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 
 	/**
 	 * Storages action handler.
+	 *
+	 * @param string|null $param
 	 */
 	public function actionStorages($param = null)
 	{
@@ -33,7 +35,7 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 			$data = $this->passwords->getAllStorages();
 			$this->template->expandAll = false;
 		} else {
-			$data = $this->passwords->getStorages($param);
+			$data = $this->passwords->getStorages(explode(',', $param));
 			$this->template->expandAll = true;
 		}
 		$this->template->pageTitle = 'Password storage disclosures';

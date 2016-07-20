@@ -70,10 +70,10 @@ class Passwords
 	/**
 	 * Get passwords storage data for a site.
 	 *
-	 * @param string $site
+	 * @param array $sites
 	 * @return \stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStorages($site)
+	public function getStorages(array $sites)
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -97,14 +97,14 @@ class Passwords
 				JOIN password_disclosures_password_storages pdps ON pdps.key_password_storages = ps.id
 				JOIN password_disclosures pd ON pdps.key_password_disclosures = pd.id
 				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
-			WHERE s.alias = ?
+			WHERE s.alias IN (?)
 			ORDER BY
 				c.name,
 				s.url,
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $site));
+		return $this->processStorages($this->database->fetchAll($query, $sites));
 	}
 
 
