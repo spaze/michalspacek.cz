@@ -18,23 +18,38 @@ class Rating
 	const RATING_E = 'E';
 	const RATING_F = 'F';
 
-	/** @internal algo type */
-	const ALGO_ARGON2 = 'argon2';
-	const ALGO_BCRYPT = 'bcrypt';
-	const ALGO_PBKDF2 = 'pbkdf2';
-	const ALGO_SCRYPT = 'scrypt';
-	const ALGO_PLAINTEXT = 'plaintext';
+	/** @var \Nette\Database\Context */
+	protected $database;
 
-	/** @internal disclosure type */
-	const DISCLO_BLOG = 'blog';
-	const DISCLO_DOCS = 'docs';
-	const DISCLO_FACEBOOK_INDEPENDENT = 'facebook-independent';
-	const DISCLO_FACEBOOK_OFFICIAL = 'facebook-official';
-	const DISCLO_FACEBOOK_PRIVATE = 'facebook-private';
-	const DISCLO_TALK = 'talk';
-	const DISCLO_TWITTER_INDEPENDENT = 'twitter-independent';
-	const DISCLO_TWITTER_OFFICIAL = 'twitter-official';
-	const DISCLO_TWITTER_PRIVATE = 'twitter-private';
+	/** @var array */
+	private $slowHashes = [
+		'argon2',
+		'bcrypt',
+		'pbkdf2',
+		'scrypt',
+	];
+
+	/** @var array */
+	private $plaintext = [
+		'plaintext',
+	];
+
+	/** @var array */
+	private $visibleDisclosures = [
+		'docs',
+	];
+
+	/** @var array */
+	private $invisibleDisclosures = [
+		'blog',
+		'facebook-independent',
+		'facebook-official',
+		'facebook-private',
+		'talk',
+		'twitter-independent',
+		'twitter-official',
+		'twitter-private',
+	];
 
 
 	/**
@@ -52,22 +67,23 @@ class Rating
 	 */
 	public function get(Algorithm $algo)
 	{
-		if (in_array($algo->alias, $this->getSlowHashes())) {
-			if (isset($algo->disclosureTypes[self::DISCLO_DOCS])) {
-				return self::RATING_A;
-			} else {
-				foreach ($this->getInvisibleDisclosures() as $disclosure) {
-					if (isset($algo->disclosureTypes[$disclosure])) {
-						return self::RATING_B;
-					}
+		if (in_array($algo->alias, $this->slowHashes, true)) {
+			foreach ($this->visibleDisclosures as $disclosure) {
+				if (isset($algo->disclosureTypes[$disclosure])) {
+					return self::RATING_A;
 				}
-				throw new \RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->alias, implode(', ', $algo->disclosureTypes)));
 			}
+			foreach ($this->invisibleDisclosures as $disclosure) {
+				if (isset($algo->disclosureTypes[$disclosure])) {
+					return self::RATING_B;
+				}
+			}
+			throw new \RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->alias, implode(', ', $algo->disclosureTypes)));
 		} elseif ($algo->salted && $algo->stretched) {
 			return self::RATING_C;
 		} elseif ($algo->salted) {
 			return self::RATING_D;
-		} elseif ($algo->alias !== self::ALGO_PLAINTEXT) {
+		} elseif (!in_array($algo->alias, $this->plaintext, true)) {
 			return self::RATING_E;
 		} else {
 			return self::RATING_F;
@@ -75,6 +91,11 @@ class Rating
 	}
 
 
+	/**
+	 * Get rating guide.
+	 *
+	 * @return array
+	 */
 	public function getRatingGuide()
 	{
 		return [
@@ -89,38 +110,24 @@ class Rating
 
 
 	/**
-	 * Get "slow" hashes.
+	 * Get array of slow hashes' aliases
 	 *
 	 * @return array
 	 */
-	private function getSlowHashes()
+	public function getSlowHashes()
 	{
-		return [
-			self::ALGO_ARGON2,
-			self::ALGO_BCRYPT,
-			self::ALGO_PBKDF2,
-			self::ALGO_SCRYPT,
-		];
+		return $this->slowHashes;
 	}
 
 
 	/**
-	 * Get "invisible" disclosures.
+	 * Get array of invisible disclosures' aliases
 	 *
 	 * @return array
 	 */
-	private function getInvisibleDisclosures()
+	public function getInvisibleDisclosures()
 	{
-		return [
-			self::DISCLO_BLOG,
-			self::DISCLO_FACEBOOK_INDEPENDENT,
-			self::DISCLO_FACEBOOK_OFFICIAL,
-			self::DISCLO_FACEBOOK_PRIVATE,
-			self::DISCLO_TALK,
-			self::DISCLO_TWITTER_INDEPENDENT,
-			self::DISCLO_TWITTER_OFFICIAL,
-			self::DISCLO_TWITTER_PRIVATE,
-		];
+		return $this->invisibleDisclosures;
 	}
 
 }
