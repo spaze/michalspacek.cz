@@ -25,12 +25,12 @@
 		</div>
 		<div class="algo-container">
 		{foreach $algos as $algo}
-			{if $iterator->counter === 2}<div><a href="" n:class="open-button, $expandAll ? open">History</a></div><div n:class="history, expandable, !$expandAll ? hidden">{/if}
+			{if $iterator->counter === 2}<div><a href="" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
 				<div class="algo"><strong>{$data->algos[$algo->id]}</strong>{if $algo->from} (since {$algo->from|date:'F Y'}){/if}</div>
 				<div>
 				{if $algo->disclosures}
-					<div><a href="" n:class="open-button, $expandAll ? open">Details</a></div>
-					<div n:class="expandable, !$expandAll ? hidden">
+					<div><a href="" n:class="open-button, $isDetail ? open">Details</a></div>
+					<div n:class="expandable, !$isDetail ? hidden">
 					<p n:ifset="$algo->params">Params: {foreach $algo->params as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
 					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>
 					<p>Disclosure: {foreach $algo->disclosures as $disclosure}<a href="{$disclosure->url}">{$disclosure->type}</a>{sep}, {/sep}{/foreach}</p>
@@ -44,4 +44,5 @@
 	</div>
 {/block}
 {/foreach}
+<div n:if="$isDetail" class="inner-container"><small>Tip: to compare two or more sites just add more hostnames to the URL, separated with comma, like in this <a n:href="this 'www.facebook.com,twitter.com'">example</a>.</small></div>
 {/define}

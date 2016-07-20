@@ -33,10 +33,10 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 	{
 		if ($param === null) {
 			$data = $this->passwords->getAllStorages();
-			$this->template->expandAll = false;
+			$this->template->isDetail = false;
 		} else {
 			$data = $this->passwords->getStorages(explode(',', $param));
-			$this->template->expandAll = true;
+			$this->template->isDetail = true;
 		}
 		$this->template->pageTitle = 'Password storage disclosures';
 		$this->template->data = $data;
