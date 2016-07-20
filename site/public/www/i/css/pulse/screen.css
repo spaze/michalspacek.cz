@@ -20,14 +20,14 @@ ol { margin: 0; }
 	margin: 0.2em 0 1em 0;
 	float: left;
 }
-.guide .rating {
+#guide .rating {
 	margin: 0.3em 0;
 }
 #guide-button {
 	float: right;
 	margin-top: 0.2em;
 }
-.guide {
+#guide {
 	padding: 1em;
 	background-color: #FAFAFA;
 }
@@ -36,27 +36,28 @@ ol { margin: 0; }
 	padding: 1em;
 	max-width: 920px;
 }
-.company-container {
+.inner-container {
 	background-color: #FEFEFE;
 	padding: 1em;
 	margin: 1em 0;
+	border-radius: 2px;
 }
-.company-container h2, .guide h2 { margin: 0; padding: 0;}
-.company-container h3 { margin: 0.5em 0; }
-.company-container div { margin: 0.5em 0; }
-.company-container p { margin: 0; }
-.company-container .algo-container {
+.inner-container h2, #guide h2 { margin: 0; padding: 0;}
+.inner-container h3 { margin: 0.5em 0; }
+.inner-container div { margin: 0.5em 0; }
+.inner-container p { margin: 0; }
+.inner-container .algo-container {
 	background-color: #FAFAFA;
 	padding: 1em 1em 0.5em 1em;
 	margin: 0;
 }
-.company-container .history {
+.inner-container .history {
 	display: none;
 	margin: 0 0 0 0.5em;
 }
-.company-container .algo { margin: 0; }
-.company-container .algo-container p { margin-left: 0.5em; }
-.company-container .site-container {
+.inner-container .algo { margin: 0; }
+.inner-container .algo-container p { margin-left: 0.5em; }
+.inner-container .site-container {
 	background-color: #EFEFEF;
 	padding: 0 1em;
 	margin-bottom: 0;
