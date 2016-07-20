@@ -18,7 +18,8 @@
 		"spaze/csp-config": "dev-master",
 		"spaze/sri-macros": "dev-master",
 		"kdyby/translation": "~2.0",
-		"defuse/php-encryption": "dev-master"
+		"defuse/php-encryption": "dev-master",
+		"roave/security-advisories": "dev-master"
 	},
 	"repositories": [
 		{
