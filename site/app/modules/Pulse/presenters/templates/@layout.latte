@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{stylesheet screen-pulse}
 	{script jquery+pulse async, defer}
+	{if $trackingCode}{script googleanalytics async, defer}{/if}
 </head>
 <body>
 <div id="container">{include #content}</div>
