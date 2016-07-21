@@ -40,6 +40,7 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 		}
 		$this->template->pageTitle = 'Password storage disclosures';
 		$this->template->data = $data;
+		$this->template->count = count($data->storages);
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
 	}
 

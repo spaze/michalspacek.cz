@@ -59,6 +59,9 @@ ol { margin: 0; }
 	padding: 0 1em;
 	margin-bottom: 0;
 }
+.site-container .permalink { display: none; }
+.site-container:hover .permalink { display: inline; }
+.site-container:hover .permalink:hover::after { content: " show only this site"; }
 .clear { clear: both; }
 .left { float: left; }
 .right { float: right; }

@@ -17,7 +17,7 @@
 	{foreach $sites as $siteId => $algos}
 		<div class="site-container">
 			<div class="left">
-				<a n:if="$data->sites[$siteId]->url" href="{$data->sites[$siteId]->url}">{$data->sites[$siteId]->host}</a>
+				{if $data->sites[$siteId]->url}<a href="{$data->sites[$siteId]->url}">{$data->sites[$siteId]->host}</a>{if $count > 1} <small><a n:href="this $data->sites[$siteId]->host" class="permalink">#</a></small>{/if}{/if}
 				<p n:if="!$data->sites[$siteId]->url">All sites</p>
 			</div>
 			<div class="right rating">Rating <strong class="right rating-{$data->sites[$siteId]->rating|lower}" title="{$ratingGuide[$data->sites[$siteId]->rating]}">{$data->sites[$siteId]->rating}</strong></div>
