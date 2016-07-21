@@ -33,7 +33,7 @@
 					<div n:class="expandable, !$isDetail ? hidden">
 					<p n:ifset="$algo->params">Params: {foreach $algo->params as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
 					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>
-					<p>Disclosure: {foreach $algo->disclosures as $disclosure}<a href="{$disclosure->url}">{$disclosure->type}</a>{sep}, {/sep}{/foreach}</p>
+					<p>Disclosure: {foreach $algo->disclosures as $disclosure}<a href="{$disclosure->url}">{$disclosure->type}</a>{if $disclosure->note}<small> ({$disclosure->note})</small>{/if}{sep}, {/sep}{/foreach}</p>
 					</div>
 				{/if}
 				</div>

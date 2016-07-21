@@ -47,6 +47,7 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				pd.url AS disclosureUrl,
+				pd.note AS disclosureNote,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes
@@ -87,6 +88,7 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				pd.url AS disclosureUrl,
+				pd.note AS disclosureNote,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes
@@ -145,6 +147,7 @@ class Passwords
 			}
 			$disclosure = new \stdClass();
 			$disclosure->url = $row->disclosureUrl;
+			$disclosure->note = $row->disclosureNote;
 			$disclosure->type = $row->disclosureType;
 			$storages->storages[$row->companyId][$row->siteId][$key]->disclosures[] = $disclosure;
 			$storages->storages[$row->companyId][$row->siteId][$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
