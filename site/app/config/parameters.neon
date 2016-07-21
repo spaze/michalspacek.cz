@@ -36,6 +36,7 @@ parameters:
 		admin: %publicKeyPins.www%
 		api: %publicKeyPins.www%
 		heartbleed: %publicKeyPins.www%
+		pulse: %publicKeyPins.www%
 		upc: %publicKeyPins.www%
 	extraHeaders:
 		www:
@@ -45,6 +46,7 @@ parameters:
 			X-XSS-Protection: %extraHeaders.www.X-XSS-Protection%
 			Vary: Origin
 		heartbleed: %extraHeaders.www%
+		pulse: %extraHeaders.www%
 		upc: %extraHeaders.www%
 	vatRate: 0.21
 	loadCompanyDataVisible: true
