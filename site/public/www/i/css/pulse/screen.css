@@ -59,9 +59,10 @@ ol { margin: 0; }
 	padding: 0 1em;
 	margin-bottom: 0;
 }
-.site-container .permalink { display: none; }
-.site-container:hover .permalink { display: inline; }
-.site-container:hover .permalink:hover::after { content: " show only this site"; }
+.permalink { display: none; }
+.site-container:hover .permalink, h1:hover .permalink { display: inline; }
+.site-container .permalink:hover::after { content: " show only this site"; }
+h1 .permalink:hover::after { content: " all sites"; }
 .clear { clear: both; }
 .left { float: left; }
 .right { float: right; }
