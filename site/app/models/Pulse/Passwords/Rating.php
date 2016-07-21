@@ -59,7 +59,7 @@ class Rating
 	 * B - slow hashes, fb/twitter/src
 	 * C - other hashes, salted, stretched
 	 * D - other hashes, salted
-	 * E - plain MD5, SHA-1, SHA-2, SHA-3
+	 * E - plain MD5, SHA-1, SHA-2, SHA-3, encrypted
 	 * F - plaintext
 	 *
 	 * @param \MichalSpacekCz\Pulse\Passwords\Algorithm $algo
@@ -103,7 +103,7 @@ class Rating
 			self::RATING_B => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
 			self::RATING_C => 'Passwords hashed with an unsuitable function but at least they are salted and stretched with multiple iterations.',
 			self::RATING_D => 'Inappropriate function used to hash passwords but passwords are salted, at least.',
-			self::RATING_E => 'Unsalted passwords hashed with one iteration of unsuitable function.',
+			self::RATING_E => 'Unsalted passwords hashed with one iteration of unsuitable function, or passwords encrypted instead of hashed.',
 			self::RATING_F => 'Passwords stored in plaintext, in their original, readable form.',
 		];
 	}
