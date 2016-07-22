@@ -2,7 +2,7 @@
 namespace App\PulseModule\Presenters;
 
 /**
- * Homepage presenter.
+ * Pulse presenter.
  *
  * @author Michal Špaček
  * @package pulse.michalspacek.cz
