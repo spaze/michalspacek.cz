@@ -28,9 +28,10 @@ ol { margin: 0; }
 	margin-top: 0.2em;
 }
 #guide {
-	padding: 1em;
+	margin: 0;
 	background-color: #FAFAFA;
 }
+#footer { background-color: #FAFAFA; }
 #container {
 	margin: 0 auto;
 	padding: 1em;

@@ -4,7 +4,7 @@
 	<p><em>How securely do they store user passwords &amp; how good are they at letting us know?</em></p>
 	<div id="guide-button"><a n:href="storages-rating" class="open-button">Rating guide</a></div>
 	<div class="clear"></div>
-	<div id="guide" class="hidden expandable">
+	<div id="guide" class="inner-container hidden expandable">
 		<h2>Rating guide</h2>
 		<div n:foreach="$ratingGuide as $rating => $info" class="rating"><strong class="left rating-{$rating|lower}">{$rating}</strong> {$info}</div>
 		<div><a n:href="storages-rating">more&hellip;</a></div>
