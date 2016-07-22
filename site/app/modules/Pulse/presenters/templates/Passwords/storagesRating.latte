@@ -1,19 +1,19 @@
 {define #content}
 <h1>Password storage disclosures rating guide <small><a n:href="storages" class="permalink">#</a></small></h1>
-<div class="inner-container">
-	<h2>Rating guide</h2>
+<div class="inner-container" id="guide">
+	<h2>Rating guide <small><a n:href="this#guide" class="permalink">#</a></small></h2>
 	<div n:foreach="$ratingGuide as $rating => $info" class="rating"><strong class="left rating-{$rating|lower}">{$rating}</strong> {$info}</div>
 </div>
-<div class="inner-container">
-	<h2>Slow hashes</h2>
+<div class="inner-container" id="slow-hashes">
+	<h2>Slow hashes <small><a n:href="this#slow-hashes" class="permalink">#</a></small></h2>
 	<ol><li n:foreach="$slowHashes as $algo">{$algo}</li></ol>
 </div>
-<div class="inner-container">
-	<h2>"On-site" disclosures</h2>
+<div class="inner-container" id="on-site">
+	<h2>"On-site" disclosures <small><a n:href="this#on-site" class="permalink">#</a></small></h2>
 	<ol><li n:foreach="$visibleDisclosures as $disclosure">{$disclosure}</li></ol>
 </div>
-<div class="inner-container">
-	<h2>Invisible disclosures</h2>
+<div class="inner-container" id="invisible">
+	<h2>Invisible disclosures <small><a n:href="this#invisible" class="permalink">#</a></small></h2>
 	<ol><li n:foreach="$invisibleDisclosures as $disclosure">{$disclosure}</li></ol>
 	<h3>Accounts</h3>
 	<p><em>Official account</em> is a company or site account, with official information.</p>
