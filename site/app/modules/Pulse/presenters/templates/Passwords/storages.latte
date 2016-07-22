@@ -11,7 +11,6 @@
 	</div>
 </div>
 {foreach $data->storages as $companyId => $sites}
-{block|strip}
 	<div class="inner-container">
 	<h2>{$data->companies[$companyId]}</h2>
 	{foreach $sites as $siteId => $algos}
@@ -42,6 +41,5 @@
 		</div>
 	{/foreach}
 	</div>
-{/block}
 {/foreach}
 {/define}
