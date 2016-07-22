@@ -31,3 +31,7 @@ services:
 
 	# upc module
 	- \App\UpcKeysModule\Presenters\HomepagePresenter
+
+	# pulse module
+	- \App\PulseModule\Presenters\HomepagePresenter
+	- \App\PulseModule\Presenters\PasswordsPresenter
