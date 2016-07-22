@@ -1,0 +1,34 @@
+{define #content}
+<h1>Password storage disclosures questions <small><a n:href="storages" class="permalink">#</a></small></h1>
+<div class="inner-container" id="why">
+	<h2>Why? <small><a n:href="this#why" class="permalink">#</a></small></h2>
+	<p>
+		This started as a personal collection of various sites disclosing their password storage algorithms.
+		I thought it might be useful to make the collection public, so I did.
+		This site should encourage sites to publicly disclose how they store user passwords, and to rework it if they don't do it in a secure way.
+		Besides, <em>why not?</em>
+	</p>
+</div>
+<div class="inner-container" id="get-listed">
+	<h2>How to get listed? <small><a n:href="this#get-listed" class="permalink">#</a></small></h2>
+	<p>
+		Publicly disclose how do you store user passwords. If they are hashed and how, or if they are stored in a readable way.
+		You can disclose in your on-line docs, a blog post, a tweet, or a Facebook post, just wherever you feel it's best for you.
+		The disclosure will then be rated according to the <a n:href="storages-rating">Rating guide</a> and the grade will be published here.
+		Don't forget to let me know e.g. by <a href="mailto:mail@michalspacek.cz">email</a> or a tweet to <a href="https://twitter.com/spazef0rze">@spazef0rze</a>.
+	</p>
+</div>
+<div class="inner-container" id="because-security">
+	<h2>Would telling you how passwords are stored make them less secure? <small><a n:href="this#because-security" class="permalink">#</a></small></h2>
+	<p>
+		No, they are either stored securely, or not. If you use one of the <a href="storages-rating#slow-hashes">slow hashes</a>, your users' passwords are <em>most probably</em> stored securely.
+		And if you do it any other way and don't want to tell us because it's bad (and you should feel bad!) then just redo your password storage and <em>then</em> tell us.
+	</p>
+</div>
+<div class="inner-container" id="examples">
+	<h2>Any notable examples? <small><a n:href="this#examples" class="permalink">#</a></small></h2>
+	<p>
+		This <a n:href="storages 'www.slevomat.cz'">major Czech company</a> switched from using SHA-1 to bcrypt. Facebook uses something they call <a n:href="storages 'www.facebook.com'">The Onion</a> (because it has layers). Twitter uses <a n:href="storages 'twitter.com'">bcrypt</a>.
+	</p>
+</div>
+{/define}

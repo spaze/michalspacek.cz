@@ -9,6 +9,9 @@
 	{if $trackingCode}{script googleanalytics async, defer}{/if}
 </head>
 <body>
-<div id="container">{include #content}</div>
+<div id="container">
+{include #content}
+<div class="inner-container"><small><strong>A <a href="https://www.michalspacek.cz">Michal Špaček</a> project.</strong> <a n:href="storages-questions">Questions?</a> Tip: compare two or more sites by adding hostnames to the URL, separated with comma, like in this <a n:href="storages 'www.facebook.com,twitter.com'">example</a>.</small></div>
+</div>
 </body>
 </html>

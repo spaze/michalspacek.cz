@@ -60,7 +60,7 @@ ol { margin: 0; }
 	margin-bottom: 0;
 }
 .permalink { display: none; }
-.site-container:hover .permalink, h1:hover .permalink { display: inline; }
+.site-container:hover .permalink, h1:hover .permalink, h2:hover .permalink { display: inline; }
 .site-container .permalink:hover::after { content: " show only this site"; }
 h1 .permalink:hover::after { content: " all sites"; }
 .clear { clear: both; }

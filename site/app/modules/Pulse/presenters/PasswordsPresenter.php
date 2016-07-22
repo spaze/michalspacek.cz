@@ -46,7 +46,7 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 
 
 	/**
-	 * Storages action handler.
+	 * Storages rating action handler.
 	 */
 	public function actionStoragesRating()
 	{
@@ -55,6 +55,15 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 		$this->template->slowHashes = $this->passwords->getSlowHashes();
 		$this->template->visibleDisclosures = $this->passwords->getVisibleDisclosures();
 		$this->template->invisibleDisclosures = $this->passwords->getInvisibleDisclosures();
+	}
+
+
+	/**
+	 * Storages questions action handler.
+	 */
+	public function actionStoragesQuestions()
+	{
+		$this->template->pageTitle = 'Password storage disclosures questions';
 	}
 
 }
