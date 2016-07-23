@@ -15,6 +15,16 @@ ol { margin: 0; }
 	line-height: 1em;
 }
 #header p { margin: 0.2em 0 1em 0; }
+#menu {
+	font-size: small;
+	line-height: 1;
+	background-color: #E3E3E3;
+}
+#menu a {
+	text-decoration: none;
+	color: #777;
+}
+#menu a:hover { text-decoration: underline; }
 #guide .rating { margin: 0.3em 0; }
 #footer { background-color: #FAFAFA; }
 #container {
