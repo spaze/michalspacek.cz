@@ -63,14 +63,14 @@ h2:hover .permalink { display: inline; }
 .left { float: left; }
 .right { float: right; }
 .rating strong {
-    width: 1.5em;
-    height: 1.5em;
-    display: block;
-    text-align: center;
-    background-color: hsl(0, 0%, 50%);
-    border: 1px solid hsl(0, 0%, 40%);
-    border-radius: 2px;
-    box-sizing: border-box;
+	width: 1.5em;
+	height: 1.5em;
+	display: block;
+	text-align: center;
+	background-color: hsl(0, 0%, 50%);
+	border: 1px solid hsl(0, 0%, 40%);
+	border-radius: 2px;
+	box-sizing: border-box;
 	color: #FFF;
 	margin: 0 0.3em;
 }
