@@ -9,4 +9,13 @@ namespace App\PulseModule\Presenters;
  */
 class HomepagePresenter extends \App\Presenters\BasePresenter
 {
+
+	/**
+	 * Default action handler.
+	 */
+	public function actionDefault()
+	{
+		$this->template->pageTitle = 'Pulse';
+	}
+
 }
