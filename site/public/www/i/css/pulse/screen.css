@@ -16,21 +16,8 @@ ol { margin: 0; }
 	font-size: 2.5em
 	line-height: 1em;
 }
-#header p {
-	margin: 0.2em 0 1em 0;
-	float: left;
-}
-#guide .rating {
-	margin: 0.3em 0;
-}
-#guide-button {
-	float: right;
-	margin-top: 0.2em;
-}
-#guide {
-	margin: 0;
-	background-color: #FAFAFA;
-}
+#header p { margin: 0.2em 0 1em 0; }
+#guide .rating { margin: 0.3em 0; }
 #footer { background-color: #FAFAFA; }
 #container {
 	margin: 0 auto;
@@ -43,7 +30,7 @@ ol { margin: 0; }
 	margin: 1em 0;
 	border-radius: 2px;
 }
-.inner-container h2, #guide h2 { margin: 0; padding: 0;}
+.inner-container h2 { margin: 0; padding: 0;}
 .inner-container h3 { margin: 0.5em 0; }
 .inner-container div { margin: 0.5em 0; }
 .inner-container p { margin: 0; }
