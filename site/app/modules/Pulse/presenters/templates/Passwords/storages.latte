@@ -1,8 +1,4 @@
 {define #content}
-<div id="header">
-	<h1>Password storage disclosures</h1>
-	<p><em>How securely do they store user passwords &amp; how good are they at letting us know?</em></p>
-</div>
 {foreach $data->storages as $companyId => $sites}
 	<div class="inner-container">
 	<h2>{$data->companies[$companyId]}</h2>

@@ -11,6 +11,10 @@
 </head>
 <body>
 <div id="container">
+<div id="header">
+	<h1 n:ifset="$pageTitle">{$pageTitle}</h1>
+	<p><em>How securely do they store user passwords &amp; how good are they at letting us know?</em></p>
+</div>
 {include #content}
 {include #footer}
 </div>
