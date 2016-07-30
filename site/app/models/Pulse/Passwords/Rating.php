@@ -78,7 +78,7 @@ class Rating
 					return self::RATING_B;
 				}
 			}
-			throw new \RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->alias, implode(', ', $algo->disclosureTypes)));
+			throw new \RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->alias, implode(', ', array_keys($algo->disclosureTypes))));
 		} elseif ($algo->salted && $algo->stretched) {
 			return self::RATING_C;
 		} elseif ($algo->salted) {
