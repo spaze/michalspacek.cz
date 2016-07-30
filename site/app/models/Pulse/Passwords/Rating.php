@@ -49,6 +49,8 @@ class Rating
 		'twitter-independent',
 		'twitter-official',
 		'twitter-private',
+		'source-code',
+		'changelog',
 	];
 
 
