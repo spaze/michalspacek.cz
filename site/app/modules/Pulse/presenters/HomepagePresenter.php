@@ -15,7 +15,8 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$this->template->pageTitle = 'Pulse';
+		$this->template->pageTitle = null;
+		$this->template->pageHeader = 'Pulse';
 	}
 
 }

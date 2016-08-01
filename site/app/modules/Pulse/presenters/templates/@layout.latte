@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>{if isset($pageTitle)}{$pageTitle} | {/if} Pulse</title>
+	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Pulse</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{stylesheet screen-pulse}
 	{script jquery+pulse async, defer}
@@ -13,7 +13,8 @@
 <body>
 <div id="container">
 <div id="header">
-	<h1 n:ifset="$pageTitle">{$pageTitle}</h1>
+	{default $pageHeader = $pageTitle}
+	<h1>{$pageHeader}</h1>
 	{ifset #tagline}<p><em>{include #tagline}</em></p>{/ifset}
 </div>
 {ifset #menu}<div id="menu" class="inner-container">{include #menu}</div>{/ifset}
