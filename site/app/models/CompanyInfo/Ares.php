@@ -24,6 +24,17 @@ class Ares implements CompanyDataInterface
 
 
 	/**
+	 * Constructor.
+	 *
+	 * @param \MichalSpacekCz\Tor $tor
+	 */
+	public function __construct(\MichalSpacekCz\Tor $tor)
+	{
+		$this->tor = $tor;
+	}
+
+
+	/**
 	 * @param string $url
 	 */
 	public function setUrl($url)
@@ -43,7 +54,7 @@ class Ares implements CompanyDataInterface
 			if (empty($companyId)) {
 				throw new \RuntimeException('Company Id is empty');
 			}
-			$content = file_get_contents(sprintf($this->url, $companyId));
+			$content = $this->tor->fetch(sprintf($this->url, $companyId), 'ares');
 			if (!$content) {
 				throw new \RuntimeException(error_get_last()['message'], self::STATUS_ERROR);
 			}

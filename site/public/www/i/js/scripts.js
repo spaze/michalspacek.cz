@@ -18,7 +18,7 @@ $(document).ready(function() {
 				country: $('#frm-application-country').val(),
 				companyId: $('#frm-application-companyId').val().replace(/ /g, ''),
 			},
-			timeout: 10000
+			timeout: 15000
 		});
 		load.done(function(data) {
 			$('#loadDataControls span').hide();

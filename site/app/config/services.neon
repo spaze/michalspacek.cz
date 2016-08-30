@@ -90,6 +90,11 @@ services:
 		class: \MichalSpacekCz\CompanyInfo\RegisterUz
 		setup:
 			- setRootUrl(%registerUz.rootUrl%)
+	tor:
+		class: \MichalSpacekCz\Tor
+		setup:
+			- setProxy(%tor.proxy%)
+			- setUserAgents(%tor.userAgents%)
 	upcKeys:
 		class: \MichalSpacekCz\UpcKeys(@database.upcKeys.context)
 		setup:
