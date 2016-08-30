@@ -52,10 +52,16 @@ parameters:
 	loadCompanyDataVisible: true
 	ares:
 		url: 'http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
+		retries: 3
 	registerUz:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	tor:
-		proxy: 'localhost:9050'
+		proxy:
+			host: localhost
+			port: 9050
+		control:
+			host: localhost
+			port: 9051
 		userAgents:
 			default: 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
 			ares: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) (+https://www.jakobejitblokaci.cz/)'

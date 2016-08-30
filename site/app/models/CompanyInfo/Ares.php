@@ -22,6 +22,12 @@ class Ares implements CompanyDataInterface
 	/** @var string */
 	private $url;
 
+	/** @var integer */
+	private $iteration = 0;
+
+	/** @var integer */
+	private $retries = 1;
+
 
 	/**
 	 * Constructor.
@@ -44,6 +50,15 @@ class Ares implements CompanyDataInterface
 
 
 	/**
+	 * @param integer $retries
+	 */
+	public function setRetries($retries)
+	{
+		$this->retries = $retries;
+	}
+
+
+	/**
 	 * @param string $companyId
 	 * @return array
 	 */
@@ -54,7 +69,7 @@ class Ares implements CompanyDataInterface
 			if (empty($companyId)) {
 				throw new \RuntimeException('Company Id is empty');
 			}
-			$content = $this->tor->fetch(sprintf($this->url, $companyId), 'ares');
+			$content = $this->fetch($companyId);
 			if (!$content) {
 				throw new \RuntimeException(error_get_last()['message'], self::STATUS_ERROR);
 			}
@@ -102,6 +117,26 @@ class Ares implements CompanyDataInterface
 		}
 
 		return $company;
+	}
+
+
+	/**
+	 * Fetch data.
+	 *
+	 * @param string $companyId
+	 * @return string
+	 */
+	private function fetch($companyId)
+	{
+		$this->iteration++;
+		$output = $this->tor->fetch(sprintf($this->url, $companyId), 'ares');
+		if ($this->tor->getTransferInfo('http_code') == 403 && $this->iteration < $this->retries) {
+			\Tracy\Debugger::log("[{$this->iteration}/{$this->retries}] Switching to clean circuits", 'tor');
+			$this->tor->cleanCircuits();
+			$output = $this->fetch($companyId);
+			\Tracy\Debugger::log("[{$this->iteration}/{$this->retries}] Resulting HTTP code: " . $this->tor->getTransferInfo('http_code'), 'tor');
+		}
+		return $output;
 	}
 
 
