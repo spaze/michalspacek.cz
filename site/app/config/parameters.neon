@@ -41,6 +41,7 @@ parameters:
 	extraHeaders:
 		www:
 			X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
+			Referrer-Policy: origin
 		admin: %extraHeaders.www%
 		api:
 			X-XSS-Protection: %extraHeaders.www.X-XSS-Protection%

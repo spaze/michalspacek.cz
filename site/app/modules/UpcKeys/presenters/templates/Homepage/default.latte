@@ -3,8 +3,9 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>UPC Wi-Fi Keys{if isset($ssid)} for {$ssid}{/if}</title>
+	<meta name="referrer" content="origin">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>UPC Wi-Fi Keys{if isset($ssid)} for {$ssid}{/if}</title>
 	{stylesheet screen-upc}
 	{script jquery+upckeys async, defer}
 	{if $trackingCode}{script googleanalytics async, defer}{/if}
