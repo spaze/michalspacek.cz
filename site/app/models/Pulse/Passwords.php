@@ -181,6 +181,8 @@ class Passwords
 	private function processStorages(array $data)
 	{
 		$storages = new \stdClass();
+		$storages->sites = array();
+
 		foreach ($data as $row) {
 			$storages->companies[$row->companyId] = $row->companyName;
 
