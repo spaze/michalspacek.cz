@@ -51,6 +51,7 @@ class Rating
 		'twitter-private',
 		'source-code',
 		'changelog',
+		'comment',
 	];
 
 
