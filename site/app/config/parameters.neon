@@ -53,7 +53,7 @@ parameters:
 	loadCompanyDataVisible: true
 	ares:
 		url: 'http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
-		retries: 3
+		retries: 5
 	registerUz:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	tor:
