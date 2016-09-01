@@ -70,6 +70,11 @@ $(document).ready(function() {
 		return false;
 	});
 
+	$('#pridat-storage a[href="#pridat-storage"]').click(function() {
+		$('#pridat-storage-container').slideToggle('fast');
+		return false;
+	});
+
 	$('#statuses td[data-date]')
 		.click(function() {
 			$('#date-' + $(this).data('date')).toggle();
@@ -116,5 +121,10 @@ $(document).ready(function() {
 	$('#statusHistory-link').click(function(event) {
 		event.preventDefault();
 		$('#statusHistory-container').slideToggle('fast');
+	});
+
+	$('a[href*="#new"]').click(function(event) {
+		event.preventDefault();
+		$($(this).attr('href')).toggle();
 	});
 });

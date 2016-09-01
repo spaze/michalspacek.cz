@@ -103,5 +103,7 @@ services:
 			- setUrl(%awsLambda.upcKeys.url%)
 			- setApiKey(%awsLambda.upcKeys.apiKey%)
 			- setPrefixes(%awsLambda.upcKeys.prefixes%)
+	pulseCompanies: \MichalSpacekCz\Pulse\Companies(@database.pulse.context)
+	pulseSites: \MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	pulsePasswords: \MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	pulsePasswordsRating: \MichalSpacekCz\Pulse\Passwords\Rating

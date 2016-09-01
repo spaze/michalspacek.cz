@@ -50,6 +50,7 @@ table {
     border-spacing: 0px;
     white-space: nowrap;
 }
+table table { padding: 0; }
 small, .small { color: #666; }
 small a, .small a { color: #444; }
 .small { font-size: small; }
@@ -195,7 +196,7 @@ form.wide input, form.wide select, form.wide textarea { width: 440px; }
 #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 170px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }
-#frm-application input[type=checkbox] { width: auto; }
+#frm-application input[type=checkbox], #newalgo input[type=checkbox] { width: auto; }
 #frm-application #frm-application-note { width: 400px; }
 #frm-statuses select { color: #666; font-family: Consolas; }
 #frm-review textarea {
@@ -241,7 +242,7 @@ div.notice {
 #pridat-ucastniky-container table input[type=text] { width: 78px; }
 #pridat-ucastniky-container table .highlight { background-color: yellow; }
 #pridat-ucastniky-container, #pridat-soubor-container, #upravit-termin-container, #pridat-termin-container,
-#pridat-prednasku-container, #pridat-rozhovor-container, #statusHistory-container { display: none; }
+#pridat-prednasku-container, #pridat-rozhovor-container, #statusHistory-container, #pridat-storage-container { display: none; }
 #emails tbody tr.row:hover { background-color: #F0F0F0; }
 #frm-mails input { font-size: 60%; }
 #frm-mails input[type=number] { width: 75px; }
