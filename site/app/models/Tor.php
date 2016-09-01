@@ -116,7 +116,7 @@ class Tor
 
 
 	/**
-	 * Return cURL transfer info
+	 * Return cURL transfer info.
 	 *
 	 * @param integer $opt see curl_getinfo() for detailed description
 	 * @return string
@@ -128,6 +128,17 @@ class Tor
 		} else {
 			return $this->transferInfo[$opt];
 		}
+	}
+
+
+	/**
+	 * Return last HTTP code from cURL
+	 *
+	 * @return string
+	 */
+	public function getLastHttpCode()
+	{
+		return $this->getTransferInfo('http_code');
 	}
 
 }
