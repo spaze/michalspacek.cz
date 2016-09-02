@@ -68,7 +68,7 @@ class Ares implements CompanyDataInterface
 			}
 			$content = $this->fetch($companyId);
 			if (!$content) {
-				throw new \RuntimeException(error_get_last()['message'] ?? 'Can\'t fetch data, last HTTP code was' . $this->tor->getLastHttpCode(), self::STATUS_ERROR);
+				throw new \Exception(error_get_last()['message'] ?? 'Can\'t fetch data, last HTTP code was ' . $this->tor->getLastHttpCode(), self::STATUS_ERROR);
 			}
 
 			libxml_disable_entity_loader();
