@@ -125,6 +125,12 @@ $(document).ready(function() {
 
 	$('a[href*="#new"]').click(function(event) {
 		event.preventDefault();
-		$($(this).attr('href')).toggle();
+		var container = $($(this).attr('href'));
+		container.toggle();
+		if (!$($(this).data('parent')).toggleClass('transparent').hasClass('transparent')) {
+			container.find(':input').val('');
+			container.find(':checkbox').prop('checked', false);
+		}
+		$(this).children('span').toggle();
 	});
 });
