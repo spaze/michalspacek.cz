@@ -55,6 +55,7 @@ class Passwords
 		$query = 'SELECT
 				c.id AS companyId,
 				c.name AS companyName,
+				c.trade_name AS tradeName,
 				s.id AS siteId,
 				s.url AS siteUrl,
 				pa.id AS algoId,
@@ -77,7 +78,7 @@ class Passwords
 				JOIN password_disclosures pd ON pdps.key_password_disclosures = pd.id
 				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
 			ORDER BY
-				c.name,
+				COALESCE(c.trade_name, c.name),
 				s.url,
 				ps.from DESC,
 				pd.published';
@@ -97,6 +98,7 @@ class Passwords
 		$query = 'SELECT
 				c.id AS companyId,
 				c.name AS companyName,
+				c.trade_name AS tradeName,
 				s.id AS siteId,
 				s.url AS siteUrl,
 				pa.id AS algoId,
@@ -120,7 +122,7 @@ class Passwords
 				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
 			WHERE s.alias IN (?)
 			ORDER BY
-				c.name,
+				COALESCE(c.trade_name, c.name),
 				s.url,
 				ps.from DESC,
 				pd.published';
@@ -140,6 +142,7 @@ class Passwords
 		$query = 'SELECT
 				c.id AS companyId,
 				c.name AS companyName,
+				c.trade_name AS tradeName,
 				s.id AS siteId,
 				s.url AS siteUrl,
 				pa.id AS algoId,
@@ -163,7 +166,7 @@ class Passwords
 				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
 			WHERE c.id = ?
 			ORDER BY
-				c.name,
+				COALESCE(c.trade_name, c.name),
 				s.url,
 				ps.from DESC,
 				pd.published';
@@ -184,7 +187,10 @@ class Passwords
 		$storages->sites = array();
 
 		foreach ($data as $row) {
-			$storages->companies[$row->companyId] = $row->companyName;
+			$company = new \stdClass();
+			$company->companyName = $row->companyName;
+			$company->tradeName = $row->tradeName;
+			$storages->companies[$row->companyId] = $company;
 
 			if (!isset($storages->sites[$row->siteId])) {
 				$site = new \stdClass();
@@ -462,7 +468,7 @@ class Passwords
 	public function addStorage(\Nette\Utils\ArrayHash $values)
 	{
 		$this->database->beginTransaction();
-		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name));
+		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba));
 		$siteId = (empty($values->site->new->url)
 			? (int)$values->site->id
 			: $this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)

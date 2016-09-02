@@ -8,6 +8,7 @@ h1 {
 	margin: 0.25em 0 1em 0;
 	line-height: 1em;
 }
+h2 small { color: #777; }
 ol { margin: 0; }
 #header { margin: 0.5em 0; }
 #header h1 {

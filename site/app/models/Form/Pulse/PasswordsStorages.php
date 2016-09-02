@@ -32,6 +32,8 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 			->setPrompt('- select company -');
 		$newCompanyContainer = $companyContainer->addContainer('new');
 		$inputName = $newCompanyContainer->addText('name', 'Name:');
+		$newCompanyContainer->addText('dba', 'Trade name:')
+			->setAttribute('title', '"doing business as"');
 
 		$selectCompany->addConditionOn($inputName, ~self::FILLED)
 			->setRequired('Choose company or add a new one');

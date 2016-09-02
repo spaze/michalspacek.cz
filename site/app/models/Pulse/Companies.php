@@ -49,11 +49,15 @@ class Companies
 	 * Add company.
 	 *
 	 * @param string $name
+	 * @param string $tradeName
 	 * @return integer Id of newly inserted company
 	 */
-	public function add($name)
+	public function add($name, $tradeName)
 	{
-		$this->database->query('INSERT INTO companies', ['name' => $name]);
+		$this->database->query('INSERT INTO companies', [
+			'name' => $name,
+			'trade_name' => (empty($tradeName) ? null : $tradeName),
+		]);
 		return $this->database->getInsertId();
 	}
 

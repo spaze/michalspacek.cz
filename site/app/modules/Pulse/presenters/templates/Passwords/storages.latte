@@ -6,7 +6,8 @@
 {define #content}
 {foreach $data->storages as $companyId => $sites}
 	<div class="inner-container">
-	<h2>{$data->companies[$companyId]}</h2>
+	<h2 n:if="!$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->companyName}</h2>
+	<h2 n:if="$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->tradeName} <small>({$data->companies[$companyId]->companyName})</small></h2>
 	{foreach $sites as $siteId => $algos}
 		<div class="site-container">
 			<div class="left">
