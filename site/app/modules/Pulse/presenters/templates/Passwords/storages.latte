@@ -12,8 +12,8 @@
 		<div class="site-container">
 			<div class="left">
 				{if $data->sites[$siteId]->url}
-					<a n:href="this $data->sites[$siteId]->host">{$data->sites[$siteId]->host}</a>
-					<small><a href="{$data->sites[$siteId]->url}">&nearr;</a></small>
+					<a n:href="this $data->sites[$siteId]->host" title="Open details">{$data->sites[$siteId]->host}</a>
+					<small><a href="{$data->sites[$siteId]->url}" title="Go to site">&nearr;</a></small>
 				{/if}
 				<p n:if="!$data->sites[$siteId]->url">All sites</p>
 			</div>
