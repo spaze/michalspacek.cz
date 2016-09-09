@@ -10,7 +10,7 @@ namespace MichalSpacekCz\Training;
 class Mails
 {
 
-	const REMINDER_DAYS = 4;
+	const REMINDER_DAYS = 5;
 
 	/** @var \Nette\Mail\IMailer */
 	protected $mailer;
