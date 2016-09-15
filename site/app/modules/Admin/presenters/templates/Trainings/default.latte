@@ -5,10 +5,15 @@
 </p>
 <table id="statuses">
 	{var $dateLineDisplayed = false}
-	<tbody n:inner-foreach="$trainings as $training" n:class="$order">
+	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
-		<tr n:class="summary, $training->start < $now && !$dateLineDisplayed ? dateLine">
-			{var $dateLineDisplayed = $training->start < $now}
+		{if $order == 'desc'}
+			{var $dateLineCheck = $training->start < $now}
+		{else}
+			{var $dateLineCheck = $training->start > $now}
+		{/if}
+		<tr n:class="summary, $dateLineCheck && !$dateLineDisplayed ? dateLine">
+			{var $dateLineDisplayed = $dateLineCheck}
 			<td n:if="$order == 'desc'" class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
 			<td n:if="$order == 'asc'" class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 			<td class="dateCell">
