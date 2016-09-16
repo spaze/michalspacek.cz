@@ -101,8 +101,11 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	{
 		$values = $form->getValues();
 		$ssid = strtoupper(trim($values->ssid));
-		$this->upcKeys->saveKeys($ssid);
-		$this->redirect('this', $ssid);
+		if (!$this->upcKeys->saveKeys($ssid)) {
+			$this->template->error = 'Oops, something went wrong, please try again in a moment';
+		} else {
+			$this->redirect('this', $ssid);
+		}
 	}
 
 

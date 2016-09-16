@@ -94,16 +94,20 @@ class UpcKeys
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @param string
-	 * @return array of \stdClass (serial, key, type)
+	 * @return false|array of \stdClass (serial, key, type)
 	 */
 	public function getKeys($ssid)
 	{
-		$keys = $this->fetchKeys($ssid);
-		if (!$keys) {
-			$keys = $this->generateKeys($ssid);
-			$this->storeKeys($ssid, $keys);
+		try {
+			$keys = $this->fetchKeys($ssid);
+			if (!$keys) {
+				$keys = $this->generateKeys($ssid);
+				$this->storeKeys($ssid, $keys);
+			}
+			return $keys;
+		} catch (\RuntimeException $e) {
+			return false;
 		}
-		return $keys;
 	}
 
 
@@ -111,11 +115,17 @@ class UpcKeys
 	 * Save keys to a database if not already there.
 	 *
 	 * @param string
+	 * @return boolean
 	 */
 	public function saveKeys($ssid)
 	{
-		if (!$this->hasKeys($ssid)) {
-			$this->storeKeys($ssid, $this->generateKeys($ssid));
+		try {
+			if (!$this->hasKeys($ssid)) {
+				$this->storeKeys($ssid, $this->generateKeys($ssid));
+			}
+			return true;
+		} catch (\RuntimeException $e) {
+			return false;
 		}
 	}
 
@@ -128,9 +138,7 @@ class UpcKeys
 	 */
 	private function generateKeys($ssid)
 	{
-		$url = sprintf($this->url, $ssid, implode(',', $this->prefixes));
-		$data = file_get_contents($url, false, stream_context_create(['http' => ['header' => 'X-API-Key: ' . $this->apiKey]]));
-		$data = \Nette\Utils\Json::decode($data);
+		$data = \Nette\Utils\Json::decode($this->callApi(sprintf($this->url, $ssid, implode(',', $this->prefixes))));
 		$keys = array();
 		foreach (explode("\n", $data) as $line) {
 			if (empty($line)) {
@@ -142,6 +150,32 @@ class UpcKeys
 		}
 		ksort($keys);
 		return array_values($keys);
+	}
+
+
+	/**
+	 * Request keys from API.
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	private function callApi($url)
+	{
+		$context = stream_context_create();
+		stream_context_set_params($context, [
+			'notification' => function ($notificationCode, $severity, $message, $messageCode) {
+				if ($notificationCode == STREAM_NOTIFY_FAILURE && $messageCode == 500) {
+					throw new \RuntimeException($message, $messageCode);
+				}
+			},
+			'options' => [
+				'http' => [
+					'ignore_errors' => true,  // To supress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
+					'header' => 'X-API-Key: ' . $this->apiKey,
+				]
+			]
+		]);
+		return file_get_contents($url, false, $context);
 	}
 
 
