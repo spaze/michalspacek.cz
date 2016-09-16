@@ -5,6 +5,7 @@
 </p>
 <table id="statuses">
 	{var $dateLineDisplayed = false}
+	{default $equipmentCount = true}
 	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
 		{if $order == 'desc'}
@@ -32,7 +33,7 @@
 			</td>
 			<td class="nameCell" data-date="{$training->dateId}">{$training->name}{if $training->public || $training->validCount > 0} ({$training->validCount}){/if}</td>
 			<td><small>{$training->venueCity}{if !$training->public}, {$training->venueName}{/if}</small></td>
-			<td><small n:if="!$training->venueEquipped" title="Vlastních počítačů: {$training->equipment}, zajistit {$training->validCount - $training->equipment}">(PC: {$training->equipment}+<strong>{$training->validCount - $training->equipment}</strong>)</small></td>
+			<td><small n:if="!$training->venueEquipped && $equipmentCount" title="Vlastních počítačů: {$training->equipment}, zajistit {$training->validCount - $training->equipment}">(PC: {$training->equipment}+<strong>{$training->validCount - $training->equipment}</strong>)</small></td>
 		</tr>
 		<tr id="date-{$training->dateId}" class="hidden">
 			<td colspan="6">
