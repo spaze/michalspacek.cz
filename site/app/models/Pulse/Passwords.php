@@ -67,6 +67,7 @@ class Passwords
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
+				pd.published AS disclosurePublished,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes
@@ -110,6 +111,7 @@ class Passwords
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
+				pd.published AS disclosurePublished,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes
@@ -154,6 +156,7 @@ class Passwords
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
+				pd.published AS disclosurePublished,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes
@@ -219,6 +222,7 @@ class Passwords
 			$disclosure->url = $row->disclosureUrl;
 			$disclosure->archive = $row->disclosureArchive;
 			$disclosure->note = $row->disclosureNote;
+			$disclosure->published = $row->disclosurePublished;
 			$disclosure->type = $row->disclosureType;
 			$storages->storages[$row->companyId][$row->siteId][$key]->disclosures[] = $disclosure;
 			$storages->storages[$row->companyId][$row->siteId][$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
