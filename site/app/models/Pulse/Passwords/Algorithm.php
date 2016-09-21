@@ -25,6 +25,9 @@ class Algorithm
 	/** @var string */
 	public $fullAlgo;
 
+	/** @var \DateTime|null */
+	public $latestDisclosure;
+
 	/** @var array */
 	public $disclosures = array();
 

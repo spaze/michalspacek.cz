@@ -224,6 +224,7 @@ class Passwords
 			$disclosure->note = $row->disclosureNote;
 			$disclosure->published = $row->disclosurePublished;
 			$disclosure->type = $row->disclosureType;
+			$storages->storages[$row->companyId][$row->siteId][$key]->latestDisclosure = $disclosure->published;
 			$storages->storages[$row->companyId][$row->siteId][$key]->disclosures[] = $disclosure;
 			$storages->storages[$row->companyId][$row->siteId][$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
 
