@@ -110,3 +110,12 @@ h2:hover .permalink { display: inline; }
 }
 .open-button.open::after { content: " ▼"; }
 .hidden { display: none; }
+#disclosures {
+	margin: 0;
+	list-style-type: none;
+	padding-left: 1em;
+}
+#disclosures li::before {
+	content: "– ";
+	color: #CCC;
+}
