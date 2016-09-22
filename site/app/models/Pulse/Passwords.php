@@ -411,9 +411,10 @@ class Passwords
 	 * @param integer $companyId
 	 * @param integer $algoId
 	 * @param integer $siteId
+	 * @param string|null $attributes
 	 * @return array
 	 */
-	private function getStorageIdByCompanyIdAlgoIdSiteId($companyId, $algoId, $siteId)
+	private function getStorageId($companyId, $algoId, $siteId, $attributes)
 	{
 		return $this->database->fetchField(
 			'SELECT id FROM password_storages WHERE ?',
@@ -421,6 +422,7 @@ class Passwords
 				'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 				'key_password_algos' => $algoId,
 				'key_sites' => ($siteId === Sites::ALL ? null : $siteId),
+				'attributes' => $attributes,
 			)
 		);
 	}
@@ -494,7 +496,7 @@ class Passwords
 				if (!$disclosureId) {
 					$disclosureId = $this->addDisclosure($disclosure->disclosure, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
 				}
-				$storageId = $this->getStorageIdByCompanyIdAlgoIdSiteId($companyId, $algoId, $siteId);
+				$storageId = $this->getStorageId($companyId, $algoId, $siteId, $values->algo->attributes);
 				if (!$storageId) {
 					$storageId = $this->addStorageData($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes);
 				}
