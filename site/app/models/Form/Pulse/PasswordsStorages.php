@@ -78,6 +78,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 		$selectAlgo = $algoContainer->addSelect('id', 'Algorithm:', $items)
 			->setPrompt('- select algorithm -');
 		$this->addFromDate($algoContainer, 'from', 'From:');
+		$algoContainer->addCheckbox('fromConfirmed', 'From confirmed');
 		$algoContainer->addText('attributes', 'Attributes:');
 		$newAlgoContainer = $algoContainer->addContainer('new');
 		$inputAlgo = $newAlgoContainer->addText('algo', 'Algorithm:');

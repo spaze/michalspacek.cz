@@ -64,6 +64,7 @@ class Passwords
 				pa.salted AS algoSalted,
 				pa.stretched AS algoStretched,
 				ps.from,
+				ps.from_confirmed AS fromConfirmed,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
@@ -108,6 +109,7 @@ class Passwords
 				pa.salted AS algoSalted,
 				pa.stretched AS algoStretched,
 				ps.from,
+				ps.from_confirmed AS fromConfirmed,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
@@ -153,6 +155,7 @@ class Passwords
 				pa.salted AS algoSalted,
 				pa.stretched AS algoStretched,
 				ps.from,
+				ps.from_confirmed AS fromConfirmed,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
@@ -213,6 +216,7 @@ class Passwords
 				$algo->salted = $row->algoSalted;
 				$algo->stretched = $row->algoStretched;
 				$algo->from = $row->from;
+				$algo->fromConfirmed = $row->fromConfirmed;
 				$attributes = \Nette\Utils\Json::decode($row->attributes);
 				$algo->params = $attributes->params ?? null;
 				$algo->fullAlgo = $this->formatFullAlgo($row->algoName, $attributes);
@@ -429,16 +433,18 @@ class Passwords
 	 * @param string $algoId
 	 * @param string $siteId
 	 * @param string $from
+	 * @param boolean $fromConfirmed
 	 * @param string $attributes
 	 * @return integer Id of newly inserted storage
 	 */
-	private function addStorageData($companyId, $algoId, $siteId, $from, $attributes)
+	private function addStorageData($companyId, $algoId, $siteId, $from, $fromConfirmed, $attributes)
 	{
 		$this->database->query('INSERT INTO password_storages', [
 			'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 			'key_password_algos' => $algoId,
 			'key_sites' => ($siteId === Sites::ALL ? null : $siteId),
 			'from' => (empty($from) ? null : new \DateTime($from)),
+			'from_confirmed' => $fromConfirmed,
 			'attributes' => (empty($attributes) ? null : $attributes),
 		]);
 		return $this->database->getInsertId();
@@ -490,7 +496,7 @@ class Passwords
 				}
 				$storageId = $this->getStorageIdByCompanyIdAlgoIdSiteId($companyId, $algoId, $siteId);
 				if (!$storageId) {
-					$storageId = $this->addStorageData($companyId, $algoId, $siteId, $values->algo->from, $values->algo->attributes);
+					$storageId = $this->addStorageData($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes);
 				}
 				$this->pairDisclosureStorage($disclosureId, $storageId);
 			}

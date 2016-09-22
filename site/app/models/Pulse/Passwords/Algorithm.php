@@ -19,6 +19,9 @@ class Algorithm
 	/** @var \DateTime */
 	public $from;
 
+	/** @var boolean */
+	public $fromConfirmed;
+
 	/** @var \stdClass */
 	public $params;
 

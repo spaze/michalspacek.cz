@@ -196,7 +196,7 @@ form.wide input, form.wide select, form.wide textarea { width: 440px; }
 #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 170px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }
-#frm-application input[type=checkbox], #newalgo input[type=checkbox] { width: auto; }
+#frm-application input[type=checkbox], #newalgo input[type=checkbox], #frm-passwordsStorages input[type=checkbox] { width: auto; }
 #frm-application #frm-application-note { width: 400px; }
 #frm-statuses select { color: #666; font-family: Consolas; }
 #submit { font-weight: bold; }
@@ -249,6 +249,7 @@ div.notice {
 #frm-mails input[type=number] { width: 75px; }
 #frm-mails input[type=number].price { width: 50px; }
 #frm-mails input[type=file] { width: 120px; }
+#frm-passwordsStorages #frm-passwordsStorages-algo-from { width: 200px; }
 #contact, #social {
     float: left;
     margin: 0px 4em 0px 0px;

@@ -24,7 +24,7 @@
 		{foreach $algos as $algo}
 			{if $iterator->counter === 2}<div><a href="" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
 				<div class="algo">
-					<strong>{$data->algos[$algo->id]}</strong>{if $algo->from || $algo->latestDisclosure} (<span n:if="$algo->from" title="{$algo->from|date:'Y-m'}">since {$algo->from|date:'F Y'}</span>{if $algo->from && $algo->latestDisclosure}, {/if}<span n:if="$algo->latestDisclosure" title="{$algo->latestDisclosure|date:'Y-m-d'}">disclosed {$algo->latestDisclosure|date:'F Y'}</span>){/if}
+					<strong>{$data->algos[$algo->id]}</strong>{if $algo->from || $algo->latestDisclosure} (<span n:if="$algo->from && $algo->fromConfirmed" title="{$algo->from|date:'Y-m'}">since {$algo->from|date:'F Y'}</span>{if $algo->from && $algo->fromConfirmed && $algo->latestDisclosure}, {/if}<span n:if="$algo->latestDisclosure" title="{$algo->latestDisclosure|date:'Y-m-d'}">disclosed {$algo->latestDisclosure|date:'F Y'}</span>){/if}
 				</div>
 				<div>
 				{if $algo->disclosures}
