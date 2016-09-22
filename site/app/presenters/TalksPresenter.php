@@ -87,6 +87,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->description = $talk->description;
 		$this->template->href = $talk->href;
 		$this->template->date = $talk->date;
+		$this->template->duration = $talk->duration;
 		$this->template->eventHref = $talk->eventHref;
 		$this->template->event = $talk->event;
 		$this->template->ogImage = $this->getOgImage($talk->ogImage, $slideNo);

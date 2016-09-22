@@ -48,6 +48,8 @@ class Talk extends Form
 		$this->addText('href', 'Odkaz na přednášku:')
 			->addCondition(self::FILLED)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na přednášku je %d znaků', 200);
+		$this->addText('duration', 'Délka:')
+			->setType('number');
 		$this->addSelect('origSlides', 'Odkázat na slajdy z:', $talks)
 			->setPrompt('Vyberte prosím přednášku, na kterou se odkáže');
 		$this->addText('slidesHref', 'Odkaz na slajdy:')
@@ -92,6 +94,7 @@ class Talk extends Form
 			'description' => $talk->descriptionTexy,
 			'date' => $talk->date->format('Y-m-d H:i'),
 			'href' => $talk->href,
+			'duration' => $talk->duration,
 			'origSlides' => $talk->origAction,
 			'slidesHref' => $talk->slidesHref,
 			'slidesEmbed' => $talk->slidesEmbed,

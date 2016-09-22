@@ -32,6 +32,7 @@ class Talks
 				t.title,
 				t.title AS titleTexy,
 				t.date,
+				t.duration,
 				t.href,
 				COALESCE(LENGTH(t.slides_href) > 0, LENGTH(t2.slides_href) > 0, 0) AS hasSlides,
 				t.slides_href,
@@ -65,6 +66,7 @@ class Talks
 				t.title,
 				t.title AS titleTexy,
 				t.date,
+				t.duration,
 				t.href,
 				COALESCE(LENGTH(t.slides_href) > 0, LENGTH(t2.slides_href) > 0, 0) AS hasSlides,
 				t.slides_href,
@@ -97,6 +99,7 @@ class Talks
 				t.description,
 				t.description AS descriptionTexy,
 				t.date,
+				t.duration,
 				t.href,
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
@@ -139,6 +142,7 @@ class Talks
 				t.description,
 				t.description AS descriptionTexy,
 				t.date,
+				t.duration,
 				t.href,
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
@@ -233,6 +237,7 @@ class Talks
 	 * @param string $title
 	 * @param string $description
 	 * @param string $date
+	 * @param integer $duration
 	 * @param string $href
 	 * @param string $origSlides
 	 * @param string $slidesHref
@@ -246,7 +251,7 @@ class Talks
 	 * @param string $favorite
 	 * @param string $supersededBy
 	 */
-	public function update($id, $action, $title, $description, $date, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
+	public function update($id, $action, $title, $description, $date, $duration, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
 	{
 		$this->database->query(
 			'UPDATE talks SET ? WHERE id_talk = ?',
@@ -255,6 +260,7 @@ class Talks
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
 				'date' => new \DateTime($date),
+				'duration' => (empty($duration) ? null : $duration),
 				'href' => (empty($href) ? null : $href),
 				'key_talk_slides' => (empty($origSlides) ? null : $this->get($origSlides)->talkId),
 				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
@@ -280,6 +286,7 @@ class Talks
 	 * @param string $title
 	 * @param string $description
 	 * @param string $date
+	 * @param integer $duration
 	 * @param string $href
 	 * @param string $origSlides
 	 * @param string $slidesHref
@@ -293,7 +300,7 @@ class Talks
 	 * @param string $favorite
 	 * @param string $supersededBy
 	 */
-	public function add($action, $title, $description, $date, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
+	public function add($action, $title, $description, $date, $duration, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
 	{
 		$this->database->query(
 			'INSERT INTO talks',
@@ -302,6 +309,7 @@ class Talks
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
 				'date' => new \DateTime($date),
+				'duration' => (empty($duration) ? null : $duration),
 				'href' => (empty($href) ? null : $href),
 				'key_talk_slides' => (empty($origSlides) ? null : $this->get($origSlides)->talkId),
 				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
