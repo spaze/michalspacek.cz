@@ -9,7 +9,7 @@
 	<h2 n:if="!$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->companyName}</h2>
 	<h2 n:if="$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->tradeName} <small>({$data->companies[$companyId]->companyName})</small></h2>
 	{foreach $sites as $siteId => $algos}
-		<div class="site-container">
+		<div id="{$data->sites[$siteId]->host}" class="site-container">
 			<div class="left">
 				{if $data->sites[$siteId]->url}
 					<a n:href="this $data->sites[$siteId]->host" title="Open details">{$data->sites[$siteId]->host}</a>
