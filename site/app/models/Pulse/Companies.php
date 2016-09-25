@@ -30,7 +30,7 @@ class Companies
 	 */
 	public function getAll()
 	{
-		return $this->database->fetchAll('SELECT id, name FROM companies ORDER BY name');
+		return $this->database->fetchAll('SELECT id, name, alias FROM companies ORDER BY name');
 	}
 
 
@@ -41,7 +41,7 @@ class Companies
 	 */
 	public function getByName($name)
 	{
-		return $this->database->fetch('SELECT id, name FROM companies WHERE name = ?', $name);
+		return $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name);
 	}
 
 
@@ -50,13 +50,15 @@ class Companies
 	 *
 	 * @param string $name
 	 * @param string $tradeName
+	 * @param string $alias
 	 * @return integer Id of newly inserted company
 	 */
-	public function add($name, $tradeName)
+	public function add($name, $tradeName, $alias)
 	{
 		$this->database->query('INSERT INTO companies', [
 			'name' => $name,
 			'trade_name' => (empty($tradeName) ? null : $tradeName),
+			'alias' => $alias,
 		]);
 		return $this->database->getInsertId();
 	}

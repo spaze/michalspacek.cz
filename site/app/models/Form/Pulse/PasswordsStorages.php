@@ -34,6 +34,9 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 		$inputName = $newCompanyContainer->addText('name', 'Name:');
 		$newCompanyContainer->addText('dba', 'Trade name:')
 			->setAttribute('title', '"doing business as"');
+		$inputAlias = $newCompanyContainer->addText('alias', 'Alias:');
+		$inputAlias->addConditionOn($inputName, self::FILLED)
+			->setRequired('Enter new company alias');
 
 		$selectCompany->addConditionOn($inputName, ~self::FILLED)
 			->setRequired('Choose company or add a new one');

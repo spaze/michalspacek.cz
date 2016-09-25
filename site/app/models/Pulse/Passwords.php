@@ -56,6 +56,7 @@ class Passwords
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
 				pa.id AS algoId,
@@ -101,6 +102,7 @@ class Passwords
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
 				pa.id AS algoId,
@@ -147,6 +149,7 @@ class Passwords
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
 				pa.id AS algoId,
@@ -196,6 +199,7 @@ class Passwords
 			$company = new \stdClass();
 			$company->companyName = $row->companyName;
 			$company->tradeName = $row->tradeName;
+			$company->alias = $row->companyAlias;
 			$storages->companies[$row->companyId] = $company;
 
 			if (!isset($storages->sites[$row->siteId])) {
@@ -481,7 +485,7 @@ class Passwords
 	public function addStorage(\Nette\Utils\ArrayHash $values)
 	{
 		$this->database->beginTransaction();
-		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba));
+		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba, $values->company->new->alias));
 		$siteId = (empty($values->site->new->url)
 			? (int)$values->site->id
 			: $this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
