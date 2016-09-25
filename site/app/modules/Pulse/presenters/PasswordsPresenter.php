@@ -35,7 +35,8 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 			$data = $this->passwords->getAllStorages();
 			$this->template->isDetail = false;
 		} else {
-			$data = $this->passwords->getStorages(explode(',', $param));
+			$sites = explode(',', $param);
+			$data = $this->passwords->getStorages($sites);
 			$this->template->isDetail = true;
 		}
 
@@ -43,7 +44,7 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 			throw new \Nette\Application\BadRequestException('Unknown site alias', \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = 'Password storage disclosures';
+		$this->template->pageTitle = ($this->template->isDetail ? implode(', ', $sites) . ' password storage disclosures' : 'Password storage disclosures');
 		$this->template->data = $data;
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
 	}
