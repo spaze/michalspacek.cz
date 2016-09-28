@@ -1245,12 +1245,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "4e89d0d25271473e2ae771fe5138b08cd30114b1"
+                "reference": "9e92c1c2c7e43d81c84f0de8962b0e90c14ff496"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/4e89d0d25271473e2ae771fe5138b08cd30114b1",
-                "reference": "4e89d0d25271473e2ae771fe5138b08cd30114b1",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/9e92c1c2c7e43d81c84f0de8962b0e90c14ff496",
+                "reference": "9e92c1c2c7e43d81c84f0de8962b0e90c14ff496",
                 "shasum": ""
             },
             "require": {
@@ -1258,9 +1258,11 @@
             },
             "require-dev": {
                 "nette/bootstrap": "^2.3",
-                "nette/tester": "^1.7"
+                "nette/tester": "^1.7",
+                "paragonie/random_compat": "^2.0"
             },
             "suggest": {
+                "paragonie/random_compat": "PHP 5.x polyfill for random_bytes() used by this library",
                 "spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too."
             },
             "type": "library",
@@ -1281,7 +1283,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2016-09-28 18:06:51"
+            "time": "2016-09-28 18:34:55"
         },
         {
             "name": "spaze/netxten",
@@ -1324,12 +1326,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "ae8ee71f899ae2ae164c2762a62f49a189e50c80"
+                "reference": "b4b69a9c5af19cb6f9cc50228c0c88359e50bbd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/ae8ee71f899ae2ae164c2762a62f49a189e50c80",
-                "reference": "ae8ee71f899ae2ae164c2762a62f49a189e50c80",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/b4b69a9c5af19cb6f9cc50228c0c88359e50bbd4",
+                "reference": "b4b69a9c5af19cb6f9cc50228c0c88359e50bbd4",
                 "shasum": ""
             },
             "require-dev": {
@@ -1356,7 +1358,7 @@
                 }
             ],
             "description": "Subresource Integrity macros for Latte template engine",
-            "time": "2016-09-28 18:09:50"
+            "time": "2016-09-28 20:59:14"
         },
         {
             "name": "symfony/config",

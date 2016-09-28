@@ -20,7 +20,12 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	protected function startup()
 	{
 		parent::startup();
+		$this->startupEx();
+	}
 
+
+	protected function startupEx()
+	{
 		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 		if ($authenticator->isForbidden()) {
 			$this->forward('Forbidden:');
@@ -47,6 +52,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		$template = parent::createTemplate($class);
 		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers(), 'loader']);
 		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
+		$template->cspConfig = $this->getContext()->getByType(\Spaze\ContentSecurityPolicy\Config::class);
 		return $template;
 	}
 

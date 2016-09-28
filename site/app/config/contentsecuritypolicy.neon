@@ -23,6 +23,10 @@ contentSecurityPolicy:
 		slideslive:
 			child-src:
 				- https://slideslive.com
+	addNonce:
+		script-src: yes
+	addStrictDynamic:
+		script-src: yes
 	policies:
 		*.*:
 			default-src: "'none'"

@@ -24,6 +24,10 @@ mail:
 	port: 25
 
 contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them
+	addNonce:
+		script-src: no
+	addStrictDynamic:
+		script-src: no
 	policies:
 		*.*:
 			img-src:

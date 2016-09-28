@@ -7,20 +7,11 @@ namespace App\AdminModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-abstract class BasePresenter extends \Nette\Application\UI\Presenter
+abstract class BasePresenter extends \App\Presenters\BasePresenter
 {
 
-	/**
-	 * @var \Nette\Localization\ITranslator
-	 * @inject
-	 */
-	public $translator;
-
-
-	protected function startup()
+	protected function startupEx()
 	{
-		parent::startup();
-
 		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 		if (!$this->user->isLoggedIn()) {
 			if ($authenticator->isReturningUser()) {
@@ -36,17 +27,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	{
 		$this->template->trackingCode = false;
 		$this->template->setTranslator($this->translator);
-	}
-
-
-	protected function createTemplate($class = null)
-	{
-		$helpers = $this->getContext()->getByType(\MichalSpacekCz\Templating\Helpers::class);
-
-		$template = parent::createTemplate($class);
-		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers(), 'loader']);
-		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
-		return $template;
 	}
 
 }
