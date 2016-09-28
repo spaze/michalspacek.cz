@@ -72,7 +72,7 @@ img {
     max-width: 100%;
     height: auto;
 }
-abbr.dtstart, abbr.dtend { border: none; }
+abbr.dtstart, abbr.dtend { text-decoration: none; }
 .button { cursor: pointer; }
 .container {
     max-width: 800px;
