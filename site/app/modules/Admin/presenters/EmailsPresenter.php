@@ -59,13 +59,12 @@ class EmailsPresenter extends BasePresenter
 	protected function createComponentMails($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingMailsOutbox($this, $formName, $this->applications);
-		$form->onSuccess[] = $this->submittedMails;
+		$form->onSuccess[] = [$this, 'submittedMails'];
 	}
 
 
-	public function submittedMails(\MichalSpacekCz\Form\TrainingMailsOutbox $form)
+	public function submittedMails(\MichalSpacekCz\Form\TrainingMailsOutbox $form, $values)
 	{
-		$values = $form->getValues();
 		$sent = 0;
 		foreach ($values->applications as $id => $data) {
 			if (empty($data->send) || !isset($this->applications[$id])) {

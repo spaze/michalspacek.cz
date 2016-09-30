@@ -72,15 +72,13 @@ class SignPresenter extends \App\Presenters\BasePresenter
 	protected function createComponentSignIn($formName)
 	{
 		$form = new \MichalSpacekCz\Form\SignIn($this, $formName);
-		$form->onSuccess[] = $this->submittedSignIn;
+		$form->onSuccess[] = [$this, 'submittedSignIn'];
 		return $form;
 	}
 
 
-	public function submittedSignIn(\MichalSpacekCz\Form\SignIn $form)
+	public function submittedSignIn(\MichalSpacekCz\Form\SignIn $form, $values)
 	{
-		$values = $form->getValues();
-
 		$this->user->setExpiration('30 minutes', true);
 		try {
 			$this->user->login($values->username, $values->password);

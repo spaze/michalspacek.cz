@@ -189,16 +189,14 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$form = new \MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
 		$form->setApplicationFromSession($this->getSession('training'));
-		$form->onSuccess[] = $this->submittedApplication;
+		$form->onSuccess[] = [$this, 'submittedApplication'];
 	}
 
 
-	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplication $form)
+	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplication $form, $values)
 	{
 		$session = $this->getSession('training');
-
-		$values = $form->getValues();
-		$name   = $form->parent->params['name'];
+		$name = $form->parent->params['name'];
 
 		try {
 			$this->checkSpam($values, $name);
@@ -296,14 +294,13 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentApplicationPreliminary($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingApplicationPreliminary($this, $formName, $this->translator);
-		$form->onSuccess[] = $this->submittedApplicationPreliminary;
+		$form->onSuccess[] = [$this, 'submittedApplicationPreliminary'];
 	}
 
 
-	public function submittedApplicationPreliminary(\MichalSpacekCz\Form\TrainingApplicationPreliminary $form)
+	public function submittedApplicationPreliminary(\MichalSpacekCz\Form\TrainingApplicationPreliminary $form, $values)
 	{
-		$values = $form->getValues();
-		$name   = $form->parent->params['name'];
+		$name = $form->parent->params['name'];
 		$this->trainingApplications->addPreliminaryInvitation($this->training, $values->name, $values->email);
 		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
 		$this->redirect('training#' . $this->translator->translate('html.id.application'), $name);

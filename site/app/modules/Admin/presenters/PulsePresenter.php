@@ -56,8 +56,8 @@ class PulsePresenter extends BasePresenter
 			$this->sites,
 			$this->passwords
 		);
-		$form->onValidate[] = $this->validatePasswordsStorages;
-		$form->onSuccess[] = $this->submittedPasswordsStorages;
+		$form->onValidate[] = [$this, 'validatePasswordsStorages'];
+		$form->onSuccess[] = [$this, 'submittedPasswordsStorages'];
 	}
 
 
@@ -74,11 +74,11 @@ class PulsePresenter extends BasePresenter
 	 * - existing company, existing site => check if the combination already exists
 	 *
 	 * @param \MichalSpacekCz\Form\Pulse\PasswordsStorages $form
+	 * @param \Nette\Utils\ArrayHash $values
 	 * @return null
 	 */
-	public function validatePasswordsStorages(\MichalSpacekCz\Form\Pulse\PasswordsStorages $form)
+	public function validatePasswordsStorages(\MichalSpacekCz\Form\Pulse\PasswordsStorages $form, $values)
 	{
-		$values = $form->getValues();
 		if (empty($values->company->new->name)) {
 			$storages = $this->passwords->getStoragesByCompanyId($values->company->id);
 			if ($values->site->id === Sites::ALL && !empty($storages->sites)) {
@@ -107,9 +107,8 @@ class PulsePresenter extends BasePresenter
 	}
 
 
-	public function submittedPasswordsStorages(\MichalSpacekCz\Form\Pulse\PasswordsStorages $form)
+	public function submittedPasswordsStorages(\MichalSpacekCz\Form\Pulse\PasswordsStorages $form, $values)
 	{
-		$values = $form->getValues();
 		if ($this->passwords->addStorage($values)) {
 			$this->flashMessage('Password storage added successfully');
 		}

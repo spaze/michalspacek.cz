@@ -54,13 +54,12 @@ class InvoicesPresenter extends BasePresenter
 	protected function createComponentInvoice($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingInvoice($this, $formName, $this->translator);
-		$form->onSuccess[] = $this->submittedApplication;
+		$form->onSuccess[] = [$this, 'submittedApplication'];
 	}
 
 
-	public function submittedApplication(\MichalSpacekCz\Form\TrainingInvoice $form)
+	public function submittedApplication(\MichalSpacekCz\Form\TrainingInvoice $form, $values)
 	{
-		$values = $form->getValues();
 		$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);
 		if ($count) {
 			$this->flashMessage('Počet zaplacených přihlášek: ' . $count);

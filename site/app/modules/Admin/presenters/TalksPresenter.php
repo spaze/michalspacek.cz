@@ -72,14 +72,13 @@ class TalksPresenter extends BasePresenter
 	{
 		$form = new \MichalSpacekCz\Form\Talk($this, $formName, $this->talk->action, $this->talks);
 		$form->setTalk($this->talks->getById($this->talk->talkId));
-		$form->onSuccess[] = $this->submittedEditTalk;
+		$form->onSuccess[] = [$this, 'submittedEditTalk'];
 		return $form;
 	}
 
 
-	public function submittedEditTalk(\MichalSpacekCz\Form\Talk $form)
+	public function submittedEditTalk(\MichalSpacekCz\Form\Talk $form, $values)
 	{
-		$values = $form->getValues();
 		$this->talks->update(
 			$this->talk->talkId,
 			$values->action,
@@ -108,14 +107,13 @@ class TalksPresenter extends BasePresenter
 	protected function createComponentAddTalk($formName)
 	{
 		$form = new \MichalSpacekCz\Form\Talk($this, $formName, null, $this->talks);
-		$form->onSuccess[] = $this->submittedAddTalk;
+		$form->onSuccess[] = [$this, 'submittedAddTalk'];
 		return $form;
 	}
 
 
-	public function submittedAddTalk(\MichalSpacekCz\Form\Talk $form)
+	public function submittedAddTalk(\MichalSpacekCz\Form\Talk $form, $values)
 	{
-		$values = $form->getValues();
 		$this->talks->add(
 			$values->action,
 			$values->title,
@@ -143,14 +141,13 @@ class TalksPresenter extends BasePresenter
 	protected function createComponentAddSlide($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TalkSlide($this, $formName);
-		$form->onSuccess[] = $this->submittedAddSlide;
+		$form->onSuccess[] = [$this, 'submittedAddSlide'];
 		return $form;
 	}
 
 
-	public function submittedAddSlide(\MichalSpacekCz\Form\TalkSlide $form)
+	public function submittedAddSlide(\MichalSpacekCz\Form\TalkSlide $form, $values)
 	{
-		$values = $form->getValues();
 		try {
 			$this->talks->addSlide($this->talk->talkId, $values->alias, $values->number);
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.slideadded'));

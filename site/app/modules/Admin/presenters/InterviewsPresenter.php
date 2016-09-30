@@ -57,14 +57,13 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$form = new \MichalSpacekCz\Form\Interview($this, $formName);
 		$form->setInterview($this->interviews->getById($this->interview->interviewId));
-		$form->onSuccess[] = $this->submittedEditInterview;
+		$form->onSuccess[] = [$this, 'submittedEditInterview'];
 		return $form;
 	}
 
 
-	public function submittedEditInterview(\MichalSpacekCz\Form\Interview $form)
+	public function submittedEditInterview(\MichalSpacekCz\Form\Interview $form, $values)
 	{
-		$values = $form->getValues();
 		$this->interviews->update(
 			$this->interview->interviewId,
 			$values->action,
@@ -87,14 +86,13 @@ class InterviewsPresenter extends BasePresenter
 	protected function createComponentAddInterview($formName)
 	{
 		$form = new \MichalSpacekCz\Form\Interview($this, $formName);
-		$form->onSuccess[] = $this->submittedAddInterview;
+		$form->onSuccess[] = [$this, 'submittedAddInterview'];
 		return $form;
 	}
 
 
-	public function submittedAddInterview(\MichalSpacekCz\Form\Interview $form)
+	public function submittedAddInterview(\MichalSpacekCz\Form\Interview $form, $values)
 	{
-		$values = $form->getValues();
 		$this->interviews->add(
 			$values->action,
 			$values->title,

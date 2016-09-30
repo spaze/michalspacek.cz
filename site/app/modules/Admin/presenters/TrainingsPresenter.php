@@ -222,8 +222,8 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentStatuses($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingStatuses($this, $formName, $this->applications, $this->translator);
-		$form->getComponent('submit')->onClick[] = $this->submittedStatuses;
-		$form->getComponent('familiar')->onClick[] = $this->submittedFamiliar;
+		$form->getComponent('submit')->onClick[] = [$this, 'submittedStatuses'];
+		$form->getComponent('familiar')->onClick[] = [$this, 'submittedFamiliar'];
 		return $form;
 	}
 
@@ -281,7 +281,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$count = (isset($_POST['applications']) ? count($_POST['applications']) : 1);
 		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, $count, $sources, $statuses, $this->translator);
-		$form->onSuccess[] = $this->submittedApplications;
+		$form->onSuccess[] = [$this, 'submittedApplications'];
 		return $form;
 	}
 
@@ -299,9 +299,8 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplications(\MichalSpacekCz\Form\TrainingApplicationMultiple $form)
+	public function submittedApplications(\MichalSpacekCz\Form\TrainingApplicationMultiple $form, $values)
 	{
-		$values = $form->getValues();
 		foreach ($values->applications as $application) {
 			$this->trainingApplications->insertApplication(
 				$this->training,
@@ -330,15 +329,13 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName);
 		$form->setReview($this->review);
-		$form->onSuccess[] = $this->submittedReview;
+		$form->onSuccess[] = [$this, 'submittedReview'];
 		return $form;
 	}
 
 
-	public function submittedReview(\MichalSpacekCz\Form\TrainingReview $form)
+	public function submittedReview(\MichalSpacekCz\Form\TrainingReview $form, $values)
 	{
-		$values = $form->getValues();
-
 		$this->trainings->addUpdateReview(
 			$this->applicationId,
 			$values->overwriteName ? $values->name : null,
@@ -357,15 +354,13 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName, $this->trainingDates, $this->translator);
 		$form->setApplication($this->application);
-		$form->onSuccess[] = $this->submittedApplication;
+		$form->onSuccess[] = [$this, 'submittedApplication'];
 		return $form;
 	}
 
 
-	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplicationAdmin $form)
+	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplicationAdmin $form, $values)
 	{
-		$values = $form->getValues();
-
 		$this->trainingApplications->updateApplicationData(
 			$this->applicationId,
 			$values->name,
@@ -399,14 +394,13 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentFile($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingFile($this, $formName);
-		$form->onSuccess[] = $this->submittedFile;
+		$form->onSuccess[] = [$this, 'submittedFile'];
 		return $form;
 	}
 
 
-	public function submittedFile(\MichalSpacekCz\Form\TrainingFile $form)
+	public function submittedFile(\MichalSpacekCz\Form\TrainingFile $form, $values)
 	{
-		$values = $form->getValues();
 		if ($values->file->isOk()) {
 			$name = $this->trainingFiles->addFile($this->training, $values->file, $this->applicationIdsAttended);
 			$this->flashMessage(
@@ -426,14 +420,13 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
 		$form->setTrainingDate($this->trainingDates->get($this->dateId));
-		$form->onSuccess[] = $this->submittedDate;
+		$form->onSuccess[] = [$this, 'submittedDate'];
 		return $form;
 	}
 
 
-	public function submittedDate(\MichalSpacekCz\Form\TrainingDate $form)
+	public function submittedDate(\MichalSpacekCz\Form\TrainingDate $form, $values)
 	{
-		$values = $form->getValues();
 		$this->trainingDates->update(
 			$this->dateId,
 			$values->training,
@@ -452,14 +445,13 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentAddDate($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
-		$form->onSuccess[] = $this->submittedAddDate;
+		$form->onSuccess[] = [$this, 'submittedAddDate'];
 		return $form;
 	}
 
 
-	public function submittedAddDate(\MichalSpacekCz\Form\TrainingDate $form)
+	public function submittedAddDate(\MichalSpacekCz\Form\TrainingDate $form, $values)
 	{
-		$values = $form->getValues();
 		$this->trainingDates->add(
 			$values->training,
 			$values->venue,

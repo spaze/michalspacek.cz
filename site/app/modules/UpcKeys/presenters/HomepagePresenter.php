@@ -92,14 +92,13 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	protected function createComponentSsid($formName)
 	{
 		$form = new \MichalSpacekCz\Form\UpcKeys($this, $formName, $this->ssid, $this->upcKeys);
-		$form->onSuccess[] = $this->submittedSsid;
+		$form->onSuccess[] = [$this, 'submittedSsid'];
 		return $form;
 	}
 
 
-	public function submittedSsid(\MichalSpacekCz\Form\UpcKeys $form)
+	public function submittedSsid(\MichalSpacekCz\Form\UpcKeys $form, $values)
 	{
-		$values = $form->getValues();
 		$ssid = strtoupper(trim($values->ssid));
 		if (!$this->upcKeys->saveKeys($ssid)) {
 			$this->template->error = 'Oops, something went wrong, please try again in a moment';

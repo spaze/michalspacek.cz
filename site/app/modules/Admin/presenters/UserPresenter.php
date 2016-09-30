@@ -34,15 +34,14 @@ class UserPresenter extends BasePresenter
 	protected function createComponentChangePassword($formName)
 	{
 		$form = new \MichalSpacekCz\Form\ChangePassword($this, $formName);
-		$form->onSuccess[] = $this->submittedChangePassword;
+		$form->onSuccess[] = [$this, 'submittedChangePassword'];
 		return $form;
 	}
 
 
-	public function submittedChangePassword(\MichalSpacekCz\Form\ChangePassword $form)
+	public function submittedChangePassword(\MichalSpacekCz\Form\ChangePassword $form, $values)
 	{
-		$values = $form->getValues();
-		$this->authenticator->changePassword($this->user, $values['password'], $values['newPassword']);
+		$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
 		$this->redirect('Homepage:');
 	}
 
