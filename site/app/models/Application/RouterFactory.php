@@ -148,7 +148,6 @@ class RouterFactory
 	{
 		foreach ($this->supportedLocales[$module] as $locale => $tld) {
 			$maskPrefix = (isset($this->translatedRoutes[$module][$defaultPresenter]) ? $this->translatedRoutes[$module][$defaultPresenter]['mask'][$locale] : null);
-			$flags = Route::SECURED;
 			$metadata = array(
 				'presenter' => [Route::VALUE => $defaultPresenter],
 				'action' => [Route::VALUE => $defaultAction],
@@ -179,7 +178,7 @@ class RouterFactory
 					}
 					break;
 			}
-			$this->addToRouter(new Route("//{$module}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata, $flags), $locale, $module);
+			$this->addToRouter(new Route("//{$module}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata), $locale, $module);
 		}
 	}
 
