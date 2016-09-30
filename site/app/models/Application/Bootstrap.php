@@ -76,7 +76,7 @@ class Bootstrap extends \Nette\Object
 			return is_file($path);
 		});
 		foreach ($existingFiles as $filename) {
-			$configurator->addConfig($filename, $configurator::NONE);
+			$configurator->addConfig($filename);
 		}
 
 		$this->container = $configurator->createContainer();
