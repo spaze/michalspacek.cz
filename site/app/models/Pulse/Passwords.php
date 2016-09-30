@@ -221,7 +221,7 @@ class Passwords
 				$algo->stretched = $row->algoStretched;
 				$algo->from = $row->from;
 				$algo->fromConfirmed = $row->fromConfirmed;
-				$attributes = \Nette\Utils\Json::decode($row->attributes);
+				$attributes = (empty($row->attributes) ? null : \Nette\Utils\Json::decode($row->attributes));
 				$algo->params = $attributes->params ?? null;
 				$algo->fullAlgo = $this->formatFullAlgo($row->algoName, $attributes);
 				$storages->storages[$row->companyId][$row->siteId][$key] = $algo;
