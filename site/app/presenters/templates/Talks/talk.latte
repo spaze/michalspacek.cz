@@ -7,7 +7,7 @@
 {/define}
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{includeblock "../embed.latte"}
+{import "../embed.latte"}
 <p n:if="$slidesHref" id="{_html.id.slides}"></p>
 {include #embedSlides}
 <p n:if="$slidesHref">

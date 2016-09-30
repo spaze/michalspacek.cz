@@ -5,8 +5,8 @@
 {/define}
 
 {define #content}
-{includeblock "default.latte"}
-{includeblock "reviews.latte"}
+{import "default.latte"}
+{import "reviews.latte"}
 <p>{$description}</p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form application class => aligned}

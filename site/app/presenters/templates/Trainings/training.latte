@@ -86,7 +86,7 @@
 {/define}
 
 {define #content}
-{includeblock "reviews.latte"}
+{import "reviews.latte"}
 <p>{$description}</p>
 
 <div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>

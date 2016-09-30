@@ -5,7 +5,7 @@
 {/define}
 
 {define #content}
-{includeblock "default.latte"}
+{import "default.latte"}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <p>
 {$trainingName} {$trainingStart|date:'j. n. Y'}
