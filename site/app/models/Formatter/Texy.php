@@ -113,8 +113,8 @@ class Texy extends \Netxten\Formatter\Texy
 	private function getTrainingSuffix($training)
 	{
 		$el = Html::el()
-			->add(Html::el()->setText(' '))
-			->add(Html::el('small')->setText(sprintf('(**%s:%s**)', self::TRAINING_DATE, $training)));
+			->addHtml(Html::el()->setText(' '))
+			->addHtml(Html::el('small')->setText(sprintf('(**%s:%s**)', self::TRAINING_DATE, $training)));
 		return $el;
 	}
 
@@ -173,9 +173,9 @@ class Texy extends \Netxten\Formatter\Texy
 				$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
 				$start = $this->netxtenHelpers->localDate($date->start, 'cs', $format);
 				$el = Html::el()
-					->add(Html::el('strong')->setText($start))
-					->add(Html::el()->setText(' '))
-					->add(Html::el()->setText($date->venueCity));
+					->addHtml(Html::el('strong')->setText($start))
+					->addHtml(Html::el()->setText(' '))
+					->addHtml(Html::el()->setText($date->venueCity));
 				$dates[] = $el;
 			}
 		}

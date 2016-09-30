@@ -260,7 +260,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->flashMessage(
 			Html::el()
 				->setText('Tykání nastaveno pro ' . $total . ' účastníků ve stavu ')
-				->add(implode(', ', $statuses))
+				->addHtml(implode(', ', $statuses))
 		);
 
 		$this->redirect($this->getAction(), $this->dateId);
@@ -405,8 +405,8 @@ class TrainingsPresenter extends BasePresenter
 			$name = $this->trainingFiles->addFile($this->training, $values->file, $this->applicationIdsAttended);
 			$this->flashMessage(
 				Html::el()->setText('Soubor ')
-					->add(Html::el('code')->setText($name))
-					->add(Html::el()->setText(' byl přidán'))
+					->addHtml(Html::el('code')->setText($name))
+					->addHtml(Html::el()->setText(' byl přidán'))
 			);
 		} else {
 			$this->flashMessage('Soubor nebyl vybrán nebo došlo k nějaké chybě při nahrávání', 'error');
