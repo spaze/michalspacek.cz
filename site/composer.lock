@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "222bef0ced8d4021bcc44dc2bd55172c",
-    "content-hash": "03414f9243544c002c8d069677c1e3a5",
+    "hash": "af97c31d942b0e05f21214c3dece6936",
+    "content-hash": "360775e56bdfe6a41948fb32331e999b",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -58,16 +58,16 @@
         },
         {
             "name": "kdyby/translation",
-            "version": "v2.3.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kdyby/Translation.git",
-                "reference": "b0517f926ea1217ed069a8fe6d70f1004e37b0d6"
+                "reference": "f14d9c0755ee8fd9118a741687e8392b0e82780d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kdyby/Translation/zipball/b0517f926ea1217ed069a8fe6d70f1004e37b0d6",
-                "reference": "b0517f926ea1217ed069a8fe6d70f1004e37b0d6",
+                "url": "https://api.github.com/repos/Kdyby/Translation/zipball/f14d9c0755ee8fd9118a741687e8392b0e82780d",
+                "reference": "f14d9c0755ee8fd9118a741687e8392b0e82780d",
                 "shasum": ""
             },
             "require": {
@@ -121,7 +121,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -152,7 +152,7 @@
                 "nette",
                 "translation"
             ],
-            "time": "2016-04-19 21:27:14"
+            "time": "2016-08-26 06:34:41"
         },
         {
             "name": "latte/latte",
@@ -1864,6 +1864,7 @@
         "spaze/netxten": 20,
         "spaze/csp-config": 20,
         "spaze/sri-macros": 20,
+        "kdyby/translation": 20,
         "defuse/php-encryption": 20,
         "roave/security-advisories": 20
     },
