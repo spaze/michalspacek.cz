@@ -14,19 +14,13 @@
 		"latte/latte": "~2.3",
 		"tracy/tracy": "~2.3",
 		"texy/texy": "~2.8",
-		"spaze/netxten": "~0.6",
+		"spaze/netxten": "dev-master",
 		"spaze/csp-config": "dev-master",
 		"spaze/sri-macros": "dev-master",
 		"kdyby/translation": "~2.0",
 		"defuse/php-encryption": "dev-master",
 		"roave/security-advisories": "dev-master"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url":  "https://github.com/spaze/netxten.git"
-		}
-	],
 	"require-dev": {
 		"nette/tester": "^1.7"
 	}

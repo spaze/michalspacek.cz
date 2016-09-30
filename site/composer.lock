@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "347adec070de3182a25d313d8fcc3367",
-    "content-hash": "60704be3307a1cc6796c419410afcc03",
+    "hash": "222bef0ced8d4021bcc44dc2bd55172c",
+    "content-hash": "03414f9243544c002c8d069677c1e3a5",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1287,7 +1287,7 @@
         },
         {
             "name": "spaze/netxten",
-            "version": "v0.6.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
@@ -1314,10 +1314,7 @@
                     "Netxten": "lib"
                 }
             },
-            "support": {
-                "source": "https://github.com/spaze/netxten/tree/v0.6.0",
-                "issues": "https://github.com/spaze/netxten/issues"
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "time": "2016-06-30 18:30:37"
         },
         {
@@ -1761,6 +1758,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "spaze/netxten": 20,
         "spaze/csp-config": 20,
         "spaze/sri-macros": 20,
         "defuse/php-encryption": 20,
