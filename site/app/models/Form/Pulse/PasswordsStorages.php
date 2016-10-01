@@ -38,7 +38,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 		$inputAlias->addConditionOn($inputName, self::FILLED)
 			->setRequired('Enter new company alias');
 
-		$selectCompany->addConditionOn($inputName, ~self::FILLED)
+		$selectCompany->addConditionOn($inputName, self::BLANK)
 			->setRequired('Choose company or add a new one');
 		$inputName->addConditionOn($selectCompany, self::FILLED)
 			->addRule(self::BLANK, "Company already selected, can't add a new one");
@@ -56,7 +56,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 			->setType('url');
 		$inputAlias = $newSiteContainer->addText('alias', 'Alias:');
 
-		$selectSite->addConditionOn($inputUrl, ~self::FILLED)
+		$selectSite->addConditionOn($inputUrl, self::BLANK)
 			->setRequired('Choose site or add a new one');
 		$inputUrl->addCondition(self::FILLED)
 			->addRule(self::URL, 'Incorrect site URL')
@@ -89,7 +89,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 		$newAlgoContainer->addCheckbox('salted', 'Salted:');
 		$newAlgoContainer->addCheckbox('stretched', 'Stretched:');
 
-		$selectAlgo->addConditionOn($inputAlgo, ~self::FILLED)
+		$selectAlgo->addConditionOn($inputAlgo, self::BLANK)
 			->setRequired('Choose algorithm or add a new one');
 		$inputAlgo->addConditionOn($selectAlgo, self::FILLED)
 			->addRule(self::BLANK, $message = "Algorithm already selected, can't add a new one");
