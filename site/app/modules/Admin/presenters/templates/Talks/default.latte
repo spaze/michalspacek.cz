@@ -1,9 +1,9 @@
 {define #itemTalk}
-	<li><a n:href="Talks:talk $talk->talkId"><strong n:tag-if="$upcoming">{$talk->title}</strong></a>
+	<li><a n:href="Talks:talk $item->talkId"><strong n:tag-if="$upcoming">{$item->title}</strong></a>
 	<small>
-		<strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}
-		<span n:if="$talk->hasSlides" class="icon icon16 slides" title="{_messages.label.slides}"></span>
-		<span n:if="$talk->videoHref" class="icon icon16 video" title="{_messages.label.videorecording}"></span>
+		<strong class="date">{$item->date|date:'j. n. Y'}</strong>, {$item->event}
+		<span n:if="$item->hasSlides" class="icon icon16 slides" title="{_messages.label.slides}"></span>
+		<span n:if="$item->videoHref" class="icon icon16 video" title="{_messages.label.videorecording}"></span>
 	</small></li>
 {/define}
 
@@ -79,11 +79,11 @@
 </div>
 <hr>
 <ol reversed>
-{foreach $upcomingTalks as $talk}
+{foreach $upcomingTalks as $item}
 	{var $upcoming = true}
 	{include #itemTalk}
 {/foreach}
-{foreach $talks as $talk}
+{foreach $talks as $item}
 	{var $upcoming = false}
 	{include #itemTalk}
 {/foreach}
