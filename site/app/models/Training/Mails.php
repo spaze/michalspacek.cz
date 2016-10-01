@@ -71,7 +71,7 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
 
-		$template->setFile($this->templatesDir . 'trainingSignUp.latte');
+		$template->setFile(realpath($this->templatesDir . 'trainingSignUp.latte'));
 
 		$template->training     = $training;
 		$template->trainingName = $trainingName;
