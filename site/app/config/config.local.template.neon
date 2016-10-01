@@ -37,15 +37,30 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 				- "'unsafe-eval'"
 			style-src:
 				- "'unsafe-inline'"
+		admin.*.*:
+			script-src:
+				-"'self'"
 		admin.info.php < *.*:
+			script-src:
+				- "'self'"
 		api.*.*:
 			img-src:
 				- 'data:'
 			script-src:
+				- "'self'"
 				- "'unsafe-inline'"
 				- "'unsafe-eval'"
 			style-src:
 				- "'unsafe-inline'"
+		webleed.*.*:
+			script-src:
+				-"'self'"
+		pulse.*.*:
+			script-src:
+				-"'self'"
+		upckeys.*.*:
+			script-src:
+				-"'self'"
 
 parameters:
 	locales:
