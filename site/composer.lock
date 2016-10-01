@@ -1387,22 +1387,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "9d927617c58b4375c407eae025b8d3aa9730c2ca"
+                "reference": "362212ce2870e138558f926ea50b568ac0c20ac2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/9d927617c58b4375c407eae025b8d3aa9730c2ca",
-                "reference": "9d927617c58b4375c407eae025b8d3aa9730c2ca",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/362212ce2870e138558f926ea50b568ac0c20ac2",
+                "reference": "362212ce2870e138558f926ea50b568ac0c20ac2",
                 "shasum": ""
             },
             "require": {
-                "latte/latte": ">= 2.3.0",
-                "nette/application": ">= 2.3.0",
-                "nette/caching": ">= 2.3.0",
-                "nette/forms": ">= 2.3.0",
-                "nette/http": ">= 2.3.0",
-                "nette/utils": ">= 2.3.0",
-                "texy/texy": ">= 2.8.0"
+                "latte/latte": "~2.3",
+                "nette/application": "~2.3",
+                "nette/caching": "~2.3",
+                "nette/forms": "~2.3",
+                "nette/http": "~2.3",
+                "nette/utils": "^2.3.10",
+                "texy/texy": "~2.8"
             },
             "type": "library",
             "autoload": {
@@ -1411,7 +1411,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-06-30 18:30:37"
+            "time": "2016-09-30 23:25:12"
         },
         {
             "name": "spaze/sri-macros",
