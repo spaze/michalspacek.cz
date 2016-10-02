@@ -36,48 +36,48 @@ class Talk extends Form
 		}
 
 		$this->addText('action', 'Akce:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka akce je %d znaků', 200);
 		$this->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
 			->addRule(self::MAX_LENGTH, 'Maximální délka názvu je %d znaků', 200);
 		$this->addTextArea('description', 'Popis:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka popisu je %d znaků', 65535);
 		$this->addTalkDate('date', 'Datum:', true);
 		$this->addText('href', 'Odkaz na přednášku:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na přednášku je %d znaků', 200);
 		$this->addText('duration', 'Délka:')
 			->setType('number');
 		$this->addSelect('origSlides', 'Odkázat na slajdy z:', $talks)
 			->setPrompt('Vyberte prosím přednášku, na kterou se odkáže');
 		$this->addText('slidesHref', 'Odkaz na slajdy:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na slajdy je %d znaků', 200);
 		$this->addText('slidesEmbed', 'Embed odkaz na slajdy:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka embed odkazu na slajdy je %d znaků', 200);
 		$this->addText('videoHref', 'Odkaz na video:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
 		$this->addText('videoEmbed', 'Embed odkaz na video:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
 		$this->addText('event', 'Událost:')
 			->setRequired('Zadejte prosím událost')
 			->addRule(self::MAX_LENGTH, 'Maximální délka události je %d znaků', 200);
 		$this->addText('eventHref', 'Odkaz na událost:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na událost je %d znaků', 200);
 		$this->addText('ogImage', 'Odkaz na obrázek:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na obrázek je %d znaků', 200);
 		$this->addTextArea('transcript', 'Přepis:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka přepisu je %d znaků', 65535);
 		$this->addTextArea('favorite', 'Popis pro oblíbené:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka popisu pro oblíbené je %d znaků', 65535);
 		$this->addSelect('supersededBy', 'Nahrazeno přednáškou:', $talks)
 			->setPrompt('Vyberte prosím přednášku, kterou se tato nahradí');

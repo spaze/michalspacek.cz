@@ -23,29 +23,29 @@ class Interview extends Form
 			->setRequired('Zadejte prosím název')
 			->addRule(self::MAX_LENGTH, 'Maximální délka názvu je %d znaků', 200);
 		$this->addTextArea('description', 'Popis:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka popisu je %d znaků', 2000);
 		$this->addInterviewDate('date', 'Datum:', true);
 		$this->addText('href', 'Odkaz na rozhovor:', true)
 			->setRequired('Zadejte prosím odkaz na rozhovor')
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na rozhovor je %d znaků', 200);
 		$this->addText('audioHref', 'Odkaz na audio:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na audio je %d znaků', 200);
 		$this->addText('audioEmbed', 'Embed odkaz na audio:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka embed odkazu na audio je %d znaků', 200);
 		$this->addText('videoHref', 'Odkaz na video:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
 		$this->addText('videoEmbed', 'Embed odkaz na video:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
 		$this->addText('sourceName', 'Název zdroje:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka názvu zdroje je %d znaků', 200);
 		$this->addText('sourceHref', 'Odkaz na zdroj:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na zdroj je %d znaků', 200);
 		$this->addSubmit('submit', 'Přidat');
 	}

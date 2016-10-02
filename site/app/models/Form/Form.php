@@ -24,15 +24,11 @@ abstract class Form extends \Nette\Application\UI\Form
 	 */
 	protected function addDate($name, $label = null, $required = false, $cols = null, $maxLength = null, $format = null, $pattern = null, $container = null)
 	{
-		$text = ($container === null ? $this : $container)->addText($name, $label, $cols, $maxLength);
-		if ($required) {
-			$text->setRequired('Zadejte datum');
-		}
-		$text->setAttribute('placeholder', $format)
+		return ($container === null ? $this : $container)->addText($name, $label, $cols, $maxLength)
+			->setAttribute('placeholder', $format)
 			->setAttribute('title', "Formát {$format}")
-			->addCondition(self::FILLED)
+			->setRequired($required ? 'Zadejte datum' : false)
 			->addRule(Self::PATTERN, "Datum musí být ve formátu {$format}", $pattern);
-		return $text;
 	}
 
 }

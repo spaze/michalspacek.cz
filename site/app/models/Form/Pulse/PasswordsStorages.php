@@ -58,7 +58,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 
 		$selectSite->addConditionOn($inputUrl, self::BLANK)
 			->setRequired('Choose site or add a new one');
-		$inputUrl->addCondition(self::FILLED)
+		$inputUrl->addCondition(self::FILLED)  // intentionally addCondition(), there's a matching endCondition() below
 			->addRule(self::URL, 'Incorrect site URL')
 			->endCondition()
 			->addConditionOn($selectSite, self::FILLED)
@@ -122,7 +122,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 				$selectDisclosure->addConditionOn($inputUrl, self::FILLED)
 					->setRequired('Enter disclosure type');
 			}
-			$inputUrl->addCondition(self::FILLED)
+			$inputUrl->addCondition(self::FILLED)  // intentionally addCondition(), there's a matching endCondition() below
 				->addRule(self::URL, 'Incorrect disclosure URL')
 				->endCondition()
 				->addConditionOn($selectDisclosure, self::FILLED)

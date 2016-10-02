@@ -119,27 +119,27 @@ abstract class TrainingForm extends Form
 	protected function addCompany(\Nette\Forms\Container $container)
 	{
 		$container->addText('companyId', 'IČO:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MIN_LENGTH, 'Minimální délka IČO je %d znaky', 6)
 			->addRule(self::MAX_LENGTH, 'Maximální délka IČO je %d znaků', 200);
 		$container->addText('companyTaxId', 'DIČ:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
 			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
 		$container->addText('company', 'Obchodní jméno:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
 			->addRule(self::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 200);
 		$container->addText('street', 'Ulice a číslo:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
 			->addRule(self::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200);
 		$container->addText('city', 'Město:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
 			->addRule(self::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
 		$container->addText('zip', 'PSČ:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
 			->addRule(self::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
 	}
@@ -153,7 +153,7 @@ abstract class TrainingForm extends Form
 	protected function addNote(\Nette\Forms\Container $container)
 	{
 		$container->addText('note', 'Poznámka:')
-			->addCondition(self::FILLED)
+			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
 	}
 
