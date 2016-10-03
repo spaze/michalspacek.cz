@@ -1446,12 +1446,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/nonce-generator.git",
-                "reference": "f1dec3dbd222e10938fcd7789d51f510bf65712f"
+                "reference": "f523230eb502bf01ea3b2ad0cae3c6b2700270f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/f1dec3dbd222e10938fcd7789d51f510bf65712f",
-                "reference": "f1dec3dbd222e10938fcd7789d51f510bf65712f",
+                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/f523230eb502bf01ea3b2ad0cae3c6b2700270f8",
+                "reference": "f523230eb502bf01ea3b2ad0cae3c6b2700270f8",
                 "shasum": ""
             },
             "require-dev": {
@@ -1481,7 +1481,7 @@
                 }
             ],
             "description": "Content Security Policy nonce generator",
-            "time": "2016-10-03 15:41:23"
+            "time": "2016-10-03 17:19:39"
         },
         {
             "name": "spaze/sri-macros",
