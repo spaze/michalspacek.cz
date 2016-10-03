@@ -33,13 +33,6 @@ class Mails
 	/** @var \Netxten\Templating\Helpers */
 	protected $netxtenHelpers;
 
-	/**
-	 * Templates directory, ends with a slash.
-	 *
-	 * @var string
-	 */
-	protected $templatesDir;
-
 	/** @var string */
 	protected $emailFrom;
 
@@ -71,7 +64,7 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
 
-		$template->setFile(realpath($this->templatesDir . 'trainingSignUp.latte'));
+		$template->setFile(__DIR__ . '/mails/trainingSignUp.latte');
 
 		$template->training     = $training;
 		$template->trainingName = $trainingName;
@@ -83,15 +76,6 @@ class Mails
 
 		$subject = 'Potvrzení registrace na školení ' . $trainingName;
 		$this->sendMail($recipientAddress, $recipientName, $subject, $template);
-	}
-
-
-	public function setTemplatesDir($dir)
-	{
-		if ($dir[strlen($dir) - 1] != '/') {
-			$dir .= '/';
-		}
-		$this->templatesDir = $dir;
 	}
 
 
@@ -163,7 +147,7 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
-		$template->setFile($this->templatesDir . 'admin/invitation.latte');
+		$template->setFile(__DIR__ . '/mails/admin/invitation.latte');
 		$template->application = $application;
 		$template->additional = $additional;
 		$subject = 'Pozvánka na školení ' . $application->trainingName;
@@ -175,11 +159,7 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
-		if ($application->familiar) {
-			$template->setFile($this->templatesDir . 'admin/materialsFamiliar.latte');
-		} else {
-			$template->setFile($this->templatesDir . 'admin/materials.latte');
-		}
+		$template->setFile(__DIR__ . '/mails/admin/' . ($application->familiar ?  'materialsFamiliar.latte' : 'materials.latte'));
 		$template->application = $application;
 		$template->additional = $additional;
 		$subject = 'Materiály ze školení ' . $application->trainingName;
@@ -191,7 +171,7 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
-		$template->setFile($this->templatesDir . ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER ? 'admin/invoiceAfter.latte' : 'admin/invoice.latte'));
+		$template->setFile(__DIR__ . '/mails/admin/' . ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER ? 'invoiceAfter.latte' : 'invoice.latte'));
 		$template->application = $application;
 		$template->additional = $additional;
 		$subject = 'Potvrzení registrace na školení ' . $application->trainingName . ' a faktura';
@@ -203,7 +183,7 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
-		$template->setFile($this->templatesDir . 'admin/reminder.latte');
+		$template->setFile(__DIR__ . '/mails/admin/reminder.latte');
 		$template->application = $application;
 		$template->venue = $this->trainingVenues->get($application->venueAction);
 		$template->phoneNumber = $this->phoneNumber;

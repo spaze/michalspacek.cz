@@ -22,7 +22,6 @@ services:
 	trainingMails:
 		class: \MichalSpacekCz\Training\Mails
 		setup:
-			- setTemplatesDir('../../app/emails')
 			- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 			- setPhoneNumber(%contact.phoneNumber%)
 	trainingDates: \MichalSpacekCz\Training\Dates
