@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "af97c31d942b0e05f21214c3dece6936",
-    "content-hash": "360775e56bdfe6a41948fb32331e999b",
+    "hash": "0522363b39801080037b092aff6edf6a",
+    "content-hash": "d10ad12e75217dad36b2cf04d124cec4",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1368,12 +1368,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "5d022d108b61b6e734aa88ce9feeb43b5f0aa4a7"
+                "reference": "1755fe29dacbf52a74bdcd1dad38cbf482366ece"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/5d022d108b61b6e734aa88ce9feeb43b5f0aa4a7",
-                "reference": "5d022d108b61b6e734aa88ce9feeb43b5f0aa4a7",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/1755fe29dacbf52a74bdcd1dad38cbf482366ece",
+                "reference": "1755fe29dacbf52a74bdcd1dad38cbf482366ece",
                 "shasum": ""
             },
             "require": {
@@ -1385,8 +1385,8 @@
                 "paragonie/random_compat": "^2.0"
             },
             "suggest": {
-                "paragonie/random_compat": "PHP 5.x polyfill for random_bytes() used by this library",
-                "spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too."
+                "spaze/nonce-generator": "Generates nonces to be added to Content Security Policy header, if enabled",
+                "spaze/sri-macros": "For script tags with automatically added nonces, and Subresource Integrity hashes, too"
             },
             "type": "library",
             "autoload": {
@@ -1406,7 +1406,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2016-10-03 04:10:15"
+            "time": "2016-10-03 16:34:11"
         },
         {
             "name": "spaze/netxten",
@@ -1441,24 +1441,68 @@
             "time": "2016-09-30 23:25:12"
         },
         {
+            "name": "spaze/nonce-generator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/nonce-generator.git",
+                "reference": "f1dec3dbd222e10938fcd7789d51f510bf65712f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/f1dec3dbd222e10938fcd7789d51f510bf65712f",
+                "reference": "f1dec3dbd222e10938fcd7789d51f510bf65712f",
+                "shasum": ""
+            },
+            "require-dev": {
+                "nette/tester": "^1.7",
+                "paragonie/random_compat": "^2.0"
+            },
+            "suggest": {
+                "paragonie/random_compat": "PHP 5.x polyfill for random_bytes() used by this library",
+                "spaze/csp-config": "Build and send Content Security Policy header, possibly including nonce, if enabled",
+                "spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spaze\\NonceGenerator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.cz"
+                }
+            ],
+            "description": "Content Security Policy nonce generator",
+            "time": "2016-10-03 15:41:23"
+        },
+        {
             "name": "spaze/sri-macros",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "88495b1bdebfffd6f68f91cc599d812d3b289d11"
+                "reference": "b3f7f75cc9673232023a2c311db8f0e4c47cfd25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/88495b1bdebfffd6f68f91cc599d812d3b289d11",
-                "reference": "88495b1bdebfffd6f68f91cc599d812d3b289d11",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/b3f7f75cc9673232023a2c311db8f0e4c47cfd25",
+                "reference": "b3f7f75cc9673232023a2c311db8f0e4c47cfd25",
                 "shasum": ""
             },
             "require-dev": {
                 "nette/tester": "^1.7"
             },
             "suggest": {
-                "spaze/csp-config": "Allows to add nonce attribute to script tags automatically, if enabled"
+                "spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
+                "spaze/nonce-generator": "Allows to add nonce attribute to script tags automatically"
             },
             "type": "library",
             "autoload": {
@@ -1478,7 +1522,7 @@
                 }
             ],
             "description": "Subresource Integrity macros for Latte template engine",
-            "time": "2016-10-03 04:12:16"
+            "time": "2016-10-03 14:15:47"
         },
         {
             "name": "symfony/config",
@@ -1890,6 +1934,7 @@
     "stability-flags": {
         "spaze/netxten": 20,
         "spaze/csp-config": 20,
+        "spaze/nonce-generator": 20,
         "spaze/sri-macros": 20,
         "kdyby/translation": 20,
         "defuse/php-encryption": 20,
