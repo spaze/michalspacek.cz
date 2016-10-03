@@ -52,7 +52,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		$template = parent::createTemplate($class);
 		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers(), 'loader']);
 		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
-		$template->cspConfig = $this->getContext()->getByType(\Spaze\ContentSecurityPolicy\Config::class);
+		$template->getLatte()->addProvider('nonceGenerator', $this->getContext()->getByType(\Spaze\ContentSecurityPolicy\NonceGeneratorInterface::class));
 		return $template;
 	}
 

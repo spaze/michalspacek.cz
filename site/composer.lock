@@ -1368,12 +1368,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "9e92c1c2c7e43d81c84f0de8962b0e90c14ff496"
+                "reference": "5d022d108b61b6e734aa88ce9feeb43b5f0aa4a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/9e92c1c2c7e43d81c84f0de8962b0e90c14ff496",
-                "reference": "9e92c1c2c7e43d81c84f0de8962b0e90c14ff496",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/5d022d108b61b6e734aa88ce9feeb43b5f0aa4a7",
+                "reference": "5d022d108b61b6e734aa88ce9feeb43b5f0aa4a7",
                 "shasum": ""
             },
             "require": {
@@ -1406,7 +1406,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2016-09-28 18:34:55"
+            "time": "2016-10-03 04:10:15"
         },
         {
             "name": "spaze/netxten",
@@ -1446,12 +1446,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "b4b69a9c5af19cb6f9cc50228c0c88359e50bbd4"
+                "reference": "88495b1bdebfffd6f68f91cc599d812d3b289d11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/b4b69a9c5af19cb6f9cc50228c0c88359e50bbd4",
-                "reference": "b4b69a9c5af19cb6f9cc50228c0c88359e50bbd4",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/88495b1bdebfffd6f68f91cc599d812d3b289d11",
+                "reference": "88495b1bdebfffd6f68f91cc599d812d3b289d11",
                 "shasum": ""
             },
             "require-dev": {
@@ -1478,7 +1478,7 @@
                 }
             ],
             "description": "Subresource Integrity macros for Latte template engine",
-            "time": "2016-09-28 20:59:14"
+            "time": "2016-10-03 04:12:16"
         },
         {
             "name": "symfony/config",

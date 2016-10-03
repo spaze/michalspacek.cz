@@ -31,7 +31,6 @@ translation:
 		session: off
 
 subresourceIntegrity:
-	addNonce: on
 	hashingAlgos:
 		- sha256
 	localPrefix:
