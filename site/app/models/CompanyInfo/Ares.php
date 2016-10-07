@@ -59,7 +59,7 @@ class Ares implements CompanyDataInterface
 			}
 			$content = $this->torProxy->fetch(sprintf($this->url, $companyId));
 			if (!$content) {
-				throw new \Exception(error_get_last()['message'] ?? sprintf("[%s/%s] Can\'t fetch data, last HTTP code %s, ", $this->torProxy->getAttempt(), $this->torProxy->getRetries(), $this->torProxy->getLastHttpCode()), self::STATUS_ERROR);
+				throw new \Exception(error_get_last()['message'] ?? "Can't fetch data, last HTTP code {$this->torProxy->getLastHttpCode()} [{$this->torProxy->getAttempt()}/{$this->torProxy->getRetries()}]", self::STATUS_ERROR);
 			}
 
 			libxml_disable_entity_loader();
@@ -95,7 +95,7 @@ class Ares implements CompanyDataInterface
 			$company->zip = $zip;
 			$company->country = $country;
 		} catch (\RuntimeException  $e) {
-			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
+			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId} [{$this->torProxy->getAttempt()}/{$this->torProxy->getRetries()}]");
 			$company->status = self::STATUS_NOT_FOUND;
 			$company->statusMessage = 'Not Found';
 		} catch (\Exception $e) {
