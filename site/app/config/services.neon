@@ -95,6 +95,7 @@ services:
 			- setProxy(%tor.proxy.host%, %tor.proxy.port%)
 			- setUserAgent(%tor.userAgents.ares%)
 			- setRetries(%ares.retries%)
+			- setExitNodes(%tor.exitNodes.ares%)
 	torControl:
 		class: \MichalSpacekCz\Tor\Control
 		setup:
