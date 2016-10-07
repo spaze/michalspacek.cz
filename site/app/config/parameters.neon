@@ -65,6 +65,8 @@ parameters:
 			port: 9051
 		userAgents:
 			ares: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) (+https://www.jakobejitblokaci.cz/)'
+		exitNodes:
+			ares:  # default is empty
 	returningUser:
 		permanentLoginInterval: 14 days
 	awsLambda:
