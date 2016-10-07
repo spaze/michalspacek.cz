@@ -19,6 +19,9 @@ class Ares implements CompanyDataInterface
 
 	const STATUS_NOT_FOUND = 2;
 
+	/** @var \MichalSpacekCz\Tor\Proxy */
+	private $torProxy;
+
 	/** @var string */
 	private $url;
 
@@ -29,11 +32,11 @@ class Ares implements CompanyDataInterface
 	/**
 	 * Constructor.
 	 *
-	 * @param \MichalSpacekCz\Tor $tor
+	 * @param \MichalSpacekCz\TorProxy $torProxy
 	 */
-	public function __construct(\MichalSpacekCz\Tor $tor)
+	public function __construct(\MichalSpacekCz\Tor\Proxy $torProxy)
 	{
-		$this->tor = $tor;
+		$this->torProxy = $torProxy;
 	}
 
 
@@ -68,7 +71,7 @@ class Ares implements CompanyDataInterface
 			}
 			$content = $this->fetch($companyId);
 			if (!$content) {
-				throw new \Exception(error_get_last()['message'] ?? 'Can\'t fetch data, last HTTP code was ' . $this->tor->getLastHttpCode(), self::STATUS_ERROR);
+				throw new \Exception(error_get_last()['message'] ?? sprintf("[%s/%s] Can\'t fetch data, last HTTP code %s, ", $this->torProxy->getAttempt(), $this->torProxy->getRetries(), $this->torProxy->getLastHttpCode()), self::STATUS_ERROR);
 			}
 
 			libxml_disable_entity_loader();
@@ -126,12 +129,12 @@ class Ares implements CompanyDataInterface
 	private function fetch($companyId)
 	{
 		for ($i = 1; $i <= $this->retries; $i++) {
-			$output = $this->tor->fetch(sprintf($this->url, $companyId), 'ares');
-			if (($code = $this->tor->getLastHttpCode()) == 200) {
+			$output = $this->torProxy->setUserAgent('ares')->fetch(sprintf($this->url, $companyId));
+			if (($code = $this->torProxy->getLastHttpCode()) == 200) {
 				return $output;
 			}
 			\Tracy\Debugger::log("[{$i}/{$this->retries}] Resulting HTTP code {$code}, switching to clean circuits", 'tor');
-			$this->tor->cleanCircuits();
+			$this->torProxy->cleanCircuits();
 		}
 		return false;
 	}
