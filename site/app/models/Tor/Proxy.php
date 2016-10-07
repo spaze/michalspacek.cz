@@ -25,6 +25,8 @@ class Proxy
 	/** @var array */
 	private $exitNodes = array();
 
+	/** @var integer */
+	private $retries = 1;
 
 	/** @var integer */
 	private $attempt;
@@ -75,6 +77,33 @@ class Proxy
 
 
 	/**
+	 * @param integer $retries
+	 */
+	public function setRetries($retries)
+	{
+		$this->retries = $retries;
+	}
+
+
+	/**
+	 * @return integer
+	 */
+	public function getRetries()
+	{
+		return $this->retries;
+	}
+
+
+	/**
+	 * @return integer
+	 */
+	public function getAttempt()
+	{
+		return $this->attempt;
+	}
+
+
+	/**
 	 * Fetch data.
 	 *
 	 * @param string $companyId
@@ -89,6 +118,7 @@ class Proxy
 		curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
 
+		for ($this->attempt = 1; $this->attempt <= $this->retries; $this->attempt++) {
 			$output = curl_exec($ch);
 			$errNo = curl_errno($ch);
 			$error = curl_error($ch);
@@ -97,7 +127,7 @@ class Proxy
 				throw new \RuntimeException($error, $errNo);
 			}
 			$this->transferInfo = curl_getinfo($ch);
-
+			if (($code = $this->getLastHttpCode()) == 200) {
 				curl_close($ch);
 				return $output;
 			}
