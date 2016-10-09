@@ -446,9 +446,9 @@ class Passwords
 	private function addStorageData($companyId, $algoId, $siteId, $from, $fromConfirmed, $attributes)
 	{
 		$this->database->query('INSERT INTO password_storages', [
-			'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
+			'key_companies' => ($siteId === Sites::ALL ? (int)$companyId : null),
 			'key_password_algos' => $algoId,
-			'key_sites' => ($siteId === Sites::ALL ? null : $siteId),
+			'key_sites' => ($siteId === Sites::ALL ? null : (int)$siteId),
 			'from' => (empty($from) ? null : new \DateTime($from)),
 			'from_confirmed' => $fromConfirmed,
 			'attributes' => (empty($attributes) ? null : $attributes),
@@ -487,7 +487,7 @@ class Passwords
 		$this->database->beginTransaction();
 		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba, $values->company->new->alias));
 		$siteId = (empty($values->site->new->url)
-			? (int)$values->site->id
+			? $values->site->id
 			: $this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
 		);
 		$algoId = (empty($values->algo->new->algo)

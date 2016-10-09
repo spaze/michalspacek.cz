@@ -64,7 +64,9 @@ class PasswordsStorages extends \MichalSpacekCz\Form\Form
 			->addConditionOn($selectSite, self::FILLED)
 			->addRule(self::BLANK, $message = "Site already selected, can't add a new one")
 			->endCondition()
-			->addConditionOn($inputName, self::FILLED)
+			->addCondition(function ($item) use ($inputName, $selectSite) {
+				return (!empty($inputName->getValue()) && $selectSite->getValue() !== \MichalSpacekCz\Pulse\Sites::ALL);
+			})
 			->setRequired('New site required when adding a new company');
 		$inputAlias->addConditionOn($selectSite, self::FILLED)
 			->addRule(self::BLANK, $message)
