@@ -38,13 +38,13 @@
 		</div>
 		<div class="algo-container">
 		{foreach $algos as $algo}
-			{if $iterator->counter === 2}<div><a href="" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
+			{if $iterator->counter === 2}<div><a n:href="this $data->sites[$siteId]->host" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
 				<div class="algo">
 					<strong>{$data->algos[$algo->id]}</strong>{if $algo->from || $algo->latestDisclosure} (<span n:if="$algo->from && $algo->fromConfirmed" title="{$algo->from|date:'Y-m'}">since {$algo->from|date:'F Y'}</span>{if $algo->from && $algo->fromConfirmed && $algo->latestDisclosure}, {/if}<span n:if="$algo->latestDisclosure" title="{$algo->latestDisclosure|date:'Y-m-d'}">disclosed {$algo->latestDisclosure|date:'F Y'}</span>){/if}
 				</div>
 				<div>
 				{if $algo->disclosures}
-					<div><a href="" n:class="open-button, $isDetail ? open">Details</a></div>
+					<div><a n:href="this $data->sites[$siteId]->host" n:class="open-button, $isDetail ? open">Details</a></div>
 					<div n:class="expandable, !$isDetail ? hidden">
 					<p n:ifset="$algo->params">Params: {foreach $algo->params as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
 					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>
