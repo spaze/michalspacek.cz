@@ -59,6 +59,32 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 
 
 	/**
+	 * Storages by company action handler.
+	 *
+	 * @param string $company
+	 */
+	public function actionStoragesByCompany($company)
+	{
+		$companies = explode(',', $company);
+		$data = $this->passwords->getStoragesByCompany($companies);
+		if (empty($data->sites)) {
+			throw new \Nette\Application\BadRequestException('Unknown company alias', \Nette\Http\Response::S404_NOT_FOUND);
+		}
+
+		$names = [];
+		foreach ($data->companies as $item) {
+			$names[] = ($item->tradeName ?: $item->companyName);
+		}
+
+		$this->template->isDetail = true;
+		$this->template->pageTitle = implode(', ', $names) . ' password storage disclosures';
+		$this->template->data = $data;
+		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+		$this->setView('storages');
+	}
+
+
+	/**
 	 * Storages rating action handler.
 	 */
 	public function actionStoragesRating()

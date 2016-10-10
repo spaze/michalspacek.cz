@@ -138,6 +138,53 @@ class Passwords
 
 
 	/**
+	 * Get passwords storage data for specified companies.
+	 *
+	 * @param array $companies Aliases
+	 * @return \stdClass with companies, sites, algos, storages properties
+	 */
+	public function getStoragesByCompany(array $companies)
+	{
+		$query = 'SELECT
+				c.id AS companyId,
+				c.name AS companyName,
+				c.trade_name AS tradeName,
+				c.alias AS companyAlias,
+				s.id AS siteId,
+				s.url AS siteUrl,
+				pa.id AS algoId,
+				pa.alias AS algoAlias,
+				pa.algo AS algoName,
+				pa.salted AS algoSalted,
+				pa.stretched AS algoStretched,
+				ps.from,
+				ps.from_confirmed AS fromConfirmed,
+				pd.url AS disclosureUrl,
+				pd.archive AS disclosureArchive,
+				pd.note AS disclosureNote,
+				pd.published AS disclosurePublished,
+				pdt.alias AS disclosureTypeAlias,
+				pdt.type AS disclosureType,
+				ps.attributes
+			FROM companies c
+				LEFT JOIN sites s ON s.key_companies = c.id
+				JOIN password_storages ps ON ps.key_sites = s.id OR ps.key_companies = c.id
+				JOIN password_algos pa ON pa.id = ps.key_password_algos
+				JOIN password_disclosures_password_storages pdps ON pdps.key_password_storages = ps.id
+				JOIN password_disclosures pd ON pdps.key_password_disclosures = pd.id
+				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
+			WHERE c.alias IN (?)
+			ORDER BY
+				COALESCE(c.trade_name, c.name),
+				s.url,
+				ps.from DESC,
+				pd.published';
+
+		return $this->processStorages($this->database->fetchAll($query, $companies));
+	}
+
+
+	/**
 	 * Get passwords storage data for a company.
 	 *
 	 * @param integer $companyId Company id
