@@ -1,7 +1,7 @@
 {define #menu}
 &raquo; <a n:href="Homepage:">Pulse</a>
 &raquo; <a n:href="Passwords:">Passwords</a>
-{if $isDetail}&raquo; <a n:href="Passwords:storages">Passwords storages</a>{/if}
+{if $isDetail}&raquo; <a n:href="default">Passwords storages</a>{/if}
 {/define}
 
 {define #metas}
@@ -28,23 +28,23 @@
 		<div id="{$data->sites[$siteId]->host}" class="site-container">
 			<div class="left">
 				{if $data->sites[$siteId]->url}
-					<a n:href="storagesBySite $data->sites[$siteId]->host" title="Open details">{$data->sites[$siteId]->host}</a>
+					<a n:href="site $data->sites[$siteId]->host" title="Open details">{$data->sites[$siteId]->host}</a>
 					<small><a href="{$data->sites[$siteId]->url}" title="Go to site">&nearr;</a></small>
 				{/if}
-				<p n:if="!$data->sites[$siteId]->url"><a n:href="storagesByCompany $data->companies[$companyId]->alias" title="Open details">All sites</a></p>
+				<p n:if="!$data->sites[$siteId]->url"><a n:href="company $data->companies[$companyId]->alias" title="Open details">All sites</a></p>
 			</div>
 			<div class="right rating">Rating <strong class="right rating-{$data->sites[$siteId]->rating|lower}" title="{$ratingGuide[$data->sites[$siteId]->rating]}">{$data->sites[$siteId]->rating}</strong></div>
 			<div class="clear"></div>
 		</div>
 		<div class="algo-container">
 		{foreach $algos as $algo}
-			{if $iterator->counter === 2}<div><a n:href="storagesBySite $data->sites[$siteId]->host" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
+			{if $iterator->counter === 2}<div><a n:href="site $data->sites[$siteId]->host" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
 				<div class="algo">
 					<strong>{$data->algos[$algo->id]}</strong>{if $algo->from || $algo->latestDisclosure} (<span n:if="$algo->from && $algo->fromConfirmed" title="{$algo->from|date:'Y-m'}">since {$algo->from|date:'F Y'}</span>{if $algo->from && $algo->fromConfirmed && $algo->latestDisclosure}, {/if}<span n:if="$algo->latestDisclosure" title="{$algo->latestDisclosure|date:'Y-m-d'}">disclosed {$algo->latestDisclosure|date:'F Y'}</span>){/if}
 				</div>
 				<div>
 				{if $algo->disclosures}
-					<div><a n:href="storagesBySite $data->sites[$siteId]->host" n:class="open-button, $isDetail ? open">Details</a></div>
+					<div><a n:href="site $data->sites[$siteId]->host" n:class="open-button, $isDetail ? open">Details</a></div>
 					<div n:class="expandable, !$isDetail ? hidden">
 					<p n:ifset="$algo->params">Params: {foreach $algo->params as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
 					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>

@@ -35,3 +35,4 @@ services:
 	# pulse module
 	- \App\PulseModule\Presenters\HomepagePresenter
 	- \App\PulseModule\Presenters\PasswordsPresenter
+	- \App\PulseModule\Presenters\PasswordsStoragesPresenter

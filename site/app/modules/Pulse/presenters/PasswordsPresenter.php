@@ -10,108 +10,34 @@ namespace App\PulseModule\Presenters;
 class PasswordsPresenter extends \App\Presenters\BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Pulse\Passwords */
-	protected $passwords;
-
-	/** @var \MichalSpacekCz\Pulse\Passwords\Rating */
-	protected $passwordsRating;
-
-
-	public function __construct(\MichalSpacekCz\Pulse\Passwords $passwords, \MichalSpacekCz\Pulse\Passwords\Rating $passwordsRating)
-	{
-		$this->passwords = $passwords;
-		$this->passwordsRating = $passwordsRating;
-	}
-
-
-	/**
-	 * Storages action handler.
-	 */
-	public function actionStorages()
-	{
-		$data = $this->passwords->getAllStorages();
-		$this->template->isDetail = false;
-		$this->template->pageTitle = 'Password storage disclosures';
-		$this->template->data = $data;
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-	}
-
-
-	/**
-	 * Storages by site action handler.
-	 *
-	 * @param string $site
-	 */
-	public function actionStoragesBySite($site)
-	{
-		$sites = explode(',', $site);
-		$data = $this->passwords->getStoragesBySite($sites);
-		if (empty($data->sites)) {
-			throw new \Nette\Application\BadRequestException('Unknown site alias', \Nette\Http\Response::S404_NOT_FOUND);
-		}
-
-		$this->template->isDetail = true;
-		$this->template->pageTitle = implode(', ', $sites) . ' password storage disclosures';
-		$this->template->data = $data;
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->setView('storages');
-	}
-
-
-	/**
-	 * Storages by company action handler.
-	 *
-	 * @param string $company
-	 */
-	public function actionStoragesByCompany($company)
-	{
-		$companies = explode(',', $company);
-		$data = $this->passwords->getStoragesByCompany($companies);
-		if (empty($data->sites)) {
-			throw new \Nette\Application\BadRequestException('Unknown company alias', \Nette\Http\Response::S404_NOT_FOUND);
-		}
-
-		$names = [];
-		foreach ($data->companies as $item) {
-			$names[] = ($item->tradeName ?: $item->companyName);
-		}
-
-		$this->template->isDetail = true;
-		$this->template->pageTitle = implode(', ', $names) . ' password storage disclosures';
-		$this->template->data = $data;
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->setView('storages');
-	}
-
-
-	/**
-	 * Storages rating action handler.
-	 */
-	public function actionStoragesRating()
-	{
-		$this->template->pageTitle = 'Password storage disclosures rating guide';
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->template->slowHashes = $this->passwords->getSlowHashes();
-		$this->template->visibleDisclosures = $this->passwords->getVisibleDisclosures();
-		$this->template->invisibleDisclosures = $this->passwords->getInvisibleDisclosures();
-	}
-
-
-	/**
-	 * Storages questions action handler.
-	 */
-	public function actionStoragesQuestions()
-	{
-		$this->template->pageTitle = 'Password storage disclosures questions';
-	}
-
-
 	/**
 	 * Default action handler.
 	 */
-	public function actionDefault()
+	public function actionDefault($param)
 	{
 		$this->template->pageTitle = 'Passwords';
+	}
+
+
+	/**
+	 * Redirect questions handler.
+	 *
+	 * Redirects already published URLs.
+	 */
+	public function actionStoragesQuestions()
+	{
+		$this->redirect(\Nette\Http\IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:questions');
+	}
+
+
+	/**
+	 * Redirect rating handler.
+	 *
+	 * Redirects already published URLs.
+	 */
+	public function actionStoragesRating()
+	{
+		$this->redirect(\Nette\Http\IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:rating');
 	}
 
 }

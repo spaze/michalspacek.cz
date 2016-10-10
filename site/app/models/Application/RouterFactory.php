@@ -129,11 +129,7 @@ class RouterFactory
 		$this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$this->addRoute(self::API, '<presenter>', 'Default', 'default');
-		$this->addRoute(self::PULSE, 'passwords/storages/rating', 'Passwords', 'storagesRating');  // Old URL, /passwords/storages-rating, will be redirected to this, if the action is storagesRating
-		$this->addRoute(self::PULSE, 'passwords/storages/questions', 'Passwords', 'storagesQuestions');  // ditto
-		$this->addRoute(self::PULSE, 'passwords/storages/site/<site>', 'Passwords', 'storagesBySite');
-		$this->addRoute(self::PULSE, 'passwords/storages/<site>', 'Passwords', 'storagesBySite');  // Old URLs, get redirected to passwords/storages/site/<site>
-		$this->addRoute(self::PULSE, 'passwords/storages/company/<company>', 'Passwords', 'storagesByCompany');
+		$this->addRoute(self::PULSE, 'passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default');
 		$this->addRoute(self::PULSE, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::UPC, '[<ssid>]', 'Homepage', 'default');
 		$this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
