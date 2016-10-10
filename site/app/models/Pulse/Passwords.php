@@ -96,7 +96,7 @@ class Passwords
 	 * @param array $sites Aliases
 	 * @return \stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStorages(array $sites)
+	public function getStoragesBySite(array $sites)
 	{
 		$query = 'SELECT
 				c.id AS companyId,

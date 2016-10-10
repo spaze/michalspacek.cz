@@ -26,27 +26,35 @@ class PasswordsPresenter extends \App\Presenters\BasePresenter
 
 	/**
 	 * Storages action handler.
-	 *
-	 * @param string|null $param
 	 */
-	public function actionStorages($param = null)
+	public function actionStorages()
 	{
-		if ($param === null) {
-			$data = $this->passwords->getAllStorages();
-			$this->template->isDetail = false;
-		} else {
-			$sites = explode(',', $param);
-			$data = $this->passwords->getStorages($sites);
-			$this->template->isDetail = true;
-		}
+		$data = $this->passwords->getAllStorages();
+		$this->template->isDetail = false;
+		$this->template->pageTitle = 'Password storage disclosures';
+		$this->template->data = $data;
+		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+	}
 
+
+	/**
+	 * Storages by site action handler.
+	 *
+	 * @param string $site
+	 */
+	public function actionStoragesBySite($site)
+	{
+		$sites = explode(',', $site);
+		$data = $this->passwords->getStoragesBySite($sites);
 		if (empty($data->sites)) {
 			throw new \Nette\Application\BadRequestException('Unknown site alias', \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = ($this->template->isDetail ? implode(', ', $sites) . ' password storage disclosures' : 'Password storage disclosures');
+		$this->template->isDetail = true;
+		$this->template->pageTitle = implode(', ', $sites) . ' password storage disclosures';
 		$this->template->data = $data;
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+		$this->setView('storages');
 	}
 
 
