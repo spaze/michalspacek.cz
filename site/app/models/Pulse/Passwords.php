@@ -249,18 +249,19 @@ class Passwords
 			$company->alias = $row->companyAlias;
 			$storages->companies[$row->companyId] = $company;
 
-			if (!isset($storages->sites[$row->siteId])) {
+			$siteId = $row->siteId ?? \MichalSpacekCz\Pulse\Sites::ALL;
+			if (!isset($storages->sites[$siteId])) {
 				$site = new \stdClass();
-				$site->id = $row->siteId;
+				$site->id = $siteId;
 				$site->url = $row->siteUrl;
 				$site->host = parse_url($row->siteUrl, PHP_URL_HOST);
 				$site->companyId = $row->companyId;
-				$storages->sites[$row->siteId] = $site;
+				$storages->sites[$siteId] = $site;
 			}
 
 			$storages->algos[$row->algoId] = $row->algoName;
 			$key = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
-			if (!isset($storages->storages[$row->companyId][$row->siteId][$key])) {
+			if (!isset($storages->storages[$row->companyId][$siteId][$key])) {
 				$algo = new Passwords\Algorithm();
 				$algo->id = $row->algoId;
 				$algo->alias = $row->algoAlias;
@@ -271,7 +272,7 @@ class Passwords
 				$attributes = (empty($row->attributes) ? null : \Nette\Utils\Json::decode($row->attributes));
 				$algo->params = $attributes->params ?? null;
 				$algo->fullAlgo = $this->formatFullAlgo($row->algoName, $attributes);
-				$storages->storages[$row->companyId][$row->siteId][$key] = $algo;
+				$storages->storages[$row->companyId][$siteId][$key] = $algo;
 			}
 			$disclosure = new \stdClass();
 			$disclosure->url = $row->disclosureUrl;
@@ -279,9 +280,9 @@ class Passwords
 			$disclosure->note = $row->disclosureNote;
 			$disclosure->published = $row->disclosurePublished;
 			$disclosure->type = $row->disclosureType;
-			$storages->storages[$row->companyId][$row->siteId][$key]->latestDisclosure = $disclosure->published;
-			$storages->storages[$row->companyId][$row->siteId][$key]->disclosures[] = $disclosure;
-			$storages->storages[$row->companyId][$row->siteId][$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
+			$storages->storages[$row->companyId][$siteId][$key]->latestDisclosure = $disclosure->published;
+			$storages->storages[$row->companyId][$siteId][$key]->disclosures[] = $disclosure;
+			$storages->storages[$row->companyId][$siteId][$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
 
 		}
 		foreach ($storages->sites as $site) {

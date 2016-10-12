@@ -81,7 +81,10 @@ class PulsePresenter extends BasePresenter
 	{
 		if (empty($values->company->new->name)) {
 			$storages = $this->passwords->getStoragesByCompanyId($values->company->id);
-			if ($values->site->id === Sites::ALL && !empty($storages->sites)) {
+			$specificSites = array_filter($storages->sites, function ($site) {
+				return $site->id !== \MichalSpacekCz\Pulse\Sites::ALL;
+			});
+			if ($values->site->id === Sites::ALL && !empty($specificSites)) {
 				$form->addError('Invalid combination, can\'t add dislosure for all sites when sites already exist');
 			}
 			if ($values->site->id !== Sites::ALL && !isset($storages->sites[$values->site->id])) {

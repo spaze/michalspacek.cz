@@ -27,7 +27,7 @@
 	{foreach $sites as $siteId => $algos}
 		<div id="{$data->sites[$siteId]->host}" class="site-container">
 			<div class="left">
-				{if $data->sites[$siteId]->url}
+				{if $siteId !== \MichalSpacekCz\Pulse\Sites::ALL}
 					{var $detailsLink = 'site'}
 					{var $detailsParam = $data->sites[$siteId]->host}
 					<a n:href="site $data->sites[$siteId]->host" title="Open details">{$data->sites[$siteId]->host}</a>
