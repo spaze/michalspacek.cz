@@ -58,7 +58,7 @@ class Ares implements CompanyDataInterface
 				throw new \RuntimeException('Company Id is empty');
 			}
 			$content = $this->torProxy->fetch(sprintf($this->url, $companyId));
-			if (!$content) {
+			if (!$content || $this->torProxy->getLastHttpCode() != 200) {
 				throw new \Exception(error_get_last()['message'] ?? "Can't fetch data, last HTTP code {$this->torProxy->getLastHttpCode()} [{$this->torProxy->getAttempt()}/{$this->torProxy->getRetries()}]", self::STATUS_ERROR);
 			}
 
