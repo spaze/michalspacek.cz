@@ -59,6 +59,7 @@ class Passwords
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
+				s.alias AS siteAlias,
 				pa.id AS algoId,
 				pa.alias AS algoAlias,
 				pa.algo AS algoName,
@@ -105,6 +106,7 @@ class Passwords
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
+				s.alias AS siteAlias,
 				pa.id AS algoId,
 				pa.alias AS algoAlias,
 				pa.algo AS algoName,
@@ -152,6 +154,7 @@ class Passwords
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
+				s.alias AS siteAlias,
 				pa.id AS algoId,
 				pa.alias AS algoAlias,
 				pa.algo AS algoName,
@@ -199,6 +202,7 @@ class Passwords
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
+				s.alias AS siteAlias,
 				pa.id AS algoId,
 				pa.alias AS algoAlias,
 				pa.algo AS algoName,
@@ -254,7 +258,7 @@ class Passwords
 				$site = new \stdClass();
 				$site->id = $siteId;
 				$site->url = $row->siteUrl;
-				$site->host = parse_url($row->siteUrl, PHP_URL_HOST);
+				$site->alias = $row->siteAlias;
 				$site->companyId = $row->companyId;
 				$storages->sites[$siteId] = $site;
 			}
