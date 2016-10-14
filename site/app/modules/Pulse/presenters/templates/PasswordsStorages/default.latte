@@ -25,7 +25,7 @@
 	<h2 id="{$data->companies[$companyId]->alias}" n:if="!$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->companyName}</h2>
 	<h2 id="{$data->companies[$companyId]->alias}" n:if="$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->tradeName} <small>({$data->companies[$companyId]->companyName})</small></h2>
 	{foreach $sites as $siteId => $algos}
-		{if $siteId !== \MichalSpacekCz\Pulse\Sites::ALL}
+		{if !$data->sites[$siteId]->typeAll}
 			{var $detailsLink = 'site'}
 			{var $detailsParam = $data->sites[$siteId]->alias}
 			{var $htmlId = $data->sites[$siteId]->alias}
@@ -36,7 +36,7 @@
 		{/if}
 		<div id="{$htmlId}" class="site-container">
 			<div class="left">
-				{if $siteId !== \MichalSpacekCz\Pulse\Sites::ALL}
+				{if !$data->sites[$siteId]->typeAll}
 					<a n:href="site $data->sites[$siteId]->alias" title="Open details">{$data->sites[$siteId]->alias}</a>
 					<small><a href="{$data->sites[$siteId]->url}" title="Go to site">&nearr;</a></small>
 				{else}

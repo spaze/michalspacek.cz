@@ -253,10 +253,11 @@ class Passwords
 			$company->alias = $row->companyAlias;
 			$storages->companies[$row->companyId] = $company;
 
-			$siteId = $row->siteId ?? \MichalSpacekCz\Pulse\Sites::ALL;
+			$siteId = $row->siteId ?? \MichalSpacekCz\Pulse\Sites::ALL . "-{$row->companyId}";
 			if (!isset($storages->sites[$siteId])) {
 				$site = new \stdClass();
 				$site->id = $siteId;
+				$site->typeAll = ($row->siteId === null);
 				$site->url = $row->siteUrl;
 				$site->alias = $row->siteAlias;
 				$site->companyId = $row->companyId;
