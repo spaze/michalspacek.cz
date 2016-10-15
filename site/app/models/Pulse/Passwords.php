@@ -544,11 +544,11 @@ class Passwords
 		$this->database->beginTransaction();
 		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba, $values->company->new->alias));
 		$siteId = (empty($values->site->new->url)
-			? $values->site->id
+			? $values->site->id  // the value can also be "all"
 			: $this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
 		);
 		$algoId = (empty($values->algo->new->algo)
-			? $values->algo->id  // the value can also be "all"
+			? $values->algo->id
 			: $this->addAlgorithm($values->algo->new->algo, $values->algo->new->alias, $values->algo->new->salted, $values->algo->new->stretched)
 		);
 		foreach ($values->disclosure->new as $disclosure) {
