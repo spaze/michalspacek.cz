@@ -7,20 +7,20 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplicationMultiple extends TrainingForm
+class TrainingApplicationMultiple extends TrainingFormAdmin
 {
 
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 * @param integer $count
-	 * @param array $sources
 	 * @param array $statuses
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, $count, $sources, $statuses, \Nette\Localization\ITranslator $translator)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, $count, $statuses, \MichalSpacekCz\Training\Applications $trainingApplications, \Nette\Localization\ITranslator $translator)
 	{
-		parent::__construct($parent, $name, $translator);
+		parent::__construct($parent, $name, $trainingApplications, $translator);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$applicationsContainer = $this->addContainer('applications');
@@ -40,8 +40,7 @@ class TrainingApplicationMultiple extends TrainingForm
 		$this->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte status')
 			->setPrompt('- vyberte status -');
-		$this->addSelect('source', 'Zdroj:', $sources)
-			->setRequired('Vyberte zdroj')
+		$this->addSource($this)
 			->setPrompt('- vyberte zdroj -');
 
 		$this->addSubmit('submit', 'Přidat');

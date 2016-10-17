@@ -269,18 +269,13 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplications($formName)
 	{
-		$sources = array();
-		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {
-			$sources[$source->alias] = $source->name;
-		}
-
 		$statuses = array();
 		foreach ($this->trainingStatuses->getInitialStatuses() as $status) {
 			$statuses[$status] = $status;
 		}
 
 		$count = (isset($_POST['applications']) ? count($_POST['applications']) : 1);
-		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, $count, $sources, $statuses, $this->translator);
+		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, $count, $statuses, $this->trainingApplications, $this->translator);
 		$form->onSuccess[] = [$this, 'submittedApplications'];
 		return $form;
 	}
@@ -352,7 +347,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName, $this->trainingDates, $this->translator);
+		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName, $this->trainingApplications, $this->trainingDates, $this->translator);
 		$form->setApplication($this->application);
 		$form->onSuccess[] = [$this, 'submittedApplication'];
 		return $form;
@@ -374,6 +369,7 @@ class TrainingsPresenter extends BasePresenter
 			$values->companyTaxId,
 			$values->note,
 			$values->equipment,
+			$values->source,
 			$values->price,
 			$values->vatRate / 100,
 			$values->priceVat,

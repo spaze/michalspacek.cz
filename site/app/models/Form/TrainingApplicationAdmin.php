@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplicationAdmin extends TrainingForm
+class TrainingApplicationAdmin extends TrainingFormAdmin
 {
 
 	/** @var \MichalSpacekCz\Training\Dates */
@@ -17,12 +17,13 @@ class TrainingApplicationAdmin extends TrainingForm
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
+	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \MichalSpacekCz\Training\Dates $trainingDates, \Nette\Localization\ITranslator $translator)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \MichalSpacekCz\Training\Applications $trainingApplications, \MichalSpacekCz\Training\Dates $trainingDates, \Nette\Localization\ITranslator $translator)
 	{
-		parent::__construct($parent, $name, $translator);
+		parent::__construct($parent, $name, $trainingApplications, $translator);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->translator = $translator;
@@ -33,6 +34,7 @@ class TrainingApplicationAdmin extends TrainingForm
 		$this->getComponent('equipment')->caption = 'Vlastní počítač:';
 
 		$this->addCheckbox('familiar', 'Tykání:');
+		$this->addSource($this);
 		$this->addCompany($this);
 		$this->addCountry($this);
 		$this->addNote($this);
@@ -68,6 +70,7 @@ class TrainingApplicationAdmin extends TrainingForm
 			'name' => $application->name,
 			'email' => $application->email,
 			'familiar' => $application->familiar,
+			'source' => $application->sourceAlias,
 			'company' => $application->company,
 			'street' => $application->street,
 			'city' => $application->city,

@@ -326,7 +326,7 @@ class Applications
 	}
 
 
-	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false, $dateId = false)
+	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $source, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false, $dateId = false)
 	{
 		if ($paid) {
 			$paid = new \DateTime($paid);
@@ -345,6 +345,7 @@ class Applications
 			'company_tax_id' => $companyTaxId,
 			'note'           => $note,
 			'equipment'      => $equipment,
+			'key_source'     => $this->getTrainingApplicationSource($source),
 			'price'          => ($price || $discount ? $price : null),
 			'vat_rate'       => ($vatRate ?: null),
 			'price_vat'      => ($priceVat ?: null),
@@ -477,6 +478,7 @@ class Applications
 				a.invoice_id AS invoiceId,
 				a.paid,
 				a.equipment,
+				sr.alias AS sourceAlias,
 				sr.name AS sourceName
 			FROM
 				training_applications a
