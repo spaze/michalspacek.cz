@@ -1,0 +1,6 @@
+CN=michalspacek.cz
+PRIVKEY=/etc/nginx/certs/$CN.privkey.pem
+CERT_DIR=/etc/nginx/certs
+SUBJECT="/C=CZ/ST=Prague/L=Prague/O=michalspacek.cz/emailAddress=$SUBJECT_EMAIL/CN=$CN"
+WEBROOT_DIR=/srv/www/$CN/site/public
+DOMAINS="www=michalspacek.cz,www.michalspacek.cz,michalspacek.com,www.michalspacek.com;admin=admin.michalspacek.cz;api=api.michalspacek.cz;heartbleed=heartbleed.michalspacek.cz;pulse=pulse.michalspacek.cz;upc=upc.michalspacek.cz"
