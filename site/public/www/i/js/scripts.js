@@ -38,8 +38,7 @@ $(document).ready(function() {
 		});
 		load.fail(function() {
 			$('#loadDataControls span').hide();
-			$('#loadDataAgain').show();
-			$('#loadDataError').show();
+			$('#loadDataAgain, #loadDataError').show();
 		});
 	};
 	APPLICATION.preflight = function(event) {
@@ -59,8 +58,7 @@ $(document).ready(function() {
 			});
 		}
 	};
-	$('#loadData a').click(APPLICATION.loadData);
-	$('#loadDataAgain a').click(APPLICATION.loadData);
+	$('#loadData a, #loadDataAgain a').click(APPLICATION.loadData);
 	$('#loadData').show();
 	$('#frm-application-name, #frm-application-email').focus(APPLICATION.preflight);
 
