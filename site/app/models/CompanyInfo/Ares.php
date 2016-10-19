@@ -25,6 +25,9 @@ class Ares implements CompanyDataInterface
 	/** @var string */
 	private $url;
 
+	/** @var array of strings */
+	private $preflightCompanyIds;
+
 
 	/**
 	 * Constructor.
@@ -43,6 +46,15 @@ class Ares implements CompanyDataInterface
 	public function setUrl($url)
 	{
 		$this->url = $url;
+	}
+
+
+	/**
+	 * @param array $companyIds
+	 */
+	public function setPreflightCompanyIds($companyIds)
+	{
+		$this->preflightCompanyIds = $companyIds;
 	}
 
 
@@ -146,6 +158,19 @@ class Ares implements CompanyDataInterface
 			'703' => 'SK',
 		);
 		return (isset($codes[$numericCode]) ? $codes[$numericCode] : null);
+	}
+
+
+	/**
+	 * Send one request to "warm" Tor connection.
+	 *
+	 * @return string|false
+	 */
+	public function preflight()
+	{
+		$companyId = $this->preflightCompanyIds[array_rand($this->preflightCompanyIds)];
+		$content = $this->torProxy->fetch(sprintf($this->url, $companyId));
+		return ($content && $this->torProxy->getLastHttpCode() == 200 ? $companyId : false);
 	}
 
 }

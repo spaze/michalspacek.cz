@@ -95,4 +95,27 @@ class Info
 		return $this->loadCompanyDataVisible;
 	}
 
+
+	/**
+	 * Send one request to "warm" connection.
+	 *
+	 * @param string $country
+	 * @return boolean
+	 */
+	public function preflight($country)
+	{
+		switch ($country) {
+			case 'cz':
+				$data = $this->ares->preflight();
+				break;
+			default:
+				throw new \RuntimeException('Unsupported country');
+				break;
+		}
+		$result = new \stdClass();
+		$result->status = ($data ? self::STATUS_FOUND : self::STATUS_ERROR);
+		$result->companyId = $data;
+		return $result;
+	}
+
 }
