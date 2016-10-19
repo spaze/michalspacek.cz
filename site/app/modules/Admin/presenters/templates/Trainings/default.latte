@@ -12,6 +12,9 @@
 			{var $dateLineCheck = $training->start < $now}
 		{else}
 			{var $dateLineCheck = $training->start > $now}
+			{if $dateLineCheck && $iterator->first}
+				{var $dateLineDisplayed = true}
+			{/if}
 		{/if}
 		<tr n:class="summary, $dateLineCheck && !$dateLineDisplayed ? dateLine">
 			{var $dateLineDisplayed = $dateLineCheck}
