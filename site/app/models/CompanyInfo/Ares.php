@@ -22,9 +22,6 @@ class Ares implements CompanyDataInterface
 	/** @var string */
 	private $url;
 
-	/** @var integer */
-	private $retries = 1;
-
 
 	/**
 	 * Constructor.
@@ -47,15 +44,6 @@ class Ares implements CompanyDataInterface
 
 
 	/**
-	 * @param integer $retries
-	 */
-	public function setRetries($retries)
-	{
-		$this->retries = $retries;
-	}
-
-
-	/**
 	 * @param string $companyId
 	 * @return array
 	 */
@@ -67,9 +55,9 @@ class Ares implements CompanyDataInterface
 				throw new \RuntimeException('Company Id is empty');
 			}
 			error_clear_last();
-			$content = $this->fetch($companyId);
-			if (!$content || $this->torProxy->getLastHttpCode() != 200) {
-				throw new \Exception(error_get_last()['message'] ?? 'Can\'t fetch data, last HTTP code was ' . $this->tor->getLastHttpCode(), self::STATUS_ERROR);
+			$content = $this->tor->fetch(sprintf($this->url, $companyId), 'ares');
+			if (!$content) {
+				throw new \RuntimeException(error_get_last()['message'], self::STATUS_ERROR);
 			}
 
 			libxml_disable_entity_loader();
@@ -115,26 +103,6 @@ class Ares implements CompanyDataInterface
 		}
 
 		return $company;
-	}
-
-
-	/**
-	 * Fetch data.
-	 *
-	 * @param string $companyId
-	 * @return string|false
-	 */
-	private function fetch($companyId)
-	{
-		for ($i = 1; $i <= $this->retries; $i++) {
-			$output = $this->tor->fetch(sprintf($this->url, $companyId), 'ares');
-			if (($code = $this->tor->getLastHttpCode()) == 200) {
-				return $output;
-			}
-			\Tracy\Debugger::log("[{$i}/{$this->retries}] Resulting HTTP code {$code}, switching to clean circuits", 'tor');
-			$this->tor->cleanCircuits();
-		}
-		return false;
 	}
 
 

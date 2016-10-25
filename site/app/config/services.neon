@@ -85,7 +85,6 @@ services:
 		class: \MichalSpacekCz\CompanyInfo\Ares
 		setup:
 			- setUrl(%ares.url%)
-			- setRetries(%ares.retries%)
 	registerUz:
 		class: \MichalSpacekCz\CompanyInfo\RegisterUz
 		setup:
@@ -93,8 +92,7 @@ services:
 	tor:
 		class: \MichalSpacekCz\Tor
 		setup:
-			- setProxy(%tor.proxy.host%, %tor.proxy.port%)
-			- setControl(%tor.control.host%, %tor.control.port%, %tor.control.password%)
+			- setProxy(%tor.proxy%)
 			- setUserAgents(%tor.userAgents%)
 	upcKeys:
 		class: \MichalSpacekCz\UpcKeys(@database.upcKeys.context)
