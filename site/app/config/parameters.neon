@@ -54,21 +54,6 @@ parameters:
 	ares:
 		url: 'http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
 		retries: 5
-		preflightCompanyIds:
-			- "00006947"  # Ministerstvo financí
-			- "00023671"  # Ministerstvo kultury
-			- "00024341"  # Ministerstvo zdravotnictví
-			- "00007064"  # Ministerstvo vnitra
-			- "00025429"  # Ministerstvo spravedlnosti
-			- "60162694"  # Ministerstvo obrany
-			- "66003008"  # Ministerstvo dopravy
-			- "00020478"  # Ministerstvo zemědělství
-			- "00164801"  # Ministerstvo životního prostředí
-			- "45769851"  # Ministerstvo zahraničních věcí
-			- "47609109"  # Ministerstvo průmyslu a obchodu
-			- "66002222"  # Ministerstvo pro místní rozvoj
-			- "00551023"  # Ministerstvo práce a sociálních věcí
-			- "00022985"  # Ministerstvo školství, mládeže a tělovýchovy
 	registerUz:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	tor:

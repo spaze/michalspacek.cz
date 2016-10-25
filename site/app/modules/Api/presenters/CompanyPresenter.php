@@ -58,15 +58,4 @@ class CompanyPresenter extends \App\Presenters\BasePresenter
 		$this->sendJson(array_filter($data));
 	}
 
-
-	/**
-	 * @param string $country
-	 */
-	public function actionPreflight($country)
-	{
-		$this->securityHeaders->accessControlAllowOrigin('https', \MichalSpacekCz\Application\RouterFactory::WWW);
-		$result = $this->companyInfo->preflight($country);
-		$this->sendJson(['status' => $result->status]);
-	}
-
 }

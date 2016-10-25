@@ -128,7 +128,7 @@ class RouterFactory
 		$this->router = new RouteList();
 		$this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
-		$this->addRoute(self::API, '<presenter>[/<action>]', 'Default', 'default');
+		$this->addRoute(self::API, '<presenter>', 'Default', 'default');
 		$this->addRoute(self::PULSE, 'passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default');
 		$this->addRoute(self::PULSE, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::UPC, '[<ssid>]', 'Homepage', 'default');

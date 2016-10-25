@@ -3,10 +3,7 @@ $(document).ready(function() {
 		$('#frm-application-trainingId').val($(this).data('id'));
 	});
 
-	var APPLICATION = APPLICATION || {
-		preflighted: false,
-		preflighting: false
-	};
+	var APPLICATION = APPLICATION || {};
 	APPLICATION.loadData = function(event) {
 		event.preventDefault();
 		if ($('#frm-application-country').val() == '' || $('#frm-application-companyId').val().replace(/ /g, '') == '') {
@@ -41,26 +38,8 @@ $(document).ready(function() {
 			$('#loadDataAgain, #loadDataError').show();
 		});
 	};
-	APPLICATION.preflight = function(event) {
-		if (!APPLICATION.preflighted && !APPLICATION.preflighting) {
-			APPLICATION.preflighting = true;
-			var preflight = $.ajax({
-				url: $('#loadData').data('preflight'),
-				timeout: 15000
-			});
-			preflight.done(function(data) {
-				if (data.status == 200) {
-					APPLICATION.preflighted = true;
-				}
-			});
-			preflight.always(function() {
-				APPLICATION.preflighting = false;
-			});
-		}
-	};
 	$('#loadData a, #loadDataAgain a').click(APPLICATION.loadData);
 	$('#loadData').show();
-	$('#frm-application-name, #frm-application-email').focus(APPLICATION.preflight);
 
 	var ENCRYPTION = ENCRYPTION || {};
 	ENCRYPTION.feedback = $(document.queryCommandSupported('copy') ? '#copied' : '#copythis');

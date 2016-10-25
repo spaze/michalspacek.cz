@@ -85,7 +85,6 @@ services:
 		class: \MichalSpacekCz\CompanyInfo\Ares(@aresTorProxy)
 		setup:
 			- setUrl(%ares.url%)
-			- setPreflightCompanyIds(%ares.preflightCompanyIds%)
 	registerUz:
 		class: \MichalSpacekCz\CompanyInfo\RegisterUz
 		setup:
