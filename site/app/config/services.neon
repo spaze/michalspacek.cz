@@ -85,6 +85,7 @@ services:
 		class: \MichalSpacekCz\CompanyInfo\Ares(@aresTorProxy)
 		setup:
 			- setUrl(%ares.url%)
+			- setRetries(%ares.retries%)
 	registerUz:
 		class: \MichalSpacekCz\CompanyInfo\RegisterUz
 		setup:
@@ -94,7 +95,6 @@ services:
 		setup:
 			- setProxy(%tor.proxy.host%, %tor.proxy.port%)
 			- setUserAgent(%tor.userAgents.ares%)
-			- setRetries(%ares.retries%)
 	torControl:
 		class: \MichalSpacekCz\Tor\Control
 		setup:
