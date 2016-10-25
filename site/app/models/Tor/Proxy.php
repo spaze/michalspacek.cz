@@ -70,7 +70,7 @@ class Proxy
 	 *
 	 * @param array $exitNodes
 	 */
-	public function setExitNodes(array $exitNodes = null)
+	public function setExitNodes(array $exitNodes)
 	{
 		$this->exitNodes = $exitNodes;
 	}
