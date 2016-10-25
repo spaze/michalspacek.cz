@@ -6,6 +6,9 @@ rád bych vám připomněl, že dne {$application->trainingStart|date:'j. n. Y'}
 
 {if $application->publicDate}
 Pohled na vchod: {='i/images/venues/' . $venue->entrance|staticUrl}
+{if $venue->entranceNavigation}
+Cesta ke vchodu: {='i/images/venues/' . $venue->entranceNavigation|staticUrl}
+{/if}
 
 {$venue->publicTransport|striptags}
 {$venue->parking|striptags}

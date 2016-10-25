@@ -269,6 +269,7 @@ trainings:
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"
+	entrancenavigation: "To entrance"
 	streetview: "streetview"
 	transportationparking: "Transportation and parking"
 	trainingshere: "Trainings at this venue"

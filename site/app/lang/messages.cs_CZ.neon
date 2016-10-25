@@ -269,6 +269,7 @@ trainings:
 venues:
 	nameaddress: "Název a adresa"
 	entrance: "Pohled na vchod"
+	entrancenavigation: "Cesta ke vchodu"
 	streetview: "streetview"
 	transportationparking: "Doprava a parkování"
 	trainingshere: "Pořádaná školení v tomto místě"

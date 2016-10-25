@@ -67,6 +67,7 @@ class VenuesPresenter extends BasePresenter
 		$this->template->description = $venue->description;
 		$this->template->action = $venue->action;
 		$this->template->entrance = $venue->entrance;
+		$this->template->entranceNavigation = $venue->entranceNavigation;
 		$this->template->streetview = $venue->streetview;
 		$this->template->parking = $venue->parking;
 		$this->template->publicTransport = $venue->publicTransport;

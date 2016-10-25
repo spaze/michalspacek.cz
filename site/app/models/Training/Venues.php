@@ -37,6 +37,7 @@ class Venues
 				v.description,
 				v.action,
 				v.entrance,
+				v.entrance_navigation AS entranceNavigation,
 				v.streetview,
 				v.parking,
 				v.public_transport AS publicTransport
