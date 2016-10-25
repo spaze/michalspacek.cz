@@ -118,10 +118,6 @@ class Proxy
 		curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
 
-		if (!empty($this->exitNodes)) {
-			$this->control->setExitNodes($this->exitNodes);
-		}
-
 		for ($this->attempt = 1; $this->attempt <= $this->retries; $this->attempt++) {
 			$output = curl_exec($ch);
 			$errNo = curl_errno($ch);

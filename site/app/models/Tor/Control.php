@@ -50,33 +50,6 @@ class Control
 
 
 	/**
-	 * Set exit nodes.
-	 *
-	 * @param array $nodes
-	 * @return null
-	 */
-	public function setExitNodes(array $nodes)
-	{
-		$this->open()->authenticate();
-		$this->command('SETCONF', 'ExitNodes=' . implode(',', $nodes));
-		$this->close();
-	}
-
-
-	/**
-	 * Reset exit nodes.
-	 *
-	 * @return null
-	 */
-	public function resetExitNodes()
-	{
-		$this->open()->authenticate();
-		$this->command('RESETCONF', 'ExitNodes');
-		$this->close();
-	}
-
-
-	/**
 	 * Open connection to control port.
 	 *
 	 * @return self
