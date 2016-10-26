@@ -165,7 +165,7 @@ class UpcKeys
 		stream_context_set_params($context, [
 			'notification' => function ($notificationCode, $severity, $message, $messageCode) {
 				if ($notificationCode == STREAM_NOTIFY_FAILURE && $messageCode == 500) {
-					throw new \RuntimeException($message, $messageCode);
+					throw new \RuntimeException(trim($message), $messageCode);
 				}
 			},
 			'options' => [
