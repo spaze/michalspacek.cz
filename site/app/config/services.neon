@@ -99,3 +99,8 @@ services:
 	pulseSites: \MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	pulsePasswords: \MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	pulsePasswordsRating: \MichalSpacekCz\Pulse\Passwords\Rating
+	keyCdn:
+		class: \MichalSpacekCz\KeyCdn
+		setup:
+			- setSecretKey(%keyCdn.secretKey%)
+			- setTokenExpiration(%keyCdn.tokenExpiration%)

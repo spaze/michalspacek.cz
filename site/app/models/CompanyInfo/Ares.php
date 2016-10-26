@@ -22,6 +22,18 @@ class Ares implements CompanyDataInterface
 	/** @var string */
 	private $url;
 
+	/** @var \MichalSpacekCz\KeyCdn */
+	protected $keyCdn;
+
+
+	/**
+	 * @param \MichalSpacekCz\KeyCdn $keyCdn
+	 */
+	public function __construct(\MichalSpacekCz\KeyCdn $keyCdn)
+	{
+		$this->keyCdn = $keyCdn;
+	}
+
 
 	/**
 	 * @param string $url
@@ -43,12 +55,7 @@ class Ares implements CompanyDataInterface
 			if (empty($companyId)) {
 				throw new \RuntimeException('Company Id is empty');
 			}
-			error_clear_last();
-			$content = file_get_contents(sprintf($this->url, $companyId));
-			if (!$content) {
-				throw new \RuntimeException(error_get_last()['message'], self::STATUS_ERROR);
-			}
-
+			$content = $this->fetch($companyId);
 			libxml_disable_entity_loader();
 			$xml = simplexml_load_string($content);
 			$ns = $xml->getDocNamespaces();
@@ -81,7 +88,7 @@ class Ares implements CompanyDataInterface
 			$company->city = $city;
 			$company->zip = $zip;
 			$company->country = $country;
-		} catch (\RuntimeException  $e) {
+		} catch (\UnexpectedValueException  $e) {
 			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
 			$company->status = self::STATUS_NOT_FOUND;
 			$company->statusMessage = 'Not Found';
@@ -92,6 +99,29 @@ class Ares implements CompanyDataInterface
 		}
 
 		return $company;
+	}
+
+
+	/**
+	 * Fetch data from API
+	 *
+	 * @param string $companyId
+	 * @return string
+	 */
+	private function fetch($companyId)
+	{
+		$context = stream_context_create();
+		stream_context_set_params($context, [
+			'notification' => function ($notificationCode, $severity, $message, $messageCode) {
+				if ($severity === STREAM_NOTIFY_SEVERITY_ERR) {
+					throw new \RuntimeException(trim($message) . " ({$notificationCode})", $messageCode);
+				}
+			},
+			'options' => [
+				'http' => ['ignore_errors' => true],  // To supress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
+			],
+		]);
+		return file_get_contents($this->keyCdn->signUrl(sprintf($this->url, $companyId)), false, $context);
 	}
 
 
