@@ -23,7 +23,6 @@ parameters:
 	reporting:
 		contentSecurityPolicy: https://plz.report-uri.io/r/default/csp/enforce
 		publicKeyPins: https://plz.report-uri.io/r/default/hpkp/reportOnly
-		xXssProtection: https://plz.report-uri.io/
 	publicKeyPins:
 		www:
 			pins:
@@ -40,7 +39,7 @@ parameters:
 		upc: %publicKeyPins.www%
 	extraHeaders:
 		www:
-			X-XSS-Protection: '1; mode=block; report=%reporting.xXssProtection%'
+			X-XSS-Protection: '1; mode=block'
 			Referrer-Policy: origin
 		admin: %extraHeaders.www%
 		api:
