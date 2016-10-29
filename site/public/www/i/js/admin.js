@@ -77,7 +77,7 @@ $(document).ready(function() {
 
 	$('#statuses td[data-date]')
 		.click(function() {
-			$('#date-' + $(this).data('date')).toggle();
+			$('#statuses').find('#date-' + $(this).data('date')).toggle();
 			return false;
 		})
 		.css('cursor', 'pointer');
@@ -125,9 +125,9 @@ $(document).ready(function() {
 
 	$('a[href*="#new"]').click(function(event) {
 		event.preventDefault();
-		var container = $($(this).attr('href'));
+		var container = $('#pridat-storage').find($(this).attr('href'));
 		container.toggle();
-		if (!$($(this).data('parent')).toggleClass('transparent').hasClass('transparent')) {
+		if (!$('#pridat-storage').find($(this).data('parent')).toggleClass('transparent').hasClass('transparent')) {
 			container.find(':input').val('');
 			container.find(':checkbox').prop('checked', false);
 		}

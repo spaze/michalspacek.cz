@@ -25,7 +25,7 @@ $(document).ready(function() {
 			$('#loadDataAgain').show();
 			if (data.status == 200) {
 				$.each(['companyId', 'companyTaxId', 'company', 'street', 'city', 'zip', 'country'], function(key, value) {
-					$('#frm-application-' + value).val(data[value]);
+					$('#company').find('#frm-application-' + value).val(data[value]);
 				});
 			} else if (data.status == 400) {
 				$('#loadDataNotFound').show();
