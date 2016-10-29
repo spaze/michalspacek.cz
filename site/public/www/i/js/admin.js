@@ -82,15 +82,12 @@ $(document).ready(function() {
 		})
 		.css('cursor', 'pointer');
 
-	$('#statusesShow').click(function() {
-		$('#statuses td[data-date]').parent().next().show();
-		$('#statuses-links').find('span').toggle();
-	});
-
-	$('#statusesHide').click(function() {
-		$('#statuses td[data-date]').parent().next().hide();
-		$('#statuses-links').find('span').toggle();
-	});
+	$('#statusesShow, #statusesHide')
+		.click(function() {
+			$('#statuses td[data-date]').parent().next().toggle();
+			$('#statuses-links').find('span').toggle();
+		})
+		.css('cursor', 'pointer');
 
 	$('.preset').click(function(event) {
 		event.preventDefault();
