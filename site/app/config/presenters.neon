@@ -15,6 +15,7 @@ services:
 	- \App\Presenters\WhoPresenter
 
 	# api module
+	- \App\ApiModule\Presenters\CertificatePresenter
 	- \App\ApiModule\Presenters\CompanyPresenter
 
 	# admin module
