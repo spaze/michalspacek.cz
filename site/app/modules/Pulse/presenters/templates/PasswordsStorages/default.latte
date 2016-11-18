@@ -59,7 +59,7 @@
 					<p n:ifset="$algo->params">Params: {foreach $algo->params as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
 					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>
 					<p>Disclosures:</p>
-					<ul id="disclosures" n:inner-foreach="$algo->disclosures as $disclosure">
+					<ul n:inner-foreach="$algo->disclosures as $disclosure">
 						<li><small title="{$disclosure->published|date:'Y-m-d H:i'}">{$disclosure->published|date:'Y-m-d'}</small> <a href="{$disclosure->url}">{$disclosure->type}</a>{if $disclosure->archive} <sup><a href="{$disclosure->archive}" title="archived">arch</a></sup>{/if}{if $disclosure->note}<small> ({$disclosure->note})</small>{/if}</li>
 					</ul>
 					</div>
