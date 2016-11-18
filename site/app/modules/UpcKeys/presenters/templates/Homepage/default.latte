@@ -53,7 +53,7 @@
 			<td class="nr"></td>
 			<th>Serial</th>
 			<th>MAC</th>
-			<th>Password/Key</th>
+			<th><span id="header-password">Password/</span>Key</th>
 			<th class="type">Type</th>
 		</tr>
 		<tr>
@@ -80,7 +80,7 @@
 				<td><code>{$key->serial}</code></td>
 				<td class="mac">{if $key->mac}<code>{$key->mac}</code>{else}<small>unknown</small>{/if}</td>
 				<td class="key"><code>{$key->key}</code></td>
-				<td class="type"><small>{$key->type}</small></td>
+				<td class="type"><small><span>{$key->type}</span></small></td>
 			</tr>
 		</tbody>
 		<tfoot id="footer">
@@ -89,7 +89,7 @@
 				<td>–</td>
 				<td>–</td>
 				<td class="key">–</td>
-				<td class="type"></td>
+				<td class="type">–</td>
 			</tr>
 		</tfoot>
 		</table>
