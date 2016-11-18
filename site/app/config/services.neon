@@ -90,11 +90,22 @@ services:
 		setup:
 			- setRootUrl(%registerUz.rootUrl%)
 	upcKeys:
-		class: \MichalSpacekCz\UpcKeys(@database.upcKeys.context)
+		class: \MichalSpacekCz\UpcKeys
+		setup:
+			- addRouter(@upcKeysTechnicolor)
+			- addRouter(@upcKeysUbee)
+	upcKeysTechnicolor:
+		class: \MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context)
 		setup:
 			- setUrl(%awsLambda.upcKeys.url%)
 			- setApiKey(%awsLambda.upcKeys.apiKey%)
-			- setPrefixes(%awsLambda.upcKeys.prefixes%)
+			- setModel(%upcKeys.technicolor.model%)
+			- setPrefixes(%upcKeys.technicolor.prefixes%)
+	upcKeysUbee:
+		class: \MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context)
+		setup:
+			- setModel(%upcKeys.ubee.model%)
+			- setPrefixes(%upcKeys.ubee.prefixes%)
 	pulseCompanies: \MichalSpacekCz\Pulse\Companies(@database.pulse.context)
 	pulseSites: \MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	pulsePasswords: \MichalSpacekCz\Pulse\Passwords(@database.pulse.context)

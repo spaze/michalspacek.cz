@@ -71,9 +71,20 @@ div.error {
 	width: 80px;
 	font-family: monospace;
 }
+#filterMac {
+	width: 100px;
+	font-family: monospace;
+}
 #footer {
 	display: none;
 	color: #F34;
 	background-color: #FEE;
 }
 #footer .nr, #footer .type { background-color: #FFF; }
+#result td:nth-child(3) { font-size: 90%; }
+#result td:nth-child(3) small { color: #CCC; }
+.pUAAP td:nth-child(2) code::after {
+	content: "––––––––";
+	color: #CCC;
+}
+.pUAAP.t3 small { color: #CCC; }

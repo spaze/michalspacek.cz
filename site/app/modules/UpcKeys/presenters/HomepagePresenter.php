@@ -20,6 +20,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	private $types = array(
 		\MichalSpacekCz\UpcKeys::SSID_TYPE_24GHZ => '2.4 GHz',
 		\MichalSpacekCz\UpcKeys::SSID_TYPE_5GHZ => '5 GHz',
+		\MichalSpacekCz\UpcKeys::SSID_TYPE_UNKNOWN => 'unknown',
 	);
 
 
@@ -51,11 +52,14 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 					$this->template->keys = $this->enrichKeys($keys);
 				}
 				$this->template->ssid = $this->ssid;
-				$this->template->filterTypes = $this->types;
+				$types = $this->types;
+				unset($types[\MichalSpacekCz\UpcKeys::SSID_TYPE_UNKNOWN]);
+				$this->template->filterTypes = $types;
 			} else {
 				$this->template->error = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
 			}
 		}
+		$this->template->modelsWithPrefixes = $this->upcKeys->getModelsWithPrefixes();
 		$this->template->prefixes = $this->upcKeys->getPrefixes();
 		$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 	}

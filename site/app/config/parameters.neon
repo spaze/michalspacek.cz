@@ -56,11 +56,16 @@ parameters:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	returningUser:
 		permanentLoginInterval: 14 days
-	awsLambda:
-		upcKeys:
+	upcKeys:
+		technicolor:
+			model: "Technicolor TC7200"
 			prefixes:
 				- SAAP
 				- SAPP
 				- SBAP
+		ubee:
+			model: "Ubee EVW3226"
+			prefixes:
+				- UAAP
 	keyCdn:
 		tokenExpiration: 120

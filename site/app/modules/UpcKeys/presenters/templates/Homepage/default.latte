@@ -33,12 +33,12 @@
 		/
 		<a href="http://www.upc.cz/pece-o-zakazniky/internet/wifi/jak-zmenim-heslo-k-bezdratove-siti/" lang="cs">Jak změním heslo k bezdrátové síti?</a> (in Czech)
 	</p>
-	<p>
-		Currently, generated keys will only work if your router's serial number starts with one of the following prefixes:
-		{foreach $prefixes as $prefix}
-			<code>{$prefix}</code>{sep}, {/sep}{last}.{/last}
+	<div id="models">
+		Supported routers:
+		{foreach $modelsWithPrefixes as $model => $modelPrefixes}
+			<strong>{$model}</strong> (serial number prefix {foreach $modelPrefixes as $prefix}<code>{$prefix}</code>{sep}, {/sep}{/foreach}){sep}, {/sep}
 		{/foreach}
-	</p>
+	</div>
 	<div id="result">
 		<div n:ifset="$error" class="error"><strong>{$error}</strong></div>
 		<div>
@@ -52,6 +52,7 @@
 		<tr>
 			<td class="nr"></td>
 			<th>Serial</th>
+			<th>MAC</th>
 			<th>Password/Key</th>
 			<th class="type">Type</th>
 		</tr>
@@ -63,6 +64,7 @@
 					<option n:foreach="$prefixes as $prefix" value="p{$prefix}">{$prefix}</option>
 				</select>
 			</td>
+			<td><input type="text" id="filterMac" placeholder="all" disabled title="Loading, please wait"></td>
 			<td><input type="text" id="filterKey" placeholder="all" disabled title="Loading, please wait"></td>
 			<td class="type">
 				<select id="filterType" disabled title="Loading, please wait">
@@ -76,6 +78,7 @@
 			<tr n:foreach="$keys as $key" class="p{$key->serialPrefix} t{$key->typeId}{if $iterator->odd} dark{/if}">
 				<td class="nr"><code>{$iterator->counter}.</code></td>
 				<td><code>{$key->serial}</code></td>
+				<td class="mac">{if $key->mac}<code>{$key->mac}</code>{else}<small>unknown</small>{/if}</td>
 				<td class="key"><code>{$key->key}</code></td>
 				<td class="type"><small>{$key->type}</small></td>
 			</tr>
@@ -83,6 +86,7 @@
 		<tfoot id="footer">
 			<tr>
 				<td class="nr"></td>
+				<td>–</td>
 				<td>–</td>
 				<td class="key">–</td>
 				<td class="type"></td>
