@@ -164,7 +164,7 @@ who:
 		2: "Originally we've intended to build //Selenium in the cloud//, but with this project we've failed to overcome the obstacles of today's dynamic web, so we've shut it down in spring 2014."
 	tojeono:
 		1: "In late 2003, my colleagues and I decided to purchase our own servers, which we've offered under the brand name \"tojeono.cz\":[%s] to use by our clients and other customers who required customized hosting services."
-		2: "I left the project after about a year and currently almost all my web sites are served from tojeono.cz servers but that's it."
+		2: "I left the project after about a year and after two more years I also left my colleagues."
 	more: "More about me and my experience at \"LinkedIn\":[%s]."
 homepage:
 	tagline: "I build web applications and I'm into web application security. I like to speak about secure development. My mission is to teach web developers how to build secure and fast web applications and why."
