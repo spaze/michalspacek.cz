@@ -36,32 +36,64 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	 * Doesn't use flash messages because I want the errors to be gone after post-redirect-get.
 	 *
 	 * @param string|NULL $ssid
+	 * @param string $format
 	 */
-	public function actionDefault($ssid = null)
+	public function actionDefault($ssid = null, $format = 'html')
 	{
 		$this->ssid = $ssid;
+		$keys = $this->loadKeys();
+		switch ($format) {
+			case 'text':
+				foreach ($keys as $key => $value) {
+					$this->template->$key = $value;
+				}
+				$this->setView('text');
+				break;
+			case 'json':
+				$this->sendJson($keys);
+				break;
+			case 'html':
+				foreach ($keys as $key => $value) {
+					$this->template->$key = $value;
+				}
+				$types = $this->types;
+				unset($types[\MichalSpacekCz\UpcKeys::SSID_TYPE_UNKNOWN]);
+				$this->template->filterTypes = $types;
+				$this->template->modelsWithPrefixes = $this->upcKeys->getModelsWithPrefixes();
+				$this->template->prefixes = $this->upcKeys->getPrefixes();
+				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
+				break;
+			default:
+				throw new \Nette\Application\BadRequestException('Unknown format', Response::S404_NOT_FOUND);
+		}
+	}
+
+
+	/**
+	 * Check if SSID is valid and load keys
+	 *
+	 * @return array
+	 */
+	protected function loadKeys()
+	{
+		$result = [];
 		if ($this->ssid !== null) {
 			if ($this->ssid !== strtoupper($this->ssid)) {
 				$this->redirect('this', strtoupper($this->ssid));
 			}
+			$result['ssid'] = $this->ssid;
 			if ($this->upcKeys->isValidSsid($this->ssid)) {
 				$keys = $this->upcKeys->getKeys($this->ssid);
 				if (!$keys) {
-					$this->template->error = 'Oops, something went wrong, please try again in a moment';
+					$result['error'] = 'Oops, something went wrong, please try again in a moment';
 				} else {
-					$this->template->keys = $this->enrichKeys($keys);
+					$result['keys'] = $this->enrichKeys($keys);
 				}
-				$this->template->ssid = $this->ssid;
-				$types = $this->types;
-				unset($types[\MichalSpacekCz\UpcKeys::SSID_TYPE_UNKNOWN]);
-				$this->template->filterTypes = $types;
 			} else {
-				$this->template->error = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
+				$result['error'] = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
 			}
 		}
-		$this->template->modelsWithPrefixes = $this->upcKeys->getModelsWithPrefixes();
-		$this->template->prefixes = $this->upcKeys->getPrefixes();
-		$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
+		return $result;
 	}
 
 

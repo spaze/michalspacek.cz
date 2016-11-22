@@ -1,0 +1,10 @@
+{contentType text/plain}
+# {$ssid}
+{ifset $error}
+# Error: {$error}
+{/ifset}
+{ifset $keys}
+{foreach $keys as $key}
+{$key->key}
+{/foreach}
+{/ifset}

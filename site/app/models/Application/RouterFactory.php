@@ -131,7 +131,7 @@ class RouterFactory
 		$this->addRoute(self::API, '<presenter>', 'Default', 'default');
 		$this->addRoute(self::PULSE, 'passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default');
 		$this->addRoute(self::PULSE, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
-		$this->addRoute(self::UPC, '[<ssid>]', 'Homepage', 'default');
+		$this->addRoute(self::UPC, '[<ssid>][/<format>]', 'Homepage', 'default');
 		$this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
 		$this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
 		$this->addRoute(self::WWW, '[/<action>]/<filename>', 'Files', 'file');
