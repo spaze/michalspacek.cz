@@ -290,6 +290,7 @@ class Technicolor implements RouterInterface
 	{
 		$result = new \stdClass();
 		$result->serial = $serial;
+		$result->oui = null;
 		$result->mac = null;
 		$result->key = $key;
 		$result->type = $type;

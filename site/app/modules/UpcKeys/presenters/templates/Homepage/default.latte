@@ -79,7 +79,7 @@
 			<tr n:foreach="$keys as $key" class="p{$key->serialPrefix} t{$key->typeId}{if $iterator->odd} dark{/if}">
 				<td class="nr"><code>{$iterator->counter}.</code></td>
 				<td><code>{$key->serial}</code></td>
-				<td class="mac">{if $key->mac}<code>{$key->mac}</code>{else}<small>unknown</small>{/if}</td>
+				<td class="mac">{if $key->mac}<code><span>{$key->oui}</span>{$key->mac}</code>{else}<small>unknown</small>{/if}</td>
 				<td class="key"><code>{$key->key}</code></td>
 				<td class="type"><small><span>{$key->type}</span></small></td>
 			</tr>

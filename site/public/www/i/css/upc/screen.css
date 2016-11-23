@@ -93,6 +93,11 @@ div.error {
 	#filterMac { width: 80px; }
 	#header-password { display: none; }
 	#result .nr { display: none; }
+	#result .mac code span { display: none; }
+	#result .mac code::before {
+		content: "…";
+		color: #CCC;
+	}
 	.pUAAP.t3 .type small span { display: none; }
 	.pUAAP.t3 .type small::after { content: "–"; }
 }

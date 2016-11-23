@@ -96,7 +96,8 @@ class Ubee implements RouterInterface
 	{
 		$result = new \stdClass();
 		$result->serial = $this->prefix;
-		$result->mac = sprintf('%s%06x', self::OUI_UBEE, $mac);
+		$result->oui = self::OUI_UBEE;
+		$result->mac = sprintf('%06x', $mac);
 		$result->type = \MichalSpacekCz\UpcKeys::SSID_TYPE_UNKNOWN;
 
 		$result->key = '';
