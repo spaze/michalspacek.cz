@@ -37,6 +37,8 @@ class Rating
 	/** @var array */
 	private $visibleDisclosures = [
 		'docs',
+		'faq',
+		'signup-page',
 	];
 
 	/** @var array */
