@@ -297,4 +297,6 @@ div.notice {
     #equipment div input { width: 3em; }
     #frm-application #frm-application-note { width: 98%; }
     #frm-application input[type=submit] { width: 170px; }
+    #projekty div { display: none; }
+    #projekty ul li { line-height: 3em }
 }
