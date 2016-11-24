@@ -46,7 +46,7 @@
 					{ifset $application->paid}zaplaceno {$application->paid|date:'j. n. Y H:i'}{else}nezaplaceno{/ifset}{else}–{/ifset}
 				{/capture}
 				<small title="{$title|strip}">
-					{ifset $application->price}{$application->price} Kč{if !isset($application->paid)} <strong>!</strong>{/if}{else}–{/ifset}
+					{ifset $application->price}{$application->price} Kč{if $application->price > 0 && !isset($application->paid)} <strong>!</strong>{/if}{else}–{/ifset}
 				</small>
 			</td>
 		</tr>
