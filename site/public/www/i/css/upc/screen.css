@@ -101,3 +101,6 @@ div.error {
 	.pUAAP.t3 .type small span { display: none; }
 	.pUAAP.t3 .type small::after { content: "–"; }
 }
+@media (max-width: 600px) {
+	#links { line-height: 2em; }
+}
