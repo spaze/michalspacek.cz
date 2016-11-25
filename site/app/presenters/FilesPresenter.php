@@ -49,7 +49,7 @@ class FilesPresenter extends BasePresenter
 
 		$downloadId = $this->files->logDownload($file->fileId);
 		$this->trainingFiles->logDownload($session->applicationId, $downloadId);
-		$this->sendFile("{$file->dirName}/{$file->fileName}");
+		$this->sendFile($file->info->getPathname());
 	}
 
 

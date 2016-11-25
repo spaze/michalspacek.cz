@@ -9,7 +9,7 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
 <ol n:inner-foreach="$files as $file">
-	<li>{$file->date}/{$file->fileName} {if $file->exists}({$file->info->getSize()|bytes}){else}<strong>does not exist</strong>{/if}</li>
+	<li>{$file->date}/{$file->fileName} {if $file->info->isReadable()}({$file->info->getSize()|bytes}){else}<strong>does not exist</strong>{/if}</li>
 </ol>
 <hr>
 {form file}

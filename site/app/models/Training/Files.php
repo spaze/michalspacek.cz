@@ -17,7 +17,7 @@ class Files
 	protected $trainingStatuses;
 
 	/**
-	 * Files directory, ends with a slash.
+	 * Files directory, does not end with a slash.
 	 *
 	 * @var string
 	 */
@@ -37,10 +37,7 @@ class Files
 
 	public function setFilesDir($dir)
 	{
-		if ($dir[strlen($dir) - 1] != '/') {
-			$dir .= '/';
-		}
-		$this->filesDir = $dir;
+		$this->filesDir = rtrim($dir, '/');
 	}
 
 
@@ -65,7 +62,7 @@ class Files
 		);
 
 		foreach ($files as $file) {
-			$file->dirName = $this->filesDir . $file->date;
+			$file->info = new \SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
 		}
 
 		return $files;
@@ -99,7 +96,7 @@ class Files
 		);
 
 		if ($file) {
-			$file->dirName = $this->filesDir . $file->date;
+			$file->info = new \SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
 		}
 
 		return $file;
@@ -109,7 +106,7 @@ class Files
 	public function addFile(\Nette\Database\Row $training, \Nette\Http\FileUpload $file, array $applicationIds)
 	{
 		$name = basename($file->getSanitizedName());
-		$file->move($this->filesDir . $training->start->format('Y-m-d') . '/' . $name);
+		$file->move($this->filesDir . '/' . $training->start->format('Y-m-d') . '/' . $name);
 
 		$datetime = new \DateTime();
 		$this->database->beginTransaction();

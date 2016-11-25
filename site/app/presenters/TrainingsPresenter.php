@@ -400,9 +400,6 @@ class TrainingsPresenter extends BasePresenter
 		if (!$files) {
 			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
-		foreach ($files as $file) {
-			$file->info = $this->files->getInfo("{$file->dirName}/{$file->fileName}");
-		}
 
 		$this->template->trainingTitle = $training->name;
 		$this->template->trainingName = ($training->custom ? null : $training->action);

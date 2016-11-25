@@ -131,16 +131,10 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->applicationIdsAttended = array($application->applicationId);
-
-		$files = $this->trainingFiles->getFiles($this->applicationId);
-		foreach ($files as $file) {
-			$file->exists = file_exists("{$file->dirName}/{$file->fileName}");
-		}
-
 		$this->training = $this->trainingDates->get($application->dateId);
 
 		$this->template->pageTitle = 'Soubory';
-		$this->template->files     = $files;
+		$this->template->files     = $this->trainingFiles->getFiles($this->applicationId);
 		$this->template->trainingStart = $this->training->start;
 		$this->template->trainingName  = $this->training->name;
 		$this->template->trainingCity  = $this->training->venueCity;

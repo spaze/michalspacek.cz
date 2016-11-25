@@ -24,13 +24,6 @@ class Files
 	}
 
 
-	public function getInfo($file)
-	{
-		$info = new \SplFileInfo($file);
-		return ($info->isReadable() ? $info : false);
-	}
-
-
 	public function logDownload($id)
 	{
 		$datetime = new \DateTime();
