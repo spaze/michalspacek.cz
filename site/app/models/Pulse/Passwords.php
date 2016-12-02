@@ -428,14 +428,15 @@ class Passwords
 
 
 	/**
-	 * Get disclosure id by URL.
+	 * Get disclosure id.
 	 *
 	 * @param string $url
+	 * @param string $archive
 	 * @return integer id
 	 */
-	private function getDisclosureIdByUrl($url)
+	private function getDisclosureId($url, $archive)
 	{
-		return $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ?', $url);
+		return $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
 	}
 
 
@@ -553,7 +554,7 @@ class Passwords
 		);
 		foreach ($values->disclosure->new as $disclosure) {
 			if ($disclosure->url) {
-				$disclosureId = $this->getDisclosureIdByUrl($disclosure->url);
+				$disclosureId = $this->getDisclosureId($disclosure->url, $disclosure->archive);
 				if (!$disclosureId) {
 					$disclosureId = $this->addDisclosure($disclosure->disclosure, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
 				}
