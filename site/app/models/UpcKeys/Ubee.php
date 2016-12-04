@@ -71,7 +71,7 @@ class Ubee implements RouterInterface
 	 * Get keys from database.
 	 *
 	 * @param string
-	 * @return false|array of \stdClass (serial, key, type)
+	 * @return array of \stdClass (serial, key, type)
 	 */
 	public function getKeys($ssid)
 	{
