@@ -43,19 +43,24 @@ class Bootstrap extends \Nette\Object
 	/** @var string */
 	private $environment;
 
+	/** @var string */
+	private $timeZone;
+
 
 	/**
 	 * @param string $appDir
 	 * @param string $logDir
 	 * @param string $tempDir
 	 * @param string $environment
+	 * @param string $timeZone
 	 */
-	public function __construct($appDir, $logDir, $tempDir, $environment)
+	public function __construct($appDir, $logDir, $tempDir, $environment, $timeZone)
 	{
 		$this->appDir = $appDir;
 		$this->logDir = $logDir;
 		$this->tempDir = $tempDir;
 		$this->environment = $environment;
+		$this->timeZone = $timeZone;
 	}
 
 
@@ -66,6 +71,7 @@ class Bootstrap extends \Nette\Object
 
 		$configurator->setDebugMode($this->isDebugMode());
 		$configurator->enableDebugger($this->logDir);
+		$configurator->setTimeZone($this->timeZone);
 		$configurator->setTempDirectory($this->tempDir);
 
 		$configurator->createRobotLoader()
