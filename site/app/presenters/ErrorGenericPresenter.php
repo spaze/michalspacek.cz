@@ -1,6 +1,8 @@
 <?php
 namespace App\Presenters;
 
+use \Nette\Application\Responses;
+
 /**
  * Generic error presenter.
  *
@@ -32,11 +34,12 @@ class ErrorGenericPresenter implements \Nette\Application\IPresenter
 
 		if ($e instanceof \Nette\Application\BadRequestException) {
 			$this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
-			return new \Nette\Application\Responses\ForwardResponse($request->setPresenterName('Error'));
+			list($module, , $sep) = \Nette\Application\Helpers::splitName($request->getPresenterName());
+			return new Responses\ForwardResponse($request->setPresenterName($module . $sep . 'Error'));
 		}
 
 		$this->logger->log($e, \Tracy\ILogger::EXCEPTION);
-		return new \Nette\Application\Responses\CallbackResponse(function () {
+		return new Responses\CallbackResponse(function () {
 			require __DIR__ . '/templates/Error/exception.phtml';
 		});
 	}
