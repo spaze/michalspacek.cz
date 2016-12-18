@@ -43,7 +43,6 @@ parameters:
 	extraHeaders:
 		www:
 			X-XSS-Protection: '1; mode=block'
-			Referrer-Policy: origin
 		admin: %extraHeaders.www%
 		api:
 			X-XSS-Protection: %extraHeaders.www.X-XSS-Protection%
