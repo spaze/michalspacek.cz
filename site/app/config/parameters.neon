@@ -40,16 +40,6 @@ parameters:
 		heartbleed: %publicKeyPins.www%
 		pulse: %publicKeyPins.www%
 		upc: %publicKeyPins.www%
-	extraHeaders:
-		www:
-			X-XSS-Protection: '1; mode=block'
-		admin: %extraHeaders.www%
-		api:
-			X-XSS-Protection: %extraHeaders.www.X-XSS-Protection%
-			Vary: Origin
-		heartbleed: %extraHeaders.www%
-		pulse: %extraHeaders.www%
-		upc: %extraHeaders.www%
 	vatRate: 0.21
 	loadCompanyDataVisible: true
 	ares:

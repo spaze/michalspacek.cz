@@ -69,7 +69,6 @@ services:
 		setup:
 			- setDefaultDomain(%domain.default%)
 			- setRootDomain(%domain.root%)
-			- setExtraHeaders(%extraHeaders%)
 	staticKeyEncryption:
 		class: \MichalSpacekCz\Encryption\Symmetric\StaticKey
 		setup:

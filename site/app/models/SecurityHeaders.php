@@ -16,9 +16,6 @@ class SecurityHeaders
 	/** @var string */
 	protected $rootDomain;
 
-	/** @var array of host => headers */
-	protected $extraHeaders = array();
-
 	/** @var \Nette\Http\IRequest */
 	protected $httpRequest;
 
@@ -75,14 +72,6 @@ class SecurityHeaders
 	}
 
 
-	public function setExtraHeaders($extraHeaders)
-	{
-		foreach ($extraHeaders as $host => $headers) {
-			$this->extraHeaders[$host] = $headers;
-		}
-	}
-
-
 	public function sendHeaders()
 	{
 		$header = $this->contentSecurityPolicy->getHeader($this->presenterName, $this->actionName);
@@ -98,12 +87,6 @@ class SecurityHeaders
 		$header = $this->publicKeyPins->getHeader($host);
 		if ($header !== false) {
 			$this->httpResponse->setHeader('Public-Key-Pins-Report-Only', $header);
-		}
-
-		if (isset($this->extraHeaders[$host])) {
-			foreach ($this->extraHeaders[$host] as $name => $value) {
-				$this->httpResponse->setHeader($name, $value);
-			}
 		}
 	}
 
