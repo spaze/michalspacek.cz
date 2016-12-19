@@ -12,8 +12,11 @@ class CertificatePresenter extends \App\Presenters\BasePresenter
 
 	public function actionDefault()
 	{
-		foreach ($this->request->getPost('expiry') as $cn => $expiry) {
-			\Tracy\Debugger::log("$cn $expiry", 'cert');
+		foreach ($this->request->getPost('expiry') ?? [] as $cn => $expiry) {
+			\Tracy\Debugger::log("OK $cn $expiry", 'cert');
+		}
+		foreach ($this->request->getPost('failure') ?? [] as $cn) {
+			\Tracy\Debugger::log("FAIL $cn", 'cert');
 		}
 		$this->sendJson(['OK']);
 	}
