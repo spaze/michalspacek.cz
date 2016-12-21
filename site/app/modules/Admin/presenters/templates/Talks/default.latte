@@ -1,10 +1,9 @@
 {define #itemTalk}
 	<li><a n:href="Talks:talk $item->talkId"><strong n:tag-if="$upcoming">{$item->title}</strong></a>
-	<small>
-		<strong class="date">{$item->date|date:'j. n. Y'}</strong>, {$item->event}
-		<span n:if="$item->hasSlides" class="icon icon16 slides" title="{_messages.label.slides}"></span>
-		<span n:if="$item->videoHref" class="icon icon16 video" title="{_messages.label.videorecording}"></span>
-	</small></li>
+	<small><strong class="date">{$item->date|date:'j. n. Y'}</strong>, {$item->event}</small>
+	<span n:if="$item->hasSlides" title="{_messages.label.slides}">📃</span>
+	<span n:if="$item->videoHref" title="{_messages.label.videorecording}">►</span>
+	</li>
 {/define}
 
 {define #talkForm}

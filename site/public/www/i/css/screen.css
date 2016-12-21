@@ -113,11 +113,6 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
     display: inline-block;
     vertical-align: middle;
 }
-.icon16 {
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-}
 .icon32 {
     width: 32px;
     height: 32px;
@@ -125,9 +120,6 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
 }
 .date { white-space: nowrap; }
 #elephpant { background-position: 0px -18px; }
-.slides { background-position: 0px 0px; }
-.video { background-position: -16px 0px; }
-.audio { background-position: -48px -32px; }
 #upsell small::before {
     content: "💡 ";
     filter: grayscale(1);

@@ -4,11 +4,9 @@
 
 {define #itemInterview}
 	<a n:href="Interviews:interview $interview->action"><strong>{$interview->title}</strong></a><br />
-	<small>
-		<strong class="date">{$interview->date|date:'j. n. Y'}</strong>, {$interview->sourceName}
-		<span n:if="$interview->audioHref" class="icon icon16 audio" title="{_messages.label.audiorecording}"></span>
-		<span n:if="$interview->videoHref" class="icon icon16 video" title="{_messages.label.videorecording}"></span>
-	</small>
+	<small><strong class="date">{$interview->date|date:'j. n. Y'}</strong>, {$interview->sourceName}</small>
+	<span n:if="$interview->audioHref" title="{_messages.label.audiorecording}">♫</span>
+	<span n:if="$interview->videoHref" title="{_messages.label.videorecording}">►</span>
 {/define}
 
 {define #content}

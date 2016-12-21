@@ -10,13 +10,11 @@
 {import "../embed.latte"}
 <p n:if="$slidesHref" id="{_html.id.slides}"></p>
 {include #embedSlides}
-<p n:if="$slidesHref">
-	<small><a href="{$slidesHref}"><span class="icon icon16 slides" title="{_messages.label.slides}"></span>{$slidesHref}</a></small>
-</p>
+<p n:if="$slidesHref"><small><span title="{_messages.label.slides}">📃</span> <a href="{$slidesHref}">{$slidesHref}</a></small></p>
 
 <p n:if="$videoHref" id="{_html.id.recording}"></p>
 {include #embedVideo}
-<p n:if="$videoHref"><small><a href="{$videoHref}"><span class="icon icon16 video" title="{_messages.label.recording}"></span>{$videoHref}</a></small></p>
+<p n:if="$videoHref"><small><span title="{_messages.label.recording}">►</span> <a href="{$videoHref}">{$videoHref}</a></small></p>
 
 <h2 n:if="$description || $href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
 {if $description}{$description}{/if}
