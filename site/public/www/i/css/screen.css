@@ -128,7 +128,10 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
 .slides { background-position: 0px 0px; }
 .video { background-position: -16px 0px; }
 .audio { background-position: -48px -32px; }
-#upsell span { background-position: -32px -32px; }
+#upsell small::before {
+    content: "💡 ";
+    filter: grayscale(1);
+}
 #heartbleed {
     background-position: -32px 0px;
     margin-left: -6px;
