@@ -14,15 +14,24 @@ class Redirections
 	protected $database;
 
 
+	/**
+	 * @param \Nette\Database\Context $context
+	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
 	}
 
 
+	/**
+	 * Get destination.
+	 *
+	 * @param \Nette\Http\UrlScript $sourceUrl
+	 * @return string|null
+	 */
 	public function getDestination(\Nette\Http\UrlScript $sourceUrl)
 	{
-		$destination = $this->database->fetchField('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath());
+		$destination = $this->database->fetchField('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath()) ?: null;
 		if ($destination) {
 			if (!parse_url($destination, PHP_URL_HOST)) {
 				$destinationUrl = clone $sourceUrl;
