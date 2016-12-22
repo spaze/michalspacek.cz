@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -22,7 +24,7 @@ class KeyCdn
 	 *
 	 * @param string $secretKey
 	 */
-	public function setSecretKey($secretKey)
+	public function setSecretKey(string $secretKey)
 	{
 		$this->secretKey = $secretKey;
 	}
@@ -33,7 +35,7 @@ class KeyCdn
 	 *
 	 * @param integer $tokenExpiration
 	 */
-	public function setTokenExpiration($tokenExpiration)
+	public function setTokenExpiration(int $tokenExpiration)
 	{
 		$this->tokenExpiration = $tokenExpiration;
 	}
@@ -45,7 +47,7 @@ class KeyCdn
 	 * @param string $toSign
 	 * @return string Signed URL
 	 */
-	public function signUrl($toSign)
+	public function signUrl(string $toSign)
 	{
 		$url = new \Nette\Http\Url($toSign);
 		$expire = time() + $this->tokenExpiration;

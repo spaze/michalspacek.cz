@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -51,10 +53,10 @@ class UpcKeys
 	 * Call a method on all routers
 	 *
 	 * @param string $method
-	 * @param string $args
+	 * @param array $args
 	 * @param callable $callback
 	 */
-	private function routerCall($method, $args, callable $callback)
+	private function routerCall(string $method, array $args, callable $callback)
 	{
 		foreach ($this->routers as $router) {
 			$callback($router->$method(...$args));
@@ -67,7 +69,7 @@ class UpcKeys
 	 *
 	 * @return array of prefixes
 	 */
-	public function getPrefixes()
+	public function getPrefixes(): array
 	{
 		if ($this->prefixes === null) {
 			$this->prefixes = [];
@@ -84,7 +86,7 @@ class UpcKeys
 	 *
 	 * @return array of models with prefixes
 	 */
-	public function getModelsWithPrefixes()
+	public function getModelsWithPrefixes(): array
 	{
 		if ($this->modelsWithPrefixes === null) {
 			$this->modelsWithPrefixes = [];
@@ -104,7 +106,7 @@ class UpcKeys
 	 * @param string
 	 * @return false|array of \stdClass (serial, key, type)
 	 */
-	public function getKeys($ssid)
+	public function getKeys(string $ssid): array
 	{
 		$this->keys = [];
 		$this->routerCall('getKeys', [$ssid], function ($keys) {
@@ -120,7 +122,7 @@ class UpcKeys
 	 * @param string
 	 * @return boolean
 	 */
-	public function saveKeys($ssid)
+	public function saveKeys(string $ssid): bool
 	{
 		return $this->routers[UpcKeys\Technicolor::class]->saveKeys($ssid);
 	}
@@ -131,7 +133,7 @@ class UpcKeys
 	 *
 	 * @return string
 	 */
-	public function getValidSsidPattern()
+	public function getValidSsidPattern(): string
 	{
 		return self::SSID_VALID_PATTERN;
 	}
@@ -141,9 +143,9 @@ class UpcKeys
 	 * Check whether the SSID is valid for upc_keys to work.
 	 *
 	 * @param string
-	 * @return string
+	 * @return boolean
 	 */
-	public function isValidSsid($ssid)
+	public function isValidSsid(string $ssid): bool
 	{
 		// Inspired by Nette\Forms\Validator::validatePattern()
 		return (bool)\Nette\Utils\Strings::match($ssid, sprintf("\x01^(%s)\\z\x01u", self::SSID_VALID_PATTERN));
@@ -155,7 +157,7 @@ class UpcKeys
 	 *
 	 * @return string
 	 */
-	public function getSsidPlaceholder()
+	public function getSsidPlaceholder(): string
 	{
 		return self::SSID_PLACEHOLDER;
 	}

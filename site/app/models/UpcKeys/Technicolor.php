@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\UpcKeys;
 
 /**
@@ -40,7 +42,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string
 	 */
-	public function setUrl($url)
+	public function setUrl(string $url)
 	{
 		$this->url = $url;
 	}
@@ -51,7 +53,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string
 	 */
-	public function setApiKey($apiKey)
+	public function setApiKey(string $apiKey)
 	{
 		$this->apiKey = $apiKey;
 	}
@@ -73,7 +75,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string
 	 */
-	public function setModel($model)
+	public function setModel(string $model)
 	{
 		$this->model = $model;
 	}
@@ -84,7 +86,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @return array of prefixes
 	 */
-	public function getModelWithPrefixes()
+	public function getModelWithPrefixes(): array
 	{
 		return [$this->model => $this->prefixes];
 	}
@@ -98,7 +100,7 @@ class Technicolor implements RouterInterface
 	 * @param string
 	 * @return array of \stdClass (serial, key, type)
 	 */
-	public function getKeys($ssid)
+	public function getKeys(string $ssid): array
 	{
 		try {
 			$keys = $this->fetchKeys($ssid);
@@ -119,7 +121,7 @@ class Technicolor implements RouterInterface
 	 * @param string
 	 * @return boolean
 	 */
-	public function saveKeys($ssid)
+	public function saveKeys(string $ssid): bool
 	{
 		try {
 			if (!$this->hasKeys($ssid)) {
@@ -138,7 +140,7 @@ class Technicolor implements RouterInterface
 	 * @param string
 	 * @return array of \stdClass (serial, key, type)
 	 */
-	private function generateKeys($ssid)
+	private function generateKeys(string $ssid): array
 	{
 		$data = \Nette\Utils\Json::decode($this->callApi(sprintf($this->url, $ssid, implode(',', $this->prefixes))));
 		$keys = array();
@@ -147,7 +149,9 @@ class Technicolor implements RouterInterface
 				continue;
 			}
 
-			list($serial, $key, $type) = explode(',', $line);
+			if (sscanf($line, '%20[^,],%20[^,],%d', $serial, $key, $type) != 3) {
+				throw new \RuntimeException('Incorrect number of tokens in ' . $line);
+			}
 			$keys["{$type}-{$serial}"] = $this->buildKey($serial, $key, $type);
 		}
 		ksort($keys);
@@ -161,7 +165,7 @@ class Technicolor implements RouterInterface
 	 * @param string $url
 	 * @return string
 	 */
-	private function callApi($url)
+	private function callApi(string $url): string
 	{
 		$context = stream_context_create();
 		stream_context_set_params($context, [
@@ -187,7 +191,7 @@ class Technicolor implements RouterInterface
 	 * @param string
 	 * @return array of \stdClass (serial, key, type)
 	 */
-	private function fetchKeys($ssid)
+	private function fetchKeys(string $ssid): array
 	{
 		$rows = $this->database->fetchAll(
 			'SELECT
@@ -215,7 +219,7 @@ class Technicolor implements RouterInterface
 	 * @param string
 	 * @return boolean
 	 */
-	private function hasKeys($ssid)
+	private function hasKeys(string $ssid): bool
 	{
 		$result = $this->database->fetchField(
 			'SELECT
@@ -237,7 +241,7 @@ class Technicolor implements RouterInterface
 	 * @param array of \stdClass (serial, key, type)
 	 * @return boolean false if no keys to store, true otherwise
 	 */
-	private function storeKeys($ssid, array $keys)
+	private function storeKeys(string $ssid, array $keys): bool
 	{
 		if (!$keys) {
 			return false;
@@ -286,7 +290,7 @@ class Technicolor implements RouterInterface
 	 * @param integer
 	 * @return \stdClass
 	 */
-	private function buildKey($serial, $key, $type)
+	private function buildKey(string $serial, string $key, int $type): \stdClass
 	{
 		$result = new \stdClass();
 		$result->serial = $serial;

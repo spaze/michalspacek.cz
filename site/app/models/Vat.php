@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -17,7 +19,7 @@ class Vat
 	/**
 	 * @param float
 	 */
-	public function setRate($rate)
+	public function setRate(float $rate)
 	{
 		$this->rate = $rate;
 	}
@@ -26,7 +28,7 @@ class Vat
 	/**
 	 * @return float
 	 */
-	public function getRate()
+	public function getRate(): float
 	{
 		return $this->rate;
 	}
@@ -34,10 +36,11 @@ class Vat
 
 	/**
 	 * @param integer
+	 * @return int
 	 */
-	public function addVat($price)
+	public function addVat(int $price): int
 	{
-		return round($price * (1 + $this->rate));
+		return (int)round($price * (1 + $this->rate));
 	}
 
 }

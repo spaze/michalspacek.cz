@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\UpcKeys;
 
 /**
@@ -34,7 +36,7 @@ class Ubee implements RouterInterface
 	/**
 	 * Set serial number prefix to get keys for.
 	 *
-	 * @param string
+	 * @param array of prefixes
 	 */
 	public function setPrefixes(array $prefixes)
 	{
@@ -50,7 +52,7 @@ class Ubee implements RouterInterface
 	 *
 	 * @param string
 	 */
-	public function setModel($model)
+	public function setModel(string $model)
 	{
 		$this->model = $model;
 	}
@@ -61,7 +63,7 @@ class Ubee implements RouterInterface
 	 *
 	 * @return array of prefixes
 	 */
-	public function getModelWithPrefixes()
+	public function getModelWithPrefixes(): array
 	{
 		return [$this->model => [$this->prefix]];
 	}
@@ -73,7 +75,7 @@ class Ubee implements RouterInterface
 	 * @param string
 	 * @return array of \stdClass (serial, key, type)
 	 */
-	public function getKeys($ssid)
+	public function getKeys(string $ssid): array
 	{
 		$rows = $this->database->fetchAll('SELECT mac, `key` FROM keys_ubee WHERE ssid = ?', substr($ssid, 3));
 		$result = array();
@@ -88,11 +90,11 @@ class Ubee implements RouterInterface
 	/**
 	 * Build key object.
 	 *
-	 * @param string
-	 * @param string
+	 * @param integer
+	 * @param integer
 	 * @return \stdClass
 	 */
-	private function buildKey($mac, $key)
+	private function buildKey(int $mac, int $key): \stdClass
 	{
 		$result = new \stdClass();
 		$result->serial = $this->prefix;

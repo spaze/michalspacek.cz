@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -60,13 +62,13 @@ class SecurityHeaders
 	}
 
 
-	public function setDefaultDomain($defaultDomain)
+	public function setDefaultDomain(string $defaultDomain)
 	{
 		$this->defaultDomain = $defaultDomain;
 	}
 
 
-	public function setRootDomain($rootDomain)
+	public function setRootDomain(string $rootDomain)
 	{
 		$this->rootDomain = $rootDomain;
 	}
@@ -98,7 +100,7 @@ class SecurityHeaders
 	 * @param string $action
 	 * @return self
 	 */
-	public function setCsp($presenterName, $actionName)
+	public function setCsp(string $presenterName, string $actionName): self
 	{
 		$this->presenterName = $presenterName;
 		$this->actionName = $actionName;
@@ -111,7 +113,7 @@ class SecurityHeaders
 	 *
 	 * @return self
 	 */
-	public function setDefaultCsp()
+	public function setDefaultCsp(): self
 	{
 		$this->presenterName = $this->actionName = $this->contentSecurityPolicy->getDefaultKey();
 		return $this;
@@ -123,7 +125,7 @@ class SecurityHeaders
 	 *
 	 * @return string
 	 */
-	private function getHost()
+	private function getHost(): string
 	{
 		if ($this->httpRequest->getUrl()->getHost() === $this->rootDomain) {
 			$host = $this->defaultDomain;
@@ -140,7 +142,7 @@ class SecurityHeaders
 	 * @param string $scheme URL scheme
 	 * @param string $host URL host
 	 */
-	public function accessControlAllowOrigin($scheme, $host)
+	public function accessControlAllowOrigin(string $scheme, string $host)
 	{
 		$origin = $this->httpRequest->getHeader('Origin');
 		if ($origin !== null) {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -32,19 +34,19 @@ class WebTracking
 	}
 
 
-	public function setCookie($cookie)
+	public function setCookie(string $cookie)
 	{
 		$this->cookie = $cookie;
 	}
 
 
-	public function setValue($value)
+	public function setValue(string $value)
 	{
 		$this->value = $value;
 	}
 
 
-	public function isEnabled()
+	public function isEnabled(): bool
 	{
 		return ($this->httpRequest->getCookie($this->cookie) != $this->value);
 	}

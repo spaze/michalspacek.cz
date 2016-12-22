@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -24,7 +26,7 @@ class Files
 	}
 
 
-	public function logDownload($id)
+	public function logDownload(int $id): int
 	{
 		$datetime = new \DateTime();
 		$this->database->query('INSERT INTO file_downloads', array(
@@ -34,7 +36,7 @@ class Files
 			'time'          => $datetime,
 			'time_timezone' => $datetime->getTimezone()->getName(),
 		));
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 }

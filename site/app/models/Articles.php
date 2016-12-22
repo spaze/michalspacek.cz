@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -24,7 +26,13 @@ class Articles
 	}
 
 
-	public function getAll($limit = null)
+	/**
+	 * Get articles sorted by date, newest first.
+	 *
+	 * @param int|null $limit Null means all, for real
+	 * @return array of \Nette\Database\Row
+	 */
+	public function getAll(int $limit = null): array
 	{
 		$query = 'SELECT
 				a.title,
@@ -43,7 +51,7 @@ class Articles
 
 		$articles = $this->database->fetchAll($query);
 		foreach ($articles as &$article) {
-			$article['excerpt'] = $this->texyFormatter->format($article['excerpt']);
+			$article->excerpt = $this->texyFormatter->format($article->excerpt);
 		}
 		return $articles;
 	}

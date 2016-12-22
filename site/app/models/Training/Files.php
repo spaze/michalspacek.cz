@@ -1,5 +1,9 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
+
+use \Nette\Database\Row;
 
 /**
  * Training files/materials model.
@@ -35,13 +39,13 @@ class Files
 	}
 
 
-	public function setFilesDir($dir)
+	public function setFilesDir(string $dir)
 	{
 		$this->filesDir = rtrim($dir, '/');
 	}
 
 
-	public function getFiles($applicationId)
+	public function getFiles(int $applicationId): array
 	{
 		$files = $this->database->fetchAll(
 			'SELECT
@@ -69,7 +73,7 @@ class Files
 	}
 
 
-	public function getFile($applicationId, $token, $filename)
+	public function getFile(int $applicationId, string $token, string $filename): Row
 	{
 		$file = $this->database->fetch(
 			'SELECT
@@ -103,7 +107,7 @@ class Files
 	}
 
 
-	public function addFile(\Nette\Database\Row $training, \Nette\Http\FileUpload $file, array $applicationIds)
+	public function addFile(Row $training, \Nette\Http\FileUpload $file, array $applicationIds): string
 	{
 		$name = basename($file->getSanitizedName());
 		$file->move($this->filesDir . '/' . $training->start->format('Y-m-d') . '/' . $name);
@@ -134,7 +138,7 @@ class Files
 	}
 
 
-	public function logDownload($applicationId, $downloadId)
+	public function logDownload(int $applicationId, int $downloadId)
 	{
 		$this->database->query('INSERT INTO training_material_downloads', array(
 			'key_application'   => $applicationId,

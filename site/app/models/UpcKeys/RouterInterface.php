@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\UpcKeys;
 
 /**
@@ -12,10 +14,10 @@ interface RouterInterface
 
 	public function setPrefixes(array $prefixes);
 
-	public function setModel($model);
+	public function setModel(string $model);
 
-	public function getModelWithPrefixes();
+	public function getModelWithPrefixes(): array;
 
-	public function getKeys($ssid);
+	public function getKeys(string $ssid): array;
 
 }
