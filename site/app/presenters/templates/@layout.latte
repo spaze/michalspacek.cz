@@ -13,7 +13,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Michal Špaček</title>
 	{stylesheet screen-main}
-	<link rel="preload" as="image" href="{='/i/images/icons.png'|staticUrl}">
+	{ifset #preload}{include #preload}{/ifset}
 	{ifset #scriptsReplace}
 		{include #scriptsReplace}
 	{else}
