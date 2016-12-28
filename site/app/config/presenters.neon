@@ -17,6 +17,8 @@ services:
 	# api module
 	- \App\ApiModule\Presenters\CertificatePresenter
 	- \App\ApiModule\Presenters\CompanyPresenter
+	- \App\ApiModule\Presenters\ErrorGenericPresenter
+	- \App\ApiModule\Presenters\ErrorPresenter
 
 	# admin module
 	- \App\AdminModule\Presenters\EmailsPresenter

@@ -1,3 +1,6 @@
+application:
+	errorPresenter: Api:ErrorGeneric
+
 translation:
 	default: en_US
 
