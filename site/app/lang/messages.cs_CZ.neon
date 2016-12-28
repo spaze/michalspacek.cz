@@ -13,11 +13,11 @@ title:
 	trainingreviews: "Ohlasy na školení %s"
 	trainingmaterials: "Materiály ze školení %s"
 	trainingapplication: "Přihláška na %s"
+	error400: "Tohle Špaček neumí!"
 	error403: "Tady je Špačkovo!"
 	error404: "Tak tohle tu Špaček nemá!"
 	error405: "Tohle u Špačka nejde!"
 	error410: "Byl jsem tu, Špaček!"
-	error4xx: "Tohle Špaček neumí!"
 	forbidden: "Nepovoleno"
 	venue: "Školírna %s"
 	photo: "Foto"
@@ -187,11 +187,11 @@ companytrainings:
 	signup: "Pro objednání školení mi \"napište e-mail\":[%s] a navrhněte termín, který se vám hodí."
 error:
 	tryother: "Zkuste jiné stránky"
+	400: "Váš prohlížeč vyslal požadavek, kterému tento server nerozuměl."
 	403: "Nemáte právo pro přístup k požadovanému objektu. Buď je chráněn proti čtení, nebo není serverem čitelný."
 	404: "Požadovaná stránka nebyla na tomto serveru nalezena. Adresa této stránky je chybná nebo stránka neexistuje."
 	405: "Metoda není pro požadované URL povolena."
 	410: "Požadované URL již není na tomto serveru k dispozici, ani není k dispozici žádná adresa k přesměrování."
-	4xx: "Váš prohlížeč vyslal požadavek, kterému tento server nerozuměl."
 forbidden:
 	spam: "Přístup zakázán kvůli opakovanému spamování."
 interview:
