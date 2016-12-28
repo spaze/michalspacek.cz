@@ -1,10 +1,7 @@
-translation:
-	default: en_US
+includes:
+	- config.common-michalspacek.com.neon
 
 parameters:
 	domain:
 		root: michalspacek.com.test
-		fqdn: www.%domain.root%
-		cookie: .%domain.root%
 		sharedStaticRoot: https://www.michalspacek.cz.test
-		contentSecurityPolicySelf: %domain.sharedStaticRoot%

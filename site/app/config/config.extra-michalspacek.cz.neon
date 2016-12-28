@@ -1,9 +1,6 @@
-translation:
-	default: cs_CZ
+includes:
+	- config.common-michalspacek.cz.neon
 
 parameters:
 	domain:
 		root: michalspacek.cz
-		fqdn: www.%domain.root%
-		cookie: .%domain.root%
-		contentSecurityPolicySelf: "'self'"

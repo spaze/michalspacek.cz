@@ -1,0 +1,8 @@
+translation:
+	default: en_US
+
+parameters:
+	domain:
+		fqdn: www.%domain.root%
+		cookie: .%domain.root%
+		contentSecurityPolicySelf: %domain.sharedStaticRoot%

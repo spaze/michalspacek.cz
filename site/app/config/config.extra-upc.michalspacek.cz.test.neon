@@ -1,9 +1,6 @@
-translation:
-	default: en_US
+includes:
+	- config.common-upc.michalspacek.cz.neon
 
 parameters:
 	domain:
 		root: michalspacek.cz.test
-		fqdn: upc.%domain.root%
-		cookie: .%domain.root%
-		contentSecurityPolicySelf: %domain.sharedStaticRoot%

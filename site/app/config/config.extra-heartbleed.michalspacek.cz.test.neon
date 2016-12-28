@@ -1,9 +1,6 @@
-translation:
-	default: en_US
+includes:
+	- config.common-heartbleed.michalspacek.cz.neon
 
 parameters:
 	domain:
 		root: michalspacek.cz.test
-		fqdn: heartbleed.%domain.root%
-		cookie: .%domain.root%
-		contentSecurityPolicySelf: %domain.sharedStaticRoot%

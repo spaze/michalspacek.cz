@@ -1,0 +1,8 @@
+translation:
+	default: cs_CZ
+
+parameters:
+	domain:
+		fqdn: admin.%domain.root%
+		cookie: .%domain.root%
+		contentSecurityPolicySelf: %domain.sharedStaticRoot%
