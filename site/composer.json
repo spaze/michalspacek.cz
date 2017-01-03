@@ -23,6 +23,7 @@
 		"roave/security-advisories": "dev-master"
 	},
 	"require-dev": {
-		"nette/tester": "^1.7"
+		"nette/tester": "^1.7",
+		"phpstan/phpstan": "^0.5.1"
 	}
 }
