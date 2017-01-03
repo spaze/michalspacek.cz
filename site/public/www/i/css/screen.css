@@ -250,11 +250,6 @@ div.notice {
     margin: 0px 4em 0px 0px;
 }
 #loadDataControls span { display: none; }
-#equipment input { width: auto; }
-#equipment div {
-    float: left;
-    margin: 0 0.4em;
-}
 #pubkey {
     background-color: #F7F7FF;
     margin: 0;
@@ -288,8 +283,6 @@ div.notice {
     }
     #frm-application table, #frm-application table label,
     #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 100%; }
-    #equipment div { float: none; }
-    #equipment div input { width: 3em; }
     #frm-application #frm-application-note { width: 98%; }
     #frm-application input[type=submit] { width: 170px; }
     #projekty div { display: none; }

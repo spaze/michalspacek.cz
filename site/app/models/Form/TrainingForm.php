@@ -95,23 +95,6 @@ abstract class TrainingForm extends Form
 
 
 	/**
-	 * Add attributes inputs.
-	 *
-	 * @param \Nette\Forms\Container $container
-	 */
-	protected function addAttributes(\Nette\Forms\Container $container)
-	{
-		$options = array(
-			0 => $this->translator->translate('messages.label.no'),
-			1 => $this->translator->translate('messages.label.yes'),
-		);
-		$container->addRadioList('equipment', 'Přinesete si vlastní počítač?', $options)
-			->setRequired('Přinesete si vlastní počítač?')
-			->getSeparatorPrototype()->setName('div');
-	}
-
-
-	/**
 	 * Add company inputs.
 	 *
 	 * @param \Nette\Forms\Container $container

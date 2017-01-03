@@ -119,7 +119,6 @@ class Applications
 				a.price_vat AS priceVat,
 				a.invoice_id AS invoiceId,
 				a.paid,
-				a.equipment,
 				sr.name AS sourceName
 			FROM
 				training_applications a
@@ -194,7 +193,7 @@ class Applications
 	}
 
 
-	public function addInvitation(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
+	public function addInvitation(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
 	{
 		return $this->insertApplication(
 			$training,
@@ -209,14 +208,13 @@ class Applications
 			$companyId,
 			$companyTaxId,
 			$note,
-			$equipment,
 			Statuses::STATUS_TENTATIVE,
 			$this->resolveSource($note)
 		);
 	}
 
 
-	public function addApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
+	public function addApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
 	{
 		return $this->insertApplication(
 			$training,
@@ -231,7 +229,6 @@ class Applications
 			$companyId,
 			$companyTaxId,
 			$note,
-			$equipment,
 			Statuses::STATUS_SIGNED_UP,
 			$this->resolveSource($note)
 		);
@@ -252,7 +249,7 @@ class Applications
 	}
 
 
-	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $status, $source, $date = null)
+	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $status, $source, $date = null)
 	{
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
 			throw new \RuntimeException("Invalid initial status {$status}");
@@ -275,7 +272,6 @@ class Applications
 			'company_id'           => $companyId,
 			'company_tax_id'       => $companyTaxId,
 			'note'                 => $note,
-			'equipment'            => $equipment,
 			'key_status'           => $statusId,
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
@@ -295,9 +291,9 @@ class Applications
 	}
 
 
-	public function updateApplication(\Nette\Database\Row $training, $applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment)
+	public function updateApplication(\Nette\Database\Row $training, $applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
 	{
-		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($training, $applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment) {
+		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($training, $applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note) {
 			$source = $this->getSourceByApplicationId($applicationId)->alias;
 			list($price, $vatRate, $priceVat, $discount) = $this->resolvePriceDiscountVat($training, Statuses::STATUS_SIGNED_UP, $source, $note);
 			$this->database->query(
@@ -313,7 +309,6 @@ class Applications
 					'company_id'     => $companyId,
 					'company_tax_id' => $companyTaxId,
 					'note'           => $note,
-					'equipment'      => $equipment,
 					'price'          => $price,
 					'vat_rate'       => $vatRate,
 					'price_vat'      => $priceVat,
@@ -326,7 +321,7 @@ class Applications
 	}
 
 
-	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $equipment, $source, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false, $dateId = false)
+	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $source, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false, $dateId = false)
 	{
 		if ($paid) {
 			$paid = new \DateTime($paid);
@@ -344,7 +339,6 @@ class Applications
 			'company_id'     => $companyId,
 			'company_tax_id' => $companyTaxId,
 			'note'           => $note,
-			'equipment'      => $equipment,
 			'key_source'     => $this->getTrainingApplicationSource($source),
 			'price'          => ($price || $discount ? $price : null),
 			'vat_rate'       => ($vatRate ?: null),
@@ -477,7 +471,6 @@ class Applications
 				a.discount,
 				a.invoice_id AS invoiceId,
 				a.paid,
-				a.equipment,
 				sr.alias AS sourceAlias,
 				sr.name AS sourceName
 			FROM
@@ -532,7 +525,6 @@ class Applications
 				a.price_vat AS priceVat,
 				a.invoice_id AS invoiceId,
 				a.paid,
-				a.equipment,
 				sr.name AS sourceName
 			FROM
 				training_applications a
@@ -586,8 +578,7 @@ class Applications
 				a.country,
 				a.company_id AS companyId,
 				a.company_tax_id AS companyTaxId,
-				a.note,
-				a.equipment
+				a.note
 			FROM
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date
@@ -647,18 +638,6 @@ class Applications
 		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
 			$this->trainingStatuses->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
 		}
-	}
-
-
-	public function countEquipment(array $applications)
-	{
-		$equipment = 0;
-		foreach ($applications as $application) {
-			if ($application->equipment && (!isset($application->discarded) || !$application->discarded)) {
-				$equipment++;
-			}
-		}
-		return $equipment;
 	}
 
 

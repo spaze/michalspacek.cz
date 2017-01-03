@@ -10,7 +10,6 @@
 <p>
 {$trainingName} {$trainingStart|date:'j. n. Y'}
 <small>{$venueCity}{if !$public}, {$venueName}{/if}</small>
-<small n:if="!$venueEquipped" title="Vlastních počítačů: {$equipment}, zajistit {$validCount - $equipment}">(PC: {$equipment}+<strong>{$validCount - $equipment}</strong>)</small>
 </p>
 {form statuses}
 <div id="applications">
@@ -20,7 +19,6 @@
 			<th></th>
 			<th><small>Jméno</small></th>
 			<th><small>E-mail</small></th>
-			<th><small title="Vlastní počítač">PC</small></th>
 			<th><small>Společnost</small></th>
 			<th><small>Status</small></th>
 			<th></th>
@@ -33,7 +31,6 @@
 			<td><small>{$iterator->getCounter()}.</small></td>
 			<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
 			<td><small>{$application->email}</small></td>
-			<td><small>{if $application->equipment}&#x2714;{else}&#x2716;{/if}</small></td>
 			<td>{$application->company}</td>
 			<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
 			<td><small>&raquo;</small></td>
@@ -71,7 +68,6 @@
 				<tr>
 					<th>{label name /}</th>
 					<th>{label email /}</th>
-					<th>{label equipment: /}</th>
 					<th>{label companyId /}</th>
 					<th>{label companyTaxId /}</th>
 					<th>{label company /}</th>
@@ -87,7 +83,6 @@
 				<tr>
 					<td>{input name}</td>
 					<td>{input email}</td>
-					<td>{input equipment:}</td>
 					<td>{input companyId}</td>
 					<td>{input companyTaxId}</td>
 					<td>{input company}</td>

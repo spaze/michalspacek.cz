@@ -56,7 +56,6 @@ class TrainingApplication extends TrainingForm
 		}
 
 		$this->addAttendee($this);
-		$this->addAttributes($this);
 		$this->addCompany($this);
 		$this->addNote($this);
 		$this->addCountry($this);
@@ -81,7 +80,6 @@ class TrainingApplication extends TrainingForm
 			'companyId' => $application->companyId,
 			'companyTaxId' => $application->companyTaxId,
 			'note' => $application->note,
-			'equipment' => $application->equipment,
 		);
 		$this->setDefaults($values);
 		return $this;

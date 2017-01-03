@@ -5,7 +5,6 @@
 </p>
 <table id="statuses">
 	{var $dateLineDisplayed = false}
-	{default $equipmentCount = true}
 	<tbody n:inner-foreach="$trainings as $training">
 		{var $upcoming = in_array($training->dateId, $upcomingIds)}
 		{if $order == 'desc'}
@@ -36,10 +35,9 @@
 			</td>
 			<td class="nameCell" data-date="{$training->dateId}">{$training->name}{if $training->public || $training->validCount > 0} ({$training->validCount}){/if}</td>
 			<td><small>{$training->venueCity}{if !$training->public}, {$training->venueName}{/if}</small></td>
-			<td><small n:if="!$training->venueEquipped && $equipmentCount" title="Vlastních počítačů: {$training->equipment}, zajistit {$training->validCount - $training->equipment}">(PC: {$training->equipment}+<strong>{$training->validCount - $training->equipment}</strong>)</small></td>
 		</tr>
 		<tr id="date-{$training->dateId}" class="hidden">
-			<td colspan="6">
+			<td colspan="5">
 				{if $training->applications}
 					<table class="indent">
 						<thead>
@@ -47,7 +45,6 @@
 								<th></th>
 								<th><small>Jméno</small></th>
 								<th><small>E-mail</small></th>
-								<th><small title="Vlastní počítač">PC</small></th>
 								<th><small>Společnost</small></th>
 								<th><small>Status</small></th>
 								<th><small>Poznámka</small></th>
@@ -59,7 +56,6 @@
 								<td><small>{$iterator->getCounter()}.</small></td>
 								<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
 								<td><small>{$application->email}</small></td>
-								<td><small>{if $application->equipment}&#x2714;{else}&#x2716;{/if}</small></td>
 								<td>{$application->company}</td>
 								<td><small><code title="{$application->statusTime|date:'j. n. Y H:i:s'}">{$application->status}</code></small></td>
 								<td><small title="{$application->note}">{$application->note|truncate:20}</small></td>

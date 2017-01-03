@@ -61,7 +61,6 @@ class Dates
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
 				v.city AS venueCity,
-				v.equipped AS venueEquipped,
 				c.id_cooperation AS cooperationId
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
@@ -90,8 +89,7 @@ class Dates
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
-				v.city AS venueCity,
-				v.equipped AS venueEquipped
+				v.city AS venueCity
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
@@ -220,8 +218,7 @@ class Dates
 					d.public,
 					v.id_venue AS venueId,
 					v.name AS venueName,
-					v.city as venueCity,
-					v.equipped AS venueEquipped
+					v.city as venueCity
 				FROM training_dates d
 					JOIN trainings t ON d.key_training = t.id_training
 					JOIN training_date_status s ON d.key_status = s.id_status
@@ -258,7 +255,6 @@ class Dates
 					'venueId'       => $row->venueId,
 					'venueName'     => $row->venueName,
 					'venueCity'     => $row->venueCity,
-					'venueEquipped' => $row->venueEquipped,
 				);
 				$upcoming[$row->action] = \Nette\Utils\ArrayHash::from(array(
 					'action' => $row->action,
@@ -290,8 +286,7 @@ class Dates
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
-				v.city AS venueCity,
-				v.equipped AS venueEquipped
+				v.city AS venueCity
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue

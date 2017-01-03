@@ -191,8 +191,7 @@ class Trainings
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
-				v.city AS venueCity,
-				v.equipped AS venueEquipped
+				v.city AS venueCity
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue

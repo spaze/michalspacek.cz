@@ -159,8 +159,7 @@ class TrainingsPresenter extends BasePresenter
 				$session->country,
 				$session->companyId,
 				$session->companyTaxId,
-				$session->note,
-				$session->equipment
+				$session->note
 			);
 			$this->redirect('training', $name);
 		}
@@ -179,7 +178,6 @@ class TrainingsPresenter extends BasePresenter
 		$session->companyId    = $application->companyId;
 		$session->companyTaxId = $application->companyTaxId;
 		$session->note         = $application->note;
-		$session->equipment    = $application->equipment;
 
 		$this->redirect('training', $application->trainingAction);
 	}
@@ -216,8 +214,7 @@ class TrainingsPresenter extends BasePresenter
 					$values->country,
 					$values->companyId,
 					$values->companyTaxId,
-					$values->note,
-					$values->equipment
+					$values->note
 				);
 			} else {
 				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values->trainingId) {
@@ -233,8 +230,7 @@ class TrainingsPresenter extends BasePresenter
 						$values->country,
 						$values->companyId,
 						$values->companyTaxId,
-						$values->note,
-						$values->equipment
+						$values->note
 					);
 					$session->application[$name] = null;
 				} else {
@@ -250,8 +246,7 @@ class TrainingsPresenter extends BasePresenter
 						$values->country,
 						$values->companyId,
 						$values->companyTaxId,
-						$values->note,
-						$values->equipment
+						$values->note
 					);
 				}
 				$this->trainingMails->sendSignUpMail(
@@ -279,7 +274,6 @@ class TrainingsPresenter extends BasePresenter
 			$session->companyId    = $values->companyId;
 			$session->companyTaxId = $values->companyTaxId;
 			$session->note         = $values->note;
-			$session->equipment    = $values->equipment;
 			$this->redirect('success', $name);
 		} catch (UnexpectedValueException $e) {
 			\Tracy\Debugger::log($e);

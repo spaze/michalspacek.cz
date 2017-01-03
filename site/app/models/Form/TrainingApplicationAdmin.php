@@ -26,13 +26,9 @@ class TrainingApplicationAdmin extends TrainingFormAdmin
 		parent::__construct($parent, $name, $trainingApplications, $translator);
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
-		$this->translator = $translator;
 		$this->trainingDates = $trainingDates;
 
 		$this->addAttendee($this);
-		$this->addAttributes($this);
-		$this->getComponent('equipment')->caption = 'Vlastní počítač:';
-
 		$this->addCheckbox('familiar', 'Tykání:');
 		$this->addSource($this);
 		$this->addCompany($this);
@@ -85,7 +81,6 @@ class TrainingApplicationAdmin extends TrainingFormAdmin
 			'discount' => $application->discount,
 			'invoiceId' => $application->invoiceId,
 			'paid' => $application->paid,
-			'equipment' => $application->equipment,
 		);
 		$this->setDefaults($values);
 		if (!isset($application->dateId)) {
@@ -99,7 +94,6 @@ class TrainingApplicationAdmin extends TrainingFormAdmin
 			$this->addSelect('date', 'Datum:', $upcoming)
 				->setPrompt($upcoming ? '- zvolte termín -' : 'Žádný vypsaný termín')
 				->setDisabled(!$upcoming);
-			$this->getComponent('equipment')->setRequired(false);
 		}
 		return $this;
 	}

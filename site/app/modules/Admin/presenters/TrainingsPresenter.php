@@ -115,11 +115,9 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingName  = $this->training->name;
 		$this->template->venueCity     = $this->training->venueCity;
 		$this->template->venueName     = $this->training->venueName;
-		$this->template->venueEquipped = $this->training->venueEquipped;
 		$this->template->public        = $this->training->public;
 		$this->template->applications  = $this->applications;
 		$this->template->validCount    = $validCount;
-		$this->template->equipment     = $this->trainingApplications->countEquipment($this->applications);
 		$this->template->attendedStatuses = $attendedStatuses;
 	}
 
@@ -206,7 +204,6 @@ class TrainingsPresenter extends BasePresenter
 		foreach ($trainings as $training) {
 			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
 			$training->validCount = count($training->applications);
-			$training->equipment = $this->trainingApplications->countEquipment($training->applications);
 		}
 
 		$this->template->pageTitle = 'Školení';
@@ -307,7 +304,6 @@ class TrainingsPresenter extends BasePresenter
 				$application->companyId,
 				$application->companyTaxId,
 				$application->note,
-				$application->equipment,
 				$values->status,
 				$values->source,
 				$values->date
@@ -365,7 +361,6 @@ class TrainingsPresenter extends BasePresenter
 			$values->companyId,
 			$values->companyTaxId,
 			$values->note,
-			$values->equipment,
 			$values->source,
 			$values->price,
 			$values->vatRate / 100,

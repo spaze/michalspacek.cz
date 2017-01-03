@@ -27,7 +27,6 @@ class TrainingApplicationMultiple extends TrainingFormAdmin
 		for ($i = 0; $i < $count; $i++) {
 			$dataContainer = $applicationsContainer->addContainer($i);
 			$this->addAttendee($dataContainer);
-			$this->addAttributes($dataContainer);
 			$this->addCompany($dataContainer);
 			$this->addNote($dataContainer);
 			$dataContainer->getComponent('name')->caption = 'Jméno:';
@@ -44,12 +43,6 @@ class TrainingApplicationMultiple extends TrainingFormAdmin
 			->setPrompt('- vyberte zdroj -');
 
 		$this->addSubmit('submit', 'Přidat');
-	}
-
-
-	protected function addAttributes(\Nette\Forms\Container $container)
-	{
-		$container->addCheckbox('equipment', 'PC');
 	}
 
 }
