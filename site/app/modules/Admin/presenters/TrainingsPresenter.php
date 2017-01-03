@@ -87,6 +87,9 @@ class TrainingsPresenter extends BasePresenter
 		$this->dateId = $param;
 		$this->redirectParam = $this->dateId;
 		$this->training = $this->trainingDates->get($this->dateId);
+		if (!$this->training) {
+			throw new \Nette\Application\BadRequestException("Date id {$param} does not exist, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		}
 		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
 		$validCount = 0;
