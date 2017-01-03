@@ -28,7 +28,7 @@ abstract class Form extends \Nette\Application\UI\Form
 			->setAttribute('placeholder', $format)
 			->setAttribute('title', "Formát {$format}")
 			->setRequired($required ? 'Zadejte datum' : false)
-			->addRule(Self::PATTERN, "Datum musí být ve formátu {$format}", $pattern);
+			->addRule(self::PATTERN, "Datum musí být ve formátu {$format}", $pattern);
 	}
 
 }
