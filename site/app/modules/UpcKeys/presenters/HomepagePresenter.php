@@ -65,7 +65,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 				break;
 			default:
-				throw new \Nette\Application\BadRequestException('Unknown format', Response::S404_NOT_FOUND);
+				throw new \Nette\Application\BadRequestException('Unknown format', \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 	}
 
