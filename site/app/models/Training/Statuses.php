@@ -198,6 +198,7 @@ class Statuses
 
 	public function updateStatusCallback(callable $callback, $status, $date)
 	{
+		$applicationId = null;
 		$this->database->beginTransaction();
 		try {
 			$applicationId = $callback();

@@ -51,7 +51,7 @@ class TrainingApplication extends TrainingForm
 				->setRequired('Vyberte prosím termín a místo školení')
 				->setPrompt('- vyberte termín a místo -');
 		} else {
-			$field = new \Netxten\Forms\Controls\HiddenFieldWithLabel($label, $date->dateId, $inputDates[$date->dateId]);
+			$field = new \Netxten\Forms\Controls\HiddenFieldWithLabel($label, key($inputDates), current($inputDates));
 			$this->addComponent($field, 'trainingId');
 		}
 
