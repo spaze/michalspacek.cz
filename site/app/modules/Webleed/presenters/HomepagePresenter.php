@@ -19,6 +19,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
+		parent::__construct();
 	}
 
 

@@ -91,6 +91,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->companyInfo = $companyInfo;
+		parent::__construct();
 	}
 
 

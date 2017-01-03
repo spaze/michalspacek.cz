@@ -30,6 +30,7 @@ class InvoicesPresenter extends BasePresenter
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
+		parent::__construct();
 	}
 
 

@@ -48,6 +48,7 @@ class TalksPresenter extends BasePresenter
 		$this->embed = $embed;
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 		$this->helpers = $helpers;
+		parent::__construct();
 	}
 
 

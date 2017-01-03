@@ -27,6 +27,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	public function __construct(\MichalSpacekCz\UpcKeys $upcKeys)
 	{
 		$this->upcKeys = $upcKeys;
+		parent::__construct();
 	}
 
 

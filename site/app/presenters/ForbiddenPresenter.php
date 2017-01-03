@@ -27,6 +27,7 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 	{
 		$this->translator = $translator;
 		$this->httpResponse = $httpResponse;
+		parent::__construct();
 	}
 
 

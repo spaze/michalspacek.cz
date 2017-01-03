@@ -32,6 +32,7 @@ class FilesPresenter extends BasePresenter
 	{
 		$this->files = $files;
 		$this->trainingFiles = $trainingFiles;
+		parent::__construct();
 	}
 
 

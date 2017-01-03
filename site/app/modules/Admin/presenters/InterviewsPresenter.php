@@ -31,6 +31,7 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->interviews = $interviews;
+		parent::__construct();
 	}
 
 

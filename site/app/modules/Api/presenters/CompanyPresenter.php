@@ -25,6 +25,7 @@ class CompanyPresenter extends \App\Presenters\BasePresenter
 	{
 		$this->companyInfo = $companyInfo;
 		$this->securityHeaders = $securityHeaders;
+		parent::__construct();
 	}
 
 

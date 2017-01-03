@@ -79,6 +79,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
+		parent::__construct();
 	}
 
 

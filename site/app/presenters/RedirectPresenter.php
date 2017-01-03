@@ -22,6 +22,7 @@ class RedirectPresenter extends BasePresenter
 	public function __construct(\MichalSpacekCz\Training\Applications $trainingApplications)
 	{
 		$this->trainingApplications = $trainingApplications;
+		parent::__construct();
 	}
 
 
