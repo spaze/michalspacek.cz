@@ -36,7 +36,7 @@ abstract class TrainingFormAdmin extends TrainingForm
 	 * Add source input.
 	 *
 	 * @param \Nette\Forms\Container $container
-	 * @return self
+	 * @return \Nette\Forms\Controls\SelectBox
 	 */
 	protected function addSource(\Nette\Forms\Container $container)
 	{
