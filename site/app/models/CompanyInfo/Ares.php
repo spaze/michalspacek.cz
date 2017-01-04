@@ -46,7 +46,7 @@ class Ares implements CompanyDataInterface
 
 	/**
 	 * @param string $companyId
-	 * @return array
+	 * @return Data
 	 */
 	public function getData($companyId)
 	{
