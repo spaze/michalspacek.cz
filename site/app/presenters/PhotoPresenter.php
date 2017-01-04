@@ -20,6 +20,7 @@ class PhotoPresenter extends BasePresenter
 	public function __construct(\MichalSpacekCz\Formatter\Texy $texyFormatter)
 	{
 		$this->texyFormatter = $texyFormatter;
+		parent::__construct();
 	}
 
 

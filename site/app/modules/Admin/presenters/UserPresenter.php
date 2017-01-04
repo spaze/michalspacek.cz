@@ -22,6 +22,7 @@ class UserPresenter extends BasePresenter
 	public function __construct(\MichalSpacekCz\User\Manager $authenticator)
 	{
 		$this->authenticator = $authenticator;
+		parent::__construct();
 	}
 
 

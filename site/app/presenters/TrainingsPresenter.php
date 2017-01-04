@@ -91,6 +91,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->companyInfo = $companyInfo;
+		parent::__construct();
 	}
 
 
@@ -275,10 +276,10 @@ class TrainingsPresenter extends BasePresenter
 			$session->companyTaxId = $values->companyTaxId;
 			$session->note         = $values->note;
 			$this->redirect('success', $name);
-		} catch (UnexpectedValueException $e) {
+		} catch (\UnexpectedValueException $e) {
 			\Tracy\Debugger::log($e);
 			$this->flashMessage($this->translator->translate('messages.trainings.spammyapplication'), 'error');
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			\Tracy\Debugger::log($e, \Tracy\Debugger::ERROR);
 			$this->flashMessage($this->translator->translate('messages.trainings.errorapplication'), 'error');
 		}

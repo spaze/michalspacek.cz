@@ -20,6 +20,7 @@ class ArticlesPresenter extends BasePresenter
 	public function __construct(\MichalSpacekCz\Articles $articles)
 	{
 		$this->articles = $articles;
+		parent::__construct();
 	}
 
 

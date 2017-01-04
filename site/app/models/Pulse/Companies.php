@@ -37,7 +37,7 @@ class Companies
 	/**
 	 * Get company by name.
 	 *
-	 * @return array of [id, name]
+	 * @return \Nette\Database\Row
 	 */
 	public function getByName($name)
 	{
@@ -60,7 +60,7 @@ class Companies
 			'trade_name' => (empty($tradeName) ? null : $tradeName),
 			'alias' => $alias,
 		]);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 }

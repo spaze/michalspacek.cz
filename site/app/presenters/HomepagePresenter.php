@@ -54,6 +54,7 @@ class HomepagePresenter extends BasePresenter
 		$this->trainingDates = $trainingDates;
 		$this->trainings = $trainings;
 		$this->companyTrainings = $companyTrainings;
+		parent::__construct();
 	}
 
 

@@ -20,6 +20,7 @@ class TrackingPresenter extends BasePresenter
 	public function __construct(\MichalSpacekCz\WebTracking $webTracking)
 	{
 		$this->webTracking = $webTracking;
+		parent::__construct();
 	}
 
 

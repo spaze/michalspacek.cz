@@ -398,7 +398,7 @@ class Passwords
 	 * Get algorithm by name.
 	 *
 	 * @param string $name
-	 * @return array of [id, algo, alias, salted, stretched]
+	 * @return \Nette\Database\Row
 	 */
 	public function getAlgorithmByName($name)
 	{
@@ -423,7 +423,7 @@ class Passwords
 			'salted' => $salted,
 			'stretched' => $stretched,
 		]);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 
@@ -459,7 +459,7 @@ class Passwords
 			'note' => (empty($note) ? null : $note),
 			'published' => (empty($published) ? null : new \DateTime($published)),
 		]);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 
@@ -468,7 +468,7 @@ class Passwords
 	 *
 	 * @param integer $companyId
 	 * @param integer $algoId
-	 * @param integer $siteId
+	 * @param string $siteId
 	 * @param string $from
 	 * @param boolean $fromConfirmed
 	 * @param string|null $attributes
@@ -493,8 +493,8 @@ class Passwords
 	/**
 	 * Add password storage data.
 	 *
-	 * @param string $companyId
-	 * @param string $algoId
+	 * @param integer $companyId
+	 * @param integer $algoId
 	 * @param string $siteId
 	 * @param string $from
 	 * @param boolean $fromConfirmed
@@ -504,14 +504,14 @@ class Passwords
 	private function addStorageData($companyId, $algoId, $siteId, $from, $fromConfirmed, $attributes)
 	{
 		$this->database->query('INSERT INTO password_storages', [
-			'key_companies' => ($siteId === Sites::ALL ? (int)$companyId : null),
+			'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 			'key_password_algos' => $algoId,
 			'key_sites' => ($siteId === Sites::ALL ? null : (int)$siteId),
 			'from' => (empty($from) ? null : new \DateTime($from)),
 			'from_confirmed' => $fromConfirmed,
 			'attributes' => (empty($attributes) ? null : $attributes),
 		]);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 
@@ -546,10 +546,10 @@ class Passwords
 		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba, $values->company->new->alias));
 		$siteId = (empty($values->site->new->url)
 			? $values->site->id  // the value can also be "all"
-			: $this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
+			: (string)$this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
 		);
 		$algoId = (empty($values->algo->new->algo)
-			? $values->algo->id
+			? (int)$values->algo->id
 			: $this->addAlgorithm($values->algo->new->algo, $values->algo->new->alias, $values->algo->new->salted, $values->algo->new->stretched)
 		);
 		foreach ($values->disclosure->new as $disclosure) {

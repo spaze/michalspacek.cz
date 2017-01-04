@@ -40,6 +40,7 @@ class InterviewsPresenter extends BasePresenter
 		$this->interviews = $interviews;
 		$this->embed = $embed;
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
+		parent::__construct();
 	}
 
 

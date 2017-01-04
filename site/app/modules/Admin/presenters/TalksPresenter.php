@@ -31,6 +31,7 @@ class TalksPresenter extends BasePresenter
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;
+		parent::__construct();
 	}
 
 

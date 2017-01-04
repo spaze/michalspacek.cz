@@ -19,6 +19,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
+		parent::__construct();
 	}
 
 
@@ -26,6 +27,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	{
 		$points = array();
 		$vulnerable = null;
+		$disclosure = $latest = new \DateTime(self::HEARTBLEED_DISCLOSURE);
 		$result = $this->database->fetchAll('SELECT date, port, vulnerable, total FROM webleed ORDER BY date, port');
 		foreach ($result as $row) {
 			$points[$row->port ?: 'any'][] = \Nette\Utils\Json::encode(array(
@@ -38,9 +40,9 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 			if ($row->port === null) {
 				$vulnerable = $row->vulnerable;
 			}
+			$latest = $row->date;
 		}
-		$disclosure = new \DateTime(self::HEARTBLEED_DISCLOSURE);
-		$daysSince = $disclosure->diff($row->date);
+		$daysSince = $disclosure->diff($latest);
 		$this->template->points = $points;
 		$this->template->vulnerable = $vulnerable;
 		$this->template->daysSince = $daysSince->format('%a');

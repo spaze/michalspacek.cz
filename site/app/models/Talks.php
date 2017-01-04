@@ -13,11 +13,11 @@ class Talks
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var \Netxten\Formatter\Texy */
+	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
 
-	public function __construct(\Nette\Database\Context $context, \Netxten\Formatter\Texy $texyFormatter)
+	public function __construct(\Nette\Database\Context $context, \MichalSpacekCz\Formatter\Texy $texyFormatter)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;

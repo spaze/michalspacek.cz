@@ -42,6 +42,7 @@ class HomepagePresenter extends BasePresenter
 		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;
 		$this->webTracking = $webTracking;
+		parent::__construct();
 	}
 
 

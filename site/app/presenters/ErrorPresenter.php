@@ -31,6 +31,7 @@ class ErrorPresenter extends BasePresenter
 	public function __construct(\MichalSpacekCz\Redirections $redirections)
 	{
 		$this->redirections = $redirections;
+		parent::__construct();
 	}
 
 

@@ -48,6 +48,7 @@ class VenuesPresenter extends BasePresenter
 		$this->trainingVenues = $trainingVenues;
 		$this->trainings = $trainings;
 		$this->embed = $embed;
+		parent::__construct();
 	}
 
 

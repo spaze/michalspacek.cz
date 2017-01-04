@@ -23,6 +23,7 @@ class PasswordsStoragesPresenter extends \App\Presenters\BasePresenter
 	{
 		$this->passwords = $passwords;
 		$this->passwordsRating = $passwordsRating;
+		parent::__construct();
 	}
 
 

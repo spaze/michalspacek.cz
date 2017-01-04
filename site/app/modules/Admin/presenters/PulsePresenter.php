@@ -36,6 +36,7 @@ class PulsePresenter extends BasePresenter
 		$this->companies = $companies;
 		$this->sites = $sites;
 		$this->passwords = $passwords;
+		parent::__construct();
 	}
 
 

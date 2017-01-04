@@ -104,7 +104,7 @@ class UpcKeys
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @param string
-	 * @return false|array of \stdClass (serial, key, type)
+	 * @return array of \stdClass (serial, key, type)
 	 */
 	public function getKeys(string $ssid): array
 	{

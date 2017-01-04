@@ -47,7 +47,7 @@ class Texy extends \Netxten\Formatter\Texy
 
 	/**
 	 * @param string $format
-	 * @param string $args
+	 * @param array|null $args
 	 * @return Html
 	 */
 	public function substitute($format, $args)
@@ -59,7 +59,7 @@ class Texy extends \Netxten\Formatter\Texy
 	/**
 	 * @param string $message
 	 * @param array $replacements
-	 * @return string
+	 * @return Html
 	 */
 	public function translate($message, array $replacements = null)
 	{
@@ -108,7 +108,7 @@ class Texy extends \Netxten\Formatter\Texy
 
 	/**
 	 * @param string $training Training name
-	 * @return string
+	 * @return Html
 	 */
 	private function getTrainingSuffix($training)
 	{

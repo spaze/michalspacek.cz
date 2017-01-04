@@ -45,6 +45,7 @@ class EmailsPresenter extends BasePresenter
 		$this->trainingMails = $trainingMails;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->vat = $vat;
+		parent::__construct();
 	}
 
 

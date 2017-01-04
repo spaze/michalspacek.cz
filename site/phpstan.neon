@@ -1,0 +1,15 @@
+parameters:
+	autoload_directories:
+		- app
+	ignoreErrors:
+		- '#^Access to an undefined property Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
+		- '#^Call to an undefined method Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
+		- '#^Call to an undefined method Nette\\Forms\\Controls\\[a-zA-Z0-9]+Control::setPrompt\(\)#'
+		- '#^Cannot access property Nette\\Http\\SessionSection::\$name from current scope#'
+		- '#^Call to sscanf contains 1 placeholder, 3 values given#'
+		- '#^Method MichalSpacekCz\\Form\\[a-zA-Z0-9:]+\(\) should return Nette\\Forms\\Controls\\[a-zA-Z0-9]+ but returns Nette\\Forms\\Controls\\BaseControl+#'
+		- '#^Parameter .* expects Nette\\Http\\SessionSection, Nette\\Http\\Session\|Nette\\Http\\SessionSection given#'
+
+includes:
+	- vendor/phpstan/phpstan/conf/config.level5.neon
+	- vendor/phpstan/phpstan-nette/extension.neon

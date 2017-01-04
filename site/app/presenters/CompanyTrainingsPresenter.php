@@ -40,6 +40,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->companyTrainings = $companyTrainings;
 		$this->vat = $vat;
+		parent::__construct();
 	}
 
 

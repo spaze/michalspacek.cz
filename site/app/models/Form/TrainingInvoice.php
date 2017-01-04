@@ -7,12 +7,18 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingInvoice extends TrainingForm
+class TrainingInvoice extends Form
 {
+
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \Nette\Localization\ITranslator $translator)
 	{
-		\Nette\Application\UI\Form::__construct($parent, $name, $translator);
+		parent::__construct($parent, $name);
+		$this->translator = $translator;
+
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addText('invoice', 'Faktura:')

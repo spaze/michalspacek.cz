@@ -40,7 +40,7 @@ class Sites
 	/**
 	 * Get site by URL.
 	 *
-	 * @return array of [id, url, alias]
+	 * @return \Nette\Database\Row
 	 */
 	public function getByUrl($url)
 	{
@@ -53,13 +53,13 @@ class Sites
 	 *
 	 * @param string $url
 	 * @param string $alias
-	 * @param string $companyId
+	 * @param integer $companyId
 	 * @return integer Id of newly inserted site
 	 */
 	public function add($url, $alias, $companyId)
 	{
 		$this->database->query('INSERT INTO sites', ['url' => $url, 'alias' => $alias, 'key_companies' => $companyId]);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 }
