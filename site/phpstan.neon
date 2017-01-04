@@ -8,7 +8,8 @@ parameters:
 		- '#^Cannot access property Nette\\Http\\SessionSection::\$name from current scope#'
 		- '#^Call to sscanf contains 1 placeholder, 3 values given#'
 		- '#^Method MichalSpacekCz\\Form\\[a-zA-Z0-9:]+\(\) should return Nette\\Forms\\Controls\\[a-zA-Z0-9]+ but returns Nette\\Forms\\Controls\\BaseControl+#'
+		- '#^Parameter .* expects Nette\\Http\\SessionSection, Nette\\Http\\Session\|Nette\\Http\\SessionSection given#'
 
 includes:
-	- vendor/phpstan/phpstan/conf/config.level4.neon
+	- vendor/phpstan/phpstan/conf/config.level5.neon
 	- vendor/phpstan/phpstan-nette/extension.neon

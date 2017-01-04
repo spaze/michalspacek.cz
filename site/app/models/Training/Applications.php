@@ -371,7 +371,7 @@ class Applications
 	 * Resolves price, VAT rate, discount.
 	 *
 	 * @param \Nette\Database\Row $training
-	 * @param integer $status
+	 * @param string $status
 	 * @param integer $source
 	 * @param string $note
 	 * @return array with price, VAT rate, price inluding VAT, discount

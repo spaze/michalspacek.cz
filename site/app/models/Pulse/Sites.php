@@ -53,7 +53,7 @@ class Sites
 	 *
 	 * @param string $url
 	 * @param string $alias
-	 * @param string $companyId
+	 * @param integer $companyId
 	 * @return integer Id of newly inserted site
 	 */
 	public function add($url, $alias, $companyId)

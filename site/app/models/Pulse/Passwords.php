@@ -493,8 +493,8 @@ class Passwords
 	/**
 	 * Add password storage data.
 	 *
-	 * @param string $companyId
-	 * @param string $algoId
+	 * @param integer $companyId
+	 * @param integer $algoId
 	 * @param string $siteId
 	 * @param string $from
 	 * @param boolean $fromConfirmed
@@ -504,7 +504,7 @@ class Passwords
 	private function addStorageData($companyId, $algoId, $siteId, $from, $fromConfirmed, $attributes)
 	{
 		$this->database->query('INSERT INTO password_storages', [
-			'key_companies' => ($siteId === Sites::ALL ? (int)$companyId : null),
+			'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 			'key_password_algos' => $algoId,
 			'key_sites' => ($siteId === Sites::ALL ? null : (int)$siteId),
 			'from' => (empty($from) ? null : new \DateTime($from)),
@@ -549,7 +549,7 @@ class Passwords
 			: (string)$this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
 		);
 		$algoId = (empty($values->algo->new->algo)
-			? $values->algo->id
+			? (int)$values->algo->id
 			: $this->addAlgorithm($values->algo->new->algo, $values->algo->new->alias, $values->algo->new->salted, $values->algo->new->stretched)
 		);
 		foreach ($values->disclosure->new as $disclosure) {
