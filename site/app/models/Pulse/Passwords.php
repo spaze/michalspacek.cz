@@ -398,7 +398,7 @@ class Passwords
 	 * Get algorithm by name.
 	 *
 	 * @param string $name
-	 * @return array of [id, algo, alias, salted, stretched]
+	 * @return \Nette\Database\Row
 	 */
 	public function getAlgorithmByName($name)
 	{
@@ -423,7 +423,7 @@ class Passwords
 			'salted' => $salted,
 			'stretched' => $stretched,
 		]);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 
@@ -459,7 +459,7 @@ class Passwords
 			'note' => (empty($note) ? null : $note),
 			'published' => (empty($published) ? null : new \DateTime($published)),
 		]);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 
@@ -511,7 +511,7 @@ class Passwords
 			'from_confirmed' => $fromConfirmed,
 			'attributes' => (empty($attributes) ? null : $attributes),
 		]);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 

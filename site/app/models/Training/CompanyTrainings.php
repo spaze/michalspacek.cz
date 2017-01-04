@@ -87,7 +87,7 @@ class CompanyTrainings
 	/**
 	 * Get company trainings without any public trainings
 	 *
-	 * @return \Nette\Database\Row
+	 * @return array of \Nette\Database\Row
 	 */
 	public function getWithoutPublicUpcoming()
 	{

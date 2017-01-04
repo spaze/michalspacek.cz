@@ -26,7 +26,7 @@ class ErrorGenericPresenter implements \Nette\Application\IPresenter
 
 
 	/**
-	 * @return \Nette\Http\IResponse
+	 * @return \Nette\Application\IResponse
 	 */
 	public function run(\Nette\Application\Request $request)
 	{
