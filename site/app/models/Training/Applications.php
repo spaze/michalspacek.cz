@@ -245,7 +245,7 @@ class Applications
 	 */
 	public function addPreliminaryInvitation(\Nette\Database\Row $training, $name, $email)
 	{
-		return $this->insertApplication($training, null, $name, $email, null, null, null, null, null, null, null, null, null, Statuses::STATUS_TENTATIVE, $this->resolveSource(null));
+		return $this->insertApplication($training, null, $name, $email, null, null, null, null, null, null, null, null, null, Statuses::STATUS_TENTATIVE, $this->resolveSource());
 	}
 
 
@@ -407,9 +407,9 @@ class Applications
 	 * @param string|null $note
 	 * @return string
 	 */
-	private function resolveSource($note)
+	private function resolveSource($note = null)
 	{
-		if ($this->vranaResolver->isTrainingApplicationOwner($note)) {
+		if ($note && $this->vranaResolver->isTrainingApplicationOwner($note)) {
 			$source = self::SOURCE_JAKUB_VRANA;
 		} else {
 			$source = self::SOURCE_MICHAL_SPACEK;
