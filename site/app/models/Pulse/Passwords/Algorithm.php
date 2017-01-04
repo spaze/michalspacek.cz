@@ -16,6 +16,12 @@ class Algorithm
 	/** @var string */
 	public $alias;
 
+	/** @var boolean */
+	public $salted;
+
+	/** @var boolean */
+	public $stretched;
+
 	/** @var \DateTime */
 	public $from;
 
