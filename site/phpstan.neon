@@ -6,6 +6,7 @@ parameters:
 		- '#^Call to an undefined method Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
 		- '#^Call to an undefined method Nette\\Forms\\Controls\\[a-zA-Z0-9]+Control::setPrompt\(\)#'
 		- '#^Cannot access property Nette\\Http\\SessionSection::\$name from current scope#'
+		- '#^Call to sscanf contains 1 placeholder, 3 values given#'
 
 includes:
 	- vendor/phpstan/phpstan/conf/config.level2.neon
