@@ -7,13 +7,12 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingReview extends \Nette\Application\UI\Form
+class TrainingReview extends ProtectedForm
 {
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
 	{
 		parent::__construct($parent, $name);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addCheckbox('overwriteName', 'Přepsat jméno:');
 		$this->addText('name', 'Jméno:');

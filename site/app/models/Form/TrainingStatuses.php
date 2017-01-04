@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingStatuses extends \Nette\Application\UI\Form
+class TrainingStatuses extends ProtectedForm
 {
 
 	use Controls\TrainingStatusDate;
@@ -20,7 +20,6 @@ class TrainingStatuses extends \Nette\Application\UI\Form
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$container = $this->addContainer('applications');
 

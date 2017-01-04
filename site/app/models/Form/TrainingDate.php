@@ -9,7 +9,7 @@ use MichalSpacekCz\Training;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingDate extends \Nette\Application\UI\Form
+class TrainingDate extends ProtectedForm
 {
 
 	/** @var \MichalSpacekCz\Training\Trainings */
@@ -31,8 +31,6 @@ class TrainingDate extends \Nette\Application\UI\Form
 	)
 	{
 		parent::__construct($parent, $name);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
-
 		$this->trainings = $trainings;
 		$this->trainingDates = $trainingDates;
 		$this->trainingVenues = $trainingVenues;

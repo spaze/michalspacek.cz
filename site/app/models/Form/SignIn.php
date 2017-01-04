@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class SignIn extends \Nette\Application\UI\Form
+class SignIn extends ProtectedForm
 {
 
 	/**
@@ -17,7 +17,7 @@ class SignIn extends \Nette\Application\UI\Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
 	{
 		parent::__construct($parent, $name);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
+
 		$this->addText('username', 'Uživatel:')
 			->setRequired('Zadejte prosím uživatele');
 		$this->addPassword('password', 'Heslo:')

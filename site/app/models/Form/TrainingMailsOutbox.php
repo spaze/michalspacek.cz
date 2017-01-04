@@ -9,13 +9,12 @@ use MichalSpacekCz\Training;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingMailsOutbox extends \Nette\Application\UI\Form
+class TrainingMailsOutbox extends ProtectedForm
 {
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications)
 	{
 		parent::__construct($parent, $name);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$applicationsContainer = $this->addContainer('applications');
 

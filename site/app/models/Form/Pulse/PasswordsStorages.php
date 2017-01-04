@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form\Pulse;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class PasswordsStorages extends \Nette\Application\UI\Form
+class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 {
 
 	use \MichalSpacekCz\Form\Controls\Date;
@@ -22,7 +22,6 @@ class PasswordsStorages extends \Nette\Application\UI\Form
 	)
 	{
 		parent::__construct($parent, $name);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		// Company
 		$companyContainer = $this->addContainer('company');

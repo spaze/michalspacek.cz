@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Talk extends \Nette\Application\UI\Form
+class Talk extends ProtectedForm
 {
 
 	use Controls\Date;
@@ -24,8 +24,6 @@ class Talk extends \Nette\Application\UI\Form
 	)
 	{
 		parent::__construct($parent, $name);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
-
 		$this->talks = $talks;
 
 		$talks = array();

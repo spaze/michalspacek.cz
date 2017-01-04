@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingInvoice extends \Nette\Application\UI\Form
+class TrainingInvoice extends ProtectedForm
 {
 
 	use Controls\PaidDate;
@@ -20,8 +20,6 @@ class TrainingInvoice extends \Nette\Application\UI\Form
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;
-
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addText('invoice', 'Faktura:')
 			->setRequired('Zadejte prosím číslo faktury');

@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplicationPreliminary extends \Nette\Application\UI\Form
+class TrainingApplicationPreliminary extends ProtectedForm
 {
 
 	use Controls\TrainingAttendee;
@@ -25,7 +25,6 @@ class TrainingApplicationPreliminary extends \Nette\Application\UI\Form
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addAttendee($this);
 

@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplicationAdmin extends \Nette\Application\UI\Form
+class TrainingApplicationAdmin extends ProtectedForm
 {
 
 	use Controls\PaidDate;
@@ -40,7 +40,6 @@ class TrainingApplicationAdmin extends \Nette\Application\UI\Form
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 		$this->translator = $translator;
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addAttendee($this);
 		$this->addCheckbox('familiar', 'Tykání:');

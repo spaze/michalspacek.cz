@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class UpcKeys extends \Nette\Application\UI\Form
+class UpcKeys extends UnprotectedForm
 {
 
 	/**

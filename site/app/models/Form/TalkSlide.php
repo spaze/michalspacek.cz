@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TalkSlide extends \Nette\Application\UI\Form
+class TalkSlide extends ProtectedForm
 {
 
 	/**
@@ -17,7 +17,7 @@ class TalkSlide extends \Nette\Application\UI\Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
 	{
 		parent::__construct($parent, $name);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
+
 		$pattern = '[a-z0-9-]+';
 		$this->addText('alias', 'Alias:')
 			->setRequired('Zadejte prosím alias')

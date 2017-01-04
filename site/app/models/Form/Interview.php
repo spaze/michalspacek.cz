@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Interview extends \Nette\Application\UI\Form
+class Interview extends ProtectedForm
 {
 
 	use Controls\Date;
@@ -15,7 +15,6 @@ class Interview extends \Nette\Application\UI\Form
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
 	{
 		parent::__construct($parent, $name);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addText('action', 'Akce:')
 			->setRequired('Zadejte prosím akci')
