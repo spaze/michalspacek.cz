@@ -45,11 +45,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
-	protected function createTemplate($class = null)
+	protected function createTemplate()
 	{
 		$helpers = $this->getContext()->getByType(\MichalSpacekCz\Templating\Helpers::class);
 
-		$template = parent::createTemplate($class);
+		$template = parent::createTemplate();
 		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers(), 'loader']);
 		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
 		return $template;
