@@ -279,7 +279,7 @@ class Manager implements \Nette\Security\IAuthenticator
 				$selector,
 				new \DateTime('-' . $this->permanentLoginInterval)
 			);
-			if ($storedToken !== false && hash_equals($storedToken->token, $this->hashToken($token))) {
+			if ($storedToken && hash_equals($storedToken->token, $this->hashToken($token))) {
 				$result = $storedToken;
 			}
 		}

@@ -77,7 +77,7 @@ class SecurityHeaders
 	public function sendHeaders()
 	{
 		$header = $this->contentSecurityPolicy->getHeader($this->presenterName, $this->actionName);
-		if ($header !== false) {
+		if (!empty($header)) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}
 
