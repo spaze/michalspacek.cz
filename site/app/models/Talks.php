@@ -13,7 +13,7 @@ class Talks
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var \Netxten\Formatter\Texy */
+	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
 
