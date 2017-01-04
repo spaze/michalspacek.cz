@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f02adf0c4121bc93a6df3b76a439172",
+    "content-hash": "cdae9b2125532233dd93f864a068c1fb",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -2031,6 +2031,45 @@
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
             "time": "2017-01-02T19:35:26+00:00"
+        },
+        {
+            "name": "phpstan/phpstan-nette",
+            "version": "0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan-nette.git",
+                "reference": "7bf258c4dfa0f6e6384f81101db829ae58d7ce9a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/7bf258c4dfa0f6e6384f81101db829ae58d7ce9a",
+                "reference": "7bf258c4dfa0f6e6384f81101db829ae58d7ce9a",
+                "shasum": ""
+            },
+            "require": {
+                "nette/utils": "^2.3.0",
+                "php": "~7.0",
+                "phpstan/phpstan": "^0.5"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "~0.12.0",
+                "phing/phing": "^2.13.0",
+                "phpunit/phpunit": "^5.3",
+                "satooshi/php-coveralls": "^1.0",
+                "slevomat/coding-standard": "dev-php7#961090ac32"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Nette Framework class reflection extension for PHPStan",
+            "time": "2016-12-26T22:54:16+00:00"
         },
         {
             "name": "symfony/console",
