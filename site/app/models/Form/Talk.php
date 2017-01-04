@@ -7,8 +7,10 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Talk extends Form
+class Talk extends \Nette\Application\UI\Form
 {
+
+	use Controls\Date;
 
 	/** @var \MichalSpacekCz\Talks */
 	protected $talks;

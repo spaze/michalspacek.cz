@@ -7,8 +7,10 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingInvoice extends Form
+class TrainingInvoice extends \Nette\Application\UI\Form
 {
+
+	use Controls\PaidDate;
 
 	/** @var \Nette\Localization\ITranslator */
 	protected $translator;

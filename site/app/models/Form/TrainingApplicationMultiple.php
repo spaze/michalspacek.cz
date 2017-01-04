@@ -7,8 +7,22 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplicationMultiple extends TrainingFormAdmin
+class TrainingApplicationMultiple extends \Nette\Application\UI\Form
 {
+
+	use Controls\TrainingAttendee;
+	use Controls\TrainingCompany;
+	use Controls\TrainingCountry;
+	use Controls\TrainingNote;
+	use Controls\TrainingSource;
+	use Controls\TrainingStatusDate;
+
+	/** @var \MichalSpacekCz\Training\Applications */
+	protected $trainingApplications;
+
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
@@ -20,7 +34,9 @@ class TrainingApplicationMultiple extends TrainingFormAdmin
 	 */
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, $count, $statuses, \MichalSpacekCz\Training\Applications $trainingApplications, \Nette\Localization\ITranslator $translator)
 	{
-		parent::__construct($parent, $name, $trainingApplications, $translator);
+		parent::__construct($parent, $name);
+		$this->trainingApplications = $trainingApplications;
+		$this->translator = $translator;
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$applicationsContainer = $this->addContainer('applications');

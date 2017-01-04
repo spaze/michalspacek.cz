@@ -7,12 +7,19 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingStatuses extends TrainingForm
+class TrainingStatuses extends \Nette\Application\UI\Form
 {
+
+	use Controls\TrainingStatusDate;
+
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications, \Nette\Localization\ITranslator $translator)
 	{
-		parent::__construct($parent, $name, $translator);
+		parent::__construct($parent, $name);
+		$this->translator = $translator;
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$container = $this->addContainer('applications');

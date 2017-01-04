@@ -1,0 +1,30 @@
+<?php
+namespace MichalSpacekCz\Form\Controls;
+
+/**
+ * Training source trait.
+ *
+ * @author Michal Špaček
+ * @package michalspacek.cz
+ */
+trait TrainingSource
+{
+
+	/**
+	 * Add source input.
+	 *
+	 * @param \Nette\Forms\Container $container
+	 * @return \Nette\Forms\Controls\SelectBox
+	 */
+	protected function addSource(\Nette\Forms\Container $container)
+	{
+		$sources = array();
+		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {
+			$sources[$source->alias] = $source->name;
+		}
+
+		return $container->addSelect('source', 'Zdroj:', $sources)
+			->setRequired('Vyberte zdroj');
+	}
+
+}

@@ -7,9 +7,10 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Interview extends Form
+class Interview extends \Nette\Application\UI\Form
 {
 
+	use Controls\Date;
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
 	{

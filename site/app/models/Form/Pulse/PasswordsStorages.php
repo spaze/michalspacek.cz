@@ -7,8 +7,10 @@ namespace MichalSpacekCz\Form\Pulse;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class PasswordsStorages extends \MichalSpacekCz\Form\Form
+class PasswordsStorages extends \Nette\Application\UI\Form
 {
+
+	use \MichalSpacekCz\Form\Controls\Date;
 
 	public function __construct(
 		\Nette\ComponentModel\IContainer $parent,

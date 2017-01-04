@@ -7,11 +7,24 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplicationAdmin extends TrainingFormAdmin
+class TrainingApplicationAdmin extends \Nette\Application\UI\Form
 {
+
+	use Controls\PaidDate;
+	use Controls\TrainingAttendee;
+	use Controls\TrainingCompany;
+	use Controls\TrainingCountry;
+	use Controls\TrainingNote;
+	use Controls\TrainingSource;
+
+	/** @var \MichalSpacekCz\Training\Applications */
+	protected $trainingApplications;
 
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
+
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
 
 
 	/**
@@ -23,10 +36,11 @@ class TrainingApplicationAdmin extends TrainingFormAdmin
 	 */
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \MichalSpacekCz\Training\Applications $trainingApplications, \MichalSpacekCz\Training\Dates $trainingDates, \Nette\Localization\ITranslator $translator)
 	{
-		parent::__construct($parent, $name, $trainingApplications, $translator);
-		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
-
+		parent::__construct($parent, $name);
+		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
+		$this->translator = $translator;
+		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addAttendee($this);
 		$this->addCheckbox('familiar', 'Tykání:');

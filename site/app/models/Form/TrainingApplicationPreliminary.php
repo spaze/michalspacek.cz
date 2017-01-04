@@ -7,8 +7,14 @@ namespace MichalSpacekCz\Form;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class TrainingApplicationPreliminary extends TrainingForm
+class TrainingApplicationPreliminary extends \Nette\Application\UI\Form
 {
+
+	use Controls\TrainingAttendee;
+
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
@@ -17,7 +23,8 @@ class TrainingApplicationPreliminary extends TrainingForm
 	 */
 	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \Nette\Localization\ITranslator $translator)
 	{
-		parent::__construct($parent, $name, $translator);
+		parent::__construct($parent, $name);
+		$this->translator = $translator;
 		$this->addProtection('Platnost formuláře vypršela, odešlete jej znovu');
 
 		$this->addAttendee($this);
