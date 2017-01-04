@@ -468,7 +468,7 @@ class Passwords
 	 *
 	 * @param integer $companyId
 	 * @param integer $algoId
-	 * @param integer $siteId
+	 * @param string $siteId
 	 * @param string $from
 	 * @param boolean $fromConfirmed
 	 * @param string|null $attributes
@@ -546,7 +546,7 @@ class Passwords
 		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba, $values->company->new->alias));
 		$siteId = (empty($values->site->new->url)
 			? $values->site->id  // the value can also be "all"
-			: $this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
+			: (string)$this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
 		);
 		$algoId = (empty($values->algo->new->algo)
 			? $values->algo->id
