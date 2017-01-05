@@ -12,6 +12,10 @@ class RouterFactory
 
 	const TRANSLATE_THIS = '-TranslateThis';
 
+	/**
+	 * Host names, L3 domains, not modules
+	 * @var string
+	 */
 	const ADMIN = 'admin';
 	const API = 'api';
 	const HEARTBLEED = 'heartbleed';
@@ -145,15 +149,15 @@ class RouterFactory
 	}
 
 
-	private function addRoute($module, $mask, $defaultPresenter, $defaultAction)
+	private function addRoute($host, $mask, $defaultPresenter, $defaultAction)
 	{
-		foreach ($this->supportedLocales[$module] as $locale => $tld) {
-			$maskPrefix = (isset($this->translatedRoutes[$module][$defaultPresenter]) ? $this->translatedRoutes[$module][$defaultPresenter]['mask'][$locale] : null);
+		foreach ($this->supportedLocales[$host] as $locale => $tld) {
+			$maskPrefix = (isset($this->translatedRoutes[$host][$defaultPresenter]) ? $this->translatedRoutes[$host][$defaultPresenter]['mask'][$locale] : null);
 			$metadata = array(
 				'presenter' => [Route::VALUE => $defaultPresenter],
 				'action' => [Route::VALUE => $defaultAction],
 			);
-			switch ($module) {
+			switch ($host) {
 				case self::API:
 					$metadata['module'] = 'Api';
 					break;
@@ -171,15 +175,15 @@ class RouterFactory
 					break;
 				case self::WWW:
 					if ($maskPrefix === null) {
-						$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$module][$locale];
+						$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$host][$locale];
 					} else {
-						$presenter = $this->translatedPresenters[$module][$locale][$maskPrefix];
+						$presenter = $this->translatedPresenters[$host][$locale][$maskPrefix];
 						$metadata['presenter'][Route::FILTER_TABLE] = array($maskPrefix => $presenter);
-						$metadata['action'][Route::FILTER_TABLE] = (isset($this->translatedActions[$module][$presenter][$locale]) ? $this->translatedActions[$module][$presenter][$locale] : []);
+						$metadata['action'][Route::FILTER_TABLE] = (isset($this->translatedActions[$host][$presenter][$locale]) ? $this->translatedActions[$host][$presenter][$locale] : []);
 					}
 					break;
 			}
-			$this->addToRouter(new Route("//{$module}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata), $locale, $module);
+			$this->addToRouter(new Route("//{$host}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata), $locale, $host);
 		}
 	}
 
@@ -187,11 +191,11 @@ class RouterFactory
 	/**
 	 * @param \Nette\Application\Routers\Route $route
 	 * @param string $locale
-	 * @param string $module
+	 * @param string $host
 	 */
-	private function addToRouter(\Nette\Application\Routers\Route $route, $locale, $module)
+	private function addToRouter(\Nette\Application\Routers\Route $route, $locale, $host)
 	{
-		if (count($this->supportedLocales[$module]) > 1 && $locale !== $this->translator->getLocale()) {
+		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
 			if (!isset($this->localeRouters[$locale])) {
 				$this->localeRouters[$locale] = new RouteList();
 			}
