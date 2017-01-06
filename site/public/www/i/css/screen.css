@@ -85,11 +85,9 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
 }
 #header img {
     float: left;
-    border-right: 1px solid #CCC;
     padding-right: 20px;
 }
 #header h1 {
-    padding-left: 90px;
     line-height: 50px;
     margin: 0px;
 }
