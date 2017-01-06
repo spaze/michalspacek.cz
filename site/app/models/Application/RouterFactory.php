@@ -72,7 +72,7 @@ class RouterFactory
 	 *
 	 * @param array $supportedLocales array of host => array of supported locales
 	 */
-	public function setSupportedLocales($supportedLocales): void
+	public function setSupportedLocales(array $supportedLocales): void
 	{
 		$this->supportedLocales = $supportedLocales;
 	}
@@ -83,7 +83,7 @@ class RouterFactory
 	 *
 	 * @param array $rootDomainMapping locale => root domain
 	 */
-	public function setLocaleRootDomainMapping($rootDomainMapping): void
+	public function setLocaleRootDomainMapping(array $rootDomainMapping): void
 	{
 		$this->rootDomainMapping = $rootDomainMapping;
 	}
@@ -94,7 +94,7 @@ class RouterFactory
 	 *
 	 * @return array $rootDomainMapping locale => root domain
 	 */
-	public function getLocaleRootDomainMapping()
+	public function getLocaleRootDomainMapping(): array
 	{
 		return $this->rootDomainMapping;
 	}
@@ -126,7 +126,7 @@ class RouterFactory
 	 *
 	 * @return array of \Nette\Application\IRouter
 	 */
-	public function getLocaleRouters()
+	public function getLocaleRouters(): array
 	{
 		return $this->localeRouters;
 	}
@@ -135,7 +135,7 @@ class RouterFactory
 	/**
 	 * @return \Nette\Application\IRouter
 	 */
-	public function createRouter()
+	public function createRouter(): \Nette\Application\IRouter
 	{
 		$this->router = new RouteList();
 		$this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
@@ -158,7 +158,7 @@ class RouterFactory
 	}
 
 
-	private function addRoute($module, $mask, $defaultPresenter, $defaultAction, $host = null, $class = Route::class): void
+	private function addRoute(string $module, string $mask, string $defaultPresenter, string $defaultAction, string $host = null, string $class = Route::class): void
 	{
 		$host = $host ?? $module;
 		foreach ($this->supportedLocales[$host] as $locale => $tld) {
@@ -206,7 +206,7 @@ class RouterFactory
 	 * @param string $locale
 	 * @param string $host
 	 */
-	private function addToRouter(\Nette\Application\IRouter $route, $locale, $host): void
+	private function addToRouter(\Nette\Application\IRouter $route, string $locale, string $host): void
 	{
 		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
 			if (!isset($this->localeRouters[$locale])) {
