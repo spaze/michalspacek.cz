@@ -72,7 +72,7 @@ class RouterFactory
 	 *
 	 * @param array $supportedLocales array of host => array of supported locales
 	 */
-	public function setSupportedLocales($supportedLocales)
+	public function setSupportedLocales($supportedLocales): void
 	{
 		$this->supportedLocales = $supportedLocales;
 	}
@@ -83,7 +83,7 @@ class RouterFactory
 	 *
 	 * @param array $rootDomainMapping locale => root domain
 	 */
-	public function setLocaleRootDomainMapping($rootDomainMapping)
+	public function setLocaleRootDomainMapping($rootDomainMapping): void
 	{
 		$this->rootDomainMapping = $rootDomainMapping;
 	}
@@ -100,7 +100,7 @@ class RouterFactory
 	}
 
 
-	public function setTranslatedRoutes(array $translatedRoutes)
+	public function setTranslatedRoutes(array $translatedRoutes): void
 	{
 		$this->translatedRoutes = $translatedRoutes;
 
@@ -158,7 +158,7 @@ class RouterFactory
 	}
 
 
-	private function addRoute($module, $mask, $defaultPresenter, $defaultAction, $host = null, $class = Route::class)
+	private function addRoute($module, $mask, $defaultPresenter, $defaultAction, $host = null, $class = Route::class): void
 	{
 		$host = $host ?? $module;
 		foreach ($this->supportedLocales[$host] as $locale => $tld) {
@@ -206,7 +206,7 @@ class RouterFactory
 	 * @param string $locale
 	 * @param string $host
 	 */
-	private function addToRouter(\Nette\Application\IRouter $route, $locale, $host)
+	private function addToRouter(\Nette\Application\IRouter $route, $locale, $host): void
 	{
 		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
 			if (!isset($this->localeRouters[$locale])) {

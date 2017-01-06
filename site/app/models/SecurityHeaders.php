@@ -62,19 +62,19 @@ class SecurityHeaders
 	}
 
 
-	public function setDefaultDomain(string $defaultDomain)
+	public function setDefaultDomain(string $defaultDomain): void
 	{
 		$this->defaultDomain = $defaultDomain;
 	}
 
 
-	public function setRootDomain(string $rootDomain)
+	public function setRootDomain(string $rootDomain): void
 	{
 		$this->rootDomain = $rootDomain;
 	}
 
 
-	public function sendHeaders()
+	public function sendHeaders(): void
 	{
 		$header = $this->contentSecurityPolicy->getHeader($this->presenterName, $this->actionName);
 		if (!empty($header)) {
@@ -142,7 +142,7 @@ class SecurityHeaders
 	 * @param string $scheme URL scheme
 	 * @param string $host URL host
 	 */
-	public function accessControlAllowOrigin(string $scheme, string $host)
+	public function accessControlAllowOrigin(string $scheme, string $host): void
 	{
 		$origin = $this->httpRequest->getHeader('Origin');
 		if ($origin !== null) {

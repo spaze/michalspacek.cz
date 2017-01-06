@@ -32,7 +32,7 @@ class Route extends \Nette\Application\Routers\Route
 	 * @param \Nette\Http\IRequest $httpRequest
 	 * @return \Nette\Application\Request|null
 	 */
-	public function match(\Nette\Http\IRequest $httpRequest)
+	public function match(\Nette\Http\IRequest $httpRequest): ?\Nette\Application\Request
 	{
 		return (!$this->blogPostLoader->exists(trim($httpRequest->getUrl()->getPath(), '/')) ? null : parent::match($httpRequest));
 	}

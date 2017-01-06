@@ -36,7 +36,7 @@ class Post
 	 * @param string $post
 	 * @return \Nette\Database\Row|null
 	 */
-	public function get(string $post)
+	public function get(string $post): ?\Nette\Database\Row
 	{
 		$result = $this->loader->fetch($post);
 		$result->title = $this->texyFormatter->format($result->title);

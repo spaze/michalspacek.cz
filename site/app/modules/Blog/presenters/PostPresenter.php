@@ -26,7 +26,7 @@ class PostPresenter extends \App\Presenters\BasePresenter
 	}
 
 
-	public function actionDefault(string $post)
+	public function actionDefault(string $post): void
 	{
 		$post = $this->blogPost->get($post);
 		$this->template->post = $post;

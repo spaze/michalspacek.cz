@@ -42,7 +42,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string
 	 */
-	public function setUrl(string $url)
+	public function setUrl(string $url): void
 	{
 		$this->url = $url;
 	}
@@ -53,7 +53,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string
 	 */
-	public function setApiKey(string $apiKey)
+	public function setApiKey(string $apiKey): void
 	{
 		$this->apiKey = $apiKey;
 	}
@@ -64,7 +64,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param array of prefixes
 	 */
-	public function setPrefixes(array $prefixes)
+	public function setPrefixes(array $prefixes): void
 	{
 		$this->prefixes = $prefixes;
 	}
@@ -75,7 +75,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string
 	 */
-	public function setModel(string $model)
+	public function setModel(string $model): void
 	{
 		$this->model = $model;
 	}

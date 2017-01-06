@@ -12,9 +12,9 @@ namespace MichalSpacekCz\UpcKeys;
 interface RouterInterface
 {
 
-	public function setPrefixes(array $prefixes);
+	public function setPrefixes(array $prefixes): void;
 
-	public function setModel(string $model);
+	public function setModel(string $model): void;
 
 	public function getModelWithPrefixes(): array;
 

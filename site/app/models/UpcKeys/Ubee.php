@@ -38,7 +38,7 @@ class Ubee implements RouterInterface
 	 *
 	 * @param array of prefixes
 	 */
-	public function setPrefixes(array $prefixes)
+	public function setPrefixes(array $prefixes): void
 	{
 		if (count($prefixes) > 1) {
 			throw new \RuntimeException('Ubee can has only one prefix');
@@ -52,7 +52,7 @@ class Ubee implements RouterInterface
 	 *
 	 * @param string
 	 */
-	public function setModel(string $model)
+	public function setModel(string $model): void
 	{
 		$this->model = $model;
 	}

@@ -43,7 +43,7 @@ class UpcKeys
 	/**
 	 * @param \MichalSpacekCz\UpcKeys\RouterInterface $router
 	 */
-	public function addRouter(\MichalSpacekCz\UpcKeys\RouterInterface $router)
+	public function addRouter(\MichalSpacekCz\UpcKeys\RouterInterface $router): void
 	{
 		$this->routers[get_class($router)] = $router;
 	}
@@ -56,7 +56,7 @@ class UpcKeys
 	 * @param array $args
 	 * @param callable $callback
 	 */
-	private function routerCall(string $method, array $args, callable $callback)
+	private function routerCall(string $method, array $args, callable $callback): void
 	{
 		foreach ($this->routers as $router) {
 			$callback($router->$method(...$args));

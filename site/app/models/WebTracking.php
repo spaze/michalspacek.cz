@@ -34,13 +34,13 @@ class WebTracking
 	}
 
 
-	public function setCookie(string $cookie)
+	public function setCookie(string $cookie): void
 	{
 		$this->cookie = $cookie;
 	}
 
 
-	public function setValue(string $value)
+	public function setValue(string $value): void
 	{
 		$this->value = $value;
 	}
@@ -52,13 +52,13 @@ class WebTracking
 	}
 
 
-	public function enable()
+	public function enable(): void
 	{
 		$this->httpResponse->deleteCookie($this->cookie, self::TRACKING_PATH);
 	}
 
 
-	public function disable()
+	public function disable(): void
 	{
 		$this->httpResponse->setCookie($this->cookie, $this->value, \Nette\Http\Response::PERMANENT, self::TRACKING_PATH);
 	}

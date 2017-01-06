@@ -19,7 +19,7 @@ class Vat
 	/**
 	 * @param float
 	 */
-	public function setRate(float $rate)
+	public function setRate(float $rate): void
 	{
 		$this->rate = $rate;
 	}

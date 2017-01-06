@@ -24,7 +24,7 @@ class KeyCdn
 	 *
 	 * @param string $secretKey
 	 */
-	public function setSecretKey(string $secretKey)
+	public function setSecretKey(string $secretKey): void
 	{
 		$this->secretKey = $secretKey;
 	}
@@ -35,7 +35,7 @@ class KeyCdn
 	 *
 	 * @param integer $tokenExpiration
 	 */
-	public function setTokenExpiration(int $tokenExpiration)
+	public function setTokenExpiration(int $tokenExpiration): void
 	{
 		$this->tokenExpiration = $tokenExpiration;
 	}

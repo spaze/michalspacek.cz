@@ -39,7 +39,7 @@ class Files
 	}
 
 
-	public function setFilesDir(string $dir)
+	public function setFilesDir(string $dir): void
 	{
 		$this->filesDir = rtrim($dir, '/');
 	}
@@ -138,7 +138,7 @@ class Files
 	}
 
 
-	public function logDownload(int $applicationId, int $downloadId)
+	public function logDownload(int $applicationId, int $downloadId): void
 	{
 		$this->database->query('INSERT INTO training_material_downloads', array(
 			'key_application'   => $applicationId,
