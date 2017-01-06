@@ -43,6 +43,7 @@ contentSecurityPolicy:
 		admin.info.php < *.*:
 			img-src:
 				- 'data:'
+		blog.*.* < *.*:
 		api.*.*:
 			default-src: "'none'"
 			frame-ancestors: "'none'"

@@ -77,3 +77,9 @@ parameters:
 					mask:
 						cs_CZ: foto
 						en_US: photo
+
+			blog:
+				Post:
+					mask:
+						cs_CZ:  # Intentionally left empty
+						en_US:  # Intentionally left empty

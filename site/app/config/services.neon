@@ -114,3 +114,5 @@ services:
 		setup:
 			- setSecretKey(%keyCdn.secretKey%)
 			- setTokenExpiration(%keyCdn.tokenExpiration%)
+	blogPost: \MichalSpacekCz\Blog\Post
+	blogPostLoader: \MichalSpacekCz\Blog\PostLoader
