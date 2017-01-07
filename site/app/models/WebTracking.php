@@ -12,7 +12,8 @@ namespace MichalSpacekCz;
 class WebTracking
 {
 
-	const TRACKING_PATH = '/';
+	/** @var string */
+	private const TRACKING_PATH = '/';
 
 	/** @var \Nette\Http\IRequest */
 	protected $httpRequest;

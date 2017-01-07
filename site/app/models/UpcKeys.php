@@ -13,19 +13,19 @@ class UpcKeys
 {
 
 	/** @var string */
-	const SSID_VALID_PATTERN = '([Uu][Pp][Cc])[0-9]{7}';
+	private const SSID_VALID_PATTERN = '([Uu][Pp][Cc])[0-9]{7}';
 
 	/** @var string */
-	const SSID_PLACEHOLDER = 'UPC1234567';
+	private const SSID_PLACEHOLDER = 'UPC1234567';
 
 	/** @var integer */
-	const SSID_TYPE_24GHZ = 1;
+	public const SSID_TYPE_24GHZ = 1;
 
 	/** @var integer */
-	const SSID_TYPE_5GHZ = 2;
+	public const SSID_TYPE_5GHZ = 2;
 
 	/** @var integer */
-	const SSID_TYPE_UNKNOWN = 3;
+	public const SSID_TYPE_UNKNOWN = 3;
 
 	/** @var array of \MichalSpacekCz\UpcKeys\RouterInterface */
 	protected $routers;

@@ -12,7 +12,8 @@ namespace MichalSpacekCz\UpcKeys;
 class Ubee implements RouterInterface
 {
 
-	const OUI_UBEE = '647c34';
+	/** @var string */
+	private const OUI_UBEE = '647c34';
 
 	/** @var \Nette\Database\Context */
 	protected $database;
