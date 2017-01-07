@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WebleedModule\Presenters;
 
 /**
@@ -10,12 +12,15 @@ namespace App\WebleedModule\Presenters;
 class HomepagePresenter extends \App\Presenters\BasePresenter
 {
 
-	const HEARTBLEED_DISCLOSURE = '2014-04-07';
+	private const HEARTBLEED_DISCLOSURE = '2014-04-07';
 
 	/** @var \Nette\Database\Context */
 	protected $database;
 
 
+	/**
+	 * @param \Nette\Database\Context $context
+	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
@@ -23,7 +28,7 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	}
 
 
-	public function actionDefault()
+	public function actionDefault(): void
 	{
 		$points = array();
 		$vulnerable = null;
@@ -50,17 +55,19 @@ class HomepagePresenter extends \App\Presenters\BasePresenter
 	}
 
 
-	private function getSmallPrint()
+	/**
+	 * @return \Nette\Utils\Html
+	 */
+	private function getSmallPrint(): \Nette\Utils\Html
 	{
 		$smallPrint = array(
-			'Knocking on yer servar\'s ports since 2014.',
-			'Do you even scan?',
-			'Wow. So heart. Much bleed.',
-			'<script>alert(\'XSS\');</script>',
-			\Nette\Utils\Html::el()->setHtml('<a href="https://www.youtube.com/watch?v=DLzxrzFCyOs">admin</a>'),
+			// 'Knocking on yer servar\'s ports since 2014.',
+			// 'Do you even scan?',
+			// 'Wow. So heart. Much bleed.',
+			htmlspecialchars('<script>alert(\'XSS\');</script>'),
+			'<a href="https://www.youtube.com/watch?v=DLzxrzFCyOs">admin</a>',
 		);
-		return $smallPrint[array_rand($smallPrint)];
+		return \Nette\Utils\Html::el()->setHtml($smallPrint[array_rand($smallPrint)]);
 	}
-
 
 }
