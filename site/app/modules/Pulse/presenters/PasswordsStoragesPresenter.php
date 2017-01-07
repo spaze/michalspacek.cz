@@ -9,7 +9,7 @@ use Nette\Http\Response;
  * @author Michal Špaček
  * @package pulse.michalspacek.cz
  */
-class PasswordsStoragesPresenter extends \App\Presenters\BasePresenter
+class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	/** @var \MichalSpacekCz\Pulse\Passwords */

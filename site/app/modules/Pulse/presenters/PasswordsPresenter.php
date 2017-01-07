@@ -7,7 +7,7 @@ namespace App\PulseModule\Presenters;
  * @author Michal Špaček
  * @package pulse.michalspacek.cz
  */
-class PasswordsPresenter extends \App\Presenters\BasePresenter
+class PasswordsPresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	/**

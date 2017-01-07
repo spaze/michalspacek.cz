@@ -7,7 +7,7 @@ namespace App\ApiModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class CertificatePresenter extends \App\Presenters\BasePresenter
+class CertificatePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	public function actionDefault()

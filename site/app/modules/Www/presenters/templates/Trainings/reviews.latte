@@ -1,0 +1,32 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Trainings:">{_messages.label.trainings}</a>
+&raquo; <a n:href="Trainings:training $name">{$title}</a>
+{/define}
+
+{define #itemReview}
+	<p><strong>{$review->name}{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
+	<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
+{/define}
+
+{define #content}
+<p>
+	{$description}
+	{capture $link}Trainings:training#{_html.id.application}{/capture}
+	<small>(<a n:href="$link $name">{_messages.label.lowercaseapplication}</a>, <a n:href="CompanyTrainings:training $name">{_messages.label.lowercasecompanytraining}</a>)</small>
+</p>
+{if $reviews}
+	<div id="{_html.id.reviews}">
+	<h2>{_messages.label.trainingreviews}</h2>
+	{foreach $reviews as $review}
+		{include #itemReview}
+	{/foreach}
+	</div>
+	<p>
+	<p>
+		{capture $link}Www:Trainings:training#{_html.id.application}{/capture}
+		{_messages.trainings.jointhem|format:"link:$link $name":$title:"link:Www:Trainings:training $name"}<br>
+		{_messages.trainings.companytraining|format:"link:Www:CompanyTrainings:training $name"}
+	</p>
+{/if}
+{/define}

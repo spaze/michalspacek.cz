@@ -7,7 +7,7 @@ namespace App\PulseModule\Presenters;
  * @author Michal Špaček
  * @package pulse.michalspacek.cz
  */
-class HomepagePresenter extends \App\Presenters\BasePresenter
+class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	/**

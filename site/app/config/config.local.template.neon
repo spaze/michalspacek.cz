@@ -29,7 +29,7 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 	addStrictDynamic:
 		script-src: no
 	policies:
-		*.*:
+		www.*.*:
 			img-src:
 				- 'data:'
 			script-src:
@@ -40,7 +40,7 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 		admin.*.*:
 			script-src:
 				-"'self'"
-		admin.info.php < *.*:
+		admin.info.php < www.*.*:
 			script-src:
 				- "'self'"
 		api.*.*:

@@ -1,0 +1,36 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+{/define}
+
+{define #itemTalk}
+	<a n:href="Talks:talk $talk->action" n:tag-if="$talk->action"><strong>{$talk->title}</strong></a><br />
+	<small><strong class="date">{$talk->date|date:'j. n. Y'}</strong>, {$talk->event}{if $talk->duration} ({_messages.talks.durationshort|format:$talk->duration}){/if}</small>
+	<span n:if="$talk->hasSlides" title="{_messages.label.slides}">📃</span>
+	<span n:if="$talk->videoHref" title="{_messages.label.videorecording}">►</span>
+{/define}
+
+{define #content}
+<h2>{_messages.label.favorite}</h2>
+<ul>
+{foreach $favoriteTalks as $talk}
+	<li>{$talk}</li>
+{/foreach}
+</ul>
+<h2>{_messages.label.upcomingtalks}</h2>
+<p n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
+	{include #itemTalk}
+</p>
+<p n:if="$upcomingTalks">{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
+<p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
+<h2>{_messages.label.pasttalks}</h2>
+<p>
+	{_messages.talks.wastalking|format:'link:Www:Talks:talk technicke-chyby-vas-pripravi-o-penize-webtop100':'link:Www:Talks:talk hash-store-profit-passwords':'link:Www:Talks:talk the-problem-with-the-real-world-passwords':'link:Www:Talks:talk i-forgot-my-password-passwords':'link:Www:Talks:talk disclosing-password-hashing-policies-passwords':'link:Www:Talks:talk identitu-byste-neukradli-identity-management'}
+</p>
+{foreach $talks as $year => $items}
+	<h3>{$year}</h3>
+	<p class="indent" n:foreach="$items as $talk">
+		{include #itemTalk}
+	</p>
+{/foreach}
+{_messages.talks.more|format:'http://www.slideshare.net/spaze/presentations':'https://speakerdeck.com/u/spaze'}
+{/define}

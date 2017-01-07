@@ -1,18 +1,18 @@
 services:
-	- \App\Presenters\ArticlesPresenter
-	- \App\Presenters\CompanyTrainingsPresenter
-	- \App\Presenters\ContactPresenter
-	- \App\Presenters\ErrorPresenter
-	- \App\Presenters\ErrorGenericPresenter
-	- \App\Presenters\FilesPresenter
-	- \App\Presenters\ForbiddenPresenter
-	- \App\Presenters\HomepagePresenter
-	- \App\Presenters\InterviewsPresenter
-	- \App\Presenters\RedirectPresenter
-	- \App\Presenters\TalksPresenter
-	- \App\Presenters\TrainingsPresenter
-	- \App\Presenters\VenuesPresenter
-	- \App\Presenters\WhoPresenter
+	- \App\WwwModule\Presenters\ArticlesPresenter
+	- \App\WwwModule\Presenters\CompanyTrainingsPresenter
+	- \App\WwwModule\Presenters\ContactPresenter
+	- \App\WwwModule\Presenters\ErrorPresenter
+	- \App\WwwModule\Presenters\ErrorGenericPresenter
+	- \App\WwwModule\Presenters\FilesPresenter
+	- \App\WwwModule\Presenters\ForbiddenPresenter
+	- \App\WwwModule\Presenters\HomepagePresenter
+	- \App\WwwModule\Presenters\InterviewsPresenter
+	- \App\WwwModule\Presenters\RedirectPresenter
+	- \App\WwwModule\Presenters\TalksPresenter
+	- \App\WwwModule\Presenters\TrainingsPresenter
+	- \App\WwwModule\Presenters\VenuesPresenter
+	- \App\WwwModule\Presenters\WhoPresenter
 
 	# api module
 	- \App\ApiModule\Presenters\CertificatePresenter

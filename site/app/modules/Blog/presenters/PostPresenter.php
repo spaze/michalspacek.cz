@@ -9,7 +9,7 @@ namespace App\BlogModule\Presenters;
  * @author Michal Špaček
  * @package michalspacek.cz
  */
-class PostPresenter extends \App\Presenters\BasePresenter
+class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	/** @var \MichalSpacekCz\Blog\Post */

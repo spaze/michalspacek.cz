@@ -7,6 +7,6 @@ namespace App\ApiModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class ErrorGenericPresenter extends \App\Presenters\ErrorGenericPresenter
+class ErrorGenericPresenter extends \App\WwwModule\Presenters\ErrorGenericPresenter
 {
 }

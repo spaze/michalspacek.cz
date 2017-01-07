@@ -12,21 +12,30 @@ use Nette\Application\Routers\RouteList;
 class RouterFactory
 {
 
-	const TRANSLATE_THIS = '-TranslateThis';
-
 	/**
-	 * Modules, the value sometimes matches a hostname
+	 * Hostnames.
 	 * @var string
 	 */
-	const ADMIN = 'admin';
-	const API = 'api';
-	const BLOG = 'blog';
-	const HEARTBLEED = 'heartbleed';
-	const PULSE = 'pulse';
-	const UPC = 'upc';
-	const WWW = 'www';
+	public const HOST_ADMIN = 'admin';
+	public const HOST_API = 'api';
+	public const HOST_HEARTBLEED = 'heartbleed';
+	public const HOST_PULSE = 'pulse';
+	public const HOST_UPC = 'upc';
+	public const HOST_WWW = 'www';
 
-	const ROOT_ONLY = '';
+	/**
+	 * Module names.
+	 * @var string
+	 */
+	private const MODULE_ADMIN = 'Admin';
+	private const MODULE_API = 'Api';
+	private const MODULE_BLOG = 'Blog';
+	private const MODULE_HEARTBLEED = 'Webleed';
+	private const MODULE_PULSE = 'Pulse';
+	private const MODULE_UPC = 'UpcKeys';
+	private const MODULE_WWW = 'Www';
+
+	private const ROOT_ONLY = '';
 
 	/** @var \MichalSpacekCz\Blog\PostLoader */
 	protected $blogPostLoader;
@@ -104,15 +113,15 @@ class RouterFactory
 	{
 		$this->translatedRoutes = $translatedRoutes;
 
-		foreach ($this->translatedRoutes as $host => $routes) {
+		foreach ($this->translatedRoutes as $module => $routes) {
 			foreach ($routes as $presenter => $items) {
 				foreach ($items['mask'] as $locale => $mask) {
-					$this->translatedPresenters[$host][$locale][$mask] = $presenter;
+					$this->translatedPresenters[$module][$locale][$mask] = $presenter;
 				}
 				if (isset($items['actions'])) {
 					foreach ($items['actions'] as $action => $actions) {
 						foreach ($actions as $locale => $translated) {
-							$this->translatedActions[$host][$presenter][$locale][$translated] = $action;
+							$this->translatedActions[$module][$presenter][$locale][$translated] = $action;
 						}
 					}
 				}
@@ -138,63 +147,43 @@ class RouterFactory
 	public function createRouter(): \Nette\Application\IRouter
 	{
 		$this->router = new RouteList();
-		$this->addRoute(self::ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
-		$this->addRoute(self::HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
-		$this->addRoute(self::API, '<presenter>', 'Default', 'default');
-		$this->addRoute(self::PULSE, 'passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default');
-		$this->addRoute(self::PULSE, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
-		$this->addRoute(self::UPC, '[<ssid>][/<format>]', 'Homepage', 'default');
-		$this->addRoute(self::WWW, '/<name>', 'Interviews', 'interview');
-		$this->addRoute(self::WWW, '/<name>[/<slide>]', 'Talks', 'talk');
-		$this->addRoute(self::WWW, '[/<action>]/<filename>', 'Files', 'file');
-		$this->addRoute(self::WWW, '/<name>[/<action>[/<param>]]', 'Trainings', 'training');
-		$this->addRoute(self::WWW, '/<name>[/<action>]', 'CompanyTrainings', 'training');
-		$this->addRoute(self::WWW, '/<action>/<token>', 'Redirect', 'default');
-		$this->addRoute(self::WWW, 'report[/<action>]', 'Report', 'default');
-		$this->addRoute(self::WWW, '/<name>', 'Venues', 'venue');
-		$this->addRoute(self::BLOG, '<post>', 'Post', 'default', self::WWW, \MichalSpacekCz\Blog\Application\Routers\Route::class);
-		$this->addRoute(self::WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
+		$this->addRoute(self::MODULE_ADMIN, self::HOST_ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
+		$this->addRoute(self::MODULE_HEARTBLEED, self::HOST_HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
+		$this->addRoute(self::MODULE_API, self::HOST_API, '<presenter>', 'Default', 'default');
+		$this->addRoute(self::MODULE_PULSE, self::HOST_PULSE, 'passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default');
+		$this->addRoute(self::MODULE_PULSE, self::HOST_PULSE, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
+		$this->addRoute(self::MODULE_UPC, self::HOST_UPC, '[<ssid>][/<format>]', 'Homepage', 'default');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>', 'Interviews', 'interview');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>[/<slide>]', 'Talks', 'talk');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '[/<action>]/<filename>', 'Files', 'file');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>[/<action>[/<param>]]', 'Trainings', 'training');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>[/<action>]', 'CompanyTrainings', 'training');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<action>/<token>', 'Redirect', 'default');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, 'report[/<action>]', 'Report', 'default');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>', 'Venues', 'venue');
+		$this->addRoute(self::MODULE_BLOG, self::HOST_WWW, '<post>', 'Post', 'default', \MichalSpacekCz\Blog\Application\Routers\Route::class);
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 		return $this->router;
 	}
 
 
-	private function addRoute(string $module, string $mask, string $defaultPresenter, string $defaultAction, string $host = null, string $class = Route::class): void
+	private function addRoute(string $module, string $host, string $mask, string $defaultPresenter, string $defaultAction, string $class = Route::class): void
 	{
-		$host = $host ?? $module;
 		foreach ($this->supportedLocales[$host] as $locale => $tld) {
 			$maskPrefix = (isset($this->translatedRoutes[$module][$defaultPresenter]) ? $this->translatedRoutes[$module][$defaultPresenter]['mask'][$locale] : null);
 			$metadata = array(
 				'presenter' => [Route::VALUE => $defaultPresenter],
 				'action' => [Route::VALUE => $defaultAction],
+				'module' => $module,
 			);
-			switch ($module) {
-				case self::API:
-					$metadata['module'] = 'Api';
-					break;
-				case self::ADMIN:
-					$metadata['module'] = 'Admin';
-					break;
-				case self::HEARTBLEED:
-					$metadata['module'] = 'Webleed';
-					break;
-				case self::UPC:
-					$metadata['module'] = 'UpcKeys';
-					break;
-				case self::PULSE:
-					$metadata['module'] = 'Pulse';
-					break;
-				case self::BLOG:
-					$metadata['module'] = 'Blog';
-					// Intentionally no break, blog lives on www host
-				case self::WWW:
-					if ($maskPrefix === null) {
-						$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$module][$locale];
-					} else {
-						$presenter = $this->translatedPresenters[$module][$locale][$maskPrefix];
-						$metadata['presenter'][Route::FILTER_TABLE] = array($maskPrefix => $presenter);
-						$metadata['action'][Route::FILTER_TABLE] = (isset($this->translatedActions[$module][$presenter][$locale]) ? $this->translatedActions[$module][$presenter][$locale] : []);
-					}
-					break;
+			if (isset($this->translatedPresenters[$module])) {
+				if ($maskPrefix === null) {
+					$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$module][$locale];
+				} else {
+					$presenter = $this->translatedPresenters[$module][$locale][$maskPrefix];
+					$metadata['presenter'][Route::FILTER_TABLE] = array($maskPrefix => $presenter);
+					$metadata['action'][Route::FILTER_TABLE] = (isset($this->translatedActions[$module][$presenter][$locale]) ? $this->translatedActions[$module][$presenter][$locale] : []);
+				}
 			}
 			$this->addToRouter($this->createRoute($class, "//{$host}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata), $locale, $host);
 		}

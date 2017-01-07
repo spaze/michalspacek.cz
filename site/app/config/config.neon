@@ -2,7 +2,7 @@ php:
 	zlib.output_compression: yes
 
 application:
-	errorPresenter: ErrorGeneric
+	errorPresenter: Www:ErrorGeneric
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 

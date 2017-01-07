@@ -7,7 +7,7 @@ namespace App\UpcKeysModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HomepagePresenter extends \App\Presenters\BasePresenter
+class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	/** @var string */

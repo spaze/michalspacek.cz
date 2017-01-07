@@ -7,7 +7,7 @@ namespace App\AdminModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class SignPresenter extends \App\Presenters\BasePresenter
+class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	/** @persistent */

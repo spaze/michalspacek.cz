@@ -7,7 +7,7 @@ namespace App\AdminModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HoneypotPresenter extends \App\Presenters\BasePresenter
+class HoneypotPresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	public function actionSignIn()

@@ -7,7 +7,7 @@ namespace App\ApiModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class CompanyPresenter extends \App\Presenters\BasePresenter
+class CompanyPresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	/** @var \MichalSpacekCz\CompanyInfo\Info */
@@ -35,7 +35,7 @@ class CompanyPresenter extends \App\Presenters\BasePresenter
 	 */
 	public function actionDefault($country, $companyId)
 	{
-		$this->securityHeaders->accessControlAllowOrigin('https', \MichalSpacekCz\Application\RouterFactory::WWW);
+		$this->securityHeaders->accessControlAllowOrigin('https', \MichalSpacekCz\Application\RouterFactory::HOST_WWW);
 
 		try {
 			$info = $this->companyInfo->getData($country, $companyId);

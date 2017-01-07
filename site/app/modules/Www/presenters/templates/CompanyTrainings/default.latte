@@ -1,0 +1,16 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+{/define}
+
+{define #content}
+<p>
+	{_messages.companytrainings.offer}
+</p>
+<ul>
+	{foreach $trainings as $item}
+		<li><a n:href="CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
+	{/foreach}
+</ul>
+<p>{_messages.companytrainings.publictraining|format:'link:Www:Trainings:'}</p>
+<p>{_messages.companytrainings.consulting|format:'mail@michalspacek.cz'}</p>
+{/define}

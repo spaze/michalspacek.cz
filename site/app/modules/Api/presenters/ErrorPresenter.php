@@ -9,7 +9,7 @@ use \Nette\Http\IResponse;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class ErrorPresenter extends \App\Presenters\ErrorPresenter
+class ErrorPresenter extends \App\WwwModule\Presenters\ErrorPresenter
 {
 
 	/** @var array */

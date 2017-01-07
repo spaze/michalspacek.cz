@@ -26,6 +26,10 @@ contentSecurityPolicy:
 	policies:
 		*.*:
 			default-src: "'none'"
+			form-action: "'none'"
+			report-uri: %reporting.contentSecurityPolicy%
+		www.*.*:
+			default-src: "'none'"
 			img-src:
 				- %domain.contentSecurityPolicySelf%
 			script-src:
@@ -37,13 +41,13 @@ contentSecurityPolicy:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		trainings.training < *.*:
+		trainings.training < www.*.*:
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
-		admin.*.* < *.*:
-		admin.info.php < *.*:
+		admin.*.* < www.*.*:
+		admin.info.php < www.*.*:
 			img-src:
 				- 'data:'
-		blog.*.* < *.*:
+		blog.*.* < www.*.*:
 		api.*.*:
 			default-src: "'none'"
 			frame-ancestors: "'none'"
@@ -51,11 +55,11 @@ contentSecurityPolicy:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		webleed.*.* < *.*:
+		webleed.*.* < www.*.*:
 			img-src:
 				- 'blob:'
 			style-src:
 				- "'unsafe-inline'"
 			form-action: "https://export.highcharts.com"
-		pulse.*.* < *.*:
-		upckeys.*.* < *.*:
+		pulse.*.* < www.*.*:
+		upckeys.*.* < www.*.*:

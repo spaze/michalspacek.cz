@@ -7,7 +7,7 @@ namespace App\AdminModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-abstract class BasePresenter extends \App\Presenters\BasePresenter
+abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	protected function startupEx()

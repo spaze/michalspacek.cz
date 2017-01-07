@@ -1,0 +1,46 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+{/define}
+
+{define #list}
+<div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
+<ul>
+ 	{foreach $upcomingTrainings as $item}
+		<li>
+			<a n:href="Trainings:training $item[action]"><strong>{$item[name]}</strong></a>
+			<small>
+				{foreach $item[dates] as $date}
+					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>
+					{$date[venueCity]}{sep}, {/sep}{last}){/last}
+				{/foreach}
+			</small>
+		</li>
+	{/foreach}
+</ul>
+<p><small>{_messages.trainings.regularlyeveryquarter}</small></p>
+{/define}
+
+{define #company}
+<ul>
+ 	{foreach $companyTrainings as $item}
+		<li><a n:href="CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
+	{/foreach}
+</ul>
+{/define}
+
+{define #content}
+<h3>{_messages.label.publictrainings}</h3>
+<p>{_messages.trainings.welcome}</p>
+{include #list}
+<h3>{_messages.label.companytrainings}</h3>
+<p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
+{include #company}
+<p>{_messages.trainings.consultancy|format:'mailto:mail@michalspacek.cz'}</p>
+<hr />
+<p><small>{_messages.trainings.partnertrainings.intro|format}</small></p>
+<ul>
+	<li><small>{_messages.trainings.partnertrainings.frontend|format:'http://www.vzhurudolu.cz/kurzy/responzivni-design':'http://www.vzhurudolu.cz/kurzy'}</small></li>
+	<li><small>{_messages.trainings.partnertrainings.nette|format:'https://www.skoleniphp.cz/skoleni-nette-vyvoj-webovych-aplikaci':'https://www.skoleniphp.cz/skoleni-mistrovstvi-v-nette'}</small></li>
+	<li><small>{_messages.trainings.partnertrainings.advanceddevelopment|format:'http://akademie.medio.cz/vyvoj-webovych-aplikaci':'http://akademie.medio.cz/'}</small></li>
+</ul>
+{/define}

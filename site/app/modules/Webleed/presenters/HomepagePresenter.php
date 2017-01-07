@@ -9,7 +9,7 @@ namespace App\WebleedModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HomepagePresenter extends \App\Presenters\BasePresenter
+class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
 	private const HEARTBLEED_DISCLOSURE = '2014-04-07';
