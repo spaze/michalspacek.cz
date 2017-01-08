@@ -70,12 +70,8 @@ class TalksPresenter extends BasePresenter
 
 	public function actionTalk(string $name, ?string $slide = null): void
 	{
-		$talk = $this->talks->get($name);
-		if (!$talk) {
-			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
-		}
-
 		try {
+			$talk = $this->talks->get($name);
 			$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
 		} catch (\RuntimeException $e) {
 			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);

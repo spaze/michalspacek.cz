@@ -47,9 +47,10 @@ class TalksPresenter extends BasePresenter
 
 	public function actionTalk(string $param): void
 	{
-		$this->talk = $this->talks->getById((int)$param);
-		if (!$this->talk) {
-			throw new \Nette\Application\BadRequestException("I haven't talked about id {$param}, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		try {
+			$this->talk = $this->talks->getById((int)$param);
+		} catch (\RuntimeException $e) {
+			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
@@ -59,9 +60,10 @@ class TalksPresenter extends BasePresenter
 
 	public function actionSlides(string $param): void
 	{
-		$this->talk = $this->talks->getById((int)$param);
-		if (!$this->talk) {
-			throw new \Nette\Application\BadRequestException("I haven't talked about id {$param}, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		try {
+			$this->talk = $this->talks->getById((int)$param);
+		} catch (\RuntimeException $e) {
+			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.admin.talkslides', $this->talk);

@@ -148,10 +148,11 @@ class Talks
 			$name
 		);
 
-		if ($result) {
-			$this->format($result);
+		if (!$result) {
+			throw new \RuntimeException("I haven't talked about {$name}, yet");
 		}
 
+		$this->format($result);
 		return $result;
 	}
 
@@ -197,10 +198,11 @@ class Talks
 			$id
 		);
 
-		if ($result) {
-			$this->format($result);
+		if (!$result) {
+			throw new \RuntimeException("I haven't talked about id {$id}, yet");
 		}
 
+		$this->format($result);
 		return $result;
 	}
 
