@@ -52,7 +52,7 @@ class TalksPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't talked about id {$param}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags((string)$this->talk->title), $this->talk->event]);
+		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
 		$this->template->talk = $this->talk;
 	}
 
@@ -64,7 +64,7 @@ class TalksPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't talked about id {$param}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.admin.talkslides', [strip_tags((string)$this->talk->title), $this->talk->event]);
+		$this->template->pageTitle = $this->talks->pageTitle('messages.title.admin.talkslides', $this->talk);
 		$this->template->talkTitle = $this->talk->title;
 		$this->template->slides = $this->talks->getSlides($this->talk->talkId);
 		$this->template->talk = $this->talk;

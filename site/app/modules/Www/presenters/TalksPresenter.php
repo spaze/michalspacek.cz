@@ -89,7 +89,7 @@ class TalksPresenter extends BasePresenter
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.slidesorigin', [$talk->origTitle, "link:Www:Talks:talk {$talk->origAction}"]), 'notice');
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags((string)$talk->title), $talk->event]);
+		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $talk);
 		$this->template->pageHeader = $talk->title;
 		$this->template->description = $talk->description;
 		$this->template->href = $talk->href;

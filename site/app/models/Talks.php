@@ -420,4 +420,17 @@ class Talks
 		}
 	}
 
+
+	/**
+	 * Build page title for the talk.
+	 *
+	 * @param string $translationKey
+	 * @param \Nette\Database\Row $talk
+	 * @return \Nette\Utils\Html
+	 */
+	public function pageTitle(string $translationKey, \Nette\Database\Row $talk): \Nette\Utils\Html
+	{
+		return $this->texyFormatter->translate($translationKey, [strip_tags((string)$talk->title), $talk->event]);
+	}
+
 }
