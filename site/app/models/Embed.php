@@ -12,15 +12,15 @@ namespace MichalSpacekCz;
 class Embed
 {
 
-	public const EMBED_SLIDES_SLIDESHARE = 'slideshare';
+	public const SLIDES_SLIDESHARE = 'slideshare';
 
-	public const EMBED_SLIDES_SPEAKERDECK = 'speakerdeck';
+	public const SLIDES_SPEAKERDECK = 'speakerdeck';
 
-	public const EMBED_VIDEO_VIMEO = 'vimeo';
+	public const VIDEO_VIMEO = 'vimeo';
 
-	public const EMBED_VIDEO_YOUTUBE = 'youtube';
+	public const VIDEO_YOUTUBE = 'youtube';
 
-	public const EMBED_VIDEO_SLIDESLIVE = 'slideslive';
+	public const VIDEO_SLIDESLIVE = 'slideslive';
 
 
 	/**
@@ -36,13 +36,13 @@ class Embed
 
 		if ($slide !== null) {
 			switch ($type) {
-				case self::EMBED_SLIDES_SLIDESHARE:
+				case self::SLIDES_SLIDESHARE:
 					$url = new \Nette\Http\Url($embedHref);
 					$url->appendQuery('startSlide=' . $slide);
 					$embedHref = $url->getAbsoluteUrl();
 					break;
 
-				case self::EMBED_SLIDES_SPEAKERDECK:
+				case self::SLIDES_SPEAKERDECK:
 					$dataSlide = $slide;
 					break;
 			}
@@ -63,10 +63,10 @@ class Embed
 	{
 		switch (parse_url($href, PHP_URL_HOST)) {
 			case 'www.slideshare.net':
-				$type = self::EMBED_SLIDES_SLIDESHARE;
+				$type = self::SLIDES_SLIDESHARE;
 				break;
 			case 'speakerdeck.com':
-				$type = self::EMBED_SLIDES_SPEAKERDECK;
+				$type = self::SLIDES_SPEAKERDECK;
 				break;
 			default:
 				throw new \RuntimeException("Unknown slides type for {$href}");
@@ -84,13 +84,13 @@ class Embed
 	{
 		switch (parse_url($href, PHP_URL_HOST)) {
 			case 'www.youtube.com':
-				$type = self::EMBED_VIDEO_YOUTUBE;
+				$type = self::VIDEO_YOUTUBE;
 				break;
 			case 'vimeo.com':
-				$type = self::EMBED_VIDEO_VIMEO;
+				$type = self::VIDEO_VIMEO;
 				break;
 			case 'slideslive.com':
-				$type = self::EMBED_VIDEO_SLIDESLIVE;
+				$type = self::VIDEO_SLIDESLIVE;
 				break;
 			default:
 				throw new \RuntimeException("Unknown video type for {$href}");
