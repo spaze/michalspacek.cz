@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -17,6 +19,12 @@ class Talks
 	protected $texyFormatter;
 
 
+	/**
+	 * Contructor.
+	 *
+	 * @param \Nette\Database\Context $context
+	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
+	 */
 	public function __construct(\Nette\Database\Context $context, \MichalSpacekCz\Formatter\Texy $texyFormatter)
 	{
 		$this->database = $context;
@@ -24,7 +32,13 @@ class Talks
 	}
 
 
-	public function getAll($limit = null)
+	/**
+	 * Get all talks, or almost all talks.
+	 *
+	 * @param integer|null $limit
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getAll(?int $limit = null): array
 	{
 		$query = 'SELECT
 				t.id_talk AS talkId,
@@ -58,7 +72,12 @@ class Talks
 	}
 
 
-	public function getUpcoming()
+	/**
+	 * Get upcoming talks.
+	 *
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getUpcoming(): array
 	{
 		$query = 'SELECT
 				t.id_talk AS talkId,
@@ -88,7 +107,13 @@ class Talks
 	}
 
 
-	public function get($name)
+	/**
+	 * Get talk data.
+	 *
+	 * @param string $name
+	 * @return \Nette\Database\Row[]
+	 */
+	public function get(string $name): \Nette\Database\Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -131,7 +156,13 @@ class Talks
 	}
 
 
-	public function getById($id)
+	/**
+	 * Get talk data by id.
+	 *
+	 * @param integer $id
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getById(int $id): \Nette\Database\Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -174,7 +205,10 @@ class Talks
 	}
 
 
-	private function format(\Nette\Database\Row $row)
+	/**
+	 * @param \Nette\Database\Row $row
+	 */
+	private function format(\Nette\Database\Row $row): void
 	{
 		foreach (['title', 'event'] as $item) {
 			if (isset($row[$item])) {
@@ -189,7 +223,12 @@ class Talks
 	}
 
 
-	public function getFavorites()
+	/**
+	 * Get favorite talks.
+	 *
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getFavorites(): array
 	{
 		$query = 'SELECT
 				action,
@@ -215,7 +254,7 @@ class Talks
 	 * @param string|null $slide
 	 * @return integer|null Slide number or null if no slide given, or slide not found
 	 */
-	public function getSlideNo($talkId, $slide)
+	public function getSlideNo(int $talkId, ?string $slide): ?int
 	{
 		if ($slide === null) {
 			return null;
@@ -223,7 +262,7 @@ class Talks
 		$slideNo = $this->database->fetchField('SELECT number FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
 		if ($slideNo === false) {
 			if (ctype_digit($slide)) {
-				$slideNo = (int)$slide;  // Too keep deprecated but already existing numerical links working
+				$slideNo = (int)$slide;  // Too keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {
 				throw new \RuntimeException("Unknown slide {$slide} for talk {$talkId}");
 			}
@@ -236,25 +275,25 @@ class Talks
 	 * Update talk data.
 	 *
 	 * @param integer $id
-	 * @param string $action
+	 * @param string|null $action
 	 * @param string $title
-	 * @param string $description
+	 * @param string|null $description
 	 * @param string $date
-	 * @param integer $duration
-	 * @param string $href
-	 * @param string $origSlides
-	 * @param string $slidesHref
-	 * @param string $slidesEmbed
-	 * @param string $videoHref
-	 * @param string $videoEmbed
+	 * @param integer|null $duration
+	 * @param string|null $href
+	 * @param string|null $origSlides
+	 * @param string|null $slidesHref
+	 * @param string|null $slidesEmbed
+	 * @param string|null $videoHref
+	 * @param string|null $videoEmbed
 	 * @param string $event
-	 * @param string $eventHref
-	 * @param string $ogImage
-	 * @param string $transcript
-	 * @param string $favorite
-	 * @param string $supersededBy
+	 * @param string|null $eventHref
+	 * @param string|null $ogImage
+	 * @param string|null $transcript
+	 * @param string|null $favorite
+	 * @param string|null $supersededBy
 	 */
-	public function update($id, $action, $title, $description, $date, $duration, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
+	public function update(int $id, ?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?string $origSlides, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?string $supersededBy): void
 	{
 		$this->database->query(
 			'UPDATE talks SET ? WHERE id_talk = ?',
@@ -285,25 +324,25 @@ class Talks
 	/**
 	 * Insert talk data.
 	 *
-	 * @param string $action
+	 * @param string|null $action
 	 * @param string $title
-	 * @param string $description
+	 * @param string|null $description
 	 * @param string $date
-	 * @param integer $duration
-	 * @param string $href
-	 * @param string $origSlides
-	 * @param string $slidesHref
-	 * @param string $slidesEmbed
-	 * @param string $videoHref
-	 * @param string $videoEmbed
+	 * @param integer|null $duration
+	 * @param string|null $href
+	 * @param string|null $origSlides
+	 * @param string|null $slidesHref
+	 * @param string|null $slidesEmbed
+	 * @param string|null $videoHref
+	 * @param string|null $videoEmbed
 	 * @param string $event
-	 * @param string $eventHref
-	 * @param string $ogImage
-	 * @param string $transcript
-	 * @param string $favorite
-	 * @param string $supersededBy
+	 * @param string|null $eventHref
+	 * @param string|null $ogImage
+	 * @param string|null $transcript
+	 * @param string|null $favorite
+	 * @param string|null $supersededBy
 	 */
-	public function add($action, $title, $description, $date, $duration, $href, $origSlides, $slidesHref, $slidesEmbed, $videoHref, $videoEmbed, $event, $eventHref, $ogImage, $transcript, $favorite, $supersededBy)
+	public function add(?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?string $origSlides, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?string $supersededBy): void
 	{
 		$this->database->query(
 			'INSERT INTO talks',
@@ -334,9 +373,9 @@ class Talks
 	 * Get slides for talk.
 	 *
 	 * @param integer $talkId Talk id
-	 * @return array of \Nette\Database\Row
+	 * @return \Nette\Database\Row[]
 	 */
-	public function getSlides($talkId)
+	public function getSlides(int $talkId): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -360,7 +399,7 @@ class Talks
 	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws \PDOException
 	 */
-	public function addSlide($talkId, $alias, $number)
+	public function addSlide(int $talkId, string $alias, string $number): void
 	{
 		try {
 			$this->database->query(

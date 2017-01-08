@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
 
 /**
@@ -35,7 +37,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.talks');
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
@@ -43,33 +45,33 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function actionTalk($param)
+	public function actionTalk(string $param): void
 	{
-		$this->talk = $this->talks->getById($param);
+		$this->talk = $this->talks->getById((int)$param);
 		if (!$this->talk) {
 			throw new \Nette\Application\BadRequestException("I haven't talked about id {$param}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($this->talk->title), $this->talk->event]);
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags((string)$this->talk->title), $this->talk->event]);
 		$this->template->talk = $this->talk;
 	}
 
 
-	public function actionSlides($param)
+	public function actionSlides(string $param): void
 	{
-		$this->talk = $this->talks->getById($param);
+		$this->talk = $this->talks->getById((int)$param);
 		if (!$this->talk) {
 			throw new \Nette\Application\BadRequestException("I haven't talked about id {$param}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.admin.talkslides', [strip_tags($this->talk->title), $this->talk->event]);
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.admin.talkslides', [strip_tags((string)$this->talk->title), $this->talk->event]);
 		$this->template->talkTitle = $this->talk->title;
 		$this->template->slides = $this->talks->getSlides($this->talk->talkId);
 		$this->template->talk = $this->talk;
 	}
 
 
-	protected function createComponentEditTalk($formName)
+	protected function createComponentEditTalk(string $formName)
 	{
 		$form = new \MichalSpacekCz\Form\Talk($this, $formName, $this->talk->action, $this->talks);
 		$form->setTalk($this->talks->getById($this->talk->talkId));
@@ -78,7 +80,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function submittedEditTalk(\MichalSpacekCz\Form\Talk $form, $values)
+	public function submittedEditTalk(\MichalSpacekCz\Form\Talk $form, \Nette\Utils\ArrayHash $values): void
 	{
 		$this->talks->update(
 			$this->talk->talkId,
@@ -86,7 +88,7 @@ class TalksPresenter extends BasePresenter
 			$values->title,
 			$values->description,
 			$values->date,
-			$values->duration,
+			(int)$values->duration,
 			$values->href,
 			$values->origSlides,
 			$values->slidesHref,
@@ -105,7 +107,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddTalk($formName)
+	protected function createComponentAddTalk(string $formName)
 	{
 		$form = new \MichalSpacekCz\Form\Talk($this, $formName, null, $this->talks);
 		$form->onSuccess[] = [$this, 'submittedAddTalk'];
@@ -113,14 +115,14 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function submittedAddTalk(\MichalSpacekCz\Form\Talk $form, $values)
+	public function submittedAddTalk(\MichalSpacekCz\Form\Talk $form, \Nette\Utils\ArrayHash $values): void
 	{
 		$this->talks->add(
 			$values->action,
 			$values->title,
 			$values->description,
 			$values->date,
-			$values->duration,
+			(int)$values->duration,
 			$values->href,
 			$values->origSlides,
 			$values->slidesHref,
@@ -139,7 +141,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddSlide($formName)
+	protected function createComponentAddSlide(string $formName)
 	{
 		$form = new \MichalSpacekCz\Form\TalkSlide($this, $formName);
 		$form->onSuccess[] = [$this, 'submittedAddSlide'];
@@ -147,7 +149,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function submittedAddSlide(\MichalSpacekCz\Form\TalkSlide $form, $values)
+	public function submittedAddSlide(\MichalSpacekCz\Form\TalkSlide $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
 			$this->talks->addSlide($this->talk->talkId, $values->alias, $values->number);

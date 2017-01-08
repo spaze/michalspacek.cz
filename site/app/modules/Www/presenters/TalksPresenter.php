@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use Nette\Utils\Html;
@@ -52,7 +54,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.talks');
 		$this->template->favoriteTalks = $this->talks->getFavorites();
@@ -66,7 +68,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function actionTalk($name, $slide = null)
+	public function actionTalk(string $name, ?string $slide = null): void
 	{
 		$talk = $this->talks->get($name);
 		if (!$talk) {
@@ -87,7 +89,7 @@ class TalksPresenter extends BasePresenter
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.slidesorigin', [$talk->origTitle, "link:Www:Talks:talk {$talk->origAction}"]), 'notice');
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags($talk->title), $talk->event]);
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.talk', [strip_tags((string)$talk->title), $talk->event]);
 		$this->template->pageHeader = $talk->title;
 		$this->template->description = $talk->description;
 		$this->template->href = $talk->href;
@@ -122,13 +124,17 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	private function getOgImage($image, $slide)
+	/**
+	 * @param string|null $image
+	 * @param int|null $slide
+	 * @return string|null
+	 */
+	private function getOgImage(?string $image, ?int $slide): ?string
 	{
-		if ($slide === null) {
-			$slide = 1;
+		if ($image === null) {
+			return null;
 		}
-
-		return sprintf($image, $slide);
+		return sprintf($image, $slide ?? 1);
 	}
 
 }
