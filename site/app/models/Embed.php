@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -10,18 +12,25 @@ namespace MichalSpacekCz;
 class Embed
 {
 
-	const EMBED_SLIDES_SLIDESHARE = 'slideshare';
+	public const EMBED_SLIDES_SLIDESHARE = 'slideshare';
 
-	const EMBED_SLIDES_SPEAKERDECK = 'speakerdeck';
+	public const EMBED_SLIDES_SPEAKERDECK = 'speakerdeck';
 
-	const EMBED_VIDEO_VIMEO = 'vimeo';
+	public const EMBED_VIDEO_VIMEO = 'vimeo';
 
-	const EMBED_VIDEO_YOUTUBE = 'youtube';
+	public const EMBED_VIDEO_YOUTUBE = 'youtube';
 
-	const EMBED_VIDEO_SLIDESLIVE = 'slideslive';
+	public const EMBED_VIDEO_SLIDESLIVE = 'slideslive';
 
 
-	public function getSlidesTemplateVars($type, $embedHref, $slide)
+	/**
+	 * Get template vars for slides
+	 * @param string|null $type
+	 * @param string|null $embedHref
+	 * @param int|null $slide
+	 * @return string[slidesEmbed, slidesDataSlide]
+	 */
+	public function getSlidesTemplateVars(?string $type, ?string $embedHref, ?int $slide): array
 	{
 		$dataSlide = null;
 
@@ -46,10 +55,12 @@ class Embed
 	}
 
 
-	public function getSlidesType($href)
+	/**
+	 * @param string $href
+	 * @return string
+	 */
+	public function getSlidesType(string $href): string
 	{
-		$type = false;
-
 		switch (parse_url($href, PHP_URL_HOST)) {
 			case 'www.slideshare.net':
 				$type = self::EMBED_SLIDES_SLIDESHARE;
@@ -57,16 +68,20 @@ class Embed
 			case 'speakerdeck.com':
 				$type = self::EMBED_SLIDES_SPEAKERDECK;
 				break;
+			default:
+				throw new \RuntimeException("Unknown slides type for {$href}");
+				break;
 		}
-
 		return $type;
 	}
 
 
-	public function getVideoType($href)
+	/**
+	 * @param string $href
+	 * @return string
+	 */
+	public function getVideoType(string $href): string
 	{
-		$type = false;
-
 		switch (parse_url($href, PHP_URL_HOST)) {
 			case 'www.youtube.com':
 				$type = self::EMBED_VIDEO_YOUTUBE;
@@ -77,8 +92,10 @@ class Embed
 			case 'slideslive.com':
 				$type = self::EMBED_VIDEO_SLIDESLIVE;
 				break;
+			default:
+				throw new \RuntimeException("Unknown video type for {$href}");
+				break;
 		}
-
 		return $type;
 	}
 

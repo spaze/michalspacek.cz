@@ -212,17 +212,20 @@ class Talks
 	 * Return slide number by given alias.
 	 *
 	 * @param integer $talkId
-	 * @param string|null $alias
-	 * @return integer|string|null Slide number or given alias if not found or null if no alias given
+	 * @param string|null $slide
+	 * @return integer|null Slide number or null if no slide given, or slide not found
 	 */
-	public function getSlideNo($talkId, $alias)
+	public function getSlideNo($talkId, $slide)
 	{
-		if ($alias === null) {
-			$slideNo = null;
-		} else {
-			$slideNo = $this->database->fetchField('SELECT number FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $alias);
-			if (!$slideNo) {
-				$slideNo = $alias;
+		if ($slide === null) {
+			return null;
+		}
+		$slideNo = $this->database->fetchField('SELECT number FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
+		if ($slideNo === false) {
+			if (ctype_digit($slide)) {
+				$slideNo = (int)$slide;  // Too keep deprecated but already existing numerical links working
+			} else {
+				throw new \RuntimeException("Unknown slide {$slide} for talk {$talkId}");
 			}
 		}
 		return $slideNo;

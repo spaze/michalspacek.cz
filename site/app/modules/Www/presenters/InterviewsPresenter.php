@@ -68,8 +68,8 @@ class InterviewsPresenter extends BasePresenter
 		$this->template->sourceName = $interview->sourceName;
 		$this->template->sourceHref = $interview->sourceHref;
 
-		$type = $this->embed->getVideoType($interview->videoHref);
-		if ($type !== false) {
+		$type = ($interview->videoHref ? $this->embed->getVideoType($interview->videoHref) : null);
+		if ($type !== null) {
 			$this->contentSecurityPolicy->addSnippet($type);
 		}
 		$this->template->videoEmbedType = $type;

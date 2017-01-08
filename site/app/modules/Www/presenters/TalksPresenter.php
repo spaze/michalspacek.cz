@@ -73,7 +73,11 @@ class TalksPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("I haven't talked about {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
+		try {
+			$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
+		} catch (\RuntimeException $e) {
+			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);
+		}
 
 		if ($talk->supersededByAction) {
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.supersededby', [$talk->supersededByTitle, "link:Www:Talks:talk {$talk->supersededByAction}"]));
@@ -98,8 +102,8 @@ class TalksPresenter extends BasePresenter
 			$this->template->canonicalLink = $this->link('//Talks:talk', $name);
 		}
 
-		$type = $this->embed->getSlidesType($talk->slidesHref);
-		if ($type !== false) {
+		$type = ($talk->slidesHref ? $type = $this->embed->getSlidesType($talk->slidesHref) : null);
+		if ($type !== null) {
 			$this->contentSecurityPolicy->addSnippet($type);
 		}
 		$this->template->slidesHref = $talk->slidesHref;
@@ -108,8 +112,8 @@ class TalksPresenter extends BasePresenter
 			$this->template->$key = $value;
 		}
 
-		$type = $this->embed->getVideoType($talk->videoHref);
-		if ($type !== false) {
+		$type = ($talk->videoHref ? $this->embed->getVideoType($talk->videoHref) : null);
+		if ($type !== null) {
 			$this->contentSecurityPolicy->addSnippet($type);
 		}
 		$this->template->videoHref = $talk->videoHref;
