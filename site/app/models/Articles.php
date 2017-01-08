@@ -32,7 +32,7 @@ class Articles
 	 * @param int|null $limit Null means all, for real
 	 * @return array of \Nette\Database\Row
 	 */
-	public function getAll(int $limit = null): array
+	public function getAll(?int $limit = null): array
 	{
 		$query = 'SELECT
 				a.title,
