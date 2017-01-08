@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -29,7 +31,7 @@ class Redirections
 	 * @param \Nette\Http\UrlScript $sourceUrl
 	 * @return string|null
 	 */
-	public function getDestination(\Nette\Http\UrlScript $sourceUrl)
+	public function getDestination(\Nette\Http\UrlScript $sourceUrl): ?string
 	{
 		$destination = $this->database->fetchField('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath()) ?: null;
 		if ($destination) {

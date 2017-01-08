@@ -87,7 +87,7 @@ class SecurityHeaders
 
 		$host = $this->getHost();
 		$header = $this->publicKeyPins->getHeader($host);
-		if ($header !== false) {
+		if ($header !== null) {
 			$this->httpResponse->setHeader('Public-Key-Pins-Report-Only', $header);
 		}
 	}

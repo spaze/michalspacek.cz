@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
 
 /**
@@ -14,7 +16,12 @@ class PublicKeyPins
 	protected $pins = array();
 
 
-	public function setPins($pins)
+	/**
+	 * Set pins.
+	 *
+	 * @param array $pins
+	 */
+	public function setPins(array $pins): void
 	{
 		foreach ($pins as $host => $sources) {
 			$this->pins[$host] = $sources;
@@ -22,10 +29,10 @@ class PublicKeyPins
 	}
 
 
-	public function getHeader($host)
+	public function getHeader(string $host): ?string
 	{
 		if (!isset($this->pins[$host])) {
-			return false;
+			return null;
 		}
 
 		$directives = array();
