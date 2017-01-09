@@ -26,29 +26,23 @@ class TalksPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Templating\Helpers */
 	protected $helpers;
 
-	/** @var \Spaze\ContentSecurityPolicy\Config */
-	protected $contentSecurityPolicy;
-
 
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Talks $talks
 	 * @param \MichalSpacekCz\Embed $embed
-	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
 	 * @param \MichalSpacekCz\Templating\Helpers $helpers
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Talks $talks,
 		\MichalSpacekCz\Embed $embed,
-		\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy,
 		\MichalSpacekCz\Templating\Helpers $helpers
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;
 		$this->embed = $embed;
-		$this->contentSecurityPolicy = $contentSecurityPolicy;
 		$this->helpers = $helpers;
 		parent::__construct();
 	}
@@ -101,13 +95,10 @@ class TalksPresenter extends BasePresenter
 			$this->template->$key = $value;
 		}
 
-		$type = ($talk->videoHref ? $this->embed->getVideoType($talk->videoHref) : null);
-		if ($type !== null) {
-			$this->contentSecurityPolicy->addSnippet($type);
-		}
 		$this->template->videoHref = $talk->videoHref;
-		$this->template->videoEmbedType = $type;
-		$this->template->videoEmbed = $talk->videoEmbed;
+		foreach ($this->embed->getVideoTemplateVars($talk) as $key => $value) {
+			$this->template->$key = $value;
+		}
 	}
 
 

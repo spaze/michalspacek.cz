@@ -80,6 +80,25 @@ class Embed
 
 
 	/**
+	 * Get template vars for video.
+	 * @param \Nette\Database\Row $talk
+	 * @return string[videoEmbed, videoEmbedType]
+	 */
+	public function getVideoTemplateVars(\Nette\Database\Row $talk): array
+	{
+		$type = $this->getVideoType($talk);
+		if ($type !== null) {
+			$this->contentSecurityPolicy->addSnippet($type);
+		}
+
+		return [
+			'videoEmbed' => $talk->videoEmbed,
+			'videoEmbedType' => $type,
+		];
+	}
+
+
+	/**
 	 * @param \Nette\Database\Row $talk
 	 * @return string|null
 	 */
@@ -105,12 +124,16 @@ class Embed
 
 
 	/**
-	 * @param string $href
-	 * @return string
+	 * @param \Nette\Database\Row $video
+	 * @return string|null
 	 */
-	public function getVideoType(string $href): string
+	private function getVideoType(\Nette\Database\Row $video): ?string
 	{
-		switch (parse_url($href, PHP_URL_HOST)) {
+		if (!$video->videoHref) {
+			return null;
+		}
+
+		switch (parse_url($video->videoHref, PHP_URL_HOST)) {
 			case 'www.youtube.com':
 				$type = self::VIDEO_YOUTUBE;
 				break;
@@ -121,7 +144,7 @@ class Embed
 				$type = self::VIDEO_SLIDESLIVE;
 				break;
 			default:
-				throw new \RuntimeException("Unknown video type for {$href}");
+				throw new \RuntimeException("Unknown video type for {$video->videoHref}");
 				break;
 		}
 		return $type;
