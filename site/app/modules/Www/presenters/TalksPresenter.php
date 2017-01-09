@@ -100,7 +100,7 @@ class TalksPresenter extends BasePresenter
 			$this->template->canonicalLink = $this->link('//Talks:talk', $name);
 		}
 
-		$type = ($talk->slidesHref ? $type = $this->embed->getSlidesType($talk->slidesHref) : null);
+		$type = ($talk->slidesHref ? $this->embed->getSlidesType($talk->slidesHref) : null);
 		if ($type !== null) {
 			$this->contentSecurityPolicy->addSnippet($type);
 		}
