@@ -96,17 +96,8 @@ class TalksPresenter extends BasePresenter
 		$this->template->ogImage = $this->getOgImage($talk->ogImage, $slideNo);
 		$this->template->transcript = $talk->transcript;
 
-		if ($slideNo !== null) {
-			$this->template->canonicalLink = $this->link('//Talks:talk', $name);
-		}
-
-		$type = ($talk->slidesHref ? $this->embed->getSlidesType($talk->slidesHref) : null);
-		if ($type !== null) {
-			$this->contentSecurityPolicy->addSnippet($type);
-		}
 		$this->template->slidesHref = $talk->slidesHref;
-		$this->template->slidesEmbedType = $type;
-		foreach ($this->embed->getSlidesTemplateVars($type, $talk->slidesEmbed, $slideNo) as $key => $value) {
+		foreach ($this->embed->getSlidesTemplateVars($talk, $slideNo) as $key => $value) {
 			$this->template->$key = $value;
 		}
 

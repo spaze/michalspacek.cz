@@ -22,16 +22,38 @@ class Embed
 
 	public const VIDEO_SLIDESLIVE = 'slideslive';
 
+	/** @var \Nette\Application\LinkGenerator */
+	protected $linkGenerator;
+
+	/** @var \Spaze\ContentSecurityPolicy\Config */
+	protected $contentSecurityPolicy;
+
+
+	/**
+	 * @param \Nette\Application\LinkGenerator $linkGenerator
+	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
+	 */
+	public function __construct(\Nette\Application\LinkGenerator $linkGenerator, \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
+	{
+		$this->linkGenerator = $linkGenerator;
+		$this->contentSecurityPolicy = $contentSecurityPolicy;
+	}
+
 
 	/**
 	 * Get template vars for slides
-	 * @param string|null $type
-	 * @param string|null $embedHref
+	 * @param \Nette\Database\Row $talk
 	 * @param int|null $slide
-	 * @return string[slidesEmbed, slidesDataSlide]
+	 * @return string[slidesEmbed, slidesDataSlide, canonicalLink, slidesEmbedType]
 	 */
-	public function getSlidesTemplateVars(?string $type, ?string $embedHref, ?int $slide): array
+	public function getSlidesTemplateVars(\Nette\Database\Row $talk, ?int $slide = null): array
 	{
+		$type = $this->getSlidesType($talk);
+		if ($type !== null) {
+			$this->contentSecurityPolicy->addSnippet($type);
+		}
+
+		$embedHref = $talk->slidesEmbed;
 		$dataSlide = null;
 
 		if ($slide !== null) {
@@ -49,19 +71,25 @@ class Embed
 		}
 
 		return array(
-			'slidesEmbed'     => $embedHref,
+			'slidesEmbed' => $embedHref,
 			'slidesDataSlide' => $dataSlide,
+			'canonicalLink' => ($slide !== null ? $this->linkGenerator->link('Www:Talks:talk', [$talk->action]) : null),
+			'slidesEmbedType' => $type,
 		);
 	}
 
 
 	/**
-	 * @param string $href
-	 * @return string
+	 * @param \Nette\Database\Row $talk
+	 * @return string|null
 	 */
-	public function getSlidesType(string $href): string
+	private function getSlidesType(\Nette\Database\Row $talk): ?string
 	{
-		switch (parse_url($href, PHP_URL_HOST)) {
+		if (!$talk->slidesHref) {
+			return null;
+		}
+
+		switch (parse_url($talk->slidesHref, PHP_URL_HOST)) {
 			case 'www.slideshare.net':
 				$type = self::SLIDES_SLIDESHARE;
 				break;
@@ -69,7 +97,7 @@ class Embed
 				$type = self::SLIDES_SPEAKERDECK;
 				break;
 			default:
-				throw new \RuntimeException("Unknown slides type for {$href}");
+				throw new \RuntimeException("Unknown slides type for {$talk->slidesHref}");
 				break;
 		}
 		return $type;

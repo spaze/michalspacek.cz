@@ -6,7 +6,9 @@
 {/define}
 
 {define #content}
-<p></p>
+{import "../../../../Www/presenters/templates/embed.latte"}
+<p id="{_html.id.slides}"></p>
+{include #embedSlides}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <table>
 	<tr><th class="right">Číslo</th><th class="left">Alias</th></tr>

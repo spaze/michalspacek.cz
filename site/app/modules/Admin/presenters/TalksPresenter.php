@@ -21,18 +21,24 @@ class TalksPresenter extends BasePresenter
 	/** @var \Nette\Database\Row */
 	private $talk;
 
+	/** @var \MichalSpacekCz\Embed */
+	protected $embed;
+
 
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Talks $talks
+	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Talks $talks
+		\MichalSpacekCz\Talks $talks,
+		\MichalSpacekCz\Embed $embed
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;
+		$this->embed = $embed;
 		parent::__construct();
 	}
 
@@ -70,6 +76,9 @@ class TalksPresenter extends BasePresenter
 		$this->template->talkTitle = $this->talk->title;
 		$this->template->slides = $this->talks->getSlides($this->talk->talkId);
 		$this->template->talk = $this->talk;
+		foreach ($this->embed->getSlidesTemplateVars($this->talk) as $key => $value) {
+			$this->template->$key = $value;
+		}
 	}
 
 
