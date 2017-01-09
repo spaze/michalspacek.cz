@@ -116,7 +116,7 @@ class Embed
 				$type = self::SLIDES_SPEAKERDECK;
 				break;
 			default:
-				throw new \RuntimeException("Unknown slides type for {$talk->slidesHref}");
+				$type = null;
 				break;
 		}
 		return $type;
@@ -144,7 +144,7 @@ class Embed
 				$type = self::VIDEO_SLIDESLIVE;
 				break;
 			default:
-				throw new \RuntimeException("Unknown video type for {$video->videoHref}");
+				$type = null;
 				break;
 		}
 		return $type;
