@@ -87,7 +87,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->duration = $talk->duration;
 		$this->template->eventHref = $talk->eventHref;
 		$this->template->event = $talk->event;
-		$this->template->ogImage = $this->getOgImage($talk->ogImage, $slideNo);
+		$this->template->ogImage = ($talk->ogImage !== null ? sprintf($talk->ogImage, $slideNo ?? 1) : null);
 		$this->template->transcript = $talk->transcript;
 
 		$this->template->slidesHref = $talk->slidesHref;
@@ -99,20 +99,6 @@ class TalksPresenter extends BasePresenter
 		foreach ($this->embed->getVideoTemplateVars($talk) as $key => $value) {
 			$this->template->$key = $value;
 		}
-	}
-
-
-	/**
-	 * @param string|null $image
-	 * @param int|null $slide
-	 * @return string|null
-	 */
-	private function getOgImage(?string $image, ?int $slide): ?string
-	{
-		if ($image === null) {
-			return null;
-		}
-		return sprintf($image, $slide ?? 1);
 	}
 
 }
