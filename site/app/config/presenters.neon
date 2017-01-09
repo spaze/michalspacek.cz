@@ -1,4 +1,5 @@
 services:
+	# www module
 	- \App\WwwModule\Presenters\ArticlesPresenter
 	- \App\WwwModule\Presenters\CompanyTrainingsPresenter
 	- \App\WwwModule\Presenters\ContactPresenter
@@ -8,6 +9,7 @@ services:
 	- \App\WwwModule\Presenters\ForbiddenPresenter
 	- \App\WwwModule\Presenters\HomepagePresenter
 	- \App\WwwModule\Presenters\InterviewsPresenter
+	- \App\WwwModule\Presenters\PhotoPresenter
 	- \App\WwwModule\Presenters\RedirectPresenter
 	- \App\WwwModule\Presenters\TalksPresenter
 	- \App\WwwModule\Presenters\TrainingsPresenter
@@ -23,11 +25,19 @@ services:
 	# admin module
 	- \App\AdminModule\Presenters\EmailsPresenter
 	- \App\AdminModule\Presenters\HomepagePresenter
+	- \App\AdminModule\Presenters\HoneypotPresenter
 	- \App\AdminModule\Presenters\InfoPresenter
+	- \App\AdminModule\Presenters\InterviewsPresenter
+	- \App\AdminModule\Presenters\InvoicesPresenter
+	- \App\AdminModule\Presenters\PulsePresenter
 	- \App\AdminModule\Presenters\SignPresenter
+	- \App\AdminModule\Presenters\TalksPresenter
 	- \App\AdminModule\Presenters\TrackingPresenter
 	- \App\AdminModule\Presenters\TrainingsPresenter
 	- \App\AdminModule\Presenters\UserPresenter
+
+	# blog module
+	- \App\BlogModule\Presenters\PostPresenter
 
 	# webleed module
 	- \App\WebleedModule\Presenters\HomepagePresenter
