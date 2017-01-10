@@ -1,13 +1,14 @@
 {define #menu}
-&raquo; <a n:href="Homepage:">Michal Špaček</a>
+&raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 {/define}
 
 {define #list}
-<div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
+{default $listItemSeparator = ''}
+<div n:if="isset($lastFreeSeats) && $lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
 <ul>
  	{foreach $upcomingTrainings as $item}
 		<li>
-			<a n:href="Trainings:training $item[action]"><strong>{$item[name]}</strong></a>
+			<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a>{$listItemSeparator}
 			<small>
 				{foreach $item[dates] as $date}
 					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>
@@ -23,7 +24,7 @@
 {define #company}
 <ul>
  	{foreach $companyTrainings as $item}
-		<li><a n:href="CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
+		<li><a n:href=":Www:CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
 	{/foreach}
 </ul>
 {/define}
