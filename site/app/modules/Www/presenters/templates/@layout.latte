@@ -31,22 +31,24 @@
 </head>
 <body>
 <div id="main">
-{default $containerClass = 'container'}
+{default $containerExtraClass = ''}
+{default $containerColsClass = 'single-column'}
 {block #body}
-	<div class="{$containerClass}">
-	<div id="header">
+	<div n:class="container, $containerExtraClass">
+	<div id="header" n:class="$containerExtraClass">
 	<a n:href=":Www:Homepage:"><img src="{='/i/images/michal-spacek.jpg'|staticUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
 	{default $pageHeader = $pageTitle}
 	<h1>{$pageHeader}</h1>
-	</div>
-	<hr />
+	<p></p>
+	<hr>
 	{ifset #menu}<div id="menu">{include #menu}</div><hr />{/ifset}
-	{include #content}
+	</div>
+	<div class="{$containerColsClass}">{include #content}</div>
 	</div>
 {/block}
 </div>
 <div id="footer">
-<div class="{$containerClass}">
+<div n:class="container, $containerExtraClass">
 	<div id="footer-name"><strong>Michal Špaček</strong></div>
 	<div id="footer-links">
 		<a n:href=":Www:Contact:">{_messages.label.contact}</a>

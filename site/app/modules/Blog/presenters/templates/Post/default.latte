@@ -1,3 +1,12 @@
 {define #content}
+{import "../../../../Www/presenters/templates/Trainings/default.latte"}
+<div class="column-content">
 {$post->text}
+</div>
+<div class="column-sidebar">
+<p>{_messages.homepage.trainings}:</p>
+{capture $listItemSeparator}<br>{/capture}
+{include #list, listItemSeparator => $listItemSeparator}
+</div>
+<div class="clear"></div>
 {/define}

@@ -1,15 +1,25 @@
 {layout "../@layout.latte"}
 {block #body}
-	<div class="container">
+	<div n:class="container, $containerExtraClass">
 	<div id="header">
 	<a n:href="Homepage:"><img src="{='/i/images/michal-spacek.jpg'|staticUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
 	<h1>Michal Špaček</h1>
-	</div>
-	<p id="tagline">
+	<p>
 		{_messages.homepage.tagline}
 		<small>(<a n:href="Who:">{_messages.homepage.aboutme}</a>, <a n:href="Contact:">{_messages.homepage.contact}</a>)</small>
 	</p>
 	<hr />
-	{include #content}
+	<div id="projekty">
+		<div><strong>{_messages.label.otherprojects}:</strong></div>
+		<ul>
+			<li><a n:href=":UpcKeys:Homepage:" title="{_messages.label.upckeys}"><span id="upckeys" class="icon icon32"></span>{_messages.label.upckeys}</a></li>
+			<li><a n:href=":Webleed:Homepage:" title="{_messages.label.webleed}"><span id="heartbleed" class="icon icon32"></span>{_messages.label.heartbleedcz}</a></li>
+			<li><a href="https://www.elephpant.cz/" title="{_messages.label.elephpant}"><span id="elephpant" class="icon icon32"></span>{_messages.label.elephpantcz}</a></li>
+			<li><a n:href=":Pulse:Homepage:" title="{_messages.label.pulse}"><span id="pulse" class="icon icon32"></span>{_messages.label.pulse}</a></li>
+		</ul>
+	</div>
+	<hr />
+	</div>
+	<div class="{$containerColsClass}">{include #content}</div>
 	</div>
 {/block}

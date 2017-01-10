@@ -75,13 +75,16 @@ img {
 abbr.dtstart, abbr.dtend { text-decoration: none; }
 .button { cursor: pointer; }
 .container {
-    max-width: 800px;
+    max-width: 820px;
     margin: 0px auto;
 }
-.container-wide { max-width: 1200px; }
+.container.blog { max-width: 1100px; }
+.container.admin { max-width: 1200px; }
 #header {
     text-align: left;
-    padding: 1em 0px;
+    margin: 0 auto;
+    padding: 1.5em 10px 0 10px;
+    max-width: 800px;
 }
 #header img {
     float: left;
@@ -91,11 +94,9 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
     line-height: 50px;
     margin: 0px;
 }
-#tagline { margin-top: 0px; }
-#main {
-    background-color: #FFF;
-    padding: 0.5em;
-}
+#header.blog { max-width: 1080px; }
+#header.admin { max-width: 1180px; }
+#main { background-color: #FFF; }
 #footer {
     border-top: 1px solid #CCC;
     color: #4F4F4F;
@@ -104,8 +105,22 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
     line-height: 2;
 }
 #footer a { color: #4F4F4F; }
+#footer .container { max-width: 800px; }
+#footer .container.blog { max-width: 1080px; }
+#footer .container.admin { max-width: 1180px; }
 #footer-name { float: left; }
 #footer-links { float: right; }
+.single-column { padding: 0 10px 0.5em 10px; }
+.with-sidebar { padding-bottom: 0.5em; }
+.column-content, .column-sidebar { padding: 0 10px; }
+.column-content {
+    max-width: 800px;
+    float: left;
+}
+.column-sidebar {
+    max-width: 250px;
+    float: right;
+}
 .icon {
     background: url('/i/images/icons.png') no-repeat top left;
     display: inline-block;

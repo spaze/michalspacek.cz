@@ -1,11 +1,11 @@
 {layout "../@layout.latte"}
 {var $robots = noindex}
 {block #body}
-	<div class="container">
+	<div n:class="container, $containerExtraClass">
 	<div id="header">
 	<a n:href="Homepage:"><img src="{='i/images/michal-spacek.jpg'|staticUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
 	<h1>{$pageTitle}</h1>
-	</div>
+	<p></p>
 	<hr />
 	<div id="menu" class="center">
 	{block #menu}
@@ -14,7 +14,10 @@
 	{/block}
 	</div>
 	<hr />
+	</div>
+	<div class="{$containerColsClass}">
 	<h2>{_messages.label.error} {$errorCode}</h2>
 	{include #content}
+	</div>
 	</div>
 {/block}
