@@ -116,3 +116,7 @@ services:
 			- setTokenExpiration(%keyCdn.tokenExpiration%)
 	blogPost: \MichalSpacekCz\Blog\Post
 	blogPostLoader: \MichalSpacekCz\Blog\PostLoader
+	certificatesApi:
+		class: \MichalSpacekCz\Api\Certificates
+		setup:
+			- setUsers(%certificatesApi.users%)
