@@ -6,8 +6,20 @@ namespace MichalSpacekCz\Api;
 class Certificates
 {
 
+	/** @var \Nette\Database\Context */
+	protected $database;
+
 	/** @var array */
 	private $users;
+
+
+	/**
+	 * @param \Nette\Database\Context $context
+	 */
+	public function __construct(\Nette\Database\Context $context)
+	{
+		$this->database = $context;
+	}
 
 
 	/**
@@ -45,18 +57,58 @@ class Certificates
 	 */
 	public function log(array $certs, array $failures): array
 	{
-		foreach ($certs as $cn => $dates) {
-			$start = date(\DateTime::ATOM, (int)$dates['start']);
-			$expiry = date(\DateTime::ATOM, (int)$dates['expiry']);
-			\Tracy\Debugger::log("OK $cn from $start to $expiry", 'cert');
+		$databaseLoggedAll = true;
+		foreach ($certs as $cnext => $dates) {
+			$start = \Nette\Utils\DateTime::from($dates['start']);
+			$expiry = \Nette\Utils\DateTime::from($dates['expiry']);
+			try {
+				$this->database->beginTransaction();
+				$this->database->query('INSERT INTO certificates', array(
+					'key_certificate_request' => $this->logRequest($cnext, true),
+					'not_before' => $start,
+					'not_after' => $expiry,
+				));
+				$this->database->commit();
+			} catch (\Nette\Database\DriverException $e) {
+				\Tracy\Debugger::log($e);
+				\Tracy\Debugger::log("OK $cnext from $start to $expiry", 'cert');
+				$databaseLoggedAll = false;
+			}
 		}
-		foreach ($failures as $cn) {
-			\Tracy\Debugger::log("FAIL $cn", 'cert');
+		foreach ($failures as $cnext) {
+			try {
+				$this->logRequest($cnext, false);
+			} catch (\Nette\Database\DriverException $e) {
+				\Tracy\Debugger::log($e);
+				\Tracy\Debugger::log("FAIL $cnext", 'cert');
+				$databaseLoggedAll = false;
+			}
 		}
+
+		if (!$databaseLoggedAll) {
+			throw new \RuntimeException('Error logging to database, some certificates logged to file instead');
+		}
+
 		return [
 			'certificates' => count($certs),
 			'failures' => count($failures),
 		];
+	}
+
+
+	/**
+	 * @param string $cnext
+	 * @param boolean $success
+	 * @return integer
+	 */
+	private function logRequest(string $cnext, bool $success): int
+	{
+		$this->database->query('INSERT INTO certificate_requests', array(
+			'cnext' => $cnext,
+			'time' => new \DateTime(),
+			'success' => $success,
+		));
+		return (int)$this->database->getInsertId();
 	}
 
 }

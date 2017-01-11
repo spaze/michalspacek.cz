@@ -39,6 +39,8 @@ class CertificatePresenter extends \App\WwwModule\Presenters\BasePresenter
 			]);
 		} catch (\Nette\Security\AuthenticationException $e) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Invalid credentials']);
+		} catch (\RuntimeException $e) {
+			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
 		}
 	}
 
