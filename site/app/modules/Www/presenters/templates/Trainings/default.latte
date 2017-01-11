@@ -3,12 +3,11 @@
 {/define}
 
 {define #list}
-{default $listItemSeparator = ''}
 <div n:if="isset($lastFreeSeats) && $lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
 <ul>
  	{foreach $upcomingTrainings as $item}
 		<li>
-			<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a>{$listItemSeparator}
+			<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a>
 			<small>
 				{foreach $item[dates] as $date}
 					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>

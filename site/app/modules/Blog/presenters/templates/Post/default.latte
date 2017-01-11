@@ -5,8 +5,19 @@
 </div>
 <div class="column-sidebar">
 <p>{_messages.homepage.trainings}:</p>
-{capture $listItemSeparator}<br>{/capture}
-{include #list, listItemSeparator => $listItemSeparator}
+<ul>
+ 	{foreach $upcomingTrainings as $item}
+		<li>
+			<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a><br>
+			<small>
+				{foreach $item[dates] as $date}
+					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>
+					{$date[venueCity]}{sep}, {/sep}{last}){/last}
+				{/foreach}
+			</small>
+		</li>
+	{/foreach}
+</ul>
 </div>
 <div class="clear"></div>
 {/define}
