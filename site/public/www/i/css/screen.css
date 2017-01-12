@@ -49,6 +49,7 @@ li { padding: 0.4em 0px; }
 table {
     border-spacing: 0px;
     white-space: nowrap;
+    margin: 1em 0;
 }
 table table { padding: 0; }
 small, .small { color: #666; }
