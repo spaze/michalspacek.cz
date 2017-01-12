@@ -120,3 +120,4 @@ services:
 		class: \MichalSpacekCz\Api\Certificates
 		setup:
 			- setUsers(%certificatesApi.users%)
+			- setExpiringThreshold(%certificatesApi.expiringThreshold%)

@@ -21,6 +21,9 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\Api\Certificates */
+	protected $certificates;
+
 	/** @var \MichalSpacekCz\WebTracking */
 	protected $webTracking;
 
@@ -29,18 +32,21 @@ class HomepagePresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param \MichalSpacekCz\Api\Certificates $certificates
 	 * @param \MichalSpacekCz\WebTracking $webTracking
 	 */
 	public function __construct(
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
 		Training\Dates $trainingDates,
+		\MichalSpacekCz\Api\Certificates $certificates,
 		\MichalSpacekCz\WebTracking $webTracking
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;
+		$this->certificates = $certificates;
 		$this->webTracking = $webTracking;
 		parent::__construct();
 	}
@@ -69,6 +75,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->trackingEnabled = $this->webTracking->isEnabled();
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
+		$this->template->certificates = $this->certificates->getNewest();
 		list($this->template->preliminaryTotal, $this->template->preliminaryDateSet) = $this->trainingApplications->getPreliminaryCounts();
 	}
 

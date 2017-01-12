@@ -1,9 +1,34 @@
 {define #content}
 {import "../Trainings/default.latte"}
-<p></p>
+<h2>Školení</h2>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {include #list, trainings => $upcomingApplications, order => 'asc'}
-
+<h2>Certifikáty</h2>
+<table id="certificates">
+<thead>
+	<tr><td></td><th><small>Certifikát</small></th><th><small>Expirace</small></th></tr>
+</thead>
+<tbody>
+<tr n:foreach="$certificates as $cert">
+	<td><small title="{if $cert->expired}Expiroval{else}Funkční{/if}" n:class="$cert->expired ? error">{if $cert->expired}&#x2716;{else}&#x2714;{/if}</small></td>
+	<td><strong n:tag-if="$cert->expiringSoon || $cert->expired" n:class="$cert->expired ? error">{$cert->cnExt}</strong></td>
+	<td><strong n:tag-if="$cert->expiringSoon || $cert->expired" n:class="$cert->expired ? error">{$cert->notAfter|date:'j. n. Y'} <small>{$cert->notAfter|date:'H:i'}</small></strong></td>
+	<td>
+		<strong n:tag-if="$cert->expiringSoon || $cert->expired">
+			<small n:class="$cert->expired ? error">
+				{if $cert->expiryDays === 0}
+					dnes
+				{elseif $cert->expired}
+					{_messages.certificates.admin.expireddaysago, $cert->expiryDays}
+				{else}
+					{_messages.certificates.admin.expiresindays, $cert->expiryDays}
+				{/if}
+			</small>
+		</strong>
+	</td>
+</tr>
+</tbody>
+</table>
 <ul>
 	<li><a n:href="Emails:">E-maily k odeslání</a> ({$emailsToSend})</li>
 	<li><a n:href="Invoices:unpaid">Nezaplacené faktury</a> ({$unpaidInvoices})</li>

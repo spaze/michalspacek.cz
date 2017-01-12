@@ -286,3 +286,7 @@ photo:
 	talk:
 		header: "Speaking"
 		desc: "This photo was shot at WebTop100, when I was talking about \"web performance and security\":[%s]."
+certificates:
+	admin:
+		expireddaysago: "%count% day ago|%count% days ago"
+		expiresindays: "in %count% day|in %count% days"

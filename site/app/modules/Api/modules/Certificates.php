@@ -12,6 +12,9 @@ class Certificates
 	/** @var array */
 	private $users;
 
+	/** @var integer */
+	private $expiringThreshold;
+
 
 	/**
 	 * @param \Nette\Database\Context $context
@@ -33,6 +36,16 @@ class Certificates
 
 
 	/**
+	 * Set expiring warning threshold.
+	 * @param integer $expiringThreshold in days
+	 */
+	public function setExpiringThreshold(int $expiringThreshold): void
+	{
+		$this->expiringThreshold = $expiringThreshold;
+	}
+
+
+	/**
 	 * @param string $user
 	 * @param string $key
 	 */
@@ -45,6 +58,33 @@ class Certificates
 		if (!password_verify($key, $this->users[$user])) {
 			throw new \Nette\Security\AuthenticationException('Invalid key', \MichalSpacekCz\User\Manager::INVALID_CREDENTIAL);
 		}
+	}
+
+
+	/**
+	 * Get newest certificates
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getNewest(): array
+	{
+		$now = new \DateTime();
+
+		$query = 'SELECT
+			cr.cnext AS cnExt,
+			MAX(c.not_after) AS notAfter
+			FROM certificates c
+				JOIN certificate_requests cr ON c.key_certificate_request = cr.id_certificate_request
+			GROUP BY cr.cnext
+			ORDER BY cr.cnext';
+		$certificates = $this->database->fetchAll($query);
+
+		foreach ($certificates as $certificate) {
+			$certificate->expired = $certificate->notAfter < $now;
+			$certificate->expiryDays = $certificate->notAfter->diff($now)->days;
+			$certificate->expiringSoon = !$certificate->expired && $certificate->expiryDays < $this->expiringThreshold;
+		}
+
+		return $certificates;
 	}
 
 

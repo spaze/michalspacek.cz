@@ -286,3 +286,7 @@ photo:
 	talk:
 		header: "Přednášková"
 		desc: "Takto mě zachytil fotograf na WebTop100, když jsem vyprávěl o \"rychlosti a zabezpečení webu\":[%s]."
+certificates:
+	admin:
+		expireddaysago: "před %count% dnem|před %count% dny"
+		expiresindays: "ze %count% den|za %count% dny|za %count% dní"
