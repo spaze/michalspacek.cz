@@ -132,7 +132,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($application->trainingStart->diff(new \DateTime('now'))->format('%d') <= self::REMINDER_DAYS) {
+				if ($application->trainingStart->diff(new \DateTime('now'))->days <= self::REMINDER_DAYS) {
 					$application->nextStatus = Statuses::STATUS_REMINDED;
 					$applications[$application->id] = $application;
 				}
