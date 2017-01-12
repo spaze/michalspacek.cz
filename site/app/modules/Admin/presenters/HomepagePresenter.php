@@ -75,8 +75,26 @@ class HomepagePresenter extends BasePresenter
 		$this->template->trackingEnabled = $this->webTracking->isEnabled();
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
-		$this->template->certificates = $this->certificates->getNewest();
+		$this->template->certificates = $certificates = $this->certificates->getNewest();
+		$this->template->certificatesNeedAttention = $this->certsNeedAttention($certificates);
 		list($this->template->preliminaryTotal, $this->template->preliminaryDateSet) = $this->trainingApplications->getPreliminaryCounts();
+	}
+
+
+	/**
+	 * Check if at least one certificate is expired or expires soon.
+	 *
+	 * @param array $certificates
+	 * @return boolean
+	 */
+	private function certsNeedAttention(array $certificates): bool
+	{
+		foreach ($certificates as $certificate) {
+			if ($certificate->expired || $certificate->expiringSoon) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

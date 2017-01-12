@@ -130,4 +130,12 @@ $(document).ready(function() {
 		}
 		$(this).children('span').toggle();
 	});
+
+	$('#certificatesShow, #certificatesHide')
+		.click(function(event) {
+			event.preventDefault();
+			$('#certificates').toggle();
+			$('#certificates-toggle span').toggle();
+		})
+		.css('cursor', 'pointer');
 });

@@ -4,7 +4,11 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {include #list, trainings => $upcomingApplications, order => 'asc'}
 <h2>Certifikáty</h2>
-<table id="certificates">
+<p id="certificates-toggle" class="small">
+	<span id="certificatesShow" n:class="$certificatesNeedAttention ? hidden">Zobrazit</span>
+	<span id="certificatesHide" n:class="!$certificatesNeedAttention ? hidden">Skrýt</span>
+</p>
+<table id="certificates" n:class="!$certificatesNeedAttention ? hidden">
 <thead>
 	<tr><td></td><th><small>Certifikát</small></th><th><small>Expirace</small></th></tr>
 </thead>
@@ -29,6 +33,7 @@
 </tr>
 </tbody>
 </table>
+<hr>
 <ul>
 	<li><a n:href="Emails:">E-maily k odeslání</a> ({$emailsToSend})</li>
 	<li><a n:href="Invoices:unpaid">Nezaplacené faktury</a> ({$unpaidInvoices})</li>
