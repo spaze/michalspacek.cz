@@ -66,7 +66,7 @@ class RouterFactory
 
 
 	/**
-	 * @param \MichalSpacekCz\Blog\Post $blogPostLoader
+	 * @param \MichalSpacekCz\Blog\PostLoader $blogPostLoader
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(\MichalSpacekCz\Blog\PostLoader $blogPostLoader, \Nette\Localization\ITranslator $translator)
