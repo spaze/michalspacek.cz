@@ -5,7 +5,6 @@ parameters:
 		- '#^Access to an undefined property Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
 		- '#^Call to an undefined method Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
 		- '#^Cannot access property Nette\\Http\\SessionSection::\$name from current scope#'
-		- '#^Call to sscanf contains 1 placeholder, 3 values given#'
 		- '#^Parameter .* expects Nette\\Http\\SessionSection, Nette\\Http\\Session\|Nette\\Http\\SessionSection given#'
 		- '~^Parameter #2 \$refUrl of class Nette\\Application\\LinkGenerator constructor expects Nette\\Http\\Url, Nette\\Http\\Request given~'
 
