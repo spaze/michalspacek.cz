@@ -21,6 +21,7 @@ title:
 	forbidden: "Nepovoleno"
 	venue: "Školírna %s"
 	photo: "Foto"
+	blog: Blog
 	admin:
 		talkslides: "Slajdy z přednášky %s (%s)"
 header:
@@ -290,3 +291,7 @@ certificates:
 	admin:
 		expireddaysago: "před %count% dnem|před %count% dny"
 		expiresindays: "ze %count% den|za %count% dny|za %count% dní"
+blog:
+	admin:
+		postadded: "Příspěvek na blog přidán"
+		duplicateslug: "Příspěvek s takovým slugem již existuje"

@@ -1,0 +1,10 @@
+{define #content}
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
+<div><p><a n:href="add" class="block">Přidat příspěvek</a></p></div>
+<hr>
+<ol reversed>
+{foreach $posts as $post}
+	<li>{$post->title}</li>
+{/foreach}
+<ol>
+{/define}

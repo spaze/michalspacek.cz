@@ -21,6 +21,7 @@ title:
 	forbidden: "Forbidden"
 	venue: "Venue %s"
 	photo: "Photo"
+	blog: Blog
 	admin:
 		talkslides: "Slides from %s (%s)"
 header:
@@ -290,3 +291,7 @@ certificates:
 	admin:
 		expireddaysago: "%count% day ago|%count% days ago"
 		expiresindays: "in %count% day|in %count% days"
+blog:
+	admin:
+		postadded: "Blog post added"
+		duplicateslug: "Blog post with such slug already exists"
