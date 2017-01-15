@@ -77,7 +77,7 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
     max-width: 820px;
     margin: 0px auto;
 }
-.container.blog { max-width: 1100px; }
+.container.blog { max-width: 1020px; }
 .container.admin { max-width: 1200px; }
 #header {
     text-align: left;
@@ -94,7 +94,7 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
     margin: 0px;
 }
 #header p { margin-top: 1em; }
-#header.blog { max-width: 1080px; }
+#header.blog { max-width: 1000px; }
 #header.admin { max-width: 1180px; }
 #main { background-color: #FFF; }
 #footer {
@@ -106,7 +106,7 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
 }
 #footer a { color: #4F4F4F; }
 #footer .container { max-width: 800px; }
-#footer .container.blog { max-width: 1080px; }
+#footer .container.blog { max-width: 1000px; }
 #footer .container.admin { max-width: 1180px; }
 #footer-name { float: left; }
 #footer-links { float: right; }
@@ -114,7 +114,7 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
 .with-sidebar { padding-bottom: 0.5em; }
 .column-content, .column-sidebar { margin: 10px; }
 .column-content {
-    max-width: 800px;
+    max-width: 720px;
     float: left;
 }
 .column-sidebar {
@@ -127,6 +127,9 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
     margin-bottom: 2em;
 }
 .column-sidebar .widget h3 { margin: 1em 0; }
+@media (max-width: 1020px) {
+    .column-content, .column-sidebar { max-width: none; }
+}
 .icon {
     background: url('/i/images/icons.png') no-repeat top left;
     display: inline-block;
