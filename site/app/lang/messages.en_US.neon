@@ -78,6 +78,7 @@ label:
 	publictrainings: Public trainings
 	companytrainings: In-house trainings
 	lowercasecompanytraining: "in-house training"
+	partnertrainings: Partnership trainings
 	trainingname: Course name
 	trainingcontent: Content
 	traininglecturer: Lecturer

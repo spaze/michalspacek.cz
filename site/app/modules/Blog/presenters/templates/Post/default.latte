@@ -1,23 +1,27 @@
 {define #content}
-{import "../../../../Www/presenters/templates/Trainings/default.latte"}
 <div class="column-content">
 {$post->text}
 </div>
 <div class="column-sidebar">
+<div class="widget">
+<h3>Michal Špaček</h3>
+<p>{_messages.homepage.tagline}</p>
+</div>
+<div class="widget">
+<h3>{_messages.label.publictrainings}</h3>
 <p>{_messages.homepage.trainings}:</p>
-<ul>
- 	{foreach $upcomingTrainings as $item}
-		<li>
-			<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a><br>
-			<small>
-				{foreach $item[dates] as $date}
-					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>
-					{$date[venueCity]}{sep}, {/sep}{last}){/last}
-				{/foreach}
-			</small>
-		</li>
-	{/foreach}
-</ul>
+{foreach $upcomingTrainings as $item}
+	<p>
+		<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a><br>
+		<small>
+			{foreach $item[dates] as $date}
+				{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>
+				{$date[venueCity]}{sep}, {/sep}{last}){/last}
+			{/foreach}
+		</small>
+	</p>
+{/foreach}
+</div>
 </div>
 <div class="clear"></div>
 {/define}
