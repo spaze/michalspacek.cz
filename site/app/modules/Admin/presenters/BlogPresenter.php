@@ -34,7 +34,11 @@ class BlogPresenter extends BasePresenter
 
 	public function actionDefault(): void
 	{
-		$posts = $this->blogPost->getAll();
+		$posts = [];
+		foreach ($this->blogPost->getAll() as $post) {
+			$posts[$post->published->getTimestamp() . $post->slug] = $post;
+		}
+		krsort($posts);
 		$this->template->posts = $posts;
 		$this->template->pageTitle = 'Blog';
 	}

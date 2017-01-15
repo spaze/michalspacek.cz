@@ -58,7 +58,7 @@ class Post
 	 */
 	public function getAll(): array
 	{
-		$posts = $this->database->fetchAll('SELECT slug, title, text, published, republished_text FROM blog_posts');
+		$posts = $this->database->fetchAll('SELECT slug, title, text, published, republished_text FROM blog_posts ORDER BY published, slug');
 		foreach ($posts as $post) {
 			$this->format($post);
 		}
