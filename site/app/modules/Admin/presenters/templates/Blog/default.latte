@@ -4,7 +4,11 @@
 <hr>
 <ol reversed>
 {foreach $posts as $post}
-	<li>{$post->title} <a n:href="edit $post->postId">Upravit</a></li>
+	<li>
+		{$post->title}
+		<a n:href="edit $post->postId">Upravit</a>
+		<a n:href=":Blog:Post:default $post->slug">Zobrazit</a>
+	</li>
 {/foreach}
 <ol>
 {/define}
