@@ -72,6 +72,12 @@ img {
     height: auto;
 }
 abbr.dtstart, abbr.dtend { text-decoration: none; }
+code {
+    padding: 0.2em 0.1em;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.04);
+    border-radius: 3px;
+}
 .button { cursor: pointer; }
 .container {
     max-width: 820px;
