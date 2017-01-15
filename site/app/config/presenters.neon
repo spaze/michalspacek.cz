@@ -23,6 +23,7 @@ services:
 	- \App\ApiModule\Presenters\ErrorPresenter
 
 	# admin module
+	- \App\AdminModule\Presenters\BlogPresenter
 	- \App\AdminModule\Presenters\EmailsPresenter
 	- \App\AdminModule\Presenters\HomepagePresenter
 	- \App\AdminModule\Presenters\HoneypotPresenter
