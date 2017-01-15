@@ -58,7 +58,7 @@ class Post
 	 */
 	public function getAll(): array
 	{
-		$posts = $this->database->fetchAll('SELECT slug, title, text FROM blog_posts');
+		$posts = $this->database->fetchAll('SELECT slug, title, text, published, republished_text FROM blog_posts');
 		foreach ($posts as $post) {
 			$this->format($post);
 		}
@@ -71,7 +71,7 @@ class Post
 		foreach(['title'] as $item) {
 			$row->$item = $this->texyFormatter->format($row->$item);
 		}
-		foreach(['text'] as $item) {
+		foreach(['text', 'republished_text'] as $item) {
 			$row->$item = $this->texyFormatter->formatBlock($row->$item);
 		}
 	}
@@ -83,8 +83,10 @@ class Post
 	 * @param string $title
 	 * @param string $slug
 	 * @param string $text
+	 * @param string $published
+	 * @param string $originally
 	 */
-	public function add(string $title, string $slug, string $text): void
+	public function add(string $title, string $slug, string $text, string $published, string $originally): void
 	{
 		$this->database->query(
 			'INSERT INTO blog_posts',
@@ -92,6 +94,8 @@ class Post
 				'title' => $title,
 				'slug' => $slug,
 				'text' => $text,
+				'published' => new \DateTime($published),
+				'republished_text' => (empty($originally) ? null : $originally),
 			)
 		);
 	}

@@ -65,7 +65,7 @@ class BlogPresenter extends BasePresenter
 	public function submittedAddPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$this->blogPost->add($values->title, $values->slug, $values->text);
+			$this->blogPost->add($values->title, $values->slug, $values->text, $values->published, $values->originally);
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
