@@ -51,7 +51,18 @@ class PostLoader
 	public function fetch(string $post): ?\Nette\Database\Row
 	{
 		if ($this->post === null) {
-			$this->post = $this->database->fetch('SELECT slug, title, text FROM blog_posts WHERE slug = ?', $post) ?: null;
+			$this->post = $this->database->fetch(
+				'SELECT
+					id_blog_post AS postId,
+					slug,
+					title,
+					text,
+					published,
+					originally
+				FROM blog_posts
+				WHERE slug = ?',
+				$post
+			) ?: null;
 		}
 		return $this->post;
 	}

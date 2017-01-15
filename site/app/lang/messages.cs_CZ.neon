@@ -295,4 +295,5 @@ certificates:
 blog:
 	admin:
 		postadded: "Příspěvek na blog přidán"
+		postupdated: "Příspěvek upraven"
 		duplicateslug: "Příspěvek s takovým slugem již existuje"

@@ -1,0 +1,10 @@
+{define #menu}
+&raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
+&raquo; <a n:href="Homepage:">Administrace</a>
+&raquo; <a n:href="Blog:">{_messages.title.blog}</a>
+{/define}
+
+{define #content}
+{import "add.latte"}
+{include #postForm, form => editPost}
+{/define}

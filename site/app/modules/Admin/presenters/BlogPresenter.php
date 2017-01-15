@@ -18,6 +18,8 @@ class BlogPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
+	/** @var \Nette\Database\Row */
+	private $post;
 
 
 	/**
@@ -74,7 +76,48 @@ class BlogPresenter extends BasePresenter
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
 		}
-		$this->redirect('Blog:default');
+		$this->redirect('Blog:');
+	}
+
+
+	/**
+	 * @param  string $param [description]
+	 */
+	public function actionEdit(string $param): void
+	{
+		$this->post = $this->blogPost->getById($param);
+		if (!$this->post) {
+			throw new \Nette\Application\BadRequestException("Post id {$param} does not exist, yet", \Nette\Http\Response::S404_NOT_FOUND);
+		}
+
+		$title = \Nette\Utils\Html::el()->setText('Příspěvek ')->addHtml($this->post->title);
+		$this->template->pageTitle = strip_tags((string)$title);
+		$this->template->pageHeader = $title;
+	}
+
+
+	/**
+	 * @param string $formName
+	 * @return \MichalSpacekCz\Form\Blog\Post
+	 */
+	protected function createComponentEditPost(string $formName): \MichalSpacekCz\Form\Blog\Post
+	{
+		$form = new \MichalSpacekCz\Form\Blog\Post($this, $formName);
+		$form->setPost($this->blogPost->getById($this->post->postId));
+		$form->onSuccess[] = [$this, 'submittedEditPost'];
+		return $form;
+	}
+
+
+	/**
+	 * @param \MichalSpacekCz\Form\Blog\Post $form
+	 * @param \Nette\Utils\ArrayHash $values
+	 */
+	public function submittedEditPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
+	{
+		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->text, $values->published, $values->originally);
+		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated'));
+		$this->redirect('Blog:');
 	}
 
 }

@@ -29,15 +29,36 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 		$this->addText('slug', 'Slug:')
 			->setRequired('Zadejte prosím slug')
 			->addRule(self::MIN_LENGTH, 'Slug musí mít alespoň %d znaky', 3);
-		$this->addPublishedDate('published', 'Vydáno:', true);
+		$this->addPublishedDate('published', 'Vydáno:', true)
+			->setDefaultValue(date('Y-m-d') . ' HH:MM');
 		$this->addTextArea('text', 'Text:')
 			->setRequired('Zadejte prosím text')
 			->addRule(self::MIN_LENGTH, 'Text musí mít alespoň %d znaky', 3);
 		$this->addTextArea('originally', 'Původně vydáno:')
-			->setRequired('Zadejte prosím text')
+			->addCondition(self::FILLED)
 			->addRule(self::MIN_LENGTH, 'Text musí mít alespoň %d znaky', 3);
 
 		$this->addSubmit('submit', 'Přidat');
+	}
+
+
+	/**
+	 * Set post.
+	 * @param \Nette\Database\Row $post [description]
+	 */
+	public function setPost(\Nette\Database\Row $post)
+	{
+		$values = array(
+			'title' => $post->titleTexy,
+			'slug' => $post->slug,
+			'published' => $post->published->format('Y-m-d H:i'),
+			'text' => $post->textTexy,
+			'originally' => $post->originallyTexy,
+		);
+		$this->setDefaults($values);
+		$this->getComponent('submit')->caption = 'Upravit';
+
+		return $this;
 	}
 
 

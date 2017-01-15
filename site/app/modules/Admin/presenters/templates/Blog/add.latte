@@ -4,9 +4,9 @@
 &raquo; <a n:href="Blog:">{_messages.title.blog}</a>
 {/define}
 
-{define #content}
+{define #postForm}
+{form $form}
 <table>
-{form addPost}
 <tr><th>{label title /}</th><td>{input title}</td></tr>
 <tr><th>{label slug /}</th><td>{input slug}</td></tr>
 <tr><th>{label published /}</th><td>{input published}</td></tr>
@@ -14,6 +14,10 @@
 <tr><th>{label originally /}</th><td>{input originally}</td></tr>
 <tr><td></td><td>{input submit}</td></tr>
 </tr>
-{/form addPost}
 </table>
+{/form $form}
+{/define}
+
+{define #content}
+{include #postForm, form => addPost}
 {/define}
