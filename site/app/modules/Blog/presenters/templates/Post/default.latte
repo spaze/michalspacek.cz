@@ -1,6 +1,8 @@
 {define #content}
 <div class="column-content">
+<p><small>{$post->published|date:'j. n. Y'}</small></p>
 {$post->text}
+{$post->originally}
 </div>
 <div class="column-sidebar">
 <div class="widget">
