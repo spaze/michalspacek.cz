@@ -25,16 +25,13 @@ mail:
 
 contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them
 	addNonce:
-		script-src: no
+		script-src: yes
 	addStrictDynamic:
 		script-src: no
 	policies:
 		www.*.*:
 			img-src:
 				- 'data:'
-			script-src:
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
 			style-src:
 				- "'unsafe-inline'"
 		admin.*.*:
@@ -48,8 +45,6 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 				- 'data:'
 			script-src:
 				- "'self'"
-				- "'unsafe-inline'"
-				- "'unsafe-eval'"
 			style-src:
 				- "'unsafe-inline'"
 		webleed.*.*:
