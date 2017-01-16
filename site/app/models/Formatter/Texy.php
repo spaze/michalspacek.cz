@@ -21,6 +21,9 @@ class Texy extends \Netxten\Formatter\Texy
 	/** @var \Netxten\Templating\Helpers */
 	protected $netxtenHelpers;
 
+	/** @var string root of relative images (http) */
+	public $imagesRoot = 'images/';
+
 
 	/**
 	 * @param \Nette\Caching\IStorage $cacheStorage
@@ -42,6 +45,30 @@ class Texy extends \Netxten\Formatter\Texy
 		$this->trainingDates = $trainingDates;
 		$this->netxtenHelpers = $netxtenHelpers;
 		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
+	}
+
+
+	/**
+	 * Set images root directory.
+	 *
+	 * @param string $root
+	 */
+	public function setImagesRoot($root)
+	{
+		$this->imagesRoot = $root;
+	}
+
+
+	/**
+	 * Create Texy object.
+	 *
+	 * @return \Texy\Texy
+	 */
+	protected function getTexy()
+	{
+		$texy = parent::getTexy();
+		$texy->imageModule->root = $this->imagesRoot;
+		return $texy;
 	}
 
 

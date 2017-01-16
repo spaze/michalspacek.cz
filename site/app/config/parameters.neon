@@ -20,6 +20,7 @@ parameters:
 	domain:
 		default: www
 		sharedStaticRoot: https://www.%domain.root%
+		imagesRoot: /i/images
 	reporting:
 		contentSecurityPolicy: https://plz.report-uri.io/r/default/csp/enforce
 		publicKeyPins: https://plz.report-uri.io/r/default/hpkp/reportOnly

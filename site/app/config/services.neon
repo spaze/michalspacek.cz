@@ -11,6 +11,7 @@ services:
 		class: \MichalSpacekCz\Formatter\Texy
 		setup:
 			- addHandlers()
+			- setImagesRoot(%domain.imagesRoot%)
 	redirections:  \MichalSpacekCz\Redirections
 	articles:  \MichalSpacekCz\Articles
 	files:     \MichalSpacekCz\Files
