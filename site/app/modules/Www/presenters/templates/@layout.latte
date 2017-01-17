@@ -25,7 +25,7 @@
 	{ifset #styles}{include #styles}{/ifset}
 	{ifset #metas}{include #metas}{/ifset}
 	<link rel="canonical" href="{$canonicalLink}" n:ifset="$canonicalLink">
-	<link rel="apple-touch-icon" href="{='/i/images/michal-spacek.jpg'|staticUrl}">
+	<link rel="apple-touch-icon" href="{='michal-spacek.jpg'|staticImageUrl}">
 	<meta property="article:author" content="https://www.facebook.com/spaze">
 	<link rel="icon" href="{='/favicon.ico'|staticUrl}">
 </head>
@@ -36,7 +36,7 @@
 {block #body}
 	<div n:class="container, $containerExtraClass">
 	<div id="header" n:class="$containerExtraClass">
-	<a n:href=":Www:Homepage:"><img src="{='/i/images/michal-spacek.jpg'|staticUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
+	<a n:href=":Www:Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
 	{default $pageHeader = $pageTitle}
 	<h1>{$pageHeader}</h1>
 	<p></p>

@@ -6,8 +6,8 @@
 
 <h3>{_messages.venues.entrance}</h3>
 <p>
-<img src="{='i/images/venues/' . $entrance|staticUrl}" width="800" height="450" alt="{_messages.venues.entrance}" title="{_messages.venues.entrance}"><br>
-{if $entranceNavigation}<img src="{='i/images/venues/' . $entranceNavigation|staticUrl}" width="800" height="450" alt="{_messages.venues.entrancenavigation}" title="{_messages.venues.entrancenavigation}"><br>{/if}
+<img src="{='venues/' . $entrance|staticImageUrl}" width="800" height="450" alt="{_messages.venues.entrance}" title="{_messages.venues.entrance}"><br>
+{if $entranceNavigation}<img src="{='venues/' . $entranceNavigation|staticImageUrl}" width="800" height="450" alt="{_messages.venues.entrancenavigation}" title="{_messages.venues.entrancenavigation}"><br>{/if}
 <small>(<a href="{$streetview}">{_messages.venues.streetview}</a>)</small>
 </p>
 

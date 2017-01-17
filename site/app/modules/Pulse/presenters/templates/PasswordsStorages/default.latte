@@ -8,10 +8,10 @@
 {if count($data->sites) === 1}
 {capture $currentRating}{=current($data->sites)->rating|lower}{/capture}
 {var $currentAlgo = current(current(current($data->storages)))}
-<meta property="og:image" content="{="/i/images/pulse/rating-$currentRating.png"|staticUrl}">
+<meta property="og:image" content="{="pulse/rating-$currentRating.png"|staticImageUrl}">
 <meta property="og:description" content="{=$data->algos[$currentAlgo->id]}{if $currentAlgo->from || $currentAlgo->latestDisclosure} ({if $currentAlgo->from && $currentAlgo->fromConfirmed}since {$currentAlgo->from|date:'F Y'}{/if}{if $currentAlgo->from && $currentAlgo->fromConfirmed && $currentAlgo->latestDisclosure}, {/if}{if $currentAlgo->latestDisclosure}disclosed {$currentAlgo->latestDisclosure|date:'F Y'}{/if}){/if}">
 {else}
-<meta property="og:image" content="{='/i/images/pulse/rating-all.png'|staticUrl}">
+<meta property="og:image" content="{='pulse/rating-all.png'|staticImageUrl}">
 <meta property="og:description" content="How securely do they store user passwords &amp; how good are they at letting us know?">
 {/if}
 <meta property="og:title" content="{$pageTitle}">

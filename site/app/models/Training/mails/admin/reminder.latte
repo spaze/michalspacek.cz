@@ -5,9 +5,9 @@ rád bych vám připomněl, že dne {$application->trainingStart|date:'j. n. Y'}
 Školení proběhne na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
 
 {if $application->publicDate}
-Pohled na vchod: {='i/images/venues/' . $venue->entrance|staticUrl}
+Pohled na vchod: {='venues/' . $venue->entrance|staticImageUrl}
 {if $venue->entranceNavigation}
-Cesta ke vchodu: {='i/images/venues/' . $venue->entranceNavigation|staticUrl}
+Cesta ke vchodu: {='venues/' . $venue->entranceNavigation|staticImageUrl}
 {/if}
 
 {$venue->publicTransport|striptags}
