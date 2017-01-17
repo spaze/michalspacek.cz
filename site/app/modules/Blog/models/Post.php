@@ -60,17 +60,21 @@ class Post
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				id_blog_post AS postId,
-				slug,
-				title,
-				title AS titleTexy,
-				text,
-				text AS textTexy,
-				published,
-				originally,
-				originally AS originallyTexy
-			FROM blog_posts
-			WHERE id_blog_post = ?',
+				bp.id_blog_post AS postId,
+				bp.slug,
+				bp.title,
+				bp.title AS titleTexy,
+				bp.text,
+				bp.text AS textTexy,
+				bp.published,
+				bp.originally,
+				bp.originally AS originallyTexy,
+				bp.og_image AS ogImage,
+				tct.card AS twitterCard
+			FROM blog_posts bp
+			LEFT JOIN twitter_card_types tct
+				ON tct.id_twitter_card_type = bp.key_twitter_card_type
+			WHERE bp.id_blog_post = ?',
 			$id
 		) ?: null;
 		if ($result) {
@@ -126,8 +130,10 @@ class Post
 	 * @param string $text
 	 * @param string $published
 	 * @param string $originally
+	 * @param string $twitterCard
+	 * @param string $ogImage
 	 */
-	public function add(string $title, string $slug, string $text, string $published, string $originally): void
+	public function add(string $title, string $slug, string $text, string $published, string $originally, string $twitterCard, string $ogImage): void
 	{
 		$this->database->query(
 			'INSERT INTO blog_posts',
@@ -137,6 +143,8 @@ class Post
 				'text' => $text,
 				'published' => new \DateTime($published),
 				'originally' => (empty($originally) ? null : $originally),
+				'key_twitter_card_type' => (empty($twitterCard) ? null : $this->getTwitterCardId($twitterCard)),
+				'og_image' => (empty($ogImage) ? null : $ogImage),
 			)
 		);
 	}
@@ -151,8 +159,10 @@ class Post
 	 * @param string $text
 	 * @param string $published
 	 * @param string $originally
+	 * @param string $twitterCard
+	 * @param string $ogImage
 	 */
-	public function update(int $id, string $title, string $slug, string $text, string $published, string $originally): void
+	public function update(int $id, string $title, string $slug, string $text, string $published, string $originally, string $twitterCard, string $ogImage): void
 	{
 		$this->database->query(
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
@@ -162,10 +172,32 @@ class Post
 				'text' => $text,
 				'published' => new \DateTime($published),
 				'originally' => (empty($originally) ? null : $originally),
+				'key_twitter_card_type' => (empty($twitterCard) ? null : $this->getTwitterCardId($twitterCard)),
+				'og_image' => (empty($ogImage) ? null : $ogImage),
 			),
 			$id
 		);
 	}
 
+
+	/**
+	 * Get all Twitter card types.
+	 *
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getAllTwitterCards(): array
+	{
+		return $this->database->fetchAll('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types ORDER BY card');
+	}
+
+
+	/**
+	 * @param string $card
+	 * @return integer
+	 */
+	private function getTwitterCardId(string $card): int
+	{
+		return $this->database->fetchField('SELECT id_twitter_card_type FROM twitter_card_types WHERE card = ?', $card);
+	}
 
 }

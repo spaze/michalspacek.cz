@@ -53,14 +53,18 @@ class PostLoader
 		if ($this->post === null) {
 			$this->post = $this->database->fetch(
 				'SELECT
-					id_blog_post AS postId,
-					slug,
-					title,
-					text,
-					published,
-					originally
-				FROM blog_posts
-				WHERE slug = ?',
+					bp.id_blog_post AS postId,
+					bp.slug,
+					bp.title,
+					bp.text,
+					bp.published,
+					bp.originally,
+					bp.og_image AS ogImage,
+					tct.card AS twitterCard
+				FROM blog_posts bp
+				LEFT JOIN twitter_card_types tct
+					ON tct.id_twitter_card_type = bp.key_twitter_card_type
+				WHERE bp.slug = ?',
 				$post
 			) ?: null;
 		}

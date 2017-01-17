@@ -58,7 +58,7 @@ class BlogPresenter extends BasePresenter
 	 */
 	protected function createComponentAddPost(string $formName): \MichalSpacekCz\Form\Blog\Post
 	{
-		$form = new \MichalSpacekCz\Form\Blog\Post($this, $formName);
+		$form = new \MichalSpacekCz\Form\Blog\Post($this, $formName, $this->blogPost);
 		$form->onSuccess[] = [$this, 'submittedAddpost'];
 		return $form;
 	}
@@ -71,7 +71,7 @@ class BlogPresenter extends BasePresenter
 	public function submittedAddPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$this->blogPost->add($values->title, $values->slug, $values->text, $values->published, $values->originally);
+			$this->blogPost->add($values->title, $values->slug, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage);
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
@@ -102,7 +102,7 @@ class BlogPresenter extends BasePresenter
 	 */
 	protected function createComponentEditPost(string $formName): \MichalSpacekCz\Form\Blog\Post
 	{
-		$form = new \MichalSpacekCz\Form\Blog\Post($this, $formName);
+		$form = new \MichalSpacekCz\Form\Blog\Post($this, $formName, $this->blogPost);
 		$form->setPost($this->blogPost->getById($this->post->postId));
 		$form->onSuccess[] = [$this, 'submittedEditPost'];
 		return $form;
@@ -115,7 +115,7 @@ class BlogPresenter extends BasePresenter
 	 */
 	public function submittedEditPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
-		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->text, $values->published, $values->originally);
+		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage);
 		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated'));
 		$this->redirect('Blog:');
 	}

@@ -14,14 +14,18 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 	use \MichalSpacekCz\Form\Controls\Date;
 
+	/** @var \MichalSpacekCz\Blog\Post */
+	protected $blogPost;
+
 
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, \MichalSpacekCz\Blog\Post $blogPost)
 	{
 		parent::__construct($parent, $name);
+		$this->blogPost = $blogPost;
 
 		$this->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
@@ -37,6 +41,15 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 		$this->addTextArea('originally', 'Původně vydáno:')
 			->addCondition(self::FILLED)
 			->addRule(self::MIN_LENGTH, 'Text musí mít alespoň %d znaky', 3);
+		$this->addText('ogImage', 'Odkaz na obrázek:')
+			->setRequired(false)
+			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na obrázek je %d znaků', 200);
+
+		$cards = ['' => 'Žádná karta'];
+		foreach ($this->blogPost->getAllTwitterCards() as $card) {
+			$cards[$card->card] = $card->title;
+		}
+		$this->addSelect('twitterCard', 'Twitter card', $cards);
 
 		$this->addSubmit('submit', 'Přidat');
 	}
@@ -54,6 +67,8 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			'published' => $post->published->format('Y-m-d H:i'),
 			'text' => $post->textTexy,
 			'originally' => $post->originallyTexy,
+			'ogImage' => $post->ogImage,
+			'twitterCard' => $post->twitterCard,
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';
