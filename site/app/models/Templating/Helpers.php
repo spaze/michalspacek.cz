@@ -10,6 +10,9 @@ class Helpers extends \Nette\Object
 	/** @var string */
 	protected $staticRoot;
 
+	/** @var string */
+	protected $imagesRoot;
+
 
 	public function __construct(\MichalSpacekCz\Formatter\Texy $texyFormatter)
 	{
@@ -36,9 +39,25 @@ class Helpers extends \Nette\Object
 	}
 
 
+	public function staticImageUrl($filename)
+	{
+		return sprintf('%s/%s/%s',
+			rtrim($this->staticRoot, '/'),
+			trim($this->imagesRoot, '/'),
+			ltrim($filename, '/')
+		);
+	}
+
+
 	public function setStaticRoot($staticRoot)
 	{
 		$this->staticRoot = $staticRoot;
+	}
+
+
+	public function setImagesRoot($imagesRoot)
+	{
+		$this->imagesRoot = $imagesRoot;
 	}
 
 

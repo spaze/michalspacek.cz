@@ -57,6 +57,7 @@ services:
 		class: \MichalSpacekCz\Templating\Helpers
 		setup:
 			- setStaticRoot(%domain.sharedStaticRoot%)
+			- setImagesRoot(%domain.imagesRoot%)
 	vat:
 		class: \MichalSpacekCz\Vat
 		setup:
