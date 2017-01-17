@@ -7,10 +7,18 @@ class Helpers extends \Nette\Object
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
-	/** @var string */
+	/**
+	 * Static files root FQDN, no trailing slash.
+	 *
+	 * @var string
+	 */
 	protected $staticRoot;
 
-	/** @var string */
+	/**
+	 * Images root, just directory no FQND, no leading slash, no trailing slash.
+	 *
+	 * @var string
+	 */
 	protected $imagesRoot;
 
 
@@ -32,32 +40,25 @@ class Helpers extends \Nette\Object
 
 	public function staticUrl($filename)
 	{
-		return sprintf('%s/%s',
-			rtrim($this->staticRoot, '/'),
-			ltrim($filename, '/')
-		);
+		return sprintf('%s/%s', $this->staticRoot, ltrim($filename, '/'));
 	}
 
 
 	public function staticImageUrl($filename)
 	{
-		return sprintf('%s/%s/%s',
-			rtrim($this->staticRoot, '/'),
-			trim($this->imagesRoot, '/'),
-			ltrim($filename, '/')
-		);
+		return sprintf('%s/%s/%s', $this->staticRoot, $this->imagesRoot, ltrim($filename, '/'));
 	}
 
 
 	public function setStaticRoot($staticRoot)
 	{
-		$this->staticRoot = $staticRoot;
+		$this->staticRoot = rtrim($staticRoot, '/');
 	}
 
 
 	public function setImagesRoot($imagesRoot)
 	{
-		$this->imagesRoot = $imagesRoot;
+		$this->imagesRoot = trim($imagesRoot, '/');
 	}
 
 
