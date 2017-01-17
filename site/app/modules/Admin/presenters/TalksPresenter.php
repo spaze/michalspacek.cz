@@ -85,7 +85,7 @@ class TalksPresenter extends BasePresenter
 	protected function createComponentEditTalk(string $formName)
 	{
 		$form = new \MichalSpacekCz\Form\Talk($this, $formName, $this->talk->action, $this->talks);
-		$form->setTalk($this->talks->getById($this->talk->talkId));
+		$form->setTalk($this->talk);
 		$form->onSuccess[] = [$this, 'submittedEditTalk'];
 		return $form;
 	}

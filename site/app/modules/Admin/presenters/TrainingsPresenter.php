@@ -408,7 +408,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentDate($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
-		$form->setTrainingDate($this->trainingDates->get($this->dateId));
+		$form->setTrainingDate($this->training);
 		$form->onSuccess[] = [$this, 'submittedDate'];
 		return $form;
 	}

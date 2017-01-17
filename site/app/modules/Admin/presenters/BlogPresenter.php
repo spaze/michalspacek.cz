@@ -103,7 +103,7 @@ class BlogPresenter extends BasePresenter
 	protected function createComponentEditPost(string $formName): \MichalSpacekCz\Form\Blog\Post
 	{
 		$form = new \MichalSpacekCz\Form\Blog\Post($this, $formName, $this->blogPost);
-		$form->setPost($this->blogPost->getById($this->post->postId));
+		$form->setPost($this->post);
 		$form->onSuccess[] = [$this, 'submittedEditPost'];
 		return $form;
 	}

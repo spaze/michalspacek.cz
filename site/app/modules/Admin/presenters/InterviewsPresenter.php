@@ -57,7 +57,7 @@ class InterviewsPresenter extends BasePresenter
 	protected function createComponentEditInterview($formName)
 	{
 		$form = new \MichalSpacekCz\Form\Interview($this, $formName);
-		$form->setInterview($this->interviews->getById($this->interview->interviewId));
+		$form->setInterview($this->interview);
 		$form->onSuccess[] = [$this, 'submittedEditInterview'];
 		return $form;
 	}
