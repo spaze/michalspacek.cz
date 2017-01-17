@@ -56,6 +56,7 @@ class PostLoader
 					bp.id_blog_post AS postId,
 					bp.slug,
 					bp.title,
+					bp.lead,
 					bp.text,
 					bp.published,
 					bp.originally,

@@ -64,6 +64,8 @@ class Post
 				bp.slug,
 				bp.title,
 				bp.title AS titleTexy,
+				bp.lead,
+				bp.lead AS leadTexy,
 				bp.text,
 				bp.text AS textTexy,
 				bp.published,
@@ -96,6 +98,7 @@ class Post
 				id_blog_post AS postId,
 				slug,
 				title,
+				lead,
 				text,
 				published,
 				originally
@@ -116,7 +119,7 @@ class Post
 		foreach(['title'] as $item) {
 			$row->$item = $this->texyFormatter->format($row->$item);
 		}
-		foreach(['text', 'originally'] as $item) {
+		foreach(['lead', 'text', 'originally'] as $item) {
 			$row->$item = $this->texyFormatter->formatBlock($row->$item);
 		}
 	}
@@ -127,19 +130,21 @@ class Post
 	 *
 	 * @param string $title
 	 * @param string $slug
+	 * @param string $lead
 	 * @param string $text
 	 * @param string $published
 	 * @param string $originally
 	 * @param string $twitterCard
 	 * @param string $ogImage
 	 */
-	public function add(string $title, string $slug, string $text, string $published, string $originally, string $twitterCard, string $ogImage): void
+	public function add(string $title, string $slug, string $lead, string $text, string $published, string $originally, string $twitterCard, string $ogImage): void
 	{
 		$this->database->query(
 			'INSERT INTO blog_posts',
 			array(
 				'title' => $title,
 				'slug' => $slug,
+				'lead' => (empty($lead) ? null : $lead),
 				'text' => $text,
 				'published' => new \DateTime($published),
 				'originally' => (empty($originally) ? null : $originally),
@@ -156,19 +161,21 @@ class Post
 	 * @param integer $id
 	 * @param string $title
 	 * @param string $slug
+	 * @param string $lead
 	 * @param string $text
 	 * @param string $published
 	 * @param string $originally
 	 * @param string $twitterCard
 	 * @param string $ogImage
 	 */
-	public function update(int $id, string $title, string $slug, string $text, string $published, string $originally, string $twitterCard, string $ogImage): void
+	public function update(int $id, string $title, string $slug, string $lead, string $text, string $published, string $originally, string $twitterCard, string $ogImage): void
 	{
 		$this->database->query(
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 			array(
 				'title' => $title,
 				'slug' => $slug,
+				'lead' => (empty($lead) ? null : $lead),
 				'text' => $text,
 				'published' => new \DateTime($published),
 				'originally' => (empty($originally) ? null : $originally),

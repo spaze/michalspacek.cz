@@ -71,7 +71,7 @@ class BlogPresenter extends BasePresenter
 	public function submittedAddPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$this->blogPost->add($values->title, $values->slug, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage);
+			$this->blogPost->add($values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage);
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
@@ -115,7 +115,7 @@ class BlogPresenter extends BasePresenter
 	 */
 	public function submittedEditPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
-		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage);
+		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage);
 		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated'));
 		$this->redirect('Blog:');
 	}
