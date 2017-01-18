@@ -141,6 +141,11 @@ code {
 @media (max-width: 1020px) {
     .column-content, .column-sidebar { max-width: none; }
 }
+.calendar-date {
+    filter: grayscale(1);
+    display: inline-block;
+    margin-right: 1em;
+}
 .icon {
     background: url('/i/images/icons.png') no-repeat top left;
     display: inline-block;

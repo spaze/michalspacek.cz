@@ -8,7 +8,7 @@
 
 {define #content}
 <div class="column-content">
-<p><small>{$post->published|date:'j. n. Y'}{if $post->tags} ({$post->tags|implode:', '}){/if}</small></p>
+<p><small><strong class="calendar-date">📆 {$post->published|date:'j. n. Y'}</strong>{if $post->tags} 🖿 {$post->tags|implode:', '}{/if}</small></p>
 {$post->lead}
 {$post->text}
 {$post->originally}
