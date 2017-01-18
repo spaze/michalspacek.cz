@@ -44,6 +44,9 @@ contentSecurityPolicy:
 		www.trainings.training < www.*.*:
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
 		admin.*.* < www.*.*:
+		admin.blog.add < admin.*.*:
+			connect-src: "'self'"
+		admin.blog.edit < admin.blog.add:
 		admin.info.php < www.*.*:
 			img-src:
 				- 'data:'

@@ -120,4 +120,19 @@ class BlogPresenter extends BasePresenter
 		$this->redirect('Blog:');
 	}
 
+
+	public function actionPreview(): void
+	{
+		if (!$this->isAjax()) {
+			throw new \Nette\Application\BadRequestException('Not an AJAX call');
+		}
+
+		$this->payload->status = \Nette\Http\IResponse::S200_OK;
+		$this->payload->statusMessage = 'Formatted';
+		$this->payload->formatted = $this->texyFormatter->noCache()->formatBlock($this->request->getPost('lead'));
+		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('text'));
+		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('originally'));
+		$this->sendPayload();
+	}
+
 }

@@ -55,6 +55,8 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 		$this->addSelect('twitterCard', 'Twitter card', $cards);
 
 		$this->addSubmit('submit', 'Přidat');
+		$this->addButton('preview', 'Náhled')
+			->setAttribute('data-alt', 'Moment…');;
 	}
 
 

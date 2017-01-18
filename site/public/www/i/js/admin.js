@@ -138,4 +138,31 @@ $(document).ready(function() {
 			$('#certificates-toggle span').toggle();
 		})
 		.css('cursor', 'pointer');
+
+	var FORMATTEXY = FORMATTEXY || {};
+	FORMATTEXY.loadData = function(event) {
+		var p = $(this);
+		var alt = p.data('alt');
+		p.data('alt', p.val());
+		p.val(alt).prop('disabled', true);
+
+		var load = $.post({
+			url: $(this).data('url'),
+			data: {
+				lead: $('body').find('#frm-' + event.data.form + '-lead').val(),
+				text: $('body').find('#frm-' + event.data.form + '-text').val(),
+				originally: $('body').find('#frm-' + event.data.form + '-originally').val(),
+			}
+		});
+		load.done(function(data) {
+			$('#preview-target').show().html(data.formatted);
+		});
+		load.always(function(data) {
+			var alt = p.data('alt');
+			p.data('alt', p.val());
+			p.val(alt).prop('disabled', false);
+		});
+	};
+	$('#frm-addPost #preview').click({form: 'addPost'}, FORMATTEXY.loadData);
+	$('#frm-editPost #preview').click({form: 'editPost'}, FORMATTEXY.loadData);
 });
