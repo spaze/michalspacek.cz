@@ -41,7 +41,7 @@ contentSecurityPolicy:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
-		trainings.training < www.*.*:
+		www.trainings.training < www.*.*:
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
 		admin.*.* < www.*.*:
 		admin.info.php < www.*.*:
