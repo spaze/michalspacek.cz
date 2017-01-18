@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "cdae9b2125532233dd93f864a068c1fb",
+    "content-hash": "4560dc2e4a3f38f55f33855cac421c4f",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1129,16 +1129,16 @@
         },
         {
             "name": "nette/utils",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "d552403bd9337eafd646a7e252c0256e281115dc"
+                "reference": "714afb64d0da07d0da7178cbf5680008e4b0180b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/d552403bd9337eafd646a7e252c0256e281115dc",
-                "reference": "d552403bd9337eafd646a7e252c0256e281115dc",
+                "url": "https://api.github.com/repos/nette/utils/zipball/714afb64d0da07d0da7178cbf5680008e4b0180b",
+                "reference": "714afb64d0da07d0da7178cbf5680008e4b0180b",
                 "shasum": ""
             },
             "require": {
@@ -1188,7 +1188,7 @@
             ],
             "description": "Nette Utility Classes",
             "homepage": "https://nette.org",
-            "time": "2017-01-09T20:22:19+00:00"
+            "time": "2017-01-16T12:30:14+00:00"
         },
         {
             "name": "psr/log",
@@ -1243,12 +1243,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "8b674956ac0ca9b4c90a98197f244cf81079e084"
+                "reference": "74f3abd031c937d75549739e88995f1caabc4dd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/8b674956ac0ca9b4c90a98197f244cf81079e084",
-                "reference": "8b674956ac0ca9b4c90a98197f244cf81079e084",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/74f3abd031c937d75549739e88995f1caabc4dd9",
+                "reference": "74f3abd031c937d75549739e88995f1caabc4dd9",
                 "shasum": ""
             },
             "conflict": {
@@ -1320,7 +1320,7 @@
                 "thelia/backoffice-default-template": ">=2.1,<2.1.2",
                 "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
                 "twig/twig": "<1.20",
-                "typo3/cms": ">=6.2,<6.2.29|>=8,<8.4.1|>=7,<7.6.13",
+                "typo3/cms": ">=6.2,<6.2.30|>=8,<8.4.1|>=7,<7.6.13",
                 "typo3/flow": ">=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5|>=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1",
                 "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
                 "willdurand/js-translation-bundle": "<2.1.1",
@@ -1366,7 +1366,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2017-01-09T15:59:17+00:00"
+            "time": "2017-01-18T01:18:40+00:00"
         },
         {
             "name": "spaze/csp-config",
@@ -1420,12 +1420,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "362212ce2870e138558f926ea50b568ac0c20ac2"
+                "reference": "a837934c32a893b4a175fe5077af5b516352cfa4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/362212ce2870e138558f926ea50b568ac0c20ac2",
-                "reference": "362212ce2870e138558f926ea50b568ac0c20ac2",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/a837934c32a893b4a175fe5077af5b516352cfa4",
+                "reference": "a837934c32a893b4a175fe5077af5b516352cfa4",
                 "shasum": ""
             },
             "require": {
@@ -1444,7 +1444,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-09-30 23:25:12"
+            "time": "2017-01-18 03:46:31"
         },
         {
             "name": "spaze/nonce-generator",
@@ -1990,16 +1990,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.5.2",
+            "version": "0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "06fc09d97a71e823db184f1bfc91354f71986072"
+                "reference": "45a41ad187b8f877c155ed5b93e7105180ee8a4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/06fc09d97a71e823db184f1bfc91354f71986072",
-                "reference": "06fc09d97a71e823db184f1bfc91354f71986072",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/45a41ad187b8f877c155ed5b93e7105180ee8a4b",
+                "reference": "45a41ad187b8f877c155ed5b93e7105180ee8a4b",
                 "shasum": ""
             },
             "require": {
@@ -2026,7 +2026,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.5-dev"
+                    "dev-master": "0.6-dev"
                 }
             },
             "autoload": {
@@ -2039,26 +2039,26 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2017-01-08T16:18:06+00:00"
+            "time": "2017-01-15T20:09:29+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
-            "version": "0.5.1",
+            "version": "0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-nette.git",
-                "reference": "bb2026433c49e62600a4fa72479bf7531b892419"
+                "reference": "44f5ba1fe3ccfde55f3deb3d45debac56d5a1138"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/bb2026433c49e62600a4fa72479bf7531b892419",
-                "reference": "bb2026433c49e62600a4fa72479bf7531b892419",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/44f5ba1fe3ccfde55f3deb3d45debac56d5a1138",
+                "reference": "44f5ba1fe3ccfde55f3deb3d45debac56d5a1138",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^2.3.0",
                 "php": "~7.0",
-                "phpstan/phpstan": "^0.5"
+                "phpstan/phpstan": "^0.6"
             },
             "require-dev": {
                 "consistence/coding-standard": "~0.12.0",
@@ -2078,7 +2078,7 @@
                 "MIT"
             ],
             "description": "Nette Framework class reflection extension for PHPStan",
-            "time": "2017-01-08T15:42:40+00:00"
+            "time": "2017-01-15T22:29:12+00:00"
         },
         {
             "name": "symfony/console",
