@@ -71,7 +71,7 @@ class BlogPresenter extends BasePresenter
 	public function submittedAddPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$this->blogPost->add($values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage);
+			$this->blogPost->add($values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage, $this->tagsToArray($values->tags));
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
@@ -115,7 +115,7 @@ class BlogPresenter extends BasePresenter
 	 */
 	public function submittedEditPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
-		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage);
+		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage, $this->tagsToArray($values->tags));
 		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated'));
 		$this->redirect('Blog:');
 	}
@@ -133,6 +133,18 @@ class BlogPresenter extends BasePresenter
 		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('text'));
 		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('originally'));
 		$this->sendPayload();
+	}
+
+
+	/**
+	 * Convert tags string to array.
+	 *
+	 * @param string $tags
+	 * @return string[]
+	 */
+	private function tagsToArray(string $tags): array
+	{
+		return array_filter(preg_split('/\s*,\s*/', $tags));
 	}
 
 }

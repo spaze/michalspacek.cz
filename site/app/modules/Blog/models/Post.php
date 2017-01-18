@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Blog;
 
+use Nette\Utils\Json;
+
 /**
  * Blog post service.
  *
@@ -72,6 +74,7 @@ class Post
 				bp.originally,
 				bp.originally AS originallyTexy,
 				bp.og_image AS ogImage,
+				bp.tags,
 				tct.card AS twitterCard
 			FROM blog_posts bp
 			LEFT JOIN twitter_card_types tct
@@ -101,7 +104,8 @@ class Post
 				lead,
 				text,
 				published,
-				originally
+				originally,
+				tags
 			FROM
 				blog_posts
 			ORDER BY
@@ -116,6 +120,7 @@ class Post
 
 	private function format(\Nette\Database\Row $row)
 	{
+		$row->tags = (empty($row->tags) ? null : Json::decode($row->tags));
 		foreach(['title'] as $item) {
 			$row->$item = $this->texyFormatter->format($row->$item);
 		}
@@ -136,8 +141,9 @@ class Post
 	 * @param string $originally
 	 * @param string $twitterCard
 	 * @param string $ogImage
+	 * @param array $tags
 	 */
-	public function add(string $title, string $slug, string $lead, string $text, string $published, string $originally, string $twitterCard, string $ogImage): void
+	public function add(string $title, string $slug, string $lead, string $text, string $published, string $originally, string $twitterCard, string $ogImage, array $tags): void
 	{
 		$this->database->query(
 			'INSERT INTO blog_posts',
@@ -150,6 +156,7 @@ class Post
 				'originally' => (empty($originally) ? null : $originally),
 				'key_twitter_card_type' => (empty($twitterCard) ? null : $this->getTwitterCardId($twitterCard)),
 				'og_image' => (empty($ogImage) ? null : $ogImage),
+				'tags' => (empty($tags) ? null : Json::encode($tags)),
 			)
 		);
 	}
@@ -167,8 +174,9 @@ class Post
 	 * @param string $originally
 	 * @param string $twitterCard
 	 * @param string $ogImage
+	 * @param array $tags
 	 */
-	public function update(int $id, string $title, string $slug, string $lead, string $text, string $published, string $originally, string $twitterCard, string $ogImage): void
+	public function update(int $id, string $title, string $slug, string $lead, string $text, string $published, string $originally, string $twitterCard, string $ogImage, array $tags): void
 	{
 		$this->database->query(
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
@@ -181,6 +189,7 @@ class Post
 				'originally' => (empty($originally) ? null : $originally),
 				'key_twitter_card_type' => (empty($twitterCard) ? null : $this->getTwitterCardId($twitterCard)),
 				'og_image' => (empty($ogImage) ? null : $ogImage),
+				'tags' => (empty($tags) ? null : Json::encode($tags)),
 			),
 			$id
 		);

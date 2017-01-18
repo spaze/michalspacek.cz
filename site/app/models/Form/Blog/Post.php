@@ -54,6 +54,9 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 		}
 		$this->addSelect('twitterCard', 'Twitter card', $cards);
 
+		$this->addText('tags', 'Tagy:')
+			->setRequired(false);
+
 		$this->addSubmit('submit', 'Přidat');
 		$this->addButton('preview', 'Náhled')
 			->setAttribute('data-alt', 'Moment…');;
@@ -75,6 +78,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			'originally' => $post->originallyTexy,
 			'ogImage' => $post->ogImage,
 			'twitterCard' => $post->twitterCard,
+			'tags' => ($post->tags ? implode(', ', $post->tags) : null),
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';

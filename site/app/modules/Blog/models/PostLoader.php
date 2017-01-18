@@ -61,7 +61,8 @@ class PostLoader
 					bp.published,
 					bp.originally,
 					bp.og_image AS ogImage,
-					tct.card AS twitterCard
+					tct.card AS twitterCard,
+					bp.tags
 				FROM blog_posts bp
 				LEFT JOIN twitter_card_types tct
 					ON tct.id_twitter_card_type = bp.key_twitter_card_type
