@@ -141,8 +141,8 @@ code {
 @media (max-width: 1020px) {
     .column-content, .column-sidebar { max-width: none; }
 }
-.calendar-date {
-    filter: grayscale(1);
+#header-icons { filter: grayscale(1); }
+#header-icons strong {
     display: inline-block;
     margin-right: 1em;
 }
