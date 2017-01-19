@@ -119,18 +119,14 @@ class Talk extends ProtectedForm
 	 * @param string control name
 	 * @param string label
 	 * @param boolean required
-	 * @param integer width of the control (deprecated)
-	 * @param integer maximum number of characters the user may enter
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	protected function addTalkDate($name, $label = null, $required = false, $cols = null, $maxLength = null)
+	protected function addTalkDate($name, $label = null, $required = false)
 	{
 		return $this->addDate(
 			$name,
 			$label,
 			$required,
-			$cols,
-			$maxLength,
 			'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM',
 			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})'
 		);

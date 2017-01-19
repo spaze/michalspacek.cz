@@ -148,18 +148,14 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 	 * @param string control name
 	 * @param string label
 	 * @param boolean required
-	 * @param integer width of the control (deprecated)
-	 * @param integer maximum number of characters the user may enter
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	private function addFromDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false, ?int $cols = null, ?int $maxLength = null): \Nette\Forms\Controls\TextInput
+	private function addFromDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(
 			$name,
 			$label,
 			$required,
-			$cols,
-			$maxLength,
 			'YYYY-MM(-DD (HH:MM(:SS)))',
 			'(\d{4}-\d{1,2}(-\d{1,2}( \d{1,2}:\d{2}(:\d{2})?)?)?)',
 			$container
@@ -173,18 +169,14 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 	 * @param string control name
 	 * @param string label
 	 * @param boolean required
-	 * @param integer width of the control (deprecated)
-	 * @param integer maximum number of characters the user may enter
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	private function addPublishedDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false, ?int $cols = null, ?int $maxLength = null): \Nette\Forms\Controls\TextInput
+	private function addPublishedDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(
 			$name,
 			$label,
 			$required,
-			$cols,
-			$maxLength,
 			'YYYY-MM-DD (HH:MM(:SS))',
 			'(\d{4}-\d{1,2}-\d{1,2}( \d{1,2}:\d{2}(:\d{2})?)?)',
 			$container
