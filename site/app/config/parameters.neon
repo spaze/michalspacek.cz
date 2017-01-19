@@ -21,6 +21,7 @@ parameters:
 		default: www
 		sharedStaticRoot: https://www.%domain.root%
 		imagesRoot: /i/images
+		locationRoot: /srv/www/michalspacek.cz/site/public/www
 	reporting:
 		contentSecurityPolicy: https://plz.report-uri.io/r/default/csp/enforce
 		publicKeyPins: https://plz.report-uri.io/r/default/hpkp/reportOnly

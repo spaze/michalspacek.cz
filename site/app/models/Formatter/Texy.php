@@ -35,6 +35,13 @@ class Texy extends \Netxten\Formatter\Texy
 	 */
 	protected $imagesRoot;
 
+	/**
+	 * Physical location root directory, no trailing slash.
+	 *
+	 * @var string
+	 */
+	protected $locationRoot;
+
 
 	/**
 	 * @param \Nette\Caching\IStorage $cacheStorage
@@ -106,6 +113,17 @@ class Texy extends \Netxten\Formatter\Texy
 
 
 	/**
+	 * Set location root directory.
+	 *
+	 * @param string $root
+	 */
+	public function setLocationRoot($root)
+	{
+		$this->locationRoot = rtrim($root, '/');
+	}
+
+
+	/**
 	 * Create Texy object.
 	 *
 	 * @return \Texy\Texy
@@ -114,6 +132,7 @@ class Texy extends \Netxten\Formatter\Texy
 	{
 		$texy = parent::getTexy();
 		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
+		$texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
 		return $texy;
 	}
 

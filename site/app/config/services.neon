@@ -13,6 +13,7 @@ services:
 			- addHandlers()
 			- setStaticRoot(%domain.sharedStaticRoot%)
 			- setImagesRoot(%domain.imagesRoot%)
+			- setLocationRoot(%domain.locationRoot%)
 	redirections:  \MichalSpacekCz\Redirections
 	articles:  \MichalSpacekCz\Articles
 	files:     \MichalSpacekCz\Files
