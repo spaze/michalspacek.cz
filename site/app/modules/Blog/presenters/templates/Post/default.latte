@@ -9,7 +9,7 @@
 {define #content}
 <div class="column-content">
 <p id="header-icons"><small><strong>📆 {$post->published|date:'j. n. Y'}</strong>{if $post->tags} 📂 {$post->tags|implode:', '}{/if}</small></p>
-{$post->lead}
+<em n:if="$post->lead">{$post->lead}</em>
 {$post->text}
 {$post->originally}
 </div>

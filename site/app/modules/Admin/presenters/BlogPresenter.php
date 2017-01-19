@@ -129,7 +129,7 @@ class BlogPresenter extends BasePresenter
 
 		$this->payload->status = \Nette\Http\IResponse::S200_OK;
 		$this->payload->statusMessage = 'Formatted';
-		$this->payload->formatted = $this->texyFormatter->noCache()->formatBlock($this->request->getPost('lead'));
+		$this->payload->formatted = \Nette\Utils\Html::el('em')->setHtml($this->texyFormatter->noCache()->formatBlock($this->request->getPost('lead')));
 		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('text'));
 		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('originally'));
 		$this->sendPayload();
