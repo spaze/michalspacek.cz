@@ -14,10 +14,10 @@ class Helpers extends \Nette\Object
 	}
 
 
-	public function loader($helper)
+	public function loader($helper, ...$args)
 	{
 		if (method_exists($this, $helper)) {
-			return call_user_func_array([$this, $helper], array_slice(func_get_args(), 1));
+			return $this->$helper(...$args);
 		} else {
 			return null;
 		}

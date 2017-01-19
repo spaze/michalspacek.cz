@@ -243,7 +243,7 @@ class Texy extends \Netxten\Formatter\Texy
 
 		$result = preg_replace_callback('~\*\*([^:]+):([^*]+)\*\*~', function ($matches) use ($replacements) {
 			if (isset($replacements[$matches[1]])) {
-				return call_user_func($replacements[$matches[1]], $matches[2]);
+				return $replacements[$matches[1]]($matches[2]);
 			}
 		}, $result);
 		return Html::el()->setHtml($result);
