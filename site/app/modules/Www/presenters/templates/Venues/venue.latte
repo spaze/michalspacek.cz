@@ -2,7 +2,7 @@
 {import "../Trainings/default.latte"}
 <h3>{_messages.venues.nameaddress}</h3>
 {var $search = $address . ', ' . $city}
-<p><strong><a href="{$href}">{$name}</a>{if $nameExtended}, {$nameExtended}{/if}, {$address}, {$city}</strong> (<a href="https://www.google.com/maps/search/{$search|url}">{_messages.label.map}</a>)</p>
+<p><strong><a href="{$href}">{$name}</a>{if $nameExtended}, {$nameExtended}{/if}, {$address}, {$city}</strong> (<a href="https://www.google.com/maps/search/{$search|escapeUrl}">{_messages.label.map}</a>)</p>
 
 <h3>{_messages.venues.entrance}</h3>
 <p>

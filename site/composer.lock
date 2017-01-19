@@ -155,16 +155,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.4.2",
+            "version": "v2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "7d30f7bfd58cb017c47d7e14ed93286ce2ca1bc9"
+                "reference": "b62ee346467e1e2402a43c499cf6047fddc5d321"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/7d30f7bfd58cb017c47d7e14ed93286ce2ca1bc9",
-                "reference": "7d30f7bfd58cb017c47d7e14ed93286ce2ca1bc9",
+                "url": "https://api.github.com/repos/nette/latte/zipball/b62ee346467e1e2402a43c499cf6047fddc5d321",
+                "reference": "b62ee346467e1e2402a43c499cf6047fddc5d321",
                 "shasum": ""
             },
             "require": {
@@ -217,20 +217,20 @@
                 "templating",
                 "twig"
             ],
-            "time": "2016-09-27T13:10:19+00:00"
+            "time": "2017-01-19T11:06:59+00:00"
         },
         {
             "name": "nette/application",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "58a8d2288dd2aae755538ccb380af183a356892d"
+                "reference": "3e30a1ec941717668bcdab336d690484700207cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/58a8d2288dd2aae755538ccb380af183a356892d",
-                "reference": "58a8d2288dd2aae755538ccb380af183a356892d",
+                "url": "https://api.github.com/repos/nette/application/zipball/3e30a1ec941717668bcdab336d690484700207cd",
+                "reference": "3e30a1ec941717668bcdab336d690484700207cd",
                 "shasum": ""
             },
             "require": {
@@ -251,7 +251,7 @@
                 "mockery/mockery": "^0.9.5",
                 "nette/di": "~2.4",
                 "nette/forms": "~2.4",
-                "nette/robot-loader": "~2.4",
+                "nette/robot-loader": "^2.4.2 || ^3.0",
                 "nette/security": "~2.4",
                 "nette/tester": "~2.0",
                 "tracy/tracy": "^2.4"
@@ -292,7 +292,7 @@
             ],
             "description": "Nette Application MVC Component",
             "homepage": "https://nette.org",
-            "time": "2016-12-20T11:12:00+00:00"
+            "time": "2017-01-19T10:34:07+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -722,16 +722,16 @@
         },
         {
             "name": "nette/http",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/http.git",
-                "reference": "71602f2ab582312b5ae016a9f0b8df1a8a116f86"
+                "reference": "7727507129934e18c59bdc4060fd32730b0d9e87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/http/zipball/71602f2ab582312b5ae016a9f0b8df1a8a116f86",
-                "reference": "71602f2ab582312b5ae016a9f0b8df1a8a116f86",
+                "url": "https://api.github.com/repos/nette/http/zipball/7727507129934e18c59bdc4060fd32730b0d9e87",
+                "reference": "7727507129934e18c59bdc4060fd32730b0d9e87",
                 "shasum": ""
             },
             "require": {
@@ -742,7 +742,7 @@
                 "nette/nette": "<2.2"
             },
             "require-dev": {
-                "nette/di": "^2.4",
+                "nette/di": "^2.4.6",
                 "nette/tester": "~2.0",
                 "tracy/tracy": "^2.4"
             },
@@ -778,7 +778,7 @@
             ],
             "description": "Nette HTTP Component",
             "homepage": "https://nette.org",
-            "time": "2016-12-19T14:56:54+00:00"
+            "time": "2017-01-18T03:03:04+00:00"
         },
         {
             "name": "nette/mail",
@@ -1243,12 +1243,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "74f3abd031c937d75549739e88995f1caabc4dd9"
+                "reference": "1991086b35313dd4e3c5b351f4b22760deea0910"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/74f3abd031c937d75549739e88995f1caabc4dd9",
-                "reference": "74f3abd031c937d75549739e88995f1caabc4dd9",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1991086b35313dd4e3c5b351f4b22760deea0910",
+                "reference": "1991086b35313dd4e3c5b351f4b22760deea0910",
                 "shasum": ""
             },
             "conflict": {
@@ -1297,7 +1297,7 @@
                 "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
                 "silverstripe/framework": ">=3,<3.3",
                 "silverstripe/userforms": "<3",
-                "simplesamlphp/saml2": ">=1.9,<1.9.1|>=1.10,<1.10.3|>=2.3,<2.3.3",
+                "simplesamlphp/saml2": "<1.8.1|>=1.9,<1.9.1|>=1.10,<1.10.3|>=2,<2.3.3",
                 "simplesamlphp/simplesamlphp": "<1.14.11",
                 "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
                 "socalnick/scn-social-auth": "<1.15.2",
@@ -1366,7 +1366,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2017-01-18T01:18:40+00:00"
+            "time": "2017-01-19T15:04:18+00:00"
         },
         {
             "name": "spaze/csp-config",
@@ -1420,12 +1420,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "a837934c32a893b4a175fe5077af5b516352cfa4"
+                "reference": "1d21775d5afdb0a79536107bdb2d15754dc7796f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/a837934c32a893b4a175fe5077af5b516352cfa4",
-                "reference": "a837934c32a893b4a175fe5077af5b516352cfa4",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/1d21775d5afdb0a79536107bdb2d15754dc7796f",
+                "reference": "1d21775d5afdb0a79536107bdb2d15754dc7796f",
                 "shasum": ""
             },
             "require": {
@@ -1435,6 +1435,7 @@
                 "nette/forms": "~2.3",
                 "nette/http": "~2.3",
                 "nette/utils": "^2.3.10",
+                "php": ">= 7.0.0",
                 "texy/texy": "~2.8"
             },
             "type": "library",
@@ -1444,7 +1445,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-01-18 03:46:31"
+            "time": "2017-01-19 18:17:17"
         },
         {
             "name": "spaze/nonce-generator",
