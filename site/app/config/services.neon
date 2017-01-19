@@ -11,6 +11,7 @@ services:
 		class: \MichalSpacekCz\Formatter\Texy
 		setup:
 			- addHandlers()
+			- setStaticRoot(%domain.sharedStaticRoot%)
 			- setImagesRoot(%domain.imagesRoot%)
 	redirections:  \MichalSpacekCz\Redirections
 	articles:  \MichalSpacekCz\Articles
@@ -53,11 +54,7 @@ services:
 		setup:
 			- setCookieParameters(/, %domain.cookie%, true)
 	netxtenHelpers: \Netxten\Templating\Helpers
-	helpers:
-		class: \MichalSpacekCz\Templating\Helpers
-		setup:
-			- setStaticRoot(%domain.sharedStaticRoot%)
-			- setImagesRoot(%domain.imagesRoot%)
+	helpers: \MichalSpacekCz\Templating\Helpers
 	vat:
 		class: \MichalSpacekCz\Vat
 		setup:

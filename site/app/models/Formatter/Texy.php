@@ -21,8 +21,19 @@ class Texy extends \Netxten\Formatter\Texy
 	/** @var \Netxten\Templating\Helpers */
 	protected $netxtenHelpers;
 
-	/** @var string root of relative images (http) */
-	public $imagesRoot = 'images/';
+	/**
+	 * Static files root FQDN, no trailing slash.
+	 *
+	 * @var string
+	 */
+	protected $staticRoot;
+
+	/**
+	 * Images root, just directory no FQND, no leading slash, no trailing slash.
+	 *
+	 * @var string
+	 */
+	protected $imagesRoot;
 
 
 	/**
@@ -49,13 +60,48 @@ class Texy extends \Netxten\Formatter\Texy
 
 
 	/**
+	 * Set static content URL root.
+	 *
+	 * @param string $root
+	 */
+	public function setStaticRoot($root)
+	{
+		$this->staticRoot = rtrim($root, '/');
+	}
+
+
+	/**
+	 * Get static content URL root.
+	 *
+	 * @param string $filename
+	 * @return string
+	 */
+	public function getStaticRoot()
+	{
+		return $this->staticRoot;
+	}
+
+
+	/**
 	 * Set images root directory.
 	 *
 	 * @param string $root
 	 */
 	public function setImagesRoot($root)
 	{
-		$this->imagesRoot = $root;
+		$this->imagesRoot = trim($root, '/');
+	}
+
+
+	/**
+	 * Get absolute URL of the image.
+	 *
+	 * @param string $filename
+	 * @return string
+	 */
+	public function getImagesRoot($filename)
+	{
+		return sprintf('%s/%s/%s', $this->staticRoot, $this->imagesRoot, ltrim($filename, '/'));
 	}
 
 
@@ -67,7 +113,7 @@ class Texy extends \Netxten\Formatter\Texy
 	protected function getTexy()
 	{
 		$texy = parent::getTexy();
-		$texy->imageModule->root = $this->imagesRoot;
+		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
 		return $texy;
 	}
 
