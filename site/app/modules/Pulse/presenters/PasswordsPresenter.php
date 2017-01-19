@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\PulseModule\Presenters;
 
 /**
@@ -13,7 +15,7 @@ class PasswordsPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * Default action handler.
 	 */
-	public function actionDefault($param)
+	public function actionDefault(): void
 	{
 		$this->template->pageTitle = 'Passwords';
 	}
@@ -24,7 +26,7 @@ class PasswordsPresenter extends \App\WwwModule\Presenters\BasePresenter
 	 *
 	 * Redirects already published URLs.
 	 */
-	public function actionStoragesQuestions()
+	public function actionStoragesQuestions(): void
 	{
 		$this->redirect(\Nette\Http\IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:questions');
 	}
@@ -35,7 +37,7 @@ class PasswordsPresenter extends \App\WwwModule\Presenters\BasePresenter
 	 *
 	 * Redirects already published URLs.
 	 */
-	public function actionStoragesRating()
+	public function actionStoragesRating(): void
 	{
 		$this->redirect(\Nette\Http\IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:rating');
 	}

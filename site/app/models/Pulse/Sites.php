@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Pulse;
 
 /**
@@ -11,7 +13,7 @@ class Sites
 {
 
 	/** @var string */
-	const ALL = 'all';
+	public const ALL = 'all';
 
 	/** @var \Nette\Database\Context */
 	protected $database;
@@ -29,9 +31,9 @@ class Sites
 	/**
 	 * Get all sites.
 	 *
-	 * @return array
+	 * @return \Nette\Database\Row[]
 	 */
-	public function getAll()
+	public function getAll(): array
 	{
 		return $this->database->fetchAll('SELECT id, url, alias FROM sites ORDER BY alias');
 	}
@@ -40,11 +42,11 @@ class Sites
 	/**
 	 * Get site by URL.
 	 *
-	 * @return \Nette\Database\Row
+	 * @return \Nette\Database\Row|null
 	 */
-	public function getByUrl($url)
+	public function getByUrl(string $url): ?\Nette\Database\Row
 	{
-		return $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
+		return $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url) ?: null;
 	}
 
 
@@ -56,7 +58,7 @@ class Sites
 	 * @param integer $companyId
 	 * @return integer Id of newly inserted site
 	 */
-	public function add($url, $alias, $companyId)
+	public function add(string $url, string $alias, int $companyId): int
 	{
 		$this->database->query('INSERT INTO sites', ['url' => $url, 'alias' => $alias, 'key_companies' => $companyId]);
 		return (int)$this->database->getInsertId();

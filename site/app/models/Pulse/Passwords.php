@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Pulse;
 
 use \MichalSpacekCz\Pulse\Sites;
@@ -50,7 +52,7 @@ class Passwords
 	 *
 	 * @return \stdClass with companies, sites, algos, storages properties
 	 */
-	public function getAllStorages()
+	public function getAllStorages(): \stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -97,7 +99,7 @@ class Passwords
 	 * @param array $sites Aliases
 	 * @return \stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStoragesBySite(array $sites)
+	public function getStoragesBySite(array $sites): \stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -145,7 +147,7 @@ class Passwords
 	 * @param array $companies Aliases
 	 * @return \stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStoragesByCompany(array $companies)
+	public function getStoragesByCompany(array $companies): \stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -193,7 +195,7 @@ class Passwords
 	 * @param integer $companyId Company id
 	 * @return \stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStoragesByCompanyId($companyId)
+	public function getStoragesByCompanyId($companyId): \stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -241,7 +243,7 @@ class Passwords
 	 * @param array $data
 	 * @return \stdClass with companies, sites, algos, storages properties
 	 */
-	private function processStorages(array $data)
+	private function processStorages(array $data): \stdClass
 	{
 		$storages = new \stdClass();
 		$storages->sites = array();
@@ -304,7 +306,7 @@ class Passwords
 	 * @param \stdClass|null $attrs attributes
 	 * @return string|null String of formatted algos, null if no inner or outer hashes used
 	 */
-	private function formatFullAlgo($name, \stdClass $attrs = null)
+	private function formatFullAlgo(string $name, ?\stdClass $attrs = null): ?string
 	{
 		if (!isset($attrs->inner) && !isset($attrs->outer)) {
 			return null;
@@ -335,7 +337,7 @@ class Passwords
 	 *
 	 * @return array of alias => name
 	 */
-	public function getSlowHashes()
+	public function getSlowHashes(): array
 	{
 		return $this->database->fetchPairs(
 			'SELECT alias, algo FROM password_algos WHERE alias IN (?) ORDER BY algo',
@@ -347,9 +349,9 @@ class Passwords
 	/**
 	 * Get disclosure types.
 	 *
-	 * @return array of (id, alias, type)
+	 * @return \Nette\Database\Row[] of (id, alias, type)
 	 */
-	public function getDisclosureTypes()
+	public function getDisclosureTypes(): array
 	{
 		return $this->database->fetchAll('SELECT id, alias, type FROM password_disclosure_types ORDER BY type');
 	}
@@ -360,7 +362,7 @@ class Passwords
 	 *
 	 * @return array of alias => name
 	 */
-	public function getVisibleDisclosures()
+	public function getVisibleDisclosures(): array
 	{
 		return $this->database->fetchPairs(
 			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
@@ -374,7 +376,7 @@ class Passwords
 	 *
 	 * @return array of alias => name
 	 */
-	public function getInvisibleDisclosures()
+	public function getInvisibleDisclosures(): array
 	{
 		return $this->database->fetchPairs(
 			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
@@ -386,9 +388,9 @@ class Passwords
 	/**
 	 * Get all algorithms.
 	 *
-	 * @return array of id, algo, alias
+	 * @return \Nette\Database\Row[] of id, algo, alias
 	 */
-	public function getAlgorithms()
+	public function getAlgorithms(): array
 	{
 		return $this->database->fetchAll('SELECT id, algo, alias FROM password_algos ORDER BY algo');
 	}
@@ -398,11 +400,11 @@ class Passwords
 	 * Get algorithm by name.
 	 *
 	 * @param string $name
-	 * @return \Nette\Database\Row
+	 * @return \Nette\Database\Row|null
 	 */
-	public function getAlgorithmByName($name)
+	public function getAlgorithmByName(string $name): ?\Nette\Database\Row
 	{
-		return $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name);
+		return $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name) ?: null;
 	}
 
 
@@ -415,7 +417,7 @@ class Passwords
 	 * @param boolean $stretched
 	 * @return integer Id of newly inserted algorithm
 	 */
-	private function addAlgorithm($name, $alias, $salted, $stretched)
+	private function addAlgorithm(string $name, string $alias, bool $salted, bool $stretched): int
 	{
 		$this->database->query('INSERT INTO password_algos', [
 			'algo' => $name,
@@ -432,11 +434,11 @@ class Passwords
 	 *
 	 * @param string $url
 	 * @param string $archive
-	 * @return integer id
+	 * @return integer|null id
 	 */
-	private function getDisclosureId($url, $archive)
+	private function getDisclosureId(string $url, string $archive): ?int
 	{
-		return $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
+		return $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive) ?: null;
 	}
 
 
@@ -450,7 +452,7 @@ class Passwords
 	 * @param string $published
 	 * @return integer Id of newly inserted disclosure
 	 */
-	private function addDisclosure($type, $url, $archive, $note, $published)
+	private function addDisclosure(int $type, string $url, string $archive, string $note, string $published): int
 	{
 		$this->database->query('INSERT INTO password_disclosures', [
 			'key_password_disclosure_types' => $type,
@@ -472,11 +474,11 @@ class Passwords
 	 * @param string $from
 	 * @param boolean $fromConfirmed
 	 * @param string|null $attributes
-	 * @return array
+	 * @return integer|null
 	 */
-	private function getStorageId($companyId, $algoId, $siteId, $from, $fromConfirmed, $attributes)
+	private function getStorageId(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, ?string $attributes): ?int
 	{
-		return $this->database->fetchField(
+		$result = $this->database->fetchField(
 			'SELECT id FROM password_storages WHERE ?',
 			array(
 				'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
@@ -487,6 +489,7 @@ class Passwords
 				'attributes' => (empty($attributes) ? null : $attributes),
 			)
 		);
+		return $result ?: null;
 	}
 
 
@@ -501,7 +504,7 @@ class Passwords
 	 * @param string $attributes
 	 * @return integer Id of newly inserted storage
 	 */
-	private function addStorageData($companyId, $algoId, $siteId, $from, $fromConfirmed, $attributes)
+	private function addStorageData(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, string $attributes): int
 	{
 		$this->database->query('INSERT INTO password_storages', [
 			'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
@@ -520,9 +523,8 @@ class Passwords
 	 *
 	 * @param integer $disclosureId
 	 * @param integer $storageId
-	 * @return null
 	 */
-	private function pairDisclosureStorage($disclosureId, $storageId)
+	private function pairDisclosureStorage(int $disclosureId, int $storageId): void
 	{
 		$this->database->query(
 			'INSERT INTO password_disclosures_password_storages',
@@ -540,13 +542,13 @@ class Passwords
 	 * @param \Nette\Utils\ArrayHash $values
 	 * @return boolean True if storage added successfully
 	 */
-	public function addStorage(\Nette\Utils\ArrayHash $values)
+	public function addStorage(\Nette\Utils\ArrayHash $values): bool
 	{
 		$this->database->beginTransaction();
 		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba, $values->company->new->alias));
-		$siteId = (empty($values->site->new->url)
+		$siteId = (string)(empty($values->site->new->url)
 			? $values->site->id  // the value can also be "all"
-			: (string)$this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
+			: $this->sites->add($values->site->new->url, $values->site->new->alias, $companyId)
 		);
 		$algoId = (empty($values->algo->new->algo)
 			? (int)$values->algo->id

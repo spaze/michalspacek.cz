@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Pulse\Passwords;
 
 /**
@@ -11,12 +13,12 @@ class Rating
 {
 
 	/** @internal rating grades */
-	const RATING_A = 'A';
-	const RATING_B = 'B';
-	const RATING_C = 'C';
-	const RATING_D = 'D';
-	const RATING_E = 'E';
-	const RATING_F = 'F';
+	private const RATING_A = 'A';
+	private const RATING_B = 'B';
+	private const RATING_C = 'C';
+	private const RATING_D = 'D';
+	private const RATING_E = 'E';
+	private const RATING_F = 'F';
 
 	/** @var \Nette\Database\Context */
 	protected $database;
@@ -71,7 +73,7 @@ class Rating
 	 * @param \MichalSpacekCz\Pulse\Passwords\Algorithm $algo
 	 * @return string 'A'-'F'
 	 */
-	public function get(Algorithm $algo)
+	public function get(Algorithm $algo): string
 	{
 		if (in_array($algo->alias, $this->slowHashes, true)) {
 			foreach ($this->visibleDisclosures as $disclosure) {
@@ -100,9 +102,9 @@ class Rating
 	/**
 	 * Get rating guide.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
-	public function getRatingGuide()
+	public function getRatingGuide(): array
 	{
 		return [
 			self::RATING_A => 'Site uses a slow hashing function, this is disclosed "on-site", in the docs, FAQ, etc.',
@@ -118,9 +120,9 @@ class Rating
 	/**
 	 * Get array of slow hashes' aliases
 	 *
-	 * @return array
+	 * @return string[]
 	 */
-	public function getSlowHashes()
+	public function getSlowHashes(): array
 	{
 		return $this->slowHashes;
 	}
@@ -129,9 +131,9 @@ class Rating
 	/**
 	 * Get array of invisible disclosures' aliases
 	 *
-	 * @return array
+	 * @return string[]
 	 */
-	public function getInvisibleDisclosures()
+	public function getInvisibleDisclosures(): array
 	{
 		return $this->invisibleDisclosures;
 	}
@@ -140,9 +142,9 @@ class Rating
 	/**
 	 * Get array of visible disclosures' aliases
 	 *
-	 * @return array
+	 * @return string[]
 	 */
-	public function getVisibleDisclosures()
+	public function getVisibleDisclosures(): array
 	{
 		return $this->visibleDisclosures;
 	}

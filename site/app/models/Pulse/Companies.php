@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Pulse;
 
 /**
@@ -26,9 +28,9 @@ class Companies
 	/**
 	 * Get all companies.
 	 *
-	 * @return array of [id, name]
+	 * @return \Nette\Database\Row[] of [id, name]
 	 */
-	public function getAll()
+	public function getAll(): array
 	{
 		return $this->database->fetchAll('SELECT id, name, alias FROM companies ORDER BY name');
 	}
@@ -37,11 +39,12 @@ class Companies
 	/**
 	 * Get company by name.
 	 *
-	 * @return \Nette\Database\Row
+	 * @param string $name
+	 * @return \Nette\Database\Row|null
 	 */
-	public function getByName($name)
+	public function getByName(string $name): ?\Nette\Database\Row
 	{
-		return $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name);
+		return $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name) ?: null;
 	}
 
 
@@ -53,7 +56,7 @@ class Companies
 	 * @param string $alias
 	 * @return integer Id of newly inserted company
 	 */
-	public function add($name, $tradeName, $alias)
+	public function add(string $name, string $tradeName, string $alias): int
 	{
 		$this->database->query('INSERT INTO companies', [
 			'name' => $name,

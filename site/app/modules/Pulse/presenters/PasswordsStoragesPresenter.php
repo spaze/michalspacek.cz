@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\PulseModule\Presenters;
 
 use Nette\Http\Response;
@@ -19,6 +21,10 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	protected $passwordsRating;
 
 
+	/**
+	 * @param \MichalSpacekCz\Pulse\Passwords $passwords
+	 * @param \MichalSpacekCz\Pulse\Passwords\Rating $passwordsRating
+	 */
 	public function __construct(\MichalSpacekCz\Pulse\Passwords $passwords, \MichalSpacekCz\Pulse\Passwords\Rating $passwordsRating)
 	{
 		$this->passwords = $passwords;
@@ -30,9 +36,9 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * Storages action handler.
 	 *
-	 * @param string $param
+	 * @param string|null $param
 	 */
-	public function actionDefault($param)
+	public function actionDefault(?string $param): void
 	{
 		// Keep old, published URLs alive
 		if ($param) {
@@ -51,7 +57,7 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	 *
 	 * @param string $param
 	 */
-	public function actionSite($param)
+	public function actionSite(string $param): void
 	{
 		if (empty($param)) {
 			$this->redirect(Response::S301_MOVED_PERMANENTLY, 'default');
@@ -76,7 +82,7 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	 *
 	 * @param string $param
 	 */
-	public function actionCompany($param)
+	public function actionCompany(string $param): void
 	{
 		if (empty($param)) {
 			$this->redirect(Response::S301_MOVED_PERMANENTLY, 'default');
@@ -104,7 +110,7 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * Storages rating action handler.
 	 */
-	public function actionRating()
+	public function actionRating(): void
 	{
 		$this->template->pageTitle = 'Password storage disclosures rating guide';
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
@@ -117,7 +123,7 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * Storages questions action handler.
 	 */
-	public function actionQuestions()
+	public function actionQuestions(): void
 	{
 		$this->template->pageTitle = 'Password storage disclosures questions';
 	}

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form\Pulse;
 
 /**
@@ -150,7 +152,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 	 * @param integer maximum number of characters the user may enter
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	private function addFromDate($container, $name, $label = null, $required = false, $cols = null, $maxLength = null)
+	private function addFromDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false, ?int $cols = null, ?int $maxLength = null): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(
 			$name,
@@ -175,7 +177,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 	 * @param integer maximum number of characters the user may enter
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	private function addPublishedDate($container, $name, $label = null, $required = false, $cols = null, $maxLength = null)
+	private function addPublishedDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false, ?int $cols = null, ?int $maxLength = null): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(
 			$name,
