@@ -36,7 +36,7 @@ subresourceIntegrity:
 		- sha256
 	localPrefix:
 		url: %domain.sharedStaticRoot%
-		path: ../www
+		path: %domain.locationRoot%
 		build: /i/build
 	localMode: build
 	resources:
