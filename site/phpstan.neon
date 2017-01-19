@@ -6,7 +6,6 @@ parameters:
 		- '#^Call to an undefined method Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
 		- '#^Cannot access property Nette\\Http\\SessionSection::\$name from current scope#'
 		- '#^Parameter .* expects Nette\\Http\\SessionSection, Nette\\Http\\Session\|Nette\\Http\\SessionSection given#'
-		- '~^Parameter #2 \$refUrl of class Nette\\Application\\LinkGenerator constructor expects Nette\\Http\\Url, Nette\\Http\\Request given~'
 
 includes:
 	- vendor/phpstan/phpstan/conf/config.level5.neon
