@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Application;
 
 /**
@@ -37,7 +39,7 @@ class LocaleLinkGenerator
 	 * @param array of name => value
 	 * @return array of locale => URL
 	 */
-	public function links($destination, array $params = array())
+	public function links(string $destination, array $params = array()): array
 	{
 		$links = array();
 		foreach ($this->routerFactory->getLocaleRouters() as $locale => $router) {

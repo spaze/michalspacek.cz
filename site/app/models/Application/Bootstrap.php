@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Application;
 
 use Nette\Application\UI\Presenter;
@@ -16,10 +18,10 @@ class Bootstrap extends \Nette\Object
 {
 
 	/** @var string */
-	const MODE_PRODUCTION = 'production';
+	private const MODE_PRODUCTION = 'production';
 
 	/** @var string */
-	const MODE_DEVELOPMENT = 'development';
+	private const MODE_DEVELOPMENT = 'development';
 
 	/** @var \Nette\Http\Request */
 	private $httpRequest;
@@ -53,20 +55,20 @@ class Bootstrap extends \Nette\Object
 	 * @param string $appDir
 	 * @param string $logDir
 	 * @param string $tempDir
-	 * @param string $environment
+	 * @param string|null $environment
 	 * @param string $timeZone
 	 */
-	public function __construct($appDir, $logDir, $tempDir, $environment, $timeZone)
+	public function __construct(string $appDir, string $logDir, string $tempDir, ?string $environment, string $timeZone)
 	{
 		$this->appDir = $appDir;
 		$this->logDir = $logDir;
 		$this->tempDir = $tempDir;
-		$this->environment = $environment;
+		$this->environment = $environment ?? self::MODE_PRODUCTION;
 		$this->timeZone = $timeZone;
 	}
 
 
-	public function run()
+	public function run(): void
 	{
 		$configurator = new \Nette\Configurator();
 		$configurator->addParameters(['appDir' => $this->appDir]);
@@ -107,7 +109,7 @@ class Bootstrap extends \Nette\Object
 	}
 
 
-	private function getConfigurationFiles()
+	private function getConfigurationFiles(): array
 	{
 		return array_unique(array(
 			$this->appDir . '/config/extensions.neon',
@@ -123,13 +125,13 @@ class Bootstrap extends \Nette\Object
 	}
 
 
-	private function isDebugMode()
+	private function isDebugMode(): bool
 	{
 		return ($this->environment === self::MODE_DEVELOPMENT);
 	}
 
 
-	private function redirectToSecure()
+	private function redirectToSecure(): void
 	{
 		$fqdn = $this->container->getParameters()['domain']['fqdn'];
 		$uri = $_SERVER['REQUEST_URI'];
