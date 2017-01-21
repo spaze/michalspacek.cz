@@ -133,6 +133,7 @@ class Texy extends \Netxten\Formatter\Texy
 		$texy = parent::getTexy();
 		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
 		$texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
+		$texy->figureModule->widthDelta = false;  // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
 		return $texy;
 	}
 
