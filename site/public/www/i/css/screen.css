@@ -129,6 +129,16 @@ code {
     box-shadow: 0px 0px 20px hsl(0, 0%, 87%);
     background-color: hsl(0, 0%, 95%);
 }
+.column-content .figure img {
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+.column-content .figure p {
+    text-align: center;
+    margin-bottom: 2em;
+    font-size: small;
+    color: #666;
+}
 .column-sidebar {
     max-width: 260px;
     float: right;
