@@ -56,6 +56,8 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 		$this->addText('tags', 'Tagy:')
 			->setRequired(false);
+		$this->addText('recommended', 'Doporučené:')
+			->setRequired(false);
 
 		$this->addSubmit('submit', 'Přidat');
 		$this->addButton('preview', 'Náhled')
@@ -79,6 +81,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			'ogImage' => $post->ogImage,
 			'twitterCard' => $post->twitterCard,
 			'tags' => ($post->tags ? implode(', ', $post->tags) : null),
+			'recommended' => (empty($post->recommended) ? null : \Nette\Utils\Json::encode($post->recommended)),
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';

@@ -152,6 +152,7 @@ $(document).ready(function() {
 				lead: $('body').find('#frm-' + event.data.form + '-lead').val(),
 				text: $('body').find('#frm-' + event.data.form + '-text').val(),
 				originally: $('body').find('#frm-' + event.data.form + '-originally').val(),
+				recommended: $('body').find('#frm-' + event.data.form + '-recommended').val(),
 			}
 		});
 		load.done(function(data) {

@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace App\AdminModule\Presenters;
 
+use \Nette\Utils\Html;
+use \Nette\Utils\Json;
+
 /**
  * Blog presenter.
  *
@@ -71,7 +74,7 @@ class BlogPresenter extends BasePresenter
 	public function submittedAddPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$this->blogPost->add($values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage, $this->tagsToArray($values->tags));
+			$this->blogPost->add($values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage, $this->tagsToArray($values->tags), $values->recommended);
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
@@ -90,7 +93,7 @@ class BlogPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("Post id {$param} does not exist, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$title = \Nette\Utils\Html::el()->setText('Příspěvek ')->addHtml($this->post->title);
+		$title = Html::el()->setText('Příspěvek ')->addHtml($this->post->title);
 		$this->template->pageTitle = strip_tags((string)$title);
 		$this->template->pageHeader = $title;
 	}
@@ -115,7 +118,7 @@ class BlogPresenter extends BasePresenter
 	 */
 	public function submittedEditPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
-		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage, $this->tagsToArray($values->tags));
+		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage, $this->tagsToArray($values->tags), $values->recommended);
 		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated'));
 		$this->redirect('Blog:');
 	}
@@ -129,9 +132,18 @@ class BlogPresenter extends BasePresenter
 
 		$this->payload->status = \Nette\Http\IResponse::S200_OK;
 		$this->payload->statusMessage = 'Formatted';
-		$this->payload->formatted = \Nette\Utils\Html::el('em')->setHtml($this->texyFormatter->noCache()->formatBlock($this->request->getPost('lead')));
+		$this->payload->formatted = Html::el('em')->setHtml($this->texyFormatter->noCache()->formatBlock($this->request->getPost('lead')));
 		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('text'));
 		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('originally'));
+		if ($this->request->getPost('recommended')) {
+			$list = Html::el('ul');
+			foreach (Json::decode($this->request->getPost('recommended')) as $item) {
+				$list->addHtml(Html::el('li')->setHtml($this->texyFormatter->noCache()->translate($item->text, [$item->url])));
+			}
+			$this->payload->formatted .= Html::el('hr');
+			$this->payload->formatted .= Html::el('h3')->setHtml($this->texyFormatter->noCache()->translate('messages.blog.post.recommendedreading'));
+			$this->payload->formatted .= $list;
+		}
 		$this->sendPayload();
 	}
 

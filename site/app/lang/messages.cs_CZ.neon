@@ -293,6 +293,8 @@ certificates:
 		expireddaysago: "před %count% dnem|před %count% dny|před %count% dny"
 		expiresindays: "ze %count% den|za %count% dny|za %count% dní"
 blog:
+	post:
+		recommendedreading: "Mohlo by vás také zajímat"
 	admin:
 		postadded: "Příspěvek na blog přidán"
 		postupdated: "Příspěvek upraven"

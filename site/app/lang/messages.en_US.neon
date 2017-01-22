@@ -293,6 +293,8 @@ certificates:
 		expireddaysago: "%count% day ago|%count% days ago"
 		expiresindays: "in %count% day|in %count% days"
 blog:
+	post:
+		recommendedreading: "Recommended reading"
 	admin:
 		postadded: "Blog post added"
 		duplicateslug: "Blog post with such slug already exists"
