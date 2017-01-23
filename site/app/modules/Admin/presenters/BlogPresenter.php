@@ -74,10 +74,10 @@ class BlogPresenter extends BasePresenter
 			$post = new \MichalSpacekCz\Blog\Post\Data();
 			$post->published = new \DateTime($values->published);
 			$post->slug = $values->slug;
-			$post->title = $values->title;
-			$post->lead = (empty($values->lead) ? null : $values->lead);
-			$post->text = $values->text;
-			$post->originally = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
+			$post->titleTexy = $values->title;
+			$post->leadTexy = (empty($values->lead) ? null : $values->lead);
+			$post->textTexy = $values->text;
+			$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
 			$post->ogImage = (empty($this->request->getPost('ogImage')) ? null : $this->request->getPost('ogImage'));
 			$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tagsToArray($this->request->getPost('tags')));
 			$post->recommended = (empty($this->request->getPost('recommended')) ? null : $this->request->getPost('recommended'));
@@ -130,10 +130,10 @@ class BlogPresenter extends BasePresenter
 		$post->postId = $this->post->postId;
 		$post->published = new \DateTime($values->published);
 		$post->slug = $values->slug;
-		$post->title = $values->title;
-		$post->lead = (empty($values->lead) ? null : $values->lead);
-		$post->text = $values->text;
-		$post->originally = (empty($values->originally) ? null : $values->originally);
+		$post->titleTexy = $values->title;
+		$post->leadTexy = (empty($values->lead) ? null : $values->lead);
+		$post->textTexy = $values->text;
+		$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
 		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
 		$post->tags = (empty($values->tags) ? null : $this->tagsToArray($values->tags));
 		$post->recommended = (empty($values->recommended) ? null : $values->recommended);
@@ -154,10 +154,10 @@ class BlogPresenter extends BasePresenter
 
 		$post = new \MichalSpacekCz\Blog\Post\Data();
 		$post->published = new \DateTime($this->request->getPost('published'));
-		$post->title = $this->request->getPost('title');
-		$post->lead = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));
-		$post->text = $this->request->getPost('text');
-		$post->originally = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
+		$post->titleTexy = $this->request->getPost('title');
+		$post->leadTexy = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));
+		$post->textTexy = $this->request->getPost('text');
+		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
 		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tagsToArray($this->request->getPost('tags')));
 		$post->recommended = (empty($this->request->getPost('recommended')) ? null : $this->request->getPost('recommended'));
 		$preview = $this->createTemplate();

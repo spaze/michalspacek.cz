@@ -64,11 +64,11 @@ class Post
 			'SELECT
 				bp.id_blog_post AS postId,
 				bp.slug,
-				bp.title,
-				bp.lead,
-				bp.text,
+				bp.title AS titleTexy,
+				bp.lead AS leadTexy,
+				bp.text AS textTexy,
 				bp.published,
-				bp.originally,
+				bp.originally AS originallyTexy,
 				bp.og_image AS ogImage,
 				bp.tags,
 				bp.recommended,
@@ -97,11 +97,11 @@ class Post
 		$sql = 'SELECT
 				id_blog_post AS postId,
 				slug,
-				title,
-				lead,
-				text,
+				title AS titleTexy,
+				lead AS leadTexy,
+				text AS textTexy,
 				published,
-				originally,
+				originally AS originallyTexy,
 				tags
 			FROM
 				blog_posts
@@ -125,11 +125,11 @@ class Post
 		$post = new \MichalSpacekCz\Blog\Post\Data();
 		$post->postId = $row->postId;
 		$post->slug = $row->slug;
-		$post->title = $row->title;
-		$post->lead = $row->lead;
-		$post->text = $row->text;
+		$post->titleTexy = $row->titleTexy;
+		$post->leadTexy = $row->leadTexy;
+		$post->textTexy = $row->textTexy;
 		$post->published = $row->published;
-		$post->originally = $row->originally;
+		$post->originallyTexy = $row->originallyTexy;
 		$post->ogImage = (isset($row->ogImage) ? $row->ogImage : null);  // Can't use ??, throws Nette\MemberAccessException
 		$post->tags = (isset($row->tags) ? Json::decode($row->tags) : null);  // Can't use ??, throws Nette\MemberAccessException
 		$post->recommended = (isset($row->recommended) ? $row->recommended : null);  // Can't use ??, throws Nette\MemberAccessException
@@ -148,12 +148,10 @@ class Post
 	{
 		$post->recommended = (empty($post->recommended) ? null : Json::decode($post->recommended));
 		foreach(['title'] as $item) {
-			$post->{$item . 'Texy'} = $post->$item;
-			$post->$item = $this->texyFormatter->format($post->$item);
+			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'});
 		}
 		foreach(['lead', 'text', 'originally'] as $item) {
-			$post->{$item . 'Texy'} = $post->$item;
-			$post->$item = $this->texyFormatter->formatBlock($post->$item);
+			$post->$item = $this->texyFormatter->formatBlock($post->{$item . 'Texy'});
 		}
 		return $post;
 	}
@@ -169,12 +167,12 @@ class Post
 		$this->database->query(
 			'INSERT INTO blog_posts',
 			array(
-				'title' => $post->title,
+				'title' => $post->titleTexy,
 				'slug' => $post->slug,
-				'lead' => $post->lead,
-				'text' => $post->text,
+				'lead' => $post->leadTexy,
+				'text' => $post->textTexy,
 				'published' => $post->published,
-				'originally' => $post->originally,
+				'originally' => $post->originallyTexy,
 				'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 				'og_image' => $post->ogImage,
 				'tags' => Json::encode($post->tags),
@@ -194,12 +192,12 @@ class Post
 		$this->database->query(
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 			array(
-				'title' => $post->title,
+				'title' => $post->titleTexy,
 				'slug' => $post->slug,
-				'lead' => $post->lead,
-				'text' => $post->text,
+				'lead' => $post->leadTexy,
+				'text' => $post->textTexy,
 				'published' => $post->published,
-				'originally' => $post->originally,
+				'originally' => $post->originallyTexy,
 				'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 				'og_image' => $post->ogImage,
 				'tags' => Json::encode($post->tags),

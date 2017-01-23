@@ -17,19 +17,19 @@ class Data
 	/** @var string */
 	public $slug;
 
-	/** @var string */
+	/** @var \Nette\Utils\Html */
 	public $title;
 
 	/** @var string */
 	public $titleTexy;
 
-	/** @var string */
+	/** @var \Nette\Utils\Html */
 	public $lead;
 
 	/** @var string */
 	public $leadTexy;
 
-	/** @var string */
+	/** @var \Nette\Utils\Html */
 	public $text;
 
 	/** @var string */
@@ -38,7 +38,7 @@ class Data
 	/** @var \DateTimeInterface */
 	public $published;
 
-	/** @var string */
+	/** @var \Nette\Utils\Html */
 	public $originally;
 
 	/** @var string */
