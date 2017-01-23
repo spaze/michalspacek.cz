@@ -3,9 +3,6 @@ declare(strict_types = 1);
 
 namespace App\AdminModule\Presenters;
 
-use \Nette\Utils\Html;
-use \Nette\Utils\Json;
-
 /**
  * Blog presenter.
  *
@@ -93,7 +90,7 @@ class BlogPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException("Post id {$param} does not exist, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
-		$title = Html::el()->setText('Příspěvek ')->addHtml($this->post->title);
+		$title = \Nette\Utils\Html::el()->setText('Příspěvek ')->addHtml($this->post->title);
 		$this->template->pageTitle = strip_tags((string)$title);
 		$this->template->pageHeader = $title;
 	}
@@ -129,34 +126,37 @@ class BlogPresenter extends BasePresenter
 		if (!$this->isAjax()) {
 			throw new \Nette\Application\BadRequestException('Not an AJAX call');
 		}
+		$this->texyFormatter->disableCache();
+
+		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post->published = new \DateTime($this->request->getPost('published'));
+		$post->title = $this->request->getPost('title');
+		$post->lead = $this->request->getPost('lead');
+		$post->text = $this->request->getPost('text');
+		$post->originally = $this->request->getPost('originally');
+		$post->tags = $this->tagsToJson($this->request->getPost('tags'));
+		$post->recommended = $this->request->getPost('recommended');
+		$this->blogPost->format($post);
+		$preview = $this->createTemplate();
+		$preview->setFile(__DIR__ . '/templates/Blog/preview.latte');
+		$preview->post = $post;
 
 		$this->payload->status = \Nette\Http\IResponse::S200_OK;
 		$this->payload->statusMessage = 'Formatted';
-		$this->payload->formatted = Html::el('em')->setHtml($this->texyFormatter->noCache()->formatBlock($this->request->getPost('lead')));
-		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('text'));
-		$this->payload->formatted .= $this->texyFormatter->noCache()->formatBlock($this->request->getPost('originally'));
-		if ($this->request->getPost('recommended')) {
-			$list = Html::el('ul');
-			foreach (Json::decode($this->request->getPost('recommended')) as $item) {
-				$list->addHtml(Html::el('li')->setHtml($this->texyFormatter->noCache()->translate($item->text, [$item->url])));
-			}
-			$this->payload->formatted .= Html::el('hr');
-			$this->payload->formatted .= Html::el('h3')->setHtml($this->texyFormatter->noCache()->translate('messages.blog.post.recommendedreading'));
-			$this->payload->formatted .= $list;
-		}
+		$this->payload->formatted = (string)$preview;
 		$this->sendPayload();
 	}
 
 
 	/**
-	 * Convert tags string to array.
+	 * Convert tags string to JSON.
 	 *
 	 * @param string $tags
-	 * @return string[]
+	 * @return string
 	 */
-	private function tagsToArray(string $tags): array
+	private function tagsToJson(string $tags): string
 	{
-		return array_filter(preg_split('/\s*,\s*/', $tags));
+		return \Nette\Utils\Json::encode(array_filter(preg_split('/\s*,\s*/', $tags)));
 	}
 
 }

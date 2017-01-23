@@ -6,8 +6,7 @@
 <meta n:if="$post->twitterCard" name="twitter:site" content="@spazef0rze">
 {/define}
 
-{define #content}
-<div class="column-content">
+{define #blogPost}
 <p id="header-icons"><small><strong>📆 {$post->published|date:'j. n. Y'}</strong>{if $post->tags} 📂 {$post->tags|implode:', '}{/if}</small></p>
 <em n:if="$post->lead">{$post->lead}</em>
 {$post->text}
@@ -19,6 +18,11 @@
 		<li>{=$item->text|format:$item->url}</li>
 	</ul>
 {/if}
+{/define}
+
+{define #content}
+<div class="column-content">
+{include #blogPost}
 </div>
 <div class="column-sidebar">
 <div class="widget">

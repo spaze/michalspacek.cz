@@ -65,14 +65,10 @@ class Post
 				bp.id_blog_post AS postId,
 				bp.slug,
 				bp.title,
-				bp.title AS titleTexy,
 				bp.lead,
-				bp.lead AS leadTexy,
 				bp.text,
-				bp.text AS textTexy,
 				bp.published,
 				bp.originally,
-				bp.originally AS originallyTexy,
 				bp.og_image AS ogImage,
 				bp.tags,
 				bp.recommended,
@@ -119,14 +115,21 @@ class Post
 	}
 
 
-	private function format(\Nette\Database\Row $row)
+	/**
+	 * Format post data.
+	 *
+	 * @param \Nette\Database\Row $row
+	 */
+	public function format(\Nette\Database\Row $row): void
 	{
 		$row->tags = (empty($row->tags) ? null : Json::decode($row->tags));
 		$row->recommended = (empty($row->recommended) ? null : Json::decode($row->recommended));
 		foreach(['title'] as $item) {
+			$row->{$item . 'Texy'} = $row->$item;
 			$row->$item = $this->texyFormatter->format($row->$item);
 		}
 		foreach(['lead', 'text', 'originally'] as $item) {
+			$row->{$item . 'Texy'} = $row->$item;
 			$row->$item = $this->texyFormatter->formatBlock($row->$item);
 		}
 	}
