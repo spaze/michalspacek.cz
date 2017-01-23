@@ -144,16 +144,11 @@ $(document).ready(function() {
 		var p = $(this);
 		var alt = p.data('alt');
 		p.data('alt', p.val());
-		p.val(alt).prop('disabled', true);
-
+		p.val(alt);
+		var disabled = $('body').find(event.data.form).find('input:hidden, input:button, input:submit').prop('disabled', true);
 		var load = $.post({
 			url: $(this).data('url'),
-			data: {
-				lead: $('body').find('#frm-' + event.data.form + '-lead').val(),
-				text: $('body').find('#frm-' + event.data.form + '-text').val(),
-				originally: $('body').find('#frm-' + event.data.form + '-originally').val(),
-				recommended: $('body').find('#frm-' + event.data.form + '-recommended').val(),
-			}
+			data: $('body').find(event.data.form).serialize(),
 		});
 		load.done(function(data) {
 			$('#preview-target').show().html(data.formatted);
@@ -161,9 +156,10 @@ $(document).ready(function() {
 		load.always(function(data) {
 			var alt = p.data('alt');
 			p.data('alt', p.val());
-			p.val(alt).prop('disabled', false);
+			p.val(alt);
+			disabled.prop('disabled', false);
 		});
 	};
-	$('#frm-addPost #preview').click({form: 'addPost'}, FORMATTEXY.loadData);
-	$('#frm-editPost #preview').click({form: 'editPost'}, FORMATTEXY.loadData);
+	$('#frm-addPost #preview').click({form: '#frm-addPost'}, FORMATTEXY.loadData);
+	$('#frm-editPost #preview').click({form: '#frm-editPost'}, FORMATTEXY.loadData);
 });
