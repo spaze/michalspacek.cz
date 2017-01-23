@@ -70,12 +70,13 @@ class Certificates
 		$now = new \DateTime();
 
 		$query = 'SELECT
-			cr.cnext AS cnExt,
+			cr.cn,
+			cr.ext,
 			MAX(c.not_after) AS notAfter
 			FROM certificates c
 				JOIN certificate_requests cr ON c.key_certificate_request = cr.id_certificate_request
-			GROUP BY cr.cnext
-			ORDER BY cr.cnext';
+			GROUP BY cr.cn, cr.ext
+			ORDER BY cr.cn, cr.ext';
 		$certificates = $this->database->fetchAll($query);
 
 		foreach ($certificates as $certificate) {
@@ -98,13 +99,13 @@ class Certificates
 	public function log(array $certs, array $failures): array
 	{
 		$databaseLoggedAll = true;
-		foreach ($certs as $cnext => $dates) {
-			$start = \Nette\Utils\DateTime::from($dates['start']);
-			$expiry = \Nette\Utils\DateTime::from($dates['expiry']);
+		foreach ($certs as $cnext => $cert) {
+			$start = \Nette\Utils\DateTime::from($cert['start']);
+			$expiry = \Nette\Utils\DateTime::from($cert['expiry']);
 			try {
 				$this->database->beginTransaction();
 				$this->database->query('INSERT INTO certificates', array(
-					'key_certificate_request' => $this->logRequest($cnext, true),
+					'key_certificate_request' => $this->logRequest($cert['cn'], $cert['ext'], true),
 					'not_before' => $start,
 					'not_after' => $expiry,
 				));
@@ -115,9 +116,9 @@ class Certificates
 				$databaseLoggedAll = false;
 			}
 		}
-		foreach ($failures as $cnext) {
+		foreach ($failures as $cnext => $cert) {
 			try {
-				$this->logRequest($cnext, false);
+				$this->logRequest($cert['cn'], $cert['ext'], false);
 			} catch (\Nette\Database\DriverException $e) {
 				\Tracy\Debugger::log($e);
 				\Tracy\Debugger::log("FAIL $cnext", 'cert');
@@ -137,14 +138,16 @@ class Certificates
 
 
 	/**
-	 * @param string $cnext
+	 * @param string $cn
+	 * @param string $ext
 	 * @param boolean $success
 	 * @return integer
 	 */
-	private function logRequest(string $cnext, bool $success): int
+	private function logRequest(string $cn, string $ext, bool $success): int
 	{
 		$this->database->query('INSERT INTO certificate_requests', array(
-			'cnext' => $cnext,
+			'cn' => $cn,
+			'ext' => (empty($ext) ? null : $ext),
 			'time' => new \DateTime(),
 			'success' => $success,
 		));
