@@ -1420,12 +1420,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "1d21775d5afdb0a79536107bdb2d15754dc7796f"
+                "reference": "9feb4bab7714b707e072f722dd10913e656ddb89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/1d21775d5afdb0a79536107bdb2d15754dc7796f",
-                "reference": "1d21775d5afdb0a79536107bdb2d15754dc7796f",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/9feb4bab7714b707e072f722dd10913e656ddb89",
+                "reference": "9feb4bab7714b707e072f722dd10913e656ddb89",
                 "shasum": ""
             },
             "require": {
@@ -1445,7 +1445,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-01-19 18:17:17"
+            "time": "2017-01-23 00:44:24"
         },
         {
             "name": "spaze/nonce-generator",
@@ -1991,16 +1991,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.6",
+            "version": "0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "45a41ad187b8f877c155ed5b93e7105180ee8a4b"
+                "reference": "254def88b153eb9dfa8ceab4a92eed92ccab8ca2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/45a41ad187b8f877c155ed5b93e7105180ee8a4b",
-                "reference": "45a41ad187b8f877c155ed5b93e7105180ee8a4b",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/254def88b153eb9dfa8ceab4a92eed92ccab8ca2",
+                "reference": "254def88b153eb9dfa8ceab4a92eed92ccab8ca2",
                 "shasum": ""
             },
             "require": {
@@ -2040,20 +2040,20 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2017-01-15T20:09:29+00:00"
+            "time": "2017-01-21T20:48:18+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
-            "version": "0.6",
+            "version": "0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-nette.git",
-                "reference": "44f5ba1fe3ccfde55f3deb3d45debac56d5a1138"
+                "reference": "d1279c0f6813e4e7d24f10bae4d30cd573b62f50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/44f5ba1fe3ccfde55f3deb3d45debac56d5a1138",
-                "reference": "44f5ba1fe3ccfde55f3deb3d45debac56d5a1138",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/d1279c0f6813e4e7d24f10bae4d30cd573b62f50",
+                "reference": "d1279c0f6813e4e7d24f10bae4d30cd573b62f50",
                 "shasum": ""
             },
             "require": {
@@ -2079,7 +2079,7 @@
                 "MIT"
             ],
             "description": "Nette Framework class reflection extension for PHPStan",
-            "time": "2017-01-15T22:29:12+00:00"
+            "time": "2017-01-21T18:15:09+00:00"
         },
         {
             "name": "symfony/console",
