@@ -106,14 +106,14 @@ class TrainingsPresenter extends BasePresenter
 
 	public function actionTraining($name)
 	{
-		$session = $this->getSession();
-		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
-
 		$this->training = $this->trainings->get($name);
 		if (!$this->training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 		$this->dates = $this->trainings->getDates($name);
+
+		$session = $this->getSession();
+		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
 		$this->template->name             = $this->training->action;
 		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.training', [$this->training->name]);
