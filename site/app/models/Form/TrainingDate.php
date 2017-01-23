@@ -37,7 +37,7 @@ class TrainingDate extends ProtectedForm
 
 		$trainings = array();
 		foreach ($this->trainings->getNamesIncludingCustom() as $training) {
-			$key = ($training->custom ? 'Na zakázku' : 'Standardní');
+			$key = ($training->successorId !== null ? 'Nahrazené' : ($training->custom ? 'Na zakázku' : 'Standardní'));
 			$trainings[$key][$training->id] = $training->name;
 		}
 		$this->addSelect('training', 'Školení:', $trainings)

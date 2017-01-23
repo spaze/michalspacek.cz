@@ -85,7 +85,8 @@ class Trainings
 				price,
 				student_discount AS studentDiscount,
 				materials,
-				custom
+				custom,
+				key_successor AS successorId
 			FROM trainings
 			WHERE
 				action = ?
@@ -216,6 +217,7 @@ class Trainings
 			FROM trainings t
 			WHERE
 				NOT t.custom
+				AND t.key_successor IS NULL
 			ORDER BY
 				t.id_training'
 		);
@@ -233,7 +235,8 @@ class Trainings
 				t.id_training AS id,
 				t.action,
 				t.name,
-				t.custom
+				t.custom,
+				t.key_successor AS successorId
 			FROM trainings t
 			ORDER BY
 				t.id_training'
@@ -269,8 +272,9 @@ class Trainings
 				LEFT JOIN training_applications a ON r.key_application = a.id_application
 				JOIN training_dates d ON a.key_date = d.id_date
 				JOIN trainings t ON t.id_training = d.key_training
+				LEFT JOIN trainings t2 ON t2.id_training = t.key_successor
 			WHERE
-				t.action = ?
+				(t.action = ? OR t2.action = ?)
 				AND NOT r.hidden
 			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
 
@@ -278,7 +282,7 @@ class Trainings
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$reviews = $this->database->fetchAll($query, $name);
+		$reviews = $this->database->fetchAll($query, $name, $name);
 		foreach ($reviews as &$review) {
 			$review['review'] = $this->texyFormatter->format($review['review']);
 		}
@@ -336,6 +340,17 @@ class Trainings
 					'hidden' => $hidden,
 				)
 		);
+	}
+
+
+	/**
+	 * Return training action name by id.
+	 * @param integer $id
+	 * @return string
+	 */
+	public function getActionById($id)
+	{
+		return $this->database->fetchField('SELECT action FROM trainings WHERE id_training = ?', $id);
 	}
 
 }

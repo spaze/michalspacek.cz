@@ -110,6 +110,11 @@ class TrainingsPresenter extends BasePresenter
 		if (!$this->training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
+
+		if ($this->training->successorId !== null) {
+			$this->redirect('training', $this->trainings->getActionById($this->training->successorId));
+		}
+
 		$this->dates = $this->trainings->getDates($name);
 
 		$session = $this->getSession();

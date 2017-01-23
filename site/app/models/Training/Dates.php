@@ -239,6 +239,8 @@ class Dates
 						GROUP BY
 							t2.action, d2.key_venue
 					) u ON t.action = u.action AND v.id_venue = u.key_venue AND d.start = u.start
+				WHERE
+					t.key_successor IS NULL
 				ORDER BY
 					t.id_training, d.start";
 
