@@ -59,6 +59,7 @@ small a, .small a { color: #444; }
     border-left: 2px solid #EEE;
 }
 .block { display: block; }
+.separated { margin-top: 1em; }
 .hidden { display: none; }
 .strikethrough { text-decoration: line-through; }
 input.big { width: 400px; }
