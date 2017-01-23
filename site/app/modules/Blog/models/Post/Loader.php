@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog;
+namespace MichalSpacekCz\Blog\Post;
 
 /**
  * Blog post loader service.
@@ -11,7 +11,7 @@ namespace MichalSpacekCz\Blog;
  * @author Michal Špaček
  * @package michalspacek.cz
  */
-class PostLoader
+class Loader
 {
 
 	/** @var \Nette\Database\Context */

@@ -37,7 +37,7 @@ class RouterFactory
 
 	private const ROOT_ONLY = '';
 
-	/** @var \MichalSpacekCz\Blog\PostLoader */
+	/** @var \MichalSpacekCz\Blog\Post\Loader */
 	protected $blogPostLoader;
 
 	/** @var \Nette\Localization\ITranslator */
@@ -66,10 +66,10 @@ class RouterFactory
 
 
 	/**
-	 * @param \MichalSpacekCz\Blog\PostLoader $blogPostLoader
+	 * @param \MichalSpacekCz\Blog\Post\Loader $blogPostLoader
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\MichalSpacekCz\Blog\PostLoader $blogPostLoader, \Nette\Localization\ITranslator $translator)
+	public function __construct(\MichalSpacekCz\Blog\Post\Loader $blogPostLoader, \Nette\Localization\ITranslator $translator)
 	{
 		$this->blogPostLoader = $blogPostLoader;
 		$this->translator = $translator;

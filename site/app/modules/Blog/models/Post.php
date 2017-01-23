@@ -17,7 +17,7 @@ class Post
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var PostLoader */
+	/** @var Post\Loader */
 	protected $loader;
 
 	/** @var \MichalSpacekCz\Formatter\Texy */
@@ -26,10 +26,10 @@ class Post
 
 	/**
 	 * @param \Nette\Database\Context $context
-	 * @param PostLoader $loader
+	 * @param Post\Loader $loader
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 */
-	public function __construct(\Nette\Database\Context $context, PostLoader $loader, \MichalSpacekCz\Formatter\Texy $texyFormatter)
+	public function __construct(\Nette\Database\Context $context, Post\Loader $loader, \MichalSpacekCz\Formatter\Texy $texyFormatter)
 	{
 		$this->database = $context;
 		$this->loader = $loader;
