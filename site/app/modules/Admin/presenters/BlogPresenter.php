@@ -18,7 +18,7 @@ class BlogPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
-	/** @var \Nette\Database\Row */
+	/** @var \MichalSpacekCz\Blog\Post\Data */
 	private $post;
 
 
@@ -71,7 +71,18 @@ class BlogPresenter extends BasePresenter
 	public function submittedAddPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$this->blogPost->add($values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage, $this->tagsToArray($values->tags), $values->recommended);
+			$post = new \MichalSpacekCz\Blog\Post\Data();
+			$post->published = new \DateTime($values->published);
+			$post->slug = $values->slug;
+			$post->title = $values->title;
+			$post->lead = (empty($values->lead) ? null : $values->lead);
+			$post->text = $values->text;
+			$post->originally = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
+			$post->ogImage = (empty($this->request->getPost('ogImage')) ? null : $this->request->getPost('ogImage'));
+			$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tagsToArray($this->request->getPost('tags')));
+			$post->recommended = (empty($this->request->getPost('recommended')) ? null : $this->request->getPost('recommended'));
+			$post->twitterCard = (empty($this->request->getPost('twitterCard')) ? null : $this->request->getPost('twitterCard'));
+			$this->blogPost->add($post);
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
@@ -115,7 +126,20 @@ class BlogPresenter extends BasePresenter
 	 */
 	public function submittedEditPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
-		$this->blogPost->update($this->post->postId, $values->title, $values->slug, $values->lead, $values->text, $values->published, $values->originally, $values->twitterCard, $values->ogImage, $this->tagsToArray($values->tags), $values->recommended);
+		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post->postId = $this->post->postId;
+		$post->published = new \DateTime($values->published);
+		$post->slug = $values->slug;
+		$post->title = $values->title;
+		$post->lead = (empty($values->lead) ? null : $values->lead);
+		$post->text = $values->text;
+		$post->originally = (empty($values->originally) ? null : $values->originally);
+		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
+		$post->tags = (empty($values->tags) ? null : $this->tagsToArray($values->tags));
+		$post->recommended = (empty($values->recommended) ? null : $values->recommended);
+		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
+
+		$this->blogPost->update($post);
 		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated'));
 		$this->redirect('Blog:');
 	}
@@ -131,15 +155,14 @@ class BlogPresenter extends BasePresenter
 		$post = new \MichalSpacekCz\Blog\Post\Data();
 		$post->published = new \DateTime($this->request->getPost('published'));
 		$post->title = $this->request->getPost('title');
-		$post->lead = $this->request->getPost('lead');
+		$post->lead = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));
 		$post->text = $this->request->getPost('text');
-		$post->originally = $this->request->getPost('originally');
-		$post->tags = $this->tagsToJson($this->request->getPost('tags'));
-		$post->recommended = $this->request->getPost('recommended');
-		$this->blogPost->format($post);
+		$post->originally = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
+		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tagsToArray($this->request->getPost('tags')));
+		$post->recommended = (empty($this->request->getPost('recommended')) ? null : $this->request->getPost('recommended'));
 		$preview = $this->createTemplate();
 		$preview->setFile(__DIR__ . '/templates/Blog/preview.latte');
-		$preview->post = $post;
+		$preview->post = $this->blogPost->format($post);
 
 		$this->payload->status = \Nette\Http\IResponse::S200_OK;
 		$this->payload->statusMessage = 'Formatted';
@@ -152,11 +175,11 @@ class BlogPresenter extends BasePresenter
 	 * Convert tags string to JSON.
 	 *
 	 * @param string $tags
-	 * @return string
+	 * @return string[]
 	 */
-	private function tagsToJson(string $tags): string
+	private function tagsToArray(string $tags): array
 	{
-		return \Nette\Utils\Json::encode(array_filter(preg_split('/\s*,\s*/', $tags)));
+		return array_filter(preg_split('/\s*,\s*/', $tags));
 	}
 
 }

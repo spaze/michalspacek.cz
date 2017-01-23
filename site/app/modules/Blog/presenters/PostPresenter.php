@@ -35,7 +35,7 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 	{
 		$post = $this->blogPost->get($post);
 		$this->template->post = $post;
-		$this->template->pageTitle = strip_tags((string)$post->title);
+		$this->template->pageTitle = strip_tags($post->title);
 		$this->template->pageHeader = $post->title;
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 	}

@@ -9,7 +9,7 @@ namespace MichalSpacekCz\Blog\Post;
  * @author Michal Špaček
  * @package michalspacek.cz
  */
-class Data extends \Nette\Database\Row
+class Data
 {
 	/** @var integer */
 	public $postId;
@@ -47,7 +47,7 @@ class Data extends \Nette\Database\Row
 	/** @var string */
 	public $ogImage;
 
-	/** @var string[] */
+	/** @var string[]|null */
 	public $tags;
 
 	/** @var \stdClass[] */

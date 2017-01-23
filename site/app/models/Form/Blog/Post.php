@@ -67,9 +67,9 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Set post.
-	 * @param \Nette\Database\Row $post [description]
+	 * @param \MichalSpacekCz\Blog\Post\Data $post [description]
 	 */
-	public function setPost(\Nette\Database\Row $post)
+	public function setPost(\MichalSpacekCz\Blog\Post\Data $post)
 	{
 		$values = array(
 			'title' => $post->titleTexy,
