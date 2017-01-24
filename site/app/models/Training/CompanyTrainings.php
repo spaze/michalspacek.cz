@@ -97,7 +97,8 @@ class CompanyTrainings
 				t.name
 			FROM trainings t
 				JOIN company_trainings ct ON t.id_training = ct.key_training
-			WHERE t.key_successor IS NULL'
+			WHERE t.key_successor IS NULL
+			ORDER BY t.order IS NULL, t.order'
 		);
 		$public = $this->trainingDates->getPublicUpcoming();
 

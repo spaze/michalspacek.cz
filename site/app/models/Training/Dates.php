@@ -242,7 +242,7 @@ class Dates
 				WHERE
 					t.key_successor IS NULL
 				ORDER BY
-					t.id_training, d.start";
+					t.order IS NULL, t.order, d.start";
 
 			$upcoming = array();
 			foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED) as $row) {

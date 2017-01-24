@@ -219,7 +219,7 @@ class Trainings
 				NOT t.custom
 				AND t.key_successor IS NULL
 			ORDER BY
-				t.id_training'
+				t.order IS NULL, t.order'
 		);
 		return $result;
 	}
