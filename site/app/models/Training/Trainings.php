@@ -290,9 +290,16 @@ class Trainings
 	}
 
 
+	/**
+	 * Get review by application id.
+	 *
+	 * @param integer $applicationId
+	 * @return \Nette\Database\Row
+	 * @throws \RuntimeException
+	 */
 	public function getReviewByApplicationId($applicationId)
 	{
-		return $this->database->fetch('SELECT
+		$result = $this->database->fetch('SELECT
 				a.name AS applicationName,
 				r.name,
 				a.company AS applicationCompany,
@@ -310,6 +317,12 @@ class Trainings
 				a.id_application = ?',
 			$applicationId
 		);
+
+		if (!$result) {
+			throw new \RuntimeException("No application id {$applicationId}, yet");
+		}
+
+		return $result;
 	}
 
 
