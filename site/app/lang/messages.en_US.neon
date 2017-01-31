@@ -171,7 +171,6 @@ homepage:
 	aboutme: "more about me"
 	contact: contact
 	trainings: "Come to my public trainings, everybody's welcome"
-	companytrainings: "I can also prepare an in-house training, \"in your company\":[%s]."
 	consultancy: "I also offer consulting for your business, \"contact me\":[%s]!"
 articles:
 	readmore: "read more…"
@@ -221,7 +220,7 @@ trainings:
 		preliminary: "Thanks for preliminarily signing up! I'll let you know once I have a date set."
 	fewseatsleft: "Few last places left, sign-up now!"
 	welcome: "Zvu vás na školení, která pořádám:"
-	companytraining: "Školení mohu uspořádat také \"u vás ve firmě\":[%s]."
+	companytraining: "I can also prepare an in-house training, \"in your company\":[%s]."
 	companyextratraining: "Jakékoliv veřejné školení mohu uspořádat také \"u vás ve firmě\":[%s]. Společnostem nabízím navíc i tyto kurzy:"
 	consultancy: "Nabízím i konzultaci pro vaši firmu, \"napište mi\":[%s]!"
 	partnertrainings:
