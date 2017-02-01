@@ -117,6 +117,22 @@ code {
 #footer .container.admin { max-width: 1180px; }
 #footer-name { float: left; }
 #footer-links { float: right; }
+#langs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0 10px;
+}
+#langs a {
+    display: block;
+    float: right;
+    background-color: rgba(0, 0, 0, 0.04);
+    border-radius: 0px 0px 3px 3px;
+    padding: 3px 5px;
+    text-decoration: none;
+}
+#langs a:hover { background-color: rgba(0, 0, 0, 0.08); }
 .single-column { padding: 0 10px 0.5em 10px; }
 .with-sidebar { padding-bottom: 0.5em; }
 .column-content, .column-sidebar { margin: 10px; }

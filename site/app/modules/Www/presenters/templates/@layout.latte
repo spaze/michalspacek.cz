@@ -61,6 +61,9 @@
 	<div class="clear"></div>
 </div>
 </div>
+<div n:ifset="$localeLink" id="langs" n:class="container, $containerExtraClass">
+<small><a href="{$localeLink['link']}">{_"messages.langs.$localeLink[name]"}</a></small>
+</div>
 </body>
 </html>
 {/block}

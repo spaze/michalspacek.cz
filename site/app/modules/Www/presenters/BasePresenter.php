@@ -42,6 +42,16 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 			$contentSecurityPolicy->addSnippet('ga');
 		}
 		$this->template->setTranslator($this->translator);
+
+		try {
+			/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
+			$localeLinkGenerator = $this->getContext()->getByType(\MichalSpacekCz\Application\LocaleLinkGenerator::class);
+			$links = $localeLinkGenerator->links($this->getName() . ':' . $this->getAction(), $this->params);
+			$this->template->localeLink = ['link' => current($links), 'name' => \Nette\Utils\Strings::lower(key($links))];
+		} catch (\Nette\Application\UI\InvalidLinkException $e) {
+			\Tracy\Debugger::log($e);
+			$this->template->localeLink = null;
+		}
 	}
 
 
