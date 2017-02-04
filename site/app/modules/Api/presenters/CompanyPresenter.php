@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\ApiModule\Presenters;
 
 /**
@@ -30,10 +32,10 @@ class CompanyPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 
 	/**
-	 * @param string $country
-	 * @param string $companyId
+	 * @param string|null $country
+	 * @param string|null $companyId
 	 */
-	public function actionDefault($country, $companyId)
+	public function actionDefault(?string $country, ?string $companyId): void
 	{
 		$this->securityHeaders->accessControlAllowOrigin('https', \MichalSpacekCz\Application\RouterFactory::HOST_WWW);
 

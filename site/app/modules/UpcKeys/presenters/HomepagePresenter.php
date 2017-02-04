@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\UpcKeysModule\Presenters;
 
 /**
@@ -39,7 +41,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	 * @param string|NULL $ssid
 	 * @param string $format
 	 */
-	public function actionDefault($ssid = null, $format = 'html')
+	public function actionDefault(?string $ssid = null, string $format = 'html'): void
 	{
 		$this->ssid = $ssid;
 		$keys = $this->loadKeys();
@@ -75,7 +77,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	 *
 	 * @return array
 	 */
-	protected function loadKeys()
+	protected function loadKeys(): array
 	{
 		$result = [];
 		if ($this->ssid !== null) {
@@ -104,7 +106,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	 * @param array (type id => type)
 	 * @return array (type id => type)
 	 */
-	protected function enrichKeys(array $keys)
+	protected function enrichKeys(array $keys): array
 	{
 		$prefixes = $this->upcKeys->getPrefixes();
 		foreach ($keys as $key) {
@@ -126,7 +128,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	}
 
 
-	protected function createComponentSsid($formName)
+	protected function createComponentSsid(string $formName): \MichalSpacekCz\Form\UpcKeys
 	{
 		$form = new \MichalSpacekCz\Form\UpcKeys($this, $formName, $this->ssid, $this->upcKeys);
 		$form->onSuccess[] = [$this, 'submittedSsid'];
@@ -134,7 +136,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	}
 
 
-	public function submittedSsid(\MichalSpacekCz\Form\UpcKeys $form, $values)
+	public function submittedSsid(\MichalSpacekCz\Form\UpcKeys $form, \Nette\Utils\ArrayHash $values): void
 	{
 		$ssid = strtoupper(trim($values->ssid));
 		if (!$this->upcKeys->saveKeys($ssid)) {
@@ -143,6 +145,5 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 			$this->redirect('this', $ssid);
 		}
 	}
-
 
 }

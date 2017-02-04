@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
@@ -12,10 +14,10 @@ class UpcKeys extends UnprotectedForm
 
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
-	 * @param string $name
+	 * @param string|null $name
 	 * @param string $ssid
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, $ssid, \MichalSpacekCz\UpcKeys $upcKeys)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, ?string $ssid, \MichalSpacekCz\UpcKeys $upcKeys)
 	{
 		parent::__construct($parent, $name);
 		$this->addText('ssid', 'SSID:')

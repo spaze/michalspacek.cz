@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use \Nette\Http\IResponse;
@@ -35,7 +37,7 @@ class ErrorPresenter extends BasePresenter
 	}
 
 
-	public function startup()
+	public function startup(): void
 	{
 		parent::startup();
 		if (!$this->getRequest()->isMethod(\Nette\Application\Request::FORWARD)) {
@@ -47,7 +49,7 @@ class ErrorPresenter extends BasePresenter
 	/**
 	 * @param \Nette\Application\BadRequestException $exception
 	 */
-	public function actionDefault(\Nette\Application\BadRequestException $exception)
+	public function actionDefault(\Nette\Application\BadRequestException $exception): void
 	{
 		$destination = $this->redirections->getDestination($this->getHttpRequest()->getUrl());
 		if ($destination) {

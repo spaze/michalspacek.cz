@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
 
 /**
@@ -10,7 +12,7 @@ namespace App\AdminModule\Presenters;
 abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
-	protected function startupEx()
+	protected function startupEx(): void
 	{
 		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 		if (!$this->user->isLoggedIn()) {
@@ -23,7 +25,7 @@ abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
 	}
 
 
-	public function beforeRender()
+	public function beforeRender(): void
 	{
 		$this->template->trackingCode = false;
 		$this->template->setTranslator($this->translator);

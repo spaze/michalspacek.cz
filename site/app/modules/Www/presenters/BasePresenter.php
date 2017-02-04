@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 /**
@@ -17,14 +19,14 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public $translator;
 
 
-	protected function startup()
+	protected function startup(): void
 	{
 		parent::startup();
 		$this->startupEx();
 	}
 
 
-	protected function startupEx()
+	protected function startupEx(): void
 	{
 		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
 		if ($authenticator->isForbidden()) {
@@ -33,7 +35,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
-	public function beforeRender()
+	public function beforeRender(): void
 	{
 		$webTracking = $this->getContext()->getByType(\MichalSpacekCz\WebTracking::class);
 		/** @var \Spaze\ContentSecurityPolicy\Config */
@@ -55,7 +57,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
-	protected function createTemplate()
+	protected function createTemplate(): \Nette\Application\UI\ITemplate
 	{
 		$helpers = $this->getContext()->getByType(\MichalSpacekCz\Templating\Helpers::class);
 
