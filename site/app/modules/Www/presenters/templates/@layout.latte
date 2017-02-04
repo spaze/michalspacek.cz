@@ -61,8 +61,8 @@
 	<div class="clear"></div>
 </div>
 </div>
-<div n:ifset="$localeLink" id="langs" n:class="container, $containerExtraClass">
-<small><a href="{$localeLink['link']}">{_"messages.langs.$localeLink[name]"}</a></small>
+<div n:ifset="$localeLinks" id="langs" n:class="container, $containerExtraClass" n:inner-foreach="$localeLinks as $language => $url">
+<small><a href="{$url}">{_"messages.langs.$language"}</a></small>
 </div>
 </body>
 </html>
