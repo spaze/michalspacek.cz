@@ -19,21 +19,27 @@ class Trainings
 	/** @var Dates */
 	protected $trainingDates;
 
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param \Netxten\Formatter\Texy $texyFormatter
 	 * @param Dates $trainingDates
+	 * @param \Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		\Netxten\Formatter\Texy $texyFormatter,
-		Dates $trainingDates
+		Dates $trainingDates,
+		\Nette\Localization\ITranslator $translator
 	)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingDates = $trainingDates;
+		$this->translator = $translator;
 	}
 
 
@@ -72,26 +78,31 @@ class Trainings
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				id_training AS trainingId,
-				action,
-				name,
-				description,
-				content,
-				upsell,
-				prerequisites,
-				audience,
-				original_href AS originalHref,
-				capacity,
-				price,
-				student_discount AS studentDiscount,
-				materials,
-				custom,
-				key_successor AS successorId
-			FROM trainings
+				t.id_training AS trainingId,
+				a.action,
+				t.name,
+				t.description,
+				t.content,
+				t.upsell,
+				t.prerequisites,
+				t.audience,
+				t.original_href AS originalHref,
+				t.capacity,
+				t.price,
+				t.student_discount AS studentDiscount,
+				t.materials,
+				t.custom,
+				t.key_successor AS successorId
+			FROM trainings t
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
 			WHERE
-				action = ?
-				AND (custom = ? OR TRUE = ?)',
+				a.action = ?
+				AND l.language = ?
+				AND (t.custom = ? OR TRUE = ?)',
 			$name,
+			$this->translator->getDefaultLocale(),
 			$includeCustom,
 			$includeCustom
 		);
@@ -109,7 +120,13 @@ class Trainings
 	}
 
 
-	public function getDates($name)
+	/**
+	 * Get training dates by training id.
+	 *
+	 * @param integer $id
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getDates($id)
 	{
 		$result = $this->database->fetchAll(
 			"SELECT
@@ -132,7 +149,7 @@ class Trainings
 				LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
 				JOIN (
 					SELECT
-						t2.action,
+						t2.id_training,
 						d2.key_venue,
 						MIN(d2.start) AS start
 					FROM
@@ -141,15 +158,15 @@ class Trainings
 						JOIN training_date_status s2 ON d2.key_status = s2.id_status
 					WHERE
 						d2.public
-						AND t2.action = ?
+						AND t2.id_training = ?
 						AND d2.end > NOW()
 						AND s2.status IN (?, ?)
 					GROUP BY
-						t2.action, d2.key_venue
-				) u ON t.action = u.action AND v.id_venue = u.key_venue AND d.start = u.start
+						t2.id_training, d2.key_venue
+				) u ON t.id_training = u.id_training AND v.id_venue = u.key_venue AND d.start = u.start
 			ORDER BY
 				d.start",
-			$name,
+			$id,
 			Dates::STATUS_TENTATIVE,
 			Dates::STATUS_CONFIRMED
 		);
@@ -183,7 +200,7 @@ class Trainings
 		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
-				t.action,
+				a.action,
 				t.name,
 				d.start,
 				d.end,
@@ -197,8 +214,14 @@ class Trainings
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
+			WHERE
+				l.language = ?
 			ORDER BY
-				d.start DESC'
+				d.start DESC',
+			$this->translator->getDefaultLocale()
 		);
 		return $result;
 	}
@@ -212,14 +235,19 @@ class Trainings
 		$result = $this->database->fetchAll(
 			'SELECT
 				t.id_training AS id,
-				t.action,
+				a.action,
 				t.name
 			FROM trainings t
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
 			WHERE
 				NOT t.custom
 				AND t.key_successor IS NULL
+				AND l.language = ?
 			ORDER BY
-				t.order IS NULL, t.order'
+				t.order IS NULL, t.order',
+			$this->translator->getDefaultLocale()
 		);
 		return $result;
 	}
@@ -233,13 +261,19 @@ class Trainings
 		$result = $this->database->fetchAll(
 			'SELECT
 				t.id_training AS id,
-				t.action,
+				a.action,
 				t.name,
 				t.custom,
 				t.key_successor AS successorId
 			FROM trainings t
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
+			WHERE
+				l.language = ?
 			ORDER BY
-				t.id_training'
+				t.id_training',
+			$this->translator->getDefaultLocale()
 		);
 		return $result;
 	}
@@ -259,7 +293,14 @@ class Trainings
 	}
 
 
-	public function getReviews($name, $limit = null)
+	/**
+	 * Get reviews by training id.
+	 *
+	 * @param integer $id
+	 * @param integer|null $limit
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getReviews($id, $limit = null)
 	{
 		$query = 'SELECT
 				COALESCE(r.name, a.name) AS name,
@@ -274,7 +315,7 @@ class Trainings
 				JOIN trainings t ON t.id_training = d.key_training
 				LEFT JOIN trainings t2 ON t2.id_training = t.key_successor
 			WHERE
-				(t.action = ? OR t2.action = ?)
+				(t.id_training = ? OR t2.id_training = ?)
 				AND NOT r.hidden
 			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
 
@@ -282,7 +323,7 @@ class Trainings
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$reviews = $this->database->fetchAll($query, $name, $name);
+		$reviews = $this->database->fetchAll($query, $id, $id);
 		foreach ($reviews as &$review) {
 			$review['review'] = $this->texyFormatter->format($review['review']);
 		}
@@ -363,7 +404,19 @@ class Trainings
 	 */
 	public function getActionById($id)
 	{
-		return $this->database->fetchField('SELECT action FROM trainings WHERE id_training = ?', $id);
+		return $this->database->fetchField(
+			'SELECT
+				a.action
+			FROM trainings t
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
+			WHERE
+				t.id_training = ?
+				AND l.language = ?',
+			$id,
+			$this->translator->getDefaultLocale()
+		);
 	}
 
 }

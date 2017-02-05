@@ -19,21 +19,27 @@ class CompanyTrainings
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param \Netxten\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param \Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		\Netxten\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Training\Dates $trainingDates
+		\MichalSpacekCz\Training\Dates $trainingDates,
+		\Nette\Localization\ITranslator $translator
 	)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingDates = $trainingDates;
+		$this->translator = $translator;
 	}
 
 
@@ -48,7 +54,8 @@ class CompanyTrainings
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				t.action,
+				t.id_training AS trainingId,
+				a.action,
 				t.name,
 				ct.description,
 				t.content,
@@ -66,9 +73,14 @@ class CompanyTrainings
 				ct.double_duration_price AS doubleDurationPrice
 			FROM trainings t
 				JOIN company_trainings ct ON t.id_training = ct.key_training
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
 			WHERE
-				t.action = ?',
-			$name
+				a.action = ?
+				AND l.language = ?',
+			$name,
+			$this->translator->getDefaultLocale()
 		);
 
 		if ($result) {
@@ -93,12 +105,18 @@ class CompanyTrainings
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
-				t.action,
+				a.action,
 				t.name
 			FROM trainings t
 				JOIN company_trainings ct ON t.id_training = ct.key_training
-			WHERE t.key_successor IS NULL
-			ORDER BY t.order IS NULL, t.order'
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
+			WHERE
+				t.key_successor IS NULL
+				AND l.language = ?
+			ORDER BY t.order IS NULL, t.order',
+			$this->translator->getDefaultLocale()
 		);
 		$public = $this->trainingDates->getPublicUpcoming();
 

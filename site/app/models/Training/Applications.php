@@ -33,14 +33,27 @@ class Applications
 	/** @var \MichalSpacekCz\Training\Resolver\Vrana */
 	protected $vranaResolver;
 
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
 
+
+	/**
+	 * @param \Nette\Database\Context $context
+	 * @param Dates $trainingDates
+	 * @param Statuses $trainingStatuses
+	 * @param \MichalSpacekCz\Encryption\Email $emailEncryption
+	 * @param \MichalSpacekCz\Vat $vat
+	 * @param \MichalSpacekCz\Training\Resolver\Vrana $vranaResolver
+	 * @param \Nette\Localization\ITranslator $translator
+	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		\MichalSpacekCz\Encryption\Email $emailEncryption,
 		\MichalSpacekCz\Vat $vat,
-		\MichalSpacekCz\Training\Resolver\Vrana $vranaResolver
+		\MichalSpacekCz\Training\Resolver\Vrana $vranaResolver,
+		\Nette\Localization\ITranslator $translator
 	)
 	{
 		$this->database = $context;
@@ -49,6 +62,7 @@ class Applications
 		$this->emailEncryption = $emailEncryption;
 		$this->vat = $vat;
 		$this->vranaResolver = $vranaResolver;
+		$this->translator = $translator;
 	}
 
 
@@ -65,7 +79,7 @@ class Applications
 				a.status_time AS statusTime,
 				d.id_date AS dateId,
 				t.name AS trainingName,
-				t.action AS trainingAction,
+				ua.action AS trainingAction,
 				d.start AS trainingStart,
 				d.public AS publicDate,
 				v.name AS venueName,
@@ -86,11 +100,16 @@ class Applications
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_application_status s ON a.key_status = s.id_status
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions ua ON ta.key_url_action = ua.id_url_action
+				JOIN languages l ON ua.key_language = l.id_language
 			WHERE
 				s.status = ?
+				AND l.language = ?
 			ORDER BY
 				d.start, a.status_time',
-			$status
+			$status,
+			$this->translator->getDefaultLocale()
 		);
 
 		if ($result) {
@@ -448,7 +467,7 @@ class Applications
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				t.action AS trainingAction,
+				ua.action AS trainingAction,
 				d.id_date AS dateId,
 				d.start AS trainingStart,
 				a.id_application AS applicationId,
@@ -479,9 +498,14 @@ class Applications
 				JOIN trainings t ON (d.key_training = t.id_training OR a.key_training = t.id_training)
 				JOIN training_application_status s ON a.key_status = s.id_status
 				JOIN training_application_sources sr ON a.key_source = sr.id_source
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions ua ON ta.key_url_action = ua.id_url_action
+				JOIN languages l ON ua.key_language = l.id_language
 			WHERE
-				id_application = ?',
-			$id
+				a.id_application = ?
+				AND l.language = ?',
+			$id,
+			$this->translator->getDefaultLocale()
 		);
 
 		if ($result) {
@@ -498,12 +522,17 @@ class Applications
 		$result = $this->database->fetchAll(
 			'SELECT
 				t.id_training AS idTraining,
-				t.action,
+				ua.action,
 				t.name
 			FROM trainings t
 				JOIN training_applications a ON a.key_training = t.id_training
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions ua ON ta.key_url_action = ua.id_url_action
+				JOIN languages l ON ua.key_language = l.id_language
 			WHERE
-				a.key_date IS NULL'
+				a.key_date IS NULL
+				AND l.language = ?',
+			$this->translator->getDefaultLocale()
 		);
 		foreach ($result as $row) {
 			$row->applications = array();
@@ -566,7 +595,7 @@ class Applications
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				t.action AS trainingAction,
+				ua.action AS trainingAction,
 				d.id_date AS dateId,
 				a.id_application AS applicationId,
 				a.name,
@@ -583,9 +612,14 @@ class Applications
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date
 				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions ua ON ta.key_url_action = ua.id_url_action
+				JOIN languages l ON ua.key_language = l.id_language
 			WHERE
-				access_token = ?',
-			$token
+				a.access_token = ?
+				AND l.language = ?',
+			$token,
+			$this->translator->getDefaultLocale()
 		);
 
 		if ($result) {

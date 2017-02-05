@@ -115,7 +115,7 @@ class TrainingsPresenter extends BasePresenter
 			$this->redirect('training', $this->trainings->getActionById($this->training->successorId));
 		}
 
-		$this->dates = $this->trainings->getDates($name);
+		$this->dates = $this->trainings->getDates($this->training->trainingId);
 
 		$session = $this->getSession();
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
@@ -137,7 +137,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates            = $this->dates;
 
-		$this->template->reviews = $this->trainings->getReviews($name, 3);
+		$this->template->reviews = $this->trainings->getReviews($this->training->trainingId, 3);
 
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
 	}
@@ -362,7 +362,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
-		$this->template->reviews = $this->trainings->getReviews($name);
+		$this->template->reviews = $this->trainings->getReviews($training->trainingId);
 	}
 
 
@@ -420,7 +420,7 @@ class TrainingsPresenter extends BasePresenter
 		if (!$training) {
 			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
-		$this->dates = $this->trainings->getDates($name);
+		$this->dates = $this->trainings->getDates($training->trainingId);
 		if (empty($this->dates)) {
 			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
 		}
@@ -456,7 +456,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $upcoming;
 
 		$this->template->form = $this->createComponentApplication('application');
-		$this->template->reviews = $this->trainings->getReviews($name, 3);
+		$this->template->reviews = $this->trainings->getReviews($training->trainingId, 3);
 	}
 
 

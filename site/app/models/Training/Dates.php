@@ -23,6 +23,9 @@ class Dates
 	/** @var Statuses */
 	protected $trainingStatuses;
 
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 	private $statusIds = array();
 
 	private $upcomingDates = array();
@@ -31,14 +34,17 @@ class Dates
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param Statuses $trainingStatuses
+	 * @param \Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
-		Statuses $trainingStatuses
+		Statuses $trainingStatuses,
+		\Nette\Localization\ITranslator $translator
 	)
 	{
 		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;
+		$this->translator = $translator;
 	}
 
 
@@ -48,7 +54,7 @@ class Dates
 			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
-				t.action,
+				a.action,
 				t.name,
 				t.price,
 				t.student_discount AS studentDiscount,
@@ -66,10 +72,15 @@ class Dates
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
 				LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
 			WHERE
-				d.id_date = ?',
-			$dateId
+				d.id_date = ?
+				AND l.language = ?',
+			$dateId,
+			$this->translator->getDefaultLocale()
 		);
 		return $result;
 	}
@@ -80,7 +91,7 @@ class Dates
 		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
-				t.action,
+				a.action,
 				t.name,
 				d.start,
 				d.end,
@@ -94,20 +105,26 @@ class Dates
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
-			WHERE EXISTS (
-				SELECT
-					1
-				FROM
-					training_applications a
-				WHERE
-					a.key_date = d.id_date
-					AND a.paid IS NULL
-					AND a.invoice_id IS NOT NULL
-					AND a.key_status NOT IN (?)
-			)
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
+			WHERE
+				EXISTS (
+					SELECT
+						1
+					FROM
+						training_applications a
+					WHERE
+						a.key_date = d.id_date
+						AND a.paid IS NULL
+						AND a.invoice_id IS NOT NULL
+						AND a.key_status NOT IN (?)
+				)
+				AND l.language = ?
 			ORDER BY
 				d.start',
-			array_keys($this->trainingStatuses->getDiscardedStatuses())
+			array_keys($this->trainingStatuses->getDiscardedStatuses()),
+			$this->translator->getDefaultLocale()
 		);
 		return $result;
 	}
@@ -211,7 +228,7 @@ class Dates
 		if (!isset($this->upcomingDates[$all])) {
 			$query = "SELECT
 					d.id_date AS dateId,
-					t.action,
+					a.action,
 					t.name,
 					s.status,
 					d.start,
@@ -221,11 +238,14 @@ class Dates
 					v.city as venueCity
 				FROM training_dates d
 					JOIN trainings t ON d.key_training = t.id_training
+					JOIN training_url_actions ta ON t.id_training = ta.key_training
+					JOIN url_actions a ON ta.key_url_action = a.id_url_action
+					JOIN languages l ON a.key_language = l.id_language
 					JOIN training_date_status s ON d.key_status = s.id_status
 					JOIN training_venues v ON d.key_venue = v.id_venue
 					JOIN (
 						SELECT
-							t2.action,
+							t2.id_training,
 							d2.key_venue,
 							MIN(d2.start) AS start
 						FROM
@@ -237,15 +257,16 @@ class Dates
 							AND d2.end > NOW()
 							AND s2.status IN (?, ?)
 						GROUP BY
-							t2.action, d2.key_venue
-					) u ON t.action = u.action AND v.id_venue = u.key_venue AND d.start = u.start
+							t2.id_training, d2.key_venue
+					) u ON t.id_training = u.id_training AND v.id_venue = u.key_venue AND d.start = u.start
 				WHERE
 					t.key_successor IS NULL
+					AND l.language = ?
 				ORDER BY
 					t.order IS NULL, t.order, d.start";
 
 			$upcoming = array();
-			foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED) as $row) {
+			foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED, $this->translator->getDefaultLocale()) as $row) {
 				$date = array(
 					'dateId'        => $row->dateId,
 					'tentative'     => ($row->status == Dates::STATUS_TENTATIVE),
@@ -279,7 +300,7 @@ class Dates
 		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
-				t.action,
+				a.action,
 				t.name,
 				d.start,
 				d.end,
@@ -293,11 +314,17 @@ class Dates
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
-			WHERE d.end BETWEEN ? AND ?
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
+			WHERE
+				d.end BETWEEN ? AND ?
+				AND l.language = ?
 			ORDER BY
 				d.start',
 			new \DateTime($from),
-			new \DateTime($to)
+			new \DateTime($to),
+			$this->translator->getDefaultLocale()
 		);
 		return $result;
 	}
