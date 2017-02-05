@@ -60,7 +60,7 @@ class Mails
 	}
 
 
-	public function sendSignUpMail($applicationId, \Nette\Bridges\ApplicationLatte\Template $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
+	public function sendSignUpMail($applicationId, \Nette\Application\UI\ITemplate $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
 	{
 		\Tracy\Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
 
@@ -143,7 +143,7 @@ class Mails
 	}
 
 
-	public function sendInvitation(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
+	public function sendInvitation(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional = null)
 	{
 		\Tracy\Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
@@ -155,7 +155,7 @@ class Mails
 	}
 
 
-	public function sendMaterials(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
+	public function sendMaterials(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional = null)
 	{
 		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
@@ -167,7 +167,7 @@ class Mails
 	}
 
 
-	public function sendInvoice(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, array $invoice, $additional = null)
+	public function sendInvoice(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, array $invoice, $additional = null)
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
@@ -179,7 +179,7 @@ class Mails
 	}
 
 
-	public function sendReminder(\Nette\Database\Row $application, \Nette\Bridges\ApplicationLatte\Template $template, $additional = null)
+	public function sendReminder(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional = null)
 	{
 		\Tracy\Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
 
@@ -195,7 +195,7 @@ class Mails
 	}
 
 
-	private function sendMail($recipientAddress, $recipientName, $subject, \Nette\Bridges\ApplicationLatte\Template $template, array $attachments = array())
+	private function sendMail($recipientAddress, $recipientName, $subject, \Nette\Application\UI\ITemplate $template, array $attachments = array())
 	{
 		$mail = new \Nette\Mail\Message();
 		foreach ($attachments as $name => $file) {

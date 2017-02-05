@@ -23,13 +23,13 @@ class Bootstrap extends \Nette\Object
 	/** @var string */
 	private const MODE_DEVELOPMENT = 'development';
 
-	/** @var \Nette\Http\Request */
+	/** @var \Nette\Http\IRequest */
 	private $httpRequest;
 
 	/** @var \Nette\DI\Container */
 	private $container;
 
-	/** @var \Nette\Http\Response */
+	/** @var \Nette\Http\IResponse */
 	private $httpResponse;
 
 	/** @var \MichalSpacekCz\SecurityHeaders */
