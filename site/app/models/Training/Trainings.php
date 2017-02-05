@@ -419,4 +419,31 @@ class Trainings
 		);
 	}
 
+
+	/**
+	 * Get localized training actions.
+	 *
+	 * @param string $action
+	 * @return array of (locale, action)
+	 */
+	public function getLocaleActions($action): array
+	{
+		return $this->database->fetchPairs(
+			'SELECT
+				l.language,
+				a.action
+			FROM
+				url_actions a
+				JOIN training_url_actions ta ON a.id_url_action = ta.key_url_action
+				JOIN languages l ON a.key_language = l.id_language
+			WHERE ta.key_training = (
+				SELECT ta.key_training
+				FROM url_actions a
+				JOIN training_url_actions ta ON a.id_url_action = ta.key_url_action
+				WHERE a.action = ?
+			)',
+			$action
+		);
+	}
+
 }

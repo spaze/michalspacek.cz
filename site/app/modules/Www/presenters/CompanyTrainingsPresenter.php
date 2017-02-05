@@ -75,4 +75,22 @@ class CompanyTrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * Translated locale parameters for trainings.
+	 *
+	 * @return array
+	 */
+	protected function getLocaleLinkParams(): array
+	{
+		if ($this->getAction() === 'default') {
+			return parent::getLocaleLinkParams();
+		} else {
+			$params = [];
+			foreach ($this->trainings->getLocaleActions($this->getParameter('name')) as $key => $value) {
+				$params[$key] = ['name' => $value];
+			}
+			return $params;
+		}
+	}
+
 }
