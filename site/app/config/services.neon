@@ -34,6 +34,7 @@ services:
 		class: \MichalSpacekCz\Training\Files
 		setup:
 			- setFilesDir('../../files/trainings')
+	trainingLocales: \MichalSpacekCz\Training\Locales
 	vranaResolver: MichalSpacekCz\Training\Resolver\Vrana
 	authenticator:
 		class: \MichalSpacekCz\User\Manager

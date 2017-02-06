@@ -18,6 +18,9 @@ class Texy extends \Netxten\Formatter\Texy
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\Training\Locales */
+	protected $trainingLocales;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -52,6 +55,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param \Nette\Application\Application $application
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Vat $vat
+	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 */
 	public function __construct(
@@ -60,6 +64,7 @@ class Texy extends \Netxten\Formatter\Texy
 		\Nette\Application\Application $application,
 		\MichalSpacekCz\Training\Dates $trainingDates,
 		\MichalSpacekCz\Vat $vat,
+		\MichalSpacekCz\Training\Locales $trainingLocales,
 		\Netxten\Templating\Helpers $netxtenHelpers
 	)
 	{
@@ -67,6 +72,7 @@ class Texy extends \Netxten\Formatter\Texy
 		$this->application = $application;
 		$this->trainingDates = $trainingDates;
 		$this->vat = $vat;
+		$this->trainingLocales = $trainingLocales;
 		$this->netxtenHelpers = $netxtenHelpers;
 		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
 	}
@@ -186,15 +192,22 @@ class Texy extends \Netxten\Formatter\Texy
 			return $invocation->proceed();
 		}
 
+		$trainingAction = ':Www:Trainings:training';
+
 		if (strncmp($link->URL, 'link:', 5) === 0) {
 			$args = preg_split('/[\s,]/', substr($link->URL, 5));
-			$link->URL = $this->application->getPresenter()->link(':' . array_shift($args), $args);
+			$action = ':' . array_shift($args);
+			if ($action === $trainingAction) {
+				$args = $this->trainingLocales->getLocaleActions(reset($args))[$this->translator->getDefaultLocale()];
+			}
+			$link->URL = $this->application->getPresenter()->link($action, $args);
 		}
 
 		if (strncmp($link->URL, 'training:', 9) === 0) {
 			$texy = $invocation->getTexy();
 			$name = substr($link->URL, 9);
-			$link->URL = $this->application->getPresenter()->link(':Www:Trainings:training', $name);
+			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
+			$link->URL = $this->application->getPresenter()->link($trainingAction, $name);
 			$el = \Texy\HtmlElement::el();
 			$el->add($texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link));
 			$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));

@@ -37,6 +37,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\CompanyTrainings */
 	protected $companyTrainings;
 
+	/** @var \MichalSpacekCz\Training\Locales */
+	protected $trainingLocales;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -62,6 +65,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
+	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
@@ -75,6 +79,7 @@ class TrainingsPresenter extends BasePresenter
 		Training\Files $trainingFiles,
 		Training\Trainings $trainings,
 		Training\CompanyTrainings $companyTrainings,
+		\MichalSpacekCz\Training\Locales $trainingLocales,
 		\MichalSpacekCz\Vat $vat,
 		\Netxten\Templating\Helpers $netxtenHelpers,
 		\MichalSpacekCz\CompanyInfo\Info $companyInfo
@@ -88,6 +93,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingFiles = $trainingFiles;
 		$this->trainings = $trainings;
 		$this->companyTrainings = $companyTrainings;
+		$this->trainingLocales = $trainingLocales;
 		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->companyInfo = $companyInfo;
@@ -471,7 +477,7 @@ class TrainingsPresenter extends BasePresenter
 			return parent::getLocaleLinkParams();
 		} else {
 			$params = [];
-			foreach ($this->trainings->getLocaleActions($this->getParameter('name')) as $key => $value) {
+			foreach ($this->trainingLocales->getLocaleActions($this->getParameter('name')) as $key => $value) {
 				$params[$key] = ['name' => $value];
 			}
 			return $params;

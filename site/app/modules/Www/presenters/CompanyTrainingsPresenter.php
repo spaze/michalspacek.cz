@@ -19,6 +19,9 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\CompanyTrainings */
 	protected $companyTrainings;
 
+	/** @var \MichalSpacekCz\Training\Locales */
+	protected $trainingLocales;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -27,18 +30,21 @@ class CompanyTrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
+	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Training\Trainings $trainings,
 		\MichalSpacekCz\Training\CompanyTrainings $companyTrainings,
+		\MichalSpacekCz\Training\Locales $trainingLocales,
 		\MichalSpacekCz\Vat $vat
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->trainings = $trainings;
 		$this->companyTrainings = $companyTrainings;
+		$this->trainingLocales = $trainingLocales;
 		$this->vat = $vat;
 		parent::__construct();
 	}
@@ -86,7 +92,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 			return parent::getLocaleLinkParams();
 		} else {
 			$params = [];
-			foreach ($this->trainings->getLocaleActions($this->getParameter('name')) as $key => $value) {
+			foreach ($this->trainingLocales->getLocaleActions($this->getParameter('name')) as $key => $value) {
 				$params[$key] = ['name' => $value];
 			}
 			return $params;
