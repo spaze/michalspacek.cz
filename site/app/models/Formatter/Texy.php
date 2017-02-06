@@ -298,10 +298,10 @@ class Texy extends \Netxten\Formatter\Texy
 	/**
 	 * Format training items.
 	 *
-	 * @param \Nette\Utils\ArrayHash $training
-	 * @return \Nette\Utils\ArrayHash
+	 * @param \Nette\Database\Row $training
+	 * @return \Nette\Database\Row
 	 */
-	public function formatTraining(\Nette\Utils\ArrayHash $training): \Nette\Utils\ArrayHash
+	public function formatTraining(\Nette\Database\Row $training): \Nette\Database\Row
 	{
 		foreach (['name', 'description', 'content', 'upsell', 'prerequisites', 'audience', 'materials', 'duration', 'doubleDuration'] as $key) {
 			if (isset($training->$key)) {

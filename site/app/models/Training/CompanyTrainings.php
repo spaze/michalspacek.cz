@@ -13,7 +13,7 @@ class CompanyTrainings
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var \Netxten\Formatter\Texy */
+	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
 	/** @var \MichalSpacekCz\Training\Dates */
@@ -25,13 +25,13 @@ class CompanyTrainings
 
 	/**
 	 * @param \Nette\Database\Context $context
-	 * @param \Netxten\Formatter\Texy $texyFormatter
+	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
-		\Netxten\Formatter\Texy $texyFormatter,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Training\Dates $trainingDates,
 		\Nette\Localization\ITranslator $translator
 	)
