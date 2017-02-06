@@ -18,6 +18,9 @@ class Texy extends \Netxten\Formatter\Texy
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
+	/** @var \MichalSpacekCz\Vat */
+	protected $vat;
+
 	/** @var \Netxten\Templating\Helpers */
 	protected $netxtenHelpers;
 
@@ -48,6 +51,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \Nette\Application\Application $application
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 */
 	public function __construct(
@@ -55,12 +59,14 @@ class Texy extends \Netxten\Formatter\Texy
 		\Nette\Localization\ITranslator $translator,
 		\Nette\Application\Application $application,
 		\MichalSpacekCz\Training\Dates $trainingDates,
+		\MichalSpacekCz\Vat $vat,
 		\Netxten\Templating\Helpers $netxtenHelpers
 	)
 	{
 		$this->translator = $translator;
 		$this->application = $application;
 		$this->trainingDates = $trainingDates;
+		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
 		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
 	}
@@ -273,6 +279,26 @@ class Texy extends \Netxten\Formatter\Texy
 			}
 		}
 		return implode(', ', $dates);
+	}
+
+
+	/**
+	 * Format training items.
+	 *
+	 * @param \Nette\Utils\ArrayHash $training
+	 * @return \Nette\Utils\ArrayHash
+	 */
+	public function formatTraining(\Nette\Utils\ArrayHash $training): \Nette\Utils\ArrayHash
+	{
+		foreach (['name', 'description', 'content', 'upsell', 'prerequisites', 'audience', 'materials', 'duration', 'doubleDuration'] as $key) {
+			if (isset($training->$key)) {
+				$training->$key = $this->translate($training->$key);
+			}
+		}
+		if (isset($training->doubleDurationPrice)) {
+			$training->doubleDurationPrice = $this->translate($training->doubleDurationPrice, [$training->price * 2, $this->vat->addVat($training->price) * 2]);
+		}
+		return $training;
 	}
 
 }

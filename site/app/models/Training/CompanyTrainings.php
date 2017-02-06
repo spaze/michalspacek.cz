@@ -48,9 +48,9 @@ class CompanyTrainings
 	 *
 	 * @param string $name
 	 * @param boolean $includeCustom
-	 * @return \Nette\Database\Row
+	 * @return \Nette\Database\Row|null
 	 */
-	public function getInfo($name)
+	public function getInfo($name): ?\Nette\Database\Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -83,16 +83,7 @@ class CompanyTrainings
 			$this->translator->getDefaultLocale()
 		);
 
-		if ($result) {
-			$result->description   = $this->texyFormatter->format($result->description);
-			$result->content       = $this->texyFormatter->format($result->content);
-			$result->upsell        = $this->texyFormatter->format($result->upsell);
-			$result->prerequisites = $this->texyFormatter->format($result->prerequisites);
-			$result->audience      = $this->texyFormatter->format($result->audience);
-			$result->materials     = $this->texyFormatter->format($result->materials);
-		}
-
-		return $result;
+		return ($result ? $this->texyFormatter->formatTraining($result) : null);
 	}
 
 
@@ -123,12 +114,11 @@ class CompanyTrainings
 		$trainings = array();
 		foreach ($result as $training) {
 			if (!isset($public[$training->action])) {
-				$trainings[$training->action] = $training;
+				$trainings[$training->action] = $this->texyFormatter->formatTraining($training);
 			}
 		}
 
 		return $trainings;
 	}
-
 
 }

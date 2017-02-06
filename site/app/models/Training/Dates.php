@@ -82,6 +82,8 @@ class Dates
 			$dateId,
 			$this->translator->getDefaultLocale()
 		);
+
+		$result->name = $this->translator->translate($result->name);
 		return $result;
 	}
 
@@ -126,6 +128,10 @@ class Dates
 			array_keys($this->trainingStatuses->getDiscardedStatuses()),
 			$this->translator->getDefaultLocale()
 		);
+
+		foreach ($result as $date) {
+			$date->name = $this->translator->translate($date->name);
+		}
 		return $result;
 	}
 
@@ -274,14 +280,14 @@ class Dates
 					'start'         => $row->start,
 					'public'        => $row->public,
 					'status'        => $row->status,
-					'name'          => $row->name,
+					'name'          => $this->translator->translate($row->name),
 					'venueId'       => $row->venueId,
 					'venueName'     => $row->venueName,
 					'venueCity'     => $row->venueCity,
 				);
 				$upcoming[$row->action] = \Nette\Utils\ArrayHash::from(array(
 					'action' => $row->action,
-					'name'   => $row->name,
+					'name'   => $date['name'],
 					'dates'  => (isset($upcoming[$row->action]->dates)
 						? $upcoming[$row->action]->dates = (array)$upcoming[$row->action]->dates + array($row->dateId => $date)
 						: array($row->dateId => $date)
@@ -326,6 +332,10 @@ class Dates
 			new \DateTime($to),
 			$this->translator->getDefaultLocale()
 		);
+
+		foreach ($result as $date) {
+			$date->name = $this->translator->translate($date->name);
+		}
 		return $result;
 	}
 
