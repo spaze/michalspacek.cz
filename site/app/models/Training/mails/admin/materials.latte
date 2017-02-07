@@ -1,7 +1,7 @@
 Dobrý den!
 
 Ještě jednou bych Vám chtěl poděkovat za účast na školení
-{$application->trainingName} a doufám, že splnilo Vaše očekávání.
+{$application->training->name} a doufám, že splnilo Vaše očekávání.
 
 Na níže uvedeném odkazu si pro Vaši osobní potřebu můžete stáhnout
 materiály, které jsme na školení použili.
@@ -9,7 +9,7 @@ materiály, které jsme na školení použili.
 {link '//:Www:Redirect:files' $application->accessToken}
 (pozor na zalomení odkazu)
 
-{if $application->trainingAction == 'bezpecnost-php-aplikaci'}
+{if $application->training->action == 'bezpecnost-php-aplikaci'}
 Nově nabyté vědomosti si, prosím, ověřujte pouze na vlastních webech
 a aplikacích a na příkladech, které jsou přiloženy k materiálům, případně
 na webech, které jsou k učení a prověřování znalostí přímo určené.

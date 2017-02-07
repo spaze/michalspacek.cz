@@ -18,6 +18,9 @@ class Applications
 	/** @var \Nette\Database\Context */
 	protected $database;
 
+	/** @var Trainings */
+	protected $trainings;
+
 	/** @var Dates */
 	protected $trainingDates;
 
@@ -39,6 +42,7 @@ class Applications
 
 	/**
 	 * @param \Nette\Database\Context $context
+	 * @param Trainings $trainings
 	 * @param Dates $trainingDates
 	 * @param Statuses $trainingStatuses
 	 * @param \MichalSpacekCz\Encryption\Email $emailEncryption
@@ -48,6 +52,7 @@ class Applications
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
+		Trainings $trainings,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		\MichalSpacekCz\Encryption\Email $emailEncryption,
@@ -57,6 +62,7 @@ class Applications
 	)
 	{
 		$this->database = $context;
+		$this->trainings = $trainings;
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
@@ -78,8 +84,7 @@ class Applications
 				s.status,
 				a.status_time AS statusTime,
 				d.id_date AS dateId,
-				t.name AS trainingName,
-				ua.action AS trainingAction,
+				t.id_training AS trainingId,
 				d.start AS trainingStart,
 				d.public AS publicDate,
 				v.name AS venueName,
@@ -100,21 +105,17 @@ class Applications
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_application_status s ON a.key_status = s.id_status
-				JOIN training_url_actions ta ON t.id_training = ta.key_training
-				JOIN url_actions ua ON ta.key_url_action = ua.id_url_action
-				JOIN languages l ON ua.key_language = l.id_language
 			WHERE
 				s.status = ?
-				AND l.language = ?
 			ORDER BY
 				d.start, a.status_time',
-			$status,
-			$this->translator->getDefaultLocale()
+			$status
 		);
 
 		if ($result) {
 			foreach ($result as $row) {
 				$row->email = $this->emailEncryption->decrypt($row->email);
+				$row->training = $this->trainings->getById($row->trainingId);
 			}
 		}
 

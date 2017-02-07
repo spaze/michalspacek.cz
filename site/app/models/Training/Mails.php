@@ -145,43 +145,43 @@ class Mails
 
 	public function sendInvitation(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional = null)
 	{
-		\Tracy\Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
+		\Tracy\Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/invitation.latte');
 		$template->application = $application;
 		$template->additional = $additional;
-		$subject = 'Pozvánka na školení ' . $application->trainingName;
+		$subject = 'Pozvánka na školení ' . $application->training->name;
 		$this->sendMail($application->email, $application->name, $subject, $template);
 	}
 
 
 	public function sendMaterials(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional = null)
 	{
-		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
+		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/' . ($application->familiar ?  'materialsFamiliar.latte' : 'materials.latte'));
 		$template->application = $application;
 		$template->additional = $additional;
-		$subject = 'Materiály ze školení ' . $application->trainingName;
+		$subject = 'Materiály ze školení ' . $application->training->name;
 		$this->sendMail($application->email, $application->name, $subject, $template);
 	}
 
 
 	public function sendInvoice(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, array $invoice, $additional = null)
 	{
-		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
+		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/' . ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER ? 'invoiceAfter.latte' : 'invoice.latte'));
 		$template->application = $application;
 		$template->additional = $additional;
-		$subject = 'Potvrzení registrace na školení ' . $application->trainingName . ' a faktura';
+		$subject = 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura';
 		$this->sendMail($application->email, $application->name, $subject, $template, $invoice);
 	}
 
 
 	public function sendReminder(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional = null)
 	{
-		\Tracy\Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->trainingAction}");
+		\Tracy\Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/reminder.latte');
 		$template->application = $application;
@@ -190,7 +190,7 @@ class Mails
 		$template->additional = $additional;
 
 		$start = $this->netxtenHelpers->localDate($application->trainingStart, 'cs', 'j. n. Y');
-		$subject = 'Připomenutí školení ' . $application->trainingName . ' ' . $start;
+		$subject = 'Připomenutí školení ' . $application->training->name . ' ' . $start;
 		$this->sendMail($application->email, $application->name, $subject, $template);
 	}
 

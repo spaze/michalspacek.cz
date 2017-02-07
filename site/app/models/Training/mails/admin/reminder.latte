@@ -1,7 +1,7 @@
 Dobrý den,
 
 rád bych vám připomněl, že dne {$application->trainingStart|date:'j. n. Y'} se koná školení
-{$application->trainingName}, na které jste přihlášeni.
+{$application->training->name}, na které jste přihlášeni.
 Školení proběhne na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
 
 {if $application->publicDate}

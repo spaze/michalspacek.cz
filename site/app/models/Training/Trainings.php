@@ -22,6 +22,9 @@ class Trainings
 	/** @var \Nette\Localization\ITranslator */
 	protected $translator;
 
+	/** @var \Nette\Database\Row[] */
+	protected $trainingsById = [];
+
 
 	/**
 	 * @param \Nette\Database\Context $context
@@ -108,6 +111,48 @@ class Trainings
 		);
 
 		return ($result ? $this->texyFormatter->formatTraining($result) : null);
+	}
+
+
+	/**
+	 * Get training info by id.
+	 *
+	 * @param integer $id
+	 * @return \Nette\Database\Row|null
+	 */
+	public function getById($id): ?\Nette\Database\Row
+	{
+		if (!array_key_exists($id, $this->trainingsById)) {
+			$result = $this->database->fetch(
+				'SELECT
+					t.id_training AS trainingId,
+					a.action,
+					t.name,
+					t.description,
+					t.content,
+					t.upsell,
+					t.prerequisites,
+					t.audience,
+					t.original_href AS originalHref,
+					t.capacity,
+					t.price,
+					t.student_discount AS studentDiscount,
+					t.materials,
+					t.custom,
+					t.key_successor AS successorId
+				FROM trainings t
+					JOIN training_url_actions ta ON t.id_training = ta.key_training
+					JOIN url_actions a ON ta.key_url_action = a.id_url_action
+					JOIN languages l ON a.key_language = l.id_language
+				WHERE
+					t.id_training = ?
+					AND l.language = ?',
+				$id,
+				$this->translator->getDefaultLocale()
+			);
+			$this->trainingsById[$id] = ($result ? $this->texyFormatter->formatTraining($result) : null);
+		}
+		return $this->trainingsById[$id];
 	}
 
 
@@ -214,6 +259,10 @@ class Trainings
 				d.start DESC',
 			$this->translator->getDefaultLocale()
 		);
+
+		foreach ($result as $training) {
+			$training = $this->texyFormatter->formatTraining($training);
+		}
 		return $result;
 	}
 
