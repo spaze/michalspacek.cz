@@ -17,6 +17,9 @@ class ErrorPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Redirections */
 	protected $redirections;
 
+	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
+	protected $localeLinkGenerator;
+
 	/** @var array */
 	protected $statuses = [
 		IResponse::S400_BAD_REQUEST,
@@ -29,10 +32,12 @@ class ErrorPresenter extends BasePresenter
 
 	/**
 	 * @param \MichalSpacekCz\Redirections $translator
+	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
 	 */
-	public function __construct(\MichalSpacekCz\Redirections $redirections)
+	public function __construct(\MichalSpacekCz\Redirections $redirections, \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator)
 	{
 		$this->redirections = $redirections;
+		$this->localeLinkGenerator = $localeLinkGenerator;
 		parent::__construct();
 	}
 
@@ -62,5 +67,48 @@ class ErrorPresenter extends BasePresenter
 		$this->template->note =  $this->translator->translate("messages.error.{$code}");
 	}
 
+
+	/**
+	 * The default locale links.
+	 *
+	 * @return array|null
+	 */
+	protected function getLocaleLinkDefault(): ?array
+	{
+		// Change the request host to the localized "homepage" host
+		$links = $this->localeLinkGenerator->links('Www:Homepage:');
+		foreach ($links as &$link) {
+			$url = $this->getHttpRequest()->getUrl();
+			$url->setHost((new \Nette\Http\Url($link))->getHost());
+			$link = $url->getAbsoluteUrl();
+		}
+		return $links;
+	}
+
+
+	/**
+	 * Get original module:presenter:action for locale links.
+	 *
+	 * @return string
+	 */
+	protected function getLocaleLinkAction(): string
+	{
+		$request = $this->getRequest()->getParameter('request');
+		if (!$request) {
+			throw new \Nette\Application\UI\InvalidLinkException('No request');
+		}
+		return $request->getPresenterName() . ':' . $request->getParameter(self::ACTION_KEY);
+	}
+
+
+	/**
+	 * Get original parameters for locale links.
+	 *
+	 * @return array
+	 */
+	protected function getLocaleLinkParams(): array
+	{
+		return $this->localeLinkGenerator->defaultParams($this->getRequest()->getParameter('request')->getParameters());
+	}
 
 }

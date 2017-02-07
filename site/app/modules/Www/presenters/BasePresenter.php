@@ -48,9 +48,9 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		try {
 			/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
 			$localeLinkGenerator = $this->getContext()->getByType(\MichalSpacekCz\Application\LocaleLinkGenerator::class);
-			$this->template->localeLinks = $localeLinkGenerator->links($this->getName() . ':' . $this->getAction(), $this->getLocaleLinkParams());
+			$this->template->localeLinks = $localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
 		} catch (\Nette\Application\UI\InvalidLinkException $e) {
-			$this->template->localeLinks = null;
+			$this->template->localeLinks = $this->getLocaleLinkDefault();
 		}
 	}
 
@@ -63,6 +63,28 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers(), 'loader']);
 		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
 		return $template;
+	}
+
+
+	/**
+	 * The default locale links.
+	 *
+	 * @return array|null
+	 */
+	protected function getLocaleLinkDefault(): ?array
+	{
+		return null;
+	}
+
+
+	/**
+	 * Default module:presenter:action for locale links.
+	 *
+	 * @return string
+	 */
+	protected function getLocaleLinkAction(): string
+	{
+		return $this->getName() . ':' . $this->getAction();
 	}
 
 

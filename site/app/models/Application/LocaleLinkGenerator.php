@@ -47,7 +47,7 @@ class LocaleLinkGenerator
 		$links = array();
 		foreach ($this->routerFactory->getLocaleRouters() as $locale => $router) {
 			$linkGenerator = new \Nette\Application\LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
-			$links[$locale] = $linkGenerator->link($destination, $params[$locale] ?? $params[self::DEFAULT_PARAMS]);
+			$links[$locale] = $linkGenerator->link($destination, $params[$locale] ?? $params[self::DEFAULT_PARAMS] ?? []);
 		}
 		return $links;
 	}
