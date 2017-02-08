@@ -195,7 +195,7 @@ class Texy extends \Netxten\Formatter\Texy
 		$trainingAction = ':Www:Trainings:training';
 
 		if (strncmp($link->URL, 'link:', 5) === 0) {
-			$args = preg_split('/[\s,]/', substr($link->URL, 5));
+			$args = preg_split('/[\s,]+/', substr($link->URL, 5));
 			$action = ':' . array_shift($args);
 			if ($action === $trainingAction) {
 				$args = $this->trainingLocales->getLocaleActions(reset($args))[$this->translator->getDefaultLocale()];
