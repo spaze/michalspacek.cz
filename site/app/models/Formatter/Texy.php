@@ -157,7 +157,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 */
 	public function substitute($format, $args)
 	{
-		return parent::format(vsprintf($format, $args));
+		return $this->format(vsprintf($format, $args));
 	}
 
 
