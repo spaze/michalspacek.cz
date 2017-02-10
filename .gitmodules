@@ -1,0 +1,3 @@
+[submodule "site/public/www/i/images/blog"]
+	path = site/public/www/i/images/blog
+	url = ssh://git@bitbucket.org/spaze/www.michalspacek.cz-images-blog.git
