@@ -6,8 +6,12 @@
 {foreach $posts as $post}
 	<li>
 		{$post->title}
-		<a n:href="edit $post->postId">Upravit</a>
-		<a n:href=":Blog:Post:default $post->slug">Zobrazit</a>
+		• <a n:href="edit $post->postId">Upravit</a>
+		• <a n:href=":Blog:Post:default $post->slug">Zobrazit</a>
+		<small>(Debug
+			<a href="https://developers.facebook.com/tools/debug/sharing/?q={link :Blog:Post:default $post->slug}" title="Facebook Sharing Debugger">Facebook</a>
+			• <a href="https://cards-dev.twitter.com/validator" title="Twitter Card validator">Twitter</a>
+		)</small>
 	</li>
 {/foreach}
 <ol>
