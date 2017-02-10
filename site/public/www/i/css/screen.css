@@ -62,6 +62,11 @@ small a, .small a { color: #444; }
 .separated { margin-top: 1em; }
 .hidden { display: none; }
 .strikethrough { text-decoration: line-through; }
+blockquote {
+    margin: 1em 0px;
+    padding-left: 1.5em;
+    border-left: 10px solid #EEE;
+}
 input.big { width: 400px; }
 textarea.big {
     width: 700px;
