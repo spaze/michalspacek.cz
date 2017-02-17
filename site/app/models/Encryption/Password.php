@@ -7,8 +7,10 @@ namespace MichalSpacekCz\Encryption;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Password extends \Nette\Object
+class Password
 {
+
+	use \Nette\SmartObject;
 
 	const GROUP = 'password';
 

@@ -7,8 +7,10 @@ namespace MichalSpacekCz\Encryption;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Email extends \Nette\Object
+class Email
 {
+
+	use \Nette\SmartObject;
 
 	const GROUP = 'email';
 

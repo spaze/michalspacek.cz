@@ -14,8 +14,10 @@ require __DIR__ . '/../../../vendor/autoload.php';
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class Bootstrap extends \Nette\Object
+class Bootstrap
 {
+
+	use \Nette\SmartObject;
 
 	/** @var string */
 	private const MODE_PRODUCTION = 'production';

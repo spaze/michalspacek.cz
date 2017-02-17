@@ -1,8 +1,10 @@
 <?php
 namespace MichalSpacekCz\Templating;
 
-class Helpers extends \Nette\Object
+class Helpers
 {
+
+	use \Nette\SmartObject;
 
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;

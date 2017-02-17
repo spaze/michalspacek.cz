@@ -11,3 +11,4 @@ parameters:
 includes:
 	- vendor/phpstan/phpstan/conf/config.level5.neon
 	- vendor/phpstan/phpstan-nette/extension.neon
+	- vendor/phpstan/phpstan-nette/rules.neon

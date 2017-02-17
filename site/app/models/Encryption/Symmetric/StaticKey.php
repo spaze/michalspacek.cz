@@ -9,8 +9,10 @@ use Defuse\Crypto;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class StaticKey extends \Nette\Object
+class StaticKey
 {
+
+	use \Nette\SmartObject;
 
 	const KEY_IV_CIPHERTEXT_SEPARATOR = '$';
 
