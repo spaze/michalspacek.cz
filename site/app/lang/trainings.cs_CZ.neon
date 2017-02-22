@@ -190,6 +190,15 @@ securityjava:
 	materials: ''
 	content: 'Podobně jako Bezpečnost PHP aplikací, bez věcí specifických pro PHP'
 
+securityjava2days:
+	name: "Bezpečnost webových aplikací (Java, 2 dny)"
+	description: 'Bezpečnost webových aplikací (pro vývojáře v Javě)'
+	upsell:
+	prerequisites: ''
+	audience: ''
+	materials: ''
+	content: 'Podobně jako Bezpečnost PHP aplikací, bez věcí specifických pro PHP, více příkladů'
+
 securityphpperformance:
 	name: "Bezpečnost a výkonnost PHP aplikací (2 dny)"
 	description: 'Bezpečnost a výkonnost PHP aplikací'
