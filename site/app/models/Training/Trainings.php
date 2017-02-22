@@ -319,6 +319,10 @@ class Trainings
 				t.id_training',
 			$this->translator->getDefaultLocale()
 		);
+
+		foreach ($result as $training) {
+			$training = $this->texyFormatter->formatTraining($training);
+		}
 		return $result;
 	}
 

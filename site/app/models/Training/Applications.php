@@ -536,6 +536,7 @@ class Applications
 			$this->translator->getDefaultLocale()
 		);
 		foreach ($result as $row) {
+			$row->name = $this->translator->translate($row->name);
 			$row->applications = array();
 			$trainings[$row->idTraining] = $row;
 		}
