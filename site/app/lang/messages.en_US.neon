@@ -53,7 +53,6 @@ label:
 	developer: "A **developer**, Zend Certified Engineer"
 	speaker: "A **speaker**"
 	webtop100juror: "**WebTop100** juror a guarantor"
-	node5shareholder: "**Node5** minor shareholder"
 	skyper: "A **Skyper** based in Prague, Czech Republic"
 	slevomat: "A developer in **Slevomat.cz**"
 	ipo48: "Co-organizer of **IPO48**"
@@ -149,11 +148,6 @@ who:
 	webtop100juror:
 		1: "Since 2011, I'm a juror and since 2014 also a guarantor for the area of technical solution and security for \"WebTop100\":[%s], the largest competition of company websites in the Czech Republic."
 		2: "I wrote several \"articles\":[%s] about the experience with the evaluation and also about the results."
-	node5shareholder:
-		1: "I could buy a car but I realized I already have one."
-		2: "\"Node5\":[%s] is a co-working space/business incubator/startup accelerator based in Prague, Czech Republic."
-		3: "I'm not employed by Node5, don't have any executive role, I don't talk on behalf of Node5 and don't organize any event."
-		4: "I just help when help is needed, be it for Node5 itself or people around it."
 	skyper: "Absolutely awesome 5 years and 5 months since my Day One in Tallinn, Estonia until November 2012 in which I've learned gazillion of new things about how to build a service for hundreds of millions of users, how to build a company, and how to grow an office from few people up to a hundred."
 	slevomat:
 		1: "I was working for one of the fastest growing on-line companies in the Czech Republic from September 2013 to June 2014."

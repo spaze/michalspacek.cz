@@ -53,7 +53,6 @@ label:
 	developer: "**Vývojář**, Zend Certified Engineer"
 	speaker: "**Přednášející**"
 	webtop100juror: "Porotce a garant v soutěži **WebTop100**"
-	node5shareholder: "Drobný akcionář prostoru **Node5**"
 	skyper: "Zaměstnanec v pražské kanceláři **Skype**"
 	slevomat: "Vývojář ve **Slevomatu**"
 	ipo48: "Spolupořadatel **IPO48**"
@@ -149,11 +148,6 @@ who:
 	speaker:
 		1: "Přednášel jsem na více než 70 konferencích a akcích, včetně konference \"WebExpo\":[%s] v Praze a konference \"Passwords\":[%s] v Las Vegas, USA, na obou opakovaně."
 		2: "Podívejte se na seznam všech mých \"přednášek\":[%s]."
-	node5shareholder:
-		1: "Mohl jsem si koupit auto, ale zjistil jsem, že už jedno mám."
-		2: "\"Node5\":[%s] je pražský co-workingový prostor kombinující byznys inkubátor a startup akcelerátor."
-		3: "Nejsem zaměstnanec Node5, nemám žádnou výkonnou funkci, za Node5 nevystupuji ani nepořádám žádnou akci."
-		4: "Jen pomáhám, když je potřeba a to jak samotnému Node5, tak jeho návštěvníkům."
 	skyper: "Úžasných pět let a pět měsíců od prvního pracovního dne v estonském Tallinnu až do listopadu 2012, během kterých jsem se naučil spoustu nových věci, nejenom co se týká vývoje služby pro stovky miliónů uživatelů, ale i samotného chodu a růstu firmy a kanceláře od pár lidí po stovku kolegů."
 	slevomat:
 		1: "Od září 2013 do konce června 2014 jsem pracoval pro jednu z nejrychleji rostoucích firem v ČR."
