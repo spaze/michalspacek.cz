@@ -38,6 +38,7 @@ contentSecurityPolicy:
 				- %domain.contentSecurityPolicySelf%
 			frame-ancestors: "'none'"
 			form-action: "'self'"
+			base-uri: "'none'"
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
