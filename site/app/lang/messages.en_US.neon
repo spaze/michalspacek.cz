@@ -204,6 +204,7 @@ talks:
 	supersededby: "This talk has been amended and superseded by \"%s\":[%s], view that one."
 	duration: "talk duration %s minutes"
 	durationshort: "%s minutes"
+	transcript: Notes transcript
 	admin:
 		slideadded: "Slide added"
 		duplicatealias: "Alias for slide %s already exists"

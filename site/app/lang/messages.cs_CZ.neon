@@ -204,6 +204,7 @@ talks:
 	supersededby: "Tato přednáška byla doplněna a nahrazena novější \"%s\":[%s], prohlédněte si raději tu."
 	duration: "délka přednášky %s minut"
 	durationshort: "%s minut"
+	transcript: Přepis poznámek
 	admin:
 		slideadded: "Slajd přidán"
 		duplicatealias: "Pro slajd %s již existuje alias"
