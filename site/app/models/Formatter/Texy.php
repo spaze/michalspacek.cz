@@ -324,6 +324,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 */
 	public function formatTraining(\Nette\Database\Row $training): \Nette\Database\Row
 	{
+		$this->setTopHeading(3);
 		foreach (['name', 'description', 'content', 'upsell', 'prerequisites', 'audience', 'materials', 'duration', 'doubleDuration'] as $key) {
 			if (isset($training->$key)) {
 				$training->$key = $this->translate($training->$key);

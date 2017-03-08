@@ -57,22 +57,32 @@ securityphp:
 	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
 	content: '''
 		Popis, rizika a obrana proti útokům, které jsou vedeny proti webovým aplikacím:
-		- Full Path Disclosure //(něco o FPD si můžete přečíst v "mém článku":http://devblog.cz/2012/04/fpd-aneb-full-path-disclosure/) .[small]//
-		- Cross-Site Scripting (XSS)
-		- SQL Injection
-		- Podstrčení proměnných
-		- Vkládání souborů
-		- Cross-Site Request Forgery (CSRF), Clickjacking
-		- Session Hijacking, Session Fixation
-		- XML External Entity Injection (XXE)
+		- **Full Path Disclosure**
+		  Proč je zobrazení chybových hlášek PHP pro útočníka lákavé a co se z nich dozví?
+		- **Cross-Site Scripting** (XSS)
+		  Útoky na návštěvníky webu a jejich prohlížeče, typy XSS((Cross-Site Scripting)) (stored, reflected, DOM((Document Object Model))-based), obrana na serveru i v browseru pomocí vyjmenování povolených zdrojů (Content Security Policy) a XSS Auditoru.
+		- **SQL Injection**
+		  O "dolování" a změně dat v tabulkách, ke kterým standardně není přístup. Vysvětlení Blind SQL Injection, Time-based blind SQL Injection, i rozdílů mezi technologií prepared statements a vázáním proměnných.
+		- **Vkládání souborů** a **vzdálené spuštění**
+		  Jak na nahrávání souborů od uživatelů, kam je ukládat a pod jakým jménem. Spouštění externích programů (např. pro změnu velikosti obrázků) "v cloudu", nebezpečí skrývající se v deserializaci uživatelských vstupů.
+		- **Cross-Site Request Forgery** (CSRF), **Clickjacking**
+		  Útočník může uživatele donutit provést nějakou akci bez jeho vědomí nebo ho naláká na kliknutí na prvek stránky, na který by normálně nekliknul. K čemu se to dá použít a jak proti tomu aplikace obránit?
+		- **Session Hijacking**, **Session Fixation**
+		  Kdo má identifikátor sezení (session id), ten je pán, takže je vhodné takový identifikátor dobře chránit. O HTTP-only cookies, přegenerování session id a rozumně vyřešeném přihlášení z více míst současně.
+		- **XML External Entity Injection** (XXE)
+		  Pomocí definice vlastních entit v XML souborech lze během jejich zpracování ze serverů získávat konfigurační soubory nebo zdrojové kódy. Ukážeme si jak a prozradíme jak tomu nejlépe zabránit.
+		- **Ukládání a hashování hesel**
+		  Jak se lámou hesla, k čemu slouží "salt", proč používat algoritmus bcrypt nebo Argon2i a ne MD5 nebo SHA-1 (ani SHA-2, SHA-3). A jak změnit hashování bez vynucené změny hesel všech uživatelů?
 
-		Další probíraná témata:
-		- Ukládání citlivých informací (hesla, kreditní karty)
-		- Neautorizovaný přístup k datům //(problému se věnuji i v "článku na Zdrojáku":http://www.zdrojak.cz/clanky/neautorizovany-pristup-k-datum/) .[small]//
-		- Využití HTTPS, útoky na SSL((Secure Sockets Layer))/TLS((Transport Layer Security))
-		- Zneužití formulářů pro odesílání nevyžádané pošty
-		- Konfigurace serveru
-		- Verzovací systémy SVN((Subversion)) a Git
+		## Další probíraná témata:
+		- Generování "bezpečných" **náhodných dat**
+		- **Šifrování dat**, authenticated encryption (AE)
+		- Využití **HTTPS**, HTTP Strict Transport Security (HSTS), útok BREACH((Browser Reconnaissance & Exfiltration via Adaptive Compression of Hypertext))
+		- Neautorizovaný **přístup k cizím datům**
+		- Zneužití formulářů pro odesílání **nevyžádané pošty**
+		- **Konfigurace** serveru
+		- **Ochrana zdrojových kódů** při "releasování" ze SVN((Subversion)) a Gitu
+		- **Bezpečnostní HTTP hlavičky**
 	'''
 	inhouse:
 		description: 'Bezpečnost webových aplikací mě zajímá a baví mě ji zkoumat. Je to citlivé téma a každá zapomenutá drobnost může dostat do problémů nejen vás, ale i vaše uživatele. O zabezpečení webu často píšu "články":/clanky a "přednáším":/prednasky. Rád vaše vývojáře naučím, jak webové aplikace zabezpečit a jak je na bezpečnost testovat. Školení je vhodné i pro vývojáře, kteří pracují např. v Javě nebo Pythonu, většina útoků a principů je stejných.'
