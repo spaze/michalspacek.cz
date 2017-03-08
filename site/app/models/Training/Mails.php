@@ -106,7 +106,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($status !== Statuses::STATUS_ATTENDED || ($status === Statuses::STATUS_ATTENDED && !$this->trainingStatuses->historyContainsStatus(Statuses::STATUS_PAID_AFTER, $application->id))) {
+				if ($status !== Statuses::STATUS_ATTENDED || ($status === Statuses::STATUS_ATTENDED && !$this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PAID_AFTER, Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id))) {
 					$application->files = $this->trainingFiles->getFiles($application->id);
 					$application->nextStatus = Statuses::STATUS_MATERIALS_SENT;
 					$applications[$application->id] = $application;
@@ -123,7 +123,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVOICE_SENT_AFTER) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($status !== Statuses::STATUS_ATTENDED || ($status === Statuses::STATUS_ATTENDED && $this->trainingStatuses->historyContainsStatus(Statuses::STATUS_PAID_AFTER, $application->id))) {
+				if ($status !== Statuses::STATUS_ATTENDED || ($status === Statuses::STATUS_ATTENDED && $this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PAID_AFTER, Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id))) {
 					$application->nextStatus = Statuses::STATUS_INVOICE_SENT_AFTER;
 					$applications[$application->id] = $application;
 				}

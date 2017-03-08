@@ -25,6 +25,7 @@ class Statuses
 	const STATUS_REMINDED            = 'REMINDED';             // 15
 	const STATUS_PAID_AFTER          = 'PAID_AFTER';           // 16
 	const STATUS_INVOICE_SENT_AFTER  = 'INVOICE_SENT_AFTER';   // 17
+	const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
 
 	/** @var \Nette\Database\Context */
 	protected $database;
@@ -119,7 +120,7 @@ class Statuses
 	{
 		$children = $this->getChildrenStatuses($parent);
 		if ($parent === self::STATUS_ATTENDED) {
-			$status = ($this->historyContainsStatus(self::STATUS_PAID_AFTER, $applicationId) ? self::STATUS_MATERIALS_SENT : self::STATUS_INVOICE_SENT_AFTER);
+			$status = ($this->historyContainsStatuses([self::STATUS_PAID_AFTER, self::STATUS_PRO_FORMA_INVOICE_SENT], $applicationId) ? self::STATUS_MATERIALS_SENT : self::STATUS_INVOICE_SENT_AFTER);
 			unset($children[$this->getStatusId($status)]);
 		}
 		return $children;
@@ -249,11 +250,11 @@ class Statuses
 	}
 
 
-	public function historyContainsStatus($status, $applicationId)
+	public function historyContainsStatuses(array $statuses, $applicationId)
 	{
 		$result = false;
 		foreach ($this->getStatusHistory($applicationId) as $history) {
-			if ($history->status === $status) {
+			if (in_array($history->status, $statuses)) {
 				$result = true;
 				break;
 			}
