@@ -48,6 +48,13 @@ class Texy extends \Netxten\Formatter\Texy
 	 */
 	protected $locationRoot;
 
+	/**
+	 * Top heading level, used to avoid starting with H1.
+	 *
+	 * @var integer
+	 */
+	protected $topHeading = 1;
+
 
 	/**
 	 * @param \Nette\Caching\IStorage $cacheStorage
@@ -136,6 +143,19 @@ class Texy extends \Netxten\Formatter\Texy
 
 
 	/**
+	 * Set top heading level.
+	 *
+	 * @param integer $level
+	 * @return self
+	 */
+	public function setTopHeading($level)
+	{
+		$this->topHeading = $level;
+		return $this;
+	}
+
+
+	/**
 	 * Create Texy object.
 	 *
 	 * @return \Texy\Texy
@@ -146,6 +166,7 @@ class Texy extends \Netxten\Formatter\Texy
 		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
 		$texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
 		$texy->figureModule->widthDelta = false;  // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
+		$texy->headingModule->top = $this->topHeading;
 		return $texy;
 	}
 

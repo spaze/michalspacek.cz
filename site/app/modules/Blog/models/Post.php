@@ -150,6 +150,7 @@ class Post
 		foreach(['title'] as $item) {
 			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'});
 		}
+		$this->texyFormatter->setTopHeading(2);
 		foreach(['lead', 'text', 'originally'] as $item) {
 			$post->$item = $this->texyFormatter->formatBlock($post->{$item . 'Texy'});
 		}
