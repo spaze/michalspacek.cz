@@ -40,7 +40,7 @@
 		<th>{label source /}</th><td>{input source}</td>
 	</tr>
 	<tr>
-		<th>{label companyId /}</th><td>{input companyId}</td>
+		<th>{label companyId /}</th><td>{input companyId}{if $companyId} <small><a href="http://www.rzp.cz/cgi-bin/aps_cacheWEB.sh?VSS_SERV=ZVWSBJFND&PRESVYBER=0&VYPIS=2&ICO={$companyId}&Action=Search">Živnostenský rejstřík</a></small>{/if}</td>
 	</tr>
 	<tr>
 		<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>

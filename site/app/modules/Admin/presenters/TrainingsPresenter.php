@@ -186,6 +186,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingStart = $start;
 		$this->template->trainingCity  = $city;
 		$this->template->sourceName    = $this->application->sourceName;
+		$this->template->companyId     = $this->application->companyId;
 		$this->template->attended      = in_array($this->application->status, $this->trainingStatuses->getAttendedStatuses());
 		$this->template->history       = $this->trainingStatuses->getStatusHistory($this->applicationId);
 	}
