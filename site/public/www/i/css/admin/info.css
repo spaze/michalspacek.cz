@@ -56,12 +56,12 @@
 #phpinfo .v i { color: #999; }
 #phpinfo img {
 	float: right;
-	border: 0px;
+	border: 0;
 }
 #phpinfo hr {
 	width: 800px;
 	background-color: #CCC;
-	border: 0px;
+	border: 0;
 	height: 1px;
 	margin: auto;
 }

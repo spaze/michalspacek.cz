@@ -2,7 +2,7 @@ body {
     font: 1em/1.5 Arial, sans-serif;
     color: #222;
     background-color: #EEE;
-    margin: 0px;
+    margin: 0;
 }
 hr {
     color: #EEE;
@@ -10,7 +10,7 @@ hr {
     height: 2px;
     border: none;
     clear: both;
-    margin: 0px;
+    margin: 0;
 }
 fieldset {
     margin: 1em 0;
@@ -18,12 +18,12 @@ fieldset {
     background-color: #FFF;
 }
 legend {
-    padding: 0px 10px;
+    padding: 0 10px;
     background-color: #EEE;
 }
 h1, h2, h3, h4 {
-    padding: 0px;
-    margin: 20px 0px;
+    padding: 0;
+    margin: 20px 0;
     text-decoration: none;
     color: #337;
     text-shadow: 1px 1px 2px rgba(51, 51, 119, 0.2);
@@ -41,11 +41,11 @@ h4 {
 p { margin: 0 0 1em 0; }
 ul {
     text-align: left;
-    padding: 0px 1em;
+    padding: 0 1em;
 }
-li { padding: 0.4em 0px; }
+li { padding: 0.4em 0; }
 table {
-    border-spacing: 0px;
+    border-spacing: 0;
     white-space: nowrap;
     margin: 1em 0;
 }
@@ -54,7 +54,7 @@ small, .small { color: #666; }
 small a, .small a { color: #444; }
 .small { font-size: small; }
 .indent {
-    margin: 1em 0px 1em 10px;
+    margin: 1em 0 1em 10px;
     padding-left: 20px;
     border-left: 2px solid #EEE;
 }
@@ -63,7 +63,7 @@ small a, .small a { color: #444; }
 .hidden { display: none; }
 .strikethrough { text-decoration: line-through; }
 blockquote {
-    margin: 1em 0px;
+    margin: 1em 0;
     padding-left: 1.5em;
     border-left: 10px solid #EEE;
 }
@@ -87,7 +87,7 @@ code {
 .button { cursor: pointer; }
 .container {
     max-width: 820px;
-    margin: 0px auto;
+    margin: 0 auto;
 }
 .container.blog { max-width: 1020px; }
 .container.admin { max-width: 1200px; }
@@ -103,7 +103,7 @@ code {
 }
 #header h1 {
     line-height: 50px;
-    margin: 0px;
+    margin: 0;
 }
 #header p { margin-top: 1em; }
 #header.blog { max-width: 1000px; }
@@ -133,7 +133,7 @@ code {
     display: block;
     float: right;
     background-color: rgba(0, 0, 0, 0.04);
-    border-radius: 0px 0px 3px 3px;
+    border-radius: 0 0 3px 3px;
     padding: 3px 5px;
     text-decoration: none;
 }
@@ -148,7 +148,7 @@ code {
 .column-content img {
     display: block;
     margin: 2em auto;
-    box-shadow: 0px 0px 20px hsl(0, 0%, 87%);
+    box-shadow: 0 0 20px hsl(0, 0%, 87%);
     background-color: hsl(0, 0%, 95%);
 }
 .column-content .figure img {
@@ -190,13 +190,13 @@ code {
     margin-right: 8px;
 }
 .date { white-space: nowrap; }
-#elephpant { background-position: 0px -18px; }
+#elephpant { background-position: 0 -18px; }
 #upsell small::before {
     content: "💡 ";
     filter: grayscale(1);
 }
 #heartbleed {
-    background-position: -32px 0px;
+    background-position: -32px 0;
     margin-left: -6px;
     margin-right: 2px;
 }
@@ -213,23 +213,23 @@ code {
 #projekty div {
     float: left;
     line-height: 32px;
-    margin: 16px 0px;
+    margin: 16px 0;
     color: #595959;
 }
 #projekty ul {
     float: left;
-    padding: 0px;
-    margin: 16px 0px;
+    padding: 0;
+    margin: 16px 0;
 }
 #projekty ul li {
     float: left;
     list-style: none;
-    padding: 0px 0px 0px 16px;
+    padding: 0 0 0 16px;
 }
 #menu {
     font-size: 85%;
     text-align: left;
-    padding: 10px 0px;
+    padding: 10px 0;
 }
 .left { text-align: left; }
 .center { text-align: center; }
@@ -265,13 +265,16 @@ form.wide input, form.wide select, form.wide textarea { width: 440px; }
 #frm-application #company th.short { width: 104px; }
 #frm-application input[type=checkbox], #newalgo input[type=checkbox], #frm-passwordsStorages input[type=checkbox] { width: auto; }
 #frm-application #frm-application-note { width: 400px; }
-#frm-statuses select { color: #666; font-family: Consolas; }
+#frm-statuses select {
+    color: #666;
+    font-family: Consolas, sans-serif;
+}
 #submit { font-weight: bold; }
 #frm-review textarea {
     width: 600px;
     height: 150px;
 }
-#chyby ul { margin: 0px; }
+#chyby ul { margin: 0; }
 #chyby {
     color: #F34;
     background-color: #FEE;
@@ -301,8 +304,8 @@ div.notice {
     border: 1px solid #DDF;
 }
 #slides-embed iframe, #video-embed iframe {
-    border: 0px;
-    margin: 0px;
+    border: 0;
+    margin: 0;
     overflow: hidden;
 }
 #ohlasy hr { height: 1px; }
@@ -319,7 +322,7 @@ div.notice {
 #frm-passwordsStorages #frm-passwordsStorages-algo-from { width: 200px; }
 #contact, #social {
     float: left;
-    margin: 0px 4em 0px 0px;
+    margin: 0 4em 0 0;
 }
 #loadDataControls span { display: none; }
 #pubkey {
@@ -345,7 +348,7 @@ div.notice {
     max-width: 720px;
     padding: 2em;
     margin: 2em;
-    box-shadow: 0px 0px 20px hsl(0, 0%, 87%);
+    box-shadow: 0 0 20px hsl(0, 0%, 87%);
 }
 @media (max-width: 64em) {
     #pubkey {

@@ -1,6 +1,6 @@
 body {
 	font: 1em/1.5 Arial, sans-serif;
-	margin: 0px;
+	margin: 0;
 	color: #249;
 	background-color: #EFF2FB;
 }
@@ -27,7 +27,7 @@ h3 { color: #777; }
 }
 #desc { clear: both; }
 #result {
-	margin: 2em 0px;
+	margin: 2em 0;
 	padding: 2em 0;
 	color: #333;
 	background-color: #FFF;
