@@ -63,7 +63,9 @@ class HomepagePresenter extends BasePresenter
 		$dates = array();
 		foreach ($trainings as $date) {
 			$date->applications = $this->trainingApplications->getValidByDate($date->dateId);
+			$date->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($date->dateId);
 			$date->validCount = count($date->applications);
+			$date->requiresAttention = ($date->canceledApplications || ($date->status == Training\Dates::STATUS_CANCELED && $date->validCount));
 			$dates[$date->start->getTimestamp()] = $date;
 		}
 		ksort($dates);

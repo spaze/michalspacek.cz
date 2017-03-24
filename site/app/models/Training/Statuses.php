@@ -70,7 +70,18 @@ class Statuses
 
 	public function getDiscardedStatuses()
 	{
-		return array($this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED) + $this->getDescendantStatuses(self::STATUS_CANCELED);
+		return $this->getCanceledStatus() + $this->getDescendantStatuses(self::STATUS_CANCELED);
+	}
+
+
+	/**
+	 * Get canceled status.
+	 *
+	 * @return array(id => status)
+	 */
+	public function getCanceledStatus()
+	{
+		return array($this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED);
 	}
 
 

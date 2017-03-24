@@ -246,8 +246,8 @@ tr.dateLine td { border-top: 2px solid #EEE; }
 #statuses th, #statuses td, #applications th, #applications td, #certificates th, #certificates td { padding: 1px 5px; }
 #statuses tr.summary:hover, #certificates tbody tr:hover { background-color: #F0F0F0; }
 #applications tbody tr:hover { background-color: #F0F0F0; }
-#applications tbody tr.discarded { opacity: 0.3; }
-#applications tbody tr.discarded:hover { opacity: 0.7; }
+#applications .discarded, #statuses .discarded { opacity: 0.3; }
+#applications .discarded:hover, #statuses .discarded:hover { opacity: 0.7; }
 #certificates thead th { text-align: left; }
 #frm-application th, #frm-application td,
 #frm-applicationPreliminary th, #frm-applicationPreliminary td {

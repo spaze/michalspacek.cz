@@ -39,6 +39,9 @@ class Applications
 	/** @var \Nette\Localization\ITranslator */
 	protected $translator;
 
+	/** @var array */
+	private $byDate = array();
+
 
 	/**
 	 * @param \Nette\Database\Context $context
@@ -125,38 +128,38 @@ class Applications
 
 	public function getByDate($dateId)
 	{
-		$result = $this->database->fetchAll(
-			'SELECT
-				a.id_application AS id,
-				a.name,
-				a.email,
-				a.company,
-				s.status,
-				a.status_time AS statusTime,
-				a.note,
-				a.price,
-				a.vat_rate AS vatRate,
-				a.price_vat AS priceVat,
-				a.invoice_id AS invoiceId,
-				a.paid,
-				sr.name AS sourceName
-			FROM
-				training_applications a
-				JOIN training_application_status s ON a.key_status = s.id_status
-				JOIN training_application_sources sr ON a.key_source = sr.id_source
-			WHERE
-				key_date = ?',
-			$dateId
-		);
-
-		if ($result) {
-			foreach ($result as $row) {
-				$row->email = $this->emailEncryption->decrypt($row->email);
-				$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
+		if (!isset($this->byDate[$dateId])) {
+			$this->byDate[$dateId] = $this->database->fetchAll(
+				'SELECT
+					a.id_application AS id,
+					a.name,
+					a.email,
+					a.company,
+					s.status,
+					a.status_time AS statusTime,
+					a.note,
+					a.price,
+					a.vat_rate AS vatRate,
+					a.price_vat AS priceVat,
+					a.invoice_id AS invoiceId,
+					a.paid,
+					sr.name AS sourceName
+				FROM
+					training_applications a
+					JOIN training_application_status s ON a.key_status = s.id_status
+					JOIN training_application_sources sr ON a.key_source = sr.id_source
+				WHERE
+					key_date = ?',
+				$dateId
+			);
+			if ($this->byDate[$dateId]) {
+				foreach ($this->byDate[$dateId] as $row) {
+					$row->email = $this->emailEncryption->decrypt($row->email);
+					$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
+				}
 			}
 		}
-
-		return $result;
+		return $this->byDate[$dateId];
 	}
 
 
@@ -191,6 +194,21 @@ class Applications
 			array_keys($this->trainingStatuses->getDiscardedStatuses())
 		);
 		return $result;
+	}
+
+
+	/**
+	 * Get canceled but already paid applications by date id.
+	 *
+	 * @param integer $dateId
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getCanceledPaidByDate($dateId)
+	{
+		$canceledStatus = $this->trainingStatuses->getCanceledStatus();
+		return array_filter($this->getByDate($dateId), function($value) use ($canceledStatus) {
+			return ($value->paid && in_array($value->status, $canceledStatus));
+		});
 	}
 
 

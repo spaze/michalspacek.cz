@@ -82,9 +82,16 @@ $(document).ready(function() {
 		})
 		.css('cursor', 'pointer');
 
+    $('#statusesShow').click(function() {
+    	$('#statuses td[data-date]').parent().next().show();
+    });
+
+    $('#statusesHide').click(function() {
+    	$('#statuses td[data-date]').parent().next().hide();
+    });
+
 	$('#statusesShow, #statusesHide')
 		.click(function() {
-			$('#statuses td[data-date]').parent().next().toggle();
 			$('#statuses-links').find('span').toggle();
 		})
 		.css('cursor', 'pointer');

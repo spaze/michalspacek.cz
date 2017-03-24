@@ -205,7 +205,9 @@ class TrainingsPresenter extends BasePresenter
 		$trainings = $this->trainings->getAllTrainings();
 		foreach ($trainings as $training) {
 			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
+			$training->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($training->dateId);
 			$training->validCount = count($training->applications);
+			$training->requiresAttention = false;
 		}
 
 		$this->template->pageTitle = 'Školení';
