@@ -67,6 +67,8 @@ blockquote {
     padding-left: 1.5em;
     border-left: 10px solid #EEE;
 }
+q::before { content: "«"; }
+q::after { content: "»"; }
 input.big { width: 400px; }
 textarea.big {
     width: 700px;
