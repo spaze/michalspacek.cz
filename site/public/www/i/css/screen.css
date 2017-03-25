@@ -84,6 +84,12 @@ code {
     background-color: rgba(0, 0, 0, 0.04);
     border-radius: 3px;
 }
+pre {
+    padding: 1em;
+    margin-bottom: 1em;
+    background-color: rgba(0, 0, 0, 0.04);
+    border-radius: 3px;
+}
 .button { cursor: pointer; }
 .container {
     max-width: 820px;
