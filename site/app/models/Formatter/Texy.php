@@ -167,6 +167,7 @@ class Texy extends \Netxten\Formatter\Texy
 		$texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
 		$texy->figureModule->widthDelta = false;  // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
 		$texy->headingModule->top = $this->topHeading;
+		$texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2);  // en_US → en
 		return $texy;
 	}
 
