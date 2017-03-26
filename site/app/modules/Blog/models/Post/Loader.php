@@ -36,9 +36,9 @@ class Loader
 	 * @param string $post
 	 * @return boolean
 	 */
-	public function exists(string $post): bool
+	public function exists(string $post, ?string $previewKey = null): bool
 	{
-		return (bool)$this->fetch($post);
+		return (bool)$this->fetch($post, $previewKey);
 	}
 
 
@@ -46,9 +46,10 @@ class Loader
 	 * Fetch post.
 	 *
 	 * @param string $post
+	 * @param string $previewKey
 	 * @return \Nette\Database\Row|null
 	 */
-	public function fetch(string $post): ?\Nette\Database\Row
+	public function fetch(string $post, ?string $previewKey = null): ?\Nette\Database\Row
 	{
 		if ($this->post === null) {
 			$this->post = $this->database->fetch(
@@ -59,6 +60,7 @@ class Loader
 					bp.lead AS leadTexy,
 					bp.text AS textTexy,
 					bp.published,
+					bp.preview_key AS previewKey,
 					bp.originally AS originallyTexy,
 					bp.og_image AS ogImage,
 					bp.tags,
@@ -67,8 +69,11 @@ class Loader
 				FROM blog_posts bp
 				LEFT JOIN twitter_card_types tct
 					ON tct.id_twitter_card_type = bp.key_twitter_card_type
-				WHERE bp.slug = ?',
-				$post
+				WHERE bp.slug = ?
+					AND (bp.published <= ? OR bp.preview_key = ?)',
+				$post,
+				new \Nette\Utils\DateTime(),
+				$previewKey
 			) ?: null;
 		}
 		return $this->post;

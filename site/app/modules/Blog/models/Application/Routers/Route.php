@@ -34,7 +34,8 @@ class Route extends \Nette\Application\Routers\Route
 	 */
 	public function match(\Nette\Http\IRequest $httpRequest): ?\Nette\Application\Request
 	{
-		return (!$this->blogPostLoader->exists(trim($httpRequest->getUrl()->getPath(), '/')) ? null : parent::match($httpRequest));
+		$url = $httpRequest->getUrl();
+		return (!$this->blogPostLoader->exists(trim($url->getPath(), '/'), $url->getQueryParameter('preview')) ? null : parent::match($httpRequest));
 	}
 
 }

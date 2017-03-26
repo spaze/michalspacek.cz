@@ -35,6 +35,9 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			->addRule(self::MIN_LENGTH, 'Slug musí mít alespoň %d znaky', 3);
 		$this->addPublishedDate('published', 'Vydáno:', true)
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
+		$this->addText('previewKey', 'Klíč pro náhled:')
+			->setRequired(false)
+			->addRule(self::MIN_LENGTH, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
 		$this->addTextArea('lead', 'Perex:')
 			->addCondition(self::FILLED)
 			->addRule(self::MIN_LENGTH, 'Perex musí mít alespoň %d znaky', 3);
@@ -75,6 +78,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			'title' => $post->titleTexy,
 			'slug' => $post->slug,
 			'published' => $post->published->format('Y-m-d H:i'),
+			'previewKey' => $post->previewKey,
 			'lead' => $post->leadTexy,
 			'text' => $post->textTexy,
 			'originally' => $post->originallyTexy,

@@ -73,6 +73,7 @@ class BlogPresenter extends BasePresenter
 		try {
 			$post = new \MichalSpacekCz\Blog\Post\Data();
 			$post->published = new \DateTime($values->published);
+			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 			$post->slug = $values->slug;
 			$post->titleTexy = $values->title;
 			$post->leadTexy = (empty($values->lead) ? null : $values->lead);
@@ -129,6 +130,7 @@ class BlogPresenter extends BasePresenter
 		$post = new \MichalSpacekCz\Blog\Post\Data();
 		$post->postId = $this->post->postId;
 		$post->published = new \DateTime($values->published);
+		$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 		$post->slug = $values->slug;
 		$post->titleTexy = $values->title;
 		$post->leadTexy = (empty($values->lead) ? null : $values->lead);

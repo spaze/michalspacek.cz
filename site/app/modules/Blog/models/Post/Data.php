@@ -38,6 +38,9 @@ class Data
 	/** @var \DateTimeInterface */
 	public $published;
 
+	/** @var string */
+	public $previewKey;
+
 	/** @var \Nette\Utils\Html */
 	public $originally;
 

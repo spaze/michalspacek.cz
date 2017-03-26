@@ -31,9 +31,9 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 	}
 
 
-	public function actionDefault(string $post): void
+	public function actionDefault(string $post, ?string $preview = null): void
 	{
-		$post = $this->blogPost->get($post);
+		$post = $this->blogPost->get($post, $preview);
 		$this->template->post = $post;
 		$this->template->pageTitle = strip_tags((string)$post->title);
 		$this->template->pageHeader = $post->title;

@@ -66,13 +66,14 @@ class Articles
 					null,
 					null
 				FROM blog_posts bp
+				WHERE bp.published <= ?
 			ORDER BY date DESC';
 
 		if ($limit !== null) {
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$articles = $this->database->fetchAll($query);
+		$articles = $this->database->fetchAll($query, new \Nette\Utils\DateTime());
 		foreach ($articles as $article) {
 			if ($article->sourceHref === null) {
 				$article->href = $this->linkGenerator->link('Blog:Post:', [$article->href]);

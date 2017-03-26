@@ -41,11 +41,12 @@ class Post
 	 * Get post.
 	 *
 	 * @param string $post
+	 * @param string $previewKey
 	 * @return \MichalSpacekCz\Blog\Post\Data|null
 	 */
-	public function get(string $post): ?\MichalSpacekCz\Blog\Post\Data
+	public function get(string $post, ?string $previewKey = null): ?\MichalSpacekCz\Blog\Post\Data
 	{
-		$result = $this->loader->fetch($post);
+		$result = $this->loader->fetch($post, $previewKey);
 		if ($result) {
 			$result = $this->format($this->build($result));
 		}
@@ -68,6 +69,7 @@ class Post
 				bp.lead AS leadTexy,
 				bp.text AS textTexy,
 				bp.published,
+				bp.preview_key AS previewKey,
 				bp.originally AS originallyTexy,
 				bp.og_image AS ogImage,
 				bp.tags,
@@ -101,6 +103,7 @@ class Post
 				lead AS leadTexy,
 				text AS textTexy,
 				published,
+				preview_key AS previewKey,
 				originally AS originallyTexy,
 				tags
 			FROM
@@ -129,6 +132,7 @@ class Post
 		$post->leadTexy = $row->leadTexy;
 		$post->textTexy = $row->textTexy;
 		$post->published = $row->published;
+		$post->previewKey = $row->previewKey;
 		$post->originallyTexy = $row->originallyTexy;
 		$post->ogImage = (isset($row->ogImage) ? $row->ogImage : null);  // Can't use ??, throws Nette\MemberAccessException
 		$post->tags = (isset($row->tags) ? Json::decode($row->tags) : null);  // Can't use ??, throws Nette\MemberAccessException
@@ -169,6 +173,7 @@ class Post
 			'INSERT INTO blog_posts',
 			array(
 				'title' => $post->titleTexy,
+				'preview_key' => $post->previewKey,
 				'slug' => $post->slug,
 				'lead' => $post->leadTexy,
 				'text' => $post->textTexy,
@@ -194,6 +199,7 @@ class Post
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 			array(
 				'title' => $post->titleTexy,
+				'preview_key' => $post->previewKey,
 				'slug' => $post->slug,
 				'lead' => $post->leadTexy,
 				'text' => $post->textTexy,
