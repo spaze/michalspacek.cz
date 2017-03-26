@@ -34,6 +34,9 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
 		$post = $this->blogPost->get($slug, $preview);
+		if ($preview !== null && $post->published <= new \Nette\Utils\DateTime()) {
+			$this->redirect($this->getAction(), $slug);
+		}
 		$this->template->post = $post;
 		$this->template->pageTitle = strip_tags((string)$post->title);
 		$this->template->pageHeader = $post->title;
