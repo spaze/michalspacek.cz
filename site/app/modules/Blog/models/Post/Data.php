@@ -17,6 +17,12 @@ class Data
 	/** @var string */
 	public $slug;
 
+	/** @var integer */
+	public $localeId;
+
+	/** @var string */
+	public $locale;
+
 	/** @var \Nette\Utils\Html */
 	public $title;
 

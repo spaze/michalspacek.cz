@@ -72,6 +72,7 @@ class BlogPresenter extends BasePresenter
 	{
 		try {
 			$post = new \MichalSpacekCz\Blog\Post\Data();
+			$post->locale = (empty($values->locale) ? null : $values->locale);
 			$post->published = new \DateTime($values->published);
 			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 			$post->slug = $values->slug;
@@ -129,6 +130,7 @@ class BlogPresenter extends BasePresenter
 	{
 		$post = new \MichalSpacekCz\Blog\Post\Data();
 		$post->postId = $this->post->postId;
+		$post->locale = (empty($values->locale) ? null : $values->locale);
 		$post->published = new \DateTime($values->published);
 		$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 		$post->slug = $values->slug;

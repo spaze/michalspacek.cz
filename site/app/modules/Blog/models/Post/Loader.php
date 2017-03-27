@@ -17,16 +17,21 @@ class Loader
 	/** @var \Nette\Database\Context */
 	protected $database;
 
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
+
 	/** @var \Nette\Database\Row */
 	protected $post;
 
 
 	/**
 	 * @param \Nette\Database\Context $context
+	 * @param \Kdyby\Translation\Translator|\Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\Database\Context $context)
+	public function __construct(\Nette\Database\Context $context, \Nette\Localization\ITranslator $translator)
 	{
 		$this->database = $context;
+		$this->translator = $translator;
 	}
 
 
@@ -55,6 +60,8 @@ class Loader
 			$this->post = $this->database->fetch(
 				'SELECT
 					bp.id_blog_post AS postId,
+					l.id_blog_post_locale AS localeId,
+					l.locale,
 					bp.slug,
 					bp.title AS titleTexy,
 					bp.lead AS leadTexy,
@@ -67,11 +74,15 @@ class Loader
 					bp.recommended,
 					tct.card AS twitterCard
 				FROM blog_posts bp
+				LEFT JOIN blog_post_locales l
+					ON l.id_blog_post_locale = bp.key_locale
 				LEFT JOIN twitter_card_types tct
 					ON tct.id_twitter_card_type = bp.key_twitter_card_type
 				WHERE bp.slug = ?
+					AND l.locale = ?
 					AND (bp.published <= ? OR bp.preview_key = ?)',
 				$post,
+				$this->translator->getDefaultLocale(),
 				new \Nette\Utils\DateTime(),
 				$previewKey
 			) ?: null;

@@ -64,6 +64,8 @@ class Post
 		$result = $this->database->fetch(
 			'SELECT
 				bp.id_blog_post AS postId,
+				l.id_blog_post_locale AS localeId,
+				l.locale,
 				bp.slug,
 				bp.title AS titleTexy,
 				bp.lead AS leadTexy,
@@ -76,6 +78,8 @@ class Post
 				bp.recommended,
 				tct.card AS twitterCard
 			FROM blog_posts bp
+			LEFT JOIN blog_post_locales l
+				ON l.id_blog_post_locale = bp.key_locale
 			LEFT JOIN twitter_card_types tct
 				ON tct.id_twitter_card_type = bp.key_twitter_card_type
 			WHERE bp.id_blog_post = ?',
@@ -97,17 +101,21 @@ class Post
 	{
 		$posts = [];
 		$sql = 'SELECT
-				id_blog_post AS postId,
-				slug,
-				title AS titleTexy,
-				lead AS leadTexy,
-				text AS textTexy,
-				published,
-				preview_key AS previewKey,
-				originally AS originallyTexy,
-				tags
+				bp.id_blog_post AS postId,
+				l.id_blog_post_locale AS localeId,
+				l.locale,
+				bp.slug,
+				bp.title AS titleTexy,
+				bp.lead AS leadTexy,
+				bp.text AS textTexy,
+				bp.published,
+				bp.preview_key AS previewKey,
+				bp.originally AS originallyTexy,
+				bp.tags
 			FROM
-				blog_posts
+				blog_posts bp
+			LEFT JOIN blog_post_locales l
+				ON l.id_blog_post_locale = bp.key_locale
 			ORDER BY
 				published, slug';
 		foreach ($this->database->fetchAll($sql) as $post) {
@@ -126,6 +134,8 @@ class Post
 	private function build(\Nette\Database\Row $row): \MichalSpacekCz\Blog\Post\Data
 	{
 		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post->locale = $row->locale;
+		$post->localeId = $row->localeId;
 		$post->postId = $row->postId;
 		$post->slug = $row->slug;
 		$post->titleTexy = $row->titleTexy;
@@ -172,6 +182,7 @@ class Post
 		$this->database->query(
 			'INSERT INTO blog_posts',
 			array(
+				'key_locale' => $post->locale,
 				'title' => $post->titleTexy,
 				'preview_key' => $post->previewKey,
 				'slug' => $post->slug,
@@ -198,6 +209,7 @@ class Post
 		$this->database->query(
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 			array(
+				'key_locale' => $post->locale,
 				'title' => $post->titleTexy,
 				'preview_key' => $post->previewKey,
 				'slug' => $post->slug,
@@ -233,6 +245,17 @@ class Post
 	private function getTwitterCardId(string $card): int
 	{
 		return $this->database->fetchField('SELECT id_twitter_card_type FROM twitter_card_types WHERE card = ?', $card);
+	}
+
+
+	/**
+	 * Get all blog post locales.
+	 *
+	 * @return array of id => locale
+	 */
+	public function getAllLocales(): array
+	{
+		return $this->database->fetchPairs('SELECT id_blog_post_locale, locale FROM blog_post_locales ORDER BY id_blog_post_locale');
 	}
 
 }

@@ -27,6 +27,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 		parent::__construct($parent, $name);
 		$this->blogPost = $blogPost;
 
+		$this->addSelect('locale', 'Jazyk:', ['' => 'Všechny'] + $this->blogPost->getAllLocales());
 		$this->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
 			->addRule(self::MIN_LENGTH, 'Titulek musí mít alespoň %d znaky', 3);
@@ -75,6 +76,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 	public function setPost(\MichalSpacekCz\Blog\Post\Data $post)
 	{
 		$values = array(
+			'locale' => $post->localeId,
 			'title' => $post->titleTexy,
 			'slug' => $post->slug,
 			'published' => $post->published->format('Y-m-d H:i'),

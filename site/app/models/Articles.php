@@ -29,7 +29,7 @@ class Articles
 	 * @param \Nette\Database\Context $context
 	 * @param \Netxten\Formatter\Texy $texyFormatter
 	 * @param \Nette\Application\LinkGenerator $linkGenerator
-	 * @param \Nette\Localization\ITranslator $translator
+	 * @param \Kdyby\Translation\Translator|\Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(\Nette\Database\Context $context, \Netxten\Formatter\Texy $texyFormatter, \Nette\Application\LinkGenerator $linkGenerator, \Nette\Localization\ITranslator $translator)
 	{
@@ -66,14 +66,17 @@ class Articles
 					null,
 					null
 				FROM blog_posts bp
+				LEFT JOIN blog_post_locales l
+					ON l.id_blog_post_locale = bp.key_locale
 				WHERE bp.published <= ?
+					AND (l.locale = ? OR l.locale IS NULL)
 			ORDER BY date DESC';
 
 		if ($limit !== null) {
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$articles = $this->database->fetchAll($query, new \Nette\Utils\DateTime());
+		$articles = $this->database->fetchAll($query, new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
 		foreach ($articles as $article) {
 			if ($article->sourceHref === null) {
 				$article->href = $this->linkGenerator->link('Blog:Post:', [$article->href]);
