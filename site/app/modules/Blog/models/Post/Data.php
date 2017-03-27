@@ -64,4 +64,16 @@ class Data
 
 	/** @var string */
 	public $twitterCard;
+
+
+	/**
+	 * Returns true when the post needs preview key to display.
+	 *
+	 * @return bool
+	 */
+	public function needsPreviewKey(): bool
+	{
+		return $this->published > new \Nette\Utils\DateTime();
+	}
+
 }

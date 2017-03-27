@@ -35,7 +35,7 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 	{
 		$post = $this->blogPost->get($slug, $preview);
 		if ($preview !== null) {
-			if ($post->published <= new \Nette\Utils\DateTime()) {
+			if (!$post->needsPreviewKey()) {
 				$this->redirect($this->getAction(), $slug);
 			}
 			$this->template->robots = 'noindex';
