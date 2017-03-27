@@ -5,7 +5,7 @@
 {/define}
 
 {define #postForm}
-{form $form}
+{form $form class => "aligned wide"}
 <table>
 <tr><th>{label locale /}</th><td>{input locale}</td></tr>
 <tr><th>{label title /}</th><td>{input title}</td></tr>
@@ -19,10 +19,8 @@
 <tr><th>{label ogImage /}</th><td>{input ogImage}</td></tr>
 <tr><th>{label tags /}</th><td>{input tags}</td></tr>
 <tr><th>{label recommended /}</th><td>{input recommended}</td></tr>
-<tr><td></td><td>{input submit}</td></tr>
 {capture $link}{link preview}{/capture}
-<tr><td></td><td>{input preview id => preview, data-url => $link}</td></tr>
-</tr>
+<tr><td></td><td class="short"><p>{input submit} {input preview id => preview, data-url => $link}</p></td></tr>
 </table>
 {/form $form}
 <div id="preview-target" class="hidden column-content"></div>

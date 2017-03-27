@@ -69,11 +69,6 @@ blockquote {
 }
 q::before { content: "«"; }
 q::after { content: "»"; }
-input.big { width: 400px; }
-textarea.big {
-    width: 700px;
-    height: 300px;
-}
 img {
     border: none;
     max-width: 100%;
@@ -267,7 +262,8 @@ form.aligned th {
     vertical-align: top;
 }
 td.short input, form.wide td.short input, #frm-application td.short input { width: 85px; }
-form.wide input, form.wide select, form.wide textarea { width: 440px; }
+form.wide input, form.wide select, form.wide textarea { width: 740px; }
+form.wide textarea { height: 200px; }
 #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 170px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }
