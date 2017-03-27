@@ -65,6 +65,9 @@ class Data
 	/** @var string */
 	public $twitterCard;
 
+	/** @var string */
+	public $href;
+
 
 	/**
 	 * Returns true when the post needs preview key to display.

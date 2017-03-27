@@ -7,7 +7,7 @@
 	<li>
 		{$post->title}
 		• <a n:href="edit $post->postId">Upravit</a>
-		• <a n:href=":Blog:Post:default $post->slug, $post->needsPreviewKey() ? $post->previewKey">Zobrazit{if $post->needsPreviewKey()} náhled{/if}</a>
+		• <a href="{$post->href}">{if $post->needsPreviewKey()}Zobrazit náhled{else}Zobrazit{/if}</a>
 		<small n:if="!$post->needsPreviewKey()">(Debug
 			<a href="https://developers.facebook.com/tools/debug/sharing/?q={link :Blog:Post:default $post->slug}" title="Facebook Sharing Debugger">Facebook</a>
 			• <a href="https://cards-dev.twitter.com/validator" title="Twitter Card validator">Twitter</a>

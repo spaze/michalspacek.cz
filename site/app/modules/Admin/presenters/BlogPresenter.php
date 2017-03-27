@@ -18,6 +18,12 @@ class BlogPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
+	/** @var \Nette\Application\LinkGenerator */
+	protected $linkGenerator;
+
+	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
+	protected $localeLinkGenerator;
+
 	/** @var \MichalSpacekCz\Blog\Post\Data */
 	private $post;
 
@@ -25,11 +31,20 @@ class BlogPresenter extends BasePresenter
 	/**
 	 * @param \MichalSpacekCz\Blog\Post $blogPost
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
+	 * @param \Nette\Application\LinkGenerator $linkGenerator
+	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
 	 */
-	public function __construct(\MichalSpacekCz\Blog\Post $blogPost, \MichalSpacekCz\Formatter\Texy $texyFormatter)
+	public function __construct(
+		\MichalSpacekCz\Blog\Post $blogPost,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
+		\Nette\Application\LinkGenerator $linkGenerator,
+		\MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
+	)
 	{
 		$this->blogPost = $blogPost;
 		$this->texyFormatter = $texyFormatter;
+		$this->linkGenerator = $linkGenerator;
+		$this->localeLinkGenerator = $localeLinkGenerator;
 		parent::__construct();
 	}
 
@@ -38,6 +53,16 @@ class BlogPresenter extends BasePresenter
 	{
 		$posts = [];
 		foreach ($this->blogPost->getAll() as $post) {
+			$params = [
+				'slug' => $post->slug,
+				'preview' => ($post->needsPreviewKey() ? $post->previewKey : null),
+			];
+			if ($post->locale === null || $post->locale === $this->translator->getDefaultLocale()) {
+				$post->href = $this->linkGenerator->link('Blog:Post:', $params);
+			} else {
+				$links = $this->localeLinkGenerator->links('Blog:Post:', $this->localeLinkGenerator->defaultParams($params));
+				$post->href = $links[$post->locale];
+			}
 			$posts[$post->published->getTimestamp() . $post->slug] = $post;
 		}
 		krsort($posts);
