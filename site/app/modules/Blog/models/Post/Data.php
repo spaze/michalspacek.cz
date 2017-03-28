@@ -20,6 +20,9 @@ class Data
 	/** @var integer */
 	public $localeId;
 
+	/** @var integer */
+	public $translationGroupId;
+
 	/** @var string */
 	public $locale;
 

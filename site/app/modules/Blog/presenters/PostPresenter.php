@@ -11,12 +11,14 @@ namespace App\BlogModule\Presenters;
  */
 class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 {
-
 	/** @var \MichalSpacekCz\Blog\Post */
 	protected $blogPost;
 
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
+
+	/** @var string[] */
+	protected $localeLinkParams = [];
 
 
 	/**
@@ -44,6 +46,32 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 		$this->template->pageTitle = strip_tags((string)$post->title);
 		$this->template->pageHeader = $post->title;
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+
+		foreach ($this->blogPost->getLocaleUrls($post->slug) as $post) {
+			$this->localeLinkParams[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
+		}
+	}
+
+
+	/**
+	 * Get original module:presenter:action for locale links.
+	 *
+	 * @return string
+	 */
+	protected function getLocaleLinkAction(): string
+	{
+		return ($this->localeLinkParams ? parent::getLocaleLinkAction() : 'Www:Articles:');
+	}
+
+
+	/**
+	 * Translated locale parameters for blog posts.
+	 *
+	 * @return array
+	 */
+	protected function getLocaleLinkParams(): array
+	{
+		return ($this->localeLinkParams ?: []);
 	}
 
 }

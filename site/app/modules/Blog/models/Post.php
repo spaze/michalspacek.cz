@@ -65,6 +65,7 @@ class Post
 			'SELECT
 				bp.id_blog_post AS postId,
 				l.id_blog_post_locale AS localeId,
+				bp.key_translation_group AS translationGroupId,
 				l.locale,
 				bp.slug,
 				bp.title AS titleTexy,
@@ -103,6 +104,7 @@ class Post
 		$sql = 'SELECT
 				bp.id_blog_post AS postId,
 				l.id_blog_post_locale AS localeId,
+				bp.key_translation_group AS translationGroupId,
 				l.locale,
 				bp.slug,
 				bp.title AS titleTexy,
@@ -134,6 +136,7 @@ class Post
 	private function build(\Nette\Database\Row $row): \MichalSpacekCz\Blog\Post\Data
 	{
 		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post->translationGroupId = $row->translationGroupId;
 		$post->locale = $row->locale;
 		$post->localeId = $row->localeId;
 		$post->postId = $row->postId;
@@ -182,6 +185,7 @@ class Post
 		$this->database->query(
 			'INSERT INTO blog_posts',
 			array(
+				'key_translation_group' => $post->translationGroup,
 				'key_locale' => $post->locale,
 				'title' => $post->titleTexy,
 				'preview_key' => $post->previewKey,
@@ -209,6 +213,7 @@ class Post
 		$this->database->query(
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 			array(
+				'key_translation_group' => $post->translationGroup,
 				'key_locale' => $post->locale,
 				'title' => $post->titleTexy,
 				'preview_key' => $post->previewKey,
@@ -256,6 +261,39 @@ class Post
 	public function getAllLocales(): array
 	{
 		return $this->database->fetchPairs('SELECT id_blog_post_locale, locale FROM blog_post_locales ORDER BY id_blog_post_locale');
+	}
+
+
+	/**
+	 * Get locales and URLs for a blog post.
+	 *
+	 * @param string $slug
+	 * @return \MichalSpacekCz\Blog\Post\Data[]
+	 */
+	public function getLocaleUrls(string $slug): array
+	{
+		$posts = [];
+		$sql = 'SELECT
+				bp.id_blog_post AS postId,
+				l.id_blog_post_locale AS localeId,
+				bp.key_translation_group AS translationGroupId,
+				l.locale,
+				bp.slug,
+				bp.title AS titleTexy,
+				bp.lead AS leadTexy,
+				bp.text AS textTexy,
+				bp.published,
+				bp.preview_key AS previewKey,
+				bp.originally AS originallyTexy,
+				bp.tags
+			FROM
+				blog_posts bp
+			LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
+			WHERE bp.key_translation_group = (SELECT key_translation_group FROM blog_posts WHERE slug = ?)';
+		foreach ($this->database->fetchAll($sql, $slug) as $post) {
+			$posts[] = $this->format($this->build($post));
+		}
+		return $posts;
 	}
 
 }

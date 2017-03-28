@@ -27,6 +27,9 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 		parent::__construct($parent, $name);
 		$this->blogPost = $blogPost;
 
+		$this->addText('translationGroup', 'Skupina překladů:')
+			->setRequired(false)
+			->setType('number');
 		$this->addSelect('locale', 'Jazyk:', ['' => 'Všechny'] + $this->blogPost->getAllLocales());
 		$this->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
@@ -76,6 +79,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 	public function setPost(\MichalSpacekCz\Blog\Post\Data $post)
 	{
 		$values = array(
+			'translationGroup' => $post->translationGroupId,
 			'locale' => $post->localeId,
 			'title' => $post->titleTexy,
 			'slug' => $post->slug,

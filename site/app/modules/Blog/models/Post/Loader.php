@@ -61,6 +61,7 @@ class Loader
 				'SELECT
 					bp.id_blog_post AS postId,
 					l.id_blog_post_locale AS localeId,
+					bp.key_translation_group AS translationGroupId,
 					l.locale,
 					bp.slug,
 					bp.title AS titleTexy,
