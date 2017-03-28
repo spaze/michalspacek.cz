@@ -261,7 +261,7 @@ form.aligned th {
     text-align: right;
     vertical-align: top;
 }
-td.short input, form.wide td.short input, #frm-application td.short input { width: 85px; }
+td.short input, form.wide td.short input, form.wide td.short select, #frm-application td.short input { width: 85px; }
 form.wide input, form.wide select, form.wide textarea { width: 740px; }
 form.wide textarea { height: 200px; }
 #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 170px; }

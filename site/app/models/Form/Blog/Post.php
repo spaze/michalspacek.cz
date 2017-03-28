@@ -30,7 +30,8 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 		$this->addText('translationGroup', 'Skupina překladů:')
 			->setRequired(false)
 			->setType('number');
-		$this->addSelect('locale', 'Jazyk:', ['' => 'Všechny'] + $this->blogPost->getAllLocales());
+		$this->addSelect('locale', 'Jazyk:', $this->blogPost->getAllLocales())
+			->setPrompt('- vyberte -');
 		$this->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
 			->addRule(self::MIN_LENGTH, 'Titulek musí mít alespoň %d znaky', 3);

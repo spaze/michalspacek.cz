@@ -69,7 +69,7 @@ class Articles
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale
 				WHERE bp.published <= ?
-					AND (l.locale = ? OR l.locale IS NULL)
+					AND l.locale = ?
 			ORDER BY date DESC';
 
 		if ($limit !== null) {
