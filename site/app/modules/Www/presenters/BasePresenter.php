@@ -18,6 +18,71 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	 */
 	public $translator;
 
+	/** @var \MichalSpacekCz\User\Manager */
+	private $authenticator;
+
+	/** @var \MichalSpacekCz\WebTracking */
+	private $webTracking;
+
+	/** @var \Spaze\ContentSecurityPolicy\Config */
+	private $contentSecurityPolicy;
+
+	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
+	private $localeLinkGenerator;
+
+	/** @var \MichalSpacekCz\Templating\Helpers */
+	private $templateHelpers;
+
+
+	/**
+	 * @internal
+	 * @param \MichalSpacekCz\User\Manager $authenticator
+	 */
+	public function injectAuthenticator(\MichalSpacekCz\User\Manager $authenticator)
+	{
+		$this->authenticator = $authenticator;
+	}
+
+
+	/**
+	 * @internal
+	 * @param \MichalSpacekCz\WebTracking $webTracking
+	 */
+	public function injectWebTracking(\MichalSpacekCz\WebTracking $webTracking)
+	{
+		$this->webTracking = $webTracking;
+	}
+
+
+	/**
+	 * @internal
+	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
+	 */
+	public function injectContentSecurityPolicy(\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
+	{
+		$this->contentSecurityPolicy = $contentSecurityPolicy;
+	}
+
+
+	/**
+	 * @internal
+	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
+	 */
+	public function injectLocaleLinkGenerator(\MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator)
+	{
+		$this->localeLinkGenerator = $localeLinkGenerator;
+	}
+
+
+	/**
+	 * @internal
+	 * @param \MichalSpacekCz\Templating\Helpers $templateHelpers
+	 */
+	public function injectTemplateHelpers(\MichalSpacekCz\Templating\Helpers $templateHelpers)
+	{
+		$this->templateHelpers = $templateHelpers;
+	}
+
 
 	protected function startup(): void
 	{
@@ -28,8 +93,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	protected function startupEx(): void
 	{
-		$authenticator = $this->getContext()->getByType(\MichalSpacekCz\User\Manager::class);
-		if ($authenticator->isForbidden()) {
+		if ($this->authenticator->isForbidden()) {
 			$this->forward('Forbidden:');
 		}
 	}
@@ -37,18 +101,13 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	public function beforeRender(): void
 	{
-		$webTracking = $this->getContext()->getByType(\MichalSpacekCz\WebTracking::class);
-		/** @var \Spaze\ContentSecurityPolicy\Config */
-		$contentSecurityPolicy = $this->getContext()->getByType(\Spaze\ContentSecurityPolicy\Config::class);
-		if ($this->template->trackingCode = $webTracking->isEnabled()) {
-			$contentSecurityPolicy->addSnippet('ga');
+		if ($this->template->trackingCode = $this->webTracking->isEnabled()) {
+			$this->contentSecurityPolicy->addSnippet('ga');
 		}
 		$this->template->setTranslator($this->translator);
 
 		try {
-			/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
-			$localeLinkGenerator = $this->getContext()->getByType(\MichalSpacekCz\Application\LocaleLinkGenerator::class);
-			$this->template->localeLinks = $localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
+			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
 		} catch (\Nette\Application\UI\InvalidLinkException $e) {
 			$this->template->localeLinks = $this->getLocaleLinkDefault();
 		}
@@ -57,11 +116,9 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	protected function createTemplate(): \Nette\Application\UI\ITemplate
 	{
-		$helpers = $this->getContext()->getByType(\MichalSpacekCz\Templating\Helpers::class);
-
 		$template = parent::createTemplate();
 		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers(), 'loader']);
-		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
+		$template->getLatte()->addFilter(null, [$this->templateHelpers, 'loader']);
 		return $template;
 	}
 
@@ -95,7 +152,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->getContext()->getByType(\MichalSpacekCz\Application\LocaleLinkGenerator::class)->defaultParams($this->getParameters());
+		return $this->localeLinkGenerator->defaultParams($this->getParameters());
 	}
 
 }

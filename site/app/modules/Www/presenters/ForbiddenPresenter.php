@@ -18,6 +18,45 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
 
+	/** @var \MichalSpacekCz\WebTracking */
+	private $webTracking;
+
+	/** @var \Spaze\ContentSecurityPolicy\Config */
+	private $contentSecurityPolicy;
+
+	/** @var \MichalSpacekCz\Templating\Helpers */
+	private $templateHelpers;
+
+
+	/**
+	 * @internal
+	 * @param \MichalSpacekCz\WebTracking $webTracking
+	 */
+	public function injectWebTracking(\MichalSpacekCz\WebTracking $webTracking)
+	{
+		$this->webTracking = $webTracking;
+	}
+
+
+	/**
+	 * @internal
+	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
+	 */
+	public function injectContentSecurityPolicy(\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
+	{
+		$this->contentSecurityPolicy = $contentSecurityPolicy;
+	}
+
+
+	/**
+	 * @internal
+	 * @param \MichalSpacekCz\Templating\Helpers $templateHelpers
+	 */
+	public function injectTemplateHelpers(\MichalSpacekCz\Templating\Helpers $templateHelpers)
+	{
+		$this->templateHelpers = $templateHelpers;
+	}
+
 
 	/**
 	 * @param \Nette\Localization\ITranslator $translator
@@ -33,11 +72,8 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 
 	public function beforeRender()
 	{
-		$webTracking = $this->getContext()->getByType(\MichalSpacekCz\WebTracking::class);
-		/** @var \Spaze\ContentSecurityPolicy\Config */
-		$contentSecurityPolicy = $this->getContext()->getByType(\Spaze\ContentSecurityPolicy\Config::class);
-		if ($this->template->trackingCode = $webTracking->isEnabled()) {
-			$contentSecurityPolicy->addSnippet('ga');
+		if ($this->template->trackingCode = $this->webTracking->isEnabled()) {
+			$this->contentSecurityPolicy->addSnippet('ga');
 		}
 		$this->template->setTranslator($this->translator);
 	}
@@ -45,11 +81,9 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 
 	protected function createTemplate()
 	{
-		$helpers = $this->getContext()->getByType(\MichalSpacekCz\Templating\Helpers::class);
-
 		$template = parent::createTemplate();
 		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers(), 'loader']);
-		$template->getLatte()->addFilter(null, [$helpers, 'loader']);
+		$template->getLatte()->addFilter(null, [$this->templateHelpers, 'loader']);
 		return $template;
 	}
 
