@@ -86,6 +86,7 @@ pre {
     margin-bottom: 1em;
     background-color: rgba(0, 0, 0, 0.04);
     border-radius: 3px;
+    white-space: pre-wrap;
 }
 .button { cursor: pointer; }
 .container {
