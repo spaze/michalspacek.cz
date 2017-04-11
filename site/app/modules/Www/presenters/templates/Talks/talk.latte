@@ -21,7 +21,7 @@
 <p n:if="$href"><a href="{$href}">{_messages.talks.detailevent}</a></p>
 
 <h2 id="{_html.id.eventdate}">{_messages.talks.dateevent}</h2>
-<p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$eventHref}">{$event}</a><small n:if="$duration"> ({_messages.talks.duration|format:$duration})</small></p>
+<p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$eventHref}" n:tag-if="$eventHref">{$event}</a><small n:if="$duration"> ({_messages.talks.duration|format:$duration})</small></p>
 
 {if $transcript}
 	<hr>
