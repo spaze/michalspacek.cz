@@ -33,6 +33,8 @@ contentSecurityPolicy:
 			img-src:
 				- %domain.contentSecurityPolicySelf%
 			script-src:
+				- "'strict-dynamic'"
+				- "'nonce'"
 				- %domain.contentSecurityPolicySelf%
 			style-src:
 				- %domain.contentSecurityPolicySelf%
