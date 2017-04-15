@@ -41,6 +41,9 @@ contentSecurityPolicy:
 			frame-ancestors: "'none'"
 			form-action: "'self'"
 			base-uri: "'none'"
+			require-sri-for:
+				- script
+				- style
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
