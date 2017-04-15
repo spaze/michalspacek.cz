@@ -34,7 +34,7 @@ parameters:
 				- "5e1MASoMjR09CTL5WP1dFoR9yQBLrAkwdHVCB3aoBaA="  # ECDSA production
 				- "N6hALJkpMWIA3mdMkpeJRwFFNwxWQmNsbcL70XBwxIo="  # ECDSA backup 1
 				- "YswPXsgfC9zcBFJRkWg9cA3e22TY08khzcragg8vxQo="  # ECDSA backup 2, printed on paper
-			max-age: 600
+			max-age: 2592000
 			includeSubdomains:
 			report-uri: %reporting.publicKeyPins%
 		admin: %publicKeyPins.www%
