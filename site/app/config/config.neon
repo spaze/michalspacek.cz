@@ -12,7 +12,7 @@ http:
 		X-Powered-By: "<script>document.write('<img src=\"//xss.sk\" title=\"Inline JavaScript is bad, m\\'kay?\">');</script>"
 		X-Content-Type-Options: nosniff
 		X-XSS-Protection: "1; mode=block"
-		Referrer-Policy: "origin-when-cross-origin"
+		Referrer-Policy: "no-referrer, strict-origin-when-cross-origin"  # Change the value in common-headers.conf, too
 	frames: false
 
 session:
