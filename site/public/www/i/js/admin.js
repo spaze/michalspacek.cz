@@ -186,6 +186,7 @@ $(document).ready(function() {
 		var slide = tbody.clone(true);
 		var index = 0;
 		slide.addClass('new-slide').find(':input:not(.slide-nr)').val('');
+		slide.find('img').hide().removeAttr('src').removeAttr('alt').removeAttr('title');
 		tbody.after(slide);
 		tbody.nextAll().find('.slide-nr').val(function(index, value) {
 			return ++value;
@@ -200,8 +201,14 @@ $(document).ready(function() {
 
 	$('#frm-slides input:file').change(function() {
 		var fields = $(this).parent().parent().find('.slide-filename, .slide-width, .slide-height');
-		if ($(this).val()) {
+		var input = $(this);
+		if (input.val()) {
 			fields.addClass('transparent').prop('readonly', true);
+			var reader = new FileReader();
+			reader.onload = function(event) {
+				input.parent().parent().next('tr').find('img').attr('src', event.target.result).show();
+			};
+			reader.readAsDataURL(event.target.files[0]);
 		} else {
 			fields.removeClass('transparent').prop('readonly', false);
 		}

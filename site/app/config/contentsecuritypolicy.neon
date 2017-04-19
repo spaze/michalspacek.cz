@@ -56,6 +56,9 @@ contentSecurityPolicy:
 		admin.info.php < www.*.*:
 			img-src:
 				- 'data:'
+		admin.talks.slides < www.*.*:
+			img-src:
+				- 'data:'
 		blog.*.* < www.*.*:
 		api.*.*:
 			default-src: "'none'"
