@@ -464,11 +464,11 @@ class Talks
 	 * @param string $prefix
 	 * @param integer $talkId
 	 * @param string $filename
-	 * @return string
+	 * @return null|string
 	 */
-	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): string
+	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): ?string
 	{
-		return "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}";
+		return (empty($filename) ? null : "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}");
 	}
 
 

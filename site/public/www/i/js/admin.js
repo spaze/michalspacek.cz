@@ -186,7 +186,7 @@ $(document).ready(function() {
 		var slide = tbody.clone(true);
 		var index = 0;
 		slide.addClass('new-slide changed').find(':input:not(.slide-nr)').val('');
-		slide.find('img').hide().removeAttr('src').removeAttr('alt').removeAttr('title');
+		slide.find('img').hide().removeAttr('src').removeAttr('alt').removeAttr('title').removeAttr('width').removeAttr('height');
 		tbody.after(slide);
 		tbody.nextAll().find('.slide-nr').val(function(index, value) {
 			return ++value;
@@ -206,7 +206,7 @@ $(document).ready(function() {
 			fields.addClass('transparent').prop('readonly', true);
 			var reader = new FileReader();
 			reader.onload = function(event) {
-				input.parent().parent().next('tr').find('img').attr('src', event.target.result).show();
+				input.parent().parent().next('tr').find('img').removeAttr('width').removeAttr('height').attr('src', event.target.result).show();
 			};
 			reader.readAsDataURL(event.target.files[0]);
 		} else {

@@ -34,7 +34,10 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td colspan="5"><img src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}"></td>
+				<td colspan="5">
+					<img n:if="$slide->image" src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}">
+					<img n:if="!$slide->image" src="" class="hidden">
+				</td>
 			</tr>
 			<tr>
 				<td><button type="button" class="add-after" title="Přidat další pod aktuální">+ ↓</button></td>
