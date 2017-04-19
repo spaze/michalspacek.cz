@@ -44,7 +44,39 @@
 			{/formContainer}
 		{/foreach}
 	{/formContainer}
-		<tr><td></td><td>{input submit}</td></tr>
+	{if empty($slides)}
+		{formContainer new}
+			{formContainer 0}
+				<tbody class="new-slide changed">
+				<tr>
+					<th class="right">Číslo</th>
+					<th>Alias</th>
+					<th>Titulek</th>
+					<th>Soubor</th>
+					<th>Rozměry</th>
+					<th>Nahradit</th>
+				</tr>
+				<tr>
+					<td class="narrow">{input number value => 1}</td>
+					<td>{input alias}</td>
+					<td class="wider">{input title}</td>
+					<td class="wider">{input filename}</td>
+					<td class="narrow">{input width}<small>×</small>{input height}</td>
+					<td>{input replace}</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td colspan="5"><img src="" class="hidden"></td>
+				</tr>
+				<tr>
+					<td><button type="button" class="add-after" title="Přidat další pod aktuální">+ ↓</button></td>
+					<td colspan="5">{input speakerNotes}</td>
+				</tr>
+				</tbody>
+			{/formContainer}
+		{/formContainer}
+	{/if}
+	<tr><td></td><td>{input submit}</td></tr>
 	</table>
 {/form slides}
 {/define}

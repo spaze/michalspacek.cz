@@ -38,6 +38,9 @@ class TalkSlides extends ProtectedForm
 			$slideIdContainer->setDefaults($values);
 		}
 
+		if (empty($slides) && $newCount === 0) {
+			$newCount = 1;
+		}
 		$newContainer = $this->addContainer('new');
 		for ($i = 0; $i < $newCount; $i++) {
 			$newIdContainer = $newContainer->addContainer($i);
