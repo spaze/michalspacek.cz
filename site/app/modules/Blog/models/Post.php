@@ -185,7 +185,7 @@ class Post
 		$this->database->query(
 			'INSERT INTO blog_posts',
 			array(
-				'key_translation_group' => $post->translationGroup,
+				'key_translation_group' => $post->translationGroupId,
 				'key_locale' => $post->locale,
 				'title' => $post->titleTexy,
 				'preview_key' => $post->previewKey,
@@ -213,7 +213,7 @@ class Post
 		$this->database->query(
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 			array(
-				'key_translation_group' => $post->translationGroup,
+				'key_translation_group' => $post->translationGroupId,
 				'key_locale' => $post->locale,
 				'title' => $post->titleTexy,
 				'preview_key' => $post->previewKey,

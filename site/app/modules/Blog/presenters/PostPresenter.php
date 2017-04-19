@@ -17,7 +17,7 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var string[] */
+	/** @var string[][] */
 	protected $localeLinkParams = [];
 
 
