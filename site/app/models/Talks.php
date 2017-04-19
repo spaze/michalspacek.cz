@@ -18,6 +18,27 @@ class Talks
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
+	/**
+	 * Slides root, just directory no FQND, no leading slash, no trailing slash.
+	 *
+	 * @var string
+	 */
+	protected $slidesRoot;
+
+	/**
+	 * Static files root FQDN, no trailing slash.
+	 *
+	 * @var string
+	 */
+	protected $staticRoot;
+
+	/**
+	 * Physical location root directory, no trailing slash.
+	 *
+	 * @var string
+	 */
+	protected $locationRoot;
+
 
 	/**
 	 * Contructor.
@@ -31,6 +52,41 @@ class Talks
 		$this->texyFormatter = $texyFormatter;
 	}
 
+
+	/**
+	 * Set static content URL root.
+	 *
+	 * @param string $root
+	 */
+	public function setStaticRoot($root)
+	{
+		$this->staticRoot = rtrim($root, '/');
+	}
+
+
+	/**
+	 * Set location root directory.
+	 *
+	 * @param string $root
+	 */
+	public function setLocationRoot($root)
+	{
+		$this->locationRoot = rtrim($root, '/');
+	}
+
+
+	/**
+	 * Set slides root directory.
+	 *
+	 * Removes both leading and trailing forward slashes.
+	 *
+	 * @param string $root
+	 * @param string $slidesRoot
+	 */
+	public function setSlidesRoot(string $root, string $slidesRoot): void
+	{
+		$this->slidesRoot = trim($root, '/') . '/' . trim($slidesRoot, '/');
+	}
 
 	/**
 	 * Get all talks, or almost all talks.
@@ -379,47 +435,162 @@ class Talks
 	 */
 	public function getSlides(int $talkId): array
 	{
-		$result = $this->database->fetchAll(
+		$slides = $this->database->fetchAll(
 			'SELECT
+				id_slide AS slideId,
 				alias,
-				number
+				number,
+				filename,
+				width,
+				height,
+				title,
+				speaker_notes AS speakerNotesTexy
 			FROM talk_slides
 			WHERE key_talk = ?
 			ORDER BY number',
 			$talkId
 		);
+		$result = [];
+		foreach ($slides as $row) {
+			$row->speakerNotes = $this->texyFormatter->format($row->speakerNotesTexy);
+			$row->image = $this->getSlideImageFilename($this->staticRoot, $talkId, $row->filename);
+			$result[$row->number] = $row;
+		}
 		return $result;
 	}
 
 
 	/**
-	 * Insert slide.
+	 * @param string $prefix
+	 * @param integer $talkId
+	 * @param string $filename
+	 * @return string
+	 */
+	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): string
+	{
+		return "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}";
+	}
+
+
+	/**
+	 * @param integer $talkId
+	 * @param \Nette\Http\FileUpload $replace
+	 * @param integer $width
+	 * @param integer $height
+	 * @return null|string
+	 */
+	private function replaceSlideImage(int $talkId, \Nette\Http\FileUpload $replace, int &$width, int &$height): ?string
+	{
+		if (!$replace->hasFile()) {
+			return null;
+		}
+		if (!$replace->isOk()) {
+			throw new \RuntimeException('Slide image upload failed', $replace->getError());
+		}
+		if (!$replace->isImage()) {
+			throw new \RuntimeException('Slide image type not allowed: ' . $replace->getContentType());
+		}
+		$name = strtr(rtrim(base64_encode(sha1($replace->getContents(), true)), '='), '+/', '-_');
+		$extension = ['image/gif' => 'gif', 'image/png' => 'png', 'image/jpeg' => 'jpg'][$replace->getContentType()];
+		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
+		list($width, $height) = $replace->getImageSize();
+		return "{$name}.{$extension}";
+	}
+
+
+	/**
+	 * Insert slides.
 	 *
 	 * @param integer $talkId
-	 * @param string $alias
-	 * @param string $number
+	 * @param \Nette\Utils\ArrayHash $slides
 	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws \PDOException
 	 */
-	public function addSlide(int $talkId, string $alias, string $number): void
+	private function addSlides(int $talkId, \Nette\Utils\ArrayHash $slides): void
 	{
+		$lastNumber = 0;
 		try {
-			$this->database->query(
-				'INSERT INTO talk_slides',
-				array(
-					'key_talk' => $talkId,
-					'alias' => $alias,
-					'number' => $number,
-				)
-			);
+			foreach ($slides as $slide) {
+				$width = (int)$slide->width;
+				$height = (int)$slide->height;
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $width, $height);
+				$lastNumber = (int)$slide->number;
+				$this->database->query(
+					'INSERT INTO talk_slides',
+					array(
+						'key_talk' => $talkId,
+						'alias' => $slide->alias,
+						'number' => $slide->number,
+						'filename' => $replace ?: $slide->filename,
+						'width' => $width,
+						'height' => $height,
+						'title' => $slide->title,
+						'speaker_notes' => $slide->speakerNotes,
+					)
+				);
+			}
 		} catch (\PDOException $e) {
 			if ($e->getCode() == '23000') {
 				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					throw new \UnexpectedValueException($e->getMessage(), $number);
+					throw new \UnexpectedValueException($e->getMessage(), $lastNumber);
 				}
 			}
 			throw $e;
 		}
+	}
+
+
+	/**
+	 * Update slides.
+	 *
+	 * @param integer $talkId
+	 * @param \Nette\Utils\ArrayHash $slides
+	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
+	 * @throws \PDOException
+	 */
+	private function updateSlides(int $talkId, \Nette\Utils\ArrayHash $slides): void
+	{
+		$lastNumber = 0;
+		try {
+			foreach ($slides as $id => $slide) {
+				$width = (int)$slide->width;
+				$height = (int)$slide->height;
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $width, $height);
+				$lastNumber = (int)$slide->number;
+				$this->database->query(
+					'UPDATE talk_slides SET ? WHERE id_slide = ?',
+					array(
+						'key_talk' => $talkId,
+						'alias' => $slide->alias,
+						'number' => $slide->number,
+						'filename' => $replace ?: $slide->filename,
+						'width' => $width,
+						'height' => $height,
+						'title' => $slide->title,
+						'speaker_notes' => $slide->speakerNotes,
+					),
+					$id
+				);
+			}
+		} catch (\PDOException $e) {
+			if ($e->getCode() == '23000') {
+				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
+					throw new \UnexpectedValueException($e->getMessage(), $lastNumber);
+				}
+			}
+			throw $e;
+		}
+	}
+
+
+	public function saveSlides(int $talkId, \Nette\Utils\ArrayHash $slides)
+	{
+		$this->database->beginTransaction();
+		// Reset slide numbers so they can be shifted around without triggering duplicated key violations
+		$this->database->query('UPDATE talk_slides SET number = null WHERE key_talk = ?', $talkId);
+		$this->updateSlides($talkId, $slides->slides);
+		$this->addSlides($talkId, $slides->new);
+		$this->database->commit();
 	}
 
 

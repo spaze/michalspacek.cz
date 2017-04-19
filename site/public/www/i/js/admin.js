@@ -4,19 +4,24 @@ $(document).ready(function() {
 		return false;
 	});
 
-	var Applications = {};
-	Applications.reindex = function(element, index) {
-		element.find('input').each(function() {
-			$(this).attr('name', function(i, value) {
-				return value.replace(/^applications\[\d+\]/, 'applications[' + index + ']');
+	var FormFields = {};
+	FormFields.reindex = function(element, index, formName, oldName, newName) {
+		if (element.attr('name') !== undefined) {
+			element.attr('name', function(i, value) {
+				var re = new RegExp('^' + oldName + '\\[\\d+\\]')
+				return value.replace(re, newName + '[' + index + ']');
 			});
-			$(this).attr('id', function(i, value) {
-				return value.replace(/^frm-applications-applications-\d+-/, 'frm-applications-applications-' + index + '-');
+		}
+		if (element.attr('id') !== undefined) {
+			element.attr('id', function(i, value) {
+				var re = new RegExp('^' + formName + '-' + oldName + '-\\d+-')
+				return value.replace(re, formName + '-' + newName + '-' + index + '-');
 			});
-			if ($(this).attr('data-nette-rules') !== undefined) {
-				$(this).attr('data-nette-rules', $(this).attr('data-nette-rules').replace(/"applications\[\d+\]/, '"applications[' + index + ']'));
-			}
-		});
+		}
+		if (element.attr('data-nette-rules') !== undefined) {
+			var re = new RegExp('"' + oldName + '\\[\\d+\\]')
+			element.attr('data-nette-rules', element.attr('data-nette-rules').replace(re, '"' + newName + '[' + index + ']'));
+		}
 	};
 	$('#pridat-ucastniky .add').click(function() {
 		$('#pridat-ucastniky .delete').show();
@@ -24,7 +29,10 @@ $(document).ready(function() {
 		tr = $(this).parent().parent();
 		tr.after(tr.clone(true));
 		tr.parent().children('tr').each(function() {
-			Applications.reindex($(this), index++);
+			$(this).find('input').each(function() {
+				FormFields.reindex($(this), index, 'frm-applications', 'applications', 'applications');
+			});
+			index++;
 		});
 	});
 	$('#pridat-ucastniky .delete').click(function() {
@@ -35,7 +43,10 @@ $(document).ready(function() {
 			tbody = tr.parent();
 			tr.remove();
 			tbody.children('tr').each(function() {
-				Applications.reindex($(this), index++);
+				$(this).find('input').each(function() {
+					FormFields.reindex($(this), index, 'frm-applications', 'applications', 'applications');
+				});
+				index++;
 			});
 			if (tbody.children('tr').length == 1) {
 				$('#pridat-ucastniky .delete').hide();
@@ -82,13 +93,13 @@ $(document).ready(function() {
 		})
 		.css('cursor', 'pointer');
 
-    $('#statusesShow').click(function() {
-    	$('#statuses td[data-date]').parent().next().show();
-    });
+	$('#statusesShow').click(function() {
+		$('#statuses td[data-date]').parent().next().show();
+	});
 
-    $('#statusesHide').click(function() {
-    	$('#statuses td[data-date]').parent().next().hide();
-    });
+	$('#statusesHide').click(function() {
+		$('#statuses td[data-date]').parent().next().hide();
+	});
 
 	$('#statusesShow, #statusesHide')
 		.click(function() {
@@ -169,4 +180,30 @@ $(document).ready(function() {
 	};
 	$('#frm-addPost #preview').click({form: '#frm-addPost'}, FORMATTEXY.loadData);
 	$('#frm-editPost #preview').click({form: '#frm-editPost'}, FORMATTEXY.loadData);
+
+	$('#frm-slides .add-after').click(function() {
+		var tbody = $(this).parent().parent().parent();
+		var slide = tbody.clone(true);
+		var index = 0;
+		slide.addClass('new-slide').find(':input:not(.slide-nr)').val('');
+		tbody.after(slide);
+		tbody.nextAll().find('.slide-nr').val(function(index, value) {
+			return ++value;
+		});
+		tbody.parent().find('.new-slide').each(function() {
+			$(this).find(':input').each(function() {
+				FormFields.reindex($(this), index, 'frm-slides', '(slides|new)', 'new');
+			});
+			index++;
+		});
+	});
+
+	$('#frm-slides input:file').change(function() {
+		var fields = $(this).parent().parent().find('.slide-filename, .slide-width, .slide-height');
+		if ($(this).val()) {
+			fields.addClass('transparent').prop('readonly', true);
+		} else {
+			fields.removeClass('transparent').prop('readonly', false);
+		}
+	});
 });

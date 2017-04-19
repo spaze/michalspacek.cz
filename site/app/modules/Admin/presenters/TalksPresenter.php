@@ -21,6 +21,9 @@ class TalksPresenter extends BasePresenter
 	/** @var \Nette\Database\Row */
 	private $talk;
 
+	/** @var \Nette\Database\Row[] */
+	private $slides;
+
 	/** @var \MichalSpacekCz\Embed */
 	protected $embed;
 
@@ -68,13 +71,14 @@ class TalksPresenter extends BasePresenter
 	{
 		try {
 			$this->talk = $this->talks->getById((int)$param);
+			$this->slides = $this->talks->getSlides($this->talk->talkId);
 		} catch (\RuntimeException $e) {
 			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.admin.talkslides', $this->talk);
 		$this->template->talkTitle = $this->talk->title;
-		$this->template->slides = $this->talks->getSlides($this->talk->talkId);
+		$this->template->slides = $this->slides;
 		$this->template->talk = $this->talk;
 		foreach ($this->embed->getSlidesTemplateVars($this->talk) as $key => $value) {
 			$this->template->$key = $value;
@@ -152,18 +156,18 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddSlide(string $formName)
+	protected function createComponentSlides(string $formName)
 	{
-		$form = new \MichalSpacekCz\Form\TalkSlide($this, $formName);
-		$form->onSuccess[] = [$this, 'submittedAddSlide'];
+		$form = new \MichalSpacekCz\Form\TalkSlides($this, $formName, $this->slides, count($this->request->getPost('new')));
+		$form->onSuccess[] = [$this, 'submittedSlides'];
 		return $form;
 	}
 
 
-	public function submittedAddSlide(\MichalSpacekCz\Form\TalkSlide $form, \Nette\Utils\ArrayHash $values): void
+	public function submittedSlides(\MichalSpacekCz\Form\TalkSlides $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$this->talks->addSlide($this->talk->talkId, $values->alias, $values->number);
+			$this->talks->saveSlides($this->talk->talkId, $values);
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.slideadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.duplicatealias', [$e->getCode()]), 'error');

@@ -22,20 +22,15 @@ class Embed
 
 	public const VIDEO_SLIDESLIVE = 'slideslive';
 
-	/** @var \Nette\Application\LinkGenerator */
-	protected $linkGenerator;
-
 	/** @var \Spaze\ContentSecurityPolicy\Config */
 	protected $contentSecurityPolicy;
 
 
 	/**
-	 * @param \Nette\Application\LinkGenerator $linkGenerator
 	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
 	 */
-	public function __construct(\Nette\Application\LinkGenerator $linkGenerator, \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
+	public function __construct(\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
 	{
-		$this->linkGenerator = $linkGenerator;
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
@@ -44,7 +39,7 @@ class Embed
 	 * Get template vars for slides
 	 * @param \Nette\Database\Row $talk
 	 * @param int|null $slide
-	 * @return string[slidesEmbed, slidesDataSlide, canonicalLink, slidesEmbedType]
+	 * @return string[slidesEmbed, slidesDataSlide, slidesEmbedType]
 	 */
 	public function getSlidesTemplateVars(\Nette\Database\Row $talk, ?int $slide = null): array
 	{
@@ -73,7 +68,6 @@ class Embed
 		return array(
 			'slidesEmbed' => $embedHref,
 			'slidesDataSlide' => $dataSlide,
-			'canonicalLink' => ($slide !== null ? $this->linkGenerator->link('Www:Talks:talk', [$talk->action]) : null),
 			'slidesEmbedType' => $type,
 		);
 	}

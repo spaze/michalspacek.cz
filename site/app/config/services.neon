@@ -17,7 +17,12 @@ services:
 	redirections:  \MichalSpacekCz\Redirections
 	articles:  \MichalSpacekCz\Articles
 	files:     \MichalSpacekCz\Files
-	talks:     \MichalSpacekCz\Talks
+	talks:
+		class: \MichalSpacekCz\Talks
+		setup:
+			- setStaticRoot(%domain.sharedStaticRoot%)
+			- setLocationRoot(%domain.locationRoot%)
+			- setSlidesRoot(%domain.imagesRoot%, 'talks')
 	trainings: \MichalSpacekCz\Training\Trainings
 	companyTrainings: \MichalSpacekCz\Training\CompanyTrainings
 	interviews: \MichalSpacekCz\Interviews

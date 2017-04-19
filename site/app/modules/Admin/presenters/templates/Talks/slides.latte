@@ -10,11 +10,37 @@
 <p id="{_html.id.slides}"></p>
 {include #embedSlides}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-<table>
-	<tr><th class="right">Číslo</th><th class="left">Alias</th></tr>
-	<tr n:foreach="$slides as $slide"><td class="right">{$slide->number}.</td><td><a n:href=":Www:Talks:talk $talk->action, $slide->alias" n:tag-if="$talk->action">{$slide->alias}</a></td></tr>
-	{form addSlide}
-	<tr><td class="short">{input number}</td><td class="short">{input alias} {input submit}</td></tr>
-	{/form addSlide}
-</table>
+{form slides}
+	<table>
+	<tr>
+		<th class="right">Číslo</th>
+		<th>Alias</th>
+		<th>Titulek</th>
+		<th>Soubor</th>
+		<th>Rozměry</th>
+		<th>Nahradit</th>
+	</tr>
+	{formContainer slides}
+		{foreach $slides as $slide}
+			{formContainer $slide->slideId}
+			<tbody>
+			<tr>
+				<td class="narrow">{input number}</td>
+				<td>{input alias}</td>
+				<td class="wider">{input title}</td>
+				<td class="wider">{input filename}</td>
+				<td class="narrow">{input width}<small>×</small>{input height}</td>
+				<td>{input replace}</td>
+			</tr>
+			<tr>
+				<td><button type="button" class="add-after" title="Přidat další pod aktuální">+ ↓</button></td>
+				<td colspan="5">{input speakerNotes}</td>
+			</tr>
+			</tbody>
+			{/formContainer}
+		{/foreach}
+	{/formContainer}
+		<tr><td></td><td>{input submit}</td></tr>
+	</table>
+{/form slides}
 {/define}

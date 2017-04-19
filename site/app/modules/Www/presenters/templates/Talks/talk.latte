@@ -1,7 +1,7 @@
 {define #metas}
 <meta n:if="$ogImage" property="og:image" content="{$ogImage}">
 <meta n:if="$pageTitle" property="og:title" content="{$pageTitle}">
-<meta n:if="$description" property="og:description" content="{$description|striptags|strip|truncate:160}">
+<meta n:if="$talk->description" property="og:description" content="{$talk->description|striptags|strip|truncate:160}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@spazef0rze">
 {/define}
@@ -16,17 +16,27 @@
 {include #embedVideo}
 <p n:if="$videoHref"><small><span title="{_messages.label.recording}">►</span> <a href="{$videoHref}">{$videoHref}</a></small></p>
 
-<h2 n:if="$description || $href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
-{if $description}{$description}{/if}
-<p n:if="$href"><a href="{$href}">{_messages.talks.detailevent}</a></p>
+<h2 n:if="$talk->description || $talk->href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
+{if $talk->description}{$talk->description}{/if}
+<p n:if="$talk->href"><a href="{$talk->href}">{_messages.talks.detailevent}</a></p>
 
 <h2 id="{_html.id.eventdate}">{_messages.talks.dateevent}</h2>
-<p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$eventHref}" n:tag-if="$eventHref">{$event}</a><small n:if="$duration"> ({_messages.talks.duration|format:$duration})</small></p>
+<p><span class="date">{$talk->date|date:'j. n. Y'}</span>, <a href="{$talk->eventHref}" n:tag-if="$talk->eventHref">{$talk->event}</a><small n:if="$talk->duration"> ({_messages.talks.duration|format:$talk->duration})</small></p>
 
-{if $transcript}
+<div n:if="$slides" id="slides">
+<h2>{_messages.label.slides}</h2>
+{foreach $slides as $slide}
+	<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight">
+	<img src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}">
+	<p><strong><a n:href="this $talk->action, $slide->alias">#{$slide->number}</a></strong> {$slide->speakerNotes}</p>
+	</div>
+{/foreach}
+</div>
+
+{if $talk->transcript}
 	<hr>
 	<h2 id="{_html.id.transcript}">{_messages.talks.transcript}</h2>
-	{$transcript}
+	{$talk->transcript}
 {/if}
 
 {/define}

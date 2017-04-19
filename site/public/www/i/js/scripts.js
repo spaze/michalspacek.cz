@@ -90,4 +90,8 @@ $(document).ready(function() {
 				})[0]
 		);
 	}
+
+	if ($('#slides .highlight').length) {
+		$('html, body').animate({scrollTop: $('#slides .highlight').offset().top - 10});
+	}
 });

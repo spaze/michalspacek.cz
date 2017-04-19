@@ -2,4 +2,5 @@
 {define #menu}
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Talks:">{_messages.label.talks}</a>
+{if $slideNo}&raquo; <a n:href="Talks:talk $talk->action">{$talk->title}</a>{/if}
 {/define}
