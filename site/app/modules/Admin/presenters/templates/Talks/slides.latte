@@ -12,18 +12,18 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form slides}
 	<table>
-	<tr>
-		<th class="right">Číslo</th>
-		<th>Alias</th>
-		<th>Titulek</th>
-		<th>Soubor</th>
-		<th>Rozměry</th>
-		<th>Nahradit</th>
-	</tr>
 	{formContainer slides}
 		{foreach $slides as $slide}
 			{formContainer $slide->slideId}
 			<tbody>
+			<tr>
+				<th class="right">Číslo</th>
+				<th>Alias</th>
+				<th>Titulek</th>
+				<th>Soubor</th>
+				<th>Rozměry</th>
+				<th>Nahradit</th>
+			</tr>
 			<tr>
 				<td class="narrow">{input number}</td>
 				<td>{input alias}</td>
