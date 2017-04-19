@@ -31,6 +31,7 @@ class TalkSlides extends ProtectedForm
 				'number' => $slide->number,
 				'title' => $slide->title,
 				'filename' => $slide->filename,
+				'filenameAlternative' => $slide->filenameAlternative,
 				'width' => $slide->width,
 				'height' => $slide->height,
 				'speakerNotes' => $slide->speakerNotesTexy,
@@ -73,6 +74,12 @@ class TalkSlides extends ProtectedForm
 			->setAttribute('class', 'slide-filename')
 			->addConditionOn($container['replace'], self::BLANK)
 				->setRequired('Zadejte prosím soubor');
+		$container->addUpload('replaceAlternative', 'Nahradit:')
+			->setAttribute('title', 'Nahradit alternativní soubor');
+		$container->addText('filenameAlternative', 'Soubor:')
+			->setAttribute('class', 'slide-filename')
+			->addConditionOn($container['replaceAlternative'], self::BLANK)
+				->setRequired('Zadejte prosím alternativní soubor');
 		$container->addText('width', 'Šířka:')
 			->setType('number')
 			->setAttribute('class', 'right slide-width')

@@ -18,6 +18,9 @@ class Talks
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
+	/** @var \Nette\Http\Request */
+	protected $httpRequest;
+
 	/**
 	 * Slides root, just directory no FQND, no leading slash, no trailing slash.
 	 *
@@ -39,17 +42,31 @@ class Talks
 	 */
 	protected $locationRoot;
 
+	/** @var string[] */
+	private $supportedImages = [
+		'image/gif' => 'gif',
+		'image/png' => 'png',
+		'image/jpeg' => 'jpg',
+	];
+
+	/** @var string[] */
+	private $supportedAlternativeImages = [
+		'image/webp' => 'webp',
+	];
+
 
 	/**
 	 * Contructor.
 	 *
 	 * @param \Nette\Database\Context $context
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
+	 * @param \Nette\Http\Request $httpRequest
 	 */
-	public function __construct(\Nette\Database\Context $context, \MichalSpacekCz\Formatter\Texy $texyFormatter)
+	public function __construct(\Nette\Database\Context $context, \MichalSpacekCz\Formatter\Texy $texyFormatter, \Nette\Http\Request $httpRequest)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
+		$this->httpRequest = $httpRequest;
 	}
 
 
@@ -87,6 +104,7 @@ class Talks
 	{
 		$this->slidesRoot = trim($root, '/') . '/' . trim($slidesRoot, '/');
 	}
+
 
 	/**
 	 * Get all talks, or almost all talks.
@@ -441,6 +459,7 @@ class Talks
 				alias,
 				number,
 				filename,
+				filename_alternative AS filenameAlternative,
 				width,
 				height,
 				title,
@@ -454,6 +473,7 @@ class Talks
 		foreach ($slides as $row) {
 			$row->speakerNotes = $this->texyFormatter->format($row->speakerNotesTexy);
 			$row->image = $this->getSlideImageFilename($this->staticRoot, $talkId, $row->filename);
+			$row->imageAlternative = $this->getSlideImageFilename($this->staticRoot, $talkId, $row->filenameAlternative);
 			$result[$row->number] = $row;
 		}
 		return $result;
@@ -475,11 +495,12 @@ class Talks
 	/**
 	 * @param integer $talkId
 	 * @param \Nette\Http\FileUpload $replace
+	 * @param string[] $supported
 	 * @param integer $width
 	 * @param integer $height
 	 * @return null|string
 	 */
-	private function replaceSlideImage(int $talkId, \Nette\Http\FileUpload $replace, int &$width, int &$height): ?string
+	private function replaceSlideImage(int $talkId, \Nette\Http\FileUpload $replace, array $supported, int &$width, int &$height): ?string
 	{
 		if (!$replace->hasFile()) {
 			return null;
@@ -487,11 +508,11 @@ class Talks
 		if (!$replace->isOk()) {
 			throw new \RuntimeException('Slide image upload failed', $replace->getError());
 		}
-		if (!$replace->isImage()) {
+		if (!in_array($replace->getContentType(), array_keys($supported))) {
 			throw new \RuntimeException('Slide image type not allowed: ' . $replace->getContentType());
 		}
 		$name = strtr(rtrim(base64_encode(sha1($replace->getContents(), true)), '='), '+/', '-_');
-		$extension = ['image/gif' => 'gif', 'image/png' => 'png', 'image/jpeg' => 'jpg'][$replace->getContentType()];
+		$extension = $supported[$replace->getContentType()];
 		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
 		list($width, $height) = $replace->getImageSize();
 		return "{$name}.{$extension}";
@@ -513,7 +534,8 @@ class Talks
 			foreach ($slides as $slide) {
 				$width = (int)$slide->width;
 				$height = (int)$slide->height;
-				$replace = $this->replaceSlideImage($talkId, $slide->replace, $width, $height);
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $width, $height);
+				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $width, $height);
 				$lastNumber = (int)$slide->number;
 				$this->database->query(
 					'INSERT INTO talk_slides',
@@ -522,6 +544,7 @@ class Talks
 						'alias' => $slide->alias,
 						'number' => $slide->number,
 						'filename' => $replace ?: $slide->filename,
+						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
 						'width' => $width,
 						'height' => $height,
 						'title' => $slide->title,
@@ -555,7 +578,8 @@ class Talks
 			foreach ($slides as $id => $slide) {
 				$width = (int)$slide->width;
 				$height = (int)$slide->height;
-				$replace = $this->replaceSlideImage($talkId, $slide->replace, $width, $height);
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $width, $height);
+				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $width, $height);
 				$lastNumber = (int)$slide->number;
 				$this->database->query(
 					'UPDATE talk_slides SET ? WHERE id_slide = ?',
@@ -564,6 +588,7 @@ class Talks
 						'alias' => $slide->alias,
 						'number' => $slide->number,
 						'filename' => $replace ?: $slide->filename,
+						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
 						'width' => $width,
 						'height' => $height,
 						'title' => $slide->title,
@@ -591,6 +616,25 @@ class Talks
 		$this->updateSlides($talkId, $slides->slides);
 		$this->addSlides($talkId, $slides->new);
 		$this->database->commit();
+	}
+
+
+	/**
+	 * Determine whether to use alternative WebP images.
+	 *
+	 * @return bool
+	 */
+	public function useAlternativeImages(): bool
+	{
+		$types = implode('|', array_keys($this->supportedAlternativeImages));
+		if (preg_match_all('~(?:' . $types . ')(?:;q=([\d.]+))?~', $this->httpRequest->getHeader('Accept', ''), $matches)) {
+			$preferred = array_filter($matches[1], function($var) {
+				return ($var === '' | (float)$var > 0);
+			});
+			return !empty($preferred);
+		} else {
+			return false;
+		}
 	}
 
 

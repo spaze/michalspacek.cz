@@ -20,23 +20,31 @@
 				<th class="right">Číslo</th>
 				<th>Alias</th>
 				<th>Titulek</th>
-				<th>Soubor</th>
 				<th>Rozměry</th>
+				<th>Soubor</th>
 				<th>Nahradit</th>
 			</tr>
 			<tr>
 				<td class="narrow">{input number}</td>
 				<td>{input alias}</td>
 				<td class="wider">{input title}</td>
-				<td class="wider">{input filename}</td>
 				<td class="narrow">{input width}<small>×</small>{input height}</td>
-				<td>{input replace}</td>
+				<td class="wider">{input filename}</td>
+				<td>{input replace data-type => image}</td>
 			</tr>
 			<tr>
+				<td colspan="3"></td>
+				<td class="right">WebP:</td>
+				<td class="wider">{input filenameAlternative}</td>
+				<td>{input replaceAlternative data-type => alternative}</td>
+			</tr>
+			<tr class="image-previews">
 				<td></td>
 				<td colspan="5">
-					<img n:if="$slide->image" src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}">
-					<img n:if="!$slide->image" src="" class="hidden">
+					<img n:if="$slide->image" src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}" class="type-image">
+					<img n:if="!$slide->image" src="" class="hidden type-image">
+					<img n:if="$slide->imageAlternative" src="{$slide->imageAlternative}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}" class="type-alternative">
+					<img n:if="!$slide->imageAlternative" src="" class="hidden type-alternative">
 				</td>
 			</tr>
 			<tr>
@@ -55,21 +63,30 @@
 					<th class="right">Číslo</th>
 					<th>Alias</th>
 					<th>Titulek</th>
-					<th>Soubor</th>
 					<th>Rozměry</th>
+					<th>Soubor</th>
 					<th>Nahradit</th>
 				</tr>
 				<tr>
 					<td class="narrow">{input number value => 1}</td>
 					<td>{input alias}</td>
 					<td class="wider">{input title}</td>
-					<td class="wider">{input filename}</td>
 					<td class="narrow">{input width}<small>×</small>{input height}</td>
-					<td>{input replace}</td>
+					<td class="wider">{input filename}</td>
+					<td>{input replace data-type => image}</td>
 				</tr>
 				<tr>
+					<td colspan="3"></td>
+					<td class="right">WebP:</td>
+					<td class="wider">{input filenameAlternative}</td>
+					<td>{input replaceAlternative data-type => alternative}</td>
+				</tr>
+				<tr class="image-previews">
 					<td></td>
-					<td colspan="5"><img src="" class="hidden"></td>
+					<td colspan="5">
+						<img src="" class="hidden type-image">
+						<img src="" class="hidden type-alternative">
+					</td>
 				</tr>
 				<tr>
 					<td><button type="button" class="add-after" title="Přidat další pod aktuální">+ ↓</button></td>

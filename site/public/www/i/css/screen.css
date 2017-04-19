@@ -286,6 +286,10 @@ form.wide textarea { height: 200px; }
     width: 99%;
     height: 100px;
 }
+#frm-slides .type-alternative {
+    width: 25%;
+    vertical-align: top;
+}
 #chyby ul { margin: 0; }
 #chyby {
     color: #F34;
