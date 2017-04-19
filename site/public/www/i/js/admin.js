@@ -185,7 +185,7 @@ $(document).ready(function() {
 		var tbody = $(this).parent().parent().parent();
 		var slide = tbody.clone(true);
 		var index = 0;
-		slide.addClass('new-slide').find(':input:not(.slide-nr)').val('');
+		slide.addClass('new-slide changed').find(':input:not(.slide-nr)').val('');
 		slide.find('img').hide().removeAttr('src').removeAttr('alt').removeAttr('title');
 		tbody.after(slide);
 		tbody.nextAll().find('.slide-nr').val(function(index, value) {
@@ -212,5 +212,9 @@ $(document).ready(function() {
 		} else {
 			fields.removeClass('transparent').prop('readonly', false);
 		}
+	});
+
+	$('#frm-slides').find('input:input, textarea').change(function() {
+		$(this).closest('tbody').addClass('changed');
 	});
 });

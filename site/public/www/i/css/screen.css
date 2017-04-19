@@ -149,12 +149,13 @@ pre {
     max-width: 720px;
     float: left;
 }
-.column-content img {
+.column-content img, #slides img {
     display: block;
     margin: 2em auto;
     box-shadow: 0 0 20px hsl(0, 0%, 87%);
     background-color: hsl(0, 0%, 95%);
 }
+#slides img { margin-bottom: 1em; }
 .column-content .figure img {
     margin-bottom: 0.5em;
     text-align: center;
@@ -282,7 +283,7 @@ form.wide textarea { height: 200px; }
     height: 150px;
 }
 #frm-slides textarea {
-    width: 100%;
+    width: 99%;
     height: 100px;
 }
 #chyby ul { margin: 0; }
@@ -314,6 +315,7 @@ div.notice {
     background-color: #EEF;
     border: 1px solid #DDF;
 }
+.changed { background-color: #F2F2FF; }
 #slides-embed iframe, #video-embed iframe {
     border: 0;
     margin: 0;
