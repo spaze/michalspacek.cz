@@ -122,14 +122,13 @@ class Talks
 				t.date,
 				t.duration,
 				t.href,
-				COALESCE(LENGTH(t.slides_href) > 0, LENGTH(t2.slides_href) > 0, 0) AS hasSlides,
+				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = t.id_talk) AS hasSlides,
 				t.slides_href,
 				t.video_href AS videoHref,
 				t.event,
 				t.event AS eventTexy,
 				t.event_href AS eventHref
 			FROM talks t
-				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
 			WHERE t.date <= NOW()
 			ORDER BY t.date DESC';
 
@@ -161,14 +160,13 @@ class Talks
 				t.date,
 				t.duration,
 				t.href,
-				COALESCE(LENGTH(t.slides_href) > 0, LENGTH(t2.slides_href) > 0, 0) AS hasSlides,
+				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = t.id_talk) AS hasSlides,
 				t.slides_href,
 				t.video_href AS videoHref,
 				t.event,
 				t.event AS eventTexy,
 				t.event_href AS eventHref
 			FROM talks t
-				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
 			WHERE t.date > NOW()
 			ORDER BY t.date';
 
