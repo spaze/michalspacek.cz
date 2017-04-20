@@ -34,7 +34,7 @@
 {/foreach}
 </div>
 
-{if $talk->transcript}
+{if !$slides && $talk->transcript}
 	<hr>
 	<h2 id="{_html.id.transcript}">{_messages.talks.transcript}</h2>
 	{$talk->transcript}
