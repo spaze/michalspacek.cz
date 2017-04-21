@@ -94,6 +94,7 @@ label:
 	interviews: Interviews
 	audiorecording: "Audio recording"
 	videorecording: "Video recording"
+	lowercasevideo: video
 	dateforwhom: "Date and for whom"
 	interviewdetail: "Interview detail"
 	recording: "Recording"
@@ -205,6 +206,7 @@ talks:
 	duration: "talk duration %s minutes"
 	durationshort: "%s minutes"
 	transcript: Notes transcript
+	slidescount: "%count% slide|%count% slides"
 	admin:
 		slideadded: "Slide added"
 		duplicatealias: "Alias for slide %s already exists"

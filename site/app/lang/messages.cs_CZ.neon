@@ -94,6 +94,7 @@ label:
 	interviews: Rozhovory
 	audiorecording: "Audio záznam"
 	videorecording: "Video záznam"
+	lowercasevideo: video
 	dateforwhom: "Datum a pro koho"
 	interviewdetail: "Detail rozhovoru"
 	recording: "Záznam"
@@ -205,6 +206,7 @@ talks:
 	duration: "délka přednášky %s minut"
 	durationshort: "%s minut"
 	transcript: Přepis poznámek
+	slidescount: "%count% slajd|%count% slajdy|%count% slajdů"
 	admin:
 		slideadded: "Slajd přidán"
 		duplicatealias: "Pro slajd %s již existuje alias"

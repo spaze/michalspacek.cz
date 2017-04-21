@@ -8,33 +8,44 @@
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {import "../embed.latte"}
-<p n:if="$slidesHref" id="{_html.id.slides}"></p>
-{include #embedSlides}
-<p n:if="$slidesHref"><small><span title="{_messages.label.slides}">📃</span> <a href="{$slidesHref}">{$slidesHref}</a></small></p>
+{if $slidesHref}
+	<p id="{_html.id.slides}"></p>
+	{include #embedSlides}
+	<p><small><span title="{_messages.label.slides}">📃</span> <a href="{$slidesHref}">{$slidesHref}</a></small></p>
 
-<p n:if="$videoHref" id="{_html.id.recording}"></p>
-{include #embedVideo}
-<p n:if="$videoHref"><small><span title="{_messages.label.recording}">►</span> <a href="{$videoHref}">{$videoHref}</a></small></p>
+	<p n:if="$videoHref" id="{_html.id.recording}"></p>
+	{include #embedVideo}
+	<p n:if="$videoHref"><small><span title="{_messages.label.recording}">►</span> <a href="{$videoHref}">{$videoHref}</a></small></p>
+{/if}
 
 <h2 n:if="$talk->description || $talk->href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
 {if $talk->description}{$talk->description}{/if}
 <p n:if="$talk->href"><a href="{$talk->href}">{_messages.talks.detailevent}</a></p>
 
 <h2 id="{_html.id.eventdate}">{_messages.talks.dateevent}</h2>
-<p><span class="date">{$talk->date|date:'j. n. Y'}</span>, <a href="{$talk->eventHref}" n:tag-if="$talk->eventHref">{$talk->event}</a><small n:if="$talk->duration"> ({_messages.talks.duration|format:$talk->duration})</small></p>
+<p>
+	<span class="date">{$talk->date|date:'j. n. Y'}</span>, <a href="{$talk->eventHref}" n:tag-if="$talk->eventHref">{$talk->event}</a>
+	<small n:if="$talk->duration || $slides || $videoHref">({if $talk->duration}{_messages.talks.duration|format:$talk->duration}{if $slides || $videoHref}, {/if}{/if}{if $slides}<a href="#{_html.id.slides}">{_messages.talks.slidescount, count($slides)}</a>{if $videoHref}, {/if}{/if}{if $videoHref}<a href="#{_html.id.recording}">{_messages.label.lowercasevideo}</a>{/if})</small>
+</p>
 
-<div n:if="$slides" id="slides">
-<h2>{_messages.label.slides}</h2>
-{foreach $slides as $slide}
-	{var $image = $useAlternativeImages ? $slide->imageAlternative : $slide->image}
-	<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight">
-	<img src="{$image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}">
-	<p><strong><a n:href="this $talk->action, $slide->alias">#{$slide->number}</a></strong> {$slide->speakerNotes}</p>
+{if !$slidesHref}
+	<div n:if="$slides" id="slides-container">
+	<h2 id="{_html.id.slides}">{_messages.label.slides}</h2>
+	{foreach $slides as $slide}
+		{var $image = $useAlternativeImages ? $slide->imageAlternative : $slide->image}
+		<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight">
+		<img src="{$image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}">
+		<p><strong><a n:href="this $talk->action, $slide->alias">#{$slide->number}</a></strong> {$slide->speakerNotes}</p>
+		</div>
+	{/foreach}
 	</div>
-{/foreach}
-</div>
 
-{if !$slides && $talk->transcript}
+	{if $videoHref}
+		<h2 id="{_html.id.recording}">{_messages.label.videorecording}</h2>
+		{include #embedVideo}
+		<p><small><span title="{_messages.label.recording}">►</span> <a href="{$videoHref}">{$videoHref}</a></small></p>
+	{/if}
+{elseif $talk->transcript}
 	<hr>
 	<h2 id="{_html.id.transcript}">{_messages.talks.transcript}</h2>
 	{$talk->transcript}
