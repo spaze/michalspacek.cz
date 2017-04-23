@@ -78,13 +78,13 @@ abbr.dtstart, abbr.dtend { text-decoration: none; }
 code {
     padding: 0.2em 0.1em;
     margin: 0;
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: #F5F5F5;
     border-radius: 3px;
 }
 pre {
     padding: 1em;
     margin-bottom: 1em;
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: #F5F5F5;
     border-radius: 3px;
     white-space: pre-wrap;
 }
