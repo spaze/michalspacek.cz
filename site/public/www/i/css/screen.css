@@ -92,6 +92,9 @@ pre {
 .container {
     max-width: 820px;
     margin: 0 auto;
+    word-wrap: break-word;
+    word-break: break-all;
+    word-break: break-word;
 }
 .container.blog { max-width: 1020px; }
 .container.admin { max-width: 1200px; }
