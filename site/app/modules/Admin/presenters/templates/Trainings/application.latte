@@ -85,7 +85,7 @@
 		<th></th><td class="short"><p>{input submit}</p></td>
 	</tr>
 	<tr n:if="$attended">
-		<th></th><td><small><a n:href="Trainings:files $applicationId">soubory</a></small> <small><a n:href="Trainings:review $applicationId">ohlas</a></small></td>
+		<th></th><td><small><a n:href="Trainings:files $applicationId">soubory</a></small>{if $reviewId} <small><a n:href="Trainings:review $reviewId">ohlas</a></small>{/if}</td>
 	</tr>
 </table>
 {/form application}

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
 
 /**
@@ -37,7 +39,7 @@ class Reviews
 	 * @param integer|null $limit
 	 * @return \Nette\Database\Row[]
 	 */
-	public function getReviews($id, $limit = null)
+	public function getReviews(int $id, ?int $limit = null): array
 	{
 		$query = 'SELECT
 				COALESCE(r.name, a.name) AS name,
@@ -75,9 +77,31 @@ class Reviews
 	 * @return \Nette\Database\Row
 	 * @throws \RuntimeException
 	 */
-	public function getReviewByApplicationId($applicationId)
+	public function getReviewIdByApplicationId(int $applicationId): ?int
+	{
+		return $this->database->fetchField('SELECT
+				r.id_review
+			FROM
+				training_applications a
+				JOIN training_reviews r ON a.id_application = r.key_application
+			WHERE
+				a.id_application = ?',
+			$applicationId
+		) ?: null;
+	}
+
+
+	/**
+	 * Get review by id.
+	 *
+	 * @param integer $reviewId
+	 * @return \Nette\Database\Row
+	 * @throws \RuntimeException
+	 */
+	public function getReview(int $reviewId): \Nette\Database\Row
 	{
 		$result = $this->database->fetch('SELECT
+				r.id_review AS reviewId,
 				a.name AS applicationName,
 				r.name,
 				a.company AS applicationCompany,
@@ -92,44 +116,58 @@ class Reviews
 				JOIN training_dates d ON a.key_date = d.id_date
 				LEFT JOIN training_reviews r ON a.id_application = r.key_application
 			WHERE
-				a.id_application = ?',
-			$applicationId
+				r.id_review = ?',
+			$reviewId
 		);
 
 		if (!$result) {
-			throw new \RuntimeException("No application id {$applicationId}, yet");
+			throw new \RuntimeException("No review id {$reviewId}, yet");
 		}
 
 		return $result;
 	}
 
 
-	public function addUpdateReview($applicationId, $name, $company, $jobTitle, $review, $href, $hidden)
+	/**
+	 * Get review by date id.
+	 *
+	 * @param integer $dateId
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getReviewByDateId(int $dateId): array
 	{
-		$datetime = new \DateTime();
-		return $this->database->query(
-				'INSERT INTO
-					training_reviews ?
-				ON DUPLICATE KEY UPDATE ?',
-				array(
-					'key_application' => $applicationId,
-					'name' => $name,
-					'company' => $company,
-					'job_title' => $jobTitle,
-					'review' => $review,
-					'href' => $href,
-					'hidden' => $hidden,
-					'added' => $datetime,
-					'added_timezone' => $datetime->getTimezone()->getName(),
-				),
-				array(
-					'name' => $name,
-					'company' => $company,
-					'job_title' => $jobTitle,
-					'review' => $review,
-					'href' => $href,
-					'hidden' => $hidden,
-				)
+		return $this->database->fetchAll('SELECT
+				r.id_review AS reviewId,
+				COALESCE(r.name, a.name) AS name,
+				COALESCE(r.company, a.company) AS company,
+				r.job_title AS jobTitle,
+				r.review,
+				r.href,
+				r.hidden
+			FROM
+				training_reviews r
+				LEFT JOIN training_applications a ON r.key_application = a.id_application
+			WHERE
+				r.key_date = ? OR a.key_date = ?',
+			$dateId,
+			$dateId
+		);
+	}
+
+
+	public function updateReview(int $reviewId, ?string $name, ?string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
+	{
+		$this->database->query(
+			'UPDATE training_reviews SET ? WHERE id_review = ?',
+			array(
+				'name' => $name,
+				'company' => $company,
+				'job_title' => $jobTitle,
+				'review' => $review,
+				'href' => $href,
+				'hidden' => $hidden,
+			),
+			$reviewId
 		);
 	}
 

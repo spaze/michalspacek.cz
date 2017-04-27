@@ -126,6 +126,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->applications  = $this->applications;
 		$this->template->validCount    = $validCount;
 		$this->template->attendedStatuses = $attendedStatuses;
+		$this->template->reviews = $this->trainingReviews->getReviewByDateId($this->dateId);
 	}
 
 
@@ -153,8 +154,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function actionReview($param)
 	{
-		$this->applicationId = $param;
-		$this->review = $this->trainingReviews->getReviewByApplicationId($this->applicationId);
+		$this->review = $this->trainingReviews->getReview($param);
 
 		$date = $this->trainingDates->get($this->review->dateId);
 
@@ -195,6 +195,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->companyId     = $this->application->companyId;
 		$this->template->attended      = in_array($this->application->status, $this->trainingStatuses->getAttendedStatuses());
 		$this->template->history       = $this->trainingStatuses->getStatusHistory($this->applicationId);
+		$this->template->reviewId      = $this->trainingReviews->getReviewIdByApplicationId($this->applicationId);
 	}
 
 
@@ -334,13 +335,13 @@ class TrainingsPresenter extends BasePresenter
 
 	public function submittedReview(\MichalSpacekCz\Form\TrainingReview $form, $values)
 	{
-		$this->trainingReviews->addUpdateReview(
-			$this->applicationId,
+		$this->trainingReviews->updateReview(
+			$this->review->reviewId,
 			$values->overwriteName ? $values->name : null,
 			$values->overwriteCompany ? $values->company : null,
 			$values->jobTitle ?: null,
 			$values->review,
-			$values->href,
+			$values->href ?: null,
 			$values->hidden
 		);
 
