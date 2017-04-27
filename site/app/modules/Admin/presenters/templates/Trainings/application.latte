@@ -30,8 +30,8 @@
 	<tr>
 		<th>Status:</th>
 		<td>
-			<small><code>{$status}</code> ({$statusTime}) <a href="#historie" id="statusHistory-link">Historie</a></small><br>
-			<span id="statusHistory-container" n:inner-foreach="$history as $record">
+			<small><code>{$status}</code> ({$statusTime}) <a href="#historie" class="open-container">Historie</a></small><br>
+			<span id="historie-container" class="hidden" n:inner-foreach="$history as $record">
 				<small><code>{$record->status}</code> ({$record->statusTime})</small><br>
 			</span>
 		</td>

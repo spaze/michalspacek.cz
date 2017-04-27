@@ -52,8 +52,8 @@
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-rozhovor">
-	<p><a href="#pridat-rozhovor" class="block">Přidat rozhovor</a></p>
-	<div id="pridat-rozhovor-container">
+	<p><a href="#pridat-rozhovor" class="open-container block">Přidat rozhovor</a></p>
+	<div id="pridat-rozhovor-container" class="hidden">
 	{include #interviewForm, form => addInterview}
 	</div>
 </div>

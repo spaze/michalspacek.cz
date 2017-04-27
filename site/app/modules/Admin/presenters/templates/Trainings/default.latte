@@ -102,8 +102,8 @@
 <p></p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-termin">
-	<p><a href="#pridat-termin" class="block">Přidat termín</a></p>
-	<div id="pridat-termin-container">
+	<p><a href="#pridat-termin" class="open-container block">Přidat termín</a></p>
+	<div id="pridat-termin-container" class="hidden">
 	{include #dateForm, form => addDate}
 	</div>
 </div>

@@ -59,8 +59,8 @@
 {/form statuses}
 <hr>
 <div id="pridat-ucastniky">
-	<p><a href="#pridat-ucastniky" class="block separated">Přidat účastníky</a></p>
-	<div id="pridat-ucastniky-container">
+	<p><a href="#pridat-ucastniky" class="open-container block separated">Přidat účastníky</a></p>
+	<div id="pridat-ucastniky-container" class="hidden">
 	{form applications}
 		<table>
 			{formContainer applications-0}
@@ -106,8 +106,8 @@
 </div>
 <hr>
 <div id="pridat-soubor">
-	<p><a href="#pridat-soubor" class="block separated">Přidat soubor</a></p>
-	<div id="pridat-soubor-container">
+	<p><a href="#pridat-soubor" class="open-container block separated">Přidat soubor</a></p>
+	<div id="pridat-soubor-container" class="hidden">
 		<p>
 			Přidá soubor všem účastíkům školení ve stavu
 			{foreach $attendedStatuses as $status}<small><code>{$status}</code></small>{sep}, {/sep}{/foreach}.
@@ -120,8 +120,8 @@
 </div>
 <hr>
 <div id="upravit-termin">
-	<p><a href="#upravit-termin" class="block separated">Upravit termín</a></p>
-	<div id="upravit-termin-container">
+	<p><a href="#upravit-termin-container" class="open-container block separated">Upravit termín</a></p>
+	<div id="upravit-termin-container" class="hidden">
 		{include #dateForm, form => date}
 	</div>
 </div>

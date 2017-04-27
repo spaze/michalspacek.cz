@@ -1,7 +1,7 @@
 $(document).ready(function() {
-	$('#pridat-ucastniky a[href="#pridat-ucastniky"]').click(function() {
-		$('#pridat-ucastniky-container').slideToggle('fast');
-		return false;
+	$('.open-container').click(function(event) {
+		event.preventDefault();
+		$('body').find($(this).attr('href') + '-container').slideToggle('fast');
 	});
 
 	var FormFields = {};
@@ -56,36 +56,6 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#pridat-soubor a[href="#pridat-soubor"]').click(function() {
-		$('#pridat-soubor-container').slideToggle('fast');
-		return false;
-	});
-
-	$('#upravit-termin a[href="#upravit-termin"]').click(function() {
-		$('#upravit-termin-container').slideToggle('fast');
-		return false;
-	});
-
-	$('#pridat-termin a[href="#pridat-termin"]').click(function() {
-		$('#pridat-termin-container').slideToggle('fast');
-		return false;
-	});
-
-	$('#pridat-prednasku a[href="#pridat-prednasku"]').click(function() {
-		$('#pridat-prednasku-container').slideToggle('fast');
-		return false;
-	});
-
-	$('#pridat-rozhovor a[href="#pridat-rozhovor"]').click(function() {
-		$('#pridat-rozhovor-container').slideToggle('fast');
-		return false;
-	});
-
-	$('#pridat-storage a[href="#pridat-storage"]').click(function() {
-		$('#pridat-storage-container').slideToggle('fast');
-		return false;
-	});
-
 	$('#statuses td[data-date]')
 		.click(function() {
 			$('#statuses').find('#date-' + $(this).data('date')).toggle();
@@ -131,11 +101,6 @@ $(document).ready(function() {
 	$('#emails #uncheckAll').click(function(event) {
 		event.preventDefault();
 		$('#emails .row .send').prop('checked', false).attr('checked', false);
-	});
-
-	$('#statusHistory-link').click(function(event) {
-		event.preventDefault();
-		$('#statusHistory-container').slideToggle('fast');
 	});
 
 	$('a[href*="#new"]').click(function(event) {

@@ -337,8 +337,6 @@ div.notice {
 #pridat-ucastniky-container table { font-size: 75%; }
 #pridat-ucastniky-container table input[type=text] { width: 78px; }
 #pridat-ucastniky-container table .highlight { background-color: yellow; }
-#pridat-ucastniky-container, #pridat-soubor-container, #upravit-termin-container, #pridat-termin-container,
-#pridat-prednasku-container, #pridat-rozhovor-container, #statusHistory-container, #pridat-storage-container { display: none; }
 #emails tbody tr.row:hover { background-color: #F0F0F0; }
 #frm-mails input { font-size: 60%; }
 #frm-mails input[type=number] { width: 75px; }
