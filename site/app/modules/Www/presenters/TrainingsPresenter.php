@@ -40,6 +40,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Locales */
 	protected $trainingLocales;
 
+	/** @var \MichalSpacekCz\Training\Reviews */
+	protected $trainingReviews;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -66,6 +69,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
 	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
+	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
@@ -80,6 +84,7 @@ class TrainingsPresenter extends BasePresenter
 		Training\Trainings $trainings,
 		Training\CompanyTrainings $companyTrainings,
 		\MichalSpacekCz\Training\Locales $trainingLocales,
+		\MichalSpacekCz\Training\Reviews $trainingReviews,
 		\MichalSpacekCz\Vat $vat,
 		\Netxten\Templating\Helpers $netxtenHelpers,
 		\MichalSpacekCz\CompanyInfo\Info $companyInfo
@@ -94,6 +99,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->companyTrainings = $companyTrainings;
 		$this->trainingLocales = $trainingLocales;
+		$this->trainingReviews = $trainingReviews;
 		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->companyInfo = $companyInfo;
@@ -143,7 +149,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates            = $this->dates;
 
-		$this->template->reviews = $this->trainings->getReviews($this->training->trainingId, 3);
+		$this->template->reviews = $this->trainingReviews->getReviews($this->training->trainingId, 3);
 
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
 	}
@@ -368,7 +374,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
-		$this->template->reviews = $this->trainings->getReviews($training->trainingId);
+		$this->template->reviews = $this->trainingReviews->getReviews($training->trainingId);
 	}
 
 
@@ -462,7 +468,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $upcoming;
 
 		$this->template->form = $this->createComponentApplication('application');
-		$this->template->reviews = $this->trainings->getReviews($training->trainingId, 3);
+		$this->template->reviews = $this->trainingReviews->getReviews($training->trainingId, 3);
 	}
 
 

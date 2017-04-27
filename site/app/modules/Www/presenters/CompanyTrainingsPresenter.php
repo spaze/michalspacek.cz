@@ -22,6 +22,9 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Locales */
 	protected $trainingLocales;
 
+	/** @var \MichalSpacekCz\Training\Reviews */
+	protected $trainingReviews;
+
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
@@ -31,6 +34,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
 	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
+	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
 	 * @param \MichalSpacekCz\Vat $vat
 	 */
 	public function __construct(
@@ -38,6 +42,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		\MichalSpacekCz\Training\Trainings $trainings,
 		\MichalSpacekCz\Training\CompanyTrainings $companyTrainings,
 		\MichalSpacekCz\Training\Locales $trainingLocales,
+		\MichalSpacekCz\Training\Reviews $trainingReviews,
 		\MichalSpacekCz\Vat $vat
 	)
 	{
@@ -45,6 +50,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->companyTrainings = $companyTrainings;
 		$this->trainingLocales = $trainingLocales;
+		$this->trainingReviews = $trainingReviews;
 		$this->vat = $vat;
 		parent::__construct();
 	}
@@ -77,7 +83,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->priceVat = $this->vat->addVat($training->price);
 		$this->template->doubleDurationPrice = $training->doubleDurationPrice;
 		$this->template->materials = $training->materials;
-		$this->template->reviews = $this->trainings->getReviews($training->trainingId, 3);
+		$this->template->reviews = $this->trainingReviews->getReviews($training->trainingId, 3);
 	}
 
 

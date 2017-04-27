@@ -31,6 +31,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Files */
 	protected $trainingFiles;
 
+	/** @var \MichalSpacekCz\Training\Reviews */
+	protected $trainingReviews;
+
 	/** @var array */
 	private $dates;
 
@@ -63,6 +66,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Trainings $trainings
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
+	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
 	 */
 	public function __construct(
 		Training\Applications $trainingApplications,
@@ -70,7 +74,8 @@ class TrainingsPresenter extends BasePresenter
 		Training\Statuses $trainingStatuses,
 		Training\Trainings $trainings,
 		Training\Venues $trainingVenues,
-		Training\Files $trainingFiles
+		Training\Files $trainingFiles,
+		Training\Reviews $trainingReviews
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
@@ -79,6 +84,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainings = $trainings;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
+		$this->trainingReviews = $trainingReviews;
 		parent::__construct();
 	}
 
@@ -148,7 +154,7 @@ class TrainingsPresenter extends BasePresenter
 	public function actionReview($param)
 	{
 		$this->applicationId = $param;
-		$this->review = $this->trainings->getReviewByApplicationId($this->applicationId);
+		$this->review = $this->trainingReviews->getReviewByApplicationId($this->applicationId);
 
 		$date = $this->trainingDates->get($this->review->dateId);
 
@@ -328,7 +334,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function submittedReview(\MichalSpacekCz\Form\TrainingReview $form, $values)
 	{
-		$this->trainings->addUpdateReview(
+		$this->trainingReviews->addUpdateReview(
 			$this->applicationId,
 			$values->overwriteName ? $values->name : null,
 			$values->overwriteCompany ? $values->company : null,
