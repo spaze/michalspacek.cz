@@ -81,6 +81,7 @@ code {
     background-color: #F5F5F5;
     border-radius: 3px;
 }
+button code { background-color: inherit; }
 pre {
     padding: 1em;
     margin-bottom: 1em;
