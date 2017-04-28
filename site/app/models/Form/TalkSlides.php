@@ -77,9 +77,7 @@ class TalkSlides extends ProtectedForm
 		$container->addUpload('replaceAlternative', 'Nahradit:')
 			->setAttribute('title', 'Nahradit alternativní soubor');
 		$container->addText('filenameAlternative', 'Soubor:')
-			->setAttribute('class', 'slide-filename')
-			->addConditionOn($container['replaceAlternative'], self::BLANK)
-				->setRequired('Zadejte prosím alternativní soubor');
+			->setAttribute('class', 'slide-filename');
 		$container->addText('width', 'Šířka:')
 			->setType('number')
 			->setAttribute('class', 'right slide-width')
