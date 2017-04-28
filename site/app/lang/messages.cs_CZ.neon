@@ -36,7 +36,6 @@ label:
 	linkedin: LinkedIn
 	github: GitHub
 	email: E-mail
-	phone: Telefon
 	skype: Skype
 	billingaddress: Fakturační adresa
 	companyid: IČO
@@ -123,7 +122,6 @@ label:
 	copy: Kopírovat
 contact:
 	twitter: @spazef0rze
-	uponrequest: "na vyžádání"
 	skypename: spazef0rze
 	billingaddress: "České Vrbné 2315, České Budějovice 37011"
 	vatpayer: plátce DPH

@@ -36,7 +36,6 @@ label:
 	linkedin: LinkedIn
 	github: GitHub
 	email: E-mail
-	phone: Phone
 	skype: Skype
 	billingaddress: Billing address
 	companyid: "Company id"
@@ -123,7 +122,6 @@ label:
 	copy: Copy
 contact:
 	twitter: @spazef0rze
-	uponrequest: "upon request"
 	skypename: spazef0rze
 	billingaddress: "České Vrbné 2315, České Budějovice 37011, Czech Republic"
 	vatpayer: VAT payer
