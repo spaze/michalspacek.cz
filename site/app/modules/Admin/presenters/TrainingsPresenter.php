@@ -282,19 +282,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	private function findDate($dateId)
-	{
-		foreach ($this->dates as $training) {
-			foreach ($training->dates as $date) {
-				if ($date->dateId == $dateId) {
-					return $date;
-				}
-			}
-		}
-		return false;
-	}
-
-
 	public function submittedApplications(\MichalSpacekCz\Form\TrainingApplicationMultiple $form, $values)
 	{
 		foreach ($values->applications as $application) {
