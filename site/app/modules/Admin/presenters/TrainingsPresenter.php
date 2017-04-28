@@ -97,19 +97,15 @@ class TrainingsPresenter extends BasePresenter
 		if (!$this->training) {
 			throw new \Nette\Application\BadRequestException("Date id {$param} does not exist, yet", \Nette\Http\Response::S404_NOT_FOUND);
 		}
-		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
-		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
 		$validCount = 0;
 		$applications = $discarded = [];
 		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
-			$application->discarded = in_array($application->status, $discardedStatuses);
 			if (!$application->discarded) {
 				$validCount++;
 				$applications[] = $application;
 			} else {
 				$discarded[] = $application;
 			}
-			$application->attended = in_array($application->status, $attendedStatuses);
 			if ($application->attended) {
 				$this->applicationIdsAttended[] = $application->id;
 			}
@@ -125,7 +121,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->public        = $this->training->public;
 		$this->template->applications  = $this->applications;
 		$this->template->validCount    = $validCount;
-		$this->template->attendedStatuses = $attendedStatuses;
+		$this->template->attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$this->template->reviews = $this->trainingReviews->getReviewByDateId($this->dateId);
 	}
 
@@ -158,9 +154,9 @@ class TrainingsPresenter extends BasePresenter
 
 		$date = $this->trainingDates->get($this->review->dateId);
 
-		$this->template->pageTitle          = 'Ohlasy';
-		$this->template->applicationName    = $this->review->applicationName;
-		$this->template->applicationCompany = $this->review->applicationCompany;
+		$name = ($this->review->applicationName ?? $this->review->name);
+		$company = ($this->review->applicationCompany ?? $this->review->company);
+		$this->template->pageTitle = "Ohlas od {$name}" . ($company ? ", {$company}": '');
 		$this->template->trainingStart      = $date->start;
 		$this->template->trainingName       = $date->name;
 		$this->template->trainingCity  = $date->venueCity;
@@ -324,21 +320,43 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentReview($formName)
+	protected function createComponentEditReview($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName);
+		$reviewApplicationIds = [];
+		foreach ($this->trainingReviews->getReviewByDateId($this->review->dateId) as $review) {
+			if ($review->applicationId !== null) {
+				$reviewApplicationIds[] = $review->applicationId;
+			}
+		}
+
+		$applications = [];
+		foreach ($this->trainingApplications->getByDate($this->review->dateId) as $application) {
+			if (!$application->discarded) {
+				$option = Html::el('option');
+				if (in_array($application->id, $reviewApplicationIds) && $application->id !== $this->review->applicationId) {
+					$option = $option->setDisabled(true);
+				}
+				$option->setText($application->name . ($application->company ? ", {$application->company}" : ''));
+				$applications[$application->id] = $option;
+			}
+		}
+		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications);
 		$form->setReview($this->review);
-		$form->onSuccess[] = [$this, 'submittedReview'];
+		$form->onSuccess[] = [$this, 'submittedEditReview'];
 		return $form;
 	}
 
 
-	public function submittedReview(\MichalSpacekCz\Form\TrainingReview $form, $values)
+	public function submittedEditReview(\MichalSpacekCz\Form\TrainingReview $form, $values)
 	{
 		$this->trainingReviews->updateReview(
 			$this->review->reviewId,
-			$values->overwriteName ? $values->name : null,
-			$values->overwriteCompany ? $values->company : null,
+			$this->review->dateId,
+			$values->application ?: null,
+			$values->overwriteName,
+			$values->name ?: null,
+			$values->overwriteCompany,
+			$values->company ?: null,
 			$values->jobTitle ?: null,
 			$values->review,
 			$values->href ?: null,
@@ -346,6 +364,48 @@ class TrainingsPresenter extends BasePresenter
 		);
 
 		$this->redirect('date', $this->review->dateId);
+	}
+
+
+	protected function createComponentAddReview($formName)
+	{
+		$reviewApplicationIds = [];
+		foreach ($this->trainingReviews->getReviewByDateId($this->dateId) as $review) {
+			if ($review->applicationId !== null) {
+				$reviewApplicationIds[] = $review->applicationId;
+			}
+		}
+
+		$applications = [];
+		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
+			if (!$application->discarded) {
+				$option = Html::el('option');
+				if (in_array($application->id, $reviewApplicationIds)) {
+					$option = $option->setDisabled(true);
+				}
+				$option->setText($application->name . ($application->company ? ", {$application->company}" : ''));
+				$applications[$application->id] = $option;
+			}
+		}
+		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications);
+		$form->onSuccess[] = [$this, 'submittedAddReview'];
+		return $form;
+	}
+
+
+	public function submittedAddReview(\MichalSpacekCz\Form\TrainingReview $form, $values)
+	{
+		$this->trainingReviews->addReview(
+			$this->dateId,
+			$values->application ?: null,
+			$values->overwriteName ? $values->name : null,
+			$values->overwriteCompany ? $values->company : null,
+			$values->jobTitle ?: null,
+			$values->review,
+			$values->href ?: null,
+			$values->hidden
+		);
+		$this->redirect('date', $this->dateId);
 	}
 
 

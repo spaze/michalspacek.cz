@@ -5,18 +5,14 @@
 &raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</a>
 {/define}
 
-{define #content}
-<p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
-{form review class => aligned}
+{define #form}
+{form $form class => aligned}
 <table>
 	<tr>
-		<th>Jméno z přihlášky:</th><td>{$applicationName}</td>
+		<th>Účastník:</th><td>{input application}</td>
 	</tr>
 	<tr>
 		<th>{label overwriteName: /}</th><td>{input overwriteName:} {input name}</td>
-	</tr>
-	<tr>
-		<th>Firma z přihlášky:</th><td>{$applicationCompany}</td>
 	</tr>
 	<tr>
 		<th>{label overwriteCompany: /}</th><td>{input overwriteCompany:} {input company}</td>
@@ -25,7 +21,7 @@
 		<th>{label jobTitle /}</th><td>{input jobTitle}</td>
 	</tr>
 	<tr>
-		<th>{label review /}</th><td>{input review}</td>
+		<th>{label review /}</th><td>{input review, class => wide}</td>
 	</tr>
 	<tr>
 		<th>{label href /}</th><td>{input href}</td>
@@ -34,9 +30,13 @@
 		<th>{label hidden: /}</th><td>{input hidden:}</td>
 	</tr>
 	<tr>
-		<th></th><td>{input save}</td>
+		<th></th><td>{input submit}</td>
 	</tr>
 </table>
-{/form review}
+{/form $form}
+{/define}
 
+{define #content}
+<p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
+{include #form, form => editReview}
 {/define}

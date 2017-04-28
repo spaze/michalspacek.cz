@@ -153,9 +153,13 @@ class Applications
 				$dateId
 			);
 			if ($this->byDate[$dateId]) {
+				$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
+				$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 				foreach ($this->byDate[$dateId] as $row) {
 					$row->email = $this->emailEncryption->decrypt($row->email);
 					$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
+					$row->discarded = in_array($row->status, $discardedStatuses);
+					$row->attended = in_array($row->status, $attendedStatuses);
 				}
 			}
 		}

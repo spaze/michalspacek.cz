@@ -6,6 +6,7 @@
 
 {define #content}
 {import "default.latte"}
+{import "review.latte"}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <p>
 {$trainingName} {$trainingStart|date:'j. n. Y'}
@@ -133,6 +134,10 @@
 			<p><strong><a n:href="Trainings:review $review->reviewId">{$review->name}</a>{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
 			<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
 		</div>
+		<fieldset>
+			<legend><a href="#pridat-ohlas" class="open-container">Přidat ohlas</a></legend>
+			<div id="pridat-ohlas-container" class="hidden">{include #form, form => addReview}</div>
+		</fieldset>
 	</div>
 </div>
 {/define}

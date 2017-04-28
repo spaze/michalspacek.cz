@@ -102,6 +102,7 @@ class Reviews
 	{
 		$result = $this->database->fetch('SELECT
 				r.id_review AS reviewId,
+				r.key_application AS applicationId,
 				a.name AS applicationName,
 				r.name,
 				a.company AS applicationCompany,
@@ -112,9 +113,9 @@ class Reviews
 				r.hidden,
 				d.id_date AS dateId
 			FROM
-				training_applications a
-				JOIN training_dates d ON a.key_date = d.id_date
-				LEFT JOIN training_reviews r ON a.id_application = r.key_application
+				training_reviews r
+				LEFT JOIN training_applications a ON r.key_application = a.id_application
+				LEFT JOIN training_dates d ON a.key_date = d.id_date OR r.key_date = d.id_date
 			WHERE
 				r.id_review = ?',
 			$reviewId
@@ -138,6 +139,7 @@ class Reviews
 	{
 		return $this->database->fetchAll('SELECT
 				r.id_review AS reviewId,
+				r.key_application AS applicationId,
 				COALESCE(r.name, a.name) AS name,
 				COALESCE(r.company, a.company) AS company,
 				r.job_title AS jobTitle,
@@ -155,19 +157,42 @@ class Reviews
 	}
 
 
-	public function updateReview(int $reviewId, ?string $name, ?string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
+	public function updateReview(int $reviewId, int $dateId, ?int $applicationId, bool $overwriteName, ?string $name, bool $overwriteCompany, ?string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
 	{
 		$this->database->query(
 			'UPDATE training_reviews SET ? WHERE id_review = ?',
 			array(
-				'name' => $name,
-				'company' => $company,
+				'key_date' => $applicationId ? null : $dateId,
+				'key_application' => $applicationId,
+				'name' => ($overwriteName || !$applicationId) ? $name : null,
+				'company' => ($overwriteCompany || !$applicationId) ? $company : null,
 				'job_title' => $jobTitle,
 				'review' => $review,
 				'href' => $href,
 				'hidden' => $hidden,
 			),
 			$reviewId
+		);
+	}
+
+
+	public function addReview(int $dateId, ?int $applicationId, ?string $name, ?string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
+	{
+		$datetime = new \DateTime();
+		$this->database->query(
+			'INSERT INTO training_reviews ?',
+			array(
+				'key_date' => $applicationId ? null : $dateId,
+				'key_application' => $applicationId,
+				'name' => $name,
+				'company' => $company,
+				'job_title' => $jobTitle,
+				'review' => $review,
+				'href' => $href,
+				'added' => $datetime,
+				'added_timezone' => $datetime->getTimezone()->getName(),
+				'hidden' => $hidden,
+			)
 		);
 	}
 

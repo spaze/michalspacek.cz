@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
@@ -10,28 +12,46 @@ namespace MichalSpacekCz\Form;
 class TrainingReview extends ProtectedForm
 {
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $applications)
 	{
 		parent::__construct($parent, $name);
 
-		$this->addCheckbox('overwriteName', 'Přepsat jméno:');
-		$this->addText('name', 'Jméno:');
-		$this->addCheckbox('overwriteCompany', 'Přepsat firmu:');
-		$this->addText('company', 'Firma:');
-		$this->addText('jobTitle', 'Pozice:');
-		$this->addTextArea('review', 'Ohlas:');
-		$this->addText('href', 'Odkaz:');
+		$this->addSelect('application', 'Účastník:', ['' => '- firemní ohlas -'] + $applications);
+		$this->addCheckbox('overwriteName', 'Přepsat jméno:')
+			->addConditionOn($this['application'], self::EQUAL, '')
+				->setRequired('Pro firemní ohlas je potřeba přepsat jméno');
+		$this->addText('name', 'Jméno:')
+			->setRequired('Zadejte prosím jméno')
+			->addRule(self::MIN_LENGTH, 'Minimální délka jména je %d znaky', 3)
+			->addRule(self::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
+		$this->addCheckbox('overwriteCompany', 'Přepsat firmu:')
+			->addConditionOn($this['application'], self::EQUAL, '')
+				->setRequired('Pro firemní ohlas je potřeba přepsat firmu');
+		$this->addText('company', 'Firma:')
+			->setRequired(false)
+			->addRule(self::MAX_LENGTH, 'Maximální délka firmz je %d znaků', 200);
+		$this->addText('jobTitle', 'Pozice:')
+			->setRequired(false)
+			->addRule(self::MAX_LENGTH, 'Maximální délka pozice je %d znaků', 200);
+		$this->addTextArea('review', 'Ohlas:')
+			->setRequired('Zadejte prosím ohlas')
+			->addRule(self::MIN_LENGTH, 'Minimální délka ohlasu je %d znaky', 3)
+			->addRule(self::MAX_LENGTH, 'Maximální délka ohlasu je %d znaků', 2000);
+		$this->addText('href', 'Odkaz:')
+			->setRequired(false)
+			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu je %d znaků', 200);
 		$this->addCheckbox('hidden', 'Skrýt:');
-		$this->addSubmit('save', 'Uložit');
+		$this->addSubmit('submit', 'Přidat');
 	}
 
 
-	public function setReview(\Nette\Database\Row $review)
+	public function setReview(\Nette\Database\Row $review): self
 	{
 		$values = array(
-			'overwriteName' => ($review->name !== null),
+			'application' => $review->applicationId,
+			'overwriteName' => ($review->name !== null || $review->applicationId === null),
 			'name' => $review->name,
-			'overwriteCompany' => ($review->company !== null),
+			'overwriteCompany' => ($review->company !== null || $review->applicationId === null),
 			'company' => $review->company,
 			'jobTitle' => $review->jobTitle,
 			'review' => $review->review,
@@ -39,6 +59,7 @@ class TrainingReview extends ProtectedForm
 			'hidden' => $review->hidden,
 		);
 		$this->setDefaults($values);
+		$this->getComponent('submit')->caption = 'Upravit';
 		return $this;
 	}
 
