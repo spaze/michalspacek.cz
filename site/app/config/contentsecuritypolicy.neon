@@ -36,8 +36,10 @@ contentSecurityPolicy:
 				- "'strict-dynamic'"
 				- "'nonce'"
 				- %domain.contentSecurityPolicySelf%
+				- "'report-sample'"
 			style-src:
 				- %domain.contentSecurityPolicySelf%
+				- "'report-sample'"
 			frame-ancestors: "'none'"
 			form-action: "'self'"
 			base-uri: "'none'"
