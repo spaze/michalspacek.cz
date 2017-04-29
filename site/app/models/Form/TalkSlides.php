@@ -61,7 +61,7 @@ class TalkSlides extends ProtectedForm
 	{
 		$container->addText('alias', 'Alias:')
 			->setRequired('Zadejte prosím alias')
-			->addRule(self::PATTERN, 'Alias musí být ve formátu [a-z0-9-]+', '[a-z0-9-]+');
+			->addRule(self::PATTERN, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
 		$container->addText('number', 'Slajd:')
 			->setType('number')
 			->setAttribute('class', 'right slide-nr')
