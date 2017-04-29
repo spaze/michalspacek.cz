@@ -152,6 +152,7 @@ $(document).ready(function() {
 		var index = 0;
 		slide.addClass('new-slide changed').find(':input:not(.slide-nr)').val('');
 		slide.find('img').hide().removeAttr('src').removeAttr('alt').removeAttr('title').removeAttr('width').removeAttr('height');
+		slide.find('.transparent').removeClass('transparent').prop('readonly', false);
 		tbody.after(slide);
 		tbody.nextAll().find('.slide-nr').val(function(index, value) {
 			return ++value;
