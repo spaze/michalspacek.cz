@@ -81,6 +81,7 @@ class Talk extends ProtectedForm
 			->addRule(self::MAX_LENGTH, 'Maximální délka popisu pro oblíbené je %d znaků', 65535);
 		$this->addSelect('supersededBy', 'Nahrazeno přednáškou:', $talks)
 			->setPrompt('Vyberte prosím přednášku, kterou se tato nahradí');
+		$this->addCheckbox('publishSlides', 'Publikovat slajdy:');
 
 		$this->addSubmit('submit', 'Přidat');
 	}
@@ -106,6 +107,7 @@ class Talk extends ProtectedForm
 			'transcript' => $talk->transcriptTexy,
 			'favorite' => $talk->favorite,
 			'supersededBy' => $talk->supersededByAction,
+			'publishSlides' => $talk->publishSlides,
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';

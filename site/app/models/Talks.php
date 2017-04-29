@@ -212,7 +212,8 @@ class Talks
 				t2.action AS origAction,
 				t2.title AS origTitle,
 				t3.action AS supersededByAction,
-				t3.title AS supersededByTitle
+				t3.title AS supersededByTitle,
+				t.publish_slides AS publishSlides
 			FROM talks t
 				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
 				LEFT JOIN talks t3 ON t.key_superseded_by = t3.id_talk
@@ -262,7 +263,8 @@ class Talks
 				t2.action AS origAction,
 				t2.title AS origTitle,
 				t3.action AS supersededByAction,
-				t3.title AS supersededByTitle
+				t3.title AS supersededByTitle,
+				t.publish_slides AS publishSlides
 			FROM talks t
 				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
 				LEFT JOIN talks t3 ON t.key_superseded_by = t3.id_talk
@@ -366,8 +368,9 @@ class Talks
 	 * @param string|null $transcript
 	 * @param string|null $favorite
 	 * @param string|null $supersededBy
+	 * @param boolean $publishSlides
 	 */
-	public function update(int $id, ?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?string $origSlides, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?string $supersededBy): void
+	public function update(int $id, ?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?string $origSlides, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?string $supersededBy, bool $publishSlides): void
 	{
 		$this->database->query(
 			'UPDATE talks SET ? WHERE id_talk = ?',
@@ -389,6 +392,7 @@ class Talks
 				'transcript' => (empty($transcript) ? null : $transcript),
 				'favorite' => (empty($favorite) ? null : $favorite),
 				'key_superseded_by' => (empty($supersededBy) ? null : $this->get($supersededBy)->talkId),
+				'publish_slides' => $publishSlides,
 			),
 			$id
 		);
@@ -415,8 +419,9 @@ class Talks
 	 * @param string|null $transcript
 	 * @param string|null $favorite
 	 * @param string|null $supersededBy
+	 * @param boolean $publishSlides
 	 */
-	public function add(?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?string $origSlides, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?string $supersededBy): void
+	public function add(?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?string $origSlides, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?string $supersededBy, bool $publishSlides): void
 	{
 		$this->database->query(
 			'INSERT INTO talks',
@@ -438,6 +443,7 @@ class Talks
 				'transcript' => (empty($transcript) ? null : $transcript),
 				'favorite' => (empty($favorite) ? null : $favorite),
 				'key_superseded_by' => (empty($supersededBy) ? null : $this->get($supersededBy)->talkId),
+				'publish_slides' => $publishSlides,
 			)
 		);
 	}

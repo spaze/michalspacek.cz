@@ -115,7 +115,8 @@ class TalksPresenter extends BasePresenter
 			$values->ogImage,
 			$values->transcript,
 			$values->favorite,
-			$values->supersededBy
+			$values->supersededBy,
+			$values->publishSlides
 		);
 		$this->flashMessage('Přednáška upravena');
 		$this->redirect('Talks:');
@@ -149,7 +150,8 @@ class TalksPresenter extends BasePresenter
 			$values->ogImage,
 			$values->transcript,
 			$values->favorite,
-			$values->supersededBy
+			$values->supersededBy,
+			$values->publishSlides
 		);
 		$this->flashMessage('Přednáška přidána');
 		$this->redirect('Talks:');

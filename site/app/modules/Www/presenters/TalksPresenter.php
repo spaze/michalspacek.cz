@@ -73,7 +73,7 @@ class TalksPresenter extends BasePresenter
 		try {
 			$talk = $this->talks->get($name);
 			$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
-			$slides = $this->talks->getSlides($talk->talkId);
+			$slides = ($talk->publishSlides ? $this->talks->getSlides($talk->talkId) : []);
 		} catch (\RuntimeException $e) {
 			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);
 		}
