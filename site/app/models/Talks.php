@@ -518,7 +518,9 @@ class Talks
 		$name = strtr(rtrim(base64_encode(sha1($replace->getContents(), true)), '='), '+/', '-_');
 		$extension = $supported[$replace->getContentType()];
 		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
-		list($width, $height) = $replace->getImageSize();
+		if (!$width || !$height) {
+			list($width, $height) = $replace->getImageSize();
+		}
 		return "{$name}.{$extension}";
 	}
 

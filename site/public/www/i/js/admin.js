@@ -166,12 +166,17 @@ $(document).ready(function() {
 	});
 
 	$('#frm-slides input:file').change(function() {
-		var fields = $(this).parent().parent().find('.slide-filename, .slide-width, .slide-height');
-        var preview = $(this).parent().parent().nextAll('tr.image-previews').find('img.type-' + $(this).data('type')).removeAttr('width').removeAttr('height');
+		var tr = $(this).parent().parent();
+		var fields = tr.find('.slide-filename');
+		var preview = tr.nextAll('tr.image-previews').find('img.type-' + $(this).data('type')).removeAttr('width').removeAttr('height');
 		if ($(this).val()) {
 			fields.addClass('transparent').prop('readonly', true);
 			var reader = new FileReader();
 			reader.onload = function(event) {
+				preview.on('load', function() {
+					tr.find('.slide-width').val($(this).width())
+					tr.find('.slide-height').val($(this).height())
+				});
 				preview.attr('src', event.target.result).show();
 			};
 			reader.readAsDataURL(event.target.files[0]);
