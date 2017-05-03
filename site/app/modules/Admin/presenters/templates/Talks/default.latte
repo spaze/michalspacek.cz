@@ -3,11 +3,12 @@
 	<small><strong class="date">{$item->date|date:'j. n. Y'}</strong>, {$item->event}</small>
 	<span n:if="$item->hasSlides" title="{_messages.label.slides}">📃</span>
 	<span n:if="$item->videoHref" title="{_messages.label.videorecording}">►</span>
+	<small>(<a n:href="slides $item->talkId">upravit slajdy</a>)</small>
 	</li>
 {/define}
 
 {define #talkForm}
-{form $form class => "aligned wide"}
+{form $formName class => "aligned wide"}
 <table>
 	<tr>
 		<th>{label action /}</th><td>{input action}<br><small>nevyplňujte, pokud nechcete samostatnou stránku pro přednášku</small></td>
@@ -61,14 +62,13 @@
 		<th>{label supersededBy /}</th><td>{input supersededBy}</td>
 	</tr>
 	<tr>
-		<th>{label publishSlides: /}</th><td>{input publishSlides:}</td>
+		<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$formName == editTalk" n:href="slides $talk->talkId">Upravit slajdy</a></td>
 	</tr>
 	<tr>
 		<th></th><td class="short"><p>{input submit}</p></td>
 	</tr>
-	{ifset #formExtra}{include #formExtra}{/ifset}
 </table>
-{/form $form}
+{/form $formName}
 {/define}
 
 {define #content}
@@ -76,7 +76,7 @@
 <div id="pridat-prednasku">
 	<p><a href="#pridat-prednasku" class="open-container block">Přidat přednášku</a></p>
 	<div id="pridat-prednasku-container" class="hidden">
-	{include #talkForm, form => addTalk}
+	{include #talkForm, formName => addTalk}
 	</div>
 </div>
 <hr>
