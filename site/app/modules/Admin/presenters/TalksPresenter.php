@@ -160,7 +160,7 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentSlides(string $formName)
 	{
-		$form = new \MichalSpacekCz\Form\TalkSlides($this, $formName, $this->slides, count($this->request->getPost('new')));
+		$form = new \MichalSpacekCz\Form\TalkSlides($this, $formName, $this->slides, count($this->request->getPost('new')), $this->talks);
 		$form->onSuccess[] = [$this, 'submittedSlides'];
 		return $form;
 	}

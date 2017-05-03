@@ -656,4 +656,26 @@ class Talks
 		return $this->texyFormatter->translate($translationKey, [strip_tags((string)$talk->title), $talk->event]);
 	}
 
+
+	/**
+	 * Get supported image types.
+	 *
+	 * @return string[] MIME type => extension
+	 */
+	public function getSupportedImages()
+	{
+		return $this->supportedImages;
+	}
+
+
+	/**
+	 * Get supported alternative image types.
+	 *
+	 * @return string[] MIME type => extension
+	 */
+	public function getSupportedAlternativeImages()
+	{
+		return $this->supportedAlternativeImages;
+	}
+
 }

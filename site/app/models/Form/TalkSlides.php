@@ -12,15 +12,20 @@ namespace MichalSpacekCz\Form;
 class TalkSlides extends ProtectedForm
 {
 
+	/** @var \MichalSpacekCz\Talks */
+	protected $talks;
+
+
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 * @param \Nette\Database\Row[] $slides
 	 * @param integer $newCount
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $slides, int $newCount)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $slides, int $newCount, $talks)
 	{
 		parent::__construct($parent, $name);
+		$this->talks = $talks;
 
 		$slidesContainer = $this->addContainer('slides');
 		foreach ($slides as $slide) {
@@ -69,13 +74,15 @@ class TalkSlides extends ProtectedForm
 		$container->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek');
 		$container->addUpload('replace', 'Nahradit:')
-			->setAttribute('title', 'Nahradit soubor');
+			->setAttribute('title', 'Nahradit soubor (*.' . implode(', *.', $this->talks->getSupportedImages()) . ')')
+			->setAttribute('accept', implode(',', array_keys($this->talks->getSupportedImages())));
 		$container->addText('filename', 'Soubor:')
 			->setAttribute('class', 'slide-filename')
 			->addConditionOn($container['replace'], self::BLANK)
 				->setRequired('Zadejte prosím soubor');
 		$container->addUpload('replaceAlternative', 'Nahradit:')
-			->setAttribute('title', 'Nahradit alternativní soubor');
+			->setAttribute('title', 'Nahradit alternativní soubor (*.' . implode(', *.', $this->talks->getSupportedAlternativeImages()) . ')')
+			->setAttribute('accept', implode(',', array_keys($this->talks->getSupportedAlternativeImages())));
 		$container->addText('filenameAlternative', 'Soubor:')
 			->setAttribute('class', 'slide-filename');
 		$container->addText('width', 'Šířka:')
