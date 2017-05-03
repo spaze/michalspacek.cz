@@ -82,6 +82,7 @@ code {
     border-radius: 3px;
 }
 button code { background-color: inherit; }
+.highlight code { background-color: #F5F5A0; }
 pre {
     padding: 1em;
     margin-bottom: 1em;
