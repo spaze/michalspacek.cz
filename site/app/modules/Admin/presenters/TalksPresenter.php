@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace App\AdminModule\Presenters;
 
+use \Nette\Utils\Html;
+
 /**
  * Talks presenter.
  *
@@ -27,20 +29,26 @@ class TalksPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Embed */
 	protected $embed;
 
+	/** @var \Nette\Application\LinkGenerator */
+	protected $linkGenerator;
+
 
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Talks $talks
+	 * @param \Nette\Application\LinkGenerator $linkGenerator
 	 * @param \MichalSpacekCz\Embed $embed
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Talks $talks,
+		\Nette\Application\LinkGenerator $linkGenerator,
 		\MichalSpacekCz\Embed $embed
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;
+		$this->linkGenerator = $linkGenerator;
 		$this->embed = $embed;
 		parent::__construct();
 	}
@@ -118,7 +126,11 @@ class TalksPresenter extends BasePresenter
 			$values->supersededBy,
 			$values->publishSlides
 		);
-		$this->flashMessage('Přednáška upravena');
+		$this->flashMessage(
+			Html::el()
+				->setText('Přednáška upravena ' )
+				->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit'))
+		);
 		$this->redirect('Talks:');
 	}
 
