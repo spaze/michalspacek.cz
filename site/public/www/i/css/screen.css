@@ -89,13 +89,13 @@ pre {
     background-color: #F5F5F5;
     border-radius: 3px;
     white-space: pre-wrap;
+    word-break: break-all;
 }
 .button { cursor: pointer; }
 .container {
     max-width: 820px;
     margin: 0 auto;
     word-wrap: break-word;
-    word-break: break-all;
     word-break: break-word;
 }
 .container.blog { max-width: 1020px; }
