@@ -169,6 +169,7 @@ class Texy extends \Netxten\Formatter\Texy
 		$texy->headingModule->top = $this->topHeading;
 		$texy->headingModule->generateID = true;
 		$texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2);  // en_US → en
+		$texy->allowed['phrase/del'] = true;
 		return $texy;
 	}
 

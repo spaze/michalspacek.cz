@@ -245,7 +245,7 @@ pre {
 .center { text-align: center; }
 .right { text-align: right; }
 .clear { clear: both; }
-.transparent { opacity: 0.5; }
+.transparent, del { opacity: 0.5; }
 th, td { padding: 5px; }
 td.positionCell, td.iconCell { width: 10px; }
 td.dateCell { width: 80px; }
