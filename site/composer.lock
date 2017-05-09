@@ -1136,16 +1136,16 @@
         },
         {
             "name": "nette/utils",
-            "version": "v2.4.5",
+            "version": "v2.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "28ad4e2a6dcf143c23bde969a825f10a5d513602"
+                "reference": "266160aec0d99516e0ea510de1dfa24a0dc1e76e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/28ad4e2a6dcf143c23bde969a825f10a5d513602",
-                "reference": "28ad4e2a6dcf143c23bde969a825f10a5d513602",
+                "url": "https://api.github.com/repos/nette/utils/zipball/266160aec0d99516e0ea510de1dfa24a0dc1e76e",
+                "reference": "266160aec0d99516e0ea510de1dfa24a0dc1e76e",
                 "shasum": ""
             },
             "require": {
@@ -1164,8 +1164,7 @@
                 "ext-intl": "for script transliteration in Strings::webalize() and toAscii()",
                 "ext-json": "to use Nette\\Utils\\Json",
                 "ext-mbstring": "to use Strings::lower() etc...",
-                "ext-xml": "to use Strings::length() etc. when mbstring is not available",
-                "https://nette.org/donate": "\u001b[1;37;42m Please consider supporting Nette via a donation \u001b[0m"
+                "ext-xml": "to use Strings::length() etc. when mbstring is not available"
             },
             "type": "library",
             "extra": {
@@ -1196,7 +1195,7 @@
             ],
             "description": "Nette Utility Classes",
             "homepage": "https://nette.org",
-            "time": "2017-03-29T16:55:54+00:00"
+            "time": "2017-04-26T10:04:49+00:00"
         },
         {
             "name": "psr/log",
@@ -1251,12 +1250,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "1196fb8f4bf78e53204838bbdda6f10547541f12"
+                "reference": "c5b0dbe69ca5bf8280b5486f5574e3de8c22f778"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1196fb8f4bf78e53204838bbdda6f10547541f12",
-                "reference": "1196fb8f4bf78e53204838bbdda6f10547541f12",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c5b0dbe69ca5bf8280b5486f5574e3de8c22f778",
+                "reference": "c5b0dbe69ca5bf8280b5486f5574e3de8c22f778",
                 "shasum": ""
             },
             "conflict": {
@@ -1281,8 +1280,8 @@
                 "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
                 "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
                 "dompdf/dompdf": ">=0.6,<0.6.2",
-                "drupal/core": ">=8,<8.2.7",
-                "drupal/drupal": ">=8,<8.2.7",
+                "drupal/core": ">=8,<8.2.8|>=8.3,<8.3.1",
+                "drupal/drupal": ">=8,<8.2.8|>=8.3,<8.3.1",
                 "firebase/php-jwt": "<2",
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
@@ -1378,7 +1377,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2017-03-31T06:31:44+00:00"
+            "time": "2017-04-28T18:49:18+00:00"
         },
         {
             "name": "spaze/csp-config",
@@ -1386,21 +1385,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "88d99673e3ff9b8c943c8c0e3199fe7f8cd437ed"
+                "reference": "20fb2ac24c8e5c8a220f706e5492f6806bb587bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/88d99673e3ff9b8c943c8c0e3199fe7f8cd437ed",
-                "reference": "88d99673e3ff9b8c943c8c0e3199fe7f8cd437ed",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/20fb2ac24c8e5c8a220f706e5492f6806bb587bd",
+                "reference": "20fb2ac24c8e5c8a220f706e5492f6806bb587bd",
                 "shasum": ""
             },
             "require": {
-                "nette/di": "~2.3"
+                "nette/di": "~2.3",
+                "php": "~7.0"
             },
             "require-dev": {
                 "nette/bootstrap": "^2.3",
                 "nette/tester": "^1.7",
-                "paragonie/random_compat": "^2.0"
+                "paragonie/random_compat": "^2.0",
+                "phpstan/phpstan": "^0.6.4"
             },
             "suggest": {
                 "spaze/nonce-generator": "Generates nonces to be added to Content Security Policy header, if enabled",
@@ -1424,7 +1425,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2017-04-14 23:48:17"
+            "time": "2017-05-09 15:32:27"
         },
         {
             "name": "spaze/netxten",
@@ -1465,17 +1466,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/nonce-generator.git",
-                "reference": "370d158a8e5ddc95f7190d30ed82835546315ee4"
+                "reference": "3537ff87a4528a3d3ec0fe9438ade09db124fc05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/370d158a8e5ddc95f7190d30ed82835546315ee4",
-                "reference": "370d158a8e5ddc95f7190d30ed82835546315ee4",
+                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/3537ff87a4528a3d3ec0fe9438ade09db124fc05",
+                "reference": "3537ff87a4528a3d3ec0fe9438ade09db124fc05",
                 "shasum": ""
+            },
+            "require": {
+                "php": "~7.0"
             },
             "require-dev": {
                 "nette/tester": "^1.7",
-                "paragonie/random_compat": "^2.0"
+                "paragonie/random_compat": "^2.0",
+                "phpstan/phpstan": "^0.6.4"
             },
             "suggest": {
                 "paragonie/random_compat": "PHP 5.x polyfill for random_bytes() used by this library",
@@ -1500,7 +1505,7 @@
                 }
             ],
             "description": "Content Security Policy nonce generator",
-            "time": "2016-11-11 03:05:12"
+            "time": "2017-05-09 15:34:32"
         },
         {
             "name": "spaze/sri-macros",
@@ -1508,16 +1513,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "42f7e38091869e40089e904c82d65ea168f08cac"
+                "reference": "d0d1c63a3de902953830a46094dda3449074d0ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/42f7e38091869e40089e904c82d65ea168f08cac",
-                "reference": "42f7e38091869e40089e904c82d65ea168f08cac",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/d0d1c63a3de902953830a46094dda3449074d0ff",
+                "reference": "d0d1c63a3de902953830a46094dda3449074d0ff",
                 "shasum": ""
             },
+            "require": {
+                "latte/latte": "^2.4",
+                "php": "~7.0"
+            },
             "require-dev": {
-                "nette/tester": "^1.7"
+                "nette/tester": "^1.7",
+                "phpstan/phpstan": "^0.6.4"
             },
             "suggest": {
                 "spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
@@ -1541,20 +1551,20 @@
                 }
             ],
             "description": "Subresource Integrity macros for Latte template engine",
-            "time": "2017-01-19 04:13:37"
+            "time": "2017-05-09 16:26:53"
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.19",
+            "version": "v2.8.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "35b7dfa089d7605eb1fdd46281b3070fb9f38750"
+                "reference": "0b8541d18507d10204a08384640ff6df3c739ebe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/35b7dfa089d7605eb1fdd46281b3070fb9f38750",
-                "reference": "35b7dfa089d7605eb1fdd46281b3070fb9f38750",
+                "url": "https://api.github.com/repos/symfony/config/zipball/0b8541d18507d10204a08384640ff6df3c739ebe",
+                "reference": "0b8541d18507d10204a08384640ff6df3c739ebe",
                 "shasum": ""
             },
             "require": {
@@ -1597,7 +1607,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-04T15:24:26+00:00"
+            "time": "2017-04-12T14:07:15+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -1709,16 +1719,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.8.19",
+            "version": "v2.8.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "047e97a64d609778cadfc76e3a09793696bb19f1"
+                "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/047e97a64d609778cadfc76e3a09793696bb19f1",
-                "reference": "047e97a64d609778cadfc76e3a09793696bb19f1",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/32b7c0bffc07772cf1a902e3464ef77117fa07c7",
+                "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7",
                 "shasum": ""
             },
             "require": {
@@ -1769,7 +1779,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-21T21:39:01+00:00"
+            "time": "2017-04-12T14:07:15+00:00"
         },
         {
             "name": "texy/texy",
@@ -2101,16 +2111,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "c30243cc51f726812be3551316b109a2f5deaf8d"
+                "reference": "a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/c30243cc51f726812be3551316b109a2f5deaf8d",
-                "reference": "c30243cc51f726812be3551316b109a2f5deaf8d",
+                "url": "https://api.github.com/repos/symfony/console/zipball/a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38",
+                "reference": "a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38",
                 "shasum": ""
             },
             "require": {
@@ -2160,20 +2170,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-04T14:33:42+00:00"
+            "time": "2017-04-26T01:39:17+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "56f613406446a4a0a031475cfd0a01751de22659"
+                "reference": "fd6eeee656a5a7b384d56f1072243fe1c0e81686"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/56f613406446a4a0a031475cfd0a01751de22659",
-                "reference": "56f613406446a4a0a031475cfd0a01751de22659",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/fd6eeee656a5a7b384d56f1072243fe1c0e81686",
+                "reference": "fd6eeee656a5a7b384d56f1072243fe1c0e81686",
                 "shasum": ""
             },
             "require": {
@@ -2217,20 +2227,20 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-28T21:38:24+00:00"
+            "time": "2017-04-19T20:17:50+00:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "b20900ce5ea164cd9314af52725b0bb5a758217a"
+                "reference": "9cf076f8f492f4b1ffac40aae9c2d287b4ca6930"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/b20900ce5ea164cd9314af52725b0bb5a758217a",
-                "reference": "b20900ce5ea164cd9314af52725b0bb5a758217a",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/9cf076f8f492f4b1ffac40aae9c2d287b4ca6930",
+                "reference": "9cf076f8f492f4b1ffac40aae9c2d287b4ca6930",
                 "shasum": ""
             },
             "require": {
@@ -2266,7 +2276,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-20T09:32:19+00:00"
+            "time": "2017-04-12T14:13:17+00:00"
         }
     ],
     "aliases": [],
