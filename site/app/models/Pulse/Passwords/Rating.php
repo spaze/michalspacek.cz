@@ -46,7 +46,7 @@ class Rating
 	/** @var array */
 	private $invisibleDisclosures = [
 		'blog',
-		'blog-independent',
+		'site-independent',
 		'facebook-independent',
 		'facebook-official',
 		'facebook-private',
