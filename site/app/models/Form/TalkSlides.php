@@ -69,6 +69,7 @@ class TalkSlides extends ProtectedForm
 			->addRule(self::PATTERN, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
 		$container->addText('number', 'Slajd:')
 			->setType('number')
+			->setDefaultValue(1)
 			->setAttribute('class', 'right slide-nr')
 			->setRequired('Zadejte prosím číslo slajdu');
 		$container->addText('title', 'Titulek:')

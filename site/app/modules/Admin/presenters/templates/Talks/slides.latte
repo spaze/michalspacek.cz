@@ -11,6 +11,12 @@
 {include #embedSlides}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form slides}
+	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
+		<legend><strong>{_messages.label.errors}</strong></legend>
+		<ul>
+			<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
+		</ul>
+	</fieldset>
 	<table>
 	{formContainer slides}
 		{foreach $slides as $slide}
@@ -55,9 +61,9 @@
 			{/formContainer}
 		{/foreach}
 	{/formContainer}
-	{if empty($slides)}
-		{formContainer new}
-			{formContainer 0}
+	{formContainer new}
+		{for $i = 0; $i < $newCount; $i++}
+			{formContainer $i}
 				<tbody class="new-slide changed">
 				<tr>
 					<th class="right">Číslo</th>
@@ -68,7 +74,7 @@
 					<th>Nahradit</th>
 				</tr>
 				<tr>
-					<td class="narrow">{input number value => 1}</td>
+					<td class="narrow">{input number}</td>
 					<td>{input alias}</td>
 					<td class="wider">{input title}</td>
 					<td class="narrow">{input width}<small>×</small>{input height}</td>
@@ -94,8 +100,8 @@
 				</tr>
 				</tbody>
 			{/formContainer}
-		{/formContainer}
-	{/if}
+		{/for}
+	{/formContainer}
 	<tr><td></td><td>{input submit}</td></tr>
 	</table>
 {/form slides}

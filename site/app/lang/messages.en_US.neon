@@ -208,6 +208,7 @@ talks:
 	admin:
 		slideadded: "Slide added"
 		duplicatealias: "Alias for slide %s already exists"
+		maxslideuploadsexceeded: "Maximum number of simultaneously uploaded slide images (%d) exceeded"
 trainings:
 	spammyapplication: "The application looks like spam, this is a no-go."
 	errorapplication: "Oops, something went wrong. The application was not submitted, please try again in a while."

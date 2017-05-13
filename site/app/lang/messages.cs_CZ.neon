@@ -208,6 +208,7 @@ talks:
 	admin:
 		slideadded: "Slajd přidán"
 		duplicatealias: "Pro slajd %s již existuje alias"
+		maxslideuploadsexceeded: "Překročen maximální počet současně nahraných obrázků slajdů (%d)"
 trainings:
 	spammyapplication: "Přihláška vypadá jako spam, takhle by to nešlo."
 	errorapplication: "Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu."
