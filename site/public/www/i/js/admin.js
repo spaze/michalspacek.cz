@@ -166,6 +166,18 @@ $(document).ready(function() {
 	});
 
 	$('#frm-slides input:file').change(function() {
+		var files = 0;
+		$('#frm-slides input:file').each(function() {
+			if ($(this).val()) {
+				files++;
+			}
+		});
+		$('#frm-slides input:file').each(function() {
+			if (!$(this).val()) {
+				$(this).prop('disabled', (files >= $('#frm-slides').data('uploads')));
+			}
+		});
+		$('#uploading').text(files);
 		var tr = $(this).parent().parent();
 		var fields = tr.find('.slide-filename');
 		var preview = tr.nextAll('tr.image-previews').find('img.type-' + $(this).data('type')).removeAttr('width').removeAttr('height');

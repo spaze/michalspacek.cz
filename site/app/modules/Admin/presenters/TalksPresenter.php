@@ -32,6 +32,12 @@ class TalksPresenter extends BasePresenter
 	/** @var \Nette\Application\LinkGenerator */
 	protected $linkGenerator;
 
+	/** @var integer */
+	private $newCount;
+
+	/** @var integer */
+	private $maxSlideUploads;
+
 
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
@@ -91,7 +97,8 @@ class TalksPresenter extends BasePresenter
 		foreach ($this->embed->getSlidesTemplateVars($this->talk) as $key => $value) {
 			$this->template->$key = $value;
 		}
-		$this->template->newCount = count($this->request->getPost('new')) ?: (int)empty($this->slides);
+		$this->template->maxSlideUploads = $this->maxSlideUploads = (int)ini_get('max_file_uploads');
+		$this->template->newCount = $this->newCount = count($this->request->getPost('new')) ?: (int)empty($this->slides);
 	}
 
 
@@ -173,7 +180,7 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentSlides(string $formName)
 	{
-		$form = new \MichalSpacekCz\Form\TalkSlides($this, $formName, $this->slides, $this->template->newCount, $this->talks);
+		$form = new \MichalSpacekCz\Form\TalkSlides($this, $formName, $this->slides, $this->newCount, $this->talks);
 		$form->onSuccess[] = [$this, 'submittedSlides'];
 		$form->onValidate[] = [$this, 'validateSlides'];
 		return $form;
@@ -196,7 +203,6 @@ class TalksPresenter extends BasePresenter
 	{
 		// Check whether max allowed file uploads has been reached
 		$uploaded = 0;
-		$max = (int)ini_get('max_file_uploads');
 		$files = $this->request->getFiles();
 		array_walk_recursive($files, function ($item) use (&$uploaded) {
 			if ($item instanceof \Nette\Http\FileUpload) {
@@ -204,8 +210,8 @@ class TalksPresenter extends BasePresenter
 			}
 		});
 		// If there's no error yet then the number of uploaded just coincidentally matches max allowed
-		if ($form->hasErrors() && $uploaded >= $max) {
-			$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [$max]));
+		if ($form->hasErrors() && $uploaded >= $this->maxSlideUploads) {
+			$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [$this->maxSlideUploads]));
 		}
 	}
 
