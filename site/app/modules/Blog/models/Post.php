@@ -47,10 +47,7 @@ class Post
 	public function get(string $post, ?string $previewKey = null): ?\MichalSpacekCz\Blog\Post\Data
 	{
 		$result = $this->loader->fetch($post, $previewKey);
-		if ($result) {
-			$result = $this->format($this->build($result));
-		}
-		return $result;
+		return ($result ? $this->format($this->build($result)) : null);
 	}
 
 
@@ -85,11 +82,8 @@ class Post
 				ON tct.id_twitter_card_type = bp.key_twitter_card_type
 			WHERE bp.id_blog_post = ?',
 			$id
-		) ?: null;
-		if ($result) {
-			$result = $this->format($this->build($result));
-		}
-		return $result;
+		);
+		return ($result ? $this->format($this->build($result)) : null);
 	}
 
 
