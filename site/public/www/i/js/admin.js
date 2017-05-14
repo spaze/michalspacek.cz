@@ -126,12 +126,15 @@ $(document).ready(function() {
 	FORMATTEXY.loadData = function(event) {
 		var p = $(this);
 		var alt = p.data('alt');
+		var form = $('body').find(event.data.form);
 		p.data('alt', p.val());
 		p.val(alt);
-		var disabled = $('body').find(event.data.form).find('input:hidden, input:button, input:submit').prop('disabled', true);
+		var disabled = form.find('input:hidden, input:button, input:submit').prop('disabled', true);
+		var data = form.serializeArray();
+		data.push({name: 'postId', value: form.data('post-id')});
 		var load = $.post({
 			url: $(this).data('url'),
-			data: $('body').find(event.data.form).serialize(),
+			data: data,
 		});
 		load.done(function(data) {
 			$('#preview-target').show().html(data.formatted);

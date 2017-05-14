@@ -74,6 +74,7 @@ class BlogPresenter extends BasePresenter
 	public function actionAdd(): void
 	{
 		$this->template->pageTitle = 'Přidat příspěvek';
+		$this->template->postId = null;
 	}
 
 
@@ -132,6 +133,7 @@ class BlogPresenter extends BasePresenter
 		$title = \Nette\Utils\Html::el()->setText('Příspěvek ')->addHtml($this->post->title);
 		$this->template->pageTitle = strip_tags((string)$title);
 		$this->template->pageHeader = $title;
+		$this->template->postId = $this->post->postId;
 	}
 
 
@@ -195,6 +197,7 @@ class BlogPresenter extends BasePresenter
 		$preview = $this->createTemplate();
 		$preview->setFile(__DIR__ . '/templates/Blog/preview.latte');
 		$preview->post = $this->blogPost->format($post);
+		$preview->edits = $this->blogPost->getEdits((int)$this->request->getPost('postId'));
 
 		$this->payload->status = \Nette\Http\IResponse::S200_OK;
 		$this->payload->statusMessage = 'Formatted';

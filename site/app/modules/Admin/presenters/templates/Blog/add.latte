@@ -5,7 +5,7 @@
 {/define}
 
 {define #postForm}
-{form $form class => "aligned wide"}
+{form $form class => "aligned wide", data-post-id => $postId}
 <table>
 <tr><th>{label translationGroup /}</th><td class="short">{input translationGroup}</td></tr>
 <tr><th>{label locale /}</th><td class="short">{input locale}</td></tr>
