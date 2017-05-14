@@ -71,6 +71,12 @@ class Data
 	/** @var string */
 	public $href;
 
+	/** @var string|null */
+	public $editSummary;
+
+	/** @var Edit[] */
+	public $edits;
+
 
 	/**
 	 * Returns true when the post needs preview key to display.

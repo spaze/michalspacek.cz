@@ -169,6 +169,7 @@ class BlogPresenter extends BasePresenter
 		$post->tags = (empty($values->tags) ? null : $this->tagsToArray($values->tags));
 		$post->recommended = (empty($values->recommended) ? null : $values->recommended);
 		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
+		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
 
 		$this->blogPost->update($post);
 		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated'));

@@ -292,6 +292,7 @@ certificates:
 blog:
 	post:
 		recommendedreading: "Recommended reading"
+		edits: "Updates"
 	admin:
 		postadded: "Blog post added"
 		duplicateslug: "Blog post with such slug already exists"

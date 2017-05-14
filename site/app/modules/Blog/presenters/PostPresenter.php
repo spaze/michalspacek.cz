@@ -46,6 +46,7 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 		$this->template->pageTitle = strip_tags((string)$post->title);
 		$this->template->pageHeader = $post->title;
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+		$this->template->edits = $this->blogPost->getEdits($post->postId);
 
 		foreach ($this->blogPost->getLocaleUrls($post->slug) as $post) {
 			$this->localeLinkParams[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];

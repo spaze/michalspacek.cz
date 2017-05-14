@@ -211,6 +211,7 @@ class Post
 	 */
 	public function update(\MichalSpacekCz\Blog\Post\Data $post): void
 	{
+		$this->database->beginTransaction();
 		$this->database->query(
 			'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 			array(
@@ -231,6 +232,19 @@ class Post
 			),
 			$post->postId
 		);
+		if ($post->editSummary) {
+			$now = new \DateTime();
+			$this->database->query(
+				'INSERT INTO blog_post_edits',
+				array(
+					'key_blog_post' => $post->postId,
+					'edited_at' => $now,
+					'edited_at_timezone' => $now->getTimezone()->getName(),
+					'summary' => $post->editSummary,
+				)
+			);
+		}
+		$this->database->commit();
 	}
 
 
@@ -296,6 +310,32 @@ class Post
 			$posts[] = $this->format($this->build($post));
 		}
 		return $posts;
+	}
+
+
+	/**
+	 * @param integer $postId
+	 * @return Post\Edit[]
+	 */
+	public function getEdits(int $postId): array
+	{
+		$sql = 'SELECT
+				edited_at AS editedAt,
+				edited_at_timezone AS editedAtTimezone,
+				summary AS summaryTexy
+			FROM blog_post_edits
+			WHERE key_blog_post = ?
+			ORDER BY edited_at DESC';
+		$edits = array();
+		foreach ($this->database->fetchAll($sql, $postId) as $row) {
+			$edit = new Post\Edit();
+			$edit->summaryTexy = $row->summaryTexy;
+			$edit->summary = $this->texyFormatter->format($row->summaryTexy);
+			$edit->editedAt = $row->editedAt;
+			$edit->editedAt->setTimezone(new \DateTimeZone($row->editedAtTimezone));
+			$edits[] = $edit;
+		}
+		return $edits;
 	}
 
 }

@@ -66,6 +66,10 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			->setRequired(false);
 		$this->addText('recommended', 'Doporučené:')
 			->setRequired(false);
+		$this->addText('editSummary', 'Shrnutí editace:')
+			->addRule(self::MAX_LENGTH, 'Maximální délka shrnutí editace je %d znaků', 200)
+			->setRequired(false)
+			->setDisabled(true);
 
 		$this->addSubmit('submit', 'Přidat');
 		$this->addButton('preview', 'Náhled')
@@ -95,6 +99,10 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			'recommended' => (empty($post->recommended) ? null : \Nette\Utils\Json::encode($post->recommended)),
 		);
 		$this->setDefaults($values);
+		$this->getComponent('editSummary')
+			->setDisabled($post->published > new \DateTime())
+			->addCondition(self::FILLED)
+			->addRule(self::MIN_LENGTH, 'Shrnutí editace musí mít alespoň %d znaky', 3);
 		$this->getComponent('submit')->caption = 'Upravit';
 
 		return $this;
