@@ -197,7 +197,6 @@ class Feed
 	{
 		$this->writer = new \XMLWriter();
 		$this->writer->openMemory();
-		$this->writer->setIndent(true);
 		$this->writer->startDocument('1.0', 'UTF-8');
 		$this->writer->startElementNs(null, 'feed', 'http://www.w3.org/2005/Atom');
 		$this->writer->writeElement('id', $this->id);
