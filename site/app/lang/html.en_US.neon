@@ -25,3 +25,5 @@ id:
 	materials: materials
 	order: order
 	transcript: transcript
+attribute:
+	lang: en

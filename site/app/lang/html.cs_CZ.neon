@@ -25,3 +25,5 @@ id:
 	materials: materialy
 	order: objednavka
 	transcript: prepis
+attribute:
+	lang: cs
