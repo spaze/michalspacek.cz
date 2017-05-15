@@ -27,6 +27,9 @@ title:
 	blog: Blog
 	admin:
 		talkslides: "Slides from %s (%s)"
+feed:
+	allarticles: All articles
+	newsletter: Newsletter
 header:
 	who: "Who is Michal Špaček?"
 label:

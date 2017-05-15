@@ -4,6 +4,10 @@
  * @copyright  Copyright (c) 2012 Michal Špaček
  * @package    michalspacek.cz
  *}
+{define #feeds}
+	<link rel="alternate" n:href=":Www:Exports:articles" type="{=\Spaze\Exports\Bridges\Nette\Atom\Response::CONTENT_TYPE}"  title="{_messages.feed.allarticles}">
+	<link rel="alternate" n:href=":Www:Exports:articles newsletter" type="{=\Spaze\Exports\Bridges\Nette\Atom\Response::CONTENT_TYPE}"  title="{_messages.feed.newsletter}">
+{/define}
 {block|strip}
 <!DOCTYPE html>
 <html lang="cs">
@@ -28,6 +32,7 @@
 	<link rel="apple-touch-icon" href="{='michal-spacek.jpg'|staticImageUrl}">
 	<meta property="article:author" content="https://www.facebook.com/spaze">
 	<link rel="icon" href="{='/favicon.ico'|staticUrl}">
+	{include #feeds}
 </head>
 <body>
 <div id="main">
