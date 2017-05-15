@@ -19,13 +19,18 @@ class ExportsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Articles */
 	protected $articles;
 
+	/** @var \MichalSpacekCz\Formatter\Texy */
+	protected $texyFormatter;
+
 
 	/**
 	 * @param \MichalSpacekCz\Articles $articles
+	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 */
-	public function __construct(\MichalSpacekCz\Articles $articles)
+	public function __construct(\MichalSpacekCz\Articles $articles, \MichalSpacekCz\Formatter\Texy $texyFormatter)
 	{
 		$this->articles = $articles;
+		$this->texyFormatter = $texyFormatter;
 		parent::__construct();
 	}
 
@@ -33,7 +38,8 @@ class ExportsPresenter extends BasePresenter
 	public function actionArticles(?string $param = null): void
 	{
 		$self = $this->link('//this');
-		$feed = new Atom\Feed($self, 'title');
+		$title = ($param ? $this->texyFormatter->translate('messages.feed.articlesbytag', [$param]) : $this->translator->translate('messages.feed.allarticles'));
+		$feed = new Atom\Feed($self, "Michal Špaček: {$title}");
 		$feed->setLinkSelf($self);
 		$feed->setAuthor(new Constructs\Person('Michal Špaček'));
 

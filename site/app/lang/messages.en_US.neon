@@ -29,7 +29,7 @@ title:
 		talkslides: "Slides from %s (%s)"
 feed:
 	allarticles: All articles
-	newsletter: Newsletter
+	articlesbytag: Articles tagges as %s
 header:
 	who: "Who is Michal Špaček?"
 label:

@@ -29,7 +29,7 @@ title:
 		talkslides: "Slajdy z přednášky %s (%s)"
 feed:
 	allarticles: Všechny články
-	newsletter: Newsletter
+	articlesbytag: Články se značkou %s
 header:
 	who: "Kdo je Michal Špaček?"
 label:
