@@ -68,6 +68,7 @@ class ExportsPresenter extends BasePresenter
 		}
 		$feed->setUpdated($feedUpdated);
 
+		$this->lastModified($feedUpdated, sha1((string)$feed), 3600);
 		$this->sendResponse(new \Spaze\Exports\Bridges\Nette\Atom\Response($feed));
 	}
 
