@@ -77,3 +77,11 @@ parameters:
 					mask:
 						cs_CZ: foto
 						en_US: photo
+				Exports:
+					mask:
+						cs_CZ: exporty
+						en_US: exports
+					actions:
+						articles:
+							cs_CZ: clanky
+							en_US: articles
