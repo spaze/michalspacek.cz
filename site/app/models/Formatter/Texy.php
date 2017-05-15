@@ -224,14 +224,14 @@ class Texy extends \Netxten\Formatter\Texy
 			if ($action === $trainingAction) {
 				$args = $this->trainingLocales->getLocaleActions(reset($args))[$this->translator->getDefaultLocale()];
 			}
-			$link->URL = $this->application->getPresenter()->link($action, $args);
+			$link->URL = $this->application->getPresenter()->link("//{$action}", $args);
 		}
 
 		if (strncmp($link->URL, 'training:', 9) === 0) {
 			$texy = $invocation->getTexy();
 			$name = substr($link->URL, 9);
 			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
-			$link->URL = $this->application->getPresenter()->link($trainingAction, $name);
+			$link->URL = $this->application->getPresenter()->link("//{$trainingAction}", $name);
 			$el = \Texy\HtmlElement::el();
 			$el->add($texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link));
 			$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
