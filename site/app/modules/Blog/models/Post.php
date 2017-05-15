@@ -192,6 +192,7 @@ class Post
 				'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 				'og_image' => $post->ogImage,
 				'tags' => Json::encode($post->tags),
+				'slug_tags' => $this->getSlugTags($post->tags),
 				'recommended' => $post->recommended,
 			)
 		);
@@ -222,6 +223,7 @@ class Post
 				'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 				'og_image' => $post->ogImage,
 				'tags' => Json::encode($post->tags),
+				'slug_tags' => $this->getSlugTags($post->tags),
 				'recommended' => $post->recommended,
 			),
 			$post->postId
@@ -330,6 +332,16 @@ class Post
 			$edits[] = $edit;
 		}
 		return $edits;
+	}
+
+
+	/**
+	 * @param array $tags|null
+	 * @return string|null
+	 */
+	private function getSlugTags(?array $tags): ?string
+	{
+		return ($tags !== null ? Json::encode(array_map([\Nette\Utils\Strings::class, 'webalize'], $tags)) : null);
 	}
 
 }
