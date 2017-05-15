@@ -136,9 +136,10 @@ class Articles
 	{
 		foreach ($articles as $article) {
 			$article->updated = null;
+			$article->edits = null;
 			if ($article->sourceHref === null) {
-				$edits = $this->blogPost->getEdits($article->articleId);
-				$article->updated = ($edits ? current($edits)->editedAt : null);
+				$article->edits = $this->blogPost->getEdits($article->articleId);
+				$article->updated = ($article->edits ? current($article->edits)->editedAt : null);
 				$article->href = $this->linkGenerator->link('Blog:Post:', [$article->href]);
 				$article->sourceName = $this->translator->translate('messages.title.blog');
 				$article->sourceHref = $this->linkGenerator->link('Www:Articles:');
