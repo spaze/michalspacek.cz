@@ -144,8 +144,8 @@ class Articles
 				$article->sourceName = $this->translator->translate('messages.title.blog');
 				$article->sourceHref = $this->linkGenerator->link('Www:Articles:');
 			}
-			$article->excerpt = $this->texyFormatter->format($article->excerpt);
-			$article->text = $this->texyFormatter->format($article->text);
+			$article->excerpt = $this->texyFormatter->formatBlock($article->excerpt);
+			$article->text = $this->texyFormatter->formatBlock($article->text);
 		}
 		return $articles;
 	}
