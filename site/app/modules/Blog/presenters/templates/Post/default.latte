@@ -9,14 +9,6 @@
 {define #blogPost}
 <p id="header-icons"><small><strong>📆 {$post->published|date:'j. n. Y'}</strong>{if $post->tags} 📂 {$post->tags|implode:', '}{/if}</small></p>
 <em n:if="$post->lead">{$post->lead}</em>
-{if $edits}
-	<blockquote>
-	<h3>{_messages.blog.post.edits}</h3>
-	<ul>
-		<li n:foreach="$edits as $edit"><em><strong>{$edit->editedAt|date:'j.n.'}</strong> {$edit->summary}</em></li>
-	</ul>
-	</blockquote>
-{/if}
 {$post->text}
 {$post->originally}
 {if $post->recommended}
@@ -33,6 +25,10 @@
 {include #blogPost}
 </div>
 <div class="column-sidebar">
+<div class="widget" n:if="$edits">
+<h3>{_messages.blog.post.edits}</h3>
+<p n:foreach="$edits as $edit"><strong>{$edit->editedAt|date:'j.n.'}</strong> {$edit->summary}</p>
+</div>
 <div class="widget">
 <h3>Michal Špaček</h3>
 <p>{_messages.homepage.tagline}</p>

@@ -295,7 +295,7 @@ certificates:
 blog:
 	post:
 		recommendedreading: "Mohlo by vás také zajímat"
-		edits: "Aktualizace"
+		edits: "Aktualizace článku"
 	admin:
 		postadded: "Příspěvek na blog přidán"
 		postupdated: "Příspěvek upraven"
