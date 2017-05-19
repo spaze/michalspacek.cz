@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "67002f33eb7e898ea50e11f716c4445c",
+    "content-hash": "7a3ce2f114edb11666525101e946d62b",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1428,6 +1428,44 @@
             "time": "2017-05-09 15:32:27"
         },
         {
+            "name": "spaze/feed-exports",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/feed-exports.git",
+                "reference": "ba919f1f267ab5a2f2f8fa1f7296babe1186587d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/feed-exports/zipball/ba919f1f267ab5a2f2f8fa1f7296babe1186587d",
+                "reference": "ba919f1f267ab5a2f2f8fa1f7296babe1186587d",
+                "shasum": ""
+            },
+            "require": {
+                "nette/application": "~2.3",
+                "php": "~7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spaze\\Exports\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.cz"
+                }
+            ],
+            "description": "Atom feed Response and related objects for Nette framework",
+            "time": "2017-05-19 22:24:26"
+        },
+        {
             "name": "spaze/netxten",
             "version": "dev-master",
             "source": {
@@ -2294,6 +2332,7 @@
     "stability-flags": {
         "spaze/netxten": 20,
         "spaze/csp-config": 20,
+        "spaze/feed-exports": 20,
         "spaze/nonce-generator": 20,
         "spaze/sri-macros": 20,
         "kdyby/translation": 20,

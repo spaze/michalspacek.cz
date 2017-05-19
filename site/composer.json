@@ -16,6 +16,7 @@
 		"texy/texy": "~2.8",
 		"spaze/netxten": "dev-master",
 		"spaze/csp-config": "dev-master",
+		"spaze/feed-exports": "dev-master",
 		"spaze/nonce-generator": "dev-master",
 		"spaze/sri-macros": "dev-master",
 		"kdyby/translation": "dev-master",
