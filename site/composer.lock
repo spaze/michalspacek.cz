@@ -1433,12 +1433,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/feed-exports.git",
-                "reference": "f11aa27bc220c6827dba734ef29e098b33ea3ea3"
+                "reference": "6a6ac651ddeda97c74e69b9735421bd9afe64723"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/feed-exports/zipball/f11aa27bc220c6827dba734ef29e098b33ea3ea3",
-                "reference": "f11aa27bc220c6827dba734ef29e098b33ea3ea3",
+                "url": "https://api.github.com/repos/spaze/feed-exports/zipball/6a6ac651ddeda97c74e69b9735421bd9afe64723",
+                "reference": "6a6ac651ddeda97c74e69b9735421bd9afe64723",
                 "shasum": ""
             },
             "require": {
@@ -1463,7 +1463,7 @@
                 }
             ],
             "description": "Atom feed Response and related objects for Nette framework",
-            "time": "2017-05-19 23:07:12"
+            "time": "2017-05-20 00:24:21"
         },
         {
             "name": "spaze/netxten",

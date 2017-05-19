@@ -51,17 +51,19 @@ class ExportsPresenter extends BasePresenter
 		$feedUpdated = null;
 		$template = $this->createTemplate()->setFile(__DIR__ . '/templates/Exports/entry.latte');
 		foreach ($articles as $article) {
-			$template->article = $article;
 			$updated = ($article->updated ?? $article->date);
 			$entry = new Elements\Entry(
 				$article->href,
 				new Constructs\Text((string)$article->title, Constructs\Text::TYPE_HTML),
-				new Constructs\Text((string)$template, Constructs\Text::TYPE_HTML),
 				$updated,
 				$article->date
 			);
 			if ($article->excerpt) {
-				$entry->setSummary(new Constructs\Text((string)$article->excerpt, Constructs\Text::TYPE_HTML));
+				$entry->setSummary(new Constructs\Text(trim((string)$article->excerpt), Constructs\Text::TYPE_HTML));
+			}
+			if ($article->text) {
+				$template->article = $article;
+				$entry->setContent(new Constructs\Text(trim((string)$template), Constructs\Text::TYPE_HTML));
 			}
 			$entry->addLink(new Elements\Link($article->href, Elements\Link::REL_ALTERNATE, 'text/' . Constructs\Text::TYPE_HTML));
 			$feed->addEntry($entry);
