@@ -60,6 +60,9 @@ class ExportsPresenter extends BasePresenter
 				$updated,
 				$article->date
 			);
+			if ($article->excerpt) {
+				$entry->setSummary(new Constructs\Text((string)$article->excerpt, Constructs\Text::TYPE_HTML));
+			}
 			$entry->addLink(new Elements\Link($article->href, Elements\Link::REL_ALTERNATE, 'text/' . Constructs\Text::TYPE_HTML));
 			$feed->addEntry($entry);
 			if ($updated > $feedUpdated) {
