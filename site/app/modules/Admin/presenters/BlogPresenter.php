@@ -106,11 +106,11 @@ class BlogPresenter extends BasePresenter
 			$post->titleTexy = $values->title;
 			$post->leadTexy = (empty($values->lead) ? null : $values->lead);
 			$post->textTexy = $values->text;
-			$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
-			$post->ogImage = (empty($this->request->getPost('ogImage')) ? null : $this->request->getPost('ogImage'));
-			$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tagsToArray($this->request->getPost('tags')));
-			$post->recommended = (empty($this->request->getPost('recommended')) ? null : $this->request->getPost('recommended'));
-			$post->twitterCard = (empty($this->request->getPost('twitterCard')) ? null : $this->request->getPost('twitterCard'));
+			$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
+			$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
+			$post->tags = (empty($values->tags) ? null : $this->tagsToArray($values->tags));
+			$post->recommended = (empty($values->recommended) ? null : $values->recommended);
+			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 			$this->blogPost->add($post);
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded'));
 		} catch (\UnexpectedValueException $e) {
