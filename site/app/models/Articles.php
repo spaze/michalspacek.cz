@@ -67,7 +67,8 @@ class Articles
 				a.excerpt,
 				null AS text,
 				s.name AS sourceName,
-				s.href AS sourceHref
+				s.href AS sourceHref,
+				null AS slugTags
 			FROM articles a
 				JOIN article_sources s ON a.key_article_source = s.id_article_source
 			UNION ALL
@@ -79,7 +80,8 @@ class Articles
 					bp.lead,
 					bp.text,
 					null,
-					null
+					null,
+					bp.slug_tags
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale
@@ -113,7 +115,8 @@ class Articles
 					bp.lead as excerpt,
 					bp.text,
 					null AS sourceName,
-					null AS sourceHref
+					null AS sourceHref,
+					bp.slug_tags AS slugTags
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale
@@ -137,7 +140,9 @@ class Articles
 		foreach ($articles as $article) {
 			$article->updated = null;
 			$article->edits = null;
-			if ($article->sourceHref === null) {
+			$article->slugTags = (isset($article->slugTags) ? \Nette\Utils\Json::decode($article->slugTags) : []);
+			$article->isBlogPost = ($article->sourceHref === null);
+			if ($article->isBlogPost) {
 				$article->edits = $this->blogPost->getEdits($article->articleId);
 				$article->updated = ($article->edits ? current($article->edits)->editedAt : null);
 				$article->href = $this->linkGenerator->link('Blog:Post:', [$article->href]);

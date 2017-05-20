@@ -5,6 +5,7 @@ services:
 	- \App\WwwModule\Presenters\ContactPresenter
 	- \App\WwwModule\Presenters\ErrorPresenter
 	- \App\WwwModule\Presenters\ErrorGenericPresenter
+	- \App\WwwModule\Presenters\ExportsPresenter
 	- \App\WwwModule\Presenters\FilesPresenter
 	- \App\WwwModule\Presenters\ForbiddenPresenter
 	- \App\WwwModule\Presenters\HomepagePresenter

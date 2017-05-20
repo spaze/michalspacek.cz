@@ -59,8 +59,14 @@ class Data
 	/** @var string */
 	public $ogImage;
 
-	/** @var string[]|null */
-	public $tags;
+	/** @var string[] */
+	public $tags = [];
+
+	/** @var string[] */
+	public $slugTags = [];
+
+	/** @var string[] */
+	public $previousSlugTags = [];
 
 	/** @var \stdClass[] */
 	public $recommended;
