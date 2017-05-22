@@ -15,13 +15,18 @@ class RedirectPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
+	/** @var \MichalSpacekCz\Articles */
+	protected $articles;
+
 
 	/**
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
+	 * @param \MichalSpacekCz\Articles $articles
 	 */
-	public function __construct(\MichalSpacekCz\Training\Applications $trainingApplications)
+	public function __construct(\MichalSpacekCz\Training\Applications $trainingApplications, \MichalSpacekCz\Articles $articles)
 	{
 		$this->trainingApplications = $trainingApplications;
+		$this->articles = $articles;
 		parent::__construct();
 	}
 
@@ -47,5 +52,15 @@ class RedirectPresenter extends BasePresenter
 		}
 	}
 
+
+	public function actionNewestArticleByTag($token)
+	{
+		$article = current($this->articles->getAllByTags($token, 1));
+		if ($article) {
+			$this->sendResponse(new \Nette\Application\Responses\RedirectResponse($article->href, \Nette\Http\IResponse::S302_FOUND));
+		} else {
+			sleep(self::GOOD_NIGHT);
+		}
+	}
 
 }

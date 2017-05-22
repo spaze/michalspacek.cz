@@ -73,6 +73,9 @@ parameters:
 						files:
 							cs_CZ: s
 							en_US: f
+						newestArticleByTag:
+							cs_CZ: nb  # nejnovější blogpost
+							en_US: nb  # newest blogpost
 				Photo:
 					mask:
 						cs_CZ: foto
