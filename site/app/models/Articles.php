@@ -124,7 +124,7 @@ class Articles
 					JSON_CONTAINS(bp.slug_tags, ?)
 					AND bp.published <= ?
 					AND l.locale = ?
-			ORDER BY date DESC';
+			ORDER BY bp.published DESC';
 
 		if ($limit !== null) {
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
@@ -132,6 +132,43 @@ class Articles
 
 		$articles = $this->database->fetchAll($query, \Nette\Utils\Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
 		return $this->enrichArticles($articles);
+	}
+
+
+	/**
+	 * Get nearest publish date of any article.
+	 *
+	 * @return \DateTimeInterface|null
+	 */
+	public function getNearestPublishDate(): ?\DateTime
+	{
+		$query = 'SELECT a.date FROM articles a
+			UNION ALL
+			SELECT bp.published FROM blog_posts bp
+				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
+			WHERE bp.published > ? AND l.locale = ?
+			ORDER BY date
+			LIMIT 1';
+		return ($this->database->fetchField($query, new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale()) ?: null);
+	}
+
+
+	/**
+	 * Get nearest publish date of an article by a tag.
+	 *
+	 * @param string $tags
+	 * @return \DateTimeInterface|null
+	 */
+	public function getNearestPublishDateByTags(string $tags): ?\DateTime
+	{
+		$query = 'SELECT bp.published FROM blog_posts bp
+				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
+			WHERE JSON_CONTAINS(bp.slug_tags, ?)
+				AND bp.published > ?
+				AND l.locale = ?
+			ORDER BY bp.published ASC
+			LIMIT 1';
+		return ($this->database->fetchField($query, \Nette\Utils\Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale()) ?: null);
 	}
 
 

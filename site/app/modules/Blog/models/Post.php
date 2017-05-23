@@ -246,8 +246,8 @@ class Post
 				),
 				$post->postId
 			);
+			$now = new \DateTime();
 			if ($post->editSummary) {
-				$now = new \DateTime();
 				$this->database->query(
 					'INSERT INTO blog_post_edits',
 					array(
@@ -261,6 +261,9 @@ class Post
 			$cacheTags = [self::class . "/id/{$post->postId}"];
 			foreach (array_merge(array_diff($post->slugTags, $post->previousSlugTags), array_diff($post->previousSlugTags, $post->slugTags)) as $tag) {
 				$cacheTags[] = self::class . "/tag/{$tag}";
+			}
+			if ($post->published > $now) {
+				$cacheTags[] = self::class;
 			}
 			$this->exportsCache->clean([Cache::TAGS => $cacheTags]);
 			$this->database->commit();
