@@ -56,59 +56,104 @@
             "time": "2016-04-02 22:35:15"
         },
         {
+            "name": "kdyby/strict-objects",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Kdyby/StrictObjects.git",
+                "reference": "ff6c82b54d8bea0d3f43dc5fce890ebe126e95c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Kdyby/StrictObjects/zipball/ff6c82b54d8bea0d3f43dc5fce890ebe126e95c7",
+                "reference": "ff6c82b54d8bea0d3f43dc5fce890ebe126e95c7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "nette/tester": "~1.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kdyby\\StrictObjects\\": "src/"
+                },
+                "classmap": [
+                    "src/exceptions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Filip Procházka",
+                    "email": "filip@prochazka.su",
+                    "homepage": "http://filip-prochazka.com"
+                }
+            ],
+            "description": "Simple trait to make your class strict, when calling or accessing undefined member (property or method).",
+            "homepage": "http://kdyby.org",
+            "keywords": [
+                "accessors",
+                "exceptions",
+                "kdyby",
+                "magic",
+                "members",
+                "methods",
+                "object",
+                "properties",
+                "scream",
+                "strict"
+            ],
+            "time": "2016-08-26T06:34:41+00:00"
+        },
+        {
             "name": "kdyby/translation",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kdyby/Translation.git",
-                "reference": "9395f7805906083c5dba71fafb42f55fc88ba11c"
+                "reference": "03890a1a3e35d112976a98c706b1c3decb99fcad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kdyby/Translation/zipball/9395f7805906083c5dba71fafb42f55fc88ba11c",
-                "reference": "9395f7805906083c5dba71fafb42f55fc88ba11c",
+                "url": "https://api.github.com/repos/Kdyby/Translation/zipball/03890a1a3e35d112976a98c706b1c3decb99fcad",
+                "reference": "03890a1a3e35d112976a98c706b1c3decb99fcad",
                 "shasum": ""
             },
             "require": {
-                "latte/latte": "~2.3@dev",
-                "nette/caching": "~2.3@dev",
-                "nette/di": "~2.3@dev",
-                "nette/finder": "~2.3@dev",
-                "nette/http": "~2.3@dev",
-                "nette/neon": "~2.3@dev",
-                "nette/php-generator": "~2.3@dev",
-                "nette/reflection": "~2.3@dev",
-                "nette/utils": "~2.3@dev",
+                "kdyby/strict-objects": "^1.0",
+                "latte/latte": "^2.4@dev",
+                "nette/caching": "^2.4@dev",
+                "nette/di": "^2.4@dev",
+                "nette/finder": "^2.4@dev",
+                "nette/http": "^2.4@dev",
+                "nette/neon": "^2.4@dev",
+                "nette/php-generator": "^2.4@dev || ^3.0@dev",
+                "nette/reflection": "^2.4@dev",
+                "nette/utils": "^2.4@dev || ^3.0@dev",
+                "php": "^5.6 || ^7.0",
                 "psr/log": "^1.0",
-                "symfony/config": "~2.5",
-                "symfony/translation": "~2.5"
+                "symfony/config": "^2.5 || ^3.0",
+                "symfony/translation": "^2.5 || ^3.0"
             },
             "require-dev": {
+                "kdyby/console": "^2.7@dev",
                 "kdyby/monolog": "^1.2@dev",
-                "latte/latte": "~2.3@dev",
                 "mockery/mockery": "~0.9",
-                "nette/application": "~2.3@dev",
-                "nette/bootstrap": "~2.3@dev",
-                "nette/caching": "~2.3@dev",
-                "nette/component-model": "~2.2@dev",
-                "nette/database": "~2.3@dev",
-                "nette/deprecated": "~2.2@dev",
-                "nette/di": "~2.3@dev",
-                "nette/finder": "~2.3@dev",
-                "nette/forms": "~2.3@dev",
-                "nette/http": "~2.3@dev",
-                "nette/mail": "~2.3@dev",
-                "nette/neon": "~2.3@dev",
-                "nette/php-generator": "~2.3@dev",
-                "nette/reflection": "~2.3@dev",
-                "nette/robot-loader": "~2.3@dev",
-                "nette/safe-stream": "~2.3@dev",
-                "nette/security": "~2.3@dev",
-                "nette/tester": "~1.4",
-                "nette/tokenizer": "~2.2@dev",
-                "nette/utils": "~2.3@dev",
-                "symfony/console": "~2.3",
-                "tracy/tracy": "~2.3@dev"
+                "nette/application": "^2.4@dev",
+                "nette/bootstrap": "^2.4@dev",
+                "nette/forms": "^2.4@dev",
+                "nette/tester": "~1.7",
+                "symfony/console": "^2.5 || ^3.0",
+                "symfony/yaml": "^2.5 || ^3.0",
+                "tracy/tracy": "^2.4@dev"
             },
             "suggest": {
                 "kdyby/console": "If you wanna use extract command and much others, install also console.",
@@ -120,15 +165,15 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Kdyby\\Translation": "src/"
+                "psr-4": {
+                    "Kdyby\\Translation\\": "src/"
                 },
                 "classmap": [
-                    "src/Kdyby/Translation/exceptions.php"
+                    "src/exceptions.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -151,20 +196,20 @@
                 "nette",
                 "translation"
             ],
-            "time": "2017-05-11 23:11:24"
+            "time": "2017-05-22 21:17:18"
         },
         {
             "name": "latte/latte",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "b62ee346467e1e2402a43c499cf6047fddc5d321"
+                "reference": "7d207e620cfc1386fb7ccd8de403d5760f7ca655"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/b62ee346467e1e2402a43c499cf6047fddc5d321",
-                "reference": "b62ee346467e1e2402a43c499cf6047fddc5d321",
+                "url": "https://api.github.com/repos/nette/latte/zipball/7d207e620cfc1386fb7ccd8de403d5760f7ca655",
+                "reference": "7d207e620cfc1386fb7ccd8de403d5760f7ca655",
                 "shasum": ""
             },
             "require": {
@@ -181,8 +226,7 @@
             },
             "suggest": {
                 "ext-fileinfo": "to use filter |datastream",
-                "ext-mbstring": "to use filters like lower, upper, capitalize, ...",
-                "ext-xml": "to use filters like length, substring, ..."
+                "ext-mbstring": "to use filters like lower, upper, capitalize, ..."
             },
             "type": "library",
             "extra": {
@@ -217,7 +261,7 @@
                 "templating",
                 "twig"
             ],
-            "time": "2017-01-19T11:06:59+00:00"
+            "time": "2017-05-17T12:00:19+00:00"
         },
         {
             "name": "nette/application",
@@ -898,21 +942,21 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v2.6.2",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "3a69f606db7f1e9995347c7d84b9d2a0507c0b38"
+                "reference": "8605fd18857a4beef4aa0afc19eb9a7f876237e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/3a69f606db7f1e9995347c7d84b9d2a0507c0b38",
-                "reference": "3a69f606db7f1e9995347c7d84b9d2a0507c0b38",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/8605fd18857a4beef4aa0afc19eb9a7f876237e8",
+                "reference": "8605fd18857a4beef4aa0afc19eb9a7f876237e8",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^2.4.2 || ~3.0.0",
-                "php": ">=5.6.0"
+                "php": ">=7.0"
             },
             "conflict": {
                 "nette/nette": "<2.2"
@@ -924,7 +968,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -948,9 +992,15 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "Nette PHP Generator",
+            "description": "🐘 Generates neat PHP code for you. Supports new PHP 7.1 features.",
             "homepage": "https://nette.org",
-            "time": "2017-03-18T15:19:52+00:00"
+            "keywords": [
+                "code",
+                "nette",
+                "php",
+                "scaffolding"
+            ],
+            "time": "2017-03-18T15:20:10+00:00"
         },
         {
             "name": "nette/reflection",
@@ -1593,24 +1643,24 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.20",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "0b8541d18507d10204a08384640ff6df3c739ebe"
+                "reference": "e5533fcc0b3dd377626153b2852707878f363728"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/0b8541d18507d10204a08384640ff6df3c739ebe",
-                "reference": "0b8541d18507d10204a08384640ff6df3c739ebe",
+                "url": "https://api.github.com/repos/symfony/config/zipball/e5533fcc0b3dd377626153b2852707878f363728",
+                "reference": "e5533fcc0b3dd377626153b2852707878f363728",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
-                "symfony/filesystem": "~2.3|~3.0.0"
+                "php": ">=5.5.9",
+                "symfony/filesystem": "~2.8|~3.0"
             },
             "require-dev": {
-                "symfony/yaml": "~2.7|~3.0.0"
+                "symfony/yaml": "~3.0"
             },
             "suggest": {
                 "symfony/yaml": "To use the yaml reference dumper"
@@ -1618,7 +1668,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -1645,20 +1695,20 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:07:15+00:00"
+            "time": "2017-04-12T14:13:17+00:00"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.0.9",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "b2da5009d9bacbd91d83486aa1f44c793a8c380d"
+                "reference": "040651db13cf061827a460cc10f6e36a445c45b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/b2da5009d9bacbd91d83486aa1f44c793a8c380d",
-                "reference": "b2da5009d9bacbd91d83486aa1f44c793a8c380d",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/040651db13cf061827a460cc10f6e36a445c45b4",
+                "reference": "040651db13cf061827a460cc10f6e36a445c45b4",
                 "shasum": ""
             },
             "require": {
@@ -1667,7 +1717,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -1694,7 +1744,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-20T05:43:46+00:00"
+            "time": "2017-04-12T14:13:17+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1757,30 +1807,30 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.8.20",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7"
+                "reference": "f4a04d2df710f81515df576b2de06bdeee518b83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/32b7c0bffc07772cf1a902e3464ef77117fa07c7",
-                "reference": "32b7c0bffc07772cf1a902e3464ef77117fa07c7",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/f4a04d2df710f81515df576b2de06bdeee518b83",
+                "reference": "f4a04d2df710f81515df576b2de06bdeee518b83",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
+                "php": ">=5.5.9",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "conflict": {
-                "symfony/config": "<2.7"
+                "symfony/config": "<2.8"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.8",
-                "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
-                "symfony/yaml": "~2.2|~3.0.0"
+                "symfony/config": "~2.8|~3.0",
+                "symfony/intl": "^2.8.18|^3.2.5",
+                "symfony/yaml": "~2.8|~3.0"
             },
             "suggest": {
                 "psr/log": "To use logging capability in translator",
@@ -1790,7 +1840,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -1817,7 +1867,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:07:15+00:00"
+            "time": "2017-04-12T14:13:17+00:00"
         },
         {
             "name": "texy/texy",
