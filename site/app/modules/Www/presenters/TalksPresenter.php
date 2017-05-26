@@ -93,7 +93,6 @@ class TalksPresenter extends BasePresenter
 		$this->template->slides = $slides;
 		$this->template->canonicalLink = ($slideNo !== null ? $this->linkGenerator->link('Www:Talks:talk', [$talk->action]) : null);
 		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($talk->ogImage !== null ? sprintf($talk->ogImage, $slideNo ?? 1) : null));
-		$this->template->useAlternativeImages = $this->talks->useAlternativeImages();
 
 		$this->template->slidesHref = $talk->slidesHref;
 		foreach ($this->embed->getSlidesTemplateVars($talk, $slideNo) as $key => $value) {

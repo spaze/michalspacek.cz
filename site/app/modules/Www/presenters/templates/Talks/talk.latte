@@ -33,9 +33,11 @@
 	<div n:if="$slides" id="slides-container">
 	<h2 id="{_html.id.slides}">{_messages.label.slides}</h2>
 	{foreach $slides as $slide}
-		{var $image = $useAlternativeImages && $slide->imageAlternative ? $slide->imageAlternative : $slide->image}
 		<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight, nobreak">
-		<img src="{$image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}">
+		<picture n:tag-if="$slide->imageAlternative">
+			<source n:if="$slide->imageAlternative" srcset="{$slide->imageAlternative}" type="{$slide->imageAlternativeType}">
+			<img src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}">
+		</picture>
 		<p><strong><a n:href="this $talk->action, $slide->alias">#{$slide->number}</a></strong> {$slide->speakerNotes}</p>
 		</div>
 	{/foreach}
