@@ -94,4 +94,10 @@ $(document).ready(function() {
 	if ($('#slides-container .highlight').length) {
 		$('html, body').animate({scrollTop: $('#slides-container .highlight').offset().top - 10});
 	}
+
+	var para = $('.column-content').find(window.location.hash)
+	if (para.length) {
+		para.addClass('highlight');
+		$('html, body').animate({scrollTop: para.offset().top - 10});
+	}
 });
