@@ -75,7 +75,7 @@ img {
     height: auto;
 }
 abbr.dtstart, abbr.dtend { text-decoration: none; }
-code {
+code, .highlight pre code {
     padding: 0.2em 0.1em;
     margin: 0;
     background-color: #F5F5F5;
