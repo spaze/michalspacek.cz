@@ -108,7 +108,8 @@ class BlogPresenter extends BasePresenter
 			$post->textTexy = $values->text;
 			$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
 			$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-			$post->tags = (empty($values->tags) ? null : $this->tagsToArray($values->tags));
+			$post->tags = (empty($values->tags) ? [] : $this->blogPost->tagsToArray($values->tags));
+			$post->slugTags = (empty($values->tags) ? [] : $this->blogPost->getSlugTags($values->tags));
 			$post->recommended = (empty($values->recommended) ? null : $values->recommended);
 			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 			$this->blogPost->add($post);
@@ -168,7 +169,9 @@ class BlogPresenter extends BasePresenter
 		$post->textTexy = $values->text;
 		$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
 		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-		$post->tags = (empty($values->tags) ? null : $this->tagsToArray($values->tags));
+		$post->tags = (empty($values->tags) ? [] : $this->blogPost->tagsToArray($values->tags));
+		$post->slugTags = (empty($values->tags) ? [] : $this->blogPost->getSlugTags($values->tags));
+		$post->previousSlugTags = (empty($values->previousTags) ? [] : $this->blogPost->getSlugTags($values->previousTags));
 		$post->recommended = (empty($values->recommended) ? null : $values->recommended);
 		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
@@ -192,7 +195,7 @@ class BlogPresenter extends BasePresenter
 		$post->leadTexy = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));
 		$post->textTexy = $this->request->getPost('text');
 		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
-		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tagsToArray($this->request->getPost('tags')));
+		$post->tags = (empty($this->request->getPost('tags')) ? [] : $this->blogPost->tagsToArray($this->request->getPost('tags')));
 		$post->recommended = (empty($this->request->getPost('recommended')) ? null : $this->request->getPost('recommended'));
 		$preview = $this->createTemplate();
 		$preview->setFile(__DIR__ . '/templates/Blog/preview.latte');
@@ -203,18 +206,6 @@ class BlogPresenter extends BasePresenter
 		$this->payload->statusMessage = 'Formatted';
 		$this->payload->formatted = (string)$preview;
 		$this->sendPayload();
-	}
-
-
-	/**
-	 * Convert tags string to JSON.
-	 *
-	 * @param string $tags
-	 * @return string[]
-	 */
-	private function tagsToArray(string $tags): array
-	{
-		return array_filter(preg_split('/\s*,\s*/', $tags));
 	}
 
 }
