@@ -48,6 +48,7 @@ class Locales
 				FROM url_actions a
 				JOIN training_url_actions ta ON a.id_url_action = ta.key_url_action
 				WHERE a.action = ?
+				LIMIT 1
 			)',
 			$action
 		);
