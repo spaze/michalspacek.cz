@@ -227,6 +227,13 @@ class Texy extends \Netxten\Formatter\Texy
 			$link->URL = $this->application->getPresenter()->link("//{$action}", $args);
 		}
 
+		// "title":[blog:post#fragment]
+		if (strncmp($link->URL, 'blog:', 5) === 0) {
+			$args = explode('#', substr($link->URL, 5));
+			$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
+			$link->URL = $this->application->getPresenter()->link("//:Blog:Post:default{$fragment}", [$args[0]]);
+		}
+
 		if (strncmp($link->URL, 'training:', 9) === 0) {
 			$texy = $invocation->getTexy();
 			$name = substr($link->URL, 9);
