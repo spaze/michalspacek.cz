@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Blog;
 
+use MichalSpacekCz\Blog\Post\Data;
 use Nette\Caching\Cache;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
@@ -28,19 +29,40 @@ class Post
 	/** @var \Nette\Caching\Cache */
 	protected $exportsCache;
 
+	/** @var \Nette\Application\LinkGenerator */
+	protected $linkGenerator;
+
+	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
+	protected $localeLinkGenerator;
+
+	/** @var \Nette\Localization\ITranslator */
+	protected $translator;
 
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param Post\Loader $loader
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \Nette\Caching\IStorage $cacheStorage
+	 * @param \Nette\Application\LinkGenerator $linkGenerator
+	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
+	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\Database\Context $context, Post\Loader $loader, \MichalSpacekCz\Formatter\Texy $texyFormatter, \Nette\Caching\IStorage $cacheStorage)
-	{
+	public function __construct(
+		\Nette\Database\Context $context,
+		Post\Loader $loader,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
+		\Nette\Caching\IStorage $cacheStorage,
+		\Nette\Application\LinkGenerator $linkGenerator,
+		\MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator,
+		\Nette\Localization\ITranslator $translator
+	) {
 		$this->database = $context;
 		$this->loader = $loader;
 		$this->texyFormatter = $texyFormatter;
 		$this->exportsCache = new Cache($cacheStorage, \MichalSpacekCz\Exports::class);
+		$this->linkGenerator = $linkGenerator;
+		$this->localeLinkGenerator = $localeLinkGenerator;
+		$this->translator = $translator;
 	}
 
 
@@ -54,14 +76,32 @@ class Post
 	public function get(string $post, ?string $previewKey = null): ?\MichalSpacekCz\Blog\Post\Data
 	{
 		$result = $this->loader->fetch($post, $previewKey);
-		return ($result ? $this->format($this->build($result)) : null);
+		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post->postId = $result->postId;
+		$post->localeId = $result->localeId;
+		$post->translationGroupId = $result->translationGroupId;
+		$post->locale = $result->locale;
+		$post->slug = $result->slug;
+		$post->titleTexy = $result->titleTexy;
+		$post->leadTexy = $result->leadTexy;
+		$post->textTexy = $result->textTexy;
+		$post->published = $result->published;
+		$post->previewKey = $result->previewKey;
+		$post->originallyTexy = $result->originallyTexy;
+		$post->ogImage = $result->ogImage;
+		$post->tags = ($result->tags !== null ? Json::decode($result->tags) : null);
+		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
+		$post->twitterCard = $result->twitterCard;
+		$this->enrich($post);
+
+		return ($result ? $this->format($post) : null);
 	}
 
 
 	/**
 	 * Get post by id.
 	 *
-	 * @return MichalSpacekCz\Blog\Post\Data|null
+	 * @return \MichalSpacekCz\Blog\Post\Data|null
 	 */
 	public function getById($id): ?\MichalSpacekCz\Blog\Post\Data
 	{
@@ -91,7 +131,25 @@ class Post
 			WHERE bp.id_blog_post = ?',
 			$id
 		);
-		return ($result ? $this->format($this->build($result)) : null);
+		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post->postId = $result->postId;
+		$post->translationGroupId = $result->translationGroupId;
+		$post->locale = $result->locale;
+		$post->localeId = $result->localeId;
+		$post->slug = $result->slug;
+		$post->titleTexy = $result->titleTexy;
+		$post->leadTexy = $result->leadTexy;
+		$post->textTexy = $result->textTexy;
+		$post->originallyTexy = $result->originallyTexy;
+		$post->published = $result->published;
+		$post->previewKey = $result->previewKey;
+		$post->ogImage = $result->ogImage;
+		$post->tags = ($result->tags !== null ? Json::decode($result->tags) : null);
+		$post->slugTags = ($result->slugTags !== null ? Json::decode($result->slugTags) : null);
+		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
+		$post->twitterCard = $result->twitterCard;
+		$this->enrich($post);
+		return ($result ? $this->format($post) : null);
 	}
 
 
@@ -123,39 +181,46 @@ class Post
 				ON l.id_blog_post_locale = bp.key_locale
 			ORDER BY
 				published, slug';
-		foreach ($this->database->fetchAll($sql) as $post) {
-			$posts[] = $this->format($this->build($post));
+		foreach ($this->database->fetchAll($sql) as $row) {
+			$post = new \MichalSpacekCz\Blog\Post\Data();
+			$post->postId = $row->postId;
+			$post->translationGroupId = $row->translationGroupId;
+			$post->locale = $row->locale;
+			$post->localeId = $row->localeId;
+			$post->slug = $row->slug;
+			$post->titleTexy = $row->titleTexy;
+			$post->leadTexy = $row->leadTexy;
+			$post->textTexy = $row->textTexy;
+			$post->originallyTexy = $row->originallyTexy;
+			$post->published = $row->published;
+			$post->previewKey = $row->previewKey;
+			$post->tags = ($row->tags !== null ? Json::decode($row->tags) : null);
+			$post->slugTags = ($row->slugTags !== null ? Json::decode($row->slugTags) : null);
+			$this->enrich($post);
+			$posts[] = $this->format($post);
 		}
 		return $posts;
 	}
 
 
 	/**
-	 * Build post data object from database row object.
+	 * Enrich post data object.
 	 *
-	 * @param \Nette\Database\Row $row
-	 * @return \MichalSpacekCz\Blog\Post\Data
+	 * @param Data $post
+	 * @return Data
 	 */
-	private function build(\Nette\Database\Row $row): \MichalSpacekCz\Blog\Post\Data
+	public function enrich(Data $post)
 	{
-		$post = new \MichalSpacekCz\Blog\Post\Data();
-		$post->translationGroupId = $row->translationGroupId;
-		$post->locale = $row->locale;
-		$post->localeId = $row->localeId;
-		$post->postId = $row->postId;
-		$post->slug = $row->slug;
-		$post->titleTexy = $row->titleTexy;
-		$post->leadTexy = $row->leadTexy;
-		$post->textTexy = $row->textTexy;
-		$post->published = $row->published;
-		$post->previewKey = $row->previewKey;
-		$post->originallyTexy = $row->originallyTexy;
-		$post->ogImage = (isset($row->ogImage) ? $row->ogImage : null);  // Can't use ??, throws Nette\MemberAccessException
-		$post->tags = (isset($row->tags) ? Json::decode($row->tags) : []);
-		$post->slugTags = (isset($row->slugTags) ? Json::decode($row->slugTags) : []);
-		$post->recommended = (isset($row->recommended) ? $row->recommended : null);  // Can't use ??, throws Nette\MemberAccessException
-		$post->twitterCard = (isset($row->twitterCard) ? $row->twitterCard : null);  // Can't use ??, throws Nette\MemberAccessException
-		return $post;
+		$params = [
+			'slug' => $post->slug,
+			'preview' => ($post->needsPreviewKey() ? $post->previewKey : null),
+		];
+		if ($post->locale === null || $post->locale === $this->translator->getDefaultLocale()) {
+			$post->href = $this->linkGenerator->link('Blog:Post:', $params);
+		} else {
+			$links = $this->localeLinkGenerator->links('Blog:Post:', $this->localeLinkGenerator->defaultParams($params));
+			$post->href = $links[$post->locale];
+		}
 	}
 
 
@@ -167,7 +232,6 @@ class Post
 	 */
 	public function format(\MichalSpacekCz\Blog\Post\Data $post): \MichalSpacekCz\Blog\Post\Data
 	{
-		$post->recommended = (empty($post->recommended) ? null : Json::decode($post->recommended));
 		foreach(['title'] as $item) {
 			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'});
 		}
@@ -192,7 +256,7 @@ class Post
 				'INSERT INTO blog_posts',
 				array(
 					'key_translation_group' => $post->translationGroupId,
-					'key_locale' => $post->locale,
+					'key_locale' => $post->localeId,
 					'title' => $post->titleTexy,
 					'preview_key' => $post->previewKey,
 					'slug' => $post->slug,
@@ -205,9 +269,10 @@ class Post
 					'og_image' => $post->ogImage,
 					'tags' => Json::encode($post->tags),
 					'slug_tags' => Json::encode($post->slugTags),
-					'recommended' => $post->recommended,
+					'recommended' => Json::encode($post->recommended),
 				)
 			);
+			$post->postId = $this->database->getInsertId();
 			$this->exportsCache->clean([Cache::TAGS => array_merge([self::class], $post->slugTags)]);
 			$this->database->commit();
 		} catch (Exception $e) {
@@ -229,7 +294,7 @@ class Post
 				'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 				array(
 					'key_translation_group' => $post->translationGroupId,
-					'key_locale' => $post->locale,
+					'key_locale' => $post->localeId,
 					'title' => $post->titleTexy,
 					'preview_key' => $post->previewKey,
 					'slug' => $post->slug,
@@ -242,7 +307,7 @@ class Post
 					'og_image' => $post->ogImage,
 					'tags' => ($post->tags ? Json::encode($post->tags) : null),
 					'slug_tags' => ($post->slugTags ? Json::encode($post->slugTags) : null),
-					'recommended' => $post->recommended,
+					'recommended' => ($post->recommended ? Json::encode($post->recommended) : null),
 				),
 				$post->postId
 			);
@@ -331,8 +396,22 @@ class Post
 				blog_posts bp
 			LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
 			WHERE bp.key_translation_group = (SELECT key_translation_group FROM blog_posts WHERE slug = ?)';
-		foreach ($this->database->fetchAll($sql, $slug) as $post) {
-			$posts[] = $this->format($this->build($post));
+		foreach ($this->database->fetchAll($sql, $slug) as $row) {
+			$post = new \MichalSpacekCz\Blog\Post\Data();
+			$post->postId = $row->postId;
+			$post->translationGroupId = $row->translationGroupId;
+			$post->locale = $row->locale;
+			$post->localeId = $row->localeId;
+			$post->slug = $row->slug;
+			$post->titleTexy = $row->titleTexy;
+			$post->leadTexy = $row->leadTexy;
+			$post->textTexy = $row->textTexy;
+			$post->originallyTexy = $row->originallyTexy;
+			$post->published = $row->published;
+			$post->previewKey = $row->previewKey;
+			$post->tags = ($row->tags !== null ? Json::decode($row->tags) : null);
+			$this->enrich($post);
+			$posts[] = $this->format($post);
 		}
 		return $posts;
 	}

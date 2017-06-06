@@ -18,12 +18,6 @@ class BlogPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
-	/** @var \Nette\Application\LinkGenerator */
-	protected $linkGenerator;
-
-	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
-	protected $localeLinkGenerator;
-
 	/** @var \MichalSpacekCz\Blog\Post\Data */
 	private $post;
 
@@ -31,20 +25,14 @@ class BlogPresenter extends BasePresenter
 	/**
 	 * @param \MichalSpacekCz\Blog\Post $blogPost
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \Nette\Application\LinkGenerator $linkGenerator
-	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
 	 */
 	public function __construct(
 		\MichalSpacekCz\Blog\Post $blogPost,
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\Nette\Application\LinkGenerator $linkGenerator,
-		\MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
+		\MichalSpacekCz\Formatter\Texy $texyFormatter
 	)
 	{
 		$this->blogPost = $blogPost;
 		$this->texyFormatter = $texyFormatter;
-		$this->linkGenerator = $linkGenerator;
-		$this->localeLinkGenerator = $localeLinkGenerator;
 		parent::__construct();
 	}
 
@@ -53,16 +41,6 @@ class BlogPresenter extends BasePresenter
 	{
 		$posts = [];
 		foreach ($this->blogPost->getAll() as $post) {
-			$params = [
-				'slug' => $post->slug,
-				'preview' => ($post->needsPreviewKey() ? $post->previewKey : null),
-			];
-			if ($post->locale === null || $post->locale === $this->translator->getDefaultLocale()) {
-				$post->href = $this->linkGenerator->link('Blog:Post:', $params);
-			} else {
-				$links = $this->localeLinkGenerator->links('Blog:Post:', $this->localeLinkGenerator->defaultParams($params));
-				$post->href = $links[$post->locale];
-			}
 			$posts[$post->published->getTimestamp() . $post->slug] = $post;
 		}
 		krsort($posts);
@@ -99,21 +77,22 @@ class BlogPresenter extends BasePresenter
 		try {
 			$post = new \MichalSpacekCz\Blog\Post\Data();
 			$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
-			$post->locale = (empty($values->locale) ? null : $values->locale);
-			$post->published = new \DateTime($values->published);
-			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
+			$post->localeId = (empty($values->locale) ? null : $values->locale);
 			$post->slug = $values->slug;
 			$post->titleTexy = $values->title;
 			$post->leadTexy = (empty($values->lead) ? null : $values->lead);
 			$post->textTexy = $values->text;
 			$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
+			$post->published = new \DateTime($values->published);
+			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 			$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-			$post->tags = (empty($values->tags) ? [] : $this->blogPost->tagsToArray($values->tags));
-			$post->slugTags = (empty($values->tags) ? [] : $this->blogPost->getSlugTags($values->tags));
-			$post->recommended = (empty($values->recommended) ? null : $values->recommended);
+			$post->tags = (empty($values->tags) ? null : $this->blogPost->tagsToArray($values->tags));
+			$post->slugTags = (empty($values->tags) ? null : $this->blogPost->getSlugTags($values->tags));
+			$post->recommended = (empty($values->recommended) ? null : \Nette\Utils\Json::decode($values->recommended));
 			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
+			$this->blogPost->enrich($post);
 			$this->blogPost->add($post);
-			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded'));
+			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$this->link('edit', [$post->postId]), $post->href]));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
 		}
@@ -160,24 +139,24 @@ class BlogPresenter extends BasePresenter
 		$post = new \MichalSpacekCz\Blog\Post\Data();
 		$post->postId = $this->post->postId;
 		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
-		$post->locale = (empty($values->locale) ? null : $values->locale);
-		$post->published = new \DateTime($values->published);
-		$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
+		$post->localeId = (empty($values->locale) ? null : $values->locale);
 		$post->slug = $values->slug;
 		$post->titleTexy = $values->title;
 		$post->leadTexy = (empty($values->lead) ? null : $values->lead);
 		$post->textTexy = $values->text;
 		$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
+		$post->published = new \DateTime($values->published);
+		$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-		$post->tags = (empty($values->tags) ? [] : $this->blogPost->tagsToArray($values->tags));
-		$post->slugTags = (empty($values->tags) ? [] : $this->blogPost->getSlugTags($values->tags));
-		$post->previousSlugTags = (empty($values->previousTags) ? [] : $this->blogPost->getSlugTags($values->previousTags));
-		$post->recommended = (empty($values->recommended) ? null : $values->recommended);
+		$post->tags = (empty($values->tags) ? null: $this->blogPost->tagsToArray($values->tags));
+		$post->slugTags = (empty($values->tags) ? null : $this->blogPost->getSlugTags($values->tags));
+		$post->previousTags = (empty($values->previousTags) ? null : $this->blogPost->getSlugTags($values->previousTags));
+		$post->recommended = (empty($values->recommended) ? null : \Nette\Utils\Json::decode($values->recommended));
 		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
-
+		$this->blogPost->enrich($post);
 		$this->blogPost->update($post);
-		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated'));
+		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$this->link('edit', [$post->postId]), $post->href]));
 		$this->redirect('Blog:');
 	}
 
@@ -188,15 +167,16 @@ class BlogPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException('Not an AJAX call');
 		}
 		$this->texyFormatter->disableCache();
-
 		$post = new \MichalSpacekCz\Blog\Post\Data();
-		$post->published = new \DateTime($this->request->getPost('published'));
-		$post->titleTexy = $this->request->getPost('title');
+		$post->slug = $this->request->getPost('slug');
+		$post->title = $this->request->getPost('title');
 		$post->leadTexy = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));
 		$post->textTexy = $this->request->getPost('text');
 		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
-		$post->tags = (empty($this->request->getPost('tags')) ? [] : $this->blogPost->tagsToArray($this->request->getPost('tags')));
-		$post->recommended = (empty($this->request->getPost('recommended')) ? null : $this->request->getPost('recommended'));
+		$post->published = new \DateTime($this->request->getPost('published'));
+		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->blogPost->tagsToArray($this->request->getPost('tags')));
+		$post->recommended = (empty($this->request->getPost('recommended')) ? null : \Nette\Utils\Json::decode($this->request->getPost('recommended')));
+		$this->blogPost->enrich($post);
 		$preview = $this->createTemplate();
 		$preview->setFile(__DIR__ . '/templates/Blog/preview.latte');
 		$preview->post = $this->blogPost->format($post);

@@ -297,5 +297,6 @@ blog:
 		recommendedreading: "Recommended reading"
 		edits: "Updates"
 	admin:
-		postadded: "Blog post added"
+		postadded: "Blog post added • \"Edit\":[%s] • \"View\":[%s]"
+		postupdated: "Blog post updated • \"Edit\":[%s] • \"View\":[%s]"
 		duplicateslug: "Blog post with such slug already exists"
