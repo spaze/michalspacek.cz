@@ -421,7 +421,7 @@ class TrainingsPresenter extends BasePresenter
 			$values->note,
 			$values->source,
 			$values->price,
-			$values->vatRate / 100,
+			(empty(trim($values->vatRate)) ? null : $values->vatRate / 100),
 			$values->priceVat,
 			$values->discount,
 			$values->invoiceId,
