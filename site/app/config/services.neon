@@ -128,4 +128,5 @@ services:
 		setup:
 			- setUsers(%certificatesApi.users%)
 			- setExpiringThreshold(%certificatesApi.expiringThreshold%)
+			- setHideExpiredAfter(%certificatesApi.hideExpiredAfter%)
 	exports: \MichalSpacekCz\Exports

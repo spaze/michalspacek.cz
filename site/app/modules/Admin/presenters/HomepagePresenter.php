@@ -92,7 +92,7 @@ class HomepagePresenter extends BasePresenter
 	private function certsNeedAttention(array $certificates): bool
 	{
 		foreach ($certificates as $certificate) {
-			if ($certificate->expired || $certificate->expiringSoon) {
+			if (($certificate->expired || $certificate->expiringSoon) && !$certificate->hidden) {
 				return true;
 			}
 		}

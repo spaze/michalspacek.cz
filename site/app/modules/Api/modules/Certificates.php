@@ -15,6 +15,9 @@ class Certificates
 	/** @var integer */
 	private $expiringThreshold;
 
+	/** @var integer */
+	private $hideExpiredAfter;
+
 
 	/**
 	 * @param \Nette\Database\Context $context
@@ -42,6 +45,16 @@ class Certificates
 	public function setExpiringThreshold(int $expiringThreshold): void
 	{
 		$this->expiringThreshold = $expiringThreshold;
+	}
+
+
+	/**
+	 * Set hide expired after interval.
+	 * @param integer $hideExpiredAfter in days
+	 */
+	public function setHideExpiredAfter(int $hideExpiredAfter): void
+	{
+		$this->hideExpiredAfter = $hideExpiredAfter;
 	}
 
 
@@ -83,6 +96,7 @@ class Certificates
 			$certificate->expired = $certificate->notAfter < $now;
 			$certificate->expiryDays = $certificate->notAfter->diff($now)->days;
 			$certificate->expiringSoon = !$certificate->expired && $certificate->expiryDays < $this->expiringThreshold;
+			$certificate->hidden = ($certificate->expired && $certificate->expiryDays > $this->hideExpiredAfter);
 		}
 
 		return $certificates;

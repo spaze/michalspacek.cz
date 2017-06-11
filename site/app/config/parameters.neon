@@ -66,3 +66,4 @@ parameters:
 
 	certificatesApi:
 		expiringThreshold: 5
+		hideExpiredAfter: 10
