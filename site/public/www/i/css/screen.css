@@ -347,9 +347,9 @@ div.notice {
 #pridat-ucastniky-container table input[type=text] { width: 78px; }
 #pridat-ucastniky-container table .highlight { background-color: yellow; }
 #emails tbody tr.row:hover { background-color: #F0F0F0; }
-#frm-mails input { font-size: 60%; }
-#frm-mails input[type=number] { width: 75px; }
-#frm-mails input[type=file] { width: 120px; }
+#frm-mails input[type=number], #frm-mails input[type=file] { font-size: 55%; }
+#frm-mails input[type=number] { width: 60px; }
+#frm-mails input[type=file] { width: 280px; }
 #frm-passwordsStorages #frm-passwordsStorages-algo-from { width: 200px; }
 #contact, #social {
     float: left;
