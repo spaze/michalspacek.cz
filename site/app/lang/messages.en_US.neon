@@ -232,7 +232,7 @@ trainings:
 	files:
 		thankyou: "Díky za účast na školení %s dne %s."
 		download: "Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili."
-	moretrainings: "Rád Vás přivítám i na nějakém dalším školení, které \"pořádám\"."
+	moretrainings: "Rád Vás přivítám i na nějakém dalším školení, které \"pořádám\":[%s]."
 	more: "more…"
 	jointhem: "Přidejte se k těmto účastníkům a \"přihlaste se\":[%s] na školení \"%s\":[%s]!"
 	addanother: "Add another participant"
