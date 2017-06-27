@@ -389,9 +389,7 @@ div.notice {
     .nobreak { page-break-inside: avoid; }
 }
 @media (max-width: 64em) {
-    #pubkey {
-        overflow-x: scroll;
-    }
+    #pubkey { overflow-x: scroll; }
 }
 @media (max-width: 680px) {
     #frm-application th, #frm-application td, #frm-application #company td,
