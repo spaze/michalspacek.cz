@@ -208,6 +208,7 @@ talks:
 	durationshort: "%s minutes"
 	transcript: Notes transcript
 	slidescount: "%count% slide|%count% slides"
+	onlineversion: "\"Online version\":[%s]"
 	admin:
 		slideadded: "Slide added"
 		duplicatealias: "Alias for slide %s already exists"

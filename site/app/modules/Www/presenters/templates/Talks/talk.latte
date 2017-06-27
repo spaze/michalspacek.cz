@@ -6,6 +6,7 @@
 <meta name="twitter:site" content="@spazef0rze">
 {/define}
 {define #content}
+<p class="print">{_messages.talks.onlineversion|format:"link:Www:Talks:talk $talk->action"}</p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {import "../embed.latte"}
 {if $slidesHref}
@@ -33,7 +34,7 @@
 	<h2 id="{_html.id.slides}">{_messages.label.slides}</h2>
 	{foreach $slides as $slide}
 		{var $image = $useAlternativeImages && $slide->imageAlternative ? $slide->imageAlternative : $slide->image}
-		<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight">
+		<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight, nobreak">
 		<img src="{$image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}">
 		<p><strong><a n:href="this $talk->action, $slide->alias">#{$slide->number}</a></strong> {$slide->speakerNotes}</p>
 		</div>

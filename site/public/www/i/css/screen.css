@@ -147,6 +147,7 @@ pre {
     text-decoration: none;
 }
 #langs a:hover { background-color: rgba(0, 0, 0, 0.08); }
+.print { display: none; }
 .single-column { padding: 0 10px 0.5em 10px; }
 .with-sidebar { padding-bottom: 0.5em; }
 .column-content, .column-sidebar { margin: 10px; }
@@ -380,6 +381,12 @@ div.notice {
     padding: 2em;
     margin: 2em;
     box-shadow: 0 3px 20px hsl(0, 0%, 87%);
+}
+@media print {
+    img { max-width: 75%; }
+    .print { display: block; }
+    hr, #langs, #menu, #video-embed, #footer, h2#detail { display: none; }
+    .nobreak { page-break-inside: avoid; }
 }
 @media (max-width: 64em) {
     #pubkey {
