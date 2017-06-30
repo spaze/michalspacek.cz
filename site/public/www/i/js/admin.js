@@ -203,5 +203,8 @@ $(document).ready(function() {
 
 	$('#frm-slides').find('input:input, textarea').change(function() {
 		$(this).closest('tbody').addClass('changed');
+		$(window).on('beforeunload', function(e) {
+			return e.returnValue = 'ORLY?';  // The value is ignored and not displayed
+		});
 	});
 });
