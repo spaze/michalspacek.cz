@@ -189,8 +189,8 @@ $(document).ready(function() {
 			var reader = new FileReader();
 			reader.onload = function(event) {
 				preview.on('load', function() {
-					tr.find('.slide-width').val($(this).width())
-					tr.find('.slide-height').val($(this).height())
+					tr.find('.slide-width').val($(this).width());
+					tr.find('.slide-height').val($(this).height());
 				});
 				preview.attr('src', event.target.result).show();
 			};
