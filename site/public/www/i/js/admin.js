@@ -207,4 +207,7 @@ $(document).ready(function() {
 			return e.returnValue = 'ORLY?';  // The value is ignored and not displayed
 		});
 	});
+	$('#frm-slides').on('submit', function() {
+		$(window).off('beforeunload');
+	});
 });
