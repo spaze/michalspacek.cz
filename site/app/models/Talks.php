@@ -474,10 +474,12 @@ class Talks
 			$talkId
 		);
 		$result = [];
+		$alternativeTypes = array_flip($this->supportedAlternativeImages);
 		foreach ($slides as $row) {
 			$row->speakerNotes = $this->texyFormatter->format($row->speakerNotesTexy);
 			$row->image = $this->getSlideImageFilename($this->staticRoot, $talkId, $row->filename);
 			$row->imageAlternative = $this->getSlideImageFilename($this->staticRoot, $talkId, $row->filenameAlternative);
+			$row->imageAlternativeType = ($row->filenameAlternative ? $alternativeTypes[pathinfo($row->filenameAlternative, PATHINFO_EXTENSION)] : null);
 			$result[$row->number] = $row;
 		}
 		return $result;
@@ -622,25 +624,6 @@ class Talks
 		$this->updateSlides($talkId, $slides->slides);
 		$this->addSlides($talkId, $slides->new);
 		$this->database->commit();
-	}
-
-
-	/**
-	 * Determine whether to use alternative WebP images.
-	 *
-	 * @return bool
-	 */
-	public function useAlternativeImages(): bool
-	{
-		$types = implode('|', array_keys($this->supportedAlternativeImages));
-		if (preg_match_all('~(?:' . $types . ')(?:;q=([\d.]+))?~', $this->httpRequest->getHeader('Accept', ''), $matches)) {
-			$preferred = array_filter($matches[1], function($var) {
-				return ($var === '' | (float)$var > 0);
-			});
-			return !empty($preferred);
-		} else {
-			return false;
-		}
 	}
 
 
