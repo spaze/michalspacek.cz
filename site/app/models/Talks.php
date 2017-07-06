@@ -43,6 +43,12 @@ class Talks
 	protected $locationRoot;
 
 	/** @var string[] */
+	private $deleteFiles = [];
+
+	/** @var string[] */
+	private $otherSlides = [];
+
+	/** @var string[] */
 	private $supportedImages = [
 		'image/gif' => 'gif',
 		'image/png' => 'png',
@@ -502,11 +508,13 @@ class Talks
 	 * @param integer $talkId
 	 * @param \Nette\Http\FileUpload $replace
 	 * @param string[] $supported
+	 * @param bool $removeFile
+	 * @param string|null $originalFile
 	 * @param integer $width
 	 * @param integer $height
 	 * @return null|string
 	 */
-	private function replaceSlideImage(int $talkId, \Nette\Http\FileUpload $replace, array $supported, int &$width, int &$height): ?string
+	private function replaceSlideImage(int $talkId, \Nette\Http\FileUpload $replace, array $supported, bool $removeFile, ?string $originalFile, int &$width, int &$height): ?string
 	{
 		if (!$replace->hasFile()) {
 			return null;
@@ -517,9 +525,15 @@ class Talks
 		if (!in_array($replace->getContentType(), array_keys($supported))) {
 			throw new \RuntimeException('Slide image type not allowed: ' . $replace->getContentType());
 		}
+		if ($removeFile && !empty($originalFile) && empty($this->otherSlides[$originalFile])) {
+			$this->deleteFiles[] = $renamed = $this->getSlideImageFilename($this->locationRoot, $talkId, "__del__{$originalFile}");
+			rename($this->getSlideImageFilename($this->locationRoot, $talkId, $originalFile), $renamed);
+		}
 		$name = strtr(rtrim(base64_encode(sha1($replace->getContents(), true)), '='), '+/', '-_');
 		$extension = $supported[$replace->getContentType()];
 		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
+		$this->decrementOtherSlides($originalFile);
+		$this->incrementOtherSlides("{$name}.{$extension}");
 		if (!$width || !$height) {
 			list($width, $height) = $replace->getImageSize();
 		}
@@ -542,8 +556,8 @@ class Talks
 			foreach ($slides as $slide) {
 				$width = (int)$slide->width;
 				$height = (int)$slide->height;
-				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $width, $height);
-				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $width, $height);
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, false, null, $width, $height);
+				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, false, null, $width, $height);
 				$lastNumber = (int)$slide->number;
 				$this->database->query(
 					'INSERT INTO talk_slides',
@@ -553,8 +567,6 @@ class Talks
 						'number' => $slide->number,
 						'filename' => $replace ?: $slide->filename,
 						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
-						'width' => $width,
-						'height' => $height,
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
 					)
@@ -576,18 +588,30 @@ class Talks
 	 *
 	 * @param integer $talkId
 	 * @param \Nette\Utils\ArrayHash $slides
+	 * @param bool $removeFiles Remove old files?
 	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws \PDOException
 	 */
-	private function updateSlides(int $talkId, \Nette\Utils\ArrayHash $slides): void
+	private function updateSlides(int $talkId, array $originalSlides, \Nette\Utils\ArrayHash $slides, bool $removeFiles): void
 	{
 		$lastNumber = 0;
+		foreach ($originalSlides as $slide) {
+			foreach ([$slide->filename, $slide->filenameAlternative] as $filename) {
+				if (!empty($filename)) {
+					$this->incrementOtherSlides($filename);
+				}
+			}
+		}
 		try {
 			foreach ($slides as $id => $slide) {
 				$width = (int)$slide->width;
 				$height = (int)$slide->height;
-				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $width, $height);
-				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $width, $height);
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $removeFiles, $originalSlides[$slide->number]->filename, $width, $height);
+				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $removeFiles, $originalSlides[$slide->number]->filenameAlternative, $width, $height);
+				if ($removeFiles) {
+					// TODO delete renamed files
+				}
+
 				$lastNumber = (int)$slide->number;
 				$this->database->query(
 					'UPDATE talk_slides SET ? WHERE id_slide = ?',
@@ -597,8 +621,6 @@ class Talks
 						'number' => $slide->number,
 						'filename' => $replace ?: $slide->filename,
 						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
-						'width' => $width,
-						'height' => $height,
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
 					),
@@ -616,13 +638,20 @@ class Talks
 	}
 
 
-	public function saveSlides(int $talkId, \Nette\Utils\ArrayHash $slides)
+	/**
+	 * Save new slides.
+	 *
+	 * @param int $talkId
+	 * @param \Nette\Database\Row[] $originalSlides
+	 * @param \Nette\Utils\ArrayHash $newSlides
+	 */
+	public function saveSlides(int $talkId, array $originalSlides, \Nette\Utils\ArrayHash $newSlides): void
 	{
 		$this->database->beginTransaction();
 		// Reset slide numbers so they can be shifted around without triggering duplicated key violations
 		$this->database->query('UPDATE talk_slides SET number = null WHERE key_talk = ?', $talkId);
-		$this->updateSlides($talkId, $slides->slides);
-		$this->addSlides($talkId, $slides->new);
+		$this->updateSlides($talkId, $originalSlides, $newSlides->slides, $newSlides->deleteReplaced);
+		$this->addSlides($talkId, $newSlides->new);
 		$this->database->commit();
 	}
 
@@ -659,6 +688,34 @@ class Talks
 	public function getSupportedAlternativeImages()
 	{
 		return $this->supportedAlternativeImages;
+	}
+
+
+	/**
+	 * Increment other slides count.
+	 *
+	 * @param string $filename
+	 */
+	private function incrementOtherSlides(string $filename): void
+	{
+		if (isset($this->otherSlides[$filename])) {
+			$this->otherSlides[$filename]++;
+		} else {
+			$this->otherSlides[$filename] = 0;
+		}
+	}
+
+
+	/**
+	 * Increment other slides count.
+	 *
+	 * @param string|null $filename
+	 */
+	private function decrementOtherSlides(?string $filename): void
+	{
+		if (!empty($filename) && $this->otherSlides[$filename] > 0) {
+			$this->otherSlides[$filename]--;
+		}
 	}
 
 }

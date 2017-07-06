@@ -190,7 +190,7 @@ class TalksPresenter extends BasePresenter
 	public function submittedSlides(\MichalSpacekCz\Form\TalkSlides $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$this->talks->saveSlides($this->talk->talkId, $values);
+			$this->talks->saveSlides($this->talk->talkId, $this->slides, $values);
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.slideadded'));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.duplicatealias', [$e->getCode()]), 'error');

@@ -53,6 +53,7 @@ class TalkSlides extends ProtectedForm
 			$this->addSlideFields($newIdContainer);
 		}
 
+		$this->addCheckbox('deleteReplaced', 'Smazat nahrazené soubory?');
 		$this->addSubmit('submit', 'Upravit');
 	}
 

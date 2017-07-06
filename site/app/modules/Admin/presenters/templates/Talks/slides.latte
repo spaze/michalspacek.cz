@@ -10,7 +10,7 @@
 <p id="{_html.id.slides}"></p>
 {include #embedSlides}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{form slides, data-uploads => $maxSlideUploads}
+{form slides, data-uploads => $maxSlideUploads, class => blocking}
 	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
 		<legend><strong>{_messages.label.errors}</strong></legend>
 		<ul>
@@ -102,6 +102,7 @@
 			{/formContainer}
 		{/for}
 	{/formContainer}
+		<tbody><tr><td></td><td colspan="5">{input deleteReplaced: class => non-blocking}{label deleteReplaced: /}</td></tr></tbody>
 		<tr><td></td><td>{input submit}</td><td colspan="4"><small>Počet nahrávaných souborů: <span id="uploading">0</span> (max. {$maxSlideUploads})</small></td></tr>
 	</table>
 {/form}
