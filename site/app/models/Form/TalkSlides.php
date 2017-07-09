@@ -37,8 +37,6 @@ class TalkSlides extends ProtectedForm
 				'title' => $slide->title,
 				'filename' => $slide->filename,
 				'filenameAlternative' => $slide->filenameAlternative,
-				'width' => $slide->width,
-				'height' => $slide->height,
 				'speakerNotes' => $slide->speakerNotesTexy,
 			);
 			$slideIdContainer->setDefaults($values);
@@ -87,16 +85,6 @@ class TalkSlides extends ProtectedForm
 			->setAttribute('accept', implode(',', array_keys($this->talks->getSupportedAlternativeImages())));
 		$container->addText('filenameAlternative', 'Soubor:')
 			->setAttribute('class', 'slide-filename');
-		$container->addText('width', 'Šířka:')
-			->setType('number')
-			->setAttribute('class', 'right slide-width')
-			->addConditionOn($container['replace'], self::BLANK)
-				->setRequired('Zadejte prosím šířku');
-		$container->addText('height', 'Výška:')
-			->setType('number')
-			->setAttribute('class', 'right slide-height')
-			->addConditionOn($container['replace'], self::BLANK)
-				->setRequired('Zadejte prosím výšku');
 		$container->addTextArea('speakerNotes', 'Poznámky:')
 			->setRequired('Zadejte prosím poznámky');
 	}

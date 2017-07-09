@@ -10,7 +10,7 @@
 <p id="{_html.id.slides}"></p>
 {include #embedSlides}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{form slides, data-uploads => $maxSlideUploads, class => blocking}
+{form slides, data-uploads => $maxSlideUploads, class => blocking, data-dimensions => $dimensions}
 	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
 		<legend><strong>{_messages.label.errors}</strong></legend>
 		<ul>
@@ -26,30 +26,31 @@
 				<th class="right">Číslo</th>
 				<th>Alias</th>
 				<th>Titulek</th>
-				<th>Rozměry</th>
 				<th>Soubor</th>
 				<th>Nahradit</th>
+				<th>Rozměry</th>
 			</tr>
 			<tr>
 				<td class="narrow">{input number}</td>
 				<td>{input alias}</td>
 				<td class="wider">{input title}</td>
-				<td class="narrow">{input width}<small>×</small>{input height}</td>
 				<td class="wider">{input filename}</td>
 				<td>{input replace data-type => image}</td>
+				<td class="center dimensions type-image"></td>
 			</tr>
 			<tr>
-				<td colspan="3"></td>
+				<td colspan="2"></td>
 				<td class="right">WebP:</td>
 				<td class="wider">{input filenameAlternative}</td>
 				<td>{input replaceAlternative data-type => alternative}</td>
+				<td class="center dimensions type-alternative"></td>
 			</tr>
 			<tr class="image-previews">
 				<td></td>
 				<td colspan="5">
-					<img n:if="$slide->image" src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}" class="type-image">
+					<img n:if="$slide->image" src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" class="type-image" data-type="image">
 					<img n:if="!$slide->image" src="" class="hidden type-image">
-					<img n:if="$slide->imageAlternative" src="{$slide->imageAlternative}" alt="{$slide->title}" title="{$slide->title}" width="{$slide->width}" height="{$slide->height}" class="type-alternative">
+					<img n:if="$slide->imageAlternative" src="{$slide->imageAlternative}" alt="{$slide->title}" title="{$slide->title}" class="type-alternative" data-type="alternative">
 					<img n:if="!$slide->imageAlternative" src="" class="hidden type-alternative">
 				</td>
 			</tr>
@@ -69,29 +70,30 @@
 					<th class="right">Číslo</th>
 					<th>Alias</th>
 					<th>Titulek</th>
-					<th>Rozměry</th>
 					<th>Soubor</th>
 					<th>Nahradit</th>
+					<th>Rozměry</th>
 				</tr>
 				<tr>
 					<td class="narrow">{input number}</td>
 					<td>{input alias}</td>
 					<td class="wider">{input title}</td>
-					<td class="narrow">{input width}<small>×</small>{input height}</td>
 					<td class="wider">{input filename}</td>
 					<td>{input replace data-type => image}</td>
+					<td class="center dimensions type-image"></td>
 				</tr>
 				<tr>
-					<td colspan="3"></td>
+					<td colspan="2"></td>
 					<td class="right">WebP:</td>
 					<td class="wider">{input filenameAlternative}</td>
 					<td>{input replaceAlternative data-type => alternative}</td>
+					<td class="center dimensions type-alternative"></td>
 				</tr>
 				<tr class="image-previews">
 					<td></td>
 					<td colspan="5">
-						<img src="" class="hidden type-image">
-						<img src="" class="hidden type-alternative">
+						<img src="" class="hidden type-image" data-type="image">
+						<img src="" class="hidden type-alternative" data-type="alternative">
 					</td>
 				</tr>
 				<tr>

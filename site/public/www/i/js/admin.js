@@ -154,6 +154,7 @@ $(document).ready(function() {
 		var slide = tbody.clone(true);
 		var index = 0;
 		slide.addClass('new-slide changed').find(':input:not(.slide-nr)').val('');
+		SLIDEPREVIEW.clearDimensions(slide.find('img'));
 		slide.find('img').hide().removeAttr('src').removeAttr('alt').removeAttr('title').removeAttr('width').removeAttr('height');
 		slide.find('.transparent').removeClass('transparent').prop('readonly', false);
 		tbody.after(slide);
@@ -168,6 +169,49 @@ $(document).ready(function() {
 		});
 	});
 
+	var SLIDEPREVIEW = SLIDEPREVIEW || {};
+	SLIDEPREVIEW.getDimensions = function() {
+		return $('#frm-slides').data('dimensions');
+	};
+	SLIDEPREVIEW.checkDimensions = function(preview) {
+		var dimensions = SLIDEPREVIEW.getDimensions();
+		return ((preview.prop('naturalWidth') / dimensions.ratio.width * dimensions.ratio.height === preview.prop('naturalHeight')) && preview.prop('naturalWidth') <= dimensions.max.width && preview.prop('naturalHeight') <= dimensions.max.height);
+	};
+	SLIDEPREVIEW.textRatio = function() {
+		var dimensions = SLIDEPREVIEW.getDimensions();
+		return dimensions.ratio.width + ':' + dimensions.ratio.height;
+	};
+	SLIDEPREVIEW.textMax = function() {
+		var dimensions = SLIDEPREVIEW.getDimensions();
+		return dimensions.max.width + '×' + dimensions.max.height;
+	};
+	SLIDEPREVIEW.setDimensions = function(image) {
+		var tbody = image.closest('tbody');
+		var target = tbody.find('.dimensions.type-' + image.data('type'));
+		target.removeClass('error');
+		if (image.attr('src')) {
+			target.text(image.prop('naturalWidth') + '×' + image.prop('naturalHeight'));
+		}
+		if (!SLIDEPREVIEW.checkDimensions(image)) {
+			target.addClass('error');
+			setTimeout(function() {
+				var slide = tbody.find('.slide-nr').val();
+				alert((slide ? 'Slajd ' + slide : 'Nový slajd') + ': nesprávná velikost ' + image.prop('naturalWidth') + '×' + image.prop('naturalHeight') + ', správné rozměry jsou ' + SLIDEPREVIEW.textRatio() + ', max ' + SLIDEPREVIEW.textMax());
+			}, 100);
+		}
+	};
+	SLIDEPREVIEW.clearDimensions = function(image) {
+		image.closest('tbody').find('.dimensions').removeClass('error').text('');
+	};
+
+	$('#frm-slides img.type-image, #frm-slides img.type-alternative')
+		.each(function() {
+			SLIDEPREVIEW.setDimensions($(this));
+		})
+		.on('load', function() {
+			SLIDEPREVIEW.setDimensions($(this));
+		});
+
 	$('#frm-slides input:file').change(function() {
 		var files = 0;
 		$('#frm-slides input:file').each(function() {
@@ -181,23 +225,28 @@ $(document).ready(function() {
 			}
 		});
 		$('#uploading').text(files);
-		var tr = $(this).parent().parent();
+		var field = $(this);
+		var tr = field.parent().parent();
 		var fields = tr.find('.slide-filename');
-		var preview = tr.nextAll('tr.image-previews').find('img.type-' + $(this).data('type')).removeAttr('width').removeAttr('height');
-		if ($(this).val()) {
-			fields.addClass('transparent').prop('readonly', true);
+		var preview = tr.nextAll('tr.image-previews').find('img.type-' + field.data('type'));
+		if (field.val()) {
 			var reader = new FileReader();
 			reader.onload = function(event) {
-				preview.on('load', function() {
-					tr.find('.slide-width').val($(this).width());
-					tr.find('.slide-height').val($(this).height());
-				});
+				fields.addClass('transparent').prop('readonly', true);
+				if (!preview.data('prev')) {
+					preview.data('prev', preview.attr('src'));
+				}
 				preview.attr('src', event.target.result).show();
 			};
 			reader.readAsDataURL(event.target.files[0]);
 		} else {
 			fields.removeClass('transparent').prop('readonly', false);
-			preview.removeAttr('src');
+			if (preview.data('prev')) {
+				preview.attr('src', preview.data('prev'));
+			} else {
+				preview.removeAttr('src');
+				SLIDEPREVIEW.clearDimensions(preview);
+			}
 		}
 	});
 

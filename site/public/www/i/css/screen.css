@@ -382,6 +382,11 @@ div.notice {
     margin: 2em;
     box-shadow: 0 3px 20px hsl(0, 0%, 87%);
 }
+.dimensions { font-size: small; }
+.dimensions.error {
+    font-weight: bold;
+    background-color: #FEE;
+}
 @media print {
     img { max-width: 75%; }
     .print { display: block; }

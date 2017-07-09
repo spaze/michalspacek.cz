@@ -12,6 +12,12 @@ namespace MichalSpacekCz;
 class Talks
 {
 
+	/** @var integer */
+	private const SLIDE_MAX_WIDTH = 800;
+
+	/** @var integer */
+	private const SLIDE_MAX_HEIGHT = 450;
+
 	/** @var \Nette\Database\Context */
 	protected $database;
 
@@ -470,8 +476,6 @@ class Talks
 				number,
 				filename,
 				filename_alternative AS filenameAlternative,
-				width,
-				height,
 				title,
 				speaker_notes AS speakerNotesTexy
 			FROM talk_slides
@@ -554,8 +558,8 @@ class Talks
 		$lastNumber = 0;
 		try {
 			foreach ($slides as $slide) {
-				$width = (int)$slide->width;
-				$height = (int)$slide->height;
+				$width = self::SLIDE_MAX_WIDTH;
+				$height = self::SLIDE_MAX_HEIGHT;
 				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, false, null, $width, $height);
 				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, false, null, $width, $height);
 				$lastNumber = (int)$slide->number;
@@ -604,8 +608,8 @@ class Talks
 		}
 		try {
 			foreach ($slides as $id => $slide) {
-				$width = (int)$slide->width;
-				$height = (int)$slide->height;
+				$width = self::SLIDE_MAX_WIDTH;
+				$height = self::SLIDE_MAX_HEIGHT;
 				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $removeFiles, $originalSlides[$slide->number]->filename, $width, $height);
 				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $removeFiles, $originalSlides[$slide->number]->filenameAlternative, $width, $height);
 				if ($removeFiles) {
@@ -716,6 +720,20 @@ class Talks
 		if (!empty($filename) && $this->otherSlides[$filename] > 0) {
 			$this->otherSlides[$filename]--;
 		}
+	}
+
+
+	/**
+	 * Get max slide dimensions and aspect ratio as JSON string.
+	 *
+	 * @return string
+	 */
+	public function getSlideDimensions(): string
+	{
+		return \Nette\Utils\Json::encode([
+			'ratio' => ['width' => 16, 'height' => 9],
+			'max' => ['width' => self::SLIDE_MAX_WIDTH, 'height' => self::SLIDE_MAX_HEIGHT],
+		]);
 	}
 
 }
