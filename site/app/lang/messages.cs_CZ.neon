@@ -229,7 +229,7 @@ trainings:
 		intro: "Rádi byste se naučili něco dalšího? Doporučuji absolvovat třeba tato **partnerská školení**:"
 		frontend: "\"Responzivní design\":[%s] a další \"kurzy moderního frontendového vývoje\":[%s] od Martina Michálka a dalších"
 		nette: "\"Vývoj webových aplikací v Nette Framework\":[%s] a \"Mistrovství v Nette\":[%s] od Davida Grudla"
-		advanceddevelopment: "\"Pokročilý vývoj a testování aplikací\":[%s] od Václava Purcharta a Ondřeje Mirtese v rámci \"Medio Akademie\":[%s]"
+		cryptosession: "\"Dvoudenní školení kryptografie\":[%s] od předního českého kryptologa Jana Dušátka"
 	files:
 		thankyou: "Díky za účast na školení %s dne %s."
 		download: "Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili."
