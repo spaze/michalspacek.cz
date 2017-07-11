@@ -228,8 +228,8 @@ trainings:
 	partnertrainings:
 		intro: "Rádi byste se naučili něco dalšího? Doporučuji absolvovat třeba tato **partnerská školení**:"
 		companyintro: "Rádi byste se ve firmě naučili něco dalšího? Doporučuji třeba tato **partnerská školení**:"
-		frontend: "\"Responzivní design\":[%s] a další \"kurzy moderního frontendového vývoje\":[%s] od Martina Michálka a dalších"
-		nette: "\"Vývoj webových aplikací v Nette Framework\":[%s] a \"Mistrovství v Nette\":[%s] od Davida Grudla"
+		frontend: "\"Responzivní design\":[%s] a další \"kurzy moderního frontendového vývoje\":[%s], které vede //profík// na CSS Martin Michálek a jeho kolegové"
+		nette: "\"Vývoj webových aplikací v Nette Framework\":[%s] a \"Mistrovství v Nette\":[%s] přímo od autora frameworku Davida Grudla"
 		cryptosession: "\"Dvoudenní školení kryptografie\":[%s] od předního českého kryptologa Jana Dušátka"
 	files:
 		thankyou: "Díky za účast na školení %s dne %s."
