@@ -227,6 +227,7 @@ trainings:
 	consultancy: "I also offer consulting for your business, \"contact me\":[%s]!"
 	partnertrainings:
 		intro: "Want more? Try these courses organized by my **friends or business partners**:"
+		companyintro: "Want some more? Try these courses organized by my **friends or business partners**:"
 		frontend: "\"Responzivní design\":[%s] a další \"kurzy moderního frontendového vývoje\":[%s] od Martina Michálka a dalších"
 		nette: "\"Vývoj webových aplikací v Nette Framework\":[%s] a \"Mistrovství v Nette\":[%s] od Davida Grudla"
 		cryptosession: "\"Two-day cryptography deep dive\":[%s] by renowned Czech cryptologist Jan Dušátko"
