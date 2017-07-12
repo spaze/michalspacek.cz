@@ -176,13 +176,11 @@
 {include #form}
 <p><small>{_messages.trainings.datainvoice}</small></p>
 <p><small>{_messages.trainings.conditions}</small></p>
-<hr>
 {else}
 <h2 id="{_html.id.application}">{_messages.label.preliminaryapplication}</h2>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {include #formPreliminary}
 <p><small>{_messages.trainings.sendinginvite}</small></p>
-<hr>
 {/if}
 
 <p>
