@@ -21,15 +21,18 @@ class TrainingReview extends ProtectedForm
 			->addConditionOn($this['application'], self::EQUAL, '')
 				->setRequired('Pro firemní ohlas je potřeba přepsat jméno');
 		$this->addText('name', 'Jméno:')
-			->setRequired('Zadejte prosím jméno')
-			->addRule(self::MIN_LENGTH, 'Minimální délka jména je %d znaky', 3)
-			->addRule(self::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
+			->setRequired(false)
+			->addConditionOn($this['overwriteName'], self::EQUAL, true)
+				->setRequired('Zadejte prosím jméno')
+				->addRule(self::MIN_LENGTH, 'Minimální délka jména je %d znaky', 3)
+				->addRule(self::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
 		$this->addCheckbox('overwriteCompany', 'Přepsat firmu:')
 			->addConditionOn($this['application'], self::EQUAL, '')
 				->setRequired('Pro firemní ohlas je potřeba přepsat firmu');
 		$this->addText('company', 'Firma:')
 			->setRequired(false)
-			->addRule(self::MAX_LENGTH, 'Maximální délka firmz je %d znaků', 200);
+			->addConditionOn($this['overwriteCompany'], self::EQUAL, true)
+				->addRule(self::MAX_LENGTH, 'Maximální délka firmy je %d znaků', 200);  // No min length to allow _removal_ of company name from a review by using an empty string
 		$this->addText('jobTitle', 'Pozice:')
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka pozice je %d znaků', 200);
