@@ -158,6 +158,18 @@ class Talks
 
 
 	/**
+	 * Get approximate number of talks.
+	 *
+	 * @return integer
+	 */
+	public function getApproxCount(): int
+	{
+		$count = $this->database->fetchField('SELECT COUNT(*) FROM talks WHERE date <= NOW()');
+		return (int)($count/10)*10;
+	}
+
+
+	/**
 	 * Get upcoming talks.
 	 *
 	 * @return \Nette\Database\Row[]
