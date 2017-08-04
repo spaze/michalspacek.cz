@@ -2,12 +2,11 @@
 {block #body}
 	<div n:class="container, $containerExtraClass">
 	<div id="header">
-	<a n:href="Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
-	<h1>Michal Špaček</h1>
-	<p>
+	{capture $tagLine}
 		{_messages.homepage.tagline}
 		<small>(<a n:href="Who:">{_messages.homepage.aboutme}</a>, <a n:href="Contact:">{_messages.homepage.contact}</a>)</small>
-	</p>
+	{/capture}
+	{include "../header.latte", pageTitle => "Michal Špaček", tagLine => $tagLine}
 	<hr />
 	<div id="projekty">
 		<div><strong>{_messages.label.otherprojects}:</strong></div>

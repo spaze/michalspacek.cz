@@ -3,9 +3,7 @@
 {block #body}
 	<div n:class="container, $containerExtraClass">
 	<div id="header">
-	<a n:href="Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
-	<h1>{$pageTitle}</h1>
-	<p></p>
+	{include "../header.latte"}
 	<hr />
 	<div id="menu" class="center">
 	{block #menu}

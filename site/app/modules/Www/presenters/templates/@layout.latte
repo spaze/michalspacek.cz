@@ -41,10 +41,7 @@
 {block #body}
 	<div n:class="container, $containerExtraClass">
 	<div id="header" n:class="$containerExtraClass">
-	<a n:href=":Www:Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
-	{default $pageHeader = $pageTitle}
-	<h1>{$pageHeader}</h1>
-	<p></p>
+	{include "./header.latte"}
 	<hr>
 	{ifset #menu}<div id="menu">{include #menu}</div><hr />{/ifset}
 	</div>
