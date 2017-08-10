@@ -1,7 +1,8 @@
 {define #metas}
 <meta n:if="$post->ogImage || $post->twitterCard" property="og:image" content="{$post->ogImage|staticImageUrl}">
 <meta n:if="$post->ogImage || $post->twitterCard" property="og:title" content="{$pageTitle}">
-<meta n:if="$post->ogImage || $post->twitterCard" property="og:description" content="{$post->lead|striptags|strip}">
+{var $ogDescription = $post->lead ?: $post->text}
+<meta n:if="$post->ogImage || $post->twitterCard" property="og:description" content="{$ogDescription|striptags|strip}">
 <meta n:if="$post->twitterCard" name="twitter:card" content="{$post->twitterCard}">
 <meta n:if="$post->twitterCard" name="twitter:site" content="@spazef0rze">
 {/define}
