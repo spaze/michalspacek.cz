@@ -272,7 +272,7 @@ class Post
 					'recommended' => Json::encode($post->recommended),
 				)
 			);
-			$post->postId = $this->database->getInsertId();
+			$post->postId = (int)$this->database->getInsertId();
 			$this->exportsCache->clean([Cache::TAGS => array_merge([self::class], $post->slugTags)]);
 			$this->database->commit();
 		} catch (Exception $e) {

@@ -51,7 +51,7 @@ class Talks
 	/** @var string[] */
 	private $deleteFiles = [];
 
-	/** @var string[] */
+	/** @var integer[] */
 	private $otherSlides = [];
 
 	/** @var string[] */
