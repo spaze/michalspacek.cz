@@ -161,6 +161,7 @@ pre {
     box-shadow: 0 3px 20px hsl(0, 0%, 87%);
     background-color: hsl(0, 0%, 95%);
 }
+img.noshadow { box-shadow: none; }
 #slides-container img { margin-bottom: 1em; }
 .column-content .figure img {
     margin-bottom: 0.5em;
