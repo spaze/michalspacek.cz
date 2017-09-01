@@ -144,8 +144,8 @@ class Post
 		$post->published = $result->published;
 		$post->previewKey = $result->previewKey;
 		$post->ogImage = $result->ogImage;
-		$post->tags = ($result->tags !== null ? Json::decode($result->tags) : null);
-		$post->slugTags = ($result->slugTags !== null ? Json::decode($result->slugTags) : null);
+		$post->tags = ($result->tags !== null ? Json::decode($result->tags) : []);
+		$post->slugTags = ($result->slugTags !== null ? Json::decode($result->slugTags) : []);
 		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
 		$post->twitterCard = $result->twitterCard;
 		$this->enrich($post);
