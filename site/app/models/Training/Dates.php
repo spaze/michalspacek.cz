@@ -269,7 +269,7 @@ class Dates
 					t.key_successor IS NULL
 					AND l.language = ?
 				ORDER BY
-					t.order IS NULL, t.order, d.start";
+					d.start";
 
 			$upcoming = array();
 			foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED, $this->translator->getDefaultLocale()) as $row) {
