@@ -65,12 +65,13 @@ class CompanyTrainings
 				t.original_href AS originalHref,
 				t.capacity,
 				ct.price,
+				ct.alternative_duration_price AS alternativeDurationPrice,
 				t.student_discount AS studentDiscount,
 				t.materials,
 				t.custom,
 				ct.duration,
-				ct.double_duration AS doubleDuration,
-				ct.double_duration_price AS doubleDurationPrice
+				ct.alternative_duration AS alternativeDuration,
+				ct.alternative_duration_price_text AS alternativeDurationPriceText
 			FROM trainings t
 				JOIN company_trainings ct ON t.id_training = ct.key_training
 				JOIN training_url_actions ta ON t.id_training = ta.key_training

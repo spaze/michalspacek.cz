@@ -21,8 +21,8 @@ introphp:
 		description: 'Na tomto školení si ukážeme vše co budete potřebovat k psaní jednoduchých skriptů v PHP. Doporučuji absolvovat i kurz "Třídy a objekty v PHP":[link:Www:CompanyTrainings:training tridy-a-objekty-v-php], zvlášť pokud chcete vytvářet větší aplikace.'
 		upsell: 'Aplikace dnes musí být bezpečné a výkonné, na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "výkonnosti":[link:Www:Trainings:training vykonnost-webovych-aplikaci] webových aplikací vám ukážu, jak na to.'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
-		doubleduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		doubledurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
 
 php5:
 	name: "Programming PHP 5"
@@ -45,13 +45,13 @@ php5:
 		description: 'Na školení Programování v PHP 5 se naučíme využívat objektově orientované programování (OOP) a několik šikovných rozšíření pro snadnější vývoj větších aplikací v PHP.'
 		upsell: 'Jak aplikaci správně zabezpečit se dozvíte na školení "bezpečnosti":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci], jak zrychlit web na školení "výkonnosti":[link:Www:CompanyTrainings:training vykonnost-webovych-aplikaci].'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
-		doubleduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		doubledurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
 
 securityphp:
 	name: "PHP application security"
 	description: "I'm into web application security and I like security research. It's a sensitive topic and every little thing left forgotten can get you and your users into trouble. Quite often you'll find me writing \"articles and posts\":[link:Www:Articles:] about web security, I'm also \"a speaker\":[link:Www:Talks:]. I'd like to share my experience with you and teach you how to secure web applications and how to test them for vulnerabilities."
-	upsell: 'Do you need to **test your web application** for issues we are discussing on the training? "Write me":mail@michalspacek.cz!'
+	upsell: 'Do you want to know more about **HTTPS**? Then "this training for developers and admins":[link:Www:Trainings:training https-pro-vyvojare-a-spravce] is just for you.'
 	prerequisites: 'Just basic knowledge of HTML, JavaScript, PHP and SQL. Training is also appropriate for developers working in other languages (e.g. Java or Python), most of the principles and attacks are the same.'
 	audience: 'The training is designed for both senior web application developers and junior developers to gain competitive advantage.'
 	materials: "Participants will receive a printed materials and a certificate. We'll dedicate enough time for questions. After completing the training, I'll send the presentation with comments via e-mail as well as with the code examples used for the training."
@@ -77,7 +77,7 @@ securityphp:
 		## Other topics:
 		- Generating "secure" **random data**
 		- **Data encryption**, authenticated encryption (AE)
-		- **HTTPS**, HTTP Strict Transport Security (HSTS), BREACH((Browser Reconnaissance & Exfiltration via Adaptive Compression of Hypertext)) attack
+		- **HTTPS**, HTTP Strict Transport Security (HSTS)
 		- Unauthorized **data access**
 		- Abusing contact forms for **sending spam**
 		- Server **configuration**
@@ -86,10 +86,10 @@ securityphp:
 	'''
 	inhouse:
 		description: 'Bezpečnost webových aplikací mě zajímá a baví mě ji zkoumat. Je to citlivé téma a každá zapomenutá drobnost může dostat do problémů nejen vás, ale i vaše uživatele. O zabezpečení webu často píšu "články":/clanky a "přednáším":/prednasky. Rád vaše vývojáře naučím, jak webové aplikace zabezpečit a jak je na bezpečnost testovat. Školení je vhodné i pro vývojáře, kteří pracují např. v Javě nebo Pythonu, většina útoků a principů je stejných.'
-		upsell: 'Potřebujete spíš **otestovat vaši webovou aplikaci**, jestli je dostatečně zabezpečená? "Napište mi":mail@michalspacek.cz!'
+		upsell: 'Zabezpečené přenosy dat pomocí protokolu **HTTPS** detailně rozebíráme na "školení pro správce a vývojáře":[link:Www:CompanyTrainings:training https-pro-vyvojare-a-spravce].'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
-		doubleduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		doubledurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
 
 webperformance:
 	name: "Web application performance"
@@ -118,8 +118,8 @@ webperformance:
 		description: 'Pokud se vaše webové aplikace již trochu zadýchávají a nestíhají vyřizovat požadavky uživatelů tak vám prozradím nějaké tipy a triky, jak zvýšit výkon samotné aplikace, serveru, i prohlížeče.'
 		upsell: 'Je výkon vašich aplikací dostačující? A jaké je jejich zabezpečení? Přijďte to zjistit na školení "Bezpečnost webových aplikací":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci].'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
-		doubleduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		doubledurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
 
 php5securityperformance2days:
 	name: "PHP 5, security, and performance (2 days)"
@@ -156,8 +156,8 @@ securityusers:
 		description: 'Používat slabá hesla není dobrý nápad a je jedno, jestli se jedná o pracovní účty, nebo soukromé. Ukážu vám proč a rovnou vysvětlím, že byste ani silné heslo neměli používat pro přihlašování k více službám. Na školení si představíme nástroj, který vám pomůže vytvářet silná hesla a zároveň si je za vás bude pamatovat. Takovému nástroji se říká správce hesel (//password manager//), během školení si jednoho správce nainstalujeme a sami se ho prakticky naučíte využívat. Nastavíme si bezpečnější přihlašování na několik známých webových služeb a vyladíme si webový prohlížeč tak, aby pomáhal chránit vás a vaše data.'
 		upsell: 'Chcete své vývojáře naučit vytvářet bezpečné aplikace? Na školení "**bezpečnosti webových aplikací**":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci] jim ukážu, jak na to. Potřebujete spíš **otestovat vaši webovou aplikaci**, jestli je dostatečně zabezpečená? "Napište mi":mail@michalspacek.cz!'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
-		doubleduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		doubledurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
 
 php5securityperformance3days:
 	name: "PHP 5, security, and performance (3 days)"
@@ -178,18 +178,18 @@ httpsdevsadmins:
 	content: '''
 		- Co je a k čemu slouží HTTPS
 		- Certifikáty a certifikační autority
+		- //Certificate Transparency//, CAA((Certificate Authority Authorization)) záznam
 		- Výměna klíčů, //Forward Secrecy//
 		- Útoky typu //Man-in-the-Middle// a jak se jim bránit
-		- Správné nastavení serveru a webové aplikace, //mixed content//
+		- Správné nastavení serveru a webové aplikace, //mixed content//, výsledky SSL Labs testu
 		- Útoky na HTTPS (CRIME((Compression Ratio Info-leak Made Easy)), BREACH((Browser Reconnaissance and Exfiltration via Adaptive Compression of Hypertext)), POODLE((Padding Oracle On Downgraded Legacy Encryption)))
 		- HTTP/2
 	'''
 	inhouse:
 		description: 'Šifrování přenášených informací nezabezpečí váš web. HTTPS však zabezpečí jeho návštěvníky, informace a soubory, které si stahují i jejich hesla. Pokud vaše webová aplikace nabízí nebo vyžaduje přihlášení, rozhodně by na HTTPS měla běžet. HTTPS má spoustu nastavení i drobností, které je ale potřeba vyřešit správně, aby uživatelé byli chránění pokud možno co nejlépe. Na tomto školení to vaše vývojáře a správce naučím.'
 		upsell: 'Na školení "Bezpečnost webových aplikací":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci] vývojáře naučím, jak web zabezpečit proti dalším častým útokům.'
-		duration: 'Školení je půldenní, trvá 4 hodiny i s přestávkami, ale dle situace se může až o 30 minut protáhnout.'
-		doubleduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme uspořádat celodenní školení.'
-		doubledurationprice: 'Základní cena celodenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami.'
+		alternativeduration: 'Můžeme uspořádat i půldenní školení, ale bude v něm méně podrobností a praktických příkladů.'
 
 securityjava:
 	name: "Web application security (Java)"
@@ -239,5 +239,5 @@ classesobjectsphp:
 		description: 'Na školení Třídy a objekty v PHP se naučíme využívat objektově orientované programování (OOP) a několik šikovných rozšíření pro snadnější vývoj větších aplikací v PHP.'
 		upsell: 'Jak aplikaci správně zabezpečit se dozvíte na školení "bezpečnosti":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci], jak zrychlit web na školení "výkonnosti":[link:Www:CompanyTrainings:training vykonnost-webovych-aplikaci].'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
-		doubleduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		doubledurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'

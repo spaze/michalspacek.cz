@@ -342,13 +342,13 @@ class Texy extends \Netxten\Formatter\Texy
 	public function formatTraining(\Nette\Database\Row $training): \Nette\Database\Row
 	{
 		$this->setTopHeading(3);
-		foreach (['name', 'description', 'content', 'upsell', 'prerequisites', 'audience', 'materials', 'duration', 'doubleDuration'] as $key) {
+		foreach (['name', 'description', 'content', 'upsell', 'prerequisites', 'audience', 'materials', 'duration', 'alternativeDuration'] as $key) {
 			if (isset($training->$key)) {
 				$training->$key = $this->translate($training->$key);
 			}
 		}
-		if (isset($training->doubleDurationPrice)) {
-			$training->doubleDurationPrice = $this->translate($training->doubleDurationPrice, [$training->price * 2, $this->vat->addVat($training->price) * 2]);
+		if (isset($training->alternativeDurationPriceText)) {
+			$training->alternativeDurationPriceText = $this->translate($training->alternativeDurationPriceText, [$training->alternativeDurationPrice, $this->vat->addVat($training->alternativeDurationPrice)]);
 		}
 		return $training;
 	}

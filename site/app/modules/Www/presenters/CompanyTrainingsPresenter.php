@@ -78,10 +78,10 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->prerequisites = $training->prerequisites;
 		$this->template->audience = $training->audience;
 		$this->template->duration = $training->duration;
-		$this->template->doubleDuration = $training->doubleDuration;
+		$this->template->alternativeDuration = $training->alternativeDuration;
 		$this->template->price = $training->price;
 		$this->template->priceVat = $this->vat->addVat($training->price);
-		$this->template->doubleDurationPrice = $training->doubleDurationPrice;
+		$this->template->alternativeDurationPriceText = $training->alternativeDurationPriceText;
 		$this->template->materials = $training->materials;
 		$this->template->reviews = $this->trainingReviews->getReviews($training->trainingId, 3);
 	}
