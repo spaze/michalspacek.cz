@@ -316,7 +316,7 @@ class Trainings
 			WHERE
 				l.language = ?
 			ORDER BY
-				t.id_training',
+				t.order IS NULL, t.order',
 			$this->translator->getDefaultLocale()
 		);
 
