@@ -92,6 +92,10 @@ class TrainingsPresenter extends BasePresenter
 	public function actionDate($param)
 	{
 		$this->dateId = $param;
+		if (!$this->dateId) {
+			throw new \Nette\Application\BadRequestException('Missing date id', \Nette\Http\Response::S404_NOT_FOUND);
+		}
+
 		$this->redirectParam = $this->dateId;
 		$this->training = $this->trainingDates->get($this->dateId);
 		if (!$this->training) {
