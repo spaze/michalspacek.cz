@@ -19,7 +19,7 @@
 		<th>Datum:</th><td>{if $trainingStart}{$trainingStart|date:'j. n. Y'}, {$trainingCity}{else}{input date}{/if}</td>
 	</tr>
 	<tr>
-		<th>{label name /}</th><td>{input name} <small n:if="$toBeInvited || $attended">Odkazy: <a n:if="$toBeInvited" n:href=":Www:Redirect:application#prihlaska $accessToken">předvyplněná přihláška</a> <a n:if="$attended" n:href=":Www:Redirect:files $accessToken">účastníkovo soubory</a></small></td>
+		<th>{label name /}</th><td>{input name} <small n:if="$toBeInvited"><a n:href=":Www:Redirect:application#prihlaska $accessToken">předvyplněná přihláška</a></small> <small n:if="$attended"><a n:href=":Www:Redirect:files $accessToken">účastníkovo soubory</a> ({if $webTrackingEnabled}<strong title="Vypněte tracking pro tento prohlížeč">změní status</strong>{else}nezmění status{/if})</small></td>
 	</tr>
 	<tr>
 		<th>{label email /}</th><td>{input email}</td>

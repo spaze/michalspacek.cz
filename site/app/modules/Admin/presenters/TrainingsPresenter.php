@@ -34,6 +34,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Reviews */
 	protected $trainingReviews;
 
+	/** @var \MichalSpacekCz\WebTracking */
+	protected $webTracking;
+
 	/** @var array */
 	private $dates;
 
@@ -67,6 +70,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
+	 * @param \MichalSpacekCz\WebTracking $webTracking
 	 */
 	public function __construct(
 		Training\Applications $trainingApplications,
@@ -75,7 +79,8 @@ class TrainingsPresenter extends BasePresenter
 		Training\Trainings $trainings,
 		Training\Venues $trainingVenues,
 		Training\Files $trainingFiles,
-		Training\Reviews $trainingReviews
+		Training\Reviews $trainingReviews,
+		\MichalSpacekCz\WebTracking $webTracking
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
@@ -85,6 +90,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
 		$this->trainingReviews = $trainingReviews;
+		$this->webTracking = $webTracking;
 		parent::__construct();
 	}
 
@@ -198,6 +204,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->accessToken   = $this->application->accessToken;
 		$this->template->history       = $this->trainingStatuses->getStatusHistory($this->applicationId);
 		$this->template->reviewId      = $this->trainingReviews->getReviewIdByApplicationId($this->applicationId);
+		$this->template->webTrackingEnabled = $this->webTracking->isEnabled();
 	}
 
 
