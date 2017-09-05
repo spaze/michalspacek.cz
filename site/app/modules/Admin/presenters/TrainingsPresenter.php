@@ -38,9 +38,6 @@ class TrainingsPresenter extends BasePresenter
 	protected $webTracking;
 
 	/** @var array */
-	private $dates;
-
-	/** @var array */
 	private $applications;
 
 	/** @var array */
