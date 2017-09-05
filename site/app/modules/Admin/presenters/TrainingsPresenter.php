@@ -430,7 +430,7 @@ class TrainingsPresenter extends BasePresenter
 			(isset($values->date) ? $values->date : false)
 		);
 		if (isset($this->dateId) || isset($values->date)) {
-			$this->redirect('date', $this->dateId);
+			$this->redirect('date', $values->date ?? $this->dateId);
 		} else {
 			$this->redirect('preliminary', $this->applicationId);
 		}
