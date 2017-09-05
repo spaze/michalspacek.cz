@@ -513,6 +513,7 @@ class Applications
 				a.discount,
 				a.invoice_id AS invoiceId,
 				a.paid,
+				a.access_token AS accessToken,
 				sr.alias AS sourceAlias,
 				sr.name AS sourceName
 			FROM

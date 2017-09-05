@@ -194,6 +194,8 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->sourceName    = $this->application->sourceName;
 		$this->template->companyId     = $this->application->companyId;
 		$this->template->attended      = in_array($this->application->status, $this->trainingStatuses->getAttendedStatuses());
+		$this->template->toBeInvited   = in_array($this->application->status, $this->trainingStatuses->getParentStatuses(\MichalSpacekCz\Training\Statuses::STATUS_INVITED));
+		$this->template->accessToken   = $this->application->accessToken;
 		$this->template->history       = $this->trainingStatuses->getStatusHistory($this->applicationId);
 		$this->template->reviewId      = $this->trainingReviews->getReviewIdByApplicationId($this->applicationId);
 	}
