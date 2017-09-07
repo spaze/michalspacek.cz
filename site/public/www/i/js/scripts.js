@@ -40,6 +40,16 @@ $(document).ready(function() {
 	};
 	$('#loadData a, #loadDataAgain a').click(APPLICATION.loadData);
 	$('#loadData').show();
+	APPLICATION.changeLabels = function() {
+		$('#frm-application').find('label').each(function() {
+			var label = $(this).data('label-' + $('#frm-application-country').val());
+			if (label) {
+				$(this).text(label);
+			}
+		});
+	};
+	$('#frm-application-country').change(APPLICATION.changeLabels);
+	APPLICATION.changeLabels();
 
 	var ENCRYPTION = ENCRYPTION || {};
 	ENCRYPTION.feedback = $(document.queryCommandSupported('copy') ? '#copied' : '#copythis');

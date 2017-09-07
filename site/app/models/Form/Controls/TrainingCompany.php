@@ -24,7 +24,12 @@ trait TrainingCompany
 		$container->addText('companyTaxId', 'DIČ:')
 			->setRequired(false)
 			->addRule(self::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
-			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200);
+			->addRule(self::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200)
+			->getLabelPrototype()
+				->addAttributes([
+					'data-label-cz' => $this->translator->translate('messages.label.taxid.cz') . ':',
+					'data-label-sk' => $this->translator->translate('messages.label.taxid.sk') . ':',
+				]);
 		$container->addText('company', 'Obchodní jméno:')
 			->setRequired(false)
 			->addRule(self::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)

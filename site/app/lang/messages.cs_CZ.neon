@@ -123,6 +123,9 @@ label:
 	download: Stáhnout
 	encrypt: Zašifrovat
 	copy: Kopírovat
+	taxid:
+		cz: DIČ
+		sk: IČ DPH
 contact:
 	twitter: @spazef0rze
 	skypename: spazef0rze

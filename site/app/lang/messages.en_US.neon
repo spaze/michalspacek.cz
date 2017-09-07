@@ -123,6 +123,9 @@ label:
 	download: Download
 	encrypt: Encrypt
 	copy: Copy
+	taxid:
+		cz: VAT ID
+		sk: VAT ID
 contact:
 	twitter: @spazef0rze
 	skypename: spazef0rze
