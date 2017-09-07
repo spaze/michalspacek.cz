@@ -53,9 +53,10 @@ $(document).ready(function() {
 
 	var ENCRYPTION = ENCRYPTION || {};
 	ENCRYPTION.feedback = $(document.queryCommandSupported('copy') ? '#copied' : '#copythis');
+	ENCRYPTION.button = $('#encrypt');
 	ENCRYPTION.reset = function() {
-		$('#encrypt').text($('#encrypt').data('encrypt'));
-		$('#encrypt').off('click').click(ENCRYPTION.handler);
+		ENCRYPTION.button.text(ENCRYPTION.button.data('encrypt'));
+		ENCRYPTION.button.off('click').click(ENCRYPTION.handler);
 		ENCRYPTION.feedback.fadeOut('fast');
 	};
 	ENCRYPTION.handler = function() {
@@ -66,8 +67,8 @@ $(document).ready(function() {
 		};
 		openpgp.encrypt(options).then(function(ciphertext) {
 			$('#message').val(ciphertext.data);
-			$('#encrypt').text($('#encrypt').data('copy'));
-			$('#encrypt').off('click').click(function() {
+			ENCRYPTION.button.text(ENCRYPTION.button.data('copy'));
+			ENCRYPTION.button.off('click').click(function() {
 				$('#message').select();
 				if (document.queryCommandSupported('copy')) {
 					document.execCommand('copy');
@@ -86,14 +87,14 @@ $(document).ready(function() {
 		}
 	});
 
-	if ($('#encrypt').length) {
+	if (ENCRYPTION.button.length) {
 		document.getElementsByTagName('head')[0].appendChild(
 			$(document.createElement('script'))
 				.prop('async', true)
-				.attr('integrity', $('#encrypt').data('integrity'))
-				.attr('src', $('#encrypt').data('lib'))
+				.attr('integrity', ENCRYPTION.button.data('integrity'))
+				.attr('src', ENCRYPTION.button.data('lib'))
 				.on('load', function(){
-					$('#encrypt')
+					ENCRYPTION.button
 						.one('click', ENCRYPTION.handler)
 						.removeAttr('title')
 						.prop('disabled', false);
