@@ -39,6 +39,7 @@ $(document).ready(function() {
 		});
 	};
 	$('#loadData a, #loadDataAgain a').click(APPLICATION.loadData);
+	$('#loadDataDisabled').hide();
 	$('#loadData').show();
 	APPLICATION.changeLabels = function() {
 		$('#frm-application').find('label').each(function() {
