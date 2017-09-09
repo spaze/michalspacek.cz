@@ -250,7 +250,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('form.blocking').find('input:input:not(.non-blocking), textarea').change(function() {
+	$('form.blocking').find('input:input:not(.non-blocking), textarea, select').change(function() {
 		$(this).closest('tbody').addClass('changed');
 		$(window).on('beforeunload', function(e) {
 			return e.returnValue = 'ORLY?';  // The value is ignored and not displayed
