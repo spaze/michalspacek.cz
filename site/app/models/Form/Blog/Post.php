@@ -51,7 +51,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			->addRule(self::MIN_LENGTH, 'Text musí mít alespoň %d znaky', 3);
 		$this->addTextArea('originally', 'Původně vydáno:')
 			->addCondition(self::FILLED)
-			->addRule(self::MIN_LENGTH, 'Text musí mít alespoň %d znaky', 3);
+			->addRule(self::MIN_LENGTH, 'Původně vydáno musí mít alespoň %d znaky', 3);
 		$this->addText('ogImage', 'Odkaz na obrázek:')
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na obrázek je %d znaků', 200);
