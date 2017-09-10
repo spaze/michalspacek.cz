@@ -94,6 +94,7 @@ $(document).ready(function() {
 				.prop('async', true)
 				.attr('integrity', ENCRYPTION.button.data('integrity'))
 				.attr('src', ENCRYPTION.button.data('lib'))
+				.attr('crossorigin', 'anonymous')
 				.on('load', function(){
 					ENCRYPTION.button
 						.one('click', ENCRYPTION.handler)
