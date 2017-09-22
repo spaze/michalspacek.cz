@@ -48,11 +48,11 @@
 		</div>
 		<div class="algo-container">
 		{foreach $algos as $algo}
-			{if $iterator->counter === 2}<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
+			{if $iterator->counter === 2}<div><div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
 				<div class="algo">
 					<strong>{$data->algos[$algo->id]}</strong>{if $algo->from || $algo->latestDisclosure} (<span n:if="$algo->from && $algo->fromConfirmed" title="{$algo->from|date:'Y-m'}">since {$algo->from|date:'F Y'}</span>{if $algo->from && $algo->fromConfirmed && $algo->latestDisclosure}, {/if}<span n:if="$algo->latestDisclosure" title="{$algo->latestDisclosure|date:'Y-m-d'}">disclosed {$algo->latestDisclosure|date:'F Y'}</span>){/if}
 				</div>
-				<div>
+				<div class="details">
 				{if $algo->disclosures}
 					<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Details</a></div>
 					<div n:class="expandable, !$isDetail ? hidden">
@@ -65,8 +65,14 @@
 					</div>
 				{/if}
 				</div>
-			{if $iterator->count() > 1 && $iterator->last}</div>{/if}
+			{if $iterator->count() > 1 && $iterator->last}</div></div>{/if}
 		{/foreach}
+		<div>
+			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why {$data->sites[$siteId]->rating}?</a></div>
+			<div n:class="expandable, !$isDetail ? hidden">
+				<p>{$ratingGuide[$data->sites[$siteId]->rating]}</p>
+			</div>
+		</div>
 		</div>
 	{/foreach}
 	</div>

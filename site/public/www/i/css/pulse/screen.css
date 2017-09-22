@@ -50,6 +50,7 @@ ol { margin: 0; }
 }
 .inner-container .history { margin: 0 0 0 0.5em; }
 .inner-container .algo { margin: 0; }
+.inner-container .details, .inner-container .details div { margin-bottom: 0; }
 .inner-container .algo-container p { margin-left: 0.5em; }
 .inner-container .site-container {
 	background-color: #EFEFEF;
