@@ -59,6 +59,16 @@ class Rating
 		'comment',
 	];
 
+	/** @var string[] */
+	private $recommendations = [
+		self::RATING_A => null,
+		self::RATING_B => 'Publish storage and hashing info details "visibly":[link:Pulse:PasswordsStorages:Rating#on-site] (e.g. in the docs or FAQ), then let me know.',
+		self::RATING_C => 'Start using "&quot;slow&quot; hashes":[link:Pulse:PasswordsStorages:Rating#slow-hashes], don\'t forget to "re-hash existing passwords":[blog:upgrading-existing-password-hashes], publish hashing info "visibly":[link:Pulse:PasswordsStorages:Rating#on-site], then let me know.',
+		self::RATING_D => 'Start using "&quot;slow&quot; hashes":[link:Pulse:PasswordsStorages:Rating#slow-hashes], don\'t forget to "re-hash existing passwords":[blog:upgrading-existing-password-hashes], publish hashing info "visibly":[link:Pulse:PasswordsStorages:Rating#on-site], then let me know.',
+		self::RATING_E => 'Start using "&quot;slow&quot; hashes":[link:Pulse:PasswordsStorages:Rating#slow-hashes], also "re-hash existing passwords":[blog:upgrading-existing-password-hashes] if needed, publish hashing info "visibly":[link:Pulse:PasswordsStorages:Rating#on-site], then let me know.',
+		self::RATING_F => 'Hash passwords using a "&quot;slow&quot; hashing function":[link:Pulse:PasswordsStorages:Rating#slow-hashes], publish storage and hashing info "visibly":[link:Pulse:PasswordsStorages:Rating#on-site], then let me know.',
+	];
+
 
 	/**
 	 * Calculate site rating.
@@ -100,6 +110,17 @@ class Rating
 
 
 	/**
+	 * Get recommendation for rating.
+	 *
+	 * @return string|null
+	 */
+	public function getRecommendation(string $rating): ?string
+	{
+		return $this->recommendations[$rating];
+	}
+
+
+		/**
 	 * Get rating guide.
 	 *
 	 * @return string[]

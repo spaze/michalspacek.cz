@@ -68,9 +68,10 @@
 			{if $iterator->count() > 1 && $iterator->last}</div></div>{/if}
 		{/foreach}
 		<div>
-			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why {$data->sites[$siteId]->rating}?</a></div>
+			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why &quot;{$data->sites[$siteId]->rating}&quot;?</a></div>
 			<div n:class="expandable, !$isDetail ? hidden">
 				<p>{$ratingGuide[$data->sites[$siteId]->rating]}</p>
+				<p n:if="$data->sites[$siteId]->recommendation"><small><strong>Recommended change</strong>: {$data->sites[$siteId]->recommendation|format}</small></p>
 			</div>
 		</div>
 		</div>

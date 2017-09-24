@@ -294,6 +294,7 @@ class Passwords
 		}
 		foreach ($storages->sites as $site) {
 			$site->rating = $this->rating->get(reset($storages->storages[$site->companyId][$site->id]));
+			$site->recommendation = $this->rating->getRecommendation($site->rating);
 		}
 		return $storages;
 	}
