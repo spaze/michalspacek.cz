@@ -16,7 +16,8 @@
 <div id="header">
 	{default $pageHeader = $pageTitle}
 	<h1>{$pageHeader}</h1>
-	{ifset #tagline}<p><em>{include #tagline}</em></p>{/ifset}
+	{ifset #tagline}<p class="left"><em>{include #tagline}</em></p>{/ifset}
+	{ifset #tagline-right}<p class="right">{include #tagline-right}</p>{/ifset}
 </div>
 {ifset #menu}<div id="menu" class="inner-container">{include #menu}</div>{/ifset}
 {include #content}

@@ -16,10 +16,12 @@ ol { margin: 0; }
 	line-height: 1em;
 }
 #header p { margin: 0.2em 0 1em 0; }
+#header p.right { margin-left: 1em; }
 #menu {
 	font-size: small;
 	line-height: 1;
 	background-color: #E3E3E3;
+	clear: both;
 }
 #menu a {
 	text-decoration: none;
