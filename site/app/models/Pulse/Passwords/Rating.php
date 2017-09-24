@@ -60,6 +60,16 @@ class Rating
 	];
 
 	/** @var string[] */
+	private $rating = [
+		self::RATING_A => 'Site uses a slow hashing function, this is disclosed "on-site", in the docs, FAQ, etc.',
+		self::RATING_B => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
+		self::RATING_C => 'Passwords hashed with an unsuitable function but at least they are salted and stretched with multiple iterations.',
+		self::RATING_D => 'Inappropriate function used to hash passwords but passwords are salted, at least.',
+		self::RATING_E => 'Unsalted passwords hashed with one iteration of unsuitable function, or passwords encrypted instead of hashed.',
+		self::RATING_F => 'Passwords stored in plaintext, in their original, readable form.',
+	];
+
+	/** @var string[] */
 	private $recommendations = [
 		self::RATING_A => null,
 		self::RATING_B => 'Publish storage and hashing info details "visibly":[link:Pulse:PasswordsStorages:Rating#on-site] (e.g. in the docs or FAQ), then let me know.',
@@ -127,14 +137,7 @@ class Rating
 	 */
 	public function getRatingGuide(): array
 	{
-		return [
-			self::RATING_A => 'Site uses a slow hashing function, this is disclosed "on-site", in the docs, FAQ, etc.',
-			self::RATING_B => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
-			self::RATING_C => 'Passwords hashed with an unsuitable function but at least they are salted and stretched with multiple iterations.',
-			self::RATING_D => 'Inappropriate function used to hash passwords but passwords are salted, at least.',
-			self::RATING_E => 'Unsalted passwords hashed with one iteration of unsuitable function, or passwords encrypted instead of hashed.',
-			self::RATING_F => 'Passwords stored in plaintext, in their original, readable form.',
-		];
+		return $this->rating;
 	}
 
 
