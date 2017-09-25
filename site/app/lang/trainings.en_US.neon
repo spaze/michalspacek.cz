@@ -142,8 +142,8 @@ securityusers:
 	audience: 'Školení je určeno pro uživatele Internetu a webových aplikací.'
 	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Po skončení školení zasílám prezentaci e-mailem. Dostatek prostoru bude věnován na dotazy.'
 	content: '''
-		- Práce s hesly //(o heslech se zmiňuji v krátké přednášce "Zapomeňte vaše hesla":[link:Www:Talks:talk zapomente-vase-hesla-new-media-inspiration]) .[small]//
-		- Password manager
+		- Práce s hesly
+		- Správce hesel ("password manager")
 		- Zabezpečení Facebooku, Twitteru, Google+
 		- Dvoufázová autorizace, ověření přihlášení
 		- HTTPS
