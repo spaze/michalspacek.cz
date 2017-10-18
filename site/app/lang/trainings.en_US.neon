@@ -91,6 +91,23 @@ securityphp:
 		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
 		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
 
+advancedwebsecurity:
+	name: 'Pokročilá webová bezpečnost'
+	description: 'Pokročilá webová bezpečnost'
+	upsell: 'Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci]'
+	prerequisites: 'Kurz Bezpečnost PHP aplikací'
+	audience: 'Vývojáři se zájmem o bezpečnost'
+	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
+	content: '''
+	    Pokročilá webová bezpečnost
+	'''
+	inhouse:
+		description: 'Pokročilá bezpečnost'
+		upsell: 'Pokročilá bezpečnost'
+		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
+		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+
 webperformance:
 	name: "Web application performance"
 	description: 'Přijďte si popovídat o výkonu vašich webových aplikací a dozvědět se nějaké tipy a triky, jak jejich výkon zvýšit. Můžete se inspirovat mojí krátkou "přednáškou na toto téma":[link:Www:Talks:talk optimalizace-vykonu-webovych-aplikaci-vse]. O výkonnosti také píšu "články":[link:Www:Articles:] a "přednáším":[link:Www:Talks:].'
