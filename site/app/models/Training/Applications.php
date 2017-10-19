@@ -293,7 +293,7 @@ class Applications
 	 */
 	public function addPreliminaryInvitation(\Nette\Database\Row $training, $name, $email)
 	{
-		return $this->insertApplication($training, null, $name, $email, null, null, null, null, null, null, null, null, null, Statuses::STATUS_TENTATIVE, $this->resolveSource());
+		return $this->insertApplication($training, null, $name, $email, null, null, null, null, null, null, null, null, Statuses::STATUS_TENTATIVE, $this->resolveSource());
 	}
 
 
