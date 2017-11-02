@@ -23,8 +23,8 @@ parameters:
 		imagesRoot: /i/images
 		locationRoot: /srv/www/michalspacek.cz/site/public/www
 	reporting:
-		contentSecurityPolicy: https://plz.report-uri.io/r/default/csp/enforce
-		publicKeyPins: https://plz.report-uri.io/r/default/hpkp/reportOnly
+		contentSecurityPolicy: https://plz.report-uri.com/r/default/csp/enforce
+		publicKeyPins: https://plz.report-uri.com/r/default/hpkp/reportOnly
 	publicKeyPins:
 		www:
 			pins:
