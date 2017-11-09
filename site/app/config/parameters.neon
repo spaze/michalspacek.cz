@@ -45,7 +45,9 @@ parameters:
 	vatRate: 0.21
 	loadCompanyDataVisible: true
 	ares:
-		url: 'http://athena-59c4.kxcdn.com/cgi-bin/ares/darv_bas.cgi?ico=%s'
+		url: 'http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
+		proxyUrl: 'http://athena-59c4.kxcdn.com/cgi-bin/ares/darv_bas.cgi?ico=%s'
+		useProxy: false
 	registerUz:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	returningUser:

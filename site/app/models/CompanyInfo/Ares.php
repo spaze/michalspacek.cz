@@ -22,6 +22,12 @@ class Ares implements CompanyDataInterface
 	/** @var string */
 	private $url;
 
+	/** @var string */
+	private $proxyUrl;
+
+	/** @var boolean */
+	private $useProxy = false;
+
 	/** @var \MichalSpacekCz\KeyCdn */
 	protected $keyCdn;
 
@@ -41,6 +47,24 @@ class Ares implements CompanyDataInterface
 	public function setUrl($url)
 	{
 		$this->url = $url;
+	}
+
+
+	/**
+	 * @param string $url
+	 */
+	public function setProxyUrl($url)
+	{
+		$this->proxyUrl = $url;
+	}
+
+
+	/**
+	 * @param boolean $useProxy
+	 */
+	public function setUseProxy($useProxy)
+	{
+		$this->useProxy = $useProxy;
 	}
 
 
@@ -121,7 +145,8 @@ class Ares implements CompanyDataInterface
 				'http' => ['ignore_errors' => true],  // To supress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
 			],
 		]);
-		return file_get_contents($this->keyCdn->signUrl(sprintf($this->url, $companyId)), false, $context);
+		$url = ($this->useProxy ? $this->keyCdn->signUrl(sprintf($this->proxyUrl, $companyId)) : sprintf($this->url, $companyId));
+		return file_get_contents($url, false, $context);
 	}
 
 

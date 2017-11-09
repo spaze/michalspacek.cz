@@ -91,6 +91,8 @@ services:
 		class: \MichalSpacekCz\CompanyInfo\Ares
 		setup:
 			- setUrl(%ares.url%)
+			- setProxyUrl(%ares.proxyUrl%)
+			- setUseProxy(%ares.useProxy%)
 	registerUz:
 		class: \MichalSpacekCz\CompanyInfo\RegisterUz
 		setup:
