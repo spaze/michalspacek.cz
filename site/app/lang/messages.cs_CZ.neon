@@ -231,10 +231,10 @@ trainings:
 	partnertrainings:
 		intro: "Rádi byste se naučili něco dalšího? Doporučuji absolvovat třeba tato **partnerská školení**:"
 		companyintro: "Rádi byste se ve firmě naučili něco dalšího? Doporučuji třeba tato **partnerská školení**:"
-		frontend: "\"Responzivní design\":[%s] a další \"kurzy moderního frontendového vývoje\":[%s], které vede //profík// na CSS Martin Michálek a jeho kolegové"
-		nette: "\"Vývoj webových aplikací v Nette Framework\":[%s] a \"Mistrovství v Nette\":[%s] přímo od autora frameworku Davida Grudla"
-		pehapkari: "\"Péhápkáři\":[%s] pořádají každý měsíc \"školení o technologiích a nástrojích\":[%s], které s PHP úzce souvisí"
-		cryptosession: "\"Dvoudenní školení kryptografie\":[%s] od předního českého kryptologa Jana Dušátka"
+		frontend: "\"Responzivní design\":[%s] a další \"kurzy moderního **frontendového vývoje**\":[%s], které vede //profík// na CSS **Martin Michálek** a jeho kolegové"
+		nette: "\"Vývoj webových aplikací v **Nette Framework**\":[%s] a \"Mistrovství v Nette\":[%s] přímo od autora frameworku **Davida Grudla**"
+		pehapkari: "\"**Péhápkáři**\":[%s] pořádají každý měsíc \"školení o **technologiích a nástrojích**\":[%s], které s PHP úzce souvisí"
+		cryptosession: "\"Dvoudenní školení **kryptografie**\":[%s] od předního českého kryptologa **Jana Dušátka**"
 	files:
 		thankyou: "Díky za účast na školení %s dne %s."
 		download: "Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili."
