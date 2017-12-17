@@ -337,7 +337,7 @@ class TrainingsPresenter extends BasePresenter
 				$applications[$application->id] = $option;
 			}
 		}
-		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications);
+		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications, $this->trainingDates->get($this->review->dateId));
 		$form->setReview($this->review);
 		$form->onSuccess[] = [$this, 'submittedEditReview'];
 		return $form;
@@ -384,7 +384,7 @@ class TrainingsPresenter extends BasePresenter
 				$applications[$application->id] = $option;
 			}
 		}
-		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications);
+		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications, $this->trainingDates->get($this->dateId));
 		$form->onSuccess[] = [$this, 'submittedAddReview'];
 		return $form;
 	}
