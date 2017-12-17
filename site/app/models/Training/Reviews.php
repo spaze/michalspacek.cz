@@ -74,8 +74,7 @@ class Reviews
 	 * Get review by application id.
 	 *
 	 * @param integer $applicationId
-	 * @return \Nette\Database\Row
-	 * @throws \RuntimeException
+	 * @return int|null
 	 */
 	public function getReviewIdByApplicationId(int $applicationId): ?int
 	{
