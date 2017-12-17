@@ -18,6 +18,7 @@ class Reviews
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
+
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
@@ -33,15 +34,16 @@ class Reviews
 
 
 	/**
-	 * Get reviews by training id.
+	 * Get visible reviews by training id.
 	 *
 	 * @param integer $id
 	 * @param integer|null $limit
 	 * @return \Nette\Database\Row[]
 	 */
-	public function getReviews(int $id, ?int $limit = null): array
+	public function getVisibleReviews(int $id, ?int $limit = null): array
 	{
 		$query = 'SELECT
+				r.id_review AS reviewId,
 				COALESCE(r.name, a.name) AS name,
 				COALESCE(r.company, a.company) AS company,
 				r.job_title AS jobTitle,
@@ -62,7 +64,48 @@ class Reviews
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$reviews = $this->database->fetchAll($query, $id, $id);
+		return $this->format($this->database->fetchAll($query, $id, $id));
+	}
+
+
+	/**
+	 * Get all reviews including hidden by training id.
+	 *
+	 * @param integer $id
+	 * @return \Nette\Database\Row[]
+	 */
+	public function getAllReviews(int $id): array
+	{
+		$query = 'SELECT
+				r.id_review AS reviewId,
+				COALESCE(r.name, a.name) AS name,
+				COALESCE(r.company, a.company) AS company,
+				r.job_title AS jobTitle,
+				r.review,
+				r.href,
+				r.hidden
+			FROM
+				training_reviews r
+				LEFT JOIN training_applications a ON r.key_application = a.id_application
+				JOIN training_dates d ON a.key_date = d.id_date
+				JOIN trainings t ON t.id_training = d.key_training
+				LEFT JOIN trainings t2 ON t2.id_training = t.key_successor
+			WHERE
+				(t.id_training = ? OR t2.id_training = ?)
+			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
+
+		return $this->format($this->database->fetchAll($query, $id, $id));
+	}
+
+
+	/**
+	 * Format reviews.
+	 *
+	 * @param \Nette\Database\Row[] $reviews
+	 * @return array
+	 */
+	private function format(array $reviews): array
+	{
 		foreach ($reviews as &$review) {
 			$review['review'] = $this->texyFormatter->format($review['review']);
 		}

@@ -149,7 +149,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates            = $this->dates;
 
-		$this->template->reviews = $this->trainingReviews->getReviews($this->training->trainingId, 3);
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);
 
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
 	}
@@ -374,7 +374,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
-		$this->template->reviews = $this->trainingReviews->getReviews($training->trainingId);
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId);
 	}
 
 
@@ -468,7 +468,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $upcoming;
 
 		$this->template->form = $this->createComponentApplication('application');
-		$this->template->reviews = $this->trainingReviews->getReviews($training->trainingId, 3);
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);
 	}
 
 

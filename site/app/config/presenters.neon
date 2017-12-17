@@ -32,6 +32,7 @@ services:
 	- \App\AdminModule\Presenters\InterviewsPresenter
 	- \App\AdminModule\Presenters\InvoicesPresenter
 	- \App\AdminModule\Presenters\PulsePresenter
+	- \App\AdminModule\Presenters\ReviewsPresenter
 	- \App\AdminModule\Presenters\SignPresenter
 	- \App\AdminModule\Presenters\TalksPresenter
 	- \App\AdminModule\Presenters\TrackingPresenter
