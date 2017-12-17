@@ -177,9 +177,9 @@ class Reviews
 	 * @param integer $dateId
 	 * @return \Nette\Database\Row[]
 	 */
-	public function getReviewByDateId(int $dateId): array
+	public function getReviewsByDateId(int $dateId): array
 	{
-		return $this->database->fetchAll('SELECT
+		$query = 'SELECT
 				r.id_review AS reviewId,
 				r.key_application AS applicationId,
 				COALESCE(r.name, a.name) AS name,
@@ -192,10 +192,9 @@ class Reviews
 				training_reviews r
 				LEFT JOIN training_applications a ON r.key_application = a.id_application
 			WHERE
-				r.key_date = ? OR a.key_date = ?',
-			$dateId,
-			$dateId
-		);
+				r.key_date = ? OR a.key_date = ?';
+
+		return $this->format($this->database->fetchAll($query, $dateId, $dateId));
 	}
 
 

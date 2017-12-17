@@ -129,7 +129,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->applications  = $this->applications;
 		$this->template->validCount    = $validCount;
 		$this->template->attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
-		$this->template->reviews = $this->trainingReviews->getReviewByDateId($this->dateId);
+		$this->template->reviews = $this->trainingReviews->getReviewsByDateId($this->dateId);
 	}
 
 
@@ -320,7 +320,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentEditReview($formName)
 	{
 		$reviewApplicationIds = [];
-		foreach ($this->trainingReviews->getReviewByDateId($this->review->dateId) as $review) {
+		foreach ($this->trainingReviews->getReviewsByDateId($this->review->dateId) as $review) {
 			if ($review->applicationId !== null) {
 				$reviewApplicationIds[] = $review->applicationId;
 			}
@@ -367,7 +367,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentAddReview($formName)
 	{
 		$reviewApplicationIds = [];
-		foreach ($this->trainingReviews->getReviewByDateId($this->dateId) as $review) {
+		foreach ($this->trainingReviews->getReviewsByDateId($this->dateId) as $review) {
 			if ($review->applicationId !== null) {
 				$reviewApplicationIds[] = $review->applicationId;
 			}
