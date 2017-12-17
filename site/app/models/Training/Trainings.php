@@ -261,7 +261,7 @@ class Trainings
 		);
 
 		foreach ($result as $training) {
-			$training = $this->texyFormatter->formatTraining($training);
+			$this->texyFormatter->formatTraining($training);
 		}
 		return $result;
 	}
@@ -291,7 +291,7 @@ class Trainings
 		);
 
 		foreach ($result as $training) {
-			$training = $this->texyFormatter->formatTraining($training);
+			$this->texyFormatter->formatTraining($training);
 		}
 		return $result;
 	}
@@ -321,7 +321,7 @@ class Trainings
 		);
 
 		foreach ($result as $training) {
-			$training = $this->texyFormatter->formatTraining($training);
+			$this->texyFormatter->formatTraining($training);
 		}
 		return $result;
 	}
