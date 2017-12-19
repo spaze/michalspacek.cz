@@ -98,7 +98,8 @@ class TalksPresenter extends BasePresenter
 			$this->template->$key = $value;
 		}
 		$this->template->maxSlideUploads = $this->maxSlideUploads = (int)ini_get('max_file_uploads');
-		$this->template->newCount = $this->newCount = count($this->request->getPost('new')) ?: (int)empty($this->slides);
+		$count = (is_array($this->request->getPost('new')) ? count($this->request->getPost('new')) : 0);
+		$this->template->newCount = $this->newCount = ($count ?: (int)empty($this->slides));
 		$this->template->dimensions = $this->talks->getSlideDimensions();
 	}
 

@@ -285,8 +285,9 @@ class TrainingsPresenter extends BasePresenter
 			$statuses[$status] = $status;
 		}
 
-		$count = count($this->request->getPost('applications')) ?: 1;
-		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, $count, $statuses, $this->trainingApplications, $this->translator);
+		$applications = $this->request->getPost('applications');
+		$count = (is_array($applications) ? count($applications) : 1);
+		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingApplications, $this->translator);
 		$form->onSuccess[] = [$this, 'submittedApplications'];
 		return $form;
 	}
