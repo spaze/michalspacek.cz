@@ -86,8 +86,8 @@ class BlogPresenter extends BasePresenter
 			$post->published = new \DateTime($values->published);
 			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 			$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-			$post->tags = (empty($values->tags) ? null : $this->blogPost->tagsToArray($values->tags));
-			$post->slugTags = (empty($values->tags) ? null : $this->blogPost->getSlugTags($values->tags));
+			$post->tags = (empty($values->tags) ? [] : $this->blogPost->tagsToArray($values->tags));
+			$post->slugTags = (empty($values->tags) ? [] : $this->blogPost->getSlugTags($values->tags));
 			$post->recommended = (empty($values->recommended) ? null : \Nette\Utils\Json::decode($values->recommended));
 			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 			$this->blogPost->enrich($post);
