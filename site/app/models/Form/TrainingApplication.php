@@ -85,7 +85,13 @@ class TrainingApplication extends ProtectedForm
 			'note' => $application->note,
 		);
 		$this->setDefaults($values);
-		$this->getComponent('companyTaxId')->caption = $this->translator->translate("messages.label.taxid.{$application->country}") . ':';
+
+		$message = "messages.label.taxid.{$application->country}";
+		$caption = $this->translator->translate($message);
+		if ($caption !== $message) {
+			$this->getComponent('companyTaxId')->caption = "{$caption}:";
+		}
+
 		return $this;
 	}
 
