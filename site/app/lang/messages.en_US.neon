@@ -183,7 +183,7 @@ companytrainings:
 	lecturerwho: "about the lecturer"
 	lecturercontact: "contact the lecturer"
 	capacity: "Unlimited but over 12 people we'll have less time for questions."
-	price: "**%s Kč**, %s Kč incl. VAT, significant discounts with a very small number of participants."
+	price: "**%s Kč**, %s Kč incl. VAT"
 	signup: "To order an in-house training, just pick a date and \"drop me an e-mail\":[%s] to sort out other details."
 error:
 	tryother: "Try other pages"
