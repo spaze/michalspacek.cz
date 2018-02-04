@@ -95,7 +95,7 @@ class Ares implements CompanyDataInterface
 				$streetNumber = (string)$data->AA->CO;
 				$city = (string)$data->AA->N;
 				$zip = (string)$data->AA->PSC;
-				$country = strtolower($this->countryCode((string)$data->AA->KS));
+				$country = strtolower($this->countryCode($data));
 			} else {
 				$street = $houseNumber = $streetNumber = $city = $zip = $country = null;
 			}
@@ -177,16 +177,16 @@ class Ares implements CompanyDataInterface
 	/**
 	 * Return ISO 3166-1 alpha-2 by ISO 3166-1 numeric.
 	 *
-	 * @param string $numericCode
+	 * @param \SimpleXMLElement $data
 	 * @return string ISO 3166-1 alpha-2 code
 	 */
-	private function countryCode($numericCode)
+	private function countryCode(\SimpleXMLElement $data)
 	{
 		$codes = array(
 			'203' => 'CZ',
 			'703' => 'SK',
 		);
-		return (isset($codes[$numericCode]) ? $codes[$numericCode] : null);
+		return ($codes[(string)$data->AA->KS] ?? substr((string)$data->DIC, 0, 2) ?: 'CZ');
 	}
 
 }
