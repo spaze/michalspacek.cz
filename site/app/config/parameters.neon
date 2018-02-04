@@ -67,5 +67,5 @@ parameters:
 		tokenExpiration: 120
 
 	certificatesApi:
-		expiringThreshold: 5
+		expiringThreshold: 20
 		hideExpiredAfter: 10
