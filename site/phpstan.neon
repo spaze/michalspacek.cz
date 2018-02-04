@@ -4,7 +4,7 @@ parameters:
 	ignoreErrors:
 		- '#^Access to an undefined property Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
 		- '#^Call to an undefined method Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
-		- '#^Access to private property \$name of class Nette\\Http\\SessionSection#'
+		- '#^Access to private property Nette\\Http\\SessionSection::\$name#'
 
 includes:
 	- vendor/phpstan/phpstan/conf/config.level5.neon
