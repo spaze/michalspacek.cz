@@ -40,7 +40,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Set URL used by API Gateway.
 	 *
-	 * @param string
+	 * @param string $url
 	 */
 	public function setUrl(string $url): void
 	{
@@ -51,7 +51,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Set API Key used by API Gateway.
 	 *
-	 * @param string
+	 * @param string $apiKey
 	 */
 	public function setApiKey(string $apiKey): void
 	{
@@ -62,7 +62,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Set serial number prefixes to generate keys for.
 	 *
-	 * @param array of prefixes
+	 * @param array $prefixes
 	 */
 	public function setPrefixes(array $prefixes): void
 	{
@@ -73,7 +73,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Set router model.
 	 *
-	 * @param string
+	 * @param string $model
 	 */
 	public function setModel(string $model): void
 	{
@@ -97,7 +97,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * If the keys are not already in the database, store them.
 	 *
-	 * @param string
+	 * @param string $ssid
 	 * @return array of \stdClass (serial, key, type)
 	 */
 	public function getKeys(string $ssid): array
@@ -118,7 +118,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Save keys to a database if not already there.
 	 *
-	 * @param string
+	 * @param string $ssid
 	 * @return boolean
 	 */
 	public function saveKeys(string $ssid): bool
@@ -137,7 +137,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Get possible keys and serial for an SSID.
 	 *
-	 * @param string
+	 * @param string $ssid
 	 * @return array of \stdClass (serial, key, type)
 	 */
 	private function generateKeys(string $ssid): array
@@ -188,7 +188,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Fetch keys from database.
 	 *
-	 * @param string
+	 * @param string $ssid
 	 * @return array of \stdClass (serial, key, type)
 	 */
 	private function fetchKeys(string $ssid): array
@@ -216,7 +216,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Do we have keys for given SSID stored already?
 	 *
-	 * @param string
+	 * @param string $ssid
 	 * @return boolean
 	 */
 	private function hasKeys(string $ssid): bool
@@ -237,8 +237,8 @@ class Technicolor implements RouterInterface
 	/**
 	 * Store keys to database.
 	 *
-	 * @param string
-	 * @param array of \stdClass (serial, key, type)
+	 * @param string $ssid
+	 * @param \stdClass[] $keys (serial, key, type)
 	 * @return boolean false if no keys to store, true otherwise
 	 */
 	private function storeKeys(string $ssid, array $keys): bool
@@ -285,9 +285,9 @@ class Technicolor implements RouterInterface
 	/**
 	 * Build key object.
 	 *
-	 * @param string
-	 * @param string
-	 * @param integer
+	 * @param string $serial
+	 * @param string $key
+	 * @param integer $type
 	 * @return \stdClass
 	 */
 	private function buildKey(string $serial, string $key, int $type): \stdClass

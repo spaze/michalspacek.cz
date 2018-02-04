@@ -47,7 +47,6 @@ class CompanyTrainings
 	 * Get training info.
 	 *
 	 * @param string $name
-	 * @param boolean $includeCustom
 	 * @return \Nette\Database\Row|null
 	 */
 	public function getInfo($name): ?\Nette\Database\Row

@@ -99,7 +99,6 @@ class Texy extends \Netxten\Formatter\Texy
 	/**
 	 * Get static content URL root.
 	 *
-	 * @param string $filename
 	 * @return string
 	 */
 	public function getStaticRoot()
@@ -203,11 +202,11 @@ class Texy extends \Netxten\Formatter\Texy
 
 
 	/**
-	 * @param \Texy\HandlerInvocation  handler invocation
-	 * @param string
-	 * @param string
-	 * @param \Texy\Modifier
-	 * @param \Texy\Link
+	 * @param \Texy\HandlerInvocation $invocation handler invocation
+	 * @param string $phrase
+	 * @param string $content
+	 * @param \Texy\Modifier $modifier
+	 * @param \Texy\Link $link
 	 * @return \Texy\HtmlElement|string|FALSE
 	 */
 	function phraseHandler($invocation, $phrase, $content, $modifier, $link)

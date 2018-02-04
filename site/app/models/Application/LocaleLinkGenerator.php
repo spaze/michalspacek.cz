@@ -25,7 +25,7 @@ class LocaleLinkGenerator
 	/**
 	 * @param \MichalSpacekCz\Application\RouterFactory $routerFactory
 	 * @param \Nette\Http\Request $httpRequest
-	 * @param \Nette\Application\IPresenterFactory
+	 * @param \Nette\Application\IPresenterFactory $presenterFactory
 	 */
 	public function __construct(RouterFactory $routerFactory, \Nette\Http\Request $httpRequest, \Nette\Application\IPresenterFactory $presenterFactory)
 	{

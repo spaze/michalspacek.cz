@@ -174,7 +174,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	/**
 	 * Set permanent login interval.
 	 *
-	 * @param string
+	 * @param string $interval
 	 */
 	public function setPermanentLoginInterval($interval)
 	{

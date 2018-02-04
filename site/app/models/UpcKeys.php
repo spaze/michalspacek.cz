@@ -103,8 +103,8 @@ class UpcKeys
 	 *
 	 * If the keys are not already in the database, store them.
 	 *
-	 * @param string
-	 * @return array of \stdClass (serial, key, type)
+	 * @param string $ssid
+	 * @return \stdClass[] (serial, key, type)
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -119,7 +119,7 @@ class UpcKeys
 	/**
 	 * Save keys to a database if not already there.
 	 *
-	 * @param string
+	 * @param string $ssid
 	 * @return boolean
 	 */
 	public function saveKeys(string $ssid): bool
@@ -142,7 +142,7 @@ class UpcKeys
 	/**
 	 * Check whether the SSID is valid for upc_keys to work.
 	 *
-	 * @param string
+	 * @param string $ssid
 	 * @return boolean
 	 */
 	public function isValidSsid(string $ssid): bool

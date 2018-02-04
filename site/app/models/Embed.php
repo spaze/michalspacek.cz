@@ -39,7 +39,7 @@ class Embed
 	 * Get template vars for slides
 	 * @param \Nette\Database\Row $talk
 	 * @param int|null $slide
-	 * @return string[slidesEmbed, slidesDataSlide, slidesEmbedType]
+	 * @return string[] with keys slidesEmbed, slidesDataSlide, slidesEmbedType
 	 */
 	public function getSlidesTemplateVars(\Nette\Database\Row $talk, ?int $slide = null): array
 	{
@@ -76,7 +76,7 @@ class Embed
 	/**
 	 * Get template vars for video.
 	 * @param \Nette\Database\Row $talk
-	 * @return string[videoEmbed, videoEmbedType]
+	 * @return string[] with keys videoEmbed, videoEmbedType
 	 */
 	public function getVideoTemplateVars(\Nette\Database\Row $talk): array
 	{

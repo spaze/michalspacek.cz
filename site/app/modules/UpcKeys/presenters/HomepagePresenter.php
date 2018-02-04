@@ -103,8 +103,8 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * Add information to keys.
 	 *
-	 * @param array (type id => type)
-	 * @return array (type id => type)
+	 * @param \stdClass[] $keys
+	 * @return \stdClass[]
 	 */
 	protected function enrichKeys(array $keys): array
 	{

@@ -111,9 +111,9 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Adds published date input control to the form.
-	 * @param string control name
-	 * @param string label
-	 * @param boolean required
+	 * @param string $name
+	 * @param string $label
+	 * @param boolean $required
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	protected function addPublishedDate($name, $label = null, $required = false)

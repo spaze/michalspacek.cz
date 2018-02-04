@@ -37,7 +37,7 @@ class Ubee implements RouterInterface
 	/**
 	 * Set serial number prefix to get keys for.
 	 *
-	 * @param array of prefixes
+	 * @param array $prefixes
 	 */
 	public function setPrefixes(array $prefixes): void
 	{
@@ -51,7 +51,7 @@ class Ubee implements RouterInterface
 	/**
 	 * Set router model.
 	 *
-	 * @param string
+	 * @param string $model
 	 */
 	public function setModel(string $model): void
 	{
@@ -73,7 +73,7 @@ class Ubee implements RouterInterface
 	/**
 	 * Get keys from database.
 	 *
-	 * @param string
+	 * @param string $ssid
 	 * @return array of \stdClass (serial, key, type)
 	 */
 	public function getKeys(string $ssid): array
@@ -91,8 +91,8 @@ class Ubee implements RouterInterface
 	/**
 	 * Build key object.
 	 *
-	 * @param integer
-	 * @param integer
+	 * @param integer $mac
+	 * @param integer $key
 	 * @return \stdClass
 	 */
 	private function buildKey(int $mac, int $key): \stdClass

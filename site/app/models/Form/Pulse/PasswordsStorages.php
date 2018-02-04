@@ -144,10 +144,10 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Adds from date input control to the form.
-	 * @param \Nette\Forms\Container container
-	 * @param string control name
-	 * @param string label
-	 * @param boolean required
+	 * @param \Nette\Forms\Container $container
+	 * @param string $name
+	 * @param string $label
+	 * @param boolean $required
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	private function addFromDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false): \Nette\Forms\Controls\TextInput
@@ -165,10 +165,10 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Adds published date input control to the form.
-	 * @param \Nette\Forms\Container container
-	 * @param string control name
-	 * @param string label
-	 * @param boolean required
+	 * @param \Nette\Forms\Container $container
+	 * @param string $name
+	 * @param string $label
+	 * @param boolean $required
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	private function addPublishedDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false): \Nette\Forms\Controls\TextInput

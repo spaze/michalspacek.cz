@@ -14,11 +14,9 @@ trait TrainingStatusDate
 
 	/**
 	 * Adds status date input control to the form.
-	 * @param string control name
-	 * @param string label
-	 * @param boolean required
-	 * @param integer width of the control (deprecated)
-	 * @param integer maximum number of characters the user may enter
+	 * @param string $name
+	 * @param string $label
+	 * @param boolean $required
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
 	protected function addStatusDate($name, $label = null, $required = false)

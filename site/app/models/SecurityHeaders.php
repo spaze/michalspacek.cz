@@ -44,7 +44,8 @@ class SecurityHeaders
 	 * @param \Nette\Http\IRequest $httpRequest
 	 * @param \Nette\Http\IResponse $httpResponse
 	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
-	 * @param \MichalSpacek\PublicKeyPins $publicKeyPins
+	 * @param \MichalSpacekCz\PublicKeyPins $publicKeyPins
+	 * @param \MichalSpacekCz\Application\RouterFactory $routerFactory
 	 */
 	public function __construct(
 		\Nette\Http\IRequest $httpRequest,
@@ -92,8 +93,8 @@ class SecurityHeaders
 	/**
 	 * Set Content Security Policy.
 	 *
-	 * @param string $presenter
-	 * @param string $action
+	 * @param string $presenterName
+	 * @param string $actionName
 	 * @return self
 	 */
 	public function setCsp(string $presenterName, string $actionName): self

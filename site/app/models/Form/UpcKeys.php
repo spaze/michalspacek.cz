@@ -14,7 +14,7 @@ class UpcKeys extends UnprotectedForm
 
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
-	 * @param string|null $name
+	 * @param string $name
 	 * @param string $ssid
 	 */
 	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, ?string $ssid, \MichalSpacekCz\UpcKeys $upcKeys)

@@ -207,7 +207,7 @@ class Talks
 	 * Get talk data.
 	 *
 	 * @param string $name
-	 * @return \Nette\Database\Row[]
+	 * @return \Nette\Database\Row
 	 */
 	public function get(string $name): \Nette\Database\Row
 	{
@@ -258,7 +258,7 @@ class Talks
 	 * Get talk data by id.
 	 *
 	 * @param integer $id
-	 * @return \Nette\Database\Row[]
+	 * @return \Nette\Database\Row
 	 */
 	public function getById(int $id): \Nette\Database\Row
 	{

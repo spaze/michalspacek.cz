@@ -17,7 +17,7 @@ class Vat
 
 
 	/**
-	 * @param float
+	 * @param float $rate
 	 */
 	public function setRate(float $rate): void
 	{
@@ -35,7 +35,7 @@ class Vat
 
 
 	/**
-	 * @param integer
+	 * @param integer $price
 	 * @return int
 	 */
 	public function addVat(int $price): int

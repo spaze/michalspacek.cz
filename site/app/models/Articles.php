@@ -138,7 +138,7 @@ class Articles
 	/**
 	 * Get nearest publish date of any article.
 	 *
-	 * @return \DateTimeInterface|null
+	 * @return \DateTime|null
 	 */
 	public function getNearestPublishDate(): ?\DateTime
 	{
@@ -157,7 +157,7 @@ class Articles
 	 * Get nearest publish date of an article by a tag.
 	 *
 	 * @param string $tags
-	 * @return \DateTimeInterface|null
+	 * @return \DateTime|null
 	 */
 	public function getNearestPublishDateByTags(string $tags): ?\DateTime
 	{

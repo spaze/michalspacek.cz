@@ -22,7 +22,7 @@ class FilesPresenter extends BasePresenter
 
 
 	/**
-	 * @param \MichalSpacekCz\Files
+	 * @param \MichalSpacekCz\Files $files
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 */
 	public function __construct(

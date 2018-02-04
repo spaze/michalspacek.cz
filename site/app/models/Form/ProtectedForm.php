@@ -14,7 +14,7 @@ abstract class ProtectedForm extends \Nette\Application\UI\Form
 
 	/**
 	 * Application form constructor.
-	 * @param Nette\ComponentModel\IContainer $parent
+	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 */
 	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name)

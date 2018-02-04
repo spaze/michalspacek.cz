@@ -61,7 +61,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Files
+	 * @param \MichalSpacekCz\Files $files
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates

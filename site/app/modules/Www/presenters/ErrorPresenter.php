@@ -31,7 +31,7 @@ class ErrorPresenter extends BasePresenter
 
 
 	/**
-	 * @param \MichalSpacekCz\Redirections $translator
+	 * @param \MichalSpacekCz\Redirections $redirections
 	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
 	 */
 	public function __construct(\MichalSpacekCz\Redirections $redirections, \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator)
