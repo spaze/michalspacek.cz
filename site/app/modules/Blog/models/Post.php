@@ -38,6 +38,10 @@ class Post
 	/** @var \Nette\Localization\ITranslator */
 	protected $translator;
 
+	/** @var string[] */
+	private $locales;
+
+
 	/**
 	 * @param \Nette\Database\Context $context
 	 * @param Post\Loader $loader
@@ -366,7 +370,22 @@ class Post
 	 */
 	public function getAllLocales(): array
 	{
-		return $this->database->fetchPairs('SELECT id_blog_post_locale, locale FROM blog_post_locales ORDER BY id_blog_post_locale');
+		if ($this->locales === null) {
+			$this->locales = $this->database->fetchPairs('SELECT id_blog_post_locale, locale FROM blog_post_locales ORDER BY id_blog_post_locale');
+		}
+		return $this->locales;
+	}
+
+
+	/**
+	 * Get locale by its id.
+	 *
+	 * @param integer $id
+	 * @return string|null
+	 */
+	public function getLocaleById(int $id): ?string
+	{
+		return $this->getAllLocales()[$id] ?? null;
 	}
 
 

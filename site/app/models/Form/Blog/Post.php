@@ -31,6 +31,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			->setRequired(false)
 			->setType('number');
 		$this->addSelect('locale', 'Jazyk:', $this->blogPost->getAllLocales())
+			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');
 		$this->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')

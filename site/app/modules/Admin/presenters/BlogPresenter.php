@@ -77,7 +77,8 @@ class BlogPresenter extends BasePresenter
 		try {
 			$post = new \MichalSpacekCz\Blog\Post\Data();
 			$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
-			$post->localeId = (empty($values->locale) ? null : $values->locale);
+			$post->localeId = $values->locale;
+			$post->locale = $this->blogPost->getLocaleById($values->locale);
 			$post->slug = $values->slug;
 			$post->titleTexy = $values->title;
 			$post->leadTexy = (empty($values->lead) ? null : $values->lead);
@@ -139,7 +140,8 @@ class BlogPresenter extends BasePresenter
 		$post = new \MichalSpacekCz\Blog\Post\Data();
 		$post->postId = $this->post->postId;
 		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
-		$post->localeId = (empty($values->locale) ? null : $values->locale);
+		$post->localeId = $values->locale;
+		$post->locale = $this->blogPost->getLocaleById($values->locale);
 		$post->slug = $values->slug;
 		$post->titleTexy = $values->title;
 		$post->leadTexy = (empty($values->lead) ? null : $values->lead);
