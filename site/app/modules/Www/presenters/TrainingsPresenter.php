@@ -204,7 +204,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentApplication($formName)
 	{
 		$form = new \MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
-		$form->setApplicationFromSession($this->getSession('training'));
+		$form->setApplicationFromSession($this->session->getSection('training'));
 		$form->onSuccess[] = [$this, 'submittedApplication'];
 	}
 
