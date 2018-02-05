@@ -92,7 +92,7 @@ class BlogPresenter extends BasePresenter
 			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 			$this->blogPost->enrich($post);
 			$this->blogPost->add($post);
-			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$this->link('edit', [$post->postId]), $post->href]));
+			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
 		} catch (\UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
 		}
@@ -156,7 +156,7 @@ class BlogPresenter extends BasePresenter
 		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
 		$this->blogPost->enrich($post);
 		$this->blogPost->update($post);
-		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$this->link('edit', [$post->postId]), $post->href]));
+		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
 		$this->redirect('Blog:');
 	}
 

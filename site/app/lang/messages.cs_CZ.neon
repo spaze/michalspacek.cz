@@ -303,6 +303,6 @@ blog:
 		recommendedreading: "Mohlo by vás také zajímat"
 		edits: "Aktualizace článku"
 	admin:
-		postadded: "Příspěvek na blog přidán • \"Upravit\":[%s] • \"Zobrazit\":[%s]"
-		postupdated: "Příspěvek upraven • \"Upravit\":[%s] • \"Zobrazit\":[%s]"
+		postadded: "Příspěvek \"%s\" přidán • \"Upravit\":[%s] • \"Zobrazit\":[%s]"
+		postupdated: "Příspěvek \"%s\" upraven • \"Upravit\":[%s] • \"Zobrazit\":[%s]"
 		duplicateslug: "Příspěvek s takovým slugem již existuje"
