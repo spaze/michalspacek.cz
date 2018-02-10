@@ -310,6 +310,7 @@ class Talks
 	 */
 	private function format(\Nette\Database\Row $row): void
 	{
+		$this->texyFormatter->setTopHeading(3);
 		foreach (['title', 'event'] as $item) {
 			if (isset($row[$item])) {
 				$row[$item] = $this->texyFormatter->format($row[$item]);
