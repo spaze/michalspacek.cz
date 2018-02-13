@@ -46,4 +46,17 @@
 		I want to highlight companies doing great job too, not just the crappy ones. But I love Plain Text Offenders nonetheless. And I mean the site.
 	</p>
 </div>
+<div class="inner-container" id="plaintextoffenders">
+	<h2>How do you independently discover a plaintext storage? <small><a href="#plaintext-discovery" class="permalink">#</a></small></h2>
+	<p>
+		If you forget your password, and the site emails the original one back to you, then it most probably is storing them in plaintext. It could be storing them encrypted too, but seems it's a less frequent option than a plaintext storage.
+		So I'll go with the worst-case scenario, and rate the site with grade F, which is used for rating plaintext storage, not grade E, used for encrypted password storage.
+		Companies have an urge to correct me when the rating is wrong, so it's also motivational for them in it's own special way.
+	</p>
+	<p>
+		You can also use my <a href="https://github.com/spaze/hashes#md5-and-sha-1">PHP hash &quot;collisions&quot; technique</a> exploiting the fact that in PHP, <code>md5('240610708') == md5('QNKCDZO')</code> (not with <code>===</code>),
+		<a href="https://github.com/spaze/hashes#plaintext">modified for detecting a plaintext storage</a>. Some companies were caught red-handed using this trick, like <a n:href="site 'ihned.cz'">this Czech news site</a>.
+	</p>
+	<p>Note: when the service emails you your password right after signing up, they could still store the password securely, they have just emailed it to you before storing it. And no, emailing passwords is not right.</p>
+</div>
 {/define}
