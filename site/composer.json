@@ -21,7 +21,8 @@
 		"spaze/sri-macros": "dev-master",
 		"kdyby/translation": "dev-master",
 		"defuse/php-encryption": "dev-master",
-		"roave/security-advisories": "dev-master"
+		"roave/security-advisories": "dev-master",
+		"paragonie/halite": "^4"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
