@@ -1,7 +1,7 @@
 <?php
 namespace MichalSpacekCz\Encryption\Symmetric;
 
-use Defuse\Crypto;
+use ParagonIE\Halite;
 
 /**
  * StaticKey encryption service.
@@ -14,7 +14,7 @@ class StaticKey
 
 	use \Nette\SmartObject;
 
-	const KEY_IV_CIPHERTEXT_SEPARATOR = '$';
+	private const KEY_CIPHERTEXT_SEPARATOR = '$';
 
 	/** @var string[] */
 	private $keys;
@@ -49,15 +49,7 @@ class StaticKey
 	{
 		$keyId = $this->getActiveKeyId($group);
 		$key = $this->getKey($group, $keyId);
-
-		try {
-			$cipherText = Crypto\Crypto::encrypt($data, $key);
-		} catch (Crypto\Exception\CryptoTestFailedException $e) {
-			throw new \RuntimeException('Crypto test failed because: ' . $e->getMessage());
-		} catch (Crypto\Exception\CannotPerformOperationException $e) {
-			throw new \RuntimeException('Cannot encrypt because: ' . $e->getMessage());
-		}
-
+		$cipherText = Halite\Symmetric\Crypto::encrypt(new Halite\HiddenString($data), $key);
 		return $this->formatKeyCipherText($keyId, $cipherText);
 	}
 
@@ -66,25 +58,23 @@ class StaticKey
 	{
 		list($keyId, $cipherText) = $this->parseKeyCipherText($data);
 		$key = $this->getKey($group, $keyId);
-
-		try {
-			$plainText = Crypto\Crypto::decrypt($cipherText, $key);
-		} catch (Crypto\Exception\InvalidCiphertextException $e) {
-			throw new \RuntimeException('The ciphertext has been tampered with!');
-		} catch (Crypto\Exception\CryptoTestFailedException $e) {
-			throw new \RuntimeException('Crypto test failed because: ' . $e->getMessage());
-		} catch (Crypto\Exception\CannotPerformOperationException $e) {
-			throw new \RuntimeException('Cannot encrypt because: ' . $e->getMessage());
-		}
-
-		return $plainText;
+		return Halite\Symmetric\Crypto::decrypt($cipherText, $key)->getString();
 	}
 
 
-	private function getKey($group, $keyId)
+	/**
+	 * Get encryption key.
+	 *
+	 * @param $group
+	 * @param $keyId
+	 * @return Halite\Symmetric\EncryptionKey
+	 * @throws Halite\Alerts\InvalidKey
+	 * @throws \TypeError
+	 */
+	private function getKey($group, $keyId): Halite\Symmetric\EncryptionKey
 	{
 		if (isset($this->keys[$group][$keyId])) {
-			return $this->keys[$group][$keyId];
+			return new Halite\Symmetric\EncryptionKey(new Halite\HiddenString($this->keys[$group][$keyId]));
 		} else {
 			throw new \OutOfRangeException('Unknown encryption key id: ' . $keyId);
 		}
@@ -99,21 +89,17 @@ class StaticKey
 
 	private function parseKeyCipherText($data)
 	{
-		$data = explode(self::KEY_IV_CIPHERTEXT_SEPARATOR, $data);
+		$data = explode(self::KEY_CIPHERTEXT_SEPARATOR, $data);
 		if (count($data) !== 3) {
 			throw new \OutOfBoundsException('Data must have cipher, key, iv, and ciphertext. Now look at the Oxford comma!');
 		}
-		return array(base64_decode($data[1]), base64_decode($data[2]));
+		return array($data[1], $data[2]);
 	}
 
 
 	private function formatKeyCipherText($keyId, $cipherText)
 	{
-		$data = array(
-			base64_encode($keyId),
-			base64_encode($cipherText),
-		);
-		return self::KEY_IV_CIPHERTEXT_SEPARATOR . implode(self::KEY_IV_CIPHERTEXT_SEPARATOR, $data);
+		return self::KEY_CIPHERTEXT_SEPARATOR . $keyId . self::KEY_CIPHERTEXT_SEPARATOR . $cipherText;
 	}
 
 }
