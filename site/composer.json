@@ -20,7 +20,6 @@
 		"spaze/nonce-generator": "dev-master",
 		"spaze/sri-macros": "dev-master",
 		"kdyby/translation": "dev-master",
-		"defuse/php-encryption": "dev-master",
 		"roave/security-advisories": "dev-master",
 		"paragonie/halite": "^4"
 	},

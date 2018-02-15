@@ -4,57 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "691d012b6f18ca28816e167f3db18a70",
+    "content-hash": "c45892384a14ba7b1f42888bf654801a",
     "packages": [
-        {
-            "name": "defuse/php-encryption",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/defuse/php-encryption.git",
-                "reference": "522859f0b3f35fe83be5803ede83af3f517bfd5b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/defuse/php-encryption/zipball/522859f0b3f35fe83be5803ede83af3f517bfd5b",
-                "reference": "522859f0b3f35fe83be5803ede83af3f517bfd5b",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*",
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "autoload.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Hornby",
-                    "email": "havoc@defuse.ca"
-                }
-            ],
-            "description": "Secure PHP Encryption Library",
-            "keywords": [
-                "aes",
-                "authenticated encryption",
-                "cipher",
-                "crypto",
-                "cryptography",
-                "encrypt",
-                "encryption",
-                "openssl",
-                "security",
-                "symmetric key cryptography"
-            ],
-            "time": "2016-04-02T22:35:15+00:00"
-        },
         {
             "name": "kdyby/strict-objects",
             "version": "v1.0.0",
@@ -2870,7 +2821,6 @@
         "spaze/nonce-generator": 20,
         "spaze/sri-macros": 20,
         "kdyby/translation": 20,
-        "defuse/php-encryption": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
