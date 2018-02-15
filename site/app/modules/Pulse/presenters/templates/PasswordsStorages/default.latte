@@ -25,6 +25,7 @@
 	<h2 id="{$data->companies[$companyId]->alias}" n:if="!$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->companyName}</h2>
 	<h2 id="{$data->companies[$companyId]->alias}" n:if="$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->tradeName} <small>({$data->companies[$companyId]->companyName})</small></h2>
 	{foreach $sites as $siteId => $algos}
+		{var $noFollow = ($data->sites[$siteId]->secureStorage ? false : 'nofollow')}
 		{if !$data->sites[$siteId]->typeAll}
 			{var $detailsLink = 'site'}
 			{var $detailsParam = $data->sites[$siteId]->alias}
@@ -38,7 +39,7 @@
 			<div class="left">
 				{if !$data->sites[$siteId]->typeAll}
 					<a n:href="site $data->sites[$siteId]->alias" title="Open details">{$data->sites[$siteId]->alias}</a>
-					<small><a href="{$data->sites[$siteId]->url}" title="Go to site">&nearr;</a></small>
+					<small><a href="{$data->sites[$siteId]->url}" n:attr="rel => $noFollow" title="Go to site">&nearr;</a></small>
 				{else}
 					<p><a n:href="company $data->companies[$companyId]->alias" title="Open details">All sites</a></p>
 				{/if}
@@ -60,7 +61,7 @@
 					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>
 					<p>Disclosures:</p>
 					<ul n:inner-foreach="$algo->disclosures as $disclosure">
-						<li><small title="{$disclosure->published|date:'Y-m-d H:i'}">{$disclosure->published|date:'Y-m-d'}</small> <a href="{$disclosure->url}">{$disclosure->type}</a>{if $disclosure->archive} <sup><a href="{$disclosure->archive}" title="archived">arch</a></sup>{/if}{if $disclosure->note}<small> ({$disclosure->note})</small>{/if}</li>
+						<li><small title="{$disclosure->published|date:'Y-m-d H:i'}">{$disclosure->published|date:'Y-m-d'}</small> <a href="{$disclosure->url}" n:attr="rel => $noFollow">{$disclosure->type}</a>{if $disclosure->archive} <sup><a href="{$disclosure->archive}" title="archived">arch</a></sup>{/if}{if $disclosure->note}<small> ({$disclosure->note})</small>{/if}</li>
 					</ul>
 					</div>
 				{/if}

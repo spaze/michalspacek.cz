@@ -130,7 +130,18 @@ class Rating
 	}
 
 
-		/**
+	/**
+	 * Check whether the rating represents secure storage.
+	 *
+	 * @return bool
+	 */
+	public function isSecureStorage(string $rating): bool
+	{
+		return in_array($rating, [self::RATING_A, self::RATING_B]);
+	}
+
+
+	/**
 	 * Get rating guide.
 	 *
 	 * @return string[]

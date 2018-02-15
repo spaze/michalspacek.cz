@@ -113,6 +113,22 @@ class RatingTest extends \Tester\TestCase
 		Assert::same('F', $this->rating->get($this->algo));
 	}
 
+
+	public function testSecureStorage()
+	{
+		$rating = [
+			'A' => true,
+			'B' => true,
+			'C' => false,
+			'D' => false,
+			'E' => false,
+			'F' => false,
+		];
+		foreach ($rating as $grade => $expected) {
+			Assert::same($expected, $this->rating->isSecureStorage($grade));
+		}
+	}
+
 }
 
 $testCase = new RatingTest();
