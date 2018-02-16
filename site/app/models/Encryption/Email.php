@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Encryption;
 
 /**
@@ -12,25 +14,55 @@ class Email
 
 	use \Nette\SmartObject;
 
-	const GROUP = 'email';
+	private const GROUP = 'email';
 
 	/** @var \MichalSpacekCz\Encryption\Symmetric\StaticKey */
 	protected $staticKeyEncryption;
 
 
+	/**
+	 * Setup the service.
+	 *
+	 * @param Symmetric\StaticKey $staticKeyEncryption
+	 */
 	public function __construct(Symmetric\StaticKey $staticKeyEncryption)
 	{
 		$this->staticKeyEncryption = $staticKeyEncryption;
 	}
 
 
-	public function encrypt($data)
+	/**
+	 * Encrypt an email address.
+	 *
+	 * @param string $data
+	 * @return string
+	 * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
+	 * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
+	 * @throws \ParagonIE\Halite\Alerts\InvalidKey
+	 * @throws \ParagonIE\Halite\Alerts\InvalidMessage
+	 * @throws \ParagonIE\Halite\Alerts\InvalidType
+	 * @throws \TypeError
+	 */
+	public function encrypt(string $data): string
 	{
 		return $this->staticKeyEncryption->encrypt($data, self::GROUP);
 	}
 
 
-	public function decrypt($data)
+	/**
+	 * Decrypt an email address.
+	 *
+	 * @param string $data
+	 * @return string
+	 * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
+	 * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
+	 * @throws \ParagonIE\Halite\Alerts\InvalidKey
+	 * @throws \ParagonIE\Halite\Alerts\InvalidMessage
+	 * @throws \ParagonIE\Halite\Alerts\InvalidSignature
+	 * @throws \ParagonIE\Halite\Alerts\InvalidType
+	 * @throws \TypeError
+	 */
+	public function decrypt(string $data): string
 	{
 		return $this->staticKeyEncryption->decrypt($data, self::GROUP);
 	}
