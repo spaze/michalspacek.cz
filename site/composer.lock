@@ -1839,12 +1839,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "a6dd371d5c28b9a18f7bde834915d76ade378959"
+                "reference": "8f698b586280c0e49d09b0d4433b0610141fb653"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/a6dd371d5c28b9a18f7bde834915d76ade378959",
-                "reference": "a6dd371d5c28b9a18f7bde834915d76ade378959",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/8f698b586280c0e49d09b0d4433b0610141fb653",
+                "reference": "8f698b586280c0e49d09b0d4433b0610141fb653",
                 "shasum": ""
             },
             "require": {
@@ -1864,7 +1864,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-12-19T21:59:41+00:00"
+            "time": "2018-02-16T01:11:12+00:00"
         },
         {
             "name": "spaze/nonce-generator",

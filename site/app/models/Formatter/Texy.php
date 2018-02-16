@@ -270,21 +270,21 @@ class Texy extends \Netxten\Formatter\Texy
 
 	/**
 	 * @param string|null $text
-	 * @return Html|false
+	 * @return Html|null
 	 */
 	public function format($text)
 	{
-		return (empty($text) ? false : $this->replace(parent::format($text)));
+		return (empty($text) ? null : $this->replace(parent::format($text)));
 	}
 
 
 	/**
 	 * @param string|null $text
-	 * @return Html|false
+	 * @return Html|null
 	 */
 	public function formatBlock($text)
 	{
-		return (empty($text) ? false : $this->replace(parent::formatBlock($text)));
+		return (empty($text) ? null : $this->replace(parent::formatBlock($text)));
 	}
 
 
