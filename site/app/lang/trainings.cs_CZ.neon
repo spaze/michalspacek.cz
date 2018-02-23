@@ -206,8 +206,8 @@ httpsdevsadmins:
 		description: 'Šifrování přenášených informací nezabezpečí váš web. HTTPS však zabezpečí jeho návštěvníky, informace a soubory, které si stahují i jejich hesla. Pokud vaše webová aplikace nabízí nebo vyžaduje přihlášení, rozhodně by na HTTPS měla běžet. HTTPS má spoustu nastavení i drobností, které je ale potřeba vyřešit správně, aby uživatelé byli chránění pokud možno co nejlépe. Na tomto školení to vaše vývojáře a správce naučím.'
 		upsell: 'Na školení "Bezpečnost webových aplikací":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci] vývojáře naučím, jak web zabezpečit proti dalším častým útokům.'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami.'
-		alternativeduration: 'Můžeme uspořádat i půldenní školení, ale bude v něm méně podrobností a praktických příkladů.'
-		alternativedurationprice: 'Základní cena půldenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativeduration: 'Chcete si vyzkoušet vytvořit vlastní certifikační autoritu a vystavit certifikát nebo se naučit odhalovat problémy v HTTPS spojení? Školení můžeme uspořádat i dvoudenní.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
 
 securityjava:
 	name: "Bezpečnost webových aplikací (Java)"
