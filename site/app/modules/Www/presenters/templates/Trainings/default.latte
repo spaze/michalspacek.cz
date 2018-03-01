@@ -28,6 +28,15 @@
 </ul>
 {/define}
 
+{define #partnerTrainings}
+<ul>
+	<li><small>{_messages.trainings.partnertrainings.frontend|format:'http://www.vzhurudolu.cz/kurzy/responzivni-design':'http://www.vzhurudolu.cz/kurzy'}</small></li>
+	<li><small>{_messages.trainings.partnertrainings.nette|format:'https://www.skoleniphp.cz/skoleni-nette-vyvoj-webovych-aplikaci':'https://www.skoleniphp.cz/skoleni-mistrovstvi-v-nette'}</small></li>
+	<li><small>{_messages.trainings.partnertrainings.pehapkari|format:'https://pehapkari.cz/':'https://pehapkari.cz/vzdelavej-se/'}</small></li>
+	<li><small>{_messages.trainings.partnertrainings.cryptosession|format:'http://cryptosession.cz/'}</small></li>
+</ul>
+{/define}
+
 {define #content}
 <h3>{_messages.label.publictrainings}</h3>
 <p>{_messages.trainings.welcome}</p>
@@ -48,10 +57,5 @@
 <hr />
 <h4>{_messages.label.partnertrainings}</h4>
 <p><small>{_messages.trainings.partnertrainings.intro|format}</small></p>
-<ul>
-	<li><small>{_messages.trainings.partnertrainings.frontend|format:'http://www.vzhurudolu.cz/kurzy/responzivni-design':'http://www.vzhurudolu.cz/kurzy'}</small></li>
-	<li><small>{_messages.trainings.partnertrainings.nette|format:'https://www.skoleniphp.cz/skoleni-nette-vyvoj-webovych-aplikaci':'https://www.skoleniphp.cz/skoleni-mistrovstvi-v-nette'}</small></li>
-	<li><small>{_messages.trainings.partnertrainings.pehapkari|format:'https://pehapkari.cz/':'https://pehapkari.cz/vzdelavej-se/'}</small></li>
-	<li><small>{_messages.trainings.partnertrainings.cryptosession|format:'http://cryptosession.cz/'}</small></li>
-</ul>
+{include #partnerTrainings}
 {/define}
