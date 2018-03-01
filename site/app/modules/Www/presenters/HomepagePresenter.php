@@ -68,6 +68,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->companyTrainings  = $this->companyTrainings->getWithoutPublicUpcoming();
 		$this->template->interviews        = $this->interviews->getAll(5);
 		$this->template->lastFreeSeats     = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
+		$this->template->discontinued = $this->trainings->getDiscontinued();
 	}
 
 }

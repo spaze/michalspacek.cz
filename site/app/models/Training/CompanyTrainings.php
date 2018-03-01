@@ -70,7 +70,8 @@ class CompanyTrainings
 				t.custom,
 				tc.duration,
 				tc.alternative_duration AS alternativeDuration,
-				tc.alternative_duration_price_text AS alternativeDurationPriceText
+				tc.alternative_duration_price_text AS alternativeDurationPriceText,
+				t.key_discontinued AS discontinuedId
 			FROM trainings t
 				JOIN trainings_company tc ON t.id_training = tc.key_training
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
@@ -105,6 +106,7 @@ class CompanyTrainings
 				JOIN languages l ON a.key_language = l.id_language
 			WHERE
 				t.key_successor IS NULL
+				AND t.key_discontinued IS NULL
 				AND l.language = ?
 			ORDER BY t.order IS NULL, t.order',
 			$this->translator->getDefaultLocale()

@@ -1,6 +1,9 @@
 <?php
 namespace App\WwwModule\Presenters;
 
+use Nette\Application\BadRequestException;
+use Nette\Http\Response;
+
 /**
  * Company Trainings presenter.
  *
@@ -63,12 +66,20 @@ class CompanyTrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param string $name
+	 * @throws BadRequestException
+	 */
 	public function actionTraining($name)
 	{
 		$training = $this->companyTrainings->getInfo($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
+		if ($training->discontinuedId !== null) {
+			throw new BadRequestException("I don't do {$name} training anymore", Response::S410_GONE);
+		}
+
 		$this->template->name = $training->action;
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->name]);
 		$this->template->title = $training->name;

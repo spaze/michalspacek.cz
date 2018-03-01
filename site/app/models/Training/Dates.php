@@ -267,6 +267,7 @@ class Dates
 					) u ON t.id_training = u.id_training AND v.id_venue = u.key_venue AND d.start = u.start
 				WHERE
 					t.key_successor IS NULL
+					AND t.key_discontinued IS NULL
 					AND l.language = ?
 				ORDER BY
 					d.start";

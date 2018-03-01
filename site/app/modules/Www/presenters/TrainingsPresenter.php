@@ -2,6 +2,7 @@
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Training;
+use Nette\Application\BadRequestException;
 use Nette\Http\Response;
 
 /**
@@ -113,14 +114,24 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
 		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
+		$this->template->discontinued = $this->trainings->getDiscontinued();
 	}
 
 
+	/**
+	 * @param string $name
+	 * @throws BadRequestException
+	 * @throws \Nette\Application\AbortException
+	 */
 	public function actionTraining($name)
 	{
 		$this->training = $this->trainings->get($name);
 		if (!$this->training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+		}
+
+		if ($this->training->discontinuedId !== null) {
+			throw new BadRequestException("I don't do {$name} training anymore", Response::S410_GONE);
 		}
 
 		if ($this->training->successorId !== null) {
@@ -159,7 +170,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$training  = $this->trainings->get($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$session = $this->getSession('training');
@@ -359,15 +370,23 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param string $name
+	 * @param string $param
+	 * @throws BadRequestException
+	 */
 	public function actionReviews($name, $param)
 	{
 		if ($param !== null) {
-			throw new \Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
+			throw new BadRequestException('No param here, please', Response::S404_NOT_FOUND);
 		}
 
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+		}
+		if ($training->discontinuedId !== null) {
+			throw new BadRequestException("I don't do {$name} training anymore", Response::S410_GONE);
 		}
 
 		$this->template->name             = $training->action;
@@ -390,17 +409,17 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		if (!$session->applicationId || !$session->token) {
-			throw new \Nette\Application\BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
+			throw new BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
 		}
 
 		$training = $this->trainings->getIncludingCustom($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
 
 		$application = $this->trainingApplications->getApplicationById($session->applicationId);
 		if (!$application) {
-			throw new \Nette\Application\BadRequestException("No training application for id {$session->applicationId}", Response::S404_NOT_FOUND);
+			throw new BadRequestException("No training application for id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
 		if ($application->trainingAction != $name) {
@@ -410,7 +429,7 @@ class TrainingsPresenter extends BasePresenter
 		$files = $this->trainingFiles->getFiles($application->applicationId);
 		$this->trainingApplications->setAccessTokenUsed($application);
 		if (!$files) {
-			throw new \Nette\Application\BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
+			throw new BadRequestException("No files for application id {$session->applicationId}", Response::S404_NOT_FOUND);
 		}
 
 		$this->template->trainingTitle = $training->name;
@@ -422,19 +441,28 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param string $name
+	 * @param string $param
+	 * @throws BadRequestException
+	 * @throws \Nette\Application\AbortException
+	 */
 	public function actionSuccess($name, $param)
 	{
 		if ($param !== null) {
-			throw new \Nette\Application\BadRequestException('No param here, please', Response::S404_NOT_FOUND);
+			throw new BadRequestException('No param here, please', Response::S404_NOT_FOUND);
 		}
 
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new \Nette\Application\BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+		}
+		if ($training->discontinuedId !== null) {
+			throw new BadRequestException("I don't do {$name} training anymore", Response::S410_GONE);
 		}
 		$this->dates = $this->trainings->getDates($training->trainingId);
 		if (empty($this->dates)) {
-			throw new \Nette\Application\BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
+			throw new BadRequestException("No dates for {$name} training", Response::S503_SERVICE_UNAVAILABLE);
 		}
 
 		$session = $this->getSession('training');

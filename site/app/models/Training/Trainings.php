@@ -95,7 +95,8 @@ class Trainings
 				t.student_discount AS studentDiscount,
 				t.materials,
 				t.custom,
-				t.key_successor AS successorId
+				t.key_successor AS successorId,
+				t.key_discontinued AS discontinuedId
 			FROM trainings t
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
@@ -139,7 +140,8 @@ class Trainings
 					t.student_discount AS studentDiscount,
 					t.materials,
 					t.custom,
-					t.key_successor AS successorId
+					t.key_successor AS successorId,
+					t.key_discontinued AS discontinuedId
 				FROM trainings t
 					JOIN training_url_actions ta ON t.id_training = ta.key_training
 					JOIN url_actions a ON ta.key_url_action = a.id_url_action
@@ -284,6 +286,7 @@ class Trainings
 			WHERE
 				NOT t.custom
 				AND t.key_successor IS NULL
+				AND t.key_discontinued IS NULL
 				AND l.language = ?
 			ORDER BY
 				t.order IS NULL, t.order',
@@ -315,6 +318,7 @@ class Trainings
 				JOIN languages l ON a.key_language = l.id_language
 			WHERE
 				l.language = ?
+				AND t.key_discontinued IS NULL
 			ORDER BY
 				t.order IS NULL, t.order',
 			$this->translator->getDefaultLocale()
@@ -361,6 +365,38 @@ class Trainings
 			$id,
 			$this->translator->getDefaultLocale()
 		);
+	}
+
+
+	/**
+	 * Get discontinued trainings with description.
+	 *
+	 * @return array
+	 */
+	public function getDiscontinued()
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				td.id_trainings_discontinued AS id,
+				td.description,
+				t.name AS training,
+				td.href
+			FROM trainings_discontinued td
+				JOIN trainings t ON t.key_discontinued = td.id_trainings_discontinued
+			ORDER BY
+				td.id_trainings_discontinued,
+				t.id_training'
+		);
+		$trainings = [];
+		foreach ($result as $row) {
+			$trainings[$row->id]['description'] = $row->description;
+			$trainings[$row->id]['href'] = $row->href;
+			if (!isset($trainings[$row->id]['trainings'])) {
+				$trainings[$row->id]['trainings'] = [];
+			}
+			$trainings[$row->id]['trainings'][] = $row->training;
+		}
+		return $trainings;
 	}
 
 }

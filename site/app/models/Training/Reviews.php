@@ -58,6 +58,7 @@ class Reviews
 			WHERE
 				(t.id_training = ? OR t2.id_training = ?)
 				AND NOT r.hidden
+				AND t.key_discontinued IS NULL
 			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
 
 		if ($limit !== null) {
