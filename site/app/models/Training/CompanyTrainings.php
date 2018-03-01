@@ -56,23 +56,23 @@ class CompanyTrainings
 				t.id_training AS trainingId,
 				a.action,
 				t.name,
-				ct.description,
+				tc.description,
 				t.content,
-				ct.upsell,
+				tc.upsell,
 				t.prerequisites,
 				t.audience,
 				t.original_href AS originalHref,
 				t.capacity,
-				ct.price,
-				ct.alternative_duration_price AS alternativeDurationPrice,
+				tc.price,
+				tc.alternative_duration_price AS alternativeDurationPrice,
 				t.student_discount AS studentDiscount,
 				t.materials,
 				t.custom,
-				ct.duration,
-				ct.alternative_duration AS alternativeDuration,
-				ct.alternative_duration_price_text AS alternativeDurationPriceText
+				tc.duration,
+				tc.alternative_duration AS alternativeDuration,
+				tc.alternative_duration_price_text AS alternativeDurationPriceText
 			FROM trainings t
-				JOIN company_trainings ct ON t.id_training = ct.key_training
+				JOIN trainings_company tc ON t.id_training = tc.key_training
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
 				JOIN languages l ON a.key_language = l.id_language
@@ -99,7 +99,7 @@ class CompanyTrainings
 				a.action,
 				t.name
 			FROM trainings t
-				JOIN company_trainings ct ON t.id_training = ct.key_training
+				JOIN trainings_company tc ON t.id_training = tc.key_training
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
 				JOIN languages l ON a.key_language = l.id_language
