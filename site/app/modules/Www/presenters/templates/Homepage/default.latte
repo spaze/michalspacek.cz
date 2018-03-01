@@ -13,16 +13,7 @@
 <h3>{_messages.label.companytrainings}</h3>
 <p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
 {include #company}
-{capture $names|strip}
-	{foreach $discontinued as $training}
-		{foreach $training[trainings] as $name}**{$name|translate}**{sep}, {/sep}{/foreach}
-	{/foreach}
-{/capture}
-<p>
-	{foreach $discontinued as $training}
-		{_$training[description]|format:$names:$training[href]}
-	{/foreach}
-</p>
+{include #discontinued}
 <hr />
 <h2 id="{_html.id.articles}">{_messages.label.myarticles}</h2>
 <div n:foreach="$articles as $article">

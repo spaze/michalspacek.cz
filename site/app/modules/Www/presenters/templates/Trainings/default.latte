@@ -37,13 +37,7 @@
 </ul>
 {/define}
 
-{define #content}
-<h3>{_messages.label.publictrainings}</h3>
-<p>{_messages.trainings.welcome}</p>
-{include #list}
-<h3>{_messages.label.companytrainings}</h3>
-<p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
-{include #company}
+{define #discontinued}
 {capture $names|strip}
 	{foreach $discontinued as $training}
 		{foreach $training[trainings] as $trainingName}**{$trainingName|translate}**{sep}, {/sep}{/foreach}
@@ -54,6 +48,16 @@
 		{_$training[description]|format:$names:$training[href]}
 	{/foreach}
 </p>
+{/define}
+
+{define #content}
+<h3>{_messages.label.publictrainings}</h3>
+<p>{_messages.trainings.welcome}</p>
+{include #list}
+<h3>{_messages.label.companytrainings}</h3>
+<p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
+{include #company}
+{include #discontinued}
 <hr />
 <h4>{_messages.label.partnertrainings}</h4>
 <p><small>{_messages.trainings.partnertrainings.intro|format}</small></p>
