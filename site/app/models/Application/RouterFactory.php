@@ -150,7 +150,7 @@ class RouterFactory
 		$this->addRoute(self::MODULE_ADMIN, self::HOST_ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::MODULE_HEARTBLEED, self::HOST_HEARTBLEED, self::ROOT_ONLY, 'Homepage', 'default');
 		$this->addRoute(self::MODULE_API, self::HOST_API, '<presenter>', 'Default', 'default');
-		$this->addRoute(self::MODULE_PULSE, self::HOST_PULSE, 'passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default');
+		$this->addRoute(self::MODULE_PULSE, self::HOST_PULSE, 'passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::PATTERN => '.+']]);
 		$this->addRoute(self::MODULE_PULSE, self::HOST_PULSE, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 		$this->addRoute(self::MODULE_UPC, self::HOST_UPC, '[<ssid>][/<format>]', 'Homepage', 'default');
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>', 'Interviews', 'interview');
@@ -161,21 +161,20 @@ class RouterFactory
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<action>/<token>', 'Redirect', 'default');
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<action>[/<param>]', 'Exports', 'default');
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>', 'Venues', 'venue');
-		$this->addRoute(self::MODULE_BLOG, self::HOST_WWW, '<slug>', 'Post', 'default', \MichalSpacekCz\Blog\Application\Routers\Route::class);
+		$this->addRoute(self::MODULE_BLOG, self::HOST_WWW, '<slug>', 'Post', 'default', null, \MichalSpacekCz\Blog\Application\Routers\Route::class);
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 		return $this->router;
 	}
 
 
-	private function addRoute(string $module, string $host, string $mask, string $defaultPresenter, string $defaultAction, string $class = Route::class): void
+	private function addRoute(string $module, string $host, string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = Route::class): void
 	{
 		foreach ($this->supportedLocales[$host] as $locale => $tld) {
+			$metadata = $initialMetadata ?? [];
 			$maskPrefix = (isset($this->translatedRoutes[$module][$defaultPresenter]) ? $this->translatedRoutes[$module][$defaultPresenter]['mask'][$locale] : null);
-			$metadata = array(
-				'presenter' => [Route::VALUE => $defaultPresenter],
-				'action' => [Route::VALUE => $defaultAction],
-				'module' => $module,
-			);
+			$metadata['presenter'] = [Route::VALUE => $defaultPresenter];
+			$metadata['action'] = [Route::VALUE => $defaultAction];
+			$metadata['module'] = $module;
 			if (isset($this->translatedPresenters[$module])) {
 				if ($maskPrefix === null) {
 					$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$module][$locale];
