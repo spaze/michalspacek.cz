@@ -51,7 +51,8 @@ subresourceIntegrity:
 		highcharts-custom: /i/js/highcharts-custom.js
 		highcharts-webleed: /i/js/highcharts-webleed.js
 		slideslive-embed: /i/js/slideslive-embed.js
-		googleanalytics: /i/js/analytics.js
+		ga-core: ../../temp/analytics.js
+		ga-init: /i/js/ga.js
 		screen-main: /i/css/screen.css
 		screen-upc: /i/css/upc/screen.css
 		screen-pulse: /i/css/pulse/screen.css
