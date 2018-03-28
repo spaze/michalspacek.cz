@@ -1,0 +1,15 @@
+#!/bin/sh
+
+FILE=site/temp/analytics.js
+
+wget --output-document=$FILE --no-verbose https://www.google-analytics.com/analytics.js
+
+if [ ! -f "$FILE" ]; then
+	echo "$FILE does not exist (download failed?)"
+	return 1
+fi
+
+if [ ! -s "$FILE" ]; then
+	echo "$FILE is empty (download failed?)"
+	return 2
+fi
