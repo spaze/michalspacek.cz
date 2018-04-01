@@ -372,7 +372,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param string $name
-	 * @param string $param
+	 * @param string|null $param
 	 * @throws BadRequestException
 	 */
 	public function actionReviews($name, $param)
@@ -443,7 +443,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param string $name
-	 * @param string $param
+	 * @param string|null $param
 	 * @throws BadRequestException
 	 * @throws \Nette\Application\AbortException
 	 */
