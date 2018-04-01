@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse;
 
 use \MichalSpacekCz\Pulse\Sites;
+use Nette\Utils\Json;
 
 /**
  * Pulse passwords service.
@@ -62,6 +63,7 @@ class Passwords
 				s.id AS siteId,
 				s.url AS siteUrl,
 				s.alias AS siteAlias,
+				s.shared_with AS sharedWith,
 				pa.id AS algoId,
 				pa.alias AS algoAlias,
 				pa.algo AS algoName,
@@ -109,6 +111,7 @@ class Passwords
 				s.id AS siteId,
 				s.url AS siteUrl,
 				s.alias AS siteAlias,
+				s.shared_with AS sharedWith,
 				pa.id AS algoId,
 				pa.alias AS algoAlias,
 				pa.algo AS algoName,
@@ -157,6 +160,7 @@ class Passwords
 				s.id AS siteId,
 				s.url AS siteUrl,
 				s.alias AS siteAlias,
+				s.shared_with AS sharedWith,
 				pa.id AS algoId,
 				pa.alias AS algoAlias,
 				pa.algo AS algoName,
@@ -205,6 +209,7 @@ class Passwords
 				s.id AS siteId,
 				s.url AS siteUrl,
 				s.alias AS siteAlias,
+				s.shared_with AS sharedWith,
 				pa.id AS algoId,
 				pa.alias AS algoAlias,
 				pa.algo AS algoName,
@@ -262,6 +267,7 @@ class Passwords
 				$site->typeAll = ($row->siteId === null);
 				$site->url = $row->siteUrl;
 				$site->alias = $row->siteAlias;
+				$site->sharedWith = ($row->sharedWith ? Json::decode($row->sharedWith) : []);
 				$site->companyId = $row->companyId;
 				$storages->sites[$siteId] = $site;
 			}
