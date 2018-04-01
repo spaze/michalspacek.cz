@@ -55,12 +55,18 @@ class Sites
 	 *
 	 * @param string $url
 	 * @param string $alias
+	 * @param string $sharedWith
 	 * @param integer $companyId
 	 * @return integer Id of newly inserted site
 	 */
-	public function add(string $url, string $alias, int $companyId): int
+	public function add(string $url, string $alias, string $sharedWith, int $companyId): int
 	{
-		$this->database->query('INSERT INTO sites', ['url' => $url, 'alias' => $alias, 'key_companies' => $companyId]);
+		$this->database->query('INSERT INTO sites', [
+			'url' => $url,
+			'alias' => $alias,
+			'shared_with' => $sharedWith ?: null,
+			'key_companies' => $companyId,
+		]);
 		return (int)$this->database->getInsertId();
 	}
 

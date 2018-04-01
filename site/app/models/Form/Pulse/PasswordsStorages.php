@@ -58,6 +58,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 		$inputUrl = $newSiteContainer->addText('url', 'URL:')
 			->setType('url');
 		$inputAlias = $newSiteContainer->addText('alias', 'Alias:');
+		$newSiteContainer->addText('sharedWith', 'Storage shared with:');
 
 		$selectSite->addConditionOn($inputUrl, self::BLANK)
 			->setRequired('Choose site or add a new one');
