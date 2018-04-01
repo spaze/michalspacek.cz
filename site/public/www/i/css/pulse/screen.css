@@ -59,8 +59,8 @@ ol { margin: 0; }
 	padding: 0 1em;
 	margin-bottom: 0;
 }
-.site-container small a { text-decoration: none; }
-.site-container small a:hover { text-decoration: underline; }
+.site-container a { text-decoration: none; }
+.site-container a:hover { text-decoration: underline; }
 .permalink { display: none; }
 h2:hover .permalink { display: inline; }
 .clear { clear: both; }
