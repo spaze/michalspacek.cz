@@ -3,3 +3,4 @@ Contact: https://www.michalspacek.com/contact
 Contact: https://twitter.com/spazef0rze
 Contact: https://www.facebook.com/spaze
 Encryption: https://www.michalspacek.cz/key.asc
+Signature: https://www.michalspacek.cz/.well-known/security.txt.sig
