@@ -1,6 +1,8 @@
 <?php
 namespace MichalSpacekCz\Training;
 
+use Netxten\Templating\Helpers;
+
 /**
  * Training mails model.
  *
@@ -189,7 +191,7 @@ class Mails
 		$template->phoneNumber = $this->phoneNumber;
 		$template->additional = $additional;
 
-		$start = $this->netxtenHelpers->localDate($application->trainingStart, 'cs', 'j. n. Y');
+		$start = $this->netxtenHelpers->localDate($application->trainingStart, 'cs_CZ', Helpers::DATE_DAY, $application->trainingEnd);
 		$subject = 'Připomenutí školení ' . $application->training->name . ' ' . $start;
 		$this->sendMail($application->email, $application->name, $subject, $template);
 	}

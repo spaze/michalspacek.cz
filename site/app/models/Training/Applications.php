@@ -95,6 +95,7 @@ class Applications
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
 				d.start AS trainingStart,
+				d.end AS trainingEnd,
 				d.public AS publicDate,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,

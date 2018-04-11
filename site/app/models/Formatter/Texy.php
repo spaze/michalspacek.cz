@@ -2,6 +2,7 @@
 namespace MichalSpacekCz\Formatter;
 
 use Nette\Utils\Html;
+use Netxten\Templating\Helpers;
 
 class Texy extends \Netxten\Formatter\Texy
 {
@@ -319,8 +320,8 @@ class Texy extends \Netxten\Formatter\Texy
 			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
 		} else {
 			foreach ($upcoming[$name]['dates'] as $date) {
-				$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
-				$start = $this->netxtenHelpers->localDate($date->start, 'cs', $format);
+				$format = ($date->tentative ? Helpers::DATE_MONTH : Helpers::DATE_DAY);
+				$start = $this->netxtenHelpers->localDate($date->start, $this->translator->getDefaultLocale(), $format, $date->end);
 				$el = Html::el()
 					->addHtml(Html::el('strong')->setText($start))
 					->addHtml(Html::el()->setText(' '))

@@ -1,6 +1,8 @@
 <?php
 namespace MichalSpacekCz\Form;
 
+use Netxten\Templating\Helpers;
+
 /**
  * Training application form.
  *
@@ -42,9 +44,9 @@ class TrainingApplication extends ProtectedForm
 
 		$inputDates = array();
 		foreach ($dates as $date) {
-			$format = ($date->tentative ? '%B %Y' : 'j. n. Y');
-			$start = $this->netxtenHelpers->localDate($date->start, 'cs', $format);
-			$inputDates[$date->dateId] = "{$start} {$date->venueCity}" . ($date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '');
+			$format = ($date->tentative ? Helpers::DATE_MONTH : Helpers::DATE_DAY);
+			$trainingDate = $this->netxtenHelpers->localDate($date->start, $this->translator->getDefaultLocale(), $format, $date->end);
+			$inputDates[$date->dateId] = "{$trainingDate} {$date->venueCity}" . ($date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '');
 		}
 
 		$label = 'Termín školení:';
