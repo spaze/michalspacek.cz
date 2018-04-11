@@ -45,7 +45,7 @@ class TrainingApplication extends ProtectedForm
 		$inputDates = array();
 		foreach ($dates as $date) {
 			$format = ($date->tentative ? Helpers::DATE_MONTH : Helpers::DATE_DAY);
-			$trainingDate = $this->netxtenHelpers->localDate($date->start, $this->translator->getDefaultLocale(), $format, $date->end);
+			$trainingDate = $this->netxtenHelpers->localDate($date->start, $format, $date->end);
 			$inputDates[$date->dateId] = "{$trainingDate} {$date->venueCity}" . ($date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '');
 		}
 

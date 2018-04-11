@@ -191,7 +191,7 @@ class Mails
 		$template->phoneNumber = $this->phoneNumber;
 		$template->additional = $additional;
 
-		$start = $this->netxtenHelpers->localDate($application->trainingStart, 'cs_CZ', Helpers::DATE_DAY, $application->trainingEnd);
+		$start = $this->netxtenHelpers->localDate($application->trainingStart, Helpers::DATE_DAY, $application->trainingEnd, 'cs_CZ');
 		$subject = 'Připomenutí školení ' . $application->training->name . ' ' . $start;
 		$this->sendMail($application->email, $application->name, $subject, $template);
 	}

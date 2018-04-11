@@ -321,7 +321,7 @@ class Texy extends \Netxten\Formatter\Texy
 		} else {
 			foreach ($upcoming[$name]['dates'] as $date) {
 				$format = ($date->tentative ? Helpers::DATE_MONTH : Helpers::DATE_DAY);
-				$start = $this->netxtenHelpers->localDate($date->start, $this->translator->getDefaultLocale(), $format, $date->end);
+				$start = $this->netxtenHelpers->localDate($date->start, $format, $date->end);
 				$el = Html::el()
 					->addHtml(Html::el('strong')->setText($start))
 					->addHtml(Html::el()->setText(' '))
