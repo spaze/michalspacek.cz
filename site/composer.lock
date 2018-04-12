@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "daf2763d552e441db07670200016c556",
+    "content-hash": "5414a1e45aae460303db34b15968fa91",
     "packages": [
         {
             "name": "kdyby/strict-objects",
@@ -66,7 +66,7 @@
         },
         {
             "name": "kdyby/translation",
-            "version": "dev-master",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kdyby/Translation.git",
@@ -1619,12 +1619,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "c83f6aa0ed08f680c012656d411d1b7c94003012"
+                "reference": "da01eff88c9227020e1ccc19f0b31c9b591fd194"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c83f6aa0ed08f680c012656d411d1b7c94003012",
-                "reference": "c83f6aa0ed08f680c012656d411d1b7c94003012",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/da01eff88c9227020e1ccc19f0b31c9b591fd194",
+                "reference": "da01eff88c9227020e1ccc19f0b31c9b591fd194",
                 "shasum": ""
             },
             "conflict": {
@@ -1682,6 +1682,7 @@
                 "padraic/humbug_get_contents": "<1.1.2",
                 "pagarme/pagarme-php": ">=0,<3",
                 "paragonie/random_compat": "<2",
+                "paypal/merchant-sdk-php": "<3.12",
                 "phpmailer/phpmailer": ">=5,<5.2.24",
                 "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
                 "phpxmlrpc/extras": "<0.6.1",
@@ -1697,6 +1698,7 @@
                 "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
                 "simplesamlphp/simplesamlphp": "<1.15.2",
                 "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
+                "slim/slim": "<2.6",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
                 "stormpath/sdk": ">=0,<9.9.99",
@@ -1719,7 +1721,7 @@
                 "symfony/web-profiler-bundle": ">=2,<2.3.19|>=2.4,<2.4.9|>=2.5,<2.5.4",
                 "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
                 "thelia/backoffice-default-template": ">=2.1,<2.1.2",
-                "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
+                "thelia/thelia": ">=2.1,<2.1.2|>=2.1.0-beta1,<2.1.3",
                 "titon/framework": ">=0,<9.9.99",
                 "twig/twig": "<1.20",
                 "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.22|>=8,<8.7.5",
@@ -1771,7 +1773,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-04-02T06:47:13+00:00"
+            "time": "2018-04-11T22:11:46+00:00"
         },
         {
             "name": "spaze/csp-config",
@@ -1865,12 +1867,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "d56fd67cbad8b1c3cb1c0a34eccc97b3f34d101f"
+                "reference": "b1f3bd424d78475aacd4de70f6727b8aaa519459"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/d56fd67cbad8b1c3cb1c0a34eccc97b3f34d101f",
-                "reference": "d56fd67cbad8b1c3cb1c0a34eccc97b3f34d101f",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/b1f3bd424d78475aacd4de70f6727b8aaa519459",
+                "reference": "b1f3bd424d78475aacd4de70f6727b8aaa519459",
                 "shasum": ""
             },
             "require": {
@@ -1892,7 +1894,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2018-04-11T16:10:19+00:00"
+            "time": "2018-04-11T17:41:00+00:00"
         },
         {
             "name": "spaze/nonce-generator",
@@ -2850,7 +2852,6 @@
         "spaze/feed-exports": 20,
         "spaze/nonce-generator": 20,
         "spaze/sri-macros": 20,
-        "kdyby/translation": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,

@@ -19,7 +19,7 @@
 		"spaze/feed-exports": "dev-master",
 		"spaze/nonce-generator": "dev-master",
 		"spaze/sri-macros": "dev-master",
-		"kdyby/translation": "dev-master",
+		"kdyby/translation": "~2.5",
 		"roave/security-advisories": "dev-master",
 		"paragonie/halite": "^4"
 	},
