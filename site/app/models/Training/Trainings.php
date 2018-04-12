@@ -301,9 +301,9 @@ class Trainings
 
 
 	/**
-	 * Get all training names including custom training names.
+	 * Get all training names including custom and discontinued training names.
 	 */
-	public function getNamesIncludingCustom()
+	public function getNamesIncludingCustomDiscontinued()
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -311,14 +311,14 @@ class Trainings
 				a.action,
 				t.name,
 				t.custom,
-				t.key_successor AS successorId
+				t.key_successor AS successorId,
+				t.key_discontinued AS discontinuedId
 			FROM trainings t
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
 				JOIN languages l ON a.key_language = l.id_language
 			WHERE
 				l.language = ?
-				AND t.key_discontinued IS NULL
 			ORDER BY
 				t.order IS NULL, t.order',
 			$this->translator->getDefaultLocale()

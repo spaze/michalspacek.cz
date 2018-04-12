@@ -12,6 +12,11 @@ use MichalSpacekCz\Training;
 class TrainingDate extends ProtectedForm
 {
 
+	private const STANDARD = 'Standardní';
+	private const CUSTOM = 'Na zakázku';
+	private const REPLACED = 'Nahrazené';
+	private const DISCONTINUED = 'Ukončené';
+
 	/** @var \MichalSpacekCz\Training\Trainings */
 	protected $trainings;
 
@@ -35,12 +40,23 @@ class TrainingDate extends ProtectedForm
 		$this->trainingDates = $trainingDates;
 		$this->trainingVenues = $trainingVenues;
 
-		$trainings = array();
-		foreach ($this->trainings->getNamesIncludingCustom() as $training) {
-			$key = ($training->successorId !== null ? 'Nahrazené' : ($training->custom ? 'Na zakázku' : 'Standardní'));
+		$trainings = array(
+			self::STANDARD => [],
+			self::CUSTOM => [],
+			self::REPLACED => [],
+			self::DISCONTINUED => [],
+		);
+		foreach ($this->trainings->getNamesIncludingCustomDiscontinued() as $training) {
+			if ($training->discontinuedId !== null) {
+				$key = self::DISCONTINUED;
+			} elseif ($training->successorId !== null) {
+				$key = self::REPLACED;
+			} else {
+				$key = ($training->custom ? self::CUSTOM : self::STANDARD);
+			}
 			$trainings[$key][$training->id] = $training->name;
 		}
-		$this->addSelect('training', 'Školení:', $trainings)
+		$this->addSelect('training', 'Školení:', array_filter($trainings))
 			->setRequired('Vyberte prosím školení');
 
 		$venues = array();
