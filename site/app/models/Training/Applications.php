@@ -500,6 +500,7 @@ class Applications
 				ua.action AS trainingAction,
 				d.id_date AS dateId,
 				d.start AS trainingStart,
+				d.end AS trainingEnd,
 				a.id_application AS applicationId,
 				s.status,
 				a.status_time AS statusTime,

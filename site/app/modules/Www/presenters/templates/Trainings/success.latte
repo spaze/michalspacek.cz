@@ -15,7 +15,7 @@
 	<table>
 		<tr>
 			<th>{$form[trainingId]->caption}</th>
-			<td>{if $tentative}{$start|localdate:'cs':'%B %Y'}{else}{$start|date:'j. n. Y'}{/if}, {$venueCity}{if $tentative} ({_messages.label.tentativedate}){/if}</td>
+			<td>{if $tentative}{$start|localeMonth}{else}{$start|localeIntervalDay:$end}{/if}, {$venueCity}{if $tentative} ({_messages.label.tentativedate}){/if}</td>
 		</tr>
 	</table>
 </fieldset>

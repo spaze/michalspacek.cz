@@ -2,12 +2,12 @@
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
 &raquo; <a n:href="Trainings:">Termíny</a>
-&raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</a>
+&raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</a>
 {/define}
 
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-<p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
+<p>{$name} {$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</p>
 <ol n:inner-foreach="$files as $file">
 	<li>{$file->date}/{$file->fileName} {if $file->info->isReadable()}({$file->info->getSize()|bytes}){else}<strong>does not exist</strong>{/if}</li>
 </ol>

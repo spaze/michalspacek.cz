@@ -10,7 +10,7 @@
 			<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a>
 			<small>
 				{foreach $item[dates] as $date}
-					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localdate:'cs':'%B %Y'}{else}{$date[start]|date:'j. n. Y'}{/if}</strong>
+					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localeMonth}{else}{$date[start]|localeIntervalDay:$date[end]}{/if}</strong>
 					{$date[venueCity]}{sep}, {/sep}{last}){/last}
 				{/foreach}
 			</small>

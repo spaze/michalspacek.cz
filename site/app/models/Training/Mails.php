@@ -62,7 +62,7 @@ class Mails
 	}
 
 
-	public function sendSignUpMail($applicationId, \Nette\Application\UI\ITemplate $template, $recipientAddress, $recipientName, $start, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
+	public function sendSignUpMail($applicationId, \Nette\Application\UI\ITemplate $template, $recipientAddress, $recipientName, $start, $end, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
 	{
 		\Tracy\Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
 
@@ -71,6 +71,7 @@ class Mails
 		$template->training     = $training;
 		$template->trainingName = $trainingName;
 		$template->start        = $start;
+		$template->end          = $end;
 		$template->venueName    = $venueName;
 		$template->venueNameExtended = $venueNameExtended;
 		$template->venueAddress = $venueAddress;
@@ -191,7 +192,7 @@ class Mails
 		$template->phoneNumber = $this->phoneNumber;
 		$template->additional = $additional;
 
-		$start = $this->netxtenHelpers->localDate($application->trainingStart, Helpers::DATE_DAY, $application->trainingEnd, 'cs_CZ');
+		$start = $this->netxtenHelpers->localeIntervalDay($application->trainingStart, $application->trainingEnd, 'cs_CZ');
 		$subject = 'Připomenutí školení ' . $application->training->name . ' ' . $start;
 		$this->sendMail($application->email, $application->name, $subject, $template);
 	}

@@ -284,6 +284,7 @@ class TrainingsPresenter extends BasePresenter
 					$values->email,
 					$values->name,
 					$date->start,
+					$date->end,
 					$name,
 					$this->training->name,
 					$date->venueName,
@@ -434,7 +435,8 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->template->trainingTitle = $training->name;
 		$this->template->trainingName = ($training->custom ? null : $training->action);
-		$this->template->trainingDate = $application->trainingStart;
+		$this->template->trainingStart = $application->trainingStart;
+		$this->template->trainingEnd = $application->trainingEnd;
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingmaterials', [$training->name]);
 		$this->template->files = $files;
@@ -488,6 +490,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->description      = $training->description;
 		$this->template->lastFreeSeats    = false;
 		$this->template->start            = $date->start;
+		$this->template->end              = $date->end;
 		$this->template->venueCity        = $date->venueCity;
 		$this->template->tentative        = $date->tentative;
 

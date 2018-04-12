@@ -320,10 +320,9 @@ class Texy extends \Netxten\Formatter\Texy
 			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
 		} else {
 			foreach ($upcoming[$name]['dates'] as $date) {
-				$format = ($date->tentative ? Helpers::DATE_MONTH : Helpers::DATE_DAY);
-				$start = $this->netxtenHelpers->localDate($date->start, $format, $date->end);
+				$trainingDate = ($date->tentative ? $this->netxtenHelpers->localeIntervalMonth($date->start, $date->end) : $this->netxtenHelpers->localeIntervalDay($date->start, $date->end));
 				$el = Html::el()
-					->addHtml(Html::el('strong')->setText($start))
+					->addHtml(Html::el('strong')->setText($trainingDate))
 					->addHtml(Html::el()->setText(' '))
 					->addHtml(Html::el()->setText($date->venueCity));
 				$dates[] = $el;

@@ -1,8 +1,8 @@
 Dobrý den,
 
-potvrzuji Vaši registraci ze dne {$application->statusTime|date:'j. n. Y'} na školení
+potvrzuji Vaši registraci ze dne {$application->statusTime|localeDay:'cs_CZ'} na školení
 
-{$application->training->name} ({$application->trainingStart|date:'j. n. Y'} od {$application->trainingStart|date:'H:i'})
+{$application->training->name} ({$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'} v čase {$application->trainingStart|date:'H:i'}–{$application->trainingEnd|date:'H:i'})
 adresa {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}
 {link //:Www:Trainings:training $application->training->action}
 

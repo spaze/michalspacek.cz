@@ -4,7 +4,7 @@
 
 {define #itemArticle}
 	<a href="{$article->href}"><strong>{$article->title}</strong></a>
-	<small>(<span class="date">{$article->date|date:'j. n. Y'}</span>, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
+	<small>(<span class="date">{$article->date|localeDay}</span>, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
 	<div class="indent small">{$article->excerpt} <p>(<a href="{$article->href}">{_messages.articles.readmore}</a>)</p></div>
 {/define}
 

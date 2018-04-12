@@ -1,6 +1,6 @@
 Dobrý den,
 
-díky za účast na školení {$application->training->name} ({$application->trainingStart|date:'j. n. Y'} od {$application->trainingStart|date:'H:i'})
+díky za účast na školení {$application->training->name} {$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'}
 
 V příloze naleznete fakturu na částku {$application->price} Kč bez DPH, {$application->priceVat} Kč s DPH,
 proplaťte ji, prosím, do stanoveného data.

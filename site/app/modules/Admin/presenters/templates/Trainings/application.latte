@@ -3,7 +3,7 @@
 &raquo; <a n:href="Homepage:">Administrace</a>
 {if $trainingStart}
 &raquo; <a n:href="Trainings:">Termíny</a>
-&raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</a>
+&raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</a>
 {else}
 &raquo; <a n:href="preliminary">Předběžné přihlášky</a>
 {/if}
@@ -16,7 +16,7 @@
 		<th>Školení:</th><td>{$trainingName}</td>
 	</tr>
 	<tr>
-		<th>Datum:</th><td>{if $trainingStart}{$trainingStart|date:'j. n. Y'}, {$trainingCity}{else}{input date}{/if}</td>
+		<th>Datum:</th><td>{if $trainingStart}{$trainingStart|localeIntervalDay:$trainingEnd}, {$trainingCity}{else}{input date}{/if}</td>
 	</tr>
 	<tr>
 		<th>{label name /}</th><td>{input name} <small n:if="$toBeInvited"><a n:href=":Www:Redirect:application#prihlaska $accessToken">předvyplněná přihláška</a></small> <small n:if="$attended"><a n:href=":Www:Redirect:files $accessToken">účastníkovo soubory</a> ({if $webTrackingEnabled}<strong title="Vypněte tracking pro tento prohlížeč">změní status</strong>{else}nezmění status{/if})</small></td>

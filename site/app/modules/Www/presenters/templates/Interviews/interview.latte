@@ -2,7 +2,7 @@
 {import "../embed.latte"}
 <p n:if="$description">{$description}</p>
 <h2 id="{_html.id.eventdate}">{_messages.label.dateforwhom}</h2>
-<p><span class="date">{$date|date:'j. n. Y'}</span>, <a href="{$sourceHref}">{$sourceName}</a></p>
+<p><span class="date">{$date|localeDay}</span>, <a href="{$sourceHref}">{$sourceName}</a></p>
 
 {if $href}
 	<h2 id="{_html.id.detail}">{_messages.label.interviewdetail}</h2>

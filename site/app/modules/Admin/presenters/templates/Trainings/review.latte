@@ -2,7 +2,7 @@
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
 &raquo; <a n:href="Trainings:">Termíny</a>
-&raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</a>
+&raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</a>
 {/define}
 
 {define #form}
@@ -37,6 +37,6 @@
 {/define}
 
 {define #content}
-<p>{$name} {$trainingName} {$trainingStart|date:'j. n. Y'} {$trainingCity}</p>
+<p>{$name} {$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</p>
 {include #form, form => editReview}
 {/define}

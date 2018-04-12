@@ -8,7 +8,7 @@
 
 {define #content}
 <p>
-	{capture $date}{$trainingDate|date:'j. n. Y'}{/capture}
+	{capture $date}{$trainingStart|localeIntervalDay:$trainingEnd}{/capture}
 	{_messages.trainings.files.thankyou|format:$trainingTitle:$date}
 	{_messages.trainings.files.download}
 </p>

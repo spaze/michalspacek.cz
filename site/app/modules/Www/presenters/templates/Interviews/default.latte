@@ -4,7 +4,7 @@
 
 {define #itemInterview}
 	<a n:href="Interviews:interview $interview->action"><strong>{$interview->title}</strong></a><br />
-	<small><strong class="date">{$interview->date|date:'j. n. Y'}</strong>, {$interview->sourceName}</small>
+	<small><strong class="date">{$interview->date|localeDay}</strong>, {$interview->sourceName}</small>
 	<span n:if="$interview->audioHref" title="{_messages.label.audiorecording}">♫</span>
 	<span n:if="$interview->videoHref" title="{_messages.label.videorecording}">►</span>
 {/define}

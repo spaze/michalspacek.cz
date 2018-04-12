@@ -122,6 +122,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->template->pageTitle     = 'Účastníci';
 		$this->template->trainingStart = $this->training->start;
+		$this->template->trainingEnd   = $this->training->end;
 		$this->template->trainingName  = $this->training->name;
 		$this->template->venueCity     = $this->training->venueCity;
 		$this->template->venueName     = $this->training->venueName;
@@ -148,6 +149,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pageTitle = 'Soubory';
 		$this->template->files     = $this->trainingFiles->getFiles($this->applicationId);
 		$this->template->trainingStart = $this->training->start;
+		$this->template->trainingEnd = $this->training->end;
 		$this->template->trainingName  = $this->training->name;
 		$this->template->trainingCity  = $this->training->venueCity;
 		$this->template->name          = $application->name;
@@ -165,6 +167,7 @@ class TrainingsPresenter extends BasePresenter
 		$company = ($this->review->applicationCompany ?? $this->review->company);
 		$this->template->pageTitle = "Ohlas od {$name}" . ($company ? ", {$company}": '');
 		$this->template->trainingStart      = $date->start;
+		$this->template->trainingEnd = $date->end;
 		$this->template->trainingName       = $date->name;
 		$this->template->trainingCity  = $date->venueCity;
 		$this->template->name          = $this->review->applicationName;
@@ -180,9 +183,10 @@ class TrainingsPresenter extends BasePresenter
 			$this->dateId = $this->application->dateId;
 			$this->training = $this->trainingDates->get($this->dateId);
 			$start = $this->training->start;
+			$end = $this->training->end;
 			$city = $this->training->venueCity;
 		} else {
-			$this->dateId = $start = $city = null;
+			$this->dateId = $start = $end = $city = null;
 			$this->training = $this->trainings->getIncludingCustom($this->application->trainingAction);
 		}
 
@@ -193,6 +197,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->statusTime    = $this->application->statusTime;
 		$this->template->trainingName  = $this->training->name;
 		$this->template->trainingStart = $start;
+		$this->template->trainingEnd   = $end;
 		$this->template->trainingCity  = $city;
 		$this->template->sourceName    = $this->application->sourceName;
 		$this->template->companyId     = $this->application->companyId;
