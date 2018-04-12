@@ -12,7 +12,7 @@ namespace App\WwwModule\Presenters;
 class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 {
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var \Kdyby\Translation\Translator */
 	protected $translator;
 
 	/** @var \Nette\Http\IResponse */
@@ -59,10 +59,10 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
+	 * @param \Kdyby\Translation\Translator $translator
 	 * @param \Nette\Http\IResponse $httpResponse
 	 */
-	public function __construct(\Nette\Localization\ITranslator $translator, \Nette\Http\IResponse $httpResponse)
+	public function __construct(\Kdyby\Translation\Translator $translator, \Nette\Http\IResponse $httpResponse)
 	{
 		$this->translator = $translator;
 		$this->httpResponse = $httpResponse;
