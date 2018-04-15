@@ -57,32 +57,44 @@ securityphp:
 	materials: "Participants will receive a printed materials and a certificate. We'll dedicate enough time for questions. After completing the training, I'll send the presentation with comments via e-mail as well as with the code examples used for the training."
 	content: '''
 		Description, threats, and defense against web attacks:
+		Day 1
+		=====
+		- **Application and device discovery**
+		  Using specialized search engines like Shodan or Certificate Transparency.
 		- **Full Path Disclosure**
 		  Why are PHP error messages appealing to the attacker and what do they learn from them?
 		- **Cross-Site Scripting** (XSS)
-		  Attacks againt visitors and their browsers, differnet XSS((Cross-Site Scripting)) types (stored, reflected, DOM((Document Object Model))-based), defending on the server and in the browser by specifying allowed sources (Content Security Policy) and using XSS Auditor.
+		  Attacks againt visitors and their browsers, different XSS((Cross-Site Scripting)) types (stored, reflected, DOM((Document Object Model))-based), defending on the server and in the browser, XSS Auditor, BeEF demo.
+		- **Content Security Policy** (CSP)
+		  Another additional defense layer against XSS((Cross-Site Scripting)) and more. Uses lists of allowed resources.
 		- **SQL Injection**
-		  About "dumping" data and changing them in tables that are not accessible by default. Details about Blind SQL Injection, Time-based blind SQL Injection, and the differences between prepared statements and variable binding.
-		- **File uploads** a **remote execution**
+		  About "dumping" data and changing them in tables that are not accessible by default. Details about Blind SQL Injection, Time-based blind SQL Injection, and the differences between prepared statements and variable binding. Testing the vulnerability using a demo site, sqlmap demo.
+		- **File uploads** and **remote execution**
 		  How to upload user files, where to store then, how to name the files. Running external programs (for example image resizing) "in the cloud", and the danger lurking in deserializing user inputs.
 		- **Cross-Site Request Forgery** (CSRF), **Clickjacking**
 		  A bad guy can force a user to perform an action without their knowledge or lure him to click on a page element they would not normally click. What is it good for and how to defend against such thing?
 		- **Session Hijacking**, **Session Fixation**
 		  Whoever is in possesion of session id is the master, so we have to protect the id. About HTTP-only cookies, session id regeneration, and also about multiple user sessions.
+		Day 2
+		=====
 		- **XML External Entity Injection** (XXE)
 		  Configuration files or source code can be obtained from the server by parsing XML files with custom entities. We'll see how and how to stop it.
+		- **Secure random data**
+		  Where the randomness comes from, why `rand()` shouldn't be used for generating tokens, encryption keys etc.
 		- **Hashing and storing user passwords**
 		  How passwords are cracked, what's "salt", why use algorithms like bcrypt or Argon2i, why not MD5 or SHA-1 (or SHA-2, SHA-3). How to change hashing algorithm without resetting passwords for all users?
-
-		## Other topics:
-		- Generating "secure" **random data**
-		- **Data encryption**, authenticated encryption (AE)
-		- **HTTPS**, HTTP Strict Transport Security (HSTS)
-		- Unauthorized **data access**
-		- Abusing contact forms for **sending spam**
-		- Server **configuration**
-		- **Protecting source code** when deploying from SVN((Subversion)) or Gitu
-		- **Security HTTP headers**
+		- **Data encryption**
+		  What's Authenticated Encryption (AE) and how to encrypt data?
+		- **HTTPS((HTTP Secure))**
+		  Server configuration, testing tools, enforcing HTTPS with HTTP Strict Transport Security (HSTS).
+		- **Unauthorized data access**
+		  How to get other customers' invoices and how to protect your application against the Insecure Direct Object Reference attack.
+		- **Abusing contact forms to send spam**
+		  Adding arbitrary headers to send messages to attacker-supplied recipients, with custom message bodies.
+		- **Configuration and protecting source code**
+		  Server and PHP configuration best practices.
+		- **HTTP security headers**
+		  Some HTTP headers may help you protect your application better, or just make a successful attack less bad. We'll see which headers and how to test your site using Security Headers and Mozilla Observatory.
 	'''
 	inhouse:
 		description: 'Bezpečnost webových aplikací mě zajímá a baví mě ji zkoumat. Je to citlivé téma a každá zapomenutá drobnost může dostat do problémů nejen vás, ale i vaše uživatele. O zabezpečení webu často píšu "články":/clanky a "přednáším":/prednasky. Rád vaše vývojáře naučím, jak webové aplikace zabezpečit a jak je na bezpečnost testovat. Školení je vhodné i pro vývojáře, kteří pracují např. v Javě nebo Pythonu, většina útoků a principů je stejných.'
