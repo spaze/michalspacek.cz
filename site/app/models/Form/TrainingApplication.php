@@ -1,6 +1,7 @@
 <?php
 namespace MichalSpacekCz\Form;
 
+use Nette\Utils\Html;
 use Netxten\Templating\Helpers;
 
 /**
@@ -43,14 +44,26 @@ class TrainingApplication extends ProtectedForm
 		$this->netxtenHelpers = $netxtenHelpers;
 
 		$inputDates = array();
+		$multipleDates = count($dates) > 1;
 		foreach ($dates as $date) {
 			$trainingDate = ($date->tentative ? $this->netxtenHelpers->localeIntervalMonth($date->start, $date->end) : $this->netxtenHelpers->localeIntervalDay($date->start, $date->end));
-			$inputDates[$date->dateId] = "{$trainingDate} {$date->venueCity}" . ($date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '');
+			$el = Html::el()->setText("{$trainingDate} {$date->venueCity}");
+			if ($date->tentative) {
+				$el->addText(' (' . $this->translator->translate('messages.label.tentativedate') . ')');
+			}
+			if ($date->label) {
+				if ($multipleDates) {
+					$el->addText(" [{$date->label}]");
+				} else {
+					$el->addHtml(Html::el('small', ['class' => 'label'])->setText($date->label));
+				}
+			}
+			$inputDates[$date->dateId] = $el;
 		}
 
 		$label = 'Termín školení:';
 		// trainingId is actually dateId, oh well
-		if (count($dates) > 1) {
+		if ($multipleDates) {
 			$this->addSelect('trainingId', $label, $inputDates)
 				->setRequired('Vyberte prosím termín a místo školení')
 				->setPrompt('- vyberte termín a místo -');

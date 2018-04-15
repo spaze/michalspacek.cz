@@ -325,6 +325,13 @@ div.notice {
 	background-color: #EEF;
 	border: 1px solid #DDF;
 }
+.label {
+	color: #222;
+	background-color: #DDF;
+	padding: 4px;
+	margin: 4px;
+	border-radius: 3px;
+}
 .changed { background-color: #F2F2FF; }
 #slides-embed, #video-embed {
 	position: relative;

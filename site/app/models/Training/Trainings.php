@@ -171,6 +171,7 @@ class Trainings
 				d.id_date AS dateId,
 				d.start,
 				d.end,
+				d.label,
 				s.status,
 				v.href AS venueHref,
 				v.name AS venueName,
