@@ -166,56 +166,10 @@ class Trainings
 	 */
 	public function getDates($id)
 	{
-		$result = $this->database->fetchAll(
-			"SELECT
-				d.id_date AS dateId,
-				d.start,
-				d.end,
-				d.label,
-				s.status,
-				v.href AS venueHref,
-				v.name AS venueName,
-				v.name_extended AS venueNameExtended,
-				v.address AS venueAddress,
-				v.city AS venueCity,
-				v.description AS venueDescription,
-				v.action AS venueAction,
-				c.description AS cooperationDescription
-			FROM training_dates d
-				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_venues v ON d.key_venue = v.id_venue
-				JOIN training_date_status s ON d.key_status = s.id_status
-				LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
-				JOIN (
-					SELECT
-						t2.id_training,
-						d2.key_venue,
-						MIN(d2.start) AS start
-					FROM
-						trainings t2
-						JOIN training_dates d2 ON t2.id_training = d2.key_training
-						JOIN training_date_status s2 ON d2.key_status = s2.id_status
-					WHERE
-						d2.public
-						AND t2.id_training = ?
-						AND d2.end > NOW()
-						AND s2.status IN (?, ?)
-					GROUP BY
-						t2.id_training, d2.key_venue
-				) u ON t.id_training = u.id_training AND v.id_venue = u.key_venue AND d.start = u.start
-			ORDER BY
-				d.start",
-			$id,
-			Dates::STATUS_TENTATIVE,
-			Dates::STATUS_CONFIRMED
-		);
-		$dates = array();
-		foreach ($result as $row) {
-			$row->tentative        = ($row->status == Dates::STATUS_TENTATIVE);
-			$row->lastFreeSeats    = $this->trainingDates->lastFreeSeats($row->start);
-			$row->venueDescription = $this->texyFormatter->format($row->venueDescription);
-			$row->cooperationDescription = $this->texyFormatter->format($row->cooperationDescription);
-			$dates[$row->dateId]   = $row;
+		$dates = $this->trainingDates->getDates($id);
+		foreach ($dates as $date) {
+			$date->venueDescription = $this->texyFormatter->format($date->venueDescription);
+			$date->cooperationDescription = $this->texyFormatter->format($date->cooperationDescription);
 		}
 		return $dates;
 	}
