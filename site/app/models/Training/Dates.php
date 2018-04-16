@@ -1,6 +1,8 @@
 <?php
 namespace MichalSpacekCz\Training;
 
+use Nette\Utils\Json;
+
 /**
  * Training dates model.
  *
@@ -282,7 +284,7 @@ class Dates
 					'lastFreeSeats' => $this->lastFreeSeats($row->start),
 					'start'         => $row->start,
 					'end'           => $row->end,
-					'label'         => $row->label,
+					'label'         => Json::decode($row->label)->{$this->translator->getDefaultLocale()},
 					'public'        => $row->public,
 					'status'        => $row->status,
 					'name'          => $this->translator->translate($row->name),
@@ -398,6 +400,7 @@ class Dates
 		);
 		$dates = array();
 		foreach ($result as $row) {
+			$row->label = Json::decode($row->label)->{$this->translator->getDefaultLocale()};
 			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
 			$row->lastFreeSeats = $this->lastFreeSeats($row->start);
 			$dates[$row->dateId] = $row;
