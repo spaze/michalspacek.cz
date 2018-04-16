@@ -61,7 +61,6 @@ class CompanyTrainings
 				tc.upsell,
 				t.prerequisites,
 				t.audience,
-				t.original_href AS originalHref,
 				t.capacity,
 				tc.price,
 				tc.alternative_duration_price AS alternativeDurationPrice,

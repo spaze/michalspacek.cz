@@ -151,7 +151,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->upsell           = $this->training->upsell;
 		$this->template->prerequisites    = $this->training->prerequisites;
 		$this->template->audience         = $this->training->audience;
-		$this->template->originalHref     = $this->training->originalHref;
 		$this->template->capacity         = $this->training->capacity;
 		$this->template->price            = $this->training->price;
 		$this->template->priceVat         = $this->vat->addVat($this->training->price);
