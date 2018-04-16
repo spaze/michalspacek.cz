@@ -287,7 +287,7 @@ class Dates
 					'lastFreeSeats' => $this->lastFreeSeats($row->start),
 					'start'         => $row->start,
 					'end'           => $row->end,
-					'label'         => Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()},
+					'label'         => ($row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null),
 					'public'        => $row->public,
 					'status'        => $row->status,
 					'name'          => $this->translator->translate($row->name),
@@ -403,7 +403,7 @@ class Dates
 		);
 		$dates = array();
 		foreach ($result as $row) {
-			$row->label = Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()};
+			$row->label = ($row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null);
 			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
 			$row->lastFreeSeats = $this->lastFreeSeats($row->start);
 			$dates[$row->dateId] = $row;
