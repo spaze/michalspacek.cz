@@ -495,6 +495,7 @@ class TrainingsPresenter extends BasePresenter
 			$values->venue,
 			$values->start,
 			$values->end,
+			$values->label,
 			$values->status,
 			$values->public,
 			$values->cooperation
@@ -519,6 +520,7 @@ class TrainingsPresenter extends BasePresenter
 			$values->venue,
 			$values->start,
 			$values->end,
+			$values->label,
 			$values->status,
 			$values->public,
 			$values->cooperation

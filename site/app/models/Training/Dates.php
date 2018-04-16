@@ -62,6 +62,7 @@ class Dates
 				t.student_discount AS studentDiscount,
 				d.start,
 				d.end,
+				d.label AS labelJson,
 				d.public,
 				s.status,
 				v.id_venue AS venueId,
@@ -138,7 +139,7 @@ class Dates
 	}
 
 
-	public function update($dateId, $training, $venue, $start, $end, $status, $public, $cooperation)
+	public function update($dateId, $training, $venue, $start, $end, $label, $status, $public, $cooperation)
 	{
 		$this->database->query(
 			'UPDATE training_dates SET ? WHERE id_date = ?',
@@ -147,6 +148,7 @@ class Dates
 				'key_venue'       => $venue,
 				'start'           => new \DateTime($start),
 				'end'             => new \DateTime($end),
+				'label'           => (empty($label) ? null : $label),
 				'key_status'      => $status,
 				'public'          => $public,
 				'key_cooperation' => (empty($cooperation) ? null : $cooperation),
@@ -165,6 +167,7 @@ class Dates
 				'key_venue'       => $venue,
 				'start'           => new \DateTime($start),
 				'end'             => new \DateTime($end),
+				'label'           => (empty($label) ? null : $label),
 				'key_status'      => $status,
 				'public'          => $public,
 				'key_cooperation' => (empty($cooperation) ? null : $cooperation),
@@ -241,7 +244,7 @@ class Dates
 					s.status,
 					d.start,
 					d.end,
-					d.label,
+					d.label AS labelJson,
 					d.public,
 					v.id_venue AS venueId,
 					v.name AS venueName,
@@ -284,7 +287,7 @@ class Dates
 					'lastFreeSeats' => $this->lastFreeSeats($row->start),
 					'start'         => $row->start,
 					'end'           => $row->end,
-					'label'         => Json::decode($row->label)->{$this->translator->getDefaultLocale()},
+					'label'         => Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()},
 					'public'        => $row->public,
 					'status'        => $row->status,
 					'name'          => $this->translator->translate($row->name),
@@ -360,7 +363,7 @@ class Dates
 				d.id_date AS dateId,
 				d.start,
 				d.end,
-				d.label,
+				d.label AS labelJson,
 				s.status,
 				v.href AS venueHref,
 				v.name AS venueName,
@@ -400,7 +403,7 @@ class Dates
 		);
 		$dates = array();
 		foreach ($result as $row) {
-			$row->label = Json::decode($row->label)->{$this->translator->getDefaultLocale()};
+			$row->label = Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()};
 			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
 			$row->lastFreeSeats = $this->lastFreeSeats($row->start);
 			$dates[$row->dateId] = $row;

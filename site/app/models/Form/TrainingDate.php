@@ -78,6 +78,8 @@ class TrainingDate extends ProtectedForm
 			->setRequired('Zadejte prosím konec')
 			->addRule(self::PATTERN, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
 
+		$this->addText('label', 'Label:');
+
 		$statuses = array();
 		foreach ($this->trainingDates->getStatuses() as $status) {
 			$statuses[$status->id] = $status->status;
@@ -104,6 +106,7 @@ class TrainingDate extends ProtectedForm
 			'venue' => $date->venueId,
 			'start' => $date->start->format('Y-m-d H:i'),
 			'end' => $date->end->format('Y-m-d H:i'),
+			'label' => $date->labelJson,
 			'status' => $this->trainingDates->getStatusId($date->status),
 			'public' => $date->public,
 			'cooperation' => $date->cooperationId,
