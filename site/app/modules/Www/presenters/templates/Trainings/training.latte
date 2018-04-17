@@ -85,9 +85,11 @@
 
 {define #content}
 {import "reviews.latte"}
+{import "default.latte"}
 <p>{$description}</p>
 
 <div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
+<div n:ifset="$discontinued" class="flash notice">{include #discontinued}</div>
 
 <div class="vcalendar">
 <h2 id="{_html.id.title}">{_messages.label.trainingname}</h2>
@@ -158,9 +160,9 @@
 <h2 id="{_html.id.materials}">{_messages.label.materials}</h2>
 <p>{$materials}</p>
 </div>
-<hr />
 
 {if $reviews}
+<hr />
 <div id="{_html.id.reviews}">
 <h2>{_messages.label.trainingreviews}</h2>
 {foreach $reviews as $review}
@@ -168,9 +170,10 @@
 {/foreach}
 </div>
 <p><a n:href="Trainings:reviews $name">{_messages.trainings.allreviews}</a></p>
-<hr />
 {/if}
 
+{if empty($discontinued)}
+<hr>
 {if count($dates)}
 <h2 id="{_html.id.application}">{_messages.label.application}</h2>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
@@ -188,4 +191,5 @@
 	{_messages.trainings.companythistraining|format:"link:Www:CompanyTrainings:training $name"}
 	{_messages.trainings.consultancy|format:'mailto:mail@michalspacek.cz'}
 </p>
+{/if}
 {/define}

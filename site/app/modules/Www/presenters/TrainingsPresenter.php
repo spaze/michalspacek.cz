@@ -114,7 +114,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
 		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
-		$this->template->discontinued = $this->trainings->getDiscontinued();
+		$this->template->discontinued = $this->trainings->getAllDiscontinued();
 	}
 
 
@@ -128,10 +128,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->training = $this->trainings->get($name);
 		if (!$this->training) {
 			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
-		}
-
-		if ($this->training->discontinuedId !== null) {
-			throw new BadRequestException("I don't do {$name} training anymore", Response::S410_GONE);
 		}
 
 		if ($this->training->successorId !== null) {
@@ -162,6 +158,10 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);
 
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
+
+		if ($this->training->discontinuedId !== null) {
+			$this->template->discontinued = [$this->trainings->getDiscontinued($this->training->discontinuedId)];
+		}
 	}
 
 

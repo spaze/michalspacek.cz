@@ -63,7 +63,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.companytrainings');
 		$this->template->trainings = $this->trainings->getNames();
-		$this->template->discontinued = $this->trainings->getDiscontinued();
+		$this->template->discontinued = $this->trainings->getAllDiscontinued();
 	}
 
 

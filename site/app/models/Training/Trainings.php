@@ -322,11 +322,11 @@ class Trainings
 
 
 	/**
-	 * Get discontinued trainings with description.
+	 * Get all discontinued trainings with description.
 	 *
 	 * @return array
 	 */
-	public function getDiscontinued()
+	public function getAllDiscontinued()
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -350,6 +350,36 @@ class Trainings
 			$trainings[$row->id]['trainings'][] = $row->training;
 		}
 		return $trainings;
+	}
+
+
+	/**
+	 * Get discontinued trainings with description.
+	 *
+	 * @param integer $id
+	 * @return array
+	 */
+	public function getDiscontinued($id)
+	{
+		$sql = 'SELECT
+				td.description,
+				t.name AS training,
+				td.href
+			FROM trainings_discontinued td
+				JOIN trainings t ON t.key_discontinued = td.id_trainings_discontinued
+			WHERE
+				td.id_trainings_discontinued = ?
+			ORDER BY
+				t.id_training';
+		$trainings = [];
+		foreach ($this->database->fetchAll($sql, $id) as $row) {
+			$trainings[] = $row->training;
+		}
+		return [
+			'description' => $row->description,
+			'href' => $row->href,
+			'trainings' => $trainings,
+		];
 	}
 
 }
