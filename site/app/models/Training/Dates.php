@@ -158,7 +158,7 @@ class Dates
 	}
 
 
-	public function add($training, $venue, $start, $end, $status, $public, $cooperation)
+	public function add($training, $venue, $start, $end, $label, $status, $public, $cooperation)
 	{
 		$this->database->query(
 			'INSERT INTO training_dates',

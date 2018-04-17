@@ -375,11 +375,11 @@ class Trainings
 		foreach ($this->database->fetchAll($sql, $id) as $row) {
 			$trainings[] = $row->training;
 		}
-		return [
+		return (empty($row) ? null : [
 			'description' => $row->description,
 			'href' => $row->href,
 			'trainings' => $trainings,
-		];
+		]);
 	}
 
 }
