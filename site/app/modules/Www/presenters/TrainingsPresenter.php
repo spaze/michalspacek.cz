@@ -53,6 +53,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\CompanyInfo\Info */
 	protected $companyInfo;
 
+	/** @var \Nette\Http\IResponse */
+	protected $httpResponse;
+
 	/** @var \Nette\Database\Row */
 	private $training;
 
@@ -74,6 +77,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
+	 * @param \Nette\Http\IResponse $httpResponse
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
@@ -88,7 +92,8 @@ class TrainingsPresenter extends BasePresenter
 		\MichalSpacekCz\Training\Reviews $trainingReviews,
 		\MichalSpacekCz\Vat $vat,
 		\Netxten\Templating\Helpers $netxtenHelpers,
-		\MichalSpacekCz\CompanyInfo\Info $companyInfo
+		\MichalSpacekCz\CompanyInfo\Info $companyInfo,
+		\Nette\Http\IResponse $httpResponse
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -104,6 +109,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->vat = $vat;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->companyInfo = $companyInfo;
+		$this->httpResponse = $httpResponse;
 		parent::__construct();
 	}
 
@@ -161,6 +167,7 @@ class TrainingsPresenter extends BasePresenter
 
 		if ($this->training->discontinuedId !== null) {
 			$this->template->discontinued = [$this->trainings->getDiscontinued($this->training->discontinuedId)];
+			$this->httpResponse->setCode(Response::S410_GONE);
 		}
 	}
 
@@ -397,6 +404,7 @@ class TrainingsPresenter extends BasePresenter
 
 		if ($training->discontinuedId !== null) {
 			$this->template->discontinued = [$this->trainings->getDiscontinued($training->discontinuedId)];
+			$this->httpResponse->setCode(Response::S410_GONE);
 		}
 	}
 

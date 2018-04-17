@@ -31,6 +31,9 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
+	/** @var \Nette\Http\IResponse */
+	protected $httpResponse;
+
 
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
@@ -39,6 +42,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
 	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
 	 * @param \MichalSpacekCz\Vat $vat
+	 * @param \Nette\Http\IResponse $httpResponse
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
@@ -46,7 +50,8 @@ class CompanyTrainingsPresenter extends BasePresenter
 		\MichalSpacekCz\Training\CompanyTrainings $companyTrainings,
 		\MichalSpacekCz\Training\Locales $trainingLocales,
 		\MichalSpacekCz\Training\Reviews $trainingReviews,
-		\MichalSpacekCz\Vat $vat
+		\MichalSpacekCz\Vat $vat,
+		\Nette\Http\IResponse $httpResponse
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -55,6 +60,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->trainingLocales = $trainingLocales;
 		$this->trainingReviews = $trainingReviews;
 		$this->vat = $vat;
+		$this->httpResponse = $httpResponse;
 		parent::__construct();
 	}
 
@@ -95,6 +101,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);
 		if ($training->discontinuedId !== null) {
 			$this->template->discontinued = [$this->trainings->getDiscontinued($training->discontinuedId)];
+			$this->httpResponse->setCode(Response::S410_GONE);
 		}
 	}
 
