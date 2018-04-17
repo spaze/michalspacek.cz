@@ -1,7 +1,7 @@
 introphp:
 	name: "Úvod do PHP"
 	description: 'Školení **Úvod do PHP** společně s kurzem "**Třídy a objekty v PHP**":[link:Www:Trainings:training tridy-a-objekty-v-php] pořádám ve spolupráci s "Akademií Root.cz":https://www.root.cz/skoleni/. Na úvodním kurzu se naučíte vše co budete potřebovat k psaní jednoduchých skriptů v PHP.'
-	upsell: 'Že tohle všechno už znáte? A víte, jak správně aplikace zabezpečit a jak je zrychlit? Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "výkonnosti":[link:Www:Trainings:training vykonnost-webovych-aplikaci].'
+	upsell: 'Že tohle všechno už znáte? A víte, jak správně aplikace zabezpečit? Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "HTTPS":[link:Www:Trainings:training https-pro-vyvojare-a-spravce].'
 	prerequisites: 'Na toto školení byste měli přijít se znalostí HTML a alespoň základní znalostí syntaxe SQL. Pokud si chcete přinést vlastní počítač, měli byste na něm mít nainstalováno PHP, např. pomocí balíku "XAMPP":https://www.apachefriends.org/index.html.'
 	audience: 'Školení je určeno pro autory webových aplikací.'
 	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
@@ -27,7 +27,7 @@ introphp:
 php5:
 	name: "Programování v PHP 5"
 	description: 'Toto školení společně s "**Úvodem do PHP**":[link:Www:Trainings:training uvod-do-php] pořádám ve spolupráci s "Akademií Root.cz":https://www.root.cz/skoleni/. Naučíte se na něm využívat objektově orientované programování (OOP) a několik šikovných rozšíření pro snadnější vývoj větších aplikací v PHP.'
-	upsell: 'Zvládáte objekty //levou zadní//? A máte aplikace dostatečně bezpečné a výkonné? Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "výkonnosti":[link:Www:Trainings:training vykonnost-webovych-aplikaci].'
+	upsell: 'Zvládáte objekty //levou zadní//? A máte aplikace dostatečně bezpečné? Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "HTTPS":[link:Www:Trainings:training https-pro-vyvojare-a-spravce].'
 	prerequisites: 'Měli byste znát PHP v rozsahu školení "Úvod do PHP":/skoleni/uvod-do-php. Na vlastní počítač, pokud si ho chcete přinést, si PHP nainstalujte předem, např. pomocí balíku "XAMPP":https://www.apachefriends.org/index.html.'
 	audience: 'Školení je určeno pro autory webových aplikací.'
 	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
