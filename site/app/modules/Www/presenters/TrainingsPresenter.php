@@ -168,8 +168,8 @@ class TrainingsPresenter extends BasePresenter
 	public function actionApplication($name, $param)
 	{
 		$training  = $this->trainings->get($name);
-		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+		if (!$training || $training->discontinuedId) {
+			throw new BadRequestException("I don't do {$name} training", Response::S404_NOT_FOUND);
 		}
 
 		$session = $this->getSession('training');
@@ -316,6 +316,9 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplicationPreliminary($formName)
 	{
+		if ($this->training->discontinuedId) {
+			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}", Response::S404_NOT_FOUND);
+		}
 		$form = new \MichalSpacekCz\Form\TrainingApplicationPreliminary($this, $formName, $this->translator);
 		$form->onSuccess[] = [$this, 'submittedApplicationPreliminary'];
 	}
@@ -455,11 +458,8 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$training = $this->trainings->get($name);
-		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
-		}
-		if ($training->discontinuedId !== null) {
-			throw new BadRequestException("I don't do {$name} training anymore", Response::S410_GONE);
+		if (!$training || $training->discontinuedId) {
+			throw new BadRequestException("I don't do {$name} training", Response::S404_NOT_FOUND);
 		}
 		$this->dates = $this->trainings->getDates($training->trainingId);
 		if (empty($this->dates)) {
