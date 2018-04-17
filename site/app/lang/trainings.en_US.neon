@@ -99,9 +99,9 @@ securityphp:
 	inhouse:
 		description: 'Bezpečnost webových aplikací mě zajímá a baví mě ji zkoumat. Je to citlivé téma a každá zapomenutá drobnost může dostat do problémů nejen vás, ale i vaše uživatele. O zabezpečení webu často píšu "články":/clanky a "přednáším":/prednasky. Rád vaše vývojáře naučím, jak webové aplikace zabezpečit a jak je na bezpečnost testovat. Školení je vhodné i pro vývojáře, kteří pracují např. v Javě nebo Pythonu, většina útoků a principů je stejných.'
 		upsell: 'Zabezpečené přenosy dat pomocí protokolu **HTTPS** detailně rozebíráme na "školení pro správce a vývojáře":[link:Www:CompanyTrainings:training https-pro-vyvojare-a-spravce].'
-		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
-		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		duration: 'Školení je dvoudenní, každý den 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
+		alternativeduration: 'Pokud budete chtít probrat jen některá témata, můžeme školení uspořádat pouze jednodenní.'
+		alternativedurationprice: 'Základní cena jednodenního školení je %s Kč bez DPH, %s Kč s DPH.'
 
 advancedwebsecurity:
 	name: 'Pokročilá webová bezpečnost'
