@@ -388,15 +388,16 @@ class TrainingsPresenter extends BasePresenter
 		if (!$training) {
 			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
 		}
-		if ($training->discontinuedId !== null) {
-			throw new BadRequestException("I don't do {$name} training anymore", Response::S410_GONE);
-		}
 
 		$this->template->name             = $training->action;
 		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
 		$this->template->title            = $training->name;
 		$this->template->description      = $training->description;
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId);
+
+		if ($training->discontinuedId !== null) {
+			$this->template->discontinued = [$this->trainings->getDiscontinued($training->discontinuedId)];
+		}
 	}
 
 

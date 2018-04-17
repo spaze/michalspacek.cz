@@ -10,11 +10,15 @@
 {/define}
 
 {define #content}
+{import "default.latte"}
 <p>
 	{$description}
-	{capture $link}Trainings:training#{_html.id.application}{/capture}
-	<small>(<a n:href="$link $name">{_messages.label.lowercaseapplication}</a>, <a n:href="CompanyTrainings:training $name">{_messages.label.lowercasecompanytraining}</a>)</small>
+	{if !isset($discontinued)}
+		{capture $link}Trainings:training#{_html.id.application}{/capture}
+		<small>(<a n:href="$link $name">{_messages.label.lowercaseapplication}</a>, <a n:href="CompanyTrainings:training $name">{_messages.label.lowercasecompanytraining}</a>)</small>
+	{/if}
 </p>
+<div n:ifset="$discontinued" class="flash notice">{include #discontinued}</div>
 {if $reviews}
 	<div id="{_html.id.reviews}">
 	<h2>{_messages.label.trainingreviews}</h2>
