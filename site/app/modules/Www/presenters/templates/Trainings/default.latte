@@ -4,14 +4,21 @@
 
 {define #list}
 <div n:if="isset($lastFreeSeats) && $lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
-<ul>
+<ul class="vcalendar">
  	{foreach $upcomingTrainings as $item}
-		<li>
-			<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a>
+		<li class="vevent">
+			<a n:href=":Www:Trainings:training $item[action]" class="url"><strong class="summary">{$item[name]}</strong></a>
 			<small>
 				{foreach $item[dates] as $date}
-					<strong>{if $date[tentative]}{$date[start]|localeMonth}{else}{$date[start]|localeIntervalDay:$date[end]}{/if}</strong>
-					{$date[venueCity]}<span n:if="$date[label]" class="label">{$date[label]}</span>
+					<strong>
+						{if $date[tentative]}
+							{$date[start]|localeMonth}
+						{else}
+							<abbr title="{$date[start]|date:DateTime::ISO8601}" class="dtstart">{$date[start]|localeIntervalDay:$date[end]}</abbr>
+							<abbr title="{$date[end]|date:DateTime::ISO8601}" class="dtend"></abbr>
+						{/if}
+					</strong>
+					<span class="location">{$date[venueCity]}</span><span n:if="$date[label]" class="label">{$date[label]}</span>
 				{sep}, {/sep}{/foreach}
 			</small>
 		</li>
