@@ -88,6 +88,7 @@ class Certificates
 			MAX(c.not_after) AS notAfter
 			FROM certificates c
 				JOIN certificate_requests cr ON c.key_certificate_request = cr.id_certificate_request
+			WHERE NOT c.hidden
 			GROUP BY cr.cn, cr.ext
 			ORDER BY cr.cn, cr.ext';
 		$certificates = $this->database->fetchAll($query);
