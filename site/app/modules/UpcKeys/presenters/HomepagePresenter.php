@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace App\UpcKeysModule\Presenters;
 
+use Nette\Http\IResponse;
+
 /**
  * Homepage presenter.
  *
@@ -18,6 +20,9 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	/** @var \MichalSpacekCz\UpcKeys */
 	protected $upcKeys;
 
+	/** @var IResponse */
+	protected $httpResponse;
+
 	/** @var array (type id => type) */
 	private $types = array(
 		\MichalSpacekCz\UpcKeys::SSID_TYPE_24GHZ => '2.4 GHz',
@@ -26,9 +31,10 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	);
 
 
-	public function __construct(\MichalSpacekCz\UpcKeys $upcKeys)
+	public function __construct(\MichalSpacekCz\UpcKeys $upcKeys, IResponse $httpResponse)
 	{
 		$this->upcKeys = $upcKeys;
+		$this->httpResponse = $httpResponse;
 		parent::__construct();
 	}
 
@@ -67,7 +73,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 				break;
 			default:
-				throw new \Nette\Application\BadRequestException('Unknown format', \Nette\Http\IResponse::S404_NOT_FOUND);
+				throw new \Nette\Application\BadRequestException('Unknown format', IResponse::S404_NOT_FOUND);
 		}
 	}
 
@@ -81,11 +87,11 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	{
 		$result = [];
 		if ($this->ssid !== null) {
-			if ($this->ssid !== strtoupper($this->ssid)) {
-				$this->redirect('this', strtoupper($this->ssid));
-			}
-			$result['ssid'] = $this->ssid;
 			if ($this->upcKeys->isValidSsid($this->ssid)) {
+				if ($this->ssid !== strtoupper($this->ssid)) {
+					$this->redirect('this', strtoupper($this->ssid));
+				}
+				$result['ssid'] = $this->ssid;
 				$keys = $this->upcKeys->getKeys($this->ssid);
 				if (!$keys) {
 					$result['error'] = 'Oops, something went wrong, please try again in a moment';
@@ -94,6 +100,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 				}
 			} else {
 				$result['error'] = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
+				$this->httpResponse->setCode(IResponse::S404_NOT_FOUND);
 			}
 		}
 		return $result;
