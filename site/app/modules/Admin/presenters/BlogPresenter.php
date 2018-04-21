@@ -108,7 +108,7 @@ class BlogPresenter extends BasePresenter
 	{
 		$this->post = $this->blogPost->getById($param);
 		if (!$this->post) {
-			throw new \Nette\Application\BadRequestException("Post id {$param} does not exist, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("Post id {$param} does not exist, yet", \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
 		$title = \Nette\Utils\Html::el()->setText('Příspěvek ')->addHtml($this->post->title);

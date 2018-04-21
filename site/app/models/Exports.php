@@ -58,7 +58,7 @@ class Exports
 
 			$articles = ($filter ? $this->articles->getAllByTags($filter, self::ITEMS) : $this->articles->getAll(self::ITEMS));
 			if (!$articles) {
-				throw new \Nette\Application\BadRequestException('No articles', \Nette\Http\Response::S404_NOT_FOUND);
+				throw new \Nette\Application\BadRequestException('No articles', \Nette\Http\IResponse::S404_NOT_FOUND);
 			}
 
 			$feedUpdated = null;

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace App\PulseModule\Presenters;
 
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 
 /**
  * Pulse password storages presenter.
@@ -42,7 +42,7 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	{
 		// Keep old, published URLs alive
 		if ($param) {
-			$this->redirect(Response::S301_MOVED_PERMANENTLY, 'site', $param);
+			$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'site', $param);
 		}
 		$data = $this->passwords->getAllStorages();
 		$this->template->isDetail = false;
@@ -60,13 +60,13 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	public function actionSite(string $param): void
 	{
 		if (empty($param)) {
-			$this->redirect(Response::S301_MOVED_PERMANENTLY, 'default');
+			$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'default');
 		}
 
 		$sites = explode(',', $param);
 		$data = $this->passwords->getStoragesBySite($sites);
 		if (empty($data->sites)) {
-			throw new \Nette\Application\BadRequestException('Unknown site alias', Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException('Unknown site alias', IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->isDetail = true;
@@ -85,13 +85,13 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 	public function actionCompany(string $param): void
 	{
 		if (empty($param)) {
-			$this->redirect(Response::S301_MOVED_PERMANENTLY, 'default');
+			$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'default');
 		}
 
 		$companies = explode(',', $param);
 		$data = $this->passwords->getStoragesByCompany($companies);
 		if (empty($data->sites)) {
-			throw new \Nette\Application\BadRequestException('Unknown company alias', Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException('Unknown company alias', IResponse::S404_NOT_FOUND);
 		}
 
 		$names = [];

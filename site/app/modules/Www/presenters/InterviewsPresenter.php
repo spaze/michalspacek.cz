@@ -49,7 +49,7 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$interview = $this->interviews->get($name);
 		if (!$interview) {
-			throw new \Nette\Application\BadRequestException("I haven't been interviewed by {$name}, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("I haven't been interviewed by {$name}, yet", \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [$interview->title]);

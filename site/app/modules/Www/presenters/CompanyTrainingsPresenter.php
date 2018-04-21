@@ -2,7 +2,7 @@
 namespace App\WwwModule\Presenters;
 
 use Nette\Application\BadRequestException;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 
 /**
  * Company Trainings presenter.
@@ -31,7 +31,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
-	/** @var \Nette\Http\IResponse */
+	/** @var IResponse */
 	protected $httpResponse;
 
 
@@ -42,7 +42,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
 	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
 	 * @param \MichalSpacekCz\Vat $vat
-	 * @param \Nette\Http\IResponse $httpResponse
+	 * @param IResponse $httpResponse
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
@@ -51,7 +51,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		\MichalSpacekCz\Training\Locales $trainingLocales,
 		\MichalSpacekCz\Training\Reviews $trainingReviews,
 		\MichalSpacekCz\Vat $vat,
-		\Nette\Http\IResponse $httpResponse
+		IResponse $httpResponse
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -81,7 +81,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	{
 		$training = $this->companyTrainings->getInfo($name);
 		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet", Response::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet", IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->name = $training->action;
@@ -101,7 +101,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);
 		if ($training->discontinuedId !== null) {
 			$this->template->discontinued = [$this->trainings->getDiscontinued($training->discontinuedId)];
-			$this->httpResponse->setCode(Response::S410_GONE);
+			$this->httpResponse->setCode(IResponse::S410_GONE);
 		}
 	}
 

@@ -75,7 +75,7 @@ class TalksPresenter extends BasePresenter
 			$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
 			$slides = ($talk->publishSlides ? $this->talks->getSlides($talk->talkId) : []);
 		} catch (\RuntimeException $e) {
-			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
 		if ($talk->supersededByAction) {

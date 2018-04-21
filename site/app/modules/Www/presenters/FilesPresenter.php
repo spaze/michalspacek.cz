@@ -1,9 +1,9 @@
 <?php
 namespace App\WwwModule\Presenters;
 
-use Nette\Application\BadRequestException,
-	Nette\Application\Responses\FileResponse,
-	Nette\Http\Response;
+use Nette\Application\BadRequestException;
+use Nette\Application\Responses\FileResponse;
+use Nette\Http\IResponse;
 
 /**
  * Files presenter.
@@ -40,12 +40,12 @@ class FilesPresenter extends BasePresenter
 	{
 		$session = $this->getSession('application');
 		if (!$session->applicationId) {
-			throw new BadRequestException("Unknown application id, missing or invalid token", Response::S404_NOT_FOUND);
+			throw new BadRequestException("Unknown application id, missing or invalid token", IResponse::S404_NOT_FOUND);
 		}
 
 		$file = $this->trainingFiles->getFile($session->applicationId, $session->token, $filename);
 		if (!$file) {
-			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", Response::S404_NOT_FOUND);
+			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", IResponse::S404_NOT_FOUND);
 		}
 
 		$downloadId = $this->files->logDownload($file->fileId);
@@ -56,7 +56,7 @@ class FilesPresenter extends BasePresenter
 
 	public function actionFile($filename)
 	{
-		throw new BadRequestException("Cannot download {$filename}", Response::S404_NOT_FOUND);
+		throw new BadRequestException("Cannot download {$filename}", IResponse::S404_NOT_FOUND);
 	}
 
 

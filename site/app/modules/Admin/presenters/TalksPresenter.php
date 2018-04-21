@@ -73,7 +73,7 @@ class TalksPresenter extends BasePresenter
 		try {
 			$this->talk = $this->talks->getById((int)$param);
 		} catch (\RuntimeException $e) {
-			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
@@ -87,7 +87,7 @@ class TalksPresenter extends BasePresenter
 			$this->talk = $this->talks->getById((int)$param);
 			$this->slides = $this->talks->getSlides($this->talk->talkId);
 		} catch (\RuntimeException $e) {
-			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.admin.talkslides', $this->talk);

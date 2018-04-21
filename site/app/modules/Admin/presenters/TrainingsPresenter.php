@@ -96,13 +96,13 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->dateId = $param;
 		if (!$this->dateId) {
-			throw new \Nette\Application\BadRequestException('Missing date id', \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException('Missing date id', \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
 		$this->redirectParam = $this->dateId;
 		$this->training = $this->trainingDates->get($this->dateId);
 		if (!$this->training) {
-			throw new \Nette\Application\BadRequestException("Date id {$param} does not exist, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("Date id {$param} does not exist, yet", \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 		$validCount = 0;
 		$applications = $discarded = [];

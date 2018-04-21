@@ -56,7 +56,7 @@ class VenuesPresenter extends BasePresenter
 	{
 		$venue = $this->trainingVenues->get($name);
 		if (!$venue) {
-			throw new \Nette\Application\BadRequestException("Where in the world is {$name}?", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("Where in the world is {$name}?", \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->name]);

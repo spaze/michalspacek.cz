@@ -46,7 +46,7 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$this->interview = $this->interviews->getById($param);
 		if (!$this->interview) {
-			throw new \Nette\Application\BadRequestException("Interview id {$param} does not exist, yet", \Nette\Http\Response::S404_NOT_FOUND);
+			throw new \Nette\Application\BadRequestException("Interview id {$param} does not exist, yet", \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->title)]);

@@ -90,7 +90,7 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 
 	public function actionDefault()
 	{
-		$this->httpResponse->setCode(\Nette\Http\Response::S403_FORBIDDEN);
+		$this->httpResponse->setCode(\Nette\Http\IResponse::S403_FORBIDDEN);
 		$this->template->pageTitle = $this->translator->translate("messages.title.forbidden");
 	}
 
