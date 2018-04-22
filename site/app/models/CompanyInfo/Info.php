@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\CompanyInfo;
 
 use Nette\Caching\Cache;
@@ -44,7 +46,12 @@ class Info
 	}
 
 
-	public function getData($country, $companyId)
+	/**
+	 * @param string $country
+	 * @param string $companyId
+	 * @return Data
+	 */
+	public function getData(string $country, string $companyId): Data
 	{
 		return $this->cache->load("{$country}/{$companyId}", function(&$dependencies) use ($country, $companyId) {
 			$found = false;
@@ -92,7 +99,7 @@ class Info
 	/**
 	 * @param boolean $visible
 	 */
-	public function setLoadCompanyDataVisible($visible)
+	public function setLoadCompanyDataVisible(bool $visible): void
 	{
 		$this->loadCompanyDataVisible = $visible;
 	}
@@ -101,7 +108,7 @@ class Info
 	/**
 	 * @return boolean
 	 */
-	public function isLoadCompanyDataVisible()
+	public function isLoadCompanyDataVisible(): bool
 	{
 		return $this->loadCompanyDataVisible;
 	}

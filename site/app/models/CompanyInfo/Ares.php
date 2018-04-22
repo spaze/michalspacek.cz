@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\CompanyInfo;
 
 /**
@@ -44,7 +46,7 @@ class Ares implements CompanyDataInterface
 	/**
 	 * @param string $url
 	 */
-	public function setUrl($url)
+	public function setUrl(string $url): void
 	{
 		$this->url = $url;
 	}
@@ -53,7 +55,7 @@ class Ares implements CompanyDataInterface
 	/**
 	 * @param string $url
 	 */
-	public function setProxyUrl($url)
+	public function setProxyUrl(string $url): void
 	{
 		$this->proxyUrl = $url;
 	}
@@ -62,7 +64,7 @@ class Ares implements CompanyDataInterface
 	/**
 	 * @param boolean $useProxy
 	 */
-	public function setUseProxy($useProxy)
+	public function setUseProxy(bool $useProxy): void
 	{
 		$this->useProxy = $useProxy;
 	}
@@ -72,7 +74,7 @@ class Ares implements CompanyDataInterface
 	 * @param string $companyId
 	 * @return Data
 	 */
-	public function getData($companyId)
+	public function getData(string $companyId): Data
 	{
 		$company = new Data();
 		try {
@@ -132,7 +134,7 @@ class Ares implements CompanyDataInterface
 	 * @param string $companyId
 	 * @return string
 	 */
-	private function fetch($companyId)
+	private function fetch(string $companyId): string
 	{
 		$context = stream_context_create();
 		stream_context_set_params($context, [
@@ -157,7 +159,7 @@ class Ares implements CompanyDataInterface
 	 * @param string $streetNumber
 	 * @return string
 	 */
-	private function formatStreet($city, $street, $houseNumber, $streetNumber)
+	private function formatStreet(string $city, string $street, string $houseNumber, string $streetNumber): string
 	{
 		$result = $street;
 		if (empty($result)) {
@@ -180,7 +182,7 @@ class Ares implements CompanyDataInterface
 	 * @param \SimpleXMLElement $data
 	 * @return string ISO 3166-1 alpha-2 code
 	 */
-	private function countryCode(\SimpleXMLElement $data)
+	private function countryCode(\SimpleXMLElement $data): string
 	{
 		$codes = array(
 			'203' => 'CZ',

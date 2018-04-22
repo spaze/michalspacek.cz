@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\CompanyInfo;
 
 /**
@@ -31,7 +33,7 @@ class RegisterUz implements CompanyDataInterface
 	 *
 	 * @param string $rootUrl
 	 */
-	public function setRootUrl($rootUrl)
+	public function setRootUrl(string $rootUrl): void
 	{
 		if ($rootUrl[strlen($rootUrl) - 1] !== '/') {
 			$rootUrl .= '/';
@@ -44,7 +46,7 @@ class RegisterUz implements CompanyDataInterface
 	 * @param string $companyId
 	 * @return Data
 	 */
-	public function getData($companyId)
+	public function getData(string $companyId): Data
 	{
 		$company = new Data();
 		try {
@@ -85,7 +87,7 @@ class RegisterUz implements CompanyDataInterface
 	 * @param array $parameters
 	 * @return \stdClass JSON object
 	 */
-	private function call($method, array $parameters = null)
+	private function call(string $method, array $parameters = null): \stdClass
 	{
 		if ($parameters !== null) {
 			$query = '?' . http_build_query($parameters);

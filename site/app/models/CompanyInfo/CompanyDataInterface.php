@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\CompanyInfo;
 
 /**
@@ -9,5 +11,5 @@ namespace MichalSpacekCz\CompanyInfo;
  */
 interface CompanyDataInterface
 {
-	public function getData($companyId);
+	public function getData(string $companyId): Data;
 }
