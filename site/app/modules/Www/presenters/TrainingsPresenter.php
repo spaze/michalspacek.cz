@@ -17,9 +17,6 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Files */
-	protected $files;
-
 	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
@@ -65,7 +62,6 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Files $files
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
@@ -81,7 +77,6 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Files $files,
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
 		Training\Dates $trainingDates,
@@ -97,7 +92,6 @@ class TrainingsPresenter extends BasePresenter
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
-		$this->files = $files;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;

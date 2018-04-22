@@ -16,7 +16,6 @@ services:
 			- setLocationRoot(%domain.locationRoot%)
 	redirections:  \MichalSpacekCz\Redirections
 	articles:  \MichalSpacekCz\Articles
-	files:     \MichalSpacekCz\Files
 	talks:
 		class: \MichalSpacekCz\Talks
 		setup:

@@ -14,23 +14,15 @@ use Nette\Http\IResponse;
 class FilesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Files */
-	protected $files;
-
 	/** @var \MichalSpacekCz\Training\Files */
 	protected $trainingFiles;
 
 
 	/**
-	 * @param \MichalSpacekCz\Files $files
 	 * @param \MichalSpacekCz\Training\Files $trainingFiles
 	 */
-	public function __construct(
-		\MichalSpacekCz\Files $files,
-		\MichalSpacekCz\Training\Files $trainingFiles
-	)
+	public function __construct(\MichalSpacekCz\Training\Files $trainingFiles)
 	{
-		$this->files = $files;
 		$this->trainingFiles = $trainingFiles;
 		parent::__construct();
 	}
@@ -47,9 +39,6 @@ class FilesPresenter extends BasePresenter
 		if (!$file) {
 			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", IResponse::S404_NOT_FOUND);
 		}
-
-		$downloadId = $this->files->logDownload($file->fileId);
-		$this->trainingFiles->logDownload($session->applicationId, $downloadId);
 		$this->sendFile($file->info->getPathname());
 	}
 
