@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use Nette\Application\BadRequestException;
@@ -28,7 +30,12 @@ class FilesPresenter extends BasePresenter
 	}
 
 
-	public function actionTraining($filename)
+	/**
+	 * @param string $filename
+	 * @throws BadRequestException
+	 * @throws \Nette\Application\AbortException
+	 */
+	public function actionTraining(string $filename): void
 	{
 		$session = $this->getSession('application');
 		if (!$session->applicationId) {
@@ -44,7 +51,11 @@ class FilesPresenter extends BasePresenter
 	}
 
 
-	public function actionFile($filename)
+	/**
+	 * @param string $filename
+	 * @throws BadRequestException
+	 */
+	public function actionFile(string $filename): void
 	{
 		throw new BadRequestException("Cannot download {$filename}", IResponse::S404_NOT_FOUND);
 	}
