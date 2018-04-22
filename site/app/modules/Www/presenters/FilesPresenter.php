@@ -39,7 +39,8 @@ class FilesPresenter extends BasePresenter
 		if (!$file) {
 			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", IResponse::S404_NOT_FOUND);
 		}
-		$this->sendFile($file->info->getPathname());
+		$pathname = $file->info->getPathname();
+		$this->sendResponse(new FileResponse($pathname, null, finfo_file(finfo_open(FILEINFO_MIME_TYPE), $pathname)));
 	}
 
 
@@ -47,12 +48,5 @@ class FilesPresenter extends BasePresenter
 	{
 		throw new BadRequestException("Cannot download {$filename}", IResponse::S404_NOT_FOUND);
 	}
-
-
-	protected function sendFile($file)
-	{
-		$this->sendResponse(new FileResponse($file, null, finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file)));
-	}
-
 
 }
