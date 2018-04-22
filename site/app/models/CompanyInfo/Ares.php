@@ -112,7 +112,7 @@ class Ares implements CompanyDataInterface
 			$company->city = $city;
 			$company->zip = $zip;
 			$company->country = $country;
-		} catch (\UnexpectedValueException  $e) {
+		} catch (\UnexpectedValueException $e) {
 			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
 			$company->status = self::STATUS_NOT_FOUND;
 			$company->statusMessage = 'Not Found';

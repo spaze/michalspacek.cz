@@ -66,7 +66,7 @@ class RegisterUz implements CompanyDataInterface
 			$company->city = $unit->mesto;
 			$company->zip = $unit->psc;
 			$company->country = self::COUNTRY_CODE;
-		} catch (\RuntimeException  $e) {
+		} catch (\RuntimeException $e) {
 			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
 			$company->status = self::STATUS_NOT_FOUND;
 			$company->statusMessage = 'Not Found';

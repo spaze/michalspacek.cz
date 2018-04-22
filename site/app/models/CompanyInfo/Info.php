@@ -67,14 +67,14 @@ class Info
 				case 'sk':
 					$data = $this->registerUz->getData($companyId);
 					switch ($data->status) {
-						case Ares::STATUS_ERROR:
+						case RegisterUz::STATUS_ERROR:
 							$data->status = self::STATUS_ERROR;
 							break;
-						case Ares::STATUS_FOUND:
+						case RegisterUz::STATUS_FOUND:
 							$data->status = self::STATUS_FOUND;
 							$found = true;
 							break;
-						case Ares::STATUS_NOT_FOUND:
+						case RegisterUz::STATUS_NOT_FOUND:
 							$data->status = self::STATUS_NOT_FOUND;
 							break;
 					}

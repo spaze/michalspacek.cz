@@ -49,7 +49,7 @@ class Exports
 		/** @var Atom\Feed $feed */
 		$feed = $this->cache->load(($filter ? "Atom/ArticlesByTag/{$filter}" : 'Atom/AllArticles'), function(&$dependencies) use ($self, $filter) {
 			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags($filter) : $this->articles->getNearestPublishDate());
-			$dependencies[CACHE::EXPIRATION] = ($nearest instanceof \DateTime ? $nearest->modify('+1 minute') : null);
+			$dependencies[Cache::EXPIRATION] = ($nearest instanceof \DateTime ? $nearest->modify('+1 minute') : null);
 
 			$title = ($filter ? $this->texyFormatter->translate('messages.feed.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.feed.allarticles'));
 			$feed = new Atom\Feed($self, "Michal Špaček: {$title}");
