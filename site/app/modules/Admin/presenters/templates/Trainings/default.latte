@@ -4,8 +4,8 @@
 	<td><a n:href="Trainings:application $application->id">{$application->name}</a></td>
 	<td><small>{$application->email}</small></td>
 	<td><span n:tag-if="($application->company|length) > 40" title="{$application->company}">{$application->company|truncate:40}</span></td>
-	<td><small><code title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</code></small></td>
 	<td><small{if ($application->note|length) > 20} title="{$application->note}"{/if}>{$application->note|truncate:20}</small></td>
+	<td><small><code title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</code></small></td>
 	<td>
 		<small><code title="Zdroj {$application->sourceName}">{$application->sourceNameInitials}</code></small>
 		{capture $title}
@@ -73,8 +73,8 @@
 								<th><small>Jméno</small></th>
 								<th><small>E-mail</small></th>
 								<th><small>Společnost</small></th>
-								<th><small>Status</small></th>
 								<th><small>Poznámka</small></th>
+								<th><small>Status</small></th>
 								<th><small title="Cena bez DPH">Cena</small></th>
 						</thead>
 						<tbody n:if="$training->applications" n:inner-foreach="$training->applications as $application">{include #listItems}</tbody>
