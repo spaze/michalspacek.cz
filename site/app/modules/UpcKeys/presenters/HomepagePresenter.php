@@ -87,11 +87,11 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	{
 		$result = [];
 		if ($this->ssid !== null) {
+			$result['ssid'] = $this->ssid;
 			if ($this->upcKeys->isValidSsid($this->ssid)) {
 				if ($this->ssid !== strtoupper($this->ssid)) {
 					$this->redirect('this', strtoupper($this->ssid));
 				}
-				$result['ssid'] = $this->ssid;
 				$keys = $this->upcKeys->getKeys($this->ssid);
 				if (!$keys) {
 					$result['error'] = 'Oops, something went wrong, please try again in a moment';
