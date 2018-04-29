@@ -10,13 +10,14 @@
 {/define}
 
 {define #content}
+{var $familiar = $familiar ? 'familiar' : 'formal'}
 <p>
 	{capture $date}{$trainingStart|localeIntervalDay:$trainingEnd}{/capture}
 	{_messages.trainings.files.thankyou|format:$trainingTitle:$date}
-	{_messages.trainings.files.download}
+	{_messages.trainings.files.download.$familiar}
 </p>
 <ul>
 	<li n:foreach="$files as $file"><a n:href="Files:training $file->fileName">{$file->fileName}</a> ({$file->info->getSize()|bytes})</li>
 </ul>
-<p>{_messages.trainings.moretrainings|format:'link:Www:Trainings:'}</p>
+<p>{_messages.trainings.moretrainings.$familiar|format:'link:Www:Trainings:'}</p>
 {/define}

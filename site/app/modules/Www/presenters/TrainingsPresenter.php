@@ -442,6 +442,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingName = ($training->custom ? null : $training->action);
 		$this->template->trainingStart = $application->trainingStart;
 		$this->template->trainingEnd = $application->trainingEnd;
+		$this->template->familiar = $application->familiar;
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingmaterials', [$training->name]);
 		$this->template->files = $files;

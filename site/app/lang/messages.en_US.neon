@@ -236,8 +236,12 @@ trainings:
 		cryptosession: "\"Two-day **cryptography** deep dive\":[%s] by renowned Czech cryptologist **Jan Dušátko**"
 	files:
 		thankyou: "Díky za účast na školení %s dne %s."
-		download: "Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili."
-	moretrainings: "Rád Vás přivítám i na nějakém dalším školení, které \"pořádám\":[%s]."
+		download:
+			formal: "Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili."
+			familiar: "Níže si pro tvou osobní potřebu můžeš stáhnout materiály, které jsme na školení použili."
+	moretrainings:
+		formal: "Rád Vás přivítám i na nějakém dalším školení, které \"pořádám\":[%s]."
+		familiar: "Rád tě přivítám i na nějakém dalším školení, které \"pořádám\":[%s]."
 	more: "more…"
 	jointhem: "Přidejte se k těmto účastníkům a \"přihlaste se\":[%s] na školení \"%s\":[%s]!"
 	addanother: "Add another participant"
