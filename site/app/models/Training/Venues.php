@@ -65,7 +65,7 @@ class Venues
 				v.name
 			FROM training_venues v
 			ORDER BY
-				v.id_venue'
+				v.order IS NULL, v.order, v.id_venue'
 		);
 		return $result;
 	}
