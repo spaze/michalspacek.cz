@@ -89,6 +89,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 		$this->addFromDate($algoContainer, 'from', 'From:');
 		$algoContainer->addCheckbox('fromConfirmed', 'From confirmed');
 		$algoContainer->addText('attributes', 'Attributes:');
+		$algoContainer->addText('note', 'Algorithm note:');
 		$newAlgoContainer = $algoContainer->addContainer('new');
 		$inputAlgo = $newAlgoContainer->addText('algo', 'Algorithm:');
 		$inputAlias = $newAlgoContainer->addText('alias', 'Alias:');

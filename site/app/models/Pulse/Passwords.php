@@ -77,7 +77,8 @@ class Passwords
 				pd.published AS disclosurePublished,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
-				ps.attributes
+				ps.attributes,
+				ps.note
 			FROM companies c
 				LEFT JOIN sites s ON s.key_companies = c.id
 				JOIN password_storages ps ON ps.key_sites = s.id OR ps.key_companies = c.id
@@ -125,7 +126,8 @@ class Passwords
 				pd.published AS disclosurePublished,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
-				ps.attributes
+				ps.attributes,
+				ps.note
 			FROM companies c
 				LEFT JOIN sites s ON s.key_companies = c.id
 				JOIN password_storages ps ON ps.key_sites = s.id OR ps.key_companies = c.id
@@ -174,7 +176,8 @@ class Passwords
 				pd.published AS disclosurePublished,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
-				ps.attributes
+				ps.attributes,
+				ps.note
 			FROM companies c
 				LEFT JOIN sites s ON s.key_companies = c.id
 				JOIN password_storages ps ON ps.key_sites = s.id OR ps.key_companies = c.id
@@ -223,7 +226,8 @@ class Passwords
 				pd.published AS disclosurePublished,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
-				ps.attributes
+				ps.attributes,
+				ps.note
 			FROM companies c
 				LEFT JOIN sites s ON s.key_companies = c.id
 				JOIN password_storages ps ON ps.key_sites = s.id OR ps.key_companies = c.id
@@ -285,6 +289,7 @@ class Passwords
 				$attributes = (empty($row->attributes) ? null : \Nette\Utils\Json::decode($row->attributes));
 				$algo->params = $attributes->params ?? null;
 				$algo->fullAlgo = $this->formatFullAlgo($row->algoName, $attributes);
+				$algo->note = $row->note;
 				$storages->storages[$row->companyId][$siteId][$key] = $algo;
 			}
 			$disclosure = new \stdClass();
@@ -482,9 +487,10 @@ class Passwords
 	 * @param string $from
 	 * @param boolean $fromConfirmed
 	 * @param string|null $attributes
+	 * @param string|null $note
 	 * @return integer|null
 	 */
-	private function getStorageId(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, ?string $attributes): ?int
+	private function getStorageId(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, ?string $attributes, ?string $note): ?int
 	{
 		$result = $this->database->fetchField(
 			'SELECT id FROM password_storages WHERE ?',
@@ -495,6 +501,7 @@ class Passwords
 				'from' => (empty($from) ? null : new \DateTime($from)),
 				'from_confirmed' => $fromConfirmed,
 				'attributes' => (empty($attributes) ? null : $attributes),
+				'note' => (empty($note) ? null : $note),
 			)
 		);
 		return $result ?: null;
@@ -510,9 +517,10 @@ class Passwords
 	 * @param string $from
 	 * @param boolean $fromConfirmed
 	 * @param string $attributes
+	 * @param string $note
 	 * @return integer Id of newly inserted storage
 	 */
-	private function addStorageData(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, string $attributes): int
+	private function addStorageData(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, string $attributes, string $note): int
 	{
 		$this->database->query('INSERT INTO password_storages', [
 			'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
@@ -521,6 +529,7 @@ class Passwords
 			'from' => (empty($from) ? null : new \DateTime($from)),
 			'from_confirmed' => $fromConfirmed,
 			'attributes' => (empty($attributes) ? null : $attributes),
+			'note' => (empty($note) ? null : $note),
 		]);
 		return (int)$this->database->getInsertId();
 	}
@@ -568,9 +577,9 @@ class Passwords
 				if (!$disclosureId) {
 					$disclosureId = $this->addDisclosure($disclosure->disclosure, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
 				}
-				$storageId = $this->getStorageId($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes);
+				$storageId = $this->getStorageId($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
 				if (!$storageId) {
-					$storageId = $this->addStorageData($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes);
+					$storageId = $this->addStorageData($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
 				}
 				$this->pairDisclosureStorage($disclosureId, $storageId);
 			}

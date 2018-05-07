@@ -45,4 +45,7 @@ class Algorithm
 	/** @var array */
 	public $disclosureTypes = array();
 
+	/** @var string */
+	public $note;
+
 }

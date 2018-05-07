@@ -65,6 +65,7 @@
 				{if $algo->disclosures}
 					<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Details</a></div>
 					<div n:class="expandable, !$isDetail ? hidden">
+					<p n:ifset="$algo->note">Note: {$algo->note|format}</p>
 					<p n:ifset="$algo->params">Params: {foreach $algo->params as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
 					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>
 					<p>Disclosures:</p>
