@@ -29,8 +29,8 @@
 		<tr class="row">
 			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 			<td>{input send}</td>
-			<td><a n:href="Trainings:application $application->id" title="{$application->company}">{$application->name}</a></td>
-			<td class="button"><small>{$application->email}</small></td>
+			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id" n:attr="title => ($application->company|ifNull:smazáno)">{$application->name|ifNull:smazáno}</a></small></td>
+			<td class="button"><small>{$application->email|ifNull:smazáno}</small></td>
 			<td>{$application->training->name} <small>{$application->trainingStart|date:'j. n.'} {$application->venueCity}</small></td>
 			<td><small><code><span title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</span> → {$application->nextStatus}</code></small></td>
 			<td>
