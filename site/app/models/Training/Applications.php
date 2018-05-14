@@ -124,7 +124,9 @@ class Applications
 
 		if ($result) {
 			foreach ($result as $row) {
-				$row->email = $this->emailEncryption->decrypt($row->email);
+				if ($row->email) {
+					$row->email = $this->emailEncryption->decrypt($row->email);
+				}
 				$row->training = $this->trainings->getById($row->trainingId);
 			}
 		}
@@ -163,7 +165,9 @@ class Applications
 				$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
 				$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 				foreach ($this->byDate[$dateId] as $row) {
-					$row->email = $this->emailEncryption->decrypt($row->email);
+					if ($row->email) {
+						$row->email = $this->emailEncryption->decrypt($row->email);
+					}
 					$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
 					$row->discarded = in_array($row->status, $discardedStatuses);
 					$row->attended = in_array($row->status, $attendedStatuses);
@@ -540,7 +544,7 @@ class Applications
 			$this->translator->getDefaultLocale()
 		);
 
-		if ($result) {
+		if ($result->email) {
 			$result->email = $this->emailEncryption->decrypt($result->email);
 		}
 
@@ -598,7 +602,9 @@ class Applications
 
 		if ($applications) {
 			foreach ($applications as $row) {
-				$row->email = $this->emailEncryption->decrypt($row->email);
+				if ($row->email) {
+					$row->email = $this->emailEncryption->decrypt($row->email);
+				}
 				$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
 				$trainings[$row->idTraining]->applications[] = $row;
 			}
@@ -655,7 +661,7 @@ class Applications
 			$this->translator->getDefaultLocale()
 		);
 
-		if ($result) {
+		if ($result->email) {
 			$result->email = $this->emailEncryption->decrypt($result->email);
 		}
 
