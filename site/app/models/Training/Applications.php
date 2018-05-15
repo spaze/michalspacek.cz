@@ -382,7 +382,7 @@ class Applications
 
 		$data = array(
 			'name'           => $name,
-			'email'          => $this->emailEncryption->encrypt($email),
+			'email'          => ($email ? $this->emailEncryption->encrypt($email) : null),
 			'company'        => $company,
 			'familiar'       => $familiar,
 			'street'         => $street,

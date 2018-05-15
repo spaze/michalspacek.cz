@@ -259,4 +259,9 @@ $(document).ready(function() {
 	$('form.blocking').on('submit', function() {
 		$(window).off('beforeunload');
 	});
+
+	$('.disableInput').change(function() {
+		var checked = $(this).is(':checked');
+		$(this).siblings(':input').toggleClass('transparent');
+	});
 });

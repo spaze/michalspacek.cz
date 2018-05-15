@@ -26,6 +26,20 @@ class TrainingApplicationAdmin extends ProtectedForm
 	/** @var \Nette\Localization\ITranslator */
 	protected $translator;
 
+	/** @var string[] */
+	private $deletableFields = [
+		'name',
+		'email',
+		'company',
+		'street',
+		'city',
+		'zip',
+		'country',
+		'companyId',
+		'companyTaxId',
+		'note',
+	];
+
 
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
@@ -46,9 +60,17 @@ class TrainingApplicationAdmin extends ProtectedForm
 		$this->addSource($this);
 		$this->addCompany($this);
 		$this->addCountry($this);
+		$this->getComponent('country')->setPrompt('- vyberte zemi -');
 		$this->addNote($this);
 		$this->addPaymentInfo($this);
 		$this->addSubmit('submit', 'Uložit');
+
+		foreach ($this->deletableFields as $field) {
+			$this->addCheckbox("{$field}Set")->setAttribute('class', 'disableInput');
+			$this->getComponent($field)
+				->setAttribute('class', 'transparent')
+				->setRequired(false);
+		}
 	}
 
 
@@ -95,6 +117,10 @@ class TrainingApplicationAdmin extends ProtectedForm
 			'invoiceId' => $application->invoiceId,
 			'paid' => $application->paid,
 		);
+		foreach ($this->deletableFields as $field) {
+			$values["{$field}Set"] = ($application->$field !== null);
+			$this->getComponent($field)->setAttribute('class', $application->$field === null ? 'transparent' : null);
+		}
 		$this->setDefaults($values);
 		if (!isset($application->dateId)) {
 			$dates = $this->trainingDates->getPublicUpcoming();

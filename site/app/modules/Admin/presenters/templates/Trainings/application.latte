@@ -19,10 +19,10 @@
 		<th>Datum:</th><td>{if $trainingStart}{$trainingStart|localeIntervalDay:$trainingEnd}, {$trainingCity}{else}{input date}{/if}</td>
 	</tr>
 	<tr>
-		<th>{label name /}</th><td>{input name} <small n:if="$toBeInvited"><a n:href=":Www:Redirect:application#prihlaska $accessToken">předvyplněná přihláška</a></small> <small n:if="$attended"><a n:href=":Www:Redirect:files $accessToken">účastníkovo soubory</a> ({if $webTrackingEnabled}<strong title="Vypněte tracking pro tento prohlížeč">změní status</strong>{else}nezmění status{/if})</small></td>
+		<th>{label name /}</th><td>{input nameSet:} {input name} <small n:if="$toBeInvited"><a n:href=":Www:Redirect:application#prihlaska $accessToken">předvyplněná přihláška</a></small> <small n:if="$attended"><a n:href=":Www:Redirect:files $accessToken">účastníkovo soubory</a> ({if $webTrackingEnabled}<strong title="Vypněte tracking pro tento prohlížeč">změní status</strong>{else}nezmění status{/if})</small></td>
 	</tr>
 	<tr>
-		<th>{label email /}</th><td>{input email}</td>
+		<th>{label email /}</th><td>{input emailSet:} {input email}</td>
 	</tr>
 	<tr>
 		<th>{label familiar: /}</th><td>{input familiar:}</td>
@@ -40,28 +40,28 @@
 		<th>{label source /}</th><td>{input source}</td>
 	</tr>
 	<tr>
-		<th>{label companyId /}</th><td>{input companyId}{if $companyId} <small><a href="http://www.rzp.cz/cgi-bin/aps_cacheWEB.sh?VSS_SERV=ZVWSBJFND&PRESVYBER=0&VYPIS=2&ICO={$companyId}&Action=Search">Živnostenský rejstřík</a></small>{/if}</td>
+		<th>{label companyId /}</th><td>{input companyIdSet:} {input companyId}{if $companyId} <small><a href="http://www.rzp.cz/cgi-bin/aps_cacheWEB.sh?VSS_SERV=ZVWSBJFND&PRESVYBER=0&VYPIS=2&ICO={$companyId}&Action=Search">Živnostenský rejstřík</a></small>{/if}</td>
 	</tr>
 	<tr>
-		<th>{label companyTaxId /}</th><td>{input companyTaxId}</td>
+		<th>{label companyTaxId /}</th><td>{input companyTaxIdSet:} {input companyTaxId}</td>
 	</tr>
 	<tr>
-		<th>{label company /}</th><td>{input company}</td>
+		<th>{label company /}</th><td>{input companySet:} {input company}</td>
 	</tr>
 	<tr>
-		<th>{label street /}</th><td>{input street}</td>
+		<th>{label street /}</th><td>{input streetSet:} {input street}</td>
 	</tr>
 	<tr>
-		<th>{label city /}</th><td>{input city}</td>
+		<th>{label city /}</th><td>{input citySet:} {input city}</td>
 	</tr>
 	<tr>
-		<th>{label zip /}</th><td>{input zip}</td>
+		<th>{label zip /}</th><td>{input zipSet:} {input zip}</td>
 	</tr>
 	<tr>
-		<th>{label country /}</th><td>{input country}</td>
+		<th>{label country /}</th><td>{input countrySet:} {input country}</td>
 	</tr>
 	<tr>
-		<th>{label note /}</th><td>{input note}</td>
+		<th>{label note /}</th><td>{input noteSet:} {input note}</td>
 	</tr>
 	<tr>
 		<th>{label price /}</th><td>{input price} Kč</td>

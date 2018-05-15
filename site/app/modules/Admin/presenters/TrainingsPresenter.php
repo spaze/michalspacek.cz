@@ -190,7 +190,7 @@ class TrainingsPresenter extends BasePresenter
 			$this->training = $this->trainings->getIncludingCustom($this->application->trainingAction);
 		}
 
-		$this->template->pageTitle     = $this->application->name;
+		$this->template->pageTitle     = $this->application->name ?? 'smazáno';
 		$this->template->applicationId = $this->applicationId;
 		$this->template->dateId        = $this->dateId;
 		$this->template->status        = $this->application->status;
@@ -425,16 +425,16 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->trainingApplications->updateApplicationData(
 			$this->applicationId,
-			$values->name,
-			$values->email,
-			$values->company,
-			$values->street,
-			$values->city,
-			$values->zip,
-			$values->country,
-			$values->companyId,
-			$values->companyTaxId,
-			$values->note,
+			$values->nameSet ? $values->name : null,
+			$values->emailSet ? $values->email : null,
+			$values->companySet ? $values->company : null,
+			$values->streetSet ? $values->street : null,
+			$values->citySet ? $values->city : null,
+			$values->zipSet ? $values->zip : null,
+			$values->countrySet ? $values->country : null,
+			$values->companyIdSet ? $values->companyId : null,
+			$values->companyTaxIdSet ? $values->companyTaxId : null,
+			$values->noteSet ? $values->note : null,
 			$values->source,
 			$values->price,
 			(empty(trim($values->vatRate)) ? null : $values->vatRate / 100),
