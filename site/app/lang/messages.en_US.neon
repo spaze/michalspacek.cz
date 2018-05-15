@@ -141,6 +141,7 @@ contact:
 		2: "Your message is encrypted in your browser, transmission of such text is secure, only me can decrypt it. Check that the page was loaded over HTTPS and there were no certificate errors."
 		3: "Please remember that I can't securely reply back if I don't have your public PGP key."
 	loading: "Loading, please wait"
+	requirements: "Requires JavaScript"
 who:
 	developer:
 		1: "I'm into web, security, and performance. I build, break, and test web applications."

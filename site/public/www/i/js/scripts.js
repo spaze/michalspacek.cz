@@ -55,10 +55,34 @@ $(document).ready(function() {
 	var ENCRYPTION = ENCRYPTION || {};
 	ENCRYPTION.feedback = $(document.queryCommandSupported('copy') ? '#copied' : '#copythis');
 	ENCRYPTION.button = $('#encrypt');
+	ENCRYPTION.loadEvents = {
+		button: 'click focus mouseover',
+		area: 'click focus'
+	};
 	ENCRYPTION.reset = function() {
 		ENCRYPTION.button.text(ENCRYPTION.button.data('encrypt'));
 		ENCRYPTION.button.off('click').click(ENCRYPTION.handler);
 		ENCRYPTION.feedback.fadeOut('fast');
+	};
+	ENCRYPTION.load = function(e) {
+		ENCRYPTION.button.attr('title', ENCRYPTION.button.data('loading'));
+		document.getElementsByTagName('head')[0].appendChild(
+			$(document.createElement('script'))
+				.prop('async', true)
+				.attr('integrity', ENCRYPTION.button.data('integrity'))
+				.attr('src', ENCRYPTION.button.data('lib'))
+				.attr('crossorigin', 'anonymous')
+				.on('load', function() {
+					$('#message').off(ENCRYPTION.loadEvents.area);
+					ENCRYPTION.button
+						.off(ENCRYPTION.loadEvents.button)
+						.one('click', ENCRYPTION.handler)
+						.removeAttr('title');
+					if (e.target === ENCRYPTION.button[0] && e.type === 'click') {
+						ENCRYPTION.handler();
+					}
+				})[0]
+		);
 	};
 	ENCRYPTION.handler = function() {
 		openpgp.config.commentstring = location.href;
@@ -87,22 +111,11 @@ $(document).ready(function() {
 			ENCRYPTION.reset();
 		}
 	});
-
-	if (ENCRYPTION.button.length) {
-		document.getElementsByTagName('head')[0].appendChild(
-			$(document.createElement('script'))
-				.prop('async', true)
-				.attr('integrity', ENCRYPTION.button.data('integrity'))
-				.attr('src', ENCRYPTION.button.data('lib'))
-				.attr('crossorigin', 'anonymous')
-				.on('load', function(){
-					ENCRYPTION.button
-						.one('click', ENCRYPTION.handler)
-						.removeAttr('title')
-						.prop('disabled', false);
-				})[0]
-		);
-	}
+	$('#message').on(ENCRYPTION.loadEvents.area, ENCRYPTION.load);
+	ENCRYPTION.button
+		.on(ENCRYPTION.loadEvents.button, ENCRYPTION.load)
+		.removeAttr('title')
+		.prop('disabled', false);
 
 	if ($('#slides-container .highlight').length) {
 		$('html, body').animate({scrollTop: $('#slides-container .highlight').offset().top - 10});
