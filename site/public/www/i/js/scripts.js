@@ -55,6 +55,7 @@ $(document).ready(function() {
 	var ENCRYPTION = ENCRYPTION || {};
 	ENCRYPTION.feedback = $(document.queryCommandSupported('copy') ? '#copied' : '#copythis');
 	ENCRYPTION.button = $('#encrypt');
+	ENCRYPTION.area = $('#message');
 	ENCRYPTION.loadEvents = {
 		button: 'click focus mouseover',
 		area: 'click focus'
@@ -73,7 +74,7 @@ $(document).ready(function() {
 				.attr('src', ENCRYPTION.button.data('lib'))
 				.attr('crossorigin', 'anonymous')
 				.on('load', function() {
-					$('#message').off(ENCRYPTION.loadEvents.area);
+					ENCRYPTION.area.off(ENCRYPTION.loadEvents.area);
 					ENCRYPTION.button
 						.off(ENCRYPTION.loadEvents.button)
 						.one('click', ENCRYPTION.handler)
@@ -87,14 +88,14 @@ $(document).ready(function() {
 	ENCRYPTION.handler = function() {
 		openpgp.config.commentstring = location.href;
 		options = {
-			data: $('#message').val(),
+			data: ENCRYPTION.area.val(),
 			publicKeys: openpgp.key.readArmored($('#pubkey').text()).keys,
 		};
 		openpgp.encrypt(options).then(function(ciphertext) {
-			$('#message').val(ciphertext.data);
+			ENCRYPTION.area.val(ciphertext.data);
 			ENCRYPTION.button.text(ENCRYPTION.button.data('copy'));
 			ENCRYPTION.button.off('click').click(function() {
-				$('#message').select();
+				ENCRYPTION.area.select();
 				if (document.queryCommandSupported('copy')) {
 					document.execCommand('copy');
 				}
@@ -103,15 +104,15 @@ $(document).ready(function() {
 		});
 	};
 	$('#copied .button, #copythis .button').click(function() {
-		$('#message').val('');
+		ENCRYPTION.area.val('');
 		ENCRYPTION.reset();
 	});
-	$('#message').on('input', function(e) {
+	ENCRYPTION.area.on('input', function(e) {
 		if (e.target.value === '') {
 			ENCRYPTION.reset();
 		}
 	});
-	$('#message').on(ENCRYPTION.loadEvents.area, ENCRYPTION.load);
+	ENCRYPTION.area.on(ENCRYPTION.loadEvents.area, ENCRYPTION.load);
 	ENCRYPTION.button
 		.on(ENCRYPTION.loadEvents.button, ENCRYPTION.load)
 		.removeAttr('title')
