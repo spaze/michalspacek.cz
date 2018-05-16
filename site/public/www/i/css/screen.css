@@ -370,7 +370,6 @@ div.notice {
 #loadDataControls span { display: none; }
 #pubkey {
 	background-color: #F7F7FF;
-	margin: 0;
 	padding: 2em;
 	font-size: smaller;
 	height: 15em;
