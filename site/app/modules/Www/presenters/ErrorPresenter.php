@@ -20,6 +20,9 @@ class ErrorPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
 	protected $localeLinkGenerator;
 
+	/** @var \Tracy\ILogger */
+	private $logger;
+
 	/** @var array */
 	protected $statuses = [
 		IResponse::S400_BAD_REQUEST,
@@ -34,10 +37,11 @@ class ErrorPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Redirections $redirections
 	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
 	 */
-	public function __construct(\MichalSpacekCz\Redirections $redirections, \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator)
+	public function __construct(\MichalSpacekCz\Redirections $redirections, \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator, \Tracy\ILogger $logger)
 	{
 		$this->redirections = $redirections;
 		$this->localeLinkGenerator = $localeLinkGenerator;
+		$this->logger = $logger;
 		parent::__construct();
 	}
 
@@ -48,6 +52,14 @@ class ErrorPresenter extends BasePresenter
 		if (!$this->getRequest()->isMethod(\Nette\Application\Request::FORWARD)) {
 			$this->error();
 		}
+
+		$destination = $this->redirections->getDestination($this->getHttpRequest()->getUrl());
+		if ($destination) {
+			$this->redirectUrl($destination, IResponse::S301_MOVED_PERMANENTLY);
+		}
+
+		$e = $this->getRequest()->getParameter('exception');
+		$this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
 	}
 
 
@@ -56,11 +68,6 @@ class ErrorPresenter extends BasePresenter
 	 */
 	public function actionDefault(\Nette\Application\BadRequestException $exception): void
 	{
-		$destination = $this->redirections->getDestination($this->getHttpRequest()->getUrl());
-		if ($destination) {
-			$this->redirectUrl($destination, IResponse::S301_MOVED_PERMANENTLY);
-		}
-
 		$code = (in_array($exception->getCode(), $this->statuses) ? $exception->getCode() : IResponse::S400_BAD_REQUEST);
 		$this->template->errorCode = $code;
 		$this->template->pageTitle = $this->translator->translate("messages.title.error{$code}");
