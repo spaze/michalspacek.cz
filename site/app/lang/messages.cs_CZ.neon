@@ -141,6 +141,7 @@ contact:
 		2: "Zpráva je šifrována ve vašem prohlížeči a přenos takového textu je bezpečný, mohu ho rozšifrovat pouze já. Zkontrolujte že se stránka načetla po HTTPS a prohlížeč nehlásí žádné chyby certifikátu."
 		3: "Pamatujte, že pokud nemám váš veřejný PGP klíč, tak vám nemohu bezpečným způsobem odpovědět."
 	loading: "Nahrávám, prosím čekejte"
+	entermessagehere: "Sem napište zprávu"
 	requirements: "Vyžaduje JavaScript"
 who:
 	developer:
