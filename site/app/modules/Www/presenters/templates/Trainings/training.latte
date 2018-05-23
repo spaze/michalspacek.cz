@@ -178,7 +178,8 @@
 <h2 id="{_html.id.application}">{_messages.label.application}</h2>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {include #form}
-<p><small>{_messages.trainings.datainvoice}</small></p>
+<p><small>{_messages.trainings.datausage}</small></p>
+<p><small>{_messages.trainings.dataretention|format:$dataRetention}</small></p>
 <p><small>{_messages.trainings.conditions}</small></p>
 {else}
 <h2 id="{_html.id.application}">{_messages.label.preliminaryapplication}</h2>

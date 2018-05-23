@@ -269,7 +269,7 @@ trainings:
 	price: "**%s Kč**, %s Kč incl. VAT"
 	studentdiscount: "%s%% discount for students"
 	allreviews: "All reviews"
-	datainvoice: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
+	datausage: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."
 	conditions: "Pokud se školení z jakéhokoliv důvodu neuskuteční nebo se přesune na jiný termín, který vám nebude vyhovovat (živelní pohroma, nemoc přednášejícího, …), bude vám vrácena celá zaplacená částka. Pokud nastanou překážky na straně účastníka, může za sebe poslat náhradníka nebo se zúčastnit náhradního termínu."
 	sendinginvite: "Na zadanou e-mailovou adresu zašlu pozvánku, jakmile termín tohoto školení vypíšu. Na nic jiného nebude použita."
 	companythistraining: "This training can also be organized \"in-house\":[%s]."
