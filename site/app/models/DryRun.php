@@ -4,16 +4,16 @@ declare(strict_types = 1);
 namespace MichalSpacekCz;
 
 /**
- * WebTracking model.
+ * DryRun model.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class WebTracking
+class DryRun
 {
 
 	/** @var string */
-	private const TRACKING_PATH = '/';
+	private const COOKIE_PATH = '/';
 
 	/** @var \Nette\Http\IRequest */
 	protected $httpRequest;
@@ -49,19 +49,19 @@ class WebTracking
 
 	public function isEnabled(): bool
 	{
-		return ($this->httpRequest->getCookie($this->cookie) != $this->value);
+		return ($this->httpRequest->getCookie($this->cookie) === $this->value);
 	}
 
 
 	public function enable(): void
 	{
-		$this->httpResponse->deleteCookie($this->cookie, self::TRACKING_PATH);
+		$this->httpResponse->setCookie($this->cookie, $this->value, \Nette\Http\Response::PERMANENT, self::COOKIE_PATH);
 	}
 
 
 	public function disable(): void
 	{
-		$this->httpResponse->setCookie($this->cookie, $this->value, \Nette\Http\Response::PERMANENT, self::TRACKING_PATH);
+		$this->httpResponse->deleteCookie($this->cookie, self::COOKIE_PATH);
 	}
 
 }

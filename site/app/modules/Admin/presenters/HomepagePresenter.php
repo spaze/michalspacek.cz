@@ -24,8 +24,8 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Api\Certificates */
 	protected $certificates;
 
-	/** @var \MichalSpacekCz\WebTracking */
-	protected $webTracking;
+	/** @var \MichalSpacekCz\DryRun */
+	protected $dryRun;
 
 
 	/**
@@ -33,21 +33,21 @@ class HomepagePresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Api\Certificates $certificates
-	 * @param \MichalSpacekCz\WebTracking $webTracking
+	 * @param \MichalSpacekCz\DryRun $dryRun
 	 */
 	public function __construct(
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
 		Training\Dates $trainingDates,
 		\MichalSpacekCz\Api\Certificates $certificates,
-		\MichalSpacekCz\WebTracking $webTracking
+		\MichalSpacekCz\DryRun $dryRun
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;
 		$this->certificates = $certificates;
-		$this->webTracking = $webTracking;
+		$this->dryRun = $dryRun;
 		parent::__construct();
 	}
 
@@ -74,7 +74,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 
 		$this->template->pageTitle = 'Administrace';
-		$this->template->trackingEnabled = $this->webTracking->isEnabled();
+		$this->template->dryRunEnabled = $this->dryRun->isEnabled();
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
 		$this->template->certificates = $certificates = $this->certificates->getNewest();

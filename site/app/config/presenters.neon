@@ -35,7 +35,7 @@ services:
 	- \App\AdminModule\Presenters\ReviewsPresenter
 	- \App\AdminModule\Presenters\SignPresenter
 	- \App\AdminModule\Presenters\TalksPresenter
-	- \App\AdminModule\Presenters\TrackingPresenter
+	- \App\AdminModule\Presenters\DryRunPresenter
 	- \App\AdminModule\Presenters\TrainingsPresenter
 	- \App\AdminModule\Presenters\UserPresenter
 

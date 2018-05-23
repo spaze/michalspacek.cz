@@ -36,8 +36,8 @@ class Applications
 	/** @var \MichalSpacekCz\Training\Resolver\Vrana */
 	protected $vranaResolver;
 
-	/** @var \MichalSpacekCz\WebTracking */
-	protected $webTracking;
+	/** @var \MichalSpacekCz\DryRun */
+	protected $dryRun;
 
 	/** @var \Nette\Localization\ITranslator */
 	protected $translator;
@@ -54,7 +54,7 @@ class Applications
 	 * @param \MichalSpacekCz\Encryption\Email $emailEncryption
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \MichalSpacekCz\Training\Resolver\Vrana $vranaResolver
-	 * @param \MichalSpacekCz\WebTracking $webTracking
+	 * @param \MichalSpacekCz\DryRun $dryRun
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
@@ -65,7 +65,7 @@ class Applications
 		\MichalSpacekCz\Encryption\Email $emailEncryption,
 		\MichalSpacekCz\Vat $vat,
 		\MichalSpacekCz\Training\Resolver\Vrana $vranaResolver,
-		\MichalSpacekCz\WebTracking $webTracking,
+		\MichalSpacekCz\DryRun $dryRun,
 		\Nette\Localization\ITranslator $translator
 	)
 	{
@@ -76,7 +76,7 @@ class Applications
 		$this->emailEncryption = $emailEncryption;
 		$this->vat = $vat;
 		$this->vranaResolver = $vranaResolver;
-		$this->webTracking = $webTracking;
+		$this->dryRun = $dryRun;
 		$this->translator = $translator;
 	}
 
@@ -708,7 +708,7 @@ class Applications
 
 	public function setAccessTokenUsed(\Nette\Database\Row $application)
 	{
-		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED && $this->webTracking->isEnabled()) {
+		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED && !$this->dryRun->isEnabled()) {
 			$this->trainingStatuses->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
 		}
 	}

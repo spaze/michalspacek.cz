@@ -18,24 +18,11 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 	/** @var \Nette\Http\IResponse */
 	protected $httpResponse;
 
-	/** @var \MichalSpacekCz\WebTracking */
-	private $webTracking;
-
 	/** @var \Spaze\ContentSecurityPolicy\Config */
 	private $contentSecurityPolicy;
 
 	/** @var \MichalSpacekCz\Templating\Helpers */
 	private $templateHelpers;
-
-
-	/**
-	 * @internal
-	 * @param \MichalSpacekCz\WebTracking $webTracking
-	 */
-	public function injectWebTracking(\MichalSpacekCz\WebTracking $webTracking)
-	{
-		$this->webTracking = $webTracking;
-	}
 
 
 	/**

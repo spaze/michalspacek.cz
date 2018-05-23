@@ -48,11 +48,11 @@ services:
 			- setReturningUserCookie(%returningUser.cookie%)
 			- setReturningUserValue(%returningUser.value%)
 	embed: \MichalSpacekCz\Embed
-	webTracking:
-		class: \MichalSpacekCz\WebTracking
+	dryRun:
+		class: \MichalSpacekCz\DryRun
 		setup:
-			- setCookie(%webTracking.cookie%)
-			- setValue(%webTracking.value%)
+			- setCookie(%dryRun.cookie%)
+			- setValue(%dryRun.value%)
 	httpResponse:
 		setup:
 			- $cookieDomain(%domain.cookie%)

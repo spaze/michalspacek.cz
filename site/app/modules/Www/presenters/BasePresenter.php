@@ -23,9 +23,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	/** @var \MichalSpacekCz\User\Manager */
 	private $authenticator;
 
-	/** @var \MichalSpacekCz\WebTracking */
-	private $webTracking;
-
 	/** @var \Spaze\ContentSecurityPolicy\Config */
 	private $contentSecurityPolicy;
 
@@ -43,16 +40,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function injectAuthenticator(\MichalSpacekCz\User\Manager $authenticator)
 	{
 		$this->authenticator = $authenticator;
-	}
-
-
-	/**
-	 * @internal
-	 * @param \MichalSpacekCz\WebTracking $webTracking
-	 */
-	public function injectWebTracking(\MichalSpacekCz\WebTracking $webTracking)
-	{
-		$this->webTracking = $webTracking;
 	}
 
 
