@@ -72,9 +72,6 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 
 	public function beforeRender()
 	{
-		if ($this->template->trackingCode = $this->webTracking->isEnabled()) {
-			$this->contentSecurityPolicy->addSnippet('ga');
-		}
 		$this->template->setTranslator($this->translator);
 	}
 

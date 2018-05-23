@@ -39,7 +39,6 @@ abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	public function beforeRender(): void
 	{
-		$this->template->trackingCode = false;
 		$this->template->setTranslator($this->translator);
 	}
 

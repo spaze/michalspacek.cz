@@ -103,9 +103,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	public function beforeRender(): void
 	{
-		if ($this->template->trackingCode = $this->webTracking->isEnabled()) {
-			$this->contentSecurityPolicy->addSnippet('ga');
-		}
 		$this->template->setTranslator($this->translator);
 
 		try {

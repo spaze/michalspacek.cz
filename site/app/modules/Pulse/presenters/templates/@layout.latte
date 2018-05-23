@@ -7,7 +7,6 @@
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Pulse</title>
 	{stylesheet screen-pulse}
 	{script jquery+pulse async, defer}
-	{if $trackingCode}{script ga-core+ga-init async, defer}{/if}
 	{ifset #metas}{include #metas}{/ifset}
 	<link rel="icon" href="{='/i/icons/pulse.ico'|staticUrl}">
 </head>
