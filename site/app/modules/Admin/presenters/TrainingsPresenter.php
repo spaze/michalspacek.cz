@@ -325,24 +325,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditReview($formName)
 	{
-		$reviewApplicationIds = [];
-		foreach ($this->trainingReviews->getReviewsByDateId($this->review->dateId) as $review) {
-			if ($review->applicationId !== null) {
-				$reviewApplicationIds[] = $review->applicationId;
-			}
-		}
-
-		$applications = [];
-		foreach ($this->trainingApplications->getByDate($this->review->dateId) as $application) {
-			if (!$application->discarded) {
-				$option = Html::el('option');
-				if (in_array($application->id, $reviewApplicationIds) && $application->id !== $this->review->applicationId) {
-					$option = $option->setDisabled(true);
-				}
-				$option->setText($application->name . ($application->company ? ", {$application->company}" : ''));
-				$applications[$application->id] = $option;
-			}
-		}
+		$applications = $this->getReviewApplications($this->review->dateId, $this->review->applicationId);
 		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications, $this->trainingDates->get($this->review->dateId));
 		$form->setReview($this->review);
 		$form->onSuccess[] = [$this, 'submittedEditReview'];
@@ -372,27 +355,39 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentAddReview($formName)
 	{
+		$applications = $this->getReviewApplications($this->dateId);
+		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications, $this->trainingDates->get($this->dateId));
+		$form->onSuccess[] = [$this, 'submittedAddReview'];
+		return $form;
+	}
+
+
+	/**
+	 * @param $dateId
+	 * @param $currentApplicationId
+	 * @return array
+	 */
+	private function getReviewApplications($dateId, $currentApplicationId = null): array
+	{
 		$reviewApplicationIds = [];
-		foreach ($this->trainingReviews->getReviewsByDateId($this->dateId) as $review) {
+		foreach ($this->trainingReviews->getReviewsByDateId($dateId) as $review) {
 			if ($review->applicationId !== null) {
 				$reviewApplicationIds[] = $review->applicationId;
 			}
 		}
 
 		$applications = [];
-		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
+		foreach ($this->trainingApplications->getByDate($dateId) as $application) {
 			if (!$application->discarded) {
 				$option = Html::el('option');
-				if (in_array($application->id, $reviewApplicationIds)) {
+				if (in_array($application->id, $reviewApplicationIds) && $currentApplicationId !== null && $application->id !== $currentApplicationId) {
 					$option = $option->setDisabled(true);
 				}
-				$option->setText($application->name . ($application->company ? ", {$application->company}" : ''));
+				$option->setText(($application->name ?? 'smazáno') . ($application->company ? ", {$application->company}" : ''));
 				$applications[$application->id] = $option;
 			}
 		}
-		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications, $this->trainingDates->get($this->dateId));
-		$form->onSuccess[] = [$this, 'submittedAddReview'];
-		return $form;
+		return $applications;
 	}
 
 
