@@ -12,34 +12,22 @@ namespace MichalSpacekCz\Form;
 class TrainingReview extends ProtectedForm
 {
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $applications, \Nette\Database\Row $date)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, ?array $applications = null)
 	{
 		parent::__construct($parent, $name);
 
-		$select = $this->addSelect('application', 'Účastník:', ['' => ($date->public ? '- vyberte účastníka -' : '- firemní ohlas -')] + $applications);
-		if ($date->public) {
-			$select->setRequired('Vyberte účastníka');
-		}
-		$checkbox = $this->addCheckbox('overwriteName', 'Přepsat jméno:');
-		if (!$date->public) {
-			$checkbox->addConditionOn($this['application'], self::EQUAL, '')
-				->setRequired('Pro firemní ohlas je potřeba přepsat jméno');
+		if ($applications !== null) {
+			$this->addSelect('application', 'Šablona:', $applications)
+				->setRequired(false)
+				->setPrompt('- vyberte účastníka -');
 		}
 		$this->addText('name', 'Jméno:')
-			->setRequired(false)
-			->addConditionOn($this['overwriteName'], self::EQUAL, true)
-				->setRequired('Zadejte prosím jméno')
-				->addRule(self::MIN_LENGTH, 'Minimální délka jména je %d znaky', 3)
-				->addRule(self::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
-		$checkbox = $this->addCheckbox('overwriteCompany', 'Přepsat firmu:');
-		if (!$date->public) {
-			$checkbox->addConditionOn($this['application'], self::EQUAL, '')
-				->setRequired('Pro firemní ohlas je potřeba přepsat firmu');
-		}
+			->setRequired('Zadejte prosím jméno')
+			->addRule(self::MIN_LENGTH, 'Minimální délka jména je %d znaky', 3)
+			->addRule(self::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
 		$this->addText('company', 'Firma:')
 			->setRequired(false)
-			->addConditionOn($this['overwriteCompany'], self::EQUAL, true)
-				->addRule(self::MAX_LENGTH, 'Maximální délka firmy je %d znaků', 200);  // No min length to allow _removal_ of company name from a review by using an empty string
+			->addRule(self::MAX_LENGTH, 'Maximální délka firmy je %d znaků', 200);  // No min length to allow _removal_ of company name from a review by using an empty string
 		$this->addText('jobTitle', 'Pozice:')
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka pozice je %d znaků', 200);
@@ -58,10 +46,7 @@ class TrainingReview extends ProtectedForm
 	public function setReview(\Nette\Database\Row $review): self
 	{
 		$values = array(
-			'application' => $review->applicationId,
-			'overwriteName' => ($review->name !== null || $review->applicationId === null),
 			'name' => $review->name,
-			'overwriteCompany' => ($review->company !== null || $review->applicationId === null),
 			'company' => $review->company,
 			'jobTitle' => $review->jobTitle,
 			'review' => $review->review,

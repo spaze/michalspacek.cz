@@ -44,15 +44,14 @@ class Reviews
 	{
 		$query = 'SELECT
 				r.id_review AS reviewId,
-				COALESCE(r.name, a.name) AS name,
-				COALESCE(r.company, a.company) AS company,
+				r.name AS name,
+				r.company AS company,
 				r.job_title AS jobTitle,
 				r.review,
 				r.href
 			FROM
 				training_reviews r
-				LEFT JOIN training_applications a ON r.key_application = a.id_application
-				JOIN training_dates d ON a.key_date = d.id_date
+				JOIN training_dates d ON r.key_date = d.id_date
 				JOIN trainings t ON t.id_training = d.key_training
 				LEFT JOIN trainings t2 ON t2.id_training = t.key_successor
 			WHERE
@@ -115,26 +114,6 @@ class Reviews
 
 
 	/**
-	 * Get review by application id.
-	 *
-	 * @param integer $applicationId
-	 * @return int|null
-	 */
-	public function getReviewIdByApplicationId(int $applicationId): ?int
-	{
-		return $this->database->fetchField('SELECT
-				r.id_review
-			FROM
-				training_applications a
-				JOIN training_reviews r ON a.id_application = r.key_application
-			WHERE
-				a.id_application = ?',
-			$applicationId
-		) ?: null;
-	}
-
-
-	/**
 	 * Get review by id.
 	 *
 	 * @param integer $reviewId
@@ -145,10 +124,7 @@ class Reviews
 	{
 		$result = $this->database->fetch('SELECT
 				r.id_review AS reviewId,
-				r.key_application AS applicationId,
-				a.name AS applicationName,
 				r.name,
-				a.company AS applicationCompany,
 				r.company,
 				r.job_title AS jobTitle,
 				r.review,
@@ -157,8 +133,7 @@ class Reviews
 				d.id_date AS dateId
 			FROM
 				training_reviews r
-				LEFT JOIN training_applications a ON r.key_application = a.id_application
-				LEFT JOIN training_dates d ON a.key_date = d.id_date OR r.key_date = d.id_date
+				LEFT JOIN training_dates d ON r.key_date = d.id_date
 			WHERE
 				r.id_review = ?',
 			$reviewId
@@ -182,32 +157,29 @@ class Reviews
 	{
 		$query = 'SELECT
 				r.id_review AS reviewId,
-				r.key_application AS applicationId,
-				COALESCE(r.name, a.name) AS name,
-				COALESCE(r.company, a.company) AS company,
+				r.name AS name,
+				r.company AS company,
 				r.job_title AS jobTitle,
 				r.review,
 				r.href,
 				r.hidden
 			FROM
 				training_reviews r
-				LEFT JOIN training_applications a ON r.key_application = a.id_application
 			WHERE
-				r.key_date = ? OR a.key_date = ?';
+				r.key_date = ?';
 
-		return $this->format($this->database->fetchAll($query, $dateId, $dateId));
+		return $this->format($this->database->fetchAll($query, $dateId));
 	}
 
 
-	public function updateReview(int $reviewId, int $dateId, ?int $applicationId, bool $overwriteName, ?string $name, bool $overwriteCompany, ?string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
+	public function updateReview(int $reviewId, int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
 	{
 		$this->database->query(
 			'UPDATE training_reviews SET ? WHERE id_review = ?',
 			array(
-				'key_date' => $applicationId ? null : $dateId,
-				'key_application' => $applicationId,
-				'name' => ($overwriteName || !$applicationId) ? $name : null,
-				'company' => ($overwriteCompany || !$applicationId) ? $company : null,
+				'key_date' => $dateId,
+				'name' => $name,
+				'company' => $company,
 				'job_title' => $jobTitle,
 				'review' => $review,
 				'href' => $href,
@@ -218,14 +190,13 @@ class Reviews
 	}
 
 
-	public function addReview(int $dateId, ?int $applicationId, ?string $name, ?string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
+	public function addReview(int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
 	{
 		$datetime = new \DateTime();
 		$this->database->query(
 			'INSERT INTO training_reviews ?',
 			array(
-				'key_date' => $applicationId ? null : $dateId,
-				'key_application' => $applicationId,
+				'key_date' => $dateId,
 				'name' => $name,
 				'company' => $company,
 				'job_title' => $jobTitle,

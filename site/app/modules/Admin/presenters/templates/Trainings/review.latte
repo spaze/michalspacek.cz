@@ -8,14 +8,14 @@
 {define #form}
 {form $form class => aligned}
 <table>
-	<tr>
-		<th>Účastník:</th><td>{input application}</td>
+	<tr n:ifset="$applications">
+		<th>{label application /}</th><td>{input application}</td>
 	</tr>
 	<tr>
-		<th>{label overwriteName: /}</th><td>{input overwriteName:} {input name}</td>
+		<th>{label name /}</th><td>{input name}</td>
 	</tr>
 	<tr>
-		<th>{label overwriteCompany: /}</th><td>{input overwriteCompany:} {input company}</td>
+		<th>{label company /}</th><td>{input company}</td>
 	</tr>
 	<tr>
 		<th>{label jobTitle /}</th><td>{input jobTitle}</td>

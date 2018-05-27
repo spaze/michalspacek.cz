@@ -149,6 +149,12 @@ $(document).ready(function() {
 	$('#frm-addPost #preview').click({form: '#frm-addPost'}, FORMATTEXY.loadData);
 	$('#frm-editPost #preview').click({form: '#frm-editPost'}, FORMATTEXY.loadData);
 
+	$('#frm-addReview-application').change(function() {
+		console.log($(this));
+		$('#frm-addReview-name').val($(this).find(':selected').data('name'));
+		$('#frm-addReview-company').val($(this).find(':selected').data('company'));
+	});
+
 	$('#frm-slides .add-after').click(function() {
 		var tbody = $(this).parent().parent().parent();
 		var slide = tbody.clone(true);

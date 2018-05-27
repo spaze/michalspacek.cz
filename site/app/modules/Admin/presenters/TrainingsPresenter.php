@@ -163,14 +163,12 @@ class TrainingsPresenter extends BasePresenter
 
 		$date = $this->trainingDates->get($this->review->dateId);
 
-		$name = ($this->review->applicationName ?? $this->review->name);
-		$company = ($this->review->applicationCompany ?? $this->review->company);
-		$this->template->pageTitle = "Ohlas od {$name}" . ($company ? ", {$company}": '');
+		$this->template->pageTitle = "Ohlas od {$this->review->name}" . ($this->review->company ? ", {$this->review->company}": '');
 		$this->template->trainingStart      = $date->start;
 		$this->template->trainingEnd = $date->end;
 		$this->template->trainingName       = $date->name;
 		$this->template->trainingCity  = $date->venueCity;
-		$this->template->name          = $this->review->applicationName;
+		$this->template->name          = $this->review->name;
 		$this->template->dateId        = $this->review->dateId;
 	}
 
@@ -205,7 +203,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->toBeInvited   = in_array($this->application->status, $this->trainingStatuses->getParentStatuses(\MichalSpacekCz\Training\Statuses::STATUS_INVITED));
 		$this->template->accessToken   = $this->application->accessToken;
 		$this->template->history       = $this->trainingStatuses->getStatusHistory($this->applicationId);
-		$this->template->reviewId      = $this->trainingReviews->getReviewIdByApplicationId($this->applicationId);
 		$this->template->dryRunEnabled = $this->dryRun->isEnabled();
 	}
 
@@ -325,8 +322,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditReview($formName)
 	{
-		$applications = $this->getReviewApplications($this->review->dateId, $this->review->applicationId);
-		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications, $this->trainingDates->get($this->review->dateId));
+		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName);
 		$form->setReview($this->review);
 		$form->onSuccess[] = [$this, 'submittedEditReview'];
 		return $form;
@@ -338,11 +334,8 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingReviews->updateReview(
 			$this->review->reviewId,
 			$this->review->dateId,
-			$values->application ?: null,
-			$values->overwriteName,
-			$values->name ?: null,
-			$values->overwriteCompany,
-			$values->company ?: null,
+			$values->name,
+			$values->company,
 			$values->jobTitle ?: null,
 			$values->review,
 			$values->href ?: null,
@@ -355,39 +348,32 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentAddReview($formName)
 	{
-		$applications = $this->getReviewApplications($this->dateId);
-		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications, $this->trainingDates->get($this->dateId));
-		$form->onSuccess[] = [$this, 'submittedAddReview'];
-		return $form;
-	}
-
-
-	/**
-	 * @param $dateId
-	 * @param $currentApplicationId
-	 * @return array
-	 */
-	private function getReviewApplications($dateId, $currentApplicationId = null): array
-	{
-		$reviewApplicationIds = [];
-		foreach ($this->trainingReviews->getReviewsByDateId($dateId) as $review) {
-			if ($review->applicationId !== null) {
-				$reviewApplicationIds[] = $review->applicationId;
+		$reviewApplicationNames = [];
+		foreach ($this->trainingReviews->getReviewsByDateId($this->dateId) as $review) {
+			if ($review->name !== null) {
+				$reviewApplicationNames[] = $review->name;
 			}
 		}
 
 		$applications = [];
-		foreach ($this->trainingApplications->getByDate($dateId) as $application) {
+		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
 			if (!$application->discarded) {
 				$option = Html::el('option');
-				if (in_array($application->id, $reviewApplicationIds) && $currentApplicationId !== null && $application->id !== $currentApplicationId) {
+				if (in_array($application->name, $reviewApplicationNames)) {
 					$option = $option->setDisabled(true);
 				}
 				$option->setText(($application->name ?? 'smazáno') . ($application->company ? ", {$application->company}" : ''));
+				$option->addAttributes([
+					'data-name' => $application->name ?? '',
+					'data-company' => $application->company ?? '',
+				]);
 				$applications[$application->id] = $option;
 			}
 		}
-		return $applications;
+
+		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications);
+		$form->onSuccess[] = [$this, 'submittedAddReview'];
+		return $form;
 	}
 
 
@@ -395,9 +381,8 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->trainingReviews->addReview(
 			$this->dateId,
-			$values->application ?: null,
-			$values->overwriteName ? $values->name : null,
-			$values->overwriteCompany ? $values->company : null,
+			$values->name,
+			$values->company,
 			$values->jobTitle ?: null,
 			$values->review,
 			$values->href ?: null,
