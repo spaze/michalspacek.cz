@@ -34,9 +34,15 @@ class CompanyPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * @param string|null $country
 	 * @param string|null $companyId
+	 * @throws \Nette\Application\BadRequestException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function actionDefault(?string $country, ?string $companyId): void
 	{
+		if ($country === null || $companyId === null) {
+			throw new \Nette\Application\BadRequestException('No country or companyId specified', \Nette\Http\IResponse::S404_NOT_FOUND);
+		}
+
 		$this->securityHeaders->accessControlAllowOrigin('https', \MichalSpacekCz\Application\RouterFactory::HOST_WWW);
 
 		try {
