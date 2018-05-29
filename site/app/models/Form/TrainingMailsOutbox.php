@@ -42,6 +42,10 @@ class TrainingMailsOutbox extends ProtectedForm
 				->setAttribute('cols', 80)
 				->setAttribute('rows', 3);
 			switch ($application->nextStatus) {
+				case Training\Statuses::STATUS_MATERIALS_SENT:
+					$applicationIdsContainer->addCheckbox('feedbackRequest', 'Požádat o zhodnocení')
+						->setDefaultValue(true);
+					break;
 				case Training\Statuses::STATUS_INVOICE_SENT:
 				case Training\Statuses::STATUS_INVOICE_SENT_AFTER:
 					$applicationIdsContainer->addText('invoiceId')

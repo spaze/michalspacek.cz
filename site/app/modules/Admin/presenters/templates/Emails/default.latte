@@ -24,9 +24,10 @@
 			<td colspan="5"></td>
 		</tr>
 	</thead>
-	<tbody n:inner-foreach="$applications as $application">
+	{foreach $applications as $application}
 		{formContainer $application->id}
-		<tr class="row">
+		<tbody class="row">
+		<tr>
 			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 			<td>{input send}</td>
 			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id" n:attr="title => ($application->company|ifNull:smazáno)">{$application->name|ifNull:smazáno}</a></small></td>
@@ -50,13 +51,19 @@
 				{/if}
 			</td>
 		</tr>
+		<tr n:if="$application->nextStatus == \MichalSpacekCz\Training\Statuses::STATUS_MATERIALS_SENT">
+			<td></td>
+			<td></td>
+			<td colspan="5">{input feedbackRequest}</td>
+		</tr>
 		<tr n:class="expand-container, !$form[applications][$application->id][additional]->value ? hidden">
 			<td></td>
 			<td></td>
 			<td colspan="5">{input additional}</td>
 		</tr>
+		</tbody>
 		{/formContainer}
-	</tbody>
+	{/foreach}
 </table>
 {/formContainer}
 <p>{input submit}</p>

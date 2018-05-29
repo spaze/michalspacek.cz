@@ -158,12 +158,13 @@ class Mails
 	}
 
 
-	public function sendMaterials(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional = null)
+	public function sendMaterials(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $feedbackRequest, $additional = null)
 	{
 		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/' . ($application->familiar ?  'materialsFamiliar.latte' : 'materials.latte'));
 		$template->application = $application;
+		$template->feedbackRequest = $feedbackRequest;
 		$template->additional = $additional;
 		$subject = 'Materiály ze školení ' . $application->training->name;
 		$this->sendMail($application->email, $application->name, $subject, $template);
