@@ -32,7 +32,7 @@ class Mails
 	/** @var Files */
 	protected $trainingFiles;
 
-	/** @var \Netxten\Templating\Helpers */
+	/** @var Helpers */
 	protected $netxtenHelpers;
 
 	/** @var string */
@@ -49,7 +49,7 @@ class Mails
 		Statuses $trainingStatuses,
 		Venues $trainingVenues,
 		Files $trainingFiles,
-		\Netxten\Templating\Helpers $netxtenHelpers
+		Helpers $netxtenHelpers
 	)
 	{
 		$this->mailer = $mailer;
