@@ -1,6 +1,10 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
 
+use Nette\Application\UI\ITemplate;
+use Nette\Database\Row;
 use Netxten\Templating\Helpers;
 
 /**
@@ -62,7 +66,34 @@ class Mails
 	}
 
 
-	public function sendSignUpMail($applicationId, \Nette\Application\UI\ITemplate $template, $recipientAddress, $recipientName, $start, $end, $training, $trainingName, $venueName, $venueNameExtended, $venueAddress, $venueCity)
+	/**
+	 * @param integer $applicationId
+	 * @param ITemplate $template
+	 * @param string $recipientAddress
+	 * @param string $recipientName
+	 * @param \DateTime $start
+	 * @param \DateTime $end
+	 * @param string $training
+	 * @param string $trainingName
+	 * @param string $venueName
+	 * @param string|null $venueNameExtended
+	 * @param string $venueAddress
+	 * @param string $venueCity
+	 */
+	public function sendSignUpMail(
+		int $applicationId,
+		ITemplate $template,
+		string $recipientAddress,
+		string $recipientName,
+		\DateTime $start,
+		\DateTime $end,
+		string $training,
+		string $trainingName,
+		string $venueName,
+		?string $venueNameExtended,
+		string $venueAddress,
+		string $venueCity
+	): void
 	{
 		\Tracy\Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
 
@@ -82,19 +113,28 @@ class Mails
 	}
 
 
-	public function setEmailFrom($from)
+	/**
+	 * @param string $from
+	 */
+	public function setEmailFrom(string $from): void
 	{
 		$this->emailFrom = $from;
 	}
 
 
-	public function setPhoneNumber($number)
+	/**
+	 * @param string $number
+	 */
+	public function setPhoneNumber(string $number): void
 	{
 		$this->phoneNumber = $number;
 	}
 
 
-	public function getApplications()
+	/**
+	 * @return Row[]
+	 */
+	public function getApplications(): array
 	{
 		$applications = [];
 
@@ -146,7 +186,12 @@ class Mails
 	}
 
 
-	public function sendInvitation(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional)
+	/**
+	 * @param Row $application
+	 * @param ITemplate $template
+	 * @param string $additional
+	 */
+	public function sendInvitation(Row $application, ITemplate $template, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -158,7 +203,13 @@ class Mails
 	}
 
 
-	public function sendMaterials(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $feedbackRequest, $additional)
+	/**
+	 * @param Row $application
+	 * @param ITemplate $template
+	 * @param boolean $feedbackRequest
+	 * @param string $additional
+	 */
+	public function sendMaterials(Row $application, ITemplate $template, bool $feedbackRequest, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -171,7 +222,13 @@ class Mails
 	}
 
 
-	public function sendInvoice(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, array $invoice, $additional)
+	/**
+	 * @param Row $application
+	 * @param ITemplate $template
+	 * @param \Nette\Http\FileUpload[] $invoice
+	 * @param string $additional
+	 */
+	public function sendInvoice(Row $application, ITemplate $template, array $invoice, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -183,7 +240,12 @@ class Mails
 	}
 
 
-	public function sendReminder(\Nette\Database\Row $application, \Nette\Application\UI\ITemplate $template, $additional)
+	/**
+	 * @param Row $application
+	 * @param ITemplate $template
+	 * @param string $additional
+	 */
+	public function sendReminder(Row $application, ITemplate $template, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -199,7 +261,14 @@ class Mails
 	}
 
 
-	private function sendMail($recipientAddress, $recipientName, $subject, \Nette\Application\UI\ITemplate $template, array $attachments = array())
+	/**
+	 * @param string $recipientAddress
+	 * @param string $recipientName
+	 * @param string $subject
+	 * @param ITemplate $template
+	 * @param string[] $attachments
+	 */
+	private function sendMail(string $recipientAddress, string $recipientName, string $subject, ITemplate $template, array $attachments = array()): void
 	{
 		$mail = new \Nette\Mail\Message();
 		foreach ($attachments as $name => $file) {
