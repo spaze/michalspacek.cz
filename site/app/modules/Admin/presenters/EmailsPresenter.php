@@ -89,10 +89,7 @@ class EmailsPresenter extends BasePresenter
 				if ($data->invoice->isOk()) {
 					$this->trainingApplications->updateApplicationInvoiceData($id, $data->invoiceId);
 					$this->applications[$id]->invoiceId = $data->invoiceId;
-
-					$invoice = array($data->invoice->getName() => $data->invoice->getTemporaryFile());
-					$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $invoice, $additional);
-
+					$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $data->invoice, $additional);
 					$this->trainingStatuses->updateStatus($id, $this->applications[$id]->nextStatus);
 					$sent++;
 				}

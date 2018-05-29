@@ -225,10 +225,10 @@ class Mails
 	/**
 	 * @param Row $application
 	 * @param ITemplate $template
-	 * @param \Nette\Http\FileUpload[] $invoice
+	 * @param \Nette\Http\FileUpload $invoice
 	 * @param string $additional
 	 */
-	public function sendInvoice(Row $application, ITemplate $template, array $invoice, string $additional): void
+	public function sendInvoice(Row $application, ITemplate $template, \Nette\Http\FileUpload $invoice, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -236,7 +236,7 @@ class Mails
 		$template->application = $application;
 		$template->additional = $additional;
 		$subject = 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura';
-		$this->sendMail($application->email, $application->name, $subject, $template, $invoice);
+		$this->sendMail($application->email, $application->name, $subject, $template, [$invoice->getName() => $invoice->getTemporaryFile()]);
 	}
 
 
