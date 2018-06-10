@@ -66,10 +66,6 @@ services:
 		class: \MichalSpacekCz\Vat
 		setup:
 			- setRate(%vatRate%)
-	publicKeyPins:
-		class: \MichalSpacekCz\PublicKeyPins
-		setup:
-			- setPins(%publicKeyPins%)
 	securityHeaders:
 		class: \MichalSpacekCz\SecurityHeaders
 		setup:

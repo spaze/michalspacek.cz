@@ -27,9 +27,6 @@ class SecurityHeaders
 	/** @var \Spaze\ContentSecurityPolicy\Config */
 	protected $contentSecurityPolicy;
 
-	/** @var PublicKeyPins */
-	protected $publicKeyPins;
-
 	/** @var \MichalSpacekCz\Application\RouterFactory */
 	private $routerFactory;
 
@@ -44,21 +41,18 @@ class SecurityHeaders
 	 * @param \Nette\Http\IRequest $httpRequest
 	 * @param \Nette\Http\IResponse $httpResponse
 	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
-	 * @param \MichalSpacekCz\PublicKeyPins $publicKeyPins
 	 * @param \MichalSpacekCz\Application\RouterFactory $routerFactory
 	 */
 	public function __construct(
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
 		\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy,
-		PublicKeyPins $publicKeyPins,
 		\MichalSpacekCz\Application\RouterFactory $routerFactory
 	)
 	{
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
-		$this->publicKeyPins = $publicKeyPins;
 		$this->routerFactory = $routerFactory;
 	}
 
@@ -80,12 +74,6 @@ class SecurityHeaders
 		$header = $this->contentSecurityPolicy->getHeader($this->presenterName, $this->actionName);
 		if (!empty($header)) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
-		}
-
-		$host = $this->getHost();
-		$header = $this->publicKeyPins->getHeader($host);
-		if ($header !== null) {
-			$this->httpResponse->setHeader('Public-Key-Pins', $header);
 		}
 	}
 
