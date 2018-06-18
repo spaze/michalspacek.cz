@@ -12,6 +12,8 @@ use MichalSpacekCz\Training;
 class TrainingDate extends ProtectedForm
 {
 
+	use Controls\TrainingNote;
+
 	private const STANDARD = 'Standardní';
 	private const CUSTOM = 'Na zakázku';
 	private const REPLACED = 'Nahrazené';
@@ -94,6 +96,7 @@ class TrainingDate extends ProtectedForm
 			$cooperations[$cooperation->id] = $cooperation->name;
 		}
 		$this->addSelect('cooperation', 'Spolupráce:', $cooperations);
+		$this->addNote($this);
 
 		$this->addSubmit('submit', 'Přidat');
 	}
@@ -110,6 +113,7 @@ class TrainingDate extends ProtectedForm
 			'status' => $this->trainingDates->getStatusId($date->status),
 			'public' => $date->public,
 			'cooperation' => $date->cooperationId,
+			'note' => $date->note,
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';

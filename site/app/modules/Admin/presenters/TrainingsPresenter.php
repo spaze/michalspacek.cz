@@ -478,7 +478,8 @@ class TrainingsPresenter extends BasePresenter
 			$values->label,
 			$values->status,
 			$values->public,
-			$values->cooperation
+			$values->cooperation,
+			$values->note
 		);
 		$this->flashMessage('Termín upraven');
 		$this->redirect($this->getAction(), $this->redirectParam);
@@ -503,7 +504,8 @@ class TrainingsPresenter extends BasePresenter
 			$values->label,
 			$values->status,
 			$values->public,
-			$values->cooperation
+			$values->cooperation,
+			$values->note
 		);
 		$this->redirect('Trainings:');
 	}

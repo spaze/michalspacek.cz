@@ -282,7 +282,7 @@ form.wide textarea, textarea.wide { height: 200px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }
 #frm-application input[type=checkbox], form.wide input[type=checkbox] { width: auto; }
-#frm-application #frm-application-note { width: 400px; }
+#frm-application-note, #frm-date-note, #frm-addDate-note { width: 400px; }
 #frm-statuses select {
 	color: #666;
 	font-family: Consolas, sans-serif;

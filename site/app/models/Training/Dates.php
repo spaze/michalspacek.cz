@@ -70,7 +70,8 @@ class Dates
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
 				v.city AS venueCity,
-				c.id_cooperation AS cooperationId
+				c.id_cooperation AS cooperationId,
+				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
@@ -105,7 +106,8 @@ class Dates
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
-				v.city AS venueCity
+				v.city AS venueCity,
+				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_venues v ON d.key_venue = v.id_venue
@@ -139,7 +141,7 @@ class Dates
 	}
 
 
-	public function update($dateId, $training, $venue, $start, $end, $label, $status, $public, $cooperation)
+	public function update($dateId, $training, $venue, $start, $end, $label, $status, $public, $cooperation, $note)
 	{
 		$this->database->query(
 			'UPDATE training_dates SET ? WHERE id_date = ?',
@@ -152,13 +154,14 @@ class Dates
 				'key_status'      => $status,
 				'public'          => $public,
 				'key_cooperation' => (empty($cooperation) ? null : $cooperation),
+				'note' => (empty($note) ? null : $note),
 			),
 			$dateId
 		);
 	}
 
 
-	public function add($training, $venue, $start, $end, $label, $status, $public, $cooperation)
+	public function add($training, $venue, $start, $end, $label, $status, $public, $cooperation, $note)
 	{
 		$this->database->query(
 			'INSERT INTO training_dates',
@@ -171,6 +174,7 @@ class Dates
 				'key_status'      => $status,
 				'public'          => $public,
 				'key_cooperation' => (empty($cooperation) ? null : $cooperation),
+				'note' => (empty($note) ? null : $note),
 			)
 		);
 		return $this->database->getInsertId();
