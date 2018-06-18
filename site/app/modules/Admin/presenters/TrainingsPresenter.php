@@ -127,6 +127,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->venueCity     = $this->training->venueCity;
 		$this->template->venueName     = $this->training->venueName;
 		$this->template->public        = $this->training->public;
+		$this->template->note          = $this->training->note;
 		$this->template->applications  = $this->applications;
 		$this->template->validCount    = $validCount;
 		$this->template->attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
