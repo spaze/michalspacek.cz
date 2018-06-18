@@ -275,6 +275,15 @@ classesobjectssecurityperformancephp5days:
 	materials: ''
 	content: 'Třídy a objekty v PHP, bezpečnost PHP aplikací, HTTPS pro vývojáře a správce, výkonnost PHP aplikací'
 
+webappsecurityen:
+	name: "Web application security (English)"
+	description: 'Web application security, in English'
+	upsell:
+	prerequisites: ''
+	audience: ''
+	materials: ''
+	content: 'Custom Web application security training, done in English'
+
 classesobjectsphp:
 	name: "Classes and objects in PHP"
 	description: 'Toto školení společně s "**Úvodem do PHP**":[link:Www:Trainings:training uvod-do-php] pořádám ve spolupráci s "Akademií Root.cz":https://www.root.cz/skoleni/. Naučíte se na něm využívat objektově orientované programování (OOP) a několik šikovných rozšíření pro snadnější vývoj větších aplikací v PHP.'
