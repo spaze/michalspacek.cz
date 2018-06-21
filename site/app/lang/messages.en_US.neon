@@ -145,6 +145,7 @@ contact:
 	entermessagehere: "Enter your message here"
 	requirements: "Requires JavaScript"
 who:
+	hi: "Hi, I'm Michal Špaček."
 	developer:
 		1: "I'm into web, security, and performance. I build, break, and test web applications."
 		2: "I'm a \"Zend Certified Engineer\":[%s] since 2009."

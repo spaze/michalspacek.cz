@@ -145,6 +145,7 @@ contact:
 	entermessagehere: "Sem napište zprávu"
 	requirements: "Vyžaduje JavaScript"
 who:
+	hi: "Ahoj, jsem Michal Špaček."
 	developer:
 		1: "Zajímá mě web, bezpečnost a výkon. Stavím, bořím a testuji webové aplikace."
 		2: "Od roku 2009 mám certifikát \"Zend Certified Engineer\":[%s]."
