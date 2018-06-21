@@ -52,7 +52,8 @@ label:
 	keybase: Keybase
 	now: Now
 	before: Before
-	developer: "A **developer**, Zend Certified Engineer"
+	developer: "A **developer** and a **trainer**, Zend Certified Engineer"
+	reporturideveloper: "A **Report URI developer**"
 	speaker: "A **speaker**"
 	webtop100juror: "**WebTop100** juror a guarantor"
 	skyper: "A **Skyper** based in Prague, Czech Republic"
@@ -147,8 +148,12 @@ who:
 	developer:
 		1: "I'm into web, security, and performance. I build, break, and test web applications."
 		2: "I'm a \"Zend Certified Engineer\":[%s] since 2009."
-		3: "As a developer, I've learned a lot and I like to pass my knowledge and experience on my \"trainings\":[%s]."
+		3: "As a developer, I've learned a lot and I like to pass my knowledge and experience on my \"trainings\":[%s]. Since 2011, I've delivered over %s workshops."
 		4: "I want to show other web developers why and how to build secure and fast web applications."
+	reporturideveloper:
+		1: "I joined \"Report URI\":[%s], a real-time security reporting tool, in 2017."
+		2: "Founded by \"Scott Helme\":[%s] (runs \"Security Headers\":[%s], too), later joined by \"Troy Hunt\":[%s] of \"Have I Been Pwned?\":[%s] fame."
+		3: "Both Scott and Troy are award-winning security researchers and bloggers."
 	speaker:
 		1: "I've been speaking at more than %d conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
 		2: "Check the list of all my \"Talks\":[%s]."

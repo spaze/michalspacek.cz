@@ -52,7 +52,8 @@ label:
 	keybase: Keybase
 	now: Jsem
 	before: Byl jsem
-	developer: "**Vývojář**, Zend Certified Engineer"
+	developer: "**Vývojář** a **školitel**, Zend Certified Engineer"
+	reporturideveloper: "**Vývojář** nástroje **Report URI**"
 	speaker: "**Přednášející**"
 	webtop100juror: "Porotce a garant v soutěži **WebTop100**"
 	skyper: "Zaměstnanec v pražské kanceláři **Skype**"
@@ -147,8 +148,12 @@ who:
 	developer:
 		1: "Zajímá mě web, bezpečnost a výkon. Stavím, bořím a testuji webové aplikace."
 		2: "Od roku 2009 mám certifikát \"Zend Certified Engineer\":[%s]."
-		3: "Vše, co jsem se jako vývojář naučil moc rád předávám dál na svých \"školeních\":[%s]."
+		3: "Vše, co jsem se jako vývojář naučil moc rád předávám dál na svých \"školeních\":[%s], začal jsem s tím v roce 2011 a od té doby uspořádal více než %s kurzů."
 		4: "Webové vývojáře chci naučit stavět bezpečnější a výkonnější weby a webové aplikace."
+	reporturideveloper:
+		1: "V roce 2017 jsem začal pracovat na \"Report URI\":[%s], nástroji na reportování bezpečnostních událostí přímo z prohlížeče."
+		2: "Službu založil \"Scott Helme\":[%s] (provozuje např. i \"Security Headers\":[%s]), v týmu je také \"Troy Hunt\":[%s] (spravuje \"Have I Been Pwned?\":[%s])."
+		3: "Oba dva jsou známí a oceňovaní bezpečnostní výzkumníci a bloggeři."
 	webtop100juror:
 		1: "Od roku 2011 jsem porotcem a od roku 2014 i odborným garantem pro oblast technické řešení a bezpečnost ve \"WebTop100\":[%s], největší soutěži firemních webů a digitálních řešení v ČR."
 		2: "O zkušenostech s hodnocením a o výsledcích jsem napsal několik \"článků\":[%s]."
