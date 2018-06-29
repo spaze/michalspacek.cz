@@ -43,7 +43,7 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 			$this->template->robots = 'noindex';
 		}
 		$this->template->post = $post;
-		$this->template->pageTitle = strip_tags((string)$post->title);
+		$this->template->pageTitle = htmlspecialchars_decode(strip_tags((string)$post->title));
 		$this->template->pageHeader = $post->title;
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$this->template->edits = $this->blogPost->getEdits($post->postId);
