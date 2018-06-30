@@ -152,7 +152,7 @@ who:
 		3: "As a developer, I've learned a lot and I like to pass my knowledge and experience on my \"trainings\":[%s]. Since 2011, I've delivered over %s workshops."
 		4: "I want to show other web developers why and how to build secure and fast web applications."
 	reporturideveloper:
-		1: "I joined \"Report URI\":[%s], a real-time security reporting tool, in 2017."
+		1: "\"I joined Report URI\":[blog:adding-features-and-deleting-code-or-how-i-joined-report-uri], a real-time security reporting tool, in 2017."
 		2: "Founded by \"Scott Helme\":[%s] (runs \"Security Headers\":[%s], too), later joined by \"Troy Hunt\":[%s] of \"Have I Been Pwned?\":[%s] fame."
 		3: "Both Scott and Troy are award-winning security researchers and bloggers."
 	speaker:
