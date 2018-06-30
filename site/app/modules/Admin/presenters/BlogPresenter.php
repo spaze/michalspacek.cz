@@ -71,6 +71,8 @@ class BlogPresenter extends BasePresenter
 	/**
 	 * @param \MichalSpacekCz\Form\Blog\Post $form
 	 * @param \Nette\Utils\ArrayHash $values
+	 * @throws \Nette\Application\AbortException
+	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
 	public function submittedAddPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
@@ -102,9 +104,10 @@ class BlogPresenter extends BasePresenter
 
 
 	/**
-	 * @param  string $param [description]
+	 * @param integer $param
+	 * @throws \Nette\Application\BadRequestException
 	 */
-	public function actionEdit(string $param): void
+	public function actionEdit(int $param): void
 	{
 		$this->post = $this->blogPost->getById($param);
 		if (!$this->post) {
@@ -134,6 +137,8 @@ class BlogPresenter extends BasePresenter
 	/**
 	 * @param \MichalSpacekCz\Form\Blog\Post $form
 	 * @param \Nette\Utils\ArrayHash $values
+	 * @throws \Nette\Application\AbortException
+	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
 	public function submittedEditPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
@@ -163,6 +168,10 @@ class BlogPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws \Nette\Application\AbortException
+	 * @throws \Nette\Application\BadRequestException
+	 */
 	public function actionPreview(): void
 	{
 		if (!$this->isAjax()) {

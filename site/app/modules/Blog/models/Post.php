@@ -105,9 +105,10 @@ class Post
 	/**
 	 * Get post by id.
 	 *
+	 * @param integer $id
 	 * @return \MichalSpacekCz\Blog\Post\Data|null
 	 */
-	public function getById($id): ?\MichalSpacekCz\Blog\Post\Data
+	public function getById(int $id): ?\MichalSpacekCz\Blog\Post\Data
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -161,6 +162,7 @@ class Post
 	 * Get all posts.
 	 *
 	 * @return \MichalSpacekCz\Blog\Post\Data[]
+	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
 	public function getAll(): array
 	{
@@ -211,7 +213,7 @@ class Post
 	 * Enrich post data object.
 	 *
 	 * @param Data $post
-	 * @return Data
+	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
 	public function enrich(Data $post)
 	{
@@ -394,6 +396,7 @@ class Post
 	 *
 	 * @param string $slug
 	 * @return \MichalSpacekCz\Blog\Post\Data[]
+	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
 	public function getLocaleUrls(string $slug): array
 	{

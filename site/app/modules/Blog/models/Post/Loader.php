@@ -39,6 +39,7 @@ class Loader
 	 * Check whether the post exists.
 	 *
 	 * @param string $post
+	 * @param string|null $previewKey
 	 * @return boolean
 	 */
 	public function exists(string $post, ?string $previewKey = null): bool
