@@ -562,12 +562,15 @@ class Applications
 				t.name
 			FROM trainings t
 				JOIN training_applications a ON a.key_training = t.id_training
+				JOIN training_application_status s ON a.key_status = s.id_status
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions ua ON ta.key_url_action = ua.id_url_action
 				JOIN languages l ON ua.key_language = l.id_language
 			WHERE
 				a.key_date IS NULL
+				AND s.status != ?
 				AND l.language = ?',
+			Statuses::STATUS_CANCELED,
 			$this->translator->getDefaultLocale()
 		);
 		foreach ($result as $row) {
@@ -597,7 +600,9 @@ class Applications
 				JOIN training_application_status s ON a.key_status = s.id_status
 				JOIN training_application_sources sr ON a.key_source = sr.id_source
 			WHERE
-				a.key_date IS NULL'
+				a.key_date IS NULL
+				AND s.status != ?',
+			Statuses::STATUS_CANCELED
 		);
 
 		if ($applications) {
