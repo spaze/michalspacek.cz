@@ -45,12 +45,10 @@
 {/define}
 
 {define #discontinued}
-{capture $names|strip}
-	{foreach $discontinued as $training}
-		{foreach $training[trainings] as $trainingName}**{$trainingName|translate}**{sep}, {/sep}{/foreach}
-	{/foreach}
-{/capture}
 {foreach $discontinued as $training}
+	{capture $names|strip}
+		{foreach $training[trainings] as $trainingName}**{$trainingName|translate}**{sep}, {/sep}{/foreach}
+	{/capture}
 	{_$training[description]|format:$names:$training[href]}
 {/foreach}
 {/define}
