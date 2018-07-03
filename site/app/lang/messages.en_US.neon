@@ -286,6 +286,8 @@ trainings:
 	discontinued:
 		takenoverby:
 			martinhujer: "Hledáte kurzy %s? Předal jsem je \"Martinovi Hujerovi\":[%s]."
+		seeother:
+			martinmichalek: "I've discontinued %s, \"Martin Michálek\":[%s] runs a similar training."
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"
