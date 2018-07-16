@@ -51,3 +51,14 @@ parameters:
 	certificatesApi:
 		expiringThreshold: 20
 		hideExpiredAfter: 10
+
+	featurePolicy:
+		accelerometer: none
+		camera: none
+		geolocation: none
+		gyroscope: none
+		magnetometer: none
+		microphone: none
+		midi: none
+		payment: none
+		usb: none

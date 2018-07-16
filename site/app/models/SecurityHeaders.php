@@ -36,6 +36,9 @@ class SecurityHeaders
 	/** @var string*/
 	private $actionName;
 
+	/** @var string[] */
+	private $featurePolicies;
+
 
 	/**
 	 * @param \Nette\Http\IRequest $httpRequest
@@ -69,12 +72,42 @@ class SecurityHeaders
 	}
 
 
+	/**
+	 * @param string[] $policies
+	 */
+	public function setFeaturePolicy(array $policies): void
+	{
+		$result = $policies;
+		foreach ($result as &$policy) {
+			if ($policy === 'none') {
+				$policy = "'none'";
+			}
+		}
+		$this->featurePolicies = $result;
+	}
+
+
+	private function getFeaturePolicyHeader(): string
+	{
+		$directives = [];
+		foreach ($this->featurePolicies as $directive => $values) {
+			if (is_array($values)) {
+				$values = implode(' ', $values);
+			}
+			$directives[] = "$directive $values";
+		}
+		return implode('; ', $directives);
+	}
+
+
 	public function sendHeaders(): void
 	{
 		$header = $this->contentSecurityPolicy->getHeader($this->presenterName, $this->actionName);
 		if (!empty($header)) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}
+
+		$this->httpResponse->setHeader('Feature-Policy', $this->getFeaturePolicyHeader());
 	}
 
 

@@ -71,6 +71,7 @@ services:
 		setup:
 			- setDefaultDomain(%domain.default%)
 			- setRootDomain(%domain.root%)
+			- setFeaturePolicy(%featurePolicy%)
 	staticKeyEncryption:
 		class: \MichalSpacekCz\Encryption\Symmetric\StaticKey
 		setup:
