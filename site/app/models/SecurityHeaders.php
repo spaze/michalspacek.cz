@@ -33,7 +33,7 @@ class SecurityHeaders
 	/** @var string */
 	private $presenterName;
 
-	/** @var string*/
+	/** @var string */
 	private $actionName;
 
 	/** @var string[] */
@@ -135,22 +135,6 @@ class SecurityHeaders
 	{
 		$this->presenterName = $this->actionName = $this->contentSecurityPolicy->getDefaultKey();
 		return $this;
-	}
-
-
-	/**
-	 * Get host.
-	 *
-	 * @return string
-	 */
-	private function getHost(): string
-	{
-		if ($this->httpRequest->getUrl()->getHost() === $this->rootDomain) {
-			$host = $this->defaultDomain;
-		} else {
-			$host = str_replace(".{$this->rootDomain}", '', $this->httpRequest->getUrl()->getHost());
-		}
-		return $host;
 	}
 
 
