@@ -111,6 +111,9 @@ class RatingTest extends \Tester\TestCase
 	{
 		$this->algo->alias = 'plaintext';
 		Assert::same('F', $this->rating->get($this->algo));
+
+		$this->algo->alias = 'encrypted';
+		Assert::same('F', $this->rating->get($this->algo));
 	}
 
 

@@ -32,8 +32,9 @@ class Rating
 	];
 
 	/** @var array */
-	private $plaintext = [
+	private $insecure = [
 		'plaintext',
+		'encrypted',
 	];
 
 	/** @var array */
@@ -65,8 +66,8 @@ class Rating
 		self::RATING_B => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
 		self::RATING_C => 'Passwords hashed with an unsuitable function but at least they are salted and stretched with multiple iterations.',
 		self::RATING_D => 'Inappropriate function used to hash passwords but passwords are salted, at least.',
-		self::RATING_E => 'Unsalted passwords hashed with one iteration of unsuitable function, or passwords encrypted instead of hashed.',
-		self::RATING_F => 'Passwords stored in plaintext, in their original, readable form.',
+		self::RATING_E => 'Unsalted passwords hashed with one iteration of unsuitable function.',
+		self::RATING_F => 'Passwords stored in plaintext, in their original, readable form, or passwords encrypted instead of hashed.',
 	];
 
 	/** @var string[] */
@@ -111,7 +112,7 @@ class Rating
 			return self::RATING_C;
 		} elseif ($algo->salted) {
 			return self::RATING_D;
-		} elseif (!in_array($algo->alias, $this->plaintext, true)) {
+		} elseif (!in_array($algo->alias, $this->insecure, true)) {
 			return self::RATING_E;
 		} else {
 			return self::RATING_F;
