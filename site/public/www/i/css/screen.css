@@ -397,6 +397,13 @@ div.notice {
 	font-weight: bold;
 	background-color: #FEE;
 }
+.shrug {
+	color: #FFF;
+	text-shadow: 0 0 0.1em #333;
+	text-align: center;
+	font-size: 300%;
+	margin-bottom: 0.33em;
+}
 @media print {
 	img { max-width: 75%; }
 	.print { display: block; }
