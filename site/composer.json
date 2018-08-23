@@ -20,12 +20,12 @@
 		"spaze/nonce-generator": "dev-master",
 		"spaze/sri-macros": "dev-master",
 		"kdyby/translation": "~2.5",
-		"roave/security-advisories": "dev-master",
 		"paragonie/halite": "^4"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
-		"phpstan/phpstan": "^0.9.1",
-		"phpstan/phpstan-nette": "^0.9.0"
+		"phpstan/phpstan": "^0.10",
+		"phpstan/phpstan-nette": "^0.10",
+		"roave/security-advisories": "dev-master"
 	}
 }
