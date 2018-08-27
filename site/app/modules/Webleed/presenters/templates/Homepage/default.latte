@@ -5,25 +5,17 @@
 	<meta charset="utf-8" />
 	<title>We Bleed: Heartbleed Bug in the Czech Republic</title>
 	{stylesheet screen-webleed}
-	{script jquery}
-	{script highcharts-custom}
-	{script highcharts-webleed}
 	<link rel="icon" href="{='/i/icons/webleed.ico'|staticUrl}">
 </head>
 <body>
 <div id="container">
-	<div id="logo"><img src="{='webleed/logo.png'|staticImageUrl}"></div>
+	<div id="logo"><img src="{='webleed/logo.png'|staticImageUrl}" width="100" height="120" alt="Czech flag in the shape of a bleeding heart"></div>
 	<div id="header">
 		<h1>Project &quot;We Bleed&quot; <small title="vyblít" lang="cs">(vɪbliːt)</small></h1>
 		<h3>Heartbleed Bug in the Czech Republic</h3>
 	</div>
 	<div id="stats"><strong>{$vulnerable}<small> vulnerable hosts</small> {$daysSince}<small> days since <a href="http://www.openssl.org/news/secadv_20140407.txt">public disclosure</a></small></strong></div>
-	<div id="chart"></div>
-	<div id="points">
-		{foreach $points as $port => $data}
-		<div n:foreach="$data as $point" data-port="{$port}" data-point="{$point}"></div>
-		{/foreach}
-	</div>
+	<div id="chart"><img src="{='webleed/chart.png'|staticImageUrl}" width="911" height="366" alt="Vulnerable hosts chart"></div>
 	<div id="notes">Scanning all CZ-assigned IPv4 addresses,
 		<a href="https://blog.mozilla.org/security/2014/04/12/testing-for-heartbleed-vulnerability-without-exploiting-the-server/">not exploiting your server</a>,
 		not <a href="http://blog.erratasec.com/2014/04/fun-with-ids-funtime-3-heartbleed.html">evading your IDS</a>.<br>
