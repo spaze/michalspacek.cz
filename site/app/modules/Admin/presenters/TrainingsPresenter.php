@@ -178,6 +178,10 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->applicationId = $param;
 		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
+		if (!$this->application) {
+			throw new \Nette\Application\BadRequestException("No application with id {$this->applicationId}", \Nette\Http\IResponse::S404_NOT_FOUND);
+		}
+
 		if (isset($this->application->dateId)) {
 			$this->dateId = $this->application->dateId;
 			$this->training = $this->trainingDates->get($this->dateId);

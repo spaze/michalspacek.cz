@@ -544,7 +544,7 @@ class Applications
 			$this->translator->getDefaultLocale()
 		);
 
-		if ($result->email) {
+		if ($result && $result->email) {
 			$result->email = $this->emailEncryption->decrypt($result->email);
 		}
 
