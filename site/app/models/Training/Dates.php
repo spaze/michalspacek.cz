@@ -87,7 +87,9 @@ class Dates
 			$this->translator->getDefaultLocale()
 		);
 
-		$result->name = $this->translator->translate($result->name);
+		if ($result) {
+			$result->name = $this->translator->translate($result->name);
+		}
 		return $result;
 	}
 
