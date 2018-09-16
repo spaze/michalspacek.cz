@@ -78,16 +78,15 @@ class Reviews
 	{
 		$query = 'SELECT
 				r.id_review AS reviewId,
-				COALESCE(r.name, a.name) AS name,
-				COALESCE(r.company, a.company) AS company,
+				r.name AS name,
+				r.company AS company,
 				r.job_title AS jobTitle,
 				r.review,
 				r.href,
 				r.hidden
 			FROM
 				training_reviews r
-				LEFT JOIN training_applications a ON r.key_application = a.id_application
-				JOIN training_dates d ON a.key_date = d.id_date
+				JOIN training_dates d ON r.key_date = d.id_date
 				JOIN trainings t ON t.id_training = d.key_training
 				LEFT JOIN trainings t2 ON t2.id_training = t.key_successor
 			WHERE
