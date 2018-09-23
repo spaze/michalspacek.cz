@@ -8,7 +8,18 @@
 {/define}
 
 {define #blogPost}
-<p id="header-icons"><small><strong>📆 {$post->published|localeDay}</strong>{if $post->tags} 📂 {$post->tags|implode:', '}{/if}</small></p>
+<p id="header-icons">
+	<span class="lighter"><i class="fas fa-fw fa-calendar"></i></span> <small><strong>{$post->published|localeDay}</strong></small>
+	{if $post->tags}
+		<span class="lighter">
+		{if ($post->tags|count) === 1}
+			<i class="fas fa-fw fa-tag"></i>
+		{else}
+			<i class="fas fa-fw fa-tags"></i>
+		{/if}
+		</span> <small>{$post->tags|implode:', '}</small>
+	{/if}
+</p>
 <em n:if="$post->lead">{$post->lead}</em>
 {$post->text}
 {$post->originally}

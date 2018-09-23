@@ -12,11 +12,11 @@
 {if $slidesHref}
 	<p id="{_html.id.slides}"></p>
 	{include #embedSlides}
-	<p><small><span title="{_messages.label.slides}">📃</span> <a href="{$slidesHref}">{$slidesHref}</a></small></p>
+	<p><small><span title="{_messages.label.slides}" class="lighter"><i class="fas fa-images"></i></span> <a href="{$slidesHref}">{$slidesHref}</a></small></p>
 
 	<p n:if="$videoHref" id="{_html.id.recording}"></p>
 	{include #embedVideo}
-	<p n:if="$videoHref"><small><span title="{_messages.label.recording}">►</span> <a href="{$videoHref}">{$videoHref}</a></small></p>
+	<p n:if="$videoHref"><small><span title="{_messages.label.recording}" class="lighter"><i class="fas fa-video"></i></span> <a href="{$videoHref}">{$videoHref}</a></small></p>
 {/if}
 
 <h2 n:if="$talk->description || $talk->href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
@@ -46,7 +46,7 @@
 	{if $videoHref}
 		<h2 id="{_html.id.recording}">{_messages.label.videorecording}</h2>
 		{include #embedVideo}
-		<p><small><span title="{_messages.label.recording}">►</span> <a href="{$videoHref}">{$videoHref}</a></small></p>
+		<p><small><span title="{_messages.label.recording}" class="lighter"><i class="fas fa-video"></i></span> <a href="{$videoHref}">{$videoHref}</a></small></p>
 	{/if}
 {elseif $talk->transcript}
 	<hr>
