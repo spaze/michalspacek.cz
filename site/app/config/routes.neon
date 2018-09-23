@@ -80,6 +80,10 @@ parameters:
 					mask:
 						cs_CZ: foto
 						en_US: photo
+				Projects:
+					mask:
+						cs_CZ: projekty
+						en_US: projects
 				Exports:
 					mask:
 						cs_CZ: exporty

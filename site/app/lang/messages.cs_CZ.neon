@@ -24,6 +24,7 @@ title:
 	forbidden: "Nepovoleno"
 	venue: "Školírna %s"
 	photo: "Foto"
+	projects: Projekty
 	blog: Blog
 	admin:
 		talkslides: "Slajdy z přednášky %s (%s)"
@@ -61,6 +62,7 @@ label:
 	ipo48: "Spolupořadatel **IPO48**"
 	simpletest: "Rádce v projektu **SimpleTest.IO**"
 	tojeono: "Spoluzakladatel webhostingu **tojeono.cz**"
+	otherprojects: "Další projekty"
 	bankshttps: "HTTPS na bankách"
 	banksczhttps: "HTTPS na českých bankách"
 	upckeys: "UPC Wi-Fi hesla"
@@ -307,6 +309,11 @@ photo:
 	talk:
 		header: "Přednášková"
 		desc: "Takto mě zachytil fotograf na WebTop100, když jsem vyprávěl o \"rychlosti a zabezpečení webu\":[%s]."
+projects:
+    otherprojects: "Toto jsou mé další projekty:"
+    pulse:
+        passwordstorages: "Seznam firem, které nějakým způsobem zveřejnily způsob ukládání uživatelských hesel. Projektem se snažím ostatní firmy inspirovat k bezpečnému ukládání hesel."
+    upckeys: "Generování výrobcem přednastavených hesel pro některé rooutery od UPC. Zkontrolujte si Wi-Fi a případně heslo změňte."
 certificates:
 	admin:
 		expireddaysago: "před %count% dnem|před %count% dny|před %count% dny"

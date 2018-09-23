@@ -153,6 +153,7 @@ pre {
 #header-links a[lang] { background-color: rgba(0, 0, 255, 0.04); }
 #header-links a:hover { background-color: rgba(0, 0, 0, 0.08); }
 #header-links a[lang]:hover { background-color: rgba(0, 0, 255, 0.08); }
+#header-links #other-projects { display: none; }
 .print { display: none; }
 .single-column { padding: 0 10px 0.5em 10px; }
 .with-sidebar { padding-bottom: 0.5em; }
@@ -390,4 +391,8 @@ div.notice {
 	#frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 100%; }
 	#frm-application #frm-application-note { width: 98%; }
 	#frm-application input[type=submit] { width: 170px; }
+}
+@media (max-width: 400px) {
+	#header-links #other-projects { display: block; }
+	#header-links a:not([lang]) { display: none; }
 }

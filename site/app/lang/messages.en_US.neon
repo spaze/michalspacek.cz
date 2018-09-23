@@ -24,6 +24,7 @@ title:
 	forbidden: "Forbidden"
 	venue: "Venue %s"
 	photo: "Photo"
+	projects: Projects
 	blog: Blog
 	admin:
 		talkslides: "Slides from %s (%s)"
@@ -61,6 +62,7 @@ label:
 	ipo48: "Co-organizer of **IPO48**"
 	simpletest: "Adviser/mentor for **SimpleTest.IO**"
 	tojeono: "Co-founder of hosting service **tojeono.cz**"
+	otherprojects: "Other projects"
 	bankshttps: "Banking HTTPS"
 	banksczhttps: "Czech banking HTTPS"
 	upckeys: "UPC Wi-Fi keys"
@@ -306,6 +308,11 @@ photo:
 	talk:
 		header: "Speaking"
 		desc: "This photo was shot at WebTop100, when I was talking about \"web performance and security\":[%s]."
+projects:
+    otherprojects: "Here are my other projects:"
+    pulse:
+        passwordstorages: "List of companies who have disclosed how they store user passwords. I'm trying to make more companies store passwords securely."
+    upckeys: "Default password generator for some UPC routers. Check your Wi-Fi and change your password if needed."
 certificates:
 	admin:
 		expireddaysago: "%count% day ago|%count% days ago"
