@@ -134,22 +134,23 @@ pre {
 #footer .container.admin { max-width: 1180px; }
 #footer-name { float: left; }
 #footer-links { float: right; }
-#langs {
+#header-links {
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	padding: 0 10px;
 }
-#langs a {
+#header-links a {
 	display: block;
 	float: right;
 	background-color: rgba(0, 0, 0, 0.04);
 	border-radius: 0 0 3px 3px;
 	padding: 3px 5px;
+	margin-left: 10px;
 	text-decoration: none;
 }
-#langs a:hover { background-color: rgba(0, 0, 0, 0.08); }
+#header-links a:hover { background-color: rgba(0, 0, 0, 0.08); }
 .print { display: none; }
 .single-column { padding: 0 10px 0.5em 10px; }
 .with-sidebar { padding-bottom: 0.5em; }
@@ -194,52 +195,10 @@ img.noshadow { box-shadow: none; }
 	display: inline-block;
 	margin-right: 1em;
 }
-.icon {
-	background: url('/i/images/icons.png') no-repeat top left;
-	display: inline-block;
-	vertical-align: middle;
-}
-.icon32 {
-	width: 32px;
-	height: 32px;
-	margin-right: 8px;
-}
 .date { white-space: nowrap; }
-#elephpant { background-position: 0 -18px; }
 #upsell small::before {
 	content: "💡 ";
 	filter: grayscale(1);
-}
-#heartbleed {
-	background-position: -32px 0;
-	margin-left: -6px;
-	margin-right: 2px;
-}
-#upckeys {
-	background-position: 0 -48px;
-	margin-left: -6px;
-	margin-right: 2px;
-}
-#pulse {
-	background-position: -32px -48px;
-	margin-left: -6px;
-	margin-right: 2px;
-}
-#projekty div {
-	float: left;
-	line-height: 32px;
-	margin: 16px 0;
-	color: #595959;
-}
-#projekty ul {
-	float: left;
-	padding: 0;
-	margin: 16px 0;
-}
-#projekty ul li {
-	float: left;
-	list-style: none;
-	padding: 0 0 0 16px;
 }
 #menu {
 	font-size: 85%;
@@ -407,7 +366,7 @@ div.notice {
 @media print {
 	img { max-width: 75%; }
 	.print { display: block; }
-	hr, #langs, #menu, #video-embed, #footer, h2#detail { display: none; }
+	hr, #header-links, #menu, #video-embed, #footer, h2#detail { display: none; }
 	.nobreak { page-break-inside: avoid; }
 }
 @media (max-width: 64em) {
@@ -424,6 +383,4 @@ div.notice {
 	#frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 100%; }
 	#frm-application #frm-application-note { width: 98%; }
 	#frm-application input[type=submit] { width: 170px; }
-	#projekty div { display: none; }
-	#projekty ul li { line-height: 3em }
 }

@@ -64,9 +64,11 @@
 	<div class="clear"></div>
 </div>
 </div>
-<div n:ifset="$localeLinks" id="langs">
-	<div n:class="container, $containerExtraClass" n:inner-foreach="$localeLinks as $language => $url">
-		<small><a href="{$url}" lang="{_"html.langs.$language"}">{_"messages.langs.$language"}</a></small>
+<div id="header-links">
+	<div n:class="container, $containerExtraClass">
+		<small n:foreach="$localeLinks as $language => $url"><a href="{$url}" lang="{_"html.langs.$language"}">{_"messages.langs.$language"}</a></small>
+		<small><a n:href=":UpcKeys:Homepage:" title="{_messages.label.upckeys}">{_messages.label.upckeys}</a></small>
+		<small><a n:href=":Pulse:Homepage:" title="{_messages.label.pulse}">{_messages.label.pulse}</a></small>
 	</div>
 </div>
 </body>

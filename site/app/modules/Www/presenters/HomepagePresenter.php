@@ -60,6 +60,7 @@ class HomepagePresenter extends BasePresenter
 
 	public function renderDefault()
 	{
+		$this->template->pageHeader = 'Michal Špaček';
 		$this->template->articles          = $this->articles->getAll(3);
 		$this->template->talks             = $this->talks->getAll(5);
 		$this->template->favoriteTalks     = $this->talks->getFavorites();

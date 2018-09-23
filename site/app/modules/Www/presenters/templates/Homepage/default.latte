@@ -1,11 +1,10 @@
-{define #preload}
-<link rel="preload" as="image" href="{='icons.png'|staticImageUrl}">
-{/define}
 {define #content}
 {import "../Articles/default.latte"}
 {import "../Talks/default.latte"}
 {import "../Interviews/default.latte"}
 {import "../Trainings/default.latte"}
+{_messages.homepage.tagline}
+<small>(<a n:href="Who:">{_messages.homepage.aboutme}</a>, <a n:href="Contact:">{_messages.homepage.contact}</a>)</small>
 <h2 id="{_html.id.trainings}">{_messages.label.mytrainings}</h2>
 <h3>{_messages.label.publictrainings}</h3>
 <p>{_messages.homepage.trainings}:</p>
