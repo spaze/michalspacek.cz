@@ -22,6 +22,7 @@
 	{else}
 		{script jquery+scripts async, defer}
 		{script netteForms async, defer}
+		{script fontawesome async, defer}
 	{/ifset}
 	{ifset #scripts}{include #scripts}{/ifset}
 	{ifset #styles}{include #styles}{/ifset}
@@ -66,9 +67,9 @@
 </div>
 <div id="header-links">
 	<div n:class="container, $containerExtraClass">
-		<small n:foreach="$localeLinks as $language => $url"><a href="{$url}" lang="{_"html.langs.$language"}">{_"messages.langs.$language"}</a></small>
-		<small><a n:href=":UpcKeys:Homepage:" title="{_messages.label.upckeys}">{_messages.label.upckeys}</a></small>
-		<small><a n:href=":Pulse:PasswordsStorages:" title="{_messages.label.pulse.passwordstorages}">{_messages.label.pulse.passwordstorages}</a></small>
+		<small n:foreach="$localeLinks as $language => $url"><a href="{$url}" lang="{_"html.langs.$language"}"><span><i class="fas fa-fw fa-language"></i></span> {_"messages.langs.$language"}</a></small>
+		<small><a n:href=":UpcKeys:Homepage:" title="{_messages.label.upckeys}"><span><i class="fas fa-fw fa-wifi"></i></span> {_messages.label.upckeys}</a></small>
+		<small><a n:href=":Pulse:PasswordsStorages:" title="{_messages.label.pulse.passwordstorages}"><span><i class="fas fa-fw fa-key"></i></span> {_messages.label.pulse.passwordstorages}</a></small>
 	</div>
 </div>
 </body>

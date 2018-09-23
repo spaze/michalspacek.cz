@@ -150,7 +150,10 @@ pre {
 	margin-left: 10px;
 	text-decoration: none;
 }
+#header-links a[lang] { background-color: rgba(0, 0, 255, 0.04); }
 #header-links a:hover { background-color: rgba(0, 0, 0, 0.08); }
+#header-links a[lang]:hover { background-color: rgba(0, 0, 255, 0.08); }
+#header-links span { opacity: 0.3; }
 .print { display: none; }
 .single-column { padding: 0 10px 0.5em 10px; }
 .with-sidebar { padding-bottom: 0.5em; }
@@ -363,6 +366,12 @@ div.notice {
 	font-size: 300%;
 	margin-bottom: 0.33em;
 }
+.fa-fw {
+	display: inline-block;
+	width: 1.25em;
+	text-align: center;
+}
+.fa-fw::before { content: "\2022"; }
 @media print {
 	img { max-width: 75%; }
 	.print { display: block; }
