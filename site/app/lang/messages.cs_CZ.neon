@@ -64,7 +64,8 @@ label:
 	bankshttps: "HTTPS na bankách"
 	banksczhttps: "HTTPS na českých bankách"
 	upckeys: "UPC Wi-Fi hesla"
-	pulse: Pulse
+	pulse:
+	    passwordstorages: Jak ukládají hesla
 	mytrainings: Školím
 	myarticles: Píšu články
 	allarticles: Všechny články

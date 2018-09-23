@@ -64,7 +64,8 @@ label:
 	bankshttps: "Banking HTTPS"
 	banksczhttps: "Czech banking HTTPS"
 	upckeys: "UPC Wi-Fi keys"
-	pulse: Pulse
+	pulse:
+	    passwordstorages: Password storages
 	mytrainings: My trainings
 	myarticles: My articles
 	allarticles: All articles
