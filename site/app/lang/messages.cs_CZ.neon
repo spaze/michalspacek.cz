@@ -60,7 +60,6 @@ label:
 	skyper: "Zaměstnanec v pražské kanceláři **Skype**"
 	slevomat: "Vývojář ve **Slevomatu**"
 	ipo48: "Spolupořadatel **IPO48**"
-	simpletest: "Rádce v projektu **SimpleTest.IO**"
 	tojeono: "Spoluzakladatel webhostingu **tojeono.cz**"
 	otherprojects: "Další projekty"
 	bankshttps: "HTTPS na bankách"
@@ -167,9 +166,6 @@ who:
 		1: "V únoru 2011 se v Praze na akci IPO48 sešlo více jak stovka vývojářů, designérů a podnikatelů zaměřujících se na moderní technologie."
 		2: "Měli během 48 hodin vytvořit svůj tým, vyvinout prototyp aplikace a sestavit obchodní model, který by uspěl ve tvrdé konkurenci na globálním trhu."
 		3: "O akci si můžete přečíst třeba na \"Zdrojáku\":[%s], u \"Davida Grudla\":[%s] nebo u \"Johna Vanhary\":[%s]."
-	simpletest:
-		1: "\"SimpleTest.IO\":[%s] byl nástroj, který na vašem webu pravidelně hledal špatné odkazy, chybějící obrázky a další prvky."
-		2: "Původním nápadem bylo postavit //Selenium v cloudu//, ale nepovedlo se nám překonat překážky, které dnešní dynamický web takovému projektu staví do cesty a tak jsme to na jaře roku 2014 //zabalili//."
 	tojeono:
 		1: "Koncem roku 2003 jsme se s kolegy rozhodli pro pořízení vlastních serverů, které jsme pod značkou \"tojeono.cz\":[%s] nabídli k využívání i dalším zákazníkům, kteří požadovali individuální nastavení služeb."
 		2: "Projekt jsem opustil přibližně po roce a po dalších dvou letech jsem opustil i kolegy."

@@ -60,7 +60,6 @@ label:
 	skyper: "A **Skyper** based in Prague, Czech Republic"
 	slevomat: "A developer in **Slevomat.cz**"
 	ipo48: "Co-organizer of **IPO48**"
-	simpletest: "Adviser/mentor for **SimpleTest.IO**"
 	tojeono: "Co-founder of hosting service **tojeono.cz**"
 	otherprojects: "Other projects"
 	bankshttps: "Banking HTTPS"
@@ -167,9 +166,6 @@ who:
 		1: "The IPO48 event held at February 2011 hosted 100+ developers, designers, and entrepreneurs all with focus on modern technology."
 		2: "They had to find their teammates, build an application prototype and create a business model that would succeed in the fierce competition in the global market."
 		3: "You can read about the event in \"Zdroják\":[%s], at \"David Grudl\":[%s], and at \"John Vanhara\":[%s] (all in Czech only)."
-	simpletest:
-		1: "\"SimpleTest.IO\":[%s] was an on-line tool to regularly scan your web for broken links, missing images, and other issues."
-		2: "Originally we've intended to build //Selenium in the cloud//, but with this project we've failed to overcome the obstacles of today's dynamic web, so we've shut it down in spring 2014."
 	tojeono:
 		1: "In late 2003, my colleagues and I decided to purchase our own servers, which we've offered under the brand name \"tojeono.cz\":[%s] to use by our clients and other customers who required customized hosting services."
 		2: "I left the project after about a year and after two more years I also left my colleagues."
