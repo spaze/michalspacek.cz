@@ -1,8 +1,8 @@
 {define #itemTalk}
 	<li><a n:href="Talks:talk $item->talkId"><strong n:tag-if="$upcoming">{$item->title}</strong></a>
 	<small><strong class="date">{$item->date|localeDay}</strong>, {$item->event}</small>
-	<span n:if="$item->hasSlides" title="{_messages.label.slides}" class="lighter"><i class="fas fa-images"></i></span>
-	<span n:if="$item->videoHref" title="{_messages.label.videorecording}" class="lighter"><i class="fas fa-video"></i></span>
+	<span n:if="$item->hasSlides" title="{_messages.label.slides}" class="lighter"><i class="fas fa-fw fa-images"></i></span>
+	<span n:if="$item->videoHref" title="{_messages.label.videorecording}" class="lighter"><i class="fas fa-fw fa-video"></i></span>
 	<small>(<a n:href="slides $item->talkId">upravit slajdy</a>)</small>
 	</li>
 {/define}

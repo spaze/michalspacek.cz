@@ -1,8 +1,8 @@
 {define #itemInterview}
 	<li><a n:href="Interviews:interview $item->interviewId">{$item->title}</a>
 	<small><strong class="date">{$item->date|localeDay}</strong>, {$item->sourceName}</small>
-	<span n:if="$item->audioHref" title="{_messages.label.audiorecording}" class="lighter"><i class="fas fa-microphone"></i></span>
-	<span n:if="$item->videoHref" title="{_messages.label.videorecording}" class="lighter"><i class="fas fa-video"></i></span>
+	<span n:if="$item->audioHref" title="{_messages.label.audiorecording}" class="lighter"><i class="fas fa-fw fa-microphone"></i></span>
+	<span n:if="$item->videoHref" title="{_messages.label.videorecording}" class="lighter"><i class="fas fa-fw fa-video"></i></span>
 	</li>
 {/define}
 

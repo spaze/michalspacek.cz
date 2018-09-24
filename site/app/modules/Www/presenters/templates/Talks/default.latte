@@ -5,8 +5,8 @@
 {define #itemTalk}
 	<a n:href="Talks:talk $talk->action" n:tag-if="$talk->action"><strong>{$talk->title}</strong></a><br />
 	<small><strong class="date">{$talk->date|localeDay}</strong>, {$talk->event}{if $talk->duration} ({_messages.talks.durationshort|format:$talk->duration}){/if}</small>
-	<span n:if="$talk->hasSlides" title="{_messages.label.slides}" class="lighter"><i class="fas fa-images"></i></span>
-	<span n:if="$talk->videoHref" title="{_messages.label.videorecording}" class="lighter"><i class="fas fa-video"></i></span>
+	<span n:if="$talk->hasSlides" title="{_messages.label.slides}" class="lighter"><i class="fas fa-fw fa-images"></i></span>
+	<span n:if="$talk->videoHref" title="{_messages.label.videorecording}" class="lighter"><i class="fas fa-fw fa-video"></i></span>
 {/define}
 
 {define #content}
