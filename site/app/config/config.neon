@@ -48,7 +48,8 @@ subresourceIntegrity:
 		upckeys: /i/js/upckeys.js
 		openpgp: /i/js/openpgp.min.js
 		pulse: /i/js/pulse.js
-		fontawesome: /i/js/fontawesome/all.min.js
+		fontawesome-js: /i/fontawesome/js/all.min.js
+		fontawesome-css: /i/fontawesome/css/svg-with-js.min.css
 		slideslive-embed: /i/js/slideslive-embed.js
 		screen-main: /i/css/screen.css
 		screen-upc: /i/css/upc/screen.css

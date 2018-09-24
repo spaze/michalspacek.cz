@@ -16,13 +16,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Michal Špaček</title>
 	{stylesheet screen-main}
+	{stylesheet fontawesome-css}
 	{ifset #preload}{include #preload}{/ifset}
 	{ifset #scriptsReplace}
 		{include #scriptsReplace}
 	{else}
 		{script jquery+scripts async, defer}
 		{script netteForms async, defer}
-		{script fontawesome async, defer}
+		{script fontawesome-js async, defer, data-auto-add-css => 'false'}
 	{/ifset}
 	{ifset #scripts}{include #scripts}{/ifset}
 	{ifset #styles}{include #styles}{/ifset}
