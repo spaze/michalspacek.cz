@@ -135,7 +135,7 @@ webperformance:
 		- HTML, CSS - rychlost stránek u klienta
 		- JavaScript - rychlost operací, práce s pamětí
 		- PHP - akcelerátory, efektivita kódu
-		- MySQL - práce s databází //(více na školení "Konfigurace a výkonnost MySQL":http://php.vrana.cz/skoleni-konfigurace-a-vykonnost-mysql.php Antonína Faltýnka) .[small]//
+		- MySQL - práce s databází //(více na školení "Konfigurace a výkonnost MySQL":https://php.vrana.cz/skoleni-konfigurace-a-vykonnost-mysql.php Antonína Faltýnka) .[small]//
 
 		Společné koncepty:
 		- Cache - databáze, disk, paměť

@@ -40,7 +40,7 @@ class PhotoPresenter extends BasePresenter
 			array(
 				'header' => $this->translator->translate('messages.photo.lecturer.header'),
 				'file' => 'michalspacek-codecamp2015-400x268.jpg',
-				'desc' => $this->texyFormatter->translate('messages.photo.lecturer.desc', ['http://codecamp.cz/', 'http://galerie.fotohavlin.cz/']),
+				'desc' => $this->texyFormatter->translate('messages.photo.lecturer.desc', ['http://codecamp.cz/', 'https://galerie.fotohavlin.cz/']),
 				'sizes' => array(
 					'400×268' => 'michalspacek-codecamp2015-400x268.jpg',
 					'800×536' => 'michalspacek-codecamp2015-800x536.jpg',
