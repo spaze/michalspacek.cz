@@ -66,7 +66,7 @@
 	<div class="clear"></div>
 </div>
 </div>
-<div id="header-links">
+<div n:if="!isset($headerLinks) || $headerLinks !== false" id="header-links">
 	<div n:class="container, $containerExtraClass">
 		<a n:foreach="$localeLinks as $language => $url" href="{$url}" lang="{_"html.langs.$language"}"><small><span class="lighter"><i class="fas fa-fw fa-language"></i></span> {_"messages.langs.$language"}</small></a>
 		<a n:href=":UpcKeys:Homepage:" title="{_messages.label.upckeys}"><small><span class="lighter"><i class="fas fa-fw fa-wifi"></i></span> {_messages.label.upckeys}</small></a>
