@@ -370,7 +370,12 @@ div.notice {
 	width: 1.25em;
 	text-align: center;
 }
-.fa-fw::before { content: "\2022"; }
+.fa-fw::before {
+	content: "\2022";
+	font-size: 200%;
+	vertical-align: text-bottom;
+	line-height: 50%;
+}
 @media print {
 	img { max-width: 75%; }
 	.print { display: block; }
