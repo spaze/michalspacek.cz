@@ -26,12 +26,12 @@ class Talk extends ProtectedForm
 		parent::__construct($parent, $name);
 		$this->talks = $talks;
 
-		$talks = array();
+		$allTalks = array();
 		foreach ($this->talks->getAll() as $talk) {
 			if ($talkAction !== $talk->action) {
 				$title = \Latte\Runtime\Filters::truncate($talk->titleTexy, 40);
 				$event = \Latte\Runtime\Filters::truncate($talk->event, 30);
-				$talks[$talk->action] = sprintf('%s (%s, %s)', $title, $talk->date->format('j. n. Y'), $event);
+				$allTalks[$talk->talkId] = sprintf('%s (%s, %s)', $title, $talk->date->format('j. n. Y'), $event);
 			}
 		}
 
@@ -50,8 +50,8 @@ class Talk extends ProtectedForm
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na přednášku je %d znaků', 200);
 		$this->addText('duration', 'Délka:')
 			->setType('number');
-		$this->addSelect('origSlides', 'Odkázat na slajdy z:', $talks)
-			->setPrompt('Vyberte prosím přednášku, na kterou se odkáže');
+		$this->addSelect('slidesTalk', 'Použít slajdy z:', $allTalks)
+			->setPrompt('Vyberte prosím přednášku, ze které se použijí slajdy');
 		$this->addText('slidesHref', 'Odkaz na slajdy:')
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na slajdy je %d znaků', 200);
@@ -79,7 +79,7 @@ class Talk extends ProtectedForm
 		$this->addTextArea('favorite', 'Popis pro oblíbené:')
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka popisu pro oblíbené je %d znaků', 65535);
-		$this->addSelect('supersededBy', 'Nahrazeno přednáškou:', $talks)
+		$this->addSelect('supersededBy', 'Nahrazeno přednáškou:', $allTalks)
 			->setPrompt('Vyberte prosím přednášku, kterou se tato nahradí');
 		$this->addCheckbox('publishSlides', 'Publikovat slajdy:');
 
@@ -96,7 +96,7 @@ class Talk extends ProtectedForm
 			'date' => $talk->date->format('Y-m-d H:i'),
 			'href' => $talk->href,
 			'duration' => $talk->duration,
-			'origSlides' => $talk->origAction,
+			'slidesTalk' => $talk->slidesTalkId,
 			'slidesHref' => $talk->slidesHref,
 			'slidesEmbed' => $talk->slidesEmbed,
 			'videoHref' => $talk->videoHref,
@@ -106,7 +106,7 @@ class Talk extends ProtectedForm
 			'ogImage' => $talk->ogImage,
 			'transcript' => $talk->transcriptTexy,
 			'favorite' => $talk->favorite,
-			'supersededBy' => $talk->supersededByAction,
+			'supersededBy' => $talk->supersededById,
 			'publishSlides' => $talk->publishSlides,
 		);
 		$this->setDefaults($values);

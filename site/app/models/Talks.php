@@ -134,8 +134,7 @@ class Talks
 				t.date,
 				t.duration,
 				t.href,
-				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = t.id_talk) AS hasSlides,
-				t.slides_href,
+				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
 				t.video_href AS videoHref,
 				t.event,
 				t.event AS eventTexy,
@@ -184,8 +183,7 @@ class Talks
 				t.date,
 				t.duration,
 				t.href,
-				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = t.id_talk) AS hasSlides,
-				t.slides_href,
+				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
 				t.video_href AS videoHref,
 				t.event,
 				t.event AS eventTexy,
@@ -233,14 +231,13 @@ class Talks
 				t.transcript,
 				t.transcript AS transcriptTexy,
 				t.favorite,
-				t2.action AS origAction,
-				t2.title AS origTitle,
-				t3.action AS supersededByAction,
-				t3.title AS supersededByTitle,
+				t.key_talk_slides AS slidesTalkId,
+				t.key_superseded_by AS supersededById,
+				ts.action AS supersededByAction,
+				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
-				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
-				LEFT JOIN talks t3 ON t.key_superseded_by = t3.id_talk
+				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.action = ?',
 			$name
 		);
@@ -284,14 +281,13 @@ class Talks
 				t.transcript,
 				t.transcript AS transcriptTexy,
 				t.favorite,
-				t2.action AS origAction,
-				t2.title AS origTitle,
-				t3.action AS supersededByAction,
-				t3.title AS supersededByTitle,
+				t.key_talk_slides AS slidesTalkId,
+				t.key_superseded_by AS supersededById,
+				ts.action AS supersededByAction,
+				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
-				LEFT JOIN talks t2 ON t.key_talk_slides = t2.id_talk
-				LEFT JOIN talks t3 ON t.key_superseded_by = t3.id_talk
+				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.id_talk = ?',
 			$id
 		);
@@ -382,7 +378,7 @@ class Talks
 	 * @param string $date
 	 * @param integer|null $duration
 	 * @param string|null $href
-	 * @param string|null $origSlides
+	 * @param integer|null $slidesTalk
 	 * @param string|null $slidesHref
 	 * @param string|null $slidesEmbed
 	 * @param string|null $videoHref
@@ -392,10 +388,10 @@ class Talks
 	 * @param string|null $ogImage
 	 * @param string|null $transcript
 	 * @param string|null $favorite
-	 * @param string|null $supersededBy
+	 * @param integer|null $supersededBy
 	 * @param boolean $publishSlides
 	 */
-	public function update(int $id, ?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?string $origSlides, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?string $supersededBy, bool $publishSlides): void
+	public function update(int $id, ?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?int $slidesTalk, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?int $supersededBy, bool $publishSlides): void
 	{
 		$this->database->query(
 			'UPDATE talks SET ? WHERE id_talk = ?',
@@ -406,7 +402,7 @@ class Talks
 				'date' => new \DateTime($date),
 				'duration' => (empty($duration) ? null : $duration),
 				'href' => (empty($href) ? null : $href),
-				'key_talk_slides' => (empty($origSlides) ? null : $this->get($origSlides)->talkId),
+				'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
 				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
 				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
@@ -416,7 +412,7 @@ class Talks
 				'og_image' => (empty($ogImage) ? null : $ogImage),
 				'transcript' => (empty($transcript) ? null : $transcript),
 				'favorite' => (empty($favorite) ? null : $favorite),
-				'key_superseded_by' => (empty($supersededBy) ? null : $this->get($supersededBy)->talkId),
+				'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
 				'publish_slides' => $publishSlides,
 			),
 			$id
@@ -433,7 +429,7 @@ class Talks
 	 * @param string $date
 	 * @param integer|null $duration
 	 * @param string|null $href
-	 * @param string|null $origSlides
+	 * @param integer|null $slidesTalk
 	 * @param string|null $slidesHref
 	 * @param string|null $slidesEmbed
 	 * @param string|null $videoHref
@@ -443,10 +439,10 @@ class Talks
 	 * @param string|null $ogImage
 	 * @param string|null $transcript
 	 * @param string|null $favorite
-	 * @param string|null $supersededBy
+	 * @param integer|null $supersededBy
 	 * @param boolean $publishSlides
 	 */
-	public function add(?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?string $origSlides, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?string $supersededBy, bool $publishSlides): void
+	public function add(?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?int $slidesTalk, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?int $supersededBy, bool $publishSlides): void
 	{
 		$this->database->query(
 			'INSERT INTO talks',
@@ -457,7 +453,7 @@ class Talks
 				'date' => new \DateTime($date),
 				'duration' => (empty($duration) ? null : $duration),
 				'href' => (empty($href) ? null : $href),
-				'key_talk_slides' => (empty($origSlides) ? null : $this->get($origSlides)->talkId),
+				'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
 				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
 				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
@@ -467,7 +463,7 @@ class Talks
 				'og_image' => (empty($ogImage) ? null : $ogImage),
 				'transcript' => (empty($transcript) ? null : $transcript),
 				'favorite' => (empty($favorite) ? null : $favorite),
-				'key_superseded_by' => (empty($supersededBy) ? null : $this->get($supersededBy)->talkId),
+				'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
 				'publish_slides' => $publishSlides,
 			)
 		);

@@ -203,7 +203,6 @@ talks:
 		noupcoming: "…třeba na vaší akci nebo konferenci, \"napište mi\":[%s]!"
 	wastalking: "…\"v kině\":[%s], \"v kasínu v Las Vegas\":[%s] (a \"zas\":[%s] a \"znovu\":[%s] a \"ještě jednou\":[%s]), \"v bývalém atomovém krytu\":[%s] v Praze, v hospodách, na konferencích, česky i anglicky."
 	more: "…a další na \"SlideShare\":[%s] nebo \"Speaker Deck\":[%s]"
-	slidesorigin: "Slajdy najdete u podobné přednášky \"%s\":[%s]"
 	detail: "Detail přednášky"
 	detailevent: "Detail přednášky na webu akce"
 	dateevent: "Datum a akce"

@@ -68,12 +68,28 @@ class TalksPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param string $name
+	 * @param string|null $slide
+	 * @throws \Nette\Application\BadRequestException
+	 * @throws \Nette\Application\UI\InvalidLinkException
+	 */
 	public function actionTalk(string $name, ?string $slide = null): void
 	{
 		try {
 			$talk = $this->talks->get($name);
-			$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
-			$slides = ($talk->publishSlides ? $this->talks->getSlides($talk->talkId) : []);
+			if ($talk->slidesTalkId) {
+				$slidesTalk = $this->talks->getById($talk->slidesTalkId);
+				$slides = ($slidesTalk->publishSlides ? $this->talks->getSlides($talk->slidesTalkId) : []);
+				$slideNo = $this->talks->getSlideNo($talk->slidesTalkId, $slide);
+				$this->template->canonicalLink = $this->linkGenerator->link('Www:Talks:talk', [$slidesTalk->action]);
+			} else {
+				$slides = ($talk->publishSlides ? $this->talks->getSlides($talk->talkId) : []);
+				$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
+				if ($slideNo !== null) {
+					$this->template->canonicalLink = $this->linkGenerator->link('Www:Talks:talk', [$talk->action]);
+				}
+			}
 		} catch (\RuntimeException $e) {
 			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
@@ -82,18 +98,12 @@ class TalksPresenter extends BasePresenter
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.supersededby', [$talk->supersededByTitle, "link:Www:Talks:talk {$talk->supersededByAction}"]));
 		}
 
-		if ($talk->origAction) {
-			$this->flashMessage($this->texyFormatter->translate('messages.talks.slidesorigin', [$talk->origTitle, "link:Www:Talks:talk {$talk->origAction}"]), 'notice');
-		}
-
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $talk);
 		$this->template->pageHeader = $talk->title;
 		$this->template->talk = $talk;
 		$this->template->slideNo = $slideNo;
 		$this->template->slides = $slides;
-		$this->template->canonicalLink = ($slideNo !== null ? $this->linkGenerator->link('Www:Talks:talk', [$talk->action]) : null);
 		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($talk->ogImage !== null ? sprintf($talk->ogImage, $slideNo ?? 1) : null));
-
 		$this->template->slidesHref = $talk->slidesHref;
 		foreach ($this->embed->getSlidesTemplateVars($talk, $slideNo) as $key => $value) {
 			$this->template->$key = $value;
