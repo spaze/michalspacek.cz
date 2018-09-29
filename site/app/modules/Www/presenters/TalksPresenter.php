@@ -104,12 +104,9 @@ class TalksPresenter extends BasePresenter
 		$this->template->slideNo = $slideNo;
 		$this->template->slides = $slides;
 		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($talk->ogImage !== null ? sprintf($talk->ogImage, $slideNo ?? 1) : null));
-		$this->template->slidesHref = $talk->slidesHref;
 		foreach ($this->embed->getSlidesTemplateVars($talk, $slideNo) as $key => $value) {
 			$this->template->$key = $value;
 		}
-
-		$this->template->videoHref = $talk->videoHref;
 		foreach ($this->embed->getVideoTemplateVars($talk) as $key => $value) {
 			$this->template->$key = $value;
 		}

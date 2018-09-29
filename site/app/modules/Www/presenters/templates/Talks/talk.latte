@@ -9,14 +9,14 @@
 <p class="print">{_messages.talks.onlineversion|format:"link:Www:Talks:talk $talk->action"}</p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {import "../embed.latte"}
-{if $slidesHref}
+{if $talk->slidesHref}
 	<p id="{_html.id.slides}"></p>
 	{include #embedSlides}
-	<p><small><span title="{_messages.label.slides}" class="lighter"><i class="fas fa-fw fa-images"></i></span> <a href="{$slidesHref}">{$slidesHref}</a></small></p>
+	<p><small><span title="{_messages.label.slides}" class="lighter"><i class="fas fa-fw fa-images"></i></span> <a href="{$talk->slidesHref}">{$talk->slidesHref}</a></small></p>
 
-	<p n:if="$videoHref" id="{_html.id.recording}"></p>
+	<p n:if="$talk->videoHref" id="{_html.id.recording}"></p>
 	{include #embedVideo}
-	<p n:if="$videoHref"><small><span title="{_messages.label.recording}" class="lighter"><i class="fas fa-fw fa-video"></i></span> <a href="{$videoHref}">{$videoHref}</a></small></p>
+	<p n:if="$talk->videoHref"><small><span title="{_messages.label.recording}" class="lighter"><i class="fas fa-fw fa-video"></i></span> <a href="{$talk->videoHref}">{$talk->videoHref}</a></small></p>
 {/if}
 
 <h2 n:if="$talk->description || $talk->href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
@@ -26,10 +26,10 @@
 <h2 id="{_html.id.eventdate}">{_messages.talks.dateevent}</h2>
 <p>
 	<span class="date">{$talk->date|localeDay}</span>, <a href="{$talk->eventHref}" n:tag-if="$talk->eventHref">{$talk->event}</a>
-	<small n:if="$talk->duration || $slides || $videoHref">({if $talk->duration}{_messages.talks.duration|format:$talk->duration}{if $slides || $videoHref}, {/if}{/if}{if $slides}<a href="#{_html.id.slides}">{_messages.talks.slidescount, count($slides)}</a>{if $videoHref}, {/if}{/if}{if $videoHref}<a href="#{_html.id.recording}">{_messages.label.lowercasevideo}</a>{/if})</small>
+	<small n:if="$talk->duration || $slides || $talk->videoHref">({if $talk->duration}{_messages.talks.duration|format:$talk->duration}{if $slides || $talk->videoHref}, {/if}{/if}{if $slides}<a href="#{_html.id.slides}">{_messages.talks.slidescount, count($slides)}</a>{if $talk->videoHref}, {/if}{/if}{if $talk->videoHref}<a href="#{_html.id.recording}">{_messages.label.lowercasevideo}</a>{/if})</small>
 </p>
 
-{if !$slidesHref}
+{if !$talk->slidesHref}
 	<div n:if="$slides" id="slides-container">
 	<h2 id="{_html.id.slides}">{_messages.label.slides}</h2>
 	{foreach $slides as $slide}
@@ -43,10 +43,10 @@
 	{/foreach}
 	</div>
 
-	{if $videoHref}
+	{if $talk->videoHref}
 		<h2 id="{_html.id.recording}">{_messages.label.videorecording}</h2>
 		{include #embedVideo}
-		<p><small><span title="{_messages.label.recording}" class="lighter"><i class="fas fa-fw fa-video"></i></span> <a href="{$videoHref}">{$videoHref}</a></small></p>
+		<p><small><span title="{_messages.label.recording}" class="lighter"><i class="fas fa-fw fa-video"></i></span> <a href="{$talk->videoHref}">{$talk->videoHref}</a></small></p>
 	{/if}
 {elseif $talk->transcript}
 	<hr>
