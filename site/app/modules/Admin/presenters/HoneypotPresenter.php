@@ -19,13 +19,13 @@ class HoneypotPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	protected function createComponentSignIn($formName)
 	{
-		$form = new \MichalSpacekCz\Form\SignIn($this, $formName);
+		$form = new \MichalSpacekCz\Form\SignInHoneypot($this, $formName);
 		$form->onSuccess[] = [$this, 'submittedSignIn'];
 		return $form;
 	}
 
 
-	public function submittedSignIn(\MichalSpacekCz\Form\SignIn $form, $values)
+	public function submittedSignIn(\MichalSpacekCz\Form\SignInHoneypot $form, $values)
 	{
 		\Tracy\Debugger::log("Sign-in attempt: {$values->username}, {$values->password}, {$this->getHttpRequest()->getRemoteAddress()}", 'honeypot');
 		$form->addError('Špatné uživatelské jméno nebo heslo');

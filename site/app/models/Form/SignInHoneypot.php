@@ -1,13 +1,15 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
- * Sign-in form.
+ * Sign-in form with no CSRF protection.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class SignIn extends ProtectedForm
+class SignInHoneypot extends UnprotectedForm
 {
 
 	use Controls\SignIn;
