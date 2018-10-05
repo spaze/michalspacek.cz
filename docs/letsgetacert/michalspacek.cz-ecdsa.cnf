@@ -1,3 +1,0 @@
-source /srv/www/michalspacek.cz/docs/letsgetacert/michalspacek.cz.cnf
-PRIVKEY=/etc/nginx/certs/$CN.privkey-ecdsa.pem
-EXT=ecdsa
