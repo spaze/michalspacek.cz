@@ -93,11 +93,13 @@ class Certificates
 			ORDER BY cr.cn, cr.ext';
 		$certificates = $this->database->fetchAll($query);
 
-		foreach ($certificates as $certificate) {
+		foreach ($certificates as $key => $certificate) {
 			$certificate->expired = $certificate->notAfter < $now;
 			$certificate->expiryDays = $certificate->notAfter->diff($now)->days;
 			$certificate->expiringSoon = !$certificate->expired && $certificate->expiryDays < $this->expiringThreshold;
-			$certificate->hidden = ($certificate->expired && $certificate->expiryDays > $this->hideExpiredAfter);
+			if ($certificate->expired && $certificate->expiryDays > $this->hideExpiredAfter) {
+				unset($certificates[$key]);
+			}
 		}
 
 		return $certificates;

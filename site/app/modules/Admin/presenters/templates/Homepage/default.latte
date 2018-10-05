@@ -13,7 +13,7 @@
 	<tr><td></td><td></td><th><small>Certifikát</small></th><th><small>Expirace</small></th></tr>
 </thead>
 <tbody>
-<tr n:foreach="$certificates as $cert" n:if="!$cert->hidden">
+<tr n:foreach="$certificates as $cert">
 	<td><small>{$iterator->getCounter()}.</small></td>
 	<td><small title="{if $cert->expired}Expiroval{else}Funkční{/if}" n:class="$cert->expired ? error">{if $cert->expired}&#x2716;{else}&#x2714;{/if}</small></td>
 	<td><strong n:tag-if="$cert->expiringSoon || $cert->expired" n:class="$cert->expired ? error">{$cert->cn}<small n:if="$cert->ext">-{$cert->ext}</small></strong></td>
