@@ -19,7 +19,7 @@ class SignInHoneypot extends UnprotectedForm
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name)
 	{
 		parent::__construct($parent, $name);
 		$this->addSignIn($this);
