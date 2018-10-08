@@ -6,7 +6,7 @@
 <meta name="twitter:site" content="@spazef0rze">
 {/define}
 {define #content}
-<p class="print">{_messages.talks.onlineversion|format:"link:Www:Talks:talk $talk->action"}</p>
+<p class="print"><strong>{_messages.talks.onlineversion|format:"link:Www:Talks:talk $talk->action"}</strong></p>
 <div n:if="$talk->supersededByAction" class="flash info"><strong>{_messages.talks.supersededby|format:$talk->supersededByTitle,"link:Www:Talks:talk {$talk->supersededByAction}"}</strong></div>
 {import "../embed.latte"}
 {if $talk->slidesHref}

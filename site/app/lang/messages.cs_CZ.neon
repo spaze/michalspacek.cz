@@ -211,7 +211,7 @@ talks:
 	durationshort: "%s minut"
 	transcript: Přepis poznámek
 	slidescount: "%count% slajd|%count% slajdy|%count% slajdů"
-	onlineversion: "\"Přednáška online\":[%s]"
+	onlineversion: "Podívejte se raději na \"online verzi přednášky\":[%s], slajdy mohly být aktualizovány nebo doplněny."
 	admin:
 		slideadded: "Slajd přidán"
 		duplicatealias: "Pro slajd %s již existuje alias"
