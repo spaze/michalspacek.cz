@@ -23,6 +23,7 @@ contentSecurityPolicy:
 			default-src: "'none'"
 			form-action: "'none'"
 			report-uri: %reporting.contentSecurityPolicy%
+			report-to: default
 		www.*.*:
 			default-src: "'none'"
 			img-src:
@@ -44,6 +45,7 @@ contentSecurityPolicy:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
+			report-to: default
 		www.trainings.training < www.*.*:
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
 		admin.*.* < www.*.*:
@@ -64,6 +66,7 @@ contentSecurityPolicy:
 			upgrade-insecure-requests:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
+			report-to: default
 		webleed.*.* < www.*.*:
 			img-src:
 				- 'blob:'

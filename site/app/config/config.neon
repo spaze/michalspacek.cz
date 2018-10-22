@@ -14,6 +14,7 @@ http:
 		X-Content-Type-Options: nosniff
 		X-XSS-Protection: "1; mode=block; report=https://plz.report-uri.com/r/d/xss/enforce"
 		Referrer-Policy: "no-referrer, strict-origin-when-cross-origin"
+		Report-To: '{"group": "default", "max_age": 31536000, "endpoints": [{"url": "https://plz.report-uri.com/a/d/g"}], "include_subdomains": true}'
 	frames: false
 
 session:
