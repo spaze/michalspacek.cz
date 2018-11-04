@@ -68,6 +68,7 @@ label:
 	myarticles: Píšu články
 	allarticles: Všechny články
 	articlesbytag: "Články se značkou \"%s\""
+	tags: Téma
 	mytalks: Přednáším
 	upcomingtalks: Budu přednášet
 	pasttalks: Přednášel jsem

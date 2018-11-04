@@ -1,0 +1,11 @@
+{define #menu}
+	&raquo; <a n:href="Homepage:">Michal Špaček</a>
+{/define}
+
+{define #content}
+<dl n:foreach="$allTags as $label => $tags">
+	<dt><strong>{$label}</strong></dt>
+	<dd n:inner-foreach="$tags as $slug => $tag"><a n:href="tag $slug">{$tag}</a>{sep}, {/sep}</dd>
+</dl>
+<p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
+{/define}

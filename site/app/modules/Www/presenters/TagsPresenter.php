@@ -18,16 +18,31 @@ class TagsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
+	/** @var \MichalSpacekCz\Strings */
+	protected $strings;
+
 
 	/**
 	 * @param \MichalSpacekCz\Articles $articles
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 */
-	public function __construct(\MichalSpacekCz\Articles $articles, \MichalSpacekCz\Formatter\Texy $texyFormatter)
+	public function __construct(\MichalSpacekCz\Articles $articles, \MichalSpacekCz\Strings $strings, \MichalSpacekCz\Formatter\Texy $texyFormatter)
 	{
 		$this->articles = $articles;
+		$this->strings = $strings;
 		$this->texyFormatter = $texyFormatter;
 		parent::__construct();
+	}
+
+
+	public function actionDefault(): void
+	{
+		$this->template->pageTitle = $this->translator->translate('messages.label.tags');
+		$tags = [];
+		foreach ($this->articles->getAllTags() as $slug => $tag) {
+			$tags[$this->strings->getInitialLetterUppercase($tag)][$slug] = $tag;
+		}
+		$this->template->allTags = $tags;
 	}
 
 

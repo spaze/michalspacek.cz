@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use Collator;
 use Nette\Utils\Json;
 
 /**
@@ -134,6 +135,41 @@ class Articles
 
 		$articles = $this->database->fetchAll($query, Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
 		return $this->enrichArticles($articles);
+	}
+
+
+	/**
+	 * Get all tags.
+	 *
+	 * @return string[]
+	 */
+	public function getAllTags(): array
+	{
+		$query = 'SELECT DISTINCT
+					bp.tags,
+					bp.slug_tags AS slugTags,
+					bp.published
+				FROM blog_posts bp
+				LEFT JOIN blog_post_locales l
+					ON l.id_blog_post_locale = bp.key_locale
+				WHERE
+					bp.tags IS NOT NULL
+					AND bp.published <= ?
+					AND l.locale = ?
+			ORDER BY bp.published DESC';
+
+		$result = [];
+		$rows = $this->database->fetchAll($query, new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
+		foreach ($rows as $row) {
+			$tags = Json::decode($row->tags);
+			$slugTags = Json::decode($row->slugTags);
+			foreach ($slugTags as $key => $slugTag) {
+				$result[$slugTag] = $tags[$key];
+			}
+		}
+		$collator = new Collator($this->translator->getDefaultLocale());
+		$collator->asort($result);
+		return $result;
 	}
 
 

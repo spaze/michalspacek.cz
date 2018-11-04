@@ -128,3 +128,4 @@ services:
 			- setExpiringThreshold(%certificatesApi.expiringThreshold%)
 			- setHideExpiredAfter(%certificatesApi.hideExpiredAfter%)
 	exports: \MichalSpacekCz\Exports
+	strings: \MichalSpacekCz\Strings

@@ -68,6 +68,7 @@ label:
 	myarticles: My articles
 	allarticles: All articles
 	articlesbytag: "Articles tagged as \"%s\""
+	tags: Tags
 	mytalks: My talks
 	upcomingtalks: Upcoming talks
 	pasttalks: Talks
