@@ -7,6 +7,7 @@
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Pulse</title>
 	{stylesheet screen-pulse}
 	{script jquery+pulse async, defer}
+	{script remove-fbclid async, defer}
 	{ifset #metas}{include #metas}{/ifset}
 	<meta name="theme-color" content="#E3E3E3">
 	<link rel="icon" href="{='/i/icons/pulse.ico'|staticUrl}">

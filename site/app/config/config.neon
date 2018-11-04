@@ -53,6 +53,7 @@ subresourceIntegrity:
 		fontawesome-js: /i/fontawesome/js/used.min.js
 		fontawesome-css: /i/fontawesome/css/svg-with-js.min.css
 		slideslive-embed: /i/js/slideslive-embed.js
+		remove-fbclid: /i/js/remove-fbclid.js
 		screen-main: /i/css/screen.css
 		screen-upc: /i/css/upc/screen.css
 		screen-pulse: /i/css/pulse/screen.css
