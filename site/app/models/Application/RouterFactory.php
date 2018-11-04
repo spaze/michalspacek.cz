@@ -29,7 +29,6 @@ class RouterFactory
 	 */
 	private const MODULE_ADMIN = 'Admin';
 	private const MODULE_API = 'Api';
-	private const MODULE_BLOG = 'Blog';
 	private const MODULE_HEARTBLEED = 'Webleed';
 	private const MODULE_PULSE = 'Pulse';
 	private const MODULE_UPC = 'UpcKeys';
@@ -37,7 +36,7 @@ class RouterFactory
 
 	private const ROOT_ONLY = '';
 
-	/** @var \MichalSpacekCz\Blog\Post\Loader */
+	/** @var \MichalSpacekCz\Post\Loader */
 	protected $blogPostLoader;
 
 	/** @var \Nette\Localization\ITranslator */
@@ -66,10 +65,10 @@ class RouterFactory
 
 
 	/**
-	 * @param \MichalSpacekCz\Blog\Post\Loader $blogPostLoader
+	 * @param \MichalSpacekCz\Post\Loader $blogPostLoader
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\MichalSpacekCz\Blog\Post\Loader $blogPostLoader, \Nette\Localization\ITranslator $translator)
+	public function __construct(\MichalSpacekCz\Post\Loader $blogPostLoader, \Nette\Localization\ITranslator $translator)
 	{
 		$this->blogPostLoader = $blogPostLoader;
 		$this->translator = $translator;
@@ -162,7 +161,7 @@ class RouterFactory
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<action>[/<param>]', 'Exports', 'default');
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>', 'Venues', 'venue');
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<tags>', 'Tags', 'tag');
-		$this->addRoute(self::MODULE_BLOG, self::HOST_WWW, '<slug>', 'Post', 'default', null, \MichalSpacekCz\Blog\Application\Routers\Route::class);
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '<slug>', 'Post', 'default', null, \MichalSpacekCz\Application\Routers\Route::class);
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 		return $this->router;
 	}
@@ -219,7 +218,7 @@ class RouterFactory
 	private function createRoute(string $class, string $mask, array $metadata): \Nette\Application\IRouter
 	{
 		switch ($class) {
-			case \MichalSpacekCz\Blog\Application\Routers\Route::class:
+			case \MichalSpacekCz\Application\Routers\Route::class:
 				$route = new $class($this->blogPostLoader, $mask, $metadata);
 				break;
 			default:

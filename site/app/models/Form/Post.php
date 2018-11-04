@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Form\Blog;
+namespace MichalSpacekCz\Form;
 
 /**
  * Blog post form.
@@ -14,7 +14,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 	use \MichalSpacekCz\Form\Controls\Date;
 
-	/** @var \MichalSpacekCz\Blog\Post */
+	/** @var \MichalSpacekCz\Post */
 	protected $blogPost;
 
 
@@ -22,7 +22,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, \MichalSpacekCz\Blog\Post $blogPost)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, \MichalSpacekCz\Post $blogPost)
 	{
 		parent::__construct($parent, $name);
 		$this->blogPost = $blogPost;
@@ -80,9 +80,9 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Set post.
-	 * @param \MichalSpacekCz\Blog\Post\Data $post [description]
+	 * @param \MichalSpacekCz\Post\Data $post [description]
 	 */
-	public function setPost(\MichalSpacekCz\Blog\Post\Data $post)
+	public function setPost(\MichalSpacekCz\Post\Data $post)
 	{
 		$values = array(
 			'translationGroup' => $post->translationGroupId,

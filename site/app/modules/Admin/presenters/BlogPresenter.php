@@ -12,22 +12,22 @@ namespace App\AdminModule\Presenters;
 class BlogPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Blog\Post */
+	/** @var \MichalSpacekCz\Post */
 	protected $blogPost;
 
 	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Blog\Post\Data */
+	/** @var \MichalSpacekCz\Post\Data */
 	private $post;
 
 
 	/**
-	 * @param \MichalSpacekCz\Blog\Post $blogPost
+	 * @param \MichalSpacekCz\Post $blogPost
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 */
 	public function __construct(
-		\MichalSpacekCz\Blog\Post $blogPost,
+		\MichalSpacekCz\Post $blogPost,
 		\MichalSpacekCz\Formatter\Texy $texyFormatter
 	)
 	{
@@ -58,26 +58,26 @@ class BlogPresenter extends BasePresenter
 
 	/**
 	 * @param string $formName
-	 * @return \MichalSpacekCz\Form\Blog\Post
+	 * @return \MichalSpacekCz\Form\Post
 	 */
-	protected function createComponentAddPost(string $formName): \MichalSpacekCz\Form\Blog\Post
+	protected function createComponentAddPost(string $formName): \MichalSpacekCz\Form\Post
 	{
-		$form = new \MichalSpacekCz\Form\Blog\Post($this, $formName, $this->blogPost);
+		$form = new \MichalSpacekCz\Form\Post($this, $formName, $this->blogPost);
 		$form->onSuccess[] = [$this, 'submittedAddpost'];
 		return $form;
 	}
 
 
 	/**
-	 * @param \MichalSpacekCz\Form\Blog\Post $form
+	 * @param \MichalSpacekCz\Form\Post $form
 	 * @param \Nette\Utils\ArrayHash $values
 	 * @throws \Nette\Application\AbortException
 	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
-	public function submittedAddPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
+	public function submittedAddPost(\MichalSpacekCz\Form\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
 		try {
-			$post = new \MichalSpacekCz\Blog\Post\Data();
+			$post = new \MichalSpacekCz\Post\Data();
 			$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
 			$post->localeId = $values->locale;
 			$post->locale = $this->blogPost->getLocaleById($values->locale);
@@ -123,11 +123,11 @@ class BlogPresenter extends BasePresenter
 
 	/**
 	 * @param string $formName
-	 * @return \MichalSpacekCz\Form\Blog\Post
+	 * @return \MichalSpacekCz\Form\Post
 	 */
-	protected function createComponentEditPost(string $formName): \MichalSpacekCz\Form\Blog\Post
+	protected function createComponentEditPost(string $formName): \MichalSpacekCz\Form\Post
 	{
-		$form = new \MichalSpacekCz\Form\Blog\Post($this, $formName, $this->blogPost);
+		$form = new \MichalSpacekCz\Form\Post($this, $formName, $this->blogPost);
 		$form->setPost($this->post);
 		$form->onSuccess[] = [$this, 'submittedEditPost'];
 		return $form;
@@ -135,14 +135,14 @@ class BlogPresenter extends BasePresenter
 
 
 	/**
-	 * @param \MichalSpacekCz\Form\Blog\Post $form
+	 * @param \MichalSpacekCz\Form\Post $form
 	 * @param \Nette\Utils\ArrayHash $values
 	 * @throws \Nette\Application\AbortException
 	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
-	public function submittedEditPost(\MichalSpacekCz\Form\Blog\Post $form, \Nette\Utils\ArrayHash $values): void
+	public function submittedEditPost(\MichalSpacekCz\Form\Post $form, \Nette\Utils\ArrayHash $values): void
 	{
-		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post = new \MichalSpacekCz\Post\Data();
 		$post->postId = $this->post->postId;
 		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
 		$post->localeId = $values->locale;
@@ -178,7 +178,7 @@ class BlogPresenter extends BasePresenter
 			throw new \Nette\Application\BadRequestException('Not an AJAX call');
 		}
 		$this->texyFormatter->disableCache();
-		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post = new \MichalSpacekCz\Post\Data();
 		$post->slug = $this->request->getPost('slug');
 		$post->title = $this->request->getPost('title');
 		$post->leadTexy = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));

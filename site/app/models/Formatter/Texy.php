@@ -231,7 +231,7 @@ class Texy extends \Netxten\Formatter\Texy
 		if (strncmp($link->URL, 'blog:', 5) === 0) {
 			$args = explode('#', substr($link->URL, 5));
 			$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
-			$link->URL = $this->application->getPresenter()->link("//:Blog:Post:default{$fragment}", [$args[0]]);
+			$link->URL = $this->application->getPresenter()->link("//:Www:Post:default{$fragment}", [$args[0]]);
 		}
 
 		// "title":[inhouse-training:training]

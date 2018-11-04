@@ -11,6 +11,7 @@ services:
 	- \App\WwwModule\Presenters\HomepagePresenter
 	- \App\WwwModule\Presenters\InterviewsPresenter
 	- \App\WwwModule\Presenters\PhotoPresenter
+	- \App\WwwModule\Presenters\PostPresenter
 	- \App\WwwModule\Presenters\RedirectPresenter
 	- \App\WwwModule\Presenters\TagsPresenter
 	- \App\WwwModule\Presenters\TalksPresenter
@@ -39,9 +40,6 @@ services:
 	- \App\AdminModule\Presenters\DryRunPresenter
 	- \App\AdminModule\Presenters\TrainingsPresenter
 	- \App\AdminModule\Presenters\UserPresenter
-
-	# blog module
-	- \App\BlogModule\Presenters\PostPresenter
 
 	# webleed module
 	- \App\WebleedModule\Presenters\HomepagePresenter

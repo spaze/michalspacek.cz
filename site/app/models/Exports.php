@@ -96,7 +96,7 @@ class Exports
 				if ($updated > $feedUpdated) {
 					$feedUpdated = $updated;
 				}
-				$type = ($article->isBlogPost ? \MichalSpacekCz\Blog\Post::class : \MichalSpacekCz\Articles::class);
+				$type = ($article->isBlogPost ? \MichalSpacekCz\Post::class : \MichalSpacekCz\Articles::class);
 				foreach ($article->slugTags as $slugTag) {
 					$cacheTags["{$type}/tag/{$slugTag}"] = "{$type}/tag/{$slugTag}";
 				}

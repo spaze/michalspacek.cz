@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog\Application\Routers;
+namespace MichalSpacekCz\Application\Routers;
 
 /**
  * The bidirectional route is responsible for mapping
@@ -10,17 +10,17 @@ namespace MichalSpacekCz\Blog\Application\Routers;
 class Route extends \Nette\Application\Routers\Route
 {
 
-	/** @var \MichalSpacekCz\Blog\Post\Loader */
+	/** @var \MichalSpacekCz\Post\Loader */
 	public $blogPostLoader;
 
 
 	/**
-	 * @param \MichalSpacekCz\Blog\Post\Loader $blogPostLoader
+	 * @param \MichalSpacekCz\Post\Loader $blogPostLoader
 	 * @param string $mask
 	 * @param string[] $metadata
 	 * @param integer $flags
 	 */
-	public function __construct(\MichalSpacekCz\Blog\Post\Loader $blogPostLoader, string $mask, array $metadata = [], int $flags = 0)
+	public function __construct(\MichalSpacekCz\Post\Loader $blogPostLoader, string $mask, array $metadata = [], int $flags = 0)
 	{
 		$this->blogPostLoader = $blogPostLoader;
 		parent::__construct($mask, $metadata, $flags);

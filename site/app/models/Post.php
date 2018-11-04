@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog;
+namespace MichalSpacekCz;
 
-use MichalSpacekCz\Blog\Post\Data;
+use MichalSpacekCz\Post\Data;
 use Nette\Caching\Cache;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
@@ -75,12 +75,12 @@ class Post
 	 *
 	 * @param string $post
 	 * @param string $previewKey
-	 * @return \MichalSpacekCz\Blog\Post\Data|null
+	 * @return \MichalSpacekCz\Post\Data|null
 	 */
-	public function get(string $post, ?string $previewKey = null): ?\MichalSpacekCz\Blog\Post\Data
+	public function get(string $post, ?string $previewKey = null): ?\MichalSpacekCz\Post\Data
 	{
 		$result = $this->loader->fetch($post, $previewKey);
-		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post = new \MichalSpacekCz\Post\Data();
 		$post->postId = $result->postId;
 		$post->localeId = $result->localeId;
 		$post->translationGroupId = $result->translationGroupId;
@@ -107,9 +107,9 @@ class Post
 	 * Get post by id.
 	 *
 	 * @param integer $id
-	 * @return \MichalSpacekCz\Blog\Post\Data|null
+	 * @return \MichalSpacekCz\Post\Data|null
 	 */
-	public function getById(int $id): ?\MichalSpacekCz\Blog\Post\Data
+	public function getById(int $id): ?\MichalSpacekCz\Post\Data
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -137,7 +137,7 @@ class Post
 			WHERE bp.id_blog_post = ?',
 			$id
 		);
-		$post = new \MichalSpacekCz\Blog\Post\Data();
+		$post = new \MichalSpacekCz\Post\Data();
 		$post->postId = $result->postId;
 		$post->translationGroupId = $result->translationGroupId;
 		$post->locale = $result->locale;
@@ -162,7 +162,7 @@ class Post
 	/**
 	 * Get all posts.
 	 *
-	 * @return \MichalSpacekCz\Blog\Post\Data[]
+	 * @return \MichalSpacekCz\Post\Data[]
 	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
 	public function getAll(): array
@@ -189,7 +189,7 @@ class Post
 			ORDER BY
 				published, slug';
 		foreach ($this->database->fetchAll($sql) as $row) {
-			$post = new \MichalSpacekCz\Blog\Post\Data();
+			$post = new \MichalSpacekCz\Post\Data();
 			$post->postId = $row->postId;
 			$post->translationGroupId = $row->translationGroupId;
 			$post->locale = $row->locale;
@@ -223,9 +223,9 @@ class Post
 			'preview' => ($post->needsPreviewKey() ? $post->previewKey : null),
 		];
 		if ($post->locale === null || $post->locale === $this->translator->getDefaultLocale()) {
-			$post->href = $this->linkGenerator->link('Blog:Post:', $params);
+			$post->href = $this->linkGenerator->link('Www:Post:', $params);
 		} else {
-			$links = $this->localeLinkGenerator->links('Blog:Post:', $this->localeLinkGenerator->defaultParams($params));
+			$links = $this->localeLinkGenerator->links('Www:Post:', $this->localeLinkGenerator->defaultParams($params));
 			$post->href = $links[$post->locale];
 		}
 	}
@@ -234,10 +234,10 @@ class Post
 	/**
 	 * Format post data.
 	 *
-	 * @param \MichalSpacekCz\Blog\Post\Data $post
-	 * @return \MichalSpacekCz\Blog\Post\Data
+	 * @param \MichalSpacekCz\Post\Data $post
+	 * @return \MichalSpacekCz\Post\Data
 	 */
-	public function format(\MichalSpacekCz\Blog\Post\Data $post): \MichalSpacekCz\Blog\Post\Data
+	public function format(\MichalSpacekCz\Post\Data $post): \MichalSpacekCz\Post\Data
 	{
 		foreach(['title'] as $item) {
 			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'});
@@ -253,9 +253,9 @@ class Post
 	/**
 	 * Add a post.
 	 *
-	 * @param \MichalSpacekCz\Blog\Post\Data $post
+	 * @param \MichalSpacekCz\Post\Data $post
 	 */
-	public function add(\MichalSpacekCz\Blog\Post\Data $post): void
+	public function add(\MichalSpacekCz\Post\Data $post): void
 	{
 		$this->database->beginTransaction();
 		try {
@@ -291,9 +291,9 @@ class Post
 	/**
 	 * Update a post.
 	 *
-	 * @param \MichalSpacekCz\Blog\Post\Data $post
+	 * @param \MichalSpacekCz\Post\Data $post
 	 */
-	public function update(\MichalSpacekCz\Blog\Post\Data $post): void
+	public function update(\MichalSpacekCz\Post\Data $post): void
 	{
 		$this->database->beginTransaction();
 		try {
@@ -396,7 +396,7 @@ class Post
 	 * Get locales and URLs for a blog post.
 	 *
 	 * @param string $slug
-	 * @return \MichalSpacekCz\Blog\Post\Data[]
+	 * @return \MichalSpacekCz\Post\Data[]
 	 * @throws \Nette\Application\UI\InvalidLinkException
 	 */
 	public function getLocaleUrls(string $slug): array
@@ -420,7 +420,7 @@ class Post
 			LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
 			WHERE bp.key_translation_group = (SELECT key_translation_group FROM blog_posts WHERE slug = ?)';
 		foreach ($this->database->fetchAll($sql, $slug) as $row) {
-			$post = new \MichalSpacekCz\Blog\Post\Data();
+			$post = new \MichalSpacekCz\Post\Data();
 			$post->postId = $row->postId;
 			$post->translationGroupId = $row->translationGroupId;
 			$post->locale = $row->locale;

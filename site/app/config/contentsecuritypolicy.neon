@@ -58,7 +58,6 @@ contentSecurityPolicy:
 		admin.talks.slides < www.*.*:
 			img-src:
 				- 'data:'
-		blog.*.* < www.*.*:
 		api.*.*:
 			default-src: "'none'"
 			frame-ancestors: "'none'"

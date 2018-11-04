@@ -119,8 +119,8 @@ services:
 		setup:
 			- setSecretKey(%keyCdn.secretKey%)
 			- setTokenExpiration(%keyCdn.tokenExpiration%)
-	blogPost: \MichalSpacekCz\Blog\Post
-	blogPostLoader: \MichalSpacekCz\Blog\Post\Loader
+	blogPost: \MichalSpacekCz\Post
+	blogPostLoader: \MichalSpacekCz\Post\Loader
 	certificatesApi:
 		class: \MichalSpacekCz\Api\Certificates
 		setup:

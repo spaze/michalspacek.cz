@@ -23,7 +23,7 @@ class Articles
 	/** @var \Nette\Application\LinkGenerator */
 	protected $linkGenerator;
 
-	/** @var \MichalSpacekCz\Blog\Post */
+	/** @var \MichalSpacekCz\Post */
 	protected $blogPost;
 
 	/** @var \Nette\Localization\ITranslator */
@@ -34,14 +34,14 @@ class Articles
 	 * @param \Nette\Database\Context $context
 	 * @param \Netxten\Formatter\Texy $texyFormatter
 	 * @param \Nette\Application\LinkGenerator $linkGenerator
-	 * @param \MichalSpacekCz\Blog\Post $blogPost
+	 * @param \MichalSpacekCz\Post $blogPost
 	 * @param \Kdyby\Translation\Translator|\Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		\Netxten\Formatter\Texy $texyFormatter,
 		\Nette\Application\LinkGenerator $linkGenerator,
-		\MichalSpacekCz\Blog\Post $blogPost,
+		\MichalSpacekCz\Post $blogPost,
 		\Nette\Localization\ITranslator $translator
 	)
 	{
@@ -218,7 +218,7 @@ class Articles
 			if ($article->isBlogPost) {
 				$article->edits = $this->blogPost->getEdits($article->articleId);
 				$article->updated = ($article->edits ? current($article->edits)->editedAt : null);
-				$article->href = $this->linkGenerator->link('Blog:Post:', [$article->href]);
+				$article->href = $this->linkGenerator->link('Www:Post:', [$article->href]);
 				$article->sourceName = $this->translator->translate('messages.title.blog');
 				$article->sourceHref = $this->linkGenerator->link('Www:Articles:');
 			}

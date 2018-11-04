@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace App\BlogModule\Presenters;
+namespace App\WwwModule\Presenters;
 
 /**
  * Post presenter.
@@ -9,9 +9,9 @@ namespace App\BlogModule\Presenters;
  * @author Michal Špaček
  * @package michalspacek.cz
  */
-class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
+class PostPresenter extends BasePresenter
 {
-	/** @var \MichalSpacekCz\Blog\Post */
+	/** @var \MichalSpacekCz\Post */
 	protected $blogPost;
 
 	/** @var \MichalSpacekCz\Training\Dates */
@@ -22,10 +22,10 @@ class PostPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 
 	/**
-	 * @param \MichalSpacekCz\Blog\Post $blogPost
+	 * @param \MichalSpacekCz\Post $blogPost
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 */
-	public function __construct(\MichalSpacekCz\Blog\Post $blogPost, \MichalSpacekCz\Training\Dates $trainingDates)
+	public function __construct(\MichalSpacekCz\Post $blogPost, \MichalSpacekCz\Training\Dates $trainingDates)
 	{
 		$this->blogPost = $blogPost;
 		$this->trainingDates = $trainingDates;

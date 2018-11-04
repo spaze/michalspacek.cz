@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog\Post;
+namespace MichalSpacekCz\Post;
 
 /**
  * Blog post loader service.
