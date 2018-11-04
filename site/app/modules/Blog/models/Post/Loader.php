@@ -73,6 +73,7 @@ class Loader
 					bp.originally AS originallyTexy,
 					bp.og_image AS ogImage,
 					bp.tags,
+					bp.slug_tags AS slugTags,
 					bp.recommended,
 					tct.card AS twitterCard
 				FROM blog_posts bp

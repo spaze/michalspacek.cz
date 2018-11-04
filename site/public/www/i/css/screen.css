@@ -197,6 +197,14 @@ img.noshadow { box-shadow: none; }
 	display: inline-block;
 	margin-right: 1em;
 }
+#header-icons small a {
+	color: #666;
+	text-decoration: none;
+}
+#header-icons small a:hover {
+	color: #444;
+	text-decoration: underline;
+}
 .date { white-space: nowrap; }
 #upsell small::before {
 	content: "💡 ";

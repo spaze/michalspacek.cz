@@ -51,7 +51,7 @@ class Exports
 			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags($filter) : $this->articles->getNearestPublishDate());
 			$dependencies[Cache::EXPIRATION] = ($nearest instanceof \DateTime ? $nearest->modify('+1 minute') : null);
 
-			$title = ($filter ? $this->texyFormatter->translate('messages.feed.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.feed.allarticles'));
+			$title = ($filter ? $this->texyFormatter->translate('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.label.allarticles'));
 			$feed = new Atom\Feed($self, "Michal Špaček: {$title}");
 			$feed->setLinkSelf($self);
 			$feed->setAuthor(new Constructs\Person('Michal Špaček'));

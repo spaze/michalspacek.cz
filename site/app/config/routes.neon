@@ -92,3 +92,7 @@ parameters:
 						articles:
 							cs_CZ: clanky
 							en_US: articles
+				Tags:
+					mask:
+						cs_CZ: tema
+						en_US: tags

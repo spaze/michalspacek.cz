@@ -28,9 +28,6 @@ title:
 	blog: Blog
 	admin:
 		talkslides: "Slajdy z přednášky %s (%s)"
-feed:
-	allarticles: Všechny články
-	articlesbytag: "Články se značkou \"%s\""
 header:
 	who: "Kdo je Michal Špaček?"
 label:
@@ -70,6 +67,7 @@ label:
 	mytrainings: Školím
 	myarticles: Píšu články
 	allarticles: Všechny články
+	articlesbytag: "Články se značkou \"%s\""
 	mytalks: Přednáším
 	upcomingtalks: Budu přednášet
 	pasttalks: Přednášel jsem

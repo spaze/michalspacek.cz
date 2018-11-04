@@ -12,6 +12,7 @@ services:
 	- \App\WwwModule\Presenters\InterviewsPresenter
 	- \App\WwwModule\Presenters\PhotoPresenter
 	- \App\WwwModule\Presenters\RedirectPresenter
+	- \App\WwwModule\Presenters\TagsPresenter
 	- \App\WwwModule\Presenters\TalksPresenter
 	- \App\WwwModule\Presenters\TrainingsPresenter
 	- \App\WwwModule\Presenters\VenuesPresenter

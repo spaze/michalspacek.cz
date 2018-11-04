@@ -94,6 +94,7 @@ class Post
 		$post->originallyTexy = $result->originallyTexy;
 		$post->ogImage = $result->ogImage;
 		$post->tags = ($result->tags !== null ? Json::decode($result->tags) : null);
+		$post->slugTags = ($result->slugTags !== null ? Json::decode($result->slugTags) : null);
 		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
 		$post->twitterCard = $result->twitterCard;
 		$this->enrich($post);

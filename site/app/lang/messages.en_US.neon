@@ -28,9 +28,6 @@ title:
 	blog: Blog
 	admin:
 		talkslides: "Slides from %s (%s)"
-feed:
-	allarticles: All articles
-	articlesbytag: Articles tagges as %s
 header:
 	who: "Who is Michal Špaček?"
 label:
@@ -70,6 +67,7 @@ label:
 	mytrainings: My trainings
 	myarticles: My articles
 	allarticles: All articles
+	articlesbytag: "Articles tagged as \"%s\""
 	mytalks: My talks
 	upcomingtalks: Upcoming talks
 	pasttalks: Talks

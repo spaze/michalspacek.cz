@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use Nette\Utils\Json;
+
 /**
  * Articles model.
  *
@@ -130,8 +132,42 @@ class Articles
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$articles = $this->database->fetchAll($query, \Nette\Utils\Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
+		$articles = $this->database->fetchAll($query, Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
 		return $this->enrichArticles($articles);
+	}
+
+
+	/**
+	 * Get label by tags.
+	 *
+	 * @param string $tags
+	 * @return string|null
+	 */
+	public function getLabelByTags(string $tags): ?string
+	{
+		$query = 'SELECT
+					bp.tags,
+					bp.slug_tags AS slugTags
+				FROM blog_posts bp
+				LEFT JOIN blog_post_locales l
+					ON l.id_blog_post_locale = bp.key_locale
+				WHERE
+					JSON_CONTAINS(bp.slug_tags, ?)
+					AND bp.published <= ?
+					AND l.locale = ?
+			LIMIT 1';
+		$tag = $this->database->fetch($query, Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
+		if ($tag) {
+			$tag->tags = ($tag->tags !== null ? Json::decode($tag->tags) : []);
+			$tag->slugTags = ($tag->slugTags !== null ? Json::decode($tag->slugTags) : []);
+
+			foreach ($tag->slugTags as $key => $slug) {
+				if ($slug === $tags) {
+					return $tag->tags[$key] ?? null;
+				}
+			}
+		}
+		return null;
 	}
 
 
@@ -168,7 +204,7 @@ class Articles
 				AND l.locale = ?
 			ORDER BY bp.published ASC
 			LIMIT 1';
-		return ($this->database->fetchField($query, \Nette\Utils\Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale()) ?: null);
+		return ($this->database->fetchField($query, Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale()) ?: null);
 	}
 
 
@@ -177,7 +213,7 @@ class Articles
 		foreach ($articles as $article) {
 			$article->updated = null;
 			$article->edits = null;
-			$article->slugTags = (isset($article->slugTags) ? \Nette\Utils\Json::decode($article->slugTags) : []);
+			$article->slugTags = (isset($article->slugTags) ? Json::decode($article->slugTags) : []);
 			$article->isBlogPost = ($article->sourceHref === null);
 			if ($article->isBlogPost) {
 				$article->edits = $this->blogPost->getEdits($article->articleId);

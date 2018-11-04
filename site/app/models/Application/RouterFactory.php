@@ -161,6 +161,7 @@ class RouterFactory
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<action>/<token>', 'Redirect', 'default');
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<action>[/<param>]', 'Exports', 'default');
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<name>', 'Venues', 'venue');
+		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '/<tags>', 'Tags', 'tag');
 		$this->addRoute(self::MODULE_BLOG, self::HOST_WWW, '<slug>', 'Post', 'default', null, \MichalSpacekCz\Blog\Application\Routers\Route::class);
 		$this->addRoute(self::MODULE_WWW, self::HOST_WWW, '<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 		return $this->router;

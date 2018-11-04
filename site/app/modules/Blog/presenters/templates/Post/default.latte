@@ -17,7 +17,10 @@
 		{else}
 			<i class="fas fa-fw fa-tags"></i>
 		{/if}
-		</span> <small>{$post->tags|implode:', '}</small>
+		</span>
+		<small>
+			{foreach $post->tags as $key => $tag}<a n:href=":Www:Tags:tag $post->slugTags[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
+		</small>
 	{/if}
 </p>
 <em n:if="$post->lead">{$post->lead}</em>
