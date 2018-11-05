@@ -1,0 +1,18 @@
+{
+	"name": "spaze/netxten",
+	"require": {
+		"php": ">= 7.1.0",
+		"ext-intl": "*",
+		"kdyby/translation": "~2.5",
+		"nette/application": "~2.3",
+		"nette/caching": "~2.3",
+		"nette/utils": "^2.3.10",
+		"nette/forms": "~2.3",
+		"nette/http": "~2.3",
+		"latte/latte": "~2.3",
+		"texy/texy": "~2.8"
+	},
+	"autoload": {
+		"psr-0": {"Netxten": "lib"}
+	}
+}

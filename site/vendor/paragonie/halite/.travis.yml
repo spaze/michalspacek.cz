@@ -1,0 +1,37 @@
+language: php
+sudo: required
+dist: trusty
+php:
+    - "7.2"
+    - "master"
+    - "nightly"
+matrix:
+    fast_finish: true
+    allow_failures:
+        - php: "master"
+        - php: "nightly"
+os:
+    - windows
+    - linux
+before_install:
+    - git clone -b stable https://github.com/jedisct1/libsodium.git
+    - cd libsodium && sudo ./configure && sudo make check && sudo make install && cd ..
+install:
+    - pecl channel-update pecl.php.net
+    - pecl install libsodium
+    - travis_retry composer install --no-interaction
+    - wget -c -nc --retry-connrefused --tries=0 https://github.com/php-coveralls/php-coveralls/releases/download/v2.0.0/php-coveralls.phar
+    - chmod +x php-coveralls.phar
+    - php php-coveralls.phar --version
+script:
+    - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+    - ./vendor/bin/psalm
+after_success:
+    - travis_retry php php-coveralls.phar -v
+before_script:
+    - mkdir -p build/logs
+    - ls -al
+cache:
+    directories:
+        - vendor
+        - $HOME/.cache/composer

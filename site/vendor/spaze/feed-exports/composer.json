@@ -1,0 +1,19 @@
+{
+	"name": "spaze/feed-exports",
+	"description": "Atom feed Response and related objects for Nette framework",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.cz",
+			"email": "mail@michalspacek.cz"
+		}
+	],
+	"require": {
+		"php": "~7.1",
+		"nette/application": "~2.3"
+	},
+	"autoload": {
+		"psr-4": {"Spaze\\Exports\\": "src"}
+	}
+}

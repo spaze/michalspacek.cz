@@ -1,0 +1,27 @@
+{
+	"name": "spaze/sri-macros",
+	"description": "Subresource Integrity macros for Latte template engine",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.cz",
+			"email": "mail@michalspacek.cz"
+		}
+	],
+	"require": {
+		"php": "~7.0",
+		"latte/latte": "^2.4"
+	},
+	"autoload": {
+		"psr-4": {"Spaze\\SubresourceIntegrity\\": "src"}
+	},
+	"require-dev": {
+		"nette/tester": "^2.0",
+		"phpstan/phpstan": "^0.6.4"
+	},
+	"suggest": {
+		"spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
+		"spaze/nonce-generator": "Allows to add nonce attribute to script tags automatically"
+	}
+}

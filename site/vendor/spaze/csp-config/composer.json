@@ -1,0 +1,32 @@
+{
+	"name": "spaze/csp-config",
+	"description": "Build Content Security Policy from a config file",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.cz",
+			"email": "mail@michalspacek.cz"
+		}
+	],
+	"require": {
+		"php": "~7.0",
+		"nette/di": "~2.3"
+	},
+	"autoload": {
+		"psr-4": {"Spaze\\ContentSecurityPolicy\\": "src"}
+	},
+	"autoload-dev": {
+		"files": ["tests/NonceGeneratorMock.php"]
+	},
+	"require-dev": {
+		"nette/tester": "^2.0",
+		"nette/bootstrap": "^2.3",
+		"paragonie/random_compat": "^2.0",
+		"phpstan/phpstan": "^0.6.4"
+	},
+	"suggest": {
+		"spaze/nonce-generator": "Generates nonces to be added to Content Security Policy header, if enabled",
+		"spaze/sri-macros": "For script tags with automatically added nonces, and Subresource Integrity hashes, too"
+	}
+}
