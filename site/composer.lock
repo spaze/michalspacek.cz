@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ebc1cc19e75d2a44263f6b1913ad337b",
+    "content-hash": "45e1187ee9ad73faa74556ebed0b5069",
     "packages": [
         {
             "name": "kdyby/strict-objects",
@@ -1625,7 +1625,7 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
@@ -1673,7 +1673,7 @@
         },
         {
             "name": "spaze/feed-exports",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/feed-exports.git",
@@ -1711,7 +1711,7 @@
         },
         {
             "name": "spaze/netxten",
-            "version": "dev-master",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
@@ -1746,7 +1746,7 @@
         },
         {
             "name": "spaze/nonce-generator",
-            "version": "dev-master",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/nonce-generator.git",
@@ -1793,7 +1793,7 @@
         },
         {
             "name": "spaze/sri-macros",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
@@ -3016,11 +3016,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "spaze/netxten": 20,
-        "spaze/csp-config": 20,
-        "spaze/feed-exports": 20,
-        "spaze/nonce-generator": 20,
-        "spaze/sri-macros": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,

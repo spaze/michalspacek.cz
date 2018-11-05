@@ -15,13 +15,13 @@
 		"latte/latte": "~2.3",
 		"tracy/tracy": "~2.3",
 		"texy/texy": "~2.8",
-		"spaze/netxten": "dev-master",
-		"spaze/csp-config": "dev-master",
-		"spaze/feed-exports": "dev-master",
-		"spaze/nonce-generator": "dev-master",
-		"spaze/sri-macros": "dev-master",
 		"kdyby/translation": "~2.5",
-		"paragonie/halite": "^4"
+		"paragonie/halite": "^4",
+		"spaze/netxten": "^0.8.0",
+		"spaze/csp-config": "^0.1.0",
+		"spaze/feed-exports": "^0.1.0",
+		"spaze/nonce-generator": "^2.0",
+		"spaze/sri-macros": "^0.1.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
