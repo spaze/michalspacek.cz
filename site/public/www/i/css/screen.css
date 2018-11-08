@@ -128,7 +128,7 @@ pre {
 	padding: 1em 0.5em;
 	line-height: 2;
 }
-#footer a { color: #4F4F4F; }
+#footer a { color: #666; }
 #footer .container { max-width: 800px; }
 #footer .container.blog { max-width: 1000px; }
 #footer .container.admin { max-width: 1180px; }
@@ -197,19 +197,15 @@ img.noshadow { box-shadow: none; }
 	display: inline-block;
 	margin-right: 1em;
 }
-#header-icons small a {
+#header-icons small a, #footer-links a {
 	color: #666;
 	text-decoration: none;
 }
-#header-icons small a:hover {
+#header-icons small a:hover, #footer-links a:hover {
 	color: #444;
 	text-decoration: underline;
 }
 .date { white-space: nowrap; }
-#upsell small::before {
-	content: "💡 ";
-	filter: grayscale(1);
-}
 #menu {
 	font-size: 85%;
 	text-align: left;
