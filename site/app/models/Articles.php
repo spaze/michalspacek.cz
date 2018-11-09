@@ -18,7 +18,7 @@ class Articles
 	/** @var \Nette\Database\Context */
 	protected $database;
 
-	/** @var \Netxten\Formatter\Texy */
+	/** @var \MichalSpacekCz\Formatter\Texy */
 	protected $texyFormatter;
 
 	/** @var \Nette\Application\LinkGenerator */
@@ -33,14 +33,14 @@ class Articles
 
 	/**
 	 * @param \Nette\Database\Context $context
-	 * @param \Netxten\Formatter\Texy $texyFormatter
+	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \Nette\Application\LinkGenerator $linkGenerator
 	 * @param \MichalSpacekCz\Post $blogPost
 	 * @param \Kdyby\Translation\Translator|\Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,
-		\Netxten\Formatter\Texy $texyFormatter,
+		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\Nette\Application\LinkGenerator $linkGenerator,
 		\MichalSpacekCz\Post $blogPost,
 		\Nette\Localization\ITranslator $translator
@@ -251,14 +251,15 @@ class Articles
 			$article->edits = null;
 			$article->slugTags = (isset($article->slugTags) ? Json::decode($article->slugTags) : []);
 			$article->isBlogPost = ($article->sourceHref === null);
+			$article->title = $this->texyFormatter->format($article->title);
 			if ($article->isBlogPost) {
 				$article->edits = $this->blogPost->getEdits($article->articleId);
 				$article->updated = ($article->edits ? current($article->edits)->editedAt : null);
 				$article->href = $this->linkGenerator->link('Www:Post:', [$article->href]);
 				$article->sourceName = $this->translator->translate('messages.title.blog');
 				$article->sourceHref = $this->linkGenerator->link('Www:Articles:');
+				$this->texyFormatter->setTopHeading(2);
 			}
-			$article->title = $this->texyFormatter->format($article->title);
 			$article->excerpt = $this->texyFormatter->formatBlock($article->excerpt);
 			$article->text = $this->texyFormatter->formatBlock($article->text);
 		}
