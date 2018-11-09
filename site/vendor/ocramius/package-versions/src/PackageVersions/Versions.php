@@ -47,7 +47,7 @@ final class Versions
   'symfony/polyfill-mbstring' => 'v1.10.0@c79c051f5b3a46be09205c73b80b346e4153e494',
   'symfony/translation' => 'v4.1.7@aa04dc1c75b7d3da7bd7003104cd0cfc5dff635c',
   'texy/texy' => 'v2.9.2@1792af01d09307c6480d38dbbacaa3b67c40bc99',
-  'tracy/tracy' => 'v2.5.4@dad70c700a595ed3f278c13491b4aff12efc862d',
+  'tracy/tracy' => 'v2.5.5@35fa649b483b28e16f61de07110ea0585fc8d6ea',
   'composer/xdebug-handler' => '1.3.0@b8e9745fb9b06ea6664d8872c4505fb16df4611c',
   'jean85/pretty-package-versions' => '1.2@75c7effcf3f77501d0e0caa75111aff4daa0dd48',
   'nette/tester' => 'v2.1.0@6b3e881e7c5ffb596a5dc25ab6e4efbbe27eb926',
@@ -59,7 +59,7 @@ final class Versions
   'roave/security-advisories' => 'dev-master@74a42b8d8d9f9cd672be58e7d1c65094da4ae971',
   'symfony/console' => 'v4.1.7@432122af37d8cd52fba1b294b11976e0d20df595',
   'symfony/finder' => 'v4.1.7@1f17195b44543017a9c9b2d437c670627e96ad06',
-  '__root__' => 'dev-master@cc06931611320b55db87370ceb06f5a5e543c5ed',
+  '__root__' => 'dev-master@64f7ed7e77628cd46d1245f38cc5c8cf71867764',
 );
 
     private function __construct()
