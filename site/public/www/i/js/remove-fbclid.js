@@ -5,7 +5,7 @@
 		try {
 			var url = new URL(location);
 			url.searchParams.delete(param);
-			replace = url.pathname + url.search + url.hash;
+			replace = url.href;
 		} catch (ex) {
 			var regExp = new RegExp('[?&]' + param + '=.*$');
 			replace = location.search.replace(regExp, '');
