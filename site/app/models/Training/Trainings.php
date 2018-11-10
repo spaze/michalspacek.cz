@@ -50,9 +50,9 @@ class Trainings
 	 * Get predefined training info.
 	 *
 	 * @param string $name
-	 * @return \Nette\Database\Row
+	 * @return \Nette\Database\Row|null
 	 */
-	public function get($name)
+	public function get($name): ?\Nette\Database\Row
 	{
 		return $this->getTraining($name, false);
 	}
@@ -62,9 +62,9 @@ class Trainings
 	 * Get training info including custom trainings.
 	 *
 	 * @param string $name
-	 * @return \Nette\Database\Row
+	 * @return \Nette\Database\Row|null
 	 */
-	public function getIncludingCustom($name)
+	public function getIncludingCustom($name): ?\Nette\Database\Row
 	{
 		return $this->getTraining($name, true);
 	}

@@ -207,7 +207,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param string $phrase
 	 * @param string $content
 	 * @param \Texy\Modifier $modifier
-	 * @param \Texy\Link $link
+	 * @param \Texy\Link|null $link
 	 * @return \Texy\HtmlElement|string|FALSE
 	 */
 	function phraseHandler($invocation, $phrase, $content, $modifier, $link)

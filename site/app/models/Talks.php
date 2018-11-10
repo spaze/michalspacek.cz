@@ -323,7 +323,7 @@ class Talks
 	/**
 	 * Get favorite talks.
 	 *
-	 * @return \Nette\Database\Row[]
+	 * @return \Nette\Utils\Html[]
 	 */
 	public function getFavorites(): array
 	{

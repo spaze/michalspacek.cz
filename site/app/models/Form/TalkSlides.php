@@ -73,12 +73,12 @@ class TalkSlides extends ProtectedForm
 			->setRequired('Zadejte prosím číslo slajdu');
 		$container->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek');
-		$container->addUpload('replace', 'Nahradit:')
+		$upload = $container->addUpload('replace', 'Nahradit:')
 			->setAttribute('title', 'Nahradit soubor (*.' . implode(', *.', $this->talks->getSupportedImages()) . ')')
 			->setAttribute('accept', implode(',', array_keys($this->talks->getSupportedImages())));
 		$container->addText('filename', 'Soubor:')
 			->setAttribute('class', 'slide-filename')
-			->addConditionOn($container['replace'], self::BLANK)
+			->addConditionOn($upload, self::BLANK)
 				->setRequired('Zadejte prosím soubor');
 		$container->addUpload('replaceAlternative', 'Nahradit:')
 			->setAttribute('title', 'Nahradit alternativní soubor (*.' . implode(', *.', $this->talks->getSupportedAlternativeImages()) . ')')

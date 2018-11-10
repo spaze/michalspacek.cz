@@ -33,7 +33,7 @@ class TrainingMailsOutbox extends ProtectedForm
 					$disabled = !$checked;
 					break;
 			}
-			$applicationIdsContainer->addCheckbox('send')
+			$send = $applicationIdsContainer->addCheckbox('send')
 				->setDefaultValue($checked)
 				->setDisabled($disabled)
 				->setAttribute('class', 'send');
@@ -53,11 +53,11 @@ class TrainingMailsOutbox extends ProtectedForm
 						->setAttribute('placeholder', 'Faktura č.')
 						->setAttribute('title', 'Faktura č.')
 						->setDefaultValue($application->invoiceId)
-						->addConditionOn($applicationIdsContainer['send'], self::FILLED)
+						->addConditionOn($send, self::FILLED)
 							->addRule(self::FILLED, 'Chybí číslo faktury');
 					$applicationIdsContainer->addUpload('invoice')
 						->setAttribute('title', 'Faktura v PDF')
-						->addConditionOn($applicationIdsContainer['send'], self::FILLED)
+						->addConditionOn($send, self::FILLED)
 							->addRule(self::FILLED, 'Chybí faktura')
 							->addRule(self::MIME_TYPE, 'Faktura není v PDF', 'application/pdf');
 					break;

@@ -64,9 +64,10 @@ class EmailsPresenter extends BasePresenter
 	}
 
 
-	public function submittedMails(\MichalSpacekCz\Form\TrainingMailsOutbox $form, $values)
+	public function submittedMails(\MichalSpacekCz\Form\TrainingMailsOutbox $form, \Nette\Utils\ArrayHash $values)
 	{
 		$sent = 0;
+		/** @var \stdClass $data */
 		foreach ($values->applications as $id => $data) {
 			if (empty($data->send) || !isset($this->applications[$id])) {
 				continue;

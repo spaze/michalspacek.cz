@@ -36,7 +36,7 @@ class SecurityHeaders
 	/** @var string */
 	private $actionName;
 
-	/** @var string[] */
+	/** @var array<string|string[]> */
 	private $featurePolicies;
 
 
@@ -73,7 +73,7 @@ class SecurityHeaders
 
 
 	/**
-	 * @param string[] $policies
+	 * @param array<string|string[]> $policies
 	 */
 	public function setFeaturePolicy(array $policies): void
 	{

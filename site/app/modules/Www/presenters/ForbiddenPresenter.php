@@ -8,6 +8,8 @@ namespace App\WwwModule\Presenters;
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
+ *
+ * @property-read \Nette\Bridges\ApplicationLatte\Template|\stdClass $template
  */
 class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 {

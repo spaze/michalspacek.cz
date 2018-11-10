@@ -70,7 +70,7 @@ class Rating
 		self::RATING_F => 'Passwords stored in plaintext, in their original, readable form, or passwords encrypted instead of hashed.',
 	];
 
-	/** @var string[] */
+	/** @var array<string|null> */
 	private $recommendations = [
 		self::RATING_A => null,
 		self::RATING_B => 'Publish storage and hashing info details "visibly":[link:Pulse:PasswordsStorages:Rating#on-site] (e.g. in the docs or FAQ), then let me know.',
