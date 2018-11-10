@@ -29,7 +29,11 @@
 	{ifset #scripts}{include #scripts}{/ifset}
 	{ifset #styles}{include #styles}{/ifset}
 	{ifset #metas}{include #metas}{/ifset}
-	<link rel="canonical" href="{$canonicalLink}" n:ifset="$canonicalLink">
+	{ifset $canonicalLink}
+		<link rel="canonical" href="{$canonicalLink}">
+	{else}
+		<link rel="canonical" n:href="//this">
+	{/ifset}
 	<meta name="theme-color" content="#EEE">
 	<link rel="apple-touch-icon" href="{='michal-spacek.jpg'|staticImageUrl}">
 	<meta property="article:author" content="https://www.facebook.com/spaze">
