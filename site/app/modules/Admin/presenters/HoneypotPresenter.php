@@ -16,7 +16,6 @@ class HoneypotPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	public function actionSignIn(): void
 	{
-		$session = $this->getSession()->start();
 		$this->template->pageTitle = 'Přihlásit se';
 	}
 
