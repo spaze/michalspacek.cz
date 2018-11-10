@@ -23,9 +23,6 @@ class TalksPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Embed */
 	protected $embed;
 
-	/** @var \Nette\Application\LinkGenerator */
-	protected $linkGenerator;
-
 	/** @var \MichalSpacekCz\Templating\Helpers */
 	protected $helpers;
 
@@ -34,21 +31,18 @@ class TalksPresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \MichalSpacekCz\Talks $talks
 	 * @param \MichalSpacekCz\Embed $embed
-	 * @param \Nette\Application\LinkGenerator $linkGenerator
 	 * @param \MichalSpacekCz\Templating\Helpers $helpers
 	 */
 	public function __construct(
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,
 		\MichalSpacekCz\Talks $talks,
 		\MichalSpacekCz\Embed $embed,
-		\Nette\Application\LinkGenerator $linkGenerator,
 		\MichalSpacekCz\Templating\Helpers $helpers
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;
 		$this->embed = $embed;
-		$this->linkGenerator = $linkGenerator;
 		$this->helpers = $helpers;
 		parent::__construct();
 	}
@@ -82,12 +76,12 @@ class TalksPresenter extends BasePresenter
 				$slidesTalk = $this->talks->getById($talk->slidesTalkId);
 				$slides = ($slidesTalk->publishSlides ? $this->talks->getSlides($talk->slidesTalkId) : []);
 				$slideNo = $this->talks->getSlideNo($talk->slidesTalkId, $slide);
-				$this->template->canonicalLink = $this->linkGenerator->link('Www:Talks:talk', [$slidesTalk->action]);
+				$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$slidesTalk->action]);
 			} else {
 				$slides = ($talk->publishSlides ? $this->talks->getSlides($talk->talkId) : []);
 				$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
 				if ($slideNo !== null) {
-					$this->template->canonicalLink = $this->linkGenerator->link('Www:Talks:talk', [$talk->action]);
+					$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$talk->action]);
 				}
 			}
 		} catch (\RuntimeException $e) {
