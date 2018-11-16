@@ -186,6 +186,7 @@ class BlogPresenter extends BasePresenter
 		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
 		$post->published = new \DateTime($this->request->getPost('published'));
 		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->blogPost->tagsToArray($this->request->getPost('tags')));
+		$post->slugTags = (empty($this->request->getPost('tags')) ? null : $this->blogPost->getSlugTags($this->request->getPost('tags')));
 		$post->recommended = (empty($this->request->getPost('recommended')) ? null : \Nette\Utils\Json::decode($this->request->getPost('recommended')));
 		$this->blogPost->enrich($post);
 		$preview = $this->createTemplate();
