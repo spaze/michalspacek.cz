@@ -316,6 +316,7 @@ blog:
 	post:
 		recommendedreading: "Recommended reading"
 		edits: "Updates"
+		edited: "updated"
 	admin:
 		postadded: "Blog post \"%s\" added • \"Edit\":[%s] • \"View\":[%s]"
 		postupdated: "Blog post \"%s\" updated • \"Edit\":[%s] • \"View\":[%s]"

@@ -194,9 +194,8 @@ img.noshadow { box-shadow: none; }
 	.column-content, .column-sidebar { max-width: none; }
 }
 #header-icons { margin-bottom: 1em; }
-#header-icons div:not(:empty) { float: left; }
-#header-icons strong {
-	display: inline-block;
+#header-icons div:not(:empty) {
+	float: left;
 	margin-right: 1em;
 }
 #header-icons small a, #footer-links a {

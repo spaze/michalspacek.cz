@@ -316,6 +316,7 @@ blog:
 	post:
 		recommendedreading: "Mohlo by vás také zajímat"
 		edits: "Aktualizace článku"
+		edited: "aktualizováno"
 	admin:
 		postadded: "Příspěvek \"%s\" přidán • \"Upravit\":[%s] • \"Zobrazit\":[%s]"
 		postupdated: "Příspěvek \"%s\" upraven • \"Upravit\":[%s] • \"Zobrazit\":[%s]"

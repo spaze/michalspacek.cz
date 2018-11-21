@@ -41,6 +41,9 @@ class Post
 	/** @var string[] */
 	private $locales;
 
+	/** @var integer */
+	private $updatedInfoThreshold;
+
 
 	/**
 	 * @param \Nette\Database\Context $context
@@ -67,6 +70,24 @@ class Post
 		$this->linkGenerator = $linkGenerator;
 		$this->localeLinkGenerator = $localeLinkGenerator;
 		$this->translator = $translator;
+	}
+
+
+	/**
+	 * @return integer
+	 */
+	public function getUpdatedInfoThreshold(): int
+	{
+		return $this->updatedInfoThreshold;
+	}
+
+
+	/**
+	 * @param integer $updatedInfoThreshold
+	 */
+	public function setUpdatedInfoThreshold(int $updatedInfoThreshold): void
+	{
+		$this->updatedInfoThreshold = $updatedInfoThreshold;
 	}
 
 

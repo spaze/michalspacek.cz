@@ -48,11 +48,15 @@ class PostPresenter extends BasePresenter
 			}
 			$this->template->robots = 'noindex';
 		}
+		$edits = $this->blogPost->getEdits($post->postId);
 		$this->template->post = $post;
 		$this->template->pageTitle = htmlspecialchars_decode(strip_tags((string)$post->title));
 		$this->template->pageHeader = $post->title;
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
-		$this->template->edits = $this->blogPost->getEdits($post->postId);
+		$this->template->edits = $edits;
+		if ($edits && current($edits)->editedAt->diff($post->published)->days >= $this->blogPost->getUpdatedInfoThreshold()) {
+			$this->template->edited = current($edits)->editedAt;
+		}
 
 		foreach ($this->blogPost->getLocaleUrls($post->slug) as $post) {
 			$this->localeLinkParams[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];

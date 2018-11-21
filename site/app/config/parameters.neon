@@ -47,11 +47,11 @@ parameters:
 				- UAAP
 	keyCdn:
 		tokenExpiration: 120
-
 	certificatesApi:
 		expiringThreshold: 20
 		hideExpiredAfter: 10
-
+	blog:
+		updatedInfoThreshold: 30
 	featurePolicy:
 		accelerometer: none
 		camera: none

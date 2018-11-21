@@ -119,7 +119,10 @@ services:
 		setup:
 			- setSecretKey(%keyCdn.secretKey%)
 			- setTokenExpiration(%keyCdn.tokenExpiration%)
-	blogPost: \MichalSpacekCz\Post
+	blogPost:
+	    class: \MichalSpacekCz\Post
+	    setup:
+	        - setUpdatedInfoThreshold(%blog.updatedInfoThreshold%)
 	blogPostLoader: \MichalSpacekCz\Post\Loader
 	certificatesApi:
 		class: \MichalSpacekCz\Api\Certificates
