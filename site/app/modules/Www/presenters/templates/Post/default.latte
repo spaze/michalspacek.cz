@@ -42,7 +42,7 @@
 <div class="column-sidebar">
 <div class="widget" n:if="$edits">
 <h3>{_messages.blog.post.edits}</h3>
-<p n:foreach="$edits as $edit"><strong>{$edit->editedAt|date:'j.n.'}</strong> {$edit->summary}</p>
+<p n:foreach="$edits as $edit"><strong>{$edit->editedAt|localeDay}</strong> {$edit->summary}</p>
 </div>
 <div class="widget">
 <h3>Michal Špaček</h3>
