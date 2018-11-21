@@ -8,9 +8,11 @@
 {/define}
 
 {define #blogPost}
-<p id="header-icons">
-	<span class="lighter"><i class="fas fa-fw fa-calendar"></i></span> <small><strong>{$post->published|localeDay}</strong></small>
-	{if $post->tags}
+<div id="header-icons">
+	<div>
+		<span class="lighter"><i class="fas fa-fw fa-calendar"></i></span> <small><strong>{$post->published|localeDay}</strong></small>
+	</div>
+	<div n:if="$post->tags">
 		<span class="lighter">
 		{if ($post->tags|count) === 1}
 			<i class="fas fa-fw fa-tag"></i>
@@ -21,8 +23,9 @@
 		<small>
 			{foreach $post->tags as $key => $tag}<a n:href=":Www:Tags:tag $post->slugTags[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
 		</small>
-	{/if}
-</p>
+	</div>
+	<div class="clear"></div>
+</div>
 <em n:if="$post->lead">{$post->lead}</em>
 {$post->text}
 {$post->originally}

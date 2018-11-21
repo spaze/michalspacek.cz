@@ -193,6 +193,8 @@ img.noshadow { box-shadow: none; }
 @media (max-width: 1020px) {
 	.column-content, .column-sidebar { max-width: none; }
 }
+#header-icons { margin-bottom: 1em; }
+#header-icons div:not(:empty) { float: left; }
 #header-icons strong {
 	display: inline-block;
 	margin-right: 1em;
