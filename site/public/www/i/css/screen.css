@@ -91,8 +91,7 @@ pre {
 	margin-bottom: 1em;
 	background-color: #F5F5F5;
 	border-radius: 3px;
-	white-space: pre-wrap;
-	word-break: break-all;
+	overflow-x: auto;
 }
 .button { cursor: pointer; }
 .container {
@@ -191,7 +190,10 @@ img.noshadow { box-shadow: none; }
 }
 .column-sidebar .widget h3 { margin: 1em 0; }
 @media (max-width: 1020px) {
-	.column-content, .column-sidebar { max-width: none; }
+	.column-content, .column-sidebar {
+		max-width: none;
+		float: none;
+	}
 }
 #header-icons { margin-bottom: 1em; }
 #header-icons div:not(:empty) {
