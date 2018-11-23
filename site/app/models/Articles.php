@@ -66,11 +66,12 @@ class Articles
 				a.id_article AS articleId,
 				a.title,
 				a.href,
-				a.date,
+				a.date AS published,
 				a.excerpt,
 				null AS text,
 				s.name AS sourceName,
 				s.href AS sourceHref,
+				null AS tags,
 				null AS slugTags
 			FROM articles a
 				JOIN article_sources s ON a.key_article_source = s.id_article_source
@@ -84,13 +85,14 @@ class Articles
 					bp.text,
 					null,
 					null,
+					bp.tags,
 					bp.slug_tags
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale
 				WHERE bp.published <= ?
 					AND l.locale = ?
-			ORDER BY date DESC';
+			ORDER BY published DESC';
 
 		if ($limit !== null) {
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
@@ -114,11 +116,12 @@ class Articles
 					bp.id_blog_post AS articleId,
 					bp.title,
 					bp.slug AS href,
-					bp.published AS date,
+					bp.published,
 					bp.lead as excerpt,
 					bp.text,
 					null AS sourceName,
 					null AS sourceHref,
+					bp.tags,
 					bp.slug_tags AS slugTags
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
@@ -249,6 +252,7 @@ class Articles
 		foreach ($articles as $article) {
 			$article->updated = null;
 			$article->edits = null;
+			$article->tags = (isset($article->tags) ? Json::decode($article->tags) : []);
 			$article->slugTags = (isset($article->slugTags) ? Json::decode($article->slugTags) : []);
 			$article->isBlogPost = ($article->sourceHref === null);
 			$article->title = $this->texyFormatter->format($article->title);
@@ -256,8 +260,8 @@ class Articles
 				$article->edits = $this->blogPost->getEdits($article->articleId);
 				$article->updated = ($article->edits ? current($article->edits)->editedAt : null);
 				$article->href = $this->linkGenerator->link('Www:Post:', [$article->href]);
-				$article->sourceName = $this->translator->translate('messages.title.blog');
-				$article->sourceHref = $this->linkGenerator->link('Www:Articles:');
+				$article->sourceName = null;
+				$article->sourceHref = null;
 				$this->texyFormatter->setTopHeading(2);
 			}
 			$article->excerpt = $this->texyFormatter->formatBlock($article->excerpt);

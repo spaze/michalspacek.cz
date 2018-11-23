@@ -64,12 +64,12 @@ class Exports
 			$feedUpdated = null;
 			$cacheTags = [];
 			foreach ($articles as $article) {
-				$updated = ($article->updated ?? $article->date);
+				$updated = ($article->updated ?? $article->published);
 				$entry = new Elements\Entry(
 					$article->href,
 					new Constructs\Text((string)$article->title, Constructs\Text::TYPE_HTML),
 					$updated,
-					$article->date
+					$article->published
 				);
 				if ($article->excerpt) {
 					$entry->setSummary(new Constructs\Text(trim((string)$article->excerpt), Constructs\Text::TYPE_HTML));

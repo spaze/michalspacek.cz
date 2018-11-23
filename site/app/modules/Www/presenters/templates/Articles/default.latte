@@ -3,8 +3,9 @@
 {/define}
 
 {define #itemArticle}
+	{import "../../templates/Post/default.latte"}
 	<a href="{$article->href}"><strong>{$article->title}</strong></a>
-	<small>(<span class="date">{$article->date|localeDay}</span>, <a href="{$article->sourceHref}">{$article->sourceName}</a>)</small>
+	{include #headerIcons, post => $article}
 	<div class="indent small">{$article->excerpt} <p>(<a href="{$article->href}">{_messages.articles.readmore}</a>)</p></div>
 {/define}
 

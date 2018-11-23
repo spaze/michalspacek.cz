@@ -6,8 +6,7 @@
 <meta n:if="$post->twitterCard" name="twitter:card" content="{$post->twitterCard}">
 <meta n:if="$post->twitterCard" name="twitter:site" content="@spazef0rze">
 {/define}
-
-{define #blogPost}
+{define #headerIcons}
 <div id="header-icons">
 	<div>
 		<span class="lighter"><i class="fas fa-fw fa-calendar"></i></span>
@@ -28,8 +27,16 @@
 			{foreach $post->tags as $key => $tag}<a n:href=":Www:Tags:tag $post->slugTags[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
 		</small>
 	</div>
+	<div n:ifset="$post->sourceHref">
+		<span class="lighter"><i class="fas fa-fw fa-external-link-square-alt"></i></span>
+		<small><a href="{$post->sourceHref}">{$post->sourceName}</a></small>
+	</div>
 	<div class="clear"></div>
 </div>
+{/define}
+
+{define #blogPost}
+{include #headerIcons}
 <em n:if="$post->lead">{$post->lead}</em>
 {$post->text}
 {$post->originally}
