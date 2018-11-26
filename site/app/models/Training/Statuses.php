@@ -10,22 +10,22 @@ namespace MichalSpacekCz\Training;
 class Statuses
 {
 
-	const STATUS_CREATED             = 'CREATED';              // 1
-	const STATUS_TENTATIVE           = 'TENTATIVE';            // 2
-	const STATUS_INVITED             = 'INVITED';              // 3
-	const STATUS_SIGNED_UP           = 'SIGNED_UP';            // 4
-	const STATUS_INVOICE_SENT        = 'INVOICE_SENT';         // 5
-	const STATUS_NOTIFIED            = 'NOTIFIED';             // 6
-	const STATUS_ATTENDED            = 'ATTENDED';             // 7
-	const STATUS_MATERIALS_SENT      = 'MATERIALS_SENT';       // 8
-	const STATUS_ACCESS_TOKEN_USED   = 'ACCESS_TOKEN_USED';    // 9
-	const STATUS_CANCELED            = 'CANCELED';             // 10
-	const STATUS_IMPORTED            = 'IMPORTED';             // 13
-	const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';  // 14
-	const STATUS_REMINDED            = 'REMINDED';             // 15
-	const STATUS_PAID_AFTER          = 'PAID_AFTER';           // 16
-	const STATUS_INVOICE_SENT_AFTER  = 'INVOICE_SENT_AFTER';   // 17
-	const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
+	public const STATUS_CREATED             = 'CREATED';              // 1
+	public const STATUS_TENTATIVE           = 'TENTATIVE';            // 2
+	public const STATUS_INVITED             = 'INVITED';              // 3
+	public const STATUS_SIGNED_UP           = 'SIGNED_UP';            // 4
+	public const STATUS_INVOICE_SENT        = 'INVOICE_SENT';         // 5
+	public const STATUS_NOTIFIED            = 'NOTIFIED';             // 6
+	public const STATUS_ATTENDED            = 'ATTENDED';             // 7
+	public const STATUS_MATERIALS_SENT      = 'MATERIALS_SENT';       // 8
+	public const STATUS_ACCESS_TOKEN_USED   = 'ACCESS_TOKEN_USED';    // 9
+	public const STATUS_CANCELED            = 'CANCELED';             // 10
+	public const STATUS_IMPORTED            = 'IMPORTED';             // 13
+	public const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';  // 14
+	public const STATUS_REMINDED            = 'REMINDED';             // 15
+	public const STATUS_PAID_AFTER          = 'PAID_AFTER';           // 16
+	public const STATUS_INVOICE_SENT_AFTER  = 'INVOICE_SENT_AFTER';   // 17
+	public const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
 
 	/** @var \Nette\Database\Context */
 	protected $database;

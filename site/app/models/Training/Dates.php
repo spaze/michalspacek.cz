@@ -12,12 +12,12 @@ use Nette\Utils\Json;
 class Dates
 {
 
-	const STATUS_CREATED   = 'CREATED';    // 1
-	const STATUS_TENTATIVE = 'TENTATIVE';  // 2
-	const STATUS_CONFIRMED = 'CONFIRMED';  // 3
-	const STATUS_CANCELED  = 'CANCELED';   // 4
+	public const STATUS_CREATED   = 'CREATED';    // 1
+	public const STATUS_TENTATIVE = 'TENTATIVE';  // 2
+	public const STATUS_CONFIRMED = 'CONFIRMED';  // 3
+	public const STATUS_CANCELED  = 'CANCELED';   // 4
 
-	const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
+	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
 	/** @var \Nette\Database\Context */
 	protected $database;

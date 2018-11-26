@@ -12,11 +12,11 @@ use Nette\Security\User;
 class Manager implements \Nette\Security\IAuthenticator
 {
 
-	const AUTH_COOKIES_PATH = '/';
+	private const AUTH_COOKIES_PATH = '/';
 
-	const AUTH_PERMANENT_COOKIE = 'permanent';
+	private const AUTH_PERMANENT_COOKIE = 'permanent';
 
-	const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
+	private const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
 
 	/** @var \Nette\Database\Context */
 	protected $database;

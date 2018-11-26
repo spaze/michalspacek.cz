@@ -8,7 +8,7 @@ class Texy extends \Netxten\Formatter\Texy
 {
 
 	/** @var string */
-	const TRAINING_DATE = 'TRAINING_DATE';
+	private const TRAINING_DATE = 'TRAINING_DATE';
 
 	/** @var \Nette\Localization\ITranslator */
 	protected $translator;

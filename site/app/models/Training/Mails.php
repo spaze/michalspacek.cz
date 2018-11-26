@@ -16,7 +16,7 @@ use Netxten\Templating\Helpers;
 class Mails
 {
 
-	const REMINDER_DAYS = 5;
+	private const REMINDER_DAYS = 5;
 
 	/** @var \Nette\Mail\IMailer */
 	protected $mailer;

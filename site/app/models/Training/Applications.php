@@ -12,8 +12,8 @@ use Nette\Application\UI\Form;
 class Applications
 {
 
-	const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
-	const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
+	private const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
+	private const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
 
 	/** @var \Nette\Database\Context */
 	protected $database;

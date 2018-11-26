@@ -16,9 +16,9 @@ use Nette\Http\IResponse;
 class RegisterUz implements CompanyDataInterface
 {
 
-	const DAY_ONE = '1993-01-01';
+	private const DAY_ONE = '1993-01-01';
 
-	const COUNTRY_CODE = 'sk';
+	private const COUNTRY_CODE = 'sk';
 
 	/** @var string */
 	private $rootUrl;

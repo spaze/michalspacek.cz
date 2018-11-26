@@ -10,7 +10,7 @@ namespace App\WwwModule\Presenters;
 class RedirectPresenter extends BasePresenter
 {
 
-	const GOOD_NIGHT = 5;
+	private const GOOD_NIGHT = 5;
 
 	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
