@@ -46,7 +46,6 @@ services:
 		setup:
 			- setPermanentLoginInterval(%returningUser.permanentLoginInterval%)
 			- setReturningUserCookie(%returningUser.cookie%)
-			- setReturningUserValue(%returningUser.value%)
 	embed: \MichalSpacekCz\Embed
 	httpResponse:
 		setup:

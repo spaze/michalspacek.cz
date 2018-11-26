@@ -20,6 +20,8 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	private const TOKEN_PERMANENT_LOGIN = 1;
 
+	private const TOKEN_RETURNING_USER = 2;
+
 	/** @var \Nette\Database\Context */
 	protected $database;
 
@@ -34,9 +36,6 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	/** @var string */
 	private $returningUserCookie;
-
-	/** @var string */
-	private $returningUserValue;
 
 	/** @var string */
 	private $permanentLoginInterval;
@@ -143,33 +142,22 @@ class Manager implements \Nette\Security\IAuthenticator
 	}
 
 
-	public function setReturningUser()
+	public function setReturningUser(string $value): void
 	{
-		$this->httpResponse->setCookie($this->returningUserCookie, $this->returningUserValue, \Nette\Http\Response::PERMANENT, self::AUTH_COOKIES_PATH);
+		$this->httpResponse->setCookie($this->returningUserCookie, $value, \Nette\Http\Response::PERMANENT, self::AUTH_COOKIES_PATH);
 	}
 
 
-	public function isReturningUser()
+	public function isReturningUser(): bool
 	{
-		return ($this->httpRequest->getCookie($this->returningUserCookie) === $this->returningUserValue);
+		$cookie = $this->httpRequest->getCookie($this->returningUserCookie);
+		return ($cookie && $this->verifyReturningUser($cookie));
 	}
 
 
 	public function setReturningUserCookie($cookie)
 	{
 		$this->returningUserCookie = $cookie;
-	}
-
-
-	public function setReturningUserValue($value)
-	{
-		$this->returningUserValue = $value;
-	}
-
-
-	public function isReturningUserValue($value)
-	{
-		return ($this->returningUserValue === $value);
 	}
 
 
@@ -260,14 +248,40 @@ class Manager implements \Nette\Security\IAuthenticator
 	/**
 	 * Verify and return permanent token, if present, and valid.
 	 *
-	 * @return false|\Nette\Database\Row
+	 * @return \Nette\Database\Row|null
 	 */
-	public function verifyPermanentLogin()
+	public function verifyPermanentLogin(): ?\Nette\Database\Row
 	{
-		$result = false;
-		$value = $this->httpRequest->getCookie(self::AUTH_PERMANENT_COOKIE);
-		if ($value !== null) {
-			list($selector, $token) = explode(self::AUTH_SELECTOR_TOKEN_SEPARATOR, $value);
+		$cookie = $this->httpRequest->getCookie(self::AUTH_PERMANENT_COOKIE, '');
+		return $this->verifyToken($cookie, new \DateTime("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
+	}
+
+
+	/**
+	 * Verify returning user, if present, and valid.
+	 *
+	 * @param string $value
+	 * @return \Nette\Database\Row|null
+	 */
+	public function verifyReturningUser(string $value): ?\Nette\Database\Row
+	{
+		return $this->verifyToken($value, new \DateTime('2000-01-01 UTC'), self::TOKEN_RETURNING_USER);
+	}
+
+
+	/**
+	 * Verify and return any token, if present, and valid.
+	 *
+	 * @param string $value
+	 * @param \DateTimeInterface $validity
+	 * @param int $type
+	 * @return \Nette\Database\Row|null
+	 */
+	private function verifyToken(string $value, \DateTimeInterface $validity, int $type): ?\Nette\Database\Row
+	{
+		$result = null;
+		$values = explode(self::AUTH_SELECTOR_TOKEN_SEPARATOR, $value);
+		if (count($values) === 2) {
 			$storedToken = $this->database->fetch(
 				'SELECT
 					at.id_auth_token AS tokenId,
@@ -281,11 +295,11 @@ class Manager implements \Nette\Security\IAuthenticator
 					at.selector = ?
 					AND at.created > ?
 					AND type = ?',
-				$selector,
-				new \DateTime('-' . $this->permanentLoginInterval),
-				self::TOKEN_PERMANENT_LOGIN
+				$values[0],
+				$validity,
+				$type
 			);
-			if ($storedToken && hash_equals($storedToken->token, $this->hashToken($token))) {
+			if ($storedToken && hash_equals($storedToken->token, $this->hashToken($values[1]))) {
 				$result = $storedToken;
 			}
 		}

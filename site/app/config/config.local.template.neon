@@ -64,7 +64,6 @@ parameters:
 
 	returningUser:
 		cookie: cafebabe
-		value: waldoxyzzy
 
 	encryption:
 		keys:

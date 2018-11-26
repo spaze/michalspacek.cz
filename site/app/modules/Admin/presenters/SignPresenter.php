@@ -47,8 +47,8 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	public function actionKnockKnock($param)
 	{
-		if ($this->authenticator->isReturningUserValue($param)) {
-			$this->authenticator->setReturningUser();
+		if ($this->authenticator->verifyReturningUser($param)) {
+			$this->authenticator->setReturningUser($param);
 		}
 
 		$this->redirect($this->user->isLoggedIn() ? 'Homepage:' : 'in');
@@ -59,7 +59,7 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 	{
 		$this->verify();
 		$this->getSession()->start();
-		if (($token = $this->authenticator->verifyPermanentLogin()) !== false) {
+		if (($token = $this->authenticator->verifyPermanentLogin()) !== null) {
 			$this->user->login($this->authenticator->getIdentity($token->userId, $token->username));
 			$this->authenticator->clearPermanentLogin($this->user);
 			$this->authenticator->storePermanentLogin($this->user);
