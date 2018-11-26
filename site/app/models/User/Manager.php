@@ -1,7 +1,12 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\User;
 
+use Nette\Database\Row;
+use Nette\Security\Identity;
 use Nette\Security\User;
+use Nette\Utils\DateTime;
 
 /**
  * Manager model.
@@ -58,15 +63,16 @@ class Manager implements \Nette\Security\IAuthenticator
 	/**
 	 * Performs an authentication.
 	 *
-	 * @return \Nette\Security\Identity
+	 * @param string[] $credentials
+	 * @return Identity
 	 *
 	 * @throws \Nette\Security\AuthenticationException
 	 */
-	public function authenticate(array $credentials)
+	public function authenticate(array $credentials): Identity
 	{
 		list($username, $password) = $credentials;
-		$user = $this->verifyPassword($username, $password);
-		return $this->getIdentity($user->userId, $user->username);
+		$userId = $this->verifyPassword($username, $password);
+		return $this->getIdentity($userId, $username);
 	}
 
 
@@ -75,15 +81,21 @@ class Manager implements \Nette\Security\IAuthenticator
 	 *
 	 * @param integer $id User id
 	 * @param string $username Username
-	 * @return \Nette\Security\Identity
+	 * @return Identity
 	 */
-	public function getIdentity($id, $username)
+	public function getIdentity(int $id, string $username): Identity
 	{
-		return new \Nette\Security\Identity($id, array(), array('username' => $username));
+		return new Identity($id, array(), array('username' => $username));
 	}
 
 
-	private function verifyPassword($username, $password)
+	/**
+	 * @param string $username
+	 * @param string $password
+	 * @return int User id
+	 * @throws \Nette\Security\AuthenticationException
+	 */
+	private function verifyPassword(string $username, string $password): int
 	{
 		$user = $this->database->fetch(
 			'SELECT
@@ -99,28 +111,42 @@ class Manager implements \Nette\Security\IAuthenticator
 		if (!$user) {
 			throw new \Nette\Security\AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		}
-		if (!$this->verifyHash($password, $this->passwordEncryption->decrypt($user->password))) {
-			throw new \Nette\Security\AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
+		try {
+			if (!$this->verifyHash($password, $this->passwordEncryption->decrypt((string)$user->password))) {
+				throw new \Nette\Security\AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
+			}
+		} catch (\ParagonIE\Halite\Alerts\HaliteAlert $e) {
+			\Tracy\Debugger::log($e);
+			throw new \Nette\Security\AuthenticationException('Oops... Something went wrong.', self::FAILURE);
 		}
-		return $user;
+		return (int)$user->userId;
 	}
 
 
-	private function calculateHash($password)
+	private function calculateHash(string $password): string
 	{
 		return password_hash($password, PASSWORD_DEFAULT);
 	}
 
 
-	private function verifyHash($password, $hash)
+	private function verifyHash(string $password, string $hash): bool
 	{
 		return password_verify($password, $hash);
 	}
 
 
-	public function changePassword(User $user, $password, $newPassword)
+	/**
+	 * @param User $user
+	 * @param string $password
+	 * @param string $newPassword
+	 * @throws \Nette\Security\AuthenticationException
+	 * @throws \ParagonIE\Halite\Alerts\HaliteAlert
+	 */
+	public function changePassword(User $user, string $password, string $newPassword): void
 	{
-		$this->verifyPassword($user->getIdentity()->username, $password);
+		/** @var Identity $identity */
+		$identity = $user->getIdentity();
+		$this->verifyPassword($identity->username, $password);
 		$encrypted = $this->passwordEncryption->encrypt($this->calculateHash($newPassword));
 		$this->database->query('UPDATE users SET password = ? WHERE id_user = ?', $encrypted, $user->getId());
 		$this->clearPermanentLogin($user);
@@ -192,6 +218,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * @param User $user
 	 * @param integer $type
 	 * @return string Concatenation of selector, separator, token
+	 * @throws \Exception
 	 */
 	private function insertToken(User $user, int $type)
 	{
@@ -205,7 +232,7 @@ class Manager implements \Nette\Security\IAuthenticator
 					'key_user' => $user->getId(),
 					'selector' => $selector,
 					'token' => $this->hashToken($token),
-					'created' => new \DateTime(),
+					'created' => new DateTime(),
 					'type' => $type,
 				)
 			);
@@ -226,6 +253,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * Store permanent login token in database and send a cookie to the browser.
 	 *
 	 * @param User $user
+	 * @throws \Exception
 	 */
 	public function storePermanentLogin(User $user)
 	{
@@ -248,12 +276,12 @@ class Manager implements \Nette\Security\IAuthenticator
 	/**
 	 * Verify and return permanent token, if present, and valid.
 	 *
-	 * @return \Nette\Database\Row|null
+	 * @return Row|null
 	 */
-	public function verifyPermanentLogin(): ?\Nette\Database\Row
+	public function verifyPermanentLogin(): ?Row
 	{
 		$cookie = $this->httpRequest->getCookie(self::AUTH_PERMANENT_COOKIE, '');
-		return $this->verifyToken($cookie, new \DateTime("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
+		return $this->verifyToken($cookie, DateTime::from("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
 	}
 
 
@@ -261,11 +289,11 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * Verify returning user, if present, and valid.
 	 *
 	 * @param string $value
-	 * @return \Nette\Database\Row|null
+	 * @return Row|null
 	 */
-	public function verifyReturningUser(string $value): ?\Nette\Database\Row
+	public function verifyReturningUser(string $value): ?Row
 	{
-		return $this->verifyToken($value, new \DateTime('2000-01-01 UTC'), self::TOKEN_RETURNING_USER);
+		return $this->verifyToken($value, DateTime::fromParts(2000, 1, 1), self::TOKEN_RETURNING_USER);
 	}
 
 
@@ -275,9 +303,9 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * @param string $value
 	 * @param \DateTimeInterface $validity
 	 * @param int $type
-	 * @return \Nette\Database\Row|null
+	 * @return Row|null
 	 */
-	private function verifyToken(string $value, \DateTimeInterface $validity, int $type): ?\Nette\Database\Row
+	private function verifyToken(string $value, \DateTimeInterface $validity, int $type): ?Row
 	{
 		$result = null;
 		$values = explode(self::AUTH_SELECTOR_TOKEN_SEPARATOR, $value);

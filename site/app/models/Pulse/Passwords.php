@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
-use \MichalSpacekCz\Pulse\Sites;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 
 /**
@@ -556,21 +556,25 @@ class Passwords
 	/**
 	 * Add password storage.
 	 *
-	 * @param \Nette\Utils\ArrayHash $values
+	 * @param ArrayHash $values
 	 * @return boolean True if storage added successfully
 	 */
-	public function addStorage(\Nette\Utils\ArrayHash $values): bool
+	public function addStorage(ArrayHash $values): bool
 	{
+		/** @var ArrayHash $newCompany */
+		$newCompany = $values->company->new;
+		/** @var ArrayHash $newSite */
+		$newSite = $values->site->new;
+		/** @var ArrayHash $newAlgo */
+		$newAlgo = $values->algo->new;
+
 		$this->database->beginTransaction();
-		$companyId = (empty($values->company->new->name) ? (int)$values->company->id : $this->companies->add($values->company->new->name, $values->company->new->dba, $values->company->new->alias));
-		$siteId = (string)(empty($values->site->new->url)
+		$companyId = (empty($newCompany->name) ? (int)$values->company->id : $this->companies->add($newCompany->name, $newCompany->dba, $newCompany->alias));
+		$siteId = (string)(empty($newSite->url)
 			? $values->site->id  // the value can also be "all"
-			: $this->sites->add($values->site->new->url, $values->site->new->alias, $values->site->new->sharedWith, $companyId)
+			: $this->sites->add($newSite->url, $newSite->alias, $newSite->sharedWith, $companyId)
 		);
-		$algoId = (empty($values->algo->new->algo)
-			? (int)$values->algo->id
-			: $this->addAlgorithm($values->algo->new->algo, $values->algo->new->alias, $values->algo->new->salted, $values->algo->new->stretched)
-		);
+		$algoId = (empty($newAlgo->algo) ? (int)$values->algo->id : $this->addAlgorithm($newAlgo->algo, $newAlgo->alias, $newAlgo->salted, $newAlgo->stretched));
 		foreach ($values->disclosure->new as $disclosure) {
 			if ($disclosure->url) {
 				$disclosureId = $this->getDisclosureId($disclosure->url, $disclosure->archive);
