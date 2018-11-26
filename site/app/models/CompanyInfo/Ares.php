@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use Nette\Http\IResponse;
+
 /**
  * ARES service.
  *
@@ -15,11 +17,10 @@ namespace MichalSpacekCz\CompanyInfo;
 class Ares implements CompanyDataInterface
 {
 
-	const STATUS_ERROR = 0;
-
-	const STATUS_FOUND = 1;
-
-	const STATUS_NOT_FOUND = 2;
+	/**
+	 * See kod_vyhledani in https://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_datatypes/v_1.0.5/ares_datatypes_v_1.0.5.xsd
+	 */
+	private const STATUS_FOUND = 1;
 
 	/** @var string */
 	private $url;
@@ -102,7 +103,7 @@ class Ares implements CompanyDataInterface
 				$street = $houseNumber = $streetNumber = $city = $zip = $country = null;
 			}
 
-			$company->status = (int)$result->K;
+			$company->status = IResponse::S200_OK;
 			$company->statusMessage = 'OK';
 			$company->companyId = (string)$data->ICO;
 			$company->companyTaxId = (string)$data->DIC;
@@ -116,11 +117,11 @@ class Ares implements CompanyDataInterface
 			$company->country = $country;
 		} catch (\UnexpectedValueException $e) {
 			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
-			$company->status = self::STATUS_NOT_FOUND;
+			$company->status = IResponse::S400_BAD_REQUEST;
 			$company->statusMessage = 'Not Found';
 		} catch (\Exception $e) {
 			\Tracy\Debugger::log($e);
-			$company->status = self::STATUS_ERROR;
+			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
 			$company->statusMessage = 'Error';
 		}
 

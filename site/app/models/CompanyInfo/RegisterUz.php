@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use Nette\Http\IResponse;
+
 /**
  * Register účtovných závierok service.
  *
@@ -13,12 +15,6 @@ namespace MichalSpacekCz\CompanyInfo;
  */
 class RegisterUz implements CompanyDataInterface
 {
-
-	const STATUS_ERROR = 0;
-
-	const STATUS_FOUND = 1;
-
-	const STATUS_NOT_FOUND = 2;
 
 	const DAY_ONE = '1993-01-01';
 
@@ -59,7 +55,7 @@ class RegisterUz implements CompanyDataInterface
 			}
 			$unit = $this->call('uctovna-jednotka', ['id' => reset($units->id)]);
 
-			$company->status = self::STATUS_FOUND;
+			$company->status = IResponse::S200_OK;
 			$company->statusMessage = 'OK';
 			$company->companyId = $unit->ico;
 			$company->companyTaxId = (isset($unit->dic) ? strtoupper(self::COUNTRY_CODE) . $unit->dic : '');
@@ -70,11 +66,11 @@ class RegisterUz implements CompanyDataInterface
 			$company->country = self::COUNTRY_CODE;
 		} catch (\RuntimeException $e) {
 			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
-			$company->status = self::STATUS_NOT_FOUND;
+			$company->status = IResponse::S400_BAD_REQUEST;
 			$company->statusMessage = 'Not Found';
 		} catch (\Exception $e) {
 			\Tracy\Debugger::log($e);
-			$company->status = self::STATUS_ERROR;
+			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
 			$company->statusMessage = 'Error';
 		}
 
@@ -96,7 +92,7 @@ class RegisterUz implements CompanyDataInterface
 		}
 		$content = file_get_contents("{$this->rootUrl}{$method}{$query}");
 		if (!$content) {
-			throw new \RuntimeException(error_get_last()['message'], self::STATUS_ERROR);
+			throw new \RuntimeException(error_get_last()['message'], IResponse::S500_INTERNAL_SERVER_ERROR);
 		}
 		return \Nette\Utils\Json::decode($content);
 	}

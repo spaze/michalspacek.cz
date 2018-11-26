@@ -49,7 +49,7 @@ class CompanyPresenter extends \App\WwwModule\Presenters\BasePresenter
 			$info = $this->companyInfo->getData($country, $companyId);
 		} catch (\RuntimeException $e) {
 			$info = new \MichalSpacekCz\CompanyInfo\Data();
-			$info->status = \MichalSpacekCz\CompanyInfo\Info::STATUS_ERROR;
+			$info->status = \Nette\Http\IResponse::S500_INTERNAL_SERVER_ERROR;
 			$info->statusMessage = $e->getMessage();
 		}
 		$data = array(
