@@ -18,6 +18,8 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	private const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
 
+	private const TOKEN_PERMANENT_LOGIN = 1;
+
 	/** @var \Nette\Database\Context */
 	protected $database;
 
@@ -200,9 +202,10 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * Selector and token are regenerated if selector already exists in the table.
 	 *
 	 * @param User $user
+	 * @param integer $type
 	 * @return string Concatenation of selector, separator, token
 	 */
-	private function insertToken(User $user)
+	private function insertToken(User $user, int $type)
 	{
 		$selector = \Nette\Utils\Random::generate(32, '0-9a-zA-Z');
 		$token = \Nette\Utils\Random::generate(64, '0-9a-zA-Z');
@@ -215,13 +218,14 @@ class Manager implements \Nette\Security\IAuthenticator
 					'selector' => $selector,
 					'token' => $this->hashToken($token),
 					'created' => new \DateTime(),
+					'type' => $type,
 				)
 			);
 		} catch (\PDOException $e) {
 			if ($e->getCode() == '23000') {
 				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
 					// regenerate the access code and try harder this time
-					return $this->insertToken($user);
+					return $this->insertToken($user, $type);
 				}
 			}
 			throw $e;
@@ -237,7 +241,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 */
 	public function storePermanentLogin(User $user)
 	{
-		$value = $this->insertToken($user);
+		$value = $this->insertToken($user, self::TOKEN_PERMANENT_LOGIN);
 		$this->httpResponse->setCookie(self::AUTH_PERMANENT_COOKIE,  $value, $this->permanentLoginInterval, self::AUTH_COOKIES_PATH);
 	}
 
@@ -248,7 +252,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * @param User $user
 	 */
 	public function clearPermanentLogin(User $user) {
-		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ?', $user->getId());
+		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
 		$this->httpResponse->deleteCookie(self::AUTH_PERMANENT_COOKIE,  self::AUTH_COOKIES_PATH);
 	}
 
@@ -275,9 +279,11 @@ class Manager implements \Nette\Security\IAuthenticator
 					JOIN users u ON u.id_user = at.key_user
 				WHERE
 					at.selector = ?
-					AND at.created > ?',
+					AND at.created > ?
+					AND type = ?',
 				$selector,
-				new \DateTime('-' . $this->permanentLoginInterval)
+				new \DateTime('-' . $this->permanentLoginInterval),
+				self::TOKEN_PERMANENT_LOGIN
 			);
 			if ($storedToken && hash_equals($storedToken->token, $this->hashToken($token))) {
 				$result = $storedToken;
