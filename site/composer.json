@@ -1,7 +1,11 @@
 {
 	"require": {
 		"php": ">= 7.2.0",
+		"ext-fileinfo": "*",
 		"ext-intl": "*",
+		"ext-libxml": "*",
+		"ext-pdo": "*",
+		"ext-simplexml": "*",
 		"nette/application": "~2.3",
 		"nette/bootstrap": "~2.3",
 		"nette/component-model": "~2.2",
