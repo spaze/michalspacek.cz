@@ -4,6 +4,10 @@ parameters:
 	ignoreErrors:
 		- '#^Access to an undefined property Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
 		- '#^Call to an undefined method Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
+		- '#^If condition is always true#'
+		- '#^Left side of && is always true#'
+		- '#^Negated boolean is always false#'
+		- '#^Ternary operator condition is always true#'
 
 includes:
 	- vendor/phpstan/phpstan/conf/config.level5.neon
