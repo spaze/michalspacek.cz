@@ -24,30 +24,24 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Api\Certificates */
 	protected $certificates;
 
-	/** @var \MichalSpacekCz\DryRun */
-	protected $dryRun;
-
 
 	/**
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \MichalSpacekCz\Api\Certificates $certificates
-	 * @param \MichalSpacekCz\DryRun $dryRun
 	 */
 	public function __construct(
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
 		Training\Dates $trainingDates,
-		\MichalSpacekCz\Api\Certificates $certificates,
-		\MichalSpacekCz\DryRun $dryRun
+		\MichalSpacekCz\Api\Certificates $certificates
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;
 		$this->certificates = $certificates;
-		$this->dryRun = $dryRun;
 		parent::__construct();
 	}
 
@@ -74,7 +68,6 @@ class HomepagePresenter extends BasePresenter
 		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 
 		$this->template->pageTitle = 'Administrace';
-		$this->template->dryRunEnabled = $this->dryRun->isEnabled();
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
 		$this->template->certificates = $certificates = $this->certificates->getNewest();

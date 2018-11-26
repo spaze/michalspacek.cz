@@ -66,10 +66,6 @@ parameters:
 		cookie: cafebabe
 		value: waldoxyzzy
 
-	dryRun:
-		cookie: qux
-		value: quux
-
 	encryption:
 		keys:
 			password:
