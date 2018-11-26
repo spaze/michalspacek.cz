@@ -31,7 +31,7 @@ abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
 			if ($this->authenticator->isReturningUser()) {
 				$this->redirect('Sign:in', array('backlink' => $this->storeRequest()));
 			} else {
-				$this->redirect('Honeypot:signIn');
+				$this->forward('Honeypot:signIn');
 			}
 		}
 	}
