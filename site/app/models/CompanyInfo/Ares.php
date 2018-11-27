@@ -119,6 +119,9 @@ class Ares implements CompanyDataInterface
 			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
 			$company->status = IResponse::S400_BAD_REQUEST;
 			$company->statusMessage = 'Not Found';
+		} catch (\RuntimeException $e) {
+			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
+			$company->statusMessage = 'Error';
 		} catch (\Exception $e) {
 			\Tracy\Debugger::log($e);
 			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
