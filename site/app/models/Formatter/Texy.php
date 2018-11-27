@@ -1,8 +1,10 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Formatter;
 
+use Nette\Database\Row;
 use Nette\Utils\Html;
-use Netxten\Templating\Helpers;
 
 class Texy extends \Netxten\Formatter\Texy
 {
@@ -36,7 +38,7 @@ class Texy extends \Netxten\Formatter\Texy
 	protected $staticRoot;
 
 	/**
-	 * Images root, just directory no FQND, no leading slash, no trailing slash.
+	 * Images root, just directory no FQDN, no leading slash, no trailing slash.
 	 *
 	 * @var string
 	 */
@@ -74,8 +76,7 @@ class Texy extends \Netxten\Formatter\Texy
 		\MichalSpacekCz\Vat $vat,
 		\MichalSpacekCz\Training\Locales $trainingLocales,
 		\Netxten\Templating\Helpers $netxtenHelpers
-	)
-	{
+	) {
 		$this->translator = $translator;
 		$this->application = $application;
 		$this->trainingDates = $trainingDates;
@@ -91,7 +92,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 *
 	 * @param string $root
 	 */
-	public function setStaticRoot($root)
+	public function setStaticRoot(string $root): void
 	{
 		$this->staticRoot = rtrim($root, '/');
 	}
@@ -102,7 +103,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 *
 	 * @return string
 	 */
-	public function getStaticRoot()
+	public function getStaticRoot(): string
 	{
 		return $this->staticRoot;
 	}
@@ -113,7 +114,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 *
 	 * @param string $root
 	 */
-	public function setImagesRoot($root)
+	public function setImagesRoot(string $root): void
 	{
 		$this->imagesRoot = trim($root, '/');
 	}
@@ -125,7 +126,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param string $filename
 	 * @return string
 	 */
-	public function getImagesRoot($filename)
+	public function getImagesRoot(string $filename): string
 	{
 		return sprintf('%s/%s/%s', $this->staticRoot, $this->imagesRoot, ltrim($filename, '/'));
 	}
@@ -136,7 +137,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 *
 	 * @param string $root
 	 */
-	public function setLocationRoot($root)
+	public function setLocationRoot(string $root): void
 	{
 		$this->locationRoot = rtrim($root, '/');
 	}
@@ -148,7 +149,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param integer $level
 	 * @return self
 	 */
-	public function setTopHeading($level)
+	public function setTopHeading(int $level): self
 	{
 		$this->topHeading = $level;
 		return $this;
@@ -160,7 +161,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 *
 	 * @return \Texy\Texy
 	 */
-	protected function getTexy()
+	protected function getTexy(): \Texy\Texy
 	{
 		$texy = parent::getTexy();
 		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
@@ -176,10 +177,10 @@ class Texy extends \Netxten\Formatter\Texy
 
 	/**
 	 * @param string $format
-	 * @param array|null $args
+	 * @param string[]|null $args
 	 * @return Html
 	 */
-	public function substitute($format, $args)
+	public function substitute(string $format, ?array $args): Html
 	{
 		return $this->format(vsprintf($format, $args));
 	}
@@ -187,16 +188,16 @@ class Texy extends \Netxten\Formatter\Texy
 
 	/**
 	 * @param string $message
-	 * @param array $replacements
+	 * @param string[]|null $replacements
 	 * @return Html
 	 */
-	public function translate($message, array $replacements = null)
+	public function translate($message, ?array $replacements = null): Html
 	{
 		return $this->substitute($this->translator->translate($message), $replacements);
 	}
 
 
-	public function addHandlers()
+	public function addHandlers(): void
 	{
 		$this->addHandler('phrase', [$this, 'phraseHandler']);
 	}
@@ -210,7 +211,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param \Texy\Link|null $link
 	 * @return \Texy\HtmlElement|string|FALSE
 	 */
-	function phraseHandler($invocation, $phrase, $content, $modifier, $link)
+	function phraseHandler(\Texy\HandlerInvocation $invocation, string $phrase, string $content, \Texy\Modifier $modifier, ?\Texy\Link $link)
 	{
 		if (!$link) {
 			return $invocation->proceed();
@@ -260,7 +261,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param string $training Training name
 	 * @return Html
 	 */
-	private function getTrainingSuffix($training)
+	private function getTrainingSuffix(string $training): Html
 	{
 		$el = Html::el()
 			->addHtml(Html::el()->setText(' '))
@@ -273,7 +274,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param string|null $text
 	 * @return Html|null
 	 */
-	public function format($text)
+	public function format(?string $text): ?Html
 	{
 		return (empty($text) ? null : $this->replace(parent::format($text)));
 	}
@@ -283,7 +284,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param string|null $text
 	 * @return Html|null
 	 */
-	public function formatBlock($text)
+	public function formatBlock(?string $text): ?Html
 	{
 		return (empty($text) ? null : $this->replace(parent::formatBlock($text)));
 	}
@@ -293,17 +294,15 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param Html $result
 	 * @return Html
 	 */
-	private function replace(Html $result)
+	private function replace(Html $result): Html
 	{
 		$replacements = array(
 			self::TRAINING_DATE => [$this, 'replaceTrainingDate'],
 		);
 
 		$result = preg_replace_callback('~\*\*([^:]+):([^*]+)\*\*~', function ($matches) use ($replacements) {
-			if (isset($replacements[$matches[1]])) {
-				return $replacements[$matches[1]]($matches[2]);
-			}
-		}, $result);
+			return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : null);
+		}, (string)$result);
 		return Html::el()->setHtml($result);
 	}
 
@@ -312,7 +311,7 @@ class Texy extends \Netxten\Formatter\Texy
 	 * @param string $name
 	 * @return string
 	 */
-	private function replaceTrainingDate($name)
+	private function replaceTrainingDate($name): string
 	{
 		$upcoming = $this->trainingDates->getPublicUpcoming();
 		$dates = array();
@@ -335,10 +334,10 @@ class Texy extends \Netxten\Formatter\Texy
 	/**
 	 * Format training items.
 	 *
-	 * @param \Nette\Database\Row $training
-	 * @return \Nette\Database\Row
+	 * @param Row $training
+	 * @return Row
 	 */
-	public function formatTraining(\Nette\Database\Row $training): \Nette\Database\Row
+	public function formatTraining(Row $training): Row
 	{
 		$this->setTopHeading(3);
 		foreach (['name', 'description', 'content', 'upsell', 'prerequisites', 'audience', 'materials', 'duration', 'alternativeDuration'] as $key) {
@@ -347,7 +346,10 @@ class Texy extends \Netxten\Formatter\Texy
 			}
 		}
 		if (isset($training->alternativeDurationPriceText)) {
-			$training->alternativeDurationPriceText = $this->translate($training->alternativeDurationPriceText, [$training->alternativeDurationPrice, $this->vat->addVat($training->alternativeDurationPrice)]);
+			$training->alternativeDurationPriceText = $this->translate($training->alternativeDurationPriceText, [
+				(string)$training->alternativeDurationPrice,
+				(string)$this->vat->addVat($training->alternativeDurationPrice),
+			]);
 		}
 		return $training;
 	}

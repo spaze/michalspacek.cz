@@ -1,12 +1,13 @@
 <?php
-namespace Netxten\Application\Responses;
+declare(strict_types = 1);
 
+namespace Netxten\Application\Responses;
 
 /**
  * CSV download response.
  *
- * @author     Petr 'PePa' Pavel
- * @author     Michal Špaček
+ * @author Petr 'PePa' Pavel
+ * @author Michal Špaček
  * Based on NCsvResponse by Petr 'PePa' Pavel http://addons.nette.org/cs/csvresponse
  *
  * @property-read array  $data
@@ -27,7 +28,7 @@ class CsvResponse implements \Nette\Application\IResponse
 	/** Add quotes only when needed */
 	const QUOTES_SMART = 2;
 
-	/** @var array */
+	/** @var string[][] */
 	private $data;
 
 	/** @var string */
@@ -56,34 +57,45 @@ class CsvResponse implements \Nette\Application\IResponse
 
 
 	/**
-	 * @param  string  data (array of arrays - rows/columns)
-	 * @param  string  imposed file name
-	 * @param  bool    return array keys as the first row (column headings)
-	 * @param  string  glue between columns (comma or a semi-colon)
-	 * @param  string  string to use as new line
-	 * @param  integer whether to add quotes
-	 * @param  string  data to start output with, think UTF-8 BOM
-	 * @param  string  MIME content type
+	 * @param string[][] $data array of arrays - rows/columns
+	 * @param string|null $name imposed file name
+	 * @param boolean $addHeading return array keys as the first row (column headings)
+	 * @param string $glue between columns (comma or a semi-colon)
+	 * @param string $newLine string to use as new line
+	 * @param integer $addQuotes whether to add quotes
+	 * @param string $initialData data to start output with, think UTF-8 BOM
+	 * @param string|null $charset output character set, if any
+	 * @param string $contentType MIME content type
 	 */
-	public function __construct($data, $name = null, $addHeading = true, $glue = ',', $newLine = "\r\n", $addQuotes = self::QUOTES_SMART, $initialData = '', $charset = null, $contentType = null)
-	{
-		$this->data        = $data;
-		$this->name        = $name;
-		$this->addHeading  = $addHeading;
-		$this->glue        = $glue;
-		$this->newLine     = $newLine;
-		$this->addQuotes   = $addQuotes;
+	public function __construct(
+		array $data,
+		?string $name = null,
+		bool $addHeading = true,
+		string $glue = ',',
+		string $newLine = "\r\n",
+		int $addQuotes = self::QUOTES_SMART,
+		string $initialData = '',
+		?string $charset = null,
+		string $contentType = 'text/csv'
+	) {
+		$this->data = $data;
+		$this->name = $name;
+		$this->addHeading = $addHeading;
+		$this->glue = $glue;
+		$this->newLine = $newLine;
+		$this->addQuotes = $addQuotes;
 		$this->initialData = $initialData;
-		$this->charset     = $charset;
-		$this->contentType = $contentType ? $contentType : 'text/csv';
+		$this->charset = $charset;
+		$this->contentType = $contentType;
 	}
 
 
 	/**
 	 * Returns the file name.
+	 *
 	 * @return string
 	 */
-	final public function getName()
+	final public function getName(): string
 	{
 		return $this->name;
 	}
@@ -91,9 +103,10 @@ class CsvResponse implements \Nette\Application\IResponse
 
 	/**
 	 * Returns the MIME content type of a downloaded content.
+	 *
 	 * @return string
 	 */
-	final public function getContentType()
+	final public function getContentType(): string
 	{
 		return $this->contentType;
 	}
@@ -101,9 +114,10 @@ class CsvResponse implements \Nette\Application\IResponse
 
 	/**
 	 * Sends response to output.
+	 *
 	 * @return void
 	 */
-	public function send(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse)
+	public function send(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse): void
 	{
 		$httpResponse->setContentType($this->contentType, $this->charset);
 
@@ -120,7 +134,7 @@ class CsvResponse implements \Nette\Application\IResponse
 	}
 
 
-	protected function formatCsv()
+	protected function formatCsv(): string
 	{
 		if (empty($this->data)) {
 			return '';
@@ -156,7 +170,11 @@ class CsvResponse implements \Nette\Application\IResponse
 	}
 
 
-	protected function formatRow($row)
+	/**
+	 * @param string[] $row
+	 * @return string
+	 */
+	protected function formatRow(array $row): string
 	{
 		foreach ($row as $key => &$value) {
 			$value = preg_replace('/[\r\n]+/', ' ', $value);
@@ -171,6 +189,5 @@ class CsvResponse implements \Nette\Application\IResponse
 		}
 		return implode($this->glue, $row) . $this->newLine;
 	}
-
 
 }

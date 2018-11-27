@@ -213,7 +213,7 @@ class TalksPresenter extends BasePresenter
 		});
 		// If there's no error yet then the number of uploaded just coincidentally matches max allowed
 		if ($form->hasErrors() && $uploaded >= $this->maxSlideUploads) {
-			$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [$this->maxSlideUploads]));
+			$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [(string)$this->maxSlideUploads]));
 		}
 	}
 

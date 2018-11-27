@@ -21,11 +21,11 @@
 		"texy/texy": "~2.8",
 		"kdyby/translation": "~2.5",
 		"paragonie/halite": "^4",
-		"spaze/netxten": "~0.8",
 		"spaze/csp-config": "~0.1",
 		"spaze/feed-exports": "~0.1",
 		"spaze/nonce-generator": "^2.0",
-		"spaze/sri-macros": "~0.1"
+		"spaze/sri-macros": "~0.1",
+		"spaze/netxten": "^0.9.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",

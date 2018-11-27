@@ -1,5 +1,9 @@
 <?php
+declare(strict_types = 1);
+
 namespace Netxten\Formatter;
+
+use \Nette\Utils\Html;
 
 /**
  * Caching Texy formatter.
@@ -29,7 +33,7 @@ class Texy
 	 * @param \Nette\Caching\IStorage $cacheStorage
 	 * @param string $namespace
 	 */
-	public function __construct(\Nette\Caching\IStorage $cacheStorage, $namespace = self::DEFAULT_NAMESPACE)
+	public function __construct(\Nette\Caching\IStorage $cacheStorage, string $namespace = self::DEFAULT_NAMESPACE)
 	{
 		$this->cacheStorage = $cacheStorage;
 		$this->namespace = $namespace;
@@ -41,7 +45,7 @@ class Texy
 	 *
 	 * @return \Texy\Texy
 	 */
-	protected function getTexy()
+	protected function getTexy(): \Texy\Texy
 	{
 		$texy = new \Texy\Texy();
 		$texy->encoding = 'utf-8';
@@ -59,7 +63,7 @@ class Texy
 	 * @param string $event
 	 * @param callable $callback
 	 */
-	protected function addHandler($event, $callback)
+	protected function addHandler(string $event, callable $callback): void
 	{
 		$this->handlers = array_merge($this->handlers, [$event => $callback]);
 	}
@@ -70,7 +74,7 @@ class Texy
 	 *
 	 * @return static
 	 */
-	public function disableCache()
+	public function disableCache(): self
 	{
 		$this->cacheResult = false;
 		return $this;
@@ -82,7 +86,7 @@ class Texy
 	 *
 	 * @return static
 	 */
-	public function enableCache()
+	public function enableCache(): self
 	{
 		$this->cacheResult = true;
 		return $this;
@@ -92,11 +96,11 @@ class Texy
 	/**
 	 * Cache formatted string.
 	 *
-	 * @var string
-	 * @var callable
-	 * @return \Nette\Utils\Html
+	 * @var string $text
+	 * @var callable $callback
+	 * @return Html
 	 */
-	private function cache($text, callable $callback)
+	private function cache(string $text, callable $callback): Html
 	{
 		if ($this->cacheResult) {
 			$cache = new \Nette\Caching\Cache($this->cacheStorage, $this->namespace);
@@ -105,7 +109,7 @@ class Texy
 		} else {
 			$formatted = $callback();
 		}
-		return \Nette\Utils\Html::el()->setHtml($formatted);
+		return Html::el()->setHtml($formatted);
 	}
 
 
@@ -114,10 +118,10 @@ class Texy
 	 *
 	 * Suitable for "inline" strings like headers.
 	 *
-	 * @param string $text Text to format
-	 * @return \Nette\Utils\Html|null
+	 * @param string|null $text Text to format
+	 * @return Html|null
 	 */
-	public function format($text)
+	public function format(?string $text): ?Html
 	{
 		return (empty($text) ? null : $this->cache("{$text}|" . __FUNCTION__, function() use ($text) {
 			$texy = $this->getTexy();
@@ -129,15 +133,14 @@ class Texy
 	/**
 	 * Format string.
 	 *
-	 * @param string $text Text to format
-	 * @return \Nette\Utils\Html|null
+	 * @param string|null $text Text to format
+	 * @return Html|null
 	 */
-	public function formatBlock($text)
+	public function formatBlock(?string $text): ?Html
 	{
 		return (empty($text) ? null : $this->cache("{$text}|" . __FUNCTION__, function() use ($text) {
 			return $this->getTexy()->process($text);
 		}));
 	}
-
 
 }

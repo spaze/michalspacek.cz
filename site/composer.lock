@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "29379c8062b3c46574cb4307bcb320d0",
+    "content-hash": "16c5e5ca7b36d7727908292799acb32e",
     "packages": [
         {
             "name": "kdyby/strict-objects",
@@ -1711,16 +1711,16 @@
         },
         {
             "name": "spaze/netxten",
-            "version": "v0.8.0",
+            "version": "v0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "f754a9f971bb1cd03110b9a5a3bb5e4429d4d82d"
+                "reference": "4a12e531e50ea273017aa2208931c5afe5a6eaa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/f754a9f971bb1cd03110b9a5a3bb5e4429d4d82d",
-                "reference": "f754a9f971bb1cd03110b9a5a3bb5e4429d4d82d",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/4a12e531e50ea273017aa2208931c5afe5a6eaa8",
+                "reference": "4a12e531e50ea273017aa2208931c5afe5a6eaa8",
                 "shasum": ""
             },
             "require": {
@@ -1742,7 +1742,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2018-09-23T21:17:08+00:00"
+            "time": "2018-11-27T03:46:10+00:00"
         },
         {
             "name": "spaze/nonce-generator",

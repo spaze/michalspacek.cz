@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Templating;
 
 class Helpers
@@ -16,7 +18,12 @@ class Helpers
 	}
 
 
-	public function loader($helper, ...$args)
+	/**
+	 * @param string $helper
+	 * @param mixed ...$args
+	 * @return mixed
+	 */
+	public function loader(string $helper, ...$args)
 	{
 		if (method_exists($this, $helper)) {
 			return $this->$helper(...$args);
@@ -26,19 +33,19 @@ class Helpers
 	}
 
 
-	public function staticUrl($filename)
+	public function staticUrl(string $filename): string
 	{
 		return sprintf('%s/%s', $this->texyFormatter->getStaticRoot(), ltrim($filename, '/'));
 	}
 
 
-	public function staticImageUrl($filename)
+	public function staticImageUrl(string $filename): string
 	{
 		return $this->texyFormatter->getImagesRoot($filename);
 	}
 
 
-	public function format($message)
+	public function format(string $message): \Nette\Utils\Html
 	{
 		$args = func_get_args();
 		array_shift($args);
