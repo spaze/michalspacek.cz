@@ -16,6 +16,11 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/** @var \MichalSpacekCz\User\Manager */
 	protected $authenticator;
 
+	/** @var string[] */
+	private $noReturningUserCheck = [
+		'knockKnock',
+	];
+
 
 	/**
 	 * @param \MichalSpacekCz\User\Manager $authenticator
@@ -30,9 +35,10 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * Port-knocking-like login.
 	 */
-	private function verify()
+	protected function startup(): void
 	{
-		if (!$this->authenticator->isReturningUser()) {
+		parent::startup();
+		if (!in_array($this->getAction(), $this->noReturningUserCheck) && !$this->authenticator->isReturningUser()) {
 			$this->forward('Honeypot:signIn');
 		}
 	}
@@ -40,7 +46,6 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	public function actionDefault()
 	{
-		$this->verify();
 		$this->redirect('in');
 	}
 
@@ -57,7 +62,6 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	public function actionIn()
 	{
-		$this->verify();
 		$this->getSession()->start();
 		if (($token = $this->authenticator->verifyPermanentLogin()) !== null) {
 			$this->user->login($this->authenticator->getIdentity($token->userId, $token->username));
@@ -99,7 +103,6 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	public function actionOut()
 	{
-		$this->verify();
 		$this->authenticator->clearPermanentLogin($this->user);
 		$this->user->logout();
 		$this->flashMessage('Byli jste odhlášeni');

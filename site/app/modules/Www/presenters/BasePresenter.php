@@ -21,7 +21,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public $translator;
 
 	/** @var \MichalSpacekCz\User\Manager */
-	private $authenticator;
+	protected $authenticator;
 
 	/** @var \Spaze\ContentSecurityPolicy\Config */
 	private $contentSecurityPolicy;
@@ -76,12 +76,6 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	protected function startup(): void
 	{
 		parent::startup();
-		$this->startupEx();
-	}
-
-
-	protected function startupEx(): void
-	{
 		if ($this->authenticator->isForbidden()) {
 			$this->forward('Forbidden:');
 		}

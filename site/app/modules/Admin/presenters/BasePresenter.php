@@ -12,27 +12,12 @@ namespace App\AdminModule\Presenters;
 abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
-	/** @var \MichalSpacekCz\User\Manager */
-	private $authenticator;
-
-	/**
-	 * @internal
-	 * @param \MichalSpacekCz\User\Manager $authenticator
-	 */
-	public function injectAuthenticator(\MichalSpacekCz\User\Manager $authenticator)
+	protected function startup(): void
 	{
-		$this->authenticator = $authenticator;
-	}
-
-
-	protected function startupEx(): void
-	{
+		parent::startup();
 		if (!$this->user->isLoggedIn()) {
-			if ($this->authenticator->isReturningUser()) {
-				$this->redirect('Sign:in', array('backlink' => $this->storeRequest()));
-			} else {
-				$this->forward('Honeypot:signIn');
-			}
+			$params = ($this->authenticator->isReturningUser() ? ['backlink' => $this->storeRequest()] : []);
+			$this->redirect('Sign:in', $params);
 		}
 	}
 
