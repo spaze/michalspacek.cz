@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form\Controls;
 
 /**
@@ -20,7 +22,7 @@ trait Date
 	 * @param \Nette\Forms\Container|null $container
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	protected function addDate($name, $label, $required, $format, $pattern, $container = null)
+	protected function addDate(string $name, string $label, bool $required, string $format, string $pattern, ?\Nette\Forms\Container $container = null): \Nette\Forms\Controls\TextInput
 	{
 		return ($container === null ? $this : $container)->addText($name, $label)
 			->setAttribute('placeholder', $format)

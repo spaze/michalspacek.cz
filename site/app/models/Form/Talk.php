@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
@@ -18,11 +20,10 @@ class Talk extends ProtectedForm
 
 	public function __construct(
 		\Nette\ComponentModel\IContainer $parent,
-		$name,
-		$talkAction,
+		string $name,
+		?string $talkAction,
 		\MichalSpacekCz\Talks $talks
-	)
-	{
+	) {
 		parent::__construct($parent, $name);
 		$this->talks = $talks;
 
@@ -87,7 +88,7 @@ class Talk extends ProtectedForm
 	}
 
 
-	public function setTalk(\Nette\Database\Row $talk)
+	public function setTalk(\Nette\Database\Row $talk): self
 	{
 		$values = array(
 			'action' => $talk->action,
@@ -123,7 +124,7 @@ class Talk extends ProtectedForm
 	 * @param boolean $required
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	protected function addTalkDate($name, $label = null, $required = false)
+	protected function addTalkDate($name, $label = null, $required = false): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(
 			$name,

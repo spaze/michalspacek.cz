@@ -24,7 +24,7 @@ class EmailsPresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Vat */
 	protected $vat;
 
-	/** @var array */
+	/** @var \Nette\Database\Row[] */
 	private $applications;
 
 

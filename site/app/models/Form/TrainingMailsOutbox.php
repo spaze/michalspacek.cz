@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training;
@@ -12,7 +14,12 @@ use MichalSpacekCz\Training;
 class TrainingMailsOutbox extends ProtectedForm
 {
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications)
+	/**
+	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param string $name
+	 * @param \Nette\Database\Row[] $applications
+	 */
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $applications)
 	{
 		parent::__construct($parent, $name);
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
@@ -28,12 +30,18 @@ class TrainingApplicationMultiple extends ProtectedForm
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
 	 * @param integer $count
-	 * @param array $statuses
+	 * @param string[] $statuses
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, $count, $statuses, \MichalSpacekCz\Training\Applications $trainingApplications, \Nette\Localization\ITranslator $translator)
-	{
+	public function __construct(
+		\Nette\ComponentModel\IContainer $parent,
+		string $name,
+		int $count,
+		array $statuses,
+		\MichalSpacekCz\Training\Applications $trainingApplications,
+		\Nette\Localization\ITranslator $translator
+	) {
 		parent::__construct($parent, $name);
 		$this->trainingApplications = $trainingApplications;
 		$this->translator = $translator;

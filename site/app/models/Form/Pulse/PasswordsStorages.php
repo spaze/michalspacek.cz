@@ -16,8 +16,8 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 
 	public function __construct(
 		\Nette\ComponentModel\IContainer $parent,
-		$name,
-		$newDisclosures,
+		string $name,
+		int $newDisclosures,
 		\MichalSpacekCz\Pulse\Companies $companies,
 		\MichalSpacekCz\Pulse\Sites $sites,
 		\MichalSpacekCz\Pulse\Passwords $passwords

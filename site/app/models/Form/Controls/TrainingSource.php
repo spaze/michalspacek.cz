@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form\Controls;
 
 /**
@@ -16,7 +18,7 @@ trait TrainingSource
 	 * @param \Nette\Forms\Container $container
 	 * @return \Nette\Forms\Controls\SelectBox
 	 */
-	protected function addSource(\Nette\Forms\Container $container)
+	protected function addSource(\Nette\Forms\Container $container): \Nette\Forms\Controls\SelectBox
 	{
 		$sources = array();
 		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {

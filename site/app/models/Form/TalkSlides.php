@@ -21,8 +21,9 @@ class TalkSlides extends ProtectedForm
 	 * @param string $name
 	 * @param \Nette\Database\Row[] $slides
 	 * @param integer $newCount
+	 * @param \MichalSpacekCz\Talks $talks
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $slides, int $newCount, $talks)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $slides, int $newCount, \MichalSpacekCz\Talks $talks)
 	{
 		parent::__construct($parent, $name);
 		$this->talks = $talks;

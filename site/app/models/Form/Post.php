@@ -21,6 +21,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
+	 * @param \MichalSpacekCz\Post $blogPost
 	 */
 	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, \MichalSpacekCz\Post $blogPost)
 	{
@@ -80,9 +81,10 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Set post.
-	 * @param \MichalSpacekCz\Post\Data $post [description]
+	 * @param \MichalSpacekCz\Post\Data $post
+	 * @return static
 	 */
-	public function setPost(\MichalSpacekCz\Post\Data $post)
+	public function setPost(\MichalSpacekCz\Post\Data $post): self
 	{
 		$values = array(
 			'translationGroup' => $post->translationGroupId,
@@ -117,7 +119,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 	 * @param boolean $required
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	protected function addPublishedDate($name, $label = null, $required = false)
+	protected function addPublishedDate($name, $label = null, $required = false): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(
 			$name,

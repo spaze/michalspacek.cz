@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form\Controls;
 
 /**
@@ -15,7 +17,7 @@ trait TrainingCompany
 	 *
 	 * @param \Nette\Forms\Container $container
 	 */
-	protected function addCompany(\Nette\Forms\Container $container)
+	protected function addCompany(\Nette\Forms\Container $container): void
 	{
 		$container->addText('companyId', 'IČO:')
 			->setRequired(false)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form\Controls;
 
 /**
@@ -19,7 +21,7 @@ trait TrainingStatusDate
 	 * @param boolean $required
 	 * @return \Nette\Forms\Controls\TextInput
 	 */
-	protected function addStatusDate($name, $label = null, $required = false)
+	protected function addStatusDate($name, $label = null, $required = false): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(
 			$name,

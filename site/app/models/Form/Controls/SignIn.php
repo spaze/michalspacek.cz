@@ -12,7 +12,7 @@ namespace MichalSpacekCz\Form\Controls;
 trait SignIn
 {
 
-	protected function addSignIn(\Nette\Forms\Container $container)
+	protected function addSignIn(\Nette\Forms\Container $container): void
 	{
 		$container->addText('username', 'Uživatel:')
 			->setRequired('Zadejte prosím uživatele');

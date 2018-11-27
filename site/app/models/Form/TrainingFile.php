@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
@@ -10,7 +12,7 @@ namespace MichalSpacekCz\Form;
 class TrainingFile extends ProtectedForm
 {
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name)
 	{
 		parent::__construct($parent, $name);
 

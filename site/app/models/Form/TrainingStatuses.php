@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
@@ -16,7 +18,13 @@ class TrainingStatuses extends ProtectedForm
 	protected $translator;
 
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, array $applications, \Nette\Localization\ITranslator $translator)
+	/**
+	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param string $name
+	 * @param \Nette\Database\Row[] $applications
+	 * @param \Nette\Localization\ITranslator $translator
+	 */
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $applications, \Nette\Localization\ITranslator $translator)
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;

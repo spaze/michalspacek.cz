@@ -1,8 +1,9 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 use Nette\Utils\Html;
-use Netxten\Templating\Helpers;
 
 /**
  * Training application form.
@@ -27,13 +28,13 @@ class TrainingApplication extends ProtectedForm
 	/**
 	 * @param \Nette\ComponentModel\IContainer $parent
 	 * @param string $name
-	 * @param array $dates
+	 * @param \Nette\Database\Row[] $dates
 	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \Netxten\Templating\Helpers $netxtenHelpers
 	 */
 	public function __construct(
 		\Nette\ComponentModel\IContainer $parent,
-		$name,
+		string $name,
 		array $dates,
 		\Nette\Localization\ITranslator $translator,
 		\Netxten\Templating\Helpers $netxtenHelpers
@@ -83,8 +84,9 @@ class TrainingApplication extends ProtectedForm
 
 	/**
 	 * @param \Nette\Http\SessionSection $application
+	 * @return static
 	 */
-	public function setApplicationFromSession(\Nette\Http\SessionSection $application)
+	public function setApplicationFromSession(\Nette\Http\SessionSection $application): self
 	{
 		$values = array(
 			'name' => $application->name,

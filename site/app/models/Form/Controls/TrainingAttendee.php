@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form\Controls;
 
 /**
@@ -15,7 +17,7 @@ trait TrainingAttendee
 	 *
 	 * @param \Nette\Forms\Container $container
 	 */
-	protected function addAttendee(\Nette\Forms\Container $container)
+	protected function addAttendee(\Nette\Forms\Container $container): void
 	{
 		$container->addText('name', 'Jméno a příjmení:')
 			->setRequired('Zadejte prosím jméno a příjmení')

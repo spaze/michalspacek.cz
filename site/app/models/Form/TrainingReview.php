@@ -12,6 +12,12 @@ namespace MichalSpacekCz\Form;
 class TrainingReview extends ProtectedForm
 {
 
+	/**
+	 * TrainingReview constructor.
+	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param string $name
+	 * @param \Nette\Utils\Html[]|null $applications
+	 */
 	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, ?array $applications = null)
 	{
 		parent::__construct($parent, $name);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
@@ -48,8 +50,13 @@ class TrainingApplicationAdmin extends ProtectedForm
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
 	 * @param \Nette\Localization\ITranslator $translator
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \MichalSpacekCz\Training\Applications $trainingApplications, \MichalSpacekCz\Training\Dates $trainingDates, \Nette\Localization\ITranslator $translator)
-	{
+	public function __construct(
+		\Nette\ComponentModel\IContainer $parent,
+		string $name,
+		\MichalSpacekCz\Training\Applications $trainingApplications,
+		\MichalSpacekCz\Training\Dates $trainingDates,
+		\Nette\Localization\ITranslator $translator
+	) {
 		parent::__construct($parent, $name);
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
@@ -74,7 +81,7 @@ class TrainingApplicationAdmin extends ProtectedForm
 	}
 
 
-	protected function addPaymentInfo(\Nette\Forms\Container $container)
+	protected function addPaymentInfo(\Nette\Forms\Container $container): void
 	{
 		$this->addText('price', 'Cena bez DPH:')
 			->setType('number')
@@ -94,8 +101,9 @@ class TrainingApplicationAdmin extends ProtectedForm
 
 	/**
 	 * @param \Nette\Database\Row $application
+	 * @return self
 	 */
-	public function setApplication(\Nette\Database\Row $application)
+	public function setApplication(\Nette\Database\Row $application): self
 	{
 		$values = array(
 			'name' => $application->name,

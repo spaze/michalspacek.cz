@@ -56,7 +56,7 @@ class TrainingsPresenter extends BasePresenter
 	/** @var \Nette\Database\Row */
 	private $training;
 
-	/** @var array */
+	/** @var \Nette\Database\Row[] */
 	private $dates;
 
 

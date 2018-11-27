@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training;
@@ -31,12 +33,11 @@ class TrainingDate extends ProtectedForm
 
 	public function __construct(
 		\Nette\ComponentModel\IContainer $parent,
-		$name,
+		string $name,
 		Training\Trainings $trainings,
 		Training\Dates $trainingDates,
 		Training\Venues $trainingVenues
-	)
-	{
+	) {
 		parent::__construct($parent, $name);
 		$this->trainings = $trainings;
 		$this->trainingDates = $trainingDates;
@@ -102,7 +103,7 @@ class TrainingDate extends ProtectedForm
 	}
 
 
-	public function setTrainingDate(\Nette\Database\Row $date)
+	public function setTrainingDate(\Nette\Database\Row $date): self
 	{
 		$values = array(
 			'training' => $date->trainingId,

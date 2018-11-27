@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Form;
 
 /**
@@ -16,7 +18,7 @@ class TrainingInvoice extends ProtectedForm
 	protected $translator;
 
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, $name, \Nette\Localization\ITranslator $translator)
+	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, \Nette\Localization\ITranslator $translator)
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;

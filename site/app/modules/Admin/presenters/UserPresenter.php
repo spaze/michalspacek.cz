@@ -1,7 +1,9 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
 
-use Nette\Application\UI\Form;
+use MichalSpacekCz\Form\ChangePassword;
 
 /**
  * User presenter.
@@ -26,21 +28,21 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	public function actionChangePassword()
+	public function actionChangePassword(): void
 	{
 		$this->template->pageTitle = 'Změnit heslo';
 	}
 
 
-	protected function createComponentChangePassword($formName)
+	protected function createComponentChangePassword($formName): ChangePassword
 	{
-		$form = new \MichalSpacekCz\Form\ChangePassword($this, $formName);
+		$form = new ChangePassword($this, $formName);
 		$form->onSuccess[] = [$this, 'submittedChangePassword'];
 		return $form;
 	}
 
 
-	public function submittedChangePassword(\MichalSpacekCz\Form\ChangePassword $form, $values)
+	public function submittedChangePassword(ChangePassword $form, $values): void
 	{
 		$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
 		$this->redirect('Homepage:');
