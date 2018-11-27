@@ -61,8 +61,7 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 		$this->getSession()->start();
 		if (($token = $this->authenticator->verifyPermanentLogin()) !== null) {
 			$this->user->login($this->authenticator->getIdentity($token->userId, $token->username));
-			$this->authenticator->clearPermanentLogin($this->user);
-			$this->authenticator->storePermanentLogin($this->user);
+			$this->authenticator->regeneratePermanentLogin($this->user);
 			$this->restoreRequest($this->backlink);
 			$this->redirect('Homepage:');
 		}

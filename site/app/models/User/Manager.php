@@ -267,9 +267,25 @@ class Manager implements \Nette\Security\IAuthenticator
 	 *
 	 * @param User $user
 	 */
-	public function clearPermanentLogin(User $user) {
+	public function clearPermanentLogin(User $user)
+	{
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
 		$this->httpResponse->deleteCookie(self::AUTH_PERMANENT_COOKIE,  self::AUTH_COOKIES_PATH);
+	}
+
+
+	/**
+	 * Regenerate permanent login token.
+	 *
+	 * @param User $user
+	 * @throws \Exception
+	 */
+	public function regeneratePermanentLogin(User $user)
+	{
+		$this->database->beginTransaction();
+		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
+		$this->storePermanentLogin($user);
+		$this->database->commit();
 	}
 
 
@@ -294,6 +310,21 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function verifyReturningUser(string $value): ?Row
 	{
 		return $this->verifyToken($value, DateTime::fromParts(2000, 1, 1), self::TOKEN_RETURNING_USER);
+	}
+
+
+	/**
+	 * Regenerate returning user token.
+	 *
+	 * @param User $user
+	 * @throws \Exception
+	 */
+	public function regenerateReturningUser(User $user)
+	{
+		$this->database->beginTransaction();
+		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_RETURNING_USER);
+		$this->setReturningUser($this->insertToken($user, self::TOKEN_RETURNING_USER));
+		$this->database->commit();
 	}
 
 
