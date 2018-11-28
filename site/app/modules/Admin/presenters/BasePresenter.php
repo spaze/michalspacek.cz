@@ -12,11 +12,13 @@ namespace App\AdminModule\Presenters;
 abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
+	protected $haveBacklink = true;
+
 	protected function startup(): void
 	{
 		parent::startup();
 		if (!$this->user->isLoggedIn()) {
-			$params = ($this->authenticator->isReturningUser() ? ['backlink' => $this->storeRequest()] : []);
+			$params = ($this->haveBacklink ? ['backlink' => $this->storeRequest()] : []);
 			$this->redirect('Sign:in', $params);
 		}
 	}

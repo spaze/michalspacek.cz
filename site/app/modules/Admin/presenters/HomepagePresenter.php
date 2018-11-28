@@ -12,6 +12,8 @@ use MichalSpacekCz\Training;
 class HomepagePresenter extends BasePresenter
 {
 
+	protected $haveBacklink = false;
+
 	/** @var \MichalSpacekCz\Training\Applications */
 	protected $trainingApplications;
 
