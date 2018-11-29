@@ -29,7 +29,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	/** @var \Nette\Http\IRequest */
 	protected $httpRequest;
 
-	/** @var \Nette\Http\IResponse */
+	/** @var \Nette\Http\Response */
 	protected $httpResponse;
 
 	/** @var \MichalSpacekCz\Encryption\Password */
@@ -51,7 +51,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function __construct(
 		\Nette\Database\Context $context,
 		\Nette\Http\IRequest $httpRequest,
-		\Nette\Http\IResponse $httpResponse,
+		\Nette\Http\Response $httpResponse,
 		\MichalSpacekCz\Encryption\Password $passwordEncryption,
 		\Nette\Application\LinkGenerator $linkGenerator
 	)
@@ -174,7 +174,7 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	public function setReturningUser(string $value): void
 	{
-		$this->httpResponse->setCookie($this->returningUserCookie, $value, \Nette\Http\Response::PERMANENT, $this->authCookiesPath);
+		$this->httpResponse->setCookie($this->returningUserCookie, $value, \Nette\Http\Response::PERMANENT, $this->authCookiesPath, null, null, null, 'Strict');
 	}
 
 
@@ -268,7 +268,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function storePermanentLogin(User $user)
 	{
 		$value = $this->insertToken($user, self::TOKEN_PERMANENT_LOGIN);
-		$this->httpResponse->setCookie($this->permanentLoginCookie, $value, $this->permanentLoginInterval, $this->authCookiesPath);
+		$this->httpResponse->setCookie($this->permanentLoginCookie, $value, $this->permanentLoginInterval, $this->authCookiesPath, null, null, null, 'Strict');
 	}
 
 

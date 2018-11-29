@@ -1,6 +1,9 @@
 translation:
 	default: cs_CZ
 
+session:
+	cookie_samesite: Strict
+
 parameters:
 	domain:
 		fqdn: admin.%domain.root%
