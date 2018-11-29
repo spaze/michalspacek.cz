@@ -32,18 +32,6 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 	}
 
 
-	/**
-	 * Port-knocking-like login.
-	 */
-	protected function startup(): void
-	{
-		parent::startup();
-		if (!in_array($this->getAction(), $this->noReturningUserCheck) && !$this->authenticator->isReturningUser()) {
-			$this->forward('Honeypot:signIn');
-		}
-	}
-
-
 	public function actionDefault()
 	{
 		$this->redirect('in');
@@ -62,6 +50,10 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	public function actionIn()
 	{
+		if (!$this->authenticator->isReturningUser()) {
+			$this->forward('Honeypot:signIn');
+		}
+
 		$this->getSession()->start();
 		if (($token = $this->authenticator->verifyPermanentLogin()) !== null) {
 			$this->user->login($this->authenticator->getIdentity($token->userId, $token->username));

@@ -17,8 +17,6 @@ use Nette\Utils\DateTime;
 class Manager implements \Nette\Security\IAuthenticator
 {
 
-	private const AUTH_COOKIES_PATH = '/';
-
 	private const AUTH_PERMANENT_COOKIE = 'permanent';
 
 	private const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
@@ -45,18 +43,23 @@ class Manager implements \Nette\Security\IAuthenticator
 	/** @var string */
 	private $permanentLoginInterval;
 
+	/** @var string */
+	private $authCookiesPath = null;
+
 
 	public function __construct(
 		\Nette\Database\Context $context,
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\IResponse $httpResponse,
-		\MichalSpacekCz\Encryption\Password $passwordEncryption
+		\MichalSpacekCz\Encryption\Password $passwordEncryption,
+		\Nette\Application\LinkGenerator $linkGenerator
 	)
 	{
 		$this->database = $context;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->passwordEncryption = $passwordEncryption;
+		$this->authCookiesPath = (new \Nette\Http\Url($linkGenerator->link('Admin:Sign:in')))->getPath();
 	}
 
 
@@ -170,7 +173,7 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	public function setReturningUser(string $value): void
 	{
-		$this->httpResponse->setCookie($this->returningUserCookie, $value, \Nette\Http\Response::PERMANENT, self::AUTH_COOKIES_PATH);
+		$this->httpResponse->setCookie($this->returningUserCookie, $value, \Nette\Http\Response::PERMANENT, $this->authCookiesPath);
 	}
 
 
@@ -258,7 +261,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function storePermanentLogin(User $user)
 	{
 		$value = $this->insertToken($user, self::TOKEN_PERMANENT_LOGIN);
-		$this->httpResponse->setCookie(self::AUTH_PERMANENT_COOKIE,  $value, $this->permanentLoginInterval, self::AUTH_COOKIES_PATH);
+		$this->httpResponse->setCookie(self::AUTH_PERMANENT_COOKIE,  $value, $this->permanentLoginInterval, $this->authCookiesPath);
 	}
 
 
@@ -270,7 +273,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function clearPermanentLogin(User $user)
 	{
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
-		$this->httpResponse->deleteCookie(self::AUTH_PERMANENT_COOKIE,  self::AUTH_COOKIES_PATH);
+		$this->httpResponse->deleteCookie(self::AUTH_PERMANENT_COOKIE, $this->authCookiesPath);
 	}
 
 
