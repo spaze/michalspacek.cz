@@ -62,9 +62,6 @@ parameters:
 	contact:
 		phoneNumber: 123456789
 
-	returningUser:
-		cookie: cafebabe
-
 	encryption:
 		keys:
 			password:

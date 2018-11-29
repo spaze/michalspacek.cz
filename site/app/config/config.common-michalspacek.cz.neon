@@ -4,5 +4,4 @@ translation:
 parameters:
 	domain:
 		fqdn: www.%domain.root%
-		cookie: .%domain.root%
 		contentSecurityPolicySelf: "'self'"

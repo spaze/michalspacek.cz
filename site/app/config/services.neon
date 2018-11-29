@@ -44,16 +44,13 @@ services:
 	authenticator:
 		class: \MichalSpacekCz\User\Manager
 		setup:
-			- setPermanentLoginInterval(%returningUser.permanentLoginInterval%)
+			- setPermanentLoginCookie(%permanentLogin.cookie%)
+			- setPermanentLoginInterval(%permanentLogin.interval%)
 			- setReturningUserCookie(%returningUser.cookie%)
 	embed: \MichalSpacekCz\Embed
 	httpResponse:
 		setup:
-			- $cookieDomain(%domain.cookie%)
 			- $cookieSecure(true)
-	session:
-		setup:
-			- setCookieParameters(/, %domain.cookie%, true)
 	netxtenHelpers: \Netxten\Templating\Helpers
 	helpers: \MichalSpacekCz\Templating\Helpers
 	vat:

@@ -33,7 +33,10 @@ parameters:
 	registerUz:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	returningUser:
-		permanentLoginInterval: 14 days
+		cookie: __Secure-beenhere
+	permanentLogin:
+		cookie: __Secure-permanent
+		interval: 14 days
 	upcKeys:
 		technicolor:
 			model: "Technicolor TC7200"

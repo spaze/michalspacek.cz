@@ -17,8 +17,6 @@ use Nette\Utils\DateTime;
 class Manager implements \Nette\Security\IAuthenticator
 {
 
-	private const AUTH_PERMANENT_COOKIE = 'permanent';
-
 	private const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
 
 	private const TOKEN_PERMANENT_LOGIN = 1;
@@ -39,6 +37,9 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	/** @var string */
 	private $returningUserCookie;
+
+	/** @var string */
+	private $permanentLoginCookie;
 
 	/** @var string */
 	private $permanentLoginInterval;
@@ -190,6 +191,12 @@ class Manager implements \Nette\Security\IAuthenticator
 	}
 
 
+	public function setPermanentLoginCookie($cookie): void
+	{
+		$this->permanentLoginCookie = $cookie;
+	}
+
+
 	/**
 	 * Set permanent login interval.
 	 *
@@ -261,7 +268,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function storePermanentLogin(User $user)
 	{
 		$value = $this->insertToken($user, self::TOKEN_PERMANENT_LOGIN);
-		$this->httpResponse->setCookie(self::AUTH_PERMANENT_COOKIE,  $value, $this->permanentLoginInterval, $this->authCookiesPath);
+		$this->httpResponse->setCookie($this->permanentLoginCookie, $value, $this->permanentLoginInterval, $this->authCookiesPath);
 	}
 
 
@@ -273,7 +280,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	public function clearPermanentLogin(User $user)
 	{
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
-		$this->httpResponse->deleteCookie(self::AUTH_PERMANENT_COOKIE, $this->authCookiesPath);
+		$this->httpResponse->deleteCookie($this->permanentLoginCookie, $this->authCookiesPath);
 	}
 
 
@@ -299,7 +306,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 */
 	public function verifyPermanentLogin(): ?Row
 	{
-		$cookie = $this->httpRequest->getCookie(self::AUTH_PERMANENT_COOKIE, '');
+		$cookie = $this->httpRequest->getCookie($this->permanentLoginCookie, '');
 		return $this->verifyToken($cookie, DateTime::from("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
 	}
 

@@ -4,5 +4,4 @@ translation:
 parameters:
 	domain:
 		fqdn: admin.%domain.root%
-		cookie: admin.%domain.root%
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%

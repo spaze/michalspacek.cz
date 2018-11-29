@@ -4,5 +4,4 @@ translation:
 parameters:
 	domain:
 		fqdn: upc.%domain.root%
-		cookie: .%domain.root%
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%

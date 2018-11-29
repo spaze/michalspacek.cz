@@ -4,5 +4,4 @@ translation:
 parameters:
 	domain:
 		fqdn: pulse.%domain.root%
-		cookie: .%domain.root%
 		contentSecurityPolicySelf: %domain.sharedStaticRoot%
