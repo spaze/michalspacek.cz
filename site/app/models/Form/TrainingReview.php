@@ -45,6 +45,9 @@ class TrainingReview extends ProtectedForm
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu je %d znaků', 200);
 		$this->addCheckbox('hidden', 'Skrýt:');
+		$this->addText('ranking', 'Pořadí:')
+			->setRequired(false)
+			->setType('number');
 		$this->addSubmit('submit', 'Přidat');
 	}
 
@@ -58,6 +61,7 @@ class TrainingReview extends ProtectedForm
 			'review' => $review->review,
 			'href' => $review->href,
 			'hidden' => $review->hidden,
+			'ranking' => $review->ranking,
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';

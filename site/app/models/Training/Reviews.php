@@ -129,6 +129,7 @@ class Reviews
 				r.review,
 				r.href,
 				r.hidden,
+				r.ranking,
 				d.id_date AS dateId
 			FROM
 				training_reviews r
@@ -171,7 +172,7 @@ class Reviews
 	}
 
 
-	public function updateReview(int $reviewId, int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
+	public function updateReview(int $reviewId, int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden, ?int $ranking): void
 	{
 		$this->database->query(
 			'UPDATE training_reviews SET ? WHERE id_review = ?',
@@ -183,13 +184,14 @@ class Reviews
 				'review' => $review,
 				'href' => $href,
 				'hidden' => $hidden,
+				'ranking' => $ranking,
 			),
 			$reviewId
 		);
 	}
 
 
-	public function addReview(int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden): void
+	public function addReview(int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden, ?int $ranking): void
 	{
 		$datetime = new \DateTime();
 		$this->database->query(
@@ -204,6 +206,7 @@ class Reviews
 				'added' => $datetime,
 				'added_timezone' => $datetime->getTimezone()->getName(),
 				'hidden' => $hidden,
+				'ranking' => $ranking,
 			)
 		);
 	}
