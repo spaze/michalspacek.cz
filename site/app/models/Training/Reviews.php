@@ -83,7 +83,8 @@ class Reviews
 				r.job_title AS jobTitle,
 				r.review,
 				r.href,
-				r.hidden
+				r.hidden,
+				r.ranking
 			FROM
 				training_reviews r
 				JOIN training_dates d ON r.key_date = d.id_date
@@ -162,7 +163,8 @@ class Reviews
 				r.job_title AS jobTitle,
 				r.review,
 				r.href,
-				r.hidden
+				r.hidden,
+				r.ranking
 			FROM
 				training_reviews r
 			WHERE

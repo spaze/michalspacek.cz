@@ -6,7 +6,10 @@
 
 {define #content}
 	<div n:class="$review->hidden ? discarded" n:foreach="$reviews as $review">
-		<p><strong><a n:href="Trainings:review $review->reviewId">{$review->name}</a>{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
+		<p>
+			<small n:ifset="$review->ranking" title="Pořadí ve výpisu všech ohlasů">#{$review->ranking}</small>
+			<strong><a n:href="Trainings:review $review->reviewId">{$review->name}</a>{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong>
+		</p>
 		<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
 	</div>
 {/define}
