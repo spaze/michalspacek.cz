@@ -321,3 +321,5 @@ blog:
 		postadded: "Příspěvek \"%s\" přidán • \"Upravit\":[%s] • \"Zobrazit\":[%s]"
 		postupdated: "Příspěvek \"%s\" upraven • \"Upravit\":[%s] • \"Zobrazit\":[%s]"
 		duplicateslug: "Příspěvek s takovým slugem již existuje"
+license:
+    content: Obsah podléhá licenci Creative Commons Uveďte původ 4.0 Mezinárodní

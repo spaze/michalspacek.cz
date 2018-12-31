@@ -200,11 +200,11 @@ img.noshadow { box-shadow: none; }
 	float: left;
 	margin-right: 1em;
 }
-#header-icons small a, #footer-links a {
+#header-icons small a, #footer a {
 	color: #666;
 	text-decoration: none;
 }
-#header-icons small a:hover, #footer-links a:hover {
+#header-icons small a:hover, #footer a:hover {
 	color: #444;
 	text-decoration: underline;
 }

@@ -321,3 +321,5 @@ blog:
 		postadded: "Blog post \"%s\" added • \"Edit\":[%s] • \"View\":[%s]"
 		postupdated: "Blog post \"%s\" updated • \"Edit\":[%s] • \"View\":[%s]"
 		duplicateslug: "Blog post with such slug already exists"
+license:
+    content: Content licensed under a Creative Commons Attribution 4.0 International License
