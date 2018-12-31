@@ -61,6 +61,7 @@ class Certificates
 	/**
 	 * @param string $user
 	 * @param string $key
+	 * @throws \Nette\Security\AuthenticationException
 	 */
 	public function authenticate(string $user, string $key): void
 	{
@@ -68,7 +69,7 @@ class Certificates
 			throw new \Nette\Security\AuthenticationException('Unknown user', \MichalSpacekCz\User\Manager::IDENTITY_NOT_FOUND);
 		}
 
-		if (!password_verify($key, $this->users[$user])) {
+		if (!hash_equals($this->users[$user], hash('sha512', $key))) {
 			throw new \Nette\Security\AuthenticationException('Invalid key', \MichalSpacekCz\User\Manager::INVALID_CREDENTIAL);
 		}
 	}
