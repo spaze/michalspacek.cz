@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Api;
+namespace MichalSpacekCz;
 
 class Certificates
 {

@@ -23,7 +23,7 @@ class HomepagePresenter extends BasePresenter
 	/** @var \MichalSpacekCz\Training\Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Api\Certificates */
+	/** @var \MichalSpacekCz\Certificates */
 	protected $certificates;
 
 
@@ -31,13 +31,13 @@ class HomepagePresenter extends BasePresenter
 	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
 	 * @param \MichalSpacekCz\Training\Mails $trainingMails
 	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Api\Certificates $certificates
+	 * @param \MichalSpacekCz\Certificates $certificates
 	 */
 	public function __construct(
 		Training\Applications $trainingApplications,
 		Training\Mails $trainingMails,
 		Training\Dates $trainingDates,
-		\MichalSpacekCz\Api\Certificates $certificates
+		\MichalSpacekCz\Certificates $certificates
 	)
 	{
 		$this->trainingApplications = $trainingApplications;

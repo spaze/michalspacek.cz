@@ -109,7 +109,7 @@ services:
 	        - setUpdatedInfoThreshold(%blog.updatedInfoThreshold%)
 	blogPostLoader: \MichalSpacekCz\Post\Loader
 	certificatesApi:
-		class: \MichalSpacekCz\Api\Certificates
+		class: \MichalSpacekCz\Certificates
 		setup:
 			- setUsers(%certificatesApi.users%)
 			- setExpiringThreshold(%certificatesApi.expiringThreshold%)

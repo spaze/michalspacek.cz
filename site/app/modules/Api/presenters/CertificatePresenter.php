@@ -12,14 +12,14 @@ namespace App\ApiModule\Presenters;
 class CertificatePresenter extends \App\WwwModule\Presenters\BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Api\Certificates */
+	/** @var \MichalSpacekCz\Certificates */
 	protected $certificates;
 
 
 	/**
-	 * @param \MichalSpacekCz\Api\Certificates $certificates
+	 * @param \MichalSpacekCz\Certificates $certificates
 	 */
-	public function __construct(\MichalSpacekCz\Api\Certificates $certificates)
+	public function __construct(\MichalSpacekCz\Certificates $certificates)
 	{
 		$this->certificates = $certificates;
 		parent::__construct();
