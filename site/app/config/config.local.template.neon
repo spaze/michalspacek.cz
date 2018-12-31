@@ -77,9 +77,6 @@ parameters:
 			url: "https://example.amazonaws.com/stage/upc_keys/%s/%s"
 			apiKey: "britishteaatfiveoclockisnotacoffee"
 
-	keyCdn:
-		secretKey: deadbeef
-
 	certificatesApi:
 		users:
 			web: sha512bin2hexrandom_bytes64
