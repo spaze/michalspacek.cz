@@ -66,42 +66,6 @@ h2:hover .permalink { display: inline; }
 .clear { clear: both; }
 .left { float: left; }
 .right { float: right; }
-.rating strong {
-	width: 1.5em;
-	height: 1.5em;
-	display: block;
-	text-align: center;
-	background-color: hsl(0, 0%, 50%);
-	border: 1px solid hsl(0, 0%, 40%);
-	border-radius: 2px;
-	box-sizing: border-box;
-	color: #FFF;
-	margin: 0 0.3em;
-}
-.rating .rating-a {
-	background-color: hsl(120, 100%, 35%);
-	border-color: hsl(120, 100%, 25%);
-}
-.rating .rating-b {
-	background-color: hsl(90, 100%, 40%);
-	border-color: hsl(90, 100%, 30%);
-}
-.rating .rating-c {
-	background-color: hsl(60, 100%, 40%);
-	border-color: hsl(60, 100%, 30%);
-}
-.rating .rating-d {
-	background-color: hsl(40, 100%, 50%);
-	border-color: hsl(40, 100%, 40%);
-}
-.rating .rating-e {
-	background-color: hsl(20, 100%, 50%);
-	border-color: hsl(20, 100%, 40%);
-}
-.rating .rating-f {
-	background-color: hsl(0, 100%, 50%);
-	border-color: hsl(0, 100%, 40%);
-}
 .open-button {
 	font-size: smaller;
 	color: #777;

@@ -5,7 +5,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Pulse</title>
-	{stylesheet screen-pulse}
+	{stylesheet screen-pulse+rating}
 	{script jquery+pulse async, defer}
 	{script remove-fbclid async, defer}
 	{ifset #metas}{include #metas}{/ifset}
