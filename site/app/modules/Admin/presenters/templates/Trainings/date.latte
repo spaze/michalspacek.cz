@@ -11,7 +11,7 @@
 <p>
 {$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd}
 <small>{$venueCity}{if !$public}, {$venueName}{/if}</small>
-{if $note}<br><span title="Poznámka">&#x1F5C5;</span> <small>{$note}</small>{/if}
+{if $note}<br><span title="Poznámka" class="lighter"><i class="far fa-fw fa-comment"></i></span> <small>{$note}</small>{/if}
 </p>
 {form statuses}
 <div id="applications">

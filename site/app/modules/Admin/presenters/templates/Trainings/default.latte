@@ -52,7 +52,7 @@
 					<a n:href="Trainings:date $training->dateId">{$training->start|localeIntervalDay:$training->end}</a>
 				</small>
 				</strong>
-				<span n:if="$training->note" title="Poznámka: {$training->note}">&#x1F5C5;</span>
+				<span n:if="$training->note" title="Poznámka: {$training->note}" class="lighter"><i class="far fa-fw fa-comment"></i></span>
 			</td>
 			<td class="iconCell">
 				<small title="{$training->status}">
