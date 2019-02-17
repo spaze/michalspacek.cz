@@ -3,24 +3,24 @@
 /**
  * This demo shows how Texy! control images (useful for CMS)
  *     - programmable images controlling
- *     - onMouseOver state
- *     - support for preloading
  */
 
+declare(strict_types=1);
 
-// include Texy!
-require_once __DIR__ . '/../../src/texy.php';
+
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	die('Install packages using `composer install`');
+}
 
 
 /**
  * User handler for images
- * @return Texy\HtmlElement|string|false
+ * @return Texy\HtmlElement|string|null
  */
 function imageHandler(Texy\HandlerInvocation $invocation, Texy\Image $image, Texy\Link $link = null)
 {
 	if ($image->URL == 'user') { // accepts only [* user *]
 		$image->URL = 'image.gif'; // image URL
-		$image->overURL = 'image-over.gif'; // onmouseover image
 		$image->modifier->title = 'Texy! logo';
 		if ($link) { // linked image
 			$link->URL = 'big.gif';
@@ -31,7 +31,7 @@ function imageHandler(Texy\HandlerInvocation $invocation, Texy\Image $image, Tex
 }
 
 
-$texy = new Texy();
+$texy = new Texy;
 $texy->addHandler('image', 'imageHandler');
 $texy->imageModule->root = 'imagesdir/';       // "in-line" images root
 $texy->imageModule->linkedRoot = 'imagesdir/big/';   // "linked" images root
@@ -62,6 +62,4 @@ echo '<hr />';
 echo '<pre>';
 echo 'used images:';
 print_r($texy->summary['images']);
-echo 'onmouseover images:';
-print_r($texy->summary['preload']);
 echo '</pre>';

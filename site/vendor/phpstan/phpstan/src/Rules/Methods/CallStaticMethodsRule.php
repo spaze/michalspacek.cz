@@ -10,6 +10,7 @@ use PHPStan\Broker\Broker;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
 use PHPStan\Rules\ClassCaseSensitivityCheck;
+use PHPStan\Rules\ClassNameNodePair;
 use PHPStan\Rules\FunctionCallParametersCheck;
 use PHPStan\Rules\RuleLevelHelper;
 use PHPStan\Type\ErrorType;
@@ -67,7 +68,7 @@ class CallStaticMethodsRule implements \PHPStan\Rules\Rule
 	/**
 	 * @param \PhpParser\Node\Expr\StaticCall $node
 	 * @param \PHPStan\Analyser\Scope $scope
-	 * @return string[]
+	 * @return (string|\PHPStan\Rules\RuleError)[]
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
@@ -127,7 +128,7 @@ class CallStaticMethodsRule implements \PHPStan\Rules\Rule
 						sprintf('Call to static method %s() on an unknown class %s.', $methodName, $className),
 					];
 				} else {
-					$errors = $this->classCaseSensitivityCheck->checkClassNames([$className]);
+					$errors = $this->classCaseSensitivityCheck->checkClassNames([new ClassNameNodePair($className, $class)]);
 				}
 
 				$classReflection = $this->broker->getClass($className);
@@ -142,7 +143,7 @@ class CallStaticMethodsRule implements \PHPStan\Rules\Rule
 				$class,
 				sprintf('Call to static method %s() on an unknown class %%s.', $methodName),
 				static function (Type $type) use ($methodName): bool {
-					return $type->canCallMethods()->yes() && $type->hasMethod($methodName);
+					return $type->canCallMethods()->yes() && $type->hasMethod($methodName)->yes();
 				}
 			);
 			$classType = $classTypeResult->getType();
@@ -164,7 +165,7 @@ class CallStaticMethodsRule implements \PHPStan\Rules\Rule
 			]);
 		}
 
-		if (!$classType->hasMethod($methodName)) {
+		if (!$classType->hasMethod($methodName)->yes()) {
 			if (!$this->reportMagicMethods) {
 				$directClassNames = TypeUtils::getDirectClassNames($classType);
 				foreach ($directClassNames as $className) {

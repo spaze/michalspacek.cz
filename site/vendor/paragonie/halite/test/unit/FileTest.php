@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use ParagonIE\Halite\File;
-use ParagonIE\Halite\HiddenString;
 use ParagonIE\Halite\KeyFactory;
 use ParagonIE\Halite\Stream\{
     MutableFile,
@@ -12,6 +11,7 @@ use ParagonIE\Halite\Stream\{
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\Halite\Util;
 use ParagonIE\Halite\Alerts as CryptoException;
+use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 
 final class FileTest extends TestCase
@@ -695,5 +695,23 @@ final class FileTest extends TestCase
         }
 
         unlink(__DIR__.'/tmp/garbage.dat');
+    }
+
+    public function testNonExistingOutputFile()
+    {
+        file_put_contents(__DIR__.'/tmp/empty116.txt', '');
+        if (\is_file(__DIR__ . '/tmp/empty116.encrypted.txt')) {
+            \unlink(__DIR__ . '/tmp/empty116.encrypted.txt');
+            \clearstatcache();
+        }
+        $key = new EncryptionKey(
+            new HiddenString(\str_repeat('B', 32))
+        );
+        File::encrypt(
+            __DIR__.'/tmp/empty116.txt',
+            __DIR__.'/tmp/empty116.encrypted.txt',
+            $key
+        );
+        $this->assertTrue(\file_exists(__DIR__.'/tmp/empty116.encrypted.txt'));
     }
 }

@@ -1,30 +1,29 @@
 <?php
 
 /**
- * This demo shows how combine Texy! with syntax highlighter GESHI
+ * This demo shows how combine Texy! with syntax highlighter GeSHi
  *       - define user callback (for /--code elements)
  *       - load language, highlight and return stylesheet + html output
  */
 
+declare(strict_types=1);
+
 
 // include libs
-require_once __DIR__ . '/../../src/texy.php';
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	die('Install packages using `composer install`');
+}
 
 
-$geshiPath = __DIR__ . '/geshi/';
-@include_once $geshiPath . 'geshi.php';
-
-
-if (!class_exists('Geshi')) {
-	die('DOWNLOAD <a href="http://qbnz.com/highlighter/">GESHI</a> AND UNPACK TO GESHI FOLDER FIRST!');
+if (!class_exists('GeSHi')) {
+	die('Install GeSHi using `composer require geshi/geshi`');
 }
 
 
 /**
  * User handler for code block
- * @return Texy\HtmlElement
  */
-function blockHandler(Texy\HandlerInvocation $invocation, $blocktype, $content, $lang, Texy\Modifier $modifier)
+function blockHandler(Texy\HandlerInvocation $invocation, $blocktype, $content, $lang, Texy\Modifier $modifier): Texy\HtmlElement
 {
 	if ($blocktype !== 'block/code') {
 		return $invocation->proceed();
@@ -32,16 +31,14 @@ function blockHandler(Texy\HandlerInvocation $invocation, $blocktype, $content, 
 
 	$texy = $invocation->getTexy();
 
-	global $geshiPath;
-
 	if ($lang == 'html') {
 		$lang = 'html4strict';
 	}
 	$content = Texy\Helpers::outdent($content);
-	$geshi = new GeSHi($content, $lang, $geshiPath . 'geshi/');
+	$geshi = new GeSHi($content, $lang);
 
 	// GeSHi could not find the language
-	if ($geshi->error) {
+	if ($geshi->error()) {
 		return $invocation->proceed();
 	}
 
@@ -56,7 +53,8 @@ function blockHandler(Texy\HandlerInvocation $invocation, $blocktype, $content, 
 	$geshi->set_link_styles(GESHI_HOVER, 'background-color: #f0f000;');
 
 	// save generated stylesheet
-	$texy->styleSheet .= $geshi->get_stylesheet();
+	global $styleSheet;
+	$styleSheet .= $geshi->get_stylesheet();
 
 	$content = $geshi->parse_code();
 
@@ -72,11 +70,11 @@ function blockHandler(Texy\HandlerInvocation $invocation, $blocktype, $content, 
 }
 
 
-$texy = new Texy();
+$texy = new Texy;
 $texy->addHandler('block', 'blockHandler');
 
 // prepare CSS stylesheet
-$texy->styleSheet = 'pre { padding:10px } ';
+$styleSheet = 'pre { padding:10px } ';
 
 // processing
 $text = file_get_contents('sample.texy');
@@ -84,7 +82,7 @@ $html = $texy->process($text);  // that's all folks!
 
 // echo Geshi Stylesheet
 header('Content-type: text/html; charset=utf-8');
-echo '<style type="text/css">' . $texy->styleSheet . '</style>';
+echo '<style type="text/css">'. $styleSheet . '</style>';
 echo '<title>' . $texy->headingModule->title . '</title>';
 // echo formated output
 echo $html;

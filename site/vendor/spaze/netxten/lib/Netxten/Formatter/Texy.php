@@ -48,7 +48,6 @@ class Texy
 	protected function getTexy(): \Texy\Texy
 	{
 		$texy = new \Texy\Texy();
-		$texy->encoding = 'utf-8';
 		$texy->allowedTags = $texy::NONE;
 		foreach ($this->handlers as $event => $callback) {
 			$texy->addHandler($event, $callback);

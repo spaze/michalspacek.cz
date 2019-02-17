@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -26,7 +28,7 @@ final class ScriptModule extends Texy\Module
 	public $separator = ',';
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -43,16 +45,16 @@ final class ScriptModule extends Texy\Module
 	/**
 	 * Callback for: {{...}}.
 	 *
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
 	public function pattern(Texy\LineParser $parser, array $matches)
 	{
-		list(, $mContent) = $matches;
+		[, $mContent] = $matches;
 		// [1] => ...
 
 		$cmd = trim($mContent);
 		if ($cmd === '') {
-			return false;
+			return;
 		}
 
 		$raw = null;
@@ -70,11 +72,11 @@ final class ScriptModule extends Texy\Module
 		if ($this->handler) {
 			if (is_callable([$this->handler, $cmd])) {
 				array_unshift($args, $parser);
-				return call_user_func_array([$this->handler, $cmd], $args);
+				return [$this->handler, $cmd](...$args);
 			}
 
 			if (is_callable($this->handler)) {
-				return call_user_func_array($this->handler, [$parser, $cmd, $args, $raw]);
+				return $this->handler($parser, $cmd, $args, $raw);
 			}
 		}
 
@@ -85,13 +87,13 @@ final class ScriptModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, $cmd, array $args = null, $raw)
+	public function solve(Texy\HandlerInvocation $invocation, string $cmd, array $args = null, string $raw = null)
 	{
 		if ($cmd === 'texy') {
 			if (!$args) {
-				return false;
+				return;
 			}
 
 			switch ($args[0]) {
@@ -100,9 +102,6 @@ final class ScriptModule extends Texy\Module
 					break;
 			}
 			return '';
-
-		} else {
-			return false;
 		}
 	}
 }

@@ -25,6 +25,7 @@ use ParagonIE\Halite\{
     Symmetric\AuthenticationKey,
     Symmetric\EncryptionKey
 };
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class File
@@ -477,6 +478,7 @@ final class File
      * @throws InvalidMessage
      * @throws InvalidType
      * @throws \TypeError
+     * @throws \SodiumException
      */
     protected static function checksumData(
         StreamInterface $fileStream,
@@ -566,6 +568,7 @@ final class File
      * @throws InvalidMessage
      * @throws InvalidType
      * @throws \TypeError
+     * @throws \SodiumException
      */
     protected static function encryptData(
         ReadOnlyFile $input,
@@ -606,6 +609,7 @@ final class File
         \sodium_crypto_generichash_update($mac, Halite::HALITE_VERSION_FILE);
         \sodium_crypto_generichash_update($mac, $firstNonce);
         \sodium_crypto_generichash_update($mac, $hkdfSalt);
+        /** @var string $mac */
 
         \sodium_memzero($authKey);
         \sodium_memzero($hkdfSalt);
@@ -616,8 +620,8 @@ final class File
             new EncryptionKey(
                 new HiddenString($encKey)
             ),
-            $firstNonce,
-            $mac,
+            (string) $firstNonce,
+            (string) $mac,
             $config
         );
     }
@@ -638,7 +642,7 @@ final class File
      * @throws InvalidKey
      * @throws InvalidMessage
      * @throws InvalidType
-     * @throws \TypeError
+     * @throws \SodiumException
      */
     protected static function decryptData(
         ReadOnlyFile $input,
@@ -682,6 +686,7 @@ final class File
         \sodium_crypto_generichash_update($mac, $header);
         \sodium_crypto_generichash_update($mac, $firstNonce);
         \sodium_crypto_generichash_update($mac, $hkdfSalt);
+        /** @var string $mac */
 
         $old_macs = self::streamVerify($input, Util::safeStrcpy($mac), $config);
 
@@ -694,8 +699,8 @@ final class File
             new EncryptionKey(
                 new HiddenString($encKey)
             ),
-            $firstNonce,
-            $mac,
+            (string) $firstNonce,
+            (string) $mac,
             $config,
             $old_macs
         );
@@ -803,8 +808,8 @@ final class File
             new EncryptionKey(
                 new HiddenString($encKey)
             ),
-            $nonce,
-            $mac,
+            (string) $nonce,
+            (string) $mac,
             $config
         );
         \sodium_memzero($encKey);
@@ -899,6 +904,7 @@ final class File
         \sodium_crypto_generichash_update($mac, $ephPublic);
         \sodium_crypto_generichash_update($mac, $hkdfSalt);
 
+        /** @var string $mac */
         $oldMACs = self::streamVerify($input, Util::safeStrcpy($mac), $config);
 
         // We no longer need these:
@@ -1222,7 +1228,7 @@ final class File
 
             $encrypted = \sodium_crypto_stream_xor(
                 $read,
-                $nonce,
+                (string) $nonce,
                 $encKey->getRawKeyMaterial()
             );
             \sodium_crypto_generichash_update($mac, $encrypted);
@@ -1265,6 +1271,7 @@ final class File
      * @throws FileModified
      * @throws InvalidMessage
      * @throws \TypeError
+     * @throws \SodiumException
      */
     final private static function streamDecrypt(
         ReadOnlyFile $input,
@@ -1298,6 +1305,7 @@ final class File
 
             // Version 2+ uses a keyed BLAKE2b hash instead of HMAC
             \sodium_crypto_generichash_update($mac, $read);
+            /** @var string $mac */
             $calcMAC = Util::safeStrcpy($mac);
             $calc = \sodium_crypto_generichash_final($calcMAC, (int) $config->MAC_SIZE);
 
@@ -1324,7 +1332,7 @@ final class File
             // This is where the decryption actually occurs:
             $decrypted = \sodium_crypto_stream_xor(
                 $read,
-                $nonce,
+                (string) $nonce,
                 $encKey->getRawKeyMaterial()
             );
             $output->writeBytes($decrypted);
@@ -1348,12 +1356,14 @@ final class File
      * @throws FileModified
      * @throws InvalidMessage
      * @throws \TypeError
+     * @throws \SodiumException
      */
     final private static function streamVerify(
         ReadOnlyFile $input,
         $mac,
         Config $config
     ): array {
+        /** @var int $start */
         $start = $input->getPos();
 
         // Grab the stored MAC:
@@ -1367,6 +1377,7 @@ final class File
 
         $break = false;
         while (!$break && $input->getPos() < $cipher_end) {
+
             /**
              * Would a full BUFFER read put it past the end of the
              * ciphertext? If so, only return a portion of the file.
@@ -1384,6 +1395,7 @@ final class File
              * We're updating our HMAC and nothing else
              */
             \sodium_crypto_generichash_update($mac, $read);
+            $mac = (string) $mac;
             // Copy the hash state then store the MAC of this chunk
             /** @var string $chunkMAC */
             $chunkMAC = Util::safeStrcpy($mac);

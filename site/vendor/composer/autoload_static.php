@@ -36,6 +36,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'Psr\\Log\\' => 8,
             'PhpParser\\' => 10,
+            'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
             'PackageVersions\\' => 16,
@@ -113,6 +114,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'ParagonIE\\HiddenString\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paragonie/hidden-string/src',
         ),
         'ParagonIE\\Halite\\' => 
         array (
@@ -436,7 +441,9 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\PhpGenerator\\PhpFile' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/PhpFile.php',
         'Nette\\PhpGenerator\\PhpLiteral' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/PhpLiteral.php',
         'Nette\\PhpGenerator\\PhpNamespace' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/PhpNamespace.php',
+        'Nette\\PhpGenerator\\Printer' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/Printer.php',
         'Nette\\PhpGenerator\\Property' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/Property.php',
+        'Nette\\PhpGenerator\\PsrPrinter' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/PsrPrinter.php',
         'Nette\\PhpGenerator\\Traits\\CommentAware' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/Traits/CommentAware.php',
         'Nette\\PhpGenerator\\Traits\\FunctionLike' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/Traits/FunctionLike.php',
         'Nette\\PhpGenerator\\Traits\\NameAware' => __DIR__ . '/..' . '/nette/php-generator/src/PhpGenerator/Traits/NameAware.php',
@@ -552,7 +559,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Texy\\Regexp' => __DIR__ . '/..' . '/texy/texy/src/Texy/Regexp.php',
         'Texy\\Strict' => __DIR__ . '/..' . '/texy/texy/src/Texy/Strict.php',
         'Texy\\Texy' => __DIR__ . '/..' . '/texy/texy/src/Texy/Texy.php',
-        'Texy\\Utf' => __DIR__ . '/..' . '/texy/texy/src/Texy/Utf.php',
         'Tracy\\Bar' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/Bar.php',
         'Tracy\\BlueScreen' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/BlueScreen.php',
         'Tracy\\Bridges\\Nette\\Bridge' => __DIR__ . '/..' . '/tracy/tracy/src/Bridges/Nette/Bridge.php',

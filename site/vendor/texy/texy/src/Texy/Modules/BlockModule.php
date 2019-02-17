@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -17,7 +19,7 @@ use Texy\HtmlElement;
  */
 final class BlockModule extends Texy\Module
 {
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -44,9 +46,8 @@ final class BlockModule extends Texy\Module
 
 	/**
 	 * Single block pre-processing.
-	 * @return void
 	 */
-	public function beforeBlockParse(Texy\BlockParser $parser, &$text)
+	public function beforeBlockParse(Texy\BlockParser $parser, string &$text): void
 	{
 		// autoclose exclusive blocks
 		$text = Texy\Regexp::replace(
@@ -64,11 +65,11 @@ final class BlockModule extends Texy\Module
 	 * ....
 	 * \----
 	 *
-	 * @return HtmlElement|string|false
+	 * @return HtmlElement|string|null
 	 */
 	public function pattern(Texy\BlockParser $parser, array $matches)
 	{
-		list(, $mParam, $mMod, $mContent) = $matches;
+		[, $mParam, $mMod, $mContent] = $matches;
 		// [1] => code | text | ...
 		// [2] => ... additional parameters
 		// [3] => .(title)[class]{style}<>
@@ -83,19 +84,11 @@ final class BlockModule extends Texy\Module
 	}
 
 
-	// for backward compatibility
-	public function outdent($s)
-	{
-		trigger_error('Use Texy\Helpers::outdent()', E_USER_WARNING);
-		return Helpers::outdent($s);
-	}
-
-
 	/**
 	 * Finish invocation.
-	 * @return HtmlElement|string|false
+	 * @return HtmlElement|string|null
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, $blocktype, $s, $param, Texy\Modifier $mod)
+	public function solve(Texy\HandlerInvocation $invocation, string $blocktype, string $s, $param, Texy\Modifier $mod)
 	{
 		$texy = $this->texy;
 		$parser = $invocation->getParser();
@@ -107,7 +100,7 @@ final class BlockModule extends Texy\Module
 		}
 
 		if (empty($texy->allowed[$blocktype])) {
-			return false;
+			return;
 		}
 
 		if ($blocktype === 'block/texysource') {
@@ -233,7 +226,5 @@ final class BlockModule extends Texy\Module
 			$el->parseBlock($texy, $s, $parser->isIndented()); // TODO: INDENT or NORMAL ?
 			return $el;
 		}
-
-		return false;
 	}
 }

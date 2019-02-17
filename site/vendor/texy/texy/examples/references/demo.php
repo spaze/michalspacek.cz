@@ -7,21 +7,24 @@
  *     - used links checking (antispam)
  */
 
+declare(strict_types=1);
 
-// include Texy!
-require_once __DIR__ . '/../../src/texy.php';
+
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	die('Install packages using `composer install`');
+}
 
 
 /**
  * User handler for unknown reference
- * @return Texy\HtmlElement|string
+ * @return Texy\HtmlElement|string|null
  */
 function newReferenceHandler(Texy\HandlerInvocation $parser, $refName)
 {
 	$names = ['Me', 'Punkrats', 'Servats', 'Bonifats'];
 
 	if (!isset($names[$refName])) {
-		return false; // it's not my job
+		return; // it's not my job
 	}
 
 	$name = $names[$refName];
@@ -35,7 +38,7 @@ function newReferenceHandler(Texy\HandlerInvocation $parser, $refName)
 }
 
 
-$texy = new Texy();
+$texy = new Texy;
 
 // references link [1] [2] will be processed through user function
 $texy->addHandler('newReference', 'newReferenceHandler');

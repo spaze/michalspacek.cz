@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy;
 
 
@@ -22,12 +24,19 @@ final class Helpers
 
 
 	/**
+	 * StrToLower in UTF-8.
+	 */
+	public static function toLower($s)
+	{
+		return function_exists('mb_strtolower') ? mb_strtolower($s, 'UTF-8') : $s;
+	}
+
+
+	/**
 	 * Translate all white spaces (\t \n \r space) to meta-spaces \x01-\x04.
 	 * which are ignored by TexyHtmlOutputModule routine
-	 * @param  string
-	 * @return string
 	 */
-	public static function freezeSpaces($s)
+	public static function freezeSpaces(string $s): string
 	{
 		return strtr($s, " \t\r\n", "\x01\x02\x03\x04");
 	}
@@ -35,10 +44,8 @@ final class Helpers
 
 	/**
 	 * Reverts meta-spaces back to normal spaces.
-	 * @param  string
-	 * @return string
 	 */
-	public static function unfreezeSpaces($s)
+	public static function unfreezeSpaces(string $s): string
 	{
 		return strtr($s, "\x01\x02\x03\x04", " \t\r\n");
 	}
@@ -46,10 +53,8 @@ final class Helpers
 
 	/**
 	 * Removes special controls characters and normalizes line endings and spaces.
-	 * @param  string
-	 * @return string
 	 */
-	public static function normalize($s)
+	public static function normalize(string $s): string
 	{
 		// standardize line endings to unix-like
 		$s = str_replace("\r\n", "\n", $s); // DOS
@@ -72,7 +77,7 @@ final class Helpers
 	 * Converts UTF-8 to ASCII.
 	 * iconv('UTF-8', 'ASCII//TRANSLIT', ...) has problem with glibc!
 	 */
-	public static function toAscii($s)
+	public static function toAscii(string $s): string
 	{
 		$s = strtr($s, '`\'"^~', '-----');
 		if (ICONV_IMPL === 'glibc') {
@@ -90,11 +95,8 @@ final class Helpers
 
 	/**
 	 * Converts to web safe characters [a-z0-9-] text.
-	 * @param  string
-	 * @param  string
-	 * @return string
 	 */
-	public static function webalize($s, $charlist = null)
+	public static function webalize(string $s, string $charlist = ''): string
 	{
 		$s = self::toAscii($s);
 		$s = strtolower($s);
@@ -106,10 +108,8 @@ final class Helpers
 
 	/**
 	 * Outdents text block.
-	 * @param  string
-	 * @return string
 	 */
-	public static function outdent($s, $firstLine = false)
+	public static function outdent(string $s, bool $firstLine = false): string
 	{
 		$s = trim($s, "\n");
 		if ($firstLine) {
@@ -129,10 +129,8 @@ final class Helpers
 
 	/**
 	 * Is given URL relative?
-	 * @param  string  URL
-	 * @return bool
 	 */
-	public static function isRelative($URL)
+	public static function isRelative(string $URL): bool
 	{
 		// check for scheme, or absolute path, or absolute URL
 		return !preg_match('#[a-z][a-z0-9+.-]{0,20}:|[\#/?]#Ai', $URL);
@@ -141,11 +139,8 @@ final class Helpers
 
 	/**
 	 * Prepends root to URL, if possible.
-	 * @param  string  URL
-	 * @param  string  root
-	 * @return string
 	 */
-	public static function prependRoot($URL, $root)
+	public static function prependRoot(string $URL, string $root): string
 	{
 		if ($root == null || !self::isRelative($URL)) {
 			return $URL;

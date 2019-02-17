@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy;
 
 
@@ -21,36 +23,32 @@ class Texy
 	use Strict;
 
 	// configuration directives
-	const ALL = true;
-	const NONE = false;
+	public const ALL = true;
+	public const NONE = false;
 
 	// Texy version
-	const VERSION = '2.9.3';
-	const REVISION = 'released on 2018-06-22';
+	public const VERSION = '3.0.0';
 
 	// types of protection marks
-	const CONTENT_MARKUP = "\x17";
-	const CONTENT_REPLACED = "\x16";
-	const CONTENT_TEXTUAL = "\x15";
-	const CONTENT_BLOCK = "\x14";
+	public const CONTENT_MARKUP = "\x17";
+	public const CONTENT_REPLACED = "\x16";
+	public const CONTENT_TEXTUAL = "\x15";
+	public const CONTENT_BLOCK = "\x14";
 
 	// url filters
-	const FILTER_ANCHOR = 'anchor';
-	const FILTER_IMAGE = 'image';
+	public const FILTER_ANCHOR = 'anchor';
+	public const FILTER_IMAGE = 'image';
 
 	// HTML minor-modes
-	const XML = 2;
+	public const XML = 2;
 
 	// HTML modes
-	const HTML4_TRANSITIONAL = 0;
-	const HTML4_STRICT = 1;
-	const HTML5 = 4;
-	const XHTML1_TRANSITIONAL = 2; // Texy::HTML4_TRANSITIONAL | Texy::XML;
-	const XHTML1_STRICT = 3; // Texy::HTML4_STRICT | Texy::XML;
-	const XHTML5 = 6; // Texy::HTML5 | Texy::XML;
-
-	/** @var string  input & output text encoding */
-	public $encoding = 'utf-8';
+	public const HTML4_TRANSITIONAL = 0;
+	public const HTML4_STRICT = 1;
+	public const HTML5 = 4;
+	public const XHTML1_TRANSITIONAL = 2; // Texy::HTML4_TRANSITIONAL | Texy::XML;
+	public const XHTML1_STRICT = 3; // Texy::HTML4_STRICT | Texy::XML;
+	public const XHTML5 = 6; // Texy::HTML5 | Texy::XML;
 
 	/** @var array  Texy! syntax configuration */
 	public $allowed = [];
@@ -80,11 +78,7 @@ class Texy
 	public $summary = [
 		'images' => [],
 		'links' => [],
-		'preload' => [],
 	];
-
-	/** @var string  Generated stylesheet */
-	public $styleSheet = '';
 
 	/** @var array  CSS classes for align modifiers */
 	public $alignClasses = [
@@ -99,9 +93,6 @@ class Texy
 
 	/** @var bool  remove soft hyphens (SHY)? */
 	public $removeSoftHyphens = true;
-
-	/** @deprecated */
-	public static $advertisingNotice = false;
 
 	/** @var string */
 	public $nontextParagraph = 'div';
@@ -185,7 +176,7 @@ class Texy
 	public $_classes, $_styles;
 
 	/** @var bool */
-	private $processing;
+	private $processing = false;
 
 	/** @var array of events and registered handlers */
 	private $handlers = [];
@@ -208,35 +199,16 @@ class Texy
 	private $mode;
 
 
-	/** DEPRECATED */
-	public static $strictDTD;
-	public $cleaner;
-	public $xhtml;
-
-
 	public function __construct()
 	{
-		if (defined('PCRE_VERSION') && PCRE_VERSION == 8.34 && PHP_VERSION_ID < 50513) {
-			trigger_error('Texy: PCRE 8.34 is not supported due to bug #1451', E_USER_WARNING);
-		}
-
 		if (extension_loaded('mbstring') && mb_get_info('func_overload') & 2 && substr(mb_get_info('internal_encoding'), 0, 1) === 'U') {
 			mb_internal_encoding('pass');
 			trigger_error("Texy: mb_internal_encoding changed to 'pass'", E_USER_WARNING);
 		}
 
-		// load all modules
 		$this->loadModules();
 
-		// DEPRECATED
-		if (self::$strictDTD !== null) {
-			$this->setOutputMode(self::$strictDTD ? self::XHTML1_STRICT : self::XHTML1_TRANSITIONAL);
-		} else {
-			$this->setOutputMode(self::XHTML1_TRANSITIONAL);
-		}
-
-		// DEPRECATED
-		$this->cleaner = &$this->htmlOutputModule;
+		$this->setOutputMode(self::XHTML1_TRANSITIONAL);
 
 		// examples of link references ;-)
 		$link = new Link('https://texy.info/');
@@ -254,10 +226,8 @@ class Texy
 
 	/**
 	 * Set HTML/XHTML output mode (overwrites self::$allowedTags)
-	 * @param  int
-	 * @return void
 	 */
-	public function setOutputMode($mode)
+	public function setOutputMode(int $mode): void
 	{
 		if (!in_array($mode, [self::HTML4_TRANSITIONAL, self::HTML4_STRICT,
 			self::HTML5, self::XHTML1_TRANSITIONAL, self::XHTML1_STRICT, self::XHTML5, ], true)
@@ -266,8 +236,7 @@ class Texy
 		}
 
 		if (!isset(self::$dtdCache[$mode])) {
-			require __DIR__ . '/DTD.php';
-			self::$dtdCache[$mode] = $dtd;
+			self::$dtdCache[$mode] = require __DIR__ . '/DTD.php';
 		}
 
 		$this->mode = $mode;
@@ -284,9 +253,8 @@ class Texy
 
 	/**
 	 * Get HTML/XHTML output mode
-	 * @return int
 	 */
-	public function getOutputMode()
+	public function getOutputMode(): int
 	{
 		return $this->mode;
 	}
@@ -296,7 +264,7 @@ class Texy
 	 * Create array of all used modules ($this->modules).
 	 * This array can be changed by overriding this method (by subclasses)
 	 */
-	protected function loadModules()
+	protected function loadModules(): void
 	{
 		// line parsing
 		$this->scriptModule = new Modules\ScriptModule($this);
@@ -323,13 +291,8 @@ class Texy
 	}
 
 
-	final public function registerLinePattern($handler, $pattern, $name, $againTest = null)
+	final public function registerLinePattern(callable $handler, string $pattern, string $name, string $againTest = null): void
 	{
-		if (!is_callable($handler)) {
-			$able = is_callable($handler, true, $textual);
-			throw new \InvalidArgumentException("Handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
-
 		if (!isset($this->allowed[$name])) {
 			$this->allowed[$name] = true;
 		}
@@ -342,13 +305,8 @@ class Texy
 	}
 
 
-	final public function registerBlockPattern($handler, $pattern, $name)
+	final public function registerBlockPattern(callable $handler, string $pattern, string $name): void
 	{
-		if (!is_callable($handler)) {
-			$able = is_callable($handler, true, $textual);
-			throw new \InvalidArgumentException("Handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
-
 		// if (!preg_match('#(.)\^.*\$\1[a-z]*#is', $pattern)) die("Texy: Not a block pattern $name");
 		if (!isset($this->allowed[$name])) {
 			$this->allowed[$name] = true;
@@ -361,13 +319,8 @@ class Texy
 	}
 
 
-	final public function registerPostLine($handler, $name)
+	final public function registerPostLine(callable $handler, string $name): void
 	{
-		if (!is_callable($handler)) {
-			$able = is_callable($handler, true, $textual);
-			throw new \InvalidArgumentException("Handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
-
 		if (!isset($this->allowed[$name])) {
 			$this->allowed[$name] = true;
 		}
@@ -378,12 +331,8 @@ class Texy
 
 	/**
 	 * Converts document in Texy! to (X)HTML code.
-	 *
-	 * @param  string   input text
-	 * @param  bool     is single line?
-	 * @return string   output HTML code
 	 */
-	public function process($text, $singleLine = false)
+	public function process(string $text, bool $singleLine = false): string
 	{
 		if ($this->processing) {
 			throw new \RuntimeException('Processing is in progress yet.');
@@ -404,9 +353,6 @@ class Texy
 		} else {
 			$this->_styles = $this->allowedStyles;
 		}
-
-		// convert to UTF-8 (and check source encoding)
-		$text = Utf::toUtf($text, $this->encoding);
 
 		if ($this->removeSoftHyphens) {
 			$text = str_replace("\xC2\xAD", '', $text);
@@ -458,8 +404,7 @@ class Texy
 		$html = str_replace("\r", "\n", $html);
 
 		$this->processing = false;
-
-		return Utf::utf2html($html, $this->encoding);
+		return $html;
 	}
 
 
@@ -469,7 +414,7 @@ class Texy
 	 * @param  string   input text
 	 * @return string   output HTML code
 	 */
-	public function processLine($text)
+	public function processLine(string $text): string
 	{
 		return $this->process($text, true);
 	}
@@ -477,14 +422,11 @@ class Texy
 
 	/**
 	 * Makes only typographic corrections.
-	 * @param  string   input text (in encoding defined by Texy::$encoding)
-	 * @return string   output text (in UTF-8)
+	 * @param  string   input text
+	 * @return string   output text
 	 */
-	public function processTypo($text)
+	public function processTypo(string $text): string
 	{
-		// convert to UTF-8 (and check source encoding)
-		$text = Utf::toUtf($text, $this->encoding);
-
 		// standardize line endings and spaces
 		$text = Helpers::normalize($text);
 
@@ -495,29 +437,27 @@ class Texy
 			$text = $this->longWordsModule->postLine($text);
 		}
 
-		return Utf::utf2html($text, $this->encoding);
+		return $text;
 	}
 
 
 	/**
 	 * Converts DOM structure to pure text.
-	 * @return string
 	 */
-	public function toText()
+	public function toText(): string
 	{
 		if (!$this->DOM) {
 			throw new \RuntimeException('Call $texy->process() first.');
 		}
 
-		return Utf::utfTo($this->DOM->toText($this), $this->encoding);
+		return $this->DOM->toText($this);
 	}
 
 
 	/**
-	 * Converts internal string representation to final HTML code in UTF-8.
-	 * @return string
+	 * Converts internal string representation to final HTML code.
 	 */
-	final public function stringToHtml($s)
+	final public function stringToHtml(string $s): string
 	{
 		// decode HTML entities to UTF-8
 		$s = html_entity_decode($s, ENT_QUOTES, 'UTF-8');
@@ -530,7 +470,7 @@ class Texy
 			}
 			foreach ($blocks as $n => $s) {
 				if ($n % 2 === 0 && $s !== '') {
-					$blocks[$n] = call_user_func($handler, $s);
+					$blocks[$n] = $handler($s);
 				}
 			}
 		}
@@ -554,10 +494,9 @@ class Texy
 
 
 	/**
-	 * Converts internal string representation to final HTML code in UTF-8.
-	 * @return string
+	 * Converts internal string representation to final HTML code.
 	 */
-	final public function stringToText($s)
+	final public function stringToText(string $s): string
 	{
 		$save = $this->htmlOutputModule->lineWrap;
 		$this->htmlOutputModule->lineWrap = false;
@@ -586,16 +525,9 @@ class Texy
 	 * Add new event handler.
 	 *
 	 * @param  string   event name
-	 * @param  callback
-	 * @return void
 	 */
-	final public function addHandler($event, $callback)
+	final public function addHandler(string $event, callable $callback): void
 	{
-		if (!is_callable($callback)) {
-			$able = is_callable($callback, true, $textual);
-			throw new \InvalidArgumentException("Handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
-
 		$this->handlers[$event][] = $callback;
 	}
 
@@ -604,10 +536,10 @@ class Texy
 	 * Invoke registered around-handlers.
 	 * @return mixed
 	 */
-	final public function invokeAroundHandlers($event, Parser $parser, array $args)
+	final public function invokeAroundHandlers(string $event, Parser $parser, array $args)
 	{
 		if (!isset($this->handlers[$event])) {
-			return false;
+			return;
 		}
 
 		$invocation = new HandlerInvocation($this->handlers[$event], $parser, $args);
@@ -617,27 +549,23 @@ class Texy
 
 	/**
 	 * Invoke registered after-handlers.
-	 * @return void
 	 */
-	final public function invokeHandlers($event, array $args)
+	final public function invokeHandlers(string $event, array $args): void
 	{
 		if (!isset($this->handlers[$event])) {
 			return;
 		}
 
 		foreach ($this->handlers[$event] as $handler) {
-			call_user_func_array($handler, $args);
+			$handler(...$args);
 		}
 	}
 
 
 	/**
 	 * Generate unique mark - useful for freezing (folding) some substrings.
-	 * @param  string   any string to froze
-	 * @param  int      Texy::CONTENT_* constant
-	 * @return string  internal mark
 	 */
-	final public function protect($child, $contentType)
+	final public function protect(string $child, string $contentType): string
 	{
 		if ($child === '') {
 			return '';
@@ -655,11 +583,9 @@ class Texy
 
 	/**
 	 * Filters bad URLs.
-	 * @param  string   user URL
-	 * @param  string   FILTER_ANCHOR | FILTER_IMAGE
-	 * @return bool
+	 * @param  string  $type FILTER_ANCHOR | FILTER_IMAGE
 	 */
-	final public function checkURL($URL, $type)
+	final public function checkURL(string $URL, string $type): bool
 	{
 		// absolute URL with scheme? check scheme!
 		return empty($this->urlSchemeFilters[$type])
@@ -668,25 +594,25 @@ class Texy
 	}
 
 
-	final public function unProtect($html)
+	final public function unProtect(string $html): string
 	{
 		return strtr($html, $this->marks);
 	}
 
 
-	final public function getLinePatterns()
+	final public function getLinePatterns(): array
 	{
 		return $this->_linePatterns;
 	}
 
 
-	final public function getBlockPatterns()
+	final public function getBlockPatterns(): array
 	{
 		return $this->_blockPatterns;
 	}
 
 
-	final public function getDOM()
+	final public function getDOM(): HtmlElement
 	{
 		return $this->DOM;
 	}
@@ -699,70 +625,74 @@ class Texy
 
 
 	/** @deprecated */
-	final public static function freezeSpaces($s)
+	final public static function freezeSpaces(string $s): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::freezeSpaces()', E_USER_DEPRECATED);
 		return Helpers::freezeSpaces($s);
 	}
 
 
 	/** @deprecated */
-	final public static function unfreezeSpaces($s)
+	final public static function unfreezeSpaces(string $s): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::unfreezeSpaces()', E_USER_DEPRECATED);
 		return Helpers::unfreezeSpaces($s);
 	}
 
 
 	/** @deprecated */
-	final public static function normalize($s)
+	final public static function normalize(string $s): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::normalize()', E_USER_DEPRECATED);
 		return Helpers::normalize($s);
 	}
 
 
 	/** @deprecated */
-	final public static function webalize($s, $charlist = null)
+	final public static function webalize(string $s, string $charlist = null): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::webalize()', E_USER_DEPRECATED);
 		return Helpers::webalize($s, $charlist);
 	}
 
 
 	/** @deprecated */
-	final public static function escapeHtml($s)
+	final public static function escapeHtml(string $s): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use htmlspecialchars()', E_USER_DEPRECATED);
 		return htmlspecialchars($s, ENT_NOQUOTES, 'UTF-8');
 	}
 
 
 	/** @deprecated */
-	final public static function unescapeHtml($s)
+	final public static function unescapeHtml(string $s): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use html_entity_decode()', E_USER_DEPRECATED);
 		return html_entity_decode($s, ENT_QUOTES, 'UTF-8');
 	}
 
 
 	/** @deprecated */
-	final public static function outdent($s)
+	final public static function outdent(string $s): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::outdent()', E_USER_DEPRECATED);
 		return Helpers::outdent($s);
 	}
 
 
 	/** @deprecated */
-	final public static function isRelative($URL)
+	final public static function isRelative(string $URL): bool
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::isRelative()', E_USER_DEPRECATED);
 		return Helpers::isRelative($URL);
 	}
 
 
 	/** @deprecated */
-	final public static function prependRoot($URL, $root)
+	final public static function prependRoot(string $URL, string $root): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::prependRoot()', E_USER_DEPRECATED);
 		return Helpers::prependRoot($URL, $root);
 	}
 
-
-	/** @deprecated */
-	final public function free()
-	{
-	}
 }

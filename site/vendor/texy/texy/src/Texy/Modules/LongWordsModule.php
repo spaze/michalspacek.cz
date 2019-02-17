@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -15,12 +17,12 @@ use Texy;
  */
 final class LongWordsModule extends Texy\Module
 {
-	const
+	public const
 		DONT = 0, // don't hyphenate
 		HERE = 1, // hyphenate here
 		AFTER = 2; // hyphenate after
 
-	const SAFE_LIMIT = 1000;
+	public const SAFE_LIMIT = 1000;
 
 	public $wordLimit = 20;
 
@@ -49,7 +51,7 @@ final class LongWordsModule extends Texy\Module
 	private $doubleVowels = ['a', 'A', 'o', 'O'];
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -64,7 +66,7 @@ final class LongWordsModule extends Texy\Module
 	}
 
 
-	public function postLine($text)
+	public function postLine(string $text): string
 	{
 		return Texy\Regexp::replace(
 			$text,
@@ -76,12 +78,11 @@ final class LongWordsModule extends Texy\Module
 
 	/**
 	 * Callback for long words.
-	 * @return string
 	 * @internal
 	 */
-	public function pattern(array $matches)
+	public function pattern(array $matches): string
 	{
-		list($mWord) = $matches;
+		[$mWord] = $matches;
 		// [0] => lllloooonnnnggggwwwoorrdddd
 
 		if (iconv_strlen($mWord, 'UTF-8') > self::SAFE_LIMIT) {

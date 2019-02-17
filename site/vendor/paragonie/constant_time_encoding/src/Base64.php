@@ -121,6 +121,7 @@ abstract class Base64 implements EncoderInterface
      * @return string
      * @throws \RangeException
      * @throws \TypeError
+     * @psalm-suppress RedundantCondition
      */
     public static function decode(string $src, bool $strictPadding = false): string
     {
@@ -199,7 +200,9 @@ abstract class Base64 implements EncoderInterface
                 $err |= 1;
             }
         }
-        if ($err !== 0) {
+        /** @var bool $check */
+        $check = ($err === 0);
+        if (!$check) {
             throw new \RangeException(
                 'Base64::decode() only expects characters in the correct base64 alphabet'
             );

@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -16,20 +18,20 @@ use Texy\Patterns;
  */
 final class FigureModule extends Texy\Module
 {
-	/** @var string  non-floated box CSS class */
+	/** @var string|null  non-floated box CSS class */
 	public $class = 'figure';
 
-	/** @var string  left-floated box CSS class */
+	/** @var string|null  left-floated box CSS class */
 	public $leftClass;
 
-	/** @var string  right-floated box CSS class */
+	/** @var string|null  right-floated box CSS class */
 	public $rightClass;
 
 	/** @var int|false  how calculate div's width */
 	public $widthDelta = 10;
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -46,11 +48,11 @@ final class FigureModule extends Texy\Module
 
 	/**
 	 * Callback for [*image*]:link *** .... .(title)[class]{style}>.
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
 	public function pattern(Texy\BlockParser $parser, array $matches)
 	{
-		list(, $mURLs, $mImgMod, $mAlign, $mLink, $mContent, $mMod) = $matches;
+		[, $mURLs, $mImgMod, $mAlign, $mLink, $mContent, $mMod] = $matches;
 		// [1] => URLs
 		// [2] => .(title)[class]{style}<>
 		// [3] => * < >
@@ -81,18 +83,17 @@ final class FigureModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|false
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, Texy\Image $image, Texy\Link $link = null, $content, Texy\Modifier $mod)
+	public function solve(Texy\HandlerInvocation $invocation, Texy\Image $image, Texy\Link $link = null, string $content, Texy\Modifier $mod): ?Texy\HtmlElement
 	{
 		$texy = $this->texy;
 
 		$hAlign = $image->modifier->hAlign;
 		$image->modifier->hAlign = null;
 
-		$elImg = $texy->imageModule->solve(null, $image, $link); // returns Texy\HtmlElement or false!
+		$elImg = $texy->imageModule->solve(null, $image, $link); // returns Texy\HtmlElement or null!
 		if (!$elImg) {
-			return false;
+			return null;
 		}
 
 		$el = new Texy\HtmlElement('div');

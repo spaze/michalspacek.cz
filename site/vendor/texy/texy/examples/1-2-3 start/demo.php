@@ -4,15 +4,17 @@
  * TEXY! 1-2-3 START DEMO
  */
 
-
-// include Texy!
-require_once __DIR__ . '/../../src/texy.php';
+declare(strict_types=1);
 
 
-$texy = new Texy();
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	die('Install packages using `composer install`');
+}
+
+
+$texy = new Texy;
 
 // other OPTIONAL configuration
-$texy->encoding = 'windows-1250';      // disable UTF-8
 $texy->imageModule->root = 'images/';  // specify image folder
 $texy->allowed['phrase/ins'] = true;
 $texy->allowed['phrase/del'] = true;
@@ -27,7 +29,7 @@ $html = $texy->process($text);  // that's all folks!
 
 
 // echo formated output
-header('Content-type: text/html; charset=' . $texy->encoding);
+header('Content-type: text/html; charset=utf-8');
 echo '<link rel="stylesheet" type="text/css" media="all" href="style.css" />';
 echo '<title>' . $texy->headingModule->title . '</title>';
 echo $html;

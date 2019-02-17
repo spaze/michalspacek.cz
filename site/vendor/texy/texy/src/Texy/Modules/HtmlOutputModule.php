@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -33,22 +35,22 @@ final class HtmlOutputModule extends Texy\Module
 	public $removeOptional = false;
 
 	/** @var int  indent space counter */
-	private $space;
+	private $space = 0;
 
 	/** @var array */
-	private $tagUsed;
+	private $tagUsed = [];
 
 	/** @var array */
-	private $tagStack;
+	private $tagStack = [];
 
 	/** @var array  content DTD used, when context is not defined */
-	private $baseDTD;
+	private $baseDTD = [];
 
 	/** @var bool */
-	private $xml;
+	private $xml = false;
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 		$texy->addHandler('postProcess', [$this, 'postProcess']);
@@ -59,7 +61,7 @@ final class HtmlOutputModule extends Texy\Module
 	 * Converts <strong><em> ... </strong> ... </em>.
 	 * into <strong><em> ... </em></strong><em> ... </em>
 	 */
-	public function postProcess($texy, &$s)
+	public function postProcess(Texy\Texy $texy, string &$s): void
 	{
 		$this->space = $this->baseIndent;
 		$this->tagStack = [];
@@ -111,13 +113,12 @@ final class HtmlOutputModule extends Texy\Module
 
 	/**
 	 * Callback function: <tag> | </tag> | ....
-	 * @return string
 	 * @internal
 	 */
-	public function cb($matches)
+	public function cb(array $matches): string
 	{
 		// html tag
-		list(, $mText, $mComment, $mEnd, $mTag, $mAttr, $mEmpty) = $matches;
+		[, $mText, $mComment, $mEnd, $mTag, $mAttr, $mEmpty] = $matches;
 		// [1] => text
 		// [1] => !-- comment --
 		// [2] => /
@@ -323,12 +324,11 @@ final class HtmlOutputModule extends Texy\Module
 
 	/**
 	 * Callback function: wrap lines.
-	 * @return string
 	 * @internal
 	 */
-	public function wrap($m)
+	public function wrap(array $m): string
 	{
-		list(, $space, $s) = $m;
+		[, $space, $s] = $m;
 		return $space . wordwrap($s, $this->lineWrap, "\n" . $space);
 	}
 }

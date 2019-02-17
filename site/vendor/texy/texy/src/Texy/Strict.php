@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy;
 
 use ReflectionClass;
@@ -74,10 +76,7 @@ trait Strict
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function __isset($name)
+	public function __isset($name): bool
 	{
 		return false;
 	}
@@ -96,9 +95,8 @@ trait Strict
 
 	/**
 	 * Finds the best suggestion.
-	 * @return string|null
 	 */
-	private static function getSuggestion(array $items, $value)
+	private static function getSuggestion(array $items, $value): ?string
 	{
 		$best = null;
 		$min = (strlen($value) / 4 + 1) * 10 + .1;

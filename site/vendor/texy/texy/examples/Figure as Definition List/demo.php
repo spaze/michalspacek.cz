@@ -4,13 +4,16 @@
  * This demo shows how change default figures behaviour
  */
 
+declare(strict_types=1);
 
-// include Texy!
-require_once __DIR__ . '/../../src/texy.php';
+
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	die('Install packages using `composer install`');
+}
 
 
 /**
- * @return Texy\HtmlElement|string|false
+ * @return Texy\HtmlElement|string|null
  */
 function figureHandler(Texy\HandlerInvocation $invocation, Texy\Image $image, Texy\Link $link = null, $content, Texy\Modifier $modifier)
 {
@@ -35,7 +38,7 @@ function figureHandler(Texy\HandlerInvocation $invocation, Texy\Image $image, Te
 }
 
 
-$texy = new Texy();
+$texy = new Texy;
 $texy->addHandler('figure', 'figureHandler');
 
 // optionally set CSS classes

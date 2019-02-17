@@ -8,6 +8,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\ErrorType;
 use PHPStan\Type\FileTypeMapper;
+use PHPStan\Type\NeverType;
 use PHPStan\Type\Type;
 use PHPStan\Type\VerbosityLevel;
 
@@ -54,13 +55,13 @@ class IncompatiblePhpDocTypeRule implements \PHPStan\Rules\Rule
 			$phpDocParamType = $phpDocParamTag->getType();
 			if (!isset($nativeParameterTypes[$parameterName])) {
 				$errors[] = sprintf(
-					'PHPDoc tag @param references unknown parameter $%s',
+					'PHPDoc tag @param references unknown parameter: $%s',
 					$parameterName
 				);
 
-			} elseif ($phpDocParamType instanceof ErrorType) {
+			} elseif ($phpDocParamType instanceof ErrorType || $phpDocParamType instanceof NeverType) {
 				$errors[] = sprintf(
-					'PHPDoc tag @param for parameter $%s contains unresolvable type',
+					'PHPDoc tag @param for parameter $%s contains unresolvable type.',
 					$parameterName
 				);
 
@@ -78,7 +79,7 @@ class IncompatiblePhpDocTypeRule implements \PHPStan\Rules\Rule
 
 				if ($isParamSuperType->no()) {
 					$errors[] = sprintf(
-						'PHPDoc tag @param for parameter $%s with type %s is incompatible with native type %s',
+						'PHPDoc tag @param for parameter $%s with type %s is incompatible with native type %s.',
 						$parameterName,
 						$phpDocParamType->describe(VerbosityLevel::typeOnly()),
 						$nativeParamType->describe(VerbosityLevel::typeOnly())
@@ -86,7 +87,7 @@ class IncompatiblePhpDocTypeRule implements \PHPStan\Rules\Rule
 
 				} elseif ($isParamSuperType->maybe()) {
 					$errors[] = sprintf(
-						'PHPDoc tag @param for parameter $%s with type %s is not subtype of native type %s',
+						'PHPDoc tag @param for parameter $%s with type %s is not subtype of native type %s.',
 						$parameterName,
 						$phpDocParamType->describe(VerbosityLevel::typeOnly()),
 						$nativeParamType->describe(VerbosityLevel::typeOnly())
@@ -98,21 +99,21 @@ class IncompatiblePhpDocTypeRule implements \PHPStan\Rules\Rule
 		if ($resolvedPhpDoc->getReturnTag() !== null) {
 			$phpDocReturnType = $resolvedPhpDoc->getReturnTag()->getType();
 
-			if ($phpDocReturnType instanceof ErrorType) {
-				$errors[] = 'PHPDoc tag @return contains unresolvable type';
+			if ($phpDocReturnType instanceof ErrorType || $phpDocReturnType instanceof NeverType) {
+				$errors[] = 'PHPDoc tag @return contains unresolvable type.';
 
 			} else {
 				$isReturnSuperType = $nativeReturnType->isSuperTypeOf($phpDocReturnType);
 				if ($isReturnSuperType->no()) {
 					$errors[] = sprintf(
-						'PHPDoc tag @return with type %s is incompatible with native type %s',
+						'PHPDoc tag @return with type %s is incompatible with native type %s.',
 						$phpDocReturnType->describe(VerbosityLevel::typeOnly()),
 						$nativeReturnType->describe(VerbosityLevel::typeOnly())
 					);
 
 				} elseif ($isReturnSuperType->maybe()) {
 					$errors[] = sprintf(
-						'PHPDoc tag @return with type %s is not subtype of native type %s',
+						'PHPDoc tag @return with type %s is not subtype of native type %s.',
 						$phpDocReturnType->describe(VerbosityLevel::typeOnly()),
 						$nativeReturnType->describe(VerbosityLevel::typeOnly())
 					);

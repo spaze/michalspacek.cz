@@ -1,5 +1,27 @@
 # Changelog
 
+## Version 4.5.2 (2019-02-11)
+
+* Fixed [#116](https://github.com/paragonie/halite/issues/116). If the output file
+  doesn't exist, it will be created. If it cannot be created, an exception will
+  still be thrown.
+
+## Version 4.5.1 (2019-01-08)
+
+* Use `class_alias()` for `ParagonIE\Halite\HiddenString` to the outsourced library.
+  This is **deprecated** and will be removed in version 5.
+
+## Version 4.5.0 (2019-01-03)
+
+* Updated Psalm version from `^0|^1` to `^1|^2`.
+* Moved `HiddenString` to a standalone library: https://travis-ci.org/paragonie/hidden-string
+
+## Version 4.4.2 (2018-03-27)
+
+* Updated Psalm version from `^0|^1` to `^1`.
+* Type-safety and documentation fixes.
+* Miscellaneous boyscouting. No bugs were found since 4.4.1.
+
 ## Version 4.4.1 (2018-02-27)
 
 * Fixed [#97](https://github.com/paragonie/halite/issues/97), set the minimum chunk size to 1.

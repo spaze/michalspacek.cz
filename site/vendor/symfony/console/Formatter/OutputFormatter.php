@@ -22,7 +22,7 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 class OutputFormatter implements WrappableOutputFormatterInterface
 {
     private $decorated;
-    private $styles = array();
+    private $styles = [];
     private $styleStack;
 
     /**
@@ -66,7 +66,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      * @param bool                            $decorated Whether this formatter should actually decorate strings
      * @param OutputFormatterStyleInterface[] $styles    Array of "name => FormatterStyle" instances
      */
-    public function __construct(bool $decorated = false, array $styles = array())
+    public function __construct(bool $decorated = false, array $styles = [])
     {
         $this->decorated = $decorated;
 
@@ -166,7 +166,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
             if (!$open && !$tag) {
                 // </>
                 $this->styleStack->pop();
-            } elseif (false === $style = $this->createStyleFromString(strtolower($tag))) {
+            } elseif (false === $style = $this->createStyleFromString($tag)) {
                 $output .= $this->applyCurrentStyle($text, $output, $width, $currentLineLength);
             } elseif ($open) {
                 $this->styleStack->push($style);
@@ -178,7 +178,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         $output .= $this->applyCurrentStyle(substr($message, $offset), $output, $width, $currentLineLength);
 
         if (false !== strpos($output, "\0")) {
-            return strtr($output, array("\0" => '\\', '\\<' => '<'));
+            return strtr($output, ["\0" => '\\', '\\<' => '<']);
         }
 
         return str_replace('\\<', '<', $output);
@@ -210,13 +210,14 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         $style = new OutputFormatterStyle();
         foreach ($matches as $match) {
             array_shift($match);
+            $match[0] = strtolower($match[0]);
 
             if ('fg' == $match[0]) {
-                $style->setForeground($match[1]);
+                $style->setForeground(strtolower($match[1]));
             } elseif ('bg' == $match[0]) {
-                $style->setBackground($match[1]);
+                $style->setBackground(strtolower($match[1]));
             } elseif ('options' === $match[0]) {
-                preg_match_all('([^,;]+)', $match[1], $options);
+                preg_match_all('([^,;]+)', strtolower($match[1]), $options);
                 $options = array_shift($options);
                 foreach ($options as $option) {
                     $style->setOption($option);

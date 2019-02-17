@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy;
 
 
@@ -470,3 +472,5 @@ $dtd['td'][0] += ['nowrap' => 1, 'bgcolor' => 1, 'width' => 1, 'height' => 1];
 $dtd['th'][0] += ['nowrap' => 1, 'bgcolor' => 1, 'width' => 1, 'height' => 1];
 
 // missing: FRAMESET, FRAME, BGSOUND, XMP, ...
+
+return $dtd;

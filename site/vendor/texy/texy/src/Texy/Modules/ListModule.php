@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -33,7 +35,7 @@ final class ListModule extends Texy\Module
 	];
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -43,7 +45,7 @@ final class ListModule extends Texy\Module
 	}
 
 
-	public function beforeParse()
+	public function beforeParse(): void
 	{
 		$RE = $REul = [];
 		foreach ($this->bullets as $desc) {
@@ -79,11 +81,10 @@ final class ListModule extends Texy\Module
 	 *   + ...
 	 * 3) ....
 	 *
-	 * @return HtmlElement|false
 	 */
-	public function patternList(BlockParser $parser, array $matches)
+	public function patternList(BlockParser $parser, array $matches): ?HtmlElement
 	{
-		list(, $mMod, $mBullet) = $matches;
+		[, $mMod, $mBullet] = $matches;
 		// [1] => .(title)[class]{style}<>
 		// [2] => bullet * + - 1) a) A) IV)
 
@@ -92,7 +93,7 @@ final class ListModule extends Texy\Module
 		$bullet = $min = null;
 		foreach ($this->bullets as $type => $desc) {
 			if (preg_match('#' . $desc[0] . '#Au', $mBullet)) {
-				$bullet = isset($desc[3]) ? $desc[3] : $desc[0];
+				$bullet = $desc[3] ?? $desc[0];
 				$min = isset($desc[3]) ? 2 : 1;
 				$el->setName($desc[1] ? 'ol' : 'ul');
 				$el->attrs['style']['list-style-type'] = $desc[2];
@@ -119,7 +120,7 @@ final class ListModule extends Texy\Module
 		}
 
 		if ($el->count() < $min) {
-			return false;
+			return null;
 		}
 
 		// event listener
@@ -137,11 +138,10 @@ final class ListModule extends Texy\Module
 	 * - description 2
 	 * - description 3
 	 *
-	 * @return HtmlElement
 	 */
-	public function patternDefList(BlockParser $parser, array $matches)
+	public function patternDefList(BlockParser $parser, array $matches): HtmlElement
 	{
-		list(, $mMod, , , , $mBullet) = $matches;
+		[, $mMod, , , , $mBullet] = $matches;
 		// [1] => .(title)[class]{style}<>
 		// [2] => ...
 		// [3] => .(title)[class]{style}<>
@@ -153,7 +153,7 @@ final class ListModule extends Texy\Module
 		$bullet = null;
 		foreach ($this->bullets as $desc) {
 			if (preg_match('#' . $desc[0] . '#Au', $mBullet)) {
-				$bullet = isset($desc[3]) ? $desc[3] : $desc[0];
+				$bullet = $desc[3] ?? $desc[0];
 				break;
 			}
 		}
@@ -172,7 +172,7 @@ final class ListModule extends Texy\Module
 			}
 
 			if ($parser->next($patternTerm, $matches)) {
-				list(, $mContent, $mMod) = $matches;
+				[, $mContent, $mMod] = $matches;
 				// [1] => ...
 				// [2] => .(title)[class]{style}<>
 
@@ -197,9 +197,8 @@ final class ListModule extends Texy\Module
 
 	/**
 	 * Callback for single list item.
-	 * @return HtmlElement|false
 	 */
-	public function patternItem(BlockParser $parser, $bullet, $indented, $tag)
+	public function patternItem(BlockParser $parser, string $bullet, bool $indented, string $tag): ?HtmlElement
 	{
 		$spacesBase = $indented ? ('\ {1,}') : '';
 		$patternItem = "#^\n?($spacesBase)$bullet\\ *(\\S.*)?" . Patterns::MODIFIER_H . '?()$#mAUu';
@@ -207,10 +206,10 @@ final class ListModule extends Texy\Module
 		// first line with bullet
 		$matches = null;
 		if (!$parser->next($patternItem, $matches)) {
-			return false;
+			return null;
 		}
 
-		list(, $mIndent, $mContent, $mMod) = $matches;
+		[, $mIndent, $mContent, $mMod] = $matches;
 			// [1] => indent
 			// [2] => ...
 			// [3] => .(title)[class]{style}<>
@@ -223,7 +222,7 @@ final class ListModule extends Texy\Module
 		$spaces = '';
 		$content = ' ' . $mContent; // trick
 		while ($parser->next('#^(\n*)' . $mIndent . '(\ {1,' . $spaces . '})(.*)()$#Am', $matches)) {
-			list(, $mBlank, $mSpaces, $mContent) = $matches;
+			[, $mBlank, $mSpaces, $mContent] = $matches;
 			// [1] => blank line?
 			// [2] => spaces
 			// [3] => ...

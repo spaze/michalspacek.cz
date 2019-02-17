@@ -260,14 +260,14 @@ class Texy extends \Netxten\Formatter\Texy
 
 	/**
 	 * @param string $training Training name
-	 * @return Html
+	 * @return string
 	 */
-	private function getTrainingSuffix(string $training): Html
+	private function getTrainingSuffix(string $training): string
 	{
 		$el = Html::el()
 			->addHtml(Html::el()->setText(' '))
 			->addHtml(Html::el('small')->setText(sprintf('(**%s:%s**)', self::TRAINING_DATE, $training)));
-		return $el;
+		return $el->render();
 	}
 
 

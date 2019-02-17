@@ -20,6 +20,7 @@ return array(
     'Spaze\\ContentSecurityPolicy\\' => array($vendorDir . '/spaze/csp-config/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'ParagonIE\\HiddenString\\' => array($vendorDir . '/paragonie/hidden-string/src'),
     'ParagonIE\\Halite\\' => array($vendorDir . '/paragonie/halite/src'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),

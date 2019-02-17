@@ -21,6 +21,7 @@ use PHPStan\Reflection\SignatureMap\SignatureMapProvider;
 use PHPStan\Type\FileTypeMapper;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
+use PHPStan\Type\TypehintHelper;
 
 class PhpClassReflectionExtension
 	implements PropertiesClassReflectionExtension, MethodsClassReflectionExtension, BrokerAwareExtension
@@ -127,33 +128,41 @@ class PhpClassReflectionExtension
 				return $annotationProperty;
 			}
 		}
-		if ($propertyReflection->getDocComment() === false) {
-			$type = new MixedType();
-		} elseif ($declaringClassReflection->getFileName() !== false) {
+
+		$docComment = $propertyReflection->getDocComment() !== false
+			? $propertyReflection->getDocComment()
+			: null;
+
+		if ($declaringClassReflection->getFileName() !== false) {
 			$phpDocBlock = PhpDocBlock::resolvePhpDocBlockForProperty(
 				$this->broker,
-				$propertyReflection->getDocComment(),
+				$docComment,
 				$declaringClassReflection->getName(),
+				null,
 				$propertyName,
 				$declaringClassReflection->getFileName()
 			);
 
-			$resolvedPhpDoc = $this->fileTypeMapper->getResolvedPhpDoc(
-				$phpDocBlock->getFile(),
-				$phpDocBlock->getClass(),
-				$this->findPropertyTrait($phpDocBlock, $propertyReflection),
-				$phpDocBlock->getDocComment()
-			);
-			$varTags = $resolvedPhpDoc->getVarTags();
-			if (isset($varTags[0]) && count($varTags) === 1) {
-				$type = $varTags[0]->getType();
-			} elseif (isset($varTags[$propertyName])) {
-				$type = $varTags[$propertyName]->getType();
+			if ($phpDocBlock !== null) {
+				$resolvedPhpDoc = $this->fileTypeMapper->getResolvedPhpDoc(
+					$phpDocBlock->getFile(),
+					$phpDocBlock->getClass(),
+					$this->findPropertyTrait($phpDocBlock, $propertyReflection),
+					$phpDocBlock->getDocComment()
+				);
+				$varTags = $resolvedPhpDoc->getVarTags();
+				if (isset($varTags[0]) && count($varTags) === 1) {
+					$type = $varTags[0]->getType();
+				} elseif (isset($varTags[$propertyName])) {
+					$type = $varTags[$propertyName]->getType();
+				} else {
+					$type = new MixedType();
+				}
+				$isDeprecated = $resolvedPhpDoc->isDeprecated();
+				$isInternal = $resolvedPhpDoc->isInternal();
 			} else {
 				$type = new MixedType();
 			}
-			$isDeprecated = $resolvedPhpDoc->isDeprecated();
-			$isInternal = $resolvedPhpDoc->isInternal();
 		} else {
 			$type = new MixedType();
 		}
@@ -316,25 +325,44 @@ class PhpClassReflectionExtension
 		$isFinal = false;
 		$declaringTraitName = $this->findMethodTrait($methodReflection);
 		if ($declaringClass->getFileName() !== false) {
-			if ($methodReflection->getDocComment() !== false) {
-				$phpDocBlock = PhpDocBlock::resolvePhpDocBlockForMethod(
-					$this->broker,
-					$methodReflection->getDocComment(),
-					$declaringClass->getName(),
-					$methodReflection->getName(),
-					$declaringClass->getFileName()
-				);
+			$docComment = $methodReflection->getDocComment() !== false
+				? $methodReflection->getDocComment()
+				: null;
 
+			$phpDocBlock = PhpDocBlock::resolvePhpDocBlockForMethod(
+				$this->broker,
+				$docComment,
+				$declaringClass->getName(),
+				$declaringTraitName,
+				$methodReflection->getName(),
+				$declaringClass->getFileName()
+			);
+
+			if ($phpDocBlock !== null) {
 				$resolvedPhpDoc = $this->fileTypeMapper->getResolvedPhpDoc(
 					$phpDocBlock->getFile(),
 					$phpDocBlock->getClass(),
-					$declaringTraitName,
+					$phpDocBlock->getTrait(),
 					$phpDocBlock->getDocComment()
 				);
 				$phpDocParameterTypes = array_map(static function (ParamTag $tag): Type {
 					return $tag->getType();
 				}, $resolvedPhpDoc->getParamTags());
-				$phpDocReturnType = $resolvedPhpDoc->getReturnTag() !== null ? $resolvedPhpDoc->getReturnTag()->getType() : null;
+				$nativeReturnType = TypehintHelper::decideTypeFromReflection(
+					$methodReflection->getReturnType(),
+					null,
+					$declaringClass->getName()
+				);
+				$phpDocReturnType = null;
+				if (
+					$resolvedPhpDoc->getReturnTag() !== null
+					&& (
+						$phpDocBlock->isExplicit()
+						|| $nativeReturnType->isSuperTypeOf($resolvedPhpDoc->getReturnTag()->getType())->yes()
+					)
+				) {
+					$phpDocReturnType = $resolvedPhpDoc->getReturnTag()->getType();
+				}
 				$phpDocThrowType = $resolvedPhpDoc->getThrowsTag() !== null ? $resolvedPhpDoc->getThrowsTag()->getType() : null;
 				$isDeprecated = $resolvedPhpDoc->isDeprecated();
 				$isInternal = $resolvedPhpDoc->isInternal();
@@ -407,8 +435,11 @@ class PhpClassReflectionExtension
 		BuiltinMethodReflection $methodReflection
 	): ?string
 	{
+		$declaringClass = $methodReflection->getDeclaringClass();
 		if (
-			$methodReflection->getFileName() === $methodReflection->getDeclaringClass()->getFileName()
+			$methodReflection->getFileName() === $declaringClass->getFileName()
+			&& $methodReflection->getStartLine() >= $declaringClass->getStartLine()
+			&& $methodReflection->getEndLine() <= $declaringClass->getEndLine()
 		) {
 			return null;
 		}
@@ -419,21 +450,48 @@ class PhpClassReflectionExtension
 			return explode('::', $traitAliases[$methodReflection->getName()])[0];
 		}
 
-		foreach ($declaringClass->getTraits() as $traitReflection) {
+		foreach ($this->collectTraits($declaringClass) as $traitReflection) {
 			if (!$traitReflection->hasMethod($methodReflection->getName())) {
 				continue;
 			}
 
-			$traitMethodReflection = $traitReflection->getMethod($methodReflection->getName());
 			if (
-				$traitMethodReflection->getFileName() === $methodReflection->getFileName()
-				&& $traitMethodReflection->getStartLine() === $methodReflection->getStartLine()
+				$methodReflection->getFileName() === $traitReflection->getFileName()
+				&& $methodReflection->getStartLine() >= $traitReflection->getStartLine()
+				&& $methodReflection->getEndLine() <= $traitReflection->getEndLine()
 			) {
 				return $traitReflection->getName();
 			}
 		}
 
 		return null;
+	}
+
+	/**
+	 * @param \ReflectionClass $class
+	 * @return \ReflectionClass[]
+	 */
+	private function collectTraits(\ReflectionClass $class): array
+	{
+		$traits = [];
+		$traitsLeftToAnalyze = $class->getTraits();
+
+		while (count($traitsLeftToAnalyze) !== 0) {
+			$trait = reset($traitsLeftToAnalyze);
+			$traits[] = $trait;
+
+			foreach ($trait->getTraits() as $subTrait) {
+				if (in_array($subTrait, $traits, true)) {
+					continue;
+				}
+
+				$traitsLeftToAnalyze[] = $subTrait;
+			}
+
+			array_shift($traitsLeftToAnalyze);
+		}
+
+		return $traits;
 	}
 
 }

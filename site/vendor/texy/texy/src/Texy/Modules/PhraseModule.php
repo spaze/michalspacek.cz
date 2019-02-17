@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -32,8 +34,8 @@ final class PhraseModule extends Texy\Module
 		'phrase/span' => 'a',
 		'phrase/span-alt' => 'a',
 		'phrase/cite' => 'cite',
-		'phrase/acronym' => 'acronym',
-		'phrase/acronym-alt' => 'acronym',
+		'phrase/acronym' => 'abbr',
+		'phrase/acronym-alt' => 'abbr',
 		'phrase/code' => 'code',
 		'phrase/quote' => 'q',
 		'phrase/quicklink' => 'a',
@@ -44,7 +46,7 @@ final class PhraseModule extends Texy\Module
 	public $linksAllowed = true;
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -232,18 +234,18 @@ final class PhraseModule extends Texy\Module
 	/**
 	 * Callback for: **.... .(title)[class]{style}**:LINK.
 	 *
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
-	public function patternPhrase(LineParser $parser, array $matches, $phrase)
+	public function patternPhrase(LineParser $parser, array $matches, string $phrase)
 	{
-		list(, $mContent, $mMod, $mLink) = $matches;
+		[, $mContent, $mMod, $mLink] = $matches;
 		// [1] => **
 		// [2] => ...
 		// [3] => .(title)[class]{style}
 		// [4] => LINK
 
 		if ($phrase === 'phrase/wikilink') {
-			list($mLink, $mMod) = [$mMod, $mLink];
+			[$mLink, $mMod] = [$mMod, $mLink];
 			$mContent = trim($mContent);
 		}
 
@@ -256,7 +258,7 @@ final class PhraseModule extends Texy\Module
 		if ($phrase === 'phrase/span' || $phrase === 'phrase/span-alt') {
 			if ($mLink == null) {
 				if (!$mMod) {
-					return false; // means "..."
+					return; // means "..."
 				}
 			} else {
 				$link = $texy->linkModule->factoryLink($mLink, $mMod, $mContent);
@@ -278,11 +280,11 @@ final class PhraseModule extends Texy\Module
 
 	/**
 	 * Callback for: any^2 any_2.
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
-	public function patternSupSub(LineParser $parser, array $matches, $phrase)
+	public function patternSupSub(LineParser $parser, array $matches, string $phrase)
 	{
-		list(, $mContent) = $matches;
+		[, $mContent] = $matches;
 		$mod = new Modifier();
 		$link = null;
 		$mContent = str_replace('-', "\xE2\x88\x92", $mContent); // &minus;
@@ -290,21 +292,18 @@ final class PhraseModule extends Texy\Module
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function patternNoTexy(LineParser $parser, array $matches)
+	public function patternNoTexy(LineParser $parser, array $matches): string
 	{
-		list(, $mContent) = $matches;
+		[, $mContent] = $matches;
 		return $this->texy->protect(htmlspecialchars($mContent, ENT_NOQUOTES, 'UTF-8'), Texy\Texy::CONTENT_TEXTUAL);
 	}
 
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement
+	 * @return Texy\HtmlElement|string|null
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, $phrase, $content, Modifier $mod, Texy\Link $link = null)
+	public function solve(Texy\HandlerInvocation $invocation, string $phrase, string $content, Modifier $mod, Texy\Link $link = null)
 	{
 		$texy = $this->texy;
 

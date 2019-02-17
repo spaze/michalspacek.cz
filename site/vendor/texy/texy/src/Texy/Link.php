@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy;
 
 
@@ -16,7 +18,7 @@ final class Link
 	use Strict;
 
 	/** @see $type */
-	const
+	public const
 		COMMON = 1,
 		BRACKET = 2,
 		IMAGE = 3;
@@ -27,20 +29,20 @@ final class Link
 	/** @var string  URL as written in text */
 	public $raw;
 
-	/** @var Modifier */
+	/** @var Modifier|null */
 	public $modifier;
 
 	/** @var int  how was link created? */
 	public $type = self::COMMON;
 
-	/** @var string  optional label, used by references */
+	/** @var string|null  optional label, used by references */
 	public $label;
 
-	/** @var string  reference name (if is stored as reference) */
+	/** @var string|null  reference name (if is stored as reference) */
 	public $name;
 
 
-	public function __construct($URL)
+	public function __construct(string $URL)
 	{
 		$this->URL = $URL;
 		$this->raw = $URL;

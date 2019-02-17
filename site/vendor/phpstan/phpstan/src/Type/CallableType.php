@@ -4,6 +4,7 @@ namespace PHPStan\Type;
 
 use PHPStan\Analyser\OutOfClassScope;
 use PHPStan\Reflection\ClassMemberAccessAnswerer;
+use PHPStan\Reflection\Native\NativeParameterReflection;
 use PHPStan\Reflection\ParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Traits\MaybeIterableTypeTrait;
@@ -115,7 +116,23 @@ class CallableType implements CompoundType, ParametersAcceptor
 
 	public function describe(VerbosityLevel $level): string
 	{
-		return 'callable';
+		return $level->handle(
+			static function (): string {
+				return 'callable';
+			},
+			function () use ($level): string {
+				return sprintf(
+					'callable(%s): %s',
+					implode(', ', array_map(
+						static function (NativeParameterReflection $param) use ($level) {
+							return $param->getType()->describe($level);
+						},
+						$this->getParameters()
+					)),
+					$this->returnType->describe($level)
+				);
+			}
+		);
 	}
 
 	public function isCallable(): TrinaryLogic

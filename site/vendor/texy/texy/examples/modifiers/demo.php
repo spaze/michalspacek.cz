@@ -4,12 +4,15 @@
  * This demo shows how control modifiers usage
  */
 
-
-// include Texy!
-require_once __DIR__ . '/../../src/texy.php';
+declare(strict_types=1);
 
 
-$texy = new Texy();
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	die('Install packages using `composer install`');
+}
+
+
+$texy = new Texy;
 $texy->htmlOutputModule->baseIndent = 1;
 
 

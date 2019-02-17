@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -16,15 +18,15 @@ use Texy\Modifier;
  */
 final class HeadingModule extends Texy\Module
 {
-	const
+	public const
 		DYNAMIC = 1, // auto-leveling
 		FIXED = 2; // fixed-leveling
 
-	/** @var string  textual content of first heading */
+	/** @var string|null  textual content of first heading */
 	public $title;
 
 	/** @var array  generated Table of Contents */
-	public $TOC;
+	public $TOC = [];
 
 	/** @var bool  autogenerate ID */
 	public $generateID = false;
@@ -50,10 +52,10 @@ final class HeadingModule extends Texy\Module
 	];
 
 	/** @var array  used ID's */
-	private $usedID;
+	private $usedID = [];
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -76,7 +78,7 @@ final class HeadingModule extends Texy\Module
 	}
 
 
-	public function beforeParse()
+	public function beforeParse(): void
 	{
 		$this->title = null;
 		$this->usedID = [];
@@ -84,10 +86,7 @@ final class HeadingModule extends Texy\Module
 	}
 
 
-	/**
-	 * @return void
-	 */
-	public function afterParse(Texy\Texy $texy, Texy\HtmlElement $DOM, $isSingleLine)
+	public function afterParse(Texy\Texy $texy, Texy\HtmlElement $DOM, bool $isSingleLine): void
 	{
 		if ($isSingleLine) {
 			return;
@@ -155,7 +154,7 @@ final class HeadingModule extends Texy\Module
 		// document title
 		if ($this->title === null && count($this->TOC)) {
 			$item = reset($this->TOC);
-			$this->title = isset($item['title']) ? $item['title'] : trim($item['el']->toText($this->texy));
+			$this->title = $item['title'] ?? trim($item['el']->toText($this->texy));
 		}
 	}
 
@@ -165,11 +164,11 @@ final class HeadingModule extends Texy\Module
 	 *
 	 * Heading .(title)[class]{style}>
 	 * -------------------------------
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
 	public function patternUnderline(Texy\BlockParser $parser, array $matches)
 	{
-		list(, $mContent, $mMod, $mLine) = $matches;
+		[, $mContent, $mMod, $mLine] = $matches;
 		// $matches:
 		// [1] => ...
 		// [2] => .(title)[class]{style}<>
@@ -185,11 +184,11 @@ final class HeadingModule extends Texy\Module
 	 * Callback for surrounded heading.
 	 *
 	 * ### Heading .(title)[class]{style}>
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
 	public function patternSurround(Texy\BlockParser $parser, array $matches)
 	{
-		list(, $mLine, $mContent, $mMod) = $matches;
+		[, $mLine, $mContent, $mMod] = $matches;
 		// [1] => ###
 		// [2] => ...
 		// [3] => .(title)[class]{style}<>
@@ -204,9 +203,8 @@ final class HeadingModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, $level, $content, Modifier $mod, $isSurrounded)
+	public function solve(Texy\HandlerInvocation $invocation, int $level, string $content, Modifier $mod, bool $isSurrounded): Texy\HtmlElement
 	{
 		// as fixed balancing, for block/texysource & correct decorating
 		$el = new Texy\HtmlElement('h' . min(6, max(1, $level + $this->top)));

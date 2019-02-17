@@ -6,6 +6,7 @@ use PhpParser\Node\Expr\FuncCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
+use PHPStan\Type\NullType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeCombinator;
 use PHPStan\Type\TypeUtils;
@@ -25,17 +26,33 @@ class ArrayKeyFirstDynamicReturnTypeExtension implements \PHPStan\Type\DynamicFu
 		}
 
 		$argType = $scope->getType($functionCall->args[0]->value);
-		$arrayTypes = TypeUtils::getArrays($argType);
-		if (count($arrayTypes) > 0) {
-			$resultTypes = [];
-			foreach ($arrayTypes as $arrayType) {
-				$resultTypes[] = $arrayType->getFirstKeyType();
-			}
-
-			return TypeCombinator::union(...$resultTypes);
+		$iterableAtLeastOnce = $argType->isIterableAtLeastOnce();
+		if ($iterableAtLeastOnce->no()) {
+			return new NullType();
 		}
 
-		return ParametersAcceptorSelector::selectSingle($functionReflection->getVariants())->getReturnType();
+		$constantArrays = TypeUtils::getConstantArrays($argType);
+		if (count($constantArrays) > 0) {
+			$keyTypes = [];
+			foreach ($constantArrays as $constantArray) {
+				$arrayKeyTypes = $constantArray->getKeyTypes();
+				if (count($arrayKeyTypes) === 0) {
+					$keyTypes[] = new NullType();
+					continue;
+				}
+
+				$keyTypes[] = $arrayKeyTypes[0];
+			}
+
+			return TypeCombinator::union(...$keyTypes);
+		}
+
+		$keyType = $argType->getIterableKeyType();
+		if ($iterableAtLeastOnce->yes()) {
+			return $keyType;
+		}
+
+		return TypeCombinator::union($keyType, new NullType());
 	}
 
 }

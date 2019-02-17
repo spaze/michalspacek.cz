@@ -10,7 +10,7 @@
 		"nette/forms": "~2.3",
 		"nette/http": "~2.3",
 		"latte/latte": "~2.3",
-		"texy/texy": "~2.8"
+		"texy/texy": "~3.0"
 	},
 	"autoload": {
 		"psr-0": {"Netxten": "lib"}

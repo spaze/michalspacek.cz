@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -24,31 +26,27 @@ final class ImageModule extends Texy\Module
 	/** @var string  root of linked images (http) */
 	public $linkedRoot = 'images/';
 
-	/** @var string  physical location of images on server */
+	/** @var string|null  physical location of images on server */
 	public $fileRoot;
 
-	/** @var string  left-floated images CSS class */
+	/** @var string|null  left-floated images CSS class */
 	public $leftClass;
 
-	/** @var string  right-floated images CSS class */
+	/** @var string|null  right-floated images CSS class */
 	public $rightClass;
 
-	/** @var string  default alternative text */
+	/** @var string|null  default alternative text */
 	public $defaultAlt = '';
-
-	/** @var string  images onload handler */
-	public $onLoad = "var i=new Image();i.src='%i';if(typeof preload=='undefined')preload=new Array();preload[preload.length]=i;this.onload=''";
 
 	/** @var array image references */
 	private $references = [];
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
 		$texy->allowed['image/definition'] = true;
-		$texy->allowed['image/hover'] = true;
 		$texy->addHandler('image', [$this, 'solve']);
 		$texy->addHandler('beforeParse', [$this, 'beforeParse']);
 
@@ -64,9 +62,8 @@ final class ImageModule extends Texy\Module
 
 	/**
 	 * Text pre-processing.
-	 * @return void
 	 */
-	public function beforeParse(Texy\Texy $texy, &$text)
+	public function beforeParse(Texy\Texy $texy, &$text): void
 	{
 		if (!empty($texy->allowed['image/definition'])) {
 			// [*image*]: urls .(title)[class]{style}
@@ -82,12 +79,11 @@ final class ImageModule extends Texy\Module
 	/**
 	 * Callback for: [*image*]: urls .(title)[class]{style}.
 	 *
-	 * @return string
 	 * @internal
 	 */
-	public function patternReferenceDef(array $matches)
+	public function patternReferenceDef(array $matches): string
 	{
-		list(, $mRef, $mURLs, $mMod) = $matches;
+		[, $mRef, $mURLs, $mMod] = $matches;
 		// [1] => [* (reference) *]
 		// [2] => urls
 		// [3] => .(title)[class]{style}<>
@@ -99,12 +95,12 @@ final class ImageModule extends Texy\Module
 
 
 	/**
-	 * Callback for [* small.jpg 80x13 | small-over.jpg | big.jpg .(alternative text)[class]{style}>]:LINK.
-	 * @return Texy\HtmlElement|string|false
+	 * Callback for [* small.jpg 80x13 || big.jpg .(alternative text)[class]{style}>]:LINK.
+	 * @return Texy\HtmlElement|string|null
 	 */
 	public function patternImage(Texy\LineParser $parser, array $matches)
 	{
-		list(, $mURLs, $mMod, $mAlign, $mLink) = $matches;
+		[, $mURLs, $mMod, $mAlign, $mLink] = $matches;
 		// [1] => URLs
 		// [2] => .(title)[class]{style}<>
 		// [3] => * < >
@@ -130,41 +126,34 @@ final class ImageModule extends Texy\Module
 
 	/**
 	 * Adds new named reference to image.
-	 * @return void
 	 */
-	public function addReference($name, Image $image)
+	public function addReference(string $name, Image $image): void
 	{
-		$image->name = Texy\Utf::strtolower($name);
+		$image->name = Helpers::toLower($name);
 		$this->references[$image->name] = $image;
 	}
 
 
 	/**
 	 * Returns named reference.
-	 * @param  string  reference name
-	 * @return Image  reference descriptor (or false)
 	 */
-	public function getReference($name)
+	public function getReference(string $name): ?Image
 	{
-		$name = Texy\Utf::strtolower($name);
+		$name = Helpers::toLower($name);
 		if (isset($this->references[$name])) {
 			return clone $this->references[$name];
 		}
-
-		return false;
+		return null;
 	}
 
 
 	/**
 	 * Parses image's syntax.
-	 * @param  string  input: small.jpg 80x13 | small-over.jpg | linked.jpg
-	 * @param  string
-	 * @param  bool
-	 * @return Image
+	 * @param  string  input: small.jpg 80x13 || linked.jpg
 	 */
-	public function factoryImage($content, $mod, $tryRef = true)
+	public function factoryImage(string $content, string $mod, bool $tryRef = true): Image
 	{
-		$image = $tryRef ? $this->getReference(trim($content)) : false;
+		$image = $tryRef ? $this->getReference(trim($content)) : null;
 
 		if (!$image) {
 			$texy = $this->texy;
@@ -186,14 +175,6 @@ final class ImageModule extends Texy\Module
 				$image->URL = null;
 			}
 
-			// onmouseover image
-			if (isset($content[1])) {
-				$tmp = trim($content[1]);
-				if ($tmp !== '' && $texy->checkURL($tmp, $texy::FILTER_IMAGE)) {
-					$image->overURL = $tmp;
-				}
-			}
-
 			// linked image
 			if (isset($content[2])) {
 				$tmp = trim($content[2]);
@@ -210,12 +191,11 @@ final class ImageModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|false
 	 */
-	public function solve(Texy\HandlerInvocation $invocation = null, Image $image, Texy\Link $link = null)
+	public function solve(Texy\HandlerInvocation $invocation = null, Image $image, Texy\Link $link = null): ?Texy\HtmlElement
 	{
 		if ($image->URL == null) {
-			return false;
+			return null;
 		}
 
 		$texy = $this->texy;
@@ -256,7 +236,7 @@ final class ImageModule extends Texy\Module
 			// detect dimensions
 			// absolute URL & security check for double dot
 			if (Helpers::isRelative($image->URL) && strpos($image->URL, '..') === false) {
-				$file = rtrim($this->fileRoot, '/\\') . '/' . $image->URL;
+				$file = rtrim((string) $this->fileRoot, '/\\') . '/' . $image->URL;
 				if (@is_file($file)) { // intentionally @
 					$size = @getimagesize($file); // intentionally @
 					if (is_array($size)) {
@@ -288,15 +268,6 @@ final class ImageModule extends Texy\Module
 
 		$el->attrs['width'] = $image->width;
 		$el->attrs['height'] = $image->height;
-
-		// onmouseover actions generate
-		if (!empty($texy->allowed['image/hover']) && $image->overURL !== null) {
-			$overSrc = Helpers::prependRoot($image->overURL, $this->root);
-			$el->attrs['onmouseover'] = 'this.src=\'' . addslashes($overSrc) . '\'';
-			$el->attrs['onmouseout'] = 'this.src=\'' . addslashes($el->attrs['src']) . '\'';
-			$el->attrs['onload'] = str_replace('%i', addslashes($overSrc), $this->onLoad);
-			$texy->summary['preload'][] = $overSrc;
-		}
 
 		$texy->summary['images'][] = $el->attrs['src'];
 

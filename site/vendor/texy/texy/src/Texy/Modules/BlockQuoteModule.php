@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -15,7 +17,7 @@ use Texy;
  */
 final class BlockQuoteModule extends Texy\Module
 {
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -38,11 +40,11 @@ final class BlockQuoteModule extends Texy\Module
 	 * of Rohan had been bruised and blackened as they passed.
 	 * >:http://www.mycom.com/tolkien/twotowers.html
 	 *
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
 	public function pattern(Texy\BlockParser $parser, array $matches)
 	{
-		list(, $mMod, $mPrefix, $mContent) = $matches;
+		[, $mMod, $mPrefix, $mContent] = $matches;
 		// [1] => .(title)[class]{style}<>
 		// [2] => spaces |
 		// [3] => ... / LINK
@@ -83,7 +85,7 @@ final class BlockQuoteModule extends Texy\Module
 			if (!$parser->next("#^\\>(?:(\\>|\\ {1,$spaces}|:)(.*))?()$#mA", $matches)) break;
 */
 
-			list(, $mPrefix, $mContent) = $matches;
+			[, $mPrefix, $mContent] = $matches;
 		} while (true);
 
 		$el->attrs['cite'] = $mod->cite;
@@ -91,7 +93,7 @@ final class BlockQuoteModule extends Texy\Module
 
 		// no content?
 		if (!$el->count()) {
-			return false;
+			return;
 		}
 
 		// event listener
@@ -103,10 +105,8 @@ final class BlockQuoteModule extends Texy\Module
 
 	/**
 	 * Converts cite source to URL.
-	 * @param  string
-	 * @return string|null
 	 */
-	public function citeLink($link)
+	public function citeLink(string $link): ?string
 	{
 		$texy = $this->texy;
 

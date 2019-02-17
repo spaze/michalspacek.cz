@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -22,14 +24,8 @@ final class LinkModule extends Texy\Module
 	/** @var string  root of relative links */
 	public $root = '';
 
-	/** @var string image popup class */
+	/** @var string|null linked image class */
 	public $imageClass;
-
-	/** @var string image popup event */
-	public $imageOnClick = 'return !popupImage(this.href)';
-
-	/** @var string class 'popup' event */
-	public $popupOnClick = 'return !popup(this.href)';
 
 	/** @var bool  always use rel="nofollow" for absolute links? */
 	public $forceNoFollow = false;
@@ -46,7 +42,7 @@ final class LinkModule extends Texy\Module
 	private static $EMAIL;
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
@@ -85,9 +81,8 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Text pre-processing.
-	 * @return void
 	 */
-	public function beforeParse(Texy\Texy $texy, &$text)
+	public function beforeParse(Texy\Texy $texy, &$text): void
 	{
 		self::$livelock = [];
 
@@ -104,12 +99,11 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: [la trine]: http://www.latrine.cz/ text odkazu .(title)[class]{style}.
-	 * @return string
 	 * @internal
 	 */
-	public function patternReferenceDef(array $matches)
+	public function patternReferenceDef(array $matches): string
 	{
-		list(, $mRef, $mLink, $mLabel, $mMod) = $matches;
+		[, $mRef, $mLink, $mLabel, $mMod] = $matches;
 		// [1] => [ (reference) ]
 		// [2] => link
 		// [3] => ...
@@ -126,11 +120,11 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: [ref].
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
 	public function patternReference(LineParser $parser, array $matches)
 	{
-		list(, $mRef) = $matches;
+		[, $mRef] = $matches;
 		// [1] => [ref]
 
 		$texy = $this->texy;
@@ -166,11 +160,11 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: http://davidgrudl.com david@grudl.com.
-	 * @return Texy\HtmlElement|string|false
+	 * @return Texy\HtmlElement|string|null
 	 */
-	public function patternUrlEmail(LineParser $parser, array $matches, $name)
+	public function patternUrlEmail(LineParser $parser, array $matches, string $name)
 	{
-		list($mURL) = $matches;
+		[$mURL] = $matches;
 		// [0] => URL
 
 		$link = new Link($mURL);
@@ -186,23 +180,20 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Adds new named reference.
-	 * @return void
 	 */
-	public function addReference($name, Link $link)
+	public function addReference(string $name, Link $link): void
 	{
-		$link->name = Texy\Utf::strtolower($name);
+		$link->name = Texy\Helpers::toLower($name);
 		$this->references[$link->name] = $link;
 	}
 
 
 	/**
 	 * Returns named reference.
-	 * @param  string  reference name
-	 * @return Link reference descriptor (or false)
 	 */
-	public function getReference($name)
+	public function getReference(string $name): ?Link
 	{
-		$name = Texy\Utf::strtolower($name);
+		$name = Texy\Helpers::toLower($name);
 		if (isset($this->references[$name])) {
 			return clone $this->references[$name];
 
@@ -220,18 +211,11 @@ final class LinkModule extends Texy\Module
 				}
 			}
 		}
-
-		return false;
+		return null;
 	}
 
 
-	/**
-	 * @param  string
-	 * @param  string
-	 * @param  string
-	 * @return Link
-	 */
-	public function factoryLink($dest, $mMod, $label)
+	public function factoryLink(string $dest, ?string $mMod, ?string $label): Link
 	{
 		$texy = $this->texy;
 		$type = Link::COMMON;
@@ -258,7 +242,7 @@ final class LinkModule extends Texy\Module
 			$this->checkLink($link);
 		}
 
-		if (strpos($link->URL, '%s') !== false) {
+		if (strpos((string) $link->URL, '%s') !== false) {
 			$link->URL = str_replace('%s', urlencode($texy->stringToText($label)), $link->URL);
 		}
 		$link->modifier->setProperties($mMod);
@@ -284,11 +268,10 @@ final class LinkModule extends Texy\Module
 		$el = new Texy\HtmlElement('a');
 
 		if (empty($link->modifier)) {
-			$nofollow = $popup = false;
+			$nofollow = false;
 		} else {
 			$nofollow = isset($link->modifier->classes['nofollow']);
-			$popup = isset($link->modifier->classes['popup']);
-			unset($link->modifier->classes['nofollow'], $link->modifier->classes['popup']);
+			unset($link->modifier->classes['nofollow']);
 			$el->attrs['href'] = null; // trick - move to front
 			$link->modifier->decorate($texy, $el);
 		}
@@ -298,8 +281,6 @@ final class LinkModule extends Texy\Module
 			$el->attrs['href'] = Texy\Helpers::prependRoot($link->URL, $texy->imageModule->linkedRoot);
 			if ($this->imageClass) {
 				$el->attrs['class'][] = $this->imageClass;
-			} else {
-				$el->attrs['onclick'] = $this->imageOnClick;
 			}
 
 		} else {
@@ -309,11 +290,6 @@ final class LinkModule extends Texy\Module
 			if ($nofollow || ($this->forceNoFollow && strpos($el->attrs['href'], '//') !== false)) {
 				$el->attrs['rel'] = 'nofollow';
 			}
-		}
-
-		// popup on click
-		if ($popup) {
-			$el->attrs['onclick'] = $this->popupOnClick;
 		}
 
 		if ($content !== null) {
@@ -340,20 +316,17 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return false
 	 */
-	public function solveNewReference(HandlerInvocation $invocation, $name)
+	public function solveNewReference(HandlerInvocation $invocation, string $name)
 	{
 		// no change
-		return false;
 	}
 
 
 	/**
 	 * Checks and corrects $URL.
-	 * @return void
 	 */
-	private function checkLink(Link $link)
+	private function checkLink(Link $link): void
 	{
 		// remove soft hyphens; if not removed by Texy\Texy::process()
 		$link->URL = str_replace("\xC2\xAD", '', $link->URL);
@@ -377,9 +350,8 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Returns textual representation of URL.
-	 * @return string
 	 */
-	private function textualUrl(Link $link)
+	private function textualUrl(Link $link): string
 	{
 		if ($this->texy->obfuscateEmail && preg_match('#^' . self::$EMAIL . '$#u', $link->raw)) { // email
 			return str_replace('@', '&#64;<!-- -->', $link->raw);

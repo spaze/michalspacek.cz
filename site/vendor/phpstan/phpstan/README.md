@@ -1,81 +1,36 @@
-# PHPStan - PHP Static Analysis Tool
+<h1 align="center">PHPStan - PHP Static Analysis Tool</h1>
 
-[![Build Status](https://travis-ci.org/phpstan/phpstan.svg)](https://travis-ci.org/phpstan/phpstan)
-[![Latest Stable Version](https://poser.pugx.org/phpstan/phpstan/v/stable)](https://packagist.org/packages/phpstan/phpstan)
-[![License](https://poser.pugx.org/phpstan/phpstan/license)](https://packagist.org/packages/phpstan/phpstan)
-[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
+<p align="center">
+	<img src="https://i.imgur.com/MOt7taM.png" alt="PHPStan" width="300" height="300">
+</p>
 
-[![Donate on PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/phpstan)
+<p align="center">
+	<a href="https://travis-ci.org/phpstan/phpstan"><img src="https://travis-ci.org/phpstan/phpstan.svg" alt="Build Status"></a>
+	<a href="https://packagist.org/packages/phpstan/phpstan"><img src="https://poser.pugx.org/phpstan/phpstan/v/stable" alt="Latest Stable Version"></a>
+	<a href="https://packagist.org/packages/phpstan/phpstan/stats"><img src="https://poser.pugx.org/phpstan/phpstan/downloads" alt="Total Downloads"></a>
+	<a href="https://choosealicense.com/licenses/mit/"><img src="https://poser.pugx.org/phpstan/phpstan/license" alt="License"></a>
+	<a href="https://github.com/phpstan/phpstan"><img src="https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat" alt="PHPStan Enabled"></a>
+</p>
+
+------
 
 PHPStan focuses on finding errors in your code without actually running it. It catches whole classes of bugs
-even before you write tests for the code.
-
-![PHPStan](build/phpstan.gif)
-
-PHPStan moves PHP closer to compiled languages in the sense that the correctness of each line of the code
+even before you write tests for the code. It moves PHP closer to compiled languages in the sense that the correctness of each line of the code
 can be checked before you run the actual line.
 
 **[Read more about PHPStan on Medium.com »](https://medium.com/@ondrejmirtes/phpstan-2939cd0ad0e3)**
 
 **[Try out PHPStan on the on-line playground! »](https://phpstan.org/)**
 
-## Is PHPStan helping you to avoid bugs in production?
-## Consider [supporting it on Patreon](https://www.patreon.com/phpstan) so I'm able to make it even more awesome!
+## Sponsors
 
-*I offer to issue invoices for contributions on PayPal and Patreon! [Contact me](mailto:ondrej@mirtes.cz) for details.*
+<a href="https://mike-pretzlaw.de/"><img src="https://i.imgur.com/TW2US6H.png" alt="Mike Pretzlaw" width="247" height="64"></a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://coders.thecodingmachine.com/phpstan"><img src="https://i.imgur.com/kQhNOTP.png" alt="TheCodingMachine" width="247" height="64"></a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://www.wispay.io/t/JdL" target="_blank"><img src="https://assets.wispay.io/wgt2_d_o.png" width="247" height="78"></a>
 
-It currently performs the following checks on your code:
-
-* Existence of classes and interfaces in `instanceof`, `catch`, typehints, other language constructs and even annotations. PHP does not do this and just stays silent instead.
-* Existence of variables while respecting scopes of branches and loops.
-* Existence and visibility of called methods and functions.
-* Existence and visibility of accessed properties and constants.
-* Correct types assigned to properties.
-* Correct number and types of parameters passed to constructors, methods and functions.
-* Correct types returned from methods and functions.
-* Correct number of parameters passed to `sprintf`/`printf` calls based on format strings.
-* Useless casts like `(string) 'foo'`.
-* Unused constructor parameters - they can either be deleted or the author forgot to
-use them in the method body.
-* Require calling `parent::__construct()` if the parent constructor exists.
-* Only valid array key types are used (only integers, strings, floats, booleans and nulls).
-* Duplicate array keys in literal arrays.
-* Only iterables are passed to `foreach`.
-* Correct case when referencing classes. Class names are case insensitive, but taking advantage of this is dangerous with autoloading on case-insensitive filesystems.
-* Impossible checks (dead code) of incompatible types with `instanceof`, `===`, `!==` and various function checks like `is_int` or `is_null`.
-* Always-defined and never-defined variables in `isset()` call.
-* Validating phpDocs - finding incompatible types between phpDocs and native typehints.
-* That only objects are passed to the `clone` keyword.
-
-## Extensibility
-
-Unique feature of PHPStan is the ability to define and statically check "magic" behaviour of classes -
-accessing properties that are not defined in the class but are created in `__get` and `__set`
-and invoking methods using `__call`.
-
-See [Class reflection extensions](#class-reflection-extensions), [Dynamic return type extensions](#dynamic-return-type-extensions) and [Type-specifying extensions](#type-specifying-extensions).
-
-You can also install official framework-specific extensions:
-
-* [Doctrine](https://github.com/phpstan/phpstan-doctrine)
-* [PHPUnit](https://github.com/phpstan/phpstan-phpunit)
-* [Nette Framework](https://github.com/phpstan/phpstan-nette)
-* [Dibi - Database Abstraction Library](https://github.com/phpstan/phpstan-dibi)
-* [PHP-Parser](https://github.com/phpstan/phpstan-php-parser)
-* [beberlei/assert](https://github.com/phpstan/phpstan-beberlei-assert)
-* [webmozart/assert](https://github.com/phpstan/phpstan-webmozart-assert)
-* [Symfony Framework](https://github.com/phpstan/phpstan-symfony)
-* [Mockery](https://github.com/phpstan/phpstan-mockery)
-
-Unofficial extensions for other frameworks and libraries are also available:
-
-* [Phony](https://github.com/eloquent/phpstan-phony)
-* [Prophecy](https://github.com/Jan0707/phpstan-prophecy)
-* [Laravel](https://github.com/nunomaduro/larastan)
-* [myclabs/php-enum](https://github.com/timeweb/phpstan-enum)
-* [Yii2](https://github.com/proget-hq/phpstan-yii2)
-
-New extensions are becoming available on a regular basis!
+Check out [PHPStan's Patreon](https://www.patreon.com/phpstan) for sponsoring options. One-time donations [through PayPal](https://paypal.me/phpstan) are also accepted. To request an invoice, [contact me](mailto:ondrej@mirtes.cz) through e-mail.
 
 ## Prerequisites
 
@@ -134,6 +89,38 @@ This feature enables incremental adoption of PHPStan checks. You can start using
 with a lower rule level and increase it when you feel like it.
 
 You can also use `--level max` as an alias for the highest level. This will ensure that you will always use the highest level when upgrading to new versions of PHPStan. Please note that this can create a significant obstacle when upgrading to a newer version because you might have to fix a lot of code to bring the number of errors down to zero.
+
+## Extensibility
+
+Unique feature of PHPStan is the ability to define and statically check "magic" behaviour of classes -
+accessing properties that are not defined in the class but are created in `__get` and `__set`
+and invoking methods using `__call`.
+
+See [Class reflection extensions](#class-reflection-extensions), [Dynamic return type extensions](#dynamic-return-type-extensions) and [Type-specifying extensions](#type-specifying-extensions).
+
+You can also install official framework-specific extensions:
+
+* [Doctrine](https://github.com/phpstan/phpstan-doctrine)
+* [PHPUnit](https://github.com/phpstan/phpstan-phpunit)
+* [Nette Framework](https://github.com/phpstan/phpstan-nette)
+* [Dibi - Database Abstraction Library](https://github.com/phpstan/phpstan-dibi)
+* [PHP-Parser](https://github.com/phpstan/phpstan-php-parser)
+* [beberlei/assert](https://github.com/phpstan/phpstan-beberlei-assert)
+* [webmozart/assert](https://github.com/phpstan/phpstan-webmozart-assert)
+* [Symfony Framework](https://github.com/phpstan/phpstan-symfony)
+* [Mockery](https://github.com/phpstan/phpstan-mockery)
+
+Unofficial extensions for other frameworks and libraries are also available:
+
+* [Phony](https://github.com/eloquent/phpstan-phony)
+* [Prophecy](https://github.com/Jan0707/phpstan-prophecy)
+* [Laravel](https://github.com/nunomaduro/larastan)
+* [myclabs/php-enum](https://github.com/timeweb/phpstan-enum)
+* [Yii2](https://github.com/proget-hq/phpstan-yii2)
+* [PhpSpec](https://github.com/proget-hq/phpstan-phpspec)
+* [TYPO3](https://github.com/sascha-egerer/phpstan-typo3)
+
+New extensions are becoming available on a regular basis!
 
 ## Configuration
 
@@ -327,6 +314,20 @@ parameters:
 		- '#Call to an undefined method [a-zA-Z0-9\\_]+::expects\(\)#'
 		- '#Access to an undefined property PHPUnit_Framework_MockObject_MockObject::\$[a-zA-Z0-9_]+#'
 		- '#Call to an undefined method PHPUnit_Framework_MockObject_MockObject::[a-zA-Z0-9_]+\(\)#'
+```
+
+To exclude an error in a specific directory or file, specify a `path` along with the `message`:
+
+```
+parameters:
+	ignoreErrors:
+		-
+			message: '#Call to an undefined method [a-zA-Z0-9\\_]+::method\(\)#'
+			path: %currentWorkingDirectory%/some/dir/SomeFile.php
+		-
+			message: '#Call to an undefined method [a-zA-Z0-9\\_]+::method\(\)#'
+			path: %currentWorkingDirectory%/other/dir/*
+		- '#Other error to catch anywhere#'
 ```
 
 If some of the patterns do not occur in the result anymore, PHPStan will let you know

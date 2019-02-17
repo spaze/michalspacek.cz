@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy;
 
 
@@ -23,7 +25,7 @@ final class Modifier
 {
 	use Strict;
 
-	/** @var string */
+	/** @var string|null */
 	public $id;
 
 	/** @var array of classes (as keys) */
@@ -35,16 +37,16 @@ final class Modifier
 	/** @var array of HTML element attributes */
 	public $attrs = [];
 
-	/** @var string */
+	/** @var string|null */
 	public $hAlign;
 
-	/** @var string */
+	/** @var string|null */
 	public $vAlign;
 
-	/** @var string */
+	/** @var string|null */
 	public $title;
 
-	/** @var string */
+	/** @var string|null */
 	public $cite;
 
 	/** @var array  list of properties which are regarded as HTML element attributes */
@@ -61,16 +63,13 @@ final class Modifier
 	];
 
 
-	/**
-	 * @param  string modifier to parse
-	 */
-	public function __construct($mod = null)
+	public function __construct(string $mod = null)
 	{
 		$this->setProperties($mod);
 	}
 
 
-	public function setProperties($mod)
+	public function setProperties(?string $mod): void
 	{
 		if (!$mod) {
 			return;
@@ -149,9 +148,8 @@ final class Modifier
 
 	/**
 	 * Decorates HtmlElement element.
-	 * @return void
 	 */
-	public function decorate(Texy $texy, HtmlElement $el)
+	public function decorate(Texy $texy, HtmlElement $el): HtmlElement
 	{
 		$elAttrs = &$el->attrs;
 

@@ -18,19 +18,19 @@
 		"nette/utils": "~2.3",
 		"latte/latte": "~2.3",
 		"tracy/tracy": "~2.3",
-		"texy/texy": "~2.8",
+		"texy/texy": "~3.0",
 		"kdyby/translation": "~2.5",
 		"paragonie/halite": "^4",
 		"spaze/csp-config": "~0.1",
 		"spaze/feed-exports": "~0.1",
 		"spaze/nonce-generator": "^2.0",
 		"spaze/sri-macros": "~0.1",
-		"spaze/netxten": "^0.9.0"
+		"spaze/netxten": "^0.10.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
-		"phpstan/phpstan": "^0.10",
-		"phpstan/phpstan-nette": "^0.10",
+		"phpstan/phpstan": "^0.11",
+		"phpstan/phpstan-nette": "^0.11",
 		"roave/security-advisories": "dev-master"
 	}
 }

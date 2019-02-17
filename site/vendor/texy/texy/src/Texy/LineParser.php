@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy;
 
 
@@ -25,11 +27,7 @@ class LineParser extends Parser
 	}
 
 
-	/**
-	 * @param  string
-	 * @return void
-	 */
-	public function parse($text)
+	public function parse(string $text): void
 	{
 		// initialization
 		$pl = $this->patterns;
@@ -82,7 +80,7 @@ class LineParser extends Parser
 
 					} else {
 						// try next time?
-						if (!$pl[$name]['again'] || !Regexp::match($text, $pl[$name]['again'], null, $offset + $delta)) {
+						if (!$pl[$name]['again'] || !Regexp::match($text, $pl[$name]['again'], 0, $offset + $delta)) {
 							unset($names[$index]);
 						}
 						continue;
@@ -103,14 +101,11 @@ class LineParser extends Parser
 			$offset = $start = $arrOffset[$min];
 
 			$this->again = false;
-			$res = call_user_func_array(
-				$px['handler'],
-				[$this, $arrMatches[$min], $min]
-			);
+			$res = $px['handler']($this, $arrMatches[$min], $min);
 
 			if ($res instanceof HtmlElement) {
 				$res = $res->toString($this->texy);
-			} elseif ($res === false) {
+			} elseif ($res === null) {
 				$arrOffset[$min] = -2;
 				continue;
 			}

@@ -6,6 +6,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Function_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\FunctionDefinitionCheck;
+use PHPStan\Rules\RuleError;
 
 class ExistingClassesInTypehintsRule implements \PHPStan\Rules\Rule
 {
@@ -26,13 +27,12 @@ class ExistingClassesInTypehintsRule implements \PHPStan\Rules\Rule
 	/**
 	 * @param \PhpParser\Node\Stmt\Function_ $node
 	 * @param \PHPStan\Analyser\Scope $scope
-	 * @return string[]
+	 * @return RuleError[]
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
 		return $this->check->checkFunction(
 			$node,
-			$scope,
 			sprintf(
 				'Parameter $%%s of function %s() has invalid typehint type %%s.',
 				(string) $node->namespacedName

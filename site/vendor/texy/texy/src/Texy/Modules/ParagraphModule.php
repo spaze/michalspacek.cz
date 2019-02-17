@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -16,17 +18,14 @@ use Texy\Regexp;
  */
 final class ParagraphModule extends Texy\Module
 {
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 		$texy->addHandler('paragraph', [$this, 'solve']);
 	}
 
 
-	/**
-	 * @return void
-	 */
-	public function process(Texy\BlockParser $parser, $content, Texy\HtmlElement $el)
+	public function process(Texy\BlockParser $parser, string $content, Texy\HtmlElement $el): void
 	{
 		if ($parser->isIndented()) {
 			$parts = preg_split('#(\n(?! )|\n{2,})#', $content, -1, PREG_SPLIT_NO_EMPTY);
@@ -43,7 +42,7 @@ final class ParagraphModule extends Texy\Module
 			// try to find modifier
 			$mod = null;
 			if ($mx = Regexp::match($s, '#' . Texy\Patterns::MODIFIER_H . '(?=\n|\z)#sUm', Regexp::OFFSET_CAPTURE)) {
-				list($mMod) = $mx[1];
+				[$mMod] = $mx[1];
 				$s = trim(substr_replace($s, '', $mx[0][1], strlen($mx[0][0])));
 				if ($s === '') {
 					continue;
@@ -62,9 +61,8 @@ final class ParagraphModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|false
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, $content, Texy\Modifier $mod = null)
+	public function solve(Texy\HandlerInvocation $invocation, string $content, Texy\Modifier $mod = null): ?Texy\HtmlElement
 	{
 		$texy = $this->texy;
 
@@ -100,7 +98,7 @@ final class ParagraphModule extends Texy\Module
 
 		// block contains only markup tags or spaces or nothing
 		} else {
-			// if {ignoreEmptyStuff} return false;
+			// if {ignoreEmptyStuff} return null;
 			if (!$mod) {
 				$el->setName(null);
 			}

@@ -4,12 +4,15 @@
  * TEXY! USER SYNTAX DEMO
  */
 
-
-// include Texy!
-require_once __DIR__ . '/../../src/texy.php';
+declare(strict_types=1);
 
 
-$texy = new Texy();
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	die('Install packages using `composer install`');
+}
+
+
+$texy = new Texy;
 
 // disable *** and ** and * phrases
 $texy->allowed['phrase/strong+em'] = false;
@@ -47,14 +50,13 @@ $texy->registerBlockPattern(
 /**
  * Pattern handler for inline syntaxes
  *
- * @param Texy\LineParser
- * @param array   reg-exp matches
- * @param string  pattern name (myInlineSyntax1 or myInlineSyntax2)
+ * @param  array $matches   reg-exp matches
+ * @param  string $name  pattern name (myInlineSyntax1 or myInlineSyntax2)
  * @return Texy\HtmlElement|string
  */
-function userInlineHandler(Texy\LineParser $parser, array $matches, $name)
+function userInlineHandler(Texy\LineParser $parser, array $matches, string $name)
 {
-	list(, $mContent, $mMod) = $matches;
+	[, $mContent, $mMod] = $matches;
 
 	$texy = $parser->getTexy();
 
@@ -79,14 +81,13 @@ function userInlineHandler(Texy\LineParser $parser, array $matches, $name)
 /**
  * Pattern handler for block syntaxes
  *
- * @param Texy\BlockParser
- * @param array      regexp matches
- * @param string     pattern name (myBlockSyntax1)
- * @return Texy\HtmlElement|string|false
+ * @param  array $matches      regexp matches
+ * @param  string $name     pattern name (myBlockSyntax1)
+ * @return Texy\HtmlElement|string|null
  */
-function userBlockHandler(Texy\BlockParser $parser, array $matches, $name)
+function userBlockHandler(Texy\BlockParser $parser, array $matches, string $name)
 {
-	list(, $mTag, $mText) = $matches;
+	[, $mTag, $mText] = $matches;
 
 	$texy = $parser->getTexy();
 

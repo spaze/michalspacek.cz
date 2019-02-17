@@ -5,6 +5,8 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Texy\Modules;
 
 use Texy;
@@ -49,10 +51,10 @@ final class TypographyModule extends Texy\Module
 	public $locale = 'cs';
 
 	/** @var array */
-	private $pattern;
+	private $pattern = [];
 
 
-	public function __construct($texy)
+	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 		$texy->registerPostLine([$this, 'postLine'], 'typography');
@@ -62,9 +64,8 @@ final class TypographyModule extends Texy\Module
 
 	/**
 	 * Text pre-processing.
-	 * @return void
 	 */
-	public function beforeParse(Texy\Texy $texy, &$text)
+	public function beforeParse(Texy\Texy $texy, &$text): void
 	{
 		// CONTENT_MARKUP mark: \x17-\x1F
 		// CONTENT_REPLACED mark: \x16
@@ -119,7 +120,7 @@ final class TypographyModule extends Texy\Module
 	}
 
 
-	public function postLine($text, $preserveSpaces = false)
+	public function postLine(string $text, bool $preserveSpaces = false): string
 	{
 		if (!$preserveSpaces) {
 			$text = Texy\Regexp::replace($text, '# {2,}#', ' ');
