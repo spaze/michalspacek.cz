@@ -17,7 +17,7 @@
 			<li n:foreach="$form->errors as $error"><strong>{$error}</strong></li>
 		</ul>
 	</fieldset>
-	<table>
+	<table id="slides">
 	{formContainer slides}
 		{foreach $slides as $slide}
 			{formContainer $slide->slideId}
