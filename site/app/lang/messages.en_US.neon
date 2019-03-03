@@ -281,6 +281,10 @@ trainings:
 			martinhujer: "Looking for %s? I've handed them over to \"Martin Hujer\":[%s]."
 		seeother:
 			martinmichalek: "I've discontinued %s, \"Martin Michálek\":[%s] runs a similar training."
+	intro:
+		intro: "And this is what they say about them"
+		review: "Originally, I've arranged Michal's training primarily for my colleagues because \"of course I already know these things\"... Michal has changed my mind in the first hour of the first day and continued to do so for the whole two days. Thanks to this training I finally understood some of the attack/defense concepts in full depth, and especially in the right context."
+		author: "Jan Pospíšil, Senior PHP developer, Czech Radio"
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"

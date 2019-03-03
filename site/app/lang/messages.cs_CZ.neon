@@ -281,6 +281,10 @@ trainings:
 			martinhujer: "Hledáte kurzy %s? Předal jsem je \"Martinovi Hujerovi\":[%s]."
 		seeother:
 			martinmichalek: "Školení %s jsem ukončil, podobný kurz nabízí \"Martin Michálek\":[%s]."
+	intro:
+		intro: "A takhle to dopadá"
+		review: "Michalovo školení jsem původně domlouval primárně pro svoje kolegy, protože já přece \"všechno z osnovy školení znám\"... Z omylu mě Michal hned první hodinu prvního dne a pak postupně celé dva dny. Teprve díky tomuto školení jsem některé koncepty útoků/obran pochopil v plné šíři, hloubce a hlavně správném kontextu."
+		author: "Jan Pospíšil, Senior PHP developer, Český rozhlas"
 venues:
 	nameaddress: "Název a adresa"
 	entrance: "Pohled na vchod"
