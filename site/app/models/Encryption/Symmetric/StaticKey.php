@@ -25,27 +25,21 @@ class StaticKey
 	/** @var string[] */
 	private $activeKeyIds;
 
+	/** @var string */
+	private $keyGroup;
+
 
 	/**
-	 * Set keys.
+	 * StaticKey constructor.
 	 *
+	 * @param string $keyGroup The group from which to read the key
 	 * @param string[][] $keys
-	 */
-	public function setKeys(array $keys): void
-	{
-		$this->keys = $keys;
-	}
-
-
-	/**
-	 * Set active key ids.
-	 *
-	 * Active keys are the ones used when encrypting.
-	 *
 	 * @param string[] $activeKeyIds
 	 */
-	public function setActiveKeyIds(array $activeKeyIds): void
+	public function __construct(string $keyGroup, array $keys, array $activeKeyIds)
 	{
+		$this->keyGroup = $keyGroup;
+		$this->keys = $keys;
 		$this->activeKeyIds = $activeKeyIds;
 	}
 
@@ -57,7 +51,6 @@ class StaticKey
 	 * because the key is not passed as a parameter to the function.
 	 *
 	 * @param string $data The plaintext
-	 * @param string $group The group from which to read the key
 	 * @return string
 	 * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
 	 * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
@@ -66,10 +59,10 @@ class StaticKey
 	 * @throws \ParagonIE\Halite\Alerts\InvalidType
 	 * @throws \TypeError
 	 */
-	public function encrypt(string $data, string $group): string
+	public function encrypt(string $data): string
 	{
-		$keyId = $this->getActiveKeyId($group);
-		$key = $this->getKey($group, $keyId);
+		$keyId = $this->getActiveKeyId();
+		$key = $this->getKey($keyId);
 		$cipherText = Symmetric\Crypto::encrypt(new HiddenString($data), $key);
 		return $this->formatKeyCipherText($keyId, $cipherText);
 	}
@@ -79,7 +72,6 @@ class StaticKey
 	 * Decrypt data using symmetric encryption.
 	 *
 	 * @param string $data
-	 * @param string $group
 	 * @return string
 	 * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
 	 * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
@@ -89,10 +81,10 @@ class StaticKey
 	 * @throws \ParagonIE\Halite\Alerts\InvalidType
 	 * @throws \TypeError
 	 */
-	public function decrypt(string $data, string $group): string
+	public function decrypt(string $data): string
 	{
 		list($keyId, $cipherText) = $this->parseKeyCipherText($data);
-		$key = $this->getKey($group, $keyId);
+		$key = $this->getKey($keyId);
 		return Symmetric\Crypto::decrypt($cipherText, $key)->getString();
 	}
 
@@ -100,16 +92,15 @@ class StaticKey
 	/**
 	 * Get encryption key.
 	 *
-	 * @param string $group
 	 * @param string $keyId
 	 * @return Symmetric\EncryptionKey
 	 * @throws \ParagonIE\Halite\Alerts\InvalidKey
 	 * @throws \TypeError
 	 */
-	private function getKey(string $group, string $keyId): Symmetric\EncryptionKey
+	private function getKey(string $keyId): Symmetric\EncryptionKey
 	{
-		if (isset($this->keys[$group][$keyId])) {
-			return new Symmetric\EncryptionKey(new HiddenString($this->keys[$group][$keyId]));
+		if (isset($this->keys[$this->keyGroup][$keyId])) {
+			return new Symmetric\EncryptionKey(new HiddenString($this->keys[$this->keyGroup][$keyId]));
 		} else {
 			throw new \OutOfRangeException('Unknown encryption key id: ' . $keyId);
 		}
@@ -121,12 +112,11 @@ class StaticKey
 	 *
 	 * Active key is used when encrypting.
 	 *
-	 * @param string $group
 	 * @return string
 	 */
-	private function getActiveKeyId(string $group): string
+	private function getActiveKeyId(): string
 	{
-		return $this->activeKeyIds[$group];
+		return $this->activeKeyIds[$this->keyGroup];
 	}
 
 

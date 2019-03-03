@@ -25,7 +25,7 @@ services:
 	trainings: \MichalSpacekCz\Training\Trainings
 	companyTrainings: \MichalSpacekCz\Training\CompanyTrainings
 	interviews: \MichalSpacekCz\Interviews
-	trainingApplications: \MichalSpacekCz\Training\Applications
+	trainingApplications: \MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
 	trainingMails:
 		class: \MichalSpacekCz\Training\Mails
 		setup:
@@ -42,7 +42,7 @@ services:
 	trainingReviews: \MichalSpacekCz\Training\Reviews
 	vranaResolver: MichalSpacekCz\Training\Resolver\Vrana
 	authenticator:
-		class: \MichalSpacekCz\User\Manager
+		class: \MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption)
 		setup:
 			- setPermanentLoginCookie(%permanentLogin.cookie%)
 			- setPermanentLoginInterval(%permanentLogin.interval%)
@@ -63,13 +63,8 @@ services:
 			- setDefaultDomain(%domain.default%)
 			- setRootDomain(%domain.root%)
 			- setFeaturePolicy(%featurePolicy%)
-	staticKeyEncryption:
-		class: \MichalSpacekCz\Encryption\Symmetric\StaticKey
-		setup:
-			- setKeys(%encryption.keys%)
-			- setActiveKeyIds(%encryption.activeKeyIds%)
-	passwordEncryption: \MichalSpacekCz\Encryption\Password
-	emailEncryption: \MichalSpacekCz\Encryption\Email
+	passwordEncryption: \MichalSpacekCz\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
+	emailEncryption: \MichalSpacekCz\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
 	companyInfo:
 		class: \MichalSpacekCz\CompanyInfo\Info
 		setup:
