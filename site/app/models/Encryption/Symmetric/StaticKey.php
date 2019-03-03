@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Encryption\Symmetric;
 
 use ParagonIE\Halite;
+use ParagonIE\HiddenString\HiddenString;
 
 /**
  * StaticKey encryption service.
@@ -69,7 +70,7 @@ class StaticKey
 	{
 		$keyId = $this->getActiveKeyId($group);
 		$key = $this->getKey($group, $keyId);
-		$cipherText = Halite\Symmetric\Crypto::encrypt(new Halite\HiddenString($data), $key);
+		$cipherText = Halite\Symmetric\Crypto::encrypt(new HiddenString($data), $key);
 		return $this->formatKeyCipherText($keyId, $cipherText);
 	}
 
@@ -108,7 +109,7 @@ class StaticKey
 	private function getKey(string $group, string $keyId): Halite\Symmetric\EncryptionKey
 	{
 		if (isset($this->keys[$group][$keyId])) {
-			return new Halite\Symmetric\EncryptionKey(new Halite\HiddenString($this->keys[$group][$keyId]));
+			return new Halite\Symmetric\EncryptionKey(new HiddenString($this->keys[$group][$keyId]));
 		} else {
 			throw new \OutOfRangeException('Unknown encryption key id: ' . $keyId);
 		}
