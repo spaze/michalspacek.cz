@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7057da1fbef8caba04bc50f88f578560",
+    "content-hash": "3726f3ae7bba13c6b036910e63fdf8cb",
     "packages": [
         {
             "name": "kdyby/strict-objects",
@@ -1758,6 +1758,49 @@
             ],
             "description": "Atom feed Response and related objects for Nette framework",
             "time": "2017-05-20T00:24:21+00:00"
+        },
+        {
+            "name": "spaze/mysql-session-handler",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/mysql-session-handler.git",
+                "reference": "dcd84cbea7acdadb65624b7148af6a17cae13a9a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/dcd84cbea7acdadb65624b7148af6a17cae13a9a",
+                "reference": "dcd84cbea7acdadb65624b7148af6a17cae13a9a",
+                "shasum": ""
+            },
+            "require": {
+                "nette/database": ">=2.4",
+                "nette/di": ">=2.4",
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pematon, s.r.o.",
+                    "homepage": "http://www.pematon.com"
+                },
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.com"
+                }
+            ],
+            "description": "MySQL session handler for Nette Framework",
+            "time": "2019-03-03T02:49:01+00:00"
         },
         {
             "name": "spaze/netxten",

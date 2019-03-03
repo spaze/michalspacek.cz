@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PackageVersions;
 
 /**
@@ -10,8 +12,8 @@ namespace PackageVersions;
  */
 final class Versions
 {
-    const ROOT_PACKAGE_NAME = '__root__';
-    const VERSIONS = array (
+    public const ROOT_PACKAGE_NAME = '__root__';
+    public const VERSIONS          = array (
   'kdyby/strict-objects' => 'v1.0.0@ff6c82b54d8bea0d3f43dc5fce890ebe126e95c7',
   'kdyby/translation' => 'v2.5.2@6b0721c767a7be7f15b2fb13c529bea8536230aa',
   'latte/latte' => 'v2.5.1@cf714b94f0759198a3c71361d46d5166cabaaf52',
@@ -39,6 +41,7 @@ final class Versions
   'psr/log' => '1.1.0@6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd',
   'spaze/csp-config' => 'v0.1.0@7d59e7091070c83874d6d5c1541c92a1c67d1117',
   'spaze/feed-exports' => 'v0.1.0@6a6ac651ddeda97c74e69b9735421bd9afe64723',
+  'spaze/mysql-session-handler' => 'v2.0.0@dcd84cbea7acdadb65624b7148af6a17cae13a9a',
   'spaze/netxten' => 'v0.10.0@c7df273be590683206f618d8c197c5819679ca51',
   'spaze/nonce-generator' => 'v2.0.0@ed34a9581edfb418d341a949e3c7ee1435ef4872',
   'spaze/sri-macros' => 'v0.1.0@e57d2dc126ff5b0d83d748a71638b8ea0c696ed3',
@@ -61,7 +64,7 @@ final class Versions
   'roave/security-advisories' => 'dev-master@4e04718428742618a4bf24dafca45b8645c9320d',
   'symfony/console' => 'v4.2.3@1f0ad51dfde4da8a6070f06adc58b4e37cbb37a4',
   'symfony/finder' => 'v4.2.3@ef71816cbb264988bb57fe6a73f610888b9aa70c',
-  '__root__' => 'dev-master@274f24ce795be11177cb4f1307ac1be4bb5fbb7a',
+  '__root__' => 'dev-master@405bd9fcba11b90696b643bf6eda8b98703c150b',
 );
 
     private function __construct()
@@ -69,7 +72,7 @@ final class Versions
     }
 
     /**
-     * @throws \OutOfBoundsException if a version cannot be located
+     * @throws \OutOfBoundsException If a version cannot be located.
      */
     public static function getVersion(string $packageName) : string
     {

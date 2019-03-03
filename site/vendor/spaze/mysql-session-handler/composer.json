@@ -1,0 +1,24 @@
+{
+	"name": "spaze/mysql-session-handler",
+	"description": "MySQL session handler for Nette Framework",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.com",
+			"email": "mail@michalspacek.cz"
+		},
+		{
+			"name": "Pematon, s.r.o.",
+			"homepage": "http://www.pematon.com"
+		}
+	],
+	"require": {
+		"php": ">=7.2",
+		"nette/database": ">=2.4",
+		"nette/di": ">=2.4"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	}
+}

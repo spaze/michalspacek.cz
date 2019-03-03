@@ -497,6 +497,8 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Utils\\Strings' => __DIR__ . '/..' . '/nette/utils/src/Utils/Strings.php',
         'Nette\\Utils\\UnknownImageFileException' => __DIR__ . '/..' . '/nette/utils/src/Utils/exceptions.php',
         'Nette\\Utils\\Validators' => __DIR__ . '/..' . '/nette/utils/src/Utils/Validators.php',
+        'Spaze\\Session\\DI\\MysqlSessionHandlerExtension' => __DIR__ . '/..' . '/spaze/mysql-session-handler/src/DI/MysqlSessionHandlerExtension.php',
+        'Spaze\\Session\\MysqlSessionHandler' => __DIR__ . '/..' . '/spaze/mysql-session-handler/src/MysqlSessionHandler.php',
         'Tester\\Assert' => __DIR__ . '/..' . '/nette/tester/src/Framework/Assert.php',
         'Tester\\AssertException' => __DIR__ . '/..' . '/nette/tester/src/Framework/AssertException.php',
         'Tester\\CodeCoverage\\Collector' => __DIR__ . '/..' . '/nette/tester/src/CodeCoverage/Collector.php',

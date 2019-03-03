@@ -333,6 +333,8 @@ return array(
     'Nette\\Utils\\Strings' => $vendorDir . '/nette/utils/src/Utils/Strings.php',
     'Nette\\Utils\\UnknownImageFileException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\Utils\\Validators' => $vendorDir . '/nette/utils/src/Utils/Validators.php',
+    'Spaze\\Session\\DI\\MysqlSessionHandlerExtension' => $vendorDir . '/spaze/mysql-session-handler/src/DI/MysqlSessionHandlerExtension.php',
+    'Spaze\\Session\\MysqlSessionHandler' => $vendorDir . '/spaze/mysql-session-handler/src/MysqlSessionHandler.php',
     'Tester\\Assert' => $vendorDir . '/nette/tester/src/Framework/Assert.php',
     'Tester\\AssertException' => $vendorDir . '/nette/tester/src/Framework/AssertException.php',
     'Tester\\CodeCoverage\\Collector' => $vendorDir . '/nette/tester/src/CodeCoverage/Collector.php',
