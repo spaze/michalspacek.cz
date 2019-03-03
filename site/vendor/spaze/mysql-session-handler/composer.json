@@ -20,5 +20,8 @@
 	},
 	"autoload": {
 		"classmap": ["src/"]
+	},
+	"suggest": {
+		"spaze/encryption": "Adds a support for encrypted session storage"
 	}
 }

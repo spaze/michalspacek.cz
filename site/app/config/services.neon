@@ -65,6 +65,7 @@ services:
 			- setFeaturePolicy(%featurePolicy%)
 	passwordEncryption: \Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
 	emailEncryption: \Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
+	sessionEncryption: \Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
 	companyInfo:
 		class: \MichalSpacekCz\CompanyInfo\Info
 		setup:

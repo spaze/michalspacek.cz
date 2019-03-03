@@ -60,3 +60,6 @@ subresourceIntegrity:
 		screen-pulse: /i/css/pulse/screen.css
 		screen-webleed: /i/css/webleed/screen.css
 		info-admin: /i/css/admin/info.css
+
+sessionHandler:
+	encryptionService: @sessionEncryption

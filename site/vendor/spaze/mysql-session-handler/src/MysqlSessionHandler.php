@@ -5,6 +5,7 @@ namespace Spaze\Session;
 
 use Nette\Database\Context;
 use SessionHandlerInterface;
+use Spaze\Encryption\Symmetric\StaticKey as StaticKeyEncryption;
 
 /**
  * Storing session to database.
@@ -28,6 +29,9 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	/** @var string[] */
 	private $idHashes = [];
 
+	/** @var StaticKeyEncryption */
+	private $encryptionService;
+
 
 	public function __construct(Context $context)
 	{
@@ -44,6 +48,12 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	public function setLockTimeout(int $timeout): void
 	{
 		$this->lockTimeout = $timeout;
+	}
+
+
+	public function setEncryptionService(StaticKeyEncryption $encryptionService): void
+	{
+		$this->encryptionService = $encryptionService;
 	}
 
 
@@ -119,7 +129,11 @@ class MysqlSessionHandler implements SessionHandlerInterface
 		$row = $this->context->table($this->tableName)->get($hashedSessionId);
 
 		if ($row) {
-			return $row->data;
+			if ($this->encryptionService) {
+				return $sessionData = $this->encryptionService->decrypt($row->data);
+			} else {
+				return $row->data;
+			}
 		}
 		return '';
 	}
@@ -135,6 +149,10 @@ class MysqlSessionHandler implements SessionHandlerInterface
 		$this->lock();
 		$hashedSessionId = $this->hash($sessionId);
 		$time = time();
+
+		if ($this->encryptionService) {
+			$sessionData = $this->encryptionService->encrypt($sessionData);
+		}
 
 		if ($row = $this->context->table($this->tableName)->get($hashedSessionId)) {
 			if ($row->data !== $sessionData) {

@@ -11,6 +11,7 @@ class MysqlSessionHandlerExtension extends CompilerExtension
 
 	private $defaults = [
 		'tableName' => 'sessions',
+		'encryptionService' => null,
 	];
 
 
@@ -26,6 +27,9 @@ class MysqlSessionHandlerExtension extends CompilerExtension
 			->setClass('Spaze\Session\MysqlSessionHandler')
 			->addSetup('setTableName', [$config['tableName']]);
 
+		if ($config['encryptionService']) {
+			$definition->addSetup('setEncryptionService', [$config['encryptionService']]);
+		}
 
 		$sessionDefinition = $builder->getDefinition('session');
 		$sessionSetup = $sessionDefinition->getSetup();

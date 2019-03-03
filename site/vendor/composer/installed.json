@@ -2510,17 +2510,17 @@
     },
     {
         "name": "spaze/mysql-session-handler",
-        "version": "v2.0.0",
-        "version_normalized": "2.0.0.0",
+        "version": "v2.1.0",
+        "version_normalized": "2.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spaze/mysql-session-handler.git",
-            "reference": "dcd84cbea7acdadb65624b7148af6a17cae13a9a"
+            "reference": "86b934fc1026c31f549420ba37df9a28e859ef20"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/dcd84cbea7acdadb65624b7148af6a17cae13a9a",
-            "reference": "dcd84cbea7acdadb65624b7148af6a17cae13a9a",
+            "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/86b934fc1026c31f549420ba37df9a28e859ef20",
+            "reference": "86b934fc1026c31f549420ba37df9a28e859ef20",
             "shasum": ""
         },
         "require": {
@@ -2528,7 +2528,10 @@
             "nette/di": ">=2.4",
             "php": ">=7.2"
         },
-        "time": "2019-03-03T02:49:01+00:00",
+        "suggest": {
+            "spaze/encryption": "Adds a support for encrypted session storage"
+        },
+        "time": "2019-03-03T22:14:44+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
