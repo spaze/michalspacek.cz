@@ -2428,6 +2428,47 @@
         "description": "Build Content Security Policy from a config file"
     },
     {
+        "name": "spaze/encryption",
+        "version": "v0.1.0",
+        "version_normalized": "0.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/spaze/encryption.git",
+            "reference": "ee4191b9ecc15e456d5b15d3de6a2db4000900b6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/spaze/encryption/zipball/ee4191b9ecc15e456d5b15d3de6a2db4000900b6",
+            "reference": "ee4191b9ecc15e456d5b15d3de6a2db4000900b6",
+            "shasum": ""
+        },
+        "require": {
+            "paragonie/halite": "^4.5",
+            "paragonie/hidden-string": "^1",
+            "php": ">=7.2"
+        },
+        "time": "2019-03-03T20:26:43+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Spaze\\Encryption\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michal Špaček",
+                "email": "mail@michalspacek.cz",
+                "homepage": "https://www.michalspacek.cz"
+            }
+        ],
+        "description": "Various encryption helpers, uses Halite (which uses Sodium) for cryptography"
+    },
+    {
         "name": "spaze/feed-exports",
         "version": "v0.1.0",
         "version_normalized": "0.1.0.0",

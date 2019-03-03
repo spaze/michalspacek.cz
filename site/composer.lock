@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3726f3ae7bba13c6b036910e63fdf8cb",
+    "content-hash": "aa8379e45adbff2fa8af9e93f12ac3da",
     "packages": [
         {
             "name": "kdyby/strict-objects",
@@ -1720,6 +1720,45 @@
             ],
             "description": "Build Content Security Policy from a config file",
             "time": "2018-04-02T18:20:14+00:00"
+        },
+        {
+            "name": "spaze/encryption",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/encryption.git",
+                "reference": "ee4191b9ecc15e456d5b15d3de6a2db4000900b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/encryption/zipball/ee4191b9ecc15e456d5b15d3de6a2db4000900b6",
+                "reference": "ee4191b9ecc15e456d5b15d3de6a2db4000900b6",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/halite": "^4.5",
+                "paragonie/hidden-string": "^1",
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spaze\\Encryption\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.cz"
+                }
+            ],
+            "description": "Various encryption helpers, uses Halite (which uses Sodium) for cryptography",
+            "time": "2019-03-03T20:26:43+00:00"
         },
         {
             "name": "spaze/feed-exports",

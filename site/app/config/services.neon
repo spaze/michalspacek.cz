@@ -63,8 +63,8 @@ services:
 			- setDefaultDomain(%domain.default%)
 			- setRootDomain(%domain.root%)
 			- setFeaturePolicy(%featurePolicy%)
-	passwordEncryption: \MichalSpacekCz\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
-	emailEncryption: \MichalSpacekCz\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
+	passwordEncryption: \Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
+	emailEncryption: \Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
 	companyInfo:
 		class: \MichalSpacekCz\CompanyInfo\Info
 		setup:

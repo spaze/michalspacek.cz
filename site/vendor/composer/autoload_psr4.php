@@ -17,6 +17,7 @@ return array(
     'Spaze\\SubresourceIntegrity\\' => array($vendorDir . '/spaze/sri-macros/src'),
     'Spaze\\NonceGenerator\\' => array($vendorDir . '/spaze/nonce-generator/src'),
     'Spaze\\Exports\\' => array($vendorDir . '/spaze/feed-exports/src'),
+    'Spaze\\Encryption\\' => array($vendorDir . '/spaze/encryption/src'),
     'Spaze\\ContentSecurityPolicy\\' => array($vendorDir . '/spaze/csp-config/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),

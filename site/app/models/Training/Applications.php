@@ -27,7 +27,7 @@ class Applications
 	/** @var Statuses */
 	protected $trainingStatuses;
 
-	/** @var \MichalSpacekCz\Encryption\Symmetric\StaticKey */
+	/** @var \Spaze\Encryption\Symmetric\StaticKey */
 	protected $emailEncryption;
 
 	/** @var \MichalSpacekCz\Vat */
@@ -48,7 +48,7 @@ class Applications
 	 * @param Trainings $trainings
 	 * @param Dates $trainingDates
 	 * @param Statuses $trainingStatuses
-	 * @param \MichalSpacekCz\Encryption\Symmetric\StaticKey $emailEncryption
+	 * @param \Spaze\Encryption\Symmetric\StaticKey $emailEncryption
 	 * @param \MichalSpacekCz\Vat $vat
 	 * @param \MichalSpacekCz\Training\Resolver\Vrana $vranaResolver
 	 * @param \Nette\Localization\ITranslator $translator
@@ -58,7 +58,7 @@ class Applications
 		Trainings $trainings,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
-		\MichalSpacekCz\Encryption\Symmetric\StaticKey $emailEncryption,
+		\Spaze\Encryption\Symmetric\StaticKey $emailEncryption,
 		\MichalSpacekCz\Vat $vat,
 		\MichalSpacekCz\Training\Resolver\Vrana $vranaResolver,
 		\Nette\Localization\ITranslator $translator

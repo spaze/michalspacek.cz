@@ -30,6 +30,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Spaze\\SubresourceIntegrity\\' => 27,
             'Spaze\\NonceGenerator\\' => 21,
             'Spaze\\Exports\\' => 14,
+            'Spaze\\Encryption\\' => 17,
             'Spaze\\ContentSecurityPolicy\\' => 28,
         ),
         'P' => 
@@ -102,6 +103,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\Exports\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/feed-exports/src',
+        ),
+        'Spaze\\Encryption\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spaze/encryption/src',
         ),
         'Spaze\\ContentSecurityPolicy\\' => 
         array (

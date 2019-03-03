@@ -1,0 +1,20 @@
+{
+	"name": "spaze/encryption",
+	"description": "Various encryption helpers, uses Halite (which uses Sodium) for cryptography",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.cz",
+			"email": "mail@michalspacek.cz"
+		}
+	],
+	"require": {
+		"php": ">=7.2",
+		"paragonie/halite": "^4.5",
+		"paragonie/hidden-string": "^1"
+	},
+	"autoload": {
+		"psr-4": {"Spaze\\Encryption\\": "src"}
+	}
+}

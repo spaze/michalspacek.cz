@@ -26,7 +26,8 @@
 		"spaze/nonce-generator": "^2.0",
 		"spaze/sri-macros": "~0.1",
 		"spaze/netxten": "^0.10.0",
-		"spaze/mysql-session-handler": "^2.0"
+		"spaze/mysql-session-handler": "^2.0",
+		"spaze/encryption": "^0.1.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",

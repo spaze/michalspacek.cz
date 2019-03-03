@@ -32,7 +32,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	/** @var \Nette\Http\Response */
 	protected $httpResponse;
 
-	/** @var \MichalSpacekCz\Encryption\Symmetric\StaticKey */
+	/** @var \Spaze\Encryption\Symmetric\StaticKey */
 	protected $passwordEncryption;
 
 	/** @var string */
@@ -52,7 +52,7 @@ class Manager implements \Nette\Security\IAuthenticator
 		\Nette\Database\Context $context,
 		\Nette\Http\IRequest $httpRequest,
 		\Nette\Http\Response $httpResponse,
-		\MichalSpacekCz\Encryption\Symmetric\StaticKey $passwordEncryption,
+		\Spaze\Encryption\Symmetric\StaticKey $passwordEncryption,
 		\Nette\Application\LinkGenerator $linkGenerator
 	)
 	{
