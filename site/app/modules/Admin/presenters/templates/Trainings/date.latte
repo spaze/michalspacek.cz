@@ -34,8 +34,8 @@
 			<td><small>{$iterator->getCounter()}.</small></td>
 			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id">{$application->name|ifnull:smazáno}</a></small></td>
 			<td><small>{$application->email|ifNull:smazáno}</small></td>
-			<td><small n:tag-if="$application->company === null"><span n:tag-if="($application->company|length) > 40" title="{$application->company}">{$application->company|ifNull:smazáno|truncate:40}</span></small></td>
-			<td><small{if ($application->note|length) > 20} title="{$application->note}"{/if}>{$application->note|ifNull:smazáno|truncate:20}</small></td>
+			<td><small n:tag-if="$application->company === null"><span n:tag-if="$application->company && ($application->company|length) > 40" title="{$application->company}">{$application->company|ifNull:smazáno|truncate:40}</span></small></td>
+			<td><small{if $application->note && ($application->note|length) > 20} title="{$application->note}"{/if}>{$application->note|ifNull:smazáno|truncate:20}</small></td>
 			<td><small><code title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</code></small></td>
 			<td><small>&raquo;</small></td>
 			<td>{input applications-$application->id class => status}</td>
