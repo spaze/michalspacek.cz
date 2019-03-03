@@ -15,7 +15,7 @@ var_dump($version); // 1.0.0@0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33
 [![Code Coverage](https://scrutinizer-ci.com/g/Ocramius/PackageVersions/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Ocramius/PackageVersions/?branch=master)
 [![Downloads](https://img.shields.io/packagist/dt/ocramius/package-versions.svg)](https://packagist.org/packages/ocramius/package-versions)
 [![Packagist](https://img.shields.io/packagist/v/ocramius/package-versions.svg)](https://packagist.org/packages/ocramius/package-versions)
-[![Packagist Pre Release](https://img.shields.io/packagist/vpre/ocramius/package-versions.svg)](https://packagist.org/packages/ocramius/package-versions)
+[![Dependencies](https://tidelift.com/badges/github/packagist/ocramius%2Fpackage-versions)](https://tidelift.com/subscription/pkg/packagist-ocramius%2Fpackage-versions?utm_source=packagist-ocramius%2Fpackage-versions&utm_medium=readme)
 
 ### Installation
 
@@ -52,4 +52,9 @@ This is especially useful when you want to generate assets/code/artifacts that a
 the current version of a certain dependency. Doing so at runtime by checking the installed
 version of a package would be too expensive, and this package mitigates that.
 
+## Professional Support
 
+[Professionally supported `ocramius/package-versions` is available through Tidelift](https://tidelift.com/subscription/pkg/packagist-ocramius-package-versions?utm_source=packagist-ocramius-package-versions&utm_medium=referral&utm_campaign=readme).
+
+You can also contact the maintainer at ocramius@gmail.com for looking into issues related to this package
+in your private projects.
