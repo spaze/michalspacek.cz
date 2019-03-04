@@ -1,6 +1,6 @@
 {
 	"name": "spaze/mysql-session-handler",
-	"description": "MySQL session handler for Nette Framework",
+	"description": "MySQL session handler for Nette Framework with optionally encrypted storage",
 	"license": "MIT",
 	"authors": [
 		{

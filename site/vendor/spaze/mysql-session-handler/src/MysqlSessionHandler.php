@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Spaze\Session;
 
 use Nette\Database\Context;
+use Nette\Database\Table\ActiveRow;
 use SessionHandlerInterface;
 use Spaze\Encryption\Symmetric\StaticKey as StaticKeyEncryption;
 
@@ -20,6 +21,9 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	/** @var integer */
 	private $lockTimeout = 5;
 
+	/** @var integer */
+	private $unchangedUpdateDelay = 300;
+
 	/** @var Context */
 	private $context;
 
@@ -28,6 +32,12 @@ class MysqlSessionHandler implements SessionHandlerInterface
 
 	/** @var string[] */
 	private $idHashes = [];
+
+	/** @var ActiveRow */
+	private $row;
+
+	/** @var string[] */
+	private $data = [];
 
 	/** @var StaticKeyEncryption */
 	private $encryptionService;
@@ -51,6 +61,12 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	}
 
 
+	public function setUnchangedUpdateDelay(int $delay): void
+	{
+		$this->unchangedUpdateDelay = $delay;
+	}
+
+
 	public function setEncryptionService(StaticKeyEncryption $encryptionService): void
 	{
 		$this->encryptionService = $encryptionService;
@@ -60,16 +76,16 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	private function hash(string $id, bool $rawOutput = true): string
 	{
 		if (!isset($this->idHashes[$id])) {
-			$this->idHashes[$id] = hash('sha256', $id, true);
+			$this->idHashes[$id] = \hash('sha256', $id, true);
 		}
-		return ($rawOutput ? $this->idHashes[$id] : bin2hex($this->idHashes[$id]));
+		return ($rawOutput ? $this->idHashes[$id] : \bin2hex($this->idHashes[$id]));
 	}
 
 
 	private function lock(): void
 	{
 		if ($this->lockId === null) {
-			$this->lockId = $this->hash(session_id(), false);
+			$this->lockId = $this->hash(\session_id(), false);
 			$this->context->query('SELECT GET_LOCK(?, ?) as `lock`', $this->lockId, $this->lockTimeout);
 		}
 	}
@@ -126,14 +142,11 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	{
 		$this->lock();
 		$hashedSessionId = $this->hash($sessionId);
-		$row = $this->context->table($this->tableName)->get($hashedSessionId);
+		$this->row = $this->context->table($this->tableName)->get($hashedSessionId);
 
-		if ($row) {
-			if ($this->encryptionService) {
-				return $sessionData = $this->encryptionService->decrypt($row->data);
-			} else {
-				return $row->data;
-			}
+		if ($this->row) {
+			$this->data[$sessionId] = ($this->encryptionService ? $this->encryptionService->decrypt($this->row->data) : $this->row->data);
+			return $this->data[$sessionId];
 		}
 		return '';
 	}
@@ -148,30 +161,29 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	{
 		$this->lock();
 		$hashedSessionId = $this->hash($sessionId);
-		$time = time();
+		$time = \time();
 
-		if ($this->encryptionService) {
-			$sessionData = $this->encryptionService->encrypt($sessionData);
-		}
-
-		if ($row = $this->context->table($this->tableName)->get($hashedSessionId)) {
-			if ($row->data !== $sessionData) {
+		if (!isset($this->data[$sessionId]) || $this->data[$sessionId] !== $sessionData) {
+			if ($this->encryptionService) {
+				$sessionData = $this->encryptionService->encrypt($sessionData);
+			}
+			if ($row = $this->context->table($this->tableName)->get($hashedSessionId)) {
 				$row->update([
 					'timestamp' => $time,
 					'data' => $sessionData,
 				]);
-			} elseif ($time - $row->timestamp > 300) {
-				// Optimization: When data has not been changed, only update
-				// the timestamp after 5 minutes.
-				$row->update([
+			} else {
+				$this->context->table($this->tableName)->insert([
+					'id' => $hashedSessionId,
 					'timestamp' => $time,
+					'data' => $sessionData,
 				]);
 			}
-		} else {
-			$this->context->table($this->tableName)->insert([
-				'id' => $hashedSessionId,
+		} elseif ($this->unchangedUpdateDelay === 0 || $time - $this->row->timestamp > $this->unchangedUpdateDelay) {
+			// Optimization: When data has not been changed, only update
+			// the timestamp after a configured delay, if any.
+			$this->row->update([
 				'timestamp' => $time,
-				'data' => $sessionData,
 			]);
 		}
 
@@ -185,7 +197,7 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	 */
 	public function gc($maxLifeTime): bool
 	{
-		$maxTimestamp = time() - $maxLifeTime;
+		$maxTimestamp = \time() - $maxLifeTime;
 
 		// Try to avoid a conflict when running garbage collection simultaneously on two
 		// MySQL servers at a very busy site in a master-master replication setup by
@@ -197,7 +209,7 @@ class MysqlSessionHandler implements SessionHandlerInterface
 		// subtraction on server 2.
 		$serverId = $this->context->query('SELECT @@server_id as `server_id`')->fetch()->server_id;
 		if ($serverId > 1 && $serverId < 10) {
-			$maxTimestamp -= ($serverId - 1) * max(86400, $maxLifeTime / 10);
+			$maxTimestamp -= ($serverId - 1) * \max(86400, $maxLifeTime / 10);
 		}
 
 		$this->context->table($this->tableName)

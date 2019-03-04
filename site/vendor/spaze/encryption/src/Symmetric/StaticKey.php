@@ -14,8 +14,6 @@ use ParagonIE\HiddenString\HiddenString;
 class StaticKey
 {
 
-	use \Nette\SmartObject;
-
 	private const KEY_CIPHERTEXT_SEPARATOR = '$';
 
 	/** @var string[][] */
@@ -127,11 +125,11 @@ class StaticKey
 	 */
 	private function parseKeyCipherText(string $data): array
 	{
-		$data = explode(self::KEY_CIPHERTEXT_SEPARATOR, $data);
-		if (count($data) !== 3) {
+		$data = \explode(self::KEY_CIPHERTEXT_SEPARATOR, $data);
+		if (\count($data) !== 3) {
 			throw new \OutOfBoundsException('Data must have cipher, key, iv, and ciphertext. Now look at the Oxford comma!');
 		}
-		return array($data[1], $data[2]);
+		return [$data[1], $data[2]];
 	}
 
 
