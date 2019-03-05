@@ -42,7 +42,7 @@ final class Versions
   'spaze/csp-config' => 'v0.1.0@7d59e7091070c83874d6d5c1541c92a1c67d1117',
   'spaze/encryption' => 'v0.1.1@e891463ec1e594da8ebe1c31caf0cc9f1b5786e4',
   'spaze/feed-exports' => 'v0.1.0@6a6ac651ddeda97c74e69b9735421bd9afe64723',
-  'spaze/mysql-session-handler' => 'v2.1.1@d3c5d38af617e14e9d866a2c3e46c8e44a7e2db9',
+  'spaze/mysql-session-handler' => 'v2.1.2@9bf674a2fdaedacaa67eb995c8c05ac0107c27b2',
   'spaze/netxten' => 'v0.10.0@c7df273be590683206f618d8c197c5819679ca51',
   'spaze/nonce-generator' => 'v2.0.0@ed34a9581edfb418d341a949e3c7ee1435ef4872',
   'spaze/sri-macros' => 'v0.1.0@e57d2dc126ff5b0d83d748a71638b8ea0c696ed3',
@@ -65,7 +65,7 @@ final class Versions
   'roave/security-advisories' => 'dev-master@4e04718428742618a4bf24dafca45b8645c9320d',
   'symfony/console' => 'v4.2.4@9dc2299a016497f9ee620be94524e6c0af0280a9',
   'symfony/finder' => 'v4.2.4@267b7002c1b70ea80db0833c3afe05f0fbde580a',
-  '__root__' => 'dev-master@ee42f5041e524ebe48f5c301963650e97967328e',
+  '__root__' => 'dev-master@c649e63ff4040d19fd5510ddf4f6c260a3720899',
 );
 
     private function __construct()

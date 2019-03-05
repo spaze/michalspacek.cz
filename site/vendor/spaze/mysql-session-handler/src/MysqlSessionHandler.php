@@ -5,6 +5,7 @@ namespace Spaze\Session;
 
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
+use Nette\SmartObject;
 use SessionHandlerInterface;
 use Spaze\Encryption\Symmetric\StaticKey as StaticKeyEncryption;
 
@@ -14,6 +15,8 @@ use Spaze\Encryption\Symmetric\StaticKey as StaticKeyEncryption;
  */
 class MysqlSessionHandler implements SessionHandlerInterface
 {
+
+	use SmartObject;
 
 	/** @var string */
 	private $tableName;
@@ -39,8 +42,18 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	/** @var string[] */
 	private $data = [];
 
+	/** @var mixed[] */
+	private $additionalData = [];
+
 	/** @var StaticKeyEncryption */
 	private $encryptionService;
+
+	/**
+	 * Occurs before the data is written to session.
+	 *
+	 * @var callable[] function ()
+	 */
+	public $onBeforeDataWrite;
 
 
 	public function __construct(Context $context)
@@ -70,6 +83,16 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	public function setEncryptionService(StaticKeyEncryption $encryptionService): void
 	{
 		$this->encryptionService = $encryptionService;
+	}
+
+
+	/**
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	public function setAdditionalData(string $key, $value): void
+	{
+		$this->additionalData[$key] = $value;
 	}
 
 
@@ -167,17 +190,18 @@ class MysqlSessionHandler implements SessionHandlerInterface
 			if ($this->encryptionService) {
 				$sessionData = $this->encryptionService->encrypt($sessionData);
 			}
+			$this->onBeforeDataWrite();
 			if ($row = $this->context->table($this->tableName)->get($hashedSessionId)) {
 				$row->update([
 					'timestamp' => $time,
 					'data' => $sessionData,
-				]);
+				] + $this->additionalData);
 			} else {
 				$this->context->table($this->tableName)->insert([
 					'id' => $hashedSessionId,
 					'timestamp' => $time,
 					'data' => $sessionData,
-				]);
+				] + $this->additionalData);
 			}
 		} elseif ($this->unchangedUpdateDelay === 0 || $time - $this->row->timestamp > $this->unchangedUpdateDelay) {
 			// Optimization: When data has not been changed, only update
