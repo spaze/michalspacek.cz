@@ -10,19 +10,17 @@
 		}
 	],
 	"require": {
-		"php": "~7.0"
+		"php": "~7.1"
 	},
 	"autoload": {
 		"psr-4": {"Spaze\\NonceGenerator\\": "src"}
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
-		"paragonie/random_compat": "^2.0",
-		"phpstan/phpstan": "^0.6.4"
+		"phpstan/phpstan": "^0.11.2"
 	},
 	"suggest": {
 		"spaze/csp-config": "Build and send Content Security Policy header, possibly including nonce, if enabled",
-		"spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too",
-		"paragonie/random_compat": "PHP 5.x polyfill for random_bytes() used by this library"
+		"spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too"
 	}
 }

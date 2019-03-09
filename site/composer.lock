@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa8379e45adbff2fa8af9e93f12ac3da",
+    "content-hash": "6be487192db06f24cd98ed3fc4d8d7ae",
     "packages": [
         {
             "name": "kdyby/strict-objects",
@@ -1546,21 +1546,21 @@
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.8.1",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "57bb5ef079d3724148da3d5c99e30695ab17afda"
+                "reference": "f261f50c84d20b1364723dbd21e668f4e40b2140"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/57bb5ef079d3724148da3d5c99e30695ab17afda",
-                "reference": "57bb5ef079d3724148da3d5c99e30695ab17afda",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/f261f50c84d20b1364723dbd21e668f4e40b2140",
+                "reference": "f261f50c84d20b1364723dbd21e668f4e40b2140",
                 "shasum": ""
             },
             "require": {
                 "paragonie/random_compat": ">=1",
-                "php": "^5.2.4|^5.3|^5.4|^5.5|^5.6|^7"
+                "php": "^5.2.4|^5.3|^5.4|^5.5|^5.6|^7|^8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^3|^4|^5"
@@ -1624,7 +1624,7 @@
                 "secret-key cryptography",
                 "side-channel resistant"
             ],
-            "time": "2019-01-03T21:00:55+00:00"
+            "time": "2019-03-06T17:16:38+00:00"
         },
         {
             "name": "psr/log",
@@ -1675,27 +1675,27 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v0.1.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "7d59e7091070c83874d6d5c1541c92a1c67d1117"
+                "reference": "ce0e33b6607067cd104fe06ff08f7cf34023b567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/7d59e7091070c83874d6d5c1541c92a1c67d1117",
-                "reference": "7d59e7091070c83874d6d5c1541c92a1c67d1117",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/ce0e33b6607067cd104fe06ff08f7cf34023b567",
+                "reference": "ce0e33b6607067cd104fe06ff08f7cf34023b567",
                 "shasum": ""
             },
             "require": {
                 "nette/di": "~2.3",
-                "php": "~7.0"
+                "php": "~7.1"
             },
             "require-dev": {
                 "nette/bootstrap": "^2.3",
                 "nette/tester": "^2.0",
                 "paragonie/random_compat": "^2.0",
-                "phpstan/phpstan": "^0.6.4"
+                "phpstan/phpstan": "^0.11.2"
             },
             "suggest": {
                 "spaze/nonce-generator": "Generates nonces to be added to Content Security Policy header, if enabled",
@@ -1719,7 +1719,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2018-04-02T18:20:14+00:00"
+            "time": "2019-03-09T03:23:10+00:00"
         },
         {
             "name": "spaze/encryption",
@@ -1882,28 +1882,26 @@
         },
         {
             "name": "spaze/nonce-generator",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/nonce-generator.git",
-                "reference": "ed34a9581edfb418d341a949e3c7ee1435ef4872"
+                "reference": "066a834ec5ededeb1133053c7131be3230e5f010"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/ed34a9581edfb418d341a949e3c7ee1435ef4872",
-                "reference": "ed34a9581edfb418d341a949e3c7ee1435ef4872",
+                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/066a834ec5ededeb1133053c7131be3230e5f010",
+                "reference": "066a834ec5ededeb1133053c7131be3230e5f010",
                 "shasum": ""
             },
             "require": {
-                "php": "~7.0"
+                "php": "~7.1"
             },
             "require-dev": {
                 "nette/tester": "^2.0",
-                "paragonie/random_compat": "^2.0",
-                "phpstan/phpstan": "^0.6.4"
+                "phpstan/phpstan": "^0.11.2"
             },
             "suggest": {
-                "paragonie/random_compat": "PHP 5.x polyfill for random_bytes() used by this library",
                 "spaze/csp-config": "Build and send Content Security Policy header, possibly including nonce, if enabled",
                 "spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too"
             },
@@ -1925,7 +1923,7 @@
                 }
             ],
             "description": "Content Security Policy nonce generator",
-            "time": "2017-12-19T23:31:58+00:00"
+            "time": "2019-03-09T03:38:10+00:00"
         },
         {
             "name": "spaze/sri-macros",

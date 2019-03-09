@@ -21,7 +21,7 @@
 		"texy/texy": "~3.0",
 		"kdyby/translation": "~2.5",
 		"paragonie/halite": "^4",
-		"spaze/csp-config": "~0.1",
+		"spaze/csp-config": "~1.0",
 		"spaze/feed-exports": "~0.1",
 		"spaze/nonce-generator": "^2.0",
 		"spaze/sri-macros": "~0.1",
