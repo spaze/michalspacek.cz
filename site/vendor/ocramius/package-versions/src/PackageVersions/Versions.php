@@ -36,7 +36,6 @@ final class Versions
   'paragonie/constant_time_encoding' => 'v2.2.3@55af0dc01992b4d0da7f6372e2eac097bbbaffdb',
   'paragonie/halite' => 'v4.5.2@9092e8ce783cf4f4c2e04dc6f602c8f0c84d5eae',
   'paragonie/hidden-string' => 'v1.0.0@0bbb00be0e33b8e1d48fa79ea35cd42d3091a936',
-  'paragonie/sodium_compat' => 'v1.9.0@f261f50c84d20b1364723dbd21e668f4e40b2140',
   'psr/log' => '1.1.0@6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd',
   'spaze/csp-config' => 'v1.0.1@ce0e33b6607067cd104fe06ff08f7cf34023b567',
   'spaze/encryption' => 'v0.1.1@e891463ec1e594da8ebe1c31caf0cc9f1b5786e4',
@@ -64,8 +63,9 @@ final class Versions
   'roave/security-advisories' => 'dev-master@4e04718428742618a4bf24dafca45b8645c9320d',
   'symfony/console' => 'v4.2.4@9dc2299a016497f9ee620be94524e6c0af0280a9',
   'symfony/finder' => 'v4.2.4@267b7002c1b70ea80db0833c3afe05f0fbde580a',
-  'paragonie/random_compat' => '9.99.99@a865d66aac099cde77cb372752e33b4abb6f6c52',
-  '__root__' => 'dev-master@a865d66aac099cde77cb372752e33b4abb6f6c52',
+  'paragonie/random_compat' => '9.99.99@f208b92809aa949dc3b4b1767c48d2dd1db26164',
+  'paragonie/sodium_compat' => '*@f208b92809aa949dc3b4b1767c48d2dd1db26164',
+  '__root__' => 'dev-master@f208b92809aa949dc3b4b1767c48d2dd1db26164',
 );
 
     private function __construct()

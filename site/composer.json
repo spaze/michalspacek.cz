@@ -36,6 +36,7 @@
 		"roave/security-advisories": "dev-master"
 	},
 	"replace": {
-		"paragonie/random_compat": "9.99.99"
+		"paragonie/random_compat": "9.99.99",
+		"paragonie/sodium_compat": "*"
 	}
 }
