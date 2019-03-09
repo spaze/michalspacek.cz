@@ -34,5 +34,8 @@
 		"phpstan/phpstan": "^0.11",
 		"phpstan/phpstan-nette": "^0.11",
 		"roave/security-advisories": "dev-master"
+	},
+	"replace": {
+		"paragonie/random_compat": "9.99.99"
 	}
 }
