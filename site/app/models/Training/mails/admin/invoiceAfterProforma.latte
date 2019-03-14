@@ -1,0 +1,15 @@
+Zdravím,
+
+v příloze posílám daňový doklad za uhrazenou zálohu na školení
+{$application->training->name} {$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'}
+
+Jen pro úplnost: záloha {$application->priceVat} Kč již byla uhrazena, tuhle fakturu není třeba platit.
+
+{if $additional}
+{$additional}
+
+{/if}
+Děkuji,
+Michal Špaček
+
+{include "../signature.latte"}

@@ -232,7 +232,11 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
-		$template->setFile(__DIR__ . '/mails/admin/' . ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER ? 'invoiceAfter.latte' : 'invoice.latte'));
+		$filename = ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER
+			? ($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma.latte' : 'invoiceAfter.latte')
+			: 'invoice.latte'
+		);
+		$template->setFile(__DIR__ . '/mails/admin/' . $filename);
 		$template->application = $application;
 		$template->additional = $additional;
 		$subject = 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura';
