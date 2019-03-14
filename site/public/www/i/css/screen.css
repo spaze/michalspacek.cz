@@ -298,6 +298,7 @@ div.notice {
 	padding: 4px;
 	margin: 4px;
 	border-radius: 3px;
+	white-space: nowrap;
 }
 .changed { background-color: #F2F2FF; }
 #slides-embed, #video-embed {
