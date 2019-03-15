@@ -232,14 +232,16 @@ class Mails
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
-		$filename = ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER
-			? ($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma.latte' : 'invoiceAfter.latte')
-			: 'invoice.latte'
-		);
+		if ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER) {
+			$filename = ($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma.latte' : 'invoiceAfter.latte');
+			$subject = 'Faktura za školení ' . $application->training->name;
+		} else {
+			$filename = 'invoice.latte';
+			$subject = 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura';
+		}
 		$template->setFile(__DIR__ . '/mails/admin/' . $filename);
 		$template->application = $application;
 		$template->additional = $additional;
-		$subject = 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura';
 		$this->sendMail($application->email, $application->name, $subject, $template, [$invoice->getName() => $invoice->getTemporaryFile()]);
 	}
 
