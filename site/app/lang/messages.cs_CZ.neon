@@ -44,7 +44,6 @@ label:
 	bankaccount: Bankovní spojení
 	iban: IBAN
 	swift: BIC kód/SWIFT
-	litecoin: Litecoin
 	openpgpkeyid: OpenPGP key id
 	fingerprint: Fingerprint
 	keybase: Keybase

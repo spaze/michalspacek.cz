@@ -44,7 +44,6 @@ label:
 	bankaccount: Bank account
 	iban: IBAN
 	swift: BIC/SWIFT
-	litecoin: Litecoin
 	openpgpkeyid: OpenPGP key id
 	fingerprint: Fingerprint
 	keybase: Keybase
