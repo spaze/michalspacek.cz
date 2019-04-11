@@ -168,6 +168,7 @@ pre {
 	background-color: hsl(0, 0%, 95%);
 }
 img.noshadow { box-shadow: none; }
+img.nobgcolor { background-color: inherit; }
 #slides-container img { margin-bottom: 1em; }
 .column-content .figure img {
 	margin-bottom: 0.5em;
