@@ -1,6 +1,6 @@
 services:
 	routerFactory:
-		class: \MichalSpacekCz\Application\RouterFactory
+		factory: \MichalSpacekCz\Application\RouterFactory
 		setup:
 			- setSupportedLocales(%locales.supported%)
 			- setLocaleRootDomainMapping(%locales.rootDomainMapping%)
@@ -8,7 +8,7 @@ services:
 	router: @routerFactory::createRouter
 	localeLinkGenerator: \MichalSpacekCz\Application\LocaleLinkGenerator
 	texyFormatter:
-		class: \MichalSpacekCz\Formatter\Texy
+		factory: \MichalSpacekCz\Formatter\Texy
 		setup:
 			- addHandlers()
 			- setStaticRoot(%domain.sharedStaticRoot%)
@@ -17,7 +17,7 @@ services:
 	redirections:  \MichalSpacekCz\Redirections
 	articles:  \MichalSpacekCz\Articles
 	talks:
-		class: \MichalSpacekCz\Talks
+		factory: \MichalSpacekCz\Talks
 		setup:
 			- setStaticRoot(%domain.sharedStaticRoot%)
 			- setLocationRoot(%domain.locationRoot%)
@@ -27,7 +27,7 @@ services:
 	interviews: \MichalSpacekCz\Interviews
 	trainingApplications: \MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
 	trainingMails:
-		class: \MichalSpacekCz\Training\Mails
+		factory: \MichalSpacekCz\Training\Mails
 		setup:
 			- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
 			- setPhoneNumber(%contact.phoneNumber%)
@@ -35,14 +35,14 @@ services:
 	trainingVenues: \MichalSpacekCz\Training\Venues
 	trainingStatuses: \MichalSpacekCz\Training\Statuses
 	trainingFiles:
-		class: \MichalSpacekCz\Training\Files
+		factory: \MichalSpacekCz\Training\Files
 		setup:
 			- setFilesDir('../../files/trainings')
 	trainingLocales: \MichalSpacekCz\Training\Locales
 	trainingReviews: \MichalSpacekCz\Training\Reviews
 	vranaResolver: MichalSpacekCz\Training\Resolver\Vrana
 	authenticator:
-		class: \MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption)
+		factory: \MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption)
 		setup:
 			- setPermanentLoginCookie(%permanentLogin.cookie%)
 			- setPermanentLoginInterval(%permanentLogin.interval%)
@@ -54,11 +54,11 @@ services:
 	netxtenHelpers: \Netxten\Templating\Helpers(@translation.default::getDefaultLocale())
 	helpers: \MichalSpacekCz\Templating\Helpers
 	vat:
-		class: \MichalSpacekCz\Vat
+		factory: \MichalSpacekCz\Vat
 		setup:
 			- setRate(%vatRate%)
 	securityHeaders:
-		class: \MichalSpacekCz\SecurityHeaders
+		factory: \MichalSpacekCz\SecurityHeaders
 		setup:
 			- setDefaultDomain(%domain.default%)
 			- setRootDomain(%domain.root%)
@@ -67,31 +67,31 @@ services:
 	emailEncryption: \Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
 	sessionEncryption: \Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
 	companyInfo:
-		class: \MichalSpacekCz\CompanyInfo\Info
+		factory: \MichalSpacekCz\CompanyInfo\Info
 		setup:
 			- setLoadCompanyDataVisible(%loadCompanyDataVisible%)
 	ares:
-		class: \MichalSpacekCz\CompanyInfo\Ares
+		factory: \MichalSpacekCz\CompanyInfo\Ares
 		setup:
 			- setUrl(%ares.url%)
 	registerUz:
-		class: \MichalSpacekCz\CompanyInfo\RegisterUz
+		factory: \MichalSpacekCz\CompanyInfo\RegisterUz
 		setup:
 			- setRootUrl(%registerUz.rootUrl%)
 	upcKeys:
-		class: \MichalSpacekCz\UpcKeys
+		factory: \MichalSpacekCz\UpcKeys
 		setup:
 			- addRouter(@upcKeysTechnicolor)
 			- addRouter(@upcKeysUbee)
 	upcKeysTechnicolor:
-		class: \MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context)
+		factory: \MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context)
 		setup:
 			- setUrl(%awsLambda.upcKeys.url%)
 			- setApiKey(%awsLambda.upcKeys.apiKey%)
 			- setModel(%upcKeys.technicolor.model%)
 			- setPrefixes(%upcKeys.technicolor.prefixes%)
 	upcKeysUbee:
-		class: \MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context)
+		factory: \MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context)
 		setup:
 			- setModel(%upcKeys.ubee.model%)
 			- setPrefixes(%upcKeys.ubee.prefixes%)
@@ -100,12 +100,12 @@ services:
 	pulsePasswords: \MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	pulsePasswordsRating: \MichalSpacekCz\Pulse\Passwords\Rating
 	blogPost:
-	    class: \MichalSpacekCz\Post
+	    factory: \MichalSpacekCz\Post
 	    setup:
 	        - setUpdatedInfoThreshold(%blog.updatedInfoThreshold%)
 	blogPostLoader: \MichalSpacekCz\Post\Loader
 	certificatesApi:
-		class: \MichalSpacekCz\Certificates
+		factory: \MichalSpacekCz\Certificates
 		setup:
 			- setUsers(%certificatesApi.users%)
 			- setExpiringThreshold(%certificatesApi.expiringThreshold%)
