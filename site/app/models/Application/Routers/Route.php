@@ -30,9 +30,9 @@ class Route extends \Nette\Application\Routers\Route
 	/**
 	 * Maps HTTP request to a Request object.
 	 * @param \Nette\Http\IRequest $httpRequest
-	 * @return \Nette\Application\Request|null
+	 * @return array|null
 	 */
-	public function match(\Nette\Http\IRequest $httpRequest): ?\Nette\Application\Request
+	public function match(\Nette\Http\IRequest $httpRequest): ?array
 	{
 		$url = $httpRequest->getUrl();
 		return (!$this->blogPostLoader->exists(trim($url->getPath(), '/'), $url->getQueryParameter('preview')) ? null : parent::match($httpRequest));

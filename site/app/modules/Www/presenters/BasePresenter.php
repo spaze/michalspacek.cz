@@ -94,7 +94,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
-	protected function createTemplate(): \Nette\Bridges\ApplicationLatte\Template
+	protected function createTemplate(): \Nette\Application\UI\ITemplate
 	{
 		/** @var \Nette\Bridges\ApplicationLatte\Template $template */
 		$template = parent::createTemplate();

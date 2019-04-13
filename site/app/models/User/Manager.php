@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User;
 
 use Nette\Database\Row;
 use Nette\Security\Identity;
+use Nette\Security\IIdentity;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
 
@@ -68,11 +69,11 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * Performs an authentication.
 	 *
 	 * @param string[] $credentials
-	 * @return Identity
+	 * @return IIdentity
 	 *
 	 * @throws \Nette\Security\AuthenticationException
 	 */
-	public function authenticate(array $credentials): Identity
+	public function authenticate(array $credentials): IIdentity
 	{
 		list($username, $password) = $credentials;
 		$userId = $this->verifyPassword($username, $password);
