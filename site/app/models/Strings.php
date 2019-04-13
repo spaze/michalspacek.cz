@@ -18,7 +18,7 @@ class Strings
 
 	/**
 	 * Strings constructor.
-	 * @param \Kdyby\Translation\Translator|\Nette\Localization\ITranslator $translator
+	 * @param \Contributte\Translation\Translator|\Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(\Nette\Localization\ITranslator $translator)
 	{

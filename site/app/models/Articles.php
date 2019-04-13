@@ -36,7 +36,7 @@ class Articles
 	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
 	 * @param \Nette\Application\LinkGenerator $linkGenerator
 	 * @param \MichalSpacekCz\Post $blogPost
-	 * @param \Kdyby\Translation\Translator|\Nette\Localization\ITranslator $translator
+	 * @param \Contributte\Translation\Translator|\Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(
 		\Nette\Database\Context $context,

@@ -26,7 +26,7 @@ class Loader
 
 	/**
 	 * @param \Nette\Database\Context $context
-	 * @param \Kdyby\Translation\Translator|\Nette\Localization\ITranslator $translator
+	 * @param \Contributte\Translation\Translator|\Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(\Nette\Database\Context $context, \Nette\Localization\ITranslator $translator)
 	{
