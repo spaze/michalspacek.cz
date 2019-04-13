@@ -46,16 +46,22 @@ contentSecurityPolicy:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 			report-to: default
-		www.trainings.training < www.*.*:
+		www.trainings.training:
+			@extends: www.*.*
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
-		admin.*.* < www.*.*:
-		admin.blog.add < admin.*.*:
-			connect-src: "'self'"
-		admin.blog.edit < admin.blog.add:
-		admin.info.php < www.*.*:
+		admin.*.*:
+		 	@extends: www.*.*
+		admin.blog.add:
+		 	@extends: admin.*.*
+		 	connect-src: "'self'"
+		admin.blog.edit:
+		 	@extends: admin.blog.add
+		admin.info.php:
+			@extends: www.*.*
 			img-src:
 				- 'data:'
-		admin.talks.slides < www.*.*:
+		admin.talks.slides:
+			@extends: www.*.*
 			img-src:
 				- 'data:'
 		api.*.*:
@@ -66,11 +72,14 @@ contentSecurityPolicy:
 			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 			report-to: default
-		webleed.*.* < www.*.*:
+		webleed.*.*:
+			@extends: www.*.*
 			img-src:
 				- 'blob:'
 			style-src:
 				- "'unsafe-inline'"
 			form-action: "https://export.highcharts.com"
-		pulse.*.* < www.*.*:
-		upckeys.*.* < www.*.*:
+		pulse.*.*:
+			@extends: www.*.*
+		upckeys.*.*:
+			@extends: www.*.*
