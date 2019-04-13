@@ -99,153 +99,6 @@
         ]
     },
     {
-        "name": "kdyby/strict-objects",
-        "version": "v1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Kdyby/StrictObjects.git",
-            "reference": "ff6c82b54d8bea0d3f43dc5fce890ebe126e95c7"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Kdyby/StrictObjects/zipball/ff6c82b54d8bea0d3f43dc5fce890ebe126e95c7",
-            "reference": "ff6c82b54d8bea0d3f43dc5fce890ebe126e95c7",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4"
-        },
-        "require-dev": {
-            "nette/tester": "~1.7"
-        },
-        "time": "2016-08-26T06:34:41+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Kdyby\\StrictObjects\\": "src/"
-            },
-            "classmap": [
-                "src/exceptions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "Filip Procházka",
-                "email": "filip@prochazka.su",
-                "homepage": "http://filip-prochazka.com"
-            }
-        ],
-        "description": "Simple trait to make your class strict, when calling or accessing undefined member (property or method).",
-        "homepage": "http://kdyby.org",
-        "keywords": [
-            "accessors",
-            "exceptions",
-            "kdyby",
-            "magic",
-            "members",
-            "methods",
-            "object",
-            "properties",
-            "scream",
-            "strict"
-        ]
-    },
-    {
-        "name": "kdyby/translation",
-        "version": "v2.5.2",
-        "version_normalized": "2.5.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Kdyby/Translation.git",
-            "reference": "6b0721c767a7be7f15b2fb13c529bea8536230aa"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Kdyby/Translation/zipball/6b0721c767a7be7f15b2fb13c529bea8536230aa",
-            "reference": "6b0721c767a7be7f15b2fb13c529bea8536230aa",
-            "shasum": ""
-        },
-        "require": {
-            "kdyby/strict-objects": "^1.0",
-            "latte/latte": "^2.4.6@dev",
-            "nette/caching": "^2.5@dev",
-            "nette/di": "^2.4.10@dev",
-            "nette/finder": "^2.4.1@dev",
-            "nette/http": "^2.4.7@dev",
-            "nette/neon": "^2.4.2@dev",
-            "nette/php-generator": "^2.6.3@dev || ^3.0.1@dev",
-            "nette/reflection": "^2.4.2@dev",
-            "nette/utils": "^2.4.5@dev || ^3.0@dev",
-            "php": "^5.6 || ^7.0",
-            "psr/log": "^1.0",
-            "symfony/config": "^3.4 || ^4.0",
-            "symfony/translation": "^3.4 || ^4.0"
-        },
-        "require-dev": {
-            "kdyby/console": "^2.7.1@dev",
-            "kdyby/monolog": "^1.3.2@dev",
-            "mockery/mockery": "^1.0",
-            "nette/application": "^2.4.9@dev",
-            "nette/bootstrap": "^2.4.5@dev",
-            "nette/forms": "^2.4.6@dev",
-            "nette/tester": "^2.0",
-            "symfony/console": "^3.4 || ^4.0",
-            "symfony/yaml": "^3.4 || ^4.0",
-            "tracy/tracy": "^2.4.9@dev"
-        },
-        "suggest": {
-            "kdyby/console": "If you wanna use extract command and much others, install also console.",
-            "kdyby/monolog": "Integration of Monolog into Nette Framework.",
-            "symfony/locale": "Locale component provides fallback code to handle cases when the intl extension is missing.",
-            "symfony/yaml": "If you wanna store translations in YAML format - supports multiline strings.",
-            "tracy/tracy": "Diagnostics tool from Nette"
-        },
-        "time": "2018-12-05T06:13:26+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Kdyby\\Translation\\": "src/"
-            },
-            "classmap": [
-                "src/exceptions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "Filip Procházka",
-                "email": "filip@prochazka.su",
-                "homepage": "http://filip-prochazka.com"
-            }
-        ],
-        "description": "Integration of Symfony/Translation into Nette Framework",
-        "homepage": "http://kdyby.org",
-        "keywords": [
-            "kdyby",
-            "nette",
-            "translation"
-        ]
-    },
-    {
         "name": "latte/latte",
         "version": "v2.5.1",
         "version_normalized": "2.5.1.0",
@@ -1045,33 +898,33 @@
     },
     {
         "name": "nette/neon",
-        "version": "v2.4.3",
-        "version_normalized": "2.4.3.0",
+        "version": "v3.0.0",
+        "version_normalized": "3.0.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/neon.git",
-            "reference": "5e72b1dd3e2d34f0863c5561139a19df6a1ef398"
+            "reference": "cbff32059cbdd8720deccf9e9eace6ee516f02eb"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/neon/zipball/5e72b1dd3e2d34f0863c5561139a19df6a1ef398",
-            "reference": "5e72b1dd3e2d34f0863c5561139a19df6a1ef398",
+            "url": "https://api.github.com/repos/nette/neon/zipball/cbff32059cbdd8720deccf9e9eace6ee516f02eb",
+            "reference": "cbff32059cbdd8720deccf9e9eace6ee516f02eb",
             "shasum": ""
         },
         "require": {
             "ext-iconv": "*",
             "ext-json": "*",
-            "php": ">=5.6.0"
+            "php": ">=7.0"
         },
         "require-dev": {
-            "nette/tester": "~2.0",
+            "nette/tester": "^2.0",
             "tracy/tracy": "^2.3"
         },
-        "time": "2018-03-21T12:12:21+00:00",
+        "time": "2019-02-05T21:30:40+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "2.4-dev"
+                "dev-master": "3.0-dev"
             }
         },
         "installation-source": "dist",
@@ -1096,7 +949,7 @@
                 "homepage": "https://nette.org/contributors"
             }
         ],
-        "description": "🍸 Nette NEON: encodes and decodes NEON file format.",
+        "description": "? Nette NEON: encodes and decodes NEON file format.",
         "homepage": "http://ne-on.org",
         "keywords": [
             "export",
@@ -2555,71 +2408,6 @@
         "description": "Subresource Integrity macros for Latte template engine"
     },
     {
-        "name": "symfony/config",
-        "version": "v4.2.5",
-        "version_normalized": "4.2.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/config.git",
-            "reference": "0e745ead307d5dcd4e163e94a47ec04b1428943f"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/config/zipball/0e745ead307d5dcd4e163e94a47ec04b1428943f",
-            "reference": "0e745ead307d5dcd4e163e94a47ec04b1428943f",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.1.3",
-            "symfony/filesystem": "~3.4|~4.0",
-            "symfony/polyfill-ctype": "~1.8"
-        },
-        "conflict": {
-            "symfony/finder": "<3.4"
-        },
-        "require-dev": {
-            "symfony/dependency-injection": "~3.4|~4.0",
-            "symfony/event-dispatcher": "~3.4|~4.0",
-            "symfony/finder": "~3.4|~4.0",
-            "symfony/yaml": "~3.4|~4.0"
-        },
-        "suggest": {
-            "symfony/yaml": "To use the yaml reference dumper"
-        },
-        "time": "2019-04-01T14:03:25+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "4.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Config\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Config Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "symfony/console",
         "version": "v4.2.4",
         "version_normalized": "4.2.4.0",
@@ -2764,58 +2552,6 @@
         ]
     },
     {
-        "name": "symfony/filesystem",
-        "version": "v4.2.5",
-        "version_normalized": "4.2.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/filesystem.git",
-            "reference": "e16b9e471703b2c60b95f14d31c1239f68f11601"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/filesystem/zipball/e16b9e471703b2c60b95f14d31c1239f68f11601",
-            "reference": "e16b9e471703b2c60b95f14d31c1239f68f11601",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.1.3",
-            "symfony/polyfill-ctype": "~1.8"
-        },
-        "time": "2019-02-07T11:40:08+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "4.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Filesystem\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Filesystem Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "symfony/finder",
         "version": "v4.2.4",
         "version_normalized": "4.2.4.0",
@@ -2865,66 +2601,6 @@
         ],
         "description": "Symfony Finder Component",
         "homepage": "https://symfony.com"
-    },
-    {
-        "name": "symfony/polyfill-ctype",
-        "version": "v1.11.0",
-        "version_normalized": "1.11.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-ctype.git",
-            "reference": "82ebae02209c21113908c229e9883c419720738a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/82ebae02209c21113908c229e9883c419720738a",
-            "reference": "82ebae02209c21113908c229e9883c419720738a",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "suggest": {
-            "ext-ctype": "For best performance"
-        },
-        "time": "2019-02-06T07:57:58+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.11-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Polyfill\\Ctype\\": ""
-            },
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            },
-            {
-                "name": "Gert de Pagter",
-                "email": "backendtea@gmail.com"
-            }
-        ],
-        "description": "Symfony polyfill for ctype functions",
-        "homepage": "https://symfony.com",
-        "keywords": [
-            "compatibility",
-            "ctype",
-            "polyfill",
-            "portable"
-        ]
     },
     {
         "name": "symfony/polyfill-mbstring",
@@ -2986,81 +2662,6 @@
             "portable",
             "shim"
         ]
-    },
-    {
-        "name": "symfony/translation",
-        "version": "v4.2.5",
-        "version_normalized": "4.2.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/translation.git",
-            "reference": "e46933cc31b68f51f7fc5470fb55550407520f56"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/e46933cc31b68f51f7fc5470fb55550407520f56",
-            "reference": "e46933cc31b68f51f7fc5470fb55550407520f56",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.1.3",
-            "symfony/contracts": "^1.0.2",
-            "symfony/polyfill-mbstring": "~1.0"
-        },
-        "conflict": {
-            "symfony/config": "<3.4",
-            "symfony/dependency-injection": "<3.4",
-            "symfony/yaml": "<3.4"
-        },
-        "provide": {
-            "symfony/translation-contracts-implementation": "1.0"
-        },
-        "require-dev": {
-            "psr/log": "~1.0",
-            "symfony/config": "~3.4|~4.0",
-            "symfony/console": "~3.4|~4.0",
-            "symfony/dependency-injection": "~3.4|~4.0",
-            "symfony/finder": "~2.8|~3.0|~4.0",
-            "symfony/intl": "~3.4|~4.0",
-            "symfony/yaml": "~3.4|~4.0"
-        },
-        "suggest": {
-            "psr/log-implementation": "To use logging capability in translator",
-            "symfony/config": "",
-            "symfony/yaml": ""
-        },
-        "time": "2019-04-01T14:13:08+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "4.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Translation\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Translation Component",
-        "homepage": "https://symfony.com"
     },
     {
         "name": "texy/texy",
