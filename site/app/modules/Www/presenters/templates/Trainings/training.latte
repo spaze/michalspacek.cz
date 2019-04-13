@@ -94,25 +94,25 @@
 <div class="vcalendar">
 <h2 id="{_html.id.title}">{_messages.label.trainingname}</h2>
 <p><strong>{$title}</strong></p>
-<hr />
+<hr>
 
 <h2 id="{_html.id.content}">{_messages.label.trainingcontent}</h2>
 <div>{$content}</div>
 
 <p><small><i class="fas fa-fw fa-bolt"></i> {$upsell}</small></p>
-<hr />
+<hr>
 
 <h2 id="{_html.id.lecturer}">{_messages.label.traininglecturer}</h2>
 <p>Michal Špaček <small>(<a n:href="Who:">{_messages.companytrainings.lecturerwho}</a>, <a n:href="Contact:">{_messages.trainings.lecturercontact}</a>)</small></p>
-<hr />
+<hr>
 
 <h2 id="{_html.id.prerequisites}">{_messages.label.prerequisites}</h2>
 <p>{$prerequisites}</p>
-<hr />
+<hr>
 
 <h2 id="{_html.id.intendedfor}">{_messages.label.intendedfor}</h2>
 <p>{$audience}</p>
-<hr />
+<hr>
 
 <div id="{_html.id.date}">
 <h2>{if count($dates) > 1}{_messages.trainings.date.more}{else}{_messages.trainings.date.one}{/if}</h2>
@@ -124,11 +124,11 @@
 		{_messages.trainings.lunchbreak}
 		<small>(<a href="#{_html.id.application}" data-id="{$date->dateId}" class="url">{_messages.label.signup}</a>)</small>
 		{if $date->tentative}
-			<br /><small>{_messages.trainings.tentativedate|format}</small>
+			<br><small>{_messages.trainings.tentativedate|format}</small>
 		{else}
 			<br><small>{_messages.trainings.extendedtime}</small>
 		{/if}
-		{if $date->cooperationDescription}<br /><small>{$date->cooperationDescription}</small>{/if}
+		{if $date->cooperationDescription}<br><small>{$date->cooperationDescription}</small>{/if}
 	</p>
 	<div class="indent">
 	<p class="location vcard"><strong>
@@ -147,22 +147,22 @@
 </p>
 <p><small>{_messages.trainings.regularlyeveryquarter}</small></p>
 </div>
-<hr />
+<hr>
 
 <h2 id="{_html.id.capacity}">{_messages.label.trainingcapacity}</h2>
 <p>{_messages.trainings.capacity|format:$capacity}</p>
-<hr />
+<hr>
 
 <h2 id="{_html.id.price}">{_messages.label.trainingprice}</h2>
 <p>{_messages.trainings.price|format:$price:$priceVat}{ifset $studentDiscount}, {_messages.trainings.studentdiscount|format:$studentDiscount}{/ifset}</p>
-<hr />
+<hr>
 
 <h2 id="{_html.id.materials}">{_messages.label.materials}</h2>
 <p>{$materials}</p>
 </div>
 
 {if $reviews}
-<hr />
+<hr>
 <div id="{_html.id.reviews}">
 <h2>{_messages.label.trainingreviews}</h2>
 {foreach $reviews as $review}

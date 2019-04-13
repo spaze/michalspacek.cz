@@ -50,7 +50,7 @@
 </fieldset>
 <p><strong>{$form[note]->caption}</strong> {$form[note]->value}<small n:if="!$form[note]->value">—</small></p>
 {/form application}
-<hr />
+<hr>
 <p class="separated">
 	{capture $link}Trainings:application#{_html.id.application}{/capture}
 	<a n:href="$link $name">{_messages.trainings.addanother}</a>
@@ -61,7 +61,7 @@
 {include #list}
 
 {if $reviews}
-<hr />
+<hr>
 <div id="{_html.id.reviews}">
 <h2>{_messages.label.participantsfeedback}</h2>
 {foreach $reviews as $review}

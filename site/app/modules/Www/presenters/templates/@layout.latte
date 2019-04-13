@@ -13,8 +13,8 @@
 <!DOCTYPE html>
 <html lang="{_html.attribute.lang}">
 <head>
-	<meta charset="utf-8" />
-	<meta name="robots" content="{$robots}" n:ifset="$robots" />
+	<meta charset="utf-8">
+	<meta name="robots" content="{$robots}" n:ifset="$robots">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Michal Špaček</title>
 	{stylesheet screen-main}
@@ -55,12 +55,12 @@
 	{ifset #headerIcon}
 		{include #headerIcon}
 	{else}
-		<a n:href=":Www:Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
+		<a n:href=":Www:Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček"></a>
 	{/ifset}
 	<h1>{$pageHeader}</h1>
 	<p>{ifset $tagLine}{$tagLine}{/ifset}</p>
 	<hr>
-	{ifset #menu}<div id="menu">{include #menu}</div><hr />{/ifset}
+	{ifset #menu}<div id="menu">{include #menu}</div><hr>{/ifset}
 	</div>
 	<div class="{$containerColsClass}">{include #content}</div>
 	</div>

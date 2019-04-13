@@ -14,13 +14,13 @@
 <p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
 {include #company}
 <p>{include #discontinued}</p>
-<hr />
+<hr>
 <h2 id="{_html.id.articles}">{_messages.label.myarticles}</h2>
 <div n:foreach="$articles as $article">
 	{include #itemArticle, article => $article}
 </div>
 <p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
-<hr />
+<hr>
 <h2 id="{_html.id.talks}">{_messages.label.mytalks}</h2>
 <h3>{_messages.label.favorite}</h3>
 <ul>
@@ -39,7 +39,7 @@
 		{include #itemTalk, talk => $talk}
 </p>
 <p><a n:href="Talks:">{_messages.label.alltalks}</a></p>
-<hr />
+<hr>
 <h2 id="{_html.id.interviews}">{_messages.label.myinterviews}</h2>
 <p class="indent" n:foreach="$interviews as $interview">
 	{include #itemInterview, interview => $interview}

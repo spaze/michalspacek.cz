@@ -27,7 +27,7 @@ hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #0
 <tr class="h"><td>
 <a href="https://www.php.net/"><img border="0" src="data:image/gif;base64,R0z5yP4nYc4J" alt="PHP Logo" /></a><h1 class="p">PHP Version 3.14159265</h1>
 </td></tr>
-</table><br />
+</table><br>
 <table border="0" cellpadding="3" width="600">
 <tr><td class="e">System </td><td class="v">FreeBSD mind.yourown.biz 3.2.1-FREE-WILLY #2: Wed Jan  5 23:79:11 CET 2011     root@mind.yourown.biz:/PROGRA~1 i387 </td></tr>
 <tr><td class="e">Build Date </td><td class="v">Feb 31 2011 22:36:23 </td></tr>
