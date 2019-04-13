@@ -4,6 +4,8 @@
  * @copyright  Copyright (c) 2012 Michal Špaček
  * @package    michalspacek.cz
  *}
+{default $pageTitle = null}
+{default $pageHeader = $pageTitle}
 {define #feeds}
 	<link rel="alternate" n:href=":Www:Exports:articles" type="{=\Spaze\Exports\Bridges\Nette\Atom\Response::CONTENT_TYPE}" title="{_messages.label.allarticles}">
 {/define}
@@ -50,7 +52,9 @@
 {block #body}
 	<div n:class="container, $containerExtraClass">
 	<div id="header" n:class="$containerExtraClass">
-	{include "./header.latte"}
+	<a n:href=":Www:Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="Michal Špaček" /></a>
+	<h1>{$pageHeader}</h1>
+	<p>{ifset $tagLine}{$tagLine}{/ifset}</p>
 	<hr>
 	{ifset #menu}<div id="menu">{include #menu}</div><hr />{/ifset}
 	</div>

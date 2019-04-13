@@ -1,21 +1,6 @@
 {layout "../@layout.latte"}
 {var $robots = noindex}
-{block #body}
-	<div n:class="container, $containerExtraClass">
-	<div id="header">
-	{include "../header.latte"}
-	<hr />
-	<div id="menu" class="center">
-	{block #menu}
-		{_messages.error.tryother}: <a n:href="Homepage:">{_messages.label.homepage}</a>
-		&ndash; <a n:href="Trainings:">{_messages.label.trainings}</a>
-	{/block}
-	</div>
-	<hr />
-	</div>
-	<div class="{$containerColsClass}">
-	<h2>{_messages.label.error} {$errorCode}</h2>
-	{include #content}
-	</div>
-	</div>
-{/block}
+{define #menu}
+	{_messages.error.tryother}: <a n:href="Homepage:">{_messages.label.homepage}</a>
+	&ndash; <a n:href="Trainings:">{_messages.label.trainings}</a>
+{/define}
