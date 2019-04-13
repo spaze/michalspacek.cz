@@ -11,7 +11,7 @@
 	],
 	"require": {
 		"php": "~7.1",
-		"nette/application": "~2.3"
+		"nette/application": "~3.0"
 	},
 	"autoload": {
 		"psr-4": {"Spaze\\Exports\\": "src"}

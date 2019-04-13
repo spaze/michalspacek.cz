@@ -48,7 +48,7 @@ class PhpInterpreter
 		$output = stream_get_contents($pipes[1]);
 		proc_close($proc);
 
-		$args = ' ' . implode(' ', array_map(['Tester\Helpers', 'escapeArg'], $args));
+		$args = ' ' . implode(' ', array_map([Helpers::class, 'escapeArg'], $args));
 		if (strpos($output, 'phpdbg') !== false) {
 			$args = ' -qrrb -S cli' . $args;
 		}
@@ -107,9 +107,9 @@ class PhpInterpreter
 	}
 
 
-	public function canMeasureCodeCoverage(): bool
+	public function getCodeCoverageEngines(): array
 	{
-		return $this->info->canMeasureCodeCoverage;
+		return $this->info->codeCoverageEngines;
 	}
 
 

@@ -48,7 +48,7 @@ class Assert
 
 
 	/**
-	 * Checks assertion. Values must be exactly the same.
+	 * Asserts that two values are equal and have the same type and identity of objects.
 	 */
 	public static function same($expected, $actual, string $description = null): void
 	{
@@ -60,7 +60,7 @@ class Assert
 
 
 	/**
-	 * Checks assertion. Values must not be exactly the same.
+	 * Asserts that two values are not equal or do not have the same type and identity of objects.
 	 */
 	public static function notSame($expected, $actual, string $description = null): void
 	{
@@ -72,7 +72,8 @@ class Assert
 
 
 	/**
-	 * Checks assertion. The identity of objects and the order of keys in the arrays are ignored.
+	 * Asserts that two values are equal and checks expectations. The identity of objects,
+	 * the order of keys in the arrays and marginally different floats are ignored.
 	 */
 	public static function equal($expected, $actual, string $description = null): void
 	{
@@ -84,19 +85,24 @@ class Assert
 
 
 	/**
-	 * Checks assertion. The identity of objects and the order of keys in the arrays are ignored.
+	 * Asserts that two values are not equal and checks expectations. The identity of objects,
+	 * the order of keys in the arrays and marginally different floats are ignored.
 	 */
 	public static function notEqual($expected, $actual, string $description = null): void
 	{
 		self::$counter++;
-		if (self::isEqual($expected, $actual)) {
+		try {
+			$res = self::isEqual($expected, $actual);
+		} catch (AssertException $e) {
+		}
+		if (empty($e) && $res) {
 			self::fail(self::describe('%1 should not be equal to %2', $description), $actual, $expected);
 		}
 	}
 
 
 	/**
-	 * Checks assertion. Values must contains expected needle.
+	 * Asserts that a haystack (string or array) contains an expected needle.
 	 */
 	public static function contains($needle, $actual, string $description = null): void
 	{
@@ -116,7 +122,7 @@ class Assert
 
 
 	/**
-	 * Checks assertion. Values must not contains expected needle.
+	 * Asserts that a haystack (string or array) does not contain an expected needle.
 	 */
 	public static function notContains($needle, $actual, string $description = null): void
 	{
@@ -136,7 +142,7 @@ class Assert
 
 
 	/**
-	 * Checks TRUE assertion.
+	 * Asserts that a value is true.
 	 * @param  mixed  $actual
 	 */
 	public static function true($actual, string $description = null): void
@@ -149,7 +155,7 @@ class Assert
 
 
 	/**
-	 * Checks FALSE assertion.
+	 * Asserts that a value is false.
 	 * @param  mixed  $actual
 	 */
 	public static function false($actual, string $description = null): void
@@ -162,7 +168,7 @@ class Assert
 
 
 	/**
-	 * Checks NULL assertion.
+	 * Asserts that a value is null.
 	 * @param  mixed  $actual
 	 */
 	public static function null($actual, string $description = null): void
@@ -175,7 +181,7 @@ class Assert
 
 
 	/**
-	 * Checks Not a Number assertion.
+	 * Asserts that a value is Not a Number.
 	 * @param  mixed  $actual
 	 */
 	public static function nan($actual, string $description = null): void
@@ -188,7 +194,7 @@ class Assert
 
 
 	/**
-	 * Checks truthy assertion.
+	 * Asserts that a value is truthy.
 	 * @param  mixed  $actual
 	 */
 	public static function truthy($actual, string $description = null): void
@@ -201,7 +207,7 @@ class Assert
 
 
 	/**
-	 * Checks falsey (empty) assertion.
+	 * Asserts that a value is falsey.
 	 * @param  mixed  $actual
 	 */
 	public static function falsey($actual, string $description = null): void
@@ -214,7 +220,7 @@ class Assert
 
 
 	/**
-	 * Checks if subject has expected count.
+	 * Asserts the number of items in an array or Countable.
 	 * @param  mixed  $value
 	 */
 	public static function count(int $count, $value, string $description = null): void
@@ -230,7 +236,7 @@ class Assert
 
 
 	/**
-	 * Checks assertion.
+	 * Asserts that a value is of given class, interface or built-in type.
 	 * @param  string|object  $type
 	 * @param  mixed  $value
 	 */
@@ -260,7 +266,7 @@ class Assert
 
 
 	/**
-	 * Checks if the function throws exception.
+	 * Asserts that a function throws exception of given type and its message matches given pattern.
 	 */
 	public static function exception(callable $function, string $class, string $message = null, $code = null): ?\Throwable
 	{
@@ -287,7 +293,7 @@ class Assert
 
 
 	/**
-	 * Checks if the function throws exception, alias for exception().
+	 * Asserts that a function throws exception of given type and its message matches given pattern. Alias for exception().
 	 */
 	public static function throws(callable $function, string $class, string $message = null, $code = null): ?\Throwable
 	{
@@ -296,7 +302,7 @@ class Assert
 
 
 	/**
-	 * Checks if the function generates PHP error or throws exception.
+	 * Asserts that a function generates one or more PHP errors or throws exceptions.
 	 * @param  int|string|array $expectedType
 	 * @param  string $expectedMessage message
 	 * @throws \Exception
@@ -357,16 +363,19 @@ class Assert
 
 
 	/**
-	 * Checks that the function does not generate PHP error and does not throw exception.
+	 * Asserts that a function does not generate PHP errors and does not throw exceptions.
 	 */
 	public static function noError(callable $function): void
 	{
+		if (($count = func_num_args()) > 1) {
+			throw new \Exception(__METHOD__ . "() expects 1 parameter, $count given.");
+		}
 		self::error($function, []);
 	}
 
 
 	/**
-	 * Compares result using regular expression or mask:
+	 * Asserts that a string matches a given pattern.
 	 *   %a%    one or more of anything except the end of line characters
 	 *   %a?%   zero or more of anything except the end of line characters
 	 *   %A%    one or more of anything including the end of line characters
@@ -397,7 +406,7 @@ class Assert
 
 
 	/**
-	 * Compares results using mask sorted in file.
+	 * Asserts that a string matches a given pattern stored in file.
 	 */
 	public static function matchFile(string $file, $actual, string $description = null): void
 	{
@@ -417,7 +426,7 @@ class Assert
 
 
 	/**
-	 * Failed assertion
+	 * Assertion that fails.
 	 */
 	public static function fail(string $message, $actual = null, $expected = null, \Throwable $previous = null): void
 	{
@@ -436,9 +445,13 @@ class Assert
 	}
 
 
-	public static function with($obj, \Closure $closure)
+	/**
+	 * Executes function that can access private and protected members of given object via $this.
+	 * @param  object|string  $obj
+	 */
+	public static function with($objectOrClass, \Closure $closure)
 	{
-		return $closure->bindTo($obj, $obj)->__invoke();
+		return $closure->bindTo(is_object($objectOrClass) ? $objectOrClass : null, $objectOrClass)();
 	}
 
 
@@ -545,49 +558,54 @@ class Assert
 
 
 	/**
-	 * Compares two structures. Ignores the identity of objects and the order of keys in the arrays.
+	 * Compares two structures and checks expectations. The identity of objects, the order of keys
+	 * in the arrays and marginally different floats are ignored.
 	 */
 	private static function isEqual($expected, $actual, int $level = 0, $objects = null): bool
 	{
-		if ($level > 10) {
-			throw new \Exception('Nesting level too deep or recursive dependency.');
-		}
+		switch (true) {
+			case $level > 10:
+				throw new \Exception('Nesting level too deep or recursive dependency.');
 
-		if (is_float($expected) && is_float($actual) && is_finite($expected) && is_finite($actual)) {
-			$diff = abs($expected - $actual);
-			return ($diff < self::EPSILON) || ($diff / max(abs($expected), abs($actual)) < self::EPSILON);
-		}
-
-		if (is_object($expected) && is_object($actual) && get_class($expected) === get_class($actual)) {
-			$objects = $objects ? clone $objects : new \SplObjectStorage;
-			if (isset($objects[$expected])) {
-				return $objects[$expected] === $actual;
-			} elseif ($expected === $actual) {
+			case $expected instanceof Expect:
+				$expected($actual);
 				return true;
-			}
-			$objects[$expected] = $actual;
-			$objects[$actual] = $expected;
-			$expected = (array) $expected;
-			$actual = (array) $actual;
-		}
 
-		if (is_array($expected) && is_array($actual)) {
-			ksort($expected, SORT_STRING);
-			ksort($actual, SORT_STRING);
-			if (array_keys($expected) !== array_keys($actual)) {
-				return false;
-			}
+			case is_float($expected) && is_float($actual) && is_finite($expected) && is_finite($actual):
+				$diff = abs($expected - $actual);
+				return ($diff < self::EPSILON) || ($diff / max(abs($expected), abs($actual)) < self::EPSILON);
 
-			foreach ($expected as $value) {
-				if (!self::isEqual($value, current($actual), $level + 1, $objects)) {
+			case is_object($expected) && is_object($actual) && get_class($expected) === get_class($actual):
+				$objects = $objects ? clone $objects : new \SplObjectStorage;
+				if (isset($objects[$expected])) {
+					return $objects[$expected] === $actual;
+				} elseif ($expected === $actual) {
+					return true;
+				}
+				$objects[$expected] = $actual;
+				$objects[$actual] = $expected;
+				$expected = (array) $expected;
+				$actual = (array) $actual;
+				// break omitted
+
+			case is_array($expected) && is_array($actual):
+				ksort($expected, SORT_STRING);
+				ksort($actual, SORT_STRING);
+				if (array_keys($expected) !== array_keys($actual)) {
 					return false;
 				}
-				next($actual);
-			}
-			return true;
-		}
 
-		return $expected === $actual;
+				foreach ($expected as $value) {
+					if (!self::isEqual($value, current($actual), $level + 1, $objects)) {
+						return false;
+					}
+					next($actual);
+				}
+				return true;
+
+			default:
+				return $expected === $actual;
+		}
 	}
 
 

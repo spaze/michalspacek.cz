@@ -13,29 +13,29 @@ use Nette\DI\Config\Helpers;
 class Config
 {
 
-	/** @internal configuration key for default values */
-	const DEFAULT_KEY = '*';
+	private const DEFAULT_KEY = '*';
 
-	/** @internal configuration key separator */
-	const KEY_SEPARATOR = '.';
+	private const KEY_SEPARATOR = '.';
+
+	private const EXTENDS_KEY = '@extends';
 
 	/** @var \Spaze\NonceGenerator\GeneratorInterface|null */
-	protected $nonceGenerator;
+	private $nonceGenerator;
 
 	/** @var array of key => array of policies */
-	protected $policy = array();
+	private $policy = array();
 
 	/** @var array of name => array of policies */
-	protected $snippets = array();
+	private $snippets = array();
 
 	/** @var array of snippet names */
-	protected $currentSnippets = array();
+	private $currentSnippets = array();
 
 	/** @var boolean */
-	protected $supportLegacyBrowsers = false;
+	private $supportLegacyBrowsers = false;
 
 	/** @var array */
-	protected $directives = array();
+	private $directives = array();
 
 
 	/**
@@ -89,8 +89,8 @@ class Config
 		$this->directives = array();
 
 		$configKey = $this->findConfigKey($presenter, $action);
-		if (isset($this->policy[$configKey][Helpers::EXTENDS_KEY])) {
-			$currentPolicy = $this->mergeExtends($this->policy[$configKey], $this->policy[$configKey][Helpers::EXTENDS_KEY]);
+		if (isset($this->policy[$configKey][self::EXTENDS_KEY])) {
+			$currentPolicy = $this->mergeExtends($this->policy[$configKey], $this->policy[$configKey][self::EXTENDS_KEY]);
 		} else {
 			$currentPolicy = $this->policy[$configKey];
 		}
@@ -117,10 +117,10 @@ class Config
 	private function mergeExtends(array $currentPolicy, string $parentKey): array
 	{
 		$currentPolicy = (array)Helpers::merge($currentPolicy, $this->policy[$parentKey]);
-		if (isset($this->policy[$parentKey][Helpers::EXTENDS_KEY])) {
-			$currentPolicy = $this->mergeExtends($currentPolicy, $this->policy[$parentKey][Helpers::EXTENDS_KEY]);
+		if (isset($this->policy[$parentKey][self::EXTENDS_KEY])) {
+			$currentPolicy = $this->mergeExtends($currentPolicy, $this->policy[$parentKey][self::EXTENDS_KEY]);
 		}
-		unset($currentPolicy[Helpers::EXTENDS_KEY]);
+		unset($currentPolicy[self::EXTENDS_KEY]);
 		return $currentPolicy;
 	}
 

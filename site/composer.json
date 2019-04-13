@@ -20,7 +20,7 @@
 		"tracy/tracy": "~2.3",
 		"texy/texy": "~3.0",
 		"paragonie/halite": "^4",
-		"spaze/csp-config": "~1.0",
+		"spaze/csp-config": "~2.0",
 		"spaze/feed-exports": "~0.2",
 		"spaze/nonce-generator": "^2.0",
 		"spaze/sri-macros": "~0.1",

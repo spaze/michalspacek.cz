@@ -79,6 +79,9 @@ class Dumper
 		} elseif ($var instanceof \Throwable) {
 			return 'Exception ' . get_class($var) . ': ' . ($var->getCode() ? '#' . $var->getCode() . ' ' : '') . $var->getMessage();
 
+		} elseif ($var instanceof Expect) {
+			return $var->dump();
+
 		} elseif (is_object($var)) {
 			return self::objectToLine($var);
 
@@ -217,7 +220,7 @@ class Dumper
 				$used = $line;
 				$line++;
 				foreach ($arr as $k => &$v) {
-					if ($k[0] === "\x00") {
+					if (isset($k[0]) && $k[0] === "\x00") {
 						$k = substr($k, strrpos($k, "\x00") + 1);
 					}
 					$out .= "$space\t" . self::_toPhp($k, $list, $level + 1, $line) . ' => ' . self::_toPhp($v, $list, $level + 1, $line) . ",\n";
@@ -311,7 +314,7 @@ class Dumper
 			if ($e instanceof AssertException && $item['file'] === __DIR__ . DIRECTORY_SEPARATOR . 'Assert.php') {
 				continue;
 			}
-			$line = $item['class'] === 'Tester\Assert' && method_exists($item['class'], $item['function'])
+			$line = $item['class'] === Assert::class && method_exists($item['class'], $item['function'])
 				&& strpos($tmp = file($item['file'])[$item['line'] - 1], "::$item[function](") ? $tmp : null;
 
 			$s .= 'in '

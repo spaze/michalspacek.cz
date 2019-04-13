@@ -3,11 +3,11 @@
 	"require": {
 		"php": ">= 7.1.0",
 		"ext-intl": "*",
-		"nette/application": "~2.3",
-		"nette/caching": "~2.3",
-		"nette/utils": "^2.3.10",
-		"nette/forms": "~2.3",
-		"nette/http": "~2.3",
+		"nette/application": "~3.0",
+		"nette/caching": "~3.0",
+		"nette/utils": "^3.0",
+		"nette/forms": "~3.0",
+		"nette/http": "~3.0",
 		"latte/latte": "~2.3",
 		"texy/texy": "~3.0"
 	},

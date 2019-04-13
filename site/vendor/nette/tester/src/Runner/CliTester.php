@@ -12,6 +12,7 @@ namespace Tester\Runner;
 use Tester\CodeCoverage;
 use Tester\Dumper;
 use Tester\Environment;
+use Tester\Helpers;
 
 
 /**
@@ -25,16 +26,19 @@ class CliTester
 	/** @var PhpInterpreter */
 	private $interpreter;
 
+	/** @var bool */
+	private $debugMode = true;
+
 
 	public function run(): ?int
 	{
 		Environment::setupColors();
-		Environment::setupErrors();
+		$this->setupErrors();
 
 		ob_start();
 		$cmd = $this->loadOptions();
 
-		Environment::$debugMode = (bool) $this->options['--debug'];
+		$this->debugMode = (bool) $this->options['--debug'];
 		if (isset($this->options['--colors'])) {
 			Environment::$useColors = (bool) $this->options['--colors'];
 		} elseif (in_array($this->options['-o'], ['tap', 'junit'], true)) {
@@ -55,15 +59,12 @@ class CliTester
 			return null;
 		}
 
-		if ($this->options['--coverage']) {
-			$coverageFile = $this->prepareCodeCoverage();
-		}
-
 		$runner = $this->createRunner();
 		$runner->setEnvironmentVariable(Environment::RUNNER, '1');
 		$runner->setEnvironmentVariable(Environment::COLORS, (string) (int) Environment::$useColors);
-		if (isset($coverageFile)) {
-			$runner->setEnvironmentVariable(Environment::COVERAGE, $coverageFile);
+
+		if ($this->options['--coverage']) {
+			$coverageFile = $this->prepareCodeCoverage($runner);
 		}
 
 		if ($this->options['-o'] !== null) {
@@ -91,7 +92,7 @@ class CliTester
 		echo <<<'XX'
  _____ ___  ___ _____ ___  ___
 |_   _/ __)( __/_   _/ __)| _ )
-  |_| \___ /___) |_| \___ |_|_\  v2.1.0
+  |_| \___ /___) |_| \___ |_|_\  v2.2.0
 
 
 XX;
@@ -127,6 +128,7 @@ XX
 			'--temp' => [CommandLine::REALPATH => true],
 			'paths' => [CommandLine::REPEATABLE => true, CommandLine::VALUE => getcwd()],
 			'--debug' => [],
+			'--cider' => [],
 			'--coverage-src' => [CommandLine::REALPATH => true, CommandLine::REPEATABLE => true],
 		]);
 
@@ -192,17 +194,22 @@ XX
 			$runner->setTempDirectory($this->options['--temp']);
 		}
 
-		if ($this->options['-o'] !== 'none') {
-			switch ($this->options['-o']) {
-				case 'tap':
-					$runner->outputHandlers[] = new Output\TapPrinter;
-					break;
-				case 'junit':
-					$runner->outputHandlers[] = new Output\JUnitPrinter;
-					break;
-				default:
-					$runner->outputHandlers[] = new Output\ConsolePrinter($runner, (bool) $this->options['-s']);
-			}
+		switch ($this->options['-o']) {
+			case 'none':
+				break;
+			case 'tap':
+				$runner->outputHandlers[] = new Output\TapPrinter;
+				break;
+			case 'junit':
+				$runner->outputHandlers[] = new Output\JUnitPrinter;
+				break;
+			default:
+				$runner->outputHandlers[] = new Output\ConsolePrinter(
+					$runner,
+					(bool) $this->options['-s'],
+					'php://output',
+					(bool) $this->options['--cider']
+				);
 		}
 
 		if ($this->options['--log']) {
@@ -219,14 +226,24 @@ XX
 	}
 
 
-	private function prepareCodeCoverage(): string
+	private function prepareCodeCoverage(Runner $runner): string
 	{
-		if (!$this->interpreter->canMeasureCodeCoverage()) {
-			throw new \Exception("Code coverage functionality requires Xdebug extension or phpdbg SAPI (used {$this->interpreter->getCommandLine()})");
+		$engines = $this->interpreter->getCodeCoverageEngines();
+		if (count($engines) < 1) {
+			throw new \Exception("Code coverage functionality requires Xdebug or PCOV extension or PHPDBG SAPI (used {$this->interpreter->getCommandLine()})");
 		}
+
 		file_put_contents($this->options['--coverage'], '');
 		$file = realpath($this->options['--coverage']);
-		echo "Code coverage: {$file}\n";
+
+		$runner->setEnvironmentVariable(Environment::COVERAGE, $file);
+		$runner->setEnvironmentVariable(Environment::COVERAGE_ENGINE, $engine = reset($engines));
+
+		if ($engine === CodeCoverage\Collector::ENGINE_PCOV && count($this->options['--coverage-src'])) {
+			$runner->addPhpIniOption('pcov.directory', Helpers::findCommonDirectory($this->options['--coverage-src']));
+		}
+
+		echo "Code coverage by $engine: $file\n";
 		return $file;
 	}
 
@@ -259,16 +276,60 @@ XX
 			foreach ($this->options['--watch'] as $directory) {
 				foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)) as $file) {
 					if (substr($file->getExtension(), 0, 3) === 'php' && substr($file->getBasename(), 0, 1) !== '.') {
-						$state[(string) $file] = md5_file((string) $file);
+						$state[(string) $file] = @md5_file((string) $file); // @ file could be deleted in the meantime
 					}
 				}
 			}
 			if ($state !== $prev) {
 				$prev = $state;
-				$runner->run();
+				try {
+					$runner->run();
+				} catch (\ErrorException $e) {
+					$this->displayException($e);
+				}
+				echo "\n";
+				$time = time();
 			}
-			echo 'Watching ' . implode(', ', $this->options['--watch']) . ' ' . str_repeat('.', ++$counter % 5) . "    \r";
+
+			$idle = time() - $time;
+			if ($idle >= 60 * 60) {
+				$idle = 'long time';
+			} elseif ($idle >= 60) {
+				$idle = round($idle / 60) . ' min';
+			} else {
+				$idle = $idle . ' sec';
+			}
+			echo 'Watching ' . implode(', ', $this->options['--watch']) . " (idle for $idle) " . str_repeat('.', ++$counter % 5) . "    \r";
 			sleep(2);
 		}
+	}
+
+
+	private function setupErrors(): void
+	{
+		error_reporting(E_ALL);
+		ini_set('html_errors', '0');
+
+		set_error_handler(function (int $severity, string $message, string $file, int $line) {
+			if (($severity & error_reporting()) === $severity) {
+				throw new \ErrorException($message, 0, $severity, $file, $line);
+			}
+			return false;
+		});
+
+		set_exception_handler(function (\Throwable $e) {
+			$this->displayException($e);
+			exit(2);
+		});
+	}
+
+
+	private function displayException(\Throwable $e): void
+	{
+		echo "\n";
+		echo $this->debugMode
+			? Dumper::dumpException($e)
+			: Dumper::color('white/red', 'Error: ' . $e->getMessage());
+		echo "\n";
 	}
 }

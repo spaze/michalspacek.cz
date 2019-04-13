@@ -43,7 +43,9 @@ class FileMutator
 
 	public function dir_opendir(string $path, int $options): bool
 	{
-		$this->handle = $this->native('opendir', $path, $this->context);
+		$this->handle = $this->context
+			? $this->native('opendir', $path, $this->context)
+			: $this->native('opendir', $path);
 		return (bool) $this->handle;
 	}
 
@@ -62,7 +64,8 @@ class FileMutator
 
 	public function mkdir(string $path, int $mode, int $options): bool
 	{
-		return $this->native('mkdir', $path, $mode, false, $this->context);
+		$recursive = (bool) ($options & STREAM_MKDIR_RECURSIVE);
+		return $this->native('mkdir', $path, $mode, $recursive, $this->context);
 	}
 
 

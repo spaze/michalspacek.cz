@@ -9,14 +9,15 @@ declare(strict_types=1);
 
 namespace Tester\CodeCoverage\Generators;
 
+use Tester\Helpers;
+
 
 /**
  * Code coverage report generator.
  */
 class HtmlGenerator extends AbstractGenerator
 {
-	/** @var array */
-	public static $classes = [
+	private const CLASSES = [
 		self::CODE_TESTED => 't', // tested
 		self::CODE_UNTESTED => 'u', // untested
 		self::CODE_DEAD => 'dead', // dead code
@@ -46,7 +47,7 @@ class HtmlGenerator extends AbstractGenerator
 		$this->parse();
 
 		$title = $this->title;
-		$classes = self::$classes;
+		$classes = self::CLASSES;
 		$files = $this->files;
 		$coveredPercent = $this->getCoveredPercent();
 
@@ -71,7 +72,7 @@ class HtmlGenerator extends AbstractGenerator
 		}
 
 		$this->files = [];
-		$commonSourcesPath = self::getCommonFilesPath($this->sources) . DIRECTORY_SEPARATOR;
+		$commonSourcesPath = Helpers::findCommonDirectory($this->sources) . DIRECTORY_SEPARATOR;
 		foreach ($this->getSourceIterator() as $entry) {
 			$entry = (string) $entry;
 
