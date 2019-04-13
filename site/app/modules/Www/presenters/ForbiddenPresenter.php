@@ -68,7 +68,7 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 	protected function createTemplate()
 	{
 		$template = parent::createTemplate();
-		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator), 'loader']);
+		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator->getDefaultLocale()), 'loader']);
 		$template->getLatte()->addFilter(null, [$this->templateHelpers, 'loader']);
 		return $template;
 	}

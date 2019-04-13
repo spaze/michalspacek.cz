@@ -25,7 +25,7 @@
 		"spaze/feed-exports": "~0.1",
 		"spaze/nonce-generator": "^2.0",
 		"spaze/sri-macros": "~0.1",
-		"spaze/netxten": "^0.10.0",
+		"spaze/netxten": "~0.11",
 		"spaze/mysql-session-handler": "^2.0",
 		"spaze/encryption": "^0.1.0"
 	},

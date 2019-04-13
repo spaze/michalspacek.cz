@@ -5,7 +5,6 @@ namespace Netxten\Templating;
 
 use DateTimeInterface;
 use IntlDateFormatter;
-use Kdyby\Translation\Translator;
 
 class Helpers
 {
@@ -105,13 +104,13 @@ class Helpers
 		],
 	];
 
-	/** @var Translator */
-	private $translator;
+	/** @var string */
+	private $defaultLocale;
 
 
-	public function __construct(Translator $translator)
+	public function __construct(string $defaultLocale)
 	{
-		$this->translator = $translator;
+		$this->defaultLocale = $defaultLocale;
 	}
 
 
@@ -133,7 +132,7 @@ class Helpers
 	private function localeDate(DateTimeInterface $start, ?DateTimeInterface $end, string $format, ?string $locale): string
 	{
 		if ($locale === null) {
-			$locale = $this->translator->getDefaultLocale();
+			$locale = $this->defaultLocale;
 		}
 
 		$formatter = new IntlDateFormatter($locale, IntlDateFormatter::NONE, IntlDateFormatter::NONE);

@@ -51,7 +51,7 @@ services:
 	httpResponse:
 		setup:
 			- $cookieSecure(true)
-	netxtenHelpers: \Netxten\Templating\Helpers
+	netxtenHelpers: \Netxten\Templating\Helpers(@translation.default::getDefaultLocale())
 	helpers: \MichalSpacekCz\Templating\Helpers
 	vat:
 		class: \MichalSpacekCz\Vat

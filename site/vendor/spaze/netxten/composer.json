@@ -3,7 +3,6 @@
 	"require": {
 		"php": ">= 7.1.0",
 		"ext-intl": "*",
-		"kdyby/translation": "~2.5",
 		"nette/application": "~2.3",
 		"nette/caching": "~2.3",
 		"nette/utils": "^2.3.10",

@@ -2425,22 +2425,21 @@
     },
     {
         "name": "spaze/netxten",
-        "version": "v0.10.0",
-        "version_normalized": "0.10.0.0",
+        "version": "v0.11.0",
+        "version_normalized": "0.11.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spaze/netxten.git",
-            "reference": "c7df273be590683206f618d8c197c5819679ca51"
+            "reference": "7c60a3794fa00034282b6a28a4f168baa93107bc"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spaze/netxten/zipball/c7df273be590683206f618d8c197c5819679ca51",
-            "reference": "c7df273be590683206f618d8c197c5819679ca51",
+            "url": "https://api.github.com/repos/spaze/netxten/zipball/7c60a3794fa00034282b6a28a4f168baa93107bc",
+            "reference": "7c60a3794fa00034282b6a28a4f168baa93107bc",
             "shasum": ""
         },
         "require": {
             "ext-intl": "*",
-            "kdyby/translation": "~2.5",
             "latte/latte": "~2.3",
             "nette/application": "~2.3",
             "nette/caching": "~2.3",
@@ -2450,7 +2449,7 @@
             "php": ">= 7.1.0",
             "texy/texy": "~3.0"
         },
-        "time": "2019-02-17T00:15:09+00:00",
+        "time": "2019-04-13T01:59:21+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

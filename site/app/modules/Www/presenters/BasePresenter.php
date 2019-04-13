@@ -98,7 +98,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	{
 		/** @var \Nette\Bridges\ApplicationLatte\Template $template */
 		$template = parent::createTemplate();
-		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator), 'loader']);
+		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator->getDefaultLocale()), 'loader']);
 		$template->getLatte()->addFilter(null, [$this->templateHelpers, 'loader']);
 		return $template;
 	}
