@@ -1,0 +1,37 @@
+{
+	"name": "contributte/translation",
+	"description": "Symfony/Translation integration for Nette Framework.",
+	"type": "library",
+	"keywords": ["symfony", "nette", "translation"],
+	"license": "MIT",
+	"homepage": "https://github.com/contributte/translation",
+	"authors": [
+		{
+			"name": "Ales Wita"
+		}
+	],
+	"require": {
+		"php": "^7.1",
+		"latte/latte": "^2.5",
+		"nette/application": "^3.0",
+		"nette/di": "^3.0",
+		"nette/finder": "^2.5",
+		"nette/http": "^3.0",
+		"nette/neon": "^3.0",
+		"nette/schema": "^1.0",
+		"nette/utils": "^3.0",
+		"symfony/translation": "^4.2",
+		"symfony/config": "^4.2"
+	},
+	"require-dev": {
+		"nette/bootstrap": "^3.0",
+		"nette/robot-loader": " ^3.0",
+		"nette/tester": "^2.2",
+		"doctrine/orm": "^2.6",
+		"tracy/tracy": "^2.6",
+		"mockery/mockery": "^1.2"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	}
+}

@@ -9,6 +9,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     public static $files = array (
         '59af96974553a1fc6407327354b6f47e' => __DIR__ . '/..' . '/nette/di/src/compatibility.php',
         '19a7e2c3b1d506dcdc1b60aab8e102e4' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/shortcuts.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'e7a6fd2e7a869bb207158e9416bdd9b0' => __DIR__ . '/..' . '/nette/application/src/compatibility.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '5d1dcebe069db2f62f5a447526290867' => __DIR__ . '/..' . '/texy/texy/src/texy.php',
@@ -18,9 +19,13 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\' => 18,
+            'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\Finder\\' => 25,
+            'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\Console\\' => 26,
+            'Symfony\\Component\\Config\\' => 25,
             'Spaze\\SubresourceIntegrity\\' => 27,
             'Spaze\\NonceGenerator\\' => 21,
             'Spaze\\Exports\\' => 14,
@@ -53,17 +58,33 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
         'Symfony\\Contracts\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/contracts',
+        ),
+        'Symfony\\Component\\Translation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/translation',
         ),
         'Symfony\\Component\\Finder\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/finder',
         ),
+        'Symfony\\Component\\Filesystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/filesystem',
+        ),
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
+        ),
+        'Symfony\\Component\\Config\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/config',
         ),
         'Spaze\\SubresourceIntegrity\\' => 
         array (
@@ -140,6 +161,27 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $classMap = array (
+        'Contributte\\Translation\\DI\\TranslationExtension' => __DIR__ . '/..' . '/contributte/translation/src/di/TranslationExtension.php',
+        'Contributte\\Translation\\Exception' => __DIR__ . '/..' . '/contributte/translation/src/exceptions.php',
+        'Contributte\\Translation\\FallbackResolver' => __DIR__ . '/..' . '/contributte/translation/src/FallbackResolver.php',
+        'Contributte\\Translation\\FileNotFoundException' => __DIR__ . '/..' . '/contributte/translation/src/exceptions.php',
+        'Contributte\\Translation\\Helpers' => __DIR__ . '/..' . '/contributte/translation/src/Helpers.php',
+        'Contributte\\Translation\\InvalidArgumentException' => __DIR__ . '/..' . '/contributte/translation/src/exceptions.php',
+        'Contributte\\Translation\\InvalidStateException' => __DIR__ . '/..' . '/contributte/translation/src/exceptions.php',
+        'Contributte\\Translation\\KdybyTranslationBackCompatibilityTrait' => __DIR__ . '/..' . '/contributte/translation/src/KdybyTranslationBackCompatibilityTrait.php',
+        'Contributte\\Translation\\Latte\\Macros' => __DIR__ . '/..' . '/contributte/translation/src/latte/Macros.php',
+        'Contributte\\Translation\\Loaders\\Doctrine' => __DIR__ . '/..' . '/contributte/translation/src/loaders/Doctrine.php',
+        'Contributte\\Translation\\Loaders\\Neon' => __DIR__ . '/..' . '/contributte/translation/src/loaders/Neon.php',
+        'Contributte\\Translation\\LocaleResolver' => __DIR__ . '/..' . '/contributte/translation/src/LocaleResolver.php',
+        'Contributte\\Translation\\LocalesResolvers\\Header' => __DIR__ . '/..' . '/contributte/translation/src/localesresolvers/Header.php',
+        'Contributte\\Translation\\LocalesResolvers\\Parameter' => __DIR__ . '/..' . '/contributte/translation/src/localesresolvers/Parameter.php',
+        'Contributte\\Translation\\LocalesResolvers\\ResolverInterface' => __DIR__ . '/..' . '/contributte/translation/src/localesresolvers/ResolverInterface.php',
+        'Contributte\\Translation\\LocalesResolvers\\Router' => __DIR__ . '/..' . '/contributte/translation/src/localesresolvers/Router.php',
+        'Contributte\\Translation\\LocalesResolvers\\Session' => __DIR__ . '/..' . '/contributte/translation/src/localesresolvers/Session.php',
+        'Contributte\\Translation\\PrefixedTranslator' => __DIR__ . '/..' . '/contributte/translation/src/PrefixedTranslator.php',
+        'Contributte\\Translation\\Resources\\Database' => __DIR__ . '/..' . '/contributte/translation/src/resources/Database.php',
+        'Contributte\\Translation\\Tracy\\Panel' => __DIR__ . '/..' . '/contributte/translation/src/tracy/Panel.php',
+        'Contributte\\Translation\\Translator' => __DIR__ . '/..' . '/contributte/translation/src/Translator.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Compiler' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Compiler.php',
         'Latte\\Engine' => __DIR__ . '/..' . '/latte/latte/src/Latte/Engine.php',
