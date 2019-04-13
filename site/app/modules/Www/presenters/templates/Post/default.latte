@@ -59,8 +59,11 @@
 <p n:foreach="$edits as $edit"><strong>{$edit->editedAt|localeDay}</strong> {$edit->summary}</p>
 </div>
 <div class="widget">
-<h3>Michal Špaček</h3>
-<p>{_messages.homepage.tagline}</p>
+	<div class="header">
+		<a n:href=":Www:Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="{_messages.label.tohomepage}"></a>
+		<h3>Michal Špaček</h3>
+	</div>
+	<p class="clear">{_messages.homepage.tagline}</p>
 </div>
 <div class="widget">
 <h3>{_messages.label.publictrainings}</h3>
