@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.6.1';
+	public const VERSION = '2.6.2';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -267,7 +267,12 @@ class Debugger
 
 		} elseif (self::$showBar && !self::$productionMode) {
 			self::removeOutputBuffers(false);
-			self::getBar()->render();
+			try {
+				self::getBar()->render();
+			} catch (\Throwable $e) {
+				self::removeOutputBuffers(true);
+				self::getBlueScreen()->render($e);
+			}
 		}
 	}
 

@@ -1021,72 +1021,6 @@
         ]
     },
     {
-        "name": "nette/reflection",
-        "version": "v2.4.2",
-        "version_normalized": "2.4.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nette/reflection.git",
-            "reference": "b12327e98ead74e87a1315e0d48182a702adf901"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nette/reflection/zipball/b12327e98ead74e87a1315e0d48182a702adf901",
-            "reference": "b12327e98ead74e87a1315e0d48182a702adf901",
-            "shasum": ""
-        },
-        "require": {
-            "ext-tokenizer": "*",
-            "nette/caching": "^2.2 || ^3.0",
-            "nette/utils": "^2.4 || ^3.0",
-            "php": ">=5.6.0"
-        },
-        "conflict": {
-            "nette/nette": "<2.2"
-        },
-        "require-dev": {
-            "nette/di": "^2.4 || ^3.0",
-            "nette/tester": "^2.0",
-            "tracy/tracy": "^2.4"
-        },
-        "time": "2017-07-11T19:28:57+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "homepage": "https://davidgrudl.com"
-            },
-            {
-                "name": "Nette Community",
-                "homepage": "https://nette.org/contributors"
-            }
-        ],
-        "description": "Nette Reflection: docblock annotations parser and common reflection classes",
-        "homepage": "https://nette.org",
-        "keywords": [
-            "annotation",
-            "nette",
-            "reflection"
-        ]
-    },
-    {
         "name": "nette/robot-loader",
         "version": "v3.2.0",
         "version_normalized": "3.2.0.0",
@@ -1648,17 +1582,17 @@
     },
     {
         "name": "paragonie/halite",
-        "version": "v4.5.2",
-        "version_normalized": "4.5.2.0",
+        "version": "v4.5.3",
+        "version_normalized": "4.5.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/paragonie/halite.git",
-            "reference": "9092e8ce783cf4f4c2e04dc6f602c8f0c84d5eae"
+            "reference": "56ccdcac236259208a19ecb0231791db8da2791e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paragonie/halite/zipball/9092e8ce783cf4f4c2e04dc6f602c8f0c84d5eae",
-            "reference": "9092e8ce783cf4f4c2e04dc6f602c8f0c84d5eae",
+            "url": "https://api.github.com/repos/paragonie/halite/zipball/56ccdcac236259208a19ecb0231791db8da2791e",
+            "reference": "56ccdcac236259208a19ecb0231791db8da2791e",
             "shasum": ""
         },
         "require": {
@@ -1668,10 +1602,10 @@
             "php": "^7.2"
         },
         "require-dev": {
-            "phpunit/phpunit": "^7",
-            "vimeo/psalm": "^1|^2"
+            "phpunit/phpunit": "^8",
+            "vimeo/psalm": "^3"
         },
-        "time": "2019-02-11T17:12:59+00:00",
+        "time": "2019-03-11T20:38:32+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1814,17 +1748,17 @@
     },
     {
         "name": "phpstan/phpstan",
-        "version": "0.11.2",
-        "version_normalized": "0.11.2.0",
+        "version": "0.11.5",
+        "version_normalized": "0.11.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/phpstan/phpstan.git",
-            "reference": "8e185a74004920419ee97bf9dc62e6a175e8dca5"
+            "reference": "24ce5a566a798b81343138ed5d41d6877554cf9a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8e185a74004920419ee97bf9dc62e6a175e8dca5",
-            "reference": "8e185a74004920419ee97bf9dc62e6a175e8dca5",
+            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/24ce5a566a798b81343138ed5d41d6877554cf9a",
+            "reference": "24ce5a566a798b81343138ed5d41d6877554cf9a",
             "shasum": ""
         },
         "require": {
@@ -1862,7 +1796,7 @@
             "slevomat/coding-standard": "^4.7.2",
             "squizlabs/php_codesniffer": "^3.3.2"
         },
-        "time": "2019-02-12T14:54:38+00:00",
+        "time": "2019-03-25T16:40:09+00:00",
         "bin": [
             "bin/phpstan"
         ],
@@ -2008,12 +1942,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "4e04718428742618a4bf24dafca45b8645c9320d"
+            "reference": "ff41a9a96718245c7160588928e6d217cfb0393c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4e04718428742618a4bf24dafca45b8645c9320d",
-            "reference": "4e04718428742618a4bf24dafca45b8645c9320d",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/ff41a9a96718245c7160588928e6d217cfb0393c",
+            "reference": "ff41a9a96718245c7160588928e6d217cfb0393c",
             "shasum": ""
         },
         "conflict": {
@@ -2033,8 +1967,8 @@
             "codeigniter/framework": "<=3.0.6",
             "composer/composer": "<=1.0.0-alpha11",
             "contao-components/mediaelement": ">=2.14.2,<2.21.1",
-            "contao/core": ">=2,<3.5.35",
-            "contao/core-bundle": ">=4,<4.4.18|>=4.5,<4.5.8",
+            "contao/core": ">=2,<3.5.39",
+            "contao/core-bundle": ">=4,<4.4.37|>=4.5,<4.7.3",
             "contao/listing-bundle": ">=4,<4.4.8",
             "contao/newsletter-bundle": ">=4,<4.1",
             "david-garcia/phpwhois": "<=4.3.1",
@@ -2048,9 +1982,9 @@
             "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
             "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
             "dompdf/dompdf": ">=0.6,<0.6.2",
-            "drupal/core": ">=7,<7.62|>=8,<8.5.11|>=8.6,<8.6.10",
-            "drupal/drupal": ">=7,<7.62|>=8,<8.5.11|>=8.6,<8.6.10",
-            "erusev/parsedown": "<1.7",
+            "drupal/core": ">=7,<7.65|>=8,<8.5.14|>=8.6,<8.6.13",
+            "drupal/drupal": ">=7,<7.64|>=8,<8.5.13|>=8.6,<8.6.12",
+            "erusev/parsedown": "<1.7.2",
             "ezsystems/ezpublish-kernel": ">=5.3,<5.3.12.1|>=5.4,<5.4.13.1|>=6,<6.7.9.1|>=6.8,<6.13.5.1|>=7,<7.2.4.1|>=7.3,<7.3.2.1",
             "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.6|>=5.4,<5.4.12.3|>=2011,<2017.12.4.3|>=2018.6,<2018.6.1.4|>=2018.9,<2018.9.1.3",
             "ezsystems/repository-forms": ">=2.3,<2.3.2.1",
@@ -2077,7 +2011,7 @@
             "la-haute-societe/tcpdf": "<6.2.22",
             "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.42|>=5.6,<5.6.30",
             "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
-            "league/commonmark": ">=0.15.6,<0.18.1",
+            "league/commonmark": "<0.18.3",
             "magento/magento1ce": "<1.9.4",
             "magento/magento1ee": ">=1.9,<1.14.4",
             "magento/product-community-edition": ">=2,<2.2.7",
@@ -2146,11 +2080,11 @@
             "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
             "tecnickcom/tcpdf": "<6.2.22",
             "thelia/backoffice-default-template": ">=2.1,<2.1.2",
-            "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
+            "thelia/thelia": ">=2.1,<2.1.2|>=2.1.0-beta1,<2.1.3",
             "theonedemon/phpwhois": "<=4.2.5",
             "titon/framework": ">=0,<9.9.99",
             "truckersmp/phpwhois": "<=4.3.1",
-            "twig/twig": "<1.20",
+            "twig/twig": "<1.38|>=2,<2.7",
             "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.23|>=9,<9.5.4",
             "typo3/cms-core": ">=8,<8.7.23|>=9,<9.5.4",
             "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5",
@@ -2170,6 +2104,7 @@
             "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
             "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
             "zendframework/zend-db": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.10|>=2.3,<2.3.5",
+            "zendframework/zend-developer-tools": ">=1.2.2,<1.2.3",
             "zendframework/zend-diactoros": ">=1,<1.8.4",
             "zendframework/zend-feed": ">=1,<2.10.3",
             "zendframework/zend-form": ">=2,<2.2.7|>=2.3,<2.3.1",
@@ -2191,7 +2126,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2019-02-26T21:14:50+00:00",
+        "time": "2019-04-12T16:05:24+00:00",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -2518,17 +2453,17 @@
     },
     {
         "name": "symfony/console",
-        "version": "v4.2.4",
-        "version_normalized": "4.2.4.0",
+        "version": "v4.2.5",
+        "version_normalized": "4.2.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/console.git",
-            "reference": "9dc2299a016497f9ee620be94524e6c0af0280a9"
+            "reference": "24206aff3efe6962593297e57ef697ebb220e384"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/console/zipball/9dc2299a016497f9ee620be94524e6c0af0280a9",
-            "reference": "9dc2299a016497f9ee620be94524e6c0af0280a9",
+            "url": "https://api.github.com/repos/symfony/console/zipball/24206aff3efe6962593297e57ef697ebb220e384",
+            "reference": "24206aff3efe6962593297e57ef697ebb220e384",
             "shasum": ""
         },
         "require": {
@@ -2557,7 +2492,7 @@
             "symfony/lock": "",
             "symfony/process": ""
         },
-        "time": "2019-02-23T15:17:42+00:00",
+        "time": "2019-04-01T07:32:59+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2662,8 +2597,8 @@
     },
     {
         "name": "symfony/finder",
-        "version": "v4.2.4",
-        "version_normalized": "4.2.4.0",
+        "version": "v4.2.5",
+        "version_normalized": "4.2.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/finder.git",
@@ -2841,17 +2776,17 @@
     },
     {
         "name": "tracy/tracy",
-        "version": "v2.6.1",
-        "version_normalized": "2.6.1.0",
+        "version": "v2.6.2",
+        "version_normalized": "2.6.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/tracy.git",
-            "reference": "e179856e5dcc3ced99df1596cd299246fb1c3ac2"
+            "reference": "9a6513089a836744e70af0910ad45f50e603dcf5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/tracy/zipball/e179856e5dcc3ced99df1596cd299246fb1c3ac2",
-            "reference": "e179856e5dcc3ced99df1596cd299246fb1c3ac2",
+            "url": "https://api.github.com/repos/nette/tracy/zipball/9a6513089a836744e70af0910ad45f50e603dcf5",
+            "reference": "9a6513089a836744e70af0910ad45f50e603dcf5",
             "shasum": ""
         },
         "require": {
@@ -2861,14 +2796,14 @@
         },
         "require-dev": {
             "nette/di": "^2.4 || ~3.0.0",
-            "nette/tester": "^2.1",
+            "nette/tester": "^2.2",
             "nette/utils": "^2.4 || ^3.0",
             "psr/log": "^1.0"
         },
         "suggest": {
             "https://nette.org/donate": "Please support Tracy via a donation"
         },
-        "time": "2019-03-01T02:12:13+00:00",
+        "time": "2019-04-03T20:29:00+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
