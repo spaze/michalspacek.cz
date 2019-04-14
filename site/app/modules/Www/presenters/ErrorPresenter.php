@@ -85,9 +85,7 @@ class ErrorPresenter extends BasePresenter
 		// Change the request host to the localized "homepage" host
 		$links = $this->localeLinkGenerator->links('Www:Homepage:');
 		foreach ($links as &$link) {
-			$url = $this->getHttpRequest()->getUrl();
-			$url->setHost((new \Nette\Http\Url($link))->getHost());
-			$link = $url->getAbsoluteUrl();
+			$link = $this->getHttpRequest()->getUrl()->withHost((new \Nette\Http\Url($link))->getHost())->getAbsoluteUrl();
 		}
 		return $links;
 	}

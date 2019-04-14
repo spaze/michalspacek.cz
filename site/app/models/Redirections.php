@@ -36,9 +36,7 @@ class Redirections
 		$destination = $this->database->fetchField('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath()) ?: null;
 		if ($destination) {
 			if (!parse_url($destination, PHP_URL_HOST)) {
-				$destinationUrl = clone $sourceUrl;
-				$destinationUrl->setPath($destination);
-				$destination = $destinationUrl->getAbsoluteUrl();
+				$destination = $sourceUrl->withPath($destination)->getAbsoluteUrl();
 			}
 		}
 		return $destination;
