@@ -224,7 +224,8 @@ class TrainingsPresenter extends BasePresenter
 	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplication $form, $values)
 	{
 		$session = $this->getSession('training');
-		$name = $form->parent->params['name'];
+		/** @var string $name */
+		$name = $this->training->action;
 
 		try {
 			$this->checkSpam($values, $name);
@@ -330,10 +331,9 @@ class TrainingsPresenter extends BasePresenter
 
 	public function submittedApplicationPreliminary(\MichalSpacekCz\Form\TrainingApplicationPreliminary $form, $values)
 	{
-		$name = $form->parent->params['name'];
 		$this->trainingApplications->addPreliminaryInvitation($this->training, $values->name, $values->email);
 		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
-		$this->redirect('training#' . $this->translator->translate('html.id.application'), $name);
+		$this->redirect('training#' . $this->translator->translate('html.id.application'), $this->training->action);
 	}
 
 
