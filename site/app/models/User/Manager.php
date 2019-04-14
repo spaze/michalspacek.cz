@@ -307,7 +307,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 */
 	public function verifyPermanentLogin(): ?Row
 	{
-		$cookie = $this->httpRequest->getCookie($this->permanentLoginCookie, '');
+		$cookie = $this->httpRequest->getCookie($this->permanentLoginCookie) ?? '';
 		return $this->verifyToken($cookie, DateTime::from("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
 	}
 
