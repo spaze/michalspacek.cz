@@ -61,7 +61,7 @@ parameters:
 			com: michalspacek.com.test
 
 	contact:
-		phoneNumber: 123456789
+		phoneNumber: "123456789"
 
 	encryption:
 		keys:
