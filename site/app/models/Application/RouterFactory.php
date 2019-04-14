@@ -39,7 +39,7 @@ class RouterFactory
 	/** @var \MichalSpacekCz\Post\Loader */
 	protected $blogPostLoader;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var \Contributte\Translation\Translator|\Nette\Localization\ITranslator */
 	protected $translator;
 
 	/** @var array of host => array of supported locales */
@@ -190,11 +190,11 @@ class RouterFactory
 
 
 	/**
-	 * @param \Nette\Application\IRouter $route
+	 * @param \Nette\Routing\Router $route
 	 * @param string $locale
 	 * @param string $host
 	 */
-	private function addToRouter(\Nette\Application\IRouter $route, string $locale, string $host): void
+	private function addToRouter(\Nette\Routing\Router $route, string $locale, string $host): void
 	{
 		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
 			if (!isset($this->localeRouters[$locale])) {
