@@ -36,12 +36,12 @@ final class Versions
   'paragonie/constant_time_encoding' => 'v2.2.3@55af0dc01992b4d0da7f6372e2eac097bbbaffdb',
   'paragonie/halite' => 'v4.5.3@56ccdcac236259208a19ecb0231791db8da2791e',
   'paragonie/hidden-string' => 'v1.0.0@0bbb00be0e33b8e1d48fa79ea35cd42d3091a936',
-  'spaze/csp-config' => 'v2.0.0@8220b5633a81a8476274049732fd9e09e78597a6',
+  'spaze/csp-config' => 'v2.0.1@4faf2cf376f7b6bc151cc6590af0ec83938758b9',
   'spaze/encryption' => 'v0.1.1@e891463ec1e594da8ebe1c31caf0cc9f1b5786e4',
   'spaze/feed-exports' => 'v0.2.0@01cfbb510c77b8fe963c0465075e8345984400b5',
-  'spaze/mysql-session-handler' => 'v2.1.2@9bf674a2fdaedacaa67eb995c8c05ac0107c27b2',
+  'spaze/mysql-session-handler' => 'v2.1.3@6f5fe5bf2fff6ebf4b213e058100c11af886c651',
   'spaze/netxten' => 'v0.12.0@472d96877c6f0ab66376f01b44c3d9f93483bbfd',
-  'spaze/nonce-generator' => 'v2.0.1@066a834ec5ededeb1133053c7131be3230e5f010',
+  'spaze/nonce-generator' => 'v3.0.0@53df0e14bc82aee9b353f05af0f87f84b4e32760',
   'spaze/sri-macros' => 'v0.1.0@e57d2dc126ff5b0d83d748a71638b8ea0c696ed3',
   'symfony/config' => 'v4.2.5@0e745ead307d5dcd4e163e94a47ec04b1428943f',
   'symfony/contracts' => 'v1.0.2@1aa7ab2429c3d594dd70689604b5cf7421254cdf',
@@ -63,9 +63,9 @@ final class Versions
   'roave/security-advisories' => 'dev-master@ff41a9a96718245c7160588928e6d217cfb0393c',
   'symfony/console' => 'v4.2.5@24206aff3efe6962593297e57ef697ebb220e384',
   'symfony/finder' => 'v4.2.5@267b7002c1b70ea80db0833c3afe05f0fbde580a',
-  'paragonie/random_compat' => '9.99.99@a28e3e2fe043c495ce1e26bd323d77b0b53dea78',
-  'paragonie/sodium_compat' => '*@a28e3e2fe043c495ce1e26bd323d77b0b53dea78',
-  '__root__' => 'dev-nette-3@a28e3e2fe043c495ce1e26bd323d77b0b53dea78',
+  'paragonie/random_compat' => '9.99.99@00a9b509a2fb577e2432451732798be5332b0c02',
+  'paragonie/sodium_compat' => '*@00a9b509a2fb577e2432451732798be5332b0c02',
+  '__root__' => 'dev-nette-3@00a9b509a2fb577e2432451732798be5332b0c02',
 );
 
     private function __construct()
