@@ -15,7 +15,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
 	/**
-	 * @var \Contributte\Translation\Translator
+	 * @var \Nette\Localization\ITranslator
 	 * @inject
 	 */
 	public $translator;
