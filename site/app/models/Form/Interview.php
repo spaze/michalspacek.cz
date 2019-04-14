@@ -28,7 +28,7 @@ class Interview extends ProtectedForm
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka popisu je %d znaků', 2000);
 		$this->addInterviewDate('date', 'Datum:', true);
-		$this->addText('href', 'Odkaz na rozhovor:', true)
+		$this->addText('href', 'Odkaz na rozhovor:')
 			->setRequired('Zadejte prosím odkaz na rozhovor')
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na rozhovor je %d znaků', 200);
 		$this->addText('audioHref', 'Odkaz na audio:')
