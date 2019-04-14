@@ -72,16 +72,18 @@ class EmailsPresenter extends BasePresenter
 			if (empty($data->send) || !isset($this->applications[$id])) {
 				continue;
 			}
+			/** @var \Nette\Bridges\ApplicationLatte\Template $template */
+			$template = $this->createTemplate();
 			$additional = trim($data->additional);
 
 			if ($this->applications[$id]->nextStatus === Training\Statuses::STATUS_INVITED) {
-				$this->trainingMails->sendInvitation($this->applications[$id], $this->createTemplate(), $additional);
+				$this->trainingMails->sendInvitation($this->applications[$id], $template, $additional);
 				$this->trainingStatuses->updateStatus($id, Training\Statuses::STATUS_INVITED);
 				$sent++;
 			}
 
 			if ($this->applications[$id]->nextStatus === Training\Statuses::STATUS_MATERIALS_SENT) {
-				$this->trainingMails->sendMaterials($this->applications[$id], $this->createTemplate(), $data->feedbackRequest, $additional);
+				$this->trainingMails->sendMaterials($this->applications[$id], $template, $data->feedbackRequest, $additional);
 				$this->trainingStatuses->updateStatus($id, Training\Statuses::STATUS_MATERIALS_SENT);
 				$sent++;
 			}
@@ -90,14 +92,14 @@ class EmailsPresenter extends BasePresenter
 				if ($data->invoice->isOk()) {
 					$this->trainingApplications->updateApplicationInvoiceData($id, $data->invoiceId);
 					$this->applications[$id]->invoiceId = $data->invoiceId;
-					$this->trainingMails->sendInvoice($this->applications[$id], $this->createTemplate(), $data->invoice, $additional);
+					$this->trainingMails->sendInvoice($this->applications[$id], $template, $data->invoice, $additional);
 					$this->trainingStatuses->updateStatus($id, $this->applications[$id]->nextStatus);
 					$sent++;
 				}
 			}
 
 			if ($this->applications[$id]->nextStatus === Training\Statuses::STATUS_REMINDED) {
-				$this->trainingMails->sendReminder($this->applications[$id], $this->createTemplate(), $additional);
+				$this->trainingMails->sendReminder($this->applications[$id], $template, $additional);
 				$this->trainingStatuses->updateStatus($id, Training\Statuses::STATUS_REMINDED);
 				$sent++;
 			}

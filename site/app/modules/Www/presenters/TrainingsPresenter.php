@@ -279,9 +279,11 @@ class TrainingsPresenter extends BasePresenter
 						$values->note
 					);
 				}
+				/** @var \Nette\Bridges\ApplicationLatte\Template $template */
+				$template = $this->createTemplate();
 				$this->trainingMails->sendSignUpMail(
 					$applicationId,
-					$this->createTemplate(),
+					$template,
 					$values->email,
 					$values->name,
 					$date->start,

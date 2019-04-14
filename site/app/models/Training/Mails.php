@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use Nette\Application\UI\ITemplate;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Netxten\Templating\Helpers;
 
@@ -68,7 +68,7 @@ class Mails
 
 	/**
 	 * @param integer $applicationId
-	 * @param ITemplate $template
+	 * @param Template $template
 	 * @param string $recipientAddress
 	 * @param string $recipientName
 	 * @param \DateTime $start
@@ -82,7 +82,7 @@ class Mails
 	 */
 	public function sendSignUpMail(
 		int $applicationId,
-		ITemplate $template,
+		Template $template,
 		string $recipientAddress,
 		string $recipientName,
 		\DateTime $start,
@@ -188,10 +188,10 @@ class Mails
 
 	/**
 	 * @param Row $application
-	 * @param ITemplate $template
+	 * @param Template $template
 	 * @param string $additional
 	 */
-	public function sendInvitation(Row $application, ITemplate $template, string $additional): void
+	public function sendInvitation(Row $application, Template $template, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -205,11 +205,11 @@ class Mails
 
 	/**
 	 * @param Row $application
-	 * @param ITemplate $template
+	 * @param Template $template
 	 * @param boolean $feedbackRequest
 	 * @param string $additional
 	 */
-	public function sendMaterials(Row $application, ITemplate $template, bool $feedbackRequest, string $additional): void
+	public function sendMaterials(Row $application, Template $template, bool $feedbackRequest, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -224,11 +224,11 @@ class Mails
 
 	/**
 	 * @param Row $application
-	 * @param ITemplate $template
+	 * @param Template $template
 	 * @param \Nette\Http\FileUpload $invoice
 	 * @param string $additional
 	 */
-	public function sendInvoice(Row $application, ITemplate $template, \Nette\Http\FileUpload $invoice, string $additional): void
+	public function sendInvoice(Row $application, Template $template, \Nette\Http\FileUpload $invoice, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -248,10 +248,10 @@ class Mails
 
 	/**
 	 * @param Row $application
-	 * @param ITemplate $template
+	 * @param Template $template
 	 * @param string $additional
 	 */
-	public function sendReminder(Row $application, ITemplate $template, string $additional): void
+	public function sendReminder(Row $application, Template $template, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
@@ -271,10 +271,10 @@ class Mails
 	 * @param string $recipientAddress
 	 * @param string $recipientName
 	 * @param string $subject
-	 * @param ITemplate $template
+	 * @param Template $template
 	 * @param string[] $attachments
 	 */
-	private function sendMail(string $recipientAddress, string $recipientName, string $subject, ITemplate $template, array $attachments = array()): void
+	private function sendMail(string $recipientAddress, string $recipientName, string $subject, Template $template, array $attachments = array()): void
 	{
 		$mail = new \Nette\Mail\Message();
 		foreach ($attachments as $name => $file) {
@@ -284,7 +284,7 @@ class Mails
 			->addTo($recipientAddress, $recipientName)
 			->addBcc($this->emailFrom)
 			->setSubject($subject)
-			->setBody($template)
+			->setBody((string)$template)
 			->clearHeader('X-Mailer');  // Hide Nette Mailer banner
 		$this->mailer->send($mail);
 	}

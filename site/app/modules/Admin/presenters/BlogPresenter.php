@@ -189,6 +189,7 @@ class BlogPresenter extends BasePresenter
 		$post->slugTags = (empty($this->request->getPost('tags')) ? null : $this->blogPost->getSlugTags($this->request->getPost('tags')));
 		$post->recommended = (empty($this->request->getPost('recommended')) ? null : \Nette\Utils\Json::decode($this->request->getPost('recommended')));
 		$this->blogPost->enrich($post);
+		/** @var \Nette\Bridges\ApplicationLatte\Template $preview */
 		$preview = $this->createTemplate();
 		$preview->setFile(__DIR__ . '/templates/Blog/preview.latte');
 		$preview->post = $this->blogPost->format($post);
