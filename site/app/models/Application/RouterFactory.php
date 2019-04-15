@@ -57,10 +57,10 @@ class RouterFactory
 	/** @var array */
 	protected $translatedActions = array();
 
-	/** @var \Nette\Application\IRouter */
+	/** @var RouteList */
 	private $router;
 
-	/** @var array of \Nette\Application\IRouter */
+	/** @var array of \Nette\Routing\Router */
 	private $localeRouters;
 
 
@@ -132,7 +132,7 @@ class RouterFactory
 	/**
 	 * Get locale routers.
 	 *
-	 * @return array of \Nette\Application\IRouter
+	 * @return array of \Nette\Routing\Router
 	 */
 	public function getLocaleRouters(): array
 	{
@@ -141,9 +141,9 @@ class RouterFactory
 
 
 	/**
-	 * @return \Nette\Application\IRouter
+	 * @return \Nette\Routing\Router
 	 */
-	public function createRouter(): \Nette\Application\IRouter
+	public function createRouter(): \Nette\Routing\Router
 	{
 		$this->router = new RouteList();
 		$this->addRoute(self::MODULE_ADMIN, self::HOST_ADMIN, '[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
@@ -213,9 +213,9 @@ class RouterFactory
 	 * @param string $class
 	 * @param string $mask
 	 * @param array $metadata
-	 * @return \Nette\Application\IRouter
+	 * @return \Nette\Routing\Router
 	 */
-	private function createRoute(string $class, string $mask, array $metadata): \Nette\Application\IRouter
+	private function createRoute(string $class, string $mask, array $metadata): \Nette\Routing\Router
 	{
 		switch ($class) {
 			case \MichalSpacekCz\Application\Routers\Route::class:
