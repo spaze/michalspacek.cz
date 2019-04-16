@@ -2,7 +2,7 @@ parameters:
 	autoload_directories:
 		- app
 	ignoreErrors:
-		- '#^Call to an undefined method Nette\\Localization\\ITranslator::get(Default)?Locale\(\)#'  # Actually called on \Contributte\Translation\Translator
+		- '#^Call to an undefined method Nette\\Localization\\ITranslator::get(Default|Available)?Locales?\(\)#'  # Actually called on \Contributte\Translation\Translator
 		-  # https://github.com/nette/application/pull/212
 			message: '#^Parameter \#2 \$destination of method Nette\\Application\\UI\\Component::redirect\(\) expects string\|null, array<string, string> given#'
 			path: app/modules/Admin/presenters/BasePresenter.php
