@@ -3,7 +3,11 @@ declare(strict_types = 1);
 
 namespace App\WwwModule\Presenters;
 
-use \Nette\Http\IResponse;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Http\IResponse;
+use Nette\Http\Url;
 
 /**
  * Error presenter.
@@ -11,17 +15,11 @@ use \Nette\Http\IResponse;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class ErrorPresenter extends BasePresenter
+class ErrorPresenter extends BaseErrorPresenter
 {
 
-	/** @var \MichalSpacekCz\Redirections */
-	protected $redirections;
-
-	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
+	/** @var LocaleLinkGenerator */
 	protected $localeLinkGenerator;
-
-	/** @var \Tracy\ILogger */
-	private $logger;
 
 	/** @var array */
 	protected $statuses = [
@@ -33,40 +31,17 @@ class ErrorPresenter extends BasePresenter
 	];
 
 
-	/**
-	 * @param \MichalSpacekCz\Redirections $redirections
-	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
-	 */
-	public function __construct(\MichalSpacekCz\Redirections $redirections, \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator, \Tracy\ILogger $logger)
+	public function __construct(LocaleLinkGenerator $localeLinkGenerator)
 	{
-		$this->redirections = $redirections;
 		$this->localeLinkGenerator = $localeLinkGenerator;
-		$this->logger = $logger;
 		parent::__construct();
 	}
 
 
-	public function startup(): void
-	{
-		parent::startup();
-		if (!$this->getRequest()->isMethod(\Nette\Application\Request::FORWARD)) {
-			$this->error();
-		}
-
-		$destination = $this->redirections->getDestination($this->getHttpRequest()->getUrl());
-		if ($destination) {
-			$this->redirectUrl($destination, IResponse::S301_MOVED_PERMANENTLY);
-		}
-
-		$e = $this->getRequest()->getParameter('exception');
-		$this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
-	}
-
-
 	/**
-	 * @param \Nette\Application\BadRequestException $exception
+	 * @param BadRequestException $exception
 	 */
-	public function actionDefault(\Nette\Application\BadRequestException $exception): void
+	public function actionDefault(BadRequestException $exception): void
 	{
 		$code = (in_array($exception->getCode(), $this->statuses) ? $exception->getCode() : IResponse::S400_BAD_REQUEST);
 		$this->template->errorCode = $code;
@@ -85,7 +60,7 @@ class ErrorPresenter extends BasePresenter
 		// Change the request host to the localized "homepage" host
 		$links = $this->localeLinkGenerator->links('Www:Homepage:');
 		foreach ($links as &$link) {
-			$link = $this->getHttpRequest()->getUrl()->withHost((new \Nette\Http\Url($link))->getHost())->getAbsoluteUrl();
+			$link = $this->getHttpRequest()->getUrl()->withHost((new Url($link))->getHost())->getAbsoluteUrl();
 		}
 		return $links;
 	}
@@ -100,7 +75,7 @@ class ErrorPresenter extends BasePresenter
 	{
 		$request = $this->getRequest()->getParameter('request');
 		if (!$request) {
-			throw new \Nette\Application\UI\InvalidLinkException('No request');
+			throw new InvalidLinkException('No request');
 		}
 		return $request->getPresenterName() . ':' . $request->getParameter(self::ACTION_KEY);
 	}

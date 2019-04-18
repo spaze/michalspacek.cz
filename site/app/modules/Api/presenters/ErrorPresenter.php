@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace App\ApiModule\Presenters;
 
-use \Nette\Http\IResponse;
+use App\WwwModule\Presenters\BaseErrorPresenter;
+use Nette\Application\BadRequestException;
+use Nette\Http\IResponse;
 
 /**
  * API Generic error presenter.
@@ -11,7 +13,7 @@ use \Nette\Http\IResponse;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class ErrorPresenter extends \App\WwwModule\Presenters\ErrorPresenter
+class ErrorPresenter extends BaseErrorPresenter
 {
 
 	/** @var array */
@@ -24,7 +26,7 @@ class ErrorPresenter extends \App\WwwModule\Presenters\ErrorPresenter
 	];
 
 
-	public function actionDefault(\Nette\Application\BadRequestException $exception): void
+	public function actionDefault(BadRequestException $exception): void
 	{
 		$code = (in_array($exception->getCode(), array_keys($this->statuses)) ? $exception->getCode() : IResponse::S400_BAD_REQUEST);
 		$this->sendJson([
