@@ -38,7 +38,7 @@ final class Versions
   'paragonie/hidden-string' => 'v1.0.0@0bbb00be0e33b8e1d48fa79ea35cd42d3091a936',
   'spaze/csp-config' => 'v2.0.1@4faf2cf376f7b6bc151cc6590af0ec83938758b9',
   'spaze/encryption' => 'v0.1.1@e891463ec1e594da8ebe1c31caf0cc9f1b5786e4',
-  'spaze/feed-exports' => 'v0.2.0@01cfbb510c77b8fe963c0465075e8345984400b5',
+  'spaze/feed-exports' => 'v0.2.1@7392ec98e0e141de51668b9086000ce05cd0555b',
   'spaze/mysql-session-handler' => 'v2.1.3@6f5fe5bf2fff6ebf4b213e058100c11af886c651',
   'spaze/netxten' => 'v0.12.0@472d96877c6f0ab66376f01b44c3d9f93483bbfd',
   'spaze/nonce-generator' => 'v3.0.0@53df0e14bc82aee9b353f05af0f87f84b4e32760',
@@ -60,12 +60,12 @@ final class Versions
   'phpstan/phpstan' => '0.11.5@24ce5a566a798b81343138ed5d41d6877554cf9a',
   'phpstan/phpstan-nette' => '0.11@998e9384ee615cec39eadb0ebae385f7d3d4dad6',
   'psr/log' => '1.1.0@6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd',
-  'roave/security-advisories' => 'dev-master@ff41a9a96718245c7160588928e6d217cfb0393c',
+  'roave/security-advisories' => 'dev-master@9c6c45a2bf8825209fc18861ff666a90f4d878cf',
   'symfony/console' => 'v4.2.7@e2840bb38bddad7a0feaf85931e38fdcffdb2f81',
   'symfony/finder' => 'v4.2.7@e45135658bd6c14b61850bf131c4f09a55133f69',
-  'paragonie/random_compat' => '9.99.99@869b057f7518673cc331756f3211ecd96931642c',
-  'paragonie/sodium_compat' => '*@869b057f7518673cc331756f3211ecd96931642c',
-  '__root__' => 'dev-nette-3@869b057f7518673cc331756f3211ecd96931642c',
+  'paragonie/random_compat' => '9.99.99@1f881671b07542d48c8c918dfeecb870ee9479bc',
+  'paragonie/sodium_compat' => '*@1f881671b07542d48c8c918dfeecb870ee9479bc',
+  '__root__' => 'dev-master@1f881671b07542d48c8c918dfeecb870ee9479bc',
 );
 
     private function __construct()

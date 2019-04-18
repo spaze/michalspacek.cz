@@ -40,7 +40,7 @@ class Response implements \Nette\Application\IResponse
 	{
 		$httpResponse->setContentType('application/atom+xml', 'utf-8');
 		$feed = (string)$this->feed;
-		$httpResponse->setHeader('Content-Length', strlen($feed));
+		$httpResponse->setHeader('Content-Length', (string)strlen($feed));
 		echo $feed;
 	}
 
