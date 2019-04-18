@@ -1,7 +1,12 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
-use \Nette\Application\Responses;
+use MichalSpacekCz\Application\Error;
+use Nette\Application\IPresenter;
+use Nette\Application\IResponse;
+use Nette\Application\Request;
 
 /**
  * Generic error presenter.
@@ -9,35 +14,22 @@ use \Nette\Application\Responses;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class ErrorGenericPresenter implements \Nette\Application\IPresenter
+class ErrorGenericPresenter implements IPresenter
 {
 
-	/** @var \Tracy\ILogger */
-	private $logger;
+	/** @var Error */
+	private $error;
 
 
-	/**
-	 * @param \Tracy\ILogger $logger
-	 */
-	public function __construct(\Tracy\ILogger $logger)
+	public function __construct(Error $error)
 	{
-		$this->logger = $logger;
+		$this->error = $error;
 	}
 
 
-	public function run(\Nette\Application\Request $request): \Nette\Application\IResponse
+	public function run(Request $request): IResponse
 	{
-		$e = $request->getParameter('exception');
-
-		if ($e instanceof \Nette\Application\BadRequestException) {
-			list($module, , $sep) = \Nette\Application\Helpers::splitName($request->getPresenterName());
-			return new Responses\ForwardResponse($request->setPresenterName($module . $sep . 'Error'));
-		}
-
-		$this->logger->log($e, \Tracy\ILogger::EXCEPTION);
-		return new Responses\CallbackResponse(function () {
-			require __DIR__ . '/templates/Error/exception.phtml';
-		});
+		return $this->error->response($request);
 	}
 
 }
