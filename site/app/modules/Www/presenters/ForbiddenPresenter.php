@@ -14,7 +14,7 @@ namespace App\WwwModule\Presenters;
 class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 {
 
-	/** @var \Kdyby\Translation\Translator */
+	/** @var \Nette\Localization\ITranslator */
 	protected $translator;
 
 	/** @var \Nette\Http\IResponse */
@@ -48,10 +48,10 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 
 
 	/**
-	 * @param \Kdyby\Translation\Translator $translator
+	 * @param \Nette\Localization\ITranslator $translator
 	 * @param \Nette\Http\IResponse $httpResponse
 	 */
-	public function __construct(\Kdyby\Translation\Translator $translator, \Nette\Http\IResponse $httpResponse)
+	public function __construct(\Nette\Localization\ITranslator $translator, \Nette\Http\IResponse $httpResponse)
 	{
 		$this->translator = $translator;
 		$this->httpResponse = $httpResponse;
@@ -65,10 +65,11 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 	}
 
 
-	protected function createTemplate()
+	protected function createTemplate(): \Nette\Application\UI\ITemplate
 	{
+		/** @var \Nette\Bridges\ApplicationLatte\Template $template */
 		$template = parent::createTemplate();
-		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator), 'loader']);
+		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator->getDefaultLocale()), 'loader']);
 		$template->getLatte()->addFilter(null, [$this->templateHelpers, 'loader']);
 		return $template;
 	}

@@ -4,19 +4,19 @@ database:
 		user: ...
 		password: ...
 		options:
-			PDO::ATTR_EMULATE_PREPARES: false
+#			PDO::ATTR_EMULATE_PREPARES: false  # https://github.com/nette/database/issues/227
 	upcKeys:
 		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_upckeys'
 		user: ...
 		password: ...
 		options:
-			PDO::ATTR_EMULATE_PREPARES: false
+#			PDO::ATTR_EMULATE_PREPARES: false  # https://github.com/nette/database/issues/227
 	pulse:
 		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_pulse'
 		user: ...
 		password: ...
 		options:
-			PDO::ATTR_EMULATE_PREPARES: false
+#			PDO::ATTR_EMULATE_PREPARES: false  # https://github.com/nette/database/issues/227
 
 mail:
 	smtp: true
@@ -33,7 +33,8 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 		admin.*.*:
 			script-src:
 				-"'self'"
-		admin.info.php < www.*.*:
+		admin.info.php:
+			@extends: www.*.*
 			script-src:
 				- "'self'"
 		api.*.*:
@@ -60,7 +61,7 @@ parameters:
 			com: michalspacek.com.test
 
 	contact:
-		phoneNumber: 123456789
+		phoneNumber: "123456789"
 
 	encryption:
 		keys:

@@ -42,7 +42,7 @@ class TrainingStatuses extends ProtectedForm
 		}
 		$this->addStatusDate('date', 'Datum:', true);
 		$this->addSubmit('submit', 'Změnit');
-		$this->addSubmit('familiar', 'Tykat všem')->setValidationScope(false);
+		$this->addSubmit('familiar', 'Tykat všem')->setValidationScope([]);
 	}
 
 }

@@ -3,6 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use Contributte\Translation\Translator;
+use Nette\Application\IPresenterFactory;
+use Nette\Application\LinkGenerator;
+use Nette\Http\Request;
+use Nette\Localization\ITranslator;
+
 /**
  * Generates links to locales other than current.
  */
@@ -12,26 +18,34 @@ class LocaleLinkGenerator
 	/** @var string */
 	private const DEFAULT_PARAMS = '*';
 
-	/** @var \MichalSpacekCz\Application\RouterFactory */
+	/** @var RouterFactory */
 	private $routerFactory;
 
-	/** @var \Nette\Http\Request */
+	/** @var Request */
 	private $httpRequest;
 
-	/** @var \Nette\Application\IPresenterFactory */
+	/** @var IPresenterFactory */
 	private $presenterFactory;
 
+	/** @var LinkGenerator */
+	private $linkGenerator;
 
-	/**
-	 * @param \MichalSpacekCz\Application\RouterFactory $routerFactory
-	 * @param \Nette\Http\Request $httpRequest
-	 * @param \Nette\Application\IPresenterFactory $presenterFactory
-	 */
-	public function __construct(RouterFactory $routerFactory, \Nette\Http\Request $httpRequest, \Nette\Application\IPresenterFactory $presenterFactory)
-	{
+	/** @var Translator|ITranslator */
+	private $translator;
+
+
+	public function __construct(
+		RouterFactory $routerFactory,
+		Request $httpRequest,
+		IPresenterFactory $presenterFactory,
+		LinkGenerator $linkGenerator,
+		ITranslator $translator
+	) {
 		$this->routerFactory = $routerFactory;
 		$this->httpRequest = $httpRequest;
 		$this->presenterFactory = $presenterFactory;
+		$this->linkGenerator = $linkGenerator;
+		$this->translator = $translator;
 	}
 
 
@@ -45,9 +59,13 @@ class LocaleLinkGenerator
 	public function links(string $destination, array $params = array()): array
 	{
 		$links = array();
-		foreach ($this->routerFactory->getLocaleRouters() as $locale => $router) {
-			$linkGenerator = new \Nette\Application\LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
-			$links[$locale] = $linkGenerator->link($destination, $params[$locale] ?? $params[self::DEFAULT_PARAMS] ?? []);
+		foreach ($this->routerFactory->getLocaleRouters() as $locale => $routers) {
+			foreach ($routers as $router) {
+				if (count($router)) {
+					$linkGenerator = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
+					$links[$locale] = $linkGenerator->link($destination, $params[$locale] ?? $params[self::DEFAULT_PARAMS] ?? []);
+				}
+			}
 		}
 		return $links;
 	}
@@ -62,6 +80,22 @@ class LocaleLinkGenerator
 	public function defaultParams(array $params): array
 	{
 		return [self::DEFAULT_PARAMS => $params];
+	}
+
+
+	/**
+	 * Generates all URLs, including a link to the current language version.
+	 *
+	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
+	 * @param array $params of locale => [name => value]
+	 * @return array of locale => URL
+	 */
+	public function allLinks(string $destination, array $params = []): array
+	{
+		return array_merge(
+			[$this->translator->getDefaultLocale() => $this->linkGenerator->link($destination, $params)],
+			$this->links($destination, $params)
+		);
 	}
 
 }

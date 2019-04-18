@@ -219,6 +219,8 @@ class Texy extends \Netxten\Formatter\Texy
 		}
 
 		$trainingAction = ':Www:Trainings:training';
+		/** @var \Nette\Application\UI\Presenter $presenter */
+		$presenter = $this->application->getPresenter();
 
 		if (strncmp($link->URL, 'link:', 5) === 0) {
 			$args = preg_split('/[\s,]+/', substr($link->URL, 5));
@@ -226,28 +228,28 @@ class Texy extends \Netxten\Formatter\Texy
 			if ($action === $trainingAction) {
 				$args = $this->trainingLocales->getLocaleActions(reset($args))[$this->translator->getDefaultLocale()];
 			}
-			$link->URL = $this->application->getPresenter()->link("//{$action}", $args);
+			$link->URL = $presenter->link("//{$action}", $args);
 		}
 
 		// "title":[blog:post#fragment]
 		if (strncmp($link->URL, 'blog:', 5) === 0) {
 			$args = explode('#', substr($link->URL, 5));
 			$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
-			$link->URL = $this->application->getPresenter()->link("//:Www:Post:default{$fragment}", [$args[0]]);
+			$link->URL = $presenter->link("//:Www:Post:default{$fragment}", [$args[0]]);
 		}
 
 		// "title":[inhouse-training:training]
 		if (strncmp($link->URL, 'inhouse-training:', 17) === 0) {
 			$args = preg_split('/[\s,]+/', substr($link->URL, 17));
 			$args = $this->trainingLocales->getLocaleActions(reset($args))[$this->translator->getDefaultLocale()];
-			$link->URL = $this->application->getPresenter()->link('//:Www:CompanyTrainings:training', $args);
+			$link->URL = $presenter->link('//:Www:CompanyTrainings:training', $args);
 		}
 
 		if (strncmp($link->URL, 'training:', 9) === 0) {
 			$texy = $invocation->getTexy();
 			$name = substr($link->URL, 9);
 			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
-			$link->URL = $this->application->getPresenter()->link("//{$trainingAction}", $name);
+			$link->URL = $presenter->link("//{$trainingAction}", $name);
 			$el = \Texy\HtmlElement::el();
 			$el->add($texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link));
 			$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));

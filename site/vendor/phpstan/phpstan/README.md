@@ -28,9 +28,12 @@ can be checked before you run the actual line.
 &nbsp;&nbsp;&nbsp;
 <a href="https://coders.thecodingmachine.com/phpstan"><img src="https://i.imgur.com/kQhNOTP.png" alt="TheCodingMachine" width="247" height="64"></a>
 &nbsp;&nbsp;&nbsp;
-<a href="https://www.wispay.io/t/JdL" target="_blank"><img src="https://assets.wispay.io/wgt2_d_o.png" width="247" height="78"></a>
+<a href="https://packagist.com/?utm_source=phpstan&utm_medium=readme&utm_campaign=sponsorlogo"><img src="https://i.imgur.com/PmMC45f.png" alt="Private Packagist" width="326" height="64"></a>
 
 Check out [PHPStan's Patreon](https://www.patreon.com/phpstan) for sponsoring options. One-time donations [through PayPal](https://paypal.me/phpstan) are also accepted. To request an invoice, [contact me](mailto:ondrej@mirtes.cz) through e-mail.
+
+BTC: bc1qd5s06wjtf8rzag08mk3s264aekn52jze9zeapt
+<br>LTC: LSU5xLsWEfrVx1P9yJwmhziHAXikiE8xtC
 
 ## Prerequisites
 
@@ -119,6 +122,8 @@ Unofficial extensions for other frameworks and libraries are also available:
 * [Yii2](https://github.com/proget-hq/phpstan-yii2)
 * [PhpSpec](https://github.com/proget-hq/phpstan-phpspec)
 * [TYPO3](https://github.com/sascha-egerer/phpstan-typo3)
+* [moneyphp/money](https://github.com/JohnstonCode/phpstan-moneyphp)
+* [Drupal](https://github.com/mglaman/phpstan-drupal)
 
 New extensions are becoming available on a regular basis!
 
@@ -406,6 +411,8 @@ You can pass the following keywords to the `--error-format=X` parameter in order
 - `table`: Default. Grouped errors by file, colorized. For human consumption.
 - `raw`: Contains one error per line, with path to file, line number, and error description
 - `checkstyle`: Creates a checkstyle.xml compatible output. Note that you'd have to redirect output into a file in order to capture the results for later processing.
+- `json`: Creates minified .json output without whitespaces. Note that you'd have to redirect output into a file in order to capture the results for later processing.
+- `prettyJson`: Creates human readable .json output with whitespaces and indentations. Note that you'd have to redirect output into a file in order to capture the results for later processing.
 
 ## Class reflection extensions
 

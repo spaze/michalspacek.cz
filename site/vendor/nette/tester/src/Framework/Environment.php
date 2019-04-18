@@ -15,20 +15,20 @@ namespace Tester;
  */
 class Environment
 {
-	/** Should Tester use console colors? */
+	/** Should Test use console colors? */
 	public const COLORS = 'NETTE_TESTER_COLORS';
 
 	/** Test is run by Runner */
 	public const RUNNER = 'NETTE_TESTER_RUNNER';
+
+	/** Code coverage engine */
+	public const COVERAGE_ENGINE = 'NETTE_TESTER_COVERAGE_ENGINE';
 
 	/** Code coverage file */
 	public const COVERAGE = 'NETTE_TESTER_COVERAGE';
 
 	/** Thread number when run tests in multi threads */
 	public const THREAD = 'NETTE_TESTER_THREAD';
-
-	/** @var bool  used for debugging Tester itself */
-	public static $debugMode = true;
 
 	/** @var bool */
 	public static $checkAssertions = false;
@@ -49,15 +49,15 @@ class Environment
 		self::setupColors();
 		self::$obLevel = ob_get_level();
 
-		class_exists('Tester\Runner\Job');
-		class_exists('Tester\Dumper');
-		class_exists('Tester\Assert');
+		class_exists(Runner\Job::class);
+		class_exists(Dumper::class);
+		class_exists(Assert::class);
 
 		$annotations = self::getTestAnnotations();
 		self::$checkAssertions = !isset($annotations['outputmatch']) && !isset($annotations['outputmatchfile']);
 
-		if (getenv(self::COVERAGE)) {
-			CodeCoverage\Collector::start(getenv(self::COVERAGE));
+		if (getenv(self::COVERAGE) && getenv(self::COVERAGE_ENGINE)) {
+			CodeCoverage\Collector::start(getenv(self::COVERAGE), getenv(self::COVERAGE_ENGINE));
 		}
 	}
 
@@ -125,7 +125,7 @@ class Environment
 	{
 		self::removeOutputBuffers();
 		self::$checkAssertions = false;
-		echo self::$debugMode ? Dumper::dumpException($e) : "\nError: {$e->getMessage()}\n";
+		echo Dumper::dumpException($e);
 		exit($e instanceof AssertException ? Runner\Job::CODE_FAIL : Runner\Job::CODE_ERROR);
 	}
 

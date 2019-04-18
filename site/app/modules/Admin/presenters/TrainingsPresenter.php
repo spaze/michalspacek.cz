@@ -253,10 +253,9 @@ class TrainingsPresenter extends BasePresenter
 
 	public function submittedFamiliar(\Nette\Forms\Controls\SubmitButton $button)
 	{
-		$values = $button->getForm()->getValues(true);  // array_keys() does not work with ArrayHash object
 		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$total = 0;
-		foreach (array_keys($values['applications']) as $id) {
+		foreach (array_keys((array)$button->getForm()->getValues()->applications) as $id) {
 			$application = $this->trainingApplications->getApplicationById($id);
 			if (in_array($application->status, $attendedStatuses) && !$application->familiar) {
 				$this->trainingApplications->setFamiliar($id);

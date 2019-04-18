@@ -2,7 +2,8 @@ application:
 	errorPresenter: Api:ErrorGeneric
 
 translation:
-	default: en_US
+	locales:
+		default: en_US
 
 parameters:
 	domain:

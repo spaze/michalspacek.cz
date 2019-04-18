@@ -29,7 +29,7 @@ class ExportsPresenter extends BasePresenter
 	public function actionArticles(?string $param = null): void
 	{
 		$feed = $this->exports->getArticles($this->link('//this'), $param);
-		$this->lastModified($feed->getUpdated(), sha1((string)$feed), 3600);
+		$this->lastModified($feed->getUpdated(), sha1((string)$feed), '1 hour');
 		$this->sendResponse(new \Spaze\Exports\Bridges\Nette\Atom\Response($feed));
 	}
 

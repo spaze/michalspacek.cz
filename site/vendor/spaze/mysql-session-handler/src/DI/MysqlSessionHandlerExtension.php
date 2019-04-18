@@ -19,20 +19,18 @@ class MysqlSessionHandlerExtension extends CompilerExtension
 
 	public function loadConfiguration(): void
 	{
-		parent::loadConfiguration();
-
-		$config = $this->getConfig($this->defaults);
+		$this->validateConfig($this->defaults);
 
 		$builder = $this->getContainerBuilder();
 
 		$definition = $builder->addDefinition($this->prefix('sessionHandler'))
 			->setClass('Spaze\Session\MysqlSessionHandler')
-			->addSetup('setTableName', [$config['tableName']])
-			->addSetup('setLockTimeout', [$config['lockTimeout']])
-			->addSetup('setUnchangedUpdateDelay', [$config['unchangedUpdateDelay']]);
+			->addSetup('setTableName', [$this->config['tableName']])
+			->addSetup('setLockTimeout', [$this->config['lockTimeout']])
+			->addSetup('setUnchangedUpdateDelay', [$this->config['unchangedUpdateDelay']]);
 
-		if ($config['encryptionService']) {
-			$definition->addSetup('setEncryptionService', [$config['encryptionService']]);
+		if ($this->config['encryptionService']) {
+			$definition->addSetup('setEncryptionService', [$this->config['encryptionService']]);
 		}
 
 		$sessionDefinition = $builder->getDefinition('session');

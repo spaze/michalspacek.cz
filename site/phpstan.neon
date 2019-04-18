@@ -2,12 +2,10 @@ parameters:
 	autoload_directories:
 		- app
 	ignoreErrors:
-		- '#^Access to an undefined property Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
-		- '#^Call to an undefined method Nette\\[a-zA-Z0-9\\]+\\I[a-zA-Z0-9\\]+::#'
-		- '#^If condition is always true#'
-		- '#^Left side of && is always true#'
-		- '#^Negated boolean expression is always false#'
-		- '#^Ternary operator condition is always true#'
+		- '#^Call to an undefined method Nette\\Localization\\ITranslator::get(Default|Available)?Locales?\(\)#'  # Actually called on \Contributte\Translation\Translator
+		-  # https://github.com/nette/application/pull/212
+			message: '#^Parameter \#2 \$destination of method Nette\\Application\\UI\\Component::redirect\(\) expects string\|null, array<string, string> given#'
+			path: app/modules/Admin/presenters/BasePresenter.php
 
 includes:
 	- vendor/phpstan/phpstan/conf/config.level5.neon

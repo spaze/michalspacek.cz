@@ -12,6 +12,20 @@ rules:
 	- PHPStan\Rules\Comparison\UnreachableIfBranchesRule
 	- PHPStan\Rules\Comparison\UnreachableTernaryElseBranchRule
 
+parameters:
+	featureToggles:
+		deadCatchesRule: false
+		noopRule: false
+		unreachableStatement: false
+
+conditionalTags:
+	PHPStan\Rules\Exceptions\DeadCatchRule:
+		phpstan.rules.rule: %featureToggles.deadCatchesRule%
+	PHPStan\Rules\DeadCode\NoopRule:
+		phpstan.rules.rule: %featureToggles.noopRule%
+	PHPStan\Rules\DeadCode\UnreachableStatementRule:
+		phpstan.rules.rule: %featureToggles.unreachableStatement%
+
 services:
 	-
 		class: PHPStan\Rules\Classes\ImpossibleInstanceOfRule
@@ -47,3 +61,12 @@ services:
 			checkAlwaysTrueStrictComparison: %checkAlwaysTrueStrictComparison%
 		tags:
 			- phpstan.rules.rule
+
+	-
+		class: PHPStan\Rules\Exceptions\DeadCatchRule
+
+	-
+		class: PHPStan\Rules\DeadCode\NoopRule
+
+	-
+		class: PHPStan\Rules\DeadCode\UnreachableStatementRule

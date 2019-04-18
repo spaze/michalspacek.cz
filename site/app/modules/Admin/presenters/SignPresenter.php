@@ -75,7 +75,7 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	public function submittedSignIn(\MichalSpacekCz\Form\SignIn $form, $values)
 	{
-		$this->user->setExpiration('30 minutes', true);
+		$this->user->setExpiration('30 minutes', \Nette\Security\IUserStorage::CLEAR_IDENTITY);
 		try {
 			$this->user->login($values->username, $values->password);
 			\Tracy\Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');

@@ -25,10 +25,7 @@ class ErrorGenericPresenter implements \Nette\Application\IPresenter
 	}
 
 
-	/**
-	 * @return \Nette\Application\IResponse
-	 */
-	public function run(\Nette\Application\Request $request)
+	public function run(\Nette\Application\Request $request): \Nette\Application\IResponse
 	{
 		$e = $request->getParameter('exception');
 

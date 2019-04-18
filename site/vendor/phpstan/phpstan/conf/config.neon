@@ -16,6 +16,8 @@ parameters:
 	checkNullables: false
 	checkThisOnly: true
 	checkUnionTypes: false
+	checkExplicitMixedMissingReturn: false
+	checkPhpDocMissingReturn: false
 	reportMaybes: false
 	reportMaybesInMethodSignatures: false
 	reportStaticMethodSignatures: false
@@ -376,6 +378,11 @@ services:
 
 	-
 		class: PHPStan\Type\Php\ExplodeFunctionDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicFunctionReturnTypeExtension
+
+	-
+		class: PHPStan\Type\Php\FilterVarDynamicReturnTypeExtension
 		tags:
 			- phpstan.broker.dynamicFunctionReturnTypeExtension
 

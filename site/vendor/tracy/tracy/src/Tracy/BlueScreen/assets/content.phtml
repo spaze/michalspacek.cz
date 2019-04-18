@@ -14,6 +14,7 @@
  * @param  string $source
  * @param  bool $sourceIsUrl
  * @param  array $lastError
+ * @param  array $httpHeaders
  * @param  callable $dump
  * @return void
  */
@@ -273,20 +274,41 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 		</div></div>
 
 
+		<?php if (PHP_SAPI === 'cli'): ?>
+		<div class="panel">
+		<h2><a data-tracy-ref="^+" class="tracy-toggle tracy-collapsed">CLI request</a></h2>
+
+		<div class="tracy-collapsed inner">
+			<h3>Process ID <?= Helpers::escapeHtml(getmypid()) ?></h3>
+			<pre>php<?= Helpers::escapeHtml(explode('):', $source, 2)[1]) ?></pre>
+
+			<h3>Arguments</h3>
+			<div class="outer">
+			<table>
+			<?php
+			foreach ($_SERVER['argv'] as $k => $v) echo '<tr><th>', Helpers::escapeHtml($k), '</th><td>', Helpers::escapeHtml($v), "</td></tr>\n";
+			?>
+			</table>
+			</div>
+		</div></div>
+
+
+		<?php else: ?>
 		<div class="panel">
 		<h2><a data-tracy-ref="^+" class="tracy-toggle tracy-collapsed">HTTP request</a></h2>
 
 		<div class="tracy-collapsed inner">
-			<?php if (function_exists('apache_request_headers')): ?>
+			<h3>URL</h3>
+			<p><a href="<?= Helpers::escapeHtml($source) ?>"><?= Helpers::escapeHtml($source) ?></a></p>
+
 			<h3>Headers</h3>
 			<div class="outer">
 			<table class="tracy-sortable">
 			<?php
-			foreach (apache_request_headers() as $k => $v) echo '<tr><th>', Helpers::escapeHtml($k), '</th><td>', Helpers::escapeHtml($v), "</td></tr>\n";
+			foreach ($httpHeaders as $k => $v) echo '<tr><th>', Helpers::escapeHtml($k), '</th><td>', Helpers::escapeHtml($v), "</td></tr>\n";
 			?>
 			</table>
 			</div>
-			<?php endif ?>
 
 
 			<?php foreach (['_GET', '_POST', '_COOKIE'] as $name): ?>
@@ -323,6 +345,7 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 			<p><i>no headers</i></p>
 			<?php endif ?>
 		</div></div>
+		<?php endif ?>
 
 
 		<?php foreach ($bottomPanels as $panel): ?>

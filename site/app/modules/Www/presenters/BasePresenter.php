@@ -15,7 +15,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
 
 	/**
-	 * @var \Kdyby\Translation\Translator
+	 * @var \Nette\Localization\ITranslator
 	 * @inject
 	 */
 	public $translator;
@@ -94,11 +94,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	}
 
 
-	protected function createTemplate(): \Nette\Bridges\ApplicationLatte\Template
+	protected function createTemplate(): \Nette\Application\UI\ITemplate
 	{
 		/** @var \Nette\Bridges\ApplicationLatte\Template $template */
 		$template = parent::createTemplate();
-		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator), 'loader']);
+		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator->getDefaultLocale()), 'loader']);
 		$template->getLatte()->addFilter(null, [$this->templateHelpers, 'loader']);
 		return $template;
 	}

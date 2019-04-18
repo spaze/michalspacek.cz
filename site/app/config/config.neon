@@ -27,12 +27,12 @@ session:
 	cookie_secure: true
 
 translation:
-	default: cs_CZ
-	whitelist: [cs, en]
-	resolvers:
-		header: off
-		request: off
-		session: off
+	locales:
+		default: cs_CZ
+		whitelist: [cs, en]
+	localeResolvers!: []
+	dirs:
+		- %appDir%/lang
 
 subresourceIntegrity:
 	hashingAlgos:

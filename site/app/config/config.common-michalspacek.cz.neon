@@ -1,5 +1,6 @@
 translation:
-	default: cs_CZ
+	locales:
+		default: cs_CZ
 
 parameters:
 	domain:
