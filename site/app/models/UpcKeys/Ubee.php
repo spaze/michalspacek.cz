@@ -81,7 +81,7 @@ class Ubee implements RouterInterface
 		$rows = $this->database->fetchAll('SELECT mac, `key` FROM keys_ubee WHERE ssid = ?', substr($ssid, 3));
 		$result = array();
 		foreach ($rows as $row) {
-			$result[$row->mac] = $this->buildKey($row->mac, $row->key);
+			$result[$row->mac] = $this->buildKey($row->mac, (int)$row->key);
 		}
 		ksort($result);
 		return array_values($result);
