@@ -32,7 +32,7 @@ class TrainingStatuses extends ProtectedForm
 		$container = $this->addContainer('applications');
 
 		foreach ($applications as $application) {
-			$select = $container->addSelect($application->id, 'Status')
+			$select = $container->addSelect((string)$application->id, 'Status')
 				->setPrompt('- změnit na -')
 				->setItems($application->childrenStatuses, false);
 			if (empty($application->childrenStatuses)) {
