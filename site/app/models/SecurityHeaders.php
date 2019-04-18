@@ -3,6 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\RouterFactory;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
+use Nette\Http\UrlImmutable;
+use Spaze\ContentSecurityPolicy\Config;
+
 /**
  * SecurityHeaders service.
  *
@@ -18,16 +25,16 @@ class SecurityHeaders
 	/** @var string */
 	protected $rootDomain;
 
-	/** @var \Nette\Http\IRequest */
+	/** @var IRequest */
 	protected $httpRequest;
 
-	/** @var \Nette\Http\IResponse */
+	/** @var IResponse */
 	protected $httpResponse;
 
-	/** @var \Spaze\ContentSecurityPolicy\Config */
+	/** @var Config */
 	protected $contentSecurityPolicy;
 
-	/** @var \MichalSpacekCz\Application\RouterFactory */
+	/** @var RouterFactory */
 	private $routerFactory;
 
 	/** @var string */
@@ -39,24 +46,22 @@ class SecurityHeaders
 	/** @var array<string|string[]> */
 	private $featurePolicies;
 
+	/** @var LocaleLinkGenerator */
+	private $localeLinkGenerator;
 
-	/**
-	 * @param \Nette\Http\IRequest $httpRequest
-	 * @param \Nette\Http\IResponse $httpResponse
-	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
-	 * @param \MichalSpacekCz\Application\RouterFactory $routerFactory
-	 */
+
 	public function __construct(
-		\Nette\Http\IRequest $httpRequest,
-		\Nette\Http\IResponse $httpResponse,
-		\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy,
-		\MichalSpacekCz\Application\RouterFactory $routerFactory
-	)
-	{
+		IRequest $httpRequest,
+		IResponse $httpResponse,
+		Config $contentSecurityPolicy,
+		RouterFactory $routerFactory,
+		LocaleLinkGenerator $localeLinkGenerator
+	) {
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 		$this->routerFactory = $routerFactory;
+		$this->localeLinkGenerator = $localeLinkGenerator;
 	}
 
 
@@ -139,21 +144,35 @@ class SecurityHeaders
 
 
 	/**
-	 * Generates Access-Control-Allow-Origin header, if there's a Origin request header.
+	 * Generates Access-Control-Allow-Origin header, if there's a Origin request header and it matches any source link.
 	 *
-	 * @param string $scheme URL scheme
-	 * @param string $host URL host
+	 * @param string $source URL to allow in format "[[[module:]presenter:]action] [#fragment]"
 	 */
-	public function accessControlAllowOrigin(string $scheme, string $host): void
+	public function accessControlAllowOrigin(string $source): void
 	{
+		$this->localeLinkGenerator->allLinks($source);
 		$origin = $this->httpRequest->getHeader('Origin');
 		if ($origin !== null) {
-			foreach ($this->routerFactory->getLocaleRootDomainMapping() as $tld) {
-				if ("{$scheme}://{$host}.{$tld}" === $origin) {
+			foreach ($this->getOrigins($source) as $from) {
+				if ($from === $origin) {
 					$this->httpResponse->setHeader('Access-Control-Allow-Origin', $origin);
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * @param string $link
+	 * @return string[]
+	 */
+	private function getOrigins(string $link): array
+	{
+		$origins = $this->localeLinkGenerator->allLinks($link);
+		foreach ($origins as &$url) {
+			$url = (new UrlImmutable($url))->getHostUrl();
+		}
+		return $origins;
 	}
 
 }

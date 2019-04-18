@@ -43,7 +43,7 @@ class CompanyPresenter extends \App\WwwModule\Presenters\BasePresenter
 			throw new \Nette\Application\BadRequestException('No country or companyId specified', \Nette\Http\IResponse::S404_NOT_FOUND);
 		}
 
-		$this->securityHeaders->accessControlAllowOrigin('https', \MichalSpacekCz\Application\RouterFactory::HOST_WWW);
+		$this->securityHeaders->accessControlAllowOrigin('Www:Homepage:');
 
 		try {
 			$info = $this->companyInfo->getData($country, $companyId);
