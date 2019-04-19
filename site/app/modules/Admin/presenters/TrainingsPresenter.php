@@ -1,7 +1,27 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
 
-use MichalSpacekCz\Training;
+use DateTime;
+use MichalSpacekCz\Form\TrainingApplicationAdmin;
+use MichalSpacekCz\Form\TrainingApplicationMultiple;
+use MichalSpacekCz\Form\TrainingDate;
+use MichalSpacekCz\Form\TrainingFile;
+use MichalSpacekCz\Form\TrainingReview;
+use MichalSpacekCz\Form\TrainingStatuses;
+use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Files;
+use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Venues;
+use Nette\Application\BadRequestException;
+use Nette\Database\Row;
+use Nette\Forms\Controls\SubmitButton;
+use Nette\Http\IResponse;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 /**
@@ -13,25 +33,25 @@ use Nette\Utils\Html;
 class TrainingsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Statuses */
+	/** @var Statuses */
 	protected $trainingStatuses;
 
-	/** @var \MichalSpacekCz\Training\Trainings */
+	/** @var Trainings */
 	protected $trainings;
 
-	/** @var \MichalSpacekCz\Training\Venues */
+	/** @var Venues */
 	protected $trainingVenues;
 
-	/** @var \MichalSpacekCz\Training\Files */
+	/** @var Files */
 	protected $trainingFiles;
 
-	/** @var \MichalSpacekCz\Training\Reviews */
+	/** @var Reviews */
 	protected $trainingReviews;
 
 	/** @var array */
@@ -40,39 +60,32 @@ class TrainingsPresenter extends BasePresenter
 	/** @var array */
 	private $applicationIdsAttended;
 
-	/** @var \Nette\Database\Row */
+	/** @var Row */
 	private $application;
 
 	private $applicationId;
 
-	/** @var \Nette\Database\Row */
+	/** @var Row */
 	private $review;
 
-	/** @var \Nette\Database\Row */
+	/** @var Row */
 	private $training;
 
+	/** @var integer|null */
 	private $dateId;
 
+	/** @var integer */
 	private $redirectParam;
 
 
-	/**
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
-	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
-	 * @param \MichalSpacekCz\Training\Files $trainingFiles
-	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
-	 */
 	public function __construct(
-		Training\Applications $trainingApplications,
-		Training\Dates $trainingDates,
-		Training\Statuses $trainingStatuses,
-		Training\Trainings $trainings,
-		Training\Venues $trainingVenues,
-		Training\Files $trainingFiles,
-		Training\Reviews $trainingReviews
+		Applications $trainingApplications,
+		Dates $trainingDates,
+		Statuses $trainingStatuses,
+		Trainings $trainings,
+		Venues $trainingVenues,
+		Files $trainingFiles,
+		Reviews $trainingReviews
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
@@ -86,17 +99,13 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionDate($param)
+	public function actionDate(int $param): void
 	{
 		$this->dateId = $param;
-		if (!$this->dateId) {
-			throw new \Nette\Application\BadRequestException('Missing date id', \Nette\Http\IResponse::S404_NOT_FOUND);
-		}
-
 		$this->redirectParam = $this->dateId;
 		$this->training = $this->trainingDates->get($this->dateId);
 		if (!$this->training) {
-			throw new \Nette\Application\BadRequestException("Date id {$param} does not exist, yet", \Nette\Http\IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Date id {$param} does not exist, yet", IResponse::S404_NOT_FOUND);
 		}
 		$validCount = 0;
 		$applications = $discarded = [];
@@ -129,7 +138,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionFiles($param)
+	public function actionFiles(int $param): void
 	{
 		$this->applicationId = $param;
 		$this->redirectParam = $this->applicationId;
@@ -152,7 +161,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionReview($param)
+	public function actionReview(int $param): void
 	{
 		$this->review = $this->trainingReviews->getReview($param);
 
@@ -168,12 +177,12 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionApplication($param)
+	public function actionApplication(int $param): void
 	{
 		$this->applicationId = $param;
 		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
 		if (!$this->application) {
-			throw new \Nette\Application\BadRequestException("No application with id {$this->applicationId}", \Nette\Http\IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("No application with id {$this->applicationId}", IResponse::S404_NOT_FOUND);
 		}
 
 		if (isset($this->application->dateId)) {
@@ -199,13 +208,13 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->sourceName    = $this->application->sourceName;
 		$this->template->companyId     = $this->application->companyId;
 		$this->template->attended      = in_array($this->application->status, $this->trainingStatuses->getAttendedStatuses());
-		$this->template->toBeInvited   = in_array($this->application->status, $this->trainingStatuses->getParentStatuses(\MichalSpacekCz\Training\Statuses::STATUS_INVITED));
+		$this->template->toBeInvited   = in_array($this->application->status, $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
 		$this->template->accessToken   = $this->application->accessToken;
 		$this->template->history       = $this->trainingStatuses->getStatusHistory($this->applicationId);
 	}
 
 
-	public function actionPreliminary($param)
+	public function actionPreliminary(): void
 	{
 		$this->template->pageTitle = 'Předběžné přihlášky';
 		$this->template->preliminaryApplications = $this->trainingApplications->getPreliminary();
@@ -213,7 +222,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$trainings = $this->trainings->getAllTrainings();
 		foreach ($trainings as $training) {
@@ -225,21 +234,21 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->template->pageTitle = 'Školení';
 		$this->template->trainings = $trainings;
-		$this->template->now = new \DateTime();
+		$this->template->now = new DateTime();
 		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 	}
 
 
-	protected function createComponentStatuses($formName)
+	protected function createComponentStatuses(string $formName): TrainingStatuses
 	{
-		$form = new \MichalSpacekCz\Form\TrainingStatuses($this, $formName, $this->applications, $this->translator);
+		$form = new TrainingStatuses($this, $formName, $this->applications, $this->translator);
 		$form->getComponent('submit')->onClick[] = [$this, 'submittedStatuses'];
 		$form->getComponent('familiar')->onClick[] = [$this, 'submittedFamiliar'];
 		return $form;
 	}
 
 
-	public function submittedStatuses(\Nette\Forms\Controls\SubmitButton $button)
+	public function submittedStatuses(SubmitButton $button): void
 	{
 		$values = $button->getForm()->getValues();
 		foreach ($values->applications as $id => $status) {
@@ -251,7 +260,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedFamiliar(\Nette\Forms\Controls\SubmitButton $button)
+	public function submittedFamiliar(SubmitButton $button): void
 	{
 		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$total = 0;
@@ -277,7 +286,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplications($formName)
+	protected function createComponentApplications(string $formName): TrainingApplicationMultiple
 	{
 		$statuses = array();
 		foreach ($this->trainingStatuses->getInitialStatuses() as $status) {
@@ -286,13 +295,13 @@ class TrainingsPresenter extends BasePresenter
 
 		$applications = $this->request->getPost('applications');
 		$count = (is_array($applications) ? count($applications) : 1);
-		$form = new \MichalSpacekCz\Form\TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingApplications, $this->translator);
+		$form = new TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingApplications, $this->translator);
 		$form->onSuccess[] = [$this, 'submittedApplications'];
 		return $form;
 	}
 
 
-	public function submittedApplications(\MichalSpacekCz\Form\TrainingApplicationMultiple $form, $values)
+	public function submittedApplications(TrainingApplicationMultiple $form, ArrayHash $values): void
 	{
 		foreach ($values->applications as $application) {
 			$this->trainingApplications->insertApplication(
@@ -317,16 +326,16 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditReview($formName)
+	protected function createComponentEditReview(string $formName): TrainingReview
 	{
-		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName);
+		$form = new TrainingReview($this, $formName);
 		$form->setReview($this->review);
 		$form->onSuccess[] = [$this, 'submittedEditReview'];
 		return $form;
 	}
 
 
-	public function submittedEditReview(\MichalSpacekCz\Form\TrainingReview $form, $values)
+	public function submittedEditReview(TrainingReview $form, ArrayHash $values): void
 	{
 		$this->trainingReviews->updateReview(
 			$this->review->reviewId,
@@ -344,7 +353,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddReview($formName)
+	protected function createComponentAddReview(string $formName): TrainingReview
 	{
 		$reviewApplicationNames = [];
 		foreach ($this->trainingReviews->getReviewsByDateId($this->dateId) as $review) {
@@ -369,13 +378,13 @@ class TrainingsPresenter extends BasePresenter
 			}
 		}
 
-		$form = new \MichalSpacekCz\Form\TrainingReview($this, $formName, $applications);
+		$form = new TrainingReview($this, $formName, $applications);
 		$form->onSuccess[] = [$this, 'submittedAddReview'];
 		return $form;
 	}
 
 
-	public function submittedAddReview(\MichalSpacekCz\Form\TrainingReview $form, $values)
+	public function submittedAddReview(TrainingReview $form, $values): void
 	{
 		$this->trainingReviews->addReview(
 			$this->dateId,
@@ -391,16 +400,16 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication($formName)
+	protected function createComponentApplication(string $formName): TrainingApplicationAdmin
 	{
-		$form = new \MichalSpacekCz\Form\TrainingApplicationAdmin($this, $formName, $this->trainingApplications, $this->trainingDates, $this->translator);
+		$form = new TrainingApplicationAdmin($this, $formName, $this->trainingApplications, $this->trainingDates, $this->translator);
 		$form->setApplication($this->application);
 		$form->onSuccess[] = [$this, 'submittedApplication'];
 		return $form;
 	}
 
 
-	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplicationAdmin $form, $values)
+	public function submittedApplication(TrainingApplicationAdmin $form, $values): void
 	{
 		$this->trainingApplications->updateApplicationData(
 			$this->applicationId,
@@ -427,20 +436,20 @@ class TrainingsPresenter extends BasePresenter
 		if (isset($this->dateId) || isset($values->date)) {
 			$this->redirect('date', $values->date ?? $this->dateId);
 		} else {
-			$this->redirect('preliminary', $this->applicationId);
+			$this->redirect('preliminary');
 		}
 	}
 
 
-	protected function createComponentFile($formName)
+	protected function createComponentFile(string $formName): TrainingFile
 	{
-		$form = new \MichalSpacekCz\Form\TrainingFile($this, $formName);
+		$form = new TrainingFile($this, $formName);
 		$form->onSuccess[] = [$this, 'submittedFile'];
 		return $form;
 	}
 
 
-	public function submittedFile(\MichalSpacekCz\Form\TrainingFile $form, $values)
+	public function submittedFile(TrainingFile $form, ArrayHash $values): void
 	{
 		if ($values->file->isOk()) {
 			$name = $this->trainingFiles->addFile($this->training, $values->file, $this->applicationIdsAttended);
@@ -457,16 +466,16 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentDate($formName)
+	protected function createComponentDate(string $formName): TrainingDate
 	{
-		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
+		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
 		$form->setTrainingDate($this->training);
 		$form->onSuccess[] = [$this, 'submittedDate'];
 		return $form;
 	}
 
 
-	public function submittedDate(\MichalSpacekCz\Form\TrainingDate $form, $values)
+	public function submittedDate(TrainingDate $form, ArrayHash $values): void
 	{
 		$this->trainingDates->update(
 			$this->dateId,
@@ -485,15 +494,15 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddDate($formName)
+	protected function createComponentAddDate(string $formName): TrainingDate
 	{
-		$form = new \MichalSpacekCz\Form\TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
+		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
 		$form->onSuccess[] = [$this, 'submittedAddDate'];
 		return $form;
 	}
 
 
-	public function submittedAddDate(\MichalSpacekCz\Form\TrainingDate $form, $values)
+	public function submittedAddDate(TrainingDate $form, ArrayHash $values): void
 	{
 		$this->trainingDates->add(
 			$values->training,

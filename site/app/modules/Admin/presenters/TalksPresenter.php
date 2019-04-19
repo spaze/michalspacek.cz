@@ -3,7 +3,20 @@ declare(strict_types = 1);
 
 namespace App\AdminModule\Presenters;
 
-use \Nette\Utils\Html;
+use MichalSpacekCz\Embed;
+use MichalSpacekCz\Form\Talk;
+use MichalSpacekCz\Form\TalkSlides;
+use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Talks;
+use Nette\Application\BadRequestException;
+use Nette\Application\LinkGenerator;
+use Nette\Database\Row;
+use Nette\Http\FileUpload;
+use Nette\Http\IResponse;
+use Nette\Utils\ArrayHash;
+use Nette\Utils\Html;
+use RuntimeException;
+use UnexpectedValueException;
 
 /**
  * Talks presenter.
@@ -14,22 +27,22 @@ use \Nette\Utils\Html;
 class TalksPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Talks */
+	/** @var Talks */
 	protected $talks;
 
-	/** @var \Nette\Database\Row */
+	/** @var Row */
 	private $talk;
 
-	/** @var \Nette\Database\Row[] */
+	/** @var Row[] */
 	private $slides;
 
-	/** @var \MichalSpacekCz\Embed */
+	/** @var Embed */
 	protected $embed;
 
-	/** @var \Nette\Application\LinkGenerator */
+	/** @var LinkGenerator */
 	protected $linkGenerator;
 
 	/** @var integer */
@@ -39,18 +52,7 @@ class TalksPresenter extends BasePresenter
 	private $maxSlideUploads;
 
 
-	/**
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Talks $talks
-	 * @param \Nette\Application\LinkGenerator $linkGenerator
-	 * @param \MichalSpacekCz\Embed $embed
-	 */
-	public function __construct(
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Talks $talks,
-		\Nette\Application\LinkGenerator $linkGenerator,
-		\MichalSpacekCz\Embed $embed
-	)
+	public function __construct(Texy $texyFormatter, Talks $talks, LinkGenerator $linkGenerator, Embed $embed)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;
@@ -72,8 +74,8 @@ class TalksPresenter extends BasePresenter
 	{
 		try {
 			$this->talk = $this->talks->getById((int)$param);
-		} catch (\RuntimeException $e) {
-			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\IResponse::S404_NOT_FOUND);
+		} catch (RuntimeException $e) {
+			throw new BadRequestException($e->getMessage(), IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
@@ -86,8 +88,8 @@ class TalksPresenter extends BasePresenter
 		try {
 			$this->talk = $this->talks->getById((int)$param);
 			$this->slides = $this->talks->getSlides($this->talk->talkId);
-		} catch (\RuntimeException $e) {
-			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\IResponse::S404_NOT_FOUND);
+		} catch (RuntimeException $e) {
+			throw new BadRequestException($e->getMessage(), IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.admin.talkslides', $this->talk);
@@ -104,16 +106,16 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditTalk(string $formName)
+	protected function createComponentEditTalk(string $formName): Talk
 	{
-		$form = new \MichalSpacekCz\Form\Talk($this, $formName, (string)$this->talk->action, $this->talks);
+		$form = new Talk($this, $formName, (string)$this->talk->action, $this->talks);
 		$form->setTalk($this->talk);
 		$form->onSuccess[] = [$this, 'submittedEditTalk'];
 		return $form;
 	}
 
 
-	public function submittedEditTalk(\MichalSpacekCz\Form\Talk $form, \Nette\Utils\ArrayHash $values): void
+	public function submittedEditTalk(Talk $form, ArrayHash $values): void
 	{
 		$this->talks->update(
 			$this->talk->talkId,
@@ -145,15 +147,15 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddTalk(string $formName)
+	protected function createComponentAddTalk(string $formName): Talk
 	{
-		$form = new \MichalSpacekCz\Form\Talk($this, $formName, null, $this->talks);
+		$form = new Talk($this, $formName, null, $this->talks);
 		$form->onSuccess[] = [$this, 'submittedAddTalk'];
 		return $form;
 	}
 
 
-	public function submittedAddTalk(\MichalSpacekCz\Form\Talk $form, \Nette\Utils\ArrayHash $values): void
+	public function submittedAddTalk(Talk $form, ArrayHash $values): void
 	{
 		$this->talks->add(
 			$values->action,
@@ -180,34 +182,34 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSlides(string $formName)
+	protected function createComponentSlides(string $formName): TalkSlides
 	{
-		$form = new \MichalSpacekCz\Form\TalkSlides($this, $formName, $this->slides, $this->newCount, $this->talks);
+		$form = new TalkSlides($this, $formName, $this->slides, $this->newCount, $this->talks);
 		$form->onSuccess[] = [$this, 'submittedSlides'];
 		$form->onValidate[] = [$this, 'validateSlides'];
 		return $form;
 	}
 
 
-	public function submittedSlides(\MichalSpacekCz\Form\TalkSlides $form, \Nette\Utils\ArrayHash $values): void
+	public function submittedSlides(TalkSlides $form, ArrayHash $values): void
 	{
 		try {
 			$this->talks->saveSlides($this->talk->talkId, $this->slides, $values);
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.slideadded'));
-		} catch (\UnexpectedValueException $e) {
+		} catch (UnexpectedValueException $e) {
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.duplicatealias', [$e->getCode()]), 'error');
 		}
 		$this->redirect('Talks:slides', $this->talk->talkId);
 	}
 
 
-	public function validateSlides(\MichalSpacekCz\Form\TalkSlides $form)
+	public function validateSlides(TalkSlides $form): void
 	{
 		// Check whether max allowed file uploads has been reached
 		$uploaded = 0;
 		$files = $this->request->getFiles();
 		array_walk_recursive($files, function ($item) use (&$uploaded) {
-			if ($item instanceof \Nette\Http\FileUpload) {
+			if ($item instanceof FileUpload) {
 				$uploaded++;
 			}
 		});
@@ -216,6 +218,5 @@ class TalksPresenter extends BasePresenter
 			$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [(string)$this->maxSlideUploads]));
 		}
 	}
-
 
 }

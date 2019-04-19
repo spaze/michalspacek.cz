@@ -1,7 +1,17 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
 
-use MichalSpacekCz\Training;
+use MichalSpacekCz\Form\TrainingMailsOutbox;
+use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Mails;
+use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Vat;
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Database\Row;
+use Nette\Utils\ArrayHash;
+use stdClass;
 
 /**
  * Emails presenter.
@@ -12,34 +22,23 @@ use MichalSpacekCz\Training;
 class EmailsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\Training\Mails */
+	/** @var Mails */
 	protected $trainingMails;
 
-	/** @var \MichalSpacekCz\Training\Statuses */
+	/** @var Statuses */
 	protected $trainingStatuses;
 
-	/** @var \MichalSpacekCz\Vat */
+	/** @var Vat */
 	protected $vat;
 
-	/** @var \Nette\Database\Row[] */
+	/** @var Row[] */
 	private $applications;
 
 
-	/**
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
-	 * @param \MichalSpacekCz\Training\Mails $trainingMails
-	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
-	 * @param \MichalSpacekCz\Vat $vat
-	 */
-	public function __construct(
-		Training\Applications $trainingApplications,
-		Training\Mails $trainingMails,
-		Training\Statuses $trainingStatuses,
-		\MichalSpacekCz\Vat $vat
-	)
+	public function __construct(Applications $trainingApplications, Mails $trainingMails, Statuses $trainingStatuses, Vat $vat)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
@@ -49,7 +48,7 @@ class EmailsPresenter extends BasePresenter
 	}
 
 
-	public function actionDefault()
+	public function actionDefault(): void
 	{
 		$this->template->pageTitle = 'E-maily k odeslání';
 		$this->applications = $this->trainingMails->getApplications();
@@ -57,38 +56,39 @@ class EmailsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentMails($formName)
+	protected function createComponentMails($formName): TrainingMailsOutbox
 	{
-		$form = new \MichalSpacekCz\Form\TrainingMailsOutbox($this, $formName, $this->applications);
+		$form = new TrainingMailsOutbox($this, $formName, $this->applications);
 		$form->onSuccess[] = [$this, 'submittedMails'];
+		return $form;
 	}
 
 
-	public function submittedMails(\MichalSpacekCz\Form\TrainingMailsOutbox $form, \Nette\Utils\ArrayHash $values)
+	public function submittedMails(TrainingMailsOutbox $form, ArrayHash $values): void
 	{
 		$sent = 0;
-		/** @var \stdClass $data */
+		/** @var stdClass $data */
 		foreach ($values->applications as $id => $data) {
 			if (empty($data->send) || !isset($this->applications[$id])) {
 				continue;
 			}
-			/** @var \Nette\Bridges\ApplicationLatte\Template $template */
+			/** @var Template $template */
 			$template = $this->createTemplate();
 			$additional = trim($data->additional);
 
-			if ($this->applications[$id]->nextStatus === Training\Statuses::STATUS_INVITED) {
+			if ($this->applications[$id]->nextStatus === Statuses::STATUS_INVITED) {
 				$this->trainingMails->sendInvitation($this->applications[$id], $template, $additional);
-				$this->trainingStatuses->updateStatus($id, Training\Statuses::STATUS_INVITED);
+				$this->trainingStatuses->updateStatus($id, Statuses::STATUS_INVITED);
 				$sent++;
 			}
 
-			if ($this->applications[$id]->nextStatus === Training\Statuses::STATUS_MATERIALS_SENT) {
+			if ($this->applications[$id]->nextStatus === Statuses::STATUS_MATERIALS_SENT) {
 				$this->trainingMails->sendMaterials($this->applications[$id], $template, $data->feedbackRequest, $additional);
-				$this->trainingStatuses->updateStatus($id, Training\Statuses::STATUS_MATERIALS_SENT);
+				$this->trainingStatuses->updateStatus($id, Statuses::STATUS_MATERIALS_SENT);
 				$sent++;
 			}
 
-			if (in_array($this->applications[$id]->nextStatus, [Training\Statuses::STATUS_INVOICE_SENT, Training\Statuses::STATUS_INVOICE_SENT_AFTER])) {
+			if (in_array($this->applications[$id]->nextStatus, [Statuses::STATUS_INVOICE_SENT, Statuses::STATUS_INVOICE_SENT_AFTER])) {
 				if ($data->invoice->isOk()) {
 					$this->trainingApplications->updateApplicationInvoiceData($id, $data->invoiceId);
 					$this->applications[$id]->invoiceId = $data->invoiceId;
@@ -98,9 +98,9 @@ class EmailsPresenter extends BasePresenter
 				}
 			}
 
-			if ($this->applications[$id]->nextStatus === Training\Statuses::STATUS_REMINDED) {
+			if ($this->applications[$id]->nextStatus === Statuses::STATUS_REMINDED) {
 				$this->trainingMails->sendReminder($this->applications[$id], $template, $additional);
-				$this->trainingStatuses->updateStatus($id, Training\Statuses::STATUS_REMINDED);
+				$this->trainingStatuses->updateStatus($id, Statuses::STATUS_REMINDED);
 				$sent++;
 			}
 		}

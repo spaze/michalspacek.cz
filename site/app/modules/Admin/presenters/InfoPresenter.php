@@ -1,5 +1,9 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
+
+use Nette\Utils\Html;
 
 /**
  * Info presenter.
@@ -10,7 +14,7 @@ namespace App\AdminModule\Presenters;
 class InfoPresenter extends BasePresenter
 {
 
-	public function renderPhp()
+	public function renderPhp(): void
 	{
 		ob_start();
 		phpinfo();
@@ -19,7 +23,7 @@ class InfoPresenter extends BasePresenter
 		$info = str_replace('style="color: #', 'class="color-', $info);
 
 		$this->template->pageTitle = 'phpinfo()';
-		$this->template->phpinfo = \Nette\Utils\Html::el()->setHtml($info);
+		$this->template->phpinfo = Html::el()->setHtml($info);
 	}
 
 }

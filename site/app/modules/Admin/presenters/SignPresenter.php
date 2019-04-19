@@ -1,5 +1,15 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
+
+use App\WwwModule\Presenters\BasePresenter;
+use MichalSpacekCz\Form\SignIn;
+use MichalSpacekCz\User\Manager;
+use Nette\Security\AuthenticationException;
+use Nette\Security\IUserStorage;
+use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * Sign in/out presenter.
@@ -7,13 +17,13 @@ namespace App\AdminModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
+class SignPresenter extends BasePresenter
 {
 
 	/** @persistent */
 	public $backlink = '';
 
-	/** @var \MichalSpacekCz\User\Manager */
+	/** @var Manager */
 	protected $authenticator;
 
 	/** @var string[] */
@@ -22,23 +32,20 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 	];
 
 
-	/**
-	 * @param \MichalSpacekCz\User\Manager $authenticator
-	 */
-	public function __construct(\MichalSpacekCz\User\Manager $authenticator)
+	public function __construct(Manager $authenticator)
 	{
 		$this->authenticator = $authenticator;
 		parent::__construct();
 	}
 
 
-	public function actionDefault()
+	public function actionDefault(): void
 	{
 		$this->redirect('in');
 	}
 
 
-	public function actionKnockKnock($param)
+	public function actionKnockKnock(string $param): void
 	{
 		if ($this->authenticator->verifyReturningUser($param)) {
 			$this->authenticator->setReturningUser($param);
@@ -48,7 +55,7 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 	}
 
 
-	public function actionIn()
+	public function actionIn(): void
 	{
 		if (!$this->authenticator->isReturningUser()) {
 			$this->forward('Honeypot:signIn');
@@ -65,20 +72,20 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 	}
 
 
-	protected function createComponentSignIn($formName)
+	protected function createComponentSignIn(string $formName): SignIn
 	{
-		$form = new \MichalSpacekCz\Form\SignIn($this, $formName);
+		$form = new SignIn($this, $formName);
 		$form->onSuccess[] = [$this, 'submittedSignIn'];
 		return $form;
 	}
 
 
-	public function submittedSignIn(\MichalSpacekCz\Form\SignIn $form, $values)
+	public function submittedSignIn(SignIn $form, ArrayHash $values): void
 	{
-		$this->user->setExpiration('30 minutes', \Nette\Security\IUserStorage::CLEAR_IDENTITY);
+		$this->user->setExpiration('30 minutes', IUserStorage::CLEAR_IDENTITY);
 		try {
 			$this->user->login($values->username, $values->password);
-			\Tracy\Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
+			Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
 			if ($values->remember) {
 				$this->authenticator->storePermanentLogin($this->user);
 			} else {
@@ -86,14 +93,14 @@ class SignPresenter extends \App\WwwModule\Presenters\BasePresenter
 			}
 			$this->restoreRequest($this->backlink);
 			$this->redirect('Homepage:');
-		} catch (\Nette\Security\AuthenticationException $e) {
-			\Tracy\Debugger::log("Failed sign-in attempt: {$e->getMessage()} ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
+		} catch (AuthenticationException $e) {
+			Debugger::log("Failed sign-in attempt: {$e->getMessage()} ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
 			$form->addError('Špatné uživatelské jméno nebo heslo');
 		}
 	}
 
 
-	public function actionOut()
+	public function actionOut(): void
 	{
 		$this->authenticator->clearPermanentLogin($this->user);
 		$this->user->logout();

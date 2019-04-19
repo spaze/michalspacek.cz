@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace App\AdminModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter as WwwBasePresenter;
 use Spaze\Session\MysqlSessionHandler;
 
 /**
@@ -11,7 +12,7 @@ use Spaze\Session\MysqlSessionHandler;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
+abstract class BasePresenter extends WwwBasePresenter
 {
 
 	/** @var MysqlSessionHandler */
@@ -24,7 +25,7 @@ abstract class BasePresenter extends \App\WwwModule\Presenters\BasePresenter
 	 * @internal
 	 * @param MysqlSessionHandler $sessionHandler
 	 */
-	public function injectSessionHandler(MysqlSessionHandler $sessionHandler)
+	public function injectSessionHandler(MysqlSessionHandler $sessionHandler): void
 	{
 		$this->sessionHandler = $sessionHandler;
 	}

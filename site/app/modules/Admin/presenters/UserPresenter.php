@@ -5,6 +5,9 @@ namespace App\AdminModule\Presenters;
 
 use MichalSpacekCz\Form\ChangePassword;
 use MichalSpacekCz\Form\RegenerateTokens;
+use MichalSpacekCz\User\Manager;
+use Nette\Http\Session;
+use Nette\Utils\ArrayHash;
 
 /**
  * User presenter.
@@ -15,18 +18,14 @@ use MichalSpacekCz\Form\RegenerateTokens;
 class UserPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\User\Manager */
+	/** @var Manager */
 	protected $authenticator;
 
-	/** @var \Nette\Http\Session */
+	/** @var Session */
 	protected $sessionHandler;
 
 
-	/**
-	 * @param \MichalSpacekCz\User\Manager $authenticator
-	 * @param \Nette\Http\Session $sessionHandler
-	 */
-	public function __construct(\MichalSpacekCz\User\Manager $authenticator, \Nette\Http\Session $sessionHandler)
+	public function __construct(Manager $authenticator, Session $sessionHandler)
 	{
 		$this->authenticator = $authenticator;
 		$this->sessionHandler = $sessionHandler;
@@ -48,7 +47,7 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	public function submittedChangePassword(ChangePassword $form, $values): void
+	public function submittedChangePassword(ChangePassword $form, ArrayHash $values): void
 	{
 		$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
 		$this->redirect('Homepage:');
@@ -69,7 +68,7 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	public function submittedRegenerateTokens(RegenerateTokens $form, \Nette\Utils\ArrayHash $values): void
+	public function submittedRegenerateTokens(RegenerateTokens $form, ArrayHash $values): void
 	{
 		if ($values->session) {
 			$this->sessionHandler->regenerateId();

@@ -1,5 +1,15 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
+
+use MichalSpacekCz\Form\Interview;
+use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Interviews;
+use Nette\Application\BadRequestException;
+use Nette\Database\Row;
+use Nette\Http\IResponse;
+use Nette\Utils\ArrayHash;
 
 /**
  * Interviews presenter.
@@ -10,24 +20,17 @@ namespace App\AdminModule\Presenters;
 class InterviewsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Interviews */
+	/** @var Interviews */
 	protected $interviews;
 
-	/** @var \Nette\Database\Row */
+	/** @var Row */
 	private $interview;
 
 
-	/**
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Interviews $interviews
-	 */
-	public function __construct(
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Interviews $interviews
-	)
+	public function __construct(Texy $texyFormatter, Interviews $interviews)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->interviews = $interviews;
@@ -35,18 +38,18 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.interviews');
 		$this->template->interviews = $this->interviews->getAll();
 	}
 
 
-	public function actionInterview($param)
+	public function actionInterview(int $param): void
 	{
 		$this->interview = $this->interviews->getById($param);
 		if (!$this->interview) {
-			throw new \Nette\Application\BadRequestException("Interview id {$param} does not exist, yet", \Nette\Http\IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Interview id {$param} does not exist, yet", IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->title)]);
@@ -54,16 +57,16 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditInterview($formName)
+	protected function createComponentEditInterview(string $formName): Interview
 	{
-		$form = new \MichalSpacekCz\Form\Interview($this, $formName);
+		$form = new Interview($this, $formName);
 		$form->setInterview($this->interview);
 		$form->onSuccess[] = [$this, 'submittedEditInterview'];
 		return $form;
 	}
 
 
-	public function submittedEditInterview(\MichalSpacekCz\Form\Interview $form, $values)
+	public function submittedEditInterview(Interview $form, ArrayHash $values): void
 	{
 		$this->interviews->update(
 			$this->interview->interviewId,
@@ -84,15 +87,15 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddInterview($formName)
+	protected function createComponentAddInterview(string $formName): Interview
 	{
-		$form = new \MichalSpacekCz\Form\Interview($this, $formName);
+		$form = new Interview($this, $formName);
 		$form->onSuccess[] = [$this, 'submittedAddInterview'];
 		return $form;
 	}
 
 
-	public function submittedAddInterview(\MichalSpacekCz\Form\Interview $form, $values)
+	public function submittedAddInterview(Interview $form, ArrayHash $values): void
 	{
 		$this->interviews->add(
 			$values->action,

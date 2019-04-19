@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace App\AdminModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter;
 use MichalSpacekCz\Form\SignInHoneypot;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -14,7 +15,7 @@ use Tracy\Debugger;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HoneypotPresenter extends \App\WwwModule\Presenters\BasePresenter
+class HoneypotPresenter extends BasePresenter
 {
 
 	public function actionSignIn(): void

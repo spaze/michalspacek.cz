@@ -3,25 +3,27 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Pulse;
 
+use MichalSpacekCz\Form\Controls\Date;
+use MichalSpacekCz\Form\ProtectedForm;
+use MichalSpacekCz\Pulse\Companies;
+use MichalSpacekCz\Pulse\Passwords;
+use MichalSpacekCz\Pulse\Sites;
+use Nette\ComponentModel\IContainer;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\TextInput;
+
 /**
  * Passwords storages form.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
+class PasswordsStorages extends ProtectedForm
 {
 
-	use \MichalSpacekCz\Form\Controls\Date;
+	use Date;
 
-	public function __construct(
-		\Nette\ComponentModel\IContainer $parent,
-		string $name,
-		int $newDisclosures,
-		\MichalSpacekCz\Pulse\Companies $companies,
-		\MichalSpacekCz\Pulse\Sites $sites,
-		\MichalSpacekCz\Pulse\Passwords $passwords
-	)
+	public function __construct(IContainer $parent, string $name, int $newDisclosures, Companies $companies, Sites $sites, Passwords $passwords)
 	{
 		parent::__construct($parent, $name);
 
@@ -48,7 +50,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 
 		// Site
 		$siteContainer = $this->addContainer('site');
-		$items = [\MichalSpacekCz\Pulse\Sites::ALL => 'all sites'];
+		$items = [Sites::ALL => 'all sites'];
 		foreach ($sites->getAll() as $site) {
 		 	$items[$site->id] = "{$site->alias} ({$site->url})";
 		}
@@ -69,7 +71,7 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 			->addRule(self::BLANK, $message = "Site already selected, can't add a new one")
 			->endCondition()
 			->addCondition(function ($item) use ($inputName, $selectSite) {
-				return (!empty($inputName->getValue()) && $selectSite->getValue() !== \MichalSpacekCz\Pulse\Sites::ALL);
+				return (!empty($inputName->getValue()) && $selectSite->getValue() !== Sites::ALL);
 			})
 			->setRequired('New site required when adding a new company');
 		$inputAlias->addConditionOn($selectSite, self::FILLED)
@@ -146,13 +148,13 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Adds from date input control to the form.
-	 * @param \Nette\Forms\Container $container
+	 * @param Container $container
 	 * @param string $name
 	 * @param string $label
 	 * @param boolean $required
-	 * @return \Nette\Forms\Controls\TextInput
+	 * @return TextInput
 	 */
-	private function addFromDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false): \Nette\Forms\Controls\TextInput
+	private function addFromDate(Container $container, string $name, ?string $label = null, ?bool $required = false): TextInput
 	{
 		return $this->addDate(
 			$name,
@@ -167,13 +169,13 @@ class PasswordsStorages extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Adds published date input control to the form.
-	 * @param \Nette\Forms\Container $container
+	 * @param Container $container
 	 * @param string $name
 	 * @param string $label
 	 * @param boolean $required
-	 * @return \Nette\Forms\Controls\TextInput
+	 * @return TextInput
 	 */
-	private function addPublishedDate(\Nette\Forms\Container $container, string $name, ?string $label = null, ?bool $required = false): \Nette\Forms\Controls\TextInput
+	private function addPublishedDate(Container $container, string $name, ?string $label = null, ?bool $required = false): TextInput
 	{
 		return $this->addDate(
 			$name,

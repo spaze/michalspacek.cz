@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Nette\ComponentModel\IContainer;
+use Nette\Localization\ITranslator;
+
 /**
  * Training invoice form.
  *
@@ -14,11 +17,11 @@ class TrainingInvoice extends ProtectedForm
 
 	use Controls\PaidDate;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, \Nette\Localization\ITranslator $translator)
+	public function __construct(IContainer $parent, string $name, ITranslator $translator)
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;

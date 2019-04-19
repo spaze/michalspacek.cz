@@ -1,7 +1,12 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
 
-use MichalSpacekCz\Training;
+use DateTime;
+use MichalSpacekCz\Form\TrainingInvoice;
+use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Dates;
 
 /**
  * Invoices presenter.
@@ -12,21 +17,14 @@ use MichalSpacekCz\Training;
 class InvoicesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
 
-	/**
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 */
-	public function __construct(
-		Training\Applications $trainingApplications,
-		Training\Dates $trainingDates
-	)
+	public function __construct(Applications $trainingApplications, Dates $trainingDates)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
@@ -34,7 +32,7 @@ class InvoicesPresenter extends BasePresenter
 	}
 
 
-	public function actionUnpaid()
+	public function actionUnpaid(): void
 	{
 		$dates = array();
 		foreach ($this->trainingDates->getWithUnpaid() as $date) {
@@ -45,21 +43,22 @@ class InvoicesPresenter extends BasePresenter
 		}
 		ksort($dates);
 		$this->template->unpaidApplications = $dates;
-		$this->template->now = new \DateTime();
+		$this->template->now = new DateTime();
 		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 
 		$this->template->pageTitle = 'Nezaplacené faktury';
 	}
 
 
-	protected function createComponentInvoice($formName)
+	protected function createComponentInvoice(string $formName): TrainingInvoice
 	{
-		$form = new \MichalSpacekCz\Form\TrainingInvoice($this, $formName, $this->translator);
+		$form = new TrainingInvoice($this, $formName, $this->translator);
 		$form->onSuccess[] = [$this, 'submittedApplication'];
+		return $form;
 	}
 
 
-	public function submittedApplication(\MichalSpacekCz\Form\TrainingInvoice $form, $values)
+	public function submittedApplication(TrainingInvoice $form, $values): void
 	{
 		$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);
 		if ($count) {

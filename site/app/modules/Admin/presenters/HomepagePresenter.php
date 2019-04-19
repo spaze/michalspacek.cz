@@ -1,7 +1,13 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
 
-use MichalSpacekCz\Training;
+use DateTime;
+use MichalSpacekCz\Certificates;
+use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Mails;
 
 /**
  * Homepage presenter.
@@ -14,31 +20,20 @@ class HomepagePresenter extends BasePresenter
 
 	protected $haveBacklink = false;
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\Training\Mails */
+	/** @var Mails */
 	protected $trainingMails;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Certificates */
+	/** @var Certificates */
 	protected $certificates;
 
 
-	/**
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
-	 * @param \MichalSpacekCz\Training\Mails $trainingMails
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Certificates $certificates
-	 */
-	public function __construct(
-		Training\Applications $trainingApplications,
-		Training\Mails $trainingMails,
-		Training\Dates $trainingDates,
-		\MichalSpacekCz\Certificates $certificates
-	)
+	public function __construct(Applications $trainingApplications, Mails $trainingMails, Dates $trainingDates, Certificates $certificates)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
@@ -48,7 +43,7 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
-	public function actionDefault()
+	public function actionDefault(): void
 	{
 		$trainings = $this->trainingDates->getAllTrainingsInterval('-1 week');
 		foreach ($this->trainingDates->getAllUpcoming() as $training) {
@@ -61,12 +56,12 @@ class HomepagePresenter extends BasePresenter
 			$date->applications = $this->trainingApplications->getValidByDate($date->dateId);
 			$date->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($date->dateId);
 			$date->validCount = count($date->applications);
-			$date->requiresAttention = ($date->canceledApplications || ($date->status == Training\Dates::STATUS_CANCELED && $date->validCount));
+			$date->requiresAttention = ($date->canceledApplications || ($date->status == Dates::STATUS_CANCELED && $date->validCount));
 			$dates[$date->start->getTimestamp()] = $date;
 		}
 		ksort($dates);
 		$this->template->upcomingApplications = $dates;
-		$this->template->now = new \DateTime();
+		$this->template->now = new DateTime();
 		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 
 		$this->template->pageTitle = 'Administrace';

@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace App\AdminModule\Presenters;
 
-use MichalSpacekCz\Training;
+use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\Trainings;
 
 /**
  * Reviews presenter.
@@ -14,18 +15,14 @@ use MichalSpacekCz\Training;
 class ReviewsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Training\Trainings */
+	/** @var Trainings */
 	protected $trainings;
 
-	/** @var \MichalSpacekCz\Training\Reviews */
+	/** @var Reviews */
 	protected $trainingReviews;
 
 
-	/**
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
-	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
-	 */
-	public function __construct(Training\Trainings $trainings, Training\Reviews $trainingReviews)
+	public function __construct(Trainings $trainings, Reviews $trainingReviews)
 	{
 		$this->trainings = $trainings;
 		$this->trainingReviews = $trainingReviews;

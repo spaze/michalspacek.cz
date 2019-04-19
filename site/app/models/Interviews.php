@@ -1,5 +1,12 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz;
+
+use DateTime;
+use Nette\Database\Context;
+use Nette\Database\Row;
+use Netxten\Formatter\Texy;
 
 /**
  * Interviews model.
@@ -10,21 +17,25 @@ namespace MichalSpacekCz;
 class Interviews
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \Netxten\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
 
-	public function __construct(\Nette\Database\Context $context, \Netxten\Formatter\Texy $texyFormatter)
+	public function __construct(Context $context, Texy $texyFormatter)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 	}
 
 
-	public function getAll($limit = null)
+	/**
+	 * @param int|null $limit
+	 * @return Row[]
+	 */
+	public function getAll(?int $limit = null): array
 	{
 		$query = 'SELECT
 				id_interview AS interviewId,
@@ -52,7 +63,7 @@ class Interviews
 	}
 
 
-	public function get($name)
+	public function get(string $name): ?Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -81,7 +92,7 @@ class Interviews
 	}
 
 
-	public function getById($id)
+	public function getById(int $id): ?Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -111,7 +122,7 @@ class Interviews
 	}
 
 
-	private function format(\Nette\Database\Row $row)
+	private function format(Row $row): void
 	{
 		foreach (['description'] as $item) {
 			if (isset($row[$item])) {
@@ -121,23 +132,20 @@ class Interviews
 	}
 
 
-	/**
-	 * Update interview data.
-	 *
-	 * @param integer $id
-	 * @param string $action
-	 * @param string $title
-	 * @param string $description
-	 * @param string $date
-	 * @param string $href
-	 * @param string $audioHref
-	 * @param string $audioEmbed
-	 * @param string $videoHref
-	 * @param string $videoEmbed
-	 * @param string $sourceName
-	 * @param string $sourceHref
-	 */
-	public function update($id, $action, $title, $description, $date, $href, $audioHref, $audioEmbed, $videoHref, $videoEmbed, $sourceName, $sourceHref)
+	public function update(
+		int $id,
+		string $action,
+		string $title,
+		string $description,
+		string $date,
+		string $href,
+		string $audioHref,
+		string $audioEmbed,
+		string $videoHref,
+		string $videoEmbed,
+		string $sourceName,
+		string $sourceHref
+	): void
 	{
 		$this->database->query(
 			'UPDATE interviews SET ? WHERE id_interview = ?',
@@ -145,7 +153,7 @@ class Interviews
 				'action' => $action,
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
-				'date' => new \DateTime($date),
+				'date' => new DateTime($date),
 				'href' => $href,
 				'audio_href' => (empty($audioHref) ? null : $audioHref),
 				'audio_embed' => (empty($audioEmbed) ? null : $audioEmbed),
@@ -159,22 +167,19 @@ class Interviews
 	}
 
 
-	/**
-	 * Insert interview data.
-	 *
-	 * @param string $action
-	 * @param string $title
-	 * @param string $description
-	 * @param string $date
-	 * @param string $href
-	 * @param string $audioHref
-	 * @param string $audioEmbed
-	 * @param string $videoHref
-	 * @param string $videoEmbed
-	 * @param string $sourceName
-	 * @param string $sourceHref
-	 */
-	public function add($action, $title, $description, $date, $href, $audioHref, $audioEmbed, $videoHref, $videoEmbed, $sourceName, $sourceHref)
+	public function add(
+		string $action,
+		string $title,
+		string $description,
+		string $date,
+		string $href,
+		string $audioHref,
+		string $audioEmbed,
+		string $videoHref,
+		string $videoEmbed,
+		string $sourceName,
+		string $sourceHref
+	): void
 	{
 		$this->database->query(
 			'INSERT INTO interviews',
@@ -182,7 +187,7 @@ class Interviews
 				'action' => $action,
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
-				'date' => new \DateTime($date),
+				'date' => new DateTime($date),
 				'href' => $href,
 				'audio_href' => (empty($audioHref) ? null : $audioHref),
 				'audio_embed' => (empty($audioEmbed) ? null : $audioEmbed),

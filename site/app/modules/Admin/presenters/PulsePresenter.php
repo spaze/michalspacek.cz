@@ -1,7 +1,13 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\AdminModule\Presenters;
 
-use \MichalSpacekCz\Pulse\Sites;
+use MichalSpacekCz\Form\Pulse\PasswordsStorages;
+use MichalSpacekCz\Pulse\Companies;
+use MichalSpacekCz\Pulse\Passwords;
+use MichalSpacekCz\Pulse\Sites;
+use Nette\Utils\ArrayHash;
 
 /**
  * Pulse presenter.
@@ -12,26 +18,17 @@ use \MichalSpacekCz\Pulse\Sites;
 class PulsePresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Pulse\Companies */
+	/** @var Companies */
 	protected $companies;
 
-	/** @var \MichalSpacekCz\Pulse\Sites */
+	/** @var Sites */
 	protected $sites;
 
-	/** @var \MichalSpacekCz\Pulse\Passwords */
+	/** @var Passwords */
 	protected $passwords;
 
 
-	/**
-	 * @param \MichalSpacekCz\Pulse\Companies $companies
-	 * @param \MichalSpacekCz\Pulse\Sites $sites
-	 * @param \MichalSpacekCz\Pulse\Passwords $passwords
-	 */
-	public function __construct(
-		\MichalSpacekCz\Pulse\Companies $companies,
-		Sites $sites,
-		\MichalSpacekCz\Pulse\Passwords $passwords
-	)
+	public function __construct(Companies $companies, Sites $sites, Passwords $passwords)
 	{
 		$this->companies = $companies;
 		$this->sites = $sites;
@@ -40,16 +37,16 @@ class PulsePresenter extends BasePresenter
 	}
 
 
-	public function actionPasswordsStorages()
+	public function actionPasswordsStorages(): void
 	{
 		$this->template->pageTitle = 'Password storages';
 		$this->template->newDisclosures = 3;
 	}
 
 
-	protected function createComponentPasswordsStorages($formName)
+	protected function createComponentPasswordsStorages(string $formName): PasswordsStorages
 	{
-		$form = new \MichalSpacekCz\Form\Pulse\PasswordsStorages(
+		$form = new PasswordsStorages(
 			$this,
 			$formName,
 			$this->template->newDisclosures,
@@ -59,6 +56,7 @@ class PulsePresenter extends BasePresenter
 		);
 		$form->onValidate[] = [$this, 'validatePasswordsStorages'];
 		$form->onSuccess[] = [$this, 'submittedPasswordsStorages'];
+		return $form;
 	}
 
 
@@ -74,11 +72,10 @@ class PulsePresenter extends BasePresenter
 	 * - existing company, another algo without "from" when there's one already
 	 * - existing company, existing site => check if the combination already exists
 	 *
-	 * @param \MichalSpacekCz\Form\Pulse\PasswordsStorages $form
-	 * @param \Nette\Utils\ArrayHash $values
-	 * @return null
+	 * @param PasswordsStorages $form
+	 * @param ArrayHash $values
 	 */
-	public function validatePasswordsStorages(\MichalSpacekCz\Form\Pulse\PasswordsStorages $form, $values)
+	public function validatePasswordsStorages(PasswordsStorages $form, ArrayHash $values): void
 	{
 		if (empty($values->company->new->name)) {
 			$storages = $this->passwords->getStoragesByCompanyId($values->company->id);
@@ -103,7 +100,7 @@ class PulsePresenter extends BasePresenter
 	}
 
 
-	public function submittedPasswordsStorages(\MichalSpacekCz\Form\Pulse\PasswordsStorages $form, $values)
+	public function submittedPasswordsStorages(PasswordsStorages $form, $values)
 	{
 		if ($this->passwords->addStorage($values)) {
 			$this->flashMessage('Password storage added successfully');
