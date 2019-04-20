@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-/**
- * Talk form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Talk extends ProtectedForm
 {
 
@@ -117,13 +111,6 @@ class Talk extends ProtectedForm
 	}
 
 
-	/**
-	 * Adds talk date input control to the form.
-	 * @param string $name
-	 * @param string $label
-	 * @param boolean $required
-	 * @return \Nette\Forms\Controls\TextInput
-	 */
 	protected function addTalkDate($name, $label = null, $required = false): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(

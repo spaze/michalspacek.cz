@@ -7,12 +7,6 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Netxten\Templating\Helpers;
 
-/**
- * Training mails model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Mails
 {
 
@@ -66,20 +60,6 @@ class Mails
 	}
 
 
-	/**
-	 * @param integer $applicationId
-	 * @param Template $template
-	 * @param string $recipientAddress
-	 * @param string $recipientName
-	 * @param \DateTime $start
-	 * @param \DateTime $end
-	 * @param string $training
-	 * @param string $trainingName
-	 * @param string $venueName
-	 * @param string|null $venueNameExtended
-	 * @param string $venueAddress
-	 * @param string $venueCity
-	 */
 	public function sendSignUpMail(
 		int $applicationId,
 		Template $template,
@@ -113,18 +93,12 @@ class Mails
 	}
 
 
-	/**
-	 * @param string $from
-	 */
 	public function setEmailFrom(string $from): void
 	{
 		$this->emailFrom = $from;
 	}
 
 
-	/**
-	 * @param string $number
-	 */
 	public function setPhoneNumber(string $number): void
 	{
 		$this->phoneNumber = $number;
@@ -186,11 +160,6 @@ class Mails
 	}
 
 
-	/**
-	 * @param Row $application
-	 * @param Template $template
-	 * @param string $additional
-	 */
 	public function sendInvitation(Row $application, Template $template, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
@@ -203,12 +172,6 @@ class Mails
 	}
 
 
-	/**
-	 * @param Row $application
-	 * @param Template $template
-	 * @param boolean $feedbackRequest
-	 * @param string $additional
-	 */
 	public function sendMaterials(Row $application, Template $template, bool $feedbackRequest, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
@@ -222,12 +185,6 @@ class Mails
 	}
 
 
-	/**
-	 * @param Row $application
-	 * @param Template $template
-	 * @param \Nette\Http\FileUpload $invoice
-	 * @param string $additional
-	 */
 	public function sendInvoice(Row $application, Template $template, \Nette\Http\FileUpload $invoice, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
@@ -246,11 +203,6 @@ class Mails
 	}
 
 
-	/**
-	 * @param Row $application
-	 * @param Template $template
-	 * @param string $additional
-	 */
 	public function sendReminder(Row $application, Template $template, string $additional): void
 	{
 		\Tracy\Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");

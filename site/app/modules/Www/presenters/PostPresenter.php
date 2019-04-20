@@ -8,12 +8,6 @@ use MichalSpacekCz\Training\Dates;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 
-/**
- * Post presenter.
- *
- * @author Michal Špaček
- * @package michalspacek.cz
- */
 class PostPresenter extends BasePresenter
 {
 	/** @var Post */
@@ -26,10 +20,6 @@ class PostPresenter extends BasePresenter
 	protected $localeLinkParams = [];
 
 
-	/**
-	 * @param Post $blogPost
-	 * @param Dates $trainingDates
-	 */
 	public function __construct(Post $blogPost, Dates $trainingDates)
 	{
 		$this->blogPost = $blogPost;

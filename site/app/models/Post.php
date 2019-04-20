@@ -8,12 +8,6 @@ use Nette\Caching\Cache;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
 
-/**
- * Blog post service.
- *
- * @author Michal Špaček
- * @package michalspacek.cz
- */
 class Post
 {
 
@@ -45,15 +39,6 @@ class Post
 	private $updatedInfoThreshold;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 * @param Post\Loader $loader
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \Nette\Caching\IStorage $cacheStorage
-	 * @param \Nette\Application\LinkGenerator $linkGenerator
-	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
-	 * @param \Nette\Localization\ITranslator $translator
-	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		Post\Loader $loader,

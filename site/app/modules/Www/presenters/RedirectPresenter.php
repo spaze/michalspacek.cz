@@ -6,12 +6,6 @@ use MichalSpacekCz\Training\Applications;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Http\IResponse;
 
-/**
- * A redirection presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class RedirectPresenter extends BasePresenter
 {
 
@@ -24,10 +18,6 @@ class RedirectPresenter extends BasePresenter
 	protected $articles;
 
 
-	/**
-	 * @param Applications $trainingApplications
-	 * @param Articles $articles
-	 */
 	public function __construct(Applications $trainingApplications, Articles $articles)
 	{
 		$this->trainingApplications = $trainingApplications;

@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-/**
- * Trainings reviews model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Reviews
 {
 
@@ -19,10 +13,6 @@ class Reviews
 	protected $texyFormatter;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		\MichalSpacekCz\Formatter\Texy $texyFormatter

@@ -5,12 +5,6 @@ namespace App\AdminModule\Presenters;
 
 use Nette\Utils\Html;
 
-/**
- * Info presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class InfoPresenter extends BasePresenter
 {
 

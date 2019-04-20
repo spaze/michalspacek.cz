@@ -1,12 +1,6 @@
 <?php
 namespace MichalSpacekCz\Training;
 
-/**
- * Company trainings model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class CompanyTrainings
 {
 
@@ -23,12 +17,6 @@ class CompanyTrainings
 	protected $translator;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \Nette\Localization\ITranslator $translator
-	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		\MichalSpacekCz\Formatter\Texy $texyFormatter,

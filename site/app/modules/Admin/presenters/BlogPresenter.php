@@ -18,12 +18,6 @@ use Nette\Utils\Html;
 use Nette\Utils\Json;
 use UnexpectedValueException;
 
-/**
- * Blog presenter.
- *
- * @author Michal Špaček
- * @package michalspacek.cz
- */
 class BlogPresenter extends BasePresenter
 {
 

@@ -9,12 +9,6 @@ use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-/**
- * Pulse password storages presenter.
- *
- * @author Michal Špaček
- * @package pulse.michalspacek.cz
- */
 class PasswordsStoragesPresenter extends BasePresenter
 {
 
@@ -25,10 +19,6 @@ class PasswordsStoragesPresenter extends BasePresenter
 	protected $passwordsRating;
 
 
-	/**
-	 * @param Passwords $passwords
-	 * @param Rating $passwordsRating
-	 */
 	public function __construct(Passwords $passwords, Rating $passwordsRating)
 	{
 		$this->passwords = $passwords;

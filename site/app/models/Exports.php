@@ -9,12 +9,6 @@ use Spaze\Exports\Atom;
 use Spaze\Exports\Atom\Constructs;
 use Spaze\Exports\Atom\Elements;
 
-/**
- * Exports service.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Exports
 {
 
@@ -31,11 +25,6 @@ class Exports
 	protected $cache;
 
 
-	/**
-	 * @param \MichalSpacekCz\Articles $articles
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \Nette\Caching\IStorage $cacheStorage
-	 */
 	public function __construct(\MichalSpacekCz\Articles $articles, \MichalSpacekCz\Formatter\Texy $texyFormatter, \Nette\Caching\IStorage $cacheStorage)
 	{
 		$this->articles = $articles;

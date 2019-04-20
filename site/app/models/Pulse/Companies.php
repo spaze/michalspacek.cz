@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
-/**
- * Pulse companies service.
- *
- * @author Michal Špaček
- * @package pulse.michalspacek.cz
- */
 class Companies
 {
 
@@ -16,9 +10,6 @@ class Companies
 	protected $database;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
@@ -36,12 +27,6 @@ class Companies
 	}
 
 
-	/**
-	 * Get company by name.
-	 *
-	 * @param string $name
-	 * @return \Nette\Database\Row|null
-	 */
 	public function getByName(string $name): ?\Nette\Database\Row
 	{
 		return $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name) ?: null;

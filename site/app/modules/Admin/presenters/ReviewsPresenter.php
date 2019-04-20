@@ -6,12 +6,6 @@ namespace App\AdminModule\Presenters;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
 
-/**
- * Reviews presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class ReviewsPresenter extends BasePresenter
 {
 

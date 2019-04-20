@@ -7,9 +7,6 @@ namespace MichalSpacekCz\Post;
  * Blog post loader service.
  *
  * Fast loader, no extra work, no formatting, no circular references.
- *
- * @author Michal Špaček
- * @package michalspacek.cz
  */
 class Loader
 {

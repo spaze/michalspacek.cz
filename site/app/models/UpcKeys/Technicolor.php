@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
-/**
- * UPC Technicolor keys service.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Technicolor implements RouterInterface
 {
 
@@ -28,9 +22,6 @@ class Technicolor implements RouterInterface
 	protected $model;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
@@ -159,12 +150,6 @@ class Technicolor implements RouterInterface
 	}
 
 
-	/**
-	 * Request keys from API.
-	 *
-	 * @param string $url
-	 * @return string
-	 */
 	private function callApi(string $url): string
 	{
 		$context = stream_context_create();
@@ -213,12 +198,6 @@ class Technicolor implements RouterInterface
 	}
 
 
-	/**
-	 * Do we have keys for given SSID stored already?
-	 *
-	 * @param string $ssid
-	 * @return boolean
-	 */
 	private function hasKeys(string $ssid): bool
 	{
 		$result = $this->database->fetchField(
@@ -282,14 +261,6 @@ class Technicolor implements RouterInterface
 	}
 
 
-	/**
-	 * Build key object.
-	 *
-	 * @param string $serial
-	 * @param string $key
-	 * @param integer $type
-	 * @return \stdClass
-	 */
 	private function buildKey(string $serial, string $key, int $type): \stdClass
 	{
 		$result = new \stdClass();

@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
-/**
- * UPC Keys service.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class UpcKeys
 {
 
@@ -40,9 +34,6 @@ class UpcKeys
 	protected $keys;
 
 
-	/**
-	 * @param \MichalSpacekCz\UpcKeys\RouterInterface $router
-	 */
 	public function addRouter(\MichalSpacekCz\UpcKeys\RouterInterface $router): void
 	{
 		$this->routers[get_class($router)] = $router;

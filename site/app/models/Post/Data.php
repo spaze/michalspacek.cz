@@ -3,14 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Post;
 
-/**
- * Blog post data.
- *
- * @author Michal Špaček
- * @package michalspacek.cz
- */
 class Data
 {
+
 	/** @var integer */
 	public $postId;
 
@@ -84,11 +79,6 @@ class Data
 	public $edits;
 
 
-	/**
-	 * Returns true when the post needs preview key to display.
-	 *
-	 * @return bool
-	 */
 	public function needsPreviewKey(): bool
 	{
 		return $this->published > new \Nette\Utils\DateTime();

@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
-/**
- * Strings model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Strings
 {
 
@@ -17,7 +11,6 @@ class Strings
 
 
 	/**
-	 * Strings constructor.
 	 * @param \Contributte\Translation\Translator|\Nette\Localization\ITranslator $translator
 	 */
 	public function __construct(\Nette\Localization\ITranslator $translator)

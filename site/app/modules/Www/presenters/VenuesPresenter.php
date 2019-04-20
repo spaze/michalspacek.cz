@@ -9,12 +9,6 @@ use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-/**
- * TrainingVenues presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class VenuesPresenter extends BasePresenter
 {
 
@@ -34,13 +28,6 @@ class VenuesPresenter extends BasePresenter
 	protected $embed;
 
 
-	/**
-	 * @param Texy $texyFormatter
-	 * @param Dates $trainingDates
-	 * @param Venues $trainingVenues
-	 * @param Trainings $trainings
-	 * @param Embed $embed
-	 */
 	public function __construct(
 		Texy $texyFormatter,
 		Dates $trainingDates,

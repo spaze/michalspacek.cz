@@ -8,12 +8,6 @@ use MichalSpacekCz\Certificates;
 use Nette\Security\AuthenticationException;
 use RuntimeException;
 
-/**
- * Certificate presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class CertificatePresenter extends BasePresenter
 {
 
@@ -21,9 +15,6 @@ class CertificatePresenter extends BasePresenter
 	protected $certificates;
 
 
-	/**
-	 * @param Certificates $certificates
-	 */
 	public function __construct(Certificates $certificates)
 	{
 		$this->certificates = $certificates;

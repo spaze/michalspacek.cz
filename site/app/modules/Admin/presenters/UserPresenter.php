@@ -9,12 +9,6 @@ use MichalSpacekCz\User\Manager;
 use Nette\Http\Session;
 use Nette\Utils\ArrayHash;
 
-/**
- * User presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class UserPresenter extends BasePresenter
 {
 

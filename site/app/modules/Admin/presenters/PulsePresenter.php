@@ -9,12 +9,6 @@ use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Sites;
 use Nette\Utils\ArrayHash;
 
-/**
- * Pulse presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class PulsePresenter extends BasePresenter
 {
 

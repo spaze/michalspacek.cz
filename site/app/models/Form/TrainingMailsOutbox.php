@@ -5,12 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training;
 
-/**
- * E-mails to send form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingMailsOutbox extends ProtectedForm
 {
 

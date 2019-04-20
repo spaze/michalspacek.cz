@@ -3,12 +3,6 @@ namespace MichalSpacekCz\Training;
 
 use Nette\Utils\Json;
 
-/**
- * Training dates model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Dates
 {
 
@@ -33,11 +27,6 @@ class Dates
 	private $upcomingDates = array();
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 * @param Statuses $trainingStatuses
-	 * @param \Nette\Localization\ITranslator $translator
-	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		Statuses $trainingStatuses,

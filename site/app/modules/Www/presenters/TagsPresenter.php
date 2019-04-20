@@ -9,12 +9,6 @@ use MichalSpacekCz\Strings;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-/**
- * Tags presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TagsPresenter extends BasePresenter
 {
 
@@ -28,10 +22,6 @@ class TagsPresenter extends BasePresenter
 	protected $strings;
 
 
-	/**
-	 * @param Articles $articles
-	 * @param Texy $texyFormatter
-	 */
 	public function __construct(Articles $articles, Strings $strings, Texy $texyFormatter)
 	{
 		$this->articles = $articles;

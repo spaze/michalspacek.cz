@@ -10,9 +10,6 @@ use Nette\Http\IResponse;
  *
  * See https://wwwinfo.mfcr.cz/ares/xml_doc/schemas/documentation/zkr_103.txt
  * for meaning of abbreviations like AA, NU, CD, CO etc. (in Czech)
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
  */
 class Ares implements CompanyDataInterface
 {
@@ -26,19 +23,12 @@ class Ares implements CompanyDataInterface
 	private $url;
 
 
-	/**
-	 * @param string $url
-	 */
 	public function setUrl(string $url): void
 	{
 		$this->url = $url;
 	}
 
 
-	/**
-	 * @param string $companyId
-	 * @return Data
-	 */
 	public function getData(string $companyId): Data
 	{
 		$company = new Data();
@@ -96,12 +86,6 @@ class Ares implements CompanyDataInterface
 	}
 
 
-	/**
-	 * Fetch data from API
-	 *
-	 * @param string $companyId
-	 * @return string
-	 */
 	private function fetch(string $companyId): string
 	{
 		$context = stream_context_create();
@@ -119,13 +103,6 @@ class Ares implements CompanyDataInterface
 	}
 
 
-	/**
-	 * @param string $city
-	 * @param string $street
-	 * @param string $houseNumber
-	 * @param string $streetNumber
-	 * @return string
-	 */
 	private function formatStreet(string $city, string $street, string $houseNumber, string $streetNumber): string
 	{
 		$result = $street;
@@ -145,9 +122,6 @@ class Ares implements CompanyDataInterface
 
 	/**
 	 * Return ISO 3166-1 alpha-2 by ISO 3166-1 numeric.
-	 *
-	 * @param \SimpleXMLElement $data
-	 * @return string ISO 3166-1 alpha-2 code
 	 */
 	private function countryCode(\SimpleXMLElement $data): string
 	{

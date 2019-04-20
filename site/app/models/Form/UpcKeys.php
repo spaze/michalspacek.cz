@@ -3,20 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-/**
- * UPC keys form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class UpcKeys extends UnprotectedForm
 {
 
-	/**
-	 * @param \Nette\ComponentModel\IContainer $parent
-	 * @param string $name
-	 * @param string $ssid
-	 */
 	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, ?string $ssid, \MichalSpacekCz\UpcKeys $upcKeys)
 	{
 		parent::__construct($parent, $name);

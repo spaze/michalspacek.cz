@@ -16,11 +16,6 @@ use Spaze\ContentSecurityPolicy\Config;
 use stdClass;
 
 /**
- * Base class for all application presenters.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- *
  * @property-read Template|stdClass $template
  */
 abstract class BasePresenter extends Presenter
@@ -45,40 +40,28 @@ abstract class BasePresenter extends Presenter
 	private $templateHelpers;
 
 
-	/**
-	 * @internal
-	 * @param Manager $authenticator
-	 */
+	/** @internal */
 	public function injectAuthenticator(Manager $authenticator)
 	{
 		$this->authenticator = $authenticator;
 	}
 
 
-	/**
-	 * @internal
-	 * @param Config $contentSecurityPolicy
-	 */
+	/** @internal */
 	public function injectContentSecurityPolicy(Config $contentSecurityPolicy)
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 
-	/**
-	 * @internal
-	 * @param LocaleLinkGenerator $localeLinkGenerator
-	 */
+	/** @internal */
 	public function injectLocaleLinkGenerator(LocaleLinkGenerator $localeLinkGenerator)
 	{
 		$this->localeLinkGenerator = $localeLinkGenerator;
 	}
 
 
-	/**
-	 * @internal
-	 * @param Helpers $templateHelpers
-	 */
+	/** @internal */
 	public function injectTemplateHelpers(Helpers $templateHelpers)
 	{
 		$this->templateHelpers = $templateHelpers;

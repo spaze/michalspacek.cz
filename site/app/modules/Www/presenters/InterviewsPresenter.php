@@ -7,12 +7,6 @@ use MichalSpacekCz\Interviews;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-/**
- * Interviews presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class InterviewsPresenter extends BasePresenter
 {
 
@@ -26,11 +20,6 @@ class InterviewsPresenter extends BasePresenter
 	protected $embed;
 
 
-	/**
-	 * @param Texy $texyFormatter
-	 * @param Interviews $interviews
-	 * @param Embed $embed
-	 */
 	public function __construct(
 		Texy $texyFormatter,
 		Interviews $interviews,

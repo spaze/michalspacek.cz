@@ -6,12 +6,6 @@ namespace MichalSpacekCz\Pulse;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 
-/**
- * Pulse passwords service.
- *
- * @author Michal Špaček
- * @package pulse.michalspacek.cz
- */
 class Passwords
 {
 
@@ -28,12 +22,6 @@ class Passwords
 	protected $sites;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 * @param \MichalSpacekCz\Pulse\Passwords\Rating $rating
-	 * @param \MichalSpacekCz\Pulse\Companies $companies
-	 * @param \MichalSpacekCz\Pulse\Sites $sites
-	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		Passwords\Rating $rating,
@@ -409,12 +397,6 @@ class Passwords
 	}
 
 
-	/**
-	 * Get algorithm by name.
-	 *
-	 * @param string $name
-	 * @return \Nette\Database\Row|null
-	 */
 	public function getAlgorithmByName(string $name): ?\Nette\Database\Row
 	{
 		return $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name) ?: null;
@@ -442,13 +424,6 @@ class Passwords
 	}
 
 
-	/**
-	 * Get disclosure id.
-	 *
-	 * @param string $url
-	 * @param string $archive
-	 * @return integer|null id
-	 */
 	private function getDisclosureId(string $url, string $archive): ?int
 	{
 		return $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive) ?: null;
@@ -535,12 +510,6 @@ class Passwords
 	}
 
 
-	/**
-	 * Pair disclosure with storage.
-	 *
-	 * @param integer $disclosureId
-	 * @param integer $storageId
-	 */
 	private function pairDisclosureStorage(int $disclosureId, int $storageId): void
 	{
 		$this->database->query(

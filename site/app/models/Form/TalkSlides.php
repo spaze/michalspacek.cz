@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-/**
- * Talk slide form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TalkSlides extends ProtectedForm
 {
 
@@ -57,11 +51,6 @@ class TalkSlides extends ProtectedForm
 	}
 
 
-	/**
-	 * Add fields for one slide.
-	 *
-	 * @param \Nette\Forms\Container $container
-	 */
 	private function addSlideFields(\Nette\Forms\Container $container): void
 	{
 		$container->addText('alias', 'Alias:')

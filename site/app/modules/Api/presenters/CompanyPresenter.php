@@ -12,12 +12,6 @@ use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use RuntimeException;
 
-/**
- * Company presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class CompanyPresenter extends BasePresenter
 {
 
@@ -28,10 +22,6 @@ class CompanyPresenter extends BasePresenter
 	protected $securityHeaders;
 
 
-	/**
-	 * @param Info $companyInfo
-	 * @param SecurityHeaders $securityHeaders
-	 */
 	public function __construct(Info $companyInfo, SecurityHeaders $securityHeaders)
 	{
 		$this->companyInfo = $companyInfo;

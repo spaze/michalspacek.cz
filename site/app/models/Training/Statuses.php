@@ -1,12 +1,6 @@
 <?php
 namespace MichalSpacekCz\Training;
 
-/**
- * Training application statuses model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Statuses
 {
 
@@ -41,9 +35,6 @@ class Statuses
 	private $statusHistory = array();
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
@@ -272,6 +263,5 @@ class Statuses
 		}
 		return $result;
 	}
-
 
 }

@@ -9,12 +9,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Http\IResponse;
 
-/**
- * Files presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class FilesPresenter extends BasePresenter
 {
 
@@ -22,9 +16,6 @@ class FilesPresenter extends BasePresenter
 	protected $trainingFiles;
 
 
-	/**
-	 * @param Files $trainingFiles
-	 */
 	public function __construct(Files $trainingFiles)
 	{
 		$this->trainingFiles = $trainingFiles;

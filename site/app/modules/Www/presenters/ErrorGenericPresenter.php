@@ -8,12 +8,6 @@ use Nette\Application\IPresenter;
 use Nette\Application\IResponse;
 use Nette\Application\Request;
 
-/**
- * Generic error presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class ErrorGenericPresenter implements IPresenter
 {
 

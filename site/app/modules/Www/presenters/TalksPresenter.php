@@ -12,12 +12,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
 use RuntimeException;
 
-/**
- * Talks presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TalksPresenter extends BasePresenter
 {
 
@@ -34,12 +28,6 @@ class TalksPresenter extends BasePresenter
 	protected $helpers;
 
 
-	/**
-	 * @param Texy $texyFormatter
-	 * @param Talks $talks
-	 * @param Embed $embed
-	 * @param Helpers $helpers
-	 */
 	public function __construct(
 		Texy $texyFormatter,
 		Talks $talks,

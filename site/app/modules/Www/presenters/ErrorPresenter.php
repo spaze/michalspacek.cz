@@ -9,12 +9,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
 use Nette\Http\Url;
 
-/**
- * Error presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class ErrorPresenter extends BaseErrorPresenter
 {
 
@@ -38,9 +32,6 @@ class ErrorPresenter extends BaseErrorPresenter
 	}
 
 
-	/**
-	 * @param BadRequestException $exception
-	 */
 	public function actionDefault(BadRequestException $exception): void
 	{
 		$code = (in_array($exception->getCode(), $this->statuses) ? $exception->getCode() : IResponse::S400_BAD_REQUEST);

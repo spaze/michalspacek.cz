@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
-/**
- * Talks model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Talks
 {
 
@@ -67,13 +61,6 @@ class Talks
 	];
 
 
-	/**
-	 * Contructor.
-	 *
-	 * @param \Nette\Database\Context $context
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \Nette\Http\Request $httpRequest
-	 */
 	public function __construct(\Nette\Database\Context $context, \MichalSpacekCz\Formatter\Texy $texyFormatter, \Nette\Http\Request $httpRequest)
 	{
 		$this->database = $context;

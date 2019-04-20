@@ -11,12 +11,6 @@ use Nette\Security\IUserStorage;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
-/**
- * Sign in/out presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class SignPresenter extends BasePresenter
 {
 

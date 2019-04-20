@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
-/**
- * Pulse passwords rating service.
- *
- * @author Michal Špaček
- * @package pulse.michalspacek.cz
- */
 class Rating
 {
 

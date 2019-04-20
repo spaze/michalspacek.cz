@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-/**
- * Training application form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingApplicationMultiple extends ProtectedForm
 {
 

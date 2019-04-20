@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
-/**
- * Pulse passwords algorithm object.
- *
- * @author Michal Špaček
- * @package pulse.michalspacek.cz
- */
 class Algorithm
 {
 

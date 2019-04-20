@@ -9,12 +9,6 @@ use Nette\Security\IIdentity;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
 
-/**
- * Manager model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Manager implements \Nette\Security\IAuthenticator
 {
 

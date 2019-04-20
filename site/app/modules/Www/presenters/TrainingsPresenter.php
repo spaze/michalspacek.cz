@@ -26,12 +26,6 @@ use PDOException;
 use Tracy\Debugger;
 use UnexpectedValueException;
 
-/**
- * Trainings presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingsPresenter extends BasePresenter
 {
 
@@ -81,21 +75,6 @@ class TrainingsPresenter extends BasePresenter
 	private $dates;
 
 
-	/**
-	 * @param Texy $texyFormatter
-	 * @param Applications $trainingApplications
-	 * @param Mails $trainingMails
-	 * @param Dates $trainingDates
-	 * @param Files $trainingFiles
-	 * @param Trainings $trainings
-	 * @param CompanyTrainings $companyTrainings
-	 * @param Locales $trainingLocales
-	 * @param Reviews $trainingReviews
-	 * @param Vat $vat
-	 * @param Helpers $netxtenHelpers
-	 * @param Info $companyInfo
-	 * @param IResponse $httpResponse
-	 */
 	public function __construct(
 		Texy $texyFormatter,
 		Applications $trainingApplications,

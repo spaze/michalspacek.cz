@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-/**
- * Training review form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingReview extends ProtectedForm
 {
 

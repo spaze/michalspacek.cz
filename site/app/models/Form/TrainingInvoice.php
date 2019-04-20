@@ -6,12 +6,6 @@ namespace MichalSpacekCz\Form;
 use Nette\ComponentModel\IContainer;
 use Nette\Localization\ITranslator;
 
-/**
- * Training invoice form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingInvoice extends ProtectedForm
 {
 

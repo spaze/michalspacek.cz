@@ -5,12 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training;
 
-/**
- * Training date form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingDate extends ProtectedForm
 {
 

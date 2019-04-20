@@ -9,12 +9,6 @@ use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Mails;
 
-/**
- * Homepage presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class HomepagePresenter extends BasePresenter
 {
 

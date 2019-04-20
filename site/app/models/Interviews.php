@@ -8,12 +8,6 @@ use Nette\Database\Context;
 use Nette\Database\Row;
 use Netxten\Formatter\Texy;
 
-/**
- * Interviews model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Interviews
 {
 

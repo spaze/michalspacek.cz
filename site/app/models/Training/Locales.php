@@ -3,14 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-/**
- * Trainings locales model.
- *
- * Split from Trainings to avoid circular references.
- *
- * @author Michal Špaček
- * @package michalspacek.cz
- */
 class Locales
 {
 
@@ -18,9 +10,6 @@ class Locales
 	protected $database;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;

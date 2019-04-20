@@ -11,12 +11,6 @@ use Nette\Database\Row;
 use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 
-/**
- * Interviews presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class InterviewsPresenter extends BasePresenter
 {
 

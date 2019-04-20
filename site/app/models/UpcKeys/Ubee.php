@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
-/**
- * UPC Ubee keys service.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Ubee implements RouterInterface
 {
 
@@ -25,20 +19,12 @@ class Ubee implements RouterInterface
 	protected $model;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
 	}
 
 
-	/**
-	 * Set serial number prefix to get keys for.
-	 *
-	 * @param array $prefixes
-	 */
 	public function setPrefixes(array $prefixes): void
 	{
 		if (count($prefixes) > 1) {
@@ -48,11 +34,6 @@ class Ubee implements RouterInterface
 	}
 
 
-	/**
-	 * Set router model.
-	 *
-	 * @param string $model
-	 */
 	public function setModel(string $model): void
 	{
 		$this->model = $model;
@@ -88,13 +69,6 @@ class Ubee implements RouterInterface
 	}
 
 
-	/**
-	 * Build key object.
-	 *
-	 * @param integer $mac
-	 * @param integer $key
-	 * @return \stdClass
-	 */
 	private function buildKey(int $mac, int $key): \stdClass
 	{
 		$result = new \stdClass();

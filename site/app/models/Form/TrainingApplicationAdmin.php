@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-/**
- * Training application form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingApplicationAdmin extends ProtectedForm
 {
 
@@ -43,13 +37,6 @@ class TrainingApplicationAdmin extends ProtectedForm
 	];
 
 
-	/**
-	 * @param \Nette\ComponentModel\IContainer $parent
-	 * @param string $name
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \Nette\Localization\ITranslator $translator
-	 */
 	public function __construct(
 		\Nette\ComponentModel\IContainer $parent,
 		string $name,

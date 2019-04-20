@@ -3,12 +3,6 @@ namespace MichalSpacekCz\Training;
 
 use Nette\Application\UI\Form;
 
-/**
- * Training applications model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Applications
 {
 
@@ -43,16 +37,6 @@ class Applications
 	private $byDate = array();
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 * @param Trainings $trainings
-	 * @param Dates $trainingDates
-	 * @param Statuses $trainingStatuses
-	 * @param \Spaze\Encryption\Symmetric\StaticKey $emailEncryption
-	 * @param \MichalSpacekCz\Vat $vat
-	 * @param \MichalSpacekCz\Training\Resolver\Vrana $vranaResolver
-	 * @param \Nette\Localization\ITranslator $translator
-	 */
 	public function __construct(
 		\Nette\Database\Context $context,
 		Trainings $trainings,
@@ -448,12 +432,6 @@ class Applications
 	}
 
 
-	/**
-	 * Resolves training source.
-	 *
-	 * @param string|null $note
-	 * @return string
-	 */
 	private function resolveSource($note = null)
 	{
 		if ($note && $this->vranaResolver->isTrainingApplicationOwner($note)) {
@@ -741,6 +719,5 @@ class Applications
 	{
 		$this->database->query('UPDATE training_applications SET familiar = TRUE WHERE id_application = ?', $applicationId);
 	}
-
 
 }

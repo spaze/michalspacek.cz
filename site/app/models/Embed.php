@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
-/**
- * Embed model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Embed
 {
 
@@ -26,9 +20,6 @@ class Embed
 	protected $contentSecurityPolicy;
 
 
-	/**
-	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
-	 */
 	public function __construct(\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;

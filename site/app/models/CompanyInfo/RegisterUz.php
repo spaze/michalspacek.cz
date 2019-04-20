@@ -9,9 +9,6 @@ use Nette\Http\IResponse;
  * Register účtovných závierok service.
  *
  * See http://www.registeruz.sk/cruz-public/static/api.html for the docs.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
  */
 class RegisterUz implements CompanyDataInterface
 {
@@ -26,8 +23,6 @@ class RegisterUz implements CompanyDataInterface
 
 	/**
 	 * Root URL of the service, ends with a slash.
-	 *
-	 * @param string $rootUrl
 	 */
 	public function setRootUrl(string $rootUrl): void
 	{
@@ -38,10 +33,6 @@ class RegisterUz implements CompanyDataInterface
 	}
 
 
-	/**
-	 * @param string $companyId
-	 * @return Data
-	 */
 	public function getData(string $companyId): Data
 	{
 		$company = new Data();

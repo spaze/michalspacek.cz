@@ -1,15 +1,8 @@
 <?php
 namespace App\WwwModule\Presenters;
 
-/**
- * Contact presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class ContactPresenter extends BasePresenter
 {
-
 
 	public function renderDefault()
 	{
@@ -17,6 +10,5 @@ class ContactPresenter extends BasePresenter
 		$this->template->keyFile = $keyFile = 'key.asc';
 		$this->template->key = file_get_contents($keyFile);
 	}
-
 
 }

@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-/**
- * Training statuses form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingStatuses extends ProtectedForm
 {
 

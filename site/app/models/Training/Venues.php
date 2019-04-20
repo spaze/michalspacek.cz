@@ -1,12 +1,6 @@
 <?php
 namespace MichalSpacekCz\Training;
 
-/**
- * Training venues model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Venues
 {
 

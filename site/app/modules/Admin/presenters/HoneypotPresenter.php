@@ -9,12 +9,6 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Tracy\Debugger;
 
-/**
- * Honeypot presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class HoneypotPresenter extends BasePresenter
 {
 

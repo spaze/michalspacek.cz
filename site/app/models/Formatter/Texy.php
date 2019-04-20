@@ -59,15 +59,6 @@ class Texy extends \Netxten\Formatter\Texy
 	protected $topHeading = 1;
 
 
-	/**
-	 * @param \Nette\Caching\IStorage $cacheStorage
-	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \Nette\Application\Application $application
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Vat $vat
-	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
-	 * @param \Netxten\Templating\Helpers $netxtenHelpers
-	 */
 	public function __construct(
 		\Nette\Caching\IStorage $cacheStorage,
 		\Nette\Localization\ITranslator $translator,

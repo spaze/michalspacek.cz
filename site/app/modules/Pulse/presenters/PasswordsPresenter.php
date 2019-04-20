@@ -6,18 +6,9 @@ namespace App\PulseModule\Presenters;
 use App\WwwModule\Presenters\BasePresenter;
 use Nette\Http\IResponse;
 
-/**
- * Pulse presenter.
- *
- * @author Michal Špaček
- * @package pulse.michalspacek.cz
- */
 class PasswordsPresenter extends BasePresenter
 {
 
-	/**
-	 * Default action handler.
-	 */
 	public function actionDefault(): void
 	{
 		$this->template->pageTitle = 'Passwords';

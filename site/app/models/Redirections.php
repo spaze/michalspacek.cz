@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
-/**
- * Redirections model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Redirections
 {
 
@@ -16,9 +10,6 @@ class Redirections
 	protected $database;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;

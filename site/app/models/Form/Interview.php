@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-/**
- * Interview form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Interview extends ProtectedForm
 {
 
@@ -75,13 +69,6 @@ class Interview extends ProtectedForm
 	}
 
 
-	/**
-	 * Adds interview date input control to the form.
-	 * @param string $name
-	 * @param string $label
-	 * @param boolean $required
-	 * @return \Nette\Forms\Controls\TextInput
-	 */
 	private function addInterviewDate($name, $label = null, $required = false): \Nette\Forms\Controls\TextInput
 	{
 		return $this->addDate(

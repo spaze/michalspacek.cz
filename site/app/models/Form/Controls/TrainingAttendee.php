@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
-/**
- * Training attendee trait.
- *
- * @author Michal Špaček
- * @package michalspacek.cz
- */
 trait TrainingAttendee
 {
 

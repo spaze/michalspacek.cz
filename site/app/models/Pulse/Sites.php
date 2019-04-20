@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
-/**
- * Pulse sites service.
- *
- * @author Michal Špaček
- * @package pulse.michalspacek.cz
- */
 class Sites
 {
 
@@ -19,9 +13,6 @@ class Sites
 	protected $database;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 */
 	public function __construct(\Nette\Database\Context $context)
 	{
 		$this->database = $context;
@@ -39,11 +30,6 @@ class Sites
 	}
 
 
-	/**
-	 * Get site by URL.
-	 *
-	 * @return \Nette\Database\Row|null
-	 */
 	public function getByUrl(string $url): ?\Nette\Database\Row
 	{
 		return $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url) ?: null;

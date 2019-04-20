@@ -12,12 +12,6 @@ use Nette\Utils\ArrayHash;
 use RuntimeException;
 use stdClass;
 
-/**
- * Homepage presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class HomepagePresenter extends BasePresenter
 {
 

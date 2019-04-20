@@ -24,12 +24,6 @@ use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
-/**
- * Trainings presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingsPresenter extends BasePresenter
 {
 

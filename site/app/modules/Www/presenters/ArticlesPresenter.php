@@ -3,12 +3,6 @@ namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Articles;
 
-/**
- * Articles presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class ArticlesPresenter extends BasePresenter
 {
 
@@ -16,9 +10,6 @@ class ArticlesPresenter extends BasePresenter
 	protected $articles;
 
 
-	/**
-	 * @param Articles $articles
-	 */
 	public function __construct(Articles $articles)
 	{
 		$this->articles = $articles;

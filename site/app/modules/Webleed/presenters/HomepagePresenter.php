@@ -6,12 +6,6 @@ namespace App\WebleedModule\Presenters;
 use App\WwwModule\Presenters\BasePresenter;
 use Nette\Utils\Html;
 
-/**
- * Homepage presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class HomepagePresenter extends BasePresenter
 {
 
@@ -23,9 +17,6 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @return Html
-	 */
 	private function getSmallPrint(): Html
 	{
 		$smallPrint = array(

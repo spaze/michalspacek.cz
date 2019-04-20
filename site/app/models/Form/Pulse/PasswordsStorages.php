@@ -12,12 +12,6 @@ use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
 
-/**
- * Passwords storages form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class PasswordsStorages extends ProtectedForm
 {
 
@@ -146,14 +140,6 @@ class PasswordsStorages extends ProtectedForm
 	}
 
 
-	/**
-	 * Adds from date input control to the form.
-	 * @param Container $container
-	 * @param string $name
-	 * @param string $label
-	 * @param boolean $required
-	 * @return TextInput
-	 */
 	private function addFromDate(Container $container, string $name, ?string $label = null, ?bool $required = false): TextInput
 	{
 		return $this->addDate(
@@ -167,14 +153,6 @@ class PasswordsStorages extends ProtectedForm
 	}
 
 
-	/**
-	 * Adds published date input control to the form.
-	 * @param Container $container
-	 * @param string $name
-	 * @param string $label
-	 * @param boolean $required
-	 * @return TextInput
-	 */
 	private function addPublishedDate(Container $container, string $name, ?string $label = null, ?bool $required = false): TextInput
 	{
 		return $this->addDate(

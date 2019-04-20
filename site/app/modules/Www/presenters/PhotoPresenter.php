@@ -3,12 +3,6 @@ namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Formatter\Texy;
 
-/**
- * Photo presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class PhotoPresenter extends BasePresenter
 {
 
@@ -16,9 +10,6 @@ class PhotoPresenter extends BasePresenter
 	protected $texyFormatter;
 
 
-	/**
-	 * @param Texy $texyFormatter
-	 */
 	public function __construct(Texy $texyFormatter)
 	{
 		$this->texyFormatter = $texyFormatter;

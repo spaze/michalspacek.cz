@@ -6,12 +6,6 @@ namespace MichalSpacekCz;
 use Collator;
 use Nette\Utils\Json;
 
-/**
- * Articles model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Articles
 {
 

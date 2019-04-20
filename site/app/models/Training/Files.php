@@ -5,12 +5,6 @@ namespace MichalSpacekCz\Training;
 
 use \Nette\Database\Row;
 
-/**
- * Training files/materials model.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Files
 {
 
@@ -28,10 +22,6 @@ class Files
 	protected $filesDir;
 
 
-	/**
-	 * @param \Nette\Database\Context $context
-	 * @param \MichalSpacekCz\Training\Statuses $trainingStatuses
-	 */
 	public function __construct(\Nette\Database\Context $context, Statuses $trainingStatuses)
 	{
 		$this->database = $context;

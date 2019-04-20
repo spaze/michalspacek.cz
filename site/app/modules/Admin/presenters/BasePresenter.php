@@ -6,12 +6,6 @@ namespace App\AdminModule\Presenters;
 use App\WwwModule\Presenters\BasePresenter as WwwBasePresenter;
 use Spaze\Session\MysqlSessionHandler;
 
-/**
- * Base class for all admin module presenters.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 abstract class BasePresenter extends WwwBasePresenter
 {
 
@@ -21,10 +15,7 @@ abstract class BasePresenter extends WwwBasePresenter
 	protected $haveBacklink = true;
 
 
-	/**
-	 * @internal
-	 * @param MysqlSessionHandler $sessionHandler
-	 */
+	/** @internal */
 	public function injectSessionHandler(MysqlSessionHandler $sessionHandler): void
 	{
 		$this->sessionHandler = $sessionHandler;

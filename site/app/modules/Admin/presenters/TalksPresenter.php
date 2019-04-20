@@ -18,12 +18,6 @@ use Nette\Utils\Html;
 use RuntimeException;
 use UnexpectedValueException;
 
-/**
- * Talks presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TalksPresenter extends BasePresenter
 {
 

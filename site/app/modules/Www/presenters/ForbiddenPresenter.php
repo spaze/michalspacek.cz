@@ -16,9 +16,6 @@ use stdClass;
  *
  * Does not extend BasePresenter to avoid loop in startup().
  *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- *
  * @property-read Template|stdClass $template
  */
 class ForbiddenPresenter extends Presenter
@@ -37,30 +34,20 @@ class ForbiddenPresenter extends Presenter
 	private $templateHelpers;
 
 
-	/**
-	 * @internal
-	 * @param Config $contentSecurityPolicy
-	 */
+	/** @internal */
 	public function injectContentSecurityPolicy(Config $contentSecurityPolicy)
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 
-	/**
-	 * @internal
-	 * @param Helpers $templateHelpers
-	 */
+	/** @internal */
 	public function injectTemplateHelpers(Helpers $templateHelpers)
 	{
 		$this->templateHelpers = $templateHelpers;
 	}
 
 
-	/**
-	 * @param ITranslator $translator
-	 * @param IResponse $httpResponse
-	 */
 	public function __construct(ITranslator $translator, IResponse $httpResponse)
 	{
 		$this->translator = $translator;

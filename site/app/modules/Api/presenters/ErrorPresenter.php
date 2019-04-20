@@ -7,12 +7,6 @@ use App\WwwModule\Presenters\BaseErrorPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-/**
- * API Generic error presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class ErrorPresenter extends BaseErrorPresenter
 {
 

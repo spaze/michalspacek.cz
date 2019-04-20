@@ -10,12 +10,6 @@ use Nette\Http\IResponse;
 use Nette\Http\UrlImmutable;
 use Spaze\ContentSecurityPolicy\Config;
 
-/**
- * SecurityHeaders service.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class SecurityHeaders
 {
 

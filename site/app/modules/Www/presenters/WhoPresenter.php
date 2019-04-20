@@ -3,12 +3,6 @@ namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Talks;
 
-/**
- * Who presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class WhoPresenter extends BasePresenter
 {
 
@@ -16,9 +10,6 @@ class WhoPresenter extends BasePresenter
 	protected $talks;
 
 
-	/**
-	 * @param Talks $talks
-	 */
 	public function __construct(Talks $talks)
 	{
 		$this->talks = $talks;

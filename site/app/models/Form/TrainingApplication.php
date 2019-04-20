@@ -5,12 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use Nette\Utils\Html;
 
-/**
- * Training application form.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class TrainingApplication extends ProtectedForm
 {
 

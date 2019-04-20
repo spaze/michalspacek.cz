@@ -5,12 +5,6 @@ namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Formatter\Texy;
 
-/**
- * Projects presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class ProjectsPresenter extends BasePresenter
 {
 
@@ -18,9 +12,6 @@ class ProjectsPresenter extends BasePresenter
 	protected $texyFormatter;
 
 
-	/**
-	 * @param Texy $texyFormatter
-	 */
 	public function __construct(Texy $texyFormatter)
 	{
 		$this->texyFormatter = $texyFormatter;

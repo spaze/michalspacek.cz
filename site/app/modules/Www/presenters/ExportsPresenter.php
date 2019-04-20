@@ -6,12 +6,6 @@ namespace App\WwwModule\Presenters;
 use MichalSpacekCz\Exports;
 use Spaze\Exports\Bridges\Nette\Atom\Response;
 
-/**
- * Exports presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class ExportsPresenter extends BasePresenter
 {
 
@@ -19,9 +13,6 @@ class ExportsPresenter extends BasePresenter
 	protected $exports;
 
 
-	/**
-	 * @param Exports $exports
-	 */
 	public function __construct(Exports $exports)
 	{
 		$this->exports = $exports;

@@ -3,14 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
-/**
- * Company data.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class Data
 {
+
 	/** @var integer */
 	public $status;
 
@@ -46,4 +41,5 @@ class Data
 
 	/** @var string */
 	public $country;
+
 }

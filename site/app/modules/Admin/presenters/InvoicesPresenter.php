@@ -8,12 +8,6 @@ use MichalSpacekCz\Form\TrainingInvoice;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 
-/**
- * Invoices presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class InvoicesPresenter extends BasePresenter
 {
 

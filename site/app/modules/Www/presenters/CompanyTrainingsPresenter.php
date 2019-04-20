@@ -10,12 +10,6 @@ use MichalSpacekCz\Vat;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-/**
- * Company Trainings presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class CompanyTrainingsPresenter extends BasePresenter
 {
 
@@ -41,15 +35,6 @@ class CompanyTrainingsPresenter extends BasePresenter
 	protected $httpResponse;
 
 
-	/**
-	 * @param Texy $texyFormatter
-	 * @param Trainings $trainings
-	 * @param CompanyTrainings $companyTrainings
-	 * @param Locales $trainingLocales
-	 * @param Reviews $trainingReviews
-	 * @param Vat $vat
-	 * @param IResponse $httpResponse
-	 */
 	public function __construct(
 		Texy $texyFormatter,
 		Trainings $trainings,

@@ -8,12 +8,6 @@ use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Trainings;
 
-/**
- * Homepage presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class HomepagePresenter extends BasePresenter
 {
 
@@ -36,14 +30,6 @@ class HomepagePresenter extends BasePresenter
 	protected $companyTrainings;
 
 
-	/**
-	 * @param Articles $articles
-	 * @param Interviews $interviews
-	 * @param Talks $talks
-	 * @param Dates $trainingDates
-	 * @param Trainings $trainings
-	 * @param CompanyTrainings $companyTrainings
-	 */
 	public function __construct(
 		Articles $articles,
 		Interviews $interviews,

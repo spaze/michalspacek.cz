@@ -13,12 +13,6 @@ use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 use stdClass;
 
-/**
- * Emails presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 class EmailsPresenter extends BasePresenter
 {
 

@@ -8,12 +8,6 @@ use Nette\Application\Request;
 use Nette\Http\IResponse;
 use Tracy\ILogger;
 
-/**
- * Base error presenter.
- *
- * @author     Michal Špaček
- * @package    michalspacek.cz
- */
 abstract class BaseErrorPresenter extends BasePresenter
 {
 
@@ -33,20 +27,14 @@ abstract class BaseErrorPresenter extends BasePresenter
 	];
 
 
-	/**
-	 * @internal
-	 * @param Redirections $redirections
-	 */
+	/** @internal */
 	public function injectRedirections(Redirections $redirections)
 	{
 		$this->redirections = $redirections;
 	}
 
 
-	/**
-	 * @internal
-	 * @param ILogger $logger
-	 */
+	/** @internal */
 	public function injectLogger(ILogger $logger)
 	{
 		$this->logger = $logger;
