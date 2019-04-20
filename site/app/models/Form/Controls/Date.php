@@ -19,8 +19,8 @@ trait Date
 	protected function addDate(string $name, string $label, bool $required, string $format, string $pattern, ?\Nette\Forms\Container $container = null): \Nette\Forms\Controls\TextInput
 	{
 		return ($container === null ? $this : $container)->addText($name, $label)
-			->setAttribute('placeholder', $format)
-			->setAttribute('title', "Formát {$format}")
+			->setHtmlAttribute('placeholder', $format)
+			->setHtmlAttribute('title', "Formát {$format}")
 			->setRequired($required ? 'Zadejte datum' : false)
 			->addRule(self::PATTERN, "Datum musí být ve formátu {$format}", $pattern);
 	}

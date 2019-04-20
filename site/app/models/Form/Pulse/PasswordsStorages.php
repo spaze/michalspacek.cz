@@ -32,7 +32,7 @@ class PasswordsStorages extends ProtectedForm
 		$newCompanyContainer = $companyContainer->addContainer('new');
 		$inputName = $newCompanyContainer->addText('name', 'Name:');
 		$newCompanyContainer->addText('dba', 'Trade name:')
-			->setAttribute('title', '"doing business as"');
+			->setHtmlAttribute('title', '"doing business as"');
 		$inputAlias = $newCompanyContainer->addText('alias', 'Alias:');
 		$inputAlias->addConditionOn($inputName, self::FILLED)
 			->setRequired('Enter new company alias');
@@ -52,7 +52,7 @@ class PasswordsStorages extends ProtectedForm
 			->setPrompt('- select site -');
 		$newSiteContainer = $siteContainer->addContainer('new');
 		$inputUrl = $newSiteContainer->addText('url', 'URL:')
-			->setType('url');
+			->setHtmlType('url');
 		$inputAlias = $newSiteContainer->addText('alias', 'Alias:');
 		$newSiteContainer->addText('sharedWith', 'Storage shared with:');
 
@@ -114,7 +114,7 @@ class PasswordsStorages extends ProtectedForm
 			$selectDisclosure = $disclosureNewCountContainer->addSelect('disclosure', 'Disclosure:', $items)
 				->setPrompt('- select disclosure type -');
 			$inputUrl = $disclosureNewCountContainer->addText('url', 'URL:')
-				->setType('url');
+				->setHtmlType('url');
 			$inputArchive = $disclosureNewCountContainer->addText('archive', 'Archive:');
 			$disclosureNewCountContainer->addText('note', 'Note:');
 			$inputPublished = $this->addPublishedDate($disclosureNewCountContainer, 'published', 'Published:');

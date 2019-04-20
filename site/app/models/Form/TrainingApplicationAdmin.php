@@ -60,9 +60,9 @@ class TrainingApplicationAdmin extends ProtectedForm
 		$this->addSubmit('submit', 'Uložit');
 
 		foreach ($this->deletableFields as $field) {
-			$this->addCheckbox("{$field}Set")->setAttribute('class', 'disableInput');
+			$this->addCheckbox("{$field}Set")->setHtmlAttribute('class', 'disableInput');
 			$this->getComponent($field)
-				->setAttribute('class', 'transparent')
+				->setHtmlAttribute('class', 'transparent')
 				->setRequired(false);
 		}
 	}
@@ -71,17 +71,17 @@ class TrainingApplicationAdmin extends ProtectedForm
 	protected function addPaymentInfo(\Nette\Forms\Container $container): void
 	{
 		$this->addText('price', 'Cena bez DPH:')
-			->setType('number')
-			->setAttribute('title', 'Po případné slevě');
+			->setHtmlType('number')
+			->setHtmlAttribute('title', 'Po případné slevě');
 		$this->addText('vatRate', 'DPH:')
-			->setType('number');
+			->setHtmlType('number');
 		$this->addText('priceVat', 'Cena s DPH:')
-			->setType('number')
-			->setAttribute('title', 'Po případné slevě');
+			->setHtmlType('number')
+			->setHtmlAttribute('title', 'Po případné slevě');
 		$this->addText('discount', 'Sleva:')
-			->setType('number');
+			->setHtmlType('number');
 		$this->addText('invoiceId', 'Faktura č.:')
-			->setType('number');
+			->setHtmlType('number');
 		$this->addPaidDate('paid', 'Zaplaceno:', false);
 	}
 
@@ -114,7 +114,7 @@ class TrainingApplicationAdmin extends ProtectedForm
 		);
 		foreach ($this->deletableFields as $field) {
 			$values["{$field}Set"] = ($application->$field !== null);
-			$this->getComponent($field)->setAttribute('class', $application->$field === null ? 'transparent' : null);
+			$this->getComponent($field)->setHtmlAttribute('class', $application->$field === null ? 'transparent' : null);
 		}
 		$this->setDefaults($values);
 		if (!isset($application->dateId)) {

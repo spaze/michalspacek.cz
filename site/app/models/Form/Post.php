@@ -19,7 +19,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 		$this->addText('translationGroup', 'Skupina překladů:')
 			->setRequired(false)
-			->setType('number');
+			->setHtmlType('number');
 		$this->addSelect('locale', 'Jazyk:', $this->blogPost->getAllLocales())
 			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');
@@ -64,7 +64,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 		$this->addSubmit('submit', 'Přidat');
 		$this->addButton('preview', 'Náhled')
-			->setAttribute('data-alt', 'Moment…');;
+			->setHtmlAttribute('data-alt', 'Moment…');;
 	}
 
 

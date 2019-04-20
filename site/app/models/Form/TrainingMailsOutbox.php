@@ -37,11 +37,11 @@ class TrainingMailsOutbox extends ProtectedForm
 			$send = $applicationIdsContainer->addCheckbox('send')
 				->setDefaultValue($checked)
 				->setDisabled($disabled)
-				->setAttribute('class', 'send');
+				->setHtmlAttribute('class', 'send');
 			$applicationIdsContainer->addTextArea('additional', null)
-				->setAttribute('placeholder', 'Dodatečný text')
-				->setAttribute('cols', 80)
-				->setAttribute('rows', 3);
+				->setHtmlAttribute('placeholder', 'Dodatečný text')
+				->setHtmlAttribute('cols', 80)
+				->setHtmlAttribute('rows', 3);
 			switch ($application->nextStatus) {
 				case Training\Statuses::STATUS_MATERIALS_SENT:
 					$applicationIdsContainer->addCheckbox('feedbackRequest', 'Požádat o zhodnocení')
@@ -50,14 +50,14 @@ class TrainingMailsOutbox extends ProtectedForm
 				case Training\Statuses::STATUS_INVOICE_SENT:
 				case Training\Statuses::STATUS_INVOICE_SENT_AFTER:
 					$applicationIdsContainer->addText('invoiceId')
-						->setType('number')
-						->setAttribute('placeholder', 'Faktura č.')
-						->setAttribute('title', 'Faktura č.')
+						->setHtmlType('number')
+						->setHtmlAttribute('placeholder', 'Faktura č.')
+						->setHtmlAttribute('title', 'Faktura č.')
 						->setDefaultValue($application->invoiceId)
 						->addConditionOn($send, self::FILLED)
 							->addRule(self::FILLED, 'Chybí číslo faktury');
 					$applicationIdsContainer->addUpload('invoice')
-						->setAttribute('title', 'Faktura v PDF')
+						->setHtmlAttribute('title', 'Faktura v PDF')
 						->addConditionOn($send, self::FILLED)
 							->addRule(self::FILLED, 'Chybí faktura')
 							->addRule(self::MIME_TYPE, 'Faktura není v PDF', 'application/pdf');

@@ -57,24 +57,24 @@ class TalkSlides extends ProtectedForm
 			->setRequired('Zadejte prosím alias')
 			->addRule(self::PATTERN, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
 		$container->addText('number', 'Slajd:')
-			->setType('number')
+			->setHtmlType('number')
 			->setDefaultValue(1)
-			->setAttribute('class', 'right slide-nr')
+			->setHtmlAttribute('class', 'right slide-nr')
 			->setRequired('Zadejte prosím číslo slajdu');
 		$container->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek');
 		$upload = $container->addUpload('replace', 'Nahradit:')
-			->setAttribute('title', 'Nahradit soubor (*.' . implode(', *.', $this->talks->getSupportedImages()) . ')')
-			->setAttribute('accept', implode(',', array_keys($this->talks->getSupportedImages())));
+			->setHtmlAttribute('title', 'Nahradit soubor (*.' . implode(', *.', $this->talks->getSupportedImages()) . ')')
+			->setHtmlAttribute('accept', implode(',', array_keys($this->talks->getSupportedImages())));
 		$container->addText('filename', 'Soubor:')
-			->setAttribute('class', 'slide-filename')
+			->setHtmlAttribute('class', 'slide-filename')
 			->addConditionOn($upload, self::BLANK)
 				->setRequired('Zadejte prosím soubor');
 		$container->addUpload('replaceAlternative', 'Nahradit:')
-			->setAttribute('title', 'Nahradit alternativní soubor (*.' . implode(', *.', $this->talks->getSupportedAlternativeImages()) . ')')
-			->setAttribute('accept', implode(',', array_keys($this->talks->getSupportedAlternativeImages())));
+			->setHtmlAttribute('title', 'Nahradit alternativní soubor (*.' . implode(', *.', $this->talks->getSupportedAlternativeImages()) . ')')
+			->setHtmlAttribute('accept', implode(',', array_keys($this->talks->getSupportedAlternativeImages())));
 		$container->addText('filenameAlternative', 'Soubor:')
-			->setAttribute('class', 'slide-filename');
+			->setHtmlAttribute('class', 'slide-filename');
 		$container->addTextArea('speakerNotes', 'Poznámky:')
 			->setRequired('Zadejte prosím poznámky');
 	}

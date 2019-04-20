@@ -10,14 +10,14 @@ class UpcKeys extends UnprotectedForm
 	{
 		parent::__construct($parent, $name);
 		$this->addText('ssid', 'SSID:')
-			->setAttribute('placeholder', $upcKeys->getSsidPlaceholder())
-			->setAttribute('title', '"UPC" and 7 digits')
+			->setHtmlAttribute('placeholder', $upcKeys->getSsidPlaceholder())
+			->setHtmlAttribute('title', '"UPC" and 7 digits')
 			->setDefaultValue($ssid)
 			->setRequired('Please enter an SSID')
 			->addRule(self::PATTERN, 'Wi-Fi network name has to be "UPC" and 7 digits (UPC1234567)', '\s*' . $upcKeys->getValidSsidPattern() . '\s*');
 		$this->addSubmit('submit', 'Get keys')
 			->setHtmlId('submit')
-			->setAttribute('data-alt', 'Wait…');
+			->setHtmlAttribute('data-alt', 'Wait…');
 	}
 
 }

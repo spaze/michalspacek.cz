@@ -44,7 +44,7 @@ class Talk extends ProtectedForm
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na přednášku je %d znaků', 200);
 		$this->addText('duration', 'Délka:')
-			->setType('number');
+			->setHtmlType('number');
 		$this->addSelect('slidesTalk', 'Použít slajdy z:', $allTalks)
 			->setPrompt('Vyberte prosím přednášku, ze které se použijí slajdy');
 		$this->addText('slidesHref', 'Odkaz na slajdy:')

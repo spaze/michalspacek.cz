@@ -41,7 +41,7 @@ class TrainingReview extends ProtectedForm
 		$this->addCheckbox('hidden', 'Skrýt:');
 		$this->addText('ranking', 'Pořadí:')
 			->setRequired(false)
-			->setType('number');
+			->setHtmlType('number');
 		$this->addSubmit('submit', 'Přidat');
 	}
 
