@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Embed;
@@ -45,7 +47,7 @@ class VenuesPresenter extends BasePresenter
 	}
 
 
-	public function actionVenue($name)
+	public function actionVenue(string $name): void
 	{
 		$venue = $this->trainingVenues->get($name);
 		if (!$venue) {

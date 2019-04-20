@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Articles;
@@ -26,7 +28,7 @@ class RedirectPresenter extends BasePresenter
 	}
 
 
-	public function actionFiles($token)
+	public function actionFiles(string $token): void
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
@@ -37,7 +39,7 @@ class RedirectPresenter extends BasePresenter
 	}
 
 
-	public function actionApplication($token)
+	public function actionApplication(string $token): void
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
@@ -48,7 +50,7 @@ class RedirectPresenter extends BasePresenter
 	}
 
 
-	public function actionNewestArticleByTag($token)
+	public function actionNewestArticleByTag(string $token): void
 	{
 		$article = current($this->articles->getAllByTags($token, 1));
 		if ($article) {

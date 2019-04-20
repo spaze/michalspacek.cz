@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Embed;
@@ -33,14 +35,14 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.interviews');
 		$this->template->interviews = $this->interviews->getAll();
 	}
 
 
-	public function actionInterview($name)
+	public function actionInterview(string $name): void
 	{
 		$interview = $this->interviews->get($name);
 		if (!$interview) {

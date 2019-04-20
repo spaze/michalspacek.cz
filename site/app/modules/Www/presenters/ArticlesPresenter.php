@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Articles;
@@ -17,11 +19,10 @@ class ArticlesPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.articles');
 		$this->template->articles  = $this->articles->getAll();
 	}
-
 
 }

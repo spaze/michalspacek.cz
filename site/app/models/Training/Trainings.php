@@ -1,31 +1,34 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
+
+use MichalSpacekCz\Formatter\Texy;
+use Nette\Database\Context;
+use Nette\Database\Row;
+use Nette\Localization\ITranslator;
+use Nette\Utils\ArrayHash;
 
 class Trainings
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
 	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
-	/** @var \Nette\Database\Row[] */
+	/** @var Row[] */
 	protected $trainingsById = [];
 
 
-	public function __construct(
-		\Nette\Database\Context $context,
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		Dates $trainingDates,
-		\Nette\Localization\ITranslator $translator
-	)
+	public function __construct(Context $context, Texy $texyFormatter, Dates $trainingDates, ITranslator $translator)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
@@ -34,38 +37,19 @@ class Trainings
 	}
 
 
-	/**
-	 * Get predefined training info.
-	 *
-	 * @param string $name
-	 * @return \Nette\Database\Row|null
-	 */
-	public function get($name): ?\Nette\Database\Row
+	public function get(string $name): ?Row
 	{
 		return $this->getTraining($name, false);
 	}
 
 
-	/**
-	 * Get training info including custom trainings.
-	 *
-	 * @param string $name
-	 * @return \Nette\Database\Row|null
-	 */
-	public function getIncludingCustom($name): ?\Nette\Database\Row
+	public function getIncludingCustom(string $name): ?Row
 	{
 		return $this->getTraining($name, true);
 	}
 
 
-	/**
-	 * Get training info.
-	 *
-	 * @param string $name
-	 * @param boolean $includeCustom
-	 * @return \Nette\Database\Row|null
-	 */
-	private function getTraining($name, $includeCustom): ?\Nette\Database\Row
+	private function getTraining(string $name, bool $includeCustom): ?Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -102,13 +86,7 @@ class Trainings
 	}
 
 
-	/**
-	 * Get training info by id.
-	 *
-	 * @param integer $id
-	 * @return \Nette\Database\Row|null
-	 */
-	public function getById($id): ?\Nette\Database\Row
+	public function getById(int $id): ?Row
 	{
 		if (!array_key_exists($id, $this->trainingsById)) {
 			$result = $this->database->fetch(
@@ -145,14 +123,11 @@ class Trainings
 
 
 	/**
-	 * Get training dates by training id.
-	 *
-	 * @param integer $id
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
-	public function getDates($id)
+	public function getDates(int $trainingId): array
 	{
-		$dates = $this->trainingDates->getDates($id);
+		$dates = $this->trainingDates->getDates($trainingId);
 		foreach ($dates as $date) {
 			$date->venueDescription = $this->texyFormatter->format($date->venueDescription);
 			$date->cooperationDescription = $this->texyFormatter->format($date->cooperationDescription);
@@ -161,7 +136,10 @@ class Trainings
 	}
 
 
-	public function lastFreeSeatsAnyTraining(array $trainings)
+	/**
+	 * @param ArrayHash[] $trainings
+	 */
+	public function lastFreeSeatsAnyTraining(array $trainings): bool
 	{
 		$lastFreeSeats = false;
 		foreach ($trainings as $training) {
@@ -174,7 +152,10 @@ class Trainings
 	}
 
 
-	public function getAllTrainings()
+	/**
+	 * @return Row[]
+	 */
+	public function getAllTrainings(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -213,8 +194,10 @@ class Trainings
 
 	/**
 	 * Get all training names without custom training names.
+	 *
+	 * @return Row[]
 	 */
-	public function getNames()
+	public function getNames(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -244,8 +227,10 @@ class Trainings
 
 	/**
 	 * Get all training names including custom and discontinued training names.
+	 *
+	 * @return Row[]
 	 */
-	public function getNamesIncludingCustomDiscontinued()
+	public function getNamesIncludingCustomDiscontinued(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -273,7 +258,10 @@ class Trainings
 	}
 
 
-	public function getCooperations()
+	/**
+	 * @return Row[]
+	 */
+	public function getCooperations(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -287,12 +275,7 @@ class Trainings
 	}
 
 
-	/**
-	 * Return training action name by id.
-	 * @param integer $id
-	 * @return string
-	 */
-	public function getActionById($id)
+	public function getActionById(int $id): string
 	{
 		return $this->database->fetchField(
 			'SELECT
@@ -313,9 +296,9 @@ class Trainings
 	/**
 	 * Get all discontinued trainings with description.
 	 *
-	 * @return array
+	 * @return array<int, array<string, string|string[]>>
 	 */
-	public function getAllDiscontinued()
+	public function getAllDiscontinued(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -345,10 +328,9 @@ class Trainings
 	/**
 	 * Get discontinued trainings with description.
 	 *
-	 * @param integer $id
-	 * @return array
+	 * @return array<string, string|string[]>|null
 	 */
-	public function getDiscontinued($id)
+	public function getDiscontinued(int $id): ?array
 	{
 		$sql = 'SELECT
 				td.description,

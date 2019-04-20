@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Articles;
@@ -49,7 +51,7 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$this->template->pageHeader = 'Michal Špaček';
 		$this->template->articles          = $this->articles->getAll(3);

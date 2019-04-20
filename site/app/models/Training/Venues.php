@@ -1,24 +1,30 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
+
+use Nette\Database\Context;
+use Nette\Database\Row;
+use Netxten\Formatter\Texy;
 
 class Venues
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \Netxten\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
 
-	public function __construct(\Nette\Database\Context $context, \Netxten\Formatter\Texy $texyFormatter)
+	public function __construct(Context $context, Texy $texyFormatter)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 	}
 
 
-	public function get($venueName)
+	public function get(string $venueName): ?Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -51,7 +57,10 @@ class Venues
 	}
 
 
-	public function getAll()
+	/**
+	 * @return Row[]
+	 */
+	public function getAll(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT

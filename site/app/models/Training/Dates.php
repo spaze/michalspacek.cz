@@ -1,6 +1,13 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
 
+use DateTime;
+use Nette\Database\Context;
+use Nette\Database\Row;
+use Nette\Localization\ITranslator;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 
 class Dates
@@ -13,25 +20,23 @@ class Dates
 
 	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 	/** @var Statuses */
 	protected $trainingStatuses;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
+	/** @var array<string, integer> */
 	private $statusIds = array();
 
+	/** @var array<integer, array<string, ArrayHash>> */
 	private $upcomingDates = array();
 
 
-	public function __construct(
-		\Nette\Database\Context $context,
-		Statuses $trainingStatuses,
-		\Nette\Localization\ITranslator $translator
-	)
+	public function __construct(Context $context, Statuses $trainingStatuses, ITranslator $translator)
 	{
 		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;
@@ -39,7 +44,7 @@ class Dates
 	}
 
 
-	public function get($dateId)
+	public function get(int $dateId): ?Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -83,7 +88,10 @@ class Dates
 	}
 
 
-	public function getWithUnpaid()
+	/**
+	 * @return Row[]
+	 */
+	public function getWithUnpaid(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -132,19 +140,30 @@ class Dates
 	}
 
 
-	public function update($dateId, $training, $venue, $start, $end, $label, $status, $public, $cooperation, $note)
+	public function update(
+		int $dateId,
+		int $trainingId,
+		int $venueId,
+		string $start,
+		string $end,
+		string $label,
+		int $statusId,
+		bool $public,
+		int $cooperationId,
+		string $note
+	): void
 	{
 		$this->database->query(
 			'UPDATE training_dates SET ? WHERE id_date = ?',
 			array(
-				'key_training'    => $training,
-				'key_venue'       => $venue,
-				'start'           => new \DateTime($start),
-				'end'             => new \DateTime($end),
-				'label'           => (empty($label) ? null : $label),
-				'key_status'      => $status,
-				'public'          => $public,
-				'key_cooperation' => (empty($cooperation) ? null : $cooperation),
+				'key_training' => $trainingId,
+				'key_venue' => $venueId,
+				'start' => new DateTime($start),
+				'end' => new DateTime($end),
+				'label' => (empty($label) ? null : $label),
+				'key_status' => $statusId,
+				'public' => $public,
+				'key_cooperation' => (empty($cooperationId) ? null : $cooperationId),
 				'note' => (empty($note) ? null : $note),
 			),
 			$dateId
@@ -152,27 +171,40 @@ class Dates
 	}
 
 
-	public function add($training, $venue, $start, $end, $label, $status, $public, $cooperation, $note)
+	public function add(
+		int $trainingId,
+		int $venueId,
+		string $start,
+		string $end,
+		string $label,
+		int $statusId,
+		bool $public,
+		int $cooperationId,
+		string $note
+	): int
 	{
 		$this->database->query(
 			'INSERT INTO training_dates',
 			array(
-				'key_training'    => $training,
-				'key_venue'       => $venue,
-				'start'           => new \DateTime($start),
-				'end'             => new \DateTime($end),
-				'label'           => (empty($label) ? null : $label),
-				'key_status'      => $status,
-				'public'          => $public,
-				'key_cooperation' => (empty($cooperation) ? null : $cooperation),
+				'key_training' => $trainingId,
+				'key_venue' => $venueId,
+				'start' => new DateTime($start),
+				'end' => new DateTime($end),
+				'label' => (empty($label) ? null : $label),
+				'key_status' => $statusId,
+				'public' => $public,
+				'key_cooperation' => (empty($cooperationId) ? null : $cooperationId),
 				'note' => (empty($note) ? null : $note),
 			)
 		);
-		return $this->database->getInsertId();
+		return (int)$this->database->getInsertId();
 	}
 
 
-	public function getStatuses()
+	/**
+	 * @return Row[]
+	 */
+	public function getStatuses(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -186,7 +218,7 @@ class Dates
 	}
 
 
-	public function getStatusId($status)
+	public function getStatusId(string $status): int
 	{
 		if (!isset($this->statusIds[$status])) {
 			$this->statusIds[$status] = $this->database->fetchField(
@@ -198,13 +230,19 @@ class Dates
 	}
 
 
-	public function getPublicUpcoming()
+	/**
+	 * @return array<string, ArrayHash>
+	 */
+	public function getPublicUpcoming(): array
 	{
 		return $this->getUpcoming(false);
 	}
 
 
-	public function getPublicUpcomingIds()
+	/**
+	 * @return integer[]
+	 */
+	public function getPublicUpcomingIds(): array
 	{
 		$upcomingIds = array();
 		foreach ($this->getPublicUpcoming() as $training) {
@@ -216,22 +254,21 @@ class Dates
 	}
 
 
-	public function getAllUpcoming()
+	/**
+	 * @return array<string, ArrayHash>
+	 */
+	public function getAllUpcoming(): array
 	{
 		return $this->getUpcoming(true);
 	}
 
 
 	/**
-	 * Get upcoming trainings.
-	 *
-	 * @param boolean $all Whether to include non-public trainings
-	 *
-	 * @return array
+	 * @return array<string, ArrayHash>
 	 */
-	private function getUpcoming($all)
+	private function getUpcoming(bool $includeNonPublic): array
 	{
-		if (!isset($this->upcomingDates[$all])) {
+		if (!isset($this->upcomingDates[(int)$includeNonPublic])) {
 			$query = "SELECT
 					d.id_date AS dateId,
 					a.action,
@@ -276,7 +313,7 @@ class Dates
 					d.start";
 
 			$upcoming = array();
-			foreach ($this->database->fetchAll($query, $all, $all, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED, $this->translator->getDefaultLocale()) as $row) {
+			foreach ($this->database->fetchAll($query, $includeNonPublic, $includeNonPublic, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED, $this->translator->getDefaultLocale()) as $row) {
 				$date = array(
 					'dateId'        => $row->dateId,
 					'tentative'     => ($row->status == Dates::STATUS_TENTATIVE),
@@ -292,7 +329,7 @@ class Dates
 					'venueCity'     => $row->venueCity,
 					'note'          => $row->note,
 				);
-				$upcoming[$row->action] = \Nette\Utils\ArrayHash::from(array(
+				$upcoming[$row->action] = ArrayHash::from(array(
 					'action' => $row->action,
 					'name'   => $date['name'],
 					'dates'  => (isset($upcoming[$row->action]->dates)
@@ -301,14 +338,17 @@ class Dates
 					),
 				));
 			}
-			$this->upcomingDates[$all] = $upcoming;
+			$this->upcomingDates[(int)$includeNonPublic] = $upcoming;
 		}
 
-		return $this->upcomingDates[$all];
+		return $this->upcomingDates[(int)$includeNonPublic];
 	}
 
 
-	public function getAllTrainingsInterval($from, $to = null)
+	/**
+	 * @return Row[]
+	 */
+	public function getAllTrainingsInterval(string $from, string $to = ''): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -336,8 +376,8 @@ class Dates
 				AND l.language = ?
 			ORDER BY
 				d.start',
-			new \DateTime($from),
-			new \DateTime($to),
+			new DateTime($from),
+			new DateTime($to),
 			$this->translator->getDefaultLocale()
 		);
 
@@ -349,12 +389,9 @@ class Dates
 
 
 	/**
-	 * Get training dates by training id.
-	 *
-	 * @param integer $id
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
-	public function getDates($id)
+	public function getDates(int $trainingId): array
 	{
 		$result = $this->database->fetchAll(
 			"SELECT
@@ -395,7 +432,7 @@ class Dates
 				) u ON t.id_training = u.id_training AND v.id_venue = u.key_venue AND d.start = u.start
 			ORDER BY
 				d.start",
-			$id,
+			$trainingId,
 			Dates::STATUS_TENTATIVE,
 			Dates::STATUS_CONFIRMED
 		);
@@ -410,14 +447,17 @@ class Dates
 	}
 
 
-	private function lastFreeSeats(\DateTime $start)
+	private function lastFreeSeats(DateTime $start): bool
 	{
-		$now = new \DateTime();
+		$now = new DateTime();
 		return ($start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $start > $now);
 	}
 
 
-	public function lastFreeSeatsAnyDate(array $dates)
+	/**
+	 * @param Row[] $dates
+	 */
+	public function lastFreeSeatsAnyDate(array $dates): bool
 	{
 		$lastFreeSeats = false;
 		foreach ($dates as $date) {

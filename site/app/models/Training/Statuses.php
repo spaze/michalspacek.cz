@@ -1,5 +1,13 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
+use Nette\Database\Context;
+use Nette\Database\Row;
 
 class Statuses
 {
@@ -21,7 +29,7 @@ class Statuses
 	public const STATUS_INVOICE_SENT_AFTER  = 'INVOICE_SENT_AFTER';   // 17
 	public const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 	private $statusIds = array();
@@ -35,13 +43,13 @@ class Statuses
 	private $statusHistory = array();
 
 
-	public function __construct(\Nette\Database\Context $context)
+	public function __construct(Context $context)
 	{
 		$this->database = $context;
 	}
 
 
-	public function getStatusId($status)
+	public function getStatusId(string $status): int
 	{
 		if (!isset($this->statusIds[$status])) {
 			$this->statusIds[$status] = $this->database->fetchField(
@@ -53,36 +61,46 @@ class Statuses
 	}
 
 
-	public function getAttendedStatuses()
+	/**
+	 * @return array<integer, string>
+	 */
+	public function getAttendedStatuses(): array
 	{
 		return array($this->getStatusId(self::STATUS_ATTENDED) => self::STATUS_ATTENDED) + $this->getDescendantStatuses(self::STATUS_ATTENDED);
 	}
 
 
-	public function getDiscardedStatuses()
+	/**
+	 * @return array<integer, string>
+	 */
+	public function getDiscardedStatuses(): array
 	{
 		return $this->getCanceledStatus() + $this->getDescendantStatuses(self::STATUS_CANCELED);
 	}
 
 
 	/**
-	 * Get canceled status.
-	 *
-	 * @return array(id => status)
+	 * @return array<integer, string>
 	 */
-	public function getCanceledStatus()
+	public function getCanceledStatus(): array
 	{
 		return array($this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED);
 	}
 
 
-	public function getInitialStatuses()
+	/**
+	 * @return array<integer, string>
+	 */
+	public function getInitialStatuses(): array
 	{
 		return $this->getChildrenStatuses(self::STATUS_CREATED);
 	}
 
 
-	public function getChildrenStatuses($parent)
+	/**
+	 * @return array<integer, string>
+	 */
+	public function getChildrenStatuses($parent): array
 	{
 		if (!isset($this->childrenStatuses[$parent])) {
 			$this->childrenStatuses[$parent] = $this->database->fetchPairs(
@@ -100,7 +118,11 @@ class Statuses
 	}
 
 
-	public function getParentStatuses($child)
+	/**
+	 * @param string $child
+	 * @return array<integer, string>
+	 */
+	public function getParentStatuses(string $child): array
 	{
 		if (!isset($this->parentStatuses[$child])) {
 			$this->parentStatuses[$child] = $this->database->fetchPairs(
@@ -118,7 +140,12 @@ class Statuses
 	}
 
 
-	public function getChildrenStatusesForApplicationId($parent, $applicationId)
+	/**
+	 * @param string $parent
+	 * @param integer $applicationId
+	 * @return array<integer, string>
+	 */
+	public function getChildrenStatusesForApplicationId(string $parent, int $applicationId): array
 	{
 		$children = $this->getChildrenStatuses($parent);
 		if ($parent === self::STATUS_ATTENDED) {
@@ -129,7 +156,11 @@ class Statuses
 	}
 
 
-	private function getDescendantStatuses($parent)
+	/**
+	 * @param string $parent
+	 * @return array<integer, string>
+	 */
+	private function getDescendantStatuses(string $parent): array
 	{
 		if (!isset($this->descendantStatuses[$parent])) {
 			$statuses = $this->getChildrenStatuses($parent);
@@ -146,7 +177,7 @@ class Statuses
 	 * Needs to be wrapped in transaction, not for public consumption,
 	 * use updateStatus(), updateStatusCallback() or updateStatusReturnCallback() instead.
 	 */
-	private function setStatus($applicationId, $status, $date)
+	private function setStatus(int $applicationId, string $status, ?string $date): void
 	{
 		$statusId = $this->getStatusId($status);
 
@@ -162,7 +193,7 @@ class Statuses
 			$applicationId
 		);
 
-		$datetime = new \DateTime($date);
+		$datetime = new DateTime($date ?? '');
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
@@ -182,54 +213,55 @@ class Statuses
 				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
 			)
 		);
-
-		return $result;
 	}
 
 
-	public function updateStatus($applicationId, $status, $date = null)
+	public function updateStatus(int $applicationId, string $status, ?string $date = null): void
 	{
 		$this->database->beginTransaction();
 		try {
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->database->rollBack();
 		}
 	}
 
 
-	public function updateStatusCallback(callable $callback, $status, $date)
+	public function updateStatusCallbackReturnId(callable $callback, string $status, ?string $date): int
 	{
 		$applicationId = null;
 		$this->database->beginTransaction();
 		try {
+			/** @var integer $applicationId */
 			$applicationId = $callback();
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->database->rollBack();
 		}
 		return $applicationId;
 	}
 
 
-	public function updateStatusReturnCallback($applicationId, $status, $date, callable $callback)
+	public function updateStatusCallback(int $applicationId, string $status, ?string $date, callable $callback): void
 	{
-		$result = null;
 		$this->database->beginTransaction();
 		try {
-			$result = $callback();
+			$callback();
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->database->rollBack();
 		}
-		return $result;
 	}
 
 
-	public function getStatusHistory($applicationId)
+	/**
+	 * @param integer $applicationId
+	 * @return Row[]
+	 */
+	public function getStatusHistory(int $applicationId): array
 	{
 		if (!isset($this->statusHistory[$applicationId])) {
 			$this->statusHistory[$applicationId] = $this->database->fetchAll(
@@ -244,7 +276,7 @@ class Statuses
 				$applicationId
 			);
 			foreach ($this->statusHistory[$applicationId] as &$row) {
-				$row->statusTime->setTimezone(new \DateTimeZone($row->statusTimeTimeZone));
+				$row->statusTime->setTimezone(new DateTimeZone($row->statusTimeTimeZone));
 				unset($row->statusTimeTimeZone);
 			}
 		}
@@ -252,7 +284,12 @@ class Statuses
 	}
 
 
-	public function historyContainsStatuses(array $statuses, $applicationId)
+	/**
+	 * @param string[] $statuses
+	 * @param integer $applicationId
+	 * @return boolean
+	 */
+	public function historyContainsStatuses(array $statuses, int $applicationId): bool
 	{
 		$result = false;
 		foreach ($this->getStatusHistory($applicationId) as $history) {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\CompanyInfo\Info;
@@ -108,7 +110,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
@@ -119,11 +121,10 @@ class TrainingsPresenter extends BasePresenter
 
 
 	/**
-	 * @param string $name
 	 * @throws BadRequestException
 	 * @throws AbortException
 	 */
-	public function actionTraining($name)
+	public function actionTraining(string $name): void
 	{
 		$this->training = $this->trainings->get($name);
 		if (!$this->training) {
@@ -167,7 +168,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionApplication($name, $param)
+	public function actionApplication(string $name, ?string $param): void
 	{
 		$training  = $this->trainings->get($name);
 		if (!$training || $training->discontinuedId) {
@@ -176,7 +177,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$session = $this->getSession('training');
 
-		$application = $this->trainingApplications->getApplicationByToken($param);
+		$application = $param ? $this->trainingApplications->getApplicationByToken($param) : null;
 		if (!$application) {
 			unset(
 				$session->application,
@@ -213,15 +214,16 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication($formName)
+	protected function createComponentApplication(string $formName): TrainingApplication
 	{
 		$form = new TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
 		$form->setApplicationFromSession($this->session->getSection('training'));
 		$form->onSuccess[] = [$this, 'submittedApplication'];
+		return $form;
 	}
 
 
-	public function submittedApplication(TrainingApplication $form, $values)
+	public function submittedApplication(TrainingApplication $form, ArrayHash $values): void
 	{
 		$session = $this->getSession('training');
 		/** @var string $name */
@@ -319,17 +321,18 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplicationPreliminary($formName)
+	protected function createComponentApplicationPreliminary(string $formName): TrainingApplicationPreliminary
 	{
 		if ($this->training->discontinuedId) {
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}", IResponse::S404_NOT_FOUND);
 		}
 		$form = new TrainingApplicationPreliminary($this, $formName, $this->translator);
 		$form->onSuccess[] = [$this, 'submittedApplicationPreliminary'];
+		return $form;
 	}
 
 
-	public function submittedApplicationPreliminary(TrainingApplicationPreliminary $form, $values)
+	public function submittedApplicationPreliminary(TrainingApplicationPreliminary $form, ArrayHash $values): void
 	{
 		$this->trainingApplications->addPreliminaryInvitation($this->training, $values->name, $values->email);
 		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
@@ -337,7 +340,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	private function checkTrainingDate(ArrayHash $values, $name)
+	private function checkTrainingDate(ArrayHash $values, string $name): void
 	{
 		if (!isset($this->dates[$values->trainingId])) {
 			$this->logData($values, $name);
@@ -347,7 +350,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	private function checkSpam(ArrayHash $values, $name)
+	private function checkSpam(ArrayHash $values, string $name): void
 	{
 		if (preg_match('~\s+href="\s*https?://~', $values->note)) {
 			$this->logData($values, $name);
@@ -356,7 +359,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	private function logData(ArrayHash $values, $name)
+	private function logData(ArrayHash $values, string $name): void
 	{
 		$session = $this->getSession('training');
 		$logValues = $logSession = array();
@@ -378,16 +381,10 @@ class TrainingsPresenter extends BasePresenter
 
 
 	/**
-	 * @param string $name
-	 * @param string|null $param
 	 * @throws BadRequestException
 	 */
-	public function actionReviews($name, $param)
+	public function actionReviews(string $name): void
 	{
-		if ($param !== null) {
-			throw new BadRequestException('No param here, please', IResponse::S404_NOT_FOUND);
-		}
-
 		$training = $this->trainings->get($name);
 		if (!$training) {
 			throw new BadRequestException("I don't do {$name} training, yet", IResponse::S404_NOT_FOUND);
@@ -406,7 +403,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function actionFiles($name, $param)
+	public function actionFiles(string $name, ?string $param): void
 	{
 		$session = $this->getSession('application');
 
@@ -454,16 +451,11 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param string $name
-	 * @param string|null $param
 	 * @throws BadRequestException
 	 * @throws AbortException
 	 */
-	public function actionSuccess($name, $param)
+	public function actionSuccess(string $name): void
 	{
-		if ($param !== null) {
-			throw new BadRequestException('No param here, please', IResponse::S404_NOT_FOUND);
-		}
-
 		$training = $this->trainings->get($name);
 		if (!$training || $training->discontinuedId) {
 			throw new BadRequestException("I don't do {$name} training", IResponse::S404_NOT_FOUND);
@@ -512,7 +504,7 @@ class TrainingsPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for trainings.
 	 *
-	 * @return array
+	 * @return array<string, array<string, string>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{

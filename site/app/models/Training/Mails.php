@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
+use Nette\Utils\Html;
 use Netxten\Templating\Helpers;
 
 class Mails
@@ -68,7 +69,7 @@ class Mails
 		\DateTime $start,
 		\DateTime $end,
 		string $training,
-		string $trainingName,
+		Html $trainingName,
 		string $venueName,
 		?string $venueNameExtended,
 		string $venueAddress,

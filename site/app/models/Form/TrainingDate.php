@@ -86,11 +86,12 @@ class TrainingDate extends ProtectedForm
 
 		$this->addCheckbox('public', 'Veřejné:');
 
-		$cooperations = array('' => 'žádná');
+		$cooperations = array(0 => 'žádná');
 		foreach ($this->trainings->getCooperations() as $cooperation) {
 			$cooperations[$cooperation->id] = $cooperation->name;
 		}
-		$this->addSelect('cooperation', 'Spolupráce:', $cooperations);
+		$this->addSelect('cooperation', 'Spolupráce:', $cooperations)
+			->addRule(self::INTEGER);
 		$this->addNote($this);
 
 		$this->addSubmit('submit', 'Přidat');

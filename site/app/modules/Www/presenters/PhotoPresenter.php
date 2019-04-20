@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Formatter\Texy;
@@ -17,7 +19,7 @@ class PhotoPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$photos = array(
 			array(
@@ -62,6 +64,5 @@ class PhotoPresenter extends BasePresenter
 		$this->template->photos = $photos;
 		$this->template->pageTitle  = $this->translator->translate('messages.title.photo');
 	}
-
 
 }

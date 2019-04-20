@@ -1,7 +1,19 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
 
-use Nette\Application\UI\Form;
+use DateTime;
+use MichalSpacekCz\Training\Resolver\Vrana;
+use Nette\Database\Context;
+use Nette\Database\Drivers\MySqlDriver;
+use Nette\Database\Row;
+use Nette\Localization\ITranslator;
+use Nette\Utils\Random;
+use PDOException;
+use RuntimeException;
+use Spaze\Encryption\Symmetric\StaticKey;
+use Tracy\Debugger;
 
 class Applications
 {
@@ -9,7 +21,7 @@ class Applications
 	private const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
 	private const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 	/** @var Trainings */
@@ -21,16 +33,16 @@ class Applications
 	/** @var Statuses */
 	protected $trainingStatuses;
 
-	/** @var \Spaze\Encryption\Symmetric\StaticKey */
+	/** @var StaticKey */
 	protected $emailEncryption;
 
-	/** @var \MichalSpacekCz\Vat */
-	protected $vat;
+	/** @var Price */
+	private $price;
 
-	/** @var \MichalSpacekCz\Training\Resolver\Vrana */
+	/** @var Vrana */
 	protected $vranaResolver;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 	/** @var array */
@@ -38,14 +50,14 @@ class Applications
 
 
 	public function __construct(
-		\Nette\Database\Context $context,
+		Context $context,
 		Trainings $trainings,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
-		\Spaze\Encryption\Symmetric\StaticKey $emailEncryption,
-		\MichalSpacekCz\Vat $vat,
-		\MichalSpacekCz\Training\Resolver\Vrana $vranaResolver,
-		\Nette\Localization\ITranslator $translator
+		StaticKey $emailEncryption,
+		Price $price,
+		Vrana $vranaResolver,
+		ITranslator $translator
 	)
 	{
 		$this->database = $context;
@@ -53,13 +65,17 @@ class Applications
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
-		$this->vat = $vat;
+		$this->price = $price;
 		$this->vranaResolver = $vranaResolver;
 		$this->translator = $translator;
 	}
 
 
-	public function getByStatus($status)
+	/**
+	 * @param string $status
+	 * @return Row[]
+	 */
+	public function getByStatus(string $status): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -113,7 +129,11 @@ class Applications
 	}
 
 
-	public function getByDate($dateId)
+	/**
+	 * @param integer $dateId
+	 * @return Row[]
+	 */
+	public function getByDate(int $dateId): array
 	{
 		if (!isset($this->byDate[$dateId])) {
 			$this->byDate[$dateId] = $this->database->fetchAll(
@@ -156,7 +176,11 @@ class Applications
 	}
 
 
-	public function getValidByDate($dateId)
+	/**
+	 * @param integer $dateId
+	 * @return Row[]
+	 */
+	public function getValidByDate(int $dateId): array
 	{
 		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
 		return array_filter($this->getByDate($dateId), function($value) use ($discardedStatuses) {
@@ -165,7 +189,11 @@ class Applications
 	}
 
 
-	public function getValidUnpaidByDate($dateId)
+	/**
+	 * @param integer $dateId
+	 * @return Row[]
+	 */
+	public function getValidUnpaidByDate(int $dateId): array
 	{
 		return array_filter($this->getValidByDate($dateId), function($value) {
 			return (isset($value->invoiceId) && !isset($value->paid));
@@ -173,7 +201,7 @@ class Applications
 	}
 
 
-	public function getValidUnpaidCount()
+	public function getValidUnpaidCount(): int
 	{
 		$result = $this->database->fetchField(
 			'SELECT
@@ -194,9 +222,9 @@ class Applications
 	 * Get canceled but already paid applications by date id.
 	 *
 	 * @param integer $dateId
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
-	public function getCanceledPaidByDate($dateId)
+	public function getCanceledPaidByDate(int $dateId): array
 	{
 		$canceledStatus = $this->trainingStatuses->getCanceledStatus();
 		return array_filter($this->getByDate($dateId), function($value) use ($canceledStatus) {
@@ -205,16 +233,20 @@ class Applications
 	}
 
 
-	private function insertData($data)
+	/**
+	 * @param array<string, string|integer|float|DateTime|null> $data
+	 * @return string Generated access token
+	 */
+	private function insertData(array $data): string
 	{
 		$data['access_token'] = $this->generateAccessCode();
 		try {
 			$this->database->query('INSERT INTO training_applications', $data);
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
+				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
 					// regenerate the access code and try harder this time
-					\Tracy\Debugger::log("Regenerating access token, {$data['access_token']} already exists. Full data: " . implode(', ', $data));
+					Debugger::log("Regenerating access token, {$data['access_token']} already exists. Full data: " . implode(', ', $data));
 					return $this->insertData($data);
 				}
 			}
@@ -224,7 +256,20 @@ class Applications
 	}
 
 
-	public function addInvitation(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
+	public function addInvitation(
+		Row $training,
+		int $dateId,
+		string $name,
+		string $email,
+		string $company,
+		string $street,
+		string $city,
+		string $zip,
+		string $country,
+		string $companyId,
+		string $companyTaxId,
+		string $note
+	): int
 	{
 		return $this->insertApplication(
 			$training,
@@ -245,7 +290,20 @@ class Applications
 	}
 
 
-	public function addApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
+	public function addApplication(
+		Row $training,
+		int $dateId,
+		string $name,
+		string $email,
+		string $company,
+		string $street,
+		string $city,
+		string $zip,
+		string $country,
+		string $companyId,
+		string $companyTaxId,
+		string $note
+	): int
 	{
 		return $this->insertApplication(
 			$training,
@@ -269,27 +327,57 @@ class Applications
 	/**
 	 * Add preliminary invitation, to a training with no date set.
 	 *
-	 * @param \Nette\Database\Row $training
+	 * @param Row $training
 	 * @param string $name
 	 * @param string $email
 	 * @return integer application id
 	 */
-	public function addPreliminaryInvitation(\Nette\Database\Row $training, $name, $email)
+	public function addPreliminaryInvitation(Row $training, string $name, string $email): int
 	{
-		return $this->insertApplication($training, null, $name, $email, null, null, null, null, null, null, null, null, Statuses::STATUS_TENTATIVE, $this->resolveSource());
+		return $this->insertApplication($training,
+			null,
+			$name,
+			$email,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			Statuses::STATUS_TENTATIVE,
+			$this->resolveSource()
+		);
 	}
 
 
-	public function insertApplication(\Nette\Database\Row $training, $dateId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $status, $source, $date = null)
+	public function insertApplication(
+		Row $training,
+		?int $dateId,
+		string $name,
+		string $email,
+		?string $company,
+		?string $street,
+		?string $city,
+		?string $zip,
+		?string $country,
+		?string $companyId,
+		?string $companyTaxId,
+		?string $note,
+		?string $status,
+		string $source,
+		?string $date = null
+	): int
 	{
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
-			throw new \RuntimeException("Invalid initial status {$status}");
+			throw new RuntimeException("Invalid initial status {$status}");
 		}
 
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
-		$datetime = new \DateTime($date);
+		$datetime = new DateTime($date ?? '');
 
-		list($price, $vatRate, $priceVat, $discount) = $this->resolvePriceDiscountVat($training, $status, $source, $note);
+		$this->price->resolvePriceDiscountVat($training, $status, $note);
 
 		$data = array(
 			'key_date'             => $dateId,
@@ -307,55 +395,107 @@ class Applications
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 			'key_source'           => $this->getTrainingApplicationSource($source),
-			'price'                => $price,
-			'vat_rate'             => $vatRate,
-			'price_vat'            => $priceVat,
-			'discount'             => $discount,
+			'price'                => $this->price->getPrice(),
+			'vat_rate'             => $this->price->getVatRate(),
+			'price_vat'            => $this->price->getPriceVat(),
+			'discount'             => $this->price->getDiscount(),
 		);
 		if ($dateId === null) {
 			$data['key_training'] = $training->trainingId;
 		}
-		return $this->trainingStatuses->updateStatusCallback(function () use ($data) {
+		return $this->trainingStatuses->updateStatusCallbackReturnId(function () use ($data): int {
 			$this->insertData($data);
-			return $this->database->getInsertId();
+			return (int)$this->database->getInsertId();
 		}, $status, $date);
 	}
 
 
-	public function updateApplication(\Nette\Database\Row $training, $applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note)
+	public function updateApplication(
+		Row $training,
+		int $applicationId,
+		string $name,
+		string $email,
+		string $company,
+		string $street,
+		string $city,
+		string $zip,
+		string $country,
+		string $companyId,
+		string $companyTaxId,
+		string $note
+	): int
 	{
-		$this->trainingStatuses->updateStatusReturnCallback($applicationId, Statuses::STATUS_SIGNED_UP, null, function () use ($training, $applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note) {
-			$source = $this->getSourceByApplicationId($applicationId)->alias;
-			list($price, $vatRate, $priceVat, $discount) = $this->resolvePriceDiscountVat($training, Statuses::STATUS_SIGNED_UP, $source, $note);
-			$this->database->query(
-				'UPDATE training_applications SET ? WHERE id_application = ?',
-				array(
-					'name'           => $name,
-					'email'          => $this->emailEncryption->encrypt($email),
-					'company'        => $company,
-					'street'         => $street,
-					'city'           => $city,
-					'zip'            => $zip,
-					'country'        => $country,
-					'company_id'     => $companyId,
-					'company_tax_id' => $companyTaxId,
-					'note'           => $note,
-					'price'          => $price,
-					'vat_rate'       => $vatRate,
-					'price_vat'      => $priceVat,
-					'discount'       => $discount,
-				),
-				$applicationId
-			);
-		});
+		$this->trainingStatuses->updateStatusCallback(
+			$applicationId,
+			Statuses::STATUS_SIGNED_UP,
+			null,
+			function () use (
+				$training,
+				$applicationId,
+				$name,
+				$email,
+				$company,
+				$street,
+				$city,
+				$zip,
+				$country,
+				$companyId,
+				$companyTaxId,
+				$note
+			): void
+			{
+				$this->price->resolvePriceDiscountVat($training, Statuses::STATUS_SIGNED_UP, $note);
+				$this->database->query(
+					'UPDATE training_applications SET ? WHERE id_application = ?',
+					array(
+						'name'           => $name,
+						'email'          => $this->emailEncryption->encrypt($email),
+						'company'        => $company,
+						'street'         => $street,
+						'city'           => $city,
+						'zip'            => $zip,
+						'country'        => $country,
+						'company_id'     => $companyId,
+						'company_tax_id' => $companyTaxId,
+						'note'           => $note,
+						'price'          => $this->price->getPrice(),
+						'vat_rate'       => $this->price->getVatRate(),
+						'price_vat'      => $this->price->getPriceVat(),
+						'discount'       => $this->price->getDiscount(),
+					),
+					$applicationId
+				);
+			}
+		);
 		return $applicationId;
 	}
 
 
-	public function updateApplicationData($applicationId, $name, $email, $company, $street, $city, $zip, $country, $companyId, $companyTaxId, $note, $source, $price = null, $vatRate = null, $priceVat = null, $discount = null, $invoiceId = null, $paid = null, $familiar = false, $dateId = false)
+	public function updateApplicationData(
+		int $applicationId,
+		?string $name,
+		?string $email,
+		?string $company,
+		?string $street,
+		?string $city,
+		?string $zip,
+		?string $country,
+		?string $companyId,
+		?string $companyTaxId,
+		?string $note,
+		string $source,
+		?int $price = null,
+		?float $vatRate = null,
+		?int $priceVat = null,
+		?int $discount = null,
+		?string $invoiceId = null,
+		string $paid = null,
+		bool $familiar = false,
+		?int $dateId = null
+	): void
 	{
 		if ($paid) {
-			$paid = new \DateTime($paid);
+			$paid = new DateTime($paid);
 		}
 
 		$data = array(
@@ -375,64 +515,30 @@ class Applications
 			'vat_rate'       => ($vatRate ?: null),
 			'price_vat'      => ($priceVat ?: null),
 			'discount'       => ($discount ?: null),
-			'invoice_id'     => ($invoiceId ?: null),
+			'invoice_id'     => ((int)$invoiceId ?: null),
 			'paid'           => ($paid ?: null),
 			'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
 		);
-		if ($dateId !== false) {
+		if ($dateId !== null) {
 			$data['key_date'] = $dateId;
 		}
 		$this->database->query('UPDATE training_applications SET ? WHERE id_application = ?', $data, $applicationId);
 	}
 
 
-	public function updateApplicationInvoiceData($applicationId, $invoiceId)
+	public function updateApplicationInvoiceData(int $applicationId, string $invoiceId): void
 	{
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
-				'invoice_id' => ($invoiceId ?: null),
+				'invoice_id' => ((int)$invoiceId ?: null),
 			),
 			$applicationId
 		);
 	}
 
 
-	/**
-	 * Resolves price, VAT rate, discount.
-	 *
-	 * @param \Nette\Database\Row $training
-	 * @param string $status
-	 * @param integer $source
-	 * @param string $note
-	 * @return array with price, VAT rate, price inluding VAT, discount
-	 */
-	private function resolvePriceDiscountVat(\Nette\Database\Row $training, $status, $source, $note)
-	{
-		if (in_array($status, [Statuses::STATUS_NON_PUBLIC_TRAINING, Statuses::STATUS_TENTATIVE])) {
-			$price = null;
-			$discount = null;
-		} elseif (stripos($note, 'student') === false) {
-			$price = $training->price;
-			$discount = null;
-		} else {
-			$price = $training->price * (100 - $training->studentDiscount) / 100;
-			$discount = $training->studentDiscount;
-		}
-
-		if ($price === null) {
-			$vatRate = null;
-			$priceVat = null;
-		} else {
-			$vatRate = $this->vat->getRate();
-			$priceVat = $this->vat->addVat($price);
-		}
-
-		return [$price, $vatRate, $priceVat, $discount];
-	}
-
-
-	private function resolveSource($note = null)
+	private function resolveSource(string $note = null): string
 	{
 		if ($note && $this->vranaResolver->isTrainingApplicationOwner($note)) {
 			$source = self::SOURCE_JAKUB_VRANA;
@@ -443,33 +549,13 @@ class Applications
 	}
 
 
-	/**
-	 * Get source for application by id
-	 * @param integer $id application id
-	 * @return \Nette\Database\Row
-	 */
-	private function getSourceByApplicationId($id)
+	private function generateAccessCode(): string
 	{
-		return $this->database->fetch(
-			'SELECT
-				s.alias
-			FROM
-				training_applications a
-				JOIN training_application_sources s ON a.key_source = s.id_source
-			WHERE
-				a.id_application = ?',
-			$id
-		);
+		return Random::generate(mt_rand(12, 16), '0-9a-zA-Z');
 	}
 
 
-	private function generateAccessCode()
-	{
-		return \Nette\Utils\Random::generate(mt_rand(12, 16), '0-9a-zA-Z');
-	}
-
-
-	public function getApplicationById($id)
+	public function getApplicationById(int $id): ?Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -524,7 +610,10 @@ class Applications
 	}
 
 
-	public function getPreliminary()
+	/**
+	 * @return Row[]
+	 */
+	public function getPreliminary(): array
 	{
 		$trainings = array();
 		$result = $this->database->fetchAll(
@@ -591,7 +680,10 @@ class Applications
 	}
 
 
-	public function getPreliminaryCounts()
+	/**
+	 * @return integer[]
+	 */
+	public function getPreliminaryCounts(): array
 	{
 		$upcoming = array_keys($this->trainingDates->getPublicUpcoming());
 
@@ -607,7 +699,7 @@ class Applications
 	}
 
 
-	public function getApplicationByToken($token)
+	public function getApplicationByToken(string $token): ?Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -646,10 +738,10 @@ class Applications
 	}
 
 
-	public function setPaidDate($invoiceId, $paid)
+	public function setPaidDate(string $invoiceId, string $paid): ?int
 	{
 		if ($paid) {
-			$paid = new \DateTime($paid);
+			$paid = new DateTime($paid);
 		}
 
 		$result = $this->database->query(
@@ -658,19 +750,22 @@ class Applications
 				'paid'           => ($paid ?: null),
 				'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
 			),
-			$invoiceId
+			(int)$invoiceId
 		);
 		return $result->getRowCount();
 	}
 
 
-	private function getTrainingApplicationSource($source)
+	private function getTrainingApplicationSource(string $source): int
 	{
 		return $this->database->fetchField('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
 	}
 
 
-	public function getTrainingApplicationSources()
+	/**
+	 * @return Row[]
+	 */
+	public function getTrainingApplicationSources(): array
 	{
 		return $this->database->fetchAll(
 			'SELECT
@@ -683,7 +778,7 @@ class Applications
 	}
 
 
-	public function setAccessTokenUsed(\Nette\Database\Row $application)
+	public function setAccessTokenUsed(Row $application): void
 	{
 		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
 			$this->trainingStatuses->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
@@ -698,11 +793,8 @@ class Applications
 	 * Example:
 	 *   Michal Špaček -> MŠ
 	 *   Internet Info, s.r.o. -> II
-	 *
-	 * @param string $name
-	 * @return string
 	 */
-	private function getSourceNameInitials($name)
+	private function getSourceNameInitials(string $name): string
 	{
 		$name = preg_replace('/,? s\.r\.o./', '', $name);
 		preg_match_all('/(?<=\s|\b)\pL/u', $name, $matches);
@@ -710,12 +802,7 @@ class Applications
 	}
 
 
-	/**
-	 * Set familiar flag for the application.
-	 *
-	 * @param integer $applicationId
-	 */
-	public function setFamiliar($applicationId)
+	public function setFamiliar(int $applicationId): void
 	{
 		$this->database->query('UPDATE training_applications SET familiar = TRUE WHERE id_application = ?', $applicationId);
 	}

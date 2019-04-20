@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Templating\Helpers;
@@ -35,14 +37,14 @@ class ForbiddenPresenter extends Presenter
 
 
 	/** @internal */
-	public function injectContentSecurityPolicy(Config $contentSecurityPolicy)
+	public function injectContentSecurityPolicy(Config $contentSecurityPolicy): void
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 
 	/** @internal */
-	public function injectTemplateHelpers(Helpers $templateHelpers)
+	public function injectTemplateHelpers(Helpers $templateHelpers): void
 	{
 		$this->templateHelpers = $templateHelpers;
 	}
@@ -56,7 +58,7 @@ class ForbiddenPresenter extends Presenter
 	}
 
 
-	public function beforeRender()
+	public function beforeRender(): void
 	{
 		$this->template->setTranslator($this->translator);
 	}
@@ -72,7 +74,7 @@ class ForbiddenPresenter extends Presenter
 	}
 
 
-	public function actionDefault()
+	public function actionDefault(): void
 	{
 		$this->httpResponse->setCode(IResponse::S403_FORBIDDEN);
 		$this->template->pageTitle = $this->translator->translate("messages.title.forbidden");

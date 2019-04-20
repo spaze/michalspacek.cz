@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Formatter\Texy;
@@ -56,7 +58,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	}
 
 
-	public function renderDefault()
+	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.companytrainings');
 		$this->template->trainings = $this->trainings->getNames();
@@ -68,7 +70,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	 * @param string $name
 	 * @throws BadRequestException
 	 */
-	public function actionTraining($name)
+	public function actionTraining(string $name): void
 	{
 		$training = $this->companyTrainings->getInfo($name);
 		if (!$training) {
@@ -100,7 +102,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for trainings.
 	 *
-	 * @return array
+	 * @return array<string, array<string, string|null>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{

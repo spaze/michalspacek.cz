@@ -1,24 +1,24 @@
 <?php
-namespace MichalSpacekCz\Pulse\Passwords;
-/**
- * Test: MichalSpacekCz\Pulse\Passwords\Rating.
- *
- * @testCase MichalSpacekCz\Pulse\Passwords\RatingTest
- * @author Michal Špaček
- * @package pulse.michalspacek.cz
- */
+declare(strict_types = 1);
 
+namespace MichalSpacekCz\Pulse\Passwords;
+
+use RuntimeException;
 use Tester\Assert;
+use Tester\TestCase;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
-class RatingTest extends \Tester\TestCase
+/**
+ * @testCase MichalSpacekCz\Pulse\Passwords\RatingTest
+ */
+class RatingTest extends TestCase
 {
 
-	/** @var \MichalSpacekCz\Pulse\Passwords\Algorithm */
+	/** @var Algorithm */
 	private $algo;
 
-	/** @var \MichalSpacekCz\Pulse\Passwords\Rating */
+	/** @var Rating */
 	private $rating;
 
 
@@ -33,7 +33,7 @@ class RatingTest extends \Tester\TestCase
 	}
 
 
-	public function testGradeA()
+	public function testGradeA(): void
 	{
 		$this->algo->alias = 'bcrypt';
 		$this->algo->disclosureTypes = ['docs' => true, 'foo' => true];
@@ -58,7 +58,7 @@ class RatingTest extends \Tester\TestCase
 	}
 
 
-	public function testGradeB()
+	public function testGradeB(): void
 	{
 		$this->algo->alias = 'bcrypt';
 		$this->algo->disclosureTypes = ['facebook-private' => true, 'blog' => true];
@@ -72,12 +72,12 @@ class RatingTest extends \Tester\TestCase
 		$this->algo->disclosureTypes = ['foo' => true];
 		Assert::exception(function() {
 			Assert::same('B', $this->rating->get($this->algo));
-		}, \RuntimeException::class);
+		}, RuntimeException::class);
 
 	}
 
 
-	public function testGradeCDE()
+	public function testGradeCDE(): void
 	{
 		$this->algo->alias = 'md5';
 		$this->algo->salted = true;
@@ -107,7 +107,7 @@ class RatingTest extends \Tester\TestCase
 	}
 
 
-	public function testGradeF()
+	public function testGradeF(): void
 	{
 		$this->algo->alias = 'plaintext';
 		Assert::same('F', $this->rating->get($this->algo));
@@ -117,7 +117,7 @@ class RatingTest extends \Tester\TestCase
 	}
 
 
-	public function testSecureStorage()
+	public function testSecureStorage(): void
 	{
 		$rating = [
 			'A' => true,
@@ -134,5 +134,4 @@ class RatingTest extends \Tester\TestCase
 
 }
 
-$testCase = new RatingTest();
-$testCase->run();
+(new RatingTest())->run();

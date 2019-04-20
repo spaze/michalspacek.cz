@@ -75,7 +75,7 @@ class LocaleLinkGenerator
 	 * Return default params for all locales.
 	 *
 	 * @param array $params
-	 * @return array
+	 * @return array<string, array<string, string>>
 	 */
 	public function defaultParams(array $params): array
 	{

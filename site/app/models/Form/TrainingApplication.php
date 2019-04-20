@@ -61,9 +61,11 @@ class TrainingApplication extends ProtectedForm
 		if ($multipleDates) {
 			$this->addSelect('trainingId', $label, $inputDates)
 				->setRequired('Vyberte prosím termín a místo školení')
-				->setPrompt('- vyberte termín a místo -');
+				->setPrompt('- vyberte termín a místo -')
+				->addRule(self::INTEGER);
 		} else {
 			$field = new \Netxten\Forms\Controls\HiddenFieldWithLabel($label, key($inputDates), current($inputDates));
+			$field->addRule(self::INTEGER);
 			$this->addComponent($field, 'trainingId');
 		}
 

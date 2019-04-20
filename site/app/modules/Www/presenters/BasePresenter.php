@@ -124,7 +124,7 @@ abstract class BasePresenter extends Presenter
 	/**
 	 * Default parameters for locale links.
 	 *
-	 * @return array
+	 * @return array<string, array<string, string>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{

@@ -1,28 +1,30 @@
 <?php
+declare(strict_types = 1);
+
 namespace MichalSpacekCz\Training;
+
+use MichalSpacekCz\Formatter\Texy;
+use Nette\Database\Context;
+use Nette\Database\Row;
+use Nette\Localization\ITranslator;
 
 class CompanyTrainings
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 
-	public function __construct(
-		\Nette\Database\Context $context,
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Training\Dates $trainingDates,
-		\Nette\Localization\ITranslator $translator
-	)
+	public function __construct(Context $context, Texy $texyFormatter, Dates $trainingDates, ITranslator $translator)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
@@ -31,13 +33,7 @@ class CompanyTrainings
 	}
 
 
-	/**
-	 * Get training info.
-	 *
-	 * @param string $name
-	 * @return \Nette\Database\Row|null
-	 */
-	public function getInfo($name): ?\Nette\Database\Row
+	public function getInfo(string $name): ?Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -76,11 +72,9 @@ class CompanyTrainings
 
 
 	/**
-	 * Get company trainings without any public trainings
-	 *
-	 * @return array of \Nette\Database\Row
+	 * @return Row[]
 	 */
-	public function getWithoutPublicUpcoming()
+	public function getWithoutPublicUpcoming(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT

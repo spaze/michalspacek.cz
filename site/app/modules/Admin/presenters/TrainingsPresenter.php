@@ -418,14 +418,14 @@ class TrainingsPresenter extends BasePresenter
 			$values->companyTaxIdSet ? $values->companyTaxId : null,
 			$values->noteSet ? $values->note : null,
 			$values->source,
-			$values->price,
-			(empty(trim($values->vatRate)) ? null : $values->vatRate / 100),
-			$values->priceVat,
-			$values->discount,
+			(trim($values->price) !== '' ? (int)$values->price : null),
+			(trim($values->vatRate) !== '' ? $values->vatRate / 100 : null),
+			(trim($values->priceVat) !== '' ? (int)$values->priceVat : null),
+			(trim($values->discount) !== '' ? (int)$values->discount : null),
 			$values->invoiceId,
 			$values->paid,
 			$values->familiar,
-			(isset($values->date) ? $values->date : false)
+			(isset($values->date) ? $values->date : null)
 		);
 		if (isset($this->dateId) || isset($values->date)) {
 			$this->redirect('date', $values->date ?? $this->dateId);

@@ -3,10 +3,18 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
+use DateTime;
+use Nette\Database\Context;
+use Nette\Database\Drivers\MySqlDriver;
+use Nette\Utils\Json;
+use PDOException;
+use RuntimeException;
+use stdClass;
+
 class Technicolor implements RouterInterface
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 	/** @var string */
@@ -22,7 +30,7 @@ class Technicolor implements RouterInterface
 	protected $model;
 
 
-	public function __construct(\Nette\Database\Context $context)
+	public function __construct(Context $context)
 	{
 		$this->database = $context;
 	}
@@ -89,7 +97,7 @@ class Technicolor implements RouterInterface
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @param string $ssid
-	 * @return array of \stdClass (serial, key, type)
+	 * @return stdClass[] (serial, key, type)
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -100,7 +108,7 @@ class Technicolor implements RouterInterface
 				$this->storeKeys($ssid, $keys);
 			}
 			return $keys;
-		} catch (\RuntimeException $e) {
+		} catch (RuntimeException $e) {
 			return [];
 		}
 	}
@@ -119,7 +127,7 @@ class Technicolor implements RouterInterface
 				$this->storeKeys($ssid, $this->generateKeys($ssid));
 			}
 			return true;
-		} catch (\RuntimeException $e) {
+		} catch (RuntimeException $e) {
 			return false;
 		}
 	}
@@ -129,11 +137,11 @@ class Technicolor implements RouterInterface
 	 * Get possible keys and serial for an SSID.
 	 *
 	 * @param string $ssid
-	 * @return array of \stdClass (serial, key, type)
+	 * @return stdClass[] (serial, key, type)
 	 */
 	private function generateKeys(string $ssid): array
 	{
-		$data = \Nette\Utils\Json::decode($this->callApi(sprintf($this->url, $ssid, implode(',', $this->prefixes))));
+		$data = Json::decode($this->callApi(sprintf($this->url, $ssid, implode(',', $this->prefixes))));
 		$keys = array();
 		foreach (explode("\n", $data) as $line) {
 			if (empty($line)) {
@@ -141,7 +149,7 @@ class Technicolor implements RouterInterface
 			}
 
 			if (sscanf($line, '%20[^,],%20[^,],%d', $serial, $key, $type) != 3) {
-				throw new \RuntimeException('Incorrect number of tokens in ' . $line);
+				throw new RuntimeException('Incorrect number of tokens in ' . $line);
 			}
 			$keys["{$type}-{$serial}"] = $this->buildKey($serial, $key, $type);
 		}
@@ -156,7 +164,7 @@ class Technicolor implements RouterInterface
 		stream_context_set_params($context, [
 			'notification' => function ($notificationCode, $severity, $message, $messageCode) {
 				if ($notificationCode == STREAM_NOTIFY_FAILURE && $messageCode >= 500) {
-					throw new \RuntimeException(trim($message), $messageCode);
+					throw new RuntimeException(trim($message), $messageCode);
 				}
 			},
 			'options' => [
@@ -174,7 +182,7 @@ class Technicolor implements RouterInterface
 	 * Fetch keys from database.
 	 *
 	 * @param string $ssid
-	 * @return array of \stdClass (serial, key, type)
+	 * @return stdClass[] (serial, key, type)
 	 */
 	private function fetchKeys(string $ssid): array
 	{
@@ -217,7 +225,7 @@ class Technicolor implements RouterInterface
 	 * Store keys to database.
 	 *
 	 * @param string $ssid
-	 * @param \stdClass[] $keys (serial, key, type)
+	 * @param stdClass[] $keys (serial, key, type)
 	 * @return boolean false if no keys to store, true otherwise
 	 */
 	private function storeKeys(string $ssid, array $keys): bool
@@ -226,7 +234,7 @@ class Technicolor implements RouterInterface
 			return false;
 		}
 
-		$datetime = new \DateTime();
+		$datetime = new DateTime();
 		$this->database->beginTransaction();
 		try {
 			$this->database->query(
@@ -250,9 +258,9 @@ class Technicolor implements RouterInterface
 				);
 			}
 			$this->database->commit();
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			$this->database->rollBack();
-			if ($e->getCode() != '23000' || $e->errorInfo[1] != \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
+			if ($e->getCode() != '23000' || $e->errorInfo[1] != MySqlDriver::ERROR_DUPLICATE_ENTRY) {
 				throw $e;
 			}
 		}
@@ -261,9 +269,9 @@ class Technicolor implements RouterInterface
 	}
 
 
-	private function buildKey(string $serial, string $key, int $type): \stdClass
+	private function buildKey(string $serial, string $key, int $type): stdClass
 	{
-		$result = new \stdClass();
+		$result = new stdClass();
 		$result->serial = $serial;
 		$result->oui = null;
 		$result->mac = null;
@@ -271,6 +279,5 @@ class Technicolor implements RouterInterface
 		$result->type = $type;
 		return $result;
 	}
-
 
 }
