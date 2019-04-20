@@ -3,6 +3,12 @@ declare(strict_types = 1);
 
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Articles;
+use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Strings;
+use Nette\Application\BadRequestException;
+use Nette\Http\IResponse;
+
 /**
  * Tags presenter.
  *
@@ -12,21 +18,21 @@ namespace App\WwwModule\Presenters;
 class TagsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Articles */
+	/** @var Articles */
 	protected $articles;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Strings */
+	/** @var Strings */
 	protected $strings;
 
 
 	/**
-	 * @param \MichalSpacekCz\Articles $articles
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
+	 * @param Articles $articles
+	 * @param Texy $texyFormatter
 	 */
-	public function __construct(\MichalSpacekCz\Articles $articles, \MichalSpacekCz\Strings $strings, \MichalSpacekCz\Formatter\Texy $texyFormatter)
+	public function __construct(Articles $articles, Strings $strings, Texy $texyFormatter)
 	{
 		$this->articles = $articles;
 		$this->strings = $strings;
@@ -48,13 +54,13 @@ class TagsPresenter extends BasePresenter
 
 	/**
 	 * @param string $tags
-	 * @throws \Nette\Application\BadRequestException
+	 * @throws BadRequestException
 	 */
 	public function actionTag(string $tags): void
 	{
 		$label = $this->articles->getLabelByTags($tags);
 		if (!$label) {
-			throw new \Nette\Application\BadRequestException('Unknown tag', \Nette\Http\IResponse::S404_NOT_FOUND);
+			throw new BadRequestException('Unknown tag', IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.label.articlesbytag', [$label]);

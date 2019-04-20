@@ -3,6 +3,11 @@ declare(strict_types = 1);
 
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Post;
+use MichalSpacekCz\Training\Dates;
+use Nette\Application\AbortException;
+use Nette\Application\UI\InvalidLinkException;
+
 /**
  * Post presenter.
  *
@@ -11,10 +16,10 @@ namespace App\WwwModule\Presenters;
  */
 class PostPresenter extends BasePresenter
 {
-	/** @var \MichalSpacekCz\Post */
+	/** @var Post */
 	protected $blogPost;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
 	/** @var string[][] */
@@ -22,10 +27,10 @@ class PostPresenter extends BasePresenter
 
 
 	/**
-	 * @param \MichalSpacekCz\Post $blogPost
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
+	 * @param Post $blogPost
+	 * @param Dates $trainingDates
 	 */
-	public function __construct(\MichalSpacekCz\Post $blogPost, \MichalSpacekCz\Training\Dates $trainingDates)
+	public function __construct(Post $blogPost, Dates $trainingDates)
 	{
 		$this->blogPost = $blogPost;
 		$this->trainingDates = $trainingDates;
@@ -36,8 +41,8 @@ class PostPresenter extends BasePresenter
 	/**
 	 * @param string $slug
 	 * @param string|null $preview
-	 * @throws \Nette\Application\AbortException
-	 * @throws \Nette\Application\UI\InvalidLinkException
+	 * @throws AbortException
+	 * @throws InvalidLinkException
 	 */
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{

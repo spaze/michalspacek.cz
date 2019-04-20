@@ -3,27 +3,36 @@ declare(strict_types = 1);
 
 namespace App\ApiModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter;
+use MichalSpacekCz\CompanyInfo\Data;
+use MichalSpacekCz\CompanyInfo\Info;
+use MichalSpacekCz\SecurityHeaders;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
+use Nette\Http\IResponse;
+use RuntimeException;
+
 /**
  * Company presenter.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class CompanyPresenter extends \App\WwwModule\Presenters\BasePresenter
+class CompanyPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\CompanyInfo\Info */
+	/** @var Info */
 	protected $companyInfo;
 
-	/** @var \MichalSpacekCz\SecurityHeaders */
+	/** @var SecurityHeaders */
 	protected $securityHeaders;
 
 
 	/**
-	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
-	 * @param \MichalSpacekCz\SecurityHeaders $securityHeaders
+	 * @param Info $companyInfo
+	 * @param SecurityHeaders $securityHeaders
 	 */
-	public function __construct(\MichalSpacekCz\CompanyInfo\Info $companyInfo, \MichalSpacekCz\SecurityHeaders $securityHeaders)
+	public function __construct(Info $companyInfo, SecurityHeaders $securityHeaders)
 	{
 		$this->companyInfo = $companyInfo;
 		$this->securityHeaders = $securityHeaders;
@@ -34,22 +43,22 @@ class CompanyPresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * @param string|null $country
 	 * @param string|null $companyId
-	 * @throws \Nette\Application\BadRequestException
-	 * @throws \Nette\Application\AbortException
+	 * @throws BadRequestException
+	 * @throws AbortException
 	 */
 	public function actionDefault(?string $country, ?string $companyId): void
 	{
 		if ($country === null || $companyId === null) {
-			throw new \Nette\Application\BadRequestException('No country or companyId specified', \Nette\Http\IResponse::S404_NOT_FOUND);
+			throw new BadRequestException('No country or companyId specified', IResponse::S404_NOT_FOUND);
 		}
 
 		$this->securityHeaders->accessControlAllowOrigin('Www:Homepage:');
 
 		try {
 			$info = $this->companyInfo->getData($country, $companyId);
-		} catch (\RuntimeException $e) {
-			$info = new \MichalSpacekCz\CompanyInfo\Data();
-			$info->status = \Nette\Http\IResponse::S500_INTERNAL_SERVER_ERROR;
+		} catch (RuntimeException $e) {
+			$info = new Data();
+			$info->status = IResponse::S500_INTERNAL_SERVER_ERROR;
 			$info->statusMessage = $e->getMessage();
 		}
 		$data = array(

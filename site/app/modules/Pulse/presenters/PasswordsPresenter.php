@@ -3,13 +3,16 @@ declare(strict_types = 1);
 
 namespace App\PulseModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter;
+use Nette\Http\IResponse;
+
 /**
  * Pulse presenter.
  *
  * @author Michal Špaček
  * @package pulse.michalspacek.cz
  */
-class PasswordsPresenter extends \App\WwwModule\Presenters\BasePresenter
+class PasswordsPresenter extends BasePresenter
 {
 
 	/**
@@ -28,7 +31,7 @@ class PasswordsPresenter extends \App\WwwModule\Presenters\BasePresenter
 	 */
 	public function actionStoragesQuestions(): void
 	{
-		$this->redirect(\Nette\Http\IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:questions');
+		$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:questions');
 	}
 
 
@@ -39,7 +42,7 @@ class PasswordsPresenter extends \App\WwwModule\Presenters\BasePresenter
 	 */
 	public function actionStoragesRating(): void
 	{
-		$this->redirect(\Nette\Http\IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:rating');
+		$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:rating');
 	}
 
 }

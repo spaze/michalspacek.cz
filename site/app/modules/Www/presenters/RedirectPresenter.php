@@ -1,6 +1,11 @@
 <?php
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Articles;
+use MichalSpacekCz\Training\Applications;
+use Nette\Application\Responses\RedirectResponse;
+use Nette\Http\IResponse;
+
 /**
  * A redirection presenter.
  *
@@ -12,18 +17,18 @@ class RedirectPresenter extends BasePresenter
 
 	private const GOOD_NIGHT = 5;
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\Articles */
+	/** @var Articles */
 	protected $articles;
 
 
 	/**
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
-	 * @param \MichalSpacekCz\Articles $articles
+	 * @param Applications $trainingApplications
+	 * @param Articles $articles
 	 */
-	public function __construct(\MichalSpacekCz\Training\Applications $trainingApplications, \MichalSpacekCz\Articles $articles)
+	public function __construct(Applications $trainingApplications, Articles $articles)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->articles = $articles;
@@ -57,7 +62,7 @@ class RedirectPresenter extends BasePresenter
 	{
 		$article = current($this->articles->getAllByTags($token, 1));
 		if ($article) {
-			$this->sendResponse(new \Nette\Application\Responses\RedirectResponse($article->href, \Nette\Http\IResponse::S302_FOUND));
+			$this->sendResponse(new RedirectResponse($article->href, IResponse::S302_FOUND));
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}

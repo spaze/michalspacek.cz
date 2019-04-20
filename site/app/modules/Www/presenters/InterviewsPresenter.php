@@ -1,6 +1,12 @@
 <?php
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Embed;
+use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Interviews;
+use Nette\Application\BadRequestException;
+use Nette\Http\IResponse;
+
 /**
  * Interviews presenter.
  *
@@ -10,25 +16,25 @@ namespace App\WwwModule\Presenters;
 class InterviewsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Interviews */
+	/** @var Interviews */
 	protected $interviews;
 
-	/** @var \MichalSpacekCz\Embed */
+	/** @var Embed */
 	protected $embed;
 
 
 	/**
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Interviews $interviews
-	 * @param \MichalSpacekCz\Embed $embed
+	 * @param Texy $texyFormatter
+	 * @param Interviews $interviews
+	 * @param Embed $embed
 	 */
 	public function __construct(
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Interviews $interviews,
-		\MichalSpacekCz\Embed $embed
+		Texy $texyFormatter,
+		Interviews $interviews,
+		Embed $embed
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -49,7 +55,7 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$interview = $this->interviews->get($name);
 		if (!$interview) {
-			throw new \Nette\Application\BadRequestException("I haven't been interviewed by {$name}, yet", \Nette\Http\IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("I haven't been interviewed by {$name}, yet", IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [$interview->title]);

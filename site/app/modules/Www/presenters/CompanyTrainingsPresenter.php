@@ -1,6 +1,12 @@
 <?php
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\Locales;
+use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Vat;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
@@ -13,22 +19,22 @@ use Nette\Http\IResponse;
 class CompanyTrainingsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Training\Trainings */
+	/** @var Trainings */
 	protected $trainings;
 
-	/** @var \MichalSpacekCz\Training\CompanyTrainings */
+	/** @var CompanyTrainings */
 	protected $companyTrainings;
 
-	/** @var \MichalSpacekCz\Training\Locales */
+	/** @var Locales */
 	protected $trainingLocales;
 
-	/** @var \MichalSpacekCz\Training\Reviews */
+	/** @var Reviews */
 	protected $trainingReviews;
 
-	/** @var \MichalSpacekCz\Vat */
+	/** @var Vat */
 	protected $vat;
 
 	/** @var IResponse */
@@ -36,21 +42,21 @@ class CompanyTrainingsPresenter extends BasePresenter
 
 
 	/**
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
-	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
-	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
-	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
-	 * @param \MichalSpacekCz\Vat $vat
+	 * @param Texy $texyFormatter
+	 * @param Trainings $trainings
+	 * @param CompanyTrainings $companyTrainings
+	 * @param Locales $trainingLocales
+	 * @param Reviews $trainingReviews
+	 * @param Vat $vat
 	 * @param IResponse $httpResponse
 	 */
 	public function __construct(
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Training\Trainings $trainings,
-		\MichalSpacekCz\Training\CompanyTrainings $companyTrainings,
-		\MichalSpacekCz\Training\Locales $trainingLocales,
-		\MichalSpacekCz\Training\Reviews $trainingReviews,
-		\MichalSpacekCz\Vat $vat,
+		Texy $texyFormatter,
+		Trainings $trainings,
+		CompanyTrainings $companyTrainings,
+		Locales $trainingLocales,
+		Reviews $trainingReviews,
+		Vat $vat,
 		IResponse $httpResponse
 	)
 	{

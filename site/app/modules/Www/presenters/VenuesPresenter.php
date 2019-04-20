@@ -1,7 +1,13 @@
 <?php
 namespace App\WwwModule\Presenters;
 
-use MichalSpacekCz\Training;
+use MichalSpacekCz\Embed;
+use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Venues;
+use Nette\Application\BadRequestException;
+use Nette\Http\IResponse;
 
 /**
  * TrainingVenues presenter.
@@ -12,35 +18,35 @@ use MichalSpacekCz\Training;
 class VenuesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Venues */
+	/** @var Venues */
 	protected $trainingVenues;
 
-	/** @var \MichalSpacekCz\Training\Trainings */
+	/** @var Trainings */
 	protected $trainings;
 
-	/** @var \MichalSpacekCz\Embed */
+	/** @var Embed */
 	protected $embed;
 
 
 	/**
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Training\Venues $trainingVenues
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
-	 * @param \MichalSpacekCz\Embed $embed
+	 * @param Texy $texyFormatter
+	 * @param Dates $trainingDates
+	 * @param Venues $trainingVenues
+	 * @param Trainings $trainings
+	 * @param Embed $embed
 	 */
 	public function __construct(
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		Training\Dates $trainingDates,
-		Training\Venues $trainingVenues,
-		Training\Trainings $trainings,
-		\MichalSpacekCz\Embed $embed
+		Texy $texyFormatter,
+		Dates $trainingDates,
+		Venues $trainingVenues,
+		Trainings $trainings,
+		Embed $embed
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -56,7 +62,7 @@ class VenuesPresenter extends BasePresenter
 	{
 		$venue = $this->trainingVenues->get($name);
 		if (!$venue) {
-			throw new \Nette\Application\BadRequestException("Where in the world is {$name}?", \Nette\Http\IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Where in the world is {$name}?", IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->name]);

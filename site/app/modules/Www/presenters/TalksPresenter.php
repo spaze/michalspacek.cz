@@ -3,7 +3,14 @@ declare(strict_types = 1);
 
 namespace App\WwwModule\Presenters;
 
-use Nette\Utils\Html;
+use MichalSpacekCz\Embed;
+use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Talks;
+use MichalSpacekCz\Templating\Helpers;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Http\IResponse;
+use RuntimeException;
 
 /**
  * Talks presenter.
@@ -14,30 +21,30 @@ use Nette\Utils\Html;
 class TalksPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Talks */
+	/** @var Talks */
 	protected $talks;
 
-	/** @var \MichalSpacekCz\Embed */
+	/** @var Embed */
 	protected $embed;
 
-	/** @var \MichalSpacekCz\Templating\Helpers */
+	/** @var Helpers */
 	protected $helpers;
 
 
 	/**
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Talks $talks
-	 * @param \MichalSpacekCz\Embed $embed
-	 * @param \MichalSpacekCz\Templating\Helpers $helpers
+	 * @param Texy $texyFormatter
+	 * @param Talks $talks
+	 * @param Embed $embed
+	 * @param Helpers $helpers
 	 */
 	public function __construct(
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\MichalSpacekCz\Talks $talks,
-		\MichalSpacekCz\Embed $embed,
-		\MichalSpacekCz\Templating\Helpers $helpers
+		Texy $texyFormatter,
+		Talks $talks,
+		Embed $embed,
+		Helpers $helpers
 	)
 	{
 		$this->texyFormatter = $texyFormatter;
@@ -65,8 +72,8 @@ class TalksPresenter extends BasePresenter
 	/**
 	 * @param string $name
 	 * @param string|null $slide
-	 * @throws \Nette\Application\BadRequestException
-	 * @throws \Nette\Application\UI\InvalidLinkException
+	 * @throws BadRequestException
+	 * @throws InvalidLinkException
 	 */
 	public function actionTalk(string $name, ?string $slide = null): void
 	{
@@ -84,8 +91,8 @@ class TalksPresenter extends BasePresenter
 					$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$talk->action]);
 				}
 			}
-		} catch (\RuntimeException $e) {
-			throw new \Nette\Application\BadRequestException($e->getMessage(), \Nette\Http\IResponse::S404_NOT_FOUND);
+		} catch (RuntimeException $e) {
+			throw new BadRequestException($e->getMessage(), IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $talk);

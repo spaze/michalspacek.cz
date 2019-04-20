@@ -1,6 +1,8 @@
 <?php
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Talks;
+
 /**
  * Who presenter.
  *
@@ -10,14 +12,14 @@ namespace App\WwwModule\Presenters;
 class WhoPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Talks */
+	/** @var Talks */
 	protected $talks;
 
 
 	/**
-	 * @param \MichalSpacekCz\Talks $talks
+	 * @param Talks $talks
 	 */
-	public function __construct(\MichalSpacekCz\Talks $talks)
+	public function __construct(Talks $talks)
 	{
 		$this->talks = $talks;
 		parent::__construct();

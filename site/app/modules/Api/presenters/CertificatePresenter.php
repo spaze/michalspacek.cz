@@ -3,23 +3,28 @@ declare(strict_types = 1);
 
 namespace App\ApiModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter;
+use MichalSpacekCz\Certificates;
+use Nette\Security\AuthenticationException;
+use RuntimeException;
+
 /**
  * Certificate presenter.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class CertificatePresenter extends \App\WwwModule\Presenters\BasePresenter
+class CertificatePresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Certificates */
+	/** @var Certificates */
 	protected $certificates;
 
 
 	/**
-	 * @param \MichalSpacekCz\Certificates $certificates
+	 * @param Certificates $certificates
 	 */
-	public function __construct(\MichalSpacekCz\Certificates $certificates)
+	public function __construct(Certificates $certificates)
 	{
 		$this->certificates = $certificates;
 		parent::__construct();
@@ -37,9 +42,9 @@ class CertificatePresenter extends \App\WwwModule\Presenters\BasePresenter
 				'statusMessage' => 'Certificates reported successfully',
 				'count' => $count,
 			]);
-		} catch (\Nette\Security\AuthenticationException $e) {
+		} catch (AuthenticationException $e) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Invalid credentials']);
-		} catch (\RuntimeException $e) {
+		} catch (RuntimeException $e) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
 		}
 	}

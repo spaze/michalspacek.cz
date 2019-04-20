@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Formatter\Texy;
+
 /**
  * Projects presenter.
  *
@@ -12,14 +14,14 @@ namespace App\WwwModule\Presenters;
 class ProjectsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
 
 	/**
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
+	 * @param Texy $texyFormatter
 	 */
-	public function __construct(\MichalSpacekCz\Formatter\Texy $texyFormatter)
+	public function __construct(Texy $texyFormatter)
 	{
 		$this->texyFormatter = $texyFormatter;
 		parent::__construct();

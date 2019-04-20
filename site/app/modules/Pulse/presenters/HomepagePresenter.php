@@ -3,13 +3,15 @@ declare(strict_types = 1);
 
 namespace App\PulseModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter;
+
 /**
  * Homepage presenter.
  *
  * @author Michal Špaček
  * @package pulse.michalspacek.cz
  */
-class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
+class HomepagePresenter extends BasePresenter
 {
 
 	/**

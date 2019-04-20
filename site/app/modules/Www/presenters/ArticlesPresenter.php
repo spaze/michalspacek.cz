@@ -1,6 +1,8 @@
 <?php
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Articles;
+
 /**
  * Articles presenter.
  *
@@ -10,14 +12,14 @@ namespace App\WwwModule\Presenters;
 class ArticlesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Articles */
+	/** @var Articles */
 	protected $articles;
 
 
 	/**
-	 * @param \MichalSpacekCz\Articles $articles
+	 * @param Articles $articles
 	 */
-	public function __construct(\MichalSpacekCz\Articles $articles)
+	public function __construct(Articles $articles)
 	{
 		$this->articles = $articles;
 		parent::__construct();

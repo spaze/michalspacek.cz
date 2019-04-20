@@ -1,6 +1,16 @@
 <?php
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Templating\Helpers;
+use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Http\IResponse;
+use Nette\Localization\ITranslator;
+use Netxten\Templating\Helpers as NetxtenHelpers;
+use Spaze\ContentSecurityPolicy\Config;
+use stdClass;
+
 /**
  * A forbidden presenter.
  *
@@ -9,29 +19,29 @@ namespace App\WwwModule\Presenters;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  *
- * @property-read \Nette\Bridges\ApplicationLatte\Template|\stdClass $template
+ * @property-read Template|stdClass $template
  */
-class ForbiddenPresenter extends \Nette\Application\UI\Presenter
+class ForbiddenPresenter extends Presenter
 {
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
-	/** @var \Nette\Http\IResponse */
+	/** @var IResponse */
 	protected $httpResponse;
 
-	/** @var \Spaze\ContentSecurityPolicy\Config */
+	/** @var Config */
 	private $contentSecurityPolicy;
 
-	/** @var \MichalSpacekCz\Templating\Helpers */
+	/** @var Helpers */
 	private $templateHelpers;
 
 
 	/**
 	 * @internal
-	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
+	 * @param Config $contentSecurityPolicy
 	 */
-	public function injectContentSecurityPolicy(\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
+	public function injectContentSecurityPolicy(Config $contentSecurityPolicy)
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
@@ -39,19 +49,19 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 
 	/**
 	 * @internal
-	 * @param \MichalSpacekCz\Templating\Helpers $templateHelpers
+	 * @param Helpers $templateHelpers
 	 */
-	public function injectTemplateHelpers(\MichalSpacekCz\Templating\Helpers $templateHelpers)
+	public function injectTemplateHelpers(Helpers $templateHelpers)
 	{
 		$this->templateHelpers = $templateHelpers;
 	}
 
 
 	/**
-	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \Nette\Http\IResponse $httpResponse
+	 * @param ITranslator $translator
+	 * @param IResponse $httpResponse
 	 */
-	public function __construct(\Nette\Localization\ITranslator $translator, \Nette\Http\IResponse $httpResponse)
+	public function __construct(ITranslator $translator, IResponse $httpResponse)
 	{
 		$this->translator = $translator;
 		$this->httpResponse = $httpResponse;
@@ -65,11 +75,11 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 	}
 
 
-	protected function createTemplate(): \Nette\Application\UI\ITemplate
+	protected function createTemplate(): ITemplate
 	{
-		/** @var \Nette\Bridges\ApplicationLatte\Template $template */
+		/** @var Template $template */
 		$template = parent::createTemplate();
-		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator->getDefaultLocale()), 'loader']);
+		$template->getLatte()->addFilter(null, [new NetxtenHelpers($this->translator->getDefaultLocale()), 'loader']);
 		$template->getLatte()->addFilter(null, [$this->templateHelpers, 'loader']);
 		return $template;
 	}
@@ -77,7 +87,7 @@ class ForbiddenPresenter extends \Nette\Application\UI\Presenter
 
 	public function actionDefault()
 	{
-		$this->httpResponse->setCode(\Nette\Http\IResponse::S403_FORBIDDEN);
+		$this->httpResponse->setCode(IResponse::S403_FORBIDDEN);
 		$this->template->pageTitle = $this->translator->translate("messages.title.forbidden");
 	}
 

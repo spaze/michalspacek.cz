@@ -3,6 +3,10 @@ declare(strict_types = 1);
 
 namespace App\PulseModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter;
+use MichalSpacekCz\Pulse\Passwords;
+use MichalSpacekCz\Pulse\Passwords\Rating;
+use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
 /**
@@ -11,21 +15,21 @@ use Nette\Http\IResponse;
  * @author Michal Špaček
  * @package pulse.michalspacek.cz
  */
-class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
+class PasswordsStoragesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Pulse\Passwords */
+	/** @var Passwords */
 	protected $passwords;
 
-	/** @var \MichalSpacekCz\Pulse\Passwords\Rating */
+	/** @var Rating */
 	protected $passwordsRating;
 
 
 	/**
-	 * @param \MichalSpacekCz\Pulse\Passwords $passwords
-	 * @param \MichalSpacekCz\Pulse\Passwords\Rating $passwordsRating
+	 * @param Passwords $passwords
+	 * @param Rating $passwordsRating
 	 */
-	public function __construct(\MichalSpacekCz\Pulse\Passwords $passwords, \MichalSpacekCz\Pulse\Passwords\Rating $passwordsRating)
+	public function __construct(Passwords $passwords, Rating $passwordsRating)
 	{
 		$this->passwords = $passwords;
 		$this->passwordsRating = $passwordsRating;
@@ -66,7 +70,7 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 		$sites = explode(',', $param);
 		$data = $this->passwords->getStoragesBySite($sites);
 		if (empty($data->sites)) {
-			throw new \Nette\Application\BadRequestException('Unknown site alias', IResponse::S404_NOT_FOUND);
+			throw new BadRequestException('Unknown site alias', IResponse::S404_NOT_FOUND);
 		}
 
 		$this->template->isDetail = true;
@@ -91,7 +95,7 @@ class PasswordsStoragesPresenter extends \App\WwwModule\Presenters\BasePresenter
 		$companies = explode(',', $param);
 		$data = $this->passwords->getStoragesByCompany($companies);
 		if (empty($data->sites)) {
-			throw new \Nette\Application\BadRequestException('Unknown company alias', IResponse::S404_NOT_FOUND);
+			throw new BadRequestException('Unknown company alias', IResponse::S404_NOT_FOUND);
 		}
 
 		$names = [];

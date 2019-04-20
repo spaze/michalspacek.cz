@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Training\Files;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Http\IResponse;
@@ -16,14 +18,14 @@ use Nette\Http\IResponse;
 class FilesPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Training\Files */
+	/** @var Files */
 	protected $trainingFiles;
 
 
 	/**
-	 * @param \MichalSpacekCz\Training\Files $trainingFiles
+	 * @param Files $trainingFiles
 	 */
-	public function __construct(\MichalSpacekCz\Training\Files $trainingFiles)
+	public function __construct(Files $trainingFiles)
 	{
 		$this->trainingFiles = $trainingFiles;
 		parent::__construct();
@@ -33,7 +35,7 @@ class FilesPresenter extends BasePresenter
 	/**
 	 * @param string $filename
 	 * @throws BadRequestException
-	 * @throws \Nette\Application\AbortException
+	 * @throws AbortException
 	 */
 	public function actionTraining(string $filename): void
 	{

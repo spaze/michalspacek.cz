@@ -3,41 +3,53 @@ declare(strict_types = 1);
 
 namespace App\WwwModule\Presenters;
 
+use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Templating\Helpers;
+use MichalSpacekCz\User\Manager;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Localization\ITranslator;
+use Netxten\Templating\Helpers as NetxtenHelpers;
+use Spaze\ContentSecurityPolicy\Config;
+use stdClass;
+
 /**
  * Base class for all application presenters.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  *
- * @property-read \Nette\Bridges\ApplicationLatte\Template|\stdClass $template
+ * @property-read Template|stdClass $template
  */
-abstract class BasePresenter extends \Nette\Application\UI\Presenter
+abstract class BasePresenter extends Presenter
 {
 
 	/**
-	 * @var \Nette\Localization\ITranslator
+	 * @var ITranslator
 	 * @inject
 	 */
 	public $translator;
 
-	/** @var \MichalSpacekCz\User\Manager */
+	/** @var Manager */
 	protected $authenticator;
 
-	/** @var \Spaze\ContentSecurityPolicy\Config */
+	/** @var Config */
 	private $contentSecurityPolicy;
 
-	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
+	/** @var LocaleLinkGenerator */
 	private $localeLinkGenerator;
 
-	/** @var \MichalSpacekCz\Templating\Helpers */
+	/** @var Helpers */
 	private $templateHelpers;
 
 
 	/**
 	 * @internal
-	 * @param \MichalSpacekCz\User\Manager $authenticator
+	 * @param Manager $authenticator
 	 */
-	public function injectAuthenticator(\MichalSpacekCz\User\Manager $authenticator)
+	public function injectAuthenticator(Manager $authenticator)
 	{
 		$this->authenticator = $authenticator;
 	}
@@ -45,9 +57,9 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	/**
 	 * @internal
-	 * @param \Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy
+	 * @param Config $contentSecurityPolicy
 	 */
-	public function injectContentSecurityPolicy(\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
+	public function injectContentSecurityPolicy(Config $contentSecurityPolicy)
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
@@ -55,9 +67,9 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	/**
 	 * @internal
-	 * @param \MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator
+	 * @param LocaleLinkGenerator $localeLinkGenerator
 	 */
-	public function injectLocaleLinkGenerator(\MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator)
+	public function injectLocaleLinkGenerator(LocaleLinkGenerator $localeLinkGenerator)
 	{
 		$this->localeLinkGenerator = $localeLinkGenerator;
 	}
@@ -65,9 +77,9 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	/**
 	 * @internal
-	 * @param \MichalSpacekCz\Templating\Helpers $templateHelpers
+	 * @param Helpers $templateHelpers
 	 */
-	public function injectTemplateHelpers(\MichalSpacekCz\Templating\Helpers $templateHelpers)
+	public function injectTemplateHelpers(Helpers $templateHelpers)
 	{
 		$this->templateHelpers = $templateHelpers;
 	}
@@ -88,17 +100,17 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 		try {
 			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
-		} catch (\Nette\Application\UI\InvalidLinkException $e) {
+		} catch (InvalidLinkException $e) {
 			$this->template->localeLinks = $this->getLocaleLinkDefault();
 		}
 	}
 
 
-	protected function createTemplate(): \Nette\Application\UI\ITemplate
+	protected function createTemplate(): ITemplate
 	{
-		/** @var \Nette\Bridges\ApplicationLatte\Template $template */
+		/** @var Template $template */
 		$template = parent::createTemplate();
-		$template->getLatte()->addFilter(null, [new \Netxten\Templating\Helpers($this->translator->getDefaultLocale()), 'loader']);
+		$template->getLatte()->addFilter(null, [new NetxtenHelpers($this->translator->getDefaultLocale()), 'loader']);
 		$template->getLatte()->addFilter(null, [$this->templateHelpers, 'loader']);
 		return $template;
 	}

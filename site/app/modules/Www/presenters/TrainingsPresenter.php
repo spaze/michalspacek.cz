@@ -1,9 +1,30 @@
 <?php
 namespace App\WwwModule\Presenters;
 
-use MichalSpacekCz\Training;
+use MichalSpacekCz\CompanyInfo\Info;
+use MichalSpacekCz\Form\TrainingApplication;
+use MichalSpacekCz\Form\TrainingApplicationPreliminary;
+use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Files;
+use MichalSpacekCz\Training\Locales;
+use MichalSpacekCz\Training\Mails;
+use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Vat;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Database\Row;
 use Nette\Http\IResponse;
+use Nette\Utils\ArrayHash;
+use Netxten\Templating\Helpers;
+use OutOfBoundsException;
+use PDOException;
+use Tracy\Debugger;
+use UnexpectedValueException;
 
 /**
  * Trainings presenter.
@@ -14,80 +35,80 @@ use Nette\Http\IResponse;
 class TrainingsPresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\Training\Mails */
+	/** @var Mails */
 	protected $trainingMails;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Files */
+	/** @var Files */
 	protected $trainingFiles;
 
-	/** @var \MichalSpacekCz\Training\Trainings */
+	/** @var Trainings */
 	protected $trainings;
 
-	/** @var \MichalSpacekCz\Training\CompanyTrainings */
+	/** @var CompanyTrainings */
 	protected $companyTrainings;
 
-	/** @var \MichalSpacekCz\Training\Locales */
+	/** @var Locales */
 	protected $trainingLocales;
 
-	/** @var \MichalSpacekCz\Training\Reviews */
+	/** @var Reviews */
 	protected $trainingReviews;
 
-	/** @var \MichalSpacekCz\Vat */
+	/** @var Vat */
 	protected $vat;
 
-	/** @var \Netxten\Templating\Helpers */
+	/** @var Helpers */
 	protected $netxtenHelpers;
 
-	/** @var \MichalSpacekCz\CompanyInfo\Info */
+	/** @var Info */
 	protected $companyInfo;
 
 	/** @var IResponse */
 	protected $httpResponse;
 
-	/** @var \Nette\Database\Row */
+	/** @var Row */
 	private $training;
 
-	/** @var \Nette\Database\Row[] */
+	/** @var Row[] */
 	private $dates;
 
 
 	/**
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
-	 * @param \MichalSpacekCz\Training\Mails $trainingMails
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Training\Files $trainingFiles
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
-	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
-	 * @param \MichalSpacekCz\Training\Locales $trainingLocales
-	 * @param \MichalSpacekCz\Training\Reviews $trainingReviews
-	 * @param \MichalSpacekCz\Vat $vat
-	 * @param \Netxten\Templating\Helpers $netxtenHelpers
-	 * @param \MichalSpacekCz\CompanyInfo\Info $companyInfo
+	 * @param Texy $texyFormatter
+	 * @param Applications $trainingApplications
+	 * @param Mails $trainingMails
+	 * @param Dates $trainingDates
+	 * @param Files $trainingFiles
+	 * @param Trainings $trainings
+	 * @param CompanyTrainings $companyTrainings
+	 * @param Locales $trainingLocales
+	 * @param Reviews $trainingReviews
+	 * @param Vat $vat
+	 * @param Helpers $netxtenHelpers
+	 * @param Info $companyInfo
 	 * @param IResponse $httpResponse
 	 */
 	public function __construct(
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		Training\Applications $trainingApplications,
-		Training\Mails $trainingMails,
-		Training\Dates $trainingDates,
-		Training\Files $trainingFiles,
-		Training\Trainings $trainings,
-		Training\CompanyTrainings $companyTrainings,
-		\MichalSpacekCz\Training\Locales $trainingLocales,
-		\MichalSpacekCz\Training\Reviews $trainingReviews,
-		\MichalSpacekCz\Vat $vat,
-		\Netxten\Templating\Helpers $netxtenHelpers,
-		\MichalSpacekCz\CompanyInfo\Info $companyInfo,
+		Texy $texyFormatter,
+		Applications $trainingApplications,
+		Mails $trainingMails,
+		Dates $trainingDates,
+		Files $trainingFiles,
+		Trainings $trainings,
+		CompanyTrainings $companyTrainings,
+		Locales $trainingLocales,
+		Reviews $trainingReviews,
+		Vat $vat,
+		Helpers $netxtenHelpers,
+		Info $companyInfo,
 		IResponse $httpResponse
 	)
 	{
@@ -121,7 +142,7 @@ class TrainingsPresenter extends BasePresenter
 	/**
 	 * @param string $name
 	 * @throws BadRequestException
-	 * @throws \Nette\Application\AbortException
+	 * @throws AbortException
 	 */
 	public function actionTraining($name)
 	{
@@ -215,13 +236,13 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication($formName)
 	{
-		$form = new \MichalSpacekCz\Form\TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
+		$form = new TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
 		$form->setApplicationFromSession($this->session->getSection('training'));
 		$form->onSuccess[] = [$this, 'submittedApplication'];
 	}
 
 
-	public function submittedApplication(\MichalSpacekCz\Form\TrainingApplication $form, $values)
+	public function submittedApplication(TrainingApplication $form, $values)
 	{
 		$session = $this->getSession('training');
 		/** @var string $name */
@@ -280,7 +301,7 @@ class TrainingsPresenter extends BasePresenter
 						$values->note
 					);
 				}
-				/** @var \Nette\Bridges\ApplicationLatte\Template $template */
+				/** @var Template $template */
 				$template = $this->createTemplate();
 				$this->trainingMails->sendSignUpMail(
 					$applicationId,
@@ -309,11 +330,11 @@ class TrainingsPresenter extends BasePresenter
 			$session->companyTaxId = $values->companyTaxId;
 			$session->note         = $values->note;
 			$this->redirect('success', $name);
-		} catch (\UnexpectedValueException $e) {
-			\Tracy\Debugger::log($e);
+		} catch (UnexpectedValueException $e) {
+			Debugger::log($e);
 			$this->flashMessage($this->translator->translate('messages.trainings.spammyapplication'), 'error');
-		} catch (\PDOException $e) {
-			\Tracy\Debugger::log($e, \Tracy\Debugger::ERROR);
+		} catch (PDOException $e) {
+			Debugger::log($e, Debugger::ERROR);
 			$this->flashMessage($this->translator->translate('messages.trainings.errorapplication'), 'error');
 		}
 	}
@@ -324,12 +345,12 @@ class TrainingsPresenter extends BasePresenter
 		if ($this->training->discontinuedId) {
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}", IResponse::S404_NOT_FOUND);
 		}
-		$form = new \MichalSpacekCz\Form\TrainingApplicationPreliminary($this, $formName, $this->translator);
+		$form = new TrainingApplicationPreliminary($this, $formName, $this->translator);
 		$form->onSuccess[] = [$this, 'submittedApplicationPreliminary'];
 	}
 
 
-	public function submittedApplicationPreliminary(\MichalSpacekCz\Form\TrainingApplicationPreliminary $form, $values)
+	public function submittedApplicationPreliminary(TrainingApplicationPreliminary $form, $values)
 	{
 		$this->trainingApplications->addPreliminaryInvitation($this->training, $values->name, $values->email);
 		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
@@ -337,26 +358,26 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	private function checkTrainingDate(\Nette\Utils\ArrayHash $values, $name)
+	private function checkTrainingDate(ArrayHash $values, $name)
 	{
 		if (!isset($this->dates[$values->trainingId])) {
 			$this->logData($values, $name);
 			$message = "Training date id {$values->trainingId} is not an upcoming training, should be one of " . implode(', ', array_keys($this->dates));
-			throw new \OutOfBoundsException($message);
+			throw new OutOfBoundsException($message);
 		}
 	}
 
 
-	private function checkSpam(\Nette\Utils\ArrayHash $values, $name)
+	private function checkSpam(ArrayHash $values, $name)
 	{
 		if (preg_match('~\s+href="\s*https?://~', $values->note)) {
 			$this->logData($values, $name);
-			throw new \UnexpectedValueException('Spammy note: ' . $values->note);
+			throw new UnexpectedValueException('Spammy note: ' . $values->note);
 		}
 	}
 
 
-	private function logData(\Nette\Utils\ArrayHash $values, $name)
+	private function logData(ArrayHash $values, $name)
 	{
 		$session = $this->getSession('training');
 		$logValues = $logSession = array();
@@ -373,7 +394,7 @@ class TrainingsPresenter extends BasePresenter
 			(empty($logSession) ? 'empty' : implode(', ', $logSession)),
 			implode(', ', $logValues)
 		);
-		\Tracy\Debugger::log($message);
+		Debugger::log($message);
 	}
 
 
@@ -456,7 +477,7 @@ class TrainingsPresenter extends BasePresenter
 	 * @param string $name
 	 * @param string|null $param
 	 * @throws BadRequestException
-	 * @throws \Nette\Application\AbortException
+	 * @throws AbortException
 	 */
 	public function actionSuccess($name, $param)
 	{

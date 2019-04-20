@@ -3,7 +3,14 @@ declare(strict_types = 1);
 
 namespace App\UpcKeysModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter;
+use MichalSpacekCz\Form\UpcKeys as UpcKeysForm;
+use MichalSpacekCz\UpcKeys;
+use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
+use Nette\Utils\ArrayHash;
+use RuntimeException;
+use stdClass;
 
 /**
  * Homepage presenter.
@@ -11,13 +18,13 @@ use Nette\Http\IResponse;
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
+class HomepagePresenter extends BasePresenter
 {
 
 	/** @var string */
 	protected $ssid;
 
-	/** @var \MichalSpacekCz\UpcKeys */
+	/** @var UpcKeys */
 	protected $upcKeys;
 
 	/** @var IResponse */
@@ -25,13 +32,13 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 
 	/** @var array (type id => type) */
 	private $types = array(
-		\MichalSpacekCz\UpcKeys::SSID_TYPE_24GHZ => '2.4 GHz',
-		\MichalSpacekCz\UpcKeys::SSID_TYPE_5GHZ => '5 GHz',
-		\MichalSpacekCz\UpcKeys::SSID_TYPE_UNKNOWN => 'unknown',
+		UpcKeys::SSID_TYPE_24GHZ => '2.4 GHz',
+		UpcKeys::SSID_TYPE_5GHZ => '5 GHz',
+		UpcKeys::SSID_TYPE_UNKNOWN => 'unknown',
 	);
 
 
-	public function __construct(\MichalSpacekCz\UpcKeys $upcKeys, IResponse $httpResponse)
+	public function __construct(UpcKeys $upcKeys, IResponse $httpResponse)
 	{
 		$this->upcKeys = $upcKeys;
 		$this->httpResponse = $httpResponse;
@@ -44,7 +51,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	 *
 	 * Doesn't use flash messages because I want the errors to be gone after post-redirect-get.
 	 *
-	 * @param string|NULL $ssid
+	 * @param string|null $ssid
 	 * @param string $format
 	 */
 	public function actionDefault(?string $ssid = null, string $format = 'html'): void
@@ -66,14 +73,14 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 					$this->template->$key = $value;
 				}
 				$types = $this->types;
-				unset($types[\MichalSpacekCz\UpcKeys::SSID_TYPE_UNKNOWN]);
+				unset($types[UpcKeys::SSID_TYPE_UNKNOWN]);
 				$this->template->filterTypes = $types;
 				$this->template->modelsWithPrefixes = $this->upcKeys->getModelsWithPrefixes();
 				$this->template->prefixes = $this->upcKeys->getPrefixes();
 				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 				break;
 			default:
-				throw new \Nette\Application\BadRequestException('Unknown format', IResponse::S404_NOT_FOUND);
+				throw new BadRequestException('Unknown format', IResponse::S404_NOT_FOUND);
 		}
 	}
 
@@ -81,7 +88,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * Check if SSID is valid and load keys
 	 *
-	 * @return array
+	 * @return array<string, string|stdClass[]>
 	 */
 	protected function loadKeys(): array
 	{
@@ -110,15 +117,15 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	/**
 	 * Add information to keys.
 	 *
-	 * @param \stdClass[] $keys
-	 * @return \stdClass[]
+	 * @param stdClass[] $keys
+	 * @return stdClass[]
 	 */
 	protected function enrichKeys(array $keys): array
 	{
 		$prefixes = $this->upcKeys->getPrefixes();
 		foreach ($keys as $key) {
 			if (!isset($this->types[$key->type])) {
-				throw new \RuntimeException('Unknown network type ' . $key->type);
+				throw new RuntimeException('Unknown network type ' . $key->type);
 			}
 			$key->typeId = $key->type;
 			$key->type = $this->types[$key->typeId];
@@ -127,7 +134,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 			preg_match('/^[a-z]+/i', $key->serial, $matches);
 			$prefix = current($matches);
 			if (!in_array($prefix, $prefixes)) {
-				throw new \RuntimeException('Unknown prefix for serial ' . $key->serial);
+				throw new RuntimeException('Unknown prefix for serial ' . $key->serial);
 			}
 			$key->serialPrefix = $prefix;
 		}
@@ -135,15 +142,15 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 	}
 
 
-	protected function createComponentSsid(string $formName): \MichalSpacekCz\Form\UpcKeys
+	protected function createComponentSsid(string $formName): UpcKeysForm
 	{
-		$form = new \MichalSpacekCz\Form\UpcKeys($this, $formName, $this->ssid, $this->upcKeys);
+		$form = new UpcKeysForm($this, $formName, $this->ssid, $this->upcKeys);
 		$form->onSuccess[] = [$this, 'submittedSsid'];
 		return $form;
 	}
 
 
-	public function submittedSsid(\MichalSpacekCz\Form\UpcKeys $form, \Nette\Utils\ArrayHash $values): void
+	public function submittedSsid(UpcKeysForm $form, ArrayHash $values): void
 	{
 		$ssid = strtoupper(trim($values->ssid));
 		if (!$this->upcKeys->saveKeys($ssid)) {

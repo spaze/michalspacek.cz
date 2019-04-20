@@ -3,13 +3,16 @@ declare(strict_types = 1);
 
 namespace App\WebleedModule\Presenters;
 
+use App\WwwModule\Presenters\BasePresenter;
+use Nette\Utils\Html;
+
 /**
  * Homepage presenter.
  *
  * @author     Michal Špaček
  * @package    michalspacek.cz
  */
-class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
+class HomepagePresenter extends BasePresenter
 {
 
 	public function actionDefault(): void
@@ -21,9 +24,9 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 
 
 	/**
-	 * @return \Nette\Utils\Html
+	 * @return Html
 	 */
-	private function getSmallPrint(): \Nette\Utils\Html
+	private function getSmallPrint(): Html
 	{
 		$smallPrint = array(
 			 'Knocking on yer servar\'s ports since 2014.',
@@ -32,7 +35,7 @@ class HomepagePresenter extends \App\WwwModule\Presenters\BasePresenter
 			htmlspecialchars('<script>alert(\'XSS\');</script>'),
 			'<a href="https://www.youtube.com/watch?v=DLzxrzFCyOs">admin</a>',
 		);
-		return \Nette\Utils\Html::el()->setHtml($smallPrint[array_rand($smallPrint)]);
+		return Html::el()->setHtml($smallPrint[array_rand($smallPrint)]);
 	}
 
 }

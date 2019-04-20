@@ -1,7 +1,12 @@
 <?php
 namespace App\WwwModule\Presenters;
 
-use MichalSpacekCz\Training;
+use MichalSpacekCz\Articles;
+use MichalSpacekCz\Interviews;
+use MichalSpacekCz\Talks;
+use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Trainings;
 
 /**
  * Homepage presenter.
@@ -12,40 +17,40 @@ use MichalSpacekCz\Training;
 class HomepagePresenter extends BasePresenter
 {
 
-	/** @var \MichalSpacekCz\Articles */
+	/** @var Articles */
 	protected $articles;
 
-	/** @var \MichalSpacekCz\Interviews */
+	/** @var Interviews */
 	protected $interviews;
 
-	/** @var \MichalSpacekCz\Talks */
+	/** @var Talks */
 	protected $talks;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Trainings */
+	/** @var Trainings */
 	protected $trainings;
 
-	/** @var \MichalSpacekCz\Training\CompanyTrainings */
+	/** @var CompanyTrainings */
 	protected $companyTrainings;
 
 
 	/**
-	 * @param \MichalSpacekCz\Articles $articles
-	 * @param \MichalSpacekCz\Interviews $interviews
-	 * @param \MichalSpacekCz\Talks $talks
-	 * @param \MichalSpacekCz\Training\Dates $trainingDates
-	 * @param \MichalSpacekCz\Training\Trainings $trainings
-	 * @param \MichalSpacekCz\Training\CompanyTrainings $companyTrainings
+	 * @param Articles $articles
+	 * @param Interviews $interviews
+	 * @param Talks $talks
+	 * @param Dates $trainingDates
+	 * @param Trainings $trainings
+	 * @param CompanyTrainings $companyTrainings
 	 */
 	public function __construct(
-		\MichalSpacekCz\Articles $articles,
-		\MichalSpacekCz\Interviews $interviews,
-		\MichalSpacekCz\Talks $talks,
-		Training\Dates $trainingDates,
-		Training\Trainings $trainings,
-		Training\CompanyTrainings $companyTrainings
+		Articles $articles,
+		Interviews $interviews,
+		Talks $talks,
+		Dates $trainingDates,
+		Trainings $trainings,
+		CompanyTrainings $companyTrainings
 	)
 	{
 		$this->articles = $articles;
