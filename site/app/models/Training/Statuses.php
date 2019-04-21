@@ -98,9 +98,10 @@ class Statuses
 
 
 	/**
+	 * @param string $parent
 	 * @return array<integer, string>
 	 */
-	public function getChildrenStatuses($parent): array
+	public function getChildrenStatuses(string $parent): array
 	{
 		if (!isset($this->childrenStatuses[$parent])) {
 			$this->childrenStatuses[$parent] = $this->database->fetchPairs(
@@ -176,6 +177,10 @@ class Statuses
 	/**
 	 * Needs to be wrapped in transaction, not for public consumption,
 	 * use updateStatus(), updateStatusCallback() or updateStatusReturnCallback() instead.
+	 *
+	 * @param integer $applicationId
+	 * @param string $status
+	 * @param string|null $date
 	 */
 	private function setStatus(int $applicationId, string $status, ?string $date): void
 	{

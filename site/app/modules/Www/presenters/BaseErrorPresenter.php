@@ -27,15 +27,21 @@ abstract class BaseErrorPresenter extends BasePresenter
 	];
 
 
-	/** @internal */
-	public function injectRedirections(Redirections $redirections)
+	/**
+	 * @internal
+	 * @param Redirections $redirections
+	 */
+	public function injectRedirections(Redirections $redirections): void
 	{
 		$this->redirections = $redirections;
 	}
 
 
-	/** @internal */
-	public function injectLogger(ILogger $logger)
+	/**
+	 * @internal
+	 * @param ILogger $logger
+	 */
+	public function injectLogger(ILogger $logger): void
 	{
 		$this->logger = $logger;
 	}

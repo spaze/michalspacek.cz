@@ -23,6 +23,8 @@ class RegisterUz implements CompanyDataInterface
 
 	/**
 	 * Root URL of the service, ends with a slash.
+	 *
+	 * @param string $rootUrl
 	 */
 	public function setRootUrl(string $rootUrl): void
 	{

@@ -91,7 +91,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	/**
 	 * @param string $username
 	 * @param string $password
-	 * @return int User id
+	 * @return integer User id
 	 * @throws \Nette\Security\AuthenticationException
 	 */
 	private function verifyPassword(string $username, string $password): int
@@ -338,7 +338,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 *
 	 * @param string $value
 	 * @param \DateTimeInterface $validity
-	 * @param int $type
+	 * @param integer $type
 	 * @return Row|null
 	 */
 	private function verifyToken(string $value, \DateTimeInterface $validity, int $type): ?Row

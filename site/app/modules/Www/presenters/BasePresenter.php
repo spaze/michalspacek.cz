@@ -40,29 +40,41 @@ abstract class BasePresenter extends Presenter
 	private $templateHelpers;
 
 
-	/** @internal */
-	public function injectAuthenticator(Manager $authenticator)
+	/**
+	 * @internal
+	 * @param Manager $authenticator
+	 */
+	public function injectAuthenticator(Manager $authenticator): void
 	{
 		$this->authenticator = $authenticator;
 	}
 
 
-	/** @internal */
-	public function injectContentSecurityPolicy(Config $contentSecurityPolicy)
+	/**
+	 * @internal
+	 * @param Config $contentSecurityPolicy
+	 */
+	public function injectContentSecurityPolicy(Config $contentSecurityPolicy): void
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 
-	/** @internal */
-	public function injectLocaleLinkGenerator(LocaleLinkGenerator $localeLinkGenerator)
+	/**
+	 * @internal
+	 * @param LocaleLinkGenerator $localeLinkGenerator
+	 */
+	public function injectLocaleLinkGenerator(LocaleLinkGenerator $localeLinkGenerator): void
 	{
 		$this->localeLinkGenerator = $localeLinkGenerator;
 	}
 
 
-	/** @internal */
-	public function injectTemplateHelpers(Helpers $templateHelpers)
+	/**
+	 * @internal
+	 * @param Helpers $templateHelpers
+	 */
+	public function injectTemplateHelpers(Helpers $templateHelpers): void
 	{
 		$this->templateHelpers = $templateHelpers;
 	}

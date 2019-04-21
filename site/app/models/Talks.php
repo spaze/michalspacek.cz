@@ -508,7 +508,7 @@ class Talks
 	 * @param integer $talkId
 	 * @param \Nette\Http\FileUpload $replace
 	 * @param string[] $supported
-	 * @param bool $removeFile
+	 * @param boolean $removeFile
 	 * @param string|null $originalFile
 	 * @param integer $width
 	 * @param integer $height
@@ -587,8 +587,9 @@ class Talks
 	 * Update slides.
 	 *
 	 * @param integer $talkId
+	 * @param \Nette\Database\Row[] $originalSlides
 	 * @param \Nette\Utils\ArrayHash $slides
-	 * @param bool $removeFiles Remove old files?
+	 * @param boolean $removeFiles Remove old files?
 	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws \PDOException
 	 */
@@ -641,7 +642,7 @@ class Talks
 	/**
 	 * Save new slides.
 	 *
-	 * @param int $talkId
+	 * @param integer $talkId
 	 * @param \Nette\Database\Row[] $originalSlides
 	 * @param \Nette\Utils\ArrayHash $newSlides
 	 */

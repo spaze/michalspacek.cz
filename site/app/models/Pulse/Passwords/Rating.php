@@ -117,6 +117,7 @@ class Rating
 	/**
 	 * Get recommendation for rating.
 	 *
+	 * @param string $rating
 	 * @return string|null
 	 */
 	public function getRecommendation(string $rating): ?string
@@ -128,7 +129,8 @@ class Rating
 	/**
 	 * Check whether the rating represents secure storage.
 	 *
-	 * @return bool
+	 * @param string $rating
+	 * @return boolean
 	 */
 	public function isSecureStorage(string $rating): bool
 	{

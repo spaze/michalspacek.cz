@@ -123,6 +123,7 @@ class Trainings
 
 
 	/**
+	 * @param integer $trainingId
 	 * @return Row[]
 	 */
 	public function getDates(int $trainingId): array
@@ -138,6 +139,7 @@ class Trainings
 
 	/**
 	 * @param ArrayHash[] $trainings
+	 * @return boolean
 	 */
 	public function lastFreeSeatsAnyTraining(array $trainings): bool
 	{
@@ -328,6 +330,7 @@ class Trainings
 	/**
 	 * Get discontinued trainings with description.
 	 *
+	 * @param integer $id
 	 * @return array<string, string|string[]>|null
 	 */
 	public function getDiscontinued(int $id): ?array

@@ -15,7 +15,10 @@ abstract class BasePresenter extends WwwBasePresenter
 	protected $haveBacklink = true;
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @param MysqlSessionHandler $sessionHandler
+	 */
 	public function injectSessionHandler(MysqlSessionHandler $sessionHandler): void
 	{
 		$this->sessionHandler = $sessionHandler;

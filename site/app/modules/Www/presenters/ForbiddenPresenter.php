@@ -36,14 +36,20 @@ class ForbiddenPresenter extends Presenter
 	private $templateHelpers;
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @param Config $contentSecurityPolicy
+	 */
 	public function injectContentSecurityPolicy(Config $contentSecurityPolicy): void
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @param Helpers $templateHelpers
+	 */
 	public function injectTemplateHelpers(Helpers $templateHelpers): void
 	{
 		$this->templateHelpers = $templateHelpers;

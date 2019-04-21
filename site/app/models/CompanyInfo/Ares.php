@@ -3,7 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use Exception;
 use Nette\Http\IResponse;
+use RuntimeException;
+use SimpleXMLElement;
+use Tracy\Debugger;
+use UnexpectedValueException;
 
 /**
  * ARES service.
@@ -34,7 +39,7 @@ class Ares implements CompanyDataInterface
 		$company = new Data();
 		try {
 			if (empty($companyId)) {
-				throw new \RuntimeException('Company Id is empty');
+				throw new RuntimeException('Company Id is empty');
 			}
 			$content = $this->fetch($companyId);
 			libxml_disable_entity_loader();
@@ -43,7 +48,7 @@ class Ares implements CompanyDataInterface
 			$result = $xml->children($ns['are'])->children($ns['D'])->VH;
 			$data = $xml->children($ns['are'])->children($ns['D'])->VBAS;
 			if ((int)$result->K !== self::STATUS_FOUND) {
-				throw new \UnexpectedValueException('Invalid status', (int)$result->K);
+				throw new UnexpectedValueException('Invalid status', (int)$result->K);
 			}
 
 			if (isset($data->AA)) {
@@ -69,15 +74,15 @@ class Ares implements CompanyDataInterface
 			$company->city = $city;
 			$company->zip = $zip;
 			$company->country = $country;
-		} catch (\UnexpectedValueException $e) {
-			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
+		} catch (UnexpectedValueException $e) {
+			Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
 			$company->status = IResponse::S400_BAD_REQUEST;
 			$company->statusMessage = 'Not Found';
-		} catch (\RuntimeException $e) {
+		} catch (RuntimeException $e) {
 			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
 			$company->statusMessage = 'Error';
-		} catch (\Exception $e) {
-			\Tracy\Debugger::log($e);
+		} catch (Exception $e) {
+			Debugger::log($e);
 			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
 			$company->statusMessage = 'Error';
 		}
@@ -92,7 +97,7 @@ class Ares implements CompanyDataInterface
 		stream_context_set_params($context, [
 			'notification' => function ($notificationCode, $severity, $message, $messageCode) {
 				if ($severity === STREAM_NOTIFY_SEVERITY_ERR) {
-					throw new \RuntimeException(trim($message) . " ({$notificationCode})", $messageCode);
+					throw new RuntimeException(trim($message) . " ({$notificationCode})", $messageCode);
 				}
 			},
 			'options' => [
@@ -122,8 +127,11 @@ class Ares implements CompanyDataInterface
 
 	/**
 	 * Return ISO 3166-1 alpha-2 by ISO 3166-1 numeric.
+	 *
+	 * @param SimpleXMLElement $data
+	 * @return string
 	 */
-	private function countryCode(\SimpleXMLElement $data): string
+	private function countryCode(SimpleXMLElement $data): string
 	{
 		$codes = array(
 			'203' => 'CZ',

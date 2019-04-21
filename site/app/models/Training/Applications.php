@@ -793,6 +793,9 @@ class Applications
 	 * Example:
 	 *   Michal Špaček -> MŠ
 	 *   Internet Info, s.r.o. -> II
+	 *
+	 * @param string $name
+	 * @return string
 	 */
 	private function getSourceNameInitials(string $name): string
 	{

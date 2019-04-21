@@ -264,6 +264,7 @@ class Dates
 
 
 	/**
+	 * @param boolean $includeNonPublic
 	 * @return array<string, ArrayHash>
 	 */
 	private function getUpcoming(bool $includeNonPublic): array
@@ -346,6 +347,8 @@ class Dates
 
 
 	/**
+	 * @param string $from
+	 * @param string $to
 	 * @return Row[]
 	 */
 	public function getAllTrainingsInterval(string $from, string $to = ''): array
@@ -389,6 +392,7 @@ class Dates
 
 
 	/**
+	 * @param integer $trainingId
 	 * @return Row[]
 	 */
 	public function getDates(int $trainingId): array
@@ -456,6 +460,7 @@ class Dates
 
 	/**
 	 * @param Row[] $dates
+	 * @return boolean
 	 */
 	public function lastFreeSeatsAnyDate(array $dates): bool
 	{

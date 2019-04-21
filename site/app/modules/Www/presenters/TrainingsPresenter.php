@@ -121,6 +121,7 @@ class TrainingsPresenter extends BasePresenter
 
 
 	/**
+	 * @param string $name
 	 * @throws BadRequestException
 	 * @throws AbortException
 	 */
@@ -381,6 +382,7 @@ class TrainingsPresenter extends BasePresenter
 
 
 	/**
+	 * @param string $name
 	 * @throws BadRequestException
 	 */
 	public function actionReviews(string $name): void
