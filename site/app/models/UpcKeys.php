@@ -120,7 +120,9 @@ class UpcKeys
 	 */
 	public function saveKeys(string $ssid): bool
 	{
-		return $this->routers[Technicolor::class]->saveKeys($ssid);
+		/** @var Technicolor $router */
+		$router = $this->routers[Technicolor::class];
+		return $router->saveKeys($ssid);
 	}
 
 
