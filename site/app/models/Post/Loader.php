@@ -3,6 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Post;
 
+use Contributte\Translation\Translator;
+use Nette\Database\Context;
+use Nette\Database\Row;
+use Nette\Localization\ITranslator;
+use Nette\Utils\DateTime;
+
 /**
  * Blog post loader service.
  *
@@ -11,21 +17,21 @@ namespace MichalSpacekCz\Post;
 class Loader
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
-	/** @var \Nette\Database\Row */
+	/** @var Row */
 	protected $post;
 
 
 	/**
-	 * @param \Nette\Database\Context $context
-	 * @param \Contributte\Translation\Translator|\Nette\Localization\ITranslator $translator
+	 * @param Context $context
+	 * @param Translator|ITranslator $translator
 	 */
-	public function __construct(\Nette\Database\Context $context, \Nette\Localization\ITranslator $translator)
+	public function __construct(Context $context, ITranslator $translator)
 	{
 		$this->database = $context;
 		$this->translator = $translator;
@@ -50,9 +56,9 @@ class Loader
 	 *
 	 * @param string $post
 	 * @param string $previewKey
-	 * @return \Nette\Database\Row|null
+	 * @return Row|null
 	 */
-	public function fetch(string $post, ?string $previewKey = null): ?\Nette\Database\Row
+	public function fetch(string $post, ?string $previewKey = null): ?Row
 	{
 		if ($this->post === null) {
 			$this->post = $this->database->fetch(
@@ -83,7 +89,7 @@ class Loader
 					AND (bp.published <= ? OR bp.preview_key = ?)',
 				$post,
 				$this->translator->getDefaultLocale(),
-				new \Nette\Utils\DateTime(),
+				new DateTime(),
 				$previewKey
 			) ?: null;
 		}

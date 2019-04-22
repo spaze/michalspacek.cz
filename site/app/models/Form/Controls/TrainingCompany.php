@@ -3,15 +3,17 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
+use Nette\Forms\Container;
+
 trait TrainingCompany
 {
 
 	/**
 	 * Add company inputs.
 	 *
-	 * @param \Nette\Forms\Container $container
+	 * @param Container $container
 	 */
-	protected function addCompany(\Nette\Forms\Container $container): void
+	protected function addCompany(Container $container): void
 	{
 		$container->addText('companyId', 'IČO:')
 			->setRequired(false)

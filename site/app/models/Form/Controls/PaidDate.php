@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
+use Nette\Forms\Controls\TextInput;
+
 trait PaidDate
 {
 
@@ -13,9 +15,9 @@ trait PaidDate
 	 * @param string $name
 	 * @param string $label
 	 * @param boolean $required
-	 * @return \Nette\Forms\Controls\TextInput
+	 * @return TextInput
 	 */
-	protected function addPaidDate($name, $label = null, $required = false): \Nette\Forms\Controls\TextInput
+	protected function addPaidDate($name, $label = null, $required = false): TextInput
 	{
 		return $this->addDate(
 			$name,

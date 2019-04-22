@@ -3,7 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use Exception;
 use Nette\Http\IResponse;
+use Nette\Utils\Json;
+use RuntimeException;
+use stdClass;
+use Tracy\Debugger;
+use UnexpectedValueException;
 
 /**
  * Register účtovných závierok service.
@@ -40,11 +46,11 @@ class RegisterUz implements CompanyDataInterface
 		$company = new Data();
 		try {
 			if (empty($companyId)) {
-				throw new \RuntimeException('Company Id is empty');
+				throw new RuntimeException('Company Id is empty');
 			}
 			$units = $this->call('uctovne-jednotky', ['zmenene-od' => self::DAY_ONE, 'ico' => $companyId]);
 			if (!isset($units->id)) {
-				throw new \UnexpectedValueException('Company not found');
+				throw new UnexpectedValueException('Company not found');
 			}
 			$unit = $this->call('uctovna-jednotka', ['id' => reset($units->id)]);
 
@@ -57,15 +63,15 @@ class RegisterUz implements CompanyDataInterface
 			$company->city = $unit->mesto;
 			$company->zip = $unit->psc;
 			$company->country = self::COUNTRY_CODE;
-		} catch (\UnexpectedValueException $e) {
-			\Tracy\Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
+		} catch (UnexpectedValueException $e) {
+			Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
 			$company->status = IResponse::S400_BAD_REQUEST;
 			$company->statusMessage = 'Not Found';
-		} catch (\RuntimeException $e) {
+		} catch (RuntimeException $e) {
 			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
 			$company->statusMessage = 'Error';
-		} catch (\Exception $e) {
-			\Tracy\Debugger::log($e);
+		} catch (Exception $e) {
+			Debugger::log($e);
 			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
 			$company->statusMessage = 'Error';
 		}
@@ -77,9 +83,9 @@ class RegisterUz implements CompanyDataInterface
 	/**
 	 * @param string $method
 	 * @param array $parameters
-	 * @return \stdClass JSON object
+	 * @return stdClass JSON object
 	 */
-	private function call(string $method, array $parameters = null): \stdClass
+	private function call(string $method, array $parameters = null): stdClass
 	{
 		if ($parameters !== null) {
 			$query = '?' . http_build_query($parameters);
@@ -88,9 +94,9 @@ class RegisterUz implements CompanyDataInterface
 		}
 		$content = file_get_contents("{$this->rootUrl}{$method}{$query}");
 		if (!$content) {
-			throw new \RuntimeException(error_get_last()['message'], IResponse::S500_INTERNAL_SERVER_ERROR);
+			throw new RuntimeException(error_get_last()['message'], IResponse::S500_INTERNAL_SERVER_ERROR);
 		}
-		return \Nette\Utils\Json::decode($content);
+		return Json::decode($content);
 	}
 
 }

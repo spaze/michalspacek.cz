@@ -3,6 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use Nette\Database\Row;
+use Nette\Http\Url;
+use Spaze\ContentSecurityPolicy\Config;
+
 class Embed
 {
 
@@ -16,11 +20,11 @@ class Embed
 
 	public const VIDEO_SLIDESLIVE = 'slideslive';
 
-	/** @var \Spaze\ContentSecurityPolicy\Config */
+	/** @var Config */
 	protected $contentSecurityPolicy;
 
 
-	public function __construct(\Spaze\ContentSecurityPolicy\Config $contentSecurityPolicy)
+	public function __construct(Config $contentSecurityPolicy)
 	{
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
@@ -28,11 +32,11 @@ class Embed
 
 	/**
 	 * Get template vars for slides
-	 * @param \Nette\Database\Row $talk
+	 * @param Row $talk
 	 * @param int|null $slide
 	 * @return array<string, null> with keys slidesEmbed, slidesDataSlide, slidesEmbedType
 	 */
-	public function getSlidesTemplateVars(\Nette\Database\Row $talk, ?int $slide = null): array
+	public function getSlidesTemplateVars(Row $talk, ?int $slide = null): array
 	{
 		$type = $this->getSlidesType($talk);
 		if ($type !== null) {
@@ -45,7 +49,7 @@ class Embed
 		if ($slide !== null) {
 			switch ($type) {
 				case self::SLIDES_SLIDESHARE:
-					$url = new \Nette\Http\Url($embedHref);
+					$url = new Url($embedHref);
 					$url->appendQuery('startSlide=' . $slide);
 					$embedHref = $url->getAbsoluteUrl();
 					break;
@@ -66,10 +70,10 @@ class Embed
 
 	/**
 	 * Get template vars for video.
-	 * @param \Nette\Database\Row $talk
+	 * @param Row $talk
 	 * @return string[] with keys videoEmbed, videoEmbedType
 	 */
-	public function getVideoTemplateVars(\Nette\Database\Row $talk): array
+	public function getVideoTemplateVars(Row $talk): array
 	{
 		$type = $this->getVideoType($talk);
 		if ($type !== null) {
@@ -84,10 +88,10 @@ class Embed
 
 
 	/**
-	 * @param \Nette\Database\Row $talk
+	 * @param Row $talk
 	 * @return string|null
 	 */
-	private function getSlidesType(\Nette\Database\Row $talk): ?string
+	private function getSlidesType(Row $talk): ?string
 	{
 		if (!$talk->slidesHref) {
 			return null;
@@ -109,10 +113,10 @@ class Embed
 
 
 	/**
-	 * @param \Nette\Database\Row $video
+	 * @param Row $video
 	 * @return string|null
 	 */
-	private function getVideoType(\Nette\Database\Row $video): ?string
+	private function getVideoType(Row $video): ?string
 	{
 		if (!$video->videoHref) {
 			return null;

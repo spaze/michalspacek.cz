@@ -3,31 +3,45 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Locales;
+use MichalSpacekCz\Vat;
+use Nette\Application\Application;
+use Nette\Application\UI\Presenter;
+use Nette\Caching\IStorage;
 use Nette\Database\Row;
+use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
+use Netxten\Formatter\Texy as NetxtenTexy;
+use Netxten\Templating\Helpers;
+use Texy\HandlerInvocation;
+use Texy\HtmlElement;
+use Texy\Link;
+use Texy\Modifier;
+use Texy\Texy as TexyTexy;
 
-class Texy extends \Netxten\Formatter\Texy
+class Texy extends NetxtenTexy
 {
 
 	/** @var string */
 	private const TRAINING_DATE = 'TRAINING_DATE';
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
-	/** @var \Nette\Application\Application */
+	/** @var Application */
 	protected $application;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Locales */
+	/** @var Locales */
 	protected $trainingLocales;
 
-	/** @var \MichalSpacekCz\Vat */
+	/** @var Vat */
 	protected $vat;
 
-	/** @var \Netxten\Templating\Helpers */
+	/** @var Helpers */
 	protected $netxtenHelpers;
 
 	/**
@@ -60,13 +74,13 @@ class Texy extends \Netxten\Formatter\Texy
 
 
 	public function __construct(
-		\Nette\Caching\IStorage $cacheStorage,
-		\Nette\Localization\ITranslator $translator,
-		\Nette\Application\Application $application,
-		\MichalSpacekCz\Training\Dates $trainingDates,
-		\MichalSpacekCz\Vat $vat,
-		\MichalSpacekCz\Training\Locales $trainingLocales,
-		\Netxten\Templating\Helpers $netxtenHelpers
+		IStorage $cacheStorage,
+		ITranslator $translator,
+		Application $application,
+		Dates $trainingDates,
+		Vat $vat,
+		Locales $trainingLocales,
+		Helpers $netxtenHelpers
 	) {
 		$this->translator = $translator;
 		$this->application = $application;
@@ -150,9 +164,9 @@ class Texy extends \Netxten\Formatter\Texy
 	/**
 	 * Create Texy object.
 	 *
-	 * @return \Texy\Texy
+	 * @return TexyTexy
 	 */
-	protected function getTexy(): \Texy\Texy
+	protected function getTexy(): TexyTexy
 	{
 		$texy = parent::getTexy();
 		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
@@ -196,21 +210,21 @@ class Texy extends \Netxten\Formatter\Texy
 
 
 	/**
-	 * @param \Texy\HandlerInvocation $invocation handler invocation
+	 * @param HandlerInvocation $invocation handler invocation
 	 * @param string $phrase
 	 * @param string $content
-	 * @param \Texy\Modifier $modifier
-	 * @param \Texy\Link|null $link
-	 * @return \Texy\HtmlElement|string|FALSE
+	 * @param Modifier $modifier
+	 * @param Link|null $link
+	 * @return HtmlElement|string|FALSE
 	 */
-	function phraseHandler(\Texy\HandlerInvocation $invocation, string $phrase, string $content, \Texy\Modifier $modifier, ?\Texy\Link $link)
+	function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link)
 	{
 		if (!$link) {
 			return $invocation->proceed();
 		}
 
 		$trainingAction = ':Www:Trainings:training';
-		/** @var \Nette\Application\UI\Presenter $presenter */
+		/** @var Presenter $presenter */
 		$presenter = $this->application->getPresenter();
 
 		if (strncmp($link->URL, 'link:', 5) === 0) {
@@ -241,7 +255,7 @@ class Texy extends \Netxten\Formatter\Texy
 			$name = substr($link->URL, 9);
 			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
 			$link->URL = $presenter->link("//{$trainingAction}", $name);
-			$el = \Texy\HtmlElement::el();
+			$el = HtmlElement::el();
 			$el->add($texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link));
 			$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
 			return $el;

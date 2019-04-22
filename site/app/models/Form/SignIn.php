@@ -3,13 +3,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\SignIn as SignInControl;
+use Nette\ComponentModel\IContainer;
+
 class SignIn extends ProtectedForm
 {
 
-	use Controls\SignIn;
+	use SignInControl;
 
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name)
+	public function __construct(IContainer $parent, string $name)
 	{
 		parent::__construct($parent, $name);
 		$this->addSignIn($this);

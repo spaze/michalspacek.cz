@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
+use Nette\Forms\Container;
+use Nette\Forms\Controls\TextInput;
+
 trait Date
 {
 
@@ -13,10 +16,10 @@ trait Date
 	 * @param boolean $required
 	 * @param string $format Format for the title attribute
 	 * @param string $pattern Validation pattern
-	 * @param \Nette\Forms\Container|null $container
-	 * @return \Nette\Forms\Controls\TextInput
+	 * @param Container|null $container
+	 * @return TextInput
 	 */
-	protected function addDate(string $name, string $label, bool $required, string $format, string $pattern, ?\Nette\Forms\Container $container = null): \Nette\Forms\Controls\TextInput
+	protected function addDate(string $name, string $label, bool $required, string $format, string $pattern, ?Container $container = null): TextInput
 	{
 		return ($container === null ? $this : $container)->addText($name, $label)
 			->setHtmlAttribute('placeholder', $format)

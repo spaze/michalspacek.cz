@@ -3,22 +3,27 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingStatusDate;
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Row;
+use Nette\Localization\ITranslator;
+
 class TrainingStatuses extends ProtectedForm
 {
 
-	use Controls\TrainingStatusDate;
+	use TrainingStatusDate;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 
 	/**
-	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param IContainer $parent
 	 * @param string $name
-	 * @param \Nette\Database\Row[] $applications
-	 * @param \Nette\Localization\ITranslator $translator
+	 * @param Row[] $applications
+	 * @param ITranslator $translator
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $applications, \Nette\Localization\ITranslator $translator)
+	public function __construct(IContainer $parent, string $name, array $applications, ITranslator $translator)
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;

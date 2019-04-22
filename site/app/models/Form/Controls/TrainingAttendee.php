@@ -3,15 +3,17 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
+use Nette\Forms\Container;
+
 trait TrainingAttendee
 {
 
 	/**
 	 * Add attendee inputs.
 	 *
-	 * @param \Nette\Forms\Container $container
+	 * @param Container $container
 	 */
-	protected function addAttendee(\Nette\Forms\Container $container): void
+	protected function addAttendee(Container $container): void
 	{
 		$container->addText('name', 'Jméno a příjmení:')
 			->setRequired('Zadejte prosím jméno a příjmení')

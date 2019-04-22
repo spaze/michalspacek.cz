@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
+use Nette\Forms\Container;
+
 trait SignIn
 {
 
-	protected function addSignIn(\Nette\Forms\Container $container): void
+	protected function addSignIn(Container $container): void
 	{
 		$container->addText('username', 'Uživatel:')
 			->setRequired('Zadejte prosím uživatele');

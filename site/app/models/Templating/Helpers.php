@@ -3,16 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
+use MichalSpacekCz\Formatter\Texy;
+use Nette\SmartObject;
+use Nette\Utils\Html;
+
 class Helpers
 {
 
-	use \Nette\SmartObject;
+	use SmartObject;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
 
-	public function __construct(\MichalSpacekCz\Formatter\Texy $texyFormatter)
+	public function __construct(Texy $texyFormatter)
 	{
 		$this->texyFormatter = $texyFormatter;
 	}
@@ -45,7 +49,7 @@ class Helpers
 	}
 
 
-	public function format(string $message): \Nette\Utils\Html
+	public function format(string $message): Html
 	{
 		$args = func_get_args();
 		array_shift($args);

@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
+use Nette\Database\Context;
+use RuntimeException;
+
 class Rating
 {
 
@@ -14,7 +17,7 @@ class Rating
 	private const RATING_E = 'E';
 	private const RATING_F = 'F';
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 	/** @var array */
@@ -85,7 +88,7 @@ class Rating
 	 * E - plain MD5, SHA-1, SHA-2, SHA-3, encrypted
 	 * F - plaintext
 	 *
-	 * @param \MichalSpacekCz\Pulse\Passwords\Algorithm $algo
+	 * @param Algorithm $algo
 	 * @return string 'A'-'F'
 	 */
 	public function get(Algorithm $algo): string
@@ -101,7 +104,7 @@ class Rating
 					return self::RATING_B;
 				}
 			}
-			throw new \RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->alias, implode(', ', array_keys($algo->disclosureTypes))));
+			throw new RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->alias, implode(', ', array_keys($algo->disclosureTypes))));
 		} elseif ($algo->salted && $algo->stretched) {
 			return self::RATING_C;
 		} elseif ($algo->salted) {

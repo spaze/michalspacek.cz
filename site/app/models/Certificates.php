@@ -3,10 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use DateTime;
+use MichalSpacekCz\User\Manager;
+use Nette\Database\Context;
+use Nette\Database\DriverException;
+use Nette\Database\Row;
+use Nette\Security\AuthenticationException;
+use Nette\Utils\DateTime as NetteDateTime;
+use RuntimeException;
+use Tracy\Debugger;
+
 class Certificates
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 	/** @var array */
@@ -19,7 +29,7 @@ class Certificates
 	private $hideExpiredAfter;
 
 
-	public function __construct(\Nette\Database\Context $context)
+	public function __construct(Context $context)
 	{
 		$this->database = $context;
 	}
@@ -58,27 +68,27 @@ class Certificates
 	/**
 	 * @param string $user
 	 * @param string $key
-	 * @throws \Nette\Security\AuthenticationException
+	 * @throws AuthenticationException
 	 */
 	public function authenticate(string $user, string $key): void
 	{
 		if (!isset($this->users[$user])) {
-			throw new \Nette\Security\AuthenticationException('Unknown user', \MichalSpacekCz\User\Manager::IDENTITY_NOT_FOUND);
+			throw new AuthenticationException('Unknown user', Manager::IDENTITY_NOT_FOUND);
 		}
 
 		if (!hash_equals($this->users[$user], hash('sha512', $key))) {
-			throw new \Nette\Security\AuthenticationException('Invalid key', \MichalSpacekCz\User\Manager::INVALID_CREDENTIAL);
+			throw new AuthenticationException('Invalid key', Manager::INVALID_CREDENTIAL);
 		}
 	}
 
 
 	/**
 	 * Get newest certificates
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getNewest(): array
 	{
-		$now = new \DateTime();
+		$now = new DateTime();
 
 		$query = 'SELECT
 			cr.cn,
@@ -115,8 +125,8 @@ class Certificates
 	{
 		$databaseLoggedAll = true;
 		foreach ($certs as $cnext => $cert) {
-			$start = \Nette\Utils\DateTime::from($cert['start']);
-			$expiry = \Nette\Utils\DateTime::from($cert['expiry']);
+			$start = NetteDateTime::from($cert['start']);
+			$expiry = NetteDateTime::from($cert['expiry']);
 			try {
 				$this->database->beginTransaction();
 				$this->database->query('INSERT INTO certificates', array(
@@ -125,24 +135,24 @@ class Certificates
 					'not_after' => $expiry,
 				));
 				$this->database->commit();
-			} catch (\Nette\Database\DriverException $e) {
-				\Tracy\Debugger::log($e);
-				\Tracy\Debugger::log("OK $cnext from $start to $expiry", 'cert');
+			} catch (DriverException $e) {
+				Debugger::log($e);
+				Debugger::log("OK $cnext from $start to $expiry", 'cert');
 				$databaseLoggedAll = false;
 			}
 		}
 		foreach ($failures as $cnext => $cert) {
 			try {
 				$this->logRequest($cert['cn'], $cert['ext'], false);
-			} catch (\Nette\Database\DriverException $e) {
-				\Tracy\Debugger::log($e);
-				\Tracy\Debugger::log("FAIL $cnext", 'cert');
+			} catch (DriverException $e) {
+				Debugger::log($e);
+				Debugger::log("FAIL $cnext", 'cert');
 				$databaseLoggedAll = false;
 			}
 		}
 
 		if (!$databaseLoggedAll) {
-			throw new \RuntimeException('Error logging to database, some certificates logged to file instead');
+			throw new RuntimeException('Error logging to database, some certificates logged to file instead');
 		}
 
 		return [
@@ -163,7 +173,7 @@ class Certificates
 		$this->database->query('INSERT INTO certificate_requests', array(
 			'cn' => $cn,
 			'ext' => (empty($ext) ? null : $ext),
-			'time' => new \DateTime(),
+			'time' => new DateTime(),
 			'success' => $success,
 		));
 		return (int)$this->database->getInsertId();

@@ -3,21 +3,26 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Talks;
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Row;
+use Nette\Forms\Container;
+
 class TalkSlides extends ProtectedForm
 {
 
-	/** @var \MichalSpacekCz\Talks */
+	/** @var Talks */
 	protected $talks;
 
 
 	/**
-	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param IContainer $parent
 	 * @param string $name
-	 * @param \Nette\Database\Row[] $slides
+	 * @param Row[] $slides
 	 * @param integer $newCount
-	 * @param \MichalSpacekCz\Talks $talks
+	 * @param Talks $talks
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $slides, int $newCount, \MichalSpacekCz\Talks $talks)
+	public function __construct(IContainer $parent, string $name, array $slides, int $newCount, Talks $talks)
 	{
 		parent::__construct($parent, $name);
 		$this->talks = $talks;
@@ -51,7 +56,7 @@ class TalkSlides extends ProtectedForm
 	}
 
 
-	private function addSlideFields(\Nette\Forms\Container $container): void
+	private function addSlideFields(Container $container): void
 	{
 		$container->addText('alias', 'Alias:')
 			->setRequired('Zadejte prosím alias')

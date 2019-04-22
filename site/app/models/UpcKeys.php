@@ -3,6 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use MichalSpacekCz\UpcKeys\RouterInterface;
+use MichalSpacekCz\UpcKeys\Technicolor;
+use Nette\Utils\Strings;
+use stdClass;
+
 class UpcKeys
 {
 
@@ -21,7 +26,7 @@ class UpcKeys
 	/** @var integer */
 	public const SSID_TYPE_UNKNOWN = 3;
 
-	/** @var array of \MichalSpacekCz\UpcKeys\RouterInterface */
+	/** @var RouterInterface[] */
 	protected $routers;
 
 	/** @var array of prefixes */
@@ -34,7 +39,7 @@ class UpcKeys
 	protected $keys;
 
 
-	public function addRouter(\MichalSpacekCz\UpcKeys\RouterInterface $router): void
+	public function addRouter(RouterInterface $router): void
 	{
 		$this->routers[get_class($router)] = $router;
 	}
@@ -95,7 +100,7 @@ class UpcKeys
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @param string $ssid
-	 * @return \stdClass[] (serial, key, type)
+	 * @return stdClass[] (serial, key, type)
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -115,7 +120,7 @@ class UpcKeys
 	 */
 	public function saveKeys(string $ssid): bool
 	{
-		return $this->routers[UpcKeys\Technicolor::class]->saveKeys($ssid);
+		return $this->routers[Technicolor::class]->saveKeys($ssid);
 	}
 
 
@@ -139,7 +144,7 @@ class UpcKeys
 	public function isValidSsid(string $ssid): bool
 	{
 		// Inspired by Nette\Forms\Validator::validatePattern()
-		return (bool)\Nette\Utils\Strings::match($ssid, sprintf("\x01^(%s)\\z\x01u", self::SSID_VALID_PATTERN));
+		return (bool)Strings::match($ssid, sprintf("\x01^(%s)\\z\x01u", self::SSID_VALID_PATTERN));
 	}
 
 

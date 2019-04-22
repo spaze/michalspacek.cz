@@ -3,14 +3,17 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use Nette\Database\Context;
+use Nette\Http\UrlScript;
+
 class Redirections
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 
-	public function __construct(\Nette\Database\Context $context)
+	public function __construct(Context $context)
 	{
 		$this->database = $context;
 	}
@@ -19,10 +22,10 @@ class Redirections
 	/**
 	 * Get destination.
 	 *
-	 * @param \Nette\Http\UrlScript $sourceUrl
+	 * @param UrlScript $sourceUrl
 	 * @return string|null
 	 */
-	public function getDestination(\Nette\Http\UrlScript $sourceUrl): ?string
+	public function getDestination(UrlScript $sourceUrl): ?string
 	{
 		$destination = $this->database->fetchField('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath()) ?: null;
 		if ($destination) {

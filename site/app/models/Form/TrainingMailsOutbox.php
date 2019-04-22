@@ -3,17 +3,19 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Training;
+use MichalSpacekCz\Training\Statuses;
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Row;
 
 class TrainingMailsOutbox extends ProtectedForm
 {
 
 	/**
-	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param IContainer $parent
 	 * @param string $name
-	 * @param \Nette\Database\Row[] $applications
+	 * @param Row[] $applications
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, array $applications)
+	public function __construct(IContainer $parent, string $name, array $applications)
 	{
 		parent::__construct($parent, $name);
 
@@ -24,12 +26,12 @@ class TrainingMailsOutbox extends ProtectedForm
 			$checked = true;
 			$disabled = false;
 			switch ($application->nextStatus) {
-				case Training\Statuses::STATUS_MATERIALS_SENT:
+				case Statuses::STATUS_MATERIALS_SENT:
 					$checked = (bool)$application->files;
 					$disabled = !$checked;
 					break;
-				case Training\Statuses::STATUS_INVOICE_SENT:
-				case Training\Statuses::STATUS_INVOICE_SENT_AFTER:
+				case Statuses::STATUS_INVOICE_SENT:
+				case Statuses::STATUS_INVOICE_SENT_AFTER:
 					$checked = ($application->price && $application->vatRate && $application->priceVat);
 					$disabled = !$checked;
 					break;
@@ -43,12 +45,12 @@ class TrainingMailsOutbox extends ProtectedForm
 				->setHtmlAttribute('cols', 80)
 				->setHtmlAttribute('rows', 3);
 			switch ($application->nextStatus) {
-				case Training\Statuses::STATUS_MATERIALS_SENT:
+				case Statuses::STATUS_MATERIALS_SENT:
 					$applicationIdsContainer->addCheckbox('feedbackRequest', 'Požádat o zhodnocení')
 						->setDefaultValue(true);
 					break;
-				case Training\Statuses::STATUS_INVOICE_SENT:
-				case Training\Statuses::STATUS_INVOICE_SENT_AFTER:
+				case Statuses::STATUS_INVOICE_SENT:
+				case Statuses::STATUS_INVOICE_SENT_AFTER:
 					$applicationIdsContainer->addText('invoiceId')
 						->setHtmlType('number')
 						->setHtmlAttribute('placeholder', 'Faktura č.')

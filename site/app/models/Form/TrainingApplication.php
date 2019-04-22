@@ -3,35 +3,45 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingAttendee;
+use MichalSpacekCz\Form\Controls\TrainingCompany;
+use MichalSpacekCz\Form\Controls\TrainingCountry;
+use MichalSpacekCz\Form\Controls\TrainingNote;
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Row;
+use Nette\Http\SessionSection;
+use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
+use Netxten\Forms\Controls\HiddenFieldWithLabel;
+use Netxten\Templating\Helpers;
 
 class TrainingApplication extends ProtectedForm
 {
 
-	use Controls\TrainingAttendee;
-	use Controls\TrainingCompany;
-	use Controls\TrainingCountry;
-	use Controls\TrainingNote;
+	use TrainingAttendee;
+	use TrainingCompany;
+	use TrainingCountry;
+	use TrainingNote;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
-	/** @var \Netxten\Templating\Helpers */
+	/** @var Helpers */
 	protected $netxtenHelpers;
 
 	/**
-	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param IContainer $parent
 	 * @param string $name
-	 * @param \Nette\Database\Row[] $dates
-	 * @param \Nette\Localization\ITranslator $translator
-	 * @param \Netxten\Templating\Helpers $netxtenHelpers
+	 * @param Row[] $dates
+	 * @param ITranslator $translator
+	 * @param Helpers $netxtenHelpers
 	 */
 	public function __construct(
-		\Nette\ComponentModel\IContainer $parent,
+		IContainer $parent,
 		string $name,
 		array $dates,
-		\Nette\Localization\ITranslator $translator,
-		\Netxten\Templating\Helpers $netxtenHelpers
+		ITranslator $translator,
+		Helpers $netxtenHelpers
 	)
 	{
 		parent::__construct($parent, $name);
@@ -64,7 +74,7 @@ class TrainingApplication extends ProtectedForm
 				->setPrompt('- vyberte termín a místo -')
 				->addRule(self::INTEGER);
 		} else {
-			$field = new \Netxten\Forms\Controls\HiddenFieldWithLabel($label, key($inputDates), current($inputDates));
+			$field = new HiddenFieldWithLabel($label, key($inputDates), current($inputDates));
 			$field->addRule(self::INTEGER);
 			$this->addComponent($field, 'trainingId');
 		}
@@ -79,10 +89,10 @@ class TrainingApplication extends ProtectedForm
 
 
 	/**
-	 * @param \Nette\Http\SessionSection $application
+	 * @param SessionSection $application
 	 * @return static
 	 */
-	public function setApplicationFromSession(\Nette\Http\SessionSection $application): self
+	public function setApplicationFromSession(SessionSection $application): self
 	{
 		$values = array(
 			'name' => $application->name,

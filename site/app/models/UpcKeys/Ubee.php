@@ -3,13 +3,18 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
+use MichalSpacekCz\UpcKeys;
+use Nette\Database\Context;
+use RuntimeException;
+use stdClass;
+
 class Ubee implements RouterInterface
 {
 
 	/** @var string */
 	private const OUI_UBEE = '647c34';
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 	/** @var string */
@@ -19,7 +24,7 @@ class Ubee implements RouterInterface
 	protected $model;
 
 
-	public function __construct(\Nette\Database\Context $context)
+	public function __construct(Context $context)
 	{
 		$this->database = $context;
 	}
@@ -28,7 +33,7 @@ class Ubee implements RouterInterface
 	public function setPrefixes(array $prefixes): void
 	{
 		if (count($prefixes) > 1) {
-			throw new \RuntimeException('Ubee can has only one prefix');
+			throw new RuntimeException('Ubee can has only one prefix');
 		}
 		$this->prefix = current($prefixes);
 	}
@@ -55,7 +60,7 @@ class Ubee implements RouterInterface
 	 * Get keys from database.
 	 *
 	 * @param string $ssid
-	 * @return array of \stdClass (serial, key, type)
+	 * @return stdClass[] (serial, key, type)
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -69,13 +74,13 @@ class Ubee implements RouterInterface
 	}
 
 
-	private function buildKey(int $mac, int $key): \stdClass
+	private function buildKey(int $mac, int $key): stdClass
 	{
-		$result = new \stdClass();
+		$result = new stdClass();
 		$result->serial = $this->prefix;
 		$result->oui = self::OUI_UBEE;
 		$result->mac = sprintf('%06x', $mac);
-		$result->type = \MichalSpacekCz\UpcKeys::SSID_TYPE_UNKNOWN;
+		$result->type = UpcKeys::SSID_TYPE_UNKNOWN;
 
 		$result->key = '';
 		for ($i = 7; $i >= 0; $i--) {

@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Nette\ComponentModel\IContainer;
+
 class RegenerateTokens extends ProtectedForm
 {
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name)
+	public function __construct(IContainer $parent, string $name)
 	{
 		parent::__construct($parent, $name);
 

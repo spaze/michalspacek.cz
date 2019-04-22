@@ -3,12 +3,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use DateTime;
+use Nette\Database\Context;
 use \Nette\Database\Row;
+use Nette\Http\FileUpload;
+use SplFileInfo;
 
 class Files
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 	/** @var Statuses */
@@ -22,7 +26,7 @@ class Files
 	protected $filesDir;
 
 
-	public function __construct(\Nette\Database\Context $context, Statuses $trainingStatuses)
+	public function __construct(Context $context, Statuses $trainingStatuses)
 	{
 		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;
@@ -56,7 +60,7 @@ class Files
 		);
 
 		foreach ($files as $file) {
-			$file->info = new \SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
+			$file->info = new SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
 		}
 
 		return $files;
@@ -90,19 +94,19 @@ class Files
 		);
 
 		if ($file) {
-			$file->info = new \SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
+			$file->info = new SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
 		}
 
 		return $file ?: null;
 	}
 
 
-	public function addFile(Row $training, \Nette\Http\FileUpload $file, array $applicationIds): string
+	public function addFile(Row $training, FileUpload $file, array $applicationIds): string
 	{
 		$name = basename($file->getSanitizedName());
 		$file->move($this->filesDir . '/' . $training->start->format('Y-m-d') . '/' . $name);
 
-		$datetime = new \DateTime();
+		$datetime = new DateTime();
 		$this->database->beginTransaction();
 
 		$this->database->query(

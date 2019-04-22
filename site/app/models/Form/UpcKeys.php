@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\UpcKeys as UpcKeysService;
+use Nette\ComponentModel\IContainer;
+
 class UpcKeys extends UnprotectedForm
 {
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, ?string $ssid, \MichalSpacekCz\UpcKeys $upcKeys)
+	public function __construct(IContainer $parent, string $name, ?string $ssid, UpcKeysService $upcKeys)
 	{
 		parent::__construct($parent, $name);
 		$this->addText('ssid', 'SSID:')

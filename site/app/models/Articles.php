@@ -4,40 +4,48 @@ declare(strict_types = 1);
 namespace MichalSpacekCz;
 
 use Collator;
+use Contributte\Translation\Translator;
+use DateTime;
+use MichalSpacekCz\Formatter\Texy;
+use Nette\Application\LinkGenerator;
+use Nette\Database\Context;
+use Nette\Database\Row;
+use Nette\Localization\ITranslator;
+use Nette\Utils\DateTime as NetteDateTime;
 use Nette\Utils\Json;
 
 class Articles
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \Nette\Application\LinkGenerator */
+	/** @var LinkGenerator */
 	protected $linkGenerator;
 
-	/** @var \MichalSpacekCz\Post */
+	/** @var Post */
 	protected $blogPost;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 
 	/**
-	 * @param \Nette\Database\Context $context
-	 * @param \MichalSpacekCz\Formatter\Texy $texyFormatter
-	 * @param \Nette\Application\LinkGenerator $linkGenerator
-	 * @param \MichalSpacekCz\Post $blogPost
-	 * @param \Contributte\Translation\Translator|\Nette\Localization\ITranslator $translator
+	 * @param Context $context
+	 * @param Texy $texyFormatter
+	 * @param LinkGenerator $linkGenerator
+	 * @param Post $blogPost
+	 * @param Translator|ITranslator $translator
 	 */
 	public function __construct(
-		\Nette\Database\Context $context,
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\Nette\Application\LinkGenerator $linkGenerator,
-		\MichalSpacekCz\Post $blogPost,
-		\Nette\Localization\ITranslator $translator
+		Context $context,
+		Texy $texyFormatter,
+		LinkGenerator $linkGenerator,
+		Post $blogPost,
+		ITranslator $translator
 	)
 	{
 		$this->database = $context;
@@ -52,7 +60,7 @@ class Articles
 	 * Get articles sorted by date, newest first.
 	 *
 	 * @param int|null $limit Null means all, for real
-	 * @return array of \Nette\Database\Row
+	 * @return Row[]
 	 */
 	public function getAll(?int $limit = null): array
 	{
@@ -92,7 +100,7 @@ class Articles
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$articles = $this->database->fetchAll($query, new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
+		$articles = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale());
 		return $this->enrichArticles($articles);
 	}
 
@@ -102,7 +110,7 @@ class Articles
 	 *
 	 * @param string $tags
 	 * @param int|null $limit Null means all, for real
-	 * @return array of \Nette\Database\Row
+	 * @return Row[]
 	 */
 	public function getAllByTags(string $tags, ?int $limit = null): array
 	{
@@ -130,7 +138,7 @@ class Articles
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$articles = $this->database->fetchAll($query, Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
+		$articles = $this->database->fetchAll($query, Json::encode($tags), new NetteDateTime(), $this->translator->getDefaultLocale());
 		return $this->enrichArticles($articles);
 	}
 
@@ -156,7 +164,7 @@ class Articles
 			ORDER BY bp.published DESC';
 
 		$result = [];
-		$rows = $this->database->fetchAll($query, new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
+		$rows = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale());
 		foreach ($rows as $row) {
 			$tags = Json::decode($row->tags);
 			$slugTags = Json::decode($row->slugTags);
@@ -189,7 +197,7 @@ class Articles
 					AND bp.published <= ?
 					AND l.locale = ?
 			LIMIT 1';
-		$tag = $this->database->fetch($query, Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale());
+		$tag = $this->database->fetch($query, Json::encode($tags), new NetteDateTime(), $this->translator->getDefaultLocale());
 		if ($tag) {
 			$tag->tags = ($tag->tags !== null ? Json::decode($tag->tags) : []);
 			$tag->slugTags = ($tag->slugTags !== null ? Json::decode($tag->slugTags) : []);
@@ -207,9 +215,9 @@ class Articles
 	/**
 	 * Get nearest publish date of any article.
 	 *
-	 * @return \DateTime|null
+	 * @return DateTime|null
 	 */
-	public function getNearestPublishDate(): ?\DateTime
+	public function getNearestPublishDate(): ?DateTime
 	{
 		$query = 'SELECT a.date FROM articles a
 			UNION ALL
@@ -218,7 +226,7 @@ class Articles
 			WHERE bp.published > ? AND l.locale = ?
 			ORDER BY date
 			LIMIT 1';
-		return ($this->database->fetchField($query, new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale()) ?: null);
+		return ($this->database->fetchField($query, new NetteDateTime(), $this->translator->getDefaultLocale()) ?: null);
 	}
 
 
@@ -226,9 +234,9 @@ class Articles
 	 * Get nearest publish date of an article by a tag.
 	 *
 	 * @param string $tags
-	 * @return \DateTime|null
+	 * @return DateTime|null
 	 */
-	public function getNearestPublishDateByTags(string $tags): ?\DateTime
+	public function getNearestPublishDateByTags(string $tags): ?DateTime
 	{
 		$query = 'SELECT bp.published FROM blog_posts bp
 				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
@@ -237,7 +245,7 @@ class Articles
 				AND l.locale = ?
 			ORDER BY bp.published ASC
 			LIMIT 1';
-		return ($this->database->fetchField($query, Json::encode($tags), new \Nette\Utils\DateTime(), $this->translator->getDefaultLocale()) ?: null);
+		return ($this->database->fetchField($query, Json::encode($tags), new NetteDateTime(), $this->translator->getDefaultLocale()) ?: null);
 	}
 
 

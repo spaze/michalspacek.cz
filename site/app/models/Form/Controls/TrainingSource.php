@@ -3,16 +3,19 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
+use Nette\Forms\Container;
+use Nette\Forms\Controls\SelectBox;
+
 trait TrainingSource
 {
 
 	/**
 	 * Add source input.
 	 *
-	 * @param \Nette\Forms\Container $container
-	 * @return \Nette\Forms\Controls\SelectBox
+	 * @param Container $container
+	 * @return SelectBox
 	 */
-	protected function addSource(\Nette\Forms\Container $container): \Nette\Forms\Controls\SelectBox
+	protected function addSource(Container $container): SelectBox
 	{
 		$sources = array();
 		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {

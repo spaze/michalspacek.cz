@@ -3,16 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingAttendee;
+use Nette\ComponentModel\IContainer;
+use Nette\Localization\ITranslator;
+
 class TrainingApplicationPreliminary extends ProtectedForm
 {
 
-	use Controls\TrainingAttendee;
+	use TrainingAttendee;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, \Nette\Localization\ITranslator $translator)
+	public function __construct(IContainer $parent, string $name, ITranslator $translator)
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;

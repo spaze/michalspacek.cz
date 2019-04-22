@@ -3,15 +3,17 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
+use Nette\Forms\Container;
+
 trait TrainingNote
 {
 
 	/**
 	 * Add note input.
 	 *
-	 * @param \Nette\Forms\Container $container
+	 * @param Container $container
 	 */
-	protected function addNote(\Nette\Forms\Container $container): void
+	protected function addNote(Container $container): void
 	{
 		$container->addText('note', 'Poznámka:')
 			->setRequired(false)

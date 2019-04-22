@@ -3,8 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use Nette\Application\Routers\Route;
+use Contributte\Translation\Translator;
+use MichalSpacekCz\Application\Routers\Route;
+use MichalSpacekCz\Post\Loader;
+use Nette\Application\Routers\Route as NetteRoute;
 use Nette\Application\Routers\RouteList;
+use Nette\Localization\ITranslator;
+use Nette\Routing\Router;
 
 class RouterFactory
 {
@@ -36,10 +41,10 @@ class RouterFactory
 
 	private const ROOT_ONLY = '';
 
-	/** @var \MichalSpacekCz\Post\Loader */
+	/** @var Loader */
 	protected $blogPostLoader;
 
-	/** @var \Contributte\Translation\Translator|\Nette\Localization\ITranslator */
+	/** @var Translator|ITranslator */
 	protected $translator;
 
 	/** @var array of host => array of supported locales */
@@ -77,10 +82,10 @@ class RouterFactory
 
 
 	/**
-	 * @param \MichalSpacekCz\Post\Loader $blogPostLoader
-	 * @param \Contributte\Translation\Translator|\Nette\Localization\ITranslator $translator
+	 * @param Loader $blogPostLoader
+	 * @param Translator|ITranslator $translator
 	 */
-	public function __construct(\MichalSpacekCz\Post\Loader $blogPostLoader, \Nette\Localization\ITranslator $translator)
+	public function __construct(Loader $blogPostLoader, ITranslator $translator)
 	{
 		$this->blogPostLoader = $blogPostLoader;
 		$this->translator = $translator;
@@ -173,7 +178,7 @@ class RouterFactory
 		$this->addRoute('<presenter>', 'Default', 'default');
 
 		$this->initRouterLists(self::MODULE_PULSE);
-		$this->addRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::PATTERN => '.+']]);
+		$this->addRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [NetteRoute::PATTERN => '.+']]);
 		$this->addRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 
 		$this->initRouterLists(self::MODULE_UPC);
@@ -189,28 +194,28 @@ class RouterFactory
 		$this->addRoute('/<action>[/<param>]', 'Exports', 'default');
 		$this->addRoute('/<name>', 'Venues', 'venue');
 		$this->addRoute('/<tags>', 'Tags', 'tag');
-		$this->addRoute('<slug>', 'Post', 'default', null, \MichalSpacekCz\Application\Routers\Route::class);
+		$this->addRoute('<slug>', 'Post', 'default', null, Route::class);
 		$this->addRoute('<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 
 		return $this->router;
 	}
 
 
-	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = Route::class): void
+	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = NetteRoute::class): void
 	{
 		$host = self::HOSTS[$this->currentModule];
 		foreach ($this->supportedLocales[$host] as $locale => $tld) {
 			$metadata = $initialMetadata ?? [];
 			$maskPrefix = (isset($this->translatedRoutes[$this->currentModule][$defaultPresenter]) ? $this->translatedRoutes[$this->currentModule][$defaultPresenter]['mask'][$locale] : null);
-			$metadata['presenter'] = [Route::VALUE => $defaultPresenter];
-			$metadata['action'] = [Route::VALUE => $defaultAction];
+			$metadata['presenter'] = [NetteRoute::VALUE => $defaultPresenter];
+			$metadata['action'] = [NetteRoute::VALUE => $defaultAction];
 			if (isset($this->translatedPresenters[$this->currentModule])) {
 				if ($maskPrefix === null) {
-					$metadata['presenter'][Route::FILTER_TABLE] = $this->translatedPresenters[$this->currentModule][$locale];
+					$metadata['presenter'][NetteRoute::FILTER_TABLE] = $this->translatedPresenters[$this->currentModule][$locale];
 				} else {
 					$presenter = $this->translatedPresenters[$this->currentModule][$locale][$maskPrefix];
-					$metadata['presenter'][Route::FILTER_TABLE] = array($maskPrefix => $presenter);
-					$metadata['action'][Route::FILTER_TABLE] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
+					$metadata['presenter'][NetteRoute::FILTER_TABLE] = array($maskPrefix => $presenter);
+					$metadata['action'][NetteRoute::FILTER_TABLE] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
 				}
 			}
 			$this->addToRouter($this->currentModule, $this->createRoute($class, "//{$host}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata), $locale, $host);
@@ -218,7 +223,7 @@ class RouterFactory
 	}
 
 
-	private function addToRouter(string $module, \Nette\Routing\Router $route, string $locale, string $host): void
+	private function addToRouter(string $module, Router $route, string $locale, string $host): void
 	{
 		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
 			$this->currentLocaleRouteList[$locale][] = $route;
@@ -234,12 +239,12 @@ class RouterFactory
 	 * @param string $class
 	 * @param string $mask
 	 * @param array $metadata
-	 * @return \Nette\Routing\Router
+	 * @return Router
 	 */
-	private function createRoute(string $class, string $mask, array $metadata): \Nette\Routing\Router
+	private function createRoute(string $class, string $mask, array $metadata): Router
 	{
 		switch ($class) {
-			case \MichalSpacekCz\Application\Routers\Route::class:
+			case Route::class:
 				$route = new $class($this->blogPostLoader, $mask, $metadata);
 				break;
 			default:

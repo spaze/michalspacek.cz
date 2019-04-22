@@ -3,29 +3,35 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
+use DateTime;
+use MichalSpacekCz\Pulse\Passwords\Algorithm;
+use MichalSpacekCz\Pulse\Passwords\Rating;
+use Nette\Database\Context;
+use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
+use stdClass;
 
 class Passwords
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Pulse\Passwords\Rating */
+	/** @var Rating */
 	protected $rating;
 
-	/** @var \MichalSpacekCz\Pulse\Companies */
+	/** @var Companies */
 	protected $companies;
 
-	/** @var \MichalSpacekCz\Pulse\Sites */
+	/** @var Sites */
 	protected $sites;
 
 
 	public function __construct(
-		\Nette\Database\Context $context,
-		Passwords\Rating $rating,
-		\MichalSpacekCz\Pulse\Companies $companies,
+		Context $context,
+		Rating $rating,
+		Companies $companies,
 		Sites $sites
 	)
 	{
@@ -39,9 +45,9 @@ class Passwords
 	/**
 	 * Get all passwords storage data.
 	 *
-	 * @return \stdClass with companies, sites, algos, storages properties
+	 * @return stdClass with companies, sites, algos, storages properties
 	 */
-	public function getAllStorages(): \stdClass
+	public function getAllStorages(): stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -88,9 +94,9 @@ class Passwords
 	 * Get passwords storage data for specified sites.
 	 *
 	 * @param array $sites Aliases
-	 * @return \stdClass with companies, sites, algos, storages properties
+	 * @return stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStoragesBySite(array $sites): \stdClass
+	public function getStoragesBySite(array $sites): stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -138,9 +144,9 @@ class Passwords
 	 * Get passwords storage data for specified companies.
 	 *
 	 * @param array $companies Aliases
-	 * @return \stdClass with companies, sites, algos, storages properties
+	 * @return stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStoragesByCompany(array $companies): \stdClass
+	public function getStoragesByCompany(array $companies): stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -188,9 +194,9 @@ class Passwords
 	 * Get passwords storage data for a company.
 	 *
 	 * @param integer $companyId Company id
-	 * @return \stdClass with companies, sites, algos, storages properties
+	 * @return stdClass with companies, sites, algos, storages properties
 	 */
-	public function getStoragesByCompanyId($companyId): \stdClass
+	public function getStoragesByCompanyId($companyId): stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -238,23 +244,23 @@ class Passwords
 	 * Process passwords storage data.
 	 *
 	 * @param array $data
-	 * @return \stdClass with companies, sites, algos, storages properties
+	 * @return stdClass with companies, sites, algos, storages properties
 	 */
-	private function processStorages(array $data): \stdClass
+	private function processStorages(array $data): stdClass
 	{
-		$storages = new \stdClass();
+		$storages = new stdClass();
 		$storages->sites = array();
 
 		foreach ($data as $row) {
-			$company = new \stdClass();
+			$company = new stdClass();
 			$company->companyName = $row->companyName;
 			$company->tradeName = $row->tradeName;
 			$company->alias = $row->companyAlias;
 			$storages->companies[$row->companyId] = $company;
 
-			$siteId = $row->siteId ?? \MichalSpacekCz\Pulse\Sites::ALL . "-{$row->companyId}";
+			$siteId = $row->siteId ?? Sites::ALL . "-{$row->companyId}";
 			if (!isset($storages->sites[$siteId])) {
-				$site = new \stdClass();
+				$site = new stdClass();
 				$site->id = $siteId;
 				$site->typeAll = ($row->siteId === null);
 				$site->url = $row->siteUrl;
@@ -267,20 +273,20 @@ class Passwords
 			$storages->algos[$row->algoId] = $row->algoName;
 			$key = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
 			if (!isset($storages->storages[$row->companyId][$siteId][$key])) {
-				$algo = new Passwords\Algorithm();
+				$algo = new Algorithm();
 				$algo->id = $row->algoId;
 				$algo->alias = $row->algoAlias;
 				$algo->salted = $row->algoSalted;
 				$algo->stretched = $row->algoStretched;
 				$algo->from = $row->from;
 				$algo->fromConfirmed = $row->fromConfirmed;
-				$attributes = (empty($row->attributes) ? null : \Nette\Utils\Json::decode($row->attributes));
+				$attributes = (empty($row->attributes) ? null : Json::decode($row->attributes));
 				$algo->params = $attributes->params ?? null;
 				$algo->fullAlgo = $this->formatFullAlgo($row->algoName, $attributes);
 				$algo->note = $row->note;
 				$storages->storages[$row->companyId][$siteId][$key] = $algo;
 			}
-			$disclosure = new \stdClass();
+			$disclosure = new stdClass();
 			$disclosure->url = $row->disclosureUrl;
 			$disclosure->archive = $row->disclosureArchive;
 			$disclosure->note = $row->disclosureNote;
@@ -304,10 +310,10 @@ class Passwords
 	 * Format full algo, if needed
 	 *
 	 * @param string $name main algo name
-	 * @param \stdClass|null $attrs attributes
+	 * @param stdClass|null $attrs attributes
 	 * @return string|null String of formatted algos, null if no inner or outer hashes used
 	 */
-	private function formatFullAlgo(string $name, ?\stdClass $attrs = null): ?string
+	private function formatFullAlgo(string $name, ?stdClass $attrs = null): ?string
 	{
 		if (!isset($attrs->inner) && !isset($attrs->outer)) {
 			return null;
@@ -350,7 +356,7 @@ class Passwords
 	/**
 	 * Get disclosure types.
 	 *
-	 * @return \Nette\Database\Row[] of (id, alias, type)
+	 * @return Row[] of (id, alias, type)
 	 */
 	public function getDisclosureTypes(): array
 	{
@@ -389,7 +395,7 @@ class Passwords
 	/**
 	 * Get all algorithms.
 	 *
-	 * @return \Nette\Database\Row[] of id, algo, alias
+	 * @return Row[] of id, algo, alias
 	 */
 	public function getAlgorithms(): array
 	{
@@ -397,7 +403,7 @@ class Passwords
 	}
 
 
-	public function getAlgorithmByName(string $name): ?\Nette\Database\Row
+	public function getAlgorithmByName(string $name): ?Row
 	{
 		return $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name) ?: null;
 	}
@@ -447,7 +453,7 @@ class Passwords
 			'url' => $url,
 			'archive' => $archive,
 			'note' => (empty($note) ? null : $note),
-			'published' => (empty($published) ? null : new \DateTime($published)),
+			'published' => (empty($published) ? null : new DateTime($published)),
 		]);
 		return (int)$this->database->getInsertId();
 	}
@@ -473,7 +479,7 @@ class Passwords
 				'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 				'key_password_algos' => $algoId,
 				'key_sites' => ($siteId === Sites::ALL ? null : $siteId),
-				'from' => (empty($from) ? null : new \DateTime($from)),
+				'from' => (empty($from) ? null : new DateTime($from)),
 				'from_confirmed' => $fromConfirmed,
 				'attributes' => (empty($attributes) ? null : $attributes),
 				'note' => (empty($note) ? null : $note),
@@ -501,7 +507,7 @@ class Passwords
 			'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 			'key_password_algos' => $algoId,
 			'key_sites' => ($siteId === Sites::ALL ? null : (int)$siteId),
-			'from' => (empty($from) ? null : new \DateTime($from)),
+			'from' => (empty($from) ? null : new DateTime($from)),
 			'from_confirmed' => $fromConfirmed,
 			'attributes' => (empty($attributes) ? null : $attributes),
 			'note' => (empty($note) ? null : $note),

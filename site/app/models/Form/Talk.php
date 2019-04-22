@@ -3,20 +3,27 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Latte\Runtime\Filters;
+use MichalSpacekCz\Form\Controls\Date;
+use MichalSpacekCz\Talks;
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Row;
+use Nette\Forms\Controls\TextInput;
+
 class Talk extends ProtectedForm
 {
 
-	use Controls\Date;
+	use Date;
 
-	/** @var \MichalSpacekCz\Talks */
+	/** @var Talks */
 	protected $talks;
 
 
 	public function __construct(
-		\Nette\ComponentModel\IContainer $parent,
+		IContainer $parent,
 		string $name,
 		?string $talkAction,
-		\MichalSpacekCz\Talks $talks
+		Talks $talks
 	) {
 		parent::__construct($parent, $name);
 		$this->talks = $talks;
@@ -24,8 +31,8 @@ class Talk extends ProtectedForm
 		$allTalks = array();
 		foreach ($this->talks->getAll() as $talk) {
 			if ($talkAction !== $talk->action) {
-				$title = \Latte\Runtime\Filters::truncate($talk->titleTexy, 40);
-				$event = \Latte\Runtime\Filters::truncate($talk->event, 30);
+				$title = Filters::truncate($talk->titleTexy, 40);
+				$event = Filters::truncate($talk->event, 30);
 				$allTalks[$talk->talkId] = sprintf('%s (%s, %s)', $title, $talk->date->format('j. n. Y'), $event);
 			}
 		}
@@ -82,7 +89,7 @@ class Talk extends ProtectedForm
 	}
 
 
-	public function setTalk(\Nette\Database\Row $talk): self
+	public function setTalk(Row $talk): self
 	{
 		$values = array(
 			'action' => $talk->action,
@@ -111,7 +118,7 @@ class Talk extends ProtectedForm
 	}
 
 
-	protected function addTalkDate($name, $label = null, $required = false): \Nette\Forms\Controls\TextInput
+	protected function addTalkDate($name, $label = null, $required = false): TextInput
 	{
 		return $this->addDate(
 			$name,

@@ -3,6 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use DateTime;
+use MichalSpacekCz\Formatter\Texy;
+use Nette\Database\Context;
+use Nette\Database\Drivers\MySqlDriver;
+use Nette\Database\Row;
+use Nette\Http\FileUpload;
+use Nette\Http\Request;
+use Nette\Utils\ArrayHash;
+use Nette\Utils\Html;
+use Nette\Utils\Json;
+use PDOException;
+use RuntimeException;
+use UnexpectedValueException;
+
 class Talks
 {
 
@@ -12,13 +26,13 @@ class Talks
 	/** @var integer */
 	private const SLIDE_MAX_HEIGHT = 450;
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \Nette\Http\Request */
+	/** @var Request */
 	protected $httpRequest;
 
 	/**
@@ -61,7 +75,7 @@ class Talks
 	];
 
 
-	public function __construct(\Nette\Database\Context $context, \MichalSpacekCz\Formatter\Texy $texyFormatter, \Nette\Http\Request $httpRequest)
+	public function __construct(Context $context, Texy $texyFormatter, Request $httpRequest)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
@@ -109,7 +123,7 @@ class Talks
 	 * Get all talks, or almost all talks.
 	 *
 	 * @param integer|null $limit
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getAll(?int $limit = null): array
 	{
@@ -158,7 +172,7 @@ class Talks
 	/**
 	 * Get upcoming talks.
 	 *
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getUpcoming(): array
 	{
@@ -192,9 +206,9 @@ class Talks
 	 * Get talk data.
 	 *
 	 * @param string $name
-	 * @return \Nette\Database\Row
+	 * @return Row
 	 */
-	public function get(string $name): \Nette\Database\Row
+	public function get(string $name): Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -230,7 +244,7 @@ class Talks
 		);
 
 		if (!$result) {
-			throw new \RuntimeException("I haven't talked about {$name}, yet");
+			throw new RuntimeException("I haven't talked about {$name}, yet");
 		}
 
 		$this->format($result);
@@ -242,9 +256,9 @@ class Talks
 	 * Get talk data by id.
 	 *
 	 * @param integer $id
-	 * @return \Nette\Database\Row
+	 * @return Row
 	 */
-	public function getById(int $id): \Nette\Database\Row
+	public function getById(int $id): Row
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -280,7 +294,7 @@ class Talks
 		);
 
 		if (!$result) {
-			throw new \RuntimeException("I haven't talked about id {$id}, yet");
+			throw new RuntimeException("I haven't talked about id {$id}, yet");
 		}
 
 		$this->format($result);
@@ -289,9 +303,9 @@ class Talks
 
 
 	/**
-	 * @param \Nette\Database\Row $row
+	 * @param Row $row
 	 */
-	private function format(\Nette\Database\Row $row): void
+	private function format(Row $row): void
 	{
 		$this->texyFormatter->setTopHeading(3);
 		foreach (['title', 'event'] as $item) {
@@ -310,7 +324,7 @@ class Talks
 	/**
 	 * Get favorite talks.
 	 *
-	 * @return \Nette\Utils\Html[]
+	 * @return Html[]
 	 */
 	public function getFavorites(): array
 	{
@@ -348,7 +362,7 @@ class Talks
 			if (ctype_digit($slide)) {
 				$slideNo = (int)$slide;  // Too keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {
-				throw new \RuntimeException("Unknown slide {$slide} for talk {$talkId}");
+				throw new RuntimeException("Unknown slide {$slide} for talk {$talkId}");
 			}
 		}
 		return $slideNo;
@@ -386,7 +400,7 @@ class Talks
 				'action' => (empty($action) ? null : $action),
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
-				'date' => new \DateTime($date),
+				'date' => new DateTime($date),
 				'duration' => (empty($duration) ? null : $duration),
 				'href' => (empty($href) ? null : $href),
 				'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
@@ -437,7 +451,7 @@ class Talks
 				'action' => (empty($action) ? null : $action),
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
-				'date' => new \DateTime($date),
+				'date' => new DateTime($date),
 				'duration' => (empty($duration) ? null : $duration),
 				'href' => (empty($href) ? null : $href),
 				'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
@@ -461,7 +475,7 @@ class Talks
 	 * Get slides for talk.
 	 *
 	 * @param integer $talkId Talk id
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getSlides(int $talkId): array
 	{
@@ -506,7 +520,7 @@ class Talks
 
 	/**
 	 * @param integer $talkId
-	 * @param \Nette\Http\FileUpload $replace
+	 * @param FileUpload $replace
 	 * @param string[] $supported
 	 * @param boolean $removeFile
 	 * @param string|null $originalFile
@@ -514,16 +528,16 @@ class Talks
 	 * @param integer $height
 	 * @return null|string
 	 */
-	private function replaceSlideImage(int $talkId, \Nette\Http\FileUpload $replace, array $supported, bool $removeFile, ?string $originalFile, int &$width, int &$height): ?string
+	private function replaceSlideImage(int $talkId, FileUpload $replace, array $supported, bool $removeFile, ?string $originalFile, int &$width, int &$height): ?string
 	{
 		if (!$replace->hasFile()) {
 			return null;
 		}
 		if (!$replace->isOk()) {
-			throw new \RuntimeException('Slide image upload failed', $replace->getError());
+			throw new RuntimeException('Slide image upload failed', $replace->getError());
 		}
 		if (!in_array($replace->getContentType(), array_keys($supported))) {
-			throw new \RuntimeException('Slide image type not allowed: ' . $replace->getContentType());
+			throw new RuntimeException('Slide image type not allowed: ' . $replace->getContentType());
 		}
 		if ($removeFile && !empty($originalFile) && empty($this->otherSlides[$originalFile])) {
 			$this->deleteFiles[] = $renamed = $this->getSlideImageFilename($this->locationRoot, $talkId, "__del__{$originalFile}");
@@ -545,11 +559,11 @@ class Talks
 	 * Insert slides.
 	 *
 	 * @param integer $talkId
-	 * @param \Nette\Utils\ArrayHash $slides
-	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
-	 * @throws \PDOException
+	 * @param ArrayHash $slides
+	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
+	 * @throws PDOException
 	 */
-	private function addSlides(int $talkId, \Nette\Utils\ArrayHash $slides): void
+	private function addSlides(int $talkId, ArrayHash $slides): void
 	{
 		$lastNumber = 0;
 		try {
@@ -572,10 +586,10 @@ class Talks
 					)
 				);
 			}
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					throw new \UnexpectedValueException($e->getMessage(), $lastNumber);
+				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
+					throw new UnexpectedValueException($e->getMessage(), $lastNumber);
 				}
 			}
 			throw $e;
@@ -587,13 +601,13 @@ class Talks
 	 * Update slides.
 	 *
 	 * @param integer $talkId
-	 * @param \Nette\Database\Row[] $originalSlides
-	 * @param \Nette\Utils\ArrayHash $slides
+	 * @param Row[] $originalSlides
+	 * @param ArrayHash $slides
 	 * @param boolean $removeFiles Remove old files?
-	 * @throws \UnexpectedValueException on duplicate entry (key_talk, number)
-	 * @throws \PDOException
+	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
+	 * @throws PDOException
 	 */
-	private function updateSlides(int $talkId, array $originalSlides, \Nette\Utils\ArrayHash $slides, bool $removeFiles): void
+	private function updateSlides(int $talkId, array $originalSlides, ArrayHash $slides, bool $removeFiles): void
 	{
 		$lastNumber = 0;
 		foreach ($originalSlides as $slide) {
@@ -628,10 +642,10 @@ class Talks
 					$id
 				);
 			}
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					throw new \UnexpectedValueException($e->getMessage(), $lastNumber);
+				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
+					throw new UnexpectedValueException($e->getMessage(), $lastNumber);
 				}
 			}
 			throw $e;
@@ -643,10 +657,10 @@ class Talks
 	 * Save new slides.
 	 *
 	 * @param integer $talkId
-	 * @param \Nette\Database\Row[] $originalSlides
-	 * @param \Nette\Utils\ArrayHash $newSlides
+	 * @param Row[] $originalSlides
+	 * @param ArrayHash $newSlides
 	 */
-	public function saveSlides(int $talkId, array $originalSlides, \Nette\Utils\ArrayHash $newSlides): void
+	public function saveSlides(int $talkId, array $originalSlides, ArrayHash $newSlides): void
 	{
 		$this->database->beginTransaction();
 		// Reset slide numbers so they can be shifted around without triggering duplicated key violations
@@ -661,10 +675,10 @@ class Talks
 	 * Build page title for the talk.
 	 *
 	 * @param string $translationKey
-	 * @param \Nette\Database\Row $talk
-	 * @return \Nette\Utils\Html
+	 * @param Row $talk
+	 * @return Html
 	 */
-	public function pageTitle(string $translationKey, \Nette\Database\Row $talk): \Nette\Utils\Html
+	public function pageTitle(string $translationKey, Row $talk): Html
 	{
 		return $this->texyFormatter->translate($translationKey, [strip_tags((string)$talk->title), $talk->event]);
 	}
@@ -727,7 +741,7 @@ class Talks
 	 */
 	public function getSlideDimensions(): string
 	{
-		return \Nette\Utils\Json::encode([
+		return Json::encode([
 			'ratio' => ['width' => 16, 'height' => 9],
 			'max' => ['width' => self::SLIDE_MAX_WIDTH, 'height' => self::SLIDE_MAX_HEIGHT],
 		]);

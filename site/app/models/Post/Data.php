@@ -3,6 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Post;
 
+use DateTimeInterface;
+use Nette\Utils\DateTime;
+use Nette\Utils\Html;
+use stdClass;
+
 class Data
 {
 
@@ -21,31 +26,31 @@ class Data
 	/** @var string */
 	public $locale;
 
-	/** @var \Nette\Utils\Html */
+	/** @var Html */
 	public $title;
 
 	/** @var string */
 	public $titleTexy;
 
-	/** @var \Nette\Utils\Html */
+	/** @var Html */
 	public $lead;
 
 	/** @var string */
 	public $leadTexy;
 
-	/** @var \Nette\Utils\Html */
+	/** @var Html */
 	public $text;
 
 	/** @var string */
 	public $textTexy;
 
-	/** @var \DateTimeInterface */
+	/** @var DateTimeInterface */
 	public $published;
 
 	/** @var string */
 	public $previewKey;
 
-	/** @var \Nette\Utils\Html */
+	/** @var Html */
 	public $originally;
 
 	/** @var string */
@@ -63,7 +68,7 @@ class Data
 	/** @var string[] */
 	public $previousSlugTags = [];
 
-	/** @var \stdClass[] */
+	/** @var stdClass[] */
 	public $recommended;
 
 	/** @var string */
@@ -81,7 +86,7 @@ class Data
 
 	public function needsPreviewKey(): bool
 	{
-		return $this->published > new \Nette\Utils\DateTime();
+		return $this->published > new DateTime();
 	}
 
 }

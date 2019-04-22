@@ -3,16 +3,24 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-class Post extends \MichalSpacekCz\Form\ProtectedForm
+use DateTime;
+use MichalSpacekCz\Form\Controls\Date;
+use MichalSpacekCz\Post as PostService;
+use MichalSpacekCz\Post\Data;
+use Nette\ComponentModel\IContainer;
+use Nette\Forms\Controls\TextInput;
+use Nette\Utils\Json;
+
+class Post extends ProtectedForm
 {
 
-	use \MichalSpacekCz\Form\Controls\Date;
+	use Date;
 
-	/** @var \MichalSpacekCz\Post */
+	/** @var PostService */
 	protected $blogPost;
 
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, \MichalSpacekCz\Post $blogPost)
+	public function __construct(IContainer $parent, string $name, PostService $blogPost)
 	{
 		parent::__construct($parent, $name);
 		$this->blogPost = $blogPost;
@@ -70,10 +78,10 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 
 	/**
 	 * Set post.
-	 * @param \MichalSpacekCz\Post\Data $post
+	 * @param Data $post
 	 * @return static
 	 */
-	public function setPost(\MichalSpacekCz\Post\Data $post): self
+	public function setPost(Data $post): self
 	{
 		$values = array(
 			'translationGroup' => $post->translationGroupId,
@@ -88,11 +96,11 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 			'ogImage' => $post->ogImage,
 			'twitterCard' => $post->twitterCard,
 			'tags' => ($post->tags ? implode(', ', $post->tags) : null),
-			'recommended' => (empty($post->recommended) ? null : \Nette\Utils\Json::encode($post->recommended)),
+			'recommended' => (empty($post->recommended) ? null : Json::encode($post->recommended)),
 		);
 		$this->setDefaults($values);
 		$this->getComponent('editSummary')
-			->setDisabled($post->published > new \DateTime())
+			->setDisabled($post->published > new DateTime())
 			->addCondition(self::FILLED)
 			->addRule(self::MIN_LENGTH, 'Shrnutí editace musí mít alespoň %d znaky', 3);
 		$this->getComponent('submit')->caption = 'Upravit';
@@ -101,7 +109,7 @@ class Post extends \MichalSpacekCz\Form\ProtectedForm
 	}
 
 
-	protected function addPublishedDate($name, $label = null, $required = false): \Nette\Forms\Controls\TextInput
+	protected function addPublishedDate($name, $label = null, $required = false): TextInput
 	{
 		return $this->addDate(
 			$name,

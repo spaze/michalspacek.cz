@@ -3,17 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use Contributte\Translation\Translator;
+use Nette\Localization\ITranslator;
+
 class Strings
 {
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	private $translator;
 
 
 	/**
-	 * @param \Contributte\Translation\Translator|\Nette\Localization\ITranslator $translator
+	 * @param Translator|ITranslator $translator
 	 */
-	public function __construct(\Nette\Localization\ITranslator $translator)
+	public function __construct(ITranslator $translator)
 	{
 		$this->translator = $translator;
 	}

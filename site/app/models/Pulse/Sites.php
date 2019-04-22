@@ -3,17 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
+use Nette\Database\Context;
+use Nette\Database\Row;
+
 class Sites
 {
 
 	/** @var string */
 	public const ALL = 'all';
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 
-	public function __construct(\Nette\Database\Context $context)
+	public function __construct(Context $context)
 	{
 		$this->database = $context;
 	}
@@ -22,7 +25,7 @@ class Sites
 	/**
 	 * Get all sites.
 	 *
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getAll(): array
 	{
@@ -30,7 +33,7 @@ class Sites
 	}
 
 
-	public function getByUrl(string $url): ?\Nette\Database\Row
+	public function getByUrl(string $url): ?Row
 	{
 		return $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url) ?: null;
 	}

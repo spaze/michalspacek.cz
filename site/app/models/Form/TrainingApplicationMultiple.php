@@ -3,38 +3,48 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingAttendee;
+use MichalSpacekCz\Form\Controls\TrainingCompany;
+use MichalSpacekCz\Form\Controls\TrainingCountry;
+use MichalSpacekCz\Form\Controls\TrainingNote;
+use MichalSpacekCz\Form\Controls\TrainingSource;
+use MichalSpacekCz\Form\Controls\TrainingStatusDate;
+use MichalSpacekCz\Training\Applications;
+use Nette\ComponentModel\IContainer;
+use Nette\Localization\ITranslator;
+
 class TrainingApplicationMultiple extends ProtectedForm
 {
 
-	use Controls\TrainingAttendee;
-	use Controls\TrainingCompany;
-	use Controls\TrainingCountry;
-	use Controls\TrainingNote;
-	use Controls\TrainingSource;
-	use Controls\TrainingStatusDate;
+	use TrainingAttendee;
+	use TrainingCompany;
+	use TrainingCountry;
+	use TrainingNote;
+	use TrainingSource;
+	use TrainingStatusDate;
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 
 	/**
-	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param IContainer $parent
 	 * @param string $name
 	 * @param integer $count
 	 * @param string[] $statuses
-	 * @param \MichalSpacekCz\Training\Applications $trainingApplications
-	 * @param \Nette\Localization\ITranslator $translator
+	 * @param Applications $trainingApplications
+	 * @param ITranslator $translator
 	 */
 	public function __construct(
-		\Nette\ComponentModel\IContainer $parent,
+		IContainer $parent,
 		string $name,
 		int $count,
 		array $statuses,
-		\MichalSpacekCz\Training\Applications $trainingApplications,
-		\Nette\Localization\ITranslator $translator
+		Applications $trainingApplications,
+		ITranslator $translator
 	) {
 		parent::__construct($parent, $name);
 		$this->trainingApplications = $trainingApplications;

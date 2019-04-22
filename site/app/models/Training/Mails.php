@@ -3,17 +3,22 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use DateTime;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
+use Nette\Http\FileUpload;
+use Nette\Mail\IMailer;
+use Nette\Mail\Message;
 use Nette\Utils\Html;
 use Netxten\Templating\Helpers;
+use Tracy\Debugger;
 
 class Mails
 {
 
 	private const REMINDER_DAYS = 5;
 
-	/** @var \Nette\Mail\IMailer */
+	/** @var IMailer */
 	protected $mailer;
 
 	/** @var Applications */
@@ -42,7 +47,7 @@ class Mails
 
 
 	public function __construct(
-		\Nette\Mail\IMailer $mailer,
+		IMailer $mailer,
 		Applications $trainingApplications,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
@@ -66,8 +71,8 @@ class Mails
 		Template $template,
 		string $recipientAddress,
 		string $recipientName,
-		\DateTime $start,
-		\DateTime $end,
+		DateTime $start,
+		DateTime $end,
 		string $training,
 		Html $trainingName,
 		string $venueName,
@@ -76,7 +81,7 @@ class Mails
 		string $venueCity
 	): void
 	{
-		\Tracy\Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
+		Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
 
 		$template->setFile(__DIR__ . '/mails/trainingSignUp.latte');
 
@@ -150,7 +155,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($application->trainingStart->diff(new \DateTime('now'))->days <= self::REMINDER_DAYS) {
+				if ($application->trainingStart->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
 					$application->nextStatus = Statuses::STATUS_REMINDED;
 					$applications[$application->id] = $application;
 				}
@@ -163,7 +168,7 @@ class Mails
 
 	public function sendInvitation(Row $application, Template $template, string $additional): void
 	{
-		\Tracy\Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
+		Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/invitation.latte');
 		$template->application = $application;
@@ -175,7 +180,7 @@ class Mails
 
 	public function sendMaterials(Row $application, Template $template, bool $feedbackRequest, string $additional): void
 	{
-		\Tracy\Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
+		Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/' . ($application->familiar ?  'materialsFamiliar.latte' : 'materials.latte'));
 		$template->application = $application;
@@ -186,9 +191,9 @@ class Mails
 	}
 
 
-	public function sendInvoice(Row $application, Template $template, \Nette\Http\FileUpload $invoice, string $additional): void
+	public function sendInvoice(Row $application, Template $template, FileUpload $invoice, string $additional): void
 	{
-		\Tracy\Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
+		Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		if ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER) {
 			$filename = ($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma.latte' : 'invoiceAfter.latte');
@@ -206,7 +211,7 @@ class Mails
 
 	public function sendReminder(Row $application, Template $template, string $additional): void
 	{
-		\Tracy\Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
+		Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/reminder.latte');
 		$template->application = $application;
@@ -229,7 +234,7 @@ class Mails
 	 */
 	private function sendMail(string $recipientAddress, string $recipientName, string $subject, Template $template, array $attachments = array()): void
 	{
-		$mail = new \Nette\Mail\Message();
+		$mail = new Message();
 		foreach ($attachments as $name => $file) {
 			$mail->addAttachment($name, file_get_contents($file));
 		}

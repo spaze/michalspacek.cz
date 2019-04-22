@@ -7,7 +7,8 @@ use Nette\Application\BadRequestException;
 use Nette\Application\Helpers;
 use Nette\Application\IResponse;
 use Nette\Application\Request;
-use Nette\Application\Responses;
+use Nette\Application\Responses\CallbackResponse;
+use Nette\Application\Responses\ForwardResponse;
 use Tracy\ILogger;
 
 class Error
@@ -29,11 +30,11 @@ class Error
 
 		if ($e instanceof BadRequestException) {
 			list($module, , $sep) = Helpers::splitName($request->getPresenterName());
-			return new Responses\ForwardResponse($request->setPresenterName($module . $sep . 'Error'));
+			return new ForwardResponse($request->setPresenterName($module . $sep . 'Error'));
 		}
 
 		$this->logger->log($e, ILogger::EXCEPTION);
-		return new Responses\CallbackResponse(function () {
+		return new CallbackResponse(function () {
 			require __DIR__ . '/templates/error.phtml';
 		});
 	}

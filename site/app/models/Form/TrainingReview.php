@@ -3,16 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Row;
+use Nette\Utils\Html;
+
 class TrainingReview extends ProtectedForm
 {
 
 	/**
 	 * TrainingReview constructor.
-	 * @param \Nette\ComponentModel\IContainer $parent
+	 * @param IContainer $parent
 	 * @param string $name
-	 * @param \Nette\Utils\Html[]|null $applications
+	 * @param Html[]|null $applications
 	 */
-	public function __construct(\Nette\ComponentModel\IContainer $parent, string $name, ?array $applications = null)
+	public function __construct(IContainer $parent, string $name, ?array $applications = null)
 	{
 		parent::__construct($parent, $name);
 
@@ -46,7 +50,7 @@ class TrainingReview extends ProtectedForm
 	}
 
 
-	public function setReview(\Nette\Database\Row $review): self
+	public function setReview(Row $review): self
 	{
 		$values = array(
 			'name' => $review->name,

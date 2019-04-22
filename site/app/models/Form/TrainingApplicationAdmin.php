@@ -3,23 +3,36 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\PaidDate;
+use MichalSpacekCz\Form\Controls\TrainingAttendee;
+use MichalSpacekCz\Form\Controls\TrainingCompany;
+use MichalSpacekCz\Form\Controls\TrainingCountry;
+use MichalSpacekCz\Form\Controls\TrainingNote;
+use MichalSpacekCz\Form\Controls\TrainingSource;
+use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Dates;
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Row;
+use Nette\Forms\Container;
+use Nette\Localization\ITranslator;
+
 class TrainingApplicationAdmin extends ProtectedForm
 {
 
-	use Controls\PaidDate;
-	use Controls\TrainingAttendee;
-	use Controls\TrainingCompany;
-	use Controls\TrainingCountry;
-	use Controls\TrainingNote;
-	use Controls\TrainingSource;
+	use PaidDate;
+	use TrainingAttendee;
+	use TrainingCompany;
+	use TrainingCountry;
+	use TrainingNote;
+	use TrainingSource;
 
-	/** @var \MichalSpacekCz\Training\Applications */
+	/** @var Applications */
 	protected $trainingApplications;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 	/** @var string[] */
@@ -38,11 +51,11 @@ class TrainingApplicationAdmin extends ProtectedForm
 
 
 	public function __construct(
-		\Nette\ComponentModel\IContainer $parent,
+		IContainer $parent,
 		string $name,
-		\MichalSpacekCz\Training\Applications $trainingApplications,
-		\MichalSpacekCz\Training\Dates $trainingDates,
-		\Nette\Localization\ITranslator $translator
+		Applications $trainingApplications,
+		Dates $trainingDates,
+		ITranslator $translator
 	) {
 		parent::__construct($parent, $name);
 		$this->trainingApplications = $trainingApplications;
@@ -68,7 +81,7 @@ class TrainingApplicationAdmin extends ProtectedForm
 	}
 
 
-	protected function addPaymentInfo(\Nette\Forms\Container $container): void
+	protected function addPaymentInfo(Container $container): void
 	{
 		$this->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
@@ -87,10 +100,10 @@ class TrainingApplicationAdmin extends ProtectedForm
 
 
 	/**
-	 * @param \Nette\Database\Row $application
+	 * @param Row $application
 	 * @return self
 	 */
-	public function setApplication(\Nette\Database\Row $application): self
+	public function setApplication(Row $application): self
 	{
 		$values = array(
 			'name' => $application->name,

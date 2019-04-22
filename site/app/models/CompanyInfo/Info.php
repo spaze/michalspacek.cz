@@ -4,6 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\CompanyInfo;
 
 use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
+use Nette\Http\IResponse;
+use RuntimeException;
 
 class Info
 {
@@ -14,14 +17,14 @@ class Info
 	/** @var RegisterUz */
 	private $registerUz;
 
-	/** @var \Nette\Caching\Cache */
+	/** @var Cache */
 	private $cache;
 
 	/** @var boolean */
 	private $loadCompanyDataVisible = true;
 
 
-	public function __construct(Ares $ares, RegisterUz $registerUz, \Nette\Caching\IStorage $cacheStorage)
+	public function __construct(Ares $ares, RegisterUz $registerUz, IStorage $cacheStorage)
 	{
 		$this->ares = $ares;
 		$this->registerUz = $registerUz;
@@ -40,10 +43,10 @@ class Info
 					$data = $this->registerUz->getData($companyId);
 					break;
 				default:
-					throw new \RuntimeException('Unsupported country');
+					throw new RuntimeException('Unsupported country');
 					break;
 			}
-			$dependencies[Cache::EXPIRATION] = ($data->status === \Nette\Http\IResponse::S200_OK ? '3 days' : '15 minutes');
+			$dependencies[Cache::EXPIRATION] = ($data->status === IResponse::S200_OK ? '3 days' : '15 minutes');
 			return $data;
 		});
 	}

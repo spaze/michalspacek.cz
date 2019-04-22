@@ -3,11 +3,18 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use DateTime;
+use MichalSpacekCz\Formatter\Texy;
+use Nette\Application\BadRequestException;
 use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
+use Nette\Http\IResponse;
 use Nette\Utils\Html;
-use Spaze\Exports\Atom;
-use Spaze\Exports\Atom\Constructs;
-use Spaze\Exports\Atom\Elements;
+use Spaze\Exports\Atom\Constructs\Person;
+use Spaze\Exports\Atom\Constructs\Text;
+use Spaze\Exports\Atom\Elements\Entry;
+use Spaze\Exports\Atom\Elements\Link;
+use Spaze\Exports\Atom\Feed;
 
 class Exports
 {
@@ -15,17 +22,17 @@ class Exports
 	/** @var integer */
 	private const ITEMS = 10;
 
-	/** @var \MichalSpacekCz\Articles */
+	/** @var Articles */
 	protected $articles;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \Nette\Caching\Cache */
+	/** @var Cache */
 	protected $cache;
 
 
-	public function __construct(\MichalSpacekCz\Articles $articles, \MichalSpacekCz\Formatter\Texy $texyFormatter, \Nette\Caching\IStorage $cacheStorage)
+	public function __construct(Articles $articles, Texy $texyFormatter, IStorage $cacheStorage)
 	{
 		$this->articles = $articles;
 		$this->texyFormatter = $texyFormatter;
@@ -33,35 +40,35 @@ class Exports
 	}
 
 
-	public function getArticles(string $self, ?string $filter = null): Atom\Feed
+	public function getArticles(string $self, ?string $filter = null): Feed
 	{
-		/** @var Atom\Feed $feed */
+		/** @var Feed $feed */
 		$feed = $this->cache->load(($filter ? "Atom/ArticlesByTag/{$filter}" : 'Atom/AllArticles'), function(&$dependencies) use ($self, $filter) {
 			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags($filter) : $this->articles->getNearestPublishDate());
-			$dependencies[Cache::EXPIRATION] = ($nearest instanceof \DateTime ? $nearest->modify('+1 minute') : null);
+			$dependencies[Cache::EXPIRATION] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 
 			$title = ($filter ? $this->texyFormatter->translate('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.label.allarticles'));
-			$feed = new Atom\Feed($self, "Michal Špaček: {$title}");
+			$feed = new Feed($self, "Michal Špaček: {$title}");
 			$feed->setLinkSelf($self);
-			$feed->setAuthor(new Constructs\Person('Michal Špaček'));
+			$feed->setAuthor(new Person('Michal Špaček'));
 
 			$articles = ($filter ? $this->articles->getAllByTags($filter, self::ITEMS) : $this->articles->getAll(self::ITEMS));
 			if (!$articles) {
-				throw new \Nette\Application\BadRequestException('No articles', \Nette\Http\IResponse::S404_NOT_FOUND);
+				throw new BadRequestException('No articles', IResponse::S404_NOT_FOUND);
 			}
 
 			$feedUpdated = null;
 			$cacheTags = [];
 			foreach ($articles as $article) {
 				$updated = ($article->updated ?? $article->published);
-				$entry = new Elements\Entry(
+				$entry = new Entry(
 					$article->href,
-					new Constructs\Text((string)$article->title, Constructs\Text::TYPE_HTML),
+					new Text((string)$article->title, Text::TYPE_HTML),
 					$updated,
 					$article->published
 				);
 				if ($article->excerpt) {
-					$entry->setSummary(new Constructs\Text(trim((string)$article->excerpt), Constructs\Text::TYPE_HTML));
+					$entry->setSummary(new Text(trim((string)$article->excerpt), Text::TYPE_HTML));
 				}
 				if ($article->text) {
 					$content = Html::el();
@@ -78,14 +85,14 @@ class Exports
 						$content->addHtml($edits);
 					}
 					$content->addHtml($article->text);
-					$entry->setContent(new Constructs\Text(trim($content->render()), Constructs\Text::TYPE_HTML));
+					$entry->setContent(new Text(trim($content->render()), Text::TYPE_HTML));
 				}
-				$entry->addLink(new Elements\Link($article->href, Elements\Link::REL_ALTERNATE, 'text/' . Constructs\Text::TYPE_HTML));
+				$entry->addLink(new Link($article->href, Link::REL_ALTERNATE, 'text/' . Text::TYPE_HTML));
 				$feed->addEntry($entry);
 				if ($updated > $feedUpdated) {
 					$feedUpdated = $updated;
 				}
-				$type = ($article->isBlogPost ? \MichalSpacekCz\Post::class : \MichalSpacekCz\Articles::class);
+				$type = ($article->isBlogPost ? Post::class : Articles::class);
 				foreach ($article->slugTags as $slugTag) {
 					$cacheTags["{$type}/tag/{$slugTag}"] = "{$type}/tag/{$slugTag}";
 				}

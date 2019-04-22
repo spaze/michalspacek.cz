@@ -3,34 +3,39 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Training;
+use MichalSpacekCz\Form\Controls\TrainingNote;
+use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Venues;
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Row;
 
 class TrainingDate extends ProtectedForm
 {
 
-	use Controls\TrainingNote;
+	use TrainingNote;
 
 	private const STANDARD = 'Standardní';
 	private const CUSTOM = 'Na zakázku';
 	private const REPLACED = 'Nahrazené';
 	private const DISCONTINUED = 'Ukončené';
 
-	/** @var \MichalSpacekCz\Training\Trainings */
+	/** @var Trainings */
 	protected $trainings;
 
-	/** @var \MichalSpacekCz\Training\Dates */
+	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var \MichalSpacekCz\Training\Venues */
+	/** @var Venues */
 	protected $trainingVenues;
 
 
 	public function __construct(
-		\Nette\ComponentModel\IContainer $parent,
+		IContainer $parent,
 		string $name,
-		Training\Trainings $trainings,
-		Training\Dates $trainingDates,
-		Training\Venues $trainingVenues
+		Trainings $trainings,
+		Dates $trainingDates,
+		Venues $trainingVenues
 	) {
 		parent::__construct($parent, $name);
 		$this->trainings = $trainings;
@@ -98,7 +103,7 @@ class TrainingDate extends ProtectedForm
 	}
 
 
-	public function setTrainingDate(\Nette\Database\Row $date): self
+	public function setTrainingDate(Row $date): self
 	{
 		$values = array(
 			'training' => $date->trainingId,

@@ -3,33 +3,46 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use DateTime;
+use DateTimeZone;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post\Data;
+use MichalSpacekCz\Post\Edit;
+use MichalSpacekCz\Post\Loader;
+use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
+use Nette\Database\Context;
+use Nette\Database\Row;
+use Nette\Localization\ITranslator;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
+use Nette\Utils\Strings;
 
 class Post
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var Post\Loader */
+	/** @var Loader */
 	protected $loader;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
-	/** @var \Nette\Caching\Cache */
+	/** @var Cache */
 	protected $exportsCache;
 
-	/** @var \Nette\Application\LinkGenerator */
+	/** @var LinkGenerator */
 	protected $linkGenerator;
 
-	/** @var \MichalSpacekCz\Application\LocaleLinkGenerator */
+	/** @var LocaleLinkGenerator */
 	protected $localeLinkGenerator;
 
-	/** @var \Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
 	/** @var string[] */
@@ -40,18 +53,18 @@ class Post
 
 
 	public function __construct(
-		\Nette\Database\Context $context,
-		Post\Loader $loader,
-		\MichalSpacekCz\Formatter\Texy $texyFormatter,
-		\Nette\Caching\IStorage $cacheStorage,
-		\Nette\Application\LinkGenerator $linkGenerator,
-		\MichalSpacekCz\Application\LocaleLinkGenerator $localeLinkGenerator,
-		\Nette\Localization\ITranslator $translator
+		Context $context,
+		Loader $loader,
+		Texy $texyFormatter,
+		IStorage $cacheStorage,
+		LinkGenerator $linkGenerator,
+		LocaleLinkGenerator $localeLinkGenerator,
+		ITranslator $translator
 	) {
 		$this->database = $context;
 		$this->loader = $loader;
 		$this->texyFormatter = $texyFormatter;
-		$this->exportsCache = new Cache($cacheStorage, \MichalSpacekCz\Exports::class);
+		$this->exportsCache = new Cache($cacheStorage, Exports::class);
 		$this->linkGenerator = $linkGenerator;
 		$this->localeLinkGenerator = $localeLinkGenerator;
 		$this->translator = $translator;
@@ -81,12 +94,12 @@ class Post
 	 *
 	 * @param string $post
 	 * @param string $previewKey
-	 * @return \MichalSpacekCz\Post\Data|null
+	 * @return Data|null
 	 */
-	public function get(string $post, ?string $previewKey = null): ?\MichalSpacekCz\Post\Data
+	public function get(string $post, ?string $previewKey = null): ?Data
 	{
 		$result = $this->loader->fetch($post, $previewKey);
-		$post = new \MichalSpacekCz\Post\Data();
+		$post = new Data();
 		$post->postId = $result->postId;
 		$post->localeId = $result->localeId;
 		$post->translationGroupId = $result->translationGroupId;
@@ -113,9 +126,9 @@ class Post
 	 * Get post by id.
 	 *
 	 * @param integer $id
-	 * @return \MichalSpacekCz\Post\Data|null
+	 * @return Data|null
 	 */
-	public function getById(int $id): ?\MichalSpacekCz\Post\Data
+	public function getById(int $id): ?Data
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -143,7 +156,7 @@ class Post
 			WHERE bp.id_blog_post = ?',
 			$id
 		);
-		$post = new \MichalSpacekCz\Post\Data();
+		$post = new Data();
 		$post->postId = $result->postId;
 		$post->translationGroupId = $result->translationGroupId;
 		$post->locale = $result->locale;
@@ -168,8 +181,8 @@ class Post
 	/**
 	 * Get all posts.
 	 *
-	 * @return \MichalSpacekCz\Post\Data[]
-	 * @throws \Nette\Application\UI\InvalidLinkException
+	 * @return Data[]
+	 * @throws InvalidLinkException
 	 */
 	public function getAll(): array
 	{
@@ -195,7 +208,7 @@ class Post
 			ORDER BY
 				published, slug';
 		foreach ($this->database->fetchAll($sql) as $row) {
-			$post = new \MichalSpacekCz\Post\Data();
+			$post = new Data();
 			$post->postId = $row->postId;
 			$post->translationGroupId = $row->translationGroupId;
 			$post->locale = $row->locale;
@@ -220,7 +233,7 @@ class Post
 	 * Enrich post data object.
 	 *
 	 * @param Data $post
-	 * @throws \Nette\Application\UI\InvalidLinkException
+	 * @throws InvalidLinkException
 	 */
 	public function enrich(Data $post)
 	{
@@ -240,10 +253,10 @@ class Post
 	/**
 	 * Format post data.
 	 *
-	 * @param \MichalSpacekCz\Post\Data $post
-	 * @return \MichalSpacekCz\Post\Data
+	 * @param Data $post
+	 * @return Data
 	 */
-	public function format(\MichalSpacekCz\Post\Data $post): \MichalSpacekCz\Post\Data
+	public function format(Data $post): Data
 	{
 		foreach(['title'] as $item) {
 			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'});
@@ -259,9 +272,9 @@ class Post
 	/**
 	 * Add a post.
 	 *
-	 * @param \MichalSpacekCz\Post\Data $post
+	 * @param Data $post
 	 */
-	public function add(\MichalSpacekCz\Post\Data $post): void
+	public function add(Data $post): void
 	{
 		$this->database->beginTransaction();
 		try {
@@ -297,9 +310,9 @@ class Post
 	/**
 	 * Update a post.
 	 *
-	 * @param \MichalSpacekCz\Post\Data $post
+	 * @param Data $post
 	 */
-	public function update(\MichalSpacekCz\Post\Data $post): void
+	public function update(Data $post): void
 	{
 		$this->database->beginTransaction();
 		try {
@@ -324,7 +337,7 @@ class Post
 				),
 				$post->postId
 			);
-			$now = new \DateTime();
+			$now = new DateTime();
 			if ($post->editSummary) {
 				$this->database->query(
 					'INSERT INTO blog_post_edits',
@@ -354,7 +367,7 @@ class Post
 	/**
 	 * Get all Twitter card types.
 	 *
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getAllTwitterCards(): array
 	{
@@ -402,8 +415,8 @@ class Post
 	 * Get locales and URLs for a blog post.
 	 *
 	 * @param string $slug
-	 * @return \MichalSpacekCz\Post\Data[]
-	 * @throws \Nette\Application\UI\InvalidLinkException
+	 * @return Data[]
+	 * @throws InvalidLinkException
 	 */
 	public function getLocaleUrls(string $slug): array
 	{
@@ -426,7 +439,7 @@ class Post
 			LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
 			WHERE bp.key_translation_group = (SELECT key_translation_group FROM blog_posts WHERE slug = ?)';
 		foreach ($this->database->fetchAll($sql, $slug) as $row) {
-			$post = new \MichalSpacekCz\Post\Data();
+			$post = new Data();
 			$post->postId = $row->postId;
 			$post->translationGroupId = $row->translationGroupId;
 			$post->locale = $row->locale;
@@ -448,7 +461,7 @@ class Post
 
 	/**
 	 * @param integer $postId
-	 * @return Post\Edit[]
+	 * @return Edit[]
 	 */
 	public function getEdits(int $postId): array
 	{
@@ -461,11 +474,11 @@ class Post
 			ORDER BY edited_at DESC';
 		$edits = array();
 		foreach ($this->database->fetchAll($sql, $postId) as $row) {
-			$edit = new Post\Edit();
+			$edit = new Edit();
 			$edit->summaryTexy = $row->summaryTexy;
 			$edit->summary = $this->texyFormatter->format($row->summaryTexy);
 			$edit->editedAt = $row->editedAt;
-			$edit->editedAt->setTimezone(new \DateTimeZone($row->editedAtTimezone));
+			$edit->editedAt->setTimezone(new DateTimeZone($row->editedAtTimezone));
 			$edits[] = $edit;
 		}
 		return $edits;
@@ -490,7 +503,7 @@ class Post
 	 */
 	public function getSlugTags(string $tags): array
 	{
-		return ($tags ? array_map([\Nette\Utils\Strings::class, 'webalize'], $this->tagsToArray($tags)) : []);
+		return ($tags ? array_map([Strings::class, 'webalize'], $this->tagsToArray($tags)) : []);
 	}
 
 }

@@ -3,19 +3,25 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use DateTime;
+use MichalSpacekCz\Formatter\Texy;
+use Nette\Database\Context;
+use Nette\Database\Row;
+use RuntimeException;
+
 class Reviews
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \MichalSpacekCz\Formatter\Texy */
+	/** @var Texy */
 	protected $texyFormatter;
 
 
 	public function __construct(
-		\Nette\Database\Context $context,
-		\MichalSpacekCz\Formatter\Texy $texyFormatter
+		Context $context,
+		Texy $texyFormatter
 	)
 	{
 		$this->database = $context;
@@ -28,7 +34,7 @@ class Reviews
 	 *
 	 * @param integer $id
 	 * @param integer|null $limit
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getVisibleReviews(int $id, ?int $limit = null): array
 	{
@@ -62,7 +68,7 @@ class Reviews
 	 * Get all reviews including hidden by training id.
 	 *
 	 * @param integer $id
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getAllReviews(int $id): array
 	{
@@ -91,7 +97,7 @@ class Reviews
 	/**
 	 * Format reviews.
 	 *
-	 * @param \Nette\Database\Row[] $reviews
+	 * @param Row[] $reviews
 	 * @return array
 	 */
 	private function format(array $reviews): array
@@ -107,10 +113,10 @@ class Reviews
 	 * Get review by id.
 	 *
 	 * @param integer $reviewId
-	 * @return \Nette\Database\Row
-	 * @throws \RuntimeException
+	 * @return Row
+	 * @throws RuntimeException
 	 */
-	public function getReview(int $reviewId): \Nette\Database\Row
+	public function getReview(int $reviewId): Row
 	{
 		$result = $this->database->fetch('SELECT
 				r.id_review AS reviewId,
@@ -131,7 +137,7 @@ class Reviews
 		);
 
 		if (!$result) {
-			throw new \RuntimeException("No review id {$reviewId}, yet");
+			throw new RuntimeException("No review id {$reviewId}, yet");
 		}
 
 		return $result;
@@ -142,7 +148,7 @@ class Reviews
 	 * Get review by date id.
 	 *
 	 * @param integer $dateId
-	 * @return \Nette\Database\Row[]
+	 * @return Row[]
 	 */
 	public function getReviewsByDateId(int $dateId): array
 	{
@@ -185,7 +191,7 @@ class Reviews
 
 	public function addReview(int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden, ?int $ranking): void
 	{
-		$datetime = new \DateTime();
+		$datetime = new DateTime();
 		$this->database->query(
 			'INSERT INTO training_reviews ?',
 			array(

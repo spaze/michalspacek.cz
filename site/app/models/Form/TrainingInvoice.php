@@ -3,13 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\PaidDate;
 use Nette\ComponentModel\IContainer;
 use Nette\Localization\ITranslator;
 
 class TrainingInvoice extends ProtectedForm
 {
 
-	use Controls\PaidDate;
+	use PaidDate;
 
 	/** @var ITranslator */
 	protected $translator;

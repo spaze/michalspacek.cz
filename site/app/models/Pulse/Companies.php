@@ -3,14 +3,17 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
+use Nette\Database\Context;
+use Nette\Database\Row;
+
 class Companies
 {
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
 
-	public function __construct(\Nette\Database\Context $context)
+	public function __construct(Context $context)
 	{
 		$this->database = $context;
 	}
@@ -19,7 +22,7 @@ class Companies
 	/**
 	 * Get all companies.
 	 *
-	 * @return \Nette\Database\Row[] of [id, name]
+	 * @return Row[] of [id, name]
 	 */
 	public function getAll(): array
 	{
@@ -27,7 +30,7 @@ class Companies
 	}
 
 
-	public function getByName(string $name): ?\Nette\Database\Row
+	public function getByName(string $name): ?Row
 	{
 		return $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name) ?: null;
 	}

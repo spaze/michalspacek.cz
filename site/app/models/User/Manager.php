@@ -3,13 +3,28 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User;
 
+use DateTimeInterface;
+use Exception;
+use Nette\Application\LinkGenerator;
+use Nette\Database\Context;
+use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Row;
+use Nette\Http\IRequest;
+use Nette\Http\Response;
+use Nette\Http\Url;
+use Nette\Security\AuthenticationException;
+use Nette\Security\IAuthenticator;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
+use Nette\Utils\Random;
+use ParagonIE\Halite\Alerts\HaliteAlert;
+use PDOException;
+use Spaze\Encryption\Symmetric\StaticKey;
+use Tracy\Debugger;
 
-class Manager implements \Nette\Security\IAuthenticator
+class Manager implements IAuthenticator
 {
 
 	private const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
@@ -18,16 +33,16 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	private const TOKEN_RETURNING_USER = 2;
 
-	/** @var \Nette\Database\Context */
+	/** @var Context */
 	protected $database;
 
-	/** @var \Nette\Http\IRequest */
+	/** @var IRequest */
 	protected $httpRequest;
 
-	/** @var \Nette\Http\Response */
+	/** @var Response */
 	protected $httpResponse;
 
-	/** @var \Spaze\Encryption\Symmetric\StaticKey */
+	/** @var StaticKey */
 	protected $passwordEncryption;
 
 	/** @var string */
@@ -44,18 +59,18 @@ class Manager implements \Nette\Security\IAuthenticator
 
 
 	public function __construct(
-		\Nette\Database\Context $context,
-		\Nette\Http\IRequest $httpRequest,
-		\Nette\Http\Response $httpResponse,
-		\Spaze\Encryption\Symmetric\StaticKey $passwordEncryption,
-		\Nette\Application\LinkGenerator $linkGenerator
+		Context $context,
+		IRequest $httpRequest,
+		Response $httpResponse,
+		StaticKey $passwordEncryption,
+		LinkGenerator $linkGenerator
 	)
 	{
 		$this->database = $context;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->passwordEncryption = $passwordEncryption;
-		$this->authCookiesPath = (new \Nette\Http\Url($linkGenerator->link('Admin:Sign:in')))->getPath();
+		$this->authCookiesPath = (new Url($linkGenerator->link('Admin:Sign:in')))->getPath();
 	}
 
 
@@ -65,7 +80,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * @param string[] $credentials
 	 * @return IIdentity
 	 *
-	 * @throws \Nette\Security\AuthenticationException
+	 * @throws AuthenticationException
 	 */
 	public function authenticate(array $credentials): IIdentity
 	{
@@ -92,7 +107,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * @param string $username
 	 * @param string $password
 	 * @return integer User id
-	 * @throws \Nette\Security\AuthenticationException
+	 * @throws AuthenticationException
 	 */
 	private function verifyPassword(string $username, string $password): int
 	{
@@ -108,15 +123,15 @@ class Manager implements \Nette\Security\IAuthenticator
 			$username
 		);
 		if (!$user) {
-			throw new \Nette\Security\AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
+			throw new AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		}
 		try {
 			if (!$this->verifyHash($password, $this->passwordEncryption->decrypt((string)$user->password))) {
-				throw new \Nette\Security\AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
+				throw new AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
 			}
-		} catch (\ParagonIE\Halite\Alerts\HaliteAlert $e) {
-			\Tracy\Debugger::log($e);
-			throw new \Nette\Security\AuthenticationException('Oops... Something went wrong.', self::FAILURE);
+		} catch (HaliteAlert $e) {
+			Debugger::log($e);
+			throw new AuthenticationException('Oops... Something went wrong.', self::FAILURE);
 		}
 		return (int)$user->userId;
 	}
@@ -138,8 +153,8 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * @param User $user
 	 * @param string $password
 	 * @param string $newPassword
-	 * @throws \Nette\Security\AuthenticationException
-	 * @throws \ParagonIE\Halite\Alerts\HaliteAlert
+	 * @throws AuthenticationException
+	 * @throws HaliteAlert
 	 */
 	public function changePassword(User $user, string $password, string $newPassword): void
 	{
@@ -169,7 +184,7 @@ class Manager implements \Nette\Security\IAuthenticator
 
 	public function setReturningUser(string $value): void
 	{
-		$this->httpResponse->setCookie($this->returningUserCookie, $value, \Nette\Http\Response::PERMANENT, $this->authCookiesPath, null, null, null, 'Strict');
+		$this->httpResponse->setCookie($this->returningUserCookie, $value, Response::PERMANENT, $this->authCookiesPath, null, null, null, 'Strict');
 	}
 
 
@@ -223,12 +238,12 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * @param User $user
 	 * @param integer $type
 	 * @return string Concatenation of selector, separator, token
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	private function insertToken(User $user, int $type)
 	{
-		$selector = \Nette\Utils\Random::generate(32, '0-9a-zA-Z');
-		$token = \Nette\Utils\Random::generate(64, '0-9a-zA-Z');
+		$selector = Random::generate(32, '0-9a-zA-Z');
+		$token = Random::generate(64, '0-9a-zA-Z');
 
 		try {
 			$this->database->query(
@@ -241,9 +256,9 @@ class Manager implements \Nette\Security\IAuthenticator
 					'type' => $type,
 				)
 			);
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == \Nette\Database\Drivers\MySqlDriver::ERROR_DUPLICATE_ENTRY) {
+				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
 					// regenerate the access code and try harder this time
 					return $this->insertToken($user, $type);
 				}
@@ -258,7 +273,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * Store permanent login token in database and send a cookie to the browser.
 	 *
 	 * @param User $user
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function storePermanentLogin(User $user)
 	{
@@ -283,7 +298,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * Regenerate permanent login token.
 	 *
 	 * @param User $user
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function regeneratePermanentLogin(User $user)
 	{
@@ -322,7 +337,7 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * Regenerate returning user token.
 	 *
 	 * @param User $user
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function regenerateReturningUser(User $user)
 	{
@@ -337,11 +352,11 @@ class Manager implements \Nette\Security\IAuthenticator
 	 * Verify and return any token, if present, and valid.
 	 *
 	 * @param string $value
-	 * @param \DateTimeInterface $validity
+	 * @param DateTimeInterface $validity
 	 * @param integer $type
 	 * @return Row|null
 	 */
-	private function verifyToken(string $value, \DateTimeInterface $validity, int $type): ?Row
+	private function verifyToken(string $value, DateTimeInterface $validity, int $type): ?Row
 	{
 		$result = null;
 		$values = explode(self::AUTH_SELECTOR_TOKEN_SEPARATOR, $value);
