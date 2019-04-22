@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace App\PulseModule\Presenters;
 
 use App\WwwModule\Presenters\BasePresenter;
-use Nette\Http\IResponse;
 
 class PasswordsPresenter extends BasePresenter
 {
@@ -22,7 +21,7 @@ class PasswordsPresenter extends BasePresenter
 	 */
 	public function actionStoragesQuestions(): void
 	{
-		$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:questions');
+		$this->redirectPermanent('PasswordsStorages:questions');
 	}
 
 
@@ -33,7 +32,7 @@ class PasswordsPresenter extends BasePresenter
 	 */
 	public function actionStoragesRating(): void
 	{
-		$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'PasswordsStorages:rating');
+		$this->redirectPermanent('PasswordsStorages:rating');
 	}
 
 }

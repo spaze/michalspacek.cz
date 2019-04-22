@@ -36,7 +36,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 	{
 		// Keep old, published URLs alive
 		if ($param) {
-			$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'site', $param);
+			$this->redirectPermanent('site', $param);
 		}
 		$data = $this->passwords->getAllStorages();
 		$this->template->isDetail = false;
@@ -54,7 +54,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 	public function actionSite(string $param): void
 	{
 		if (empty($param)) {
-			$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'default');
+			$this->redirectPermanent('default');
 		}
 
 		$sites = explode(',', $param);
@@ -79,7 +79,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 	public function actionCompany(string $param): void
 	{
 		if (empty($param)) {
-			$this->redirect(IResponse::S301_MOVED_PERMANENTLY, 'default');
+			$this->redirectPermanent('default');
 		}
 
 		$companies = explode(',', $param);
