@@ -74,7 +74,7 @@ class HomepagePresenter extends BasePresenter
 				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 				break;
 			default:
-				throw new BadRequestException('Unknown format', IResponse::S404_NOT_FOUND);
+				throw new BadRequestException('Unknown format');
 		}
 	}
 

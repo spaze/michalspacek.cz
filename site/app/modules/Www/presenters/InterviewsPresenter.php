@@ -7,7 +7,6 @@ use MichalSpacekCz\Embed;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Interviews;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 
 class InterviewsPresenter extends BasePresenter
 {
@@ -46,7 +45,7 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$interview = $this->interviews->get($name);
 		if (!$interview) {
-			throw new BadRequestException("I haven't been interviewed by {$name}, yet", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("I haven't been interviewed by {$name}, yet");
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [$interview->title]);

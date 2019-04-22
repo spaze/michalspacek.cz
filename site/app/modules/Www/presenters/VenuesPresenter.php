@@ -51,7 +51,7 @@ class VenuesPresenter extends BasePresenter
 	{
 		$venue = $this->trainingVenues->get($name);
 		if (!$venue) {
-			throw new BadRequestException("Where in the world is {$name}?", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Where in the world is {$name}?");
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->name]);

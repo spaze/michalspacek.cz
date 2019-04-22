@@ -39,7 +39,7 @@ class CompanyPresenter extends BasePresenter
 	public function actionDefault(?string $country, ?string $companyId): void
 	{
 		if ($country === null || $companyId === null) {
-			throw new BadRequestException('No country or companyId specified', IResponse::S404_NOT_FOUND);
+			throw new BadRequestException('No country or companyId specified');
 		}
 
 		$this->securityHeaders->accessControlAllowOrigin('Www:Homepage:');

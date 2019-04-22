@@ -7,7 +7,6 @@ use MichalSpacekCz\Articles;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Strings;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 
 class TagsPresenter extends BasePresenter
 {
@@ -50,7 +49,7 @@ class TagsPresenter extends BasePresenter
 	{
 		$label = $this->articles->getLabelByTags($tags);
 		if (!$label) {
-			throw new BadRequestException('Unknown tag', IResponse::S404_NOT_FOUND);
+			throw new BadRequestException('Unknown tag');
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.label.articlesbytag', [$label]);

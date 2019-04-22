@@ -7,7 +7,6 @@ use MichalSpacekCz\Training\Files;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
-use Nette\Http\IResponse;
 
 class FilesPresenter extends BasePresenter
 {
@@ -32,12 +31,12 @@ class FilesPresenter extends BasePresenter
 	{
 		$session = $this->getSession('application');
 		if (!$session->applicationId) {
-			throw new BadRequestException("Unknown application id, missing or invalid token", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Unknown application id, missing or invalid token");
 		}
 
 		$file = $this->trainingFiles->getFile($session->applicationId, $session->token, $filename);
 		if (!$file) {
-			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}");
 		}
 		$pathname = $file->info->getPathname();
 		$this->sendResponse(new FileResponse($pathname, null, finfo_file(finfo_open(FILEINFO_MIME_TYPE), $pathname)));
@@ -50,7 +49,7 @@ class FilesPresenter extends BasePresenter
 	 */
 	public function actionFile(string $filename): void
 	{
-		throw new BadRequestException("Cannot download {$filename}", IResponse::S404_NOT_FOUND);
+		throw new BadRequestException("Cannot download {$filename}");
 	}
 
 }

@@ -8,7 +8,6 @@ use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Interviews;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
-use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 
 class InterviewsPresenter extends BasePresenter
@@ -43,7 +42,7 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$this->interview = $this->interviews->getById($param);
 		if (!$this->interview) {
-			throw new BadRequestException("Interview id {$param} does not exist, yet", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Interview id {$param} does not exist, yet");
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->title)]);

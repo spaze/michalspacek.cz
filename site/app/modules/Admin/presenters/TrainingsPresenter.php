@@ -20,7 +20,6 @@ use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
@@ -99,7 +98,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->redirectParam = $this->dateId;
 		$this->training = $this->trainingDates->get($this->dateId);
 		if (!$this->training) {
-			throw new BadRequestException("Date id {$param} does not exist, yet", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Date id {$param} does not exist, yet");
 		}
 		$validCount = 0;
 		$applications = $discarded = [];
@@ -176,7 +175,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->applicationId = $param;
 		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
 		if (!$this->application) {
-			throw new BadRequestException("No application with id {$this->applicationId}", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("No application with id {$this->applicationId}");
 		}
 
 		if (isset($this->application->dateId)) {

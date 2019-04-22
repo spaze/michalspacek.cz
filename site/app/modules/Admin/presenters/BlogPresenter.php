@@ -113,7 +113,7 @@ class BlogPresenter extends BasePresenter
 	{
 		$this->post = $this->blogPost->getById($param);
 		if (!$this->post) {
-			throw new BadRequestException("Post id {$param} does not exist, yet", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Post id {$param} does not exist, yet");
 		}
 
 		$title = Html::el()->setText('Příspěvek ')->addHtml($this->post->title);

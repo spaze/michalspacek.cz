@@ -74,7 +74,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	{
 		$training = $this->companyTrainings->getInfo($name);
 		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet");
 		}
 
 		$this->template->name = $training->action;

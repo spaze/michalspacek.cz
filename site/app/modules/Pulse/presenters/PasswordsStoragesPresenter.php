@@ -7,7 +7,6 @@ use App\WwwModule\Presenters\BasePresenter;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 
 class PasswordsStoragesPresenter extends BasePresenter
 {
@@ -60,7 +59,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 		$sites = explode(',', $param);
 		$data = $this->passwords->getStoragesBySite($sites);
 		if (empty($data->sites)) {
-			throw new BadRequestException('Unknown site alias', IResponse::S404_NOT_FOUND);
+			throw new BadRequestException('Unknown site alias');
 		}
 
 		$this->template->isDetail = true;
@@ -85,7 +84,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 		$companies = explode(',', $param);
 		$data = $this->passwords->getStoragesByCompany($companies);
 		if (empty($data->sites)) {
-			throw new BadRequestException('Unknown company alias', IResponse::S404_NOT_FOUND);
+			throw new BadRequestException('Unknown company alias');
 		}
 
 		$names = [];

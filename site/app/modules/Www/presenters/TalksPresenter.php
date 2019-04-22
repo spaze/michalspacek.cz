@@ -9,7 +9,6 @@ use MichalSpacekCz\Talks;
 use MichalSpacekCz\Templating\Helpers;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Http\IResponse;
 use RuntimeException;
 
 class TalksPresenter extends BasePresenter
@@ -80,7 +79,7 @@ class TalksPresenter extends BasePresenter
 				}
 			}
 		} catch (RuntimeException $e) {
-			throw new BadRequestException($e->getMessage(), IResponse::S404_NOT_FOUND);
+			throw new BadRequestException($e->getMessage());
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $talk);

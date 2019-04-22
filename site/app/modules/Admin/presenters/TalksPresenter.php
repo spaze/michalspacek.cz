@@ -12,7 +12,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
-use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use RuntimeException;
@@ -69,7 +68,7 @@ class TalksPresenter extends BasePresenter
 		try {
 			$this->talk = $this->talks->getById((int)$param);
 		} catch (RuntimeException $e) {
-			throw new BadRequestException($e->getMessage(), IResponse::S404_NOT_FOUND);
+			throw new BadRequestException($e->getMessage());
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
@@ -83,7 +82,7 @@ class TalksPresenter extends BasePresenter
 			$this->talk = $this->talks->getById((int)$param);
 			$this->slides = $this->talks->getSlides($this->talk->talkId);
 		} catch (RuntimeException $e) {
-			throw new BadRequestException($e->getMessage(), IResponse::S404_NOT_FOUND);
+			throw new BadRequestException($e->getMessage());
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.admin.talkslides', $this->talk);

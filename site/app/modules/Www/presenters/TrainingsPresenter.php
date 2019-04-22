@@ -129,7 +129,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->training = $this->trainings->get($name);
 		if (!$this->training) {
-			throw new BadRequestException("I don't do {$name} training, yet", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet");
 		}
 
 		if ($this->training->successorId !== null) {
@@ -173,7 +173,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$training  = $this->trainings->get($name);
 		if (!$training || $training->discontinuedId) {
-			throw new BadRequestException("I don't do {$name} training", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training");
 		}
 
 		$session = $this->getSession('training');
@@ -325,7 +325,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentApplicationPreliminary(string $formName): TrainingApplicationPreliminary
 	{
 		if ($this->training->discontinuedId) {
-			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}");
 		}
 		$form = new TrainingApplicationPreliminary($this, $formName, $this->translator);
 		$form->onSuccess[] = [$this, 'submittedApplicationPreliminary'];
@@ -389,7 +389,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$training = $this->trainings->get($name);
 		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet");
 		}
 
 		$this->template->name             = $training->action;
@@ -417,17 +417,17 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		if (!$session->applicationId || !$session->token) {
-			throw new BadRequestException("Unknown application id, missing or invalid token", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("Unknown application id, missing or invalid token");
 		}
 
 		$training = $this->trainings->getIncludingCustom($name);
 		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training, yet");
 		}
 
 		$application = $this->trainingApplications->getApplicationById($session->applicationId);
 		if (!$application) {
-			throw new BadRequestException("No training application for id {$session->applicationId}", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("No training application for id {$session->applicationId}");
 		}
 
 		if ($application->trainingAction != $name) {
@@ -437,7 +437,7 @@ class TrainingsPresenter extends BasePresenter
 		$files = $this->trainingFiles->getFiles($application->applicationId);
 		$this->trainingApplications->setAccessTokenUsed($application);
 		if (!$files) {
-			throw new BadRequestException("No files for application id {$session->applicationId}", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("No files for application id {$session->applicationId}");
 		}
 
 		$this->template->trainingTitle = $training->name;
@@ -460,7 +460,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$training = $this->trainings->get($name);
 		if (!$training || $training->discontinuedId) {
-			throw new BadRequestException("I don't do {$name} training", IResponse::S404_NOT_FOUND);
+			throw new BadRequestException("I don't do {$name} training");
 		}
 		$this->dates = $this->trainings->getDates($training->trainingId);
 		if (empty($this->dates)) {

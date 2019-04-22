@@ -8,7 +8,6 @@ use MichalSpacekCz\Formatter\Texy;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Nette\Http\IResponse;
 use Nette\Utils\Html;
 use Spaze\Exports\Atom\Constructs\Person;
 use Spaze\Exports\Atom\Constructs\Text;
@@ -54,7 +53,7 @@ class Exports
 
 			$articles = ($filter ? $this->articles->getAllByTags($filter, self::ITEMS) : $this->articles->getAll(self::ITEMS));
 			if (!$articles) {
-				throw new BadRequestException('No articles', IResponse::S404_NOT_FOUND);
+				throw new BadRequestException('No articles');
 			}
 
 			$feedUpdated = null;
