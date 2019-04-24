@@ -52,9 +52,9 @@ class PhpDocParser
 		if ($tokens->isCurrentTokenType(Lexer::TOKEN_PHPDOC_TAG)) {
 			return $this->parseTag($tokens);
 
-		} else {
-			return $this->parseText($tokens);
 		}
+
+		return $this->parseText($tokens);
 	}
 
 
@@ -97,6 +97,10 @@ class PhpDocParser
 
 				case '@throws':
 					$tagValue = $this->parseThrowsTagValue($tokens);
+					break;
+
+				case '@deprecated':
+					$tagValue = $this->parseDeprecatedTagValue($tokens);
 					break;
 
 				case '@property':
@@ -157,6 +161,12 @@ class PhpDocParser
 		$type = $this->typeParser->parse($tokens);
 		$description = $this->parseOptionalDescription($tokens, true);
 		return new Ast\PhpDoc\ThrowsTagValueNode($type, $description);
+	}
+
+	private function parseDeprecatedTagValue(TokenIterator $tokens): Ast\PhpDoc\DeprecatedTagValueNode
+	{
+		$description = $this->parseOptionalDescription($tokens);
+		return new Ast\PhpDoc\DeprecatedTagValueNode($description);
 	}
 
 
@@ -261,9 +271,11 @@ class PhpDocParser
 	{
 		if ($limitStartToken) {
 			foreach (self::DISALLOWED_DESCRIPTION_START_TOKENS as $disallowedStartToken) {
-				if ($tokens->isCurrentTokenType($disallowedStartToken)) {
-					$tokens->consumeTokenType(Lexer::TOKEN_OTHER); // will throw exception
+				if (!$tokens->isCurrentTokenType($disallowedStartToken)) {
+					continue;
 				}
+
+				$tokens->consumeTokenType(Lexer::TOKEN_OTHER); // will throw exception
 			}
 		}
 
