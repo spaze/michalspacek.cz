@@ -85,11 +85,11 @@ $(document).ready(function() {
 				})[0]
 		);
 	};
-	ENCRYPTION.handler = function() {
+	ENCRYPTION.handler = async function() {
 		openpgp.config.commentstring = location.href;
 		options = {
-			data: ENCRYPTION.area.val(),
-			publicKeys: openpgp.key.readArmored($('#pubkey').text()).keys,
+			message: openpgp.message.fromText(ENCRYPTION.area.val()),
+			publicKeys: (await openpgp.key.readArmored($('#pubkey').text())).keys,
 		};
 		openpgp.encrypt(options).then(function(ciphertext) {
 			ENCRYPTION.area.val(ciphertext.data);
