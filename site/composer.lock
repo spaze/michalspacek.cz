@@ -1455,16 +1455,16 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "2697fe50f8762dffbec35fa75ac1086a7d48a3a5"
+                "reference": "768c87392803d87d8836ccc9083c27e7939b5d76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/2697fe50f8762dffbec35fa75ac1086a7d48a3a5",
-                "reference": "2697fe50f8762dffbec35fa75ac1086a7d48a3a5",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/768c87392803d87d8836ccc9083c27e7939b5d76",
+                "reference": "768c87392803d87d8836ccc9083c27e7939b5d76",
                 "shasum": ""
             },
             "require": {
@@ -1498,7 +1498,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2019-04-24T22:25:13+00:00"
+            "time": "2019-04-28T22:16:28+00:00"
         },
         {
             "name": "spaze/encryption",

@@ -36,7 +36,7 @@ final class Versions
   'paragonie/constant_time_encoding' => 'v2.2.3@55af0dc01992b4d0da7f6372e2eac097bbbaffdb',
   'paragonie/halite' => 'v4.5.3@56ccdcac236259208a19ecb0231791db8da2791e',
   'paragonie/hidden-string' => 'v1.0.0@0bbb00be0e33b8e1d48fa79ea35cd42d3091a936',
-  'spaze/csp-config' => 'v2.0.2@2697fe50f8762dffbec35fa75ac1086a7d48a3a5',
+  'spaze/csp-config' => 'v2.0.3@768c87392803d87d8836ccc9083c27e7939b5d76',
   'spaze/encryption' => 'v0.1.1@e891463ec1e594da8ebe1c31caf0cc9f1b5786e4',
   'spaze/feed-exports' => 'v0.2.1@7392ec98e0e141de51668b9086000ce05cd0555b',
   'spaze/mysql-session-handler' => 'v2.1.3@6f5fe5bf2fff6ebf4b213e058100c11af886c651',
@@ -63,9 +63,9 @@ final class Versions
   'roave/security-advisories' => 'dev-master@1b329f4f2d9a0a3981fd79dbfe37754bedd383e2',
   'symfony/console' => 'v4.2.7@e2840bb38bddad7a0feaf85931e38fdcffdb2f81',
   'symfony/finder' => 'v4.2.7@e45135658bd6c14b61850bf131c4f09a55133f69',
-  'paragonie/random_compat' => '9.99.99@7825d51a0f0e29079d5e8674c33a6ed41113e920',
-  'paragonie/sodium_compat' => '*@7825d51a0f0e29079d5e8674c33a6ed41113e920',
-  '__root__' => 'dev-master@7825d51a0f0e29079d5e8674c33a6ed41113e920',
+  'paragonie/random_compat' => '9.99.99@b46f2e9c1fec0b6e69ca20b4c8cd232f0376687a',
+  'paragonie/sodium_compat' => '*@b46f2e9c1fec0b6e69ca20b4c8cd232f0376687a',
+  '__root__' => 'dev-master@b46f2e9c1fec0b6e69ca20b4c8cd232f0376687a',
 );
 
     private function __construct()
