@@ -140,6 +140,7 @@ contact:
 	loading: "Nahrávám, prosím čekejte"
 	entermessagehere: "Sem napište zprávu"
 	requirements: "Vyžaduje JavaScript"
+	unsupported: "Je mi líto, ale tohle váš prohlížeč již neumí, pořiďte si novější"
 who:
 	hi: "Ahoj, jsem Michal Špaček."
 	developer:

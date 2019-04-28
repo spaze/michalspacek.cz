@@ -140,6 +140,7 @@ contact:
 	loading: "Loading, please wait"
 	entermessagehere: "Enter your message here"
 	requirements: "Requires JavaScript"
+	unsupported: "I'm sorry but your browser can't do this anymore, get a newer one"
 who:
 	hi: "Hi, I'm Michal Špaček."
 	developer:
