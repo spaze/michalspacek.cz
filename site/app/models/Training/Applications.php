@@ -377,7 +377,7 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new DateTime($date ?? '');
 
-		$this->price->resolvePriceDiscountVat($training, $status, $note);
+		$this->price->resolvePriceDiscountVat($training, $status, $note ?? '');
 
 		$data = array(
 			'key_date'             => $dateId,
