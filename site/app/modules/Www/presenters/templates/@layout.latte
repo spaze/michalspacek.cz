@@ -60,7 +60,7 @@
 	</div>
 {/block}
 </div>
-<div id="footer">
+<footer id="footer">
 <div n:class="container, $containerExtraClass">
 	<div id="footer-name">
 		<strong xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Michal Špaček</strong>
@@ -77,7 +77,7 @@
 	</div>
 	<div class="clear"></div>
 </div>
-</div>
+</footer>
 <div n:if="!isset($headerLinks) || $headerLinks !== false" id="header-links">
 	<div n:class="container, $containerExtraClass">
 		<a n:foreach="$localeLinks as $language => $url" href="{$url}" lang="{_"html.langs.$language"}"><small><span class="lighter"><i class="fas fa-fw fa-flag"></i></span> {_"messages.langs.$language"}</small></a>
