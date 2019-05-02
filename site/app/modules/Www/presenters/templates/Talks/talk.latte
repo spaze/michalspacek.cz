@@ -1,3 +1,7 @@
+{var $containerExtraClass = 'talk'}
+{var $containerColsClass = 'with-sidebar'}
+{define #headerIcon}{/define}
+
 {define #metas}
 <meta n:if="$ogImage" property="og:image" content="{$ogImage}">
 <meta n:if="$pageTitle" property="og:title" content="{$pageTitle}">
@@ -5,7 +9,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@spazef0rze">
 {/define}
-{define #content}
+
+{define #talkContent}
 <p class="print"><strong>{_messages.talks.onlineversion|format:"link:Www:Talks:talk $talk->action"}</strong></p>
 <div n:if="$talk->supersededByAction" class="flash info"><strong>{_messages.talks.supersededby|format:$talk->supersededByTitle,"link:Www:Talks:talk {$talk->supersededByAction}"}</strong></div>
 {import "../embed.latte"}
@@ -53,5 +58,15 @@
 	<h2 id="{_html.id.transcript}">{_messages.talks.transcript}</h2>
 	{$talk->transcript}
 {/if}
+{/define}
 
+{define #content}
+{import "../widgets.latte"}
+<div class="column-content">
+{include #talkContent}
+</div>
+<div class="column-sidebar">
+{include #widgets}
+</div>
+<div class="clear"></div>
 {/define}
