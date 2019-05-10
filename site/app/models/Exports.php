@@ -19,7 +19,7 @@ class Exports
 {
 
 	/** @var integer */
-	private const ITEMS = 10;
+	private const ITEMS = 5;
 
 	/** @var Articles */
 	protected $articles;
