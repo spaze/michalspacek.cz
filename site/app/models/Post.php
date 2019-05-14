@@ -412,54 +412,6 @@ class Post
 
 
 	/**
-	 * Get locales and URLs for a blog post.
-	 *
-	 * @param string $slug
-	 * @return Data[]
-	 * @throws InvalidLinkException
-	 */
-	public function getLocaleUrls(string $slug): array
-	{
-		$posts = [];
-		$sql = 'SELECT
-				bp.id_blog_post AS postId,
-				l.id_blog_post_locale AS localeId,
-				bp.key_translation_group AS translationGroupId,
-				l.locale,
-				bp.slug,
-				bp.title AS titleTexy,
-				bp.lead AS leadTexy,
-				bp.text AS textTexy,
-				bp.published,
-				bp.preview_key AS previewKey,
-				bp.originally AS originallyTexy,
-				bp.tags
-			FROM
-				blog_posts bp
-			LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
-			WHERE bp.key_translation_group = (SELECT key_translation_group FROM blog_posts WHERE slug = ?)';
-		foreach ($this->database->fetchAll($sql, $slug) as $row) {
-			$post = new Data();
-			$post->postId = $row->postId;
-			$post->translationGroupId = $row->translationGroupId;
-			$post->locale = $row->locale;
-			$post->localeId = $row->localeId;
-			$post->slug = $row->slug;
-			$post->titleTexy = $row->titleTexy;
-			$post->leadTexy = $row->leadTexy;
-			$post->textTexy = $row->textTexy;
-			$post->originallyTexy = $row->originallyTexy;
-			$post->published = $row->published;
-			$post->previewKey = $row->previewKey;
-			$post->tags = ($row->tags !== null ? Json::decode($row->tags) : null);
-			$this->enrich($post);
-			$posts[] = $this->format($post);
-		}
-		return $posts;
-	}
-
-
-	/**
 	 * @param integer $postId
 	 * @return Edit[]
 	 */

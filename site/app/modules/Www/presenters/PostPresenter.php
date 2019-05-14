@@ -4,14 +4,17 @@ declare(strict_types = 1);
 namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Post;
+use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Training\Dates;
 use Nette\Application\AbortException;
-use Nette\Application\UI\InvalidLinkException;
 
 class PostPresenter extends BasePresenter
 {
 	/** @var Post */
 	protected $blogPost;
+
+	/** @var LocaleUrls */
+	protected $localeUrls;
 
 	/** @var Dates */
 	protected $trainingDates;
@@ -20,9 +23,10 @@ class PostPresenter extends BasePresenter
 	protected $localeLinkParams = [];
 
 
-	public function __construct(Post $blogPost, Dates $trainingDates)
+	public function __construct(Post $blogPost, Dates $trainingDates, LocaleUrls $localeUrls)
 	{
 		$this->blogPost = $blogPost;
+		$this->localeUrls = $localeUrls;
 		$this->trainingDates = $trainingDates;
 		parent::__construct();
 	}
@@ -32,7 +36,6 @@ class PostPresenter extends BasePresenter
 	 * @param string $slug
 	 * @param string|null $preview
 	 * @throws AbortException
-	 * @throws InvalidLinkException
 	 */
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
@@ -53,7 +56,7 @@ class PostPresenter extends BasePresenter
 			$this->template->edited = current($edits)->editedAt;
 		}
 
-		foreach ($this->blogPost->getLocaleUrls($post->slug) as $post) {
+		foreach ($this->localeUrls->get($post->slug) as $post) {
 			$this->localeLinkParams[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
 		}
 	}
@@ -66,7 +69,7 @@ class PostPresenter extends BasePresenter
 	 */
 	protected function getLocaleLinkAction(): string
 	{
-		return ($this->localeLinkParams ? parent::getLocaleLinkAction() : 'Www:Articles:');
+		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Articles:');
 	}
 
 
@@ -77,7 +80,7 @@ class PostPresenter extends BasePresenter
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		return ($this->localeLinkParams ?: []);
+		return $this->localeLinkParams;
 	}
 
 }

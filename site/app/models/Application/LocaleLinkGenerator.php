@@ -63,7 +63,7 @@ class LocaleLinkGenerator
 			foreach ($routers as $router) {
 				if (count($router)) {
 					$linkGenerator = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
-					$links[$locale] = $linkGenerator->link($destination, $params[$locale] ?? $params[self::DEFAULT_PARAMS] ?? []);
+					$links[$locale] = $linkGenerator->link($destination, $this->getParams($params, $locale));
 				}
 			}
 		}
@@ -84,6 +84,18 @@ class LocaleLinkGenerator
 
 
 	/**
+	 * Set default params.
+	 *
+	 * @param array<string, array<string, string>> $params
+	 * @param array<string, array<string, string>> $defaultParams
+	 */
+	public function setDefaultParams(array &$params, array $defaultParams): void
+	{
+		$params[self::DEFAULT_PARAMS] = $defaultParams;
+	}
+
+
+	/**
 	 * Generates all URLs, including a link to the current language version.
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
@@ -92,10 +104,17 @@ class LocaleLinkGenerator
 	 */
 	public function allLinks(string $destination, array $params = []): array
 	{
+		$locale = $this->translator->getDefaultLocale();
 		return array_merge(
-			[$this->translator->getDefaultLocale() => $this->linkGenerator->link($destination, $params)],
+			[$locale => $this->linkGenerator->link($destination, $this->getParams($params, $locale))],
 			$this->links($destination, $params)
 		);
+	}
+
+
+	private function getParams(array $params, string $locale): array
+	{
+		return $params[$locale] ?? $params[self::DEFAULT_PARAMS] ?? [];
 	}
 
 }
