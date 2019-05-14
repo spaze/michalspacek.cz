@@ -54,6 +54,8 @@ class Talk extends ProtectedForm
 			->setHtmlType('number');
 		$this->addSelect('slidesTalk', 'Použít slajdy z:', $allTalks)
 			->setPrompt('Vyberte prosím přednášku, ze které se použijí slajdy');
+		$this->addSelect('filenamesTalk', 'Soubory pro slajdy z:', $allTalks)
+			->setPrompt('Vyberte prosím přednášku, ze které se použijí soubory pro slajdy');
 		$this->addText('slidesHref', 'Odkaz na slajdy:')
 			->setRequired(false)
 			->addRule(self::MAX_LENGTH, 'Maximální délka odkazu na slajdy je %d znaků', 200);
@@ -99,6 +101,7 @@ class Talk extends ProtectedForm
 			'href' => $talk->href,
 			'duration' => $talk->duration,
 			'slidesTalk' => $talk->slidesTalkId,
+			'filenamesTalk' => $talk->filenamesTalkId,
 			'slidesHref' => $talk->slidesHref,
 			'slidesEmbed' => $talk->slidesEmbed,
 			'videoHref' => $talk->videoHref,

@@ -233,6 +233,7 @@ class Talks
 				t.transcript AS transcriptTexy,
 				t.favorite,
 				t.key_talk_slides AS slidesTalkId,
+				t.key_talk_filenames AS filenamesTalkId,
 				t.key_superseded_by AS supersededById,
 				ts.action AS supersededByAction,
 				ts.title AS supersededByTitle,
@@ -283,6 +284,7 @@ class Talks
 				t.transcript AS transcriptTexy,
 				t.favorite,
 				t.key_talk_slides AS slidesTalkId,
+				t.key_talk_filenames AS filenamesTalkId,
 				t.key_superseded_by AS supersededById,
 				ts.action AS supersededByAction,
 				ts.title AS supersededByTitle,
@@ -371,28 +373,29 @@ class Talks
 
 	/**
 	 * Update talk data.
-	 *
-	 * @param integer $id
-	 * @param string|null $action
-	 * @param string $title
-	 * @param string|null $description
-	 * @param string $date
-	 * @param integer|null $duration
-	 * @param string|null $href
-	 * @param integer|null $slidesTalk
-	 * @param string|null $slidesHref
-	 * @param string|null $slidesEmbed
-	 * @param string|null $videoHref
-	 * @param string|null $videoEmbed
-	 * @param string $event
-	 * @param string|null $eventHref
-	 * @param string|null $ogImage
-	 * @param string|null $transcript
-	 * @param string|null $favorite
-	 * @param integer|null $supersededBy
-	 * @param boolean $publishSlides
 	 */
-	public function update(int $id, ?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?int $slidesTalk, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?int $supersededBy, bool $publishSlides): void
+	public function update(
+		int $id,
+		?string $action,
+		string $title,
+		?string $description,
+		string $date,
+		?int $duration,
+		?string $href,
+		?int $slidesTalk,
+		?int $filenamesTalk,
+		?string $slidesHref,
+		?string $slidesEmbed,
+		?string $videoHref,
+		?string $videoEmbed,
+		string $event,
+		?string $eventHref,
+		?string $ogImage,
+		?string $transcript,
+		?string $favorite,
+		?int $supersededBy,
+		bool $publishSlides
+	): void
 	{
 		$this->database->query(
 			'UPDATE talks SET ? WHERE id_talk = ?',
@@ -404,6 +407,7 @@ class Talks
 				'duration' => (empty($duration) ? null : $duration),
 				'href' => (empty($href) ? null : $href),
 				'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
+				'key_talk_filenames' => (empty($filenamesTalk) ? null : $filenamesTalk),
 				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
 				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
@@ -423,27 +427,28 @@ class Talks
 
 	/**
 	 * Insert talk data.
-	 *
-	 * @param string|null $action
-	 * @param string $title
-	 * @param string|null $description
-	 * @param string $date
-	 * @param integer|null $duration
-	 * @param string|null $href
-	 * @param integer|null $slidesTalk
-	 * @param string|null $slidesHref
-	 * @param string|null $slidesEmbed
-	 * @param string|null $videoHref
-	 * @param string|null $videoEmbed
-	 * @param string $event
-	 * @param string|null $eventHref
-	 * @param string|null $ogImage
-	 * @param string|null $transcript
-	 * @param string|null $favorite
-	 * @param integer|null $supersededBy
-	 * @param boolean $publishSlides
 	 */
-	public function add(?string $action, string $title, ?string $description, string $date, ?int $duration, ?string $href, ?int $slidesTalk, ?string $slidesHref, ?string $slidesEmbed, ?string $videoHref, ?string $videoEmbed, string $event, ?string $eventHref, ?string $ogImage, ?string $transcript, ?string $favorite, ?int $supersededBy, bool $publishSlides): void
+	public function add(
+		?string $action,
+		string $title,
+		?string $description,
+		string $date,
+		?int $duration,
+		?string $href,
+		?int $slidesTalk,
+		?int $filenamesTalk,
+		?string $slidesHref,
+		?string $slidesEmbed,
+		?string $videoHref,
+		?string $videoEmbed,
+		string $event,
+		?string $eventHref,
+		?string $ogImage,
+		?string $transcript,
+		?string $favorite,
+		?int $supersededBy,
+		bool $publishSlides
+	): void
 	{
 		$this->database->query(
 			'INSERT INTO talks',
@@ -455,6 +460,7 @@ class Talks
 				'duration' => (empty($duration) ? null : $duration),
 				'href' => (empty($href) ? null : $href),
 				'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
+				'key_talk_filenames' => (empty($filenamesTalk) ? null : $filenamesTalk),
 				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
 				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
@@ -475,9 +481,10 @@ class Talks
 	 * Get slides for talk.
 	 *
 	 * @param integer $talkId Talk id
+	 * @param integer|null $filenamesTalkId
 	 * @return Row[]
 	 */
-	public function getSlides(int $talkId): array
+	public function getSlides(int $talkId, ?int $filenamesTalkId): array
 	{
 		$slides = $this->database->fetchAll(
 			'SELECT
@@ -493,12 +500,36 @@ class Talks
 			ORDER BY number',
 			$talkId
 		);
+
+		$filenames = [];
+		if ($filenamesTalkId) {
+			$result = $this->database->fetchAll(
+				'SELECT
+       				number,
+					filename,
+					filename_alternative AS filenameAlternative
+				FROM talk_slides
+				WHERE key_talk = ?',
+				$filenamesTalkId
+			);
+			foreach ($result as $row) {
+				$filenames[$row->number] = [$row->filename, $row->filenameAlternative];
+			}
+		}
+
 		$result = [];
 		$alternativeTypes = array_flip($this->supportedAlternativeImages);
 		foreach ($slides as $row) {
+			if (isset($filenames[$row->number])) {
+				$row->filename = $filenames[$row->number][0];
+				$row->filenameAlternative = $filenames[$row->number][1];
+				$row->filenamesTalkId = $filenamesTalkId;
+			} else {
+				$row->filenamesTalkId = null;
+			}
 			$row->speakerNotes = $this->texyFormatter->format($row->speakerNotesTexy);
-			$row->image = $this->getSlideImageFilename($this->staticRoot, $talkId, $row->filename);
-			$row->imageAlternative = $this->getSlideImageFilename($this->staticRoot, $talkId, $row->filenameAlternative);
+			$row->image = $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filename);
+			$row->imageAlternative = $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filenameAlternative);
 			$row->imageAlternativeType = ($row->filenameAlternative ? $alternativeTypes[pathinfo($row->filenameAlternative, PATHINFO_EXTENSION)] : null);
 			$result[$row->number] = $row;
 		}
@@ -609,7 +640,6 @@ class Talks
 	 */
 	private function updateSlides(int $talkId, array $originalSlides, ArrayHash $slides, bool $removeFiles): void
 	{
-		$lastNumber = 0;
 		foreach ($originalSlides as $slide) {
 			foreach ([$slide->filename, $slide->filenameAlternative] as $filename) {
 				if (!empty($filename)) {
@@ -621,19 +651,24 @@ class Talks
 			foreach ($slides as $id => $slide) {
 				$width = self::SLIDE_MAX_WIDTH;
 				$height = self::SLIDE_MAX_HEIGHT;
-				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $removeFiles, $originalSlides[$slide->number]->filename, $width, $height);
-				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $removeFiles, $originalSlides[$slide->number]->filenameAlternative, $width, $height);
-				if ($removeFiles) {
-					// TODO delete renamed files
+
+				$slideNumber = (int)$slide->number;
+				if (isset($slide->replace, $slide->replaceAlternative)) {
+					$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $removeFiles, $originalSlides[$slideNumber]->filename, $width, $height);
+					$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $removeFiles, $originalSlides[$slideNumber]->filenameAlternative, $width, $height);
+					if ($removeFiles) {
+						// TODO delete renamed files
+					}
+				} else {
+					$replace = $replaceAlternative = $slide->filename = $slide->filenameAlternative = null;
 				}
 
-				$lastNumber = (int)$slide->number;
 				$this->database->query(
 					'UPDATE talk_slides SET ? WHERE id_slide = ?',
 					array(
 						'key_talk' => $talkId,
 						'alias' => $slide->alias,
-						'number' => $slide->number,
+						'number' => $slideNumber,
 						'filename' => $replace ?: $slide->filename,
 						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
 						'title' => $slide->title,
@@ -644,8 +679,8 @@ class Talks
 			}
 		} catch (PDOException $e) {
 			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					throw new UnexpectedValueException($e->getMessage(), $lastNumber);
+				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY && isset($slideNumber)) {
+					throw new UnexpectedValueException($e->getMessage(), $slideNumber);
 				}
 			}
 			throw $e;

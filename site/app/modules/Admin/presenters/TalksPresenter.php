@@ -80,7 +80,7 @@ class TalksPresenter extends BasePresenter
 	{
 		try {
 			$this->talk = $this->talks->getById((int)$param);
-			$this->slides = $this->talks->getSlides($this->talk->talkId);
+			$this->slides = $this->talks->getSlides($this->talk->talkId, $this->talk->filenamesTalkId);
 		} catch (RuntimeException $e) {
 			throw new BadRequestException($e->getMessage());
 		}
@@ -119,6 +119,7 @@ class TalksPresenter extends BasePresenter
 			(int)$values->duration,
 			$values->href,
 			$values->slidesTalk,
+			$values->filenamesTalk,
 			$values->slidesHref,
 			$values->slidesEmbed,
 			$values->videoHref,
@@ -158,6 +159,7 @@ class TalksPresenter extends BasePresenter
 			(int)$values->duration,
 			$values->href,
 			$values->slidesTalk,
+			$values->filenamesTalk,
 			$values->slidesHref,
 			$values->slidesEmbed,
 			$values->videoHref,

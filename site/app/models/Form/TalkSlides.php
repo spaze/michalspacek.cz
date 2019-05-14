@@ -30,7 +30,7 @@ class TalkSlides extends ProtectedForm
 		$slidesContainer = $this->addContainer('slides');
 		foreach ($slides as $slide) {
 			$slideIdContainer = $slidesContainer->addContainer($slide->slideId);
-			$this->addSlideFields($slideIdContainer);
+			$this->addSlideFields($slideIdContainer, $slide->filenamesTalkId);
 			$values = array(
 				'alias' => $slide->alias,
 				'number' => $slide->number,
@@ -48,7 +48,7 @@ class TalkSlides extends ProtectedForm
 		$newContainer = $this->addContainer('new');
 		for ($i = 0; $i < $newCount; $i++) {
 			$newIdContainer = $newContainer->addContainer($i);
-			$this->addSlideFields($newIdContainer);
+			$this->addSlideFields($newIdContainer, null);
 		}
 
 		$this->addCheckbox('deleteReplaced', 'Smazat nahrazené soubory?');
@@ -56,8 +56,9 @@ class TalkSlides extends ProtectedForm
 	}
 
 
-	private function addSlideFields(Container $container): void
+	private function addSlideFields(Container $container, ?int $filenamesTalkId): void
 	{
+		$disableSlideUploads = (bool)$filenamesTalkId;
 		$container->addText('alias', 'Alias:')
 			->setRequired('Zadejte prosím alias')
 			->addRule(self::PATTERN, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
@@ -69,16 +70,20 @@ class TalkSlides extends ProtectedForm
 		$container->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek');
 		$upload = $container->addUpload('replace', 'Nahradit:')
+			->setDisabled($disableSlideUploads)
 			->setHtmlAttribute('title', 'Nahradit soubor (*.' . implode(', *.', $this->talks->getSupportedImages()) . ')')
 			->setHtmlAttribute('accept', implode(',', array_keys($this->talks->getSupportedImages())));
 		$container->addText('filename', 'Soubor:')
+			->setDisabled($disableSlideUploads)
 			->setHtmlAttribute('class', 'slide-filename')
 			->addConditionOn($upload, self::BLANK)
 				->setRequired('Zadejte prosím soubor');
 		$container->addUpload('replaceAlternative', 'Nahradit:')
+			->setDisabled($disableSlideUploads)
 			->setHtmlAttribute('title', 'Nahradit alternativní soubor (*.' . implode(', *.', $this->talks->getSupportedAlternativeImages()) . ')')
 			->setHtmlAttribute('accept', implode(',', array_keys($this->talks->getSupportedAlternativeImages())));
 		$container->addText('filenameAlternative', 'Soubor:')
+			->setDisabled($disableSlideUploads)
 			->setHtmlAttribute('class', 'slide-filename');
 		$container->addTextArea('speakerNotes', 'Poznámky:')
 			->setRequired('Zadejte prosím poznámky');

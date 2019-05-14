@@ -26,7 +26,7 @@
 				<th class="right">Číslo</th>
 				<th>Alias</th>
 				<th>Titulek</th>
-				<th>Soubor</th>
+				<th>Soubor{ifset $slide->filenamesTalkId} z přednášky <a n:href="Talks:slides $slide->filenamesTalkId">{$slide->filenamesTalkId}</a>{/ifset}</th>
 				<th>Nahradit</th>
 				<th>Rozměry</th>
 			</tr>

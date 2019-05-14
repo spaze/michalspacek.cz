@@ -68,11 +68,11 @@ class TalksPresenter extends BasePresenter
 			$talk = $this->talks->get($name);
 			if ($talk->slidesTalkId) {
 				$slidesTalk = $this->talks->getById($talk->slidesTalkId);
-				$slides = ($slidesTalk->publishSlides ? $this->talks->getSlides($talk->slidesTalkId) : []);
+				$slides = ($slidesTalk->publishSlides ? $this->talks->getSlides($slidesTalk->talkId, $slidesTalk->filenamesTalkId) : []);
 				$slideNo = $this->talks->getSlideNo($talk->slidesTalkId, $slide);
 				$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$slidesTalk->action]);
 			} else {
-				$slides = ($talk->publishSlides ? $this->talks->getSlides($talk->talkId) : []);
+				$slides = ($talk->publishSlides ? $this->talks->getSlides($talk->talkId, $talk->filenamesTalkId) : []);
 				$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
 				if ($slideNo !== null) {
 					$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$talk->action]);
