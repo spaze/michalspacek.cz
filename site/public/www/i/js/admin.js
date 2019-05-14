@@ -58,17 +58,17 @@ $(document).ready(function() {
 
 	$('#statuses td[data-date]')
 		.click(function() {
-			$('#statuses').find('#date-' + $(this).data('date')).toggle();
+			$('#statuses').find('#date-' + $(this).data('date')).toggleClass('hidden');
 			return false;
 		})
 		.css('cursor', 'pointer');
 
 	$('#statusesShow').click(function() {
-		$('#statuses td[data-date]').parent().next().show();
+		$('#statuses td[data-date]').parent().next().removeClass('hidden');
 	});
 
 	$('#statusesHide').click(function() {
-		$('#statuses td[data-date]').parent().next().hide();
+		$('#statuses td[data-date]').parent().next().addClass('hidden');
 	});
 
 	$('#statusesShow, #statusesHide')
@@ -90,7 +90,7 @@ $(document).ready(function() {
 	});
 
 	$('#emails tbody .button').click(function() {
-		$(this).closest('tr').nextUntil('.row', '.expand-container').toggle();
+		$(this).closest('tr').nextUntil('.row', '.expand-container').toggleClass('hidden');
 	});
 
 	$('#emails #checkAll').click(function(event) {
@@ -106,7 +106,7 @@ $(document).ready(function() {
 	$('a[href*="#new"]').click(function(event) {
 		event.preventDefault();
 		var container = $('#pridat-storage').find($(this).attr('href'));
-		container.toggle();
+		container.toggleClass('hidden');
 		if (!$('#pridat-storage').find($(this).data('parent')).toggleClass('transparent').hasClass('transparent')) {
 			container.find(':input').val('');
 			container.find(':checkbox').prop('checked', false);
