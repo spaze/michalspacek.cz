@@ -24,7 +24,7 @@ use Symfony;
  * @property      array $prefix
  * @property-read array $prefixTemp
  * @property-read string $formattedPrefix
- * @property-read array $availableLocales
+ * @property-read string[] $availableLocales
  * @property      string|null $locale
  *
  * @author Ales Wita
@@ -133,7 +133,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 
 
 	/**
-	 * @return Tracy\Panel|null
+	 * @return Contributte\Translation\Tracy\Panel|null
 	 */
 	public function getTracyPanel(): ?Tracy\Panel
 	{
@@ -142,7 +142,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 
 
 	/**
-	 * @param Tracy\Panel|null $tracyPanel
+	 * @param Contributte\Translation\Tracy\Panel|null $tracyPanel
 	 * @return self
 	 */
 	public function setTracyPanel(?Tracy\Panel $tracyPanel): self
@@ -265,7 +265,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 
 
 	/**
-	 * @return array
+	 * @return string[]
 	 */
 	public function getAvailableLocales(): array
 	{
@@ -286,7 +286,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 
 
 	/**
-	 * @return string|null
+	 * {@inheritdoc}
 	 */
 	public function getLocale()
 	{
@@ -299,7 +299,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 
 
 	/**
-	 * @param string|null $locale
+	 * {@inheritdoc}
 	 */
 	public function setLocale($locale)
 	{
@@ -320,22 +320,21 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	/**
 	 * {@inheritdoc}
 	 */
-	// public function translate($message, $count = null, $parameters = [], $domain = null, $locale = null)// @uncomment
-	public function translate($message, ...$parameters): string // @comment
+	public function translate($message, ...$parameters): string
 	{
-		$count = array_key_exists(0, $parameters) ? $parameters[0] : null; // @comment
-		$params = array_key_exists(1, $parameters) ? $parameters[1] : []; // @comment
-		$domain = array_key_exists(2, $parameters) ? $parameters[2] : null; // @comment
-		$locale = array_key_exists(3, $parameters) ? $parameters[3] : null; // @comment
+		$count = array_key_exists(0, $parameters) ? $parameters[0] : null;
+		$params = array_key_exists(1, $parameters) ? $parameters[1] : [];
+		$domain = array_key_exists(2, $parameters) ? $parameters[2] : null;
+		$locale = array_key_exists(3, $parameters) ? $parameters[3] : null;
 
-		if (is_array($count)) {// back compatibility for ITranslator
+		if (is_array($count)) {
 			$locale = $domain !== null ? (string) $domain : null;
 			$domain = $params !== null && !empty($params) ? (string) $params : null;
 			$params = $count;
 			$count = null;
 		}
 
-		if (Nette\Utils\Strings::startsWith($message, '//')) {
+		if (is_string($message) && Nette\Utils\Strings::startsWith($message, '//')) {
 			$message = Nette\Utils\Strings::substring($message, 2);
 
 		} elseif (count($this->prefix) > 0) {
@@ -348,13 +347,12 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 
 		$tmp = [];
 		foreach ($params as $k1 => $v1) {
-			//$tmp['%' . Nette\Utils\Strings::trim($k1, '%') . '%'] = $v1;// need this?
 			$tmp['%' . $k1 . '%'] = $v1;
 		}
 		$params = $tmp;
 
-		if (Nette\Utils\Validators::isNumericInt($count)) {
-			$params += ['%count%' => (int) $count];
+		if (Nette\Utils\Validators::isNumeric($count)) {
+			$params += ['%count%' => $count];
 		}
 
 		return $this->trans($message, $params, $domain, $locale);

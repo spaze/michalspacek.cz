@@ -3,9 +3,10 @@
 namespace PHPStan\DependencyInjection;
 
 use Nette\DI\Extensions\PhpExtension;
+use Phar;
 use PHPStan\Broker\Broker;
 use PHPStan\File\FileHelper;
-use PHPStan\File\RelativePathHelper;
+use PHPStan\File\FuzzyRelativePathHelper;
 
 class ContainerFactory
 {
@@ -23,8 +24,17 @@ class ContainerFactory
 	{
 		$this->currentWorkingDirectory = $currentWorkingDirectory;
 		$fileHelper = new FileHelper($currentWorkingDirectory);
-		$this->rootDirectory = $fileHelper->normalizePath(__DIR__ . '/../..');
-		$this->configDirectory = $this->rootDirectory . '/conf';
+
+		$rootDir = __DIR__ . '/../..';
+		$originalRootDir = $fileHelper->normalizePath($rootDir);
+		if (extension_loaded('phar')) {
+			$pharPath = Phar::running(false);
+			if ($pharPath !== '') {
+				$rootDir = dirname($pharPath);
+			}
+		}
+		$this->rootDirectory = $fileHelper->normalizePath($rootDir);
+		$this->configDirectory = $originalRootDir . '/conf';
 	}
 
 	/**
@@ -58,7 +68,7 @@ class ContainerFactory
 		}
 
 		$configurator->addServices([
-			'relativePathHelper' => new RelativePathHelper($this->currentWorkingDirectory, DIRECTORY_SEPARATOR, $analysedPaths),
+			'relativePathHelper' => new FuzzyRelativePathHelper($this->currentWorkingDirectory, DIRECTORY_SEPARATOR, $analysedPaths),
 		]);
 
 		$container = $configurator->createContainer();

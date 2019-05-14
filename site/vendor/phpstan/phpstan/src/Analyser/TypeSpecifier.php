@@ -404,10 +404,10 @@ class TypeSpecifier
 			return $this->specifyTypesInCondition($scope, $expr->expr, $context->negate());
 		} elseif ($expr instanceof Node\Expr\Assign) {
 			if ($context->null()) {
-				return $this->specifyTypesInCondition($scope, $expr->expr, $context);
+				return $this->specifyTypesInCondition($scope->exitFirstLevelStatements(), $expr->expr, $context);
 			}
 
-			return $this->specifyTypesInCondition($scope, $expr->var, $context);
+			return $this->specifyTypesInCondition($scope->exitFirstLevelStatements(), $expr->var, $context);
 		} elseif (
 			(
 				$expr instanceof Expr\Isset_
@@ -516,6 +516,8 @@ class TypeSpecifier
 			&& (new ArrayType(new MixedType(), new MixedType()))->isSuperTypeOf($scope->getType($expr->expr))->yes()
 		) {
 			return $this->create($expr->expr, new NonEmptyArrayType(), $context->negate());
+		} elseif ($expr instanceof Expr\ErrorSuppress) {
+			return $this->specifyTypesInCondition($scope, $expr->expr, $context, $defaultHandleFunctions);
 		} elseif (!$context->null()) {
 			return $this->handleDefaultTruthyOrFalseyContext($context, $expr);
 		}
@@ -569,7 +571,12 @@ class TypeSpecifier
 		return null;
 	}
 
-	public function create(Expr $expr, Type $type, TypeSpecifierContext $context): SpecifiedTypes
+	public function create(
+		Expr $expr,
+		Type $type,
+		TypeSpecifierContext $context,
+		bool $overwrite = false
+	): SpecifiedTypes
 	{
 		if ($expr instanceof New_ || $expr instanceof Instanceof_) {
 			return new SpecifiedTypes();
@@ -585,7 +592,7 @@ class TypeSpecifier
 			$sureTypes[$exprString] = [$expr, $type];
 		}
 
-		return new SpecifiedTypes($sureTypes, $sureNotTypes);
+		return new SpecifiedTypes($sureTypes, $sureNotTypes, $overwrite);
 	}
 
 	/**

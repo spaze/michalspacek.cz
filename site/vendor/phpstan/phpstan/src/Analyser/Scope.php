@@ -2407,7 +2407,9 @@ class Scope implements ClassMemberAccessAnswerer
 			$expr = $typeSpecification['expr'];
 			$type = $typeSpecification['type'];
 			if ($typeSpecification['sure']) {
-				$type = TypeCombinator::intersect($type, $this->getType($expr));
+				if (!$specifiedTypes->shouldOverwrite()) {
+					$type = TypeCombinator::intersect($type, $this->getType($expr));
+				}
 				$scope = $scope->specifyExpressionType($expr, $type);
 			} else {
 				$scope = $scope->removeTypeFromExpression($expr, $type);
@@ -2994,7 +2996,7 @@ class Scope implements ClassMemberAccessAnswerer
 		$descriptions = [];
 		foreach ($this->getVariableTypes() as $name => $variableTypeHolder) {
 			$key = sprintf('$%s (%s)', $name, $variableTypeHolder->getCertainty()->describe());
-			$descriptions[$key] = $variableTypeHolder->getType()->describe(VerbosityLevel::value());
+			$descriptions[$key] = $variableTypeHolder->getType()->describe(VerbosityLevel::precise());
 		}
 		foreach ($this->moreSpecificTypes as $exprString => $typeHolder) {
 			$key = sprintf(
@@ -3002,7 +3004,7 @@ class Scope implements ClassMemberAccessAnswerer
 				$exprString,
 				$typeHolder->getCertainty()->describe()
 			);
-			$descriptions[$key] = $typeHolder->getType()->describe(VerbosityLevel::value());
+			$descriptions[$key] = $typeHolder->getType()->describe(VerbosityLevel::precise());
 		}
 
 		return $descriptions;

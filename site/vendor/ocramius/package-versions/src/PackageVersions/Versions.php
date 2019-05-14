@@ -14,7 +14,7 @@ final class Versions
 {
     public const ROOT_PACKAGE_NAME = '__root__';
     public const VERSIONS          = array (
-  'contributte/translation' => '0.1.0@dae0b686c28117a06da44203a287d0b046215a61',
+  'contributte/translation' => 'v0.2.1@700349ef0401bc4e78aee2ddd8c5223bdebebcc4',
   'latte/latte' => 'v2.5.1@cf714b94f0759198a3c71361d46d5166cabaaf52',
   'nette/application' => 'v3.0.0@4f3b250709226c70c8ca0a35f796877bcb72b10d',
   'nette/bootstrap' => 'v3.0.0@e1075af05c211915e03e0c86542f3ba5433df4a3',
@@ -43,12 +43,12 @@ final class Versions
   'spaze/netxten' => 'v0.12.0@472d96877c6f0ab66376f01b44c3d9f93483bbfd',
   'spaze/nonce-generator' => 'v3.0.0@53df0e14bc82aee9b353f05af0f87f84b4e32760',
   'spaze/sri-macros' => 'v0.2.0@780e9fa50faa37b4e23cdea2b279d2dca73d6642',
-  'symfony/config' => 'v4.2.7@0e745ead307d5dcd4e163e94a47ec04b1428943f',
-  'symfony/contracts' => 'v1.0.2@1aa7ab2429c3d594dd70689604b5cf7421254cdf',
-  'symfony/filesystem' => 'v4.2.7@e16b9e471703b2c60b95f14d31c1239f68f11601',
+  'symfony/config' => 'v4.2.8@0e745ead307d5dcd4e163e94a47ec04b1428943f',
+  'symfony/contracts' => 'v1.1.0@d3636025e8253c6144358ec0a62773cae588395b',
+  'symfony/filesystem' => 'v4.2.8@e16b9e471703b2c60b95f14d31c1239f68f11601',
   'symfony/polyfill-ctype' => 'v1.11.0@82ebae02209c21113908c229e9883c419720738a',
   'symfony/polyfill-mbstring' => 'v1.11.0@fe5e94c604826c35a32fa832f35bd036b6799609',
-  'symfony/translation' => 'v4.2.7@46c0dede1f925383d13dc783857be2c41efd0b24',
+  'symfony/translation' => 'v4.2.8@181a426dd129cb496f12d7e7555f6d0b37a7615b',
   'texy/texy' => 'v3.0.0@3b9a25e779f7610f68870fe967c7f0e444a85c1a',
   'tracy/tracy' => 'v2.6.2@9a6513089a836744e70af0910ad45f50e603dcf5',
   'composer/xdebug-handler' => '1.3.2@d17708133b6c276d6e42ef887a877866b909d892',
@@ -57,15 +57,15 @@ final class Versions
   'nikic/php-parser' => 'v4.2.1@5221f49a608808c1e4d436df32884cbc1b821ac0',
   'ocramius/package-versions' => '1.4.0@a4d4b60d0e60da2487bd21a2c6ac089f85570dbb',
   'phpstan/phpdoc-parser' => '0.3.3@472d3161d289f652713a5e353532fa4592663a57',
-  'phpstan/phpstan' => '0.11.5@24ce5a566a798b81343138ed5d41d6877554cf9a',
+  'phpstan/phpstan' => '0.11.6@7af8b9d02b3ab36444dbf4e1b9ca1c1bd5044d81',
   'phpstan/phpstan-nette' => '0.11@998e9384ee615cec39eadb0ebae385f7d3d4dad6',
   'psr/log' => '1.1.0@6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd',
-  'roave/security-advisories' => 'dev-master@1b329f4f2d9a0a3981fd79dbfe37754bedd383e2',
-  'symfony/console' => 'v4.2.7@e2840bb38bddad7a0feaf85931e38fdcffdb2f81',
-  'symfony/finder' => 'v4.2.7@e45135658bd6c14b61850bf131c4f09a55133f69',
-  'paragonie/random_compat' => '9.99.99@b46f2e9c1fec0b6e69ca20b4c8cd232f0376687a',
-  'paragonie/sodium_compat' => '*@b46f2e9c1fec0b6e69ca20b4c8cd232f0376687a',
-  '__root__' => 'dev-master@b46f2e9c1fec0b6e69ca20b4c8cd232f0376687a',
+  'roave/security-advisories' => 'dev-master@c91d74867cc32f6bbc788b33d23372703d61f2c2',
+  'symfony/console' => 'v4.2.8@e2840bb38bddad7a0feaf85931e38fdcffdb2f81',
+  'symfony/finder' => 'v4.2.8@e45135658bd6c14b61850bf131c4f09a55133f69',
+  'paragonie/random_compat' => '9.99.99@595d6343bd50afbe3ac1e621038997780cfc64bd',
+  'paragonie/sodium_compat' => '*@595d6343bd50afbe3ac1e621038997780cfc64bd',
+  '__root__' => 'dev-master@595d6343bd50afbe3ac1e621038997780cfc64bd',
 );
 
     private function __construct()

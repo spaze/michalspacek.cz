@@ -3,6 +3,8 @@ parameters:
 	excludes_analyse: []
 	autoload_directories: []
 	autoload_files: []
+	featureToggles:
+		subtractableTypes: false
 	fileExtensions:
 		- php
 	checkAlwaysTrueCheckTypeFunctionCall: false
@@ -105,6 +107,8 @@ services:
 
 	-
 		class: PHPStan\Broker\AnonymousClassNameHelper
+		arguments:
+			relativePathHelper: @simpleRelativePathHelper
 
 	-
 		class: PHPStan\PhpDocParser\Lexer\Lexer
@@ -168,6 +172,10 @@ services:
 
 	-
 		class: PHPStan\Dependency\DependencyResolver
+
+	-
+		class: PHPStan\DependencyInjection\Container
+		factory: PHPStan\DependencyInjection\Nette\NetteContainer
 
 	-
 		class: PHPStan\File\FileHelper
@@ -582,6 +590,11 @@ services:
 		tags:
 			- phpstan.broker.dynamicFunctionReturnTypeExtension
 
+	-
+		class: PHPStan\Type\Php\SprintfFunctionDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicFunctionReturnTypeExtension
+
 	typeSpecifier:
 		class: PHPStan\Analyser\TypeSpecifier
 		factory: @typeSpecifierFactory::create
@@ -592,6 +605,14 @@ services:
 	relativePathHelper:
 		class: PHPStan\File\RelativePathHelper
 		dynamic: true
+		autowired: true
+
+	simpleRelativePathHelper:
+		class: PHPStan\File\RelativePathHelper
+		factory: PHPStan\File\SimpleRelativePathHelper
+		arguments:
+			currentWorkingDirectory: %currentWorkingDirectory%
+		autowired: false
 
 	broker:
 		class: PHPStan\Broker\Broker
@@ -625,6 +646,8 @@ services:
 
 	errorFormatter.checkstyle:
 		class: PHPStan\Command\ErrorFormatter\CheckstyleErrorFormatter
+		arguments:
+			relativePathHelper: @simpleRelativePathHelper
 
 	errorFormatter.json:
 		class: PHPStan\Command\ErrorFormatter\JsonErrorFormatter

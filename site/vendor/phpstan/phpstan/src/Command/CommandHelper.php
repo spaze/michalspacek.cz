@@ -3,10 +3,12 @@
 namespace PHPStan\Command;
 
 use Nette\DI\Helpers;
+use PHPStan\DependencyInjection\Container;
 use PHPStan\DependencyInjection\ContainerFactory;
 use PHPStan\DependencyInjection\LoaderFactory;
 use PHPStan\File\FileFinder;
 use PHPStan\File\FileHelper;
+use PHPStan\Type\TypeCombinator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -127,6 +129,23 @@ class CommandHelper
 			$additionalConfigFiles[] = $levelConfigFile;
 		}
 
+		if (class_exists('PHPStan\ExtensionInstaller\GeneratedConfig')) {
+			foreach (\PHPStan\ExtensionInstaller\GeneratedConfig::EXTENSIONS as $name => $extensionConfig) {
+				foreach ($extensionConfig['extra']['includes'] ?? [] as $includedFile) {
+					if (!is_string($includedFile)) {
+						$errorOutput->writeln(sprintf('Cannot include config from package %s, expecting string file path but got %s', $name, gettype($includedFile)));
+						throw new \PHPStan\Command\InceptionNotSuccessfulException();
+					}
+					$includedFilePath = sprintf('%s/%s', $extensionConfig['install_path'], $includedFile);
+					if (!file_exists($includedFilePath) || !is_readable($includedFilePath)) {
+						$errorOutput->writeln(sprintf('Config file %s does not exists or isn\'t readable', $includedFilePath));
+						throw new \PHPStan\Command\InceptionNotSuccessfulException();
+					}
+					$additionalConfigFiles[] = $includedFilePath;
+				}
+			}
+		}
+
 		if ($projectConfigFile !== null) {
 			$additionalConfigFiles[] = $projectConfigFile;
 		}
@@ -141,8 +160,9 @@ class CommandHelper
 		$paths = array_map(static function (string $path) use ($fileHelper): string {
 			return $fileHelper->absolutizePath($path);
 		}, $paths);
-		$container = $containerFactory->create($tmpDir, $additionalConfigFiles, $paths);
-		$memoryLimitFile = $container->parameters['memoryLimitFile'];
+		$netteContainer = $containerFactory->create($tmpDir, $additionalConfigFiles, $paths);
+		TypeCombinator::$enableSubtractableTypes = $netteContainer->parameters['featureToggles']['subtractableTypes'];
+		$memoryLimitFile = $netteContainer->parameters['memoryLimitFile'];
 		if (file_exists($memoryLimitFile)) {
 			$memoryLimitFileContents = file_get_contents($memoryLimitFile);
 			if ($memoryLimitFileContents === false) {
@@ -157,7 +177,7 @@ class CommandHelper
 		}
 
 		self::setUpSignalHandler($consoleStyle, $memoryLimitFile);
-		if (!isset($container->parameters['customRulesetUsed'])) {
+		if (!isset($netteContainer->parameters['customRulesetUsed'])) {
 			$errorOutput->writeln('');
 			$errorOutput->writeln('<comment>No rules detected</comment>');
 			$errorOutput->writeln('');
@@ -169,35 +189,36 @@ class CommandHelper
 			$errorOutput->writeln('  * in this case, don\'t forget to define parameter <options=bold>customRulesetUsed</> in your config file.');
 			$errorOutput->writeln('');
 			throw new \PHPStan\Command\InceptionNotSuccessfulException();
-		} elseif ((bool) $container->parameters['customRulesetUsed']) {
+		} elseif ((bool) $netteContainer->parameters['customRulesetUsed']) {
 			$defaultLevelUsed = false;
 		}
 
-		foreach ($container->parameters['autoload_files'] as $parameterAutoloadFile) {
-			(static function (string $file): void {
+		$container = $netteContainer->getByType(Container::class);
+		foreach ($netteContainer->parameters['autoload_files'] as $parameterAutoloadFile) {
+			(static function (string $file) use ($container): void {
 				require_once $file;
 			})($fileHelper->normalizePath($parameterAutoloadFile));
 		}
 
-		if (count($container->parameters['autoload_directories']) > 0) {
+		if (count($netteContainer->parameters['autoload_directories']) > 0) {
 			$robotLoader = new \Nette\Loaders\RobotLoader();
 			$robotLoader->acceptFiles = array_map(static function (string $extension): string {
 				return sprintf('*.%s', $extension);
-			}, $container->parameters['fileExtensions']);
+			}, $netteContainer->parameters['fileExtensions']);
 
 			$robotLoader->setTempDirectory($tmpDir);
-			foreach ($container->parameters['autoload_directories'] as $directory) {
+			foreach ($netteContainer->parameters['autoload_directories'] as $directory) {
 				$robotLoader->addDirectory($fileHelper->normalizePath($directory));
 			}
 
-			foreach ($container->parameters['excludes_analyse'] as $directory) {
+			foreach ($netteContainer->parameters['excludes_analyse'] as $directory) {
 				$robotLoader->excludeDirectory($fileHelper->normalizePath($directory));
 			}
 
 			$robotLoader->register();
 		}
 
-		$bootstrapFile = $container->parameters['bootstrap'];
+		$bootstrapFile = $netteContainer->parameters['bootstrap'];
 		if ($bootstrapFile !== null) {
 			$bootstrapFile = $fileHelper->normalizePath($bootstrapFile);
 			if (!is_file($bootstrapFile)) {
@@ -205,7 +226,7 @@ class CommandHelper
 				throw new \PHPStan\Command\InceptionNotSuccessfulException();
 			}
 			try {
-				(static function (string $file): void {
+				(static function (string $file) use ($container): void {
 					require_once $file;
 				})($bootstrapFile);
 			} catch (\Throwable $e) {
@@ -215,7 +236,7 @@ class CommandHelper
 		}
 
 		/** @var FileFinder $fileFinder */
-		$fileFinder = $container->getByType(FileFinder::class);
+		$fileFinder = $netteContainer->getByType(FileFinder::class);
 
 		try {
 			$fileFinderResult = $fileFinder->findFiles($paths);
@@ -229,7 +250,7 @@ class CommandHelper
 			$fileFinderResult->isOnlyFiles(),
 			$consoleStyle,
 			$errorOutput,
-			$container,
+			$netteContainer,
 			$defaultLevelUsed,
 			$memoryLimitFile
 		);
@@ -241,6 +262,7 @@ class CommandHelper
 			return;
 		}
 
+		pcntl_async_signals(true);
 		pcntl_signal(SIGINT, static function () use ($consoleStyle, $memoryLimitFile): void {
 			if (file_exists($memoryLimitFile)) {
 				@unlink($memoryLimitFile);

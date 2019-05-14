@@ -46,10 +46,12 @@ use PhpParser\Node\Stmt\Unset_;
 use PhpParser\Node\Stmt\While_;
 use PHPStan\Broker\Broker;
 use PHPStan\File\FileHelper;
+use PHPStan\Node\ClosureReturnStatementsNode;
 use PHPStan\Node\ExecutionEndNode;
 use PHPStan\Node\InClassMethodNode;
 use PHPStan\Node\LiteralArrayItem;
 use PHPStan\Node\LiteralArrayNode;
+use PHPStan\Node\ReturnStatement;
 use PHPStan\Node\UnreachableStatementNode;
 use PHPStan\Parser\Parser;
 use PHPStan\PhpDoc\PhpDocBlock;
@@ -920,8 +922,13 @@ class NodeScopeResolver
 			}
 		} elseif ($stmt instanceof Static_) {
 			$hasYield = false;
+			$comment = CommentHelper::getDocComment($stmt);
 			foreach ($stmt->vars as $var) {
 				$scope = $this->processStmtNode($var, $scope, $nodeCallback)->getScope();
+				if ($comment === null || !is_string($var->var->name)) {
+					continue;
+				}
+				$scope = $this->processVarAnnotation($scope, $var->var->name, $comment, false);
 			}
 		} elseif ($stmt instanceof StaticVar) {
 			$hasYield = false;
@@ -1750,8 +1757,24 @@ class NodeScopeResolver
 
 		$closureScope = $scope->enterAnonymousFunction($expr);
 		$closureScope = $closureScope->processClosureScope($scope, null, $byRefUses);
+
+		$gatheredReturnStatements = [];
+		$closureStmtsCallback = static function (\PhpParser\Node $node, Scope $scope) use ($nodeCallback, &$gatheredReturnStatements): void {
+			$nodeCallback($node, $scope);
+			if (!$node instanceof Return_) {
+				return;
+			}
+
+			$gatheredReturnStatements[] = new ReturnStatement($scope, $node);
+		};
 		if (count($byRefUses) === 0) {
-			$this->processStmtNodes($expr, $expr->stmts, $closureScope, $nodeCallback);
+			$statementResult = $this->processStmtNodes($expr, $expr->stmts, $closureScope, $closureStmtsCallback);
+			$nodeCallback(new ClosureReturnStatementsNode(
+				$expr,
+				$gatheredReturnStatements,
+				$statementResult
+			), $scope);
+
 			return $scope;
 		}
 
@@ -1773,7 +1796,12 @@ class NodeScopeResolver
 			$count++;
 		} while ($count < self::LOOP_SCOPE_ITERATIONS);
 
-		$this->processStmtNodes($expr, $expr->stmts, $closureScope, $nodeCallback);
+		$statementResult = $this->processStmtNodes($expr, $expr->stmts, $closureScope, $closureStmtsCallback);
+		$nodeCallback(new ClosureReturnStatementsNode(
+			$expr,
+			$gatheredReturnStatements,
+			$statementResult
+		), $scope);
 
 		return $scope->processClosureScope($closureScope, null, $byRefUses);
 	}

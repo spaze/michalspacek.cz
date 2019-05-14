@@ -15,7 +15,7 @@ use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\Traits\TruthyBooleanTypeTrait;
 
-class ObjectType implements TypeWithClassName
+class ObjectType implements TypeWithClassName, SubtractableType
 {
 
 	use TruthyBooleanTypeTrait;
@@ -25,9 +25,16 @@ class ObjectType implements TypeWithClassName
 	/** @var string */
 	private $className;
 
-	public function __construct(string $className)
+	/** @var \PHPStan\Type\Type|null */
+	private $subtractedType;
+
+	public function __construct(
+		string $className,
+		?Type $subtractedType = null
+	)
 	{
 		$this->className = $className;
+		$this->subtractedType = $subtractedType;
 	}
 
 	public function getClassName(): string
@@ -108,15 +115,34 @@ class ObjectType implements TypeWithClassName
 		}
 
 		if ($type instanceof ObjectWithoutClassType) {
+			if ($type->getSubtractedType() !== null) {
+				$isSuperType = $type->getSubtractedType()->isSuperTypeOf($this);
+				if ($isSuperType->yes()) {
+					return TrinaryLogic::createNo();
+				}
+			}
 			return TrinaryLogic::createMaybe();
-		}
-
-		if ($type instanceof ClosureType) {
-			return $this->isInstanceOf(\Closure::class);
 		}
 
 		if (!$type instanceof TypeWithClassName) {
 			return TrinaryLogic::createNo();
+		}
+
+		if ($this->subtractedType !== null) {
+			$isSuperType = $this->subtractedType->isSuperTypeOf($type);
+			if ($isSuperType->yes()) {
+				return TrinaryLogic::createNo();
+			}
+		}
+
+		if (
+			$type instanceof SubtractableType
+			&& $type->getSubtractedType() !== null
+		) {
+			$isSuperType = $type->getSubtractedType()->isSuperTypeOf($this);
+			if ($isSuperType->yes()) {
+				return TrinaryLogic::createNo();
+			}
 		}
 
 		$thisClassName = $this->className;
@@ -160,7 +186,27 @@ class ObjectType implements TypeWithClassName
 
 	public function equals(Type $type): bool
 	{
-		return $type instanceof self && $this->className === $type->className;
+		if (!$type instanceof self) {
+			return false;
+		}
+
+		if ($this->className !== $type->className) {
+			return false;
+		}
+
+		if ($this->subtractedType === null) {
+			if ($type->subtractedType === null) {
+				return true;
+			}
+
+			return false;
+		}
+
+		if ($type->subtractedType === null) {
+			return false;
+		}
+
+		return $this->subtractedType->equals($type->subtractedType);
 	}
 
 	private function checkSubclassAcceptability(string $thatClass): TrinaryLogic
@@ -207,6 +253,14 @@ class ObjectType implements TypeWithClassName
 			},
 			function (): string {
 				return $this->className;
+			},
+			function () use ($level): string {
+				$description = $this->className;
+				if ($this->subtractedType !== null) {
+					$description .= sprintf('~%s', $this->subtractedType->describe($level));
+				}
+
+				return $description;
 			}
 		);
 	}
@@ -397,7 +451,7 @@ class ObjectType implements TypeWithClassName
 		}
 
 		if ($this->isInstanceOf(\IteratorAggregate::class)->yes()) {
-			return RecursionGuard::run($this, static function () use ($classReflection) {
+			return RecursionGuard::run($this, static function () use ($classReflection): Type {
 				return ParametersAcceptorSelector::selectSingle(
 					$classReflection->getNativeMethod('getIterator')->getVariants()
 				)->getReturnType()->getIterableKeyType();
@@ -428,7 +482,7 @@ class ObjectType implements TypeWithClassName
 		}
 
 		if ($this->isInstanceOf(\IteratorAggregate::class)->yes()) {
-			return RecursionGuard::run($this, static function () use ($classReflection) {
+			return RecursionGuard::run($this, static function () use ($classReflection): Type {
 				return ParametersAcceptorSelector::selectSingle(
 					$classReflection->getNativeMethod('getIterator')->getVariants()
 				)->getReturnType()->getIterableValueType();
@@ -495,7 +549,7 @@ class ObjectType implements TypeWithClassName
 
 		if ($this->isInstanceOf(\ArrayAccess::class)->yes()) {
 			$classReflection = $broker->getClass($this->className);
-			return RecursionGuard::run($this, static function () use ($classReflection) {
+			return RecursionGuard::run($this, static function () use ($classReflection): Type {
 				return ParametersAcceptorSelector::selectSingle($classReflection->getNativeMethod('offsetGet')->getVariants())->getReturnType();
 			});
 		}
@@ -507,6 +561,38 @@ class ObjectType implements TypeWithClassName
 	{
 		if ($this->isOffsetAccessible()->no()) {
 			return new ErrorType();
+		}
+
+		$broker = Broker::getInstance();
+		if ($this->isInstanceOf(\ArrayAccess::class)->yes()) {
+			$classReflection = $broker->getClass($this->className);
+			$acceptedValueType = new NeverType();
+			$acceptedOffsetType = RecursionGuard::run($this, function () use ($classReflection, &$acceptedValueType): Type {
+				$parameters = ParametersAcceptorSelector::selectSingle($classReflection->getNativeMethod('offsetSet')->getVariants())->getParameters();
+				if (count($parameters) < 2) {
+					throw new \PHPStan\ShouldNotHappenException(sprintf(
+						'Method %s::%s() has less than 2 parameters.',
+						$this->className,
+						'offsetSet'
+					));
+				}
+
+				$offsetParameter = $parameters[0];
+				$acceptedValueType = $parameters[1]->getType();
+
+				return $offsetParameter->getType();
+			});
+
+			if ($offsetType === null) {
+				$offsetType = new NullType();
+			}
+
+			if (
+				(!$offsetType instanceof MixedType && !$acceptedOffsetType->isSuperTypeOf($offsetType)->yes())
+				|| (!$valueType instanceof MixedType && !$acceptedValueType->isSuperTypeOf($valueType)->yes())
+			) {
+				return new ErrorType();
+			}
 		}
 
 		// in the future we may return intersection of $this and OffsetAccessibleType()
@@ -581,7 +667,10 @@ class ObjectType implements TypeWithClassName
 	 */
 	public static function __set_state(array $properties): Type
 	{
-		return new self($properties['className']);
+		return new self(
+			$properties['className'],
+			$properties['subtractedType'] ?? null
+		);
 	}
 
 	public function isInstanceOf(string $className): TrinaryLogic
@@ -602,6 +691,30 @@ class ObjectType implements TypeWithClassName
 		}
 
 		return TrinaryLogic::createNo();
+	}
+
+	public function subtract(Type $type): Type
+	{
+		if ($this->subtractedType !== null) {
+			$type = TypeCombinator::union($this->subtractedType, $type);
+		}
+
+		return new self($this->className, $type);
+	}
+
+	public function getTypeWithoutSubtractedType(): Type
+	{
+		return new self($this->className);
+	}
+
+	public function changeSubtractedType(?Type $subtractedType): Type
+	{
+		return new self($this->className, $subtractedType);
+	}
+
+	public function getSubtractedType(): ?Type
+	{
+		return $this->subtractedType;
 	}
 
 }
