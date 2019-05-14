@@ -9,6 +9,7 @@ use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Vat;
 use Nette\Application\Application;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Caching\IStorage;
 use Nette\Database\Row;
@@ -228,6 +229,7 @@ class Texy extends NetxtenTexy
 	 * @param Modifier $modifier
 	 * @param Link|null $link
 	 * @return HtmlElement|string|FALSE
+	 * @throws InvalidLinkException
 	 */
 	function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link)
 	{
@@ -250,15 +252,12 @@ class Texy extends NetxtenTexy
 
 		// "title":[blog:post#fragment]
 		if (strncmp($link->URL, 'blog:', 5) === 0) {
-			$args = explode('#', substr($link->URL, 5));
-			$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
+			$link->URL = $this->getBlogLinks(substr($link->URL, 5), $this->translator->getDefaultLocale());
+		}
 
-			$params = [];
-			foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
-				$params[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
-			}
-			$this->localeLinkGenerator->setDefaultParams($params, current($params));
-			$link->URL = $this->localeLinkGenerator->allLinks("Www:Post:default{$fragment}", $params)[$this->translator->getDefaultLocale()];
+		// "title":[blog-en_US:post#fragment]
+		if (preg_match('/^blog\-([a-z]{2}_[A-Z]{2}):(.*)\z/', $link->URL, $matches)) {
+			$link->URL = $this->getBlogLinks($matches[2], $matches[1]);
 		}
 
 		// "title":[inhouse-training:training]
@@ -280,6 +279,20 @@ class Texy extends NetxtenTexy
 		}
 
 		return $invocation->proceed();
+	}
+
+
+	private function getBlogLinks(string $url, string $locale): string
+	{
+		$args = explode('#', $url);
+		$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
+
+		$params = [];
+		foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
+			$params[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
+		}
+		$this->localeLinkGenerator->setDefaultParams($params, current($params));
+		return $this->localeLinkGenerator->allLinks("Www:Post:default{$fragment}", $params)[$locale];
 	}
 
 
