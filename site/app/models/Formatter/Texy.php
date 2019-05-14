@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Vat;
@@ -40,6 +42,12 @@ class Texy extends NetxtenTexy
 
 	/** @var Vat */
 	protected $vat;
+
+	/** @var LocaleLinkGenerator */
+	private $localeLinkGenerator;
+
+	/** @var LocaleUrls */
+	private $blogPostLocaleUrls;
 
 	/** @var Helpers */
 	protected $netxtenHelpers;
@@ -80,6 +88,8 @@ class Texy extends NetxtenTexy
 		Dates $trainingDates,
 		Vat $vat,
 		Locales $trainingLocales,
+		LocaleLinkGenerator $localeLinkGenerator,
+		LocaleUrls $localeUrls,
 		Helpers $netxtenHelpers
 	) {
 		$this->translator = $translator;
@@ -87,6 +97,8 @@ class Texy extends NetxtenTexy
 		$this->trainingDates = $trainingDates;
 		$this->vat = $vat;
 		$this->trainingLocales = $trainingLocales;
+		$this->localeLinkGenerator = $localeLinkGenerator;
+		$this->blogPostLocaleUrls = $localeUrls;
 		$this->netxtenHelpers = $netxtenHelpers;
 		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
 	}
@@ -240,7 +252,13 @@ class Texy extends NetxtenTexy
 		if (strncmp($link->URL, 'blog:', 5) === 0) {
 			$args = explode('#', substr($link->URL, 5));
 			$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
-			$link->URL = $presenter->link("//:Www:Post:default{$fragment}", [$args[0]]);
+
+			$params = [];
+			foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
+				$params[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
+			}
+			$this->localeLinkGenerator->setDefaultParams($params, current($params));
+			$link->URL = $this->localeLinkGenerator->allLinks("Www:Post:default{$fragment}", $params)[$this->translator->getDefaultLocale()];
 		}
 
 		// "title":[inhouse-training:training]
