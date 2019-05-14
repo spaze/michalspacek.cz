@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Training\Dates;
@@ -29,7 +30,7 @@ class Texy extends NetxtenTexy
 	/** @var string */
 	private const TRAINING_DATE = 'TRAINING_DATE';
 
-	/** @var ITranslator */
+	/** @var Translator|ITranslator */
 	protected $translator;
 
 	/** @var Application */
@@ -347,6 +348,7 @@ class Texy extends NetxtenTexy
 
 
 	/**
+	 * @noinspection PhpUnusedPrivateMethodInspection Used in self::replace()
 	 * @param string $name
 	 * @return string
 	 */
@@ -387,7 +389,7 @@ class Texy extends NetxtenTexy
 		if (isset($training->alternativeDurationPriceText)) {
 			$training->alternativeDurationPriceText = $this->translate($training->alternativeDurationPriceText, [
 				(string)$training->alternativeDurationPrice,
-				(string)$this->vat->addVat($training->alternativeDurationPrice),
+				(string)$this->vat->addVat((int)$training->alternativeDurationPrice),
 			]);
 		}
 		return $training;
