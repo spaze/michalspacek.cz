@@ -131,15 +131,19 @@ class Manager implements IAuthenticator
 		if (!$user) {
 			throw new AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		}
+		$userId = (int)$user->userId;
 		try {
-			if (!$this->passwords->verify($password, $this->passwordEncryption->decrypt((string)$user->password))) {
+			$hash = $this->passwordEncryption->decrypt((string)$user->password);
+			if (!$this->passwords->verify($password, $hash)) {
 				throw new AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
+			} elseif ($this->passwords->needsRehash($hash)) {
+				$this->updatePassword($userId, $password);
 			}
 		} catch (HaliteAlert $e) {
 			Debugger::log($e);
 			throw new AuthenticationException('Oops... Something went wrong.', self::FAILURE);
 		}
-		return (int)$user->userId;
+		return $userId;
 	}
 
 
@@ -155,9 +159,18 @@ class Manager implements IAuthenticator
 		/** @var Identity $identity */
 		$identity = $user->getIdentity();
 		$this->verifyPassword($identity->username, $password);
-		$encrypted = $this->passwordEncryption->encrypt($this->passwords->hash($newPassword));
-		$this->database->query('UPDATE users SET password = ? WHERE id_user = ?', $encrypted, $user->getId());
+		$this->updatePassword($user->getId(), $newPassword);
 		$this->clearPermanentLogin($user);
+	}
+
+
+	/**
+	 * @throws HaliteAlert
+	 */
+	private function updatePassword(int $userId, string $newPassword): void
+	{
+		$encrypted = $this->passwordEncryption->encrypt($this->passwords->hash($newPassword));
+		$this->database->query('UPDATE users SET password = ? WHERE id_user = ?', $encrypted, $userId);
 	}
 
 

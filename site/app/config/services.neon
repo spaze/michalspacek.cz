@@ -64,6 +64,7 @@ services:
 			- setDefaultDomain(%domain.default%)
 			- setRootDomain(%domain.root%)
 			- setFeaturePolicy(%featurePolicy%)
+	security.passwords: \Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
 	passwordEncryption: \Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
 	emailEncryption: \Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
 	sessionEncryption: \Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
