@@ -16,6 +16,7 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
+use Nette\Security\Passwords;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
@@ -42,6 +43,9 @@ class Manager implements IAuthenticator
 	/** @var Response */
 	protected $httpResponse;
 
+	/** @var Passwords */
+	private $passwords;
+
 	/** @var StaticKey */
 	protected $passwordEncryption;
 
@@ -62,6 +66,7 @@ class Manager implements IAuthenticator
 		Context $context,
 		IRequest $httpRequest,
 		Response $httpResponse,
+		Passwords $passwords,
 		StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator
 	)
@@ -69,6 +74,7 @@ class Manager implements IAuthenticator
 		$this->database = $context;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
+		$this->passwords = $passwords;
 		$this->passwordEncryption = $passwordEncryption;
 		$this->authCookiesPath = (new Url($linkGenerator->link('Admin:Sign:in')))->getPath();
 	}
@@ -126,7 +132,7 @@ class Manager implements IAuthenticator
 			throw new AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		}
 		try {
-			if (!$this->verifyHash($password, $this->passwordEncryption->decrypt((string)$user->password))) {
+			if (!$this->passwords->verify($password, $this->passwordEncryption->decrypt((string)$user->password))) {
 				throw new AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
 			}
 		} catch (HaliteAlert $e) {
@@ -134,18 +140,6 @@ class Manager implements IAuthenticator
 			throw new AuthenticationException('Oops... Something went wrong.', self::FAILURE);
 		}
 		return (int)$user->userId;
-	}
-
-
-	private function calculateHash(string $password): string
-	{
-		return password_hash($password, PASSWORD_DEFAULT);
-	}
-
-
-	private function verifyHash(string $password, string $hash): bool
-	{
-		return password_verify($password, $hash);
 	}
 
 
@@ -161,7 +155,7 @@ class Manager implements IAuthenticator
 		/** @var Identity $identity */
 		$identity = $user->getIdentity();
 		$this->verifyPassword($identity->username, $password);
-		$encrypted = $this->passwordEncryption->encrypt($this->calculateHash($newPassword));
+		$encrypted = $this->passwordEncryption->encrypt($this->passwords->hash($newPassword));
 		$this->database->query('UPDATE users SET password = ? WHERE id_user = ?', $encrypted, $user->getId());
 		$this->clearPermanentLogin($user);
 	}
