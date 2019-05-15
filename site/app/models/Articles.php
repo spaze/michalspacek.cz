@@ -67,6 +67,7 @@ class Articles
 		$query = 'SELECT
 				a.id_article AS articleId,
 				a.title,
+       			NULL as slug,
 				a.href,
 				a.date AS published,
 				a.excerpt,
@@ -82,6 +83,7 @@ class Articles
 					bp.id_blog_post,
 					bp.title,
 					bp.slug,
+					null,
 					bp.published,
 					bp.lead,
 					bp.text,
@@ -117,7 +119,7 @@ class Articles
 		$query = 'SELECT
 					bp.id_blog_post AS articleId,
 					bp.title,
-					bp.slug AS href,
+					bp.slug,
 					bp.published,
 					bp.lead as excerpt,
 					bp.text,
@@ -261,7 +263,7 @@ class Articles
 			if ($article->isBlogPost) {
 				$article->edits = $this->blogPost->getEdits($article->articleId);
 				$article->updated = ($article->edits ? current($article->edits)->editedAt : null);
-				$article->href = $this->linkGenerator->link('Www:Post:', [$article->href]);
+				$article->href = $this->linkGenerator->link('Www:Post:', [$article->slug]);
 				$article->sourceName = null;
 				$article->sourceHref = null;
 				$this->texyFormatter->setTopHeading(2);

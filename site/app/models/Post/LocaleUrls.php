@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Post;
 
 use Nette\Database\Context;
+use Nette\Utils\Json;
 
 class LocaleUrls
 {
@@ -31,7 +32,8 @@ class LocaleUrls
        			l.locale,
 				bp.slug,
 				bp.published,
-				bp.preview_key AS previewKey
+				bp.preview_key AS previewKey,
+				bp.slug_tags AS slugTags
 			FROM
 				blog_posts bp
 			LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
@@ -44,6 +46,7 @@ class LocaleUrls
 			$post->slug = $row->slug;
 			$post->published = $row->published;
 			$post->previewKey = $row->previewKey;
+			$post->slugTags = ($row->slugTags !== null ? Json::decode($row->slugTags) : []);
 			$posts[] = $post;
 		}
 		return $posts;
