@@ -1,17 +1,24 @@
 {
 	"name": "phpstan/phpstan-nette",
 	"description": "Nette Framework class reflection extension for PHPStan",
+	"type": "phpstan-extension",
 	"license": ["MIT"],
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"extra": {
 		"branch-alias": {
 			"dev-master": "0.11-dev"
+		},
+		"phpstan": {
+			"includes": [
+				"extension.neon",
+				"rules.neon"
+			]
 		}
 	},
 	"require": {
 		"php": "~7.1",
-		"phpstan/phpstan": "^0.11",
+		"phpstan/phpstan": "^0.11.7",
 		"nikic/php-parser": "^4.0"
 	},
 	"require-dev": {

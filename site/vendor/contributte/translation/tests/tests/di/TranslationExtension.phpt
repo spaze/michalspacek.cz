@@ -30,6 +30,28 @@ class TranslationExtension extends Contributte\Translation\Tests\AbstractTest
 	}
 
 
+	public function test02(): void
+	{
+		try {
+			$loader = new Nette\DI\ContainerLoader($this->container->getParameters()['tempDir'], true);
+
+			$loader->load(function (Nette\DI\Compiler $compiler): void {
+				$compiler->addExtension('translation', new Contributte\Translation\DI\TranslationExtension);
+				$compiler->addExtension('translationProvider', new class extends Nette\DI\CompilerExtension implements Contributte\Translation\DI\TranslationProviderInterface {
+					public function getTranslationResources(): array
+					{
+						return [__DIR__ . '/__translation_provider_dir__'];
+					}
+				});
+				$compiler->addConfig(['parameters' => $this->container->getParameters(), 'translation' => ['locales' => ['default' => 'en'], 'dirs' => [__DIR__ . '__config_dir__']]]);
+			});
+
+		} catch (\UnexpectedValueException $e) {
+			Tester\Assert::true(Nette\Utils\Strings::contains($e->getMessage(), __DIR__ . '/__translation_provider_dir__'));// translation provider dirs first !!
+		}
+	}
+
+
 	/**
 	 * @internal
 	 *

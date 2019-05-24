@@ -162,6 +162,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
 
     public static $classMap = array (
         'Contributte\\Translation\\DI\\TranslationExtension' => __DIR__ . '/..' . '/contributte/translation/src/di/TranslationExtension.php',
+        'Contributte\\Translation\\DI\\TranslationProviderInterface' => __DIR__ . '/..' . '/contributte/translation/src/di/TranslationProviderInterface.php',
         'Contributte\\Translation\\Exception' => __DIR__ . '/..' . '/contributte/translation/src/exceptions.php',
         'Contributte\\Translation\\FallbackResolver' => __DIR__ . '/..' . '/contributte/translation/src/FallbackResolver.php',
         'Contributte\\Translation\\FileNotFoundException' => __DIR__ . '/..' . '/contributte/translation/src/exceptions.php',
@@ -183,6 +184,8 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Contributte\\Translation\\PrefixedTranslator' => __DIR__ . '/..' . '/contributte/translation/src/PrefixedTranslator.php',
         'Contributte\\Translation\\Tracy\\Panel' => __DIR__ . '/..' . '/contributte/translation/src/tracy/Panel.php',
         'Contributte\\Translation\\Translator' => __DIR__ . '/..' . '/contributte/translation/src/Translator.php',
+        'Contributte\\Translation\\Wrappers\\Message' => __DIR__ . '/..' . '/contributte/translation/src/wrappers/Message.php',
+        'Contributte\\Translation\\Wrappers\\NotTranslate' => __DIR__ . '/..' . '/contributte/translation/src/wrappers/NotTranslate.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Compiler' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Compiler.php',
         'Latte\\Engine' => __DIR__ . '/..' . '/latte/latte/src/Latte/Engine.php',

@@ -34,7 +34,7 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 			'debug' => Expect::bool($builder->parameters['debugMode']),
 			'debugger' => Expect::bool(interface_exists(Tracy\IBarPanel::class)),
 			'locales' => Expect::structure([
-				'whitelist' => Expect::array()->default(null),
+				'whitelist' => Expect::array()->default(null), // @todo unique check?
 				'default' => Expect::string(null),
 				'fallback' => Expect::array()->default(['en_US']),
 			]),
@@ -56,6 +56,9 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 	}
 
 
+	/**
+	 * @throws Contributte\Translation\InvalidArgumentException|\ReflectionException
+	 */
 	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
@@ -170,6 +173,11 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 			$latteFactory->getResultDefinition()
 				->addSetup('?->onCompile[] = function (Latte\\Engine $engine): void { ?::install($engine->getCompiler()); }', ['@self', new Nette\PhpGenerator\PhpLiteral(Contributte\Translation\Latte\Macros::class)])
 				->addSetup('addProvider', ['translator', $builder->getDefinition($this->prefix('translator'))]);
+		}
+
+		/** @var Contributte\Translation\DI\TranslationProviderInterface $v1 */
+		foreach ($this->compiler->getExtensions(TranslationProviderInterface::class) as $v1) {
+			$this->config->dirs = array_merge($v1->getTranslationResources(), $this->config->dirs);
 		}
 
 		if (count($this->config->dirs) > 0) {

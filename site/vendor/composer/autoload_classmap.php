@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Contributte\\Translation\\DI\\TranslationExtension' => $vendorDir . '/contributte/translation/src/di/TranslationExtension.php',
+    'Contributte\\Translation\\DI\\TranslationProviderInterface' => $vendorDir . '/contributte/translation/src/di/TranslationProviderInterface.php',
     'Contributte\\Translation\\Exception' => $vendorDir . '/contributte/translation/src/exceptions.php',
     'Contributte\\Translation\\FallbackResolver' => $vendorDir . '/contributte/translation/src/FallbackResolver.php',
     'Contributte\\Translation\\FileNotFoundException' => $vendorDir . '/contributte/translation/src/exceptions.php',
@@ -28,6 +29,8 @@ return array(
     'Contributte\\Translation\\PrefixedTranslator' => $vendorDir . '/contributte/translation/src/PrefixedTranslator.php',
     'Contributte\\Translation\\Tracy\\Panel' => $vendorDir . '/contributte/translation/src/tracy/Panel.php',
     'Contributte\\Translation\\Translator' => $vendorDir . '/contributte/translation/src/Translator.php',
+    'Contributte\\Translation\\Wrappers\\Message' => $vendorDir . '/contributte/translation/src/wrappers/Message.php',
+    'Contributte\\Translation\\Wrappers\\NotTranslate' => $vendorDir . '/contributte/translation/src/wrappers/NotTranslate.php',
     'Latte\\CompileException' => $vendorDir . '/latte/latte/src/Latte/exceptions.php',
     'Latte\\Compiler' => $vendorDir . '/latte/latte/src/Latte/Compiler/Compiler.php',
     'Latte\\Engine' => $vendorDir . '/latte/latte/src/Latte/Engine.php',

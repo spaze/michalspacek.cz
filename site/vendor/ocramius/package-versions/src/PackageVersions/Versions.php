@@ -14,7 +14,7 @@ final class Versions
 {
     public const ROOT_PACKAGE_NAME = '__root__';
     public const VERSIONS          = array (
-  'contributte/translation' => 'v0.2.1@700349ef0401bc4e78aee2ddd8c5223bdebebcc4',
+  'contributte/translation' => 'v0.3.0@b097ddf2e30662617df2a41152aa130096f4a785',
   'latte/latte' => 'v2.5.1@cf714b94f0759198a3c71361d46d5166cabaaf52',
   'nette/application' => 'v3.0.0@4f3b250709226c70c8ca0a35f796877bcb72b10d',
   'nette/bootstrap' => 'v3.0.0@e1075af05c211915e03e0c86542f3ba5433df4a3',
@@ -57,15 +57,15 @@ final class Versions
   'nikic/php-parser' => 'v4.2.1@5221f49a608808c1e4d436df32884cbc1b821ac0',
   'ocramius/package-versions' => '1.4.0@a4d4b60d0e60da2487bd21a2c6ac089f85570dbb',
   'phpstan/phpdoc-parser' => '0.3.3@472d3161d289f652713a5e353532fa4592663a57',
-  'phpstan/phpstan' => '0.11.6@7af8b9d02b3ab36444dbf4e1b9ca1c1bd5044d81',
-  'phpstan/phpstan-nette' => '0.11@998e9384ee615cec39eadb0ebae385f7d3d4dad6',
+  'phpstan/phpstan' => '0.11.7@32d87d746c70785f78d239855782d27cde0eb6ee',
+  'phpstan/phpstan-nette' => '0.11.1@356ee9e80b07d46ac24f1bdbb8bc469e14bb9965',
   'psr/log' => '1.1.0@6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd',
-  'roave/security-advisories' => 'dev-master@c91d74867cc32f6bbc788b33d23372703d61f2c2',
+  'roave/security-advisories' => 'dev-master@4c0ba8a35f1f12dd9236452e9fae4346b0bf2a56',
   'symfony/console' => 'v4.2.8@e2840bb38bddad7a0feaf85931e38fdcffdb2f81',
   'symfony/finder' => 'v4.2.8@e45135658bd6c14b61850bf131c4f09a55133f69',
-  'paragonie/random_compat' => '9.99.99@595d6343bd50afbe3ac1e621038997780cfc64bd',
-  'paragonie/sodium_compat' => '*@595d6343bd50afbe3ac1e621038997780cfc64bd',
-  '__root__' => 'dev-master@595d6343bd50afbe3ac1e621038997780cfc64bd',
+  'paragonie/random_compat' => '9.99.99@86faae7857fca3021a912541adc6997ffaecd6d5',
+  'paragonie/sodium_compat' => '*@86faae7857fca3021a912541adc6997ffaecd6d5',
+  '__root__' => 'dev-master@86faae7857fca3021a912541adc6997ffaecd6d5',
 );
 
     private function __construct()
