@@ -318,7 +318,7 @@ class Dates
 				$date = array(
 					'dateId'        => $row->dateId,
 					'tentative'     => ($row->status == Dates::STATUS_TENTATIVE),
-					'lastFreeSeats' => $this->lastFreeSeats($row->start),
+					'lastFreeSeats' => $this->lastFreeSeats($row),
 					'start'         => $row->start,
 					'end'           => $row->end,
 					'label'         => ($row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null),
@@ -444,17 +444,17 @@ class Dates
 		foreach ($result as $row) {
 			$row->label = ($row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null);
 			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
-			$row->lastFreeSeats = $this->lastFreeSeats($row->start);
+			$row->lastFreeSeats = $this->lastFreeSeats($row);
 			$dates[$row->dateId] = $row;
 		}
 		return $dates;
 	}
 
 
-	private function lastFreeSeats(DateTime $start): bool
+	private function lastFreeSeats(Row $date): bool
 	{
 		$now = new DateTime();
-		return ($start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $start > $now);
+		return ($date->start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $date->start > $now && $date->status !== Dates::STATUS_TENTATIVE);
 	}
 
 
