@@ -37,6 +37,7 @@
 	},
 	"replace": {
 		"paragonie/random_compat": "9.99.99",
-		"paragonie/sodium_compat": "*"
+		"paragonie/sodium_compat": "*",
+		"symfony/polyfill-php73": "*"
 	}
 }

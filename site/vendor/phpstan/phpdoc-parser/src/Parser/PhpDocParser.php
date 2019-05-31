@@ -3,6 +3,7 @@
 namespace PHPStan\PhpDocParser\Parser;
 
 use PHPStan\PhpDocParser\Ast;
+use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use PHPStan\PhpDocParser\Lexer\Lexer;
 
 class PhpDocParser
@@ -60,8 +61,35 @@ class PhpDocParser
 
 	private function parseText(TokenIterator $tokens): Ast\PhpDoc\PhpDocTextNode
 	{
-		$text = $tokens->joinUntil(Lexer::TOKEN_PHPDOC_EOL, Lexer::TOKEN_CLOSE_PHPDOC, Lexer::TOKEN_END);
-		$text = rtrim($text, " \t"); // the trimmed characters MUST match Lexer::TOKEN_HORIZONTAL_WS
+		$text = '';
+		while (true) {
+			// If we received a Lexer::TOKEN_PHPDOC_EOL, exit early to prevent
+			// them from being processed.
+			if ($tokens->currentTokenType() === Lexer::TOKEN_PHPDOC_EOL) {
+				break;
+			}
+			$text .= $tokens->joinUntil(Lexer::TOKEN_PHPDOC_EOL, Lexer::TOKEN_CLOSE_PHPDOC, Lexer::TOKEN_END);
+			$text = rtrim($text, " \t");
+
+			// If we joined until TOKEN_PHPDOC_EOL, peak at the next tokens to see
+			// if we have a multiline string to join.
+			if ($tokens->currentTokenType() !== Lexer::TOKEN_PHPDOC_EOL) {
+				break;
+			}
+
+			// Peek at the next token to determine if it is more text that needs
+			// to be combined.
+			$tokens->pushSavePoint();
+			$tokens->next();
+			if ($tokens->currentTokenType() !== Lexer::TOKEN_IDENTIFIER) {
+				$tokens->rollback();
+				break;
+			}
+
+			// There's more text on a new line, ensure spacing.
+			$text .= "\n";
+		}
+		$text = trim($text, " \t");
 
 		return new Ast\PhpDoc\PhpDocTextNode($text);
 	}
@@ -111,6 +139,10 @@ class PhpDocParser
 
 				case '@method':
 					$tagValue = $this->parseMethodTagValue($tokens);
+					break;
+
+				case '@template':
+					$tagValue = $this->parseTemplateTagValue($tokens);
 					break;
 
 				default:
@@ -243,6 +275,22 @@ class PhpDocParser
 		return new Ast\PhpDoc\MethodTagValueParameterNode($parameterType, $isReference, $isVariadic, $parameterName, $defaultValue);
 	}
 
+	private function parseTemplateTagValue(TokenIterator $tokens): Ast\PhpDoc\TemplateTagValueNode
+	{
+		$name = $tokens->currentTokenValue();
+		$tokens->consumeTokenType(Lexer::TOKEN_IDENTIFIER);
+
+		if ($tokens->tryConsumeTokenValue('of')) {
+			$bound = $this->typeParser->parse($tokens);
+
+		} else {
+			$bound = new IdentifierTypeNode('mixed');
+		}
+
+		$description = $this->parseOptionalDescription($tokens);
+
+		return new Ast\PhpDoc\TemplateTagValueNode($name, $bound, $description);
+	}
 
 	private function parseOptionalVariableName(TokenIterator $tokens): string
 	{
