@@ -2,7 +2,10 @@ services:
 	# www module
 	- \App\WwwModule\Presenters\ArticlesPresenter
 	- \App\WwwModule\Presenters\CompanyTrainingsPresenter
-	- \App\WwwModule\Presenters\ContactPresenter
+	contactPresenter:
+		factory: \App\WwwModule\Presenters\ContactPresenter
+		setup:
+		- setLocationRoot(%domain.locationRoot%)
 	- \App\WwwModule\Presenters\ErrorPresenter
 	- \App\WwwModule\Presenters\ErrorGenericPresenter
 	- \App\WwwModule\Presenters\ExportsPresenter
