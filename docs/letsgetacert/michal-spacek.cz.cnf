@@ -3,4 +3,4 @@ PRIVKEY=/etc/nginx/certs/$CN.privkey.pem
 CERT_DIR=/etc/nginx/certs
 SUBJECT="/C=CZ/ST=Prague/L=Prague/O=michal-spacek.cz/emailAddress=$SUBJECT_EMAIL/CN=$CN"
 WEBROOT_DIR=/srv/www/michalspacek.cz/site/public
-DOMAINS="www=michal-spacek.cz,www.michal-spacek.cz,michal-spacek.com,www.michal-spacek.com"
+DOMAINS="www=michal-spacek.cz,www.michal-spacek.cz;www.michalspacek.com=michal-spacek.com,www.michal-spacek.com"
