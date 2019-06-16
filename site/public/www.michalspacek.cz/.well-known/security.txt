@@ -1,8 +1,28 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
 Contact: https://www.michalspacek.cz/kontakt
-Contact: https://www.michalspacek.com/contact
 Contact: https://twitter.com/spazef0rze
 Contact: https://www.facebook.com/spaze
 Encryption: https://www.michalspacek.cz/key.asc
-Signature: https://www.michalspacek.cz/.well-known/security.txt.sig
+Canonical: https://www.michalspacek.cz/.well-known/security.txt
+Preferred-Languages: cs, en
 Rick: <img/src=//xss.sk>
 Rolling: <script/src=//xss.sk></script>
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl0FvcoACgkQtkvdbkZK
+tSlcmxAAo7lh0qYdXcBODv01ZVA4z40TBsgYT5rKwT9nTigWihA5vJ9rTTZwGax1
+hhbkZcmhKxITyHjQtzQ0+OrbS1AQFc2gKxeMzvJ8KTwNcgPZZyDuD+xUDKvT50E7
+57t0i1JDKTLvdBJgQavkizuQdUNmRTcv0mKCGrfrmiFJpXjctyuBCTZ4Y712OewQ
+6hVz/3upbMzCfR7o5+4tA9/T7LjpJjyj3UdmurZ5HKkOafkBEejzPrlpDLTbIU4Y
+95d6FxnsMF4Z4Ec/Ib1+wRRGTwjOh2lGV2wpk82uu6oD7Fc7EdwqW58mcHj3zG7H
+vxtfjZTCwaNZvu/ipv5xzHZ0KFcEutxaeMSjcDvzQdg+O9lyTPlw0mfLLnmNyFXU
+lZe8oMLdli6nLdsg03WA7aNi+lXrhG4K2NofDO/1qf6kFvZEkB56qm6bCoo5nU3T
+bSgBkLQjhCEDyZkV3ZoQLS6bf58A9U9DhTelPlFFNew9202J+UIUguPBoST9wTLa
+oPyPzDlQ6MsUUEISm4oi3Q5PGwzskedGDmngUR5xZC94WVqeUt5LbsH+pnU7tyg4
+QJ4s9+9Jp0kwgfYwaY8IOXDCSkJZz4r8dl1M3pkX8SGBrlUXo3etZhQtdiXtx/kv
+JblJ4BDGpwbuaG1fWgHa8gq/Qf3+DNUxOVEEIzcABNoM2eF2w58=
+=lFa4
+-----END PGP SIGNATURE-----
