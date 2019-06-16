@@ -21,7 +21,7 @@ parameters:
 		default: www
 		sharedStaticRoot: https://www.%domain.root%
 		imagesRoot: /i/images
-		locationRoot: /srv/www/michalspacek.cz/site/public/www
+		locationRoot: /srv/www/michalspacek.cz/site/public/www.michalspacek.cz
 	reporting:
 		contentSecurityPolicy: https://plz.report-uri.com/r/default/csp/enforce
 	vatRate: 0.21
