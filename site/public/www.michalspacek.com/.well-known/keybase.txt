@@ -1,0 +1,85 @@
+==================================================================
+https://keybase.io/spaze
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://www.michalspacek.com
+  * I am spaze (https://keybase.io/spaze) on keybase.
+  * I have a public key with fingerprint 4BD4 C403 AF2F 9FCC B151  FE61 B64B DD6E 464A B529
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "010174a59d4aced87d503619d17824eaf43f9e67db02360898c7e3cddf724855f8580a",
+      "fingerprint": "4bd4c403af2f9fccb151fe61b64bdd6e464ab529",
+      "host": "keybase.io",
+      "key_id": "b64bdd6e464ab529",
+      "kid": "010174a59d4aced87d503619d17824eaf43f9e67db02360898c7e3cddf724855f8580a",
+      "uid": "0d1e89702eefb648b4b71e7d3cc99700",
+      "username": "spaze"
+    },
+    "merkle_root": {
+      "ctime": 1560719110,
+      "hash_meta": "284926114a86d778a5587e637afc70e6498306772f39ec7af88947b749ea1649",
+      "seqno": 5581498
+    },
+    "revoke": {
+      "sig_ids": [
+        "fa91e0a50f15c79d8690d69d1457444584d02938f676936249303dec24b985780f"
+      ]
+    },
+    "service": {
+      "hostname": "www.michalspacek.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1560719116,
+  "expire_in": 157680000,
+  "prev": "b5ccf3627fab01832c9f28200813b461766d127db6234fee86d9049f11074346",
+  "seqno": 47,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+
+owGtU2tsFUUUvi1U5AIVH7QJCNo1EMFSdnZnZ3auBSRUILQiTVFUhJvZ3dl2aXv3
+cndpoS9AkJfhESBBXtryKFRAqlBQiQiUFLBUoZQCoaUgIk9pUB4mWOJshZgYf7p/
+JnvO953zzXfOLO3WweeP2p3aHBoxuqp/VO01zTfxiR1xhYJmG9OFQKGQzdoPlmMw
+xw1mW4YQEEQgAgypQgxIdWao2FBEGQFiAKxKkFETyiZhCBuaKMlIVImqYybrhmFi
+CaqKYqqKKlIhUTCtUCaLhCNWyOVloWZAHYoyNSWTmLquAQWYDAEN8YyBGESQaopE
+ODHLdjwGF6dRhyVZNo/xn2C7vP/A/8+6p/5dzgBMJViUGDN5T1WDGgYMG7KuEx4W
+PaDDIiGayzjaCdMCJhQnCrkskp3DghHbdj1nddfy8kBBIgYEAJHfjjpZwVzmUk6T
+VEgkBACkKjIwVqmiqJghGVNTxyJDkKiyiDCWTJkwnUdVlUCsYUgYBTzLRThsSsgW
+ApwIOJoriLA8O5t5zR0rk3vmCIEJgkkJYCLdX6SIJlB0TAwVEdFA3B2oYAihokJD
+lIismggjIiMJElmUDaZLUCOqglXRFCYWe+0ieZbeXt4b06Pr5+fnJ+VaehbN4Ubo
+LDtJt3O5tnDEdm3dzuGILNcNOwHPIXd6uJ3CtOCjYkHNChl8WTgjj0Ucyw5xxzjy
+3+ahRIFNC1sRFrQ8hIKRKvLP68PyvNVQdN3k0rFJNRGosqQTU1IlUVSBrEEEMEIG
+kPgCIEmGJmPccyJCYvKxYChD9I+bEHOdNNMbrJUZou7UCB+uf0G03NEX5ff1jkvo
+mNpwqMOOQZ8e+yL9IX38wGKivdfl83fu/jjS2tbdVxldfrfne03FPd36PnfzxpbW
+Kdu176bcKF42viY55sLepgfP7Mr4kP7UqaR54Lqc5ybUOT/XLTzU5ea5upq5MT0a
+4h+8NHl2xf7Svl+21G7Y4t4btbVyRK89s6u3lC35JHbn+1Eocdw4aUXFhiiwblP5
+/TZ15YnqhctW4aGlkxJO7Zk+9vrts8P3JWxtjK6O0FknzQvdf/9s7oWTjd0Gber6
+25HXv4cYuR8Ul1Weav64szlwyKozM57t9WdW9eCVm188PfFsU3jL1YXHipYnie9M
+3ThrpXYl7bV5W5ML5i84UqZl31x9wBUyBo+84ZxrjEvqtHta6Xr9hS4zq9csib21
+fPHOO2vnJgTuPt+n5t6BlvrS40Pur4kpeGPKwEXrSc35inNDRrYdSvuosvhK0eSl
+JYvO+AtWb9vVWlIHqgYceXVe7NqDswYln774w+V9S+rT6StNHT8/kX8nvu/udGd+
+XNcUResHhtXZV/dOGvN2xh+9Li4YPsb/ZOux1O0tv761qKpZ6D3DiL2VklIklz/V
+POc4sWceve9ejDpp7u2XJY9OxF+vg0H/4YOFySuObl48KcNRtje8+WHajzPWs21V
+7u2d3wbiL99KrXfnp6RXWdb4UeVxLeTpb4bdfthYMPzU4Xis++Zc339pNr3hjCs8
+379HXpi8O2BpWm2Dr3Xj6baMvrVJLw/9ZXRrxaWSTWdyr5V1/soO/AU=
+=6ZF9
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/spaze
+
+==================================================================
