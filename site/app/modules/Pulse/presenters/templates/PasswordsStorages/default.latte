@@ -70,7 +70,7 @@
 					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>
 					<p>Disclosures:</p>
 					<ul n:inner-foreach="$algo->disclosures as $disclosure">
-						<li><small title="{$disclosure->published|date:'Y-m-d H:i'}">{$disclosure->published|date:'Y-m-d'}</small> <a href="{$disclosure->url}" n:attr="rel => $noFollow">{$disclosure->type}</a>{if $disclosure->archive} <sup><a href="{$disclosure->archive}" title="archived">arch</a></sup>{/if}{if $disclosure->note}<small> ({$disclosure->note})</small>{/if}</li>
+						<li><small title="{$disclosure->published|date:'Y-m-d H:i'}">{$disclosure->published|date:'Y-m-d'}</small> <a href="{$disclosure->url}" n:attr="rel => $noFollow">{$disclosure->type}</a>{if $disclosure->archive} <sup><a href="{$disclosure->archive}" title="archived">arch</a></sup>{/if}{if $disclosure->note}<small> ({$disclosure->note|format})</small>{/if}</li>
 					</ul>
 					</div>
 				{/if}
