@@ -39,7 +39,11 @@ class Route extends NetteRoute
 	public function match(IRequest $httpRequest): ?array
 	{
 		$url = $httpRequest->getUrl();
-		return (!$this->blogPostLoader->exists(trim($url->getPath(), '/'), $url->getQueryParameter('preview')) ? null : parent::match($httpRequest));
+		$previewKey = $url->getQueryParameter('preview');
+		if (is_array($previewKey)) {
+			return null;
+		}
+		return (!$this->blogPostLoader->exists(trim($url->getPath(), '/'), $previewKey) ? null : parent::match($httpRequest));
 	}
 
 }
