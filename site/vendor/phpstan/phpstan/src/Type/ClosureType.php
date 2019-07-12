@@ -5,6 +5,7 @@ namespace PHPStan\Type;
 use PHPStan\Reflection\ClassMemberAccessAnswerer;
 use PHPStan\Reflection\ConstantReflection;
 use PHPStan\Reflection\MethodReflection;
+use PHPStan\Reflection\Native\NativeParameterReflection;
 use PHPStan\Reflection\ParameterReflection;
 use PHPStan\Reflection\ParametersAcceptor;
 use PHPStan\Reflection\PropertyReflection;
@@ -12,9 +13,12 @@ use PHPStan\TrinaryLogic;
 use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantBooleanType;
 use PHPStan\Type\Constant\ConstantIntegerType;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 
 class ClosureType implements TypeWithClassName, ParametersAcceptor
 {
+
+	use NonGenericTypeTrait;
 
 	/** @var ObjectType */
 	private $objectType;
@@ -73,15 +77,21 @@ class ClosureType implements TypeWithClassName, ParametersAcceptor
 			return $this->objectType->accepts($type, $strictTypes);
 		}
 
-		return $this->isSuperTypeOf($type);
+		return $this->isSuperTypeOfInternal($type, true);
 	}
 
 	public function isSuperTypeOf(Type $type): TrinaryLogic
 	{
+		return $this->isSuperTypeOfInternal($type, false);
+	}
+
+	private function isSuperTypeOfInternal(Type $type, bool $treatMixedAsAny): TrinaryLogic
+	{
 		if ($type instanceof self) {
 			return CallableTypeHelper::isParametersAcceptorSuperTypeOf(
 				$this,
-				$type
+				$type,
+				$treatMixedAsAny
 			);
 		}
 
@@ -269,6 +279,28 @@ class ClosureType implements TypeWithClassName, ParametersAcceptor
 	public function getReturnType(): Type
 	{
 		return $this->returnType;
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		return new static(
+			array_map(static function (NativeParameterReflection $param) use ($cb): NativeParameterReflection {
+				return new NativeParameterReflection(
+					$param->getName(),
+					$param->isOptional(),
+					$cb($param->getType()),
+					$param->passedByReference(),
+					$param->isVariadic()
+				);
+			}, $this->getParameters()),
+			$cb($this->getReturnType()),
+			$this->isVariadic()
+		);
+	}
+
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createNo();
 	}
 
 	/**

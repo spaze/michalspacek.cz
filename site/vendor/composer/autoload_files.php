@@ -11,5 +11,6 @@ return array(
     '320cde22f66dd4f5d3fd621d3e88b98f' => $vendorDir . '/symfony/polyfill-ctype/bootstrap.php',
     'e7a6fd2e7a869bb207158e9416bdd9b0' => $vendorDir . '/nette/application/src/compatibility.php',
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
+    'afdda9f94b76f77a7518e02eee753cc9' => $vendorDir . '/nette/mail/src/compatibility.php',
     '5d1dcebe069db2f62f5a447526290867' => $vendorDir . '/texy/texy/src/texy.php',
 );

@@ -13,12 +13,14 @@ use PHPStan\Reflection\TrivialParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantStringType;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\TruthyBooleanTypeTrait;
 
 class ObjectType implements TypeWithClassName, SubtractableType
 {
 
 	use TruthyBooleanTypeTrait;
+	use NonGenericTypeTrait;
 
 	private const EXTRA_OFFSET_CLASSES = ['SimpleXMLElement', 'DOMNodeList'];
 
@@ -87,18 +89,6 @@ class ObjectType implements TypeWithClassName, SubtractableType
 
 		if ($type instanceof ClosureType) {
 			return $this->isInstanceOf(\Closure::class);
-		}
-
-		if (
-			$this->isInstanceOf('SimpleXMLElement')->yes()
-			&& $type->isSuperTypeOf($this)->no()
-		) {
-			return (new UnionType([
-				new IntegerType(),
-				new FloatType(),
-				new StringType(),
-				new BooleanType(),
-			]))->accepts($type, $strictTypes);
 		}
 
 		if (!$type instanceof TypeWithClassName) {
@@ -496,6 +486,11 @@ class ObjectType implements TypeWithClassName, SubtractableType
 		return new ErrorType();
 	}
 
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createNo();
+	}
+
 	private function isExtraOffsetAccessibleClass(): TrinaryLogic
 	{
 		$broker = Broker::getInstance();
@@ -716,6 +711,20 @@ class ObjectType implements TypeWithClassName, SubtractableType
 	public function getSubtractedType(): ?Type
 	{
 		return $this->subtractedType;
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		$subtractedType = $this->subtractedType !== null ? $cb($this->subtractedType) : null;
+
+		if ($subtractedType !== $this->subtractedType) {
+			return new static(
+				$this->className,
+				$subtractedType
+			);
+		}
+
+		return $this;
 	}
 
 }

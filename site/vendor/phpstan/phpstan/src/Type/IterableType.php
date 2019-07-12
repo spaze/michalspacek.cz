@@ -6,6 +6,7 @@ use PHPStan\TrinaryLogic;
 use PHPStan\Type\Traits\MaybeCallableTypeTrait;
 use PHPStan\Type\Traits\MaybeObjectTypeTrait;
 use PHPStan\Type\Traits\MaybeOffsetAccessibleTypeTrait;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\UndecidedBooleanTypeTrait;
 
 class IterableType implements StaticResolvableType, CompoundType
@@ -15,6 +16,7 @@ class IterableType implements StaticResolvableType, CompoundType
 	use MaybeObjectTypeTrait;
 	use MaybeOffsetAccessibleTypeTrait;
 	use UndecidedBooleanTypeTrait;
+	use NonGenericTypeTrait;
 
 	/** @var \PHPStan\Type\Type */
 	private $keyType;
@@ -49,13 +51,13 @@ class IterableType implements StaticResolvableType, CompoundType
 
 	public function accepts(Type $type, bool $strictTypes): TrinaryLogic
 	{
-		if ($type instanceof CompoundType) {
-			return CompoundTypeHelper::accepts($type, $this, $strictTypes);
-		}
-
 		if ($type->isIterable()->yes()) {
 			return $this->getIterableValueType()->accepts($type->getIterableValueType(), $strictTypes)
 				->and($this->getIterableKeyType()->accepts($type->getIterableKeyType(), $strictTypes));
+		}
+
+		if ($type instanceof CompoundType) {
+			return CompoundTypeHelper::accepts($type, $this, $strictTypes);
 		}
 
 		return TrinaryLogic::createNo();
@@ -91,6 +93,11 @@ class IterableType implements StaticResolvableType, CompoundType
 			$otherType->getIterableValueType()->isSuperTypeOf($this->itemType),
 			$otherType->getIterableKeyType()->isSuperTypeOf($this->keyType)
 		);
+	}
+
+	public function isAcceptedBy(Type $acceptingType, bool $strictTypes): TrinaryLogic
+	{
+		return $this->isSubTypeOf($acceptingType);
 	}
 
 	public function equals(Type $type): bool
@@ -183,6 +190,23 @@ class IterableType implements StaticResolvableType, CompoundType
 	public function getIterableValueType(): Type
 	{
 		return $this->getItemType();
+	}
+
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createMaybe();
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		$keyType = $cb($this->keyType);
+		$itemType = $cb($this->itemType);
+
+		if ($keyType !== $this->keyType || $itemType !== $this->itemType) {
+			return new static($keyType, $itemType);
+		}
+
+		return $this;
 	}
 
 	/**

@@ -46,4 +46,14 @@ trait JustNullableTypeTrait
 		return $type instanceof self;
 	}
 
+	public function traverse(callable $cb): Type
+	{
+		return $this;
+	}
+
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createNo();
+	}
+
 }

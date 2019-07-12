@@ -27,6 +27,8 @@ use PHPStan\Reflection\ClassMemberAccessAnswerer;
 use PHPStan\Reflection\ClassMemberReflection;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\ConstantReflection;
+use PHPStan\Reflection\Dummy\DummyConstructorReflection;
+use PHPStan\Reflection\ExtendedPropertyReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\Native\NativeParameterReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
@@ -136,7 +138,7 @@ class Scope implements ClassMemberAccessAnswerer
 	private $dynamicConstantNames;
 
 	/**
-	 * @param  \PHPStan\Analyser\ScopeFactory $scopeFactory
+	 * @param \PHPStan\Analyser\ScopeFactory $scopeFactory
 	 * @param \PHPStan\Broker\Broker $broker
 	 * @param \PhpParser\PrettyPrinter\Standard $printer
 	 * @param \PHPStan\Analyser\TypeSpecifier $typeSpecifier
@@ -912,11 +914,6 @@ class Scope implements ClassMemberAccessAnswerer
 							$leftType->getIterableKeyType(),
 							$rightType->getIterableKeyType(),
 						] as $keyType) {
-							if ($keyType instanceof BenevolentUnionType) {
-								$keyTypes[] = new MixedType();
-								continue;
-							}
-
 							$keyTypes[] = $keyType;
 						}
 						$keyType = TypeCombinator::union(...$keyTypes);
@@ -1050,23 +1047,26 @@ class Scope implements ClassMemberAccessAnswerer
 					$classReflection = $this->broker->getClass($resolvedClassName);
 					if ($classReflection->hasConstructor()) {
 						$constructorMethod = $classReflection->getConstructor();
-						$resolvedTypes = [];
-						$methodCall = new Expr\StaticCall(
-							$node->class,
-							new Node\Identifier($constructorMethod->getName()),
-							$node->args
-						);
-						foreach ($this->broker->getDynamicStaticMethodReturnTypeExtensionsForClass($classReflection->getName()) as $dynamicStaticMethodReturnTypeExtension) {
-							if (!$dynamicStaticMethodReturnTypeExtension->isStaticMethodSupported($constructorMethod)) {
-								continue;
-							}
+					} else {
+						$constructorMethod = new DummyConstructorReflection($classReflection);
+					}
 
-							$resolvedTypes[] = $dynamicStaticMethodReturnTypeExtension->getTypeFromStaticMethodCall($constructorMethod, $methodCall, $this);
+					$resolvedTypes = [];
+					$methodCall = new Expr\StaticCall(
+						$node->class,
+						new Node\Identifier($constructorMethod->getName()),
+						$node->args
+					);
+					foreach ($this->broker->getDynamicStaticMethodReturnTypeExtensionsForClass($classReflection->getName()) as $dynamicStaticMethodReturnTypeExtension) {
+						if (!$dynamicStaticMethodReturnTypeExtension->isStaticMethodSupported($constructorMethod)) {
+							continue;
 						}
 
-						if (count($resolvedTypes) > 0) {
-							return TypeCombinator::union(...$resolvedTypes);
-						}
+						$resolvedTypes[] = $dynamicStaticMethodReturnTypeExtension->getTypeFromStaticMethodCall($constructorMethod, $methodCall, $this);
+					}
+
+					if (count($resolvedTypes) > 0) {
+						return TypeCombinator::union(...$resolvedTypes);
 					}
 				}
 				if (in_array($lowercasedClassName, [
@@ -1525,7 +1525,16 @@ class Scope implements ClassMemberAccessAnswerer
 					continue;
 				}
 
-				$types[] = $propertyClassReflection->getProperty($propertyName, $this)->getType();
+				$property = $propertyClassReflection->getProperty($propertyName, $this);
+				if ($this->isInExpressionAssign($node)) {
+					if ($property instanceof ExtendedPropertyReflection) {
+						$types[] = $property->getWritableType();
+					} else {
+						$types[] = $property->getType();
+					}
+				} else {
+					$types[] = $property->getType();
+				}
 			}
 
 			if (count($types) > 0) {
@@ -1536,7 +1545,14 @@ class Scope implements ClassMemberAccessAnswerer
 				return new ErrorType();
 			}
 
-			return $propertyFetchedOnType->getProperty($node->name->name, $this)->getType();
+			$property = $propertyFetchedOnType->getProperty($node->name->name, $this);
+			if (
+				$this->isInExpressionAssign($node)
+				&& $property instanceof ExtendedPropertyReflection
+			) {
+				return $property->getWritableType();
+			}
+			return $property->getType();
 		}
 
 		if (
@@ -1562,7 +1578,16 @@ class Scope implements ClassMemberAccessAnswerer
 					continue;
 				}
 
-				$types[] = $propertyClassReflection->getProperty($propertyName, $this)->getType();
+				$property = $propertyClassReflection->getProperty($propertyName, $this);
+				if ($this->isInExpressionAssign($node)) {
+					if ($property instanceof ExtendedPropertyReflection) {
+						$types[] = $property->getWritableType();
+					} else {
+						$types[] = $property->getType();
+					}
+				} else {
+					$types[] = $propertyClassReflection->getProperty($propertyName, $this)->getType();
+				}
 			}
 
 			if (count($types) > 0) {
@@ -1573,7 +1598,14 @@ class Scope implements ClassMemberAccessAnswerer
 				return new ErrorType();
 			}
 
-			return $calleeType->getProperty($node->name->name, $this)->getType();
+			$property = $calleeType->getProperty($node->name->name, $this);
+			if (
+				$this->isInExpressionAssign($node)
+				&& $property instanceof ExtendedPropertyReflection
+			) {
+				return $property->getWritableType();
+			}
+			return $property->getType();
 		}
 
 		if ($node instanceof FuncCall) {
@@ -2022,19 +2054,43 @@ class Scope implements ClassMemberAccessAnswerer
 		return $this->inClosureBindScopeClass !== null;
 	}
 
+	/**
+	 * @param \PhpParser\Node\Expr\Closure $closure
+	 * @param \PHPStan\Reflection\ParameterReflection[]|null $callableParameters
+	 * @return \PHPStan\Analyser\Scope
+	 */
 	public function enterAnonymousFunction(
-		Expr\Closure $closure
+		Expr\Closure $closure,
+		?array $callableParameters = null
 	): self
 	{
 		$variableTypes = [];
-		foreach ($closure->params as $parameter) {
-			$isNullable = $this->isParameterValueNullable($parameter);
+		foreach ($closure->params as $i => $parameter) {
+			if ($parameter->type === null) {
+				if ($callableParameters === null) {
+					$parameterType = new MixedType();
+				} elseif (isset($callableParameters[$i])) {
+					$parameterType = $callableParameters[$i]->getType();
+				} elseif (count($callableParameters) > 0) {
+					$lastParameter = $callableParameters[count($callableParameters) - 1];
+					if ($lastParameter->isVariadic()) {
+						$parameterType = $lastParameter->getType();
+					} else {
+						$parameterType = new MixedType();
+					}
+				} else {
+					$parameterType = new MixedType();
+				}
+			} else {
+				$isNullable = $this->isParameterValueNullable($parameter);
+				$parameterType = $this->getFunctionType($parameter->type, $isNullable, $parameter->variadic);
+			}
 
 			if (!$parameter->var instanceof Variable || !is_string($parameter->var->name)) {
 				throw new \PHPStan\ShouldNotHappenException();
 			}
 			$variableTypes[$parameter->var->name] = VariableTypeHolder::createYes(
-				$this->getFunctionType($parameter->type, $isNullable, $parameter->variadic)
+				$parameterType
 			);
 		}
 
@@ -2246,10 +2302,15 @@ class Scope implements ClassMemberAccessAnswerer
 		return array_key_exists($exprString, $this->currentlyAssignedExpressions);
 	}
 
-	public function assignVariable(string $variableName, Type $type): self
+	public function assignVariable(string $variableName, Type $type, ?TrinaryLogic $certainty = null): self
 	{
+		if ($certainty === null) {
+			$certainty = TrinaryLogic::createYes();
+		} elseif ($certainty->no()) {
+			throw new \PHPStan\ShouldNotHappenException();
+		}
 		$variableTypes = $this->getVariableTypes();
-		$variableTypes[$variableName] = new VariableTypeHolder($type, TrinaryLogic::createYes());
+		$variableTypes[$variableName] = new VariableTypeHolder($type, $certainty);
 
 		$variableString = $this->printer->prettyPrintExpr(new Variable($variableName));
 		$moreSpecificTypeHolders = $this->moreSpecificTypes;

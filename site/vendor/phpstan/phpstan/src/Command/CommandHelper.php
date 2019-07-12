@@ -3,6 +3,7 @@
 namespace PHPStan\Command;
 
 use Nette\DI\Config\Adapters\NeonAdapter;
+use Nette\DI\Config\Adapters\PhpAdapter;
 use Nette\DI\Helpers;
 use Nette\Schema\Context as SchemaContext;
 use Nette\Schema\Processor;
@@ -302,7 +303,8 @@ class CommandHelper
 			$errorOutput,
 			$netteContainer,
 			$defaultLevelUsed,
-			$memoryLimitFile
+			$memoryLimitFile,
+			$projectConfigFile
 		);
 	}
 
@@ -330,9 +332,10 @@ class CommandHelper
 	): void
 	{
 		$neonAdapter = new NeonAdapter();
+		$phpAdapter = new PhpAdapter();
 		$allConfigFiles = $configFiles;
 		foreach ($configFiles as $configFile) {
-			$allConfigFiles = array_merge($allConfigFiles, self::getConfigFiles($neonAdapter, $configFile, $loaderParameters));
+			$allConfigFiles = array_merge($allConfigFiles, self::getConfigFiles($neonAdapter, $phpAdapter, $configFile, $loaderParameters));
 		}
 
 		$normalized = array_map(static function (string $file) use ($fileHelper): string {
@@ -359,6 +362,7 @@ class CommandHelper
 
 	private static function getConfigFiles(
 		NeonAdapter $neonAdapter,
+		PhpAdapter $phpAdapter,
 		string $configFile,
 		array $loaderParameters
 	): array
@@ -367,7 +371,11 @@ class CommandHelper
 			return [];
 		}
 
-		$data = $neonAdapter->load($configFile);
+		if (Strings::endsWith($configFile, '.php')) {
+			$data = $phpAdapter->load($configFile);
+		} else {
+			$data = $neonAdapter->load($configFile);
+		}
 		$allConfigFiles = [];
 		if (isset($data['includes'])) {
 			Validators::assert($data['includes'], 'list', sprintf("section 'includes' in file '%s'", $configFile));
@@ -375,7 +383,7 @@ class CommandHelper
 			foreach ($includes as $include) {
 				$include = self::expandIncludedFile($include, $configFile);
 				$allConfigFiles[] = $include;
-				$allConfigFiles = array_merge($allConfigFiles, self::getConfigFiles($neonAdapter, $include, $loaderParameters));
+				$allConfigFiles = array_merge($allConfigFiles, self::getConfigFiles($neonAdapter, $phpAdapter, $include, $loaderParameters));
 			}
 		}
 

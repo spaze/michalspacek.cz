@@ -13,6 +13,7 @@ use PHPStan\Reflection\TrivialParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Traits\MaybeIterableTypeTrait;
 use PHPStan\Type\Traits\MaybeOffsetAccessibleTypeTrait;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\UndecidedBooleanTypeTrait;
 
 class MixedType implements CompoundType, SubtractableType
@@ -21,6 +22,7 @@ class MixedType implements CompoundType, SubtractableType
 	use MaybeIterableTypeTrait;
 	use MaybeOffsetAccessibleTypeTrait;
 	use UndecidedBooleanTypeTrait;
+	use NonGenericTypeTrait;
 
 	/** @var bool */
 	private $isExplicitMixed;
@@ -132,6 +134,15 @@ class MixedType implements CompoundType, SubtractableType
 		}
 
 		return TrinaryLogic::createMaybe();
+	}
+
+	public function isAcceptedBy(Type $acceptingType, bool $strictTypes): TrinaryLogic
+	{
+		$isSuperType = $this->isSuperTypeOf($acceptingType);
+		if ($isSuperType->no()) {
+			return $isSuperType;
+		}
+		return TrinaryLogic::createYes();
 	}
 
 	public function canAccessProperties(): TrinaryLogic
@@ -262,6 +273,16 @@ class MixedType implements CompoundType, SubtractableType
 	public function getSubtractedType(): ?Type
 	{
 		return $this->subtractedType;
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		return $this;
+	}
+
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createMaybe();
 	}
 
 	/**

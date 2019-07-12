@@ -3,12 +3,14 @@
 namespace PHPStan\Type;
 
 use PHPStan\TrinaryLogic;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\ObjectTypeTrait;
 
 class ObjectWithoutClassType implements SubtractableType
 {
 
 	use ObjectTypeTrait;
+	use NonGenericTypeTrait;
 
 	/** @var \PHPStan\Type\Type|null */
 	private $subtractedType;
@@ -136,6 +138,18 @@ class ObjectWithoutClassType implements SubtractableType
 	public function getSubtractedType(): ?Type
 	{
 		return $this->subtractedType;
+	}
+
+
+	public function traverse(callable $cb): Type
+	{
+		$subtractedType = $this->subtractedType !== null ? $cb($this->subtractedType) : null;
+
+		if ($subtractedType !== $this->subtractedType) {
+			return new static($subtractedType);
+		}
+
+		return $this;
 	}
 
 	/**

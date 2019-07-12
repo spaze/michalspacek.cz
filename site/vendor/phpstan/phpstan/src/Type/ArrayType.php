@@ -7,6 +7,8 @@ use PHPStan\Reflection\TrivialParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Constant\ConstantIntegerType;
 use PHPStan\Type\Constant\ConstantStringType;
+use PHPStan\Type\Generic\TemplateType;
+use PHPStan\Type\Generic\TemplateTypeMap;
 use PHPStan\Type\Traits\MaybeCallableTypeTrait;
 use PHPStan\Type\Traits\NonObjectTypeTrait;
 use PHPStan\Type\Traits\UndecidedBooleanTypeTrait;
@@ -98,8 +100,11 @@ class ArrayType implements StaticResolvableType
 
 	public function describe(VerbosityLevel $level): string
 	{
-		if ($this->keyType instanceof MixedType || $this->keyType instanceof NeverType) {
-			if ($this->itemType instanceof MixedType || $this->itemType instanceof NeverType) {
+		$isMixedKeyType = $this->keyType instanceof MixedType && !$this->keyType instanceof TemplateType;
+		$isMixedItemType = $this->itemType instanceof MixedType && !$this->itemType instanceof TemplateType;
+
+		if ($isMixedKeyType || $this->keyType instanceof NeverType) {
+			if ($isMixedItemType || $this->itemType instanceof NeverType) {
 				return 'array';
 			}
 
@@ -171,6 +176,11 @@ class ArrayType implements StaticResolvableType
 	public function getIterableValueType(): Type
 	{
 		return $this->getItemType();
+	}
+
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createYes();
 	}
 
 	public function isOffsetAccessible(): TrinaryLogic
@@ -286,6 +296,42 @@ class ArrayType implements StaticResolvableType
 		}
 
 		return new UnionType([new IntegerType(), new StringType()]);
+	}
+
+	public function inferTemplateTypes(Type $receivedType): TemplateTypeMap
+	{
+		if ($receivedType instanceof UnionType || $receivedType instanceof IntersectionType) {
+			return $receivedType->inferTemplateTypesOn($this);
+		}
+
+		if (
+			$receivedType instanceof ArrayType
+			&& !$this->getKeyType()->isSuperTypeOf($receivedType->getKeyType())->no()
+			&& !$this->getItemType()->isSuperTypeOf($receivedType->getItemType())->no()
+		) {
+			$receivedKey = $receivedType->getKeyType();
+			$receivedItem = $receivedType->getItemType();
+		} else {
+			$receivedKey = new NeverType();
+			$receivedItem = new NeverType();
+		}
+
+		$keyTypeMap = $this->getKeyType()->inferTemplateTypes($receivedKey);
+		$itemTypeMap = $this->getItemType()->inferTemplateTypes($receivedItem);
+
+		return $keyTypeMap->union($itemTypeMap);
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		$keyType = $cb($this->keyType);
+		$itemType = $cb($this->itemType);
+
+		if ($keyType !== $this->keyType || $itemType !== $this->itemType) {
+			return new static($keyType, $itemType);
+		}
+
+		return $this;
 	}
 
 	/**

@@ -9,6 +9,7 @@ use PHPStan\Reflection\PropertyReflection;
 use PHPStan\Reflection\TrivialParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Accessory\AccessoryType;
+use PHPStan\Type\Generic\TemplateTypeMap;
 
 class IntersectionType implements CompoundType, StaticResolvableType
 {
@@ -73,6 +74,11 @@ class IntersectionType implements CompoundType, StaticResolvableType
 		}
 
 		return TrinaryLogic::maxMin(...$results);
+	}
+
+	public function isAcceptedBy(Type $acceptingType, bool $strictTypes): TrinaryLogic
+	{
+		return $this->isSubTypeOf($acceptingType);
 	}
 
 	public function equals(Type $type): bool
@@ -233,6 +239,13 @@ class IntersectionType implements CompoundType, StaticResolvableType
 		});
 	}
 
+	public function isArray(): TrinaryLogic
+	{
+		return $this->intersectResults(static function (Type $type): TrinaryLogic {
+			return $type->isArray();
+		});
+	}
+
 	public function isOffsetAccessible(): TrinaryLogic
 	{
 		return $this->intersectResults(static function (Type $type): TrinaryLogic {
@@ -351,6 +364,49 @@ class IntersectionType implements CompoundType, StaticResolvableType
 	public function changeBaseClass(string $className): StaticResolvableType
 	{
 		return new self(UnionTypeHelper::changeBaseClass($className, $this->getTypes()));
+	}
+
+	public function inferTemplateTypes(Type $receivedType): TemplateTypeMap
+	{
+		$types = TemplateTypeMap::empty();
+
+		foreach ($this->types as $type) {
+			$receive = $type->isSuperTypeOf($receivedType)->yes() ? $receivedType : new NeverType();
+			$types = $types->intersect($type->inferTemplateTypes($receive));
+		}
+
+		return $types;
+	}
+
+	public function inferTemplateTypesOn(Type $templateType): TemplateTypeMap
+	{
+		$types = TemplateTypeMap::empty();
+
+		foreach ($this->types as $type) {
+			$types = $types->intersect($templateType->inferTemplateTypes($type));
+		}
+
+		return $types;
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		$types = [];
+		$changed = false;
+
+		foreach ($this->types as $type) {
+			$newType = $cb($type);
+			if ($type !== $newType) {
+				$changed = true;
+			}
+			$types[] = $newType;
+		}
+
+		if ($changed) {
+			return TypeCombinator::intersect(...$types);
+		}
+
+		return $this;
 	}
 
 	/**

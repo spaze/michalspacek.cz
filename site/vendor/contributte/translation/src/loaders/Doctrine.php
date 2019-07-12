@@ -1,44 +1,32 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * This file is part of the Contributte/Translation
  */
 
-declare(strict_types=1);
-
 namespace Contributte\Translation\Loaders;
 
 use Contributte;
+use Doctrine\ORM\Decorator\EntityManagerDecorator;
+use stdClass;
 use Symfony;
 
-
-/**
- * @author Ales Wita
- */
 class Doctrine extends DatabaseAbstract implements Symfony\Component\Translation\Loader\LoaderInterface
 {
-	/** @var \Doctrine\ORM\Decorator\EntityManagerDecorator $em */
+
+	/** @var EntityManagerDecorator $em */
 	private $em;
 
-
-	/**
-	 * @param \Doctrine\ORM\Decorator\EntityManagerDecorator $em
-	 */
-	public function __construct(\Doctrine\ORM\Decorator\EntityManagerDecorator $em)
+	public function __construct(EntityManagerDecorator $em)
 	{
 		$this->em = $em;
 	}
 
-
 	/**
-	 * @param \stdClass $config
-	 * @param string $resource
-	 * @param string $locale
-	 * @param string $domain
-	 * @return array
-	 * @throws Contributte\Translation\InvalidStateException
+	 * @return string[]
+	 * @throws Contributte\Translation\Exceptions\InvalidState
 	 */
-	protected function getMessages(\stdClass $config, string $resource, string $locale, string $domain): array
+	protected function getMessages(stdClass $config, string $resource, string $locale, string $domain): array
 	{
 		$messages = [];
 
@@ -47,7 +35,7 @@ class Doctrine extends DatabaseAbstract implements Symfony\Component\Translation
 			$message = $v1->{$config->message};
 
 			if (array_key_exists($id, $messages)) {
-				throw new Contributte\Translation\InvalidStateException('Id "' . $id . '" declared twice in "' . $config->table . '" table/domain.');
+				throw new Contributte\Translation\Exceptions\InvalidState('Id "' . $id . '" declared twice in "' . $config->table . '" table/domain.');
 			}
 
 			$messages[$id] = $message;
@@ -55,4 +43,5 @@ class Doctrine extends DatabaseAbstract implements Symfony\Component\Translation
 
 		return $messages;
 	}
+
 }

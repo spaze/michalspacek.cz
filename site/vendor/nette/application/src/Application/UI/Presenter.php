@@ -48,10 +48,13 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var int */
 	public $invalidLinkMode;
 
-	/** @var callable[]  function (Presenter $sender): void; Occurs when the presenter is starting */
+	/** @var callable[]&(callable(Presenter $sender): void)[]; Occurs when the presenter is starting */
 	public $onStartup;
 
-	/** @var callable[]  function (Presenter $sender, IResponse $response): void; Occurs when the presenter is shutting down */
+	/** @var callable[]&(callable(Presenter $sender): void)[]; Occurs when the presenter is rendering after beforeRender */
+	public $onRender;
+
+	/** @var callable[]&(callable(Presenter $sender, IResponse $response): void)[]; Occurs when the presenter is shutting down */
 	public $onShutdown;
 
 	/** @var bool  automatically call canonicalize() */
@@ -213,6 +216,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 			// RENDERING VIEW
 			$this->beforeRender();
+			$this->onRender($this);
 			// calls $this->render<View>()
 			$this->tryCall($this->formatRenderMethod($this->view), $this->params);
 			$this->afterRender();
@@ -695,7 +699,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 				);
 			} catch (InvalidLinkException $e) {
 			}
-			if (isset($url) && !$this->httpRequest->getUrl()->isEqual($url)) {
+			if (isset($url) && !$this->httpRequest->getUrl()->withoutUserInfo()->isEqual($url)) {
 				$code = $request->hasFlag($request::VARYING) ? Http\IResponse::S302_FOUND : Http\IResponse::S301_MOVED_PERMANENTLY;
 				$this->sendResponse(new Responses\RedirectResponse($url, $code));
 			}
@@ -921,7 +925,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		if ($this->refUrlCache === null) {
 			$url = $this->httpRequest->getUrl();
-			$this->refUrlCache = new Http\UrlScript($url->getHostUrl() . $url->getScriptPath());
+			$this->refUrlCache = new Http\UrlScript($url->withoutUserInfo()->getHostUrl() . $url->getScriptPath());
 		}
 		if (!$this->router) {
 			throw new Nette\InvalidStateException('Unable to generate URL, service Router has not been set.');

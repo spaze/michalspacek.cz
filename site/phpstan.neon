@@ -3,9 +3,9 @@ parameters:
 		- app
 	ignoreErrors:
 		- '#^Call to an undefined method Nette\\Localization\\ITranslator::get(Default|Available)?Locales?\(\)#'  # Actually called on \Contributte\Translation\Translator
-		-  # https://github.com/nette/application/pull/212
-			message: '#^Parameter \#2 \$destination of method Nette\\Application\\UI\\Component::redirect\(\) expects string\|null, (array<string, string>)|(int(\|null)?) given#'
-			path: 'app/modules/Admin/presenters/'
+		-  # https://github.com/nette/forms/pull/226
+			message: '#^Array \(array<callable\(Nette\\Forms\\Container\): void>\) does not accept array\(\$this\(App\\AdminModule\\Presenters\\PulsePresenter\)#'
+			path: 'app/modules/Admin/presenters/PulsePresenter.php'
 
 includes:
 	- vendor/phpstan/phpstan/conf/config.level5.neon

@@ -16,7 +16,8 @@ use PHPUnit\Framework\TestCase;
 
 final class FileTest extends TestCase
 {
-    public function setUp()
+
+    public function setUp(): void
     {
         chmod(__DIR__.'/tmp/', 0777);
     }
@@ -713,5 +714,36 @@ final class FileTest extends TestCase
             $key
         );
         $this->assertTrue(\file_exists(__DIR__.'/tmp/empty116.encrypted.txt'));
+    }
+
+    public function testOutputToOutputbuffer()
+    {
+        $stream = fopen('php://output', 'wb');
+
+        touch(__DIR__.'/tmp/paragon_avatar.encrypted.png');
+        chmod(__DIR__.'/tmp/paragon_avatar.encrypted.png', 0777);
+
+        $key = new EncryptionKey(
+            new HiddenString(\str_repeat('B', 32))
+        );
+        File::encrypt(
+            __DIR__.'/tmp/paragon_avatar.png',
+            __DIR__.'/tmp/paragon_avatar.encrypted.png',
+            $key
+        );
+
+        ob_start();
+        File::decrypt(
+            __DIR__.'/tmp/paragon_avatar.encrypted.png',
+            $stream,
+            $key
+        );
+        $contents = ob_get_clean();
+
+        $this->assertSame(
+            hash_file('sha256', __DIR__.'/tmp/paragon_avatar.png'),
+            hash('sha256', $contents)
+        );
+        unlink(__DIR__.'/tmp/paragon_avatar.encrypted.png');
     }
 }

@@ -9,6 +9,7 @@ use PHPStan\Reflection\PropertyReflection;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantBooleanType;
+use PHPStan\Type\Generic\TemplateTypeMap;
 
 class UnionType implements CompoundType, StaticResolvableType
 {
@@ -61,7 +62,7 @@ class UnionType implements CompoundType, StaticResolvableType
 
 	public function accepts(Type $type, bool $strictTypes): TrinaryLogic
 	{
-		if ($type instanceof CompoundType) {
+		if ($type instanceof CompoundType && !$type instanceof CallableType) {
 			return CompoundTypeHelper::accepts($type, $this, $strictTypes);
 		}
 
@@ -97,9 +98,19 @@ class UnionType implements CompoundType, StaticResolvableType
 		return TrinaryLogic::extremeIdentity(...$results);
 	}
 
+	public function isAcceptedBy(Type $acceptingType, bool $strictTypes): TrinaryLogic
+	{
+		$results = [];
+		foreach ($this->getTypes() as $innerType) {
+			$results[] = $acceptingType->accepts($innerType, $strictTypes);
+		}
+
+		return TrinaryLogic::extremeIdentity(...$results);
+	}
+
 	public function equals(Type $type): bool
 	{
-		if (!$type instanceof self) {
+		if (!$type instanceof static) {
 			return false;
 		}
 
@@ -405,6 +416,13 @@ class UnionType implements CompoundType, StaticResolvableType
 		});
 	}
 
+	public function isArray(): TrinaryLogic
+	{
+		return $this->unionResults(static function (Type $type): TrinaryLogic {
+			return $type->isArray();
+		});
+	}
+
 	public function isOffsetAccessible(): TrinaryLogic
 	{
 		return $this->unionResults(static function (Type $type): TrinaryLogic {
@@ -529,6 +547,49 @@ class UnionType implements CompoundType, StaticResolvableType
 		});
 
 		return $type;
+	}
+
+	public function inferTemplateTypes(Type $receivedType): TemplateTypeMap
+	{
+		$types = TemplateTypeMap::empty();
+
+		foreach ($this->types as $type) {
+			$receive = $type->isSuperTypeOf($receivedType)->yes() ? $receivedType : new NeverType();
+			$types = $types->union($type->inferTemplateTypes($receive));
+		}
+
+		return $types;
+	}
+
+	public function inferTemplateTypesOn(Type $templateType): TemplateTypeMap
+	{
+		$types = TemplateTypeMap::empty();
+
+		foreach ($this->types as $type) {
+			$types = $types->union($templateType->inferTemplateTypes($type));
+		}
+
+		return $types;
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		$types = [];
+		$changed = false;
+
+		foreach ($this->types as $type) {
+			$newType = $cb($type);
+			if ($type !== $newType) {
+				$changed = true;
+			}
+			$types[] = $newType;
+		}
+
+		if ($changed) {
+			return TypeCombinator::union(...$types);
+		}
+
+		return $this;
 	}
 
 	/**

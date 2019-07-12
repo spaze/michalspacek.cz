@@ -7,12 +7,14 @@ use PHPStan\Reflection\ConstantReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\PropertyReflection;
 use PHPStan\TrinaryLogic;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\TruthyBooleanTypeTrait;
 
 class StaticType implements StaticResolvableType, TypeWithClassName
 {
 
 	use TruthyBooleanTypeTrait;
+	use NonGenericTypeTrait;
 
 	/** @var string */
 	private $baseClass;
@@ -192,6 +194,11 @@ class StaticType implements StaticResolvableType, TypeWithClassName
 		return $this->staticObjectType->isCallable();
 	}
 
+	public function isArray(): TrinaryLogic
+	{
+		return $this->staticObjectType->isArray();
+	}
+
 	/**
 	 * @param \PHPStan\Reflection\ClassMemberAccessAnswerer $scope
 	 * @return \PHPStan\Reflection\ParametersAcceptor[]
@@ -229,6 +236,11 @@ class StaticType implements StaticResolvableType, TypeWithClassName
 	public function toArray(): Type
 	{
 		return $this->staticObjectType->toArray();
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		return $this;
 	}
 
 	/**

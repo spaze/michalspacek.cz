@@ -9,11 +9,13 @@ use PHPStan\Reflection\PropertyReflection;
 use PHPStan\Reflection\TrivialParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Traits\FalseyBooleanTypeTrait;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 
 class NeverType implements CompoundType
 {
 
 	use FalseyBooleanTypeTrait;
+	use NonGenericTypeTrait;
 
 	/**
 	 * @return string[]
@@ -45,6 +47,11 @@ class NeverType implements CompoundType
 	public function isSubTypeOf(Type $otherType): TrinaryLogic
 	{
 		return TrinaryLogic::createYes();
+	}
+
+	public function isAcceptedBy(Type $acceptingType, bool $strictTypes): TrinaryLogic
+	{
+		return $this->isSubTypeOf($acceptingType);
 	}
 
 	public function describe(VerbosityLevel $level): string
@@ -179,6 +186,16 @@ class NeverType implements CompoundType
 	public function toArray(): Type
 	{
 		return $this;
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		return $this;
+	}
+
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createNo();
 	}
 
 	/**

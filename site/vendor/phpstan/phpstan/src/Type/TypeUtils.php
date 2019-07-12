@@ -2,6 +2,7 @@
 
 namespace PHPStan\Type;
 
+use PHPStan\Type\Accessory\AccessoryType;
 use PHPStan\Type\Accessory\HasPropertyType;
 use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantStringType;
@@ -221,14 +222,24 @@ class TypeUtils
 		}
 
 		if ($type instanceof UnionType || $type instanceof IntersectionType) {
-			$hasPropertyTypes = [];
+			$hasPropertyTypes = [[]];
 			foreach ($type->getTypes() as $innerType) {
-				$hasPropertyTypes = array_merge($hasPropertyTypes, self::getHasPropertyTypes($innerType));
+				$hasPropertyTypes[] = self::getHasPropertyTypes($innerType);
 			}
-			return $hasPropertyTypes;
+
+			return array_merge(...$hasPropertyTypes);
 		}
 
 		return [];
+	}
+
+	/**
+	 * @param \PHPStan\Type\Type $type
+	 * @return \PHPStan\Type\Accessory\AccessoryType[]
+	 */
+	public static function getAccessoryTypes(Type $type): array
+	{
+		return self::map(AccessoryType::class, $type, true, false);
 	}
 
 }

@@ -7,6 +7,7 @@ use PHPStan\Reflection\TrivialParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\CompoundType;
 use PHPStan\Type\IntersectionType;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\ObjectTypeTrait;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
@@ -15,6 +16,7 @@ class HasPropertyType implements AccessoryType, CompoundType
 {
 
 	use ObjectTypeTrait;
+	use NonGenericTypeTrait;
 
 	/** @var string */
 	private $propertyName;
@@ -62,6 +64,11 @@ class HasPropertyType implements AccessoryType, CompoundType
 		return $limit->and($otherType->hasProperty($this->propertyName));
 	}
 
+	public function isAcceptedBy(Type $acceptingType, bool $strictTypes): TrinaryLogic
+	{
+		return $this->isSubTypeOf($acceptingType);
+	}
+
 	public function equals(Type $type): bool
 	{
 		return $type instanceof self
@@ -85,6 +92,11 @@ class HasPropertyType implements AccessoryType, CompoundType
 	public function getCallableParametersAcceptors(ClassMemberAccessAnswerer $scope): array
 	{
 		return [new TrivialParametersAcceptor()];
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		return $this;
 	}
 
 	public static function __set_state(array $properties): Type

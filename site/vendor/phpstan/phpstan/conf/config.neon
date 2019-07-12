@@ -8,6 +8,7 @@ parameters:
 	featureToggles:
 		subtractableTypes: false
 		validateParameters: false
+		allowVarTagAboveStatements: false
 	fileExtensions:
 		- php
 	checkAlwaysTrueCheckTypeFunctionCall: false
@@ -23,12 +24,14 @@ parameters:
 	checkUnionTypes: false
 	checkExplicitMixedMissingReturn: false
 	checkPhpDocMissingReturn: false
+	inferPrivatePropertyTypeFromConstructor: false
 	reportMaybes: false
 	reportMaybesInMethodSignatures: false
 	reportStaticMethodSignatures: false
 	polluteScopeWithLoopInitialAssignments: true
 	polluteScopeWithAlwaysIterableForeach: true
 	polluteCatchScopeWithTryAssignments: false
+	tipsOfTheDay: true
 	reportMagicMethods: false
 	reportMagicProperties: false
 	ignoreErrors: []
@@ -40,7 +43,6 @@ parameters:
 	scopeClass: PHPStan\Analyser\Scope
 	universalObjectCratesClasses:
 		- stdClass
-		- SimpleXMLElement
 	earlyTerminatingMethodCalls: []
 	memoryLimitFile: %tmpDir%/.memory_limit
 	benchmarkFile: null
@@ -110,6 +112,8 @@ parametersSchema:
 	checkUnionTypes: bool()
 	checkExplicitMixedMissingReturn: bool()
 	checkPhpDocMissingReturn: bool()
+	inferPrivatePropertyTypeFromConstructor: bool()
+	tipsOfTheDay: bool()
 	reportMaybes: bool()
 	reportMaybesInMethodSignatures: bool()
 	reportStaticMethodSignatures: bool()
@@ -225,6 +229,7 @@ services:
 			polluteCatchScopeWithTryAssignments: %polluteCatchScopeWithTryAssignments%
 			polluteScopeWithAlwaysIterableForeach: %polluteScopeWithAlwaysIterableForeach%
 			earlyTerminatingMethodCalls: %earlyTerminatingMethodCalls%
+			allowVarTagAboveStatements: %featureToggles.allowVarTagAboveStatements%
 
 	-
 		class: PHPStan\Cache\Cache
@@ -283,6 +288,8 @@ services:
 
 	-
 		class: PHPStan\Reflection\Php\PhpClassReflectionExtension
+		arguments:
+			inferPrivatePropertyTypeFromConstructor: %inferPrivatePropertyTypeFromConstructor%
 
 	-
 		class: PHPStan\Reflection\PhpDefect\PhpDefectClassReflectionExtension
@@ -473,6 +480,11 @@ services:
 		class: PHPStan\Type\Php\GettimeofdayDynamicFunctionReturnTypeExtension
 		tags:
 			- phpstan.broker.dynamicFunctionReturnTypeExtension
+
+	-
+		class: PHPStan\Type\Php\SimpleXMLElementClassPropertyReflectionExtension
+		tags:
+			- phpstan.broker.propertiesClassReflectionExtension
 
 	-
 		class: PHPStan\Type\Php\StatDynamicReturnTypeExtension
@@ -713,6 +725,10 @@ services:
 
 	errorFormatter.table:
 		class: PHPStan\Command\ErrorFormatter\TableErrorFormatter
+		arguments:
+			showTipsOfTheDay: %tipsOfTheDay%
+			checkThisOnly: %checkThisOnly%
+			inferPrivatePropertyTypeFromConstructor: %inferPrivatePropertyTypeFromConstructor%
 
 	errorFormatter.checkstyle:
 		class: PHPStan\Command\ErrorFormatter\CheckstyleErrorFormatter

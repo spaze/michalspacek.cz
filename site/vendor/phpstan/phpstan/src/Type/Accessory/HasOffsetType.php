@@ -12,6 +12,7 @@ use PHPStan\Type\MixedType;
 use PHPStan\Type\Traits\MaybeCallableTypeTrait;
 use PHPStan\Type\Traits\MaybeIterableTypeTrait;
 use PHPStan\Type\Traits\MaybeObjectTypeTrait;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\TruthyBooleanTypeTrait;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
@@ -23,6 +24,7 @@ class HasOffsetType implements CompoundType, AccessoryType
 	use MaybeIterableTypeTrait;
 	use MaybeObjectTypeTrait;
 	use TruthyBooleanTypeTrait;
+	use NonGenericTypeTrait;
 
 	/** @var \PHPStan\Type\Type */
 	private $offsetType;
@@ -67,6 +69,11 @@ class HasOffsetType implements CompoundType, AccessoryType
 			->and($otherType instanceof self ? TrinaryLogic::createYes() : TrinaryLogic::createMaybe());
 	}
 
+	public function isAcceptedBy(Type $acceptingType, bool $strictTypes): TrinaryLogic
+	{
+		return $this->isSubTypeOf($acceptingType);
+	}
+
 	public function equals(Type $type): bool
 	{
 		return $type instanceof self
@@ -107,6 +114,11 @@ class HasOffsetType implements CompoundType, AccessoryType
 		return TrinaryLogic::createYes();
 	}
 
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createMaybe();
+	}
+
 	public function toNumber(): Type
 	{
 		return new ErrorType();
@@ -130,6 +142,11 @@ class HasOffsetType implements CompoundType, AccessoryType
 	public function toArray(): Type
 	{
 		return new MixedType();
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		return $this;
 	}
 
 	public static function __set_state(array $properties): Type

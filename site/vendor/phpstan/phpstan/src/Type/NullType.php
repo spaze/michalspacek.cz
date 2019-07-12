@@ -8,6 +8,7 @@ use PHPStan\Type\Constant\ConstantIntegerType;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\Traits\FalseyBooleanTypeTrait;
 use PHPStan\Type\Traits\NonCallableTypeTrait;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\NonIterableTypeTrait;
 use PHPStan\Type\Traits\NonObjectTypeTrait;
 
@@ -18,6 +19,7 @@ class NullType implements ConstantScalarType
 	use NonIterableTypeTrait;
 	use NonObjectTypeTrait;
 	use FalseyBooleanTypeTrait;
+	use NonGenericTypeTrait;
 
 	/**
 	 * @return string[]
@@ -120,6 +122,16 @@ class NullType implements ConstantScalarType
 	{
 		$array = new ConstantArrayType([], []);
 		return $array->setOffsetValueType($offsetType, $valueType);
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		return $this;
+	}
+
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createNo();
 	}
 
 	/**

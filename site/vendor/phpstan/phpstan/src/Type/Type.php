@@ -7,6 +7,7 @@ use PHPStan\Reflection\ConstantReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\PropertyReflection;
 use PHPStan\TrinaryLogic;
+use PHPStan\Type\Generic\TemplateTypeMap;
 
 interface Type
 {
@@ -50,6 +51,8 @@ interface Type
 
 	public function getIterableValueType(): Type;
 
+	public function isArray(): TrinaryLogic;
+
 	public function isOffsetAccessible(): TrinaryLogic;
 
 	public function hasOffsetValueType(Type $offsetType): TrinaryLogic;
@@ -79,6 +82,24 @@ interface Type
 	public function toString(): Type;
 
 	public function toArray(): Type;
+
+	/**
+	 * Infers template types
+	 *
+	 * Infers the real Type of the TemplateTypes found in $this, based on
+	 * the received Type.
+	 */
+	public function inferTemplateTypes(Type $receivedType): TemplateTypeMap;
+
+	/**
+	 * Traverses inner types
+	 *
+	 * Returns a new instance with all inner types mapped through $cb. Might
+	 * return the same instance if inner types did not change.
+	 *
+	 * @param callable(Type):Type $cb
+	 */
+	public function traverse(callable $cb): Type;
 
 	/**
 	 * @param mixed[] $properties

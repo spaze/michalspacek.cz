@@ -6,6 +6,7 @@ use PHPStan\TrinaryLogic;
 use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantIntegerType;
 use PHPStan\Type\Traits\NonCallableTypeTrait;
+use PHPStan\Type\Traits\NonGenericTypeTrait;
 use PHPStan\Type\Traits\NonIterableTypeTrait;
 use PHPStan\Type\Traits\NonObjectTypeTrait;
 use PHPStan\Type\Traits\UndecidedBooleanTypeTrait;
@@ -17,6 +18,7 @@ class FloatType implements Type
 	use NonIterableTypeTrait;
 	use NonObjectTypeTrait;
 	use UndecidedBooleanTypeTrait;
+	use NonGenericTypeTrait;
 
 	/**
 	 * @return string[]
@@ -33,7 +35,7 @@ class FloatType implements Type
 		}
 
 		if ($type instanceof CompoundType) {
-			return CompoundTypeHelper::accepts($type, new UnionType([
+			return $type->isAcceptedBy(new UnionType([
 				$this,
 				new IntegerType(),
 			]), $strictTypes);
@@ -112,6 +114,16 @@ class FloatType implements Type
 	public function setOffsetValueType(?Type $offsetType, Type $valueType): Type
 	{
 		return new ErrorType();
+	}
+
+	public function isArray(): TrinaryLogic
+	{
+		return TrinaryLogic::createNo();
+	}
+
+	public function traverse(callable $cb): Type
+	{
+		return $this;
 	}
 
 	/**
