@@ -7,6 +7,7 @@ use App\WwwModule\Presenters\BasePresenter;
 use MichalSpacekCz\Form\UpcKeys as UpcKeysForm;
 use MichalSpacekCz\UpcKeys;
 use Nette\Application\BadRequestException;
+use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 use RuntimeException;
@@ -144,7 +145,7 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
-	public function submittedSsid(UpcKeysForm $form, ArrayHash $values): void
+	public function submittedSsid(Form $form, ArrayHash $values): void
 	{
 		$ssid = strtoupper(trim($values->ssid));
 		if (!$this->upcKeys->saveKeys($ssid)) {

@@ -5,6 +5,7 @@ namespace App\AdminModule\Presenters;
 
 use App\WwwModule\Presenters\BasePresenter;
 use MichalSpacekCz\Form\SignInHoneypot;
+use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Tracy\Debugger;
@@ -26,7 +27,7 @@ class HoneypotPresenter extends BasePresenter
 	}
 
 
-	public function submittedSignIn(SignInHoneypot $form, ArrayHash $values): void
+	public function submittedSignIn(Form $form, ArrayHash $values): void
 	{
 		Debugger::log("Sign-in attempt: {$values->username}, {$values->password}, {$this->getHttpRequest()->getRemoteAddress()}", 'honeypot');
 		$creds = $values->username . ':' . $values->password;

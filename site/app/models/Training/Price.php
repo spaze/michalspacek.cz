@@ -40,7 +40,7 @@ class Price
 			$this->price = $training->price;
 			$this->discount = null;
 		} else {
-			$this->price = $training->price * (100 - $training->studentDiscount) / 100;
+			$this->price = (int)($training->price * (100 - $training->studentDiscount) / 100);
 			$this->discount = $training->studentDiscount;
 		}
 

@@ -298,7 +298,7 @@ class Trainings
 	/**
 	 * Get all discontinued trainings with description.
 	 *
-	 * @return array<int, array<string, string|string[]>>
+	 * @return array<integer, array<string, string|string[]>>
 	 */
 	public function getAllDiscontinued(): array
 	{
@@ -316,12 +316,14 @@ class Trainings
 		);
 		$trainings = [];
 		foreach ($result as $row) {
-			$trainings[$row->id]['description'] = $row->description;
-			$trainings[$row->id]['href'] = $row->href;
-			if (!isset($trainings[$row->id]['trainings'])) {
-				$trainings[$row->id]['trainings'] = [];
+			/** @var integer $id */
+			$id = $row->id;
+			$trainings[$id]['description'] = $row->description;
+			$trainings[$id]['href'] = $row->href;
+			if (!isset($trainings[$id]['trainings'])) {
+				$trainings[$id]['trainings'] = [];
 			}
-			$trainings[$row->id]['trainings'][] = $row->training;
+			$trainings[$id]['trainings'][] = $row->training;
 		}
 		return $trainings;
 	}

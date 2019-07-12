@@ -74,7 +74,9 @@ class TrainingApplication extends ProtectedForm
 				->setPrompt('- vyberte termín a místo -')
 				->addRule(self::INTEGER);
 		} else {
-			$field = new HiddenFieldWithLabel($label, key($inputDates), current($inputDates));
+			/** @var string $key */
+			$key = key($inputDates);
+			$field = new HiddenFieldWithLabel($label, $key, $inputDates[$key]);
 			$field->addRule(self::INTEGER);
 			$this->addComponent($field, 'trainingId');
 		}

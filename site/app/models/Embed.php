@@ -34,7 +34,7 @@ class Embed
 	 * Get template vars for slides
 	 * @param Row $talk
 	 * @param int|null $slide
-	 * @return array<string, null> with keys slidesEmbed, slidesDataSlide, slidesEmbedType
+	 * @return array<string, string|integer|null> with keys slidesEmbed, slidesDataSlide, slidesEmbedType
 	 */
 	public function getSlidesTemplateVars(Row $talk, ?int $slide = null): array
 	{
@@ -43,6 +43,7 @@ class Embed
 			$this->contentSecurityPolicy->addSnippet($type);
 		}
 
+		/** @var string $embedHref */
 		$embedHref = $talk->slidesEmbed;
 		$dataSlide = null;
 

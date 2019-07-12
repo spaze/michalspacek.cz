@@ -20,6 +20,7 @@ use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
@@ -294,7 +295,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplications(TrainingApplicationMultiple $form, ArrayHash $values): void
+	public function submittedApplications(Form $form, ArrayHash $values): void
 	{
 		foreach ($values->applications as $application) {
 			$this->trainingApplications->insertApplication(
@@ -328,7 +329,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedEditReview(TrainingReview $form, ArrayHash $values): void
+	public function submittedEditReview(Form $form, ArrayHash $values): void
 	{
 		$this->trainingReviews->updateReview(
 			$this->review->reviewId,
@@ -377,7 +378,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedAddReview(TrainingReview $form, $values): void
+	public function submittedAddReview(Form $form, $values): void
 	{
 		$this->trainingReviews->addReview(
 			$this->dateId,
@@ -402,7 +403,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplication(TrainingApplicationAdmin $form, $values): void
+	public function submittedApplication(Form $form, $values): void
 	{
 		$this->trainingApplications->updateApplicationData(
 			$this->applicationId,
@@ -442,7 +443,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedFile(TrainingFile $form, ArrayHash $values): void
+	public function submittedFile(Form $form, ArrayHash $values): void
 	{
 		if ($values->file->isOk()) {
 			$name = $this->trainingFiles->addFile($this->training, $values->file, $this->applicationIdsAttended);
@@ -468,7 +469,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedDate(TrainingDate $form, ArrayHash $values): void
+	public function submittedDate(Form $form, ArrayHash $values): void
 	{
 		$this->trainingDates->update(
 			$this->dateId,
@@ -495,7 +496,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedAddDate(TrainingDate $form, ArrayHash $values): void
+	public function submittedAddDate(Form $form, ArrayHash $values): void
 	{
 		$this->trainingDates->add(
 			$values->training,

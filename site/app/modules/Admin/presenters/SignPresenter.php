@@ -6,6 +6,7 @@ namespace App\AdminModule\Presenters;
 use App\WwwModule\Presenters\BasePresenter;
 use MichalSpacekCz\Form\SignIn;
 use MichalSpacekCz\User\Manager;
+use Nette\Forms\Form;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IUserStorage;
 use Nette\Utils\ArrayHash;
@@ -74,7 +75,7 @@ class SignPresenter extends BasePresenter
 	}
 
 
-	public function submittedSignIn(SignIn $form, ArrayHash $values): void
+	public function submittedSignIn(Form $form, ArrayHash $values): void
 	{
 		$this->user->setExpiration('30 minutes', IUserStorage::CLEAR_IDENTITY);
 		try {

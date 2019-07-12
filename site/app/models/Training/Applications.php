@@ -239,20 +239,20 @@ class Applications
 	 */
 	private function insertData(array $data): string
 	{
-		$data['access_token'] = $this->generateAccessCode();
+		$data['access_token'] = $token = $this->generateAccessCode();
 		try {
 			$this->database->query('INSERT INTO training_applications', $data);
 		} catch (PDOException $e) {
 			if ($e->getCode() == '23000') {
 				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
 					// regenerate the access code and try harder this time
-					Debugger::log("Regenerating access token, {$data['access_token']} already exists. Full data: " . implode(', ', $data));
+					Debugger::log("Regenerating access token, {$token} already exists. Full data: " . implode(', ', $data));
 					return $this->insertData($data);
 				}
 			}
 			throw $e;
 		}
-		return $data['access_token'];
+		return $token;
 	}
 
 
@@ -494,9 +494,7 @@ class Applications
 		?int $dateId = null
 	): void
 	{
-		if ($paid) {
-			$paid = new DateTime($paid);
-		}
+		$paidDate = ($paid ? new DateTime($paid) : null);
 
 		$data = array(
 			'name'           => $name,
@@ -516,8 +514,8 @@ class Applications
 			'price_vat'      => ($priceVat ?: null),
 			'discount'       => ($discount ?: null),
 			'invoice_id'     => ((int)$invoiceId ?: null),
-			'paid'           => ($paid ?: null),
-			'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
+			'paid'           => ($paidDate ?: null),
+			'paid_timezone'  => ($paidDate ? $paidDate->getTimezone()->getName() : null),
 		);
 		if ($dateId !== null) {
 			$data['key_date'] = $dateId;
@@ -740,15 +738,13 @@ class Applications
 
 	public function setPaidDate(string $invoiceId, string $paid): ?int
 	{
-		if ($paid) {
-			$paid = new DateTime($paid);
-		}
+		$paidDate = ($paid ? new DateTime($paid) : null);
 
 		$result = $this->database->query(
 			'UPDATE training_applications SET ? WHERE invoice_id = ?',
 			array(
-				'paid'           => ($paid ?: null),
-				'paid_timezone'  => ($paid ? $paid->getTimezone()->getName() : null),
+				'paid'           => ($paidDate ?: null),
+				'paid_timezone'  => ($paidDate ? $paidDate->getTimezone()->getName() : null),
 			),
 			(int)$invoiceId
 		);

@@ -8,6 +8,7 @@ use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Interviews;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
+use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 class InterviewsPresenter extends BasePresenter
@@ -59,7 +60,7 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	public function submittedEditInterview(Interview $form, ArrayHash $values): void
+	public function submittedEditInterview(Form $form, ArrayHash $values): void
 	{
 		$this->interviews->update(
 			$this->interview->interviewId,
@@ -88,7 +89,7 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	public function submittedAddInterview(Interview $form, ArrayHash $values): void
+	public function submittedAddInterview(Form $form, ArrayHash $values): void
 	{
 		$this->interviews->add(
 			$values->action,

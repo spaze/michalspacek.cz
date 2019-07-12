@@ -20,6 +20,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
+use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 use Netxten\Templating\Helpers;
@@ -224,7 +225,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplication(TrainingApplication $form, ArrayHash $values): void
+	public function submittedApplication(Form $form, ArrayHash $values): void
 	{
 		$session = $this->getSession('training');
 		/** @var string $name */
@@ -333,7 +334,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplicationPreliminary(TrainingApplicationPreliminary $form, ArrayHash $values): void
+	public function submittedApplicationPreliminary(Form $form, ArrayHash $values): void
 	{
 		$this->trainingApplications->addPreliminaryInvitation($this->training, $values->name, $values->email);
 		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));

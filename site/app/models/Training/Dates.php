@@ -330,11 +330,13 @@ class Dates
 					'venueCity'     => $row->venueCity,
 					'note'          => $row->note,
 				);
-				$upcoming[$row->action] = ArrayHash::from(array(
-					'action' => $row->action,
-					'name'   => $date['name'],
-					'dates'  => (isset($upcoming[$row->action]->dates)
-						? $upcoming[$row->action]->dates = (array)$upcoming[$row->action]->dates + array($row->dateId => $date)
+				/** @var string $action */
+				$action = $row->action;
+				$upcoming[$action] = ArrayHash::from(array(
+					'action' => $action,
+					'name' => $date['name'],
+					'dates' => (isset($upcoming[$action]->dates)
+						? $upcoming[$action]->dates = (array)$upcoming[$action]->dates + array($row->dateId => $date)
 						: array($row->dateId => $date)
 					),
 				));
