@@ -12,7 +12,7 @@ class InfoPresenter extends BasePresenter
 	{
 		ob_start();
 		phpinfo();
-		$info = preg_replace('~^.*?(<table[^>]*>.*</table>).*$~s', '$1', ob_get_clean());
+		$info = preg_replace('~^.*?(<table[^>]*>.*</table>).*$~s', '$1', ob_get_clean() ?: 'Cannot get phpinfo() output');
 		// Convert inline styles to classes defined in admin/info.css so we can drop CSP style-src 'unsafe-inline'
 		$info = str_replace('style="color: #', 'class="color-', $info);
 

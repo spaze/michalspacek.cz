@@ -44,6 +44,9 @@ class Ares implements CompanyDataInterface
 			$content = $this->fetch($companyId);
 			libxml_disable_entity_loader();
 			$xml = simplexml_load_string($content);
+			if (!$xml) {
+				throw new RuntimeException("Can't parse XML received for company {$companyId}");
+			}
 			$ns = $xml->getDocNamespaces();
 			$result = $xml->children($ns['are'])->children($ns['D'])->VH;
 			$data = $xml->children($ns['are'])->children($ns['D'])->VBAS;
@@ -104,7 +107,12 @@ class Ares implements CompanyDataInterface
 				'http' => ['ignore_errors' => true],  // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
 			],
 		]);
-		return file_get_contents(sprintf($this->url, $companyId), false, $context);
+		$url = sprintf($this->url, $companyId);
+		$result = file_get_contents($url, false, $context);
+		if (!$result) {
+			throw new RuntimeException("Can't get result from {$url}");
+		}
+		return $result;
 	}
 
 

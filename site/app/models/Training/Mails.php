@@ -236,7 +236,11 @@ class Mails
 	{
 		$mail = new Message();
 		foreach ($attachments as $name => $file) {
-			$mail->addAttachment($name, file_get_contents($file));
+			$contents = file_get_contents($file);
+			if (!$contents) {
+				throw new \RuntimeException("Can't read file {$file}");
+			}
+			$mail->addAttachment($name, $contents);
 		}
 		$mail->setFrom($this->emailFrom)
 			->addTo($recipientAddress, $recipientName)
