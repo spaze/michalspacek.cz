@@ -13,10 +13,9 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Localization\ITranslator;
 use Netxten\Templating\Helpers as NetxtenHelpers;
 use Spaze\ContentSecurityPolicy\Config;
-use stdClass;
 
 /**
- * @property-read Template|stdClass $template
+ * @property-read Template $template
  */
 abstract class BasePresenter extends Presenter
 {

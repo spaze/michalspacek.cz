@@ -11,14 +11,13 @@ use Nette\Http\IResponse;
 use Nette\Localization\ITranslator;
 use Netxten\Templating\Helpers as NetxtenHelpers;
 use Spaze\ContentSecurityPolicy\Config;
-use stdClass;
 
 /**
  * A forbidden presenter.
  *
  * Does not extend BasePresenter to avoid loop in startup().
  *
- * @property-read Template|stdClass $template
+ * @property-read Template $template
  */
 class ForbiddenPresenter extends Presenter
 {
