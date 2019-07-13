@@ -14,3 +14,20 @@ includes:
 	- vendor/phpstan/phpstan/conf/config.level6.neon
 	- vendor/phpstan/phpstan-nette/extension.neon
 	- vendor/phpstan/phpstan-nette/rules.neon
+
+services:
+	-
+		class: Spaze\PHPStan\Rules\Disallowed\FunctionCalls
+		tags:
+			- phpstan.rules.rule
+		arguments:
+			forbiddenCalls:
+				-
+					function: 'var_dump()'
+					message: 'use logger instead'
+				-
+					function: 'print_r()'
+					message: 'use logger instead'
+				-
+					function: 'var_export()'
+					message: 'use logger instead'

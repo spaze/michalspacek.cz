@@ -25,6 +25,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Config\\' => 25,
             'Spaze\\SubresourceIntegrity\\' => 27,
+            'Spaze\\PHPStan\\Rules\\Disallowed\\' => 31,
             'Spaze\\NonceGenerator\\' => 21,
             'Spaze\\Exports\\' => 14,
             'Spaze\\Encryption\\' => 17,
@@ -85,6 +86,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\SubresourceIntegrity\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/sri-macros/src',
+        ),
+        'Spaze\\PHPStan\\Rules\\Disallowed\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spaze/phpstan-disallowed-calls/src',
         ),
         'Spaze\\NonceGenerator\\' => 
         array (

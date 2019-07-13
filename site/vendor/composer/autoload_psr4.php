@@ -14,6 +14,7 @@ return array(
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
     'Spaze\\SubresourceIntegrity\\' => array($vendorDir . '/spaze/sri-macros/src'),
+    'Spaze\\PHPStan\\Rules\\Disallowed\\' => array($vendorDir . '/spaze/phpstan-disallowed-calls/src'),
     'Spaze\\NonceGenerator\\' => array($vendorDir . '/spaze/nonce-generator/src'),
     'Spaze\\Exports\\' => array($vendorDir . '/spaze/feed-exports/src'),
     'Spaze\\Encryption\\' => array($vendorDir . '/spaze/encryption/src'),
