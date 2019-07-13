@@ -12,6 +12,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -71,12 +72,10 @@ class BlogPresenter extends BasePresenter
 
 
 	/**
-	 * @param PostForm $form
-	 * @param ArrayHash $values
 	 * @throws AbortException
 	 * @throws InvalidLinkException
 	 */
-	public function submittedAddPost(PostForm $form, ArrayHash $values): void
+	public function submittedAddPost(Form $form, ArrayHash $values): void
 	{
 		try {
 			$post = new Data();
@@ -137,12 +136,10 @@ class BlogPresenter extends BasePresenter
 
 
 	/**
-	 * @param PostForm $form
-	 * @param ArrayHash $values
 	 * @throws AbortException
 	 * @throws InvalidLinkException
 	 */
-	public function submittedEditPost(PostForm $form, ArrayHash $values): void
+	public function submittedEditPost(Form $form, ArrayHash $values): void
 	{
 		$post = new Data();
 		$post->postId = $this->post->postId;

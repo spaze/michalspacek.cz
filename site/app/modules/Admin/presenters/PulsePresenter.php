@@ -7,6 +7,7 @@ use MichalSpacekCz\Form\Pulse\PasswordsStorages;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Sites;
+use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 class PulsePresenter extends BasePresenter
@@ -94,7 +95,7 @@ class PulsePresenter extends BasePresenter
 	}
 
 
-	public function submittedPasswordsStorages(PasswordsStorages $form, $values)
+	public function submittedPasswordsStorages(Form $form, $values)
 	{
 		if ($this->passwords->addStorage($values)) {
 			$this->flashMessage('Password storage added successfully');

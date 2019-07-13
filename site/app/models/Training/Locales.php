@@ -22,7 +22,7 @@ class Locales
 	 * Get localized training actions.
 	 *
 	 * @param string $action
-	 * @return array of (locale, action)
+	 * @return array<string, string>
 	 */
 	public function getLocaleActions(string $action): array
 	{

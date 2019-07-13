@@ -6,6 +6,7 @@ namespace App\AdminModule\Presenters;
 use MichalSpacekCz\Form\ChangePassword;
 use MichalSpacekCz\Form\RegenerateTokens;
 use MichalSpacekCz\User\Manager;
+use Nette\Forms\Form;
 use Nette\Http\Session;
 use Nette\Utils\ArrayHash;
 
@@ -41,7 +42,7 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	public function submittedChangePassword(ChangePassword $form, ArrayHash $values): void
+	public function submittedChangePassword(Form $form, ArrayHash $values): void
 	{
 		$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
 		$this->redirect('Homepage:');
@@ -62,7 +63,7 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	public function submittedRegenerateTokens(RegenerateTokens $form, ArrayHash $values): void
+	public function submittedRegenerateTokens(Form $form, ArrayHash $values): void
 	{
 		if ($values->session) {
 			$this->sessionHandler->regenerateId();

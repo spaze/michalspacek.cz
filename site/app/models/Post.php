@@ -445,7 +445,9 @@ class Post
 	 */
 	public function tagsToArray(string $tags): array
 	{
-		return array_filter(preg_split('/\s*,\s*/', $tags));
+		/** @var string[] $values */
+		$values = preg_split('/\s*,\s*/', $tags);
+		return array_filter($values);
 	}
 
 

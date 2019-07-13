@@ -243,10 +243,11 @@ class Texy extends NetxtenTexy
 		$presenter = $this->application->getPresenter();
 
 		if (strncmp($link->URL, 'link:', 5) === 0) {
+			/** @var string[] $args */
 			$args = preg_split('/[\s,]+/', substr($link->URL, 5));
 			$action = ':' . array_shift($args);
 			if ($action === $trainingAction) {
-				$args = $this->trainingLocales->getLocaleActions(reset($args))[$this->translator->getDefaultLocale()];
+				$args = $this->trainingLocales->getLocaleActions($args[0])[$this->translator->getDefaultLocale()];
 			}
 			$link->URL = $presenter->link("//{$action}", $args);
 		}
@@ -264,7 +265,7 @@ class Texy extends NetxtenTexy
 		// "title":[inhouse-training:training]
 		if (strncmp($link->URL, 'inhouse-training:', 17) === 0) {
 			$args = preg_split('/[\s,]+/', substr($link->URL, 17));
-			$args = $this->trainingLocales->getLocaleActions(reset($args))[$this->translator->getDefaultLocale()];
+			$args = $this->trainingLocales->getLocaleActions($args[0])[$this->translator->getDefaultLocale()];
 			$link->URL = $presenter->link('//:Www:CompanyTrainings:training', $args);
 		}
 

@@ -11,6 +11,7 @@ use MichalSpacekCz\Talks;
 use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Row;
+use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -108,7 +109,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function submittedEditTalk(Talk $form, ArrayHash $values): void
+	public function submittedEditTalk(Form $form, ArrayHash $values): void
 	{
 		$this->talks->update(
 			$this->talk->talkId,
@@ -149,7 +150,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function submittedAddTalk(Talk $form, ArrayHash $values): void
+	public function submittedAddTalk(Form $form, ArrayHash $values): void
 	{
 		$this->talks->add(
 			$values->action,
@@ -186,7 +187,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function submittedSlides(TalkSlides $form, ArrayHash $values): void
+	public function submittedSlides(Form $form, ArrayHash $values): void
 	{
 		try {
 			$this->talks->saveSlides($this->talk->talkId, $this->slides, $values);

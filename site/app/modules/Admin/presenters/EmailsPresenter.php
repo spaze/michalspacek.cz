@@ -10,6 +10,7 @@ use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Vat;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
+use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use stdClass;
 
@@ -58,7 +59,7 @@ class EmailsPresenter extends BasePresenter
 	}
 
 
-	public function submittedMails(TrainingMailsOutbox $form, ArrayHash $values): void
+	public function submittedMails(Form $form, ArrayHash $values): void
 	{
 		$sent = 0;
 		/** @var stdClass $data */

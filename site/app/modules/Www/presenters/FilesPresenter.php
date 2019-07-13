@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace App\WwwModule\Presenters;
 
+use finfo;
 use MichalSpacekCz\Training\Files;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -39,7 +40,8 @@ class FilesPresenter extends BasePresenter
 			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}");
 		}
 		$pathname = $file->info->getPathname();
-		$this->sendResponse(new FileResponse($pathname, null, finfo_file(finfo_open(FILEINFO_MIME_TYPE), $pathname)));
+		$fileInfo = new finfo(FILEINFO_MIME_TYPE);
+		$this->sendResponse(new FileResponse($pathname, null, $fileInfo->file($pathname) ?: null));
 	}
 
 

@@ -169,12 +169,16 @@ class Technicolor implements RouterInterface
 			},
 			'options' => [
 				'http' => [
-					'ignore_errors' => true,  // To supress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
+					'ignore_errors' => true,  // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
 					'header' => 'X-API-Key: ' . $this->apiKey,
 				]
 			]
 		]);
-		return file_get_contents($url, false, $context);
+		$result = file_get_contents($url, false, $context);
+		if (!$result) {
+			throw new RuntimeException("Can't get result from {$url}");
+		}
+		return $result;
 	}
 
 

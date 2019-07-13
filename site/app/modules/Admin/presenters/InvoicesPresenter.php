@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\Form\TrainingInvoice;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
+use Nette\Forms\Form;
 
 class InvoicesPresenter extends BasePresenter
 {
@@ -52,7 +53,7 @@ class InvoicesPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplication(TrainingInvoice $form, $values): void
+	public function submittedApplication(Form $form, $values): void
 	{
 		$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);
 		if ($count) {
