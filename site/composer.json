@@ -1,9 +1,11 @@
 {
 	"require": {
-		"php": ">= 7.2.0",
+		"php": ">= 7.3.0",
+		"ext-ctype": "*",
 		"ext-fileinfo": "*",
 		"ext-intl": "*",
 		"ext-libxml": "*",
+		"ext-mbstring": "*",
 		"ext-pdo": "*",
 		"ext-simplexml": "*",
 		"nette/application": "~3.0",
@@ -38,6 +40,8 @@
 	"replace": {
 		"paragonie/random_compat": "9.99.99",
 		"paragonie/sodium_compat": "*",
+		"symfony/polyfill-ctype": "*",
+		"symfony/polyfill-mbstring": "*",
 		"symfony/polyfill-php73": "*"
 	}
 }

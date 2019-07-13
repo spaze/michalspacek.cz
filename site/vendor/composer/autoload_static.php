@@ -9,9 +9,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     public static $files = array (
         '59af96974553a1fc6407327354b6f47e' => __DIR__ . '/..' . '/nette/di/src/compatibility.php',
         '19a7e2c3b1d506dcdc1b60aab8e102e4' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/shortcuts.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'e7a6fd2e7a869bb207158e9416bdd9b0' => __DIR__ . '/..' . '/nette/application/src/compatibility.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'afdda9f94b76f77a7518e02eee753cc9' => __DIR__ . '/..' . '/nette/mail/src/compatibility.php',
         '5d1dcebe069db2f62f5a447526290867' => __DIR__ . '/..' . '/texy/texy/src/texy.php',
     );
@@ -19,8 +17,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
-            'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Component\\Translation\\' => 30,
@@ -58,14 +54,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
     );
 
     public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Mbstring\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
-        'Symfony\\Polyfill\\Ctype\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
-        ),
         'Symfony\\Contracts\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation-contracts',
