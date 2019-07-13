@@ -65,10 +65,10 @@ final class Versions
   'symfony/console' => 'v4.3.2@b592b26a24265a35172d8a2094d8b10f22b7cc39',
   'symfony/finder' => 'v4.3.2@33c21f7d5d3dc8a140c282854a7e13aeb5d0f91a',
   'symfony/service-contracts' => 'v1.1.5@f391a00de78ec7ec8cf5cdcdae59ec7b883edb8d',
-  'paragonie/random_compat' => '9.99.99@66c18e6df9a18c623c0b7880f5b8193bbb8cedd2',
-  'paragonie/sodium_compat' => '*@66c18e6df9a18c623c0b7880f5b8193bbb8cedd2',
-  'symfony/polyfill-php73' => '*@66c18e6df9a18c623c0b7880f5b8193bbb8cedd2',
-  '__root__' => 'dev-master@66c18e6df9a18c623c0b7880f5b8193bbb8cedd2',
+  'paragonie/random_compat' => '9.99.99@6bfc1a4d9751e91b3a7c99970efae5db783ae518',
+  'paragonie/sodium_compat' => '*@6bfc1a4d9751e91b3a7c99970efae5db783ae518',
+  'symfony/polyfill-php73' => '*@6bfc1a4d9751e91b3a7c99970efae5db783ae518',
+  '__root__' => 'dev-master@6bfc1a4d9751e91b3a7c99970efae5db783ae518',
 );
 
     private function __construct()

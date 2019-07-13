@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0781ccc60f323eec4cf3c36c28061bc",
+    "content-hash": "f4b3b7fb713abcd0a829ec81abf2307c",
     "packages": [
         {
             "name": "contributte/translation",
