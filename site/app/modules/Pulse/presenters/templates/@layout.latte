@@ -6,8 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Pulse</title>
 	{stylesheet screen-pulse+rating}
+	{stylesheet fontawesome-css}
 	{script jquery+pulse async, defer}
 	{script remove-fbclid async, defer}
+	{script fontawesome-js defer, data-auto-add-css => 'false'}
 	{ifset #metas}{include #metas}{/ifset}
 	<meta name="theme-color" content="#E3E3E3">
 	<link rel="icon" type="image/png" href="{='/i/icons/pulse.png'|staticUrl}">

@@ -86,3 +86,4 @@ h2:hover .permalink { display: inline; }
 	content: "– ";
 	color: #CCC;
 }
+.lighter { opacity: 0.3; }

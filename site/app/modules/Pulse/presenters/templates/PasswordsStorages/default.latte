@@ -39,13 +39,13 @@
 			<div class="left">
 				{if !$data->sites[$siteId]->typeAll}
 					<a n:href="site $data->sites[$siteId]->alias" title="Open details">{$data->sites[$siteId]->alias}</a>
-					<small><a href="{$data->sites[$siteId]->url}" n:attr="rel => $noFollow" title="Go to site">&nearr;</a></small>
+					<small><a href="{$data->sites[$siteId]->url}" n:attr="rel => $noFollow" title="Go to site"><span class="lighter"><i class="fas fa-fw fa-link"></i></span></a></small>
 					{foreach $data->sites[$siteId]->sharedWith as $sharedSite}
 						<br>
 						<small>
 						{first}Storage shared with:<br>{/first}
 						<a n:href="site $data->sites[$siteId]->alias" title="Open details">{$sharedSite->alias}</a>
-						<a href="{$sharedSite->url}" n:attr="rel => $noFollow" title="Go to site">&nearr;</a>
+						<a href="{$sharedSite->url}" n:attr="rel => $noFollow" title="Go to site"><span class="lighter"><i class="fas fa-fw fa-link"></i></span></a>
 						</small>
 					{/foreach}
 				{else}
