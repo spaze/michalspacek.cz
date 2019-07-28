@@ -218,12 +218,12 @@ class RouterFactory
 					$metadata['action'][NetteRoute::FILTER_TABLE] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
 				}
 			}
-			$this->addToRouter($this->currentModule, $this->createRoute($class, "//{$host}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata), $locale, $host);
+			$this->addToRouter($this->createRoute($class, "//{$host}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata), $locale, $host);
 		}
 	}
 
 
-	private function addToRouter(string $module, Router $route, string $locale, string $host): void
+	private function addToRouter(Router $route, string $locale, string $host): void
 	{
 		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
 			$this->currentLocaleRouteList[$locale][] = $route;
