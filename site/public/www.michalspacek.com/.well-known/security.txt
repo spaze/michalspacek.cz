@@ -1,9 +1,15 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
 
+# Email
 Contact: https://www.michalspacek.com/contact
+
+# Twitter Direct Message to @spazef0rze
 Contact: https://twitter.com/messages/compose?recipient_id=15823805
+
+# Facebook Messenger
 Contact: https://m.me/spaze
+
 Encryption: https://www.michalspacek.cz/key.asc
 Canonical: https://www.michalspacek.com/.well-known/security.txt
 Preferred-Languages: en, cs
@@ -11,17 +17,17 @@ Rick: <img/src=//xss.sk>
 Rolling: <script/src=//xss.sk></script>
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl1S4BcACgkQtkvdbkZK
-tSneyQ/+JFxLP2sDe0VeOF1Zq8VWDUOUJ2j9VI4iKzHiagpn/o2qP1NL7vkgBhYK
-I5cRivx1Uj+oBzWmyl6z6+aoFDaXyYRmmdQo8vSeq0451PrKiTo/5btSy8Kr3cDL
-EI7HAQVA3C492pxrL39diCy62gTqAGpfmi72xCiQldeBIfZDde0f9sSK0YoRpuy7
-61IIMBWiETwCL2/60kazAaonsJEjkUJqSLrKEezN4rDQrhaR04ZFv5nR+VVlgEGz
-27uESMWLTior0OqZTlJOSrKKbnu1s2zpqs4CAEPuQmuFsovdnzheM0O6ESpesSox
-23IG8MCOkk6wr1c3iMXDYU9A8c2yFzAibp/ZlegTa/at+y+/Yne4UyBkceT9thfC
-DQLF1A4vE4XymCf8svDKL7ZeSt9rVzWaqvd5/jpLqgkvK66xwncPr8eqm1iyJQ8k
-8zfjkeLW2ZRK7A/VUGrBLPJWBhvEZyj9iX4ppXkwQ53FXKcU8RW7ek6PDANd+ub3
-H5QW2OZu/OD4U7ahLBpxawzaL3Nl0OiIFBj3/uPG4OJqQCcDlpjhhsn1O4uQCF8K
-Wawq+mgAYnWlMhGlYPtwVFzWZ04RwdQpJXKDio1EW/8wV14SYg8IQib4Gusgp3UT
-NKtnaP4PTNjjCzPVpshuhIroGEGS2jELXGwOE5pz3fA2BnnqLVk=
-=U2wf
+iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl1S5YQACgkQtkvdbkZK
+tSmZjQ/+KibEmAzkCEdb9leKa83RERwg2ZUx+LkAMIAWxFWHaV6UAGif5v2myfK+
+gyDBCBZHlN1ZwxUm8Ct/vNHvohj0p2ZgMpz3tGcjEBl17omtrEizdeiQ1lzmCAsF
+DxKyoceSIDHq8ZgOSCOspOriDNdLmygXfjF5LTfrShLOjF58ITLofqZnSl4B93ef
+5P7luVO2Svt2lDEOl0kRHWn+kQREjxyz5ifd4SWFFHhvP6CQXWvVdCYHyYggJiKn
+xy6KpQk1QSziR6wjAW2BJuuNvTJhRu/r9zQL84SvcwOmBLUv2dJCxb4kp8bd7M78
+sZLRdHUJ5QrXlstPMRWc4XZJqwwjm2K6uA+0bMsIp6n8NBqxXscyQHpqe+yxSFv7
+ms0x5iIy/93K1lxeyw4yqjqh402u8hpT8aKONii7UPVfdEmWFDv7cwA/e+FS58Jt
+zadt8vOH6Ph4U/nQPITrbMsBpiz27xnvJuKRu2oq8ISZlTXPTf0Kf1QqAJzv6NO+
+2VRNxkIOGU3BJv3/vZnckkUFr+WOdyqDlAmgVnOIpu7UzjsQQmRX9y8jEWS9enXU
+lpRUNJhM57eBT1810nnbkGB+4pHSsl2GX0hQ6ShQgLSEK2xaWYK54CW4cqhseNIS
+zVqFXRbTsORmlFRw8ShGcPBrc+sk7vohFFsY8c1IskigPbZjjJ4=
+=D9Nb
 -----END PGP SIGNATURE-----

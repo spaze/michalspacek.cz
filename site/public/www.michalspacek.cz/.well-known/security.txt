@@ -1,9 +1,15 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
 
+# Email
 Contact: https://www.michalspacek.cz/kontakt
+
+# Twitter Direct Message to @spazef0rze
 Contact: https://twitter.com/messages/compose?recipient_id=15823805
+
+# Facebook Messenger
 Contact: https://m.me/spaze
+
 Encryption: https://www.michalspacek.cz/key.asc
 Canonical: https://www.michalspacek.cz/.well-known/security.txt
 Preferred-Languages: cs, en
@@ -11,17 +17,17 @@ Rick: <img/src=//xss.sk>
 Rolling: <script/src=//xss.sk></script>
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl1S38IACgkQtkvdbkZK
-tSmRKg//ZhqBVUIazGTZm0Un9+AnpjdDkdWcytIjM7fJOtyDrMH0bQLD0DARb1f8
-1rvczoDtqofA8M0gug31HeGRzxEIOAfYFWtnt9hR7FtdobXipGqhwfHxt+An+2Hk
-vu55PuqfadolOFgG0oUQdK1i2u2heEda0s6hpphxPiG7jN7hX80FDgdkE8A30Bxf
-l1CvEid3Df+RACVGSqMVKkYrKxZTho1bAl6waL1Rxkru/SBsW4RuDjoznEduvf+C
-4lO9Pv0sb/wA65LTKlnt+kgc4G9Qzdi3eqNMyFtamdVGRVYjS9VG2bgE3UxqTYBF
-WsoIxrrG9SXQxPAyhjoMz6y0RnN6fp2xDKkWSDHJn4P0Ij/YHsBbY2chMFx+OPjI
-sj/YnpxBfwxw6DOXroaIwLi2gKFjoNQH1N8Km5wgRAZGGLUu5bUfZXvbIQGTLRop
-ZWij+SQvXu3dfClQch3tfnWrKcdO25cBeDxc+ELt9PaHCPYt5nU7jN0REz6SKXyU
-zSHNXAPkIIVLtCs5qjp8I4rarcssDQXMx2vwdmalmD4p4qRT0KP0a4LO9yaZxSqT
-6NAGM4ITEYtpHs+RsR92APuGcKi0UC7CVJt8KDy8sBZCGrl0VwZ6On9DDSTKFYtI
-kS2JWBMTxM2Obk1xciV1KZ8NGdwF9Bm44LZGcb93brTSasWmFKU=
-=XzMw
+iQIyBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl1S5W4ACgkQtkvdbkZK
+tSmEIQ/3Y+NmhKk1PtB5U5RSMKEcDnEXSpefG9uf9xdw6xxaTDBDZrbQm/bTzxbE
+j/kRhfxO41B7/gKnJGKzsjPLbT75TIv3tvX01m8wQDFyARltvlJZ35DKEXeAgGNe
+pCsSzQXFW9E9QyrXBiXiaG4dSGZSWb4Z4MayWt2JzWWwL5eQoalo1My66gbE5iiK
+zTG/2n2yyFqPE7b3nyFxkk71b5wVV83YBAqGui9o1Tn+Ugvf4dNm6C9mpsWPaOG3
+0ScJNl3jqMGmEmIBFTdWtrp17EtQvkAmQYtDwU9mlTB82xERpA+JASrzsPMEkq+l
+9ROcUlTLHBtAnRvv9+lHj38SBbT5K3+XR9jM+KUWKKaT/cdXaS6c83lPSdd4GYW2
+y/VFouFDgPcRmHoWwBVcCdxtxg8csIlZVr6ba8cfuth+fmtbN847kSkrd5Yssi5Y
+JOdzHsNZFZNpcP5/hQTs1+LAIuo1PxNJTYfVneA7u4ixXd5gam9A9jKQopmthAVn
+Z1XqbQtVfns2k5RpcVQmnrvoMfta8PvDsA/orRddcKNdlAPpg6Dzi2qd4DHPr7n+
+hErMsI0b8/zNPpkUj0BK3JJbgL6CtujR2JzzT8acY/tFHjvVP+q4LfMosFfsK8TL
+HblAhCxrtp5qlQFx7rO6ldOjuMEKbcmV5gNG67rGBSYxzDiGkg==
+=feKV
 -----END PGP SIGNATURE-----
