@@ -2,27 +2,26 @@
 Hash: SHA512
 
 Contact: https://www.michalspacek.com/contact
-Contact: https://twitter.com/spazef0rze
-Contact: https://www.facebook.com/spaze
+Contact: https://twitter.com/messages/compose?recipient_id=15823805
+Contact: https://m.me/spaze
 Encryption: https://www.michalspacek.cz/key.asc
 Canonical: https://www.michalspacek.com/.well-known/security.txt
 Preferred-Languages: en, cs
 Rick: <img/src=//xss.sk>
 Rolling: <script/src=//xss.sk></script>
-
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl0FvjoACgkQtkvdbkZK
-tSkUpRAA6ubskuIEHKQ+UxSnTO/a/4fB+RTPOB5VxIAVFgo+vRF4pd+mmXcuHtca
-DdOvXOysFZMShu8dfdNysQAfDSPaYhJQ567YXlKheDGDMWJ02wX/6xKYBaQaecwx
-g6nRpVJSAUYr1aKsahm6Y6cikYprI23djiZmgrY0SxVetfiKYwCVggK221pDupRp
-nDgVjogbwhlPW++a5P7opuTKxTko4w6zvDUY6Ha6SJ+pyNC0xx7JRtR+ZJdy+44P
-+mRzXKGSesEh5aNqlPsQ8LBUIbHBJc97lhEAjQeErXjvZyqNKVWDdLOR2W9ng8ou
-I6SVzSlxJvFoz+GTqmSi+0nFabnVzscfX6sErFw2PSpCY7bOE+X0NJ0Rk2zZuuGH
-YsF9X/WPp/b0y8nCEaVJcFuZRkqFa2Nd7SJwZAsRzfVw2bPiSI5uqvIwNQ1kz7Po
-vT/fr9GI14OTpIrN4bwQF1s8nrJRiWM6SigHDvQMLWlS0ys8e3MC+rchQU0Kjuyb
-HWQXCctmH0kCyTU8jMpbMxn/T7UV5Q+6Uon0gFztTohw2uf5FcWpzWliC3bs/XgM
-xVuBs12kSpBlOjN2+78+uflZlItkfz99p8Uuj1aNWiuqeltBSA72odtq8TlZDl++
-JiQD05U86k4pBBDY70+l/KduRQ65FIVFSg5sNCOsqu59iq+VYd4=
-=Df7A
+iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl1S4BcACgkQtkvdbkZK
+tSneyQ/+JFxLP2sDe0VeOF1Zq8VWDUOUJ2j9VI4iKzHiagpn/o2qP1NL7vkgBhYK
+I5cRivx1Uj+oBzWmyl6z6+aoFDaXyYRmmdQo8vSeq0451PrKiTo/5btSy8Kr3cDL
+EI7HAQVA3C492pxrL39diCy62gTqAGpfmi72xCiQldeBIfZDde0f9sSK0YoRpuy7
+61IIMBWiETwCL2/60kazAaonsJEjkUJqSLrKEezN4rDQrhaR04ZFv5nR+VVlgEGz
+27uESMWLTior0OqZTlJOSrKKbnu1s2zpqs4CAEPuQmuFsovdnzheM0O6ESpesSox
+23IG8MCOkk6wr1c3iMXDYU9A8c2yFzAibp/ZlegTa/at+y+/Yne4UyBkceT9thfC
+DQLF1A4vE4XymCf8svDKL7ZeSt9rVzWaqvd5/jpLqgkvK66xwncPr8eqm1iyJQ8k
+8zfjkeLW2ZRK7A/VUGrBLPJWBhvEZyj9iX4ppXkwQ53FXKcU8RW7ek6PDANd+ub3
+H5QW2OZu/OD4U7ahLBpxawzaL3Nl0OiIFBj3/uPG4OJqQCcDlpjhhsn1O4uQCF8K
+Wawq+mgAYnWlMhGlYPtwVFzWZ04RwdQpJXKDio1EW/8wV14SYg8IQib4Gusgp3UT
+NKtnaP4PTNjjCzPVpshuhIroGEGS2jELXGwOE5pz3fA2BnnqLVk=
+=U2wf
 -----END PGP SIGNATURE-----

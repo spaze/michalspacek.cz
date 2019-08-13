@@ -2,27 +2,26 @@
 Hash: SHA512
 
 Contact: https://www.michalspacek.cz/kontakt
-Contact: https://twitter.com/spazef0rze
-Contact: https://www.facebook.com/spaze
+Contact: https://twitter.com/messages/compose?recipient_id=15823805
+Contact: https://m.me/spaze
 Encryption: https://www.michalspacek.cz/key.asc
 Canonical: https://www.michalspacek.cz/.well-known/security.txt
 Preferred-Languages: cs, en
 Rick: <img/src=//xss.sk>
 Rolling: <script/src=//xss.sk></script>
-
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl0FvcoACgkQtkvdbkZK
-tSlcmxAAo7lh0qYdXcBODv01ZVA4z40TBsgYT5rKwT9nTigWihA5vJ9rTTZwGax1
-hhbkZcmhKxITyHjQtzQ0+OrbS1AQFc2gKxeMzvJ8KTwNcgPZZyDuD+xUDKvT50E7
-57t0i1JDKTLvdBJgQavkizuQdUNmRTcv0mKCGrfrmiFJpXjctyuBCTZ4Y712OewQ
-6hVz/3upbMzCfR7o5+4tA9/T7LjpJjyj3UdmurZ5HKkOafkBEejzPrlpDLTbIU4Y
-95d6FxnsMF4Z4Ec/Ib1+wRRGTwjOh2lGV2wpk82uu6oD7Fc7EdwqW58mcHj3zG7H
-vxtfjZTCwaNZvu/ipv5xzHZ0KFcEutxaeMSjcDvzQdg+O9lyTPlw0mfLLnmNyFXU
-lZe8oMLdli6nLdsg03WA7aNi+lXrhG4K2NofDO/1qf6kFvZEkB56qm6bCoo5nU3T
-bSgBkLQjhCEDyZkV3ZoQLS6bf58A9U9DhTelPlFFNew9202J+UIUguPBoST9wTLa
-oPyPzDlQ6MsUUEISm4oi3Q5PGwzskedGDmngUR5xZC94WVqeUt5LbsH+pnU7tyg4
-QJ4s9+9Jp0kwgfYwaY8IOXDCSkJZz4r8dl1M3pkX8SGBrlUXo3etZhQtdiXtx/kv
-JblJ4BDGpwbuaG1fWgHa8gq/Qf3+DNUxOVEEIzcABNoM2eF2w58=
-=lFa4
+iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl1S38IACgkQtkvdbkZK
+tSmRKg//ZhqBVUIazGTZm0Un9+AnpjdDkdWcytIjM7fJOtyDrMH0bQLD0DARb1f8
+1rvczoDtqofA8M0gug31HeGRzxEIOAfYFWtnt9hR7FtdobXipGqhwfHxt+An+2Hk
+vu55PuqfadolOFgG0oUQdK1i2u2heEda0s6hpphxPiG7jN7hX80FDgdkE8A30Bxf
+l1CvEid3Df+RACVGSqMVKkYrKxZTho1bAl6waL1Rxkru/SBsW4RuDjoznEduvf+C
+4lO9Pv0sb/wA65LTKlnt+kgc4G9Qzdi3eqNMyFtamdVGRVYjS9VG2bgE3UxqTYBF
+WsoIxrrG9SXQxPAyhjoMz6y0RnN6fp2xDKkWSDHJn4P0Ij/YHsBbY2chMFx+OPjI
+sj/YnpxBfwxw6DOXroaIwLi2gKFjoNQH1N8Km5wgRAZGGLUu5bUfZXvbIQGTLRop
+ZWij+SQvXu3dfClQch3tfnWrKcdO25cBeDxc+ELt9PaHCPYt5nU7jN0REz6SKXyU
+zSHNXAPkIIVLtCs5qjp8I4rarcssDQXMx2vwdmalmD4p4qRT0KP0a4LO9yaZxSqT
+6NAGM4ITEYtpHs+RsR92APuGcKi0UC7CVJt8KDy8sBZCGrl0VwZ6On9DDSTKFYtI
+kS2JWBMTxM2Obk1xciV1KZ8NGdwF9Bm44LZGcb93brTSasWmFKU=
+=XzMw
 -----END PGP SIGNATURE-----
