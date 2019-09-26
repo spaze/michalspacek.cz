@@ -28,6 +28,7 @@ return array(
     'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'PHPStan\\' => array($vendorDir . '/phpstan/phpstan/src', $vendorDir . '/phpstan/phpstan/build/PHPStan', $vendorDir . '/phpstan/phpstan-nette/src'),
+    'MichalSpacekCz\\' => array($baseDir . '/app/models'),
     'Jean85\\' => array($vendorDir . '/jean85/pretty-package-versions/src'),
     'Contributte\\Translation\\' => array($vendorDir . '/contributte/translation/src'),
     'Composer\\XdebugHandler\\' => array($vendorDir . '/composer/xdebug-handler/src'),

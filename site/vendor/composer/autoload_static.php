@@ -43,6 +43,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPStan\\' => 8,
         ),
+        'M' => 
+        array (
+            'MichalSpacekCz\\' => 15,
+        ),
         'J' => 
         array (
             'Jean85\\' => 7,
@@ -144,6 +148,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             0 => __DIR__ . '/..' . '/phpstan/phpstan/src',
             1 => __DIR__ . '/..' . '/phpstan/phpstan/build/PHPStan',
             2 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
+        ),
+        'MichalSpacekCz\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/models',
         ),
         'Jean85\\' => 
         array (

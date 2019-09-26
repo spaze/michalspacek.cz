@@ -7,7 +7,7 @@ use RuntimeException;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../../../vendor/autoload.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /**
  * @testCase MichalSpacekCz\Pulse\Passwords\RatingTest
@@ -24,11 +24,7 @@ class RatingTest extends TestCase
 
 	public function __construct()
 	{
-
-		require __DIR__ . '/../../../app/models/Pulse/Passwords/Algorithm.php';
 		$this->algo = new Algorithm();
-
-		require __DIR__ . '/../../../app/models/Pulse/Passwords/Rating.php';
 		$this->rating = new Rating();
 	}
 

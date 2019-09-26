@@ -13,6 +13,13 @@ namespace PackageVersions;
 final class Versions
 {
     public const ROOT_PACKAGE_NAME = '__root__';
+    /**
+     * Array of all available composer packages.
+     * Dont read this array from your calling code, but use the \PackageVersions\Versions::getVersion() method instead.
+     *
+     * @var array<string, string>
+     * @internal
+     */
     public const VERSIONS          = array (
   'contributte/translation' => 'v0.4.1@1b8020c343c05545e5f3782fb06ebfe64fb358e2',
   'latte/latte' => 'v2.5.2@c41020789756c044deb4d5d535855405c421ad08',
@@ -64,12 +71,12 @@ final class Versions
   'symfony/console' => 'v4.3.3@8b0ae5742ce9aaa8b0075665862c1ca397d1c1d9',
   'symfony/finder' => 'v4.3.3@9638d41e3729459860bb96f6247ccb61faaa45f2',
   'symfony/service-contracts' => 'v1.1.5@f391a00de78ec7ec8cf5cdcdae59ec7b883edb8d',
-  'paragonie/random_compat' => '9.99.99@8c29f16ba746a52d63ec972272daac8e473cc74d',
-  'paragonie/sodium_compat' => '*@8c29f16ba746a52d63ec972272daac8e473cc74d',
-  'symfony/polyfill-ctype' => '*@8c29f16ba746a52d63ec972272daac8e473cc74d',
-  'symfony/polyfill-mbstring' => '*@8c29f16ba746a52d63ec972272daac8e473cc74d',
-  'symfony/polyfill-php73' => '*@8c29f16ba746a52d63ec972272daac8e473cc74d',
-  '__root__' => 'dev-master@8c29f16ba746a52d63ec972272daac8e473cc74d',
+  'paragonie/random_compat' => '9.99.99@205c2eb27e81242ca48006ff08d83e531f839d2c',
+  'paragonie/sodium_compat' => '*@205c2eb27e81242ca48006ff08d83e531f839d2c',
+  'symfony/polyfill-ctype' => '*@205c2eb27e81242ca48006ff08d83e531f839d2c',
+  'symfony/polyfill-mbstring' => '*@205c2eb27e81242ca48006ff08d83e531f839d2c',
+  'symfony/polyfill-php73' => '*@205c2eb27e81242ca48006ff08d83e531f839d2c',
+  '__root__' => 'dev-master@205c2eb27e81242ca48006ff08d83e531f839d2c',
 );
 
     private function __construct()
@@ -78,6 +85,8 @@ final class Versions
 
     /**
      * @throws \OutOfBoundsException If a version cannot be located.
+     *
+     * @psalm-param key-of<self::VERSIONS> $packageName
      */
     public static function getVersion(string $packageName) : string
     {
@@ -86,7 +95,7 @@ final class Versions
         }
 
         throw new \OutOfBoundsException(
-            'Required package "' . $packageName . '" is not installed: cannot detect its version'
+            'Required package "' . $packageName . '" is not installed: check your ./vendor/composer/installed.json and/or ./composer.lock files'
         );
     }
 }
