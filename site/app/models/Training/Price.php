@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Vat;
 use Nette\Database\Row;
+use NumberFormatter;
 
 class Price
 {
@@ -31,17 +32,33 @@ class Price
 	}
 
 
-	public function resolvePriceDiscountVat(Row $training, string $status, string $note): void
+	public function resolvePriceVat(int $price): void
 	{
-		if (in_array($status, [Statuses::STATUS_NON_PUBLIC_TRAINING, Statuses::STATUS_TENTATIVE])) {
+		$this->resolve($price, null, false);
+	}
+
+
+	public function resolvePriceDiscountVat(int $price, int $studentDiscount, string $status, string $note): void
+	{
+		$this->resolve(
+			$price,
+			stripos($note, 'student') !== false ? $studentDiscount : null,
+			in_array($status, [Statuses::STATUS_NON_PUBLIC_TRAINING, Statuses::STATUS_TENTATIVE], true),
+		);
+	}
+
+
+	private function resolve(int $price, ?int $studentDiscount, bool $noPrice): void
+	{
+		if ($noPrice) {
 			$this->price = null;
 			$this->discount = null;
-		} elseif (stripos($note, 'student') === false) {
-			$this->price = $training->price;
+		} elseif ($studentDiscount === null) {
+			$this->price = $price;
 			$this->discount = null;
 		} else {
-			$this->price = (int)($training->price * (100 - $training->studentDiscount) / 100);
-			$this->discount = $training->studentDiscount;
+			$this->price = (int)($price * (100 - $studentDiscount) / 100);
+			$this->discount = $studentDiscount;
 		}
 
 		if ($this->price === null) {
@@ -60,6 +77,16 @@ class Price
 	}
 
 
+	public function getPriceAsString(): string
+	{
+		if ($this->price === null) {
+			return '';
+		}
+
+		return $this->getNumberFormatter($this->price)->formatCurrency($this->price, 'CZK');
+	}
+
+
 	public function getVatRate(): ?float
 	{
 		return $this->vatRate;
@@ -72,9 +99,29 @@ class Price
 	}
 
 
+	public function getPriceVatAsString(): string
+	{
+		if ($this->priceVat === null) {
+			return '';
+		}
+
+		return $this->getNumberFormatter($this->priceVat)->formatCurrency($this->priceVat, 'CZK');
+	}
+
+
 	public function getDiscount(): ?int
 	{
 		return $this->discount;
+	}
+
+
+	private function getNumberFormatter(float $price): NumberFormatter
+	{
+		$formatter = new NumberFormatter('cs_CZ', NumberFormatter::CURRENCY);
+		if (fmod($price, 1) === (float)0) {
+			$formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
+		}
+		return $formatter;
 	}
 
 }

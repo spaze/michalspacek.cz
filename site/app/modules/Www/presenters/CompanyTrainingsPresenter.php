@@ -6,9 +6,9 @@ namespace App\WwwModule\Presenters;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Locales;
+use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
-use MichalSpacekCz\Vat;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
@@ -30,8 +30,8 @@ class CompanyTrainingsPresenter extends BasePresenter
 	/** @var Reviews */
 	protected $trainingReviews;
 
-	/** @var Vat */
-	protected $vat;
+	/** @var Price */
+	private $price;
 
 	/** @var IResponse */
 	protected $httpResponse;
@@ -43,7 +43,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		CompanyTrainings $companyTrainings,
 		Locales $trainingLocales,
 		Reviews $trainingReviews,
-		Vat $vat,
+		Price $price,
 		IResponse $httpResponse
 	)
 	{
@@ -52,7 +52,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->companyTrainings = $companyTrainings;
 		$this->trainingLocales = $trainingLocales;
 		$this->trainingReviews = $trainingReviews;
-		$this->vat = $vat;
+		$this->price = $price;
 		$this->httpResponse = $httpResponse;
 		parent::__construct();
 	}
@@ -77,6 +77,8 @@ class CompanyTrainingsPresenter extends BasePresenter
 			throw new BadRequestException("I don't do {$name} training, yet");
 		}
 
+		$this->price->resolvePriceVat($training->price);
+
 		$this->template->name = $training->action;
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->name]);
 		$this->template->title = $training->name;
@@ -87,8 +89,8 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->audience = $training->audience;
 		$this->template->duration = $training->duration;
 		$this->template->alternativeDuration = $training->alternativeDuration;
-		$this->template->price = $training->price;
-		$this->template->priceVat = $this->vat->addVat($training->price);
+		$this->template->price = $this->price->getPriceAsString();
+		$this->template->priceVat = $this->price->getPriceVatAsString();
 		$this->template->alternativeDurationPriceText = $training->alternativeDurationPriceText;
 		$this->template->materials = $training->materials;
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);

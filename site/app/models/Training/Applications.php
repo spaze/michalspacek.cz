@@ -377,7 +377,7 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new DateTime($date ?? '');
 
-		$this->price->resolvePriceDiscountVat($training, $status, $note ?? '');
+		$this->price->resolvePriceDiscountVat($training->price, $training->studentDiscount, $status, $note ?? '');
 
 		$data = array(
 			'key_date'             => $dateId,
@@ -444,7 +444,7 @@ class Applications
 				$note
 			): void
 			{
-				$this->price->resolvePriceDiscountVat($training, Statuses::STATUS_SIGNED_UP, $note);
+				$this->price->resolvePriceDiscountVat($training->price, $training->studentDiscount, Statuses::STATUS_SIGNED_UP, $note);
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
 					array(

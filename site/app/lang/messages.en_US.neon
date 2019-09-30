@@ -184,7 +184,7 @@ companytrainings:
 	lecturerwho: "about the lecturer"
 	lecturercontact: "contact the lecturer"
 	capacity: "Unlimited but over 12 people we'll have less time for questions."
-	price: "**%s Kč**, %s Kč incl. VAT"
+	price: "**%s**, %s incl. VAT"
 	signup: "To order an in-house training, just pick a date and \"drop me an e-mail\":[%s] to sort out other details."
 error:
 	tryother: "Try other pages"
@@ -265,7 +265,7 @@ trainings:
 	tentativedate: "**Předběžný termín** - přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát."
 	extendedtime: "According to the situation, the course can be longer by an extra hour."
 	capacity: "Maximum of %s participants"
-	price: "**%s Kč**, %s Kč incl. VAT"
+	price: "**%s**, %s incl. VAT"
 	studentdiscount: "%s%% discount for students"
 	allreviews: "All reviews"
 	datausage: "Zadané údaje budou použity pro vystavení faktury, která vám bude zaslána e-mailem během několika dní, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."

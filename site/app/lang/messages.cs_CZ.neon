@@ -184,7 +184,7 @@ companytrainings:
 	lecturerwho: "o lektorovi"
 	lecturercontact: "kontakt na lektora"
 	capacity: "Neomezena, ale nad 12 účastníků zbývá méně času na dotazy."
-	price: "**%s Kč** bez DPH, %s Kč s DPH"
+	price: "**%s** bez DPH, %s s DPH"
 	signup: "Pro objednání školení mi \"napište e-mail\":[%s] a navrhněte termín, který se vám hodí."
 error:
 	tryother: "Zkuste jiné stránky"
@@ -265,7 +265,7 @@ trainings:
 	tentativedate: "**Předběžný termín** - přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát."
 	extendedtime: "Školení se dle situace může až o hodinu protáhnout."
 	capacity: "Nejvýše %s účastníků"
-	price: "**%s Kč** bez DPH, %s Kč s DPH"
+	price: "**%s** bez DPH, %s s DPH"
 	studentdiscount: "%s%% sleva pro studenty"
 	allreviews: "Všechny ohlasy"
 	datausage: "Zadané údaje budou použity pro zaslání potvrzení, vystavení a zaslání faktury, připomínky termínu a materiálů po školení, případně pro zaslání pozvánky, pokud se hlásíte na předběžný termín."

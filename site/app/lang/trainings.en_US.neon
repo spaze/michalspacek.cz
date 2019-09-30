@@ -22,7 +22,7 @@ introphp:
 		upsell: 'Aplikace dnes musí být bezpečné a výkonné, na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "výkonnosti":[link:Www:Trainings:training vykonnost-webovych-aplikaci] webových aplikací vám ukážu, jak na to.'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
 		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
 
 php5:
 	name: "Programming PHP 5"
@@ -46,7 +46,7 @@ php5:
 		upsell: 'Jak aplikaci správně zabezpečit se dozvíte na školení "bezpečnosti":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci], jak zrychlit web na školení "výkonnosti":[link:Www:CompanyTrainings:training vykonnost-webovych-aplikaci].'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
 		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
 
 securityphp:
 	name: "PHP application security"
@@ -101,7 +101,7 @@ securityphp:
 		upsell: 'Zabezpečené přenosy dat pomocí protokolu **HTTPS** detailně rozebíráme na "školení pro správce a vývojáře":[link:Www:CompanyTrainings:training https-pro-vyvojare-a-spravce].'
 		duration: 'Školení je dvoudenní, každý den 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
 		alternativeduration: 'Pokud budete chtít probrat jen některá témata, můžeme školení uspořádat pouze jednodenní.'
-		alternativedurationprice: 'Základní cena jednodenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativedurationprice: 'Základní cena jednodenního školení je %s bez DPH, %s s DPH.'
 
 advancedwebsecurity:
 	name: 'Pokročilá webová bezpečnost'
@@ -118,7 +118,7 @@ advancedwebsecurity:
 		upsell: 'Pokročilá bezpečnost'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
 		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
 
 webperformance:
 	name: "Web application performance"
@@ -148,7 +148,7 @@ webperformance:
 		upsell: 'Je výkon vašich aplikací dostačující? A jaké je jejich zabezpečení? Přijďte to zjistit na školení "Bezpečnost webových aplikací":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci].'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
 		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
 
 php5securityperformance2days:
 	name: "PHP 5, security, and performance (2 days)"
@@ -186,7 +186,7 @@ securityusers:
 		upsell: 'Chcete své vývojáře naučit vytvářet bezpečné aplikace? Na školení "**bezpečnosti webových aplikací**":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci] jim ukážu, jak na to. Potřebujete spíš **otestovat vaši webovou aplikaci**, jestli je dostatečně zabezpečená? "Napište mi":mail@michalspacek.cz!'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
 		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
 
 php5securityperformance3days:
 	name: "PHP 5, security, and performance (3 days)"
@@ -219,7 +219,7 @@ httpsdevsadmins:
 		upsell: 'Na školení "Bezpečnost webových aplikací":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci] vývojáře naučím, jak web zabezpečit proti dalším častým útokům.'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami.'
 		alternativeduration: 'Chcete si vyzkoušet vytvořit vlastní certifikační autoritu a vystavit certifikát nebo se naučit odhalovat problémy v HTTPS spojení? Školení můžeme uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
 
 securityjava:
 	name: "Web application security (Java)"
@@ -306,4 +306,4 @@ classesobjectsphp:
 		upsell: 'Jak aplikaci správně zabezpečit se dozvíte na školení "bezpečnosti":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci], jak zrychlit web na školení "výkonnosti":[link:Www:CompanyTrainings:training vykonnost-webovych-aplikaci].'
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
 		alternativeduration: 'Pokud budete mít zájem o více praktických příkladů a úloh, můžeme školení uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s Kč bez DPH, %s Kč s DPH.'
+		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
