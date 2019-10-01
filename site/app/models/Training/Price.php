@@ -60,7 +60,7 @@ class Price
 			$this->vatRate = null;
 			$this->priceVat = null;
 		} else {
-			$this->priceVat = (int)round($this->price * (1 + $this->vatRate));
+			$this->priceVat = $this->price * (1 + $this->vatRate);
 		}
 	}
 
@@ -87,7 +87,7 @@ class Price
 	}
 
 
-	public function getPriceVat(): ?int
+	public function getPriceVat(): ?float
 	{
 		return $this->priceVat;
 	}

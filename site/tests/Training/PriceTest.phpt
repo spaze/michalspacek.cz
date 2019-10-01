@@ -44,9 +44,9 @@ class PriceTest extends TestCase
 		Assert::same('', $this->price->getPriceVatAsString());
 		$this->price->resolvePriceDiscountVat(9990, 50, Statuses::STATUS_SIGNED_UP, 'foo');
 		Assert::same(9990, $this->price->getPrice());
-		Assert::same(12088, $this->price->getPriceVat());
+		Assert::same(12087.9, $this->price->getPriceVat());
 		Assert::same('9 990 Kč', $this->price->getPriceAsString());
-		Assert::same('12 088 Kč', $this->price->getPriceVatAsString());
+		Assert::same('12 087,90 Kč', $this->price->getPriceVatAsString());
 	}
 
 
@@ -54,9 +54,9 @@ class PriceTest extends TestCase
 	{
 		$this->price->resolvePriceDiscountVat(9990, 42, Statuses::STATUS_SIGNED_UP, 'FooStudentBar');
 		Assert::same(5794, $this->price->getPrice());
-		Assert::same(7011, $this->price->getPriceVat());
+		Assert::same(7010.74, $this->price->getPriceVat());
 		Assert::same('5 794 Kč', $this->price->getPriceAsString());
-		Assert::same('7 011 Kč', $this->price->getPriceVatAsString());
+		Assert::same('7 010,74 Kč', $this->price->getPriceVatAsString());
 	}
 
 
@@ -64,9 +64,9 @@ class PriceTest extends TestCase
 	{
 		$this->price->resolvePriceVat(7990);
 		Assert::same(7990, $this->price->getPrice());
-		Assert::same(9668, $this->price->getPriceVat());
+		Assert::same(9667.9, $this->price->getPriceVat());
 		Assert::same('7 990 Kč', $this->price->getPriceAsString());
-		Assert::same('9 668 Kč', $this->price->getPriceVatAsString());
+		Assert::same('9 667,90 Kč', $this->price->getPriceVatAsString());
 	}
 
 
