@@ -40,7 +40,10 @@ services:
 			- setFilesDir('../../files/trainings')
 	trainingLocales: \MichalSpacekCz\Training\Locales
 	trainingReviews: \MichalSpacekCz\Training\Reviews
-	trainingPrice: \MichalSpacekCz\Training\Price
+	trainingPrice:
+		factory: \MichalSpacekCz\Training\Price
+		setup:
+			- setVatRate(%vatRate%)
 	vranaResolver: MichalSpacekCz\Training\Resolver\Vrana
 	authenticator:
 		factory: \MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption)
@@ -54,10 +57,6 @@ services:
 			- $cookieSecure(true)
 	netxtenHelpers: \Netxten\Templating\Helpers(@translation.translator::getDefaultLocale())
 	helpers: \MichalSpacekCz\Templating\Helpers
-	vat:
-		factory: \MichalSpacekCz\Vat
-		setup:
-			- setRate(%vatRate%)
 	securityHeaders:
 		factory: \MichalSpacekCz\SecurityHeaders
 		setup:

@@ -7,7 +7,6 @@ use MichalSpacekCz\Form\TrainingMailsOutbox;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Statuses;
-use MichalSpacekCz\Vat;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Nette\Forms\Form;
@@ -26,19 +25,15 @@ class EmailsPresenter extends BasePresenter
 	/** @var Statuses */
 	protected $trainingStatuses;
 
-	/** @var Vat */
-	protected $vat;
-
 	/** @var Row[] */
 	private $applications;
 
 
-	public function __construct(Applications $trainingApplications, Mails $trainingMails, Statuses $trainingStatuses, Vat $vat)
+	public function __construct(Applications $trainingApplications, Mails $trainingMails, Statuses $trainingStatuses)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainingStatuses = $trainingStatuses;
-		$this->vat = $vat;
 		parent::__construct();
 	}
 

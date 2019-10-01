@@ -16,23 +16,18 @@ require __DIR__ . '/../bootstrap.php';
 class PriceTest extends TestCase
 {
 
-	/** @var Vat */
-	private $vat;
-
 	/** @var Price */
 	private $price;
 
 
-	public function __construct()
+	public function setUp()
 	{
-		$this->vat = new Vat();
-		$this->price = new Price($this->vat);
-
-		$this->vat->setRate(0.21);
+		$this->price = new Price();
+		$this->price->setVatRate(0.21);
 	}
 
 
-	public function testResolvePriceDiscountVat(): void
+	public function testResolvePriceNoDiscountVat(): void
 	{
 		Assert::same('', $this->price->getPriceVatAsString());
 		$this->price->resolvePriceDiscountVat(9990, 50, Statuses::STATUS_SIGNED_UP, 'foo');

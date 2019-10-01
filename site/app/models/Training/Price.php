@@ -3,15 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use MichalSpacekCz\Vat;
-use Nette\Database\Row;
 use NumberFormatter;
 
 class Price
 {
-
-	/** @var Vat */
-	private $vat;
 
 	/** @var integer|null */
 	private $price;
@@ -26,9 +21,9 @@ class Price
 	private $discount;
 
 
-	public function __construct(Vat $vat)
+	public function setVatRate(float $vatRate): void
 	{
-		$this->vat = $vat;
+		$this->vatRate = $vatRate;
 	}
 
 
@@ -65,8 +60,7 @@ class Price
 			$this->vatRate = null;
 			$this->priceVat = null;
 		} else {
-			$this->vatRate = $this->vat->getRate();
-			$this->priceVat = $this->vat->addVat($this->price);
+			$this->priceVat = (int)round($this->price * (1 + $this->vatRate));
 		}
 	}
 
