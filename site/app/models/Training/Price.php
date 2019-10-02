@@ -11,57 +11,18 @@ class Price
 	/** @var integer|null */
 	private $price;
 
-	/** @var float|null */
-	private $vatRate;
-
-	/** @var integer|null */
-	private $priceVat;
-
 	/** @var integer|null */
 	private $discount;
 
+	/** @var float|null */
+	private $vatRate;
 
-	public function setVatRate(float $vatRate): void
+
+	public function __construct(?int $price, ?int $discount, ?float $vatRate)
 	{
+		$this->price = $price;
+		$this->discount = $discount;
 		$this->vatRate = $vatRate;
-	}
-
-
-	public function resolvePriceVat(int $price): void
-	{
-		$this->resolve($price, null, false);
-	}
-
-
-	public function resolvePriceDiscountVat(int $price, int $studentDiscount, string $status, string $note): void
-	{
-		$this->resolve(
-			$price,
-			stripos($note, 'student') !== false ? $studentDiscount : null,
-			in_array($status, [Statuses::STATUS_NON_PUBLIC_TRAINING, Statuses::STATUS_TENTATIVE], true),
-		);
-	}
-
-
-	private function resolve(int $price, ?int $studentDiscount, bool $noPrice): void
-	{
-		if ($noPrice) {
-			$this->price = null;
-			$this->discount = null;
-		} elseif ($studentDiscount === null) {
-			$this->price = $price;
-			$this->discount = null;
-		} else {
-			$this->price = (int)($price * (100 - $studentDiscount) / 100);
-			$this->discount = $studentDiscount;
-		}
-
-		if ($this->price === null) {
-			$this->vatRate = null;
-			$this->priceVat = null;
-		} else {
-			$this->priceVat = $this->price * (1 + $this->vatRate);
-		}
 	}
 
 
@@ -81,6 +42,12 @@ class Price
 	}
 
 
+	public function getDiscount(): ?int
+	{
+		return $this->discount;
+	}
+
+
 	public function getVatRate(): ?float
 	{
 		return $this->vatRate;
@@ -89,23 +56,18 @@ class Price
 
 	public function getPriceVat(): ?float
 	{
-		return $this->priceVat;
+		return $this->price !== null ? $this->price * (1 + $this->vatRate) : null;
 	}
 
 
 	public function getPriceVatAsString(): string
 	{
-		if ($this->priceVat === null) {
+		$priceVat = $this->getPriceVat();
+		if ($priceVat === null) {
 			return '';
 		}
 
-		return $this->getNumberFormatter($this->priceVat)->formatCurrency($this->priceVat, 'CZK');
-	}
-
-
-	public function getDiscount(): ?int
-	{
-		return $this->discount;
+		return $this->getNumberFormatter($priceVat)->formatCurrency($priceVat, 'CZK');
 	}
 
 

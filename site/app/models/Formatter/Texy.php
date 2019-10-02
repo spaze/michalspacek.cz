@@ -8,7 +8,7 @@ use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Locales;
-use MichalSpacekCz\Training\Price;
+use MichalSpacekCz\Training\Prices;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -42,8 +42,8 @@ class Texy extends NetxtenTexy
 	/** @var Locales */
 	protected $trainingLocales;
 
-	/** @var Price */
-	private $price;
+	/** @var Prices */
+	private $prices;
 
 	/** @var LocaleLinkGenerator */
 	private $localeLinkGenerator;
@@ -88,7 +88,7 @@ class Texy extends NetxtenTexy
 		ITranslator $translator,
 		Application $application,
 		Dates $trainingDates,
-		Price $price,
+		Prices $price,
 		Locales $trainingLocales,
 		LocaleLinkGenerator $localeLinkGenerator,
 		LocaleUrls $localeUrls,
@@ -97,7 +97,7 @@ class Texy extends NetxtenTexy
 		$this->translator = $translator;
 		$this->application = $application;
 		$this->trainingDates = $trainingDates;
-		$this->price = $price;
+		$this->prices = $price;
 		$this->trainingLocales = $trainingLocales;
 		$this->localeLinkGenerator = $localeLinkGenerator;
 		$this->blogPostLocaleUrls = $localeUrls;
@@ -389,10 +389,10 @@ class Texy extends NetxtenTexy
 		}
 
 		if (isset($training->alternativeDurationPriceText)) {
-			$this->price->resolvePriceVat($training->alternativeDurationPrice);
+			$price = $this->prices->resolvePriceVat($training->alternativeDurationPrice);
 			$training->alternativeDurationPriceText = $this->translate($training->alternativeDurationPriceText, [
-				$this->price->getPriceAsString(),
-				$this->price->getPriceVatAsString()
+				$price->getPriceAsString(),
+				$price->getPriceVatAsString()
 			]);
 		}
 		return $training;

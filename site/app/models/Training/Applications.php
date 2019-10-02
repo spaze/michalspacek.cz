@@ -36,8 +36,8 @@ class Applications
 	/** @var StaticKey */
 	protected $emailEncryption;
 
-	/** @var Price */
-	private $price;
+	/** @var Prices */
+	private $prices;
 
 	/** @var Vrana */
 	protected $vranaResolver;
@@ -55,7 +55,7 @@ class Applications
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		StaticKey $emailEncryption,
-		Price $price,
+		Prices $price,
 		Vrana $vranaResolver,
 		ITranslator $translator
 	)
@@ -65,7 +65,7 @@ class Applications
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->emailEncryption = $emailEncryption;
-		$this->price = $price;
+		$this->prices = $price;
 		$this->vranaResolver = $vranaResolver;
 		$this->translator = $translator;
 	}
@@ -377,7 +377,7 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new DateTime($date ?? '');
 
-		$this->price->resolvePriceDiscountVat($training->price, $training->studentDiscount, $status, $note ?? '');
+		$price = $this->prices->resolvePriceDiscountVat($training->price, $training->studentDiscount, $status, $note ?? '');
 
 		$data = array(
 			'key_date'             => $dateId,
@@ -395,10 +395,10 @@ class Applications
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 			'key_source'           => $this->getTrainingApplicationSource($source),
-			'price'                => $this->price->getPrice(),
-			'vat_rate'             => $this->price->getVatRate(),
-			'price_vat'            => $this->price->getPriceVat(),
-			'discount'             => $this->price->getDiscount(),
+			'price'                => $price->getPrice(),
+			'vat_rate'             => $price->getVatRate(),
+			'price_vat'            => $price->getPriceVat(),
+			'discount'             => $price->getDiscount(),
 		);
 		if ($dateId === null) {
 			$data['key_training'] = $training->trainingId;
@@ -444,7 +444,7 @@ class Applications
 				$note
 			): void
 			{
-				$this->price->resolvePriceDiscountVat($training->price, $training->studentDiscount, Statuses::STATUS_SIGNED_UP, $note);
+				$price = $this->prices->resolvePriceDiscountVat($training->price, $training->studentDiscount, Statuses::STATUS_SIGNED_UP, $note);
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
 					array(
@@ -458,10 +458,10 @@ class Applications
 						'company_id'     => $companyId,
 						'company_tax_id' => $companyTaxId,
 						'note'           => $note,
-						'price'          => $this->price->getPrice(),
-						'vat_rate'       => $this->price->getVatRate(),
-						'price_vat'      => $this->price->getPriceVat(),
-						'discount'       => $this->price->getDiscount(),
+						'price'          => $price->getPrice(),
+						'vat_rate'       => $price->getVatRate(),
+						'price_vat'      => $price->getPriceVat(),
+						'discount'       => $price->getDiscount(),
 					),
 					$applicationId
 				);

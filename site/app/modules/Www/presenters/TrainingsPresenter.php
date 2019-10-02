@@ -13,7 +13,7 @@ use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Files;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Mails;
-use MichalSpacekCz\Training\Price;
+use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\AbortException;
@@ -59,8 +59,8 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Reviews */
 	protected $trainingReviews;
 
-	/** @var Price */
-	private $price;
+	/** @var Prices */
+	private $prices;
 
 	/** @var Helpers */
 	protected $netxtenHelpers;
@@ -88,7 +88,7 @@ class TrainingsPresenter extends BasePresenter
 		CompanyTrainings $companyTrainings,
 		Locales $trainingLocales,
 		Reviews $trainingReviews,
-		Price $price,
+		Prices $price,
 		Helpers $netxtenHelpers,
 		Info $companyInfo,
 		IResponse $httpResponse
@@ -103,7 +103,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->companyTrainings = $companyTrainings;
 		$this->trainingLocales = $trainingLocales;
 		$this->trainingReviews = $trainingReviews;
-		$this->price = $price;
+		$this->prices = $price;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->companyInfo = $companyInfo;
 		$this->httpResponse = $httpResponse;
@@ -138,7 +138,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->dates = $this->trainings->getDates($this->training->trainingId);
-		$this->price->resolvePriceVat($this->training->price);
+		$price = $this->prices->resolvePriceVat($this->training->price);
 
 		$session = $this->getSession();
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
@@ -152,8 +152,8 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->prerequisites    = $this->training->prerequisites;
 		$this->template->audience         = $this->training->audience;
 		$this->template->capacity         = $this->training->capacity;
-		$this->template->price            = $this->price->getPriceAsString();
-		$this->template->priceVat         = $this->price->getPriceVatAsString();
+		$this->template->price            = $price->getPriceAsString();
+		$this->template->priceVat         = $price->getPriceVatAsString();
 		$this->template->studentDiscount  = $this->training->studentDiscount;
 		$this->template->materials        = $this->training->materials;
 		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);

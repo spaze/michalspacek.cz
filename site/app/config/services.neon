@@ -40,8 +40,8 @@ services:
 			- setFilesDir('../../files/trainings')
 	trainingLocales: \MichalSpacekCz\Training\Locales
 	trainingReviews: \MichalSpacekCz\Training\Reviews
-	trainingPrice:
-		factory: \MichalSpacekCz\Training\Price
+	trainingPrices:
+		factory: \MichalSpacekCz\Training\Prices
 		setup:
 			- setVatRate(%vatRate%)
 	vranaResolver: MichalSpacekCz\Training\Resolver\Vrana
