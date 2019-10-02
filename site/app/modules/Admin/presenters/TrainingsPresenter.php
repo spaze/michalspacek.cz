@@ -420,7 +420,7 @@ class TrainingsPresenter extends BasePresenter
 			$values->source,
 			(trim($values->price) !== '' ? (int)$values->price : null),
 			(trim($values->vatRate) !== '' ? $values->vatRate / 100 : null),
-			(trim($values->priceVat) !== '' ? (int)$values->priceVat : null),
+			(is_float($values->priceVat) ? $values->priceVat : null),
 			(trim($values->discount) !== '' ? (int)$values->discount : null),
 			$values->invoiceId,
 			$values->paid,

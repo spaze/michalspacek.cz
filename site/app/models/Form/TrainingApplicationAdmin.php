@@ -90,6 +90,8 @@ class TrainingApplicationAdmin extends ProtectedForm
 			->setHtmlType('number');
 		$this->addText('priceVat', 'Cena s DPH:')
 			->setHtmlType('number')
+			->setHtmlAttribute('step', 'any')
+			->addRule(self::FLOAT)
 			->setHtmlAttribute('title', 'Po případné slevě');
 		$this->addText('discount', 'Sleva:')
 			->setHtmlType('number');

@@ -486,7 +486,7 @@ class Applications
 		string $source,
 		?int $price = null,
 		?float $vatRate = null,
-		?int $priceVat = null,
+		?float $priceVat = null,
 		?int $discount = null,
 		?string $invoiceId = null,
 		string $paid = null,
