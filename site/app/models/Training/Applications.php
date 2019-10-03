@@ -122,6 +122,7 @@ class Applications
 					$row->email = $this->emailEncryption->decrypt($row->email);
 				}
 				$row->training = $this->trainings->getById($row->trainingId);
+				$this->addPricesWithCurrency($row);
 			}
 		}
 
@@ -148,6 +149,7 @@ class Applications
 					a.price,
 					a.vat_rate AS vatRate,
 					a.price_vat AS priceVat,
+					a.discount,
 					a.invoice_id AS invoiceId,
 					a.paid,
 					sr.name AS sourceName
@@ -169,6 +171,7 @@ class Applications
 					$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
 					$row->discarded = in_array($row->status, $discardedStatuses);
 					$row->attended = in_array($row->status, $attendedStatuses);
+					$this->addPricesWithCurrency($row);
 				}
 			}
 		}
@@ -804,6 +807,14 @@ class Applications
 	public function setFamiliar(int $applicationId): void
 	{
 		$this->database->query('UPDATE training_applications SET familiar = TRUE WHERE id_application = ?', $applicationId);
+	}
+
+
+	private function addPricesWithCurrency(Row $row): void
+	{
+		$price = new Price($row->price, $row->discount, $row->vatRate, $row->priceVat);
+		$row->priceWithCurrency = $price->getPriceWithCurrency();
+		$row->priceVatWithCurrency = $price->getPriceVatWithCurrency();
 	}
 
 }

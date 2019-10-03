@@ -6,7 +6,7 @@ potvrzuji Vaši registraci ze dne {$application->statusTime|localeDay:'cs_CZ'} n
 adresa {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}
 {link //:Www:Trainings:training $application->training->action}
 
-V příloze naleznete fakturu na částku {$application->price} Kč bez DPH, {$application->priceVat} Kč s DPH,
+V příloze naleznete fakturu na částku {$application->priceWithCurrency} bez DPH, {$application->priceVatWithCurrency} s DPH,
 proplaťte ji, prosím, do stanoveného data.
 
 {if $additional}

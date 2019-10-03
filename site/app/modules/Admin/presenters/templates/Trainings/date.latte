@@ -42,7 +42,7 @@
 			<td>
 				<small><code title="Zdroj {$application->sourceName}">{$application->sourceNameInitials}</code></small>
 				{capture $title}
-					{ifset $application->priceVat}{$application->priceVat} Kč s DPH, {/ifset}
+					{ifset $application->priceVatWithCurrency}{$application->priceVatWithCurrency} s DPH, {/ifset}
 					faktura č. {ifset $application->invoiceId}{$application->invoiceId},
 					{ifset $application->paid}
 						{capture $paidTime}{$application->paid|date:'H:i'}{/capture}
@@ -53,7 +53,7 @@
 					{else}–{/ifset}
 				{/capture}
 				<small title="{$title|strip}">
-					{ifset $application->price}{$application->price} Kč{if $application->price > 0 && !isset($application->paid)} <strong>!</strong>{/if}{else}–{/ifset}
+					{ifset $application->priceWithCurrency}{$application->priceWithCurrency}{if $application->price > 0 && !isset($application->paid)} <strong>!</strong>{/if}{else}–{/ifset}
 				</small>
 			</td>
 		</tr>

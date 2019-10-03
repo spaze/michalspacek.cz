@@ -41,10 +41,9 @@
 					{if $application->price && $application->vatRate && $application->priceVat}
 						{input invoiceId}
 						{input invoice}
-						<span title="Cena v Kč bez DPH po případné slevě">{$application->price} Kč</span>
-						/
-						<span title="Cena v Kč s DPH po případné slevě">{$application->priceVat} Kč</span>
-						<small n:if="$application->discount" title="Sleva {$application->discount} %">{$application->discount} %</small>
+						<span title="Cena v Kč bez DPH po případné slevě">{$application->priceWithCurrency}</span>
+						<small title="Cena v Kč s DPH po případné slevě">{$application->priceVatWithCurrency}</small>
+						<small n:if="$application->discount" title="Sleva {$application->discount} %"><strong>{$application->discount} %</strong></small>
 					{else}
 						<strong class="error">Není zadána cena, DPH nebo cena s DPH!</strong>
 					{/if}

@@ -17,12 +17,16 @@ class Price
 	/** @var float|null */
 	private $vatRate;
 
+	/** @var float|null */
+	private $priceVat;
 
-	public function __construct(?int $price, ?int $discount, ?float $vatRate)
+
+	public function __construct(?int $price, ?int $discount, ?float $vatRate, ?float $priceVat = null)
 	{
 		$this->price = $price;
 		$this->discount = $discount;
 		$this->vatRate = $vatRate;
+		$this->priceVat = $priceVat;
 	}
 
 
@@ -32,7 +36,7 @@ class Price
 	}
 
 
-	public function getPriceAsString(): string
+	public function getPriceWithCurrency(): string
 	{
 		if ($this->price === null) {
 			return '';
@@ -56,11 +60,15 @@ class Price
 
 	public function getPriceVat(): ?float
 	{
+		if ($this->priceVat) {
+			return $this->priceVat;
+		}
+
 		return $this->price !== null ? $this->price * (1 + $this->vatRate) : null;
 	}
 
 
-	public function getPriceVatAsString(): string
+	public function getPriceVatWithCurrency(): string
 	{
 		$priceVat = $this->getPriceVat();
 		if ($priceVat === null) {

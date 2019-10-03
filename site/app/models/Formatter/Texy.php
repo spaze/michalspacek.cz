@@ -391,8 +391,8 @@ class Texy extends NetxtenTexy
 		if (isset($training->alternativeDurationPriceText)) {
 			$price = $this->prices->resolvePriceVat($training->alternativeDurationPrice);
 			$training->alternativeDurationPriceText = $this->translate($training->alternativeDurationPriceText, [
-				$price->getPriceAsString(),
-				$price->getPriceVatAsString()
+				$price->getPriceWithCurrency(),
+				$price->getPriceVatWithCurrency()
 			]);
 		}
 		return $training;

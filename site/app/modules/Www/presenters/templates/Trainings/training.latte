@@ -154,7 +154,7 @@
 <hr>
 
 <h2 id="{_html.id.price}">{_messages.label.trainingprice}</h2>
-<p>{_messages.trainings.price|format:$price:$priceVat}{ifset $studentDiscount}, {_messages.trainings.studentdiscount|format:$studentDiscount}{/ifset}</p>
+<p>{_messages.trainings.price|format:$priceWithCurrency:$priceVatWithCurrency}{ifset $studentDiscount}, {_messages.trainings.studentdiscount|format:$studentDiscount}{/ifset}</p>
 <hr>
 
 <h2 id="{_html.id.materials}">{_messages.label.materials}</h2>

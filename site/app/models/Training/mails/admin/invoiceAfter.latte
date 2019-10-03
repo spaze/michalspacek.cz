@@ -2,7 +2,7 @@ Dobrý den,
 
 díky za účast na školení {$application->training->name} {$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'}
 
-V příloze naleznete fakturu na částku {$application->price} Kč bez DPH, {$application->priceVat} Kč s DPH,
+V příloze naleznete fakturu na částku {$application->priceWithCurrency} bez DPH, {$application->priceVatWithCurrency} s DPH,
 proplaťte ji, prosím, do stanoveného data.
 
 {if $additional}

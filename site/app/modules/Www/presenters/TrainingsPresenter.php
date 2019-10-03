@@ -152,8 +152,8 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->prerequisites    = $this->training->prerequisites;
 		$this->template->audience         = $this->training->audience;
 		$this->template->capacity         = $this->training->capacity;
-		$this->template->price            = $price->getPriceAsString();
-		$this->template->priceVat         = $price->getPriceVatAsString();
+		$this->template->priceWithCurrency = $price->getPriceWithCurrency();
+		$this->template->priceVatWithCurrency = $price->getPriceVatWithCurrency();
 		$this->template->studentDiscount  = $this->training->studentDiscount;
 		$this->template->materials        = $this->training->materials;
 		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
