@@ -27,7 +27,7 @@ return array(
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
-    'PHPStan\\' => array($vendorDir . '/phpstan/phpstan/src', $vendorDir . '/phpstan/phpstan/build/PHPStan', $vendorDir . '/phpstan/phpstan-nette/src'),
+    'PHPStan\\' => array($vendorDir . '/phpstan/phpstan/src', $vendorDir . '/phpstan/phpstan-nette/src'),
     'MichalSpacekCz\\' => array($baseDir . '/app/models'),
     'Jean85\\' => array($vendorDir . '/jean85/pretty-package-versions/src'),
     'Contributte\\Translation\\' => array($vendorDir . '/contributte/translation/src'),

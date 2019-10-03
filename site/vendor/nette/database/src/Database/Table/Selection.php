@@ -37,7 +37,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/** @var string table name */
 	protected $name;
 
-	/** @var string|array|null primary key field name */
+	/** @var string|string[]|null primary key field name */
 	protected $primary;
 
 	/** @var string|bool primary column sequence name, false for autodetection */
@@ -115,7 +115,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 
 	/**
-	 * @return string|array|null
+	 * @return string|string[]|null
 	 */
 	public function getPrimary(bool $throw = true)
 	{
@@ -394,7 +394,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * Sets limit clause, more calls rewrite old values.
 	 * @return static
 	 */
-	public function limit(int $limit, int $offset = null)
+	public function limit(?int $limit, int $offset = null)
 	{
 		$this->emptyResultSet();
 		$this->sqlBuilder->setLimit($limit, $offset);

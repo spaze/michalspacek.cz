@@ -80,6 +80,21 @@ class NativeBuiltinMethodReflection implements BuiltinMethodReflection
 		return $this->reflection->isDeprecated();
 	}
 
+	public function isFinal(): bool
+	{
+		return $this->reflection->isFinal();
+	}
+
+	public function isInternal(): bool
+	{
+		return $this->reflection->isInternal();
+	}
+
+	public function isAbstract(): bool
+	{
+		return $this->reflection->isAbstract();
+	}
+
 	public function isVariadic(): bool
 	{
 		return $this->reflection->isVariadic();

@@ -98,24 +98,4 @@ class StatementResult
 		return $exitPoints;
 	}
 
-	/**
-	 * @return StatementExitPoint[]
-	 */
-	public function getTerminatingExitPoints(): array
-	{
-		$exitPoints = [];
-		foreach ($this->exitPoints as $exitPoint) {
-			if ($exitPoint->getStatement() instanceof Stmt\Break_) {
-				continue;
-			}
-			if ($exitPoint->getStatement() instanceof Stmt\Continue_) {
-				continue;
-			}
-
-			$exitPoints[] = $exitPoint;
-		}
-
-		return $exitPoints;
-	}
-
 }

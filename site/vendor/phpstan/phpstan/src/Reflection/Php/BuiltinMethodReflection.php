@@ -48,4 +48,10 @@ interface BuiltinMethodReflection
 	 */
 	public function getParameters(): array;
 
+	public function isFinal(): bool;
+
+	public function isInternal(): bool;
+
+	public function isAbstract(): bool;
+
 }

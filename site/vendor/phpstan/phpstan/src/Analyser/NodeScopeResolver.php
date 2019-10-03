@@ -50,6 +50,7 @@ use PHPStan\File\FileHelper;
 use PHPStan\Node\ClosureReturnStatementsNode;
 use PHPStan\Node\ExecutionEndNode;
 use PHPStan\Node\FunctionReturnStatementsNode;
+use PHPStan\Node\InArrowFunctionNode;
 use PHPStan\Node\InClassMethodNode;
 use PHPStan\Node\LiteralArrayItem;
 use PHPStan\Node\LiteralArrayNode;
@@ -490,6 +491,10 @@ class NodeScopeResolver
 			foreach ($stmt->props as $prop) {
 				$this->processStmtNode($prop, $scope, $nodeCallback);
 			}
+
+			if ($stmt->type !== null) {
+				$nodeCallback($stmt->type, $scope);
+			}
 		} elseif ($stmt instanceof Node\Stmt\PropertyProperty) {
 			$hasYield = false;
 			if ($stmt->default !== null) {
@@ -667,6 +672,7 @@ class NodeScopeResolver
 			} while (!$alwaysTerminating && $count < self::LOOP_SCOPE_ITERATIONS);
 
 			$bodyScope = $bodyScope->mergeWith($scope);
+			$bodyScopeMaybeRan = $bodyScope;
 			$bodyScope = $this->processExprNode($stmt->cond, $bodyScope, $nodeCallback, ExpressionContext::createDeep())->getTruthyScope();
 			$finalScopeResult = $this->processStmtNodes($stmt, $stmt->stmts, $bodyScope, $nodeCallback)->filterOutLoopExitPoints();
 			$finalScope = $finalScopeResult->getScope();
@@ -678,16 +684,17 @@ class NodeScopeResolver
 				$finalScope = $finalScope->mergeWith($breakExitPoint->getScope());
 			}
 
-			$condBooleanType = $scope->getType($stmt->cond)->toBoolean();
-			$isIterableAtLeastOnce = $condBooleanType instanceof ConstantBooleanType && $condBooleanType->getValue();
-			$isAlwaysTerminating = $finalScopeResult->isAlwaysTerminating() && $isIterableAtLeastOnce;
-			if (
-				!$isAlwaysTerminating
-				&& $isIterableAtLeastOnce
-				&& count($breakExitPoints) === 0
-				&& count($finalScopeResult->getTerminatingExitPoints()) > 0
-			) {
-				$isAlwaysTerminating = true;
+			$beforeCondBooleanType = $scope->getType($stmt->cond)->toBoolean();
+			$condBooleanType = $bodyScopeMaybeRan->getType($stmt->cond)->toBoolean();
+			$isIterableAtLeastOnce = $beforeCondBooleanType instanceof ConstantBooleanType && $beforeCondBooleanType->getValue();
+			$alwaysIterates = $condBooleanType instanceof ConstantBooleanType && $condBooleanType->getValue();
+
+			if ($alwaysIterates) {
+				$isAlwaysTerminating = count($finalScopeResult->getExitPointsByType(Break_::class)) === 0;
+			} elseif ($isIterableAtLeastOnce) {
+				$isAlwaysTerminating = $finalScopeResult->isAlwaysTerminating();
+			} else {
+				$isAlwaysTerminating = false;
 			}
 			// todo for all loops - is not falsey when the loop is exited via break
 			$condScope = $condResult->getFalseyScope();
@@ -736,8 +743,15 @@ class NodeScopeResolver
 			$bodyScope = $bodyScope->mergeWith($scope);
 
 			$bodyScopeResult = $this->processStmtNodes($stmt, $stmt->stmts, $bodyScope, $nodeCallback)->filterOutLoopExitPoints();
-			$alwaysTerminating = $bodyScopeResult->isAlwaysTerminating();
 			$bodyScope = $bodyScopeResult->getScope();
+			$condBooleanType = $bodyScope->getType($stmt->cond)->toBoolean();
+			$alwaysIterates = $condBooleanType instanceof ConstantBooleanType && $condBooleanType->getValue();
+
+			if ($alwaysIterates) {
+				$alwaysTerminating = count($bodyScopeResult->getExitPointsByType(Break_::class)) === 0;
+			} else {
+				$alwaysTerminating = $bodyScopeResult->isAlwaysTerminating();
+			}
 			foreach ($bodyScopeResult->getExitPointsByType(Continue_::class) as $continueExitPoint) {
 				$bodyScope = $bodyScope->mergeWith($continueExitPoint->getScope());
 			}
@@ -747,15 +761,6 @@ class NodeScopeResolver
 			}
 			if (!$alwaysTerminating) {
 				$finalScope = $this->processExprNode($stmt->cond, $bodyScope, $nodeCallback, ExpressionContext::createDeep())->getFalseyScope();
-
-				$condType = $bodyScope->getType($stmt->cond);
-				if (
-					$condType instanceof ConstantBooleanType && $condType->getValue()
-					&& count($bodyScopeResult->getExitPointsByType(Break_::class)) === 0
-					&& count($bodyScopeResult->getTerminatingExitPoints()) > 0
-				) {
-					$alwaysTerminating = true;
-				}
 				// todo not falsey if it breaks out of the loop using break;
 			}
 			foreach ($bodyScopeResult->getExitPointsByType(Break_::class) as $breakExitPoint) {
@@ -1317,7 +1322,7 @@ class NodeScopeResolver
 				function (Scope $scope) use ($expr, $nodeCallback, $context): ExpressionResult {
 					return $this->processExprNode($expr->expr, $scope, $nodeCallback, $context->enterDeep());
 				},
-				false
+				$expr instanceof Expr\AssignOp\Coalesce
 			);
 			$scope = $result->getScope();
 			$hasYield = $result->hasYield();
@@ -1439,7 +1444,7 @@ class NodeScopeResolver
 		} elseif ($expr instanceof MethodCall) {
 			$originalScope = $scope;
 			if (
-				$expr->var instanceof Expr\Closure
+				($expr->var instanceof Expr\Closure || $expr->var instanceof Expr\ArrowFunction)
 				&& $expr->name instanceof Node\Identifier
 				&& strtolower($expr->name->name) === 'call'
 				&& isset($expr->args[0])
@@ -1562,6 +1567,19 @@ class NodeScopeResolver
 		} elseif ($expr instanceof Expr\ClosureUse) {
 			$this->processExprNode($expr->var, $scope, $nodeCallback, $context);
 			$hasYield = false;
+		} elseif ($expr instanceof Expr\ArrowFunction) {
+			foreach ($expr->params as $param) {
+				$this->processParamNode($param, $scope, $nodeCallback);
+			}
+			if ($expr->returnType !== null) {
+				$nodeCallback($expr->returnType, $scope);
+			}
+
+			$arrowFunctionScope = $scope->enterArrowFunction($expr);
+			$nodeCallback(new InArrowFunctionNode($expr), $arrowFunctionScope);
+			$this->processExprNode($expr->expr, $arrowFunctionScope, $nodeCallback, $context);
+			$hasYield = false;
+
 		} elseif ($expr instanceof ErrorSuppress) {
 			$result = $this->processExprNode($expr->expr, $scope, $nodeCallback, $context);
 			$hasYield = $result->hasYield();

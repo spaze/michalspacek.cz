@@ -28,8 +28,10 @@ use PHPStan\Reflection\PropertiesClassReflectionExtension;
 use PHPStan\Reflection\PropertyReflection;
 use PHPStan\Reflection\SignatureMap\ParameterSignature;
 use PHPStan\Reflection\SignatureMap\SignatureMapProvider;
+use PHPStan\Type\ErrorType;
 use PHPStan\Type\FileTypeMapper;
 use PHPStan\Type\MixedType;
+use PHPStan\Type\NeverType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypehintHelper;
 
@@ -165,6 +167,7 @@ class PhpClassReflectionExtension
 			? $propertyReflection->getDocComment()
 			: null;
 
+		$phpDocType = null;
 		if ($declaringClassReflection->getFileName() !== false) {
 			$phpDocBlock = PhpDocBlock::resolvePhpDocBlockForProperty(
 				$this->broker,
@@ -184,11 +187,9 @@ class PhpClassReflectionExtension
 				);
 				$varTags = $resolvedPhpDoc->getVarTags();
 				if (isset($varTags[0]) && count($varTags) === 1) {
-					$type = $varTags[0]->getType();
+					$phpDocType = $varTags[0]->getType();
 				} elseif (isset($varTags[$propertyName])) {
-					$type = $varTags[$propertyName]->getType();
-				} else {
-					$type = new MixedType();
+					$phpDocType = $varTags[$propertyName]->getType();
 				}
 				$deprecatedDescription = $resolvedPhpDoc->getDeprecatedTag() !== null ? $resolvedPhpDoc->getDeprecatedTag()->getMessage() : null;
 				$isDeprecated = $resolvedPhpDoc->isDeprecated();
@@ -196,23 +197,26 @@ class PhpClassReflectionExtension
 			} elseif (
 				$this->inferPrivatePropertyTypeFromConstructor
 				&& $propertyReflection->isPrivate()
+				&& (!method_exists($propertyReflection, 'hasType') || !$propertyReflection->hasType())
 				&& $declaringClassReflection->hasConstructor()
 				&& $declaringClassReflection->getConstructor()->getDeclaringClass()->getName() === $declaringClassReflection->getName()
 			) {
-				$type = $this->inferPrivatePropertyType(
+				$phpDocType = $this->inferPrivatePropertyType(
 					$propertyReflection->getName(),
 					$declaringClassReflection->getConstructor()
 				);
-			} else {
-				$type = new MixedType();
 			}
-		} else {
-			$type = new MixedType();
+		}
+
+		$nativeType = null;
+		if (method_exists($propertyReflection, 'getType') && $propertyReflection->getType() !== null) {
+			$nativeType = $propertyReflection->getType();
 		}
 
 		return new PhpPropertyReflection(
 			$declaringClassReflection,
-			$type,
+			$nativeType,
+			$phpDocType,
 			$propertyReflection,
 			$deprecatedDescription,
 			$isDeprecated,
@@ -642,7 +646,12 @@ class PhpClassReflectionExtension
 				continue;
 			}
 
-			$propertyTypes[$propertyFetch->name->toString()] = $methodScope->getType($expr->expr);
+			$propertyType = $methodScope->getType($expr->expr);
+			if ($propertyType instanceof ErrorType || $propertyType instanceof NeverType) {
+				continue;
+			}
+
+			$propertyTypes[$propertyFetch->name->toString()] = $propertyType;
 		}
 
 		return $this->propertyTypesCache[$declaringClass->getName()] = $propertyTypes;

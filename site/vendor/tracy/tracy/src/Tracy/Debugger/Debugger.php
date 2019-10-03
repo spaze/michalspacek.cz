@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.6.4';
+	public const VERSION = '2.7.0';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -262,7 +262,7 @@ class Debugger
 		self::$reserved = null;
 
 		$error = error_get_last();
-		if (in_array($error['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE, E_RECOVERABLE_ERROR, E_USER_ERROR], true)) {
+		if (in_array($error['type'] ?? null, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE, E_RECOVERABLE_ERROR, E_USER_ERROR], true)) {
 			self::exceptionHandler(
 				Helpers::fixStack(new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'])),
 				false
@@ -361,7 +361,7 @@ class Debugger
 	 * @throws ErrorException
 	 * @internal
 	 */
-	public static function errorHandler(int $severity, string $message, string $file, int $line, array $context = []): ?bool
+	public static function errorHandler(int $severity, string $message, string $file, int $line, array $context = null): ?bool
 	{
 		if (self::$scream) {
 			error_reporting(E_ALL);
@@ -403,7 +403,7 @@ class Debugger
 			self::exceptionHandler($e);
 		}
 
-		$message = 'PHP ' . Helpers::errorTypeToString($severity) . ': ' . Helpers::improveError($message, $context);
+		$message = 'PHP ' . Helpers::errorTypeToString($severity) . ': ' . Helpers::improveError($message, (array) $context);
 		$count = &self::getBar()->getPanel('Tracy:errors')->data["$file|$line|$message"];
 
 		if ($count++) { // repeated error
@@ -602,6 +602,7 @@ class Debugger
 		if (!isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !isset($_SERVER['HTTP_FORWARDED'])) {
 			$list[] = '127.0.0.1';
 			$list[] = '::1';
+			$list[] = '[::1]'; // workaround for PHP < 7.3.4
 		}
 		return in_array($addr, $list, true) || in_array("$secret@$addr", $list, true);
 	}
