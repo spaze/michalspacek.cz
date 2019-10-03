@@ -4,14 +4,20 @@ $(document).ready(function() {
 	});
 
 	var APPLICATION = APPLICATION || {};
+	APPLICATION.hideLoadControls = function() {
+		$('#loadDataControls span').addClass('hidden');
+	};
+	APPLICATION.showLoadControls = function(selector) {
+		$(selector).removeClass('hidden');
+	};
 	APPLICATION.loadData = function(event) {
 		event.preventDefault();
 		if ($('#frm-application-country').val() == '' || $('#frm-application-companyId').val().replace(/ /g, '') == '') {
 			alert($('#errorCountryCompanyMissing').text());
 			return;
 		}
-		$('#loadDataControls span').hide();
-		$('#loadDataWait').show();
+		APPLICATION.hideLoadControls();
+		APPLICATION.showLoadControls('#loadDataWait');
 		var load = $.ajax({
 			url: $('#loadData').data('url'),
 			data: {
@@ -21,26 +27,27 @@ $(document).ready(function() {
 			timeout: 10000
 		});
 		load.done(function(data) {
-			$('#loadDataControls span').hide();
-			$('#loadDataAgain').show();
+			APPLICATION.hideLoadControls();
+			APPLICATION.showLoadControls('#loadDataAgain');
 			if (data.status == 200) {
 				$.each(['companyId', 'companyTaxId', 'company', 'street', 'city', 'zip', 'country'], function(key, value) {
 					$('#company').find('#frm-application-' + value).val(data[value]);
 				});
 			} else if (data.status == 400) {
-				$('#loadDataNotFound').show();
+				APPLICATION.showLoadControls('#loadDataNotFound');
 			} else {
-				$('#loadDataError').show();
+				APPLICATION.showLoadControls('#loadDataError');
 			}
 		});
 		load.fail(function() {
-			$('#loadDataControls span').hide();
-			$('#loadDataAgain, #loadDataError').show();
+			APPLICATION.hideLoadControls();
+			APPLICATION.showLoadControls('#loadDataAgain, #loadDataError');
 		});
 	};
 	$('#loadData a, #loadDataAgain a').click(APPLICATION.loadData);
-	$('#loadDataDisabled').hide();
-	$('#loadData').show();
+	$('#loadDataDisabled').addClass('hidden');
+	APPLICATION.hideLoadControls();
+	APPLICATION.showLoadControls('#loadDataControls, #loadData');
 	APPLICATION.changeLabels = function() {
 		$('#frm-application').find('label').each(function() {
 			var label = $(this).data('label-' + $('#frm-application-country').val());

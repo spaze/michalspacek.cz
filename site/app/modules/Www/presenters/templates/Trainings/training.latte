@@ -35,7 +35,7 @@
 			<td class="short" headers="th-id">
 				{input companyId}
 				<small><span id="loadDataDisabled" class="transparent">{_messages.trainings.loaddata.loadrest}</span></small>
-				<small id="loadDataControls" n:if="$loadCompanyDataVisible">
+				<small id="loadDataControls" class="hidden" n:if="$loadCompanyDataVisible">
 					<span id="loadData" data-url="{link :Api:Company:}"><a href="" title="{_messages.trainings.loaddata.title}">{_messages.trainings.loaddata.loadrest}</a></span>
 					<span id="loadDataWait">{_messages.trainings.loaddata.wait}</span>
 					<span id="loadDataNotFound">{_messages.trainings.loaddata.notfound} </span>
