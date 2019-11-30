@@ -29,7 +29,7 @@ session:
 translation:
 	locales:
 		default: cs_CZ
-		whitelist: [cs, en]
+		whitelist: [cs_CZ, en_US]
 	localeResolvers!: []
 	dirs:
 		- %appDir%/lang
