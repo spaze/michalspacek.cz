@@ -65,7 +65,8 @@ class Venues
 		$result = $this->database->fetchAll(
 			'SELECT
 				v.id_venue AS id,
-				v.name
+				v.name,
+				v.city
 			FROM training_venues v
 			ORDER BY
 				v.order IS NULL, v.order, v.id_venue'

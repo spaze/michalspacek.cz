@@ -63,7 +63,7 @@ class TrainingDate extends ProtectedForm
 
 		$venues = array();
 		foreach ($this->trainingVenues->getAll() as $venue) {
-			$venues[$venue->id] = $venue->name;
+			$venues[$venue->id] = "{$venue->name}, {$venue->city}";
 		}
 		$this->addSelect('venue', 'Místo:', $venues)
 			->setRequired('Vyberte prosím místo');
