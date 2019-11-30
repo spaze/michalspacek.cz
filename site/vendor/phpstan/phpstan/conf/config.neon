@@ -131,6 +131,11 @@ parametersSchema:
 			]),
 			structure([
 				message: string()
+				count: int()
+				path: string()
+			]),
+			structure([
+				message: string()
 				paths: listOf(string())
 			])
 		)
@@ -722,6 +727,11 @@ services:
 
 	errorFormatter.raw:
 		class: PHPStan\Command\ErrorFormatter\RawErrorFormatter
+
+	errorFormatter.baselineNeon:
+		class: PHPStan\Command\ErrorFormatter\BaselineNeonErrorFormatter
+		arguments:
+			relativePathHelper: @simpleRelativePathHelper
 
 	errorFormatter.table:
 		class: PHPStan\Command\ErrorFormatter\TableErrorFormatter

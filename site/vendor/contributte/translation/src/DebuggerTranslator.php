@@ -1,9 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * This file is part of the Contributte/Translation
- */
-
 namespace Contributte\Translation;
 
 use Contributte;
@@ -29,11 +25,17 @@ class DebuggerTranslator extends LoggerTranslator
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @param string|null $id
+	 * @param mixed[] $parameters
+	 * @param string|null $domain
+	 * @param string|null $locale
+	 * @return string
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint
 	 */
 	public function trans($id, array $parameters = [], $domain = null, $locale = null)
 	{
-		if ($this->tracyPanel !== null) {
+		if ($id !== null && $this->tracyPanel !== null) {
 			if ($domain === null) {
 				$domain = 'messages';
 			}

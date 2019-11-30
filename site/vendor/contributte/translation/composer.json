@@ -11,29 +11,30 @@
 		}
 	],
 	"require": {
-		"php": "^7.1",
+		"php": "^7.2.9",
 		"latte/latte": "^2.5",
-		"nette/application": "^3.0",
 		"nette/di": "^3.0",
 		"nette/finder": "^2.5",
 		"nette/http": "^3.0",
 		"nette/neon": "^3.0",
 		"nette/schema": "^1.0",
+		"nette/routing": "^3.0",
 		"nette/utils": "^3.0",
-		"symfony/translation": "^4.2",
-		"symfony/config": "^4.2"
+		"symfony/translation": "^4.4|^5.0",
+		"symfony/config": "^4.4|^5.0"
 	},
 	"require-dev": {
+		"nette/application": "^3.0",
 		"nette/bootstrap": "^3.0",
 		"nette/database": "^3.0",
 		"nette/robot-loader": " ^3.0",
-		"nette/tester": "^2.1",
+		"nette/tester": "^2.3.1",
 		"doctrine/orm": "^2.6",
 		"tracy/tracy": "^2.6",
-		"psr/log": "1.0",
+		"psr/log": "^1.0",
 		"mockery/mockery": "^1.2",
 		"ninjify/qa": "^0.8.0",
-		"ninjify/nunjuck": "^0.2.0"
+		"ninjify/nunjuck": "^0.3.0"
 	},
 	"autoload": {
 		"psr-4": {

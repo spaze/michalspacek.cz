@@ -39,7 +39,7 @@ abstract class Component extends Nette\ComponentModel\Container implements ISign
 	public function getPresenter(): ?Presenter
 	{
 		if (func_num_args()) {
-			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use hasPresenter()', E_USER_DEPRECATED);
+			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getPresenterIfExists()', E_USER_DEPRECATED);
 			$throw = func_get_arg(0);
 		}
 		return $this->lookup(Presenter::class, $throw ?? true);
@@ -47,8 +47,15 @@ abstract class Component extends Nette\ComponentModel\Container implements ISign
 
 
 	/**
-	 * Returns whether there is a presenter.
+	 * Returns the presenter where this component belongs to.
 	 */
+	public function getPresenterIfExists(): ?Presenter
+	{
+		return $this->lookup(Presenter::class, false);
+	}
+
+
+	/** @deprecated */
 	public function hasPresenter(): bool
 	{
 		return (bool) $this->lookup(Presenter::class, false);
@@ -135,13 +142,12 @@ abstract class Component extends Nette\ComponentModel\Container implements ISign
 		$reflection = $this->getReflection();
 		foreach ($reflection->getPersistentParams() as $name => $meta) {
 			if (isset($params[$name])) { // nulls are ignored
-				$type = gettype($meta['def']);
-				if (!$reflection->convertType($params[$name], $type)) {
+				if (!$reflection->convertType($params[$name], $meta['type'])) {
 					throw new Nette\Application\BadRequestException(sprintf(
 						"Value passed to persistent parameter '%s' in %s must be %s, %s given.",
 						$name,
 						$this instanceof Presenter ? 'presenter ' . $this->getName() : "component '{$this->getUniqueId()}'",
-						$type === 'NULL' ? 'scalar' : $type,
+						$meta['type'] === 'NULL' ? 'scalar' : $meta['type'],
 						is_object($params[$name]) ? get_class($params[$name]) : gettype($params[$name])
 					));
 				}

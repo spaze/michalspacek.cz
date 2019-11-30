@@ -116,7 +116,7 @@ class ResourceCheckerConfigCache implements ConfigCacheInterface
      *
      * @throws \RuntimeException When cache file can't be written
      */
-    public function write($content, array $metadata = null)
+    public function write(string $content, array $metadata = null)
     {
         $mode = 0666;
         $umask = umask();
@@ -144,17 +144,14 @@ class ResourceCheckerConfigCache implements ConfigCacheInterface
 
     /**
      * Gets the meta file path.
-     *
-     * @return string The meta file path
      */
-    private function getMetaFile()
+    private function getMetaFile(): string
     {
         return $this->file.'.meta';
     }
 
-    private function safelyUnserialize($file)
+    private function safelyUnserialize(string $file)
     {
-        $e = null;
         $meta = false;
         $content = file_get_contents($file);
         $signalingException = new \UnexpectedValueException();

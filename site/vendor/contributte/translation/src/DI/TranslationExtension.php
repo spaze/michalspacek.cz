@@ -1,9 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * This file is part of the Contributte/Translation
- */
-
 namespace Contributte\Translation\DI;
 
 use Contributte;
@@ -31,10 +27,22 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 			'debugger' => Expect::bool(interface_exists(Tracy\IBarPanel::class)),
 			'logger' => Expect::mixed()->default(null),
 			'locales' => Expect::structure([
-				'whitelist' => Expect::array()->default(null), // @todo unique check?
-				'default' => Expect::string(null),
+				'whitelist' => Expect::array()->default(null)->assert(function (array $array): bool {
+					if (count($array) !== count(array_unique($array))) {
+						throw new Contributte\Translation\Exceptions\InvalidArgument('Whitelist settings have not unique values.');
+					}
+
+					return true;
+				}),
+				'default' => Expect::string('en'),
 				'fallback' => Expect::array()->default(null),
-			]),
+			])->assert(function (stdClass $locales): bool {
+				if ($locales->whitelist !== null && !in_array($locales->default, $locales->whitelist, true)) {
+					throw new Contributte\Translation\Exceptions\InvalidArgument('If you set whitelist, default locale must be on him.');
+				}
+
+				return true;
+			}),
 			'localeResolvers' => Expect::array()->default(null),
 			'loaders' => Expect::array()->default([
 				'neon' => Contributte\Translation\Loaders\Neon::class,
@@ -81,10 +89,10 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 				throw new Contributte\Translation\Exceptions\InvalidArgument('Resolver must implement interface "' . Contributte\Translation\LocalesResolvers\ResolverInterface::class . '".');
 			}
 
-			$localeResolvers[] = $resolver = $builder->addDefinition($this->prefix('localeResolver' . $reflection->getShortName()))
+			$localeResolvers[] = $builder->addDefinition($this->prefix('localeResolver' . $reflection->getShortName()))
 				->setFactory($v1);
 
-			$localeResolver->addSetup('addResolver', [$resolver]);
+			$localeResolver->addSetup('addResolver', [$v1]);
 		}
 
 		// FallbackResolver
@@ -102,10 +110,6 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 			->setFactory($this->config->cache->factory, [$this->config->debug]);
 
 		// Translator
-		if ($this->config->locales->default === null) {
-			throw new Contributte\Translation\Exceptions\InvalidArgument('Default locale must be set.');
-		}
-
 		if ($this->config->debug && $this->config->debugger) {
 			$factory = Contributte\Translation\DebuggerTranslator::class;
 
@@ -148,7 +152,6 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 		}
 	}
 
-
 	/**
 	 * @throws Contributte\Translation\Exceptions\InvalidArgument|ReflectionException
 	 */
@@ -165,25 +168,19 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 			$tracyPanel = $builder->getDefinition($this->prefix('tracyPanel'));
 		}
 
-		$templateFactoryName = $builder->getByType(Nette\Application\UI\ITemplateFactory::class);
+		$latteFactoryName = $builder->getByType(Nette\Bridges\ApplicationLatte\ILatteFactory::class);
 
-		if ($templateFactoryName !== null) {
-			/** @var Nette\DI\Definitions\ServiceDefinition $templateFactory */
-			$templateFactory = $builder->getDefinition($templateFactoryName);
+		if ($latteFactoryName !== null) {
+			$latteFilters = $builder->addDefinition($this->prefix('latte.filters'))
+				->setFactory(Contributte\Translation\Latte\Filters::class);
 
-			$templateFactory->addSetup('
-					$service->onCreate[] = function (Nette\\Bridges\\ApplicationLatte\\Template $template): void {
-						$template->setTranslator(?);
-					};', [$translator]);
-		}
-
-		if ($builder->hasDefinition('latte.latteFactory')) {
 			/** @var Nette\DI\Definitions\FactoryDefinition $latteFactory */
-			$latteFactory = $builder->getDefinition('latte.latteFactory');
+			$latteFactory = $builder->getDefinition($latteFactoryName);
 
 			$latteFactory->getResultDefinition()
 				->addSetup('?->onCompile[] = function (Latte\\Engine $engine): void { ?::install($engine->getCompiler()); }', ['@self', new Nette\PhpGenerator\PhpLiteral(Contributte\Translation\Latte\Macros::class)])
-				->addSetup('addProvider', ['translator', $builder->getDefinition($this->prefix('translator'))]);
+				->addSetup('addProvider', ['translator', $builder->getDefinition($this->prefix('translator'))])
+				->addSetup('addFilter', ['translate', [$latteFilters, 'translate']]);
 		}
 
 		/** @var Contributte\Translation\DI\TranslationProviderInterface $v1 */

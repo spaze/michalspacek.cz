@@ -1,9 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * This file is part of the Contributte/Translation
- */
-
 namespace Contributte\Translation;
 
 use Contributte;
@@ -27,7 +23,6 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 {
 
 	use Nette\SmartObject;
-	use KdybyTranslationBackCompatibilityTrait;
 
 	/** @var Contributte\Translation\LocaleResolver */
 	private $localeResolver;
@@ -66,7 +61,6 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 		$this->debug = $debug;
 
 		parent::__construct('', null, $cacheDir, $debug);
-		$this->setLocale(null);
 	}
 
 	public function getLocaleResolver(): LocaleResolver
@@ -165,7 +159,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 				throw new Exceptions\InvalidArgument('Unknown "' . $string . '" prefix.');
 			}
 
-			unset($key);
+			unset($this->prefix[$key]);
 		}
 
 		return $this;
@@ -192,7 +186,12 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @param string $format
+	 * @param mixed $resource
+	 * @param string $locale
+	 * @param string $domain
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint
 	 */
 	public function addResource($format, $resource, $locale, $domain = null)
 	{
@@ -205,7 +204,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	 */
 	public function getLocale()
 	{
-		if (parent::getLocale() === null) {
+		if (parent::getLocale() === '') {
 			$this->setLocale($this->localeResolver->resolve($this));
 		}
 

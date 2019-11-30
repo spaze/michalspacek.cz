@@ -38,10 +38,8 @@ abstract class FileLoader extends Loader
 
     /**
      * Sets the current directory.
-     *
-     * @param string $dir
      */
-    public function setCurrentDir($dir)
+    public function setCurrentDir(string $dir)
     {
         $this->currentDir = $dir;
     }
@@ -59,10 +57,11 @@ abstract class FileLoader extends Loader
     /**
      * Imports a resource.
      *
-     * @param mixed       $resource       A Resource
-     * @param string|null $type           The resource type or null if unknown
-     * @param bool        $ignoreErrors   Whether to ignore import errors or not
-     * @param string|null $sourceResource The original resource importing the new resource
+     * @param mixed                $resource       A Resource
+     * @param string|null          $type           The resource type or null if unknown
+     * @param bool                 $ignoreErrors   Whether to ignore import errors or not
+     * @param string|null          $sourceResource The original resource importing the new resource
+     * @param string|string[]|null $exclude        Glob patterns to exclude from the import
      *
      * @return mixed
      *
@@ -70,12 +69,20 @@ abstract class FileLoader extends Loader
      * @throws FileLoaderImportCircularReferenceException
      * @throws FileLocatorFileNotFoundException
      */
-    public function import($resource, $type = null, $ignoreErrors = false, $sourceResource = null)
+    public function import($resource, string $type = null, bool $ignoreErrors = false, string $sourceResource = null, $exclude = null)
     {
         if (\is_string($resource) && \strlen($resource) !== $i = strcspn($resource, '*?{[')) {
+            $excluded = [];
+            foreach ((array) $exclude as $pattern) {
+                foreach ($this->glob($pattern, true, $_, false, true) as $path => $info) {
+                    // normalize Windows slashes
+                    $excluded[str_replace('\\', '/', $path)] = true;
+                }
+            }
+
             $ret = [];
             $isSubpath = 0 !== $i && false !== strpos(substr($resource, 0, $i), '/');
-            foreach ($this->glob($resource, false, $_, $ignoreErrors || !$isSubpath) as $path => $info) {
+            foreach ($this->glob($resource, false, $_, $ignoreErrors || !$isSubpath, false, $excluded) as $path => $info) {
                 if (null !== $res = $this->doImport($path, $type, $ignoreErrors, $sourceResource)) {
                     $ret[] = $res;
                 }
@@ -125,7 +132,7 @@ abstract class FileLoader extends Loader
         yield from $resource;
     }
 
-    private function doImport($resource, $type = null, bool $ignoreErrors = false, $sourceResource = null)
+    private function doImport($resource, string $type = null, bool $ignoreErrors = false, string $sourceResource = null)
     {
         try {
             $loader = $this->resolve($resource, $type);
