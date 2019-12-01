@@ -1,7 +1,7 @@
 Dobrý den,
 
 posílám pozvánku na školení {$application->training->name} na které jste se
-nezávazně přihlásil na mých webových stránkách dne {$application->statusTime|localeDay:'cs_CZ'}.
+nezávazně přihlásili na mých webových stránkách dne {$application->statusTime|localeDay:'cs_CZ'}.
 
 Termín školení je {$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'} v čase {$application->trainingStart|date:'H:i'}–{$application->trainingEnd|date:'H:i'}
 na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
@@ -9,7 +9,7 @@ na adrese {$application->venueName}{if $application->venueNameExtended}, {$appli
 Přihlaste se prosím na adrese
 {link '//:Www:Redirect:application' $application->accessToken}
 
-Registrační formulář bude předvyplněn údaji, které jste zadal při
+Registrační formulář bude předvyplněn údaji, které jste zadali při
 nezávazné registraci. Pokud z jakýchkoliv důvodů nemůžete na školení
 přijít, dejte mi vědět, abych mohl nabídnout místo dalším zájemcům.
 
