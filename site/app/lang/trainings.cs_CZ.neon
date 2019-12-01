@@ -257,6 +257,15 @@ securityphp2days:
 	materials: ''
 	content: 'Bezpečnost PHP aplikací, více příkladů a detailů'
 
+securityheaders:
+	name: 'Security hlavičky'
+	description: 'Víceúrovňové zabezpečení webových aplikací pomocí security headers'
+	upsell:
+	prerequisites:
+	audience:
+	materials:
+	content: "X-XSS-Protection, Content-Security-Policy, CSP Upgrade-Insecure-Requests, CSP 'strict-dynamic', Report-To, Network Error Logging (NEL), X-Content-Type-Options, X-Frame-Options a CSP frame-ancestors, Referrer-Policy, Feature-Policy, SameSite Cookies, Expect-CT a Signed Certificate Timestamp (SCT), sslstrip, HTTP Strict Transport Security (HSTS), HTTP Public Key Pinning, Subresource Integrity (SRI)"
+
 httpsdevsadmins2days:
 	name: "HTTPS pro vývojáře a správce (2 dny)"
 	description: 'HTTPS pro vývojáře a správce'
