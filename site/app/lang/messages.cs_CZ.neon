@@ -153,7 +153,7 @@ who:
 		2: "Službu založil \"Scott Helme\":[%s] (provozuje např. i \"Security Headers\":[%s]), v týmu je také \"Troy Hunt\":[%s] (spravuje \"Have I Been Pwned?\":[%s])."
 		3: "Oba dva jsou známí a oceňovaní bezpečnostní výzkumníci a bloggeři."
 	webtop100juror:
-		1: "Od roku 2011 jsem porotcem a od roku 2014 i odborným garantem pro oblast technické řešení a bezpečnost ve \"WebTop100\":[%s], největší soutěži firemních webů a digitálních řešení v ČR."
+		1: "Osm let počínaje rokem 2011 jsem byl porotcem a od roku 2014 i odborným garantem pro oblast technické řešení a bezpečnost ve \"WebTop100\":[%s], největší soutěži firemních webů a digitálních řešení v ČR."
 		2: "O zkušenostech s hodnocením a o výsledcích jsem napsal několik \"článků\":[%s]."
 	speaker:
 		1: "Přednášel jsem na více než %d konferencích a akcích, včetně konference \"WebExpo\":[%s] v Praze a konference \"Passwords\":[%s] v Las Vegas, USA, na obou opakovaně."

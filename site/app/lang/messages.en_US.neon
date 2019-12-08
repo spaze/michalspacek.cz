@@ -156,7 +156,7 @@ who:
 		1: "I've been speaking at more than %d conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
 		2: "Check the list of all my \"Talks\":[%s]."
 	webtop100juror:
-		1: "Since 2011, I'm a juror and since 2014 also a guarantor for the area of technical solution and security for \"WebTop100\":[%s], the largest competition of company websites in the Czech Republic."
+		1: "I was a juror (2011-2018) and later also a guarantor (2014-2018) for the area of technical solution and security for \"WebTop100\":[%s], the largest competition of company websites in the Czech Republic."
 		2: "I wrote several \"articles\":[%s] about the experience with the evaluation and also about the results."
 	skyper: "Absolutely awesome 5 years and 5 months since my Day One in Tallinn, Estonia until November 2012 in which I've learned gazillion of new things about how to build a service for hundreds of millions of users, how to build a company, and how to grow an office from few people up to a hundred."
 	slevomat:
