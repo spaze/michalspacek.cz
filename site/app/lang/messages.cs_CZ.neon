@@ -57,6 +57,7 @@ label:
 	slevomat: "Vývojář ve **Slevomatu**"
 	ipo48: "Spolupořadatel **IPO48**"
 	tojeono: "Spoluzakladatel webhostingu **tojeono.cz**"
+	bughunter: "Občasný **lovec chyb**"
 	otherprojects: "Další projekty"
 	bankshttps: "HTTPS na bankách"
 	banksczhttps: "HTTPS na českých bankách"
@@ -169,6 +170,18 @@ who:
 	tojeono:
 		1: "Koncem roku 2003 jsme se s kolegy rozhodli pro pořízení vlastních serverů, které jsme pod značkou \"tojeono.cz\":[%s] nabídli k využívání i dalším zákazníkům, kteří požadovali individuální nastavení služeb."
 		2: "Projekt jsem opustil přibližně po roce a po dalších dvou letech jsem opustil i kolegy."
+	bughunter:
+		1: "Chci, aby Internet byl o něco bezpečnější a tak hledám a hlásím bezpečnostní chyby. Nijak se při tom neskrývám a ani nechci nikoho poškodit."
+		2: "Větší i menší problémy jsem nahlásil společnostem jako např."
+		3:
+			google: 'Google ("záznam na zdi slávy":[%s]),'
+			atlassian: 'Atlassian ("zeď slávy":[%s], "popis problému":[link:Www:Talks:talk everything-is-user-input-fakt-linuxdays,edit-ssh-key]),'
+			tmobile: 'T-Mobile ("zeď slávy":[%s]),'
+			operatorict: 'Operátor ICT ("zeď slávy":https://www.pidlitacka.cz/.well-known/acknowledgement.txt, "popis chyby":[blog:unos-resetu-hesel-na-litacce]),'
+			domaintools: 'DomainTools ("s překvapující rychlostí opravy":[blog:takhle-by-mela-vypadat-reakce-na-nahlaseni-chyby]),'
+			czechia: 'hosting Czechia od firmy ZONER ("únik dat":[link:Www:Talks:talk vyhledavejte-na-netu-jako-macgyver-linuxdays,google-a76c8ba54d7be5d57daf858987c168a458009312]),'
+			alza: 'Alza ("článek o chybě":[blog:k-cemu-je-soubor-security.txt]),'
+		4: 'CZC.cz a mnoho dalších. Jestli chcete, aby vám lidé mě podobní také mohli jednoduše hlásit bezpečnostní chyby, "přidejte si na web soubor `security.txt`":[blog:k-cemu-je-soubor-security.txt#nahlaseni-chyby].'
 	more: "Více o mně a mých dobrodužstvích naleznete na \"LinkedIn\":[%s]."
 homepage:
 	tagline: "Vyvíjím webové aplikace, zajímá mě jejich bezpečnost. Nebojím se o tom mluvit veřejně, hledám hranice tak, že je posouvám. Chci naučit webové vývojáře stavět bezpečnější a výkonnější weby a aplikace."

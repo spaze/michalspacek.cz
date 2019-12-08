@@ -57,6 +57,7 @@ label:
 	slevomat: "A developer in **Slevomat.cz**"
 	ipo48: "Co-organizer of **IPO48**"
 	tojeono: "Co-founder of hosting service **tojeono.cz**"
+	bughunter: "Occasional **bug hunter**"
 	otherprojects: "Other projects"
 	bankshttps: "Banking HTTPS"
 	banksczhttps: "Czech banking HTTPS"
@@ -169,6 +170,18 @@ who:
 	tojeono:
 		1: "In late 2003, my colleagues and I decided to purchase our own servers, which we've offered under the brand name \"tojeono.cz\":[%s] to use by our clients and other customers who required customized hosting services."
 		2: "I left the project after about a year and after two more years I also left my colleagues."
+	bughunter:
+		1: "I find and report security issues because I care about the Internet and I want it to be more secure. I'm not trying to hide while doing so, and I don't want to cause any harm."
+		2: "I've reported both major and minor bugs to companies like"
+		3:
+			google: 'Google ("hall of fame record":[%s]),'
+			atlassian: 'Atlassian ("hall of fame":[%s], "problem description":[link:Www:Talks:talk everything-is-user-input-phpprague,edit-ssh-key]),'
+			tmobile: 'T-Mobile ("hall of fame":[%s]),'
+			operatorict: 'Operátor ICT ("hall of fame":https://www.pidlitacka.cz/.well-known/acknowledgement.txt, "bug description":[blog:account-takeover-in-regional-transportation-system-litacka]),'
+			domaintools: 'DomainTools ("with a swift response":[blog:this-is-how-you-respond-to-a-disclosure]),'
+			czechia: '"Czechia" - a web hosting service by a Czech company called ZONER ("customer login details dump":[link:Www:Talks:talk if-macgyver-was-a-search-engine-pipedrive,google-a76c8ba54d7be5d57daf858987c168a458009312]),'
+			alza: 'Alza ("my post about the bug":[blog:what-is-security.txt-and-why-you-should-have-one]),'
+		4: 'CZC.cz and many others. If you want people like me to report security bugs to you easily, "add `security.txt` file to your site":[blog:what-is-security.txt-and-why-you-should-have-one#reporting-the-issue].'
 	more: "More about me and my experience at \"LinkedIn\":[%s]."
 homepage:
 	tagline: "I build web applications and I'm into web application security. I like to speak about secure development. My mission is to teach web developers how to build secure and fast web applications and why."
