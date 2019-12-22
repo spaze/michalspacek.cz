@@ -4,7 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form\Controls;
 
 use Nette\Forms\Container;
+use Nette\Localization\ITranslator;
 
+/**
+ * @property-read ITranslator $translator
+ */
 trait TrainingCompany
 {
 

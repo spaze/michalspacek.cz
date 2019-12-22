@@ -22,7 +22,7 @@ class Companies
 	/**
 	 * Get all companies.
 	 *
-	 * @return Row[] of [id, name]
+	 * @return Row[]
 	 */
 	public function getAll(): array
 	{

@@ -3,9 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Controls;
 
+use MichalSpacekCz\Training\Applications;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
 
+/**
+ * @property-read Applications trainingApplications
+ */
 trait TrainingSource
 {
 
