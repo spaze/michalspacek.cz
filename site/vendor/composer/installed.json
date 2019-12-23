@@ -47,17 +47,17 @@
     },
     {
         "name": "contributte/translation",
-        "version": "v0.5.0",
-        "version_normalized": "0.5.0.0",
+        "version": "v0.6.0",
+        "version_normalized": "0.6.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/contributte/translation.git",
-            "reference": "79c4f3ea42c528def20e97dee518975b7a5d23c7"
+            "reference": "63696acc0b9f2be97d04c10dee7734e5b2db8b91"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/contributte/translation/zipball/79c4f3ea42c528def20e97dee518975b7a5d23c7",
-            "reference": "79c4f3ea42c528def20e97dee518975b7a5d23c7",
+            "url": "https://api.github.com/repos/contributte/translation/zipball/63696acc0b9f2be97d04c10dee7734e5b2db8b91",
+            "reference": "63696acc0b9f2be97d04c10dee7734e5b2db8b91",
             "shasum": ""
         },
         "require": {
@@ -69,7 +69,7 @@
             "nette/routing": "^3.0",
             "nette/schema": "^1.0",
             "nette/utils": "^3.0",
-            "php": "^7.2.9",
+            "php": "^7.1.3",
             "symfony/config": "^4.4|^5.0",
             "symfony/translation": "^4.4|^5.0"
         },
@@ -86,11 +86,11 @@
             "psr/log": "^1.0",
             "tracy/tracy": "^2.6"
         },
-        "time": "2019-11-21T11:43:17+00:00",
+        "time": "2019-12-16T16:50:01+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "0.5.x-dev"
+                "dev-master": "0.6.x-dev"
             }
         },
         "installation-source": "dist",
@@ -171,17 +171,17 @@
     },
     {
         "name": "latte/latte",
-        "version": "v2.5.3",
-        "version_normalized": "2.5.3.0",
+        "version": "v2.5.4",
+        "version_normalized": "2.5.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/latte.git",
-            "reference": "7ee09e0d1af1f1e3c7cc85fb5e742ab078f1b7a6"
+            "reference": "211bec057917e1d771aa09fc334cde1229738860"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/latte/zipball/7ee09e0d1af1f1e3c7cc85fb5e742ab078f1b7a6",
-            "reference": "7ee09e0d1af1f1e3c7cc85fb5e742ab078f1b7a6",
+            "url": "https://api.github.com/repos/nette/latte/zipball/211bec057917e1d771aa09fc334cde1229738860",
+            "reference": "211bec057917e1d771aa09fc334cde1229738860",
             "shasum": ""
         },
         "require": {
@@ -195,6 +195,7 @@
         "require-dev": {
             "nette/tester": "~2.0",
             "nette/utils": "^3.0",
+            "phpstan/phpstan": "^0.12",
             "tracy/tracy": "^2.3"
         },
         "suggest": {
@@ -202,7 +203,7 @@
             "ext-mbstring": "to use filters like lower, upper, capitalize, ...",
             "nette/utils": "to use filter |webalize"
         },
-        "time": "2019-09-24T10:42:57+00:00",
+        "time": "2019-12-11T19:48:05+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -544,17 +545,17 @@
     },
     {
         "name": "nette/database",
-        "version": "v3.0.4",
-        "version_normalized": "3.0.4.0",
+        "version": "v3.0.5",
+        "version_normalized": "3.0.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/database.git",
-            "reference": "e17242a71a251cd09e209c1e2bdb530112a6efa8"
+            "reference": "dd75e74d6e086ac4d0b301ae33b8ae6a7cad2a81"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/database/zipball/e17242a71a251cd09e209c1e2bdb530112a6efa8",
-            "reference": "e17242a71a251cd09e209c1e2bdb530112a6efa8",
+            "url": "https://api.github.com/repos/nette/database/zipball/dd75e74d6e086ac4d0b301ae33b8ae6a7cad2a81",
+            "reference": "dd75e74d6e086ac4d0b301ae33b8ae6a7cad2a81",
             "shasum": ""
         },
         "require": {
@@ -570,9 +571,10 @@
             "mockery/mockery": "^1.0.0",
             "nette/di": "^v3.0",
             "nette/tester": "^2.0",
+            "phpstan/phpstan-nette": "^0.12",
             "tracy/tracy": "^2.4"
         },
-        "time": "2019-11-19T18:28:25+00:00",
+        "time": "2019-12-13T18:06:11+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2082,12 +2084,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "9986511fcd47e8b8ec491884cc18beee1773548a"
+            "reference": "181dd66fd666ed397991ded7b725fe90a8a00413"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9986511fcd47e8b8ec491884cc18beee1773548a",
-            "reference": "9986511fcd47e8b8ec491884cc18beee1773548a",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/181dd66fd666ed397991ded7b725fe90a8a00413",
+            "reference": "181dd66fd666ed397991ded7b725fe90a8a00413",
             "shasum": ""
         },
         "conflict": {
@@ -2108,7 +2110,7 @@
             "composer/composer": "<=1-alpha.11",
             "contao-components/mediaelement": ">=2.14.2,<2.21.1",
             "contao/core": ">=2,<3.5.39",
-            "contao/core-bundle": ">=4,<4.4.39|>=4.5,<4.7.5",
+            "contao/core-bundle": ">=4,<4.4.46|>=4.5,<4.8.6",
             "contao/listing-bundle": ">=4,<4.4.8",
             "datadog/dd-trace": ">=0.30,<0.30.2",
             "david-garcia/phpwhois": "<=4.3.1",
@@ -2122,8 +2124,8 @@
             "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
             "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
             "dompdf/dompdf": ">=0.6,<0.6.2",
-            "drupal/core": ">=7,<7.67|>=8,<8.6.16|>=8.7,<8.7.1|>8.7.3,<8.7.5",
-            "drupal/drupal": ">=7,<7.67|>=8,<8.6.16|>=8.7,<8.7.1|>8.7.3,<8.7.5",
+            "drupal/core": ">=7,<8.7.11|>=8.8,<8.8.1",
+            "drupal/drupal": ">=7,<8.7.11|>=8.8,<8.8.1",
             "erusev/parsedown": "<1.7.2",
             "ezsystems/ezplatform-admin-ui": ">=1.3,<1.3.5|>=1.4,<1.4.4",
             "ezsystems/ezpublish-kernel": ">=5.3,<5.3.12.1|>=5.4,<5.4.13.1|>=6,<6.7.9.1|>=6.8,<6.13.5.1|>=7,<7.2.4.1|>=7.3,<7.3.2.1",
@@ -2155,7 +2157,7 @@
             "league/commonmark": "<0.18.3",
             "magento/magento1ce": "<1.9.4.3",
             "magento/magento1ee": ">=1,<1.14.4.3",
-            "magento/product-community-edition": ">=2,<2.2.10|>=2.3,<2.3.2",
+            "magento/product-community-edition": ">=2,<2.2.10|>=2.3,<2.3.2-p.2",
             "monolog/monolog": ">=1.8,<1.12",
             "namshi/jose": "<2.2",
             "onelogin/php-saml": "<2.10.4",
@@ -2178,6 +2180,7 @@
             "pusher/pusher-php-server": "<2.2.1",
             "robrichards/xmlseclibs": ">=1,<3.0.4",
             "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
+            "scheb/two-factor-bundle": "<3.26|>=4,<4.11",
             "sensiolabs/connect": "<4.2.3",
             "serluck/phpwhois": "<=4.2.6",
             "shopware/shopware": "<5.3.7",
@@ -2237,8 +2240,8 @@
             "titon/framework": ">=0,<9.9.99",
             "truckersmp/phpwhois": "<=4.3.1",
             "twig/twig": "<1.38|>=2,<2.7",
-            "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.27|>=9,<9.5.8",
-            "typo3/cms-core": ">=8,<8.7.27|>=9,<9.5.8",
+            "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.30|>=9,<9.5.12|>=10,<10.2.1",
+            "typo3/cms-core": ">=8,<8.7.30|>=9,<9.5.12|>=10,<10.2.1",
             "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5",
             "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
             "typo3/phar-stream-wrapper": ">=1,<2.1.1|>=3,<3.1.1",
@@ -2279,7 +2282,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2019-11-29T17:22:08+00:00",
+        "time": "2019-12-21T14:43:42+00:00",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -2651,17 +2654,17 @@
     },
     {
         "name": "symfony/config",
-        "version": "v5.0.0",
-        "version_normalized": "5.0.0.0",
+        "version": "v5.0.2",
+        "version_normalized": "5.0.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/config.git",
-            "reference": "10cb9692805d2152fe2ecb3af018c188c712bba8"
+            "reference": "7f930484966350906185ba0a604728f7898b7ba0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/config/zipball/10cb9692805d2152fe2ecb3af018c188c712bba8",
-            "reference": "10cb9692805d2152fe2ecb3af018c188c712bba8",
+            "url": "https://api.github.com/repos/symfony/config/zipball/7f930484966350906185ba0a604728f7898b7ba0",
+            "reference": "7f930484966350906185ba0a604728f7898b7ba0",
             "shasum": ""
         },
         "require": {
@@ -2682,7 +2685,7 @@
         "suggest": {
             "symfony/yaml": "To use the yaml reference dumper"
         },
-        "time": "2019-11-18T17:27:11+00:00",
+        "time": "2019-12-18T13:50:31+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2717,17 +2720,17 @@
     },
     {
         "name": "symfony/console",
-        "version": "v4.4.0",
-        "version_normalized": "4.4.0.0",
+        "version": "v4.4.2",
+        "version_normalized": "4.4.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/console.git",
-            "reference": "35d9077f495c6d184d9930f7a7ecbd1ad13c7ab8"
+            "reference": "82437719dab1e6bdd28726af14cb345c2ec816d0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/console/zipball/35d9077f495c6d184d9930f7a7ecbd1ad13c7ab8",
-            "reference": "35d9077f495c6d184d9930f7a7ecbd1ad13c7ab8",
+            "url": "https://api.github.com/repos/symfony/console/zipball/82437719dab1e6bdd28726af14cb345c2ec816d0",
+            "reference": "82437719dab1e6bdd28726af14cb345c2ec816d0",
             "shasum": ""
         },
         "require": {
@@ -2760,7 +2763,7 @@
             "symfony/lock": "",
             "symfony/process": ""
         },
-        "time": "2019-11-13T07:39:40+00:00",
+        "time": "2019-12-17T10:32:23+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2795,24 +2798,24 @@
     },
     {
         "name": "symfony/filesystem",
-        "version": "v5.0.0",
-        "version_normalized": "5.0.0.0",
+        "version": "v5.0.2",
+        "version_normalized": "5.0.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/filesystem.git",
-            "reference": "0bf75c37a71ff41f718b14b9f5a0a7d6a7dd9b84"
+            "reference": "1d71f670bc5a07b9ccc97dc44f932177a322d4e6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/filesystem/zipball/0bf75c37a71ff41f718b14b9f5a0a7d6a7dd9b84",
-            "reference": "0bf75c37a71ff41f718b14b9f5a0a7d6a7dd9b84",
+            "url": "https://api.github.com/repos/symfony/filesystem/zipball/1d71f670bc5a07b9ccc97dc44f932177a322d4e6",
+            "reference": "1d71f670bc5a07b9ccc97dc44f932177a322d4e6",
             "shasum": ""
         },
         "require": {
             "php": "^7.2.5",
             "symfony/polyfill-ctype": "~1.8"
         },
-        "time": "2019-11-18T17:27:11+00:00",
+        "time": "2019-11-26T23:25:11+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2847,8 +2850,8 @@
     },
     {
         "name": "symfony/finder",
-        "version": "v4.4.0",
-        "version_normalized": "4.4.0.0",
+        "version": "v4.4.2",
+        "version_normalized": "4.4.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/finder.git",
@@ -2898,27 +2901,27 @@
     },
     {
         "name": "symfony/service-contracts",
-        "version": "v2.0.0",
-        "version_normalized": "2.0.0.0",
+        "version": "v2.0.1",
+        "version_normalized": "2.0.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/service-contracts.git",
-            "reference": "9d99e1556417bf227a62e14856d630672bf10eaf"
+            "reference": "144c5e51266b281231e947b51223ba14acf1a749"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/service-contracts/zipball/9d99e1556417bf227a62e14856d630672bf10eaf",
-            "reference": "9d99e1556417bf227a62e14856d630672bf10eaf",
+            "url": "https://api.github.com/repos/symfony/service-contracts/zipball/144c5e51266b281231e947b51223ba14acf1a749",
+            "reference": "144c5e51266b281231e947b51223ba14acf1a749",
             "shasum": ""
         },
         "require": {
-            "php": "^7.2.9",
+            "php": "^7.2.5",
             "psr/container": "^1.0"
         },
         "suggest": {
             "symfony/service-implementation": ""
         },
-        "time": "2019-11-09T09:18:34+00:00",
+        "time": "2019-11-18T17:27:11+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2958,17 +2961,17 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v5.0.0",
-        "version_normalized": "5.0.0.0",
+        "version": "v5.0.2",
+        "version_normalized": "5.0.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "e86df1b0f1672362ecf96023faf2c42241c41330"
+            "reference": "3ae6fad7a3dc2d99a023f9360184628fc44acbb3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/e86df1b0f1672362ecf96023faf2c42241c41330",
-            "reference": "e86df1b0f1672362ecf96023faf2c42241c41330",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/3ae6fad7a3dc2d99a023f9360184628fc44acbb3",
+            "reference": "3ae6fad7a3dc2d99a023f9360184628fc44acbb3",
             "shasum": ""
         },
         "require": {
@@ -3002,7 +3005,7 @@
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2019-11-18T17:27:11+00:00",
+        "time": "2019-12-12T13:03:32+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -3037,26 +3040,26 @@
     },
     {
         "name": "symfony/translation-contracts",
-        "version": "v2.0.0",
-        "version_normalized": "2.0.0.0",
+        "version": "v2.0.1",
+        "version_normalized": "2.0.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation-contracts.git",
-            "reference": "8feb81e6bb1a42d6a3b1429c751d291eb6d05297"
+            "reference": "8cc682ac458d75557203b2f2f14b0b92e1c744ed"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/8feb81e6bb1a42d6a3b1429c751d291eb6d05297",
-            "reference": "8feb81e6bb1a42d6a3b1429c751d291eb6d05297",
+            "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/8cc682ac458d75557203b2f2f14b0b92e1c744ed",
+            "reference": "8cc682ac458d75557203b2f2f14b0b92e1c744ed",
             "shasum": ""
         },
         "require": {
-            "php": "^7.2.9"
+            "php": "^7.2.5"
         },
         "suggest": {
             "symfony/translation-implementation": ""
         },
-        "time": "2019-11-09T09:18:34+00:00",
+        "time": "2019-11-18T17:27:11+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -3163,17 +3166,17 @@
     },
     {
         "name": "tracy/tracy",
-        "version": "v2.7.1",
-        "version_normalized": "2.7.1.0",
+        "version": "v2.7.2",
+        "version_normalized": "2.7.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/tracy.git",
-            "reference": "16691cf8b609b238a9a3596ee2878183a91b6446"
+            "reference": "d28ebdf7ab8d88f231310aef1e8cce965ea0b2ca"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/tracy/zipball/16691cf8b609b238a9a3596ee2878183a91b6446",
-            "reference": "16691cf8b609b238a9a3596ee2878183a91b6446",
+            "url": "https://api.github.com/repos/nette/tracy/zipball/d28ebdf7ab8d88f231310aef1e8cce965ea0b2ca",
+            "reference": "d28ebdf7ab8d88f231310aef1e8cce965ea0b2ca",
             "shasum": ""
         },
         "require": {
@@ -3188,12 +3191,13 @@
             "nette/di": "^3.0",
             "nette/tester": "^2.2",
             "nette/utils": "^3.0",
+            "phpstan/phpstan": "^0.12",
             "psr/log": "^1.0"
         },
         "suggest": {
             "https://nette.org/donate": "Please support Tracy via a donation"
         },
-        "time": "2019-11-02T20:12:14+00:00",
+        "time": "2019-12-15T22:48:05+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

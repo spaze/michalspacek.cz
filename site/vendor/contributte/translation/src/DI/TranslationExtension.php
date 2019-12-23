@@ -121,11 +121,11 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 		}
 
 		$translator = $builder->addDefinition($this->prefix('translator'))
-			->setType(Nette\Localization\ITranslator::class)
 			->setFactory($factory, ['defaultLocale' => $this->config->locales->default, 'cacheDir' => $this->config->cache->dir, 'debug' => $this->config->debug])
 			->addSetup('setLocalesWhitelist', [$this->config->locales->whitelist])
 			->addSetup('setConfigCacheFactory', [$configCacheFactory])
-			->addSetup('setFallbackLocales', [$this->config->locales->fallback]);
+			->addSetup('setFallbackLocales', [$this->config->locales->fallback])
+			->setAutowired([Nette\Localization\ITranslator::class, Symfony\Contracts\Translation\TranslatorInterface::class]);
 
 		// Loaders
 		foreach ($this->config->loaders as $k1 => $v1) {
@@ -219,7 +219,7 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 			if ($this->config->logger === true) {
 				$psrLogger = $builder->getDefinitionByType(Psr\Log\LoggerInterface::class);
 
-			} elseif (is_string($this->config->logger)) {
+			} elseif (is_string($this->config->logger) && class_exists($this->config->logger)) {
 				$reflection = new ReflectionClass($this->config->logger);
 
 				if (!$reflection->implementsInterface(Psr\Log\LoggerInterface::class)) {
