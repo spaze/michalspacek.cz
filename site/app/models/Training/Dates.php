@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
+use DateTimeImmutable;
 use Nette\Database\Context;
 use Nette\Database\Row;
 use Nette\Localization\ITranslator;
@@ -19,6 +20,8 @@ class Dates
 	public const STATUS_CANCELED  = 'CANCELED';   // 4
 
 	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
+
+	private const DATA_RETENTION = 30;
 
 	/** @var Context */
 	protected $database;
@@ -474,6 +477,18 @@ class Dates
 			}
 		}
 		return $lastFreeSeats;
+	}
+
+
+	public function getDataRetentionDays(): int
+	{
+		return self::DATA_RETENTION;
+	}
+
+
+	public function getDataRetentionDate(): DateTimeImmutable
+	{
+		return new DateTimeImmutable("-{$this->getDataRetentionDays()} days");
 	}
 
 }

@@ -8,6 +8,7 @@ use MichalSpacekCz\Certificates;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Mails;
+use MichalSpacekCz\Training\Trainings;
 
 class HomepagePresenter extends BasePresenter
 {
@@ -26,13 +27,17 @@ class HomepagePresenter extends BasePresenter
 	/** @var Certificates */
 	protected $certificates;
 
+	/** @var Trainings */
+	private $trainings;
 
-	public function __construct(Applications $trainingApplications, Mails $trainingMails, Dates $trainingDates, Certificates $certificates)
+
+	public function __construct(Applications $trainingApplications, Mails $trainingMails, Dates $trainingDates, Certificates $certificates, Trainings $trainings)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;
 		$this->certificates = $certificates;
+		$this->trainings = $trainings;
 		parent::__construct();
 	}
 
@@ -64,6 +69,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->certificates = $certificates = $this->certificates->getNewest();
 		$this->template->certificatesNeedAttention = $this->certsNeedAttention($certificates);
 		list($this->template->preliminaryTotal, $this->template->preliminaryDateSet) = $this->trainingApplications->getPreliminaryCounts();
+		$this->template->pastWithPersonalData = count($this->trainings->getPastWithPersonalData());
 	}
 
 

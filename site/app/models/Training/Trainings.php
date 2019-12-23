@@ -358,4 +358,81 @@ class Trainings
 		]);
 	}
 
+
+	/**
+	 * @return Row[]
+	 */
+	public function getPastWithPersonalData(): array
+	{
+		$result = $this->database->fetchAll(
+			'SELECT DISTINCT
+				d.id_date AS dateId,
+				ua.action,
+				t.name,
+				d.start,
+				d.end,
+				d.public,
+				s.status,
+				tv.href AS venueHref,
+				tv.name AS venueName,
+				tv.name_extended AS venueNameExtended,
+				tv.city AS venueCity,
+				d.note
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_applications ta ON d.id_date = ta.key_date
+				JOIN training_venues tv ON d.key_venue = tv.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
+				JOIN training_url_actions tua ON t.id_training = tua.key_training
+				JOIN url_actions ua ON tua.key_url_action = ua.id_url_action
+				JOIN languages l ON ua.key_language = l.id_language
+			WHERE
+				l.language = ?
+				AND d.end < ?
+				AND (
+					ta.name IS NOT NULL OR
+					ta.email IS NOT NULL OR
+					ta.company IS NOT NULL OR
+					ta.street IS NOT NULL OR
+					ta.city IS NOT NULL OR
+					ta.zip IS NOT NULL OR
+					ta.country IS NOT NULL OR
+					ta.company_id IS NOT NULL OR
+					ta.company_tax_id IS NOT NULL OR
+					ta.note IS NOT NULL
+				)
+			ORDER BY
+				d.start DESC',
+			$this->translator->getDefaultLocale(),
+			$this->trainingDates->getDataRetentionDate()
+		);
+
+		foreach ($result as $training) {
+			$this->texyFormatter->formatTraining($training);
+		}
+		return $result;
+	}
+
+
+	public function deleteHistoricalPersonalData(): void
+	{
+
+		$this->database->query(
+			'UPDATE training_applications SET ? WHERE key_date IN (SELECT id_date FROM training_dates WHERE end < ?)',
+			array(
+				'name' => null,
+				'email' => null,
+				'company' => null,
+				'street' => null,
+				'city' => null,
+				'zip' => null,
+				'country' => null,
+				'company_id' => null,
+				'company_tax_id' => null,
+				'note' => null,
+			),
+			$this->trainingDates->getDataRetentionDate()
+		);
+	}
+
 }

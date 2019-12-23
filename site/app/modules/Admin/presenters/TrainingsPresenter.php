@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace App\AdminModule\Presenters;
 
 use DateTime;
+use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdmin;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
 use MichalSpacekCz\Form\TrainingDate;
@@ -23,6 +24,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
+use Netxten\Templating\Helpers;
 
 class TrainingsPresenter extends BasePresenter
 {
@@ -47,6 +49,12 @@ class TrainingsPresenter extends BasePresenter
 
 	/** @var Reviews */
 	protected $trainingReviews;
+
+	/** @var Helpers */
+	private $netxtenHelpers;
+
+	/** @var DeletePersonalDataFormFactory */
+	private $deletePersonalDataFormFactory;
 
 	/** @var array */
 	private $applications;
@@ -79,7 +87,9 @@ class TrainingsPresenter extends BasePresenter
 		Trainings $trainings,
 		Venues $trainingVenues,
 		Files $trainingFiles,
-		Reviews $trainingReviews
+		Reviews $trainingReviews,
+		Helpers $netxtenHelpers,
+		DeletePersonalDataFormFactory $deletePersonalDataFormFactory
 	)
 	{
 		$this->trainingApplications = $trainingApplications;
@@ -89,6 +99,8 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
 		$this->trainingReviews = $trainingReviews;
+		$this->netxtenHelpers = $netxtenHelpers;
+		$this->deletePersonalDataFormFactory = $deletePersonalDataFormFactory;
 		parent::__construct();
 	}
 
@@ -219,17 +231,33 @@ class TrainingsPresenter extends BasePresenter
 	public function renderDefault(): void
 	{
 		$trainings = $this->trainings->getAllTrainings();
+		$this->addApplications($trainings);
+
+		$this->template->pageTitle = 'Školení';
+		$this->template->trainings = $trainings;
+		$this->template->now = new DateTime();
+		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
+	}
+
+
+	public function renderPastWithPersonalData(): void
+	{
+		$trainings = $this->trainings->getPastWithPersonalData();
+		$this->addApplications($trainings);
+
+		$this->template->pageTitle = 'Minulá školení s osobními daty starší než ' . $this->netxtenHelpers->localeDay($this->trainingDates->getDataRetentionDate());
+		$this->template->trainings = $trainings;
+	}
+
+
+	private function addApplications(array &$trainings): void
+	{
 		foreach ($trainings as $training) {
 			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
 			$training->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($training->dateId);
 			$training->validCount = count($training->applications);
 			$training->requiresAttention = false;
 		}
-
-		$this->template->pageTitle = 'Školení';
-		$this->template->trainings = $trainings;
-		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
 	}
 
 
@@ -510,6 +538,15 @@ class TrainingsPresenter extends BasePresenter
 			$values->note
 		);
 		$this->redirect('Trainings:');
+	}
+
+
+	protected function createComponentDeletePersonalDataForm(): Form
+	{
+		return $this->deletePersonalDataFormFactory->create(function (): void {
+			$this->flashMessage('Osobní data z minulých školení smazána');
+			$this->redirect('Homepage:');
+		});
 	}
 
 }
