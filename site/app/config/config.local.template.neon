@@ -4,19 +4,19 @@ database:
 		user: ...
 		password: ...
 		options:
-#			PDO::ATTR_EMULATE_PREPARES: false  # https://github.com/nette/database/issues/227
+			PDO::ATTR_EMULATE_PREPARES: false
 	upcKeys:
 		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_upckeys'
 		user: ...
 		password: ...
 		options:
-#			PDO::ATTR_EMULATE_PREPARES: false  # https://github.com/nette/database/issues/227
+			PDO::ATTR_EMULATE_PREPARES: false
 	pulse:
 		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_pulse'
 		user: ...
 		password: ...
 		options:
-#			PDO::ATTR_EMULATE_PREPARES: false  # https://github.com/nette/database/issues/227
+			PDO::ATTR_EMULATE_PREPARES: false
 
 mail:
 	smtp: true
