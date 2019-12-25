@@ -7,8 +7,9 @@ namespace Composer\Autoload;
 class ComposerStaticInit247de957f14f643f393d210a332dd05b
 {
     public static $files = array (
-        '19a7e2c3b1d506dcdc1b60aab8e102e4' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/shortcuts.php',
         '59af96974553a1fc6407327354b6f47e' => __DIR__ . '/..' . '/nette/di/src/compatibility.php',
+        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
+        '19a7e2c3b1d506dcdc1b60aab8e102e4' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/shortcuts.php',
         'e7a6fd2e7a869bb207158e9416bdd9b0' => __DIR__ . '/..' . '/nette/application/src/compatibility.php',
         'afdda9f94b76f77a7518e02eee753cc9' => __DIR__ . '/..' . '/nette/mail/src/compatibility.php',
         '5d1dcebe069db2f62f5a447526290867' => __DIR__ . '/..' . '/texy/texy/src/texy.php',
@@ -18,11 +19,8 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'S' => 
         array (
             'Symfony\\Contracts\\Translation\\' => 30,
-            'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Component\\Translation\\' => 30,
-            'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Filesystem\\' => 29,
-            'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Config\\' => 25,
             'Spaze\\SubresourceIntegrity\\' => 27,
             'Spaze\\PHPStan\\Rules\\Disallowed\\' => 31,
@@ -33,28 +31,19 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         ),
         'P' => 
         array (
-            'Psr\\Log\\' => 8,
-            'Psr\\Container\\' => 14,
             'PhpParser\\' => 10,
             'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
-            'PackageVersions\\' => 16,
-            'PHPStan\\PhpDocParser\\' => 21,
             'PHPStan\\' => 8,
         ),
         'M' => 
         array (
             'MichalSpacekCz\\' => 15,
         ),
-        'J' => 
-        array (
-            'Jean85\\' => 7,
-        ),
         'C' => 
         array (
             'Contributte\\Translation\\' => 24,
-            'Composer\\XdebugHandler\\' => 23,
         ),
     );
 
@@ -63,25 +52,13 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/symfony/translation-contracts',
         ),
-        'Symfony\\Contracts\\Service\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/service-contracts',
-        ),
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
         ),
-        'Symfony\\Component\\Finder\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/finder',
-        ),
         'Symfony\\Component\\Filesystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/filesystem',
-        ),
-        'Symfony\\Component\\Console\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/console',
         ),
         'Symfony\\Component\\Config\\' => 
         array (
@@ -111,14 +88,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/spaze/csp-config/src',
         ),
-        'Psr\\Log\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
-        ),
-        'Psr\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/container/src',
-        ),
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
@@ -135,34 +104,17 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'PackageVersions\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions',
-        ),
-        'PHPStan\\PhpDocParser\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
-        ),
         'PHPStan\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpstan/phpstan/src',
-            1 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
+            0 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
         ),
         'MichalSpacekCz\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app/models',
         ),
-        'Jean85\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/jean85/pretty-package-versions/src',
-        ),
         'Contributte\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/contributte/translation/src',
-        ),
-        'Composer\\XdebugHandler\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/composer/xdebug-handler/src',
         ),
     );
 

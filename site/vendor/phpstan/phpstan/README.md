@@ -30,7 +30,7 @@ can be checked before you run the actual line.
 &nbsp;&nbsp;&nbsp;
 <a href="https://packagist.com/?utm_source=phpstan&utm_medium=readme&utm_campaign=sponsorlogo"><img src="https://i.imgur.com/PmMC45f.png" alt="Private Packagist" width="326" height="64"></a>
 &nbsp;&nbsp;&nbsp;
-<a href="https://app.ncoreplat.com/jobposition/3054/php-backend-developer-milan-it/musement"><img src="https://i.imgur.com/uw5rAlR.png" alt="Musement" width="247" height="49"></a>
+<a href="https://stackoverflow.com/jobs/273089/backend-software-engineer-musement-spa"><img src="https://i.imgur.com/uw5rAlR.png" alt="Musement" width="247" height="49"></a>
 &nbsp;&nbsp;&nbsp;
 <a href="https://blackfire.io/docs/introduction?utm_source=phpstan&utm_medium=github_readme&utm_campaign=logo"><img src="https://i.imgur.com/zR8rsqk.png" alt="Blackfire.io" width="254" height="64"></a>
 &nbsp;&nbsp;&nbsp;
@@ -62,9 +62,172 @@ composer require --dev phpstan/phpstan
 
 Composer will install PHPStan's executable in its `bin-dir` which defaults to `vendor/bin`.
 
-If you have conflicting dependencies or you want to install PHPStan globally, the best way is via a PHAR archive. You will always find the latest stable PHAR archive below the [release notes](https://github.com/phpstan/phpstan/releases). You can also use the [phpstan/phpstan-shim](https://packagist.org/packages/phpstan/phpstan-shim) package to install PHPStan via Composer without the risk of conflicting dependencies.
+<details>
+  <summary>Use PHPStan via Docker</summary>
 
-You can also use [PHPStan via Docker](https://github.com/phpstan/docker-image).
+[![Docker Stars](https://img.shields.io/docker/stars/phpstan/phpstan.svg)](https://hub.docker.com/r/phpstan/phpstan/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/phpstan/phpstan.svg)](https://hub.docker.com/r/phpstan/phpstan/)
+
+The image is based on [Alpine Linux](https://alpinelinux.org/) and built daily.
+
+## Supported tags
+
+- `0.12`, `latest`
+- `0.11`
+- `0.10`
+- `nightly` (dev-master)
+
+## How to use this image
+
+### Install
+
+Install the container:
+
+```bash
+docker pull phpstan/phpstan
+```
+
+Alternatively, pull a specific version:
+
+```bash
+docker pull phpstan/phpstan:0.11
+```
+
+### Usage
+
+We are recommend to use the images as an shell alias to access via short-command.
+To use simply *phpstan* everywhere on CLI add this line to your ~/.zshrc, ~/.bashrc or ~/.profile.
+
+```bash
+alias phpstan='docker run -v $PWD:/app --rm phpstan/phpstan'
+```
+
+If you don't have set the alias, use this command to run the container:
+
+```bash
+docker run --rm -v /path/to/app:/app phpstan/phpstan [some arguments for PHPStan]
+```
+
+For example:
+
+```bash
+docker run --rm -v /path/to/app:/app phpstan/phpstan analyse /app/src
+```
+
+### Customizing
+
+#### Install PHPStan extensions
+
+If you need an PHPStan extension, for example [phpstan/phpstan-phpunit](https://github.com/phpstan/phpstan-phpunit), you can simply
+extend an existing image and add the relevant extension via Composer.
+In some cases you need also some additional PHP extensions like DOM. (see section below)
+
+Here is an example Dockerfile for phpstan/phpstan-phpunit:
+
+```dockerfile
+FROM phpstan/phpstan:latest
+RUN composer global require phpstan/phpstan-phpunit
+```
+
+You can update the `phpstan.neon` file in order to use the extension:
+
+```neon
+includes:
+    - /composer/vendor/phpstan/phpstan-phpunit/extension.neon
+```
+
+#### Further PHP extension support
+
+Sometimes your codebase requires some additional PHP extensions like "intl" or maybe "soap".
+
+Therefore you need to know that our Docker image extends the [official php:cli-alpine Docker image](https://hub.docker.com/_/php).
+So only [the default built-in extensions](#default-built-in-php-extensions) are available (see below).
+Also because PHPStan needs no further extensions to run itself.
+
+But to solve this issue you can extend our Docker image in an own Dockerfile like this, for example to add "soap" and "intl":
+
+```dockerfile
+FROM phpstan/phpstan:latest
+RUN apk --update --progress --no-cache add icu-dev libxml2-dev \
+    && docker-php-ext-install intl soap
+```
+
+#### Missing classes like "PHPUnit_Framework_TestCase"
+
+Often you use PHAR files like PHPUnit in your projects. These PHAR files provide sometimes own classes
+where your project classes extends from. But these cannot be found in
+the vendor directory and so cannot be autoloaded. So you see error messages like this:
+*"Fatal error: Class 'PHPUnit_Framework_TestCase' not found"*
+
+To solve this issue you need an own configuration file, like "phpstan.neon".
+This file can look like this:
+
+```neon
+parameters:
+	autoload_files:
+		- path/to/phpunit.phar
+```
+
+After creating this file in your project root you can run PHPStan for example via
+
+```bash
+docker run -v $PWD:/app --rm phpstan/phpstan -c phpstan.neon --level=4
+```
+
+and now the required classes are loaded. Please take also a look in the [relevant part](https://github.com/phpstan/phpstan#autoloading) at the PHPStan documentation.
+
+---
+
+#### Default built-in PHP extensions
+
+You can use the following command to determine which php extensions are already installed on the base image:
+
+```bash
+docker run --rm php:cli-alpine -m
+```
+
+This should give you an output like this:
+
+```ini
+[PHP Modules]
+Core
+ctype
+curl
+date
+dom
+fileinfo
+filter
+ftp
+hash
+iconv
+json
+libxml
+mbstring
+mysqlnd
+openssl
+pcre
+PDO
+pdo_sqlite
+Phar
+posix
+readline
+Reflection
+session
+SimpleXML
+sodium
+SPL
+sqlite3
+standard
+tokenizer
+xml
+xmlreader
+xmlwriter
+zlib
+
+[Zend Modules]
+```
+
+</details>
 
 ## First run
 
@@ -136,9 +299,10 @@ Unofficial extensions for other frameworks and libraries are also available:
 Unofficial extensions with third-party rules:
 
 * [thecodingmachine / phpstan-strict-rules](https://github.com/thecodingmachine/phpstan-strict-rules)
-* [localheinz / phpstan-rules](https://github.com/localheinz/phpstan-rules)
+* [ergebnis / phpstan-rules](https://github.com/ergebnis/phpstan-rules)
 * [pepakriz / phpstan-exception-rules](https://github.com/pepakriz/phpstan-exception-rules)
 * [Slamdunk / phpstan-extensions](https://github.com/Slamdunk/phpstan-extensions)
+* [ekino / phpstan-banned-code](https://github.com/ekino/phpstan-banned-code)
 
 New extensions are becoming available on a regular basis!
 
@@ -175,6 +339,8 @@ All the following options are part of the `parameters` section.
  - `level` - specifies analysis level - if specified, `-l` option is not required
  - `paths` - specifies analysed paths - if specified, paths are not required to be passed as arguments
 
+Relative paths in the configuration are made absolute according to the directory where the configuration file resides.
+
 ### Autoloading
 
 PHPStan uses Composer autoloader so the easiest way how to autoload classes
@@ -190,12 +356,10 @@ you can specify directories to scan and concrete files to include using
 ```
 parameters:
 	autoload_directories:
-		- %rootDir%/../../../build
+		- build
 	autoload_files:
-		- %rootDir%/../../../generated/routes/GeneratedRouteList.php
+		- generated/routes/GeneratedRouteList.php
 ```
-
-`%rootDir%` is expanded to the root directory where PHPStan resides.
 
 #### Autoloading for global installation
 
@@ -226,7 +390,7 @@ is used as a pattern for the [`fnmatch`](https://secure.php.net/manual/en/functi
 ```
 parameters:
 	excludes_analyse:
-		- %rootDir%/../../../tests/*/data/*
+		- tests/*/data/*
 ```
 
 ### Include custom extensions
@@ -322,6 +486,17 @@ parameters:
 			- sendResponse
 ```
 
+### Custom early terminating function calls
+In addition to the custom early terminating method calls, you can specify custom early terminating function calls. For example a global helper function called `redirect()`
+
+These functions can be configured by adding them to the `earlyTerminatingFunctionCalls` list like this:
+
+```
+parameters:
+	earlyTerminatingFunctionCalls:
+			- redirect
+```
+
 ### Ignore error messages with regular expressions
 
 If some issue in your code base is not easy to fix or just simply want to deal with it later,
@@ -343,12 +518,12 @@ parameters:
 	ignoreErrors:
 		-
 			message: '#Call to an undefined method [a-zA-Z0-9\\_]+::method\(\)#'
-			path: %currentWorkingDirectory%/some/dir/SomeFile.php
+			path: some/dir/SomeFile.php
 		-
 			message: '#Call to an undefined method [a-zA-Z0-9\\_]+::method\(\)#'
 			paths:
-				- %currentWorkingDirectory%/some/dir/*
-				- %currentWorkingDirectory%/other/dir/*
+				- some/dir/*
+				- other/dir/*
 		- '#Other error to catch anywhere#'
 ```
 
@@ -363,7 +538,7 @@ you can provide your own bootstrap file:
 
 ```
 parameters:
-	bootstrap: %rootDir%/../../../phpstan-bootstrap.php
+	bootstrap: phpstan-bootstrap.php
 ```
 
 ### Custom rules
@@ -379,10 +554,12 @@ services:
 			- phpstan.rules.rule
 ```
 
-For inspiration on how to implement a rule turn to [src/Rules](https://github.com/phpstan/phpstan/tree/master/src/Rules)
+For inspiration on how to implement a rule turn to [src/Rules](https://github.com/phpstan/phpstan-src/tree/master/src/Rules)
 to see a lot of built-in rules.
 
 Check out also [phpstan-strict-rules](https://github.com/phpstan/phpstan-strict-rules) repository for extra strict and opinionated rules for PHPStan!
+
+Check as well [phpstan-deprecation-rules](https://github.com/phpstan/phpstan-deprecation-rules) for rules that detect usage of deprecated classes, methods, properties, constants and traits!
 
 ### Custom error formatters
 
@@ -431,7 +608,7 @@ You can pass the following keywords to the `--error-format=X` parameter in order
 - `json`: Creates minified .json output without whitespaces. Note that you'd have to redirect output into a file in order to capture the results for later processing.
 - `prettyJson`: Creates human readable .json output with whitespaces and indentations. Note that you'd have to redirect output into a file in order to capture the results for later processing.
 - `gitlab`: Creates format for use Code Quality widget on GitLab Merge Request.
-- `baselineNeon`: Creates a .neon output for including in your config. This allows a baseline for existing errors. Note that you'd have to redirect output into a file in order to capture the results for later processing.
+- `baselineNeon`: Creates a .neon output for including in your config. This allows a baseline for existing errors. Note that you'd have to redirect output into a file in order to capture the results for later processing. [Detailed article about this feature.](https://medium.com/@ondrejmirtes/phpstans-baseline-feature-lets-you-hold-new-code-to-a-higher-standard-e77d815a5dff)
 
 ## Class reflection extensions
 
@@ -723,18 +900,4 @@ This project adheres to a [Contributor Code of Conduct](https://github.com/phpst
 
 ## Contributing
 
-Any contributions are welcome.
-
-### Building
-
-You can either run the whole build including linting and coding standards using
-
-```bash
-vendor/bin/phing
-```
-
-or run only tests using
-
-```bash
-vendor/bin/phing tests
-```
+Any contributions are welcome. PHPStan's source code open to pull requests lives at [`phpstan/phpstan-src`](https://github.com/phpstan/phpstan-src).
