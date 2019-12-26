@@ -3,15 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Form\Controls\TrainingStatusDate;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
 use Nette\Localization\ITranslator;
 
 class TrainingStatuses extends ProtectedForm
 {
-
-	use TrainingStatusDate;
 
 	/** @var ITranslator */
 	protected $translator;
@@ -21,9 +18,10 @@ class TrainingStatuses extends ProtectedForm
 	 * @param IContainer $parent
 	 * @param string $name
 	 * @param Row[] $applications
+	 * @param TrainingControlsFactory $trainingControlsFactory
 	 * @param ITranslator $translator
 	 */
-	public function __construct(IContainer $parent, string $name, array $applications, ITranslator $translator)
+	public function __construct(IContainer $parent, string $name, array $applications, TrainingControlsFactory $trainingControlsFactory, ITranslator $translator)
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;
@@ -39,7 +37,7 @@ class TrainingStatuses extends ProtectedForm
 					->setPrompt('nelze dále měnit');
 			}
 		}
-		$this->addStatusDate('date', 'Datum:', true);
+		$trainingControlsFactory->addStatusDate($this, 'date', 'Datum:', true);
 		$this->addSubmit('submit', 'Změnit');
 		$this->addSubmit('familiar', 'Tykat všem')->setValidationScope([]);
 	}

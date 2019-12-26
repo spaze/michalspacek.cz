@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace App\AdminModule\Presenters;
 
 use DateTime;
+use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Form\TrainingInvoice;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
@@ -18,12 +19,16 @@ class InvoicesPresenter extends BasePresenter
 	/** @var Dates */
 	protected $trainingDates;
 
+	/** @var TrainingControlsFactory */
+	private $trainingControlsFactory;
 
-	public function __construct(Applications $trainingApplications, Dates $trainingDates)
+
+	public function __construct(Applications $trainingApplications, Dates $trainingDates, TrainingControlsFactory $trainingControlsFactory)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 		parent::__construct();
+		$this->trainingControlsFactory = $trainingControlsFactory;
 	}
 
 
@@ -47,7 +52,7 @@ class InvoicesPresenter extends BasePresenter
 
 	protected function createComponentInvoice(string $formName): TrainingInvoice
 	{
-		$form = new TrainingInvoice($this, $formName, $this->translator);
+		$form = new TrainingInvoice($this, $formName, $this->trainingControlsFactory);
 		$form->onSuccess[] = [$this, 'submittedApplication'];
 		return $form;
 	}

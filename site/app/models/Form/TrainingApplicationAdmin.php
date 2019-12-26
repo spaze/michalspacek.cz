@@ -3,12 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Form\Controls\PaidDate;
-use MichalSpacekCz\Form\Controls\TrainingAttendee;
-use MichalSpacekCz\Form\Controls\TrainingCompany;
-use MichalSpacekCz\Form\Controls\TrainingCountry;
-use MichalSpacekCz\Form\Controls\TrainingNote;
-use MichalSpacekCz\Form\Controls\TrainingSource;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use Nette\ComponentModel\IContainer;
@@ -19,18 +13,14 @@ use Nette\Localization\ITranslator;
 class TrainingApplicationAdmin extends ProtectedForm
 {
 
-	use PaidDate;
-	use TrainingAttendee;
-	use TrainingCompany;
-	use TrainingCountry;
-	use TrainingNote;
-	use TrainingSource;
-
 	/** @var Applications */
 	protected $trainingApplications;
 
 	/** @var Dates */
 	protected $trainingDates;
+
+	/** @var TrainingControlsFactory */
+	private $trainingControlsFactory;
 
 	/** @var ITranslator */
 	protected $translator;
@@ -55,20 +45,22 @@ class TrainingApplicationAdmin extends ProtectedForm
 		string $name,
 		Applications $trainingApplications,
 		Dates $trainingDates,
+		TrainingControlsFactory $trainingControlsFactory,
 		ITranslator $translator
 	) {
 		parent::__construct($parent, $name);
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 		$this->translator = $translator;
+		$this->trainingControlsFactory = $trainingControlsFactory;
 
-		$this->addAttendee($this);
+		$this->trainingControlsFactory->addAttendee($this);
 		$this->addCheckbox('familiar', 'Tykání:');
-		$this->addSource($this);
-		$this->addCompany($this);
-		$this->addCountry($this);
+		$this->trainingControlsFactory->addSource($this);
+		$this->trainingControlsFactory->addCompany($this);
+		$this->trainingControlsFactory->addCountry($this);
 		$this->getComponent('country')->setPrompt('- vyberte zemi -');
-		$this->addNote($this);
+		$this->trainingControlsFactory->addNote($this);
 		$this->addPaymentInfo($this);
 		$this->addSubmit('submit', 'Uložit');
 
@@ -97,7 +89,7 @@ class TrainingApplicationAdmin extends ProtectedForm
 			->setHtmlType('number');
 		$this->addText('invoiceId', 'Faktura č.:')
 			->setHtmlType('number');
-		$this->addPaidDate('paid', 'Zaplaceno:', false);
+		$this->trainingControlsFactory->addPaidDate($this, 'paid', 'Zaplaceno:', false);
 	}
 
 

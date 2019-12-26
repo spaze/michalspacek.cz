@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdmin;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
+use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Form\TrainingDate;
 use MichalSpacekCz\Form\TrainingFile;
 use MichalSpacekCz\Form\TrainingReview;
@@ -50,6 +51,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Reviews */
 	protected $trainingReviews;
 
+	/** @var TrainingControlsFactory */
+	private $trainingControlsFactory;
+
 	/** @var Helpers */
 	private $netxtenHelpers;
 
@@ -88,6 +92,7 @@ class TrainingsPresenter extends BasePresenter
 		Venues $trainingVenues,
 		Files $trainingFiles,
 		Reviews $trainingReviews,
+		TrainingControlsFactory $trainingControlsFactory,
 		Helpers $netxtenHelpers,
 		DeletePersonalDataFormFactory $deletePersonalDataFormFactory
 	)
@@ -99,6 +104,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
 		$this->trainingReviews = $trainingReviews;
+		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->deletePersonalDataFormFactory = $deletePersonalDataFormFactory;
 		parent::__construct();
@@ -263,7 +269,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentStatuses(string $formName): TrainingStatuses
 	{
-		$form = new TrainingStatuses($this, $formName, $this->applications, $this->translator);
+		$form = new TrainingStatuses($this, $formName, $this->applications, $this->trainingControlsFactory, $this->translator);
 		$form->getComponent('submit')->onClick[] = [$this, 'submittedStatuses'];
 		$form->getComponent('familiar')->onClick[] = [$this, 'submittedFamiliar'];
 		return $form;
@@ -317,7 +323,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$applications = $this->request->getPost('applications');
 		$count = (is_array($applications) ? count($applications) : 1);
-		$form = new TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingApplications, $this->translator);
+		$form = new TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingApplications, $this->trainingControlsFactory);
 		$form->onSuccess[] = [$this, 'submittedApplications'];
 		return $form;
 	}
@@ -424,7 +430,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication(string $formName): TrainingApplicationAdmin
 	{
-		$form = new TrainingApplicationAdmin($this, $formName, $this->trainingApplications, $this->trainingDates, $this->translator);
+		$form = new TrainingApplicationAdmin($this, $formName, $this->trainingApplications, $this->trainingDates, $this->trainingControlsFactory, $this->translator);
 		$form->setApplication($this->application);
 		$form->onSuccess[] = [$this, 'submittedApplication'];
 		return $form;
@@ -490,7 +496,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentDate(string $formName): TrainingDate
 	{
-		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
+		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues, $this->trainingControlsFactory);
 		$form->setTrainingDate($this->training);
 		$form->onSuccess[] = [$this, 'submittedDate'];
 		return $form;
@@ -518,7 +524,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentAddDate(string $formName): TrainingDate
 	{
-		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues);
+		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues, $this->trainingControlsFactory);
 		$form->onSuccess[] = [$this, 'submittedAddDate'];
 		return $form;
 	}

@@ -3,10 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Form\Controls\TrainingAttendee;
-use MichalSpacekCz\Form\Controls\TrainingCompany;
-use MichalSpacekCz\Form\Controls\TrainingCountry;
-use MichalSpacekCz\Form\Controls\TrainingNote;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
 use Nette\Http\SessionSection;
@@ -18,22 +14,19 @@ use Netxten\Templating\Helpers;
 class TrainingApplication extends ProtectedForm
 {
 
-	use TrainingAttendee;
-	use TrainingCompany;
-	use TrainingCountry;
-	use TrainingNote;
-
 	/** @var ITranslator */
 	protected $translator;
 
 	/** @var Helpers */
 	protected $netxtenHelpers;
 
+
 	/**
 	 * @param IContainer $parent
 	 * @param string $name
 	 * @param Row[] $dates
 	 * @param ITranslator $translator
+	 * @param TrainingControlsFactory $trainingControlsFactory
 	 * @param Helpers $netxtenHelpers
 	 */
 	public function __construct(
@@ -41,6 +34,7 @@ class TrainingApplication extends ProtectedForm
 		string $name,
 		array $dates,
 		ITranslator $translator,
+		TrainingControlsFactory $trainingControlsFactory,
 		Helpers $netxtenHelpers
 	)
 	{
@@ -81,10 +75,10 @@ class TrainingApplication extends ProtectedForm
 			$this->addComponent($field, 'trainingId');
 		}
 
-		$this->addAttendee($this);
-		$this->addCompany($this);
-		$this->addNote($this);
-		$this->addCountry($this);
+		$trainingControlsFactory->addAttendee($this);
+		$trainingControlsFactory->addCompany($this);
+		$trainingControlsFactory->addNote($this);
+		$trainingControlsFactory->addCountry($this);
 
 		$this->addSubmit('signUp', 'Odeslat');
 	}

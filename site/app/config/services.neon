@@ -115,6 +115,7 @@ services:
 	exports: \MichalSpacekCz\Exports
 	strings: \MichalSpacekCz\Strings
 	error: \MichalSpacekCz\Application\Error
+	trainingControlsFactory: \MichalSpacekCz\Form\TrainingControlsFactory
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory

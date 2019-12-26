@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Form\Controls\TrainingNote;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
@@ -12,8 +11,6 @@ use Nette\Database\Row;
 
 class TrainingDate extends ProtectedForm
 {
-
-	use TrainingNote;
 
 	private const STANDARD = 'Standardní';
 	private const CUSTOM = 'Na zakázku';
@@ -35,7 +32,8 @@ class TrainingDate extends ProtectedForm
 		string $name,
 		Trainings $trainings,
 		Dates $trainingDates,
-		Venues $trainingVenues
+		Venues $trainingVenues,
+		TrainingControlsFactory $trainingControlsFactory
 	) {
 		parent::__construct($parent, $name);
 		$this->trainings = $trainings;
@@ -97,7 +95,7 @@ class TrainingDate extends ProtectedForm
 		}
 		$this->addSelect('cooperation', 'Spolupráce:', $cooperations)
 			->addRule(self::INTEGER);
-		$this->addNote($this);
+		$trainingControlsFactory->addNote($this);
 
 		$this->addSubmit('submit', 'Přidat');
 	}

@@ -6,6 +6,7 @@ namespace App\WwwModule\Presenters;
 use MichalSpacekCz\CompanyInfo\Info;
 use MichalSpacekCz\Form\TrainingApplication;
 use MichalSpacekCz\Form\TrainingApplicationPreliminary;
+use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
@@ -65,6 +66,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Helpers */
 	protected $netxtenHelpers;
 
+	/** @var TrainingControlsFactory */
+	private $trainingControlsFactory;
+
 	/** @var Info */
 	protected $companyInfo;
 
@@ -90,6 +94,7 @@ class TrainingsPresenter extends BasePresenter
 		Reviews $trainingReviews,
 		Prices $price,
 		Helpers $netxtenHelpers,
+		TrainingControlsFactory $trainingControlsFactory,
 		Info $companyInfo,
 		IResponse $httpResponse
 	)
@@ -105,6 +110,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingReviews = $trainingReviews;
 		$this->prices = $price;
 		$this->netxtenHelpers = $netxtenHelpers;
+		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->companyInfo = $companyInfo;
 		$this->httpResponse = $httpResponse;
 		parent::__construct();
@@ -219,7 +225,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication(string $formName): TrainingApplication
 	{
-		$form = new TrainingApplication($this, $formName, $this->dates, $this->translator, $this->netxtenHelpers);
+		$form = new TrainingApplication($this, $formName, $this->dates, $this->translator, $this->trainingControlsFactory, $this->netxtenHelpers);
 		$form->setApplicationFromSession($this->session->getSection('training'));
 		$form->onSuccess[] = [$this, 'submittedApplication'];
 		return $form;
@@ -329,7 +335,7 @@ class TrainingsPresenter extends BasePresenter
 		if ($this->training->discontinuedId) {
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}");
 		}
-		$form = new TrainingApplicationPreliminary($this, $formName, $this->translator);
+		$form = new TrainingApplicationPreliminary($this, $formName, $this->trainingControlsFactory);
 		$form->onSuccess[] = [$this, 'submittedApplicationPreliminary'];
 		return $form;
 	}
