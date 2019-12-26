@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use Nette\ComponentModel\IContainer;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Row;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
@@ -22,7 +22,7 @@ class TrainingApplication extends ProtectedForm
 
 
 	/**
-	 * @param IContainer $parent
+	 * @param Presenter $parent
 	 * @param string $name
 	 * @param Row[] $dates
 	 * @param ITranslator $translator
@@ -30,7 +30,7 @@ class TrainingApplication extends ProtectedForm
 	 * @param Helpers $netxtenHelpers
 	 */
 	public function __construct(
-		IContainer $parent,
+		Presenter $parent,
 		string $name,
 		array $dates,
 		ITranslator $translator,

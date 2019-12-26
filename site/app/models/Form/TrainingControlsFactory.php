@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\EasterEgg\WinterIsComing;
 use MichalSpacekCz\Form\Controls\Date;
 use MichalSpacekCz\Training\Applications;
 use Nette\Forms\Container;
@@ -19,13 +20,17 @@ class TrainingControlsFactory
 	/** @var ITranslator */
 	private $translator;
 
+	/** @var WinterIsComing */
+	private $winterIsComing;
+
 	/** @var Applications */
 	private $trainingApplications;
 
 
-	public function __construct(Applications $trainingApplications, ITranslator $translator)
+	public function __construct(Applications $trainingApplications, WinterIsComing $winterIsComing, ITranslator $translator)
 	{
 		$this->trainingApplications = $trainingApplications;
+		$this->winterIsComing = $winterIsComing;
 		$this->translator = $translator;
 	}
 
@@ -39,7 +44,8 @@ class TrainingControlsFactory
 		$container->addText('email', 'E-mail:')
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200);
+			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200)
+			->addRule($this->winterIsComing->rule(), 'Winter is actually not coming');
 	}
 
 
