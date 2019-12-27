@@ -235,7 +235,7 @@ class Post
 	 * @param Data $post
 	 * @throws InvalidLinkException
 	 */
-	public function enrich(Data $post)
+	public function enrich(Data $post): void
 	{
 		$params = [
 			'slug' => $post->slug,

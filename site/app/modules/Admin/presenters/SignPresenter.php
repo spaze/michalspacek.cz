@@ -15,7 +15,10 @@ use Tracy\Debugger;
 class SignPresenter extends BasePresenter
 {
 
-	/** @persistent */
+	/**
+	 * @var string
+	 * @persistent
+	 */
 	public $backlink = '';
 
 	/** @var Manager */

@@ -46,7 +46,7 @@ class EmailsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentMails($formName): TrainingMailsOutbox
+	protected function createComponentMails(string $formName): TrainingMailsOutbox
 	{
 		$form = new TrainingMailsOutbox($this, $formName, $this->applications);
 		$form->onSuccess[] = [$this, 'submittedMails'];

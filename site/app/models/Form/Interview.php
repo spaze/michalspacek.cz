@@ -74,7 +74,7 @@ class Interview extends ProtectedForm
 	}
 
 
-	private function addInterviewDate($name, $label = null, $required = false): TextInput
+	private function addInterviewDate(string $name, string $label, bool $required = false): TextInput
 	{
 		return $this->addDate(
 			$name,

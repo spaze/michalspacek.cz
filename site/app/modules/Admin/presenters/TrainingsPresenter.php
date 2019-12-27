@@ -69,6 +69,7 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Row */
 	private $application;
 
+	/** @var integer */
 	private $applicationId;
 
 	/** @var Row */
@@ -412,7 +413,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedAddReview(Form $form, $values): void
+	public function submittedAddReview(Form $form, ArrayHash $values): void
 	{
 		$this->trainingReviews->addReview(
 			$this->dateId,
@@ -437,7 +438,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplication(Form $form, $values): void
+	public function submittedApplication(Form $form, ArrayHash $values): void
 	{
 		$this->trainingApplications->updateApplicationData(
 			$this->applicationId,

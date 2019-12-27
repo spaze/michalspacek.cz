@@ -13,6 +13,7 @@ use MichalSpacekCz\Training\Trainings;
 class HomepagePresenter extends BasePresenter
 {
 
+	/** @var boolean */
 	protected $haveBacklink = false;
 
 	/** @var Applications */

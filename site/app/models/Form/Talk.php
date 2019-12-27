@@ -121,7 +121,7 @@ class Talk extends ProtectedForm
 	}
 
 
-	protected function addTalkDate($name, $label = null, $required = false): TextInput
+	protected function addTalkDate(string $name, string $label, bool $required = false): TextInput
 	{
 		return $this->addDate(
 			$name,

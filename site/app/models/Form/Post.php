@@ -109,7 +109,7 @@ class Post extends ProtectedForm
 	}
 
 
-	protected function addPublishedDate($name, $label = null, $required = false): TextInput
+	protected function addPublishedDate(string $name, string $label, bool $required = false): TextInput
 	{
 		return $this->addDate(
 			$name,

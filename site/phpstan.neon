@@ -1,8 +1,9 @@
 parameters:
+	checkMissingIterableValueType: false
 	inferPrivatePropertyTypeFromConstructor: true
 	autoload_directories:
 		- app
-	level: 5
+	level: 6
 	ignoreErrors:
 		- '#^Call to an undefined method Nette\\Localization\\ITranslator::get(Default|Available)?Locales?\(\)#'  # Actually called on \Contributte\Translation\Translator
 

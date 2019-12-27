@@ -107,6 +107,9 @@ class Bootstrap
 	}
 
 
+	/**
+	 * @return string[]
+	 */
 	private function getConfigurationFiles(): array
 	{
 		return array_unique(array(

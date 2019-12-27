@@ -174,7 +174,7 @@ class Manager implements IAuthenticator
 	}
 
 
-	public function isForbidden()
+	public function isForbidden(): bool
 	{
 		$forbidden = $this->database->fetchField(
 			'SELECT
@@ -202,13 +202,13 @@ class Manager implements IAuthenticator
 	}
 
 
-	public function setReturningUserCookie($cookie)
+	public function setReturningUserCookie(string $cookie): void
 	{
 		$this->returningUserCookie = $cookie;
 	}
 
 
-	public function setPermanentLoginCookie($cookie): void
+	public function setPermanentLoginCookie(string $cookie): void
 	{
 		$this->permanentLoginCookie = $cookie;
 	}
@@ -219,7 +219,7 @@ class Manager implements IAuthenticator
 	 *
 	 * @param string $interval
 	 */
-	public function setPermanentLoginInterval($interval)
+	public function setPermanentLoginInterval(string $interval): void
 	{
 		$this->permanentLoginInterval = $interval;
 	}
@@ -282,7 +282,7 @@ class Manager implements IAuthenticator
 	 * @param User $user
 	 * @throws Exception
 	 */
-	public function storePermanentLogin(User $user)
+	public function storePermanentLogin(User $user): void
 	{
 		$value = $this->insertToken($user, self::TOKEN_PERMANENT_LOGIN);
 		$this->httpResponse->setCookie($this->permanentLoginCookie, $value, $this->permanentLoginInterval, $this->authCookiesPath, null, null, null, 'Strict');
@@ -294,7 +294,7 @@ class Manager implements IAuthenticator
 	 *
 	 * @param User $user
 	 */
-	public function clearPermanentLogin(User $user)
+	public function clearPermanentLogin(User $user): void
 	{
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
 		$this->httpResponse->deleteCookie($this->permanentLoginCookie, $this->authCookiesPath);
@@ -307,7 +307,7 @@ class Manager implements IAuthenticator
 	 * @param User $user
 	 * @throws Exception
 	 */
-	public function regeneratePermanentLogin(User $user)
+	public function regeneratePermanentLogin(User $user): void
 	{
 		$this->database->beginTransaction();
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
@@ -346,7 +346,7 @@ class Manager implements IAuthenticator
 	 * @param User $user
 	 * @throws Exception
 	 */
-	public function regenerateReturningUser(User $user)
+	public function regenerateReturningUser(User $user): void
 	{
 		$this->database->beginTransaction();
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_RETURNING_USER);

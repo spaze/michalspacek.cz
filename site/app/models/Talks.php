@@ -88,7 +88,7 @@ class Talks
 	 *
 	 * @param string $root
 	 */
-	public function setStaticRoot($root)
+	public function setStaticRoot($root): void
 	{
 		$this->staticRoot = rtrim($root, '/');
 	}
@@ -99,7 +99,7 @@ class Talks
 	 *
 	 * @param string $root
 	 */
-	public function setLocationRoot($root)
+	public function setLocationRoot($root): void
 	{
 		$this->locationRoot = rtrim($root, '/');
 	}

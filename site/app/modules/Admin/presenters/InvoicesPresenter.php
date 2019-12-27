@@ -9,6 +9,7 @@ use MichalSpacekCz\Form\TrainingInvoice;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 
 class InvoicesPresenter extends BasePresenter
 {
@@ -58,7 +59,7 @@ class InvoicesPresenter extends BasePresenter
 	}
 
 
-	public function submittedApplication(Form $form, $values): void
+	public function submittedApplication(Form $form, ArrayHash $values): void
 	{
 		$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);
 		if ($count) {

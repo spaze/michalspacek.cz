@@ -32,15 +32,20 @@ class Statuses
 	/** @var Context */
 	protected $database;
 
-	private $statusIds = array();
+	/** @var array<string, integer> */
+	private $statusIds = [];
 
-	private $childrenStatuses = array();
+	/** @var array<string, array<integer, string>> */
+	private $childrenStatuses = [];
 
-	private $parentStatuses = array();
+	/** @var array<string, array<integer, string>> */
+	private $parentStatuses = [];
 
-	private $descendantStatuses = array();
+	/** @var array<string, array<integer, string>> */
+	private $descendantStatuses = [];
 
-	private $statusHistory = array();
+	/** @var array<integer, array<integer, Row>> */
+	private $statusHistory = [];
 
 
 	public function __construct(Context $context)

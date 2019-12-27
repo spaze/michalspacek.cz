@@ -12,6 +12,7 @@ abstract class BasePresenter extends WwwBasePresenter
 	/** @var MysqlSessionHandler */
 	private $sessionHandler;
 
+	/** @var boolean */
 	protected $haveBacklink = true;
 
 
