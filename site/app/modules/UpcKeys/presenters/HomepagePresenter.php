@@ -60,9 +60,6 @@ class HomepagePresenter extends BasePresenter
 				}
 				$this->setView('text');
 				break;
-			case 'json':
-				$this->sendJson($keys);
-				break;
 			case 'html':
 				foreach ($keys as $key => $value) {
 					$this->template->$key = $value;
@@ -74,6 +71,13 @@ class HomepagePresenter extends BasePresenter
 				$this->template->prefixes = $this->upcKeys->getPrefixes();
 				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
 				break;
+			/**
+			 * @noinspection PhpMissingBreakStatementInspection
+			 * `Nette\Application\UI\Presenter::sendJson()` is listed in `earlyTerminatingMethodCalls` in the phpstan-nette extension config
+			 * so PHPStan flags it as "Unreachable statement" - removing the `break` fixed it but then PHPStorm started to complain
+			 */
+			case 'json':
+				$this->sendJson($keys);
 			default:
 				throw new BadRequestException('Unknown format');
 		}

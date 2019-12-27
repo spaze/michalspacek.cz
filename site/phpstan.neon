@@ -2,16 +2,11 @@ parameters:
 	inferPrivatePropertyTypeFromConstructor: true
 	autoload_directories:
 		- app
+	level: 5
 	ignoreErrors:
 		- '#^Call to an undefined method Nette\\Localization\\ITranslator::get(Default|Available)?Locales?\(\)#'  # Actually called on \Contributte\Translation\Translator
-		-  # https://github.com/nette/forms/pull/226
-			message: '#^Array \(array<callable\(Nette\\Forms\\Container\): void>\) does not accept array\(\$this\(App\\AdminModule\\Presenters\\#'
-			paths:
-				- 'app/modules/Admin/presenters/PulsePresenter.php'
-				- 'app/modules/Admin/presenters/TalksPresenter.php'
 
 includes:
-	- vendor/phpstan/phpstan/conf/config.level6.neon
 	- vendor/phpstan/phpstan-nette/extension.neon
 	- vendor/phpstan/phpstan-nette/rules.neon
 

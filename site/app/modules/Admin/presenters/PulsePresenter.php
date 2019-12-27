@@ -95,7 +95,7 @@ class PulsePresenter extends BasePresenter
 	}
 
 
-	public function submittedPasswordsStorages(Form $form, $values)
+	public function submittedPasswordsStorages(Form $form, $values): void
 	{
 		if ($this->passwords->addStorage($values)) {
 			$this->flashMessage('Password storage added successfully');

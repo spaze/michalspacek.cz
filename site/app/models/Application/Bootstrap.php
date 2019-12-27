@@ -96,11 +96,11 @@ class Bootstrap
 		$this->redirectToSecure();
 
 		$application = $this->container->getByType(Application::class);
-		$application->onRequest[] = function(Application $sender, Request $request) {
+		$application->onRequest[] = function(Application $sender, Request $request): void {
 			$action = $request->getParameter(Presenter::ACTION_KEY) ?? Presenter::DEFAULT_ACTION;
 			$this->securityHeaders->setCsp($request->getPresenterName(), $action);
 		};
-		$application->onResponse[] = function(Application $sender, ApplicationIResponse $request) {
+		$application->onResponse[] = function(Application $sender, ApplicationIResponse $request): void {
 			$this->securityHeaders->sendHeaders();
 		};
 		$application->run();

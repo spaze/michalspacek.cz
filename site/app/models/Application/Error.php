@@ -34,7 +34,7 @@ class Error
 		}
 
 		$this->logger->log($e, ILogger::EXCEPTION);
-		return new CallbackResponse(function () {
+		return new CallbackResponse(function (): void {
 			require __DIR__ . '/templates/error.phtml';
 		});
 	}
