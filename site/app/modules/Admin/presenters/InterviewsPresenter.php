@@ -20,7 +20,7 @@ class InterviewsPresenter extends BasePresenter
 	/** @var Interviews */
 	protected $interviews;
 
-	/** @var Row */
+	/** @var Row<mixed> */
 	private $interview;
 
 
@@ -60,6 +60,10 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedEditInterview(Form $form, ArrayHash $values): void
 	{
 		$this->interviews->update(
@@ -89,6 +93,10 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedAddInterview(Form $form, ArrayHash $values): void
 	{
 		$this->interviews->add(

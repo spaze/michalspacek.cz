@@ -388,7 +388,7 @@ class Post
 	/**
 	 * Get all blog post locales.
 	 *
-	 * @return array of id => locale
+	 * @return array<integer, string> of id => locale
 	 */
 	public function getAllLocales(): array
 	{
@@ -453,7 +453,7 @@ class Post
 
 	/**
 	 * @param string $tags
-	 * @return array
+	 * @return string[]
 	 */
 	public function getSlugTags(string $tags): array
 	{

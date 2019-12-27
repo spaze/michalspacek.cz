@@ -206,11 +206,11 @@ class Talks
 	 * Get talk data.
 	 *
 	 * @param string $name
-	 * @return Row
+	 * @return Row<mixed>
 	 */
 	public function get(string $name): Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_talk AS talkId,
@@ -258,11 +258,11 @@ class Talks
 	 * Get talk data by id.
 	 *
 	 * @param integer $id
-	 * @return Row
+	 * @return Row<mixed>
 	 */
 	public function getById(int $id): Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_talk AS talkId,
@@ -307,7 +307,7 @@ class Talks
 
 
 	/**
-	 * @param Row $row
+	 * @param Row<mixed> $row
 	 */
 	private function format(Row $row): void
 	{
@@ -592,7 +592,7 @@ class Talks
 	 * Insert slides.
 	 *
 	 * @param integer $talkId
-	 * @param ArrayHash $slides
+	 * @param ArrayHash<ArrayHash<integer|string>> $slides
 	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws PDOException
 	 */
@@ -635,7 +635,7 @@ class Talks
 	 *
 	 * @param integer $talkId
 	 * @param Row[] $originalSlides
-	 * @param ArrayHash $slides
+	 * @param ArrayHash<ArrayHash<integer|string>> $slides
 	 * @param boolean $removeFiles Remove old files?
 	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws PDOException
@@ -695,7 +695,7 @@ class Talks
 	 *
 	 * @param integer $talkId
 	 * @param Row[] $originalSlides
-	 * @param ArrayHash $newSlides
+	 * @param ArrayHash<integer|string> $newSlides
 	 */
 	public function saveSlides(int $talkId, array $originalSlides, ArrayHash $newSlides): void
 	{
@@ -712,8 +712,8 @@ class Talks
 	 * Build page title for the talk.
 	 *
 	 * @param string $translationKey
-	 * @param Row $talk
-	 * @return Html
+	 * @param Row<mixed> $talk
+	 * @return Html<Html|string>
 	 */
 	public function pageTitle(string $translationKey, Row $talk): Html
 	{
@@ -721,7 +721,7 @@ class Talks
 	}
 
 
-	/**
+ 	/**
 	 * Get supported image types.
 	 *
 	 * @return string[] MIME type => extension

@@ -113,7 +113,7 @@ abstract class BasePresenter extends Presenter
 	/**
 	 * The default locale links.
 	 *
-	 * @return array|null
+	 * @return string[]|null
 	 */
 	protected function getLocaleLinkDefault(): ?array
 	{

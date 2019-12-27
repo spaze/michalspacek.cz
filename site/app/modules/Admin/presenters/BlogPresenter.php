@@ -72,6 +72,8 @@ class BlogPresenter extends BasePresenter
 
 
 	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
 	 * @throws AbortException
 	 * @throws InvalidLinkException
 	 */
@@ -136,6 +138,8 @@ class BlogPresenter extends BasePresenter
 
 
 	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
 	 * @throws AbortException
 	 * @throws InvalidLinkException
 	 */

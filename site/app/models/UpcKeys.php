@@ -29,13 +29,13 @@ class UpcKeys
 	/** @var RouterInterface[] */
 	protected $routers;
 
-	/** @var array of prefixes */
+	/** @var string[] */
 	protected $prefixes;
 
-	/** @var array of model => prefixes */
+	/** @var array<string, array<integer, string>> */
 	protected $modelsWithPrefixes;
 
-	/** @var array of keys */
+	/** @var stdClass[] */
 	protected $keys;
 
 
@@ -49,7 +49,7 @@ class UpcKeys
 	 * Call a method on all routers
 	 *
 	 * @param string $method
-	 * @param array $args
+	 * @param string[] $args
 	 * @param callable $callback
 	 */
 	private function routerCall(string $method, array $args, callable $callback): void
@@ -63,7 +63,7 @@ class UpcKeys
 	/**
 	 * Get serial number prefixes to get keys for.
 	 *
-	 * @return array of prefixes
+	 * @return string[]
 	 */
 	public function getPrefixes(): array
 	{
@@ -80,7 +80,7 @@ class UpcKeys
 	/**
 	 * Get router models with serial number prefixes.
 	 *
-	 * @return array of models with prefixes
+	 * @return array<string, array<integer, string>>
 	 */
 	public function getModelsWithPrefixes(): array
 	{

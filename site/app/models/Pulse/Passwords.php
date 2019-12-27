@@ -93,7 +93,7 @@ class Passwords
 	/**
 	 * Get passwords storage data for specified sites.
 	 *
-	 * @param array $sites Aliases
+	 * @param string[] $sites Aliases
 	 * @return stdClass with companies, sites, algos, storages properties
 	 */
 	public function getStoragesBySite(array $sites): stdClass
@@ -143,7 +143,7 @@ class Passwords
 	/**
 	 * Get passwords storage data for specified companies.
 	 *
-	 * @param array $companies Aliases
+	 * @param string[] $companies Aliases
 	 * @return stdClass with companies, sites, algos, storages properties
 	 */
 	public function getStoragesByCompany(array $companies): stdClass
@@ -243,7 +243,7 @@ class Passwords
 	/**
 	 * Process passwords storage data.
 	 *
-	 * @param array $data
+	 * @param Row[] $data
 	 * @return stdClass with companies, sites, algos, storages properties
 	 */
 	private function processStorages(array $data): stdClass
@@ -342,7 +342,7 @@ class Passwords
 	/**
 	 * Get slow hashes.
 	 *
-	 * @return array of alias => name
+	 * @return array<string, string> of alias => name
 	 */
 	public function getSlowHashes(): array
 	{
@@ -367,7 +367,7 @@ class Passwords
 	/**
 	 * Get visible disclosures.
 	 *
-	 * @return array of alias => name
+	 * @return array<string, string> of alias => name
 	 */
 	public function getVisibleDisclosures(): array
 	{
@@ -381,7 +381,7 @@ class Passwords
 	/**
 	 * Get invisible disclosures.
 	 *
-	 * @return array of alias => name
+	 * @return array<string, string> of alias => name
 	 */
 	public function getInvisibleDisclosures(): array
 	{
@@ -403,9 +403,13 @@ class Passwords
 	}
 
 
+	/**
+	 * @param string $name
+	 * @return Row<mixed>|null
+	 */
 	public function getAlgorithmByName(string $name): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name);
 		return $result;
 	}
@@ -533,16 +537,16 @@ class Passwords
 	/**
 	 * Add password storage.
 	 *
-	 * @param ArrayHash $values
+	 * @param ArrayHash<integer|string> $values
 	 * @return boolean True if storage added successfully
 	 */
 	public function addStorage(ArrayHash $values): bool
 	{
-		/** @var ArrayHash $newCompany */
+		/** @var ArrayHash<integer|string> $newCompany */
 		$newCompany = $values->company->new;
-		/** @var ArrayHash $newSite */
+		/** @var ArrayHash<integer|string> $newSite */
 		$newSite = $values->site->new;
-		/** @var ArrayHash $newAlgo */
+		/** @var ArrayHash<integer|string> $newAlgo */
 		$newAlgo = $values->algo->new;
 
 		$this->database->beginTransaction();

@@ -82,10 +82,10 @@ class RegisterUz implements CompanyDataInterface
 
 	/**
 	 * @param string $method
-	 * @param array $parameters
+	 * @param array<string, string> $parameters
 	 * @return stdClass JSON object
 	 */
-	private function call(string $method, array $parameters = null): stdClass
+	private function call(string $method, ?array $parameters = null): stdClass
 	{
 		if ($parameters !== null) {
 			$query = '?' . http_build_query($parameters);

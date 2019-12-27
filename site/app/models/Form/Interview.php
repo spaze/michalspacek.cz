@@ -52,6 +52,10 @@ class Interview extends ProtectedForm
 	}
 
 
+	/**
+	 * @param Row<mixed> $interview
+	 * @return $this
+	 */
 	public function setInterview(Row $interview): self
 	{
 		$values = array(

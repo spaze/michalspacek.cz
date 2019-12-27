@@ -12,7 +12,7 @@ class Edit
 	/** @var DateTime */
 	public $editedAt;
 
-	/** @var Html */
+	/** @var Html<Html|string> */
 	public $summary;
 
 	/** @var string */

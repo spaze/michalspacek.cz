@@ -251,6 +251,10 @@ class Articles
 	}
 
 
+	/**
+	 * @param Row[] $articles
+	 * @return Row[]
+	 */
 	private function enrichArticles(array $articles): array
 	{
 		foreach ($articles as $article) {

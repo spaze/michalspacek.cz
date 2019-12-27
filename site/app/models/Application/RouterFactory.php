@@ -47,31 +47,31 @@ class RouterFactory
 	/** @var Translator|ITranslator */
 	protected $translator;
 
-	/** @var array of host => array of supported locales */
+	/** @var array<string, array<string, string>> of host => array of supported locales */
 	protected $supportedLocales;
 
-	/** @var array of locale => root domain */
+	/** @var array<string, string> of locale => root domain */
 	protected $rootDomainMapping;
 
-	/** @var array */
+	/** @var array<string, array<string, array{mask:array<string, string>, actions:array<string, array<string, string>>}>> */
 	protected $translatedRoutes;
 
-	/** @var array */
-	protected $translatedPresenters = array();
+	/** @var array<string, array<string, array<string, string>>> */
+	protected $translatedPresenters = [];
 
-	/** @var array */
-	protected $translatedActions = array();
+	/** @var array<string, array<string, array<string, array<string, string>>>> */
+	protected $translatedActions = [];
 
 	/** @var string */
 	private $currentModule;
 
-	/** @var RouteList */
+	/** @var RouteList<Router> */
 	private $currentRouteList;
 
 	/** @var RouteList[] */
 	private $currentLocaleRouteList;
 
-	/** @var RouteList */
+	/** @var RouteList<Router> */
 	private $router;
 
 	/** @var RouteList[] */
@@ -96,7 +96,7 @@ class RouterFactory
 	/**
 	 * Set supported locales
 	 *
-	 * @param array $supportedLocales array of host => array of supported locales
+	 * @param array<string, array<string, string>> $supportedLocales array of host => array of supported locales
 	 */
 	public function setSupportedLocales(array $supportedLocales): void
 	{
@@ -107,7 +107,7 @@ class RouterFactory
 	/**
 	 * Set locale to root domain mapping.
 	 *
-	 * @param array $rootDomainMapping locale => root domain
+	 * @param array<string, string> $rootDomainMapping locale => root domain
 	 */
 	public function setLocaleRootDomainMapping(array $rootDomainMapping): void
 	{
@@ -118,7 +118,7 @@ class RouterFactory
 	/**
 	 * Get locale to root domain mapping.
 	 *
-	 * @return array $rootDomainMapping locale => root domain
+	 * @return array<string, string> $rootDomainMapping locale => root domain
 	 */
 	public function getLocaleRootDomainMapping(): array
 	{
@@ -126,6 +126,9 @@ class RouterFactory
 	}
 
 
+	/**
+	 * @param array<string, array<string, array{mask:array<string, string>, actions:array<string, array<string, string>>}>> $translatedRoutes
+	 */
 	public function setTranslatedRoutes(array $translatedRoutes): void
 	{
 		$this->translatedRoutes = $translatedRoutes;
@@ -159,7 +162,7 @@ class RouterFactory
 
 
 	/**
-	 * @return RouteList
+	 * @return RouteList<Router>
 	 */
 	public function createRouter(): RouteList
 	{
@@ -201,6 +204,13 @@ class RouterFactory
 	}
 
 
+	/**
+	 * @param string $mask
+	 * @param string $defaultPresenter
+	 * @param string $defaultAction
+	 * @param array<string, array<string, string>>|null $initialMetadata
+	 * @param string $class
+	 */
 	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = NetteRoute::class): void
 	{
 		$host = self::HOSTS[$this->currentModule];
@@ -238,7 +248,7 @@ class RouterFactory
 	 *
 	 * @param string $class
 	 * @param string $mask
-	 * @param array $metadata
+	 * @param array<string, array<string, array<string, string>|string>> $metadata
 	 * @return Router
 	 */
 	private function createRoute(string $class, string $mask, array $metadata): Router

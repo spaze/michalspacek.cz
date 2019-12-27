@@ -39,6 +39,10 @@ class Files
 	}
 
 
+	/**
+	 * @param integer $applicationId
+	 * @return Row[]
+	 */
 	public function getFiles(int $applicationId): array
 	{
 		$files = $this->database->fetchAll(
@@ -67,9 +71,15 @@ class Files
 	}
 
 
+	/**
+	 * @param integer $applicationId
+	 * @param string $token
+	 * @param string $filename
+	 * @return Row<mixed>|null
+	 */
 	public function getFile(int $applicationId, string $token, string $filename): ?Row
 	{
-		/** @var Row|null $file */
+		/** @var Row<mixed>|null $file */
 		$file = $this->database->fetch(
 			'SELECT
 				f.id_file AS fileId,
@@ -102,6 +112,12 @@ class Files
 	}
 
 
+	/**
+	 * @param Row<mixed> $training
+	 * @param FileUpload $file
+	 * @param integer[] $applicationIds
+	 * @return string
+	 */
 	public function addFile(Row $training, FileUpload $file, array $applicationIds): string
 	{
 		$name = basename($file->getSanitizedName());

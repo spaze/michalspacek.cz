@@ -9,6 +9,7 @@ use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Trainings;
+use Nette\Database\Row;
 
 class HomepagePresenter extends BasePresenter
 {
@@ -77,7 +78,7 @@ class HomepagePresenter extends BasePresenter
 	/**
 	 * Check if at least one certificate is expired or expires soon.
 	 *
-	 * @param array $certificates
+	 * @param Row[] $certificates
 	 * @return boolean
 	 */
 	private function certsNeedAttention(array $certificates): bool

@@ -23,7 +23,7 @@ class Loader
 	/** @var ITranslator */
 	protected $translator;
 
-	/** @var Row|null */
+	/** @var Row<mixed>|null */
 	protected $post;
 
 
@@ -56,12 +56,12 @@ class Loader
 	 *
 	 * @param string $post
 	 * @param string $previewKey
-	 * @return Row|null
+	 * @return Row<mixed>|null
 	 */
 	public function fetch(string $post, ?string $previewKey = null): ?Row
 	{
 		if ($this->post === null) {
-			/** @var Row|null $result */
+			/** @var Row<mixed>|null $result */
 			$result = $this->database->fetch(
 				'SELECT
 					bp.id_blog_post AS postId,

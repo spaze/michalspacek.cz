@@ -57,9 +57,13 @@ class Interviews
 	}
 
 
+	/**
+	 * @param string $name
+	 * @return Row<mixed>|null
+	 */
 	public function get(string $name): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				id_interview AS interviewId,
@@ -87,9 +91,13 @@ class Interviews
 	}
 
 
+	/**
+	 * @param integer $id
+	 * @return Row<mixed>|null
+	 */
 	public function getById(int $id): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				id_interview AS interviewId,
@@ -118,6 +126,9 @@ class Interviews
 	}
 
 
+	/**
+	 * @param Row<mixed> $row
+	 */
 	private function format(Row $row): void
 	{
 		foreach (['description'] as $item) {

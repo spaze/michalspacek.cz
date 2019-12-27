@@ -30,6 +30,9 @@ class Ubee implements RouterInterface
 	}
 
 
+	/**
+	 * @param string[] $prefixes
+	 */
 	public function setPrefixes(array $prefixes): void
 	{
 		if (count($prefixes) > 1) {
@@ -48,7 +51,7 @@ class Ubee implements RouterInterface
 	/**
 	 * Get serial number prefixes to get keys for.
 	 *
-	 * @return array of prefixes
+	 * @return array<string, array<integer, string>>
 	 */
 	public function getModelWithPrefixes(): array
 	{

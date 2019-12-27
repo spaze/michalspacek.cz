@@ -60,22 +60,22 @@ class TrainingsPresenter extends BasePresenter
 	/** @var DeletePersonalDataFormFactory */
 	private $deletePersonalDataFormFactory;
 
-	/** @var array */
+	/** @var Row[] */
 	private $applications;
 
-	/** @var array */
+	/** @var integer[] */
 	private $applicationIdsAttended;
 
-	/** @var Row */
+	/** @var Row<mixed> */
 	private $application;
 
 	/** @var integer */
 	private $applicationId;
 
-	/** @var Row */
+	/** @var Row<mixed> */
 	private $review;
 
-	/** @var Row */
+	/** @var Row<mixed> */
 	private $training;
 
 	/** @var integer|null */
@@ -257,6 +257,9 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Row[] $trainings
+	 */
 	private function addApplications(array &$trainings): void
 	{
 		foreach ($trainings as $training) {
@@ -330,6 +333,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedApplications(Form $form, ArrayHash $values): void
 	{
 		foreach ($values->applications as $application) {
@@ -364,6 +371,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedEditReview(Form $form, ArrayHash $values): void
 	{
 		$this->trainingReviews->updateReview(
@@ -413,6 +424,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedAddReview(Form $form, ArrayHash $values): void
 	{
 		$this->trainingReviews->addReview(
@@ -438,6 +453,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedApplication(Form $form, ArrayHash $values): void
 	{
 		$this->trainingApplications->updateApplicationData(
@@ -478,6 +497,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedFile(Form $form, ArrayHash $values): void
 	{
 		if ($values->file->isOk()) {
@@ -504,6 +527,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedDate(Form $form, ArrayHash $values): void
 	{
 		$this->trainingDates->update(
@@ -531,6 +558,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedAddDate(Form $form, ArrayHash $values): void
 	{
 		$this->trainingDates->add(

@@ -1,6 +1,4 @@
 parameters:
-	checkMissingIterableValueType: false
-	inferPrivatePropertyTypeFromConstructor: true
 	autoload_directories:
 		- app
 	level: 6

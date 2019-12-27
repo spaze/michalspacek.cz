@@ -101,6 +101,10 @@ class TrainingDate extends ProtectedForm
 	}
 
 
+	/**
+	 * @param Row<mixed> $date
+	 * @return $this
+	 */
 	public function setTrainingDate(Row $date): self
 	{
 		$values = array(

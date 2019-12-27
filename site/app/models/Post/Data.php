@@ -26,19 +26,19 @@ class Data
 	/** @var string */
 	public $locale;
 
-	/** @var Html */
+	/** @var Html<Html|string> */
 	public $title;
 
 	/** @var string */
 	public $titleTexy;
 
-	/** @var Html */
+	/** @var Html<Html|string> */
 	public $lead;
 
 	/** @var string */
 	public $leadTexy;
 
-	/** @var Html */
+	/** @var Html<Html|string> */
 	public $text;
 
 	/** @var string */
@@ -50,7 +50,7 @@ class Data
 	/** @var string */
 	public $previewKey;
 
-	/** @var Html */
+	/** @var Html<Html|string> */
 	public $originally;
 
 	/** @var string */

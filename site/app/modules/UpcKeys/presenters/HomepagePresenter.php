@@ -25,12 +25,12 @@ class HomepagePresenter extends BasePresenter
 	/** @var IResponse */
 	protected $httpResponse;
 
-	/** @var array (type id => type) */
-	private $types = array(
+	/** @var array<integer, string> */
+	private $types = [
 		UpcKeys::SSID_TYPE_24GHZ => '2.4 GHz',
 		UpcKeys::SSID_TYPE_5GHZ => '5 GHz',
 		UpcKeys::SSID_TYPE_UNKNOWN => 'unknown',
-	);
+	];
 
 
 	public function __construct(UpcKeys $upcKeys, IResponse $httpResponse)
@@ -149,6 +149,10 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedSsid(Form $form, ArrayHash $values): void
 	{
 		$ssid = strtoupper(trim($values->ssid));

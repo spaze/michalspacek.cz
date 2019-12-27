@@ -53,8 +53,8 @@ class LocaleLinkGenerator
 	 * Generates localized URLs.
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
-	 * @param array $params of locale => [name => value]
-	 * @return array of locale => URL
+	 * @param array<string, array<string, string>> $params of locale => [name => value]
+	 * @return array<string, string> of locale => URL
 	 */
 	public function links(string $destination, array $params = array()): array
 	{
@@ -74,7 +74,7 @@ class LocaleLinkGenerator
 	/**
 	 * Return default params for all locales.
 	 *
-	 * @param array $params
+	 * @param array<string, string> $params
 	 * @return array<string, array<string, string>>
 	 */
 	public function defaultParams(array $params): array
@@ -99,8 +99,8 @@ class LocaleLinkGenerator
 	 * Generates all URLs, including a link to the current language version.
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
-	 * @param array $params of locale => [name => value]
-	 * @return array of locale => URL
+	 * @param array<string, array<string, string>> $params of locale => [name => value]
+	 * @return array<string, string> of locale => URL
 	 */
 	public function allLinks(string $destination, array $params = []): array
 	{
@@ -112,6 +112,11 @@ class LocaleLinkGenerator
 	}
 
 
+	/**
+	 * @param array<string, array<string, string>> $params
+	 * @param string $locale
+	 * @return array<string, string>
+	 */
 	private function getParams(array $params, string $locale): array
 	{
 		return $params[$locale] ?? $params[self::DEFAULT_PARAMS] ?? [];

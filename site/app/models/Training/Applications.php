@@ -45,7 +45,7 @@ class Applications
 	/** @var ITranslator */
 	protected $translator;
 
-	/** @var array */
+	/** @var array<integer, array<integer, Row>> */
 	private $byDate = array();
 
 
@@ -259,6 +259,21 @@ class Applications
 	}
 
 
+	/**
+	 * @param Row<mixed> $training
+	 * @param integer $dateId
+	 * @param string $name
+	 * @param string $email
+	 * @param string $company
+	 * @param string $street
+	 * @param string $city
+	 * @param string $zip
+	 * @param string $country
+	 * @param string $companyId
+	 * @param string $companyTaxId
+	 * @param string $note
+	 * @return integer
+	 */
 	public function addInvitation(
 		Row $training,
 		int $dateId,
@@ -293,6 +308,21 @@ class Applications
 	}
 
 
+	/**
+	 * @param Row<mixed> $training
+	 * @param integer $dateId
+	 * @param string $name
+	 * @param string $email
+	 * @param string $company
+	 * @param string $street
+	 * @param string $city
+	 * @param string $zip
+	 * @param string $country
+	 * @param string $companyId
+	 * @param string $companyTaxId
+	 * @param string $note
+	 * @return integer
+	 */
 	public function addApplication(
 		Row $training,
 		int $dateId,
@@ -330,7 +360,7 @@ class Applications
 	/**
 	 * Add preliminary invitation, to a training with no date set.
 	 *
-	 * @param Row $training
+	 * @param Row<mixed> $training
 	 * @param string $name
 	 * @param string $email
 	 * @return integer application id
@@ -355,6 +385,24 @@ class Applications
 	}
 
 
+	/**
+	 * @param Row<mixed> $training
+	 * @param integer|null $dateId
+	 * @param string $name
+	 * @param string $email
+	 * @param string|null $company
+	 * @param string|null $street
+	 * @param string|null $city
+	 * @param string|null $zip
+	 * @param string|null $country
+	 * @param string|null $companyId
+	 * @param string|null $companyTaxId
+	 * @param string|null $note
+	 * @param string|null $status
+	 * @param string $source
+	 * @param string|null $date
+	 * @return integer
+	 */
 	public function insertApplication(
 		Row $training,
 		?int $dateId,
@@ -413,6 +461,21 @@ class Applications
 	}
 
 
+	/**
+	 * @param Row<mixed> $training
+	 * @param integer $applicationId
+	 * @param string $name
+	 * @param string $email
+	 * @param string $company
+	 * @param string $street
+	 * @param string $city
+	 * @param string $zip
+	 * @param string $country
+	 * @param string $companyId
+	 * @param string $companyTaxId
+	 * @param string $note
+	 * @return integer
+	 */
 	public function updateApplication(
 		Row $training,
 		int $applicationId,
@@ -556,9 +619,13 @@ class Applications
 	}
 
 
+	/**
+	 * @param integer $id
+	 * @return Row<mixed>|null
+	 */
 	public function getApplicationById(int $id): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				ua.action AS trainingAction,
@@ -701,9 +768,13 @@ class Applications
 	}
 
 
+	/**
+	 * @param string $token
+	 * @return Row<mixed>|null
+	 */
 	public function getApplicationByToken(string $token): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				ua.action AS trainingAction,
@@ -779,6 +850,9 @@ class Applications
 	}
 
 
+	/**
+	 * @param Row<mixed> $application
+	 */
 	public function setAccessTokenUsed(Row $application): void
 	{
 		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
@@ -812,6 +886,9 @@ class Applications
 	}
 
 
+	/**
+	 * @param Row<mixed> $row
+	 */
 	private function addPricesWithCurrency(Row $row): void
 	{
 		$price = new Price($row->price, $row->discount, $row->vatRate, $row->priceVat);

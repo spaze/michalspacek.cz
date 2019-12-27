@@ -27,6 +27,10 @@ class HoneypotPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedSignIn(Form $form, ArrayHash $values): void
 	{
 		Debugger::log("Sign-in attempt: {$values->username}, {$values->password}, {$this->getHttpRequest()->getRemoteAddress()}", 'honeypot');

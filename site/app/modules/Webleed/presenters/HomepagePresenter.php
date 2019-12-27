@@ -17,6 +17,9 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @return Html<Html|string>
+	 */
 	private function getSmallPrint(): Html
 	{
 		$smallPrint = array(

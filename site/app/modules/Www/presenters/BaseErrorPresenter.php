@@ -17,7 +17,7 @@ abstract class BaseErrorPresenter extends BasePresenter
 	/** @var ILogger */
 	private $logger;
 
-	/** @var array */
+	/** @var integer[] */
 	protected $statuses = [
 		IResponse::S400_BAD_REQUEST,
 		IResponse::S403_FORBIDDEN,

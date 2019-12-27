@@ -76,7 +76,7 @@ class PostPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for blog posts.
 	 *
-	 * @return array
+	 * @return string[][]
 	 */
 	protected function getLocaleLinkParams(): array
 	{

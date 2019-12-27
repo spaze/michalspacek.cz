@@ -20,7 +20,7 @@ class Rating
 	/** @var Context */
 	protected $database;
 
-	/** @var array */
+	/** @var string[] */
 	private $slowHashes = [
 		'argon2',
 		'bcrypt',
@@ -28,20 +28,20 @@ class Rating
 		'scrypt',
 	];
 
-	/** @var array */
+	/** @var string[] */
 	private $insecure = [
 		'plaintext',
 		'encrypted',
 	];
 
-	/** @var array */
+	/** @var string[] */
 	private $visibleDisclosures = [
 		'docs',
 		'faq',
 		'signup-page',
 	];
 
-	/** @var array */
+	/** @var string[] */
 	private $invisibleDisclosures = [
 		'blog',
 		'site-independent',
@@ -57,7 +57,7 @@ class Rating
 		'comment',
 	];
 
-	/** @var string[] */
+	/** @var array<string, string> */
 	private $rating = [
 		self::RATING_A => 'Site uses a slow hashing function, this is disclosed "on-site", in the docs, FAQ, etc.',
 		self::RATING_B => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
@@ -67,7 +67,7 @@ class Rating
 		self::RATING_F => 'Passwords stored in plaintext, in their original, readable form, or passwords encrypted instead of hashed.',
 	];
 
-	/** @var array<string|null> */
+	/** @var array<string, string|null> */
 	private $recommendations = [
 		self::RATING_A => null,
 		self::RATING_B => 'Publish storage and hashing info details "visibly":[link:Pulse:PasswordsStorages:Rating#on-site] (e.g. in the docs or FAQ), then let me know.',

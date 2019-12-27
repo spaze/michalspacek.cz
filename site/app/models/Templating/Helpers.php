@@ -49,6 +49,10 @@ class Helpers
 	}
 
 
+	/**
+	 * @param string $message
+	 * @return Html<Html|string>
+	 */
 	public function format(string $message): Html
 	{
 		$args = func_get_args();

@@ -8,6 +8,7 @@ use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Strings;
 use Nette\Application\BadRequestException;
+use Nette\Database\Row;
 
 class TagsPresenter extends BasePresenter
 {
@@ -76,7 +77,7 @@ class TagsPresenter extends BasePresenter
 	 * - tags in Czech: hesla, stroj
 	 * This seems a bit weird but otherwise, we'd have to use and build and maintain a translation table for tags. Thanks, but no thanks.
 	 *
-	 * @param array $articles
+	 * @param Row[] $articles
 	 * @param string $tags
 	 */
 	private function findLocaleLinkParams(array $articles, string $tags): void
@@ -109,7 +110,7 @@ class TagsPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for tags.
 	 *
-	 * @return array
+	 * @return string[][]
 	 */
 	protected function getLocaleLinkParams(): array
 	{

@@ -319,7 +319,7 @@ class Manager implements IAuthenticator
 	/**
 	 * Verify and return permanent token, if present, and valid.
 	 *
-	 * @return Row|null
+	 * @return Row<mixed>|null
 	 */
 	public function verifyPermanentLogin(): ?Row
 	{
@@ -332,7 +332,7 @@ class Manager implements IAuthenticator
 	 * Verify returning user, if present, and valid.
 	 *
 	 * @param string $value
-	 * @return Row|null
+	 * @return Row<mixed>|null
 	 */
 	public function verifyReturningUser(string $value): ?Row
 	{
@@ -361,14 +361,14 @@ class Manager implements IAuthenticator
 	 * @param string $value
 	 * @param DateTimeInterface $validity
 	 * @param integer $type
-	 * @return Row|null
+	 * @return Row<mixed>|null
 	 */
 	private function verifyToken(string $value, DateTimeInterface $validity, int $type): ?Row
 	{
 		$result = null;
 		$values = explode(self::AUTH_SELECTOR_TOKEN_SEPARATOR, $value);
 		if (count($values) === 2) {
-			/** @var Row|null $storedToken */
+			/** @var Row<mixed>|null $storedToken */
 			$storedToken = $this->database->fetch(
 				'SELECT
 					at.id_auth_token AS tokenId,

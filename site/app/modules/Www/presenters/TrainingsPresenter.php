@@ -75,7 +75,7 @@ class TrainingsPresenter extends BasePresenter
 	/** @var IResponse */
 	protected $httpResponse;
 
-	/** @var Row */
+	/** @var Row<mixed> */
 	private $training;
 
 	/** @var Row[] */
@@ -232,6 +232,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedApplication(Form $form, ArrayHash $values): void
 	{
 		$session = $this->getSession('training');
@@ -341,6 +345,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedApplicationPreliminary(Form $form, ArrayHash $values): void
 	{
 		$this->trainingApplications->addPreliminaryInvitation($this->training, $values->name, $values->email);
@@ -349,6 +357,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param ArrayHash<integer|string> $values
+	 * @param string $name
+	 */
 	private function checkTrainingDate(ArrayHash $values, string $name): void
 	{
 		if (!isset($this->dates[$values->trainingId])) {
@@ -359,6 +371,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param ArrayHash<integer|string> $values
+	 * @param string $name
+	 */
 	private function checkSpam(ArrayHash $values, string $name): void
 	{
 		if (preg_match('~\s+href="\s*https?://~', $values->note)) {
@@ -368,6 +384,10 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param ArrayHash<integer|string> $values
+	 * @param string $name
+	 */
 	private function logData(ArrayHash $values, string $name): void
 	{
 		$session = $this->getSession('training');

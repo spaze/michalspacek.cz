@@ -94,7 +94,7 @@ class TrainingApplicationAdmin extends ProtectedForm
 
 
 	/**
-	 * @param Row $application
+	 * @param Row<mixed> $application
 	 * @return self
 	 */
 	public function setApplication(Row $application): self

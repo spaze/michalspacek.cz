@@ -15,7 +15,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	/** @var LocaleLinkGenerator */
 	protected $localeLinkGenerator;
 
-	/** @var array */
+	/** @var integer[] */
 	protected $statuses = [
 		IResponse::S400_BAD_REQUEST,
 		IResponse::S403_FORBIDDEN,
@@ -44,7 +44,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	/**
 	 * The default locale links.
 	 *
-	 * @return array|null
+	 * @return string[]|null
 	 */
 	protected function getLocaleLinkDefault(): ?array
 	{
@@ -75,7 +75,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	/**
 	 * Get original parameters for locale links.
 	 *
-	 * @return array
+	 * @return array<string, array<string, string>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{

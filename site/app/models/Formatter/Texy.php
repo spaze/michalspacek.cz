@@ -198,7 +198,7 @@ class Texy extends NetxtenTexy
 	/**
 	 * @param string $format
 	 * @param string[]|null $args
-	 * @return Html
+	 * @return Html<Html|string>
 	 */
 	public function substitute(string $format, ?array $args): Html
 	{
@@ -209,7 +209,7 @@ class Texy extends NetxtenTexy
 	/**
 	 * @param string $message
 	 * @param string[]|null $replacements
-	 * @return Html
+	 * @return Html<Html|string>
 	 */
 	public function translate($message, ?array $replacements = null): Html
 	{
@@ -229,7 +229,7 @@ class Texy extends NetxtenTexy
 	 * @param string $content
 	 * @param Modifier $modifier
 	 * @param Link|null $link
-	 * @return HtmlElement|string|FALSE
+	 * @return HtmlElement<HtmlElement|string>|string|false
 	 * @throws InvalidLinkException
 	 */
 	function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link)
@@ -313,7 +313,7 @@ class Texy extends NetxtenTexy
 
 	/**
 	 * @param string|null $text
-	 * @return Html|null
+	 * @return Html<Html|string>|null
 	 */
 	public function format(?string $text): ?Html
 	{
@@ -323,7 +323,7 @@ class Texy extends NetxtenTexy
 
 	/**
 	 * @param string|null $text
-	 * @return Html|null
+	 * @return Html<Html|string>|null
 	 */
 	public function formatBlock(?string $text): ?Html
 	{
@@ -332,8 +332,8 @@ class Texy extends NetxtenTexy
 
 
 	/**
-	 * @param Html $result
-	 * @return Html
+	 * @param Html<Html|string> $result
+	 * @return Html<Html|string>
 	 */
 	private function replace(Html $result): Html
 	{
@@ -376,8 +376,8 @@ class Texy extends NetxtenTexy
 	/**
 	 * Format training items.
 	 *
-	 * @param Row $training
-	 * @return Row
+	 * @param Row<mixed> $training
+	 * @return Row<mixed>
 	 */
 	public function formatTraining(Row $training): Row
 	{

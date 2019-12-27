@@ -50,6 +50,10 @@ class TrainingReview extends ProtectedForm
 	}
 
 
+	/**
+	 * @param Row<mixed> $review
+	 * @return $this
+	 */
 	public function setReview(Row $review): self
 	{
 		$values = array(

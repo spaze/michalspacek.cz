@@ -78,6 +78,10 @@ class SignPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedSignIn(Form $form, ArrayHash $values): void
 	{
 		$this->user->setExpiration('30 minutes', IUserStorage::CLEAR_IDENTITY);

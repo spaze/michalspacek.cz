@@ -37,21 +37,34 @@ class Trainings
 	}
 
 
+	/**
+	 * @param string $name
+	 * @return Row<mixed>|null
+	 */
 	public function get(string $name): ?Row
 	{
 		return $this->getTraining($name, false);
 	}
 
 
+	/**
+	 * @param string $name
+	 * @return Row<mixed>|null
+	 */
 	public function getIncludingCustom(string $name): ?Row
 	{
 		return $this->getTraining($name, true);
 	}
 
 
+	/**
+	 * @param string $name
+	 * @param boolean $includeCustom
+	 * @return Row<mixed>|null
+	 */
 	private function getTraining(string $name, bool $includeCustom): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_training AS trainingId,
@@ -87,10 +100,14 @@ class Trainings
 	}
 
 
+	/**
+	 * @param integer $id
+	 * @return Row<mixed>|null
+	 */
 	public function getById(int $id): ?Row
 	{
 		if (!array_key_exists($id, $this->trainingsById)) {
-			/** @var Row|null $result */
+			/** @var Row<mixed>|null $result */
 			$result = $this->database->fetch(
 				'SELECT
 					t.id_training AS trainingId,

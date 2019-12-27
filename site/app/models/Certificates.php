@@ -19,7 +19,7 @@ class Certificates
 	/** @var Context */
 	protected $database;
 
-	/** @var array */
+	/** @var array<string, string> */
 	private $users;
 
 	/** @var integer */
@@ -37,7 +37,7 @@ class Certificates
 
 	/**
 	 * Set users authentication info.
-	 * @param array $users
+	 * @param array<string, string> $users
 	 */
 	public function setUsers(array $users): void
 	{
@@ -117,9 +117,9 @@ class Certificates
 	/**
 	 * Log certificates.
 	 *
-	 * @param array $certs
-	 * @param array $failures
-	 * @return array with counts
+	 * @param array<string, array<string, string>> $certs
+	 * @param array<string, array<string, string>> $failures
+	 * @return array{certificates:integer, failures:integer} with counts
 	 */
 	public function log(array $certs, array $failures): array
 	{

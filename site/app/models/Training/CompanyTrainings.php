@@ -33,9 +33,13 @@ class CompanyTrainings
 	}
 
 
+	/**
+	 * @param string $name
+	 * @return Row<mixed>|null
+	 */
 	public function getInfo(string $name): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_training AS trainingId,

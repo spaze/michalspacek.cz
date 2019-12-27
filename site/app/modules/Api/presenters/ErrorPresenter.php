@@ -10,7 +10,7 @@ use Nette\Http\IResponse;
 class ErrorPresenter extends BaseErrorPresenter
 {
 
-	/** @var array */
+	/** @var array<integer, string> */
 	protected $statuses = [
 		IResponse::S400_BAD_REQUEST => 'Never gonna request you up',
 		IResponse::S403_FORBIDDEN => 'Never gonna accept you up',

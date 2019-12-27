@@ -23,7 +23,7 @@ class Technicolor implements RouterInterface
 	/** @var string */
 	protected $apiKey;
 
-	/** @var array of strings */
+	/** @var string[] */
 	protected $prefixes;
 
 	/** @var string */
@@ -61,7 +61,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Set serial number prefixes to generate keys for.
 	 *
-	 * @param array $prefixes
+	 * @param string[] $prefixes
 	 */
 	public function setPrefixes(array $prefixes): void
 	{
@@ -83,7 +83,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Get serial number prefixes to generate keys for.
 	 *
-	 * @return array of prefixes
+	 * @return array<string, array<integer, string>>
 	 */
 	public function getModelWithPrefixes(): array
 	{

@@ -36,10 +36,10 @@ class Algorithm
 	/** @var DateTime|null */
 	public $latestDisclosure;
 
-	/** @var array */
+	/** @var stdClass[] */
 	public $disclosures = array();
 
-	/** @var array */
+	/** @var boolean[] */
 	public $disclosureTypes = array();
 
 	/** @var string */

@@ -27,7 +27,7 @@ class TalksPresenter extends BasePresenter
 	/** @var Talks */
 	protected $talks;
 
-	/** @var Row */
+	/** @var Row<mixed> */
 	private $talk;
 
 	/** @var Row[] */
@@ -109,6 +109,10 @@ class TalksPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedEditTalk(Form $form, ArrayHash $values): void
 	{
 		$this->talks->update(
@@ -150,6 +154,10 @@ class TalksPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedAddTalk(Form $form, ArrayHash $values): void
 	{
 		$this->talks->add(
@@ -187,6 +195,10 @@ class TalksPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedSlides(Form $form, ArrayHash $values): void
 	{
 		try {

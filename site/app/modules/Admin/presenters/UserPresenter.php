@@ -42,6 +42,10 @@ class UserPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedChangePassword(Form $form, ArrayHash $values): void
 	{
 		$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
@@ -63,6 +67,10 @@ class UserPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedRegenerateTokens(Form $form, ArrayHash $values): void
 	{
 		if ($values->session) {

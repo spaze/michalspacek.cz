@@ -24,9 +24,13 @@ class Venues
 	}
 
 
+	/**
+	 * @param string $venueName
+	 * @return Row<mixed>|null
+	 */
 	public function get(string $venueName): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				v.id_venue AS id,

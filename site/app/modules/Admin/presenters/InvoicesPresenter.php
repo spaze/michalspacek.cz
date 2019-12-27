@@ -59,6 +59,10 @@ class InvoicesPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedApplication(Form $form, ArrayHash $values): void
 	{
 		$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);

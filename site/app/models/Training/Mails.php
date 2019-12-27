@@ -66,6 +66,20 @@ class Mails
 	}
 
 
+	/**
+	 * @param integer $applicationId
+	 * @param Template $template
+	 * @param string $recipientAddress
+	 * @param string $recipientName
+	 * @param DateTime $start
+	 * @param DateTime $end
+	 * @param string $training
+	 * @param Html<Html|string> $trainingName
+	 * @param string $venueName
+	 * @param string|null $venueNameExtended
+	 * @param string $venueAddress
+	 * @param string $venueCity
+	 */
 	public function sendSignUpMail(
 		int $applicationId,
 		Template $template,
@@ -166,6 +180,11 @@ class Mails
 	}
 
 
+	/**
+	 * @param Row<mixed> $application
+	 * @param Template $template
+	 * @param string $additional
+	 */
 	public function sendInvitation(Row $application, Template $template, string $additional): void
 	{
 		Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
@@ -178,6 +197,12 @@ class Mails
 	}
 
 
+	/**
+	 * @param Row<mixed> $application
+	 * @param Template $template
+	 * @param bool $feedbackRequest
+	 * @param string $additional
+	 */
 	public function sendMaterials(Row $application, Template $template, bool $feedbackRequest, string $additional): void
 	{
 		Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
@@ -191,6 +216,12 @@ class Mails
 	}
 
 
+	/**
+	 * @param Row<mixed> $application
+	 * @param Template $template
+	 * @param FileUpload $invoice
+	 * @param string $additional
+	 */
 	public function sendInvoice(Row $application, Template $template, FileUpload $invoice, string $additional): void
 	{
 		Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
@@ -209,6 +240,11 @@ class Mails
 	}
 
 
+	/**
+	 * @param Row<mixed> $application
+	 * @param Template $template
+	 * @param string $additional
+	 */
 	public function sendReminder(Row $application, Template $template, string $additional): void
 	{
 		Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");

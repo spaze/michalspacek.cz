@@ -47,9 +47,13 @@ class Dates
 	}
 
 
+	/**
+	 * @param integer $dateId
+	 * @return Row<mixed>|null
+	 */
 	public function get(int $dateId): ?Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				d.id_date AS dateId,
@@ -457,6 +461,10 @@ class Dates
 	}
 
 
+	/**
+	 * @param Row<mixed> $date
+	 * @return bool
+	 */
 	private function lastFreeSeats(Row $date): bool
 	{
 		$now = new DateTime();

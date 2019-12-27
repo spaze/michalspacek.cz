@@ -85,7 +85,7 @@ class TrainingApplication extends ProtectedForm
 
 
 	/**
-	 * @param SessionSection $application
+	 * @param SessionSection<string> $application
 	 * @return static
 	 */
 	public function setApplicationFromSession(SessionSection $application): self

@@ -98,7 +98,7 @@ class Reviews
 	 * Format reviews.
 	 *
 	 * @param Row[] $reviews
-	 * @return array
+	 * @return Row[]
 	 */
 	private function format(array $reviews): array
 	{
@@ -113,12 +113,12 @@ class Reviews
 	 * Get review by id.
 	 *
 	 * @param integer $reviewId
-	 * @return Row
+	 * @return Row<mixed>
 	 * @throws RuntimeException
 	 */
 	public function getReview(int $reviewId): Row
 	{
-		/** @var Row|null $result */
+		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch('SELECT
 				r.id_review AS reviewId,
 				r.name,

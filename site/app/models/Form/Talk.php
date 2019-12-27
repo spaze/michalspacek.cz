@@ -91,6 +91,10 @@ class Talk extends ProtectedForm
 	}
 
 
+	/**
+	 * @param Row<mixed> $talk
+	 * @return $this
+	 */
 	public function setTalk(Row $talk): self
 	{
 		$values = array(

@@ -54,6 +54,10 @@ class EmailsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
 	public function submittedMails(Form $form, ArrayHash $values): void
 	{
 		$sent = 0;
