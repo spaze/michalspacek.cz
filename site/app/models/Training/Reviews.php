@@ -118,6 +118,7 @@ class Reviews
 	 */
 	public function getReview(int $reviewId): Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch('SELECT
 				r.id_review AS reviewId,
 				r.name,

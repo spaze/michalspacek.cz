@@ -59,6 +59,7 @@ class Interviews
 
 	public function get(string $name): ?Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				id_interview AS interviewId,
@@ -88,6 +89,7 @@ class Interviews
 
 	public function getById(int $id): ?Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				id_interview AS interviewId,

@@ -368,6 +368,7 @@ class Manager implements IAuthenticator
 		$result = null;
 		$values = explode(self::AUTH_SELECTOR_TOKEN_SEPARATOR, $value);
 		if (count($values) === 2) {
+			/** @var Row|null $storedToken */
 			$storedToken = $this->database->fetch(
 				'SELECT
 					at.id_auth_token AS tokenId,

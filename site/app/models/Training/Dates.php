@@ -49,6 +49,7 @@ class Dates
 
 	public function get(int $dateId): ?Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				d.id_date AS dateId,

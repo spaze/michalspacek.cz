@@ -32,7 +32,9 @@ class Companies
 
 	public function getByName(string $name): ?Row
 	{
-		return $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name) ?: null;
+		/** @var Row|null $result */
+		$result = $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name);
+		return $result;
 	}
 
 

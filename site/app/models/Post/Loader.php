@@ -23,7 +23,7 @@ class Loader
 	/** @var ITranslator */
 	protected $translator;
 
-	/** @var Row */
+	/** @var Row|null */
 	protected $post;
 
 
@@ -61,7 +61,8 @@ class Loader
 	public function fetch(string $post, ?string $previewKey = null): ?Row
 	{
 		if ($this->post === null) {
-			$this->post = $this->database->fetch(
+			/** @var Row|null $result */
+			$result = $this->database->fetch(
 				'SELECT
 					bp.id_blog_post AS postId,
 					l.id_blog_post_locale AS localeId,
@@ -91,7 +92,8 @@ class Loader
 				$this->translator->getDefaultLocale(),
 				new DateTime(),
 				$previewKey
-			) ?: null;
+			);
+			$this->post = $result;
 		}
 		return $this->post;
 	}

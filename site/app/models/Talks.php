@@ -210,6 +210,7 @@ class Talks
 	 */
 	public function get(string $name): Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_talk AS talkId,
@@ -261,6 +262,7 @@ class Talks
 	 */
 	public function getById(int $id): Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_talk AS talkId,

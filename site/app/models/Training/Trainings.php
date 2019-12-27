@@ -51,6 +51,7 @@ class Trainings
 
 	private function getTraining(string $name, bool $includeCustom): ?Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_training AS trainingId,
@@ -89,6 +90,7 @@ class Trainings
 	public function getById(int $id): ?Row
 	{
 		if (!array_key_exists($id, $this->trainingsById)) {
+			/** @var Row|null $result */
 			$result = $this->database->fetch(
 				'SELECT
 					t.id_training AS trainingId,

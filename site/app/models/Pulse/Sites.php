@@ -35,7 +35,9 @@ class Sites
 
 	public function getByUrl(string $url): ?Row
 	{
-		return $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url) ?: null;
+		/** @var Row|null $result */
+		$result = $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
+		return $result;
 	}
 
 

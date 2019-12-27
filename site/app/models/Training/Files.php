@@ -69,6 +69,7 @@ class Files
 
 	public function getFile(int $applicationId, string $token, string $filename): ?Row
 	{
+		/** @var Row|null $file */
 		$file = $this->database->fetch(
 			'SELECT
 				f.id_file AS fileId,
@@ -97,7 +98,7 @@ class Files
 			$file->info = new SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
 		}
 
-		return $file ?: null;
+		return $file;
 	}
 
 

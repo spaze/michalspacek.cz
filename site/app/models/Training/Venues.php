@@ -26,6 +26,7 @@ class Venues
 
 	public function get(string $venueName): ?Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				v.id_venue AS id,

@@ -558,6 +558,7 @@ class Applications
 
 	public function getApplicationById(int $id): ?Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				ua.action AS trainingAction,
@@ -702,6 +703,7 @@ class Applications
 
 	public function getApplicationByToken(string $token): ?Row
 	{
+		/** @var Row|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				ua.action AS trainingAction,

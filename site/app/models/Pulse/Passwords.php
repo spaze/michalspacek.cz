@@ -405,7 +405,9 @@ class Passwords
 
 	public function getAlgorithmByName(string $name): ?Row
 	{
-		return $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name) ?: null;
+		/** @var Row|null $result */
+		$result = $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name);
+		return $result;
 	}
 
 
