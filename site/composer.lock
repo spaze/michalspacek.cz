@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98749d3e3b430763f1a3cb248cc6ecbe",
+    "content-hash": "f6b3c831a4bffb9e40025d6fecf0d86d",
     "packages": [
         {
             "name": "contributte/translation",
@@ -2607,12 +2607,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "31a820a0ce420ccd3dcee43c39eb9af3e5c5e214"
+                "reference": "ea1eaa84fc2c8f240cfb96b42aeed8cd6bb11806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/31a820a0ce420ccd3dcee43c39eb9af3e5c5e214",
-                "reference": "31a820a0ce420ccd3dcee43c39eb9af3e5c5e214",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/ea1eaa84fc2c8f240cfb96b42aeed8cd6bb11806",
+                "reference": "ea1eaa84fc2c8f240cfb96b42aeed8cd6bb11806",
                 "shasum": ""
             },
             "require": {

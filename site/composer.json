@@ -1,4 +1,7 @@
 {
+	"name": "spaze/michalspacek.cz",
+	"description": "Source code for my site",
+	"license": "MIT",
 	"autoload": {
 		"psr-4": {"MichalSpacekCz\\": "app/models/"}
 	},
