@@ -1,0 +1,38 @@
+name: PHP Tests
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Add missing PHP extensions
+      run: apt-fast install -y --no-install-recommends php7.3-intl
+
+    - name: OS info
+      run: cat /etc/os-release
+
+    - name: PHP info
+      run: |
+        php -v
+        php -m
+
+    - name: Validate composer.json and composer.lock
+      run: composer --working-dir=site validate
+
+    - name: Analyse source code
+      run: site/vendor/phpstan/phpstan/phpstan --ansi analyse --no-progress --configuration site/phpstan.neon site/app/
+
+    - name: Test environment info
+      run: site/vendor/nette/tester/src/tester -p php -C --colors 1 --info
+
+    - name: Run test suite
+      run: site/vendor/nette/tester/src/tester -p php -C --colors 1 site/tests/
+
+    - name: Failed test output, if any
+      if: failure()
+      run: for i in $(find ./site/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
