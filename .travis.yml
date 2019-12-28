@@ -1,0 +1,13 @@
+dist: bionic
+
+language: php
+
+php:
+  - 7.4
+
+script:
+  - ./site/vendor/phpstan/phpstan/phpstan analyse -c site/phpstan.neon site/app/
+  - ./site/vendor/nette/tester/src/tester -p php site/tests/
+
+after_failure:
+  - for i in $(find ./site/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
