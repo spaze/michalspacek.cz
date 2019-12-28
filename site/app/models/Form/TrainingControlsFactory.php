@@ -113,12 +113,12 @@ class TrainingControlsFactory
 	public function addStatusDate(Container $container, string $name, string $label, bool $required): TextInput
 	{
 		return $this->addDate(
+			$container,
 			$name,
 			$label,
 			$required,
 			'YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW',
 			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2}:\d{2})|[Nn][Oo][Ww]',
-			$container
 		);
 	}
 
@@ -126,12 +126,12 @@ class TrainingControlsFactory
 	public function addPaidDate(Container $container, string $name, string $label, bool $required): TextInput
 	{
 		return $this->addDate(
+			$container,
 			$name,
 			$label,
 			$required,
 			'YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW',
 			'((\d{4}-\d{1,2}-\d{1,2})( \d{1,2}:\d{2}:\d{2})?)|(\d{1,2}\.\d{1,2}\.\d{4})|[Nn][Oo][Ww]',
-			$container
 		);
 	}
 

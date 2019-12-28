@@ -264,8 +264,7 @@ class Texy extends NetxtenTexy
 
 		// "title":[inhouse-training:training]
 		if (strncmp($link->URL, 'inhouse-training:', 17) === 0) {
-			$args = preg_split('/[\s,]+/', substr($link->URL, 17));
-			$args = $this->trainingLocales->getLocaleActions($args[0])[$this->translator->getDefaultLocale()];
+			$args = $this->trainingLocales->getLocaleActions(substr($link->URL, 17))[$this->translator->getDefaultLocale()];
 			$link->URL = $presenter->link('//:Www:CompanyTrainings:training', $args);
 		}
 

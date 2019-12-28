@@ -128,6 +128,7 @@ class Talk extends ProtectedForm
 	protected function addTalkDate(string $name, string $label, bool $required = false): TextInput
 	{
 		return $this->addDate(
+			$this,
 			$name,
 			$label,
 			$required,

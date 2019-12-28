@@ -143,12 +143,12 @@ class PasswordsStorages extends ProtectedForm
 	private function addFromDate(Container $container, string $name, ?string $label = null, ?bool $required = false): TextInput
 	{
 		return $this->addDate(
+			$container,
 			$name,
 			$label,
 			$required,
 			'YYYY-MM(-DD (HH:MM(:SS)))',
 			'(\d{4}-\d{1,2}(-\d{1,2}( \d{1,2}:\d{2}(:\d{2})?)?)?)',
-			$container
 		);
 	}
 
@@ -156,12 +156,12 @@ class PasswordsStorages extends ProtectedForm
 	private function addPublishedDate(Container $container, string $name, ?string $label = null, ?bool $required = false): TextInput
 	{
 		return $this->addDate(
+			$container,
 			$name,
 			$label,
 			$required,
 			'YYYY-MM-DD (HH:MM(:SS))',
 			'(\d{4}-\d{1,2}-\d{1,2}( \d{1,2}:\d{2}(:\d{2})?)?)',
-			$container
 		);
 	}
 

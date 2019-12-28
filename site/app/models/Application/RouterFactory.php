@@ -74,7 +74,7 @@ class RouterFactory
 	/** @var RouteList<Router> */
 	private $router;
 
-	/** @var RouteList[] */
+	/** @var array<string, RouteList> */
 	private $localeRouters;
 
 	/** @var string[] */

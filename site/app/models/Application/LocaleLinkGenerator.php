@@ -104,7 +104,7 @@ class LocaleLinkGenerator
 	 */
 	public function allLinks(string $destination, array $params = []): array
 	{
-		$locale = $this->translator->getDefaultLocale();
+		$locale = (string)$this->translator->getDefaultLocale();
 		return array_merge(
 			[$locale => $this->linkGenerator->link($destination, $this->getParams($params, $locale))],
 			$this->links($destination, $params)

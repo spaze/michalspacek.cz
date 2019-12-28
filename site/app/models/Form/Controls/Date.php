@@ -10,9 +10,9 @@ use Nette\Forms\Form;
 trait Date
 {
 
-	protected function addDate(string $name, string $label, bool $required, string $format, string $pattern, ?Container $container = null): TextInput
+	protected function addDate(Container $container, string $name, string $label, bool $required, string $format, string $pattern): TextInput
 	{
-		return ($container === null ? $this : $container)->addText($name, $label)
+		return $container->addText($name, $label)
 			->setHtmlAttribute('placeholder', $format)
 			->setHtmlAttribute('title', "Formát {$format}")
 			->setRequired($required ? 'Zadejte datum' : false)
