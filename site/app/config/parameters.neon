@@ -27,7 +27,7 @@ parameters:
 	vatRate: 0.21
 	loadCompanyDataVisible: true
 	ares:
-		url: 'http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
+		url: 'https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
 	registerUz:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	returningUser:
