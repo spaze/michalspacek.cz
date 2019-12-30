@@ -14,7 +14,7 @@ h3, a {
 }
 #container {
 	margin: 2em auto;
-	width: 920px;
+	max-width: 920px;
 }
 #chart {
 	padding-top: 50px;
@@ -43,9 +43,39 @@ h3, a {
 	font-size: 0.25em;
 	color: #999;
 }
+#break {
+	display: none;
+}
 #notes {
 	padding-top: 50px;
 	text-align: center;
 	font-size: 0.75em;
 	color: #999;
+	line-height: 2em;
+}
+@media (max-width: 920px) {
+	#chart {
+		width: auto;
+		max-width: 920px;
+		overflow-x: scroll;
+	}
+	#logo, #header {
+		float: none;
+		margin: 0 auto;
+		text-align: center;
+	}
+	#stats {
+		padding-top: 0;
+		font-size: 2em;
+		float: none;
+	}
+	#stats small {
+		font-size: 1em;
+	}
+	#break {
+		display: block;
+	}
+	#notes {
+		font-size: 1em;
+	}
 }

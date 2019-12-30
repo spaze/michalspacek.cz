@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>We Bleed: Heartbleed Bug in the Czech Republic</title>
 	{stylesheet screen-webleed}
 	<link rel="icon" type="image/png" href="{='/i/icons/webleed.png'|staticUrl}">
@@ -14,7 +15,7 @@
 		<h1>Project &quot;We Bleed&quot; <small title="vyblít" lang="cs">(vɪbliːt)</small></h1>
 		<h3>Heartbleed Bug in the Czech Republic</h3>
 	</div>
-	<div id="stats"><strong>{$vulnerable}<small> vulnerable hosts</small> {$daysSince}<small> days since <a href="https://www.openssl.org/news/secadv_20140407.txt">public disclosure</a></small></strong></div>
+	<div id="stats"><strong>{$vulnerable}<small> vulnerable hosts</small> <br id="break">{$daysSince}<small> days since <a href="https://www.openssl.org/news/secadv_20140407.txt">public disclosure</a></small></strong></div>
 	<div id="chart"><img src="{='webleed/chart.png'|staticImageUrl}" width="911" height="366" alt="Vulnerable hosts chart"></div>
 	<div id="notes">Scanning all CZ-assigned IPv4 addresses,
 		<a href="https://blog.mozilla.org/security/2014/04/12/testing-for-heartbleed-vulnerability-without-exploiting-the-server/">not exploiting your server</a>,
