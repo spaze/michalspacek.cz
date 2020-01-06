@@ -59,6 +59,9 @@ class Compiler
 	/** @var array of [name => IMacro[]] */
 	private $macros = [];
 
+	/** @var string[] of orig name */
+	private $functions = [];
+
 	/** @var int[] IMacro flags */
 	private $flags;
 
@@ -106,6 +109,17 @@ class Compiler
 		}
 		$this->macros[$name][] = $macro;
 		return $this;
+	}
+
+
+	/**
+	 * Registers run-time function.
+	 */
+	public function addFunction(string $name): string
+	{
+		$lname = strtolower($name);
+		$this->functions[$lname] = $name;
+		return '_fn' . $lname;
 	}
 
 
@@ -203,6 +217,18 @@ class Compiler
 	public function getMacroNode(): ?MacroNode
 	{
 		return $this->macroNode;
+	}
+
+
+	public function getMacros(): array
+	{
+		return $this->macros;
+	}
+
+
+	public function getFunctions(): array
+	{
+		return $this->functions;
 	}
 
 

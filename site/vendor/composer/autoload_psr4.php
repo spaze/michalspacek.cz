@@ -16,7 +16,6 @@ return array(
     'Spaze\\Exports\\' => array($vendorDir . '/spaze/feed-exports/src'),
     'Spaze\\Encryption\\' => array($vendorDir . '/spaze/encryption/src'),
     'Spaze\\ContentSecurityPolicy\\' => array($vendorDir . '/spaze/csp-config/src'),
-    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'ParagonIE\\HiddenString\\' => array($vendorDir . '/paragonie/hidden-string/src'),
     'ParagonIE\\Halite\\' => array($vendorDir . '/paragonie/halite/src'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),

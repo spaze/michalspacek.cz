@@ -328,6 +328,7 @@ return array(
     'Nette\\Utils\\DateTime' => $vendorDir . '/nette/utils/src/Utils/DateTime.php',
     'Nette\\Utils\\FileSystem' => $vendorDir . '/nette/utils/src/Utils/FileSystem.php',
     'Nette\\Utils\\Finder' => $vendorDir . '/nette/finder/src/Utils/Finder.php',
+    'Nette\\Utils\\Helpers' => $vendorDir . '/nette/utils/src/Utils/Helpers.php',
     'Nette\\Utils\\Html' => $vendorDir . '/nette/utils/src/Utils/Html.php',
     'Nette\\Utils\\IHtmlString' => $vendorDir . '/nette/utils/src/Utils/IHtmlString.php',
     'Nette\\Utils\\Image' => $vendorDir . '/nette/utils/src/Utils/Image.php',

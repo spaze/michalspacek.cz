@@ -31,7 +31,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         ),
         'P' => 
         array (
-            'PhpParser\\' => 10,
             'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
@@ -87,10 +86,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\ContentSecurityPolicy\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/csp-config/src',
-        ),
-        'PhpParser\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
         'ParagonIE\\HiddenString\\' => 
         array (
@@ -451,6 +446,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Utils\\DateTime' => __DIR__ . '/..' . '/nette/utils/src/Utils/DateTime.php',
         'Nette\\Utils\\FileSystem' => __DIR__ . '/..' . '/nette/utils/src/Utils/FileSystem.php',
         'Nette\\Utils\\Finder' => __DIR__ . '/..' . '/nette/finder/src/Utils/Finder.php',
+        'Nette\\Utils\\Helpers' => __DIR__ . '/..' . '/nette/utils/src/Utils/Helpers.php',
         'Nette\\Utils\\Html' => __DIR__ . '/..' . '/nette/utils/src/Utils/Html.php',
         'Nette\\Utils\\IHtmlString' => __DIR__ . '/..' . '/nette/utils/src/Utils/IHtmlString.php',
         'Nette\\Utils\\Image' => __DIR__ . '/..' . '/nette/utils/src/Utils/Image.php',
