@@ -52,7 +52,7 @@ class RedirectPresenter extends BasePresenter
 
 	public function actionNewestArticleByTag(string $token): void
 	{
-		$article = current($this->articles->getAllByTags($token, 1));
+		$article = current($this->articles->getAllByTags([$token], 1));
 		if ($article) {
 			$this->sendResponse(new RedirectResponse($article->href, IResponse::S302_FOUND));
 		} else {

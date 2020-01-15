@@ -117,6 +117,7 @@ services:
 	error: \MichalSpacekCz\Application\Error
 	trainingControlsFactory: \MichalSpacekCz\Form\TrainingControlsFactory
 	winterIsComing: \MichalSpacekCz\EasterEgg\WinterIsComing
+	tags: \MichalSpacekCz\Tags
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory

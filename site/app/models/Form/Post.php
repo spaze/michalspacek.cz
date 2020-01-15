@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\Form\Controls\Date;
 use MichalSpacekCz\Post as PostService;
 use MichalSpacekCz\Post\Data;
+use MichalSpacekCz\Tags;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Json;
@@ -19,11 +20,14 @@ class Post extends ProtectedForm
 	/** @var PostService */
 	protected $blogPost;
 
+	private Tags $tags;
 
-	public function __construct(IContainer $parent, string $name, PostService $blogPost)
+
+	public function __construct(IContainer $parent, string $name, PostService $blogPost, Tags $tags)
 	{
 		parent::__construct($parent, $name);
 		$this->blogPost = $blogPost;
+		$this->tags = $tags;
 
 		$this->addText('translationGroup', 'Skupina překladů:')
 			->setRequired(false)
@@ -95,7 +99,7 @@ class Post extends ProtectedForm
 			'originally' => $post->originallyTexy,
 			'ogImage' => $post->ogImage,
 			'twitterCard' => $post->twitterCard,
-			'tags' => ($post->tags ? implode(', ', $post->tags) : null),
+			'tags' => ($post->tags ? $this->tags->toString($post->tags) : null),
 			'recommended' => (empty($post->recommended) ? null : Json::encode($post->recommended)),
 		);
 		$this->setDefaults($values);

@@ -8,6 +8,7 @@ use MichalSpacekCz\Form\Post as PostForm;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post;
 use MichalSpacekCz\Post\Data;
+use MichalSpacekCz\Tags;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -31,11 +32,14 @@ class BlogPresenter extends BasePresenter
 	/** @var Data */
 	private $post;
 
+	private Tags $tags;
 
-	public function __construct(Post $blogPost, Texy $texyFormatter)
+
+	public function __construct(Post $blogPost, Texy $texyFormatter, Tags $tags)
 	{
 		$this->blogPost = $blogPost;
 		$this->texyFormatter = $texyFormatter;
+		$this->tags = $tags;
 		parent::__construct();
 	}
 
@@ -65,7 +69,7 @@ class BlogPresenter extends BasePresenter
 	 */
 	protected function createComponentAddPost(string $formName): PostForm
 	{
-		$form = new PostForm($this, $formName, $this->blogPost);
+		$form = new PostForm($this, $formName, $this->blogPost, $this->tags);
 		$form->onSuccess[] = [$this, 'submittedAddpost'];
 		return $form;
 	}
@@ -92,8 +96,8 @@ class BlogPresenter extends BasePresenter
 			$post->published = new DateTime($values->published);
 			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 			$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-			$post->tags = (empty($values->tags) ? [] : $this->blogPost->tagsToArray($values->tags));
-			$post->slugTags = (empty($values->tags) ? [] : $this->blogPost->getSlugTags($values->tags));
+			$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));
+			$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
 			$post->recommended = (empty($values->recommended) ? null : Json::decode($values->recommended));
 			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 			$this->blogPost->enrich($post);
@@ -130,7 +134,7 @@ class BlogPresenter extends BasePresenter
 	 */
 	protected function createComponentEditPost(string $formName): PostForm
 	{
-		$form = new PostForm($this, $formName, $this->blogPost);
+		$form = new PostForm($this, $formName, $this->blogPost, $this->tags);
 		$form->setPost($this->post);
 		$form->onSuccess[] = [$this, 'submittedEditPost'];
 		return $form;
@@ -158,8 +162,8 @@ class BlogPresenter extends BasePresenter
 		$post->published = new DateTime($values->published);
 		$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-		$post->tags = (empty($values->tags) ? []: $this->blogPost->tagsToArray($values->tags));
-		$post->slugTags = (empty($values->tags) ? [] : $this->blogPost->getSlugTags($values->tags));
+		$post->tags = (empty($values->tags) ? []: $this->tags->toArray($values->tags));
+		$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
 		$post->previousSlugTags = $this->post->slugTags;
 		$post->recommended = (empty($values->recommended) ? null : Json::decode($values->recommended));
 		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
@@ -188,8 +192,8 @@ class BlogPresenter extends BasePresenter
 		$post->textTexy = $this->request->getPost('text');
 		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
 		$post->published = new DateTime($this->request->getPost('published'));
-		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->blogPost->tagsToArray($this->request->getPost('tags')));
-		$post->slugTags = (empty($this->request->getPost('tags')) ? null : $this->blogPost->getSlugTags($this->request->getPost('tags')));
+		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tags->toArray($this->request->getPost('tags')));
+		$post->slugTags = (empty($this->request->getPost('tags')) ? null : $this->tags->toSlugArray($this->request->getPost('tags')));
 		$post->recommended = (empty($this->request->getPost('recommended')) ? null : Json::decode($this->request->getPost('recommended')));
 		$this->blogPost->enrich($post);
 		/** @var Template $preview */

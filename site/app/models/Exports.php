@@ -43,7 +43,7 @@ class Exports
 	{
 		/** @var Feed $feed */
 		$feed = $this->cache->load(($filter ? "Atom/ArticlesByTag/{$filter}" : 'Atom/AllArticles'), function(&$dependencies) use ($self, $filter) {
-			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags($filter) : $this->articles->getNearestPublishDate());
+			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate());
 			$dependencies[Cache::EXPIRATION] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 
 			$title = ($filter ? $this->texyFormatter->translate('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.label.allarticles'));
@@ -51,7 +51,7 @@ class Exports
 			$feed->setLinkSelf($self);
 			$feed->setAuthor(new Person('Michal Špaček'));
 
-			$articles = ($filter ? $this->articles->getAllByTags($filter, self::ITEMS) : $this->articles->getAll(self::ITEMS));
+			$articles = ($filter ? $this->articles->getAllByTags([$filter], self::ITEMS) : $this->articles->getAll(self::ITEMS));
 			if (!$articles) {
 				throw new BadRequestException('No articles');
 			}

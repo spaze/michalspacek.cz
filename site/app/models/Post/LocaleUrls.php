@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Post;
 
+use MichalSpacekCz\Tags;
 use Nette\Database\Context;
-use Nette\Utils\Json;
 
 class LocaleUrls
 {
@@ -12,10 +12,13 @@ class LocaleUrls
 	/** @var Context */
 	private $database;
 
+	private Tags $tags;
 
-	public function __construct(Context $context)
+
+	public function __construct(Context $context, Tags $tags)
 	{
 		$this->database = $context;
+		$this->tags = $tags;
 	}
 
 
@@ -46,7 +49,7 @@ class LocaleUrls
 			$post->slug = $row->slug;
 			$post->published = $row->published;
 			$post->previewKey = $row->previewKey;
-			$post->slugTags = ($row->slugTags !== null ? Json::decode($row->slugTags) : []);
+			$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
 			$posts[] = $post;
 		}
 		return $posts;

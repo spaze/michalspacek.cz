@@ -19,7 +19,6 @@ use Nette\Database\Row;
 use Nette\Localization\ITranslator;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
-use Nette\Utils\Strings;
 
 class Post
 {
@@ -42,6 +41,8 @@ class Post
 	/** @var LocaleLinkGenerator */
 	protected $localeLinkGenerator;
 
+	private Tags $tags;
+
 	/** @var ITranslator */
 	protected $translator;
 
@@ -59,6 +60,7 @@ class Post
 		IStorage $cacheStorage,
 		LinkGenerator $linkGenerator,
 		LocaleLinkGenerator $localeLinkGenerator,
+		Tags $tags,
 		ITranslator $translator
 	) {
 		$this->database = $context;
@@ -67,6 +69,7 @@ class Post
 		$this->exportsCache = new Cache($cacheStorage, Exports::class);
 		$this->linkGenerator = $linkGenerator;
 		$this->localeLinkGenerator = $localeLinkGenerator;
+		$this->tags = $tags;
 		$this->translator = $translator;
 	}
 
@@ -112,8 +115,8 @@ class Post
 		$post->previewKey = $result->previewKey;
 		$post->originallyTexy = $result->originallyTexy;
 		$post->ogImage = $result->ogImage;
-		$post->tags = ($result->tags !== null ? Json::decode($result->tags) : null);
-		$post->slugTags = ($result->slugTags !== null ? Json::decode($result->slugTags) : null);
+		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : null);
+		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : null);
 		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
 		$post->twitterCard = $result->twitterCard;
 		$this->enrich($post);
@@ -169,8 +172,8 @@ class Post
 		$post->published = $result->published;
 		$post->previewKey = $result->previewKey;
 		$post->ogImage = $result->ogImage;
-		$post->tags = ($result->tags !== null ? Json::decode($result->tags) : []);
-		$post->slugTags = ($result->slugTags !== null ? Json::decode($result->slugTags) : []);
+		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
+		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
 		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
 		$post->twitterCard = $result->twitterCard;
 		$this->enrich($post);
@@ -220,8 +223,8 @@ class Post
 			$post->originallyTexy = $row->originallyTexy;
 			$post->published = $row->published;
 			$post->previewKey = $row->previewKey;
-			$post->tags = ($row->tags !== null ? Json::decode($row->tags) : null);
-			$post->slugTags = ($row->slugTags !== null ? Json::decode($row->slugTags) : null);
+			$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : null);
+			$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : null);
 			$this->enrich($post);
 			$posts[] = $this->format($post);
 		}
@@ -293,8 +296,8 @@ class Post
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 					'og_image' => $post->ogImage,
-					'tags' => Json::encode($post->tags),
-					'slug_tags' => Json::encode($post->slugTags),
+					'tags' => $this->tags->serialize($post->tags),
+					'slug_tags' => $this->tags->serialize($post->slugTags),
 					'recommended' => Json::encode($post->recommended),
 				)
 			);
@@ -331,8 +334,8 @@ class Post
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 					'og_image' => $post->ogImage,
-					'tags' => ($post->tags ? Json::encode($post->tags) : null),
-					'slug_tags' => ($post->slugTags ? Json::encode($post->slugTags) : null),
+					'tags' => ($post->tags ? $this->tags->serialize($post->tags) : null),
+					'slug_tags' => ($post->slugTags ? $this->tags->serialize($post->slugTags) : null),
 					'recommended' => ($post->recommended ? Json::encode($post->recommended) : null),
 				),
 				$post->postId
@@ -434,30 +437,6 @@ class Post
 			$edits[] = $edit;
 		}
 		return $edits;
-	}
-
-
-	/**
-	 * Convert tags string to JSON.
-	 *
-	 * @param string $tags
-	 * @return string[]
-	 */
-	public function tagsToArray(string $tags): array
-	{
-		/** @var string[] $values */
-		$values = preg_split('/\s*,\s*/', $tags);
-		return array_filter($values);
-	}
-
-
-	/**
-	 * @param string $tags
-	 * @return string[]
-	 */
-	public function getSlugTags(string $tags): array
-	{
-		return ($tags ? array_map([Strings::class, 'webalize'], $this->tagsToArray($tags)) : []);
 	}
 
 }

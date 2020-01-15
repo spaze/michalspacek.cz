@@ -51,18 +51,18 @@ class TagsPresenter extends BasePresenter
 
 
 	/**
-	 * @param string $tags
+	 * @param string $tag
 	 * @throws BadRequestException
 	 */
-	public function actionTag(string $tags): void
+	public function actionTag(string $tag): void
 	{
-		$label = $this->articles->getLabelByTags($tags);
+		$label = $this->articles->getLabelByTag($tag);
 		if (!$label) {
 			throw new BadRequestException('Unknown tag');
 		}
 
-		$articles = $this->articles->getAllByTags($tags);
-		$this->findLocaleLinkParams($articles, $tags);
+		$articles = $this->articles->getAllByTags([$tag]);
+		$this->findLocaleLinkParams($articles, $tag);
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.label.articlesbytag', [$label]);
 		$this->template->articles = $articles;
@@ -78,18 +78,18 @@ class TagsPresenter extends BasePresenter
 	 * This seems a bit weird but otherwise, we'd have to use and build and maintain a translation table for tags. Thanks, but no thanks.
 	 *
 	 * @param Row[] $articles
-	 * @param string $tags
+	 * @param string $tag
 	 */
-	private function findLocaleLinkParams(array $articles, string $tags): void
+	private function findLocaleLinkParams(array $articles, string $tag): void
 	{
 		foreach ($articles as $article) {
 			$posts = $this->localeUrls->get($article->slug);
 			if (count($posts) === 1) {
 				continue;  // post and tags not translated yet
 			}
-			$tagKey = array_search($tags, $article->slugTags);
+			$tagKey = array_search($tag, $article->slugTags);
 			foreach ($posts as $post) {
-				$this->localeLinkParams[$post->locale] = ['tags' => $post->slugTags[$tagKey]];
+				$this->localeLinkParams[$post->locale] = ['tag' => $post->slugTags[$tagKey]];
 			}
 			return;
 		}

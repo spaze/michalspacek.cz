@@ -12,7 +12,6 @@ use Nette\Database\Context;
 use Nette\Database\Row;
 use Nette\Localization\ITranslator;
 use Nette\Utils\DateTime as NetteDateTime;
-use Nette\Utils\Json;
 
 class Articles
 {
@@ -32,6 +31,8 @@ class Articles
 	/** @var ITranslator */
 	protected $translator;
 
+	private Tags $tags;
+
 
 	/**
 	 * @param Context $context
@@ -45,6 +46,7 @@ class Articles
 		Texy $texyFormatter,
 		LinkGenerator $linkGenerator,
 		Post $blogPost,
+		Tags $tags,
 		ITranslator $translator
 	)
 	{
@@ -52,6 +54,7 @@ class Articles
 		$this->texyFormatter = $texyFormatter;
 		$this->linkGenerator = $linkGenerator;
 		$this->blogPost = $blogPost;
+		$this->tags = $tags;
 		$this->translator = $translator;
 	}
 
@@ -110,11 +113,11 @@ class Articles
 	/**
 	 * Get articles filtered by tags, sorted by date, newest first.
 	 *
-	 * @param string $tags
+	 * @param string[] $tags
 	 * @param int|null $limit Null means all, for real
 	 * @return Row[]
 	 */
-	public function getAllByTags(string $tags, ?int $limit = null): array
+	public function getAllByTags(array $tags, ?int $limit = null): array
 	{
 		$query = 'SELECT
 					bp.id_blog_post AS articleId,
@@ -140,7 +143,7 @@ class Articles
 			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
 		}
 
-		$articles = $this->database->fetchAll($query, Json::encode($tags), new NetteDateTime(), $this->translator->getDefaultLocale());
+		$articles = $this->database->fetchAll($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale());
 		return $this->enrichArticles($articles);
 	}
 
@@ -168,8 +171,8 @@ class Articles
 		$result = [];
 		$rows = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale());
 		foreach ($rows as $row) {
-			$tags = Json::decode($row->tags);
-			$slugTags = Json::decode($row->slugTags);
+			$tags = $this->tags->unserialize($row->tags);
+			$slugTags = $this->tags->unserialize($row->slugTags);
 			foreach ($slugTags as $key => $slugTag) {
 				$result[$slugTag] = $tags[$key];
 			}
@@ -183,10 +186,10 @@ class Articles
 	/**
 	 * Get label by tags.
 	 *
-	 * @param string $tags
+	 * @param string $tag
 	 * @return string|null
 	 */
-	public function getLabelByTags(string $tags): ?string
+	public function getLabelByTag(string $tag): ?string
 	{
 		$query = 'SELECT
 					bp.tags,
@@ -199,14 +202,14 @@ class Articles
 					AND bp.published <= ?
 					AND l.locale = ?
 			LIMIT 1';
-		$tag = $this->database->fetch($query, Json::encode($tags), new NetteDateTime(), $this->translator->getDefaultLocale());
-		if ($tag) {
-			$tag->tags = ($tag->tags !== null ? Json::decode($tag->tags) : []);
-			$tag->slugTags = ($tag->slugTags !== null ? Json::decode($tag->slugTags) : []);
+		$result = $this->database->fetch($query, $this->tags->serialize([$tag]), new NetteDateTime(), $this->translator->getDefaultLocale());
+		if ($result) {
+			$result->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
+			$result->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
 
-			foreach ($tag->slugTags as $key => $slug) {
-				if ($slug === $tags) {
-					return $tag->tags[$key] ?? null;
+			foreach ($result->slugTags as $key => $slug) {
+				if ($slug === $tag) {
+					return $result->tags[$key] ?? null;
 				}
 			}
 		}
@@ -235,10 +238,10 @@ class Articles
 	/**
 	 * Get nearest publish date of an article by a tag.
 	 *
-	 * @param string $tags
+	 * @param string[] $tags
 	 * @return DateTime|null
 	 */
-	public function getNearestPublishDateByTags(string $tags): ?DateTime
+	public function getNearestPublishDateByTags(array $tags): ?DateTime
 	{
 		$query = 'SELECT bp.published FROM blog_posts bp
 				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
@@ -247,7 +250,7 @@ class Articles
 				AND l.locale = ?
 			ORDER BY bp.published ASC
 			LIMIT 1';
-		return ($this->database->fetchField($query, Json::encode($tags), new NetteDateTime(), $this->translator->getDefaultLocale()) ?: null);
+		return ($this->database->fetchField($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale()) ?: null);
 	}
 
 
@@ -260,8 +263,8 @@ class Articles
 		foreach ($articles as $article) {
 			$article->updated = null;
 			$article->edits = null;
-			$article->tags = (isset($article->tags) ? Json::decode($article->tags) : []);
-			$article->slugTags = (isset($article->slugTags) ? Json::decode($article->slugTags) : []);
+			$article->tags = (isset($article->tags) ? $this->tags->unserialize($article->tags) : []);
+			$article->slugTags = (isset($article->slugTags) ? $this->tags->unserialize($article->slugTags) : []);
 			$article->isBlogPost = ($article->sourceHref === null);
 			$article->title = $this->texyFormatter->format($article->title);
 			if ($article->isBlogPost) {

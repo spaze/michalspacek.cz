@@ -196,7 +196,7 @@ class RouterFactory
 		$this->addRoute('/<action>/<token>', 'Redirect', 'default');
 		$this->addRoute('/<action>[/<param>]', 'Exports', 'default');
 		$this->addRoute('/<name>', 'Venues', 'venue');
-		$this->addRoute('/<tags>', 'Tags', 'tag');
+		$this->addRoute('/<tag>', 'Tags', 'tag');
 		$this->addRoute('<slug>', 'Post', 'default', null, Route::class);
 		$this->addRoute('<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 
