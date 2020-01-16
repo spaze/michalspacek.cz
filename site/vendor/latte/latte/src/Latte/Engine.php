@@ -17,7 +17,7 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.6.0';
+	public const VERSION = '2.6.1';
 
 	/** Content types */
 	public const
@@ -299,9 +299,7 @@ class Engine
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setContentType(string $type)
 	{
 		$this->contentType = $type;
@@ -362,9 +360,7 @@ class Engine
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setLoader(ILoader $loader)
 	{
 		$this->loader = $loader;

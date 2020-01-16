@@ -31,7 +31,7 @@ final class HtmlOutputModule extends Texy\Module
 	/** @var int  wrap width, doesn't include indent space */
 	public $lineWrap = 80;
 
-	/** @var bool  remove optional HTML end tags? */
+	/** @deprecated */
 	public $removeOptional = false;
 
 	/** @var int  indent space counter */
@@ -45,9 +45,6 @@ final class HtmlOutputModule extends Texy\Module
 
 	/** @var array  content DTD used, when context is not defined */
 	private $baseDTD = [];
-
-	/** @var bool */
-	private $xml = false;
 
 
 	public function __construct(Texy\Texy $texy)
@@ -66,10 +63,10 @@ final class HtmlOutputModule extends Texy\Module
 		$this->space = $this->baseIndent;
 		$this->tagStack = [];
 		$this->tagUsed = [];
-		$this->xml = $texy->getOutputMode() & $texy::XML;
 
 		// special "base content"
-		$this->baseDTD = $texy->dtd['div'][1] + $texy->dtd['html'][1] /*+ $texy->dtd['head'][1]*/ + $texy->dtd['body'][1] + ['html' => 1];
+		$dtd = $texy->getDTD();
+		$this->baseDTD = $dtd['div'][1] + $dtd['html'][1] /*+ $dtd['head'][1]*/ + $dtd['body'][1] + ['html' => 1];
 
 		// wellform and reformat
 		$s = Regexp::replace(
@@ -103,11 +100,6 @@ final class HtmlOutputModule extends Texy\Module
 				[$this, 'wrap']
 			);
 		}
-
-		// remove HTML 4.01 optional end tags
-		if (!$this->xml && $this->removeOptional) {
-			$s = Regexp::replace($s, '#\s*</(colgroup|dd|dt|li|option|p|td|tfoot|th|thead|tr)>#u', '');
-		}
 	}
 
 
@@ -131,7 +123,7 @@ final class HtmlOutputModule extends Texy\Module
 		// phase #1 - stuff between tags
 		if ($mText !== '') {
 			$item = reset($this->tagStack);
-			if ($item && !isset($item['dtdContent']['%DATA'])) {  // text not allowed?
+			if ($item && !isset($item['dtdContent'][HtmlElement::INNER_TEXT])) {  // text not allowed?
 
 			} elseif (array_intersect(array_keys($this->tagUsed, true), $this->preserveSpaces)) { // inside pre & textarea preserve spaces
 				$s = Texy\Helpers::freezeSpaces($mText);
@@ -201,7 +193,8 @@ final class HtmlOutputModule extends Texy\Module
 
 			$dtdContent = $this->baseDTD;
 
-			if (!isset($this->texy->dtd[$mTag])) {
+			$dtd = $this->texy->getDTD();
+			if (!isset($dtd[$mTag])) {
 				// unknown (non-html) tag
 				$allowed = true;
 				$item = reset($this->tagStack);
@@ -253,10 +246,6 @@ final class HtmlOutputModule extends Texy\Module
 					return $s;
 				}
 
-				if ($this->xml) {
-					$mAttr .= ' /';
-				}
-
 				$indent = $this->indent && !array_intersect(array_keys($this->tagUsed, true), $this->preserveSpaces);
 
 				if ($indent && $mTag === 'br') { // formatting exception
@@ -286,9 +275,14 @@ final class HtmlOutputModule extends Texy\Module
 			if ($allowed) {
 				$open = '<' . $mTag . $mAttr . '>';
 
-				// receive new content (ins & del are special cases)
-				if (!empty($this->texy->dtd[$mTag][1])) {
-					$dtdContent = $this->texy->dtd[$mTag][1];
+				// receive new content
+				if ($tagDTD = $dtd[$mTag] ?? null) {
+					if (isset($tagDTD[1][HtmlElement::INNER_TRANSPARENT])) {
+						$dtdContent += $tagDTD[1];
+						unset($dtdContent[HtmlElement::INNER_TRANSPARENT]);
+					} else {
+						$dtdContent = $tagDTD[1];
+					}
 				}
 
 				// format output

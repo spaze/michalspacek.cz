@@ -137,7 +137,7 @@ final class HtmlModule extends Texy\Module
 		// convert case
 		$name = $el->getName();
 		$lower = strtolower($name);
-		if (isset($texy->dtd[$lower]) || $name === strtoupper($name)) {
+		if (isset($texy->getDTD()[$lower]) || $name === strtoupper($name)) {
 			// complete UPPER convert to lower
 			$name = $lower;
 			$el->setName($name);
@@ -169,7 +169,6 @@ final class HtmlModule extends Texy\Module
 			$elAttrs = [];
 
 		} elseif (is_array($allowedAttrs)) {
-
 			// skip disabled
 			$allowedAttrs = array_flip($allowedAttrs);
 			foreach ($elAttrs as $key => $foo) {
@@ -180,46 +179,45 @@ final class HtmlModule extends Texy\Module
 		}
 
 		// apply allowedClasses
-		$tmp = $texy->_classes; // speed-up
+		[$classes, $styles] = $texy->getAllowedProps();
 		if (isset($elAttrs['class'])) {
-			if (is_array($tmp)) {
+			if (is_array($classes)) {
 				$elAttrs['class'] = explode(' ', $elAttrs['class']);
 				foreach ($elAttrs['class'] as $key => $value) {
-					if (!isset($tmp[$value])) {
+					if (!isset($classes[$value])) {
 						unset($elAttrs['class'][$key]); // id & class are case-sensitive
 					}
 				}
 
-			} elseif ($tmp !== $texy::ALL) {
+			} elseif ($classes !== $texy::ALL) {
 				$elAttrs['class'] = null;
 			}
 		}
 
 		// apply allowedClasses for ID
 		if (isset($elAttrs['id'])) {
-			if (is_array($tmp)) {
-				if (!isset($tmp['#' . $elAttrs['id']])) {
+			if (is_array($classes)) {
+				if (!isset($classes['#' . $elAttrs['id']])) {
 					$elAttrs['id'] = null;
 				}
-			} elseif ($tmp !== $texy::ALL) {
+			} elseif ($classes !== $texy::ALL) {
 				$elAttrs['id'] = null;
 			}
 		}
 
 		// apply allowedStyles
 		if (isset($elAttrs['style'])) {
-			$tmp = $texy->_styles; // speed-up
-			if (is_array($tmp)) {
+			if (is_array($styles)) {
 				$styles = explode(';', $elAttrs['style']);
 				$elAttrs['style'] = null;
 				foreach ($styles as $value) {
 					$pair = explode(':', $value, 2);
 					$prop = trim($pair[0]);
-					if (isset($pair[1]) && isset($tmp[strtolower($prop)])) { // CSS is case-insensitive
+					if (isset($pair[1]) && isset($styles[strtolower($prop)])) { // CSS is case-insensitive
 						$elAttrs['style'][$prop] = $pair[1];
 					}
 				}
-			} elseif ($tmp !== $texy::ALL) {
+			} elseif ($styles !== $texy::ALL) {
 				$elAttrs['style'] = null;
 			}
 		}
@@ -266,7 +264,7 @@ final class HtmlModule extends Texy\Module
 			];
 		}
 
-		$el->validateAttrs($texy->dtd);
+		$el->validateAttrs($texy->getDTD());
 
 		return $el;
 	}

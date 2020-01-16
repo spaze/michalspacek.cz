@@ -11,7 +11,7 @@ namespace Texy;
 
 
 /**
- * Texy! - Convert plain text to XHTML format using {@link process()}.
+ * Texy! - Convert plain text to HTML format using {@link process()}.
  *
  * <code>
  * $texy = new Texy();
@@ -27,7 +27,7 @@ class Texy
 	public const NONE = false;
 
 	// Texy version
-	public const VERSION = '3.0.0';
+	public const VERSION = '3.1.0';
 
 	// types of protection marks
 	public const CONTENT_MARKUP = "\x17";
@@ -39,16 +39,15 @@ class Texy
 	public const FILTER_ANCHOR = 'anchor';
 	public const FILTER_IMAGE = 'image';
 
-	// HTML minor-modes
-	public const XML = 2;
-
-	// HTML modes
-	public const HTML4_TRANSITIONAL = 0;
-	public const HTML4_STRICT = 1;
-	public const HTML5 = 4;
-	public const XHTML1_TRANSITIONAL = 2; // Texy::HTML4_TRANSITIONAL | Texy::XML;
-	public const XHTML1_STRICT = 3; // Texy::HTML4_STRICT | Texy::XML;
-	public const XHTML5 = 6; // Texy::HTML5 | Texy::XML;
+	/** @deprecated  */
+	public const
+		HTML4_TRANSITIONAL = 0,
+		HTML4_STRICT = 1,
+		HTML5 = 4,
+		XHTML1_TRANSITIONAL = 2,
+		XHTML1_STRICT = 3,
+		XHTML5 = 6,
+		XML = 2;
 
 	/** @var array  Texy! syntax configuration */
 	public $allowed = [];
@@ -94,7 +93,7 @@ class Texy
 	/** @var bool  remove soft hyphens (SHY)? */
 	public $removeSoftHyphens = true;
 
-	/** @var string */
+	/** @var string|HtmlElement */
 	public $nontextParagraph = 'div';
 
 	/** @var Modules\ScriptModule */
@@ -173,7 +172,8 @@ class Texy
 	private $marks = [];
 
 	/** @var array  for internal usage */
-	public $_classes, $_styles;
+	private $_classes;
+	private $_styles;
 
 	/** @var bool */
 	private $processing = false;
@@ -187,16 +187,10 @@ class Texy
 	 *   $dtd[element][1] - allowed content for an element (content model) (as array keys)
 	 *                    - array of allowed elements (as keys)
 	 *                    - false - empty element
-	 *                    - 0 - special case for ins & del
+	 *                    - 0 - transparent
 	 * @var array
 	 */
-	public $dtd;
-
-	/** @var array */
-	private static $dtdCache;
-
-	/** @var int  HTML mode */
-	private $mode;
+	private static $dtd;
 
 
 	public function __construct()
@@ -208,7 +202,7 @@ class Texy
 
 		$this->loadModules();
 
-		$this->setOutputMode(self::XHTML1_TRANSITIONAL);
+		$this->initDTD();
 
 		// examples of link references ;-)
 		$link = new Link('https://texy.info/');
@@ -224,39 +218,32 @@ class Texy
 	}
 
 
-	/**
-	 * Set HTML/XHTML output mode (overwrites self::$allowedTags)
-	 */
-	public function setOutputMode(int $mode): void
+	private function initDTD(): void
 	{
-		if (!in_array($mode, [self::HTML4_TRANSITIONAL, self::HTML4_STRICT,
-			self::HTML5, self::XHTML1_TRANSITIONAL, self::XHTML1_STRICT, self::XHTML5, ], true)
-		) {
-			throw new \InvalidArgumentException('Invalid mode.');
+		if (!self::$dtd) {
+			self::$dtd = require __DIR__ . '/DTD.php';
 		}
-
-		if (!isset(self::$dtdCache[$mode])) {
-			self::$dtdCache[$mode] = require __DIR__ . '/DTD.php';
-		}
-
-		$this->mode = $mode;
-		$this->dtd = self::$dtdCache[$mode];
-		HtmlElement::$xhtml = (bool) ($mode & self::XML); // TODO: remove?
 
 		// accept all valid HTML tags and attributes by default
 		$this->allowedTags = [];
-		foreach ($this->dtd as $tag => $dtd) {
+		foreach (self::$dtd as $tag => $dtd) {
 			$this->allowedTags[$tag] = self::ALL;
 		}
 	}
 
 
-	/**
-	 * Get HTML/XHTML output mode
-	 */
+	/** @deprecated */
+	public function setOutputMode(int $mode): void
+	{
+		trigger_error('Texy::setOutputMode() is deprecated, only HTML5 mode is supported.', E_USER_DEPRECATED);
+	}
+
+
+	/** @deprecated */
 	public function getOutputMode(): int
 	{
-		return $this->mode;
+		trigger_error('Texy::getOutputMode() is deprecated, only HTML5 mode is supported.', E_USER_DEPRECATED);
+		return self::HTML5;
 	}
 
 
@@ -362,11 +349,12 @@ class Texy
 		$text = Helpers::normalize($text);
 
 		// replace tabs with spaces
-		$this->tabWidth = max(1, (int) $this->tabWidth);
-		while (strpos($text, "\t") !== false) {
-			$text = Regexp::replace($text, '#^([^\t\n]*+)\t#mU', function ($m) {
-				return $m[1] . str_repeat(' ', $this->tabWidth - strlen($m[1]) % $this->tabWidth);
-			});
+		if ($this->tabWidth) {
+			while (strpos($text, "\t") !== false) {
+				$text = Regexp::replace($text, '#^([^\t\n]*+)\t#mU', function ($m) {
+					return $m[1] . str_repeat(' ', $this->tabWidth - strlen($m[1]) % $this->tabWidth);
+				});
+			}
 		}
 
 		// user before handler
@@ -618,6 +606,20 @@ class Texy
 	}
 
 
+	/** @internal */
+	public static function getDTD(): array
+	{
+		return self::$dtd;
+	}
+
+
+	/** @internal */
+	final public function getAllowedProps(): array
+	{
+		return [$this->_classes, $this->_styles];
+	}
+
+
 	final public function __clone()
 	{
 		throw new \Exception('Clone is not supported.');
@@ -649,7 +651,7 @@ class Texy
 
 
 	/** @deprecated */
-	final public static function webalize(string $s, string $charlist = null): string
+	final public static function webalize(string $s, string $charlist = ''): string
 	{
 		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::webalize()', E_USER_DEPRECATED);
 		return Helpers::webalize($s, $charlist);
@@ -694,5 +696,4 @@ class Texy
 		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::prependRoot()', E_USER_DEPRECATED);
 		return Helpers::prependRoot($URL, $root);
 	}
-
 }

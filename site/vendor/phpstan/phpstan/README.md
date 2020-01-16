@@ -33,6 +33,8 @@ can be checked before you run the actual line.
 <a href="https://stackoverflow.com/jobs/273089/backend-software-engineer-musement-spa"><img src="https://i.imgur.com/uw5rAlR.png" alt="Musement" width="247" height="49"></a>
 &nbsp;&nbsp;&nbsp;
 <a href="https://blackfire.io/docs/introduction?utm_source=phpstan&utm_medium=github_readme&utm_campaign=logo"><img src="https://i.imgur.com/zR8rsqk.png" alt="Blackfire.io" width="254" height="64"></a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://jobs.ticketswap.com/"><img src="https://i.imgur.com/lhzcutK.png" alt="TicketSwap" width="269" height="64"></a>
 
 [**You can now sponsor my open-source work on PHPStan through GitHub Sponsors.**](https://github.com/sponsors/ondrejmirtes)
 
@@ -256,8 +258,8 @@ making PHPStan suitable to run as part of your continuous integration script.
 ## Rule levels
 
 If you want to use PHPStan but your codebase isn't up to speed with strong typing
-and PHPStan's strict checks, you can choose from currently 8 levels
-(0 is the loosest and 7 is the strictest) by passing `--level` to `analyse` command. Default level is `0`.
+and PHPStan's strict checks, you can choose from currently 9 levels
+(0 is the loosest and 8 is the strictest) by passing `--level` to `analyse` command. Default level is `0`.
 
 This feature enables incremental adoption of PHPStan checks. You can start using PHPStan
 with a lower rule level and increase it when you feel like it.
@@ -289,6 +291,7 @@ Unofficial extensions for other frameworks and libraries are also available:
 * [Phony](https://github.com/eloquent/phpstan-phony)
 * [Prophecy](https://github.com/Jan0707/phpstan-prophecy)
 * [Laravel](https://github.com/nunomaduro/larastan)
+* [marc-mabe/php-enum](https://github.com/marc-mabe/php-enum-phpstan)
 * [myclabs/php-enum](https://github.com/timeweb/phpstan-enum)
 * [Yii2](https://github.com/proget-hq/phpstan-yii2)
 * [PhpSpec](https://github.com/proget-hq/phpstan-phpspec)

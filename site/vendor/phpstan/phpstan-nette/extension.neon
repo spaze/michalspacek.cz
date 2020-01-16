@@ -1,7 +1,11 @@
 parameters:
 	stubFiles:
-		- stubs/Form.php
-		- stubs/FormContainer.php
+		- stubs/ArrayHash.stub
+		- stubs/Form.stub
+		- stubs/FormContainer.stub
+		- stubs/Html.stub
+		- stubs/Rules.stub
+		- stubs/SessionSection.stub
 	universalObjectCratesClasses:
 		- Nette\Application\UI\ITemplate
 		- Nette\Bridges\ApplicationLatte\Template

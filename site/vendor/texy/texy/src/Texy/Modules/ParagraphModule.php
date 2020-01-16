@@ -94,7 +94,11 @@ final class ParagraphModule extends Texy\Module
 
 		// block contains only replaced element
 		} elseif (strpos($content, $texy::CONTENT_REPLACED) !== false) {
-			$el->setName($texy->nontextParagraph);
+			if ($texy->nontextParagraph instanceof Texy\HtmlElement) {
+				$el = (clone $texy->nontextParagraph)->setText($content);
+			} else {
+				$el->setName($texy->nontextParagraph);
+			}
 
 		// block contains only markup tags or spaces or nothing
 		} else {
@@ -110,9 +114,9 @@ final class ParagraphModule extends Texy\Module
 				$mod->decorate($texy, $el);
 			}
 
-			// add <br />
+			// add <br>
 			if (strpos($content, "\r") !== false) {
-				$key = $texy->protect('<br />', $texy::CONTENT_REPLACED);
+				$key = $texy->protect('<br>', $texy::CONTENT_REPLACED);
 				$content = str_replace("\r", $key, $content);
 			}
 		}

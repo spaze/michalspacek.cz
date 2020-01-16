@@ -172,9 +172,7 @@ class PhpWriter
 	}
 
 
-	/**
-	 * @throws CompileException
-	 */
+	/** @throws CompileException */
 	public function validateTokens(MacroTokens $tokens): void
 	{
 		$brackets = [];
@@ -256,7 +254,7 @@ class PhpWriter
 		$inTernary = $tmp = [];
 		$errors = 0;
 		while ($tokens->nextToken()) {
-			if ($tokens->isCurrent('?') && $tokens->isNext() && !$tokens->isNext(':', ',', ')', ']', '|')) {
+			if ($tokens->isCurrent('?') && $tokens->isNext() && !$tokens->isNext(',', ')', ']', '|')) {
 				$inTernary[] = $tokens->depth;
 				$tmp[] = $tokens->isNext('[');
 
@@ -278,7 +276,7 @@ class PhpWriter
 		}
 		if ($errors) {
 			$tokens->reset();
-			trigger_error('Short ternary operator requires braces around array: ' . $tokens->joinAll(), E_USER_DEPRECATED);
+			trigger_error('Short ternary operator requires parentheses around array in ' . $tokens->joinAll(), E_USER_DEPRECATED);
 		}
 		return $res;
 	}
@@ -304,7 +302,7 @@ class PhpWriter
 
 			do {
 				if ($tokens->nextToken('?')) {
-					if ($tokens->isNext() && (!$tokens->isNext($tokens::T_CHAR) || $tokens->isNext('(', '[', '{', ':', '!', '@'))) {  // is it ternary operator?
+					if ($tokens->isNext() && (!$tokens->isNext($tokens::T_CHAR) || $tokens->isNext('(', '[', '{', ':', '!', '@', '\\'))) {  // is it ternary operator?
 						$expr->append($addBraces . ' ?');
 						break;
 					}
