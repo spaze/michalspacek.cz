@@ -93,7 +93,7 @@ class TagsPresenter extends BasePresenter
 					$this->localeLinkParams[$post->locale] = ['tag' => $post->slugTags[$tagKey]];
 				}
 			}
-			if (isset($this->localeLinkParams[$post->locale])) {
+			if (isset($post) && isset($this->localeLinkParams[$post->locale])) {
 				return;
 			}
 		}
