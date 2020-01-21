@@ -38,7 +38,7 @@ class Resolver
 	private $currentServiceType;
 
 	/** @var bool */
-	private $currentServiceAllowed;
+	private $currentServiceAllowed = false;
 
 	/** @var \SplObjectStorage  circular reference detector */
 	private $recursive;
@@ -291,9 +291,7 @@ class Resolver
 	}
 
 
-	/**
-	 * @return string|array|Reference  literal, Class, Reference, [Class, member], [, globalFunc], [Reference, member], [Statement, member]
-	 */
+	/** @return string|array|Reference  literal, Class, Reference, [Class, member], [, globalFunc], [Reference, member], [Statement, member] */
 	private function normalizeEntity(Statement $statement)
 	{
 		$entity = $statement->getEntity();

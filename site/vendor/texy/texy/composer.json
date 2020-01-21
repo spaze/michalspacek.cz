@@ -16,14 +16,14 @@
 	"require-dev": {
 		"nette/tester": "^2.0",
 		"tracy/tracy": "^2.4",
+		"latte/latte": "^2.6",
 		"phpstan/phpstan": "^0.12"
 	},
 	"replace": {
 		"dg/texy": "*"
 	},
 	"autoload": {
-		"classmap": ["src/"],
-		"files": ["src/texy.php"]
+		"classmap": ["src/"]
 	},
 	"scripts": {
 		"phpstan": "phpstan analyse --level 5 src",

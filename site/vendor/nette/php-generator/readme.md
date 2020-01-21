@@ -43,9 +43,9 @@ $class = new Nette\PhpGenerator\ClassType('Demo');
 
 $class
 	->setFinal()
-	->setExtends('ParentClass')
-	->addImplement('Countable')
-	->addTrait('Nette\SmartObject')
+	->setExtends(ParentClass::class)
+	->addImplement(Countable::class)
+	->addTrait(Nette\SmartObject::class)
 	->addComment("Description of class.\nSecond line\n")
 	->addComment('@property-read Nette\Forms\Form $form');
 
@@ -78,7 +78,7 @@ We can add constants and properties:
 $class->addConstant('ID', 123);
 
 $class->addProperty('items', [1, 2, 3])
-	->setVisibility('private')
+	->setPrivate()
 	->setStatic()
 	->addComment('@var int[]');
 ```
@@ -99,7 +99,7 @@ $method = $class->addMethod('count')
 	->addComment('Count it.')
 	->addComment('@return int')
 	->setFinal()
-	->setVisibility('protected')
+	->setProtected()
 	->setBody('return count($items ?: $this->items);');
 
 $method->addParameter('items', []) // $items = []
@@ -127,23 +127,25 @@ Members can be removed using `removeProperty()`, `removeConstant()`, `removeMeth
 PHP Generator supports all new PHP 7.3 and 7.4 features:
 
 ```php
+use Nette\PhpGenerator\Type;
+
 $class = new Nette\PhpGenerator\ClassType('Demo');
 
 $class->addConstant('ID', 123)
-	->setVisibility('private'); // constant visiblity
+	->setPrivate(); // constant visiblity
 
 $class->addProperty('items')
-	->setType('array') // typed properites
+	->setType(Type::ARRAY) // typed properites
 	->setNullable()
 	->setInitialized();
 
 $method = $class->addMethod('getValue')
-	->setReturnType('int') // method return type
+	->setReturnType(Type::INT) // method return type
 	->setReturnNullable() // nullable return type
 	->setBody('return count($this->items);');
 
 $method->addParameter('id')
-		->setType('int') // scalar type hint
+		->setType(Type::ARRAY) // scalar type hint
 		->setNullable(); // nullable type hint
 
 echo $class;
@@ -205,17 +207,17 @@ It can be used also for functions, closures, namespaces etc.
 Literals
 --------
 
-You can pass any PHP code to property or parameter default values via `PhpLiteral`:
+You can pass any PHP code to property or parameter default values via `Literal`:
 
 ```php
-use Nette\PhpGenerator\PhpLiteral;
+use Nette\PhpGenerator\Literal;
 
 $class = new Nette\PhpGenerator\ClassType('Demo');
 
-$class->addProperty('foo', new PhpLiteral('Iterator::SELF_FIRST'));
+$class->addProperty('foo', new Literal('Iterator::SELF_FIRST'));
 
 $class->addMethod('bar')
-	->addParameter('id', new PhpLiteral('1 + 2'));
+	->addParameter('id', new Literal('1 + 2'));
 
 echo $class;
 ```
@@ -238,8 +240,8 @@ Interface or Trait
 
 ```php
 $class = new Nette\PhpGenerator\ClassType('DemoInterface');
-$class->setType('interface');
-// or $class->setType('trait');
+$class->setInterface();
+// or $class->setTrait();
 ```
 
 Trait Resolutions and Visibility
@@ -439,8 +441,8 @@ If the class already exists, it will be overwritten.
 You can define use-statements:
 
 ```php
-$namespace->addUse('Http\Request'); // use Http\Request;
-$namespace->addUse('Http\Request', 'HttpReq'); // use Http\Request as HttpReq;
+$namespace->addUse(Http\Request::class); // use Http\Request;
+$namespace->addUse(Http\Request::class, 'HttpReq'); // use Http\Request as HttpReq;
 ```
 
 **IMPORTANT NOTE:** when the class is part of the namespace, it is rendered slightly differently: all types (ie. type hints, return types, parent class name,

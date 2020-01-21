@@ -17,7 +17,7 @@ use Texy;
  */
 final class EmoticonModule extends Texy\Module
 {
-	/** @var array  supported emoticons and image files / chars */
+	/** @var array<string, string>  supported emoticons and image files / chars */
 	public $icons = [
 		':-)' => '🙂',
 		':-(' => '☹',
@@ -86,6 +86,8 @@ final class EmoticonModule extends Texy\Module
 				return $this->texy->invokeAroundHandlers('emoticon', $parser, [$emoticon, $match]);
 			}
 		}
+
+		return null;
 	}
 
 

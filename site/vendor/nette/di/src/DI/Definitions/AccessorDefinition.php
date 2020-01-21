@@ -25,9 +25,7 @@ final class AccessorDefinition extends Definition
 	private $reference;
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setImplement(string $type)
 	{
 		if (!interface_exists($type)) {
@@ -104,7 +102,7 @@ final class AccessorDefinition extends Definition
 			->addImplement($this->getType());
 
 		$class->addProperty('container')
-			->setVisibility('private');
+			->setPrivate();
 
 		$class->addMethod('__construct')
 			->addBody('$this->container = $container;')

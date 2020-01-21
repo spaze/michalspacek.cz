@@ -17,13 +17,6 @@ use Texy;
  */
 final class ScriptModule extends Texy\Module
 {
-	/**
-	 * @var callback|object  script elements handler
-	 * function myFunc($parser, $cmd, $args, $raw)
-	 */
-	public $handler;
-
-
 	/** @var string  arguments separator */
 	public $separator = ',';
 
@@ -54,7 +47,7 @@ final class ScriptModule extends Texy\Module
 
 		$cmd = trim($mContent);
 		if ($cmd === '') {
-			return;
+			return null;
 		}
 
 		$raw = null;
@@ -62,25 +55,12 @@ final class ScriptModule extends Texy\Module
 		// function (arg, arg, ...) or function: arg, arg
 		if ($matches = Texy\Regexp::match($cmd, '#^([a-z_][a-z0-9_-]*)\s*(?:\(([^()]*)\)|:(.*))$#iu')) {
 			$cmd = $matches[1];
-			$raw = isset($matches[3]) ? trim($matches[3]) : trim($matches[2]);
+			$raw = trim($matches[3] ?? $matches[2]);
 			if ($raw !== '') {
 				$args = preg_split('#\s*' . preg_quote($this->separator, '#') . '\s*#u', $raw);
 			}
 		}
 
-		// Texy 1.x way
-		if ($this->handler) {
-			if (is_callable([$this->handler, $cmd])) {
-				array_unshift($args, $parser);
-				return [$this->handler, $cmd](...$args);
-			}
-
-			if (is_callable($this->handler)) {
-				return $this->handler($parser, $cmd, $args, $raw);
-			}
-		}
-
-		// Texy 2 way
 		return $this->texy->invokeAroundHandlers('script', $parser, [$cmd, $args, $raw]);
 	}
 
@@ -91,11 +71,7 @@ final class ScriptModule extends Texy\Module
 	 */
 	public function solve(Texy\HandlerInvocation $invocation, string $cmd, array $args = null, string $raw = null)
 	{
-		if ($cmd === 'texy') {
-			if (!$args) {
-				return;
-			}
-
+		if ($cmd === 'texy' && $args) {
 			switch ($args[0]) {
 				case 'nofollow':
 					$this->texy->linkModule->forceNoFollow = true;
@@ -103,5 +79,6 @@ final class ScriptModule extends Texy\Module
 			}
 			return '';
 		}
+		return null;
 	}
 }

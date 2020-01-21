@@ -258,14 +258,14 @@ final class PhraseModule extends Texy\Module
 		if ($phrase === 'phrase/span' || $phrase === 'phrase/span-alt') {
 			if ($mLink == null) {
 				if (!$mMod) {
-					return; // means "..."
+					return null; // means "..."
 				}
 			} else {
 				$link = $texy->linkModule->factoryLink($mLink, $mMod, $mContent);
 			}
 
 		} elseif ($phrase === 'phrase/acronym' || $phrase === 'phrase/acronym-alt') {
-			$mod->title = trim(html_entity_decode($mLink, ENT_QUOTES, 'UTF-8'));
+			$mod->title = trim(Texy\Helpers::unescapeHtml($mLink));
 
 		} elseif ($phrase === 'phrase/quote') {
 			$mod->cite = $texy->blockQuoteModule->citeLink($mLink);
@@ -287,7 +287,7 @@ final class PhraseModule extends Texy\Module
 		[, $mContent] = $matches;
 		$mod = new Modifier();
 		$link = null;
-		$mContent = str_replace('-', "\xE2\x88\x92", $mContent); // &minus;
+		$mContent = str_replace('-', "\u{2212}", $mContent); // &minus;
 		return $this->texy->invokeAroundHandlers('phrase', $parser, [$phrase, $mContent, $mod, $link]);
 	}
 
@@ -306,8 +306,7 @@ final class PhraseModule extends Texy\Module
 	public function solve(Texy\HandlerInvocation $invocation, string $phrase, string $content, Modifier $mod, Texy\Link $link = null)
 	{
 		$texy = $this->texy;
-
-		$tag = isset($this->tags[$phrase]) ? $this->tags[$phrase] : null;
+		$tag = $this->tags[$phrase] ?? null;
 
 		if ($tag === 'a') {
 			$tag = $link && $this->linksAllowed ? null : 'span';

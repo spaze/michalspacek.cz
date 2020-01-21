@@ -25,8 +25,8 @@ final class Factory
 			? new ClassType
 			: new ClassType($from->getShortName(), new PhpNamespace($from->getNamespaceName()));
 		$class->setType($from->isInterface() ? $class::TYPE_INTERFACE : ($from->isTrait() ? $class::TYPE_TRAIT : $class::TYPE_CLASS));
-		$class->setFinal($from->isFinal() && $class->getType() === $class::TYPE_CLASS);
-		$class->setAbstract($from->isAbstract() && $class->getType() === $class::TYPE_CLASS);
+		$class->setFinal($from->isFinal() && $class->isClass());
+		$class->setAbstract($from->isAbstract() && $class->isClass());
 
 		$ifaces = $from->getInterfaceNames();
 		foreach ($ifaces as $iface) {
@@ -83,9 +83,7 @@ final class Factory
 	}
 
 
-	/**
-	 * @return GlobalFunction|Closure
-	 */
+	/** @return GlobalFunction|Closure */
 	public function fromFunctionReflection(\ReflectionFunction $from)
 	{
 		$function = $from->isClosure() ? new Closure : new GlobalFunction($from->getName());
@@ -111,7 +109,7 @@ final class Factory
 		$param->setNullable($from->hasType() && $from->getType()->allowsNull());
 		if ($from->isDefaultValueAvailable()) {
 			$param->setDefaultValue($from->isDefaultValueConstant()
-				? new PhpLiteral($from->getDefaultValueConstantName())
+				? new Literal($from->getDefaultValueConstantName())
 				: $from->getDefaultValue());
 			$param->setNullable($param->isNullable() && $param->getDefaultValue() !== null);
 		}

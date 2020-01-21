@@ -22,22 +22,25 @@ class Texy
 {
 	use Strict;
 
-	// configuration directives
-	public const ALL = true;
-	public const NONE = false;
-
 	// Texy version
-	public const VERSION = '3.1.0';
+	public const VERSION = '3.1.1';
+
+	// configuration directives
+	public const
+		ALL = true,
+		NONE = false;
 
 	// types of protection marks
-	public const CONTENT_MARKUP = "\x17";
-	public const CONTENT_REPLACED = "\x16";
-	public const CONTENT_TEXTUAL = "\x15";
-	public const CONTENT_BLOCK = "\x14";
+	public const
+		CONTENT_MARKUP = "\x17",
+		CONTENT_REPLACED = "\x16",
+		CONTENT_TEXTUAL = "\x15",
+		CONTENT_BLOCK = "\x14";
 
 	// url filters
-	public const FILTER_ANCHOR = 'anchor';
-	public const FILTER_IMAGE = 'image';
+	public const
+		FILTER_ANCHOR = 'anchor',
+		FILTER_IMAGE = 'image';
 
 	/** @deprecated  */
 	public const
@@ -49,16 +52,16 @@ class Texy
 		XHTML5 = 6,
 		XML = 2;
 
-	/** @var array  Texy! syntax configuration */
+	/** @var array<string, bool>  Texy! syntax configuration */
 	public $allowed = [];
 
-	/** @var true|false|array  Allowed HTML tags */
+	/** @var bool|array<string, bool|array<int, string>>  Allowed HTML tags */
 	public $allowedTags;
 
-	/** @var true|false|array  Allowed classes */
+	/** @var bool|array<int, string>  Allowed classes */
 	public $allowedClasses = self::ALL; // all classes and id are allowed
 
-	/** @var true|false|array  Allowed inline CSS style */
+	/** @var bool|array<int, string>  Allowed inline CSS style */
 	public $allowedStyles = self::ALL;  // all inline styles are allowed
 
 	/** @var int  TAB width (for converting tabs to spaces) */
@@ -67,19 +70,19 @@ class Texy
 	/** @var bool  Do obfuscate e-mail addresses? */
 	public $obfuscateEmail = true;
 
-	/** @var array  regexps to check URL schemes */
+	/** @var array<string|string>  regexps to check URL schemes */
 	public $urlSchemeFilters; // disable URL scheme filter
 
 	/** @var bool  Paragraph merging mode */
 	public $mergeLines = true;
 
-	/** @var array  Parsing summary */
+	/** @var array<string, string[]>  Parsing summary */
 	public $summary = [
 		'images' => [],
 		'links' => [],
 	];
 
-	/** @var array  CSS classes for align modifiers */
+	/** @var array<string, ?string>  CSS classes for align modifiers */
 	public $alignClasses = [
 		'left' => null,
 		'right' => null,
@@ -150,35 +153,41 @@ class Texy
 
 	/**
 	 * Registered regexps and associated handlers for inline parsing.
-	 * @var array of ('handler' => callback, 'pattern' => regular expression)
+	 * @var array<string, array{handler: callable, pattern: string, again: ?string}>
 	 */
 	private $linePatterns = [];
+
+	/** @var array<string, array{handler: callable, pattern: string, again: ?string}> */
 	private $_linePatterns;
 
 	/**
 	 * Registered regexps and associated handlers for block parsing.
-	 * @var array of ('handler' => callback, 'pattern' => regular expression)
+	 * @var array<string, array{handler: callable, pattern: string}>
 	 */
 	private $blockPatterns = [];
+
+	/** @var array<string, array{handler: callable, pattern: string}> */
 	private $_blockPatterns;
 
-	/** @var array */
+	/** @var array<string, callable> */
 	private $postHandlers = [];
 
-	/** @var HtmlElement  DOM structure for parsed text */
+	/** @var HtmlElement|null  DOM structure for parsed text */
 	private $DOM;
 
 	/** @var array  Texy protect markup table */
 	private $marks = [];
 
-	/** @var array  for internal usage */
+	/** @var bool|array  for internal usage */
 	private $_classes;
+
+	/** @var bool|array  for internal usage */
 	private $_styles;
 
 	/** @var bool */
 	private $processing = false;
 
-	/** @var array of events and registered handlers */
+	/** @var array<string, array<int, callable>> of events and registered handlers */
 	private $handlers = [];
 
 	/**
@@ -188,7 +197,7 @@ class Texy
 	 *                    - array of allowed elements (as keys)
 	 *                    - false - empty element
 	 *                    - 0 - transparent
-	 * @var array
+	 * @var array<string, array{array<string, int>, array<string, int>}>
 	 */
 	private static $dtd;
 
@@ -342,7 +351,7 @@ class Texy
 		}
 
 		if ($this->removeSoftHyphens) {
-			$text = str_replace("\xC2\xAD", '', $text);
+			$text = str_replace("\u{AD}", '', $text);
 		}
 
 		// standardize line endings and spaces
@@ -398,9 +407,6 @@ class Texy
 
 	/**
 	 * Converts single line in Texy! to (X)HTML code.
-	 *
-	 * @param  string   input text
-	 * @return string   output HTML code
 	 */
 	public function processLine(string $text): string
 	{
@@ -410,8 +416,6 @@ class Texy
 
 	/**
 	 * Makes only typographic corrections.
-	 * @param  string   input text
-	 * @return string   output text
 	 */
 	public function processTypo(string $text): string
 	{
@@ -448,7 +452,7 @@ class Texy
 	final public function stringToHtml(string $s): string
 	{
 		// decode HTML entities to UTF-8
-		$s = html_entity_decode($s, ENT_QUOTES, 'UTF-8');
+		$s = Helpers::unescapeHtml($s);
 
 		// line-postprocessing
 		$blocks = explode(self::CONTENT_BLOCK, $s);
@@ -486,10 +490,7 @@ class Texy
 	 */
 	final public function stringToText(string $s): string
 	{
-		$save = $this->htmlOutputModule->lineWrap;
-		$this->htmlOutputModule->lineWrap = false;
 		$s = $this->stringToHtml($s);
-		$this->htmlOutputModule->lineWrap = $save;
 
 		// remove tags
 		$s = Regexp::replace($s, '#<(script|style)(.*)</\1>#Uis', '');
@@ -497,12 +498,12 @@ class Texy
 		$s = Regexp::replace($s, '#\n\s*\n\s*\n[\n\s]*\n#', "\n\n");
 
 		// entities -> chars
-		$s = html_entity_decode($s, ENT_QUOTES, 'UTF-8');
+		$s = Helpers::unescapeHtml($s);
 
 		// convert nbsp to normal space and remove shy
 		$s = strtr($s, [
-			"\xC2\xAD" => '', // shy
-			"\xC2\xA0" => ' ', // nbsp
+			"\u{AD}" => '', // shy
+			"\u{A0}" => ' ', // nbsp
 		]);
 
 		return $s;
@@ -511,8 +512,6 @@ class Texy
 
 	/**
 	 * Add new event handler.
-	 *
-	 * @param  string   event name
 	 */
 	final public function addHandler(string $event, callable $callback): void
 	{
@@ -571,7 +570,7 @@ class Texy
 
 	/**
 	 * Filters bad URLs.
-	 * @param  string  $type FILTER_ANCHOR | FILTER_IMAGE
+	 * @param  string  $type  Texy::FILTER_ANCHOR | Texy::FILTER_IMAGE
 	 */
 	final public function checkURL(string $URL, string $type): bool
 	{
@@ -588,12 +587,14 @@ class Texy
 	}
 
 
+	/** @return array<string, array{handler: callable, pattern: string, again: ?string}> */
 	final public function getLinePatterns(): array
 	{
 		return $this->_linePatterns;
 	}
 
 
+	/** @return array<string, array{handler: callable, pattern: string}> */
 	final public function getBlockPatterns(): array
 	{
 		return $this->_blockPatterns;
@@ -606,7 +607,10 @@ class Texy
 	}
 
 
-	/** @internal */
+	/**
+	 * @internal
+	 * @return array<string, array{array<string, int>, array<string, int>}>
+	 */
 	public static function getDTD(): array
 	{
 		return self::$dtd;
@@ -669,8 +673,8 @@ class Texy
 	/** @deprecated */
 	final public static function unescapeHtml(string $s): string
 	{
-		trigger_error(__METHOD__ . '() is deprecated, use html_entity_decode()', E_USER_DEPRECATED);
-		return html_entity_decode($s, ENT_QUOTES, 'UTF-8');
+		trigger_error(__METHOD__ . '() is deprecated, use Texy\Helpers::unescapeHtml()', E_USER_DEPRECATED);
+		return Helpers::unescapeHtml($s);
 	}
 
 
@@ -697,3 +701,6 @@ class Texy
 		return Helpers::prependRoot($URL, $root);
 	}
 }
+
+
+class_exists(\Texy::class);
