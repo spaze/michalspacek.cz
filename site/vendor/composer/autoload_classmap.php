@@ -380,6 +380,7 @@ return array(
     'Tester\\Runner\\TestHandler' => $vendorDir . '/nette/tester/src/Runner/TestHandler.php',
     'Tester\\TestCase' => $vendorDir . '/nette/tester/src/Framework/TestCase.php',
     'Tester\\TestCaseException' => $vendorDir . '/nette/tester/src/Framework/TestCase.php',
+    'Texy' => $vendorDir . '/texy/texy/src/Texy.php',
     'Texy\\BlockParser' => $vendorDir . '/texy/texy/src/Texy/BlockParser.php',
     'Texy\\Bridges\\Latte\\TexyMacro' => $vendorDir . '/texy/texy/src/Bridges/Latte/TexyMacro.php',
     'Texy\\Configurator' => $vendorDir . '/texy/texy/src/Texy/Configurator.php',

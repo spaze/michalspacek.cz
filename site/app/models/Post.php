@@ -52,6 +52,9 @@ class Post
 	/** @var integer */
 	private $updatedInfoThreshold;
 
+	/** @var array<string, array<string, array<integer, string>>> */
+	private array $allowedTags;
+
 
 	public function __construct(
 		Context $context,
@@ -93,6 +96,15 @@ class Post
 
 
 	/**
+	 * @param array<string, array<string, array<integer, string>>> $allowedTags
+	 */
+	public function setAllowedTags(array $allowedTags): void
+	{
+		$this->allowedTags = $allowedTags;
+	}
+
+
+	/**
 	 * Get post.
 	 *
 	 * @param string $post
@@ -119,6 +131,13 @@ class Post
 		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : null);
 		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
 		$post->twitterCard = $result->twitterCard;
+		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
+
+		if ($result->allowedTags) {
+			foreach (Json::decode($result->allowedTags, Json::FORCE_ARRAY) as $htmlTags) {
+				$post->allowedTags = array_merge($post->allowedTags, $this->allowedTags[$htmlTags]);
+			}
+		}
 		$this->enrich($post);
 
 		return ($result ? $this->format($post) : null);
@@ -261,12 +280,16 @@ class Post
 	 */
 	public function format(Data $post): Data
 	{
+		$texy = $this->texyFormatter->getTexy();
+		if ($post->allowedTags) {
+			$texy->allowedTags = $post->allowedTags;
+		}
 		foreach(['title'] as $item) {
-			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'});
+			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'}, $texy);
 		}
 		$this->texyFormatter->setTopHeading(2);
 		foreach(['lead', 'text', 'originally'] as $item) {
-			$post->$item = $this->texyFormatter->formatBlock($post->{$item . 'Texy'});
+			$post->$item = $this->texyFormatter->formatBlock($post->{$item . 'Texy'}, $texy);
 		}
 		return $post;
 	}

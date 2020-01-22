@@ -118,13 +118,13 @@ class Texy
 	 * Suitable for "inline" strings like headers.
 	 *
 	 * @param string|null $text Text to format
+	 * @param \Texy\Texy|null $texy
 	 * @return Html|null
 	 */
-	public function format(?string $text): ?Html
+	public function format(?string $text, ?\Texy\Texy $texy = null): ?Html
 	{
-		return (empty($text) ? null : $this->cache("{$text}|" . __FUNCTION__, function() use ($text) {
-			$texy = $this->getTexy();
-			return preg_replace('~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1', $texy->process($text));
+		return (empty($text) ? null : $this->cache("{$text}|" . __FUNCTION__, function() use ($text, $texy) {
+			return preg_replace('~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1', ($texy ?? $this->getTexy())->process($text));
 		}));
 	}
 
@@ -133,12 +133,13 @@ class Texy
 	 * Format string.
 	 *
 	 * @param string|null $text Text to format
+	 * @param \Texy\Texy|null $texy
 	 * @return Html|null
 	 */
-	public function formatBlock(?string $text): ?Html
+	public function formatBlock(?string $text, ?\Texy\Texy $texy = null): ?Html
 	{
-		return (empty($text) ? null : $this->cache("{$text}|" . __FUNCTION__, function() use ($text) {
-			return $this->getTexy()->process($text);
+		return (empty($text) ? null : $this->cache("{$text}|" . __FUNCTION__, function() use ($text, $texy) {
+			return ($texy ?? $this->getTexy())->process($text);
 		}));
 	}
 

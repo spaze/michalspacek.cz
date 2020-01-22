@@ -51,6 +51,10 @@ parameters:
 		hideExpiredAfter: 10
 	blog:
 		updatedInfoThreshold: 30
+		allowedTags:
+			forms:
+				form: [action, method, target]
+				button: []
 	featurePolicy:
 		accelerometer: none
 		camera: none

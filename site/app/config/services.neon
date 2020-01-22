@@ -104,6 +104,7 @@ services:
 	    factory: \MichalSpacekCz\Post
 	    setup:
 	        - setUpdatedInfoThreshold(%blog.updatedInfoThreshold%)
+	        - setAllowedTags(%blog.allowedTags%)
 	blogPostLoader: \MichalSpacekCz\Post\Loader
 	blogPostLocaleUrls: \MichalSpacekCz\Post\LocaleUrls
 	certificatesApi:

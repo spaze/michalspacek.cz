@@ -83,6 +83,12 @@ class Data
 	/** @var Edit[] */
 	public $edits;
 
+	/** @var array<integer, string> */
+	public array $cspSnippets = [];
+
+	/** @var array<string, array<integer, string>> */
+	public array $allowedTags = [];
+
 
 	public function needsPreviewKey(): bool
 	{

@@ -40,7 +40,7 @@ h4 {
 	font-size: 1em;
 	color: #666;
 }
-p { margin: 0 0 1em 0; }
+p, form { margin: 0 0 1em 0; }
 ul {
 	text-align: left;
 	padding: 0 1em;

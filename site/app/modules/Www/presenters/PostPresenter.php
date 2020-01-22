@@ -7,6 +7,7 @@ use MichalSpacekCz\Post;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Training\Dates;
 use Nette\Application\AbortException;
+use Spaze\ContentSecurityPolicy\Config as CspConfig;
 
 class PostPresenter extends BasePresenter
 {
@@ -22,12 +23,15 @@ class PostPresenter extends BasePresenter
 	/** @var string[][] */
 	protected $localeLinkParams = [];
 
+	private CspConfig $contentSecurityPolicy;
 
-	public function __construct(Post $blogPost, Dates $trainingDates, LocaleUrls $localeUrls)
+
+	public function __construct(Post $blogPost, Dates $trainingDates, LocaleUrls $localeUrls, CspConfig $contentSecurityPolicy)
 	{
 		$this->blogPost = $blogPost;
 		$this->localeUrls = $localeUrls;
 		$this->trainingDates = $trainingDates;
+		$this->contentSecurityPolicy = $contentSecurityPolicy;
 		parent::__construct();
 	}
 
@@ -56,8 +60,11 @@ class PostPresenter extends BasePresenter
 			$this->template->edited = current($edits)->editedAt;
 		}
 
-		foreach ($this->localeUrls->get($post->slug) as $post) {
-			$this->localeLinkParams[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
+		foreach ($this->localeUrls->get($post->slug) as $localePost) {
+			$this->localeLinkParams[$localePost->locale] = ['slug' => $localePost->slug, 'preview' => ($localePost->needsPreviewKey() ? $localePost->previewKey : null)];
+		}
+		foreach ($post->cspSnippets as $snippet) {
+			$this->contentSecurityPolicy->addSnippet($snippet);
 		}
 	}
 

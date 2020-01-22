@@ -496,6 +496,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Tester\\Runner\\TestHandler' => __DIR__ . '/..' . '/nette/tester/src/Runner/TestHandler.php',
         'Tester\\TestCase' => __DIR__ . '/..' . '/nette/tester/src/Framework/TestCase.php',
         'Tester\\TestCaseException' => __DIR__ . '/..' . '/nette/tester/src/Framework/TestCase.php',
+        'Texy' => __DIR__ . '/..' . '/texy/texy/src/Texy.php',
         'Texy\\BlockParser' => __DIR__ . '/..' . '/texy/texy/src/Texy/BlockParser.php',
         'Texy\\Bridges\\Latte\\TexyMacro' => __DIR__ . '/..' . '/texy/texy/src/Bridges/Latte/TexyMacro.php',
         'Texy\\Configurator' => __DIR__ . '/..' . '/texy/texy/src/Texy/Configurator.php',

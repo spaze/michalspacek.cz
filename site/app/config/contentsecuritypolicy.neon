@@ -18,6 +18,9 @@ contentSecurityPolicy:
 		slideslive:
 			child-src:
 				- https://slideslive.com
+		exploited.cz:
+			form-action:
+				- https://exploited.cz
 	policies:
 		*.*:
 			default-src: "'none'"

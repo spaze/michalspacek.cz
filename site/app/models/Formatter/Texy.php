@@ -180,7 +180,7 @@ class Texy extends NetxtenTexy
 	 *
 	 * @return TexyTexy
 	 */
-	protected function getTexy(): TexyTexy
+	public function getTexy(): TexyTexy
 	{
 		$texy = parent::getTexy();
 		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
@@ -312,21 +312,23 @@ class Texy extends NetxtenTexy
 
 	/**
 	 * @param string|null $text
+	 * @param TexyTexy|null $texy
 	 * @return Html<Html|string>|null
 	 */
-	public function format(?string $text): ?Html
+	public function format(?string $text, ?TexyTexy $texy = null): ?Html
 	{
-		return (empty($text) ? null : $this->replace(parent::format($text)));
+		return (empty($text) ? null : $this->replace(parent::format($text, $texy)));
 	}
 
 
 	/**
 	 * @param string|null $text
+	 * @param TexyTexy|null $texy
 	 * @return Html<Html|string>|null
 	 */
-	public function formatBlock(?string $text): ?Html
+	public function formatBlock(?string $text, ?TexyTexy $texy = null): ?Html
 	{
-		return (empty($text) ? null : $this->replace(parent::formatBlock($text)));
+		return (empty($text) ? null : $this->replace(parent::formatBlock($text, $texy)));
 	}
 
 
