@@ -122,3 +122,4 @@ services:
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
+	- MichalSpacekCz\Form\PostFormFactory

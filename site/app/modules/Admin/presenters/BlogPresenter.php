@@ -4,42 +4,39 @@ declare(strict_types = 1);
 namespace App\AdminModule\Presenters;
 
 use DateTime;
-use MichalSpacekCz\Form\Post as PostForm;
+use MichalSpacekCz\Form\PostFormFactory;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post;
 use MichalSpacekCz\Post\Data;
 use MichalSpacekCz\Tags;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\Template;
-use Nette\Forms\Form;
 use Nette\Http\IResponse;
-use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
-use UnexpectedValueException;
 
 class BlogPresenter extends BasePresenter
 {
 
-	/** @var Post */
-	protected $blogPost;
+	protected Post $blogPost;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	protected Texy $texyFormatter;
 
-	/** @var Data */
-	private $post;
+	private Data $post;
 
 	private Tags $tags;
 
+	private PostFormFactory $postFormFactory;
 
-	public function __construct(Post $blogPost, Texy $texyFormatter, Tags $tags)
+
+	public function __construct(Post $blogPost, Texy $texyFormatter, Tags $tags, PostFormFactory $postFormFactory)
 	{
 		$this->blogPost = $blogPost;
 		$this->texyFormatter = $texyFormatter;
 		$this->tags = $tags;
+		$this->postFormFactory = $postFormFactory;
 		parent::__construct();
 	}
 
@@ -63,50 +60,14 @@ class BlogPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $formName
-	 * @return PostForm
-	 */
-	protected function createComponentAddPost(string $formName): PostForm
+	protected function createComponentAddPost(): Form
 	{
-		$form = new PostForm($this, $formName, $this->blogPost, $this->tags);
-		$form->onSuccess[] = [$this, 'submittedAddpost'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
-	 * @throws AbortException
-	 * @throws InvalidLinkException
-	 */
-	public function submittedAddPost(Form $form, ArrayHash $values): void
-	{
-		try {
-			$post = new Data();
-			$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
-			$post->localeId = $values->locale;
-			$post->locale = $this->blogPost->getLocaleById($values->locale);
-			$post->slug = $values->slug;
-			$post->titleTexy = $values->title;
-			$post->leadTexy = (empty($values->lead) ? null : $values->lead);
-			$post->textTexy = $values->text;
-			$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
-			$post->published = new DateTime($values->published);
-			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
-			$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-			$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));
-			$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
-			$post->recommended = (empty($values->recommended) ? null : Json::decode($values->recommended));
-			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
-			$this->blogPost->enrich($post);
+		$form = $this->postFormFactory->create(function (Data $post): void {
 			$this->blogPost->add($post);
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
-		} catch (UnexpectedValueException $e) {
-			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.duplicateslug'), 'error');
-		}
-		$this->redirect('Blog:');
+			$this->redirect('Blog:');
+		});
+		return $form;
 	}
 
 
@@ -128,50 +89,36 @@ class BlogPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $formName
-	 * @return PostForm
-	 */
-	protected function createComponentEditPost(string $formName): PostForm
+	protected function createComponentEditPost(): Form
 	{
-		$form = new PostForm($this, $formName, $this->blogPost, $this->tags);
-		$form->setPost($this->post);
-		$form->onSuccess[] = [$this, 'submittedEditPost'];
+		$form = $this->postFormFactory->create(function (Data $post): void {
+			$post->postId = $this->post->postId;
+			$post->previousSlugTags = $this->post->slugTags;
+			$this->blogPost->update($post);
+			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
+			$this->redirect('Blog:');
+		});
+
+		$values = array(
+			'translationGroup' => $this->post->translationGroupId,
+			'locale' => $this->post->localeId,
+			'title' => $this->post->titleTexy,
+			'slug' => $this->post->slug,
+			'published' => $this->post->published->format('Y-m-d H:i'),
+			'previewKey' => $this->post->previewKey,
+			'lead' => $this->post->leadTexy,
+			'text' => $this->post->textTexy,
+			'originally' => $this->post->originallyTexy,
+			'ogImage' => $this->post->ogImage,
+			'twitterCard' => $this->post->twitterCard,
+			'tags' => ($this->post->tags ? $this->tags->toString($this->post->tags) : null),
+			'recommended' => (empty($this->post->recommended) ? null : Json::encode($this->post->recommended)),
+		);
+		$form->setDefaults($values);
+		$form->getComponent('editSummary')
+			->setDisabled($this->post->published > new DateTime());
+		$form->getComponent('submit')->caption = 'Upravit';
 		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
-	 * @throws AbortException
-	 * @throws InvalidLinkException
-	 */
-	public function submittedEditPost(Form $form, ArrayHash $values): void
-	{
-		$post = new Data();
-		$post->postId = $this->post->postId;
-		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
-		$post->localeId = $values->locale;
-		$post->locale = $this->blogPost->getLocaleById($values->locale);
-		$post->slug = $values->slug;
-		$post->titleTexy = $values->title;
-		$post->leadTexy = (empty($values->lead) ? null : $values->lead);
-		$post->textTexy = $values->text;
-		$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
-		$post->published = new DateTime($values->published);
-		$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
-		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-		$post->tags = (empty($values->tags) ? []: $this->tags->toArray($values->tags));
-		$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
-		$post->previousSlugTags = $this->post->slugTags;
-		$post->recommended = (empty($values->recommended) ? null : Json::decode($values->recommended));
-		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
-		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
-		$this->blogPost->enrich($post);
-		$this->blogPost->update($post);
-		$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
-		$this->redirect('Blog:');
 	}
 
 
