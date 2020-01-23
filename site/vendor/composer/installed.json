@@ -148,17 +148,17 @@
     },
     {
         "name": "nette/application",
-        "version": "v3.0.3",
-        "version_normalized": "3.0.3.0",
+        "version": "v3.0.4",
+        "version_normalized": "3.0.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/application.git",
-            "reference": "aa975f06c6f303512de6399b7320d48750b96832"
+            "reference": "da24ae52e65fe52fa6d26f2181a56ec48958ccb0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/application/zipball/aa975f06c6f303512de6399b7320d48750b96832",
-            "reference": "aa975f06c6f303512de6399b7320d48750b96832",
+            "url": "https://api.github.com/repos/nette/application/zipball/da24ae52e65fe52fa6d26f2181a56ec48958ccb0",
+            "reference": "da24ae52e65fe52fa6d26f2181a56ec48958ccb0",
             "shasum": ""
         },
         "require": {
@@ -169,19 +169,19 @@
             "php": ">=7.1"
         },
         "conflict": {
-            "latte/latte": "<2.4",
+            "latte/latte": "<2.6",
             "nette/di": "<3.0-stable",
             "nette/forms": "<3.0",
             "tracy/tracy": "<2.5"
         },
         "require-dev": {
-            "latte/latte": "^2.5.1",
+            "latte/latte": "^2.6",
             "mockery/mockery": "^1.0",
             "nette/di": "^v3.0",
             "nette/forms": "^3.0",
             "nette/robot-loader": "^3.2",
             "nette/security": "^3.0",
-            "nette/tester": "^2.0.1",
+            "nette/tester": "^2.3.1",
             "phpstan/phpstan-nette": "^0.12",
             "tracy/tracy": "^2.6"
         },
@@ -189,7 +189,7 @@
             "latte/latte": "Allows using Latte in templates",
             "nette/forms": "Allows to use Nette\\Application\\UI\\Form"
         },
-        "time": "2020-01-05T22:31:46+00:00",
+        "time": "2020-01-22T21:39:02+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -200,16 +200,13 @@
         "autoload": {
             "classmap": [
                 "src/"
-            ],
-            "files": [
-                "src/compatibility.php"
             ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
             "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
+            "GPL-2.0-only",
+            "GPL-3.0-only"
         ],
         "authors": [
             {
@@ -1914,17 +1911,17 @@
     },
     {
         "name": "spaze/csp-config",
-        "version": "v2.0.3",
-        "version_normalized": "2.0.3.0",
+        "version": "v2.0.4",
+        "version_normalized": "2.0.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spaze/csp-config.git",
-            "reference": "768c87392803d87d8836ccc9083c27e7939b5d76"
+            "reference": "ba8d096260520fdd4beca8e12c0c3195905e9525"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spaze/csp-config/zipball/768c87392803d87d8836ccc9083c27e7939b5d76",
-            "reference": "768c87392803d87d8836ccc9083c27e7939b5d76",
+            "url": "https://api.github.com/repos/spaze/csp-config/zipball/ba8d096260520fdd4beca8e12c0c3195905e9525",
+            "reference": "ba8d096260520fdd4beca8e12c0c3195905e9525",
             "shasum": ""
         },
         "require": {
@@ -1940,7 +1937,7 @@
             "spaze/nonce-generator": "Generates nonces to be added to Content Security Policy header, if enabled",
             "spaze/sri-macros": "For script tags with automatically added nonces, and Subresource Integrity hashes, too"
         },
-        "time": "2019-04-28T22:16:28+00:00",
+        "time": "2020-01-23T17:13:05+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

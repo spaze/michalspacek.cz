@@ -80,6 +80,8 @@ return array(
     'Nette\\Application\\UI\\MethodReflection' => $vendorDir . '/nette/application/src/Application/UI/MethodReflection.php',
     'Nette\\Application\\UI\\Multiplier' => $vendorDir . '/nette/application/src/Application/UI/Multiplier.php',
     'Nette\\Application\\UI\\Presenter' => $vendorDir . '/nette/application/src/Application/UI/Presenter.php',
+    'Nette\\Application\\UI\\PresenterComponent' => $vendorDir . '/nette/application/src/compatibility.php',
+    'Nette\\Application\\UI\\PresenterComponentReflection' => $vendorDir . '/nette/application/src/compatibility.php',
     'Nette\\ArgumentOutOfRangeException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\Bridges\\ApplicationDI\\ApplicationExtension' => $vendorDir . '/nette/application/src/Bridges/ApplicationDI/ApplicationExtension.php',
     'Nette\\Bridges\\ApplicationDI\\LatteExtension' => $vendorDir . '/nette/application/src/Bridges/ApplicationDI/LatteExtension.php',
