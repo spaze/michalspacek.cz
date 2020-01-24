@@ -1476,16 +1476,16 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v2.0.4",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "ba8d096260520fdd4beca8e12c0c3195905e9525"
+                "reference": "91939ed2ce51c72243f277b56fecd348ac9c8c1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/ba8d096260520fdd4beca8e12c0c3195905e9525",
-                "reference": "ba8d096260520fdd4beca8e12c0c3195905e9525",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/91939ed2ce51c72243f277b56fecd348ac9c8c1a",
+                "reference": "91939ed2ce51c72243f277b56fecd348ac9c8c1a",
                 "shasum": ""
             },
             "require": {
@@ -1495,7 +1495,7 @@
             "require-dev": {
                 "nette/bootstrap": "^3.0",
                 "nette/tester": "^2.0",
-                "phpstan/phpstan": "^0.11.2"
+                "phpstan/phpstan": "^0.12"
             },
             "suggest": {
                 "spaze/nonce-generator": "Generates nonces to be added to Content Security Policy header, if enabled",
@@ -1519,7 +1519,7 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
-            "time": "2020-01-23T17:13:05+00:00"
+            "time": "2020-01-24T15:33:37+00:00"
         },
         {
             "name": "spaze/encryption",
@@ -1681,24 +1681,25 @@
         },
         {
             "name": "spaze/nonce-generator",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/nonce-generator.git",
-                "reference": "53df0e14bc82aee9b353f05af0f87f84b4e32760"
+                "reference": "819fb0a48be33522cf6f38d69711c08c6b70b021"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/53df0e14bc82aee9b353f05af0f87f84b4e32760",
-                "reference": "53df0e14bc82aee9b353f05af0f87f84b4e32760",
+                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/819fb0a48be33522cf6f38d69711c08c6b70b021",
+                "reference": "819fb0a48be33522cf6f38d69711c08c6b70b021",
                 "shasum": ""
             },
             "require": {
                 "php": "~7.1"
             },
             "require-dev": {
+                "nette/di": "^3.0",
                 "nette/tester": "^2.0",
-                "phpstan/phpstan": "^0.11.2"
+                "phpstan/phpstan": "^0.12"
             },
             "suggest": {
                 "spaze/csp-config": "Build and send Content Security Policy header, possibly including nonce, if enabled",
@@ -1722,7 +1723,7 @@
                 }
             ],
             "description": "Content Security Policy nonce generator",
-            "time": "2019-04-14T23:29:09+00:00"
+            "time": "2020-01-24T15:17:16+00:00"
         },
         {
             "name": "spaze/sri-macros",

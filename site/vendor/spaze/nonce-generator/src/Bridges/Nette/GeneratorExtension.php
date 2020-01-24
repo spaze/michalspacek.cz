@@ -3,37 +3,41 @@ declare(strict_types = 1);
 
 namespace Spaze\NonceGenerator\Bridges\Nette;
 
-/**
- * NonceGenerator\Generator extension.
- *
- * @author Michal Špaček
- */
-class GeneratorExtension extends \Nette\DI\CompilerExtension
+use Nette\DI\CompilerExtension;
+use Nette\DI\Definitions\FactoryDefinition;
+use Spaze\NonceGenerator\Generator;
+
+class GeneratorExtension extends CompilerExtension
 {
 
-	public function loadConfiguration()
+	public function loadConfiguration(): void
 	{
 		$this->getContainerBuilder()
 			->addDefinition($this->prefix('generator'))
-			->setClass('Spaze\NonceGenerator\Generator');
+			->setClass(Generator::class);
 	}
 
 
-	public function beforeCompile()
+	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
 
-		$register = function (\Nette\DI\Definitions\FactoryDefinition $service) {
+		$register = function (FactoryDefinition $service) {
 			$service->getResultDefinition()->addSetup('addProvider', ['nonceGenerator', $this->prefix('@generator')]);
 		};
 
+		// A string is used in getByType() instead of ::class so we don't need to depend on nette/application
 		$latteFactoryService = $builder->getByType('\Nette\Bridges\ApplicationLatte\ILatteFactory') ?: 'nette.latteFactory';
 		if ($builder->hasDefinition($latteFactoryService)) {
-			$register($builder->getDefinition($latteFactoryService));
+			/** @var FactoryDefinition $definition */
+			$definition = $builder->getDefinition($latteFactoryService);
+			$register($definition);
 		}
 
 		if ($builder->hasDefinition('nette.latte')) {
-			$register($builder->getDefinition('nette.latte'));
+			/** @var FactoryDefinition $definition */
+			$definition = $builder->getDefinition('nette.latte');
+			$register($definition);
 		}
 	}
 

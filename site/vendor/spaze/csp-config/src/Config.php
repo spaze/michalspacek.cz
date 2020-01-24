@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Spaze\ContentSecurityPolicy;
 
 use Nette\DI\Config\Helpers;
+use Spaze\NonceGenerator\GeneratorInterface;
 
 /**
  * ContentSecurityPolicy\Config service.
@@ -19,40 +20,33 @@ class Config
 
 	private const EXTENDS_KEY = '@extends';
 
-	/** @var \Spaze\NonceGenerator\GeneratorInterface|null */
+	/** @var GeneratorInterface|null */
 	private $nonceGenerator;
 
-	/** @var array of key => array of policies */
-	private $policy = array();
+	/** @var array<string, array<string, string|array<integer, string>>> */
+	private $policy = [];
 
-	/** @var array of name => array of policies */
-	private $snippets = array();
+	/** @var array<string, array<string, array<integer, string>>> */
+	private $snippets = [];
 
-	/** @var array of snippet names */
-	private $currentSnippets = array();
+	/** @var array<integer, string> */
+	private $currentSnippets = [];
 
 	/** @var boolean */
 	private $supportLegacyBrowsers = false;
 
-	/** @var array */
-	private $directives = array();
+	/** @var array<string, string> */
+	private $directives = [];
 
 
-	/**
-	 * Constructor.
-	 *
-	 * @param \Spaze\NonceGenerator\GeneratorInterface $generator
-	 */
-	public function __construct(\Spaze\NonceGenerator\GeneratorInterface $generator = null)
+	public function __construct(GeneratorInterface $generator = null)
 	{
 		$this->nonceGenerator = $generator;
 	}
 
 
 	/**
-	 * Set policy.
-	 *
-	 * @param string[][] $policy
+	 * @param array<string, array<string, string|array<integer, string>>> $policy
 	 * @return self
 	 */
 	public function setPolicy(array $policy): self
@@ -65,9 +59,7 @@ class Config
 
 
 	/**
-	 * Set policy snippets.
-	 *
-	 * @param string[][] $snippets
+	 * @param array<string, array<string, array<integer, string>>> $snippets
 	 * @return self
 	 */
 	public function setSnippets(array $snippets): self
@@ -78,9 +70,7 @@ class Config
 
 
 	/**
-	 * Get policy snippets.
-	 *
-	 * @return string[][]
+	 * @return array<string, array<string, array<integer, string>>>
 	 */
 	public function getSnippets(): array
 	{
@@ -90,14 +80,10 @@ class Config
 
 	/**
 	 * Get Content-Security-Policy header value.
-	 *
-	 * @param  string $presenter
-	 * @param  string $action
-	 * @return string
 	 */
 	public function getHeader(string $presenter, string $action): string
 	{
-		$this->directives = array();
+		$this->directives = [];
 
 		$configKey = $this->findConfigKey($presenter, $action);
 		if (isset($this->policy[$configKey][self::EXTENDS_KEY])) {
@@ -119,11 +105,9 @@ class Config
 
 
 	/**
-	 * Merge parent policies.
-	 *
-	 * @param array $currentPolicy
-	 * @param string[] $parentKeys
-	 * @return array
+	 * @param array<string, string|array<integer, string>> $currentPolicy
+	 * @param array<integer, string> $parentKeys
+	 * @return array<string, array<string, string>>
 	 */
 	private function mergeExtends(array $currentPolicy, array $parentKeys): array
 	{
@@ -139,9 +123,6 @@ class Config
 
 	/**
 	 * Add named snippet to current CSP config.
-	 *
-	 * @param string $snippetName
-	 * @return self
 	 */
 	public function addSnippet(string $snippetName): self
 	{
@@ -150,13 +131,6 @@ class Config
 	}
 
 
-	/**
-	 * Find CSP policy config key.
-	 *
-	 * @param  string $presenter
-	 * @param  string $action
-	 * @return string
-	 */
 	private function findConfigKey(string $presenter, string $action): string
 	{
 		$parts = explode(':', strtolower($presenter));
@@ -172,10 +146,8 @@ class Config
 
 
 	/**
-	 * Format and add a directive.
-	 *
 	 * @param string $name
-	 * @param array $sources
+	 * @param array<integer, string> $sources
 	 */
 	private function addDirective(string $name, array $sources): void
 	{
@@ -195,8 +167,6 @@ class Config
 
 	/**
 	 * Get default config key.
-	 *
-	 * @return string
 	 */
 	public function getDefaultKey(): string
 	{
@@ -205,9 +175,7 @@ class Config
 
 
 	/**
-	 * Enable legacy browser (i.e. Safari) support
-	 *
-	 * @return self
+	 * Enable legacy browser (i.e. some older Safaris) support
 	 */
 	public function supportLegacyBrowsers(): self
 	{

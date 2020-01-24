@@ -3,21 +3,24 @@ declare(strict_types = 1);
 
 namespace Spaze\ContentSecurityPolicy\Bridges\Nette;
 
+use Nette\DI\CompilerExtension;
 use Nette\Schema\Expect;
+use Nette\Schema\Schema;
+use stdClass;
 
 /**
  * ContentSecurityPolicy\Config extension.
  *
  * @author Michal Špaček
  */
-class ConfigExtension extends \Nette\DI\CompilerExtension
+class ConfigExtension extends CompilerExtension
 {
 
-	/** @var array|\stdClass */
+	/** @var array<string, mixed>|stdClass */
 	protected $config = [];
 
 
-	public function getConfigSchema(): \Nette\Schema\Schema
+	public function getConfigSchema(): Schema
 	{
 		return Expect::structure([
 			'supportLegacyBrowsers' => Expect::bool()->default(false),
@@ -47,8 +50,8 @@ class ConfigExtension extends \Nette\DI\CompilerExtension
 
 		$cspConfig = $builder->addDefinition($this->prefix('config'))
 			->setClass('Spaze\ContentSecurityPolicy\Config')
-			->addSetup('setPolicy', array($this->config->policies))
-			->addSetup('setSnippets', array($this->config->snippets));
+			->addSetup('setPolicy', [$this->config->policies])
+			->addSetup('setSnippets', [$this->config->snippets]);
 
 		if ($this->config->supportLegacyBrowsers) {
 			$cspConfig->addSetup('supportLegacyBrowsers');

@@ -16,8 +16,9 @@
 		"psr-4": {"Spaze\\NonceGenerator\\": "src"}
 	},
 	"require-dev": {
+		"nette/di": "^3.0",
 		"nette/tester": "^2.0",
-		"phpstan/phpstan": "^0.11.2"
+		"phpstan/phpstan": "^0.12"
 	},
 	"suggest": {
 		"spaze/csp-config": "Build and send Content Security Policy header, possibly including nonce, if enabled",
