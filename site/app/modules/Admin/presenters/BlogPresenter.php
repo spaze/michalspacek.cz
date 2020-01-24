@@ -16,6 +16,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IResponse;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
+use Spaze\ContentSecurityPolicy\Config as CspConfig;
 
 class BlogPresenter extends BasePresenter
 {
@@ -30,14 +31,20 @@ class BlogPresenter extends BasePresenter
 
 	private PostFormFactory $postFormFactory;
 
+	/**
+	 * @var CspConfig
+	 */
+	private CspConfig $contentSecurityPolicy;
 
-	public function __construct(Post $blogPost, Texy $texyFormatter, Tags $tags, PostFormFactory $postFormFactory)
+
+	public function __construct(Post $blogPost, Texy $texyFormatter, Tags $tags, PostFormFactory $postFormFactory, CspConfig $contentSecurityPolicy)
 	{
 		$this->blogPost = $blogPost;
 		$this->texyFormatter = $texyFormatter;
 		$this->tags = $tags;
 		$this->postFormFactory = $postFormFactory;
 		parent::__construct();
+		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 
@@ -113,6 +120,8 @@ class BlogPresenter extends BasePresenter
 			'twitterCard' => $this->post->twitterCard,
 			'tags' => ($this->post->tags ? $this->tags->toString($this->post->tags) : null),
 			'recommended' => (empty($this->post->recommended) ? null : Json::encode($this->post->recommended)),
+			'cspSnippets' => $this->post->cspSnippets,
+			'allowedTags' => $this->post->allowedTags,
 		);
 		$form->setDefaults($values);
 		$form->getComponent('editSummary')
@@ -142,12 +151,19 @@ class BlogPresenter extends BasePresenter
 		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tags->toArray($this->request->getPost('tags')));
 		$post->slugTags = (empty($this->request->getPost('tags')) ? null : $this->tags->toSlugArray($this->request->getPost('tags')));
 		$post->recommended = (empty($this->request->getPost('recommended')) ? null : Json::decode($this->request->getPost('recommended')));
+		$post->cspSnippets = $this->request->getPost('cspSnippets') ?? [];
+		$post->allowedTags = $this->request->getPost('allowedTags') ?? [];
 		$this->blogPost->enrich($post);
 		/** @var Template $preview */
 		$preview = $this->createTemplate();
 		$preview->setFile(__DIR__ . '/templates/Blog/preview.latte');
 		$preview->post = $this->blogPost->format($post);
 		$preview->edits = $this->blogPost->getEdits((int)$this->request->getPost('postId'));
+
+		// Changing CSP in an AJAX response won't have the desired effect but for the sake of completeness...
+		foreach ($post->cspSnippets as $snippet) {
+			$this->contentSecurityPolicy->addSnippet($snippet);
+		}
 
 		$this->payload->status = IResponse::S200_OK;
 		$this->payload->statusMessage = 'Formatted';

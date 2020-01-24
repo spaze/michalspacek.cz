@@ -96,6 +96,15 @@ class Post
 
 
 	/**
+	 * @return array<string, array<string, array<integer, string>>>
+	 */
+	public function getAllowedTags(): array
+	{
+		return $this->allowedTags;
+	}
+
+
+	/**
 	 * @param array<string, array<string, array<integer, string>>> $allowedTags
 	 */
 	public function setAllowedTags(array $allowedTags): void
@@ -132,12 +141,7 @@ class Post
 		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
 		$post->twitterCard = $result->twitterCard;
 		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
-
-		if ($result->allowedTags) {
-			foreach (Json::decode($result->allowedTags, Json::FORCE_ARRAY) as $htmlTags) {
-				$post->allowedTags = array_merge($post->allowedTags, $this->allowedTags[$htmlTags]);
-			}
-		}
+		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
 		$this->enrich($post);
 
 		return ($result ? $this->format($post) : null);
@@ -169,6 +173,8 @@ class Post
 				bp.tags,
 				bp.slug_tags AS slugTags,
 				bp.recommended,
+				bp.csp_snippets as cspSnippets,
+				bp.allowed_tags as allowedTags,
 				tct.card AS twitterCard
 			FROM blog_posts bp
 			LEFT JOIN blog_post_locales l
@@ -194,6 +200,8 @@ class Post
 		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
 		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
 		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
+		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
+		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
 		$post->twitterCard = $result->twitterCard;
 		$this->enrich($post);
 		return ($result ? $this->format($post) : null);
@@ -282,7 +290,11 @@ class Post
 	{
 		$texy = $this->texyFormatter->getTexy();
 		if ($post->allowedTags) {
-			$texy->allowedTags = $post->allowedTags;
+			$allowedTags = [];
+			foreach ($post->allowedTags as $tags) {
+				$allowedTags = array_merge($allowedTags, $this->allowedTags[$tags]);
+			}
+			$texy->allowedTags = $allowedTags;
 		}
 		foreach(['title'] as $item) {
 			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'}, $texy);
@@ -322,6 +334,8 @@ class Post
 					'tags' => $this->tags->serialize($post->tags),
 					'slug_tags' => $this->tags->serialize($post->slugTags),
 					'recommended' => Json::encode($post->recommended),
+					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
+					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
 				)
 			);
 			$post->postId = (int)$this->database->getInsertId();
@@ -360,6 +374,8 @@ class Post
 					'tags' => ($post->tags ? $this->tags->serialize($post->tags) : null),
 					'slug_tags' => ($post->slugTags ? $this->tags->serialize($post->slugTags) : null),
 					'recommended' => ($post->recommended ? Json::encode($post->recommended) : null),
+					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
+					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
 				),
 				$post->postId
 			);

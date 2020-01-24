@@ -86,7 +86,7 @@ class Data
 	/** @var array<integer, string> */
 	public array $cspSnippets = [];
 
-	/** @var array<string, array<integer, string>> */
+	/** @var array<integer, string> */
 	public array $allowedTags = [];
 
 

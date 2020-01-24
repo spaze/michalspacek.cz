@@ -12,7 +12,9 @@ use MichalSpacekCz\Tags;
 use Nette\Application\UI\Form;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\Html;
 use Nette\Utils\Json;
+use Spaze\ContentSecurityPolicy\Config as CspConfig;
 use stdClass;
 
 class PostFormFactory
@@ -28,13 +30,16 @@ class PostFormFactory
 
 	private Texy $texyFormatter;
 
+	private CspConfig $contentSecurityPolicy;
 
-	public function __construct(FormFactory $factory, Post $blogPost, Tags $tags, Texy $texyFormatter)
+
+	public function __construct(FormFactory $factory, Post $blogPost, Tags $tags, Texy $texyFormatter, CspConfig $contentSecurityPolicy)
 	{
 		$this->factory = $factory;
 		$this->blogPost = $blogPost;
 		$this->tags = $tags;
 		$this->texyFormatter = $texyFormatter;
+		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 
@@ -89,6 +94,27 @@ class PostFormFactory
 			->endCondition()
 			->addRule(Form::MAX_LENGTH, 'Maximální délka shrnutí editace je %d znaků', 200);
 
+		$label = Html::el()->addText(Html::el('span', ['title' => 'Content Security Policy'])->setText('CSP'))->addText(' snippety:');
+		$items = [];
+		foreach ($this->contentSecurityPolicy->getSnippets() as $name => $snippet) {
+			$allowed = [];
+			foreach ($snippet as $directive => $values) {
+				$allowed[] = trim($directive . ' ' . implode(' ', $values));
+			}
+			$items[$name] = $name . ': ' . implode('; ', $allowed);
+		}
+		$form->addMultiSelect('cspSnippets', $label, $items);
+
+		$items = [];
+		foreach ($this->blogPost->getAllowedTags() as $name => $tags) {
+			$allowed = [];
+			foreach ($tags as $tag => $attributes) {
+				$allowed[] = trim('<' . trim($tag . ' ' . implode(' ', $attributes)) . '>');
+			}
+			$items[$name] = $name . ': ' . implode(', ', $allowed);
+		}
+		$form->addMultiSelect('allowedTags', 'Povolené tagy:', $items);
+
 		$form->addSubmit('submit', 'Přidat');
 		$form->addButton('preview', 'Náhled')
 			->setHtmlAttribute('data-alt', 'Moment…');;
@@ -111,6 +137,8 @@ class PostFormFactory
 			$post->recommended = (empty($values->recommended) ? null : Json::decode($values->recommended));
 			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 			$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
+			$post->cspSnippets = (empty($values->cspSnippets) ? [] : $values->cspSnippets);
+			$post->allowedTags = (empty($values->allowedTags) ? [] : $values->allowedTags);
 			$this->blogPost->enrich($post);
 			try {
 				$onSuccess($post);
