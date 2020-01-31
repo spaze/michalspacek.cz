@@ -34,6 +34,8 @@ can be checked before you run the actual line.
 &nbsp;&nbsp;&nbsp;
 <a href="https://blackfire.io/docs/introduction?utm_source=phpstan&utm_medium=github_readme&utm_campaign=logo"><img src="https://i.imgur.com/zR8rsqk.png" alt="Blackfire.io" width="254" height="64"></a>
 &nbsp;&nbsp;&nbsp;
+<a href="https://www.intracto.com/"><img src="https://i.imgur.com/XRCDGZi.png" alt="Intracto" width="254" height="65"></a>
+&nbsp;&nbsp;&nbsp;
 <a href="https://jobs.ticketswap.com/"><img src="https://i.imgur.com/lhzcutK.png" alt="TicketSwap" width="269" height="64"></a>
 
 [**You can now sponsor my open-source work on PHPStan through GitHub Sponsors.**](https://github.com/sponsors/ondrejmirtes)
@@ -569,9 +571,12 @@ Check as well [phpstan-deprecation-rules](https://github.com/phpstan/phpstan-dep
 
 ### Custom error formatters
 
-PHPStan outputs errors via formatters. You can customize the output by implementing the `ErrorFormatter` interface in a new class and add it to the configuration. For existing formatters, see next chapter.
+PHPStan outputs errors via formatters. You can customize the output by implementing the `\PHPStan\Command\ErrorFormatter\ErrorFormatter` interface in a new class and add it to the configuration. For existing formatters, see next chapter.
 
 ```php
+
+namespace PHPStan\Command\ErrorFormatter;
+
 interface ErrorFormatter
 {
 
@@ -584,7 +589,7 @@ interface ErrorFormatter
 	 */
 	public function formatErrors(
 		AnalysisResult $analysisResult,
-		\Symfony\Component\Console\Style\OutputStyle $style
+		\PHPStan\Command\Output $output
 	): int;
 
 }

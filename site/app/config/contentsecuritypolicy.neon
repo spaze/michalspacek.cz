@@ -1,5 +1,4 @@
 contentSecurityPolicy:
-	supportLegacyBrowsers: true
 	snippets:
 		slideshare:
 			child-src:
