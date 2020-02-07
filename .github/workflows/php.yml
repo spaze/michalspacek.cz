@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Add missing PHP extensions
-      run: apt-fast install -y --no-install-recommends php7.4-intl
+      run: composer --working-dir=site add-missing-extensions-prod
 
     - name: OS info
       run: cat /etc/os-release
@@ -24,14 +24,8 @@ jobs:
     - name: Validate composer.json and composer.lock
       run: composer --working-dir=site validate
 
-    - name: Analyse source code
-      run: site/vendor/phpstan/phpstan/phpstan --ansi analyse --no-progress --configuration site/phpstan.neon site/app/
-
-    - name: Test environment info
-      run: site/vendor/nette/tester/src/tester -p php -C --colors 1 --info
-
-    - name: Run test suite
-      run: site/vendor/nette/tester/src/tester -p php -C --colors 1 site/tests/
+    - name: Run tests
+      run: composer --working-dir=site test-prod
 
     - name: Failed test output, if any
       if: failure()
