@@ -1,0 +1,7 @@
+version: STSv1
+mode: testing
+mx: mx1.smtp.goog
+mx: mx2.smtp.goog
+mx: mx3.smtp.goog
+mx: mx4.smtp.goog
+max_age: 86400
