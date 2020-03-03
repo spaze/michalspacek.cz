@@ -328,6 +328,7 @@ projects:
     upckeys: "Default password generator for some UPC routers. Check your Wi-Fi and change your password if needed."
 certificates:
 	admin:
+		validdays: "%count% day ago|%count% days ago"
 		expireddaysago: "%count% day ago|%count% days ago"
 		expiresindays: "in %count% day|in %count% days"
 blog:

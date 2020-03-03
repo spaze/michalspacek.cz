@@ -328,6 +328,7 @@ projects:
     upckeys: "Generování výrobcem přednastavených hesel pro některé rooutery od UPC. Zkontrolujte si Wi-Fi a případně heslo změňte."
 certificates:
 	admin:
+		validdays: "%count% den|%count% dny|%count% dní"
 		expireddaysago: "před %count% dnem|před %count% dny|před %count% dny"
 		expiresindays: "za %count% den|za %count% dny|za %count% dní"
 blog:

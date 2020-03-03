@@ -93,6 +93,7 @@ class Certificates
 		$query = 'SELECT
 			cr.cn,
 			cr.ext,
+			MAX(c.not_before) AS notBefore,
 			MAX(c.not_after) AS notAfter
 			FROM certificates c
 				JOIN certificate_requests cr ON c.key_certificate_request = cr.id_certificate_request
@@ -102,6 +103,7 @@ class Certificates
 		$certificates = $this->database->fetchAll($query);
 
 		foreach ($certificates as $key => $certificate) {
+			$certificate->validDays = $certificate->notBefore->diff($now)->days;
 			$certificate->expired = $certificate->notAfter < $now;
 			$certificate->expiryDays = $certificate->notAfter->diff($now)->days;
 			$certificate->expiringSoon = !$certificate->expired && $certificate->expiryDays < $this->expiringThreshold;
