@@ -22,7 +22,7 @@ class SmtpMailer implements Mailer
 	/** @var Signer|null */
 	private $signer;
 
-	/** @var resource */
+	/** @var resource|null */
 	private $connection;
 
 	/** @var string */
@@ -74,16 +74,14 @@ class SmtpMailer implements Mailer
 		if (isset($options['clientHost'])) {
 			$this->clientHost = $options['clientHost'];
 		} else {
-			$this->clientHost = isset($_SERVER['HTTP_HOST']) && preg_match('#^[\w.-]+\z#', $_SERVER['HTTP_HOST'])
+			$this->clientHost = isset($_SERVER['HTTP_HOST']) && preg_match('#^[\w.-]+$#D', $_SERVER['HTTP_HOST'])
 				? $_SERVER['HTTP_HOST']
 				: 'localhost';
 		}
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setSigner(Signer $signer): self
 	{
 		$this->signer = $signer;

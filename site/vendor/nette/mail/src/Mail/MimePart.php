@@ -46,7 +46,7 @@ class MimePart
 
 	/**
 	 * Sets a header.
-	 * @param  string|array  $value  value or pair email => name
+	 * @param  string|array|null  $value  value or pair email => name
 	 * @return static
 	 */
 	public function setHeader(string $name, $value, bool $append = false)
@@ -131,7 +131,7 @@ class MimePart
 			}
 			return ltrim(substr($s, 0, -1)); // last comma
 
-		} elseif (preg_match('#^(\S+; (?:file)?name=)"(.*)"\z#', $this->headers[$name], $m)) { // Content-Disposition
+		} elseif (preg_match('#^(\S+; (?:file)?name=)"(.*)"$#D', $this->headers[$name], $m)) { // Content-Disposition
 			$offset += strlen($m[1]);
 			return $m[1] . '"' . self::encodeHeader($m[2], $offset) . '"';
 

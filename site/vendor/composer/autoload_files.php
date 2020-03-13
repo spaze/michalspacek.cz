@@ -8,5 +8,4 @@ $baseDir = dirname($vendorDir);
 return array(
     '9b38cf48e83f5d8f60375221cd213eee' => $vendorDir . '/phpstan/phpstan/bootstrap.php',
     '19a7e2c3b1d506dcdc1b60aab8e102e4' => $vendorDir . '/tracy/tracy/src/Tracy/shortcuts.php',
-    'afdda9f94b76f77a7518e02eee753cc9' => $vendorDir . '/nette/mail/src/compatibility.php',
 );
