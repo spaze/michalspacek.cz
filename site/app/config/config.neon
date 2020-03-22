@@ -12,7 +12,7 @@ http:
 		Server: "<script/src=//xss.sk></script>"
 		X-Powered-By: "<script>document.write('<img src=\"//xss.sk\" title=\"Inline JavaScript is bad, m\\'kay?\">');</script>"
 		X-Content-Type-Options: nosniff
-		X-XSS-Protection: "1; mode=block; report=https://plz.report-uri.com/r/d/xss/enforce"
+		X-XSS-Protection: "1; mode=block"
 		Referrer-Policy: "no-referrer, strict-origin-when-cross-origin"
 		Report-To: '{"group": "default", "max_age": 31536000, "endpoints": [{"url": "https://plz.report-uri.com/a/d/g"}], "include_subdomains": true}'
 		NEL: '{"report_to": "default", "max_age": 31536000, "include_subdomains": true}'
