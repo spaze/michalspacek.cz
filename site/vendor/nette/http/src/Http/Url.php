@@ -107,9 +107,7 @@ class Url implements \JsonSerializable
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setScheme(string $scheme)
 	{
 		$this->scheme = $scheme;
@@ -123,9 +121,7 @@ class Url implements \JsonSerializable
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setUser(string $user)
 	{
 		$this->user = $user;
@@ -139,9 +135,7 @@ class Url implements \JsonSerializable
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setPassword(string $password)
 	{
 		$this->password = $password;
@@ -155,9 +149,7 @@ class Url implements \JsonSerializable
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setHost(string $host)
 	{
 		$this->host = $host;
@@ -183,9 +175,7 @@ class Url implements \JsonSerializable
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setPort(int $port)
 	{
 		$this->port = $port;
@@ -199,9 +189,7 @@ class Url implements \JsonSerializable
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setPath(string $path)
 	{
 		$this->path = $path;
@@ -254,9 +242,7 @@ class Url implements \JsonSerializable
 	}
 
 
-	/**
-	 * @return mixed
-	 */
+	/** @return mixed */
 	public function getQueryParameter(string $name)
 	{
 		if (func_num_args() > 1) {
@@ -277,9 +263,7 @@ class Url implements \JsonSerializable
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function setFragment(string $fragment)
 	{
 		$this->fragment = $fragment;
@@ -424,12 +408,13 @@ class Url implements \JsonSerializable
 
 
 	/**
-	 * Parses query string.
+	 * Parses query string. Is affected by directive arg_separator.input.
 	 */
 	public static function parseQuery(string $s): array
 	{
 		$s = str_replace(['%5B', '%5b'], '[', $s);
-		$s = preg_replace('#([&;])([^[&;=]+)([^&;]*)#', '&0[$2]$3', '&' . $s);
+		$sep = preg_quote(ini_get('arg_separator.input'));
+		$s = preg_replace("#([$sep])([^[$sep=]+)([^$sep]*)#", '&0[$2]$3', '&' . $s);
 		parse_str($s, $res);
 		return $res[0] ?? [];
 	}

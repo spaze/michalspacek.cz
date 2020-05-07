@@ -36,9 +36,6 @@ abstract class MultiChoiceControl extends BaseControl
 	}
 
 
-	/**
-	 * Loads HTTP data.
-	 */
 	public function loadHttpData(): void
 	{
 		$this->value = array_keys(array_flip($this->getHttpData(Nette\Forms\Form::DATA_TEXT)));
@@ -161,9 +158,7 @@ abstract class MultiChoiceControl extends BaseControl
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function checkDefaultValue(bool $value = true)
 	{
 		$this->checkDefaultValue = $value;

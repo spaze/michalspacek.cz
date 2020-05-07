@@ -11,6 +11,7 @@ namespace Latte\Runtime;
 
 use Latte;
 use Latte\Engine;
+use Latte\Policy;
 
 
 /**
@@ -50,6 +51,9 @@ class Template
 	/** @var string */
 	private $name;
 
+	/** @var Policy|null */
+	private $policy;
+
 	/** @var Template|null  @internal */
 	private $referringTemplate;
 
@@ -57,12 +61,13 @@ class Template
 	private $referenceType;
 
 
-	public function __construct(Engine $engine, array $params, FilterExecutor $filters, array $providers, string $name)
+	public function __construct(Engine $engine, array $params, FilterExecutor $filters, array $providers, string $name, ?Policy $policy)
 	{
 		$this->engine = $engine;
 		$this->params = $params;
 		$this->filters = $filters;
 		$this->name = $name;
+		$this->policy = $policy;
 		$this->global = (object) $providers;
 		foreach ($this->blocks as $nm => $method) {
 			$this->blockQueue[$nm][] = [$this, $method];
@@ -132,7 +137,7 @@ class Template
 	 * Renders template.
 	 * @internal
 	 */
-	public function render(): void
+	public function render(string $block = null): void
 	{
 		$this->prepare();
 
@@ -154,14 +159,14 @@ class Template
 			ob_start(function () {});
 			$params = $this->main();
 			ob_end_clean();
-			$this->createTemplate($this->parentName, $params, 'extends')->render();
+			$this->createTemplate($this->parentName, $params, 'extends')->render($block);
 			return;
 
-		} elseif (!empty($this->params['_renderblock'])) { // single block rendering
+		} elseif ($block !== null) { // single block rendering
 			$tmp = $this;
 			while (in_array($this->referenceType, ['extends', null], true) && ($tmp = $tmp->referringTemplate));
 			if (!$tmp) {
-				$this->renderBlock($this->params['_renderblock'], $this->params);
+				$this->renderBlock($block, $this->params);
 				return;
 			}
 		}
@@ -170,10 +175,12 @@ class Template
 		$this->params['_l'] = new \stdClass;
 		$this->params['_g'] = $this->global;
 		$this->params['_b'] = (object) ['blocks' => &$this->blockQueue, 'types' => &$this->blockTypes];
-		if (isset($this->global->snippetDriver) && $this->global->snippetBridge->isSnippetMode()) {
-			if ($this->global->snippetDriver->renderSnippets($this->blockQueue, $this->params)) {
-				return;
-			}
+		if (
+			isset($this->global->snippetDriver)
+			&& $this->global->snippetBridge->isSnippetMode()
+			&& $this->global->snippetDriver->renderSnippets($this->blockQueue, $this->params)
+		) {
+			return;
 		}
 
 		$this->main();
@@ -187,7 +194,11 @@ class Template
 	public function createTemplate(string $name, array $params, string $referenceType): self
 	{
 		$name = $this->engine->getLoader()->getReferredName($name, $this->name);
-		$child = $this->engine->createTemplate($name, $params);
+		if ($referenceType === 'sandbox') {
+			$child = (clone $this->engine)->setSandboxMode()->createTemplate($name, $params);
+		} else {
+			$child = $this->engine->createTemplate($name, $params);
+		}
 		$child->referringTemplate = $this;
 		$child->referenceType = $referenceType;
 		$child->global = $this->global;
@@ -223,12 +234,16 @@ class Template
 	}
 
 
-	/**
-	 * @return void
-	 * @internal
-	 */
-	public function prepare()
+	/** @internal */
+	public function prepare(): void
 	{
+	}
+
+
+	/** @internal */
+	public function main(): array
+	{
+		return [];
 	}
 
 
@@ -302,5 +317,45 @@ class Template
 		} finally {
 			$this->global->coreCaptured = false;
 		}
+	}
+
+
+	/********************* policy ****************d*g**/
+
+
+	/** @internal */
+	protected function call($callable)
+	{
+		if (is_string($callable)) {
+			$parts = explode('::', $callable);
+			$allowed = count($parts) === 1
+				? $this->policy->isFunctionAllowed($parts[0])
+				: $this->policy->isMethodAllowed(...$parts);
+		} elseif (is_array($callable)) {
+			$allowed = $this->policy->isMethodAllowed(is_object($callable[0]) ? get_class($callable[0]) : $callable[0], $callable[1]);
+		} elseif (is_object($callable)) {
+			$allowed = $callable instanceof \Closure
+				? true
+				: $this->policy->isMethodAllowed(get_class($callable), '__invoke');
+		} else {
+			$allowed = false;
+		}
+
+		if (!$allowed) {
+			is_callable($callable, false, $text);
+			throw new Latte\SecurityViolation("Calling $text() is not allowed.");
+		}
+		return $callable;
+	}
+
+
+	/** @internal */
+	protected function prop($obj, $prop)
+	{
+		$class = is_object($obj) ? get_class($obj) : $obj;
+		if (is_string($class) && !$this->policy->isPropertyAllowed($class, $prop)) {
+			throw new Latte\SecurityViolation("Access to '$prop' property on a $class object is not allowed.");
+		}
+		return $obj;
 	}
 }

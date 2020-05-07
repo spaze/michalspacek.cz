@@ -3,7 +3,7 @@
 	"description": "?? Nette Forms: generating, validating and processing secure forms in PHP. Handy API, fully customizable, server & client side validation and mature design.",
 	"keywords": ["nette", "forms", "validation", "csrf", "javascript", "bootstrap"],
 	"homepage": "https://nette.org",
-	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
 	"authors": [
 		{
 			"name": "David Grudl",
@@ -23,7 +23,7 @@
 	"require-dev": {
 		"nette/di": "^3.0",
 		"nette/tester": "^2.0",
-		"latte/latte": "^2.4.1",
+		"latte/latte": "^2.7",
 		"tracy/tracy": "^2.4",
 		"phpstan/phpstan-nette": "^0.12"
 	},

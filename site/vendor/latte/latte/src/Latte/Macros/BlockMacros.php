@@ -13,6 +13,7 @@ use Latte;
 use Latte\CompileException;
 use Latte\Helpers;
 use Latte\MacroNode;
+use Latte\PhpHelpers;
 use Latte\PhpWriter;
 use Latte\Runtime\SnippetDriver;
 
@@ -79,7 +80,8 @@ class BlockMacros extends MacroSet
 			$compiler->addMethod(
 				$functions[$name] = $this->generateMethodName($name),
 				'?>' . $compiler->expandTokens($code) . '<?php',
-				'$_args'
+				'array $_args',
+				'void'
 			);
 		}
 
@@ -131,12 +133,12 @@ class BlockMacros extends MacroSet
 		}
 		return $writer->write(
 			'$this->renderBlock' . ($parent ? 'Parent' : '') . '('
-			. (strpos($destination, '$') === false ? var_export($destination, true) : $destination)
+			. (strpos($destination, '$') === false ? PhpHelpers::dump($destination) : $destination)
 			. ', %node.array? + '
 			. (isset($this->namedBlocks[$destination]) || $parent ? 'get_defined_vars()' : '$this->params')
 			. ($node->modifiers
 				? ', function ($s, $type) { $_fi = new LR\FilterInfo($type); return %modifyContent($s); }'
-				: ($noEscape || $parent ? '' : ', ' . var_export(implode($node->context), true)))
+				: ($noEscape || $parent ? '' : ', ' . PhpHelpers::dump(implode($node->context))))
 			. ');'
 		);
 	}
@@ -187,14 +189,14 @@ class BlockMacros extends MacroSet
 		$notation = $node->getNotation();
 		if ($node->modifiers) {
 			throw new CompileException("Modifiers are not allowed in $notation");
-		} elseif (!$node->args) {
+		} elseif ($node->args === '') {
 			throw new CompileException("Missing destination in $notation");
 		} elseif ($node->parentNode) {
 			throw new CompileException("$notation must be placed outside any macro.");
 		} elseif ($this->extends !== null) {
 			throw new CompileException("Multiple $notation declarations are not allowed.");
 		} elseif ($node->args === 'none') {
-			$this->extends = 'FALSE';
+			$this->extends = 'false';
 		} else {
 			$this->extends = $writer->write('%node.word%node.args');
 		}
@@ -248,12 +250,12 @@ class BlockMacros extends MacroSet
 				$enterCode = '$this->global->snippetDriver->enter(' . $writer->formatWord($name) . ', "' . SnippetDriver::TYPE_DYNAMIC . '");';
 
 				if ($node->prefix) {
-					$node->attrCode = $writer->write("<?php echo ' $this->snippetAttribute=\"' . htmlSpecialChars(\$this->global->snippetDriver->getHtmlId({$writer->formatWord($name)})) . '\"' ?>");
+					$node->attrCode = $writer->write("<?php echo ' $this->snippetAttribute=\"' . htmlspecialchars(\$this->global->snippetDriver->getHtmlId({$writer->formatWord($name)})) . '\"' ?>");
 					return $writer->write($enterCode);
 				}
 				$node->closingCode .= "\n</div>";
 				$this->checkExtraArgs($node);
-				return $writer->write("?>\n<div $this->snippetAttribute=\"<?php echo htmlSpecialChars(\$this->global->snippetDriver->getHtmlId({$writer->formatWord($name)})) ?>\"><?php " . $enterCode);
+				return $writer->write("?>\n<div $this->snippetAttribute=\"<?php echo htmlspecialchars(\$this->global->snippetDriver->getHtmlId({$writer->formatWord($name)})) ?>\"><?php " . $enterCode);
 
 			} else {
 				$node->data->leave = true;
@@ -271,7 +273,7 @@ class BlockMacros extends MacroSet
 					$node->closingCode = $writer->write('<?php $this->renderBlock(%raw, get_defined_vars()'
 						. ($node->modifiers ? ', function ($s, $type) { $_fi = new LR\FilterInfo($type); return %modifyContent($s); }' : '') . '); ?>', $fname);
 				}
-				$blockType = var_export(implode($node->context), true);
+				$blockType = PhpHelpers::dump(implode($node->context));
 				$this->checkExtraArgs($node);
 				return "\$this->checkBlockContentType($blockType, $fname);"
 					. "\$this->blockQueue[$fname][] = [\$this, '{$node->data->func}'];";
@@ -292,7 +294,7 @@ class BlockMacros extends MacroSet
 		if (isset($this->namedBlocks[$name])) {
 			throw new CompileException("Cannot redeclare static {$node->name} '$name'");
 		}
-		$extendsCheck = $this->namedBlocks ? '' : 'if ($this->getParentName()) return get_defined_vars();';
+		$extendsCheck = $this->namedBlocks ? '' : 'if ($this->getParentName()) { return get_defined_vars();} ';
 		$this->namedBlocks[$name] = true;
 
 		if (Helpers::removeFilter($node->modifiers, 'escape')) {
@@ -314,11 +316,11 @@ class BlockMacros extends MacroSet
 				if (isset($node->htmlNode->macroAttrs['foreach'])) {
 					trigger_error('Combination of n:snippet with n:foreach is invalid, use n:inner-foreach.', E_USER_WARNING);
 				}
-				$node->attrCode = $writer->write("<?php echo ' $this->snippetAttribute=\"' . htmlSpecialChars(\$this->global->snippetDriver->getHtmlId(%var)) . '\"' ?>", (string) substr($name, 1));
+				$node->attrCode = $writer->write("<?php echo ' $this->snippetAttribute=\"' . htmlspecialchars(\$this->global->snippetDriver->getHtmlId(%var)) . '\"' ?>", (string) substr($name, 1));
 				return $writer->write($include, $name);
 			}
 			$this->checkExtraArgs($node);
-			return $writer->write("?>\n<div $this->snippetAttribute=\"<?php echo htmlSpecialChars(\$this->global->snippetDriver->getHtmlId(%var)) ?>\"><?php $include ?>\n</div><?php ",
+			return $writer->write("?>\n<div $this->snippetAttribute=\"<?php echo htmlspecialchars(\$this->global->snippetDriver->getHtmlId(%var)) ?>\"><?php $include ?>\n</div><?php ",
 				(string) substr($name, 1), $name
 			);
 
@@ -335,7 +337,7 @@ class BlockMacros extends MacroSet
 				}
 			}
 			if ($args) {
-				$node->data->args = 'list(' . implode(', ', $args) . ') = $_args + [' . str_repeat('NULL, ', count($args)) . '];';
+				$node->data->args = '[' . implode(', ', $args) . '] = $_args + [' . str_repeat('null, ', count($args)) . '];';
 			}
 			return $extendsCheck;
 
@@ -380,7 +382,8 @@ class BlockMacros extends MacroSet
 				$this->getCompiler()->addMethod(
 					$node->data->func,
 					$this->getCompiler()->expandTokens("extract(\$_args);\n?>$node->content<?php"),
-					'$_args'
+					'array $_args',
+					'void'
 				);
 				$node->content = '';
 			}

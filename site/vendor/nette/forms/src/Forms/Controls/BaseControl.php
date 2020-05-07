@@ -105,9 +105,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-	/**
-	 * @return object|string
-	 */
+	/** @return object|string */
 	public function getCaption()
 	{
 		return $this->caption;
@@ -268,7 +266,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Generates label's HTML element.
 	 * @param  string|object  $caption
-	 * @return Html|string
+	 * @return Html|string|null
 	 */
 	public function getLabel($caption = null)
 	{
@@ -524,9 +522,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-	/**
-	 * @deprecated
-	 */
+	/** @deprecated */
 	public static function enableAutoOptionalMode(): void
 	{
 		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);

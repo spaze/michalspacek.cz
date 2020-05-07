@@ -14,6 +14,10 @@ use Tracy\Helpers;
 		font: 9pt/1.5 Consolas, monospace;
 	}
 
+	#tracy-debug .nette-RoutingPanel tr {
+		border: #d6ceb0 0 solid;
+	}
+
 	#tracy-debug .nette-RoutingPanel .yes td {
 		background: #BDE678 !important;
 	}
@@ -68,21 +72,21 @@ use Tracy\Helpers;
 
 	<tbody>
 	<?php foreach ($routers as $router): ?>
-	<tr class="<?= $router['matched'] ?>">
-		<td><?= $router['matched'] === 'yes' ? '✓' : ($router['matched'] === 'may' ? '≈' : '') ?></td>
+	<tr class="<?= $router->matched ?>" style="border-width: <?=($router->gutterTop ?? 0) * 3?>px 0 <?=($router->gutterBottom ?? 0) * 3?>px <?=$router->level * 6?>px">
+		<td><?= $router->matched === 'yes' ? '✓' : ($router->matched === 'may' ? '≈' : '') ?></td>
 
-		<td><code title="<?= Helpers::escapeHtml($router['class']) ?>"><?= isset($router['mask']) ? str_replace('/', '<wbr>/', Helpers::escapeHtml($router['mask'])) : str_replace('\\', '<wbr>\\', Helpers::escapeHtml($router['class'])) ?></code></td>
+		<td><code title="<?= Helpers::escapeHtml($router->class) ?>"><?= isset($router->mask) ? str_replace(['/', '-'], ['<wbr>/', '<wbr>-'], Helpers::escapeHtml($router->mask)) : str_replace('\\', '<wbr>\\', Helpers::escapeHtml($router->class)) ?></code></td>
 
 		<td><code>
-		<?php foreach ($router['defaults'] as $key => $value): ?>
+		<?php foreach ($router->defaults as $key => $value): ?>
 			<?= Helpers::escapeHtml($key), '&nbsp;=&nbsp;', is_string($value) ? Helpers::escapeHtml($value) . '<br />' : Dumper::toHtml($value, [Dumper::COLLAPSE => true, Dumper::LIVE => true]) ?>
 		<?php endforeach ?>
 		</code></td>
 
-		<?php if ($hasModule): ?><td><code><?= Helpers::escapeHtml($router['module']) ?></code></td><?php endif ?>
+		<?php if ($hasModule): ?><td><code><?= Helpers::escapeHtml($router->module) ?></code></td><?php endif ?>
 
-		<td><?php if ($router['params']): ?><code>
-		<?php $params = $router['params']; ?>
+		<td><?php if ($router->params): ?><code>
+		<?php $params = $router->params; ?>
 		<?php if (isset($params[Presenter::PRESENTER_KEY])): ?>
 		<strong><?= Helpers::escapeHtml($params['presenter'] . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION)) ?></strong><br />
 		<?php unset($params[Presenter::PRESENTER_KEY], $params[Presenter::ACTION_KEY]) ?>
@@ -90,7 +94,7 @@ use Tracy\Helpers;
 		<?php foreach ($params as $key => $value): ?>
 			<?= Helpers::escapeHtml($key), '&nbsp;=&nbsp;', is_string($value) ? Helpers::escapeHtml($value) . '<br />' : Dumper::toHtml($value, [Dumper::COLLAPSE => true, Dumper::LIVE => true]) ?>
 		<?php endforeach ?>
-		</code><?php elseif ($router['error']): ?><strong><?= Helpers::escapeHtml($router['error']->getMessage()) ?></strong><?php endif ?></td>
+		</code><?php elseif ($router->error): ?><strong><?= Helpers::escapeHtml($router->error->getMessage()) ?></strong><?php endif ?></td>
 	</tr>
 	<?php endforeach ?>
 	</tbody>

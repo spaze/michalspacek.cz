@@ -36,9 +36,6 @@ abstract class ChoiceControl extends BaseControl
 	}
 
 
-	/**
-	 * Loads HTTP data.
-	 */
 	public function loadHttpData(): void
 	{
 		$this->value = $this->getHttpData(Nette\Forms\Form::DATA_TEXT);
@@ -149,9 +146,7 @@ abstract class ChoiceControl extends BaseControl
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function checkDefaultValue(bool $value = true)
 	{
 		$this->checkDefaultValue = $value;

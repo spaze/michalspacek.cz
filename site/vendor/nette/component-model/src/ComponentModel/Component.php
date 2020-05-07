@@ -30,7 +30,7 @@ abstract class Component implements IComponent
 	/** @var string|null */
 	private $name;
 
-	/** @var array of [type => [obj, depth, path, array of [attached, detached]]] */
+	/** @var array<string, array{?IComponent, ?int, ?string, array<int, array{?callable, ?callable}>}> means [type => [obj, depth, path, [attached, detached]]] */
 	private $monitors = [];
 
 
@@ -203,7 +203,8 @@ abstract class Component implements IComponent
 
 	/**
 	 * Refreshes monitors.
-	 * @param  array|null  $missing  (array = attaching, null = detaching)
+	 * @param  array<string,true>|null  $missing  (array = attaching, null = detaching)
+	 * @param  array<int,array{callable,IComponent}>  $listeners
 	 */
 	private function refreshMonitors(int $depth, array &$missing = null, array &$listeners = []): void
 	{
@@ -241,7 +242,7 @@ abstract class Component implements IComponent
 					$this->monitors[$type] = [null, null, null, $rec[3]];
 
 				} else {
-					$this->monitors[$type] = null; // forces re-lookup
+					unset($this->monitors[$type]); // forces re-lookup
 					if ($obj = $this->lookup($type, false)) {
 						foreach ($rec[3] as $pair) {
 							$listeners[] = [$pair[0], $obj];

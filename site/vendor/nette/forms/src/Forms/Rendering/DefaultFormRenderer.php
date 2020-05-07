@@ -46,7 +46,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 	 *            .... label.requiredsuffix
 	 *          \---
 	 *
-	 *          /--- control.container [.odd]
+	 *          /--- control.container [.odd .multi]
 	 *            .... CONTROL [.required .error .text .password .file .submit .button]
 	 *            .... control.requiredsuffix
 	 *            .... control.description
@@ -88,6 +88,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 		'control' => [
 			'container' => 'td',
 			'.odd' => null,
+			'.multi' => null,
 
 			'description' => 'small',
 			'requiredsuffix' => '',
@@ -217,6 +218,12 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 		$errors = $control
 			? $control->getErrors()
 			: ($own ? $this->form->getOwnErrors() : $this->form->getErrors());
+		return $this->doRenderErrors($errors, (bool) $control);
+	}
+
+
+	private function doRenderErrors(array $errors, bool $control): string
+	{
 		if (!$errors) {
 			return '';
 		}
@@ -431,6 +438,10 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 		if ($this->counter % 2) {
 			$body->class($this->getValue('control .odd'), true);
 		}
+		if (!$this->getWrapper('pair container')->getName()) {
+			$body->class($control->getOption('class'), true);
+			$body->id = $control->getOption('id');
+		}
 
 		$description = $control->getOption('description');
 		if ($description instanceof IHtmlString) {
@@ -450,6 +461,8 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 			$description = $this->getValue('control requiredsuffix') . $description;
 		}
 
+		$els = $errors = [];
+		renderControl:
 		$control->setOption('rendered', true);
 		$el = $control->getControl();
 		if ($el instanceof Html) {
@@ -458,20 +471,27 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 			}
 			$el->class($this->getValue('control .error'), $control->hasErrors());
 		}
-		return $body->setHtml($el . $description . $this->renderErrors($control));
+		$els[] = $el;
+		$errors = array_merge($errors, $control->getErrors());
+
+		if ($nextTo = $control->getOption('nextTo')) {
+			$control = $control->getForm()->getComponent($nextTo);
+			$body->class($this->getValue('control .multi'), true);
+			goto renderControl;
+		}
+
+		return $body->setHtml(implode('', $els) . $description . $this->doRenderErrors($errors, true));
 	}
 
 
-	protected function getWrapper(string $name): Html
+	public function getWrapper(string $name): Html
 	{
 		$data = $this->getValue($name);
 		return $data instanceof Html ? clone $data : Html::el($data);
 	}
 
 
-	/**
-	 * @return mixed
-	 */
+	/** @return mixed */
 	protected function getValue(string $name)
 	{
 		$name = explode(' ', $name);

@@ -18,7 +18,6 @@ use Nette\Forms\Form;
  */
 class TextInput extends TextBase
 {
-
 	/**
 	 * @param  string|object  $label
 	 */
@@ -30,9 +29,6 @@ class TextInput extends TextBase
 	}
 
 
-	/**
-	 * Loads HTTP data.
-	 */
 	public function loadHttpData(): void
 	{
 		$this->setValue($this->getHttpData(Form::DATA_LINE));
@@ -60,9 +56,6 @@ class TextInput extends TextBase
 	}
 
 
-	/**
-	 * Generates control's HTML element.
-	 */
 	public function getControl(): Nette\Utils\Html
 	{
 		return parent::getControl()->addAttributes([
@@ -72,9 +65,7 @@ class TextInput extends TextBase
 	}
 
 
-	/**
-	 * @return static
-	 */
+	/** @return static */
 	public function addRule($validator, $errorMessage = null, $arg = null)
 	{
 		if ($this->control->type === null && in_array($validator, [Form::EMAIL, Form::URL, Form::INTEGER], true)) {

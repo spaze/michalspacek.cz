@@ -52,9 +52,6 @@ class CsrfProtection extends HiddenField
 	}
 
 
-	/**
-	 * Loads HTTP data.
-	 */
 	public function loadHttpData(): void
 	{
 		$this->value = $this->getHttpData(Nette\Forms\Form::DATA_TEXT);
@@ -80,18 +77,13 @@ class CsrfProtection extends HiddenField
 	}
 
 
-	/**
-	 * Generates control's HTML element.
-	 */
 	public function getControl(): Nette\Utils\Html
 	{
 		return parent::getControl()->value($this->generateToken());
 	}
 
 
-	/**
-	 * @internal
-	 */
+	/** @internal */
 	public static function validateCsrf(self $control): bool
 	{
 		$value = (string) $control->getValue();

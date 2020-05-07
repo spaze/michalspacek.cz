@@ -17,7 +17,6 @@ use Nette;
  */
 class Button extends BaseControl
 {
-
 	/**
 	 * @param  string|object  $caption
 	 */
@@ -42,7 +41,7 @@ class Button extends BaseControl
 	/**
 	 * Bypasses label generation.
 	 */
-	public function getLabel($caption = null): void
+	public function getLabel($caption = null)
 	{
 	}
 
