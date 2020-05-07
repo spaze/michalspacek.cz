@@ -345,13 +345,16 @@ class Manager implements IAuthenticator
 	 *
 	 * @param User $user
 	 * @throws Exception
+	 * @return string
 	 */
-	public function regenerateReturningUser(User $user): void
+	public function regenerateReturningUser(User $user): string
 	{
 		$this->database->beginTransaction();
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_RETURNING_USER);
-		$this->setReturningUser($this->insertToken($user, self::TOKEN_RETURNING_USER));
+		$selectorToken = $this->insertToken($user, self::TOKEN_RETURNING_USER);
+		$this->setReturningUser($selectorToken);
 		$this->database->commit();
+		return $selectorToken;
 	}
 
 

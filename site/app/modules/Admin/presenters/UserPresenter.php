@@ -6,9 +6,11 @@ namespace App\AdminModule\Presenters;
 use MichalSpacekCz\Form\ChangePassword;
 use MichalSpacekCz\Form\RegenerateTokens;
 use MichalSpacekCz\User\Manager;
+use Nette\Application\LinkGenerator;
 use Nette\Forms\Form;
 use Nette\Http\Session;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\Html;
 
 class UserPresenter extends BasePresenter
 {
@@ -19,11 +21,15 @@ class UserPresenter extends BasePresenter
 	/** @var Session */
 	protected $sessionHandler;
 
+	/** @var LinkGenerator */
+	private LinkGenerator $linkGenerator;
 
-	public function __construct(Manager $authenticator, Session $sessionHandler)
+
+	public function __construct(Manager $authenticator, Session $sessionHandler, LinkGenerator $linkGenerator)
 	{
 		$this->authenticator = $authenticator;
 		$this->sessionHandler = $sessionHandler;
+		$this->linkGenerator = $linkGenerator;
 		parent::__construct();
 	}
 
@@ -80,8 +86,13 @@ class UserPresenter extends BasePresenter
 			$this->authenticator->regeneratePermanentLogin($this->user);
 		}
 		if ($values->returning) {
-			$this->authenticator->regenerateReturningUser($this->user);
+			$selectorToken = $this->authenticator->regenerateReturningUser($this->user);
 		}
+		$message = Html::el()->setText('Tokeny přegenerovány ' );
+		if (isset($selectorToken)) {
+			$message->addHtml(Html::el('a')->href($this->linkGenerator->link('Admin:Sign:knockKnock', [$selectorToken]))->setText('Odkaz na přihlášení'));
+		}
+		$this->flashMessage($message);
 		$this->redirect('Homepage:');
 	}
 
