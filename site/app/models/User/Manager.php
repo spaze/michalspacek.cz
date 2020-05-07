@@ -191,7 +191,7 @@ class Manager implements IAuthenticator
 
 	public function setReturningUser(string $value): void
 	{
-		$this->httpResponse->setCookie($this->returningUserCookie, $value, Response::PERMANENT, $this->authCookiesPath, null, null, null, 'Strict');
+		$this->httpResponse->setCookie($this->returningUserCookie, $value, '+10 years', $this->authCookiesPath, null, null, null, 'Strict');
 	}
 
 
