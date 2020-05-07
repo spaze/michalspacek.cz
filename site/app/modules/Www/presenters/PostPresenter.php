@@ -20,7 +20,7 @@ class PostPresenter extends BasePresenter
 	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var string[][] */
+	/** @var array<string, array<string, string|null>> */
 	protected $localeLinkParams = [];
 
 	private CspConfig $contentSecurityPolicy;

@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Application;
 use Contributte\Translation\Translator;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\LinkGenerator;
+use Nette\Application\Routers\RouteList;
 use Nette\Http\Request;
 use Nette\Localization\ITranslator;
 
@@ -61,6 +62,7 @@ class LocaleLinkGenerator
 		$links = array();
 		foreach ($this->routerFactory->getLocaleRouters() as $locale => $routers) {
 			foreach ($routers as $router) {
+				/** @var RouteList $router */
 				if (count($router)) {
 					$linkGenerator = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
 					$links[$locale] = $linkGenerator->link($destination, $this->getParams($params, $locale));
@@ -74,8 +76,8 @@ class LocaleLinkGenerator
 	/**
 	 * Return default params for all locales.
 	 *
-	 * @param array<string, string> $params
-	 * @return array<string, array<string, string>>
+	 * @param array<string, string|null> $params
+	 * @return array<string, array<string, string|null>>
 	 */
 	public function defaultParams(array $params): array
 	{

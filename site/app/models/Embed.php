@@ -72,7 +72,7 @@ class Embed
 	/**
 	 * Get template vars for video.
 	 * @param Row<mixed> $talk
-	 * @return string[] with keys videoEmbed, videoEmbedType
+	 * @return array{videoEmbed: string|null, videoEmbedType: string|null}
 	 */
 	public function getVideoTemplateVars(Row $talk): array
 	{
