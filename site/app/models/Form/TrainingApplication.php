@@ -46,7 +46,7 @@ class TrainingApplication extends ProtectedForm
 		$multipleDates = count($dates) > 1;
 		foreach ($dates as $date) {
 			$trainingDate = ($date->tentative ? $this->netxtenHelpers->localeIntervalMonth($date->start, $date->end) : $this->netxtenHelpers->localeIntervalDay($date->start, $date->end));
-			$el = Html::el()->setText("{$trainingDate} {$date->venueCity}");
+			$el = Html::el()->setText("{$trainingDate} " . ($date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity));
 			if ($date->tentative) {
 				$el->addText(' (' . $this->translator->translate('messages.label.tentativedate') . ')');
 			}

@@ -68,6 +68,7 @@ class Dates
 				d.public,
 				s.status,
 				v.id_venue AS venueId,
+				d.remote,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
@@ -76,7 +77,7 @@ class Dates
 				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_venues v ON d.key_venue = v.id_venue
+				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
@@ -110,6 +111,7 @@ class Dates
 				d.end,
 				d.public,
 				s.status,
+				d.remote,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
@@ -117,7 +119,7 @@ class Dates
 				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_venues v ON d.key_venue = v.id_venue
+				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
@@ -151,7 +153,8 @@ class Dates
 	public function update(
 		int $dateId,
 		int $trainingId,
-		int $venueId,
+		?int $venueId,
+		bool $remote,
 		string $start,
 		string $end,
 		string $label,
@@ -166,6 +169,7 @@ class Dates
 			array(
 				'key_training' => $trainingId,
 				'key_venue' => $venueId,
+				'remote' => $remote,
 				'start' => new DateTime($start),
 				'end' => new DateTime($end),
 				'label' => (empty($label) ? null : $label),
@@ -181,7 +185,8 @@ class Dates
 
 	public function add(
 		int $trainingId,
-		int $venueId,
+		?int $venueId,
+		bool $remote,
 		string $start,
 		string $end,
 		string $label,
@@ -196,6 +201,7 @@ class Dates
 			array(
 				'key_training' => $trainingId,
 				'key_venue' => $venueId,
+				'remote' => $remote,
 				'start' => new DateTime($start),
 				'end' => new DateTime($end),
 				'label' => (empty($label) ? null : $label),
@@ -287,6 +293,7 @@ class Dates
 					d.end,
 					d.label AS labelJson,
 					d.public,
+					d.remote,
 					v.id_venue AS venueId,
 					v.name AS venueName,
 					v.city as venueCity,
@@ -297,7 +304,7 @@ class Dates
 					JOIN url_actions a ON ta.key_url_action = a.id_url_action
 					JOIN languages l ON a.key_language = l.id_language
 					JOIN training_date_status s ON d.key_status = s.id_status
-					JOIN training_venues v ON d.key_venue = v.id_venue
+					LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 					JOIN (
 						SELECT
 							t2.id_training,
@@ -313,7 +320,7 @@ class Dates
 							AND s2.status IN (?, ?)
 						GROUP BY
 							t2.id_training, d2.key_venue
-					) u ON t.id_training = u.id_training AND v.id_venue = u.key_venue AND d.start = u.start
+					) u ON t.id_training = u.id_training AND (v.id_venue = u.key_venue OR u.key_venue IS NULL) AND d.start = u.start
 				WHERE
 					t.key_successor IS NULL
 					AND t.key_discontinued IS NULL
@@ -333,6 +340,7 @@ class Dates
 					'public'        => $row->public,
 					'status'        => $row->status,
 					'name'          => $this->translator->translate($row->name),
+					'remote' => (bool)$row->remote,
 					'venueId'       => $row->venueId,
 					'venueName'     => $row->venueName,
 					'venueCity'     => $row->venueCity,
@@ -372,6 +380,7 @@ class Dates
 				d.end,
 				d.public,
 				s.status,
+				d.remote,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
@@ -379,7 +388,7 @@ class Dates
 				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_venues v ON d.key_venue = v.id_venue
+				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
@@ -414,6 +423,7 @@ class Dates
 				d.end,
 				d.label AS labelJson,
 				s.status,
+				d.remote,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
@@ -424,7 +434,7 @@ class Dates
 				c.description AS cooperationDescription
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_venues v ON d.key_venue = v.id_venue
+				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
 				LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
 				JOIN (
@@ -443,7 +453,7 @@ class Dates
 						AND s2.status IN (?, ?)
 					GROUP BY
 						t2.id_training, d2.key_venue
-				) u ON t.id_training = u.id_training AND v.id_venue = u.key_venue AND d.start = u.start
+				) u ON t.id_training = u.id_training AND (v.id_venue = u.key_venue OR u.key_venue IS NULL) AND d.start = u.start
 			ORDER BY
 				d.start",
 			$trainingId,
@@ -452,6 +462,7 @@ class Dates
 		);
 		$dates = array();
 		foreach ($result as $row) {
+			$row->remote = (bool)$row->remote;
 			$row->label = ($row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null);
 			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
 			$row->lastFreeSeats = $this->lastFreeSeats($row);

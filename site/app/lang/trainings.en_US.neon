@@ -4,7 +4,7 @@ introphp:
 	upsell: 'Že tohle všechno už znáte? A víte, jak správně aplikace zabezpečit? Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "HTTPS":[link:Www:Trainings:training https-pro-vyvojare-a-spravce].'
 	prerequisites: 'Na toto školení byste měli přijít se znalostí HTML a alespoň základní znalostí syntaxe SQL. Pokud si chcete přinést vlastní počítač, měli byste na něm mít nainstalováno PHP, např. pomocí balíku "XAMPP":https://www.apachefriends.org/index.html.'
 	audience: 'Školení je určeno pro autory webových aplikací.'
-	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
+	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training together with the code examples used for the class. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
 		- Základní syntaxe, vkládání do HTML
 		- Komentáře, operátory, proměnné, typy
@@ -30,7 +30,7 @@ php5:
 	upsell: 'Zvládáte objekty //levou zadní//? A máte aplikace dostatečně bezpečné? Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "HTTPS":[link:Www:Trainings:training https-pro-vyvojare-a-spravce].'
 	prerequisites: 'Měli byste znát PHP v rozsahu školení "Úvod do PHP":/skoleni/uvod-do-php. Na vlastní počítač, pokud si ho chcete přinést, si PHP nainstalujte předem, např. pomocí balíku "XAMPP":https://www.apachefriends.org/index.html.'
 	audience: 'Školení je určeno pro autory webových aplikací.'
-	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
+	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training together with the code examples used for the class. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
 		- Objektový model - dědičnost, statické metody, abstraktní třídy, rozhraní, magické metody, klonování
 		- Výjimky
@@ -54,11 +54,9 @@ securityphp:
 	upsell: 'Do you want to know more about **HTTPS**? Then "this training for developers and admins":[link:Www:Trainings:training https-pro-vyvojare-a-spravce] is just for you.'
 	prerequisites: 'Just basic knowledge of HTML, JavaScript, PHP and SQL. Training is also appropriate for developers working in other languages (e.g. Java or Python), most of the principles and attacks are the same.'
 	audience: 'The training is designed for both senior web application developers and junior developers to gain competitive advantage.'
-	materials: "Participants will receive a printed materials and a certificate. We'll dedicate enough time for questions. After completing the training, I'll send the presentation with comments via e-mail as well as with the code examples used for the training."
+	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training together with the code examples used for the class. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
 		Description, threats, and defense against web attacks:
-		Day 1
-		=====
 		- **Application and device discovery**
 		  Using specialized search engines like Shodan or Certificate Transparency.
 		- **Full Path Disclosure**
@@ -75,8 +73,6 @@ securityphp:
 		  A bad guy can force a user to perform an action without their knowledge or lure him to click on a page element they would not normally click. What is it good for and how to defend against such thing?
 		- **Session Hijacking**, **Session Fixation**
 		  Whoever is in possesion of session id is the master, so we have to protect the id. About HTTP-only cookies, session id regeneration, and also about multiple user sessions.
-		Day 2
-		=====
 		- **XML External Entity Injection** (XXE)
 		  Configuration files or source code can be obtained from the server by parsing XML files with custom entities. We'll see how and how to stop it.
 		- **Secure random data**
@@ -109,7 +105,7 @@ advancedwebsecurity:
 	upsell: 'Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci]'
 	prerequisites: 'Kurz Bezpečnost PHP aplikací'
 	audience: 'Vývojáři se zájmem o bezpečnost'
-	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
+	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training together with the code examples used for the class. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
 	    Pokročilá webová bezpečnost
 	'''
@@ -126,7 +122,7 @@ webperformance:
 	upsell: 'Je výkon vašich aplikací dostačující? A jaké je jejich zabezpečení? Přijďte to zjistit na školení "Bezpečnost PHP aplikací":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci].'
 	prerequisites: 'Přijďte se znalostmi PHP, MySQL a JavaScriptu.'
 	audience: 'Školení je určeno jak pro tvůrce webových aplikací a částečně i jejich správce.'
-	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
+	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training together with the code examples used for the class. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
 		Optimalizace jednotlivých částí webové aplikace:
 		- HTTP - hlavičky ovlivňující platnost stránky
@@ -169,7 +165,7 @@ securityusers:
 	upsell: 'Chcete vytvářet bezpečné aplikace? Na školení "bezpečnosti webových aplikací pro vývojáře":[link:Www:Trainings:training bezpecnost-php-aplikaci] vás naučím, jak na to.'
 	prerequisites: 'Stačí, když budete umět ovládat webový prohlížeč. Ujistěte se, že máte možnost do něj instalovat doplňky.'
 	audience: 'Školení je určeno pro uživatele Internetu a webových aplikací.'
-	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Po skončení školení zasílám prezentaci e-mailem. Dostatek prostoru bude věnován na dotazy.'
+	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
 		- Práce s hesly
 		- Správce hesel ("password manager")
@@ -200,10 +196,10 @@ php5securityperformance3days:
 httpsdevsadmins:
 	name: "HTTPS for developers and admins"
 	description: 'Samotné HTTPS, tedy šifrování přenášených informací, nezabezpečí váš web. Zabezpečí ale jeho návštěvníky, informace a soubory, které si stahují i jejich hesla. Pokud vaše webová aplikace nabízí nebo vyžaduje přihlášení, rozhodně by na HTTPS měla běžet. HTTPS má spoustu nastavení i drobností, které je ale potřeba nastavit správně, aby uživatelé byli chránění pokud možno co nejlépe. Na tomto školení vás to naučím.'
-	upsell: 'Chcete se dozvědět, jak web zabezpečit proti dalším častým útokům? Přijďte na školení "Bezpečnost PHP aplikací":[link:Www:Trainings:training bezpecnost-php-aplikaci]!'
+	upsell: 'Chcete se dozvědět, jak web zabezpečit proti dalším častým útokům? Přihlaste se na školení "Bezpečnost PHP aplikací":[link:Www:Trainings:training bezpecnost-php-aplikaci]!'
 	prerequisites: 'Stačí, když budete vědět, že webový prohlížeč posílá nějaké požadavky a server na ně odpovídá. Plusem bude, pokud budete tušit, jak a kde se konfiguruje váš server'
 	audience: 'Školení je určeno pro vývojáře webových aplikací a pro správce webových serverů, kterým záleží na bezpečí a soukromí jejich uživatelů.'
-	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Po skončení školení zasílám prezentaci e-mailem. Dostatek prostoru bude věnován na dotazy.'
+	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
 		- Co je a k čemu slouží HTTPS
 		- Certifikáty a certifikační autority
@@ -220,7 +216,6 @@ httpsdevsadmins:
 		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami.'
 		alternativeduration: 'Chcete si vyzkoušet vytvořit vlastní certifikační autoritu a vystavit certifikát nebo se naučit odhalovat problémy v HTTPS spojení? Školení můžeme uspořádat i dvoudenní.'
 		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
-
 securityjava:
 	name: "Web application security (Java)"
 	description: 'Bezpečnost webových aplikací (pro vývojáře v Javě)'
@@ -299,7 +294,7 @@ classesobjectsphp:
 	upsell: 'Zvládáte objekty //levou zadní//? A máte aplikace dostatečně bezpečné a výkonné? Přijďte na školení "bezpečnosti":[link:Www:Trainings:training bezpecnost-php-aplikaci] a "výkonnosti":[link:Www:Trainings:training vykonnost-webovych-aplikaci].'
 	prerequisites: 'Měli byste znát PHP v rozsahu školení "Úvod do PHP":/skoleni/uvod-do-php. Na vlastní počítač, pokud si ho chcete přinést, si PHP nainstalujte předem, např. pomocí balíku "XAMPP":https://www.apachefriends.org/index.html.'
 	audience: 'Školení je určeno pro autory webových aplikací.'
-	materials: 'Účastníci dostanou tištěnou prezentaci a certifikát. Dostatek prostoru bude věnován na dotazy. Po skončení školení zasílám komentovanou prezentaci e-mailem i s příklady použitými na školení.'
+	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training together with the code examples used for the class. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
 		- Objektový model - dědičnost, statické metody, abstraktní třídy, rozhraní, magické metody, klonování
 		- Výjimky

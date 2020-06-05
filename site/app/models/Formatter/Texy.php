@@ -366,7 +366,7 @@ class Texy extends NetxtenTexy
 				$el = Html::el()
 					->addHtml(Html::el('strong')->setText($trainingDate))
 					->addHtml(Html::el()->setText(' '))
-					->addHtml(Html::el()->setText($date->venueCity));
+					->addHtml(Html::el()->setText($date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity));
 				$dates[] = $el;
 			}
 		}

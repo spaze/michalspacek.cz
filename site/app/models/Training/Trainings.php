@@ -187,6 +187,7 @@ class Trainings
 				d.end,
 				d.public,
 				s.status,
+				d.remote,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
@@ -194,7 +195,7 @@ class Trainings
 				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_venues v ON d.key_venue = v.id_venue
+				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
@@ -392,6 +393,7 @@ class Trainings
 				d.end,
 				d.public,
 				s.status,
+				d.remote,
 				tv.href AS venueHref,
 				tv.name AS venueName,
 				tv.name_extended AS venueNameExtended,
@@ -400,7 +402,7 @@ class Trainings
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				JOIN training_applications ta ON d.id_date = ta.key_date
-				JOIN training_venues tv ON d.key_venue = tv.id_venue
+				LEFT JOIN training_venues tv ON d.key_venue = tv.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
 				JOIN training_url_actions tua ON t.id_training = tua.key_training
 				JOIN url_actions ua ON tua.key_url_action = ua.id_url_action

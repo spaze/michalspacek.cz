@@ -75,6 +75,7 @@ class Mails
 	 * @param DateTime $end
 	 * @param string $training
 	 * @param Html<Html|string> $trainingName
+	 * @param bool $remote
 	 * @param string $venueName
 	 * @param string|null $venueNameExtended
 	 * @param string $venueAddress
@@ -89,10 +90,11 @@ class Mails
 		DateTime $end,
 		string $training,
 		Html $trainingName,
-		string $venueName,
+		bool $remote,
+		?string $venueName,
 		?string $venueNameExtended,
-		string $venueAddress,
-		string $venueCity
+		?string $venueAddress,
+		?string $venueCity
 	): void
 	{
 		Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
@@ -103,6 +105,7 @@ class Mails
 		$template->trainingName = $trainingName;
 		$template->start        = $start;
 		$template->end          = $end;
+		$template->remote = $remote;
 		$template->venueName    = $venueName;
 		$template->venueNameExtended = $venueNameExtended;
 		$template->venueAddress = $venueAddress;

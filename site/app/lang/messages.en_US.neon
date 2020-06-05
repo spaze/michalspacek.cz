@@ -108,6 +108,7 @@ label:
 	othertrainings: "Other trainings"
 	date: "Date"
 	tentativedate: "tentative date"
+	remote: remote
 	participant: "Participant"
 	companydetails: "Company details"
 	optional: "optional"
@@ -272,8 +273,8 @@ trainings:
 	lecturerwho: "about the lecturer"
 	lecturercontact: "contact the lecturer"
 	date:
-		one: "Date and venue"
-		more: "Dates and venues"
+		one: "Date, venue, price"
+		more: "Dates, venues, prices"
 	lunchbreak: "one hour lunch break"
 	tentativedate: "**Předběžný termín** - přesné datum zatím neznám. Můžete vyplnit nezávaznou přihlášku a dám vám vědět, až datum budu znát."
 	extendedtime: "According to the situation, the course can be longer by an extra hour."
@@ -299,6 +300,10 @@ trainings:
 		intro: "And this is what they say about them"
 		review: "Originally, I've arranged Michal's training primarily for my colleagues because \"of course I already know these things\"... Michal has changed my mind in the first hour of the first day and continued to do so for the whole two days. Thanks to this training I finally understood some of the attack/defense concepts in full depth, and especially in the right context."
 		author: "Jan Pospíšil, Senior PHP developer, Czech Radio"
+	remotedescription:
+		1: "We'll do the training using Zoom, Skype, Whereby, or Jitsi – I'll send the link upfront and you'll need just a browser."
+		2: "And speakers, camera & microphone, whereas built-in devices are fine."
+	remoteindividualqa: 'The price includes a recording and an hour of individual Q&A in the next month following the class.'
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"

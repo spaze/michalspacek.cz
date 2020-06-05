@@ -10,7 +10,7 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <p>
 {$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd}
-<small>{$venueCity}{if !$public}, {$venueName}{/if}</small>
+<small>{if $remote}{_messages.label.remote}{else}{$venueCity}{/if}{if !$public}, {$venueName}{/if}</small>
 {if $note}<br><span title="Poznámka" class="lighter"><i class="far fa-fw fa-comment"></i></span> <small>{$note}</small>{/if}
 </p>
 {form statuses}

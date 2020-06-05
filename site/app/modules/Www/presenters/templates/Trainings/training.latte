@@ -119,9 +119,10 @@
 <div n:foreach="$dates as $date" class="vevent">
 	<p>
 		<strong>{if $date->tentative}{$date->start|localeMonth}{else}{$date->start|localeIntervalDay:$date->end}{/if}</strong>
-		<span class="summary">{$date->venueCity}</span>,
-		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>,
-		{_messages.trainings.lunchbreak}
+		<span class="summary">{if $date->remote}<span class="location">{_messages.label.remote}</span>{else}{$date->venueCity}{/if}</span>,
+		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>{if !$date->remote},
+		{_messages.trainings.lunchbreak}{/if}
+		<small n:if="$date->label" class="label">{$date->label}</small>
 		<small>(<a href="#{_html.id.application}" data-id="{$date->dateId}" class="url">{_messages.label.signup}</a>)</small>
 		{if $date->tentative}
 			<br><small>{_messages.trainings.tentativedate|format}</small>
@@ -131,19 +132,26 @@
 		{if $date->cooperationDescription}<br><small>{$date->cooperationDescription}</small>{/if}
 	</p>
 	<div class="indent">
-	<p class="location vcard"><strong>
-		<a n:href=":Www:Venues:venue $date->venueAction" class="fn org">{$date->venueName}</a>{if $date->venueNameExtended}, {$date->venueNameExtended}{/if},
-		<span class="adr"><span class="street-address">{$date->venueAddress}</span>, <span class="locality">{$date->venueCity}</span></span>
-	</strong></p>
-	{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
+	<p><i class="fas fa-fw fa-coins lighter"></i> {_messages.trainings.price|format:$priceWithCurrency:$priceVatWithCurrency}{ifset $studentDiscount}, {_messages.trainings.studentdiscount|format:$studentDiscount}{/ifset}</p>
+	{if $date->remote}
+		<p><i class="fas fa-fw fa-bolt lighter"></i> {_messages.trainings.remoteindividualqa}</p>
+		<p>
+			{_messages.trainings.remotedescription.1}
+			{_messages.trainings.remotedescription.2}
+		</p>
+	{else}
+		<p class="location vcard"><i class="fas fa-fw fa-map-marker-alt lighter"></i> <strong>
+			<a n:href=":Www:Venues:venue $date->venueAction" class="fn org">{$date->venueName}</a>{if $date->venueNameExtended}, {$date->venueNameExtended}{/if},
+			<span class="adr"><span class="street-address">{$date->venueAddress}</span>, <span class="locality">{$date->venueCity}</span></span>
+		</strong></p>
+		{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
+	{/if}
 	</div>
 </div>
-<p>
-{if !$dates}
+<p n:if="!$dates">
 	{capture $anchor}#{_html.id.application}{/capture}
 	{_messages.trainings.nodateyet.long|format:$anchor}
 	{_messages.trainings.companythistraining|format:"link:Www:CompanyTrainings:training $name"}
-{/if}
 </p>
 <p><small>{_messages.trainings.regularlyeveryquarter}</small></p>
 </div>
@@ -151,10 +159,6 @@
 
 <h2 id="{_html.id.capacity}">{_messages.label.trainingcapacity}</h2>
 <p>{_messages.trainings.capacity|format:$capacity}</p>
-<hr>
-
-<h2 id="{_html.id.price}">{_messages.label.trainingprice}</h2>
-<p>{_messages.trainings.price|format:$priceWithCurrency:$priceVatWithCurrency}{ifset $studentDiscount}, {_messages.trainings.studentdiscount|format:$studentDiscount}{/ifset}</p>
 <hr>
 
 <h2 id="{_html.id.materials}">{_messages.label.materials}</h2>

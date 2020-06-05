@@ -306,6 +306,7 @@ class TrainingsPresenter extends BasePresenter
 					$date->end,
 					$name,
 					$this->training->name,
+					$date->remote,
 					$date->venueName,
 					$date->venueNameExtended,
 					$date->venueAddress,

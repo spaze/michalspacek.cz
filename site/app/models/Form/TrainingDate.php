@@ -63,8 +63,8 @@ class TrainingDate extends ProtectedForm
 		foreach ($this->trainingVenues->getAll() as $venue) {
 			$venues[$venue->id] = "{$venue->name}, {$venue->city}";
 		}
-		$this->addSelect('venue', 'Místo:', $venues)
-			->setRequired('Vyberte prosím místo');
+		$selectVenue = $this->addSelect('venue', 'Místo:', $venues)
+			->setPrompt('- vyberte místo -');
 
 		$this->addText('start', 'Začátek:')
 			->setHtmlAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
@@ -87,7 +87,13 @@ class TrainingDate extends ProtectedForm
 		$this->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte prosím status');
 
-		$this->addCheckbox('public', 'Veřejné:');
+		$checkboxPublic = $this->addCheckbox('public', 'Veřejné:');
+		$checkboxRemote = $this->addCheckbox('remote', 'Online:');
+		$checkboxRemote->addConditionOn($selectVenue, self::FILLED)
+			->addConditionOn($checkboxPublic, self::FILLED)
+			->addRule(self::BLANK, 'Je vybráno místo, veřejné školení nemůže být online');
+		$selectVenue->addConditionOn($checkboxRemote, self::BLANK)
+			->setRequired('Vyberte prosím místo nebo školení označte jako online');
 
 		$cooperations = array(0 => 'žádná');
 		foreach ($this->trainings->getCooperations() as $cooperation) {
@@ -110,6 +116,7 @@ class TrainingDate extends ProtectedForm
 		$values = array(
 			'training' => $date->trainingId,
 			'venue' => $date->venueId,
+			'remote' => $date->remote,
 			'start' => $date->start->format('Y-m-d H:i'),
 			'end' => $date->end->format('Y-m-d H:i'),
 			'label' => $date->labelJson,

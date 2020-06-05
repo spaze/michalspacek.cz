@@ -19,7 +19,7 @@
 							<abbr title="{$date[end]|date:DateTime::ISO8601}" class="dtend"></abbr>
 						{/if}
 					</strong>
-					<span class="location">{$date[venueCity]}</span><span n:if="$date[label]" class="label">{$date[label]}</span>
+					<span class="location">{if $date[remote]}{_messages.label.remote}{else}{$date[venueCity]}{/if}</span><span n:if="$date[label]" class="label">{$date[label]}</span>
 				{sep}, {/sep}{/foreach}
 			</small>
 		</li>
