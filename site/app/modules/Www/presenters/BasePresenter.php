@@ -5,6 +5,7 @@ namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Templating\Helpers;
+use MichalSpacekCz\Theme;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
@@ -37,6 +38,8 @@ abstract class BasePresenter extends Presenter
 
 	/** @var Helpers */
 	private $templateHelpers;
+
+	private Theme $theme;
 
 
 	/**
@@ -79,6 +82,16 @@ abstract class BasePresenter extends Presenter
 	}
 
 
+	/**
+	 * @internal
+	 * @param Theme $theme
+	 */
+	public function injectTheme(Theme $theme): void
+	{
+		$this->theme = $theme;
+	}
+
+
 	protected function startup(): void
 	{
 		parent::startup();
@@ -90,6 +103,7 @@ abstract class BasePresenter extends Presenter
 
 	public function beforeRender(): void
 	{
+		$this->template->darkMode = $this->theme->isDarkMode();
 		$this->template->setTranslator($this->translator);
 
 		try {
@@ -140,6 +154,20 @@ abstract class BasePresenter extends Presenter
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->localeLinkGenerator->defaultParams($this->getParameters());
+	}
+
+
+	public function handleDarkFuture(): void
+	{
+		$this->theme->setDarkMode();
+		$this->redirectPermanent('this');
+	}
+
+
+	public function handleBrightFuture(): void
+	{
+		$this->theme->setLightMode();
+		$this->redirectPermanent('this');
 	}
 
 }

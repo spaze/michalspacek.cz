@@ -1,0 +1,59 @@
+body {
+	color: #DDD;
+	background-color: #15202B;
+}
+h1, h2, h3, h4 {
+	color: #00D700;
+	text-shadow: 1px 1px 2px rgba(51, 119, 51, 0.2);
+}
+h4 { color: #A9A9A9; }
+a { color: #00C700; }
+a:visited { color: #00A700; }
+a:active { color: #00FF00; }
+a:hover { color: #00D700; }
+img, div.flash {
+	opacity: .75;
+	transition: opacity .5s ease-in-out;
+}
+img:hover, div.flash:hover { opacity: 1; }
+hr {
+	color: #000;
+	background-color: #000;
+}
+fieldset { border-color: #000; }
+legend { background-color: #000; }
+input, select {
+	color: #DDD;
+	border: 1px solid #000;
+	background-color: #24374C;
+}
+input[type=submit] { background-color: #224E34; }
+input[type=submit]:hover { background-color: #2A6040; }
+small, .small, .column-content .figure p { color: #A9A9A9; }
+small a, .small a { color: #C9C9C9 !important; }
+blockquote, .indent { border-left-color: #2B2B2B; }
+#header-links a { background-color: rgba(255, 255, 255, 0.06); }
+#header-links a.tools { background-color: rgba(0, 255, 0, 0.08); }
+#header-links a:hover { background-color: rgba(255, 255, 255, 0.12); }
+#header-links a.tools:hover { background-color: rgba(0, 255, 0, 0.16); }
+#header-icons small a, #footer a { color: #A9A9A9; }
+#header-icons small a:hover, #footer a:hover { color: #00D700; }
+.discarded, #statuses .discarded, .lighter { opacity: 0.5; }
+.discarded:hover, #statuses .discarded:hover { opacity: 0.8; }
+#footer {
+	background-color: #000;
+	color: #BDB;
+	border-top-color: #333;
+}
+.label {
+	color: #B9CEA4;
+	background-color: #1B3D29;
+}
+code, pre, .highlight pre code { background-color: #2D2F2B; }
+.column-content img, #slides-container img {
+	box-shadow: none;
+	background-color: hsl(0, 0%, 5%);
+}
+.column-sidebar .widget { background-color: #202530; }
+#theme-dark { display: none !important; }
+#theme-light { display: initial !important; }
