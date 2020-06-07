@@ -344,7 +344,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		foreach ($values->applications as $application) {
 			$this->trainingApplications->insertApplication(
-				$this->training,
+				$this->training->trainingId,
 				$this->dateId,
 				$application->name,
 				$application->email,
@@ -356,6 +356,8 @@ class TrainingsPresenter extends BasePresenter
 				$application->companyId,
 				$application->companyTaxId,
 				$application->note,
+				$this->training->price,
+				$this->training->studentDiscount,
 				$values->status,
 				$values->source,
 				$values->date
@@ -547,7 +549,9 @@ class TrainingsPresenter extends BasePresenter
 			$values->status,
 			$values->public,
 			$values->cooperation,
-			$values->note
+			$values->note,
+			$values->price === '' ? null : (int)$values->price,
+			$values->studentDiscount === '' ? null : (int)$values->studentDiscount
 		);
 		$this->flashMessage('Termín upraven');
 		$this->redirect($this->getAction(), $this->redirectParam);
@@ -578,7 +582,9 @@ class TrainingsPresenter extends BasePresenter
 			$values->status,
 			$values->public,
 			$values->cooperation,
-			$values->note
+			$values->note,
+			$values->price === '' ? null : (int)$values->price,
+			$values->studentDiscount === '' ? null : (int)$values->studentDiscount
 		);
 		$this->redirect('Trainings:');
 	}

@@ -103,6 +103,13 @@ class TrainingDate extends ProtectedForm
 			->addRule(self::INTEGER);
 		$trainingControlsFactory->addNote($this);
 
+		$this->addText('price', 'Cena bez DPH:')
+			->setHtmlType('number')
+			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná cena');
+		$this->addText('studentDiscount', 'Studentská sleva:')
+			->setHtmlType('number')
+			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná sleva');
+
 		$this->addSubmit('submit', 'Přidat');
 	}
 
@@ -124,6 +131,8 @@ class TrainingDate extends ProtectedForm
 			'public' => $date->public,
 			'cooperation' => $date->cooperationId,
 			'note' => $date->note,
+			'price' => ($date->hasCustomPrice ? $date->price->getPrice() : null),
+			'studentDiscount' => ($date->hasCustomStudentDiscount ? $date->studentDiscount : null),
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';

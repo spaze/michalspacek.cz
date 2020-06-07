@@ -29,6 +29,8 @@ class Dates
 	/** @var Statuses */
 	protected $trainingStatuses;
 
+	private Prices $prices;
+
 	/** @var ITranslator */
 	protected $translator;
 
@@ -39,10 +41,11 @@ class Dates
 	private $upcomingDates = array();
 
 
-	public function __construct(Context $context, Statuses $trainingStatuses, ITranslator $translator)
+	public function __construct(Context $context, Statuses $trainingStatuses, Prices $prices, ITranslator $translator)
 	{
 		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;
+		$this->prices = $prices;
 		$this->translator = $translator;
 	}
 
@@ -60,8 +63,10 @@ class Dates
 				t.id_training AS trainingId,
 				a.action,
 				t.name,
-				t.price,
-				t.student_discount AS studentDiscount,
+				COALESCE(d.price, t.price) AS price,
+				COALESCE(d.student_discount, t.student_discount) AS studentDiscount,
+				d.price IS NOT NULL AS hasCustomPrice,
+				d.student_discount IS NOT NULL AS hasCustomStudentDiscount,
 				d.start,
 				d.end,
 				d.label AS labelJson,
@@ -91,6 +96,7 @@ class Dates
 		);
 
 		if ($result) {
+			$result->price = $this->prices->resolvePriceVat($result->price);
 			$result->name = $this->translator->translate($result->name);
 		}
 		return $result;
@@ -161,7 +167,9 @@ class Dates
 		int $statusId,
 		bool $public,
 		int $cooperationId,
-		string $note
+		string $note,
+		?int $price,
+		?int $studentDiscount
 	): void
 	{
 		$this->database->query(
@@ -177,6 +185,8 @@ class Dates
 				'public' => $public,
 				'key_cooperation' => (empty($cooperationId) ? null : $cooperationId),
 				'note' => (empty($note) ? null : $note),
+				'price' => $price,
+				'student_discount' => $studentDiscount,
 			),
 			$dateId
 		);
@@ -193,7 +203,9 @@ class Dates
 		int $statusId,
 		bool $public,
 		int $cooperationId,
-		string $note
+		string $note,
+		?int $price,
+		?int $studentDiscount
 	): int
 	{
 		$this->database->query(
@@ -209,6 +221,8 @@ class Dates
 				'public' => $public,
 				'key_cooperation' => (empty($cooperationId) ? null : $cooperationId),
 				'note' => (empty($note) ? null : $note),
+				'price' => $price,
+				'student_discount' => $studentDiscount,
 			)
 		);
 		return (int)$this->database->getInsertId();
@@ -419,6 +433,9 @@ class Dates
 		$result = $this->database->fetchAll(
 			"SELECT
 				d.id_date AS dateId,
+				t.id_training AS trainingId,
+				COALESCE(d.price, t.price) AS price,
+				COALESCE(d.student_discount, t.student_discount) AS studentDiscount,
 				d.start,
 				d.end,
 				d.label AS labelJson,
@@ -466,6 +483,7 @@ class Dates
 			$row->label = ($row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null);
 			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
 			$row->lastFreeSeats = $this->lastFreeSeats($row);
+			$row->price = $this->prices->resolvePriceVat($row->price);
 			$dates[$row->dateId] = $row;
 		}
 		return $dates;

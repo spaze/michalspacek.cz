@@ -260,8 +260,7 @@ class Applications
 
 
 	/**
-	 * @param Row<mixed> $training
-	 * @param integer $dateId
+	 * @param Row<mixed> $date
 	 * @param string $name
 	 * @param string $email
 	 * @param string $company
@@ -275,8 +274,7 @@ class Applications
 	 * @return integer
 	 */
 	public function addInvitation(
-		Row $training,
-		int $dateId,
+		Row $date,
 		string $name,
 		string $email,
 		string $company,
@@ -290,8 +288,8 @@ class Applications
 	): int
 	{
 		return $this->insertApplication(
-			$training,
-			$dateId,
+			$date->trainingId,
+			$date->dateId,
 			$name,
 			$email,
 			$company,
@@ -302,6 +300,8 @@ class Applications
 			$companyId,
 			$companyTaxId,
 			$note,
+			$date->price,
+			$date->studentDiscount,
 			Statuses::STATUS_TENTATIVE,
 			$this->resolveSource($note)
 		);
@@ -309,8 +309,7 @@ class Applications
 
 
 	/**
-	 * @param Row<mixed> $training
-	 * @param integer $dateId
+	 * @param Row<mixed> $date
 	 * @param string $name
 	 * @param string $email
 	 * @param string $company
@@ -324,8 +323,7 @@ class Applications
 	 * @return integer
 	 */
 	public function addApplication(
-		Row $training,
-		int $dateId,
+		Row $date,
 		string $name,
 		string $email,
 		string $company,
@@ -339,8 +337,8 @@ class Applications
 	): int
 	{
 		return $this->insertApplication(
-			$training,
-			$dateId,
+			$date->trainingId,
+			$date->dateId,
 			$name,
 			$email,
 			$company,
@@ -351,6 +349,8 @@ class Applications
 			$companyId,
 			$companyTaxId,
 			$note,
+			$date->price,
+			$date->studentDiscount,
 			Statuses::STATUS_SIGNED_UP,
 			$this->resolveSource($note)
 		);
@@ -360,17 +360,20 @@ class Applications
 	/**
 	 * Add preliminary invitation, to a training with no date set.
 	 *
-	 * @param Row<mixed> $training
+	 * @param integer $trainingId
 	 * @param string $name
 	 * @param string $email
 	 * @return integer application id
 	 */
-	public function addPreliminaryInvitation(Row $training, string $name, string $email): int
+	public function addPreliminaryInvitation(int $trainingId, string $name, string $email): int
 	{
-		return $this->insertApplication($training,
+		return $this->insertApplication(
+			$trainingId,
 			null,
 			$name,
 			$email,
+			null,
+			null,
 			null,
 			null,
 			null,
@@ -385,26 +388,8 @@ class Applications
 	}
 
 
-	/**
-	 * @param Row<mixed> $training
-	 * @param integer|null $dateId
-	 * @param string $name
-	 * @param string $email
-	 * @param string|null $company
-	 * @param string|null $street
-	 * @param string|null $city
-	 * @param string|null $zip
-	 * @param string|null $country
-	 * @param string|null $companyId
-	 * @param string|null $companyTaxId
-	 * @param string|null $note
-	 * @param string|null $status
-	 * @param string $source
-	 * @param string|null $date
-	 * @return integer
-	 */
 	public function insertApplication(
-		Row $training,
+		int $trainingId,
 		?int $dateId,
 		string $name,
 		string $email,
@@ -416,6 +401,8 @@ class Applications
 		?string $companyId,
 		?string $companyTaxId,
 		?string $note,
+		?Price $price,
+		?int $studentDiscount,
 		?string $status,
 		string $source,
 		?string $date = null
@@ -428,7 +415,7 @@ class Applications
 		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
 		$datetime = new DateTime($date ?? '');
 
-		$price = $this->prices->resolvePriceDiscountVat($training->price, $training->studentDiscount, $status, $note ?? '');
+		$customerPrice = $this->prices->resolvePriceDiscountVat($price, $studentDiscount, $status, $note ?? '');
 
 		$data = array(
 			'key_date'             => $dateId,
@@ -446,13 +433,13 @@ class Applications
 			'status_time'          => $datetime,
 			'status_time_timezone' => $datetime->getTimezone()->getName(),
 			'key_source'           => $this->getTrainingApplicationSource($source),
-			'price'                => $price->getPrice(),
-			'vat_rate'             => $price->getVatRate(),
-			'price_vat'            => $price->getPriceVat(),
-			'discount'             => $price->getDiscount(),
+			'price' => $customerPrice->getPrice(),
+			'vat_rate' => $customerPrice->getVatRate(),
+			'price_vat' => $customerPrice->getPriceVat(),
+			'discount' => $customerPrice->getDiscount(),
 		);
 		if ($dateId === null) {
-			$data['key_training'] = $training->trainingId;
+			$data['key_training'] = $trainingId;
 		}
 		return $this->trainingStatuses->updateStatusCallbackReturnId(function () use ($data): int {
 			$this->insertData($data);
@@ -462,7 +449,7 @@ class Applications
 
 
 	/**
-	 * @param Row<mixed> $training
+	 * @param Row<mixed> $date
 	 * @param integer $applicationId
 	 * @param string $name
 	 * @param string $email
@@ -477,7 +464,7 @@ class Applications
 	 * @return integer
 	 */
 	public function updateApplication(
-		Row $training,
+		Row $date,
 		int $applicationId,
 		string $name,
 		string $email,
@@ -496,7 +483,7 @@ class Applications
 			Statuses::STATUS_SIGNED_UP,
 			null,
 			function () use (
-				$training,
+				$date,
 				$applicationId,
 				$name,
 				$email,
@@ -510,7 +497,7 @@ class Applications
 				$note
 			): void
 			{
-				$price = $this->prices->resolvePriceDiscountVat($training->price, $training->studentDiscount, Statuses::STATUS_SIGNED_UP, $note);
+				$price = $this->prices->resolvePriceDiscountVat($date->price, $date->studentDiscount, Statuses::STATUS_SIGNED_UP, $note);
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
 					array(

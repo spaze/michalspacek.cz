@@ -144,7 +144,6 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->dates = $this->trainings->getDates($this->training->trainingId);
-		$price = $this->prices->resolvePriceVat($this->training->price);
 
 		$session = $this->getSession();
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
@@ -158,9 +157,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->prerequisites    = $this->training->prerequisites;
 		$this->template->audience         = $this->training->audience;
 		$this->template->capacity         = $this->training->capacity;
-		$this->template->priceWithCurrency = $price->getPriceWithCurrency();
-		$this->template->priceVatWithCurrency = $price->getPriceVatWithCurrency();
-		$this->template->studentDiscount  = $this->training->studentDiscount;
 		$this->template->materials        = $this->training->materials;
 		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates            = $this->dates;
@@ -249,8 +245,7 @@ class TrainingsPresenter extends BasePresenter
 			$date = $this->dates[$values->trainingId];
 			if ($date->tentative) {
 				$this->trainingApplications->addInvitation(
-					$this->training,
-					$values->trainingId,
+					$date,
 					$values->name,
 					$values->email,
 					$values->company,
@@ -265,7 +260,7 @@ class TrainingsPresenter extends BasePresenter
 			} else {
 				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values->trainingId) {
 					$applicationId = $this->trainingApplications->updateApplication(
-						$this->training,
+						$date,
 						$session->application[$name]['id'],
 						$values->name,
 						$values->email,
@@ -281,8 +276,7 @@ class TrainingsPresenter extends BasePresenter
 					$session->application[$name] = null;
 				} else {
 					$applicationId = $this->trainingApplications->addApplication(
-						$this->training,
-						$values->trainingId,
+						$date,
 						$values->name,
 						$values->email,
 						$values->company,
@@ -352,7 +346,7 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	public function submittedApplicationPreliminary(Form $form, ArrayHash $values): void
 	{
-		$this->trainingApplications->addPreliminaryInvitation($this->training, $values->name, $values->email);
+		$this->trainingApplications->addPreliminaryInvitation($this->training->trainingId, $values->name, $values->email);
 		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
 		$this->redirect('training#' . $this->translator->translate('html.id.application'), $this->training->action);
 	}
