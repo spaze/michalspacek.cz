@@ -5,11 +5,13 @@ namespace App\WwwModule\Presenters;
 
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Templating\Helpers;
+use MichalSpacekCz\Theme;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Http\Response;
 use Nette\Localization\ITranslator;
 use Netxten\Templating\Helpers as NetxtenHelpers;
 use Spaze\ContentSecurityPolicy\Config;
@@ -37,6 +39,10 @@ abstract class BasePresenter extends Presenter
 
 	/** @var Helpers */
 	private $templateHelpers;
+
+	protected Theme $theme;
+
+	private Response $httpResponse;
 
 
 	/**
@@ -79,9 +85,30 @@ abstract class BasePresenter extends Presenter
 	}
 
 
+	/**
+	 * @internal
+	 * @param Theme $theme
+	 */
+	public function injectTheme(Theme $theme): void
+	{
+		$this->theme = $theme;
+	}
+
+
+	/**
+	 * @internal
+	 * @param Response $httpResponse
+	 */
+	public function injectHttpResponse(Response $httpResponse): void
+	{
+		$this->httpResponse = $httpResponse;
+	}
+
+
 	protected function startup(): void
 	{
 		parent::startup();
+		$this->httpResponse->addHeader('Vary', 'Cookie');
 		if ($this->authenticator->isForbidden()) {
 			$this->forward('Forbidden:');
 		}
@@ -90,6 +117,7 @@ abstract class BasePresenter extends Presenter
 
 	public function beforeRender(): void
 	{
+		$this->template->darkMode = $this->theme->isDarkMode();
 		$this->template->setTranslator($this->translator);
 
 		try {
@@ -140,6 +168,22 @@ abstract class BasePresenter extends Presenter
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->localeLinkGenerator->defaultParams($this->getParameters());
+	}
+
+
+	public function handleDarkFuture(): void
+	{
+		$this->theme->setDarkMode();
+		$this->httpResponse->setExpiration(null);
+		$this->redirectPermanent('this');
+	}
+
+
+	public function handleBrightFuture(): void
+	{
+		$this->theme->setLightMode();
+		$this->httpResponse->setExpiration(null);
+		$this->redirectPermanent('this');
 	}
 
 }

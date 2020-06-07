@@ -119,6 +119,7 @@ services:
 	trainingControlsFactory: \MichalSpacekCz\Form\TrainingControlsFactory
 	winterIsComing: \MichalSpacekCz\EasterEgg\WinterIsComing
 	tags: \MichalSpacekCz\Tags
+	theme: \MichalSpacekCz\Theme
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory

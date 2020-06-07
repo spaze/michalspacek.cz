@@ -127,6 +127,9 @@ label:
 	taxid:
 		cz: VAT ID
 		sk: VAT ID
+	mode:
+		dark: Dark mode
+		light: Light mode
 contact:
 	twitter: @spazef0rze
 	skypename: spazef0rze

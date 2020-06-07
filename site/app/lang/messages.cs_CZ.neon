@@ -127,6 +127,9 @@ label:
 	taxid:
 		cz: DIČ
 		sk: IČ DPH
+	mode:
+		dark: Tmavý režim
+		light: Světlý režim
 contact:
 	twitter: @spazef0rze
 	skypename: spazef0rze
