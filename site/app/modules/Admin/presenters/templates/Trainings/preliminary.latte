@@ -22,7 +22,7 @@
 			<td colspan="5">
 				<strong n:tag-if="isset($upcoming[$training->action])">{$training->name}</strong>
 				{if isset($upcoming[$training->action])}
-					(Vypsané termíny: <a n:foreach="$upcoming[$training->action]['dates'] as $date" n:href="Trainings:date $date->dateId">{$date->start|localeIntervalDay:$date->end}</a>)
+					(Vypsané termíny: {foreach $upcoming[$training->action]['dates'] as $date}<a n:href="Trainings:date $date->dateId">{$date->start|localeIntervalDay:$date->end}</a>{sep}, {/sep}{/foreach})
 				{/if}
 			</td>
 		</tr>
