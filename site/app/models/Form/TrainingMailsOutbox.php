@@ -60,6 +60,7 @@ class TrainingMailsOutbox extends ProtectedForm
 							->addRule(self::FILLED, 'Chybí číslo faktury');
 					$applicationIdsContainer->addUpload('invoice')
 						->setHtmlAttribute('title', 'Faktura v PDF')
+						->setHtmlAttribute('accept', 'application/pdf')
 						->addConditionOn($send, self::FILLED)
 							->addRule(self::FILLED, 'Chybí faktura')
 							->addRule(self::MIME_TYPE, 'Faktura není v PDF', 'application/pdf');

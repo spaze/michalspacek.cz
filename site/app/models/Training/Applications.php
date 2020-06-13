@@ -91,6 +91,7 @@ class Applications
 				d.start AS trainingStart,
 				d.end AS trainingEnd,
 				d.public AS publicDate,
+				d.remote,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,
@@ -107,7 +108,7 @@ class Applications
 				training_applications a
 				JOIN training_dates d ON a.key_date = d.id_date
 				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_venues v ON d.key_venue = v.id_venue
+				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_application_status s ON a.key_status = s.id_status
 			WHERE
 				s.status = ?

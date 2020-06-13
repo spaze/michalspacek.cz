@@ -1,19 +1,19 @@
 Dobrý den,
 
-potvrzuji Vaši registraci ze dne {$application->statusTime|localeDay:'cs_CZ'} na školení
+potvrzuji Vaši registraci ze dne {$application->statusTime|localeDay:'cs_CZ'} na {if $application->remote}online {/if}školení
 
 {$application->training->name} ({$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'} v čase {$application->trainingStart|date:'H:i'}–{$application->trainingEnd|date:'H:i'})
-adresa {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}
-{link //:Www:Trainings:training $application->training->action}
+{if !$application->remote}adresa {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}
+{/if}{link //:Www:Trainings:training $application->training->action}
 
 V příloze naleznete fakturu na částku {$application->priceWithCurrency} bez DPH, {$application->priceVatWithCurrency} s DPH,
-proplaťte ji, prosím, do stanoveného data.
+proplaťte ji, prosím, do stanoveného data.{if $application->remote} Další informace pošlu nejpozději den před školením.{/if}
 
 {if $additional}
 {$additional}
 
 {/if}
-Děkuji a brzy na shledanou!
+Děkuji a brzy na {if $application->remote}viděnou{else}shledanou{/if}!
 Michal Špaček
 
 {include "../signature.latte"}
