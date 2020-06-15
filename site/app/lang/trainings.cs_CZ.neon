@@ -82,7 +82,7 @@ securityphp:
 		- **Šifrování dat**
 		  Co je to Authenticated Encryption (AE) a co na šifrování použít?
 		- **HTTPS((HTTP Secure))**
-		  Konfigurace serveru, testovací nástroje a vynucení pomocí HTTP Strict Transport Security (HSTS).
+		  Konfigurace serveru, testovací nástroje a vynucení pomocí HTTP Strict Transport Security (HSTS). Šifrování přenosu dat je ale samo o sobě natolik rozsáhlé téma, že jsem ho vyčlenil do **samostatného "školení HTTPS":[training:https-pro-vyvojare-a-spravce]**, ve kterém si do detailu vysvětlujeme certifikáty a certifikační autority, ukazujeme si výměnu šifrovacích klíčů, Certificate Transparency, CAA((Certification Authority Authorization)) a další technologie a nastavení používané k zabezpečení přenostu dat.
 		- **Neautorizovaný přístup k cizím datům**
 		  Jak získat faktury ostatních zákazníků a jak útoku Insecure Direct Object Reference zabránit?
 		- **Zneužití formulářů pro odesílání nevyžádané pošty**

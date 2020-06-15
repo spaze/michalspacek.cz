@@ -82,7 +82,7 @@ securityphp:
 		- **Data encryption**
 		  What's Authenticated Encryption (AE) and how to encrypt data?
 		- **HTTPS((HTTP Secure))**
-		  Server configuration, testing tools, enforcing HTTPS with HTTP Strict Transport Security (HSTS).
+		  Server configuration, testing tools, enforcing HTTPS with HTTP Strict Transport Security (HSTS). Connection security is an extensive topic which I cover in more details in my "**HTTPS training**":[training:https-for-developers-and-admins] where you'll learn more about certificates and certification authorities, key exchange, Certificate Transparency, CAA((Certification Authority Authorization)) and other technologies and settings used to secure data in transit.
 		- **Unauthorized data access**
 		  How to get other customers' invoices and how to protect your application against the Insecure Direct Object Reference attack.
 		- **Abusing contact forms to send spam**
