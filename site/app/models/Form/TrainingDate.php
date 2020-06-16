@@ -95,6 +95,14 @@ class TrainingDate extends ProtectedForm
 		$selectVenue->addConditionOn($checkboxRemote, self::BLANK)
 			->setRequired('Vyberte prosím místo nebo školení označte jako online');
 
+		$this->addText('remoteUrl', 'Online URL:')
+			->addRule(self::MAX_LENGTH, 'Maximální délka URL je %d znaků', 200);
+
+		$format = "Bez HTML značek,\nodřádkování bude v pozvánce zachováno";
+		$this->addTextArea('remoteNotes', 'Online poznámky:')
+			->setHtmlAttribute('placeholder', $format)
+			->setHtmlAttribute('title', $format);
+
 		$cooperations = array(0 => 'žádná');
 		foreach ($this->trainings->getCooperations() as $cooperation) {
 			$cooperations[$cooperation->id] = $cooperation->name;
@@ -124,6 +132,8 @@ class TrainingDate extends ProtectedForm
 			'training' => $date->trainingId,
 			'venue' => $date->venueId,
 			'remote' => $date->remote,
+			'remoteUrl' => $date->remoteUrl,
+			'remoteNotes' => $date->remoteNotes,
 			'start' => $date->start->format('Y-m-d H:i'),
 			'end' => $date->end->format('Y-m-d H:i'),
 			'label' => $date->labelJson,

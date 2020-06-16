@@ -78,6 +78,18 @@ class Statuses
 	/**
 	 * @return array<integer, string>
 	 */
+	public function getAllowFilesStatuses(): array
+	{
+		return [
+			$this->getStatusId(self::STATUS_INVOICE_SENT) => self::STATUS_INVOICE_SENT,
+			$this->getStatusId(self::STATUS_REMINDED) => self::STATUS_REMINDED,
+		] + $this->getAttendedStatuses();
+	}
+
+
+	/**
+	 * @return array<integer, string>
+	 */
 	public function getDiscardedStatuses(): array
 	{
 		return $this->getCanceledStatus() + $this->getDescendantStatuses(self::STATUS_CANCELED);

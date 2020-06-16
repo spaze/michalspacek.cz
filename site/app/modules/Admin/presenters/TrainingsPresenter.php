@@ -64,7 +64,7 @@ class TrainingsPresenter extends BasePresenter
 	private $applications;
 
 	/** @var integer[] */
-	private $applicationIdsAttended;
+	private $applicationIdsAllowedFiles;
 
 	/** @var Row<mixed> */
 	private $application;
@@ -129,8 +129,8 @@ class TrainingsPresenter extends BasePresenter
 			} else {
 				$discarded[] = $application;
 			}
-			if ($application->attended) {
-				$this->applicationIdsAttended[] = $application->id;
+			if ($application->allowFiles) {
+				$this->applicationIdsAllowedFiles[] = $application->id;
 			}
 			$application->childrenStatuses = $this->trainingStatuses->getChildrenStatusesForApplicationId($application->status, $application->id);
 		}
@@ -148,6 +148,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->applications  = $this->applications;
 		$this->template->validCount    = $validCount;
 		$this->template->attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
+		$this->template->filesStatuses = $this->trainingStatuses->getAllowFilesStatuses();
 		$this->template->reviews = $this->trainingReviews->getReviewsByDateId($this->dateId);
 	}
 
@@ -157,11 +158,11 @@ class TrainingsPresenter extends BasePresenter
 		$this->applicationId = $param;
 		$this->redirectParam = $this->applicationId;
 		$application = $this->trainingApplications->getApplicationById($this->applicationId);
-		if (!in_array($application->status, $this->trainingStatuses->getAttendedStatuses())) {
+		if (!in_array($application->status, $this->trainingStatuses->getAllowFilesStatuses(), true)) {
 			$this->redirect('date', $application->dateId);
 		}
 
-		$this->applicationIdsAttended = array($application->applicationId);
+		$this->applicationIdsAllowedFiles = array($application->applicationId);
 		$this->training = $this->trainingDates->get($application->dateId);
 
 		$this->template->pageTitle = 'Soubory';
@@ -223,7 +224,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingCity  = $city;
 		$this->template->sourceName    = $this->application->sourceName;
 		$this->template->companyId     = $this->application->companyId;
-		$this->template->attended      = in_array($this->application->status, $this->trainingStatuses->getAttendedStatuses());
+		$this->template->allowFiles      = in_array($this->application->status, $this->trainingStatuses->getAllowFilesStatuses());
 		$this->template->toBeInvited   = in_array($this->application->status, $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
 		$this->template->accessToken   = $this->application->accessToken;
 		$this->template->history       = $this->trainingStatuses->getStatusHistory($this->applicationId);
@@ -509,7 +510,7 @@ class TrainingsPresenter extends BasePresenter
 	public function submittedFile(Form $form, ArrayHash $values): void
 	{
 		if ($values->file->isOk()) {
-			$name = $this->trainingFiles->addFile($this->training, $values->file, $this->applicationIdsAttended);
+			$name = $this->trainingFiles->addFile($this->training, $values->file, $this->applicationIdsAllowedFiles);
 			$this->flashMessage(
 				Html::el()->setText('Soubor ')
 					->addHtml(Html::el('code')->setText($name))
@@ -551,7 +552,9 @@ class TrainingsPresenter extends BasePresenter
 			$values->cooperation,
 			$values->note,
 			$values->price === '' ? null : (int)$values->price,
-			$values->studentDiscount === '' ? null : (int)$values->studentDiscount
+			$values->studentDiscount === '' ? null : (int)$values->studentDiscount,
+			$values->remoteUrl,
+			$values->remoteNotes
 		);
 		$this->flashMessage('Termín upraven');
 		$this->redirect($this->getAction(), $this->redirectParam);
@@ -584,7 +587,9 @@ class TrainingsPresenter extends BasePresenter
 			$values->cooperation,
 			$values->note,
 			$values->price === '' ? null : (int)$values->price,
-			$values->studentDiscount === '' ? null : (int)$values->studentDiscount
+			$values->studentDiscount === '' ? null : (int)$values->studentDiscount,
+			$values->remoteUrl,
+			$values->remoteNotes
 		);
 		$this->redirect('Trainings:');
 	}

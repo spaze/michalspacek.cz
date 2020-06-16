@@ -14,7 +14,9 @@ title:
 	trainings: "Trainings"
 	training: "Training %s"
 	trainingreviews: "Reviews for training %s"
-	trainingmaterials: "Materials for training %s"
+	trainingmaterials:
+		regular: "Materials from training %s"
+		remote: "Materials for training %s"
 	trainingapplication: "Application for %s"
 	error400: "Špaček doesn't know how to do this!"
 	error403: "Here be dragons. And Špaček!"
@@ -250,10 +252,16 @@ trainings:
 		pehapkari: "\"**Péhápkáři**\":[%s] pořádají každý měsíc \"školení o **technologiích a nástrojích**\":[%s], které s PHP úzce souvisí"
 		cryptosession: "\"Two-day **cryptography** deep dive\":[%s] by renowned Czech cryptologist **Jan Dušátko**"
 	files:
-		thankyou: "Díky za účast na školení %s dne %s."
+		thankyou:
+			regular: "Díky za účast na školení %s dne %s."
+			remote: "Díky za přihlášku na online školení %s dne %s."
 		download:
-			formal: "Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili."
-			familiar: "Níže si pro tvou osobní potřebu můžeš stáhnout materiály, které jsme na školení použili."
+			regular:
+				formal: "Níže si pro Vaši osobní potřebu můžete stáhnout materiály, které jsme na školení použili."
+				familiar: "Níže si pro tvou osobní potřebu můžeš stáhnout materiály, které jsme na školení použili."
+			remote:
+				formal: "Níže si pro Vaši osobní potřebu můžete stáhnout a vytisknout materiály a během školení si do nich psát poznámky. Další soubory se tu mohou objevit po školení."
+				familiar: "Níže si pro tvou osobní potřebu můžeš stáhnout a vytisknout materiály a během školení si do nich psát poznámky. Další soubory se tu mohou objevit po školení."
 	moretrainings:
 		formal: "Rád Vás přivítám i na nějakém dalším školení, které \"pořádám\":[%s]."
 		familiar: "Rád tě přivítám i na nějakém dalším školení, které \"pořádám\":[%s]."

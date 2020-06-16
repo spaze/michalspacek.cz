@@ -120,7 +120,7 @@
 	<div id="pridat-soubor-container" class="hidden">
 		<p>
 			Přidá soubor všem účastíkům školení ve stavu
-			{foreach $attendedStatuses as $status}<small><code>{$status}</code></small>{sep}, {/sep}{/foreach}.
+			{foreach $filesStatuses as $status}<small><code>{$status}</code></small>{sep}, {/sep}{/foreach}.
 		</p>
 		{form file}
 		<p><strong>{label file /}</strong> {input file}</p>

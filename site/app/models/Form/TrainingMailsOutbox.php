@@ -35,6 +35,12 @@ class TrainingMailsOutbox extends ProtectedForm
 					$checked = ($application->price && $application->vatRate && $application->priceVat);
 					$disabled = !$checked;
 					break;
+				case Statuses::STATUS_REMINDED:
+					if ($application->remote) {
+						$checked = (bool)$application->files && (bool)$application->remoteUrl;
+						$disabled = !$checked;
+					}
+					break;
 			}
 			$send = $applicationIdsContainer->addCheckbox('send')
 				->setDefaultValue($checked)

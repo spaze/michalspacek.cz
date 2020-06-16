@@ -74,6 +74,8 @@ class Dates
 				s.status,
 				v.id_venue AS venueId,
 				d.remote,
+				d.remote_url AS remoteUrl,
+				d.remote_notes AS remoteNotes,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
@@ -169,7 +171,9 @@ class Dates
 		int $cooperationId,
 		string $note,
 		?int $price,
-		?int $studentDiscount
+		?int $studentDiscount,
+		string $remoteUrl,
+		string $remoteNotes
 	): void
 	{
 		$this->database->query(
@@ -187,6 +191,8 @@ class Dates
 				'note' => (empty($note) ? null : $note),
 				'price' => $price,
 				'student_discount' => $studentDiscount,
+				'remote_url' => (empty($remoteUrl) ? null : $remoteUrl),
+				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
 			),
 			$dateId
 		);
@@ -205,7 +211,9 @@ class Dates
 		int $cooperationId,
 		string $note,
 		?int $price,
-		?int $studentDiscount
+		?int $studentDiscount,
+		string $remoteUrl,
+		string $remoteNotes
 	): int
 	{
 		$this->database->query(
@@ -223,6 +231,8 @@ class Dates
 				'note' => (empty($note) ? null : $note),
 				'price' => $price,
 				'student_discount' => $studentDiscount,
+				'remote_url' => (empty($remoteUrl) ? null : $remoteUrl),
+				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
 			)
 		);
 		return (int)$this->database->getInsertId();

@@ -1,0 +1,23 @@
+Dobrý den,
+
+rád bych Vám připomněl, že dne {$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'} se koná online školení
+{$application->training->name}, na které jste přihlášeni.
+
+Adresa pro připojení:
+{$application->remoteUrl}
+{$application->remoteNotes}
+
+Prezentaci ke stažení a případnému vytištění pro zapisování poznámek najdete na
+{link '//:Www:Redirect:files' $application->accessToken}
+
+Školení začíná v {$application->trainingStart|date:'H:i'}.
+V případě jakýchkoliv komplikací mě kontaktujte na telefonu {$phoneNumber}.
+
+{if $additional}
+{$additional}
+
+{/if}
+Těším se brzy na viděnou!
+Michal Špaček
+
+{include "../signature.latte"}

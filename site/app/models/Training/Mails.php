@@ -173,6 +173,7 @@ class Mails
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if ($application->trainingStart->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
+					$application->files = $this->trainingFiles->getFiles($application->id);
 					$application->nextStatus = Statuses::STATUS_REMINDED;
 					$applications[$application->id] = $application;
 				}
@@ -252,9 +253,13 @@ class Mails
 	{
 		Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
 
-		$template->setFile(__DIR__ . '/mails/admin/reminder.latte');
+		if ($application->remote) {
+			$template->setFile(__DIR__ . '/mails/admin/reminderRemote.latte');
+		} else {
+			$template->setFile(__DIR__ . '/mails/admin/reminder.latte');
+			$template->venue = $this->trainingVenues->get($application->venueAction);
+		}
 		$template->application = $application;
-		$template->venue = $this->trainingVenues->get($application->venueAction);
 		$template->phoneNumber = $this->phoneNumber;
 		$template->additional = $additional;
 

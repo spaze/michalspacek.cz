@@ -60,7 +60,7 @@ class Files
 				a.id_application = ?
 				AND s.status IN (?)',
 			$applicationId,
-			$this->trainingStatuses->getAttendedStatuses()
+			$this->trainingStatuses->getAllowFilesStatuses()
 		);
 
 		foreach ($files as $file) {
@@ -95,13 +95,11 @@ class Files
 				a.id_application = ?
 				AND a.access_token = ?
 				AND f.filename = ?
-				AND s.status IN (?, ?, ?)',
+				AND s.status IN (?)',
 			$applicationId,
 			$token,
 			$filename,
-			Statuses::STATUS_ATTENDED,
-			Statuses::STATUS_MATERIALS_SENT,
-			Statuses::STATUS_ACCESS_TOKEN_USED
+			$this->trainingStatuses->getAllowFilesStatuses()
 		);
 
 		if ($file) {

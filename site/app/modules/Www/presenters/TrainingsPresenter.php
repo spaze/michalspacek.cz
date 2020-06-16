@@ -468,8 +468,10 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingStart = $application->trainingStart;
 		$this->template->trainingEnd = $application->trainingEnd;
 		$this->template->familiar = $application->familiar;
+		$remote = $application->remote && !$application->attended;
+		$this->template->remote = $remote;
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingmaterials', [$training->name]);
+		$this->template->pageTitle = $this->texyFormatter->translate(($remote ? 'messages.title.trainingmaterials.remote' : 'messages.title.trainingmaterials.regular'), [$training->name]);
 		$this->template->files = $files;
 	}
 

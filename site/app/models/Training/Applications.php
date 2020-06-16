@@ -92,6 +92,8 @@ class Applications
 				d.end AS trainingEnd,
 				d.public AS publicDate,
 				d.remote,
+				d.remote_url AS remoteUrl,
+				d.remote_notes AS remoteNotes,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,
@@ -164,14 +166,14 @@ class Applications
 			);
 			if ($this->byDate[$dateId]) {
 				$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
-				$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
+				$allowFilesStatuses = $this->trainingStatuses->getAllowFilesStatuses();
 				foreach ($this->byDate[$dateId] as $row) {
 					if ($row->email) {
 						$row->email = $this->emailEncryption->decrypt($row->email);
 					}
 					$row->sourceNameInitials = $this->getSourceNameInitials($row->sourceName);
 					$row->discarded = in_array($row->status, $discardedStatuses);
-					$row->attended = in_array($row->status, $attendedStatuses);
+					$row->allowFiles = in_array($row->status, $allowFilesStatuses);
 					$this->addPricesWithCurrency($row);
 				}
 			}
@@ -618,6 +620,7 @@ class Applications
 			'SELECT
 				ua.action AS trainingAction,
 				d.id_date AS dateId,
+				d.remote,
 				d.start AS trainingStart,
 				d.end AS trainingEnd,
 				a.id_application AS applicationId,
@@ -659,8 +662,11 @@ class Applications
 			$this->translator->getDefaultLocale()
 		);
 
-		if ($result && $result->email) {
-			$result->email = $this->emailEncryption->decrypt($result->email);
+		if ($result) {
+			$result->attended = in_array($result->status, $this->trainingStatuses->getAttendedStatuses(), true);
+			if ($result->email) {
+				$result->email = $this->emailEncryption->decrypt($result->email);
+			}
 		}
 
 		return $result;
@@ -843,7 +849,7 @@ class Applications
 	 */
 	public function setAccessTokenUsed(Row $application): void
 	{
-		if ($application->status != Statuses::STATUS_ACCESS_TOKEN_USED) {
+		if (in_array($application->status, $this->trainingStatuses->getParentStatuses(Statuses::STATUS_ACCESS_TOKEN_USED), true)) {
 			$this->trainingStatuses->updateStatus($application->applicationId, Statuses::STATUS_ACCESS_TOKEN_USED);
 		}
 	}
