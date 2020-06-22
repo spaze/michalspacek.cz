@@ -81,6 +81,8 @@ class Dates
 				v.name_extended AS venueNameExtended,
 				v.city AS venueCity,
 				c.id_cooperation AS cooperationId,
+				d.video_href AS videoHref,
+				d.feedback_href AS feedbackHref,
 				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
@@ -173,7 +175,9 @@ class Dates
 		?int $price,
 		?int $studentDiscount,
 		string $remoteUrl,
-		string $remoteNotes
+		string $remoteNotes,
+		string $videoHref,
+		string $feedbackHref
 	): void
 	{
 		$this->database->query(
@@ -193,6 +197,8 @@ class Dates
 				'student_discount' => $studentDiscount,
 				'remote_url' => (empty($remoteUrl) ? null : $remoteUrl),
 				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
+				'video_href' => (empty($videoHref) ? null : $videoHref),
+				'feedback_href' => (empty($feedbackHref) ? null : $feedbackHref),
 			),
 			$dateId
 		);
@@ -213,7 +219,9 @@ class Dates
 		?int $price,
 		?int $studentDiscount,
 		string $remoteUrl,
-		string $remoteNotes
+		string $remoteNotes,
+		string $videoHref,
+		string $feedbackHref
 	): int
 	{
 		$this->database->query(
@@ -233,6 +241,8 @@ class Dates
 				'student_discount' => $studentDiscount,
 				'remote_url' => (empty($remoteUrl) ? null : $remoteUrl),
 				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
+				'video_href' => (empty($videoHref) ? null : $videoHref),
+				'feedback_href' => (empty($feedbackHref) ? null : $feedbackHref),
 			)
 		);
 		return (int)$this->database->getInsertId();

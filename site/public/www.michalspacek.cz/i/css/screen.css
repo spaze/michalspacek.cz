@@ -270,7 +270,8 @@ form.wide textarea, textarea.wide { height: 200px; }
 #frm-application #company th.short { width: 104px; }
 #frm-application input[type=checkbox], form.wide input[type=checkbox] { width: auto; }
 #frm-application #frm-application-note { width: 400px; }
-#frm-date-note, #frm-addDate-note, #frm-date-remoteUrl, #frm-addDate-remoteUrl, #frm-date-label, #frm-addDate-label { width: 740px; }
+#frm-date-note, #frm-addDate-note, #frm-date-remoteUrl, #frm-addDate-remoteUrl, #frm-date-label, #frm-addDate-label,
+	#frm-date-videoHref, #frm-addDate-videoHref, #frm-date-feedbackHref, #frm-addDate-feedbackHref { width: 740px; }
 #frm-statuses select {
 	color: #666;
 	font-family: Consolas, sans-serif;

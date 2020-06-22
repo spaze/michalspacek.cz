@@ -554,7 +554,9 @@ class TrainingsPresenter extends BasePresenter
 			$values->price === '' ? null : (int)$values->price,
 			$values->studentDiscount === '' ? null : (int)$values->studentDiscount,
 			$values->remoteUrl,
-			$values->remoteNotes
+			$values->remoteNotes,
+			$values->videoHref,
+			$values->feedbackHref
 		);
 		$this->flashMessage('Termín upraven');
 		$this->redirect($this->getAction(), $this->redirectParam);
@@ -589,7 +591,9 @@ class TrainingsPresenter extends BasePresenter
 			$values->price === '' ? null : (int)$values->price,
 			$values->studentDiscount === '' ? null : (int)$values->studentDiscount,
 			$values->remoteUrl,
-			$values->remoteNotes
+			$values->remoteNotes,
+			$values->videoHref,
+			$values->feedbackHref
 		);
 		$this->redirect('Trainings:');
 	}

@@ -94,6 +94,8 @@ class Applications
 				d.remote,
 				d.remote_url AS remoteUrl,
 				d.remote_notes AS remoteNotes,
+				d.video_href AS videoHref,
+				d.feedback_href AS feedbackHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,

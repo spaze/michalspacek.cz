@@ -96,6 +96,7 @@ class TrainingDate extends ProtectedForm
 			->setRequired('Vyberte prosím místo nebo školení označte jako online');
 
 		$this->addText('remoteUrl', 'Online URL:')
+			->addRule(self::URL, 'Online URL musí být validní URL')
 			->addRule(self::MAX_LENGTH, 'Maximální délka URL je %d znaků', 200);
 
 		$format = "Bez HTML značek,\nodřádkování bude v pozvánce zachováno";
@@ -117,6 +118,13 @@ class TrainingDate extends ProtectedForm
 		$this->addText('studentDiscount', 'Studentská sleva:')
 			->setHtmlType('number')
 			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná sleva');
+
+		$this->addText('videoHref', 'Odkaz na záznam:')
+			->addRule(self::URL, 'Odkaz na záznam musí být validní URL')
+			->addRule(self::MAX_LENGTH, 'Maximální délka URL je %d znaků', 200);
+		$this->addText('feedbackHref', 'Odkaz na feedback formulář:')
+			->addRule(self::URL, 'Odkaz na feedback formulář musí být validní URL')
+			->addRule(self::MAX_LENGTH, 'Maximální délka URL je %d znaků', 200);
 
 		$this->addSubmit('submit', 'Přidat');
 	}
@@ -143,6 +151,8 @@ class TrainingDate extends ProtectedForm
 			'note' => $date->note,
 			'price' => ($date->hasCustomPrice ? $date->price->getPrice() : null),
 			'studentDiscount' => ($date->hasCustomStudentDiscount ? $date->studentDiscount : null),
+			'videoHref' => $date->videoHref,
+			'feedbackHref' => $date->feedbackHref,
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';

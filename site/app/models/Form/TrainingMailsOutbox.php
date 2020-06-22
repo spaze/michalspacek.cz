@@ -52,8 +52,12 @@ class TrainingMailsOutbox extends ProtectedForm
 				->setHtmlAttribute('rows', 3);
 			switch ($application->nextStatus) {
 				case Statuses::STATUS_MATERIALS_SENT:
-					$applicationIdsContainer->addCheckbox('feedbackRequest', 'Požádat o zhodnocení')
-						->setDefaultValue(true);
+					$feedbackRequestCheckbox = $applicationIdsContainer->addCheckbox('feedbackRequest', 'Požádat o zhodnocení')
+						->setDefaultValue($application->feedbackHref);
+					if (!$application->feedbackHref) {
+						$feedbackRequestCheckbox->setHtmlAttribute('title', 'Odkaz na feedback formulář není nastaven')
+							->setDisabled(true);
+					}
 					break;
 				case Statuses::STATUS_INVOICE_SENT:
 				case Statuses::STATUS_INVOICE_SENT_AFTER:

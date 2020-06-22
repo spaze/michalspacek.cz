@@ -5,9 +5,12 @@ Ještě jednou bych ti chtěl poděkovat za účast na školení
 
 Na níže uvedeném odkazu si během následujících 30 dní můžeš pro tvoji
 osobní potřebu stáhnout materiály, které jsme na školení použili.
-
 {link '//:Www:Redirect:files' $application->accessToken}
 
+{if $application->videoHref}
+Záznam školení najdeš na {$application->videoHref}
+
+{/if}
 {if $application->training->action == 'bezpecnost-php-aplikaci'}
 Nově nabyté vědomosti si, prosím, ověřuj pouze na vlastních webech
 a aplikacích a na příkladech, které jsou přiloženy k materiálům, případně
@@ -15,8 +18,9 @@ na webech, které jsou k učení a prověřování znalostí přímo určené.
 
 {/if}
 {if $feedbackRequest}
-Zároveň bych tě chtěl poprosit o krátké shrnutí tvého dojmu ze
-školení včetně případné kritiky nebo nápadů na vylepšení.
+Zároveň bych tě chtěl poprosit o zpětnou vazbu, abych mohl další školení udělat
+ještě lepší. Zabere to jen pár minut, děkuju! Formulář s otázkami najdeš tu:
+{$application->feedbackHref}
 
 {/if}
 Pokud používáš LinkedIn nebo Facebook, pošli mi žádost o propojení:
