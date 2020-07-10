@@ -10,10 +10,17 @@ use Nette\Forms\Controls\TextInput;
 class WinterIsComing
 {
 
+	/** @var array<integer, string> */
+	private $emails = [
+		'winter@example.com',
+		'sample@email.tst',
+	];
+
+
 	public function rule(): callable
 	{
 		return function (TextInput $input) {
-			if ($input->getValue() === 'winter@example.com') {
+			if (in_array($input->getValue(), $this->emails, true)) {
 				/** @var Presenter $presenter */
 				$presenter = $input->getForm()->getParent();
 				$presenter->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/templates/sqlSyntaxError.latte')));
