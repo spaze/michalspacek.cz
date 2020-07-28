@@ -66,11 +66,11 @@ parameters:
 	encryption:
 		keys:
 			password:
-				dev1: "\xab\xad\xca\xfe\xc1\x5c\x0d\x06\xf0\x0d\xca\xfe\xd0\x0d\xbe\xef" # \x[0-9A-F]{32}
+				dev1: "abadcafec15c0d06f00dcafed00dbeef" # [0-9A-F]{64}
 			email:
-				dev1: "\xca\xfe\xba\xbe\x25\xda\x17\x68\xd6\x9e\xe8\x07\x17\xcc\x2f\x30" # \x[0-9A-F]{32}
+				dev1: "cafebabe25da1768d69ee80717cc2f30" # [0-9A-F]{64}
 			session:
-				dev1: "\x25\xda\x17\x68\xd6\x9e\xe8\x07\x17\xcc\x2f\x30\xca\xfe\xba\xbe" # \x[0-9A-F]{32}
+				dev1: "25da1768d69ee80717cc2f30cafebabe" # [0-9A-F]{64}
 		activeKeyIds:
 			password: dev1
 			email: dev1

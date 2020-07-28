@@ -50,7 +50,7 @@ class Configurator
 	];
 
 	/** @var string[] of classes which shouldn't be autowired */
-	public $autowireExcludedClasses = ['ArrayAccess', 'Countable', 'IteratorAggregate', 'stdClass', 'Traversable'];
+	public $autowireExcludedClasses = [\ArrayAccess::class, \Countable::class, \IteratorAggregate::class, \stdClass::class, \Traversable::class];
 
 	/** @var array */
 	protected $parameters;
@@ -67,7 +67,7 @@ class Configurator
 
 	public function __construct()
 	{
-		$this->parameters = $this->getDefaultParameters();
+		$this->parameters = self::escape($this->getDefaultParameters());
 	}
 
 
@@ -101,7 +101,7 @@ class Configurator
 	 */
 	public function setTempDirectory(string $path)
 	{
-		$this->parameters['tempDir'] = $path;
+		$this->parameters['tempDir'] = self::escape($path);
 		return $this;
 	}
 
@@ -244,7 +244,13 @@ class Configurator
 		);
 		$class = $loader->load(
 			[$this, 'generateContainer'],
-			[$this->parameters, array_keys($this->dynamicParameters), $this->configs, PHP_VERSION_ID - PHP_RELEASE_VERSION]
+			[
+				$this->parameters,
+				array_keys($this->dynamicParameters),
+				$this->configs,
+				PHP_VERSION_ID - PHP_RELEASE_VERSION, // minor PHP version
+				class_exists(ClassLoader::class) ? filemtime((new \ReflectionClass(ClassLoader::class))->getFilename()) : null, // composer update
+			]
 		);
 		return $class;
 	}
@@ -295,7 +301,7 @@ class Configurator
 		if (empty($this->parameters['tempDir'])) {
 			throw new Nette\InvalidStateException('Set path to temporary directory using setTempDirectory().');
 		}
-		$dir = $this->parameters['tempDir'] . '/cache';
+		$dir = DI\Helpers::expand('%tempDir%/cache', $this->parameters, true);
 		Nette\Utils\FileSystem::createDir($dir);
 		return $dir;
 	}
@@ -323,5 +329,19 @@ class Configurator
 			$list[] = '[::1]'; // workaround for PHP < 7.3.4
 		}
 		return in_array($addr, $list, true) || in_array("$secret@$addr", $list, true);
+	}
+
+
+	/**
+	 * Expand counterpart.
+	 */
+	private static function escape($value)
+	{
+		if (is_array($value)) {
+			return array_map([self::class, 'escape'], $value);
+		} elseif (is_string($value)) {
+			return str_replace('%', '%%', $value);
+		}
+		return $value;
 	}
 }

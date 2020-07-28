@@ -40,7 +40,7 @@ return array(
     'Latte\\Runtime\\SnippetDriver' => $vendorDir . '/latte/latte/src/Latte/Runtime/SnippetDriver.php',
     'Latte\\Runtime\\Template' => $vendorDir . '/latte/latte/src/Latte/Runtime/Template.php',
     'Latte\\Sandbox\\SecurityPolicy' => $vendorDir . '/latte/latte/src/Latte/Sandbox/SecurityPolicy.php',
-    'Latte\\SecurityViolation' => $vendorDir . '/latte/latte/src/Latte/exceptions.php',
+    'Latte\\SecurityViolationException' => $vendorDir . '/latte/latte/src/Latte/exceptions.php',
     'Latte\\Strict' => $vendorDir . '/latte/latte/src/Latte/Strict.php',
     'Latte\\Token' => $vendorDir . '/latte/latte/src/Latte/Compiler/Token.php',
     'Latte\\TokenIterator' => $vendorDir . '/latte/latte/src/Latte/Compiler/TokenIterator.php',
@@ -361,6 +361,7 @@ return array(
     'Nette\\Utils\\Validators' => $vendorDir . '/nette/utils/src/Utils/Validators.php',
     'Spaze\\Session\\DI\\MysqlSessionHandlerExtension' => $vendorDir . '/spaze/mysql-session-handler/src/DI/MysqlSessionHandlerExtension.php',
     'Spaze\\Session\\MysqlSessionHandler' => $vendorDir . '/spaze/mysql-session-handler/src/MysqlSessionHandler.php',
+    'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
     'Tester\\Assert' => $vendorDir . '/nette/tester/src/Framework/Assert.php',
     'Tester\\AssertException' => $vendorDir . '/nette/tester/src/Framework/AssertException.php',
     'Tester\\CodeCoverage\\Collector' => $vendorDir . '/nette/tester/src/CodeCoverage/Collector.php',
@@ -441,4 +442,6 @@ return array(
     'Tracy\\ILogger' => $vendorDir . '/tracy/tracy/src/Tracy/Logger/ILogger.php',
     'Tracy\\Logger' => $vendorDir . '/tracy/tracy/src/Tracy/Logger/Logger.php',
     'Tracy\\OutputDebugger' => $vendorDir . '/tracy/tracy/src/Tracy/OutputDebugger/OutputDebugger.php',
+    'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+    'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
 );

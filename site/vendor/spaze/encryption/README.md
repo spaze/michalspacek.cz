@@ -11,16 +11,16 @@ Add this to your `config.local.neon` parameters section (DO NOT COMMIT THIS TO R
 encryption:
     keys:
         passwordHash:
-            prod1: "\xab\xad\xca\xfe\xc1\x5c\x..." # \x[0-9A-F]{32}
+            prod1: "abadcafec15c..." # [0-9A-F]{64}
         email:
-            prod1: "\xca\xfe\xba\xbe\x25\xda\x..." # \x[0-9A-F]{32}
+            prod1: "cafebabe25da..." # [0-9A-F]{64}
     activeKeyIds:
         passwordHash: prod1
         email: prod1
 ```
 YOU HAVE TO GENERATE YOUR OWN KEYS. You can use for example
 ```php
-preg_replace('/(..)/', '\x$1', bin2hex(random_bytes(32)))
+bin2hex(random_bytes(32))
 ```
 to generate a key. You can have multiple keys in each group (here we see two groups: `password` and `email`), meaning you will be able to decrypt data encrypted with these keys. Data will always be encrypted with what's defined in `activeKeyIds` section.
 

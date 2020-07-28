@@ -88,7 +88,7 @@ class Runtime
 
 				public function getLabel($name = null)
 				{
-					return $this->inner->getLabel() ? '{label ' . $this->inner->lookupPath(Form::class) . '}' : null;
+					return $this->inner->getLabel() ? '{label ' . $this->inner->lookupPath(Form::class) . '/}' : null;
 				}
 
 
@@ -150,7 +150,7 @@ class Runtime
 		$blueprint = new Latte\Runtime\Blueprint;
 		$end = $blueprint->printCanvas();
 		$blueprint->printHeader('Form ' . $form->getName());
-		$blueprint->printCode($body);
+		echo '<xmp>', $body, '</xmp>';
 		echo $end;
 	}
 }

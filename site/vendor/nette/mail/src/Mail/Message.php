@@ -293,14 +293,11 @@ class Message extends MimePart
 	/**
 	 * Creates file MIME part.
 	 */
-	private function createAttachment(string $file, string $content = null, string $contentType = null, string $disposition): MimePart
+	private function createAttachment(string $file, ?string $content, ?string $contentType, string $disposition): MimePart
 	{
 		$part = new MimePart;
 		if ($content === null) {
-			$content = @file_get_contents($file); // @ is escalated to exception
-			if ($content === false) {
-				throw new Nette\FileNotFoundException("Unable to read file '$file'.");
-			}
+			$content = Nette\Utils\FileSystem::read($file);
 		}
 		if (!$contentType) {
 			$contentType = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $content);

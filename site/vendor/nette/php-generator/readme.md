@@ -27,7 +27,7 @@ The recommended way to install is via Composer:
 composer require nette/php-generator
 ```
 
-- PhpGenerator 3.3 & 3.2 is compatible with PHP 7.1 to 7.4
+- PhpGenerator 3.2 – 3.4 is compatible with PHP 7.1 to 7.4
 - PhpGenerator 3.1 is compatible with PHP 7.1 to 7.3
 - PhpGenerator 3.0 is compatible with PHP 7.0 to 7.3
 - PhpGenerator 2.6 is compatible with PHP 5.6 to 7.3
@@ -552,6 +552,16 @@ $closure = Nette\PhpGenerator\Closure::from(
 	function (stdClass $a, $b = null) {}
 );
 ```
+
+Method bodies are empty by default. If you want to load them as well, use this way
+(it requires `nikic/php-parser` to be installed):
+
+```php
+$class = Nette\PhpGenerator\ClassType::withBodiesFrom(MyClass::class);
+
+$function = Nette\PhpGenerator\GlobalFunction::withBodyFrom('dump');
+```
+
 
 Variables dumper
 ----------------

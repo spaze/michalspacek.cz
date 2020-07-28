@@ -17,8 +17,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.8.0';
-	public const VERSION_ID = 20800;
+	public const VERSION = '2.8.1';
+	public const VERSION_ID = 20801;
 
 	/** Content types */
 	public const
@@ -138,7 +138,7 @@ class Engine
 
 		} catch (\Exception $e) {
 			if (!$e instanceof CompileException) {
-				$e = new CompileException($e instanceof SecurityViolation ? $e->getMessage() : "Thrown exception '{$e->getMessage()}'", 0, $e);
+				$e = new CompileException($e instanceof SecurityViolationException ? $e->getMessage() : "Thrown exception '{$e->getMessage()}'", 0, $e);
 			}
 			$line = isset($tokens) ? $this->getCompiler()->getLine() : $this->getParser()->getLine();
 			throw $e->setSource($source, $line, $name);
@@ -336,6 +336,14 @@ class Engine
 	public function setPolicy(?Policy $policy)
 	{
 		$this->policy = $policy;
+		return $this;
+	}
+
+
+	/** @return static */
+	public function setExceptionHandler(callable $callback)
+	{
+		$this->providers['coreExceptionHandler'] = $callback;
 		return $this;
 	}
 

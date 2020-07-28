@@ -188,15 +188,16 @@ class PhpWriter
 		$brackets = [];
 		$pos = $tokens->position;
 		while ($tokens->nextToken()) {
+			$tokenValue = $tokens->currentValue();
 			if ($tokens->isCurrent('?>')) {
 				throw new CompileException('Forbidden ?> inside macro');
 
 			} elseif ($tokens->isCurrent('(', '[', '{')) {
 				static $counterpart = ['(' => ')', '[' => ']', '{' => '}'];
-				$brackets[] = $counterpart[$tokens->currentValue()];
+				$brackets[] = $counterpart[$tokenValue];
 
-			} elseif ($tokens->isCurrent(')', ']', '}') && $tokens->currentValue() !== array_pop($brackets)) {
-				throw new CompileException('Unexpected ' . $tokens->currentValue());
+			} elseif ($tokens->isCurrent(')', ']', '}') && $tokenValue !== array_pop($brackets)) {
+				throw new CompileException('Unexpected ' . $tokenValue);
 
 			} elseif ($tokens->isCurrent('`')) {
 				if ($this->policy) {
@@ -205,8 +206,8 @@ class PhpWriter
 					trigger_error('Backtick operator is deprecated in Latte.', E_USER_DEPRECATED);
 				}
 
-			} elseif ($this->policy && $tokens->isCurrent('$this')) {
-				throw new CompileException('Forbidden variable $this.');
+			} elseif ($this->policy && ($tokens->isCurrent('$this') || substr($tokenValue, 0, 2) === '$_')) {
+				throw new CompileException("Forbidden variable {$tokenValue}.");
 			}
 		}
 		if ($brackets) {
@@ -496,11 +497,11 @@ class PhpWriter
 				$expr = new MacroTokens(array_merge([$tokens->currentToken()], $tokens->nextAll($tokens::T_SYMBOL, '\\')));
 				$static = true;
 
+			} elseif ($tokens->isCurrent('$')) { // $$$var or ${...}
+				throw new CompileException('Forbidden variable variables.');
+
 			} elseif ($tokens->isCurrent($tokens::T_VARIABLE, $tokens::T_STRING)) {  // $var or 'func'
 				$expr = new MacroTokens([$tokens->currentToken()]);
-
-			} elseif ($tokens->isCurrent('$')) { // $$$var
-				$expr = new MacroTokens(array_merge([$tokens->currentToken()], $tokens->nextAll($tokens::T_VARIABLE, '$')));
 
 			} else { // not a begin
 				$res->append($tokens->currentToken());
@@ -512,7 +513,7 @@ class PhpWriter
 					if ($static) { // global function
 						$name = $expr->joinAll();
 						if (!$this->policy->isFunctionAllowed($name)) {
-							throw new SecurityViolation("Function $name() is not allowed.");
+							throw new SecurityViolationException("Function $name() is not allowed.");
 						}
 						$static = false;
 						$expr->append('(');
@@ -690,10 +691,12 @@ class PhpWriter
 				} elseif (!strcasecmp($tokens->currentValue(), 'checkurl')) {
 					$res->prepend('LR\Filters::safeUrl(');
 					$inside = true;
+				} elseif (!strcasecmp($tokens->currentValue(), 'noescape') || !strcasecmp($tokens->currentValue(), 'nocheck')) {
+					throw new SecurityViolationException("Filter |{$tokens->currentValue()} is not allowed.");
 				} else {
 					$name = $tokens->currentValue();
 					if ($this->policy && !$this->policy->isFilterAllowed($name)) {
-						throw new SecurityViolation("Filter |$name is not allowed.");
+						throw new SecurityViolationException("Filter |$name is not allowed.");
 					}
 					$name = strtolower($name);
 					$res->prepend($isContent

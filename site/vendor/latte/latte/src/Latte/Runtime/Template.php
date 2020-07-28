@@ -326,7 +326,9 @@ class Template
 	/** @internal */
 	protected function call($callable)
 	{
-		if (is_string($callable)) {
+		if (!is_callable($callable)) {
+			throw new Latte\SecurityViolationException('Invalid callable.');
+		} elseif (is_string($callable)) {
 			$parts = explode('::', $callable);
 			$allowed = count($parts) === 1
 				? $this->policy->isFunctionAllowed($parts[0])
@@ -343,7 +345,7 @@ class Template
 
 		if (!$allowed) {
 			is_callable($callable, false, $text);
-			throw new Latte\SecurityViolation("Calling $text() is not allowed.");
+			throw new Latte\SecurityViolationException("Calling $text() is not allowed.");
 		}
 		return $callable;
 	}
@@ -353,8 +355,8 @@ class Template
 	protected function prop($obj, $prop)
 	{
 		$class = is_object($obj) ? get_class($obj) : $obj;
-		if (is_string($class) && !$this->policy->isPropertyAllowed($class, $prop)) {
-			throw new Latte\SecurityViolation("Access to '$prop' property on a $class object is not allowed.");
+		if (is_string($class) && !$this->policy->isPropertyAllowed($class, (string) $prop)) {
+			throw new Latte\SecurityViolationException("Access to '$prop' property on a $class object is not allowed.");
 		}
 		return $obj;
 	}

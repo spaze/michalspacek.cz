@@ -90,16 +90,16 @@ final class Decoder
 	 */
 	public function decode(string $input)
 	{
-		if (!is_string($input)) {
-			throw new \InvalidArgumentException(sprintf('Argument must be a string, %s given.', gettype($input)));
-
-		} elseif (substr($input, 0, 3) === "\u{FEFF}") { // BOM
+		if (substr($input, 0, 3) === "\u{FEFF}") { // BOM
 			$input = substr($input, 3);
 		}
 		$this->input = "\n" . str_replace("\r", '', $input); // \n forces indent detection
 
-		$pattern = '~(' . implode(')|(', self::PATTERNS) . ')~Amix';
+		$pattern = '~(' . implode(')|(', self::PATTERNS) . ')~Amixu';
 		$this->tokens = preg_split($pattern, $this->input, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE | PREG_SPLIT_DELIM_CAPTURE);
+		if ($this->tokens === false) {
+			throw new Exception('Invalid UTF-8 sequence.');
+		}
 
 		$last = end($this->tokens);
 		if ($this->tokens && !preg_match($pattern, $last[0])) {
@@ -356,10 +356,10 @@ final class Decoder
 			}
 			return iconv('UTF-32BE', 'UTF-8//IGNORE', pack('N', $code));
 		} elseif ($sq[1] === 'x' && strlen($sq) === 4) {
+			trigger_error("Neon: '$sq' is deprecated, use '\uXXXX' instead.", E_USER_DEPRECATED);
 			return chr(hexdec(substr($sq, 2)));
 		} else {
 			$this->error("Invalid escaping sequence $sq");
-			return '';
 		}
 	}
 

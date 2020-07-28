@@ -113,12 +113,17 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 		$isArray = $returnType === self::ARRAY;
 		$obj = $isArray ? new \stdClass : new $returnType;
+		$rc = new \ReflectionClass($obj);
 
 		foreach ($this->getComponents() as $name => $control) {
+			$name = (string) $name;
 			if ($control instanceof IControl && !$control->isOmitted()) {
 				$obj->$name = $control->getValue();
 			} elseif ($control instanceof self) {
-				$obj->$name = $control->getValues($isArray && !$control->mappedType ? self::ARRAY : null);
+				$type = $isArray && !$control->mappedType
+					? self::ARRAY
+					: ($rc->hasProperty($name) ? Nette\Utils\Reflection::getPropertyType($rc->getProperty($name)) : null);
+				$obj->$name = $control->getValues($type);
 			}
 		}
 		return $isArray ? (array) $obj : $obj;
@@ -168,7 +173,9 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 			}
 			foreach ($this->onValidate as $handler) {
 				$params = Nette\Utils\Callback::toReflection($handler)->getParameters();
-				$values = isset($params[1]) ? $this->getValues($params[1]->getType() ? $params[1]->getType()->getName() : null) : null;
+				$values = isset($params[1])
+					? $this->getValues($params[1]->getType() instanceof \ReflectionNamedType ? $params[1]->getType()->getName() : null)
+					: null;
 				$handler($this, $values);
 			}
 		}
@@ -329,7 +336,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	/**
 	 * Adds hidden form control used to store a non-displayed value.
 	 */
-	public function addHidden(string $name, string $default = null): Controls\HiddenField
+	public function addHidden(string $name, $default = null): Controls\HiddenField
 	{
 		return $this[$name] = (new Controls\HiddenField)
 			->setDefaultValue($default);

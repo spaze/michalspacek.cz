@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Spaze\Encryption\Symmetric;
 
+use ParagonIE\ConstantTime\Hex;
 use ParagonIE\Halite\Symmetric;
 use ParagonIE\HiddenString\HiddenString;
 
@@ -97,7 +98,7 @@ class StaticKey
 	private function getKey(string $keyId): Symmetric\EncryptionKey
 	{
 		if (isset($this->keys[$this->keyGroup][$keyId])) {
-			return new Symmetric\EncryptionKey(new HiddenString($this->keys[$this->keyGroup][$keyId]));
+			return new Symmetric\EncryptionKey(new HiddenString(Hex::decode($this->keys[$this->keyGroup][$keyId])));
 		} else {
 			throw new \OutOfRangeException('Unknown encryption key id: ' . $keyId);
 		}

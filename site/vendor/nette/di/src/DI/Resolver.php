@@ -134,7 +134,10 @@ class Resolver
 
 		} elseif (is_string($entity)) { // class
 			if (!class_exists($entity)) {
-				throw new ServiceCreationException("Class $entity not found.");
+				throw new ServiceCreationException(interface_exists($entity)
+					? "Interface $entity can not be used as 'factory', did you mean 'implement'?"
+					: "Class $entity not found."
+				);
 			}
 			return $entity;
 		}
@@ -362,7 +365,15 @@ class Resolver
 		) {
 			return new Reference(Reference::SELF);
 		}
-		return new Reference($this->builder->getByType($type, true));
+
+		$name = $this->builder->getByType($type, true);
+		if (
+			!$this->currentServiceAllowed
+			&& $this->currentService === $this->builder->getDefinition($name)
+		) {
+			throw new MissingServiceException;
+		}
+		return new Reference($name);
 	}
 
 
@@ -458,7 +469,7 @@ class Resolver
 		$res = [];
 
 		foreach ($method->getParameters() as $num => $param) {
-			$paramName = $param->getName();
+			$paramName = $param->name;
 			if (!$param->isVariadic() && array_key_exists($paramName, $arguments)) {
 				$res[$num] = $arguments[$paramName];
 				unset($arguments[$paramName], $arguments[$num]);
@@ -502,7 +513,7 @@ class Resolver
 	{
 		$type = Reflection::getParameterType($parameter);
 		$method = $parameter->getDeclaringFunction();
-		$desc = '$' . $parameter->getName() . ' in ' . Reflection::toString($method) . '()';
+		$desc = '$' . $parameter->name . ' in ' . Reflection::toString($method) . '()';
 
 		if ($type && !Reflection::isBuiltinType($type)) {
 			try {
@@ -523,7 +534,7 @@ class Resolver
 		} elseif (
 			$method instanceof \ReflectionMethod
 			&& $parameter->isArray()
-			&& preg_match('#@param[ \t]+([\w\\\\]+)\[\][ \t]+\$' . $parameter->getName() . '#', (string) $method->getDocComment(), $m)
+			&& preg_match('#@param[ \t]+([\w\\\\]+)\[\][ \t]+\$' . $parameter->name . '#', (string) $method->getDocComment(), $m)
 			&& ($itemType = Reflection::expandClassName($m[1], $method->getDeclaringClass()))
 			&& (class_exists($itemType) || interface_exists($itemType))
 		) {

@@ -6,8 +6,8 @@
 		"MIT"
 	],
 	"require": {
-		"php": "~7.1",
-		"phpstan/phpstan": "^0.12"
+		"php": "^7.1 || ^8.0",
+		"phpstan/phpstan": "^0.12.33"
 	},
 	"conflict": {
 		"nette/application": "<2.3.0",
@@ -19,7 +19,7 @@
 	},
 	"require-dev": {
 		"consistence/coding-standard": "^3.0.1",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"ergebnis/composer-normalize": "^2.0.2",
 		"jakub-onderka/php-parallel-lint": "^1.0",
 		"nette/utils": "^2.3.0 || ^3.0.0",

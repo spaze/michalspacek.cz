@@ -34,8 +34,8 @@
 		"spaze/sri-macros": "~0.1",
 		"spaze/netxten": "~0.12",
 		"spaze/mysql-session-handler": "^2.0",
-		"spaze/encryption": "^0.1.0",
-		"contributte/translation": "^0.6"
+		"spaze/encryption": "^0.2",
+		"contributte/translation": "^0.7"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
