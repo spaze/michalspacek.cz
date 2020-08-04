@@ -23,6 +23,8 @@ class Dumper
 
 	public static $maxPathSegments = 3;
 
+	public static $pathSeparator;
+
 
 	/**
 	 * Dumps information about a variable in readable format.
@@ -268,7 +270,7 @@ class Dumper
 				|| is_object($actual) || is_array($actual) || (is_string($actual) && strlen($actual) > self::$maxLength)
 			) {
 				$args = isset($_SERVER['argv'][1])
-					? '.[' . implode(' ', preg_replace(['#^-*(.{1,20}).*#i', '#[^=a-z0-9. -]+#i'], ['$1', '-'], array_slice($_SERVER['argv'], 1))) . ']'
+					? '.[' . implode(' ', preg_replace(['#^-*([^|]+).*#i', '#[^=a-z0-9. -]+#i'], ['$1', '-'], array_slice($_SERVER['argv'], 1))) . ']'
 					: '';
 				$stored[] = self::saveOutput($testFile, $expected, $args . '.expected');
 				$stored[] = self::saveOutput($testFile, $actual, $args . '.actual');
@@ -321,7 +323,10 @@ class Dumper
 				. ($item['file']
 					? (
 						($item['file'] === $testFile ? self::color('white') : '')
-						. implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, $item['file']), -self::$maxPathSegments))
+						. implode(
+							self::$pathSeparator ?? DIRECTORY_SEPARATOR,
+							array_slice(explode(DIRECTORY_SEPARATOR, $item['file']), -self::$maxPathSegments)
+						)
 						. "($item[line])" . self::color('gray') . ' '
 					)
 					: '[internal function]'
