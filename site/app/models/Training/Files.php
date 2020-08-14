@@ -13,18 +13,14 @@ use SplFileInfo;
 class Files
 {
 
-	/** @var Context */
-	protected $database;
+	protected Context $database;
 
-	/** @var Statuses */
-	protected $trainingStatuses;
+	protected Statuses $trainingStatuses;
 
 	/**
 	 * Files directory, does not end with a slash.
-	 *
-	 * @var string
 	 */
-	protected $filesDir;
+	protected string $filesDir;
 
 
 	public function __construct(Context $context, Statuses $trainingStatuses)

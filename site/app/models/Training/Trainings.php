@@ -12,20 +12,16 @@ use Nette\Utils\ArrayHash;
 class Trainings
 {
 
-	/** @var Context */
-	protected $database;
+	protected Context $database;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	protected Texy $texyFormatter;
 
-	/** @var Dates */
-	protected $trainingDates;
+	protected Dates $trainingDates;
 
-	/** @var ITranslator */
-	protected $translator;
+	protected ITranslator $translator;
 
 	/** @var Row[] */
-	protected $trainingsById = [];
+	protected array $trainingsById = [];
 
 	/** @var Row[] */
 	private ?array $pastWithPersonalData = null;
