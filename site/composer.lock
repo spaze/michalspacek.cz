@@ -513,16 +513,16 @@
         },
         {
             "name": "nette/di",
-            "version": "v3.0.4",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/di.git",
-                "reference": "34d3e47ebe96229b7671664893a3b1128c102213"
+                "reference": "766e8185196a97ded4f9128db6d79a3a124b7eb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/di/zipball/34d3e47ebe96229b7671664893a3b1128c102213",
-                "reference": "34d3e47ebe96229b7671664893a3b1128c102213",
+                "url": "https://api.github.com/repos/nette/di/zipball/766e8185196a97ded4f9128db6d79a3a124b7eb6",
+                "reference": "766e8185196a97ded4f9128db6d79a3a124b7eb6",
                 "shasum": ""
             },
             "require": {
@@ -580,7 +580,7 @@
                 "nette",
                 "static"
             ],
-            "time": "2020-05-14T10:29:59+00:00"
+            "time": "2020-08-13T13:04:23+00:00"
         },
         {
             "name": "nette/finder",

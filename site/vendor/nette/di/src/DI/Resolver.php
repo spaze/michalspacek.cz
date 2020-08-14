@@ -181,7 +181,21 @@ class Resolver
 				break;
 
 			case $entity === 'not':
+				if (count($arguments) > 1) {
+					throw new ServiceCreationException("Function $entity() expects at most 1 parameter, " . count($arguments) . ' given.');
+				}
 				$entity = ['', '!'];
+				break;
+
+			case $entity === 'bool':
+			case $entity === 'int':
+			case $entity === 'float':
+			case $entity === 'string':
+				if (count($arguments) > 1) {
+					throw new ServiceCreationException("Function $entity() expects at most 1 parameter, " . count($arguments) . ' given.');
+				}
+				$arguments = [$arguments[0], $entity];
+				$entity = [Helpers::class, 'convertType'];
 				break;
 
 			case is_string($entity): // create class
@@ -526,14 +540,14 @@ class Resolver
 			if ($res !== null || $parameter->allowsNull()) {
 				return $res;
 			} elseif (class_exists($type) || interface_exists($type)) {
-				throw new ServiceCreationException("Service of type $type needed by $desc not found. Did you register it in configuration file?");
+				throw new ServiceCreationException("Service of type $type needed by $desc not found. Did you add it to configuration file?");
 			} else {
 				throw new ServiceCreationException("Class $type needed by $desc not found. Check type hint and 'use' statements.");
 			}
 
 		} elseif (
 			$method instanceof \ReflectionMethod
-			&& $parameter->isArray()
+			&& $type === 'array'
 			&& preg_match('#@param[ \t]+([\w\\\\]+)\[\][ \t]+\$' . $parameter->name . '#', (string) $method->getDocComment(), $m)
 			&& ($itemType = Reflection::expandClassName($m[1], $method->getDeclaringClass()))
 			&& (class_exists($itemType) || interface_exists($itemType))
