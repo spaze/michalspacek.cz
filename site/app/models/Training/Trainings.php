@@ -27,6 +27,9 @@ class Trainings
 	/** @var Row[] */
 	protected $trainingsById = [];
 
+	/** @var Row[] */
+	private ?array $pastWithPersonalData = null;
+
 
 	public function __construct(Context $context, Texy $texyFormatter, Dates $trainingDates, ITranslator $translator)
 	{
@@ -384,7 +387,11 @@ class Trainings
 	 */
 	public function getPastWithPersonalData(): array
 	{
-		$result = $this->database->fetchAll(
+		if ($this->pastWithPersonalData !== null) {
+			return $this->pastWithPersonalData;
+		}
+
+		$result = $this->database->query(
 			'SELECT DISTINCT
 				d.id_date AS dateId,
 				ua.action,
@@ -426,20 +433,22 @@ class Trainings
 				d.start DESC',
 			$this->translator->getDefaultLocale(),
 			$this->trainingDates->getDataRetentionDate()
-		);
+		)->fetchAssoc('dateId->');
 
 		foreach ($result as $training) {
 			$this->texyFormatter->formatTraining($training);
 		}
-		return $result;
+		return $this->pastWithPersonalData = $result;
 	}
 
 
-	public function deleteHistoricalPersonalData(): void
+	/**
+	 * @param array<integer, integer> $dateIds
+	 */
+	public function deletePersonalData(array $dateIds): void
 	{
-
 		$this->database->query(
-			'UPDATE training_applications SET ? WHERE key_date IN (SELECT id_date FROM training_dates WHERE end < ?)',
+			'UPDATE training_applications SET ? WHERE key_date IN (?)',
 			array(
 				'name' => null,
 				'email' => null,
@@ -452,7 +461,7 @@ class Trainings
 				'company_tax_id' => null,
 				'note' => null,
 			),
-			$this->trainingDates->getDataRetentionDate()
+			$dateIds
 		);
 	}
 

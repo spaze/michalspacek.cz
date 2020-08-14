@@ -7,6 +7,7 @@ use DateTime;
 use Nette\Database\Context;
 use \Nette\Database\Row;
 use Nette\Http\FileUpload;
+use Nette\Utils\FileSystem;
 use SplFileInfo;
 
 class Files
@@ -49,7 +50,7 @@ class Files
 			'SELECT
 				f.id_file AS fileId,
 				f.filename AS fileName,
-				CAST(DATE(d.start) AS char) AS date
+				d.start
 			FROM
 				files f
 				JOIN training_materials m ON f.id_file = m.key_file
@@ -64,7 +65,7 @@ class Files
 		);
 
 		foreach ($files as $file) {
-			$file->info = new SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
+			$file->info = new SplFileInfo($this->getDir($file->start) . $file->fileName);
 		}
 
 		return $files;
@@ -84,7 +85,7 @@ class Files
 			'SELECT
 				f.id_file AS fileId,
 				f.filename AS fileName,
-				CAST(DATE(d.start) AS char) AS date
+				d.start
 			FROM
 				files f
 				JOIN training_materials m ON f.id_file = m.key_file
@@ -103,7 +104,7 @@ class Files
 		);
 
 		if ($file) {
-			$file->info = new SplFileInfo("{$this->filesDir}/{$file->date}/{$file->fileName}");
+			$file->info = new SplFileInfo($this->getDir($file->start) . $file->fileName);
 		}
 
 		return $file;
@@ -119,7 +120,7 @@ class Files
 	public function addFile(Row $training, FileUpload $file, array $applicationIds): string
 	{
 		$name = basename($file->getSanitizedName());
-		$file->move($this->filesDir . '/' . $training->start->format('Y-m-d') . '/' . $name);
+		$file->move($this->getDir($training->start) . $name);
 
 		$datetime = new DateTime();
 		$this->database->beginTransaction();
@@ -144,6 +145,35 @@ class Files
 		}
 		$this->database->commit();
 		return $name;
+	}
+
+
+	private function getDir(DateTime $date): string
+	{
+		return $this->filesDir . '/' . $date->format('Y-m-d') . '/';
+	}
+
+
+	/**
+	 * @param array<integer, integer> $dateIds
+	 */
+	public function deleteFiles(array $dateIds): void
+	{
+		$this->database->query(
+			'DELETE FROM files WHERE id_file IN (
+				SELECT
+					m.key_file
+				FROM
+					training_materials m
+					JOIN training_applications a ON a.id_application = m.key_application
+				WHERE a.key_date IN (?)
+			)',
+			$dateIds
+		);
+
+		foreach ($this->database->fetchPairs('SELECT start FROM training_dates WHERE id_date IN (?)', $dateIds) as $date) {
+			FileSystem::delete($this->getDir($date));
+		}
 	}
 
 }
