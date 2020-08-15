@@ -8,6 +8,7 @@ use Nette\Database\Context;
 use \Nette\Database\Row;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
+use RuntimeException;
 use SplFileInfo;
 
 class Files
@@ -32,7 +33,11 @@ class Files
 
 	public function setFilesDir(string $dir): void
 	{
-		$this->filesDir = rtrim($dir, '/');
+		$path = realpath($dir);
+		if (!$path) {
+			throw new RuntimeException("Can't get absolute path, maybe {$dir} doesn't exist?");
+		}
+		$this->filesDir = $path;
 	}
 
 
