@@ -14,23 +14,12 @@ use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\Type;
 
 /**
- * Reports on dynamically calling a forbidden method or two.
+ * Reports on dynamically calling a disallowed method or two.
  *
  * Static calls have a different rule, <code>StaticCalls</code>
  *
- * Specify required arguments in a config file, example:
- * <code>
- * arguments:
- *   forbiddenCalls:
- *     -
- *       method: 'Tracy\ILogger::log()'
- *       message: 'use our own logger instead'
- *     -
- *       method: 'Foo\Bar::baz()'
- *       message: 'waldo instead'
- * </code>
- *
- * @package spaze\PHPStan\Rules\Disallowed
+ * @package Spaze\PHPStan\Rules\Disallowed
+ * @implements Rule<MethodCall>
  */
 class MethodCalls implements Rule
 {
@@ -38,14 +27,23 @@ class MethodCalls implements Rule
 	/** @var RuleLevelHelper */
 	private $ruleLevelHelper;
 
-	/** @var string[][] */
-	private $forbiddenCalls;
+	/** @var DisallowedHelper */
+	private $disallowedHelper;
+
+	/** @var DisallowedCall[] */
+	private $disallowedCalls;
 
 
-	public function __construct(Broker $broker, array $forbiddenCalls)
+	/**
+	 * @param Broker $broker
+	 * @param DisallowedHelper $disallowedHelper
+	 * @param array<array{function?:string, method?:string, message?:string, allowIn?:string[], allowParamsInAllowed?:array<integer, integer|boolean|string>, allowParamsAnywhere?:array<integer, integer|boolean|string>}> $forbiddenCalls
+	 */
+	public function __construct(Broker $broker, DisallowedHelper $disallowedHelper, array $forbiddenCalls)
 	{
 		$this->ruleLevelHelper = new RuleLevelHelper($broker, true, false, true);
-		$this->forbiddenCalls = $forbiddenCalls;
+		$this->disallowedHelper = $disallowedHelper;
+		$this->disallowedCalls = $this->disallowedHelper->createCallsFromConfig($forbiddenCalls);
 	}
 
 
@@ -59,6 +57,7 @@ class MethodCalls implements Rule
 	 * @param Node $node
 	 * @param Scope $scope
 	 * @return string[]
+	 * @throws ShouldNotHappenException
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
@@ -78,13 +77,9 @@ class MethodCalls implements Rule
 		);
 
 		foreach ($typeResult->getReferencedClasses() as $referencedClass) {
-			$fullyQualified = current($typeResult->getReferencedClasses()) . "::{$name}()";
-			foreach ($this->forbiddenCalls as $forbiddenCall) {
-				if ($fullyQualified === $forbiddenCall['method']) {
-					return [
-						sprintf('Calling %s is forbidden, %s', $fullyQualified, $forbiddenCall['message'] ?? 'because reasons'),
-					];
-				}
+			$message = $this->disallowedHelper->getDisallowedMessage($node, $scope, "{$referencedClass}::{$name}()", $this->disallowedCalls);
+			if ($message) {
+				return $message;
 			}
 		}
 

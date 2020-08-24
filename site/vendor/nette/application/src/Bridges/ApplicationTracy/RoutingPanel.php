@@ -99,10 +99,14 @@ final class RoutingPanel implements Tracy\IBarPanel
 	private function analyse(Routing\Router $router, string $module = '', bool $parentMatches = true, int $level = -1): void
 	{
 		if ($router instanceof Routing\RouteList) {
-			$parentMatches = $parentMatches && $router->match($this->httpRequest) !== null;
+			try {
+				$parentMatches = $parentMatches && $router->match($this->httpRequest) !== null;
+			} catch (\Exception $e) {
+			}
 			$next = count($this->routers);
+			$parentModule = $module . ($router instanceof Nette\Application\Routers\RouteList ? $router->getModule() : '');
 			foreach ($router->getRouters() as $subRouter) {
-				$this->analyse($subRouter, $module . $router->getModule(), $parentMatches, $level + 1);
+				$this->analyse($subRouter, $parentModule, $parentMatches, $level + 1);
 			}
 
 			if ($info = $this->routers[$next] ?? null) {
@@ -119,6 +123,7 @@ final class RoutingPanel implements Tracy\IBarPanel
 		try {
 			$params = $parentMatches ? $router->match($this->httpRequest) : null;
 		} catch (\Exception $e) {
+			$matched = 'error';
 		}
 		if ($params !== null) {
 			if ($module) {

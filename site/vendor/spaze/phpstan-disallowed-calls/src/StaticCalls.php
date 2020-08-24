@@ -4,40 +4,42 @@ declare(strict_types = 1);
 namespace Spaze\PHPStan\Rules\Disallowed;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
+use PHPStan\Broker\ClassNotFoundException;
 use PHPStan\Rules\Rule;
+use PHPStan\ShouldNotHappenException;
+use PHPStan\Type\ObjectType;
 
 /**
- * Reports on statically calling a forbidden method or two.
+ * Reports on statically calling a disallowed method or two.
  *
  * Dynamic calls have a different rule, <code>MethodCalls</code>
  *
- * Specify required arguments in a config file, example:
- * <code>
- * arguments:
- *   forbiddenCalls:
- *     -
- *       method: 'Tracy\Debugger::log()'
- *       message: 'use our own logger instead'
- *     -
- *       method: 'Foo\Bar::baz()'
- *       message: 'waldo instead'
- * </code>
- *
- * @package spaze\PHPStan\Rules\Disallowed
+ * @package Spaze\PHPStan\Rules\Disallowed
+ * @implements Rule<StaticCall>
  */
 class StaticCalls implements Rule
 {
 
-	/** @var string[][] */
-	private $forbiddenCalls;
+	/** @var DisallowedHelper */
+	private $disallowedHelper;
+
+	/** @var DisallowedCall[] */
+	private $disallowedCalls;
 
 
-	public function __construct(array $forbiddenCalls)
+	/**
+	 * @param DisallowedHelper $disallowedHelper
+	 * @param array<array{function?:string, method?:string, message?:string, allowIn?:string[], allowParamsInAllowed?:array<integer, integer|boolean|string>, allowParamsAnywhere?:array<integer, integer|boolean|string>}> $forbiddenCalls
+	 */
+	public function __construct(DisallowedHelper $disallowedHelper, array $forbiddenCalls)
 	{
-		$this->forbiddenCalls = $forbiddenCalls;
+		$this->disallowedHelper = $disallowedHelper;
+		$this->disallowedCalls = $this->disallowedHelper->createCallsFromConfig($forbiddenCalls);
 	}
 
 
@@ -51,6 +53,8 @@ class StaticCalls implements Rule
 	 * @param Node $node
 	 * @param Scope $scope
 	 * @return string[]
+	 * @throws ShouldNotHappenException
+	 * @throws ClassNotFoundException
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
@@ -59,17 +63,35 @@ class StaticCalls implements Rule
 			return [];
 		}
 
-		$name = $node->name->name;
-		$fullyQualified = "{$node->class}::{$name}()";
-		foreach ($this->forbiddenCalls as $forbiddenCall) {
-			if ($fullyQualified === $forbiddenCall['method']) {
-				return [
-					sprintf('Calling %s is forbidden, %s', $fullyQualified, $forbiddenCall['message'] ?? 'because reasons'),
-				];
-			}
+		$fullyQualified = $this->getMethod($node->class, $node->name->name, $scope);
+		if (!$fullyQualified) {
+			return [];
+		}
+		return $this->disallowedHelper->getDisallowedMessage($node, $scope, $fullyQualified, $this->disallowedCalls);
+	}
+
+
+	/**
+	 * @param Name|Expr $class
+	 * @param string $methodName
+	 * @param Scope $scope
+	 * @return string|null
+	 * @throws ClassNotFoundException
+	 */
+	private function getMethod($class, string $methodName, Scope $scope): ?string
+	{
+		if ($class instanceof Name) {
+			$calledOnType = new ObjectType($scope->resolveName($class));
+		} else {
+			$calledOnType = $scope->getType($class);
 		}
 
-		return [];
+		if ($calledOnType->canCallMethods()->yes() && $calledOnType->hasMethod($methodName)->yes()) {
+			$method = $calledOnType->getMethod($methodName, $scope);
+			return sprintf('%s::%s()', $method->getDeclaringClass()->getDisplayName(), $method->getName());
+		}
+
+		return null;
 	}
 
 }

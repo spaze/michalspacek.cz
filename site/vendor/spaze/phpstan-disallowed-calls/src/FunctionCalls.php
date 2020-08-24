@@ -8,34 +8,32 @@ use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\ShouldNotHappenException;
 
 /**
- * Reports on dynamically calling a forbidden function.
+ * Reports on dynamically calling a disallowed function.
  *
- * Specify required arguments in a config file, example:
- * <code>
- * arguments:
- *   forbiddenCalls:
- *     -
- *       function: 'var_dump()'
- *       message: 'use logger instead'
- *     -
- *       function: 'Foo\Bar\baz()'
- *       message: 'waldo instead'
- * </code>
- *
- * @package spaze\PHPStan\Rules\Disallowed
+ * @package Spaze\PHPStan\Rules\Disallowed
+ * @implements Rule<FuncCall>
  */
 class FunctionCalls implements Rule
 {
 
-	/** @var string[][] */
-	private $forbiddenCalls;
+	/** @var DisallowedHelper */
+	private $disallowedHelper;
+
+	/** @var DisallowedCall[] */
+	private $disallowedCalls;
 
 
-	public function __construct(array $forbiddenCalls)
+	/**
+	 * @param DisallowedHelper $disallowedHelper
+	 * @param array<array{function?:string, method?:string, message?:string, allowIn?:string[], allowParamsInAllowed?:array<integer, integer|boolean|string>, allowParamsAnywhere?:array<integer, integer|boolean|string>}> $forbiddenCalls
+	 */
+	public function __construct(DisallowedHelper $disallowedHelper, array $forbiddenCalls)
 	{
-		$this->forbiddenCalls = $forbiddenCalls;
+		$this->disallowedHelper = $disallowedHelper;
+		$this->disallowedCalls = $this->disallowedHelper->createCallsFromConfig($forbiddenCalls);
 	}
 
 
@@ -46,25 +44,18 @@ class FunctionCalls implements Rule
 
 
 	/**
-	 * @param FuncCall $node
+	 * @param Node $node
 	 * @param Scope $scope
 	 * @return string[]
+	 * @throws ShouldNotHappenException
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
+		/** @var FuncCall $node */
 		if (!($node->name instanceof Name)) {
 			return [];
 		}
-
-		$name = $node->name . '()';
-		foreach ($this->forbiddenCalls as $forbiddenCall) {
-			if ($name === $forbiddenCall['function']) {
-				return [
-					sprintf('Calling %s is forbidden, %s', $name, $forbiddenCall['message'] ?? 'because reasons'),
-				];
-			}
-		}
-
-		return [];
+		return $this->disallowedHelper->getDisallowedMessage($node, $scope, $node->name . '()', $this->disallowedCalls);
 	}
+
 }
