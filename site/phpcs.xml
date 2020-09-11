@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<ruleset name="MichalSpacekCz">
+	<arg name="extensions" value="php"/>
+	<arg name="tab-width" value="4"/>
+	<arg name="colors"/>
+	<arg value="s"/>
+	<arg value="p"/>
+	<config name="installed_paths" value="../../slevomat/coding-standard"/>
+	<rule ref="Generic.Files.ByteOrderMark"/>
+	<rule ref="Generic.Files.LineEndings">
+		<properties>
+			<property name="eolChar" value="\n"/>
+		</properties>
+	</rule>
+	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+	<rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
+	<rule ref="Generic.WhiteSpace.ScopeIndent">
+		<properties>
+			<property name="tabIndent" value="true"/>
+		</properties>
+	</rule>
+	<rule ref="PSR2.Files.ClosingTag"/>
+	<rule ref="PSR2.Files.EndFileNewline"/>
+	<rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+		<properties>
+			<property name="newlinesCountBetweenOpenTagAndDeclare" value="1"/>
+			<property name="newlinesCountAfterDeclare" value="2"/>
+			<property name="spacesCountAroundEqualsSign" value="1"/>
+		</properties>
+	</rule>
+	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+	<exclude-pattern>public/www.michalspacek.cz/info.php</exclude-pattern>  <!-- Contains only HTML, no PHP code -->
+</ruleset>
