@@ -39,11 +39,11 @@ class DeletePersonalDataFormFactory
 		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
 			$this->database->beginTransaction();
 			try {
-			$pastIds = array_keys($this->trainings->getPastWithPersonalData());
-			$this->trainings->deletePersonalData($pastIds);
-			$this->files->deleteFiles($pastIds);
+				$pastIds = array_keys($this->trainings->getPastWithPersonalData());
+				$this->trainings->deletePersonalData($pastIds);
+				$this->files->deleteFiles($pastIds);
 				$this->database->commit();
-			$onSuccess();
+				$onSuccess();
 			} catch (Exception $e) {
 				$this->database->rollBack();
 				$form->addError('Oops, something went wrong, please try again in a moment');

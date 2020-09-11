@@ -46,7 +46,7 @@ class PasswordsStorages extends ProtectedForm
 		$siteContainer = $this->addContainer('site');
 		$items = [Sites::ALL => 'all sites'];
 		foreach ($sites->getAll() as $site) {
-		 	$items[$site->id] = "{$site->alias} ({$site->url})";
+			$items[$site->id] = "{$site->alias} ({$site->url})";
 		}
 		$selectSite = $siteContainer->addSelect('id', 'Site:', $items)
 			->setPrompt('- select site -');
@@ -78,7 +78,7 @@ class PasswordsStorages extends ProtectedForm
 		$algoContainer = $this->addContainer('algo');
 		$items = [];
 		foreach ($passwords->getAlgorithms() as $algo) {
-		 	$items[$algo->id] = $algo->algo;
+			$items[$algo->id] = $algo->algo;
 		}
 		$selectAlgo = $algoContainer->addSelect('id', 'Algorithm:', $items)
 			->setPrompt('- select algorithm -');
@@ -105,7 +105,7 @@ class PasswordsStorages extends ProtectedForm
 		// Disclosures
 		$items = [];
 		foreach ($passwords->getDisclosureTypes() as $disclosure) {
-		 	$items[$disclosure->id] = $disclosure->type;
+			$items[$disclosure->id] = $disclosure->type;
 		}
 		$disclosureContainer = $this->addContainer('disclosure');
 		$disclosureNewContainer = $disclosureContainer->addContainer('new');

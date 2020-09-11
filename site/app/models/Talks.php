@@ -721,7 +721,7 @@ class Talks
 	}
 
 
- 	/**
+	/**
 	 * Get supported image types.
 	 *
 	 * @return string[] MIME type => extension
