@@ -27,12 +27,14 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Spaze\\Exports\\' => 14,
             'Spaze\\Encryption\\' => 17,
             'Spaze\\ContentSecurityPolicy\\' => 28,
+            'SlevomatCodingStandard\\' => 23,
         ),
         'P' => 
         array (
             'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
+            'PHPStan\\PhpDocParser\\' => 21,
             'PHPStan\\' => 8,
         ),
         'M' => 
@@ -43,6 +45,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'JakubOnderka\\PhpConsoleHighlighter\\' => 35,
             'JakubOnderka\\PhpConsoleColor\\' => 29,
+        ),
+        'D' => 
+        array (
+            'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 55,
         ),
         'C' => 
         array (
@@ -95,6 +101,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/spaze/csp-config/src',
         ),
+        'SlevomatCodingStandard\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slevomat/coding-standard/SlevomatCodingStandard',
+        ),
         'ParagonIE\\HiddenString\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/hidden-string/src',
@@ -106,6 +116,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
+        'PHPStan\\PhpDocParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
         'PHPStan\\' => 
         array (
@@ -122,6 +136,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'JakubOnderka\\PhpConsoleColor\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
+        ),
+        'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
         ),
         'Contributte\\Translation\\' => 
         array (

@@ -44,7 +44,8 @@
 		"phpstan/phpstan": "^0.12",
 		"phpstan/phpstan-nette": "^0.12",
 		"roave/security-advisories": "dev-master",
-		"spaze/phpstan-disallowed-calls": "^0.12"
+		"spaze/phpstan-disallowed-calls": "^0.12",
+		"slevomat/coding-standard": "^6.4"
 	},
 	"replace": {
 		"paragonie/random_compat": "9.99.99",
