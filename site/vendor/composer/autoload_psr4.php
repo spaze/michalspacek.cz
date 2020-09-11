@@ -22,5 +22,7 @@ return array(
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-nette/src'),
     'MichalSpacekCz\\' => array($baseDir . '/app/models'),
+    'JakubOnderka\\PhpConsoleHighlighter\\' => array($vendorDir . '/php-parallel-lint/php-console-highlighter/src'),
+    'JakubOnderka\\PhpConsoleColor\\' => array($vendorDir . '/php-parallel-lint/php-console-color/src'),
     'Contributte\\Translation\\' => array($vendorDir . '/contributte/translation/src'),
 );
