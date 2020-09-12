@@ -23,6 +23,7 @@
 		</properties>
 	</rule>
 	<rule ref="PSR2.ControlStructures.ControlStructureSpacing"/>
+	<rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
 	<rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses"/>
 	<rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
 		<properties>
