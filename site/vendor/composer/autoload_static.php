@@ -27,6 +27,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Spaze\\Exports\\' => 14,
             'Spaze\\Encryption\\' => 17,
             'Spaze\\ContentSecurityPolicy\\' => 28,
+            'Spaze\\CodingStandard\\' => 21,
             'SlevomatCodingStandard\\' => 23,
         ),
         'P' => 
@@ -100,6 +101,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\ContentSecurityPolicy\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/csp-config/src',
+        ),
+        'Spaze\\CodingStandard\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spaze/coding-standard/src',
         ),
         'SlevomatCodingStandard\\' => 
         array (

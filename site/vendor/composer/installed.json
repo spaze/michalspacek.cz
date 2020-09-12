@@ -2341,6 +2341,47 @@
         ]
     },
     {
+        "name": "spaze/coding-standard",
+        "version": "v0.0.1",
+        "version_normalized": "0.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/spaze/coding-standard.git",
+            "reference": "36f08897c688ce399f5dc72c2c3d7547ca49c88d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/spaze/coding-standard/zipball/36f08897c688ce399f5dc72c2c3d7547ca49c88d",
+            "reference": "36f08897c688ce399f5dc72c2c3d7547ca49c88d",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.3",
+            "slevomat/coding-standard": "^6.4.0",
+            "squizlabs/php_codesniffer": "^3.5.6"
+        },
+        "time": "2020-09-12T01:37:26+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Spaze\\CodingStandard\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michal Špaček",
+                "email": "mail@michalspacek.cz",
+                "homepage": "https://www.michalspacek.com"
+            }
+        ],
+        "description": "Coding Standard – PHP Code Sniffer Rules"
+    },
+    {
         "name": "spaze/csp-config",
         "version": "v2.0.6",
         "version_normalized": "2.0.6.0",

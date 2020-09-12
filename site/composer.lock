@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "070a817a2d75fad51463b9ea97ee977e",
+    "content-hash": "d90b863cfe27045842ba3ce74801f577",
     "packages": [
         {
             "name": "contributte/translation",
@@ -3131,6 +3131,45 @@
                 }
             ],
             "time": "2020-08-31T07:02:52+00:00"
+        },
+        {
+            "name": "spaze/coding-standard",
+            "version": "v0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/coding-standard.git",
+                "reference": "36f08897c688ce399f5dc72c2c3d7547ca49c88d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/36f08897c688ce399f5dc72c2c3d7547ca49c88d",
+                "reference": "36f08897c688ce399f5dc72c2c3d7547ca49c88d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3",
+                "slevomat/coding-standard": "^6.4.0",
+                "squizlabs/php_codesniffer": "^3.5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spaze\\CodingStandard\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.com"
+                }
+            ],
+            "description": "Coding Standard – PHP Code Sniffer Rules",
+            "time": "2020-09-12T01:37:26+00:00"
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
