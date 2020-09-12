@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "675ebe40f026aad2cd3e20eb42be721b",
+    "content-hash": "efaf325ecb04a857b0ea0d2b083eb433",
     "packages": [
         {
             "name": "contributte/translation",
@@ -3164,20 +3164,20 @@
         },
         {
             "name": "spaze/coding-standard",
-            "version": "v0.0.1",
+            "version": "v0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/coding-standard.git",
-                "reference": "36f08897c688ce399f5dc72c2c3d7547ca49c88d"
+                "reference": "f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/36f08897c688ce399f5dc72c2c3d7547ca49c88d",
-                "reference": "36f08897c688ce399f5dc72c2c3d7547ca49c88d",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f",
+                "reference": "f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3",
+                "php": "^7.1",
                 "slevomat/coding-standard": "^6.4.0",
                 "squizlabs/php_codesniffer": "^3.5.6"
             },
@@ -3199,7 +3199,7 @@
                 }
             ],
             "description": "Coding Standard – PHP Code Sniffer Rules",
-            "time": "2020-09-12T01:37:26+00:00"
+            "time": "2020-09-12T13:36:56+00:00"
         },
         {
             "name": "spaze/phpstan-disallowed-calls",

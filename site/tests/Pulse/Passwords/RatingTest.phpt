@@ -66,10 +66,9 @@ class RatingTest extends TestCase
 
 		$this->algo->alias = 'scrypt';
 		$this->algo->disclosureTypes = ['foo' => true];
-		Assert::exception(function() {
+		Assert::exception(function () {
 			Assert::same('B', $this->rating->get($this->algo));
 		}, RuntimeException::class);
-
 	}
 
 

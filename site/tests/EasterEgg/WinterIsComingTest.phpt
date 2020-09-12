@@ -36,7 +36,7 @@ class WinterIsComingTest extends TestCase
 	protected function setUp()
 	{
 		$this->resultObject = new stdClass();
-		$this->presenter = new class($this->resultObject) extends Presenter {
+		$this->presenter = new class ($this->resultObject) extends Presenter {
 
 			/** @var stdClass */
 			private $resultObject;

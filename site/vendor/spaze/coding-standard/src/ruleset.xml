@@ -6,8 +6,10 @@
 		<exclude name="Generic.Files.LineLength.TooLong"/>
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent.TabsUsed"/>
 		<exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
+		<exclude name="PSR12.Classes.AnonClassDeclaration.CloseBraceAfterBody"/> <!-- 1 blank line checked by Squiz.WhiteSpace.FunctionSpacing.AfterLast -->
 		<exclude name="PSR12.Files.DeclareStatement"/>
 		<exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
+		<exclude name="PSR12.Traits.UseDeclaration.BlankLineAfterLastUse"/> <!-- Checked by SlevomatCodingStandard.Classes.TraitUseSpacing -->
 		<exclude name="PSR12.Traits.UseDeclaration.UseAfterBrace"/>
 	</rule>
 	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
