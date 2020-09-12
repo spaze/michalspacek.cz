@@ -11,21 +11,5 @@ parameters:
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
 	- vendor/phpstan/phpstan-nette/rules.neon
-
-services:
-	- Spaze\PHPStan\Rules\Disallowed\DisallowedHelper
-	-
-		class: Spaze\PHPStan\Rules\Disallowed\FunctionCalls
-		tags:
-			- phpstan.rules.rule
-		arguments:
-			forbiddenCalls:
-				-
-					function: 'var_dump()'
-					message: 'use logger instead'
-				-
-					function: 'print_r()'
-					message: 'use logger instead'
-				-
-					function: 'var_export()'
-					message: 'use logger instead'
+	- vendor/spaze/phpstan-disallowed-calls/extension.neon
+	- vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
