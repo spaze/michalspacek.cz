@@ -1,14 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-use \MichalSpacekCz\Application\Bootstrap;
+use MichalSpacekCz\Application\Bootstrap;
 
 if (file_exists('./maintenance.php')) {
 	require 'maintenance.php';
 }
 
 $rootDir = realpath(__DIR__ . '/../..');
-
+require $rootDir . '/vendor/autoload.php';
 require $rootDir . '/app/models/Application/Bootstrap.php';
 
 $appDir = $rootDir . '/app';

@@ -33,6 +33,7 @@ class Route extends NetteRoute
 
 	/**
 	 * Maps HTTP request to a Request object.
+	 *
 	 * @param IRequest $httpRequest
 	 * @return array<string, string>|null
 	 */

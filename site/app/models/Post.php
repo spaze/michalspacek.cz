@@ -296,11 +296,11 @@ class Post
 			}
 			$texy->allowedTags = $allowedTags;
 		}
-		foreach(['title'] as $item) {
+		foreach (['title'] as $item) {
 			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'}, $texy);
 		}
 		$this->texyFormatter->setTopHeading(2);
-		foreach(['lead', 'text', 'originally'] as $item) {
+		foreach (['lead', 'text', 'originally'] as $item) {
 			$post->$item = $this->texyFormatter->formatBlock($post->{$item . 'Texy'}, $texy);
 		}
 		return $post;

@@ -58,8 +58,7 @@ class Applications
 		Prices $price,
 		Vrana $vranaResolver,
 		ITranslator $translator
-	)
-	{
+	) {
 		$this->database = $context;
 		$this->trainings = $trainings;
 		$this->trainingDates = $trainingDates;
@@ -191,7 +190,7 @@ class Applications
 	public function getValidByDate(int $dateId): array
 	{
 		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
-		return array_filter($this->getByDate($dateId), function($value) use ($discardedStatuses) {
+		return array_filter($this->getByDate($dateId), function ($value) use ($discardedStatuses) {
 			return !in_array($value->status, $discardedStatuses);
 		});
 	}
@@ -203,7 +202,7 @@ class Applications
 	 */
 	public function getValidUnpaidByDate(int $dateId): array
 	{
-		return array_filter($this->getValidByDate($dateId), function($value) {
+		return array_filter($this->getValidByDate($dateId), function ($value) {
 			return (isset($value->invoiceId) && !isset($value->paid));
 		});
 	}
@@ -235,7 +234,7 @@ class Applications
 	public function getCanceledPaidByDate(int $dateId): array
 	{
 		$canceledStatus = $this->trainingStatuses->getCanceledStatus();
-		return array_filter($this->getByDate($dateId), function($value) use ($canceledStatus) {
+		return array_filter($this->getByDate($dateId), function ($value) use ($canceledStatus) {
 			return ($value->paid && in_array($value->status, $canceledStatus));
 		});
 	}
@@ -290,8 +289,7 @@ class Applications
 		string $companyId,
 		string $companyTaxId,
 		string $note
-	): int
-	{
+	): int {
 		return $this->insertApplication(
 			$date->trainingId,
 			$date->dateId,
@@ -339,8 +337,7 @@ class Applications
 		string $companyId,
 		string $companyTaxId,
 		string $note
-	): int
-	{
+	): int {
 		return $this->insertApplication(
 			$date->trainingId,
 			$date->dateId,
@@ -411,8 +408,7 @@ class Applications
 		?string $status,
 		string $source,
 		?string $date = null
-	): int
-	{
+	): int {
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
 			throw new RuntimeException("Invalid initial status {$status}");
 		}
@@ -481,8 +477,7 @@ class Applications
 		string $companyId,
 		string $companyTaxId,
 		string $note
-	): int
-	{
+	): int {
 		$this->trainingStatuses->updateStatusCallback(
 			$applicationId,
 			Statuses::STATUS_SIGNED_UP,
@@ -500,8 +495,7 @@ class Applications
 				$companyId,
 				$companyTaxId,
 				$note
-			): void
-			{
+			): void {
 				$price = $this->prices->resolvePriceDiscountVat($date->price, $date->studentDiscount, Statuses::STATUS_SIGNED_UP, $note);
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
@@ -550,8 +544,7 @@ class Applications
 		string $paid = null,
 		bool $familiar = false,
 		?int $dateId = null
-	): void
-	{
+	): void {
 		$paidDate = ($paid ? new DateTime($paid) : null);
 
 		$data = array(

@@ -36,8 +36,7 @@ class TrainingApplication extends ProtectedForm
 		ITranslator $translator,
 		TrainingControlsFactory $trainingControlsFactory,
 		Helpers $netxtenHelpers
-	)
-	{
+	) {
 		parent::__construct($parent, $name);
 		$this->translator = $translator;
 		$this->netxtenHelpers = $netxtenHelpers;

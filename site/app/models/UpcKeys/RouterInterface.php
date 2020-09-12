@@ -13,6 +13,7 @@ interface RouterInterface
 	 */
 	public function setPrefixes(array $prefixes): void;
 
+
 	public function setModel(string $model): void;
 
 

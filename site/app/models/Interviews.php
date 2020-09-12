@@ -152,8 +152,7 @@ class Interviews
 		string $videoEmbed,
 		string $sourceName,
 		string $sourceHref
-	): void
-	{
+	): void {
 		$this->database->query(
 			'UPDATE interviews SET ? WHERE id_interview = ?',
 			array(
@@ -186,8 +185,7 @@ class Interviews
 		string $videoEmbed,
 		string $sourceName,
 		string $sourceHref
-	): void
-	{
+	): void {
 		$this->database->query(
 			'INSERT INTO interviews',
 			array(

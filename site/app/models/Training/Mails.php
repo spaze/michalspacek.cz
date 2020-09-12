@@ -54,8 +54,7 @@ class Mails
 		Venues $trainingVenues,
 		Files $trainingFiles,
 		Helpers $netxtenHelpers
-	)
-	{
+	) {
 		$this->mailer = $mailer;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
@@ -95,8 +94,7 @@ class Mails
 		?string $venueNameExtended,
 		?string $venueAddress,
 		?string $venueCity
-	): void
-	{
+	): void {
 		Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
 
 		$template->setFile(__DIR__ . '/mails/trainingSignUp.latte');

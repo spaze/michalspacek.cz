@@ -17,6 +17,7 @@ class PasswordsStorages extends ProtectedForm
 
 	use Date;
 
+
 	public function __construct(IContainer $parent, string $name, int $newDisclosures, Companies $companies, Sites $sites, Passwords $passwords)
 	{
 		parent::__construct($parent, $name);

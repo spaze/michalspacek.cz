@@ -69,8 +69,7 @@ class Manager implements IAuthenticator
 		Passwords $passwords,
 		StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator
-	)
-	{
+	) {
 		$this->database = $context;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
@@ -85,7 +84,6 @@ class Manager implements IAuthenticator
 	 *
 	 * @param string[] $credentials
 	 * @return IIdentity
-	 *
 	 * @throws AuthenticationException
 	 */
 	public function authenticate(array $credentials): IIdentity

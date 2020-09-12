@@ -37,6 +37,7 @@ class Certificates
 
 	/**
 	 * Set users authentication info.
+	 *
 	 * @param array<string, string> $users
 	 */
 	public function setUsers(array $users): void
@@ -47,6 +48,7 @@ class Certificates
 
 	/**
 	 * Set expiring warning threshold.
+	 *
 	 * @param integer $expiringThreshold in days
 	 */
 	public function setExpiringThreshold(int $expiringThreshold): void
@@ -57,6 +59,7 @@ class Certificates
 
 	/**
 	 * Set hide expired after interval.
+	 *
 	 * @param integer $hideExpiredAfter in days
 	 */
 	public function setHideExpiredAfter(int $hideExpiredAfter): void
@@ -83,7 +86,8 @@ class Certificates
 
 
 	/**
-	 * Get newest certificates
+	 * Get newest certificates.
+	 *
 	 * @return Row[]
 	 */
 	public function getNewest(): array

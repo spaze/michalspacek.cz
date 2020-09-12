@@ -22,8 +22,7 @@ class Reviews
 	public function __construct(
 		Context $context,
 		Texy $texyFormatter
-	)
-	{
+	) {
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 	}
@@ -119,7 +118,8 @@ class Reviews
 	public function getReview(int $reviewId): Row
 	{
 		/** @var Row<mixed>|null $result */
-		$result = $this->database->fetch('SELECT
+		$result = $this->database->fetch(
+			'SELECT
 				r.id_review AS reviewId,
 				r.name,
 				r.company,

@@ -25,8 +25,7 @@ class InterviewsPresenter extends BasePresenter
 		Texy $texyFormatter,
 		Interviews $interviews,
 		Embed $embed
-	)
-	{
+	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->interviews = $interviews;
 		$this->embed = $embed;

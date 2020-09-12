@@ -31,7 +31,6 @@ class Embed
 
 
 	/**
-	 * Get template vars for slides
 	 * @param Row<mixed> $talk
 	 * @param int|null $slide
 	 * @return array<string, string|integer|null> with keys slidesEmbed, slidesDataSlide, slidesEmbedType
@@ -71,6 +70,7 @@ class Embed
 
 	/**
 	 * Get template vars for video.
+	 *
 	 * @param Row<mixed> $talk
 	 * @return array{videoEmbed: string|null, videoEmbedType: string|null}
 	 */

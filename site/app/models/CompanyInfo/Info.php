@@ -34,7 +34,7 @@ class Info
 
 	public function getData(string $country, string $companyId): Data
 	{
-		return $this->cache->load("{$country}/{$companyId}", function(&$dependencies) use ($country, $companyId) {
+		return $this->cache->load("{$country}/{$companyId}", function (&$dependencies) use ($country, $companyId) {
 			switch ($country) {
 				case 'cz':
 					$data = $this->ares->getData($companyId);

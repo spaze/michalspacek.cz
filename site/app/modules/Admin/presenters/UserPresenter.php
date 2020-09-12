@@ -88,7 +88,7 @@ class UserPresenter extends BasePresenter
 		if ($values->returning) {
 			$selectorToken = $this->authenticator->regenerateReturningUser($this->user);
 		}
-		$message = Html::el()->setText('Tokeny přegenerovány ' );
+		$message = Html::el()->setText('Tokeny přegenerovány ');
 		if (isset($selectorToken)) {
 			$message->addHtml(Html::el('a')->href($this->linkGenerator->link('Admin:Sign:knockKnock', [$selectorToken]))->setText('Odkaz na přihlášení'));
 		}

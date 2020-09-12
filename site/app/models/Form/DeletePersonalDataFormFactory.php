@@ -17,7 +17,6 @@ class DeletePersonalDataFormFactory
 
 	private FormFactory $factory;
 
-
 	private Trainings $trainings;
 
 	private Files $files;

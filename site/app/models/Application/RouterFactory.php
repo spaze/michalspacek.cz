@@ -15,7 +15,6 @@ class RouterFactory
 {
 
 	/**
-	 * Module names.
 	 * @var string
 	 */
 	private const MODULE_ADMIN = 'Admin';

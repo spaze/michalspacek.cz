@@ -178,8 +178,7 @@ class Dates
 		string $remoteNotes,
 		string $videoHref,
 		string $feedbackHref
-	): void
-	{
+	): void {
 		$this->database->query(
 			'UPDATE training_dates SET ? WHERE id_date = ?',
 			array(
@@ -222,8 +221,7 @@ class Dates
 		string $remoteNotes,
 		string $videoHref,
 		string $feedbackHref
-	): int
-	{
+	): int {
 		$this->database->query(
 			'INSERT INTO training_dates',
 			array(

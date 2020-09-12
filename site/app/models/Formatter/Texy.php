@@ -232,7 +232,7 @@ class Texy extends NetxtenTexy
 	 * @return HtmlElement<HtmlElement|string>|string|false
 	 * @throws InvalidLinkException
 	 */
-	function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link)
+	public function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link)
 	{
 		if (!$link) {
 			return $invocation->proceed();

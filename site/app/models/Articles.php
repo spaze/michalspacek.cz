@@ -48,8 +48,7 @@ class Articles
 		Post $blogPost,
 		Tags $tags,
 		ITranslator $translator
-	)
-	{
+	) {
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
 		$this->linkGenerator = $linkGenerator;
