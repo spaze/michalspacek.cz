@@ -7,7 +7,7 @@ use DateTime;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
-use Nette\Mail\IMailer;
+use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Nette\Utils\Html;
 use Netxten\Templating\Helpers;
@@ -18,7 +18,7 @@ class Mails
 
 	private const REMINDER_DAYS = 5;
 
-	/** @var IMailer */
+	/** @var Mailer */
 	protected $mailer;
 
 	/** @var Applications */
@@ -47,15 +47,14 @@ class Mails
 
 
 	public function __construct(
-		IMailer $mailer,
+		Mailer $mailer,
 		Applications $trainingApplications,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		Venues $trainingVenues,
 		Files $trainingFiles,
 		Helpers $netxtenHelpers
-	)
-	{
+	) {
 		$this->mailer = $mailer;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
@@ -95,8 +94,7 @@ class Mails
 		?string $venueNameExtended,
 		?string $venueAddress,
 		?string $venueCity
-	): void
-	{
+	): void {
 		Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
 
 		$template->setFile(__DIR__ . '/mails/trainingSignUp.latte');

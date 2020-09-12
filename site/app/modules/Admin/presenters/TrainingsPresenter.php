@@ -96,8 +96,7 @@ class TrainingsPresenter extends BasePresenter
 		TrainingControlsFactory $trainingControlsFactory,
 		Helpers $netxtenHelpers,
 		DeletePersonalDataFormFactory $deletePersonalDataFormFactory
-	)
-	{
+	) {
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 		$this->trainingStatuses = $trainingStatuses;
@@ -182,7 +181,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$date = $this->trainingDates->get($this->review->dateId);
 
-		$this->template->pageTitle = "Ohlas od {$this->review->name}" . ($this->review->company ? ", {$this->review->company}": '');
+		$this->template->pageTitle = "Ohlas od {$this->review->name}" . ($this->review->company ? ", {$this->review->company}" : '');
 		$this->template->trainingStart      = $date->start;
 		$this->template->trainingEnd = $date->end;
 		$this->template->trainingName       = $date->name;

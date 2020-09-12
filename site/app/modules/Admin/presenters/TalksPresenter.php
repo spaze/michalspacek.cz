@@ -139,7 +139,7 @@ class TalksPresenter extends BasePresenter
 		);
 		$this->flashMessage(
 			Html::el()
-				->setText('Přednáška upravena ' )
+				->setText('Přednáška upravena ')
 				->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit'))
 		);
 		$this->redirect('Talks:');

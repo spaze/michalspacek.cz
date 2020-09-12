@@ -97,8 +97,7 @@ class TrainingsPresenter extends BasePresenter
 		TrainingControlsFactory $trainingControlsFactory,
 		Info $companyInfo,
 		IResponse $httpResponse
-	)
-	{
+	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
@@ -395,7 +394,8 @@ class TrainingsPresenter extends BasePresenter
 		foreach ($values as $key => $value) {
 			$logValues[] = "{$key} => \"{$value}\"";
 		}
-		$message = sprintf('Application session data for %s: %s, form values: %s',
+		$message = sprintf(
+			'Application session data for %s: %s, form values: %s',
 			$name,
 			(empty($logSession) ? 'empty' : implode(', ', $logSession)),
 			implode(', ', $logValues)

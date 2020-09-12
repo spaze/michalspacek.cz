@@ -12,6 +12,7 @@ class Helpers
 
 	use SmartObject;
 
+
 	/** @var Texy */
 	protected $texyFormatter;
 

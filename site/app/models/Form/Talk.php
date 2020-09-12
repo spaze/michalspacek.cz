@@ -15,6 +15,7 @@ class Talk extends ProtectedForm
 
 	use Date;
 
+
 	/** @var Talks */
 	protected $talks;
 

@@ -17,6 +17,7 @@ class TrainingControlsFactory
 
 	use Date;
 
+
 	/** @var ITranslator */
 	private $translator;
 

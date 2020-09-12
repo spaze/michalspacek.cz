@@ -165,7 +165,7 @@ class Talks
 	public function getApproxCount(): int
 	{
 		$count = $this->database->fetchField('SELECT COUNT(*) FROM talks WHERE date <= NOW()');
-		return (int)($count/10)*10;
+		return (int)($count / 10) * 10;
 	}
 
 
@@ -397,8 +397,7 @@ class Talks
 		?string $favorite,
 		?int $supersededBy,
 		bool $publishSlides
-	): void
-	{
+	): void {
 		$this->database->query(
 			'UPDATE talks SET ? WHERE id_talk = ?',
 			array(
@@ -450,8 +449,7 @@ class Talks
 		?string $favorite,
 		?int $supersededBy,
 		bool $publishSlides
-	): void
-	{
+	): void {
 		$this->database->query(
 			'INSERT INTO talks',
 			array(
@@ -721,7 +719,7 @@ class Talks
 	}
 
 
- 	/**
+	/**
 	 * Get supported image types.
 	 *
 	 * @return string[] MIME type => extension

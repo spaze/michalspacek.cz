@@ -36,8 +36,7 @@ class VenuesPresenter extends BasePresenter
 		Venues $trainingVenues,
 		Trainings $trainings,
 		Embed $embed
-	)
-	{
+	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingDates = $trainingDates;
 		$this->trainingVenues = $trainingVenues;

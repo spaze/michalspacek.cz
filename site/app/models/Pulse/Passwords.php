@@ -33,8 +33,7 @@ class Passwords
 		Rating $rating,
 		Companies $companies,
 		Sites $sites
-	)
-	{
+	) {
 		$this->database = $context;
 		$this->rating = $rating;
 		$this->companies = $companies;
@@ -295,7 +294,6 @@ class Passwords
 			$storages->storages[$row->companyId][$siteId][$key]->latestDisclosure = $disclosure->published;
 			$storages->storages[$row->companyId][$siteId][$key]->disclosures[] = $disclosure;
 			$storages->storages[$row->companyId][$siteId][$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
-
 		}
 		foreach ($storages->sites as $site) {
 			$site->rating = $this->rating->get(reset($storages->storages[$site->companyId][$site->id]));

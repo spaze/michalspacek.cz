@@ -1,0 +1,20 @@
+{
+	"name": "spaze/coding-standard",
+	"description": "Coding Standard – PHP Code Sniffer Rules",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.com",
+			"email": "mail@michalspacek.cz"
+		}
+	],
+	"require": {
+		"php": "^7.3",
+		"squizlabs/php_codesniffer": "^3.5.6",
+		"slevomat/coding-standard": "^6.4.0"
+	},
+	"autoload": {
+		"psr-4": {"Spaze\\CodingStandard\\": "src"}
+	}
+}

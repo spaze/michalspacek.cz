@@ -22,6 +22,7 @@ class PostFormFactory
 
 	use Date;
 
+
 	private FormFactory $factory;
 
 	private Post $blogPost;
@@ -117,7 +118,7 @@ class PostFormFactory
 
 		$form->addSubmit('submit', 'Přidat');
 		$form->addButton('preview', 'Náhled')
-			->setHtmlAttribute('data-alt', 'Moment…');;
+			->setHtmlAttribute('data-alt', 'Moment…');
 
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess): void {
 			$post = new Data();

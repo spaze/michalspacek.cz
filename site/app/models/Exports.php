@@ -42,7 +42,7 @@ class Exports
 	public function getArticles(string $self, ?string $filter = null): Feed
 	{
 		/** @var Feed $feed */
-		$feed = $this->cache->load(($filter ? "Atom/ArticlesByTag/{$filter}" : 'Atom/AllArticles'), function(&$dependencies) use ($self, $filter) {
+		$feed = $this->cache->load(($filter ? "Atom/ArticlesByTag/{$filter}" : 'Atom/AllArticles'), function (&$dependencies) use ($self, $filter) {
 			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate());
 			$dependencies[Cache::EXPIRATION] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 

@@ -11,7 +11,6 @@ class TrainingReview extends ProtectedForm
 {
 
 	/**
-	 * TrainingReview constructor.
 	 * @param IContainer $parent
 	 * @param string $name
 	 * @param Html[]|null $applications

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use DateTime;
 use Nette\Database\Context;
-use \Nette\Database\Row;
+use Nette\Database\Row;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
 use RuntimeException;
