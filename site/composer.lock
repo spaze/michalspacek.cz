@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "efaf325ecb04a857b0ea0d2b083eb433",
+    "content-hash": "ba450100b844a1e5e1a2713623127280",
     "packages": [
         {
             "name": "contributte/translation",
@@ -2807,16 +2807,16 @@
         },
         {
             "name": "roave/security-advisories",
-            "version": "dev-master",
+            "version": "dev-latest",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "425be18066a07ae07112a0aec85bf16f9cd02ed1"
+                "reference": "5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/425be18066a07ae07112a0aec85bf16f9cd02ed1",
-                "reference": "425be18066a07ae07112a0aec85bf16f9cd02ed1",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8",
+                "reference": "5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8",
                 "shasum": ""
             },
             "conflict": {
@@ -3103,7 +3103,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-11T17:02:36+00:00"
+            "time": "2020-09-13T17:11:14+00:00"
         },
         {
             "name": "slevomat/coding-standard",
@@ -3164,16 +3164,16 @@
         },
         {
             "name": "spaze/coding-standard",
-            "version": "v0.0.2",
+            "version": "v0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/coding-standard.git",
-                "reference": "f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f"
+                "reference": "b5e36d7a8dbe2519813e20e7b1ffee6d537ecded"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f",
-                "reference": "f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/b5e36d7a8dbe2519813e20e7b1ffee6d537ecded",
+                "reference": "b5e36d7a8dbe2519813e20e7b1ffee6d537ecded",
                 "shasum": ""
             },
             "require": {
@@ -3199,7 +3199,7 @@
                 }
             ],
             "description": "Coding Standard – PHP Code Sniffer Rules",
-            "time": "2020-09-12T13:36:56+00:00"
+            "time": "2020-09-13T15:33:46+00:00"
         },
         {
             "name": "spaze/phpstan-disallowed-calls",

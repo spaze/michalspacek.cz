@@ -2,6 +2,9 @@
 <ruleset name="SpazeCodingStandard">
 	<arg name="tab-width" value="4"/>
 	<config name="installed_paths" value="../../slevomat/coding-standard"/>
+	<rule ref="PSR2.ControlStructures.ControlStructureSpacing">
+		<exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/> <!-- Put first expression of multiline condition on the next line -->
+	</rule>
 	<rule ref="PSR12">
 		<exclude name="Generic.Files.LineLength.TooLong"/>
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent.TabsUsed"/>
@@ -19,9 +22,13 @@
 			<property name="tabIndent" value="true"/>
 		</properties>
 	</rule>
-	<rule ref="PSR2.ControlStructures.ControlStructureSpacing"/>
 	<rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
 	<rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses"/>
+	<rule ref="SlevomatCodingStandard.ControlStructures.RequireMultiLineCondition">
+		<properties>
+			<property name="minLineLength" value="150"/>
+		</properties>
+	</rule>
 	<rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
 		<properties>
 			<property name="linesCountBeforeFirstContent" value="0"/>

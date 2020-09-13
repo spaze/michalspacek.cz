@@ -1984,17 +1984,17 @@
     },
     {
         "name": "roave/security-advisories",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "dev-latest",
+        "version_normalized": "dev-latest",
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "425be18066a07ae07112a0aec85bf16f9cd02ed1"
+            "reference": "5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/425be18066a07ae07112a0aec85bf16f9cd02ed1",
-            "reference": "425be18066a07ae07112a0aec85bf16f9cd02ed1",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8",
+            "reference": "5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8",
             "shasum": ""
         },
         "conflict": {
@@ -2253,7 +2253,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2020-09-11T17:02:36+00:00",
+        "time": "2020-09-13T17:11:14+00:00",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -2344,17 +2344,17 @@
     },
     {
         "name": "spaze/coding-standard",
-        "version": "v0.0.2",
-        "version_normalized": "0.0.2.0",
+        "version": "v0.0.3",
+        "version_normalized": "0.0.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spaze/coding-standard.git",
-            "reference": "f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f"
+            "reference": "b5e36d7a8dbe2519813e20e7b1ffee6d537ecded"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spaze/coding-standard/zipball/f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f",
-            "reference": "f1ec0e6e84aeaa28a27a6e2fab5e0900943aa89f",
+            "url": "https://api.github.com/repos/spaze/coding-standard/zipball/b5e36d7a8dbe2519813e20e7b1ffee6d537ecded",
+            "reference": "b5e36d7a8dbe2519813e20e7b1ffee6d537ecded",
             "shasum": ""
         },
         "require": {
@@ -2362,7 +2362,7 @@
             "slevomat/coding-standard": "^6.4.0",
             "squizlabs/php_codesniffer": "^3.5.6"
         },
-        "time": "2020-09-12T13:36:56+00:00",
+        "time": "2020-09-13T15:33:46+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
