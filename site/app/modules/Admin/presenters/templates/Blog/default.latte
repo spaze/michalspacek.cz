@@ -3,14 +3,24 @@
 <div><p><a n:href="add" class="block">Přidat příspěvek</a></p></div>
 <hr>
 <ol reversed>
+{var $dateLineDisplayed = false}
 {foreach $posts as $post}
-	<li>
-		{$post->title}
-		• <a n:href="edit $post->postId">Upravit</a>
+	{var $dateLineCheck = $post->published < $now}
+	{if $dateLineCheck && $iterator->first}
+		{var $dateLineDisplayed = true}
+	{/if}
+	<li n:class="$dateLineCheck && !$dateLineDisplayed ? dateLine">
+		{var $dateLineDisplayed = $dateLineCheck}
+		<small n:tag-if="$post->published > $now">
+		<strong>{$post->title}</strong>
+		<small class="date" title="{$post->published|localeDay} {$post->published|date:'H:i'}">{$post->published|localeDay}</small>
+		<br>
+		<a n:href="edit $post->postId">Upravit</a>
 		• <a href="{$post->href}">{if $post->needsPreviewKey()}Zobrazit náhled{else}Zobrazit{/if}</a>
-		<small n:if="!$post->needsPreviewKey()">(Debug
-			<a href="https://developers.facebook.com/tools/debug/sharing/?q={$post->href}" title="Facebook Sharing Debugger">Facebook</a>
-			• <a href="https://cards-dev.twitter.com/validator" title="Twitter Card validator">Twitter</a>)</small>
+		<small n:if="!$post->needsPreviewKey()">
+			• <a href="https://developers.facebook.com/tools/debug/sharing/?q={$post->href}">Facebook Sharing Debugger</a>
+			• <a href="https://cards-dev.twitter.com/validator">Twitter Card validator</a></small>
+		</small>
 	</li>
 {/foreach}
 <ol>

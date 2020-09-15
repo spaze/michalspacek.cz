@@ -57,6 +57,7 @@ class BlogPresenter extends BasePresenter
 		krsort($posts);
 		$this->template->posts = $posts;
 		$this->template->pageTitle = 'Blog';
+		$this->template->now = new DateTime();
 	}
 
 
