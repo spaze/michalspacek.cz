@@ -249,7 +249,6 @@ trainings:
 		companyintro: "Want some more? Try these courses organized by my **friends or business partners**:"
 		frontend: "\"Responzivní design\":[%s] a další \"kurzy moderního **frontendového vývoje**\":[%s], které vede //profík// na CSS **Martin Michálek** a jeho kolegové"
 		nette: "\"Vývoj webových aplikací v **Nette Framework**\":[%s] a \"Mistrovství v Nette\":[%s] přímo od autora frameworku **Davida Grudla**"
-		pehapkari: "\"**Péhápkáři**\":[%s] pořádají každý měsíc \"školení o **technologiích a nástrojích**\":[%s], které s PHP úzce souvisí"
 	files:
 		thankyou:
 			regular: "Díky za účast na školení %s dne %s."
