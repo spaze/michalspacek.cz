@@ -1076,17 +1076,17 @@
     },
     {
         "name": "nette/robot-loader",
-        "version": "v3.3.0",
-        "version_normalized": "3.3.0.0",
+        "version": "v3.3.1",
+        "version_normalized": "3.3.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/robot-loader.git",
-            "reference": "737ff8ee1709eff053d9cc27e6c661d82395bd8b"
+            "reference": "15c1ecd0e6e69e8d908dfc4cca7b14f3b850a96b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/robot-loader/zipball/737ff8ee1709eff053d9cc27e6c661d82395bd8b",
-            "reference": "737ff8ee1709eff053d9cc27e6c661d82395bd8b",
+            "url": "https://api.github.com/repos/nette/robot-loader/zipball/15c1ecd0e6e69e8d908dfc4cca7b14f3b850a96b",
+            "reference": "15c1ecd0e6e69e8d908dfc4cca7b14f3b850a96b",
             "shasum": ""
         },
         "require": {
@@ -1100,7 +1100,7 @@
             "phpstan/phpstan": "^0.12",
             "tracy/tracy": "^2.3"
         },
-        "time": "2020-07-28T13:34:12+00:00",
+        "time": "2020-09-15T15:14:17+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1860,17 +1860,17 @@
     },
     {
         "name": "phpstan/phpstan",
-        "version": "0.12.42",
-        "version_normalized": "0.12.42.0",
+        "version": "0.12.43",
+        "version_normalized": "0.12.43.0",
         "source": {
             "type": "git",
             "url": "https://github.com/phpstan/phpstan.git",
-            "reference": "7c43b7c2d5ca6554f6231e82e342a710163ac5f4"
+            "reference": "54221b44766cb4bdfe40d1828d5bba5dd79c38c6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7c43b7c2d5ca6554f6231e82e342a710163ac5f4",
-            "reference": "7c43b7c2d5ca6554f6231e82e342a710163ac5f4",
+            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/54221b44766cb4bdfe40d1828d5bba5dd79c38c6",
+            "reference": "54221b44766cb4bdfe40d1828d5bba5dd79c38c6",
             "shasum": ""
         },
         "require": {
@@ -1879,7 +1879,7 @@
         "conflict": {
             "phpstan/phpstan-shim": "*"
         },
-        "time": "2020-09-02T13:14:53+00:00",
+        "time": "2020-09-19T21:19:38+00:00",
         "bin": [
             "phpstan",
             "phpstan.phar"
@@ -1989,12 +1989,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8"
+            "reference": "81cb95735a719403eddb77fc78e21362b56d9ea9"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8",
-            "reference": "5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/81cb95735a719403eddb77fc78e21362b56d9ea9",
+            "reference": "81cb95735a719403eddb77fc78e21362b56d9ea9",
             "shasum": ""
         },
         "conflict": {
@@ -2040,8 +2040,8 @@
             "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
             "dolibarr/dolibarr": "<11.0.4",
             "dompdf/dompdf": ">=0.6,<0.6.2",
-            "drupal/core": ">=7,<7.72|>=8,<8.8.8|>=8.9,<8.9.1|>=9,<9.0.1",
-            "drupal/drupal": ">=7,<7.72|>=8,<8.8.8|>=8.9,<8.9.1|>=9,<9.0.1",
+            "drupal/core": ">=7,<7.73|>=8,<8.8.10|>=8.9,<8.9.6|>=9,<9.0.6",
+            "drupal/drupal": ">=7,<7.73|>=8,<8.8.10|>=8.9,<8.9.6|>=9,<9.0.6",
             "endroid/qr-code-bundle": "<3.4.2",
             "enshrined/svg-sanitize": "<0.13.1",
             "erusev/parsedown": "<1.7.2",
@@ -2125,6 +2125,7 @@
             "phpxmlrpc/extras": "<0.6.1",
             "pimcore/pimcore": "<6.3",
             "prestashop/autoupgrade": ">=4,<4.10.1",
+            "prestashop/contactform": ">1.0.1,<4.3",
             "prestashop/gamification": "<2.3.2",
             "prestashop/ps_facetedsearch": "<3.4.1",
             "privatebin/privatebin": "<1.2.2|>=1.3,<1.3.2",
@@ -2133,6 +2134,7 @@
             "pusher/pusher-php-server": "<2.2.1",
             "rainlab/debugbar-plugin": "<3.1",
             "robrichards/xmlseclibs": "<3.0.4",
+            "sabberworm/php-css-parser": ">=1,<1.0.1|>=2,<2.0.1|>=3,<3.0.1|>=4,<4.0.1|>=5,<5.0.9|>=5.1,<5.1.3|>=5.2,<5.2.1|>=6,<6.0.2|>=7,<7.0.4|>=8,<8.0.1|>=8.1,<8.1.1|>=8.2,<8.2.1|>=8.3,<8.3.1",
             "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
             "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
             "sensiolabs/connect": "<4.2.3",
@@ -2219,7 +2221,7 @@
             "willdurand/js-translation-bundle": "<2.1.1",
             "yii2mod/yii2-cms": "<1.9.2",
             "yiisoft/yii": ">=1.1.14,<1.1.15",
-            "yiisoft/yii2": "<2.0.15",
+            "yiisoft/yii2": "<2.0.38",
             "yiisoft/yii2-bootstrap": "<2.0.4",
             "yiisoft/yii2-dev": "<2.0.15",
             "yiisoft/yii2-elasticsearch": "<2.0.5",
@@ -2253,7 +2255,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2020-09-13T17:11:14+00:00",
+        "time": "2020-09-18T13:01:53+00:00",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
