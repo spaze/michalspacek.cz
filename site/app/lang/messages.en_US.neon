@@ -296,7 +296,7 @@ trainings:
 	nodateyet:
 		short: "termín zatím nevypsán"
 		long: "Žádný termín není zatím stanoven. \"Dejte mi níže vědět\":[%s], pokud byste o školení měli zájem."
-	regularlyeveryquarter: "Trainings in Prague are held regularly in the middle of March, June, September, and December, in other cities irregularly."
+	regularlyeveryquarter: "Trainings in Prague (or remote) are held regularly in the middle of March, June, September, and December, in other cities irregularly."
 	discontinued:
 		takenoverby:
 			martinhujer: "Looking for %s? I've handed them over to \"Martin Hujer\":[%s]."

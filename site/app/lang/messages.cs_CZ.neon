@@ -296,7 +296,7 @@ trainings:
 	nodateyet:
 		short: "termín zatím nevypsán"
 		long: "Žádný termín není zatím stanoven. \"Dejte mi níže vědět\":[%s], pokud byste o školení měli zájem."
-	regularlyeveryquarter: "Školení v Praze probíhají pravidelně jednou za čtvrt roku, vždy v polovině března, června, září a prosince, v jiných městech nepravidelně."
+	regularlyeveryquarter: "Školení v Praze (příp. online) probíhají pravidelně jednou za čtvrt roku, vždy v polovině března, června, září a prosince, v jiných městech nepravidelně."
 	discontinued:
 		takenoverby:
 			martinhujer: "Hledáte kurzy %s? Předal jsem je \"Martinovi Hujerovi\":[%s]."
