@@ -3,8 +3,12 @@ Dobrý den,
 posílám pozvánku na školení {$application->training->name} na které jste se
 nezávazně přihlásili na mých webových stránkách dne {$application->statusTime|localeDay:'cs_CZ'}.
 
-Termín školení je {$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'} v čase {$application->trainingStart|date:'H:i'}–{$application->trainingEnd|date:'H:i'}
-na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
+Termín školení je {$application->trainingStart|localeIntervalDay:$application->trainingEnd:'cs_CZ'} v čase {$application->trainingStart|date:'H:i'}–{$application->trainingEnd|date:'H:i'},
+{if $application->remote}
+bude se konat online, nemusíte nikam chodit.
+{else}
+bude se konat na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
+{/if}
 
 Přihlaste se prosím na adrese
 {link '//:Www:Redirect:application' $application->accessToken}
