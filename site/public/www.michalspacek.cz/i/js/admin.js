@@ -95,12 +95,12 @@ $(document).ready(function() {
 
 	$('#emails #checkAll').click(function(event) {
 		event.preventDefault();
-		$('#emails .row .send').prop('checked', true).attr('checked', true);
+		$('#emails .row .send:enabled').prop('checked', true).attr('checked', true);
 	});
 
 	$('#emails #uncheckAll').click(function(event) {
 		event.preventDefault();
-		$('#emails .row .send').prop('checked', false).attr('checked', false);
+		$('#emails .row .send:enabled').prop('checked', false).attr('checked', false);
 	});
 
 	$('a[href*="#new"]').click(function(event) {
