@@ -32,10 +32,19 @@
 			<td>{input send}</td>
 			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id" n:attr="title => ($application->company|ifNull:smazáno)">{$application->name|ifNull:smazáno}</a></small></td>
 			<td class="button"><small>{$application->email|ifNull:smazáno}</small></td>
-			<td>{$application->training->name} <small>{$application->trainingStart|date:'j. n.'} {if $application->remote}{_messages.label.remote}{else}{$application->venueCity}{/if}</small></td>
+			<td>
+				{$application->training->name}
+				<small>
+					{ifset $application->dateId}
+						{$application->trainingStart|date:'j. n.'} {if $application->remote}{_messages.label.remote}{else}{$application->venueCity}{/if}
+					{else}
+						zvolte termín
+					{/ifset}
+				</small>
+			</td>
 			<td><small><code><span title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</span> → {$application->nextStatus}</code></small></td>
 			<td>
-				{if $application->nextStatus === \MichalSpacekCz\Training\Statuses::STATUS_MATERIALS_SENT || ($application->remote && $application->nextStatus === \MichalSpacekCz\Training\Statuses::STATUS_REMINDED)}
+				{if $application->nextStatus === \MichalSpacekCz\Training\Statuses::STATUS_MATERIALS_SENT || (isset($application->remote) && $application->remote && $application->nextStatus === \MichalSpacekCz\Training\Statuses::STATUS_REMINDED)}
 					<strong n:if="!$application->files" class="error">Není nahrán žádný soubor!</strong>
 				{elseif in_array($application->nextStatus, [\MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT, \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER])}
 					{if $application->price && $application->vatRate && $application->priceVat}

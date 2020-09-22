@@ -758,6 +758,26 @@ class Applications
 
 
 	/**
+	 * @return Row[]
+	 */
+	public function getPreliminaryWithDateSet(): array
+	{
+		$upcoming = array_keys($this->trainingDates->getPublicUpcoming());
+
+		$applications = [];
+		foreach ($this->getPreliminary() as $training) {
+			if (in_array($training->action, $upcoming)) {
+				foreach ($training->applications as $application) {
+					$application->training = $training;
+					$applications[] = $application;
+				}
+			}
+		}
+		return $applications;
+	}
+
+
+	/**
 	 * @param string $token
 	 * @return Row<mixed>|null
 	 */

@@ -26,6 +26,10 @@ class TrainingMailsOutbox extends ProtectedForm
 			$checked = true;
 			$disabled = false;
 			switch ($application->nextStatus) {
+				case Statuses::STATUS_INVITED:
+					$checked = isset($application->dateId);
+					$disabled = !$checked;
+					break;
 				case Statuses::STATUS_MATERIALS_SENT:
 					$checked = (bool)$application->files;
 					$disabled = !$checked;

@@ -134,6 +134,11 @@ class Mails
 		$applications = [];
 		$paidOrInvoice = [Statuses::STATUS_PAID_AFTER, Statuses::STATUS_PRO_FORMA_INVOICE_SENT];
 
+		foreach ($this->trainingApplications->getPreliminaryWithDateSet() as $application) {
+			$application->nextStatus = Statuses::STATUS_INVITED;
+			$applications[$application->id] = $application;
+		}
+
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if ($this->trainingDates->get($application->dateId)->status == Dates::STATUS_CONFIRMED) {
