@@ -19,8 +19,8 @@
 							<abbr title="{$date[end]|date:DateTime::ISO8601}" class="dtend"></abbr>
 						{/if}
 					</strong>
-					<span class="location">{if $date[remote]}{_messages.label.remote}{else}{$date[venueCity]}{/if}</span><span n:if="$date[label]" class="label">{$date[label]}</span>
-				{sep}, {/sep}{/foreach}
+					<span class="location">{if $date[remote]}{_messages.label.remote}{else}{$date[venueCity]}{/if}</span><span n:if="$date[label]" class="label">{$date[label]}</span>{sep}{if !$date[label]}, {/if}{/sep}
+				{/foreach}
 			</small>
 		</li>
 	{/foreach}
