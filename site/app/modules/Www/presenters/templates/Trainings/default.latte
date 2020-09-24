@@ -4,23 +4,21 @@
 
 {define #list}
 <div n:if="isset($lastFreeSeats) && $lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
-<ul class="vcalendar">
+<ul class="vcalendar" id="training-dates">
  	{foreach $upcomingTrainings as $item}
 		<li class="vevent">
 			<a n:href=":Www:Trainings:training $item[action]" class="url"><strong class="summary">{$item[name]}</strong></a>
 			<span class="lighter"><i class="fas fa-fw fa-calendar"></i></span>
-			<small>
-				{foreach $item[dates] as $date}
-					<strong>
-						{if $date[tentative]}
-							{$date[start]|localeMonth}
-						{else}
-							<abbr title="{$date[start]|date:DateTime::ISO8601}" class="dtstart">{$date[start]|localeIntervalDay:$date[end]}</abbr>
-							<abbr title="{$date[end]|date:DateTime::ISO8601}" class="dtend"></abbr>
-						{/if}
-					</strong>
-					<span class="location">{if $date[remote]}{_messages.label.remote}{else}{$date[venueCity]}{/if}</span><span n:if="$date[label]" class="label">{$date[label]}</span>{sep}{if !$date[label]}, {/if}{/sep}
-				{/foreach}
+			<small n:foreach="$item[dates] as $date" class="date">
+				<strong>
+					{if $date[tentative]}
+						{$date[start]|localeMonth}
+					{else}
+						<abbr title="{$date[start]|date:DateTime::ISO8601}" class="dtstart">{$date[start]|localeIntervalDay:$date[end]}</abbr>
+						<abbr title="{$date[end]|date:DateTime::ISO8601}" class="dtend"></abbr>
+					{/if}
+				</strong>
+				<span class="location">{if $date[remote]}{_messages.label.remote}{else}{$date[venueCity]}{/if}</span><span n:if="$date[label]" class="label">{$date[label]}</span>{sep}{if !$date[label]}<span class="separator">, </span>{/if}{/sep}
 			</small>
 		</li>
 	{/foreach}

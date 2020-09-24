@@ -425,6 +425,8 @@ p#contact, p#social {
 	#frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 100%; }
 	#frm-application #frm-application-note { width: 98%; }
 	#frm-application input[type=submit] { width: 170px; }
+	#training-dates .fa-calendar, #training-dates .separator { display: none; }
+	#training-dates .date { display: block; }
 }
 @media (max-width: 400px) {
 	#header-links #other-projects { display: block; }
