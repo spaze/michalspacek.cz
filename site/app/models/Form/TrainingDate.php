@@ -82,7 +82,7 @@ class TrainingDate extends ProtectedForm
 
 		$statuses = array();
 		foreach ($this->trainingDates->getStatuses() as $status) {
-			$statuses[$status->id] = $status->status;
+			$statuses[$status->id] = "{$status->status} – {$status->description}";
 		}
 		$this->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte prosím status');
