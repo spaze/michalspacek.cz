@@ -15,7 +15,7 @@
 <tbody>
 <tr n:foreach="$certificates as $cert">
 	<td><small>{$iterator->getCounter()}.</small></td>
-	<td><small title="{if $cert->expired}Expiroval{else}Funkční{/if}" n:class="$cert->expired ? error">{if $cert->expired}&#x2716;{else}&#x2714;{/if}</small></td>
+	<td><small title="{if $cert->expired}Expiroval{else}Funkční{/if}" n:class="$cert->expired ? error">{if $cert->expired}<i class="fas fa-fw fa-times"></i>{else}<i class="fas fa-fw fa-check"></i>{/if}</small></td>
 	<td><strong n:tag-if="$cert->expiringSoon || $cert->expired" n:class="$cert->expired ? error">{$cert->cn}<small n:if="$cert->ext">-{$cert->ext}</small></strong></td>
 	<td>{$cert->notBefore|localeDay} <small>{$cert->notBefore|date:'H:i'}</small></td>
 	<td>
