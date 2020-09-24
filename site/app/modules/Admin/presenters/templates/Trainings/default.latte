@@ -53,12 +53,14 @@
 				</small>
 				</strong>
 				<span n:if="$training->note" title="Poznámka: {$training->note}" class="lighter"><i class="far fa-fw fa-comment"></i></span>
+				<span n:if="$training->label" title="Label: {$training->label}" class="lighter"><i class="far fa-fw fa-comment-alt"></i></span>
 			</td>
 			<td class="iconCell">
-				<small title="{$training->status}">
-					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED}&#x2714;{/if}
-					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_TENTATIVE}&#x2731;{/if}
-					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CANCELED}&#x2716;{/if}
+				<small title="{$training->status}" n:class="$training->status !== \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED ? lighter">
+					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CREATED}<i class="fas fa-fw fa-plus"></i>{/if}
+					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED}<i class="fas fa-fw fa-check"></i>{/if}
+					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_TENTATIVE}<i class="fas fa-fw fa-asterisk"></i>{/if}
+					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CANCELED}<i class="fas fa-fw fa-times"></i>{/if}
 				</small>
 			</td>
 			<td class="nameCell" data-date="{$training->dateId}">{$training->name}{if $training->public || $training->validCount > 0} ({$training->validCount}){/if}</td>

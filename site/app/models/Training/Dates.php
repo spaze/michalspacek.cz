@@ -255,7 +255,8 @@ class Dates
 		$result = $this->database->fetchAll(
 			'SELECT
 				s.id_status AS id,
-				s.status
+				s.status,
+				description
 			FROM training_date_status s
 			ORDER BY
 				s.id_status'
@@ -341,7 +342,7 @@ class Dates
 						SELECT
 							t2.id_training,
 							d2.key_venue,
-							MIN(d2.start) AS start
+							d2.start
 						FROM
 							trainings t2
 							JOIN training_dates d2 ON t2.id_training = d2.key_training
@@ -350,8 +351,6 @@ class Dates
 							(d2.public != ? OR TRUE = ?)
 							AND d2.end > NOW()
 							AND s2.status IN (?, ?)
-						GROUP BY
-							t2.id_training, d2.key_venue
 					) u ON t.id_training = u.id_training AND (v.id_venue = u.key_venue OR u.key_venue IS NULL) AND d.start = u.start
 				WHERE
 					t.key_successor IS NULL
@@ -368,7 +367,7 @@ class Dates
 					'lastFreeSeats' => $this->lastFreeSeats($row),
 					'start'         => $row->start,
 					'end'           => $row->end,
-					'label'         => ($row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null),
+					'label'         => $this->decodeLabel($row->labelJson),
 					'public'        => $row->public,
 					'status'        => $row->status,
 					'name'          => $this->translator->translate($row->name),
@@ -476,7 +475,7 @@ class Dates
 					SELECT
 						t2.id_training,
 						d2.key_venue,
-						MIN(d2.start) AS start
+						d2.start
 					FROM
 						trainings t2
 						JOIN training_dates d2 ON t2.id_training = d2.key_training
@@ -486,8 +485,6 @@ class Dates
 						AND t2.id_training = ?
 						AND d2.end > NOW()
 						AND s2.status IN (?, ?)
-					GROUP BY
-						t2.id_training, d2.key_venue
 				) u ON t.id_training = u.id_training AND (v.id_venue = u.key_venue OR u.key_venue IS NULL) AND d.start = u.start
 			ORDER BY
 				d.start",
@@ -498,7 +495,7 @@ class Dates
 		$dates = array();
 		foreach ($result as $row) {
 			$row->remote = (bool)$row->remote;
-			$row->label = ($row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null);
+			$row->label = $this->decodeLabel($row->labelJson);
 			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
 			$row->lastFreeSeats = $this->lastFreeSeats($row);
 			$row->price = $this->prices->resolvePriceVat($row->price);
@@ -545,6 +542,12 @@ class Dates
 	public function getDataRetentionDate(): DateTimeImmutable
 	{
 		return new DateTimeImmutable("-{$this->getDataRetentionDays()} days");
+	}
+
+
+	public function decodeLabel(?string $json): ?string
+	{
+		return ($json ? Json::decode($json)->{$this->translator->getDefaultLocale()} : null);
 	}
 
 }
