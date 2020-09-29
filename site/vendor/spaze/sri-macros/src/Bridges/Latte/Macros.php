@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Spaze\SubresourceIntegrity\Bridges\Latte;
 
+use Spaze\SubresourceIntegrity\Exceptions;
+use Spaze\SubresourceIntegrity\FileBuilder;
+
 class Macros
 {
 
@@ -52,8 +55,12 @@ class Macros
 		}
 
 		$resource = $node->tokenizer->fetchWord();
-		$url = $this->sriConfig->getUrl($resource);
-		$hash = $this->sriConfig->getHash($resource);
+		if (!$resource) {
+			throw new Exceptions\ShouldNotHappenException();
+		}
+
+		$url = $this->sriConfig->getUrl($resource, FileBuilder::EXT_JS);
+		$hash = $this->sriConfig->getHash($resource, FileBuilder::EXT_JS);
 
 		return $writer->write(
 			"echo '<script"
@@ -80,13 +87,14 @@ class Macros
 		}
 
 		$resource = $node->tokenizer->fetchWord();
-		$url = $this->sriConfig->getUrl($resource);
-		$hash = $this->sriConfig->getHash($resource);
+		if (!$resource) {
+			throw new Exceptions\ShouldNotHappenException();
+		}
 
 		return $writer->write(
 			"echo '<link rel=\"stylesheet\""
-			. " href=\"' . %escape('" . $url . "') . '\""
-			. " integrity=\"' . %escape('" . $hash . "') . '\""
+			. " href=\"' . %escape('" . $this->sriConfig->getUrl($resource, FileBuilder::EXT_CSS) . "') . '\""
+			. " integrity=\"' . %escape('" . $this->sriConfig->getHash($resource, FileBuilder::EXT_CSS) . "') . '\""
 			. "' . (isset(\$this->global->nonceGenerator) && \$this->global->nonceGenerator instanceof \\Spaze\\NonceGenerator\\GeneratorInterface ? ' nonce=\"' . %escape(\$this->global->nonceGenerator->getNonce()) . '\"' : '')"
 			. $this->buildAttributes('stylesheet', $node)
 			. " . '>';"
@@ -108,9 +116,11 @@ class Macros
 		}
 
 		$resource = $node->tokenizer->fetchWord();
-		$url = $this->sriConfig->getUrl($resource);
+		if (!$resource) {
+			throw new Exceptions\ShouldNotHappenException();
+		}
 
-		return $writer->write("echo %escape('" . $url . "');");
+		return $writer->write("echo %escape('" . $this->sriConfig->getUrl($resource) . "');");
 	}
 
 
@@ -128,9 +138,11 @@ class Macros
 		}
 
 		$resource = $node->tokenizer->fetchWord();
-		$hash = $this->sriConfig->getHash($resource);
+		if (!$resource) {
+			throw new Exceptions\ShouldNotHappenException();
+		}
 
-		return $writer->write("echo %escape('" . $hash . "');");
+		return $writer->write("echo %escape('" . $this->sriConfig->getHash($resource) . "');");
 	}
 
 
@@ -148,9 +160,11 @@ class Macros
 		$attrName = $attrValue = null;
 		while ($node->tokenizer->nextToken()) {
 			if ($node->tokenizer->isCurrent(\Latte\MacroTokens::T_SYMBOL)) {
-				${$isAttrName ? 'attrName' : 'attrValue'} = "'{$node->tokenizer->currentValue()}'";
+				$value = "'{$node->tokenizer->currentValue()}'";
+				$isAttrName ? $attrName = $value : $attrValue = $value;
 			} elseif ($node->tokenizer->isCurrent(\Latte\MacroTokens::T_STRING, \Latte\MacroTokens::T_VARIABLE)) {
-				${$isAttrName ? 'attrName' : 'attrValue'} = $node->tokenizer->currentValue();
+				$value = $node->tokenizer->currentValue();
+				$isAttrName ? $attrName = $value : $attrValue = $value;
 			} elseif ($node->tokenizer->isCurrent('=', '=>')) {
 				$isAttrName = false;
 			} elseif ($node->tokenizer->isCurrent(',')) {

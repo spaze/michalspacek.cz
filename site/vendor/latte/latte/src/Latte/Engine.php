@@ -17,8 +17,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.8.1';
-	public const VERSION_ID = 20801;
+	public const VERSION = '2.8.2';
+	public const VERSION_ID = 20802;
 
 	/** Content types */
 	public const
@@ -309,6 +309,20 @@ class Engine
 	{
 		$this->functions->$name = $callback;
 		return $this;
+	}
+
+
+	/**
+	 * Call a run-time function.
+	 * @return mixed
+	 */
+	public function invokeFunction(string $name, array $args)
+	{
+		if (!isset($this->functions->$name)) {
+			$hint = ($t = Helpers::getSuggestion(array_keys((array) $this->functions), $name)) ? ", did you mean '$t'?" : '.';
+			throw new \LogicException("Function '$name' is not defined$hint");
+		}
+		return ($this->functions->$name)(...$args);
 	}
 
 
