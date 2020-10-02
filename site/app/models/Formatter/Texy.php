@@ -54,6 +54,9 @@ class Texy extends NetxtenTexy
 	/** @var Helpers */
 	protected $netxtenHelpers;
 
+	/** @var TexyTexy|null */
+	private $texy;
+
 	/**
 	 * Static files root FQDN, no trailing slash.
 	 *
@@ -171,6 +174,9 @@ class Texy extends NetxtenTexy
 	public function setTopHeading(int $level): self
 	{
 		$this->topHeading = $level;
+		if ($this->texy) {
+			$this->texy->headingModule->top = $this->topHeading;
+		}
 		return $this;
 	}
 
@@ -186,11 +192,12 @@ class Texy extends NetxtenTexy
 		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
 		$texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
 		$texy->figureModule->widthDelta = false;  // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
-		$texy->headingModule->top = $this->topHeading;
 		$texy->headingModule->generateID = true;
 		$texy->headingModule->idPrefix = '';
 		$texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2);  // en_US → en
 		$texy->allowed['phrase/del'] = true;
+		$this->texy = $texy;
+		$this->setTopHeading($this->topHeading);
 		return $texy;
 	}
 
