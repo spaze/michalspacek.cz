@@ -16,7 +16,7 @@
 	<tr>
 		<th>{label title /}</th><td>{input title}<br><small><a n:ifset="$talk->action" n:href=":Www:Talks:talk $talk->action">zobrazit přednášku</a></small></td>
 	</tr>
-	<tr>
+	<tr class="with-textarea">
 		<th>{label description /}</th><td>{input description}</td>
 	</tr>
 	<tr>
@@ -55,10 +55,10 @@
 	<tr>
 		<th>{label ogImage /}</th><td>{input ogImage}<br><small>místo čísla slajdu v URL použijte <code>%d</code></small></td>
 	</tr>
-	<tr>
+	<tr class="with-textarea">
 		<th>{label transcript /}</th><td>{input transcript}</td>
 	</tr>
-	<tr>
+	<tr class="with-textarea">
 		<th>{label favorite /}</th><td>{input favorite}</td>
 	</tr>
 	<tr>
