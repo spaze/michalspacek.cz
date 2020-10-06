@@ -156,9 +156,9 @@ pre {
 	margin-left: 10px;
 	text-decoration: none;
 }
-#header-links a[lang] { background-color: rgba(0, 0, 255, 0.04); }
+#header-links a.tools { background-color: rgba(0, 0, 255, 0.04); }
 #header-links a:hover { background-color: rgba(0, 0, 0, 0.08); }
-#header-links a[lang]:hover { background-color: rgba(0, 0, 255, 0.08); }
+#header-links a.tools:hover { background-color: rgba(0, 0, 255, 0.08); }
 #header-links #other-projects { display: none; }
 .print { display: none; }
 .single-column { padding: 0 10px 0.5em 10px; }
@@ -394,6 +394,8 @@ p#contact, p#social {
 	font-size: 300%;
 	margin-bottom: 0.33em;
 }
+#theme-dark { display: initial !important; }
+#theme-light { display: none !important; }
 .fa-fw {
 	display: inline-block;
 	width: 1.25em;
@@ -430,5 +432,5 @@ p#contact, p#social {
 }
 @media (max-width: 400px) {
 	#header-links #other-projects { display: block; }
-	#header-links a:not([lang]) { display: none; }
+	#header-links a:not(.tools) { display: none; }
 }

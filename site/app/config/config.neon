@@ -56,6 +56,7 @@ subresourceIntegrity:
 		remove-fbclid: /i/js/remove-fbclid.js
 		rating: /i/css/rating.css
 		screen-main: /i/css/screen.css
+		screen-main-dark: /i/css/screen-dark.css
 		screen-upc: /i/css/upc/screen.css
 		screen-pulse: /i/css/pulse/screen.css
 		screen-webleed: /i/css/webleed/screen.css
