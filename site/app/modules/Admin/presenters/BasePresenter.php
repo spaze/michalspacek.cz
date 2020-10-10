@@ -39,11 +39,4 @@ abstract class BasePresenter extends WwwBasePresenter
 		}
 	}
 
-
-	public function beforeRender(): void
-	{
-		$this->template->darkMode = $this->theme->isDarkMode();
-		$this->template->setTranslator($this->translator);
-	}
-
 }
