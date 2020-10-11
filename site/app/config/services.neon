@@ -121,6 +121,7 @@ services:
 	winterIsComing: \MichalSpacekCz\EasterEgg\WinterIsComing
 	tags: \MichalSpacekCz\Tags
 	theme: \MichalSpacekCz\Theme
+	phpInfo: \Spaze\PhpInfo\PhpInfo
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory

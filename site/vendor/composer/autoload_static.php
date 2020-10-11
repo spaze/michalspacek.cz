@@ -22,6 +22,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\Config\\' => 25,
             'Spaze\\SubresourceIntegrity\\' => 27,
+            'Spaze\\PhpInfo\\' => 14,
             'Spaze\\PHPStan\\Rules\\Disallowed\\' => 31,
             'Spaze\\NonceGenerator\\' => 21,
             'Spaze\\Exports\\' => 14,
@@ -81,6 +82,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Spaze\\SubresourceIntegrity\\' => 
         array (
             0 => __DIR__ . '/..' . '/spaze/sri-macros/src',
+        ),
+        'Spaze\\PhpInfo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spaze/phpinfo/src',
         ),
         'Spaze\\PHPStan\\Rules\\Disallowed\\' => 
         array (

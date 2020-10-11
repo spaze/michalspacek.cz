@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7b7c90ab638ae8427abd89e72630110",
+    "content-hash": "156b7af7cff2490f8e805b75c1c839cd",
     "packages": [
         {
             "name": "contributte/translation",
@@ -1941,6 +1941,54 @@
             ],
             "description": "Content Security Policy nonce generator",
             "time": "2020-01-24T15:17:16+00:00"
+        },
+        {
+            "name": "spaze/phpinfo",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/phpinfo.git",
+                "reference": "fd15bf28364206569cceb5a9fa0e291e850ccc74"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/fd15bf28364206569cceb5a9fa0e291e850ccc74",
+                "reference": "fd15bf28364206569cceb5a9fa0e291e850ccc74",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "nette/tester": "^2.3",
+                "php-parallel-lint/php-console-highlighter": "^0.5.0",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan": "^0.12.44",
+                "spaze/coding-standard": "^0.0.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spaze\\PhpInfo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.com/"
+                }
+            ],
+            "description": "Extract phpinfo() into a variable and move CSS to external file.",
+            "keywords": [
+                "php",
+                "phpinfo"
+            ],
+            "time": "2020-10-11T17:23:56+00:00"
         },
         {
             "name": "spaze/sri-macros",

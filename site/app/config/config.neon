@@ -60,7 +60,7 @@ subresourceIntegrity:
 		screen-upc: /i/css/upc/screen.css
 		screen-pulse: /i/css/pulse/screen.css
 		screen-webleed: /i/css/webleed/screen.css
-		info-admin: /i/css/admin/info.css
+		info-admin: ../../vendor/spaze/phpinfo/src/assets/info.css
 
 sessionHandler:
 	encryptionService: @sessionEncryption
