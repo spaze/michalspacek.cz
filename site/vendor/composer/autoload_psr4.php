@@ -12,6 +12,7 @@ return array(
     'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
     'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
     'Spaze\\SubresourceIntegrity\\' => array($vendorDir . '/spaze/sri-macros/src'),
+    'Spaze\\PhpInfo\\' => array($vendorDir . '/spaze/phpinfo/src'),
     'Spaze\\PHPStan\\Rules\\Disallowed\\' => array($vendorDir . '/spaze/phpstan-disallowed-calls/src'),
     'Spaze\\NonceGenerator\\' => array($vendorDir . '/spaze/nonce-generator/src'),
     'Spaze\\Exports\\' => array($vendorDir . '/spaze/feed-exports/src'),

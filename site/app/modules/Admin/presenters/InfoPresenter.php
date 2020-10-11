@@ -4,20 +4,25 @@ declare(strict_types = 1);
 namespace App\AdminModule\Presenters;
 
 use Nette\Utils\Html;
+use Spaze\PhpInfo\PhpInfo;
 
 class InfoPresenter extends BasePresenter
 {
 
+	private PhpInfo $phpInfo;
+
+
+	public function __construct(PhpInfo $phpInfo)
+	{
+		$this->phpInfo = $phpInfo;
+		parent::__construct();
+	}
+
+
 	public function renderPhp(): void
 	{
-		ob_start();
-		phpinfo();
-		$info = preg_replace('~^.*?(<table[^>]*>.*</table>).*$~s', '$1', ob_get_clean() ?: 'Cannot get phpinfo() output');
-		// Convert inline styles to classes defined in admin/info.css so we can drop CSP style-src 'unsafe-inline'
-		$info = str_replace('style="color: #', 'class="color-', $info);
-
 		$this->template->pageTitle = 'phpinfo()';
-		$this->template->phpinfo = Html::el()->setHtml($info);
+		$this->template->phpinfo = Html::el()->setHtml($this->phpInfo->getHtml());
 	}
 
 }
