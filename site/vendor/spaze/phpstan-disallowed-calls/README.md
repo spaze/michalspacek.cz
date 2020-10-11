@@ -49,6 +49,23 @@ includes:
 
 `disallowed-dangerous-calls.neon` can also serve as a template when you'd like to extend the configuration to disallow some other functions or methods, copy it and modify to your needs.
 
+If you want to disable program execution functions (`exec()`, `shell_exec()` & friends), include `disallowed-execution-calls.neon`:
+
+```neon
+includes:
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+```
+
+I'd recommend you include both:
+
+```neon
+includes:
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+```
+
+### Custom rules
+
 There are three different disallowed types (and configuration keys) that can be disallowed:
 
 1. `disallowedMethodCalls` - for detecting `$object->method()` calls
@@ -81,7 +98,16 @@ parameters:
             message: 'use logger instead'
 ```
 
-The `message` key is optional.
+The `message` key is optional. Functions and methods can be specified with or without `()`.
+
+Use wildcard (`*`) to ignore all functions or methods starting with a prefix, for example:
+```neon
+parameters:
+    disallowedFunctionCalls:
+        -
+            function: 'pcntl_*()'
+```
+The wildcard must be the leftmost character of the function or method name, optionally followed by `()`.
 
 ## Example output
 

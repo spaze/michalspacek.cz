@@ -226,18 +226,32 @@ abstract class AbstractControlStructureSpacing implements Sniff
 			return;
 		}
 
-		$hasCommentAfter = in_array(
-			$tokens[$notWhitespacePointerAfter]['code'],
-			Tokens::$commentTokens,
-			true
-		) && $tokens[$notWhitespacePointerAfter]['line'] === $tokens[$controlStructureEndPointer]['line'];
-		$pointerAfter = $hasCommentAfter
-			? TokenHelper::findNextExcluding($phpcsFile, T_WHITESPACE, $notWhitespacePointerAfter + 1)
-			: $notWhitespacePointerAfter;
+		$hasCommentAfter = in_array($tokens[$notWhitespacePointerAfter]['code'], Tokens::$commentTokens, true);
+		$isCommentAfterOnSameLine = false;
+		$pointerAfter = $notWhitespacePointerAfter;
 
-		$isLastControlStructure = in_array($tokens[$controlStructurePointer]['code'], [T_CASE, T_DEFAULT], true)
-			? $tokens[$pointerAfter]['code'] === T_CLOSE_CURLY_BRACKET
-			: in_array($tokens[$pointerAfter]['code'], [T_CLOSE_CURLY_BRACKET, T_CASE, T_DEFAULT], true);
+		$isControlStructureEndAfterPointer = static function (int $pointer) use ($tokens, $controlStructurePointer): bool {
+			return in_array($tokens[$controlStructurePointer]['code'], [T_CASE, T_DEFAULT], true)
+				? $tokens[$pointer]['code'] === T_CLOSE_CURLY_BRACKET
+				: in_array($tokens[$pointer]['code'], [T_CLOSE_CURLY_BRACKET, T_CASE, T_DEFAULT], true);
+		};
+
+		if ($hasCommentAfter) {
+			if ($tokens[$notWhitespacePointerAfter]['line'] === $tokens[$controlStructureEndPointer]['line'] + 1) {
+				$commentEndPointer = CommentHelper::getCommentEndPointer($phpcsFile, $notWhitespacePointerAfter);
+				$pointerAfterComment = TokenHelper::findNextExcluding($phpcsFile, T_WHITESPACE, $commentEndPointer + 1);
+
+				if ($isControlStructureEndAfterPointer($pointerAfterComment)) {
+					$controlStructureEndPointer = $commentEndPointer;
+					$pointerAfter = $pointerAfterComment;
+				}
+			} elseif ($tokens[$notWhitespacePointerAfter]['line'] === $tokens[$controlStructureEndPointer]['line']) {
+				$isCommentAfterOnSameLine = true;
+				$pointerAfter = TokenHelper::findNextExcluding($phpcsFile, T_WHITESPACE, $notWhitespacePointerAfter + 1);
+			}
+		}
+
+		$isLastControlStructure = $isControlStructureEndAfterPointer($pointerAfter);
 
 		$requiredLinesCountAfter = $isLastControlStructure
 			? $this->getLinesCountAfterLast($phpcsFile, $controlStructurePointer, $controlStructureEndPointer)
@@ -263,7 +277,7 @@ abstract class AbstractControlStructureSpacing implements Sniff
 			return;
 		}
 
-		$replaceStartPointer = $hasCommentAfter ? $notWhitespacePointerAfter : $controlStructureEndPointer;
+		$replaceStartPointer = $isCommentAfterOnSameLine ? $notWhitespacePointerAfter : $controlStructureEndPointer;
 		$endOfLineBeforeAfterPointer = TokenHelper::findPreviousContent($phpcsFile, T_WHITESPACE, $phpcsFile->eolChar, $pointerAfter - 1);
 
 		$phpcsFile->fixer->beginChangeset();
@@ -272,7 +286,7 @@ abstract class AbstractControlStructureSpacing implements Sniff
 			$phpcsFile->fixer->replaceToken($i, '');
 		}
 
-		if ($hasCommentAfter) {
+		if ($isCommentAfterOnSameLine) {
 			for ($i = 0; $i < $requiredLinesCountAfter; $i++) {
 				$phpcsFile->fixer->addNewline($notWhitespacePointerAfter);
 			}
@@ -323,6 +337,14 @@ abstract class AbstractControlStructureSpacing implements Sniff
 
 		if ($tokens[$controlStructurePointer]['code'] === T_IF) {
 			if (!array_key_exists('scope_closer', $tokens[$controlStructurePointer])) {
+				throw new Exception('"if" without curly braces is not supported.');
+			}
+
+			$pointerAfterParenthesisCloser = TokenHelper::findNextEffective(
+				$phpcsFile,
+				$tokens[$controlStructurePointer]['parenthesis_closer'] + 1
+			);
+			if ($pointerAfterParenthesisCloser !== null && $tokens[$pointerAfterParenthesisCloser]['code'] === T_COLON) {
 				throw new Exception('"if" without curly braces is not supported.');
 			}
 
@@ -377,18 +399,21 @@ abstract class AbstractControlStructureSpacing implements Sniff
 
 		if (in_array($tokens[$controlStructurePointer]['code'], [T_CASE, T_DEFAULT], true)) {
 			$switchPointer = TokenHelper::findPrevious($phpcsFile, T_SWITCH, $controlStructurePointer - 1);
-			$pointerAfterControlStructureEnd = TokenHelper::findNext(
+
+			$pointers = TokenHelper::findNextAll(
 				$phpcsFile,
 				[T_CASE, T_DEFAULT],
 				$controlStructurePointer + 1,
 				$tokens[$switchPointer]['scope_closer']
 			);
 
-			if ($pointerAfterControlStructureEnd === null) {
-				return TokenHelper::findPreviousExcluding($phpcsFile, T_WHITESPACE, $tokens[$switchPointer]['scope_closer'] - 1);
+			foreach ($pointers as $pointer) {
+				if (TokenHelper::findPrevious($phpcsFile, T_SWITCH, $pointer - 1) === $switchPointer) {
+					return TokenHelper::findPreviousExcluding($phpcsFile, T_WHITESPACE, $pointer - 1);
+				}
 			}
 
-			return TokenHelper::findPreviousExcluding($phpcsFile, T_WHITESPACE, $pointerAfterControlStructureEnd - 1);
+			return TokenHelper::findPreviousExcluding($phpcsFile, T_WHITESPACE, $tokens[$switchPointer]['scope_closer'] - 1);
 		}
 
 		$nextPointer = TokenHelper::findNext(
