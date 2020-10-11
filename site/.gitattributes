@@ -1,1 +1,2 @@
 composer.lock -merge
+vendor/composer/installed.json linguist-generated=true
