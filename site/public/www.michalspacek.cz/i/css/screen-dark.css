@@ -22,16 +22,17 @@ hr {
 }
 fieldset { border-color: #000; }
 legend { background-color: #000; }
-input, select, textarea {
+input, select, textarea, button {
 	color: #DDD;
 	border: 1px solid #000;
 	background-color: #24374C;
 }
-input[type=submit] { background-color: #224E34; }
-input[type=submit]:hover { background-color: #2A6040; }
+input[type=submit], button { background-color: #224E34; }
+input[type=submit]:hover, button:hover { background-color: #2A6040; }
 small, .small, .column-content .figure p { color: #A9A9A9; }
 small a, .small a { color: #C9C9C9 !important; }
 blockquote, .indent { border-left-color: #2B2B2B; }
+tr.dateLine td, li.dateLine { border-top-color: #2B2B2B; }
 #header-links a { background-color: rgba(255, 255, 255, 0.06); }
 #header-links a.tools { background-color: rgba(0, 255, 0, 0.08); }
 #header-links a:hover { background-color: rgba(255, 255, 255, 0.12); }
@@ -57,3 +58,6 @@ code, pre, .highlight pre code { background-color: #2D2F2B; }
 .column-sidebar .widget { background-color: #202530; }
 #theme-dark { display: none !important; }
 #theme-light { display: initial !important; }
+#statuses tr.summary:hover, #certificates tbody tr:hover, #applications tbody tr:hover, #slides tbody:hover,
+	#emails tbody.row:hover { background-color: #234; }
+#pubkey { background-color: #2D282B; }

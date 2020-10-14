@@ -23,7 +23,7 @@ legend {
 	padding: 0 10px;
 	background-color: #EEE;
 }
-input, select { padding: 6px; }
+input, select, button { padding: 6px; }
 h1, h2, h3, h4 {
 	padding: 0;
 	margin: 20px 0;
