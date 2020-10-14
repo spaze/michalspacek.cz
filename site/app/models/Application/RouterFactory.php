@@ -170,6 +170,8 @@ class RouterFactory
 			$this->localeRouters[$locale] = new RouteList();
 		}
 
+		$this->router->withModule('EasterEgg')->addRoute('/nette.micro', 'Nette:micro');
+
 		$this->initRouterLists(self::MODULE_ADMIN);
 		$this->addRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 

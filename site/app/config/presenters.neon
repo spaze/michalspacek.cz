@@ -53,3 +53,6 @@ services:
 	- \App\PulseModule\Presenters\HomepagePresenter
 	- \App\PulseModule\Presenters\PasswordsPresenter
 	- \App\PulseModule\Presenters\PasswordsStoragesPresenter
+
+	# easteregg module
+	- \MichalSpacekCz\EasterEgg\Presenters\NettePresenter

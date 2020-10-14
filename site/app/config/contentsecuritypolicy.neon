@@ -26,6 +26,8 @@ contentSecurityPolicy:
 			form-action: "'none'"
 			report-uri: %reporting.contentSecurityPolicy%
 			report-to: default
+		*.*.*:
+			@extends: *.*
 		www.*.*:
 			default-src: "'none'"
 			img-src:
