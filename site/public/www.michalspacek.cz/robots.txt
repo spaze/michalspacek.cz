@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /admin
 Disallow: /info.php
+Disallow: /nette.micro
 Disallow: /</script>">'><script>alert('brobots.txt')</script>
