@@ -80,6 +80,22 @@ class NetteCve202015227Test extends TestCase
 		Assert::equal($keys, array_keys($rce[1]));
 	}
 
+
+	public function testRceWget(): void
+	{
+		Assert::same(['nette.micro-wget', []], $this->cve202015227->rce('shell_exec', ['cmd' => 'wget example.com']));
+	}
+
+
+	public function testRceNotFound(): void
+	{
+		Assert::same(['nette.micro-not-found', ['command' => 'echo']], $this->cve202015227->rce('shell_exec', ['cmd' => 'echo something']));
+		Assert::same(['nette.micro-not-found', ['command' => 'bash']], $this->cve202015227->rce('shell_exec', ['cmd' => 'bash something']));
+		Assert::same(['nette.micro-not-found', ['command' => 'zsh']], $this->cve202015227->rce('shell_exec', ['cmd' => 'sh something']));
+		Assert::same(['nette.micro-not-recognized', ['command' => 'certutil.exe']], $this->cve202015227->rce('shell_exec', ['cmd' => 'certutil something']));
+		Assert::same(['nette.micro-not-recognized', ['command' => 'sa.exe']], $this->cve202015227->rce('shell_exec', ['cmd' => 'sa.exe something']));
+	}
+
 }
 
 (new NetteCve202015227Test())->run();

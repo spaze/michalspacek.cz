@@ -53,6 +53,23 @@ class NetteCve202015227
 			$view = 'nette.micro-ifconfig';
 		} elseif (Strings::contains($param, 'ls')) {
 			$view = 'nette.micro-ls';
+		} elseif (Strings::contains($param, 'wget')) {
+			$view = 'nette.micro-wget';
+		} elseif (Strings::contains($param, 'echo')) {
+			$data['command'] = 'echo';
+			$view = 'nette.micro-not-found';
+		} elseif (Strings::contains($param, 'bash')) {
+			$data['command'] = 'bash';
+			$view = 'nette.micro-not-found';
+		} elseif (Strings::contains($param, 'sa.exe')) {
+			$data['command'] = 'sa.exe';
+			$view = 'nette.micro-not-recognized';
+		} elseif (Strings::contains($param, 'certutil')) {
+			$data['command'] = 'certutil.exe';
+			$view = 'nette.micro-not-recognized';
+		} elseif (Strings::contains($param, 'sh')) {
+			$data['command'] = 'zsh';
+			$view = 'nette.micro-not-found';
 		} else {
 			throw new BadRequestException(sprintf("[%s] Unknown value '%s' for callback '%s' and param '%s'", __CLASS__, $param, $callback, $paramNames[$callback]));
 		}
