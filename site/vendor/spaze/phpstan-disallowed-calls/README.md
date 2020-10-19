@@ -109,6 +109,10 @@ parameters:
 ```
 The wildcard must be the leftmost character of the function or method name, optionally followed by `()`.
 
+You can treat `eval()` as a function (although it's a language construct) and disallow it in `disallowedFunctionCalls`.
+
+To disallow naive object creation (`new ClassName()` or `new $classname`), disallow `NameSpace\ClassName::__construct` in `disallowedMethodCalls`. Works even when there's no constructor defined in that class.
+
 ## Example output
 
 ```

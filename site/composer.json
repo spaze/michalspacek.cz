@@ -36,7 +36,8 @@
 		"spaze/mysql-session-handler": "^2.0",
 		"spaze/encryption": "^0.2",
 		"spaze/phpinfo": "^0.1.0",
-		"contributte/translation": "^0.7"
+		"contributte/translation": "^0.7",
+		"spaze/phpstan-disallowed-calls": "^1.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
@@ -46,7 +47,6 @@
 		"phpstan/phpstan-nette": "^0.12",
 		"roave/security-advisories": "dev-latest",
 		"spaze/coding-standard": "^0.0",
-		"spaze/phpstan-disallowed-calls": "^0.12.7",
 		"slevomat/coding-standard": "^6.4"
 	},
 	"replace": {
