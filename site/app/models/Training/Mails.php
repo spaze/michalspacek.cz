@@ -95,7 +95,7 @@ class Mails
 		?string $venueAddress,
 		?string $venueCity
 	): void {
-		Debugger::log("Sending sign-up email to {$recipientName}, application id: {$applicationId}, training: {$training}");
+		Debugger::log("Sending sign-up email to application id: {$applicationId}, training: {$training}");
 
 		$template->setFile(__DIR__ . '/mails/trainingSignUp.latte');
 
@@ -201,7 +201,7 @@ class Mails
 	 */
 	public function sendInvitation(Row $application, Template $template, string $additional): void
 	{
-		Debugger::log("Sending invitation email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
+		Debugger::log("Sending invitation email application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/invitation.latte');
 		$template->application = $application;
@@ -219,7 +219,7 @@ class Mails
 	 */
 	public function sendMaterials(Row $application, Template $template, bool $feedbackRequest, string $additional): void
 	{
-		Debugger::log("Sending materials email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
+		Debugger::log("Sending materials email application id: {$application->id}, training: {$application->training->action}");
 
 		$template->setFile(__DIR__ . '/mails/admin/' . ($application->familiar ?  'materialsFamiliar.latte' : 'materials.latte'));
 		$template->application = $application;
@@ -238,7 +238,7 @@ class Mails
 	 */
 	public function sendInvoice(Row $application, Template $template, FileUpload $invoice, string $additional): void
 	{
-		Debugger::log("Sending invoice email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
+		Debugger::log("Sending invoice email to application id: {$application->id}, training: {$application->training->action}");
 
 		if ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER) {
 			$filename = ($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma.latte' : 'invoiceAfter.latte');
@@ -261,7 +261,7 @@ class Mails
 	 */
 	public function sendReminder(Row $application, Template $template, string $additional): void
 	{
-		Debugger::log("Sending reminder email to {$application->name}, application id: {$application->id}, training: {$application->training->action}");
+		Debugger::log("Sending reminder email application id: {$application->id}, training: {$application->training->action}");
 
 		if ($application->remote) {
 			$template->setFile(__DIR__ . '/mails/admin/reminderRemote.latte');
