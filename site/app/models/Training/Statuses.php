@@ -8,6 +8,7 @@ use DateTimeZone;
 use Exception;
 use Nette\Database\Context;
 use Nette\Database\Row;
+use Tracy\Debugger;
 
 class Statuses
 {
@@ -216,6 +217,16 @@ class Statuses
 		);
 
 		$datetime = new DateTime($date ?? '');
+
+		Debugger::log(sprintf(
+			'Changing status for application id: %d; old status: %s, old status time: %s; new status: %s, new status time: %s',
+			$applicationId,
+			$prevStatus->statusId,
+			$prevStatus->statusTime->format(DateTime::ATOM),
+			$statusId,
+			$datetime->format(DateTime::ATOM),
+		));
+
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
@@ -226,7 +237,7 @@ class Statuses
 			$applicationId
 		);
 
-		$result = $this->database->query(
+		$this->database->query(
 			'INSERT INTO training_application_status_history',
 			array(
 				'key_application'      => $applicationId,
