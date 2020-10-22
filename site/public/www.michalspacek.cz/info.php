@@ -21,7 +21,7 @@ h2 {font-size: 125%;}
 img {float: right; border: 0px;}
 hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #000000;}
 </style>
-<title>phpinfo()</title><meta name="ROBOTS" content="NOINDEX,NOFOLLOW,NOARCHIVE" /></head>
+<title>phpinfo()</title><meta name="ROBOTS" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOFUTURE" /></head>
 <body><div class="center">
 <table border="0" cellpadding="3" width="600">
 <tr class="h"><td>
