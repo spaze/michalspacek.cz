@@ -8,6 +8,7 @@ use MichalSpacekCz\Training\Dates;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Localization\ITranslator;
+use Netxten\Templating\Helpers;
 use stdClass;
 
 class TrainingApplicationAdminFactory
@@ -20,6 +21,8 @@ class TrainingApplicationAdminFactory
 	private Dates $trainingDates;
 
 	private TrainingControlsFactory $trainingControlsFactory;
+
+	private Helpers $netxtenHelpers;
 
 	private ITranslator $translator;
 
@@ -43,12 +46,14 @@ class TrainingApplicationAdminFactory
 		Applications $trainingApplications,
 		Dates $trainingDates,
 		TrainingControlsFactory $trainingControlsFactory,
+		Helpers $netxtenHelpers,
 		ITranslator $translator
 	) {
 		$this->factory = $factory;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 		$this->trainingControlsFactory = $trainingControlsFactory;
+		$this->netxtenHelpers = $netxtenHelpers;
 		$this->translator = $translator;
 	}
 
@@ -66,6 +71,24 @@ class TrainingApplicationAdminFactory
 		$this->trainingControlsFactory->addNote($form);
 		$this->addPaymentInfo($form);
 		$form->addSubmit('submit', 'Uložit');
+
+		$dates = $this->trainingDates->getPublicUpcoming();
+		$upcoming = [];
+		if (isset($dates[$application->trainingAction])) {
+			foreach ($dates[$application->trainingAction]->dates as $date) {
+				$upcoming[$date->dateId] = sprintf(
+					'%s, %s',
+					$this->netxtenHelpers->localeIntervalDay($date->start, $date->end),
+					$date->remote ? $this->translator->translate('messages.label.remote') : $date->city
+				);
+			}
+		}
+		$required = (bool)$upcoming;
+		$form->addSelect('date', 'Datum:', $upcoming)
+			->setPrompt($upcoming ? '- zvolte termín -' : 'Žádný vypsaný termín')
+			->setHtmlAttribute('data-original-date-id', $application->dateId)
+			->setRequired($required)
+			->setDisabled(!$required);
 
 		foreach ($this->deletableFields as $field) {
 			$form->addCheckbox("{$field}Set")->setHtmlAttribute('class', 'disableInput');
@@ -150,24 +173,13 @@ class TrainingApplicationAdminFactory
 			'discount' => $application->discount,
 			'invoiceId' => $application->invoiceId,
 			'paid' => $application->paid,
+			'date' => $application->dateId,
 		);
 		foreach ($this->deletableFields as $field) {
 			$values["{$field}Set"] = ($application->$field !== null);
 			$form->getComponent($field)->setHtmlAttribute('class', $application->$field === null ? 'transparent' : null);
 		}
 		$form->setDefaults($values);
-		if (!isset($application->dateId)) {
-			$dates = $this->trainingDates->getPublicUpcoming();
-			$upcoming = array();
-			if (isset($dates[$application->trainingAction])) {
-				foreach ($dates[$application->trainingAction]->dates as $date) {
-					$upcoming[$date->dateId] = $date->start;
-				}
-			}
-			$form->addSelect('date', 'Datum:', $upcoming)
-				->setPrompt($upcoming ? '- zvolte termín -' : 'Žádný vypsaný termín')
-				->setDisabled(!$upcoming);
-		}
 	}
 
 }

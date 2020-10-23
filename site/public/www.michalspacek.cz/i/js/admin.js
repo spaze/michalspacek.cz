@@ -270,4 +270,14 @@ $(document).ready(function() {
 		var checked = $(this).is(':checked');
 		$(this).siblings(':input').toggleClass('transparent');
 	});
+
+	$('#change-training-date, #change-training-date-cancel').on('click', function (event) {
+		event.preventDefault();
+		$('#training-date, #change-training-date, #change-training-date-cancel, #frm-applicationForm-date').toggleClass('hidden');
+	});
+	$('#change-training-date-cancel').on('click', function (event) {
+		event.preventDefault();
+		var dateSelect = $('#frm-applicationForm-date');
+		dateSelect.val(dateSelect.data('original-date-id'));
+	});
 });

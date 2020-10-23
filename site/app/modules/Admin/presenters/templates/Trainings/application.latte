@@ -16,7 +16,17 @@
 		<th>Školení:</th><td>{$trainingName}</td>
 	</tr>
 	<tr>
-		<th>Datum:</th><td>{if $trainingStart}{$trainingStart|localeIntervalDay:$trainingEnd}, {if $trainingRemote}{_messages.label.remote}{else}{$trainingCity}{/if}{else}{input date}{/if}</td>
+		<th>Datum:</th>
+		<td>
+			{if $trainingStart}
+				<span id="training-date">{$trainingStart|localeIntervalDay:$trainingEnd}, {if $trainingRemote}{_messages.label.remote}{else}{$trainingCity}{/if}</span>
+				<small><a href="#zmenit" id="change-training-date">Změnit</a></small>
+				{input date class => hidden}
+				<small><a href="#zrusit" id="change-training-date-cancel" class="hidden">Zrušit</a></small>
+			{else}
+				{input date}
+			{/if}
+		</td>
 	</tr>
 	<tr>
 		<th>{label name /}</th><td>{input nameSet:} {input name} <small n:if="$toBeInvited"><a n:href=":Www:Redirect:application#prihlaska $accessToken">předvyplněná přihláška</a></small></td>
