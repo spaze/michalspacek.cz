@@ -5,7 +5,7 @@ namespace App\AdminModule\Presenters;
 
 use DateTime;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
-use MichalSpacekCz\Form\TrainingApplicationAdmin;
+use MichalSpacekCz\Form\TrainingApplicationAdminFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
 use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Form\TrainingDate;
@@ -26,6 +26,7 @@ use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Netxten\Templating\Helpers;
+use stdClass;
 
 class TrainingsPresenter extends BasePresenter
 {
@@ -59,6 +60,8 @@ class TrainingsPresenter extends BasePresenter
 
 	/** @var DeletePersonalDataFormFactory */
 	private $deletePersonalDataFormFactory;
+
+	private TrainingApplicationAdminFactory $trainingApplicationAdminFactory;
 
 	/** @var Row[] */
 	private $applications;
@@ -95,7 +98,8 @@ class TrainingsPresenter extends BasePresenter
 		Reviews $trainingReviews,
 		TrainingControlsFactory $trainingControlsFactory,
 		Helpers $netxtenHelpers,
-		DeletePersonalDataFormFactory $deletePersonalDataFormFactory
+		DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
+		TrainingApplicationAdminFactory $trainingApplicationAdminFactory
 	) {
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
@@ -107,6 +111,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->netxtenHelpers = $netxtenHelpers;
 		$this->deletePersonalDataFormFactory = $deletePersonalDataFormFactory;
+		$this->trainingApplicationAdminFactory = $trainingApplicationAdminFactory;
 		parent::__construct();
 	}
 
@@ -449,48 +454,18 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication(string $formName): TrainingApplicationAdmin
+	protected function createComponentApplicationForm(): Form
 	{
-		$form = new TrainingApplicationAdmin($this, $formName, $this->trainingApplications, $this->trainingDates, $this->trainingControlsFactory, $this->translator);
-		$form->setApplication($this->application);
-		$form->onSuccess[] = [$this, 'submittedApplication'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
-	 */
-	public function submittedApplication(Form $form, ArrayHash $values): void
-	{
-		$this->trainingApplications->updateApplicationData(
-			$this->applicationId,
-			$values->nameSet ? $values->name : null,
-			$values->emailSet ? $values->email : null,
-			$values->companySet ? $values->company : null,
-			$values->streetSet ? $values->street : null,
-			$values->citySet ? $values->city : null,
-			$values->zipSet ? $values->zip : null,
-			$values->countrySet ? $values->country : null,
-			$values->companyIdSet ? $values->companyId : null,
-			$values->companyTaxIdSet ? $values->companyTaxId : null,
-			$values->noteSet ? $values->note : null,
-			$values->source,
-			(trim($values->price) !== '' ? (int)$values->price : null),
-			(trim($values->vatRate) !== '' ? $values->vatRate / 100 : null),
-			(is_float($values->priceVat) ? $values->priceVat : null),
-			(trim($values->discount) !== '' ? (int)$values->discount : null),
-			$values->invoiceId,
-			$values->paid,
-			$values->familiar,
-			(isset($values->date) ? $values->date : null)
+		return $this->trainingApplicationAdminFactory->create(
+			function (?int $dateId) {
+				if (isset($this->dateId) || isset($dateId)) {
+					$this->redirect('date', $dateId ?? $this->dateId);
+				} else {
+					$this->redirect('preliminary');
+				}
+			},
+			$this->application
 		);
-		if (isset($this->dateId) || isset($values->date)) {
-			$this->redirect('date', $values->date ?? $this->dateId);
-		} else {
-			$this->redirect('preliminary');
-		}
 	}
 
 
