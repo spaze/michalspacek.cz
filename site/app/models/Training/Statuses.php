@@ -305,7 +305,8 @@ class Statuses
 					h.status_time_timezone AS statusTimeTimeZone
 				FROM training_application_status s
 					JOIN training_application_status_history h ON h.key_status = s.id_status
-				WHERE h.key_application = ?',
+				WHERE h.key_application = ?
+				ORDER BY h.status_time DESC, h.key_status DESC',
 				$applicationId
 			);
 			foreach ($this->statusHistory[$applicationId] as &$row) {

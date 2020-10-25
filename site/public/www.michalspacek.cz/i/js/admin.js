@@ -1,7 +1,23 @@
 $(document).ready(function() {
+	var Toggle = {};
+	Toggle.toggleContainer = function(element, toggle) {
+		var container = $('body').find($(element).attr('href') + '-container');
+		toggle(container);
+		if (container.data('display')) {
+			container.css('display', container.data('display'));
+		}
+	};
 	$('.open-container').click(function(event) {
 		event.preventDefault();
-		$('body').find($(this).attr('href') + '-container').slideToggle('fast');
+		Toggle.toggleContainer(this, function(container) {
+			container.slideToggle('fast');
+		});
+	});
+	$('.fade-container').click(function(event) {
+		event.preventDefault();
+		Toggle.toggleContainer(this, function(container) {
+			container.fadeToggle('fast');
+		});
 	});
 
 	var FormFields = {};

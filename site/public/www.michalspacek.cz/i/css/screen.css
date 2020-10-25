@@ -241,6 +241,8 @@ img.nobgcolor { background-color: inherit; }
 .clear { clear: both; }
 .transparent, del { opacity: 0.5; }
 th, td { padding: 5px; }
+table.condensed { margin: 0; }
+table.condensed td { padding: 0 5px; }
 td.positionCell, td.iconCell { width: 10px; }
 td.dateCell { width: 80px; }
 td.nameCell { width: 200px; }
@@ -248,7 +250,7 @@ tr.dateLine td, li.dateLine { border-top: 2px solid #EEE; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
 #pridat-ucastniky .delete { display: none; }
 #statuses th, #statuses td, #applications th, #applications td, #certificates th, #certificates td { padding: 1px 5px; }
-#statuses tr.summary:hover, #certificates tbody tr:hover, #applications tbody tr:hover, #slides tbody:hover { background-color: #F0F0F0; }
+#statuses tr.summary:hover, #certificates tbody tr:hover, #applications tbody tr:hover, #slides tbody:hover, table .row:hover { background-color: #F0F0F0; }
 .discarded, #statuses .discarded, .lighter { opacity: 0.3; }
 .discarded:hover, #statuses .discarded:hover { opacity: 0.7; }
 #certificates thead th { text-align: left; }
@@ -258,7 +260,7 @@ tr.dateLine td, li.dateLine { border-top: 2px solid #EEE; }
 	white-space: nowrap;
 }
 form.aligned th { text-align: right; }
-form tr.with-textarea { vertical-align: top; }
+form tr.with-textarea, form.aligned th.align-top { vertical-align: top; }
 td.short input, form.wide td.short input, form.wide td.short select, #frm-application td.short input { width: 85px; }
 td.narrow input { width: 40px; }
 td.wider input { width: 280px; }
@@ -348,7 +350,6 @@ div.notice {
 #pridat-ucastniky-container table { font-size: 75%; }
 #pridat-ucastniky-container table input[type=text] { width: 78px; }
 #pridat-ucastniky-container table .highlight { background-color: yellow; }
-#emails tbody.row:hover { background-color: #F0F0F0; }
 #frm-mails input[type=number], #frm-mails input[type=file] { font-size: 55%; }
 #frm-mails input[type=number] { width: 60px; }
 #frm-mails input[type=file] { width: 280px; }

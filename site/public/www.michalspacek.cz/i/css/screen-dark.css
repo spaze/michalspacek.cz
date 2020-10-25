@@ -58,6 +58,5 @@ code, pre, .highlight pre code { background-color: #2D2F2B; }
 .column-sidebar .widget { background-color: #202530; }
 #theme-dark { display: none !important; }
 #theme-light { display: initial !important; }
-#statuses tr.summary:hover, #certificates tbody tr:hover, #applications tbody tr:hover, #slides tbody:hover,
-	#emails tbody.row:hover { background-color: #234; }
+#statuses tr.summary:hover, #certificates tbody tr:hover, #applications tbody tr:hover, #slides tbody:hover, table .row:hover { background-color: #234; }
 #pubkey { background-color: #2D282B; }

@@ -38,12 +38,22 @@
 		<th>{label familiar: /}</th><td>{input familiar:}</td>
 	</tr>
 	<tr>
-		<th>Status:</th>
+		<th class="align-top">Status:</th>
 		<td>
-			<small><code>{$status}</code> ({$statusTime}) <a href="#historie" class="open-container">Historie</a></small><br>
-			<span id="historie-container" class="hidden" n:inner-foreach="$history as $record">
-				<small><code>{$record->status}</code> ({$record->statusTime})</small><br>
-			</span>
+			<table class="condensed">
+				<tr class="row">
+					<td><code>{$status}</code></td>
+					<td><small>{$statusTime}</small></td>
+					<td><small><a href="#historie" class="open-container">Historie</a></small></td>
+				</tr>
+				<tbody id="historie-container" class="hidden" data-display="table-row-group">
+				<tr n:foreach="$history as $record" class="row">
+					<td><code>{$record->status}</code></td>
+					<td><small>{$record->statusTime}</small><br></td>
+					<td></td>
+				</tr>
+				</tbody>
+			</table>
 		</td>
 	</tr>
 	<tr>
