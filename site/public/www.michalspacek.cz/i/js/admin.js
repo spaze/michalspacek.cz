@@ -296,4 +296,8 @@ $(document).ready(function() {
 		var dateSelect = $('#frm-applicationForm-date');
 		dateSelect.val(dateSelect.data('original-date-id'));
 	});
+
+	$('.confirm-click').on('click', function () {
+		return confirm($(this).data('confirm'));
+	})
 });

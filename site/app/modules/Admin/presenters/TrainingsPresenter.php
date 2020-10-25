@@ -457,12 +457,15 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentApplicationForm(): Form
 	{
 		return $this->trainingApplicationAdminFactory->create(
-			function (?int $dateId) {
+			function (?int $dateId): void {
 				if (isset($this->dateId) || isset($dateId)) {
 					$this->redirect('date', $dateId ?? $this->dateId);
 				} else {
 					$this->redirect('preliminary');
 				}
+			},
+			function (): void {
+				$this->redirect('this');
 			},
 			$this->application
 		);

@@ -5,8 +5,10 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Netxten\Templating\Helpers;
 use stdClass;
@@ -23,6 +25,8 @@ class TrainingApplicationAdminFactory
 	private TrainingControlsFactory $trainingControlsFactory;
 
 	private Helpers $netxtenHelpers;
+
+	private Statuses $trainingStatuses;
 
 	private ITranslator $translator;
 
@@ -47,6 +51,7 @@ class TrainingApplicationAdminFactory
 		Dates $trainingDates,
 		TrainingControlsFactory $trainingControlsFactory,
 		Helpers $netxtenHelpers,
+		Statuses $trainingStatuses,
 		ITranslator $translator
 	) {
 		$this->factory = $factory;
@@ -54,11 +59,12 @@ class TrainingApplicationAdminFactory
 		$this->trainingDates = $trainingDates;
 		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->netxtenHelpers = $netxtenHelpers;
+		$this->trainingStatuses = $trainingStatuses;
 		$this->translator = $translator;
 	}
 
 
-	public function create(callable $onSuccess, Row $application): Form
+	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, Row $application): Form
 	{
 		$form = $this->factory->create();
 
@@ -95,6 +101,18 @@ class TrainingApplicationAdminFactory
 			$form->getComponent($field)
 				->setHtmlAttribute('class', 'transparent')
 				->setRequired(false);
+		}
+
+		$containerName = 'statusHistoryDelete';
+		$historyContainer = $form->addContainer($containerName);
+		foreach ($this->trainingStatuses->getStatusHistory($application->applicationId) as $history) {
+			$historyContainer
+				->addSubmit((string)$history->id)
+				->setValidationScope([$form[$containerName]])
+				->onClick[] = function (SubmitButton $button) use ($application, $onStatusHistoryDeleteSuccess): void {
+					$this->trainingStatuses->deleteHistoryRecord($application->applicationId, (int)$button->getName());
+					$onStatusHistoryDeleteSuccess();
+				};
 		}
 
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($application, $onSuccess): void {

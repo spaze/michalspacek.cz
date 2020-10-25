@@ -299,6 +299,7 @@ class Statuses
 		if (!isset($this->statusHistory[$applicationId])) {
 			$this->statusHistory[$applicationId] = $this->database->fetchAll(
 				'SELECT
+					h.id_status_log AS id,
 					h.key_status AS statusId,
 					s.status,
 					h.status_time AS statusTime,
@@ -333,6 +334,36 @@ class Statuses
 			}
 		}
 		return $result;
+	}
+
+
+	public function deleteHistoryRecord(int $applicationId, int $recordId): void
+	{
+		$result = $this->database->fetch(
+			'SELECT
+				key_status AS statusId,
+				status_time AS statusTime
+			FROM training_application_status_history
+			WHERE key_application = ? AND id_status_log = ?',
+			$applicationId,
+			$recordId
+		);
+		if (!$result) {
+			return;
+		}
+
+		Debugger::log(sprintf(
+			'Deleting status history record for application id: %d, history record id: %d, status: %d, status time: %s',
+			$applicationId,
+			$recordId,
+			$result->statusId,
+			$result->statusTime->format(DateTime::ATOM)
+		));
+		$this->database->query(
+			'DELETE FROM training_application_status_history WHERE key_application = ? AND id_status_log = ?',
+			$applicationId,
+			$recordId
+		);
 	}
 
 }

@@ -11,6 +11,8 @@
 
 {define #content}
 {form applicationForm class => aligned}
+{* Hidden submit causes the form data to be saved on Enter, otherwise the first status history record (the first submit button in the form) would be deleted. *}
+{input submit class => hidden}
 <table>
 	<tr>
 		<th>Školení:</th><td>{$trainingName}</td>
@@ -47,11 +49,15 @@
 					<td><small><a href="#historie" class="open-container">Historie</a></small></td>
 				</tr>
 				<tbody id="historie-container" class="hidden" data-display="table-row-group">
+				{formContainer statusHistoryDelete}
 				<tr n:foreach="$history as $record" class="row">
 					<td><code>{$record->status}</code></td>
 					<td><small>{$record->statusTime}</small><br></td>
-					<td></td>
+					<td class="center">
+						<button n:name="$record->id" class="danger confirm-click" title="Odstranit status z historie" data-confirm="Odstranit status {$record->status} {$record->statusTime} z historie?"><i class="fas fa-fw fa-times"></i></button>
+					</td>
 				</tr>
+				{/formContainer}
 				</tbody>
 			</table>
 		</td>

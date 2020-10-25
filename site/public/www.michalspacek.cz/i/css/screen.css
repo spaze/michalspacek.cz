@@ -89,6 +89,7 @@ button code { background-color: inherit; }
 .flash code { background-color: hsl(60, 100%, 89%); }
 .error code { background-color: hsl(0, 100%, 95%); }
 .notice code { background-color: hsl(240, 100%, 95%); }
+.danger { color: #FF1453; }
 pre {
 	padding: 1em;
 	margin-bottom: 1em;
@@ -243,6 +244,7 @@ img.nobgcolor { background-color: inherit; }
 th, td { padding: 5px; }
 table.condensed { margin: 0; }
 table.condensed td { padding: 0 5px; }
+table.condensed button { padding: 1px; }
 td.positionCell, td.iconCell { width: 10px; }
 td.dateCell { width: 80px; }
 td.nameCell { width: 200px; }
