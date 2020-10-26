@@ -24,7 +24,6 @@ use Nette\Database\Row;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
-use Netxten\Templating\Helpers;
 use OutOfBoundsException;
 use PDOException;
 use Tracy\Debugger;
@@ -63,9 +62,6 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Prices */
 	private $prices;
 
-	/** @var Helpers */
-	protected $netxtenHelpers;
-
 	/** @var TrainingControlsFactory */
 	private $trainingControlsFactory;
 
@@ -93,7 +89,6 @@ class TrainingsPresenter extends BasePresenter
 		Locales $trainingLocales,
 		Reviews $trainingReviews,
 		Prices $price,
-		Helpers $netxtenHelpers,
 		TrainingControlsFactory $trainingControlsFactory,
 		Info $companyInfo,
 		IResponse $httpResponse
@@ -108,7 +103,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingLocales = $trainingLocales;
 		$this->trainingReviews = $trainingReviews;
 		$this->prices = $price;
-		$this->netxtenHelpers = $netxtenHelpers;
 		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->companyInfo = $companyInfo;
 		$this->httpResponse = $httpResponse;
@@ -220,7 +214,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication(string $formName): TrainingApplication
 	{
-		$form = new TrainingApplication($this, $formName, $this->dates, $this->translator, $this->trainingControlsFactory, $this->netxtenHelpers);
+		$form = new TrainingApplication($this, $formName, $this->dates, $this->translator, $this->trainingControlsFactory, $this->trainingDates);
 		$form->setApplicationFromSession($this->session->getSection('training'));
 		$form->onSuccess[] = [$this, 'submittedApplication'];
 		return $form;

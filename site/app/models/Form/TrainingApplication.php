@@ -3,22 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Training\Dates;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Row;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use Netxten\Forms\Controls\HiddenFieldWithLabel;
-use Netxten\Templating\Helpers;
 
 class TrainingApplication extends ProtectedForm
 {
 
-	/** @var ITranslator */
-	protected $translator;
+	protected ITranslator $translator;
 
-	/** @var Helpers */
-	protected $netxtenHelpers;
+	protected Dates $trainingDates;
 
 
 	/**
@@ -27,7 +25,7 @@ class TrainingApplication extends ProtectedForm
 	 * @param Row[] $dates
 	 * @param ITranslator $translator
 	 * @param TrainingControlsFactory $trainingControlsFactory
-	 * @param Helpers $netxtenHelpers
+	 * @param Dates $trainingDates
 	 */
 	public function __construct(
 		Presenter $parent,
@@ -35,20 +33,16 @@ class TrainingApplication extends ProtectedForm
 		array $dates,
 		ITranslator $translator,
 		TrainingControlsFactory $trainingControlsFactory,
-		Helpers $netxtenHelpers
+		Dates $trainingDates
 	) {
 		parent::__construct($parent, $name);
 		$this->translator = $translator;
-		$this->netxtenHelpers = $netxtenHelpers;
+		$this->trainingDates = $trainingDates;
 
 		$inputDates = array();
 		$multipleDates = count($dates) > 1;
 		foreach ($dates as $date) {
-			$trainingDate = ($date->tentative ? $this->netxtenHelpers->localeIntervalMonth($date->start, $date->end) : $this->netxtenHelpers->localeIntervalDay($date->start, $date->end));
-			$el = Html::el()->setText("{$trainingDate} " . ($date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity));
-			if ($date->tentative) {
-				$el->addText(' (' . $this->translator->translate('messages.label.tentativedate') . ')');
-			}
+			$el = Html::el()->setText($this->trainingDates->formatDateVenueForUser($date));
 			if ($date->label) {
 				if ($multipleDates) {
 					$el->addText(" [{$date->label}]");

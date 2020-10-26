@@ -568,4 +568,17 @@ class Dates
 		);
 	}
 
+
+	public function formatDateVenueForUser(ArrayHash $date): string
+	{
+		$start = $date->start ?? $date->trainingStart;
+		$end = $date->end ?? $date->trainingEnd;
+		return sprintf(
+			'%s, %s%s',
+			$date->tentative ? $this->netxtenHelpers->localeIntervalMonth($start, $end) : $this->netxtenHelpers->localeIntervalDay($start, $end),
+			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity,
+			$date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : ''
+		);
+	}
+
 }
