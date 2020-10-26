@@ -10,7 +10,6 @@ use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
-use Netxten\Templating\Helpers;
 use stdClass;
 
 class TrainingApplicationAdminFactory
@@ -23,8 +22,6 @@ class TrainingApplicationAdminFactory
 	private Dates $trainingDates;
 
 	private TrainingControlsFactory $trainingControlsFactory;
-
-	private Helpers $netxtenHelpers;
 
 	private Statuses $trainingStatuses;
 
@@ -50,7 +47,6 @@ class TrainingApplicationAdminFactory
 		Applications $trainingApplications,
 		Dates $trainingDates,
 		TrainingControlsFactory $trainingControlsFactory,
-		Helpers $netxtenHelpers,
 		Statuses $trainingStatuses,
 		ITranslator $translator
 	) {
@@ -58,7 +54,6 @@ class TrainingApplicationAdminFactory
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->netxtenHelpers = $netxtenHelpers;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->translator = $translator;
 	}
@@ -78,20 +73,16 @@ class TrainingApplicationAdminFactory
 		$this->addPaymentInfo($form);
 		$form->addSubmit('submit', 'Uložit');
 
-		$dates = $this->trainingDates->getPublicUpcoming();
-		$upcoming = [];
-		if (isset($dates[$application->trainingAction])) {
-			foreach ($dates[$application->trainingAction]->dates as $date) {
-				$upcoming[$date->dateId] = sprintf(
-					'%s, %s',
-					$this->netxtenHelpers->localeIntervalDay($date->start, $date->end),
-					$date->remote ? $this->translator->translate('messages.label.remote') : $date->city
-				);
+		$upcoming = $this->trainingDates->getPublicUpcoming();
+		$dates = $application->dateId ? [$application->dateId => $this->trainingDates->formatDateVenueForAdmin($application)] : [];
+		if (isset($upcoming[$application->trainingAction])) {
+			foreach ($upcoming[$application->trainingAction]->dates as $date) {
+				$dates[$date->dateId] = $this->trainingDates->formatDateVenueForAdmin($date);
 			}
 		}
-		$required = (bool)$upcoming;
-		$form->addSelect('date', 'Datum:', $upcoming)
-			->setPrompt($upcoming ? '- zvolte termín -' : 'Žádný vypsaný termín')
+		$required = (bool)$dates;
+		$form->addSelect('date', 'Datum:', $dates)
+			->setPrompt($dates ? false : 'Žádný vypsaný termín')
 			->setHtmlAttribute('data-original-date-id', $application->dateId)
 			->setRequired($required)
 			->setDisabled(!$required);

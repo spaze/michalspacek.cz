@@ -10,6 +10,7 @@ use Nette\Database\Row;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
+use Netxten\Templating\Helpers;
 
 class Dates
 {
@@ -31,6 +32,8 @@ class Dates
 
 	private Prices $prices;
 
+	private Helpers $netxtenHelpers;
+
 	/** @var ITranslator */
 	protected $translator;
 
@@ -41,11 +44,12 @@ class Dates
 	private $upcomingDates = array();
 
 
-	public function __construct(Context $context, Statuses $trainingStatuses, Prices $prices, ITranslator $translator)
+	public function __construct(Context $context, Statuses $trainingStatuses, Prices $prices, Helpers $netxtenHelpers, ITranslator $translator)
 	{
 		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;
 		$this->prices = $prices;
+		$this->netxtenHelpers = $netxtenHelpers;
 		$this->translator = $translator;
 	}
 
@@ -552,6 +556,16 @@ class Dates
 	public function decodeLabel(?string $json): ?string
 	{
 		return ($json ? Json::decode($json)->{$this->translator->getDefaultLocale()} : null);
+	}
+
+
+	public function formatDateVenueForAdmin(ArrayHash $date): string
+	{
+		return sprintf(
+			'%s, %s',
+			$this->netxtenHelpers->localeIntervalDay($date->start ?? $date->trainingStart, $date->end ?? $date->trainingEnd),
+			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity
+		);
 	}
 
 }
