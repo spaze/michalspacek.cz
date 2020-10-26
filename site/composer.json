@@ -3,7 +3,7 @@
 	"description": "Source code for my site",
 	"license": "MIT",
 	"autoload": {
-		"psr-4": {"MichalSpacekCz\\": "app/models/"}
+		"psr-4": {"MichalSpacekCz\\": "app/"}
 	},
 	"require": {
 		"php": ">= 7.4.0",

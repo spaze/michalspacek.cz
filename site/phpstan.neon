@@ -5,7 +5,7 @@ parameters:
 		-
 			# `Nette\Application\UI\Presenter::sendJson()` is listed in `earlyTerminatingMethodCalls` in the phpstan-nette extension config
 			message: '#^Unreachable statement - code above always terminates\.$#'
-			path: app/models/UpcKeys/Presenters/HomepagePresenter.php
+			path: app/UpcKeys/Presenters/HomepagePresenter.php
 			count: 1
 
 includes:

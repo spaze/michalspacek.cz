@@ -25,7 +25,7 @@ return array(
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-nette/src'),
-    'MichalSpacekCz\\' => array($baseDir . '/app/models'),
+    'MichalSpacekCz\\' => array($baseDir . '/app'),
     'JakubOnderka\\PhpConsoleHighlighter\\' => array($vendorDir . '/php-parallel-lint/php-console-highlighter/src'),
     'JakubOnderka\\PhpConsoleColor\\' => array($vendorDir . '/php-parallel-lint/php-console-color/src'),
     'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),

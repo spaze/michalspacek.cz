@@ -9,7 +9,7 @@ if (file_exists('./maintenance.php')) {
 
 $rootDir = realpath(__DIR__ . '/../..');
 require $rootDir . '/vendor/autoload.php';
-require $rootDir . '/app/models/Application/Bootstrap.php';
+require $rootDir . '/app/Application/Bootstrap.php';
 
 $appDir = $rootDir . '/app';
 $logDir = $rootDir . '/log';
