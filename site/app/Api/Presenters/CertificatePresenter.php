@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Api\Presenters;
 
 use MichalSpacekCz\Www\Presenters\BasePresenter;
-use MichalSpacekCz\Certificates;
+use MichalSpacekCz\Http\Certificates;
 use Nette\Security\AuthenticationException;
 use RuntimeException;
 

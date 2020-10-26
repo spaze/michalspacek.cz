@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\Interview;
 use MichalSpacekCz\Formatter\Texy;
-use MichalSpacekCz\Interviews;
+use MichalSpacekCz\Interviews\Interviews;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;

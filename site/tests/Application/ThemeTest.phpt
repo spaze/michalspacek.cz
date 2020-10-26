@@ -5,6 +5,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz;
 
+use MichalSpacekCz\Application\Theme;
 use Nette\Http\Request;
 use Nette\Http\Response;
 use Nette\Http\UrlScript;
@@ -13,10 +14,10 @@ use Tester\Assert;
 use Tester\Environment;
 use Tester\TestCase;
 
-require __DIR__ . '/bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /**
- * @testCase MichalSpacekCz\ThemeTest
+ * @testCase MichalSpacekCz\Application/ThemeTest
  */
 class ThemeTest extends TestCase
 {

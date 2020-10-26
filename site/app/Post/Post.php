@@ -1,15 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Post;
 
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Feed\Exports;
 use MichalSpacekCz\Formatter\Texy;
-use MichalSpacekCz\Post\Data;
-use MichalSpacekCz\Post\Edit;
-use MichalSpacekCz\Post\Loader;
+use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Caching\Cache;

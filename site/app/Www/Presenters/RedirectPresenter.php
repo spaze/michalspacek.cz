@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Articles;
+use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Training\Applications;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Http\IResponse;

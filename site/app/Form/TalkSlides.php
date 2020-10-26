@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Talks;
+use MichalSpacekCz\Talks\Talks;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
 use Nette\Forms\Container;

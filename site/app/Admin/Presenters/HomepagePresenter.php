@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
-use MichalSpacekCz\Certificates;
+use MichalSpacekCz\Http\Certificates;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Mails;

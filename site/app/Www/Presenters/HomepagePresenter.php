@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Articles;
-use MichalSpacekCz\Interviews;
-use MichalSpacekCz\Talks;
+use MichalSpacekCz\Articles\Articles;
+use MichalSpacekCz\Interviews\Interviews;
+use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Trainings;

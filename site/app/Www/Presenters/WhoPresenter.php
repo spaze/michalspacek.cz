@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Talks;
+use MichalSpacekCz\Talks\Talks;
 
 class WhoPresenter extends BasePresenter
 {

@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Post;
 use MichalSpacekCz\Post\LocaleUrls;
+use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Training\Dates;
 use Nette\Application\AbortException;
 use Spaze\ContentSecurityPolicy\Config as CspConfig;

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Post;
 
-use MichalSpacekCz\Tags;
+use MichalSpacekCz\Tags\Tags;
 use Nette\Database\Context;
 
 class LocaleUrls

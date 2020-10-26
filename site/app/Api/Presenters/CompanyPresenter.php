@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Api\Presenters;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use MichalSpacekCz\CompanyInfo\Data;
 use MichalSpacekCz\CompanyInfo\Info;
-use MichalSpacekCz\SecurityHeaders;
+use MichalSpacekCz\Http\SecurityHeaders;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;

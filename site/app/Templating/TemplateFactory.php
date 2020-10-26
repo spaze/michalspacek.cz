@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
-use MichalSpacekCz\Theme;
+use MichalSpacekCz\Application\Theme;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\ILatteFactory;

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use MichalSpacekCz\SecurityHeaders;
+use MichalSpacekCz\Http\SecurityHeaders;
 use Nette\Application\Application;
 use Nette\Application\IResponse as ApplicationIResponse;
 use Nette\Application\Request;

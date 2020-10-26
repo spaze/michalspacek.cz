@@ -15,17 +15,17 @@ services:
 			- setImagesRoot(%domain.imagesRoot%)
 			- setLocationRoot(%domain.locationRoot%)
 	latte.templateFactory: \MichalSpacekCz\Templating\TemplateFactory
-	redirections:  \MichalSpacekCz\Redirections
-	articles:  \MichalSpacekCz\Articles
+	redirections:  \MichalSpacekCz\Http\Redirections
+	articles:  \MichalSpacekCz\Articles\Articles
 	talks:
-		factory: \MichalSpacekCz\Talks
+		factory: \MichalSpacekCz\Talks\Talks
 		setup:
 			- setStaticRoot(%domain.sharedStaticRoot%)
 			- setLocationRoot(%domain.locationRoot%)
 			- setSlidesRoot(%domain.imagesRoot%, 'talks')
 	trainings: \MichalSpacekCz\Training\Trainings
 	companyTrainings: \MichalSpacekCz\Training\CompanyTrainings
-	interviews: \MichalSpacekCz\Interviews
+	interviews: \MichalSpacekCz\Interviews\Interviews
 	trainingApplications: \MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
 	trainingMails:
 		factory: \MichalSpacekCz\Training\Mails
@@ -52,14 +52,14 @@ services:
 			- setPermanentLoginCookie(%permanentLogin.cookie%)
 			- setPermanentLoginInterval(%permanentLogin.interval%)
 			- setReturningUserCookie(%returningUser.cookie%)
-	embed: \MichalSpacekCz\Embed
+	embed: \MichalSpacekCz\Templating\Embed
 	httpResponse:
 		setup:
 			- $cookieSecure(true)
 	netxtenHelpers: \Netxten\Templating\Helpers(@translation.translator::getDefaultLocale())
 	helpers: \MichalSpacekCz\Templating\Helpers
 	securityHeaders:
-		factory: \MichalSpacekCz\SecurityHeaders
+		factory: \MichalSpacekCz\Http\SecurityHeaders
 		setup:
 			- setDefaultDomain(%domain.default%)
 			- setRootDomain(%domain.root%)
@@ -81,7 +81,7 @@ services:
 		setup:
 			- setRootUrl(%registerUz.rootUrl%)
 	upcKeys:
-		factory: \MichalSpacekCz\UpcKeys
+		factory: \MichalSpacekCz\UpcKeys\UpcKeys
 		setup:
 			- addRouter(@upcKeysTechnicolor)
 			- addRouter(@upcKeysUbee)
@@ -102,25 +102,25 @@ services:
 	pulsePasswords: \MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	pulsePasswordsRating: \MichalSpacekCz\Pulse\Passwords\Rating
 	blogPost:
-	    factory: \MichalSpacekCz\Post
+	    factory: \MichalSpacekCz\Post\Post
 	    setup:
 	        - setUpdatedInfoThreshold(%blog.updatedInfoThreshold%)
 	        - setAllowedTags(%blog.allowedTags%)
 	blogPostLoader: \MichalSpacekCz\Post\Loader
 	blogPostLocaleUrls: \MichalSpacekCz\Post\LocaleUrls
 	certificatesApi:
-		factory: \MichalSpacekCz\Certificates
+		factory: \MichalSpacekCz\Http\Certificates
 		setup:
 			- setUsers(%certificatesApi.users%)
 			- setExpiringThreshold(%certificatesApi.expiringThreshold%)
 			- setHideExpiredAfter(%certificatesApi.hideExpiredAfter%)
-	exports: \MichalSpacekCz\Exports
-	strings: \MichalSpacekCz\Strings
+	exports: \MichalSpacekCz\Feed\Exports
+	strings: \MichalSpacekCz\Utils\Strings
 	error: \MichalSpacekCz\Application\Error
 	trainingControlsFactory: \MichalSpacekCz\Form\TrainingControlsFactory
 	winterIsComing: \MichalSpacekCz\EasterEgg\WinterIsComing
-	tags: \MichalSpacekCz\Tags
-	theme: \MichalSpacekCz\Theme
+	tags: \MichalSpacekCz\Tags\Tags
+	theme: \MichalSpacekCz\Application\Theme
 	phpInfo: \Spaze\PhpInfo\PhpInfo
 	netteCve202015227: \MichalSpacekCz\EasterEgg\NetteCve202015227
 

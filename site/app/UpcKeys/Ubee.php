@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
-use MichalSpacekCz\UpcKeys;
 use Nette\Database\Context;
 use RuntimeException;
 use stdClass;

@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Articles;
+use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post\LocaleUrls;
-use MichalSpacekCz\Strings;
+use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 

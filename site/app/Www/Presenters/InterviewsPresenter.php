@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Embed;
 use MichalSpacekCz\Formatter\Texy;
-use MichalSpacekCz\Interviews;
+use MichalSpacekCz\Interviews\Interviews;
+use MichalSpacekCz\Templating\Embed;
 use Nette\Application\BadRequestException;
 
 class InterviewsPresenter extends BasePresenter

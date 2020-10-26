@@ -5,7 +5,7 @@ namespace MichalSpacekCz\UpcKeys\Presenters;
 
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use MichalSpacekCz\Form\UpcKeys as UpcKeysForm;
-use MichalSpacekCz\UpcKeys;
+use MichalSpacekCz\UpcKeys\UpcKeys;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Exports;
+use MichalSpacekCz\Feed\Exports;
 use Spaze\Exports\Bridges\Nette\Atom\Response;
 
 class ExportsPresenter extends BasePresenter

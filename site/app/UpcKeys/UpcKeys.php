@@ -1,10 +1,8 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\UpcKeys;
 
-use MichalSpacekCz\UpcKeys\RouterInterface;
-use MichalSpacekCz\UpcKeys\Technicolor;
 use Nette\Utils\Strings;
 use stdClass;
 

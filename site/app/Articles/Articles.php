@@ -1,12 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Articles;
 
 use Collator;
 use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Post\Post;
+use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Context;
 use Nette\Database\Row;

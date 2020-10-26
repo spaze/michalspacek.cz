@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\UpcKeys as UpcKeysService;
+use MichalSpacekCz\UpcKeys\UpcKeys as UpcKeysService;
 use Nette\ComponentModel\IContainer;
 
 class UpcKeys extends UnprotectedForm

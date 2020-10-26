@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Application\LocaleLinkGenerator;
-use MichalSpacekCz\Theme;
+use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;

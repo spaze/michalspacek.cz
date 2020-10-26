@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Application;
 
 use Nette\Http\Request;
 use Nette\Http\Response;

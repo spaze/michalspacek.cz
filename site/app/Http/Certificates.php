@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Http;
 
 use DateTime;
 use MichalSpacekCz\User\Manager;

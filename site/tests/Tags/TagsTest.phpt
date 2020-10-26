@@ -2,15 +2,15 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Tags;
 
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /**
- * @testCase MichalSpacekCz\TagsTest
+ * @testCase MichalSpacekCz\Tags\TagsTest
  */
 class TagsTest extends TestCase
 {

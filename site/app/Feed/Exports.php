@@ -1,10 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Feed;
 
 use DateTime;
+use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Post\Post;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;

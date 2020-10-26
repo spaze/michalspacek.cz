@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Embed;
 use MichalSpacekCz\Formatter\Texy;
-use MichalSpacekCz\Talks;
+use MichalSpacekCz\Talks\Talks;
+use MichalSpacekCz\Templating\Embed;
 use MichalSpacekCz\Templating\Helpers;
 use MichalSpacekCz\Training\Dates;
 use Nette\Application\BadRequestException;

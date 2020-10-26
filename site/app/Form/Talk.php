@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use Latte\Runtime\Filters;
 use MichalSpacekCz\Form\Controls\Date;
-use MichalSpacekCz\Talks;
+use MichalSpacekCz\Talks\Talks;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
 use Nette\Forms\Controls\TextInput;

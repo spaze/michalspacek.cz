@@ -3,13 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Embed;
 use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Templating\Embed;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 
 class VenuesPresenter extends BasePresenter
 {

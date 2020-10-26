@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Redirections;
+use MichalSpacekCz\Http\Redirections;
 use Nette\Application\Request;
 use Nette\Http\IResponse;
 use Tracy\ILogger;

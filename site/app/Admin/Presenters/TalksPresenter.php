@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Embed;
 use MichalSpacekCz\Form\Talk;
 use MichalSpacekCz\Form\TalkSlides;
 use MichalSpacekCz\Formatter\Texy;
-use MichalSpacekCz\Talks;
+use MichalSpacekCz\Talks\Talks;
+use MichalSpacekCz\Templating\Embed;
 use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Row;
