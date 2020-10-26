@@ -1,5 +1,5 @@
 includes:
-	- config.common-api.michalspacek.cz.neon
+	- common-upc.michalspacek.cz.neon
 
 parameters:
 	domain:

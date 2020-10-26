@@ -1,5 +1,5 @@
 includes:
-	- config.common-pulse.michalspacek.cz.neon
+	- common-heartbleed.michalspacek.cz.neon
 
 parameters:
 	domain:

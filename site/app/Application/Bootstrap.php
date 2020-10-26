@@ -112,14 +112,14 @@ class Bootstrap
 	{
 		return array_unique(array(
 			$this->appDir . '/config/extensions.neon',
-			$this->appDir . '/config/config.neon',
+			$this->appDir . '/config/common.neon',
 			$this->appDir . '/config/contentsecuritypolicy.neon',
 			$this->appDir . '/config/parameters.neon',
 			$this->appDir . '/config/presenters.neon',
 			$this->appDir . '/config/services.neon',
 			$this->appDir . '/config/routes.neon',
-			$this->appDir . '/config/config.extra-' . $_SERVER['SERVER_NAME'] . '.neon',
-			$this->appDir . '/config/config.local.neon',
+			$this->appDir . '/config/extra-' . $_SERVER['SERVER_NAME'] . '.neon',
+			$this->appDir . '/config/local.neon',
 		));
 	}
 
