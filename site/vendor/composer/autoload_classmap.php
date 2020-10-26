@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'JakubOnderka\\PhpParallelLint\\Application' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Application.php',
     'JakubOnderka\\PhpParallelLint\\ArrayIterator' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Settings.php',
     'JakubOnderka\\PhpParallelLint\\Blame' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Error.php',

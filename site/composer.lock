@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "contributte/translation",
-            "version": "v0.7.0",
+            "version": "v0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contributte/translation.git",
-                "reference": "26fa99330deb663770ef45e1f6e8cbf1f3fb3c23"
+                "reference": "943b5463b569a1c51b299b3fe793cbe5fa20268b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contributte/translation/zipball/26fa99330deb663770ef45e1f6e8cbf1f3fb3c23",
-                "reference": "26fa99330deb663770ef45e1f6e8cbf1f3fb3c23",
+                "url": "https://api.github.com/repos/contributte/translation/zipball/943b5463b569a1c51b299b3fe793cbe5fa20268b",
+                "reference": "943b5463b569a1c51b299b3fe793cbe5fa20268b",
                 "shasum": ""
             },
             "require": {
@@ -49,7 +49,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.7.x-dev"
+                    "dev-master": "0.8.x-dev"
                 }
             },
             "autoload": {
@@ -73,7 +73,7 @@
                 "symfony",
                 "translation"
             ],
-            "time": "2020-06-25T06:42:02+00:00"
+            "time": "2020-10-22T05:25:05+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -1597,16 +1597,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.50",
+            "version": "0.12.52",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "b8248f9c81265af75d6d969ca3252aaf3e998f3a"
+                "reference": "e96dd5e7ae9aefed663bc7e285ad96792b67eadc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b8248f9c81265af75d6d969ca3252aaf3e998f3a",
-                "reference": "b8248f9c81265af75d6d969ca3252aaf3e998f3a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e96dd5e7ae9aefed663bc7e285ad96792b67eadc",
+                "reference": "e96dd5e7ae9aefed663bc7e285ad96792b67eadc",
                 "shasum": ""
             },
             "require": {
@@ -1649,7 +1649,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-16T12:22:23+00:00"
+            "time": "2020-10-25T07:23:44+00:00"
         },
         {
             "name": "slevomat/coding-standard",
@@ -2150,16 +2150,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.5.6",
+            "version": "3.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "e97627871a7eab2f70e59166072a6b767d5834e0"
+                "reference": "9d583721a7157ee997f235f327de038e7ea6dac4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/e97627871a7eab2f70e59166072a6b767d5834e0",
-                "reference": "e97627871a7eab2f70e59166072a6b767d5834e0",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/9d583721a7157ee997f235f327de038e7ea6dac4",
+                "reference": "9d583721a7157ee997f235f327de038e7ea6dac4",
                 "shasum": ""
             },
             "require": {
@@ -2197,7 +2197,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2020-08-10T04:50:15+00:00"
+            "time": "2020-10-23T02:01:07+00:00"
         },
         {
             "name": "symfony/config",
@@ -2409,25 +2409,25 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.18.1",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "d87d5766cbf48d72388a9f6b85f280c8ad51f981"
+                "reference": "e70aa8b064c5b72d3df2abd5ab1e90464ad009de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/d87d5766cbf48d72388a9f6b85f280c8ad51f981",
-                "reference": "d87d5766cbf48d72388a9f6b85f280c8ad51f981",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/e70aa8b064c5b72d3df2abd5ab1e90464ad009de",
+                "reference": "e70aa8b064c5b72d3df2abd5ab1e90464ad009de",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0.8"
+                "php": ">=7.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.20-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -2471,7 +2471,21 @@
                 "portable",
                 "shim"
             ],
-            "time": "2020-07-14T12:35:20+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-10-23T14:02:19+00:00"
         },
         {
             "name": "symfony/translation",
