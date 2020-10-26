@@ -1,58 +1,58 @@
 services:
 	# www module
-	- \App\WwwModule\Presenters\ArticlesPresenter
-	- \App\WwwModule\Presenters\CompanyTrainingsPresenter
+	- MichalSpacekCz\Www\Presenters\ArticlesPresenter
+	- MichalSpacekCz\Www\Presenters\CompanyTrainingsPresenter
 	contactPresenter:
-		factory: \App\WwwModule\Presenters\ContactPresenter
+		factory: MichalSpacekCz\Www\Presenters\ContactPresenter
 		setup:
 		- setLocationRoot(%domain.locationRoot%)
-	- \App\WwwModule\Presenters\ErrorPresenter
-	- \App\WwwModule\Presenters\ErrorGenericPresenter
-	- \App\WwwModule\Presenters\ExportsPresenter
-	- \App\WwwModule\Presenters\FilesPresenter
-	- \App\WwwModule\Presenters\ForbiddenPresenter
-	- \App\WwwModule\Presenters\HomepagePresenter
-	- \App\WwwModule\Presenters\InterviewsPresenter
-	- \App\WwwModule\Presenters\PhotoPresenter
-	- \App\WwwModule\Presenters\PostPresenter
-	- \App\WwwModule\Presenters\RedirectPresenter
-	- \App\WwwModule\Presenters\TagsPresenter
-	- \App\WwwModule\Presenters\TalksPresenter
-	- \App\WwwModule\Presenters\TrainingsPresenter
-	- \App\WwwModule\Presenters\VenuesPresenter
-	- \App\WwwModule\Presenters\WhoPresenter
+	- MichalSpacekCz\Www\Presenters\ErrorPresenter
+	- MichalSpacekCz\Www\Presenters\ErrorGenericPresenter
+	- MichalSpacekCz\Www\Presenters\ExportsPresenter
+	- MichalSpacekCz\Www\Presenters\FilesPresenter
+	- MichalSpacekCz\Www\Presenters\ForbiddenPresenter
+	- MichalSpacekCz\Www\Presenters\HomepagePresenter
+	- MichalSpacekCz\Www\Presenters\InterviewsPresenter
+	- MichalSpacekCz\Www\Presenters\PhotoPresenter
+	- MichalSpacekCz\Www\Presenters\PostPresenter
+	- MichalSpacekCz\Www\Presenters\RedirectPresenter
+	- MichalSpacekCz\Www\Presenters\TagsPresenter
+	- MichalSpacekCz\Www\Presenters\TalksPresenter
+	- MichalSpacekCz\Www\Presenters\TrainingsPresenter
+	- MichalSpacekCz\Www\Presenters\VenuesPresenter
+	- MichalSpacekCz\Www\Presenters\WhoPresenter
 
 	# api module
-	- \App\ApiModule\Presenters\CertificatePresenter
-	- \App\ApiModule\Presenters\CompanyPresenter
-	- \App\ApiModule\Presenters\ErrorGenericPresenter
-	- \App\ApiModule\Presenters\ErrorPresenter
+	- MichalSpacekCz\Api\Presenters\CertificatePresenter
+	- MichalSpacekCz\Api\Presenters\CompanyPresenter
+	- MichalSpacekCz\Api\Presenters\ErrorGenericPresenter
+	- MichalSpacekCz\Api\Presenters\ErrorPresenter
 
 	# admin module
-	- \App\AdminModule\Presenters\BlogPresenter
-	- \App\AdminModule\Presenters\EmailsPresenter
-	- \App\AdminModule\Presenters\HomepagePresenter
-	- \App\AdminModule\Presenters\HoneypotPresenter
-	- \App\AdminModule\Presenters\InfoPresenter
-	- \App\AdminModule\Presenters\InterviewsPresenter
-	- \App\AdminModule\Presenters\InvoicesPresenter
-	- \App\AdminModule\Presenters\PulsePresenter
-	- \App\AdminModule\Presenters\ReviewsPresenter
-	- \App\AdminModule\Presenters\SignPresenter
-	- \App\AdminModule\Presenters\TalksPresenter
-	- \App\AdminModule\Presenters\TrainingsPresenter
-	- \App\AdminModule\Presenters\UserPresenter
+	- MichalSpacekCz\Admin\Presenters\BlogPresenter
+	- MichalSpacekCz\Admin\Presenters\EmailsPresenter
+	- MichalSpacekCz\Admin\Presenters\HomepagePresenter
+	- MichalSpacekCz\Admin\Presenters\HoneypotPresenter
+	- MichalSpacekCz\Admin\Presenters\InfoPresenter
+	- MichalSpacekCz\Admin\Presenters\InterviewsPresenter
+	- MichalSpacekCz\Admin\Presenters\InvoicesPresenter
+	- MichalSpacekCz\Admin\Presenters\PulsePresenter
+	- MichalSpacekCz\Admin\Presenters\ReviewsPresenter
+	- MichalSpacekCz\Admin\Presenters\SignPresenter
+	- MichalSpacekCz\Admin\Presenters\TalksPresenter
+	- MichalSpacekCz\Admin\Presenters\TrainingsPresenter
+	- MichalSpacekCz\Admin\Presenters\UserPresenter
 
 	# webleed module
-	- \App\WebleedModule\Presenters\HomepagePresenter
+	- MichalSpacekCz\Webleed\Presenters\HomepagePresenter
 
 	# upc module
-	- \App\UpcKeysModule\Presenters\HomepagePresenter
+	- MichalSpacekCz\UpcKeys\Presenters\HomepagePresenter
 
 	# pulse module
-	- \App\PulseModule\Presenters\HomepagePresenter
-	- \App\PulseModule\Presenters\PasswordsPresenter
-	- \App\PulseModule\Presenters\PasswordsStoragesPresenter
+	- MichalSpacekCz\Pulse\Presenters\HomepagePresenter
+	- MichalSpacekCz\Pulse\Presenters\PasswordsPresenter
+	- MichalSpacekCz\Pulse\Presenters\PasswordsStoragesPresenter
 
 	# easteregg module
-	- \MichalSpacekCz\EasterEgg\Presenters\NettePresenter
+	- MichalSpacekCz\EasterEgg\Presenters\NettePresenter
