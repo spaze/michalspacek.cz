@@ -73,7 +73,7 @@ class HomepagePresenter extends BasePresenter
 				break;
 			case 'json':
 				$this->sendJson($keys);
-				break;
+				// no break, Presenter::sendJson() is in earlyTerminatingMethodCalls defined in the phpstan-nette extension config
 			default:
 				throw new BadRequestException('Unknown format');
 		}
