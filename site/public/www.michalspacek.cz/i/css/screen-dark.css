@@ -53,6 +53,7 @@ tr.dateLine td, li.dateLine { border-top-color: #2B2B2B; }
 	color: #B9CEA4;
 	background-color: #1B3D29;
 }
+.changed { background-color: #1E2D42; }
 code, pre, .highlight pre code { background-color: #2D2F2B; }
 .column-content img, #slides-container img {
 	box-shadow: none;
@@ -63,3 +64,5 @@ code, pre, .highlight pre code { background-color: #2D2F2B; }
 #theme-light { display: initial !important; }
 #statuses tr.summary:hover, #certificates tbody tr:hover, #applications tbody tr:hover, #slides tbody:hover, table .row:hover { background-color: #234; }
 #pubkey { background-color: #2D282B; }
+#phpinfo table { box-shadow: 1px 2px 3px #05080A; }
+#phpinfo td, th { border-color: #333; }
