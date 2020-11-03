@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$('#termin a[href="#prihlaska"]').click(function() {
+	$('#termin a[href="#prihlaska"]').on('click', function() {
 		$('#frm-application-trainingId').val($(this).data('id'));
 	});
 
@@ -44,7 +44,7 @@ $(document).ready(function() {
 			APPLICATION.showLoadControls('#loadDataAgain, #loadDataError');
 		});
 	};
-	$('#loadData a, #loadDataAgain a').click(APPLICATION.loadData);
+	$('#loadData a, #loadDataAgain a').on('click', APPLICATION.loadData);
 	$('#loadDataDisabled').addClass('hidden');
 	APPLICATION.hideLoadControls();
 	APPLICATION.showLoadControls('#loadDataControls, #loadData');
@@ -70,7 +70,7 @@ $(document).ready(function() {
 	};
 	ENCRYPTION.reset = function() {
 		ENCRYPTION.button.text(ENCRYPTION.button.data('encrypt'));
-		ENCRYPTION.button.off('click').click(ENCRYPTION.handler);
+		ENCRYPTION.button.off('click').on('click', ENCRYPTION.handler);
 		ENCRYPTION.feedback.fadeOut('fast');
 	};
 	ENCRYPTION.load = function(e) {
@@ -104,7 +104,7 @@ $(document).ready(function() {
 				openpgp.encrypt(options).then(function(ciphertext) {
 					ENCRYPTION.area.val(ciphertext.data);
 					ENCRYPTION.button.text(ENCRYPTION.button.data('copy'));
-					ENCRYPTION.button.off('click').click(function() {
+					ENCRYPTION.button.off('click').on('click', function() {
 						ENCRYPTION.area.select();
 						if (document.queryCommandSupported('copy')) {
 							document.execCommand('copy');
@@ -115,7 +115,7 @@ $(document).ready(function() {
 			});
 		};
 	}
-	$('#copied .button, #copythis .button').click(function() {
+	$('#copied .button, #copythis .button').on('click', function() {
 		ENCRYPTION.area.val('');
 		ENCRYPTION.reset();
 	});
