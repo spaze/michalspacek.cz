@@ -54,7 +54,9 @@ class DkimSigner implements Signer
 		$this->selector = $options['selector'] ?? '';
 		$this->privateKey = $options['privateKey'] ?? '';
 		$this->passPhrase = $options['passPhrase'] ?? '';
-		$this->signHeaders = count($signHeaders) > 0 ? $signHeaders : self::DEFAULT_SIGN_HEADERS;
+		$this->signHeaders = count($signHeaders) > 0
+			? $signHeaders
+			: self::DEFAULT_SIGN_HEADERS;
 	}
 
 
@@ -131,10 +133,14 @@ class DkimSigner implements Signer
 		}
 
 		if (openssl_sign($value, $signature, $privateKey, 'sha256WithRSAEncryption')) {
-			openssl_pkey_free($privateKey);
+			if (PHP_VERSION_ID < 80000) {
+				openssl_pkey_free($privateKey);
+			}
 			return base64_encode($signature);
 		}
-		openssl_pkey_free($privateKey);
+		if (PHP_VERSION_ID < 80000) {
+			openssl_pkey_free($privateKey);
+		}
 		return '';
 	}
 

@@ -38,8 +38,12 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 	private $tempDir;
 
 
-	public function __construct(bool $debugMode = false, array $scanDirs = null, string $tempDir = null, Nette\Loaders\RobotLoader $robotLoader = null)
-	{
+	public function __construct(
+		bool $debugMode = false,
+		array $scanDirs = null,
+		string $tempDir = null,
+		Nette\Loaders\RobotLoader $robotLoader = null
+	) {
 		$this->debugMode = $debugMode;
 		$this->scanDirs = (array) $scanDirs;
 		$this->tempDir = $tempDir;
@@ -50,7 +54,7 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 	public function getConfigSchema(): Nette\Schema\Schema
 	{
 		return Expect::structure([
-			'debugger' => Expect::bool(interface_exists(Tracy\IBarPanel::class)),
+			'debugger' => Expect::bool(),
 			'errorPresenter' => Expect::string('Nette:Error')->dynamic(),
 			'catchExceptions' => Expect::bool(!$this->debugMode)->dynamic(),
 			'mapping' => Expect::arrayOf('string|array'),
@@ -72,14 +76,11 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 			? UI\Presenter::INVALID_LINK_TEXTUAL | ($config->silentLinks ? 0 : UI\Presenter::INVALID_LINK_WARNING)
 			: UI\Presenter::INVALID_LINK_WARNING;
 
-		$application = $builder->addDefinition($this->prefix('application'))
+		$builder->addDefinition($this->prefix('application'))
 			->setFactory(Nette\Application\Application::class)
 			->addSetup('$catchExceptions', [$config->catchExceptions])
 			->addSetup('$errorPresenter', [$config->errorPresenter]);
 
-		if ($config->debugger) {
-			$application->addSetup([Nette\Bridges\ApplicationTracy\RoutingPanel::class, 'initializePanel']);
-		}
 		$this->compiler->addExportedType(Nette\Application\Application::class);
 
 		if ($this->debugMode && ($config->scanDirs || $this->robotLoader) && $this->tempDir) {
@@ -90,7 +91,8 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 		$presenterFactory = $builder->addDefinition($this->prefix('presenterFactory'))
 			->setType(Nette\Application\IPresenterFactory::class)
 			->setFactory(Nette\Application\PresenterFactory::class, [new Definitions\Statement(
-				Nette\Bridges\ApplicationDI\PresenterFactoryCallback::class, [1 => $this->invalidLinkMode, $touch ?? null]
+				Nette\Bridges\ApplicationDI\PresenterFactoryCallback::class,
+				[1 => $this->invalidLinkMode, $touch ?? null]
 			)]);
 
 		if ($config->mapping) {
@@ -112,6 +114,12 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 	public function beforeCompile()
 	{
 		$builder = $this->getContainerBuilder();
+
+		if ($this->config->debugger ?? $builder->getByType(Tracy\BlueScreen::class)) {
+			$builder->getDefinition($this->prefix('application'))
+				->addSetup([Nette\Bridges\ApplicationTracy\RoutingPanel::class, 'initializePanel']);
+		}
+
 		$all = [];
 
 		foreach ($builder->findByType(Nette\Application\IPresenter::class) as $def) {

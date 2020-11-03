@@ -40,24 +40,33 @@ final class Factory
 		$class->setImplements($ifaces);
 
 		$class->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
+		$class->setAttributes(self::getAttributes($from));
 		if ($from->getParentClass()) {
 			$class->setExtends($from->getParentClass()->name);
 			$class->setImplements(array_diff($class->getImplements(), $from->getParentClass()->getInterfaceNames()));
 		}
 		$props = $methods = $consts = [];
 		foreach ($from->getProperties() as $prop) {
-			if ($prop->isDefault() && $prop->getDeclaringClass()->name === $from->name) {
+			if ($prop->isDefault()
+				&& $prop->getDeclaringClass()->name === $from->name
+				&& (PHP_VERSION_ID < 80000 || !$prop->isPromoted())
+			) {
 				$props[] = $this->fromPropertyReflection($prop);
 			}
 		}
 		$class->setProperties($props);
 
-		$bodies = $withBodies ? $this->loadMethodBodies($from) : [];
+		$bodies = [];
 		foreach ($from->getMethods() as $method) {
 			if ($method->getDeclaringClass()->name === $from->name) {
 				$methods[] = $m = $this->fromMethodReflection($method);
-				if (isset($bodies[$method->name])) {
-					$m->setBody($bodies[$method->name]);
+				if ($withBodies) {
+					$srcMethod = Nette\Utils\Reflection::getMethodDeclaringMethod($method);
+					$srcClass = $srcMethod->getDeclaringClass()->name;
+					$b = $bodies[$srcClass] = $bodies[$srcClass] ?? $this->loadMethodBodies($srcMethod->getDeclaringClass());
+					if (isset($b[$srcMethod->name])) {
+						$m->setBody($b[$srcMethod->name]);
+					}
 				}
 			}
 		}
@@ -80,9 +89,10 @@ final class Factory
 		$method->setParameters(array_map([$this, 'fromParameterReflection'], $from->getParameters()));
 		$method->setStatic($from->isStatic());
 		$isInterface = $from->getDeclaringClass()->isInterface();
-		$method->setVisibility($from->isPrivate()
-			? ClassType::VISIBILITY_PRIVATE
-			: ($from->isProtected() ? ClassType::VISIBILITY_PROTECTED : ($isInterface ? null : ClassType::VISIBILITY_PUBLIC))
+		$method->setVisibility(
+			$from->isPrivate()
+				? ClassType::VISIBILITY_PRIVATE
+				: ($from->isProtected() ? ClassType::VISIBILITY_PROTECTED : ($isInterface ? null : ClassType::VISIBILITY_PUBLIC))
 		);
 		$method->setFinal($from->isFinal());
 		$method->setAbstract($from->isAbstract() && !$isInterface);
@@ -90,9 +100,12 @@ final class Factory
 		$method->setReturnReference($from->returnsReference());
 		$method->setVariadic($from->isVariadic());
 		$method->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
+		$method->setAttributes(self::getAttributes($from));
 		if ($from->getReturnType() instanceof \ReflectionNamedType) {
 			$method->setReturnType($from->getReturnType()->getName());
 			$method->setReturnNullable($from->getReturnType()->allowsNull());
+		} elseif ($from->getReturnType() instanceof \ReflectionUnionType) {
+			$method->setReturnType((string) $from->getReturnType());
 		}
 		return $method;
 	}
@@ -108,9 +121,12 @@ final class Factory
 		if (!$from->isClosure()) {
 			$function->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
 		}
+		$function->setAttributes(self::getAttributes($from));
 		if ($from->getReturnType() instanceof \ReflectionNamedType) {
 			$function->setReturnType($from->getReturnType()->getName());
 			$function->setReturnNullable($from->getReturnType()->allowsNull());
+		} elseif ($from->getReturnType() instanceof \ReflectionUnionType) {
+			$function->setReturnType((string) $from->getReturnType());
 		}
 		$function->setBody($withBody ? $this->loadFunctionBody($from) : '');
 		return $function;
@@ -129,16 +145,23 @@ final class Factory
 
 	public function fromParameterReflection(\ReflectionParameter $from): Parameter
 	{
-		$param = new Parameter($from->name);
+		$param = PHP_VERSION_ID >= 80000 && $from->isPromoted()
+			? new PromotedParameter($from->name)
+			: new Parameter($from->name);
 		$param->setReference($from->isPassedByReference());
-		$param->setType($from->getType() instanceof \ReflectionNamedType ? $from->getType()->getName() : null);
-		$param->setNullable($from->hasType() && $from->getType()->allowsNull());
+		if ($from->getType() instanceof \ReflectionNamedType) {
+			$param->setType($from->getType()->getName());
+			$param->setNullable($from->getType()->allowsNull());
+		} elseif ($from->getType() instanceof \ReflectionUnionType) {
+			$param->setType((string) $from->getType());
+		}
 		if ($from->isDefaultValueAvailable()) {
 			$param->setDefaultValue($from->isDefaultValueConstant()
 				? new Literal($from->getDefaultValueConstantName())
 				: $from->getDefaultValue());
 			$param->setNullable($param->isNullable() && $param->getDefaultValue() !== null);
 		}
+		$param->setAttributes(self::getAttributes($from));
 		return $param;
 	}
 
@@ -147,11 +170,13 @@ final class Factory
 	{
 		$const = new Constant($from->name);
 		$const->setValue($from->getValue());
-		$const->setVisibility($from->isPrivate()
-			? ClassType::VISIBILITY_PRIVATE
-			: ($from->isProtected() ? ClassType::VISIBILITY_PROTECTED : ClassType::VISIBILITY_PUBLIC)
+		$const->setVisibility(
+			$from->isPrivate()
+				? ClassType::VISIBILITY_PRIVATE
+				: ($from->isProtected() ? ClassType::VISIBILITY_PROTECTED : ClassType::VISIBILITY_PUBLIC)
 		);
 		$const->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
+		$const->setAttributes(self::getAttributes($from));
 		return $const;
 	}
 
@@ -162,16 +187,22 @@ final class Factory
 		$prop = new Property($from->name);
 		$prop->setValue($defaults[$prop->getName()] ?? null);
 		$prop->setStatic($from->isStatic());
-		$prop->setVisibility($from->isPrivate()
-			? ClassType::VISIBILITY_PRIVATE
-			: ($from->isProtected() ? ClassType::VISIBILITY_PROTECTED : ClassType::VISIBILITY_PUBLIC)
+		$prop->setVisibility(
+			$from->isPrivate()
+				? ClassType::VISIBILITY_PRIVATE
+				: ($from->isProtected() ? ClassType::VISIBILITY_PROTECTED : ClassType::VISIBILITY_PUBLIC)
 		);
-		if (PHP_VERSION_ID >= 70400 && ($from->getType() instanceof \ReflectionNamedType)) {
-			$prop->setType($from->getType()->getName());
-			$prop->setNullable($from->getType()->allowsNull());
-			$prop->setInitialized(array_key_exists($prop->getName(), $defaults));
+		if (PHP_VERSION_ID >= 70400) {
+			if ($from->getType() instanceof \ReflectionNamedType) {
+				$prop->setType($from->getType()->getName());
+				$prop->setNullable($from->getType()->allowsNull());
+			} elseif ($from->getType() instanceof \ReflectionUnionType) {
+				$prop->setType((string) $from->getType());
+			}
+			$prop->setInitialized($from->hasType() && array_key_exists($prop->getName(), $defaults));
 		}
 		$prop->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
+		$prop->setAttributes(self::getAttributes($from));
 		return $prop;
 	}
 
@@ -313,5 +344,18 @@ final class Factory
 		$stmts = $traverser->traverse($stmts);
 
 		return [$code, $stmts];
+	}
+
+
+	private function getAttributes($from): array
+	{
+		if (PHP_VERSION_ID < 80000) {
+			return [];
+		}
+		$res = [];
+		foreach ($from->getAttributes() as $attr) {
+			$res[] = new Attribute($attr->getName(), $attr->getArguments());
+		}
+		return $res;
 	}
 }

@@ -37,8 +37,11 @@ final class MicroPresenter implements Application\IPresenter
 	private $request;
 
 
-	public function __construct(Nette\DI\Container $context = null, Http\IRequest $httpRequest = null, Router $router = null)
-	{
+	public function __construct(
+		Nette\DI\Container $context = null,
+		Http\IRequest $httpRequest = null,
+		Router $router = null
+	) {
 		$this->context = $context;
 		$this->httpRequest = $httpRequest;
 		$this->router = $router;
@@ -58,7 +61,12 @@ final class MicroPresenter implements Application\IPresenter
 	{
 		$this->request = $request;
 
-		if ($this->httpRequest && $this->router && !$this->httpRequest->isAjax() && ($request->isMethod('get') || $request->isMethod('head'))) {
+		if (
+			$this->httpRequest
+			&& $this->router
+			&& !$this->httpRequest->isAjax()
+			&& ($request->isMethod('get') || $request->isMethod('head'))
+		) {
 			$refUrl = $this->httpRequest->getUrl()->withoutUserInfo();
 			$url = $this->router->constructUrl($request->toArray(), $refUrl);
 			if ($url !== null && !$refUrl->isEqual($url)) {
@@ -69,14 +77,14 @@ final class MicroPresenter implements Application\IPresenter
 		$params = $request->getParameters();
 		$callback = $params['callback'] ?? null;
 		if (!$callback instanceof \Closure) {
-			throw new Nette\InvalidStateException('Parameter callback is not a valid closure.');
+			throw new Application\BadRequestException('Parameter callback is not a valid closure.');
 		}
 		$reflection = new \ReflectionFunction($callback);
 
 		if ($this->context) {
 			foreach ($reflection->getParameters() as $param) {
-				if ($param->getClass()) {
-					$params[$param->getName()] = $this->context->getByType($param->getClass()->getName(), false);
+				if ($param->getType()) {
+					$params[$param->getName()] = $this->context->getByType($param->getType()->getName(), false);
 				}
 			}
 		}
@@ -113,8 +121,12 @@ final class MicroPresenter implements Application\IPresenter
 	 */
 	public function createTemplate(string $class = null, callable $latteFactory = null): Application\UI\ITemplate
 	{
-		$latte = $latteFactory ? $latteFactory() : $this->getContext()->getByType(Nette\Bridges\ApplicationLatte\ILatteFactory::class)->create();
-		$template = $class ? new $class : new Nette\Bridges\ApplicationLatte\Template($latte);
+		$latte = $latteFactory
+			? $latteFactory()
+			: $this->getContext()->getByType(Nette\Bridges\ApplicationLatte\ILatteFactory::class)->create();
+		$template = $class
+			? new $class
+			: new Nette\Bridges\ApplicationLatte\Template($latte);
 
 		$template->setParameters($this->request->getParameters());
 		$template->presenter = $this;

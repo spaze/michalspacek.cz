@@ -12,6 +12,7 @@ namespace Tester;
 
 /**
  * PHP file mutator.
+ * @internal
  */
 class FileMutator
 {
@@ -31,7 +32,7 @@ class FileMutator
 	{
 		self::$mutators[] = $mutator;
 		stream_wrapper_unregister(self::PROTOCOL);
-		stream_wrapper_register(self::PROTOCOL, __CLASS__);
+		stream_wrapper_register(self::PROTOCOL, self::class);
 	}
 
 
@@ -65,19 +66,25 @@ class FileMutator
 	public function mkdir(string $path, int $mode, int $options): bool
 	{
 		$recursive = (bool) ($options & STREAM_MKDIR_RECURSIVE);
-		return $this->native('mkdir', $path, $mode, $recursive, $this->context);
+		return $this->context
+			? $this->native('mkdir', $path, $mode, $recursive, $this->context)
+			: $this->native('mkdir', $path, $mode, $recursive);
 	}
 
 
 	public function rename(string $pathFrom, string $pathTo): bool
 	{
-		return $this->native('rename', $pathFrom, $pathTo, $this->context);
+		return $this->context
+			? $this->native('rename', $pathFrom, $pathTo, $this->context)
+			: $this->native('rename', $pathFrom, $pathTo);
 	}
 
 
 	public function rmdir(string $path, int $options): bool
 	{
-		return $this->native('rmdir', $path, $this->context);
+		return $this->context
+			? $this->native('rmdir', $path, $this->context)
+			: $this->native('rmdir', $path);
 	}
 
 
@@ -216,9 +223,11 @@ class FileMutator
 	private function native(string $func)
 	{
 		stream_wrapper_restore(self::PROTOCOL);
-		$res = $func(...array_slice(func_get_args(), 1));
-		stream_wrapper_unregister(self::PROTOCOL);
-		stream_wrapper_register(self::PROTOCOL, __CLASS__);
-		return $res;
+		try {
+			return $func(...array_slice(func_get_args(), 1));
+		} finally {
+			stream_wrapper_unregister(self::PROTOCOL);
+			stream_wrapper_register(self::PROTOCOL, self::class);
+		}
 	}
 }

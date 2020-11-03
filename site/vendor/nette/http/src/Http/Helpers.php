@@ -20,6 +20,10 @@ final class Helpers
 {
 	use Nette\StaticClass;
 
+	/** @internal */
+	public const STRICT_COOKIE_NAME = 'nette-samesite';
+
+
 	/**
 	 * Returns HTTP valid date format.
 	 * @param  string|int|\DateTimeInterface  $time
@@ -45,5 +49,13 @@ final class Helpers
 			return false;
 		}
 		return strncmp($ip, $mask, $size === '' ? $max : (int) $size) === 0;
+	}
+
+
+	public static function initCookie(IRequest $request, IResponse $response)
+	{
+		if (!$request->getCookie(self::STRICT_COOKIE_NAME)) {
+			$response->setCookie(self::STRICT_COOKIE_NAME, '1', 0, '/', null, null, true, 'Strict');
+		}
 	}
 }
