@@ -250,7 +250,7 @@ class Mails
 		$template->setFile(__DIR__ . '/mails/admin/' . $filename);
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $subject, $template, [$invoice->getName() => $invoice->getTemporaryFile()]);
+		$this->sendMail($application->email, $application->name, $subject, $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()]);
 	}
 
 
