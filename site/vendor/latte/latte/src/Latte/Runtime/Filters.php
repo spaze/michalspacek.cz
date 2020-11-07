@@ -283,7 +283,9 @@ class Filters
 				'xhtmlComment' => 'escapeHtmlComment',
 			],
 		];
-		return isset($table[$source][$dest]) ? [self::class, $table[$source][$dest]] : null;
+		return isset($table[$source][$dest])
+			? [self::class, $table[$source][$dest]]
+			: null;
 	}
 
 
@@ -453,7 +455,7 @@ class Filters
 			if (abs($bytes) < 1024 || $unit === end($units)) {
 				break;
 			}
-			$bytes = $bytes / 1024;
+			$bytes /= 1024;
 		}
 		return round($bytes, $precision) . ' ' . $unit;
 	}
@@ -525,19 +527,19 @@ class Filters
 	 * Truncates string to maximal length.
 	 * @return string plain text
 	 */
-	public static function truncate($s, $maxLen, $append = "\u{2026}"): string
+	public static function truncate($s, $length, $append = "\u{2026}"): string
 	{
 		$s = (string) $s;
-		if (self::strLength($s) > $maxLen) {
-			$maxLen = $maxLen - self::strLength($append);
-			if ($maxLen < 1) {
+		if (self::strLength($s) > $length) {
+			$length -= self::strLength($append);
+			if ($length < 1) {
 				return $append;
 
-			} elseif (preg_match('#^.{1,' . $maxLen . '}(?=[\s\x00-/:-@\[-`{-~])#us', $s, $matches)) {
+			} elseif (preg_match('#^.{1,' . $length . '}(?=[\s\x00-/:-@\[-`{-~])#us', $s, $matches)) {
 				return $matches[0] . $append;
 
 			} else {
-				return self::substring($s, 0, $maxLen) . $append;
+				return self::substring($s, 0, $length) . $append;
 			}
 		}
 		return $s;
@@ -607,13 +609,14 @@ class Filters
 
 	private static function strLength(string $s): int
 	{
-		return function_exists('mb_strlen') ? mb_strlen($s, 'UTF-8') : strlen(utf8_decode($s));
+		return function_exists('mb_strlen')
+			? mb_strlen($s, 'UTF-8')
+			: strlen(utf8_decode($s));
 	}
 
 
 	/**
 	 * Strips whitespace.
-	 * @return string
 	 */
 	public static function trim(FilterInfo $info, $s, string $charlist = " \t\n\r\0\x0B\u{A0}"): string
 	{
@@ -629,24 +632,24 @@ class Filters
 	/**
 	 * Pad a string to a certain length with another string.
 	 */
-	public static function padLeft($s, int $length, string $pad = ' '): string
+	public static function padLeft($s, int $length, string $append = ' '): string
 	{
 		$s = (string) $s;
 		$length = max(0, $length - self::strLength($s));
-		$padLen = self::strLength($pad);
-		return str_repeat($pad, (int) ($length / $padLen)) . self::substring($pad, 0, $length % $padLen) . $s;
+		$l = self::strLength($append);
+		return str_repeat($append, (int) ($length / $l)) . self::substring($append, 0, $length % $l) . $s;
 	}
 
 
 	/**
 	 * Pad a string to a certain length with another string.
 	 */
-	public static function padRight($s, int $length, string $pad = ' '): string
+	public static function padRight($s, int $length, string $append = ' '): string
 	{
 		$s = (string) $s;
 		$length = max(0, $length - self::strLength($s));
-		$padLen = self::strLength($pad);
-		return $s . str_repeat($pad, (int) ($length / $padLen)) . self::substring($pad, 0, $length % $padLen);
+		$l = self::strLength($append);
+		return $s . str_repeat($append, (int) ($length / $l)) . self::substring($append, 0, $length % $l);
 	}
 
 
@@ -670,12 +673,12 @@ class Filters
 	 * Chunks items by returning an array of arrays with the given number of items.
 	 * @param  array|\Traversable  $list
 	 */
-	public static function batch($list, int $size, $rest = null): \Generator
+	public static function batch($list, int $length, $rest = null): \Generator
 	{
 		$batch = [];
 		foreach ($list as $key => $value) {
 			$batch[$key] = $value;
-			if (count($batch) >= $size) {
+			if (count($batch) >= $length) {
 				yield $batch;
 				$batch = [];
 			}
@@ -683,7 +686,7 @@ class Filters
 
 		if ($batch) {
 			if ($rest !== null) {
-				while (count($batch) < $size) {
+				while (count($batch) < $length) {
 					$batch[] = $rest;
 				}
 			}
@@ -719,7 +722,9 @@ class Filters
 				foreach ($value as $k => $v) {
 					if ($v != null) { // intentionally ==, skip nulls & empty string
 						//  composite 'style' vs. 'others'
-						$tmp[] = $v === true ? $k : (is_string($k) ? $k . ':' . $v : $v);
+						$tmp[] = $v === true
+							? $k
+							: (is_string($k) ? $k . ':' . $v : $v);
 					}
 				}
 				if ($tmp === null) {

@@ -67,7 +67,7 @@ class FilterExecutor
 	 */
 	public function add(?string $name, callable $callback)
 	{
-		if ($name == null) { // intentionally ==
+		if ($name === null) {
 			array_unshift($this->_dynamic, $callback);
 		} else {
 			$name = strtolower($name);
@@ -127,7 +127,9 @@ class FilterExecutor
 					return ($this->$name)(...func_get_args());
 				}
 			}
-			$hint = ($t = Helpers::getSuggestion(array_keys($this->_static), $name)) ? ", did you mean '$t'?" : '.';
+			$hint = ($t = Helpers::getSuggestion(array_keys($this->_static), $name))
+				? ", did you mean '$t'?"
+				: '.';
 			throw new \LogicException("Filter '$name' is not defined$hint");
 		};
 	}
@@ -141,7 +143,9 @@ class FilterExecutor
 	{
 		$lname = strtolower($name);
 		if (!isset($this->_static[$lname])) {
-			$hint = ($t = Helpers::getSuggestion(array_keys($this->_static), $name)) ? ", did you mean '$t'?" : '.';
+			$hint = ($t = Helpers::getSuggestion(array_keys($this->_static), $name))
+				? ", did you mean '$t'?"
+				: '.';
 			throw new \LogicException("Filter |$name is not defined$hint");
 		}
 
@@ -149,20 +153,19 @@ class FilterExecutor
 		if ($aware) { // FilterInfo aware filter
 			array_unshift($args, $info);
 			return $callback(...$args);
-
-		} else { // classic filter
-			if ($info->contentType !== Engine::CONTENT_TEXT) {
-				trigger_error("Filter |$name is called with incompatible content type " . strtoupper($info->contentType)
-					. ($info->contentType === Engine::CONTENT_HTML ? ', try to prepend |stripHtml.' : '.'), E_USER_WARNING);
-			}
-			$res = ($this->$name)(...$args);
-			if ($res instanceof HtmlStringable) {
-				trigger_error("Filter |$name should be changed to content-aware filter.");
-				$info->contentType = Engine::CONTENT_HTML;
-				$res = $res->__toString();
-			}
-			return $res;
 		}
+		// classic filter
+		if ($info->contentType !== Engine::CONTENT_TEXT) {
+			trigger_error("Filter |$name is called with incompatible content type " . strtoupper($info->contentType)
+				. ($info->contentType === Engine::CONTENT_HTML ? ', try to prepend |stripHtml.' : '.'), E_USER_WARNING);
+		}
+		$res = ($this->$name)(...$args);
+		if ($res instanceof HtmlStringable) {
+			trigger_error("Filter |$name should be changed to content-aware filter.");
+			$info->contentType = Engine::CONTENT_HTML;
+			$res = $res->__toString();
+		}
+		return $res;
 	}
 
 

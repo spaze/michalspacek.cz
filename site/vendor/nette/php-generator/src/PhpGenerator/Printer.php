@@ -267,7 +267,7 @@ class Printer
 			$params[] =
 				($promoted ? Helpers::formatDocComment((string) $promoted->getComment()) : '')
 				. ($attrs = self::printAttributes($param->getAttributes(), $namespace, true))
-				. ($promoted ? ($param->getVisibility() ?: 'public') . ' ' : '')
+				. ($promoted ? ($promoted->getVisibility() ?: 'public') . ' ' : '')
 				. ltrim($this->printType($type, $param->isNullable(), $namespace) . ' ')
 				. ($param->isReference() ? '&' : '')
 				. ($variadic ? '...' : '')
@@ -311,7 +311,7 @@ class Printer
 		}
 		$items = [];
 		foreach ($attrs as $attr) {
-			$args = (new Dumper)->format('...?', $attr->getArguments());
+			$args = (new Dumper)->format('...?:', $attr->getArguments());
 			$items[] = $this->printType($attr->getName(), false, $namespace) . ($args ? "($args)" : '');
 		}
 		return $inline
