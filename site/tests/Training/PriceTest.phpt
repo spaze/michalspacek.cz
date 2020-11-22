@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Training\Price;
 use Tester\Assert;

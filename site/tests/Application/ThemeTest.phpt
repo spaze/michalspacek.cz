@@ -3,7 +3,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz;
+namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Application\Theme;
 use Nette\Http\Request;
