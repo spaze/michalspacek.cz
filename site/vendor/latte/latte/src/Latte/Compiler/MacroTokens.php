@@ -34,7 +34,7 @@ class MacroTokens extends TokenIterator
 
 
 	/**
-	 * @param  string|array  $input
+	 * @param  string|list<array{string, int, int}>  $input
 	 */
 	public function __construct($input = [])
 	{
@@ -43,18 +43,21 @@ class MacroTokens extends TokenIterator
 	}
 
 
+	/**
+	 * @return list<array{string, int, int}>
+	 */
 	public function parse(string $s): array
 	{
 		self::$tokenizer = self::$tokenizer ?: new Tokenizer([
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
 			self::T_STRING => Parser::RE_STRING,
-			self::T_KEYWORD => '(?:true|false|null|TRUE|FALSE|NULL|INF|NAN|and|or|xor|clone|new|instanceof|return|continue|break)(?!\w)', // keyword
+			self::T_KEYWORD => '(?:true|false|null|TRUE|FALSE|NULL|INF|NAN|and|or|xor|AND|OR|XOR|clone|new|instanceof|return|continue|break)(?!\w)', // keyword
 			self::T_CAST => '\((?:expand|string|array|int|integer|float|bool|boolean|object)\)', // type casting
 			self::T_VARIABLE => '\$\w+',
 			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
 			self::T_SYMBOL => '\w+(?:-+\w+)*',
-			self::T_CHAR => '::|=>|->|\+\+|--|<<|>>|<=>|<=|>=|===|!==|==|!=|<>|&&|\|\||\?\?|\?>|\*\*|\.\.\.|[^"\']', // =>, any char except quotes
+			self::T_CHAR => '::|=>|->|\?->|\?\?->|\+\+|--|<<|>>|<=>|<=|>=|===|!==|==|!=|<>|&&|\|\||\?\?|\?>|\*\*|\.\.\.|[^"\']', // =>, any char except quotes
 		], 'u');
 		return self::$tokenizer->tokenize($s);
 	}
@@ -62,6 +65,7 @@ class MacroTokens extends TokenIterator
 
 	/**
 	 * Appends simple token or string (will be parsed).
+	 * @param  string|array{string, int, int}  $val
 	 * @return static
 	 */
 	public function append($val, int $position = null)
@@ -80,6 +84,7 @@ class MacroTokens extends TokenIterator
 
 	/**
 	 * Prepends simple token or string (will be parsed).
+	 * @param  string|array{string, int, int}  $val
 	 * @return static
 	 */
 	public function prepend($val)
@@ -103,6 +108,7 @@ class MacroTokens extends TokenIterator
 
 	/**
 	 * Reads single tokens delimited by colon from string.
+	 * @return string[]
 	 */
 	public function fetchWords(): array
 	{
@@ -120,6 +126,28 @@ class MacroTokens extends TokenIterator
 	}
 
 
+	/**
+	 * @param  string|string[]  $modifiers
+	 * @return ?array{string, ?string}
+	 */
+	public function fetchWordWithModifier($modifiers): ?array
+	{
+		$modifiers = (array) $modifiers;
+		$pos = $this->position;
+		if (
+			($mod = $this->nextValue(...$modifiers))
+			&& $this->nextToken($this::T_WHITESPACE)
+			&& ($name = $this->fetchWord())
+		) {
+			return [$name, $mod];
+		}
+		$this->position = $pos;
+		$name = $this->fetchWord();
+		return $name === null ? null : [$name, null];
+	}
+
+
+	/** @return static */
 	public function reset()
 	{
 		$this->depth = 0;

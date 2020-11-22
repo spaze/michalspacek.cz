@@ -15,7 +15,9 @@ use Latte\Helpers;
 use Latte\MacroNode;
 use Latte\PhpHelpers;
 use Latte\PhpWriter;
+use Latte\Runtime\Block;
 use Latte\Runtime\SnippetDriver;
+use Latte\Runtime\Template;
 
 
 /**
@@ -26,11 +28,11 @@ class BlockMacros extends MacroSet
 	/** @var string */
 	public $snippetAttribute = 'id';
 
-	/** @var array */
-	private $namedBlocks = [];
+	/** @var Block[][] */
+	private $blocks;
 
-	/** @var array */
-	private $blockTypes = [];
+	/** @var int  current layer */
+	private $index;
 
 	/** @var string|bool|null */
 	private $extends;
@@ -47,10 +49,11 @@ class BlockMacros extends MacroSet
 		$me->addMacro('import', [$me, 'macroImport'], null, null, self::ALLOWED_IN_HEAD);
 		$me->addMacro('extends', [$me, 'macroExtends'], null, null, self::ALLOWED_IN_HEAD);
 		$me->addMacro('layout', [$me, 'macroExtends'], null, null, self::ALLOWED_IN_HEAD);
-		$me->addMacro('snippet', [$me, 'macroBlock'], [$me, 'macroBlockEnd']);
+		$me->addMacro('snippet', [$me, 'macroSnippet'], [$me, 'macroBlockEnd']); // must be before block
 		$me->addMacro('block', [$me, 'macroBlock'], [$me, 'macroBlockEnd'], null, self::AUTO_CLOSE);
-		$me->addMacro('define', [$me, 'macroBlock'], [$me, 'macroBlockEnd']);
-		$me->addMacro('snippetArea', [$me, 'macroBlock'], [$me, 'macroBlockEnd']);
+		$me->addMacro('define', [$me, 'macroDefine'], [$me, 'macroBlockEnd']);
+		$me->addMacro('embed', [$me, 'macroEmbed'], [$me, 'macroEmbedEnd']);
+		$me->addMacro('snippetArea', [$me, 'macroSnippetArea'], [$me, 'macroBlockEnd']);
 		$me->addMacro('ifset', [$me, 'macroIfset'], '}');
 		$me->addMacro('elseifset', [$me, 'macroIfset']);
 	}
@@ -62,8 +65,8 @@ class BlockMacros extends MacroSet
 	 */
 	public function initialize()
 	{
-		$this->namedBlocks = [];
-		$this->blockTypes = [];
+		$this->blocks = [[]];
+		$this->index = Template::LAYER_TOP;
 		$this->extends = null;
 		$this->imports = [];
 	}
@@ -75,19 +78,23 @@ class BlockMacros extends MacroSet
 	public function finalize()
 	{
 		$compiler = $this->getCompiler();
-		$functions = [];
-		foreach ($this->namedBlocks as $name => $code) {
-			$compiler->addMethod(
-				$functions[$name] = $this->generateMethodName($name),
-				'?>' . $compiler->expandTokens($code) . '<?php',
-				'array $_args',
-				'void'
-			);
+		$meta = [];
+		foreach ($this->blocks as $layer => $blocks) {
+			foreach ($blocks as $name => $block) {
+				$compiler->addMethod(
+					$method = $this->generateMethodName($name),
+					'?>' . $compiler->expandTokens($block->code) . '<?php',
+					'array $__args',
+					'void'
+				);
+				$meta[$layer][$name] = $block->contentType === $compiler->getContentType()
+					? $method
+					: [$method, $block->contentType];
+			}
 		}
 
-		if ($this->namedBlocks) {
-			$compiler->addProperty('blocks', $functions);
-			$compiler->addProperty('blockTypes', $this->blockTypes);
+		if ($meta) {
+			$compiler->addConstant('BLOCKS', $meta);
 		}
 
 		return [
@@ -100,44 +107,62 @@ class BlockMacros extends MacroSet
 
 
 	/**
-	 * {include block}
+	 * {include [block] name [,] [params]}
+	 * @return string|false
 	 */
 	public function macroInclude(MacroNode $node, PhpWriter $writer)
 	{
+		$node->validate(true, [], true);
 		$node->replaced = false;
-		$destination = $node->tokenizer->fetchWord(); // destination [,] [params]
-		if (!$destination || !preg_match('~#|[\w-]+$~DA', $destination)) {
-			return false;
-		}
 
-		$destination = ltrim($destination, '#');
-		$parent = $destination === 'parent';
-		if ($destination === 'parent' || $destination === 'this') {
-			for (
-				$item = $node->parentNode;
-				$item && $item->name !== 'block' && !isset($item->data->name);
-				$item = $item->parentNode
-			);
-			if (!$item) {
-				throw new CompileException("Cannot include $destination block outside of any block.");
+		[$name, $mod] = $node->tokenizer->fetchWordWithModifier(['block', 'file']);
+		if ($mod !== 'block') {
+			if ($mod === 'file' || !$name || !preg_match('~#|[\w-]+$~DA', $name)) {
+				return false; // {include file}
 			}
-			$destination = $item->data->name;
+			$name = ltrim($name, '#');
 		}
 
 		$noEscape = Helpers::removeFilter($node->modifiers, 'noescape');
 		if (!$noEscape && Helpers::removeFilter($node->modifiers, 'escape')) {
-			trigger_error('Macro ' . $node->getNotation() . ' provides auto-escaping, remove |escape.');
+			trigger_error('Tag ' . $node->getNotation() . ' provides auto-escaping, remove |escape.');
 		}
 		if ($node->modifiers && !$noEscape) {
 			$node->modifiers .= '|escape';
 		}
+
+		if ($node->tokenizer->nextToken('from')) {
+			$node->tokenizer->nextToken($node->tokenizer::T_WHITESPACE);
+			return $writer->write(
+				'$this->createTemplate(%node.word, %node.array? + $this->params, "include")->renderToContentType(%raw, %word);',
+				$node->modifiers
+					? $writer->write('function ($s, $type) { $__fi = new LR\FilterInfo($type); return %modifyContent($s); }')
+					: PhpHelpers::dump($noEscape ? null : implode($node->context)),
+				$name
+			);
+		}
+
+		$parent = $name === 'parent';
+		if ($name === 'parent' || $name === 'this') {
+			$item = $node->closest(['block', 'define'], function ($node) { return isset($node->data->name); });
+			if (!$item) {
+				throw new CompileException("Cannot include $name block outside of any block.");
+			}
+			$name = $item->data->name;
+		}
+
+
+		$phpName = strpos($name, '$') === false
+			? PhpHelpers::dump($name)
+			: $writer->formatWord($name);
+
 		return $writer->write(
 			'$this->renderBlock' . ($parent ? 'Parent' : '') . '('
-			. (strpos($destination, '$') === false ? PhpHelpers::dump($destination) : $destination)
+			. $phpName
 			. ', %node.array? + '
-			. (isset($this->namedBlocks[$destination]) || $parent ? 'get_defined_vars()' : '$this->params')
+			. '($this->hasBlock(' . $phpName . ', true) ? get_defined_vars() : $this->params)'
 			. ($node->modifiers
-				? ', function ($s, $type) { $_fi = new LR\FilterInfo($type); return %modifyContent($s); }'
+				? ', function ($s, $type) { $__fi = new LR\FilterInfo($type); return %modifyContent($s); }'
 				: ($noEscape || $parent ? '' : ', ' . PhpHelpers::dump(implode($node->context))))
 			. ');'
 		);
@@ -148,15 +173,15 @@ class BlockMacros extends MacroSet
 	 * {includeblock "file"}
 	 * @deprecated
 	 */
-	public function macroIncludeBlock(MacroNode $node, PhpWriter $writer)
+	public function macroIncludeBlock(MacroNode $node, PhpWriter $writer): string
 	{
-		//trigger_error('Macro {includeblock} is deprecated, use similar macro {import}.', E_USER_DEPRECATED);
+		//trigger_error('Tag {includeblock} is deprecated, use similar tag {import}.', E_USER_DEPRECATED);
 		$node->replaced = false;
-		if ($node->modifiers) {
-			throw new CompileException('Modifiers are not allowed in ' . $node->getNotation());
-		}
+		$node->validate(true);
 		return $writer->write(
-			'ob_start(function () {}); $this->createTemplate(%node.word, %node.array? + get_defined_vars(), "includeblock")->renderToContentType(%var); echo rtrim(ob_get_clean());',
+			'ob_start(function () {});
+			$this->createTemplate(%node.word, %node.array? + get_defined_vars(), "includeblock")->renderToContentType(%var);
+			echo rtrim(ob_get_clean());',
 			implode($node->context)
 		);
 	}
@@ -165,16 +190,15 @@ class BlockMacros extends MacroSet
 	/**
 	 * {import "file"}
 	 */
-	public function macroImport(MacroNode $node, PhpWriter $writer)
+	public function macroImport(MacroNode $node, PhpWriter $writer): string
 	{
-		if ($node->modifiers) {
-			throw new CompileException('Modifiers are not allowed in ' . $node->getNotation());
-		}
-		$destination = $node->tokenizer->fetchWord();
+		$node->validate(true);
+		$file = $node->tokenizer->fetchWord();
 		$this->checkExtraArgs($node);
-		$code = $writer->write('$this->createTemplate(%word, $this->params, "import")->render();', $destination);
+		$code = $writer->write('$this->createTemplate(%word, $this->params, "import")->render();', $file);
 		if ($this->getCompiler()->isInHead()) {
 			$this->imports[] = $code;
+			return '';
 		} else {
 			return $code;
 		}
@@ -184,125 +208,49 @@ class BlockMacros extends MacroSet
 	/**
 	 * {extends none | $var | "file"}
 	 */
-	public function macroExtends(MacroNode $node, PhpWriter $writer)
+	public function macroExtends(MacroNode $node, PhpWriter $writer): void
 	{
-		$notation = $node->getNotation();
-		if ($node->modifiers) {
-			throw new CompileException("Modifiers are not allowed in $notation");
-		} elseif ($node->args === '') {
-			throw new CompileException("Missing destination in $notation");
-		} elseif ($node->parentNode) {
-			throw new CompileException("$notation must be placed outside any macro.");
+		$node->validate(true);
+		if ($node->parentNode) {
+			throw new CompileException($node->getNotation() . ' must not be inside other tags.');
 		} elseif ($this->extends !== null) {
-			throw new CompileException("Multiple $notation declarations are not allowed.");
+			throw new CompileException('Multiple ' . $node->getNotation() . ' declarations are not allowed.');
 		} elseif ($node->args === 'none') {
 			$this->extends = 'false';
 		} else {
 			$this->extends = $writer->write('%node.word%node.args');
 		}
 		if (!$this->getCompiler()->isInHead()) {
-			trigger_error("$notation must be placed in template head.", E_USER_WARNING);
+			trigger_error($node->getNotation() . ' must be placed in template head.', E_USER_WARNING);
 		}
 	}
 
 
 	/**
-	 * {block [name]}
-	 * {snippet [name]}
-	 * {snippetArea [name]}
-	 * {define name}
+	 * {block [local] [name]}
 	 */
-	public function macroBlock(MacroNode $node, PhpWriter $writer)
+	public function macroBlock(MacroNode $node, PhpWriter $writer): string
 	{
-		$name = $node->tokenizer->fetchWord();
+		[$name, $local] = $node->tokenizer->fetchWordWithModifier('local');
+		$layer = $local ? Template::LAYER_LOCAL : null;
+		$data = $node->data;
+		$data->name = ltrim((string) $name, '#');
+		$this->checkExtraArgs($node);
 
-		if ($node->name === 'block' && $name === null) { // anonymous block
-			return $node->modifiers === ''
-				? ''
-				: 'ob_start(function () {})';
-
-		} elseif ($node->name === 'define' && $node->modifiers) {
-			$node->setArgs($node->args . $node->modifiers);
-			$node->tokenizer->fetchWord();
-		}
-
-		$node->data->name = $name = ltrim((string) $name, '#');
-		if ($name === '') {
-			if ($node->name === 'define') {
-				throw new CompileException('Missing block name.');
+		if ($data->name === '') {
+			if ($node->modifiers === '') {
+				return '';
 			}
-
-		} elseif (strpos($name, '$') !== false) { // dynamic block/snippet
-			if ($node->name === 'snippet') {
-				if ($node->prefix && isset($node->htmlNode->attrs[$this->snippetAttribute])) {
-					throw new CompileException("Cannot combine HTML attribute $this->snippetAttribute with n:snippet.");
-				}
-
-				for (
-					$parent = $node->parentNode;
-					$parent && !($parent->name === 'snippet' || $parent->name === 'snippetArea');
-					$parent = $parent->parentNode
-				);
-				if (!$parent) {
-					throw new CompileException('Dynamic snippets are allowed only inside static snippet/snippetArea.');
-				}
-				$parent->data->dynamic = true;
-				$node->data->leave = true;
-				$node->closingCode = '<?php $this->global->snippetDriver->leave(); ?>';
-				$enterCode = '$this->global->snippetDriver->enter(' . $writer->formatWord($name) . ', "' . SnippetDriver::TYPE_DYNAMIC . '");';
-
-				if ($node->prefix) {
-					$node->attrCode = $writer->write("<?php echo ' $this->snippetAttribute=\"' . htmlspecialchars(\$this->global->snippetDriver->getHtmlId({$writer->formatWord($name)})) . '\"' ?>");
-					return $writer->write($enterCode);
-				}
-				$node->closingCode .= "\n</div>";
-				$this->checkExtraArgs($node);
-				return $writer->write("?>\n<div $this->snippetAttribute=\"<?php echo htmlspecialchars(\$this->global->snippetDriver->getHtmlId({$writer->formatWord($name)})) ?>\"><?php " . $enterCode);
-
-			} else {
-				$node->data->leave = true;
-				$node->data->func = $this->generateMethodName($name);
-				$fname = $writer->formatWord($name);
-				if ($node->name === 'define') {
-					$node->closingCode = '<?php ?>';
-				} else {
-					if (Helpers::startsWith((string) $node->context[1], Latte\Compiler::CONTEXT_HTML_ATTRIBUTE)) {
-						$node->context[1] = '';
-						$node->modifiers .= '|escape';
-					} elseif ($node->modifiers) {
-						$node->modifiers .= '|escape';
-					}
-					$node->closingCode = $writer->write('<?php $this->renderBlock(%raw, get_defined_vars()'
-						. ($node->modifiers ? ', function ($s, $type) { $_fi = new LR\FilterInfo($type); return %modifyContent($s); }' : '') . '); ?>', $fname);
-				}
-				$blockType = PhpHelpers::dump(implode($node->context));
-				$this->checkExtraArgs($node);
-				return "\$this->checkBlockContentType($blockType, $fname);"
-					. "\$this->blockQueue[$fname][] = [\$this, '{$node->data->func}'];";
-			}
-
-		} elseif ($name[0] === '_') {
-			throw new CompileException("Block name '$name' must not start with an underscore.");
+			$node->modifiers .= '|escape';
+			$node->closingCode = $writer->write(
+				'<?php $__fi = new LR\FilterInfo(%var); echo %modifyContent(ob_get_clean()); ?>',
+				$node->context[0]
+			);
+			return 'ob_start(function () {});';
 		}
-
-		// static snippet/snippetArea
-		if ($node->name === 'snippet' || $node->name === 'snippetArea') {
-			if ($node->prefix && isset($node->htmlNode->attrs[$this->snippetAttribute])) {
-				throw new CompileException("Cannot combine HTML attribute $this->snippetAttribute with n:snippet.");
-			}
-			$node->data->name = $name = '_' . $name;
-		}
-
-		if (isset($this->namedBlocks[$name])) {
-			throw new CompileException("Cannot redeclare static {$node->name} '$name'");
-		}
-		$extendsCheck = $this->namedBlocks
-			? ''
-			: 'if ($this->getParentName()) { return get_defined_vars();} ';
-		$this->namedBlocks[$name] = true;
 
 		if (Helpers::removeFilter($node->modifiers, 'escape')) {
-			trigger_error('Macro ' . $node->getNotation() . ' provides auto-escaping, remove |escape.');
+			trigger_error('Tag ' . $node->getNotation() . ' provides auto-escaping, remove |escape.');
 		}
 		if (Helpers::startsWith((string) $node->context[1], Latte\Compiler::CONTEXT_HTML_ATTRIBUTE)) {
 			$node->context[1] = '';
@@ -310,139 +258,354 @@ class BlockMacros extends MacroSet
 		} elseif ($node->modifiers) {
 			$node->modifiers .= '|escape';
 		}
-		$this->blockTypes[$name] = implode($node->context);
 
-		$include = '$this->renderBlock(%var, ' . (($node->name === 'snippet' || $node->name === 'snippetArea') ? '$this->params' : 'get_defined_vars()')
-			. ($node->modifiers ? ', function ($s, $type) { $_fi = new LR\FilterInfo($type); return %modifyContent($s); }' : '') . ')';
+		$renderArgs = $writer->write(
+			'get_defined_vars()'
+			. ($node->modifiers ? ', function ($s, $type) { $__fi = new LR\FilterInfo($type); return %modifyContent($s); }' : '')
+		);
 
-		if ($node->name === 'snippet') {
-			if ($node->prefix) {
-				if (isset($node->htmlNode->macroAttrs['foreach'])) {
-					trigger_error('Combination of n:snippet with n:foreach is invalid, use n:inner-foreach.', E_USER_WARNING);
-				}
-				$node->attrCode = $writer->write("<?php echo ' $this->snippetAttribute=\"' . htmlspecialchars(\$this->global->snippetDriver->getHtmlId(%var)) . '\"' ?>", (string) substr($name, 1));
-				return $writer->write($include, $name);
+		if (strpos($data->name, '$') !== false) { // dynamic block
+			$node->closingCode = $writer->write('<?php $this->renderBlock(%word, %raw); ?>', $data->name, $renderArgs);
+			return $this->beginDynamicBlockOrDefine($node, $writer, $layer);
+		}
+
+		if (!preg_match('#^[a-z]#iD', $data->name)) {
+			throw new CompileException("Block name must start with letter a-z, '$data->name' given.");
+		}
+
+		$extendsCheck = $this->blocks[Template::LAYER_TOP] || count($this->blocks) > 1 || $node->parentNode;
+		$block = $this->addBlock($node, $layer);
+
+		$data->after = function () use ($node, $block) {
+			$this->extractMethod($node, $block);
+		};
+
+		return $writer->write(
+			($extendsCheck ? '' : 'if ($this->getParentName()) { return get_defined_vars();} ')
+			. '$this->renderBlock(%var, %raw)',
+			$data->name,
+			$renderArgs
+		);
+	}
+
+
+	/**
+	 * {define [local] name}
+	 */
+	public function macroDefine(MacroNode $node, PhpWriter $writer): string
+	{
+		if ($node->modifiers) { // modifier may be union|type
+			$node->setArgs($node->args . $node->modifiers);
+			$node->modifiers = '';
+		}
+		$node->validate(true);
+
+		[$name, $local] = $node->tokenizer->fetchWordWithModifier('local');
+		$layer = $local ? Template::LAYER_LOCAL : null;
+		$data = $node->data;
+		$data->name = ltrim((string) $name, '#');
+
+		if (strpos($data->name, '$') !== false) { // dynamic
+			$node->closingCode = '<?php ?>';
+			return $this->beginDynamicBlockOrDefine($node, $writer, $layer);
+		}
+
+		if (!preg_match('#^[a-z]#iD', $data->name)) {
+			throw new CompileException("Block name must start with letter a-z, '$data->name' given.");
+		}
+
+		$tokens = $node->tokenizer;
+		$args = [];
+		while ($tokens->isNext()) {
+			if ($tokens->nextToken($tokens::T_SYMBOL, '?', 'null', '\\')) { // type
+				$tokens->nextAll($tokens::T_SYMBOL, '\\', '|', '[', ']', 'null');
 			}
-			$this->checkExtraArgs($node);
-			return $writer->write(
-				"?>\n<div $this->snippetAttribute=\"<?php echo htmlspecialchars(\$this->global->snippetDriver->getHtmlId(%var)) ?>\"><?php $include ?>\n</div><?php ",
-				(string) substr($name, 1),
-				$name
+			$args[] = $tokens->consumeValue($tokens::T_VARIABLE);
+			if ($tokens->isNext()) {
+				$tokens->consumeValue(',');
+			}
+		}
+
+		$extendsCheck = $this->blocks[Template::LAYER_TOP] || count($this->blocks) > 1 || $node->parentNode;
+		$block = $this->addBlock($node, $layer);
+
+		$data->after = function () use ($node, $block, $args) {
+			$args = $args
+				? ('[' . implode(', ', $args) . '] = $__args + [' . str_repeat('null, ', count($args)) . '];')
+				: null;
+			$this->extractMethod($node, $block, $args);
+		};
+
+		return $extendsCheck
+			? ''
+			: 'if ($this->getParentName()) { return get_defined_vars();} ';
+	}
+
+
+	private function beginDynamicBlockOrDefine(MacroNode $node, PhpWriter $writer, ?string $layer): string
+	{
+		$this->checkExtraArgs($node);
+		$data = $node->data;
+		$func = $this->generateMethodName($data->name);
+
+		$data->after = function () use ($node, $func) {
+			$node->content = rtrim($node->content, " \t");
+			$this->getCompiler()->addMethod(
+				$func,
+				$this->getCompiler()->expandTokens("extract(\$__args);\n?>{$node->content}<?php"),
+				'array $__args',
+				'void'
+			);
+			$node->content = '';
+		};
+
+		return $writer->write(
+			'$this->addBlock(%word, %var, [[$this, %var]], %var);',
+			$data->name,
+			implode($node->context),
+			$func,
+			$layer
+		);
+	}
+
+
+	/**
+	 * {snippet [name]}
+	 */
+	public function macroSnippet(MacroNode $node, PhpWriter $writer): string
+	{
+		$node->validate(null);
+		$data = $node->data;
+		$data->name = (string) $node->tokenizer->fetchWord();
+		$this->checkExtraArgs($node);
+
+		if ($node->prefix && isset($node->htmlNode->attrs[$this->snippetAttribute])) {
+			throw new CompileException("Cannot combine HTML attribute {$this->snippetAttribute} with n:snippet.");
+
+		} elseif (strpos($data->name, '$') !== false) { // dynamic snippet
+			return $this->beginDynamicSnippet($node, $writer);
+
+		} elseif ($data->name !== '' && !preg_match('#^[a-z]#iD', $data->name)) {
+			throw new CompileException("Snippet name must start with letter a-z, '$data->name' given.");
+		}
+
+		$block = $this->addBlock($node, Template::LAYER_SNIPPET);
+
+		$data->after = function () use ($node, $writer, $data, $block) {
+			if ($node->prefix === MacroNode::PREFIX_NONE) { // n:snippet -> n:inner-snippet
+				$node->content = $node->innerContent;
+			}
+
+			$node->content = $writer->write(
+				'<?php $this->global->snippetDriver->enter(%word, %var);
+				try { ?>%raw<?php } finally { $this->global->snippetDriver->leave(); } ?>',
+				$data->name,
+				SnippetDriver::TYPE_STATIC,
+				preg_replace('#(?<=\n)[ \t]+$#D', '', $node->content)
 			);
 
-		} elseif ($node->name === 'define') {
-			$tokens = $node->tokenizer;
-			$args = [];
-			while ($tokens->isNext()) {
-				if ($tokens->nextToken($tokens::T_SYMBOL, '?', 'null', '\\')) { // type
-					$tokens->nextAll($tokens::T_SYMBOL, '\\', '|', '[', ']', 'null');
-				}
-				$args[] = $tokens->consumeValue($tokens::T_VARIABLE);
-				if ($tokens->isNext()) {
-					$tokens->consumeValue(',');
-				}
-			}
-			if ($args) {
-				$node->data->args = '[' . implode(', ', $args) . '] = $_args + [' . str_repeat('null, ', count($args)) . '];';
-			}
-			return $extendsCheck;
+			$this->extractMethod($node, $block);
 
-		} else { // block, snippetArea
-			$this->checkExtraArgs($node);
-			return $writer->write($extendsCheck . $include, $name);
+			if ($node->prefix === MacroNode::PREFIX_NONE) {
+				$node->innerContent = $node->openingCode . $node->content . $node->closingCode;
+				$node->closingCode = $node->openingCode = '<?php ?>';
+			}
+		};
+
+		if ($node->prefix) {
+			if (isset($node->htmlNode->macroAttrs['foreach'])) {
+				trigger_error('Combination of n:snippet with n:foreach is invalid, use n:inner-foreach.', E_USER_WARNING);
+			}
+			$node->attrCode = $writer->write(
+				"<?php echo ' {$this->snippetAttribute}=\"' . htmlspecialchars(\$this->global->snippetDriver->getHtmlId(%var)) . '\"' ?>",
+				$data->name
+			);
+			return $writer->write('$this->renderBlock(%var, $this->params, null, %var)', $data->name, Template::LAYER_SNIPPET);
 		}
+
+		return $writer->write(
+			"?>\n<div {$this->snippetAttribute}=\"<?php echo htmlspecialchars(\$this->global->snippetDriver->getHtmlId(%var)) ?>\">"
+			. '<?php $this->renderBlock(%var, $this->params, null, %var) ?>'
+			. "\n</div><?php ",
+			$data->name,
+			$data->name,
+			Template::LAYER_SNIPPET
+		);
+	}
+
+
+	private function beginDynamicSnippet(MacroNode $node, PhpWriter $writer): string
+	{
+		$parent = $node->closest(['snippet', 'snippetArea']);
+		if (!$parent) {
+			throw new CompileException('Dynamic snippets are allowed only inside static snippet/snippetArea.');
+		}
+
+		$parent->data->dynamic = true;
+		$data = $node->data;
+		$node->closingCode = '<?php } finally { $this->global->snippetDriver->leave(); } ?>';
+
+		if ($node->prefix) {
+			if ($node->prefix === MacroNode::PREFIX_NONE) { // n:snippet -> n:inner-snippet
+				$data->after = function () use ($node) {
+					$node->innerContent = $node->openingCode . $node->innerContent . $node->closingCode;
+					$node->closingCode = $node->openingCode = '<?php ?>';
+				};
+			}
+			$node->attrCode = $writer->write(
+				"<?php echo ' {$this->snippetAttribute}=\"' . htmlspecialchars(\$this->global->snippetDriver->getHtmlId(%word)) . '\"' ?>",
+				$data->name
+			);
+			return $writer->write('$this->global->snippetDriver->enter(%word, %var); try {', $data->name, SnippetDriver::TYPE_DYNAMIC);
+		}
+
+		$node->closingCode .= "\n</div>";
+		return $writer->write(
+			"?>\n<div {$this->snippetAttribute}=\""
+			. '<?php echo htmlspecialchars($this->global->snippetDriver->getHtmlId(%word)) ?>"'
+			. '><?php $this->global->snippetDriver->enter(%word, %var); try {',
+			$data->name,
+			$data->name,
+			SnippetDriver::TYPE_DYNAMIC
+		);
+	}
+
+
+	/**
+	 * {snippetArea name}
+	 */
+	public function macroSnippetArea(MacroNode $node, PhpWriter $writer): string
+	{
+		$node->validate(true);
+		$data = $node->data;
+		$data->name = (string) $node->tokenizer->fetchWord();
+		$this->checkExtraArgs($node);
+
+		$block = $this->addBlock($node, Template::LAYER_SNIPPET);
+
+		$data->after = function () use ($node, $writer, $data, $block) {
+			$node->content = $writer->write(
+				'<?php $this->global->snippetDriver->enter(%word, %var);
+				try { ?>%raw<?php } finally { $this->global->snippetDriver->leave(); } ?>',
+				$data->name,
+				SnippetDriver::TYPE_AREA,
+				preg_replace('#(?<=\n)[ \t]+$#D', '', $node->content)
+			);
+			$this->extractMethod($node, $block);
+		};
+		return $writer->write('$this->renderBlock(%var, $this->params, null, %var)', $data->name, Template::LAYER_SNIPPET);
 	}
 
 
 	/**
 	 * {/block}
+	 * {/define}
 	 * {/snippet}
 	 * {/snippetArea}
-	 * {/define}
 	 */
-	public function macroBlockEnd(MacroNode $node, PhpWriter $writer)
+	public function macroBlockEnd(MacroNode $node, PhpWriter $writer): void
 	{
-		if (isset($node->data->name)) { // block, snippet, define
-			if ($asInner = $node->name === 'snippet' && $node->prefix === MacroNode::PREFIX_NONE) {
-				$node->content = $node->innerContent;
-			}
-
-			if (
-				($node->name === 'snippet' || $node->name === 'snippetArea')
-				&& strpos($node->data->name, '$') === false
-			) {
-				$type = $node->name === 'snippet'
-					? SnippetDriver::TYPE_STATIC
-					: SnippetDriver::TYPE_AREA;
-				$node->content = '<?php $this->global->snippetDriver->enter('
-					. $writer->formatWord(substr($node->data->name, 1))
-					. ', "' . $type . '"); ?>'
-					. preg_replace('#(?<=\n)[ \t]+$#D', '', $node->content) . '<?php $this->global->snippetDriver->leave(); ?>';
-			}
-			if (empty($node->data->leave)) {
-				if (preg_match('#\$|n:#', $node->content)) {
-					$node->content = '<?php ' . (isset($node->data->args) ? 'extract($this->params); ' . $node->data->args : 'extract($_args);') . ' ?>'
-						. $node->content;
-				}
-				$this->namedBlocks[$node->data->name] = $tmp = preg_replace('#^\n+|(?<=\n)[ \t]+$#D', '', $node->content);
-				$node->content = substr_replace($node->content, $node->openingCode . "\n", strspn($node->content, "\n"), strlen($tmp));
-				$node->openingCode = '<?php ?>';
-
-			} elseif (isset($node->data->func)) {
-				$node->content = rtrim($node->content, " \t");
-				$this->getCompiler()->addMethod(
-					$node->data->func,
-					$this->getCompiler()->expandTokens("extract(\$_args);\n?>$node->content<?php"),
-					'array $_args',
-					'void'
-				);
-				$node->content = '';
-			}
-
-			if ($asInner) { // n:snippet -> n:inner-snippet
-				$node->innerContent = $node->openingCode . $node->content . $node->closingCode;
-				$node->closingCode = $node->openingCode = '<?php ?>';
-			}
-			return ' '; // consume next new line
-
-		} elseif ($node->modifiers) { // anonymous block with modifier
-			$node->modifiers .= '|escape';
-			return $writer->write('$_fi = new LR\FilterInfo(%var); echo %modifyContent(ob_get_clean());', $node->context[0]);
+		if (isset($node->data->after)) {
+			($node->data->after)();
 		}
+	}
+
+
+	private function addBlock(MacroNode $node, string $layer = null): Block
+	{
+		$data = $node->data;
+		if ($layer === Template::LAYER_SNIPPET
+			? isset($this->blocks[$layer][$data->name])
+			: (isset($this->blocks[Template::LAYER_LOCAL][$data->name]) || isset($this->blocks[$this->index][$data->name]))
+		) {
+			throw new CompileException("Cannot redeclare {$node->name} '{$data->name}'");
+		}
+
+		$block = $this->blocks[$layer ?? $this->index][$data->name] = new Block;
+		$block->contentType = implode($node->context);
+		return $block;
+	}
+
+
+	private function extractMethod(MacroNode $node, Block $block, string $args = null): void
+	{
+		if (preg_match('#\$|n:#', $node->content)) {
+			$node->content = '<?php '
+				. ($args === null ? 'extract($__args);' : 'extract($this->params); ' . $args)
+				. ' ?>' . $node->content;
+		}
+		$block->code = preg_replace('#^\n+|(?<=\n)[ \t]+$#D', '', $node->content);
+		$node->content = substr_replace($node->content, $node->openingCode . "\n", strspn($node->content, "\n"), strlen($block->code));
+		$node->openingCode = '<?php ?>';
+	}
+
+
+	/**
+	 * {embed "file"}
+	 */
+	public function macroEmbed(MacroNode $node, PhpWriter $writer): string
+	{
+		$node->validate(true);
+		$node->replaced = true;
+		$node->data->prevIndex = $this->index;
+		$this->index = count($this->blocks);
+		$this->blocks[$this->index] = [];
+
+		return $writer->write(
+			'$this->initBlockLayer(%var);
+			$this->setBlockLayer(%var);
+			try { $this->createTemplate(%node.word, %node.array, "embed")->renderToContentType(%var); }
+			finally { $this->setBlockLayer(%var); }
+			if (false) {',
+			$this->index,
+			$this->index,
+			implode($node->context),
+			$node->data->prevIndex
+		);
+	}
+
+
+	/**
+	 * {/embed}
+	 */
+	public function macroEmbedEnd(MacroNode $node, PhpWriter $writer): string
+	{
+		$this->index = $node->data->prevIndex;
+		return '}';
 	}
 
 
 	/**
 	 * {ifset block}
 	 * {elseifset block}
+	 * @return string|false
 	 */
 	public function macroIfset(MacroNode $node, PhpWriter $writer)
 	{
-		if ($node->modifiers) {
-			throw new CompileException('Modifiers are not allowed in ' . $node->getNotation());
-		}
-		if (!preg_match('~#|[\w-]+$~DA', $node->args)) {
+		$node->validate(true);
+		if (!preg_match('~(#|block\s)|[\w-]+$~DA', $node->args)) {
 			return false;
 		}
 		$list = [];
-		while (($name = $node->tokenizer->fetchWord()) !== null) {
-			$list[] = preg_match('~#|[\w-]+$~DA', $name)
-				? '$this->blockQueue["' . ltrim($name, '#') . '"]'
-				: $writer->formatArgs(new Latte\MacroTokens($name));
+		while ([$name, $block] = $node->tokenizer->fetchWordWithModifier('block')) {
+			$list[] = $block || preg_match('~#|[\w-]+$~DA', $name)
+				? '$this->hasBlock(' . $writer->formatWord(ltrim($name, '#')) . ')'
+				: 'isset(' . $writer->formatArgs(new Latte\MacroTokens($name)) . ')';
 		}
 		return ($node->name === 'elseifset' ? '} else' : '')
-			. 'if (isset(' . implode(', ', $list) . ')) {';
+			. 'if (' . implode(' && ', $list) . ') {';
 	}
 
 
 	private function generateMethodName(string $blockName): string
 	{
-		$clean = trim(preg_replace('#\W+#', '_', $blockName), '_');
-		$name = 'block' . ucfirst($clean);
-		$methods = array_keys($this->getCompiler()->getMethods());
-		if (!$clean || in_array(strtolower($name), array_map('strtolower', $methods), true)) {
-			$name .= '_' . substr(md5($blockName), 0, 5);
+		$name = 'block' . ucfirst(trim(preg_replace('#\W+#', '_', $blockName), '_'));
+		$lower = strtolower($name);
+		$methods = array_change_key_case($this->getCompiler()->getMethods()) + ['block' => 1];
+		$counter = null;
+		while (isset($methods[$lower . $counter])) {
+			$counter++;
 		}
-		return $name;
+		return $name . $counter;
 	}
 }

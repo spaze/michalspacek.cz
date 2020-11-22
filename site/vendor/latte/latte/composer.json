@@ -15,7 +15,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1",
+		"php": ">=7.1 <8.1",
 		"ext-json": "*",
 		"ext-tokenizer": "*"
 	},
@@ -46,7 +46,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "2.8-dev"
+			"dev-master": "2.9-dev"
 		}
 	}
 }

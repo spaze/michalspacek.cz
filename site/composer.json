@@ -36,7 +36,7 @@
 		"spaze/mysql-session-handler": "^2.0",
 		"spaze/encryption": "^0.2",
 		"spaze/phpinfo": "^0.1.0",
-		"contributte/translation": "^0.7",
+		"contributte/translation": "^0.8",
 		"spaze/phpstan-disallowed-calls": "^1.0"
 	},
 	"require-dev": {

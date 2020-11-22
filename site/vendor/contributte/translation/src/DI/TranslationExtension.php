@@ -52,7 +52,9 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 			'cache' => Expect::structure([
 				'dir' => Expect::string($builder->parameters['tempDir'] . '/cache/translation'),
 				'factory' => Expect::string(Symfony\Component\Config\ConfigCacheFactory::class),
+				'vary' => Expect::array()->default([]),
 			]),
+			'translatorFactory' => Expect::string()->default(null),
 		]);
 	}
 
@@ -111,18 +113,21 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 			->setFactory($this->config->cache->factory, [$this->config->debug]);
 
 		// Translator
-		if ($this->config->debug && $this->config->debugger) {
-			$factory = Contributte\Translation\DebuggerTranslator::class;
+		if ($this->config->translatorFactory !== null) {
+			$reflectionTranslatorFactory = new ReflectionClass($this->config->translatorFactory);
 
-		} elseif ($this->config->logger) {
-			$factory = Contributte\Translation\LoggerTranslator::class;
+			if (!$reflectionTranslatorFactory->isSubclassOf(Contributte\Translation\Translator::class)) {
+				throw new Contributte\Translation\Exceptions\InvalidArgument('Translator must extends class "' . Contributte\Translation\Translator::class . '".');
+			}
+
+			$factory = $this->config->translatorFactory;
 
 		} else {
 			$factory = Contributte\Translation\Translator::class;
 		}
 
 		$translator = $builder->addDefinition($this->prefix('translator'))
-			->setFactory($factory, ['defaultLocale' => $this->config->locales->default, 'cacheDir' => $this->config->cache->dir, 'debug' => $this->config->debug])
+			->setFactory($factory, ['defaultLocale' => $this->config->locales->default, 'cacheDir' => $this->config->cache->dir, 'debug' => $this->config->debug, 'cacheVary' => $this->config->cache->vary])
 			->addSetup('setLocalesWhitelist', [$this->config->locales->whitelist])
 			->addSetup('setConfigCacheFactory', [$configCacheFactory])
 			->addSetup('setFallbackLocales', [$this->config->locales->fallback])
@@ -143,13 +148,15 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 		}
 
 		// Tracy\Panel
-		if ($this->config->debug && $this->config->debugger) {
-			$tracyPanel = $builder->addDefinition($this->prefix('tracyPanel'))
-				->setFactory(Contributte\Translation\Tracy\Panel::class, [$translator]);
+		if (!$this->config->debug || !$this->config->debugger) {
+			return;
+		}
 
-			foreach ($localeResolvers as $v1) {
-				$tracyPanel->addSetup('addLocaleResolver', [$v1]);
-			}
+		$tracyPanel = $builder->addDefinition($this->prefix('tracyPanel'))
+			->setFactory(Contributte\Translation\Tracy\Panel::class, [$translator]);
+
+		foreach ($localeResolvers as $v1) {
+			$tracyPanel->addSetup('addLocaleResolver', [$v1]);
 		}
 	}
 
@@ -208,47 +215,52 @@ class TranslationExtension extends Nette\DI\CompilerExtension
 
 					$translator->addSetup('addResource', [$match['format'], $v2->getPathname(), $match['locale'], $match['domain']]);
 
-					if (isset($tracyPanel)) {
-						$tracyPanel->addSetup('addResource', [$match['format'], $v2->getPathname(), $match['locale'], $match['domain']]);
+					if (!isset($tracyPanel)) {
+						continue;
 					}
+
+					$tracyPanel->addSetup('addResource', [$match['format'], $v2->getPathname(), $match['locale'], $match['domain']]);
 				}
 			}
+		}
+
+		if ($this->config->logger === null) {
+			return;
 		}
 
 		// Psr\Log\LoggerInterface
-		if ($this->config->logger !== null) {
-			if ($this->config->logger === true) {
-				$psrLogger = $builder->getDefinitionByType(Psr\Log\LoggerInterface::class);
+		if ($this->config->logger === true) {
+			$psrLogger = $builder->getDefinitionByType(Psr\Log\LoggerInterface::class);
 
-			} elseif (is_string($this->config->logger) && class_exists($this->config->logger)) {
-				$reflection = new ReflectionClass($this->config->logger);
+		} elseif (is_string($this->config->logger) && class_exists($this->config->logger)) {
+			$reflection = new ReflectionClass($this->config->logger);
 
-				if (!$reflection->implementsInterface(Psr\Log\LoggerInterface::class)) {
-					throw new Contributte\Translation\Exceptions\InvalidArgument('Logger must implement interface "' . Psr\Log\LoggerInterface::class . '".');
-				}
-
-				try {
-					$psrLogger = $builder->getDefinitionByType($this->config->logger);
-
-				} catch (Nette\DI\MissingServiceException $e) {
-					$psrLogger = $builder->addDefinition($this->prefix('psrLogger'))
-						->setFactory($this->config->logger);
-				}
-
-			} else {
-				throw new Contributte\Translation\Exceptions\InvalidArgument('Option "logger" must be bool for autowired or class name as string.');
+			if (!$reflection->implementsInterface(Psr\Log\LoggerInterface::class)) {
+				throw new Contributte\Translation\Exceptions\InvalidArgument('Logger must implement interface "' . Psr\Log\LoggerInterface::class . '".');
 			}
 
-			$translator->addSetup('setPsrLogger', [$psrLogger]);
+			try {
+				$psrLogger = $builder->getDefinitionByType($this->config->logger);
+
+			} catch (Nette\DI\MissingServiceException $e) {
+				$psrLogger = $builder->addDefinition($this->prefix('psrLogger'))
+					->setFactory($this->config->logger);
+			}
+		} else {
+			throw new Contributte\Translation\Exceptions\InvalidArgument('Option "logger" must be bool for autowired or class name as string.');
 		}
+
+		$translator->addSetup('setPsrLogger', [$psrLogger]);
 	}
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class): void
 	{
-		if ($this->config->debug && $this->config->debugger) {
-			$initialize = $class->getMethod('initialize');
-			$initialize->addBody('$this->getService(?)->addPanel($this->getService(?));', ['tracy.bar', $this->prefix('tracyPanel')]);
+		if (!$this->config->debug || !$this->config->debugger) {
+			return;
 		}
+
+		$initialize = $class->getMethod('initialize');
+		$initialize->addBody('$this->getService(?)->addPanel($this->getService(?));', ['tracy.bar', $this->prefix('tracyPanel')]);
 	}
 
 }

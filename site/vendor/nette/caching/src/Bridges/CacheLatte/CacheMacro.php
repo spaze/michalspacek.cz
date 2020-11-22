@@ -59,7 +59,8 @@ final class CacheMacro implements Latte\IMacro
 		$this->used = true;
 		$node->empty = false;
 		$node->openingCode = Latte\PhpWriter::using($node)
-			->write('<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($this->global->cacheStorage, %var, $this->global->cacheStack, %node.array?)) { ?>',
+			->write(
+				'<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($this->global->cacheStorage, %var, $this->global->cacheStack, %node.array?)) try { ?>',
 				Nette\Utils\Random::generate()
 			);
 	}
@@ -72,7 +73,11 @@ final class CacheMacro implements Latte\IMacro
 	public function nodeClosed(Latte\MacroNode $node)
 	{
 		$node->closingCode = Latte\PhpWriter::using($node)
-			->write('<?php Nette\Bridges\CacheLatte\CacheMacro::endCache($this->global->cacheStack, %node.array?); } ?>');
+			->write('<?php
+				Nette\Bridges\CacheLatte\CacheMacro::endCache($this->global->cacheStack, %node.array?);
+				} catch (\Throwable $__e) {
+					Nette\Bridges\CacheLatte\CacheMacro::rollback($this->global->cacheStack); throw $__e;
+				} ?>');
 	}
 
 
@@ -94,8 +99,12 @@ final class CacheMacro implements Latte\IMacro
 	 * Starts the output cache. Returns Nette\Caching\OutputHelper object if buffering was started.
 	 * @return Nette\Caching\OutputHelper|\stdClass
 	 */
-	public static function createCache(Nette\Caching\IStorage $cacheStorage, string $key, ?array &$parents, array $args = null)
-	{
+	public static function createCache(
+		Nette\Caching\IStorage $cacheStorage,
+		string $key,
+		?array &$parents,
+		array $args = null
+	) {
 		if ($args) {
 			if (array_key_exists('if', $args) && !$args['if']) {
 				return $parents[] = new \stdClass;
@@ -121,16 +130,30 @@ final class CacheMacro implements Latte\IMacro
 	public static function endCache(array &$parents, array $args = null): void
 	{
 		$helper = array_pop($parents);
+		if (!$helper instanceof Nette\Caching\OutputHelper) {
+			return;
+		}
+
+		if (isset($args['dependencies'])) {
+			$args += $args['dependencies']();
+		}
+		if (isset($args['expire'])) {
+			$args['expiration'] = $args['expire']; // back compatibility
+		}
+		$helper->dependencies[Cache::TAGS] = $args['tags'] ?? null;
+		$helper->dependencies[Cache::EXPIRATION] = $args['expiration'] ?? '+ 7 days';
+		$helper->end();
+	}
+
+
+	/**
+	 * @param  Nette\Caching\OutputHelper[]  $parents
+	 */
+	public static function rollback(array &$parents): void
+	{
+		$helper = array_pop($parents);
 		if ($helper instanceof Nette\Caching\OutputHelper) {
-			if (isset($args['dependencies'])) {
-				$args += $args['dependencies']();
-			}
-			if (isset($args['expire'])) {
-				$args['expiration'] = $args['expire']; // back compatibility
-			}
-			$helper->dependencies[Cache::TAGS] = $args['tags'] ?? null;
-			$helper->dependencies[Cache::EXPIRATION] = $args['expiration'] ?? '+ 7 days';
-			$helper->end();
+			$helper->rollback();
 		}
 	}
 }
