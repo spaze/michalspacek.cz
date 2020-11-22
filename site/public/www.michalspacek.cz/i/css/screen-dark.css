@@ -59,6 +59,7 @@ code, pre, .highlight pre code { background-color: #2D2F2B; }
 	box-shadow: none;
 	background-color: hsl(0, 0%, 5%);
 }
+img.nobgcolor { background-color: inherit; }
 .column-sidebar .widget { background-color: #202530; }
 #theme-dark { display: none !important; }
 #theme-light { display: initial !important; }
