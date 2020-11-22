@@ -313,6 +313,8 @@ trainings:
 		1: "We'll do the training using Zoom, Skype, Whereby, or Jitsi – I'll send the link upfront and you'll need just a browser."
 		2: "And speakers, camera & microphone, whereas built-in devices are fine."
 	remoteindividualqa: 'The price includes a recording and an hour of individual Q&A in the next month following the class.'
+	nextdate: "next date"
+	nextdates: "next dates"
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"

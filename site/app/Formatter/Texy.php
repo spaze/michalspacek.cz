@@ -388,7 +388,11 @@ class Texy extends NetxtenTexy
 				$dates[] = $el;
 			}
 		}
-		return implode(', ', $dates);
+		return sprintf(
+			'%s: %s',
+			count($dates) > 1 ? $this->translator->translate('messages.trainings.nextdates') : $this->translator->translate('messages.trainings.nextdate'),
+			implode(', ', $dates)
+		);
 	}
 
 

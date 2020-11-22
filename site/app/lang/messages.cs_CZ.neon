@@ -313,6 +313,8 @@ trainings:
 		1: "Školení proběhne pomocí aplikací jako Zoom, Skype, Whereby, nebo Jitsi – odkaz pošlu předem a budete potřebovat jenom browser."
 		2: "A taky reproduktory, kameru a mikrofon, přičemž mohou být klidně i vestavěné."
 	remoteindividualqa: 'V ceně je i záznam školení ke stažení i hodinová individuální konzultace do měsíce od konání kurzu.'
+	nextdate: "nejbližší termín"
+	nextdates: "nejbližší termíny"
 venues:
 	nameaddress: "Název a adresa"
 	entrance: "Pohled na vchod"
