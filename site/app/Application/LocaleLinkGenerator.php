@@ -88,8 +88,8 @@ class LocaleLinkGenerator
 	/**
 	 * Set default params.
 	 *
-	 * @param array<string, array<string, string>> $params
-	 * @param array<string, array<string, string>> $defaultParams
+	 * @param array<string, array<string, string|null>> $params
+	 * @param array<string, string|null> $defaultParams
 	 */
 	public function setDefaultParams(array &$params, array $defaultParams): void
 	{

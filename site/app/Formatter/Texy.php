@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Formatter;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Post\LocaleUrls;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Prices;
@@ -290,6 +291,12 @@ class Texy extends NetxtenTexy
 	}
 
 
+	/**
+	 * @param string $url
+	 * @param string $locale
+	 * @return string
+	 * @throws ShouldNotHappenException
+	 */
 	private function getBlogLinks(string $url, string $locale): string
 	{
 		$args = explode('#', $url);
@@ -299,7 +306,11 @@ class Texy extends NetxtenTexy
 		foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
 			$params[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
 		}
-		$this->localeLinkGenerator->setDefaultParams($params, current($params));
+		$defaultParams = current($params);
+		if ($defaultParams === false) {
+			throw new ShouldNotHappenException('The array should not be empty');
+		}
+		$this->localeLinkGenerator->setDefaultParams($params, $defaultParams);
 		return $this->localeLinkGenerator->allLinks("Www:Post:default{$fragment}", $params)[$locale];
 	}
 

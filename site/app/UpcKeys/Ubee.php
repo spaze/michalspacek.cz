@@ -34,7 +34,7 @@ class Ubee implements RouterInterface
 	 */
 	public function setPrefixes(array $prefixes): void
 	{
-		if (count($prefixes) > 1) {
+		if (count($prefixes) !== 1) {
 			throw new RuntimeException('Ubee can has only one prefix');
 		}
 		$this->prefix = current($prefixes);
