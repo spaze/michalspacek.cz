@@ -41,7 +41,7 @@
 		<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight, nobreak">
 		<picture n:tag-if="$slide->imageAlternative">
 			<source n:if="$slide->imageAlternative" srcset="{$slide->imageAlternative}" type="{$slide->imageAlternativeType}">
-			<img src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="800" height="450">
+			<img src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="800" height="450" {if $iterator->counter > 3}loading="lazy"{/if}>
 		</picture>
 		<p><strong><a n:href="this $talk->action, $slide->alias">#{$slide->number}</a></strong> {$slide->speakerNotes}</p>
 		</div>
