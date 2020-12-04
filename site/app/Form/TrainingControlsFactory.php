@@ -94,6 +94,7 @@ class TrainingControlsFactory
 	public function addNote(Container $container): void
 	{
 		$container->addText('note', 'Poznámka:')
+			->setHtmlAttribute('placeholder', $this->translator->translate('messages.trainings.applicationform.note'))
 			->setRequired(false)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
 	}
