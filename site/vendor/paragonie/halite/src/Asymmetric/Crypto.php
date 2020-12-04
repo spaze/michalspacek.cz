@@ -15,7 +15,8 @@ use ParagonIE\Halite\{
     Halite,
     Key,
     Symmetric\Crypto as SymmetricCrypto,
-    Symmetric\EncryptionKey
+    Symmetric\EncryptionKey,
+    Util
 };
 use ParagonIE\HiddenString\HiddenString;
 
@@ -63,6 +64,7 @@ final class Crypto
      * @throws InvalidMessage
      * @throws InvalidDigestLength
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function encrypt(
@@ -95,6 +97,7 @@ final class Crypto
      * @throws InvalidMessage
      * @throws InvalidDigestLength
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function encryptWithAd(
@@ -136,6 +139,7 @@ final class Crypto
      * @throws InvalidMessage
      * @throws InvalidSignature
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function decrypt(
@@ -169,6 +173,7 @@ final class Crypto
      * @throws InvalidMessage
      * @throws InvalidSignature
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function decryptWithAd(
@@ -206,6 +211,7 @@ final class Crypto
      * @return HiddenString|Key
      *
      * @throws InvalidKey
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function getSharedSecret(
@@ -240,6 +246,7 @@ final class Crypto
      * @return string                        Ciphertext
      *
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function seal(
@@ -267,6 +274,7 @@ final class Crypto
      * @return string Signature (detached)
      *
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function sign(
@@ -299,6 +307,7 @@ final class Crypto
      * @throws InvalidKey
      * @throws InvalidMessage
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function signAndEncrypt(
@@ -318,7 +327,7 @@ final class Crypto
         }
         $signature = self::sign($message->getString(), $secretKey, true);
         $plaintext = new HiddenString($signature . $message->getString());
-        \sodium_memzero($signature);
+        Util::memzero($signature);
 
         $myEncKey = $secretKey->getEncryptionSecretKey();
         return self::encrypt($plaintext, $myEncKey, $publicKey, $encoding);
@@ -335,6 +344,7 @@ final class Crypto
      * @throws InvalidKey
      * @throws InvalidMessage
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function unseal(
@@ -364,8 +374,8 @@ final class Crypto
         );
         
         // Wipe these immediately:
-        \sodium_memzero($secret_key);
-        \sodium_memzero($public_key);
+        Util::memzero($secret_key);
+        Util::memzero($public_key);
         
         // Now let's open that sealed box
         $message = \sodium_crypto_box_seal_open(
@@ -374,7 +384,7 @@ final class Crypto
         );
 
         // Always memzero after retrieving a value
-        \sodium_memzero($key_pair);
+        Util::memzero($key_pair);
         if (!\is_string($message)) {
             // @codeCoverageIgnoreStart
             throw new InvalidKey(
@@ -398,6 +408,7 @@ final class Crypto
      *
      * @throws InvalidSignature
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function verify(
@@ -442,6 +453,7 @@ final class Crypto
      * @throws InvalidMessage
      * @throws InvalidSignature
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function verifyAndDecrypt(

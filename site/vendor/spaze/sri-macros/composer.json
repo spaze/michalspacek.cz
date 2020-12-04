@@ -10,10 +10,10 @@
 		}
 	],
 	"require": {
-		"php": "~7.1",
+		"php": "^7.1 || ^8.0",
 		"latte/latte": "^2.8",
 		"nette/di": "^3.0",
-		"spaze/coding-standard": "^0.0"
+		"spaze/coding-standard": "^0.0.4"
 	},
 	"autoload": {
 		"psr-4": {"Spaze\\SubresourceIntegrity\\": "src"}

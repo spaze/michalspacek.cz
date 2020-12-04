@@ -8,4 +8,7 @@
 * Key splitting: [**HKDF-BLAKE2b**](Classes/Util.md)
 * Password-Based Key Derivation: [**Argon2**](https://paragonie.com/book/pecl-libsodium/read/07-password-hashing.md#crypto-pwhash-str)
 
-In all cases, we follow an Encrypt then MAC construction, thus avoiding the [cryptographic doom principle](http://www.thoughtcrime.org/blog/the-cryptographic-doom-principle).
+In all cases, we follow an Encrypt then MAC construction, thus avoiding the [cryptographic doom principle](https://moxie.org/2011/12/13/the-cryptographic-doom-principle.html).
+
+As a consequence of our use of a keyed BLAKE2b hash as a MAC, instead of GCM/Poly1305,
+Halite ciphertexts are [**message committing**](https://eprint.iacr.org/2020/1456) which makes ciphertexts random key robust.  

@@ -1,6 +1,6 @@
 {
 	"name": "nette/utils",
-	"description": "🛠 Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
+	"description": "🛠  Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
 	"keywords": ["nette", "images", "json", "password", "validation", "utility", "string", "array", "core", "slugify", "utf-8", "unicode", "paginator", "datetime"],
 	"homepage": "https://nette.org",
 	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
@@ -15,12 +15,15 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1"
+		"php": ">=7.2 <8.1"
 	},
 	"require-dev": {
 		"nette/tester": "~2.0",
 		"tracy/tracy": "^2.3",
 		"phpstan/phpstan": "^0.12"
+	},
+	"conflict": {
+		"nette/di": "<3.0.6"
 	},
 	"suggest": {
 		"ext-iconv": "to use Strings::webalize(), toAscii(), chr() and reverse()",
@@ -36,12 +39,12 @@
 	},
 	"minimum-stability": "dev",
 	"scripts": {
-		"phpstan": "phpstan analyse --level 5 --configuration tests/phpstan.neon src",
+		"phpstan": "phpstan analyse",
 		"tester": "tester tests -s"
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "3.1-dev"
+			"dev-master": "3.2-dev"
 		}
 	}
 }

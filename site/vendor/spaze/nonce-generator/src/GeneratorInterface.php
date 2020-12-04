@@ -5,5 +5,7 @@ namespace Spaze\NonceGenerator;
 
 interface GeneratorInterface
 {
+
 	public function getNonce(): string;
+
 }

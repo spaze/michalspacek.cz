@@ -7,13 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Nette\Utils;
+namespace Nette\DI\Attributes;
+
+use Attribute;
 
 
-interface IHtmlString
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class Inject
 {
-	/**
-	 * Returns string in HTML format
-	 */
-	function __toString(): string;
 }

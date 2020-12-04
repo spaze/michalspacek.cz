@@ -111,7 +111,9 @@ class Resolver
 			try {
 				/** @var \ReflectionMethod|\ReflectionFunction $reflection */
 				$reflection = Nette\Utils\Callback::toReflection($entity[0] === '' ? $entity[1] : $entity);
-				$refClass = $reflection instanceof \ReflectionMethod ? $reflection->getDeclaringClass() : null;
+				$refClass = $reflection instanceof \ReflectionMethod
+					? $reflection->getDeclaringClass()
+					: null;
 			} catch (\ReflectionException $e) {
 				$refClass = $reflection = null;
 			}
@@ -134,7 +136,8 @@ class Resolver
 
 		} elseif (is_string($entity)) { // class
 			if (!class_exists($entity)) {
-				throw new ServiceCreationException(interface_exists($entity)
+				throw new ServiceCreationException(
+					interface_exists($entity)
 					? "Interface $entity can not be used as 'factory', did you mean 'implement'?"
 					: "Class $entity not found."
 				);
@@ -147,7 +150,9 @@ class Resolver
 
 	public function completeDefinition(Definition $def): void
 	{
-		$this->currentService = in_array($def, $this->builder->getDefinitions(), true) ? $def : null;
+		$this->currentService = in_array($def, $this->builder->getDefinitions(), true)
+			? $def
+			: null;
 		$this->currentServiceType = $def->getType();
 		$this->currentServiceAllowed = false;
 
@@ -287,7 +292,9 @@ class Resolver
 				$entity = $val->getEntity();
 				if ($entity === 'typed' || $entity === 'tagged') {
 					$services = [];
-					$current = $this->currentService ? $this->currentService->getName() : null;
+					$current = $this->currentService
+						? $this->currentService->getName()
+						: null;
 					foreach ($val->arguments as $argument) {
 						foreach ($entity === 'tagged' ? $this->builder->findByTag($argument) : $this->builder->findAutowired($argument) as $name => $foo) {
 							if ($name !== $current) {
@@ -320,7 +327,7 @@ class Resolver
 
 		if ($item instanceof Definition) {
 			$name = current(array_keys($this->builder->getDefinitions(), $item, true));
-			if ($name == false) {
+			if ($name === false) {
 				throw new ServiceCreationException("Service '{$item->getName()}' not found in definitions.");
 			}
 			$item = new Reference($name);
@@ -407,20 +414,26 @@ class Resolver
 	{
 		if ($e instanceof ServiceCreationException && Strings::startsWith($e->getMessage(), "Service '")) {
 			return $e;
-		} else {
-			$name = $def->getName();
-			$type = $def->getType();
-			if (!$type) {
-				$message = "Service '$name': " . $e->getMessage();
-			} elseif (!$name || ctype_digit($name)) {
-				$message = "Service of type $type: " . str_replace("$type::", '', $e->getMessage());
-			} else {
-				$message = "Service '$name' (type of $type): " . str_replace("$type::", '', $e->getMessage());
-			}
-			return $e instanceof ServiceCreationException
-				? $e->setMessage($message)
-				: new ServiceCreationException($message, 0, $e);
 		}
+
+		$name = $def->getName();
+		$type = $def->getType();
+		if ($name && !ctype_digit($name)) {
+			$message = "Service '$name'" . ($type ? " (type of $type)" : '') . ': ';
+		} elseif ($type) {
+			$message = "Service of type $type: ";
+		} elseif ($def instanceof Definitions\ServiceDefinition && $def->getEntity()) {
+			$message = 'Service (' . $this->entityToString($def->getEntity()) . '): ';
+		} else {
+			$message = '';
+		}
+		$message .= $type
+			? str_replace("$type::", '', $e->getMessage())
+			: $e->getMessage();
+
+		return $e instanceof ServiceCreationException
+			? $e->setMessage($message)
+			: new ServiceCreationException($message, 0, $e);
 	}
 
 
@@ -476,8 +489,11 @@ class Resolver
 	 * @param  (callable(string $type, bool $single): object|object[]|null)  $getter
 	 * @throws ServiceCreationException
 	 */
-	public static function autowireArguments(\ReflectionFunctionAbstract $method, array $arguments, callable $getter): array
-	{
+	public static function autowireArguments(
+		\ReflectionFunctionAbstract $method,
+		array $arguments,
+		callable $getter
+	): array {
 		$optCount = 0;
 		$num = -1;
 		$res = [];
@@ -508,7 +524,7 @@ class Resolver
 			$optCount = 0;
 		}
 		if ($arguments) {
-			throw new ServiceCreationException('Unable to pass specified arguments to ' . Reflection::toString($method) . '().');
+			throw new ServiceCreationException('Unable to pass specified arguments to ' . Reflection::toString($method) . '.');
 		} elseif ($optCount) {
 			$res = array_slice($res, 0, -$optCount);
 		}
@@ -527,7 +543,7 @@ class Resolver
 	{
 		$type = Reflection::getParameterType($parameter);
 		$method = $parameter->getDeclaringFunction();
-		$desc = '$' . $parameter->name . ' in ' . Reflection::toString($method) . '()';
+		$desc = Reflection::toString($parameter);
 
 		if ($type && !Reflection::isBuiltinType($type)) {
 			try {
@@ -554,10 +570,16 @@ class Resolver
 		) {
 			return $getter($itemType, false);
 
-		} elseif (($type && $parameter->allowsNull()) || $parameter->isOptional() || $parameter->isDefaultValueAvailable()) {
+		} elseif (
+			($type && $parameter->allowsNull())
+			|| $parameter->isOptional()
+			|| $parameter->isDefaultValueAvailable()
+		) {
 			// !optional + defaultAvailable = func($a = null, $b) since 5.4.7
 			// optional + !defaultAvailable = i.e. Exception::__construct, mysqli::mysqli, ...
-			return $parameter->isDefaultValueAvailable() ? Reflection::getParameterDefaultValue($parameter) : null;
+			return $parameter->isDefaultValueAvailable()
+				? Reflection::getParameterDefaultValue($parameter)
+				: null;
 
 		} else {
 			throw new ServiceCreationException("Parameter $desc has no class type hint or default value, so its value must be specified.");

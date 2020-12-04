@@ -13,7 +13,7 @@ use Nette;
 
 
 /**
- * Basic manipulation with images.
+ * Basic manipulation with images. Supported types are JPEG, PNG, GIF, WEBP and BMP.
  *
  * <code>
  * $image = Image::fromFile('nette.jpg');
@@ -144,43 +144,44 @@ class Image
 
 
 	/**
-	 * Reads an image from a file and returns its type in $detectedFormat. Supported types are JPEG, PNG, GIF, WEBP and BMP.
+	 * Reads an image from a file and returns its type in $type.
 	 * @throws Nette\NotSupportedException if gd extension is not loaded
 	 * @throws UnknownImageFileException if file not found or file type is not known
 	 * @return static
 	 */
-	public static function fromFile(string $file, int &$detectedFormat = null)
+	public static function fromFile(string $file, int &$type = null)
 	{
 		if (!extension_loaded('gd')) {
 			throw new Nette\NotSupportedException('PHP extension GD is not loaded.');
 		}
 
-		$detectedFormat = @getimagesize($file)[2]; // @ - files smaller than 12 bytes causes read error
-		if (!isset(self::FORMATS[$detectedFormat])) {
-			$detectedFormat = null;
+		$type = self::detectTypeFromFile($file);
+		if (!$type) {
 			throw new UnknownImageFileException(is_file($file) ? "Unknown type of file '$file'." : "File '$file' not found.");
 		}
-		return new static(Callback::invokeSafe('imagecreatefrom' . image_type_to_extension($detectedFormat, false), [$file], function (string $message): void {
+
+		$method = 'imagecreatefrom' . self::FORMATS[$type];
+		return new static(Callback::invokeSafe($method, [$file], function (string $message): void {
 			throw new ImageException($message);
 		}));
 	}
 
 
 	/**
-	 * Reads an image from a string and returns its type in $detectedFormat. Supported types are JPEG, PNG, GIF, WEBP and BMP.
+	 * Reads an image from a string and returns its type in $type.
 	 * @return static
 	 * @throws Nette\NotSupportedException if gd extension is not loaded
 	 * @throws ImageException
 	 */
-	public static function fromString(string $s, int &$detectedFormat = null)
+	public static function fromString(string $s, int &$type = null)
 	{
 		if (!extension_loaded('gd')) {
 			throw new Nette\NotSupportedException('PHP extension GD is not loaded.');
 		}
 
-		if (func_num_args() > 1) {
-			$tmp = @getimagesizefromstring($s)[2]; // @ - strings smaller than 12 bytes causes read error
-			$detectedFormat = isset(self::FORMATS[$tmp]) ? $tmp : null;
+		$type = self::detectTypeFromString($s);
+		if (!$type) {
+			throw new UnknownImageFileException('Unknown type of image.');
 		}
 
 		return new static(Callback::invokeSafe('imagecreatefromstring', [$s], function (string $message): void {
@@ -213,6 +214,26 @@ class Image
 			imagealphablending($image, true);
 		}
 		return new static($image);
+	}
+
+
+	/**
+	 * Returns the type of image from file.
+	 */
+	public static function detectTypeFromFile(string $file): ?int
+	{
+		$type = @getimagesize($file)[2]; // @ - files smaller than 12 bytes causes read error
+		return isset(self::FORMATS[$type]) ? $type : null;
+	}
+
+
+	/**
+	 * Returns the type of image from string.
+	 */
+	public static function detectTypeFromString(string $s): ?int
+	{
+		$type = @getimagesizefromstring($s)[2]; // @ - strings smaller than 12 bytes causes read error
+		return isset(self::FORMATS[$type]) ? $type : null;
 	}
 
 
@@ -308,9 +329,16 @@ class Image
 		if ($newWidth !== $this->getWidth() || $newHeight !== $this->getHeight()) { // resize
 			$newImage = static::fromBlank($newWidth, $newHeight, self::rgb(0, 0, 0, 127))->getImageResource();
 			imagecopyresampled(
-				$newImage, $this->image,
-				0, 0, 0, 0,
-				$newWidth, $newHeight, $this->getWidth(), $this->getHeight()
+				$newImage,
+				$this->image,
+				0,
+				0,
+				0,
+				0,
+				$newWidth,
+				$newHeight,
+				$this->getWidth(),
+				$this->getHeight()
 			);
 			$this->image = $newImage;
 		}
@@ -327,8 +355,13 @@ class Image
 	 * @param  int|string|null  $newWidth in pixels or percent
 	 * @param  int|string|null  $newHeight in pixels or percent
 	 */
-	public static function calculateSize(int $srcWidth, int $srcHeight, $newWidth, $newHeight, int $flags = self::FIT): array
-	{
+	public static function calculateSize(
+		int $srcWidth,
+		int $srcHeight,
+		$newWidth,
+		$newHeight,
+		int $flags = self::FIT
+	): array {
 		if ($newWidth === null) {
 		} elseif (self::isPercent($newWidth)) {
 			$newWidth = (int) round($srcWidth / 100 * abs($newWidth));
@@ -510,8 +543,14 @@ class Image
 		}
 
 		imagecopy(
-			$this->image, $output,
-			$left, $top, 0, 0, $width, $height
+			$this->image,
+			$output,
+			$left,
+			$top,
+			0,
+			0,
+			$width,
+			$height
 		);
 		return $this;
 	}
@@ -623,7 +662,7 @@ class Image
 	{
 		$function = 'image' . $name;
 		if (!function_exists($function)) {
-			ObjectHelpers::strictCall(get_class($this), $name);
+			ObjectHelpers::strictCall(static::class, $name);
 		}
 
 		foreach ($args as $key => $value) {
@@ -633,15 +672,23 @@ class Image
 			} elseif (is_array($value) && isset($value['red'])) { // rgb
 				$args[$key] = imagecolorallocatealpha(
 					$this->image,
-					$value['red'], $value['green'], $value['blue'], $value['alpha']
+					$value['red'],
+					$value['green'],
+					$value['blue'],
+					$value['alpha']
 				) ?: imagecolorresolvealpha(
 					$this->image,
-					$value['red'], $value['green'], $value['blue'], $value['alpha']
+					$value['red'],
+					$value['green'],
+					$value['blue'],
+					$value['alpha']
 				);
 			}
 		}
 		$res = $function($this->image, ...$args);
-		return $res instanceof \GdImage || (is_resource($res) && get_resource_type($res) === 'gd') ? $this->setImageResource($res) : $res;
+		return $res instanceof \GdImage || (is_resource($res) && get_resource_type($res) === 'gd')
+			? $this->setImageResource($res)
+			: $res;
 	}
 
 

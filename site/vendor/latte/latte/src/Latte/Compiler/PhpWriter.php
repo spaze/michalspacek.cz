@@ -166,9 +166,13 @@ class PhpWriter
 	 */
 	public function formatWord(string $s): string
 	{
-		return (is_numeric($s) || preg_match('#^\$|[\'"]|^(true|TRUE)$|^(false|FALSE)$|^(null|NULL)$|^[\w\\\\]{3,}::[A-Z0-9_]{2,}$#D', $s))
-			? $this->formatArgs(new MacroTokens($s))
-			: '"' . $s . '"';
+		if (is_numeric($s)
+			|| preg_match('#^[$([]|[\'"\ ]|^(true|TRUE)$|^(false|FALSE)$|^(null|NULL)$|^[\w\\\\]{3,}::[A-Z0-9_]{2,}$#D', $s)
+		) {
+			$s = preg_match('#\s#', $s) ? "($s)" : $s;
+			return $this->formatArgs(new MacroTokens($s));
+		}
+		return '"' . $s . '"';
 	}
 
 
@@ -676,7 +680,7 @@ class PhpWriter
 
 
 	/**
-	 * @return list<array{string, int, int}>
+	 * @return array<array{string, int, int}>
 	 */
 	private function inlineModifierInner(MacroTokens $tokens): array
 	{
@@ -724,7 +728,7 @@ class PhpWriter
 
 	/**
 	 * Formats modifiers calling.
-	 * @param  string|list<array{string, int, int}>  $var
+	 * @param  string|array<array{string, int, int}>  $var
 	 * @throws CompileException
 	 */
 	public function modifierPass(MacroTokens $tokens, $var, bool $isContent = false): MacroTokens
@@ -788,7 +792,7 @@ class PhpWriter
 					$inside = true;
 				}
 			} else {
-				throw new CompileException("Modifier name must be alphanumeric string, '{$tokens->currentValue()}' given.");
+				throw new CompileException("Filter name must be alphanumeric string, '{$tokens->currentValue()}' given.");
 			}
 		}
 		if ($inside) {

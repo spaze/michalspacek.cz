@@ -47,6 +47,9 @@ class Compiler
 		CONTEXT_XML_COMMENT = self::CONTEXT_HTML_COMMENT,
 		CONTEXT_XML_BOGUS_COMMENT = self::CONTEXT_HTML_BOGUS_COMMENT;
 
+	/** @var string[] @internal */
+	public $placeholders = [];
+
 	/** @var Token[] */
 	private $tokens;
 
@@ -70,9 +73,6 @@ class Compiler
 
 	/** @var MacroNode|null */
 	private $macroNode;
-
-	/** @var string[] */
-	private $placeholders = [];
 
 	/** @var string */
 	private $contentType = self::CONTENT_HTML;
@@ -108,7 +108,7 @@ class Compiler
 	 */
 	public function addMacro(string $name, Macro $macro, int $flags = null)
 	{
-		if (!preg_match('#^[a-z_=][\w-]*$#iD', $name)) {
+		if (!preg_match('#^[a-z_=]\w*(?:[.:-]\w+)*$#iD', $name)) {
 			throw new \LogicException("Invalid tag name '$name'.");
 
 		} elseif (!isset($this->flags[$name])) {
@@ -177,6 +177,9 @@ class Compiler
 		}
 
 		while ($this->macroNode) {
+			if ($this->macroNode->parentNode) {
+				trigger_error('Missing {/' . $this->macroNode->name . '}', E_USER_WARNING);
+			}
 			if (~$this->flags[$this->macroNode->name] & Macro::AUTO_CLOSE) {
 				throw new CompileException('Missing ' . self::printEndTag($this->macroNode));
 			}
@@ -646,12 +649,12 @@ class Compiler
 		$this->output = &$node->saved[0];
 		$this->writeCode((string) $node->openingCode, $node->replaced, $node->saved[1]);
 		$this->output .= $node->content;
-		$this->writeCode((string) $node->closingCode, $node->replaced, $isRightmost);
+		$this->writeCode((string) $node->closingCode, $node->replaced, $isRightmost, true);
 		return $node;
 	}
 
 
-	private function writeCode(string $code, ?bool $isReplaced, ?bool $isRightmost): void
+	private function writeCode(string $code, ?bool $isReplaced, ?bool $isRightmost, bool $isClosing = false): void
 	{
 		if ($isRightmost) {
 			$leftOfs = ($tmp = strrpos($this->output, "\n")) === false ? 0 : $tmp + 1;
@@ -661,7 +664,7 @@ class Compiler
 			}
 			if ($isLeftmost && !$isReplaced) {
 				$this->output = substr($this->output, 0, $leftOfs); // alone macro without output -> remove indentation
-				if (substr($code, -2) !== '?>') {
+				if (!$isClosing && substr($code, -2) !== '?>') {
 					$code .= '<?php ?>'; // consume new line
 				}
 			} elseif (substr($code, -2) === '?>') {

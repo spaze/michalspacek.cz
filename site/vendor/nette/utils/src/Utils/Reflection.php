@@ -37,49 +37,106 @@ final class Reflection
 	/**
 	 * Returns the type of return value of given function or method and normalizes `self`, `static`, and `parent` to actual class names.
 	 * If the function does not have a return type, it returns null.
+	 * If the function has union type, it throws Nette\InvalidStateException.
 	 */
 	public static function getReturnType(\ReflectionFunctionAbstract $func): ?string
 	{
-		$type = $func->getReturnType();
-		return $type instanceof \ReflectionNamedType
-			? ($func instanceof \ReflectionMethod ? self::normalizeType($type->getName(), $func) : $type->getName())
-			: null;
+		return self::getType($func, $func->getReturnType());
+	}
+
+
+	/**
+	 * Returns the types of return value of given function or method and normalizes `self`, `static`, and `parent` to actual class names.
+	 */
+	public static function getReturnTypes(\ReflectionFunctionAbstract $func): array
+	{
+		return self::getType($func, $func->getReturnType(), true);
 	}
 
 
 	/**
 	 * Returns the type of given parameter and normalizes `self` and `parent` to the actual class names.
 	 * If the parameter does not have a type, it returns null.
+	 * If the parameter has union type, it throws Nette\InvalidStateException.
 	 */
 	public static function getParameterType(\ReflectionParameter $param): ?string
 	{
-		$type = $param->getType();
-		return $type instanceof \ReflectionNamedType
-			? self::normalizeType($type->getName(), $param)
-			: null;
+		return self::getType($param, $param->getType());
+	}
+
+
+	/**
+	 * Returns the types of given parameter and normalizes `self` and `parent` to the actual class names.
+	 */
+	public static function getParameterTypes(\ReflectionParameter $param): array
+	{
+		return self::getType($param, $param->getType(), true);
 	}
 
 
 	/**
 	 * Returns the type of given property and normalizes `self` and `parent` to the actual class names.
 	 * If the property does not have a type, it returns null.
+	 * If the property has union type, it throws Nette\InvalidStateException.
 	 */
 	public static function getPropertyType(\ReflectionProperty $prop): ?string
 	{
-		$type = PHP_VERSION_ID >= 70400 ? $prop->getType() : null;
-		return $type instanceof \ReflectionNamedType
-			? self::normalizeType($type->getName(), $prop)
-			: null;
+		return self::getType($prop, PHP_VERSION_ID >= 70400 ? $prop->getType() : null);
 	}
 
 
 	/**
-	 * @param  \ReflectionMethod|\ReflectionParameter|\ReflectionProperty  $reflection
+	 * Returns the types of given property and normalizes `self` and `parent` to the actual class names.
+	 */
+	public static function getPropertyTypes(\ReflectionProperty $prop): array
+	{
+		return self::getType($prop, PHP_VERSION_ID >= 70400 ? $prop->getType() : null, true);
+	}
+
+
+	/**
+	 * @param  \ReflectionFunction|\ReflectionMethod|\ReflectionParameter|\ReflectionProperty  $reflection
+	 * @return string|array|null
+	 */
+	private static function getType($reflection, ?\ReflectionType $type, bool $asArray = false)
+	{
+		if ($type === null) {
+			return $asArray ? [] : null;
+
+		} elseif ($type instanceof \ReflectionNamedType) {
+			$name = self::normalizeType($type->getName(), $reflection);
+			if ($asArray) {
+				return $type->allowsNull() && $type->getName() !== 'mixed'
+					? [$name, 'null']
+					: [$name];
+			}
+			return $name;
+
+		} elseif ($type instanceof \ReflectionUnionType) {
+			if ($asArray) {
+				$types = [];
+				foreach ($type->getTypes() as $type) {
+					$types[] = self::normalizeType($type->getName(), $reflection);
+				}
+				return $types;
+			}
+			throw new Nette\InvalidStateException('The ' . self::toString($reflection) . ' is not expected to have a union type.');
+
+		} else {
+			throw new Nette\InvalidStateException('Unexpected type of ' . self::toString($reflection));
+		}
+	}
+
+
+	/**
+	 * @param  \ReflectionFunction|\ReflectionMethod|\ReflectionParameter|\ReflectionProperty  $reflection
 	 */
 	private static function normalizeType(string $type, $reflection): string
 	{
 		$lower = strtolower($type);
-		if ($lower === 'self' || $lower === 'static') {
+		if ($reflection instanceof \ReflectionFunction) {
+			return $type;
+		} elseif ($lower === 'self' || $lower === 'static') {
 			return $reflection->getDeclaringClass()->name;
 		} elseif ($lower === 'parent' && $reflection->getDeclaringClass()->getParentClass()) {
 			return $reflection->getDeclaringClass()->getParentClass()->name;
@@ -180,9 +237,7 @@ final class Reflection
 	public static function areCommentsAvailable(): bool
 	{
 		static $res;
-		return $res === null
-			? $res = (bool) (new \ReflectionMethod(__METHOD__))->getDocComment()
-			: $res;
+		return $res ?? $res = (bool) (new \ReflectionMethod(__METHOD__))->getDocComment();
 	}
 
 
@@ -191,13 +246,13 @@ final class Reflection
 		if ($ref instanceof \ReflectionClass) {
 			return $ref->name;
 		} elseif ($ref instanceof \ReflectionMethod) {
-			return $ref->getDeclaringClass()->name . '::' . $ref->name;
+			return $ref->getDeclaringClass()->name . '::' . $ref->name . '()';
 		} elseif ($ref instanceof \ReflectionFunction) {
-			return $ref->name;
+			return $ref->name . '()';
 		} elseif ($ref instanceof \ReflectionProperty) {
 			return self::getPropertyDeclaringClass($ref)->name . '::$' . $ref->name;
 		} elseif ($ref instanceof \ReflectionParameter) {
-			return '$' . $ref->name . ' in ' . self::toString($ref->getDeclaringFunction()) . '()';
+			return '$' . $ref->name . ' in ' . self::toString($ref->getDeclaringFunction());
 		} else {
 			throw new Nette\InvalidArgumentException;
 		}

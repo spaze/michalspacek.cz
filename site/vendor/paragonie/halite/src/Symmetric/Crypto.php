@@ -57,6 +57,7 @@ final class Crypto
      *
      * @throws InvalidMessage
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function authenticate(
@@ -94,6 +95,7 @@ final class Crypto
      * @throws InvalidMessage
      * @throws InvalidSignature
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function decrypt(
@@ -123,6 +125,7 @@ final class Crypto
      * @throws InvalidMessage
      * @throws InvalidSignature
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function decryptWithAd(
@@ -192,8 +195,8 @@ final class Crypto
                 'Invalid message authentication code'
             );
         }
-        \sodium_memzero($salt);
-        \sodium_memzero($authKey);
+        CryptoUtil::memzero($salt);
+        CryptoUtil::memzero($authKey);
 
         // crypto_stream_xor() can be used to encrypt and decrypt
         /** @var string $plaintext */
@@ -202,9 +205,9 @@ final class Crypto
             (string) $nonce,
             (string) $encKey
         );
-        \sodium_memzero($encrypted);
-        \sodium_memzero($nonce);
-        \sodium_memzero($encKey);
+        CryptoUtil::memzero($encrypted);
+        CryptoUtil::memzero($nonce);
+        CryptoUtil::memzero($encKey);
         return new HiddenString($plaintext);
     }
 
@@ -223,6 +226,7 @@ final class Crypto
      * @throws InvalidDigestLength
      * @throws InvalidMessage
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function encrypt(
@@ -249,6 +253,7 @@ final class Crypto
      * @throws InvalidDigestLength
      * @throws InvalidMessage
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function encryptWithAd(
@@ -284,7 +289,7 @@ final class Crypto
             $nonce,
             $encKey
         );
-        \sodium_memzero($encKey);
+        CryptoUtil::memzero($encKey);
 
         // Calculate an authentication tag:
         $auth = self::calculateMAC(
@@ -292,16 +297,16 @@ final class Crypto
             $authKey,
             $config
         );
-        \sodium_memzero($authKey);
+        CryptoUtil::memzero($authKey);
 
         /** @var string $message */
         $message = Halite::HALITE_VERSION . $salt . $nonce . $encrypted . $auth;
 
         // Wipe every superfluous piece of data from memory
-        \sodium_memzero($nonce);
-        \sodium_memzero($salt);
-        \sodium_memzero($encrypted);
-        \sodium_memzero($auth);
+        CryptoUtil::memzero($nonce);
+        CryptoUtil::memzero($salt);
+        CryptoUtil::memzero($encrypted);
+        CryptoUtil::memzero($auth);
 
         $encoder = Halite::chooseEncoder($encoding);
         if ($encoder) {
@@ -321,6 +326,7 @@ final class Crypto
      *
      * @throws CannotPerformOperation
      * @throws InvalidDigestLength
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function splitKeys(
@@ -421,7 +427,7 @@ final class Crypto
         );
 
         // We don't need this anymore.
-        \sodium_memzero($ciphertext);
+        CryptoUtil::memzero($ciphertext);
 
         // Now we return the pieces in a specific order:
         return [$version, $config, $salt, $nonce, $encrypted, $auth];
@@ -440,6 +446,7 @@ final class Crypto
      * @throws InvalidMessage
      * @throws InvalidSignature
      * @throws InvalidType
+     * @throws \SodiumException
      * @throws \TypeError
      */
     public static function verify(
@@ -484,6 +491,7 @@ final class Crypto
      * @param SymmetricConfig $config
      * @return string
      * @throws InvalidMessage
+     * @throws \SodiumException
      */
     protected static function calculateMAC(
         string $message,
@@ -516,6 +524,7 @@ final class Crypto
      *
      * @throws InvalidMessage
      * @throws InvalidSignature
+     * @throws \SodiumException
      */
     protected static function verifyMAC(
         string $mac,
@@ -537,7 +546,7 @@ final class Crypto
                 (int) $config->MAC_SIZE
             );
             $res = \hash_equals($mac, $calc);
-            \sodium_memzero($calc);
+            CryptoUtil::memzero($calc);
             return $res;
         }
         // @codeCoverageIgnoreStart
