@@ -7,7 +7,7 @@ use DateTime;
 use DateTimeImmutable;
 use Nette\Database\Context;
 use Nette\Database\Row;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 use Netxten\Templating\Helpers;
@@ -34,7 +34,7 @@ class Dates
 
 	private Helpers $netxtenHelpers;
 
-	/** @var ITranslator */
+	/** @var Translator */
 	protected $translator;
 
 	/** @var array<string, integer> */
@@ -44,7 +44,7 @@ class Dates
 	private $upcomingDates = array();
 
 
-	public function __construct(Context $context, Statuses $trainingStatuses, Prices $prices, Helpers $netxtenHelpers, ITranslator $translator)
+	public function __construct(Context $context, Statuses $trainingStatuses, Prices $prices, Helpers $netxtenHelpers, Translator $translator)
 	{
 		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use MichalSpacekCz\Formatter\Texy;
 use Nette\Database\Context;
 use Nette\Database\Row;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 
 class Trainings
@@ -18,7 +18,7 @@ class Trainings
 
 	protected Dates $trainingDates;
 
-	protected ITranslator $translator;
+	protected Translator $translator;
 
 	/** @var Row[] */
 	protected array $trainingsById = [];
@@ -27,7 +27,7 @@ class Trainings
 	private ?array $pastWithPersonalData = null;
 
 
-	public function __construct(Context $context, Texy $texyFormatter, Dates $trainingDates, ITranslator $translator)
+	public function __construct(Context $context, Texy $texyFormatter, Dates $trainingDates, Translator $translator)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;

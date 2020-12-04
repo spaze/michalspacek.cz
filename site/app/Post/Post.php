@@ -15,7 +15,7 @@ use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\Database\Context;
 use Nette\Database\Row;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
 
@@ -42,7 +42,7 @@ class Post
 
 	private Tags $tags;
 
-	/** @var ITranslator */
+	/** @var Translator */
 	protected $translator;
 
 	/** @var string[] */
@@ -63,7 +63,7 @@ class Post
 		LinkGenerator $linkGenerator,
 		LocaleLinkGenerator $localeLinkGenerator,
 		Tags $tags,
-		ITranslator $translator
+		Translator $translator
 	) {
 		$this->database = $context;
 		$this->loader = $loader;

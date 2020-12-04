@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Post;
 use Contributte\Translation\Translator;
 use Nette\Database\Context;
 use Nette\Database\Row;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator as NetteTranslator;
 use Nette\Utils\DateTime;
 
 /**
@@ -20,7 +20,7 @@ class Loader
 	/** @var Context */
 	protected $database;
 
-	/** @var ITranslator */
+	/** @var NetteTranslator */
 	protected $translator;
 
 	/** @var Row<mixed>|null */
@@ -29,9 +29,9 @@ class Loader
 
 	/**
 	 * @param Context $context
-	 * @param Translator|ITranslator $translator
+	 * @param Translator|NetteTranslator $translator
 	 */
-	public function __construct(Context $context, ITranslator $translator)
+	public function __construct(Context $context, NetteTranslator $translator)
 	{
 		$this->database = $context;
 		$this->translator = $translator;

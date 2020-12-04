@@ -10,7 +10,7 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 class TrainingControlsFactory
 {
@@ -18,7 +18,7 @@ class TrainingControlsFactory
 	use Date;
 
 
-	/** @var ITranslator */
+	/** @var Translator */
 	private $translator;
 
 	/** @var WinterIsComing */
@@ -28,7 +28,7 @@ class TrainingControlsFactory
 	private $trainingApplications;
 
 
-	public function __construct(Applications $trainingApplications, WinterIsComing $winterIsComing, ITranslator $translator)
+	public function __construct(Applications $trainingApplications, WinterIsComing $winterIsComing, Translator $translator)
 	{
 		$this->trainingApplications = $trainingApplications;
 		$this->winterIsComing = $winterIsComing;

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Www\Presenters;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IResponse;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 /**
  * A forbidden presenter.
@@ -18,14 +18,14 @@ use Nette\Localization\ITranslator;
 class ForbiddenPresenter extends Presenter
 {
 
-	/** @var ITranslator */
+	/** @var Translator */
 	protected $translator;
 
 	/** @var IResponse */
 	protected $httpResponse;
 
 
-	public function __construct(ITranslator $translator, IResponse $httpResponse)
+	public function __construct(Translator $translator, IResponse $httpResponse)
 	{
 		$this->translator = $translator;
 		$this->httpResponse = $httpResponse;

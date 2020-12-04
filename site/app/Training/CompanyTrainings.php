@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use MichalSpacekCz\Formatter\Texy;
 use Nette\Database\Context;
 use Nette\Database\Row;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 class CompanyTrainings
 {
@@ -20,11 +20,11 @@ class CompanyTrainings
 	/** @var Dates */
 	protected $trainingDates;
 
-	/** @var ITranslator */
+	/** @var Translator */
 	protected $translator;
 
 
-	public function __construct(Context $context, Texy $texyFormatter, Dates $trainingDates, ITranslator $translator)
+	public function __construct(Context $context, Texy $texyFormatter, Dates $trainingDates, Translator $translator)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;

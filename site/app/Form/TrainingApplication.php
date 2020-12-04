@@ -7,14 +7,14 @@ use MichalSpacekCz\Training\Dates;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Row;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Netxten\Forms\Controls\HiddenFieldWithLabel;
 
 class TrainingApplication extends ProtectedForm
 {
 
-	protected ITranslator $translator;
+	protected Translator $translator;
 
 	protected Dates $trainingDates;
 
@@ -23,7 +23,7 @@ class TrainingApplication extends ProtectedForm
 	 * @param Presenter $parent
 	 * @param string $name
 	 * @param Row[] $dates
-	 * @param ITranslator $translator
+	 * @param Translator $translator
 	 * @param TrainingControlsFactory $trainingControlsFactory
 	 * @param Dates $trainingDates
 	 */
@@ -31,7 +31,7 @@ class TrainingApplication extends ProtectedForm
 		Presenter $parent,
 		string $name,
 		array $dates,
-		ITranslator $translator,
+		Translator $translator,
 		TrainingControlsFactory $trainingControlsFactory,
 		Dates $trainingDates
 	) {

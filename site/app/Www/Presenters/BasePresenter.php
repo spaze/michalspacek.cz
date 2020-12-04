@@ -10,7 +10,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Response;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 /**
  * @property-read Template $template
@@ -19,7 +19,7 @@ abstract class BasePresenter extends Presenter
 {
 
 	/**
-	 * @var ITranslator
+	 * @var Translator
 	 * @inject
 	 */
 	public $translator;

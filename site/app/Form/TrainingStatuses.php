@@ -5,12 +5,12 @@ namespace MichalSpacekCz\Form;
 
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 class TrainingStatuses extends ProtectedForm
 {
 
-	/** @var ITranslator */
+	/** @var Translator */
 	protected $translator;
 
 
@@ -19,9 +19,9 @@ class TrainingStatuses extends ProtectedForm
 	 * @param string $name
 	 * @param Row[] $applications
 	 * @param TrainingControlsFactory $trainingControlsFactory
-	 * @param ITranslator $translator
+	 * @param Translator $translator
 	 */
-	public function __construct(IContainer $parent, string $name, array $applications, TrainingControlsFactory $trainingControlsFactory, ITranslator $translator)
+	public function __construct(IContainer $parent, string $name, array $applications, TrainingControlsFactory $trainingControlsFactory, Translator $translator)
 	{
 		parent::__construct($parent, $name);
 		$this->translator = $translator;

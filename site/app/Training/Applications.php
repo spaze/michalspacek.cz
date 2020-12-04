@@ -8,7 +8,7 @@ use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Database\Context;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Row;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Random;
 use PDOException;
 use RuntimeException;
@@ -42,7 +42,7 @@ class Applications
 	/** @var Vrana */
 	protected $vranaResolver;
 
-	/** @var ITranslator */
+	/** @var Translator */
 	protected $translator;
 
 	/** @var array<integer, array<integer, Row>> */
@@ -57,7 +57,7 @@ class Applications
 		StaticKey $emailEncryption,
 		Prices $price,
 		Vrana $vranaResolver,
-		ITranslator $translator
+		Translator $translator
 	) {
 		$this->database = $context;
 		$this->trainings = $trainings;

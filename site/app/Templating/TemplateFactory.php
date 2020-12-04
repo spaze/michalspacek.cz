@@ -11,7 +11,7 @@ use Nette\Bridges\ApplicationLatte\Template as NetteTemplate;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
 use Nette\Caching\IStorage;
 use Nette\Http\IRequest;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Security\User;
 use Netxten\Templating\Helpers as NetxtenHelpers;
 
@@ -24,7 +24,7 @@ class TemplateFactory extends NetteTemplateFactory
 
 	private Helpers $templateHelpers;
 
-	private ITranslator $translator;
+	private Translator $translator;
 
 
 	public function __construct(
@@ -35,7 +35,7 @@ class TemplateFactory extends NetteTemplateFactory
 		Theme $theme,
 		NetxtenHelpers $netxtenHelpers,
 		Helpers $templateHelpers,
-		ITranslator $translator,
+		Translator $translator,
 		string $templateClass = null
 	) {
 		parent::__construct($latteFactory, $httpRequest, $user, $cacheStorage, $templateClass);

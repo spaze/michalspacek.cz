@@ -8,7 +8,7 @@ use MichalSpacekCz\Application\Routers\Route;
 use MichalSpacekCz\Post\Loader;
 use Nette\Application\Routers\Route as NetteRoute;
 use Nette\Application\Routers\RouteList;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator as NetteTranslator;
 use Nette\Routing\Router;
 
 class RouterFactory
@@ -43,7 +43,7 @@ class RouterFactory
 	/** @var Loader */
 	protected $blogPostLoader;
 
-	/** @var Translator|ITranslator */
+	/** @var Translator|NetteTranslator */
 	protected $translator;
 
 	/** @var array<string, array<string, string>> of host => array of supported locales */
@@ -82,9 +82,9 @@ class RouterFactory
 
 	/**
 	 * @param Loader $blogPostLoader
-	 * @param Translator|ITranslator $translator
+	 * @param Translator|NetteTranslator $translator
 	 */
-	public function __construct(Loader $blogPostLoader, ITranslator $translator)
+	public function __construct(Loader $blogPostLoader, NetteTranslator $translator)
 	{
 		$this->blogPostLoader = $blogPostLoader;
 		$this->translator = $translator;
