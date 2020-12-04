@@ -396,6 +396,7 @@ class Trainings
 				t.name,
 				d.start,
 				d.end,
+				d.label AS labelJson,
 				d.public,
 				s.status,
 				d.remote,
@@ -435,6 +436,7 @@ class Trainings
 
 		foreach ($result as $training) {
 			$this->texyFormatter->formatTraining($training);
+			$training->label = $this->trainingDates->decodeLabel($training->labelJson);
 		}
 		return $this->pastWithPersonalData = $result;
 	}
