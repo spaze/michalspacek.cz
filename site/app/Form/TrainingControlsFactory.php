@@ -91,9 +91,9 @@ class TrainingControlsFactory
 	}
 
 
-	public function addNote(Container $container): void
+	public function addNote(Container $container): TextInput
 	{
-		$container->addText('note', 'Poznámka:')
+		return $container->addText('note', 'Poznámka:')
 			->setRequired(false)
 			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
 	}

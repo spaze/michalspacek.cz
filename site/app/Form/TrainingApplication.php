@@ -70,7 +70,8 @@ class TrainingApplication extends ProtectedForm
 
 		$trainingControlsFactory->addAttendee($this);
 		$trainingControlsFactory->addCompany($this);
-		$trainingControlsFactory->addNote($this);
+		$trainingControlsFactory->addNote($this)
+			->setHtmlAttribute('placeholder', $this->translator->translate('messages.trainings.applicationform.note'));
 		$trainingControlsFactory->addCountry($this);
 
 		$this->addSubmit('signUp', 'Odeslat');

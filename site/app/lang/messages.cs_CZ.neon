@@ -315,6 +315,8 @@ trainings:
 	remoteindividualqa: 'V ceně je i záznam školení ke stažení i hodinová individuální konzultace do měsíce od konání kurzu.'
 	nextdate: "nejbližší termín"
 	nextdates: "nejbližší termíny"
+	applicationform:
+		note: "Např. jiná fakturační e-mailová adresa apod."
 venues:
 	nameaddress: "Název a adresa"
 	entrance: "Pohled na vchod"

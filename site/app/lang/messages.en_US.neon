@@ -315,6 +315,8 @@ trainings:
 	remoteindividualqa: 'The price includes a recording and an hour of individual Q&A in the next month following the class.'
 	nextdate: "next date"
 	nextdates: "next dates"
+	applicationform:
+		note: "E.g. different billing email address etc."
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"
