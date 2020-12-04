@@ -42,12 +42,12 @@ class DeletePersonalDataFormFactory
 				$this->trainings->deletePersonalData($pastIds);
 				$this->files->deleteFiles($pastIds);
 				$this->database->commit();
-				$onSuccess();
 			} catch (Exception $e) {
+				Debugger::log($e);
 				$this->database->rollBack();
 				$form->addError('Oops, something went wrong, please try again in a moment');
-				Debugger::log($e);
 			}
+			$onSuccess();
 		};
 
 		return $form;

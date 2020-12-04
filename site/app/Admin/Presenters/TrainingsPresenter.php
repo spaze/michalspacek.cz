@@ -26,7 +26,6 @@ use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Netxten\Templating\Helpers;
-use stdClass;
 
 class TrainingsPresenter extends BasePresenter
 {
