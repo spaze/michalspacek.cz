@@ -2731,21 +2731,21 @@
     },
     {
         "name": "spaze/phpstan-disallowed-calls",
-        "version": "v1.0.1",
-        "version_normalized": "1.0.1.0",
+        "version": "v1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-            "reference": "24feac6714a42e8e54735cfdfe22bfb42d759b78"
+            "reference": "6f83bad39acee6a990bfd63ed435ef4bdded1624"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/24feac6714a42e8e54735cfdfe22bfb42d759b78",
-            "reference": "24feac6714a42e8e54735cfdfe22bfb42d759b78",
+            "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/6f83bad39acee6a990bfd63ed435ef4bdded1624",
+            "reference": "6f83bad39acee6a990bfd63ed435ef4bdded1624",
             "shasum": ""
         },
         "require": {
-            "php": ">=7.1",
+            "php": "^7.1 || ^8.0",
             "phpstan/phpstan": "^0.12"
         },
         "require-dev": {
@@ -2754,7 +2754,7 @@
             "phpunit/phpunit": "^7.0 || ^9.4.2",
             "spaze/coding-standard": "^0.0.4"
         },
-        "time": "2020-11-12T21:03:35+00:00",
+        "time": "2020-12-05T02:59:41+00:00",
         "type": "phpstan-extension",
         "extra": {
             "phpstan": {
