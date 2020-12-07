@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\UpcKeys;
 
 use DateTime;
+use DateTimeZone;
 use Nette\Database\Context;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Utils\Json;
@@ -241,12 +242,14 @@ class Technicolor implements RouterInterface
 		$datetime = new DateTime();
 		$this->database->beginTransaction();
 		try {
+			/** @var DateTimeZone|false $timeZone */
+			$timeZone = $datetime->getTimezone();
 			$this->database->query(
 				'INSERT INTO ssids',
 				array(
 					'ssid' => $ssid,
 					'added' => $datetime,
-					'added_timezone' => $datetime->getTimezone()->getName(),
+					'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 				)
 			);
 			$ssidId = $this->database->getInsertId();

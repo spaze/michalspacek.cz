@@ -227,12 +227,14 @@ class Statuses
 			$datetime->format(DateTime::ATOM),
 		));
 
+		/** @var DateTimeZone|false $timeZone */
+		$timeZone = $datetime->getTimezone();
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
 				'key_status'           => $statusId,
 				'status_time'          => $datetime,
-				'status_time_timezone' => $datetime->getTimezone()->getName(),
+				'status_time_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 			),
 			$applicationId
 		);
