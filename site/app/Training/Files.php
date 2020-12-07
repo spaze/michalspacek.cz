@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
+use DateTimeZone;
 use Nette\Database\Context;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
@@ -126,12 +127,14 @@ class Files
 		$datetime = new DateTime();
 		$this->database->beginTransaction();
 
+		/** @var DateTimeZone|false $timeZone */
+		$timeZone = $datetime->getTimezone();
 		$this->database->query(
 			'INSERT INTO files',
 			array(
 				'filename'       => $name,
 				'added'          => $datetime,
-				'added_timezone' => $datetime->getTimezone()->getName(),
+				'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 			)
 		);
 		$fileId = $this->database->getInsertId();

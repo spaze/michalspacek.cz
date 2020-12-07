@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
+use DateTimeZone;
 use MichalSpacekCz\Formatter\Texy;
 use Nette\Database\Context;
 use Nette\Database\Row;
@@ -193,6 +194,8 @@ class Reviews
 	public function addReview(int $dateId, string $name, string $company, ?string $jobTitle, string $review, ?string $href, bool $hidden, ?int $ranking): void
 	{
 		$datetime = new DateTime();
+		/** @var DateTimeZone|false $timeZone */
+		$timeZone = $datetime->getTimezone();
 		$this->database->query(
 			'INSERT INTO training_reviews ?',
 			array(
@@ -203,7 +206,7 @@ class Reviews
 				'review' => $review,
 				'href' => $href,
 				'added' => $datetime,
-				'added_timezone' => $datetime->getTimezone()->getName(),
+				'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 				'hidden' => $hidden,
 				'ranking' => $ranking,
 			)
