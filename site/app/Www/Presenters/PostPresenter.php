@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use DateInterval;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Training\Dates;
@@ -59,7 +60,9 @@ class PostPresenter extends BasePresenter
 		$this->template->pageHeader = $post->title;
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$this->template->edits = $edits;
-		if ($edits && current($edits)->editedAt->diff($post->published)->days >= $this->blogPost->getUpdatedInfoThreshold()) {
+		/** @var DateInterval|false $interval */
+		$interval = ($edits ? current($edits)->editedAt->diff($post->published) : false);
+		if ($edits && $interval && $interval->days >= $this->blogPost->getUpdatedInfoThreshold()) {
 			$this->template->edited = current($edits)->editedAt;
 		}
 

@@ -47,6 +47,7 @@ class Ares implements CompanyDataInterface
 			if (!$xml) {
 				throw new RuntimeException("Can't parse XML received for company {$companyId}");
 			}
+			/** @var array<string, string> $ns */
 			$ns = $xml->getDocNamespaces();
 			$result = $xml->children($ns['are'])->children($ns['D'])->VH;
 			$data = $xml->children($ns['are'])->children($ns['D'])->VBAS;

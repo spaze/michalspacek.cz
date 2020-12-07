@@ -42,7 +42,7 @@ class Price
 			return '';
 		}
 
-		return $this->getNumberFormatter($this->price)->formatCurrency($this->price, 'CZK');
+		return $this->formatCurrency($this->price);
 	}
 
 
@@ -75,17 +75,20 @@ class Price
 			return '';
 		}
 
-		return $this->getNumberFormatter($priceVat)->formatCurrency($priceVat, 'CZK');
+		return $this->formatCurrency($priceVat);
 	}
 
 
-	private function getNumberFormatter(float $price): NumberFormatter
+	private function formatCurrency(float $price): string
 	{
 		$formatter = new NumberFormatter('cs_CZ', NumberFormatter::CURRENCY);
 		if (fmod($price, 1) === (float)0) {
 			$formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
 		}
-		return $formatter;
+
+		/** @var string $formatted */
+		$formatted = $formatter->formatCurrency($price, 'CZK');
+		return $formatted;
 	}
 
 }

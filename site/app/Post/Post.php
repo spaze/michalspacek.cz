@@ -315,6 +315,8 @@ class Post
 	{
 		$this->database->beginTransaction();
 		try {
+			/** @var DateTimeZone|false $timeZone */
+			$timeZone = $post->published->getTimezone();
 			$this->database->query(
 				'INSERT INTO blog_posts',
 				array(
@@ -326,7 +328,7 @@ class Post
 					'lead' => $post->leadTexy,
 					'text' => $post->textTexy,
 					'published' => $post->published,
-					'published_timezone' => $post->published->getTimezone()->getName(),
+					'published_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 					'og_image' => $post->ogImage,
@@ -355,6 +357,8 @@ class Post
 	{
 		$this->database->beginTransaction();
 		try {
+			/** @var DateTimeZone|false $timeZone */
+			$timeZone = $post->published->getTimezone();
 			$this->database->query(
 				'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 				array(
@@ -366,7 +370,7 @@ class Post
 					'lead' => $post->leadTexy,
 					'text' => $post->textTexy,
 					'published' => $post->published,
-					'published_timezone' => $post->published->getTimezone()->getName(),
+					'published_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 					'og_image' => $post->ogImage,
@@ -380,12 +384,14 @@ class Post
 			);
 			$now = new DateTime();
 			if ($post->editSummary) {
+				/** @var DateTimeZone|false $timeZone */
+				$timeZone = $now->getTimezone();
 				$this->database->query(
 					'INSERT INTO blog_post_edits',
 					array(
 						'key_blog_post' => $post->postId,
 						'edited_at' => $now,
-						'edited_at_timezone' => $now->getTimezone()->getName(),
+						'edited_at_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 						'summary' => $post->editSummary,
 					)
 				);
