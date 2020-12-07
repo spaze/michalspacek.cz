@@ -37,8 +37,6 @@ class Link
 
 
 	/**
-	 * Link constructor.
-	 *
 	 * @param string $href
 	 * @param string|null $rel
 	 * @param string|null $type
@@ -57,66 +55,36 @@ class Link
 	}
 
 
-	/**
-	 * Get link href.
-	 *
-	 * @return string
-	 */
 	public function getHref(): string
 	{
 		return $this->href;
 	}
 
 
-	/**
-	 * Get link rel.
-	 *
-	 * @return string|null
-	 */
 	public function getRel(): ?string
 	{
 		return $this->rel;
 	}
 
 
-	/**
-	 * Get link type.
-	 *
-	 * @return string|null
-	 */
 	public function getType(): ?string
 	{
 		return $this->type;
 	}
 
 
-	/**
-	 * Get link hreflang.
-	 *
-	 * @return string|null
-	 */
 	public function getHreflang(): ?string
 	{
 		return $this->hreflang;
 	}
 
 
-	/**
-	 * Get link title.
-	 *
-	 * @return string|null
-	 */
 	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
 
 
-	/**
-	 * Get link length in octets.
-	 *
-	 * @return int|null
-	 */
 	public function getLength(): ?int
 	{
 		return $this->length;

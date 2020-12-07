@@ -1485,27 +1485,27 @@
     },
     {
         "name": "paragonie/constant_time_encoding",
-        "version": "v2.3.0",
-        "version_normalized": "2.3.0.0",
+        "version": "v2.4.0",
+        "version_normalized": "2.4.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/paragonie/constant_time_encoding.git",
-            "reference": "47a1cedd2e4d52688eb8c96469c05ebc8fd28fa2"
+            "reference": "f34c2b11eb9d2c9318e13540a1dbc2a3afbd939c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/47a1cedd2e4d52688eb8c96469c05ebc8fd28fa2",
-            "reference": "47a1cedd2e4d52688eb8c96469c05ebc8fd28fa2",
+            "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/f34c2b11eb9d2c9318e13540a1dbc2a3afbd939c",
+            "reference": "f34c2b11eb9d2c9318e13540a1dbc2a3afbd939c",
             "shasum": ""
         },
         "require": {
             "php": "^7|^8"
         },
         "require-dev": {
-            "phpunit/phpunit": "^6|^7",
-            "vimeo/psalm": "^1|^2|^3"
+            "phpunit/phpunit": "^6|^7|^8|^9",
+            "vimeo/psalm": "^1|^2|^3|^4"
         },
-        "time": "2019-11-06T19:20:29+00:00",
+        "time": "2020-12-06T15:14:20+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1549,22 +1549,22 @@
     },
     {
         "name": "paragonie/halite",
-        "version": "v4.7.0",
-        "version_normalized": "4.7.0.0",
+        "version": "v4.7.1",
+        "version_normalized": "4.7.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/paragonie/halite.git",
-            "reference": "907ba473060308d1231062645d9553eace41e785"
+            "reference": "538a0579e86ac8222973be55d17615a7be8f29cb"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paragonie/halite/zipball/907ba473060308d1231062645d9553eace41e785",
-            "reference": "907ba473060308d1231062645d9553eace41e785",
+            "url": "https://api.github.com/repos/paragonie/halite/zipball/538a0579e86ac8222973be55d17615a7be8f29cb",
+            "reference": "538a0579e86ac8222973be55d17615a7be8f29cb",
             "shasum": ""
         },
         "require": {
             "paragonie/constant_time_encoding": "^2",
-            "paragonie/hidden-string": "^1",
+            "paragonie/hidden-string": "^1|^2",
             "paragonie/sodium_compat": "^1.14",
             "php": "^7.2|^8"
         },
@@ -1572,7 +1572,7 @@
             "phpunit/phpunit": "^8|^9",
             "vimeo/psalm": "^3|^4"
         },
-        "time": "2020-12-03T16:32:56+00:00",
+        "time": "2020-12-06T15:18:22+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1871,17 +1871,17 @@
     },
     {
         "name": "phpstan/phpstan",
-        "version": "0.12.58",
-        "version_normalized": "0.12.58.0",
+        "version": "0.12.59",
+        "version_normalized": "0.12.59.0",
         "source": {
             "type": "git",
             "url": "https://github.com/phpstan/phpstan.git",
-            "reference": "2a4847df6047b30af28854ed9dc95304cdb56ae5"
+            "reference": "cf4107257c8ca2ad967efdd6a00f12b21acbb779"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2a4847df6047b30af28854ed9dc95304cdb56ae5",
-            "reference": "2a4847df6047b30af28854ed9dc95304cdb56ae5",
+            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/cf4107257c8ca2ad967efdd6a00f12b21acbb779",
+            "reference": "cf4107257c8ca2ad967efdd6a00f12b21acbb779",
             "shasum": ""
         },
         "require": {
@@ -1890,7 +1890,7 @@
         "conflict": {
             "phpstan/phpstan-shim": "*"
         },
-        "time": "2020-11-29T13:32:03+00:00",
+        "time": "2020-12-07T14:46:03+00:00",
         "bin": [
             "phpstan",
             "phpstan.phar"
@@ -2505,24 +2505,31 @@
     },
     {
         "name": "spaze/feed-exports",
-        "version": "v0.2.1",
-        "version_normalized": "0.2.1.0",
+        "version": "v0.2.2",
+        "version_normalized": "0.2.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spaze/feed-exports.git",
-            "reference": "7392ec98e0e141de51668b9086000ce05cd0555b"
+            "reference": "68aee874527eca4c300f2681e3878e182c3eeeb4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spaze/feed-exports/zipball/7392ec98e0e141de51668b9086000ce05cd0555b",
-            "reference": "7392ec98e0e141de51668b9086000ce05cd0555b",
+            "url": "https://api.github.com/repos/spaze/feed-exports/zipball/68aee874527eca4c300f2681e3878e182c3eeeb4",
+            "reference": "68aee874527eca4c300f2681e3878e182c3eeeb4",
             "shasum": ""
         },
         "require": {
             "nette/application": "~3.0",
-            "php": "~7.1"
+            "php": "^7.1 || ^8.0"
         },
-        "time": "2019-04-18T09:30:17+00:00",
+        "require-dev": {
+            "nette/tester": "^2.3",
+            "php-parallel-lint/php-console-highlighter": "^0.5.0",
+            "php-parallel-lint/php-parallel-lint": "^1.2",
+            "phpstan/phpstan": "^0.12.59",
+            "spaze/coding-standard": "^0.0.4"
+        },
+        "time": "2020-12-07T16:17:29+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
