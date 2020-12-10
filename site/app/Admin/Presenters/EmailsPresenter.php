@@ -77,7 +77,7 @@ class EmailsPresenter extends BasePresenter
 			}
 
 			if ($this->applications[$id]->nextStatus === Statuses::STATUS_MATERIALS_SENT) {
-				$this->trainingMails->sendMaterials($this->applications[$id], $template, $data->feedbackRequest, $additional);
+				$this->trainingMails->sendMaterials($this->applications[$id], $template, $data->feedbackRequest ?? false, $additional);
 				$this->trainingStatuses->updateStatus($id, Statuses::STATUS_MATERIALS_SENT);
 				$sent++;
 			}
