@@ -24,21 +24,21 @@ final class HiddenString
     /**
      * @var string
      */
-    protected $internalStringValue = '';
+    protected string $internalStringValue = '';
 
     /**
      * Disallow the contents from being accessed via __toString()?
      *
      * @var bool
      */
-    protected $disallowInline = false;
+    protected bool $disallowInline = true;
 
     /**
      * Disallow the contents from being accessed via __sleep()?
      *
      * @var bool
      */
-    protected $disallowSerialization = false;
+    protected bool $disallowSerialization = true;
 
     /**
      * HiddenString constructor.
@@ -50,8 +50,8 @@ final class HiddenString
      */
     public function __construct(
         string $value,
-        bool $disallowInline = false,
-        bool $disallowSerialization = false
+        bool $disallowInline = true,
+        bool $disallowSerialization = true
     ) {
         $this->internalStringValue = self::safeStrcpy($value);
         $this->disallowInline = $disallowInline;
@@ -73,6 +73,9 @@ final class HiddenString
 
     /**
      * Hide its internal state from var_dump()
+     *
+     * Note: The xdebug extension may break this behavior.
+     * You should not rely on it if you have debugging extensions installed.
      *
      * @return array
      */
@@ -130,6 +133,7 @@ final class HiddenString
      * Optionally, it can return an empty string.
      *
      * @return string
+     * @throws MisuseException
      * @throws \TypeError
      */
     public function __toString(): string
@@ -137,11 +141,14 @@ final class HiddenString
         if (!$this->disallowInline) {
             return self::safeStrcpy($this->internalStringValue);
         }
-        return '';
+        throw new MisuseException(
+            'This HiddenString object cannot be inlined as a string.'
+        );
     }
 
     /**
      * @return array
+     * @throws MisuseException
      */
     public function __sleep(): array
     {
@@ -152,7 +159,9 @@ final class HiddenString
                 'disallowSerialization'
             ];
         }
-        return [];
+        throw new MisuseException(
+            'This HiddenString object cannot be serialized.'
+        );
     }
 
     /**

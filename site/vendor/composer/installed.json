@@ -76,30 +76,30 @@
     },
     {
         "name": "dealerdirect/phpcodesniffer-composer-installer",
-        "version": "v0.7.0",
-        "version_normalized": "0.7.0.0",
+        "version": "v0.7.1",
+        "version_normalized": "0.7.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Dealerdirect/phpcodesniffer-composer-installer.git",
-            "reference": "e8d808670b8f882188368faaf1144448c169c0b7"
+            "reference": "fe390591e0241955f22eb9ba327d137e501c771c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Dealerdirect/phpcodesniffer-composer-installer/zipball/e8d808670b8f882188368faaf1144448c169c0b7",
-            "reference": "e8d808670b8f882188368faaf1144448c169c0b7",
+            "url": "https://api.github.com/repos/Dealerdirect/phpcodesniffer-composer-installer/zipball/fe390591e0241955f22eb9ba327d137e501c771c",
+            "reference": "fe390591e0241955f22eb9ba327d137e501c771c",
             "shasum": ""
         },
         "require": {
             "composer-plugin-api": "^1.0 || ^2.0",
             "php": ">=5.3",
-            "squizlabs/php_codesniffer": "^2 || ^3 || 4.0.x-dev"
+            "squizlabs/php_codesniffer": "^2.0 || ^3.0 || ^4.0"
         },
         "require-dev": {
             "composer/composer": "*",
             "phpcompatibility/php-compatibility": "^9.0",
             "sensiolabs/security-checker": "^4.1.0"
         },
-        "time": "2020-06-25T14:57:39+00:00",
+        "time": "2020-12-07T18:04:37+00:00",
         "type": "composer-plugin",
         "extra": {
             "class": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin"
@@ -1616,29 +1616,29 @@
     },
     {
         "name": "paragonie/hidden-string",
-        "version": "v1.1.0",
-        "version_normalized": "1.1.0.0",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/paragonie/hidden-string.git",
-            "reference": "1c30373ac2fce76fb57954010ef06e990f9a49b5"
+            "reference": "151e53d55bfc67dd58087cdf8762dd8177ea7575"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paragonie/hidden-string/zipball/1c30373ac2fce76fb57954010ef06e990f9a49b5",
-            "reference": "1c30373ac2fce76fb57954010ef06e990f9a49b5",
+            "url": "https://api.github.com/repos/paragonie/hidden-string/zipball/151e53d55bfc67dd58087cdf8762dd8177ea7575",
+            "reference": "151e53d55bfc67dd58087cdf8762dd8177ea7575",
             "shasum": ""
         },
         "require": {
             "paragonie/constant_time_encoding": "^2",
             "paragonie/sodium_compat": "^1.6",
-            "php": "^7|^8"
+            "php": "^7.4|^8"
         },
         "require-dev": {
             "phpunit/phpunit": "^6|^7|^8|^9",
             "vimeo/psalm": "^3|^4"
         },
-        "time": "2020-12-03T14:24:26+00:00",
+        "time": "2020-12-06T15:07:44+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -2001,12 +2001,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "676668eda60bb8a32bd2a4efcb12c96d6e1c4bc6"
+            "reference": "d5961914bf7f90e81af509b81e51450bff419815"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/676668eda60bb8a32bd2a4efcb12c96d6e1c4bc6",
-            "reference": "676668eda60bb8a32bd2a4efcb12c96d6e1c4bc6",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/d5961914bf7f90e81af509b81e51450bff419815",
+            "reference": "d5961914bf7f90e81af509b81e51450bff419815",
             "shasum": ""
         },
         "conflict": {
@@ -2080,6 +2080,8 @@
             "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
             "fuel/core": "<1.8.1",
             "getgrav/grav": "<1.7-beta.8",
+            "getkirby/cms": ">=3,<3.4.5",
+            "getkirby/panel": "<2.5.14",
             "gos/web-socket-bundle": "<1.10.4|>=2,<2.6.1|>=3,<3.3",
             "gree/jose": "<=2.2",
             "gregwar/rst": "<1.0.3",
@@ -2280,7 +2282,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2020-12-02T06:02:50+00:00",
+        "time": "2020-12-08T15:02:56+00:00",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -2464,25 +2466,31 @@
     },
     {
         "name": "spaze/encryption",
-        "version": "v0.2.0",
-        "version_normalized": "0.2.0.0",
+        "version": "v0.3.0",
+        "version_normalized": "0.3.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spaze/encryption.git",
-            "reference": "5c59081763680472a98eef083a0398d252e25120"
+            "reference": "a7e153ee8b66b83fa0ccf0378c10dd3e5e9ce7db"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spaze/encryption/zipball/5c59081763680472a98eef083a0398d252e25120",
-            "reference": "5c59081763680472a98eef083a0398d252e25120",
+            "url": "https://api.github.com/repos/spaze/encryption/zipball/a7e153ee8b66b83fa0ccf0378c10dd3e5e9ce7db",
+            "reference": "a7e153ee8b66b83fa0ccf0378c10dd3e5e9ce7db",
             "shasum": ""
         },
         "require": {
             "paragonie/halite": "^4.5",
-            "paragonie/hidden-string": "^1",
-            "php": ">=7.2"
+            "paragonie/hidden-string": "^1 || ^2",
+            "php": "^7.2 || ^8.0"
         },
-        "time": "2020-07-28T18:50:05+00:00",
+        "require-dev": {
+            "php-parallel-lint/php-console-highlighter": "^0.5.0",
+            "php-parallel-lint/php-parallel-lint": "^1.2",
+            "phpstan/phpstan": "^0.12.59",
+            "spaze/coding-standard": "^0.0.4"
+        },
+        "time": "2020-12-11T04:52:27+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

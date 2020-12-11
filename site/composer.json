@@ -34,7 +34,7 @@
 		"spaze/sri-macros": "~0.1",
 		"spaze/netxten": "~0.12",
 		"spaze/mysql-session-handler": "^2.0",
-		"spaze/encryption": "^0.2",
+		"spaze/encryption": "^0.3",
 		"spaze/phpinfo": "^0.1.0",
 		"contributte/translation": "^0.8",
 		"spaze/phpstan-disallowed-calls": "^1.0"
