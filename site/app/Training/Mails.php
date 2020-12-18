@@ -132,7 +132,6 @@ class Mails
 	public function getApplications(): array
 	{
 		$applications = [];
-		$paidOrInvoice = [Statuses::STATUS_PAID_AFTER, Statuses::STATUS_PRO_FORMA_INVOICE_SENT];
 
 		foreach ($this->trainingApplications->getPreliminaryWithDateSet() as $application) {
 			$application->nextStatus = Statuses::STATUS_INVITED;
@@ -150,10 +149,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if (
-					$status !== Statuses::STATUS_ATTENDED
-					|| ($status === Statuses::STATUS_ATTENDED && !$this->trainingStatuses->historyContainsStatuses($paidOrInvoice, $application->id))
-				) {
+				if ($status !== Statuses::STATUS_ATTENDED || !$this->trainingStatuses->sendInvoiceAfter($application->id)) {
 					$application->files = $this->trainingFiles->getFiles($application->id);
 					$application->nextStatus = Statuses::STATUS_MATERIALS_SENT;
 					$applications[$application->id] = $application;
@@ -170,10 +166,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVOICE_SENT_AFTER) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if (
-					$status !== Statuses::STATUS_ATTENDED
-					|| ($status === Statuses::STATUS_ATTENDED && $this->trainingStatuses->historyContainsStatuses($paidOrInvoice, $application->id))
-				) {
+				if ($status !== Statuses::STATUS_ATTENDED || $this->trainingStatuses->sendInvoiceAfter($application->id)) {
 					$application->nextStatus = Statuses::STATUS_INVOICE_SENT_AFTER;
 					$applications[$application->id] = $application;
 				}

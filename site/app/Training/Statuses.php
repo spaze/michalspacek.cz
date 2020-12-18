@@ -168,8 +168,8 @@ class Statuses
 	{
 		$children = $this->getChildrenStatuses($parent);
 		if ($parent === self::STATUS_ATTENDED) {
-			$status = ($this->historyContainsStatuses([self::STATUS_PAID_AFTER, self::STATUS_PRO_FORMA_INVOICE_SENT], $applicationId) ? self::STATUS_MATERIALS_SENT : self::STATUS_INVOICE_SENT_AFTER);
-			unset($children[$this->getStatusId($status)]);
+			$removeStatus = ($this->sendInvoiceAfter($applicationId) ? self::STATUS_MATERIALS_SENT : self::STATUS_INVOICE_SENT_AFTER);
+			unset($children[$this->getStatusId($removeStatus)]);
 		}
 		return $children;
 	}
@@ -365,6 +365,15 @@ class Statuses
 			'DELETE FROM training_application_status_history WHERE key_application = ? AND id_status_log = ?',
 			$applicationId,
 			$recordId
+		);
+	}
+
+
+	public function sendInvoiceAfter(int $applicationId): bool
+	{
+		return (
+			$this->historyContainsStatuses([self::STATUS_PAID_AFTER, self::STATUS_PRO_FORMA_INVOICE_SENT], $applicationId)
+			&& !$this->historyContainsStatuses([self::STATUS_INVOICE_SENT], $applicationId)
 		);
 	}
 
