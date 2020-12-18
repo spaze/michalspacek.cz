@@ -27,7 +27,7 @@ final class Type implements Schema
 	/** @var Schema|null for arrays */
 	private $items;
 
-	/** @var array */
+	/** @var array{?float, ?float} */
 	private $range = [null, null];
 
 	/** @var string|null */
@@ -44,14 +44,14 @@ final class Type implements Schema
 
 	public function nullable(): self
 	{
-		$this->type .= '|null';
+		$this->type = 'null|' . $this->type;
 		return $this;
 	}
 
 
 	public function dynamic(): self
 	{
-		$this->type .= '|' . DynamicParameter::class;
+		$this->type = DynamicParameter::class . '|' . $this->type;
 		return $this;
 	}
 
@@ -140,13 +140,13 @@ final class Type implements Schema
 		if (!$this->doValidate($value, $expected, $context)) {
 			return;
 		}
-		if ($this->pattern !== null && !preg_match("\x01^(?:$this->pattern)$\x01Du", $value)) {
+		if ($value !== null && $this->pattern !== null && !preg_match("\x01^(?:$this->pattern)$\x01Du", $value)) {
 			$context->addError("The option %path% expects to match pattern '$this->pattern', '$value' given.");
 			return;
 		}
 
 		if ($value instanceof DynamicParameter) {
-			$context->dynamics[] = [$value, str_replace('|' . DynamicParameter::class, '', $expected)];
+			$context->dynamics[] = [$value, str_replace(DynamicParameter::class . '|', '', $expected)];
 		}
 
 		if ($this->items) {
