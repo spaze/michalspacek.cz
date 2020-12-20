@@ -104,7 +104,7 @@ class Dates
 		);
 
 		if ($result) {
-			$result->price = $this->prices->resolvePriceVat($result->price);
+			$result->price = $result->price ? $this->prices->resolvePriceVat($result->price) : null;
 			$result->name = $this->translator->translate($result->name);
 		}
 		return $result;
@@ -506,7 +506,7 @@ class Dates
 			$row->label = $this->decodeLabel($row->labelJson);
 			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
 			$row->lastFreeSeats = $this->lastFreeSeats($row);
-			$row->price = $this->prices->resolvePriceVat($row->price);
+			$row->price = $row->price ? $this->prices->resolvePriceVat($row->price) : null;
 			$dates[$row->dateId] = $row;
 		}
 		return $dates;

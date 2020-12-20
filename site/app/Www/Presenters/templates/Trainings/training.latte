@@ -132,7 +132,7 @@
 		{if $date->cooperationDescription}<br><small>{$date->cooperationDescription}</small>{/if}
 	</p>
 	<div class="indent">
-	<p><i class="fas fa-fw fa-coins lighter"></i> {_messages.trainings.price|format:$date->price->getPriceWithCurrency():$date->price->getPriceVatWithCurrency()}{if $date->studentDiscount}, {_messages.trainings.studentdiscount|format:$date->studentDiscount}{/if}</p>
+	<p n:if="$date->price"><i class="fas fa-fw fa-coins lighter"></i> {_messages.trainings.price|format:$date->price->getPriceWithCurrency():$date->price->getPriceVatWithCurrency()}{if $date->studentDiscount}, {_messages.trainings.studentdiscount|format:$date->studentDiscount}{/if}</p>
 	{if $date->remote}
 		<p><i class="fas fa-fw fa-bolt lighter"></i> {_messages.trainings.remoteindividualqa}</p>
 		<p>
