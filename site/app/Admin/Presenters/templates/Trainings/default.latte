@@ -94,6 +94,7 @@
 
 {define #dateForm}
 {form $form class => aligned}
+<div id="{$id}" n:class="!$form->hasErrors() ? hidden">
 <table>
 	<tr><th>{label training /}</th><td>{input training}</td></tr>
 	<tr><th>{label remote: /}</th><td>{input remote:}</td></tr>
@@ -107,12 +108,13 @@
 	<tr><th>{label public: /}</th><td>{input public:}</td></tr>
 	<tr><th>{label cooperation /}</th><td>{input cooperation}</td></tr>
 	<tr><th>{label note /}</th><td>{input note}</td></tr>
-	<tr><th>{label price /}</th><td>{input price}</td></tr>
+	<tr><th>{label price /}</th><td>{input price} <span n:ifcontent class="error">{inputError price}</span></td></tr>
 	<tr><th>{label studentDiscount /}</th><td>{input studentDiscount}</td></tr>
 	<tr><th>{label videoHref /}</th><td>{input videoHref, class => wide}</td></tr>
 	<tr><th>{label feedbackHref /}</th><td>{input feedbackHref, class => wide}</td></tr>
 	<tr><th></th><td><p>{input submit}</p></td></tr>
 </table>
+</div>
 {/form $form}
 {/define}
 
@@ -121,9 +123,7 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-termin">
 	<p><a href="#pridat-termin" class="open-container block">Přidat termín</a></p>
-	<div id="pridat-termin-container" class="hidden">
-	{include #dateForm, form => addDate}
-	</div>
+	{include #dateForm, form => addDate, id => pridat-termin-container}
 </div>
 <hr>
 {include #list, order => 'desc'}

@@ -22,6 +22,7 @@ use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -504,8 +505,24 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues, $this->trainingControlsFactory);
 		$form->setTrainingDate($this->training);
+		$form->onValidate[] = [$this, 'validatePrice'];
 		$form->onSuccess[] = [$this, 'submittedDate'];
 		return $form;
+	}
+
+
+	/**
+	 * @param Form $form
+	 * @param ArrayHash<integer|string> $values
+	 */
+	public function validatePrice(Form $form, ArrayHash $values): void
+	{
+		$training = $this->trainings->getById($values->training);
+		if ($values->price === '' && $training->price === null) {
+			/** @var TextInput $component */
+			$component = $form->getComponent('price');
+			$component->addError('Běžná cena není nastavena, je třeba nastavit cenu zde');
+		}
 	}
 
 
@@ -542,6 +559,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentAddDate(string $formName): TrainingDate
 	{
 		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues, $this->trainingControlsFactory);
+		$form->onValidate[] = [$this, 'validatePrice'];
 		$form->onSuccess[] = [$this, 'submittedAddDate'];
 		return $form;
 	}
