@@ -3,16 +3,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 
 class Locales
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 
-	public function __construct(Context $context)
+	public function __construct(Explorer $context)
 	{
 		$this->database = $context;
 	}

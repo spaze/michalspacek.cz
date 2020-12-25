@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Pulse;
 use DateTime;
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
 use MichalSpacekCz\Pulse\Passwords\Rating;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
@@ -15,7 +15,7 @@ use stdClass;
 class Passwords
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var Rating */
@@ -29,7 +29,7 @@ class Passwords
 
 
 	public function __construct(
-		Context $context,
+		Explorer $context,
 		Rating $rating,
 		Companies $companies,
 		Sites $sites

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\User;
 use DateTimeInterface;
 use Exception;
 use Nette\Application\LinkGenerator;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Row;
 use Nette\Http\IRequest;
@@ -34,7 +34,7 @@ class Manager implements IAuthenticator
 
 	private const TOKEN_RETURNING_USER = 2;
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var IRequest */
@@ -63,7 +63,7 @@ class Manager implements IAuthenticator
 
 
 	public function __construct(
-		Context $context,
+		Explorer $context,
 		IRequest $httpRequest,
 		Response $httpResponse,
 		Passwords $passwords,

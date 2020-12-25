@@ -3,17 +3,17 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Http\UrlScript;
 
 class Redirections
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 
-	public function __construct(Context $context)
+	public function __construct(Explorer $context)
 	{
 		$this->database = $context;
 	}

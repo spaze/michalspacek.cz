@@ -6,14 +6,14 @@ namespace MichalSpacekCz\Training;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Formatter\Texy;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use RuntimeException;
 
 class Reviews
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var Texy */
@@ -21,7 +21,7 @@ class Reviews
 
 
 	public function __construct(
-		Context $context,
+		Explorer $context,
 		Texy $texyFormatter
 	) {
 		$this->database = $context;

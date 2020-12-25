@@ -10,7 +10,7 @@ use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Localization\Translator as NetteTranslator;
 use Nette\Utils\DateTime as NetteDateTime;
@@ -18,7 +18,7 @@ use Nette\Utils\DateTime as NetteDateTime;
 class Articles
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var Texy */
@@ -37,14 +37,14 @@ class Articles
 
 
 	/**
-	 * @param Context $context
+	 * @param Explorer $context
 	 * @param Texy $texyFormatter
 	 * @param LinkGenerator $linkGenerator
 	 * @param Post $blogPost
 	 * @param Translator|NetteTranslator $translator
 	 */
 	public function __construct(
-		Context $context,
+		Explorer $context,
 		Texy $texyFormatter,
 		LinkGenerator $linkGenerator,
 		Post $blogPost,

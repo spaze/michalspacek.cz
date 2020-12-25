@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Tracy\Debugger;
 
@@ -30,7 +30,7 @@ class Statuses
 	public const STATUS_INVOICE_SENT_AFTER  = 'INVOICE_SENT_AFTER';   // 17
 	public const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var array<string, integer> */
@@ -49,7 +49,7 @@ class Statuses
 	private $statusHistory = [];
 
 
-	public function __construct(Context $context)
+	public function __construct(Explorer $context)
 	{
 		$this->database = $context;
 	}

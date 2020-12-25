@@ -4,21 +4,21 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Interviews;
 
 use DateTime;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Netxten\Formatter\Texy;
 
 class Interviews
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var Texy */
 	protected $texyFormatter;
 
 
-	public function __construct(Context $context, Texy $texyFormatter)
+	public function __construct(Explorer $context, Texy $texyFormatter)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;

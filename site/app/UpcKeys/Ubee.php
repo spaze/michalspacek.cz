@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use RuntimeException;
 use stdClass;
 
@@ -13,7 +13,7 @@ class Ubee implements RouterInterface
 	/** @var string */
 	private const OUI_UBEE = '647c34';
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var string */
@@ -23,7 +23,7 @@ class Ubee implements RouterInterface
 	protected $model;
 
 
-	public function __construct(Context $context)
+	public function __construct(Explorer $context)
 	{
 		$this->database = $context;
 	}

@@ -15,7 +15,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1",
+		"php": ">=7.2 <8.1",
 		"ext-pdo": "*",
 		"nette/caching": "^3.0",
 		"nette/utils": "^3.1"
@@ -40,7 +40,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "3.0-dev"
+			"dev-master": "3.1-dev"
 		}
 	}
 }

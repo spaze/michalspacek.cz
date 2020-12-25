@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace Nette\Database\Table;
 
 use Nette;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 
 
 /**
@@ -37,8 +37,8 @@ class GroupedSelection extends Selection
 	 * Creates filtered and grouped table representation.
 	 */
 	public function __construct(
-		Context $context,
-		IConventions $conventions,
+		Explorer $explorer,
+		Conventions $conventions,
 		string $tableName,
 		string $column,
 		Selection $refTable,
@@ -46,7 +46,7 @@ class GroupedSelection extends Selection
 	) {
 		$this->refTable = $refTable;
 		$this->column = $column;
-		parent::__construct($context, $conventions, $tableName, $cacheStorage);
+		parent::__construct($explorer, $conventions, $tableName, $cacheStorage);
 	}
 
 

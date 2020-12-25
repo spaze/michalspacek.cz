@@ -5,7 +5,7 @@ namespace MichalSpacekCz\UpcKeys;
 
 use DateTime;
 use DateTimeZone;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Utils\Json;
 use PDOException;
@@ -15,7 +15,7 @@ use stdClass;
 class Technicolor implements RouterInterface
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var string */
@@ -31,7 +31,7 @@ class Technicolor implements RouterInterface
 	protected $model;
 
 
-	public function __construct(Context $context)
+	public function __construct(Explorer $context)
 	{
 		$this->database = $context;
 	}

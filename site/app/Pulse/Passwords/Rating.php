@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use RuntimeException;
 
 class Rating
@@ -17,7 +17,7 @@ class Rating
 	private const RATING_E = 'E';
 	private const RATING_F = 'F';
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var string[] */

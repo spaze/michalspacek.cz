@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use DateTime;
 use DateTimeImmutable;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
@@ -24,7 +24,7 @@ class Dates
 
 	private const DATA_RETENTION = 30;
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var Statuses */
@@ -44,7 +44,7 @@ class Dates
 	private $upcomingDates = array();
 
 
-	public function __construct(Context $context, Statuses $trainingStatuses, Prices $prices, Helpers $netxtenHelpers, Translator $translator)
+	public function __construct(Explorer $context, Statuses $trainingStatuses, Prices $prices, Helpers $netxtenHelpers, Translator $translator)
 	{
 		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;

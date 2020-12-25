@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use DateTime;
 use DateTimeZone;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
@@ -15,7 +15,7 @@ use SplFileInfo;
 class Files
 {
 
-	protected Context $database;
+	protected Explorer $database;
 
 	protected Statuses $trainingStatuses;
 
@@ -25,7 +25,7 @@ class Files
 	protected string $filesDir;
 
 
-	public function __construct(Context $context, Statuses $trainingStatuses)
+	public function __construct(Explorer $context, Statuses $trainingStatuses)
 	{
 		$this->database = $context;
 		$this->trainingStatuses = $trainingStatuses;

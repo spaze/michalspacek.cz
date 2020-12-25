@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Http;
 
 use DateTime;
 use MichalSpacekCz\User\Manager;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\DriverException;
 use Nette\Database\Row;
 use Nette\Security\AuthenticationException;
@@ -16,7 +16,7 @@ use Tracy\Debugger;
 class Certificates
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var array<string, string> */
@@ -29,7 +29,7 @@ class Certificates
 	private $hideExpiredAfter;
 
 
-	public function __construct(Context $context)
+	public function __construct(Explorer $context)
 	{
 		$this->database = $context;
 	}

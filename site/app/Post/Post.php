@@ -13,7 +13,7 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Localization\Translator;
 use Nette\Neon\Exception;
@@ -22,7 +22,7 @@ use Nette\Utils\Json;
 class Post
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var Loader */
@@ -56,7 +56,7 @@ class Post
 
 
 	public function __construct(
-		Context $context,
+		Explorer $context,
 		Loader $loader,
 		Texy $texyFormatter,
 		IStorage $cacheStorage,
