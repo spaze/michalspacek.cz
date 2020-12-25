@@ -1,6 +1,9 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
 
+# What's this file?
+# https://www.michalspacek.cz/k-cemu-je-soubor-security.txt
+
 # Email
 Contact: https://www.michalspacek.cz/kontakt
 
@@ -18,17 +21,17 @@ Rick: <img/src=//xss.sk>
 Rolling: <script/src=//xss.sk></script>
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl/lKQ4ACgkQtkvdbkZK
-tSl1fw//f3B2WtECh+un+cwTfi/xplHWgbSX53PneBmBXY7KWWzWyrNygkjEZ9C9
-V8mctYSkNaHRh6osWPyUBCt/YTeQLzsYei50l5jNcyNTGoFEe54i7YzqqmfbI/zq
-DxLAU+VchJ085ibYRd96rx2mQUl3BqFGhn+xw3viKaUOl4h2wk25URKAnu1Orya1
-3sM/jFtBNPCwZmRrIbgXy8XIDfyJlP5WANzqzJlS8tU714flvQ86BsW72B+wfdsS
-TuUixtpGNq7GSSCkKpZXZxtvQAEhex/+/oJLOusy+8oQHEKGr+aHXkjioW0nFMHi
-LLs6MiXhS4qtsOs0lQqZsqOjar+/4gww/YKhiWSjRKI6Zwr3z00z/Usvkc2hBhir
-2/akkDvSq5+BMT1XNqgo3+3ziPiJrmZEm7fnhJrBsBY1QWPFWzPiVF5BnULWLFP4
-wQEhaDLDCg18PDMqj3p4aOwIF44iRjsLZGBZZGztbHXtgLtzEmdU8mZ+YQmnRLWB
-zRh8O9+ko3opGu+Ia5T0U7x+WK2H57QAbKRvNkkkhd1oqm1oHqLQ0PDG8WpNZYd3
-HGGMzcdrgVjee55xaph/fvi731fbSqfD7DgDGYA1bak/DYdWxPLPRgm1VKzAt9TH
-ePXFhZPnX26zqH4iIkHyza3vD92+S3e+8smjBsM9y/q8NmC5tkQ=
-=afiB
+iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl/lLX0ACgkQtkvdbkZK
+tSkXLBAAp++XAT3UaxJGU6qidFH8uY17rKbRtmx9KlE8sa1zFmDLKvXyG/lTJJ07
+jU2TlllDChwsPA5jdG8Q7I7+Al69bqYxP17/7//43xyV1yt38zWmA5Vm+9NsACKr
+YncdMfPT5EBYO+dSWvG8buyJfvoMZL+VKdtvYSVZ5TMBmSGtz8t8oJxYpeUmN+1w
+ND8dx8HGaBc2qXkVnksGtD6NWmTce1jXfg1i7I7GtrcaahNaB40EEj2H7TjLzPaz
+J+0y5hbHnHRgT0zA20TEr/UKVXJTRkWYsbJBd/n/xvEIFd2HZPsd3jVRYZPFFv27
+Ms3BswDgYeLCrKKRzkVjelVPL5LFqjCECzgb/hNBd4/r4Ndk/iPlJP3hzNTWD0T0
+hemRymh4sp94n5av2rHgNLII8byzh0LikV/uuEEaE2fYnClLEz0U1LdySEmC9bUP
+yTUIk6mpPdyQU8QN61eOHW0wfvG4NaKZ7vcXGzkl5SXg8vJW3kbNH+3YuF0iWOVk
+GIdk9UOcNqapplIzaR8KOVbQjUqo1XQTegBI4t+JAWQAlUpNMaWLN0V6xmQ33B/P
+iFAlLPmkM5Ys34qxbyuerrpkFlK2fyCMxzuA+E4NuHV7kGiM6ZxgySLEgzN7IjVR
+X0Rc0VGXyovGJksGWemEthWYyo6NKvS+WVzWGB5568zsNOBUOvM=
+=loGP
 -----END PGP SIGNATURE-----

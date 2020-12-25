@@ -1,6 +1,9 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
 
+# What's this file?
+# https://www.michalspacek.com/what-is-security.txt-and-why-you-should-have-one
+
 # Email
 Contact: https://www.michalspacek.com/contact
 
@@ -18,17 +21,17 @@ Rick: <img/src=//xss.sk>
 Rolling: <script/src=//xss.sk></script>
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl/lKTMACgkQtkvdbkZK
-tSnM8hAAj482xawl9ngOp7pnBqy/g8RdcpF94NmFtX2iseVsIMr8LyDGjzvW5Vgr
-vuTsL7F2FL8soeEfGQVEqlzhZ7PiebOz2C9rmULrSe4XpI/Na9OpFpoDw9PMmo/c
-8HcMIBhH82w3Zu/5WMR1w77zmjuIPK+VarcyzjkZlfvw28deMRkBjrj0Wlxq9Y8U
-t8UmkFPJuFl/ElU+h5YrSflIX+xCHAy+X0KollpzWDAgSpK7mAPgD7lFWLi1OJhM
-ozFKmE7Xd8lgsIbd4i84fwWOU3Gg4bgcLf1W56Cgn+4yUkBXX62na9oPGQoIP85Q
-bTFmWP3/nCQY55QyDBXsilwHp8CK2TxELZJkpNqhtD/SV24IsvoBDnJavk3P8ibL
-8vCyENUanHPbXZG3OXIs1N0GwlpzjK2jzCYZx3pKZswcFz5XBOnlYQ4M21xH8gzz
-wM9xm3zHfF2bOxqb976oRC1Nl+MDxhXhlntPjNJ3Yz0r7R6VkK2yZRX2jPyq79sS
-H9qmgkMh6Dsg3h6sxqQ2TjigXgl5oupIpntd8jUNSzacdNj9W3sihxI3gjPPaGXw
-BMb/c7tNPqymoJiCX05IvCP6M2jOnXRpZc3FqLH13QV8YylCaUy1/1qWM8Gpsta5
-X8Ig5KtfNEml+L1CYr8WDb9rVn1zNNOx2v7W0t8h8RRLnXusTGg=
-=nYqJ
+iQIzBAEBCgAdFiEES9TEA68vn8yxUf5htkvdbkZKtSkFAl/lLW8ACgkQtkvdbkZK
+tSmZnhAAxUl/VbOXsN3AnhszhLC8hYX8bp/sVT6jpySK3XGWgpGKYUaldu82kXTs
+jHG6nxMszMhEqq4QZvSpgTSJkPPE95mt5y2oUD3Q9xw+gsfpQszk8buvsEKP3PIh
+JfoKv2DPFCm81FGOP3+v0WoMvtlkuD4XiXHPXims3Rx+l1Qfcgd5o0HC0wH6+YdK
+VkI5O3tRwOQEXomReHdY1r1U77Zd+ky24Ht8bjlFOj+RTjMUw71qIkCdyezXCoOy
+BnQuB5C1ZKEp8zWZzeWi/r1vaMUD8V5KNzSb/TmKKzWLDas9oMP9xDuatCij1sjh
+szUi5YKw4JsRMOqpzxtogFerk47Pky6HnDSJBMkcRV1gFLea5HEwlUKn9W47STlF
+kcM8V+CkKJEG8jccZxkDSvfZMFcLlVD+lE7EPAgcWSUBiKnPXv62TVHBj33eks5R
+HQ2qHgPsp5Ti+kO0I0MastQT0tup3rSLRJKYHbczIxyy7ZNiWlld3Qss5+PLsQkj
+kovpRmqW+A93fSOXtw7weWO407ydNiHHHWm22vzdIT9ltCqaOG7QtVxH+Y61XN6T
+crr10tZ6aWrraqik7AlJ6NtFvppgfnMY30WnkJYUceD/tuNsxwPxASL9JgBIl7/a
+c/GuTuAKlC6WDOJnLFtazbOAKCCn3tjsoS38Ln5MbOV4DMCQtPI=
+=XhT4
 -----END PGP SIGNATURE-----
