@@ -7,13 +7,13 @@ use Exception;
 use MichalSpacekCz\Training\Files;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\UI\Form;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Tracy\Debugger;
 
 class DeletePersonalDataFormFactory
 {
 
-	private Context $database;
+	private Explorer $database;
 
 	private FormFactory $factory;
 
@@ -22,7 +22,7 @@ class DeletePersonalDataFormFactory
 	private Files $files;
 
 
-	public function __construct(Context $context, FormFactory $factory, Trainings $trainings, Files $files)
+	public function __construct(Explorer $context, FormFactory $factory, Trainings $trainings, Files $files)
 	{
 		$this->database = $context;
 		$this->factory = $factory;

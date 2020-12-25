@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Talks;
 
 use DateTime;
 use MichalSpacekCz\Formatter\Texy;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
@@ -26,7 +26,7 @@ class Talks
 	/** @var integer */
 	private const SLIDE_MAX_HEIGHT = 450;
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var Texy */
@@ -75,7 +75,7 @@ class Talks
 	];
 
 
-	public function __construct(Context $context, Texy $texyFormatter, Request $httpRequest)
+	public function __construct(Explorer $context, Texy $texyFormatter, Request $httpRequest)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;

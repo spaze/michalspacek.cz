@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Training\Resolver\Vrana;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Row;
 use Nette\Localization\Translator;
@@ -22,7 +22,7 @@ class Applications
 	private const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
 	private const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
 
-	/** @var Context */
+	/** @var Explorer */
 	protected $database;
 
 	/** @var Trainings */
@@ -51,7 +51,7 @@ class Applications
 
 
 	public function __construct(
-		Context $context,
+		Explorer $context,
 		Trainings $trainings,
 		Dates $trainingDates,
 		Statuses $trainingStatuses,

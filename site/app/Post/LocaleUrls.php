@@ -4,18 +4,18 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Post;
 
 use MichalSpacekCz\Tags\Tags;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 
 class LocaleUrls
 {
 
-	/** @var Context */
+	/** @var Explorer */
 	private $database;
 
 	private Tags $tags;
 
 
-	public function __construct(Context $context, Tags $tags)
+	public function __construct(Explorer $context, Tags $tags)
 	{
 		$this->database = $context;
 		$this->tags = $tags;
