@@ -49,6 +49,9 @@ try {
 }
 ```
 
+Method `$e->getMessages()` returns array of all message strings and `$e->getMessageObjects()` return all messages as [Nette\Schema\Message](https://api.nette.org/3.1/Nette/Schema/Message.html) objects.
+
+
 Defining Schema
 ---------------
 
@@ -164,7 +167,7 @@ The parameter can also be a schema, so we can write:
 Expect::arrayOf(Expect::bool())
 ```
 
-The default value is an empty array.
+The default value is an empty array. If you specify default value, it will be merged with the passed data. This can be disabled using `mergeDefaults(false)`.
 
 
 Enumeration: anyOf()
@@ -211,7 +214,7 @@ $schema = Expect::structure([
 ]);
 
 $processor->process($schema, ['optional' => '']);
-// ERROR: option 'required' is missing
+// ERROR: item 'required' is missing
 
 $processor->process($schema, ['required' => 'foo']);
 // OK, returns {'required' => 'foo', 'optional' => null}
@@ -240,7 +243,7 @@ $schema = Expect::structure([
 ]);
 
 $processor->process($schema, ['additional' => 1]);
-// ERROR: Unexpected option 'additional'
+// ERROR: Unexpected item 'additional'
 ```
 
 Which we can change with `otherItems()`. As a parameter, we will specify the schema for each extra element:
@@ -252,6 +255,20 @@ $schema = Expect::structure([
 
 $processor->process($schema, ['additional' => 1]); // OK
 $processor->process($schema, ['additional' => true]); // ERROR
+```
+
+Deprecations
+------------
+
+You can deprecate property using the `deprecated([string $message])` method. Deprecation notices are returned by `$processor->getWarnings()` (since v1.1):
+
+```php
+$schema = Expect::structure([
+	'old' => Expect::int()->deprecated('The item %path% is deprecated'),
+]);
+
+$processor->process($schema, ['old' => 1]); // OK
+$processor->getWarnings(); // ["The item 'old' is deprecated"]
 ```
 
 Ranges: min() max()
@@ -325,7 +342,7 @@ $schema = Expect::arrayOf('string')
 	->assert($countIsEven, 'Even items in array');
 
 $processor->process($schema, ['a', 'b', 'c']);
-// Failed assertion "Even items in array" for option with value array.
+// Failed assertion "Even items in array" for item with value array.
 ```
 
 The method can be called repeatedly to add more assertions.

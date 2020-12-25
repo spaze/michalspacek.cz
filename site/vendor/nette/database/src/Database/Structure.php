@@ -86,7 +86,7 @@ class Structure implements IStructure
 
 		// Search for autoincrement key from simple primary key
 		foreach ($this->getColumns($table) as $column) {
-			if ($column['name'] == $primaryKey) {
+			if ($column['name'] === $primaryKey) {
 				return $column['autoincrement'] ? $column['name'] : null;
 			}
 		}
@@ -100,7 +100,7 @@ class Structure implements IStructure
 		$this->needStructure();
 		$table = $this->resolveFQTableName($table);
 
-		if (!$this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_SEQUENCE)) {
+		if (!$this->connection->getDriver()->isSupported(Driver::SUPPORT_SEQUENCE)) {
 			return null;
 		}
 
@@ -177,16 +177,13 @@ class Structure implements IStructure
 			return;
 		}
 
-		$this->structure = $this->cache->load('structure', [$this, 'loadStructure']);
+		$this->structure = $this->cache->load('structure', \Closure::fromCallable([$this, 'loadStructure']));
 	}
 
 
-	/**
-	 * @internal
-	 */
-	public function loadStructure(): array
+	protected function loadStructure(): array
 	{
-		$driver = $this->connection->getSupplementalDriver();
+		$driver = $this->connection->getDriver();
 
 		$structure = [];
 		$structure['tables'] = $driver->getTables();
@@ -244,7 +241,7 @@ class Structure implements IStructure
 	{
 		$lowerTable = strtolower($table);
 
-		$foreignKeys = $this->connection->getSupplementalDriver()->getForeignKeys($table);
+		$foreignKeys = $this->connection->getDriver()->getForeignKeys($table);
 
 		$fksColumnsCounts = [];
 		foreach ($foreignKeys as $foreignKey) {

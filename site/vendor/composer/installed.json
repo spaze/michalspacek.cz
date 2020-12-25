@@ -518,24 +518,24 @@
     },
     {
         "name": "nette/database",
-        "version": "v3.0.7",
-        "version_normalized": "3.0.7.0",
+        "version": "v3.1.0",
+        "version_normalized": "3.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/database.git",
-            "reference": "cd75f89558d92f6ab9a5833bc18b895ec0a00ad8"
+            "reference": "94caf0bf9b24d63f0ca7d0201ee47a9bcfcfa7d2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/database/zipball/cd75f89558d92f6ab9a5833bc18b895ec0a00ad8",
-            "reference": "cd75f89558d92f6ab9a5833bc18b895ec0a00ad8",
+            "url": "https://api.github.com/repos/nette/database/zipball/94caf0bf9b24d63f0ca7d0201ee47a9bcfcfa7d2",
+            "reference": "94caf0bf9b24d63f0ca7d0201ee47a9bcfcfa7d2",
             "shasum": ""
         },
         "require": {
             "ext-pdo": "*",
             "nette/caching": "^3.0",
             "nette/utils": "^3.1",
-            "php": ">=7.1"
+            "php": ">=7.2 <8.1"
         },
         "conflict": {
             "nette/di": "<3.0-stable"
@@ -547,11 +547,11 @@
             "phpstan/phpstan-nette": "^0.12",
             "tracy/tracy": "^2.4"
         },
-        "time": "2020-10-30T13:01:25+00:00",
+        "time": "2020-12-21T01:23:36+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "3.0-dev"
+                "dev-master": "3.1-dev"
             }
         },
         "installation-source": "dist",
@@ -1206,17 +1206,17 @@
     },
     {
         "name": "nette/schema",
-        "version": "v1.0.4",
-        "version_normalized": "1.0.4.0",
+        "version": "v1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/schema.git",
-            "reference": "74b4b51ee8d3d44db1b43afc4017c56bfd0b8772"
+            "reference": "3b6b9702a2a54170c81d157b65570fac871caba0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/schema/zipball/74b4b51ee8d3d44db1b43afc4017c56bfd0b8772",
-            "reference": "74b4b51ee8d3d44db1b43afc4017c56bfd0b8772",
+            "url": "https://api.github.com/repos/nette/schema/zipball/3b6b9702a2a54170c81d157b65570fac871caba0",
+            "reference": "3b6b9702a2a54170c81d157b65570fac871caba0",
             "shasum": ""
         },
         "require": {
@@ -1228,11 +1228,11 @@
             "phpstan/phpstan-nette": "^0.12",
             "tracy/tracy": "^2.3"
         },
-        "time": "2020-12-17T23:40:10+00:00",
+        "time": "2020-12-20T22:18:49+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.0-dev"
+                "dev-master": "1.1-dev"
             }
         },
         "installation-source": "dist",
@@ -1871,17 +1871,17 @@
     },
     {
         "name": "phpstan/phpstan",
-        "version": "0.12.63",
-        "version_normalized": "0.12.63.0",
+        "version": "0.12.64",
+        "version_normalized": "0.12.64.0",
         "source": {
             "type": "git",
             "url": "https://github.com/phpstan/phpstan.git",
-            "reference": "c97ec4754bd53099a06c24847bd2870b99966b6a"
+            "reference": "23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c97ec4754bd53099a06c24847bd2870b99966b6a",
-            "reference": "c97ec4754bd53099a06c24847bd2870b99966b6a",
+            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa",
+            "reference": "23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa",
             "shasum": ""
         },
         "require": {
@@ -1890,7 +1890,7 @@
         "conflict": {
             "phpstan/phpstan-shim": "*"
         },
-        "time": "2020-12-15T16:37:16+00:00",
+        "time": "2020-12-21T11:59:02+00:00",
         "bin": [
             "phpstan",
             "phpstan.phar"
@@ -1996,12 +1996,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "d5961914bf7f90e81af509b81e51450bff419815"
+            "reference": "49da07b20a780d3fca9fe12e1db27975a2910c18"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/d5961914bf7f90e81af509b81e51450bff419815",
-            "reference": "d5961914bf7f90e81af509b81e51450bff419815",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/49da07b20a780d3fca9fe12e1db27975a2910c18",
+            "reference": "49da07b20a780d3fca9fe12e1db27975a2910c18",
             "shasum": ""
         },
         "conflict": {
@@ -2158,8 +2158,8 @@
             "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
             "sensiolabs/connect": "<4.2.3",
             "serluck/phpwhois": "<=4.2.6",
-            "shopware/core": "<=6.3.2",
-            "shopware/platform": "<=6.3.2",
+            "shopware/core": "<=6.3.4",
+            "shopware/platform": "<=6.3.4",
             "shopware/shopware": "<5.6.9",
             "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
             "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
@@ -2277,7 +2277,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2020-12-08T15:02:56+00:00",
+        "time": "2020-12-21T18:11:20+00:00",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
