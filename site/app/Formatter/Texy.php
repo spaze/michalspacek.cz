@@ -13,7 +13,7 @@ use MichalSpacekCz\Training\Prices;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Nette\Database\Row;
 use Nette\Localization\Translator as NetteTranslator;
 use Nette\Utils\Html;
@@ -88,7 +88,7 @@ class Texy extends NetxtenTexy
 
 
 	public function __construct(
-		IStorage $cacheStorage,
+		Storage $cacheStorage,
 		NetteTranslator $translator,
 		Application $application,
 		Dates $trainingDates,

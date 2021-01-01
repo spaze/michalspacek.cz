@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\CompanyInfo;
 
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Nette\Http\IResponse;
 use RuntimeException;
 
@@ -24,7 +24,7 @@ class Info
 	private $loadCompanyDataVisible = true;
 
 
-	public function __construct(Ares $ares, RegisterUz $registerUz, IStorage $cacheStorage)
+	public function __construct(Ares $ares, RegisterUz $registerUz, Storage $cacheStorage)
 	{
 		$this->ares = $ares;
 		$this->registerUz = $registerUz;

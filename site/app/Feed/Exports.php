@@ -9,7 +9,7 @@ use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post\Post;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Nette\Utils\Html;
 use Spaze\Exports\Atom\Constructs\Person;
 use Spaze\Exports\Atom\Constructs\Text;
@@ -33,7 +33,7 @@ class Exports
 	protected $cache;
 
 
-	public function __construct(Articles $articles, Texy $texyFormatter, IStorage $cacheStorage)
+	public function __construct(Articles $articles, Texy $texyFormatter, Storage $cacheStorage)
 	{
 		$this->articles = $articles;
 		$this->texyFormatter = $texyFormatter;

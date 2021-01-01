@@ -13,10 +13,10 @@ use Nette\Http\IRequest;
 use Nette\Http\Response;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
-use Nette\Security\IAuthenticator;
-use Nette\Security\Identity;
+use Nette\Security\Authenticator;
 use Nette\Security\IIdentity;
 use Nette\Security\Passwords;
+use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
@@ -25,7 +25,7 @@ use PDOException;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
 
-class Manager implements IAuthenticator
+class Manager implements Authenticator
 {
 
 	private const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
@@ -99,11 +99,11 @@ class Manager implements IAuthenticator
 	 *
 	 * @param integer $id User id
 	 * @param string $username Username
-	 * @return Identity
+	 * @return SimpleIdentity
 	 */
-	public function getIdentity(int $id, string $username): Identity
+	public function getIdentity(int $id, string $username): SimpleIdentity
 	{
-		return new Identity($id, array(), array('username' => $username));
+		return new SimpleIdentity($id, array(), array('username' => $username));
 	}
 
 
@@ -154,7 +154,7 @@ class Manager implements IAuthenticator
 	 */
 	public function changePassword(User $user, string $password, string $newPassword): void
 	{
-		/** @var Identity $identity */
+		/** @var SimpleIdentity $identity */
 		$identity = $user->getIdentity();
 		$this->verifyPassword($identity->username, $password);
 		$this->updatePassword($user->getId(), $newPassword);

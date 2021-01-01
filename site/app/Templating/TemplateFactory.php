@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Templating;
 
 use MichalSpacekCz\Application\Theme;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Nette\Bridges\ApplicationLatte\ILatteFactory;
 use Nette\Bridges\ApplicationLatte\Template as NetteTemplate;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Nette\Http\IRequest;
 use Nette\Localization\Translator;
 use Nette\Security\User;
@@ -31,7 +31,7 @@ class TemplateFactory extends NetteTemplateFactory
 		ILatteFactory $latteFactory,
 		IRequest $httpRequest = null,
 		User $user = null,
-		IStorage $cacheStorage = null,
+		Storage $cacheStorage = null,
 		Theme $theme,
 		NetxtenHelpers $netxtenHelpers,
 		Helpers $templateHelpers,
