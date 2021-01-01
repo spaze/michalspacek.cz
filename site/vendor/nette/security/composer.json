@@ -15,7 +15,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1",
+		"php": ">=7.2 <8.1",
 		"nette/utils": "^3.1"
 	},
 	"require-dev": {
@@ -26,7 +26,8 @@
 		"phpstan/phpstan-nette": "^0.12"
 	},
 	"conflict": {
-		"nette/di": "<3.0-stable"
+		"nette/di": "<3.0-stable",
+		"nette/schema": "<1.1"
 	},
 	"autoload": {
 		"classmap": ["src/"]
@@ -38,7 +39,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "3.0-dev"
+			"dev-master": "3.1-dev"
 		}
 	}
 }

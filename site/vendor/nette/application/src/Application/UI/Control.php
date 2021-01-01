@@ -15,17 +15,17 @@ use Nette;
 /**
  * Control is renderable Presenter component.
  *
- * @property-read ITemplate|Nette\Bridges\ApplicationLatte\Template|\stdClass $template
+ * @property-read Template|Nette\Bridges\ApplicationLatte\DefaultTemplate|\stdClass $template
  */
-abstract class Control extends Component implements IRenderable
+abstract class Control extends Component implements Renderable
 {
 	/** @var bool */
 	public $snippetMode;
 
-	/** @var ITemplateFactory */
+	/** @var TemplateFactory */
 	private $templateFactory;
 
-	/** @var ITemplate */
+	/** @var Template */
 	private $template;
 
 	/** @var array */
@@ -35,14 +35,14 @@ abstract class Control extends Component implements IRenderable
 	/********************* template factory ****************d*g**/
 
 
-	final public function setTemplateFactory(ITemplateFactory $templateFactory)
+	final public function setTemplateFactory(TemplateFactory $templateFactory)
 	{
 		$this->templateFactory = $templateFactory;
 		return $this;
 	}
 
 
-	final public function getTemplate(): ITemplate
+	final public function getTemplate(): Template
 	{
 		if ($this->template === null) {
 			$this->template = $this->createTemplate();
@@ -51,32 +51,59 @@ abstract class Control extends Component implements IRenderable
 	}
 
 
-	protected function createTemplate(): ITemplate
+	/**
+	 * @param  string  $class
+	 */
+	protected function createTemplate(/*string $class = null*/): Template
 	{
+		$class = func_num_args() // back compatibility
+			? func_get_arg(0)
+			: $this->formatTemplateClass();
 		$templateFactory = $this->templateFactory ?: $this->getPresenter()->getTemplateFactory();
-		return $templateFactory->createTemplate($this);
+		return $templateFactory->createTemplate($this, $class);
+	}
+
+
+	public function formatTemplateClass(): ?string
+	{
+		$class = preg_replace('#Presenter$|Control$#', 'Template', static::class);
+		if ($class === static::class || !class_exists($class)) {
+			return null;
+		} elseif (!is_a($class, Template::class, true)) {
+			trigger_error(sprintf(
+				'%s: class %s was found but does not implement the %s, so it will not be used for the template.',
+				static::class,
+				$class,
+				Template::class
+			), E_USER_NOTICE);
+			return null;
+		} else {
+			return $class;
+		}
 	}
 
 
 	/**
 	 * Descendant can override this method to customize template compile-time filters.
 	 */
-	public function templatePrepareFilters(ITemplate $template): void
+	public function templatePrepareFilters(Template $template): void
 	{
 	}
 
 
 	/**
 	 * Saves the message to template, that can be displayed after redirect.
+	 * @param  string|\stdClass  $message
 	 */
 	public function flashMessage($message, string $type = 'info'): \stdClass
 	{
 		$id = $this->getParameterId('flash');
-		$messages = $this->getPresenter()->getFlashSession()->$id;
-		$messages[] = $flash = (object) [
+		$flash = $message instanceof \stdClass ? $message : (object) [
 			'message' => $message,
 			'type' => $type,
 		];
+		$messages = $this->getPresenter()->getFlashSession()->$id;
+		$messages[] = $flash;
 		$this->getTemplate()->flashes = $messages;
 		$this->getPresenter()->getFlashSession()->$id = $messages;
 		return $flash;
@@ -118,7 +145,7 @@ abstract class Control extends Component implements IRenderable
 		$queue = [$this];
 		do {
 			foreach (array_shift($queue)->getComponents() as $component) {
-				if ($component instanceof IRenderable) {
+				if ($component instanceof Renderable) {
 					if ($component->isControlInvalid()) {
 						// $this->invalidSnippets['__child'] = true; // as cache
 						return true;
