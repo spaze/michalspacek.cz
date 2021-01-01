@@ -88,7 +88,7 @@ class Manager implements Authenticator
 	 */
 	public function authenticate(array $credentials): IIdentity
 	{
-		list($username, $password) = $credentials;
+		[$username, $password] = $credentials;
 		$userId = $this->verifyPassword($username, $password);
 		return $this->getIdentity($userId, $username);
 	}
