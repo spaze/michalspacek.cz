@@ -46,10 +46,10 @@ class TemplateFactory extends NetteTemplateFactory
 	}
 
 
-	public function createTemplate(Control $control = null): ITemplate
+	public function createTemplate(Control $control = null, string $class = null): Template
 	{
 		/** @var NetteTemplate $template */
-		$template = parent::createTemplate($control);
+		$template = parent::createTemplate($control, $class);
 		$template->darkMode = $this->theme->isDarkMode();
 		$template->addFilter(null, [$this->netxtenHelpers, 'loader']);
 		$template->addFilter(null, [$this->templateHelpers, 'loader']);
