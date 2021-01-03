@@ -1,17 +1,11 @@
 <?php
-/** @noinspection PhpMissingParentConstructorInspection */
-/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use MichalSpacekCz\Application\Theme;
-use Nette\Http\Request;
-use Nette\Http\Response;
-use Nette\Http\UrlScript;
-use stdClass;
+use MichalSpacekCz\Test\Http\Request;
+use MichalSpacekCz\Test\ServicesTrait;
 use Tester\Assert;
-use Tester\Environment;
 use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
@@ -22,75 +16,71 @@ require __DIR__ . '/../bootstrap.php';
 class ThemeTest extends TestCase
 {
 
-	private Request $httpRequest;
+	use ServicesTrait;
+
+
+	private const COOKIE = 'future';
+
+
+	private Request $request;
 
 	private Theme $theme;
 
-	private stdClass $response;
 
-
-	private function getThemeService(?string $requestCookieValue = null): Theme
+	protected function setUp()
 	{
-		$this->response = new stdClass();
-		$cookies = $requestCookieValue ? ['future' => $requestCookieValue] : null;
-		$httpRequest = new Request(new UrlScript(), null, null, $cookies);
-		$httpResponse = new class ($this->response) extends Response {
-
-			private stdClass $response;
-
-
-			public function __construct(stdClass $response)
-			{
-				$this->response = $response;
-			}
-
-
-			public function setCookie(string $name, string $value, $time, string $path = null, string $domain = null, bool $secure = null, bool $httpOnly = null, string $sameSite = null)
-			{
-				$this->response->$name = $value;
-			}
-
-		};
-		return new Theme($httpRequest, $httpResponse);
+		$this->request = $this->getHttpRequest();
+		$this->theme = $this->getTheme();
 	}
 
 
 	public function testSetDarkMode(): void
 	{
-		$theme = $this->getThemeService();
-		$theme->setDarkMode();
-		Assert::same('dark', $this->response->future);
+		$this->theme->setDarkMode();
+		Assert::same('dark', $this->getHttpResponse()->getCookie('future'));
 	}
 
 
 	public function testSetLightMode(): void
 	{
-		$theme = $this->getThemeService();
-		$theme->setLightMode();
-		Assert::same('bright', $this->response->future);
+		$this->theme->setLightMode();
+		Assert::same('bright', $this->getHttpResponse()->getCookie('future'));
 	}
 
 
 	public function testIsDarkMode(): void
 	{
-		$theme = $this->getThemeService();
-		Assert::null($theme->isDarkMode());
+		Assert::null($this->theme->isDarkMode());
+	}
 
-		$theme = $this->getThemeService('foo');
-		Assert::null($theme->isDarkMode());
 
-		$theme = $this->getThemeService('dark');
-		Assert::true($theme->isDarkMode());
+	public function testIsDarkModeValueUnknown(): void
+	{
+		$this->request->setCookie(self::COOKIE, 'foo');
+		Assert::null($this->theme->isDarkMode());
+	}
 
-		$theme = $this->getThemeService('bright');
-		Assert::false($theme->isDarkMode());
 
-		$theme = $this->getThemeService('light');
-		Assert::null($theme->isDarkMode());
+	public function testIsDarkModeValueDark(): void
+	{
+		$this->request->setCookie(self::COOKIE, 'dark');
+		Assert::true($this->theme->isDarkMode());
+	}
+
+
+	public function testIsDarkModeValueBright(): void
+	{
+		$this->request->setCookie(self::COOKIE, 'bright');
+		Assert::false($this->theme->isDarkMode());
+	}
+
+
+	public function testIsDarkModeValueLight(): void
+	{
+		$this->request->setCookie(self::COOKIE, 'light');
+		Assert::null($this->theme->isDarkMode());
 	}
 
 }
 
-// Nette\Http\Response is marked as final and I can't be bothered implementing all the methods from IResponse
-Environment::bypassFinals();
 (new ThemeTest())->run();

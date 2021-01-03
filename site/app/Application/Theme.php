@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use Nette\Http\Request;
+use MichalSpacekCz\Test\Http\Response as TestResponse;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
 use Nette\Http\Response;
 
 class Theme
@@ -15,12 +17,12 @@ class Theme
 
 	private const LIGHT = 'bright';
 
-	private Request $httpRequest;
+	private IRequest $httpRequest;
 
-	private Response $httpResponse;
+	private IResponse $httpResponse;
 
 
-	public function __construct(Request $httpRequest, Response $httpResponse)
+	public function __construct(IRequest $httpRequest, IResponse $httpResponse)
 	{
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
@@ -48,7 +50,9 @@ class Theme
 
 	private function setCookie(string $mode): void
 	{
-		$this->httpResponse->setCookie(self::COOKIE, $mode, '+10 years', null, null, null, null, 'None');
+		/** @var Response|TestResponse $response */
+		$response = $this->httpResponse;
+		$response->setCookie(self::COOKIE, $mode, '+10 years', null, null, null, null, 'None');
 	}
 
 }
