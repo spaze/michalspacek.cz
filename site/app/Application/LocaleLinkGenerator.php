@@ -61,9 +61,9 @@ class LocaleLinkGenerator
 	{
 		$links = array();
 		foreach ($this->routerFactory->getLocaleRouters() as $locale => $routers) {
-			foreach ($routers as $router) {
+			foreach ($routers->getRouters() as $router) {
 				/** @var RouteList $router */
-				if (count($router)) {
+				if (count($router->getRouters())) {
 					$linkGenerator = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
 					$links[$locale] = $linkGenerator->link($destination, $this->getParams($params, $locale));
 				}
