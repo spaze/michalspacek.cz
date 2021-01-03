@@ -56,11 +56,14 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 		return Expect::structure([
 			'debugger' => Expect::bool(),
 			'errorPresenter' => Expect::string('Nette:Error')->dynamic(),
-			'catchExceptions' => Expect::bool(!$this->debugMode)->dynamic(),
+			'catchExceptions' => Expect::bool()->dynamic(),
 			'mapping' => Expect::arrayOf('string|array'),
-			'scanDirs' => Expect::anyOf(Expect::arrayOf('string'), false)->default($this->scanDirs),
+			'scanDirs' => Expect::anyOf(
+				Expect::arrayOf('string')->default($this->scanDirs)->mergeDefaults(),
+				false
+			)->default($this->scanDirs),
 			'scanComposer' => Expect::bool(class_exists(ClassLoader::class)),
-			'scanFilter' => Expect::string('Presenter'),
+			'scanFilter' => Expect::string('*Presenter'),
 			'silentLinks' => Expect::bool(),
 		]);
 	}
@@ -78,7 +81,7 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 
 		$builder->addDefinition($this->prefix('application'))
 			->setFactory(Nette\Application\Application::class)
-			->addSetup('$catchExceptions', [$config->catchExceptions])
+			->addSetup('$catchExceptions', [$this->debugMode ? $config->catchExceptions : true])
 			->addSetup('$errorPresenter', [$config->errorPresenter]);
 
 		$this->compiler->addExportedType(Nette\Application\Application::class);
@@ -117,7 +120,7 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 
 		if ($this->config->debugger ?? $builder->getByType(Tracy\BlueScreen::class)) {
 			$builder->getDefinition($this->prefix('application'))
-				->addSetup([Nette\Bridges\ApplicationTracy\RoutingPanel::class, 'initializePanel']);
+				->addSetup([self::class, 'initializeBlueScreenPanel']);
 		}
 
 		$all = [];
@@ -156,7 +159,7 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 			}
 			$robot = new Nette\Loaders\RobotLoader;
 			$robot->addDirectory(...$config->scanDirs);
-			$robot->acceptFiles = ['*' . $config->scanFilter . '*.php'];
+			$robot->acceptFiles = [$config->scanFilter . '.php'];
 			if ($this->tempDir) {
 				$robot->setTempDirectory($this->tempDir);
 				$robot->refresh();
@@ -188,7 +191,7 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 		$presenters = [];
 		foreach (array_unique($classes) as $class) {
 			if (
-				strpos($class, $config->scanFilter) !== false
+				fnmatch($config->scanFilter, $class)
 				&& class_exists($class)
 				&& ($rc = new \ReflectionClass($class))
 				&& $rc->implementsInterface(Nette\Application\IPresenter::class)
@@ -198,5 +201,21 @@ final class ApplicationExtension extends Nette\DI\CompilerExtension
 			}
 		}
 		return $presenters;
+	}
+
+
+	/** @internal */
+	public static function initializeBlueScreenPanel(
+		Tracy\BlueScreen $blueScreen,
+		Nette\Application\Application $application
+	): void {
+		$blueScreen->addPanel(function (?\Throwable $e) use ($application, $blueScreen): ?array {
+			$dumper = $blueScreen->getDumper();
+			return $e ? null : [
+				'tab' => 'Nette Application',
+				'panel' => '<h3>Requests</h3>' . $dumper($application->getRequests())
+					. '<h3>Presenter</h3>' . $dumper($application->getPresenter()),
+			];
+		});
 	}
 }

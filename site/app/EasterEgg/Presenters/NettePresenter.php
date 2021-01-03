@@ -5,10 +5,10 @@ namespace MichalSpacekCz\EasterEgg\Presenters;
 
 use MichalSpacekCz\EasterEgg\NetteCve202015227;
 use Nette\Application\UI\Presenter;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 
 /**
- * @property-read Template $template
+ * @property-read DefaultTemplate $template
  */
 class NettePresenter extends Presenter
 {

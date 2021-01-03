@@ -17,14 +17,14 @@ use Nette\Application\UI;
 /**
  * Latte powered template factory.
  */
-class TemplateFactory implements UI\ITemplateFactory
+class TemplateFactory implements UI\TemplateFactory
 {
 	use Nette\SmartObject;
 
-	/** @var callable[]&(callable(Template $template): void)[]; Occurs when a new template is created */
+	/** @var callable[]&(callable(UI\Template $template): void)[]; Occurs when a new template is created */
 	public $onCreate;
 
-	/** @var ILatteFactory */
+	/** @var LatteFactory */
 	private $latteFactory;
 
 	/** @var Nette\Http\IRequest|null */
@@ -33,7 +33,7 @@ class TemplateFactory implements UI\ITemplateFactory
 	/** @var Nette\Security\User|null */
 	private $user;
 
-	/** @var Nette\Caching\IStorage|null */
+	/** @var Nette\Caching\Storage|null */
 	private $cacheStorage;
 
 	/** @var string */
@@ -41,27 +41,32 @@ class TemplateFactory implements UI\ITemplateFactory
 
 
 	public function __construct(
-		ILatteFactory $latteFactory,
+		LatteFactory $latteFactory,
 		Nette\Http\IRequest $httpRequest = null,
 		Nette\Security\User $user = null,
-		Nette\Caching\IStorage $cacheStorage = null,
+		Nette\Caching\Storage $cacheStorage = null,
 		$templateClass = null
 	) {
 		$this->latteFactory = $latteFactory;
 		$this->httpRequest = $httpRequest;
 		$this->user = $user;
 		$this->cacheStorage = $cacheStorage;
-		if ($templateClass && (!class_exists($templateClass) || !is_a($templateClass, Template::class, true))) {
-			throw new Nette\InvalidArgumentException("Class $templateClass does not extend " . Template::class . ' or it does not exist.');
+		if ($templateClass && (!class_exists($templateClass) || !is_a($templateClass, UI\Template::class, true))) {
+			throw new Nette\InvalidArgumentException("Class $templateClass does not implement " . UI\Template::class . ' or it does not exist.');
 		}
-		$this->templateClass = $templateClass ?: Template::class;
+		$this->templateClass = $templateClass ?: DefaultTemplate::class;
 	}
 
 
-	public function createTemplate(UI\Control $control = null): UI\ITemplate
+	public function createTemplate(UI\Control $control = null, string $class = null): UI\Template
 	{
+		$class = $class ?? $this->templateClass;
+		if (!is_a($class, UI\Template::class, true)) {
+			throw new Nette\InvalidArgumentException("Class $class does not implement " . UI\Template::class . ' or it does not exist.');
+		}
+
 		$latte = $this->latteFactory->create();
-		$template = new $this->templateClass($latte);
+		$template = new $class($latte);
 		$presenter = $control ? $control->getPresenterIfExists() : null;
 
 		if ($latte->onCompile instanceof \Traversable) {
@@ -81,23 +86,10 @@ class TemplateFactory implements UI\ITemplateFactory
 			}
 		});
 
-		$latte->addFilter('url', function (string $s): string {
-			trigger_error('Filter |url is deprecated, use |escapeUrl.', E_USER_DEPRECATED);
-			return rawurlencode($s);
-		});
-		foreach (['normalize', 'toAscii'] as $name) {
-			$latte->addFilter($name, function (string $s) use ($name): string {
-				trigger_error("Filter |$name is deprecated.", E_USER_DEPRECATED);
-				return [Nette\Utils\Strings::class, $name]($s);
-			});
-		}
-		$latte->addFilter('null', function (): void {
-			trigger_error('Filter |null is deprecated.', E_USER_DEPRECATED);
-		});
 		$latte->addFilter('modifyDate', function ($time, $delta, $unit = null) {
-			return $time == null // intentionally ==
-				? null
-				: Nette\Utils\DateTime::from($time)->modify($delta . $unit);
+			return $time
+				? Nette\Utils\DateTime::from($time)->modify($delta . $unit)
+				: null;
 		});
 
 		if (!isset($latte->getFilters()['translate'])) {
@@ -112,17 +104,29 @@ class TemplateFactory implements UI\ITemplateFactory
 		}
 
 		// default parameters
-		$template->user = $this->user;
-		$template->baseUrl = $this->httpRequest
+		$baseUrl = $this->httpRequest
 			? rtrim($this->httpRequest->getUrl()->withoutUserInfo()->getBaseUrl(), '/')
 			: null;
-		$template->basePath = $this->httpRequest
-			? preg_replace('#https?://[^/]+#A', '', $template->baseUrl)
-			: null;
-		$template->flashes = [];
+		$flashes = $presenter instanceof UI\Presenter && $presenter->hasFlashSession()
+			? (array) $presenter->getFlashSession()->{$control->getParameterId('flash')}
+			: [];
+
+		$params = [
+			'user' => $this->user,
+			'baseUrl' => $baseUrl,
+			'basePath' => $baseUrl ? preg_replace('#https?://[^/]+#A', '', $baseUrl) : null,
+			'flashes' => $flashes,
+			'control' => $control,
+			'presenter' => $presenter,
+		];
+
+		foreach ($params as $key => $value) {
+			if ($value !== null && property_exists($template, $key)) {
+				$template->$key = $value;
+			}
+		}
+
 		if ($control) {
-			$template->control = $control;
-			$template->presenter = $presenter;
 			$latte->addProvider('uiControl', $control);
 			$latte->addProvider('uiPresenter', $presenter);
 			$latte->addProvider('snippetBridge', new Nette\Bridges\ApplicationLatte\SnippetBridge($control));
@@ -134,11 +138,6 @@ class TemplateFactory implements UI\ITemplateFactory
 			$latte->addProvider('uiNonce', $nonce);
 		}
 		$latte->addProvider('cacheStorage', $this->cacheStorage);
-
-		if ($presenter instanceof UI\Presenter && $presenter->hasFlashSession()) {
-			$id = $control->getParameterId('flash');
-			$template->flashes = (array) $presenter->getFlashSession()->$id;
-		}
 
 		$this->onCreate($template);
 

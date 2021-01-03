@@ -11,6 +11,8 @@ use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Response;
 use Nette\Localization\Translator;
+use Nette\Utils\Html;
+use stdClass;
 
 /**
  * @property-read Template $template
@@ -141,6 +143,22 @@ abstract class BasePresenter extends Presenter
 		$this->theme->setLightMode();
 		$this->httpResponse->setExpiration(null);
 		$this->redirectPermanent('this');
+	}
+
+
+	/**
+	 * Saves the message to template, that can be displayed after redirect.
+	 *
+	 * @param string|Html $message
+	 * @param string $type
+	 * @return stdClass
+	 */
+	public function flashMessage($message, string $type = 'info'): stdClass
+	{
+		$flash = new stdClass();
+		$flash->message = $message;
+		$flash->type = $type;
+		return parent::flashMessage($flash);
 	}
 
 }

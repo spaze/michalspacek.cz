@@ -12,7 +12,7 @@ use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Localization\Translator;
@@ -59,7 +59,7 @@ class Post
 		Explorer $context,
 		Loader $loader,
 		Texy $texyFormatter,
-		IStorage $cacheStorage,
+		Storage $cacheStorage,
 		LinkGenerator $linkGenerator,
 		LocaleLinkGenerator $localeLinkGenerator,
 		Tags $tags,

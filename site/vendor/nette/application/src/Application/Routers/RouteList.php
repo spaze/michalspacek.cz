@@ -15,7 +15,7 @@ use Nette;
 /**
  * The router broker.
  */
-class RouteList extends Nette\Routing\RouteList implements Nette\Application\IRouter, \ArrayAccess, \Countable, \IteratorAggregate
+class RouteList extends Nette\Routing\RouteList implements Nette\Routing\Router, \ArrayAccess, \Countable, \IteratorAggregate
 {
 	private const PRESENTER_KEY = 'presenter';
 
@@ -93,8 +93,10 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Application\IRo
 	}
 
 
+	/** @deprecated */
 	public function count(): int
 	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		return count($this->getRouters());
 	}
 
@@ -132,7 +134,7 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Application\IRo
 	 */
 	public function offsetExists($index): bool
 	{
-		return is_int($index) && $index >= 0 && $index < $this->count();
+		return is_int($index) && $index >= 0 && $index < count($this->getRouters());
 	}
 
 
@@ -149,8 +151,13 @@ class RouteList extends Nette\Routing\RouteList implements Nette\Application\IRo
 	}
 
 
+	/** @deprecated */
 	public function getIterator(): \ArrayIterator
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use getRouters().', E_USER_DEPRECATED);
 		return new \ArrayIterator($this->getRouters());
 	}
 }
+
+
+interface_exists(Nette\Application\IRouter::class);

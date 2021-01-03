@@ -22,7 +22,7 @@ use Nette;
  * @property-read Presenter $presenter
  * @property-read bool $linkCurrent
  */
-abstract class Component extends Nette\ComponentModel\Container implements ISignalReceiver, IStatePersistent, \ArrayAccess
+abstract class Component extends Nette\ComponentModel\Container implements SignalReceiver, StatePersistent, \ArrayAccess
 {
 	use Nette\ComponentModel\ArrayAccess;
 
@@ -133,7 +133,7 @@ abstract class Component extends Nette\ComponentModel\Container implements ISign
 	}
 
 
-	/********************* interface IStatePersistent ****************d*g**/
+	/********************* interface StatePersistent ****************d*g**/
 
 
 	/**
@@ -149,7 +149,7 @@ abstract class Component extends Nette\ComponentModel\Container implements ISign
 						"Value passed to persistent parameter '%s' in %s must be %s, %s given.",
 						$name,
 						$this instanceof Presenter ? 'presenter ' . $this->getName() : "component '{$this->getUniqueId()}'",
-						$meta['type'] === 'NULL' ? 'scalar' : $meta['type'],
+						$meta['type'],
 						is_object($params[$name]) ? get_class($params[$name]) : gettype($params[$name])
 					));
 				}
@@ -200,17 +200,7 @@ abstract class Component extends Nette\ComponentModel\Container implements ISign
 	}
 
 
-	/** @deprecated */
-	final public function getParam($name = null, $default = null)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use getParameter() or getParameters() instead.', E_USER_DEPRECATED);
-		return func_num_args()
-			? $this->getParameter($name, $default)
-			: $this->getParameters();
-	}
-
-
-	/********************* interface ISignalReceiver ****************d*g**/
+	/********************* interface SignalReceiver ****************d*g**/
 
 
 	/**
@@ -296,23 +286,13 @@ abstract class Component extends Nette\ComponentModel\Container implements ISign
 	 * @param  array|mixed  $args
 	 * @throws Nette\Application\AbortException
 	 */
-	public function redirect(/*int $code, string */$destination, $args = []): void
+	public function redirect(string $destination, $args = []): void
 	{
-		if (is_numeric($destination)) {
-			trigger_error(__METHOD__ . '() first parameter $code is deprecated; use redirectPermanent() for 301 redirect.', E_USER_DEPRECATED);
-			[$code, $destination, $args] = func_get_args() + [null, null, []];
-			if (func_num_args() > 3 || !is_array($args)) {
-				$args = array_slice(func_get_args(), 2);
-			}
-		} else {
-			$code = null;
-			$args = func_num_args() < 3 && is_array($args)
-				? $args
-				: array_slice(func_get_args(), 1);
-		}
-
+		$args = func_num_args() < 3 && is_array($args)
+			? $args
+			: array_slice(func_get_args(), 1);
 		$presenter = $this->getPresenter();
-		$presenter->redirectUrl($presenter->createRequest($this, $destination, $args, 'redirect'), $code);
+		$presenter->redirectUrl($presenter->createRequest($this, $destination, $args, 'redirect'));
 	}
 
 

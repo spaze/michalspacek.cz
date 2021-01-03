@@ -78,14 +78,7 @@ class PresenterFactory implements IPresenterFactory
 			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is abstract.");
 		}
 
-		$this->cache[$name] = $class;
-
-		if ($name !== ($realName = $this->unformatPresenterClass($class))) {
-			trigger_error("Case mismatch on presenter name '$name', correct name is '$realName'.", E_USER_WARNING);
-			$name = $realName;
-		}
-
-		return $class;
+		return $this->cache[$name] = $class;
 	}
 
 
@@ -135,6 +128,7 @@ class PresenterFactory implements IPresenterFactory
 	 */
 	public function unformatPresenterClass(string $class): ?string
 	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		foreach ($this->mapping as $module => $mapping) {
 			$mapping = str_replace(['\\', '*'], ['\\\\', '(\w+)'], $mapping);
 			if (preg_match("#^\\\\?$mapping[0]((?:$mapping[1])*)$mapping[2]$#Di", $class, $matches)) {
