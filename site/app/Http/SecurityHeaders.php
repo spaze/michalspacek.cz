@@ -77,12 +77,22 @@ class SecurityHeaders
 	public function setFeaturePolicy(array $policies): void
 	{
 		$result = $policies;
-		foreach ($result as &$policy) {
-			if ($policy === 'none') {
-				$policy = "'none'";
+		$this->normalizeFeaturePolicyValues($result);
+		$this->featurePolicies = $result;
+	}
+
+
+	private function normalizeFeaturePolicyValues(array &$values): void
+	{
+		foreach ($values as &$value) {
+			if ($value === 'none' || $value === null) {
+				$value = "'none'";
+			} elseif ($value === 'self') {
+				$value = "'self'";
+			} elseif (is_array($value)) {
+				$this->normalizeFeaturePolicyValues($value);
 			}
 		}
-		$this->featurePolicies = $result;
 	}
 
 
