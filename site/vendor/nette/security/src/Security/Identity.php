@@ -13,13 +13,12 @@ use Nette;
 
 
 /**
- * Default implementation of IIdentity.
- *
+ * @deprecated  use Nette\Security\SimpleIdentity
  * @property   mixed $id
  * @property   array $roles
  * @property   array $data
  */
-class SimpleIdentity implements IIdentity, \Serializable
+class Identity implements IIdentity
 {
 	use Nette\SmartObject {
 		__get as private parentGet;
@@ -57,14 +56,14 @@ class SimpleIdentity implements IIdentity, \Serializable
 		if (!is_string($id) && !is_int($id)) {
 			throw new Nette\InvalidArgumentException('Identity identifier must be string|int, but type "' . gettype($id) . '" given.');
 		}
-		$this->id = $id;
+		$this->id = is_numeric($id) && !is_float($tmp = $id * 1) ? $tmp : $id;
 		return $this;
 	}
 
 
 	/**
 	 * Returns the ID of user.
-	 * @return string|int
+	 * @return mixed
 	 */
 	public function getId()
 	{
@@ -133,25 +132,5 @@ class SimpleIdentity implements IIdentity, \Serializable
 	public function __isset(string $key): bool
 	{
 		return isset($this->data[$key]) || $this->parentIsSet($key);
-	}
-
-
-	public function serialize(): string
-	{
-		return serialize([
-			'id' => $this->id,
-			'roles' => $this->roles,
-			'data' => $this->data,
-		]);
-	}
-
-
-	public function unserialize($serialized)
-	{
-		[
-			'id' => $this->id,
-			'roles' => $this->roles,
-			'data' => $this->data,
-		] = unserialize($serialized);
 	}
 }

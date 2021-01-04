@@ -11,13 +11,12 @@ namespace Nette\Security;
 
 
 /**
- * Performs authentication.
+ * Restores Identity from storage.
  */
-interface Authenticator extends IAuthenticator
+interface IdentityRestorer
 {
 	/**
-	 * Performs an authentication.
-	 * @throws AuthenticationException
+	 * Refreshes stored identity.
 	 */
-	function authenticate(string $user, string $password): IIdentity;
+	function restoreIdentity(IIdentity $identity): IIdentity;
 }

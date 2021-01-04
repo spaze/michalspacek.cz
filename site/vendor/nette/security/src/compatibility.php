@@ -10,11 +10,6 @@ declare(strict_types=1);
 namespace Nette\Security;
 
 if (false) {
-	/** @deprecated use Nette\Security\Authenticator */
-	interface IAuthenticator extends Authenticator
-	{
-	}
-
 	/** @deprecated use Nette\Security\Authorizator */
 	interface IAuthorizator extends Authorizator
 	{
@@ -29,21 +24,8 @@ if (false) {
 	interface IRole
 	{
 	}
-
-	/** @deprecated use Nette\Security\UserStorage */
-	interface IUserStorage
-	{
-	}
-
-	/** @deprecated use Nette\Security\SimpleIdentity */
-	class Identity extends SimpleIdentity
-	{
-	}
-} elseif (!interface_exists(IAuthenticator::class)) {
-	class_alias(Authenticator::class, IAuthenticator::class);
+} elseif (!interface_exists(IAuthorizator::class)) {
 	class_alias(Authorizator::class, IAuthorizator::class);
 	class_alias(Resource::class, IResource::class);
 	class_alias(Role::class, IRole::class);
-	class_alias(UserStorage::class, IUserStorage::class);
-	class_alias(SimpleIdentity::class, Identity::class);
 }

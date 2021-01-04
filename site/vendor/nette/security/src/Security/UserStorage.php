@@ -15,47 +15,29 @@ namespace Nette\Security;
  */
 interface UserStorage
 {
-	/** Log-out reason {@link UserStorage::getLogoutReason()} */
+	/** Log-out reason */
 	public const
-		MANUAL = 0b0001,
-		INACTIVITY = 0b0010;
-
-	/** Log-out behavior */
-	public const CLEAR_IDENTITY = 0b1000;
+		LOGOUT_MANUAL = 1,
+		LOGOUT_INACTIVITY = 2;
 
 	/**
-	 * Sets the authenticated status of this user.
-	 * @return static
+	 * Sets the authenticated state of user.
 	 */
-	function setAuthenticated(bool $state);
+	function saveAuthentication(IIdentity $identity): void;
 
 	/**
-	 * Is this user authenticated?
+	 * Removed authenticated state of user.
 	 */
-	function isAuthenticated(): bool;
+	function clearAuthentication(bool $clearIdentity): void;
 
 	/**
-	 * Sets the user identity.
-	 * @return static
+	 * Returns user authenticated state, identity and logout reason.
+	 * @return array{bool, ?IIdentity, ?int}
 	 */
-	function setIdentity(?IIdentity $identity);
+	function getState(): array;
 
 	/**
-	 * Returns current user identity, if any.
+	 * Enables log out from the persistent storage after inactivity (like '20 minutes').
 	 */
-	function getIdentity(): ?IIdentity;
-
-	/**
-	 * Enables log out from the persistent storage after inactivity (like '20 minutes'). Accepts flag UserStorage::CLEAR_IDENTITY.
-	 * @return static
-	 */
-	function setExpiration(?string $expire, int $flags = 0);
-
-	/**
-	 * Why was user logged out?
-	 */
-	function getLogoutReason(): ?int;
+	function setExpiration(?string $expire, bool $clearIdentity): void;
 }
-
-
-interface_exists(IUserStorage::class);
