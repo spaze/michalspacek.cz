@@ -37,8 +37,11 @@ class SecurityHeaders
 	/** @var string */
 	private $actionName;
 
-	/** @var array<string|string[]> */
-	private $featurePolicies;
+	/** @var array<string|null|string[]> */
+	private array $featurePolicy;
+
+	/** @var array<string|null|string[]> */
+	private array $permissionsPolicy;
 
 	/** @var LocaleLinkGenerator */
 	private $localeLinkGenerator;
@@ -72,13 +75,15 @@ class SecurityHeaders
 
 
 	/**
-	 * @param array<string|string[]> $policies
+	 * @param array<string|string[]> $policy
 	 */
-	public function setFeaturePolicy(array $policies): void
+	public function setFeaturePolicy(array $policy): void
 	{
-		$result = $policies;
-		$this->normalizeFeaturePolicyValues($result);
-		$this->featurePolicies = $result;
+		$featurePolicy = $permissionsPolicy = $policy;
+		$this->normalizeFeaturePolicyValues($featurePolicy);
+		$this->normalizePermissionsPolicyValues($permissionsPolicy);
+		$this->featurePolicy = $featurePolicy;
+		$this->permissionsPolicy = $permissionsPolicy;
 	}
 
 
@@ -91,6 +96,27 @@ class SecurityHeaders
 				$value = "'self'";
 			} elseif (is_array($value)) {
 				$this->normalizeFeaturePolicyValues($value);
+			} else {
+				$value = trim($value);
+			}
+		}
+	}
+
+
+	private function normalizePermissionsPolicyValues(array &$values): void
+	{
+		foreach ($values as &$value) {
+			if ($value === 'none' || $value === null) {
+				$value = '';
+			} elseif ($value === 'self') {
+				$value = 'self';
+			} elseif (is_array($value)) {
+				$this->normalizePermissionsPolicyValues($value);
+			} else {
+				$value = trim($value);
+				if ($value !== '') {
+					$value = sprintf('"%s"', $value);
+				}
 			}
 		}
 	}
@@ -99,13 +125,26 @@ class SecurityHeaders
 	private function getFeaturePolicyHeader(): string
 	{
 		$directives = [];
-		foreach ($this->featurePolicies as $directive => $values) {
+		foreach ($this->featurePolicy as $directive => $values) {
 			if (is_array($values)) {
-				$values = implode(' ', $values);
+				$values = implode(' ', array_filter($values));
 			}
 			$directives[] = "$directive $values";
 		}
 		return implode('; ', $directives);
+	}
+
+
+	public function getPermissionsPolicyHeader(): string
+	{
+		$directives = [];
+		foreach ($this->permissionsPolicy as $directive => $values) {
+			if (is_array($values)) {
+				$values = implode(' ', array_filter($values));
+			}
+			$directives[] = "$directive=({$values})";
+		}
+		return implode(', ', $directives);
 	}
 
 
@@ -117,6 +156,7 @@ class SecurityHeaders
 		}
 
 		$this->httpResponse->setHeader('Feature-Policy', $this->getFeaturePolicyHeader());
+		$this->httpResponse->setHeader('Permissions-Policy', $this->getPermissionsPolicyHeader());
 	}
 
 

@@ -53,15 +53,17 @@ class SecurityHeadersTest extends TestCase
 			'camera' => 'none',
 			'geolocation' => null,
 			'midi' => [
-				'none',
 				'self',
+				'none',
+				' ',
 				'https://example.com',
 			],
 		]);
 		$this->securityHeaders->sendHeaders();
 		$expected = [
 			'content-security-policy' => "script-src 'none' example.com; form-action 'self'",
-			'feature-policy' => "camera 'none'; geolocation 'none'; midi 'none' 'self' https://example.com",
+			'feature-policy' => "camera 'none'; geolocation 'none'; midi 'self' 'none' https://example.com",
+			'permissions-policy' => 'camera=(), geolocation=(), midi=(self "https://example.com")',
 		];
 		Assert::same($expected, $this->httpResponse->getHeaders());
 	}
