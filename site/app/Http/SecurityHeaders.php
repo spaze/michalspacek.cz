@@ -13,35 +13,21 @@ use Spaze\ContentSecurityPolicy\Config;
 class SecurityHeaders
 {
 
-	/** @var string */
-	protected $defaultDomain;
-
-	/** @var string */
-	protected $rootDomain;
-
-	/** @var IRequest */
-	protected $httpRequest;
-
-	/** @var IResponse */
-	protected $httpResponse;
-
-	/** @var Config */
-	protected $contentSecurityPolicy;
-
-	/** @var RouterFactory */
-	private $routerFactory;
-
-	/** @var string */
-	private $presenterName;
-
-	/** @var string */
-	private $actionName;
+	private string $defaultDomain;
+	private string $rootDomain;
+	private IRequest $httpRequest;
+	private IResponse $httpResponse;
+	private Config $contentSecurityPolicy;
+	private RouterFactory $routerFactory;
+	private LocaleLinkGenerator $localeLinkGenerator;
+	private string $presenterName;
+	private string $actionName;
 
 	/** @var array<string|string[]> */
-	private $featurePolicies;
+	private array $featurePolicy;
 
-	/** @var LocaleLinkGenerator */
-	private $localeLinkGenerator;
+	/** @var array<string|string[]> */
+	private array $permissionsPolicy;
 
 
 	public function __construct(
@@ -72,30 +58,82 @@ class SecurityHeaders
 
 
 	/**
-	 * @param array<string|string[]> $policies
+	 * @param array<string|null|string[]> $policy
 	 */
-	public function setFeaturePolicy(array $policies): void
+	public function setPermissionsPolicy(array $policy): void
 	{
-		$result = $policies;
-		foreach ($result as &$policy) {
-			if ($policy === 'none') {
-				$policy = "'none'";
+		$featurePolicy = $permissionsPolicy = $policy;
+		$this->normalizeFeaturePolicyValues($featurePolicy);
+		$this->normalizePermissionsPolicyValues($permissionsPolicy);
+		$this->featurePolicy = $featurePolicy;
+		$this->permissionsPolicy = $permissionsPolicy;
+	}
+
+
+	/**
+	 * @param array<string|null|string[]> $values
+	 */
+	private function normalizeFeaturePolicyValues(array &$values): void
+	{
+		foreach ($values as &$value) {
+			if ($value === 'none' || $value === null) {
+				$value = "'none'";
+			} elseif ($value === 'self') {
+				$value = "'self'";
+			} elseif (is_array($value)) {
+				$this->normalizeFeaturePolicyValues($value);
+			} else {
+				$value = trim($value);
 			}
 		}
-		$this->featurePolicies = $result;
+	}
+
+
+	/**
+	 * @param array<string|null|string[]> $values
+	 */
+	private function normalizePermissionsPolicyValues(array &$values): void
+	{
+		foreach ($values as &$value) {
+			if ($value === 'none' || $value === null) {
+				$value = '';
+			} elseif ($value === 'self') {
+				$value = 'self';
+			} elseif (is_array($value)) {
+				$this->normalizePermissionsPolicyValues($value);
+			} else {
+				$value = trim($value);
+				if ($value !== '') {
+					$value = sprintf('"%s"', $value);
+				}
+			}
+		}
 	}
 
 
 	private function getFeaturePolicyHeader(): string
 	{
 		$directives = [];
-		foreach ($this->featurePolicies as $directive => $values) {
+		foreach ($this->featurePolicy as $directive => $values) {
 			if (is_array($values)) {
-				$values = implode(' ', $values);
+				$values = implode(' ', array_filter($values));
 			}
 			$directives[] = "$directive $values";
 		}
 		return implode('; ', $directives);
+	}
+
+
+	public function getPermissionsPolicyHeader(): string
+	{
+		$directives = [];
+		foreach ($this->permissionsPolicy as $directive => $values) {
+			if (is_array($values)) {
+				$values = implode(' ', array_filter($values));
+			}
+			$directives[] = "$directive=({$values})";
+		}
+		return implode(', ', $directives);
 	}
 
 
@@ -107,6 +145,7 @@ class SecurityHeaders
 		}
 
 		$this->httpResponse->setHeader('Feature-Policy', $this->getFeaturePolicyHeader());
+		$this->httpResponse->setHeader('Permissions-Policy', $this->getPermissionsPolicyHeader());
 	}
 
 
