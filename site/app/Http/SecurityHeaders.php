@@ -77,7 +77,7 @@ class SecurityHeaders
 	/**
 	 * @param array<string|string[]> $policy
 	 */
-	public function setFeaturePolicy(array $policy): void
+	public function setPermissionsPolicy(array $policy): void
 	{
 		$featurePolicy = $permissionsPolicy = $policy;
 		$this->normalizeFeaturePolicyValues($featurePolicy);

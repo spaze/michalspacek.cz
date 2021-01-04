@@ -55,7 +55,7 @@ parameters:
 			forms:
 				form: [action, method, target]
 				button: []
-	featurePolicy:
+	permissionsPolicy:
 		accelerometer: none
 		camera: none
 		geolocation: none

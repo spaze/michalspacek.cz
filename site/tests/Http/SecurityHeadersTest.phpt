@@ -49,7 +49,7 @@ class SecurityHeadersTest extends TestCase
 	public function testSendHeaders(): void
 	{
 		$this->securityHeaders->setCsp('Foo', 'bar');
-		$this->securityHeaders->setFeaturePolicy([
+		$this->securityHeaders->setPermissionsPolicy([
 			'camera' => 'none',
 			'geolocation' => null,
 			'midi' => [
