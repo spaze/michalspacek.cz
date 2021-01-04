@@ -13,8 +13,6 @@ use Spaze\ContentSecurityPolicy\Config;
 class SecurityHeaders
 {
 
-	private string $defaultDomain;
-	private string $rootDomain;
 	private IRequest $httpRequest;
 	private IResponse $httpResponse;
 	private Config $contentSecurityPolicy;
@@ -42,18 +40,6 @@ class SecurityHeaders
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
 		$this->routerFactory = $routerFactory;
 		$this->localeLinkGenerator = $localeLinkGenerator;
-	}
-
-
-	public function setDefaultDomain(string $defaultDomain): void
-	{
-		$this->defaultDomain = $defaultDomain;
-	}
-
-
-	public function setRootDomain(string $rootDomain): void
-	{
-		$this->rootDomain = $rootDomain;
 	}
 
 

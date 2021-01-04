@@ -61,8 +61,6 @@ services:
 	securityHeaders:
 		factory: MichalSpacekCz\Http\SecurityHeaders
 		setup:
-			- setDefaultDomain(%domain.default%)
-			- setRootDomain(%domain.root%)
 			- setPermissionsPolicy(%permissionsPolicy%)
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
 	passwordEncryption: Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
