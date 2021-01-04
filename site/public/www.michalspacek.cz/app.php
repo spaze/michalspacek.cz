@@ -7,14 +7,13 @@ if (file_exists('./maintenance.php')) {
 	require 'maintenance.php';
 }
 
-$rootDir = realpath(__DIR__ . '/../..');
-require $rootDir . '/vendor/autoload.php';
-require $rootDir . '/app/Application/Bootstrap.php';
+$siteDir = realpath(__DIR__ . '/../..');
+require $siteDir . '/vendor/autoload.php';
+require $siteDir . '/app/Application/Bootstrap.php';
 
-$appDir = $rootDir . '/app';
-$logDir = $rootDir . '/log';
-$tempDir = $rootDir . '/temp';
+$logDir = $siteDir . '/log';
+$tempDir = $siteDir . '/temp';
 $environment = (isset($_SERVER['ENVIRONMENT']) ? $_SERVER['ENVIRONMENT'] : null);
 
-$bootstrap = new Bootstrap($appDir, $logDir, $tempDir, $environment, 'Europe/Prague');
+$bootstrap = new Bootstrap($siteDir, $logDir, $tempDir, $environment, 'Europe/Prague');
 $bootstrap->run();

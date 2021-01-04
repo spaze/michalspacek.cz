@@ -39,7 +39,7 @@ class Bootstrap
 	private $securityHeaders;
 
 	/** @var string */
-	private $appDir;
+	private $siteDir;
 
 	/** @var string */
 	private $logDir;
@@ -54,9 +54,9 @@ class Bootstrap
 	private $timeZone;
 
 
-	public function __construct(string $appDir, string $logDir, string $tempDir, ?string $environment, string $timeZone)
+	public function __construct(string $siteDir, string $logDir, string $tempDir, ?string $environment, string $timeZone)
 	{
-		$this->appDir = $appDir;
+		$this->siteDir = $siteDir;
 		$this->logDir = $logDir;
 		$this->tempDir = $tempDir;
 		$this->environment = $environment ?? self::MODE_PRODUCTION;
@@ -67,7 +67,7 @@ class Bootstrap
 	public function run(): void
 	{
 		$configurator = new Configurator();
-		$configurator->addParameters(['appDir' => $this->appDir]);
+		$configurator->addParameters(['siteDir' => $this->siteDir]);
 
 		$configurator->setDebugMode($this->isDebugMode());
 		$configurator->enableDebugger($this->logDir);
@@ -75,7 +75,7 @@ class Bootstrap
 		$configurator->setTempDirectory($this->tempDir);
 
 		$configurator->createRobotLoader()
-			->addDirectory($this->appDir)
+			->addDirectory($this->siteDir . '/app')
 			->register();
 
 		$existingFiles = array_filter($this->getConfigurationFiles(), function ($path) {
@@ -111,15 +111,15 @@ class Bootstrap
 	private function getConfigurationFiles(): array
 	{
 		return array_unique(array(
-			$this->appDir . '/config/extensions.neon',
-			$this->appDir . '/config/common.neon',
-			$this->appDir . '/config/contentsecuritypolicy.neon',
-			$this->appDir . '/config/parameters.neon',
-			$this->appDir . '/config/presenters.neon',
-			$this->appDir . '/config/services.neon',
-			$this->appDir . '/config/routes.neon',
-			$this->appDir . '/config/extra-' . $_SERVER['SERVER_NAME'] . '.neon',
-			$this->appDir . '/config/local.neon',
+			$this->siteDir . '/config/extensions.neon',
+			$this->siteDir . '/config/common.neon',
+			$this->siteDir . '/config/contentsecuritypolicy.neon',
+			$this->siteDir . '/config/parameters.neon',
+			$this->siteDir . '/config/presenters.neon',
+			$this->siteDir . '/config/services.neon',
+			$this->siteDir . '/config/routes.neon',
+			$this->siteDir . '/config/extra-' . $_SERVER['SERVER_NAME'] . '.neon',
+			$this->siteDir . '/config/local.neon',
 		));
 	}
 

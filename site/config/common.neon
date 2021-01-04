@@ -32,7 +32,7 @@ translation:
 		whitelist: [cs_CZ, en_US]
 	localeResolvers!: []
 	dirs:
-		- %appDir%/lang
+		- %siteDir%/app/lang
 
 subresourceIntegrity:
 	hashingAlgos:
