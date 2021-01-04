@@ -13,38 +13,21 @@ use Spaze\ContentSecurityPolicy\Config;
 class SecurityHeaders
 {
 
-	/** @var string */
-	protected $defaultDomain;
+	private string $defaultDomain;
+	private string $rootDomain;
+	private IRequest $httpRequest;
+	private IResponse $httpResponse;
+	private Config $contentSecurityPolicy;
+	private RouterFactory $routerFactory;
+	private LocaleLinkGenerator $localeLinkGenerator;
+	private string $presenterName;
+	private string $actionName;
 
-	/** @var string */
-	protected $rootDomain;
-
-	/** @var IRequest */
-	protected $httpRequest;
-
-	/** @var IResponse */
-	protected $httpResponse;
-
-	/** @var Config */
-	protected $contentSecurityPolicy;
-
-	/** @var RouterFactory */
-	private $routerFactory;
-
-	/** @var string */
-	private $presenterName;
-
-	/** @var string */
-	private $actionName;
-
-	/** @var array<string|null|string[]> */
+	/** @var array<string|string[]> */
 	private array $featurePolicy;
 
-	/** @var array<string|null|string[]> */
+	/** @var array<string|string[]> */
 	private array $permissionsPolicy;
-
-	/** @var LocaleLinkGenerator */
-	private $localeLinkGenerator;
 
 
 	public function __construct(
@@ -75,7 +58,7 @@ class SecurityHeaders
 
 
 	/**
-	 * @param array<string|string[]> $policy
+	 * @param array<string|null|string[]> $policy
 	 */
 	public function setPermissionsPolicy(array $policy): void
 	{
@@ -87,6 +70,9 @@ class SecurityHeaders
 	}
 
 
+	/**
+	 * @param array<string|null|string[]> $values
+	 */
 	private function normalizeFeaturePolicyValues(array &$values): void
 	{
 		foreach ($values as &$value) {
@@ -103,6 +89,9 @@ class SecurityHeaders
 	}
 
 
+	/**
+	 * @param array<string|null|string[]> $values
+	 */
 	private function normalizePermissionsPolicyValues(array &$values): void
 	{
 		foreach ($values as &$value) {
