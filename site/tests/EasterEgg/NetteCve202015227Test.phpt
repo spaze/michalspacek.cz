@@ -10,9 +10,7 @@ use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
-/**
-* @testCase MichalSpacekCz\EasterEgg\NetteCve202015227Test
-*/
+/** @testCase */
 class NetteCve202015227Test extends TestCase
 {
 

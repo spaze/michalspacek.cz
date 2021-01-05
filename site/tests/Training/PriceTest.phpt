@@ -3,15 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use MichalSpacekCz\Training\Price;
 use Tester\Assert;
 use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
-/**
- * @testCase MichalSpacekCz\Training\PriceTest
- */
+/** @testCase */
 class PriceTest extends TestCase
 {
 

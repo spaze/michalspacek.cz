@@ -9,9 +9,7 @@ use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
-/**
- * @testCase MichalSpacekCz\Tags\TagsTest
- */
+/** @testCase */
 class TagsTest extends TestCase
 {
 

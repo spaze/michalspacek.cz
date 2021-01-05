@@ -10,9 +10,7 @@ use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
-/**
- * @testCase MichalSpacekCz\Application/ThemeTest
- */
+/** @testCase */
 class ThemeTest extends TestCase
 {
 

@@ -9,17 +9,13 @@ use Tester\TestCase;
 
 require __DIR__ . '/../../bootstrap.php';
 
-/**
- * @testCase MichalSpacekCz\Pulse\Passwords\RatingTest
- */
+/** @testCase */
 class RatingTest extends TestCase
 {
 
-	/** @var Algorithm */
-	private $algo;
+	private Algorithm $algo;
 
-	/** @var Rating */
-	private $rating;
+	private Rating $rating;
 
 
 	public function __construct()

@@ -3,21 +3,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use MichalSpacekCz\Training\Prices;
-use MichalSpacekCz\Training\Statuses;
 use Tester\Assert;
 use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
-/**
- * @testCase MichalSpacekCz\Training\PricesTest
- */
+/** @testCase */
 class PricesTest extends TestCase
 {
 
-	/** @var Prices */
-	private $prices;
+	private Prices $prices;
 
 
 	public function setUp()
