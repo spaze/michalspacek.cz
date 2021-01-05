@@ -57,7 +57,7 @@ class Reviews
 			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
 
 		if ($limit !== null) {
-			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
+			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
 		}
 
 		return $this->format($this->database->fetchAll($query, $id, $id));

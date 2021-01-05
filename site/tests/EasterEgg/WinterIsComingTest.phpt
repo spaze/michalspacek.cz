@@ -5,7 +5,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
-use Nette\Application\IResponse;
+use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
@@ -48,7 +48,7 @@ class WinterIsComingTest extends TestCase
 			}
 
 
-			public function sendResponse(IResponse $response): void
+			public function sendResponse(Response $response): void
 			{
 				$this->resultObject->response = $response;
 			}

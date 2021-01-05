@@ -5,10 +5,10 @@ namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Http\SecurityHeaders;
 use Nette\Application\Application;
-use Nette\Application\IResponse as ApplicationIResponse;
 use Nette\Application\Request;
+use Nette\Application\Response;
 use Nette\Application\UI\Presenter;
-use Nette\Configurator;
+use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
@@ -98,7 +98,7 @@ class Bootstrap
 			$action = $request->getParameter(Presenter::ACTION_KEY) ?? Presenter::DEFAULT_ACTION;
 			$this->securityHeaders->setCsp($request->getPresenterName(), $action);
 		};
-		$application->onResponse[] = function (Application $sender, ApplicationIResponse $request): void {
+		$application->onResponse[] = function (Application $sender, Response $response): void {
 			$this->securityHeaders->sendHeaders();
 		};
 		$application->run();

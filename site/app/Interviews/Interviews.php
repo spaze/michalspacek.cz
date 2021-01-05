@@ -45,7 +45,7 @@ class Interviews
 			ORDER BY date DESC';
 
 		if ($limit !== null) {
-			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
+			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
 		}
 
 		$result = $this->database->fetchAll($query);

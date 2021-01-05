@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Templating;
 use MichalSpacekCz\Application\Theme;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Template;
-use Nette\Bridges\ApplicationLatte\ILatteFactory;
+use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Bridges\ApplicationLatte\Template as NetteTemplate;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
 use Nette\Caching\Storage;
@@ -28,7 +28,7 @@ class TemplateFactory extends NetteTemplateFactory
 
 
 	public function __construct(
-		ILatteFactory $latteFactory,
+		LatteFactory $latteFactory,
 		IRequest $httpRequest = null,
 		User $user = null,
 		Storage $cacheStorage = null,

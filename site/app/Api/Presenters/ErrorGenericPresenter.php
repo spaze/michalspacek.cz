@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Api\Presenters;
 
 use MichalSpacekCz\Application\Error;
 use Nette\Application\IPresenter;
-use Nette\Application\IResponse;
+use Nette\Application\Response;
 use Nette\Application\Request;
 
 class ErrorGenericPresenter implements IPresenter
@@ -21,7 +21,7 @@ class ErrorGenericPresenter implements IPresenter
 	}
 
 
-	public function run(Request $request): IResponse
+	public function run(Request $request): Response
 	{
 		return $this->error->response($request);
 	}

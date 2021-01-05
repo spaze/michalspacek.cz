@@ -103,7 +103,7 @@ class Articles
 			ORDER BY published DESC';
 
 		if ($limit !== null) {
-			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
+			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
 		}
 
 		$articles = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale());
@@ -141,7 +141,7 @@ class Articles
 			ORDER BY bp.published DESC';
 
 		if ($limit !== null) {
-			$this->database->getConnection()->getSupplementalDriver()->applyLimit($query, $limit, null);
+			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
 		}
 
 		$articles = $this->database->fetchAll($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale());

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Application;
 
 use Nette\Application\BadRequestException;
 use Nette\Application\Helpers;
-use Nette\Application\IResponse;
+use Nette\Application\Response;
 use Nette\Application\Request;
 use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\Responses\ForwardResponse;
@@ -24,7 +24,7 @@ class Error
 	}
 
 
-	public function response(Request $request): IResponse
+	public function response(Request $request): Response
 	{
 		$e = $request->getParameter('exception');
 
