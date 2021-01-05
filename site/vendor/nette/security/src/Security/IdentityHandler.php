@@ -11,12 +11,11 @@ namespace Nette\Security;
 
 
 /**
- * Restores Identity from storage.
+ * Adjusts identity from/to storage.
  */
-interface IdentityRestorer
+interface IdentityHandler
 {
-	/**
-	 * Refreshes stored identity.
-	 */
-	function restoreIdentity(IIdentity $identity): IIdentity;
+	function sleepIdentity(IIdentity $identity): IIdentity;
+
+	function wakeupIdentity(IIdentity $identity): ?IIdentity;
 }
