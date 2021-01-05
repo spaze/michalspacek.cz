@@ -15,19 +15,10 @@ use Tracy\Debugger;
 class SignPresenter extends BasePresenter
 {
 
-	/**
-	 * @var string
-	 * @persistent
-	 */
-	public $backlink = '';
+	/** @persistent */
+	public string $backlink = '';
 
-	/** @var Manager */
-	protected $authenticator;
-
-	/** @var string[] */
-	private $noReturningUserCheck = [
-		'knockKnock',
-	];
+	private Manager $authenticator;
 
 
 	public function __construct(Manager $authenticator)

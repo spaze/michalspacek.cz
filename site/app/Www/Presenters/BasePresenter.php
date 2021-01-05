@@ -20,17 +20,12 @@ use stdClass;
 abstract class BasePresenter extends Presenter
 {
 
-	/**
-	 * @var Translator
-	 * @inject
-	 */
-	public $translator;
+	/** @inject */
+	public Translator $translator;
 
-	/** @var Manager */
-	protected $authenticator;
+	private Manager $authenticator;
 
-	/** @var LocaleLinkGenerator */
-	private $localeLinkGenerator;
+	private LocaleLinkGenerator $localeLinkGenerator;
 
 	private Theme $theme;
 
