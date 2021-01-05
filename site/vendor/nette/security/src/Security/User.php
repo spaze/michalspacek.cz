@@ -64,10 +64,10 @@ class User
 
 
 	public function __construct(
-		UserStorage $storage = null,
+		IUserStorage $legacyStorage = null,
 		IAuthenticator $authenticator = null,
 		Authorizator $authorizator = null,
-		IUserStorage $legacyStorage = null
+		UserStorage $storage = null
 	) {
 		$this->storage = $storage ?? $legacyStorage; // back compatibility
 		if (!$this->storage) {
@@ -98,19 +98,25 @@ class User
 	public function login($user, string $password = null): void
 	{
 		$this->logout(true);
-		if (!$user instanceof IIdentity) {
+		if ($user instanceof IIdentity) {
+			$this->identity = $user;
+		} else {
 			$authenticator = $this->getAuthenticator();
-			$user = $authenticator instanceof Authenticator
+			$this->identity = $authenticator instanceof Authenticator
 				? $authenticator->authenticate($user, $password)
 				: $authenticator->authenticate(func_get_args());
 		}
+
+		$id = $this->authenticator instanceof IdentityHandler
+			? $this->authenticator->sleepIdentity($this->identity)
+			: $this->identity;
 		if ($this->storage instanceof UserStorage) {
-			$this->storage->saveAuthentication($user);
+			$this->storage->saveAuthentication($id);
 		} else {
-			$this->storage->setIdentity($user);
+			$this->storage->setIdentity($id);
 			$this->storage->setAuthenticated(true);
 		}
-		$this->identity = $user;
+
 		$this->authenticated = true;
 		$this->logoutReason = null;
 		$this->onLoggedIn($this);
@@ -126,6 +132,9 @@ class User
 			$this->onLoggedOut($this);
 		}
 
+		$this->authenticated = false;
+		$this->identity = $clearIdentity ? null : $this->identity;
+
 		if ($this->storage instanceof UserStorage) {
 			$this->storage->clearAuthentication($clearIdentity);
 		} else {
@@ -135,9 +144,6 @@ class User
 			}
 			$this->logoutReason = self::MANUAL;
 		}
-
-		$this->authenticated = false;
-		$this->identity = $clearIdentity ? null : $this->identity;
 	}
 
 
@@ -168,19 +174,21 @@ class User
 	private function getStoredData(): void
 	{
 		if ($this->storage instanceof UserStorage) {
-			(function (bool $state, ?IIdentity $identity, ?int $reason) {
+			(function (bool $state, ?IIdentity $id, ?int $reason) use (&$identity) {
+				$identity = $id;
 				$this->authenticated = $state;
-				$this->identity = $identity;
 				$this->logoutReason = $reason;
 			})(...$this->storage->getState());
 		} else {
+			$identity = $this->storage->getIdentity();
 			$this->authenticated = $this->storage->isAuthenticated();
-			$this->identity = $this->storage->getIdentity();
 			$this->logoutReason = $this->storage->getLogoutReason();
 		}
-		if ($this->authenticator instanceof IdentityRestorer) {
-			$this->identity = $this->authenticator->restoreIdentity($this->identity);
-		}
+
+		$this->identity = $identity && $this->authenticator instanceof IdentityHandler
+			? $this->authenticator->wakeupIdentity($identity)
+			: $identity;
+		$this->authenticated = $this->authenticated && $this->identity;
 	}
 
 
