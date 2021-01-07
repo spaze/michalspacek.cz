@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Contributte\\Translation\\DebuggerTranslator' => $vendorDir . '/contributte/translation/src/compatibility.php',
     'Contributte\\Translation\\LoggerTranslator' => $vendorDir . '/contributte/translation/src/compatibility.php',
     'JakubOnderka\\PhpParallelLint\\Application' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Application.php',
