@@ -100,8 +100,38 @@ class Arrays
 
 
 	/**
+	 * Tests an array for the presence of value.
+	 * @param  mixed  $value
+	 */
+	public static function contains(array $array, $value): bool
+	{
+		return in_array($value, $array, true);
+	}
+
+
+	/**
+	 * Returns the first item from the array or null if array is empty.
+	 * @return mixed
+	 */
+	public static function first(array $array)
+	{
+		return count($array) ? reset($array) : null;
+	}
+
+
+	/**
+	 * Returns the last item from the array or null if array is empty.
+	 * @return mixed
+	 */
+	public static function last(array $array)
+	{
+		return count($array) ? end($array) : null;
+	}
+
+
+	/**
 	 * Inserts the contents of the $inserted array into the $array immediately after the $key.
-	 * If $key is null (or does not exist), it is inserted at the end.
+	 * If $key is null (or does not exist), it is inserted at the beginning.
 	 * @param  string|int|null  $key
 	 */
 	public static function insertBefore(array &$array, $key, array $inserted): void
@@ -115,7 +145,7 @@ class Arrays
 
 	/**
 	 * Inserts the contents of the $inserted array into the $array before the $key.
-	 * If $key is null (or does not exist), it is inserted at the beginning.
+	 * If $key is null (or does not exist), it is inserted at the end.
 	 * @param  string|int|null  $key
 	 */
 	public static function insertAfter(array &$array, $key, array $inserted): void
@@ -280,7 +310,7 @@ class Arrays
 	 * Tests whether at least one element in the array passes the test implemented by the
 	 * provided callback with signature `function ($value, $key, array $array): bool`.
 	 */
-	public static function some(array $array, callable $callback): bool
+	public static function some(iterable $array, callable $callback): bool
 	{
 		foreach ($array as $k => $v) {
 			if ($callback($v, $k, $array)) {
@@ -295,7 +325,7 @@ class Arrays
 	 * Tests whether all elements in the array pass the test implemented by the provided function,
 	 * which has the signature `function ($value, $key, array $array): bool`.
 	 */
-	public static function every(array $array, callable $callback): bool
+	public static function every(iterable $array, callable $callback): bool
 	{
 		foreach ($array as $k => $v) {
 			if (!$callback($v, $k, $array)) {
@@ -310,7 +340,7 @@ class Arrays
 	 * Calls $callback on all elements in the array and returns the array of return values.
 	 * The callback has the signature `function ($value, $key, array $array): bool`.
 	 */
-	public static function map(array $array, callable $callback): array
+	public static function map(iterable $array, callable $callback): array
 	{
 		$res = [];
 		foreach ($array as $k => $v) {
@@ -321,11 +351,39 @@ class Arrays
 
 
 	/**
+	 * Invokes all callbacks and returns array of results.
+	 * @param  callable[]  $callbacks
+	 */
+	public static function invoke(iterable $callbacks, ...$args): array
+	{
+		$res = [];
+		foreach ($callbacks as $k => $cb) {
+			$res[$k] = $cb(...$args);
+		}
+		return $res;
+	}
+
+
+	/**
+	 * Invokes method on every object in an array and returns array of results.
+	 * @param  object[]  $objects
+	 */
+	public static function invokeMethod(iterable $objects, string $method, ...$args): array
+	{
+		$res = [];
+		foreach ($objects as $k => $obj) {
+			$res[$k] = $obj->$method(...$args);
+		}
+		return $res;
+	}
+
+
+	/**
 	 * Copies the elements of the $array array to the $object object and then returns it.
 	 * @param  object  $object
 	 * @return object
 	 */
-	public static function toObject(array $array, $object)
+	public static function toObject(iterable $array, $object)
 	{
 		foreach ($array as $k => $v) {
 			$object->$k = $v;
