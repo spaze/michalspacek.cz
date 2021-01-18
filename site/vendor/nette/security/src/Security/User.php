@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Security;
 
 use Nette;
+use Nette\Utils\Arrays;
 
 
 /**
@@ -39,10 +40,10 @@ class User
 	public $authenticatedRole = 'authenticated';
 
 	/** @var callable[]  function (User $sender): void; Occurs when the user is successfully logged in */
-	public $onLoggedIn;
+	public $onLoggedIn = [];
 
 	/** @var callable[]  function (User $sender): void; Occurs when the user is logged out */
-	public $onLoggedOut;
+	public $onLoggedOut = [];
 
 	/** @var UserStorage|IUserStorage  Session storage for current user */
 	private $storage;
@@ -103,7 +104,7 @@ class User
 		} else {
 			$authenticator = $this->getAuthenticator();
 			$this->identity = $authenticator instanceof Authenticator
-				? $authenticator->authenticate($user, $password)
+				? $authenticator->authenticate(...func_get_args())
 				: $authenticator->authenticate(func_get_args());
 		}
 
@@ -119,7 +120,7 @@ class User
 
 		$this->authenticated = true;
 		$this->logoutReason = null;
-		$this->onLoggedIn($this);
+		Arrays::invoke($this->onLoggedIn, $this);
 	}
 
 
@@ -128,12 +129,7 @@ class User
 	 */
 	final public function logout(bool $clearIdentity = false): void
 	{
-		if ($this->isLoggedIn()) {
-			$this->onLoggedOut($this);
-		}
-
-		$this->authenticated = false;
-		$this->identity = $clearIdentity ? null : $this->identity;
+		$logged = $this->isLoggedIn();
 
 		if ($this->storage instanceof UserStorage) {
 			$this->storage->clearAuthentication($clearIdentity);
@@ -142,8 +138,14 @@ class User
 			if ($clearIdentity) {
 				$this->storage->setIdentity(null);
 			}
-			$this->logoutReason = self::MANUAL;
 		}
+
+		$this->authenticated = false;
+		$this->logoutReason = self::MANUAL;
+		if ($logged) {
+			Arrays::invoke($this->onLoggedOut, $this);
+		}
+		$this->identity = $clearIdentity ? null : $this->identity;
 	}
 
 
@@ -311,7 +313,12 @@ class User
 	 */
 	final public function isInRole(string $role): bool
 	{
-		return in_array($role, $this->getRoles(), true);
+		foreach ($this->getRoles() as $r) {
+			if ($role === ($r instanceof Role ? $r->getRoleId() : $r)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 

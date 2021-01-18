@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'd699d01b70bd314aa3df72974e7e0105f5aa4b6d',
+    'reference' => '93ebfdfaa10909797c0c83ca7aa0b2748bf841dc',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -233,12 +233,12 @@ private static $installed = array (
     ),
     'nette/security' => 
     array (
-      'pretty_version' => 'v3.1.2',
-      'version' => '3.1.2.0',
+      'pretty_version' => 'v3.1.3',
+      'version' => '3.1.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bce278f5e981ad8f421de0c04e5424c5d23731ac',
+      'reference' => '817ee98aad1f122f8f40b728c35e634086e1093d',
     ),
     'nette/tester' => 
     array (
@@ -337,12 +337,12 @@ private static $installed = array (
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.67',
-      'version' => '0.12.67.0',
+      'pretty_version' => '0.12.68',
+      'version' => '0.12.68.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ced7a5d9c5dba908c1c00cea3f1d4ad74da71b86',
+      'reference' => 'ddbe01af0706ee094c3f1ce9730b35aebb508d3d',
     ),
     'phpstan/phpstan-nette' => 
     array (
@@ -361,7 +361,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '0f7a0af0970ff222b7c4212e2417580e0e05b257',
+      'reference' => '8925516274a93151a553e6e30703dff0703a36e4',
     ),
     'slevomat/coding-standard' => 
     array (
@@ -415,7 +415,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'd699d01b70bd314aa3df72974e7e0105f5aa4b6d',
+      'reference' => '93ebfdfaa10909797c0c83ca7aa0b2748bf841dc',
     ),
     'spaze/mysql-session-handler' => 
     array (
