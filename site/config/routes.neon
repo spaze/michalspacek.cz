@@ -96,3 +96,7 @@ parameters:
 					mask:
 						cs_CZ: tema
 						en_US: tags
+				Pgp:
+					mask:
+						cs_CZ: pgp
+						en_US: pgp

@@ -28,6 +28,7 @@ title:
 	photo: "Foto"
 	projects: Projekty
 	blog: Blog
+	encryptedmessages: "Šifrované zprávy"
 	admin:
 		talkslides: "Slajdy z přednášky %s (%s)"
 header:
@@ -135,7 +136,8 @@ contact:
 	skypename: spazef0rze
 	billingaddress: "České Vrbné 2315, České Budějovice 37011"
 	vatpayer: plátce DPH
-	encryptedmessages: Šifrované zprávy
+	encryptedmessages: "Pro zabezpečenou komunikaci používám \"Signal\":[%s], vyjímečně mi můžete \"zašifrovanou zprávu e-mailem\":[%s]."
+pgp:
 	mypgpkey: Můj PGP klíč
 	newmessage: Nová zpráva
 	copied: "Zašifrovaný text je nyní ve schránce, vložte ho do e-mailu a pošlete mi ho."

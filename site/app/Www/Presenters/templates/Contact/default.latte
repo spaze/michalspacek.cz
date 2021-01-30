@@ -4,17 +4,16 @@
 
 {define #content}
 <h3>Michal Špaček</h3>
-<p id="contact">
+<p>
 	<strong>{_messages.label.email}</strong>: <a href="mailto:mail&#x40;michalspacek.cz">mail&#x40;michalspacek.cz</a><br>
 	<strong>{_messages.label.skype}</strong>: <a href="skype:spazef0rze?chat">{_messages.contact.skypename}</a>
 </p>
-<p id="social">
+<p>
 	<strong>{_messages.label.twitter}</strong>: <a href="https://twitter.com/spazef0rze">@spazef0rze</a><br>
 	<strong>{_messages.label.linkedin}</strong>: <a href="https://www.linkedin.com/in/spaze">Michal Špaček</a><br>
 	<strong>{_messages.label.facebook}</strong>: <a href="https://www.facebook.com/spaze">spaze</a><br>
 	<strong>{_messages.label.github}</strong>: <a href="https://github.com/spaze">spaze</a>
 </p>
-<div class="clear"></div>
 <p>
 	<strong>{_messages.label.billingaddress}</strong>: {_messages.contact.billingaddress}<br>
 	<strong>{_messages.label.companyid}</strong>: 72183373<br>
@@ -25,33 +24,5 @@
 	<strong>{_messages.label.iban}</strong>: CZ4620100000002900608109
 	<strong>{_messages.label.swift}</strong>: FIOBCZPPXXX<br>
 </p>
-<h3>{_messages.contact.encryptedmessages}</h3>
-<p>
-	{_messages.contact.howto.1|format:'mail@michalspacek.cz':'mail@michalspacek.cz'}
-	{_messages.contact.howto.2}
-	{_messages.contact.howto.3}
-</p>
-<p>
-	<textarea id="message" title="{_messages.contact.entermessagehere}"></textarea><br>
-	<button
-		id="encrypt"
-		data-loading="{_messages.contact.loading}"
-		data-encrypt="{_messages.label.encrypt}"
-		data-copy="{_messages.label.copy}"
-		data-lib="{resourceurl openpgp}"
-		data-integrity="{resourcehash openpgp}"
-		data-unsupported="{_messages.contact.unsupported}"
-		disabled
-		title="{_messages.contact.requirements}"
-	>{_messages.label.encrypt}</button>
-	<small id="copied">{_messages.contact.copied} <span class="button">{_messages.contact.newmessage}</span></small>
-	<small id="copythis">{_messages.contact.copythis} <span class="button">{_messages.contact.newmessage}</span></small>
-</p>
-<h3 id="pgp">{_messages.contact.mypgpkey}</h3>
-<p>
-	<strong>{_messages.label.openpgpkeyid}</strong>: <a href="https://keyserver.ubuntu.com/pks/lookup?search=0xB64BDD6E464AB529&amp;op=index">0xB64BDD6E464AB529</a> (<a href="{=$keyFile|staticUrl}">{_messages.label.download}</a>)<br>
-	<strong>{_messages.label.fingerprint}</strong>: 4BD4 C403 AF2F 9FCC B151 FE61 B64B DD6E 464A B529<br>
-	<strong>{_messages.label.keybase}</strong>: <a href="https://keybase.io/spaze">spaze</a>
-</p>
-<pre id="pubkey">{$key}</pre>
+<p>{_messages.contact.encryptedmessages|format:'https://signal.org/cs/':'link:Www:Pgp:'}</p>
 {/define}

@@ -2,10 +2,7 @@ services:
 	# www module
 	- MichalSpacekCz\Www\Presenters\ArticlesPresenter
 	- MichalSpacekCz\Www\Presenters\CompanyTrainingsPresenter
-	contactPresenter:
-		factory: MichalSpacekCz\Www\Presenters\ContactPresenter
-		setup:
-		- setLocationRoot(%domain.locationRoot%)
+	- MichalSpacekCz\Www\Presenters\ContactPresenter
 	- MichalSpacekCz\Www\Presenters\ErrorPresenter
 	- MichalSpacekCz\Www\Presenters\ErrorGenericPresenter
 	- MichalSpacekCz\Www\Presenters\ExportsPresenter
@@ -13,6 +10,10 @@ services:
 	- MichalSpacekCz\Www\Presenters\ForbiddenPresenter
 	- MichalSpacekCz\Www\Presenters\HomepagePresenter
 	- MichalSpacekCz\Www\Presenters\InterviewsPresenter
+	pgpPresenter:
+		factory: MichalSpacekCz\Www\Presenters\PgpPresenter
+		setup:
+		- setLocationRoot(%domain.locationRoot%)
 	- MichalSpacekCz\Www\Presenters\PhotoPresenter
 	- MichalSpacekCz\Www\Presenters\PostPresenter
 	- MichalSpacekCz\Www\Presenters\RedirectPresenter

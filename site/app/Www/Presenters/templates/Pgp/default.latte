@@ -1,0 +1,34 @@
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+{/define}
+
+{define #content}
+<p>
+	{_messages.pgp.howto.1|format:'mail@michalspacek.cz':'mail@michalspacek.cz'}
+	{_messages.pgp.howto.2}
+	{_messages.pgp.howto.3}
+</p>
+<p>
+	<textarea id="message" title="{_messages.pgp.entermessagehere}"></textarea><br>
+	<button
+		id="encrypt"
+		data-loading="{_messages.pgp.loading}"
+		data-encrypt="{_messages.label.encrypt}"
+		data-copy="{_messages.label.copy}"
+		data-lib="{resourceurl openpgp}"
+		data-integrity="{resourcehash openpgp}"
+		data-unsupported="{_messages.pgp.unsupported}"
+		disabled
+		title="{_messages.pgp.requirements}"
+	>{_messages.label.encrypt}</button>
+	<small id="copied">{_messages.pgp.copied} <span class="button">{_messages.pgp.newmessage}</span></small>
+	<small id="copythis">{_messages.pgp.copythis} <span class="button">{_messages.pgp.newmessage}</span></small>
+</p>
+<h3 id="pgp">{_messages.pgp.mypgpkey}</h3>
+<p>
+	<strong>{_messages.label.openpgpkeyid}</strong>: <a href="https://keyserver.ubuntu.com/pks/lookup?search=0xB64BDD6E464AB529&amp;op=index">0xB64BDD6E464AB529</a> (<a href="{=$keyFile|staticUrl}">{_messages.label.download}</a>)<br>
+	<strong>{_messages.label.fingerprint}</strong>: 4BD4 C403 AF2F 9FCC B151 FE61 B64B DD6E 464A B529<br>
+	<strong>{_messages.label.keybase}</strong>: <a href="https://keybase.io/spaze">spaze</a>
+</p>
+<pre id="pubkey">{$key}</pre>
+{/define}

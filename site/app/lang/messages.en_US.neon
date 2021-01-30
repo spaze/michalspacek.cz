@@ -28,6 +28,7 @@ title:
 	photo: "Photo"
 	projects: Projects
 	blog: Blog
+	encryptedmessages: "Encrypted messages"
 	admin:
 		talkslides: "Slides from %s (%s)"
 header:
@@ -135,7 +136,8 @@ contact:
 	skypename: spazef0rze
 	billingaddress: "České Vrbné 2315, České Budějovice 37011, Czech Republic"
 	vatpayer: VAT payer
-	encryptedmessages: Encrypted messages
+	encryptedmessages: "I use \"Signal\":[%s] for secure comunication, you can also send me an \"encrypted message by email\":[%s]."
+pgp:
 	mypgpkey: My PGP key
 	newmessage: New message
 	copied: "Encrypted message is now in the clipboard, paste it to an email and send it to me."
