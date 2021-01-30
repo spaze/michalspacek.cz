@@ -145,7 +145,7 @@ pgp:
 	howto:
 		1: "Do formuláře níže napište text, který mi chcete poslat, zašifrujte ho, zkopírujte a vložte do e-mailové zprávy a tu mi pošlete na \"%s\":[%s]."
 		2: "Zpráva je šifrována ve vašem prohlížeči a přenos takového textu je bezpečný, mohu ho rozšifrovat pouze já. Zkontrolujte že se stránka načetla po HTTPS a prohlížeč nehlásí žádné chyby certifikátu."
-		3: "Pamatujte, že pokud nemám váš veřejný PGP klíč, tak vám nemohu bezpečným způsobem odpovědět."
+		3: "Pamatujte, že pokud mi nepošlete také váš veřejný PGP klíč, tak vám nemohu bezpečným způsobem odpovědět."
 	loading: "Nahrávám, prosím čekejte"
 	entermessagehere: "Sem napište zprávu"
 	requirements: "Vyžaduje JavaScript"

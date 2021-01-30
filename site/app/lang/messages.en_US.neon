@@ -145,7 +145,7 @@ pgp:
 	howto:
 		1: "Enter your message to the form below, encrypt it, copy and paste it to en e-mail message, and send it to \"%s\":[%s]."
 		2: "Your message is encrypted in your browser, transmission of such text is secure, only me can decrypt it. Check that the page was loaded over HTTPS and there were no certificate errors."
-		3: "Please remember that I can't securely reply back if I don't have your public PGP key."
+		3: "Please remember that I can't securely reply back if you don't send me your public PGP key."
 	loading: "Loading, please wait"
 	entermessagehere: "Enter your message here"
 	requirements: "Requires JavaScript"
