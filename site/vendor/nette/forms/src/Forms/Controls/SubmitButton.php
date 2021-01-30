@@ -17,13 +17,13 @@ use Nette;
  *
  * @property-read bool $submittedBy
  */
-class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
+class SubmitButton extends Button implements Nette\Forms\SubmitterControl
 {
-	/** @var callable[]&(callable(SubmitButton): void)[]; Occurs when the button is clicked and form is successfully validated */
-	public $onClick;
+	/** @var callable[]&((callable(Nette\Forms\Form|SubmitButton, array|object): void)|(callable(array|object): void))[]; Occurs when the button is clicked and form is successfully validated */
+	public $onClick = [];
 
 	/** @var callable[]&(callable(SubmitButton): void)[]; Occurs when the button is clicked and form is not validated */
-	public $onInvalidClick;
+	public $onInvalidClick = [];
 
 	/** @var array|null */
 	private $validationScope;
@@ -69,7 +69,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 		} else {
 			$this->validationScope = [];
 			foreach ($scope ?: [] as $control) {
-				if (!$control instanceof Nette\Forms\Container && !$control instanceof Nette\Forms\IControl) {
+				if (!$control instanceof Nette\Forms\Container && !$control instanceof Nette\Forms\Control) {
 					throw new Nette\InvalidArgumentException('Validation scope accepts only Nette\Forms\Container or Nette\Forms\IControl instances.');
 				}
 				$this->validationScope[] = $control;
@@ -93,7 +93,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	 */
 	public function click(): void
 	{
-		$this->onClick($this);
+		Nette\Utils\Arrays::invoke($this->onClick, $this);
 	}
 
 

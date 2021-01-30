@@ -493,7 +493,6 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroIterateWhile(MacroNode $node, PhpWriter $writer): void
 	{
-		$node->validate(null);
 		if (!$node->closest(['foreach'])) {
 			throw new CompileException('Tag ' . $node->getNotation() . ' must be inside {foreach} ... {/foreach}.');
 		}
@@ -506,6 +505,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroEndIterateWhile(MacroNode $node, PhpWriter $writer): void
 	{
+		$node->validate(true);
 		$foreach = $node->closest(['foreach']);
 		$vars = preg_replace('#^.+\s+as\s+(?:(.+)=>)?(.+)$#i', '$1, $2', $foreach->args);
 		$stmt = '

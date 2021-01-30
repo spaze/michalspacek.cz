@@ -100,12 +100,18 @@ class Helpers
 	{
 		$payload = [];
 		foreach ($rules as $rule) {
-			if (!is_string($op = $rule->validator)) {
-				if (!Nette\Utils\Callback::isStatic($op)) {
+			if (!$rule->canExport()) {
+				if ($rule->branch) {
 					continue;
 				}
+				break;
+			}
+
+			$op = $rule->validator;
+			if (!is_string($op)) {
 				$op = Nette\Utils\Callback::toString($op);
 			}
+
 			if ($rule->branch) {
 				$item = [
 					'op' => ($rule->isNegative ? '~' : '') . $op,
@@ -119,7 +125,7 @@ class Helpers
 				}
 			} else {
 				$msg = Validator::formatMessage($rule, false);
-				if ($msg instanceof Nette\Utils\IHtmlString) {
+				if ($msg instanceof Nette\HtmlStringable) {
 					$msg = html_entity_decode(strip_tags((string) $msg), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 				}
 				$item = ['op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => $msg];
@@ -128,12 +134,12 @@ class Helpers
 			if (is_array($rule->arg)) {
 				$item['arg'] = [];
 				foreach ($rule->arg as $key => $value) {
-					$item['arg'][$key] = $value instanceof IControl
+					$item['arg'][$key] = $value instanceof Control
 						? ['control' => $value->getHtmlName()]
 						: $value;
 				}
 			} elseif ($rule->arg !== null) {
-				$item['arg'] = $rule->arg instanceof IControl
+				$item['arg'] = $rule->arg instanceof Control
 					? ['control' => $rule->arg->getHtmlName()]
 					: $rule->arg;
 			}
@@ -168,7 +174,7 @@ class Helpers
 			$res .= ($res === '' && $wrapperEnd === '' ? '' : $wrapper)
 				. $labelTag . $label->attributes() . '>'
 				. $inputTag . $input->attributes() . (Html::$xhtml ? ' />' : '>')
-				. ($caption instanceof Nette\Utils\IHtmlString ? $caption : htmlspecialchars((string) $caption, ENT_NOQUOTES, 'UTF-8'))
+				. ($caption instanceof Nette\HtmlStringable ? $caption : htmlspecialchars((string) $caption, ENT_NOQUOTES, 'UTF-8'))
 				. '</label>'
 				. $wrapperEnd;
 		}

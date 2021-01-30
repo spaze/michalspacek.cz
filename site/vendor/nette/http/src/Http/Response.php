@@ -94,7 +94,7 @@ final class Response implements IResponse
 		} elseif (strcasecmp($name, 'Content-Length') === 0 && ini_get('zlib.output_compression')) {
 			// ignore, PHP bug #44164
 		} else {
-			header($name . ': ' . $value, true, $this->code);
+			header($name . ': ' . $value);
 		}
 		return $this;
 	}
@@ -108,7 +108,7 @@ final class Response implements IResponse
 	public function addHeader(string $name, string $value)
 	{
 		self::checkHeaders();
-		header($name . ': ' . $value, false, $this->code);
+		header($name . ': ' . $value, false);
 		return $this;
 	}
 
@@ -134,6 +134,22 @@ final class Response implements IResponse
 	public function setContentType(string $type, string $charset = null)
 	{
 		$this->setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
+		return $this;
+	}
+
+
+	/**
+	 * Response should be downloaded with 'Save as' dialog.
+	 * @return static
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 */
+	public function sendAsFile(string $fileName)
+	{
+		$this->setHeader(
+			'Content-Disposition',
+			'attachment; filename="' . str_replace('"', '', $fileName) . '"; '
+			. "filename*=utf-8''" . rawurlencode($fileName)
+		);
 		return $this;
 	}
 

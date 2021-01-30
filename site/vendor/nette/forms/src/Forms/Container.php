@@ -26,8 +26,8 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	private const ARRAY = 'array';
 
-	/** @var callable[]&(callable(Container, mixed): void)[]; Occurs when the form is validated */
-	public $onValidate;
+	/** @var callable[]&((callable(Container, array|object|null): void)|(callable(array|object|null): void))[]; Occurs when the form was validated */
+	public $onValidate = [];
 
 	/** @var ControlGroup|null */
 	protected $currentGroup;
@@ -79,7 +79,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 		}
 
 		foreach ($this->getComponents() as $name => $control) {
-			if ($control instanceof IControl) {
+			if ($control instanceof Control) {
 				if (array_key_exists($name, $values)) {
 					$control->setValue($values[$name]);
 
@@ -102,31 +102,50 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Returns the values submitted by the form.
-	 * @param  string|null  $returnType  'array' for array
+	 * @param  string|object|null  $returnType  'array' for array
+	 * @param  Control[]|null  $controls
 	 * @return object|array
 	 */
-	public function getValues($returnType = null)
+	public function getValues($returnType = null, array $controls = null)
 	{
-		$returnType = $returnType
-			? ($returnType === true ? self::ARRAY : $returnType) // back compatibility
-			: ($this->mappedType ?? ArrayHash::class);
+		$form = $this->getForm(false);
+		if ($form && $form->isSubmitted() && !$form->isValid()) {
+			trigger_error(__METHOD__ . '() invoked but the form is not valid.', E_USER_WARNING);
+		}
 
-		$isArray = $returnType === self::ARRAY;
-		$obj = $isArray ? new \stdClass : new $returnType;
+		if ($returnType === self::ARRAY || $returnType === true || $this->mappedType === self::ARRAY) {
+			$returnType = self::ARRAY;
+			$obj = new \stdClass;
+
+		} elseif (is_object($returnType)) {
+			$obj = $returnType;
+
+		} else {
+			$returnType = ($returnType ?? $this->mappedType ?? ArrayHash::class);
+			$obj = new $returnType;
+		}
+
 		$rc = new \ReflectionClass($obj);
-
 		foreach ($this->getComponents() as $name => $control) {
 			$name = (string) $name;
-			if ($control instanceof IControl && !$control->isOmitted()) {
+			if (
+				$control instanceof Control
+				&& !$control->isOmitted()
+				&& ($controls === null || in_array($control, $controls, true))
+			) {
 				$obj->$name = $control->getValue();
+
 			} elseif ($control instanceof self) {
-				$type = $isArray && !$control->mappedType
+				$type = $returnType === self::ARRAY && !$control->mappedType
 					? self::ARRAY
 					: ($rc->hasProperty($name) ? Nette\Utils\Reflection::getPropertyType($rc->getProperty($name)) : null);
-				$obj->$name = $control->getValues($type);
+				$obj->$name = $control->getValues($type, $controls);
 			}
 		}
-		return $isArray ? (array) $obj : $obj;
+
+		return $returnType === self::ARRAY
+			? (array) $obj
+			: $obj;
 	}
 
 
@@ -158,28 +177,30 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Performs the server side validation.
-	 * @param  IControl[]|null  $controls
+	 * @param  Control[]|null  $controls
 	 */
 	public function validate(array $controls = null): void
 	{
-		foreach ($controls === null ? $this->getComponents() : $controls as $control) {
-			if ($control instanceof IControl || $control instanceof self) {
+		foreach ($controls ?? $this->getComponents() as $control) {
+			if ($control instanceof Control || $control instanceof self) {
 				$control->validate();
 			}
 		}
-		if ($this->onValidate !== null) {
-			if (!is_iterable($this->onValidate)) {
-				throw new Nette\UnexpectedValueException('Property Form::$onValidate must be iterable, ' . gettype($this->onValidate) . ' given.');
-			}
-			foreach ($this->onValidate as $handler) {
-				$params = Nette\Utils\Callback::toReflection($handler)->getParameters();
-				$values = isset($params[1])
-					? $this->getValues($params[1]->getType() instanceof \ReflectionNamedType ? $params[1]->getType()->getName() : null)
-					: null;
-				$handler($this, $values);
-			}
-		}
 		$this->validated = true;
+
+		$isValid = !$this->getErrors();
+		foreach ($this->onValidate as $handler) {
+			$params = Nette\Utils\Callback::toReflection($handler)->getParameters();
+			$types = array_map([Nette\Utils\Reflection::class, 'getParameterType'], $params);
+			$handler(
+				!isset($types[0]) || $this instanceof $types[0]
+					? $this
+					: ($isValid ? $this->getValues($types[0]) : null),
+				isset($params[1]) && $isValid
+					? $this->getValues($types[1])
+					: null
+			);
+		}
 	}
 
 
@@ -236,7 +257,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function getControls(): \Iterator
 	{
-		return $this->getComponents(true, IControl::class);
+		return $this->getComponents(true, Control::class);
 	}
 
 
@@ -319,11 +340,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addUpload(string $name, $label = null): Controls\UploadControl
 	{
-		if (func_num_args() > 2) {
-			trigger_error(__METHOD__ . '() parameter $multiple is deprecated, use addMultiUpload()', E_USER_DEPRECATED);
-			$multiple = func_get_arg(2);
-		}
-		return $this[$name] = new Controls\UploadControl($label, $multiple ?? false);
+		return $this[$name] = new Controls\UploadControl($label, false);
 	}
 
 
@@ -428,9 +445,16 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  string  $src  URI of the image
 	 * @param  string  $alt  alternate text for the image
 	 */
-	public function addImage(string $name, string $src = null, string $alt = null): Controls\ImageButton
+	public function addImageButton(string $name, string $src = null, string $alt = null): Controls\ImageButton
 	{
 		return $this[$name] = new Controls\ImageButton($src, $alt);
+	}
+
+
+	/** @deprecated  use addImageButton() */
+	public function addImage(): Controls\ImageButton
+	{
+		return $this->addImageButton(...func_get_args());
 	}
 
 

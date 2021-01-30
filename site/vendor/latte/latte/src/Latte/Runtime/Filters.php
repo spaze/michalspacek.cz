@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace Latte\Runtime;
 
 use Latte;
-use Latte\CompileException;
 use Latte\Engine;
+use Latte\RuntimeException;
 
 
 /**
@@ -203,7 +203,7 @@ class Filters
 	 */
 	public static function stripHtml(FilterInfo $info, $s): string
 	{
-		$info->validate(['html', 'xhtml', 'htmlAttr', 'xhtmlAttr', 'xml', 'xmlAttr'], __FUNCTION__);
+		$info->validate([null, 'html', 'xhtml', 'htmlAttr', 'xhtmlAttr', 'xml', 'xmlAttr'], __FUNCTION__);
 		$info->contentType = Engine::CONTENT_TEXT;
 		return html_entity_decode(strip_tags((string) $s), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 	}
@@ -216,6 +216,7 @@ class Filters
 	 */
 	public static function stripTags(FilterInfo $info, $s): string
 	{
+		$info->contentType = $info->contentType ?? 'html';
 		$info->validate(['html', 'xhtml', 'htmlAttr', 'xhtmlAttr', 'xml', 'xmlAttr'], __FUNCTION__);
 		return strip_tags((string) $s);
 	}
@@ -226,14 +227,14 @@ class Filters
 	 */
 	public static function convertTo(FilterInfo $info, string $dest, $s): string
 	{
-		$source = $info->contentType;
+		$source = $info->contentType ?: Engine::CONTENT_TEXT;
 		if ($source === $dest) {
 			return $s;
 		} elseif ($conv = self::getConvertor($source, $dest)) {
 			$info->contentType = $dest;
 			return $conv($s);
 		} else {
-			throw new CompileException('Filters: unable to convert content type ' . strtoupper($source) . ' to ' . strtoupper($dest));
+			throw new RuntimeException('Filters: unable to convert content type ' . strtoupper($source) . ' to ' . strtoupper($dest));
 			return $s;
 		}
 	}

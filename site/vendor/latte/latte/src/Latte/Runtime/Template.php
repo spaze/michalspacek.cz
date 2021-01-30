@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Latte\Runtime;
 
 use Latte;
-use Latte\CompileException;
 use Latte\Engine;
 use Latte\Policy;
 
@@ -332,7 +331,7 @@ class Template
 			$block->contentType = $contentType;
 
 		} elseif ($block->contentType !== $contentType) {
-			throw new CompileException(sprintf(
+			throw new Latte\RuntimeException(sprintf(
 				"Overridden block $name with content type %s by incompatible type %s.",
 				strtoupper($contentType),
 				strtoupper($block->contentType)
@@ -358,7 +357,7 @@ class Template
 			echo $filter($this->capture($function));
 
 		} else {
-			throw new CompileException(sprintf(
+			throw new Latte\RuntimeException(sprintf(
 				"Including $name with content type %s into incompatible type %s.",
 				strtoupper($contentType),
 				strtoupper($mod)

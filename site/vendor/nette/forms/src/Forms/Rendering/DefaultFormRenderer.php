@@ -10,14 +10,14 @@ declare(strict_types=1);
 namespace Nette\Forms\Rendering;
 
 use Nette;
+use Nette\HtmlStringable;
 use Nette\Utils\Html;
-use Nette\Utils\IHtmlString;
 
 
 /**
  * Converts a Form into the HTML output.
  */
-class DefaultFormRenderer implements Nette\Forms\IFormRenderer
+class DefaultFormRenderer implements Nette\Forms\FormRenderer
 {
 	use Nette\SmartObject;
 
@@ -213,7 +213,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 	/**
 	 * Renders validation errors (per form or per control).
 	 */
-	public function renderErrors(Nette\Forms\IControl $control = null, bool $own = true): string
+	public function renderErrors(Nette\Forms\Control $control = null, bool $own = true): string
 	{
 		$errors = $control
 			? $control->getErrors()
@@ -232,7 +232,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 
 		foreach ($errors as $error) {
 			$item = clone $item;
-			if ($error instanceof IHtmlString) {
+			if ($error instanceof HtmlStringable) {
 				$item->addHtml($error);
 			} else {
 				$item->setText($error);
@@ -274,7 +274,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 			$s .= "\n" . $container->startTag();
 
 			$text = $group->getOption('label');
-			if ($text instanceof IHtmlString) {
+			if ($text instanceof HtmlStringable) {
 				$s .= $this->getWrapper('group label')->addHtml($text);
 
 			} elseif ($text != null) { // intentionally ==
@@ -285,7 +285,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 			}
 
 			$text = $group->getOption('description');
-			if ($text instanceof IHtmlString) {
+			if ($text instanceof HtmlStringable) {
 				$s .= $text;
 
 			} elseif ($text != null) { // intentionally ==
@@ -361,7 +361,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 	/**
 	 * Renders single visual row.
 	 */
-	public function renderPair(Nette\Forms\IControl $control): string
+	public function renderPair(Nette\Forms\Control $control): string
 	{
 		$pair = $this->getWrapper('pair container');
 		$pair->addHtml($this->renderLabel($control));
@@ -379,17 +379,17 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 
 	/**
 	 * Renders single visual row of multiple controls.
-	 * @param  Nette\Forms\IControl[]  $controls
+	 * @param  Nette\Forms\Control[]  $controls
 	 */
 	public function renderPairMulti(array $controls): string
 	{
 		$s = [];
 		foreach ($controls as $control) {
-			if (!$control instanceof Nette\Forms\IControl) {
+			if (!$control instanceof Nette\Forms\Control) {
 				throw new Nette\InvalidArgumentException('Argument must be array of Nette\Forms\IControl instances.');
 			}
 			$description = $control->getOption('description');
-			if ($description instanceof IHtmlString) {
+			if ($description instanceof HtmlStringable) {
 				$description = ' ' . $description;
 
 			} elseif ($description != null) { // intentionally ==
@@ -422,7 +422,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 	/**
 	 * Renders 'label' part of visual row of controls.
 	 */
-	public function renderLabel(Nette\Forms\IControl $control): Html
+	public function renderLabel(Nette\Forms\Control $control): Html
 	{
 		$suffix = $this->getValue('label suffix') . ($control->isRequired() ? $this->getValue('label requiredsuffix') : '');
 		$label = $control->getLabel();
@@ -441,7 +441,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 	/**
 	 * Renders 'control' part of visual row of controls.
 	 */
-	public function renderControl(Nette\Forms\IControl $control): Html
+	public function renderControl(Nette\Forms\Control $control): Html
 	{
 		$body = $this->getWrapper('control container');
 		if ($this->counter % 2) {
@@ -453,7 +453,7 @@ class DefaultFormRenderer implements Nette\Forms\IFormRenderer
 		}
 
 		$description = $control->getOption('description');
-		if ($description instanceof IHtmlString) {
+		if ($description instanceof HtmlStringable) {
 			$description = ' ' . $description;
 
 		} elseif ($description != null) { // intentionally ==

@@ -17,8 +17,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.10.0';
-	public const VERSION_ID = 21000;
+	public const VERSION = '2.10.1';
+	public const VERSION_ID = 21001;
 
 	/** Content types */
 	public const
@@ -288,7 +288,7 @@ class Engine
 
 
 	/**
-	 * Registers run-time filter loader.
+	 * Registers filter loader.
 	 * @return static
 	 */
 	public function addFilterLoader(callable $callback)

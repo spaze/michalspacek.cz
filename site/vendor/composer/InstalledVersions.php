@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '157fcf2d339935ada77f2f8935fb4393729fc6be',
+    'reference' => 'bde5ec890e46cdd35826fb239c436a120943df29',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -89,12 +89,12 @@ private static $installed = array (
     ),
     'latte/latte' => 
     array (
-      'pretty_version' => 'v2.10.0',
-      'version' => '2.10.0.0',
+      'pretty_version' => 'v2.10.1',
+      'version' => '2.10.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3aade26bbd998b346d1e9586811b7195baa24342',
+      'reference' => '0787008cc4aecb0d741a143081cb5038b4a4fd43',
     ),
     'nette/application' => 
     array (
@@ -161,21 +161,21 @@ private static $installed = array (
     ),
     'nette/forms' => 
     array (
-      'pretty_version' => 'v3.0.7',
-      'version' => '3.0.7.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'cfe069b5880e07930e92058b774f22e491aa7b0e',
-    ),
-    'nette/http' => 
-    array (
       'pretty_version' => 'v3.1.0',
       'version' => '3.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'e791a0069c33f031f6a8e3f766e6c8155219140a',
+      'reference' => '2fce9b9164166254babe042cd7d11214339fe3c9',
+    ),
+    'nette/http' => 
+    array (
+      'pretty_version' => 'v3.1.1',
+      'version' => '3.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c903d0f0b793ed2045a442f338e756e1d3954c22',
     ),
     'nette/mail' => 
     array (
@@ -337,12 +337,12 @@ private static $installed = array (
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.69',
-      'version' => '0.12.69.0',
+      'pretty_version' => '0.12.70',
+      'version' => '0.12.70.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8f436ea35241da33487fd0d38b4bc3e6dfe30ea8',
+      'reference' => '07f0ef37f5f876e8cee44cc8ea0ec3fe80d499ee',
     ),
     'phpstan/phpstan-nette' => 
     array (
@@ -361,7 +361,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'db043e108edc5065662fec040aedea5bf30f8a12',
+      'reference' => '7263d7d73a4de68760e05f3eda5eee73b59f0f6d',
     ),
     'slevomat/coding-standard' => 
     array (
@@ -415,7 +415,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '157fcf2d339935ada77f2f8935fb4393729fc6be',
+      'reference' => 'bde5ec890e46cdd35826fb239c436a120943df29',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -482,12 +482,12 @@ private static $installed = array (
     ),
     'symfony/config' => 
     array (
-      'pretty_version' => 'v5.2.1',
-      'version' => '5.2.1.0',
+      'pretty_version' => 'v5.2.2',
+      'version' => '5.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd0a82d965296083fe463d655a3644cbe49cbaa80',
+      'reference' => '50e0e1314a3b2609d32b6a5a0d0fb5342494c4ab',
     ),
     'symfony/deprecation-contracts' => 
     array (
@@ -500,12 +500,12 @@ private static $installed = array (
     ),
     'symfony/filesystem' => 
     array (
-      'pretty_version' => 'v5.2.1',
-      'version' => '5.2.1.0',
+      'pretty_version' => 'v5.2.2',
+      'version' => '5.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'fa8f8cab6b65e2d99a118e082935344c5ba8c60d',
+      'reference' => '262d033b57c73e8b59cd6e68a45c528318b15038',
     ),
     'symfony/polyfill-ctype' => 
     array (
@@ -539,12 +539,12 @@ private static $installed = array (
     ),
     'symfony/translation' => 
     array (
-      'pretty_version' => 'v5.2.1',
-      'version' => '5.2.1.0',
+      'pretty_version' => 'v5.2.2',
+      'version' => '5.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a04209ba0d1391c828e5b2373181dac63c52ee70',
+      'reference' => 'c021864d4354ee55160ddcfd31dc477a1bc77949',
     ),
     'symfony/translation-contracts' => 
     array (
