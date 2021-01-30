@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Bootstrap;
 
 use Composer\Autoload\ClassLoader;
+use Latte;
 use Nette;
 use Nette\DI;
 use Tracy;
@@ -25,7 +26,7 @@ class Configurator
 	public const COOKIE_SECRET = 'nette-debug';
 
 	/** @var callable[]  function (Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
-	public $onCompile;
+	public $onCompile = [];
 
 	/** @var array */
 	public $defaultExtensions = [
@@ -195,6 +196,9 @@ class Configurator
 		Tracy\Debugger::$strictMode = true;
 		Tracy\Debugger::enable(!$this->staticParameters['debugMode'], $logDirectory, $email);
 		Tracy\Bridges\Nette\Bridge::initialize();
+		if (class_exists(Latte\Bridges\Tracy\BlueScreenPanel::class)) {
+			Latte\Bridges\Tracy\BlueScreenPanel::initialize();
+		}
 	}
 
 
@@ -309,7 +313,7 @@ class Configurator
 			}
 		}
 
-		$this->onCompile($this, $compiler);
+		Nette\Utils\Arrays::invoke($this->onCompile, $this, $compiler);
 	}
 
 

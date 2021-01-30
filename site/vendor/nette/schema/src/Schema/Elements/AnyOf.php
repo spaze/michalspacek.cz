@@ -29,7 +29,17 @@ final class AnyOf implements Schema
 	 */
 	public function __construct(...$set)
 	{
+		if (!$set) {
+			throw new Nette\InvalidStateException('The enumeration must not be empty.');
+		}
 		$this->set = $set;
+	}
+
+
+	public function firstIsDefault(): self
+	{
+		$this->default = $this->set[0];
+		return $this;
 	}
 
 
@@ -97,7 +107,7 @@ final class AnyOf implements Schema
 			$context->errors = array_merge($context->errors, $innerErrors);
 		} else {
 			$context->addError(
-				'The item %path% expects to be %expected%, %value% given.',
+				'The %label% %path% expects to be %expected%, %value% given.',
 				Nette\Schema\Message::TYPE_MISMATCH,
 				[
 					'value' => $value,

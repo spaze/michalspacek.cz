@@ -231,6 +231,8 @@ class Template
 			$this->blocks[self::LAYER_SNIPPET] += $referred->blocks[self::LAYER_SNIPPET];
 			$referred->blocks[self::LAYER_SNIPPET] = &$this->blocks[self::LAYER_SNIPPET];
 		}
+
+		($this->engine->probe)($referred);
 		return $referred;
 	}
 
@@ -329,11 +331,11 @@ class Template
 			$block->contentType = $contentType;
 
 		} elseif ($block->contentType !== $contentType) {
-			trigger_error(sprintf(
+			throw new Latte\RuntimeException(sprintf(
 				"Overridden block $name with content type %s by incompatible type %s.",
 				strtoupper($contentType),
 				strtoupper($block->contentType)
-			), E_USER_WARNING);
+			));
 		}
 
 		$block->functions = array_merge($block->functions, $functions);
@@ -355,11 +357,11 @@ class Template
 			echo $filter($this->capture($function));
 
 		} else {
-			trigger_error(sprintf(
+			throw new Latte\RuntimeException(sprintf(
 				"Including $name with content type %s into incompatible type %s.",
 				strtoupper($contentType),
 				strtoupper($mod)
-			), E_USER_WARNING);
+			));
 		}
 	}
 
@@ -387,14 +389,18 @@ class Template
 	/**
 	 * @param  int|string  $id
 	 */
-	protected function initBlockLayer($id): void
+	protected function initBlockLayer($id, bool $copy = false): void
 	{
-		$blocks = &$this->blocks[$id];
-		$blocks = [];
+		$this->blocks[$id] = [];
 		foreach (static::BLOCKS[$id] ?? [] as $nm => $info) {
-			$blocks[$nm] = $block = new Block;
-			[$method, $block->contentType] = is_array($info) ? $info : [$info, static::CONTENT_TYPE];
-			$block->functions[] = [$this, $method];
+			[$method, $contentType] = is_array($info) ? $info : [$info, static::CONTENT_TYPE];
+			$this->addBlock($nm, $contentType, [[$this, $method]], $id);
+		}
+
+		if ($copy) {
+			foreach ($this->blocks[$this->index] as $nm => $block) {
+				$this->addBlock($nm, $block->contentType, $block->functions, $id);
+			}
 		}
 	}
 
