@@ -2,10 +2,6 @@ parameters:
 	level: 7
 	ignoreErrors:
 		- '#^Call to an undefined method Nette\\Localization\\Translator::get(Default|Available)?Locales?\(\)#'  # Actually called on \Contributte\Translation\Translator
-		-
-			message: '#^Array \(array<callable\(Nette\\Forms\\Controls\\SubmitButton\|Nette\\Forms\\Form, array\|object\): void>\) does not accept Closure\(Nette\\Forms\\Controls\\SubmitButton, stdClass\): void#'
-			path: app/Form/TrainingApplicationAdminFactory.php
-			count: 1
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
