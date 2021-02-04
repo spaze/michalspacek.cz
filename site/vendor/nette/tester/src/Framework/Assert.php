@@ -103,6 +103,8 @@ class Assert
 
 	/**
 	 * Asserts that a haystack (string or array) contains an expected needle.
+	 * @param  mixed  $needle
+	 * @param  array|string  $actual
 	 */
 	public static function contains($needle, $actual, string $description = null): void
 	{
@@ -112,7 +114,10 @@ class Assert
 				self::fail(self::describe('%1 should contain %2', $description), $actual, $needle);
 			}
 		} elseif (is_string($actual)) {
-			if ($needle !== '' && strpos($actual, $needle) === false) {
+			if (!is_string($needle)) {
+				self::fail(self::describe('Needle %1 should be string'), $needle);
+
+			} elseif ($needle !== '' && strpos($actual, $needle) === false) {
 				self::fail(self::describe('%1 should contain %2', $description), $actual, $needle);
 			}
 		} else {
@@ -123,6 +128,8 @@ class Assert
 
 	/**
 	 * Asserts that a haystack (string or array) does not contain an expected needle.
+	 * @param  mixed  $needle
+	 * @param  array|string  $actual
 	 */
 	public static function notContains($needle, $actual, string $description = null): void
 	{
@@ -132,7 +139,10 @@ class Assert
 				self::fail(self::describe('%1 should not contain %2', $description), $actual, $needle);
 			}
 		} elseif (is_string($actual)) {
-			if ($needle === '' || strpos($actual, $needle) !== false) {
+			if (!is_string($needle)) {
+				self::fail(self::describe('Needle %1 should be string'), $needle);
+
+			} elseif ($needle === '' || strpos($actual, $needle) !== false) {
 				self::fail(self::describe('%1 should not contain %2', $description), $actual, $needle);
 			}
 		} else {
@@ -234,7 +244,7 @@ class Assert
 
 	/**
 	 * Asserts the number of items in an array or Countable.
-	 * @param  mixed  $value
+	 * @param  array|\Countable  $value
 	 */
 	public static function count(int $count, $value, string $description = null): void
 	{
@@ -273,6 +283,7 @@ class Assert
 
 		} elseif (!$value instanceof $type) {
 			$actual = is_object($value) ? get_class($value) : gettype($value);
+			$type = is_object($type) ? get_class($type) : $type;
 			self::fail(self::describe("$actual should be instance of $type", $description));
 		}
 	}

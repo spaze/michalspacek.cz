@@ -2,7 +2,7 @@
 ================================================================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/tester.svg)](https://packagist.org/packages/nette/tester)
-[![Build Status](https://travis-ci.org/nette/tester.svg?branch=master)](https://travis-ci.org/nette/tester)
+[![Tests](https://github.com/nette/tester/workflows/Tests/badge.svg?branch=master)](https://github.com/nette/tester/actions)
 [![Build Status Windows](https://ci.appveyor.com/api/projects/status/github/nette/tester?branch=master&svg=true)](https://ci.appveyor.com/project/dg/tester/branch/master)
 [![Latest Stable Version](https://poser.pugx.org/nette/tester/v/stable)](https://github.com/nette/tester/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/tester/blob/master/license.md)
@@ -77,7 +77,7 @@ Now we run tests from command-line using the `tester` command:
 > tester
  _____ ___  ___ _____ ___  ___
 |_   _/ __)( __/_   _/ __)| _ )
-  |_| \___ /___) |_| \___ |_|_\  v2.3.4
+  |_| \___ /___) |_| \___ |_|_\  v2.3.5
 
 PHP 7.3.3 | php -n | 8 threads
 .
