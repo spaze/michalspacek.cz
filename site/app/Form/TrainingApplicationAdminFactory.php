@@ -100,8 +100,7 @@ class TrainingApplicationAdminFactory
 			$historyContainer
 				->addSubmit((string)$history->id)
 				->setValidationScope([$form[$containerName]])
-				->onClick[] = function ($button) use ($application, $onStatusHistoryDeleteSuccess): void {
-					/** @var SubmitButton $button */
+				->onClick[] = function (SubmitButton $button) use ($application, $onStatusHistoryDeleteSuccess): void {
 					$this->trainingStatuses->deleteHistoryRecord($application->applicationId, (int)$button->getName());
 					$onStatusHistoryDeleteSuccess();
 				};

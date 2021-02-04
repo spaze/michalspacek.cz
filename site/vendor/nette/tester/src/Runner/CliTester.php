@@ -92,7 +92,7 @@ class CliTester
 		echo <<<'XX'
  _____ ___  ___ _____ ___  ___
 |_   _/ __)( __/_   _/ __)| _ )
-  |_| \___ /___) |_| \___ |_|_\  v2.3.4
+  |_| \___ /___) |_| \___ |_|_\  v2.3.5
 
 
 XX;
@@ -236,8 +236,14 @@ XX
 		file_put_contents($this->options['--coverage'], '');
 		$file = realpath($this->options['--coverage']);
 
+		[$engine, $version] = reset($engines);
+
 		$runner->setEnvironmentVariable(Environment::COVERAGE, $file);
-		$runner->setEnvironmentVariable(Environment::COVERAGE_ENGINE, $engine = reset($engines));
+		$runner->setEnvironmentVariable(Environment::COVERAGE_ENGINE, $engine);
+
+		if ($engine === CodeCoverage\Collector::ENGINE_XDEBUG && version_compare($version, '3.0.0', '>=')) {
+			$runner->addPhpIniOption('xdebug.mode', ltrim(ini_get('xdebug.mode') . ',coverage', ','));
+		}
 
 		if ($engine === CodeCoverage\Collector::ENGINE_PCOV && count($this->options['--coverage-src'])) {
 			$runner->addPhpIniOption('pcov.directory', Helpers::findCommonDirectory($this->options['--coverage-src']));
@@ -254,7 +260,7 @@ XX
 			echo 'Generating code coverage report... ';
 		}
 		if (filesize($file) === 0) {
-			echo 'failed. Coverage file is empty. Do you call Tester\Environment::setup() in tests?';
+			echo 'failed. Coverage file is empty. Do you call Tester\Environment::setup() in tests?' . "\n";
 			return;
 		}
 		$generator = pathinfo($file, PATHINFO_EXTENSION) === 'xml'
