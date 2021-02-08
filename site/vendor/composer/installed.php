@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '20326972c6db441e8c62924dd92da4f6dc798c77',
+    'reference' => '055c7ecbd484426e18627c3ebe84abcfd9156b2e',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -66,21 +66,21 @@
     ),
     'latte/latte' => 
     array (
-      'pretty_version' => 'v2.10.1',
-      'version' => '2.10.1.0',
+      'pretty_version' => 'v2.10.2',
+      'version' => '2.10.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0787008cc4aecb0d741a143081cb5038b4a4fd43',
+      'reference' => '2f8dd896472b8a2f2069934f128a02566631d876',
     ),
     'nette/application' => 
     array (
-      'pretty_version' => 'v3.1.1',
-      'version' => '3.1.1.0',
+      'pretty_version' => 'v3.1.2',
+      'version' => '3.1.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '891dd7d333c61687fe15cb305a30bce33fc2a748',
+      'reference' => 'f817a0b738a3190efe1e573a099d1a80797e156b',
     ),
     'nette/bootstrap' => 
     array (
@@ -192,12 +192,12 @@
     ),
     'nette/routing' => 
     array (
-      'pretty_version' => 'v3.0.1',
-      'version' => '3.0.1.0',
+      'pretty_version' => 'v3.0.2',
+      'version' => '3.0.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd989c52fa70708816253f2adab7f57ba039a4b4f',
+      'reference' => '5532e7e3612e13def357f089c1a5c25793a16843',
     ),
     'nette/schema' => 
     array (
@@ -314,12 +314,12 @@
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.71',
-      'version' => '0.12.71.0',
+      'pretty_version' => '0.12.74',
+      'version' => '0.12.74.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd508fa3b0ecc5fc91ac70c6c7ac2862f968ba2b5',
+      'reference' => 'bc5f9483c8f461c86653dcbd040cf0d2778c91a2',
     ),
     'phpstan/phpstan-nette' => 
     array (
@@ -392,7 +392,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '20326972c6db441e8c62924dd92da4f6dc798c77',
+      'reference' => '055c7ecbd484426e18627c3ebe84abcfd9156b2e',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -432,12 +432,12 @@
     ),
     'spaze/phpstan-disallowed-calls' => 
     array (
-      'pretty_version' => 'v1.1.0',
-      'version' => '1.1.0.0',
+      'pretty_version' => 'v1.2.1',
+      'version' => '1.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6f83bad39acee6a990bfd63ed435ef4bdded1624',
+      'reference' => 'd374688723748e213345932fdb77402e96eefcc0',
     ),
     'spaze/sri-macros' => 
     array (

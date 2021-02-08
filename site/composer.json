@@ -47,7 +47,7 @@
 		"phpstan/phpstan-nette": "^0.12",
 		"roave/security-advisories": "dev-latest",
 		"spaze/coding-standard": "^0.0",
-		"spaze/phpstan-disallowed-calls": "^1.0",
+		"spaze/phpstan-disallowed-calls": "^1.2",
 		"slevomat/coding-standard": "^6.4"
 	},
 	"replace": {

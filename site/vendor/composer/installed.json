@@ -150,17 +150,17 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.10.1",
-            "version_normalized": "2.10.1.0",
+            "version": "v2.10.2",
+            "version_normalized": "2.10.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "0787008cc4aecb0d741a143081cb5038b4a4fd43"
+                "reference": "2f8dd896472b8a2f2069934f128a02566631d876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/0787008cc4aecb0d741a143081cb5038b4a4fd43",
-                "reference": "0787008cc4aecb0d741a143081cb5038b4a4fd43",
+                "url": "https://api.github.com/repos/nette/latte/zipball/2f8dd896472b8a2f2069934f128a02566631d876",
+                "reference": "2f8dd896472b8a2f2069934f128a02566631d876",
                 "shasum": ""
             },
             "require": {
@@ -185,7 +185,7 @@
                 "nette/php-generator": "to use tag {templatePrint}",
                 "nette/utils": "to use filter |webalize"
             },
-            "time": "2021-01-26T13:15:35+00:00",
+            "time": "2021-02-08T08:16:26+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -228,34 +228,34 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v2.10.1"
+                "source": "https://github.com/nette/latte/tree/v2.10.2"
             },
             "install-path": "../latte/latte"
         },
         {
             "name": "nette/application",
-            "version": "v3.1.1",
-            "version_normalized": "3.1.1.0",
+            "version": "v3.1.2",
+            "version_normalized": "3.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "891dd7d333c61687fe15cb305a30bce33fc2a748"
+                "reference": "f817a0b738a3190efe1e573a099d1a80797e156b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/891dd7d333c61687fe15cb305a30bce33fc2a748",
-                "reference": "891dd7d333c61687fe15cb305a30bce33fc2a748",
+                "url": "https://api.github.com/repos/nette/application/zipball/f817a0b738a3190efe1e573a099d1a80797e156b",
+                "reference": "f817a0b738a3190efe1e573a099d1a80797e156b",
                 "shasum": ""
             },
             "require": {
                 "nette/component-model": "^3.0",
                 "nette/http": "^3.0.2",
-                "nette/routing": "~3.0.0",
+                "nette/routing": "^3.0.2",
                 "nette/utils": "^3.2.1",
                 "php": ">=7.2"
             },
             "conflict": {
-                "latte/latte": "<2.7.1 >=3.0",
+                "latte/latte": "<2.7.1 || >=3.0",
                 "nette/caching": "<3.1",
                 "nette/di": "<3.0.7",
                 "nette/forms": "<3.0",
@@ -263,7 +263,7 @@
                 "tracy/tracy": "<2.5"
             },
             "require-dev": {
-                "latte/latte": "^2.9.1",
+                "latte/latte": "^2.10.2",
                 "mockery/mockery": "^1.0",
                 "nette/di": "^v3.0",
                 "nette/forms": "^3.0",
@@ -277,7 +277,7 @@
                 "latte/latte": "Allows using Latte in templates",
                 "nette/forms": "Allows to use Nette\\Application\\UI\\Form"
             },
-            "time": "2021-01-25T01:56:04+00:00",
+            "time": "2021-02-08T05:57:00+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -322,7 +322,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/application/issues",
-                "source": "https://github.com/nette/application/tree/v3.1.1"
+                "source": "https://github.com/nette/application/tree/v3.1.2"
             },
             "install-path": "../nette/application"
         },
@@ -1197,17 +1197,17 @@
         },
         {
             "name": "nette/routing",
-            "version": "v3.0.1",
-            "version_normalized": "3.0.1.0",
+            "version": "v3.0.2",
+            "version_normalized": "3.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/routing.git",
-                "reference": "d989c52fa70708816253f2adab7f57ba039a4b4f"
+                "reference": "5532e7e3612e13def357f089c1a5c25793a16843"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/routing/zipball/d989c52fa70708816253f2adab7f57ba039a4b4f",
-                "reference": "d989c52fa70708816253f2adab7f57ba039a4b4f",
+                "url": "https://api.github.com/repos/nette/routing/zipball/5532e7e3612e13def357f089c1a5c25793a16843",
+                "reference": "5532e7e3612e13def357f089c1a5c25793a16843",
                 "shasum": ""
             },
             "require": {
@@ -1220,7 +1220,7 @@
                 "phpstan/phpstan": "^0.12",
                 "tracy/tracy": "^2.3"
             },
-            "time": "2020-11-02T15:13:26+00:00",
+            "time": "2021-02-06T04:08:30+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1254,6 +1254,10 @@
             "keywords": [
                 "nette"
             ],
+            "support": {
+                "issues": "https://github.com/nette/routing/issues",
+                "source": "https://github.com/nette/routing/tree/v3.0.2"
+            },
             "install-path": "../nette/routing"
         },
         {
@@ -1950,17 +1954,17 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.71",
-            "version_normalized": "0.12.71.0",
+            "version": "0.12.74",
+            "version_normalized": "0.12.74.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "d508fa3b0ecc5fc91ac70c6c7ac2862f968ba2b5"
+                "reference": "bc5f9483c8f461c86653dcbd040cf0d2778c91a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d508fa3b0ecc5fc91ac70c6c7ac2862f968ba2b5",
-                "reference": "d508fa3b0ecc5fc91ac70c6c7ac2862f968ba2b5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/bc5f9483c8f461c86653dcbd040cf0d2778c91a2",
+                "reference": "bc5f9483c8f461c86653dcbd040cf0d2778c91a2",
                 "shasum": ""
             },
             "require": {
@@ -1969,7 +1973,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2021-02-01T18:24:00+00:00",
+            "time": "2021-02-08T15:00:25+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -1993,7 +1997,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.71"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.74"
             },
             "funding": [
                 {
@@ -2849,17 +2853,17 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v1.1.0",
-            "version_normalized": "1.1.0.0",
+            "version": "v1.2.1",
+            "version_normalized": "1.2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "6f83bad39acee6a990bfd63ed435ef4bdded1624"
+                "reference": "d374688723748e213345932fdb77402e96eefcc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/6f83bad39acee6a990bfd63ed435ef4bdded1624",
-                "reference": "6f83bad39acee6a990bfd63ed435ef4bdded1624",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/d374688723748e213345932fdb77402e96eefcc0",
+                "reference": "d374688723748e213345932fdb77402e96eefcc0",
                 "shasum": ""
             },
             "require": {
@@ -2872,7 +2876,7 @@
                 "phpunit/phpunit": "^7.0 || ^9.4.2",
                 "spaze/coding-standard": "^0.0.4"
             },
-            "time": "2020-12-05T02:59:41+00:00",
+            "time": "2021-02-09T02:26:11+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -2899,6 +2903,10 @@
                 }
             ],
             "description": "Disallowed method and function calls plug-in for PHPStan",
+            "support": {
+                "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v1.2.1"
+            },
             "install-path": "../spaze/phpstan-disallowed-calls"
         },
         {
@@ -3635,7 +3643,9 @@
         "php-parallel-lint/php-console-color",
         "php-parallel-lint/php-console-highlighter",
         "php-parallel-lint/php-parallel-lint",
+        "phpstan/phpstan",
         "phpstan/phpstan-nette",
-        "roave/security-advisories"
+        "roave/security-advisories",
+        "spaze/phpstan-disallowed-calls"
     ]
 }

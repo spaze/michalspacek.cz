@@ -26,7 +26,7 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 {
 	use Nette\ComponentModel\ArrayAccess;
 
-	/** @var callable[]&(callable(Component $sender): void)[]; Occurs when component is attached to presenter */
+	/** @var array<callable(self): void>  Occurs when component is attached to presenter */
 	public $onAnchor = [];
 
 	/** @var array */
@@ -76,9 +76,9 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 	protected function createComponent(string $name): ?Nette\ComponentModel\IComponent
 	{
 		$res = parent::createComponent($name);
-		if (!$res instanceof SignalReceiver && !$res instanceof StatePersistent) {
+		if ($res && !$res instanceof SignalReceiver && !$res instanceof StatePersistent) {
 			$type = get_class($res);
-			trigger_error("It seems that component '$name' of type $type is not intended to for in the Presenter.", E_USER_NOTICE);
+			trigger_error("It seems that component '$name' of type $type is not intended to be used in the Presenter.", E_USER_NOTICE);
 		}
 		return $res;
 	}
@@ -103,7 +103,10 @@ abstract class Component extends Nette\ComponentModel\Container implements Signa
 		$rc = $this->getReflection();
 		if ($rc->hasMethod($method)) {
 			$rm = $rc->getMethod($method);
-			if ($rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic()) {
+			if ($rm->isPrivate()) {
+				throw new Nette\InvalidStateException('Method ' . $rm->getName() . '() can not be called because it is private.');
+			}
+			if (!$rm->isAbstract() && !$rm->isStatic()) {
 				$this->checkRequirements($rm);
 				try {
 					$args = $rc->combineArgs($rm, $params);

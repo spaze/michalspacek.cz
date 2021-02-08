@@ -49,13 +49,13 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var int */
 	public $invalidLinkMode;
 
-	/** @var callable[]&(callable(Presenter $sender): void)[]; Occurs when the presenter is starting */
+	/** @var array<callable(self): void>  Occurs when the presenter is starting */
 	public $onStartup = [];
 
-	/** @var callable[]&(callable(Presenter $sender): void)[]; Occurs when the presenter is rendering after beforeRender */
+	/** @var array<callable(self): void>  Occurs when the presenter is rendering after beforeRender */
 	public $onRender = [];
 
-	/** @var callable[]&(callable(Presenter $sender, Response $response): void)[]; Occurs when the presenter is shutting down */
+	/** @var array<callable(self, Application\Response): void>  Occurs when the presenter is shutting down */
 	public $onShutdown = [];
 
 	/** @var bool  automatically call canonicalize() */
@@ -565,6 +565,14 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
+	public function formatTemplateClass(): ?string
+	{
+		$base = preg_replace('#Presenter$#', '', static::class);
+		return $this->checkTemplateClass($base . ucfirst((string) $this->action) . 'Template')
+			?? $this->checkTemplateClass($base . 'Template');
+	}
+
+
 	/********************* partial AJAX rendering ****************d*g**/
 
 
@@ -748,7 +756,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @throws InvalidLinkException
 	 * @internal
 	 */
-	final protected function createRequest(
+	protected function createRequest(
 		Component $component,
 		string $destination,
 		array $args,
@@ -816,7 +824,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 					throw new InvalidLinkException("Unknown signal '$signal', missing handler {$reflection->getName()}::$method()");
 				}
 				// convert indexed parameters to named
-				self::argsToParams(get_class($component), $method, $args, [], $missing);
+				static::argsToParams(get_class($component), $method, $args, [], $missing);
 			}
 
 			// counterpart of StatePersistent
@@ -858,7 +866,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 					throw new InvalidLinkException("Unable to pass parameters to action '$presenter:$action', missing corresponding method.");
 				}
 			} else {
-				self::argsToParams($presenterClass, $method, $args, $path === 'this' ? $this->params : [], $missing);
+				static::argsToParams($presenterClass, $method, $args, $path === 'this' ? $this->params : [], $missing);
 			}
 
 			// counterpart of StatePersistent

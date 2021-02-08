@@ -48,6 +48,7 @@ includes:
 ```
 
 `disallowed-dangerous-calls.neon` can also serve as a template when you'd like to extend the configuration to disallow some other functions or methods, copy it and modify to your needs.
+You can also allow a previously disallowed dangerous call in a defined path (see below) in your own config by using the same `call` or `method` key.
 
 If you want to disable program execution functions (`exec()`, `shell_exec()` & friends), include `disallowed-execution-calls.neon`:
 
@@ -116,7 +117,7 @@ parameters:
         -
             function: 'pcntl_*()'
 ```
-The wildcard must be the leftmost character of the function or method name, optionally followed by `()`.
+The wildcard must be the rightmost character of the function or method name, optionally followed by `()`.
 
 You can treat `eval()` as a function (although it's a language construct) and disallow it in `disallowedFunctionCalls`.
 
@@ -187,6 +188,19 @@ When using `allowParamsInAllowed`, calls will be allowed only when they are in o
 With `allowParamsAnywhere`, calls are allowed when called with all parameters listed no matter in which file. In the example above, the `log()` method will be disallowed unless called as:
 - `log(..., true)` anywhere
 - `log('foo', true)` in `another/file.php` or `optional/path/to/log.tests.php`
+
+## Detect disallowed calls without any other PHPStan rules
+
+If you want to use this PHPStan extension without running any other PHPStan rules, you can use `phpstan.neon` config file that looks like this (the `customRulesetUsed: true` and the missing `level` key are the important bits):
+
+```neon
+parameters:
+    customRulesetUsed: true
+includes:
+    - vendor/spaze/phpstan-disallowed-calls/extension.neon
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+```
 
 ## Running tests
 
