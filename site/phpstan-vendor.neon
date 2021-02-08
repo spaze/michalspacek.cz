@@ -1,0 +1,64 @@
+parameters:
+	customRulesetUsed: true
+	paths:
+		- vendor
+	excludePaths:
+		analyseAndScan:
+			# `require` packages
+			- vendor/paragonie/halite/test/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
+			- vendor/paragonie/constant_time_encoding/tests/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
+			- vendor/paragonie/hidden-string/test/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
+			- vendor/nette/forms/src/compatibility.php  # throws `Class 'Nette\Forms\SubmitterControl' not found` for some reason
+			- vendor/symfony/translation-contracts/Test/*  # Symfony packages not installed
+			- vendor/symfony/translation/Command/XliffLintCommand.php
+			- vendor/symfony/translation/DataCollector/TranslationDataCollector.php
+			- vendor/symfony/translation/DataCollectorTranslator.php
+			- vendor/symfony/translation/DependencyInjection/*Pass.php
+			- vendor/symfony/translation/Loader/YamlFileLoader.php
+			- vendor/texy/texy/examples/*/demo-*.php  # kukulich/fshl not installed
+			- vendor/tracy/tracy/src/Bridges/Psr/*  # psr/log not installed, Psr\Log\LogLevel constants missing intentionally
+			# `require-dev` packages
+			- vendor/dealerdirect/phpcodesniffer-composer-installer/*  # required by slevomat/coding-standard (excluded as well)
+			- vendor/phpstan/*
+			- vendor/slevomat/coding-standard/*
+			- vendor/squizlabs/php_codesniffer/*
+
+	disallowedFunctionCalls:
+		# local disallowed-calls.neon
+		-
+			function: 'pcntl_*()'
+			allowIn:
+				- vendor/nette/tester/src/Runner/Runner.php
+		# bundled disallowed-dangerous-calls.neon
+		-
+			function: 'eval()'
+			message: 'eval is evil, please write more code and do not use eval()'
+			allowIn:
+				- vendor/latte/latte/src/Latte/Engine.php  # called only when temp dir is not set
+				- vendor/nette/application/src/Bridges/ApplicationDI/RoutingExtension.php  # called in afterCompile
+		-
+			function: 'print_r()'
+			message: 'use some logger instead'
+			allowIn:
+				- vendor/texy/texy/examples/*
+			allowParamsAnywhere:
+				2: true
+		-
+			function: 'putenv()'
+			message: 'might overwrite existing variables'
+			allowIn:
+				- vendor/nette/tester/src/Runner/Job.php
+		# bundled disallowed-execution-calls.neon
+		-
+			function: 'exec()'
+			allowIn:
+				- vendor/tracy/tracy/src/Tracy/Debugger/Debugger.php  # can run a browser if configured
+		-
+			function: 'proc_open()'
+			allowIn:
+				- vendor/nette/tester/src/Runner/Job.php
+				- vendor/nette/tester/src/Runner/PhpInterpreter.php
+				- vendor/php-parallel-lint/php-parallel-lint/src/Process/Process.php
+
+includes:
+	- disallowed-calls.neon

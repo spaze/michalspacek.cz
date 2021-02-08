@@ -62,6 +62,7 @@
 		"phpcs": "vendor/squizlabs/php_codesniffer/bin/phpcs app/ public/ tests/",
 		"phpstan": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon",
 		"phpstan-prod": "vendor/phpstan/phpstan/phpstan --ansi analyse --no-progress --configuration phpstan.neon",
+		"phpstan-vendor": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon",
 		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage coverage.html --coverage-src app/ tests/",
 		"tester-prod": "vendor/nette/tester/src/tester -p php -C --colors 1 tests/",
 		"add-missing-extensions-prod": "apt-fast install -y --no-install-recommends php7.4-intl",
