@@ -1,5 +1,6 @@
 {
 	"name": "spaze/michalspacek.cz",
+	"type": "project",
 	"description": "Source code for my site",
 	"license": "MIT",
 	"autoload": {
