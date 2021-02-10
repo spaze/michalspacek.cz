@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '055c7ecbd484426e18627c3ebe84abcfd9156b2e',
+    'reference' => 'be25aac664cc6ad22506c2e74291469d64efd0e6',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -392,7 +392,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '055c7ecbd484426e18627c3ebe84abcfd9156b2e',
+      'reference' => 'be25aac664cc6ad22506c2e74291469d64efd0e6',
     ),
     'spaze/mysql-session-handler' => 
     array (

@@ -6,6 +6,9 @@
 	"autoload": {
 		"psr-4": {"MichalSpacekCz\\": "app/"}
 	},
+	"config": {
+		"sort-packages": true
+	},
 	"require": {
 		"php": ">= 7.4.0",
 		"ext-ctype": "*",
@@ -40,15 +43,19 @@
 		"contributte/translation": "^0.8"
 	},
 	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
 		"nette/tester": "^2.0",
+		"php-parallel-lint/php-console-color": "^0.3",
 		"php-parallel-lint/php-console-highlighter": "^0.5.0",
 		"php-parallel-lint/php-parallel-lint": "^1.2",
+		"phpstan/phpdoc-parser": "^0.4.9",
 		"phpstan/phpstan": "^0.12",
 		"phpstan/phpstan-nette": "^0.12",
 		"roave/security-advisories": "dev-latest",
+		"slevomat/coding-standard": "^6.4",
 		"spaze/coding-standard": "^0.0",
 		"spaze/phpstan-disallowed-calls": "^1.2",
-		"slevomat/coding-standard": "^6.4"
+		"squizlabs/php_codesniffer": "^3.5"
 	},
 	"replace": {
 		"paragonie/random_compat": "9.99.99",
@@ -62,6 +69,8 @@
 		"phpcs": "vendor/squizlabs/php_codesniffer/bin/phpcs app/ public/ tests/",
 		"phpstan": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon",
 		"phpstan-prod": "vendor/phpstan/phpstan/phpstan --ansi analyse --no-progress --configuration phpstan.neon",
+		"phpstan-vendor": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon",
+		"phpstan-vendor-prod": "vendor/phpstan/phpstan/phpstan --ansi analyse --no-progress --configuration phpstan-vendor.neon",
 		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage coverage.html --coverage-src app/ tests/",
 		"tester-prod": "vendor/nette/tester/src/tester -p php -C --colors 1 tests/",
 		"add-missing-extensions-prod": "apt-fast install -y --no-install-recommends php7.4-intl",
@@ -69,12 +78,14 @@
 			"@lint",
 			"@phpcs",
 			"@phpstan",
+			"@phpstan-vendor",
 			"@tester"
 		],
 		"test-prod": [
 			"@lint",
 			"@phpcs",
 			"@phpstan-prod",
+			"@phpstan-vendor-prod",
 			"@tester-prod"
 		]
 	}
