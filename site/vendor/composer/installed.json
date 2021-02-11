@@ -763,17 +763,17 @@
         },
         {
             "name": "nette/forms",
-            "version": "v3.1.1",
-            "version_normalized": "3.1.1.0",
+            "version": "v3.1.2",
+            "version_normalized": "3.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/forms.git",
-                "reference": "05d14fe2ccfc9d158b5fcb4013119b52115e6db8"
+                "reference": "9f513af40cef17e529778ef0e117c1007d205549"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/forms/zipball/05d14fe2ccfc9d158b5fcb4013119b52115e6db8",
-                "reference": "05d14fe2ccfc9d158b5fcb4013119b52115e6db8",
+                "url": "https://api.github.com/repos/nette/forms/zipball/9f513af40cef17e529778ef0e117c1007d205549",
+                "reference": "9f513af40cef17e529778ef0e117c1007d205549",
                 "shasum": ""
             },
             "require": {
@@ -794,7 +794,7 @@
                 "phpstan/phpstan-nette": "^0.12",
                 "tracy/tracy": "^2.4"
             },
-            "time": "2021-02-04T03:32:21+00:00",
+            "time": "2021-02-10T22:15:40+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -835,7 +835,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/forms/issues",
-                "source": "https://github.com/nette/forms/tree/v3.1.1"
+                "source": "https://github.com/nette/forms/tree/v3.1.2"
             },
             "install-path": "../nette/forms"
         },
@@ -2089,12 +2089,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "f7d723a10c7cb36e11430182f5813ecb1b887da0"
+                "reference": "5f40d4d577a71466f9723122251b46bdaf634709"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f7d723a10c7cb36e11430182f5813ecb1b887da0",
-                "reference": "f7d723a10c7cb36e11430182f5813ecb1b887da0",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5f40d4d577a71466f9723122251b46bdaf634709",
+                "reference": "5f40d4d577a71466f9723122251b46bdaf634709",
                 "shasum": ""
             },
             "conflict": {
@@ -2211,7 +2211,7 @@
                 "october/backend": ">=1.0.319,<1.0.470",
                 "october/cms": "= 1.0.469|>=1.0.319,<1.0.469",
                 "october/october": ">=1.0.319,<1.0.466",
-                "october/rain": ">=1.0.319,<1.0.468",
+                "october/rain": "<1.0.472|>=1.1,<1.1.2",
                 "onelogin/php-saml": "<2.10.4",
                 "oneup/uploader-bundle": "<1.9.3|>=2,<2.1.5",
                 "openid/php-openid": "<2.3",
@@ -2255,7 +2255,7 @@
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
                 "shopware/core": "<=6.3.4",
-                "shopware/platform": "<=6.3.4",
+                "shopware/platform": "<=6.3.5",
                 "shopware/shopware": "<5.6.9",
                 "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
                 "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
@@ -2374,7 +2374,7 @@
                 "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
                 "zfr/zfr-oauth2-server-module": "<0.1.2"
             },
-            "time": "2021-02-02T10:05:32+00:00",
+            "time": "2021-02-10T03:02:31+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -2853,17 +2853,17 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v1.2.1",
-            "version_normalized": "1.2.1.0",
+            "version": "v1.2.2",
+            "version_normalized": "1.2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "d374688723748e213345932fdb77402e96eefcc0"
+                "reference": "d78e950e239e04d0aee9e9d0878d479f40db6f38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/d374688723748e213345932fdb77402e96eefcc0",
-                "reference": "d374688723748e213345932fdb77402e96eefcc0",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/d78e950e239e04d0aee9e9d0878d479f40db6f38",
+                "reference": "d78e950e239e04d0aee9e9d0878d479f40db6f38",
                 "shasum": ""
             },
             "require": {
@@ -2876,7 +2876,7 @@
                 "phpunit/phpunit": "^7.0 || ^9.4.2",
                 "spaze/coding-standard": "^0.0.4"
             },
-            "time": "2021-02-09T02:26:11+00:00",
+            "time": "2021-02-10T23:55:28+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -2905,7 +2905,7 @@
             "description": "Disallowed method and function calls plug-in for PHPStan",
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v1.2.1"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v1.2.2"
             },
             "install-path": "../spaze/phpstan-disallowed-calls"
         },

@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'be25aac664cc6ad22506c2e74291469d64efd0e6',
+    'reference' => 'b4c4d4dc6fe244ce1ccf68e641ddeab2785f3036',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -162,12 +162,12 @@ private static $installed = array (
     ),
     'nette/forms' => 
     array (
-      'pretty_version' => 'v3.1.1',
-      'version' => '3.1.1.0',
+      'pretty_version' => 'v3.1.2',
+      'version' => '3.1.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '05d14fe2ccfc9d158b5fcb4013119b52115e6db8',
+      'reference' => '9f513af40cef17e529778ef0e117c1007d205549',
     ),
     'nette/http' => 
     array (
@@ -362,7 +362,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'f7d723a10c7cb36e11430182f5813ecb1b887da0',
+      'reference' => '5f40d4d577a71466f9723122251b46bdaf634709',
     ),
     'slevomat/coding-standard' => 
     array (
@@ -416,7 +416,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'be25aac664cc6ad22506c2e74291469d64efd0e6',
+      'reference' => 'b4c4d4dc6fe244ce1ccf68e641ddeab2785f3036',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -456,12 +456,12 @@ private static $installed = array (
     ),
     'spaze/phpstan-disallowed-calls' => 
     array (
-      'pretty_version' => 'v1.2.1',
-      'version' => '1.2.1.0',
+      'pretty_version' => 'v1.2.2',
+      'version' => '1.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd374688723748e213345932fdb77402e96eefcc0',
+      'reference' => 'd78e950e239e04d0aee9e9d0878d479f40db6f38',
     ),
     'spaze/sri-macros' => 
     array (
