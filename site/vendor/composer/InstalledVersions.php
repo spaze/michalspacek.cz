@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'e3b546c00eef20a736dc324325889de63baaa5fe',
+    'reference' => '3169152bd009dd83f8d0e173eeacb7ed38f67eba',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -345,6 +345,15 @@ private static $installed = array (
       ),
       'reference' => '1f10b8c8d118d01e7b492f9707999d456be5812c',
     ),
+    'phpstan/phpstan-deprecation-rules' => 
+    array (
+      'pretty_version' => '0.12.6',
+      'version' => '0.12.6.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '46dbd43c2db973d2876d6653e53f5c2cc3a01fbb',
+    ),
     'phpstan/phpstan-nette' => 
     array (
       'pretty_version' => '0.12.14',
@@ -416,7 +425,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'e3b546c00eef20a736dc324325889de63baaa5fe',
+      'reference' => '3169152bd009dd83f8d0e173eeacb7ed38f67eba',
     ),
     'spaze/mysql-session-handler' => 
     array (

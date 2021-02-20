@@ -135,6 +135,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'PHPStan\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
+            1 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
         ),
         'MichalSpacekCz\\' => 
         array (
