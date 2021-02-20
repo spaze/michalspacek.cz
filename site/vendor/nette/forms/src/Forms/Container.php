@@ -208,8 +208,8 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 			$params = Nette\Utils\Callback::toReflection($handler)->getParameters();
 			$types = array_map([Nette\Utils\Reflection::class, 'getParameterType'], $params);
 			$args = isset($types[0]) && !$this instanceof $types[0]
-				? [$this->getUnsafeValues($types[0], $controls)]
-				: [$this, isset($params[1]) ? $this->getUnsafeValues($types[1], $controls) : null];
+				? [$this->getUnsafeValues($types[0])]
+				: [$this, isset($params[1]) ? $this->getUnsafeValues($types[1]) : null];
 			$handler(...$args);
 		}
 	}

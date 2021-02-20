@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'b4c4d4dc6fe244ce1ccf68e641ddeab2785f3036',
+    'reference' => 'e3b546c00eef20a736dc324325889de63baaa5fe',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -143,7 +143,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '9f513af40cef17e529778ef0e117c1007d205549',
+      'reference' => '54858a9eeb0c57c316a07cea5aa2fa135c6807ac',
     ),
     'nette/http' => 
     array (
@@ -314,12 +314,12 @@
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.74',
-      'version' => '0.12.74.0',
+      'pretty_version' => '0.12.77',
+      'version' => '0.12.77.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bc5f9483c8f461c86653dcbd040cf0d2778c91a2',
+      'reference' => '1f10b8c8d118d01e7b492f9707999d456be5812c',
     ),
     'phpstan/phpstan-nette' => 
     array (
@@ -338,7 +338,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '5f40d4d577a71466f9723122251b46bdaf634709',
+      'reference' => '640ff0b5dcacc0958534c8c0255b90697f3eb2a8',
     ),
     'slevomat/coding-standard' => 
     array (
@@ -392,7 +392,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'b4c4d4dc6fe244ce1ccf68e641ddeab2785f3036',
+      'reference' => 'e3b546c00eef20a736dc324325889de63baaa5fe',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -432,12 +432,12 @@
     ),
     'spaze/phpstan-disallowed-calls' => 
     array (
-      'pretty_version' => 'v1.2.2',
-      'version' => '1.2.2.0',
+      'pretty_version' => 'v1.3.0',
+      'version' => '1.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd78e950e239e04d0aee9e9d0878d479f40db6f38',
+      'reference' => 'bb809a32e0669cba26a32a37e4b215816a436afa',
     ),
     'spaze/sri-macros' => 
     array (
@@ -507,8 +507,8 @@
     ),
     'symfony/polyfill-php80' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
