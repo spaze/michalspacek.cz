@@ -1,7 +1,11 @@
-$(function() {
-	$('.open-button').on('click', function(event) {
+$(document).ready(function() {
+	$('.open-button').on('click', function (event) {
 		event.preventDefault();
-		$(this).parent().nextAll('.expandable').slideToggle(100);
+		const elements = $(this).data('open') ? $('body').find($(this).data('open')) : $(this).parent().nextAll('.expandable');
+		elements.slideToggle(100);
 		$(this).toggleClass('open');
 	});
+	$('#frm-searchSort select').on('change', function () {
+		this.form.submit();
+	})
 });

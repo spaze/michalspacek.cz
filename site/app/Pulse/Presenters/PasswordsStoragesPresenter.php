@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Presenters;
 
+use MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory;
+use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
 
 class PasswordsStoragesPresenter extends BasePresenter
 {
@@ -17,31 +20,40 @@ class PasswordsStoragesPresenter extends BasePresenter
 	/** @var Rating */
 	protected $passwordsRating;
 
+	private PasswordsStoragesSearchSortFactory $searchSortFactory;
 
-	public function __construct(Passwords $passwords, Rating $passwordsRating)
-	{
+	private PasswordsSorting $passwordsSorting;
+
+
+	public function __construct(
+		Passwords $passwords,
+		Rating $passwordsRating,
+		PasswordsStoragesSearchSortFactory $searchSortFactory,
+		PasswordsSorting $passwordsSorting
+	) {
 		$this->passwords = $passwords;
 		$this->passwordsRating = $passwordsRating;
+		$this->searchSortFactory = $searchSortFactory;
+		$this->passwordsSorting = $passwordsSorting;
 		parent::__construct();
 	}
 
 
-	/**
-	 * Storages action handler.
-	 *
-	 * @param string|null $param
-	 */
-	public function actionDefault(?string $param): void
+	public function actionDefault(?string $param, ?string $rating, ?string $sort): void
 	{
 		// Keep old, published URLs alive
 		if ($param) {
 			$this->redirectPermanent('site', $param);
 		}
-		$data = $this->passwords->getAllStorages();
+
+		$rating = $rating === null || $rating === 'all' ? null : strtoupper($rating);
+		$data = $this->passwords->getAllStorages($rating, $sort === null ? $this->passwordsSorting->getDefaultSort() : $sort);
 		$this->template->isDetail = false;
 		$this->template->pageTitle = 'Password storage disclosures';
 		$this->template->data = $data;
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+		$this->template->openSearchSort = $rating !== null || $sort !== null;
+		$this->template->canonicalLink = $this->link("//{$this->action}");  // Not using 'this' as the destination to omit params
 	}
 
 
@@ -119,6 +131,12 @@ class PasswordsStoragesPresenter extends BasePresenter
 	public function actionQuestions(): void
 	{
 		$this->template->pageTitle = 'Password storage disclosures questions';
+	}
+
+
+	protected function createComponentSearchSort(): Form
+	{
+		return $this->searchSortFactory->create();
 	}
 
 }

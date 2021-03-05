@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Pulse;
 
 use DateTime;
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
+use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -27,31 +28,38 @@ class Passwords
 	/** @var Sites */
 	protected $sites;
 
+	private PasswordsSorting $sorting;
+
 
 	public function __construct(
 		Explorer $context,
 		Rating $rating,
 		Companies $companies,
-		Sites $sites
+		Sites $sites,
+		PasswordsSorting $sorting
 	) {
 		$this->database = $context;
 		$this->rating = $rating;
 		$this->companies = $companies;
 		$this->sites = $sites;
+		$this->sorting = $sorting;
 	}
 
 
 	/**
 	 * Get all passwords storage data.
 	 *
+	 * @param string|null $rating
+	 * @param string $sort
 	 * @return stdClass with companies, sites, algos, storages properties
 	 */
-	public function getAllStorages(): stdClass
+	public function getAllStorages(?string $rating, string $sort): stdClass
 	{
 		$query = 'SELECT
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				COALESCE(c.trade_name, c.name) AS sortName,
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
@@ -79,13 +87,23 @@ class Passwords
 				JOIN password_disclosures_password_storages pdps ON pdps.key_password_storages = ps.id
 				JOIN password_disclosures pd ON pdps.key_password_disclosures = pd.id
 				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
-			ORDER BY
-				COALESCE(c.trade_name, c.name),
-				s.url,
-				ps.from DESC,
-				pd.published';
-
-		return $this->processStorages($this->database->fetchAll($query));
+			ORDER BY ?';
+		$orderBy = [
+			'sortName' => !$this->sorting->isCompanyAlphabeticallyReversed($sort),
+			's.url' => !$this->sorting->isCompanyAlphabeticallyReversed($sort),
+			'ps.from' => false,
+			'disclosurePublished' => true,
+		];
+		$storages = $this->processStorages($this->database->fetchAll($query, $orderBy), $sort);
+		foreach ($storages->sites as $siteId => $site) {
+			if ($rating && $site->rating !== $rating) {
+				unset($storages->storages[$site->storageId]->sites[$site->id]);
+				if (count($storages->storages[$site->storageId]->sites) === 0) {
+					unset($storages->storages[$site->storageId]);
+				}
+			}
+		}
+		return $storages;
 	}
 
 
@@ -101,6 +119,7 @@ class Passwords
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				COALESCE(c.trade_name, c.name) AS sortName,
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
@@ -135,7 +154,7 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $sites));
+		return $this->processStorages($this->database->fetchAll($query, $sites), $this->sorting->getDefaultSort());
 	}
 
 
@@ -151,6 +170,7 @@ class Passwords
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				COALESCE(c.trade_name, c.name) AS sortName,
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
@@ -185,7 +205,7 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $companies));
+		return $this->processStorages($this->database->fetchAll($query, $companies), $this->sorting->getDefaultSort());
 	}
 
 
@@ -201,6 +221,7 @@ class Passwords
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				COALESCE(c.trade_name, c.name) AS sortName,
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
@@ -235,7 +256,7 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $companyId));
+		return $this->processStorages($this->database->fetchAll($query, $companyId), $this->sorting->getDefaultSort());
 	}
 
 
@@ -243,9 +264,10 @@ class Passwords
 	 * Process passwords storage data.
 	 *
 	 * @param Row[] $data
+	 * @param string $sort
 	 * @return stdClass with companies, sites, algos, storages properties
 	 */
-	private function processStorages(array $data): stdClass
+	private function processStorages(array $data, string $sort): stdClass
 	{
 		$storages = new stdClass();
 		$storages->sites = array();
@@ -255,9 +277,16 @@ class Passwords
 			$company->companyName = $row->companyName;
 			$company->tradeName = $row->tradeName;
 			$company->alias = $row->companyAlias;
+			$company->sortName = $row->sortName;
 			$storages->companies[$row->companyId] = $company;
 
 			$siteId = $row->siteId ?? Sites::ALL . "-{$row->companyId}";
+			if ($this->sorting->isAnyCompanyAlphabetically($sort)) {
+				$storageKey = $row->companyId;
+			} else {
+				$storageKey = $siteId;
+			}
+
 			if (!isset($storages->sites[$siteId])) {
 				$site = new stdClass();
 				$site->id = $siteId;
@@ -266,12 +295,22 @@ class Passwords
 				$site->alias = $row->siteAlias;
 				$site->sharedWith = ($row->sharedWith ? Json::decode($row->sharedWith) : []);
 				$site->companyId = $row->companyId;
+				$site->storageId = $storageKey;
 				$storages->sites[$siteId] = $site;
 			}
 
 			$storages->algos[$row->algoId] = $row->algoName;
 			$key = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
-			if (!isset($storages->storages[$row->companyId][$siteId][$key])) {
+			if (!isset($storages->storages[$storageKey])) {
+				$storage = new stdClass();
+				$storage->companyId = $row->companyId;
+				$storage->sites = [];
+				$storages->storages[$storageKey] = $storage;
+			}
+			if (!isset($storages->storages[$storageKey]->sites[$siteId])) {
+				$storages->storages[$storageKey]->sites[$siteId] = new stdClass();
+			}
+			if (!isset($storages->storages[$storageKey]->sites[$siteId]->algos[$key])) {
 				$algo = new Algorithm();
 				$algo->id = $row->algoId;
 				$algo->alias = $row->algoAlias;
@@ -283,7 +322,7 @@ class Passwords
 				$algo->params = $attributes->params ?? null;
 				$algo->fullAlgo = $this->formatFullAlgo($row->algoName, $attributes);
 				$algo->note = $row->note;
-				$storages->storages[$row->companyId][$siteId][$key] = $algo;
+				$storages->storages[$storageKey]->sites[$siteId]->algos[$key] = $algo;
 			}
 			$disclosure = new stdClass();
 			$disclosure->url = $row->disclosureUrl;
@@ -291,16 +330,16 @@ class Passwords
 			$disclosure->note = $row->disclosureNote;
 			$disclosure->published = $row->disclosurePublished;
 			$disclosure->type = $row->disclosureType;
-			$storages->storages[$row->companyId][$siteId][$key]->latestDisclosure = $disclosure->published;
-			$storages->storages[$row->companyId][$siteId][$key]->disclosures[] = $disclosure;
-			$storages->storages[$row->companyId][$siteId][$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
+			$storages->storages[$storageKey]->sites[$siteId]->algos[$key]->latestDisclosure = $disclosure->published;
+			$storages->storages[$storageKey]->sites[$siteId]->algos[$key]->disclosures[] = $disclosure;
+			$storages->storages[$storageKey]->sites[$siteId]->algos[$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
 		}
 		foreach ($storages->sites as $site) {
-			$site->rating = $this->rating->get(reset($storages->storages[$site->companyId][$site->id]));
+			$site->rating = $this->rating->get(reset($storages->storages[$site->storageId]->sites[$site->id]->algos));
 			$site->secureStorage = $this->rating->isSecureStorage($site->rating);
 			$site->recommendation = $this->rating->getRecommendation($site->rating);
 		}
-		return $storages;
+		return $this->sorting->sort($storages, $sort);
 	}
 
 
@@ -458,6 +497,7 @@ class Passwords
 			'archive' => $archive,
 			'note' => (empty($note) ? null : $note),
 			'published' => (empty($published) ? null : new DateTime($published)),
+			'added' => new DateTime(),
 		]);
 		return (int)$this->database->getInsertId();
 	}

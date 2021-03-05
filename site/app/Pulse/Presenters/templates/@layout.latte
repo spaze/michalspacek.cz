@@ -11,6 +11,11 @@
 	{script remove-fbclid async, defer}
 	{script fontawesome-js defer, data-auto-add-css => 'false'}
 	{ifset #metas}{include #metas}{/ifset}
+	{ifset $canonicalLink}
+		<link rel="canonical" href="{$canonicalLink}">
+	{else}
+		<link rel="canonical" n:href="//this">
+	{/ifset}
 	<meta name="theme-color" content="#E3E3E3">
 	<link rel="icon" type="image/png" href="{='/i/icons/pulse.png'|staticUrl}">
 </head>
@@ -22,7 +27,11 @@
 	{ifset #tagline}<p class="left"><em>{include #tagline}</em></p>{/ifset}
 	{ifset #tagline-right}<p class="right">{include #tagline-right}</p>{/ifset}
 </div>
-{ifset #menu}<div id="menu" class="inner-container">{include #menu}</div>{/ifset}
+<div n:ifset="#menu" id="menu" class="inner-container">
+	<div class="left">{include #menu}</div>
+	<div n:ifset="#menuRight" class="right">{include #menuRight}</div>
+	<div class="clear"></div>
+</div>
 {include #content}
 {include #footer}
 </div>

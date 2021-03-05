@@ -4,10 +4,14 @@
 {if $isDetail}&raquo; <a n:href="default">Passwords storages</a>{/if}
 {/define}
 
+{define #menuRight}
+<a n:ifset="$openSearchSort" href="" n:class="open-button, $openSearchSort ? open" data-open="#search-sort">Search & sort</a>
+{/define}
+
 {define #metas}
 {if count($data->sites) === 1}
 {capture $currentRating}{=current($data->sites)->rating|lower}{/capture}
-{var $currentAlgo = current(current(current($data->storages)))}
+{var $currentAlgo = current(current(current($data->storages)->sites)->algos)}
 <meta property="og:image" content="{="pulse/rating-$currentRating.png"|staticImageUrl}">
 <meta property="og:description" content="{=$data->algos[$currentAlgo->id]}{if $currentAlgo->from || $currentAlgo->latestDisclosure} ({if $currentAlgo->from && $currentAlgo->fromConfirmed}since {$currentAlgo->from|date:'F Y'}{/if}{if $currentAlgo->from && $currentAlgo->fromConfirmed && $currentAlgo->latestDisclosure}, {/if}{if $currentAlgo->latestDisclosure}disclosed {$currentAlgo->latestDisclosure|date:'F Y'}{/if}){/if}">
 {else}
@@ -20,11 +24,19 @@
 {/define}
 
 {define #content}
-{foreach $data->storages as $companyId => $sites}
+<div n:ifset="$openSearchSort" id="search-sort" n:class="inner-container, !$openSearchSort ? hidden">
+	<div class="right"><small><a n:href=":">Reset</a></small></div>
+	<form n:name="searchSort">
+		<div class="right">{label rating} {input rating}</div>
+		<div class="right">{label sort} {input sort}</div>
+	</form>
+	<div class="clear"></div>
+</div>
+{foreach $data->storages as $storage}
 	<div class="inner-container">
-	<h2 id="{$data->companies[$companyId]->alias}" n:if="!$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->companyName}</h2>
-	<h2 id="{$data->companies[$companyId]->alias}" n:if="$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->tradeName} <small>({$data->companies[$companyId]->companyName})</small></h2>
-	{foreach $sites as $siteId => $algos}
+	<h2 id="{$data->companies[$storage->companyId]->alias}" n:if="!$data->companies[$storage->companyId]->tradeName">{$data->companies[$storage->companyId]->companyName}</h2>
+	<h2 id="{$data->companies[$storage->companyId]->alias}" n:if="$data->companies[$storage->companyId]->tradeName">{$data->companies[$storage->companyId]->tradeName} <small>({$data->companies[$storage->companyId]->companyName})</small></h2>
+	{foreach $storage->sites as $siteId => $site}
 		{var $noFollow = ($data->sites[$siteId]->secureStorage ? false : 'nofollow')}
 		{if !$data->sites[$siteId]->typeAll}
 			{var $detailsLink = 'site'}
@@ -32,8 +44,8 @@
 			{var $htmlId = $data->sites[$siteId]->alias}
 		{else}
 			{var $detailsLink = 'company'}
-			{var $detailsParam = $data->companies[$companyId]->alias}
-			{var $htmlId = $data->companies[$companyId]->alias . '-all'}
+			{var $detailsParam = $data->companies[$storage->companyId]->alias}
+			{var $htmlId = $data->companies[$storage->companyId]->alias . '-all'}
 		{/if}
 		<div id="{$htmlId}" class="site-container">
 			<div class="left">
@@ -49,14 +61,14 @@
 						</small>
 					{/foreach}
 				{else}
-					<p><a n:href="company $data->companies[$companyId]->alias" title="Open details">All sites</a></p>
+					<p><a n:href="company $data->companies[$storage->companyId]->alias" title="Open details">All sites</a></p>
 				{/if}
 			</div>
 			<div class="right rating">Rating <strong class="right rating-{$data->sites[$siteId]->rating|lower}" title="{$ratingGuide[$data->sites[$siteId]->rating]}">{$data->sites[$siteId]->rating}</strong></div>
 			<div class="clear"></div>
 		</div>
 		<div class="algo-container">
-		{foreach $algos as $algo}
+		{foreach $site->algos as $algo}
 			{if $iterator->counter === 2}<div><div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
 				<div class="algo">
 					<strong>{$data->algos[$algo->id]}</strong>{if $algo->from || $algo->latestDisclosure} (<span n:if="$algo->from && $algo->fromConfirmed" title="{$algo->from|date:'Y-m'}">since {$algo->from|date:'F Y'}</span>{if $algo->from && $algo->fromConfirmed && $algo->latestDisclosure}, {/if}<span n:if="$algo->latestDisclosure" title="{$algo->latestDisclosure|date:'Y-m-d'}">disclosed {$algo->latestDisclosure|date:'F Y'}</span>){/if}

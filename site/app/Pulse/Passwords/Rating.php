@@ -142,6 +142,17 @@ class Rating
 
 
 	/**
+	 * Get ratings.
+	 *
+	 * @return string[]
+	 */
+	public function getRatings(): array
+	{
+		return array_keys($this->rating);
+	}
+
+
+	/**
 	 * Get rating guide.
 	 *
 	 * @return string[]
