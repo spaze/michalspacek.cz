@@ -93,23 +93,23 @@ class Rating
 	 */
 	public function get(Algorithm $algo): string
 	{
-		if (in_array($algo->alias, $this->slowHashes, true)) {
+		if (in_array($algo->getAlias(), $this->slowHashes, true)) {
 			foreach ($this->visibleDisclosures as $disclosure) {
-				if (isset($algo->disclosureTypes[$disclosure])) {
+				if ($algo->hasDisclosureType($disclosure)) {
 					return self::RATING_A;
 				}
 			}
 			foreach ($this->invisibleDisclosures as $disclosure) {
-				if (isset($algo->disclosureTypes[$disclosure])) {
+				if ($algo->hasDisclosureType($disclosure)) {
 					return self::RATING_B;
 				}
 			}
-			throw new RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->alias, implode(', ', array_keys($algo->disclosureTypes))));
-		} elseif ($algo->salted && $algo->stretched) {
+			throw new RuntimeException(sprintf('Invalid combination of algo (%s) and disclosures (%s)', $algo->getAlias(), implode(', ', $algo->getDisclosureTypes())));
+		} elseif ($algo->isSalted() && $algo->isStretched()) {
 			return self::RATING_C;
-		} elseif ($algo->salted) {
+		} elseif ($algo->isSalted()) {
 			return self::RATING_D;
-		} elseif (!in_array($algo->alias, $this->insecure, true)) {
+		} elseif (!in_array($algo->getAlias(), $this->insecure, true)) {
 			return self::RATING_E;
 		} else {
 			return self::RATING_F;

@@ -65,4 +65,10 @@ class Sites
 		return (int)$this->database->getInsertId();
 	}
 
+
+	public function generateId(?int $siteId, int $companyId): string
+	{
+		return $siteId ? (string)$siteId : self::ALL . "-{$companyId}";
+	}
+
 }

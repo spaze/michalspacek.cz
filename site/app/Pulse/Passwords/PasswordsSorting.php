@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Pulse\Passwords;
 
 use Collator;
 use MichalSpacekCz\ShouldNotHappenException;
-use stdClass;
 
 class PasswordsSorting
 {
@@ -24,7 +23,7 @@ class PasswordsSorting
 	];
 
 
-	public function sort(stdClass $storages, string $sort): stdClass
+	public function sort(StorageRegistry $storages, string $sort): StorageRegistry
 	{
 		if ($this->isAnyCompanyAlphabetically($sort)) {
 			// done in the SQL query already
@@ -34,34 +33,34 @@ class PasswordsSorting
 		switch ($sort) {
 			case self::RATING_A_F:
 			case self::RATING_F_A:
-				$sorter = function (stdClass $a, stdClass $b) use ($storages, $sort): int {
+				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
 					return $this->sortByRating($storages, $a, $b, $sort);
 				};
 				break;
 		}
 		if (isset($sorter)) {
-			uasort($storages->storages, $sorter);
+			$storages->sortStorages($sorter);
 		}
 		return $storages;
 	}
 
 
-	private function sortByRating(stdClass $storages, stdClass $a, stdClass $b, string $sort): int
+	private function sortByRating(StorageRegistry $storages, Storage $a, Storage $b, string $sort): int
 	{
-		if (count($a->sites) > 1 || count($b->sites) > 1) {
+		if (count($a->getSites()) > 1 || count($b->getSites()) > 1) {
 			throw new ShouldNotHappenException('When sorting by rating there should be just one site per disclosure');
 		}
-		$siteA = $storages->sites[array_key_first($a->sites)];
-		$siteB = $storages->sites[array_key_first($b->sites)];
-		$result = $sort === self::RATING_A_F ? $siteA->rating <=> $siteB->rating : $siteB->rating <=> $siteA->rating;
+		$siteA = $storages->getSite((string)array_key_first($a->getSites()));
+		$siteB = $storages->getSite((string)array_key_first($b->getSites()));
+		$result = $sort === self::RATING_A_F ? $siteA->getRating() <=> $siteB->getRating() : $siteB->getRating() <=> $siteA->getRating();
 		if ($result === 0) {
 			static $collator;
 			if (!$collator) {
 				$collator = new Collator('en_US');
 			}
-			$result = $collator->getSortKey($storages->companies[$a->companyId]->sortName) <=> $collator->getSortKey($storages->companies[$b->companyId]->sortName);
+			$result = $collator->getSortKey($storages->getCompany($a->getCompanyId())->getSortName()) <=> $collator->getSortKey($storages->getCompany($b->getCompanyId())->getSortName());
 			if ($result === 0) {
-				$result = $siteA->url <=> $siteB->url;
+				$result = $siteA->getUrl() <=> $siteB->getUrl();
 			}
 		}
 		return $result;

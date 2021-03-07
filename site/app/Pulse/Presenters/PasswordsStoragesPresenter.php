@@ -70,7 +70,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 
 		$sites = explode(',', $param);
 		$data = $this->passwords->getStoragesBySite($sites);
-		if (empty($data->sites)) {
+		if (count($data->getSites()) === 0) {
 			throw new BadRequestException('Unknown site alias');
 		}
 
@@ -95,13 +95,13 @@ class PasswordsStoragesPresenter extends BasePresenter
 
 		$companies = explode(',', $param);
 		$data = $this->passwords->getStoragesByCompany($companies);
-		if (empty($data->sites)) {
+		if (count($data->getSites()) === 0) {
 			throw new BadRequestException('Unknown company alias');
 		}
 
 		$names = [];
-		foreach ($data->companies as $item) {
-			$names[] = ($item->tradeName ?: $item->companyName);
+		foreach ($data->getCompanies() as $item) {
+			$names[] = $item->getDisplayName();
 		}
 
 		$this->template->isDetail = true;

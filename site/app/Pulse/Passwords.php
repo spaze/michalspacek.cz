@@ -7,11 +7,13 @@ use DateTime;
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
+use MichalSpacekCz\Pulse\Passwords\Storage;
+use MichalSpacekCz\Pulse\Passwords\StorageDisclosure;
+use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
-use stdClass;
 
 class Passwords
 {
@@ -46,14 +48,7 @@ class Passwords
 	}
 
 
-	/**
-	 * Get all passwords storage data.
-	 *
-	 * @param string|null $rating
-	 * @param string $sort
-	 * @return stdClass with companies, sites, algos, storages properties
-	 */
-	public function getAllStorages(?string $rating, string $sort): stdClass
+	public function getAllStorages(?string $rating, string $sort): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -76,6 +71,7 @@ class Passwords
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
 				pd.published AS disclosurePublished,
+				pd.added AS disclosureAdded,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes,
@@ -95,12 +91,9 @@ class Passwords
 			'disclosurePublished' => true,
 		];
 		$storages = $this->processStorages($this->database->fetchAll($query, $orderBy), $sort);
-		foreach ($storages->sites as $siteId => $site) {
-			if ($rating && $site->rating !== $rating) {
-				unset($storages->storages[$site->storageId]->sites[$site->id]);
-				if (count($storages->storages[$site->storageId]->sites) === 0) {
-					unset($storages->storages[$site->storageId]);
-				}
+		foreach ($storages->getSites() as $site) {
+			if ($rating && $site->getRating() !== $rating) {
+				$storages->removeStorageSite($site);
 			}
 		}
 		return $storages;
@@ -111,9 +104,9 @@ class Passwords
 	 * Get passwords storage data for specified sites.
 	 *
 	 * @param string[] $sites Aliases
-	 * @return stdClass with companies, sites, algos, storages properties
+	 * @return StorageRegistry
 	 */
-	public function getStoragesBySite(array $sites): stdClass
+	public function getStoragesBySite(array $sites): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -136,6 +129,7 @@ class Passwords
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
 				pd.published AS disclosurePublished,
+				pd.added AS disclosureAdded,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes,
@@ -162,9 +156,9 @@ class Passwords
 	 * Get passwords storage data for specified companies.
 	 *
 	 * @param string[] $companies Aliases
-	 * @return stdClass with companies, sites, algos, storages properties
+	 * @return StorageRegistry
 	 */
-	public function getStoragesByCompany(array $companies): stdClass
+	public function getStoragesByCompany(array $companies): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -187,6 +181,7 @@ class Passwords
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
 				pd.published AS disclosurePublished,
+				pd.added AS disclosureAdded,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes,
@@ -209,13 +204,7 @@ class Passwords
 	}
 
 
-	/**
-	 * Get passwords storage data for a company.
-	 *
-	 * @param integer $companyId Company id
-	 * @return stdClass with companies, sites, algos, storages properties
-	 */
-	public function getStoragesByCompanyId($companyId): stdClass
+	public function getStoragesByCompanyId(int $companyId): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -238,6 +227,7 @@ class Passwords
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
 				pd.published AS disclosurePublished,
+				pd.added AS disclosureAdded,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes,
@@ -261,118 +251,42 @@ class Passwords
 
 
 	/**
-	 * Process passwords storage data.
-	 *
 	 * @param Row[] $data
 	 * @param string $sort
-	 * @return stdClass with companies, sites, algos, storages properties
+	 * @return StorageRegistry
 	 */
-	private function processStorages(array $data, string $sort): stdClass
+	private function processStorages(array $data, string $sort): StorageRegistry
 	{
-		$storages = new stdClass();
-		$storages->sites = array();
-
+		$registry = new StorageRegistry();
 		foreach ($data as $row) {
-			$company = new stdClass();
-			$company->companyName = $row->companyName;
-			$company->tradeName = $row->tradeName;
-			$company->alias = $row->companyAlias;
-			$company->sortName = $row->sortName;
-			$storages->companies[$row->companyId] = $company;
+			$siteId = $this->sites->generateId($row->siteId, $row->companyId);
+			$storageKey = $this->sorting->isAnyCompanyAlphabetically($sort) ? (string)$row->companyId : $siteId;
+			$algoKey = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
 
-			$siteId = $row->siteId ?? Sites::ALL . "-{$row->companyId}";
-			if ($this->sorting->isAnyCompanyAlphabetically($sort)) {
-				$storageKey = $row->companyId;
-			} else {
-				$storageKey = $siteId;
+			if (!$registry->hasCompany($row->companyId)) {
+				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
 			}
-
-			if (!isset($storages->sites[$siteId])) {
-				$site = new stdClass();
-				$site->id = $siteId;
-				$site->typeAll = ($row->siteId === null);
-				$site->url = $row->siteUrl;
-				$site->alias = $row->siteAlias;
-				$site->sharedWith = ($row->sharedWith ? Json::decode($row->sharedWith) : []);
-				$site->companyId = $row->companyId;
-				$site->storageId = $storageKey;
-				$storages->sites[$siteId] = $site;
+			if (!$registry->hasSite($siteId)) {
+				$registry->addSite(new Site($siteId, $row->siteId === null, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, Json::FORCE_ARRAY) : [], $row->companyId, $storageKey));
 			}
-
-			$storages->algos[$row->algoId] = $row->algoName;
-			$key = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
-			if (!isset($storages->storages[$storageKey])) {
-				$storage = new stdClass();
-				$storage->companyId = $row->companyId;
-				$storage->sites = [];
-				$storages->storages[$storageKey] = $storage;
+			if (!$registry->hasStorage($storageKey)) {
+				$registry->addStorage(new Storage($storageKey, $row->companyId));
 			}
-			if (!isset($storages->storages[$storageKey]->sites[$siteId])) {
-				$storages->storages[$storageKey]->sites[$siteId] = new stdClass();
+			if (!$registry->getStorage($storageKey)->hasSite($siteId)) {
+				$registry->getStorage($storageKey)->addSite($registry->getSite($siteId));
 			}
-			if (!isset($storages->storages[$storageKey]->sites[$siteId]->algos[$key])) {
-				$algo = new Algorithm();
-				$algo->id = $row->algoId;
-				$algo->alias = $row->algoAlias;
-				$algo->salted = $row->algoSalted;
-				$algo->stretched = $row->algoStretched;
-				$algo->from = $row->from;
-				$algo->fromConfirmed = $row->fromConfirmed;
-				$attributes = (empty($row->attributes) ? null : Json::decode($row->attributes));
-				$algo->params = $attributes->params ?? null;
-				$algo->fullAlgo = $this->formatFullAlgo($row->algoName, $attributes);
-				$algo->note = $row->note;
-				$storages->storages[$storageKey]->sites[$siteId]->algos[$key] = $algo;
+			if (!$registry->getStorage($storageKey)->getSite($siteId)->hasAlgorithm($algoKey)) {
+				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $row->attributes ? Json::decode($row->attributes) : null, $row->note);
+				$registry->getStorage($storageKey)->getSite($siteId)->addAlgorithm($algorithm);
 			}
-			$disclosure = new stdClass();
-			$disclosure->url = $row->disclosureUrl;
-			$disclosure->archive = $row->disclosureArchive;
-			$disclosure->note = $row->disclosureNote;
-			$disclosure->published = $row->disclosurePublished;
-			$disclosure->type = $row->disclosureType;
-			$storages->storages[$storageKey]->sites[$siteId]->algos[$key]->latestDisclosure = $disclosure->published;
-			$storages->storages[$storageKey]->sites[$siteId]->algos[$key]->disclosures[] = $disclosure;
-			$storages->storages[$storageKey]->sites[$siteId]->algos[$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
+			$disclosure = new StorageDisclosure($row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
+			$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);
 		}
-		foreach ($storages->sites as $site) {
-			$site->rating = $this->rating->get(reset($storages->storages[$site->storageId]->sites[$site->id]->algos));
-			$site->secureStorage = $this->rating->isSecureStorage($site->rating);
-			$site->recommendation = $this->rating->getRecommendation($site->rating);
+		foreach ($registry->getSites() as $site) {
+			$rating = $this->rating->get($site->getLatestAlgorithm());
+			$site->setRating($rating, $this->rating->isSecureStorage($rating), $this->rating->getRecommendation($rating));
 		}
-		return $this->sorting->sort($storages, $sort);
-	}
-
-
-	/**
-	 * Format full algo, if needed
-	 *
-	 * @param string $name main algo name
-	 * @param stdClass|null $attrs attributes
-	 * @return string|null String of formatted algos, null if no inner or outer hashes used
-	 */
-	private function formatFullAlgo(string $name, ?stdClass $attrs = null): ?string
-	{
-		if (!isset($attrs->inner) && !isset($attrs->outer)) {
-			return null;
-		}
-
-		$result = '';
-		$count = 0;
-		if (isset($attrs->outer)) {
-			for ($i = count($attrs->outer) - 1; $i >= 0; $i--) {
-				$result .= $attrs->outer[$i] . '(';
-				$count++;
-			}
-		}
-		$result .= $name . '(';
-		$count++;
-		if (isset($attrs->inner)) {
-			for ($i = count($attrs->inner) - 1; $i >= 0; $i--) {
-				$result .= $attrs->inner[$i] . '(';
-				$count++;
-			}
-		}
-		return $result . 'password' . str_repeat(')', $count);
+		return $this->sorting->sort($registry, $sort);
 	}
 
 
