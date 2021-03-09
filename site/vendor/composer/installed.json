@@ -1954,17 +1954,17 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.77",
-            "version_normalized": "0.12.77.0",
+            "version": "0.12.81",
+            "version_normalized": "0.12.81.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "1f10b8c8d118d01e7b492f9707999d456be5812c"
+                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1f10b8c8d118d01e7b492f9707999d456be5812c",
-                "reference": "1f10b8c8d118d01e7b492f9707999d456be5812c",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
+                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
                 "shasum": ""
             },
             "require": {
@@ -1973,7 +1973,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2021-02-17T16:22:19+00:00",
+            "time": "2021-03-08T22:03:02+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -1997,7 +1997,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.77"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.81"
             },
             "funding": [
                 {
@@ -2071,17 +2071,17 @@
         },
         {
             "name": "phpstan/phpstan-nette",
-            "version": "0.12.14",
-            "version_normalized": "0.12.14.0",
+            "version": "0.12.16",
+            "version_normalized": "0.12.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-nette.git",
-                "reference": "16a1457e21ebcf910d733fbaa7c0ba9c86686f31"
+                "reference": "7fda19691b464b1f0a3e42fa34c2c363e7404c77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/16a1457e21ebcf910d733fbaa7c0ba9c86686f31",
-                "reference": "16a1457e21ebcf910d733fbaa7c0ba9c86686f31",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/7fda19691b464b1f0a3e42fa34c2c363e7404c77",
+                "reference": "7fda19691b464b1f0a3e42fa34c2c363e7404c77",
                 "shasum": ""
             },
             "require": {
@@ -2106,7 +2106,7 @@
                 "phpstan/phpstan-strict-rules": "^0.12.5",
                 "phpunit/phpunit": "^7.5.20"
             },
-            "time": "2021-01-05T10:04:46+00:00",
+            "time": "2021-03-04T13:58:46+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "branch-alias": {
@@ -2132,7 +2132,7 @@
             "description": "Nette Framework class reflection extension for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-nette/issues",
-                "source": "https://github.com/phpstan/phpstan-nette/tree/0.12.14"
+                "source": "https://github.com/phpstan/phpstan-nette/tree/0.12.16"
             },
             "install-path": "../phpstan/phpstan-nette"
         },
@@ -2909,17 +2909,17 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v1.3.0",
-            "version_normalized": "1.3.0.0",
+            "version": "v1.4.0",
+            "version_normalized": "1.4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "bb809a32e0669cba26a32a37e4b215816a436afa"
+                "reference": "146482f2794609f7d652cf5eda713252c05024b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/bb809a32e0669cba26a32a37e4b215816a436afa",
-                "reference": "bb809a32e0669cba26a32a37e4b215816a436afa",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/146482f2794609f7d652cf5eda713252c05024b5",
+                "reference": "146482f2794609f7d652cf5eda713252c05024b5",
                 "shasum": ""
             },
             "require": {
@@ -2932,7 +2932,7 @@
                 "phpunit/phpunit": "^7.0 || ^9.4.2",
                 "spaze/coding-standard": "^0.0.4"
             },
-            "time": "2021-02-19T22:26:49+00:00",
+            "time": "2021-03-03T10:43:29+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -2961,7 +2961,7 @@
             "description": "Disallowed method and function calls plug-in for PHPStan",
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v1.3.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v1.4.0"
             },
             "install-path": "../spaze/phpstan-disallowed-calls"
         },
