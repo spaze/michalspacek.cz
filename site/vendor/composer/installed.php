@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '3169152bd009dd83f8d0e173eeacb7ed38f67eba',
+    'reference' => '5bcad8a43c5a3f8f34cd78a24c3d944189faa799',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -314,12 +314,12 @@
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.77',
-      'version' => '0.12.77.0',
+      'pretty_version' => '0.12.81',
+      'version' => '0.12.81.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1f10b8c8d118d01e7b492f9707999d456be5812c',
+      'reference' => '0dd5b0ebeff568f7000022ea5f04aa86ad3124b8',
     ),
     'phpstan/phpstan-deprecation-rules' => 
     array (
@@ -332,12 +332,12 @@
     ),
     'phpstan/phpstan-nette' => 
     array (
-      'pretty_version' => '0.12.14',
-      'version' => '0.12.14.0',
+      'pretty_version' => '0.12.16',
+      'version' => '0.12.16.0',
       'aliases' => 
       array (
       ),
-      'reference' => '16a1457e21ebcf910d733fbaa7c0ba9c86686f31',
+      'reference' => '7fda19691b464b1f0a3e42fa34c2c363e7404c77',
     ),
     'roave/security-advisories' => 
     array (
@@ -401,7 +401,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '3169152bd009dd83f8d0e173eeacb7ed38f67eba',
+      'reference' => '5bcad8a43c5a3f8f34cd78a24c3d944189faa799',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -441,12 +441,21 @@
     ),
     'spaze/phpstan-disallowed-calls' => 
     array (
-      'pretty_version' => 'v1.3.0',
-      'version' => '1.3.0.0',
+      'pretty_version' => 'v1.4.0',
+      'version' => '1.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bb809a32e0669cba26a32a37e4b215816a436afa',
+      'reference' => '146482f2794609f7d652cf5eda713252c05024b5',
+    ),
+    'spaze/phpstan-disallowed-calls-nette' => 
+    array (
+      'pretty_version' => 'v1.0.0',
+      'version' => '1.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '299f0a133d7cd2607be6f3fc84f0f1175c68f6a9',
     ),
     'spaze/sri-macros' => 
     array (

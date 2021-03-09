@@ -1,0 +1,16 @@
+{
+	"name": "spaze/phpstan-disallowed-calls-nette",
+	"description": "Nette Framework-specific configuration for Disallowed method and function calls plug-in for PHPStan",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.cz",
+			"email": "mail@michalspacek.cz"
+		}
+	],
+	"require": {
+		"php": "^7.1 || ^8.0",
+		"spaze/phpstan-disallowed-calls": "^1.4.0"
+	}
+}

@@ -16,6 +16,7 @@ parameters:
 			- vendor/symfony/translation/DependencyInjection/*Pass.php
 			- vendor/symfony/translation/Loader/YamlFileLoader.php
 			- vendor/texy/texy/examples/*/demo-*.php  # kukulich/fshl not installed
+			- vendor/tracy/tracy/examples/*.php  # dump, bdump examples
 			- vendor/tracy/tracy/src/Bridges/Psr/*  # psr/log not installed, Psr\Log\LogLevel constants missing intentionally
 			# `require-dev` packages
 			- vendor/dealerdirect/phpcodesniffer-composer-installer/*  # required by slevomat/coding-standard (excluded as well)
@@ -59,6 +60,13 @@ parameters:
 				- vendor/nette/tester/src/Runner/Job.php
 				- vendor/nette/tester/src/Runner/PhpInterpreter.php
 				- vendor/php-parallel-lint/php-parallel-lint/src/Process/Process.php
+
+	disallowedStaticCalls:
+		-
+			method: 'Tracy\Debugger::barDump()'
+			message: 'use logger instead, debug bar is not visible in production'
+			allowIn:
+				- vendor/tracy/tracy/src/Tracy/functions.php
 
 includes:
 	- disallowed-calls.neon

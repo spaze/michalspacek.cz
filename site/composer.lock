@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9728df6135ecc9e0c486648a2877cc10",
+    "content-hash": "13c2a885189b5f4dd4ff469e94a9951c",
     "packages": [
         {
             "name": "contributte/translation",
@@ -3105,16 +3105,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.77",
+            "version": "0.12.81",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "1f10b8c8d118d01e7b492f9707999d456be5812c"
+                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1f10b8c8d118d01e7b492f9707999d456be5812c",
-                "reference": "1f10b8c8d118d01e7b492f9707999d456be5812c",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
+                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
                 "shasum": ""
             },
             "require": {
@@ -3145,7 +3145,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.77"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.81"
             },
             "funding": [
                 {
@@ -3161,7 +3161,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-17T16:22:19+00:00"
+            "time": "2021-03-08T22:03:02+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -3216,16 +3216,16 @@
         },
         {
             "name": "phpstan/phpstan-nette",
-            "version": "0.12.14",
+            "version": "0.12.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-nette.git",
-                "reference": "16a1457e21ebcf910d733fbaa7c0ba9c86686f31"
+                "reference": "7fda19691b464b1f0a3e42fa34c2c363e7404c77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/16a1457e21ebcf910d733fbaa7c0ba9c86686f31",
-                "reference": "16a1457e21ebcf910d733fbaa7c0ba9c86686f31",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/7fda19691b464b1f0a3e42fa34c2c363e7404c77",
+                "reference": "7fda19691b464b1f0a3e42fa34c2c363e7404c77",
                 "shasum": ""
             },
             "require": {
@@ -3274,9 +3274,9 @@
             "description": "Nette Framework class reflection extension for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-nette/issues",
-                "source": "https://github.com/phpstan/phpstan-nette/tree/0.12.14"
+                "source": "https://github.com/phpstan/phpstan-nette/tree/0.12.16"
             },
-            "time": "2021-01-05T10:04:46+00:00"
+            "time": "2021-03-04T13:58:46+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -3608,16 +3608,16 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v1.3.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "bb809a32e0669cba26a32a37e4b215816a436afa"
+                "reference": "146482f2794609f7d652cf5eda713252c05024b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/bb809a32e0669cba26a32a37e4b215816a436afa",
-                "reference": "bb809a32e0669cba26a32a37e4b215816a436afa",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/146482f2794609f7d652cf5eda713252c05024b5",
+                "reference": "146482f2794609f7d652cf5eda713252c05024b5",
                 "shasum": ""
             },
             "require": {
@@ -3657,9 +3657,46 @@
             "description": "Disallowed method and function calls plug-in for PHPStan",
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v1.3.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v1.4.0"
             },
-            "time": "2021-02-19T22:26:49+00:00"
+            "time": "2021-03-03T10:43:29+00:00"
+        },
+        {
+            "name": "spaze/phpstan-disallowed-calls-nette",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/phpstan-disallowed-calls-nette.git",
+                "reference": "299f0a133d7cd2607be6f3fc84f0f1175c68f6a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls-nette/zipball/299f0a133d7cd2607be6f3fc84f0f1175c68f6a9",
+                "reference": "299f0a133d7cd2607be6f3fc84f0f1175c68f6a9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "spaze/phpstan-disallowed-calls": "^1.4.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.cz"
+                }
+            ],
+            "description": "Nette Framework-specific configuration for Disallowed method and function calls plug-in for PHPStan",
+            "support": {
+                "issues": "https://github.com/spaze/phpstan-disallowed-calls-nette/issues",
+                "source": "https://github.com/spaze/phpstan-disallowed-calls-nette/tree/v1.0.0"
+            },
+            "time": "2021-03-09T14:32:51+00:00"
         }
     ],
     "aliases": [],

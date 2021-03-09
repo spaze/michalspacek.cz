@@ -1,0 +1,18 @@
+parameters:
+	disallowedFunctionCalls:
+		-
+			function: 'dump()'
+			message: 'use logger instead'
+		-
+			function: 'dumpe()'
+			message: 'use logger instead'
+		-
+			function: 'bdump()'
+			message: 'use logger instead, debug bar is not visible in production'
+	disallowedStaticCalls:
+		-
+			method: 'Tracy\Debugger::dump()'
+			message: 'use logger instead'
+		-
+			method: 'Tracy\Debugger::barDump()'
+			message: 'use logger instead, debug bar is not visible in production'
