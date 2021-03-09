@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '3bae86f48f71c634604913828c58a8ee66360666',
+    'reference' => '5bcad8a43c5a3f8f34cd78a24c3d944189faa799',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -425,7 +425,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '3bae86f48f71c634604913828c58a8ee66360666',
+      'reference' => '5bcad8a43c5a3f8f34cd78a24c3d944189faa799',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -471,6 +471,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '146482f2794609f7d652cf5eda713252c05024b5',
+    ),
+    'spaze/phpstan-disallowed-calls-nette' => 
+    array (
+      'pretty_version' => 'v1.0.0',
+      'version' => '1.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '299f0a133d7cd2607be6f3fc84f0f1175c68f6a9',
     ),
     'spaze/sri-macros' => 
     array (

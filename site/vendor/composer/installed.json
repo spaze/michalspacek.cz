@@ -2966,6 +2966,46 @@
             "install-path": "../spaze/phpstan-disallowed-calls"
         },
         {
+            "name": "spaze/phpstan-disallowed-calls-nette",
+            "version": "v1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/phpstan-disallowed-calls-nette.git",
+                "reference": "299f0a133d7cd2607be6f3fc84f0f1175c68f6a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls-nette/zipball/299f0a133d7cd2607be6f3fc84f0f1175c68f6a9",
+                "reference": "299f0a133d7cd2607be6f3fc84f0f1175c68f6a9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "spaze/phpstan-disallowed-calls": "^1.4.0"
+            },
+            "time": "2021-03-09T14:32:51+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "email": "mail@michalspacek.cz",
+                    "homepage": "https://www.michalspacek.cz"
+                }
+            ],
+            "description": "Nette Framework-specific configuration for Disallowed method and function calls plug-in for PHPStan",
+            "support": {
+                "issues": "https://github.com/spaze/phpstan-disallowed-calls-nette/issues",
+                "source": "https://github.com/spaze/phpstan-disallowed-calls-nette/tree/v1.0.0"
+            },
+            "install-path": "../spaze/phpstan-disallowed-calls-nette"
+        },
+        {
             "name": "spaze/sri-macros",
             "version": "v0.3.2",
             "version_normalized": "0.3.2.0",
@@ -3703,6 +3743,7 @@
         "phpstan/phpstan-deprecation-rules",
         "phpstan/phpstan-nette",
         "roave/security-advisories",
-        "spaze/phpstan-disallowed-calls"
+        "spaze/phpstan-disallowed-calls",
+        "spaze/phpstan-disallowed-calls-nette"
     ]
 }
