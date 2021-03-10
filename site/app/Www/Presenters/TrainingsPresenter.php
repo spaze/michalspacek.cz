@@ -133,7 +133,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		if ($this->training->successorId !== null) {
-			$this->redirect('training', $this->trainings->getActionById($this->training->successorId));
+			$this->redirectPermanent('training', $this->trainings->getActionById($this->training->successorId));
 		}
 
 		$this->dates = $this->trainings->getDates($this->training->trainingId);
