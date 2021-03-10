@@ -396,7 +396,8 @@ class TrainingsPresenter extends BasePresenter
 			$values->review,
 			$values->href ?: null,
 			$values->hidden,
-			$values->ranking ?: null
+			$values->ranking ?: null,
+			$values->note ?: null,
 		);
 
 		$this->redirect('date', $this->review->dateId);
@@ -448,7 +449,8 @@ class TrainingsPresenter extends BasePresenter
 			$values->review,
 			$values->href ?: null,
 			$values->hidden,
-			$values->ranking ?: null
+			$values->ranking ?: null,
+			$values->note ?: null,
 		);
 		$this->redirect('date', $this->dateId);
 	}

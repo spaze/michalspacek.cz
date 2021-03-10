@@ -45,6 +45,9 @@ class TrainingReview extends ProtectedForm
 		$this->addText('ranking', 'Pořadí:')
 			->setRequired(false)
 			->setHtmlType('number');
+		$this->addText('note', 'Poznámka:')
+			->setRequired(false)
+			->addRule(self::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
 		$this->addSubmit('submit', 'Přidat');
 	}
 
@@ -63,6 +66,7 @@ class TrainingReview extends ProtectedForm
 			'href' => $review->href,
 			'hidden' => $review->hidden,
 			'ranking' => $review->ranking,
+			'note' => $review->note,
 		);
 		$this->setDefaults($values);
 		$this->getComponent('submit')->caption = 'Upravit';
