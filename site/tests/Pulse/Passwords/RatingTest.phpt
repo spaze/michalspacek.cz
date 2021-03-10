@@ -114,7 +114,7 @@ class RatingTest extends TestCase
 	{
 		$algorithm = new Algorithm('1', 'foo', $alias, $salted, $stretched, new DateTime(), true, null, null);
 		foreach ($disclosureTypes as $typeAlias) {
-			$algorithm->addDisclosure(new StorageDisclosure('https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', $typeAlias));
+			$algorithm->addDisclosure(new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', $typeAlias));
 		}
 		return $algorithm;
 	}

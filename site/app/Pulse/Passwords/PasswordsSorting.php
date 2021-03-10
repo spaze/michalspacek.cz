@@ -45,7 +45,7 @@ class PasswordsSorting
 							if (!$collator) {
 								$collator = new Collator('en_US');
 							}
-							$result = $collator->getSortKey($storages->getCompany($siteA->getCompanyId())->getSortName()) <=> $collator->getSortKey($storages->getCompany($siteB->getCompanyId())->getSortName());
+							$result = $collator->getSortKey($storages->getCompany($siteA->getCompany()->getId())->getSortName()) <=> $collator->getSortKey($storages->getCompany($siteB->getCompany()->getId())->getSortName());
 							if ($result === 0) {
 								$result = $siteA->getUrl() <=> $siteB->getUrl();
 							}

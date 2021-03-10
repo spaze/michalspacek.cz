@@ -15,11 +15,14 @@ class Storage
 	/** @var array<string, Site> */
 	private array $sites = [];
 
+	private SearchResult $searchResult;
+
 
 	public function __construct(string $id, int $companyId)
 	{
 		$this->id = $id;
 		$this->companyId = $companyId;
+		$this->searchResult = new SearchResult();
 	}
 
 
@@ -65,6 +68,12 @@ class Storage
 	public function removeSite(Site $site): void
 	{
 		unset($this->sites[$site->getId()]);
+	}
+
+
+	public function getSearchResult(): SearchResult
+	{
+		return $this->searchResult;
 	}
 
 }

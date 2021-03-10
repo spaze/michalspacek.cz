@@ -8,6 +8,8 @@ use DateTimeInterface;
 class StorageDisclosure
 {
 
+	private int $id;
+
 	private string $url;
 
 	private string $archive;
@@ -23,8 +25,9 @@ class StorageDisclosure
 	private string $typeAlias;
 
 
-	public function __construct(string $url, string $archive, ?string $note, ?DateTimeInterface $published, ?DateTimeInterface $added, string $type, string $typeAlias)
+	public function __construct(int $id, string $url, string $archive, ?string $note, ?DateTimeInterface $published, ?DateTimeInterface $added, string $type, string $typeAlias)
 	{
+		$this->id = $id;
 		$this->url = $url;
 		$this->archive = $archive;
 		$this->note = $note;
@@ -32,6 +35,12 @@ class StorageDisclosure
 		$this->added = $added;
 		$this->type = $type;
 		$this->typeAlias = $typeAlias;
+	}
+
+
+	public function getId(): int
+	{
+		return $this->id;
 	}
 
 

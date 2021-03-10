@@ -20,7 +20,7 @@ class Site
 	/** @var array<integer, StorageSharedWith> */
 	private array $sharedWith = [];
 
-	private int $companyId;
+	private Company $company;
 
 	private string $storageId;
 
@@ -42,16 +42,16 @@ class Site
 	 * @param string|null $url
 	 * @param string|null $alias
 	 * @param array<integer, array{url:string, alias:string}> $sharedWith
-	 * @param int $companyId
+	 * @param Company $company
 	 * @param string $storageId
 	 */
-	public function __construct(string $id, bool $isTypeAll, ?string $url, ?string $alias, array $sharedWith, int $companyId, string $storageId)
+	public function __construct(string $id, bool $isTypeAll, ?string $url, ?string $alias, array $sharedWith, Company $company, string $storageId)
 	{
 		$this->id = $id;
 		$this->isTypeAll = $isTypeAll;
 		$this->url = $url;
 		$this->alias = $alias;
-		$this->companyId = $companyId;
+		$this->company = $company;
 		$this->storageId = $storageId;
 		foreach ($sharedWith as $sharedSite) {
 			$this->sharedWith[] = new StorageSharedWith($sharedSite['url'], $sharedSite['alias']);
@@ -92,9 +92,9 @@ class Site
 	}
 
 
-	public function getCompanyId(): int
+	public function getCompany(): Company
 	{
-		return $this->companyId;
+		return $this->company;
 	}
 
 

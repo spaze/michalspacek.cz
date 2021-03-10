@@ -39,6 +39,8 @@ class PasswordsStoragesSearchSortFactory
 		$form->addSelect('rating', 'Rating', $items)->setDefaultValue('all');
 		$sorting = $this->sorting->getSorting();
 		$form->addSelect('sort', 'Sort by', $sorting)->setDefaultValue(array_key_first($sorting));
+		$placeholder = 'company, site, disclosure';
+		$form->addText('search', 'Search')->setHtmlAttribute('placeholder', $placeholder)->setHtmlAttribute('title', $placeholder);
 		return $form;
 	}
 

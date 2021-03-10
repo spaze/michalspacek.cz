@@ -39,7 +39,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 	}
 
 
-	public function actionDefault(?string $param, ?string $rating, ?string $sort): void
+	public function actionDefault(?string $param, ?string $rating, ?string $sort, ?string $search): void
 	{
 		// Keep old, published URLs alive
 		if ($param) {
@@ -47,12 +47,12 @@ class PasswordsStoragesPresenter extends BasePresenter
 		}
 
 		$rating = $rating === null || $rating === 'all' ? null : strtoupper($rating);
-		$data = $this->passwords->getAllStorages($rating, $sort === null ? $this->passwordsSorting->getDefaultSort() : $sort);
+		$data = $this->passwords->getAllStorages($rating, $sort === null ? $this->passwordsSorting->getDefaultSort() : $sort, $search);
 		$this->template->isDetail = false;
 		$this->template->pageTitle = 'Password storage disclosures';
 		$this->template->data = $data;
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->template->openSearchSort = $rating !== null || $sort !== null;
+		$this->template->openSearchSort = $rating !== null || $sort !== null || $search !== null;
 		$this->template->canonicalLink = $this->link("//{$this->action}");  // Not using 'this' as the destination to omit params
 	}
 

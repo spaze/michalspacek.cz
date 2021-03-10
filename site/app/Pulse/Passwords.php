@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
+use MichalSpacekCz\Pulse\Passwords\SearchMatcher;
 use MichalSpacekCz\Pulse\Passwords\Storage;
 use MichalSpacekCz\Pulse\Passwords\StorageDisclosure;
 use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
@@ -48,7 +49,7 @@ class Passwords
 	}
 
 
-	public function getAllStorages(?string $rating, string $sort): StorageRegistry
+	public function getAllStorages(?string $rating, string $sort, ?string $search): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
@@ -67,6 +68,7 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				ps.from_confirmed AS fromConfirmed,
+				pd.id AS disclosureId,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
@@ -91,8 +93,9 @@ class Passwords
 			'disclosurePublished' => true,
 		];
 		$storages = $this->processStorages($this->database->fetchAll($query, $orderBy), $sort);
+		$searchMatcher = new SearchMatcher($search, $storages);
 		foreach ($storages->getSites() as $site) {
-			if ($rating && $site->getRating() !== $rating) {
+			if (($rating && $site->getRating() !== $rating) || !$searchMatcher->match($site)) {
 				$storages->removeStorageSite($site);
 			}
 		}
@@ -125,6 +128,7 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				ps.from_confirmed AS fromConfirmed,
+				pd.id AS disclosureId,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
@@ -177,6 +181,7 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				ps.from_confirmed AS fromConfirmed,
+				pd.id AS disclosureId,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
@@ -223,6 +228,7 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				ps.from_confirmed AS fromConfirmed,
+				pd.id AS disclosureId,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
@@ -267,7 +273,7 @@ class Passwords
 				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
 			}
 			if (!$registry->hasSite($siteId)) {
-				$registry->addSite(new Site($siteId, $row->siteId === null, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, Json::FORCE_ARRAY) : [], $row->companyId, $storageKey));
+				$registry->addSite(new Site($siteId, $row->siteId === null, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, Json::FORCE_ARRAY) : [], $registry->getCompany($row->companyId), $storageKey));
 			}
 			if (!$registry->hasStorage($storageKey)) {
 				$registry->addStorage(new Storage($storageKey, $row->companyId));
@@ -279,7 +285,7 @@ class Passwords
 				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $row->attributes ? Json::decode($row->attributes) : null, $row->note);
 				$registry->getStorage($storageKey)->getSite($siteId)->addAlgorithm($algorithm);
 			}
-			$disclosure = new StorageDisclosure($row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
+			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
 			$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);
 		}
 		foreach ($registry->getSites() as $site) {
