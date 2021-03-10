@@ -76,6 +76,10 @@ class CompanyTrainingsPresenter extends BasePresenter
 			throw new BadRequestException("I don't do {$name} training, yet");
 		}
 
+		if ($training->successorId !== null) {
+			$this->redirectPermanent('this', $this->trainings->getActionById($training->successorId));
+		}
+
 		$price = $this->prices->resolvePriceVat($training->price);
 
 		$this->template->name = $training->action;

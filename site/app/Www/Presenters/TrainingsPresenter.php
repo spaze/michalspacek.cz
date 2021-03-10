@@ -132,9 +132,7 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("I don't do {$name} training, yet");
 		}
 
-		if ($this->training->successorId !== null) {
-			$this->redirectPermanent('training', $this->trainings->getActionById($this->training->successorId));
-		}
+		$this->redirectToSuccessor($this->training->successorId);
 
 		$this->dates = $this->trainings->getDates($this->training->trainingId);
 
@@ -409,6 +407,8 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("I don't do {$name} training, yet");
 		}
 
+		$this->redirectToSuccessor($training->successorId);
+
 		$this->template->name             = $training->action;
 		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
 		$this->template->title            = $training->name;
@@ -537,6 +537,14 @@ class TrainingsPresenter extends BasePresenter
 				$params[$key] = ['name' => $value];
 			}
 			return $params;
+		}
+	}
+
+
+	private function redirectToSuccessor(?int $successorId): void
+	{
+		if ($successorId !== null) {
+			$this->redirectPermanent('this', $this->trainings->getActionById($successorId));
 		}
 	}
 

@@ -59,6 +59,7 @@ class CompanyTrainings
 				tc.duration,
 				tc.alternative_duration AS alternativeDuration,
 				tc.alternative_duration_price_text AS alternativeDurationPriceText,
+				t.key_successor AS successorId,
 				t.key_discontinued AS discontinuedId
 			FROM trainings t
 				JOIN trainings_company tc ON t.id_training = tc.key_training
