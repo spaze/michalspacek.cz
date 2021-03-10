@@ -16,6 +16,8 @@ class PasswordsSorting
 	private const RATING_F_A = 'rating-f-a';
 	private const NEWEST_DISCLOSURES_FIRST = 'newest-disclosures-first';
 	private const NEWEST_DISCLOSURES_LAST = 'newest-disclosures-last';
+	private const NEWLY_ADDED_FIRST = 'newly-added-first';
+	private const NEWLY_ADDED_LAST = 'newly-added-last';
 
 	/** @var array<string, string> */
 	private array $sorting = [
@@ -25,16 +27,13 @@ class PasswordsSorting
 		self::RATING_F_A => 'best rating last',
 		self::NEWEST_DISCLOSURES_FIRST => 'newest disclosures first',
 		self::NEWEST_DISCLOSURES_LAST => 'newest disclosures last',
+		self::NEWLY_ADDED_FIRST => 'newly added first',
+		self::NEWLY_ADDED_LAST => 'newly added last',
 	];
 
 
 	public function sort(StorageRegistry $storages, string $sort): StorageRegistry
 	{
-		if ($this->isAnyCompanyAlphabetically($sort)) {
-			// done in the SQL query already
-			return $storages;
-		}
-
 		switch ($sort) {
 			case self::RATING_A_F:
 			case self::RATING_F_A:
@@ -62,6 +61,16 @@ class PasswordsSorting
 						return $sort === self::NEWEST_DISCLOSURES_LAST
 							? $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished() <=> $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished()
 							: $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished() <=> $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
+					});
+				};
+				break;
+			case self::NEWLY_ADDED_FIRST:
+			case self::NEWLY_ADDED_LAST:
+				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
+					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, Site $siteA, Site $siteB, string $sort): int {
+						$addedA = $siteA->getLatestAlgorithm()->getLatestDisclosure()->getAdded() ?? $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
+						$addedB = $siteB->getLatestAlgorithm()->getLatestDisclosure()->getAdded() ?? $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
+						return $sort === self::NEWLY_ADDED_LAST ? $addedA <=> $addedB : $addedB <=> $addedA;
 					});
 				};
 				break;
