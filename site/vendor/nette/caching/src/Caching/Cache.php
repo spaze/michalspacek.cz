@@ -88,7 +88,7 @@ class Cache
 		$storageKey = $this->generateKey($key);
 		$data = $this->storage->read($storageKey);
 		if ($data === null && $generator) {
-			$this->storage->lock($storageKey);			
+			$this->storage->lock($storageKey);
 			try {
 				$data = $generator(...[&$dependencies]);
 			} catch (\Throwable $e) {
@@ -169,7 +169,6 @@ class Cache
 		$key = $this->generateKey($key);
 
 		if ($data instanceof \Closure) {
-			trigger_error(__METHOD__ . '() closure argument is deprecated.', E_USER_WARNING);
 			$this->storage->lock($key);
 			try {
 				$data = $data(...[&$dependencies]);

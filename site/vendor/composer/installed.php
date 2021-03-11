@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '5bcad8a43c5a3f8f34cd78a24c3d944189faa799',
+    'reference' => '5c08efecece06150cd06a437aa35366e26132cc7',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -66,12 +66,12 @@
     ),
     'latte/latte' => 
     array (
-      'pretty_version' => 'v2.10.2',
-      'version' => '2.10.2.0',
+      'pretty_version' => 'v2.10.3',
+      'version' => '2.10.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2f8dd896472b8a2f2069934f128a02566631d876',
+      'reference' => 'dd2c58863e830c22a2c6b85af63f37b829d255df',
     ),
     'nette/application' => 
     array (
@@ -93,12 +93,12 @@
     ),
     'nette/caching' => 
     array (
-      'pretty_version' => 'v3.1.0',
-      'version' => '3.1.0.0',
+      'pretty_version' => 'v3.1.1',
+      'version' => '3.1.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '60281abf366c4ab76e9436dc1bfe2e402db18b67',
+      'reference' => '3e771c589dee414724be473c24ad16dae50c1960',
     ),
     'nette/component-model' => 
     array (
@@ -120,12 +120,12 @@
     ),
     'nette/di' => 
     array (
-      'pretty_version' => 'v3.0.7',
-      'version' => '3.0.7.0',
+      'pretty_version' => 'v3.0.8',
+      'version' => '3.0.8.0',
       'aliases' => 
       array (
       ),
-      'reference' => '33b188dd8fce8de15795a19ac89bb34227dfb37a',
+      'reference' => '1a3210f0f1f971db8a6e970c716c1cebd28b7ab0',
     ),
     'nette/finder' => 
     array (
@@ -138,12 +138,12 @@
     ),
     'nette/forms' => 
     array (
-      'pretty_version' => 'v3.1.2',
-      'version' => '3.1.2.0',
+      'pretty_version' => 'v3.1.3',
+      'version' => '3.1.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '54858a9eeb0c57c316a07cea5aa2fa135c6807ac',
+      'reference' => 'bfbef39b1f07dc5cdfeb7dba4843ee086ca0c065',
     ),
     'nette/http' => 
     array (
@@ -156,39 +156,39 @@
     ),
     'nette/mail' => 
     array (
-      'pretty_version' => 'v3.1.5',
-      'version' => '3.1.5.0',
+      'pretty_version' => 'v3.1.6',
+      'version' => '3.1.6.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'e072486ef2dbb533189f36a53c020f06b7659f4f',
+      'reference' => 'd5035afcb733ff76b353b8a126a1a6fd560005de',
     ),
     'nette/neon' => 
     array (
-      'pretty_version' => 'v3.2.1',
-      'version' => '3.2.1.0',
+      'pretty_version' => 'v3.2.2',
+      'version' => '3.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a5b3a60833d2ef55283a82d0c30b45d136b29e75',
+      'reference' => 'e4ca6f4669121ca6876b1d048c612480e39a28d5',
     ),
     'nette/php-generator' => 
     array (
-      'pretty_version' => 'v3.5.2',
-      'version' => '3.5.2.0',
+      'pretty_version' => 'v3.5.3',
+      'version' => '3.5.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '41dcc5d1cb322835e5950a76515166c90923c6b7',
+      'reference' => '119f01a7bd590469cb01b538f20a125a28853626',
     ),
     'nette/robot-loader' => 
     array (
-      'pretty_version' => 'v3.3.1',
-      'version' => '3.3.1.0',
+      'pretty_version' => 'v3.4.0',
+      'version' => '3.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '15c1ecd0e6e69e8d908dfc4cca7b14f3b850a96b',
+      'reference' => '3973cf3970d1de7b30888fd10b92dac9e0c2fd82',
     ),
     'nette/routing' => 
     array (
@@ -201,12 +201,12 @@
     ),
     'nette/schema' => 
     array (
-      'pretty_version' => 'v1.2.0',
-      'version' => '1.2.0.0',
+      'pretty_version' => 'v1.2.1',
+      'version' => '1.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9962564311f4affebd63f9cab014ab69266306ce',
+      'reference' => 'f5ed39fc96358f922cedfd1e516f0dadf5d2be0d',
     ),
     'nette/security' => 
     array (
@@ -219,21 +219,21 @@
     ),
     'nette/tester' => 
     array (
-      'pretty_version' => 'v2.3.5',
-      'version' => '2.3.5.0',
+      'pretty_version' => 'v2.4.0',
+      'version' => '2.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '86d0e32ac2011c734d8def8e90ec65522b644bc4',
+      'reference' => '0988c33459b49bfd6c8d06e16f29de96eba341e7',
     ),
     'nette/utils' => 
     array (
-      'pretty_version' => 'v3.2.1',
-      'version' => '3.2.1.0',
+      'pretty_version' => 'v3.2.2',
+      'version' => '3.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2bc2f58079c920c2ecbb6935645abf6f2f5f94ba',
+      'reference' => '967cfc4f9a1acd5f1058d76715a424c53343c20c',
     ),
     'paragonie/constant_time_encoding' => 
     array (
@@ -347,7 +347,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '640ff0b5dcacc0958534c8c0255b90697f3eb2a8',
+      'reference' => '635360789eae558cd66e17c9454a58cb2334e80a',
     ),
     'slevomat/coding-standard' => 
     array (
@@ -401,7 +401,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '5bcad8a43c5a3f8f34cd78a24c3d944189faa799',
+      'reference' => '5c08efecece06150cd06a437aa35366e26132cc7',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -477,12 +477,12 @@
     ),
     'symfony/config' => 
     array (
-      'pretty_version' => 'v5.2.3',
-      'version' => '5.2.3.0',
+      'pretty_version' => 'v5.2.4',
+      'version' => '5.2.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '50e0e1314a3b2609d32b6a5a0d0fb5342494c4ab',
+      'reference' => '212d54675bf203ff8aef7d8cee8eecfb72f4a263',
     ),
     'symfony/deprecation-contracts' => 
     array (
@@ -495,12 +495,12 @@
     ),
     'symfony/filesystem' => 
     array (
-      'pretty_version' => 'v5.2.3',
-      'version' => '5.2.3.0',
+      'pretty_version' => 'v5.2.4',
+      'version' => '5.2.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '262d033b57c73e8b59cd6e68a45c528318b15038',
+      'reference' => '710d364200997a5afde34d9fe57bd52f3cc1e108',
     ),
     'symfony/polyfill-ctype' => 
     array (
@@ -534,12 +534,12 @@
     ),
     'symfony/translation' => 
     array (
-      'pretty_version' => 'v5.2.3',
-      'version' => '5.2.3.0',
+      'pretty_version' => 'v5.2.5',
+      'version' => '5.2.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c021864d4354ee55160ddcfd31dc477a1bc77949',
+      'reference' => '0947ab1e3aabd22a6bef393874b2555d2bb976da',
     ),
     'symfony/translation-contracts' => 
     array (
@@ -554,7 +554,7 @@
     array (
       'provided' => 
       array (
-        0 => '2.0',
+        0 => '2.3',
       ),
     ),
     'texy/texy' => 

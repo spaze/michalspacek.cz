@@ -2,7 +2,7 @@ Nette PHP Generator
 ===================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/php-generator.svg)](https://packagist.org/packages/nette/php-generator)
-[![Build Status](https://travis-ci.org/nette/php-generator.svg?branch=master)](https://travis-ci.org/nette/php-generator)
+[![Tests](https://github.com/nette/php-generator/workflows/Tests/badge.svg?branch=master)](https://github.com/nette/php-generator/actions)
 [![Coverage Status](https://coveralls.io/repos/github/nette/php-generator/badge.svg?branch=master&v=1)](https://coveralls.io/github/nette/php-generator?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/nette/php-generator/v/stable)](https://github.com/nette/php-generator/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/php-generator/blob/master/license.md)
@@ -13,9 +13,21 @@ Introduction
 
 Do you need to generate PHP code of classes, functions, namespaces, etc.? This library with a friendly API will help you.
 
-Documentation can be found on the [website](https://doc.nette.org/php-generator). If you like it, **[please make a donation now](https://github.com/sponsors/dg)**. Thank you!
+Documentation can be found on the [website](https://doc.nette.org/php-generator).
 
-Installation:
+
+[Support Me](https://github.com/sponsors/dg)
+--------------------------------------------
+
+Do you like PHP Generator? Are you looking forward to the new features?
+
+[![Buy me a coffee](https://files.nette.org/icons/donation-3.svg)](https://github.com/sponsors/dg)
+
+Thank you!
+
+
+Installation
+------------
 
 ```shell
 composer require nette/php-generator

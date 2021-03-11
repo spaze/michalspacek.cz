@@ -2,7 +2,7 @@ Nette Mail: Sending E-mails
 ===========================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/mail.svg)](https://packagist.org/packages/nette/mail)
-[![Build Status](https://travis-ci.org/nette/mail.svg?branch=master)](https://travis-ci.org/nette/mail)
+[![Tests](https://github.com/nette/mail/workflows/Tests/badge.svg?branch=master)](https://github.com/nette/mail/actions)
 [![Coverage Status](https://coveralls.io/repos/github/nette/mail/badge.svg?branch=master)](https://coveralls.io/github/nette/mail?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/nette/mail/v/stable)](https://github.com/nette/mail/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/mail/blob/master/license.md)
@@ -13,13 +13,28 @@ Introduction
 
 Are you going to send emails such as newsletters or order confirmations? Nette Framework provides the necessary tools with a very nice API.
 
-Documentation can be found on the [website](https://doc.nette.org/mailing). If you like it, **[please make a donation now](https://github.com/sponsors/dg)**. Thank you!
+Documentation can be found on the [website](https://doc.nette.org/mailing).
 
-Installation:
+
+[Support Me](https://github.com/sponsors/dg)
+--------------------------------------------
+
+Do you like Nette Mail? Are you looking forward to the new features?
+
+[![Buy me a coffee](https://files.nette.org/icons/donation-3.svg)](https://github.com/sponsors/dg)
+
+Thank you!
+
+
+Installation
+------------
 
 ```shell
 composer require nette/mail
 ```
+
+It requires PHP version 7.1 and supports PHP up to 8.0.
+
 
 Creating Emails
 ===============

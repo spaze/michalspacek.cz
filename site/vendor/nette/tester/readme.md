@@ -17,7 +17,15 @@ the [Nette Framework](https://nette.org) and is capable of testing any PHP code.
 Documentation is available on the [Nette Tester website](https://tester.nette.org).
 Read the [blog](https://blog.nette.org/category/tester/) for new information.
 
-If you like Nette, **[please make a donation now](https://nette.org/donate)**. Thank you!
+
+[Support Tester](https://github.com/sponsors/dg)
+--------------------------------------------
+
+Do you like Nette Tester? Are you looking forward to the new features?
+
+[![Buy me a coffee](https://files.nette.org/icons/donation-3.svg)](https://github.com/sponsors/dg)
+
+Thank you!
 
 
 Installation
@@ -31,6 +39,7 @@ composer require nette/tester --dev
 
 Alternatively, you can download the [tester.phar](https://github.com/nette/tester/releases) file.
 
+- Nette Tester 2.4 is compatible with PHP 7.2 to 8.0
 - Nette Tester 2.3 is compatible with PHP 7.1 to 8.0
 - Nette Tester 2.1 & 2.2 is compatible with PHP 7.1 to 7.3
 - Nette Tester 2.0 is compatible with PHP 5.6 to 7.3
@@ -77,7 +86,7 @@ Now we run tests from command-line using the `tester` command:
 > tester
  _____ ___  ___ _____ ___  ___
 |_   _/ __)( __/_   _/ __)| _ )
-  |_| \___ /___) |_| \___ |_|_\  v2.3.5
+  |_| \___ /___) |_| \___ |_|_\  v2.4.0
 
 PHP 7.3.3 | php -n | 8 threads
 .

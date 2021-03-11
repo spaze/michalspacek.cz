@@ -323,7 +323,7 @@ class CoreMacros extends MacroSet
 
 			return $writer->write(
 				'$ʟ_fi = new LR\FilterInfo(%var); echo %modifyContent($this->filters->filterContent("translate", $ʟ_fi, %raw)) %node.line;',
-				$node->context[0],
+				implode($node->context),
 				$value
 			);
 
@@ -404,12 +404,12 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroCaptureEnd(MacroNode $node, PhpWriter $writer): string
 	{
-		$body = in_array($node->context[0], [Engine::CONTENT_HTML, Engine::CONTENT_XHTML], true)
+		$body = in_array(implode($node->context), [Engine::CONTENT_HTML, Engine::CONTENT_XHTML], true)
 			? 'ob_get_length() ? new LR\\Html(ob_get_clean()) : ob_get_clean()'
 			: 'ob_get_clean()';
 		return $writer->write(
 			'$ʟ_fi = new LR\FilterInfo(%var); %raw = %modifyContent(%raw);',
-			$node->context[0],
+			implode($node->context),
 			$node->data->variable,
 			$body
 		);

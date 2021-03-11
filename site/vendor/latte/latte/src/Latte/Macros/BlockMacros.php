@@ -261,7 +261,7 @@ class BlockMacros extends MacroSet
 			$node->modifiers .= '|escape';
 			$node->closingCode = $writer->write(
 				'<?php $ʟ_fi = new LR\FilterInfo(%var); echo %modifyContent(ob_get_clean()); ?>',
-				$node->context[0]
+				implode($node->context)
 			);
 			return $writer->write('ob_start(function () {}) %node.line;');
 		}
@@ -375,7 +375,7 @@ class BlockMacros extends MacroSet
 			$node->content = rtrim($node->content, " \t");
 			$this->getCompiler()->addMethod(
 				$func,
-				$this->getCompiler()->expandTokens("extract(\$ʟ_args);\n?>{$node->content}<?php"),
+				$this->getCompiler()->expandTokens("extract(\$ʟ_args); unset(\$ʟ_args);\n?>{$node->content}<?php"),
 				'array $ʟ_args',
 				'void',
 				"{{$node->name} {$node->args}} on line {$node->startLine}"
@@ -553,7 +553,10 @@ class BlockMacros extends MacroSet
 	private function extractMethod(MacroNode $node, Block $block, string $params = null): void
 	{
 		if (preg_match('#\$|n:#', $node->content)) {
-			$node->content = '<?php extract($this->params);' . ($params ?? 'extract($ʟ_args);') . '?>' . $node->content;
+			$node->content = '<?php extract(' . ($node->name === 'block' && $node->closest(['embed']) ? 'end($this->varStack)' : '$this->params') . ');'
+				. ($params ?? 'extract($ʟ_args);')
+				. 'unset($ʟ_args);?>'
+				. $node->content;
 		}
 		$block->code = preg_replace('#^\n+|(?<=\n)[ \t]+$#D', '', $node->content);
 		$node->content = substr_replace($node->content, $node->openingCode . "\n", strspn($node->content, "\n"), strlen($block->code));
@@ -577,8 +580,7 @@ class BlockMacros extends MacroSet
 
 		$node->openingCode = $writer->write(
 			'<?php
-			$this->initBlockLayer(%0_var' . ($mod === 'block' ? ', true' : '') . ');
-			$this->setBlockLayer(%0_var);
+			$this->enterBlockLayer(%0_var, get_defined_vars()) %node.line;
 			if (false) { ?>',
 			$this->index
 		);
@@ -587,20 +589,19 @@ class BlockMacros extends MacroSet
 			$node->closingCode = $writer->write(
 				'<?php }
 				try { $this->createTemplate(%word, %node.array, "embed")->renderToContentType(%var) %node.line; }
-				finally { $this->setBlockLayer(%var); } ?>' . "\n",
+				finally { $this->leaveBlockLayer(); } ?>' . "\n",
 				$name,
-				implode($node->context),
-				$node->data->prevIndex
+				implode($node->context)
 			);
 
 		} else {
 			$node->closingCode = $writer->write(
 				'<?php }
-				try { $this->renderBlock(%raw, %node.array, %var); }
-				finally { $this->setBlockLayer(%var); } ?>' . "\n",
+				$this->copyBlockLayer();
+				try { $this->renderBlock(%raw, %node.array, %var) %node.line; }
+				finally { $this->leaveBlockLayer(); } ?>' . "\n",
 				$this->isDynamic($name) ? $writer->formatWord($name) : PhpHelpers::dump($name),
-				implode($node->context),
-				$node->data->prevIndex
+				implode($node->context)
 			);
 		}
 	}

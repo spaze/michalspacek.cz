@@ -17,8 +17,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.10.2';
-	public const VERSION_ID = 21002;
+	public const VERSION = '2.10.3';
+	public const VERSION_ID = 21003;
 
 	/** Content types */
 	public const
@@ -96,6 +96,7 @@ class Engine
 	public function render(string $name, $params = [], string $block = null): void
 	{
 		$template = $this->createTemplate($name, $this->processParams($params));
+		$template->global->coreCaptured = false;
 		($this->probe)($template);
 		$template->render($block);
 	}
@@ -108,6 +109,7 @@ class Engine
 	public function renderToString(string $name, $params = [], string $block = null): string
 	{
 		$template = $this->createTemplate($name, $this->processParams($params));
+		$template->global->coreCaptured = true;
 		($this->probe)($template);
 		return $template->capture(function () use ($template, $block) { $template->render($block); });
 	}
