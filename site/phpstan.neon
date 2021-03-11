@@ -4,9 +4,6 @@ parameters:
 	level: 7
 	ignoreErrors:
 		- '#^Call to an undefined method Nette\\Localization\\Translator::get(Default|Available)?Locales?\(\)#'  # Actually called on \Contributte\Translation\Translator
-		-
-			message: '#^Fetching class constant CLEAR_IDENTITY of deprecated class Nette\\Security\\IUserStorage:\nuse Nette\\Security\\UserStorage#'
-			path: app/Admin/Presenters/SignPresenter.php
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
