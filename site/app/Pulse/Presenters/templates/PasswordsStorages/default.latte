@@ -26,12 +26,12 @@
 
 {define #content}
 <div n:ifset="$openSearchSort" id="search-sort" n:class="inner-container, !$openSearchSort ? hidden">
-	<div class="right"><small><a n:href=":">Reset</a></small></div>
 	<form n:name="searchSort">
-		<div class="right">{label rating} {input rating}</div>
-		<div class="right">{label sort} {input sort}</div>
-		<div class="right">{label search} {input search}</div>
+		<div class="left">{label search} {input search}</div>
+		<div class="left">{label sort} {input sort}</div>
+		<div class="left">{label rating} {input rating}</div>
 	</form>
+	<div class="right"><small><a n:href=":">Reset</a></small></div>
 	<div class="clear"></div>
 </div>
 {foreach $data->getStorages() as $storage}
