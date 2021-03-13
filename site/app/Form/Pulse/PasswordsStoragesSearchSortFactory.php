@@ -27,7 +27,7 @@ class PasswordsStoragesSearchSortFactory
 	}
 
 
-	public function create(): Form
+	public function create(?string $rating, ?string $sort, ?string $search): Form
 	{
 		$form = $this->factory->create();
 		$form->setMethod('get');
@@ -36,11 +36,14 @@ class PasswordsStoragesSearchSortFactory
 		if (!$items) {
 			throw new ShouldNotHappenException();
 		}
-		$form->addSelect('rating', 'Rating', $items)->setDefaultValue('all');
+		$form->addSelect('rating', 'Rating', $items)->setDefaultValue(array_key_exists($rating, $items) ? $rating : 'all');
 		$sorting = $this->sorting->getSorting();
-		$form->addSelect('sort', 'Sort by', $sorting)->setDefaultValue(array_key_first($sorting));
+		$form->addSelect('sort', 'Sort by', $sorting)->setDefaultValue(array_key_exists($sort, $sorting) ? $sort : array_key_first($sorting));
 		$placeholder = 'company, site, disclosure';
-		$form->addText('search', 'Search')->setHtmlAttribute('placeholder', $placeholder)->setHtmlAttribute('title', $placeholder);
+		$form->addText('search', 'Search')
+			->setHtmlAttribute('placeholder', $placeholder)
+			->setHtmlAttribute('title', $placeholder)
+			->setDefaultValue($search);
 		return $form;
 	}
 

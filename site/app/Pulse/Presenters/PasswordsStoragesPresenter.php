@@ -24,6 +24,8 @@ class PasswordsStoragesPresenter extends BasePresenter
 
 	private PasswordsSorting $passwordsSorting;
 
+	private Form $searchSortForm;
+
 
 	public function __construct(
 		Passwords $passwords,
@@ -46,6 +48,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 			$this->redirectPermanent('site', $param);
 		}
 
+		$this->searchSortForm = $this->searchSortFactory->create($rating, $sort, $search);
 		$rating = $rating === null || $rating === 'all' ? null : strtoupper($rating);
 		$data = $this->passwords->getAllStorages($rating, $sort === null ? $this->passwordsSorting->getDefaultSort() : $sort, $search);
 		$this->template->isDetail = false;
@@ -136,7 +139,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 
 	protected function createComponentSearchSort(): Form
 	{
-		return $this->searchSortFactory->create();
+		return $this->searchSortForm;
 	}
 
 }
