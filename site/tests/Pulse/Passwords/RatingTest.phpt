@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
+use DateTime;
 use RuntimeException;
 use Tester\Assert;
 use Tester\TestCase;
@@ -13,98 +14,83 @@ require __DIR__ . '/../../bootstrap.php';
 class RatingTest extends TestCase
 {
 
-	private Algorithm $algo;
-
 	private Rating $rating;
 
 
-	public function __construct()
+	public function setUp()
 	{
-		$this->algo = new Algorithm();
 		$this->rating = new Rating();
 	}
 
 
 	public function testGradeA(): void
 	{
-		$this->algo->alias = 'bcrypt';
-		$this->algo->disclosureTypes = ['docs' => true, 'foo' => true];
-		Assert::same('A', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('bcrypt', true, true, ['docs', 'foo']);
+		Assert::same('A', $this->rating->get($algo));
 
-		$this->algo->alias = 'bcrypt';
-		$this->algo->disclosureTypes = ['facebook-private' => true, 'docs' => true];
-		Assert::same('A', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('bcrypt', true, true, ['facebook-private', 'docs']);
+		Assert::same('A', $this->rating->get($algo));
 
-		$this->algo->alias = 'scrypt';
-		Assert::same('A', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('scrypt', true, true, ['facebook-private', 'docs']);
+		Assert::same('A', $this->rating->get($algo));
 
-		$this->algo->alias = 'pbkdf2';
-		Assert::same('A', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('pbkdf2', true, true, ['facebook-private', 'docs']);
+		Assert::same('A', $this->rating->get($algo));
 
-		$this->algo->alias = 'argon2';
-		Assert::same('A', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('argon2', true, true, ['facebook-private', 'docs']);
+		Assert::same('A', $this->rating->get($algo));
 
-		$this->algo->alias = 'md5';
-		$this->algo->disclosureTypes = ['facebook-private' => true, 'docs' => true];
-		Assert::notSame('A', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('md5', true, true, ['facebook-private', 'docs']);
+		Assert::notSame('A', $this->rating->get($algo));
 	}
 
 
 	public function testGradeB(): void
 	{
-		$this->algo->alias = 'bcrypt';
-		$this->algo->disclosureTypes = ['facebook-private' => true, 'blog' => true];
-		Assert::same('B', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('bcrypt', true, true, ['facebook-private', 'blog']);
+		Assert::same('B', $this->rating->get($algo));
 
-		$this->algo->alias = 'bcrypt';
-		$this->algo->disclosureTypes = ['facebook-private' => true, 'docs' => true];
-		Assert::notSame('B', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('bcrypt', true, true, ['facebook-private', 'docs']);
+		Assert::notSame('B', $this->rating->get($algo));
 
-		$this->algo->alias = 'scrypt';
-		$this->algo->disclosureTypes = ['foo' => true];
-		Assert::exception(function () {
-			Assert::same('B', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('scrypt', true, true, ['foo']);
+		Assert::exception(function () use ($algo): void {
+			$this->rating->get($algo);
 		}, RuntimeException::class);
 	}
 
 
 	public function testGradeCDE(): void
 	{
-		$this->algo->alias = 'md5';
-		$this->algo->salted = true;
-		$this->algo->stretched = true;
-		$this->algo->disclosureTypes = ['facebook-private' => true, 'docs' => true];
-		Assert::same('C', $this->rating->get($this->algo));
-		Assert::notSame('D', $this->rating->get($this->algo));
-		Assert::notSame('E', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('md5', true, true, ['facebook-private', 'docs']);
+		Assert::same('C', $this->rating->get($algo));
+		Assert::notSame('D', $this->rating->get($algo));
+		Assert::notSame('E', $this->rating->get($algo));
 
-		$this->algo->salted = false;
-		$this->algo->stretched = true;
-		Assert::notSame('C', $this->rating->get($this->algo));
-		Assert::notSame('D', $this->rating->get($this->algo));
-		Assert::same('E', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('md5', false, true, ['facebook-private', 'docs']);
+		Assert::notSame('C', $this->rating->get($algo));
+		Assert::notSame('D', $this->rating->get($algo));
+		Assert::same('E', $this->rating->get($algo));
 
-		$this->algo->salted = true;
-		$this->algo->stretched = false;
-		Assert::notSame('C', $this->rating->get($this->algo));
-		Assert::same('D', $this->rating->get($this->algo));
-		Assert::notSame('E', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('md5', true, false, ['facebook-private', 'docs']);
+		Assert::notSame('C', $this->rating->get($algo));
+		Assert::same('D', $this->rating->get($algo));
+		Assert::notSame('E', $this->rating->get($algo));
 
-		$this->algo->salted = false;
-		$this->algo->stretched = false;
-		Assert::notSame('C', $this->rating->get($this->algo));
-		Assert::notSame('D', $this->rating->get($this->algo));
-		Assert::same('E', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('md5', false, false, ['facebook-private', 'docs']);
+		Assert::notSame('C', $this->rating->get($algo));
+		Assert::notSame('D', $this->rating->get($algo));
+		Assert::same('E', $this->rating->get($algo));
 	}
 
 
 	public function testGradeF(): void
 	{
-		$this->algo->alias = 'plaintext';
-		Assert::same('F', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('plaintext', false, false, ['facebook-private', 'docs']);
+		Assert::same('F', $this->rating->get($algo));
 
-		$this->algo->alias = 'encrypted';
-		Assert::same('F', $this->rating->get($this->algo));
+		$algo = $this->getAlgo('encrypted', false, false, ['facebook-private', 'docs']);
+		Assert::same('F', $this->rating->get($algo));
 	}
 
 
@@ -121,6 +107,16 @@ class RatingTest extends TestCase
 		foreach ($rating as $grade => $expected) {
 			Assert::same($expected, $this->rating->isSecureStorage($grade));
 		}
+	}
+
+
+	private function getAlgo(string $alias, bool $salted, bool $stretched, array $disclosureTypes): Algorithm
+	{
+		$algorithm = new Algorithm('1', 'foo', $alias, $salted, $stretched, new DateTime(), true, null, null);
+		foreach ($disclosureTypes as $typeAlias) {
+			$algorithm->addDisclosure(new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', $typeAlias));
+		}
+		return $algorithm;
 	}
 
 }

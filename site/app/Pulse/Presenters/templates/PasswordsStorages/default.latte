@@ -1,15 +1,20 @@
+{templateType MichalSpacekCz\Pulse\Presenters\PasswordsStoragesTemplates\PasswordsStoragesDefaultTemplate}
 {define #menu}
 &raquo; <a n:href="Homepage:">Pulse</a>
 &raquo; <a n:href="Passwords:">Passwords</a>
 {if $isDetail}&raquo; <a n:href="default">Passwords storages</a>{/if}
 {/define}
 
+{define #menuRight}
+<a n:ifset="$openSearchSort" href="" n:class="open-button, $openSearchSort ? open" data-open="#search-sort">Search & sort</a>
+{/define}
+
 {define #metas}
-{if count($data->sites) === 1}
-{capture $currentRating}{=current($data->sites)->rating|lower}{/capture}
-{var $currentAlgo = current(current(current($data->storages)))}
+{if count($data->getSites()) === 1}
+{capture $currentRating}{=current($data->getSites())->getRating()|lower}{/capture}
+{var MichalSpacekCz\Pulse\Passwords\Algorithm $currentAlgo = current(current(current($data->getStorages())->getSites())->getAlgorithms())}
 <meta property="og:image" content="{="pulse/rating-$currentRating.png"|staticImageUrl}">
-<meta property="og:description" content="{=$data->algos[$currentAlgo->id]}{if $currentAlgo->from || $currentAlgo->latestDisclosure} ({if $currentAlgo->from && $currentAlgo->fromConfirmed}since {$currentAlgo->from|date:'F Y'}{/if}{if $currentAlgo->from && $currentAlgo->fromConfirmed && $currentAlgo->latestDisclosure}, {/if}{if $currentAlgo->latestDisclosure}disclosed {$currentAlgo->latestDisclosure|date:'F Y'}{/if}){/if}">
+<meta property="og:description" content="{=$currentAlgo->getId()}{if $currentAlgo->getFrom() || $currentAlgo->getLatestDisclosure()->getPublished()} ({if $currentAlgo->getFrom() && $currentAlgo->isFromConfirmed()}since {$currentAlgo->getFrom()|date:'F Y'}{/if}{if $currentAlgo->getFrom() && $currentAlgo->isFromConfirmed() && $currentAlgo->getLatestDisclosure()->getPublished()}, {/if}{if $currentAlgo->getLatestDisclosure()->getPublished()}disclosed {$currentAlgo->getLatestDisclosure()->getPublished()|date:'F Y'}{/if}){/if}">
 {else}
 <meta property="og:image" content="{='pulse/rating-all.png'|staticImageUrl}">
 <meta property="og:description" content="How securely do they store user passwords &amp; how good are they at letting us know?">
@@ -20,57 +25,66 @@
 {/define}
 
 {define #content}
-{foreach $data->storages as $companyId => $sites}
+<div n:ifset="$openSearchSort" id="search-sort" n:class="inner-container, !$openSearchSort ? hidden">
+	<form n:name="searchSort">
+		<div class="left">{label search} {input search}</div>
+		<div class="left">{label sort} {input sort}</div>
+		<div class="left">{label rating} {input rating}</div>
+	</form>
+	<div class="right"><small><a n:href=":">Reset</a></small></div>
+	<div class="clear"></div>
+</div>
+{foreach $data->getStorages() as $storage}
 	<div class="inner-container">
-	<h2 id="{$data->companies[$companyId]->alias}" n:if="!$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->companyName}</h2>
-	<h2 id="{$data->companies[$companyId]->alias}" n:if="$data->companies[$companyId]->tradeName">{$data->companies[$companyId]->tradeName} <small>({$data->companies[$companyId]->companyName})</small></h2>
-	{foreach $sites as $siteId => $algos}
-		{var $noFollow = ($data->sites[$siteId]->secureStorage ? false : 'nofollow')}
-		{if !$data->sites[$siteId]->typeAll}
+	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="!$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span></h2>
+	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))">{$data->getCompany($storage->getCompanyId())->getTradeName()}</span> <small>(<span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span>)</small></h2>
+	{foreach $storage->getSites() as $site}
+		{var $noFollow = ($site->isSecureStorage() ? false : 'nofollow')}
+		{if !$site->isTypeAll()}
 			{var $detailsLink = 'site'}
-			{var $detailsParam = $data->sites[$siteId]->alias}
-			{var $htmlId = $data->sites[$siteId]->alias}
+			{var $detailsParam = $site->getAlias()}
+			{var $htmlId = $site->getAlias()}
 		{else}
 			{var $detailsLink = 'company'}
-			{var $detailsParam = $data->companies[$companyId]->alias}
-			{var $htmlId = $data->companies[$companyId]->alias . '-all'}
+			{var $detailsParam = $data->getCompany($storage->getCompanyId())->getCompanyAlias()}
+			{var $htmlId = $data->getCompany($storage->getCompanyId())->getCompanyAlias() . '-all'}
 		{/if}
 		<div id="{$htmlId}" class="site-container">
 			<div class="left">
-				{if !$data->sites[$siteId]->typeAll}
-					<a n:href="site $data->sites[$siteId]->alias" title="Open details">{$data->sites[$siteId]->alias}</a>
-					<small><a href="{$data->sites[$siteId]->url}" n:attr="rel => $noFollow" title="Go to site"><span class="lighter"><i class="fas fa-fw fa-link"></i></span></a></small>
-					{foreach $data->sites[$siteId]->sharedWith as $sharedSite}
+				{if !$site->isTypeAll()}
+					<a n:href="site $site->getAlias()" title="Open details" n:class="$storage->getSearchResult()->isSiteAliasMatch($site) ? search-result">{$site->getAlias()}</a>
+					<small n:class="$storage->getSearchResult()->isSiteUrlMatch($site) ? search-result"><a href="{$site->getUrl()}" n:attr="rel => $noFollow" title="Go to site"><span class="lighter"><i class="fas fa-fw fa-link"></i></span></a></small>
+					{foreach $site->getSharedWith() as $sharedSite}
 						<br>
 						<small>
 						{first}Storage shared with:<br>{/first}
-						<a n:href="site $data->sites[$siteId]->alias" title="Open details">{$sharedSite->alias}</a>
-						<a href="{$sharedSite->url}" n:attr="rel => $noFollow" title="Go to site"><span class="lighter"><i class="fas fa-fw fa-link"></i></span></a>
+						<a n:href="site $site->getAlias()" title="Open details">{$sharedSite->getAlias()}</a>
+						<a href="{$sharedSite->getUrl()}" n:attr="rel => $noFollow" title="Go to site"><span class="lighter"><i class="fas fa-fw fa-link"></i></span></a>
 						</small>
 					{/foreach}
 				{else}
-					<p><a n:href="company $data->companies[$companyId]->alias" title="Open details">All sites</a></p>
+					<p><a n:href="company $data->getCompany($storage->getCompanyId())->getCompanyAlias()" title="Open details">All sites</a></p>
 				{/if}
 			</div>
-			<div class="right rating">Rating <strong class="right rating-{$data->sites[$siteId]->rating|lower}" title="{$ratingGuide[$data->sites[$siteId]->rating]}">{$data->sites[$siteId]->rating}</strong></div>
+			<div class="right rating">Rating <strong class="right rating-{$site->getRating()|lower}" title="{$ratingGuide[$site->getRating()]}">{$site->getRating()}</strong></div>
 			<div class="clear"></div>
 		</div>
 		<div class="algo-container">
-		{foreach $algos as $algo}
-			{if $iterator->counter === 2}<div><div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
+		{foreach $site->getAlgorithms() as $algo}
+			{if $iterator->counter === 2}<div><div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open, $storage->getSearchResult()->hasDisclosureHistoryMatch() ? search-result">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
 				<div class="algo">
-					<strong>{$data->algos[$algo->id]}</strong>{if $algo->from || $algo->latestDisclosure} (<span n:if="$algo->from && $algo->fromConfirmed" title="{$algo->from|date:'Y-m'}">since {$algo->from|date:'F Y'}</span>{if $algo->from && $algo->fromConfirmed && $algo->latestDisclosure}, {/if}<span n:if="$algo->latestDisclosure" title="{$algo->latestDisclosure|date:'Y-m-d'}">disclosed {$algo->latestDisclosure|date:'F Y'}</span>){/if}
+					<strong n:class="$storage->getSearchResult()->isAlgorithmNameMatch($algo) ? search-result">{$algo->getName()}</strong>{if $algo->getFrom() || $algo->getLatestDisclosure()} (<span n:if="$algo->getFrom() && $algo->isFromConfirmed()" title="{$algo->getFrom()|date:'Y-m'}">since {$algo->getFrom()|date:'F Y'}</span>{if $algo->getFrom() && $algo->isFromConfirmed() && $algo->getLatestDisclosure()}, {/if}<span n:if="$algo->getLatestDisclosure()" title="{$algo->getLatestDisclosure()->getPublished()|date:'Y-m-d'}">disclosed {$algo->getLatestDisclosure()->getPublished()|date:'F Y'}</span>){/if}
 				</div>
 				<div class="details">
-				{if $algo->disclosures}
-					<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Details</a></div>
+				{if $algo->getDisclosures()}
+					<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open, $storage->getSearchResult()->hasDisclosureUrlMatch($algo) ? search-result">Details</a></div>
 					<div n:class="expandable, !$isDetail ? hidden">
-					<p n:ifset="$algo->note">Note: {$algo->note|format}</p>
-					<p n:ifset="$algo->params">Params: {foreach $algo->params as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
-					<p n:ifset="$algo->fullAlgo">Full algorithm: <code>{$algo->fullAlgo}</code></p>
+					<p n:if="$algo->getNote()">Note: {$algo->getNote()|format}</p>
+					<p n:if="$algo->getParams()">Params: {foreach $algo->getParams() as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
+					<p n:if="$algo->getFullAlgo()">Full algorithm: <code>{$algo->getFullAlgo()}</code></p>
 					<p>Disclosures:</p>
-					<ul n:inner-foreach="$algo->disclosures as $disclosure">
-						<li><small title="{$disclosure->published|date:'Y-m-d H:i'}">{$disclosure->published|date:'Y-m-d'}</small> <a href="{$disclosure->url}" n:attr="rel => $noFollow">{$disclosure->type}</a>{if $disclosure->archive} <sup><a href="{$disclosure->archive}" title="archived">arch</a></sup>{/if}{if $disclosure->note}<small> ({$disclosure->note|format})</small>{/if}</li>
+					<ul n:inner-foreach="$algo->getDisclosures() as $disclosure">
+						<li><small title="{$disclosure->getPublished()|date:'Y-m-d H:i'}">{$disclosure->getPublished()|date:'Y-m-d'}</small> <a href="{$disclosure->getUrl()}" n:attr="rel => $noFollow" n:class="$storage->getSearchResult()->isDisclosureUrlMatch($disclosure) ? search-result">{$disclosure->getType()}</a>{if $disclosure->getArchive()} <sup><a href="{$disclosure->getArchive()}" title="archived">arch</a></sup>{/if}{if $disclosure->getNote()}<small> ({$disclosure->getNote()|format})</small>{/if}</li>
 					</ul>
 					</div>
 				{/if}
@@ -78,10 +92,10 @@
 			{if $iterator->count() > 1 && $iterator->last}</div></div>{/if}
 		{/foreach}
 		<div>
-			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why &quot;{$data->sites[$siteId]->rating}&quot;?</a></div>
+			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why &quot;{$site->getRating()}&quot;?</a></div>
 			<div n:class="expandable, !$isDetail ? hidden">
-				<p>{$ratingGuide[$data->sites[$siteId]->rating]}</p>
-				<p n:if="$data->sites[$siteId]->recommendation"><small><strong>Recommended change</strong>: {$data->sites[$siteId]->recommendation|format}</small></p>
+				<p>{$ratingGuide[$site->getRating()]}</p>
+				<p n:if="$site->getRecommendation()"><small><strong>Recommended change</strong>: {$site->getRecommendation()|format}</small></p>
 			</div>
 		</div>
 		</div>

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
+use DateTime;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
@@ -56,6 +57,7 @@ class Companies
 			'name' => $name,
 			'trade_name' => (empty($tradeName) ? null : $tradeName),
 			'alias' => $alias,
+			'added' => new DateTime(),
 		]);
 		return (int)$this->database->getInsertId();
 	}

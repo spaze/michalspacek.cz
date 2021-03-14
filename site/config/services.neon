@@ -99,6 +99,7 @@ services:
 	pulseSites: MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	pulsePasswords: MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	pulsePasswordsRating: MichalSpacekCz\Pulse\Passwords\Rating
+	pulsePasswordsSorting: MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	blogPost:
 	    factory: MichalSpacekCz\Post\Post
 	    setup:
@@ -123,6 +124,8 @@ services:
 	netteCve202015227: MichalSpacekCz\EasterEgg\NetteCve202015227
 
 	- MichalSpacekCz\Form\FormFactory
+	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\PostFormFactory
+	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFactory

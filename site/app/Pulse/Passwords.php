@@ -5,12 +5,16 @@ namespace MichalSpacekCz\Pulse;
 
 use DateTime;
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
+use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
+use MichalSpacekCz\Pulse\Passwords\SearchMatcher;
+use MichalSpacekCz\Pulse\Passwords\Storage;
+use MichalSpacekCz\Pulse\Passwords\StorageDisclosure;
+use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
-use stdClass;
 
 class Passwords
 {
@@ -27,31 +31,31 @@ class Passwords
 	/** @var Sites */
 	protected $sites;
 
+	private PasswordsSorting $sorting;
+
 
 	public function __construct(
 		Explorer $context,
 		Rating $rating,
 		Companies $companies,
-		Sites $sites
+		Sites $sites,
+		PasswordsSorting $sorting
 	) {
 		$this->database = $context;
 		$this->rating = $rating;
 		$this->companies = $companies;
 		$this->sites = $sites;
+		$this->sorting = $sorting;
 	}
 
 
-	/**
-	 * Get all passwords storage data.
-	 *
-	 * @return stdClass with companies, sites, algos, storages properties
-	 */
-	public function getAllStorages(): stdClass
+	public function getAllStorages(?string $rating, string $sort, ?string $search): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				COALESCE(c.trade_name, c.name) AS sortName,
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
@@ -64,10 +68,12 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				ps.from_confirmed AS fromConfirmed,
+				pd.id AS disclosureId,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
 				pd.published AS disclosurePublished,
+				pd.added AS disclosureAdded,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes,
@@ -79,13 +85,21 @@ class Passwords
 				JOIN password_disclosures_password_storages pdps ON pdps.key_password_storages = ps.id
 				JOIN password_disclosures pd ON pdps.key_password_disclosures = pd.id
 				JOIN password_disclosure_types pdt ON pdt.id = pd.key_password_disclosure_types
-			ORDER BY
-				COALESCE(c.trade_name, c.name),
-				s.url,
-				ps.from DESC,
-				pd.published';
-
-		return $this->processStorages($this->database->fetchAll($query));
+			ORDER BY ?';
+		$orderBy = [
+			'sortName' => !$this->sorting->isCompanyAlphabeticallyReversed($sort),
+			's.url' => !$this->sorting->isCompanyAlphabeticallyReversed($sort),
+			'ps.from' => false,
+			'disclosurePublished' => true,
+		];
+		$storages = $this->processStorages($this->database->fetchAll($query, $orderBy), $sort);
+		$searchMatcher = new SearchMatcher($search, $storages);
+		foreach ($storages->getSites() as $site) {
+			if (($rating && $site->getRating() !== $rating) || !$searchMatcher->match($site)) {
+				$storages->removeStorageSite($site);
+			}
+		}
+		return $storages;
 	}
 
 
@@ -93,14 +107,15 @@ class Passwords
 	 * Get passwords storage data for specified sites.
 	 *
 	 * @param string[] $sites Aliases
-	 * @return stdClass with companies, sites, algos, storages properties
+	 * @return StorageRegistry
 	 */
-	public function getStoragesBySite(array $sites): stdClass
+	public function getStoragesBySite(array $sites): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				COALESCE(c.trade_name, c.name) AS sortName,
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
@@ -113,10 +128,12 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				ps.from_confirmed AS fromConfirmed,
+				pd.id AS disclosureId,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
 				pd.published AS disclosurePublished,
+				pd.added AS disclosureAdded,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes,
@@ -135,7 +152,7 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $sites));
+		return $this->processStorages($this->database->fetchAll($query, $sites), $this->sorting->getDefaultSort());
 	}
 
 
@@ -143,14 +160,15 @@ class Passwords
 	 * Get passwords storage data for specified companies.
 	 *
 	 * @param string[] $companies Aliases
-	 * @return stdClass with companies, sites, algos, storages properties
+	 * @return StorageRegistry
 	 */
-	public function getStoragesByCompany(array $companies): stdClass
+	public function getStoragesByCompany(array $companies): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				COALESCE(c.trade_name, c.name) AS sortName,
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
@@ -163,10 +181,12 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				ps.from_confirmed AS fromConfirmed,
+				pd.id AS disclosureId,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
 				pd.published AS disclosurePublished,
+				pd.added AS disclosureAdded,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes,
@@ -185,22 +205,17 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $companies));
+		return $this->processStorages($this->database->fetchAll($query, $companies), $this->sorting->getDefaultSort());
 	}
 
 
-	/**
-	 * Get passwords storage data for a company.
-	 *
-	 * @param integer $companyId Company id
-	 * @return stdClass with companies, sites, algos, storages properties
-	 */
-	public function getStoragesByCompanyId($companyId): stdClass
+	public function getStoragesByCompanyId(int $companyId): StorageRegistry
 	{
 		$query = 'SELECT
 				c.id AS companyId,
 				c.name AS companyName,
 				c.trade_name AS tradeName,
+				COALESCE(c.trade_name, c.name) AS sortName,
 				c.alias AS companyAlias,
 				s.id AS siteId,
 				s.url AS siteUrl,
@@ -213,10 +228,12 @@ class Passwords
 				pa.stretched AS algoStretched,
 				ps.from,
 				ps.from_confirmed AS fromConfirmed,
+				pd.id AS disclosureId,
 				pd.url AS disclosureUrl,
 				pd.archive AS disclosureArchive,
 				pd.note AS disclosureNote,
 				pd.published AS disclosurePublished,
+				pd.added AS disclosureAdded,
 				pdt.alias AS disclosureTypeAlias,
 				pdt.type AS disclosureType,
 				ps.attributes,
@@ -235,105 +252,47 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $companyId));
+		return $this->processStorages($this->database->fetchAll($query, $companyId), $this->sorting->getDefaultSort());
 	}
 
 
 	/**
-	 * Process passwords storage data.
-	 *
 	 * @param Row[] $data
-	 * @return stdClass with companies, sites, algos, storages properties
+	 * @param string $sort
+	 * @return StorageRegistry
 	 */
-	private function processStorages(array $data): stdClass
+	private function processStorages(array $data, string $sort): StorageRegistry
 	{
-		$storages = new stdClass();
-		$storages->sites = array();
-
+		$registry = new StorageRegistry();
 		foreach ($data as $row) {
-			$company = new stdClass();
-			$company->companyName = $row->companyName;
-			$company->tradeName = $row->tradeName;
-			$company->alias = $row->companyAlias;
-			$storages->companies[$row->companyId] = $company;
+			$siteId = $this->sites->generateId($row->siteId, $row->companyId);
+			$storageKey = $this->sorting->isAnyCompanyAlphabetically($sort) ? (string)$row->companyId : $siteId;
+			$algoKey = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
 
-			$siteId = $row->siteId ?? Sites::ALL . "-{$row->companyId}";
-			if (!isset($storages->sites[$siteId])) {
-				$site = new stdClass();
-				$site->id = $siteId;
-				$site->typeAll = ($row->siteId === null);
-				$site->url = $row->siteUrl;
-				$site->alias = $row->siteAlias;
-				$site->sharedWith = ($row->sharedWith ? Json::decode($row->sharedWith) : []);
-				$site->companyId = $row->companyId;
-				$storages->sites[$siteId] = $site;
+			if (!$registry->hasCompany($row->companyId)) {
+				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
 			}
-
-			$storages->algos[$row->algoId] = $row->algoName;
-			$key = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
-			if (!isset($storages->storages[$row->companyId][$siteId][$key])) {
-				$algo = new Algorithm();
-				$algo->id = $row->algoId;
-				$algo->alias = $row->algoAlias;
-				$algo->salted = $row->algoSalted;
-				$algo->stretched = $row->algoStretched;
-				$algo->from = $row->from;
-				$algo->fromConfirmed = $row->fromConfirmed;
-				$attributes = (empty($row->attributes) ? null : Json::decode($row->attributes));
-				$algo->params = $attributes->params ?? null;
-				$algo->fullAlgo = $this->formatFullAlgo($row->algoName, $attributes);
-				$algo->note = $row->note;
-				$storages->storages[$row->companyId][$siteId][$key] = $algo;
+			if (!$registry->hasSite($siteId)) {
+				$registry->addSite(new Site($siteId, $row->siteId === null, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, Json::FORCE_ARRAY) : [], $registry->getCompany($row->companyId), $storageKey));
 			}
-			$disclosure = new stdClass();
-			$disclosure->url = $row->disclosureUrl;
-			$disclosure->archive = $row->disclosureArchive;
-			$disclosure->note = $row->disclosureNote;
-			$disclosure->published = $row->disclosurePublished;
-			$disclosure->type = $row->disclosureType;
-			$storages->storages[$row->companyId][$siteId][$key]->latestDisclosure = $disclosure->published;
-			$storages->storages[$row->companyId][$siteId][$key]->disclosures[] = $disclosure;
-			$storages->storages[$row->companyId][$siteId][$key]->disclosureTypes[$row->disclosureTypeAlias] = true;
-		}
-		foreach ($storages->sites as $site) {
-			$site->rating = $this->rating->get(reset($storages->storages[$site->companyId][$site->id]));
-			$site->secureStorage = $this->rating->isSecureStorage($site->rating);
-			$site->recommendation = $this->rating->getRecommendation($site->rating);
-		}
-		return $storages;
-	}
-
-
-	/**
-	 * Format full algo, if needed
-	 *
-	 * @param string $name main algo name
-	 * @param stdClass|null $attrs attributes
-	 * @return string|null String of formatted algos, null if no inner or outer hashes used
-	 */
-	private function formatFullAlgo(string $name, ?stdClass $attrs = null): ?string
-	{
-		if (!isset($attrs->inner) && !isset($attrs->outer)) {
-			return null;
-		}
-
-		$result = '';
-		$count = 0;
-		if (isset($attrs->outer)) {
-			for ($i = count($attrs->outer) - 1; $i >= 0; $i--) {
-				$result .= $attrs->outer[$i] . '(';
-				$count++;
+			if (!$registry->hasStorage($storageKey)) {
+				$registry->addStorage(new Storage($storageKey, $row->companyId));
 			}
-		}
-		$result .= $name . '(';
-		$count++;
-		if (isset($attrs->inner)) {
-			for ($i = count($attrs->inner) - 1; $i >= 0; $i--) {
-				$result .= $attrs->inner[$i] . '(';
-				$count++;
+			if (!$registry->getStorage($storageKey)->hasSite($siteId)) {
+				$registry->getStorage($storageKey)->addSite($registry->getSite($siteId));
 			}
+			if (!$registry->getStorage($storageKey)->getSite($siteId)->hasAlgorithm($algoKey)) {
+				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $row->attributes ? Json::decode($row->attributes) : null, $row->note);
+				$registry->getStorage($storageKey)->getSite($siteId)->addAlgorithm($algorithm);
+			}
+			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
+			$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);
 		}
-		return $result . 'password' . str_repeat(')', $count);
+		foreach ($registry->getSites() as $site) {
+			$rating = $this->rating->get($site->getLatestAlgorithm());
+			$site->setRating($rating, $this->rating->isSecureStorage($rating), $this->rating->getRecommendation($rating));
+		}
+		return $this->sorting->sort($registry, $sort);
 	}
 
 
@@ -458,6 +417,7 @@ class Passwords
 			'archive' => $archive,
 			'note' => (empty($note) ? null : $note),
 			'published' => (empty($published) ? null : new DateTime($published)),
+			'added' => new DateTime(),
 		]);
 		return (int)$this->database->getInsertId();
 	}

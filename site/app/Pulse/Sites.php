@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
+use DateTime;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
@@ -61,8 +62,15 @@ class Sites
 			'alias' => $alias,
 			'shared_with' => $sharedWith ?: null,
 			'key_companies' => $companyId,
+			'added' => new DateTime(),
 		]);
 		return (int)$this->database->getInsertId();
+	}
+
+
+	public function generateId(?int $siteId, int $companyId): string
+	{
+		return $siteId ? (string)$siteId : self::ALL . "-{$companyId}";
 	}
 
 }

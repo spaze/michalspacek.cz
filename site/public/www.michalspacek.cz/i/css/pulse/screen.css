@@ -22,12 +22,17 @@ ol { margin: 0; }
 	line-height: 1;
 	background-color: #E3E3E3;
 	clear: both;
+	margin-bottom: 0;
 }
-#menu a {
+#menu a, #menu .open-button:hover {
 	text-decoration: none;
 	color: #777;
 }
 #menu a:hover { text-decoration: underline; }
+#menu div { margin: 0; }
+#menu .open-button { font-size: small; }
+#search-sort { margin-top: 0; }
+#search-sort div { margin: 0.3em 1em; }
 #guide .rating { margin: 0.3em 0; }
 #footer { background-color: #FAFAFA; }
 #container {
@@ -63,7 +68,11 @@ ol { margin: 0; }
 .site-container a:hover { text-decoration: underline; }
 .permalink { display: none; }
 h2:hover .permalink { display: inline; }
-.clear { clear: both; }
+.clear {
+	clear: both;
+	padding: 0;
+	margin: 0;
+}
 .left { float: left; }
 .right { float: right; }
 .open-button {
@@ -87,3 +96,9 @@ h2:hover .permalink { display: inline; }
 	color: #CCC;
 }
 .lighter { opacity: 0.3; }
+.search-result {
+	background-color: rgba(255, 255, 0, 0.3);
+	margin: -2px;
+	padding: 2px 2px;
+	border-radius: 2px;
+}
