@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Http;
 
 use DateTime;
 use MichalSpacekCz\User\Manager;
-use Nette\Database\Explorer;
 use Nette\Database\DriverException;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime as NetteDateTime;

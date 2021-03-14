@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Talks;
 
 use DateTime;
 use MichalSpacekCz\Formatter\Texy;
-use Nette\Database\Explorer;
 use Nette\Database\Drivers\MySqlDriver;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
 use Nette\Http\Request;

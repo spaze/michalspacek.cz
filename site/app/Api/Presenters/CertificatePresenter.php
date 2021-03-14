@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Api\Presenters;
 
-use MichalSpacekCz\Www\Presenters\BasePresenter;
 use MichalSpacekCz\Http\Certificates;
+use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Security\AuthenticationException;
 use RuntimeException;
 
