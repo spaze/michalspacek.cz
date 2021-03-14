@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '25084dd7e5a0c7ca240cb16114500c2e2f324b9e',
+    'reference' => 'c5a9bf7736d83bff6dfae7ece5893e49c05da70a',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -425,7 +425,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '25084dd7e5a0c7ca240cb16114500c2e2f324b9e',
+      'reference' => 'c5a9bf7736d83bff6dfae7ece5893e49c05da70a',
     ),
     'spaze/mysql-session-handler' => 
     array (
