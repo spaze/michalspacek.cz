@@ -18,11 +18,10 @@ class Rating
 	private const RATING_E = 'E';
 	private const RATING_F = 'F';
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
 	/** @var string[] */
-	private $slowHashes = [
+	private array $slowHashes = [
 		'argon2',
 		'bcrypt',
 		'pbkdf2',
@@ -30,20 +29,20 @@ class Rating
 	];
 
 	/** @var string[] */
-	private $insecure = [
+	private array $insecure = [
 		'plaintext',
 		'encrypted',
 	];
 
 	/** @var string[] */
-	private $visibleDisclosures = [
+	private array $visibleDisclosures = [
 		'docs',
 		'faq',
 		'signup-page',
 	];
 
 	/** @var string[] */
-	private $invisibleDisclosures = [
+	private array $invisibleDisclosures = [
 		'blog',
 		'site-independent',
 		'facebook-independent',
@@ -59,7 +58,7 @@ class Rating
 	];
 
 	/** @var array<string, string> */
-	private $rating = [
+	private array $rating = [
 		self::RATING_A => 'Site uses a slow hashing function, this is disclosed "on-site", in the docs, FAQ, etc.',
 		self::RATING_B => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
 		self::RATING_C => 'Passwords hashed with an unsuitable function but at least they are salted and stretched with multiple iterations.',
@@ -69,7 +68,7 @@ class Rating
 	];
 
 	/** @var array<string, string|null> */
-	private $recommendations = [
+	private array $recommendations = [
 		self::RATING_A => null,
 		self::RATING_B => 'Publish storage and hashing info details "visibly":[link:Pulse:PasswordsStorages:Rating#on-site] (e.g. in the docs or FAQ), then let me know.',
 		self::RATING_C => 'Start using "&quot;slow&quot; hashes":[link:Pulse:PasswordsStorages:Rating#slow-hashes], don\'t forget to "re-hash existing passwords":[blog:upgrading-existing-password-hashes], publish hashing info "visibly":[link:Pulse:PasswordsStorages:Rating#on-site], then let me know.',

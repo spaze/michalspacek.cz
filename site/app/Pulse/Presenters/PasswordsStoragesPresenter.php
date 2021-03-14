@@ -14,11 +14,9 @@ use Nette\Application\UI\Form;
 class PasswordsStoragesPresenter extends BasePresenter
 {
 
-	/** @var Passwords */
-	protected $passwords;
+	private Passwords $passwords;
 
-	/** @var Rating */
-	protected $passwordsRating;
+	private Rating $passwordsRating;
 
 	private PasswordsStoragesSearchSortFactory $searchSortFactory;
 

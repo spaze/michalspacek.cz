@@ -19,17 +19,13 @@ use Nette\Utils\Json;
 class Passwords
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Rating */
-	protected $rating;
+	private Rating $rating;
 
-	/** @var Companies */
-	protected $companies;
+	private Companies $companies;
 
-	/** @var Sites */
-	protected $sites;
+	private Sites $sites;
 
 	private PasswordsSorting $sorting;
 

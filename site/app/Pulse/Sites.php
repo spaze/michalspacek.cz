@@ -13,8 +13,7 @@ class Sites
 	/** @var string */
 	public const ALL = 'all';
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
 
 	public function __construct(Explorer $context)

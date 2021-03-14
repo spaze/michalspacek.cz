@@ -10,8 +10,7 @@ use Nette\Database\Row;
 class Companies
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
 
 	public function __construct(Explorer $context)
