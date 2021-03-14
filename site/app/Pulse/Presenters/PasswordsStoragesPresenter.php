@@ -49,7 +49,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 		}
 
 		$this->searchSortForm = $this->searchSortFactory->create($rating, $sort, $search);
-		$rating = $rating === null || $rating === 'all' ? null : strtoupper($rating);
+		$rating = $rating === null || $rating === 'all' || !array_key_exists($rating, $this->passwordsRating->getRatings()) ? null : strtoupper($rating);
 		$data = $this->passwords->getAllStorages($rating, $sort === null ? $this->passwordsSorting->getDefaultSort() : $sort, $search);
 		$this->template->isDetail = false;
 		$this->template->pageTitle = 'Password storage disclosures';

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use RuntimeException;
 
@@ -144,11 +145,17 @@ class Rating
 	/**
 	 * Get ratings.
 	 *
-	 * @return string[]
+	 * @return array<string, string>
+	 * @throws ShouldNotHappenException
 	 */
 	public function getRatings(): array
 	{
-		return array_keys($this->rating);
+		$ratings = array_keys($this->rating);
+		$ratings = array_combine(array_map('strtolower', $ratings), $ratings);
+		if (!$ratings) {
+			throw new ShouldNotHappenException();
+		}
+		return $ratings;
 	}
 
 
