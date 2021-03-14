@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'fe67ca8e54abd82b2ef998c035f31c34611bfb44',
+    'reference' => 'c5a9bf7736d83bff6dfae7ece5893e49c05da70a',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -384,12 +384,12 @@ private static $installed = array (
     ),
     'spaze/coding-standard' => 
     array (
-      'pretty_version' => 'v0.0.4',
-      'version' => '0.0.4.0',
+      'pretty_version' => 'v0.0.5',
+      'version' => '0.0.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bb3c648761dfd86e7c065eeffbeeafd559ba7ddf',
+      'reference' => '0b37edaf5bf071fc137b7c7740e98785b33a4247',
     ),
     'spaze/csp-config' => 
     array (
@@ -425,7 +425,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'fe67ca8e54abd82b2ef998c035f31c34611bfb44',
+      'reference' => 'c5a9bf7736d83bff6dfae7ece5893e49c05da70a',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -483,12 +483,12 @@ private static $installed = array (
     ),
     'spaze/sri-macros' => 
     array (
-      'pretty_version' => 'v0.3.2',
-      'version' => '0.3.2.0',
+      'pretty_version' => 'v0.3.3',
+      'version' => '0.3.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd91f4e0b8e3541da2c930793eed9b558f2aba5cc',
+      'reference' => '66c105f3324dfd8b4a1af0bd4b48c7bade153d1d',
     ),
     'squizlabs/php_codesniffer' => 
     array (

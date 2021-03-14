@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Api\Presenters;
 
-use MichalSpacekCz\Www\Presenters\BasePresenter;
 use MichalSpacekCz\CompanyInfo\Data;
 use MichalSpacekCz\CompanyInfo\Info;
 use MichalSpacekCz\Http\SecurityHeaders;
+use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;

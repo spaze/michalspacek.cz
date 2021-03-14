@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Application\Error;
 use Nette\Application\IPresenter;
-use Nette\Application\Response;
 use Nette\Application\Request;
+use Nette\Application\Response;
 
 class ErrorGenericPresenter implements IPresenter
 {

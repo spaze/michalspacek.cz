@@ -5,8 +5,8 @@ namespace MichalSpacekCz\UpcKeys;
 
 use DateTime;
 use DateTimeZone;
-use Nette\Database\Explorer;
 use Nette\Database\Drivers\MySqlDriver;
+use Nette\Database\Explorer;
 use Nette\Utils\Json;
 use PDOException;
 use RuntimeException;
