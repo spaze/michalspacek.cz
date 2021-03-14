@@ -2551,17 +2551,17 @@
         },
         {
             "name": "spaze/coding-standard",
-            "version": "v0.0.4",
-            "version_normalized": "0.0.4.0",
+            "version": "v0.0.5",
+            "version_normalized": "0.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/coding-standard.git",
-                "reference": "bb3c648761dfd86e7c065eeffbeeafd559ba7ddf"
+                "reference": "0b37edaf5bf071fc137b7c7740e98785b33a4247"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/bb3c648761dfd86e7c065eeffbeeafd559ba7ddf",
-                "reference": "bb3c648761dfd86e7c065eeffbeeafd559ba7ddf",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/0b37edaf5bf071fc137b7c7740e98785b33a4247",
+                "reference": "0b37edaf5bf071fc137b7c7740e98785b33a4247",
                 "shasum": ""
             },
             "require": {
@@ -2569,7 +2569,7 @@
                 "slevomat/coding-standard": "^6.4.0",
                 "squizlabs/php_codesniffer": "^3.5.6"
             },
-            "time": "2020-11-12T20:31:02+00:00",
+            "time": "2021-03-14T22:33:05+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -2589,6 +2589,10 @@
                 }
             ],
             "description": "Coding Standard – PHP Code Sniffer Rules",
+            "support": {
+                "issues": "https://github.com/spaze/coding-standard/issues",
+                "source": "https://github.com/spaze/coding-standard/tree/v0.0.5"
+            },
             "install-path": "../spaze/coding-standard"
         },
         {
@@ -3030,24 +3034,24 @@
         },
         {
             "name": "spaze/sri-macros",
-            "version": "v0.3.2",
-            "version_normalized": "0.3.2.0",
+            "version": "v0.3.3",
+            "version_normalized": "0.3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "d91f4e0b8e3541da2c930793eed9b558f2aba5cc"
+                "reference": "66c105f3324dfd8b4a1af0bd4b48c7bade153d1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/d91f4e0b8e3541da2c930793eed9b558f2aba5cc",
-                "reference": "d91f4e0b8e3541da2c930793eed9b558f2aba5cc",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/66c105f3324dfd8b4a1af0bd4b48c7bade153d1d",
+                "reference": "66c105f3324dfd8b4a1af0bd4b48c7bade153d1d",
                 "shasum": ""
             },
             "require": {
                 "latte/latte": "^2.8",
                 "nette/di": "^3.0",
                 "php": "^7.1 || ^8.0",
-                "spaze/coding-standard": "^0.0.4"
+                "spaze/coding-standard": "^0.0"
             },
             "require-dev": {
                 "nette/application": "^3.0",
@@ -3060,7 +3064,7 @@
                 "spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
                 "spaze/nonce-generator": "Allows to add nonce attribute to script tags automatically"
             },
-            "time": "2020-11-26T01:15:56+00:00",
+            "time": "2021-03-14T22:38:27+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3080,6 +3084,10 @@
                 }
             ],
             "description": "Subresource Integrity macros for Latte template engine",
+            "support": {
+                "issues": "https://github.com/spaze/sri-macros/issues",
+                "source": "https://github.com/spaze/sri-macros/tree/v0.3.3"
+            },
             "install-path": "../spaze/sri-macros"
         },
         {
