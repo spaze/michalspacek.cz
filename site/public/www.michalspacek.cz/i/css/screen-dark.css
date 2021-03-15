@@ -55,6 +55,10 @@ tr.dateLine td, li.dateLine { border-top-color: #2B2B2B; }
 }
 .changed { background-color: #1E2D42; }
 code, pre, .highlight pre code { background-color: #2D2F2B; }
+#slides-container .highlight {
+	border: 1px solid rgba(255, 255, 0, 0.35);
+	box-shadow: 0 0 2px #FFFF46;
+}
 .column-content img, #slides-container img {
 	box-shadow: none;
 	background-color: hsl(0, 0%, 5%);
