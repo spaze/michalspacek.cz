@@ -32,7 +32,12 @@ ol { margin: 0; }
 #menu div { margin: 0; }
 #menu .open-button { font-size: small; }
 #search-sort { margin-top: 0; }
-#search-sort div { margin: 0.3em 1em; }
+#search-sort div { margin: 0.3em 0; }
+#search-sort label {
+	width: 4em;
+	display: inline-block;
+	text-align: right;
+}
 #guide .rating { margin: 0.3em 0; }
 #footer { background-color: #FAFAFA; }
 #container {

@@ -31,11 +31,11 @@ class PasswordsStoragesSearchSortFactory
 		$form = $this->factory->create();
 		$form->setMethod('get');
 		$items = ['all' => 'all'] + $this->rating->getRatings();
-		$form->addSelect('rating', 'Rating', $items)->setDefaultValue(array_key_exists($rating, $items) ? $rating : 'all');
+		$form->addSelect('rating', 'Rating:', $items)->setDefaultValue(array_key_exists($rating, $items) ? $rating : 'all');
 		$sorting = $this->sorting->getSorting();
-		$form->addSelect('sort', 'Sort by', $sorting)->setDefaultValue(array_key_exists($sort, $sorting) ? $sort : array_key_first($sorting));
+		$form->addSelect('sort', 'Sort by:', $sorting)->setDefaultValue(array_key_exists($sort, $sorting) ? $sort : array_key_first($sorting));
 		$placeholder = 'company, site, disclosure';
-		$form->addText('search', 'Search')
+		$form->addText('search', 'Search:')
 			->setHtmlAttribute('placeholder', $placeholder)
 			->setHtmlAttribute('title', $placeholder)
 			->setHtmlType('search')

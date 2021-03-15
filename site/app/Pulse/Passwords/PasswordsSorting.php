@@ -21,8 +21,8 @@ class PasswordsSorting
 
 	/** @var array<string, string> */
 	private array $sorting = [
-		self::COMPANY_A_Z => 'company alphabetically',
-		self::COMPANY_Z_A => 'company alphabetically reversed',
+		self::COMPANY_A_Z => 'company a-z',
+		self::COMPANY_Z_A => 'company z-a',
 		self::RATING_A_F => 'best rating first',
 		self::RATING_F_A => 'best rating last',
 		self::NEWEST_DISCLOSURES_FIRST => 'newest disclosures first',
