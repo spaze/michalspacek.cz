@@ -38,6 +38,7 @@ class PasswordsStoragesSearchSortFactory
 		$form->addText('search', 'Search')
 			->setHtmlAttribute('placeholder', $placeholder)
 			->setHtmlAttribute('title', $placeholder)
+			->setHtmlType('search')
 			->setDefaultValue($search);
 		return $form;
 	}
