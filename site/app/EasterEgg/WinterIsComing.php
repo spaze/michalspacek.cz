@@ -14,6 +14,7 @@ class WinterIsComing
 	private $emails = [
 		'winter@example.com',
 		'sample@email.tst',
+		'arachni@email.gr',
 	];
 
 
