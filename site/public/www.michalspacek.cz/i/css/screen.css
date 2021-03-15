@@ -374,7 +374,10 @@ div.notice {
 	height: 15em;
 }
 #encrypt { width: 85px; }
-#copied, #copythis { display: none; }
+#copied, #copythis {
+	opacity: 0;
+	transition: opacity 0.2s;
+}
 #copied .button, #copythis .button {
 	text-decoration: underline;
 	color: #444;
