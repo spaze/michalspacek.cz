@@ -67,7 +67,13 @@
 		<tr n:class="expand-container, !$form[applications][$application->id][additional]->value ? hidden">
 			<td></td>
 			<td></td>
-			<td colspan="5">{input additional}</td>
+			<td colspan="5">
+				<p>
+					Template: <code>{$application->mailMessage->getBasename()}</code><br>
+					Subject: <em>{$application->mailMessage->getSubject()}</em>
+				</p>
+				{input additional}
+			</td>
 		</tr>
 		</tbody>
 		{/formContainer}

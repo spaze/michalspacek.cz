@@ -37,8 +37,12 @@ class EmailsPresenter extends BasePresenter
 
 	public function actionDefault(): void
 	{
+		$applications = $this->trainingMails->getApplications();
+		foreach ($applications as $application) {
+			$application->mailMessage = $this->trainingMails->getMailMessage($application);
+		}
 		$this->template->pageTitle = 'E-maily k odeslání';
-		$this->applications = $this->trainingMails->getApplications();
+		$this->applications = $applications;
 		$this->template->applications = $this->applications;
 	}
 

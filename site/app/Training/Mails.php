@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
@@ -182,16 +183,16 @@ class Mails
 	 * @param Row<mixed> $application
 	 * @param Template $template
 	 * @param string $additional
+	 * @throws ShouldNotHappenException
 	 */
 	public function sendInvitation(Row $application, Template $template, string $additional): void
 	{
 		Debugger::log("Sending invitation email application id: {$application->id}, training: {$application->training->action}");
-
-		$template->setFile(__DIR__ . '/mails/admin/invitation.latte');
+		$message = $this->getMailMessage($application);
+		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->additional = $additional;
-		$subject = 'Pozvánka na školení ' . $application->training->name;
-		$this->sendMail($application->email, $application->name, $subject, $template);
+		$this->sendMail($application->email, $application->name, $message->getSubject(), $template);
 	}
 
 
@@ -200,17 +201,17 @@ class Mails
 	 * @param Template $template
 	 * @param bool $feedbackRequest
 	 * @param string $additional
+	 * @throws ShouldNotHappenException
 	 */
 	public function sendMaterials(Row $application, Template $template, bool $feedbackRequest, string $additional): void
 	{
 		Debugger::log("Sending materials email application id: {$application->id}, training: {$application->training->action}");
-
-		$template->setFile(__DIR__ . '/mails/admin/' . ($application->familiar ?  'materialsFamiliar.latte' : 'materials.latte'));
+		$message = $this->getMailMessage($application);
+		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->feedbackRequest = $feedbackRequest;
 		$template->additional = $additional;
-		$subject = 'Materiály ze školení ' . $application->training->name;
-		$this->sendMail($application->email, $application->name, $subject, $template);
+		$this->sendMail($application->email, $application->name, $message->getSubject(), $template);
 	}
 
 
@@ -219,22 +220,16 @@ class Mails
 	 * @param Template $template
 	 * @param FileUpload $invoice
 	 * @param string $additional
+	 * @throws ShouldNotHappenException
 	 */
 	public function sendInvoice(Row $application, Template $template, FileUpload $invoice, string $additional): void
 	{
 		Debugger::log("Sending invoice email to application id: {$application->id}, training: {$application->training->action}");
-
-		if ($application->nextStatus === Statuses::STATUS_INVOICE_SENT_AFTER) {
-			$filename = ($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma.latte' : 'invoiceAfter.latte');
-			$subject = 'Faktura za školení ' . $application->training->name;
-		} else {
-			$filename = 'invoice.latte';
-			$subject = 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura';
-		}
-		$template->setFile(__DIR__ . '/mails/admin/' . $filename);
+		$message = $this->getMailMessage($application);
+		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $subject, $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()]);
+		$this->sendMail($application->email, $application->name, $message->getSubject(), $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()]);
 	}
 
 
@@ -242,24 +237,20 @@ class Mails
 	 * @param Row<mixed> $application
 	 * @param Template $template
 	 * @param string $additional
+	 * @throws ShouldNotHappenException
 	 */
 	public function sendReminder(Row $application, Template $template, string $additional): void
 	{
 		Debugger::log("Sending reminder email application id: {$application->id}, training: {$application->training->action}");
-
-		if ($application->remote) {
-			$template->setFile(__DIR__ . '/mails/admin/reminderRemote.latte');
-		} else {
-			$template->setFile(__DIR__ . '/mails/admin/reminder.latte');
+		$message = $this->getMailMessage($application);
+		$template->setFile($message->getFilename());
+		if (!$application->remote) {
 			$template->venue = $this->trainingVenues->get($application->venueAction);
 		}
 		$template->application = $application;
 		$template->phoneNumber = $this->phoneNumber;
 		$template->additional = $additional;
-
-		$start = $this->netxtenHelpers->localeIntervalDay($application->trainingStart, $application->trainingEnd, 'cs_CZ');
-		$subject = 'Připomenutí školení ' . $application->training->name . ' ' . $start;
-		$this->sendMail($application->email, $application->name, $subject, $template);
+		$this->sendMail($application->email, $application->name, $message->getSubject(), $template);
 	}
 
 
@@ -287,6 +278,31 @@ class Mails
 			->setBody((string)$template)
 			->clearHeader('X-Mailer');  // Hide Nette Mailer banner
 		$this->mailer->send($mail);
+	}
+
+
+	/**
+	 * @param Row $application
+	 * @return MailMessageAdmin
+	 * @throws ShouldNotHappenException
+	 */
+	public function getMailMessage(Row $application): MailMessageAdmin
+	{
+		switch ($application->nextStatus) {
+			case Statuses::STATUS_INVITED:
+				return new MailMessageAdmin('invitation', 'Pozvánka na školení ' . $application->training->name);
+			case Statuses::STATUS_MATERIALS_SENT:
+				return new MailMessageAdmin($application->familiar ? 'materialsFamiliar' : 'materials', 'Materiály ze školení ' . $application->training->name);
+			case Statuses::STATUS_INVOICE_SENT:
+				return new MailMessageAdmin('invoice', 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura');
+			case Statuses::STATUS_INVOICE_SENT_AFTER:
+				return new MailMessageAdmin($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->training->name);
+			case Statuses::STATUS_REMINDED:
+				$start = $this->netxtenHelpers->localeIntervalDay($application->trainingStart, $application->trainingEnd, 'cs_CZ');
+				return new MailMessageAdmin($application->remote ? 'reminderRemote' : 'reminder', 'Připomenutí školení ' . $application->training->name . ' ' . $start);
+			default:
+				throw new ShouldNotHappenException();
+		}
 	}
 
 }
