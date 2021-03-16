@@ -5,9 +5,8 @@ namespace MichalSpacekCz\Templating;
 
 use MichalSpacekCz\Application\Theme;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Template;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
-use Nette\Bridges\ApplicationLatte\Template as NetteTemplate;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
 use Nette\Caching\Storage;
 use Nette\Http\IRequest;
@@ -48,7 +47,7 @@ class TemplateFactory extends NetteTemplateFactory
 
 	public function createTemplate(Control $control = null, string $class = null): Template
 	{
-		/** @var NetteTemplate $template */
+		/** @var Template $template */
 		$template = parent::createTemplate($control, $class);
 		$template->darkMode = $this->theme->isDarkMode();
 		$template->addFilter(null, [$this->netxtenHelpers, 'loader']);

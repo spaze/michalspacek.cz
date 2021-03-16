@@ -129,3 +129,4 @@ services:
 	- MichalSpacekCz\Form\PostFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFactory
+	- MichalSpacekCz\Form\TrainingMailsOutboxFactory
