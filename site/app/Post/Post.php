@@ -22,34 +22,26 @@ use Nette\Utils\Json;
 class Post
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Loader */
-	protected $loader;
+	private Loader $loader;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Cache */
-	protected $exportsCache;
+	private Cache $exportsCache;
 
-	/** @var LinkGenerator */
-	protected $linkGenerator;
+	private LinkGenerator $linkGenerator;
 
-	/** @var LocaleLinkGenerator */
-	protected $localeLinkGenerator;
+	private LocaleLinkGenerator $localeLinkGenerator;
 
 	private Tags $tags;
 
-	/** @var Translator */
-	protected $translator;
+	private Translator $translator;
 
-	/** @var string[] */
-	private $locales;
+	/** @var string[]|null */
+	private ?array $locales = null;
 
-	/** @var integer */
-	private $updatedInfoThreshold;
+	private int $updatedInfoThreshold;
 
 	/** @var array<string, array<string, array<integer, string>>> */
 	private array $allowedTags;

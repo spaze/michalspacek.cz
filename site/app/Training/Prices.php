@@ -6,8 +6,7 @@ namespace MichalSpacekCz\Training;
 class Prices
 {
 
-	/** @var float|null */
-	private $vatRate;
+	private ?float $vatRate;
 
 
 	public function setVatRate(float $vatRate): void

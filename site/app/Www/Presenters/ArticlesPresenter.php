@@ -8,8 +8,7 @@ use MichalSpacekCz\Articles\Articles;
 class ArticlesPresenter extends BasePresenter
 {
 
-	/** @var Articles */
-	protected $articles;
+	private Articles $articles;
 
 
 	public function __construct(Articles $articles)

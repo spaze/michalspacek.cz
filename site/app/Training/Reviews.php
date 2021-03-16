@@ -13,11 +13,9 @@ use RuntimeException;
 class Reviews
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
 
 	public function __construct(

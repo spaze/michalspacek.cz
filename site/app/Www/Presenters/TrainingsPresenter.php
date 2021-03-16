@@ -32,50 +32,37 @@ use UnexpectedValueException;
 class TrainingsPresenter extends BasePresenter
 {
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Applications */
-	protected $trainingApplications;
+	private Applications $trainingApplications;
 
-	/** @var Mails */
-	protected $trainingMails;
+	private Mails $trainingMails;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Files */
-	protected $trainingFiles;
+	private Files $trainingFiles;
 
-	/** @var Trainings */
-	protected $trainings;
+	private Trainings $trainings;
 
-	/** @var CompanyTrainings */
-	protected $companyTrainings;
+	private CompanyTrainings $companyTrainings;
 
-	/** @var Locales */
-	protected $trainingLocales;
+	private Locales $trainingLocales;
 
-	/** @var Reviews */
-	protected $trainingReviews;
+	private Reviews $trainingReviews;
 
-	/** @var Prices */
-	private $prices;
+	private Prices $prices;
 
-	/** @var TrainingControlsFactory */
-	private $trainingControlsFactory;
+	private TrainingControlsFactory $trainingControlsFactory;
 
-	/** @var Info */
-	protected $companyInfo;
+	private Info $companyInfo;
 
-	/** @var IResponse */
-	protected $httpResponse;
+	private IResponse $httpResponse;
 
 	/** @var Row<mixed> */
-	private $training;
+	private Row $training;
 
 	/** @var Row[] */
-	private $dates;
+	private array $dates;
 
 
 	public function __construct(
@@ -127,10 +114,11 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	public function actionTraining(string $name): void
 	{
-		$this->training = $this->trainings->get($name);
-		if (!$this->training) {
+		$training = $this->trainings->get($name);
+		if (!$training) {
 			throw new BadRequestException("I don't do {$name} training, yet");
 		}
+		$this->training = $training;
 
 		$this->redirectToSuccessor($this->training->successorId);
 

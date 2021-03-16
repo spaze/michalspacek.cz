@@ -12,17 +12,14 @@ use Spaze\ContentSecurityPolicy\Config as CspConfig;
 
 class PostPresenter extends BasePresenter
 {
-	/** @var Post */
-	protected $blogPost;
+	private Post $blogPost;
 
-	/** @var LocaleUrls */
-	protected $localeUrls;
+	private LocaleUrls $localeUrls;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
 	/** @var array<string, array<string, string|null>> */
-	protected $localeLinkParams = [];
+	private array $localeLinkParams = [];
 
 	private CspConfig $contentSecurityPolicy;
 

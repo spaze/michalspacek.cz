@@ -13,14 +13,11 @@ class Ubee implements RouterInterface
 	/** @var string */
 	private const OUI_UBEE = '647c34';
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var string */
-	protected $prefix;
+	private string $prefix;
 
-	/** @var string */
-	protected $model;
+	private string $model;
 
 
 	public function __construct(Explorer $context)

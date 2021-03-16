@@ -15,20 +15,15 @@ use RuntimeException;
 class TalksPresenter extends BasePresenter
 {
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Talks */
-	protected $talks;
+	private Talks $talks;
 
-	/** @var Embed */
-	protected $embed;
+	private Embed $embed;
 
-	/** @var Helpers */
-	protected $helpers;
+	private Helpers $helpers;
 
-	/** @var Dates */
-	private $trainingDates;
+	private Dates $trainingDates;
 
 
 	public function __construct(Texy $texyFormatter, Talks $talks, Embed $embed, Helpers $helpers, Dates $trainingDates)

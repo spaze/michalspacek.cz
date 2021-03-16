@@ -23,14 +23,11 @@ class Exports
 	/** @var integer */
 	private const ITEMS = 5;
 
-	/** @var Articles */
-	protected $articles;
+	private Articles $articles;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Cache */
-	protected $cache;
+	private Cache $cache;
 
 
 	public function __construct(Articles $articles, Texy $texyFormatter, Storage $cacheStorage)

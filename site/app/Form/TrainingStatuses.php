@@ -10,8 +10,7 @@ use Nette\Localization\Translator;
 class TrainingStatuses extends ProtectedForm
 {
 
-	/** @var Translator */
-	protected $translator;
+	private Translator $translator;
 
 
 	/**

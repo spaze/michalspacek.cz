@@ -11,17 +11,13 @@ use RuntimeException;
 class Info
 {
 
-	/** @var Ares */
-	private $ares;
+	private Ares $ares;
 
-	/** @var RegisterUz */
-	private $registerUz;
+	private RegisterUz $registerUz;
 
-	/** @var Cache */
-	private $cache;
+	private Cache $cache;
 
-	/** @var boolean */
-	private $loadCompanyDataVisible = true;
+	private bool $loadCompanyDataVisible = true;
 
 
 	public function __construct(Ares $ares, RegisterUz $registerUz, Storage $cacheStorage)

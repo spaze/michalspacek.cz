@@ -11,7 +11,7 @@ class WinterIsComing
 {
 
 	/** @var array<integer, string> */
-	private $emails = [
+	private array $emails = [
 		'winter@example.com',
 		'sample@email.tst',
 		'arachni@email.gr',

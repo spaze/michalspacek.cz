@@ -12,8 +12,7 @@ use Nette\Application\Responses\FileResponse;
 class FilesPresenter extends BasePresenter
 {
 
-	/** @var Files */
-	protected $trainingFiles;
+	private Files $trainingFiles;
 
 
 	public function __construct(Files $trainingFiles)

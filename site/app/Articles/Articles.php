@@ -18,20 +18,15 @@ use Nette\Utils\DateTime as NetteDateTime;
 class Articles
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var LinkGenerator */
-	protected $linkGenerator;
+	private LinkGenerator $linkGenerator;
 
-	/** @var Post */
-	protected $blogPost;
+	private Post $blogPost;
 
-	/** @var NetteTranslator */
-	protected $translator;
+	private NetteTranslator $translator;
 
 	private Tags $tags;
 

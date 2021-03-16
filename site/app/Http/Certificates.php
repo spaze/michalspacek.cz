@@ -16,17 +16,14 @@ use Tracy\Debugger;
 class Certificates
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
 	/** @var array<string, string> */
-	private $users;
+	private array $users;
 
-	/** @var integer */
-	private $expiringThreshold;
+	private int $expiringThreshold;
 
-	/** @var integer */
-	private $hideExpiredAfter;
+	private int $hideExpiredAfter;
 
 
 	public function __construct(Explorer $context)

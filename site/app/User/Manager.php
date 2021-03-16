@@ -34,32 +34,23 @@ class Manager implements Authenticator
 
 	private const TOKEN_RETURNING_USER = 2;
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var IRequest */
-	protected $httpRequest;
+	private IRequest $httpRequest;
 
-	/** @var Response */
-	protected $httpResponse;
+	private Response $httpResponse;
 
-	/** @var Passwords */
-	private $passwords;
+	private Passwords $passwords;
 
-	/** @var StaticKey */
-	protected $passwordEncryption;
+	private StaticKey $passwordEncryption;
 
-	/** @var string */
-	private $returningUserCookie;
+	private string $returningUserCookie;
 
-	/** @var string */
-	private $permanentLoginCookie;
+	private string $permanentLoginCookie;
 
-	/** @var string */
-	private $permanentLoginInterval;
+	private string $permanentLoginInterval;
 
-	/** @var string */
-	private $authCookiesPath = null;
+	private ?string $authCookiesPath = null;
 
 
 	public function __construct(

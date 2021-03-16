@@ -13,8 +13,7 @@ class Helpers
 	use SmartObject;
 
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
 
 	public function __construct(Texy $texyFormatter)

@@ -15,14 +15,14 @@ use SplFileInfo;
 class Files
 {
 
-	protected Explorer $database;
+	private Explorer $database;
 
-	protected Statuses $trainingStatuses;
+	private Statuses $trainingStatuses;
 
 	/**
 	 * Files directory, does not end with a slash.
 	 */
-	protected string $filesDir;
+	private string $filesDir;
 
 
 	public function __construct(Explorer $context, Statuses $trainingStatuses)

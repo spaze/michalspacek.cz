@@ -26,51 +26,42 @@ class Talks
 	/** @var integer */
 	private const SLIDE_MAX_HEIGHT = 450;
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Request */
-	protected $httpRequest;
+	private Request $httpRequest;
 
 	/**
 	 * Slides root, just directory no FQND, no leading slash, no trailing slash.
-	 *
-	 * @var string
 	 */
-	protected $slidesRoot;
+	private string $slidesRoot;
 
 	/**
 	 * Static files root FQDN, no trailing slash.
-	 *
-	 * @var string
 	 */
-	protected $staticRoot;
+	private string $staticRoot;
 
 	/**
 	 * Physical location root directory, no trailing slash.
-	 *
-	 * @var string
 	 */
-	protected $locationRoot;
+	private string $locationRoot;
 
 	/** @var string[] */
-	private $deleteFiles = [];
+	private array $deleteFiles = [];
 
 	/** @var integer[] */
-	private $otherSlides = [];
+	private array $otherSlides = [];
 
 	/** @var string[] */
-	private $supportedImages = [
+	private array $supportedImages = [
 		'image/gif' => 'gif',
 		'image/png' => 'png',
 		'image/jpeg' => 'jpg',
 	];
 
 	/** @var string[] */
-	private $supportedAlternativeImages = [
+	private array $supportedAlternativeImages = [
 		'image/webp' => 'webp',
 	];
 

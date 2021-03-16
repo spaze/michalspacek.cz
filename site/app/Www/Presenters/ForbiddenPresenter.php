@@ -18,11 +18,9 @@ use Nette\Localization\Translator;
 class ForbiddenPresenter extends Presenter
 {
 
-	/** @var Translator */
-	protected $translator;
+	private Translator $translator;
 
-	/** @var IResponse */
-	protected $httpResponse;
+	private IResponse $httpResponse;
 
 
 	public function __construct(Translator $translator, IResponse $httpResponse)

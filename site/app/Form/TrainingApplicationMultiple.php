@@ -9,8 +9,7 @@ use Nette\ComponentModel\IContainer;
 class TrainingApplicationMultiple extends ProtectedForm
 {
 
-	/** @var Applications */
-	private $trainingApplications;
+	private Applications $trainingApplications;
 
 
 	/**

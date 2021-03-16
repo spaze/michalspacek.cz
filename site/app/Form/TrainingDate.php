@@ -17,14 +17,11 @@ class TrainingDate extends ProtectedForm
 	private const REPLACED = 'Nahrazené';
 	private const DISCONTINUED = 'Ukončené';
 
-	/** @var Trainings */
-	protected $trainings;
+	private Trainings $trainings;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Venues */
-	protected $trainingVenues;
+	private Venues $trainingVenues;
 
 
 	public function __construct(

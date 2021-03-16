@@ -9,8 +9,7 @@ use Spaze\Exports\Bridges\Nette\Atom\Response;
 class ExportsPresenter extends BasePresenter
 {
 
-	/** @var Exports */
-	protected $exports;
+	private Exports $exports;
 
 
 	public function __construct(Exports $exports)

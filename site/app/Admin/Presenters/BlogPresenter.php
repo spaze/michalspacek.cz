@@ -21,9 +21,9 @@ use Spaze\ContentSecurityPolicy\Config as CspConfig;
 class BlogPresenter extends BasePresenter
 {
 
-	protected Post $blogPost;
+	private Post $blogPost;
 
-	protected Texy $texyFormatter;
+	private Texy $texyFormatter;
 
 	private Data $post;
 
@@ -31,9 +31,6 @@ class BlogPresenter extends BasePresenter
 
 	private PostFormFactory $postFormFactory;
 
-	/**
-	 * @var CspConfig
-	 */
 	private CspConfig $contentSecurityPolicy;
 
 

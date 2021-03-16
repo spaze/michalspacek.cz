@@ -9,11 +9,9 @@ use Spaze\Session\MysqlSessionHandler;
 abstract class BasePresenter extends WwwBasePresenter
 {
 
-	/** @var MysqlSessionHandler */
-	private $sessionHandler;
+	private MysqlSessionHandler $sessionHandler;
 
-	/** @var boolean */
-	protected $haveBacklink = true;
+	protected bool $haveBacklink = true;
 
 
 	/**

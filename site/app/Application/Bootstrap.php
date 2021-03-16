@@ -26,32 +26,23 @@ class Bootstrap
 	/** @var string */
 	private const MODE_DEVELOPMENT = 'development';
 
-	/** @var IRequest */
-	private $httpRequest;
+	private IRequest $httpRequest;
 
-	/** @var Container */
-	private $container;
+	private Container $container;
 
-	/** @var IResponse */
-	private $httpResponse;
+	private IResponse $httpResponse;
 
-	/** @var SecurityHeaders */
-	private $securityHeaders;
+	private SecurityHeaders $securityHeaders;
 
-	/** @var string */
-	private $siteDir;
+	private string $siteDir;
 
-	/** @var string */
-	private $logDir;
+	private string $logDir;
 
-	/** @var string */
-	private $tempDir;
+	private string $tempDir;
 
-	/** @var string */
-	private $environment;
+	private string $environment;
 
-	/** @var string */
-	private $timeZone;
+	private string $timeZone;
 
 
 	public function __construct(string $siteDir, string $logDir, string $tempDir, ?string $environment, string $timeZone)

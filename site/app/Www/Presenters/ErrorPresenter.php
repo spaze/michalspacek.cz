@@ -12,11 +12,10 @@ use Nette\Http\Url;
 class ErrorPresenter extends BaseErrorPresenter
 {
 
-	/** @var LocaleLinkGenerator */
-	protected $localeLinkGenerator;
+	private LocaleLinkGenerator $localeLinkGenerator;
 
 	/** @var integer[] */
-	protected $statuses = [
+	private array $statuses = [
 		IResponse::S400_BAD_REQUEST,
 		IResponse::S403_FORBIDDEN,
 		IResponse::S404_NOT_FOUND,

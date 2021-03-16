@@ -9,11 +9,9 @@ use MichalSpacekCz\Training\Trainings;
 class ReviewsPresenter extends BasePresenter
 {
 
-	/** @var Trainings */
-	protected $trainings;
+	private Trainings $trainings;
 
-	/** @var Reviews */
-	protected $trainingReviews;
+	private Reviews $trainingReviews;
 
 
 	public function __construct(Trainings $trainings, Reviews $trainingReviews)

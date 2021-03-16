@@ -24,24 +24,21 @@ class Dates
 
 	private const DATA_RETENTION = 30;
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Statuses */
-	protected $trainingStatuses;
+	private Statuses $trainingStatuses;
 
 	private Prices $prices;
 
 	private Helpers $netxtenHelpers;
 
-	/** @var Translator */
-	protected $translator;
+	private Translator $translator;
 
 	/** @var array<string, integer> */
-	private $statusIds = array();
+	private array $statusIds = array();
 
 	/** @var array<integer, array<string, ArrayHash>> */
-	private $upcomingDates = array();
+	private array $upcomingDates = array();
 
 
 	public function __construct(Explorer $context, Statuses $trainingStatuses, Prices $prices, Helpers $netxtenHelpers, Translator $translator)

@@ -10,11 +10,9 @@ use Netxten\Formatter\Texy;
 class Venues
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
 
 	public function __construct(Explorer $context, Texy $texyFormatter)

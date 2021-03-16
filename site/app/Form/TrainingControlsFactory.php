@@ -18,14 +18,11 @@ class TrainingControlsFactory
 	use Date;
 
 
-	/** @var Translator */
-	private $translator;
+	private Translator $translator;
 
-	/** @var WinterIsComing */
-	private $winterIsComing;
+	private WinterIsComing $winterIsComing;
 
-	/** @var Applications */
-	private $trainingApplications;
+	private Applications $trainingApplications;
 
 
 	public function __construct(Applications $trainingApplications, WinterIsComing $winterIsComing, Translator $translator)

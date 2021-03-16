@@ -14,23 +14,17 @@ use Nette\Database\Row;
 class HomepagePresenter extends BasePresenter
 {
 
-	/** @var boolean */
-	protected $haveBacklink = false;
+	protected bool $haveBacklink = false;
 
-	/** @var Applications */
-	protected $trainingApplications;
+	private Applications $trainingApplications;
 
-	/** @var Mails */
-	protected $trainingMails;
+	private Mails $trainingMails;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Certificates */
-	protected $certificates;
+	private Certificates $certificates;
 
-	/** @var Trainings */
-	private $trainings;
+	private Trainings $trainings;
 
 
 	public function __construct(Applications $trainingApplications, Mails $trainingMails, Dates $trainingDates, Certificates $certificates, Trainings $trainings)

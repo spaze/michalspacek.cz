@@ -8,8 +8,7 @@ use MichalSpacekCz\Formatter\Texy;
 class PhotoPresenter extends BasePresenter
 {
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
 
 	public function __construct(Texy $texyFormatter)

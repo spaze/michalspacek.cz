@@ -11,8 +11,7 @@ use RuntimeException;
 class CertificatePresenter extends BasePresenter
 {
 
-	/** @var Certificates */
-	protected $certificates;
+	private Certificates $certificates;
 
 
 	public function __construct(Certificates $certificates)

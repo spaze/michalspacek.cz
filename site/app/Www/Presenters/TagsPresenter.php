@@ -13,20 +13,16 @@ use Nette\Database\Row;
 class TagsPresenter extends BasePresenter
 {
 
-	/** @var Articles */
-	protected $articles;
+	private Articles $articles;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Strings */
-	protected $strings;
+	private Strings $strings;
 
-	/** @var LocaleUrls */
-	private $localeUrls;
+	private LocaleUrls $localeUrls;
 
 	/** @var string[][] */
-	private $localeLinkParams = [];
+	private array $localeLinkParams = [];
 
 
 	public function __construct(Articles $articles, Strings $strings, Texy $texyFormatter, LocaleUrls $localeUrls)

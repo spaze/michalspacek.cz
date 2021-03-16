@@ -14,14 +14,11 @@ use Nette\Utils\ArrayHash;
 class InvoicesPresenter extends BasePresenter
 {
 
-	/** @var Applications */
-	protected $trainingApplications;
+	private Applications $trainingApplications;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var TrainingControlsFactory */
-	private $trainingControlsFactory;
+	private TrainingControlsFactory $trainingControlsFactory;
 
 
 	public function __construct(Applications $trainingApplications, Dates $trainingDates, TrainingControlsFactory $trainingControlsFactory)

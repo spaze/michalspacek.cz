@@ -13,11 +13,9 @@ class RedirectPresenter extends BasePresenter
 
 	private const GOOD_NIGHT = 5;
 
-	/** @var Applications */
-	protected $trainingApplications;
+	private Applications $trainingApplications;
 
-	/** @var Articles */
-	protected $articles;
+	private Articles $articles;
 
 
 	public function __construct(Applications $trainingApplications, Articles $articles)

@@ -40,44 +40,42 @@ class RouterFactory
 
 	private const ROOT_ONLY = '';
 
-	/** @var Loader */
-	protected $blogPostLoader;
+	private Loader $blogPostLoader;
 
 	/** @var Translator|NetteTranslator */
-	protected $translator;
+	private NetteTranslator $translator;
 
 	/** @var array<string, array<string, string>> of host => array of supported locales */
-	protected $supportedLocales;
+	private array $supportedLocales;
 
 	/** @var array<string, string> of locale => root domain */
-	protected $rootDomainMapping;
+	private array $rootDomainMapping;
 
 	/** @var array<string, array<string, array{mask:array<string, string>, actions:array<string, array<string, string>>}>> */
-	protected $translatedRoutes;
+	private array $translatedRoutes;
 
 	/** @var array<string, array<string, array<string, string>>> */
-	protected $translatedPresenters = [];
+	private array $translatedPresenters = [];
 
 	/** @var array<string, array<string, array<string, array<string, string>>>> */
-	protected $translatedActions = [];
+	private array $translatedActions = [];
 
-	/** @var string */
-	private $currentModule;
+	private string $currentModule;
 
 	/** @var RouteList<Router> */
-	private $currentRouteList;
+	private RouteList $currentRouteList;
 
 	/** @var RouteList[] */
-	private $currentLocaleRouteList;
+	private array $currentLocaleRouteList;
 
 	/** @var RouteList<Router> */
-	private $router;
+	private RouteList $router;
 
 	/** @var array<string, RouteList> */
-	private $localeRouters;
+	private array $localeRouters;
 
 	/** @var string[] */
-	private $availableLocales = [];
+	private array $availableLocales = [];
 
 
 	/**

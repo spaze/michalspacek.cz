@@ -16,17 +16,14 @@ use stdClass;
 class EmailsPresenter extends BasePresenter
 {
 
-	/** @var Applications */
-	protected $trainingApplications;
+	private Applications $trainingApplications;
 
-	/** @var Mails */
-	protected $trainingMails;
+	private Mails $trainingMails;
 
-	/** @var Statuses */
-	protected $trainingStatuses;
+	private Statuses $trainingStatuses;
 
 	/** @var Row[] */
-	private $applications;
+	private array $applications;
 
 
 	public function __construct(Applications $trainingApplications, Mails $trainingMails, Statuses $trainingStatuses)

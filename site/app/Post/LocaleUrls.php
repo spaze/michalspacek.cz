@@ -9,9 +9,7 @@ use Nette\Database\Explorer;
 class LocaleUrls
 {
 
-	/** @var Explorer */
-	private $database;
-
+	private Explorer $database;
 	private Tags $tags;
 
 

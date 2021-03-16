@@ -22,32 +22,24 @@ class Applications
 	private const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
 	private const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Trainings */
-	protected $trainings;
+	private Trainings $trainings;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Statuses */
-	protected $trainingStatuses;
+	private Statuses $trainingStatuses;
 
-	/** @var StaticKey */
-	protected $emailEncryption;
+	private StaticKey $emailEncryption;
 
-	/** @var Prices */
-	private $prices;
+	private Prices $prices;
 
-	/** @var Vrana */
-	protected $vranaResolver;
+	private Vrana $vranaResolver;
 
-	/** @var Translator */
-	protected $translator;
+	private Translator $translator;
 
 	/** @var array<integer, array<integer, Row>> */
-	private $byDate = array();
+	private array $byDate = [];
 
 
 	public function __construct(

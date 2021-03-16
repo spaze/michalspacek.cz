@@ -11,7 +11,7 @@ class ErrorPresenter extends BaseErrorPresenter
 {
 
 	/** @var array<integer, string> */
-	protected $statuses = [
+	private array $statuses = [
 		IResponse::S400_BAD_REQUEST => 'Never gonna request you up',
 		IResponse::S403_FORBIDDEN => 'Never gonna accept you up',
 		IResponse::S404_NOT_FOUND => 'Never gonna look you up',

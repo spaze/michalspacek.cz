@@ -13,23 +13,17 @@ use MichalSpacekCz\Training\Trainings;
 class HomepagePresenter extends BasePresenter
 {
 
-	/** @var Articles */
-	protected $articles;
+	private Articles $articles;
 
-	/** @var Interviews */
-	protected $interviews;
+	private Interviews $interviews;
 
-	/** @var Talks */
-	protected $talks;
+	private Talks $talks;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Trainings */
-	protected $trainings;
+	private Trainings $trainings;
 
-	/** @var CompanyTrainings */
-	protected $companyTrainings;
+	private CompanyTrainings $companyTrainings;
 
 
 	public function __construct(

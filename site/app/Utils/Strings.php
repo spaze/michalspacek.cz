@@ -9,8 +9,7 @@ use Nette\Localization\Translator as NetteTranslator;
 class Strings
 {
 
-	/** @var NetteTranslator */
-	private $translator;
+	private NetteTranslator $translator;
 
 
 	/**

@@ -25,16 +25,16 @@ class UpcKeys
 	public const SSID_TYPE_UNKNOWN = 3;
 
 	/** @var RouterInterface[] */
-	protected $routers;
+	private array $routers;
 
-	/** @var string[] */
-	protected $prefixes;
+	/** @var string[]|null */
+	private ?array $prefixes = null;
 
-	/** @var array<string, array<integer, string>> */
-	protected $modelsWithPrefixes;
+	/** @var array<string, array<integer, string>>|null */
+	private ?array $modelsWithPrefixes = null;
 
 	/** @var stdClass[] */
-	protected $keys;
+	private array $keys;
 
 
 	public function addRouter(RouterInterface $router): void

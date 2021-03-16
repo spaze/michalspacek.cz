@@ -8,8 +8,6 @@ class PgpPresenter extends BasePresenter
 
 	/**
 	 * Physical location root directory, no trailing slash.
-	 *
-	 * @var string
 	 */
 	private string $locationRoot;
 

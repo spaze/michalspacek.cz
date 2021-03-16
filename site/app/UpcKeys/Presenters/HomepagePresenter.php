@@ -16,17 +16,14 @@ use stdClass;
 class HomepagePresenter extends BasePresenter
 {
 
-	/** @var string */
-	protected $ssid;
+	private ?string $ssid;
 
-	/** @var UpcKeys */
-	protected $upcKeys;
+	private UpcKeys $upcKeys;
 
-	/** @var IResponse */
-	protected $httpResponse;
+	private IResponse $httpResponse;
 
 	/** @var array<integer, string> */
-	private $types = [
+	private array $types = [
 		UpcKeys::SSID_TYPE_24GHZ => '2.4 GHz',
 		UpcKeys::SSID_TYPE_5GHZ => '5 GHz',
 		UpcKeys::SSID_TYPE_UNKNOWN => 'unknown',

@@ -15,26 +15,19 @@ use Nette\Http\IResponse;
 class CompanyTrainingsPresenter extends BasePresenter
 {
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Trainings */
-	protected $trainings;
+	private Trainings $trainings;
 
-	/** @var CompanyTrainings */
-	protected $companyTrainings;
+	private CompanyTrainings $companyTrainings;
 
-	/** @var Locales */
-	protected $trainingLocales;
+	private Locales $trainingLocales;
 
-	/** @var Reviews */
-	protected $trainingReviews;
+	private Reviews $trainingReviews;
 
-	/** @var Prices */
-	private $prices;
+	private Prices $prices;
 
-	/** @var IResponse */
-	protected $httpResponse;
+	private IResponse $httpResponse;
 
 
 	public function __construct(

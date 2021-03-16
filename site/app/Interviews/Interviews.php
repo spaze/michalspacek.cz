@@ -11,11 +11,8 @@ use Netxten\Formatter\Texy;
 class Interviews
 {
 
-	/** @var Explorer */
-	protected $database;
-
-	/** @var Texy */
-	protected $texyFormatter;
+	private Explorer $database;
+	private Texy $texyFormatter;
 
 
 	public function __construct(Explorer $context, Texy $texyFormatter)

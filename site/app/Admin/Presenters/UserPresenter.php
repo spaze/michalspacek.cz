@@ -15,13 +15,10 @@ use Nette\Utils\Html;
 class UserPresenter extends BasePresenter
 {
 
-	/** @var Manager */
-	protected $authenticator;
+	private Manager $authenticator;
 
-	/** @var Session */
-	protected $sessionHandler;
+	private Session $sessionHandler;
 
-	/** @var LinkGenerator */
 	private LinkGenerator $linkGenerator;
 
 

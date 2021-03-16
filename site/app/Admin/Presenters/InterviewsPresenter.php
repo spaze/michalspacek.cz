@@ -14,14 +14,12 @@ use Nette\Utils\ArrayHash;
 class InterviewsPresenter extends BasePresenter
 {
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Interviews */
-	protected $interviews;
+	private Interviews $interviews;
 
 	/** @var Row<mixed> */
-	private $interview;
+	private Row $interview;
 
 
 	public function __construct(Texy $texyFormatter, Interviews $interviews)

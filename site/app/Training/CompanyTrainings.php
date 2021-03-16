@@ -11,17 +11,13 @@ use Nette\Localization\Translator;
 class CompanyTrainings
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Translator */
-	protected $translator;
+	private Translator $translator;
 
 
 	public function __construct(Explorer $context, Texy $texyFormatter, Dates $trainingDates, Translator $translator)

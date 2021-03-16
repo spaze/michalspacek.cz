@@ -15,20 +15,16 @@ use stdClass;
 class Technicolor implements RouterInterface
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var string */
-	protected $url;
+	private string $url;
 
-	/** @var string */
-	protected $apiKey;
+	private string $apiKey;
 
 	/** @var string[] */
-	protected $prefixes;
+	private array $prefixes;
 
-	/** @var string */
-	protected $model;
+	private string $model;
 
 
 	public function __construct(Explorer $context)

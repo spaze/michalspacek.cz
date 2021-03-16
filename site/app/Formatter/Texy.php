@@ -32,59 +32,43 @@ class Texy extends NetxtenTexy
 	private const TRAINING_DATE = 'TRAINING_DATE';
 
 	/** @var Translator|NetteTranslator */
-	protected $translator;
+	private NetteTranslator $translator;
 
-	/** @var Application */
-	protected $application;
+	private Application $application;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Locales */
-	protected $trainingLocales;
+	private Locales $trainingLocales;
 
-	/** @var Prices */
-	private $prices;
+	private Prices $prices;
 
-	/** @var LocaleLinkGenerator */
-	private $localeLinkGenerator;
+	private LocaleLinkGenerator $localeLinkGenerator;
 
-	/** @var LocaleUrls */
-	private $blogPostLocaleUrls;
+	private LocaleUrls $blogPostLocaleUrls;
 
-	/** @var Helpers */
-	protected $netxtenHelpers;
+	private Helpers $netxtenHelpers;
 
-	/** @var TexyTexy|null */
-	private $texy;
+	private ?TexyTexy $texy = null;
 
 	/**
 	 * Static files root FQDN, no trailing slash.
-	 *
-	 * @var string
 	 */
-	protected $staticRoot;
+	private string $staticRoot;
 
 	/**
 	 * Images root, just directory no FQDN, no leading slash, no trailing slash.
-	 *
-	 * @var string
 	 */
-	protected $imagesRoot;
+	private string $imagesRoot;
 
 	/**
 	 * Physical location root directory, no trailing slash.
-	 *
-	 * @var string
 	 */
-	protected $locationRoot;
+	private string $locationRoot;
 
 	/**
 	 * Top heading level, used to avoid starting with H1.
-	 *
-	 * @var integer
 	 */
-	protected $topHeading = 1;
+	private int $topHeading = 1;
 
 
 	public function __construct(

@@ -15,11 +15,9 @@ use RuntimeException;
 class CompanyPresenter extends BasePresenter
 {
 
-	/** @var Info */
-	protected $companyInfo;
+	private Info $companyInfo;
 
-	/** @var SecurityHeaders */
-	protected $securityHeaders;
+	private SecurityHeaders $securityHeaders;
 
 
 	public function __construct(Info $companyInfo, SecurityHeaders $securityHeaders)

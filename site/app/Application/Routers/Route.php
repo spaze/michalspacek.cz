@@ -14,8 +14,7 @@ use Nette\Http\IRequest;
 class Route extends NetteRoute
 {
 
-	/** @var Loader */
-	public $blogPostLoader;
+	private Loader $blogPostLoader;
 
 
 	/**

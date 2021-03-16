@@ -30,23 +30,22 @@ class Statuses
 	public const STATUS_INVOICE_SENT_AFTER  = 'INVOICE_SENT_AFTER';   // 17
 	public const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
 	/** @var array<string, integer> */
-	private $statusIds = [];
+	private array $statusIds = [];
 
 	/** @var array<string, array<integer, string>> */
-	private $childrenStatuses = [];
+	private array $childrenStatuses = [];
 
 	/** @var array<string, array<integer, string>> */
-	private $parentStatuses = [];
+	private array $parentStatuses = [];
 
 	/** @var array<string, array<integer, string>> */
-	private $descendantStatuses = [];
+	private array $descendantStatuses = [];
 
 	/** @var array<integer, array<integer, Row>> */
-	private $statusHistory = [];
+	private array $statusHistory = [];
 
 
 	public function __construct(Explorer $context)

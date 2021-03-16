@@ -16,8 +16,7 @@ class Talk extends ProtectedForm
 	use Date;
 
 
-	/** @var Talks */
-	protected $talks;
+	private Talks $talks;
 
 
 	public function __construct(

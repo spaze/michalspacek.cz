@@ -11,14 +11,12 @@ use Tracy\ILogger;
 abstract class BaseErrorPresenter extends BasePresenter
 {
 
-	/** @var Redirections */
-	protected $redirections;
+	private Redirections $redirections;
 
-	/** @var ILogger */
-	private $logger;
+	private ILogger $logger;
 
 	/** @var integer[] */
-	protected $statuses = [
+	private array $statuses = [
 		IResponse::S400_BAD_REQUEST,
 		IResponse::S403_FORBIDDEN,
 		IResponse::S404_NOT_FOUND,

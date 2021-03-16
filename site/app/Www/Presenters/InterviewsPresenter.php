@@ -11,14 +11,11 @@ use Nette\Application\BadRequestException;
 class InterviewsPresenter extends BasePresenter
 {
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Interviews */
-	protected $interviews;
+	private Interviews $interviews;
 
-	/** @var Embed */
-	protected $embed;
+	private Embed $embed;
 
 
 	public function __construct(

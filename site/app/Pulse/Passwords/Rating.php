@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use MichalSpacekCz\ShouldNotHappenException;
-use Nette\Database\Explorer;
 use RuntimeException;
 
 class Rating
@@ -17,8 +16,6 @@ class Rating
 	private const RATING_D = 'D';
 	private const RATING_E = 'E';
 	private const RATING_F = 'F';
-
-	private Explorer $database;
 
 	/** @var string[] */
 	private array $slowHashes = [

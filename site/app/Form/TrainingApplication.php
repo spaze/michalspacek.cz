@@ -14,9 +14,9 @@ use Netxten\Forms\Controls\HiddenFieldWithLabel;
 class TrainingApplication extends ProtectedForm
 {
 
-	protected Translator $translator;
+	private Translator $translator;
 
-	protected Dates $trainingDates;
+	private Dates $trainingDates;
 
 
 	/**

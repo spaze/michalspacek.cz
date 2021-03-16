@@ -17,14 +17,12 @@ use Nette\Utils\DateTime;
 class Loader
 {
 
-	/** @var Explorer */
-	protected $database;
+	private Explorer $database;
 
-	/** @var NetteTranslator */
-	protected $translator;
+	private NetteTranslator $translator;
 
 	/** @var Row<mixed>|null */
-	protected $post;
+	private ?Row $post = null;
 
 
 	/**

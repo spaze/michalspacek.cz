@@ -31,61 +31,48 @@ use Netxten\Templating\Helpers;
 class TrainingsPresenter extends BasePresenter
 {
 
-	/** @var Applications */
-	protected $trainingApplications;
+	private Applications $trainingApplications;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Statuses */
-	protected $trainingStatuses;
+	private Statuses $trainingStatuses;
 
-	/** @var Trainings */
-	protected $trainings;
+	private Trainings $trainings;
 
-	/** @var Venues */
-	protected $trainingVenues;
+	private Venues $trainingVenues;
 
-	/** @var Files */
-	protected $trainingFiles;
+	private Files $trainingFiles;
 
-	/** @var Reviews */
-	protected $trainingReviews;
+	private Reviews $trainingReviews;
 
-	/** @var TrainingControlsFactory */
-	private $trainingControlsFactory;
+	private TrainingControlsFactory $trainingControlsFactory;
 
-	/** @var Helpers */
-	private $netxtenHelpers;
+	private Helpers $netxtenHelpers;
 
-	/** @var DeletePersonalDataFormFactory */
-	private $deletePersonalDataFormFactory;
+	private DeletePersonalDataFormFactory $deletePersonalDataFormFactory;
 
 	private TrainingApplicationAdminFactory $trainingApplicationAdminFactory;
 
 	/** @var Row[] */
-	private $applications;
+	private array $applications;
 
 	/** @var integer[] */
-	private $applicationIdsAllowedFiles;
+	private array $applicationIdsAllowedFiles;
 
 	/** @var Row<mixed> */
-	private $application;
+	private Row $application;
 
-	/** @var integer */
-	private $applicationId;
-
-	/** @var Row<mixed> */
-	private $review;
+	private int $applicationId;
 
 	/** @var Row<mixed> */
-	private $training;
+	private Row $review;
 
-	/** @var integer|null */
-	private $dateId;
+	/** @var Row<mixed> */
+	private Row $training;
 
-	/** @var integer */
-	private $redirectParam;
+	private ?int $dateId;
+
+	private ?int $redirectParam;
 
 
 	public function __construct(

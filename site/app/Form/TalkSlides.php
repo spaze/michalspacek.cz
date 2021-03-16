@@ -11,8 +11,7 @@ use Nette\Forms\Container;
 class TalkSlides extends ProtectedForm
 {
 
-	/** @var Talks */
-	protected $talks;
+	private Talks $talks;
 
 
 	/**

@@ -13,20 +13,15 @@ use Nette\Application\BadRequestException;
 class VenuesPresenter extends BasePresenter
 {
 
-	/** @var Texy */
-	protected $texyFormatter;
+	private Texy $texyFormatter;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Venues */
-	protected $trainingVenues;
+	private Venues $trainingVenues;
 
-	/** @var Trainings */
-	protected $trainings;
+	private Trainings $trainings;
 
-	/** @var Embed */
-	protected $embed;
+	private Embed $embed;
 
 
 	public function __construct(

@@ -23,8 +23,7 @@ class RegisterUz implements CompanyDataInterface
 
 	private const COUNTRY_CODE = 'sk';
 
-	/** @var string */
-	private $rootUrl;
+	private string $rootUrl;
 
 
 	/**

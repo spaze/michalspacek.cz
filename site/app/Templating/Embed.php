@@ -20,8 +20,7 @@ class Embed
 
 	public const VIDEO_SLIDESLIVE = 'slideslive';
 
-	/** @var Config */
-	protected $contentSecurityPolicy;
+	private Config $contentSecurityPolicy;
 
 
 	public function __construct(Config $contentSecurityPolicy)

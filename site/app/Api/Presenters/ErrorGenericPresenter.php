@@ -11,8 +11,7 @@ use Nette\Application\Response;
 class ErrorGenericPresenter implements IPresenter
 {
 
-	/** @var Error */
-	private $error;
+	private Error $error;
 
 
 	public function __construct(Error $error)

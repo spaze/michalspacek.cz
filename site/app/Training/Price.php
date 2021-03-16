@@ -8,17 +8,13 @@ use NumberFormatter;
 class Price
 {
 
-	/** @var integer|null */
-	private $price;
+	private ?int $price;
 
-	/** @var integer|null */
-	private $discount;
+	private ?int $discount;
 
-	/** @var float|null */
-	private $vatRate;
+	private ?float $vatRate;
 
-	/** @var float|null */
-	private $priceVat;
+	private ?float $priceVat;
 
 
 	public function __construct(?int $price, ?int $discount, ?float $vatRate, ?float $priceVat = null)

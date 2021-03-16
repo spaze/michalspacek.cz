@@ -18,32 +18,23 @@ class Mails
 
 	private const REMINDER_DAYS = 5;
 
-	/** @var Mailer */
-	protected $mailer;
+	private Mailer $mailer;
 
-	/** @var Applications */
-	protected $trainingApplications;
+	private Applications $trainingApplications;
 
-	/** @var Dates */
-	protected $trainingDates;
+	private Dates $trainingDates;
 
-	/** @var Statuses */
-	protected $trainingStatuses;
+	private Statuses $trainingStatuses;
 
-	/** @var Venues */
-	protected $trainingVenues;
+	private Venues $trainingVenues;
 
-	/** @var Files */
-	protected $trainingFiles;
+	private Files $trainingFiles;
 
-	/** @var Helpers */
-	protected $netxtenHelpers;
+	private Helpers $netxtenHelpers;
 
-	/** @var string */
-	protected $emailFrom;
+	private string $emailFrom;
 
-	/** @var string */
-	protected $phoneNumber;
+	private string $phoneNumber;
 
 
 	public function __construct(

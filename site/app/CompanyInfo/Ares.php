@@ -24,8 +24,7 @@ class Ares implements CompanyDataInterface
 	 */
 	private const STATUS_FOUND = 1;
 
-	/** @var string */
-	private $url;
+	private string $url;
 
 
 	public function setUrl(string $url): void
