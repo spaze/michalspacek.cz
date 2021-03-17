@@ -167,6 +167,9 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
+				if ($application->status === Statuses::STATUS_PRO_FORMA_INVOICE_SENT && $application->paid) {
+					continue;
+				}
 				if ($application->trainingStart->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
 					$application->files = $this->trainingFiles->getFiles($application->id);
 					$application->nextStatus = Statuses::STATUS_REMINDED;
