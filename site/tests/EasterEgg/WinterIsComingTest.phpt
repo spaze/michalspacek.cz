@@ -67,6 +67,26 @@ class WinterIsComingTest extends TestCase
 	public function testRuleFakeError(): void
 	{
 		($this->rule)($this->form->addText('foo')->setDefaultValue('winter@example.com'));
+		$this->assertResponse();
+	}
+
+
+	public function testRuleFakeErrorEmailHost(): void
+	{
+		($this->rule)($this->form->addText('foo')->setDefaultValue(random_int(0, PHP_INT_MAX) . '@ssemarketing.net'));
+		$this->assertResponse();
+	}
+
+
+	public function testRuleNiceHost(): void
+	{
+		($this->rule)($this->form->addText('foo')->setDefaultValue('kuddelmuddel@fussemarketing.net'));
+		Assert::hasNotKey('response', (array)$this->resultObject);
+	}
+
+
+	private function assertResponse(): void
+	{
 		/** @var TextResponse $response */
 		$response = $this->resultObject->response;
 		Assert::type(TextResponse::class, $response);
