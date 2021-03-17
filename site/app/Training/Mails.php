@@ -222,17 +222,18 @@ class Mails
 	 * @param Row<mixed> $application
 	 * @param Template $template
 	 * @param FileUpload $invoice
+	 * @param string|null $cc
 	 * @param string $additional
 	 * @throws ShouldNotHappenException
 	 */
-	public function sendInvoice(Row $application, Template $template, FileUpload $invoice, string $additional): void
+	public function sendInvoice(Row $application, Template $template, FileUpload $invoice, ?string $cc, string $additional): void
 	{
 		Debugger::log("Sending invoice email to application id: {$application->id}, training: {$application->training->action}");
 		$message = $this->getMailMessage($application);
 		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $message->getSubject(), $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()]);
+		$this->sendMail($application->email, $application->name, $message->getSubject(), $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()], $cc);
 	}
 
 
@@ -263,8 +264,9 @@ class Mails
 	 * @param string $subject
 	 * @param Template $template
 	 * @param string[] $attachments
+	 * @param string|null $cc
 	 */
-	private function sendMail(string $recipientAddress, string $recipientName, string $subject, Template $template, array $attachments = array()): void
+	private function sendMail(string $recipientAddress, string $recipientName, string $subject, Template $template, array $attachments = [], ?string $cc = null): void
 	{
 		$mail = new Message();
 		foreach ($attachments as $name => $file) {
@@ -280,6 +282,9 @@ class Mails
 			->setSubject($subject)
 			->setBody((string)$template)
 			->clearHeader('X-Mailer');  // Hide Nette Mailer banner
+		if ($cc) {
+			$mail->addCc($cc);
+		}
 		$this->mailer->send($mail);
 	}
 

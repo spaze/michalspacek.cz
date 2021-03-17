@@ -114,6 +114,7 @@ class TrainingMailsOutboxFactory
 						->addConditionOn($send, Form::FILLED)
 						->addRule(Form::FILLED, 'Chybí faktura')
 						->addRule(Form::MIME_TYPE, 'Faktura není v PDF', 'application/pdf');
+					$applicationIdsContainer->addEmail('cc', 'Cc:')->setRequired(false);
 					break;
 			}
 		}
@@ -146,7 +147,7 @@ class TrainingMailsOutboxFactory
 					if ($data->invoice->isOk()) {
 						$this->trainingApplications->updateApplicationInvoiceData($id, $data->invoiceId);
 						$applications[$id]->invoiceId = $data->invoiceId;
-						$this->trainingMails->sendInvoice($applications[$id], $template, $data->invoice, $additional);
+						$this->trainingMails->sendInvoice($applications[$id], $template, $data->invoice, $data->cc ?: null, $additional);
 						$this->trainingStatuses->updateStatus($id, $applications[$id]->nextStatus);
 						$sent++;
 					}
