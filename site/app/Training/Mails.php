@@ -294,7 +294,9 @@ class Mails
 			case Statuses::STATUS_MATERIALS_SENT:
 				return new MailMessageAdmin($application->familiar ? 'materialsFamiliar' : 'materials', 'Materiály ze školení ' . $application->training->name);
 			case Statuses::STATUS_INVOICE_SENT:
-				return new MailMessageAdmin('invoice', 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura');
+				return $application->status === Statuses::STATUS_PRO_FORMA_INVOICE_SENT || $this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id)
+					? new MailMessageAdmin('invoiceAfterProforma', 'Faktura za školení ' . $application->training->name)
+					: new MailMessageAdmin('invoice', 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura');
 			case Statuses::STATUS_INVOICE_SENT_AFTER:
 				return new MailMessageAdmin($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->training->name);
 			case Statuses::STATUS_REMINDED:
