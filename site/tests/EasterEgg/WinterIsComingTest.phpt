@@ -15,9 +15,7 @@ use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
-/**
-* @testCase MichalSpacekCz\EasterEgg\WinterIsComingTest
-*/
+/** @testCase */
 class WinterIsComingTest extends TestCase
 {
 	/** @var Presenter */
