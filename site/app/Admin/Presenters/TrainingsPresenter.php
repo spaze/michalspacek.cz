@@ -291,7 +291,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$total = 0;
-		foreach (array_keys((array)$button->getForm()->getValues()->applications) as $id) {
+		foreach (array_keys((array)$button->getForm()->getUnsafeValues(null)->applications) as $id) {
 			$application = $this->trainingApplications->getApplicationById($id);
 			if (in_array($application->status, $attendedStatuses) && !$application->familiar) {
 				$this->trainingApplications->setFamiliar($id);
