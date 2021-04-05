@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'c5a9bf7736d83bff6dfae7ece5893e49c05da70a',
+    'reference' => '8fad068d69778ae37a5a8bacb9807549d674e5f6',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -314,12 +314,12 @@
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.81',
-      'version' => '0.12.81.0',
+      'pretty_version' => '0.12.83',
+      'version' => '0.12.83.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0dd5b0ebeff568f7000022ea5f04aa86ad3124b8',
+      'reference' => '4a967cec6efb46b500dd6d768657336a3ffe699f',
     ),
     'phpstan/phpstan-deprecation-rules' => 
     array (
@@ -347,7 +347,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '43a315341710475e88006a0e55864b348d3d781c',
+      'reference' => '0a55b3eacf6b4a0fdc6ec9d01e00285ca9942b2b',
     ),
     'slevomat/coding-standard' => 
     array (
@@ -360,12 +360,12 @@
     ),
     'spaze/coding-standard' => 
     array (
-      'pretty_version' => 'v0.0.5',
-      'version' => '0.0.5.0',
+      'pretty_version' => 'v0.0.6',
+      'version' => '0.0.6.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0b37edaf5bf071fc137b7c7740e98785b33a4247',
+      'reference' => 'ce3c61fea125ae63350442b3064a5572ab0ee822',
     ),
     'spaze/csp-config' => 
     array (
@@ -401,7 +401,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'c5a9bf7736d83bff6dfae7ece5893e49c05da70a',
+      'reference' => '8fad068d69778ae37a5a8bacb9807549d674e5f6',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -495,12 +495,12 @@
     ),
     'symfony/filesystem' => 
     array (
-      'pretty_version' => 'v5.2.4',
-      'version' => '5.2.4.0',
+      'pretty_version' => 'v5.2.6',
+      'version' => '5.2.6.0',
       'aliases' => 
       array (
       ),
-      'reference' => '710d364200997a5afde34d9fe57bd52f3cc1e108',
+      'reference' => '8c86a82f51658188119e62cff0a050a12d09836f',
     ),
     'symfony/polyfill-ctype' => 
     array (
@@ -534,12 +534,12 @@
     ),
     'symfony/translation' => 
     array (
-      'pretty_version' => 'v5.2.5',
-      'version' => '5.2.5.0',
+      'pretty_version' => 'v5.2.6',
+      'version' => '5.2.6.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0947ab1e3aabd22a6bef393874b2555d2bb976da',
+      'reference' => '2cc7f45d96db9adfcf89adf4401d9dfed509f4e1',
     ),
     'symfony/translation-contracts' => 
     array (

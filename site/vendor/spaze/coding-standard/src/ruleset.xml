@@ -37,6 +37,18 @@
 			<property name="linesCountAfterLastContent" value="0"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.Classes.ClassStructure">
+		<properties>
+			<property name="groups" type="array">
+				<element value="uses"/>
+				<element value="constants"/>
+				<element value="properties"/>
+				<element value="abstract methods"/>
+				<element value="constructor"/>
+				<element value="methods"/>
+			</property>
+		</properties>
+	</rule>
 	<rule ref="SlevomatCodingStandard.Classes.ConstantSpacing">
 		<properties>
 			<property name="minLinesCountBeforeWithComment" value="1"/>
