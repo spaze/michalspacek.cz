@@ -670,7 +670,7 @@ class Talks
 			}
 		} catch (PDOException $e) {
 			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY && isset($slideNumber)) {
+				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
 					throw new UnexpectedValueException($e->getMessage(), $slideNumber);
 				}
 			}
