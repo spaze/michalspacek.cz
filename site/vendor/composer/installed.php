@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'f11509477229db2e787d54b4d2099b815b5599f0',
+    'reference' => '4d9f4bfbda8c00077ee1f7dd516f99a6ea0d2828',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -332,12 +332,12 @@
     ),
     'phpstan/phpstan-nette' => 
     array (
-      'pretty_version' => '0.12.16',
-      'version' => '0.12.16.0',
+      'pretty_version' => '0.12.17',
+      'version' => '0.12.17.0',
       'aliases' => 
       array (
       ),
-      'reference' => '7fda19691b464b1f0a3e42fa34c2c363e7404c77',
+      'reference' => '4930ff18725dd27bf2e15bb2b6ac1ef581d53514',
     ),
     'roave/security-advisories' => 
     array (
@@ -401,7 +401,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'f11509477229db2e787d54b4d2099b815b5599f0',
+      'reference' => '4d9f4bfbda8c00077ee1f7dd516f99a6ea0d2828',
     ),
     'spaze/mysql-session-handler' => 
     array (

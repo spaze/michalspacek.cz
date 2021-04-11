@@ -4,10 +4,6 @@ parameters:
 	level: 7
 	ignoreErrors:
 		- '#^Call to an undefined method Nette\\Localization\\Translator::get(Default|Available)?Locales?\(\)#'  # Actually called on \Contributte\Translation\Translator
-		-  # https://github.com/phpstan/phpstan-nette/pull/66
-			message: '#^Cannot access property \$applications on array\|object#'
-			path: app/Admin/Presenters/TrainingsPresenter.php
-			count: 1
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
