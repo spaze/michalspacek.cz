@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '8fad068d69778ae37a5a8bacb9807549d674e5f6',
+    'reference' => 'f11509477229db2e787d54b4d2099b815b5599f0',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -296,21 +296,21 @@
     ),
     'php-parallel-lint/php-parallel-lint' => 
     array (
-      'pretty_version' => 'v1.2.0',
-      'version' => '1.2.0.0',
+      'pretty_version' => 'v1.3.0',
+      'version' => '1.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '474f18bc6cc6aca61ca40bfab55139de614e51ca',
+      'reference' => '772a954e5f119f6f5871d015b23eabed8cbdadfb',
     ),
     'phpstan/phpdoc-parser' => 
     array (
-      'pretty_version' => '0.4.9',
-      'version' => '0.4.9.0',
+      'pretty_version' => '0.5.4',
+      'version' => '0.5.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '98a088b17966bdf6ee25c8a4b634df313d8aa531',
+      'reference' => 'e352d065af1ae9b41c12d1dfd309e90f7b1f55c9',
     ),
     'phpstan/phpstan' => 
     array (
@@ -347,25 +347,25 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '0a55b3eacf6b4a0fdc6ec9d01e00285ca9942b2b',
+      'reference' => 'aa48fe959b0236eede9c51a38f47df2bb81ef137',
     ),
     'slevomat/coding-standard' => 
     array (
-      'pretty_version' => '6.4.1',
-      'version' => '6.4.1.0',
+      'pretty_version' => '7.0.0',
+      'version' => '7.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '696dcca217d0c9da2c40d02731526c1e25b65346',
+      'reference' => 'b4922c5ad5cbd3787c453a2eb1f6d540f2482198',
     ),
     'spaze/coding-standard' => 
     array (
-      'pretty_version' => 'v0.0.6',
-      'version' => '0.0.6.0',
+      'pretty_version' => 'v0.0.8',
+      'version' => '0.0.8.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ce3c61fea125ae63350442b3064a5572ab0ee822',
+      'reference' => '1d4154e044a257a326bf81ada44e2dc0fed56cd2',
     ),
     'spaze/csp-config' => 
     array (
@@ -401,7 +401,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '8fad068d69778ae37a5a8bacb9807549d674e5f6',
+      'reference' => 'f11509477229db2e787d54b4d2099b815b5599f0',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -468,12 +468,12 @@
     ),
     'squizlabs/php_codesniffer' => 
     array (
-      'pretty_version' => '3.5.8',
-      'version' => '3.5.8.0',
+      'pretty_version' => '3.6.0',
+      'version' => '3.6.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9d583721a7157ee997f235f327de038e7ea6dac4',
+      'reference' => 'ffced0d2c8fa8e6cdc4d695a743271fab6c38625',
     ),
     'symfony/config' => 
     array (

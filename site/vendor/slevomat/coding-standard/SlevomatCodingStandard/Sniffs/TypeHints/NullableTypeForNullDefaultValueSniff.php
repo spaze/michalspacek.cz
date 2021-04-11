@@ -6,13 +6,16 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use SlevomatCodingStandard\Helpers\SuppressHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
+use SlevomatCodingStandard\Helpers\TypeHintHelper;
 use function array_merge;
 use function in_array;
+use function preg_match;
 use function sprintf;
+use function strtolower;
+use function substr_count;
 use const T_BITWISE_AND;
 use const T_ELLIPSIS;
 use const T_EQUAL;
-use const T_INLINE_THEN;
 use const T_NULL;
 use const T_NULLABLE;
 use const T_VARIABLE;
@@ -20,7 +23,7 @@ use const T_VARIABLE;
 class NullableTypeForNullDefaultValueSniff implements Sniff
 {
 
-	public const CODE_NULLABILITY_SYMBOL_REQUIRED = 'NullabilitySymbolRequired';
+	public const CODE_NULLABILITY_TYPE_MISSING = 'NullabilityTypeMissing';
 
 	private const NAME = 'SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue';
 
@@ -47,7 +50,7 @@ class NullableTypeForNullDefaultValueSniff implements Sniff
 		$startPointer = $tokens[$functionPointer]['parenthesis_opener'] + 1;
 		$endPointer = $tokens[$functionPointer]['parenthesis_closer'];
 
-		$typeHintTokenCodes = TokenHelper::getTypeHintTokenCodes();
+		$typeHintTokenCodes = TokenHelper::getOnlyTypeHintTokenCodes();
 
 		for ($i = $startPointer; $i < $endPointer; $i++) {
 			if ($tokens[$i]['code'] !== T_VARIABLE) {
@@ -67,45 +70,55 @@ class NullableTypeForNullDefaultValueSniff implements Sniff
 			}
 
 			$ignoreTokensToFindTypeHint = array_merge(TokenHelper::$ineffectiveTokenCodes, [T_BITWISE_AND, T_ELLIPSIS]);
-			$typeHintPointer = TokenHelper::findPreviousExcluding($phpcsFile, $ignoreTokensToFindTypeHint, $i - 1, $startPointer);
+			$typeHintEndPointer = TokenHelper::findPreviousExcluding($phpcsFile, $ignoreTokensToFindTypeHint, $i - 1, $startPointer);
 
 			if (
-				$typeHintPointer === null
-				|| !in_array($tokens[$typeHintPointer]['code'], $typeHintTokenCodes, true)
+				$typeHintEndPointer === null
+				|| !in_array($tokens[$typeHintEndPointer]['code'], $typeHintTokenCodes, true)
 			) {
 				continue;
 			}
 
-			$ignoreTokensToSkipTypeHint = array_merge(TokenHelper::$ineffectiveTokenCodes, $typeHintTokenCodes);
-			$beforeTypeHintPointer = TokenHelper::findPreviousExcluding(
+			$typeHintStartPointer = TypeHintHelper::getStartPointer($phpcsFile, $typeHintEndPointer);
+
+			$typeHint = TokenHelper::getContent($phpcsFile, $typeHintStartPointer, $typeHintEndPointer);
+
+			if (strtolower($typeHint) === 'mixed') {
+				continue;
+			}
+
+			$nullableSymbolPointer = TokenHelper::findPreviousEffective(
 				$phpcsFile,
-				$ignoreTokensToSkipTypeHint,
-				$typeHintPointer - 1,
-				$startPointer
+				$typeHintStartPointer - 1,
+				$tokens[$functionPointer]['parenthesis_opener']
 			);
 
-			// PHPCS reports T_NULLABLE as T_INLINE_THEN in PHP 8
-			if ($beforeTypeHintPointer !== null && in_array($tokens[$beforeTypeHintPointer]['code'], [T_NULLABLE, T_INLINE_THEN], true)) {
+			if ($nullableSymbolPointer !== null && $tokens[$nullableSymbolPointer]['code'] === T_NULLABLE) {
+				continue;
+			}
+
+			if (preg_match('~(?:^|\|)null(?:\||$)~i', $typeHint) === 1) {
 				continue;
 			}
 
 			$fix = $phpcsFile->addFixableError(
 				sprintf('Parameter %s has null default value, but is not marked as nullable.', $parameterName),
 				$i,
-				self::CODE_NULLABILITY_SYMBOL_REQUIRED
+				self::CODE_NULLABILITY_TYPE_MISSING
 			);
 
 			if (!$fix) {
 				continue;
 			}
 
-			$firstTypehint = TokenHelper::findNextEffective(
-				$phpcsFile,
-				$beforeTypeHintPointer === null ? $startPointer : $beforeTypeHintPointer + 1
-			);
-
 			$phpcsFile->fixer->beginChangeset();
-			$phpcsFile->fixer->addContent($firstTypehint - 1, '?');
+
+			if (substr_count($typeHint, '|') > 0) {
+				$phpcsFile->fixer->addContent($typeHintEndPointer, '|null');
+			} else {
+				$phpcsFile->fixer->addContentBefore($typeHintStartPointer, '?');
+			}
+
 			$phpcsFile->fixer->endChangeset();
 		}
 	}

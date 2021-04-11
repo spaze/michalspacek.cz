@@ -11,9 +11,12 @@ use function array_reverse;
 use function array_values;
 use function count;
 use function in_array;
+use function preg_match;
+use function preg_replace;
 use function sprintf;
 use const T_ANON_CLASS;
 use const T_CLOSE_CURLY_BRACKET;
+use const T_FUNCTION;
 use const T_NULLABLE;
 use const T_OPEN_CURLY_BRACKET;
 use const T_PRIVATE;
@@ -23,6 +26,9 @@ use const T_SEMICOLON;
 use const T_STATIC;
 use const T_VAR;
 
+/**
+ * @internal
+ */
 class PropertyHelper
 {
 
@@ -37,7 +43,8 @@ class PropertyHelper
 		}
 
 		if (in_array($tokens[$previousPointer]['code'], [T_PUBLIC, T_PROTECTED, T_PRIVATE, T_VAR], true)) {
-			return true;
+			$constructorPointer = TokenHelper::findPrevious($phpcsFile, T_FUNCTION, $previousPointer - 1);
+			return $constructorPointer === null || $tokens[$constructorPointer]['parenthesis_closer'] < $previousPointer;
 		}
 
 		if (
@@ -64,7 +71,7 @@ class PropertyHelper
 		return in_array($conditionCode, Tokens::$ooScopeTokens, true);
 	}
 
-	public static function findTypeHint(File $phpcsFile, int $propertyPointer): ?PropertyTypeHint
+	public static function findTypeHint(File $phpcsFile, int $propertyPointer): ?TypeHint
 	{
 		$tokens = $phpcsFile->getTokens();
 
@@ -84,22 +91,25 @@ class PropertyHelper
 			return null;
 		}
 
-		$typeHintStartPointer = TokenHelper::findPreviousExcluding(
-			$phpcsFile,
-			TokenHelper::getTypeHintTokenCodes(),
-			$typeHintEndPointer,
-			$propertyStartPointer
-		) + 1;
+		$typeHintStartPointer = TypeHintHelper::getStartPointer($phpcsFile, $typeHintEndPointer);
 
 		$previousPointer = TokenHelper::findPreviousEffective($phpcsFile, $typeHintStartPointer - 1, $propertyStartPointer);
-		$nullabilitySymbolPointer = $previousPointer !== null && $tokens[$previousPointer]['code'] === T_NULLABLE ? $previousPointer : null;
+		$nullable = $previousPointer !== null && $tokens[$previousPointer]['code'] === T_NULLABLE;
 
-		return new PropertyTypeHint(
-			TokenHelper::getContent($phpcsFile, $typeHintStartPointer, $typeHintEndPointer),
-			$nullabilitySymbolPointer !== null,
-			$nullabilitySymbolPointer ?? $typeHintStartPointer,
-			$typeHintEndPointer
-		);
+		if ($nullable) {
+			$typeHintStartPointer = $previousPointer;
+		}
+
+		$typeHint = TokenHelper::getContent($phpcsFile, $typeHintStartPointer, $typeHintEndPointer);
+
+		if (!$nullable) {
+			$nullable = preg_match('~(?:^|\|\s*)null(?:\s*\||$)~i', $typeHint) === 1;
+		}
+
+		/** @var string $typeHint */
+		$typeHint = preg_replace('~\s+~', '', $typeHint);
+
+		return new TypeHint($typeHint, $nullable, $typeHintStartPointer, $typeHintEndPointer);
 	}
 
 	public static function getFullyQualifiedName(File $phpcsFile, int $propertyPointer): string

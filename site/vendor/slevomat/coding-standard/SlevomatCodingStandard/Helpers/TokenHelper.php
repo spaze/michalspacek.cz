@@ -6,7 +6,6 @@ use PHP_CodeSniffer\Files\File;
 use function array_key_exists;
 use function array_merge;
 use function count;
-use function defined;
 use const T_ARRAY_HINT;
 use const T_BREAK;
 use const T_CALLABLE;
@@ -22,6 +21,7 @@ use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
 use const T_EXIT;
+use const T_FALSE;
 use const T_FN;
 use const T_FUNCTION;
 use const T_INTERFACE;
@@ -29,6 +29,7 @@ use const T_NAME_FULLY_QUALIFIED;
 use const T_NAME_QUALIFIED;
 use const T_NAME_RELATIVE;
 use const T_NS_SEPARATOR;
+use const T_NULL;
 use const T_PARENT;
 use const T_PHPCS_DISABLE;
 use const T_PHPCS_ENABLE;
@@ -40,19 +41,14 @@ use const T_SELF;
 use const T_STRING;
 use const T_THROW;
 use const T_TRAIT;
+use const T_TYPE_UNION;
 use const T_WHITESPACE;
 
+/**
+ * @internal
+ */
 class TokenHelper
 {
-
-	/**
-	 * @deprecated Use TokenHelper::getNameTokenCodes()
-	 * @var (int|string)[]
-	 */
-	public static $nameTokenCodes = [
-		T_NS_SEPARATOR,
-		T_STRING,
-	];
 
 	/** @var (int|string)[] */
 	public static $typeKeywordTokenCodes = [
@@ -87,19 +83,6 @@ class TokenHelper
 		T_PHPCS_IGNORE,
 		T_PHPCS_IGNORE_FILE,
 		T_PHPCS_SET,
-	];
-
-	/**
-	 * @deprecated Use TokenHelper::getTypeHintTokenCodes()
-	 * @var (int|string)[]
-	 */
-	public static $typeHintTokenCodes = [
-		T_NS_SEPARATOR,
-		T_STRING,
-		T_SELF,
-		T_PARENT,
-		T_ARRAY_HINT,
-		T_CALLABLE,
 	];
 
 	/** @var (int|string)[] */
@@ -174,8 +157,8 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param int $startPointer search starts at this token, inclusive
-	 * @param int|null $endPointer search ends at this token, exclusive
+	 * @param int $startPointer Search starts at this token, inclusive
+	 * @param int|null $endPointer Search ends at this token, exclusive
 	 * @return int|null
 	 */
 	public static function findNextEffective(File $phpcsFile, int $startPointer, ?int $endPointer = null): ?int
@@ -186,8 +169,8 @@ class TokenHelper
 	/**
 	 * @param File $phpcsFile
 	 * @param (int|string)|(int|string)[] $types
-	 * @param int $startPointer search starts at this token, inclusive
-	 * @param int|null $endPointer search ends at this token, exclusive
+	 * @param int $startPointer Search starts at this token, inclusive
+	 * @param int|null $endPointer Search ends at this token, exclusive
 	 * @return int|null
 	 */
 	public static function findNextExcluding(File $phpcsFile, $types, int $startPointer, ?int $endPointer = null): ?int
@@ -213,22 +196,8 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param (int|string)|(int|string)[] $types
-	 * @param int $startPointer
-	 * @param int|null $endPointer
-	 * @return int|null
-	 */
-	public static function findNextLocalExcluding(File $phpcsFile, $types, int $startPointer, ?int $endPointer = null): ?int
-	{
-		/** @var int|false $token */
-		$token = $phpcsFile->findNext($types, $startPointer, $endPointer, true, null, true);
-		return $token === false ? null : $token;
-	}
-
-	/**
-	 * @param File $phpcsFile
-	 * @param int $startPointer search starts at this token, inclusive
-	 * @param int|null $endPointer search ends at this token, exclusive
+	 * @param int $startPointer Search starts at this token, inclusive
+	 * @param int|null $endPointer Search ends at this token, exclusive
 	 * @return int|null
 	 */
 	public static function findNextAnyToken(File $phpcsFile, int $startPointer, ?int $endPointer = null): ?int
@@ -239,8 +208,8 @@ class TokenHelper
 	/**
 	 * @param File $phpcsFile
 	 * @param (int|string)|(int|string)[] $types
-	 * @param int $startPointer search starts at this token, inclusive
-	 * @param int|null $endPointer search ends at this token, exclusive
+	 * @param int $startPointer Search starts at this token, inclusive
+	 * @param int|null $endPointer Search ends at this token, exclusive
 	 * @return int|null
 	 */
 	public static function findPrevious(File $phpcsFile, $types, int $startPointer, ?int $endPointer = null): ?int
@@ -267,8 +236,8 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param int $startPointer search starts at this token, inclusive
-	 * @param int|null $endPointer search ends at this token, exclusive
+	 * @param int $startPointer Search starts at this token, inclusive
+	 * @param int|null $endPointer Search ends at this token, exclusive
 	 * @return int|null
 	 */
 	public static function findPreviousEffective(File $phpcsFile, int $startPointer, ?int $endPointer = null): ?int
@@ -279,8 +248,8 @@ class TokenHelper
 	/**
 	 * @param File $phpcsFile
 	 * @param (int|string)|(int|string)[] $types
-	 * @param int $startPointer search starts at this token, inclusive
-	 * @param int|null $endPointer search ends at this token, exclusive
+	 * @param int $startPointer Search starts at this token, inclusive
+	 * @param int|null $endPointer Search ends at this token, exclusive
 	 * @return int|null
 	 */
 	public static function findPreviousExcluding(File $phpcsFile, $types, int $startPointer, ?int $endPointer = null): ?int
@@ -306,7 +275,7 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param int $pointer search starts at this token, inclusive
+	 * @param int $pointer Search starts at this token, inclusive
 	 * @return int
 	 */
 	public static function findFirstTokenOnLine(File $phpcsFile, int $pointer): int
@@ -328,7 +297,7 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param int $pointer search starts at this token, inclusive
+	 * @param int $pointer Search starts at this token, inclusive
 	 * @return int
 	 */
 	public static function findLastTokenOnLine(File $phpcsFile, int $pointer): int
@@ -346,7 +315,7 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param int $pointer search starts at this token, inclusive
+	 * @param int $pointer Search starts at this token, inclusive
 	 * @return int|null
 	 */
 	public static function findFirstTokenOnNextLine(File $phpcsFile, int $pointer): ?int
@@ -370,7 +339,7 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param int $pointer search starts at this token, inclusive
+	 * @param int $pointer Search starts at this token, inclusive
 	 * @return int
 	 */
 	public static function findFirstNonWhitespaceOnLine(File $phpcsFile, int $pointer): int
@@ -392,7 +361,7 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param int $pointer search starts at this token, inclusive
+	 * @param int $pointer Search starts at this token, inclusive
 	 * @return int|null
 	 */
 	public static function findFirstNonWhitespaceOnNextLine(File $phpcsFile, int $pointer): ?int
@@ -414,7 +383,7 @@ class TokenHelper
 
 	/**
 	 * @param File $phpcsFile
-	 * @param int $pointer search starts at this token, inclusive
+	 * @param int $pointer Search starts at this token, inclusive
 	 * @return int|null
 	 */
 	public static function findFirstNonWhitespaceOnPreviousLine(File $phpcsFile, int $pointer): ?int
@@ -477,14 +446,7 @@ class TokenHelper
 	 */
 	public static function getNameTokenCodes(): array
 	{
-		static $nameTokenCodes = null;
-
-		if ($nameTokenCodes === null) {
-			$nameTokenCodes = self::getOnlyNameTokenCodes();
-			$nameTokenCodes[] = T_NS_SEPARATOR;
-		}
-
-		return $nameTokenCodes;
+		return [T_STRING, T_NS_SEPARATOR, T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED, T_NAME_RELATIVE];
 	}
 
 	/**
@@ -493,34 +455,13 @@ class TokenHelper
 	 */
 	public static function getOnlyNameTokenCodes(): array
 	{
-		static $nameTokenCodes = null;
-
-		if ($nameTokenCodes === null) {
-			$nameTokenCodes = [T_STRING];
-
-			// @codeCoverageIgnoreStart
-			if (defined('T_NAME_FULLY_QUALIFIED')) {
-				$nameTokenCodes[] = T_NAME_FULLY_QUALIFIED;
-			}
-
-			if (defined('T_NAME_QUALIFIED')) {
-				$nameTokenCodes[] = T_NAME_QUALIFIED;
-			}
-
-			if (defined('T_NAME_RELATIVE')) {
-				$nameTokenCodes[] = T_NAME_RELATIVE;
-			}
-			// @codeCoverageIgnoreEnd
-		}
-
-		return $nameTokenCodes;
+		return [T_STRING, T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED, T_NAME_RELATIVE];
 	}
 
 	/**
-	 * @internal
 	 * @return array<int, (int|string)>
 	 */
-	public static function getTypeHintTokenCodes(): array
+	public static function getOnlyTypeHintTokenCodes(): array
 	{
 		static $typeHintTokenCodes = null;
 
@@ -532,7 +473,26 @@ class TokenHelper
 					T_PARENT,
 					T_ARRAY_HINT,
 					T_CALLABLE,
+					T_FALSE,
+					T_NULL,
 				]
+			);
+		}
+
+		return $typeHintTokenCodes;
+	}
+
+	/**
+	 * @return array<int, (int|string)>
+	 */
+	public static function getTypeHintTokenCodes(): array
+	{
+		static $typeHintTokenCodes = null;
+
+		if ($typeHintTokenCodes === null) {
+			$typeHintTokenCodes = array_merge(
+				self::getOnlyTypeHintTokenCodes(),
+				[T_TYPE_UNION]
 			);
 		}
 

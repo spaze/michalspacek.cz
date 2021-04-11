@@ -6,7 +6,6 @@ use PHP_CodeSniffer\Files\File;
 use function array_reverse;
 use function array_slice;
 use function count;
-use function defined;
 use function explode;
 use function implode;
 use function in_array;
@@ -22,6 +21,8 @@ use const T_NS_SEPARATOR;
  * http://php.net/manual/en/language.namespaces.rules.php
  *
  * "Canonical" is a fully qualified name without the leading backslash.
+ *
+ * @internal
  */
 class NamespaceHelper
 {
@@ -48,13 +49,7 @@ class NamespaceHelper
 
 	public static function isFullyQualifiedPointer(File $phpcsFile, int $pointer): bool
 	{
-		$fullyQualifiedTokenCodes = [T_NS_SEPARATOR];
-
-		if (defined('T_NAME_FULLY_QUALIFIED')) {
-			$fullyQualifiedTokenCodes[] = T_NAME_FULLY_QUALIFIED;
-		}
-
-		return in_array($phpcsFile->getTokens()[$pointer]['code'], $fullyQualifiedTokenCodes, true);
+		return in_array($phpcsFile->getTokens()[$pointer]['code'], [T_NS_SEPARATOR, T_NAME_FULLY_QUALIFIED], true);
 	}
 
 	public static function getFullyQualifiedTypeName(string $typeName): string
@@ -150,7 +145,7 @@ class NamespaceHelper
 
 	public static function resolveClassName(File $phpcsFile, string $nameAsReferencedInFile, int $currentPointer): string
 	{
-		return self::resolveName($phpcsFile, $nameAsReferencedInFile, ReferencedName::TYPE_DEFAULT, $currentPointer);
+		return self::resolveName($phpcsFile, $nameAsReferencedInFile, ReferencedName::TYPE_CLASS, $currentPointer);
 	}
 
 	public static function resolveName(File $phpcsFile, string $nameAsReferencedInFile, string $type, int $currentPointer): string

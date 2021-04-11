@@ -7,8 +7,10 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 use SlevomatCodingStandard\Helpers\CommentHelper;
 use SlevomatCodingStandard\Helpers\FunctionHelper;
+use SlevomatCodingStandard\Helpers\PropertyHelper;
 use SlevomatCodingStandard\Helpers\ScopeHelper;
 use SlevomatCodingStandard\Helpers\SniffSettingsHelper;
+use SlevomatCodingStandard\Helpers\StringHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
 use SlevomatCodingStandard\Helpers\UseStatementHelper;
 use function array_key_exists;
@@ -16,11 +18,10 @@ use function array_merge;
 use function in_array;
 use function sprintf;
 use function str_repeat;
-use function strlen;
-use function substr;
 use const T_ABSTRACT;
 use const T_ANON_CLASS;
 use const T_AS;
+use const T_ATTRIBUTE_END;
 use const T_CLOSE_CURLY_BRACKET;
 use const T_CONST;
 use const T_FINAL;
@@ -99,7 +100,7 @@ class ClassMemberSpacingSniff implements Sniff
 			) {
 				$previousMemberEndPointer = CommentHelper::getCommentEndPointer($phpcsFile, $commentPointerAfterPreviousMember);
 
-				if (substr($tokens[$commentPointerAfterPreviousMember]['content'], -strlen($phpcsFile->eolChar)) === $phpcsFile->eolChar) {
+				if (StringHelper::endsWith($tokens[$commentPointerAfterPreviousMember]['content'], $phpcsFile->eolChar)) {
 					$hasCommentWithNewLineAfterPreviousMember = true;
 				}
 			}
@@ -169,7 +170,11 @@ class ClassMemberSpacingSniff implements Sniff
 				}
 
 				$propertyPointer = TokenHelper::findNext($phpcsFile, [T_VARIABLE, T_FUNCTION, T_CONST], $memberPointer + 1);
-				if ($propertyPointer === null || $tokens[$propertyPointer]['code'] !== T_VARIABLE) {
+				if (
+					$propertyPointer === null
+					|| $tokens[$propertyPointer]['code'] !== T_VARIABLE
+					|| !PropertyHelper::isProperty($phpcsFile, $propertyPointer)
+				) {
 					continue;
 				}
 
@@ -190,19 +195,31 @@ class ClassMemberSpacingSniff implements Sniff
 		$tokens = $phpcsFile->getTokens();
 
 		$memberFirstCodePointer = $this->getMemberFirstCodePointer($phpcsFile, $memberPointer);
-		$pointerBefore = TokenHelper::findPreviousExcluding($phpcsFile, T_WHITESPACE, $memberFirstCodePointer - 1);
 
-		if (
-			in_array($tokens[$pointerBefore]['code'], Tokens::$commentTokens, true)
-			&& $tokens[$pointerBefore]['line'] + 1 === $tokens[$memberFirstCodePointer]['line']
-		) {
-			$pointerBeforeComment = TokenHelper::findPreviousEffective($phpcsFile, $pointerBefore - 1);
-			if ($tokens[$pointerBeforeComment]['line'] !== $tokens[$pointerBefore]['line']) {
-				return array_key_exists('comment_opener', $tokens[$pointerBefore])
-					? $tokens[$pointerBefore]['comment_opener']
-					: CommentHelper::getMultilineCommentStartPointer($phpcsFile, $pointerBefore);
+		do {
+			$pointerBefore = TokenHelper::findPreviousExcluding($phpcsFile, T_WHITESPACE, $memberFirstCodePointer - 1);
+
+			if ($tokens[$pointerBefore]['code'] === T_ATTRIBUTE_END) {
+				$memberFirstCodePointer = $tokens[$pointerBefore]['attribute_opener'];
+				continue;
 			}
-		}
+
+			if (
+				in_array($tokens[$pointerBefore]['code'], Tokens::$commentTokens, true)
+				&& $tokens[$pointerBefore]['line'] + 1 === $tokens[$memberFirstCodePointer]['line']
+			) {
+				$pointerBeforeComment = TokenHelper::findPreviousEffective($phpcsFile, $pointerBefore - 1);
+				if ($tokens[$pointerBeforeComment]['line'] !== $tokens[$pointerBefore]['line']) {
+					$memberFirstCodePointer = array_key_exists('comment_opener', $tokens[$pointerBefore])
+						? $tokens[$pointerBefore]['comment_opener']
+						: CommentHelper::getMultilineCommentStartPointer($phpcsFile, $pointerBefore);
+					continue;
+				}
+			}
+
+			break;
+
+		} while (true);
 
 		return $memberFirstCodePointer;
 	}

@@ -9,14 +9,14 @@ use SlevomatCodingStandard\Helpers\TokenHelper;
 use function abs;
 use function array_key_exists;
 use function in_array;
-use const T_BREAK;
 use const T_CASE;
 use const T_CLOSE_CURLY_BRACKET;
 use const T_COLON;
-use const T_CONTINUE;
 use const T_DEFAULT;
-use const T_GOTO;
+use const T_OPEN_CURLY_BRACKET;
+use const T_OPEN_TAG;
 use const T_RETURN;
+use const T_SEMICOLON;
 use const T_SWITCH;
 use const T_THROW;
 use const T_YIELD;
@@ -26,19 +26,19 @@ class JumpStatementsSpacingSniff extends AbstractControlStructureSpacing
 {
 
 	/** @var int */
-	public $linesCountBeforeControlStructure = 1;
+	public $linesCountBefore = 1;
 
 	/** @var int */
-	public $linesCountBeforeFirstControlStructure = 0;
+	public $linesCountBeforeFirst = 0;
 
 	/** @var int|null */
 	public $linesCountBeforeWhenFirstInCaseOrDefault = null;
 
 	/** @var int */
-	public $linesCountAfterControlStructure = 1;
+	public $linesCountAfter = 1;
 
 	/** @var int */
-	public $linesCountAfterLastControlStructure = 0;
+	public $linesCountAfterLast = 0;
 
 	/** @var int|null */
 	public $linesCountAfterWhenLastInCaseOrDefault = null;
@@ -50,7 +50,7 @@ class JumpStatementsSpacingSniff extends AbstractControlStructureSpacing
 	public $allowSingleLineYieldStacking = true;
 
 	/** @var string[] */
-	public $tokensToCheck = [];
+	public $jumpStatements = [];
 
 	/**
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
@@ -67,32 +67,32 @@ class JumpStatementsSpacingSniff extends AbstractControlStructureSpacing
 	}
 
 	/**
-	 * @return int[]
+	 * @return string[]
 	 */
-	protected function getSupportedTokens(): array
+	protected function getSupportedKeywords(): array
 	{
 		return [
-			T_GOTO,
-			T_BREAK,
-			T_CONTINUE,
-			T_RETURN,
-			T_THROW,
-			T_YIELD,
-			T_YIELD_FROM,
+			self::KEYWORD_GOTO,
+			self::KEYWORD_BREAK,
+			self::KEYWORD_CONTINUE,
+			self::KEYWORD_RETURN,
+			self::KEYWORD_THROW,
+			self::KEYWORD_YIELD,
+			self::KEYWORD_YIELD_FROM,
 		];
 	}
 
 	/**
 	 * @return string[]
 	 */
-	protected function getTokensToCheck(): array
+	protected function getKeywordsToCheck(): array
 	{
-		return $this->tokensToCheck;
+		return $this->jumpStatements;
 	}
 
 	protected function getLinesCountBefore(): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeControlStructure);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountBefore);
 	}
 
 	protected function getLinesCountBeforeFirst(File $phpcsFile, int $jumpStatementPointer): int
@@ -104,12 +104,12 @@ class JumpStatementsSpacingSniff extends AbstractControlStructureSpacing
 			return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeWhenFirstInCaseOrDefault);
 		}
 
-		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeFirstControlStructure);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeFirst);
 	}
 
 	protected function getLinesCountAfter(): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterControlStructure);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountAfter);
 	}
 
 	/**
@@ -135,7 +135,7 @@ class JumpStatementsSpacingSniff extends AbstractControlStructureSpacing
 			return SniffSettingsHelper::normalizeInteger($this->linesCountAfterWhenLastInCaseOrDefault);
 		}
 
-		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterLastControlStructure);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterLast);
 	}
 
 	protected function checkLinesBefore(File $phpcsFile, int $jumpStatementPointer): void
@@ -144,6 +144,10 @@ class JumpStatementsSpacingSniff extends AbstractControlStructureSpacing
 			$this->allowSingleLineYieldStacking
 			&& $this->isStackedSingleLineYield($phpcsFile, $jumpStatementPointer, true)
 		) {
+			return;
+		}
+
+		if ($this->isThrowExpression($phpcsFile, $jumpStatementPointer)) {
 			return;
 		}
 
@@ -156,6 +160,10 @@ class JumpStatementsSpacingSniff extends AbstractControlStructureSpacing
 			$this->allowSingleLineYieldStacking
 			&& $this->isStackedSingleLineYield($phpcsFile, $jumpStatementPointer, false)
 		) {
+			return;
+		}
+
+		if ($this->isThrowExpression($phpcsFile, $jumpStatementPointer)) {
 			return;
 		}
 
@@ -202,6 +210,23 @@ class JumpStatementsSpacingSniff extends AbstractControlStructureSpacing
 
 		return $adjoiningYieldPointer !== null
 			&& abs($tokens[$adjoiningYieldPointer]['line'] - $tokens[$jumpStatementPointer]['line']) === 1;
+	}
+
+	private function isThrowExpression(File $phpcsFile, int $jumpStatementPointer): bool
+	{
+		$tokens = $phpcsFile->getTokens();
+
+		if ($tokens[$jumpStatementPointer]['code'] !== T_THROW) {
+			return false;
+		}
+
+		$pointerBefore = TokenHelper::findPreviousEffective($phpcsFile, $jumpStatementPointer - 1);
+
+		return !in_array(
+			$tokens[$pointerBefore]['code'],
+			[T_SEMICOLON, T_COLON, T_OPEN_CURLY_BRACKET, T_CLOSE_CURLY_BRACKET, T_OPEN_TAG],
+			true
+		);
 	}
 
 	private function isFirstInCaseOrDefault(File $phpcsFile, int $jumpStatementPointer): bool

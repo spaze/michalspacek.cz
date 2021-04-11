@@ -12,10 +12,12 @@ use function in_array;
 use const T_ANON_CLASS;
 use const T_ARRAY;
 use const T_AS;
+use const T_ATTRIBUTE;
 use const T_BITWISE_AND;
 use const T_BITWISE_OR;
 use const T_CATCH;
 use const T_CLASS;
+use const T_CLOSE_PARENTHESIS;
 use const T_COLON;
 use const T_COMMA;
 use const T_CONST;
@@ -30,28 +32,18 @@ use const T_INSTANCEOF;
 use const T_NAMESPACE;
 use const T_NEW;
 use const T_NULLABLE;
+use const T_NULLSAFE_OBJECT_OPERATOR;
 use const T_OBJECT_OPERATOR;
 use const T_OPEN_PARENTHESIS;
 use const T_OPEN_SHORT_ARRAY;
+use const T_OPEN_TAG;
 use const T_TRAIT;
+use const T_TYPE_UNION;
 use const T_USE;
 use const T_VARIABLE;
 
 /**
- * Following type name occurrences are considered as a referenced name:
- *
- * - extending a class, implementing an interface
- * - typehinting a class or an interface
- * - creating new instance of a class
- * - class whose static method or a property is accessed
- * - thrown and caught exception names
- *
- * Following occurrences are not considered as a referenced name:
- *
- * - namespace name
- * - type name in a use statement
- * - class name in a class definition
- * - method name alias imported from trait
+ * @internal
  */
 class ReferencedNameHelper
 {
@@ -59,7 +51,7 @@ class ReferencedNameHelper
 	/**
 	 * @param File $phpcsFile
 	 * @param int $openTagPointer
-	 * @return ReferencedName[] referenced names
+	 * @return ReferencedName[]
 	 */
 	public static function getAllReferencedNames(File $phpcsFile, int $openTagPointer): array
 	{
@@ -68,6 +60,20 @@ class ReferencedNameHelper
 		};
 
 		return SniffLocalCache::getAndSetIfNotCached($phpcsFile, 'references', $lazyValue);
+	}
+
+	/**
+	 * @param File $phpcsFile
+	 * @param int $openTagPointer
+	 * @return ReferencedName[]
+	 */
+	public static function getAllReferencedNamesInAttributes(File $phpcsFile, int $openTagPointer): array
+	{
+		$lazyValue = static function () use ($phpcsFile, $openTagPointer): array {
+			return self::createAllReferencedNamesInAttributes($phpcsFile, $openTagPointer);
+		};
+
+		return SniffLocalCache::getAndSetIfNotCached($phpcsFile, 'referencesFromAttributes', $lazyValue);
 	}
 
 	public static function getReferenceName(File $phpcsFile, int $nameStartPointer, int $nameEndPointer): string
@@ -113,16 +119,15 @@ class ReferencedNameHelper
 	/**
 	 * @param File $phpcsFile
 	 * @param int $openTagPointer
-	 * @return ReferencedName[] referenced names
+	 * @return ReferencedName[]
 	 */
 	private static function createAllReferencedNames(File $phpcsFile, int $openTagPointer): array
 	{
-		$tokens = $phpcsFile->getTokens();
+		$referencedNames = [];
 
 		$beginSearchAtPointer = $openTagPointer + 1;
-		$types = [];
-
 		$nameTokenCodes = TokenHelper::getNameTokenCodes();
+		$tokens = $phpcsFile->getTokens();
 
 		while (true) {
 			$nameStartPointer = TokenHelper::findNext($phpcsFile, $nameTokenCodes, $beginSearchAtPointer);
@@ -130,7 +135,17 @@ class ReferencedNameHelper
 				break;
 			}
 
+			// Attributes are parsed in specific method
+			$attributeStartPointerBefore = TokenHelper::findPrevious($phpcsFile, T_ATTRIBUTE, $nameStartPointer - 1, $beginSearchAtPointer);
+			if ($attributeStartPointerBefore !== null) {
+				if ($tokens[$attributeStartPointerBefore]['attribute_closer'] > $nameStartPointer) {
+					$beginSearchAtPointer = $tokens[$attributeStartPointerBefore]['attribute_closer'] + 1;
+					continue;
+				}
+			}
+
 			if (!self::isReferencedName($phpcsFile, $nameStartPointer)) {
+				/** @var int $beginSearchAtPointer */
 				$beginSearchAtPointer = TokenHelper::findNextExcluding(
 					$phpcsFile,
 					array_merge(TokenHelper::$ineffectiveTokenCodes, $nameTokenCodes),
@@ -141,92 +156,104 @@ class ReferencedNameHelper
 
 			$nameEndPointer = self::getReferencedNameEndPointer($phpcsFile, $nameStartPointer);
 
-			$nextTokenAfterEndPointer = TokenHelper::findNextEffective($phpcsFile, $nameEndPointer + 1);
-			$previousTokenBeforeStartPointer = TokenHelper::findPreviousEffective($phpcsFile, $nameStartPointer - 1);
-			$type = ReferencedName::TYPE_DEFAULT;
-			if ($nextTokenAfterEndPointer !== null && $previousTokenBeforeStartPointer !== null) {
-				if ($tokens[$nextTokenAfterEndPointer]['code'] === T_OPEN_PARENTHESIS) {
-					if ($tokens[$previousTokenBeforeStartPointer]['code'] !== T_NEW) {
-						$type = ReferencedName::TYPE_FUNCTION;
-					}
-				} elseif ($tokens[$nextTokenAfterEndPointer]['code'] === T_BITWISE_AND) {
-					$tokenAfterNextToken = TokenHelper::findNextEffective($phpcsFile, $nextTokenAfterEndPointer + 1);
-					if (!in_array($tokens[$tokenAfterNextToken]['code'], [T_VARIABLE, T_ELLIPSIS], true)) {
-						$type = ReferencedName::TYPE_CONSTANT;
-					}
-				} elseif (
-					!in_array($tokens[$nextTokenAfterEndPointer]['code'], [
-						T_VARIABLE,
-						// Variadic parameter
-						T_ELLIPSIS,
-					], true)
-				) {
-					if (
-						!in_array($tokens[$previousTokenBeforeStartPointer]['code'], [
-							T_EXTENDS,
-							T_IMPLEMENTS,
-							T_INSTANCEOF,
-							// Trait
-							T_USE,
-							T_NEW,
-							// Return type hint
-							T_COLON,
-							// Nullable type hint
-							T_NULLABLE,
-						], true)
-						&& $tokens[$nextTokenAfterEndPointer]['code'] !== T_DOUBLE_COLON
-					) {
-						if ($tokens[$previousTokenBeforeStartPointer]['code'] === T_COMMA) {
-							$precedingTokenPointer = TokenHelper::findPreviousExcluding(
-								$phpcsFile,
-								array_merge([T_COMMA], $nameTokenCodes, TokenHelper::$ineffectiveTokenCodes),
-								$previousTokenBeforeStartPointer - 1
-							);
-							if (
-								!in_array($tokens[$precedingTokenPointer]['code'], [
-									T_IMPLEMENTS,
-									T_EXTENDS,
-									T_USE,
-								], true)
-							) {
-								$type = ReferencedName::TYPE_CONSTANT;
-							}
-						} elseif ($tokens[$previousTokenBeforeStartPointer]['code'] === T_BITWISE_OR
-							|| $tokens[$previousTokenBeforeStartPointer]['code'] === T_OPEN_PARENTHESIS
-						) {
-							$exclude = [T_BITWISE_OR, T_OPEN_PARENTHESIS];
-							$catchPointer = TokenHelper::findPreviousExcluding(
-								$phpcsFile,
-								array_merge($exclude, $nameTokenCodes, TokenHelper::$ineffectiveTokenCodes),
-								$previousTokenBeforeStartPointer - 1
-							);
-							$exclude = [T_BITWISE_OR];
-							$openParenthesisPointer = TokenHelper::findPreviousExcluding(
-								$phpcsFile,
-								array_merge($exclude, $nameTokenCodes, TokenHelper::$ineffectiveTokenCodes),
-								$previousTokenBeforeStartPointer
-							);
-							if (
-								$tokens[$catchPointer]['code'] !== T_CATCH
-								|| $tokens[$openParenthesisPointer]['code'] !== T_OPEN_PARENTHESIS
-							) {
-								$type = ReferencedName::TYPE_CONSTANT;
-							}
-						} else {
-							$type = ReferencedName::TYPE_CONSTANT;
-						}
-					}
-				}
-			}
-			$types[] = new ReferencedName(
+			$referencedNames[] = new ReferencedName(
 				self::getReferenceName($phpcsFile, $nameStartPointer, $nameEndPointer),
 				$nameStartPointer,
 				$nameEndPointer,
-				$type
+				self::getReferenceType($phpcsFile, $nameStartPointer, $nameEndPointer)
 			);
 			$beginSearchAtPointer = $nameEndPointer + 1;
 		}
-		return $types;
+		return $referencedNames;
+	}
+
+	private static function getReferenceType(File $phpcsFile, int $nameStartPointer, int $nameEndPointer): string
+	{
+		$tokens = $phpcsFile->getTokens();
+
+		$nextTokenAfterEndPointer = TokenHelper::findNextEffective($phpcsFile, $nameEndPointer + 1);
+		$previousTokenBeforeStartPointer = TokenHelper::findPreviousEffective($phpcsFile, $nameStartPointer - 1);
+
+		$nameTokenCodes = TokenHelper::getNameTokenCodes();
+
+		if ($tokens[$nextTokenAfterEndPointer]['code'] === T_OPEN_PARENTHESIS) {
+			return $tokens[$previousTokenBeforeStartPointer]['code'] === T_NEW
+				? ReferencedName::TYPE_CLASS
+				: ReferencedName::TYPE_FUNCTION;
+		}
+
+		if (
+			$tokens[$previousTokenBeforeStartPointer]['code'] === T_TYPE_UNION
+			|| $tokens[$nextTokenAfterEndPointer]['code'] === T_TYPE_UNION
+		) {
+			return ReferencedName::TYPE_CLASS;
+		}
+
+		if ($tokens[$nextTokenAfterEndPointer]['code'] === T_BITWISE_AND) {
+			$tokenAfterNextToken = TokenHelper::findNextEffective($phpcsFile, $nextTokenAfterEndPointer + 1);
+
+			return in_array($tokens[$tokenAfterNextToken]['code'], [T_VARIABLE, T_ELLIPSIS], true)
+				? ReferencedName::TYPE_CLASS
+				: ReferencedName::TYPE_CONSTANT;
+		}
+
+		if (
+			in_array($tokens[$nextTokenAfterEndPointer]['code'], [
+				T_VARIABLE,
+				// Variadic parameter
+				T_ELLIPSIS,
+			], true)
+		) {
+			return ReferencedName::TYPE_CLASS;
+		}
+
+		if (
+			in_array($tokens[$previousTokenBeforeStartPointer]['code'], [
+				T_EXTENDS,
+				T_IMPLEMENTS,
+				T_INSTANCEOF,
+				// Trait
+				T_USE,
+				T_NEW,
+				// Return type hint
+				T_COLON,
+				// Nullable type hint
+				T_NULLABLE,
+			], true)
+			|| $tokens[$nextTokenAfterEndPointer]['code'] === T_DOUBLE_COLON
+		) {
+			return ReferencedName::TYPE_CLASS;
+		}
+
+		if ($tokens[$previousTokenBeforeStartPointer]['code'] === T_COMMA) {
+			$previousTokenPointer = TokenHelper::findPreviousExcluding(
+				$phpcsFile,
+				array_merge([T_COMMA], $nameTokenCodes, TokenHelper::$ineffectiveTokenCodes),
+				$previousTokenBeforeStartPointer - 1
+			);
+
+			return in_array($tokens[$previousTokenPointer]['code'], [
+				T_IMPLEMENTS,
+				T_EXTENDS,
+				T_USE,
+			], true)
+				? ReferencedName::TYPE_CLASS
+				: ReferencedName::TYPE_CONSTANT;
+		}
+
+		if (in_array($tokens[$previousTokenBeforeStartPointer]['code'], [T_BITWISE_OR, T_OPEN_PARENTHESIS], true)) {
+			$catchPointer = TokenHelper::findPreviousExcluding(
+				$phpcsFile,
+				array_merge([T_BITWISE_OR, T_OPEN_PARENTHESIS], $nameTokenCodes, TokenHelper::$ineffectiveTokenCodes),
+				$previousTokenBeforeStartPointer - 1
+			);
+
+			if ($tokens[$catchPointer]['code'] === T_CATCH) {
+				return ReferencedName::TYPE_CLASS;
+			}
+		}
+
+		return ReferencedName::TYPE_CONSTANT;
 	}
 
 	private static function isReferencedName(File $phpcsFile, int $startPointer): bool
@@ -236,8 +263,8 @@ class ReferencedNameHelper
 		$nextPointer = TokenHelper::findNextEffective($phpcsFile, $startPointer + 1);
 		$previousPointer = TokenHelper::findPreviousEffective($phpcsFile, $startPointer - 1);
 
-		if ($tokens[$nextPointer]['code'] === T_DOUBLE_COLON) {
-			return $tokens[$previousPointer]['code'] !== T_OBJECT_OPERATOR;
+		if ($nextPointer !== null && $tokens[$nextPointer]['code'] === T_DOUBLE_COLON) {
+			return !in_array($tokens[$previousPointer]['code'], [T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR], true);
 		}
 
 		if (
@@ -255,6 +282,7 @@ class ReferencedNameHelper
 			T_AS,
 			T_DOUBLE_COLON,
 			T_OBJECT_OPERATOR,
+			T_NULLSAFE_OBJECT_OPERATOR,
 			T_NAMESPACE,
 			T_CONST,
 		];
@@ -321,6 +349,77 @@ class ReferencedNameHelper
 		}
 
 		return $referencedName !== 'object';
+	}
+
+	/**
+	 * @param File $phpcsFile
+	 * @param int $openTagPointer
+	 * @return ReferencedName[]
+	 */
+	private static function createAllReferencedNamesInAttributes(File $phpcsFile, int $openTagPointer): array
+	{
+		$referencedNames = [];
+
+		$tokens = $phpcsFile->getTokens();
+
+		$attributePointers = TokenHelper::findNextAll($phpcsFile, T_ATTRIBUTE, $openTagPointer + 1);
+
+		foreach ($attributePointers as $attributeStartPointer) {
+			$searchStartPointer = $attributeStartPointer + 1;
+			$searchEndPointer = $tokens[$attributeStartPointer]['attribute_closer'];
+
+			$searchPointer = $searchStartPointer;
+			$searchTokens = array_merge(TokenHelper::getNameTokenCodes(), [T_OPEN_PARENTHESIS, T_CLOSE_PARENTHESIS]);
+			$level = 0;
+			do {
+				$pointer = TokenHelper::findNext($phpcsFile, $searchTokens, $searchPointer, $searchEndPointer);
+
+				if ($pointer === null) {
+					break;
+				}
+
+				if ($tokens[$pointer]['code'] === T_OPEN_PARENTHESIS) {
+					$level++;
+					$searchPointer = $pointer + 1;
+					continue;
+				}
+
+				if ($tokens[$pointer]['code'] === T_CLOSE_PARENTHESIS) {
+					$level--;
+					$searchPointer = $pointer + 1;
+					continue;
+				}
+
+				$referencedNameEndPointer = self::getReferencedNameEndPointer($phpcsFile, $pointer);
+
+				$pointerBefore = TokenHelper::findPreviousEffective($phpcsFile, $pointer - 1);
+
+				if (in_array($tokens[$pointerBefore]['code'], [T_OPEN_TAG, T_ATTRIBUTE], true)) {
+					$referenceType = ReferencedName::TYPE_CLASS;
+				} elseif ($tokens[$pointerBefore]['code'] === T_COMMA && $level === 0) {
+					$referenceType = ReferencedName::TYPE_CLASS;
+				} elseif (self::isReferencedName($phpcsFile, $pointer)) {
+					$referenceType = self::getReferenceType($phpcsFile, $pointer, $referencedNameEndPointer);
+				} else {
+					$searchPointer = $pointer + 1;
+					continue;
+				}
+
+				$referencedName = self::getReferenceName($phpcsFile, $pointer, $referencedNameEndPointer);
+
+				$referencedNames[] = new ReferencedName(
+					$referencedName,
+					$attributeStartPointer,
+					$tokens[$attributeStartPointer]['attribute_closer'],
+					$referenceType
+				);
+
+				$searchPointer = $referencedNameEndPointer + 1;
+
+			} while (true);
+		}
+
+		return $referencedNames;
 	}
 
 }

@@ -173,8 +173,9 @@ class DocCommentSpacingSniff implements Sniff
 
 		$fix = $phpcsFile->addFixableError(
 			sprintf(
-				'Expected %d lines before first content, found %d.',
+				'Expected %d line%s before first content, found %d.',
 				$requiredLinesCountBeforeFirstContent,
+				$requiredLinesCountBeforeFirstContent === 1 ? '' : 's',
 				$linesCountBeforeFirstContent
 			),
 			$firstContentStartPointer,
@@ -243,8 +244,9 @@ class DocCommentSpacingSniff implements Sniff
 
 		$fix = $phpcsFile->addFixableError(
 			sprintf(
-				'Expected %d lines between description and annotations, found %d.',
+				'Expected %d line%s between description and annotations, found %d.',
 				$requiredLinesCountBetweenDescriptionAndAnnotations,
+				$requiredLinesCountBetweenDescriptionAndAnnotations === 1 ? '' : 's',
 				$linesCountBetweenDescriptionAndAnnotations
 			),
 			$firstAnnotation->getStartPointer(),
@@ -318,8 +320,9 @@ class DocCommentSpacingSniff implements Sniff
 
 			$fix = $phpcsFile->addFixableError(
 				sprintf(
-					'Expected %d lines between different annotations types, found %d.',
+					'Expected %d line%s between different annotations types, found %d.',
 					$requiredLinesCountBetweenDifferentAnnotationsTypes,
+					$requiredLinesCountBetweenDifferentAnnotationsTypes === 1 ? '' : 's',
 					$linesCountAfterPreviousAnnotation
 				),
 				$annotation->getStartPointer(),
@@ -413,8 +416,9 @@ class DocCommentSpacingSniff implements Sniff
 
 			$fix = $phpcsFile->addFixableError(
 				sprintf(
-					'Expected %d lines between annotations groups, found %d.',
+					'Expected %d line%s between annotations groups, found %d.',
 					$requiredLinesCountBetweenAnnotationsGroups,
+					$requiredLinesCountBetweenAnnotationsGroups === 1 ? '' : 's',
 					$actualLinesCountBetweenAnnotationsGroups
 				),
 				$firstAnnotationInActualGroup->getStartPointer(),
@@ -674,11 +678,15 @@ class DocCommentSpacingSniff implements Sniff
 							return $expectedAnnotationsGroupOrder[$annotationName];
 						}
 
+						$order = null;
 						foreach ($expectedAnnotationsGroupOrder as $expectedAnnotationName => $expectedAnnotationOrder) {
 							if ($this->isAnnotationNameInAnnotationNamespace($expectedAnnotationName, $annotationName)) {
-								return $expectedAnnotationOrder;
+								$order = $expectedAnnotationOrder;
+								break;
 							}
 						}
+
+						return $order;
 					};
 
 					$expectedOrder = $getExpectedOrder($firstAnnotation->getName()) <=> $getExpectedOrder($secondAnnotation->getName());
@@ -727,7 +735,12 @@ class DocCommentSpacingSniff implements Sniff
 		}
 
 		$fix = $phpcsFile->addFixableError(
-			sprintf('Expected %d lines after last content, found %d.', $requiredLinesCountAfterLastContent, $linesCountAfterLastContent),
+			sprintf(
+				'Expected %d line%s after last content, found %d.',
+				$requiredLinesCountAfterLastContent,
+				$requiredLinesCountAfterLastContent === 1 ? '' : 's',
+				$linesCountAfterLastContent
+			),
 			$lastContentEndPointer,
 			self::CODE_INCORRECT_LINES_COUNT_AFTER_LAST_CONTENT
 		);

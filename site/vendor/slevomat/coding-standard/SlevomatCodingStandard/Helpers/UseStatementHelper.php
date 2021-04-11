@@ -18,6 +18,9 @@ use const T_SEMICOLON;
 use const T_STRING;
 use const T_USE;
 
+/**
+ * @internal
+ */
 class UseStatementHelper
 {
 
@@ -132,7 +135,7 @@ class UseStatementHelper
 				}
 
 				$nextTokenFromUsePointer = TokenHelper::findNextEffective($phpcsFile, $usePointer + 1);
-				$type = UseStatement::TYPE_DEFAULT;
+				$type = UseStatement::TYPE_CLASS;
 				if ($tokens[$nextTokenFromUsePointer]['code'] === T_STRING) {
 					if ($tokens[$nextTokenFromUsePointer]['content'] === 'const') {
 						$type = UseStatement::TYPE_CONSTANT;

@@ -30,19 +30,19 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the FreeBSD Project.
  */
 
-if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50400) {
-    fwrite(STDERR, "PHP Parallel Lint require PHP 5.4.0 or newer." . PHP_EOL);
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50300) {
+    fwrite(STDERR, "PHP Parallel Lint requires PHP 5.3.0 or newer." . PHP_EOL);
     exit(254);
 }
 
-$autoloadLocations = [
+$autoloadLocations = array(
     getcwd() . '/vendor/autoload.php',
     getcwd() . '/../../autoload.php',
     __DIR__ . '/vendor/autoload.php',
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',
     __DIR__ . '/../../autoload.php',
-];
+);
 
 $loaded = false;
 foreach ($autoloadLocations as $autoload) {
@@ -55,11 +55,13 @@ foreach ($autoloadLocations as $autoload) {
 if (!$loaded) {
     fwrite(STDERR,
         'You must set up the project dependencies, run the following commands:' . PHP_EOL .
-        'curl -s http://getcomposer.org/installer | php' . PHP_EOL .
+        'curl -s https://getcomposer.org/installer | php' . PHP_EOL .
         'php composer.phar install' . PHP_EOL
     );
     exit(254);
 }
+
+require_once __DIR__ . '/src/polyfill.php';
 
 $app = new JakubOnderka\PhpParallelLint\Application();
 exit($app->run());

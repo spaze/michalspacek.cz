@@ -7,6 +7,7 @@ use PHP_CodeSniffer\Util\Tokens;
 use function array_key_exists;
 use function array_merge;
 use function count;
+use function in_array;
 use function preg_replace;
 use function sprintf;
 use function strtolower;
@@ -31,7 +32,15 @@ use const T_LOGICAL_AND;
 use const T_LOGICAL_OR;
 use const T_LOGICAL_XOR;
 use const T_OPEN_PARENTHESIS;
+use const T_PARENT;
+use const T_SELF;
+use const T_STATIC;
+use const T_STRING;
+use const T_VARIABLE;
 
+/**
+ * @internal
+ */
 class ConditionHelper
 {
 
@@ -149,7 +158,7 @@ class ConditionHelper
 		if ($tokens[$pointerAfterConditionStart]['code'] === T_BOOLEAN_NOT) {
 			$pointerAfterBooleanNot = TokenHelper::findNextEffective($phpcsFile, $pointerAfterConditionStart + 1);
 			if ($tokens[$pointerAfterBooleanNot]['code'] === T_OPEN_PARENTHESIS) {
-				if ($nested && count($booleanPointers) > 0) {
+				if ($nested && $booleanPointers !== []) {
 					return self::removeBooleanNot($condition);
 				}
 
@@ -188,6 +197,27 @@ class ConditionHelper
 			return sprintf('!(%s)', $condition);
 		}
 
+		if ($tokens[$pointerAfterConditionStart]['code'] === T_STRING) {
+			$pointerAfterConditionStart = TokenHelper::findNextEffective($phpcsFile, $pointerAfterConditionStart + 1);
+			if (
+				$tokens[$pointerAfterConditionStart]['code'] === T_OPEN_PARENTHESIS
+				&& $tokens[$pointerAfterConditionStart]['parenthesis_closer'] === $conditionBoundaryEndPointer
+			) {
+				return sprintf('!%s', $condition);
+			}
+		}
+
+		if (in_array($tokens[$pointerAfterConditionStart]['code'], [T_VARIABLE, T_SELF, T_STATIC, T_PARENT], true)) {
+			$identificatorEndPointer = IdentificatorHelper::findEndPointer($phpcsFile, $pointerAfterConditionStart);
+			$pointerAfterIdentificatorEnd = TokenHelper::findNextEffective($phpcsFile, $identificatorEndPointer + 1);
+			if (
+				$tokens[$pointerAfterIdentificatorEnd]['code'] === T_OPEN_PARENTHESIS
+				&& $tokens[$pointerAfterIdentificatorEnd]['parenthesis_closer'] === $conditionBoundaryEndPointer
+			) {
+				return sprintf('!%s', $condition);
+			}
+		}
+
 		$comparisonPointer = TokenHelper::findNext(
 			$phpcsFile,
 			[T_IS_EQUAL, T_IS_NOT_EQUAL, T_IS_IDENTICAL, T_IS_NOT_IDENTICAL, T_IS_SMALLER_OR_EQUAL, T_IS_GREATER_OR_EQUAL, T_LESS_THAN, T_GREATER_THAN],
@@ -208,6 +238,13 @@ class ConditionHelper
 
 			$negativeCondition = '';
 			for ($i = $conditionBoundaryStartPointer; $i <= $conditionBoundaryEndPointer; $i++) {
+				// Skip calls()
+				if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS) {
+					$negativeCondition .= TokenHelper::getContent($phpcsFile, $i, $tokens[$i]['parenthesis_closer']);
+					$i = $tokens[$i]['parenthesis_closer'];
+					continue;
+				}
+
 				$negativeCondition .= array_key_exists($tokens[$i]['code'], $comparisonReplacements)
 					? $comparisonReplacements[$tokens[$i]['code']]
 					: $tokens[$i]['content'];
@@ -249,6 +286,8 @@ class ConditionHelper
 		$actualPointer = $conditionBoundaryStartPointer;
 		$parenthesesLevel = 0;
 
+		$operatorsOnLevel = [];
+
 		do {
 			$actualPointer = TokenHelper::findNext(
 				$phpcsFile,
@@ -262,6 +301,12 @@ class ConditionHelper
 			}
 
 			if ($tokens[$actualPointer]['code'] === T_OPEN_PARENTHESIS) {
+				$pointerBeforeParenthesisOpener = TokenHelper::findPreviousEffective($phpcsFile, $actualPointer - 1);
+				if ($tokens[$pointerBeforeParenthesisOpener]['code'] === T_STRING) {
+					$actualPointer = $tokens[$actualPointer]['parenthesis_closer'] + 1;
+					continue;
+				}
+
 				$parenthesesLevel++;
 				$actualPointer++;
 				continue;
@@ -277,6 +322,15 @@ class ConditionHelper
 				$actualPointer++;
 				continue;
 			}
+
+			if (
+				array_key_exists($parenthesesLevel, $operatorsOnLevel)
+				&& $operatorsOnLevel[$parenthesesLevel] !== $tokens[$actualPointer]['code']
+			) {
+				return sprintf('!(%s)', TokenHelper::getContent($phpcsFile, $conditionBoundaryStartPointer, $conditionBoundaryEndPointer));
+			}
+
+			$operatorsOnLevel[$parenthesesLevel] = $tokens[$actualPointer]['code'];
 
 			$negativeCondition .= self::getNegativeCondition($phpcsFile, $nestedConditionStartPointer, $actualPointer - 1, true);
 			$negativeCondition .= $booleanOperatorReplacements[$tokens[$actualPointer]['code']];

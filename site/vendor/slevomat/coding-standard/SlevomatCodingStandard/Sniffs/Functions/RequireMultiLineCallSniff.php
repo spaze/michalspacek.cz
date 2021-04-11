@@ -130,11 +130,11 @@ class RequireMultiLineCallSniff extends AbstractLineCall
 		$name = ltrim($tokens[$stringPointer]['content'], '\\');
 
 		if (in_array($tokens[$previousPointer]['code'], [T_OBJECT_OPERATOR, T_DOUBLE_COLON], true)) {
-			$error = sprintf('Call of method %s() should be splitted to more lines.', $name);
+			$error = sprintf('Call of method %s() should be split to more lines.', $name);
 		} elseif ($tokens[$previousPointer]['code'] === T_NEW) {
-			$error = 'Constructor call should be splitted to more lines.';
+			$error = 'Constructor call should be split to more lines.';
 		} else {
-			$error = sprintf('Call of function %s() should be splitted to more lines.', $name);
+			$error = sprintf('Call of function %s() should be split to more lines.', $name);
 		}
 
 		$fix = $phpcsFile->addFixableError($error, $stringPointer, self::CODE_REQUIRED_MULTI_LINE_CALL);
@@ -167,16 +167,16 @@ class RequireMultiLineCallSniff extends AbstractLineCall
 	private function shouldBeSkipped(File $phpcsFile, int $stringPointer, int $parenthesisCloserPointer): bool
 	{
 		$tokens = $phpcsFile->getTokens();
+		$nameTokenCodes = TokenHelper::getOnlyNameTokenCodes();
 
-		$firstPointerOnLine = TokenHelper::findFirstNonWhitespaceOnLine($phpcsFile, $stringPointer);
-		$stringPointersBefore = TokenHelper::findNextAll(
-			$phpcsFile,
-			TokenHelper::getOnlyNameTokenCodes(),
-			$firstPointerOnLine,
-			$stringPointer
-		);
+		$searchStartPointer = TokenHelper::findFirstNonWhitespaceOnLine($phpcsFile, $stringPointer);
+		while (true) {
+			$stringPointerBefore = TokenHelper::findNext($phpcsFile, $nameTokenCodes, $searchStartPointer, $stringPointer);
 
-		foreach ($stringPointersBefore as $stringPointerBefore) {
+			if ($stringPointerBefore === null) {
+				break;
+			}
+
 			$pointerAfterStringPointerBefore = TokenHelper::findNextEffective($phpcsFile, $stringPointerBefore + 1);
 			if (
 				$tokens[$pointerAfterStringPointerBefore]['code'] === T_OPEN_PARENTHESIS
@@ -184,17 +184,19 @@ class RequireMultiLineCallSniff extends AbstractLineCall
 			) {
 				return true;
 			}
+
+			$searchStartPointer = $stringPointerBefore + 1;
 		}
 
 		$lastPointerOnLine = TokenHelper::findLastTokenOnLine($phpcsFile, $parenthesisCloserPointer);
-		$stringPointersAfter = TokenHelper::findNextAll(
-			$phpcsFile,
-			TokenHelper::getOnlyNameTokenCodes(),
-			$parenthesisCloserPointer + 1,
-			$lastPointerOnLine + 1
-		);
+		$searchStartPointer = $parenthesisCloserPointer + 1;
+		while (true) {
+			$stringPointerAfter = TokenHelper::findNext($phpcsFile, $nameTokenCodes, $searchStartPointer, $lastPointerOnLine + 1);
 
-		foreach ($stringPointersAfter as $stringPointerAfter) {
+			if ($stringPointerAfter === null) {
+				break;
+			}
+
 			$pointerAfterStringPointerAfter = TokenHelper::findNextEffective($phpcsFile, $stringPointerAfter + 1);
 			if (
 				$pointerAfterStringPointerAfter !== null
@@ -207,6 +209,8 @@ class RequireMultiLineCallSniff extends AbstractLineCall
 			) {
 				return true;
 			}
+
+			$searchStartPointer = $stringPointerAfter + 1;
 		}
 
 		return false;

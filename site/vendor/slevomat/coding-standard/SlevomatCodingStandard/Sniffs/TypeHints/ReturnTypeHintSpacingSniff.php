@@ -7,7 +7,6 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use SlevomatCodingStandard\Helpers\FunctionHelper;
 use SlevomatCodingStandard\Helpers\SniffSettingsHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
-use function array_merge;
 use function sprintf;
 use function str_repeat;
 use const T_CLOSE_PARENTHESIS;
@@ -57,23 +56,16 @@ class ReturnTypeHintSpacingSniff implements Sniff
 
 		$tokens = $phpcsFile->getTokens();
 
-		$typeHintPointer = $typeHint->getStartPointer();
+		$typeHintStartPointer = $typeHint->getStartPointer();
 
 		/** @var int $colonPointer */
-		$colonPointer = TokenHelper::findPreviousExcluding(
-			$phpcsFile,
-			array_merge([T_NULLABLE], TokenHelper::$ineffectiveTokenCodes),
-			$typeHintPointer - 1
-		);
+		$colonPointer = TokenHelper::findPreviousEffective($phpcsFile, $typeHintStartPointer - 1);
 
-		$nextPointer = TokenHelper::findNextEffective($phpcsFile, $colonPointer + 1);
-		$nullabilitySymbolPointer = $nextPointer !== null && $tokens[$nextPointer]['code'] === T_NULLABLE ? $nextPointer : null;
-
-		if ($nullabilitySymbolPointer === null) {
+		if ($tokens[$typeHintStartPointer]['code'] !== T_NULLABLE) {
 			if ($tokens[$colonPointer + 1]['code'] !== T_WHITESPACE) {
 				$fix = $phpcsFile->addFixableError(
 					'There must be exactly one space between return type hint colon and return type hint.',
-					$typeHintPointer,
+					$typeHintStartPointer,
 					self::CODE_NO_SPACE_BETWEEN_COLON_AND_TYPE_HINT
 				);
 				if ($fix) {
@@ -84,7 +76,7 @@ class ReturnTypeHintSpacingSniff implements Sniff
 			} elseif ($tokens[$colonPointer + 1]['content'] !== ' ') {
 				$fix = $phpcsFile->addFixableError(
 					'There must be exactly one space between return type hint colon and return type hint.',
-					$typeHintPointer,
+					$typeHintStartPointer,
 					self::CODE_MULTIPLE_SPACES_BETWEEN_COLON_AND_TYPE_HINT
 				);
 				if ($fix) {
@@ -97,7 +89,7 @@ class ReturnTypeHintSpacingSniff implements Sniff
 			if ($tokens[$colonPointer + 1]['code'] !== T_WHITESPACE) {
 				$fix = $phpcsFile->addFixableError(
 					'There must be exactly one space between return type hint colon and return type hint nullability symbol.',
-					$typeHintPointer,
+					$typeHintStartPointer,
 					self::CODE_NO_SPACE_BETWEEN_COLON_AND_NULLABILITY_SYMBOL
 				);
 				if ($fix) {
@@ -108,7 +100,7 @@ class ReturnTypeHintSpacingSniff implements Sniff
 			} elseif ($tokens[$colonPointer + 1]['content'] !== ' ') {
 				$fix = $phpcsFile->addFixableError(
 					'There must be exactly one space between return type hint colon and return type hint nullability symbol.',
-					$typeHintPointer,
+					$typeHintStartPointer,
 					self::CODE_MULTIPLE_SPACES_BETWEEN_COLON_AND_NULLABILITY_SYMBOL
 				);
 				if ($fix) {
@@ -118,15 +110,15 @@ class ReturnTypeHintSpacingSniff implements Sniff
 				}
 			}
 
-			if ($nullabilitySymbolPointer + 1 !== $typeHintPointer) {
+			if ($tokens[$typeHintStartPointer + 1]['code'] === T_WHITESPACE) {
 				$fix = $phpcsFile->addFixableError(
 					'There must be no whitespace between return type hint nullability symbol and return type hint.',
-					$typeHintPointer,
+					$typeHintStartPointer,
 					self::CODE_WHITESPACE_AFTER_NULLABILITY_SYMBOL
 				);
 				if ($fix) {
 					$phpcsFile->fixer->beginChangeset();
-					$phpcsFile->fixer->replaceToken($nullabilitySymbolPointer + 1, '');
+					$phpcsFile->fixer->replaceToken($typeHintStartPointer + 1, '');
 					$phpcsFile->fixer->endChangeset();
 				}
 			}
@@ -142,7 +134,7 @@ class ReturnTypeHintSpacingSniff implements Sniff
 			$fix = $spacesCountBeforeColon === 0
 				? $phpcsFile->addFixableError(
 					'There must be no whitespace between closing parenthesis and return type colon.',
-					$typeHintPointer,
+					$typeHintStartPointer,
 					self::CODE_WHITESPACE_BEFORE_COLON
 				)
 				: $phpcsFile->addFixableError(
@@ -151,7 +143,7 @@ class ReturnTypeHintSpacingSniff implements Sniff
 						$spacesCountBeforeColon,
 						$spacesCountBeforeColon !== 1 ? 's' : ''
 					),
-					$typeHintPointer,
+					$typeHintStartPointer,
 					self::CODE_INCORRECT_SPACES_BEFORE_COLON
 				);
 			if ($fix) {
@@ -166,7 +158,7 @@ class ReturnTypeHintSpacingSniff implements Sniff
 					$spacesCountBeforeColon,
 					$spacesCountBeforeColon !== 1 ? 's' : ''
 				),
-				$typeHintPointer,
+				$typeHintStartPointer,
 				self::CODE_INCORRECT_SPACES_BEFORE_COLON
 			);
 			if ($fix) {

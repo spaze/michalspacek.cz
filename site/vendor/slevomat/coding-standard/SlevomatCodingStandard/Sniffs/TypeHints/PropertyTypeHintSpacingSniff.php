@@ -4,7 +4,9 @@ namespace SlevomatCodingStandard\Sniffs\TypeHints;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use SlevomatCodingStandard\Helpers\PropertyHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
+use SlevomatCodingStandard\Helpers\TypeHintHelper;
 use const T_AS;
 use const T_CONST;
 use const T_FUNCTION;
@@ -22,8 +24,6 @@ class PropertyTypeHintSpacingSniff implements Sniff
 	public const CODE_NO_SPACE_BEFORE_NULLABILITY_SYMBOL = 'NoSpaceBeforeNullabilitySymbol';
 
 	public const CODE_MULTIPLE_SPACES_BEFORE_NULLABILITY_SYMBOL = 'MultipleSpacesBeforeNullabilitySymbol';
-
-	public const CODE_NO_SPACE_BEFORE_TYPE_HINT = 'NoSpaceBeforeTypeHint';
 
 	public const CODE_MULTIPLE_SPACES_BEFORE_TYPE_HINT = 'MultipleSpacesBeforeTypeHint';
 
@@ -66,33 +66,30 @@ class PropertyTypeHintSpacingSniff implements Sniff
 			return;
 		}
 
-		$typeHintTokenCodes = TokenHelper::getTypeHintTokenCodes();
+		if (!PropertyHelper::isProperty($phpcsFile, $propertyPointer)) {
+			return;
+		}
 
 		$propertyStartPointer = $visibilityPointer;
 
-		$typeHintEndPointer = TokenHelper::findPrevious($phpcsFile, $typeHintTokenCodes, $propertyPointer - 1, $propertyStartPointer);
+		$typeHintEndPointer = TokenHelper::findPrevious(
+			$phpcsFile,
+			TokenHelper::getTypeHintTokenCodes(),
+			$propertyPointer - 1,
+			$propertyStartPointer
+		);
 		if ($typeHintEndPointer === null) {
 			return;
 		}
 
-		$typeHintStartPointer = TokenHelper::findPreviousExcluding(
-			$phpcsFile,
-			$typeHintTokenCodes,
-			$typeHintEndPointer,
-			$propertyStartPointer
-		) + 1;
+		$typeHintStartPointer = TypeHintHelper::getStartPointer($phpcsFile, $typeHintEndPointer);
 
 		$previousPointer = TokenHelper::findPreviousEffective($phpcsFile, $typeHintStartPointer - 1, $propertyStartPointer);
 		$nullabilitySymbolPointer = $previousPointer !== null && $tokens[$previousPointer]['code'] === T_NULLABLE ? $previousPointer : null;
 
 		if ($tokens[$propertyStartPointer + 1]['code'] !== T_WHITESPACE) {
-			if ($nullabilitySymbolPointer !== null) {
-				$errorMessage = 'There must be exactly one space before type hint nullability symbol.';
-				$errorCode = self::CODE_NO_SPACE_BEFORE_NULLABILITY_SYMBOL;
-			} else {
-				$errorMessage = 'There must be exactly one space before type hint.';
-				$errorCode = self::CODE_NO_SPACE_BEFORE_TYPE_HINT;
-			}
+			$errorMessage = 'There must be exactly one space before type hint nullability symbol.';
+			$errorCode = self::CODE_NO_SPACE_BEFORE_NULLABILITY_SYMBOL;
 
 			$fix = $phpcsFile->addFixableError($errorMessage, $typeHintEndPointer, $errorCode);
 			if ($fix) {

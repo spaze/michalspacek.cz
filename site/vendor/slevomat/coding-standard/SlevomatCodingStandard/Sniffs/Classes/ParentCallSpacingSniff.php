@@ -15,7 +15,6 @@ use const T_COLON;
 use const T_INLINE_ELSE;
 use const T_INLINE_THEN;
 use const T_OPEN_SHORT_ARRAY;
-use const T_PARENT;
 use const T_RETURN;
 use const T_STRING_CONCAT;
 use const T_YIELD;
@@ -25,16 +24,16 @@ class ParentCallSpacingSniff extends AbstractControlStructureSpacing
 {
 
 	/** @var int */
-	public $linesCountBeforeParentCall = 1;
+	public $linesCountBefore = 1;
 
 	/** @var int */
-	public $linesCountBeforeFirstParentCall = 0;
+	public $linesCountBeforeFirst = 0;
 
 	/** @var int */
-	public $linesCountAfterParentCall = 1;
+	public $linesCountAfter = 1;
 
 	/** @var int */
-	public $linesCountAfterLastParentCall = 0;
+	public $linesCountAfterLast = 0;
 
 	/**
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
@@ -70,22 +69,22 @@ class ParentCallSpacingSniff extends AbstractControlStructureSpacing
 	/**
 	 * @return string[]
 	 */
-	protected function getSupportedTokens(): array
+	protected function getSupportedKeywords(): array
 	{
-		return [T_PARENT];
+		return [self::KEYWORD_PARENT];
 	}
 
 	/**
 	 * @return string[]
 	 */
-	protected function getTokensToCheck(): array
+	protected function getKeywordsToCheck(): array
 	{
-		return ['T_PARENT'];
+		return [self::KEYWORD_PARENT];
 	}
 
 	protected function getLinesCountBefore(): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeParentCall);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountBefore);
 	}
 
 	/**
@@ -96,12 +95,12 @@ class ParentCallSpacingSniff extends AbstractControlStructureSpacing
 	 */
 	protected function getLinesCountBeforeFirst(File $phpcsFile, int $parentPointer): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeFirstParentCall);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeFirst);
 	}
 
 	protected function getLinesCountAfter(): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterParentCall);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountAfter);
 	}
 
 	/**
@@ -113,7 +112,7 @@ class ParentCallSpacingSniff extends AbstractControlStructureSpacing
 	 */
 	protected function getLinesCountAfterLast(File $phpcsFile, int $parentPointer, int $parentEndPointer): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterLastParentCall);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterLast);
 	}
 
 }

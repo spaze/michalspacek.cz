@@ -6,34 +6,27 @@ use PHP_CodeSniffer\Files\File;
 use SlevomatCodingStandard\Helpers\SniffSettingsHelper;
 use SlevomatCodingStandard\Helpers\TokenHelper;
 use function array_key_exists;
-use const T_CASE;
 use const T_CLOSE_CURLY_BRACKET;
-use const T_DEFAULT;
 use const T_DO;
-use const T_FOR;
-use const T_FOREACH;
-use const T_IF;
-use const T_SWITCH;
-use const T_TRY;
 use const T_WHILE;
 
 class BlockControlStructureSpacingSniff extends AbstractControlStructureSpacing
 {
 
 	/** @var int */
-	public $linesCountBeforeControlStructure = 1;
+	public $linesCountBefore = 1;
 
 	/** @var int */
-	public $linesCountBeforeFirstControlStructure = 0;
+	public $linesCountBeforeFirst = 0;
 
 	/** @var int */
-	public $linesCountAfterControlStructure = 1;
+	public $linesCountAfter = 1;
 
 	/** @var int */
-	public $linesCountAfterLastControlStructure = 0;
+	public $linesCountAfterLast = 0;
 
 	/** @var string[] */
-	public $tokensToCheck = [];
+	public $controlStructures = [];
 
 	/**
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
@@ -50,34 +43,34 @@ class BlockControlStructureSpacingSniff extends AbstractControlStructureSpacing
 	}
 
 	/**
-	 * @return int[]
+	 * @return string[]
 	 */
-	protected function getSupportedTokens(): array
+	protected function getSupportedKeywords(): array
 	{
 		return [
-			T_IF,
-			T_DO,
-			T_WHILE,
-			T_FOR,
-			T_FOREACH,
-			T_SWITCH,
-			T_TRY,
-			T_CASE,
-			T_DEFAULT,
+			self::KEYWORD_IF,
+			self::KEYWORD_DO,
+			self::KEYWORD_WHILE,
+			self::KEYWORD_FOR,
+			self::KEYWORD_FOREACH,
+			self::KEYWORD_SWITCH,
+			self::KEYWORD_TRY,
+			self::KEYWORD_CASE,
+			self::KEYWORD_DEFAULT,
 		];
 	}
 
 	/**
 	 * @return string[]
 	 */
-	protected function getTokensToCheck(): array
+	protected function getKeywordsToCheck(): array
 	{
-		return $this->tokensToCheck;
+		return $this->controlStructures;
 	}
 
 	protected function getLinesCountBefore(): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeControlStructure);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountBefore);
 	}
 
 	/**
@@ -88,12 +81,12 @@ class BlockControlStructureSpacingSniff extends AbstractControlStructureSpacing
 	 */
 	protected function getLinesCountBeforeFirst(File $phpcsFile, int $controlStructurePointer): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeFirstControlStructure);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountBeforeFirst);
 	}
 
 	protected function getLinesCountAfter(): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterControlStructure);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountAfter);
 	}
 
 	/**
@@ -105,7 +98,7 @@ class BlockControlStructureSpacingSniff extends AbstractControlStructureSpacing
 	 */
 	protected function getLinesCountAfterLast(File $phpcsFile, int $controlStructurePointer, int $controlStructureEndPointer): int
 	{
-		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterLastControlStructure);
+		return SniffSettingsHelper::normalizeInteger($this->linesCountAfterLast);
 	}
 
 	private function isWhilePartOfDo(File $phpcsFile, int $controlStructurePointer): bool

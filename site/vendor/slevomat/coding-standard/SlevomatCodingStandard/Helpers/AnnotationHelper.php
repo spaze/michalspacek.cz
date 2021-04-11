@@ -31,12 +31,15 @@ use SlevomatCodingStandard\Helpers\Annotation\PropertyAnnotation;
 use SlevomatCodingStandard\Helpers\Annotation\ReturnAnnotation;
 use SlevomatCodingStandard\Helpers\Annotation\TemplateAnnotation;
 use SlevomatCodingStandard\Helpers\Annotation\ThrowsAnnotation;
+use SlevomatCodingStandard\Helpers\Annotation\TypeAliasAnnotation;
+use SlevomatCodingStandard\Helpers\Annotation\TypeImportAnnotation;
 use SlevomatCodingStandard\Helpers\Annotation\UseAnnotation;
 use SlevomatCodingStandard\Helpers\Annotation\VariableAnnotation;
 use function array_key_exists;
 use function array_merge;
 use function get_class;
 use function in_array;
+use function max;
 use function preg_match;
 use function preg_match_all;
 use function preg_replace;
@@ -49,6 +52,9 @@ use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
 
+/**
+ * @internal
+ */
 class AnnotationHelper
 {
 
@@ -56,7 +62,7 @@ class AnnotationHelper
 
 	/**
 	 * @internal
-	 * @param VariableAnnotation|ParameterAnnotation|ReturnAnnotation|ThrowsAnnotation|PropertyAnnotation|MethodAnnotation|TemplateAnnotation|ExtendsAnnotation|ImplementsAnnotation|UseAnnotation|MixinAnnotation $annotation
+	 * @param VariableAnnotation|ParameterAnnotation|ReturnAnnotation|ThrowsAnnotation|PropertyAnnotation|MethodAnnotation|TemplateAnnotation|ExtendsAnnotation|ImplementsAnnotation|UseAnnotation|MixinAnnotation|TypeAliasAnnotation|TypeImportAnnotation $annotation
 	 * @return TypeNode[]
 	 */
 	public static function getAnnotationTypes(Annotation $annotation): array
@@ -78,6 +84,8 @@ class AnnotationHelper
 			if ($annotation->getBound() !== null) {
 				$annotationTypes[] = $annotation->getBound();
 			}
+		} elseif ($annotation instanceof TypeImportAnnotation) {
+			$annotationTypes[] = $annotation->getImportedFrom();
 		} else {
 			$annotationTypes[] = $annotation->getType();
 		}
@@ -215,7 +223,7 @@ class AnnotationHelper
 			static function () use ($phpcsFile, $pointer): array {
 				$annotations = [];
 
-				$docCommentOpenToken = DocCommentHelper::findDocCommentOpenToken($phpcsFile, $pointer);
+				$docCommentOpenToken = DocCommentHelper::findDocCommentOpenPointer($phpcsFile, $pointer);
 				if ($docCommentOpenToken === null) {
 					return $annotations;
 				}
@@ -234,10 +242,11 @@ class AnnotationHelper
 					$annotationEndPointer = $i;
 
 					// Fix for wrong PHPCS parsing
-					$parenthesesLevel = (int) preg_match_all('~[({]~', $tokens[$i]['content']) - (int) preg_match_all(
+					$parenthesesLevel = max((int) preg_match_all('~[({]~', $tokens[$i]['content']) - (int) preg_match_all(
 						'~[)}]~',
 						$tokens[$i]['content']
-					);
+					), 0);
+
 					$annotationCode = $tokens[$i]['content'];
 
 					for ($j = $i + 1; $j <= $tokens[$docCommentOpenToken]['comment_closer']; $j++) {
@@ -270,6 +279,10 @@ class AnnotationHelper
 							'~[)}]~',
 							$tokens[$j]['content']
 						);
+						if ($parenthesesLevel < 0) {
+							$parenthesesLevel = 0;
+						}
+
 						$annotationCode .= $tokens[$j]['content'];
 					}
 
@@ -327,6 +340,10 @@ class AnnotationHelper
 						'@use' => UseAnnotation::class,
 						'@template-use' => UseAnnotation::class,
 						'@phpstan-use' => UseAnnotation::class,
+						'@psalm-type' => TypeAliasAnnotation::class,
+						'@phpstan-type' => TypeAliasAnnotation::class,
+						'@psalm-import-type' => TypeImportAnnotation::class,
+						'@phpstan-import-type' => TypeImportAnnotation::class,
 						'@mixin' => MixinAnnotation::class,
 					];
 
@@ -363,17 +380,19 @@ class AnnotationHelper
 	/**
 	 * @param File $phpcsFile
 	 * @param int $functionPointer
-	 * @param ReturnTypeHint|ParameterTypeHint|PropertyTypeHint|null $typeHint
+	 * @param TypeHint|null $typeHint
 	 * @param ReturnAnnotation|ParameterAnnotation|VariableAnnotation $annotation
 	 * @param array<int, string> $traversableTypeHints
+	 * @param bool $enableUnionTypeHint
 	 * @return bool
 	 */
 	public static function isAnnotationUseless(
 		File $phpcsFile,
 		int $functionPointer,
-		$typeHint,
+		?TypeHint $typeHint,
 		Annotation $annotation,
-		array $traversableTypeHints
+		array $traversableTypeHints,
+		bool $enableUnionTypeHint = false
 	): bool
 	{
 		if ($annotation->isInvalid()) {
@@ -389,7 +408,7 @@ class AnnotationHelper
 		}
 
 		if (TypeHintHelper::isTraversableType(
-			TypeHintHelper::getFullyQualifiedTypeHint($phpcsFile, $functionPointer, $typeHint->getTypeHint()),
+			TypeHintHelper::getFullyQualifiedTypeHint($phpcsFile, $functionPointer, $typeHint->getTypeHintWithoutNullabilitySymbol()),
 			$traversableTypeHints
 		)) {
 			return false;
@@ -399,15 +418,26 @@ class AnnotationHelper
 			return false;
 		}
 
-		if (AnnotationTypeHelper::isCompoundOfNull($annotation->getType())) {
-			/** @var UnionTypeNode $annotationTypeNode */
-			$annotationTypeNode = $annotation->getType();
-
-			$annotationTypeHintNode = AnnotationTypeHelper::getTypeFromNullableType($annotationTypeNode);
-			$annotationTypeHint = $annotationTypeHintNode instanceof IdentifierTypeNode
-				? $annotationTypeHintNode->name
-				: (string) $annotationTypeHintNode;
-			return TypeHintHelper::typeHintEqualsAnnotation($phpcsFile, $functionPointer, $typeHint->getTypeHint(), $annotationTypeHint);
+		if (
+			AnnotationTypeHelper::containsJustTwoTypes($annotation->getType())
+			|| (
+				$enableUnionTypeHint
+				&& (
+					$annotation->getType() instanceof UnionTypeNode
+					|| (
+						$annotation->getType() instanceof IdentifierTypeNode
+						&& TypeHintHelper::isUnofficialUnionTypeHint($annotation->getType()->name)
+					)
+				)
+			)
+		) {
+			$annotationTypeHint = AnnotationTypeHelper::export($annotation->getType());
+			return TypeHintHelper::typeHintEqualsAnnotation(
+				$phpcsFile,
+				$functionPointer,
+				$typeHint->getTypeHint(),
+				$annotationTypeHint
+			);
 		}
 
 		if (!AnnotationTypeHelper::containsOneType($annotation->getType())) {
@@ -441,11 +471,16 @@ class AnnotationHelper
 		}
 
 		$annotationTypeHint = AnnotationTypeHelper::getTypeHintFromOneType($annotationTypeNode);
-		return TypeHintHelper::typeHintEqualsAnnotation($phpcsFile, $functionPointer, $typeHint->getTypeHint(), $annotationTypeHint);
+		return TypeHintHelper::typeHintEqualsAnnotation(
+			$phpcsFile,
+			$functionPointer,
+			$typeHint->getTypeHintWithoutNullabilitySymbol(),
+			$annotationTypeHint
+		);
 	}
 
 	/**
-	 * @param VariableAnnotation|ParameterAnnotation|ReturnAnnotation|ThrowsAnnotation|PropertyAnnotation|MethodAnnotation|TemplateAnnotation|ExtendsAnnotation|ImplementsAnnotation|UseAnnotation|MixinAnnotation $annotation
+	 * @param VariableAnnotation|ParameterAnnotation|ReturnAnnotation|ThrowsAnnotation|PropertyAnnotation|MethodAnnotation|TemplateAnnotation|ExtendsAnnotation|ImplementsAnnotation|UseAnnotation|MixinAnnotation|TypeAliasAnnotation|TypeImportAnnotation $annotation
 	 * @param TypeNode $typeNode
 	 * @param TypeNode $fixedTypeNode
 	 * @return Annotation
@@ -473,6 +508,11 @@ class AnnotationHelper
 		} elseif ($annotation instanceof TemplateAnnotation) {
 			$fixedContentNode = clone $annotation->getContentNode();
 			$fixedContentNode->bound = AnnotationTypeHelper::change($annotation->getBound(), $typeNode, $fixedTypeNode);
+		} elseif ($annotation instanceof TypeImportAnnotation) {
+			$fixedContentNode = clone $annotation->getContentNode();
+			/** @var IdentifierTypeNode $fixedType */
+			$fixedType = AnnotationTypeHelper::change($annotation->getImportedFrom(), $typeNode, $fixedTypeNode);
+			$fixedContentNode->importedFrom = $fixedType;
 		} elseif (
 			$annotation instanceof ExtendsAnnotation
 			|| $annotation instanceof ImplementsAnnotation

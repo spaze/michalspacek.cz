@@ -44,6 +44,7 @@ use const T_LIST;
 use const T_LNUMBER;
 use const T_LOGICAL_AND;
 use const T_LOGICAL_OR;
+use const T_MATCH;
 use const T_MINUS;
 use const T_MODULUS;
 use const T_MULTIPLY;
@@ -149,6 +150,7 @@ class UselessParenthesesSniff implements Sniff
 				T_OBJECT_CAST,
 				T_BOOL_CAST,
 				T_UNSET_CAST,
+				T_MATCH,
 			]
 		), true)
 		) {
@@ -321,7 +323,7 @@ class UselessParenthesesSniff implements Sniff
 			$parenthesisOpenerPointer + 1,
 			$tokens[$parenthesisOpenerPointer]['parenthesis_closer']
 		);
-		if (count($operatorsPointers) !== 0) {
+		if ($operatorsPointers !== []) {
 			return;
 		}
 

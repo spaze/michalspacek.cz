@@ -30,6 +30,7 @@ use const T_DO;
 use const T_DOUBLE_ARROW;
 use const T_DOUBLE_COLON;
 use const T_DOUBLE_QUOTED_STRING;
+use const T_ECHO;
 use const T_ELSEIF;
 use const T_EQUAL;
 use const T_FOR;
@@ -59,6 +60,7 @@ use const T_USE;
 use const T_VARIABLE;
 use const T_WHILE;
 use const T_XOR_EQUAL;
+use const T_YIELD;
 
 class UnusedVariableSniff implements Sniff
 {
@@ -129,6 +131,7 @@ class UnusedVariableSniff implements Sniff
 			T_SL_EQUAL,
 			T_SR_EQUAL,
 			T_CONCAT_EQUAL,
+			T_YIELD,
 		], true)) {
 			return;
 		}
@@ -254,7 +257,7 @@ class UnusedVariableSniff implements Sniff
 				return true;
 			}
 
-			return !in_array($tokens[$parenthesisOwnerPointer]['code'], [T_FOR, T_WHILE], true);
+			return !in_array($tokens[$parenthesisOwnerPointer]['code'], [T_FOR, T_WHILE, T_IF, T_ELSEIF], true);
 		}
 
 		if ($parenthesisOwnerPointer !== null && $tokens[$parenthesisOwnerPointer]['code'] === T_FOREACH) {
@@ -632,7 +635,7 @@ class UnusedVariableSniff implements Sniff
 
 		return in_array(
 			$tokens[$previousPointer]['code'],
-			array_merge([T_STRING_CONCAT], Tokens::$operators, Tokens::$assignmentTokens, Tokens::$booleanOperators),
+			array_merge([T_STRING_CONCAT, T_ECHO], Tokens::$operators, Tokens::$assignmentTokens, Tokens::$booleanOperators),
 			true
 		);
 	}

@@ -13,27 +13,30 @@ use function array_reverse;
 use function count;
 use function in_array;
 use function iterator_to_array;
+use function preg_match;
+use function preg_replace;
 use function sprintf;
 use const T_ANON_CLASS;
 use const T_BITWISE_AND;
 use const T_CLASS;
 use const T_CLOSURE;
 use const T_COLON;
-use const T_COMMA;
 use const T_ELLIPSIS;
-use const T_EQUAL;
 use const T_FUNCTION;
-use const T_INLINE_THEN;
 use const T_INTERFACE;
 use const T_NULLABLE;
 use const T_RETURN;
 use const T_SEMICOLON;
 use const T_STRING;
 use const T_TRAIT;
+use const T_USE;
 use const T_VARIABLE;
 use const T_YIELD;
 use const T_YIELD_FROM;
 
+/**
+ * @internal
+ */
 class FunctionHelper
 {
 
@@ -183,7 +186,7 @@ class FunctionHelper
 	/**
 	 * @param File $phpcsFile
 	 * @param int $functionPointer
-	 * @return (ParameterTypeHint|null)[]
+	 * @return (TypeHint|null)[]
 	 */
 	public static function getParametersTypeHints(File $phpcsFile, int $functionPointer): array
 	{
@@ -196,37 +199,37 @@ class FunctionHelper
 			}
 
 			$parameterName = $tokens[$i]['content'];
-			$typeHint = '';
-			$isNullable = false;
 
-			$previousToken = $i;
-			do {
-				$previousToken = TokenHelper::findPreviousExcluding(
-					$phpcsFile,
-					array_merge(TokenHelper::$ineffectiveTokenCodes, [T_BITWISE_AND, T_ELLIPSIS]),
-					$previousToken - 1,
-					$tokens[$functionPointer]['parenthesis_opener'] + 1
-				);
-				if ($previousToken !== null) {
-					// PHPCS reports T_NULLABLE as T_INLINE_THEN in PHP 8
-					$isTypeHint = !in_array($tokens[$previousToken]['code'], [T_COMMA, T_NULLABLE, T_INLINE_THEN], true);
-					if (in_array($tokens[$previousToken]['code'], [T_NULLABLE, T_INLINE_THEN], true)) {
-						$isNullable = true;
-					}
-				} else {
-					$isTypeHint = false;
-				}
+			$pointerBeforeVariable = TokenHelper::findPreviousExcluding(
+				$phpcsFile,
+				array_merge(TokenHelper::$ineffectiveTokenCodes, [T_BITWISE_AND, T_ELLIPSIS]),
+				$i - 1
+			);
 
-				if ($isTypeHint) {
-					$typeHint = $tokens[$previousToken]['content'] . $typeHint;
-				}
+			if (!in_array($tokens[$pointerBeforeVariable]['code'], TokenHelper::getTypeHintTokenCodes(), true)) {
+				$parametersTypeHints[$parameterName] = null;
+				continue;
+			}
 
-			} while ($isTypeHint);
+			$typeHintEndPointer = $pointerBeforeVariable;
+			$typeHintStartPointer = TypeHintHelper::getStartPointer($phpcsFile, $typeHintEndPointer);
 
-			$equalsPointer = TokenHelper::findNextEffective($phpcsFile, $i + 1, $tokens[$functionPointer]['parenthesis_closer']);
-			$isOptional = $equalsPointer !== null && $tokens[$equalsPointer]['code'] === T_EQUAL;
+			$pointerBeforeTypeHint = TokenHelper::findPreviousEffective($phpcsFile, $typeHintStartPointer - 1);
+			$isNullable = $tokens[$pointerBeforeTypeHint]['code'] === T_NULLABLE;
+			if ($isNullable) {
+				$typeHintStartPointer = $pointerBeforeTypeHint;
+			}
 
-			$parametersTypeHints[$parameterName] = $typeHint !== '' ? new ParameterTypeHint($typeHint, $isNullable, $isOptional) : null;
+			$typeHint = TokenHelper::getContent($phpcsFile, $typeHintStartPointer, $typeHintEndPointer);
+
+			/** @var string $typeHint */
+			$typeHint = preg_replace('~\s+~', '', $typeHint);
+
+			if (!$isNullable) {
+				$isNullable = preg_match('~(?:^|\|)null(?:\||$)~i', $typeHint) === 1;
+			}
+
+			$parametersTypeHints[$parameterName] = new TypeHint($typeHint, $isNullable, $typeHintStartPointer, $typeHintEndPointer);
 		}
 
 		return $parametersTypeHints;
@@ -266,67 +269,42 @@ class FunctionHelper
 		return false;
 	}
 
-	public static function findReturnTypeHint(File $phpcsFile, int $functionPointer): ?ReturnTypeHint
+	public static function findReturnTypeHint(File $phpcsFile, int $functionPointer): ?TypeHint
 	{
 		$tokens = $phpcsFile->getTokens();
 
-		$isAbstract = self::isAbstract($phpcsFile, $functionPointer);
+		$nextPointer = TokenHelper::findNextEffective($phpcsFile, $tokens[$functionPointer]['parenthesis_closer'] + 1);
 
-		$colonToken = $isAbstract
-			? TokenHelper::findNextLocal($phpcsFile, T_COLON, $tokens[$functionPointer]['parenthesis_closer'] + 1)
-			: TokenHelper::findNext(
-				$phpcsFile,
-				T_COLON,
-				$tokens[$functionPointer]['parenthesis_closer'] + 1,
-				$tokens[$functionPointer]['scope_opener'] - 1
-			);
+		if ($tokens[$nextPointer]['code'] === T_USE) {
+			$useParenthesisOpener = TokenHelper::findNextEffective($phpcsFile, $nextPointer + 1);
+			$colonPointer = TokenHelper::findNextEffective($phpcsFile, $tokens[$useParenthesisOpener]['parenthesis_closer'] + 1);
+		} else {
+			$colonPointer = $nextPointer;
+		}
 
-		if ($colonToken === null) {
+		if ($tokens[$colonPointer]['code'] !== T_COLON) {
 			return null;
 		}
 
-		$abstractExcludeTokens = array_merge(TokenHelper::$ineffectiveTokenCodes, [T_SEMICOLON]);
+		$typeHintStartPointer = TokenHelper::findNextEffective($phpcsFile, $colonPointer + 1);
+		$nullable = $tokens[$typeHintStartPointer]['code'] === T_NULLABLE;
 
-		$nullableToken = $isAbstract
-			? TokenHelper::findNextLocalExcluding($phpcsFile, $abstractExcludeTokens, $colonToken + 1)
-			: TokenHelper::findNextExcluding(
-				$phpcsFile,
-				TokenHelper::$ineffectiveTokenCodes,
-				$colonToken + 1,
-				$tokens[$functionPointer]['scope_opener'] - 1
-			);
+		$pointerAfterTypeHint = self::isAbstract($phpcsFile, $functionPointer)
+			? TokenHelper::findNext($phpcsFile, T_SEMICOLON, $typeHintStartPointer + 1)
+			: $tokens[$functionPointer]['scope_opener'];
 
-		$nullable = $nullableToken !== null && $tokens[$nullableToken]['code'] === T_NULLABLE;
+		$typeHintEndPointer = TokenHelper::findPreviousEffective($phpcsFile, $pointerAfterTypeHint - 1);
 
-		$typeHint = '';
-		$typeHintStartPointer = null;
-		$typeHintEndPointer = null;
-		$nextToken = $nullable ? $nullableToken : $colonToken;
-		do {
-			$nextToken = $isAbstract
-				? TokenHelper::findNextLocalExcluding($phpcsFile, $abstractExcludeTokens, $nextToken + 1)
-				: TokenHelper::findNextExcluding(
-					$phpcsFile,
-					TokenHelper::$ineffectiveTokenCodes,
-					$nextToken + 1,
-					$tokens[$functionPointer]['scope_opener']
-				);
+		$typeHint = TokenHelper::getContent($phpcsFile, $typeHintStartPointer, $typeHintEndPointer);
 
-			$isTypeHint = $nextToken !== null;
-			if (!$isTypeHint) {
-				break;
-			}
+		/** @var string $typeHint */
+		$typeHint = preg_replace('~\s+~', '', $typeHint);
 
-			$typeHint .= $tokens[$nextToken]['content'];
-			if ($typeHintStartPointer === null) {
-				/** @var int $typeHintStartPointer */
-				$typeHintStartPointer = $nextToken;
-			}
-			/** @var int $typeHintEndPointer */
-			$typeHintEndPointer = $nextToken;
-		} while ($isTypeHint);
+		if (!$nullable) {
+			$nullable = preg_match('~(?:^|\|)null(?:\||$)~i', $typeHint) === 1;
+		}
 
-		return $typeHint !== '' ? new ReturnTypeHint($typeHint, $nullable, $typeHintStartPointer, $typeHintEndPointer) : null;
+		return new TypeHint($typeHint, $nullable, $typeHintStartPointer, $typeHintEndPointer);
 	}
 
 	public static function hasReturnTypeHint(File $phpcsFile, int $functionPointer): bool
@@ -450,6 +428,21 @@ class FunctionHelper
 				}
 			)
 		);
+	}
+
+	public static function getFunctionLengthInLines(File $file, int $position): int
+	{
+		$tokens = $file->getTokens();
+		$token = $tokens[$position];
+
+		if (self::isAbstract($file, $position)) {
+			return 0;
+		}
+
+		$firstToken = $tokens[$token['scope_opener']];
+		$lastToken = $tokens[$token['scope_closer']];
+
+		return $lastToken['line'] - $firstToken['line'];
 	}
 
 	/**
