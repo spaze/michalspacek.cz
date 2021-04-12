@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '4d9f4bfbda8c00077ee1f7dd516f99a6ea0d2828',
+    'reference' => 'd7d7d12574363506339140b548d3ef5ecacb1a38',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -351,21 +351,21 @@
     ),
     'slevomat/coding-standard' => 
     array (
-      'pretty_version' => '7.0.0',
-      'version' => '7.0.0.0',
+      'pretty_version' => '7.0.1',
+      'version' => '7.0.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b4922c5ad5cbd3787c453a2eb1f6d540f2482198',
+      'reference' => '08580348e8bb68a36c8753d3db6ba816089129e6',
     ),
     'spaze/coding-standard' => 
     array (
-      'pretty_version' => 'v0.0.8',
-      'version' => '0.0.8.0',
+      'pretty_version' => 'v0.0.9',
+      'version' => '0.0.9.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1d4154e044a257a326bf81ada44e2dc0fed56cd2',
+      'reference' => '68e9bb80e45bf798a8aa8e276cd8d9d888709f4f',
     ),
     'spaze/csp-config' => 
     array (
@@ -401,7 +401,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '4d9f4bfbda8c00077ee1f7dd516f99a6ea0d2828',
+      'reference' => 'd7d7d12574363506339140b548d3ef5ecacb1a38',
     ),
     'spaze/mysql-session-handler' => 
     array (

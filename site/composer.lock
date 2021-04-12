@@ -1708,16 +1708,16 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "7.0.0",
+            "version": "7.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "b4922c5ad5cbd3787c453a2eb1f6d540f2482198"
+                "reference": "08580348e8bb68a36c8753d3db6ba816089129e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/b4922c5ad5cbd3787c453a2eb1f6d540f2482198",
-                "reference": "b4922c5ad5cbd3787c453a2eb1f6d540f2482198",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/08580348e8bb68a36c8753d3db6ba816089129e6",
+                "reference": "08580348e8bb68a36c8753d3db6ba816089129e6",
                 "shasum": ""
             },
             "require": {
@@ -1753,7 +1753,7 @@
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/7.0.0"
+                "source": "https://github.com/slevomat/coding-standard/tree/7.0.1"
             },
             "funding": [
                 {
@@ -1765,25 +1765,25 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-09T07:01:20+00:00"
+            "time": "2021-04-09T12:43:58+00:00"
         },
         {
             "name": "spaze/coding-standard",
-            "version": "v0.0.8",
+            "version": "v0.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/coding-standard.git",
-                "reference": "1d4154e044a257a326bf81ada44e2dc0fed56cd2"
+                "reference": "68e9bb80e45bf798a8aa8e276cd8d9d888709f4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/1d4154e044a257a326bf81ada44e2dc0fed56cd2",
-                "reference": "1d4154e044a257a326bf81ada44e2dc0fed56cd2",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/68e9bb80e45bf798a8aa8e276cd8d9d888709f4f",
+                "reference": "68e9bb80e45bf798a8aa8e276cd8d9d888709f4f",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0",
-                "slevomat/coding-standard": "^7.0.0",
+                "slevomat/coding-standard": "^7.0.1",
                 "squizlabs/php_codesniffer": "^3.6.0"
             },
             "type": "library",
@@ -1806,9 +1806,9 @@
             "description": "Coding Standard – PHP Code Sniffer Rules",
             "support": {
                 "issues": "https://github.com/spaze/coding-standard/issues",
-                "source": "https://github.com/spaze/coding-standard/tree/v0.0.8"
+                "source": "https://github.com/spaze/coding-standard/tree/v0.0.9"
             },
-            "time": "2021-04-11T04:19:28+00:00"
+            "time": "2021-04-12T09:05:31+00:00"
         },
         {
             "name": "spaze/csp-config",
