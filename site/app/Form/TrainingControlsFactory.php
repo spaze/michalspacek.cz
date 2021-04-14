@@ -43,7 +43,7 @@ class TrainingControlsFactory
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
 			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200)
-			->addRule($this->winterIsComing->rule(), 'Winter is actually not coming');
+			->addRule($this->winterIsComing->ruleEmail(), 'Winter is actually not coming');
 	}
 
 
@@ -69,7 +69,8 @@ class TrainingControlsFactory
 		$container->addText('street', 'Ulice a číslo:')
 			->setRequired(false)
 			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200);
+			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200)
+			->addRule($this->winterIsComing->ruleStreet(), 'Winter is actually not coming');
 		$container->addText('city', 'Město:')
 			->setRequired(false)
 			->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)

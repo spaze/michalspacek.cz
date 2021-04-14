@@ -12,9 +12,9 @@ use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Files;
+use MichalSpacekCz\Training\FormSpam;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Mails;
-use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\AbortException;
@@ -50,13 +50,13 @@ class TrainingsPresenter extends BasePresenter
 
 	private Reviews $trainingReviews;
 
-	private Prices $prices;
-
 	private TrainingControlsFactory $trainingControlsFactory;
 
 	private Info $companyInfo;
 
 	private IResponse $httpResponse;
+
+	private FormSpam $formSpam;
 
 	/** @var Row<mixed> */
 	private Row $training;
@@ -75,10 +75,10 @@ class TrainingsPresenter extends BasePresenter
 		CompanyTrainings $companyTrainings,
 		Locales $trainingLocales,
 		Reviews $trainingReviews,
-		Prices $price,
 		TrainingControlsFactory $trainingControlsFactory,
 		Info $companyInfo,
-		IResponse $httpResponse
+		IResponse $httpResponse,
+		FormSpam $formSpam
 	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingApplications = $trainingApplications;
@@ -89,10 +89,10 @@ class TrainingsPresenter extends BasePresenter
 		$this->companyTrainings = $companyTrainings;
 		$this->trainingLocales = $trainingLocales;
 		$this->trainingReviews = $trainingReviews;
-		$this->prices = $price;
 		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->companyInfo = $companyInfo;
 		$this->httpResponse = $httpResponse;
+		$this->formSpam = $formSpam;
 		parent::__construct();
 	}
 
@@ -351,7 +351,7 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	private function checkSpam(ArrayHash $values, string $name): void
 	{
-		if (preg_match('~\s+href="\s*https?://~', $values->note)) {
+		if ($this->formSpam->isSpam($values)) {
 			$this->logData($values, $name);
 			throw new UnexpectedValueException('Spammy note: ' . $values->note);
 		}
