@@ -122,6 +122,7 @@ services:
 	theme: MichalSpacekCz\Application\Theme
 	phpInfo: Spaze\PhpInfo\PhpInfo
 	netteCve202015227: MichalSpacekCz\EasterEgg\NetteCve202015227
+	formSpam: MichalSpacekCz\Training\FormSpam
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory

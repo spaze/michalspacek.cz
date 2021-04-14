@@ -10,7 +10,14 @@ class FormSpam
 
 	public function isSpam(ArrayHash $values): bool
 	{
-		if (preg_match('~\s+href="\s*https?://~', $values->note)) {
+		if (preg_match('~\s+href="\s*https?://~', $values->note ?? '')) {
+			return true;
+		} elseif (
+			ctype_lower($values->name ?? '')
+			&& ctype_lower($values->company ?? '')
+			&& ctype_lower($values->companyId ?? '')
+			&& ctype_lower($values->companyTaxId ?? '')
+		) {
 			return true;
 		}
 		return false;

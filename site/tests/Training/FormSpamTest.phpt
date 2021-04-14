@@ -30,6 +30,14 @@ class FormSpamTest extends TestCase
 					'note' => 'foo href="https:// example" bar baz',
 				],
 			],
+			[
+				[
+					'name' => 'zggnbijhah',
+					'companyId' => 'vwetyeofcx',
+					'companyTaxId' => 'tyqvukaims',
+					'company' => 'qzpormrfcq',
+				],
+			],
 		];
 	}
 
