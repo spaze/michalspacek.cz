@@ -25,7 +25,7 @@ class WinterIsComingTest extends TestCase
 	private $form;
 
 	/** @var callable */
-	private $rule;
+	private $ruleEmail;
 
 	/** @var stdClass */
 	private $resultObject;
@@ -52,33 +52,33 @@ class WinterIsComingTest extends TestCase
 
 		};
 		$this->form = new Form($this->presenter, 'leForm');
-		$this->rule = (new WinterIsComing())->rule();
+		$this->ruleEmail = (new WinterIsComing())->ruleEmail();
 	}
 
 
-	public function testRule(): void
+	public function testRuleEmail(): void
 	{
-		Assert::true(($this->rule)($this->form->addText('foo')->setDefaultValue('foo@bar.com')));
+		Assert::true(($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('foo@bar.com')));
 	}
 
 
-	public function testRuleFakeError(): void
+	public function testRuleEmailFakeError(): void
 	{
-		($this->rule)($this->form->addText('foo')->setDefaultValue('winter@example.com'));
+		($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('winter@example.com'));
 		$this->assertResponse();
 	}
 
 
-	public function testRuleFakeErrorEmailHost(): void
+	public function testRuleEmailFakeErrorEmailHost(): void
 	{
-		($this->rule)($this->form->addText('foo')->setDefaultValue(random_int(0, PHP_INT_MAX) . '@ssemarketing.net'));
+		($this->ruleEmail)($this->form->addText('foo')->setDefaultValue(random_int(0, PHP_INT_MAX) . '@ssemarketing.net'));
 		$this->assertResponse();
 	}
 
 
-	public function testRuleNiceHost(): void
+	public function testRuleEmailNiceHost(): void
 	{
-		($this->rule)($this->form->addText('foo')->setDefaultValue('kuddelmuddel@fussemarketing.net'));
+		($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('kuddelmuddel@fussemarketing.net'));
 		Assert::hasNotKey('response', (array)$this->resultObject);
 	}
 
