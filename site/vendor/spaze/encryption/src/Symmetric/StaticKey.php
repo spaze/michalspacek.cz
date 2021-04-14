@@ -88,6 +88,19 @@ class StaticKey
 
 
 	/**
+	 * Checks if the given data are encrypted using the active key.
+	 *
+	 * @param string $data
+	 * @return bool
+	 */
+	public function needsReEncrypt(string $data): bool
+	{
+		list($keyId) = $this->parseKeyCipherText($data);
+		return $keyId !== $this->getActiveKeyId();
+	}
+
+
+	/**
 	 * Get encryption key.
 	 *
 	 * @param string $keyId

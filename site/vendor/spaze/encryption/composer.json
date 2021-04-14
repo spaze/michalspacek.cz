@@ -18,19 +18,23 @@
 		"psr-4": {"Spaze\\Encryption\\": "src"}
 	},
 	"require-dev": {
-		"spaze/coding-standard": "^0.0.4",
+		"spaze/coding-standard": "^0.0",
 		"php-parallel-lint/php-parallel-lint": "^1.2",
 		"php-parallel-lint/php-console-highlighter": "^0.5.0",
-		"phpstan/phpstan": "^0.12.59"
+		"phpstan/phpstan": "^0.12.59",
+		"nette/tester": "^2.4"
 	},
 	"scripts": {
-		"lint": "vendor/bin/parallel-lint --colors src",
-		"phpcs": "vendor/bin/phpcs src",
+		"lint": "vendor/bin/parallel-lint --colors src tests",
+		"phpcs": "vendor/bin/phpcs src tests",
+		"cs-fix": "vendor/squizlabs/php_codesniffer/bin/phpcbf src tests",
 		"phpstan": "vendor/phpstan/phpstan/phpstan --ansi analyse --configuration phpstan.neon",
+		"tester": "vendor/nette/tester/src/tester --colors 1 tests",
 		"test": [
 			"@lint",
 			"@phpcs",
-			"@phpstan"
+			"@phpstan",
+			"@tester"
 		]
 	}
 }

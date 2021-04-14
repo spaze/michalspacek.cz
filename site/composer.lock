@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38a5bcf5448b3ecc81d27913db8693de",
+    "content-hash": "ec1568a281d753e16e0ba1340fd398d9",
     "packages": [
         {
             "name": "contributte/translation",
@@ -1866,16 +1866,16 @@
         },
         {
             "name": "spaze/encryption",
-            "version": "v0.3.0",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/encryption.git",
-                "reference": "a7e153ee8b66b83fa0ccf0378c10dd3e5e9ce7db"
+                "reference": "361c185ee62726202e18a347b64a498671dc65f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/encryption/zipball/a7e153ee8b66b83fa0ccf0378c10dd3e5e9ce7db",
-                "reference": "a7e153ee8b66b83fa0ccf0378c10dd3e5e9ce7db",
+                "url": "https://api.github.com/repos/spaze/encryption/zipball/361c185ee62726202e18a347b64a498671dc65f7",
+                "reference": "361c185ee62726202e18a347b64a498671dc65f7",
                 "shasum": ""
             },
             "require": {
@@ -1884,10 +1884,11 @@
                 "php": "^7.2 || ^8.0"
             },
             "require-dev": {
+                "nette/tester": "^2.4",
                 "php-parallel-lint/php-console-highlighter": "^0.5.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpstan/phpstan": "^0.12.59",
-                "spaze/coding-standard": "^0.0.4"
+                "spaze/coding-standard": "^0.0"
             },
             "type": "library",
             "autoload": {
@@ -1909,9 +1910,9 @@
             "description": "Various encryption helpers, uses Halite (which uses Sodium) for cryptography",
             "support": {
                 "issues": "https://github.com/spaze/encryption/issues",
-                "source": "https://github.com/spaze/encryption/tree/v0.3.0"
+                "source": "https://github.com/spaze/encryption/tree/v0.4.0"
             },
-            "time": "2020-12-11T04:52:27+00:00"
+            "time": "2021-04-14T01:29:40+00:00"
         },
         {
             "name": "spaze/feed-exports",
@@ -3280,12 +3281,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "aa48fe959b0236eede9c51a38f47df2bb81ef137"
+                "reference": "7cc7126a8a1c71197c85c04b147b24257393cd11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/aa48fe959b0236eede9c51a38f47df2bb81ef137",
-                "reference": "aa48fe959b0236eede9c51a38f47df2bb81ef137",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/7cc7126a8a1c71197c85c04b147b24257393cd11",
+                "reference": "7cc7126a8a1c71197c85c04b147b24257393cd11",
                 "shasum": ""
             },
             "conflict": {
@@ -3448,6 +3449,7 @@
                 "propel/propel1": ">=1,<=1.7.1",
                 "pterodactyl/panel": "<0.7.19|>=1-rc.0,<=1-rc.6",
                 "pusher/pusher-php-server": "<2.2.1",
+                "pwweb/laravel-core": "<=0.3.6-beta",
                 "rainlab/debugbar-plugin": "<3.1",
                 "robrichards/xmlseclibs": "<3.0.4",
                 "sabberworm/php-css-parser": ">=1,<1.0.1|>=2,<2.0.1|>=3,<3.0.1|>=4,<4.0.1|>=5,<5.0.9|>=5.1,<5.1.3|>=5.2,<5.2.1|>=6,<6.0.2|>=7,<7.0.4|>=8,<8.0.1|>=8.1,<8.1.1|>=8.2,<8.2.1|>=8.3,<8.3.1",
@@ -3455,8 +3457,9 @@
                 "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
-                "shopware/core": "<=6.3.4",
-                "shopware/platform": "<=6.3.5.1",
+                "shopware/core": "<=6.3.5.2",
+                "shopware/platform": "<=6.3.5.2",
+                "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<5.6.9",
                 "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
                 "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
@@ -3613,7 +3616,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-09T08:01:23+00:00"
+            "time": "2021-04-13T16:02:59+00:00"
         },
         {
             "name": "spaze/phpstan-disallowed-calls",

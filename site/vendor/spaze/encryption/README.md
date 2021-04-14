@@ -73,3 +73,12 @@ services:
 
 ## Key rotation
 You can always add a new encryption key, set it as an active key and from that moment, the data will be encrypted with the new key. Unless you remove the old key, it will be possible to decrypt data encrypted with it. You can then take all the data encrypted with the old key and re-encrypt them just to change they key which was used to encrypt them. Once done you can delete the old key.
+
+You can use `needsReEncrypt($ciphertext): bool` to see if the data is encrypted with an inactive key and thus should be re-encrypted with the currently active one.
+
+## Running tests
+
+If you want to contribute (awesome, thanks!), you should add/run tests for your contributions.
+First install dev dependencies by running `composer install`, then run tests with `composer test`, see `scripts` in `composer.json`. Tests are also run on GitHub with Actions on each push.
+
+You can fix coding style issues automatically by running `composer cs-fix`.
