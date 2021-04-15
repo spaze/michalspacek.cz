@@ -16,6 +16,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
 use Nette\Localization\Translator as NetteTranslator;
+use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Netxten\Formatter\Texy as NetxtenTexy;
 use Netxten\Templating\Helpers;
@@ -231,14 +232,16 @@ class Texy extends NetxtenTexy
 		}
 
 		$trainingAction = ':Www:Trainings:training';
+		$companyTrainingAction = ':Www:CompanyTrainings:training';
 		/** @var Presenter $presenter */
 		$presenter = $this->application->getPresenter();
 
+		// "title":[link:Module:Presenter:action params]
 		if (strncmp($link->URL, 'link:', 5) === 0) {
 			/** @var string[] $args */
 			$args = preg_split('/[\s,]+/', substr($link->URL, 5));
 			$action = ':' . array_shift($args);
-			if ($action === $trainingAction) {
+			if (Arrays::contains([$trainingAction, $companyTrainingAction], $action)) {
 				$args = $this->trainingLocales->getLocaleActions($args[0])[$this->translator->getDefaultLocale()];
 			}
 			$link->URL = $presenter->link("//{$action}", $args);
@@ -257,9 +260,10 @@ class Texy extends NetxtenTexy
 		// "title":[inhouse-training:training]
 		if (strncmp($link->URL, 'inhouse-training:', 17) === 0) {
 			$args = $this->trainingLocales->getLocaleActions(substr($link->URL, 17))[$this->translator->getDefaultLocale()];
-			$link->URL = $presenter->link('//:Www:CompanyTrainings:training', $args);
+			$link->URL = $presenter->link("//{$companyTrainingAction}", $args);
 		}
 
+		// "title":[training:training]
 		if (strncmp($link->URL, 'training:', 9) === 0) {
 			$texy = $invocation->getTexy();
 			$name = substr($link->URL, 9);
