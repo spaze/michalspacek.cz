@@ -197,7 +197,7 @@ httpsdevsadmins:
 	name: "HTTPS pro vývojáře a správce"
 	description: 'Samotné HTTPS, tedy šifrování přenášených informací, nezabezpečí váš web. Zabezpečí ale jeho návštěvníky, informace a soubory, které si stahují i jejich hesla. Pokud vaše webová aplikace nabízí nebo vyžaduje přihlášení, rozhodně by na HTTPS měla běžet. HTTPS má spoustu nastavení i drobností, které je ale potřeba nastavit správně, aby uživatelé byli chránění pokud možno co nejlépe. Na tomto školení vás to naučím.'
 	upsell: 'Chcete se dozvědět, jak web zabezpečit proti dalším častým útokům? Přihlaste se na školení "Bezpečnost PHP aplikací":[link:Www:Trainings:training bezpecnost-php-aplikaci]!'
-	prerequisites: 'Stačí, když budete vědět, že webový prohlížeč posílá nějaké požadavky a server na ně odpovídá. Plusem bude, pokud budete tušit, jak a kde se konfiguruje váš server'
+	prerequisites: 'Stačí, když budete vědět, že webový prohlížeč posílá nějaké požadavky a server na ně odpovídá. Plusem bude, pokud budete tušit, jak a kde se konfiguruje váš server.'
 	audience: 'Školení je určeno pro vývojáře webových aplikací a pro správce webových serverů, kterým záleží na bezpečí a soukromí jejich uživatelů.'
 	materials: 'Účastníci prezenčních školení dostanou certifikát a tištěnou prezentaci, kterou po skončení posílám i e-mailem. U online kurzů posílám prezentaci předem k případnému vytištění, po skončení navíc i certifikát v PDF. Dostatek prostoru bude věnován na dotazy.'
 	content: '''

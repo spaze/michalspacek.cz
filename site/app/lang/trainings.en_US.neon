@@ -93,11 +93,11 @@ securityphp:
 		  Some HTTP headers may help you protect your application better, or just make a successful attack less bad. We'll see which headers and how to test your site using Security Headers and Mozilla Observatory.
 	'''
 	inhouse:
-		description: 'Bezpečnost webových aplikací mě zajímá a baví mě ji zkoumat. Je to citlivé téma a každá zapomenutá drobnost může dostat do problémů nejen vás, ale i vaše uživatele. O zabezpečení webu často píšu "články":/clanky a "přednáším":/prednasky. Rád vaše vývojáře naučím, jak webové aplikace zabezpečit a jak je na bezpečnost testovat. Školení je vhodné i pro vývojáře, kteří pracují např. v Javě nebo Pythonu, většina útoků a principů je stejných.'
-		upsell: 'Zabezpečené přenosy dat pomocí protokolu **HTTPS** detailně rozebíráme na "školení pro správce a vývojáře":[link:Www:CompanyTrainings:training https-pro-vyvojare-a-spravce].'
-		duration: 'Školení je dvoudenní, každý den 8 hodin i s přestávkami, ale dle situace se může až o hodinu protáhnout.'
-		alternativeduration: 'Pokud budete chtít probrat jen některá témata, můžeme školení uspořádat pouze jednodenní.'
-		alternativedurationprice: 'Základní cena jednodenního školení je %s bez DPH, %s s DPH.'
+		description: "I'm into web app security and I enjoy security research. It's an interesting and sensitive area where every thing left forgotten no matter how small it is can get you and your users into big trouble. I like to \"blog\":/articles and \"talk\":/talks about security. I'll teach your developers how to secure web apps they are building and how to spot security issues. The course is also suitable for developers working in languages like Python, Java and others, as most of the attacks and priniciples is the same."
+		upsell: "**HTTPS** transport security is also important topic that's why there's an extra \"course for developers and admins\":[link:Www:CompanyTrainings:training https-pro-vyvojare-a-spravce]."
+		duration: 'The training duration is 2 days, 8 hours including breaks each day, but sometimes it might be prolonged by up to an hour.'
+		alternativeduration: "If you're willing to skip some topics, it's also possible to shorten the training to just one day."
+		alternativedurationprice: 'Base price of the 1-day shorter training is %s without VAT, %s including VAT.'
 
 advancedwebsecurity:
 	name: 'Pokročilá webová bezpečnost'
@@ -194,28 +194,28 @@ php5securityperformance3days:
 	content: 'PHP 5, bezpečnost a výkonnost'
 
 httpsdevsadmins:
-	name: "HTTPS for developers and admins"
-	description: 'Samotné HTTPS, tedy šifrování přenášených informací, nezabezpečí váš web. Zabezpečí ale jeho návštěvníky, informace a soubory, které si stahují i jejich hesla. Pokud vaše webová aplikace nabízí nebo vyžaduje přihlášení, rozhodně by na HTTPS měla běžet. HTTPS má spoustu nastavení i drobností, které je ale potřeba nastavit správně, aby uživatelé byli chránění pokud možno co nejlépe. Na tomto školení vás to naučím.'
-	upsell: 'Chcete se dozvědět, jak web zabezpečit proti dalším častým útokům? Přihlaste se na školení "Bezpečnost PHP aplikací":[link:Www:Trainings:training bezpecnost-php-aplikaci]!'
-	prerequisites: 'Stačí, když budete vědět, že webový prohlížeč posílá nějaké požadavky a server na ně odpovídá. Plusem bude, pokud budete tušit, jak a kde se konfiguruje váš server'
-	audience: 'Školení je určeno pro vývojáře webových aplikací a pro správce webových serverů, kterým záleží na bezpečí a soukromí jejich uživatelů.'
+	name: "HTTPS for developers & admins"
+	description: "HTTPS means transport encryption and as such can't protect your whole site. But it can protect your users, information and files they download, their passwords. If your web app requires authentication, it's a no-brainer to run it on HTTPS. But with gazillion of settings, even small details matter and you have to set them right to protect the users as much as possible. I'll teach you how."
+	upsell: 'Want a bigger web app security picture, interested to know more about other attacks? Sign up for my "PHP app security":[link:Www:Trainings:training bezpecnost-php-aplikaci] training!'
+	prerequisites: "All you need to know is that your web browser sends some requests and that the server responds back. If you also know how to configure your web server, that's definitely a plus."
+	audience: 'The training is best suited for web app developers and web server admins who care about security and privacy of their users.'
 	materials: "On-site participants will receive a certificate and printed materials that I'll also email after completing the training. Remote participants will get a presentation they can print upfront and also a PDF certificate after completing the training. We'll dedicate enough time for questions."
 	content: '''
-		- Co je a k čemu slouží HTTPS
-		- Certifikáty a certifikační autority
-		- //Certificate Transparency//, CAA((Certificate Authority Authorization)) záznam
-		- Výměna klíčů, //Forward Secrecy//
-		- Útoky typu //Man-in-the-Middle// a jak se jim bránit
-		- Správné nastavení serveru a webové aplikace, //mixed content//, výsledky SSL Labs testu
-		- Útoky na HTTPS (CRIME((Compression Ratio Info-leak Made Easy)), BREACH((Browser Reconnaissance and Exfiltration via Adaptive Compression of Hypertext)), POODLE((Padding Oracle On Downgraded Legacy Encryption)))
+		- What is HTTPS and why we (should) use it
+		- Certificates and certification authorities
+		- Certificate Transparency, CAA((Certificate Authority Authorization)) DNS record
+		- Key exchange, Forward Secrecy
+		- Man-in-the-Middle attacks and how to mitigate them
+		- Proper server & web app configuration, mixed content, SSL Labs test results
+		- Attacks on HTTPS (CRIME((Compression Ratio Info-leak Made Easy)), BREACH((Browser Reconnaissance and Exfiltration via Adaptive Compression of Hypertext)), POODLE((Padding Oracle On Downgraded Legacy Encryption)))
 		- HTTP/2
 	'''
 	inhouse:
-		description: 'Šifrování přenášených informací nezabezpečí váš web. HTTPS však zabezpečí jeho návštěvníky, informace a soubory, které si stahují i jejich hesla. Pokud vaše webová aplikace nabízí nebo vyžaduje přihlášení, rozhodně by na HTTPS měla běžet. HTTPS má spoustu nastavení i drobností, které je ale potřeba vyřešit správně, aby uživatelé byli chránění pokud možno co nejlépe. Na tomto školení to vaše vývojáře a správce naučím.'
-		upsell: 'Na školení "Bezpečnost webových aplikací":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci] vývojáře naučím, jak web zabezpečit proti dalším častým útokům.'
-		duration: 'Školení je jednodenní, trvá 8 hodin i s přestávkami.'
-		alternativeduration: 'Chcete si vyzkoušet vytvořit vlastní certifikační autoritu a vystavit certifikát nebo se naučit odhalovat problémy v HTTPS spojení? Školení můžeme uspořádat i dvoudenní.'
-		alternativedurationprice: 'Základní cena dvoudenního školení je %s bez DPH, %s s DPH.'
+		description: "HTTPS means transport encryption and using it doesn't mean your whole site is //secure//. But HTTPS can protect your users, data & files they download, and their passwords. If there's a password input field on your site, then HTTPS is a no-brainer. But it has tons of settings and even the smallest details matter of you want to protect your users as much as possible. I'll show your devs and admins how to do that."
+		upsell: 'I also teach "Web app security":[link:Www:CompanyTrainings:training bezpecnost-php-aplikaci] course where your devs will learn about other attacks used in the wild.'
+		duration: 'This is a one day training, 8 hours including breaks.'
+		alternativeduration: 'Want to build your own certification authority, issue a certificate or learn how to debug HTTPS connection problems? We can add one extra day.'
+		alternativedurationprice: 'Base price of the the 2-day extended training is %s without VAT, %s including VAT.'
 securityjava:
 	name: "Web application security (Java)"
 	description: 'Bezpečnost webových aplikací (pro vývojáře v Javě)'
