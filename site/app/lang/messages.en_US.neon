@@ -334,7 +334,7 @@ photo:
 		desc: "Please use **this photo**, it's like my //trademark//. I use it on \"Twitter\":[%s], on \"Facebook\":[%s], and elsewhere on the web, so that people can recognize me easily. This great picture was shot by \"Lukáš Hudeček\":[%s]."
 	lecturer:
 		header: "As a lecturer"
-		desc: "Too optimistic? Use this one. It's from \"Code Camp\":[%s] and was taken by \"Josef Havlín\":[%s]."
+		desc: "Too optimistic? Use this one. It's from Code Camp and was taken by \"Josef Havlín\":[%s]."
 	office:
 		header: "In the office"
 		desc: "Taken in Skype Prague office back in the day."
