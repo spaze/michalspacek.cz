@@ -3,10 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Templating\Embed;
-use MichalSpacekCz\Templating\Helpers;
 use MichalSpacekCz\Training\Dates;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -15,23 +13,17 @@ use RuntimeException;
 class TalksPresenter extends BasePresenter
 {
 
-	private Texy $texyFormatter;
-
 	private Talks $talks;
 
 	private Embed $embed;
 
-	private Helpers $helpers;
-
 	private Dates $trainingDates;
 
 
-	public function __construct(Texy $texyFormatter, Talks $talks, Embed $embed, Helpers $helpers, Dates $trainingDates)
+	public function __construct(Talks $talks, Embed $embed, Dates $trainingDates)
 	{
-		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;
 		$this->embed = $embed;
-		$this->helpers = $helpers;
 		$this->trainingDates = $trainingDates;
 		parent::__construct();
 	}

@@ -9,7 +9,6 @@ use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\Translator;
 use stdClass;
 
 class TrainingApplicationAdminFactory
@@ -24,8 +23,6 @@ class TrainingApplicationAdminFactory
 	private TrainingControlsFactory $trainingControlsFactory;
 
 	private Statuses $trainingStatuses;
-
-	private Translator $translator;
 
 	/** @var string[] */
 	private array $deletableFields = [
@@ -47,15 +44,13 @@ class TrainingApplicationAdminFactory
 		Applications $trainingApplications,
 		Dates $trainingDates,
 		TrainingControlsFactory $trainingControlsFactory,
-		Statuses $trainingStatuses,
-		Translator $translator
+		Statuses $trainingStatuses
 	) {
 		$this->factory = $factory;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
 		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->trainingStatuses = $trainingStatuses;
-		$this->translator = $translator;
 	}
 
 

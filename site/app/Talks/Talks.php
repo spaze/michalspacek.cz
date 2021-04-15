@@ -9,7 +9,6 @@ use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
-use Nette\Http\Request;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -29,8 +28,6 @@ class Talks
 	private Explorer $database;
 
 	private Texy $texyFormatter;
-
-	private Request $httpRequest;
 
 	/**
 	 * Slides root, just directory no FQND, no leading slash, no trailing slash.
@@ -66,11 +63,10 @@ class Talks
 	];
 
 
-	public function __construct(Explorer $context, Texy $texyFormatter, Request $httpRequest)
+	public function __construct(Explorer $context, Texy $texyFormatter)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
-		$this->httpRequest = $httpRequest;
 	}
 
 

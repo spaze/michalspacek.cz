@@ -3,20 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Formatter\Texy;
-
 class ProjectsPresenter extends BasePresenter
 {
-
-	private Texy $texyFormatter;
-
-
-	public function __construct(Texy $texyFormatter)
-	{
-		$this->texyFormatter = $texyFormatter;
-		parent::__construct();
-	}
-
 
 	public function renderDefault(): void
 	{

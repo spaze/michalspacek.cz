@@ -4,20 +4,14 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\TrainingMailsOutboxFactory;
-use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Mails;
-use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
 
 class EmailsPresenter extends BasePresenter
 {
 
-	private Applications $trainingApplications;
-
 	private Mails $trainingMails;
-
-	private Statuses $trainingStatuses;
 
 	private TrainingMailsOutboxFactory $trainingMailsOutboxFactory;
 
@@ -25,11 +19,9 @@ class EmailsPresenter extends BasePresenter
 	private array $applications;
 
 
-	public function __construct(Applications $trainingApplications, Mails $trainingMails, Statuses $trainingStatuses, TrainingMailsOutboxFactory $trainingMailsOutboxFactory)
+	public function __construct(Mails $trainingMails, TrainingMailsOutboxFactory $trainingMailsOutboxFactory)
 	{
-		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
-		$this->trainingStatuses = $trainingStatuses;
 		$this->trainingMailsOutboxFactory = $trainingMailsOutboxFactory;
 		parent::__construct();
 	}

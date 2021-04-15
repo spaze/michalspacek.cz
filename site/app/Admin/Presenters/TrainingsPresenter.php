@@ -268,7 +268,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentStatuses(string $formName): TrainingStatuses
 	{
-		$form = new TrainingStatuses($this, $formName, $this->applications, $this->trainingControlsFactory, $this->translator);
+		$form = new TrainingStatuses($this, $formName, $this->applications, $this->trainingControlsFactory);
 		$form->getComponent('submit')->onClick[] = [$this, 'submittedStatuses'];
 		$form->getComponent('familiar')->onClick[] = [$this, 'submittedFamiliar'];
 		return $form;
@@ -322,7 +322,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$applications = $this->request->getPost('applications');
 		$count = (is_array($applications) ? count($applications) : 1);
-		$form = new TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingApplications, $this->trainingControlsFactory);
+		$form = new TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingControlsFactory);
 		$form->onSuccess[] = [$this, 'submittedApplications'];
 		return $form;
 	}

@@ -178,7 +178,7 @@ trait ServicesTrait
 	{
 		static $service;
 		if (!$service) {
-			$service = new SecurityHeaders($this->getHttpRequest(), $this->getHttpResponse(), $this->getCspConfig(), $this->getRouterFactory(), $this->getLocaleLinkGenerator());
+			$service = new SecurityHeaders($this->getHttpRequest(), $this->getHttpResponse(), $this->getCspConfig(), $this->getLocaleLinkGenerator());
 		}
 		return $service;
 	}

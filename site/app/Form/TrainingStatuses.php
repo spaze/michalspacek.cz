@@ -5,28 +5,21 @@ namespace MichalSpacekCz\Form;
 
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
-use Nette\Localization\Translator;
 
 class TrainingStatuses extends ProtectedForm
 {
-
-	private Translator $translator;
-
 
 	/**
 	 * @param IContainer $parent
 	 * @param string $name
 	 * @param Row[] $applications
 	 * @param TrainingControlsFactory $trainingControlsFactory
-	 * @param Translator $translator
 	 */
-	public function __construct(IContainer $parent, string $name, array $applications, TrainingControlsFactory $trainingControlsFactory, Translator $translator)
+	public function __construct(IContainer $parent, string $name, array $applications, TrainingControlsFactory $trainingControlsFactory)
 	{
 		parent::__construct($parent, $name);
-		$this->translator = $translator;
 
 		$container = $this->addContainer('applications');
-
 		foreach ($applications as $application) {
 			$select = $container->addSelect((string)$application->id, 'Status')
 				->setPrompt('- změnit na -')

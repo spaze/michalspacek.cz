@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\Texy;
-use MichalSpacekCz\Templating\Embed;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
@@ -21,21 +20,17 @@ class VenuesPresenter extends BasePresenter
 
 	private Trainings $trainings;
 
-	private Embed $embed;
-
 
 	public function __construct(
 		Texy $texyFormatter,
 		Dates $trainingDates,
 		Venues $trainingVenues,
-		Trainings $trainings,
-		Embed $embed
+		Trainings $trainings
 	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingDates = $trainingDates;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainings = $trainings;
-		$this->embed = $embed;
 		parent::__construct();
 	}
 

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Application\LocaleLinkGenerator;
-use MichalSpacekCz\Application\RouterFactory;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Http\UrlImmutable;
@@ -16,7 +15,6 @@ class SecurityHeaders
 	private IRequest $httpRequest;
 	private IResponse $httpResponse;
 	private Config $contentSecurityPolicy;
-	private RouterFactory $routerFactory;
 	private LocaleLinkGenerator $localeLinkGenerator;
 	private string $presenterName;
 	private string $actionName;
@@ -29,13 +27,11 @@ class SecurityHeaders
 		IRequest $httpRequest,
 		IResponse $httpResponse,
 		Config $contentSecurityPolicy,
-		RouterFactory $routerFactory,
 		LocaleLinkGenerator $localeLinkGenerator
 	) {
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->contentSecurityPolicy = $contentSecurityPolicy;
-		$this->routerFactory = $routerFactory;
 		$this->localeLinkGenerator = $localeLinkGenerator;
 	}
 

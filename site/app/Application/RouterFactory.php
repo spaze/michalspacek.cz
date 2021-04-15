@@ -237,7 +237,7 @@ class RouterFactory
 		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
 			$this->currentLocaleRouteList[$locale][] = $route;
 		} else {
-			$this->currentRouteList[] = $route;
+			$this->currentRouteList->add($route);
 		}
 	}
 

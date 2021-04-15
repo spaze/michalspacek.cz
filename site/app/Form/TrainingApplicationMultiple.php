@@ -3,21 +3,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Training\Applications;
 use Nette\ComponentModel\IContainer;
 
 class TrainingApplicationMultiple extends ProtectedForm
 {
-
-	private Applications $trainingApplications;
-
 
 	/**
 	 * @param IContainer $parent
 	 * @param string $name
 	 * @param integer $count
 	 * @param string[] $statuses
-	 * @param Applications $trainingApplications
 	 * @param TrainingControlsFactory $trainingControlsFactory
 	 */
 	public function __construct(
@@ -25,11 +20,9 @@ class TrainingApplicationMultiple extends ProtectedForm
 		string $name,
 		int $count,
 		array $statuses,
-		Applications $trainingApplications,
 		TrainingControlsFactory $trainingControlsFactory
 	) {
 		parent::__construct($parent, $name);
-		$this->trainingApplications = $trainingApplications;
 
 		$applicationsContainer = $this->addContainer('applications');
 		for ($i = 0; $i < $count; $i++) {
