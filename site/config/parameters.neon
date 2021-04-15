@@ -64,3 +64,4 @@ parameters:
 		midi: none
 		payment: none
 		usb: none
+		interest-cohort: none
