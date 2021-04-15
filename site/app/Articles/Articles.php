@@ -36,6 +36,7 @@ class Articles
 	 * @param Texy $texyFormatter
 	 * @param LinkGenerator $linkGenerator
 	 * @param Post $blogPost
+	 * @param Tags $tags
 	 * @param Translator|NetteTranslator $translator
 	 */
 	public function __construct(

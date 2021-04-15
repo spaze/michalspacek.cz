@@ -9,13 +9,11 @@ use Nette\Utils\Html;
 class Edit
 {
 
-	/** @var DateTime */
-	public $editedAt;
+	public DateTime $editedAt;
 
 	/** @var Html<Html|string> */
-	public $summary;
+	public Html $summary;
 
-	/** @var string */
-	public $summaryTexy;
+	public string $summaryTexy;
 
 }
