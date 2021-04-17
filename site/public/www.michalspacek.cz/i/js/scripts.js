@@ -45,6 +45,11 @@ $(document).ready(function() {
 		});
 	};
 	$('#loadData a, #loadDataAgain a').on('click', APPLICATION.loadData);
+	$('#frm-application-companyId').on('keypress', function(e) {
+		if (e.which === 13) {
+			APPLICATION.loadData(e);
+		}
+	});
 	$('#loadDataDisabled').addClass('hidden');
 	APPLICATION.hideLoadControls();
 	APPLICATION.showLoadControls('#loadDataControls, #loadData');
