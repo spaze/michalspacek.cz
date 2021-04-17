@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use Nette\Utils\ArrayHash;
+use stdClass;
 
 class FormSpam
 {
 
-	public function isSpam(ArrayHash $values): bool
+	public function isSpam(stdClass $values): bool
 	{
 		if (preg_match('~\s+href="\s*https?://~', $values->note ?? '')) {
 			return true;

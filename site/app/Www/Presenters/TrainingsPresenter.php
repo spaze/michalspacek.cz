@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\CompanyInfo\Info;
-use MichalSpacekCz\Form\TrainingApplication;
+use MichalSpacekCz\Form\TrainingApplicationFactory;
 use MichalSpacekCz\Form\TrainingApplicationPreliminary;
 use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\Texy;
@@ -12,9 +12,7 @@ use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Files;
-use MichalSpacekCz\Training\FormSpam;
 use MichalSpacekCz\Training\Locales;
-use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\AbortException;
@@ -24,10 +22,6 @@ use Nette\Database\Row;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
-use OutOfBoundsException;
-use PDOException;
-use Tracy\Debugger;
-use UnexpectedValueException;
 
 class TrainingsPresenter extends BasePresenter
 {
@@ -35,8 +29,6 @@ class TrainingsPresenter extends BasePresenter
 	private Texy $texyFormatter;
 
 	private Applications $trainingApplications;
-
-	private Mails $trainingMails;
 
 	private Dates $trainingDates;
 
@@ -52,11 +44,11 @@ class TrainingsPresenter extends BasePresenter
 
 	private TrainingControlsFactory $trainingControlsFactory;
 
+	private TrainingApplicationFactory $trainingApplicationFactory;
+
 	private Info $companyInfo;
 
 	private IResponse $httpResponse;
-
-	private FormSpam $formSpam;
 
 	/** @var Row<mixed> */
 	private Row $training;
@@ -68,7 +60,6 @@ class TrainingsPresenter extends BasePresenter
 	public function __construct(
 		Texy $texyFormatter,
 		Applications $trainingApplications,
-		Mails $trainingMails,
 		Dates $trainingDates,
 		Files $trainingFiles,
 		Trainings $trainings,
@@ -76,13 +67,12 @@ class TrainingsPresenter extends BasePresenter
 		Locales $trainingLocales,
 		Reviews $trainingReviews,
 		TrainingControlsFactory $trainingControlsFactory,
+		TrainingApplicationFactory $trainingApplicationFactory,
 		Info $companyInfo,
-		IResponse $httpResponse,
-		FormSpam $formSpam
+		IResponse $httpResponse
 	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingApplications = $trainingApplications;
-		$this->trainingMails = $trainingMails;
 		$this->trainingDates = $trainingDates;
 		$this->trainingFiles = $trainingFiles;
 		$this->trainings = $trainings;
@@ -90,9 +80,9 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingLocales = $trainingLocales;
 		$this->trainingReviews = $trainingReviews;
 		$this->trainingControlsFactory = $trainingControlsFactory;
+		$this->trainingApplicationFactory = $trainingApplicationFactory;
 		$this->companyInfo = $companyInfo;
 		$this->httpResponse = $httpResponse;
-		$this->formSpam = $formSpam;
 		parent::__construct();
 	}
 
@@ -198,113 +188,25 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication(string $formName): TrainingApplication
+	protected function createComponentApplication(): Form
 	{
-		$form = new TrainingApplication($this, $formName, $this->dates, $this->translator, $this->trainingControlsFactory, $this->trainingDates);
-		$form->setApplicationFromSession($this->session->getSection('training'));
-		$form->onSuccess[] = [$this, 'submittedApplication'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
-	 */
-	public function submittedApplication(Form $form, ArrayHash $values): void
-	{
-		$session = $this->getSession('training');
-		/** @var string $name */
-		$name = $this->training->action;
-
-		try {
-			$this->checkSpam($values, $name);
-			$this->checkTrainingDate($values, $name);
-
-			$date = $this->dates[$values->trainingId];
-			if ($date->tentative) {
-				$this->trainingApplications->addInvitation(
-					$date,
-					$values->name,
-					$values->email,
-					$values->company,
-					$values->street,
-					$values->city,
-					$values->zip,
-					$values->country,
-					$values->companyId,
-					$values->companyTaxId,
-					$values->note
-				);
-			} else {
-				if (isset($session->application[$name]) && $session->application[$name]['dateId'] == $values->trainingId) {
-					$applicationId = $this->trainingApplications->updateApplication(
-						$date,
-						$session->application[$name]['id'],
-						$values->name,
-						$values->email,
-						$values->company,
-						$values->street,
-						$values->city,
-						$values->zip,
-						$values->country,
-						$values->companyId,
-						$values->companyTaxId,
-						$values->note
-					);
-					$session->application[$name] = null;
-				} else {
-					$applicationId = $this->trainingApplications->addApplication(
-						$date,
-						$values->name,
-						$values->email,
-						$values->company,
-						$values->street,
-						$values->city,
-						$values->zip,
-						$values->country,
-						$values->companyId,
-						$values->companyTaxId,
-						$values->note
-					);
-				}
+		return $this->trainingApplicationFactory->create(
+			function (string $name): void {
+				$this->redirect('success', $name);
+			},
+			function (string $message): void {
+				$this->flashMessage($this->translator->translate($message), 'error');
+			},
+			function (): Template {
 				/** @var Template $template */
 				$template = $this->createTemplate();
-				$this->trainingMails->sendSignUpMail(
-					$applicationId,
-					$template,
-					$values->email,
-					$values->name,
-					$date->start,
-					$date->end,
-					$name,
-					$this->training->name,
-					$date->remote,
-					$date->venueName,
-					$date->venueNameExtended,
-					$date->venueAddress,
-					$date->venueCity
-				);
-			}
-			$session->trainingId   = $values->trainingId;
-			$session->name         = $values->name;
-			$session->email        = $values->email;
-			$session->company      = $values->company;
-			$session->street       = $values->street;
-			$session->city         = $values->city;
-			$session->zip          = $values->zip;
-			$session->country      = $values->country;
-			$session->companyId    = $values->companyId;
-			$session->companyTaxId = $values->companyTaxId;
-			$session->note         = $values->note;
-			$this->redirect('success', $name);
-		} catch (UnexpectedValueException $e) {
-			Debugger::log($e);
-			$this->flashMessage($this->translator->translate('messages.trainings.spammyapplication'), 'error');
-		} catch (PDOException $e) {
-			Debugger::log($e, Debugger::ERROR);
-			$this->flashMessage($this->translator->translate('messages.trainings.errorapplication'), 'error');
-		}
+				return $template;
+			},
+			$this->training->action,
+			$this->training->name,
+			$this->dates,
+			$this->session->getSection('training'),
+		);
 	}
 
 
@@ -328,59 +230,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingApplications->addPreliminaryInvitation($this->training->trainingId, $values->name, $values->email);
 		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
 		$this->redirect('training#' . $this->translator->translate('html.id.application'), $this->training->action);
-	}
-
-
-	/**
-	 * @param ArrayHash<integer|string> $values
-	 * @param string $name
-	 */
-	private function checkTrainingDate(ArrayHash $values, string $name): void
-	{
-		if (!isset($this->dates[$values->trainingId])) {
-			$this->logData($values, $name);
-			$message = "Training date id {$values->trainingId} is not an upcoming training, should be one of " . implode(', ', array_keys($this->dates));
-			throw new OutOfBoundsException($message);
-		}
-	}
-
-
-	/**
-	 * @param ArrayHash<integer|string> $values
-	 * @param string $name
-	 */
-	private function checkSpam(ArrayHash $values, string $name): void
-	{
-		if ($this->formSpam->isSpam($values)) {
-			$this->logData($values, $name);
-			throw new UnexpectedValueException('Spammy note: ' . $values->note);
-		}
-	}
-
-
-	/**
-	 * @param ArrayHash<integer|string> $values
-	 * @param string $name
-	 */
-	private function logData(ArrayHash $values, string $name): void
-	{
-		$session = $this->getSession('training');
-		$logValues = $logSession = array();
-		if (isset($session->application[$name])) {
-			foreach ($session->application[$name] as $key => $value) {
-				$logSession[] = "{$key} => \"{$value}\"";
-			}
-		}
-		foreach ($values as $key => $value) {
-			$logValues[] = "{$key} => \"{$value}\"";
-		}
-		$message = sprintf(
-			'Application session data for %s: %s, form values: %s',
-			$name,
-			(empty($logSession) ? 'empty' : implode(', ', $logSession)),
-			implode(', ', $logValues)
-		);
-		Debugger::log($message);
 	}
 
 
@@ -469,7 +318,8 @@ class TrainingsPresenter extends BasePresenter
 		if (!$training || $training->discontinuedId) {
 			throw new BadRequestException("I don't do {$name} training");
 		}
-		$this->dates = $this->trainings->getDates($training->trainingId);
+		$this->training = $training;
+		$this->dates = $this->trainings->getDates($this->training->trainingId);
 		if (empty($this->dates)) {
 			throw new BadRequestException("No dates for {$name} training", IResponse::S503_SERVICE_UNAVAILABLE);
 		}
@@ -491,10 +341,10 @@ class TrainingsPresenter extends BasePresenter
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.confirmed'));
 		}
 
-		$this->template->name             = $training->action;
-		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingapplication', [$training->name]);
-		$this->template->title            = $training->name;
-		$this->template->description      = $training->description;
+		$this->template->name             = $this->training->action;
+		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingapplication', [$this->training->name]);
+		$this->template->title            = $this->training->name;
+		$this->template->description      = $this->training->description;
 		$this->template->lastFreeSeats    = false;
 		$this->template->start            = $date->start;
 		$this->template->end              = $date->end;
@@ -505,8 +355,8 @@ class TrainingsPresenter extends BasePresenter
 		unset($upcoming[$name]);
 		$this->template->upcomingTrainings = $upcoming;
 
-		$this->template->form = $this->createComponentApplication('application');
-		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);
+		$this->template->form = $this->createComponentApplication();
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);
 	}
 
 
