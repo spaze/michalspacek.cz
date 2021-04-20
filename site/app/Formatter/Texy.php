@@ -190,10 +190,10 @@ class Texy extends NetxtenTexy
 
 	/**
 	 * @param string $format
-	 * @param string[]|null $args
+	 * @param string[] $args
 	 * @return Html<Html|string>
 	 */
-	public function substitute(string $format, ?array $args): Html
+	public function substitute(string $format, array $args): Html
 	{
 		return $this->format(vsprintf($format, $args));
 	}
@@ -201,10 +201,10 @@ class Texy extends NetxtenTexy
 
 	/**
 	 * @param string $message
-	 * @param string[]|null $replacements
+	 * @param string[] $replacements
 	 * @return Html<Html|string>
 	 */
-	public function translate($message, ?array $replacements = null): Html
+	public function translate($message, array $replacements = []): Html
 	{
 		return $this->substitute($this->translator->translate($message), $replacements);
 	}
