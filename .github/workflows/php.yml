@@ -33,9 +33,7 @@ jobs:
       with:
         coverage: "none"
         php-version: "${{ matrix.php-version }}"
-
-    - name: Add missing PHP extensions
-      run: composer --working-dir=site add-missing-extensions-prod
+        extensions: intl
 
     - name: PHP info
       run: |

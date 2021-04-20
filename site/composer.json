@@ -76,7 +76,6 @@
 		"phpstan-vendor-prod": "vendor/phpstan/phpstan/phpstan --ansi analyse --no-progress --configuration phpstan-vendor.neon",
 		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage coverage.html --coverage-src app/ tests/",
 		"tester-prod": "vendor/nette/tester/src/tester -p php -C --colors 1 tests/",
-		"add-missing-extensions-prod": "apt-fast install -y --no-install-recommends php7.4-intl",
 		"test": [
 			"@lint",
 			"@phpcs",
