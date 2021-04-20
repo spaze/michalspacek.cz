@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '7d86872b94bf8155f34dbdfcfe0678c4b7f9b3e4',
+    'reference' => '18003f191175d48f1678543d0fb94c85aec5b0e3',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -246,12 +246,12 @@
     ),
     'paragonie/halite' => 
     array (
-      'pretty_version' => 'v4.7.1',
-      'version' => '4.7.1.0',
+      'pretty_version' => 'v4.8.0',
+      'version' => '4.8.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '538a0579e86ac8222973be55d17615a7be8f29cb',
+      'reference' => '7596d5cb25154092b524c34cb9ce2201db612ffc',
     ),
     'paragonie/hidden-string' => 
     array (
@@ -314,12 +314,12 @@
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.83',
-      'version' => '0.12.83.0',
+      'pretty_version' => '0.12.84',
+      'version' => '0.12.84.0',
       'aliases' => 
       array (
       ),
-      'reference' => '4a967cec6efb46b500dd6d768657336a3ffe699f',
+      'reference' => '9c43f15da8798c8f30a4b099e6a94530a558cfd5',
     ),
     'phpstan/phpstan-deprecation-rules' => 
     array (
@@ -347,16 +347,16 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '7cc7126a8a1c71197c85c04b147b24257393cd11',
+      'reference' => '593c4de369ca852cf3b86037f19435d47c136448',
     ),
     'slevomat/coding-standard' => 
     array (
-      'pretty_version' => '7.0.1',
-      'version' => '7.0.1.0',
+      'pretty_version' => '7.0.4',
+      'version' => '7.0.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '08580348e8bb68a36c8753d3db6ba816089129e6',
+      'reference' => '5a78b787e65c4420e7821692aaa781cdc93ab29d',
     ),
     'spaze/coding-standard' => 
     array (
@@ -401,7 +401,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '7d86872b94bf8155f34dbdfcfe0678c4b7f9b3e4',
+      'reference' => '18003f191175d48f1678543d0fb94c85aec5b0e3',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -486,12 +486,12 @@
     ),
     'symfony/deprecation-contracts' => 
     array (
-      'pretty_version' => 'v2.2.0',
-      'version' => '2.2.0.0',
+      'pretty_version' => 'v2.4.0',
+      'version' => '2.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '5fa56b4074d1ae755beb55617ddafe6f5d78f665',
+      'reference' => '5f38c8804a9e97d23e0c8d63341088cd8a22d627',
     ),
     'symfony/filesystem' => 
     array (
@@ -543,12 +543,12 @@
     ),
     'symfony/translation-contracts' => 
     array (
-      'pretty_version' => 'v2.3.0',
-      'version' => '2.3.0.0',
+      'pretty_version' => 'v2.4.0',
+      'version' => '2.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'e2eaa60b558f26a4b0354e1bbb25636efaaad105',
+      'reference' => '95c812666f3e91db75385749fe219c5e494c7f95',
     ),
     'symfony/translation-implementation' => 
     array (

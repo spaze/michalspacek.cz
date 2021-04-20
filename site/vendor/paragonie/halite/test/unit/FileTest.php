@@ -20,6 +20,9 @@ final class FileTest extends TestCase
     public function setUp(): void
     {
         chmod(__DIR__.'/tmp/', 0777);
+        if (!\extension_loaded('sodium')) {
+            $this->markTestSkipped('Libsodium not installed');
+        }
     }
 
     /**
