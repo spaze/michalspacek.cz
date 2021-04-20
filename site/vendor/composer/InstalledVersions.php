@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '18003f191175d48f1678543d0fb94c85aec5b0e3',
+    'reference' => 'a434471c3161e92ef88e034e885f1993a9fefb85',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -375,12 +375,12 @@ private static $installed = array (
     ),
     'slevomat/coding-standard' => 
     array (
-      'pretty_version' => '7.0.4',
-      'version' => '7.0.4.0',
+      'pretty_version' => '7.0.5',
+      'version' => '7.0.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => '5a78b787e65c4420e7821692aaa781cdc93ab29d',
+      'reference' => '35e0235aeeea6422d0caa2921c4e5e1411d8a379',
     ),
     'spaze/coding-standard' => 
     array (
@@ -425,7 +425,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '18003f191175d48f1678543d0fb94c85aec5b0e3',
+      'reference' => 'a434471c3161e92ef88e034e885f1993a9fefb85',
     ),
     'spaze/mysql-session-handler' => 
     array (
