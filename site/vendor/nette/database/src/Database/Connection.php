@@ -22,10 +22,10 @@ class Connection
 {
 	use Nette\SmartObject;
 
-	/** @var callable[]&(callable(Connection $connection): void)[]; Occurs after connection is established */
+	/** @var array<callable(self): void>  Occurs after connection is established */
 	public $onConnect = [];
 
-	/** @var callable[]&(callable(Connection $connection, ResultSet|DriverException $result): void)[]; Occurs after query is executed */
+	/** @var array<callable(self, ResultSet|DriverException): void>  Occurs after query is executed */
 	public $onQuery = [];
 
 	/** @var array */
@@ -45,6 +45,9 @@ class Connection
 
 	/** @var string|null */
 	private $sql;
+
+	/** @var int */
+	private $transactionDepth = 0;
 
 
 	public function __construct(string $dsn, string $user = null, string $password = null, array $options = null)
@@ -145,18 +148,30 @@ class Connection
 
 	public function beginTransaction(): void
 	{
+		if ($this->transactionDepth !== 0) {
+			throw new \LogicException(__METHOD__ . '() call is forbidden inside a transaction() callback');
+		}
+
 		$this->query('::beginTransaction');
 	}
 
 
 	public function commit(): void
 	{
+		if ($this->transactionDepth !== 0) {
+			throw new \LogicException(__METHOD__ . '() call is forbidden inside a transaction() callback');
+		}
+
 		$this->query('::commit');
 	}
 
 
 	public function rollBack(): void
 	{
+		if ($this->transactionDepth !== 0) {
+			throw new \LogicException(__METHOD__ . '() call is forbidden inside a transaction() callback');
+		}
+
 		$this->query('::rollBack');
 	}
 
@@ -166,14 +181,26 @@ class Connection
 	 */
 	public function transaction(callable $callback)
 	{
-		$this->beginTransaction();
+		if ($this->transactionDepth === 0) {
+			$this->beginTransaction();
+		}
+
+		$this->transactionDepth++;
 		try {
-			$res = $callback();
+			$res = $callback($this);
 		} catch (\Throwable $e) {
-			$this->rollBack();
+			$this->transactionDepth--;
+			if ($this->transactionDepth === 0) {
+				$this->rollback();
+			}
 			throw $e;
 		}
-		$this->commit();
+
+		$this->transactionDepth--;
+		if ($this->transactionDepth === 0) {
+			$this->commit();
+		}
+
 		return $res;
 	}
 

@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'a434471c3161e92ef88e034e885f1993a9fefb85',
+    'reference' => '20d7a7e7ef7ee039fce084cb85b33a71ed3fd503',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -111,12 +111,12 @@
     ),
     'nette/database' => 
     array (
-      'pretty_version' => 'v3.1.1',
-      'version' => '3.1.1.0',
+      'pretty_version' => 'v3.1.2',
+      'version' => '3.1.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '17bc9b2b5a5cd57ab089bc1a5982bc6c3b3790e3',
+      'reference' => '8caf46857ea50784734e0d53e4accf3833d236ff',
     ),
     'nette/di' => 
     array (
@@ -314,12 +314,12 @@
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.84',
-      'version' => '0.12.84.0',
+      'pretty_version' => '0.12.87',
+      'version' => '0.12.87.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9c43f15da8798c8f30a4b099e6a94530a558cfd5',
+      'reference' => 'd464e00776afb711f419faffa96826dc02e4d145',
     ),
     'phpstan/phpstan-deprecation-rules' => 
     array (
@@ -332,12 +332,12 @@
     ),
     'phpstan/phpstan-nette' => 
     array (
-      'pretty_version' => '0.12.17',
-      'version' => '0.12.17.0',
+      'pretty_version' => '0.12.18',
+      'version' => '0.12.18.0',
       'aliases' => 
       array (
       ),
-      'reference' => '4930ff18725dd27bf2e15bb2b6ac1ef581d53514',
+      'reference' => '9feb3cafff0f1d3bba38f0e8680085089deceb62',
     ),
     'roave/security-advisories' => 
     array (
@@ -347,16 +347,16 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '593c4de369ca852cf3b86037f19435d47c136448',
+      'reference' => '5ffdb87f627ff16cc392e30515a1fe069cddc3e2',
     ),
     'slevomat/coding-standard' => 
     array (
-      'pretty_version' => '7.0.5',
-      'version' => '7.0.5.0',
+      'pretty_version' => '7.0.8',
+      'version' => '7.0.8.0',
       'aliases' => 
       array (
       ),
-      'reference' => '35e0235aeeea6422d0caa2921c4e5e1411d8a379',
+      'reference' => '48141737f9e5ed701ef8bcea2027e701b50bd932',
     ),
     'spaze/coding-standard' => 
     array (
@@ -401,7 +401,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'a434471c3161e92ef88e034e885f1993a9fefb85',
+      'reference' => '20d7a7e7ef7ee039fce084cb85b33a71ed3fd503',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -477,12 +477,12 @@
     ),
     'symfony/config' => 
     array (
-      'pretty_version' => 'v5.2.4',
-      'version' => '5.2.4.0',
+      'pretty_version' => 'v5.2.8',
+      'version' => '5.2.8.0',
       'aliases' => 
       array (
       ),
-      'reference' => '212d54675bf203ff8aef7d8cee8eecfb72f4a263',
+      'reference' => '8dfa5f8adea9cd5155920069224beb04f11d6b7e',
     ),
     'symfony/deprecation-contracts' => 
     array (
@@ -495,12 +495,12 @@
     ),
     'symfony/filesystem' => 
     array (
-      'pretty_version' => 'v5.2.6',
-      'version' => '5.2.6.0',
+      'pretty_version' => 'v5.2.7',
+      'version' => '5.2.7.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8c86a82f51658188119e62cff0a050a12d09836f',
+      'reference' => '056e92acc21d977c37e6ea8e97374b2a6c8551b0',
     ),
     'symfony/polyfill-ctype' => 
     array (
@@ -534,12 +534,12 @@
     ),
     'symfony/translation' => 
     array (
-      'pretty_version' => 'v5.2.6',
-      'version' => '5.2.6.0',
+      'pretty_version' => 'v5.2.8',
+      'version' => '5.2.8.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2cc7f45d96db9adfcf89adf4401d9dfed509f4e1',
+      'reference' => '445caa74a5986f1cc9dd91a2975ef68fa7cb2068',
     ),
     'symfony/translation-contracts' => 
     array (
@@ -568,12 +568,12 @@
     ),
     'tracy/tracy' => 
     array (
-      'pretty_version' => 'v2.8.3',
-      'version' => '2.8.3.0',
+      'pretty_version' => 'v2.8.4',
+      'version' => '2.8.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '342674bbf72365e8456de9855a8cd839ca695933',
+      'reference' => 'cb7d3dcd9469aa2aa6722edf6bee2d5d75188079',
     ),
   ),
 );
