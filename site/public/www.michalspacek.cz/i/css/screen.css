@@ -319,11 +319,12 @@ div.notice {
 	border: 1px solid #DDF;
 }
 .label {
-	color: #222;
+	color: #0A0746;
 	background-color: #EBEAFD;
 	padding: 4px;
 	margin: 4px;
-	border-radius: 3px;
+	border-radius: 6px;
+	border: 1px solid #C5D0ED;
 	white-space: nowrap;
 }
 .changed { background-color: #F2F2FF; }

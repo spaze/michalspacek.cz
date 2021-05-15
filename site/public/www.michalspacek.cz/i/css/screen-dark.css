@@ -50,8 +50,9 @@ tr.dateLine td, li.dateLine { border-top-color: #2B2B2B; }
 	border-top-color: #333;
 }
 .label {
-	color: #B9CEA4;
-	background-color: #1B3D29;
+	color: #A1BD84;
+	background-color: #0B1911;
+	border-color: #4D6336;
 }
 .changed { background-color: #1E2D42; }
 code, pre, .highlight pre code { background-color: #2D2F2B; }
