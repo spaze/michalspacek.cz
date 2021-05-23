@@ -41,7 +41,6 @@ class Ares implements CompanyDataInterface
 				throw new RuntimeException('Company Id is empty');
 			}
 			$content = $this->fetch($companyId);
-			libxml_disable_entity_loader();
 			$xml = simplexml_load_string($content);
 			if (!$xml) {
 				throw new RuntimeException("Can't parse XML received for company {$companyId}");

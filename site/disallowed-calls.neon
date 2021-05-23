@@ -2,6 +2,10 @@ parameters:
 	disallowedFunctionCalls:
 		-
 			function: 'pcntl_*()'
+	disallowedConstants:
+		-
+			constant: 'LIBXML_NOENT'
+			message: 'libxml_disable_entity_loader() has been deprecated in PHP 8.0, no longer needed to protect against XXE attacks, unless the (still vulnerable) LIBXML_NOENT is used https://www.php.net/migration80.deprecated#migration80.deprecated.libxml'
 
 includes:
 	- vendor/spaze/phpstan-disallowed-calls/extension.neon
