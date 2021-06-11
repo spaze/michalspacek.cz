@@ -361,6 +361,11 @@ div.notice {
 #frm-mails input[type=number], #frm-mails input[type=file] { font-size: 55%; }
 #frm-mails input[type=number] { width: 60px; }
 #frm-mails input[type=file] { width: 280px; }
+#frm-mails input[type=checkbox][title]:after {
+	content: "❗";
+	margin-left: 1.1em;
+	line-height: 0;
+}
 #frm-passwordsStorages #frm-passwordsStorages-algo-from { width: 200px; }
 #pubkey {
 	background-color: #F7F7FF;

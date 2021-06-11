@@ -61,24 +61,46 @@ class TrainingMailsOutboxFactory
 			$applicationIdsContainer = $applicationsContainer->addContainer($application->id);
 			$checked = true;
 			$disabled = false;
+			$sendCheckboxTitle = [];
 			switch ($application->nextStatus) {
 				case Statuses::STATUS_INVITED:
 					$checked = isset($application->dateId);
 					$disabled = !$checked;
+					if (!isset($application->dateId)) {
+						$sendCheckboxTitle['dateId'] = 'Není vybrán datum';
+					}
 					break;
 				case Statuses::STATUS_MATERIALS_SENT:
 					$checked = (bool)$application->files;
 					$disabled = !$checked;
+					if (!$application->files) {
+						$sendCheckboxTitle['files'] = 'Není nahrán žádný soubor';
+					}
 					break;
 				case Statuses::STATUS_INVOICE_SENT:
 				case Statuses::STATUS_INVOICE_SENT_AFTER:
 					$checked = ($application->price && $application->vatRate && $application->priceVat);
 					$disabled = !$checked;
+					if (!$application->price) {
+						$sendCheckboxTitle['price'] = 'Chybí cena';
+					}
+					if (!$application->vatRate) {
+						$sendCheckboxTitle['vatRate'] = 'Chybí DPH';
+					}
+					if (!$application->priceVat) {
+						$sendCheckboxTitle['priceVat'] = 'Chybí cena s DPH';
+					}
 					break;
 				case Statuses::STATUS_REMINDED:
 					if ($application->remote) {
 						$checked = (bool)$application->files && (bool)$application->remoteUrl;
 						$disabled = !$checked;
+						if (!$application->files) {
+							$sendCheckboxTitle['files'] = 'Není nahrán žádný soubor';
+						}
+						if (!$application->remoteUrl) {
+							$sendCheckboxTitle['remoteUrl'] = 'Chybí online URL';
+						}
 					}
 					break;
 			}
@@ -86,6 +108,9 @@ class TrainingMailsOutboxFactory
 				->setDefaultValue($checked)
 				->setDisabled($disabled)
 				->setHtmlAttribute('class', 'send');
+			if ($sendCheckboxTitle) {
+				$send->setHtmlAttribute('title', implode("\n", $sendCheckboxTitle));
+			}
 			$applicationIdsContainer->addTextArea('additional')
 				->setHtmlAttribute('placeholder', 'Dodatečný text')
 				->setHtmlAttribute('cols', 80)

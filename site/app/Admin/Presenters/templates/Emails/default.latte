@@ -44,17 +44,13 @@
 			</td>
 			<td><small><code><span title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</span> → {$application->nextStatus}</code></small></td>
 			<td>
-				{if $application->nextStatus === \MichalSpacekCz\Training\Statuses::STATUS_MATERIALS_SENT || (isset($application->remote) && $application->remote && $application->nextStatus === \MichalSpacekCz\Training\Statuses::STATUS_REMINDED)}
-					<strong n:if="!$application->files" class="error">Není nahrán žádný soubor!</strong>
-				{elseif in_array($application->nextStatus, [\MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT, \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER])}
+				{if in_array($application->nextStatus, [\MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT, \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER])}
 					{if $application->price && $application->vatRate && $application->priceVat}
 						{input invoiceId}
 						{input invoice}
 						<span title="Cena v Kč bez DPH po případné slevě">{$application->priceWithCurrency}</span>
 						<small title="Cena v Kč s DPH po případné slevě">{$application->priceVatWithCurrency}</small>
 						<small n:if="$application->discount" title="Sleva {$application->discount} %"><strong>{$application->discount} %</strong></small>
-					{else}
-						<strong class="error">Není zadána cena, DPH nebo cena s DPH!</strong>
 					{/if}
 				{/if}
 			</td>
