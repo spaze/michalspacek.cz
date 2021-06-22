@@ -447,6 +447,7 @@ return array(
     'Nette\\Utils\\Strings' => $vendorDir . '/nette/utils/src/Utils/Strings.php',
     'Nette\\Utils\\UnknownImageFileException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\Utils\\Validators' => $vendorDir . '/nette/utils/src/Utils/Validators.php',
+    'ReturnTypeWillChange' => $vendorDir . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
     'Spaze\\Session\\DI\\MysqlSessionHandlerExtension' => $vendorDir . '/spaze/mysql-session-handler/src/DI/MysqlSessionHandlerExtension.php',
     'Spaze\\Session\\MysqlSessionHandler' => $vendorDir . '/spaze/mysql-session-handler/src/MysqlSessionHandler.php',
     'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
