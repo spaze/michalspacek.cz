@@ -10,11 +10,12 @@ parameters:
 			- vendor/paragonie/hidden-string/test/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
 			- vendor/nette/forms/src/compatibility.php  # throws `Class 'Nette\Forms\SubmitterControl' not found` for some reason
 			- vendor/symfony/translation-contracts/Test/*  # Symfony packages not installed
-			- vendor/symfony/translation/Command/XliffLintCommand.php
+			- vendor/symfony/translation/Command/*Command.php
 			- vendor/symfony/translation/DataCollector/TranslationDataCollector.php
 			- vendor/symfony/translation/DataCollectorTranslator.php
 			- vendor/symfony/translation/DependencyInjection/*Pass.php
 			- vendor/symfony/translation/Loader/YamlFileLoader.php
+			- vendor/symfony/translation/Test/*
 			- vendor/texy/texy/examples/*/demo-*.php  # kukulich/fshl not installed
 			- vendor/tracy/tracy/examples/*.php  # dump, bdump examples
 			- vendor/tracy/tracy/src/Bridges/Psr/*  # psr/log not installed, Psr\Log\LogLevel constants missing intentionally
