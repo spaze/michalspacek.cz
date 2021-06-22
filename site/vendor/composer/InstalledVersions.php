@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '09650ebd6a3c1e669d6ef81c32a93163ee5e3c46',
+    'reference' => 'd1db4dcdf57f155d5f883ab8ee3bca21ca8f732b',
     'name' => 'spaze/michalspacek.cz',
   ),
   'versions' => 
@@ -425,7 +425,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '09650ebd6a3c1e669d6ef81c32a93163ee5e3c46',
+      'reference' => 'd1db4dcdf57f155d5f883ab8ee3bca21ca8f732b',
     ),
     'spaze/mysql-session-handler' => 
     array (
@@ -549,12 +549,10 @@ private static $installed = array (
     ),
     'symfony/polyfill-php80' => 
     array (
-      'pretty_version' => 'v1.23.0',
-      'version' => '1.23.0.0',
-      'aliases' => 
+      'replaced' => 
       array (
+        0 => '*',
       ),
-      'reference' => 'eca0bf41ed421bed1b57c4958bab16aa86b757d0',
     ),
     'symfony/polyfill-php81' => 
     array (
