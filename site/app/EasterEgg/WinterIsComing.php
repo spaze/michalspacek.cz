@@ -22,6 +22,7 @@ class WinterIsComing
 
 	/** @var array<integer, string> */
 	private array $hosts = [
+		'burpcollaborator.net',
 		'ssemarketing.net',
 	];
 
@@ -36,7 +37,7 @@ class WinterIsComing
 		return function (TextInput $input) {
 			if (
 				Arrays::contains($this->emails, $input->getValue())
-				|| Strings::match($input->getValue(), '/@' . implode('|', array_map('preg_quote', $this->hosts)) . '$/')
+				|| Strings::match($input->getValue(), '/@(' . implode('|', array_map('preg_quote', $this->hosts)) . ')$/')
 			) {
 				$this->sendSyntaxError($input);
 			}
