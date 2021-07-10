@@ -2,25 +2,21 @@
 
 namespace Contributte\Translation;
 
-use Contributte;
-use Nette;
+use Nette\Localization\ITranslator;
 
-/**
- * @property-read Contributte\Translation\Translator $translator
- * @property-read string $prefix
- */
-class PrefixedTranslator implements Nette\Localization\ITranslator
+class PrefixedTranslator implements ITranslator
 {
 
-	use Nette\SmartObject;
-
-	/** @var Contributte\Translation\Translator */
+	/** @var \Contributte\Translation\Translator */
 	private $translator;
 
 	/** @var string */
 	private $prefix;
 
-	public function __construct(Translator $translator, string $prefix)
+	public function __construct(
+		Translator $translator,
+		string $prefix
+	)
 	{
 		$this->translator = $translator;
 		$this->prefix = $prefix;
@@ -40,7 +36,10 @@ class PrefixedTranslator implements Nette\Localization\ITranslator
 	 * @param mixed $message
 	 * @param mixed ...$parameters
 	 */
-	public function translate($message, ...$parameters): string
+	public function translate(
+		$message,
+		...$parameters
+	): string
 	{
 		$this->translator->addPrefix($this->prefix);
 		$message = $this->translator->translate($message, ...$parameters);

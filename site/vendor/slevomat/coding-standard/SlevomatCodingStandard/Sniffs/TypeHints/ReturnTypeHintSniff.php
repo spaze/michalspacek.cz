@@ -164,7 +164,9 @@ class ReturnTypeHintSniff implements Sniff
 
 		$hasReturnAnnotation = $this->hasReturnAnnotation($returnAnnotation);
 		$returnTypeNode = $this->getReturnTypeNode($returnAnnotation);
-		$isAnnotationReturnTypeVoid = $returnTypeNode instanceof IdentifierTypeNode && strtolower($returnTypeNode->name) === 'void';
+		$isAnnotationReturnTypeVoid = $returnTypeNode instanceof IdentifierTypeNode && TypeHintHelper::isVoidTypeHint(
+			strtolower($returnTypeNode->name)
+		);
 		$isAbstract = FunctionHelper::isAbstract($phpcsFile, $functionPointer);
 		$returnsValue = $isAbstract
 			? ($hasReturnAnnotation && !$isAnnotationReturnTypeVoid)
@@ -219,6 +221,18 @@ class ReturnTypeHintSniff implements Sniff
 				$phpcsFile->fixer->endChangeset();
 			}
 
+			return;
+		}
+
+		if ($returnsValue && $isAnnotationReturnTypeVoid) {
+			$message = sprintf(
+				'%s %s() does not have native return type hint for its return value but it should be possible to add it based on @return annotation "%s".',
+				FunctionHelper::getTypeLabel($phpcsFile, $functionPointer),
+				FunctionHelper::getFullyQualifiedName($phpcsFile, $functionPointer),
+				AnnotationTypeHelper::export($returnTypeNode)
+			);
+
+			$phpcsFile->addError($message, $functionPointer, self::getSniffName(self::CODE_MISSING_NATIVE_TYPE_HINT));
 			return;
 		}
 
@@ -341,7 +355,7 @@ class ReturnTypeHintSniff implements Sniff
 				return;
 			}
 
-			$typeHintsWithConvertedUnion[$typeHintNo] = $typeHint === 'void'
+			$typeHintsWithConvertedUnion[$typeHintNo] = TypeHintHelper::isVoidTypeHint($typeHint)
 				? 'null'
 				: TypeHintHelper::convertLongSimpleTypeHintToShort($typeHint);
 		}

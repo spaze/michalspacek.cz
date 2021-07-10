@@ -2,18 +2,27 @@
 
 namespace Contributte\Translation\Latte;
 
-use Contributte;
-use Latte;
+use Contributte\Translation\Helpers;
+use Latte\CompileException;
+use Latte\Compiler;
+use Latte\Engine;
+use Latte\MacroNode;
+use Latte\Macros\MacroSet;
+use Latte\PhpWriter;
 
-class Macros extends Latte\Macros\MacroSet
+class Macros extends MacroSet
 {
 
-	final public function __construct(Latte\Compiler $compiler)
+	final public function __construct(
+		Compiler $compiler
+	)
 	{
 		parent::__construct($compiler);
 	}
 
-	public static function install(Latte\Compiler $compiler): void
+	public static function install(
+		Compiler $compiler
+	): void
 	{
 		$me = new static($compiler);
 
@@ -24,9 +33,12 @@ class Macros extends Latte\Macros\MacroSet
 	/**
 	 * {_ ...}
 	 *
-	 * @throws Latte\CompileException
+	 * @throws \Latte\CompileException
 	 */
-	public function macroTranslate(Latte\MacroNode $node, Latte\PhpWriter $writer): string
+	public function macroTranslate(
+		MacroNode $node,
+		PhpWriter $writer
+	): string
 	{
 		if ($node->closing) {
 			if (strpos($node->content, '<?php') === false) {
@@ -38,23 +50,25 @@ class Macros extends Latte\Macros\MacroSet
 				$value = 'ob_get_clean()';
 			}
 
-			if (!defined(Latte\Engine::class . '::VERSION_ID') || Latte\Engine::VERSION_ID < 20900) {
-				return $writer->write('$_fi = new LR\FilterInfo(%var); echo %modifyContent($this->filters->filterContent("translate", $_fi, %raw))', $node->context[0], $value);
+			if (!defined(Engine::class . '::VERSION_ID') || Engine::VERSION_ID < 20900) {
+				$latteProp = '$_fi';
+			} elseif (Engine::VERSION_ID >= 20900 && Engine::VERSION_ID < 20902) {
+				$latteProp = '$__fi';
+			} else {
+				$latteProp = '$ʟ_fi';
 			}
 
-			if (Latte\Engine::VERSION_ID >= 20900 && Latte\Engine::VERSION_ID < 20902) {
-				return $writer->write('$__fi = new LR\FilterInfo(%var); echo %modifyContent($this->filters->filterContent("translate", $__fi, %raw))', $node->context[0], $value);
-			}
-
-			return $writer->write('$ʟ_fi = new LR\FilterInfo(%var); echo %modifyContent($this->filters->filterContent("translate", $ʟ_fi, %raw))', $node->context[0], $value);
+			return $writer->write($latteProp . ' = new LR\FilterInfo(%var); echo %modifyContent($this->filters->filterContent("translate", ' . $latteProp . ', %raw))', $node->context[0], $value);
 		}
 
 		if ($node->empty = ($node->args !== '')) {
-			if (Contributte\Translation\Helpers::macroWithoutParameters($node)) {
-				return $writer->write('echo %modify(call_user_func($this->filters->translate, %node.word))');
+			$prefix = '$message = isset($prefix) ? implode(".", $prefix) . "." : "";';
+
+			if (Helpers::macroWithoutParameters($node)) {
+				return $writer->write($prefix . 'echo %modify(call_user_func($this->filters->translate, $message . %node.word))');
 			}
 
-			return $writer->write('echo %modify(call_user_func($this->filters->translate, %node.word, %node.args))');
+			return $writer->write($prefix . 'echo %modify(call_user_func($this->filters->translate, $message . %node.word, %node.args))');
 		}
 
 		return '';
@@ -63,23 +77,36 @@ class Macros extends Latte\Macros\MacroSet
 	/**
 	 * {translate ...}
 	 *
-	 * @throws Latte\CompileException
+	 * @throws \Latte\CompileException
 	 */
-	public function macroPrefix(Latte\MacroNode $node, Latte\PhpWriter $writer): string
+	public function macroPrefix(
+		MacroNode $node,
+		PhpWriter $writer
+	): string
 	{
 		if ($node->closing) {
 			if ($node->content !== null && $node->content !== '') {
-				return $writer->write('$this->global->translator->prefix = $this->global->translator->prefixTemp;');
+				return $writer->write('$prefix = array_pop($tempPrefix);');
 			}
 
 			return '';
 		}
 
 		if ($node->args === '') {
-			throw new Latte\CompileException('Expected message prefix, none given.');
+			throw new CompileException('Expected message prefix, none given.');
 		}
 
-		return $writer->write('$this->global->translator->prefix = [%node.word];');
+		return $writer->write('
+			if (!isset($tempPrefix)) {
+				$tempPrefix = [];
+			}
+
+			if (isset($prefix)) {
+				$tempPrefix[] = $prefix;
+			}
+
+			$prefix = [%node.word];
+		');
 	}
 
 }
