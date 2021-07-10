@@ -2,32 +2,32 @@
 
 namespace Contributte\Translation;
 
-use Nette;
+use Nette\Utils\Strings;
 
-/**
- * @property      array $fallbackLocales
- */
 class FallbackResolver
 {
 
-	use Nette\SmartObject;
-
-	/** @var string[] */
+	/** @var array<string> */
 	private $fallbackLocales = [];
 
 	/**
-	 * @param string[] $array
+	 * @param array<string> $array
 	 */
-	public function setFallbackLocales(array $array): self
+	public function setFallbackLocales(
+		array $array
+	): self
 	{
 		$this->fallbackLocales = $array;
 		return $this;
 	}
 
 	/**
-	 * @return string[]
+	 * @return array<string>
 	 */
-	public function compute(Translator $translator, string $locale): array
+	public function compute(
+		Translator $translator,
+		string $locale
+	): array
 	{
 		$locales = [];
 
@@ -40,15 +40,22 @@ class FallbackResolver
 		}
 
 		if (strrchr($locale, '_') !== false) {
-			array_unshift($locales, Nette\Utils\Strings::substring($locale, 0, -Nette\Utils\Strings::length(strrchr($locale, '_'))));
+			array_unshift(
+				$locales,
+				Strings::substring(
+					$locale,
+					0,
+					-Strings::length(strrchr($locale, '_'))
+				)
+			);
 		}
 
-		foreach ($translator->availableLocales as $v1) {
+		foreach ($translator->getAvailableLocales() as $v1) {
 			if ($v1 === $locale) {
 				continue;
 			}
 
-			if (Nette\Utils\Strings::substring($v1, 0, 2) === Nette\Utils\Strings::substring($locale, 0, 2)) {
+			if (Strings::substring($v1, 0, 2) === Strings::substring($locale, 0, 2)) {
 				array_unshift($locales, $v1);
 				break;
 			}

@@ -18,7 +18,7 @@
 		"ext-mbstring": "*",
 		"ext-pdo": "*",
 		"ext-simplexml": "*",
-		"contributte/translation": "^0.8",
+		"contributte/translation": "^0.9.0",
 		"latte/latte": "~2.3",
 		"nette/application": "~3.0",
 		"nette/bootstrap": "~3.0",

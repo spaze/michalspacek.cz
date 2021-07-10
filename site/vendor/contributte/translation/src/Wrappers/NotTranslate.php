@@ -2,33 +2,17 @@
 
 namespace Contributte\Translation\Wrappers;
 
-use Nette;
-
-/**
- * @property     string $message
- */
 class NotTranslate
 {
 
-	use Nette\SmartObject;
-
 	/** @var string */
-	private $message;
+	public $message;
 
-	public function __construct(string $message)
+	public function __construct(
+		string $message
+	)
 	{
 		$this->message = $message;
-	}
-
-	public function getMessage(): string
-	{
-		return $this->message;
-	}
-
-	public function setMessage(string $string): self
-	{
-		$this->message = $string;
-		return $this;
 	}
 
 }

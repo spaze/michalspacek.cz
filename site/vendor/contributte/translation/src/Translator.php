@@ -2,35 +2,23 @@
 
 namespace Contributte\Translation;
 
-use Contributte;
-use Nette;
-use Psr;
-use Symfony;
+use Contributte\Translation\Exceptions\InvalidArgument;
+use Contributte\Translation\Tracy\Panel;
+use Contributte\Translation\Wrappers\Message;
+use Contributte\Translation\Wrappers\NotTranslate;
+use Nette\Localization\ITranslator;
+use Nette\Utils\Strings;
+use Nette\Utils\Validators;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
-/**
- * @property-read Contributte\Translation\LocaleResolver $localeResolver
- * @property-read Contributte\Translation\FallbackResolver $fallbackResolver
- * @property-read string $defaultLocale
- * @property-read string|null $cacheDir
- * @property-read bool $debug
- * @property      string[]|null $localesWhitelist
- * @property      string[] $prefix
- * @property-read string[][] $prefixTemp
- * @property-read string $formattedPrefix
- * @property-read string[] $availableLocales
- * @property      string|null $locale
- * @property      Psr\Log\LoggerInterface|null $psrLogger
- * @property      Contributte\Translation\Tracy\Panel|null $tracyPanel
- */
-class Translator extends Symfony\Component\Translation\Translator implements Nette\Localization\ITranslator
+class Translator extends SymfonyTranslator implements ITranslator
 {
 
-	use Nette\SmartObject;
-
-	/** @var Contributte\Translation\LocaleResolver */
+	/** @var \Contributte\Translation\LocaleResolver */
 	private $localeResolver;
 
-	/** @var Contributte\Translation\FallbackResolver */
+	/** @var \Contributte\Translation\FallbackResolver */
 	private $fallbackResolver;
 
 	/** @var string */
@@ -42,28 +30,38 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	/** @var bool */
 	private $debug;
 
-	/** @var string[]|null */
+	/** @var bool */
+	public $returnOriginalMessage = true;
+
+	/** @var array<string>|null */
 	private $localesWhitelist;
 
-	/** @var string[] */
+	/** @var array<string> */
 	private $prefix = [];
 
-	/** @var string[][] @internal */
+	/** @var array<array<string>> */
 	private $prefixTemp = [];
 
-	/** @var bool[] @internal */
+	/** @var array<bool> */
 	private $resourcesLocales = [];
 
-	/** @var Psr\Log\LoggerInterface|null */
+	/** @var \Psr\Log\LoggerInterface|null */
 	private $psrLogger;
 
-	/** @var Contributte\Translation\Tracy\Panel|null */
+	/** @var \Contributte\Translation\Tracy\Panel|null */
 	private $tracyPanel;
 
 	/**
-	 * @param string[] $cacheVary
+	 * @param array<string> $cacheVary
 	 */
-	public function __construct(LocaleResolver $localeResolver, FallbackResolver $fallbackResolver, string $defaultLocale, ?string $cacheDir = null, bool $debug = false, array $cacheVary = [])
+	public function __construct(
+		LocaleResolver $localeResolver,
+		FallbackResolver $fallbackResolver,
+		string $defaultLocale,
+		?string $cacheDir = null,
+		bool $debug = false,
+		array $cacheVary = []
+	)
 	{
 		$this->localeResolver = $localeResolver;
 		$this->fallbackResolver = $fallbackResolver;
@@ -101,7 +99,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	}
 
 	/**
-	 * @return string[]|null
+	 * @return array<string>|null
 	 */
 	public function getLocalesWhitelist(): ?array
 	{
@@ -109,16 +107,18 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	}
 
 	/**
-	 * @param string[]|null $whitelist
+	 * @param array<string>|null $whitelist
 	 */
-	public function setLocalesWhitelist(?array $whitelist): self
+	public function setLocalesWhitelist(
+		?array $whitelist
+	): self
 	{
 		$this->localesWhitelist = $whitelist;
 		return $this;
 	}
 
 	/**
-	 * @return string[]
+	 * @return array<string>
 	 */
 	public function getPrefix(): array
 	{
@@ -126,9 +126,11 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	}
 
 	/**
-	 * @param string[] $array
+	 * @param array<string> $array
 	 */
-	public function setPrefix(array $array): self
+	public function setPrefix(
+		array $array
+	): self
 	{
 		$this->prefixTemp[] = $this->prefix;
 		$this->prefix = $array;
@@ -136,7 +138,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	}
 
 	/**
-	 * @return string[]
+	 * @return array<string>
 	 * @internal
 	 */
 	public function getPrefixTemp(): array
@@ -146,28 +148,32 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 		return $temp !== false ? $temp : [];
 	}
 
-	public function addPrefix(string $string): self
+	public function addPrefix(
+		string $string
+	): self
 	{
 		$this->prefix[] = $string;
 		return $this;
 	}
 
 	/**
-	 * @throws Contributte\Translation\Exceptions\InvalidArgument
+	 * @throws \Contributte\Translation\Exceptions\InvalidArgument
 	 */
-	public function removePrefix(?string $string = null): self
+	public function removePrefix(
+		?string $string = null
+	): self
 	{
 		if ($string === null) {
 			$value = array_pop($this->prefix);
 
 			if ($value === null) {
-				throw new Exceptions\InvalidArgument('Can not remove empty prefix.');
+				throw new InvalidArgument('Can not remove empty prefix.');
 			}
 		} else {
 			$key = array_search($string, array_reverse($this->prefix), true);
 
 			if ($key === false) {
-				throw new Exceptions\InvalidArgument('Unknown "' . $string . '" prefix.');
+				throw new InvalidArgument('Unknown "' . $string . '" prefix.');
 			}
 
 			unset($this->prefix[$key]);
@@ -181,13 +187,15 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 		return implode('.', $this->prefix);
 	}
 
-	public function createPrefixedTranslator(string $prefix): PrefixedTranslator
+	public function createPrefixedTranslator(
+		string $prefix
+	): PrefixedTranslator
 	{
 		return new PrefixedTranslator($this, $prefix);
 	}
 
 	/**
-	 * @return string[]
+	 * @return array<string>
 	 */
 	public function getAvailableLocales(): array
 	{
@@ -201,10 +209,13 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	 * @param mixed $resource
 	 * @param string $locale
 	 * @param string|null $domain
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint
 	 */
-	public function addResource($format, $resource, $locale, $domain = null)
+	public function addResource(
+		$format,
+		$resource,
+		$locale,
+		$domain = null
+	)
 	{
 		parent::addResource($format, $resource, $locale, $domain);
 		$this->resourcesLocales[$locale] = true;
@@ -225,37 +236,35 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	/**
 	 * {@inheritdoc}
 	 */
-	public function setLocale($locale)
-	{
-		parent::setLocale($locale);
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function setFallbackLocales(array $locales)
+	public function setFallbackLocales(
+		array $locales
+	)
 	{
 		parent::setFallbackLocales($locales);
 		$this->fallbackResolver->setFallbackLocales($locales);
 	}
 
-	public function getPsrLogger(): ?Psr\Log\LoggerInterface
+	public function getPsrLogger(): ?LoggerInterface
 	{
 		return $this->psrLogger;
 	}
 
-	public function setPsrLogger(?Psr\Log\LoggerInterface $psrLogger): self
+	public function setPsrLogger(
+		?LoggerInterface $psrLogger
+	): self
 	{
 		$this->psrLogger = $psrLogger;
 		return $this;
 	}
 
-	public function getTracyPanel(): ?Tracy\Panel
+	public function getTracyPanel(): ?Panel
 	{
 		return $this->tracyPanel;
 	}
 
-	public function setTracyPanel(?Tracy\Panel $tracyPanel): self
+	public function setTracyPanel(
+		?Panel $tracyPanel
+	): self
 	{
 		$this->tracyPanel = $tracyPanel;
 		return $this;
@@ -265,17 +274,20 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	 * @param mixed $message
 	 * @param mixed ...$parameters
 	 */
-	public function translate($message, ...$parameters): string
+	public function translate(
+		$message,
+		...$parameters
+	): string
 	{
 		if ($message === null || $message === '') {
 			return '';
 		}
 
-		if ($message instanceof Wrappers\NotTranslate) {
+		if ($message instanceof NotTranslate) {
 			return $message->message;
 		}
 
-		if ($message instanceof Wrappers\Message) {
+		if ($message instanceof Message) {
 			$parameters = $message->parameters;
 			$message = $message->message;
 
@@ -284,7 +296,7 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 		}
 
 		if (!is_string($message)) {
-			throw new Exceptions\InvalidArgument('Message must be string, ' . gettype($message) . ' given.');
+			throw new InvalidArgument('Message must be string, ' . gettype($message) . ' given.');
 		}
 
 		$count = array_key_exists(0, $parameters) ? $parameters[0] : null;
@@ -299,8 +311,10 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 			$count = null;
 		}
 
-		if (Nette\Utils\Strings::startsWith($message, '//')) {
-			$message = Nette\Utils\Strings::substring($message, 2);
+		$originalMessage = $message;
+
+		if (Strings::startsWith($message, '//')) {
+			$message = Strings::substring($message, 2);
 
 		} elseif (count($this->prefix) > 0) {
 			$message = $this->getFormattedPrefix() . '.' . $message;
@@ -317,23 +331,34 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 
 		$params = $tmp;
 
-		if (Nette\Utils\Validators::isNumeric($count)) {
+		if (Validators::isNumeric($count)) {
 			$params += ['%count%' => $count];
 		}
 
-		return $this->trans($message, $params, $domain, $locale);
+		$translated = $this->trans($message, $params, $domain, $locale);
+
+		if ($this->returnOriginalMessage) {
+			if ($domain . '.' . $translated === $originalMessage) {
+				return $originalMessage;
+			}
+		}
+
+		return $translated;
 	}
 
 	/**
 	 * @param string|null $id
-	 * @param mixed[] $parameters
+	 * @param array<mixed> $parameters
 	 * @param string|null $domain
 	 * @param string|null $locale
 	 * @return string
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint
 	 */
-	public function trans($id, array $parameters = [], $domain = null, $locale = null)
+	public function trans(
+		$id,
+		array $parameters = [],
+		$domain = null,
+		$locale = null
+	)
 	{
 		if ($domain === null) {
 			$domain = 'messages';
@@ -363,7 +388,9 @@ class Translator extends Symfony\Component\Translation\Translator implements Net
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function computeFallbackLocales($locale)
+	protected function computeFallbackLocales(
+		$locale
+	)
 	{
 		return $this->fallbackResolver->compute($this, $locale);
 	}
