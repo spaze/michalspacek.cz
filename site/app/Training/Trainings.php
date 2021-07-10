@@ -339,12 +339,12 @@ class Trainings
 		foreach ($result as $row) {
 			/** @var integer $id */
 			$id = $row->id;
-			$trainings[$id]['description'] = $row->description;
-			$trainings[$id]['href'] = $row->href;
+			$trainings[$id]['description'] = (string)$row->description;
+			$trainings[$id]['href'] = (string)$row->href;
 			if (!isset($trainings[$id]['trainings'])) {
 				$trainings[$id]['trainings'] = [];
 			}
-			$trainings[$id]['trainings'][] = $row->training;
+			$trainings[$id]['trainings'][] = (string)$row->training;
 		}
 		return $trainings;
 	}
