@@ -136,7 +136,7 @@ contact:
 	skypename: spazef0rze
 	billingaddress: "České Vrbné 2315, České Budějovice 37011"
 	vatpayer: plátce DPH
-	encryptedmessages: "Pro zabezpečenou komunikaci používám \"Signal\":[%s], vyjímečně mi můžete \"zašifrovanou zprávu e-mailem\":[%s]."
+	encryptedmessages: "Pro zabezpečenou komunikaci používám \"Signal\":[%s], výjimečně mi můžete \"zašifrovanou zprávu e-mailem\":[%s]."
 pgp:
 	mypgpkey: Můj PGP klíč
 	newmessage: Nová zpráva
