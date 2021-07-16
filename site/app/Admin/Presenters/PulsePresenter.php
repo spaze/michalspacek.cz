@@ -77,7 +77,7 @@ class PulsePresenter extends BasePresenter
 			if ($values->site->id === Sites::ALL && !empty($specificSites)) {
 				$form->addError('Invalid combination, can\'t add disclosure for all sites when sites already exist');
 			}
-			if ($values->site->id !== null && $values->site->id !== Sites::ALL && !$storages->hasSite($values->site->id)) {
+			if ($values->site->id !== null && $values->site->id !== Sites::ALL && !$storages->hasSite((string)$values->site->id)) {
 				$form->addError('Invalid combination, the site is already assigned to different company');
 			}
 		} elseif ($this->companies->getByName($values->company->new->name)) {
