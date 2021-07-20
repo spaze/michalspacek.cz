@@ -27,6 +27,9 @@ class WinterIsComingTest extends TestCase
 	/** @var callable */
 	private $ruleEmail;
 
+	/** @var callable */
+	private $ruleStreet;
+
 	/** @var stdClass */
 	private $resultObject;
 
@@ -52,7 +55,9 @@ class WinterIsComingTest extends TestCase
 
 		};
 		$this->form = new Form($this->presenter, 'leForm');
-		$this->ruleEmail = (new WinterIsComing())->ruleEmail();
+		$winterIsComing = new WinterIsComing();
+		$this->ruleEmail = $winterIsComing->ruleEmail();
+		$this->ruleStreet = $winterIsComing->ruleStreet();
 	}
 
 
@@ -80,6 +85,32 @@ class WinterIsComingTest extends TestCase
 	{
 		($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('kuddelmuddel@fussemarketing.net'));
 		Assert::hasNotKey('response', (array)$this->resultObject);
+	}
+
+
+	public function getRuleStreetStreets(): array
+	{
+		return [
+			['34 Watts road', false],
+			['34 Watts Road', true],
+			['34 Watts', true],
+			['35 Watts road', true],
+		];
+	}
+
+
+	/**
+	 * @dataProvider getRuleStreetStreets
+	 */
+	public function testRuleStreet(string $name, bool $isNice): void
+	{
+		$result = ($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
+		if ($isNice) {
+			Assert::true($result);
+			Assert::hasNotKey('response', (array)$this->resultObject);
+		} else {
+			$this->assertResponse();
+		}
 	}
 
 
