@@ -18,11 +18,10 @@ require __DIR__ . '/../bootstrap.php';
 /** @testCase */
 class WinterIsComingTest extends TestCase
 {
-	/** @var Presenter */
-	private $presenter;
 
-	/** @var Form */
-	private $form;
+	private Presenter $presenter;
+
+	private Form $form;
 
 	/** @var callable */
 	private $ruleEmail;
@@ -30,8 +29,7 @@ class WinterIsComingTest extends TestCase
 	/** @var callable */
 	private $ruleStreet;
 
-	/** @var stdClass */
-	private $resultObject;
+	private stdClass $resultObject;
 
 
 	protected function setUp()
