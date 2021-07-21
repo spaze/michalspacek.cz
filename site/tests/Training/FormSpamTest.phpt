@@ -75,6 +75,18 @@ class FormSpamTest extends TestCase
 			],
 			[
 				[
+					'name' => 'zggnbijhah',
+				],
+				false,
+				'Application session data for ' . self::FORM_NAME . ': empty, form values: name => "zggnbijhah"',
+			],
+			[
+				[],
+				false,
+				'Application session data for ' . self::FORM_NAME . ': empty, form values: empty',
+			],
+			[
+				[
 					'name' => 'foo bar',
 				],
 				true,

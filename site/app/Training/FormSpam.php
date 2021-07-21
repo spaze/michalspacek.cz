@@ -10,6 +10,10 @@ use UnexpectedValueException;
 class FormSpam
 {
 
+	/**
+	 * Must be lowercase string, we need `ctype_lower()` to return true in case the field is missing.
+	 */
+	private const FIELD_MISSING_VALUE = 'missing';
 
 	private FormDataLogger $formDataLogger;
 
@@ -20,7 +24,7 @@ class FormSpam
 	}
 
 
-	public function check(stdClass $values, string $name, SessionSection $sessionSection): void
+	public function check(stdClass $values, string $name, ?SessionSection $sessionSection = null): void
 	{
 		if ($this->isSpam($values)) {
 			$this->formDataLogger->log($values, $name, $sessionSection);
@@ -34,10 +38,10 @@ class FormSpam
 		if (preg_match('~\s+href="\s*https?://~', $values->note ?? '')) {
 			return true;
 		} elseif (
-			ctype_lower($values->name ?? '')
-			&& ctype_lower($values->company ?? '')
-			&& ctype_lower($values->companyId ?? '')
-			&& ctype_lower($values->companyTaxId ?? '')
+			ctype_lower($values->name ?? self::FIELD_MISSING_VALUE)
+			&& ctype_lower($values->company ?? self::FIELD_MISSING_VALUE)
+			&& ctype_lower($values->companyId ?? self::FIELD_MISSING_VALUE)
+			&& ctype_lower($values->companyTaxId ?? self::FIELD_MISSING_VALUE)
 		) {
 			return true;
 		}

@@ -214,11 +214,15 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}");
 		}
 		return $this->trainingApplicationPreliminaryFactory->create(
-			function (): void {
+			function (string $action): void {
 				$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
-				$this->redirect('training#' . $this->translator->translate('html.id.application'), $this->training->action);
+				$this->redirect('training#' . $this->translator->translate('html.id.application'), $action);
+			},
+			function (string $message): void {
+				$this->flashMessage($this->translator->translate($message), 'error');
 			},
 			$this->training->trainingId,
+			$this->training->action,
 		);
 	}
 

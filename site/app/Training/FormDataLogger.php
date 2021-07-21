@@ -10,7 +10,7 @@ use Tracy\Debugger;
 class FormDataLogger
 {
 
-	public function log(stdClass $values, string $name, SessionSection $sessionSection): void
+	public function log(stdClass $values, string $name, ?SessionSection $sessionSection): void
 	{
 		$logValues = $logSession = [];
 		if (isset($sessionSection->application[$name])) {
@@ -24,8 +24,8 @@ class FormDataLogger
 		$message = sprintf(
 			'Application session data for %s: %s, form values: %s',
 			$name,
-			(empty($logSession) ? 'empty' : implode(', ', $logSession)),
-			implode(', ', $logValues)
+			($sessionSection === null ? 'undefined' : ($logSession === [] ? 'empty' : implode(', ', $logSession))),
+			($logValues === [] ? 'empty' : implode(', ', $logValues))
 		);
 		Debugger::log($message);
 	}
