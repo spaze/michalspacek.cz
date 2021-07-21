@@ -123,6 +123,7 @@ services:
 	phpInfo: Spaze\PhpInfo\PhpInfo
 	netteCve202015227: MichalSpacekCz\EasterEgg\NetteCve202015227
 	formSpam: MichalSpacekCz\Training\FormSpam
+	formDataLogger: MichalSpacekCz\Training\FormDataLogger
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
