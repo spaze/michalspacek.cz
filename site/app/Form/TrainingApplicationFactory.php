@@ -5,6 +5,8 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
+use MichalSpacekCz\Training\FormDataLogger;
 use MichalSpacekCz\Training\FormSpam;
 use MichalSpacekCz\Training\Mails;
 use Nette\Application\UI\Form;
@@ -19,7 +21,6 @@ use OutOfBoundsException;
 use PDOException;
 use stdClass;
 use Tracy\Debugger;
-use UnexpectedValueException;
 
 class TrainingApplicationFactory
 {
@@ -28,6 +29,7 @@ class TrainingApplicationFactory
 	private Translator $translator;
 	private Dates $trainingDates;
 	private TrainingControlsFactory $trainingControlsFactory;
+	private FormDataLogger $formDataLogger;
 	private FormSpam $formSpam;
 	private Applications $trainingApplications;
 	private Mails $trainingMails;
@@ -38,6 +40,7 @@ class TrainingApplicationFactory
 		Translator $translator,
 		TrainingControlsFactory $trainingControlsFactory,
 		Dates $trainingDates,
+		FormDataLogger $formDataLogger,
 		FormSpam $formSpam,
 		Applications $trainingApplications,
 		Mails $trainingMails
@@ -46,6 +49,7 @@ class TrainingApplicationFactory
 		$this->translator = $translator;
 		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->trainingDates = $trainingDates;
+		$this->formDataLogger = $formDataLogger;
 		$this->formSpam = $formSpam;
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingMails = $trainingMails;
@@ -112,7 +116,7 @@ class TrainingApplicationFactory
 
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError, $createTemplate, $action, $name, $dates, $sessionSection): void {
 			try {
-				$this->checkSpam($values, $action, $sessionSection);
+				$this->formSpam->check($values, $action, $sessionSection);
 				$this->checkTrainingDate($values, $action, $dates, $sessionSection);
 
 				$date = $dates[$values->trainingId];
@@ -190,7 +194,7 @@ class TrainingApplicationFactory
 				$sessionSection->companyTaxId = $values->companyTaxId;
 				$sessionSection->note = $values->note;
 				$onSuccess($action);
-			} catch (UnexpectedValueException $e) {
+			} catch (SpammyApplicationException $e) {
 				Debugger::log($e);
 				$onError('messages.trainings.spammyapplication');
 			} catch (PDOException $e) {
@@ -244,40 +248,10 @@ class TrainingApplicationFactory
 	private function checkTrainingDate(stdClass $values, string $name, array $dates, SessionSection $sessionSection): void
 	{
 		if (!isset($dates[$values->trainingId])) {
-			$this->logData($values, $name, $sessionSection);
+			$this->formDataLogger->log($values, $name, $sessionSection);
 			$message = "Training date id {$values->trainingId} is not an upcoming training, should be one of " . implode(', ', array_keys($dates));
 			throw new OutOfBoundsException($message);
 		}
-	}
-
-
-	private function checkSpam(stdClass $values, string $name, SessionSection $sessionSection): void
-	{
-		if ($this->formSpam->isSpam($values)) {
-			$this->logData($values, $name, $sessionSection);
-			throw new UnexpectedValueException('Spammy note: ' . $values->note);
-		}
-	}
-
-
-	private function logData(stdClass $values, string $name, SessionSection $sessionSection): void
-	{
-		$logValues = $logSession = array();
-		if (isset($sessionSection->application[$name])) {
-			foreach ($sessionSection->application[$name] as $key => $value) {
-				$logSession[] = "{$key} => \"{$value}\"";
-			}
-		}
-		foreach ((array)$values as $key => $value) {
-			$logValues[] = "{$key} => \"{$value}\"";
-		}
-		$message = sprintf(
-			'Application session data for %s: %s, form values: %s',
-			$name,
-			(empty($logSession) ? 'empty' : implode(', ', $logSession)),
-			implode(', ', $logValues)
-		);
-		Debugger::log($message);
 	}
 
 }

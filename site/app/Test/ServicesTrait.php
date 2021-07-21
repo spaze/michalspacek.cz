@@ -20,6 +20,7 @@ use Nette\Database\Structure as DatabaseStructure;
 use Nette\Http\UrlScript;
 use Spaze\ContentSecurityPolicy\Config as CspConfig;
 use Spaze\NonceGenerator\Generator as NonceGenerator;
+use Tracy\Debugger;
 
 trait ServicesTrait
 {
@@ -189,6 +190,17 @@ trait ServicesTrait
 		static $service;
 		if (!$service) {
 			$service = new Theme($this->getHttpRequest(), $this->getHttpResponse());
+		}
+		return $service;
+	}
+
+
+	public function getLogger(): NullLogger
+	{
+		static $service;
+		if (!$service) {
+			$service = new NullLogger();
+			Debugger::setLogger($service);
 		}
 		return $service;
 	}

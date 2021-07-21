@@ -5,8 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\CompanyInfo\Info;
 use MichalSpacekCz\Form\TrainingApplicationFactory;
-use MichalSpacekCz\Form\TrainingApplicationPreliminary;
-use MichalSpacekCz\Form\TrainingControlsFactory;
+use MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
@@ -21,7 +20,6 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
-use Nette\Utils\ArrayHash;
 
 class TrainingsPresenter extends BasePresenter
 {
@@ -42,9 +40,9 @@ class TrainingsPresenter extends BasePresenter
 
 	private Reviews $trainingReviews;
 
-	private TrainingControlsFactory $trainingControlsFactory;
-
 	private TrainingApplicationFactory $trainingApplicationFactory;
+
+	private TrainingApplicationPreliminaryFactory $trainingApplicationPreliminaryFactory;
 
 	private Info $companyInfo;
 
@@ -66,8 +64,8 @@ class TrainingsPresenter extends BasePresenter
 		CompanyTrainings $companyTrainings,
 		Locales $trainingLocales,
 		Reviews $trainingReviews,
-		TrainingControlsFactory $trainingControlsFactory,
 		TrainingApplicationFactory $trainingApplicationFactory,
+		TrainingApplicationPreliminaryFactory $trainingApplicationPreliminaryFactory,
 		Info $companyInfo,
 		IResponse $httpResponse
 	) {
@@ -79,8 +77,8 @@ class TrainingsPresenter extends BasePresenter
 		$this->companyTrainings = $companyTrainings;
 		$this->trainingLocales = $trainingLocales;
 		$this->trainingReviews = $trainingReviews;
-		$this->trainingControlsFactory = $trainingControlsFactory;
 		$this->trainingApplicationFactory = $trainingApplicationFactory;
+		$this->trainingApplicationPreliminaryFactory = $trainingApplicationPreliminaryFactory;
 		$this->companyInfo = $companyInfo;
 		$this->httpResponse = $httpResponse;
 		parent::__construct();
@@ -210,26 +208,22 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplicationPreliminary(string $formName): TrainingApplicationPreliminary
+	protected function createComponentApplicationPreliminary(string $formName): Form
 	{
 		if ($this->training->discontinuedId) {
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}");
 		}
-		$form = new TrainingApplicationPreliminary($this, $formName, $this->trainingControlsFactory);
-		$form->onSuccess[] = [$this, 'submittedApplicationPreliminary'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
-	 */
-	public function submittedApplicationPreliminary(Form $form, ArrayHash $values): void
-	{
-		$this->trainingApplications->addPreliminaryInvitation($this->training->trainingId, $values->name, $values->email);
-		$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
-		$this->redirect('training#' . $this->translator->translate('html.id.application'), $this->training->action);
+		return $this->trainingApplicationPreliminaryFactory->create(
+			function (string $action): void {
+				$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
+				$this->redirect('training#' . $this->translator->translate('html.id.application'), $action);
+			},
+			function (string $message): void {
+				$this->flashMessage($this->translator->translate($message), 'error');
+			},
+			$this->training->trainingId,
+			$this->training->action,
+		);
 	}
 
 
