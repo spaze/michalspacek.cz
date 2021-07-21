@@ -132,4 +132,5 @@ services:
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFactory
 	- MichalSpacekCz\Form\TrainingApplicationFactory
+	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFactory
