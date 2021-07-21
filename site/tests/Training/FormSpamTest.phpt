@@ -8,12 +8,12 @@ use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\ServicesTrait;
+use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\ArrayHash;
 use Tester\Assert;
 use Tester\TestCase;
-use UnexpectedValueException;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -108,7 +108,7 @@ class FormSpamTest extends TestCase
 			Assert::noError($check);
 			Assert::null($this->nullLogger->getLogged());
 		} else {
-			Assert::throws($check, UnexpectedValueException::class);
+			Assert::throws($check, SpammyApplicationException::class);
 			Assert::same($logged, $this->nullLogger->getLogged());
 		}
 	}

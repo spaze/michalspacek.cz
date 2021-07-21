@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\FormDataLogger;
 use MichalSpacekCz\Training\FormSpam;
 use MichalSpacekCz\Training\Mails;
@@ -20,7 +21,6 @@ use OutOfBoundsException;
 use PDOException;
 use stdClass;
 use Tracy\Debugger;
-use UnexpectedValueException;
 
 class TrainingApplicationFactory
 {
@@ -194,7 +194,7 @@ class TrainingApplicationFactory
 				$sessionSection->companyTaxId = $values->companyTaxId;
 				$sessionSection->note = $values->note;
 				$onSuccess($action);
-			} catch (UnexpectedValueException $e) {
+			} catch (SpammyApplicationException $e) {
 				Debugger::log($e);
 				$onError('messages.trainings.spammyapplication');
 			} catch (PDOException $e) {

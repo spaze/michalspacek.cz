@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use Nette\Http\SessionSection;
 use stdClass;
-use UnexpectedValueException;
 
 class FormSpam
 {
@@ -28,7 +28,7 @@ class FormSpam
 	{
 		if ($this->isSpam($values)) {
 			$this->formDataLogger->log($values, $name, $sessionSection);
-			throw new UnexpectedValueException('Spammy application');
+			throw new SpammyApplicationException();
 		}
 	}
 

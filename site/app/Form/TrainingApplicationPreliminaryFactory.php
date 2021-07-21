@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\FormSpam;
 use Nette\Application\UI\Form;
 use stdClass;
 use Tracy\Debugger;
-use UnexpectedValueException;
 
 class TrainingApplicationPreliminaryFactory
 {
@@ -38,7 +38,7 @@ class TrainingApplicationPreliminaryFactory
 				$this->formSpam->check($values, $action);
 				$this->trainingApplications->addPreliminaryInvitation($trainingId, $values->name, $values->email);
 				$onSuccess($action);
-			} catch (UnexpectedValueException $e) {
+			} catch (SpammyApplicationException $e) {
 				Debugger::log($e);
 				$onError('messages.trainings.spammyapplication');
 			}
