@@ -50,7 +50,7 @@ includes:
 `disallowed-dangerous-calls.neon` can also serve as a template when you'd like to extend the configuration to disallow some other functions or methods, copy it and modify to your needs.
 You can also allow a previously disallowed dangerous call in a defined path (see below) in your own config by using the same `call` or `method` key.
 
-If you want to disable program execution functions (`exec()`, `shell_exec()` & friends), include `disallowed-execution-calls.neon`:
+If you want to disallow program execution functions (`exec()`, `shell_exec()` & friends) including the backtick operator (`` `...` ``, disallowed when `shell_exec()` is disallowed), include `disallowed-execution-calls.neon`:
 
 ```neon
 includes:
@@ -133,9 +133,11 @@ The wildcard makes most sense when used as the rightmost character of the functi
 
 You can treat some language constructs as functions and disallow it in `disallowedFunctionCalls`. Currently detected language constructs are:
 - `die()`
+- `echo()`
 - `empty()`
 - `eval()`
 - `exit()`
+- `print()`
 
 To disallow naive object creation (`new ClassName()` or `new $classname`), disallow `NameSpace\ClassName::__construct` in `disallowedMethodCalls`. Works even when there's no constructor defined in that class.
 
@@ -222,6 +224,56 @@ When using `allowParamsInAllowed`, calls will be allowed only when they are in o
 With `allowParamsAnywhere`, calls are allowed when called with all parameters listed no matter in which file. In the example above, the `log()` method will be disallowed unless called as:
 - `log(..., true)` anywhere
 - `log('foo', true)` in `another/file.php` or `optional/path/to/log.tests.php`
+
+Use `allowParamsInAllowedAnyValue` and `allowParamsAnywhereAnyValue` if you don't care about the parameter's value but want to make sure the parameter is passed.
+Following the previous example:
+
+```neon
+parameters:
+    disallowedMethodCalls:
+        -
+            method: 'PotentiallyDangerous\Logger::log()'
+            message: 'use our own logger instead'
+            allowIn:
+                - path/to/some/file-*.php
+                - tests/*.test.php
+            allowParamsInAllowedAnyValue:
+                - 2
+            allowParamsAnywhereAnyValue:
+                - 1
+```
+means that you should use (`...` means any value):
+- `log(...)` anywhere
+- `log(..., ...)` in `another/file.php` or `optional/path/to/log.tests.php`
+
+Such configuration only makes sense when both the parameters of `log()` are optional. If they are required, omitting them would result in an error already detected by PHPStan itself.
+
+## Allow calls except when a param has a specified value
+
+Sometimes, it's handy to disallow a function or a method call only when a parameter matches but allow it otherwise. For example the `hash()` function, it's fine using it with algorithm families like SHA-2 & SHA-3 (not for passwords though) but you'd like PHPStan to report when it's used with MD5 like `hash('md5', ...)`.
+You can use `allowExceptParams` & `allowExceptCaseInsensitiveParams` config options to disallow only some calls:
+
+```neon
+parameters:
+    disallowedFunctionCalls:
+        -
+            function: 'hash()'
+            allowExceptCaseInsensitiveParams:
+            	1: 'md5'
+```
+
+This will disallow `hash()` call where the first parameter is `'md5'`. `allowExceptCaseInsensitiveParams` is used because the first parameter of `hash()` is case-insensitive (so you can also use `'MD5'`, or even `'Md5'` & `'mD5'` if you wish).
+To disallow only exact matches, use `allowExceptParams`:
+
+```neon
+parameters:
+    disallowedFunctionCalls:
+        -
+            function: 'foo()'
+            allowExceptParams:
+            	2: 'baz'
+```
+will disallow `foo('bar', 'baz')` but not `foo('bar', 'BAZ')`.
 
 ## Detect disallowed calls without any other PHPStan rules
 
