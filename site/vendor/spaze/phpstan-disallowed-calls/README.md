@@ -65,6 +65,20 @@ includes:
     - vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
 ```
 
+To disallow some insecure or potentially insecure calls (like `md5()`, `sha1()`, `mysql_query()`), include `disallowed-insecure-calls.neon`:
+
+```neon
+includes:
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
+```
+
+Some function calls are better when done for example with some parameters set to a defined value ("strict calls"). For example `in_array()` better also check for types to prevent some type juggling bugs. Include `disallowed-loose-calls.neon` to disallow calls without such parameters set ("loose calls").
+
+```neon
+includes:
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-loose-calls.neon
+```
+
 ### Custom rules
 
 There are several different types (and configuration keys) that can be disallowed:
@@ -201,6 +215,20 @@ parameters:
 
 The paths in `allowIn` are relative to the config file location and support [fnmatch()](https://www.php.net/function.fnmatch) patterns.
 
+To allow a previously disallowed method or function only when called from a different method or function in any file, use `allowInFunctions` (or `allowInMethods` alias):
+
+```neon
+parameters:
+    disallowedMethodCalls:
+        -
+            method: 'PotentiallyDangerous\Logger::log()'
+            message: 'use our own logger instead'
+            allowInMethods:
+                - Foo\Bar\Baz::method()
+```
+
+The function or method names support [fnmatch()](https://www.php.net/function.fnmatch) patterns.
+
 You can also narrow down the allowed items when called with some parameters (doesn't apply to constants for obvious reasons). For example, you want to disallow calling `print_r()` but want to allow `print_r(..., true)`.
 This can be done with optional `allowParamsInAllowed` or `allowParamsAnywhere` configuration keys:
 
@@ -251,7 +279,7 @@ Such configuration only makes sense when both the parameters of `log()` are opti
 ## Allow calls except when a param has a specified value
 
 Sometimes, it's handy to disallow a function or a method call only when a parameter matches but allow it otherwise. For example the `hash()` function, it's fine using it with algorithm families like SHA-2 & SHA-3 (not for passwords though) but you'd like PHPStan to report when it's used with MD5 like `hash('md5', ...)`.
-You can use `allowExceptParams` & `allowExceptCaseInsensitiveParams` config options to disallow only some calls:
+You can use `allowExceptParams`, `allowExceptCaseInsensitiveParams`, `allowExceptParamsInAllowed` config options to disallow only some calls:
 
 ```neon
 parameters:
@@ -274,6 +302,23 @@ parameters:
             	2: 'baz'
 ```
 will disallow `foo('bar', 'baz')` but not `foo('bar', 'BAZ')`.
+
+It's also possible to disallow functions and methods previously allowed by path (using `allowIn`) or by function/method name (`allowInMethods`) when they're called with specified parameters, and allow when called with any other parameter. This is done using the `allowExceptParamsInAllowed` config option.
+
+Take this example configuration:
+
+```neon
+parameters:
+    disallowedFunctionCalls:
+        -
+            function: 'waldo()'
+            allowIn:
+                - 'views/*'
+            allowExceptParamsInAllowed:
+                2: 'quux'
+```
+
+Calling `waldo()` is disallowed, and allowed back again only when the file is in the `views/` subdirectory **and** `waldo()` is called in the file with a 2nd parameter being the string `quux`.
 
 ## Detect disallowed calls without any other PHPStan rules
 

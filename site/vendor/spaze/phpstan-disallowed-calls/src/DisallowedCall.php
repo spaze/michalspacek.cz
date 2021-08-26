@@ -17,11 +17,17 @@ class DisallowedCall
 	/** @var string[] */
 	private $allowIn;
 
+	/** @var string[] */
+	private $allowInCalls;
+
 	/** @var array<integer, DisallowedCallParam> */
 	private $allowParamsInAllowed;
 
 	/** @var array<integer, DisallowedCallParam> */
 	private $allowParamsAnywhere;
+
+	/** @var array<integer, DisallowedCallParam> */
+	private $allowExceptParamsInAllowed;
 
 	/** @var array<integer, DisallowedCallParam> */
 	private $allowExceptParams;
@@ -33,18 +39,21 @@ class DisallowedCall
 	 * @param string $call
 	 * @param string|null $message
 	 * @param string[] $allowIn
+	 * @param string[] $allowInCalls
 	 * @param array<integer, DisallowedCallParam> $allowParamsInAllowed
 	 * @param array<integer, DisallowedCallParam> $allowParamsAnywhere
+	 * @param array<integer, DisallowedCallParam> $allowExceptParamsInAllowed
 	 * @param array<integer, DisallowedCallParam> $allowExceptParams
 	 */
-	public function __construct(string $call, ?string $message, array $allowIn, array $allowParamsInAllowed, array $allowParamsAnywhere, array $allowExceptParams)
+	public function __construct(string $call, ?string $message, array $allowIn, array $allowInCalls, array $allowParamsInAllowed, array $allowParamsAnywhere, array $allowExceptParamsInAllowed, array $allowExceptParams)
 	{
-		$call = substr($call, -2) === '()' ? substr($call, 0, -2) : $call;
-		$this->call = ltrim($call, '\\');
+		$this->call = $call;
 		$this->message = $message;
 		$this->allowIn = $allowIn;
+		$this->allowInCalls = $allowInCalls;
 		$this->allowParamsInAllowed = $allowParamsInAllowed;
 		$this->allowParamsAnywhere = $allowParamsAnywhere;
+		$this->allowExceptParamsInAllowed = $allowExceptParamsInAllowed;
 		$this->allowExceptParams = $allowExceptParams;
 	}
 
@@ -71,6 +80,15 @@ class DisallowedCall
 
 
 	/**
+	 * @return string[]
+	 */
+	public function getAllowInCalls(): array
+	{
+		return $this->allowInCalls;
+	}
+
+
+	/**
 	 * @return array<integer, DisallowedCallParam>
 	 */
 	public function getAllowParamsInAllowed(): array
@@ -91,6 +109,15 @@ class DisallowedCall
 	/**
 	 * @return array<integer, DisallowedCallParam>
 	 */
+	public function getAllowExceptParamsInAllowed(): array
+	{
+		return $this->allowExceptParamsInAllowed;
+	}
+
+
+	/**
+	 * @return array<integer, DisallowedCallParam>
+	 */
 	public function getAllowExceptParams(): array
 	{
 		return $this->allowExceptParams;
@@ -100,7 +127,7 @@ class DisallowedCall
 	public function getKey(): string
 	{
 		// The key consists of "initial" config values that would be overwritten with more specific details in a custom config.
-		// `allowIn` & `allowParams*` aren't included because these are set by the user in their config, not in the bundled files.
+		// `allowIn` & `allowParams*` & few others aren't included because these are set by the user in their config, not in the bundled files.
 		return serialize([$this->getCall(), $this->getAllowExceptParams()]);
 	}
 

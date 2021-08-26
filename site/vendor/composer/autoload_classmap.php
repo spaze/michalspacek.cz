@@ -19,6 +19,7 @@ return array(
     'JakubOnderka\\PhpParallelLint\\ErrorFormatter' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/ErrorFormatter.php',
     'JakubOnderka\\PhpParallelLint\\Exception' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/exceptions.php',
     'JakubOnderka\\PhpParallelLint\\FileWriter' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Output.php',
+    'JakubOnderka\\PhpParallelLint\\GitLabOutput' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Output.php',
     'JakubOnderka\\PhpParallelLint\\IWriter' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Output.php',
     'JakubOnderka\\PhpParallelLint\\InvalidArgumentException' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/exceptions.php',
     'JakubOnderka\\PhpParallelLint\\JsonOutput' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Output.php',

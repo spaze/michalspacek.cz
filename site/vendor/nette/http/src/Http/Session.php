@@ -93,9 +93,13 @@ class Session
 
 		try {
 			// session_start returns false on failure only sometimes
-			Nette\Utils\Callback::invokeSafe('session_start', [['read_and_close' => $this->readAndClose]], function (string $message) use (&$e): void {
-				$e = new Nette\InvalidStateException($message);
-			});
+			Nette\Utils\Callback::invokeSafe(
+				'session_start',
+				[['read_and_close' => $this->readAndClose]],
+				function (string $message) use (&$e): void {
+					$e = new Nette\InvalidStateException($message);
+				}
+			);
 		} catch (\Throwable $e) {
 		}
 
@@ -176,7 +180,7 @@ class Session
 	 */
 	public function destroy(): void
 	{
-		if (!session_status() === PHP_SESSION_ACTIVE) {
+		if (session_status() !== PHP_SESSION_ACTIVE) {
 			throw new Nette\InvalidStateException('Session is not started.');
 		}
 
@@ -325,7 +329,7 @@ class Session
 	public function setOptions(array $options)
 	{
 		$normalized = [];
-		$allowed = ini_get_all('session', false) + ['read_and_close' => 1, 'session.cookie_samesite' => 1]; // for PHP < 7.3
+		$allowed = ini_get_all('session', false) + ['session.read_and_close' => 1, 'session.cookie_samesite' => 1]; // for PHP < 7.3
 
 		foreach ($options as $key => $value) {
 			if (!strncmp($key, 'session.', 8)) { // back compatibility
