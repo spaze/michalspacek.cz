@@ -8,7 +8,6 @@ use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Forms\Form;
 use Nette\Security\AuthenticationException;
-use Nette\Security\UserStorage;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
@@ -20,13 +19,10 @@ class SignPresenter extends BasePresenter
 
 	private Manager $authenticator;
 
-	private UserStorage $userStorage;
 
-
-	public function __construct(Manager $authenticator, UserStorage $userStorage)
+	public function __construct(Manager $authenticator)
 	{
 		$this->authenticator = $authenticator;
-		$this->userStorage = $userStorage;
 		parent::__construct();
 	}
 
@@ -79,7 +75,7 @@ class SignPresenter extends BasePresenter
 	 */
 	public function submittedSignIn(Form $form, ArrayHash $values): void
 	{
-		$this->userStorage->setExpiration('30 minutes', true);
+		$this->user->setExpiration('30 minutes', true);
 		try {
 			$this->user->login($values->username, $values->password);
 			Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');

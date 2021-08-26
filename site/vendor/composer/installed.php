@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'e9938601e78a906c15d98a4f9bcd9d73f1b9d2c6',
+        'reference' => '40ceef0ec0991539a945893e4f4d8f9499a1b9ce',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'e9938601e78a906c15d98a4f9bcd9d73f1b9d2c6',
+            'reference' => '40ceef0ec0991539a945893e4f4d8f9499a1b9ce',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(

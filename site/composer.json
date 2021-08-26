@@ -22,7 +22,7 @@
 		"nette/http": "^3.0.5",
 		"nette/mail": "~3.0",
 		"nette/robot-loader": "^3.0",
-		"nette/security": "~3.0",
+		"nette/security": "~3.1.4",
 		"nette/utils": "~3.0",
 		"paragonie/halite": "^4",
 		"spaze/csp-config": "~2.0",
