@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '40ceef0ec0991539a945893e4f4d8f9499a1b9ce',
+        'reference' => '0038bf3ee47a01ee905bbc196f4cbdb1fd433fd3',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -113,12 +113,12 @@
             'dev_requirement' => false,
         ),
         'nette/di' => array(
-            'pretty_version' => 'v3.0.8',
-            'version' => '3.0.8.0',
+            'pretty_version' => 'v3.0.9',
+            'version' => '3.0.9.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/di',
             'aliases' => array(),
-            'reference' => '1a3210f0f1f971db8a6e970c716c1cebd28b7ab0',
+            'reference' => '310945023e8dc1bc7b641924f9a9d61b9399262d',
             'dev_requirement' => false,
         ),
         'nette/finder' => array(
@@ -305,12 +305,12 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '0.12.96',
-            'version' => '0.12.96.0',
+            'pretty_version' => '0.12.98',
+            'version' => '0.12.98.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => 'a98bdc51318f20fcae8c953d266f81a70254917f',
+            'reference' => '3bb7cc246c057405dd5e290c3ecc62ab51d57e00',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '295e62200d6e91c0bd5b3d78715b00c3bdc8f28f',
+            'reference' => 'bc10788e8d1fc3c962d92faa2442bd1852c08c03',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '40ceef0ec0991539a945893e4f4d8f9499a1b9ce',
+            'reference' => '0038bf3ee47a01ee905bbc196f4cbdb1fd433fd3',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
@@ -529,12 +529,12 @@
             'dev_requirement' => false,
         ),
         'symfony/translation' => array(
-            'pretty_version' => 'v5.3.4',
-            'version' => '5.3.4.0',
+            'pretty_version' => 'v5.3.7',
+            'version' => '5.3.7.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
-            'reference' => 'd89ad7292932c2699cbe4af98d72c5c6bbc504c1',
+            'reference' => '4d595a6d15fd3a2c67f6f31d14d15d3b7356d7a6',
             'dev_requirement' => false,
         ),
         'symfony/translation-contracts' => array(

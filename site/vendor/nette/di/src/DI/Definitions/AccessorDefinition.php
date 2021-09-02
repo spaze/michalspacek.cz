@@ -29,7 +29,11 @@ final class AccessorDefinition extends Definition
 	public function setImplement(string $type)
 	{
 		if (!interface_exists($type)) {
-			throw new Nette\InvalidArgumentException("Service '{$this->getName()}': Interface '$type' not found.");
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Service '%s': Interface '%s' not found.",
+				$this->getName(),
+				$type
+			));
 		}
 		$rc = new \ReflectionClass($type);
 
@@ -40,9 +44,17 @@ final class AccessorDefinition extends Definition
 			|| $method->getName() !== self::METHOD_GET
 			|| count($rc->getMethods()) > 1
 		) {
-			throw new Nette\InvalidArgumentException("Service '{$this->getName()}': Interface $type must have just one non-static method get().");
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Service '%s': Interface %s must have just one non-static method get().",
+				$this->getName(),
+				$type
+			));
 		} elseif ($method->getNumberOfParameters()) {
-			throw new Nette\InvalidArgumentException("Service '{$this->getName()}': Method $type::get() must have no parameters.");
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Service '%s': Method %s::get() must have no parameters.",
+				$this->getName(),
+				$type
+			));
 		}
 		return parent::setType($type);
 	}
@@ -90,9 +102,13 @@ final class AccessorDefinition extends Definition
 			$returnType = Nette\DI\Helpers::getReturnType($method);
 
 			if (!$returnType) {
-				throw new ServiceCreationException("Method $interface::get() has not return type hint or annotation @return.");
+				throw new ServiceCreationException(sprintf('Method %s::get() has no return type or annotation @return.', $interface));
 			} elseif (!class_exists($returnType) && !interface_exists($returnType)) {
-				throw new ServiceCreationException("Check a type hint or annotation @return of the $interface::get() method, class '$returnType' cannot be found.");
+				throw new ServiceCreationException(sprintf(
+					"Class '%s' not found.\nCheck the return type or annotation @return of the %s::get() method.",
+					$returnType,
+					$interface
+				));
 			}
 			$this->setReference($returnType);
 		}

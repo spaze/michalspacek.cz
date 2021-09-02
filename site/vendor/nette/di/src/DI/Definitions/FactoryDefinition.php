@@ -38,12 +38,20 @@ final class FactoryDefinition extends Definition
 	public function setImplement(string $type)
 	{
 		if (!interface_exists($type)) {
-			throw new Nette\InvalidArgumentException("Service '{$this->getName()}': Interface '$type' not found.");
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Service '%s': Interface '%s' not found.",
+				$this->getName(),
+				$type
+			));
 		}
 		$rc = new \ReflectionClass($type);
 		$method = $rc->getMethods()[0] ?? null;
 		if (!$method || $method->isStatic() || $method->name !== self::METHOD_CREATE || count($rc->getMethods()) > 1) {
-			throw new Nette\InvalidArgumentException("Service '{$this->getName()}': Interface $type must have just one non-static method create().");
+			throw new Nette\InvalidArgumentException(sprintf(
+				"Service '%s': Interface %s must have just one non-static method create().",
+				$this->getName(),
+				$type
+			));
 		}
 		return parent::setType($type);
 	}
@@ -182,9 +190,13 @@ final class FactoryDefinition extends Definition
 			$method = new \ReflectionMethod($interface, self::METHOD_CREATE);
 			$returnType = Nette\DI\Helpers::getReturnType($method);
 			if (!$returnType) {
-				throw new ServiceCreationException("Method $interface::create() has not return type hint or annotation @return.");
+				throw new ServiceCreationException(sprintf('Method %s::create() has no return type or annotation @return.', $interface));
 			} elseif (!class_exists($returnType) && !interface_exists($returnType)) {
-				throw new ServiceCreationException("Check a type hint or annotation @return of the $interface::create() method, class '$returnType' cannot be found.");
+				throw new ServiceCreationException(sprintf(
+					"Class '%s' not found.\nCheck the return type or annotation @return of the %s::create() method.",
+					$returnType,
+					$interface
+				));
 			}
 			$resultDef->setType($returnType);
 		}
@@ -237,13 +249,22 @@ final class FactoryDefinition extends Definition
 				if ($methodHint !== $ctorHint
 					&& !is_a((string) reset($methodHint), (string) reset($ctorHint), true)
 				) {
-					throw new ServiceCreationException("Type hint for \${$param->name} in $interface::create() doesn't match type hint in $class constructor.");
+					throw new ServiceCreationException(sprintf(
+						"Type of \$%s in %s::create() doesn't match type in %s constructor.",
+						$param->name,
+						$interface,
+						$class
+					));
 				}
 				$this->resultDefinition->getFactory()->arguments[$ctorParam->getPosition()] = Nette\DI\ContainerBuilder::literal('$' . $ctorParam->name);
 
 			} elseif (!$this->resultDefinition->getSetup()) {
 				$hint = Nette\Utils\Helpers::getSuggestion(array_keys($ctorParams), $param->name);
-				throw new ServiceCreationException("Unused parameter \${$param->name} when implementing method $interface::create()" . ($hint ? ", did you mean \${$hint}?" : '.'));
+				throw new ServiceCreationException(sprintf(
+					'Unused parameter $%s when implementing method %s::create()',
+					$param->name,
+					$interface
+				) . ($hint ? ", did you mean \${$hint}?" : '.'));
 			}
 
 			$paramDef = PHP_VERSION_ID < 80000
