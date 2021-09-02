@@ -15,18 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (encrypted || !supported) {
 			return;
 		}
-		openpgp.key.readArmored(document.querySelector('#pubkey').innerText).then(function(result) {
-			openpgp.config.commentstring = location.href;
-			let options = {
-				message: openpgp.message.fromText(area.value),
-				publicKeys: result.keys,
-			};
-			openpgp.encrypt(options).then(function(ciphertext) {
-				encrypted = true;
-				area.value = ciphertext.data;
-				button.innerText = button.dataset.copy;
-				button.removeEventListener('click', handler);
-				button.addEventListener('click', copy);
+		openpgp.readKey({armoredKey: document.querySelector('#pubkey').innerText}).then(function (key) {
+			openpgp.config.commentString = location.href;
+			openpgp.config.showComment = true;
+			openpgp.createMessage({text: area.value}).then(function (message) {
+				openpgp.encrypt({message, encryptionKeys: key}).then(function (ciphertext) {
+					encrypted = true;
+					area.value = ciphertext;
+					button.innerText = button.dataset.copy;
+					button.removeEventListener('click', handler);
+					button.addEventListener('click', copy);
+				});
 			});
 		});
 	};
