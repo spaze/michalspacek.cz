@@ -40,6 +40,10 @@ class PasswordsStoragesSearchSortFactory
 			->setHtmlAttribute('title', $placeholder)
 			->setHtmlType('search')
 			->setDefaultValue($search);
+		$form->onSuccess[] = function (): void {
+			// Intentionally empty, the form values are passed to the action as method params.
+			// Values can also be passed directly in the URL, not via the form, so the form doesn't need any onSuccess handler.
+		};
 		return $form;
 	}
 
