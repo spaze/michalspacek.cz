@@ -20,7 +20,7 @@ use Spaze\Exports\Atom\Feed;
 class Exports
 {
 
-	/** @var integer */
+	/** @var int */
 	private const ITEMS = 5;
 
 	private Articles $articles;

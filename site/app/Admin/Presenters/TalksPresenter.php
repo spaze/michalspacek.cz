@@ -105,7 +105,7 @@ class TalksPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedEditTalk(Form $form, ArrayHash $values): void
 	{
@@ -150,7 +150,7 @@ class TalksPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedAddTalk(Form $form, ArrayHash $values): void
 	{
@@ -191,7 +191,7 @@ class TalksPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedSlides(Form $form, ArrayHash $values): void
 	{

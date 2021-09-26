@@ -13,7 +13,7 @@ class Response implements IResponse
 	/** @var array<string, string> */
 	private array $headers;
 
-	/** @var array<string, array<integer, string>> */
+	/** @var array<string, array<int, string>> */
 	private array $allHeaders;
 
 	/** @var array<string, string> */
@@ -135,7 +135,7 @@ class Response implements IResponse
 
 
 	/**
-	 * @return array<string, array<integer, string>>
+	 * @return array<string, array<int, string>>
 	 */
 	public function getAllHeaders(): array
 	{

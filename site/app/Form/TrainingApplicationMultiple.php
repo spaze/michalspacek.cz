@@ -11,7 +11,7 @@ class TrainingApplicationMultiple extends ProtectedForm
 	/**
 	 * @param IContainer $parent
 	 * @param string $name
-	 * @param integer $count
+	 * @param int $count
 	 * @param string[] $statuses
 	 * @param TrainingControlsFactory $trainingControlsFactory
 	 */

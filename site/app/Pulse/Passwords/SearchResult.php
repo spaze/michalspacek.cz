@@ -9,10 +9,10 @@ use MichalSpacekCz\Pulse\Site;
 class SearchResult
 {
 
-	/** @var array<integer, Company> */
+	/** @var array<int, Company> */
 	private array $companyNames = [];
 
-	/** @var array<integer, Company> */
+	/** @var array<int, Company> */
 	private array $tradeNames = [];
 
 	/** @var array<string, Algorithm> */
@@ -24,7 +24,7 @@ class SearchResult
 	/** @var array<string, Site> */
 	private array $siteAliases = [];
 
-	/** @var array<integer, StorageDisclosure> */
+	/** @var array<int, StorageDisclosure> */
 	private array $disclosureUrls = [];
 
 	private bool $disclosureHistoryMatch = false;

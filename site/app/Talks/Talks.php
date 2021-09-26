@@ -19,10 +19,10 @@ use UnexpectedValueException;
 class Talks
 {
 
-	/** @var integer */
+	/** @var int */
 	private const SLIDE_MAX_WIDTH = 800;
 
-	/** @var integer */
+	/** @var int */
 	private const SLIDE_MAX_HEIGHT = 450;
 
 	private Explorer $database;
@@ -47,7 +47,7 @@ class Talks
 	/** @var string[] */
 	private array $deleteFiles = [];
 
-	/** @var integer[] */
+	/** @var int[] */
 	private array $otherSlides = [];
 
 	/** @var string[] */
@@ -109,7 +109,7 @@ class Talks
 	/**
 	 * Get all talks, or almost all talks.
 	 *
-	 * @param integer|null $limit
+	 * @param int|null $limit
 	 * @return Row[]
 	 */
 	public function getAll(?int $limit = null): array
@@ -147,7 +147,7 @@ class Talks
 	/**
 	 * Get approximate number of talks.
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function getApproxCount(): int
 	{
@@ -244,7 +244,7 @@ class Talks
 	/**
 	 * Get talk data by id.
 	 *
-	 * @param integer $id
+	 * @param int $id
 	 * @return Row<mixed>
 	 */
 	public function getById(int $id): Row
@@ -339,9 +339,9 @@ class Talks
 	/**
 	 * Return slide number by given alias.
 	 *
-	 * @param integer $talkId
+	 * @param int $talkId
 	 * @param string|null $slide
-	 * @return integer|null Slide number or null if no slide given, or slide not found
+	 * @return int|null Slide number or null if no slide given, or slide not found
 	 */
 	public function getSlideNo(int $talkId, ?string $slide): ?int
 	{
@@ -467,8 +467,8 @@ class Talks
 	/**
 	 * Get slides for talk.
 	 *
-	 * @param integer $talkId Talk id
-	 * @param integer|null $filenamesTalkId
+	 * @param int $talkId Talk id
+	 * @param int|null $filenamesTalkId
 	 * @return Row[]
 	 */
 	public function getSlides(int $talkId, ?int $filenamesTalkId): array
@@ -526,7 +526,7 @@ class Talks
 
 	/**
 	 * @param string $prefix
-	 * @param integer $talkId
+	 * @param int $talkId
 	 * @param string $filename
 	 * @return null|string
 	 */
@@ -537,13 +537,13 @@ class Talks
 
 
 	/**
-	 * @param integer $talkId
+	 * @param int $talkId
 	 * @param FileUpload $replace
 	 * @param string[] $supported
-	 * @param boolean $removeFile
+	 * @param bool $removeFile
 	 * @param string|null $originalFile
-	 * @param integer $width
-	 * @param integer $height
+	 * @param int $width
+	 * @param int $height
 	 * @return null|string
 	 */
 	private function replaceSlideImage(int $talkId, FileUpload $replace, array $supported, bool $removeFile, ?string $originalFile, int &$width, int &$height): ?string
@@ -576,8 +576,8 @@ class Talks
 	/**
 	 * Insert slides.
 	 *
-	 * @param integer $talkId
-	 * @param ArrayHash<ArrayHash<integer|string>> $slides
+	 * @param int $talkId
+	 * @param ArrayHash<ArrayHash<int|string>> $slides
 	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws PDOException
 	 */
@@ -618,10 +618,10 @@ class Talks
 	/**
 	 * Update slides.
 	 *
-	 * @param integer $talkId
+	 * @param int $talkId
 	 * @param Row[] $originalSlides
-	 * @param ArrayHash<ArrayHash<integer|string>> $slides
-	 * @param boolean $removeFiles Remove old files?
+	 * @param ArrayHash<ArrayHash<int|string>> $slides
+	 * @param bool $removeFiles Remove old files?
 	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
 	 * @throws PDOException
 	 */
@@ -678,9 +678,9 @@ class Talks
 	/**
 	 * Save new slides.
 	 *
-	 * @param integer $talkId
+	 * @param int $talkId
 	 * @param Row[] $originalSlides
-	 * @param ArrayHash<integer|string> $newSlides
+	 * @param ArrayHash<int|string> $newSlides
 	 */
 	public function saveSlides(int $talkId, array $originalSlides, ArrayHash $newSlides): void
 	{

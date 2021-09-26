@@ -130,7 +130,7 @@ class Rating
 	 * Check whether the rating represents secure storage.
 	 *
 	 * @param string $rating
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isSecureStorage(string $rating): bool
 	{

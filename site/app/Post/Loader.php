@@ -41,7 +41,7 @@ class Loader
 	 *
 	 * @param string $post
 	 * @param string|null $previewKey
-	 * @return boolean
+	 * @return bool
 	 */
 	public function exists(string $post, ?string $previewKey = null): bool
 	{

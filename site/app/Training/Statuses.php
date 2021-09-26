@@ -32,19 +32,19 @@ class Statuses
 
 	private Explorer $database;
 
-	/** @var array<string, integer> */
+	/** @var array<string, int> */
 	private array $statusIds = [];
 
-	/** @var array<string, array<integer, string>> */
+	/** @var array<string, array<int, string>> */
 	private array $childrenStatuses = [];
 
-	/** @var array<string, array<integer, string>> */
+	/** @var array<string, array<int, string>> */
 	private array $parentStatuses = [];
 
-	/** @var array<string, array<integer, string>> */
+	/** @var array<string, array<int, string>> */
 	private array $descendantStatuses = [];
 
-	/** @var array<integer, array<integer, Row>> */
+	/** @var array<int, array<int, Row>> */
 	private array $statusHistory = [];
 
 
@@ -67,7 +67,7 @@ class Statuses
 
 
 	/**
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	public function getAttendedStatuses(): array
 	{
@@ -76,7 +76,7 @@ class Statuses
 
 
 	/**
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	public function getAllowFilesStatuses(): array
 	{
@@ -88,7 +88,7 @@ class Statuses
 
 
 	/**
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	public function getDiscardedStatuses(): array
 	{
@@ -97,7 +97,7 @@ class Statuses
 
 
 	/**
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	public function getCanceledStatus(): array
 	{
@@ -106,7 +106,7 @@ class Statuses
 
 
 	/**
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	public function getInitialStatuses(): array
 	{
@@ -116,7 +116,7 @@ class Statuses
 
 	/**
 	 * @param string $parent
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	public function getChildrenStatuses(string $parent): array
 	{
@@ -138,7 +138,7 @@ class Statuses
 
 	/**
 	 * @param string $child
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	public function getParentStatuses(string $child): array
 	{
@@ -160,8 +160,8 @@ class Statuses
 
 	/**
 	 * @param string $parent
-	 * @param integer $applicationId
-	 * @return array<integer, string>
+	 * @param int $applicationId
+	 * @return array<int, string>
 	 */
 	public function getChildrenStatusesForApplicationId(string $parent, int $applicationId): array
 	{
@@ -176,7 +176,7 @@ class Statuses
 
 	/**
 	 * @param string $parent
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	private function getDescendantStatuses(string $parent): array
 	{
@@ -195,7 +195,7 @@ class Statuses
 	 * Needs to be wrapped in transaction, not for public consumption,
 	 * use updateStatus(), updateStatusCallback() or updateStatusReturnCallback() instead.
 	 *
-	 * @param integer $applicationId
+	 * @param int $applicationId
 	 * @param string $status
 	 * @param string|null $date
 	 */
@@ -267,7 +267,7 @@ class Statuses
 		$applicationId = null;
 		$this->database->beginTransaction();
 		try {
-			/** @var integer $applicationId */
+			/** @var int $applicationId */
 			$applicationId = $callback();
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();
@@ -292,7 +292,7 @@ class Statuses
 
 
 	/**
-	 * @param integer $applicationId
+	 * @param int $applicationId
 	 * @return Row[]
 	 */
 	public function getStatusHistory(int $applicationId): array
@@ -322,8 +322,8 @@ class Statuses
 
 	/**
 	 * @param string[] $statuses
-	 * @param integer $applicationId
-	 * @return boolean
+	 * @param int $applicationId
+	 * @return bool
 	 */
 	public function historyContainsStatuses(array $statuses, int $applicationId): bool
 	{

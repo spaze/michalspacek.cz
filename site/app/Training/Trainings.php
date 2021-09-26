@@ -58,7 +58,7 @@ class Trainings
 
 	/**
 	 * @param string $name
-	 * @param boolean $includeCustom
+	 * @param bool $includeCustom
 	 * @return Row<mixed>|null
 	 */
 	private function getTraining(string $name, bool $includeCustom): ?Row
@@ -100,7 +100,7 @@ class Trainings
 
 
 	/**
-	 * @param integer $id
+	 * @param int $id
 	 * @return Row<mixed>|null
 	 */
 	public function getById(int $id): ?Row
@@ -141,7 +141,7 @@ class Trainings
 
 
 	/**
-	 * @param integer $trainingId
+	 * @param int $trainingId
 	 * @return Row[]
 	 */
 	public function getDates(int $trainingId): array
@@ -157,7 +157,7 @@ class Trainings
 
 	/**
 	 * @param ArrayHash[] $trainings
-	 * @return boolean
+	 * @return bool
 	 */
 	public function lastFreeSeatsAnyTraining(array $trainings): bool
 	{
@@ -319,7 +319,7 @@ class Trainings
 	/**
 	 * Get all discontinued trainings with description.
 	 *
-	 * @return array<integer, array<string, string|string[]>>
+	 * @return array<int, array<string, string|string[]>>
 	 */
 	public function getAllDiscontinued(): array
 	{
@@ -337,7 +337,7 @@ class Trainings
 		);
 		$trainings = [];
 		foreach ($result as $row) {
-			/** @var integer $id */
+			/** @var int $id */
 			$id = $row->id;
 			$trainings[$id]['description'] = (string)$row->description;
 			$trainings[$id]['href'] = (string)$row->href;
@@ -353,7 +353,7 @@ class Trainings
 	/**
 	 * Get discontinued trainings with description.
 	 *
-	 * @param integer $id
+	 * @param int $id
 	 * @return array<string, string|string[]>|null
 	 */
 	public function getDiscontinued(int $id): ?array
@@ -443,7 +443,7 @@ class Trainings
 
 
 	/**
-	 * @param array<integer, integer> $dateIds
+	 * @param array<int, int> $dateIds
 	 */
 	public function deletePersonalData(array $dateIds): void
 	{

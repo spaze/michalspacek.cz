@@ -58,7 +58,7 @@ class InvoicesPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedApplication(Form $form, ArrayHash $values): void
 	{

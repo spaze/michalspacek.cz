@@ -154,7 +154,7 @@ class Texy extends NetxtenTexy
 	/**
 	 * Set top heading level.
 	 *
-	 * @param integer $level
+	 * @param int $level
 	 * @return self
 	 */
 	public function setTopHeading(int $level): self

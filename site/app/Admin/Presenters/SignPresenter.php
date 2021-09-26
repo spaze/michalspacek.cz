@@ -71,7 +71,7 @@ class SignPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedSignIn(Form $form, ArrayHash $values): void
 	{

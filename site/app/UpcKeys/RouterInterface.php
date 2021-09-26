@@ -18,7 +18,7 @@ interface RouterInterface
 
 
 	/**
-	 * @return array<string, array<integer, string>>
+	 * @return array<string, array<int, string>>
 	 */
 	public function getModelWithPrefixes(): array;
 

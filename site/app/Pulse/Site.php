@@ -17,7 +17,7 @@ class Site
 
 	private ?string $alias;
 
-	/** @var array<integer, StorageSharedWith> */
+	/** @var array<int, StorageSharedWith> */
 	private array $sharedWith = [];
 
 	private Company $company;
@@ -41,7 +41,7 @@ class Site
 	 * @param bool $isTypeAll
 	 * @param string|null $url
 	 * @param string|null $alias
-	 * @param array<integer, array{url:string, alias:string}> $sharedWith
+	 * @param array<int, array{url:string, alias:string}> $sharedWith
 	 * @param Company $company
 	 * @param string $storageId
 	 */
@@ -84,7 +84,7 @@ class Site
 
 
 	/**
-	 * @return array<integer, StorageSharedWith>
+	 * @return array<int, StorageSharedWith>
 	 */
 	public function getSharedWith(): array
 	{

@@ -15,13 +15,13 @@ class UpcKeys
 	/** @var string */
 	private const SSID_PLACEHOLDER = 'UPC1234567';
 
-	/** @var integer */
+	/** @var int */
 	public const SSID_TYPE_24GHZ = 1;
 
-	/** @var integer */
+	/** @var int */
 	public const SSID_TYPE_5GHZ = 2;
 
-	/** @var integer */
+	/** @var int */
 	public const SSID_TYPE_UNKNOWN = 3;
 
 	/** @var RouterInterface[] */
@@ -30,7 +30,7 @@ class UpcKeys
 	/** @var string[]|null */
 	private ?array $prefixes = null;
 
-	/** @var array<string, array<integer, string>>|null */
+	/** @var array<string, array<int, string>>|null */
 	private ?array $modelsWithPrefixes = null;
 
 	/** @var stdClass[] */
@@ -78,7 +78,7 @@ class UpcKeys
 	/**
 	 * Get router models with serial number prefixes.
 	 *
-	 * @return array<string, array<integer, string>>
+	 * @return array<string, array<int, string>>
 	 */
 	public function getModelsWithPrefixes(): array
 	{
@@ -114,7 +114,7 @@ class UpcKeys
 	 * Save keys to a database if not already there.
 	 *
 	 * @param string $ssid
-	 * @return boolean
+	 * @return bool
 	 */
 	public function saveKeys(string $ssid): bool
 	{
@@ -139,7 +139,7 @@ class UpcKeys
 	 * Check whether the SSID is valid for upc_keys to work.
 	 *
 	 * @param string $ssid
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isValidSsid(string $ssid): bool
 	{

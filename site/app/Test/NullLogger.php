@@ -10,7 +10,7 @@ class NullLogger implements ILogger
 
 	private mixed $logged;
 
-	/** @var array<integer, mixed> */
+	/** @var array<int, mixed> */
 	private array $allLogged = [];
 
 
@@ -34,7 +34,7 @@ class NullLogger implements ILogger
 
 
 	/**
-	 * @return array<integer, mixed>
+	 * @return array<int, mixed>
 	 */
 	public function getAllLogged(): array
 	{

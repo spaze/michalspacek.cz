@@ -30,8 +30,8 @@ class Reviews
 	/**
 	 * Get visible reviews by training id.
 	 *
-	 * @param integer $id
-	 * @param integer|null $limit
+	 * @param int $id
+	 * @param int|null $limit
 	 * @return Row[]
 	 */
 	public function getVisibleReviews(int $id, ?int $limit = null): array
@@ -65,7 +65,7 @@ class Reviews
 	/**
 	 * Get all reviews including hidden by training id.
 	 *
-	 * @param integer $id
+	 * @param int $id
 	 * @return Row[]
 	 */
 	public function getAllReviews(int $id): array
@@ -110,7 +110,7 @@ class Reviews
 	/**
 	 * Get review by id.
 	 *
-	 * @param integer $reviewId
+	 * @param int $reviewId
 	 * @return Row<mixed>
 	 * @throws RuntimeException
 	 */
@@ -148,7 +148,7 @@ class Reviews
 	/**
 	 * Get review by date id.
 	 *
-	 * @param integer $dateId
+	 * @param int $dateId
 	 * @return Row[]
 	 */
 	public function getReviewsByDateId(int $dateId): array

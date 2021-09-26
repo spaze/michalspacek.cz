@@ -47,7 +47,7 @@ class UserPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedChangePassword(Form $form, ArrayHash $values): void
 	{
@@ -72,7 +72,7 @@ class UserPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedRegenerateTokens(Form $form, ArrayHash $values): void
 	{

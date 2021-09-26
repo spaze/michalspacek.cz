@@ -89,7 +89,7 @@ class Interviews
 
 
 	/**
-	 * @param integer $id
+	 * @param int $id
 	 * @return Row<mixed>|null
 	 */
 	public function getById(int $id): ?Row

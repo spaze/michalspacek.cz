@@ -80,7 +80,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Get serial number prefixes to generate keys for.
 	 *
-	 * @return array<string, array<integer, string>>
+	 * @return array<string, array<int, string>>
 	 */
 	public function getModelWithPrefixes(): array
 	{
@@ -115,7 +115,7 @@ class Technicolor implements RouterInterface
 	 * Save keys to a database if not already there.
 	 *
 	 * @param string $ssid
-	 * @return boolean
+	 * @return bool
 	 */
 	public function saveKeys(string $ssid): bool
 	{
@@ -227,7 +227,7 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string $ssid
 	 * @param stdClass[] $keys (serial, key, type)
-	 * @return boolean false if no keys to store, true otherwise
+	 * @return bool false if no keys to store, true otherwise
 	 */
 	private function storeKeys(string $ssid, array $keys): bool
 	{

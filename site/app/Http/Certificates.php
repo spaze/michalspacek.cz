@@ -46,7 +46,7 @@ class Certificates
 	/**
 	 * Set expiring warning threshold.
 	 *
-	 * @param integer $expiringThreshold in days
+	 * @param int $expiringThreshold in days
 	 */
 	public function setExpiringThreshold(int $expiringThreshold): void
 	{
@@ -57,7 +57,7 @@ class Certificates
 	/**
 	 * Set hide expired after interval.
 	 *
-	 * @param integer $hideExpiredAfter in days
+	 * @param int $hideExpiredAfter in days
 	 */
 	public function setHideExpiredAfter(int $hideExpiredAfter): void
 	{
@@ -122,7 +122,7 @@ class Certificates
 	 *
 	 * @param array<string, array<string, string>> $certs
 	 * @param array<string, array<string, string>> $failures
-	 * @return array{certificates:integer, failures:integer} with counts
+	 * @return array{certificates:int, failures:int} with counts
 	 */
 	public function log(array $certs, array $failures): array
 	{
@@ -168,8 +168,8 @@ class Certificates
 	/**
 	 * @param string $cn
 	 * @param string $ext
-	 * @param boolean $success
-	 * @return integer
+	 * @param bool $success
+	 * @return int
 	 */
 	private function logRequest(string $cn, string $ext, bool $success): int
 	{

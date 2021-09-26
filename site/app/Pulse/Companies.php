@@ -48,7 +48,7 @@ class Companies
 	 * @param string $name
 	 * @param string $tradeName
 	 * @param string $alias
-	 * @return integer Id of newly inserted company
+	 * @return int Id of newly inserted company
 	 */
 	public function add(string $name, string $tradeName, string $alias): int
 	{

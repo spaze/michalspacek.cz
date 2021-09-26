@@ -77,7 +77,7 @@ class BlogPresenter extends BasePresenter
 
 
 	/**
-	 * @param integer $param
+	 * @param int $param
 	 * @throws BadRequestException
 	 */
 	public function actionEdit(int $param): void

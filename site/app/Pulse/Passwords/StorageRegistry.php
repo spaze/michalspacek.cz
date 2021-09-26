@@ -9,7 +9,7 @@ use MichalSpacekCz\Pulse\Site;
 class StorageRegistry
 {
 
-	/** @var array<integer, Company> */
+	/** @var array<int, Company> */
 	private array $companies = [];
 
 	/** @var array<string, Site> */
@@ -20,7 +20,7 @@ class StorageRegistry
 
 
 	/**
-	 * @return array<integer, Company>
+	 * @return array<int, Company>
 	 */
 	public function getCompanies(): array
 	{

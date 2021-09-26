@@ -34,10 +34,10 @@ class Dates
 
 	private Translator $translator;
 
-	/** @var array<string, integer> */
+	/** @var array<string, int> */
 	private array $statusIds = array();
 
-	/** @var array<integer, array<string, ArrayHash>> */
+	/** @var array<int, array<string, ArrayHash>> */
 	private array $upcomingDates = array();
 
 
@@ -52,7 +52,7 @@ class Dates
 
 
 	/**
-	 * @param integer $dateId
+	 * @param int $dateId
 	 * @return Row<mixed>|null
 	 */
 	public function get(int $dateId): ?Row
@@ -290,7 +290,7 @@ class Dates
 
 
 	/**
-	 * @return integer[]
+	 * @return int[]
 	 */
 	public function getPublicUpcomingIds(): array
 	{
@@ -314,7 +314,7 @@ class Dates
 
 
 	/**
-	 * @param boolean $includeNonPublic
+	 * @param bool $includeNonPublic
 	 * @return array<string, ArrayHash>
 	 */
 	private function getUpcoming(bool $includeNonPublic): array
@@ -447,7 +447,7 @@ class Dates
 
 
 	/**
-	 * @param integer $trainingId
+	 * @param int $trainingId
 	 * @return Row[]
 	 */
 	public function getDates(int $trainingId): array
@@ -523,7 +523,7 @@ class Dates
 
 	/**
 	 * @param Row[] $dates
-	 * @return boolean
+	 * @return bool
 	 */
 	public function lastFreeSeatsAnyDate(array $dates): bool
 	{

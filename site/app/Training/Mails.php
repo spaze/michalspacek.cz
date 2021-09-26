@@ -58,7 +58,7 @@ class Mails
 
 
 	/**
-	 * @param integer $applicationId
+	 * @param int $applicationId
 	 * @param Template $template
 	 * @param string $recipientAddress
 	 * @param string $recipientName

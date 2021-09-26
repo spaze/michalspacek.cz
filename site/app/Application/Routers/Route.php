@@ -21,7 +21,7 @@ class Route extends NetteRoute
 	 * @param Loader $blogPostLoader
 	 * @param string $mask
 	 * @param string[] $metadata
-	 * @param integer $flags
+	 * @param int $flags
 	 */
 	public function __construct(Loader $blogPostLoader, string $mask, array $metadata = [], int $flags = 0)
 	{

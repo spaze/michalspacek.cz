@@ -88,7 +88,7 @@ class Manager implements Authenticator
 	/**
 	 * Get identity object.
 	 *
-	 * @param integer $id User id
+	 * @param int $id User id
 	 * @param string $username Username
 	 * @return SimpleIdentity
 	 */
@@ -101,7 +101,7 @@ class Manager implements Authenticator
 	/**
 	 * @param string $username
 	 * @param string $password
-	 * @return integer User id
+	 * @return int User id
 	 * @throws AuthenticationException
 	 */
 	private function verifyPassword(string $username, string $password): int
@@ -232,7 +232,7 @@ class Manager implements Authenticator
 	 * Selector and token are regenerated if selector already exists in the table.
 	 *
 	 * @param User $user
-	 * @param integer $type
+	 * @param int $type
 	 * @return string Concatenation of selector, separator, token
 	 * @throws Exception
 	 */
@@ -352,7 +352,7 @@ class Manager implements Authenticator
 	 *
 	 * @param string $value
 	 * @param DateTimeInterface $validity
-	 * @param integer $type
+	 * @param int $type
 	 * @return Row<mixed>|null
 	 */
 	private function verifyToken(string $value, DateTimeInterface $validity, int $type): ?Row

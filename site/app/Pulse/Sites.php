@@ -51,8 +51,8 @@ class Sites
 	 * @param string $url
 	 * @param string $alias
 	 * @param string $sharedWith
-	 * @param integer $companyId
-	 * @return integer Id of newly inserted site
+	 * @param int $companyId
+	 * @return int Id of newly inserted site
 	 */
 	public function add(string $url, string $alias, string $sharedWith, int $companyId): int
 	{

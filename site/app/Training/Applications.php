@@ -38,7 +38,7 @@ class Applications
 
 	private Translator $translator;
 
-	/** @var array<integer, array<integer, Row>> */
+	/** @var array<int, array<int, Row>> */
 	private array $byDate = [];
 
 
@@ -128,7 +128,7 @@ class Applications
 
 
 	/**
-	 * @param integer $dateId
+	 * @param int $dateId
 	 * @return Row[]
 	 */
 	public function getByDate(int $dateId): array
@@ -177,7 +177,7 @@ class Applications
 
 
 	/**
-	 * @param integer $dateId
+	 * @param int $dateId
 	 * @return Row[]
 	 */
 	public function getValidByDate(int $dateId): array
@@ -190,7 +190,7 @@ class Applications
 
 
 	/**
-	 * @param integer $dateId
+	 * @param int $dateId
 	 * @return Row[]
 	 */
 	public function getValidUnpaidByDate(int $dateId): array
@@ -221,7 +221,7 @@ class Applications
 	/**
 	 * Get canceled but already paid applications by date id.
 	 *
-	 * @param integer $dateId
+	 * @param int $dateId
 	 * @return Row[]
 	 */
 	public function getCanceledPaidByDate(int $dateId): array
@@ -234,7 +234,7 @@ class Applications
 
 
 	/**
-	 * @param array<string, string|integer|float|DateTime|null> $data
+	 * @param array<string, string|int|float|DateTime|null> $data
 	 * @return string Generated access token
 	 */
 	private function insertData(array $data): string
@@ -268,7 +268,7 @@ class Applications
 	 * @param string $companyId
 	 * @param string $companyTaxId
 	 * @param string $note
-	 * @return integer
+	 * @return int
 	 */
 	public function addInvitation(
 		Row $date,
@@ -316,7 +316,7 @@ class Applications
 	 * @param string $companyId
 	 * @param string $companyTaxId
 	 * @param string $note
-	 * @return integer
+	 * @return int
 	 */
 	public function addApplication(
 		Row $date,
@@ -355,10 +355,10 @@ class Applications
 	/**
 	 * Add preliminary invitation, to a training with no date set.
 	 *
-	 * @param integer $trainingId
+	 * @param int $trainingId
 	 * @param string $name
 	 * @param string $email
-	 * @return integer application id
+	 * @return int application id
 	 */
 	public function addPreliminaryInvitation(int $trainingId, string $name, string $email): int
 	{
@@ -446,7 +446,7 @@ class Applications
 
 	/**
 	 * @param Row<mixed> $date
-	 * @param integer $applicationId
+	 * @param int $applicationId
 	 * @param string $name
 	 * @param string $email
 	 * @param string $company
@@ -457,7 +457,7 @@ class Applications
 	 * @param string $companyId
 	 * @param string $companyTaxId
 	 * @param string $note
-	 * @return integer
+	 * @return int
 	 */
 	public function updateApplication(
 		Row $date,
@@ -601,7 +601,7 @@ class Applications
 
 
 	/**
-	 * @param integer $id
+	 * @param int $id
 	 * @return Row<mixed>|null
 	 */
 	public function getApplicationById(int $id): ?Row
@@ -735,7 +735,7 @@ class Applications
 
 
 	/**
-	 * @return integer[]
+	 * @return int[]
 	 */
 	public function getPreliminaryCounts(): array
 	{

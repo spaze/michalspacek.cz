@@ -60,7 +60,7 @@ class InterviewsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedEditInterview(Form $form, ArrayHash $values): void
 	{
@@ -93,7 +93,7 @@ class InterviewsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedAddInterview(Form $form, ArrayHash $values): void
 	{

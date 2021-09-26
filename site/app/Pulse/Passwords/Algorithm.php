@@ -33,10 +33,10 @@ class Algorithm
 
 	private ?StorageDisclosure $latestDisclosure = null;
 
-	/** @var array<integer, StorageDisclosure> */
+	/** @var array<int, StorageDisclosure> */
 	private array $disclosures = [];
 
-	/** @var array<string, boolean> */
+	/** @var array<string, bool> */
 	private array $disclosureTypes = [];
 
 
@@ -164,7 +164,7 @@ class Algorithm
 
 
 	/**
-	 * @return array<integer, StorageDisclosure>
+	 * @return array<int, StorageDisclosure>
 	 */
 	public function getDisclosures(): array
 	{
@@ -185,7 +185,7 @@ class Algorithm
 
 
 	/**
-	 * @return array<integer, string>
+	 * @return array<int, string>
 	 */
 	public function getDisclosureTypes(): array
 	{

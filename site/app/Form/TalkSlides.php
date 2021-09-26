@@ -18,7 +18,7 @@ class TalkSlides extends ProtectedForm
 	 * @param IContainer $parent
 	 * @param string $name
 	 * @param Row[] $slides
-	 * @param integer $newCount
+	 * @param int $newCount
 	 * @param Talks $talks
 	 */
 	public function __construct(IContainer $parent, string $name, array $slides, int $newCount, Talks $talks)

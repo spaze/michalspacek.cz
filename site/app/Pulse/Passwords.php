@@ -373,9 +373,9 @@ class Passwords
 	 *
 	 * @param string $name
 	 * @param string $alias
-	 * @param boolean $salted
-	 * @param boolean $stretched
-	 * @return integer Id of newly inserted algorithm
+	 * @param bool $salted
+	 * @param bool $stretched
+	 * @return int Id of newly inserted algorithm
 	 */
 	private function addAlgorithm(string $name, string $alias, bool $salted, bool $stretched): int
 	{
@@ -398,12 +398,12 @@ class Passwords
 	/**
 	 * Add disclosure.
 	 *
-	 * @param integer $type
+	 * @param int $type
 	 * @param string $url
 	 * @param string $archive
 	 * @param string $note
 	 * @param string $published
-	 * @return integer Id of newly inserted disclosure
+	 * @return int Id of newly inserted disclosure
 	 */
 	private function addDisclosure(int $type, string $url, string $archive, string $note, string $published): int
 	{
@@ -422,14 +422,14 @@ class Passwords
 	/**
 	 * Get storage id by company id, algorithm id, site id.
 	 *
-	 * @param integer $companyId
-	 * @param integer $algoId
+	 * @param int $companyId
+	 * @param int $algoId
 	 * @param string $siteId
 	 * @param string $from
-	 * @param boolean $fromConfirmed
+	 * @param bool $fromConfirmed
 	 * @param string|null $attributes
 	 * @param string|null $note
-	 * @return integer|null
+	 * @return int|null
 	 */
 	private function getStorageId(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, ?string $attributes, ?string $note): ?int
 	{
@@ -452,14 +452,14 @@ class Passwords
 	/**
 	 * Add password storage data.
 	 *
-	 * @param integer $companyId
-	 * @param integer $algoId
+	 * @param int $companyId
+	 * @param int $algoId
 	 * @param string $siteId
 	 * @param string $from
-	 * @param boolean $fromConfirmed
+	 * @param bool $fromConfirmed
 	 * @param string $attributes
 	 * @param string $note
-	 * @return integer Id of newly inserted storage
+	 * @return int Id of newly inserted storage
 	 */
 	private function addStorageData(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, string $attributes, string $note): int
 	{
@@ -491,16 +491,16 @@ class Passwords
 	/**
 	 * Add password storage.
 	 *
-	 * @param ArrayHash<integer|string> $values
-	 * @return boolean True if storage added successfully
+	 * @param ArrayHash<int|string> $values
+	 * @return bool True if storage added successfully
 	 */
 	public function addStorage(ArrayHash $values): bool
 	{
-		/** @var ArrayHash<integer|string> $newCompany */
+		/** @var ArrayHash<int|string> $newCompany */
 		$newCompany = $values->company->new;
-		/** @var ArrayHash<integer|string> $newSite */
+		/** @var ArrayHash<int|string> $newSite */
 		$newSite = $values->site->new;
-		/** @var ArrayHash<integer|string> $newAlgo */
+		/** @var ArrayHash<int|string> $newAlgo */
 		$newAlgo = $values->algo->new;
 
 		$this->database->beginTransaction();

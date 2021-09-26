@@ -43,7 +43,7 @@ class Post
 
 	private int $updatedInfoThreshold;
 
-	/** @var array<string, array<string, array<integer, string>>> */
+	/** @var array<string, array<string, array<int, string>>> */
 	private array $allowedTags;
 
 
@@ -69,7 +69,7 @@ class Post
 
 
 	/**
-	 * @return integer
+	 * @return int
 	 */
 	public function getUpdatedInfoThreshold(): int
 	{
@@ -78,7 +78,7 @@ class Post
 
 
 	/**
-	 * @param integer $updatedInfoThreshold
+	 * @param int $updatedInfoThreshold
 	 */
 	public function setUpdatedInfoThreshold(int $updatedInfoThreshold): void
 	{
@@ -87,7 +87,7 @@ class Post
 
 
 	/**
-	 * @return array<string, array<string, array<integer, string>>>
+	 * @return array<string, array<string, array<int, string>>>
 	 */
 	public function getAllowedTags(): array
 	{
@@ -96,7 +96,7 @@ class Post
 
 
 	/**
-	 * @param array<string, array<string, array<integer, string>>> $allowedTags
+	 * @param array<string, array<string, array<int, string>>> $allowedTags
 	 */
 	public function setAllowedTags(array $allowedTags): void
 	{
@@ -142,7 +142,7 @@ class Post
 	/**
 	 * Get post by id.
 	 *
-	 * @param integer $id
+	 * @param int $id
 	 * @return Data|null
 	 */
 	public function getById(int $id): ?Data
@@ -416,7 +416,7 @@ class Post
 
 	/**
 	 * @param string $card
-	 * @return integer
+	 * @return int
 	 */
 	private function getTwitterCardId(string $card): int
 	{
@@ -427,7 +427,7 @@ class Post
 	/**
 	 * Get all blog post locales.
 	 *
-	 * @return array<integer, string> of id => locale
+	 * @return array<int, string> of id => locale
 	 */
 	public function getAllLocales(): array
 	{
@@ -441,7 +441,7 @@ class Post
 	/**
 	 * Get locale by its id.
 	 *
-	 * @param integer $id
+	 * @param int $id
 	 * @return string|null
 	 */
 	public function getLocaleById(int $id): ?string
@@ -451,7 +451,7 @@ class Post
 
 
 	/**
-	 * @param integer $postId
+	 * @param int $postId
 	 * @return Edit[]
 	 */
 	public function getEdits(int $postId): array

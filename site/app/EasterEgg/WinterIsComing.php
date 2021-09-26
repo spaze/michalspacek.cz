@@ -13,20 +13,20 @@ use Nette\Utils\Strings;
 class WinterIsComing
 {
 
-	/** @var array<integer, string> */
+	/** @var array<int, string> */
 	private array $emails = [
 		'winter@example.com',
 		'sample@email.tst',
 		'arachni@email.gr',
 	];
 
-	/** @var array<integer, string> */
+	/** @var array<int, string> */
 	private array $hosts = [
 		'burpcollaborator.net',
 		'ssemarketing.net',
 	];
 
-	/** @var array<integer, string> */
+	/** @var array<int, string> */
 	private array $streets = [
 		'34 Watts road',
 	];

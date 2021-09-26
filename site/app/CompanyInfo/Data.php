@@ -6,7 +6,7 @@ namespace MichalSpacekCz\CompanyInfo;
 class Data
 {
 
-	/** @var integer */
+	/** @var int */
 	public $status;
 
 	/** @var string */

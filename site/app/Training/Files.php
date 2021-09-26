@@ -43,7 +43,7 @@ class Files
 
 
 	/**
-	 * @param integer $applicationId
+	 * @param int $applicationId
 	 * @return Row[]
 	 */
 	public function getFiles(int $applicationId): array
@@ -75,7 +75,7 @@ class Files
 
 
 	/**
-	 * @param integer $applicationId
+	 * @param int $applicationId
 	 * @param string $token
 	 * @param string $filename
 	 * @return Row<mixed>|null
@@ -116,7 +116,7 @@ class Files
 	/**
 	 * @param Row<mixed> $training
 	 * @param FileUpload $file
-	 * @param integer[] $applicationIds
+	 * @param int[] $applicationIds
 	 * @return string
 	 */
 	public function addFile(Row $training, FileUpload $file, array $applicationIds): string
@@ -159,7 +159,7 @@ class Files
 
 
 	/**
-	 * @param array<integer, integer> $dateIds
+	 * @param array<int, int> $dateIds
 	 */
 	public function deleteFiles(array $dateIds): void
 	{

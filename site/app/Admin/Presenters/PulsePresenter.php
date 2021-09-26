@@ -65,7 +65,7 @@ class PulsePresenter extends BasePresenter
 	 * - existing company, existing site => check if the combination already exists
 	 *
 	 * @param PasswordsStorages $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function validatePasswordsStorages(PasswordsStorages $form, ArrayHash $values): void
 	{
@@ -94,7 +94,7 @@ class PulsePresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedPasswordsStorages(Form $form, ArrayHash $values): void
 	{

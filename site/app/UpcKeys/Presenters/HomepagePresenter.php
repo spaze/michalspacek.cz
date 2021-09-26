@@ -22,7 +22,7 @@ class HomepagePresenter extends BasePresenter
 
 	private IResponse $httpResponse;
 
-	/** @var array<integer, string> */
+	/** @var array<int, string> */
 	private array $types = [
 		UpcKeys::SSID_TYPE_24GHZ => '2.4 GHz',
 		UpcKeys::SSID_TYPE_5GHZ => '5 GHz',
@@ -144,7 +144,7 @@ class HomepagePresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedSsid(Form $form, ArrayHash $values): void
 	{

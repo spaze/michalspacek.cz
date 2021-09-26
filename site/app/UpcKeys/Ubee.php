@@ -47,7 +47,7 @@ class Ubee implements RouterInterface
 	/**
 	 * Get serial number prefixes to get keys for.
 	 *
-	 * @return array<string, array<integer, string>>
+	 * @return array<string, array<int, string>>
 	 */
 	public function getModelWithPrefixes(): array
 	{

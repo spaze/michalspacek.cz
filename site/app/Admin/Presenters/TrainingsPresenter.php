@@ -56,7 +56,7 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Row[] */
 	private array $applications;
 
-	/** @var integer[] */
+	/** @var int[] */
 	private array $applicationIdsAllowedFiles;
 
 	/** @var Row<mixed> */
@@ -330,7 +330,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedApplications(Form $form, ArrayHash $values): void
 	{
@@ -370,7 +370,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedEditReview(Form $form, ArrayHash $values): void
 	{
@@ -424,7 +424,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedAddReview(Form $form, ArrayHash $values): void
 	{
@@ -471,7 +471,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedFile(Form $form, ArrayHash $values): void
 	{
@@ -502,7 +502,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function validatePrice(Form $form, ArrayHash $values): void
 	{
@@ -517,7 +517,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedDate(Form $form, ArrayHash $values): void
 	{
@@ -556,7 +556,7 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param Form $form
-	 * @param ArrayHash<integer|string> $values
+	 * @param ArrayHash<int|string> $values
 	 */
 	public function submittedAddDate(Form $form, ArrayHash $values): void
 	{

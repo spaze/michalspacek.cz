@@ -11,16 +11,16 @@ use stdClass;
 class Data
 {
 
-	/** @var integer */
+	/** @var int */
 	public $postId;
 
 	/** @var string */
 	public $slug;
 
-	/** @var integer */
+	/** @var int */
 	public $localeId;
 
-	/** @var integer */
+	/** @var int */
 	public $translationGroupId;
 
 	/** @var string */
@@ -83,10 +83,10 @@ class Data
 	/** @var Edit[] */
 	public $edits;
 
-	/** @var array<integer, string> */
+	/** @var array<int, string> */
 	public array $cspSnippets = [];
 
-	/** @var array<integer, string> */
+	/** @var array<int, string> */
 	public array $allowedTags = [];
 
 

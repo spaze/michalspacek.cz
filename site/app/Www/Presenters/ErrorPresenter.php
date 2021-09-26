@@ -14,7 +14,7 @@ class ErrorPresenter extends BaseErrorPresenter
 
 	private LocaleLinkGenerator $localeLinkGenerator;
 
-	/** @var integer[] */
+	/** @var int[] */
 	private array $statuses = [
 		IResponse::S400_BAD_REQUEST,
 		IResponse::S403_FORBIDDEN,
