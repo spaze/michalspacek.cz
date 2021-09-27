@@ -25,6 +25,9 @@ final class Dumper
 	/** @var int */
 	public $wrapLength = 120;
 
+	/** @var string */
+	public $indentation = "\t";
+
 
 	/**
 	 * Returns a PHP representation of a variable.
@@ -46,10 +49,10 @@ final class Dumper
 		} elseif (is_array($var)) {
 			return $this->dumpArray($var, $parents, $level, $column);
 
+		} elseif ($var instanceof Literal) {
+			return $this->dumpLiteral($var, $level);
+
 		} elseif (is_object($var)) {
-			if ($var instanceof Literal || $var instanceof Closure) {
-				return ltrim(Nette\Utils\Strings::indent(trim((string) $var), $level), "\t");
-			}
 			return $this->dumpObject($var, $parents, $level);
 
 		} elseif (is_resource($var)) {
@@ -92,7 +95,7 @@ final class Dumper
 			throw new Nette\InvalidArgumentException('Nesting level too deep or recursive dependency.');
 		}
 
-		$space = str_repeat("\t", $level);
+		$space = str_repeat($this->indentation, $level);
 		$outInline = '';
 		$outWrapped = "\n$space";
 		$parents[] = $var;
@@ -106,7 +109,7 @@ final class Dumper
 			$counter = is_int($k) ? max($k + 1, $counter) : $counter;
 			$outInline .= ($outInline === '' ? '' : ', ') . $keyPart;
 			$outInline .= $this->dumpVar($v, $parents, 0, $column + strlen($outInline));
-			$outWrapped .= "\t"
+			$outWrapped .= $this->indentation
 				. $keyPart
 				. $this->dumpVar($v, $parents, $level + 1, strlen($keyPart))
 				. ",\n$space";
@@ -118,12 +121,21 @@ final class Dumper
 	}
 
 
-	private function dumpObject(&$var, array $parents, int $level): string
+	private function dumpObject($var, array $parents, int $level): string
 	{
 		if ($var instanceof \Serializable) {
 			return 'unserialize(' . $this->dumpString(serialize($var)) . ')';
 
+		} elseif ($var instanceof \UnitEnum) {
+			return '\\' . get_class($var) . '::' . $var->name;
+
 		} elseif ($var instanceof \Closure) {
+			$inner = Nette\Utils\Callback::unwrap($var);
+			if (Nette\Utils\Callback::isStatic($inner)) {
+				return PHP_VERSION_ID < 80100
+					? '\Closure::fromCallable(' . $this->dump($inner) . ')'
+					: implode('::', (array) $inner) . '(...)';
+			}
 			throw new Nette\InvalidArgumentException('Cannot dump closure.');
 		}
 
@@ -136,7 +148,7 @@ final class Dumper
 		}
 
 		$arr = (array) $var;
-		$space = str_repeat("\t", $level);
+		$space = str_repeat($this->indentation, $level);
 
 		if ($level > $this->maxDepth || in_array($var, $parents ?? [], true)) {
 			throw new Nette\InvalidArgumentException('Nesting level too deep or recursive dependency.');
@@ -152,7 +164,7 @@ final class Dumper
 
 		foreach ($arr as $k => &$v) {
 			if (!isset($props) || isset($props[$k])) {
-				$out .= "$space\t"
+				$out .= $space . $this->indentation
 					. ($keyPart = $this->dumpVar($k) . ' => ')
 					. $this->dumpVar($v, $parents, $level + 1, strlen($keyPart))
 					. ",\n";
@@ -167,17 +179,25 @@ final class Dumper
 	}
 
 
+	private function dumpLiteral(Literal $var, int $level): string
+	{
+		$s = $var->formatWith($this);
+		$s = Nette\Utils\Strings::indent(trim($s), $level, $this->indentation);
+		return ltrim($s, $this->indentation);
+	}
+
+
 	/**
 	 * Generates PHP statement.
 	 */
 	public function format(string $statement, ...$args): string
 	{
-		$tokens = preg_split('#(\.\.\.\?:?|\$\?|->\?|::\?|\\\\\?|\?\*|\?)#', $statement, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$tokens = preg_split('#(\.\.\.\?:?|\$\?|->\?|::\?|\\\\\?|\?\*|\?(?!\w))#', $statement, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$res = '';
 		foreach ($tokens as $n => $token) {
 			if ($n % 2 === 0) {
 				$res .= $token;
-			} elseif ($token === '\\?') {
+			} elseif ($token === '\?') {
 				$res .= '?';
 			} elseif (!$args) {
 				throw new Nette\InvalidArgumentException('Insufficient number of arguments.');
@@ -213,7 +233,8 @@ final class Dumper
 			$k = !$named || is_int($k) ? '' : $k . ': ';
 			$outInline .= $outInline === '' ? '' : ', ';
 			$outInline .= $k . $this->dumpVar($v, [$var], 0, $column + strlen($outInline));
-			$outWrapped .= ($outWrapped === '' ? '' : ',') . "\n\t" . $k . $this->dumpVar($v, [$var], 1);
+			$outWrapped .= ($outWrapped === '' ? '' : ',') . "\n"
+				. $this->indentation . $k . $this->dumpVar($v, [$var], 1);
 		}
 
 		return count($var) > 1 && (strpos($outInline, "\n") !== false || $column + strlen($outInline) > $this->wrapLength)
@@ -223,10 +244,9 @@ final class Dumper
 
 
 	/**
-	 * @return object
 	 * @internal
 	 */
-	public static function createObject(string $class, array $props)
+	public static function createObject(string $class, array $props): object
 	{
 		return unserialize('O' . substr(serialize($class), 1, -1) . substr(serialize($props), 1));
 	}

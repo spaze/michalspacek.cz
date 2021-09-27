@@ -12,6 +12,7 @@ namespace Nette\PhpGenerator\Traits;
 use Nette;
 use Nette\PhpGenerator\Dumper;
 use Nette\PhpGenerator\Parameter;
+use Nette\Utils\Type;
 
 
 /**
@@ -68,11 +69,9 @@ trait FunctionLike
 	 */
 	public function setParameters(array $val): self
 	{
+		(function (Parameter ...$val) {})(...$val);
 		$this->parameters = [];
 		foreach ($val as $v) {
-			if (!$v instanceof Parameter) {
-				throw new Nette\InvalidArgumentException('Argument must be Nette\PhpGenerator\Parameter[].');
-			}
 			$this->parameters[$v->getName()] = $v;
 		}
 		return $this;
@@ -127,18 +126,19 @@ trait FunctionLike
 	/** @return static */
 	public function setReturnType(?string $type): self
 	{
-		if ($type && $type[0] === '?') {
-			$type = substr($type, 1);
-			$this->returnNullable = true;
-		}
-		$this->returnType = $type;
+		$this->returnType = Nette\PhpGenerator\Helpers::validateType($type, $this->returnNullable);
 		return $this;
 	}
 
 
-	public function getReturnType(): ?string
+	/**
+	 * @return Type|string|null
+	 */
+	public function getReturnType(bool $asObject = false)
 	{
-		return $this->returnType;
+		return $asObject && $this->returnType
+			? Type::fromString($this->returnType)
+			: $this->returnType;
 	}
 
 

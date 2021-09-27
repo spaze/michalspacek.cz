@@ -52,6 +52,45 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess
 	/**
 	 * Sets a variable in this session section.
 	 */
+	public function set(string $name, $value, string $expiration = null): void
+	{
+		$this->getData(true)[$name] = $value;
+		$this->setExpiration($expiration, $name);
+	}
+
+
+	/**
+	 * Gets a variable from this session section.
+	 * @return mixed
+	 */
+	public function get(string $name)
+	{
+		return $this->getData(false)[$name] ?? null;
+	}
+
+
+	/**
+	 * Removes a variable or whole section.
+	 * @param  string|array|null  $name
+	 */
+	public function remove($name = null): void
+	{
+		if (func_num_args()) {
+			$data = &$this->getData(true);
+			$meta = &$this->getMeta();
+			foreach ((array) $name as $name) {
+				unset($data[$name], $meta[$name]);
+			}
+		} else {
+			$this->session->autoStart(true);
+			unset($_SESSION['__NF']['DATA'][$this->name], $_SESSION['__NF']['META'][$this->name]);
+		}
+	}
+
+
+	/**
+	 * Sets a variable in this session section.
+	 */
 	public function __set(string $name, $value): void
 	{
 		$this->getData(true)[$name] = $value;
@@ -113,7 +152,7 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function offsetGet($name)
 	{
-		return $this->__get($name);
+		return $this->get($name);
 	}
 
 
@@ -175,28 +214,16 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess
 	}
 
 
-	/**
-	 * Cancels the current session section.
-	 */
-	public function remove(): void
+	private function &getData(bool $forWrite)
 	{
-		$this->session->start();
-		unset($_SESSION['__NF']['DATA'][$this->name], $_SESSION['__NF']['META'][$this->name]);
-	}
-
-
-	private function &getData(bool $write)
-	{
-		if ($write || !session_id()) {
-			$this->session->start();
-		}
+		$this->session->autoStart($forWrite);
 		return $_SESSION['__NF']['DATA'][$this->name];
 	}
 
 
 	private function &getMeta()
 	{
-		$this->session->start();
+		$this->session->autoStart(true);
 		return $_SESSION['__NF']['META'][$this->name];
 	}
 }

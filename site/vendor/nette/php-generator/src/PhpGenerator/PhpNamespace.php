@@ -26,11 +26,10 @@ final class PhpNamespace
 {
 	use Nette\SmartObject;
 
-	private const KEYWORDS = [
-		'string' => 1, 'int' => 1, 'float' => 1, 'bool' => 1, 'array' => 1, 'object' => 1,
-		'callable' => 1, 'iterable' => 1, 'void' => 1, 'self' => 1, 'parent' => 1, 'static' => 1,
-		'mixed' => 1, 'null' => 1, 'false' => 1,
-	];
+	public const
+		NAME_NORMAL = 'n',
+		NAME_FUNCTION = 'f',
+		NAME_CONSTANT = 'c';
 
 	/** @var string */
 	private $name;
@@ -43,6 +42,9 @@ final class PhpNamespace
 
 	/** @var ClassType[] */
 	private $classes = [];
+
+	/** @var GlobalFunction[] */
+	private $functions = [];
 
 
 	public function __construct(string $name)
@@ -90,6 +92,15 @@ final class PhpNamespace
 	 */
 	public function addUse(string $name, string $alias = null, string &$aliasOut = null): self
 	{
+		if (
+			!Helpers::isNamespaceIdentifier($name, true)
+			|| (Helpers::isIdentifier($name) && isset(Helpers::KEYWORDS[strtolower($name)]))
+		) {
+			throw new Nette\InvalidArgumentException("Value '$name' is not valid class name.");
+		} elseif ($alias && (!Helpers::isIdentifier($alias) || isset(Helpers::KEYWORDS[strtolower($alias)]))) {
+			throw new Nette\InvalidArgumentException("Value '$alias' is not valid alias.");
+		}
+
 		$name = ltrim($name, '\\');
 		if ($alias === null && $this->name === Helpers::extractNamespace($name)) {
 			$alias = Helpers::extractShortName($name);
@@ -108,7 +119,7 @@ final class PhpNamespace
 
 		} elseif (isset($this->uses[$alias]) && $this->uses[$alias] !== $name) {
 			throw new InvalidStateException(
-				"Alias '$alias' used already for '{$this->uses[$alias]}', cannot use for '{$name}'."
+				"Alias '$alias' used already for '{$this->uses[$alias]}', cannot use for '$name'."
 			);
 		}
 
@@ -126,20 +137,30 @@ final class PhpNamespace
 	}
 
 
-	public function unresolveUnionType(string $type): string
+	/** @deprecated  use simplifyName() */
+	public function unresolveName(string $name): string
 	{
-		return implode('|', array_map([$this, 'unresolveName'], explode('|', $type)));
+		return $this->simplifyName($name);
 	}
 
 
-	public function unresolveName(string $name): string
+	public function simplifyType(string $type): string
 	{
-		if (isset(self::KEYWORDS[strtolower($name)]) || $name === '') {
+		return preg_replace_callback('~[\w\x7f-\xff\\\\]+~', function ($m) { return $this->simplifyName($m[0]); }, $type);
+	}
+
+
+	public function simplifyName(string $name): string
+	{
+		if (isset(Helpers::KEYWORDS[strtolower($name)]) || $name === '') {
 			return $name;
 		}
 		$name = ltrim($name, '\\');
-		$res = null;
 		$lower = strtolower($name);
+		$res = Strings::startsWith($lower, strtolower($this->name) . '\\')
+			? substr($name, strlen($this->name) + 1)
+			: null;
+
 		foreach ($this->uses as $alias => $original) {
 			if (Strings::startsWith($lower . '\\', strtolower($original) . '\\')) {
 				$short = $alias . substr($name, strlen($original));
@@ -149,11 +170,7 @@ final class PhpNamespace
 			}
 		}
 
-		if (!$res && Strings::startsWith($lower, strtolower($this->name) . '\\')) {
-			return substr($name, strlen($this->name) + 1);
-		} else {
-			return $res ?: ($this->name ? '\\' : '') . $name;
-		}
+		return $res ?: ($this->name ? '\\' : '') . $name;
 	}
 
 
@@ -179,13 +196,25 @@ final class PhpNamespace
 
 	public function addInterface(string $name): ClassType
 	{
-		return $this->addClass($name)->setInterface();
+		return $this->addClass($name)->setType(ClassType::TYPE_INTERFACE);
 	}
 
 
 	public function addTrait(string $name): ClassType
 	{
-		return $this->addClass($name)->setTrait();
+		return $this->addClass($name)->setType(ClassType::TYPE_TRAIT);
+	}
+
+
+	public function addEnum(string $name): ClassType
+	{
+		return $this->addClass($name)->setType(ClassType::TYPE_ENUM);
+	}
+
+
+	public function addFunction(string $name): GlobalFunction
+	{
+		return $this->functions[$name] = new GlobalFunction($name);
 	}
 
 
@@ -193,6 +222,13 @@ final class PhpNamespace
 	public function getClasses(): array
 	{
 		return $this->classes;
+	}
+
+
+	/** @return GlobalFunction[] */
+	public function getFunctions(): array
+	{
+		return $this->functions;
 	}
 
 

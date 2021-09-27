@@ -106,6 +106,7 @@
 			<property name="spacesCountAroundEqualsSign" value="1"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
 	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHintSpacing"/>
 	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing">
 		<properties>
