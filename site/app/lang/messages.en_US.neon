@@ -319,6 +319,8 @@ trainings:
 	nextdates: "next dates"
 	applicationform:
 		note: "E.g. different billing email address etc."
+	signupforpreposition: "for the"
+	training: "training %s"
 venues:
 	nameaddress: "Name and address"
 	entrance: "Entrance"

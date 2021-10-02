@@ -319,6 +319,8 @@ trainings:
 	nextdates: "nejbližší termíny"
 	applicationform:
 		note: "Např. jiná fakturační e-mailová adresa apod."
+	signupforpreposition: "na"
+	training: "školení %s"
 venues:
 	nameaddress: "Název a adresa"
 	entrance: "Pohled na vchod"

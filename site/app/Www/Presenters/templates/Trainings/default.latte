@@ -7,7 +7,7 @@
 <ul class="vcalendar" id="training-dates">
  	{foreach $upcomingTrainings as $item}
 		<li class="vevent">
-			<a n:href=":Www:Trainings:training $item[action]" class="url"><strong class="summary">{$item[name]}</strong></a>
+			<a n:href=":Www:Trainings:training $item[action]" class="url"><strong class="summary description">{$item[name]}</strong></a>
 			<span class="lighter"><i class="fas fa-fw fa-calendar"></i></span>
 			<small n:foreach="$item[dates] as $date" class="date">
 				<strong>

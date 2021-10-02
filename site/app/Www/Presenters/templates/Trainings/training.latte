@@ -123,7 +123,7 @@
 		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>{if !$date->remote},
 		{_messages.trainings.lunchbreak}{/if}
 		<small n:if="$date->label" class="label">{$date->label}</small>
-		<small>(<a href="#{_html.id.application}" data-id="{$date->dateId}" class="url">{_messages.label.signup}</a>)</small>
+		<small>(<a href="#{_html.id.application}" data-id="{$date->dateId}" class="url">{_messages.label.signup}</a> {_messages.trainings.signupforpreposition} <span class="description">{_messages.trainings.training|format:$title}</span>)</small>
 		{if $date->tentative}
 			<br><small>{_messages.trainings.tentativedate|format}</small>
 		{else}
