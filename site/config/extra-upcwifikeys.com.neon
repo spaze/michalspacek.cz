@@ -1,0 +1,7 @@
+includes:
+	- common-upcwifikeys.com.neon
+
+parameters:
+	domain:
+		root: upcwifikeys.com
+		sharedStaticRoot: https://www.michalspacek.cz

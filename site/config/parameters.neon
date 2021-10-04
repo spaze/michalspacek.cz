@@ -1,6 +1,7 @@
 parameters:
 	locales:
 		supported:
+			# The value is a FQDN if it ends with a dot, otherwise the rootDomainMapping.$value domain is appended to the host name
 			admin:
 				cs_CZ: cz
 			api:
@@ -10,7 +11,7 @@ parameters:
 			pulse:
 				en_US: cz
 			upc:
-				en_US: cz
+				en_US: upcwifikeys.com.
 			www:
 				cs_CZ: cz
 				en_US: com

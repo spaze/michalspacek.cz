@@ -56,6 +56,9 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 
 parameters:
 	locales:
+		supported:
+			upc:
+				en_US: upcwifikeys.com.test.
 		rootDomainMapping:
 			cz: michalspacek.cz.test
 			com: michalspacek.com.test

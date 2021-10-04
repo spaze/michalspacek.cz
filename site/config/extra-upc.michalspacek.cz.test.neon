@@ -1,6 +1,0 @@
-includes:
-	- common-upc.michalspacek.cz.neon
-
-parameters:
-	domain:
-		root: michalspacek.cz.test
