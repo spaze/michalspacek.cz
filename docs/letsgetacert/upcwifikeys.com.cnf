@@ -1,0 +1,6 @@
+CN=upcwifikeys.com
+PRIVKEY_CMD="ecparam -genkey -name prime256v1 -out %s"
+CERT_DIR=/etc/nginx/certs
+SUBJECT="/C=CZ/ST=Prague/L=Prague/O=upcwifikeys.com/emailAddress=$SUBJECT_EMAIL/CN=$CN"
+WEBROOT_DIR=/srv/www/michalspacek.cz/site/public
+DOMAINS="upcwifikeys.com=upcwifikeys.com,www.upcwifikeys.com"

@@ -3,4 +3,4 @@ PRIVKEY_CMD="ecparam -genkey -name prime256v1 -out %s"
 CERT_DIR=/etc/nginx/certs
 SUBJECT="/C=CZ/ST=Prague/L=Prague/O=michalspacek.cz/emailAddress=$SUBJECT_EMAIL/CN=$CN"
 WEBROOT_DIR=/srv/www/$CN/site/public
-DOMAINS="www.michalspacek.cz=michalspacek.cz,www.michalspacek.cz;www.michalspacek.com=michalspacek.com,www.michalspacek.com;admin=admin.michalspacek.cz;api=api.michalspacek.cz;heartbleed=heartbleed.michalspacek.cz;pulse=pulse.michalspacek.cz;upc=upc.michalspacek.cz"
+DOMAINS="www.michalspacek.cz=michalspacek.cz,www.michalspacek.cz;www.michalspacek.com=michalspacek.com,www.michalspacek.com;admin=admin.michalspacek.cz;api=api.michalspacek.cz;heartbleed=heartbleed.michalspacek.cz;pulse=pulse.michalspacek.cz;upcwifikeys.com=upc.michalspacek.cz"

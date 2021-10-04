@@ -213,7 +213,7 @@ class RouterFactory
 	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = NetteRoute::class): void
 	{
 		$host = self::HOSTS[$this->currentModule];
-		foreach ($this->supportedLocales[$host] as $locale => $tld) {
+		foreach ($this->supportedLocales[$host] as $locale => $domain) {
 			$metadata = $initialMetadata ?? [];
 			$maskPrefix = (isset($this->translatedRoutes[$this->currentModule][$defaultPresenter]) ? $this->translatedRoutes[$this->currentModule][$defaultPresenter]['mask'][$locale] : null);
 			$metadata['presenter'] = [NetteRoute::VALUE => $defaultPresenter];
@@ -227,7 +227,13 @@ class RouterFactory
 					$metadata['action'][NetteRoute::FILTER_TABLE] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
 				}
 			}
-			$this->addToRouter($this->createRoute($class, "//{$host}.{$this->rootDomainMapping[$tld]}/{$maskPrefix}{$mask}", $metadata), $locale, $host);
+			$hostMask = sprintf(
+				'//%s/%s%s',
+				str_ends_with($domain, '.') ? rtrim($domain, '.') : "{$host}.{$this->rootDomainMapping[$domain]}",
+				$maskPrefix,
+				$mask,
+			);
+			$this->addToRouter($this->createRoute($class, $hostMask, $metadata), $locale, $host);
 		}
 	}
 
