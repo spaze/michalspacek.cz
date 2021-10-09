@@ -347,7 +347,7 @@ projects:
     otherprojects: "Toto jsou mé další projekty:"
     pulse:
         passwordstorages: "Seznam firem, které nějakým způsobem zveřejnily způsob ukládání uživatelských hesel. Projektem se snažím ostatní firmy inspirovat k bezpečnému ukládání hesel."
-    upckeys: "Generování výrobcem přednastavených hesel pro některé rooutery od UPC. Zkontrolujte si Wi-Fi a případně heslo změňte."
+    upckeys: "Generování výrobcem přednastavených hesel pro některé routery od UPC. Zkontrolujte si Wi-Fi a případně heslo změňte."
 certificates:
 	admin:
 		validdays: "%count% den|%count% dny|%count% dní"
