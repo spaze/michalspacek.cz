@@ -18,29 +18,14 @@ class LocaleLinkGenerator
 	/** @var string */
 	private const DEFAULT_PARAMS = '*';
 
-	private RouterFactory $routerFactory;
-
-	private IRequest $httpRequest;
-
-	private IPresenterFactory $presenterFactory;
-
-	private LinkGenerator $linkGenerator;
-
-	private Translator $translator;
-
 
 	public function __construct(
-		RouterFactory $routerFactory,
-		IRequest $httpRequest,
-		IPresenterFactory $presenterFactory,
-		LinkGenerator $linkGenerator,
-		Translator $translator
+		private RouterFactory $routerFactory,
+		private IRequest $httpRequest,
+		private IPresenterFactory $presenterFactory,
+		private LinkGenerator $linkGenerator,
+		private Translator $translator,
 	) {
-		$this->routerFactory = $routerFactory;
-		$this->httpRequest = $httpRequest;
-		$this->presenterFactory = $presenterFactory;
-		$this->linkGenerator = $linkGenerator;
-		$this->translator = $translator;
 	}
 
 

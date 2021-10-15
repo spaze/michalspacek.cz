@@ -17,33 +17,14 @@ use Nette\Utils\DateTime as NetteDateTime;
 class Articles
 {
 
-	private Explorer $database;
-
-	private Texy $texyFormatter;
-
-	private LinkGenerator $linkGenerator;
-
-	private Post $blogPost;
-
-	private Translator $translator;
-
-	private Tags $tags;
-
-
 	public function __construct(
-		Explorer $context,
-		Texy $texyFormatter,
-		LinkGenerator $linkGenerator,
-		Post $blogPost,
-		Tags $tags,
-		Translator $translator
+		private Explorer $database,
+		private Texy $texyFormatter,
+		private LinkGenerator $linkGenerator,
+		private Post $blogPost,
+		private Tags $tags,
+		private Translator $translator,
 	) {
-		$this->database = $context;
-		$this->texyFormatter = $texyFormatter;
-		$this->linkGenerator = $linkGenerator;
-		$this->blogPost = $blogPost;
-		$this->tags = $tags;
-		$this->translator = $translator;
 	}
 
 

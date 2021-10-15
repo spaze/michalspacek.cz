@@ -18,18 +18,11 @@ class TrainingControlsFactory
 	use Date;
 
 
-	private Translator $translator;
-
-	private WinterIsComing $winterIsComing;
-
-	private Applications $trainingApplications;
-
-
-	public function __construct(Applications $trainingApplications, WinterIsComing $winterIsComing, Translator $translator)
-	{
-		$this->trainingApplications = $trainingApplications;
-		$this->winterIsComing = $winterIsComing;
-		$this->translator = $translator;
+	public function __construct(
+		private Applications $trainingApplications,
+		private WinterIsComing $winterIsComing,
+		private Translator $translator,
+	) {
 	}
 
 

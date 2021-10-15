@@ -25,34 +25,16 @@ use Tracy\Debugger;
 class TrainingApplicationFactory
 {
 
-	private FormFactory $factory;
-	private Translator $translator;
-	private Dates $trainingDates;
-	private TrainingControlsFactory $trainingControlsFactory;
-	private FormDataLogger $formDataLogger;
-	private FormSpam $formSpam;
-	private Applications $trainingApplications;
-	private Mails $trainingMails;
-
-
 	public function __construct(
-		FormFactory $factory,
-		Translator $translator,
-		TrainingControlsFactory $trainingControlsFactory,
-		Dates $trainingDates,
-		FormDataLogger $formDataLogger,
-		FormSpam $formSpam,
-		Applications $trainingApplications,
-		Mails $trainingMails
+		private FormFactory $factory,
+		private Translator $translator,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private Dates $trainingDates,
+		private FormDataLogger $formDataLogger,
+		private FormSpam $formSpam,
+		private Applications $trainingApplications,
+		private Mails $trainingMails,
 	) {
-		$this->factory = $factory;
-		$this->translator = $translator;
-		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->trainingDates = $trainingDates;
-		$this->formDataLogger = $formDataLogger;
-		$this->formSpam = $formSpam;
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingMails = $trainingMails;
 	}
 
 

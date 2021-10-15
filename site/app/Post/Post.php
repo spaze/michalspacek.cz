@@ -22,21 +22,7 @@ use Nette\Utils\Json;
 class Post
 {
 
-	private Explorer $database;
-
-	private Loader $loader;
-
-	private Texy $texyFormatter;
-
 	private Cache $exportsCache;
-
-	private LinkGenerator $linkGenerator;
-
-	private LocaleLinkGenerator $localeLinkGenerator;
-
-	private Tags $tags;
-
-	private Translator $translator;
 
 	/** @var string[]|null */
 	private ?array $locales = null;
@@ -48,23 +34,16 @@ class Post
 
 
 	public function __construct(
-		Explorer $context,
-		Loader $loader,
-		Texy $texyFormatter,
-		Storage $cacheStorage,
-		LinkGenerator $linkGenerator,
-		LocaleLinkGenerator $localeLinkGenerator,
-		Tags $tags,
-		Translator $translator
+		private Explorer $database,
+		private Loader $loader,
+		private Texy $texyFormatter,
+		private Storage $cacheStorage,
+		private LinkGenerator $linkGenerator,
+		private LocaleLinkGenerator $localeLinkGenerator,
+		private Tags $tags,
+		private Translator $translator,
 	) {
-		$this->database = $context;
-		$this->loader = $loader;
-		$this->texyFormatter = $texyFormatter;
-		$this->exportsCache = new Cache($cacheStorage, Exports::class);
-		$this->linkGenerator = $linkGenerator;
-		$this->localeLinkGenerator = $localeLinkGenerator;
-		$this->tags = $tags;
-		$this->translator = $translator;
+		$this->exportsCache = new Cache($this->cacheStorage, Exports::class);
 	}
 
 

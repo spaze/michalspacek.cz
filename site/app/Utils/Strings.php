@@ -8,12 +8,9 @@ use Contributte\Translation\Translator;
 class Strings
 {
 
-	private Translator $translator;
-
-
-	public function __construct(Translator $translator)
-	{
-		$this->translator = $translator;
+	public function __construct(
+		private Translator $translator,
+	) {
 	}
 
 

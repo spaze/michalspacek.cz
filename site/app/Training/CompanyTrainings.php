@@ -11,21 +11,12 @@ use Nette\Database\Row;
 class CompanyTrainings
 {
 
-	private Explorer $database;
-
-	private Texy $texyFormatter;
-
-	private Dates $trainingDates;
-
-	private Translator $translator;
-
-
-	public function __construct(Explorer $context, Texy $texyFormatter, Dates $trainingDates, Translator $translator)
-	{
-		$this->database = $context;
-		$this->texyFormatter = $texyFormatter;
-		$this->trainingDates = $trainingDates;
-		$this->translator = $translator;
+	public function __construct(
+		private Explorer $database,
+		private Texy $texyFormatter,
+		private Dates $trainingDates,
+		private Translator $translator,
+	) {
 	}
 
 

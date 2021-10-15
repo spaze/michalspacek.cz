@@ -39,10 +39,6 @@ class RouterFactory
 
 	private const ROOT_ONLY = '';
 
-	private Loader $blogPostLoader;
-
-	private Translator $translator;
-
 	/** @var array<string, array<string, string>> of host => array of supported locales */
 	private array $supportedLocales;
 
@@ -76,10 +72,10 @@ class RouterFactory
 	private array $availableLocales = [];
 
 
-	public function __construct(Loader $blogPostLoader, Translator $translator)
-	{
-		$this->blogPostLoader = $blogPostLoader;
-		$this->translator = $translator;
+	public function __construct(
+		private Loader $blogPostLoader,
+		private Translator $translator,
+	) {
 		$this->availableLocales = $this->translator->getAvailableLocales();
 	}
 

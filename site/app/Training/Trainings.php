@@ -12,14 +12,6 @@ use Nette\Utils\ArrayHash;
 class Trainings
 {
 
-	private Explorer $database;
-
-	private Texy $texyFormatter;
-
-	private Dates $trainingDates;
-
-	private Translator $translator;
-
 	/** @var Row[] */
 	private array $trainingsById = [];
 
@@ -27,12 +19,12 @@ class Trainings
 	private ?array $pastWithPersonalData = null;
 
 
-	public function __construct(Explorer $context, Texy $texyFormatter, Dates $trainingDates, Translator $translator)
-	{
-		$this->database = $context;
-		$this->texyFormatter = $texyFormatter;
-		$this->trainingDates = $trainingDates;
-		$this->translator = $translator;
+	public function __construct(
+		private Explorer $database,
+		private Texy $texyFormatter,
+		private Dates $trainingDates,
+		private Translator $translator,
+	) {
 	}
 
 

@@ -18,15 +18,10 @@ use Nette\Http\IResponse;
 class ForbiddenPresenter extends Presenter
 {
 
-	private Translator $translator;
-
-	private IResponse $httpResponse;
-
-
-	public function __construct(Translator $translator, IResponse $httpResponse)
-	{
-		$this->translator = $translator;
-		$this->httpResponse = $httpResponse;
+	public function __construct(
+		private Translator $translator,
+		private IResponse $httpResponse,
+	) {
 		parent::__construct();
 	}
 

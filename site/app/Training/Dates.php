@@ -24,16 +24,6 @@ class Dates
 
 	private const DATA_RETENTION = 30;
 
-	private Explorer $database;
-
-	private Statuses $trainingStatuses;
-
-	private Prices $prices;
-
-	private Helpers $netxtenHelpers;
-
-	private Translator $translator;
-
 	/** @var array<string, int> */
 	private array $statusIds = array();
 
@@ -41,13 +31,13 @@ class Dates
 	private array $upcomingDates = array();
 
 
-	public function __construct(Explorer $context, Statuses $trainingStatuses, Prices $prices, Helpers $netxtenHelpers, Translator $translator)
-	{
-		$this->database = $context;
-		$this->trainingStatuses = $trainingStatuses;
-		$this->prices = $prices;
-		$this->netxtenHelpers = $netxtenHelpers;
-		$this->translator = $translator;
+	public function __construct(
+		private Explorer $database,
+		private Statuses $trainingStatuses,
+		private Prices $prices,
+		private Helpers $netxtenHelpers,
+		private Translator $translator,
+	) {
 	}
 
 

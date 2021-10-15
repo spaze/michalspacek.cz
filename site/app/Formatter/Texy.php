@@ -31,22 +31,6 @@ class Texy extends NetxtenTexy
 	/** @var string */
 	private const TRAINING_DATE = 'TRAINING_DATE';
 
-	private Translator $translator;
-
-	private Application $application;
-
-	private Dates $trainingDates;
-
-	private Locales $trainingLocales;
-
-	private Prices $prices;
-
-	private LocaleLinkGenerator $localeLinkGenerator;
-
-	private LocaleUrls $blogPostLocaleUrls;
-
-	private Helpers $netxtenHelpers;
-
 	private ?TexyTexy $texy = null;
 
 	/**
@@ -72,23 +56,15 @@ class Texy extends NetxtenTexy
 
 	public function __construct(
 		Storage $cacheStorage,
-		Translator $translator,
-		Application $application,
-		Dates $trainingDates,
-		Prices $price,
-		Locales $trainingLocales,
-		LocaleLinkGenerator $localeLinkGenerator,
-		LocaleUrls $localeUrls,
-		Helpers $netxtenHelpers
+		private Translator $translator,
+		private Application $application,
+		private Dates $trainingDates,
+		private Prices $prices,
+		private Locales $trainingLocales,
+		private LocaleLinkGenerator $localeLinkGenerator,
+		private LocaleUrls $blogPostLocaleUrls,
+		private Helpers $netxtenHelpers,
 	) {
-		$this->translator = $translator;
-		$this->application = $application;
-		$this->trainingDates = $trainingDates;
-		$this->prices = $price;
-		$this->trainingLocales = $trainingLocales;
-		$this->localeLinkGenerator = $localeLinkGenerator;
-		$this->blogPostLocaleUrls = $localeUrls;
-		$this->netxtenHelpers = $netxtenHelpers;
 		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
 	}
 

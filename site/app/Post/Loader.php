@@ -16,18 +16,14 @@ use Nette\Utils\DateTime;
 class Loader
 {
 
-	private Explorer $database;
-
-	private Translator $translator;
-
 	/** @var Row<mixed>|null */
 	private ?Row $post = null;
 
 
-	public function __construct(Explorer $context, Translator $translator)
-	{
-		$this->database = $context;
-		$this->translator = $translator;
+	public function __construct(
+		private Explorer $database,
+		private Translator $translator,
+	) {
 	}
 
 
@@ -48,7 +44,7 @@ class Loader
 	 * Fetch post.
 	 *
 	 * @param string $post
-	 * @param string $previewKey
+	 * @param string|null $previewKey
 	 * @return Row<mixed>|null
 	 */
 	public function fetch(string $post, ?string $previewKey = null): ?Row
