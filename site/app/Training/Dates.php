@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 use Netxten\Templating\Helpers;

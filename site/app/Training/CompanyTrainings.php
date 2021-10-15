@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\Texy;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator;
 
 class CompanyTrainings
 {

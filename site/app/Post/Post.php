@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Post;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
@@ -15,7 +16,6 @@ use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
 

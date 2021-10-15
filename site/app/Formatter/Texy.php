@@ -15,7 +15,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
-use Nette\Localization\Translator as NetteTranslator;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Netxten\Formatter\Texy as NetxtenTexy;
@@ -32,8 +31,7 @@ class Texy extends NetxtenTexy
 	/** @var string */
 	private const TRAINING_DATE = 'TRAINING_DATE';
 
-	/** @var Translator|NetteTranslator */
-	private NetteTranslator $translator;
+	private Translator $translator;
 
 	private Application $application;
 
@@ -74,7 +72,7 @@ class Texy extends NetxtenTexy
 
 	public function __construct(
 		Storage $cacheStorage,
-		NetteTranslator $translator,
+		Translator $translator,
 		Application $application,
 		Dates $trainingDates,
 		Prices $price,

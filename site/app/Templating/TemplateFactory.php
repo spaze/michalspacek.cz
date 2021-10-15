@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Theme;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
@@ -10,7 +11,6 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
 use Nette\Caching\Storage;
 use Nette\Http\IRequest;
-use Nette\Localization\Translator;
 use Nette\Security\User;
 use Netxten\Templating\Helpers as NetxtenHelpers;
 

@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator;
 use Nette\Utils\Random;
 use PDOException;
 use RuntimeException;
