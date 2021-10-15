@@ -192,17 +192,18 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	public function run(Application\Request $request): Application\Response
 	{
+		$this->request = $request;
+		$this->payload = $this->payload ?: new \stdClass;
+		$this->setParent($this->getParent(), $request->getPresenterName());
+
+		if (!$this->httpResponse->isSent()) {
+			$this->httpResponse->addHeader('Vary', 'X-Requested-With');
+		}
+
+		$this->initGlobalParameters();
+
 		try {
 			// STARTUP
-			$this->request = $request;
-			$this->payload = $this->payload ?: new \stdClass;
-			$this->setParent($this->getParent(), $request->getPresenterName());
-
-			if (!$this->httpResponse->isSent()) {
-				$this->httpResponse->addHeader('Vary', 'X-Requested-With');
-			}
-
-			$this->initGlobalParameters();
 			$this->checkRequirements(static::getReflection());
 			Arrays::invoke($this->onStartup, $this);
 			$this->startup();
@@ -236,19 +237,17 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->tryCall(static::formatRenderMethod($this->view), $this->params);
 			$this->afterRender();
 
-			// save component tree persistent state
-			$this->saveGlobalState();
-			if ($this->isAjax()) {
-				$this->payload->state = $this->getGlobalState();
-			}
-
 			// finish template rendering
 			$this->sendTemplate();
 
 		} catch (Application\AbortException $e) {
 		}
 
+		// save component tree persistent state
+		$this->saveGlobalState();
+
 		if ($this->isAjax()) {
+			$this->payload->state = $this->getGlobalState();
 			try {
 				if ($this->response instanceof Responses\TextResponse && $this->isControlInvalid()) {
 					$this->snippetMode = true;
@@ -447,6 +446,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * @throws Nette\Application\AbortException
+	 * @return never
 	 */
 	public function sendTemplate(Template $template = null): void
 	{
@@ -595,6 +595,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Sends AJAX payload to the output.
 	 * @throws Nette\Application\AbortException
+	 * @return never
 	 */
 	public function sendPayload(): void
 	{
@@ -606,6 +607,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Sends JSON data to the output.
 	 * @param  mixed  $data
 	 * @throws Nette\Application\AbortException
+	 * @return never
 	 */
 	public function sendJson($data): void
 	{
@@ -619,6 +621,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Sends response and terminates presenter.
 	 * @throws Nette\Application\AbortException
+	 * @return never
 	 */
 	public function sendResponse(Application\Response $response): void
 	{
@@ -630,6 +633,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Correctly terminates presenter.
 	 * @throws Nette\Application\AbortException
+	 * @return never
 	 */
 	public function terminate(): void
 	{
@@ -642,6 +646,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  string|Nette\Application\Request  $destination
 	 * @param  array|mixed  $args
 	 * @throws Nette\Application\AbortException
+	 * @return never
 	 */
 	public function forward($destination, $args = []): void
 	{
@@ -660,6 +665,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Redirect to another URL and ends presenter execution.
 	 * @throws Nette\Application\AbortException
+	 * @return never
 	 */
 	public function redirectUrl(string $url, int $httpCode = null): void
 	{
@@ -698,15 +704,19 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Conditional redirect to canonicalized URI.
+	 * @param  mixed  ...$args
 	 * @throws Nette\Application\AbortException
 	 */
-	public function canonicalize(string $destination = null, array $args = []): void
+	public function canonicalize(string $destination = null, ...$args): void
 	{
 		$request = $this->request;
 		if ($this->isAjax() || (!$request->isMethod('get') && !$request->isMethod('head'))) {
 			return;
 		}
 
+		$args = count($args) === 1 && is_array($args[0] ?? null)
+			? $args[0]
+			: $args;
 		try {
 			$url = $this->createRequest(
 				$this,
@@ -821,6 +831,12 @@ abstract class Presenter extends Control implements Application\IPresenter
 				if (!$reflection->hasCallableMethod($method)) {
 					throw new InvalidLinkException("Unknown signal '$signal', missing handler {$reflection->getName()}::$method()");
 				}
+				if (
+					$this->invalidLinkMode
+					&& ComponentReflection::parseAnnotation(new \ReflectionMethod($component, $method), 'deprecated')
+				) {
+					trigger_error("Link to deprecated signal '$signal'" . ($component === $this ? '' : ' in ' . get_class($component)) . " from '{$this->getName()}:{$this->getAction()}'.", E_USER_DEPRECATED);
+				}
 				// convert indexed parameters to named
 				static::argsToParams(get_class($component), $method, $args, [], $missing);
 			}
@@ -848,6 +864,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$current = ($action === '*' || strcasecmp($action, (string) $this->action) === 0) && $presenterClass === static::class;
 
 			$reflection = new ComponentReflection($presenterClass);
+			if ($this->invalidLinkMode && ComponentReflection::parseAnnotation($reflection, 'deprecated')) {
+				trigger_error("Link to deprecated presenter '$presenter' from '{$this->getName()}:{$this->getAction()}'.", E_USER_DEPRECATED);
+			}
 
 			// counterpart of run() & tryCall()
 			$method = $presenterClass::formatActionMethod($action);
@@ -864,6 +883,12 @@ abstract class Presenter extends Control implements Application\IPresenter
 					throw new InvalidLinkException("Unable to pass parameters to action '$presenter:$action', missing corresponding method.");
 				}
 			} else {
+				if (
+					$this->invalidLinkMode
+					&& ComponentReflection::parseAnnotation(new \ReflectionMethod($presenterClass, $method), 'deprecated')
+				) {
+					trigger_error("Link to deprecated action '$presenter:$action' from '{$this->getName()}:{$this->getAction()}'.", E_USER_DEPRECATED);
+				}
 				static::argsToParams($presenterClass, $method, $args, $path === 'this' ? $this->params : [], $missing);
 			}
 

@@ -4,9 +4,20 @@ Custom PHP session handler for [Nette Framework](http://nette.org/) that uses My
 
 ## Requirements
 
+- [nette/database](https://github.com/nette/database) 3.1+
+- [nette/di](https://github.com/nette/utils) 3.0+
+- [nette/utils](https://github.com/nette/utils) 3.2+
+- PHP 7.4+
+
+<details>
+<summary>Requirements for previous versions</summary>
+
+*Requirements for 2.1 (not supported anymore)**
 - [nette/database](https://github.com/nette/database) 2.4+
+- [nette/di](https://github.com/nette/utils) 2.4+
 - [nette/utils](https://github.com/nette/utils) 2.4+
 - PHP 7.2+
+</details>
 
 ## Installation
 

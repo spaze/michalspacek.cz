@@ -92,6 +92,10 @@ class DefinitionSchema implements Schema
 			return ['factory' => $def];
 
 		} elseif (is_array($def)) {
+			if (isset($def['create']) && !isset($def['factory'])) {
+				$def['factory'] = $def['create'];
+				unset($def['create']);
+			}
 			if (isset($def['class']) && !isset($def['type'])) {
 				if ($def['class'] instanceof Statement) {
 					$key = end($context->path);
@@ -154,6 +158,9 @@ class DefinitionSchema implements Schema
 
 		} elseif (isset($def['imported'])) {
 			return Definitions\ImportedDefinition::class;
+
+		} elseif (!$def) {
+			throw new Nette\DI\InvalidConfigurationException("Service '$key': Empty definition.");
 
 		} else {
 			return Definitions\ServiceDefinition::class;

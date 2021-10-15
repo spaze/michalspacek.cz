@@ -141,6 +141,9 @@ class BlockMacros extends MacroSet
 			$name = ltrim($name, '#');
 		}
 
+		if ($name === 'parent' && $node->modifiers !== '') {
+			throw new CompileException('Filters are not allowed in {include parent}');
+		}
 		$noEscape = Helpers::removeFilter($node->modifiers, 'noescape');
 		if ($node->modifiers && !$noEscape) {
 			$node->modifiers .= '|escape';
@@ -159,7 +162,7 @@ class BlockMacros extends MacroSet
 
 		$parent = $name === 'parent';
 		if ($name === 'parent' || $name === 'this') {
-			$item = $node->closest(['block', 'define'], function ($node) { return isset($node->data->name); });
+			$item = $node->closest(['block', 'define'], function ($node) { return $node->data->name !== ''; });
 			if (!$item) {
 				throw new CompileException("Cannot include $name block outside of any block.");
 			}
@@ -174,7 +177,7 @@ class BlockMacros extends MacroSet
 
 		return $writer->write(
 			'$this->renderBlock' . ($parent ? 'Parent' : '')
-			. '($ʟ_nm = ' . $phpName . ', '
+			. '(' . $phpName . ', '
 			. '%node.array? + ' . $key
 			. ($node->modifiers
 				? ', function ($s, $type) { $ʟ_fi = new LR\FilterInfo($type); return %modifyContent($s); }'

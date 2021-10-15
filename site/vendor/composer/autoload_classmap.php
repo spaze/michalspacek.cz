@@ -304,7 +304,6 @@ return array(
     'Nette\\Forms\\Controls\\TextInput' => $vendorDir . '/nette/forms/src/Forms/Controls/TextInput.php',
     'Nette\\Forms\\Controls\\UploadControl' => $vendorDir . '/nette/forms/src/Forms/Controls/UploadControl.php',
     'Nette\\Forms\\Form' => $vendorDir . '/nette/forms/src/Forms/Form.php',
-    'Nette\\Forms\\FormFactory' => $vendorDir . '/nette/forms/src/Forms/FormFactory.php',
     'Nette\\Forms\\FormRenderer' => $vendorDir . '/nette/forms/src/Forms/FormRenderer.php',
     'Nette\\Forms\\Helpers' => $vendorDir . '/nette/forms/src/Forms/Helpers.php',
     'Nette\\Forms\\IControl' => $vendorDir . '/nette/forms/src/compatibility.php',

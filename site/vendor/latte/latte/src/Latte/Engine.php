@@ -17,8 +17,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.10.3';
-	public const VERSION_ID = 21003;
+	public const VERSION = '2.10.4';
+	public const VERSION_ID = 21004;
 
 	/** Content types */
 	public const
@@ -297,7 +297,7 @@ class Engine
 	{
 		$this->filters->add(null, function ($name) use ($callback) {
 			if ($filter = $callback($name)) {
-				$this->filters->add($name, $callback($name));
+				$this->filters->add($name, $filter);
 			}
 		});
 		return $this;

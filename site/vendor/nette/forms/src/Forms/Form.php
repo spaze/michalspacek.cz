@@ -106,10 +106,10 @@ class Form extends Container implements Nette\HtmlStringable
 	/** @var Nette\Http\IRequest */
 	private static $defaultHttpRequest;
 
-	/** @var mixed or null meaning: not detected yet */
+	/** @var SubmitterControl|bool */
 	private $submittedBy;
 
-	/** @var array */
+	/** @var array|null */
 	private $httpData;
 
 	/** @var Html  element <form> */
@@ -350,7 +350,7 @@ class Form extends Container implements Nette\HtmlStringable
 	 */
 	public function isSubmitted()
 	{
-		if ($this->submittedBy === null) {
+		if ($this->httpData === null) {
 			$this->getHttpData();
 		}
 		return $this->submittedBy;
@@ -433,7 +433,7 @@ class Form extends Container implements Nette\HtmlStringable
 		Arrays::invoke($this->onSubmit, $this);
 
 		if (!$handled) {
-			trigger_error('Form was submitted but there are no associated handlers.', E_USER_WARNING);
+			trigger_error("Form was submitted but there are no associated handlers (form '{$this->getName()}').", E_USER_WARNING);
 		}
 	}
 
@@ -700,13 +700,6 @@ class Form extends Container implements Nette\HtmlStringable
 			}
 			Nette\Http\Helpers::initCookie(self::$defaultHttpRequest, new Nette\Http\Response);
 		}
-	}
-
-
-	/** @internal */
-	public function setHttpRequest(Nette\Http\IRequest $request)
-	{
-		$this->httpRequest = $request;
 	}
 
 

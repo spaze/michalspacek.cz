@@ -102,13 +102,13 @@ final class Extractor
 		(new NodeFinder)->find($statements, function (Node $node) use (&$replacements, $start) {
 			if ($node instanceof Node\Name\FullyQualified) {
 				if ($node->getAttribute('originalName') instanceof Node\Name) {
-					$type = $node->getAttribute('parent') instanceof Node\Expr\ConstFetch
+					$of = $node->getAttribute('parent') instanceof Node\Expr\ConstFetch
 							? PhpNamespace::NAME_CONSTANT
 							: ($node->getAttribute('parent') instanceof Node\Expr\FuncCall ? PhpNamespace::NAME_FUNCTION : PhpNamespace::NAME_NORMAL);
 					$replacements[] = [
 						$node->getStartFilePos() - $start,
 						$node->getEndFilePos() - $start,
-						Helpers::tagName($node->toCodeString(), $type),
+						Helpers::tagName($node->toCodeString(), $of),
 					];
 				}
 
@@ -147,19 +147,11 @@ final class Extractor
 	private function performReplacements(string $s, array $replacements): string
 	{
 		usort($replacements, function ($a, $b) { // sort by position in file
-			return $a[0] <=> $b[0];
+			return $b[0] <=> $a[0];
 		});
 
-		$correctiveOffset = 0;
 		foreach ($replacements as [$start, $end, $replacement]) {
-			$replacingStringLength = $end - $start + 1;
-			$s = substr_replace(
-				$s,
-				$replacement,
-				$correctiveOffset + $start,
-				$replacingStringLength
-			);
-			$correctiveOffset += strlen($replacement) - $replacingStringLength;
+			$s = substr_replace($s, $replacement, $start, $end - $start + 1);
 		}
 		return $s;
 	}
@@ -221,10 +213,13 @@ final class Extractor
 
 	private function addUseToNamespace(Node\Stmt\Use_ $node, PhpNamespace $namespace): void
 	{
-		if ($node->type === $node::TYPE_NORMAL) {
-			foreach ($node->uses as $use) {
-				$namespace->addUse($use->name->toString(), $use->alias ? $use->alias->toString() : null);
-			}
+		$of = [
+			$node::TYPE_NORMAL => PhpNamespace::NAME_NORMAL,
+			$node::TYPE_FUNCTION => PhpNamespace::NAME_FUNCTION,
+			$node::TYPE_CONSTANT => PhpNamespace::NAME_CONSTANT,
+		][$node->type];
+		foreach ($node->uses as $use) {
+			$namespace->addUse($use->name->toString(), $use->alias ? $use->alias->toString() : null, $of);
 		}
 	}
 

@@ -75,9 +75,12 @@ class Container
 			throw new Nette\InvalidArgumentException(sprintf("Service '%s' must be a object, %s given.", $name, gettype($service)));
 		}
 
-		$type = $service instanceof \Closure
-			? (string) Nette\Utils\Reflection::getReturnType(new \ReflectionFunction($service))
-			: get_class($service);
+		if ($service instanceof \Closure) {
+			$rt = Nette\Utils\Type::fromReflection(new \ReflectionFunction($service));
+			$type = $rt ? Helpers::ensureClassType($rt, 'return type of factory') : '';
+		} else {
+			$type = get_class($service);
+		}
 
 		if (!isset($this->methods[self::getMethodName($name)])) {
 			$this->types[$name] = $type;
@@ -226,8 +229,9 @@ class Container
 
 	/**
 	 * Resolves service by type.
-	 * @param  bool  $throw  exception if service doesn't exist?
-	 * @return object|null  service
+	 * @template T
+	 * @param  class-string<T>  $type
+	 * @return ?T
 	 * @throws MissingServiceException
 	 */
 	public function getByType(string $type, bool $throw = true)

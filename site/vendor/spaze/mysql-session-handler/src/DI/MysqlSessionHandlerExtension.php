@@ -4,35 +4,45 @@ declare(strict_types = 1);
 namespace Spaze\Session\DI;
 
 use Nette\DI\CompilerExtension;
+use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Statement;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
+use Spaze\Encryption\Symmetric\StaticKey;
+use stdClass;
 
+/**
+ * @property stdClass $config
+ */
 class MysqlSessionHandlerExtension extends CompilerExtension
 {
 
-	private $defaults = [
-		'tableName' => 'sessions',
-		'lockTimeout' => 5,
-		'unchangedUpdateDelay' => 300,
-		'encryptionService' => null,
-	];
+	public function getConfigSchema(): Schema
+	{
+		return Expect::structure([
+			'tableName' => Expect::string()->default('sessions'),
+			'lockTimeout' => Expect::int()->default(5),
+			'unchangedUpdateDelay' => Expect::int()->default(300),
+			'encryptionService' => Expect::string(StaticKey::class),
+		]);
+	}
 
 
 	public function loadConfiguration(): void
 	{
-		$this->validateConfig($this->defaults);
-
 		$builder = $this->getContainerBuilder();
 
 		$definition = $builder->addDefinition($this->prefix('sessionHandler'))
 			->setClass('Spaze\Session\MysqlSessionHandler')
-			->addSetup('setTableName', [$this->config['tableName']])
-			->addSetup('setLockTimeout', [$this->config['lockTimeout']])
-			->addSetup('setUnchangedUpdateDelay', [$this->config['unchangedUpdateDelay']]);
+			->addSetup('setTableName', [$this->config->tableName])
+			->addSetup('setLockTimeout', [$this->config->lockTimeout])
+			->addSetup('setUnchangedUpdateDelay', [$this->config->unchangedUpdateDelay]);
 
-		if ($this->config['encryptionService']) {
-			$definition->addSetup('setEncryptionService', [$this->config['encryptionService']]);
+		if ($this->config->encryptionService) {
+			$definition->addSetup('setEncryptionService', [$this->config->encryptionService]);
 		}
 
+		/** @var ServiceDefinition */
 		$sessionDefinition = $builder->getDefinition('session');
 		$sessionSetup = $sessionDefinition->getSetup();
 		# Prepend setHandler method to other possible setups (setExpiration) which would start session prematurely
