@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Post;
 use Contributte\Translation\Translator;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator as NetteTranslator;
 use Nette\Utils\DateTime;
 
 /**
@@ -17,22 +16,14 @@ use Nette\Utils\DateTime;
 class Loader
 {
 
-	private Explorer $database;
-
-	private NetteTranslator $translator;
-
 	/** @var Row<mixed>|null */
 	private ?Row $post = null;
 
 
-	/**
-	 * @param Explorer $context
-	 * @param Translator|NetteTranslator $translator
-	 */
-	public function __construct(Explorer $context, NetteTranslator $translator)
-	{
-		$this->database = $context;
-		$this->translator = $translator;
+	public function __construct(
+		private Explorer $database,
+		private Translator $translator,
+	) {
 	}
 
 
@@ -53,7 +44,7 @@ class Loader
 	 * Fetch post.
 	 *
 	 * @param string $post
-	 * @param string $previewKey
+	 * @param string|null $previewKey
 	 * @return Row<mixed>|null
 	 */
 	public function fetch(string $post, ?string $previewKey = null): ?Row

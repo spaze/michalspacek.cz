@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 use Netxten\Templating\Helpers;
@@ -24,16 +24,6 @@ class Dates
 
 	private const DATA_RETENTION = 30;
 
-	private Explorer $database;
-
-	private Statuses $trainingStatuses;
-
-	private Prices $prices;
-
-	private Helpers $netxtenHelpers;
-
-	private Translator $translator;
-
 	/** @var array<string, int> */
 	private array $statusIds = array();
 
@@ -41,13 +31,13 @@ class Dates
 	private array $upcomingDates = array();
 
 
-	public function __construct(Explorer $context, Statuses $trainingStatuses, Prices $prices, Helpers $netxtenHelpers, Translator $translator)
-	{
-		$this->database = $context;
-		$this->trainingStatuses = $trainingStatuses;
-		$this->prices = $prices;
-		$this->netxtenHelpers = $netxtenHelpers;
-		$this->translator = $translator;
+	public function __construct(
+		private Explorer $database,
+		private Statuses $trainingStatuses,
+		private Prices $prices,
+		private Helpers $netxtenHelpers,
+		private Translator $translator,
+	) {
 	}
 
 

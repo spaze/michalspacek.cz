@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Theme;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
@@ -10,38 +11,24 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
 use Nette\Caching\Storage;
 use Nette\Http\IRequest;
-use Nette\Localization\Translator;
 use Nette\Security\User;
 use Netxten\Templating\Helpers as NetxtenHelpers;
 
 class TemplateFactory extends NetteTemplateFactory
 {
 
-	private Theme $theme;
-
-	private NetxtenHelpers $netxtenHelpers;
-
-	private Helpers $templateHelpers;
-
-	private Translator $translator;
-
-
 	public function __construct(
-		LatteFactory $latteFactory,
-		IRequest $httpRequest = null,
-		User $user = null,
-		Storage $cacheStorage = null,
-		Theme $theme,
-		NetxtenHelpers $netxtenHelpers,
-		Helpers $templateHelpers,
-		Translator $translator,
-		string $templateClass = null
+		private LatteFactory $latteFactory,
+		private Theme $theme,
+		private NetxtenHelpers $netxtenHelpers,
+		private Helpers $templateHelpers,
+		private Translator $translator,
+		private ?IRequest $httpRequest = null,
+		private ?User $user = null,
+		private ?Storage $cacheStorage = null,
+		string $templateClass = null,
 	) {
-		parent::__construct($latteFactory, $httpRequest, $user, $cacheStorage, $templateClass);
-		$this->theme = $theme;
-		$this->netxtenHelpers = $netxtenHelpers;
-		$this->templateHelpers = $templateHelpers;
-		$this->translator = $translator;
+		parent::__construct($this->latteFactory, $this->httpRequest, $this->user, $this->cacheStorage, $templateClass);
 	}
 
 

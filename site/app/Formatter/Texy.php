@@ -15,7 +15,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
-use Nette\Localization\Translator as NetteTranslator;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Netxten\Formatter\Texy as NetxtenTexy;
@@ -31,23 +30,6 @@ class Texy extends NetxtenTexy
 
 	/** @var string */
 	private const TRAINING_DATE = 'TRAINING_DATE';
-
-	/** @var Translator|NetteTranslator */
-	private NetteTranslator $translator;
-
-	private Application $application;
-
-	private Dates $trainingDates;
-
-	private Locales $trainingLocales;
-
-	private Prices $prices;
-
-	private LocaleLinkGenerator $localeLinkGenerator;
-
-	private LocaleUrls $blogPostLocaleUrls;
-
-	private Helpers $netxtenHelpers;
 
 	private ?TexyTexy $texy = null;
 
@@ -74,23 +56,15 @@ class Texy extends NetxtenTexy
 
 	public function __construct(
 		Storage $cacheStorage,
-		NetteTranslator $translator,
-		Application $application,
-		Dates $trainingDates,
-		Prices $price,
-		Locales $trainingLocales,
-		LocaleLinkGenerator $localeLinkGenerator,
-		LocaleUrls $localeUrls,
-		Helpers $netxtenHelpers
+		private Translator $translator,
+		private Application $application,
+		private Dates $trainingDates,
+		private Prices $prices,
+		private Locales $trainingLocales,
+		private LocaleLinkGenerator $localeLinkGenerator,
+		private LocaleUrls $blogPostLocaleUrls,
+		private Helpers $netxtenHelpers,
 	) {
-		$this->translator = $translator;
-		$this->application = $application;
-		$this->trainingDates = $trainingDates;
-		$this->prices = $price;
-		$this->trainingLocales = $trainingLocales;
-		$this->localeLinkGenerator = $localeLinkGenerator;
-		$this->blogPostLocaleUrls = $localeUrls;
-		$this->netxtenHelpers = $netxtenHelpers;
 		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
 	}
 

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\User\Manager;
@@ -10,7 +11,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\Response;
-use Nette\Localization\Translator;
 
 /**
  * @property-read Template $template

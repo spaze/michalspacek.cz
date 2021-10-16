@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\EasterEgg\WinterIsComing;
 use MichalSpacekCz\Form\Controls\Date;
 use MichalSpacekCz\Training\Applications;
@@ -10,7 +11,6 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Localization\Translator;
 
 class TrainingControlsFactory
 {
@@ -18,18 +18,11 @@ class TrainingControlsFactory
 	use Date;
 
 
-	private Translator $translator;
-
-	private WinterIsComing $winterIsComing;
-
-	private Applications $trainingApplications;
-
-
-	public function __construct(Applications $trainingApplications, WinterIsComing $winterIsComing, Translator $translator)
-	{
-		$this->trainingApplications = $trainingApplications;
-		$this->winterIsComing = $winterIsComing;
-		$this->translator = $translator;
+	public function __construct(
+		private Applications $trainingApplications,
+		private WinterIsComing $winterIsComing,
+		private Translator $translator,
+	) {
 	}
 
 

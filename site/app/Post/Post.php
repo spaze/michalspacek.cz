@@ -3,40 +3,22 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Post;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
-use MichalSpacekCz\Feed\Exports;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Caching\Cache;
-use Nette\Caching\Storage;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
 
 class Post
 {
-
-	private Explorer $database;
-
-	private Loader $loader;
-
-	private Texy $texyFormatter;
-
-	private Cache $exportsCache;
-
-	private LinkGenerator $linkGenerator;
-
-	private LocaleLinkGenerator $localeLinkGenerator;
-
-	private Tags $tags;
-
-	private Translator $translator;
 
 	/** @var string[]|null */
 	private ?array $locales = null;
@@ -48,23 +30,15 @@ class Post
 
 
 	public function __construct(
-		Explorer $context,
-		Loader $loader,
-		Texy $texyFormatter,
-		Storage $cacheStorage,
-		LinkGenerator $linkGenerator,
-		LocaleLinkGenerator $localeLinkGenerator,
-		Tags $tags,
-		Translator $translator
+		private Explorer $database,
+		private Loader $loader,
+		private Texy $texyFormatter,
+		private Cache $exportsCache,
+		private LinkGenerator $linkGenerator,
+		private LocaleLinkGenerator $localeLinkGenerator,
+		private Tags $tags,
+		private Translator $translator,
 	) {
-		$this->database = $context;
-		$this->loader = $loader;
-		$this->texyFormatter = $texyFormatter;
-		$this->exportsCache = new Cache($cacheStorage, Exports::class);
-		$this->linkGenerator = $linkGenerator;
-		$this->localeLinkGenerator = $localeLinkGenerator;
-		$this->tags = $tags;
-		$this->translator = $translator;
 	}
 
 

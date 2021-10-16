@@ -8,7 +8,6 @@ use Nette\Application\IPresenterFactory;
 use Nette\Application\LinkGenerator;
 use Nette\Application\Routers\RouteList;
 use Nette\Http\IRequest;
-use Nette\Localization\Translator as NetteTranslator;
 
 /**
  * Generates links to locales other than current.
@@ -19,30 +18,14 @@ class LocaleLinkGenerator
 	/** @var string */
 	private const DEFAULT_PARAMS = '*';
 
-	private RouterFactory $routerFactory;
-
-	private IRequest $httpRequest;
-
-	private IPresenterFactory $presenterFactory;
-
-	private LinkGenerator $linkGenerator;
-
-	/** @var Translator|NetteTranslator */
-	private NetteTranslator $translator;
-
 
 	public function __construct(
-		RouterFactory $routerFactory,
-		IRequest $httpRequest,
-		IPresenterFactory $presenterFactory,
-		LinkGenerator $linkGenerator,
-		NetteTranslator $translator
+		private RouterFactory $routerFactory,
+		private IRequest $httpRequest,
+		private IPresenterFactory $presenterFactory,
+		private LinkGenerator $linkGenerator,
+		private Translator $translator,
 	) {
-		$this->routerFactory = $routerFactory;
-		$this->httpRequest = $httpRequest;
-		$this->presenterFactory = $presenterFactory;
-		$this->linkGenerator = $linkGenerator;
-		$this->translator = $translator;
 	}
 
 

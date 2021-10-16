@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IResponse;
-use Nette\Localization\Translator;
 
 /**
  * A forbidden presenter.
@@ -18,15 +18,10 @@ use Nette\Localization\Translator;
 class ForbiddenPresenter extends Presenter
 {
 
-	private Translator $translator;
-
-	private IResponse $httpResponse;
-
-
-	public function __construct(Translator $translator, IResponse $httpResponse)
-	{
-		$this->translator = $translator;
-		$this->httpResponse = $httpResponse;
+	public function __construct(
+		private Translator $translator,
+		private IResponse $httpResponse,
+	) {
 		parent::__construct();
 	}
 

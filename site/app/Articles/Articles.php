@@ -12,47 +12,19 @@ use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator as NetteTranslator;
 use Nette\Utils\DateTime as NetteDateTime;
 
 class Articles
 {
 
-	private Explorer $database;
-
-	private Texy $texyFormatter;
-
-	private LinkGenerator $linkGenerator;
-
-	private Post $blogPost;
-
-	private NetteTranslator $translator;
-
-	private Tags $tags;
-
-
-	/**
-	 * @param Explorer $context
-	 * @param Texy $texyFormatter
-	 * @param LinkGenerator $linkGenerator
-	 * @param Post $blogPost
-	 * @param Tags $tags
-	 * @param Translator|NetteTranslator $translator
-	 */
 	public function __construct(
-		Explorer $context,
-		Texy $texyFormatter,
-		LinkGenerator $linkGenerator,
-		Post $blogPost,
-		Tags $tags,
-		NetteTranslator $translator
+		private Explorer $database,
+		private Texy $texyFormatter,
+		private LinkGenerator $linkGenerator,
+		private Post $blogPost,
+		private Tags $tags,
+		private Translator $translator,
 	) {
-		$this->database = $context;
-		$this->texyFormatter = $texyFormatter;
-		$this->linkGenerator = $linkGenerator;
-		$this->blogPost = $blogPost;
-		$this->tags = $tags;
-		$this->translator = $translator;
 	}
 
 

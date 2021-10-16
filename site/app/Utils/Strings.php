@@ -4,20 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Utils;
 
 use Contributte\Translation\Translator;
-use Nette\Localization\Translator as NetteTranslator;
 
 class Strings
 {
 
-	private NetteTranslator $translator;
-
-
-	/**
-	 * @param Translator|NetteTranslator $translator
-	 */
-	public function __construct(NetteTranslator $translator)
-	{
-		$this->translator = $translator;
+	public function __construct(
+		private Translator $translator,
+	) {
 	}
 
 

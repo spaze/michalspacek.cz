@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
@@ -14,7 +15,6 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
-use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Netxten\Forms\Controls\HiddenFieldWithLabel;
 use OutOfBoundsException;
@@ -25,34 +25,16 @@ use Tracy\Debugger;
 class TrainingApplicationFactory
 {
 
-	private FormFactory $factory;
-	private Translator $translator;
-	private Dates $trainingDates;
-	private TrainingControlsFactory $trainingControlsFactory;
-	private FormDataLogger $formDataLogger;
-	private FormSpam $formSpam;
-	private Applications $trainingApplications;
-	private Mails $trainingMails;
-
-
 	public function __construct(
-		FormFactory $factory,
-		Translator $translator,
-		TrainingControlsFactory $trainingControlsFactory,
-		Dates $trainingDates,
-		FormDataLogger $formDataLogger,
-		FormSpam $formSpam,
-		Applications $trainingApplications,
-		Mails $trainingMails
+		private FormFactory $factory,
+		private Translator $translator,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private Dates $trainingDates,
+		private FormDataLogger $formDataLogger,
+		private FormSpam $formSpam,
+		private Applications $trainingApplications,
+		private Mails $trainingMails,
 	) {
-		$this->factory = $factory;
-		$this->translator = $translator;
-		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->trainingDates = $trainingDates;
-		$this->formDataLogger = $formDataLogger;
-		$this->formSpam = $formSpam;
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingMails = $trainingMails;
 	}
 
 

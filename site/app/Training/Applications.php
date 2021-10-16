@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Localization\Translator;
 use Nette\Utils\Random;
 use PDOException;
 use RuntimeException;
@@ -22,44 +22,20 @@ class Applications
 	private const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
 	private const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
 
-	private Explorer $database;
-
-	private Trainings $trainings;
-
-	private Dates $trainingDates;
-
-	private Statuses $trainingStatuses;
-
-	private StaticKey $emailEncryption;
-
-	private Prices $prices;
-
-	private Vrana $vranaResolver;
-
-	private Translator $translator;
-
 	/** @var array<int, array<int, Row>> */
 	private array $byDate = [];
 
 
 	public function __construct(
-		Explorer $context,
-		Trainings $trainings,
-		Dates $trainingDates,
-		Statuses $trainingStatuses,
-		StaticKey $emailEncryption,
-		Prices $price,
-		Vrana $vranaResolver,
-		Translator $translator
+		private Explorer $database,
+		private Trainings $trainings,
+		private Dates $trainingDates,
+		private Statuses $trainingStatuses,
+		private StaticKey $emailEncryption,
+		private Prices $prices,
+		private Vrana $vranaResolver,
+		private Translator $translator,
 	) {
-		$this->database = $context;
-		$this->trainings = $trainings;
-		$this->trainingDates = $trainingDates;
-		$this->trainingStatuses = $trainingStatuses;
-		$this->emailEncryption = $emailEncryption;
-		$this->prices = $price;
-		$this->vranaResolver = $vranaResolver;
-		$this->translator = $translator;
 	}
 
 

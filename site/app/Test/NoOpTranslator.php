@@ -1,12 +1,18 @@
 <?php
+/** @noinspection PhpMissingParentConstructorInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test;
 
-use Nette\Localization\Translator;
+use Contributte\Translation\Translator;
 
-class NoOpTranslator implements Translator
+class NoOpTranslator extends Translator
 {
+
+	public function __construct()
+	{
+	}
+
 
 	public function translate($message, ...$parameters): string
 	{
