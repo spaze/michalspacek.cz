@@ -7,13 +7,11 @@ use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
-use MichalSpacekCz\Feed\Exports;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Caching\Cache;
-use Nette\Caching\Storage;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Neon\Exception;
@@ -21,8 +19,6 @@ use Nette\Utils\Json;
 
 class Post
 {
-
-	private Cache $exportsCache;
 
 	/** @var string[]|null */
 	private ?array $locales = null;
@@ -37,13 +33,12 @@ class Post
 		private Explorer $database,
 		private Loader $loader,
 		private Texy $texyFormatter,
-		private Storage $cacheStorage,
+		private Cache $exportsCache,
 		private LinkGenerator $linkGenerator,
 		private LocaleLinkGenerator $localeLinkGenerator,
 		private Tags $tags,
 		private Translator $translator,
 	) {
-		$this->exportsCache = new Cache($this->cacheStorage, Exports::class);
 	}
 
 

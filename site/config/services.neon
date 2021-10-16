@@ -101,7 +101,7 @@ services:
 	pulsePasswordsRating: MichalSpacekCz\Pulse\Passwords\Rating
 	pulsePasswordsSorting: MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	blogPost:
-		factory: MichalSpacekCz\Post\Post
+		factory: MichalSpacekCz\Post\Post(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class))
 		setup:
 			- setUpdatedInfoThreshold(%blog.updatedInfoThreshold%)
 			- setAllowedTags(%blog.allowedTags%)
