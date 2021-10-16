@@ -81,9 +81,8 @@ class TrainingApplicationFactory
 				->setPrompt('- vyberte termín a místo -')
 				->addRule(Form::INTEGER);
 		} else {
-			/** @var string $key */
 			$key = key($inputDates);
-			$field = new HiddenFieldWithLabel($label, $key, $inputDates[$key]);
+			$field = new HiddenFieldWithLabel($label, (string)$key, $inputDates[$key]);
 			$field->addRule(Form::INTEGER);
 			$form->addComponent($field, 'trainingId');
 		}

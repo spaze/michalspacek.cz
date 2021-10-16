@@ -164,7 +164,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'Netxten' => 
             array (
-                0 => __DIR__ . '/..' . '/spaze/netxten/lib',
+                0 => __DIR__ . '/..' . '/spaze/netxten/src',
             ),
         ),
     );

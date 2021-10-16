@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'b866761439f125de21e84547096cad5d7b059cf1',
+        'reference' => 'f17419d0b313ffbb95c9987f9964329a31c082ce',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'b866761439f125de21e84547096cad5d7b059cf1',
+            'reference' => 'f17419d0b313ffbb95c9987f9964329a31c082ce',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
@@ -406,12 +406,12 @@
             'dev_requirement' => false,
         ),
         'spaze/netxten' => array(
-            'pretty_version' => 'v0.13.0',
-            'version' => '0.13.0.0',
+            'pretty_version' => 'v1.0.0',
+            'version' => '1.0.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/netxten',
             'aliases' => array(),
-            'reference' => 'e23ca62abb5352efb10c6d8089602240933975e0',
+            'reference' => '8c201fc239d7f5c1467786cb1d2047c5f3ef437e',
             'dev_requirement' => false,
         ),
         'spaze/nonce-generator' => array(

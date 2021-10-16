@@ -3,31 +3,25 @@ declare(strict_types = 1);
 
 namespace Netxten\Forms\Controls;
 
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
  * Hidden form control used to store a non-displayed value but with label and optional text
  *
- * @author     Michal Špaček
+ * @author Michal Špaček
  */
-class HiddenFieldWithLabel extends \Nette\Forms\Controls\BaseControl
+class HiddenFieldWithLabel extends BaseControl
 {
 
-	/** @param  string field text */
-	protected $text;
-
-
-	/**
-	 * @param string|Html|null $label
-	 * @param string|Html|null $value
-	 * @param string|Html|null $text 
-	 */
-	public function __construct($label = null, $value = null, $text = null)
-	{
+	public function __construct(
+		Html|string|null $label = null,
+		Html|string|null $value = null,
+		protected Html|string|null $text = null,
+	) {
 		parent::__construct($label);
 		$this->control->type = 'hidden';
 		$this->value = $value;
-		$this->text = $text;
 	}
 
 
@@ -38,7 +32,9 @@ class HiddenFieldWithLabel extends \Nette\Forms\Controls\BaseControl
 	 */
 	public function getControl(): Html
 	{
-		$input = parent::getControl()
+		/** @var Html $control */
+		$control = parent::getControl();
+		$input = $control
 			->value($this->value === null ? '' : $this->value)
 			->data('nette-rules', null);
 
@@ -54,11 +50,12 @@ class HiddenFieldWithLabel extends \Nette\Forms\Controls\BaseControl
 	/**
 	 * Generates label's HTML element.
 	 *
-	 * @param string|null
-	 * @return Html|string
+	 * @param string|null $caption
+	 * @return Html
 	 */
-	public function getLabel($caption = null)
+	public function getLabel($caption = null): Html
 	{
+		/** @var Html $label */
 		$label = parent::getLabel($caption);
 		unset($label->for);
 		return $label;

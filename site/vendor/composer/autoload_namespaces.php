@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Netxten' => array($vendorDir . '/spaze/netxten/lib'),
+    'Netxten' => array($vendorDir . '/spaze/netxten/src'),
 );
