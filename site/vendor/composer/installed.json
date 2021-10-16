@@ -2925,39 +2925,53 @@
         },
         {
             "name": "spaze/netxten",
-            "version": "v0.13.0",
-            "version_normalized": "0.13.0.0",
+            "version": "v1.0.0",
+            "version_normalized": "1.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/netxten.git",
-                "reference": "e23ca62abb5352efb10c6d8089602240933975e0"
+                "reference": "8c201fc239d7f5c1467786cb1d2047c5f3ef437e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/netxten/zipball/e23ca62abb5352efb10c6d8089602240933975e0",
-                "reference": "e23ca62abb5352efb10c6d8089602240933975e0",
+                "url": "https://api.github.com/repos/spaze/netxten/zipball/8c201fc239d7f5c1467786cb1d2047c5f3ef437e",
+                "reference": "8c201fc239d7f5c1467786cb1d2047c5f3ef437e",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
-                "latte/latte": "~2.3",
-                "nette/application": "~3.0",
-                "nette/caching": "~3.0",
-                "nette/forms": "~3.0",
-                "nette/http": "~3.0",
+                "latte/latte": "^2.3",
+                "nette/application": "^3.0",
+                "nette/caching": "^3.1",
+                "nette/forms": "^3.0",
+                "nette/http": "^3.0",
                 "nette/utils": "^3.0",
-                "php": ">= 7.1.0",
-                "texy/texy": "~3.0"
+                "php": "^8.0",
+                "texy/texy": "^3.0"
             },
-            "time": "2020-01-22T05:01:14+00:00",
+            "require-dev": {
+                "php-parallel-lint/php-console-highlighter": "^0.5.0",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpstan/phpstan": "^0.12.99",
+                "spaze/coding-standard": "^0.0"
+            },
+            "time": "2021-10-16T15:37:13+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
                 "psr-0": {
-                    "Netxten": "lib"
+                    "Netxten": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Various Nette Framework extension services",
+            "support": {
+                "issues": "https://github.com/spaze/netxten/issues",
+                "source": "https://github.com/spaze/netxten/tree/v1.0.0"
+            },
             "install-path": "../spaze/netxten"
         },
         {
