@@ -20,17 +20,23 @@ class DisallowedCall
 	/** @var string[] */
 	private $allowInCalls;
 
-	/** @var array<integer, DisallowedCallParam> */
+	/** @var array<int, DisallowedCallParam> */
 	private $allowParamsInAllowed;
 
-	/** @var array<integer, DisallowedCallParam> */
+	/** @var array<int, DisallowedCallParam> */
 	private $allowParamsAnywhere;
 
-	/** @var array<integer, DisallowedCallParam> */
+	/** @var array<int, DisallowedCallParam> */
 	private $allowExceptParamsInAllowed;
 
-	/** @var array<integer, DisallowedCallParam> */
+	/** @var array<int, DisallowedCallParam> */
 	private $allowExceptParams;
+
+	/** @var int */
+	private $allowCount;
+
+	/** @var int */
+	private $timesAllowed = 0;
 
 
 	/**
@@ -40,12 +46,13 @@ class DisallowedCall
 	 * @param string|null $message
 	 * @param string[] $allowIn
 	 * @param string[] $allowInCalls
-	 * @param array<integer, DisallowedCallParam> $allowParamsInAllowed
-	 * @param array<integer, DisallowedCallParam> $allowParamsAnywhere
-	 * @param array<integer, DisallowedCallParam> $allowExceptParamsInAllowed
-	 * @param array<integer, DisallowedCallParam> $allowExceptParams
+	 * @param array<int, DisallowedCallParam> $allowParamsInAllowed
+	 * @param array<int, DisallowedCallParam> $allowParamsAnywhere
+	 * @param array<int, DisallowedCallParam> $allowExceptParamsInAllowed
+	 * @param array<int, DisallowedCallParam> $allowExceptParams
+	 * @param int $allowCount
 	 */
-	public function __construct(string $call, ?string $message, array $allowIn, array $allowInCalls, array $allowParamsInAllowed, array $allowParamsAnywhere, array $allowExceptParamsInAllowed, array $allowExceptParams)
+	public function __construct(string $call, ?string $message, array $allowIn, array $allowInCalls, array $allowParamsInAllowed, array $allowParamsAnywhere, array $allowExceptParamsInAllowed, array $allowExceptParams, int $allowCount)
 	{
 		$this->call = $call;
 		$this->message = $message;
@@ -55,6 +62,7 @@ class DisallowedCall
 		$this->allowParamsAnywhere = $allowParamsAnywhere;
 		$this->allowExceptParamsInAllowed = $allowExceptParamsInAllowed;
 		$this->allowExceptParams = $allowExceptParams;
+		$this->allowCount = $allowCount;
 	}
 
 
@@ -89,7 +97,7 @@ class DisallowedCall
 
 
 	/**
-	 * @return array<integer, DisallowedCallParam>
+	 * @return array<int, DisallowedCallParam>
 	 */
 	public function getAllowParamsInAllowed(): array
 	{
@@ -98,7 +106,7 @@ class DisallowedCall
 
 
 	/**
-	 * @return array<integer, DisallowedCallParam>
+	 * @return array<int, DisallowedCallParam>
 	 */
 	public function getAllowParamsAnywhere(): array
 	{
@@ -107,7 +115,7 @@ class DisallowedCall
 
 
 	/**
-	 * @return array<integer, DisallowedCallParam>
+	 * @return array<int, DisallowedCallParam>
 	 */
 	public function getAllowExceptParamsInAllowed(): array
 	{
@@ -116,11 +124,29 @@ class DisallowedCall
 
 
 	/**
-	 * @return array<integer, DisallowedCallParam>
+	 * @return array<int, DisallowedCallParam>
 	 */
 	public function getAllowExceptParams(): array
 	{
 		return $this->allowExceptParams;
+	}
+
+
+	public function getAllowCount(): int
+	{
+		return $this->allowCount;
+	}
+
+
+	public function hasRemainingAllowCount(): bool
+	{
+		return $this->allowCount > $this->timesAllowed;
+	}
+
+
+	public function trackAllowedCall(): void
+	{
+		$this->timesAllowed++;
 	}
 
 

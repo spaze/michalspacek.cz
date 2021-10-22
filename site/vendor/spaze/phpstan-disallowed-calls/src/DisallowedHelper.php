@@ -36,7 +36,7 @@ class DisallowedHelper
 	 * @phpstan-param ForbiddenCalls|null $node
 	 * @noinspection PhpUndefinedClassInspection ForbiddenCalls is a type alias defined in PHPStan config
 	 * @param DisallowedCall $disallowedCall
-	 * @return boolean
+	 * @return bool
 	 */
 	private function isAllowed(Scope $scope, ?Node $node, DisallowedCall $disallowedCall): bool
 	{
@@ -73,7 +73,7 @@ class DisallowedHelper
 	 * @phpstan-param ForbiddenCalls|null $node
 	 * @noinspection PhpUndefinedClassInspection ForbiddenCalls is a type alias defined in PHPStan config
 	 * @param DisallowedCall $disallowedCall
-	 * @return boolean
+	 * @return bool
 	 */
 	private function hasAllowedParamsInAllowed(Scope $scope, ?Node $node, DisallowedCall $disallowedCall): bool
 	{
@@ -92,9 +92,9 @@ class DisallowedHelper
 	 * @param Expr|null $node
 	 * @phpstan-param ForbiddenCalls|null $node
 	 * @noinspection PhpUndefinedClassInspection ForbiddenCalls is a type alias defined in PHPStan config
-	 * @param array<integer, DisallowedCallParam> $allowConfig
+	 * @param array<int, DisallowedCallParam> $allowConfig
 	 * @param bool $paramsRequired
-	 * @return boolean
+	 * @return bool
 	 */
 	private function hasAllowedParams(Scope $scope, ?Node $node, array $allowConfig, bool $paramsRequired): bool
 	{
@@ -145,10 +145,16 @@ class DisallowedHelper
 	{
 		foreach ($disallowedCalls as $disallowedCall) {
 			if ($this->callMatches($disallowedCall, $name) && !$this->isAllowed($scope, $node, $disallowedCall)) {
+				if ($disallowedCall->hasRemainingAllowCount()) {
+					$disallowedCall->trackAllowedCall();
+					return [];
+				}
+
 				return [
 					sprintf(
-						$message ?? 'Calling %s is forbidden, %s%s',
+						$message ?? 'Calling %s%s is forbidden, %s%s',
 						($displayName && $displayName !== $name) ? "{$name}() (as {$displayName}())" : "{$name}()",
+						$disallowedCall->getAllowCount() > 0 ? sprintf(' more than %s', $disallowedCall->getAllowCount() === 1 ? 'once' : sprintf('%d times', $disallowedCall->getAllowCount())) : '',
 						$disallowedCall->getMessage(),
 						$disallowedCall->getCall() !== $name ? " [{$name}() matches {$disallowedCall->getCall()}()]" : ''
 					),
@@ -233,7 +239,7 @@ class DisallowedHelper
 	/**
 	 * @param Scope $scope
 	 * @param DisallowedConstant $disallowedConstant
-	 * @return boolean
+	 * @return bool
 	 */
 	private function isAllowedPath(Scope $scope, DisallowedConstant $disallowedConstant): bool
 	{
