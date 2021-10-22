@@ -104,3 +104,7 @@ parameters:
 					mask:
 						cs_CZ: cookies
 						en_US: cookies
+				Security:
+					mask:
+						cs_CZ: bezpecnost
+						en_US: security
