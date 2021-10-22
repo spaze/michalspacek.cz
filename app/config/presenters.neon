@@ -16,6 +16,7 @@ services:
 	- MichalSpacekCz\Presentation\Www\Post\PostPresenter
 	- MichalSpacekCz\Presentation\Www\Projects\ProjectsPresenter
 	- MichalSpacekCz\Presentation\Www\Redirect\RedirectPresenter
+	- MichalSpacekCz\Presentation\Www\Security\SecurityPresenter
 	- MichalSpacekCz\Presentation\Www\Tags\TagsPresenter
 	- MichalSpacekCz\Presentation\Www\Talks\TalksPresenter
 	- MichalSpacekCz\Presentation\Www\Trainings\TrainingsPresenter
