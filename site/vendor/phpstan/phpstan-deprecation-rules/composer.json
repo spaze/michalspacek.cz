@@ -7,13 +7,12 @@
 	],
 	"require": {
 		"php": "^7.1 || ^8.0",
-		"phpstan/phpstan": "^0.12.60"
+		"phpstan/phpstan": "^1.0"
 	},
 	"require-dev": {
-		"phing/phing": "^2.16.3",
 		"php-parallel-lint/php-parallel-lint": "^1.2",
-		"phpstan/phpstan-phpunit": "^0.12",
-		"phpunit/phpunit": "^7.5.20"
+		"phpstan/phpstan-phpunit": "^1.0",
+		"phpunit/phpunit": "^9.5"
 	},
 	"config": {
 		"platform": {
@@ -23,7 +22,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "0.12-dev"
+			"dev-master": "1.0-dev"
 		},
 		"phpstan": {
 			"includes": [
