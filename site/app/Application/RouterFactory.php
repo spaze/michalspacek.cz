@@ -198,7 +198,7 @@ class RouterFactory
 	 * @param string $defaultPresenter
 	 * @param string $defaultAction
 	 * @param array<string, array<string, string>>|null $initialMetadata
-	 * @param string $class
+	 * @param class-string<NetteRoute> $class
 	 */
 	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = NetteRoute::class): void
 	{
@@ -241,7 +241,7 @@ class RouterFactory
 	/**
 	 * Route factory.
 	 *
-	 * @param string $class
+	 * @param class-string<NetteRoute> $class
 	 * @param string $mask
 	 * @param array<string, array<string, array<string, string>|string>> $metadata
 	 * @return Router
