@@ -10,7 +10,6 @@ use Nette\Application\Response;
 use Nette\Application\UI\Presenter;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
-use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\SmartObject;
 
@@ -25,8 +24,6 @@ class Bootstrap
 
 	/** @var string */
 	private const MODE_DEVELOPMENT = 'development';
-
-	private IRequest $httpRequest;
 
 	private Container $container;
 
@@ -77,10 +74,7 @@ class Bootstrap
 		}
 
 		$this->container = $configurator->createContainer();
-
-		$this->httpRequest = $this->container->getByType(IRequest::class);
 		$this->httpResponse = $this->container->getByType(IResponse::class);
-
 		$this->securityHeaders = $this->container->getByType(SecurityHeaders::class);
 		$this->redirectToSecure();
 
