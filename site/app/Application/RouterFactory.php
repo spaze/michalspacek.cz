@@ -45,7 +45,7 @@ class RouterFactory
 	/** @var array<string, string> of locale => root domain */
 	private array $rootDomainMapping;
 
-	/** @var array<string, array<string, array{mask:array<string, string>, actions:array<string, array<string, string>>}>> */
+	/** @var array<string, array<string, array{mask:array<string, string>, actions?:array<string, array<string, string>>}>> */
 	private array $translatedRoutes;
 
 	/** @var array<string, array<string, array<string, string>>> */
@@ -114,7 +114,7 @@ class RouterFactory
 
 
 	/**
-	 * @param array<string, array<string, array{mask:array<string, string>, actions:array<string, array<string, string>>}>> $translatedRoutes
+	 * @param array<string, array<string, array{mask:array<string, string>, actions?:array<string, array<string, string>>}>> $translatedRoutes
 	 */
 	public function setTranslatedRoutes(array $translatedRoutes): void
 	{
