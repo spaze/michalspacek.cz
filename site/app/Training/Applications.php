@@ -222,7 +222,7 @@ class Applications
 			if ($e->getCode() == '23000') {
 				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
 					// regenerate the access code and try harder this time
-					Debugger::log("Regenerating access token, {$token} already exists. Full data: " . implode(', ', $data));
+					Debugger::log("Regenerating access token, {$token} already exists");
 					return $this->insertData($data);
 				}
 			}

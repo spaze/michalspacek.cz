@@ -7,6 +7,13 @@ Prerequisites:
 - [Disallowed Calls PHPStan extension](https://github.com/spaze/phpstan-disallowed-calls)
 
 Installation:
+
+With Composer:
+```
+composer require --dev spaze/phpstan-disallowed-calls-nette
+```
+
+Then include the file in your `phpstan.neon` or similar:
 ```neon
 includes:
     - vendor/spaze/phpstan-disallowed-calls-nette/disallowed-dangerous-calls.neon

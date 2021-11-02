@@ -45,7 +45,7 @@ class RouterFactory
 	/** @var array<string, string> of locale => root domain */
 	private array $rootDomainMapping;
 
-	/** @var array<string, array<string, array{mask:array<string, string>, actions:array<string, array<string, string>>}>> */
+	/** @var array<string, array<string, array{mask:array<string, string>, actions?:array<string, array<string, string>>}>> */
 	private array $translatedRoutes;
 
 	/** @var array<string, array<string, array<string, string>>> */
@@ -114,7 +114,7 @@ class RouterFactory
 
 
 	/**
-	 * @param array<string, array<string, array{mask:array<string, string>, actions:array<string, array<string, string>>}>> $translatedRoutes
+	 * @param array<string, array<string, array{mask:array<string, string>, actions?:array<string, array<string, string>>}>> $translatedRoutes
 	 */
 	public function setTranslatedRoutes(array $translatedRoutes): void
 	{
@@ -198,7 +198,7 @@ class RouterFactory
 	 * @param string $defaultPresenter
 	 * @param string $defaultAction
 	 * @param array<string, array<string, string>>|null $initialMetadata
-	 * @param string $class
+	 * @param class-string<NetteRoute> $class
 	 */
 	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = NetteRoute::class): void
 	{
@@ -241,7 +241,7 @@ class RouterFactory
 	/**
 	 * Route factory.
 	 *
-	 * @param string $class
+	 * @param class-string<NetteRoute> $class
 	 * @param string $mask
 	 * @param array<string, array<string, array<string, string>|string>> $metadata
 	 * @return Router

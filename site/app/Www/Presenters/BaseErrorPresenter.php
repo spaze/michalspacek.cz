@@ -12,17 +12,7 @@ abstract class BaseErrorPresenter extends BasePresenter
 {
 
 	private Redirections $redirections;
-
 	private ILogger $logger;
-
-	/** @var int[] */
-	private array $statuses = [
-		IResponse::S400_BAD_REQUEST,
-		IResponse::S403_FORBIDDEN,
-		IResponse::S404_NOT_FOUND,
-		IResponse::S405_METHOD_NOT_ALLOWED,
-		IResponse::S410_GONE,
-	];
 
 
 	/**
