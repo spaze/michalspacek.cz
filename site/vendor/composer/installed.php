@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => 'a890b463ab40bc3b2b2ed6769bc67f82a4fb32f6',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -352,12 +352,12 @@
             'dev_requirement' => false,
         ),
         'spaze/coding-standard' => array(
-            'pretty_version' => 'v0.0.10',
-            'version' => '0.0.10.0',
+            'pretty_version' => 'v0.0.11',
+            'version' => '0.0.11.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/coding-standard',
             'aliases' => array(),
-            'reference' => '7419ef7166d48e74e5fd3f9c6ed9483e1f3d53c4',
+            'reference' => '805c35691e4e027b619af614d21955a886e0f3db',
             'dev_requirement' => false,
         ),
         'spaze/csp-config' => array(
@@ -388,12 +388,12 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => 'a890b463ab40bc3b2b2ed6769bc67f82a4fb32f6',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(

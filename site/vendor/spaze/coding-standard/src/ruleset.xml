@@ -70,7 +70,7 @@
 		<properties>
 			<property name="linesCountBeforeFirstUse" value="1"/>
 			<property name="linesCountBeforeFirstUseWhenFirstInClass" value="1"/>
-			<property name="linesCountBetweenUses" value="1"/>
+			<property name="linesCountBetweenUses" value="0"/>
 			<property name="linesCountAfterLastUse" value="2"/>
 			<property name="linesCountAfterLastUseWhenLastInClass" value="1"/>
 		</properties>
