@@ -74,9 +74,7 @@
 		"lint": "vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors app/ public/ tests/",
 		"phpcs": "vendor/squizlabs/php_codesniffer/bin/phpcs app/ public/ tests/",
 		"phpstan": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon",
-		"phpstan-prod": "vendor/phpstan/phpstan/phpstan --ansi analyse --no-progress --configuration phpstan.neon",
 		"phpstan-vendor": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon",
-		"phpstan-vendor-prod": "vendor/phpstan/phpstan/phpstan --ansi analyse --no-progress --configuration phpstan-vendor.neon",
 		"test": [
 			"@lint",
 			"@phpcs",
@@ -84,14 +82,6 @@
 			"@phpstan-vendor",
 			"@tester"
 		],
-		"test-prod": [
-			"@lint",
-			"@phpcs",
-			"@phpstan-prod",
-			"@phpstan-vendor-prod",
-			"@tester-prod"
-		],
-		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage coverage.html --coverage-src app/ tests/",
-		"tester-prod": "vendor/nette/tester/src/tester -p php -C --colors 1 tests/"
+		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage coverage.html --coverage-src app/ tests/"
 	}
 }

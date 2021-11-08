@@ -43,7 +43,7 @@ jobs:
       run: composer --working-dir=site validate
 
     - name: Run tests
-      run: composer --working-dir=site test-prod
+      run: composer --working-dir=site test
 
     - name: Failed test output, if any
       if: failure()
