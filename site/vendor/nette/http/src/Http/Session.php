@@ -85,7 +85,13 @@ class Session
 	 */
 	public function start(): void
 	{
-		if (session_status() === PHP_SESSION_ACTIVE) {
+		$this->doStart();
+	}
+
+
+	private function doStart($mustExists = false): void
+	{
+		if (session_status() === PHP_SESSION_ACTIVE) { // adapt an existing session
 			if (!$this->started) {
 				$this->configure(self::SECURITY_OPTIONS);
 				$this->initialize();
@@ -103,14 +109,46 @@ class Session
 			session_id($id); // causes resend of a cookie to make sure it has the right parameters
 		}
 
-		if (!@session_start(['read_and_close' => $this->readAndClose])) { // @ is escalated to exception
-			$message = Nette\Utils\Helpers::getLastError();
-			@session_write_close(); // this is needed?
-			throw new Nette\InvalidStateException($message);
+		try {
+			// session_start returns false on failure only sometimes (even in PHP >= 7.1)
+			Nette\Utils\Callback::invokeSafe(
+				'session_start',
+				[['read_and_close' => $this->readAndClose]],
+				function (string $message) use (&$e): void {
+					$e = new Nette\InvalidStateException($message);
+				}
+			);
+		} catch (\Throwable $e) {
+		}
+
+		if ($e) {
+			@session_write_close(); // this is needed
+			throw $e;
+		}
+
+		if ($mustExists && $this->request->getCookie(session_name()) !== session_id()) {
+			// PHP regenerated the ID which means that the session did not exist and cookie was invalid
+			$this->destroy();
+			return;
 		}
 
 		$this->initialize();
 		$this->onStart($this);
+	}
+
+
+	/** @internal */
+	public function autoStart(bool $forWrite): void
+	{
+		if ($this->started || (!$forWrite && !$this->exists())) {
+			return;
+
+		} elseif (!$this->autoStart) {
+			trigger_error('Cannot auto-start session because autostarting is disabled', E_USER_WARNING);
+			return;
+		}
+
+		$this->doStart(!$forWrite);
 	}
 
 
@@ -203,28 +241,8 @@ class Session
 	}
 
 
-	/** @internal */
-	public function autoStart(bool $forWrite): void
-	{
-		if ($this->started || (!$forWrite && !$this->exists())) {
-			return;
-
-		} elseif (!$this->autoStart) {
-			trigger_error('Cannot auto-start session because autostarting is disabled', E_USER_WARNING);
-			return;
-		}
-
-		$this->start();
-
-		if (!$forWrite && $this->request->getCookie(session_name()) !== session_id()) {
-			// PHP regenerated the ID which means that the session did not exist and cookie was invalid
-			$this->destroy();
-		}
-	}
-
-
 	/**
-	 * Does session exists for the current request?
+	 * Does session exist for the current request?
 	 */
 	public function exists(): bool
 	{
