@@ -80,7 +80,6 @@
 		"phpstan-vendor": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon",
 		"test": [
 			"@lint",
-			"@lint-latte",
 			"@lint-neon",
 			"@phpcs",
 			"@phpstan",
