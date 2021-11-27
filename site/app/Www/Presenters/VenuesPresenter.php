@@ -25,7 +25,7 @@ class VenuesPresenter extends BasePresenter
 		Texy $texyFormatter,
 		Dates $trainingDates,
 		Venues $trainingVenues,
-		Trainings $trainings
+		Trainings $trainings,
 	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingDates = $trainingDates;

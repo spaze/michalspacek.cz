@@ -63,7 +63,7 @@ class Exports
 					$article->href,
 					new Text((string)$article->title, Text::TYPE_HTML),
 					$updated,
-					$article->published
+					$article->published,
 				);
 				if ($article->excerpt) {
 					$entry->setSummary(new Text(trim((string)$article->excerpt), Text::TYPE_HTML));

@@ -59,7 +59,7 @@ class Manager implements Authenticator
 		Response $httpResponse,
 		Passwords $passwords,
 		StaticKey $passwordEncryption,
-		LinkGenerator $linkGenerator
+		LinkGenerator $linkGenerator,
 	) {
 		$this->database = $context;
 		$this->httpRequest = $httpRequest;
@@ -115,7 +115,7 @@ class Manager implements Authenticator
 				users
 			WHERE
 				username = ?',
-			$username
+			$username,
 		);
 		if (!$user) {
 			throw new AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
@@ -172,7 +172,7 @@ class Manager implements Authenticator
 				forbidden
 			WHERE
 				ip = ?',
-			$this->httpRequest->getRemoteAddress()
+			$this->httpRequest->getRemoteAddress(),
 		);
 		return (bool)$forbidden;
 	}
@@ -250,7 +250,7 @@ class Manager implements Authenticator
 					'token' => $this->hashToken($token),
 					'created' => new DateTime(),
 					'type' => $type,
-				)
+				),
 			);
 		} catch (PDOException $e) {
 			if ($e->getCode() == '23000') {
@@ -376,7 +376,7 @@ class Manager implements Authenticator
 					AND type = ?',
 				$values[0],
 				$validity,
-				$type
+				$type,
 			);
 			if ($storedToken && hash_equals($storedToken->token, $this->hashToken($values[1]))) {
 				$result = $storedToken;

@@ -29,7 +29,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 		Passwords $passwords,
 		Rating $passwordsRating,
 		PasswordsStoragesSearchSortFactory $searchSortFactory,
-		PasswordsSorting $passwordsSorting
+		PasswordsSorting $passwordsSorting,
 	) {
 		$this->passwords = $passwords;
 		$this->passwordsRating = $passwordsRating;

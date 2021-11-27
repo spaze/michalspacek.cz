@@ -353,7 +353,7 @@ class Texy extends NetxtenTexy
 		return sprintf(
 			'%s: %s',
 			count($dates) > 1 ? $this->translator->translate('messages.trainings.nextdates') : $this->translator->translate('messages.trainings.nextdate'),
-			implode(', ', $dates)
+			implode(', ', $dates),
 		);
 	}
 
@@ -377,7 +377,7 @@ class Texy extends NetxtenTexy
 			$price = $this->prices->resolvePriceVat($training->alternativeDurationPrice);
 			$training->alternativeDurationPriceText = $this->translate($training->alternativeDurationPriceText, [
 				$price->getPriceWithCurrency(),
-				$price->getPriceVatWithCurrency()
+				$price->getPriceVatWithCurrency(),
 			]);
 		}
 		return $training;

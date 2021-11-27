@@ -35,7 +35,7 @@ class Passwords
 		Rating $rating,
 		Companies $companies,
 		Sites $sites,
-		PasswordsSorting $sorting
+		PasswordsSorting $sorting,
 	) {
 		$this->database = $context;
 		$this->rating = $rating;
@@ -301,7 +301,7 @@ class Passwords
 	{
 		return $this->database->fetchPairs(
 			'SELECT alias, algo FROM password_algos WHERE alias IN (?) ORDER BY algo',
-			$this->rating->getSlowHashes()
+			$this->rating->getSlowHashes(),
 		);
 	}
 
@@ -326,7 +326,7 @@ class Passwords
 	{
 		return $this->database->fetchPairs(
 			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
-			$this->rating->getVisibleDisclosures()
+			$this->rating->getVisibleDisclosures(),
 		);
 	}
 
@@ -340,7 +340,7 @@ class Passwords
 	{
 		return $this->database->fetchPairs(
 			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
-			$this->rating->getInvisibleDisclosures()
+			$this->rating->getInvisibleDisclosures(),
 		);
 	}
 
@@ -443,7 +443,7 @@ class Passwords
 				'from_confirmed' => $fromConfirmed,
 				'attributes' => (empty($attributes) ? null : $attributes),
 				'note' => (empty($note) ? null : $note),
-			)
+			),
 		);
 		return $result ?: null;
 	}
@@ -483,7 +483,7 @@ class Passwords
 			array(
 				'key_password_disclosures' => $disclosureId,
 				'key_password_storages' => $storageId,
-			)
+			),
 		);
 	}
 

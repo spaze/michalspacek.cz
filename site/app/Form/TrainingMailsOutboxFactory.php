@@ -35,7 +35,7 @@ class TrainingMailsOutboxFactory
 		Statuses $trainingStatuses,
 		Mails $trainingMails,
 		TemplateFactory $templateFactory,
-		NetteApplication $netteApplication
+		NetteApplication $netteApplication,
 	) {
 		$this->factory = $factory;
 		$this->trainingApplications = $trainingApplications;

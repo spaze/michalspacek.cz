@@ -229,7 +229,7 @@ class Talks
 			FROM talks t
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.action = ?',
-			$name
+			$name,
 		);
 
 		if (!$result) {
@@ -281,7 +281,7 @@ class Talks
 			FROM talks t
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.id_talk = ?',
-			$id
+			$id,
 		);
 
 		if (!$result) {
@@ -383,7 +383,7 @@ class Talks
 		?string $transcript,
 		?string $favorite,
 		?int $supersededBy,
-		bool $publishSlides
+		bool $publishSlides,
 	): void {
 		$this->database->query(
 			'UPDATE talks SET ? WHERE id_talk = ?',
@@ -408,7 +408,7 @@ class Talks
 				'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
 				'publish_slides' => $publishSlides,
 			),
-			$id
+			$id,
 		);
 	}
 
@@ -435,7 +435,7 @@ class Talks
 		?string $transcript,
 		?string $favorite,
 		?int $supersededBy,
-		bool $publishSlides
+		bool $publishSlides,
 	): void {
 		$this->database->query(
 			'INSERT INTO talks',
@@ -459,7 +459,7 @@ class Talks
 				'favorite' => (empty($favorite) ? null : $favorite),
 				'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
 				'publish_slides' => $publishSlides,
-			)
+			),
 		);
 	}
 
@@ -485,7 +485,7 @@ class Talks
 			FROM talk_slides
 			WHERE key_talk = ?
 			ORDER BY number',
-			$talkId
+			$talkId,
 		);
 
 		$filenames = [];
@@ -497,7 +497,7 @@ class Talks
 					filename_alternative AS filenameAlternative
 				FROM talk_slides
 				WHERE key_talk = ?',
-				$filenamesTalkId
+				$filenamesTalkId,
 			);
 			foreach ($result as $row) {
 				$filenames[$row->number] = [$row->filename, $row->filenameAlternative];
@@ -601,7 +601,7 @@ class Talks
 						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
-					)
+					),
 				);
 			}
 		} catch (PDOException $e) {
@@ -661,7 +661,7 @@ class Talks
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
 					),
-					$id
+					$id,
 				);
 			}
 		} catch (PDOException $e) {

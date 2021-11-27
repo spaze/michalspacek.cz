@@ -76,7 +76,7 @@ class InterviewsPresenter extends BasePresenter
 			$values->videoHref,
 			$values->videoEmbed,
 			$values->sourceName,
-			$values->sourceHref
+			$values->sourceHref,
 		);
 		$this->flashMessage('Rozhovor upraven');
 		$this->redirect('Interviews:');
@@ -108,7 +108,7 @@ class InterviewsPresenter extends BasePresenter
 			$values->videoHref,
 			$values->videoEmbed,
 			$values->sourceName,
-			$values->sourceHref
+			$values->sourceHref,
 		);
 		$this->flashMessage('Rozhovor přidán');
 		$this->redirect('Interviews:');

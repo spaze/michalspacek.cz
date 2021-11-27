@@ -57,7 +57,7 @@ class CompanyTrainings
 				a.action = ?
 				AND l.language = ?',
 			$name,
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		return ($result ? $this->texyFormatter->formatTraining($result) : null);
@@ -83,7 +83,7 @@ class CompanyTrainings
 				AND t.key_discontinued IS NULL
 				AND l.language = ?
 			ORDER BY t.order IS NULL, t.order',
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 		$public = $this->trainingDates->getPublicUpcoming();
 

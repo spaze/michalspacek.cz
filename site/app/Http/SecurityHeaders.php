@@ -27,7 +27,7 @@ class SecurityHeaders
 		IRequest $httpRequest,
 		IResponse $httpResponse,
 		Config $contentSecurityPolicy,
-		LocaleLinkGenerator $localeLinkGenerator
+		LocaleLinkGenerator $localeLinkGenerator,
 	) {
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;

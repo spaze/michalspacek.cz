@@ -20,7 +20,7 @@ class Reviews
 
 	public function __construct(
 		Explorer $context,
-		Texy $texyFormatter
+		Texy $texyFormatter,
 	) {
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
@@ -134,7 +134,7 @@ class Reviews
 				LEFT JOIN training_dates d ON r.key_date = d.id_date
 			WHERE
 				r.id_review = ?',
-			$reviewId
+			$reviewId,
 		);
 
 		if (!$result) {
@@ -186,7 +186,7 @@ class Reviews
 				'ranking' => $ranking,
 				'note' => $note,
 			),
-			$reviewId
+			$reviewId,
 		);
 	}
 
@@ -210,7 +210,7 @@ class Reviews
 				'hidden' => $hidden,
 				'ranking' => $ranking,
 				'note' => $note,
-			)
+			),
 		);
 	}
 

@@ -44,7 +44,7 @@ class TrainingApplicationAdminFactory
 		Applications $trainingApplications,
 		Dates $trainingDates,
 		TrainingControlsFactory $trainingControlsFactory,
-		Statuses $trainingStatuses
+		Statuses $trainingStatuses,
 	) {
 		$this->factory = $factory;
 		$this->trainingApplications = $trainingApplications;
@@ -123,7 +123,7 @@ class TrainingApplicationAdminFactory
 				$values->invoiceId,
 				$values->paid,
 				$values->familiar,
-				$dateId
+				$dateId,
 			);
 			$onSuccess($dateId);
 		};

@@ -21,7 +21,7 @@ class InterviewsPresenter extends BasePresenter
 	public function __construct(
 		Texy $texyFormatter,
 		Interviews $interviews,
-		Embed $embed
+		Embed $embed,
 	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->interviews = $interviews;

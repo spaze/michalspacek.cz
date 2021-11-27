@@ -44,7 +44,7 @@ class PulsePresenter extends BasePresenter
 			$this->template->newDisclosures,
 			$this->companies,
 			$this->sites,
-			$this->passwords
+			$this->passwords,
 		);
 		$form->onValidate[] = [$this, 'validatePasswordsStorages'];
 		$form->onSuccess[] = [$this, 'submittedPasswordsStorages'];

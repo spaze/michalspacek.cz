@@ -84,7 +84,7 @@ class Trainings
 			$name,
 			$this->translator->getDefaultLocale(),
 			$includeCustom,
-			$includeCustom
+			$includeCustom,
 		);
 
 		return ($result ? $this->texyFormatter->formatTraining($result) : null);
@@ -124,7 +124,7 @@ class Trainings
 					t.id_training = ?
 					AND l.language = ?',
 				$id,
-				$this->translator->getDefaultLocale()
+				$this->translator->getDefaultLocale(),
 			);
 			$this->trainingsById[$id] = ($result ? $this->texyFormatter->formatTraining($result) : null);
 		}
@@ -196,7 +196,7 @@ class Trainings
 				l.language = ?
 			ORDER BY
 				d.start DESC',
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		foreach ($result as $training) {
@@ -230,7 +230,7 @@ class Trainings
 				AND l.language = ?
 			ORDER BY
 				t.order IS NULL, t.order',
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		foreach ($result as $training) {
@@ -263,7 +263,7 @@ class Trainings
 				l.language = ?
 			ORDER BY
 				t.order IS NULL, t.order',
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		foreach ($result as $training) {
@@ -284,7 +284,7 @@ class Trainings
 				c.name
 			FROM training_cooperations c
 			ORDER BY
-				c.id_cooperation'
+				c.id_cooperation',
 		);
 		return $result;
 	}
@@ -303,7 +303,7 @@ class Trainings
 				t.id_training = ?
 				AND l.language = ?',
 			$id,
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 	}
 
@@ -325,7 +325,7 @@ class Trainings
 				JOIN trainings t ON t.key_discontinued = td.id_trainings_discontinued
 			ORDER BY
 				td.id_trainings_discontinued,
-				t.id_training'
+				t.id_training',
 		);
 		$trainings = [];
 		foreach ($result as $row) {
@@ -423,7 +423,7 @@ class Trainings
 			ORDER BY
 				d.start DESC',
 			$this->translator->getDefaultLocale(),
-			$this->trainingDates->getDataRetentionDate()
+			$this->trainingDates->getDataRetentionDate(),
 		)->fetchAssoc('dateId->');
 
 		foreach ($result as $training) {
@@ -453,7 +453,7 @@ class Trainings
 				'company_tax_id' => null,
 				'note' => null,
 			),
-			$dateIds
+			$dateIds,
 		);
 	}
 

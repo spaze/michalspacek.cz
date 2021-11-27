@@ -129,12 +129,12 @@ class TalksPresenter extends BasePresenter
 			$values->transcript,
 			$values->favorite,
 			$values->supersededBy,
-			$values->publishSlides
+			$values->publishSlides,
 		);
 		$this->flashMessage(
 			Html::el()
 				->setText('Přednáška upravena ')
-				->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit'))
+				->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit')),
 		);
 		$this->redirect('Talks:');
 	}
@@ -173,7 +173,7 @@ class TalksPresenter extends BasePresenter
 			$values->transcript,
 			$values->favorite,
 			$values->supersededBy,
-			$values->publishSlides
+			$values->publishSlides,
 		);
 		$this->flashMessage('Přednáška přidána');
 		$this->redirect('Talks:');

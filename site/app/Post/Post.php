@@ -147,7 +147,7 @@ class Post
 			LEFT JOIN twitter_card_types tct
 				ON tct.id_twitter_card_type = bp.key_twitter_card_type
 			WHERE bp.id_blog_post = ?',
-			$id
+			$id,
 		);
 		$post = new Data();
 		$post->postId = $result->postId;
@@ -303,7 +303,7 @@ class Post
 					'recommended' => Json::encode($post->recommended),
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
-				)
+				),
 			);
 			$post->postId = (int)$this->database->getInsertId();
 			$this->exportsCache->clean([Cache::TAGS => array_merge([self::class], $post->slugTags)]);
@@ -346,7 +346,7 @@ class Post
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
 				),
-				$post->postId
+				$post->postId,
 			);
 			$now = new DateTime();
 			if ($post->editSummary) {
@@ -359,7 +359,7 @@ class Post
 						'edited_at' => $now,
 						'edited_at_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 						'summary' => $post->editSummary,
-					)
+					),
 				);
 			}
 			$cacheTags = [self::class . "/id/{$post->postId}"];

@@ -40,7 +40,7 @@ class Locales
 				WHERE a.action = ?
 				LIMIT 1
 			)',
-			$action
+			$action,
 		);
 	}
 
