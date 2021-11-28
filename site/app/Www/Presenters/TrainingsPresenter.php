@@ -67,7 +67,7 @@ class TrainingsPresenter extends BasePresenter
 		TrainingApplicationFactory $trainingApplicationFactory,
 		TrainingApplicationPreliminaryFactory $trainingApplicationPreliminaryFactory,
 		Info $companyInfo,
-		IResponse $httpResponse
+		IResponse $httpResponse,
 	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->trainingApplications = $trainingApplications;
@@ -162,7 +162,7 @@ class TrainingsPresenter extends BasePresenter
 				$session->country,
 				$session->companyId,
 				$session->companyTaxId,
-				$session->note
+				$session->note,
 			);
 			$this->redirect('training', $name);
 		}

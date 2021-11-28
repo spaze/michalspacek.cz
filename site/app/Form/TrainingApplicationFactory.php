@@ -55,7 +55,7 @@ class TrainingApplicationFactory
 		string $action,
 		Html $name,
 		array $dates,
-		SessionSection $sessionSection
+		SessionSection $sessionSection,
 	): Form {
 		$form = $this->factory->create();
 
@@ -113,7 +113,7 @@ class TrainingApplicationFactory
 						$values->country,
 						$values->companyId,
 						$values->companyTaxId,
-						$values->note
+						$values->note,
 					);
 				} else {
 					if (isset($sessionSection->application[$action]) && $sessionSection->application[$action]['dateId'] == $values->trainingId) {
@@ -129,7 +129,7 @@ class TrainingApplicationFactory
 							$values->country,
 							$values->companyId,
 							$values->companyTaxId,
-							$values->note
+							$values->note,
 						);
 						$sessionSection->application[$action] = null;
 					} else {
@@ -144,7 +144,7 @@ class TrainingApplicationFactory
 							$values->country,
 							$values->companyId,
 							$values->companyTaxId,
-							$values->note
+							$values->note,
 						);
 					}
 					$this->trainingMails->sendSignUpMail(
@@ -160,7 +160,7 @@ class TrainingApplicationFactory
 						$date->venueName,
 						$date->venueNameExtended,
 						$date->venueAddress,
-						$date->venueCity
+						$date->venueCity,
 					);
 				}
 				$sessionSection->trainingId = $values->trainingId;

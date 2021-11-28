@@ -36,7 +36,7 @@ class SecurityHeadersTest extends TestCase
 			'*.*' => [
 				'script-src' => [
 					"'none'",
-					'example.com'
+					'example.com',
 				],
 				'form-action' => [
 					"'self'",

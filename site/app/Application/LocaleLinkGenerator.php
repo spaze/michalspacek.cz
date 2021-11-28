@@ -88,7 +88,7 @@ class LocaleLinkGenerator
 		$locale = (string)$this->translator->getDefaultLocale();
 		return array_merge(
 			[$locale => $this->linkGenerator->link($destination, $this->getParams($params, $locale))],
-			$this->links($destination, $params)
+			$this->links($destination, $params),
 		);
 	}
 

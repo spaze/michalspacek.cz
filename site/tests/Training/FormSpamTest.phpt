@@ -91,7 +91,7 @@ class FormSpamTest extends TestCase
 				],
 				true,
 				null,
-			]
+			],
 		];
 	}
 

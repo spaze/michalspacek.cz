@@ -13,20 +13,10 @@ use Nette\Neon\Node;
 
 
 /** @internal */
-final class ArrayNode extends Node
+abstract class ArrayNode extends Node
 {
 	/** @var ArrayItemNode[] */
 	public $items = [];
-
-	/** @var ?string */
-	public $indent;
-
-
-	public function __construct(?string $indent = null, int $pos = null)
-	{
-		$this->indent = $indent;
-		$this->startPos = $this->endPos = $pos;
-	}
 
 
 	public function toValue(): array
@@ -35,24 +25,12 @@ final class ArrayNode extends Node
 	}
 
 
-	public function toString(): string
-	{
-		if ($this->indent === null) {
-			$isList = !array_filter($this->items, function ($item) { return $item->key; });
-			$res = ArrayItemNode::itemsToInlineString($this->items);
-			return ($isList ? '[' : '{') . $res . ($isList ? ']' : '}');
-
-		} elseif (count($this->items) === 0) {
-			return '[]';
-
-		} else {
-			return ArrayItemNode::itemsToBlockString($this->items);
-		}
-	}
-
-
 	public function getSubNodes(): array
 	{
-		return $this->items;
+		$res = [];
+		foreach ($this->items as &$item) {
+			$res[] = &$item;
+		}
+		return $res;
 	}
 }

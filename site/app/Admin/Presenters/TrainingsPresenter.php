@@ -86,7 +86,7 @@ class TrainingsPresenter extends BasePresenter
 		TrainingControlsFactory $trainingControlsFactory,
 		Helpers $netxtenHelpers,
 		DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
-		TrainingApplicationAdminFactory $trainingApplicationAdminFactory
+		TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
 	) {
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
@@ -306,7 +306,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->flashMessage(
 			Html::el()
 				->setText('Tykání nastaveno pro ' . $total . ' účastníků ve stavu ')
-				->addHtml(implode(', ', $statuses))
+				->addHtml(implode(', ', $statuses)),
 		);
 
 		$this->redirect($this->getAction(), $this->dateId);
@@ -352,7 +352,7 @@ class TrainingsPresenter extends BasePresenter
 				$this->training->studentDiscount,
 				$values->status,
 				$values->source,
-				$values->date
+				$values->date,
 			);
 		}
 		$this->redirect($this->getAction(), $this->dateId);
@@ -456,7 +456,7 @@ class TrainingsPresenter extends BasePresenter
 			function (): void {
 				$this->redirect('this');
 			},
-			$this->application
+			$this->application,
 		);
 	}
 
@@ -480,7 +480,7 @@ class TrainingsPresenter extends BasePresenter
 			$this->flashMessage(
 				Html::el()->setText('Soubor ')
 					->addHtml(Html::el('code')->setText($name))
-					->addHtml(Html::el()->setText(' byl přidán'))
+					->addHtml(Html::el()->setText(' byl přidán')),
 			);
 		} else {
 			$this->flashMessage('Soubor nebyl vybrán nebo došlo k nějaké chybě při nahrávání', 'error');
@@ -538,7 +538,7 @@ class TrainingsPresenter extends BasePresenter
 			$values->remoteUrl,
 			$values->remoteNotes,
 			$values->videoHref,
-			$values->feedbackHref
+			$values->feedbackHref,
 		);
 		$this->flashMessage('Termín upraven');
 		$this->redirect($this->getAction(), $this->redirectParam);
@@ -576,7 +576,7 @@ class TrainingsPresenter extends BasePresenter
 			$values->remoteUrl,
 			$values->remoteNotes,
 			$values->videoHref,
-			$values->feedbackHref
+			$values->feedbackHref,
 		);
 		$this->redirect('Trainings:');
 	}

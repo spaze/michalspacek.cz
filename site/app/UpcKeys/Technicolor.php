@@ -168,8 +168,8 @@ class Technicolor implements RouterInterface
 				'http' => [
 					'ignore_errors' => true,  // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
 					'header' => 'X-API-Key: ' . $this->apiKey,
-				]
-			]
+				],
+			],
 		]);
 		$result = file_get_contents($url, false, $context);
 		if (!$result) {
@@ -196,7 +196,7 @@ class Technicolor implements RouterInterface
 				`keys` k
 				JOIN ssids s ON k.key_ssid = s.id_ssid
 			WHERE s.ssid = ?',
-			$ssid
+			$ssid,
 		);
 		$result = array();
 		foreach ($rows as $row) {
@@ -216,7 +216,7 @@ class Technicolor implements RouterInterface
 				`keys` k
 				JOIN ssids s ON k.key_ssid = s.id_ssid
 			WHERE s.ssid = ?',
-			$ssid
+			$ssid,
 		);
 		return (bool)$result;
 	}
@@ -246,7 +246,7 @@ class Technicolor implements RouterInterface
 					'ssid' => $ssid,
 					'added' => $datetime,
 					'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
-				)
+				),
 			);
 			$ssidId = $this->database->getInsertId();
 			foreach ($keys as $key) {
@@ -257,7 +257,7 @@ class Technicolor implements RouterInterface
 						'serial' => $key->serial,
 						'key' => $key->key,
 						'type' => $key->type,
-					)
+					),
 				);
 			}
 			$this->database->commit();

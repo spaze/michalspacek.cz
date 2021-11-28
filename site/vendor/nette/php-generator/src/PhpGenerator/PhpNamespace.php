@@ -152,7 +152,11 @@ final class PhpNamespace
 	public function getUses(string $of = self::NAME_NORMAL): array
 	{
 		asort($this->aliases[$of]);
-		return $this->aliases[$of];
+		return array_filter(
+			$this->aliases[$of],
+			function ($name, $alias) { return strcasecmp(($this->name ? $this->name . '\\' : '') . $alias, $name); },
+			ARRAY_FILTER_USE_BOTH
+		);
 	}
 
 
@@ -160,6 +164,27 @@ final class PhpNamespace
 	public function unresolveName(string $name): string
 	{
 		return $this->simplifyName($name);
+	}
+
+
+	public function resolveName(string $name, string $of = self::NAME_NORMAL): string
+	{
+		if (isset(Helpers::KEYWORDS[strtolower($name)]) || $name === '') {
+			return $name;
+		} elseif ($name[0] === '\\') {
+			return substr($name, 1);
+		}
+
+		$aliases = array_change_key_case($this->aliases[$of]);
+		if ($of !== self::NAME_NORMAL) {
+			return $aliases[strtolower($name)]
+				?? $this->resolveName(Helpers::extractNamespace($name) . '\\') . Helpers::extractShortName($name);
+		}
+
+		$parts = explode('\\', $name, 2);
+		return ($res = $aliases[strtolower($parts[0])] ?? null)
+			? $res . (isset($parts[1]) ? '\\' . $parts[1] : '')
+			: $this->name . ($this->name ? '\\' : '') . $name;
 	}
 
 

@@ -37,7 +37,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		Locales $trainingLocales,
 		Reviews $trainingReviews,
 		Prices $price,
-		IResponse $httpResponse
+		IResponse $httpResponse,
 	) {
 		$this->texyFormatter = $texyFormatter;
 		$this->trainings = $trainings;

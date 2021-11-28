@@ -39,13 +39,10 @@ class Interviews
 				source_name AS sourceName,
 				source_href AS sourceHref
 			FROM interviews
-			ORDER BY date DESC';
+			ORDER BY date DESC
+			LIMIT ?';
 
-		if ($limit !== null) {
-			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
-		}
-
-		$result = $this->database->fetchAll($query);
+		$result = $this->database->fetchAll($query, $limit ?? PHP_INT_MAX);
 		foreach ($result as $row) {
 			$this->format($row);
 		}
@@ -77,7 +74,7 @@ class Interviews
 				source_href AS sourceHref
 			FROM interviews
 			WHERE action = ?',
-			$name
+			$name,
 		);
 
 		if ($result) {
@@ -112,7 +109,7 @@ class Interviews
 				source_href AS sourceHref
 			FROM interviews
 			WHERE id_interview = ?',
-			$id
+			$id,
 		);
 
 		if ($result) {
@@ -148,7 +145,7 @@ class Interviews
 		string $videoHref,
 		string $videoEmbed,
 		string $sourceName,
-		string $sourceHref
+		string $sourceHref,
 	): void {
 		$this->database->query(
 			'UPDATE interviews SET ? WHERE id_interview = ?',
@@ -165,7 +162,7 @@ class Interviews
 				'source_name' => (empty($sourceName) ? null : $sourceName),
 				'source_href' => (empty($sourceHref) ? null : $sourceHref),
 			),
-			$id
+			$id,
 		);
 	}
 
@@ -181,7 +178,7 @@ class Interviews
 		string $videoHref,
 		string $videoEmbed,
 		string $sourceName,
-		string $sourceHref
+		string $sourceHref,
 	): void {
 		$this->database->query(
 			'INSERT INTO interviews',
@@ -197,7 +194,7 @@ class Interviews
 				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
 				'source_name' => (empty($sourceName) ? null : $sourceName),
 				'source_href' => (empty($sourceHref) ? null : $sourceHref),
-			)
+			),
 		);
 	}
 

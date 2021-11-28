@@ -25,7 +25,7 @@ class FormDataLogger
 			'Application session data for %s: %s, form values: %s',
 			$name,
 			($sessionSection === null ? 'undefined' : ($logSession === [] ? 'empty' : implode(', ', $logSession))),
-			($logValues === [] ? 'empty' : implode(', ', $logValues))
+			($logValues === [] ? 'empty' : implode(', ', $logValues)),
 		);
 		Debugger::log($message);
 	}

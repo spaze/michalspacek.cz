@@ -20,7 +20,7 @@ class TrainingApplicationMultiple extends ProtectedForm
 		string $name,
 		int $count,
 		array $statuses,
-		TrainingControlsFactory $trainingControlsFactory
+		TrainingControlsFactory $trainingControlsFactory,
 	) {
 		parent::__construct($parent, $name);
 

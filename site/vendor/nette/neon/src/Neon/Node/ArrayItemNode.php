@@ -63,9 +63,9 @@ final class ArrayItemNode extends Node
 		foreach ($items as $item) {
 			$v = $item->value->toString();
 			$res .= ($item->key ? $item->key->toString() . ':' : '-')
-				. (strpos($v, "\n") === false
-					? ' ' . $v . "\n"
-					: "\n" . preg_replace('#^(?=.)#m', "\t", $v) . (substr($v, -2, 1) === "\n" ? '' : "\n"));
+				. ($item->value instanceof BlockArrayNode && $item->value->items
+					? "\n" . $v . (substr($v, -2, 1) === "\n" ? '' : "\n")
+					: ' ' . $v . "\n");
 		}
 		return $res;
 	}
@@ -85,6 +85,6 @@ final class ArrayItemNode extends Node
 
 	public function getSubNodes(): array
 	{
-		return $this->key ? [$this->key, $this->value] : [$this->value];
+		return $this->key ? [&$this->key, &$this->value] : [&$this->value];
 	}
 }

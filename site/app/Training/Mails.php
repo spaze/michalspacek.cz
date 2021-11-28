@@ -45,7 +45,7 @@ class Mails
 		Statuses $trainingStatuses,
 		Venues $trainingVenues,
 		Files $trainingFiles,
-		Helpers $netxtenHelpers
+		Helpers $netxtenHelpers,
 	) {
 		$this->mailer = $mailer;
 		$this->trainingApplications = $trainingApplications;
@@ -85,7 +85,7 @@ class Mails
 		?string $venueName,
 		?string $venueNameExtended,
 		?string $venueAddress,
-		?string $venueCity
+		?string $venueCity,
 	): void {
 		Debugger::log("Sending sign-up email to application id: {$applicationId}, training: {$training}");
 

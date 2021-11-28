@@ -82,7 +82,7 @@ class Loader
 				$post,
 				$this->translator->getDefaultLocale(),
 				new DateTime(),
-				$previewKey
+				$previewKey,
 			);
 			$this->post = $result;
 		}

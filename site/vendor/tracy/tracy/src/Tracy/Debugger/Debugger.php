@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.8.7';
+	public const VERSION = '2.8.9';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -47,6 +47,9 @@ class Debugger
 
 	/** @var int initial output buffer level */
 	private static $obLevel;
+
+	/** @var ?array output buffer status @internal */
+	public static $obStatus;
 
 	/********************* errors and exceptions reporting ****************d*g**/
 
@@ -220,6 +223,7 @@ class Debugger
 			'Dumper/Exposer',
 			'Dumper/Renderer',
 			'Dumper/Value',
+			'Logger/FireLogger',
 			'Logger/Logger',
 			'Helpers',
 		] as $path) {
@@ -233,7 +237,7 @@ class Debugger
 
 	public static function dispatch(): void
 	{
-		if (self::$productionMode || PHP_SAPI === 'cli') {
+		if (self::$productionMode || Helpers::isCli()) {
 			return;
 
 		} elseif (headers_sent($file, $line) || ob_get_length()) {
@@ -309,6 +313,7 @@ class Debugger
 	{
 		$firstTime = (bool) self::$reserved;
 		self::$reserved = null;
+		self::$obStatus = ob_get_status(true);
 
 		if (!headers_sent()) {
 			http_response_code(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== false ? 503 : 500);
@@ -332,7 +337,7 @@ class Debugger
 				(function ($logged) use ($exception) {
 					require self::$errorTemplate ?: __DIR__ . '/assets/error.500.phtml';
 				})(empty($e));
-			} elseif (PHP_SAPI === 'cli') {
+			} elseif (Helpers::isCli()) {
 				// @ triggers E_NOTICE when strerr is closed since PHP 7.4
 				@fwrite(STDERR, "ERROR: {$exception->getMessage()}\n"
 					. (isset($e)
@@ -550,7 +555,7 @@ class Debugger
 				Dumper::DEPTH => self::$maxDepth,
 				Dumper::TRUNCATE => self::$maxLength,
 			];
-			return PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg'
+			return Helpers::isCli()
 				? Dumper::toText($var)
 				: Helpers::capture(function () use ($var, $options) {
 					Dumper::dump($var, $options);

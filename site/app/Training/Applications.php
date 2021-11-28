@@ -86,7 +86,7 @@ class Applications
 				s.status = ?
 			ORDER BY
 				d.start, a.status_time',
-			$status
+			$status,
 		);
 
 		if ($result) {
@@ -132,7 +132,7 @@ class Applications
 					JOIN training_application_sources sr ON a.key_source = sr.id_source
 				WHERE
 					key_date = ?',
-				$dateId
+				$dateId,
 			);
 			if ($this->byDate[$dateId]) {
 				$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
@@ -188,7 +188,7 @@ class Applications
 				key_status NOT IN(?)
 				AND invoice_id IS NOT NULL
 				AND paid IS NULL',
-			array_keys($this->trainingStatuses->getDiscardedStatuses())
+			array_keys($this->trainingStatuses->getDiscardedStatuses()),
 		);
 		return $result;
 	}
@@ -257,7 +257,7 @@ class Applications
 		string $country,
 		string $companyId,
 		string $companyTaxId,
-		string $note
+		string $note,
 	): int {
 		return $this->insertApplication(
 			$date->trainingId,
@@ -275,7 +275,7 @@ class Applications
 			$date->price,
 			$date->studentDiscount,
 			Statuses::STATUS_TENTATIVE,
-			$this->resolveSource($note)
+			$this->resolveSource($note),
 		);
 	}
 
@@ -305,7 +305,7 @@ class Applications
 		string $country,
 		string $companyId,
 		string $companyTaxId,
-		string $note
+		string $note,
 	): int {
 		return $this->insertApplication(
 			$date->trainingId,
@@ -323,7 +323,7 @@ class Applications
 			$date->price,
 			$date->studentDiscount,
 			Statuses::STATUS_SIGNED_UP,
-			$this->resolveSource($note)
+			$this->resolveSource($note),
 		);
 	}
 
@@ -354,7 +354,7 @@ class Applications
 			null,
 			null,
 			Statuses::STATUS_TENTATIVE,
-			$this->resolveSource()
+			$this->resolveSource(),
 		);
 	}
 
@@ -376,7 +376,7 @@ class Applications
 		?int $studentDiscount,
 		?string $status,
 		string $source,
-		?string $date = null
+		?string $date = null,
 	): int {
 		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
 			throw new RuntimeException("Invalid initial status {$status}");
@@ -447,7 +447,7 @@ class Applications
 		string $country,
 		string $companyId,
 		string $companyTaxId,
-		string $note
+		string $note,
 	): int {
 		$this->trainingStatuses->updateStatusCallback(
 			$applicationId,
@@ -486,9 +486,9 @@ class Applications
 						'price_vat'      => $price->getPriceVat(),
 						'discount'       => $price->getDiscount(),
 					),
-					$applicationId
+					$applicationId,
 				);
-			}
+			},
 		);
 		return $applicationId;
 	}
@@ -514,7 +514,7 @@ class Applications
 		?string $invoiceId = null,
 		string $paid = null,
 		bool $familiar = false,
-		?int $dateId = null
+		?int $dateId = null,
 	): void {
 		$paidDate = ($paid ? new DateTime($paid) : null);
 		/** @var DateTimeZone|false $timeZone */
@@ -554,7 +554,7 @@ class Applications
 			array(
 				'invoice_id' => ((int)$invoiceId ?: null),
 			),
-			$applicationId
+			$applicationId,
 		);
 	}
 
@@ -626,7 +626,7 @@ class Applications
 				a.id_application = ?
 				AND l.language = ?',
 			$id,
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		if ($result) {
@@ -662,7 +662,7 @@ class Applications
 				AND s.status != ?
 				AND l.language = ?',
 			Statuses::STATUS_CANCELED,
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 		foreach ($result as $row) {
 			$row->name = $this->translator->translate($row->name);
@@ -693,7 +693,7 @@ class Applications
 			WHERE
 				a.key_date IS NULL
 				AND s.status != ?',
-			Statuses::STATUS_CANCELED
+			Statuses::STATUS_CANCELED,
 		);
 
 		if ($applications) {
@@ -782,7 +782,7 @@ class Applications
 				a.access_token = ?
 				AND l.language = ?',
 			$token,
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		if ($result && $result->email) {
@@ -804,7 +804,7 @@ class Applications
 				'paid'           => ($paidDate ?: null),
 				'paid_timezone'  => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
 			),
-			(int)$invoiceId
+			(int)$invoiceId,
 		);
 		return $result->getRowCount();
 	}
@@ -827,7 +827,7 @@ class Applications
 				alias,
 				name
 			FROM
-				training_application_sources'
+				training_application_sources',
 		);
 	}
 

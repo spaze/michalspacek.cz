@@ -23,7 +23,7 @@ class Talk extends ProtectedForm
 		IContainer $parent,
 		string $name,
 		?string $talkAction,
-		Talks $talks
+		Talks $talks,
 	) {
 		parent::__construct($parent, $name);
 		$this->talks = $talks;
@@ -133,7 +133,7 @@ class Talk extends ProtectedForm
 			$label,
 			$required,
 			'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM',
-			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})'
+			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})',
 		);
 	}
 

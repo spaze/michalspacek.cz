@@ -87,7 +87,7 @@ class Dates
 				d.id_date = ?
 				AND l.language = ?',
 			$dateId,
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		if ($result) {
@@ -142,7 +142,7 @@ class Dates
 			ORDER BY
 				d.start',
 			array_keys($this->trainingStatuses->getDiscardedStatuses()),
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		foreach ($result as $date) {
@@ -170,7 +170,7 @@ class Dates
 		string $remoteUrl,
 		string $remoteNotes,
 		string $videoHref,
-		string $feedbackHref
+		string $feedbackHref,
 	): void {
 		$this->database->query(
 			'UPDATE training_dates SET ? WHERE id_date = ?',
@@ -192,7 +192,7 @@ class Dates
 				'video_href' => (empty($videoHref) ? null : $videoHref),
 				'feedback_href' => (empty($feedbackHref) ? null : $feedbackHref),
 			),
-			$dateId
+			$dateId,
 		);
 	}
 
@@ -213,7 +213,7 @@ class Dates
 		string $remoteUrl,
 		string $remoteNotes,
 		string $videoHref,
-		string $feedbackHref
+		string $feedbackHref,
 	): int {
 		$this->database->query(
 			'INSERT INTO training_dates',
@@ -234,7 +234,7 @@ class Dates
 				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
 				'feedback_href' => (empty($feedbackHref) ? null : $feedbackHref),
-			)
+			),
 		);
 		return (int)$this->database->getInsertId();
 	}
@@ -252,7 +252,7 @@ class Dates
 				description
 			FROM training_date_status s
 			ORDER BY
-				s.id_status'
+				s.id_status',
 		);
 		return $result;
 	}
@@ -263,7 +263,7 @@ class Dates
 		if (!isset($this->statusIds[$status])) {
 			$this->statusIds[$status] = $this->database->fetchField(
 				'SELECT id_status FROM training_date_status WHERE status = ?',
-				$status
+				$status,
 			);
 		}
 		return $this->statusIds[$status];
@@ -425,7 +425,7 @@ class Dates
 				d.start',
 			new DateTime($from),
 			new DateTime($to),
-			$this->translator->getDefaultLocale()
+			$this->translator->getDefaultLocale(),
 		);
 
 		foreach ($result as $date) {
@@ -485,7 +485,7 @@ class Dates
 				d.start",
 			$trainingId,
 			Dates::STATUS_TENTATIVE,
-			Dates::STATUS_CONFIRMED
+			Dates::STATUS_CONFIRMED,
 		);
 		$dates = array();
 		foreach ($result as $row) {
@@ -551,7 +551,7 @@ class Dates
 		return sprintf(
 			'%s, %s',
 			$this->netxtenHelpers->localeIntervalDay($date->start ?? $date->trainingStart, $date->end ?? $date->trainingEnd),
-			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity
+			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity,
 		);
 	}
 
@@ -564,7 +564,7 @@ class Dates
 			'%s, %s%s',
 			$date->tentative ? $this->netxtenHelpers->localeIntervalMonth($start, $end) : $this->netxtenHelpers->localeIntervalDay($start, $end),
 			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity,
-			$date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : ''
+			$date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '',
 		);
 	}
 

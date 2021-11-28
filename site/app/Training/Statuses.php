@@ -59,7 +59,7 @@ class Statuses
 		if (!isset($this->statusIds[$status])) {
 			$this->statusIds[$status] = $this->database->fetchField(
 				'SELECT id_status FROM training_application_status WHERE status = ?',
-				$status
+				$status,
 			);
 		}
 		return $this->statusIds[$status];
@@ -129,7 +129,7 @@ class Statuses
 					JOIN training_application_status sf ON sf.id_status = f.key_status_from
 					JOIN training_application_status st ON st.id_status = f.key_status_to
 				WHERE sf.status = ?',
-				$parent
+				$parent,
 			);
 		}
 		return $this->childrenStatuses[$parent];
@@ -151,7 +151,7 @@ class Statuses
 					JOIN training_application_status sf ON sf.id_status = f.key_status_from
 					JOIN training_application_status st ON st.id_status = f.key_status_to
 				WHERE st.status = ?',
-				$child
+				$child,
 			);
 		}
 		return $this->parentStatuses[$child];
@@ -212,7 +212,7 @@ class Statuses
 				training_applications
 			WHERE
 				id_application = ?',
-			$applicationId
+			$applicationId,
 		);
 
 		$datetime = new DateTime($date ?? '');
@@ -235,7 +235,7 @@ class Statuses
 				'status_time'          => $datetime,
 				'status_time_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 			),
-			$applicationId
+			$applicationId,
 		);
 
 		$this->database->query(
@@ -245,7 +245,7 @@ class Statuses
 				'key_status'           => $prevStatus->statusId,
 				'status_time'          => $prevStatus->statusTime,
 				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
-			)
+			),
 		);
 	}
 
@@ -309,7 +309,7 @@ class Statuses
 					JOIN training_application_status_history h ON h.key_status = s.id_status
 				WHERE h.key_application = ?
 				ORDER BY h.status_time DESC, h.key_status DESC',
-				$applicationId
+				$applicationId,
 			);
 			foreach ($this->statusHistory[$applicationId] as &$row) {
 				$row->statusTime->setTimezone(new DateTimeZone($row->statusTimeTimeZone));
@@ -347,7 +347,7 @@ class Statuses
 			FROM training_application_status_history
 			WHERE key_application = ? AND id_status_log = ?',
 			$applicationId,
-			$recordId
+			$recordId,
 		);
 		if (!$result) {
 			return;
@@ -358,12 +358,12 @@ class Statuses
 			$applicationId,
 			$recordId,
 			$result->statusId,
-			$result->statusTime->format(DateTime::ATOM)
+			$result->statusTime->format(DateTime::ATOM),
 		));
 		$this->database->query(
 			'DELETE FROM training_application_status_history WHERE key_application = ? AND id_status_log = ?',
 			$applicationId,
-			$recordId
+			$recordId,
 		);
 	}
 

@@ -63,7 +63,7 @@ class Files
 				a.id_application = ?
 				AND s.status IN (?)',
 			$applicationId,
-			$this->trainingStatuses->getAllowFilesStatuses()
+			$this->trainingStatuses->getAllowFilesStatuses(),
 		);
 
 		foreach ($files as $file) {
@@ -102,7 +102,7 @@ class Files
 			$applicationId,
 			$token,
 			$filename,
-			$this->trainingStatuses->getAllowFilesStatuses()
+			$this->trainingStatuses->getAllowFilesStatuses(),
 		);
 
 		if ($file) {
@@ -135,7 +135,7 @@ class Files
 				'filename'       => $name,
 				'added'          => $datetime,
 				'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
-			)
+			),
 		);
 		$fileId = $this->database->getInsertId();
 		foreach ($applicationIds as $applicationId) {
@@ -144,7 +144,7 @@ class Files
 				array(
 					'key_file'        => $fileId,
 					'key_application' => $applicationId,
-				)
+				),
 			);
 		}
 		$this->database->commit();
@@ -172,7 +172,7 @@ class Files
 					JOIN training_applications a ON a.id_application = m.key_application
 				WHERE a.key_date IN (?)
 			)',
-			$dateIds
+			$dateIds,
 		);
 
 		foreach ($this->database->fetchPairs('SELECT start FROM training_dates WHERE id_date IN (?)', $dateIds) as $date) {

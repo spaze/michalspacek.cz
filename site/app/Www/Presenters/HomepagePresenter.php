@@ -32,7 +32,7 @@ class HomepagePresenter extends BasePresenter
 		Talks $talks,
 		Dates $trainingDates,
 		Trainings $trainings,
-		CompanyTrainings $companyTrainings
+		CompanyTrainings $companyTrainings,
 	) {
 		$this->articles = $articles;
 		$this->interviews = $interviews;

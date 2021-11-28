@@ -30,7 +30,7 @@ class TrainingDate extends ProtectedForm
 		Trainings $trainings,
 		Dates $trainingDates,
 		Venues $trainingVenues,
-		TrainingControlsFactory $trainingControlsFactory
+		TrainingControlsFactory $trainingControlsFactory,
 	) {
 		parent::__construct($parent, $name);
 		$this->trainings = $trainings;
