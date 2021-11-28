@@ -68,13 +68,10 @@ class Articles
 					ON l.id_blog_post_locale = bp.key_locale
 				WHERE bp.published <= ?
 					AND l.locale = ?
-			ORDER BY published DESC';
+			ORDER BY published DESC
+			LIMIT ?';
 
-		if ($limit !== null) {
-			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
-		}
-
-		$articles = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale());
+		$articles = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
 		return $this->enrichArticles($articles);
 	}
 
@@ -106,13 +103,10 @@ class Articles
 					JSON_CONTAINS(bp.slug_tags, ?)
 					AND bp.published <= ?
 					AND l.locale = ?
-			ORDER BY bp.published DESC';
+			ORDER BY bp.published DESC
+			LIMIT ?';
 
-		if ($limit !== null) {
-			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
-		}
-
-		$articles = $this->database->fetchAll($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale());
+		$articles = $this->database->fetchAll($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
 		return $this->enrichArticles($articles);
 	}
 

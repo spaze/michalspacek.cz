@@ -52,13 +52,10 @@ class Reviews
 				(t.id_training = ? OR t2.id_training = ?)
 				AND NOT r.hidden
 				AND t.key_discontinued IS NULL
-			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
+			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC
+			LIMIT ?';
 
-		if ($limit !== null) {
-			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
-		}
-
-		return $this->format($this->database->fetchAll($query, $id, $id));
+		return $this->format($this->database->fetchAll($query, $id, $id, $limit ?? PHP_INT_MAX));
 	}
 
 

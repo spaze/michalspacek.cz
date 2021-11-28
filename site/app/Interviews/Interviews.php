@@ -39,13 +39,10 @@ class Interviews
 				source_name AS sourceName,
 				source_href AS sourceHref
 			FROM interviews
-			ORDER BY date DESC';
+			ORDER BY date DESC
+			LIMIT ?';
 
-		if ($limit !== null) {
-			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
-		}
-
-		$result = $this->database->fetchAll($query);
+		$result = $this->database->fetchAll($query, $limit ?? PHP_INT_MAX);
 		foreach ($result as $row) {
 			$this->format($row);
 		}

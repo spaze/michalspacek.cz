@@ -129,13 +129,10 @@ class Talks
 				t.event_href AS eventHref
 			FROM talks t
 			WHERE t.date <= NOW()
-			ORDER BY t.date DESC';
+			ORDER BY t.date DESC
+			LIMIT ?';
 
-		if ($limit !== null) {
-			$this->database->getConnection()->getDriver()->applyLimit($query, $limit, null);
-		}
-
-		$result = $this->database->fetchAll($query);
+		$result = $this->database->fetchAll($query, $limit ?? PHP_INT_MAX);
 		foreach ($result as $row) {
 			$this->format($row);
 		}
