@@ -214,11 +214,7 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	}
 
 
-	/**
-	 * @param int $maxLifeTime
-	 * @return bool
-	 */
-	public function gc($maxLifeTime): bool
+	public function gc(int $maxLifeTime): int|false
 	{
 		$maxTimestamp = \time() - $maxLifeTime;
 
@@ -235,11 +231,9 @@ class MysqlSessionHandler implements SessionHandlerInterface
 			$maxTimestamp -= ($row->serverId - 1) * \max(86400, $maxLifeTime / 10);
 		}
 
-		$this->explorer->table($this->tableName)
+		return $this->explorer->table($this->tableName)
 			->where('timestamp < ?', $maxTimestamp)
 			->delete();
-
-		return true;
 	}
 
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58d3ec375657979a8bc1d246195d183a",
+    "content-hash": "4afcba5efb6409512d50177f6b611605",
     "packages": [
         {
             "name": "contributte/translation",
@@ -1981,30 +1981,30 @@
         },
         {
             "name": "spaze/mysql-session-handler",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/mysql-session-handler.git",
-                "reference": "ea83dedfd455c5580504d68491e555baaa2f39db"
+                "reference": "f9237bb722b603eb8438cd8be530276bf650a9f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/ea83dedfd455c5580504d68491e555baaa2f39db",
-                "reference": "ea83dedfd455c5580504d68491e555baaa2f39db",
+                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/f9237bb722b603eb8438cd8be530276bf650a9f1",
+                "reference": "f9237bb722b603eb8438cd8be530276bf650a9f1",
                 "shasum": ""
             },
             "require": {
                 "nette/database": "^3.1",
                 "nette/di": "^3.0",
                 "nette/utils": "^3.2",
-                "php": "^7.4 || ^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
                 "nette/schema": "^1.2",
                 "php-parallel-lint/php-console-highlighter": "^0.5.0",
                 "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpstan/phpstan": "^0.12.99",
-                "phpstan/phpstan-nette": "^0.12.21",
+                "phpstan/phpstan": "^1.2",
+                "phpstan/phpstan-nette": "^1.0",
                 "spaze/coding-standard": "^0.0",
                 "spaze/encryption": "^0.4.0"
             },
@@ -2034,9 +2034,9 @@
             ],
             "description": "MySQL session handler for Nette Framework with optionally encrypted storage",
             "support": {
-                "source": "https://github.com/spaze/mysql-session-handler/tree/v2.2.0"
+                "source": "https://github.com/spaze/mysql-session-handler/tree/v2.3.0"
             },
-            "time": "2021-10-11T14:02:58+00:00"
+            "time": "2021-11-30T13:24:40+00:00"
         },
         {
             "name": "spaze/netxten",
@@ -3845,7 +3845,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-intl": "*",
