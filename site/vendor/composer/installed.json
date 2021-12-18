@@ -2735,21 +2735,22 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v2.0.7",
-            "version_normalized": "2.0.7.0",
+            "version": "v2.1.0",
+            "version_normalized": "2.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "2a0941f4532adcd472a7cd2550a20877c9d49128"
+                "reference": "e652af266a7c8ca6c7138a588fac78c86dc1db52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/2a0941f4532adcd472a7cd2550a20877c9d49128",
-                "reference": "2a0941f4532adcd472a7cd2550a20877c9d49128",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/e652af266a7c8ca6c7138a588fac78c86dc1db52",
+                "reference": "e652af266a7c8ca6c7138a588fac78c86dc1db52",
                 "shasum": ""
             },
             "require": {
                 "nette/di": "^3.0",
+                "nette/schema": "^1.2",
                 "php": "^7.1 || ^8.0",
                 "spaze/nonce-generator": "^3.0.2"
             },
@@ -2758,13 +2759,13 @@
                 "nette/tester": "^2.0",
                 "php-parallel-lint/php-console-highlighter": "^0.5.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan": "^0.12",
-                "spaze/coding-standard": "^0.0.4"
+                "phpstan/phpstan": "^1.2",
+                "spaze/coding-standard": "^0.0"
             },
             "suggest": {
                 "spaze/sri-macros": "For script tags with automatically added nonces, and Subresource Integrity hashes, too"
             },
-            "time": "2020-11-26T04:36:55+00:00",
+            "time": "2021-12-18T15:43:56+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -2784,6 +2785,10 @@
                 }
             ],
             "description": "Build Content Security Policy from a config file",
+            "support": {
+                "issues": "https://github.com/spaze/csp-config/issues",
+                "source": "https://github.com/spaze/csp-config/tree/v2.1.0"
+            },
             "install-path": "../spaze/csp-config"
         },
         {

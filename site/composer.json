@@ -26,7 +26,7 @@
 		"nette/security": "~3.1.4",
 		"nette/utils": "~3.0",
 		"paragonie/halite": "^4",
-		"spaze/csp-config": "~2.0",
+		"spaze/csp-config": "^2.1",
 		"spaze/encryption": "^0.4",
 		"spaze/feed-exports": "~0.2",
 		"spaze/mysql-session-handler": "^2.0",
