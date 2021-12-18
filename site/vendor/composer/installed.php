@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '92535231fecd58a567908f0c38702e8deb2fa3ef',
+        'reference' => '5f1606dc130823f0b717b14eea846a3e70452a65',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -361,12 +361,12 @@
             'dev_requirement' => false,
         ),
         'spaze/csp-config' => array(
-            'pretty_version' => 'v2.0.7',
-            'version' => '2.0.7.0',
+            'pretty_version' => 'v2.1.0',
+            'version' => '2.1.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/csp-config',
             'aliases' => array(),
-            'reference' => '2a0941f4532adcd472a7cd2550a20877c9d49128',
+            'reference' => 'e652af266a7c8ca6c7138a588fac78c86dc1db52',
             'dev_requirement' => false,
         ),
         'spaze/encryption' => array(
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '92535231fecd58a567908f0c38702e8deb2fa3ef',
+            'reference' => '5f1606dc130823f0b717b14eea846a3e70452a65',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
