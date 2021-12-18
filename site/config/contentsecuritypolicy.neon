@@ -84,3 +84,8 @@ contentSecurityPolicy:
 			@extends: www.*.*
 		upckeys.*.*:
 			@extends: www.*.*
+	policiesReportOnly:
+		*.*.*:
+			require-trusted-types-for: "'script'"
+			report-uri: %reporting.contentSecurityPolicy%
+			report-to: default

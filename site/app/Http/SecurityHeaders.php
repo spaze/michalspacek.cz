@@ -88,6 +88,10 @@ class SecurityHeaders
 		if (!empty($header)) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}
+		$header = $this->contentSecurityPolicy->getHeaderReportOnly($this->presenterName, $this->actionName);
+		if ($header) {
+			$this->httpResponse->setHeader('Content-Security-Policy-Report-Only', $header);
+		}
 
 		$this->httpResponse->setHeader('Permissions-Policy', $this->getPermissionsPolicyHeader());
 	}
