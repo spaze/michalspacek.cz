@@ -44,7 +44,6 @@ contentSecurityPolicy:
 			form-action: "'self'"
 			base-uri: "'none'"
 			upgrade-insecure-requests:
-			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 			report-to: default
 		www.trainings.training:
@@ -70,7 +69,6 @@ contentSecurityPolicy:
 			frame-ancestors: "'none'"
 			form-action: "'none'"
 			upgrade-insecure-requests:
-			block-all-mixed-content:
 			report-uri: %reporting.contentSecurityPolicy%
 			report-to: default
 		webleed.*.*:
