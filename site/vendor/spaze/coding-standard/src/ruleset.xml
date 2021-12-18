@@ -10,6 +10,7 @@
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent.TabsUsed"/>
 		<exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
 		<exclude name="PSR12.Classes.AnonClassDeclaration.CloseBraceAfterBody"/> <!-- 1 blank line checked by Squiz.WhiteSpace.FunctionSpacing.AfterLast -->
+		<exclude name="PSR12.Classes.OpeningBraceSpace.Found"/> <!-- 1 blank like required by Squiz.WhiteSpace.FunctionSpacing.BeforeFirst -->
 		<exclude name="PSR12.Files.DeclareStatement"/>
 		<exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
 		<exclude name="PSR12.Traits.UseDeclaration.BlankLineAfterLastUse"/> <!-- Checked by SlevomatCodingStandard.Classes.TraitUseSpacing -->
