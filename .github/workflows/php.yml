@@ -48,3 +48,11 @@ jobs:
     - name: Failed test output, if any
       if: failure()
       run: for i in $(find ./site/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
+
+    - name: Upload test code coverage
+      uses: actions/upload-artifact@v2
+      if: success()
+      with:
+        name: Test code coverage (PHP ${{ matrix.php-version }})
+        path: 'site/temp/coverage.html'
+        retention-days: 5
