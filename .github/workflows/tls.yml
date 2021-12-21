@@ -1,0 +1,46 @@
+name: SSL/TLS Scans
+
+on:
+  schedule:
+    - cron:  '34 2 * * *'
+
+jobs:
+  tls:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tls-version:
+          - "1.2"
+          - "1.3"
+        url:
+          - michalspacek.cz
+    steps:
+    - name: Check TLS ${{ matrix.tls-version }} is available
+      run: |
+        curl \
+        --verbose \
+        --silent \
+        --output /dev/null \
+        --user-agent "GitHub Actions TLS check" \
+        --tls-max ${{ matrix.tls-version }} \
+        --tlsv${{ matrix.tls-version }} \
+        https://${{ matrix.url }}/
+
+  testssl:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        url:
+          - michalspacek.cz
+    steps:
+    - name: testssl.sh scan
+      uses: mbogh/test-ssl-action@v1
+      with:
+        host: ${{ matrix.url }}
+    - uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: testssl.sh reports
+        path: 'output/*'
