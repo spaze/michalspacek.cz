@@ -10,7 +10,7 @@ http:
 	headers:
 		# Change these values in common-headers.conf, too
 		Server: "<script/src=//xss.sk></script>"
-		X-Powered-By: "<script>document.write('<img src=\"//xss.sk\" title=\"Inline JavaScript is bad, m\\'kay?\">');</script>"
+		X-Powered-By: "<script>document.write('<img src=//xss.sk title=inline_js_is_bad_mkay.gif>');</script>"
 		X-Content-Type-Options: nosniff
 		X-XSS-Protection: "1; mode=block"
 		Referrer-Policy: "no-referrer, strict-origin-when-cross-origin"
