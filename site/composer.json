@@ -86,6 +86,6 @@
 			"@phpstan-vendor",
 			"@tester"
 		],
-		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage coverage.html --coverage-src app/ tests/"
+		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/"
 	}
 }
