@@ -1,0 +1,20 @@
+name: Checks composer.lock for known vulnz in package deps
+
+on:
+  push:
+  schedule:
+    - cron:  '25 * * * *'
+
+jobs:
+  composer-vulnz:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      id: cache-db
+      with:
+          path: ~/.symfony/cache
+          key: db
+    - uses: symfonycorp/security-checker-action@v2
+      with:
+          lock: site/composer.lock
