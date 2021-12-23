@@ -3,43 +3,121 @@ name: PHP Tests
 on: [push]
 
 jobs:
-  build:
-
+  info:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         php-version:
           - "8.1"
-
     steps:
-    - uses: actions/checkout@v2
-
     - name: OS info
       run: cat /etc/os-release
-
-    - name: "Install PHP"
-      uses: shivammathur/setup-php@v2
-      with:
-        coverage: "none"
-        php-version: "${{ matrix.php-version }}"
-        extensions: intl
-
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
     - name: PHP info
       run: |
         php -v
         php -m
 
+  composer-validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
     - name: Validate composer.json and composer.lock
       run: composer --working-dir=site validate
 
-    - name: Run tests
-      run: composer --working-dir=site test
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - run: composer --working-dir=site lint
 
+  lint-neon:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - run: composer --working-dir=site lint-neon
+
+  phpcs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get PHP_CodeSniffer cache file pattern
+      id: phpcs-cache
+      run: echo "::set-output name=file::$(php -r "echo sys_get_temp_dir() . '/phpcs.*';")"
+    - uses: actions/cache@v2
+      with:
+        path: ${{ steps.phpcs-cache.outputs.file }}
+        key: phpcs-cache-php${{ matrix.php-version }}
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - run: composer --working-dir=site phpcs
+
+  phpstan:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get PHPStan result cache directory
+      id: phpstan-cache
+      run: echo "::set-output name=dir::$(php -r "echo sys_get_temp_dir() . '/phpstan';")"
+    - uses: actions/cache@v2
+      with:
+        path: ${{ steps.phpstan-cache.outputs.dir }}
+        key: phpstan-cache-php${{ matrix.php-version }}
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - run: composer --working-dir=site phpstan
+
+  phpstan-vendor:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get PHPStan result cache directory
+      id: phpstan-cache
+      run: echo "::set-output name=dir::$(php -r "echo sys_get_temp_dir() . '/phpstan';")"
+    - uses: actions/cache@v2
+      with:
+        path: ${{ steps.phpstan-cache.outputs.dir }}
+        key: phpstan-vendor-cache-php${{ matrix.php-version }}
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - run: composer --working-dir=site phpstan-vendor
+
+  tester:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - run: composer --working-dir=site tester
     - name: Failed test output, if any
       if: failure()
       run: for i in $(find ./site/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
-
     - name: Upload test code coverage
       uses: actions/upload-artifact@v2
       if: success()
