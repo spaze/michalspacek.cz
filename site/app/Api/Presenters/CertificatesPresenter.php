@@ -21,7 +21,7 @@ class CertificatesPresenter extends BasePresenter
 	}
 
 
-	public function actionDefault(): void
+	public function actionLogIssued(): void
 	{
 		try {
 			$this->certificates->authenticate($this->request->getPost('user'), $this->request->getPost('key'));

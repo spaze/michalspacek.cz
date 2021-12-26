@@ -167,7 +167,7 @@ class RouterFactory
 		$this->addRoute(self::ROOT_ONLY, 'Homepage', 'default');
 
 		$this->initRouterLists(self::MODULE_API);
-		$this->addRoute('<presenter>', 'Default', 'default');
+		$this->addRoute('<presenter>[/<action>]', 'Default', 'default');
 
 		$this->initRouterLists(self::MODULE_PULSE);
 		$this->addRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [NetteRoute::PATTERN => '.+']]);
