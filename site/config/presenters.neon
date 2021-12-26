@@ -24,7 +24,7 @@ services:
 	- MichalSpacekCz\Www\Presenters\WhoPresenter
 
 	# api module
-	- MichalSpacekCz\Api\Presenters\CertificatePresenter
+	- MichalSpacekCz\Api\Presenters\CertificatesPresenter
 	- MichalSpacekCz\Api\Presenters\CompanyPresenter
 	- MichalSpacekCz\Api\Presenters\ErrorGenericPresenter
 	- MichalSpacekCz\Api\Presenters\ErrorPresenter

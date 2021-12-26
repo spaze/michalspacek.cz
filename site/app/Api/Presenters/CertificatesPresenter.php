@@ -8,7 +8,7 @@ use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Security\AuthenticationException;
 use RuntimeException;
 
-class CertificatePresenter extends BasePresenter
+class CertificatesPresenter extends BasePresenter
 {
 
 	private Certificates $certificates;
