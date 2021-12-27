@@ -1,4 +1,6 @@
 services:
+	webApplication: MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
+	application: Nette\Application\Application
 	routerFactory:
 		factory: MichalSpacekCz\Application\RouterFactory
 		setup:
