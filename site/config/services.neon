@@ -108,7 +108,7 @@ services:
 	blogPostLoader: MichalSpacekCz\Post\Loader
 	blogPostLocaleUrls: MichalSpacekCz\Post\LocaleUrls
 	certificatesApi:
-		factory: MichalSpacekCz\Http\Certificates
+		factory: MichalSpacekCz\Tls\Certificates
 		setup:
 			- setUsers(%certificatesApi.users%)
 			- setExpiringThreshold(%certificatesApi.expiringThreshold%)
