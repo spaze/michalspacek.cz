@@ -218,7 +218,7 @@ class RouterFactory
 				}
 			}
 			$hostMask = sprintf(
-				'//%s/%s%s',
+				'https://%s/%s%s',
 				str_ends_with($domain, '.') ? rtrim($domain, '.') : "{$host}.{$this->rootDomainMapping[$domain]}",
 				$maskPrefix,
 				$mask,
