@@ -16,19 +16,16 @@ use Tracy\Debugger;
 class Certificates
 {
 
-	private Explorer $database;
-
 	/** @var array<string, string> */
 	private array $users;
-
-	private int $expiringThreshold;
 
 	private int $hideExpiredAfter;
 
 
-	public function __construct(Explorer $context)
-	{
-		$this->database = $context;
+	public function __construct(
+		private Explorer $database,
+		private CertificateFactory $certificateFactory,
+	) {
 	}
 
 
@@ -40,17 +37,6 @@ class Certificates
 	public function setUsers(array $users): void
 	{
 		$this->users = $users;
-	}
-
-
-	/**
-	 * Set expiring warning threshold.
-	 *
-	 * @param int $expiringThreshold in days
-	 */
-	public function setExpiringThreshold(int $expiringThreshold): void
-	{
-		$this->expiringThreshold = $expiringThreshold;
 	}
 
 
@@ -102,7 +88,7 @@ class Certificates
 			ORDER BY cr.cn, cr.ext';
 		$certificates = [];
 		foreach ($this->database->fetchAll($query) as $data) {
-			$certificate = new Certificate($data->cn, $data->ext, DateTimeImmutable::createFromInterface($data->notBefore), DateTimeImmutable::createFromInterface($data->notAfter), $this->expiringThreshold);
+			$certificate = $this->certificateFactory->fromDatabaseRow($data);
 			if ($certificate->isExpired() && $certificate->getExpiryDays() > $this->hideExpiredAfter) {
 				continue;
 			}

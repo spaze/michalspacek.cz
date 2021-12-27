@@ -4,9 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
+use JsonSerializable;
+use MichalSpacekCz\DateTime\DateTime;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 
-class Certificate
+class Certificate implements JsonSerializable
 {
 
 	private int $validDays;
@@ -24,21 +26,21 @@ class Certificate
 		private DateTimeImmutable $notBefore,
 		private DateTimeImmutable $notAfter,
 		private int $expiringThreshold,
+		private ?string $serialNumber,
+		private DateTimeImmutable $now = new DateTimeImmutable(),
 	) {
-		$now = new DateTimeImmutable();
-
-		$validDays = $this->notBefore->diff($now)->days;
+		$validDays = $this->notBefore->diff($this->now)->days;
 		if ($validDays === false) {
 			throw new CertificateException('Unknown number of valid days');
 		}
 		$this->validDays = $validDays;
-		$expiryDays = $this->notAfter->diff($now)->days;
+		$expiryDays = $this->notAfter->diff($this->now)->days;
 		if ($expiryDays === false) {
 			throw new CertificateException('Unknown number of expiry days');
 		}
 		$this->expiryDays = $expiryDays;
 
-		$this->expired = $this->notAfter < $now;
+		$this->expired = $this->notAfter < $this->now;
 		$this->expiringSoon = !$this->expired && $this->expiryDays < $this->expiringThreshold;
 	}
 
@@ -88,6 +90,32 @@ class Certificate
 	public function isExpiringSoon(): bool
 	{
 		return $this->expiringSoon;
+	}
+
+
+	public function getSerialNumber(): ?string
+	{
+		return $this->serialNumber;
+	}
+
+
+	/**
+	 * @return array{commonName:string, commonNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string}
+	 */
+	public function jsonSerialize(): array
+	{
+		return [
+			'commonName' => $this->commonName,
+			'commonNameExt' => $this->commonNameExt,
+			'notBefore' => $this->notBefore->format(DateTime::DATE_RFC3339_MICROSECONDS),
+			'notBeforeTz' => $this->notBefore->getTimezone()->getName(),
+			'notAfter' => $this->notAfter->format(DateTime::DATE_RFC3339_MICROSECONDS),
+			'notAfterTz' => $this->notAfter->getTimezone()->getName(),
+			'expiringThreshold' => $this->expiringThreshold,
+			'serialNumber' => $this->serialNumber,
+			'now' => $this->now->format(DateTime::DATE_RFC3339_MICROSECONDS),
+			'nowTz' => $this->now->getTimezone()->getName(),
+		];
 	}
 
 }

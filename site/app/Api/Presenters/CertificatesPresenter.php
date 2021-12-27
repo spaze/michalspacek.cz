@@ -34,11 +34,7 @@ class CertificatesPresenter extends BasePresenter
 
 	public function actionDefault(): never
 	{
-		$cns = [];
-		foreach ($this->certificates->getNewest() as $certificate) {
-			$cns[] = $certificate->getCommonName();
-		}
-		$this->sendJson($cns);
+		$this->sendJson($this->certificates->getNewest());
 	}
 
 
