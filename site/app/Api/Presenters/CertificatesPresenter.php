@@ -36,7 +36,7 @@ class CertificatesPresenter extends BasePresenter
 	{
 		$cns = [];
 		foreach ($this->certificates->getNewest() as $certificate) {
-			$cns[] = $certificate->cn;
+			$cns[] = $certificate->getCommonName();
 		}
 		$this->sendJson($cns);
 	}

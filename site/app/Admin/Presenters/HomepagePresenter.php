@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
+use MichalSpacekCz\Tls\Certificate;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Trainings;
-use Nette\Database\Row;
 
 class HomepagePresenter extends BasePresenter
 {
@@ -72,13 +72,13 @@ class HomepagePresenter extends BasePresenter
 	/**
 	 * Check if at least one certificate is expired or expires soon.
 	 *
-	 * @param Row[] $certificates
+	 * @param array<int, Certificate> $certificates
 	 * @return bool
 	 */
 	private function certsNeedAttention(array $certificates): bool
 	{
 		foreach ($certificates as $certificate) {
-			if ($certificate->expired || $certificate->expiringSoon) {
+			if ($certificate->isExpired() || $certificate->isExpiringSoon()) {
 				return true;
 			}
 		}
