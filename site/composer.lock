@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1932cf0fff1158ab8168fb3f74e2aa1c",
+    "content-hash": "035c04fbcb67c5536523f1e164b489e8",
     "packages": [
         {
             "name": "contributte/translation",
@@ -1674,6 +1674,55 @@
             "time": "2020-12-06T15:07:44+00:00"
         },
         {
+            "name": "php-parallel-lint/php-console-color",
+            "version": "v0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-parallel-lint/PHP-Console-Color.git",
+                "reference": "b6af326b2088f1ad3b264696c9fd590ec395b49e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-parallel-lint/PHP-Console-Color/zipball/b6af326b2088f1ad3b264696c9fd590ec395b49e",
+                "reference": "b6af326b2088f1ad3b264696c9fd590ec395b49e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "replace": {
+                "jakub-onderka/php-console-color": "*"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-code-style": "1.0",
+                "php-parallel-lint/php-parallel-lint": "1.0",
+                "php-parallel-lint/php-var-dump-check": "0.*",
+                "phpunit/phpunit": "~4.3",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JakubOnderka\\PhpConsoleColor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Onderka",
+                    "email": "jakub.onderka@gmail.com"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/php-parallel-lint/PHP-Console-Color/issues",
+                "source": "https://github.com/php-parallel-lint/PHP-Console-Color/tree/master"
+            },
+            "time": "2020-05-14T05:47:14+00:00"
+        },
+        {
             "name": "phpstan/phpdoc-parser",
             "version": "1.2.0",
             "source": {
@@ -2984,55 +3033,6 @@
             "time": "2021-08-24T14:13:00+00:00"
         },
         {
-            "name": "php-parallel-lint/php-console-color",
-            "version": "v0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-parallel-lint/PHP-Console-Color.git",
-                "reference": "b6af326b2088f1ad3b264696c9fd590ec395b49e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-parallel-lint/PHP-Console-Color/zipball/b6af326b2088f1ad3b264696c9fd590ec395b49e",
-                "reference": "b6af326b2088f1ad3b264696c9fd590ec395b49e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "replace": {
-                "jakub-onderka/php-console-color": "*"
-            },
-            "require-dev": {
-                "php-parallel-lint/php-code-style": "1.0",
-                "php-parallel-lint/php-parallel-lint": "1.0",
-                "php-parallel-lint/php-var-dump-check": "0.*",
-                "phpunit/phpunit": "~4.3",
-                "squizlabs/php_codesniffer": "1.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JakubOnderka\\PhpConsoleColor\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Jakub Onderka",
-                    "email": "jakub.onderka@gmail.com"
-                }
-            ],
-            "support": {
-                "issues": "https://github.com/php-parallel-lint/PHP-Console-Color/issues",
-                "source": "https://github.com/php-parallel-lint/PHP-Console-Color/tree/master"
-            },
-            "time": "2020-05-14T05:47:14+00:00"
-        },
-        {
             "name": "php-parallel-lint/php-console-highlighter",
             "version": "v0.5",
             "source": {
@@ -3867,5 +3867,5 @@
         "ext-simplexml": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
