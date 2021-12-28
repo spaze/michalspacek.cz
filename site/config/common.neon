@@ -26,6 +26,29 @@ session:
 	use_strict_mode: true
 	cookie_secure: true
 
+database:
+	default:
+		dsn: 'mysql:host=localhost;dbname=cz_michalspacek'
+		user: ...
+		password: ...
+		options:
+			lazy: true
+			PDO::ATTR_EMULATE_PREPARES: false
+	upcKeys:
+		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_upckeys'
+		user: ...
+		password: ...
+		options:
+			lazy: true
+			PDO::ATTR_EMULATE_PREPARES: false
+	pulse:
+		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_pulse'
+		user: ...
+		password: ...
+		options:
+			lazy: true
+			PDO::ATTR_EMULATE_PREPARES: false
+
 translation:
 	locales:
 		default: cs_CZ

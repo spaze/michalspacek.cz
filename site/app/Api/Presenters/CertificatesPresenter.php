@@ -34,7 +34,7 @@ class CertificatesPresenter extends BasePresenter
 
 	public function actionDefault(): never
 	{
-		$this->sendJson($this->certificates->getNewest());
+		$this->sendJson(['status' => 'ok', 'certificates' => $this->certificates->getNewest()]);
 	}
 
 

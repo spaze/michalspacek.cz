@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
+use Exception;
 use JakubOnderka\PhpConsoleColor\ConsoleColor;
 
 class CertificateMonitor
@@ -21,11 +22,16 @@ class CertificateMonitor
 
 	public function run(): never
 	{
-		// Not running in parallel because those sites are hosted on just a few tiny servers
-		foreach ($this->certificatesApiClient->getLoggedCertificates() as $loggedCertificate) {
-			$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificate($loggedCertificate->getCommonName()));
+		try {
+			// Not running in parallel because those sites are hosted on just a few tiny servers
+			foreach ($this->certificatesApiClient->getLoggedCertificates() as $loggedCertificate) {
+				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificate($loggedCertificate->getCommonName()));
+			}
+			exit($this->hasErrors ? 1 : 0);
+		} catch (Exception $e) {
+			$this->error(null, $e->getMessage());
+			exit(2);
 		}
-		exit($this->hasErrors ? 1 : 0);
 	}
 
 
@@ -85,7 +91,7 @@ class CertificateMonitor
 	}
 
 
-	private function error(Certificate $certificate, string $message): void
+	private function error(?Certificate $certificate, string $message): void
 	{
 		$this->message(
 			$certificate,
@@ -95,7 +101,7 @@ class CertificateMonitor
 	}
 
 
-	private function info(Certificate $certificate, string $message): void
+	private function info(?Certificate $certificate, string $message): void
 	{
 		$this->message(
 			$certificate,
@@ -105,12 +111,12 @@ class CertificateMonitor
 	}
 
 
-	private function message(Certificate $certificate, string $format, string $message): void
+	private function message(?Certificate $certificate, string $format, string $message): void
 	{
 		printf(
 			$format . "\n",
 			date(DATE_RFC3339),
-			$certificate->getCommonName(),
+			$certificate ? $certificate->getCommonName() : __CLASS__,
 			$message,
 		);
 	}

@@ -49,6 +49,7 @@ parameters:
 	certificatesApi:
 		expiringThreshold: 20
 		hideExpiredAfter: 10
+		users:  # Added in local.neon
 	blog:
 		updatedInfoThreshold: 30
 		allowedTags:
@@ -66,3 +67,14 @@ parameters:
 		payment: none
 		usb: none
 		interest-cohort: none
+
+	# Added/changed in local.neon
+	contact:
+		phoneNumber: "123456789"
+	encryption:
+		keys:
+		activeKeyIds:
+	awsLambda:
+		upcKeys:
+			url:
+			apiKey:
