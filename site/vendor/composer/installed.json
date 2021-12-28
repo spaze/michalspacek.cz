@@ -3968,7 +3968,6 @@
     "dev": true,
     "dev-package-names": [
         "nette/tester",
-        "php-parallel-lint/php-console-color",
         "php-parallel-lint/php-console-highlighter",
         "php-parallel-lint/php-parallel-lint",
         "phpstan/phpstan",

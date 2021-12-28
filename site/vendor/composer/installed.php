@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'cf9be21e9dedcd1537709b6b0c43e5d663f1281b',
+        'reference' => '4580d1115948b321d81e86f3866021b822e5cb09',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -41,7 +41,7 @@
             ),
         ),
         'jakub-onderka/php-console-color' => array(
-            'dev_requirement' => true,
+            'dev_requirement' => false,
             'replaced' => array(
                 0 => '*',
             ),
@@ -275,7 +275,7 @@
             'install_path' => __DIR__ . '/../php-parallel-lint/php-console-color',
             'aliases' => array(),
             'reference' => 'b6af326b2088f1ad3b264696c9fd590ec395b49e',
-            'dev_requirement' => true,
+            'dev_requirement' => false,
         ),
         'php-parallel-lint/php-console-highlighter' => array(
             'pretty_version' => 'v0.5',
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'cf9be21e9dedcd1537709b6b0c43e5d663f1281b',
+            'reference' => '4580d1115948b321d81e86f3866021b822e5cb09',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
