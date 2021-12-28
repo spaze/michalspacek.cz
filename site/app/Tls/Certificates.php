@@ -1,13 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Http;
+namespace MichalSpacekCz\Tls;
 
-use DateTime;
+use DateTimeImmutable;
+use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\User\Manager;
 use Nette\Database\DriverException;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime as NetteDateTime;
 use RuntimeException;
@@ -16,19 +16,16 @@ use Tracy\Debugger;
 class Certificates
 {
 
-	private Explorer $database;
-
 	/** @var array<string, string> */
 	private array $users;
-
-	private int $expiringThreshold;
 
 	private int $hideExpiredAfter;
 
 
-	public function __construct(Explorer $context)
-	{
-		$this->database = $context;
+	public function __construct(
+		private Explorer $database,
+		private CertificateFactory $certificateFactory,
+	) {
 	}
 
 
@@ -40,17 +37,6 @@ class Certificates
 	public function setUsers(array $users): void
 	{
 		$this->users = $users;
-	}
-
-
-	/**
-	 * Set expiring warning threshold.
-	 *
-	 * @param int $expiringThreshold in days
-	 */
-	public function setExpiringThreshold(int $expiringThreshold): void
-	{
-		$this->expiringThreshold = $expiringThreshold;
 	}
 
 
@@ -85,12 +71,11 @@ class Certificates
 	/**
 	 * Get newest certificates.
 	 *
-	 * @return Row[]
+	 * @return array<int, Certificate>
+	 * @throws CertificateException
 	 */
 	public function getNewest(): array
 	{
-		$now = new DateTime();
-
 		$query = 'SELECT
 			cr.cn,
 			cr.ext,
@@ -101,18 +86,14 @@ class Certificates
 			WHERE NOT c.hidden
 			GROUP BY cr.cn, cr.ext
 			ORDER BY cr.cn, cr.ext';
-		$certificates = $this->database->fetchAll($query);
-
-		foreach ($certificates as $key => $certificate) {
-			$certificate->validDays = $certificate->notBefore->diff($now)->days;
-			$certificate->expired = $certificate->notAfter < $now;
-			$certificate->expiryDays = $certificate->notAfter->diff($now)->days;
-			$certificate->expiringSoon = !$certificate->expired && $certificate->expiryDays < $this->expiringThreshold;
-			if ($certificate->expired && $certificate->expiryDays > $this->hideExpiredAfter) {
-				unset($certificates[$key]);
+		$certificates = [];
+		foreach ($this->database->fetchAll($query) as $data) {
+			$certificate = $this->certificateFactory->fromDatabaseRow($data);
+			if ($certificate->isExpired() && $certificate->getExpiryDays() > $this->hideExpiredAfter) {
+				continue;
 			}
+			$certificates[] = $certificate;
 		}
-
 		return $certificates;
 	}
 
@@ -176,7 +157,7 @@ class Certificates
 		$this->database->query('INSERT INTO certificate_requests', array(
 			'cn' => $cn,
 			'ext' => (empty($ext) ? null : $ext),
-			'time' => new DateTime(),
+			'time' => new DateTimeImmutable(),
 			'success' => $success,
 		));
 		return (int)$this->database->getInsertId();

@@ -1,3 +1,4 @@
+{varType MichalSpacekCz\Tls\Certificate[] $certificates}
 {define #content}
 {import "../Trainings/default.latte"}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
@@ -15,29 +16,29 @@
 <tbody>
 <tr n:foreach="$certificates as $cert">
 	<td><small>{$iterator->getCounter()}.</small></td>
-	<td><small title="{if $cert->expired}Expiroval{else}Funkční{/if}" n:class="$cert->expired ? error">{if $cert->expired}<i class="fas fa-fw fa-times"></i>{else}<i class="fas fa-fw fa-check"></i>{/if}</small></td>
-	<td><strong n:tag-if="$cert->expiringSoon || $cert->expired" n:class="$cert->expired ? error">{$cert->cn}<small n:if="$cert->ext">-{$cert->ext}</small></strong></td>
-	<td>{$cert->notBefore|localeDay} <small>{$cert->notBefore|date:'H:i'}</small></td>
+	<td><small title="{if $cert->isExpired()}Expiroval{else}Funkční{/if}" n:class="$cert->isExpired() ? error">{if $cert->isExpired()}<i class="fas fa-fw fa-times"></i>{else}<i class="fas fa-fw fa-check"></i>{/if}</small></td>
+	<td><strong n:tag-if="$cert->isExpiringSoon() || $cert->isExpired()" n:class="$cert->isExpired() ? error">{$cert->getCommonName()}<small n:if="$cert->getCommonNameExt()">-{$cert->getCommonNameExt()}</small></strong></td>
+	<td>{$cert->getNotBefore()|localeDay} <small>{$cert->getNotBefore()|date:'H:i'}</small></td>
 	<td>
 		<small>
-            {if $cert->validDays === 0}
+            {if $cert->getValidDays() === 0}
 				dnes
             {else}
-                {_messages.certificates.admin.validdays, $cert->validDays}
+                {_messages.certificates.admin.validdays, $cert->getValidDays()}
             {/if}
 		</small>
 	</td>
 	<td> &mdash; </td>
-	<td><strong n:tag-if="$cert->expiringSoon || $cert->expired" n:class="$cert->expired ? error">{$cert->notAfter|localeDay} <small>{$cert->notAfter|date:'H:i'}</small></strong></td>
+	<td><strong n:tag-if="$cert->isExpiringSoon() || $cert->isExpired()" n:class="$cert->isExpired() ? error">{$cert->getNotAfter()|localeDay} <small>{$cert->getNotAfter()|date:'H:i'}</small></strong></td>
 	<td>
-		<strong n:tag-if="$cert->expiringSoon || $cert->expired">
-			<small n:class="$cert->expired ? error">
-				{if $cert->expiryDays === 0}
+		<strong n:tag-if="$cert->isExpiringSoon() || $cert->isExpired()">
+			<small n:class="$cert->isExpired() ? error">
+				{if $cert->getExpiryDays() === 0}
 					dnes
-				{elseif $cert->expired}
-					{_messages.certificates.admin.expireddaysago, $cert->expiryDays}
+				{elseif $cert->isExpired()}
+					{_messages.certificates.admin.expireddaysago, $cert->getExpiryDays()}
 				{else}
-					{_messages.certificates.admin.expiresindays, $cert->expiryDays}
+					{_messages.certificates.admin.expiresindays, $cert->getExpiryDays()}
 				{/if}
 			</small>
 		</strong>

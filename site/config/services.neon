@@ -1,4 +1,6 @@
 services:
+	webApplication: MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
+	application: Nette\Application\Application
 	routerFactory:
 		factory: MichalSpacekCz\Application\RouterFactory
 		setup:
@@ -16,6 +18,7 @@ services:
 			- setLocationRoot(%domain.locationRoot%)
 	latte.templateFactory: MichalSpacekCz\Templating\TemplateFactory
 	redirections: MichalSpacekCz\Http\Redirections
+	httpStreamContext: MichalSpacekCz\Http\HttpStreamContext
 	articles: MichalSpacekCz\Articles\Articles
 	talks:
 		factory: MichalSpacekCz\Talks\Talks
@@ -108,11 +111,14 @@ services:
 	blogPostLoader: MichalSpacekCz\Post\Loader
 	blogPostLocaleUrls: MichalSpacekCz\Post\LocaleUrls
 	certificatesApi:
-		factory: MichalSpacekCz\Http\Certificates
+		factory: MichalSpacekCz\Tls\Certificates
 		setup:
 			- setUsers(%certificatesApi.users%)
-			- setExpiringThreshold(%certificatesApi.expiringThreshold%)
 			- setHideExpiredAfter(%certificatesApi.hideExpiredAfter%)
+	certificatesApiClient: MichalSpacekCz\Tls\CertificatesApiClient
+	certificateGatherer: MichalSpacekCz\Tls\CertificateGatherer
+	certificateMonitor: MichalSpacekCz\Tls\CertificateMonitor
+	certificateFactory: MichalSpacekCz\Tls\CertificateFactory(expiringThreshold: %certificatesApi.expiringThreshold%)
 	exports: MichalSpacekCz\Feed\Exports
 	strings: MichalSpacekCz\Utils\Strings
 	error: MichalSpacekCz\Application\Error
@@ -124,6 +130,7 @@ services:
 	netteCve202015227: MichalSpacekCz\EasterEgg\NetteCve202015227
 	formSpam: MichalSpacekCz\Training\FormSpam
 	formDataLogger: MichalSpacekCz\Training\FormDataLogger
+	consoleColor: JakubOnderka\PhpConsoleColor\ConsoleColor
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory

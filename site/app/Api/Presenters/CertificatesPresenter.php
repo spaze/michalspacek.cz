@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Api\Presenters;
 
-use MichalSpacekCz\Http\Certificates;
+use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Security\AuthenticationException;
 use RuntimeException;
@@ -34,11 +34,7 @@ class CertificatesPresenter extends BasePresenter
 
 	public function actionDefault(): never
 	{
-		$cns = [];
-		foreach ($this->certificates->getNewest() as $certificate) {
-			$cns[] = $certificate->cn;
-		}
-		$this->sendJson($cns);
+		$this->sendJson($this->certificates->getNewest());
 	}
 
 
