@@ -56,3 +56,6 @@ jobs:
       - uses: actions/checkout@v2
       - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
       - run: php site/bin/certmonitor.php
+        env:
+          CERTMONITOR_USER: ${{ secrets.CERTMONITOR_USER }}
+          CERTMONITOR_KEY: ${{ secrets.CERTMONITOR_KEY }}
