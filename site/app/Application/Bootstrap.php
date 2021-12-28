@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use JakubOnderka\PhpConsoleColor\ConsoleColor;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
 use Nette\Utils\Arrays;
@@ -32,10 +33,14 @@ class Bootstrap
 	{
 		$_SERVER['HTTPS'] = 'on';
 		$debugMode = ($_SERVER['PHP_CLI_ENVIRONMENT'] ?? null) === self::MODE_DEVELOPMENT || Arrays::contains($_SERVER['argv'], '--debug');
-		return $this->createConfigurator(
+		$container = $this->createConfigurator(
 			$debugMode,
 			$this->siteDir . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),
 		)->createContainer();
+		if (Arrays::contains($_SERVER['argv'], '--colors')) {
+			$container->getByType(ConsoleColor::class)->setForceStyle(true);
+		}
+		return $container;
 	}
 
 

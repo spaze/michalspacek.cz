@@ -59,7 +59,10 @@ class CertificatesApiClient
 		if (!isset($decoded['certificates'])) {
 			throw new CertificatesApiException(sprintf('Decoded response from %s (`%s`) has no field `certificates`', $url, $json));
 		}
-		foreach ($decoded as $details) {
+		if (!is_array($decoded['certificates'])) {
+			throw new CertificatesApiException(sprintf("Response from %s (`%s`) has `certificates` but it's not an array", $url, $json));
+		}
+		foreach ($decoded['certificates'] as $details) {
 			$certificates[] = $this->certificateFactory->fromArray($details);
 		}
 		return $certificates;
