@@ -69,8 +69,8 @@ class CertificatesApiClient
 	private function getPostData(): string
 	{
 		$postData = [
-			'user' => $_SERVER['CERTMONITOR_USER'],
-			'key' => $_SERVER['CERTMONITOR_KEY'],
+			'user' => $_SERVER['CERTMONITOR_USER'] ?? '',
+			'key' => $_SERVER['CERTMONITOR_KEY'] ?? '',
 		];
 		return http_build_query($postData);
 	}

@@ -1,26 +1,3 @@
-database:
-	default:
-		dsn: 'mysql:host=localhost;dbname=cz_michalspacek'
-		user: ...
-		password: ...
-		options:
-			lazy: true
-			PDO::ATTR_EMULATE_PREPARES: false
-	upcKeys:
-		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_upckeys'
-		user: ...
-		password: ...
-		options:
-			lazy: true
-			PDO::ATTR_EMULATE_PREPARES: false
-	pulse:
-		dsn: 'mysql:host=localhost;dbname=michalspacek_cz_pulse'
-		user: ...
-		password: ...
-		options:
-			lazy: true
-			PDO::ATTR_EMULATE_PREPARES: false
-
 mail:
 	smtp: true
 	host: localhost
@@ -65,9 +42,6 @@ parameters:
 		rootDomainMapping:
 			cz: michalspacek.cz.test
 			com: michalspacek.com.test
-
-	contact:
-		phoneNumber: "123456789"
 
 	encryption:
 		keys:
