@@ -1,7 +1,6 @@
 name: SSL/TLS Scans
 
 on:
-  push:
   schedule:
     - cron:  '34 2 * * *'
 
