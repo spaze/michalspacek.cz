@@ -58,3 +58,13 @@ jobs:
         env:
           CERTMONITOR_USER: ${{ secrets.CERTMONITOR_USER }}
           CERTMONITOR_KEY: ${{ secrets.CERTMONITOR_KEY }}
+
+  heartbeat:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - tls
+      - testssl
+      - certmonitor
+    steps:
+      - run: curl --no-progress-meter ${{ secrets.SSLTLSSCANS_HEARTBEAT_URL }}
