@@ -138,4 +138,15 @@ abstract class BasePresenter extends Presenter
 		$this->redirectPermanent('this');
 	}
 
+
+	/** @inheritDoc */
+	public function lastModified($lastModified, string $etag = null, string $expire = null): void
+	{
+		$compression = ini_get('zlib.output_compression');
+		ini_set('zlib.output_compression', false);
+		parent::lastModified($lastModified, $etag, $expire);
+		// If the response was HTTP 304 then the following line won't be reached and 304s won't be compressed
+		ini_set('zlib.output_compression', $compression);
+	}
+
 }
