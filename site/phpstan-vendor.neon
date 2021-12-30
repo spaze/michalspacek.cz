@@ -53,8 +53,8 @@ parameters:
 		# bundled disallowed-execution-calls.neon
 		-
 			function: 'exec()'
-			allowIn:
-				- vendor/tracy/tracy/src/Tracy/Debugger/Debugger.php  # can run a browser if configured
+			allowInMethods:
+				- 'Tracy\DevelopmentStrategy::renderExceptionCli'  # can run a browser if configured
 		-
 			function: 'proc_open()'
 			allowIn:
