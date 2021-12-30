@@ -47,7 +47,7 @@ class Compiler
 	private $className = 'Container';
 
 
-	public function __construct(ContainerBuilder $builder = null)
+	public function __construct(?ContainerBuilder $builder = null)
 	{
 		$this->builder = $builder ?: new ContainerBuilder;
 		$this->dependencies = new DependencyChecker;
@@ -67,6 +67,7 @@ class Compiler
 		} elseif (isset($this->extensions[$name])) {
 			throw new Nette\InvalidArgumentException(sprintf("Name '%s' is already used or reserved.", $name));
 		}
+
 		$lname = strtolower($name);
 		foreach (array_keys($this->extensions) as $nm) {
 			if ($lname === strtolower((string) $nm)) {
@@ -77,12 +78,13 @@ class Compiler
 				));
 			}
 		}
+
 		$this->extensions[$name] = $extension->setCompiler($this, $name);
 		return $this;
 	}
 
 
-	public function getExtensions(string $type = null): array
+	public function getExtensions(?string $type = null): array
 	{
 		return $type
 			? array_filter($this->extensions, function ($item) use ($type): bool { return $item instanceof $type; })
@@ -113,6 +115,7 @@ class Compiler
 		foreach ($config as $section => $data) {
 			$this->configs[$section][] = $data;
 		}
+
 		$this->sources .= "// source: array\n";
 		return $this;
 	}
@@ -122,13 +125,14 @@ class Compiler
 	 * Adds new configuration from file.
 	 * @return static
 	 */
-	public function loadConfig(string $file, Config\Loader $loader = null)
+	public function loadConfig(string $file, ?Config\Loader $loader = null)
 	{
 		$sources = $this->sources . "// source: $file\n";
 		$loader = $loader ?: new Config\Loader;
 		foreach ($loader->load($file, false) as $data) {
 			$this->addConfig($data);
 		}
+
 		$this->dependencies->add($loader->getDependencies());
 		$this->sources = $sources;
 		return $this;
@@ -185,6 +189,7 @@ class Compiler
 			assert($this->extensions[self::DI] instanceof Extensions\DIExtension);
 			$this->extensions[self::DI]->exportedTags[$tag] = true;
 		}
+
 		return $this;
 	}
 
@@ -196,6 +201,7 @@ class Compiler
 			assert($this->extensions[self::DI] instanceof Extensions\DIExtension);
 			$this->extensions[self::DI]->exportedTypes[$type] = true;
 		}
+
 		return $this;
 	}
 
@@ -286,9 +292,11 @@ class Compiler
 		} catch (Schema\ValidationException $e) {
 			throw new Nette\DI\InvalidConfigurationException($e->getMessage());
 		}
+
 		foreach ($processor->getWarnings() as $warning) {
 			trigger_error($warning, E_USER_DEPRECATED);
 		}
+
 		return $res;
 	}
 

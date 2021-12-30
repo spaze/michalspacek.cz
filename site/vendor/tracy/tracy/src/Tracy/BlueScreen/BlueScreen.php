@@ -44,6 +44,9 @@ class BlueScreen
 	/** @var callable[] functions that returns action for exceptions */
 	private $actions = [];
 
+	/** @var callable[] */
+	private $fileGenerators = [];
+
 	/** @var array */
 	private $snapshot;
 
@@ -53,6 +56,7 @@ class BlueScreen
 		$this->collapsePaths = preg_match('#(.+/vendor)/tracy/tracy/src/Tracy/BlueScreen$#', strtr(__DIR__, '\\', '/'), $m)
 			? [$m[1] . '/tracy', $m[1] . '/nette', $m[1] . '/latte']
 			: [dirname(__DIR__)];
+		$this->fileGenerators[] = [self::class, 'generateNewPhpFileContents'];
 	}
 
 
@@ -65,6 +69,7 @@ class BlueScreen
 		if (!in_array($panel, $this->panels, true)) {
 			$this->panels[] = $panel;
 		}
+
 		return $this;
 	}
 
@@ -81,24 +86,36 @@ class BlueScreen
 
 
 	/**
+	 * Add new file generator.
+	 * @param  callable(string): ?string  $generator
+	 * @return static
+	 */
+	public function addFileGenerator(callable $generator): self
+	{
+		$this->fileGenerators[] = $generator;
+		return $this;
+	}
+
+
+	/**
 	 * Renders blue screen.
 	 */
 	public function render(\Throwable $exception): void
 	{
-		if (Helpers::isAjax() && session_status() === PHP_SESSION_ACTIVE) {
-			$_SESSION['_tracy']['bluescreen'][$_SERVER['HTTP_X_TRACY_AJAX']] = [
-				'content' => Helpers::capture(function () use ($exception) {
-					$this->renderTemplate($exception, __DIR__ . '/assets/content.phtml');
-				}),
-				'time' => time(),
-			];
-
-		} else {
-			if (!headers_sent()) {
-				header('Content-Type: text/html; charset=UTF-8');
-			}
-			$this->renderTemplate($exception, __DIR__ . '/assets/page.phtml');
+		if (!headers_sent()) {
+			header('Content-Type: text/html; charset=UTF-8');
 		}
+
+		$this->renderTemplate($exception, __DIR__ . '/assets/page.phtml');
+	}
+
+
+	/** @internal */
+	public function renderToAjax(\Throwable $exception, DeferredContent $defer): void
+	{
+		$defer->addSetup('Tracy.BlueScreen.loadAjax', Helpers::capture(function () use ($exception) {
+			$this->renderTemplate($exception, __DIR__ . '/assets/content.phtml');
+		}));
 	}
 
 
@@ -116,6 +133,7 @@ class BlueScreen
 			fclose($handle);
 			return true;
 		}
+
 		return false;
 	}
 
@@ -147,11 +165,12 @@ class BlueScreen
 
 		$css = array_map('file_get_contents', array_merge([
 			__DIR__ . '/assets/bluescreen.css',
-			__DIR__ . '/../Toggle/toggle.css',
-			__DIR__ . '/../TableSort/table-sort.css',
+			__DIR__ . '/../assets/toggle.css',
+			__DIR__ . '/../assets/table-sort.css',
+			__DIR__ . '/../assets/tabs.css',
 			__DIR__ . '/../Dumper/assets/dumper-light.css',
 		], Debugger::$customCssFiles));
-		$css = Helpers::minifyCss(implode($css));
+		$css = Helpers::minifyCss(implode('', $css));
 
 		$nonce = $toScreen ? Helpers::getNonce() : null;
 		$actions = $toScreen ? $this->renderActions($exception) : [];
@@ -173,19 +192,23 @@ class BlueScreen
 				if (empty($panel['tab']) || empty($panel['panel'])) {
 					continue;
 				}
+
 				$res[] = (object) $panel;
 				continue;
 			} catch (\Throwable $e) {
 			}
+
 			while (ob_get_level() > $obLevel) { // restore ob-level if broken
 				ob_end_clean();
 			}
+
 			is_callable($callback, true, $name);
 			$res[] = (object) [
 				'tab' => "Error in panel $name",
 				'panel' => nl2br(Helpers::escapeHtml($e)),
 			];
 		}
+
 		return $res;
 	}
 
@@ -217,8 +240,9 @@ class BlueScreen
 				!class_exists($class, false) && !interface_exists($class, false) && !trait_exists($class, false)
 				&& ($file = Helpers::guessClassFile($class)) && !is_file($file)
 			) {
+				[$content, $line] = $this->generateNewFileContents($file, $class);
 				$actions[] = [
-					'link' => Helpers::editorUri($file, 1, 'create'),
+					'link' => Helpers::editorUri($file, $line, 'create', '', $content),
 					'label' => 'create class',
 				];
 			}
@@ -226,8 +250,17 @@ class BlueScreen
 
 		if (preg_match('# ([\'"])((?:/|[a-z]:[/\\\\])\w[^\'"]+\.\w{2,5})\1#i', $ex->getMessage(), $m)) {
 			$file = $m[2];
+			if (is_file($file)) {
+				$label = 'open';
+				$content = '';
+				$line = 1;
+			} else {
+				$label = 'create';
+				[$content, $line] = $this->generateNewFileContents($file);
+			}
+
 			$actions[] = [
-				'link' => Helpers::editorUri($file, 1, $label = is_file($file) ? 'open' : 'create'),
+				'link' => Helpers::editorUri($file, $line, $label, '', $content),
 				'label' => $label . ' file',
 			];
 		}
@@ -250,6 +283,7 @@ class BlueScreen
 				'label' => 'skip error',
 			];
 		}
+
 		return $actions;
 	}
 
@@ -257,16 +291,21 @@ class BlueScreen
 	/**
 	 * Returns syntax highlighted source code.
 	 */
-	public static function highlightFile(string $file, int $line, int $lines = 15): ?string
+	public static function highlightFile(string $file, int $line, int $lines = 15, bool $php = true): ?string
 	{
 		$source = @file_get_contents($file); // @ file may not exist
 		if ($source === false) {
 			return null;
 		}
-		$source = static::highlightPhp($source, $line, $lines);
+
+		$source = $php
+			? static::highlightPhp($source, $line, $lines)
+			: '<pre class=code><div>' . static::highlightLine(htmlspecialchars($source, ENT_IGNORE, 'UTF-8'), $line, $lines) . '</div></pre>';
+
 		if ($editor = Helpers::editorUri($file, $line)) {
 			$source = substr_replace($source, ' title="Ctrl-Click to open in editor" data-tracy-href="' . Helpers::escapeHtml($editor) . '"', 4, 0);
 		}
+
 		return $source;
 	}
 
@@ -310,6 +349,7 @@ class BlueScreen
 					$spans++;
 					$out .= $m[1];
 				}
+
 				break;
 			}
 		}
@@ -333,6 +373,7 @@ class BlueScreen
 				$out .= sprintf("<span class='line'>%{$numWidth}s:</span>    %s\n", $n, $s);
 			}
 		}
+
 		$out .= str_repeat('</span>', $spans) . '</code>';
 		return $out;
 	}
@@ -347,6 +388,7 @@ class BlueScreen
 		if ($source === false) {
 			return null;
 		}
+
 		$s = self::highlightPhp($source, $line, $lines);
 
 		$colors = [
@@ -368,6 +410,7 @@ class BlueScreen
 				} else {
 					$stack[] = isset($m[2], $colors[$m[2]]) ? $colors[$m[2]] : '0';
 				}
+
 				return "\e[0m\e[" . end($stack) . 'm';
 			},
 			$s
@@ -390,6 +433,7 @@ class BlueScreen
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -430,9 +474,11 @@ class BlueScreen
 				} elseif (class_exists($m[1], false) || interface_exists($m[1], false)) {
 					$r = new \ReflectionClass($m[1]);
 				}
+
 				if (empty($r) || !$r->getFileName()) {
 					return $m[0];
 				}
+
 				return '<a href="' . Helpers::escapeHtml(Helpers::editorUri($r->getFileName(), $r->getStartLine())) . '" class="tracy-editor">' . $m[0] . '</a>';
 			},
 			$msg
@@ -466,7 +512,49 @@ class BlueScreen
 			echo '<pre class="tracy-dump tracy-light">', Helpers::escapeHtml($info), '</pre>';
 		} else {
 			$info = str_replace('<table', '<table class="tracy-sortable"', $info);
-			echo preg_replace('#^.+<body>|</body>.+\z#s', '', $info);
+			echo preg_replace('#^.+<body>|</body>.+\z|<hr />|<h1>Configuration</h1>#s', '', $info);
 		}
+	}
+
+
+	/** @internal */
+	private function generateNewFileContents(string $file, ?string $class = null): array
+	{
+		foreach (array_reverse($this->fileGenerators) as $generator) {
+			$content = $generator($file, $class);
+			if ($content !== null) {
+				$line = 1;
+				$pos = strpos($content, '$END$');
+				if ($pos !== false) {
+					$content = substr_replace($content, '', $pos, 5);
+					$line = substr_count($content, "\n", 0, $pos) + 1;
+				}
+
+				return [$content, $line];
+			}
+		}
+
+		return ['', 1];
+	}
+
+
+	/** @internal */
+	public static function generateNewPhpFileContents(string $file, ?string $class = null): ?string
+	{
+		if (substr($file, -4) !== '.php') {
+			return null;
+		}
+
+		$res = "<?php\n\ndeclare(strict_types=1);\n\n";
+		if (!$class) {
+			return $res . '$END$';
+		}
+
+		if ($pos = strrpos($class, '\\')) {
+			$res .= 'namespace ' . substr($class, 0, $pos) . ";\n\n";
+			$class = substr($class, $pos + 1);
+		}
+
+		return $res . "class $class\n{\n\$END\$\n}\n";
 	}
 }

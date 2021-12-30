@@ -21,7 +21,7 @@ class Blueprint
 {
 	use Latte\Strict;
 
-	public function printClass(Template $template, string $name = null): void
+	public function printClass(Template $template, ?string $name = null): void
 	{
 		if (!class_exists(Php\ClassType::class)) {
 			throw new \LogicException('Nette PhpGenerator is required to print template, install package `nette/php-generator`.');
@@ -61,6 +61,7 @@ class Blueprint
 			if (Latte\Helpers::startsWith($name, 'ʟ_') || $name === '_l' || $name === '_g') {
 				continue;
 			}
+
 			$type = Php\Type::getType($value) ?: 'mixed';
 			$res .= "{varType $type $$name}\n";
 		}
@@ -75,7 +76,7 @@ class Blueprint
 	/**
 	 * @param  mixed[]  $props
 	 */
-	public function addProperties(Php\ClassType $class, array $props, bool $native = null): void
+	public function addProperties(Php\ClassType $class, array $props, ?bool $native = null): void
 	{
 		$printer = new Php\Printer;
 		$native = $native ?? (PHP_VERSION_ID >= 70400);
@@ -111,14 +112,17 @@ class Blueprint
 		if ($type === null) {
 			return '';
 		}
+
 		if ($namespace) {
 			$type = $namespace->unresolveName($type);
 		}
+
 		if ($nullable && strcasecmp($type, 'mixed')) {
 			$type = strpos($type, '|') !== false
 				? $type . '|null'
 				: '?' . $type;
 		}
+
 		return $type;
 	}
 
@@ -126,7 +130,7 @@ class Blueprint
 	/**
 	 * @param Closure|GlobalFunction|Method  $function
 	 */
-	public function printParameters($function, Php\PhpNamespace $namespace = null): string
+	public function printParameters($function, ?Php\PhpNamespace $namespace = null): string
 	{
 		$params = [];
 		$list = $function->getParameters();
@@ -138,6 +142,7 @@ class Blueprint
 				. '$' . $param->getName()
 				. ($param->hasDefaultValue() && !$variadic ? ' = ' . var_export($param->getDefaultValue(), true) : '');
 		}
+
 		return '(' . implode(', ', $params) . ')';
 	}
 

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tracy;
 
+use Ds;
 use Tracy\Dumper\Describer;
 use Tracy\Dumper\Exposer;
 use Tracy\Dumper\Renderer;
@@ -82,8 +83,8 @@ class Dumper
 		\DOMNode::class => [Exposer::class, 'exposeDOMNode'],
 		\DOMNodeList::class => [Exposer::class, 'exposeDOMNodeList'],
 		\DOMNamedNodeMap::class => [Exposer::class, 'exposeDOMNodeList'],
-		\Ds\Collection::class => [Exposer::class, 'exposeDsCollection'],
-		\Ds\Map::class => [Exposer::class, 'exposeDsMap'],
+		Ds\Collection::class => [Exposer::class, 'exposeDsCollection'],
+		Ds\Map::class => [Exposer::class, 'exposeDsMap'],
 	];
 
 	/** @var Describer */
@@ -112,6 +113,7 @@ class Dumper
 			self::renderAssets();
 			echo self::toHtml($var, $options);
 		}
+
 		return $var;
 	}
 
@@ -152,17 +154,18 @@ class Dumper
 		if (Debugger::$productionMode === true || $sent) {
 			return;
 		}
+
 		$sent = true;
 
 		$nonce = Helpers::getNonce();
 		$nonceAttr = $nonce ? ' nonce="' . Helpers::escapeHtml($nonce) . '"' : '';
-		$s = file_get_contents(__DIR__ . '/../Toggle/toggle.css')
+		$s = file_get_contents(__DIR__ . '/../assets/toggle.css')
 			. file_get_contents(__DIR__ . '/assets/dumper-light.css')
 			. file_get_contents(__DIR__ . '/assets/dumper-dark.css');
 		echo "<style{$nonceAttr}>", str_replace('</', '<\/', Helpers::minifyCss($s)), "</style>\n";
 
 		if (!Debugger::isEnabled()) {
-			$s = '(function(){' . file_get_contents(__DIR__ . '/../Toggle/toggle.js') . '})();'
+			$s = '(function(){' . file_get_contents(__DIR__ . '/../assets/toggle.js') . '})();'
 				. '(function(){' . file_get_contents(__DIR__ . '/../Dumper/assets/dumper.js') . '})();';
 			echo "<script{$nonceAttr}>", str_replace(['<!--', '</s'], ['<\!--', '<\/s'], Helpers::minifyJs($s)), "</script>\n";
 		}
@@ -189,6 +192,7 @@ class Dumper
 		} elseif (isset($options[self::SNAPSHOT])) {
 			$tmp = &$options[self::SNAPSHOT];
 		}
+
 		if (isset($tmp)) {
 			$tmp[0] = $tmp[0] ?? [];
 			$tmp[1] = $tmp[1] ?? [];
@@ -221,6 +225,7 @@ class Dumper
 			$model = $this->describer->describe([$key => $var]);
 			$model->value = $model->value[0][1];
 		}
+
 		return $this->renderer->renderAsHtml($model);
 	}
 
