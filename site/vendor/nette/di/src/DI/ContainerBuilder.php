@@ -57,7 +57,7 @@ class ContainerBuilder
 	 * Adds new service definition.
 	 * @return Definitions\ServiceDefinition
 	 */
-	public function addDefinition(?string $name, Definition $definition = null): Definition
+	public function addDefinition(?string $name, ?Definition $definition = null): Definition
 	{
 		$this->needsResolve = true;
 		if ($name === null) {
@@ -76,6 +76,7 @@ class ContainerBuilder
 			if (isset($this->definitions[$name])) {
 				throw new Nette\InvalidStateException(sprintf("Service '%s' has already been added.", $name));
 			}
+
 			$lname = strtolower($name);
 			foreach ($this->definitions as $nm => $foo) {
 				if ($lname === strtolower($nm)) {
@@ -141,6 +142,7 @@ class ContainerBuilder
 		if (!isset($this->definitions[$service])) {
 			throw new MissingServiceException(sprintf("Service '%s' not found.", $name));
 		}
+
 		return $this->definitions[$service];
 	}
 
@@ -179,6 +181,7 @@ class ContainerBuilder
 		} elseif (isset($this->definitions[$alias])) {
 			throw new Nette\InvalidStateException(sprintf("Service '%s' has already been added.", $alias));
 		}
+
 		$this->aliases[$alias] = $service;
 	}
 
@@ -260,6 +263,7 @@ class ContainerBuilder
 				$found[$name] = $def;
 			}
 		}
+
 		return $found;
 	}
 
@@ -276,6 +280,7 @@ class ContainerBuilder
 				$found[$name] = $tmp;
 			}
 		}
+
 		return $found;
 	}
 
@@ -291,6 +296,7 @@ class ContainerBuilder
 		if ($this->resolving) {
 			return;
 		}
+
 		$this->resolving = true;
 
 		$resolver = new Resolver($this);
@@ -359,6 +365,7 @@ class ContainerBuilder
 			if ($def instanceof Definitions\ImportedDefinition) {
 				$meta['types'][$name] = $def->getType();
 			}
+
 			foreach ($def->getTags() as $tag => $value) {
 				$meta['tags'][$tag][$name] = $value;
 			}
@@ -389,7 +396,7 @@ class ContainerBuilder
 	}
 
 
-	public static function literal(string $code, array $args = null): Nette\PhpGenerator\PhpLiteral
+	public static function literal(string $code, ?array $args = null): Nette\PhpGenerator\PhpLiteral
 	{
 		return new Nette\PhpGenerator\PhpLiteral(
 			$args === null ? $code : (new Nette\PhpGenerator\Dumper)->format($code, ...$args)

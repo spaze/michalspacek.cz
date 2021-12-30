@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.8.9';
+	public const VERSION = '2.9.0';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -56,7 +56,7 @@ class Debugger
 	/** @var bool|int determines whether any error will cause immediate death in development mode; if integer that it's matched against error severity */
 	public static $strictMode = false;
 
-	/** @var bool disables the @ (shut-up) operator so that notices and warnings are no longer hidden */
+	/** @var bool|int disables the @ (shut-up) operator so that notices and warnings are no longer hidden; if integer than it's matched against error severity */
 	public static $scream = false;
 
 	/** @var callable[] functions that are automatically called after fatal error */
@@ -125,6 +125,9 @@ class Debugger
 	/** @var string[] */
 	public static $customJsFiles = [];
 
+	/** @var callable[] */
+	private static $sourceMappers = [];
+
 	/** @var array|null */
 	private static $cpuUsage;
 
@@ -142,6 +145,12 @@ class Debugger
 	/** @var ILogger */
 	private static $fireLogger;
 
+	/** @var array{DevelopmentStrategy, ProductionStrategy} */
+	private static $strategy;
+
+	/** @var SessionStorage */
+	private static $sessionStorage;
+
 
 	/**
 	 * Static class - cannot be instantiated.
@@ -158,7 +167,7 @@ class Debugger
 	 * @param  string  $logDirectory  error log directory
 	 * @param  string|array  $email  administrator email; enables email sending in production mode
 	 */
-	public static function enable($mode = null, string $logDirectory = null, $email = null): void
+	public static function enable($mode = null, ?string $logDirectory = null, $email = null): void
 	{
 		if ($mode !== null || self::$productionMode === null) {
 			self::$productionMode = is_bool($mode)
@@ -175,9 +184,11 @@ class Debugger
 		if ($email !== null) {
 			self::$email = $email;
 		}
+
 		if ($logDirectory !== null) {
 			self::$logDirectory = $logDirectory;
 		}
+
 		if (self::$logDirectory) {
 			if (!preg_match('#([a-z]+:)?[/\\\\]#Ai', self::$logDirectory)) {
 				self::exceptionHandler(new \RuntimeException('Logging directory must be absolute path.'));
@@ -190,18 +201,16 @@ class Debugger
 
 		// php configuration
 		if (function_exists('ini_set')) {
-			ini_set('display_errors', self::$productionMode ? '0' : '1'); // or 'stderr'
+			ini_set('display_errors', '0'); // or 'stderr'
 			ini_set('html_errors', '0');
 			ini_set('log_errors', '0');
 			ini_set('zend.exception_ignore_args', '0');
-
-		} elseif (
-			ini_get('display_errors') != !self::$productionMode // intentionally ==
-			&& ini_get('display_errors') !== (self::$productionMode ? 'stderr' : 'stdout')
-		) {
-			self::exceptionHandler(new \RuntimeException("Unable to set 'display_errors' because function ini_set() is disabled."));
 		}
+
 		error_reporting(E_ALL);
+
+		$strategy = self::getStrategy();
+		$strategy->initialize();
 
 		if (self::$enabled) {
 			return;
@@ -225,6 +234,9 @@ class Debugger
 			'Dumper/Value',
 			'Logger/FireLogger',
 			'Logger/Logger',
+			'Session/SessionStorage',
+			'Session/FileSession',
+			'Session/NativeSession',
 			'Helpers',
 		] as $path) {
 			require_once dirname(__DIR__) . "/$path.php";
@@ -237,25 +249,11 @@ class Debugger
 
 	public static function dispatch(): void
 	{
-		if (self::$productionMode || Helpers::isCli()) {
-			return;
-
-		} elseif (headers_sent($file, $line) || ob_get_length()) {
-			throw new \LogicException(
-				__METHOD__ . '() called after some output has been sent. '
-				. ($file ? "Output started at $file:$line." : 'Try Tracy\OutputDebugger to find where output started.')
-			);
-
-		} elseif (self::$enabled && session_status() !== PHP_SESSION_ACTIVE) {
-			ini_set('session.use_cookies', '1');
-			ini_set('session.use_only_cookies', '1');
-			ini_set('session.use_trans_sid', '0');
-			ini_set('session.cookie_path', '/');
-			ini_set('session.cookie_httponly', '1');
-			session_start();
-		}
-
-		if (self::getBar()->dispatchAssets()) {
+		if (
+			!Helpers::isCli()
+			&& self::getStrategy()->sendAssets()
+		) {
+			self::$showBar = false;
 			exit;
 		}
 	}
@@ -266,9 +264,7 @@ class Debugger
 	 */
 	public static function renderLoader(): void
 	{
-		if (!self::$productionMode) {
-			self::getBar()->renderLoader();
-		}
+		self::getStrategy()->renderLoader();
 	}
 
 
@@ -294,10 +290,9 @@ class Debugger
 
 		self::$reserved = null;
 
-		if (self::$showBar && !self::$productionMode) {
-			self::removeOutputBuffers(false);
+		if (self::$showBar && !Helpers::isCli()) {
 			try {
-				self::getBar()->render();
+				self::getStrategy()->renderBar();
 			} catch (\Throwable $e) {
 				self::exceptionHandler($e);
 			}
@@ -322,51 +317,7 @@ class Debugger
 		Helpers::improveException($exception);
 		self::removeOutputBuffers(true);
 
-		if (self::$productionMode || connection_aborted()) {
-			try {
-				self::log($exception, self::EXCEPTION);
-			} catch (\Throwable $e) {
-			}
-
-			if (!$firstTime) {
-				// nothing
-			} elseif (Helpers::isHtmlMode()) {
-				if (!headers_sent()) {
-					header('Content-Type: text/html; charset=UTF-8');
-				}
-				(function ($logged) use ($exception) {
-					require self::$errorTemplate ?: __DIR__ . '/assets/error.500.phtml';
-				})(empty($e));
-			} elseif (Helpers::isCli()) {
-				// @ triggers E_NOTICE when strerr is closed since PHP 7.4
-				@fwrite(STDERR, "ERROR: {$exception->getMessage()}\n"
-					. (isset($e)
-						? 'Unable to log error. You may try enable debug mode to inspect the problem.'
-						: 'Check log to see more info.')
-					. "\n");
-			}
-
-		} elseif ($firstTime && Helpers::isHtmlMode() || Helpers::isAjax()) {
-			self::getBlueScreen()->render($exception);
-
-		} else {
-			self::fireLog($exception);
-			try {
-				$file = self::log($exception, self::EXCEPTION);
-				if ($file && !headers_sent()) {
-					header("X-Tracy-Error-Log: $file", false);
-				}
-				if (Helpers::detectColors()) {
-					echo "\n\n" . BlueScreen::highlightPhpCli($exception->getFile(), $exception->getLine()) . "\n";
-				}
-				echo "$exception\n" . ($file ? "\n(stored in $file)\n" : '');
-				if ($file && self::$browser) {
-					exec(self::$browser . ' ' . escapeshellarg(strtr($file, self::$editorMapping)));
-				}
-			} catch (\Throwable $e) {
-				echo "$exception\nTracy is unable to log error: {$e->getMessage()}\n";
-			}
-		}
+		self::getStrategy()->handleException($exception, $firstTime);
 
 		try {
 			foreach ($firstTime ? self::$onFatalError : [] as $handler) {
@@ -392,16 +343,12 @@ class Debugger
 		string $message,
 		string $file,
 		int $line,
-		array $context = null
-	): ?bool {
+		?array $context = null
+	): bool {
 		$error = error_get_last();
 		if (($error['type'] ?? null) === E_COMPILE_WARNING) {
 			error_clear_last();
 			self::errorHandler($error['type'], $error['message'], $error['file'], $error['line']);
-		}
-
-		if (self::$scream) {
-			error_reporting(E_ALL);
 		}
 
 		if ($context) {
@@ -423,56 +370,26 @@ class Debugger
 			$e->context = $context;
 			throw $e;
 
-		} elseif (($severity & error_reporting()) !== $severity) { // muted errors
-
-		} elseif (self::$productionMode) {
-			if (($severity & self::$logSeverity) === $severity) {
-				$e = new ErrorException($message, 0, $severity, $file, $line);
-				$e->context = $context;
-				Helpers::improveException($e);
-			} else {
-				$e = 'PHP ' . Helpers::errorTypeToString($severity) . ': ' . Helpers::improveError($message, (array) $context) . " in $file:$line";
-			}
-
-			try {
-				self::log($e, self::ERROR);
-			} catch (\Throwable $foo) {
-			}
-
 		} elseif (
-			(is_bool(self::$strictMode) ? self::$strictMode : ((self::$strictMode & $severity) === $severity)) // $strictMode
-			&& !isset($_GET['_tracy_skip_error'])
+			($severity & error_reporting())
+			|| (is_int(self::$scream) ? $severity & self::$scream : self::$scream)
 		) {
-			$e = new ErrorException($message, 0, $severity, $file, $line);
-			$e->context = $context;
-			$e->skippable = true;
-			self::exceptionHandler($e);
-			exit(255);
-
-		} else {
-			$message = 'PHP ' . Helpers::errorTypeToString($severity) . ': ' . Helpers::improveError($message, (array) $context);
-			$count = &self::getBar()->getPanel('Tracy:errors')->data["$file|$line|$message"];
-
-			if ($count++) { // repeated error
-				return null;
-
-			} else {
-				self::fireLog(new ErrorException($message, 0, $severity, $file, $line));
-				return Helpers::isHtmlMode() || Helpers::isAjax() ? null : false; // false calls normal error handler
-			}
+			self::getStrategy()->handleError($severity, $message, $file, $line, $context);
 		}
 
 		return false; // calls normal error handler to fill-in error_get_last()
 	}
 
 
-	private static function removeOutputBuffers(bool $errorOccurred): void
+	/** @internal */
+	public static function removeOutputBuffers(bool $errorOccurred): void
 	{
 		while (ob_get_level() > self::$obLevel) {
 			$status = ob_get_status();
 			if (in_array($status['name'], ['ob_gzhandler', 'zlib output compression'], true)) {
 				break;
 			}
+
 			$fnc = $status['chunk_size'] || !$errorOccurred
 				? 'ob_end_flush'
 				: 'ob_end_clean';
@@ -496,6 +413,7 @@ class Debugger
 				'Tracy ' . self::VERSION,
 			];
 		}
+
 		return self::$blueScreen;
 	}
 
@@ -508,6 +426,7 @@ class Debugger
 			$info->cpuUsage = self::$cpuUsage;
 			self::$bar->addPanel(new DefaultBarPanel('errors'), 'Tracy:errors'); // filled by errorHandler()
 		}
+
 		return self::$bar;
 	}
 
@@ -525,6 +444,7 @@ class Debugger
 			self::$logger->directory = &self::$logDirectory; // back compatiblity
 			self::$logger->email = &self::$email;
 		}
+
 		return self::$logger;
 	}
 
@@ -534,7 +454,47 @@ class Debugger
 		if (!self::$fireLogger) {
 			self::$fireLogger = new FireLogger;
 		}
+
 		return self::$fireLogger;
+	}
+
+
+	/** @return ProductionStrategy|DevelopmentStrategy @internal */
+	public static function getStrategy()
+	{
+		if (empty(self::$strategy[self::$productionMode])) {
+			self::$strategy[self::$productionMode] = self::$productionMode
+				? new ProductionStrategy
+				: new DevelopmentStrategy(self::getBar(), self::getBlueScreen(), new DeferredContent(self::getSessionStorage()));
+		}
+
+		return self::$strategy[self::$productionMode];
+	}
+
+
+	public static function setSessionStorage(SessionStorage $storage): void
+	{
+		if (self::$sessionStorage) {
+			throw new \Exception('Storage is already set.');
+		}
+
+		self::$sessionStorage = $storage;
+	}
+
+
+	/** @internal */
+	public static function getSessionStorage(): SessionStorage
+	{
+		if (!self::$sessionStorage) {
+			self::$sessionStorage = is_dir($dir = session_save_path())
+				|| is_dir($dir = ini_get('upload_tmp_dir'))
+				|| is_dir($dir = sys_get_temp_dir())
+				|| ($dir = self::$logDirectory)
+				? new FileSession($dir)
+				: new NativeSession;
+		}
+
+		return self::$sessionStorage;
 	}
 
 
@@ -579,7 +539,7 @@ class Debugger
 	 * Starts/stops stopwatch.
 	 * @return float   elapsed seconds
 	 */
-	public static function timer(string $name = null): float
+	public static function timer(?string $name = null): float
 	{
 		static $time = [];
 		$now = microtime(true);
@@ -595,13 +555,14 @@ class Debugger
 	 * @param  mixed  $var
 	 * @return mixed  variable itself
 	 */
-	public static function barDump($var, string $title = null, array $options = [])
+	public static function barDump($var, ?string $title = null, array $options = [])
 	{
 		if (!self::$productionMode) {
 			static $panel;
 			if (!$panel) {
 				self::getBar()->addPanel($panel = new DefaultBarPanel('dumps'), 'Tracy:dumps');
 			}
+
 			$panel->data[] = ['title' => $title, 'dump' => Dumper::toHtml($var, $options + [
 				Dumper::DEPTH => self::$maxDepth,
 				Dumper::TRUNCATE => self::$maxLength,
@@ -609,6 +570,7 @@ class Debugger
 				Dumper::LAZY => true,
 			])];
 		}
+
 		return $var;
 	}
 
@@ -636,6 +598,26 @@ class Debugger
 	}
 
 
+	/** @internal */
+	public static function addSourceMapper(callable $mapper): void
+	{
+		self::$sourceMappers[] = $mapper;
+	}
+
+
+	/** @return array{file: string, line: int, label: string, active: bool} */
+	public static function mapSource(string $file, int $line): ?array
+	{
+		foreach (self::$sourceMappers as $mapper) {
+			if ($res = $mapper($file, $line)) {
+				return $res;
+			}
+		}
+
+		return null;
+	}
+
+
 	/**
 	 * Detects debug mode by IP address.
 	 * @param  string|array  $list  IP addresses or computer names whitelist detection
@@ -654,6 +636,7 @@ class Debugger
 			$list[] = '::1';
 			$list[] = '[::1]'; // workaround for PHP < 7.3.4
 		}
+
 		return in_array($addr, $list, true) || in_array("$secret@$addr", $list, true);
 	}
 }

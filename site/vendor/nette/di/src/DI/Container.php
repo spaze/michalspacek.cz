@@ -77,7 +77,7 @@ class Container
 
 		if ($service instanceof \Closure) {
 			$rt = Nette\Utils\Type::fromReflection(new \ReflectionFunction($service));
-			$type = $rt ? Helpers::ensureClassType($rt, 'return type of factory') : '';
+			$type = $rt ? Helpers::ensureClassType($rt, 'return type of closure') : '';
 		} else {
 			$type = get_class($service);
 		}
@@ -126,8 +126,10 @@ class Container
 			if (isset($this->aliases[$name])) {
 				return $this->getService($this->aliases[$name]);
 			}
+
 			$this->instances[$name] = $this->createService($name);
 		}
+
 		return $this->instances[$name];
 	}
 
@@ -184,6 +186,7 @@ class Container
 		if (!$this->hasService($name)) {
 			throw new MissingServiceException(sprintf("Service '%s' not found.", $name));
 		}
+
 		$name = $this->aliases[$name] ?? $name;
 		return isset($this->instances[$name]);
 	}
@@ -241,6 +244,7 @@ class Container
 			if (count($names = $this->wiring[$type][0]) === 1) {
 				return $this->getService($names[0]);
 			}
+
 			natsort($names);
 			throw new MissingServiceException(sprintf("Multiple services of type $type found: %s.", implode(', ', $names)));
 
@@ -248,20 +252,23 @@ class Container
 			if (!class_exists($type) && !interface_exists($type)) {
 				throw new MissingServiceException(sprintf("Service of type '%s' not found. Check the class name because it cannot be found.", $type));
 			}
+
 			foreach ($this->methods as $method => $foo) {
 				$methodType = (new \ReflectionMethod(static::class, $method))->getReturnType()->getName();
 				if (is_a($methodType, $type, true)) {
 					throw new MissingServiceException(sprintf(
-						'Service of type %s is not autowired or is missing in di › export › types.',
+						"Service of type %s is not autowired or is missing in di\u{a0}›\u{a0}export\u{a0}›\u{a0}types.",
 						$type
 					));
 				}
 			}
+
 			throw new MissingServiceException(sprintf(
 				'Service of type %s not found. Did you add it to configuration file?',
 				$type
 			));
 		}
+
 		return null;
 	}
 
@@ -321,6 +328,7 @@ class Container
 		} elseif ($args) {
 			throw new ServiceCreationException(sprintf('Unable to pass arguments, class %s has no constructor.', $class));
 		}
+
 		return new $class;
 	}
 
@@ -360,6 +368,7 @@ class Container
 		if ($name === '') {
 			throw new Nette\InvalidArgumentException('Service name must be a non-empty string.');
 		}
+
 		return 'createService' . str_replace('.', '__', ucfirst($name));
 	}
 }

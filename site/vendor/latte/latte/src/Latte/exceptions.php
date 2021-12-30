@@ -25,7 +25,7 @@ class CompileException extends \Exception
 	public $sourceLine;
 
 
-	public function setSource(string $code, ?int $line, string $name = null): self
+	public function setSource(string $code, ?int $line, ?string $name = null): self
 	{
 		$this->sourceCode = $code;
 		$this->sourceLine = $line;
@@ -34,6 +34,7 @@ class CompileException extends \Exception
 			$this->message = rtrim($this->message, '.')
 				. ' in ' . str_replace(dirname($name, 2), '...', $name) . ($line ? ":$line" : '');
 		}
+
 		return $this;
 	}
 }
@@ -54,7 +55,7 @@ class RegexpException extends \Exception
 	];
 
 
-	public function __construct(?string $message, int $code = null)
+	public function __construct(?string $message, ?int $code = null)
 	{
 		parent::__construct($message ?: (self::MESSAGES[$code] ?? 'Unknown error'), $code);
 	}

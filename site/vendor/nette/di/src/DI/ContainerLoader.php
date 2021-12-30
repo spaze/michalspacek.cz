@@ -43,6 +43,7 @@ class ContainerLoader
 		if (!class_exists($class, false)) {
 			$this->loadFile($class, $generator);
 		}
+
 		return $class;
 	}
 
@@ -96,7 +97,7 @@ class ContainerLoader
 	}
 
 
-	private function isExpired(string $file, string &$updatedMeta = null): bool
+	private function isExpired(string $file, ?string &$updatedMeta = null): bool
 	{
 		if ($this->autoRebuild) {
 			$meta = @unserialize((string) file_get_contents("$file.meta")); // @ - file may not exist
@@ -105,6 +106,7 @@ class ContainerLoader
 				|| DependencyChecker::isExpired(...$meta)
 				|| ($orig !== $meta[2] && $updatedMeta = serialize($meta));
 		}
+
 		return false;
 	}
 

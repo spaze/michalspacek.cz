@@ -59,7 +59,6 @@ class DependencyChecker
 						$classes[$item] = true;
 					}
 				}
-
 			} elseif ($dep instanceof \ReflectionFunctionAbstract) {
 				$phpFiles[] = $dep->getFileName();
 				$functions[] = rtrim(Reflection::toString($dep), '()');
@@ -127,6 +126,7 @@ class DependencyChecker
 					];
 				}
 			}
+
 			foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
 				if ($method->getDeclaringClass() == $class) { // intentionally ==
 					$hash[] = [
@@ -148,11 +148,13 @@ class DependencyChecker
 				if (isset($flip[$class->name])) {
 					continue;
 				}
+
 				$uses = Reflection::getUseStatements($class);
 			} else {
 				$method = new \ReflectionFunction($name);
 				$uses = null;
 			}
+
 			$hash[] = [
 				$name,
 				$uses,
@@ -175,10 +177,11 @@ class DependencyChecker
 				(string) Type::fromReflection($param),
 				$param->isVariadic(),
 				$param->isDefaultValueAvailable()
-					? [Reflection::getParameterDefaultValue($param)]
+					? is_object($tmp = Reflection::getParameterDefaultValue($param)) ? ['object' => get_class($tmp)] : ['value' => $tmp]
 					: null,
 			];
 		}
+
 		return $res;
 	}
 }

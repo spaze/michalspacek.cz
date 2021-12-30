@@ -38,7 +38,7 @@ final class UIRuntime
 	}
 
 
-	public static function printClass(Latte\Runtime\Template $template, string $parent = null): void
+	public static function printClass(Latte\Runtime\Template $template, ?string $parent = null): void
 	{
 		$blueprint = new Latte\Runtime\Blueprint;
 		$name = 'Template';
@@ -54,6 +54,7 @@ final class UIRuntime
 				$blueprint->printHeader("{templatePrint}: Class '$parent' doesn't exist.");
 				return;
 			}
+
 			$params = array_diff_key($params, get_class_vars($parent));
 		}
 
