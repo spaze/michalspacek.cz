@@ -442,7 +442,7 @@ div.notice {
 	#training-dates .fa-calendar, #training-dates .separator { display: none; }
 	#training-dates .date { display: block; }
 }
-@media (max-width: 400px) {
+@media (max-width: 430px) {
 	#header-links #other-projects { display: block; }
 	#header-links a:not(.tools) { display: none; }
 }
