@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'b68b60d01e83ffa7e5adadc70af3145f54226c38',
+        'reference' => 'b7cfa9741bb9a9a463ae638ce39ef42058b14102',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'b68b60d01e83ffa7e5adadc70af3145f54226c38',
+            'reference' => 'b7cfa9741bb9a9a463ae638ce39ef42058b14102',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
@@ -520,13 +520,10 @@
             ),
         ),
         'symfony/polyfill-php81' => array(
-            'pretty_version' => 'v1.23.0',
-            'version' => '1.23.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/polyfill-php81',
-            'aliases' => array(),
-            'reference' => 'e66119f3de95efc359483f810c4c3e6436279436',
             'dev_requirement' => false,
+            'replaced' => array(
+                0 => '*',
+            ),
         ),
         'symfony/translation' => array(
             'pretty_version' => 'v5.4.2',
