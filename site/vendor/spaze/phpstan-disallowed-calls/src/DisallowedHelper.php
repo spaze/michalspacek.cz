@@ -11,6 +11,8 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Broker\ClassNotFoundException;
 use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Reflection\MethodReflection;
+use PHPStan\Rules\RuleError;
+use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
@@ -20,13 +22,13 @@ use Spaze\PHPStan\Rules\Disallowed\Params\DisallowedCallParam;
 class DisallowedHelper
 {
 
-	/** @var FileHelper */
-	private $fileHelper;
+	/** @var IsAllowedFileHelper */
+	private $isAllowedFileHelper;
 
 
-	public function __construct(FileHelper $fileHelper)
+	public function __construct(IsAllowedFileHelper $isAllowedFileHelper)
 	{
-		$this->fileHelper = $fileHelper;
+		$this->isAllowedFileHelper = $isAllowedFileHelper;
 	}
 
 
@@ -45,7 +47,8 @@ class DisallowedHelper
 			}
 		}
 		foreach ($disallowedCall->getAllowIn() as $allowedPath) {
-			if (fnmatch($this->fileHelper->absolutizePath($allowedPath), $scope->getFile())) {
+			$file = $scope->getTraitReflection() ? $scope->getTraitReflection()->getFileName() : $scope->getFile();
+			if ($file !== null && fnmatch($this->isAllowedFileHelper->absolutizePath($allowedPath), $file)) {
 				return $this->hasAllowedParamsInAllowed($scope, $node, $disallowedCall);
 			}
 		}
@@ -111,19 +114,21 @@ class DisallowedHelper
 	 * @param string|null $displayName
 	 * @param DisallowedCall[] $disallowedCalls
 	 * @param string|null $message
-	 * @return string[]
+	 * @return RuleError[]
 	 */
 	public function getDisallowedMessage(?CallLike $node, Scope $scope, string $name, ?string $displayName, array $disallowedCalls, ?string $message = null): array
 	{
 		foreach ($disallowedCalls as $disallowedCall) {
 			if ($this->callMatches($disallowedCall, $name) && !$this->isAllowed($scope, $node, $disallowedCall)) {
 				return [
-					sprintf(
+					RuleErrorBuilder::message(sprintf(
 						$message ?? 'Calling %s is forbidden, %s%s',
 						($displayName && $displayName !== $name) ? "{$name}() (as {$displayName}())" : "{$name}()",
 						$disallowedCall->getMessage(),
 						$disallowedCall->getCall() !== $name ? " [{$name}() matches {$disallowedCall->getCall()}()]" : ''
-					),
+					))
+						->identifier($disallowedCall->getErrorIdentifier())
+						->build(),
 				];
 			}
 		}
@@ -145,7 +150,7 @@ class DisallowedHelper
 	 * @param CallLike $node
 	 * @param Scope $scope
 	 * @param DisallowedCall[] $disallowedCalls
-	 * @return string[]
+	 * @return RuleError[]
 	 * @throws ClassNotFoundException
 	 */
 	public function getDisallowedMethodMessage($class, CallLike $node, Scope $scope, array $disallowedCalls): array
@@ -202,7 +207,7 @@ class DisallowedHelper
 	private function isAllowedPath(Scope $scope, DisallowedConstant $disallowedConstant): bool
 	{
 		foreach ($disallowedConstant->getAllowIn() as $allowedPath) {
-			if (fnmatch($this->fileHelper->absolutizePath($allowedPath), $scope->getFile())) {
+			if (fnmatch($this->isAllowedFileHelper->absolutizePath($allowedPath), $scope->getFile())) {
 				return true;
 			}
 		}
@@ -215,19 +220,21 @@ class DisallowedHelper
 	 * @param Scope $scope
 	 * @param string|null $displayName
 	 * @param DisallowedConstant[] $disallowedConstants
-	 * @return string[]
+	 * @return RuleError[]
 	 */
 	public function getDisallowedConstantMessage(string $constant, Scope $scope, ?string $displayName, array $disallowedConstants): array
 	{
 		foreach ($disallowedConstants as $disallowedConstant) {
 			if ($disallowedConstant->getConstant() === $constant && !$this->isAllowedPath($scope, $disallowedConstant)) {
 				return [
-					sprintf(
+					RuleErrorBuilder::message(sprintf(
 						'Using %s%s is forbidden, %s',
 						$disallowedConstant->getConstant(),
 						$displayName && $displayName !== $disallowedConstant->getConstant() ? ' (as ' . $displayName . ')' : '',
 						$disallowedConstant->getMessage()
-					),
+					))
+						->identifier($disallowedConstant->getErrorIdentifier())
+						->build(),
 				];
 			}
 		}

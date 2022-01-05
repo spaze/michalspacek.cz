@@ -100,6 +100,7 @@ parameters:
         -
             method: 'Redis::connect()'
             message: 'use our own Redis instead'
+            errorIdentifier: 'redis.connect'
 
     disallowedStaticCalls:
         -
@@ -135,6 +136,8 @@ parameters:
 ```
 
 The `message` key is optional. Functions and methods can be specified with or without `()`. Omitting `()` is not recommended though to avoid confusing method calls with class constants.
+
+The `errorIdentifier` key is optional. It can be used to provide a unique identifier to the PHPStan error.
 
 Use wildcard (`*`) to ignore all functions, methods, namespaces starting with a prefix, for example:
 ```neon
@@ -213,7 +216,23 @@ parameters:
                 - tests/*.test.php
 ```
 
-The paths in `allowIn` are relative to the config file location and support [fnmatch()](https://www.php.net/function.fnmatch) patterns.
+Paths in `allowIn` support [fnmatch()](https://www.php.net/function.fnmatch) patterns.
+
+Relative paths in `allowIn` are resolved based on the current working directory. When running PHPStan from a directory or subdirectory which is not your "root" directory, the paths will probably not work.
+Use `allowInRootDir` in that case to specify an absolute root directory for all `allowIn` paths. Absolute paths might change between machines (for example your local development machine and a continous integration machine) but you
+can use [`%rootDir%`](https://phpstan.org/config-reference#expanding-paths) to start with PHPStan's root directory (usually `/something/something/vendor/phpstan/phpstan`) and then `..` from there to your "root" directory.
+
+For example when PHPStan is installed in `/home/foo/vendor/phpstan/phpstan` and you're using a configuration like this:
+```neon
+parameters:
+    allowInRootDir: %rootDir%/../../..
+    disallowedMethodCalls:
+        -
+            method: 'PotentiallyDangerous\Logger::log()'
+            allowIn:
+                - path/to/some/file-*.php
+```
+then `Logger::log()` will be allowed in `/home/foo/path/to/some/file-bar.php`.
 
 To allow a previously disallowed method or function only when called from a different method or function in any file, use `allowInFunctions` (or `allowInMethods` alias):
 
@@ -279,7 +298,7 @@ Such configuration only makes sense when both the parameters of `log()` are opti
 ## Allow calls except when a param has a specified value
 
 Sometimes, it's handy to disallow a function or a method call only when a parameter matches but allow it otherwise. For example the `hash()` function, it's fine using it with algorithm families like SHA-2 & SHA-3 (not for passwords though) but you'd like PHPStan to report when it's used with MD5 like `hash('md5', ...)`.
-You can use `allowExceptParams`, `allowExceptCaseInsensitiveParams`, `allowExceptParamsInAllowed` config options to disallow only some calls:
+You can use `allowExceptParams` (or `disallowParams`), `allowExceptCaseInsensitiveParams` (or `disallowCaseInsensitiveParams`), `allowExceptParamsInAllowed` (or `disallowParamsInAllowed`) config options to disallow only some calls:
 
 ```neon
 parameters:

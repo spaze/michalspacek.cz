@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'e2b91482f3de3659f382f0a203fa4483005515f4',
+        'reference' => 'b7cfa9741bb9a9a463ae638ce39ef42058b14102',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -59,12 +59,12 @@
             ),
         ),
         'latte/latte' => array(
-            'pretty_version' => 'v2.10.7',
-            'version' => '2.10.7.0',
+            'pretty_version' => 'v2.10.8',
+            'version' => '2.10.8.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../latte/latte',
             'aliases' => array(),
-            'reference' => 'a69d0b9598652438b5754ae5c1abc217d5003d98',
+            'reference' => '596b28bf098ebb852732d60b00538139a009c4db',
             'dev_requirement' => false,
         ),
         'nette/application' => array(
@@ -305,12 +305,12 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.3.0',
-            'version' => '1.3.0.0',
+            'pretty_version' => '1.3.1',
+            'version' => '1.3.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => 'ffc5aee6019eeae4ea618d97dd290ab95e77be59',
+            'reference' => 'c3e7a5837829b3cd5907b895da73a4da084a9f8f',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'e2b91482f3de3659f382f0a203fa4483005515f4',
+            'reference' => 'b7cfa9741bb9a9a463ae638ce39ef42058b14102',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
@@ -433,12 +433,12 @@
             'dev_requirement' => false,
         ),
         'spaze/phpstan-disallowed-calls' => array(
-            'pretty_version' => 'v2.1.0',
-            'version' => '2.1.0.0',
+            'pretty_version' => 'v2.2.0',
+            'version' => '2.2.0.0',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../spaze/phpstan-disallowed-calls',
             'aliases' => array(),
-            'reference' => '5ad6d0086ebf7fca11a2d9217791c99dd317f085',
+            'reference' => '2eafca7bb34fc64e6f415506897d9aaf56041c08',
             'dev_requirement' => true,
         ),
         'spaze/phpstan-disallowed-calls-nette' => array(
@@ -520,13 +520,10 @@
             ),
         ),
         'symfony/polyfill-php81' => array(
-            'pretty_version' => 'v1.23.0',
-            'version' => '1.23.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/polyfill-php81',
-            'aliases' => array(),
-            'reference' => 'e66119f3de95efc359483f810c4c3e6436279436',
             'dev_requirement' => false,
+            'replaced' => array(
+                0 => '*',
+            ),
         ),
         'symfony/translation' => array(
             'pretty_version' => 'v5.4.2',

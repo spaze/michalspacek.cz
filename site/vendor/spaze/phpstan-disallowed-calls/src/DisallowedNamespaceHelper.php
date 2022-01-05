@@ -4,17 +4,19 @@ declare(strict_types = 1);
 namespace Spaze\PHPStan\Rules\Disallowed;
 
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\RuleError;
+use PHPStan\Rules\RuleErrorBuilder;
 
 class DisallowedNamespaceHelper
 {
 
-	/** @var FileHelper */
-	private $fileHelper;
+	/** @var IsAllowedFileHelper */
+	private $isAllowedFileHelper;
 
 
-	public function __construct(FileHelper $fileHelper)
+	public function __construct(IsAllowedFileHelper $isAllowedFileHelper)
 	{
-		$this->fileHelper = $fileHelper;
+		$this->isAllowedFileHelper = $isAllowedFileHelper;
 	}
 
 
@@ -26,7 +28,7 @@ class DisallowedNamespaceHelper
 	private function isAllowed(Scope $scope, DisallowedNamespace $disallowedNamespace): bool
 	{
 		foreach ($disallowedNamespace->getAllowIn() as $allowedPath) {
-			$match = fnmatch($this->fileHelper->absolutizePath($allowedPath), $scope->getFile());
+			$match = fnmatch($this->isAllowedFileHelper->absolutizePath($allowedPath), $scope->getFile());
 			if ($match) {
 				return true;
 			}
@@ -39,7 +41,7 @@ class DisallowedNamespaceHelper
 	 * @param string $namespace
 	 * @param Scope $scope
 	 * @param DisallowedNamespace[] $disallowedNamespaces
-	 * @return string[]
+	 * @return RuleError[]
 	 */
 	public function getDisallowedMessage(string $namespace, Scope $scope, array $disallowedNamespaces): array
 	{
@@ -53,12 +55,14 @@ class DisallowedNamespaceHelper
 			}
 
 			return [
-				sprintf(
+				RuleErrorBuilder::message(sprintf(
 					'Namespace %s is forbidden, %s%s',
 					$namespace,
 					$disallowedNamespace->getMessage(),
 					$disallowedNamespace->getNamespace() !== $namespace ? " [{$namespace} matches {$disallowedNamespace->getNamespace()}]" : ''
-				),
+				))
+					->identifier($disallowedNamespace->getErrorIdentifier())
+					->build(),
 			];
 		}
 
