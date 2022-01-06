@@ -2,6 +2,8 @@
 > michalspacek.cz + michalspacek.com + subdomains source code because why not
 
 [![PHP Tests](https://github.com/spaze/michalspacek.cz/workflows/PHP%20Tests/badge.svg)](https://github.com/spaze/michalspacek.cz/actions?query=workflow%3A%22PHP+Tests%22)
+[![SSL/TLS Scans](https://github.com/spaze/michalspacek.cz/actions/workflows/tls.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/tls.yml)
+[![Checks composer.lock for known vulnz in package deps](https://github.com/spaze/michalspacek.cz/actions/workflows/composer-vulns.yml/badge.svg)](https://github.com/spaze/michalspacek.cz/actions/workflows/composer-vulns.yml)
 
 I believe your threat model should include a scenario when somebody gains access to your code repository, and having my source code publicly available helps me to keep that in mind and apply mitigations before it's too late.
 Plus sometimes, I want to show the code of some of the tricks used on my site and this makes it far easier.
