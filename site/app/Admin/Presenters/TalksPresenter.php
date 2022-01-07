@@ -199,7 +199,7 @@ class TalksPresenter extends BasePresenter
 			$this->talks->saveSlides($this->talk->talkId, $this->slides, $values);
 			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.slideadded'));
 		} catch (UnexpectedValueException $e) {
-			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.duplicatealias', [$e->getCode()]), 'error');
+			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.duplicatealias', [(string)$e->getCode()]), 'error');
 		}
 		$this->redirect('Talks:slides', $this->talk->talkId);
 	}
