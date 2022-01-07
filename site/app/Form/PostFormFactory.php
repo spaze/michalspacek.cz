@@ -120,26 +120,16 @@ class PostFormFactory
 		$form->addButton('preview', 'Náhled')
 			->setHtmlAttribute('data-alt', 'Moment…');
 
+		$form->onValidate[] = function (Form $form, stdClass $values): void {
+			$post = $this->buildPost($values);
+			if ($post->needsPreviewKey() && $post->previewKey === null) {
+				/** @var TextInput $input */
+				$input = $form->getComponent('previewKey');
+				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $post->published === null ? 'nepublikovaný' : 'budoucí'));
+			}
+		};
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess): void {
-			$post = new Data();
-			$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
-			$post->localeId = $values->locale;
-			$post->locale = $this->blogPost->getLocaleById($values->locale);
-			$post->slug = $values->slug;
-			$post->titleTexy = $values->title;
-			$post->leadTexy = (empty($values->lead) ? null : $values->lead);
-			$post->textTexy = $values->text;
-			$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
-			$post->published = (empty($values->published) ? null : new DateTime($values->published));
-			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
-			$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-			$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));
-			$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
-			$post->recommended = (empty($values->recommended) ? null : Json::decode($values->recommended));
-			$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
-			$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
-			$post->cspSnippets = (empty($values->cspSnippets) ? [] : $values->cspSnippets);
-			$post->allowedTags = (empty($values->allowedTags) ? [] : $values->allowedTags);
+			$post = $this->buildPost($values);
 			$this->blogPost->enrich($post);
 			try {
 				$onSuccess($post);
@@ -150,6 +140,31 @@ class PostFormFactory
 			}
 		};
 		return $form;
+	}
+
+
+	private function buildPost(stdClass $values): Data
+	{
+		$post = new Data();
+		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
+		$post->localeId = $values->locale;
+		$post->locale = $this->blogPost->getLocaleById($values->locale);
+		$post->slug = $values->slug;
+		$post->titleTexy = $values->title;
+		$post->leadTexy = (empty($values->lead) ? null : $values->lead);
+		$post->textTexy = $values->text;
+		$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
+		$post->published = (empty($values->published) ? null : new DateTime($values->published));
+		$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
+		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
+		$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));
+		$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
+		$post->recommended = (empty($values->recommended) ? null : Json::decode($values->recommended));
+		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
+		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
+		$post->cspSnippets = (empty($values->cspSnippets) ? [] : $values->cspSnippets);
+		$post->allowedTags = (empty($values->allowedTags) ? [] : $values->allowedTags);
+		return $post;
 	}
 
 
