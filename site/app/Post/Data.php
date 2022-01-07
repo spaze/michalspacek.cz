@@ -44,8 +44,7 @@ class Data
 	/** @var string */
 	public $textTexy;
 
-	/** @var DateTimeInterface */
-	public $published;
+	public ?DateTimeInterface $published;
 
 	/** @var string */
 	public $previewKey;
@@ -90,9 +89,9 @@ class Data
 	public array $allowedTags = [];
 
 
-	public function needsPreviewKey(): bool
+	public function needsPreviewKey(DateTimeInterface $when = new DateTime()): bool
 	{
-		return $this->published > new DateTime();
+		return $this->published === null || $this->published > $when;
 	}
 
 }

@@ -49,9 +49,9 @@ class BlogPresenter extends BasePresenter
 	{
 		$posts = [];
 		foreach ($this->blogPost->getAll() as $post) {
-			$posts[$post->published->getTimestamp() . $post->slug] = $post;
+			$posts[($post->published?->getTimestamp() ?: PHP_INT_MAX) . $post->slug] = $post;
 		}
-		krsort($posts);
+		krsort($posts, SORT_NATURAL);
 		$this->template->posts = $posts;
 		$this->template->pageTitle = 'Blog';
 		$this->template->now = new DateTime();
@@ -109,7 +109,7 @@ class BlogPresenter extends BasePresenter
 			'locale' => $this->post->localeId,
 			'title' => $this->post->titleTexy,
 			'slug' => $this->post->slug,
-			'published' => $this->post->published->format('Y-m-d H:i'),
+			'published' => $this->post->published?->format('Y-m-d H:i'),
 			'previewKey' => $this->post->previewKey,
 			'lead' => $this->post->leadTexy,
 			'text' => $this->post->textTexy,
@@ -123,7 +123,7 @@ class BlogPresenter extends BasePresenter
 		);
 		$form->setDefaults($values);
 		$form->getComponent('editSummary')
-			->setDisabled($this->post->published > new DateTime());
+			->setDisabled($this->post->needsPreviewKey());
 		$form->getComponent('submit')->caption = 'Upravit';
 		return $form;
 	}
@@ -145,7 +145,7 @@ class BlogPresenter extends BasePresenter
 		$post->leadTexy = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));
 		$post->textTexy = $this->request->getPost('text');
 		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
-		$post->published = new DateTime($this->request->getPost('published'));
+		$post->published =  $this->request->getPost('published') ? new DateTime($this->request->getPost('published')) : null;
 		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tags->toArray($this->request->getPost('tags')));
 		$post->slugTags = (empty($this->request->getPost('tags')) ? null : $this->tags->toSlugArray($this->request->getPost('tags')));
 		$post->recommended = (empty($this->request->getPost('recommended')) ? null : Json::decode($this->request->getPost('recommended')));

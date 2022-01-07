@@ -66,7 +66,8 @@ class Articles
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale
-				WHERE bp.published <= ?
+				WHERE bp.published IS NOT NULL
+					AND bp.published <= ?
 					AND l.locale = ?
 			ORDER BY published DESC
 			LIMIT ?';
@@ -101,6 +102,7 @@ class Articles
 					ON l.id_blog_post_locale = bp.key_locale
 				WHERE
 					JSON_CONTAINS(bp.slug_tags, ?)
+					AND bp.published IS NOT NULL
 					AND bp.published <= ?
 					AND l.locale = ?
 			ORDER BY bp.published DESC
@@ -127,6 +129,7 @@ class Articles
 					ON l.id_blog_post_locale = bp.key_locale
 				WHERE
 					bp.tags IS NOT NULL
+					AND bp.published IS NOT NULL
 					AND bp.published <= ?
 					AND l.locale = ?
 			ORDER BY bp.published DESC';
@@ -162,6 +165,7 @@ class Articles
 					ON l.id_blog_post_locale = bp.key_locale
 				WHERE
 					JSON_CONTAINS(bp.slug_tags, ?)
+					AND bp.published IS NOT NULL
 					AND bp.published <= ?
 					AND l.locale = ?
 			LIMIT 1';
@@ -191,7 +195,7 @@ class Articles
 			UNION ALL
 			SELECT bp.published FROM blog_posts bp
 				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
-			WHERE bp.published > ? AND l.locale = ?
+			WHERE bp.published IS NOT NULL AND bp.published > ? AND l.locale = ?
 			ORDER BY date
 			LIMIT 1';
 		return ($this->database->fetchField($query, new NetteDateTime(), $this->translator->getDefaultLocale()) ?: null);
@@ -209,6 +213,7 @@ class Articles
 		$query = 'SELECT bp.published FROM blog_posts bp
 				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
 			WHERE JSON_CONTAINS(bp.slug_tags, ?)
+				AND bp.published IS NOT NULL
 				AND bp.published > ?
 				AND l.locale = ?
 			ORDER BY bp.published ASC

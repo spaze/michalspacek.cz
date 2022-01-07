@@ -59,7 +59,7 @@ class PostFormFactory
 		$form->addText('slug', 'Slug:')
 			->setRequired('Zadejte prosím slug')
 			->addRule(Form::MIN_LENGTH, 'Slug musí mít alespoň %d znaky', 3);
-		$this->addPublishedDate($form, 'published', 'Vydáno:', true)
+		$this->addPublishedDate($form, 'published', 'Vydáno:')
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
 		$form->addText('previewKey', 'Klíč pro náhled:')
 			->setRequired(false)
@@ -130,7 +130,7 @@ class PostFormFactory
 			$post->leadTexy = (empty($values->lead) ? null : $values->lead);
 			$post->textTexy = $values->text;
 			$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
-			$post->published = new DateTime($values->published);
+			$post->published = (empty($values->published) ? null : new DateTime($values->published));
 			$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
 			$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
 			$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));

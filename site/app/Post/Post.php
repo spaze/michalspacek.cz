@@ -281,8 +281,8 @@ class Post
 	{
 		$this->database->beginTransaction();
 		try {
-			/** @var DateTimeZone|false $timeZone */
-			$timeZone = $post->published->getTimezone();
+			/** @var DateTimeZone|null $timeZone */
+			$timeZone = $post->published?->getTimezone() ?: null;
 			$this->database->query(
 				'INSERT INTO blog_posts',
 				array(
@@ -294,7 +294,7 @@ class Post
 					'lead' => $post->leadTexy,
 					'text' => $post->textTexy,
 					'published' => $post->published,
-					'published_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
+					'published_timezone' => $post->published ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null,
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 					'og_image' => $post->ogImage,
@@ -324,7 +324,7 @@ class Post
 		$this->database->beginTransaction();
 		try {
 			/** @var DateTimeZone|false $timeZone */
-			$timeZone = $post->published->getTimezone();
+			$timeZone = $post->published?->getTimezone() ?: null;
 			$this->database->query(
 				'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
 				array(
@@ -336,7 +336,7 @@ class Post
 					'lead' => $post->leadTexy,
 					'text' => $post->textTexy,
 					'published' => $post->published,
-					'published_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
+					'published_timezone' => $post->published ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null,
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 					'og_image' => $post->ogImage,
@@ -366,7 +366,7 @@ class Post
 			foreach (array_merge(array_diff($post->slugTags, $post->previousSlugTags), array_diff($post->previousSlugTags, $post->slugTags)) as $tag) {
 				$cacheTags[] = self::class . "/tag/{$tag}";
 			}
-			if ($post->published > $now) {
+			if ($post->needsPreviewKey($now)) {
 				$cacheTags[] = self::class;
 			}
 			$this->exportsCache->clean([Cache::TAGS => $cacheTags]);

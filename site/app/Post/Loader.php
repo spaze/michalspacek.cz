@@ -78,7 +78,7 @@ class Loader
 					ON tct.id_twitter_card_type = bp.key_twitter_card_type
 				WHERE bp.slug = ?
 					AND l.locale = ?
-					AND (bp.published <= ? OR bp.preview_key = ?)',
+					AND (bp.published IS NOT NULL AND bp.published <= ? OR bp.preview_key = ?)',
 				$post,
 				$this->translator->getDefaultLocale(),
 				new DateTime(),

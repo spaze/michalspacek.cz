@@ -11,9 +11,9 @@
 	{/if}
 	<li n:class="$dateLineCheck && !$dateLineDisplayed ? dateLine">
 		{var $dateLineDisplayed = $dateLineCheck}
-		<small n:tag-if="$post->published > $now">
+		<small n:tag-if="$post->needsPreviewKey()">
 		<strong>{$post->title}</strong>
-		<small class="date" title="{$post->published|localeDay} {$post->published|date:'H:i'}">{$post->published|localeDay}</small>
+		<small class="date" n:ifset="$post->published" title="{$post->published|localeDay} {$post->published|date:'H:i'}">{$post->published|localeDay}</small>
 		<br>
 		<a n:href="edit $post->postId">Upravit</a>
 		• <a href="{$post->href}">{if $post->needsPreviewKey()}Zobrazit náhled{else}Zobrazit{/if}</a>
