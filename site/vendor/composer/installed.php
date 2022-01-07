@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'b7cfa9741bb9a9a463ae638ce39ef42058b14102',
+        'reference' => 'a5923f18cd2c5601952d5408546beda361e8cc30',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -305,12 +305,12 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.3.1',
-            'version' => '1.3.1.0',
+            'pretty_version' => '1.3.2',
+            'version' => '1.3.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => 'c3e7a5837829b3cd5907b895da73a4da084a9f8f',
+            'reference' => '84eaa569d48ea79d3bebe2c3ec5d302537a6ae8a',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '31d9d9e2977ae7d796d82271be09e46f4bdf41b3',
+            'reference' => '5d1ae7d4b053281a29a24e6e21ede5f9ef245b05',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'b7cfa9741bb9a9a463ae638ce39ef42058b14102',
+            'reference' => 'a5923f18cd2c5601952d5408546beda361e8cc30',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
