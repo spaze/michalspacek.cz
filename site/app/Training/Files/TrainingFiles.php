@@ -1,54 +1,34 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Files;
 
 use DateTime;
 use DateTimeZone;
+use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
-use RuntimeException;
-use SplFileInfo;
 
-class Files
+class TrainingFiles
 {
 
-	private Explorer $database;
-
-	private Statuses $trainingStatuses;
-
-	/**
-	 * Files directory, does not end with a slash.
-	 */
-	private string $filesDir;
-
-
-	public function __construct(Explorer $context, Statuses $trainingStatuses)
-	{
-		$this->database = $context;
-		$this->trainingStatuses = $trainingStatuses;
-	}
-
-
-	public function setFilesDir(string $dir): void
-	{
-		$path = realpath($dir);
-		if (!$path) {
-			throw new RuntimeException("Can't get absolute path, maybe {$dir} doesn't exist?");
-		}
-		$this->filesDir = $path;
+	public function __construct(
+		private Explorer $database,
+		private Statuses $trainingStatuses,
+		private TrainingFileFactory $trainingFileFactory,
+		private TrainingFilesStorage $trainingFilesStorage,
+	) {
 	}
 
 
 	/**
-	 * @param int $applicationId
-	 * @return Row[]
+	 * @return array<int, TrainingFile>
 	 */
 	public function getFiles(int $applicationId): array
 	{
-		$files = $this->database->fetchAll(
+		$rows = $this->database->fetchAll(
 			'SELECT
 				f.id_file AS fileId,
 				f.filename AS fileName,
@@ -66,24 +46,18 @@ class Files
 			$this->trainingStatuses->getAllowFilesStatuses(),
 		);
 
-		foreach ($files as $file) {
-			$file->info = new SplFileInfo($this->getDir($file->start) . $file->fileName);
+		$files = [];
+		foreach ($rows as $row) {
+			$files[] = $this->trainingFileFactory->fromDatabaseRow($row);
 		}
-
 		return $files;
 	}
 
 
-	/**
-	 * @param int $applicationId
-	 * @param string $token
-	 * @param string $filename
-	 * @return Row<mixed>|null
-	 */
-	public function getFile(int $applicationId, string $token, string $filename): ?Row
+	public function getFile(int $applicationId, string $token, string $filename): ?TrainingFile
 	{
-		/** @var Row<mixed>|null $file */
-		$file = $this->database->fetch(
+		/** @var Row<mixed>|null $row */
+		$row = $this->database->fetch(
 			'SELECT
 				f.id_file AS fileId,
 				f.filename AS fileName,
@@ -104,12 +78,7 @@ class Files
 			$filename,
 			$this->trainingStatuses->getAllowFilesStatuses(),
 		);
-
-		if ($file) {
-			$file->info = new SplFileInfo($this->getDir($file->start) . $file->fileName);
-		}
-
-		return $file;
+		return $row ? $this->trainingFileFactory->fromDatabaseRow($row) : null;
 	}
 
 
@@ -122,7 +91,7 @@ class Files
 	public function addFile(Row $training, FileUpload $file, array $applicationIds): string
 	{
 		$name = basename($file->getSanitizedName());
-		$file->move($this->getDir($training->start) . $name);
+		$file->move($this->trainingFilesStorage->getFilesDir($training->start) . $name);
 
 		$datetime = new DateTime();
 		$this->database->beginTransaction();
@@ -152,12 +121,6 @@ class Files
 	}
 
 
-	private function getDir(DateTime $date): string
-	{
-		return $this->filesDir . '/' . $date->format('Y-m-d') . '/';
-	}
-
-
 	/**
 	 * @param array<int, int> $dateIds
 	 */
@@ -176,7 +139,7 @@ class Files
 		);
 
 		foreach ($this->database->fetchPairs('SELECT start FROM training_dates WHERE id_date IN (?)', $dateIds) as $date) {
-			FileSystem::delete($this->getDir($date));
+			FileSystem::delete($this->trainingFilesStorage->getFilesDir($date));
 		}
 	}
 

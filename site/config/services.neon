@@ -38,10 +38,9 @@ services:
 	trainingDates: MichalSpacekCz\Training\Dates
 	trainingVenues: MichalSpacekCz\Training\Venues
 	trainingStatuses: MichalSpacekCz\Training\Statuses
-	trainingFiles:
-		factory: MichalSpacekCz\Training\Files
-		setup:
-			- setFilesDir('../../files/trainings')
+	trainingFileFactory: MichalSpacekCz\Training\Files\TrainingFileFactory
+	trainingFilesStorage: MichalSpacekCz\Training\Files\TrainingFilesStorage('../../files/trainings')
+	trainingFiles: MichalSpacekCz\Training\Files\TrainingFiles
 	trainingLocales: MichalSpacekCz\Training\Locales
 	trainingReviews: MichalSpacekCz\Training\Reviews
 	trainingPrices:

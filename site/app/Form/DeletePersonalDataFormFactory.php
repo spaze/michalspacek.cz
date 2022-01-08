@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use Exception;
-use MichalSpacekCz\Training\Files;
+use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\UI\Form;
 use Nette\Database\Explorer;
@@ -19,10 +19,10 @@ class DeletePersonalDataFormFactory
 
 	private Trainings $trainings;
 
-	private Files $files;
+	private TrainingFiles $files;
 
 
-	public function __construct(Explorer $context, FormFactory $factory, Trainings $trainings, Files $files)
+	public function __construct(Explorer $context, FormFactory $factory, Trainings $trainings, TrainingFiles $files)
 	{
 		$this->database = $context;
 		$this->factory = $factory;

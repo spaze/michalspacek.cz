@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use finfo;
-use MichalSpacekCz\Training\Files;
+use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
@@ -12,10 +12,10 @@ use Nette\Application\Responses\FileResponse;
 class FilesPresenter extends BasePresenter
 {
 
-	private Files $trainingFiles;
+	private TrainingFiles $trainingFiles;
 
 
-	public function __construct(Files $trainingFiles)
+	public function __construct(TrainingFiles $trainingFiles)
 	{
 		$this->trainingFiles = $trainingFiles;
 		parent::__construct();
@@ -38,7 +38,7 @@ class FilesPresenter extends BasePresenter
 		if (!$file) {
 			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}");
 		}
-		$pathname = $file->info->getPathname();
+		$pathname = $file->getFileInfo()->getPathname();
 		$fileInfo = new finfo(FILEINFO_MIME_TYPE);
 		$this->sendResponse(new FileResponse($pathname, null, $fileInfo->file($pathname) ?: null));
 	}

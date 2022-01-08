@@ -14,7 +14,7 @@ use MichalSpacekCz\Form\TrainingReview;
 use MichalSpacekCz\Form\TrainingStatuses;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
-use MichalSpacekCz\Training\Files;
+use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings;
@@ -41,7 +41,7 @@ class TrainingsPresenter extends BasePresenter
 
 	private Venues $trainingVenues;
 
-	private Files $trainingFiles;
+	private TrainingFiles $trainingFiles;
 
 	private Reviews $trainingReviews;
 
@@ -81,7 +81,7 @@ class TrainingsPresenter extends BasePresenter
 		Statuses $trainingStatuses,
 		Trainings $trainings,
 		Venues $trainingVenues,
-		Files $trainingFiles,
+		TrainingFiles $trainingFiles,
 		Reviews $trainingReviews,
 		TrainingControlsFactory $trainingControlsFactory,
 		Helpers $netxtenHelpers,

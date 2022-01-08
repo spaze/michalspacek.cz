@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
@@ -29,7 +30,7 @@ class Mails
 
 	private Venues $trainingVenues;
 
-	private Files $trainingFiles;
+	private TrainingFiles $trainingFiles;
 
 	private Helpers $netxtenHelpers;
 
@@ -44,7 +45,7 @@ class Mails
 		Dates $trainingDates,
 		Statuses $trainingStatuses,
 		Venues $trainingVenues,
-		Files $trainingFiles,
+		TrainingFiles $trainingFiles,
 		Helpers $netxtenHelpers,
 	) {
 		$this->mailer = $mailer;
