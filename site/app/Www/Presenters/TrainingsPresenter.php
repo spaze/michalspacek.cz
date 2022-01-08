@@ -284,7 +284,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$files = $this->trainingFiles->getFiles($application->applicationId);
 		$this->trainingApplications->setAccessTokenUsed($application);
-		if (!$files) {
+		if (count($files) === 0) {
 			throw new BadRequestException("No files for application id {$session->applicationId}");
 		}
 

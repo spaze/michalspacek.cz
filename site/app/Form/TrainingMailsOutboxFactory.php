@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Files\TrainingFilesCollection;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\Application as NetteApplication;
@@ -62,6 +63,9 @@ class TrainingMailsOutboxFactory
 			$checked = true;
 			$disabled = false;
 			$sendCheckboxTitle = [];
+			/** @var TrainingFilesCollection $files */
+			$files = $application->files;
+			$filesCount = count($files);
 			switch ($application->nextStatus) {
 				case Statuses::STATUS_INVITED:
 					$checked = isset($application->dateId);
@@ -71,10 +75,13 @@ class TrainingMailsOutboxFactory
 					}
 					break;
 				case Statuses::STATUS_MATERIALS_SENT:
-					$checked = (bool)$application->files;
+					$uploadedAfterStart = $files->getNewestFile()->getAdded() > $application->trainingStart;
+					$checked = $filesCount > 0 && $uploadedAfterStart;
 					$disabled = !$checked;
-					if (!$application->files) {
+					if ($filesCount === 0) {
 						$sendCheckboxTitle['files'] = 'Není nahrán žádný soubor';
+					} elseif (!$uploadedAfterStart) {
+						$sendCheckboxTitle['files'] = 'Není nahrán žádný nový soubor (s časem nahrání po začátku školení)';
 					}
 					break;
 				case Statuses::STATUS_INVOICE_SENT:
@@ -93,9 +100,9 @@ class TrainingMailsOutboxFactory
 					break;
 				case Statuses::STATUS_REMINDED:
 					if ($application->remote) {
-						$checked = (bool)$application->files && (bool)$application->remoteUrl;
+						$checked = $filesCount > 0 && (bool)$application->remoteUrl;
 						$disabled = !$checked;
-						if (!$application->files) {
+						if ($filesCount === 0) {
 							$sendCheckboxTitle['files'] = 'Není nahrán žádný soubor';
 						}
 						if (!$application->remoteUrl) {
