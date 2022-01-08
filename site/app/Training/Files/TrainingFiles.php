@@ -25,9 +25,10 @@ class TrainingFiles
 
 
 	/**
-	 * @return array<int, TrainingFile>
+	 * @param int $applicationId
+	 * @return TrainingFilesCollection<int, TrainingFile>
 	 */
-	public function getFiles(int $applicationId): array
+	public function getFiles(int $applicationId): TrainingFilesCollection
 	{
 		$rows = $this->database->fetchAll(
 			'SELECT
@@ -48,9 +49,9 @@ class TrainingFiles
 			$this->trainingStatuses->getAllowFilesStatuses(),
 		);
 
-		$files = [];
+		$files = new TrainingFilesCollection();
 		foreach ($rows as $row) {
-			$files[] = $this->trainingFileFactory->fromDatabaseRow($row);
+			$files->add($this->trainingFileFactory->fromDatabaseRow($row));
 		}
 		return $files;
 	}
