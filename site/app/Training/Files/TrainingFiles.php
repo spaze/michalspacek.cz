@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Files;
 
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
@@ -85,15 +86,15 @@ class TrainingFiles
 
 
 	/**
-	 * @param Row<mixed> $training
+	 * @param DateTimeInterface $start
 	 * @param FileUpload $file
 	 * @param int[] $applicationIds
 	 * @return string
 	 */
-	public function addFile(Row $training, FileUpload $file, array $applicationIds): string
+	public function addFile(DateTimeInterface $start, FileUpload $file, array $applicationIds): string
 	{
 		$name = basename($file->getSanitizedName());
-		$file->move($this->trainingFilesStorage->getFilesDir($training->start) . $name);
+		$file->move($this->trainingFilesStorage->getFilesDir($start) . $name);
 
 		$datetime = new DateTime();
 		$this->database->beginTransaction();
