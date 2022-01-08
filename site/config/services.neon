@@ -139,4 +139,5 @@ services:
 	- MichalSpacekCz\Form\TrainingApplicationAdminFactory
 	- MichalSpacekCz\Form\TrainingApplicationFactory
 	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory
+	- MichalSpacekCz\Form\TrainingFileFormFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFactory

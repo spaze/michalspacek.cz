@@ -9,7 +9,7 @@ use MichalSpacekCz\Form\TrainingApplicationAdminFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
 use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Form\TrainingDate;
-use MichalSpacekCz\Form\TrainingFile;
+use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingReview;
 use MichalSpacekCz\Form\TrainingStatuses;
 use MichalSpacekCz\Training\Applications;
@@ -57,7 +57,7 @@ class TrainingsPresenter extends BasePresenter
 	private array $applications;
 
 	/** @var int[] */
-	private array $applicationIdsAllowedFiles;
+	private array $applicationIdsAllowedFiles = [];
 
 	/** @var Row<mixed> */
 	private Row $application;
@@ -87,6 +87,7 @@ class TrainingsPresenter extends BasePresenter
 		Helpers $netxtenHelpers,
 		DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
 		TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
+		private TrainingFileFormFactory $trainingFileFormFactory,
 	) {
 		$this->trainingApplications = $trainingApplications;
 		$this->trainingDates = $trainingDates;
@@ -461,32 +462,24 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentFile(string $formName): TrainingFile
+	protected function createComponentFile(): Form
 	{
-		$form = new TrainingFile($this, $formName);
-		$form->onSuccess[] = [$this, 'submittedFile'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedFile(Form $form, ArrayHash $values): void
-	{
-		if ($values->file->isOk()) {
-			$name = $this->trainingFiles->addFile($this->training, $values->file, $this->applicationIdsAllowedFiles);
-			$this->flashMessage(
-				Html::el()->setText('Soubor ')
-					->addHtml(Html::el('code')->setText($name))
-					->addHtml(Html::el()->setText(' byl přidán')),
-			);
-		} else {
-			$this->flashMessage('Soubor nebyl vybrán nebo došlo k nějaké chybě při nahrávání', 'error');
-		}
-
-		$this->redirect($this->getAction(), $this->redirectParam);
+		return $this->trainingFileFormFactory->create(
+			function (?string $uploadedFilename): void {
+				if ($uploadedFilename !== null) {
+					$this->flashMessage(
+						Html::el()->setText('Soubor ')
+							->addHtml(Html::el('code')->setText($uploadedFilename))
+							->addHtml(Html::el()->setText(' byl přidán')),
+					);
+				} else {
+					$this->flashMessage('Soubor nebyl vybrán nebo došlo k nějaké chybě při nahrávání', 'error');
+				}
+				$this->redirect($this->getAction(), $this->redirectParam);
+			},
+			$this->training->start,
+			$this->applicationIdsAllowedFiles,
+		);
 	}
 
 
