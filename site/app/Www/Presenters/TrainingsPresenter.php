@@ -10,7 +10,7 @@ use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates;
-use MichalSpacekCz\Training\Files;
+use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
@@ -30,7 +30,7 @@ class TrainingsPresenter extends BasePresenter
 
 	private Dates $trainingDates;
 
-	private Files $trainingFiles;
+	private TrainingFiles $trainingFiles;
 
 	private Trainings $trainings;
 
@@ -59,7 +59,7 @@ class TrainingsPresenter extends BasePresenter
 		Texy $texyFormatter,
 		Applications $trainingApplications,
 		Dates $trainingDates,
-		Files $trainingFiles,
+		TrainingFiles $trainingFiles,
 		Trainings $trainings,
 		CompanyTrainings $companyTrainings,
 		Locales $trainingLocales,
@@ -284,7 +284,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$files = $this->trainingFiles->getFiles($application->applicationId);
 		$this->trainingApplications->setAccessTokenUsed($application);
-		if (!$files) {
+		if (count($files) === 0) {
 			throw new BadRequestException("No files for application id {$session->applicationId}");
 		}
 
