@@ -30,6 +30,7 @@ class TrainingFiles
 	{
 		$rows = $this->database->fetchAll(
 			'SELECT
+				f.added,
 				f.id_file AS fileId,
 				f.filename AS fileName,
 				d.start
@@ -59,6 +60,7 @@ class TrainingFiles
 		/** @var Row<mixed>|null $row */
 		$row = $this->database->fetch(
 			'SELECT
+				f.added,
 				f.id_file AS fileId,
 				f.filename AS fileName,
 				d.start

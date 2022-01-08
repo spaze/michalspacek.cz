@@ -21,6 +21,7 @@ class TrainingFileFactory
 			$row->fileId,
 			$row->fileName,
 			new SplFileInfo($this->storage->getFilesDir($row->start) . $row->fileName),
+			$row->added,
 		);
 	}
 
