@@ -69,7 +69,10 @@ class TrainingApplicationAdminFactory
 		$form->addSubmit('submit', 'Uložit');
 
 		$upcoming = $this->trainingDates->getPublicUpcoming();
-		$dates = $application->dateId ? [$application->dateId => $this->trainingDates->formatDateVenueForAdmin($application)] : [];
+		$dates = [];
+		if ($application->dateId) {
+			$dates[$application->dateId] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($application->dateId));
+		}
 		if (isset($upcoming[$application->trainingAction])) {
 			foreach ($upcoming[$application->trainingAction]->dates as $date) {
 				$dates[$date->dateId] = $this->trainingDates->formatDateVenueForAdmin($date);

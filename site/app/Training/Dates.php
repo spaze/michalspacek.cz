@@ -550,7 +550,7 @@ class Dates
 	{
 		return sprintf(
 			'%s, %s',
-			$this->netxtenHelpers->localeIntervalDay($date->start ?? $date->trainingStart, $date->end ?? $date->trainingEnd),
+			$this->netxtenHelpers->localeIntervalDay($date->start, $date->end),
 			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity,
 		);
 	}
