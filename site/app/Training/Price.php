@@ -8,7 +8,7 @@ use NumberFormatter;
 class Price
 {
 
-	private ?int $price;
+	private ?float $price;
 
 	private ?int $discount;
 
@@ -17,7 +17,7 @@ class Price
 	private ?float $priceVat;
 
 
-	public function __construct(?int $price, ?int $discount, ?float $vatRate, ?float $priceVat = null)
+	public function __construct(?float $price, ?int $discount, ?float $vatRate, ?float $priceVat = null)
 	{
 		$this->price = $price;
 		$this->discount = $discount;
@@ -26,7 +26,7 @@ class Price
 	}
 
 
-	public function getPrice(): ?int
+	public function getPrice(): ?float
 	{
 		return $this->price;
 	}

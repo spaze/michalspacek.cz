@@ -119,7 +119,7 @@ class TrainingApplicationAdminFactory
 				$values->companyTaxIdSet ? $values->companyTaxId : null,
 				$values->noteSet ? $values->note : null,
 				$values->source,
-				(trim($values->price) !== '' ? (int)$values->price : null),
+				(is_float($values->price) ? $values->price : null),
 				(trim($values->vatRate) !== '' ? $values->vatRate / 100 : null),
 				(is_float($values->priceVat) ? $values->priceVat : null),
 				(trim($values->discount) !== '' ? (int)$values->discount : null),
@@ -139,6 +139,8 @@ class TrainingApplicationAdminFactory
 	{
 		$form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
+			->setHtmlAttribute('step', 'any')
+			->addRule(Form::FLOAT)
 			->setHtmlAttribute('title', 'Po případné slevě');
 		$form->addText('vatRate', 'DPH:')
 			->setHtmlType('number');
