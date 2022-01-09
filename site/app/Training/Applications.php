@@ -507,7 +507,7 @@ class Applications
 		?string $companyTaxId,
 		?string $note,
 		string $source,
-		?int $price = null,
+		?float $price = null,
 		?float $vatRate = null,
 		?float $priceVat = null,
 		?int $discount = null,
