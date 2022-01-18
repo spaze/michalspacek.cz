@@ -1,0 +1,36 @@
+name: Checks security.txt
+
+on:
+  schedule:
+    - cron:  '37 13 * * *'
+
+jobs:
+  securitytxt:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "8.1"
+        uri:
+          - https://www.michalspacek.cz/.well-known/security.txt
+          - https://www.michalspacek.com/.well-known/security.txt
+          - https://upcwifikeys.com/.well-known/security.txt
+    steps:
+    - name: Set PHP version
+      run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - name: Install ext-gnupg
+      run: |
+        sudo add-apt-repository ppa:ondrej/php
+        sudo apt-get update
+        apt-fast install -y --no-install-recommends php${{ matrix.php-version }}-gnupg
+    - name: Install the checker
+      run: composer require spaze/security-txt:dev-main
+    - name: Check security.txt at ${{ matrix.uri }}
+      run: |
+        php \
+        vendor/spaze/security-txt/bin/checksecuritytxt.php \
+        ${{ matrix.uri }} \
+        10 \
+        --colors \
+        --strict
