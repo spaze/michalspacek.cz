@@ -641,7 +641,11 @@ class Talks
 					$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $removeFiles, $originalSlides[$slideNumber]->filename, $width, $height);
 					$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $removeFiles, $originalSlides[$slideNumber]->filenameAlternative, $width, $height);
 					if ($removeFiles) {
-						// TODO delete renamed files
+						foreach ($this->deleteFiles as $key => $value) {
+							if (unlink($value)) {
+								unset($this->deleteFiles[$key]);
+							};
+						}
 					}
 				} else {
 					$replace = $replaceAlternative = $slide->filename = $slide->filenameAlternative = null;
