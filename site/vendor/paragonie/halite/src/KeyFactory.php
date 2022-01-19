@@ -21,6 +21,40 @@ use ParagonIE\Halite\{
     Symmetric\EncryptionKey
 };
 use ParagonIE\HiddenString\HiddenString;
+use SodiumException;
+use Throwable;
+use TypeError;
+use const
+    SODIUM_CRYPTO_AUTH_KEYBYTES,
+    SODIUM_CRYPTO_BOX_SEEDBYTES,
+    SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
+    SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13,
+    SODIUM_CRYPTO_PWHASH_SALTBYTES,
+    SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
+    SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE,
+    SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE,
+    SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+    SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE,
+    SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE,
+    SODIUM_CRYPTO_SIGN_SEEDBYTES,
+    SODIUM_CRYPTO_STREAM_KEYBYTES;
+use function
+    file_get_contents,
+    file_put_contents,
+    hash_equals,
+    is_int,
+    is_readable,
+    random_bytes,
+    sodium_crypto_box_keypair,
+    sodium_crypto_box_publickey,
+    sodium_crypto_box_secretkey,
+    sodium_crypto_box_seed_keypair,
+    sodium_crypto_generichash,
+    sodium_crypto_pwhash,
+    sodium_crypto_sign_keypair,
+    sodium_crypto_sign_publickey,
+    sodium_crypto_sign_secretkey,
+    sodium_crypto_sign_seed_keypair;
 
 /**
  * Class KeyFactory
@@ -46,7 +80,7 @@ final class KeyFactory
     const SENSITIVE = 'sensitive';
 
     /**
-     * Generate an an authentication key (symmetric-key cryptography)
+     * Generate an authentication key (symmetric-key cryptography)
      *
      * @return AuthenticationKey
      * @throws CannotPerformOperation
@@ -57,8 +91,8 @@ final class KeyFactory
     {
         // @codeCoverageIgnoreStart
         try {
-            $secretKey = \random_bytes(\SODIUM_CRYPTO_AUTH_KEYBYTES);
-        } catch (\Throwable $ex) {
+            $secretKey = random_bytes(SODIUM_CRYPTO_AUTH_KEYBYTES);
+        } catch (Throwable $ex) {
             throw new CannotPerformOperation($ex->getMessage());
         }
         // @codeCoverageIgnoreEnd
@@ -68,19 +102,20 @@ final class KeyFactory
     }
     
     /**
-     * Generate an an encryption key (symmetric-key cryptography)
+     * Generate an encryption key (symmetric-key cryptography)
      *
      * @return EncryptionKey
+     *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \TypeError
+     * @throws TypeError
      */
     public static function generateEncryptionKey(): EncryptionKey
     {
         // @codeCoverageIgnoreStart
         try {
-            $secretKey = \random_bytes(\SODIUM_CRYPTO_STREAM_KEYBYTES);
-        } catch (\Throwable $ex) {
+            $secretKey = random_bytes(SODIUM_CRYPTO_STREAM_KEYBYTES);
+        } catch (Throwable $ex) {
             throw new CannotPerformOperation($ex->getMessage());
         }
         // @codeCoverageIgnoreEnd
@@ -92,23 +127,25 @@ final class KeyFactory
     /**
      * Generate a key pair for public key encryption
      *
-     * @return \ParagonIE\Halite\EncryptionKeyPair
+     * @return EncryptionKeyPair
      *
      * @throws InvalidKey
-     * @throws \TypeError
-     * @throws \SodiumException
+     * @throws TypeError
+     * @throws SodiumException
      */
     public static function generateEncryptionKeyPair(): EncryptionKeyPair
     {
         // Encryption keypair
-        $kp = \sodium_crypto_box_keypair();
-        $secretKey = \sodium_crypto_box_secretkey($kp);
+        $kp = sodium_crypto_box_keypair();
+        $secretKey = sodium_crypto_box_secretkey($kp);
+        $publicKey = sodium_crypto_box_publickey($kp);
         
         // Let's wipe our $kp variable
         Util::memzero($kp);
         return new EncryptionKeyPair(
             new EncryptionSecretKey(
-                new HiddenString($secretKey)
+                new HiddenString($secretKey),
+                new HiddenString($publicKey)
             )
         );
     }
@@ -117,21 +154,25 @@ final class KeyFactory
      * Generate a key pair for public key digital signatures
      *
      * @return SignatureKeyPair
+     *
+     * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function generateSignatureKeyPair(): SignatureKeyPair
     {
         // Encryption keypair
-        $kp = \sodium_crypto_sign_keypair();
-        $secretKey = \sodium_crypto_sign_secretkey($kp);
+        $kp = sodium_crypto_sign_keypair();
+        $secretKey = sodium_crypto_sign_secretkey($kp);
+        $publicKey = sodium_crypto_sign_publickey($kp);
         
         // Let's wipe our $kp variable
         Util::memzero($kp);
         return new SignatureKeyPair(
             new SignatureSecretKey(
-                new HiddenString($secretKey)
+                new HiddenString($secretKey),
+                new HiddenString($publicKey)
             )
         );
     }
@@ -150,8 +191,8 @@ final class KeyFactory
      * @throws InvalidKey
      * @throws InvalidSalt
      * @throws InvalidType
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function deriveAuthenticationKey(
         HiddenString $password,
@@ -161,15 +202,15 @@ final class KeyFactory
     ): AuthenticationKey {
         $kdfLimits = self::getSecurityLevels($level, $alg);
         // VERSION 2+ (argon2)
-        if (Binary::safeStrlen($salt) !== \SODIUM_CRYPTO_PWHASH_SALTBYTES) {
+        if (Binary::safeStrlen($salt) !== SODIUM_CRYPTO_PWHASH_SALTBYTES) {
             // @codeCoverageIgnoreStart
             throw new InvalidSalt(
-                'Expected ' . \SODIUM_CRYPTO_PWHASH_SALTBYTES . ' bytes, got ' . Binary::safeStrlen($salt)
+                'Expected ' . SODIUM_CRYPTO_PWHASH_SALTBYTES . ' bytes, got ' . Binary::safeStrlen($salt)
             );
             // @codeCoverageIgnoreEnd
         }
-        $secretKey = @\sodium_crypto_pwhash(
-            \SODIUM_CRYPTO_AUTH_KEYBYTES,
+        $secretKey = sodium_crypto_pwhash(
+            SODIUM_CRYPTO_AUTH_KEYBYTES,
             $password->getString(),
             $salt,
             $kdfLimits[0],
@@ -192,11 +233,12 @@ final class KeyFactory
      *                      (You can safely use the default)
      * 
      * @return EncryptionKey
+     *
      * @throws InvalidKey
      * @throws InvalidSalt
      * @throws InvalidType
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function deriveEncryptionKey(
         HiddenString $password,
@@ -206,15 +248,15 @@ final class KeyFactory
     ): EncryptionKey {
         $kdfLimits = self::getSecurityLevels($level, $alg);
         // VERSION 2+ (argon2)
-        if (Binary::safeStrlen($salt) !== \SODIUM_CRYPTO_PWHASH_SALTBYTES) {
+        if (Binary::safeStrlen($salt) !== SODIUM_CRYPTO_PWHASH_SALTBYTES) {
             // @codeCoverageIgnoreStart
             throw new InvalidSalt(
-                'Expected ' . \SODIUM_CRYPTO_PWHASH_SALTBYTES . ' bytes, got ' . Binary::safeStrlen($salt)
+                'Expected ' . SODIUM_CRYPTO_PWHASH_SALTBYTES . ' bytes, got ' . Binary::safeStrlen($salt)
             );
             // @codeCoverageIgnoreEnd
         }
-        $secretKey = \sodium_crypto_pwhash(
-            \SODIUM_CRYPTO_STREAM_KEYBYTES,
+        $secretKey = sodium_crypto_pwhash(
+            SODIUM_CRYPTO_STREAM_KEYBYTES,
             $password->getString(),
             $salt,
             $kdfLimits[0],
@@ -240,8 +282,8 @@ final class KeyFactory
      * @throws InvalidKey
      * @throws InvalidSalt
      * @throws InvalidType
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function deriveEncryptionKeyPair(
         HiddenString $password,
@@ -251,30 +293,32 @@ final class KeyFactory
     ): EncryptionKeyPair {
         $kdfLimits = self::getSecurityLevels($level, $alg);
         // VERSION 2+ (argon2)
-        if (Binary::safeStrlen($salt) !== \SODIUM_CRYPTO_PWHASH_SALTBYTES) {
+        if (Binary::safeStrlen($salt) !== SODIUM_CRYPTO_PWHASH_SALTBYTES) {
             // @codeCoverageIgnoreStart
             throw new InvalidSalt(
-                'Expected ' . \SODIUM_CRYPTO_PWHASH_SALTBYTES . ' bytes, got ' . Binary::safeStrlen($salt)
+                'Expected ' . SODIUM_CRYPTO_PWHASH_SALTBYTES . ' bytes, got ' . Binary::safeStrlen($salt)
             );
             // @codeCoverageIgnoreEnd
         }
         // Diffie Hellman key exchange key pair
-        $seed = @\sodium_crypto_pwhash(
-            \SODIUM_CRYPTO_BOX_SEEDBYTES,
+        $seed = sodium_crypto_pwhash(
+            SODIUM_CRYPTO_BOX_SEEDBYTES,
             $password->getString(),
             $salt,
             $kdfLimits[0],
             $kdfLimits[1],
             $alg
         );
-        $keyPair = \sodium_crypto_box_seed_keypair($seed);
-        $secretKey = \sodium_crypto_box_secretkey($keyPair);
+        $keyPair = sodium_crypto_box_seed_keypair($seed);
+        $secretKey = sodium_crypto_box_secretkey($keyPair);
+        $publicKey = sodium_crypto_box_publickey($keyPair);
         
         // Let's wipe our $kp variable
         Util::memzero($keyPair);
         return new EncryptionKeyPair(
             new EncryptionSecretKey(
-                new HiddenString($secretKey)
+                new HiddenString($secretKey),
+                new HiddenString($publicKey)
             )
         );
     }
@@ -290,11 +334,11 @@ final class KeyFactory
      *
      * @return SignatureKeyPair
      *
+     * @throws CannotPerformOperation
      * @throws InvalidKey
      * @throws InvalidSalt
      * @throws InvalidType
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
      */
     public static function deriveSignatureKeyPair(
         HiddenString $password,
@@ -304,30 +348,32 @@ final class KeyFactory
     ): SignatureKeyPair {
         $kdfLimits = self::getSecurityLevels($level, $alg);
         // VERSION 2+ (argon2)
-        if (Binary::safeStrlen($salt) !== \SODIUM_CRYPTO_PWHASH_SALTBYTES) {
+        if (Binary::safeStrlen($salt) !== SODIUM_CRYPTO_PWHASH_SALTBYTES) {
             // @codeCoverageIgnoreStart
             throw new InvalidSalt(
-                'Expected ' . \SODIUM_CRYPTO_PWHASH_SALTBYTES . ' bytes, got ' . Binary::safeStrlen($salt)
+                'Expected ' . SODIUM_CRYPTO_PWHASH_SALTBYTES . ' bytes, got ' . Binary::safeStrlen($salt)
             );
             // @codeCoverageIgnoreEnd
         }
         // Digital signature keypair
-        $seed = @\sodium_crypto_pwhash(
-            \SODIUM_CRYPTO_SIGN_SEEDBYTES,
+        $seed = sodium_crypto_pwhash(
+            SODIUM_CRYPTO_SIGN_SEEDBYTES,
             $password->getString(),
             $salt,
             $kdfLimits[0],
             $kdfLimits[1],
             $alg
         );
-        $keyPair = \sodium_crypto_sign_seed_keypair($seed);
-        $secretKey = \sodium_crypto_sign_secretkey($keyPair);
+        $keyPair = sodium_crypto_sign_seed_keypair($seed);
+        $secretKey = sodium_crypto_sign_secretkey($keyPair);
+        $publicKey = sodium_crypto_sign_publickey($keyPair);
         
         // Let's wipe our $kp variable
         Util::memzero($keyPair);
         return new SignatureKeyPair(
             new SignatureSecretKey(
-                new HiddenString($secretKey)
+                new HiddenString($secretKey),
+                new HiddenString($publicKey)
             )
         );
     }
@@ -337,7 +383,9 @@ final class KeyFactory
      *
      * @param string $level
      * @param int $alg
+     *
      * @return int[]
+     *
      * @throws InvalidType
      * @codeCoverageIgnore
      */
@@ -352,8 +400,8 @@ final class KeyFactory
                     return [4, 33554432];
                 }
                 return [
-                    \SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
-                    \SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
+                    SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+                    SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
                 ];
             case self::MODERATE:
                 if ($alg === SODIUM_CRYPTO_PWHASH_ALG_ARGON2I13) {
@@ -361,8 +409,8 @@ final class KeyFactory
                     return [6, 134217728];
                 }
                 return [
-                    \SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE,
-                    \SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE
+                    SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE,
+                    SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE
                 ];
             case self::SENSITIVE:
                 if ($alg === SODIUM_CRYPTO_PWHASH_ALG_ARGON2I13) {
@@ -370,8 +418,8 @@ final class KeyFactory
                     return [8, 536870912];
                 }
                 return [
-                    \SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE,
-                    \SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE
+                    SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE,
+                    SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE
                 ];
             default:
                 throw new InvalidType(
@@ -384,11 +432,12 @@ final class KeyFactory
      * Load a symmetric authentication key from a string
      *
      * @param HiddenString $keyData
+     *
      * @return AuthenticationKey
      *
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function importAuthenticationKey(HiddenString $keyData): AuthenticationKey
     {
@@ -405,11 +454,12 @@ final class KeyFactory
      * Load a symmetric encryption key from a string
      *
      * @param HiddenString $keyData
+     *
      * @return EncryptionKey
      *
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function importEncryptionKey(HiddenString $keyData): EncryptionKey
     {
@@ -426,11 +476,12 @@ final class KeyFactory
      * Load, specifically, an encryption public key from a string
      *
      * @param HiddenString $keyData
+     *
      * @return EncryptionPublicKey
      *
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function importEncryptionPublicKey(HiddenString $keyData): EncryptionPublicKey
     {
@@ -447,11 +498,12 @@ final class KeyFactory
      * Load, specifically, an encryption secret key from a string
      *
      * @param HiddenString $keyData
+     *
      * @return EncryptionSecretKey
      *
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function importEncryptionSecretKey(HiddenString $keyData): EncryptionSecretKey
     {
@@ -468,11 +520,12 @@ final class KeyFactory
      * Load, specifically, a signature public key from a string
      *
      * @param HiddenString $keyData
+     *
      * @return SignaturePublicKey
      *
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function importSignaturePublicKey(HiddenString $keyData): SignaturePublicKey
     {
@@ -489,11 +542,12 @@ final class KeyFactory
      * Load, specifically, a signature secret key from a string
      *
      * @param HiddenString $keyData
+     *
      * @return SignatureSecretKey
      *
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function importSignatureSecretKey(HiddenString $keyData): SignatureSecretKey
     {
@@ -510,11 +564,12 @@ final class KeyFactory
      * Load an asymmetric encryption key pair from a string
      *
      * @param HiddenString $keyData
+     *
      * @return EncryptionKeyPair
      *
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function importEncryptionKeyPair(HiddenString $keyData): EncryptionKeyPair
     {
@@ -535,9 +590,10 @@ final class KeyFactory
      * @param HiddenString $keyData
      * @return SignatureKeyPair
      *
+     * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function importSignatureKeyPair(HiddenString $keyData): SignatureKeyPair
     {
@@ -556,17 +612,18 @@ final class KeyFactory
      * Load a symmetric authentication key from a file
      * 
      * @param string $filePath
+     *
      * @return AuthenticationKey
      *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      * @codeCoverageIgnore
      */
     public static function loadAuthenticationKey(string $filePath): AuthenticationKey
     {
-        if (!\is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new CannotPerformOperation(
                 'Cannot read keyfile: '. $filePath
             );
@@ -580,17 +637,18 @@ final class KeyFactory
      * Load a symmetric encryption key from a file
      * 
      * @param string $filePath
+     *
      * @return EncryptionKey
      *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      * @codeCoverageIgnore
      */
     public static function loadEncryptionKey(string $filePath): EncryptionKey
     {
-        if (!\is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new CannotPerformOperation(
                 'Cannot read keyfile: '. $filePath
             );
@@ -604,17 +662,18 @@ final class KeyFactory
      * Load, specifically, an encryption public key from a file
      * 
      * @param string $filePath
+     *
      * @return EncryptionPublicKey
      *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      * @codeCoverageIgnore
      */
     public static function loadEncryptionPublicKey(string $filePath): EncryptionPublicKey
     {
-        if (!\is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new CannotPerformOperation(
                 'Cannot read keyfile: '. $filePath
             );
@@ -628,17 +687,18 @@ final class KeyFactory
      * Load, specifically, an encryption public key from a file
      * 
      * @param string $filePath
+     *
      * @return EncryptionSecretKey
      *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      * @codeCoverageIgnore
      */
     public static function loadEncryptionSecretKey(string $filePath): EncryptionSecretKey
     {
-        if (!\is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new CannotPerformOperation(
                 'Cannot read keyfile: '. $filePath
             );
@@ -652,17 +712,18 @@ final class KeyFactory
      * Load, specifically, a signature public key from a file
      * 
      * @param string $filePath
+     *
      * @return SignaturePublicKey
      *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      * @codeCoverageIgnore
      */
     public static function loadSignaturePublicKey(string $filePath): SignaturePublicKey
     {
-        if (!\is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new CannotPerformOperation(
                 'Cannot read keyfile: '. $filePath
             );
@@ -676,17 +737,18 @@ final class KeyFactory
      * Load, specifically, a signature secret key from a file
      * 
      * @param string $filePath
+     *
      * @return SignatureSecretKey
      *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      * @codeCoverageIgnore
      */
     public static function loadSignatureSecretKey(string $filePath): SignatureSecretKey
     {
-        if (!\is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new CannotPerformOperation(
                 'Cannot read keyfile: '. $filePath
             );
@@ -700,17 +762,18 @@ final class KeyFactory
      * Load an asymmetric encryption key pair from a file
      *
      * @param string $filePath
+     *
      * @return EncryptionKeyPair
      *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      * @codeCoverageIgnore
      */
     public static function loadEncryptionKeyPair(string $filePath): EncryptionKeyPair
     {
-        if (!\is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new CannotPerformOperation(
                 'Cannot read keyfile: '. $filePath
             );
@@ -726,17 +789,18 @@ final class KeyFactory
      * Load an asymmetric signature key pair from a file
      * 
      * @param string $filePath
+     *
      * @return SignatureKeyPair
      *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      * @codeCoverageIgnore
      */
     public static function loadSignatureKeyPair(string $filePath): SignatureKeyPair
     {
-        if (!\is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             throw new CannotPerformOperation(
                 'Cannot read keyfile: '. $filePath
             );
@@ -751,33 +815,32 @@ final class KeyFactory
     /**
      * Export a cryptography key to a string (with a checksum)
      *
-     * @param object $key
+     * @param Key|KeyPair $key
+     *
      * @return HiddenString
      *
      * @throws CannotPerformOperation
      * @throws InvalidType
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
-    public static function export($key): HiddenString
+    public static function export(Key|KeyPair $key): HiddenString
     {
         if ($key instanceof KeyPair) {
             return self::export(
                 $key->getSecretKey()
             );
-        } elseif ($key instanceof Key) {
-            return new HiddenString(
-                Hex::encode(
-                    Halite::HALITE_VERSION_KEYS . $key->getRawKeyMaterial() .
-                    \sodium_crypto_generichash(
-                        Halite::HALITE_VERSION_KEYS . $key->getRawKeyMaterial(),
-                        '',
-                        \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
-                    )
-                )
-            );
         }
-        throw new \TypeError('Expected a Key.');
+        return new HiddenString(
+            Hex::encode(
+                Halite::HALITE_VERSION_KEYS . $key->getRawKeyMaterial() .
+                sodium_crypto_generichash(
+                    Halite::HALITE_VERSION_KEYS . $key->getRawKeyMaterial(),
+                    '',
+                    SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
+                )
+            )
+        );
     }
 
     /**
@@ -785,11 +848,13 @@ final class KeyFactory
      *
      * @param Key|KeyPair $key
      * @param string $filename
+     *
      * @return bool
-     * @throws \SodiumException
-     * @throws \TypeError
+     *
+     * @throws SodiumException
+     * @throws TypeError
      */
-    public static function save($key, string $filename = ''): bool
+    public static function save(Key|KeyPair $key, string $filename = ''): bool
     {
         if ($key instanceof KeyPair) {
             return self::saveKeyFile(
@@ -804,15 +869,17 @@ final class KeyFactory
      * Read a key from a file, verify its checksum
      * 
      * @param string $filePath
+     *
      * @return HiddenString
+     *
      * @throws CannotPerformOperation
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     protected static function loadKeyFile(string $filePath): HiddenString
     {
-        $fileData = \file_get_contents($filePath);
+        $fileData = file_get_contents($filePath);
         if ($fileData === false) {
             // @codeCoverageIgnoreStart
             throw new CannotPerformOperation(
@@ -832,10 +899,12 @@ final class KeyFactory
      * checksum)
      * 
      * @param string $data
+     *
      * @return string
+     *
      * @throws InvalidKey
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     public static function getKeyDataFromString(string $data): string
     {
@@ -843,19 +912,19 @@ final class KeyFactory
         $keyData = Binary::safeSubstr(
             $data,
             Halite::VERSION_TAG_LEN,
-            -\SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
+            -SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
         );
         $checksum = Binary::safeSubstr(
             $data,
-            -\SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
-            \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
+            -SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
+            SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
         );
-        $calc = \sodium_crypto_generichash(
+        $calc = sodium_crypto_generichash(
             $versionTag . $keyData,
             '',
-            \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
+            SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
         );
-        if (!\hash_equals($calc, $checksum)) {
+        if (!hash_equals($calc, $checksum)) {
             // @codeCoverageIgnoreStart
             throw new InvalidKey(
                 'Checksum validation fail'
@@ -876,24 +945,24 @@ final class KeyFactory
      * @param string $keyData
      * @return bool
      *
-     * @throws \SodiumException
-     * @throws \TypeError
+     * @throws SodiumException
+     * @throws TypeError
      */
     protected static function saveKeyFile(
         string $filePath,
         string $keyData
     ): bool {
-        $saved = \file_put_contents(
+        $saved = file_put_contents(
             $filePath,
             Hex::encode(
                 Halite::HALITE_VERSION_KEYS . $keyData .
-                \sodium_crypto_generichash(
+                sodium_crypto_generichash(
                     Halite::HALITE_VERSION_KEYS . $keyData,
                     '',
-                    \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
+                    SODIUM_CRYPTO_GENERICHASH_BYTES_MAX
                 )
             )
         );
-        return $saved !== false;
+        return is_int($saved );
     }
 }

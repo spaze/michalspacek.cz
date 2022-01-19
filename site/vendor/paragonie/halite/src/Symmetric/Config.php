@@ -6,13 +6,16 @@ use ParagonIE\ConstantTime\Binary;
 use ParagonIE\Halite\Alerts\InvalidMessage;
 use ParagonIE\Halite\{
     Config as BaseConfig,
-    Halite
+    Halite,
+    Util
 };
+use const
+    SODIUM_CRYPTO_BOX_PUBLICKEYBYTES,
+    SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
+    SODIUM_CRYPTO_STREAM_NONCEBYTES;
 
 /**
  * Class Config
- *
- * Secure encrypted cookies
  *
  * This library makes heavy use of return-type declarations,
  * which are a PHP 7 only feature. Read more about them here:
@@ -32,6 +35,7 @@ final class Config extends BaseConfig
      *
      * @param string $header
      * @param string $mode
+     *
      * @return self
      *
      * @throws InvalidMessage
@@ -45,13 +49,13 @@ final class Config extends BaseConfig
                 'Invalid version tag'
             );
         }
-        if (\ord($header[0]) !== 49 || \ord($header[1]) !== 66) {
+        if (Util::chrToInt($header[0]) !== 49 || Util::chrToInt($header[1]) !== 66) {
             throw new InvalidMessage(
                 'Invalid version tag'
             );
         }
-        $major = \ord($header[2]);
-        $minor = \ord($header[3]);
+        $major = Util::chrToInt($header[2]);
+        $minor = Util::chrToInt($header[3]);
         if ($mode === 'encrypt') {
             return new Config(
                 self::getConfigEncrypt($major, $minor)
@@ -71,21 +75,44 @@ final class Config extends BaseConfig
      * 
      * @param int $major
      * @param int $minor
+     *
      * @return array
+     *
      * @throws InvalidMessage
      */
     public static function getConfigEncrypt(int $major, int $minor): array
     {
-        if ($major === 3 || $major === 4) {
+        if ($major === 5) {
             switch ($minor) {
                 case 0:
                     return [
                         'ENCODING' => Halite::ENCODE_BASE64URLSAFE,
                         'SHORTEST_CIPHERTEXT_LENGTH' => 124,
-                        'NONCE_BYTES' => \SODIUM_CRYPTO_STREAM_NONCEBYTES,
+                        'NONCE_BYTES' => SODIUM_CRYPTO_STREAM_NONCEBYTES,
                         'HKDF_SALT_LEN' => 32,
+                        'ENC_ALGO' => 'XChaCha20',
+                        'USE_PAE' => true,
                         'MAC_ALGO' => 'BLAKE2b',
-                        'MAC_SIZE' => \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
+                        'MAC_SIZE' => SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
+                        'HKDF_USE_INFO' => true,
+                        'HKDF_SBOX' => 'Halite|EncryptionKey',
+                        'HKDF_AUTH' => 'AuthenticationKeyFor_|Halite'
+                    ];
+            }
+        }
+        if ($major === 4 || $major === 3) {
+            switch ($minor) {
+                case 0:
+                    return [
+                        'ENCODING' => Halite::ENCODE_BASE64URLSAFE,
+                        'SHORTEST_CIPHERTEXT_LENGTH' => 124,
+                        'NONCE_BYTES' => SODIUM_CRYPTO_STREAM_NONCEBYTES,
+                        'HKDF_SALT_LEN' => 32,
+                        'ENC_ALGO' => 'XSalsa20',
+                        'USE_PAE' => false,
+                        'MAC_ALGO' => 'BLAKE2b',
+                        'MAC_SIZE' => SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
+                        'HKDF_USE_INFO' => false,
                         'HKDF_SBOX' => 'Halite|EncryptionKey',
                         'HKDF_AUTH' => 'AuthenticationKeyFor_|Halite'
                     ];
@@ -101,19 +128,23 @@ final class Config extends BaseConfig
      * 
      * @param int $major
      * @param int $minor
+     *
      * @return array
+     *
      * @throws InvalidMessage
      */
     public static function getConfigAuth(int $major, int $minor): array
     {
-        if ($major === 3 || $major === 4) {
+        if ($major === 4 || $major === 5) {
             switch ($minor) {
                 case 0:
                     return [
+                        'USE_PAE' => $major >= 5,
                         'HKDF_SALT_LEN' => 32,
                         'MAC_ALGO' => 'BLAKE2b',
-                        'MAC_SIZE' => \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
-                        'PUBLICKEY_BYTES' => \SODIUM_CRYPTO_BOX_PUBLICKEYBYTES,
+                        'MAC_SIZE' => SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
+                        'PUBLICKEY_BYTES' => SODIUM_CRYPTO_BOX_PUBLICKEYBYTES,
+                        'HKDF_USE_INFO' => $major > 4,
                         'HKDF_SBOX' => 'Halite|EncryptionKey',
                         'HKDF_AUTH' => 'AuthenticationKeyFor_|Halite'
                     ];
