@@ -231,7 +231,7 @@ class RouterFactory
 	private function addToRouter(Router $route, string $locale, string $host): void
 	{
 		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
-			$this->currentLocaleRouteList[$locale][] = $route;
+			$this->currentLocaleRouteList[$locale]->add($route);
 		} else {
 			$this->currentRouteList->add($route);
 		}
