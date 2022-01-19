@@ -25,15 +25,8 @@ use ParagonIE\Halite\Asymmetric\{
  */
 class KeyPair
 {
-    /**
-     * @var SecretKey
-     */
-    protected $secretKey;
-
-    /**
-     * @var PublicKey
-     */
-    protected $publicKey;
+    protected SecretKey $secretKey;
+    protected PublicKey $publicKey;
 
     /**
      * Hide this from var_dump(), etc.

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6911d364c71971ce3496e72eec6b1aaa",
+    "content-hash": "c70868a4061131ee85b3fd34a9d30029",
     "packages": [
         {
             "name": "contributte/translation",
@@ -1485,16 +1485,16 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.4.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "f34c2b11eb9d2c9318e13540a1dbc2a3afbd939c"
+                "reference": "9229e15f2e6ba772f0c55dd6986c563b937170a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/f34c2b11eb9d2c9318e13540a1dbc2a3afbd939c",
-                "reference": "f34c2b11eb9d2c9318e13540a1dbc2a3afbd939c",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/9229e15f2e6ba772f0c55dd6986c563b937170a8",
+                "reference": "9229e15f2e6ba772f0c55dd6986c563b937170a8",
                 "shasum": ""
             },
             "require": {
@@ -1548,31 +1548,32 @@
                 "issues": "https://github.com/paragonie/constant_time_encoding/issues",
                 "source": "https://github.com/paragonie/constant_time_encoding"
             },
-            "time": "2020-12-06T15:14:20+00:00"
+            "time": "2022-01-17T05:32:27+00:00"
         },
         {
             "name": "paragonie/halite",
-            "version": "v4.8.0",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/halite.git",
-                "reference": "7596d5cb25154092b524c34cb9ce2201db612ffc"
+                "reference": "51453605277b04bc920a9600209856251f08a932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/halite/zipball/7596d5cb25154092b524c34cb9ce2201db612ffc",
-                "reference": "7596d5cb25154092b524c34cb9ce2201db612ffc",
+                "url": "https://api.github.com/repos/paragonie/halite/zipball/51453605277b04bc920a9600209856251f08a932",
+                "reference": "51453605277b04bc920a9600209856251f08a932",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "paragonie/constant_time_encoding": "^2",
                 "paragonie/hidden-string": "^1|^2",
-                "paragonie/sodium_compat": "^1.15",
-                "php": "^7.2|^8"
+                "paragonie/sodium_compat": "^1.17",
+                "php": "^8"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8|^9",
-                "vimeo/psalm": "^3|^4"
+                "phpunit/phpunit": "^9",
+                "vimeo/psalm": "^4"
             },
             "type": "library",
             "autoload": {
@@ -1616,9 +1617,9 @@
             "support": {
                 "docs": "https://github.com/paragonie/halite/tree/master/doc",
                 "issues": "https://github.com/paragonie/halite/issues",
-                "source": "https://github.com/paragonie/halite/tree/v4.8.0"
+                "source": "https://github.com/paragonie/halite/tree/v5.0.0"
             },
-            "time": "2021-04-18T19:24:56+00:00"
+            "time": "2022-01-19T07:35:42+00:00"
         },
         {
             "name": "paragonie/hidden-string",
@@ -1932,28 +1933,28 @@
         },
         {
             "name": "spaze/encryption",
-            "version": "v0.4.0",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/encryption.git",
-                "reference": "361c185ee62726202e18a347b64a498671dc65f7"
+                "reference": "e3455328a0d534612219a01cf61388bee6906c33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/encryption/zipball/361c185ee62726202e18a347b64a498671dc65f7",
-                "reference": "361c185ee62726202e18a347b64a498671dc65f7",
+                "url": "https://api.github.com/repos/spaze/encryption/zipball/e3455328a0d534612219a01cf61388bee6906c33",
+                "reference": "e3455328a0d534612219a01cf61388bee6906c33",
                 "shasum": ""
             },
             "require": {
-                "paragonie/halite": "^4.5",
-                "paragonie/hidden-string": "^1 || ^2",
-                "php": "^7.2 || ^8.0"
+                "paragonie/halite": "^5.0",
+                "paragonie/hidden-string": "^2.0",
+                "php": "^8.0"
             },
             "require-dev": {
                 "nette/tester": "^2.4",
                 "php-parallel-lint/php-console-highlighter": "^0.5.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan": "^0.12.59",
+                "phpstan/phpstan": "^1.4",
                 "spaze/coding-standard": "^0.0"
             },
             "type": "library",
@@ -1976,9 +1977,9 @@
             "description": "Various encryption helpers, uses Halite (which uses Sodium) for cryptography",
             "support": {
                 "issues": "https://github.com/spaze/encryption/issues",
-                "source": "https://github.com/spaze/encryption/tree/v0.4.0"
+                "source": "https://github.com/spaze/encryption/tree/v1.0.0"
             },
-            "time": "2021-04-14T01:29:40+00:00"
+            "time": "2022-01-19T14:01:44+00:00"
         },
         {
             "name": "spaze/feed-exports",
@@ -3065,16 +3066,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.3.3",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "151a51f6149855785fbd883e79768c0abc96b75f"
+                "reference": "1dd8f3e40bf7aa30031a75c65cece99220a161b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/151a51f6149855785fbd883e79768c0abc96b75f",
-                "reference": "151a51f6149855785fbd883e79768c0abc96b75f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1dd8f3e40bf7aa30031a75c65cece99220a161b8",
+                "reference": "1dd8f3e40bf7aa30031a75c65cece99220a161b8",
                 "shasum": ""
             },
             "require": {
@@ -3090,7 +3091,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -3105,7 +3106,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.3.3"
+                "source": "https://github.com/phpstan/phpstan/tree/1.4.2"
             },
             "funding": [
                 {
@@ -3125,7 +3126,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-07T09:49:03+00:00"
+            "time": "2022-01-18T16:09:11+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -3247,12 +3248,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "11696ae4d8970456cbd1919c17e6bb2ddb63553a"
+                "reference": "38da7ef14348ff26d7c415c4ed18b82db07fe199"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/11696ae4d8970456cbd1919c17e6bb2ddb63553a",
-                "reference": "11696ae4d8970456cbd1919c17e6bb2ddb63553a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/38da7ef14348ff26d7c415c4ed18b82db07fe199",
+                "reference": "38da7ef14348ff26d7c415c4ed18b82db07fe199",
                 "shasum": ""
             },
             "conflict": {
@@ -3315,7 +3316,7 @@
                 "doctrine/mongodb-odm": ">=1,<1.0.2",
                 "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
                 "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1|>=2.8.3,<2.8.4",
-                "dolibarr/dolibarr": "<14|>= 3.3.beta1, < 13.0.2",
+                "dolibarr/dolibarr": "<=14.0.4|>= 3.3.beta1, < 13.0.2",
                 "dompdf/dompdf": ">=0.6,<0.6.2",
                 "drupal/core": ">=7,<7.80|>=8,<8.9.16|>=9,<9.1.12|>=9.2,<9.2.4",
                 "drupal/drupal": ">=7,<7.80|>=8,<8.9.16|>=9,<9.1.12|>=9.2,<9.2.4",
@@ -3441,7 +3442,7 @@
                 "october/cms": "= 1.1.1|= 1.0.471|= 1.0.469|>=1.0.319,<1.0.469",
                 "october/october": ">=1.0.319,<1.0.466|>=2.1,<2.1.12",
                 "october/rain": "<1.0.472|>=1.1,<1.1.2",
-                "october/system": "<1.0.472|>=1.1.1,<1.1.5|>=2.1,<2.1.12",
+                "october/system": "<1.0.473|>=1.1,<1.1.6|>=2.1,<2.1.12",
                 "onelogin/php-saml": "<2.10.4",
                 "oneup/uploader-bundle": "<1.9.3|>=2,<2.1.5",
                 "opencart/opencart": "<=3.0.3.2",
@@ -3449,7 +3450,7 @@
                 "openmage/magento-lts": "<19.4.15|>=20,<20.0.13",
                 "orchid/platform": ">=9,<9.4.4",
                 "oro/crm": ">=1.7,<1.7.4|>=3.1,<4.1.17|>=4.2,<4.2.7",
-                "oro/platform": ">=1.7,<1.7.4|>=3.1,<3.1.21|>=4.1,<4.1.14|>=4.2,<4.2.8",
+                "oro/platform": ">=1.7,<1.7.4|>=3.1,<3.1.29|>=4.1,<4.1.17|>=4.2,<4.2.8",
                 "padraic/humbug_get_contents": "<1.1.2",
                 "pagarme/pagarme-php": ">=0,<3",
                 "pagekit/pagekit": "<=1.0.18",
@@ -3472,7 +3473,7 @@
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
                 "pimcore/pimcore": "<10.2.7",
-                "pocketmine/pocketmine-mp": "<4.0.5",
+                "pocketmine/pocketmine-mp": "<4.0.6",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/contactform": ">1.0.1,<4.3",
@@ -3520,7 +3521,7 @@
                 "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
                 "simplito/elliptic-php": "<1.0.6",
                 "slim/slim": "<2.6",
-                "smarty/smarty": "<3.1.39",
+                "smarty/smarty": "<3.1.43|>=4,<4.0.3",
                 "snipe/snipe-it": "<5.3.5",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
@@ -3681,7 +3682,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-08T00:53:14+00:00"
+            "time": "2022-01-14T21:13:43+00:00"
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
