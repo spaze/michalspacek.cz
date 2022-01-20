@@ -38,8 +38,10 @@ class CertificatesApiClient
 			__METHOD__,
 			[
 				'method' => 'POST',
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
 				'content' => $this->getPostData(),
+			],
+			[
+				'Content-type' => 'application/x-www-form-urlencoded',
 			],
 		));
 		if (!$json) {

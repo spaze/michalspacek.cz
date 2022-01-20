@@ -5,6 +5,8 @@ namespace MichalSpacekCz\Tls;
 
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\Http\HttpStreamContext;
+use MichalSpacekCz\Net\DnsResolver;
+use MichalSpacekCz\Net\Exceptions\DnsGetRecordException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 
@@ -14,7 +16,27 @@ class CertificateGatherer
 	public function __construct(
 		private CertificateFactory $certificateFactory,
 		private HttpStreamContext $httpStreamContext,
+		private DnsResolver $dnsResolver,
 	) {
+	}
+
+
+	/**
+	 * @param string $hostname
+	 * @return array<string, Certificate>
+	 * @throws CannotParseDateTimeException
+	 * @throws CertificateException
+	 * @throws OpenSslException
+	 * @throws DnsGetRecordException
+	 */
+	public function fetchCertificates(string $hostname): array
+	{
+		$certificates = [];
+		$records = $this->dnsResolver->getRecords($hostname, DNS_A | DNS_AAAA);
+		foreach ($records as $record) {
+			$certificates[$record->getIpv6() ?? $record->getIp()] = $this->fetchCertificate($hostname, $record->getIp() ?? null, $record->getIpv6() ?? null);
+		}
+		return $certificates;
 	}
 
 
@@ -23,9 +45,9 @@ class CertificateGatherer
 	 * @throws CertificateException
 	 * @throws CannotParseDateTimeException
 	 */
-	public function fetchCertificate(string $hostname): Certificate
+	private function fetchCertificate(string $hostname, ?string $ipv4, ?string $ipv6): Certificate
 	{
-		$url = "https://{$hostname}/";
+		$url = 'https://' . ($ipv6 ? "[{$ipv6}]" : $ipv4) . '/';
 		$fp = fopen($url, 'r', context: $this->httpStreamContext->create(
 			__METHOD__,
 			[
@@ -33,7 +55,11 @@ class CertificateGatherer
 				'follow_location' => 0,
 			],
 			[
+				'Host' => $hostname,
+			],
+			[
 				'capture_peer_cert' => true,
+				'peer_name' => $hostname,
 			],
 		));
 		if (!$fp) {
