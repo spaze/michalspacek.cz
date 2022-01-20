@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Bin;
 
 use MichalSpacekCz\Application\Bootstrap;
 use MichalSpacekCz\Tls\CertificateMonitor;
+use Nette\Utils\Arrays;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -15,4 +16,4 @@ require $siteDir . '/vendor/autoload.php';
 $bootstrap = new Bootstrap($siteDir);
 /** @var CertificateMonitor $certificateMonitor */
 $certificateMonitor = $bootstrap->bootCli()->getByType(CertificateMonitor::class);
-$certificateMonitor->run();
+$certificateMonitor->run(!Arrays::contains($_SERVER['argv'], '--no-ipv6'));
