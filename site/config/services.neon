@@ -130,6 +130,7 @@ services:
 	formSpam: MichalSpacekCz\Training\FormSpam
 	formDataLogger: MichalSpacekCz\Training\FormDataLogger
 	consoleColor: JakubOnderka\PhpConsoleColor\ConsoleColor
+	dnsResolver: MichalSpacekCz\Net\DnsResolver
 
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory

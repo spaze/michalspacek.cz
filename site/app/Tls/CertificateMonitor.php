@@ -25,7 +25,7 @@ class CertificateMonitor
 		try {
 			// Not running in parallel because those sites are hosted on just a few tiny servers
 			foreach ($this->certificatesApiClient->getLoggedCertificates() as $loggedCertificate) {
-				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificate($loggedCertificate->getCommonName()));
+				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificates($loggedCertificate->getCommonName()));
 			}
 			exit($this->hasErrors ? 1 : 0);
 		} catch (Exception $e) {
@@ -35,15 +35,29 @@ class CertificateMonitor
 	}
 
 
-	private function compareCertificates(Certificate $loggedCertificate, Certificate $serverCertificate): void
+	/**
+	 * @param Certificate $loggedCertificate
+	 * @param array<string, Certificate> $serverCertificates
+	 * @return void
+	 */
+	private function compareCertificates(Certificate $loggedCertificate, array $serverCertificates): void
+	{
+		foreach ($serverCertificates as $ipAddress => $serverCertificate) {
+			$this->compareCertificate($loggedCertificate, $serverCertificate, $ipAddress);
+		}
+	}
+
+
+	private function compareCertificate(Certificate $loggedCertificate, Certificate $serverCertificate, string $ipAddress): void
 	{
 		$error = false;
 		if ($loggedCertificate->getNotAfter()->getTimestamp() !== $serverCertificate->getNotAfter()->getTimestamp()) {
 			$error = true;
 			$this->error($serverCertificate, sprintf(
-				"Logged certificate's notAfter (%s, %s) doesn't match server certificate's notAfter (%s, %s)",
+				"Logged certificate's notAfter (%s, %s) doesn't match %s certificate's notAfter (%s, %s)",
 				$loggedCertificate->getNotAfter()->format(DATE_RFC3339),
 				$this->getExpiryDays($loggedCertificate),
+				$ipAddress,
 				$serverCertificate->getNotAfter()->format(DATE_RFC3339),
 				$this->getExpiryDays($serverCertificate),
 			));
@@ -51,7 +65,8 @@ class CertificateMonitor
 		if ($serverCertificate->isExpiringSoon()) {
 			$error = true;
 			$this->error($serverCertificate, sprintf(
-				'Server certificate expires soon (notAfter: %s, %s)',
+				'%s certificate expires soon (notAfter: %s, %s)',
+				$ipAddress,
 				$serverCertificate->getNotAfter()->format(DATE_RFC3339),
 				$this->getExpiryDays($serverCertificate),
 			));
@@ -59,7 +74,8 @@ class CertificateMonitor
 		if ($serverCertificate->isExpired()) {
 			$error = true;
 			$this->error($serverCertificate, sprintf(
-				'Server certificate expired (notAfter: %s, %s)',
+				'%s certificate expired (notAfter: %s, %s)',
+				$ipAddress,
 				$serverCertificate->getNotAfter()->format(DATE_RFC3339),
 				$this->getExpiryDays($serverCertificate),
 			));
@@ -68,7 +84,8 @@ class CertificateMonitor
 			$this->hasErrors = true;
 		} else {
 			$this->info($loggedCertificate, sprintf(
-				"Logged certificate's notAfter matches server certificate's notAfter (%s, %s)",
+				"Logged certificate's notAfter matches %s certificate's notAfter (%s, %s)",
+				$ipAddress,
 				$loggedCertificate->getNotAfter()->format(DATE_RFC3339),
 				$this->getExpiryDays($loggedCertificate),
 			));

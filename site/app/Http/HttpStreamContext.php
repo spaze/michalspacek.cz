@@ -9,12 +9,13 @@ class HttpStreamContext
 {
 
 	/**
-	 * @param array<string, string|bool> $sslOptions
-	 * @param array<string, string|int> $httpOptions
 	 * @param string $userAgent
+	 * @param array<string, string|int> $httpOptions
+	 * @param array<string, string> $httpHeaders
+	 * @param array<string, string|bool> $sslOptions
 	 * @return resource
 	 */
-	public function create(string $userAgent, array $httpOptions, array $sslOptions = [])
+	public function create(string $userAgent, array $httpOptions, array $httpHeaders = [], array $sslOptions = [])
 	{
 		return stream_context_create(
 			[
@@ -22,6 +23,7 @@ class HttpStreamContext
 				'http' => $httpOptions + [
 					'ignore_errors' => true,
 					'user_agent' => HttpHeader::normalizeValue($userAgent),
+					'header' => $httpHeaders,
 				],
 			],
 			[
