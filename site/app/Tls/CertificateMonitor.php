@@ -20,12 +20,12 @@ class CertificateMonitor
 	}
 
 
-	public function run(): never
+	public function run(bool $includeIpv6): never
 	{
 		try {
 			// Not running in parallel because those sites are hosted on just a few tiny servers
 			foreach ($this->certificatesApiClient->getLoggedCertificates() as $loggedCertificate) {
-				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificates($loggedCertificate->getCommonName()));
+				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificates($loggedCertificate->getCommonName(), $includeIpv6));
 			}
 			exit($this->hasErrors ? 1 : 0);
 		} catch (Exception $e) {
