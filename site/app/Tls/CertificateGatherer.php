@@ -23,16 +23,17 @@ class CertificateGatherer
 
 	/**
 	 * @param string $hostname
+	 * @param bool $includeIpv6
 	 * @return array<string, Certificate>
 	 * @throws CannotParseDateTimeException
 	 * @throws CertificateException
 	 * @throws OpenSslException
 	 * @throws DnsGetRecordException
 	 */
-	public function fetchCertificates(string $hostname): array
+	public function fetchCertificates(string $hostname, bool $includeIpv6): array
 	{
 		$certificates = [];
-		$records = $this->dnsResolver->getRecords($hostname, DNS_A | DNS_AAAA);
+		$records = $this->dnsResolver->getRecords($hostname, $includeIpv6 ? DNS_A | DNS_AAAA : DNS_A);
 		foreach ($records as $record) {
 			$certificates[$record->getIpv6() ?? $record->getIp()] = $this->fetchCertificate($hostname, $record->getIp() ?? null, $record->getIpv6() ?? null);
 		}
