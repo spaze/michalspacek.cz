@@ -23,6 +23,7 @@ class WinterIsComing
 	/** @var array<int, string> */
 	private array $hosts = [
 		'burpcollaborator.net',
+		'mailrez.com',
 		'ssemarketing.net',
 	];
 
