@@ -11,13 +11,13 @@
 {form $formName class => "aligned wide"}
 <table>
 	<tr>
-		<th>{label action /}</th><td>{input action}<br><small>nevyplňujte, pokud nechcete samostatnou stránku pro přednášku</small></td>
+		<th class="align-top">{label action /}</th><td>{input action}<br><small>nevyplňujte, pokud nechcete samostatnou stránku pro přednášku</small></td>
 	</tr>
 	<tr>
-		<th>{label title /}</th><td>{input title}<br><small><a n:ifset="$talk->action" n:href=":Www:Talks:talk $talk->action">zobrazit přednášku</a></small></td>
+		<th n:class="$talk && $talk->action ? align-top">{label title /}</th><td>{input title}<br><small n:if="$talk && $talk->action"><a n:href=":Www:Talks:talk $talk->action">zobrazit přednášku</a></small></td>
 	</tr>
-	<tr class="with-textarea">
-		<th>{label description /}</th><td>{input description}</td>
+	<tr>
+		<th class="align-top">{label description /}</th><td>{input description}</td>
 	</tr>
 	<tr>
 		<th>{label date /}</th><td>{input date}</td>
@@ -53,13 +53,13 @@
 		<th>{label eventHref /}</th><td>{input eventHref}</td>
 	</tr>
 	<tr>
-		<th>{label ogImage /}</th><td>{input ogImage}<br><small>místo čísla slajdu v URL použijte <code>%d</code></small></td>
+		<th class="align-top">{label ogImage /}</th><td>{input ogImage}<br><small>místo čísla slajdu v URL použijte <code>%d</code></small></td>
 	</tr>
-	<tr class="with-textarea">
-		<th>{label transcript /}</th><td>{input transcript}</td>
+	<tr>
+		<th class="align-top">{label transcript /}</th><td>{input transcript}</td>
 	</tr>
-	<tr class="with-textarea">
-		<th>{label favorite /}</th><td>{input favorite}</td>
+	<tr>
+		<th class="align-top">{label favorite /}</th><td>{input favorite}</td>
 	</tr>
 	<tr>
 		<th>{label supersededBy /}</th><td>{input supersededBy}</td>
@@ -79,7 +79,7 @@
 <div id="pridat-prednasku">
 	<p><a href="#pridat-prednasku" class="open-container block">Přidat přednášku</a></p>
 	<div id="pridat-prednasku-container" class="hidden">
-	{include #talkForm, formName => addTalk}
+	{include #talkForm, formName => addTalk, talk => null}
 	</div>
 </div>
 <hr>

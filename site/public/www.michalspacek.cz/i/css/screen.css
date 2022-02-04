@@ -262,7 +262,7 @@ tr.dateLine td, li.dateLine { border-top: 2px solid #EEE; }
 	white-space: nowrap;
 }
 form.aligned th { text-align: right; }
-form tr.with-textarea, form.aligned th.align-top { vertical-align: top; }
+form.aligned th.align-top, form.aligned td.align-top { vertical-align: top; }
 td.short input, form.wide td.short input, form.wide td.short select, #frm-application td.short input { width: 85px; }
 td.narrow input { width: 40px; }
 td.wider input { width: 280px; }
