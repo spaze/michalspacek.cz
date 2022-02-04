@@ -178,7 +178,7 @@ class Texy extends NetxtenTexy
 	 * @param string[] $replacements
 	 * @return Html<Html|string>
 	 */
-	public function translate($message, array $replacements = []): Html
+	public function translate(string $message, array $replacements = []): Html
 	{
 		return $this->substitute($this->translator->translate($message), $replacements);
 	}
@@ -199,7 +199,7 @@ class Texy extends NetxtenTexy
 	 * @return HtmlElement<HtmlElement|string>|string|false
 	 * @throws InvalidLinkException
 	 */
-	public function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link)
+	public function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
 		if (!$link) {
 			return $invocation->proceed();
@@ -330,11 +330,10 @@ class Texy extends NetxtenTexy
 
 
 	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used in self::replace()
 	 * @param string $name
 	 * @return string
 	 */
-	private function replaceTrainingDate($name): string
+	private function replaceTrainingDate(string $name): string
 	{
 		$upcoming = $this->trainingDates->getPublicUpcoming();
 		$dates = array();

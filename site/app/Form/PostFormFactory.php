@@ -159,7 +159,7 @@ class PostFormFactory
 		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
 		$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));
 		$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
-		$post->recommended = (empty($values->recommended) ? null : Json::decode($values->recommended));
+		$post->recommended = (empty($values->recommended) ? [] : Json::decode($values->recommended));
 		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
 		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
 		$post->cspSnippets = (empty($values->cspSnippets) ? [] : $values->cspSnippets);
