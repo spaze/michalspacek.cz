@@ -322,8 +322,8 @@ class Texy extends NetxtenTexy
 			self::TRAINING_DATE => [$this, 'replaceTrainingDate'],
 		);
 
-		$result = preg_replace_callback('~\*\*([^:]+):([^*]+)\*\*~', function ($matches) use ($replacements) {
-			return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : null);
+		$result = preg_replace_callback('~\*\*([^:]+):([^*]+)\*\*~', function ($matches) use ($replacements): string {
+			return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : '');
 		}, (string)$result);
 		return Html::el()->setHtml($result);
 	}
