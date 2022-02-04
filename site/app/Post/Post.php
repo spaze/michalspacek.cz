@@ -324,7 +324,7 @@ class Post
 			$post->postId = (int)$this->database->getInsertId();
 			$this->exportsCache->clean([Cache::TAGS => array_merge([self::class], $post->slugTags)]);
 			$this->database->commit();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$this->database->rollBack();
 		}
 	}
@@ -388,7 +388,7 @@ class Post
 			}
 			$this->exportsCache->clean([Cache::TAGS => $cacheTags]);
 			$this->database->commit();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$this->database->rollBack();
 		}
 	}
