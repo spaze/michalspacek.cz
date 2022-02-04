@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Post\LocaleUrls;
@@ -24,6 +25,7 @@ use Texy\HtmlElement;
 use Texy\Link;
 use Texy\Modifier;
 use Texy\Texy as TexyTexy;
+use Throwable;
 
 class Texy extends NetxtenTexy
 {
@@ -166,6 +168,7 @@ class Texy extends NetxtenTexy
 	 * @param string $format
 	 * @param string[] $args
 	 * @return Html<Html|string>
+	 * @throws Throwable
 	 */
 	public function substitute(string $format, array $args): Html
 	{
@@ -177,6 +180,8 @@ class Texy extends NetxtenTexy
 	 * @param string $message
 	 * @param string[] $replacements
 	 * @return Html<Html|string>
+	 * @throws InvalidArgument
+	 * @throws Throwable
 	 */
 	public function translate(string $message, array $replacements = []): Html
 	{
@@ -198,6 +203,7 @@ class Texy extends NetxtenTexy
 	 * @param Link|null $link
 	 * @return HtmlElement<HtmlElement|string>|string|false
 	 * @throws InvalidLinkException
+	 * @throws ShouldNotHappenException
 	 */
 	public function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
@@ -294,6 +300,7 @@ class Texy extends NetxtenTexy
 	 * @param string|null $text
 	 * @param TexyTexy|null $texy
 	 * @return Html<Html|string>|null
+	 * @throws Throwable
 	 */
 	public function format(?string $text, ?TexyTexy $texy = null): ?Html
 	{
@@ -305,6 +312,7 @@ class Texy extends NetxtenTexy
 	 * @param string|null $text
 	 * @param TexyTexy|null $texy
 	 * @return Html<Html|string>|null
+	 * @throws Throwable
 	 */
 	public function formatBlock(?string $text, ?TexyTexy $texy = null): ?Html
 	{
@@ -332,6 +340,7 @@ class Texy extends NetxtenTexy
 	/**
 	 * @param string $name
 	 * @return string
+	 * @throws InvalidArgument
 	 */
 	private function replaceTrainingDate(string $name): string
 	{
@@ -362,6 +371,8 @@ class Texy extends NetxtenTexy
 	 *
 	 * @param Row<mixed> $training
 	 * @return Row<mixed>
+	 * @throws InvalidArgument
+	 * @throws Throwable
 	 */
 	public function formatTraining(Row $training): Row
 	{

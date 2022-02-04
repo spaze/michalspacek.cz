@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Post;
 
 use MichalSpacekCz\Tags\Tags;
 use Nette\Database\Explorer;
+use Nette\Utils\JsonException;
 
 class LocaleUrls
 {
@@ -25,6 +26,7 @@ class LocaleUrls
 	 *
 	 * @param string $slug
 	 * @return Data[]
+	 * @throws JsonException
 	 */
 	public function get(string $slug): array
 	{

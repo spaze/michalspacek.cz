@@ -17,6 +17,8 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
+use Throwable;
 
 class Post
 {
@@ -85,6 +87,9 @@ class Post
 	 * @param string $post
 	 * @param string $previewKey
 	 * @return Data|null
+	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 * @throws Throwable
 	 */
 	public function get(string $post, ?string $previewKey = null): ?Data
 	{
@@ -119,6 +124,9 @@ class Post
 	 *
 	 * @param int $id
 	 * @return Data|null
+	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 * @throws Throwable
 	 */
 	public function getById(int $id): ?Data
 	{
@@ -179,6 +187,8 @@ class Post
 	 *
 	 * @return Data[]
 	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 * @throws Throwable
 	 */
 	public function getAll(): array
 	{
@@ -251,6 +261,7 @@ class Post
 	 *
 	 * @param Data $post
 	 * @return Data
+	 * @throws Throwable
 	 */
 	public function format(Data $post): Data
 	{
@@ -280,6 +291,7 @@ class Post
 	 * Add a post.
 	 *
 	 * @param Data $post
+	 * @throws JsonException
 	 */
 	public function add(Data $post): void
 	{
@@ -322,6 +334,7 @@ class Post
 	 * Update a post.
 	 *
 	 * @param Data $post
+	 * @throws JsonException
 	 */
 	public function update(Data $post): void
 	{
@@ -431,6 +444,7 @@ class Post
 	/**
 	 * @param int $postId
 	 * @return Edit[]
+	 * @throws Throwable
 	 */
 	public function getEdits(int $postId): array
 	{
