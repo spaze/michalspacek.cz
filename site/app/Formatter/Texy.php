@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Post\LocaleUrls;
@@ -24,6 +25,7 @@ use Texy\HtmlElement;
 use Texy\Link;
 use Texy\Modifier;
 use Texy\Texy as TexyTexy;
+use Throwable;
 
 class Texy extends NetxtenTexy
 {
@@ -166,6 +168,7 @@ class Texy extends NetxtenTexy
 	 * @param string $format
 	 * @param string[] $args
 	 * @return Html<Html|string>
+	 * @throws Throwable
 	 */
 	public function substitute(string $format, array $args): Html
 	{
@@ -177,8 +180,10 @@ class Texy extends NetxtenTexy
 	 * @param string $message
 	 * @param string[] $replacements
 	 * @return Html<Html|string>
+	 * @throws InvalidArgument
+	 * @throws Throwable
 	 */
-	public function translate($message, array $replacements = []): Html
+	public function translate(string $message, array $replacements = []): Html
 	{
 		return $this->substitute($this->translator->translate($message), $replacements);
 	}
@@ -198,8 +203,9 @@ class Texy extends NetxtenTexy
 	 * @param Link|null $link
 	 * @return HtmlElement<HtmlElement|string>|string|false
 	 * @throws InvalidLinkException
+	 * @throws ShouldNotHappenException
 	 */
-	public function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link)
+	public function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
 		if (!$link) {
 			return $invocation->proceed();
@@ -294,6 +300,7 @@ class Texy extends NetxtenTexy
 	 * @param string|null $text
 	 * @param TexyTexy|null $texy
 	 * @return Html<Html|string>|null
+	 * @throws Throwable
 	 */
 	public function format(?string $text, ?TexyTexy $texy = null): ?Html
 	{
@@ -305,6 +312,7 @@ class Texy extends NetxtenTexy
 	 * @param string|null $text
 	 * @param TexyTexy|null $texy
 	 * @return Html<Html|string>|null
+	 * @throws Throwable
 	 */
 	public function formatBlock(?string $text, ?TexyTexy $texy = null): ?Html
 	{
@@ -322,19 +330,19 @@ class Texy extends NetxtenTexy
 			self::TRAINING_DATE => [$this, 'replaceTrainingDate'],
 		);
 
-		$result = preg_replace_callback('~\*\*([^:]+):([^*]+)\*\*~', function ($matches) use ($replacements) {
-			return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : null);
+		$result = preg_replace_callback('~\*\*([^:]+):([^*]+)\*\*~', function ($matches) use ($replacements): string {
+			return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : '');
 		}, (string)$result);
 		return Html::el()->setHtml($result);
 	}
 
 
 	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used in self::replace()
 	 * @param string $name
 	 * @return string
+	 * @throws InvalidArgument
 	 */
-	private function replaceTrainingDate($name): string
+	private function replaceTrainingDate(string $name): string
 	{
 		$upcoming = $this->trainingDates->getPublicUpcoming();
 		$dates = array();
@@ -363,6 +371,8 @@ class Texy extends NetxtenTexy
 	 *
 	 * @param Row<mixed> $training
 	 * @return Row<mixed>
+	 * @throws InvalidArgument
+	 * @throws Throwable
 	 */
 	public function formatTraining(Row $training): Row
 	{

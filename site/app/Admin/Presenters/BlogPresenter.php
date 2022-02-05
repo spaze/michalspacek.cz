@@ -146,9 +146,9 @@ class BlogPresenter extends BasePresenter
 		$post->textTexy = $this->request->getPost('text');
 		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
 		$post->published =  $this->request->getPost('published') ? new DateTime($this->request->getPost('published')) : null;
-		$post->tags = (empty($this->request->getPost('tags')) ? null : $this->tags->toArray($this->request->getPost('tags')));
-		$post->slugTags = (empty($this->request->getPost('tags')) ? null : $this->tags->toSlugArray($this->request->getPost('tags')));
-		$post->recommended = (empty($this->request->getPost('recommended')) ? null : Json::decode($this->request->getPost('recommended')));
+		$post->tags = (empty($this->request->getPost('tags')) ? [] : $this->tags->toArray($this->request->getPost('tags')));
+		$post->slugTags = (empty($this->request->getPost('tags')) ? [] : $this->tags->toSlugArray($this->request->getPost('tags')));
+		$post->recommended = (empty($this->request->getPost('recommended')) ? [] : Json::decode($this->request->getPost('recommended')));
 		$post->cspSnippets = $this->request->getPost('cspSnippets') ?? [];
 		$post->allowedTags = $this->request->getPost('allowedTags') ?? [];
 		$this->blogPost->enrich($post);

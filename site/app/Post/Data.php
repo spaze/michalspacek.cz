@@ -11,76 +11,62 @@ use stdClass;
 class Data
 {
 
-	/** @var int */
-	public $postId;
+	public int $postId;
 
-	/** @var string */
-	public $slug;
+	public string $slug;
 
-	/** @var int */
-	public $localeId;
+	public int $localeId;
 
-	/** @var int */
-	public $translationGroupId;
+	public ?int $translationGroupId;
 
-	/** @var string */
-	public $locale;
+	public ?string $locale;
 
 	/** @var Html<Html|string> */
-	public $title;
+	public Html $title;
 
-	/** @var string */
-	public $titleTexy;
+	public string $titleTexy;
 
-	/** @var Html<Html|string> */
-	public $lead;
+	/** @var Html<Html|string>|null */
+	public ?Html $lead;
 
-	/** @var string */
-	public $leadTexy;
+	public ?string $leadTexy;
 
 	/** @var Html<Html|string> */
-	public $text;
+	public Html $text;
 
-	/** @var string */
-	public $textTexy;
+	public string $textTexy;
 
 	public ?DateTimeInterface $published;
 
-	/** @var string */
-	public $previewKey;
+	public ?string $previewKey;
 
-	/** @var Html<Html|string> */
-	public $originally;
+	/** @var Html<Html|string>|null */
+	public ?Html $originally;
 
-	/** @var string */
-	public $originallyTexy;
+	public ?string $originallyTexy;
 
-	/** @var string */
-	public $ogImage;
+	public ?string $ogImage;
 
-	/** @var string[] */
-	public $tags = [];
+	/** @var array<int, string> */
+	public array $tags = [];
 
-	/** @var string[] */
-	public $slugTags = [];
+	/** @var array<int, string> */
+	public array $slugTags = [];
 
-	/** @var string[] */
-	public $previousSlugTags = [];
+	/** @var array<int, string> */
+	public array $previousSlugTags = [];
 
-	/** @var stdClass[] */
-	public $recommended;
+	/** @var array<int, stdClass> */
+	public array $recommended;
 
-	/** @var string */
-	public $twitterCard;
+	public ?string $twitterCard;
 
-	/** @var string */
-	public $href;
+	public string $href;
 
-	/** @var string|null */
-	public $editSummary;
+	public ?string $editSummary;
 
-	/** @var Edit[] */
-	public $edits;
+	/** @var array<int, Edit> */
+	public array $edits;
 
 	/** @var array<int, string> */
 	public array $cspSnippets = [];

@@ -8,6 +8,7 @@ use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
@@ -16,6 +17,8 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Neon\Exception;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
+use Throwable;
 
 class Post
 {
@@ -84,6 +87,9 @@ class Post
 	 * @param string $post
 	 * @param string $previewKey
 	 * @return Data|null
+	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 * @throws Throwable
 	 */
 	public function get(string $post, ?string $previewKey = null): ?Data
 	{
@@ -101,9 +107,9 @@ class Post
 		$post->previewKey = $result->previewKey;
 		$post->originallyTexy = $result->originallyTexy;
 		$post->ogImage = $result->ogImage;
-		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : null);
-		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : null);
-		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
+		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
+		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
+		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : []);
 		$post->twitterCard = $result->twitterCard;
 		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
 		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
@@ -118,6 +124,9 @@ class Post
 	 *
 	 * @param int $id
 	 * @return Data|null
+	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 * @throws Throwable
 	 */
 	public function getById(int $id): ?Data
 	{
@@ -164,7 +173,7 @@ class Post
 		$post->ogImage = $result->ogImage;
 		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
 		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
-		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : null);
+		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : []);
 		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
 		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
 		$post->twitterCard = $result->twitterCard;
@@ -178,6 +187,8 @@ class Post
 	 *
 	 * @return Data[]
 	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 * @throws Throwable
 	 */
 	public function getAll(): array
 	{
@@ -215,8 +226,8 @@ class Post
 			$post->originallyTexy = $row->originallyTexy;
 			$post->published = $row->published;
 			$post->previewKey = $row->previewKey;
-			$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : null);
-			$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : null);
+			$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : []);
+			$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
 			$this->enrich($post);
 			$posts[] = $this->format($post);
 		}
@@ -250,6 +261,7 @@ class Post
 	 *
 	 * @param Data $post
 	 * @return Data
+	 * @throws Throwable
 	 */
 	public function format(Data $post): Data
 	{
@@ -261,13 +273,16 @@ class Post
 			}
 			$texy->allowedTags = $allowedTags;
 		}
-		foreach (['title'] as $item) {
-			$post->$item = $this->texyFormatter->format($post->{$item . 'Texy'}, $texy);
-		}
 		$this->texyFormatter->setTopHeading(2);
-		foreach (['lead', 'text', 'originally'] as $item) {
-			$post->$item = $this->texyFormatter->formatBlock($post->{$item . 'Texy'}, $texy);
+		$title = $this->texyFormatter->format($post->titleTexy, $texy);
+		$text = $this->texyFormatter->formatBlock($post->textTexy, $texy);
+		if (!isset($title, $text)) {
+			throw new ShouldNotHappenException();
 		}
+		$post->title = $title;
+		$post->text = $text;
+		$post->lead = $this->texyFormatter->formatBlock($post->leadTexy, $texy);
+		$post->originally = $this->texyFormatter->formatBlock($post->originallyTexy, $texy);
 		return $post;
 	}
 
@@ -276,6 +291,7 @@ class Post
 	 * Add a post.
 	 *
 	 * @param Data $post
+	 * @throws JsonException
 	 */
 	public function add(Data $post): void
 	{
@@ -298,9 +314,9 @@ class Post
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
 					'og_image' => $post->ogImage,
-					'tags' => $this->tags->serialize($post->tags),
+					'tags' => $post->tags ? $this->tags->serialize($post->tags) : null,
 					'slug_tags' => $this->tags->serialize($post->slugTags),
-					'recommended' => Json::encode($post->recommended),
+					'recommended' => $post->recommended ? Json::encode($post->recommended) : null,
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
 				),
@@ -308,7 +324,7 @@ class Post
 			$post->postId = (int)$this->database->getInsertId();
 			$this->exportsCache->clean([Cache::TAGS => array_merge([self::class], $post->slugTags)]);
 			$this->database->commit();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$this->database->rollBack();
 		}
 	}
@@ -318,6 +334,7 @@ class Post
 	 * Update a post.
 	 *
 	 * @param Data $post
+	 * @throws JsonException
 	 */
 	public function update(Data $post): void
 	{
@@ -371,7 +388,7 @@ class Post
 			}
 			$this->exportsCache->clean([Cache::TAGS => $cacheTags]);
 			$this->database->commit();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$this->database->rollBack();
 		}
 	}
@@ -427,6 +444,7 @@ class Post
 	/**
 	 * @param int $postId
 	 * @return Edit[]
+	 * @throws Throwable
 	 */
 	public function getEdits(int $postId): array
 	{
@@ -439,9 +457,13 @@ class Post
 			ORDER BY edited_at DESC';
 		$edits = array();
 		foreach ($this->database->fetchAll($sql, $postId) as $row) {
+			$summary = $this->texyFormatter->format($row->summaryTexy);
+			if ($summary === null) {
+				throw new ShouldNotHappenException();
+			}
 			$edit = new Edit();
 			$edit->summaryTexy = $row->summaryTexy;
-			$edit->summary = $this->texyFormatter->format($row->summaryTexy);
+			$edit->summary = $summary;
 			$edit->editedAt = $row->editedAt;
 			$edit->editedAt->setTimezone(new DateTimeZone($row->editedAtTimezone));
 			$edits[] = $edit;

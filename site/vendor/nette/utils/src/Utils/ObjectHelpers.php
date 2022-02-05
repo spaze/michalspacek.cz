@@ -130,7 +130,7 @@ final class ObjectHelpers
 
 		$rc = new \ReflectionClass($class);
 		preg_match_all(
-			'~^  [ \t*]*  @property(|-read|-write)  [ \t]+  [^\s$]+  [ \t]+  \$  (\w+)  ()~mx',
+			'~^  [ \t*]*  @property(|-read|-write|-deprecated)  [ \t]+  [^\s$]+  [ \t]+  \$  (\w+)  ()~mx',
 			(string) $rc->getDocComment(),
 			$matches,
 			PREG_SET_ORDER
@@ -147,7 +147,7 @@ final class ObjectHelpers
 				&& ($rm = $rc->getMethod($nm))->name === $nm && !$rm->isPrivate() && !$rm->isStatic();
 
 			if ($read || $write) {
-				$props[$name] = $read << 0 | ($nm[0] === 'g') << 1 | $rm->returnsReference() << 2 | $write << 3;
+				$props[$name] = $read << 0 | ($nm[0] === 'g') << 1 | $rm->returnsReference() << 2 | $write << 3 | ($type === '-deprecated') << 4;
 			}
 		}
 
@@ -158,6 +158,7 @@ final class ObjectHelpers
 		if ($parent = get_parent_class($class)) {
 			$props += self::getMagicProperties($parent);
 		}
+
 		return $props;
 	}
 
@@ -182,6 +183,7 @@ final class ObjectHelpers
 				$best = $item;
 			}
 		}
+
 		return $best;
 	}
 
@@ -196,6 +198,7 @@ final class ObjectHelpers
 				$traits += $trait->getTraits();
 			}
 		} while ($rc = $rc->getParentClass());
+
 		return preg_match_all($pattern, implode($doc), $m) ? $m[1] : [];
 	}
 
@@ -219,6 +222,7 @@ final class ObjectHelpers
 			} catch (\ReflectionException $e) {
 			}
 		}
+
 		return $prop;
 	}
 }
