@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'bdc8953e37760b51053b95977b06496a2eff8faa',
+        'reference' => 'e7277d3a472bc8506007c8946ad1190fec2f4c0e',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -20,12 +20,12 @@
             'dev_requirement' => false,
         ),
         'dealerdirect/phpcodesniffer-composer-installer' => array(
-            'pretty_version' => 'v0.7.1',
-            'version' => '0.7.1.0',
+            'pretty_version' => 'v0.7.2',
+            'version' => '0.7.2.0',
             'type' => 'composer-plugin',
             'install_path' => __DIR__ . '/../dealerdirect/phpcodesniffer-composer-installer',
             'aliases' => array(),
-            'reference' => 'fe390591e0241955f22eb9ba327d137e501c771c',
+            'reference' => '1c968e542d8843d7cd71de3c5c9c3ff3ad71a1db',
             'dev_requirement' => false,
         ),
         'dg/texy' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '0c86f70adfb4d976d59e222d2c36590919158039',
+            'reference' => '8ba45c14eb7b79db601052ba90c2811d9b028d7a',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'bdc8953e37760b51053b95977b06496a2eff8faa',
+            'reference' => 'e7277d3a472bc8506007c8946ad1190fec2f4c0e',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
