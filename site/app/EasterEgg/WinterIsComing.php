@@ -66,7 +66,7 @@ class WinterIsComing
 	{
 		/** @var Presenter $presenter */
 		$presenter = $input->getForm()->getParent();
-		$presenter->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/templates/sqlSyntaxError.latte')));
+		$presenter->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/templates/sqlSyntaxError.html')));
 	}
 
 }

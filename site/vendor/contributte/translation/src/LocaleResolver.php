@@ -8,11 +8,10 @@ use Nette\Utils\Strings;
 class LocaleResolver
 {
 
-	/** @var \Nette\DI\Container */
-	private $container;
+	private Container $container;
 
-	/** @var array<string> */
-	private $resolvers = [];
+	/** @var array<class-string> */
+	private array $resolvers = [];
 
 	public function __construct(
 		Container $container
@@ -22,13 +21,17 @@ class LocaleResolver
 	}
 
 	/**
-	 * @return array<string>
+	 * @return array<class-string>
 	 */
 	public function getResolvers(): array
 	{
 		return $this->resolvers;
 	}
 
+	/**
+	 * @param class-string $resolver
+	 * @return self
+	 */
 	public function addResolver(
 		string $resolver
 	): self
@@ -42,13 +45,25 @@ class LocaleResolver
 	): string
 	{
 		foreach ($this->resolvers as $v1) {
-			/** @var \Contributte\Translation\LocalesResolvers\ResolverInterface $resolver */
-			$resolver = $this->container->getByType($v1);
+			$resolver = $this->container
+				->getByType($v1);
+
 			$locale = $resolver->resolve($translator);
 
-			if ($locale !== null && ($translator->getLocalesWhitelist() === null || in_array(Strings::substring($locale, 0, 2), array_map(function ($locale): string {
-				return Strings::substring($locale, 0, 2);
-			}, $translator->getLocalesWhitelist()), true))) {
+			if (
+				$locale !== null &&
+				(
+					$translator->getLocalesWhitelist() === null ||
+					in_array(
+						Strings::substring($locale, 0, 2),
+						array_map(
+							fn (string $locale): string => Strings::substring($locale, 0, 2),
+							$translator->getLocalesWhitelist()
+						),
+						true
+					)
+				)
+			) {
 				return $locale;
 			}
 		}

@@ -7,8 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'Contributte\\Translation\\DebuggerTranslator' => $vendorDir . '/contributte/translation/src/compatibility.php',
-    'Contributte\\Translation\\LoggerTranslator' => $vendorDir . '/contributte/translation/src/compatibility.php',
     'JakubOnderka\\PhpParallelLint\\Application' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Application.php',
     'JakubOnderka\\PhpParallelLint\\ArrayIterator' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Settings.php',
     'JakubOnderka\\PhpParallelLint\\Blame' => $vendorDir . '/php-parallel-lint/php-parallel-lint/src/Error.php',

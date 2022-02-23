@@ -2,10 +2,10 @@ Dobrý den,
 
 potvrzuji Vaši registraci na školení {$trainingName},
 {if $remote}
-které se koná online {$start|localeIntervalDay:$end:'cs_CZ'} v čase {$start|date:'H:i'}–{$end|date:'H:i'}.
+které se koná online {$start|localeIntervalDay:$end, 'cs_CZ'} v čase {$start|date:'H:i'}–{$end|date:'H:i'}.
 Budete potřebovat jen webový prohlížeč, nejpozději den před školením pošlu odkaz.
 {else}
-které se koná {$start|localeIntervalDay:$end:'cs_CZ'} v čase {$start|date:'H:i'}–{$end|date:'H:i'}
+které se koná {$start|localeIntervalDay:$end, 'cs_CZ'} v čase {$start|date:'H:i'}–{$end|date:'H:i'}
 na adrese {$venueName}{if $venueNameExtended}, {$venueNameExtended}{/if}, {$venueAddress}, {$venueCity}.
 {/if}
 

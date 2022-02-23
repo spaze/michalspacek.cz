@@ -24,7 +24,7 @@
 <p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
 <h2>{_messages.label.pasttalks}</h2>
 <p>
-	{_messages.talks.wastalking|format:'link:Www:Talks:talk technicke-chyby-vas-pripravi-o-penize-webtop100':'link:Www:Talks:talk hash-store-profit-passwords':'link:Www:Talks:talk the-problem-with-the-real-world-passwords':'link:Www:Talks:talk i-forgot-my-password-passwords':'link:Www:Talks:talk disclosing-password-hashing-policies-passwords':'link:Www:Talks:talk identitu-byste-neukradli-identity-management'}
+	{_messages.talks.wastalking|format:'link:Www:Talks:talk technicke-chyby-vas-pripravi-o-penize-webtop100', 'link:Www:Talks:talk hash-store-profit-passwords', 'link:Www:Talks:talk the-problem-with-the-real-world-passwords', 'link:Www:Talks:talk i-forgot-my-password-passwords', 'link:Www:Talks:talk disclosing-password-hashing-policies-passwords', 'link:Www:Talks:talk identitu-byste-neukradli-identity-management'}
 </p>
 {foreach $talks as $year => $items}
 	<h3>{$year}</h3>
@@ -32,5 +32,5 @@
 		{include #itemTalk}
 	</p>
 {/foreach}
-{_messages.talks.more|format:'https://www.slideshare.net/spaze/presentations':'https://speakerdeck.com/u/spaze'}
+{_messages.talks.more|format:'https://www.slideshare.net/spaze/presentations', 'https://speakerdeck.com/u/spaze'}
 {/define}

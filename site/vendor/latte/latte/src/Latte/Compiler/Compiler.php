@@ -425,6 +425,10 @@ class Compiler
 					&& ($t->type !== Token::MACRO_TAG || $t->name !== $token->name)
 					&& ($t->type !== Token::HTML_ATTRIBUTE_BEGIN || $t->name !== Parser::N_PREFIX . $token->name));
 				$token->empty = $t ? !$t->closing : true;
+				if ($token->empty) {
+					$tmp = substr($token->text, 0, -1) . ' /}';
+					trigger_error("Auto-empty behaviour is deprecated, replace {$token->text} with $tmp in line " . $this->getLine(), E_USER_DEPRECATED);
+				}
 			}
 
 			$node = $this->openMacro($token->name, $token->value, $token->modifiers, $isRightmost);
@@ -510,7 +514,7 @@ class Compiler
 		if ($htmlNode->macroAttrs) {
 			$html = substr($this->output, $this->tagOffset) . $token->text;
 			$this->output = substr($this->output, 0, $this->tagOffset);
-			$this->writeAttrsMacro($html);
+			$this->writeAttrsMacro($html, $emptyElement ?? null);
 		} else {
 			$this->output .= $token->text . $end;
 		}
@@ -529,7 +533,7 @@ class Compiler
 
 		} elseif (
 			(($lower = strtolower($htmlNode->name)) === 'script' || $lower === 'style')
-			&& (!isset($htmlNode->attrs['type']) || preg_match('#(java|j|ecma|live)script|module|json|css#i', $htmlNode->attrs['type']))
+			&& (!isset($htmlNode->attrs['type']) || preg_match('#(java|j|ecma|live)script|module|json|css|plain#i', $htmlNode->attrs['type']))
 		) {
 			$this->context = $lower === 'script'
 				? self::CONTEXT_HTML_JS
@@ -726,7 +730,7 @@ class Compiler
 	 * Generates code for macro <tag n:attr> to the output.
 	 * @internal
 	 */
-	public function writeAttrsMacro(string $html): void
+	public function writeAttrsMacro(string $html, ?bool $empty = null): void
 	{
 		//     none-2 none-1 tag-1 tag-2       <el attr-1 attr-2>   /tag-2 /tag-1 [none-2] [none-1] inner-2 inner-1
 		// /inner-1 /inner-2 [none-1] [none-2] tag-1 tag-2  </el>   /tag-2 /tag-1 /none-1 /none-2
@@ -737,6 +741,9 @@ class Compiler
 			$attrName = MacroNode::PREFIX_INNER . "-$name";
 			if (!isset($attrs[$attrName])) {
 				continue;
+			}
+			if ($empty) {
+				trigger_error("Unexpected n:$attrName on void element <{$this->htmlNode->name}>", E_USER_WARNING);
 			}
 
 			if ($this->htmlNode->closing) {
@@ -769,6 +776,9 @@ class Compiler
 			$attrName = MacroNode::PREFIX_TAG . "-$name";
 			if (!isset($attrs[$attrName])) {
 				continue;
+			}
+			if ($empty) {
+				trigger_error("Unexpected n:$attrName on void element <{$this->htmlNode->name}>", E_USER_WARNING);
 			}
 
 			$left[] = function () use ($name, $attrs, $attrName) {
@@ -863,15 +873,16 @@ class Compiler
 
 			if (!Helpers::removeFilter($modifiers, 'noescape')) {
 				$modifiers .= '|escape';
-				if (
-					$this->context === self::CONTEXT_HTML_JS
-					&& $name === '='
-					&& preg_match('#["\'] *$#D', $this->tokens[$this->position - 1]->text)
-				) {
-					throw new CompileException("Do not place {$this->tokens[$this->position]->text} inside quotes.");
-				}
 			} elseif ($this->policy && !$this->policy->isFilterAllowed('noescape')) {
 				throw new SecurityViolationException('Filter |noescape is not allowed.');
+			}
+
+			if (
+				$this->context === self::CONTEXT_HTML_JS
+				&& $name === '='
+				&& preg_match('#["\']$#D', $this->tokens[$this->position - 1]->text)
+			) {
+				throw new CompileException("Do not place {$this->tokens[$this->position]->text} inside quotes in JavaScript.");
 			}
 		}
 

@@ -129,7 +129,7 @@ services:
 	netteCve202015227: MichalSpacekCz\EasterEgg\NetteCve202015227
 	formSpam: MichalSpacekCz\Training\FormSpam
 	formDataLogger: MichalSpacekCz\Training\FormDataLogger
-	consoleColor: JakubOnderka\PhpConsoleColor\ConsoleColor
+	consoleColor: PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor
 	dnsResolver: MichalSpacekCz\Net\DnsResolver
 
 	- MichalSpacekCz\Form\FormFactory

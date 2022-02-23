@@ -68,7 +68,7 @@
 					Template: <code>{$application->mailMessage->getBasename()}</code><br>
 					Subject: <em>{$application->mailMessage->getSubject()}</em>
 					{if $application->nextStatus == \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT || $application->nextStatus == \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER}
-						<br>{label cc} {input cc}
+						<br>{label cc /} {input cc}
 					{/if}
 				</p>
 				{input additional}

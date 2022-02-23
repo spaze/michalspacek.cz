@@ -8,11 +8,9 @@ use Nette\Http\IRequest;
 class Parameter implements ResolverInterface
 {
 
-	/** @var string */
-	public static $parameter = 'locale';
+	public static string $parameter = 'locale';
 
-	/** @var \Nette\Http\IRequest */
-	private $request;
+	private IRequest $request;
 
 	public function __construct(
 		IRequest $request
@@ -25,7 +23,14 @@ class Parameter implements ResolverInterface
 		Translator $translator
 	): ?string
 	{
-		return $this->request->getQuery(self::$parameter);
+		$locale = $this->request
+			->getQuery(self::$parameter);
+
+		if (is_string($locale)) {
+			return $locale;
+		}
+
+		return null;
 	}
 
 }

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use Exception;
-use JakubOnderka\PhpConsoleColor\ConsoleColor;
+use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
 class CertificateMonitor
 {

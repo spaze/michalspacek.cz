@@ -15,44 +15,35 @@ use Symfony\Component\Translation\Translator as SymfonyTranslator;
 class Translator extends SymfonyTranslator implements ITranslator
 {
 
-	/** @var \Contributte\Translation\LocaleResolver */
-	private $localeResolver;
+	private LocaleResolver $localeResolver;
 
-	/** @var \Contributte\Translation\FallbackResolver */
-	private $fallbackResolver;
+	private FallbackResolver $fallbackResolver;
 
-	/** @var string */
-	private $defaultLocale;
+	private string $defaultLocale;
 
-	/** @var string|null */
-	private $cacheDir;
+	private ?string $cacheDir;
 
-	/** @var bool */
-	private $debug;
+	private bool $debug;
 
-	/** @var bool */
-	public $returnOriginalMessage = true;
+	public bool $returnOriginalMessage = true;
 
 	/** @var array<string>|null */
-	private $localesWhitelist;
+	private ?array $localesWhitelist = null;
 
 	/** @var array<string> */
-	private $prefix = [];
+	private array $prefix = [];
 
 	/** @var array<array<string>> */
-	private $prefixTemp = [];
+	private array $prefixTemp = [];
 
 	/** @var array<bool> */
-	private $resourcesLocales = [];
+	private array $resourcesLocales = [];
 
-	/** @var \Psr\Log\LoggerInterface|null */
-	private $psrLogger;
+	private ?LoggerInterface $psrLogger = null;
 
-	/** @var \Contributte\Translation\Tracy\Panel|null */
-	private $tracyPanel;
+	private ?Panel $tracyPanel = null;
 
-	/** @var string */
-	private $initLang;
+	private string $initLang;
 
 	/**
 	 * @param array<string> $cacheVary
@@ -118,6 +109,7 @@ class Translator extends SymfonyTranslator implements ITranslator
 	): self
 	{
 		$this->localesWhitelist = $whitelist;
+
 		return $this;
 	}
 
@@ -138,6 +130,7 @@ class Translator extends SymfonyTranslator implements ITranslator
 	{
 		$this->prefixTemp[] = $this->prefix;
 		$this->prefix = $array;
+
 		return $this;
 	}
 
@@ -149,6 +142,7 @@ class Translator extends SymfonyTranslator implements ITranslator
 	{
 		$temp = end($this->prefixTemp);
 		array_pop($this->prefixTemp);
+
 		return $temp !== false ? $temp : [];
 	}
 
@@ -208,27 +202,19 @@ class Translator extends SymfonyTranslator implements ITranslator
 		return $locales;
 	}
 
-	/**
-	 * @param string $format
-	 * @param mixed $resource
-	 * @param string $locale
-	 * @param string|null $domain
-	 */
 	public function addResource(
-		$format,
+		string $format,
 		$resource,
-		$locale,
-		$domain = null
-	)
+		string $locale,
+		?string $domain = null
+	): void
 	{
 		parent::addResource($format, $resource, $locale, $domain);
+
 		$this->resourcesLocales[$locale] = true;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getLocale()
+	public function getLocale(): string
 	{
 		if (parent::getLocale() === $this->initLang) {
 			$this->setLocale($this->localeResolver->resolve($this));
@@ -238,14 +224,16 @@ class Translator extends SymfonyTranslator implements ITranslator
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @param array<string> $locales
 	 */
 	public function setFallbackLocales(
 		array $locales
-	)
+	): void
 	{
 		parent::setFallbackLocales($locales);
-		$this->fallbackResolver->setFallbackLocales($locales);
+
+		$this->fallbackResolver
+			->setFallbackLocales($locales);
 	}
 
 	public function getPsrLogger(): ?LoggerInterface
@@ -329,6 +317,7 @@ class Translator extends SymfonyTranslator implements ITranslator
 		}
 
 		$tmp = [];
+
 		foreach ($params as $k1 => $v1) {
 			$tmp['%' . $k1 . '%'] = $v1;
 		}
@@ -342,7 +331,7 @@ class Translator extends SymfonyTranslator implements ITranslator
 		$translated = $this->trans($message, $params, $domain, $locale);
 
 		if ($this->returnOriginalMessage) {
-			if ($domain . '.' . $translated === $originalMessage) {
+			if (!$this->getCatalogue()->has($message, $domain)) {
 				return $originalMessage;
 			}
 		}
@@ -351,18 +340,14 @@ class Translator extends SymfonyTranslator implements ITranslator
 	}
 
 	/**
-	 * @param string|null $id
 	 * @param array<mixed> $parameters
-	 * @param string|null $domain
-	 * @param string|null $locale
-	 * @return string
 	 */
 	public function trans(
-		$id,
+		?string $id,
 		array $parameters = [],
-		$domain = null,
-		$locale = null
-	)
+		?string $domain = null,
+		?string $locale = null
+	): string
 	{
 		if ($domain === null) {
 			$domain = 'messages';
@@ -371,32 +356,46 @@ class Translator extends SymfonyTranslator implements ITranslator
 		if ($id !== null) {
 			if ($this->psrLogger !== null) {
 				if (!$this->getCatalogue()->has($id, $domain)) {
-					$this->psrLogger->notice('Missing translation', [
-						'id' => $id,
-						'domain' => $domain,
-						'locale' => $locale ?? $this->getLocale(),
-					]);
+					$this->psrLogger
+						->notice(
+							'Missing translation',
+							[
+								'id' => $id,
+								'domain' => $domain,
+								'locale' => $locale ?? $this->getLocale(),
+							]
+						);
 				}
 			}
 
 			if ($this->tracyPanel !== null) {
 				if (!$this->getCatalogue()->has($id, $domain)) {
-					$this->tracyPanel->addMissingTranslation($id, $domain);
+					$this->tracyPanel
+						->addMissingTranslation($id, $domain);
 				}
 			}
 		}
 
-		return parent::trans($id, $parameters, $domain, $locale);
+		return parent::trans(
+			$id,
+			$parameters,
+			$domain,
+			$locale
+		);
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @return array<string>
 	 */
 	protected function computeFallbackLocales(
-		$locale
-	)
+		string $locale
+	): array
 	{
-		return $this->fallbackResolver->compute($this, $locale);
+		return $this->fallbackResolver
+			->compute(
+				$this,
+				$locale
+			);
 	}
 
 }

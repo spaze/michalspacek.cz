@@ -375,36 +375,9 @@ class PhpWriter
 
 			$addBraces = '';
 			$expr = new MacroTokens([$tokens->currentToken()]);
-			$var = $tokens->currentValue();
 
 			do {
-				if ($tokens->nextToken('?')) {
-					if ( // is it ternary operator?
-						$tokens->isNext(...$tokens::SIGNIFICANT)
-						&& (
-							!$tokens->isNext($tokens::T_CHAR)
-							|| $tokens->isNext('(', '[', '{', ':', '!', '@', '\\')
-						)
-					) {
-						$expr->append($addBraces . ' ?');
-						break;
-					}
-
-					if (!$tokens->isNext('::')) {
-						$expr->prepend('(');
-						$expr->append(' ?? null)' . $addBraces);
-						trigger_error("Syntax '$var?' is deprecated, use '$var ?? null' instead.", E_USER_DEPRECATED);
-						break;
-					}
-
-					trigger_error("Syntax '$var?::' is deprecated.", E_USER_DEPRECATED);
-					$expr->prepend('(($ʟ_tmp = ');
-					$expr->append(' ?? null) === null ? null : ');
-					$res->tokens = array_merge($res->tokens, $expr->tokens);
-					$expr = new MacroTokens('$ʟ_tmp');
-					$addBraces .= ')';
-
-				} elseif ($tokens->nextToken('?->')) {
+				if ($tokens->nextToken('?->')) {
 					if (PHP_VERSION_ID >= 80000) {
 						$expr->append($tokens->currentToken());
 						$expr->append($tokens->nextToken());
@@ -828,12 +801,16 @@ class PhpWriter
 					$res->append($tokens->currentToken());
 
 				} else {
+					if ($tokens->isNext(':') && !$tokens->depth) {
+						$hint = (clone $tokens)->reset()->joinAll();
+						trigger_error("Colon as argument separator is deprecated, use comma in '$hint'.", E_USER_DEPRECATED);
+					}
 					$res->append($tokens->currentToken());
 				}
 			} elseif ($tokens->isCurrent($tokens::T_SYMBOL)) {
 				if ($tokens->isCurrent('escape')) {
 					if ($isContent) {
-						$res->prepend('LR\Filters::convertTo($ʟ_fi, ' . PhpHelpers::dump(implode($this->context)) . ', ')
+						$res->prepend('LR\Filters::convertTo($ʟ_fi, ' . PhpHelpers::dump(implode('', $this->context)) . ', ')
 							->append(')');
 					} else {
 						$res = $this->escapePass($res);
