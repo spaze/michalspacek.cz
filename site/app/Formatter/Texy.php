@@ -276,7 +276,7 @@ class Texy extends NetxtenTexy
 		}
 		$defaultParams = current($params);
 		if ($defaultParams === false) {
-			throw new ShouldNotHappenException('The array should not be empty');
+			throw new ShouldNotHappenException("The blog links array should not be empty, maybe the linked blog post '{$url}' is missing?");
 		}
 		$this->localeLinkGenerator->setDefaultParams($params, $defaultParams);
 		return $this->localeLinkGenerator->allLinks("Www:Post:default{$fragment}", $params)[$locale];
