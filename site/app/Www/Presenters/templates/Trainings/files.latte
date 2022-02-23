@@ -14,7 +14,7 @@
 {var $type = $remote ? 'remote' : 'regular'}
 <p>
 	{capture $date}{$trainingStart|localeIntervalDay:$trainingEnd}{/capture}
-	{_messages.trainings.files.thankyou.$type|format:$trainingTitle:$date}
+	{_messages.trainings.files.thankyou.$type|format:$trainingTitle, $date}
 	{_messages.trainings.files.download.$type.$familiar}
 </p>
 <ul>
