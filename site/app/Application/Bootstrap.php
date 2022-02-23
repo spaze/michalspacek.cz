@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use JakubOnderka\PhpConsoleColor\ConsoleColor;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
 use Nette\Utils\Arrays;
+use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
 class Bootstrap
 {
