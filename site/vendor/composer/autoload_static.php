@@ -35,17 +35,14 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'ParagonIE\\HiddenString\\' => 23,
             'ParagonIE\\Halite\\' => 17,
             'ParagonIE\\ConstantTime\\' => 23,
+            'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' => 40,
+            'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPStan\\' => 8,
         ),
         'M' => 
         array (
             'MichalSpacekCz\\' => 15,
-        ),
-        'J' => 
-        array (
-            'JakubOnderka\\PhpConsoleHighlighter\\' => 35,
-            'JakubOnderka\\PhpConsoleColor\\' => 29,
         ),
         'D' => 
         array (
@@ -122,6 +119,14 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
+        'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-highlighter/src',
+        ),
+        'PHP_Parallel_Lint\\PhpConsoleColor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
+        ),
         'PHPStan\\PhpDocParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
@@ -134,14 +139,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'MichalSpacekCz\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
-        ),
-        'JakubOnderka\\PhpConsoleHighlighter\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-highlighter/src',
-        ),
-        'JakubOnderka\\PhpConsoleColor\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
         ),
         'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
         array (
@@ -165,8 +162,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Contributte\\Translation\\DebuggerTranslator' => __DIR__ . '/..' . '/contributte/translation/src/compatibility.php',
-        'Contributte\\Translation\\LoggerTranslator' => __DIR__ . '/..' . '/contributte/translation/src/compatibility.php',
         'JakubOnderka\\PhpParallelLint\\Application' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Application.php',
         'JakubOnderka\\PhpParallelLint\\ArrayIterator' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Settings.php',
         'JakubOnderka\\PhpParallelLint\\Blame' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Error.php',

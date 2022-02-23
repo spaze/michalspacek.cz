@@ -40,7 +40,7 @@ trait FunctionLike
 
 
 	/** @return static */
-	public function setBody(string $code, array $args = null): self
+	public function setBody(string $code, ?array $args = null): self
 	{
 		$this->body = $args === null
 			? $code
@@ -56,7 +56,7 @@ trait FunctionLike
 
 
 	/** @return static */
-	public function addBody(string $code, array $args = null): self
+	public function addBody(string $code, ?array $args = null): self
 	{
 		$this->body .= ($args === null ? $code : (new Dumper)->format($code, ...$args)) . "\n";
 		return $this;
@@ -74,6 +74,7 @@ trait FunctionLike
 		foreach ($val as $v) {
 			$this->parameters[$v->getName()] = $v;
 		}
+
 		return $this;
 	}
 
@@ -94,6 +95,7 @@ trait FunctionLike
 		if (func_num_args() > 1) {
 			$param->setDefaultValue($defaultValue);
 		}
+
 		return $this->parameters[$name] = $param;
 	}
 
@@ -178,7 +180,7 @@ trait FunctionLike
 
 
 	/** @deprecated */
-	public function setNamespace(Nette\PhpGenerator\PhpNamespace $val = null): self
+	public function setNamespace(?Nette\PhpGenerator\PhpNamespace $val = null): self
 	{
 		trigger_error(__METHOD__ . '() is deprecated', E_USER_DEPRECATED);
 		return $this;

@@ -94,11 +94,6 @@ class Parser
 			$input = substr($input, 3);
 		}
 
-		if (preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]#', $input, $m, PREG_OFFSET_CAPTURE)) {
-			trigger_error('Template contains control character \x' . dechex(ord($m[0][0])) . ' on line ' . (substr_count($input, "\n", 0, $m[0][1]) + 1) . '.', E_USER_WARNING);
-			$input = preg_replace('#[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]#', '', $input);
-		}
-
 		$this->input = $input = str_replace("\r\n", "\n", $input);
 		$this->offset = 0;
 		$this->line = 1;
@@ -107,7 +102,11 @@ class Parser
 		if (!preg_match('##u', $input)) {
 			preg_match('#(?:[\x00-\x7F]|[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3})*+#A', $input, $m);
 			$this->line += substr_count($m[0], "\n");
-			throw new \InvalidArgumentException('Template is not valid UTF-8 stream.');
+			throw new CompileException('Template is not valid UTF-8 stream.');
+
+		} elseif (preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]#', $input, $m, PREG_OFFSET_CAPTURE)) {
+			$this->line += substr_count($input, "\n", 0, $m[0][1]);
+			throw new CompileException('Template contains control character \x' . dechex(ord($m[0][0])));
 		}
 
 		$this->setSyntax($this->defaultSyntax);
@@ -397,9 +396,9 @@ class Parser
 	 * Changes macro tag delimiters.
 	 * @return static
 	 */
-	public function setSyntax(string $type)
+	public function setSyntax(?string $type)
 	{
-		$type = $type ?: $this->defaultSyntax;
+		$type = $type ?? $this->defaultSyntax;
 		if (!isset($this->syntaxes[$type])) {
 			throw new \InvalidArgumentException("Unknown syntax '$type'");
 		}
@@ -430,10 +429,8 @@ class Parser
 	{
 		if (!preg_match('~^
 			(?P<closing>/?)
-			(
-				(?P<name>\?|[a-z]\w*+(?:[.:-]\w+)*+(?!::|\(|\\\\))|   ## ?, name, /name, but not function( or class:: or namespace\
-				(?P<shortname>=|_(?!_)|)      ## expression, =expression, ...
-			)(?P<args>(?:' . self::RE_STRING . '|[^\'"])*?)
+			(?P<name>=|_(?!_)|[a-z]\w*+(?:[.:-]\w+)*+(?!::|\(|\\\\)|)   ## name, /name, but not function( or class:: or namespace\
+			(?P<args>(?:' . self::RE_STRING . '|[^\'"])*?)
 			(?P<modifiers>(?<!\|)\|[a-z](?P<modArgs>(?:' . self::RE_STRING . '|(?:\((?P>modArgs)\))|[^\'"/()]|/(?=.))*+))?
 			(?P<empty>/?$)
 		()$~Disx', $tag, $match)) {
@@ -445,7 +442,7 @@ class Parser
 		}
 
 		if ($match['name'] === '') {
-			$match['name'] = $match['shortname'] ?: ($match['closing'] ? '' : '=');
+			$match['name'] = $match['closing'] ? '' : '=';
 		}
 
 		return [$match['name'], trim($match['args']), $match['modifiers'], (bool) $match['empty'], (bool) $match['closing']];
@@ -474,12 +471,8 @@ class Parser
 	 */
 	protected function filter(Token $token): void
 	{
-		if ($token->type === Token::MACRO_TAG && $token->name === '/syntax') {
-			$this->setSyntax($this->defaultSyntax);
-			$token->type = Token::COMMENT;
-
-		} elseif ($token->type === Token::MACRO_TAG && $token->name === 'syntax') {
-			$this->setSyntax($token->value);
+		if ($token->type === Token::MACRO_TAG && $token->name === 'syntax') {
+			$this->setSyntax($token->closing ? $this->defaultSyntax : $token->value);
 			$token->type = Token::COMMENT;
 
 		} elseif ($token->type === Token::HTML_ATTRIBUTE_BEGIN && $token->name === 'n:syntax') {

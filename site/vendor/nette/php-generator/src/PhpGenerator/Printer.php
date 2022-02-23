@@ -51,7 +51,7 @@ class Printer
 	}
 
 
-	public function printFunction(GlobalFunction $function, PhpNamespace $namespace = null): string
+	public function printFunction(GlobalFunction $function, ?PhpNamespace $namespace = null): string
 	{
 		$this->namespace = $this->resolveTypes ? $namespace : null;
 		$line = 'function '
@@ -69,13 +69,14 @@ class Printer
 	}
 
 
-	public function printClosure(Closure $closure, PhpNamespace $namespace = null): string
+	public function printClosure(Closure $closure, ?PhpNamespace $namespace = null): string
 	{
 		$this->namespace = $this->resolveTypes ? $namespace : null;
 		$uses = [];
 		foreach ($closure->getUses() as $param) {
 			$uses[] = ($param->isReference() ? '&' : '') . '$' . $param->getName();
 		}
+
 		$useStr = strlen($tmp = implode(', ', $uses)) > $this->wrapLength && count($uses) > 1
 			? "\n" . $this->indentation . implode(",\n" . $this->indentation, $uses) . "\n"
 			: $tmp;
@@ -91,7 +92,7 @@ class Printer
 	}
 
 
-	public function printArrowFunction(Closure $closure, PhpNamespace $namespace = null): string
+	public function printArrowFunction(Closure $closure, ?PhpNamespace $namespace = null): string
 	{
 		$this->namespace = $this->resolveTypes ? $namespace : null;
 		foreach ($closure->getUses() as $use) {
@@ -99,6 +100,7 @@ class Printer
 				throw new Nette\InvalidArgumentException('Arrow function cannot bind variables by-reference.');
 			}
 		}
+
 		$body = Helpers::simplifyTaggedNames($closure->getBody(), $this->namespace);
 
 		return self::printAttributes($closure->getAttributes())
@@ -110,7 +112,7 @@ class Printer
 	}
 
 
-	public function printMethod(Method $method, PhpNamespace $namespace = null): string
+	public function printMethod(Method $method, ?PhpNamespace $namespace = null): string
 	{
 		$this->namespace = $this->resolveTypes ? $namespace : null;
 		$method->validate();
@@ -139,7 +141,7 @@ class Printer
 	}
 
 
-	public function printClass(ClassType $class, PhpNamespace $namespace = null): string
+	public function printClass(ClassType $class, ?PhpNamespace $namespace = null): string
 	{
 		$this->namespace = $this->resolveTypes ? $namespace : null;
 		$class->validate();
@@ -165,6 +167,7 @@ class Printer
 				. ($case->getValue() === null ? '' : ' = ' . $this->dump($case->getValue()))
 				. ";\n";
 		}
+
 		$enumType = isset($case) && $case->getValue() !== null
 			? $this->returnTypeColon . Type::getType($case->getValue())
 			: '';
@@ -242,6 +245,7 @@ class Printer
 		foreach ($namespace->getClasses() as $class) {
 			$items[] = $this->printClass($class, $namespace);
 		}
+
 		foreach ($namespace->getFunctions() as $function) {
 			$items[] = $this->printFunction($function, $namespace);
 		}
@@ -292,6 +296,7 @@ class Printer
 				? "use $prefix$original;\n"
 				: "use $prefix$original as $alias;\n";
 		}
+
 		return implode('', $uses);
 	}
 
@@ -339,14 +344,17 @@ class Printer
 		if ($type === null) {
 			return '';
 		}
+
 		if ($this->namespace) {
 			$type = $this->namespace->simplifyType($type);
 		}
+
 		if ($nullable && strcasecmp($type, 'mixed')) {
 			$type = strpos($type, '|') === false
 				? '?' . $type
 				: $type . '|null';
 		}
+
 		return $type;
 	}
 
@@ -367,6 +375,7 @@ class Printer
 		if (!$attrs) {
 			return '';
 		}
+
 		$this->dumper->indentation = $this->indentation;
 		$items = [];
 		foreach ($attrs as $attr) {
@@ -374,6 +383,7 @@ class Printer
 			$args = Helpers::simplifyTaggedNames($args, $this->namespace);
 			$items[] = $this->printType($attr->getName(), false) . ($args ? "($args)" : '');
 		}
+
 		return $inline
 			? '#[' . implode(', ', $items) . '] '
 			: '#[' . implode("]\n#[", $items) . "]\n";

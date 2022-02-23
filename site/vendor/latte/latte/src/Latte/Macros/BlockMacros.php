@@ -110,7 +110,7 @@ class BlockMacros extends MacroSet
 		}
 
 		return [
-			($this->extends === null ? '' : '$this->parentName = ' . $this->extends . ';') . implode($this->imports),
+			($this->extends === null ? '' : '$this->parentName = ' . $this->extends . ';') . implode('', $this->imports),
 		];
 	}
 
@@ -158,7 +158,7 @@ class BlockMacros extends MacroSet
 				'$this->createTemplate(%node.word, %node.array? + $this->params, "include")->renderToContentType(%raw, %word) %node.line;',
 				$node->modifiers
 					? $writer->write('function ($s, $type) { $ʟ_fi = new LR\FilterInfo($type); return %modifyContent($s); }')
-					: PhpHelpers::dump($noEscape ? null : implode($node->context)),
+					: PhpHelpers::dump($noEscape ? null : implode('', $node->context)),
 				$name
 			);
 		}
@@ -185,7 +185,7 @@ class BlockMacros extends MacroSet
 			. '%node.array? + ' . $key
 			. ($node->modifiers
 				? ', function ($s, $type) { $ʟ_fi = new LR\FilterInfo($type); return %modifyContent($s); }'
-				: ($noEscape || $parent ? '' : ', ' . PhpHelpers::dump(implode($node->context))))
+				: ($noEscape || $parent ? '' : ', ' . PhpHelpers::dump(implode('', $node->context))))
 			. ') %node.line;'
 		);
 	}
@@ -197,14 +197,18 @@ class BlockMacros extends MacroSet
 	 */
 	public function macroIncludeBlock(MacroNode $node, PhpWriter $writer): string
 	{
-		//trigger_error('Macro {includeblock} is deprecated, use {include 'file.latte' with blocks} or similar macro {import}.', E_USER_DEPRECATED);
+		trigger_error("Macro {includeblock} is deprecated, use {include $node->args with blocks} or similar macro {import}.", E_USER_DEPRECATED);
 		$node->replaced = false;
 		$node->validate(true);
 		return $writer->write(
-			'ob_start(function () {});
-			$this->createTemplate(%node.word, %node.array? + get_defined_vars(), "includeblock")->renderToContentType(%var) %node.line;
-			echo rtrim(ob_get_clean());',
-			implode($node->context)
+			'
+			ob_start(function () {});
+			try {
+				$this->createTemplate(%node.word, %node.array? + get_defined_vars(), "includeblock")->renderToContentType(%var) %node.line;
+			} finally {
+				echo rtrim(ob_get_clean());
+			}',
+			implode('', $node->context)
 		);
 	}
 
@@ -269,10 +273,10 @@ class BlockMacros extends MacroSet
 
 			$node->modifiers .= '|escape';
 			$node->closingCode = $writer->write(
-				'<?php $ʟ_fi = new LR\FilterInfo(%var); echo %modifyContent(ob_get_clean()); ?>',
-				implode($node->context)
+				'<?php } finally { $ʟ_fi = new LR\FilterInfo(%var); echo %modifyContent(ob_get_clean()); } ?>',
+				implode('', $node->context)
 			);
-			return $writer->write('ob_start(function () {}) %node.line;');
+			return $writer->write('ob_start(function () {}) %node.line; try {');
 		}
 
 		if (Helpers::startsWith((string) $node->context[1], Latte\Compiler::CONTEXT_HTML_ATTRIBUTE)) {
@@ -397,7 +401,7 @@ class BlockMacros extends MacroSet
 		return $writer->write(
 			'$this->addBlock($ʟ_nm = %word, %var, [[$this, %var]], %var);',
 			$data->name,
-			implode($node->context),
+			implode('', $node->context),
 			$func,
 			$layer
 		);
@@ -425,6 +429,10 @@ class BlockMacros extends MacroSet
 
 		} elseif ($data->name !== '' && !preg_match('#^[a-z]#iD', $data->name)) {
 			throw new CompileException("Snippet name must start with letter a-z, '$data->name' given.");
+		}
+
+		if ($node->prefix && $node->prefix !== $node::PREFIX_NONE) {
+			trigger_error("Use n:snippet instead of {$node->getNotation()}", E_USER_DEPRECATED);
 		}
 
 		$block = $this->addBlock($node, Template::LAYER_SNIPPET);
@@ -558,7 +566,7 @@ class BlockMacros extends MacroSet
 		}
 
 		$block = $this->blocks[$layer ?? $this->index][$data->name] = new Block;
-		$block->contentType = implode($node->context);
+		$block->contentType = implode('', $node->context);
 		$block->comment = "{{$node->name} {$node->args}} on line {$node->startLine}";
 		return $block;
 	}
@@ -606,7 +614,7 @@ class BlockMacros extends MacroSet
 				try { $this->createTemplate(%word, %node.array, "embed")->renderToContentType(%var) %node.line; }
 				finally { $this->leaveBlockLayer(); } ?>' . "\n",
 				$name,
-				implode($node->context)
+				implode('', $node->context)
 			);
 
 		} else {
@@ -616,7 +624,7 @@ class BlockMacros extends MacroSet
 				try { $this->renderBlock(%raw, %node.array, %var) %node.line; }
 				finally { $this->leaveBlockLayer(); } ?>' . "\n",
 				$this->isDynamic($name) ? $writer->formatWord($name) : PhpHelpers::dump($name),
-				implode($node->context)
+				implode('', $node->context)
 			);
 		}
 	}

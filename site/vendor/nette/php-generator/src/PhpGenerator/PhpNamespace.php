@@ -55,6 +55,7 @@ final class PhpNamespace
 		if ($name !== '' && !Helpers::isNamespaceIdentifier($name)) {
 			throw new Nette\InvalidArgumentException("Value '$name' is not valid name.");
 		}
+
 		$this->name = $name;
 	}
 
@@ -93,7 +94,7 @@ final class PhpNamespace
 	 * @throws InvalidStateException
 	 * @return static
 	 */
-	public function addUse(string $name, string $alias = null, string $of = self::NAME_NORMAL): self
+	public function addUse(string $name, ?string $alias = null, string $of = self::NAME_NORMAL): self
 	{
 		if (
 			!Helpers::isNamespaceIdentifier($name, true)
@@ -117,7 +118,6 @@ final class PhpNamespace
 				$lower = strtolower($alias);
 				$counter++;
 			} while ((isset($aliases[$lower]) && strcasecmp($aliases[$lower], $name) !== 0) || isset($used[$lower]));
-
 		} else {
 			$lower = strtolower($alias);
 			if (isset($aliases[$lower]) && strcasecmp($aliases[$lower], $name) !== 0) {
@@ -135,14 +135,14 @@ final class PhpNamespace
 
 
 	/** @return static */
-	public function addUseFunction(string $name, string $alias = null): self
+	public function addUseFunction(string $name, ?string $alias = null): self
 	{
 		return $this->addUse($name, $alias, self::NAME_FUNCTION);
 	}
 
 
 	/** @return static */
-	public function addUseConstant(string $name, string $alias = null): self
+	public function addUseConstant(string $name, ?string $alias = null): self
 	{
 		return $this->addUse($name, $alias, self::NAME_CONSTANT);
 	}
@@ -199,6 +199,7 @@ final class PhpNamespace
 		if (isset(Helpers::KEYWORDS[strtolower($name)]) || $name === '') {
 			return $name;
 		}
+
 		$name = ltrim($name, '\\');
 
 		if ($of !== self::NAME_NORMAL) {
@@ -207,6 +208,7 @@ final class PhpNamespace
 					return $alias;
 				}
 			}
+
 			return $this->simplifyName(Helpers::extractNamespace($name) . '\\') . Helpers::extractShortName($name);
 		}
 
@@ -219,6 +221,7 @@ final class PhpNamespace
 			if ($relative && self::startsWith($relative . '\\', $alias . '\\')) {
 				$relative = null;
 			}
+
 			if (self::startsWith($name . '\\', $original . '\\')) {
 				$short = $alias . substr($name, strlen($original));
 				if (!isset($shortest) || strlen($shortest) > strlen($short)) {
@@ -242,10 +245,12 @@ final class PhpNamespace
 		if ($name === null) {
 			throw new Nette\InvalidArgumentException('Class does not have a name.');
 		}
+
 		$lower = strtolower($name);
 		if ($orig = array_change_key_case($this->aliases[self::NAME_NORMAL])[$lower] ?? null) {
 			throw new Nette\InvalidStateException("Name '$name' used already as alias for $orig.");
 		}
+
 		$this->classes[$lower] = $class;
 		return $this;
 	}
@@ -276,13 +281,28 @@ final class PhpNamespace
 	}
 
 
+	public function removeClass(string $name): self
+	{
+		unset($this->classes[strtolower($name)]);
+		return $this;
+	}
+
+
 	public function addFunction(string $name): GlobalFunction
 	{
 		$lower = strtolower($name);
 		if ($orig = array_change_key_case($this->aliases[self::NAME_FUNCTION])[$lower] ?? null) {
 			throw new Nette\InvalidStateException("Name '$name' used already as alias for $orig.");
 		}
+
 		return $this->functions[$lower] = new GlobalFunction($name);
+	}
+
+
+	public function removeFunction(string $name): self
+	{
+		unset($this->functions[strtolower($name)]);
+		return $this;
 	}
 
 
@@ -293,6 +313,7 @@ final class PhpNamespace
 		foreach ($this->classes as $class) {
 			$res[$class->getName()] = $class;
 		}
+
 		return $res;
 	}
 
@@ -304,6 +325,7 @@ final class PhpNamespace
 		foreach ($this->functions as $fn) {
 			$res[$fn->getName()] = $fn;
 		}
+
 		return $res;
 	}
 
@@ -322,6 +344,7 @@ final class PhpNamespace
 			if (PHP_VERSION_ID >= 70400) {
 				throw $e;
 			}
+
 			trigger_error('Exception in ' . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 			return '';
 		}

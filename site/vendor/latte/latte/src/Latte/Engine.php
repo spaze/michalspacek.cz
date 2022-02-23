@@ -17,8 +17,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.10.8';
-	public const VERSION_ID = 21008;
+	public const VERSION = '2.11.0';
+	public const VERSION_ID = 21100;
 
 	/** Content types */
 	public const
@@ -137,6 +137,10 @@ class Engine
 	 */
 	public function compile(string $name): string
 	{
+		if ($this->sandboxed && !$this->policy) {
+			throw new \LogicException('In sandboxed mode you need to set a security policy.');
+		}
+
 		foreach ($this->onCompile ?: [] as $cb) {
 			(Helpers::checkCallback($cb))($this);
 		}
