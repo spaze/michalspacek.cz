@@ -58,7 +58,6 @@ label:
 	webtop100juror: "**WebTop100** juror a guarantor"
 	skyper: "A **Skyper** based in Prague, Czech Republic"
 	slevomat: "A developer in **Slevomat.cz**"
-	ipo48: "Co-organizer of **IPO48**"
 	tojeono: "Co-founder of hosting service **tojeono.cz**"
 	bughunter: "Occasional **bug hunter**"
 	otherprojects: "Other projects"
@@ -171,10 +170,6 @@ who:
 	slevomat:
 		1: "I was working for one of the fastest growing on-line companies in the Czech Republic from September 2013 to June 2014."
 		2: "I've done a talk about how we've secured the application and user data. The slides from the talk are on-line and the talk is called \"How we have improved the security of Slevomat.cz\":[%s] (in Czech only)."
-	ipo48:
-		1: "The IPO48 event held at February 2011 hosted 100+ developers, designers, and entrepreneurs all with focus on modern technology."
-		2: "They had to find their teammates, build an application prototype and create a business model that would succeed in the fierce competition in the global market."
-		3: "You can read about the event in \"Zdroják\":[%s], at \"David Grudl\":[%s], and at \"John Vanhara\":[%s] (all in Czech only)."
 	tojeono:
 		1: "In late 2003, my colleagues and I decided to purchase our own servers, which we've offered under the brand name \"tojeono.cz\":[%s] to use by our clients and other customers who required customized hosting services."
 		2: "I left the project after about a year and after two more years I also left my colleagues."

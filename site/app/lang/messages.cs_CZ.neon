@@ -58,7 +58,6 @@ label:
 	webtop100juror: "Porotce a garant v soutěži **WebTop100**"
 	skyper: "Zaměstnanec v pražské kanceláři **Skype**"
 	slevomat: "Vývojář ve **Slevomatu**"
-	ipo48: "Spolupořadatel **IPO48**"
 	tojeono: "Spoluzakladatel webhostingu **tojeono.cz**"
 	bughunter: "Občasný **lovec chyb**"
 	otherprojects: "Další projekty"
@@ -171,10 +170,6 @@ who:
 	slevomat:
 		1: "Od září 2013 do konce června 2014 jsem pracoval pro jednu z nejrychleji rostoucích firem v ČR."
 		2: "O tom, jak jsme zabezpečovali data Slevomatu i zákazníků se dozvíte v prezentaci \"Jak jsme zlepšili zabezpečení Slevomatu\":[%s]."
-	ipo48:
-		1: "V únoru 2011 se v Praze na akci IPO48 sešlo více jak stovka vývojářů, designérů a podnikatelů zaměřujících se na moderní technologie."
-		2: "Měli během 48 hodin vytvořit svůj tým, vyvinout prototyp aplikace a sestavit obchodní model, který by uspěl ve tvrdé konkurenci na globálním trhu."
-		3: "O akci si můžete přečíst třeba na \"Zdrojáku\":[%s], u \"Davida Grudla\":[%s] nebo u \"Johna Vanhary\":[%s]."
 	tojeono:
 		1: "Koncem roku 2003 jsme se s kolegy rozhodli pro pořízení vlastních serverů, které jsme pod značkou \"tojeono.cz\":[%s] nabídli k využívání i dalším zákazníkům, kteří požadovali individuální nastavení služeb."
 		2: "Projekt jsem opustil přibližně po roce a po dalších dvou letech jsem opustil i kolegy."
