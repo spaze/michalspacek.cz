@@ -77,6 +77,7 @@
 	},
 	"scripts": {
 		"cs-fix": "vendor/squizlabs/php_codesniffer/bin/phpcbf app/ public/ tests/",
+		"check-file-patterns": "bin/check-file-patterns.sh",
 		"lint": "vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors app/ public/ tests/",
 		"lint-latte": "vendor/latte/latte/bin/latte-lint app/",
 		"lint-neon": "vendor/nette/neon/bin/neon-lint app/",
@@ -84,6 +85,7 @@
 		"phpstan": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon",
 		"phpstan-vendor": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon",
 		"test": [
+			"@check-file-patterns",
 			"@lint",
 			"@lint-neon",
 			"@phpcs",
