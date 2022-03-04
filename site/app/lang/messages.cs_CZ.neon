@@ -65,7 +65,7 @@ label:
 	banksczhttps: "HTTPS na českých bankách"
 	upckeys: "UPC Wi-Fi hesla"
 	pulse:
-	    passwordstorages: Jak ukládají hesla
+		passwordstorages: Jak ukládají hesla
 	mytrainings: Školím
 	myarticles: Píšu články
 	allarticles: Všechny články
@@ -339,10 +339,10 @@ photo:
 		header: "Přednášková"
 		desc: "Takto mě zachytil fotograf na WebTop100, když jsem vyprávěl o \"rychlosti a zabezpečení webu\":[%s]."
 projects:
-    otherprojects: "Toto jsou mé další projekty:"
-    pulse:
-        passwordstorages: "Seznam firem, které nějakým způsobem zveřejnily způsob ukládání uživatelských hesel. Projektem se snažím ostatní firmy inspirovat k bezpečnému ukládání hesel."
-    upckeys: "Generování výrobcem přednastavených hesel pro některé routery od UPC. Zkontrolujte si Wi-Fi a případně heslo změňte."
+	otherprojects: "Toto jsou mé další projekty:"
+	pulse:
+		passwordstorages: "Seznam firem, které nějakým způsobem zveřejnily způsob ukládání uživatelských hesel. Projektem se snažím ostatní firmy inspirovat k bezpečnému ukládání hesel."
+	upckeys: "Generování výrobcem přednastavených hesel pro některé routery od UPC. Zkontrolujte si Wi-Fi a případně heslo změňte."
 certificates:
 	admin:
 		validdays: "%count% den|%count% dny|%count% dní"
@@ -358,4 +358,4 @@ blog:
 		postupdated: "Příspěvek \"%s\" upraven • \"Upravit\":[%s] • \"Zobrazit\":[%s]"
 		duplicateslug: "Příspěvek s takovým slugem již existuje"
 license:
-    content: Obsah podléhá licenci Creative Commons Uveďte původ 4.0 Mezinárodní
+	content: Obsah podléhá licenci Creative Commons Uveďte původ 4.0 Mezinárodní

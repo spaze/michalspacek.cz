@@ -65,7 +65,7 @@ label:
 	banksczhttps: "Czech banking HTTPS"
 	upckeys: "UPC Wi-Fi keys"
 	pulse:
-	    passwordstorages: Password storages
+		passwordstorages: Password storages
 	mytrainings: My trainings
 	myarticles: My articles
 	allarticles: All articles
@@ -339,10 +339,10 @@ photo:
 		header: "Speaking"
 		desc: "This photo was shot at WebTop100, when I was talking about \"web performance and security\":[%s]."
 projects:
-    otherprojects: "Here are my other projects:"
-    pulse:
-        passwordstorages: "List of companies who have disclosed how they store user passwords. I'm trying to make more companies store passwords securely."
-    upckeys: "Default password generator for some UPC routers. Check your Wi-Fi and change your password if needed."
+	otherprojects: "Here are my other projects:"
+	pulse:
+		passwordstorages: "List of companies who have disclosed how they store user passwords. I'm trying to make more companies store passwords securely."
+	upckeys: "Default password generator for some UPC routers. Check your Wi-Fi and change your password if needed."
 certificates:
 	admin:
 		validdays: "%count% day ago|%count% days ago"
@@ -358,4 +358,4 @@ blog:
 		postupdated: "Blog post \"%s\" updated • \"Edit\":[%s] • \"View\":[%s]"
 		duplicateslug: "Blog post with such slug already exists"
 license:
-    content: Content licensed under a Creative Commons Attribution 4.0 International License
+	content: Content licensed under a Creative Commons Attribution 4.0 International License
