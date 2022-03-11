@@ -143,7 +143,6 @@ class Mails
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if ($status !== Statuses::STATUS_ATTENDED || !$this->trainingStatuses->sendInvoiceAfter($application->id)) {
-					$application->files = $this->trainingFiles->getFiles($application->id);
 					$application->nextStatus = Statuses::STATUS_MATERIALS_SENT;
 					$applications[$application->id] = $application;
 				}
@@ -172,13 +171,15 @@ class Mails
 					continue;
 				}
 				if ($application->trainingStart->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
-					$application->files = $this->trainingFiles->getFiles($application->id);
 					$application->nextStatus = Statuses::STATUS_REMINDED;
 					$applications[$application->id] = $application;
 				}
 			}
 		}
 
+		foreach ($applications as $application) {
+			$application->files = $this->trainingFiles->getFiles($application->id);
+		}
 		return $applications;
 	}
 
