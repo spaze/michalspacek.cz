@@ -41,11 +41,12 @@ final class Encoder
 		if ($val instanceof \DateTimeInterface) {
 			return new Node\LiteralNode($val);
 
-		} elseif ($val instanceof Entity && $val->value === Neon::CHAIN) {
+		} elseif ($val instanceof Entity && $val->value === Neon::Chain) {
 			$node = new Node\EntityChainNode;
 			foreach ($val->attributes as $entity) {
 				$node->chain[] = $this->valueToNode($entity);
 			}
+
 			return $node;
 
 		} elseif ($val instanceof Entity) {
@@ -61,6 +62,7 @@ final class Encoder
 				$isList = is_array($val) && (!$val || array_keys($val) === range(0, count($val) - 1));
 				$node = new Node\InlineArrayNode($isList ? '[' : '{');
 			}
+
 			$node->items = $this->arrayToNodes($val, $blockMode);
 			return $node;
 
@@ -73,6 +75,7 @@ final class Encoder
 	}
 
 
+	/** @return Node\ArrayItemNode[] */
 	private function arrayToNodes($val, bool $blockMode = false): array
 	{
 		$res = [];
@@ -85,11 +88,13 @@ final class Encoder
 			if ($item->value instanceof Node\BlockArrayNode) {
 				$item->value->indentation = $this->indentation;
 			}
+
 			if ($hide && is_int($k)) {
 				$hide = $k === $counter;
 				$counter = max($k + 1, $counter);
 			}
 		}
+
 		return $res;
 	}
 }

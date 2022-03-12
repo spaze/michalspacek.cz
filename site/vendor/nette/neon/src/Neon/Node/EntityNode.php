@@ -20,15 +20,13 @@ final class EntityNode extends Node
 	public $value;
 
 	/** @var ArrayItemNode[] */
-	public $attributes = [];
+	public $attributes;
 
 
-	public function __construct(Node $value, array $attributes, int $startPos = null, int $endPos = null)
+	public function __construct(Node $value, array $attributes = [])
 	{
 		$this->value = $value;
 		$this->attributes = $attributes;
-		$this->startPos = $startPos;
-		$this->endPos = $endPos ?? $startPos;
 	}
 
 
@@ -50,12 +48,12 @@ final class EntityNode extends Node
 	}
 
 
-	public function getSubNodes(): array
+	public function &getIterator(): \Generator
 	{
-		$res = [&$this->value];
+		yield $this->value;
+
 		foreach ($this->attributes as &$item) {
-			$res[] = &$item;
+			yield $item;
 		}
-		return $res;
 	}
 }

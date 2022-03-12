@@ -47,6 +47,7 @@ class Helpers
 			echo "\t<tr>\n\t\t<th>Affected rows:</th>\n\t\t<td>", $result->getRowCount(), "</td>\n\t</tr>\n</table>\n";
 			return;
 		}
+
 		$i = 0;
 		foreach ($result as $row) {
 			if ($i === 0) {
@@ -54,8 +55,10 @@ class Helpers
 				foreach ($row as $col => $foo) {
 					echo "\t\t<th>" . htmlspecialchars($col, ENT_NOQUOTES, 'UTF-8') . "</th>\n";
 				}
+
 				echo "\t</tr>\n</thead>\n<tbody>\n";
 			}
+
 			echo "\t<tr>\n\t\t<th>", $i, "</th>\n";
 			foreach ($row as $col) {
 				if (is_bool($col)) {
@@ -65,8 +68,10 @@ class Helpers
 				} else {
 					$s = (string) $col;
 				}
+
 				echo "\t\t<td>", htmlspecialchars($s, ENT_NOQUOTES, 'UTF-8'), "</td>\n";
 			}
+
 			echo "\t</tr>\n";
 			$i++;
 		}
@@ -82,7 +87,7 @@ class Helpers
 	/**
 	 * Returns syntax highlighted SQL command.
 	 */
-	public static function dumpSql(string $sql, array $params = null, Connection $connection = null): string
+	public static function dumpSql(string $sql, ?array $params = null, ?Connection $connection = null): string
 	{
 		static $keywords1 = 'SELECT|(?:ON\s+DUPLICATE\s+KEY)?UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|DELETE|CALL|UNION|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|OFFSET|SET|VALUES|LEFT\s+JOIN|INNER\s+JOIN|TRUNCATE';
 		static $keywords2 = 'ALL|DISTINCT|DISTINCTROW|IGNORE|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|[RI]?LIKE|REGEXP|TRUE|FALSE';
@@ -120,6 +125,7 @@ class Helpers
 			if (!isset($params[$i])) {
 				return '?';
 			}
+
 			$param = $params[$i++];
 			if (
 				is_string($param)
@@ -141,6 +147,7 @@ class Helpers
 				if ($type === 'stream') {
 					$info = stream_get_meta_data($param);
 				}
+
 				return '<i' . (isset($info['uri']) ? ' title="' . htmlspecialchars($info['uri'], ENT_NOQUOTES, 'UTF-8') . '"' : null)
 					. '>&lt;' . htmlspecialchars($type, ENT_NOQUOTES, 'UTF-8') . ' resource&gt;</i> ';
 
@@ -169,6 +176,7 @@ class Helpers
 				$types[$meta['name']] = self::detectType($meta['native_type']);
 			}
 		}
+
 		return $types;
 	}
 
@@ -188,6 +196,7 @@ class Helpers
 				}
 			}
 		}
+
 		return $cache[$type];
 	}
 
@@ -206,8 +215,8 @@ class Helpers
 				if (is_string($value) && ($pos = strpos($value, '.')) !== false) {
 					$value = rtrim(rtrim($pos === 0 ? "0$value" : $value, '0'), '.');
 				}
-				$float = (float) $value;
-				$row[$key] = (string) $float === $value ? $float : $value;
+
+				$row[$key] = (float) $value;
 
 			} elseif ($type === IStructure::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
@@ -239,7 +248,7 @@ class Helpers
 	 * @param  array<callable(int, ?float): void>  $onProgress
 	 * @return int  count of commands
 	 */
-	public static function loadFromFile(Connection $connection, string $file, callable $onProgress = null): int
+	public static function loadFromFile(Connection $connection, string $file, ?callable $onProgress = null): int
 	{
 		@set_time_limit(0); // @ function may be disabled
 
@@ -266,11 +275,11 @@ class Helpers
 				if ($onProgress) {
 					$onProgress($count, isset($stat['size']) ? $size * 100 / $stat['size'] : null);
 				}
-
 			} else {
 				$sql .= $s;
 			}
 		}
+
 		if (rtrim($sql) !== '') {
 			$pdo->exec($sql);
 			$count++;
@@ -278,12 +287,13 @@ class Helpers
 				$onProgress($count, isset($stat['size']) ? 100 : null);
 			}
 		}
+
 		fclose($handle);
 		return $count;
 	}
 
 
-	/** @deprecated  use Helpers::initializeTracy() */
+	/** @deprecated  use Nette\Bridges\DatabaseTracy\ConnectionPanel::initialize() */
 	public static function createDebugPanel(
 		Connection $connection,
 		bool $explain,
@@ -291,29 +301,20 @@ class Helpers
 		Tracy\Bar $bar,
 		Tracy\BlueScreen $blueScreen
 	): ?ConnectionPanel {
-		return self::initializeTracy($connection, true, $name, $explain, $bar, $blueScreen);
+		return ConnectionPanel::initialize($connection, true, $name, $explain, $bar, $blueScreen);
 	}
 
 
+	/** @deprecated  use Nette\Bridges\DatabaseTracy\ConnectionPanel::initialize() */
 	public static function initializeTracy(
 		Connection $connection,
 		bool $addBarPanel = false,
 		string $name = '',
 		bool $explain = true,
-		Tracy\Bar $bar = null,
-		Tracy\BlueScreen $blueScreen = null
+		?Tracy\Bar $bar = null,
+		?Tracy\BlueScreen $blueScreen = null
 	): ?ConnectionPanel {
-		$blueScreen = $blueScreen ?? Tracy\Debugger::getBlueScreen();
-		$blueScreen->addPanel([ConnectionPanel::class, 'renderException']);
-
-		if ($addBarPanel) {
-			$panel = new ConnectionPanel($connection, $blueScreen);
-			$panel->explain = $explain;
-			$panel->name = $name;
-			$bar = $bar ?? Tracy\Debugger::getBar();
-			$bar->addPanel($panel);
-		}
-		return $panel ?? null;
+		return ConnectionPanel::initialize($connection, $addBarPanel, $name, $explain, $bar, $blueScreen);
 	}
 
 
@@ -363,6 +364,7 @@ class Helpers
 			$meta = $statement->getColumnMeta($i);
 			$cols[$meta['name']][] = $meta['table'] ?? '';
 		}
+
 		$duplicates = [];
 		foreach ($cols as $name => $tables) {
 			if (count($tables) > 1) {
@@ -370,6 +372,7 @@ class Helpers
 				$duplicates[] = "'$name'" . ($tables ? ' (from ' . implode(', ', $tables) . ')' : '');
 			}
 		}
+
 		return implode(', ', $duplicates);
 	}
 }

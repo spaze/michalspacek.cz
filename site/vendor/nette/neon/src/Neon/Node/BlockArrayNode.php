@@ -17,10 +17,9 @@ final class BlockArrayNode extends ArrayNode
 	public $indentation;
 
 
-	public function __construct(string $indentation = '', int $pos = null)
+	public function __construct(string $indentation = '')
 	{
 		$this->indentation = $indentation;
-		$this->startPos = $this->endPos = $pos;
 	}
 
 
@@ -29,6 +28,7 @@ final class BlockArrayNode extends ArrayNode
 		if (count($this->items) === 0) {
 			return '[]';
 		}
+
 		$res = ArrayItemNode::itemsToBlockString($this->items);
 		return preg_replace('#^(?=.)#m', $this->indentation, $res);
 	}

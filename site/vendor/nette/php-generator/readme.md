@@ -33,6 +33,7 @@ Installation
 composer require nette/php-generator
 ```
 
+- PhpGenerator 4.0 is compatible with PHP 8.0 to 8.1
 - PhpGenerator 3.6 is compatible with PHP 7.2 to 8.1
 - PhpGenerator 3.2 – 3.5 is compatible with PHP 7.1 to 8.0
 - PhpGenerator 3.1 is compatible with PHP 7.1 to 7.3
@@ -163,7 +164,7 @@ Readonly properties introduced by PHP 8.1 can be marked via `setReadOnly()`.
 
 ------
 
-If the added property, constant, method or parameter already exist, it will be overwritten.
+If the added property, constant, method or parameter already exist, it throws exception.
 
 Members can be removed using `removeProperty()`, `removeConstant()`, `removeMethod()` or `removeParameter()`.
 
@@ -225,9 +226,8 @@ Interface or Trait
 You can create interfaces and traits:
 
 ```php
-$interface = Nette\PhpGenerator\ClassType::interface('MyInterface');
-$trait = Nette\PhpGenerator\ClassType::trait('MyTrait');
-// in a similar way $class = Nette\PhpGenerator\ClassType::class('MyClass');
+$interface = Nette\PhpGenerator\InterfaceType('MyInterface');
+$trait = Nette\PhpGenerator\TraitType('MyTrait');
 ```
 
 Enums
@@ -236,7 +236,7 @@ Enums
 You can easily create the enums that PHP 8.1 brings:
 
 ```php
-$enum = Nette\PhpGenerator\ClassType::enum('Suit');
+$enum = Nette\PhpGenerator\EnumType('Suit');
 $enum->addCase('Clubs');
 $enum->addCase('Diamonds');
 $enum->addCase('Hearts');
@@ -313,7 +313,7 @@ Using Traits
 ```php
 $class = new Nette\PhpGenerator\ClassType('Demo');
 $class->addTrait('SmartObject');
-$class->addTrait('MyTrait', true)
+$class->addTrait('MyTrait')
 	->addResolution('sayHello as protected')
 	->addComment('@use MyTrait<Foo>');
 echo $class;
@@ -573,7 +573,7 @@ $class = new Nette\PhpGenerator\ClassType('Task');
 $namespace->add($class);
 ```
 
-If the class already exists, it will be overwritten.
+If the class already exists, it throws exception.
 
 You can define use-statements:
 
@@ -590,14 +590,14 @@ To simplify a fully qualified class, function or constant name according to the 
 
 ```php
 echo $namespace->simplifyName('Foo\Bar'); // 'Bar', because 'Foo' is current namespace
-echo $namespace->simplifyName('iter\range', $namespace::NAME_FUNCTION); // 'range', because of the defined use-statement
+echo $namespace->simplifyName('iter\range', $namespace::NameFunction); // 'range', because of the defined use-statement
 ```
 
 Conversely, you can convert a simplified class, function or constant name to a fully qualified one using the `resolveName` method:
 
 ```php
 echo $namespace->resolveName('Bar'); // 'Foo\Bar'
-echo $namespace->resolveName('range', $namespace::NAME_FUNCTION); // 'iter\range'
+echo $namespace->resolveName('range', $namespace::NameFunction); // 'iter\range'
 ```
 
 Class Names Resolving
@@ -720,9 +720,9 @@ Function and method bodies are empty by default. If you want to load them as wel
 (it requires `nikic/php-parser` to be installed):
 
 ```php
-$class = Nette\PhpGenerator\ClassType::withBodiesFrom(MyClass::class);
+$class = Nette\PhpGenerator\ClassType::from(PDO::class, withBodies: true);
 
-$function = Nette\PhpGenerator\GlobalFunction::withBodyFrom('dump');
+$function = Nette\PhpGenerator\GlobalFunction::from('dump', withBody: true);
 ```
 
 Load class from file
@@ -771,9 +771,10 @@ Need to customize printer behavior? Create your own by inheriting the `Printer` 
 ```php
 class MyPrinter extends Nette\PhpGenerator\Printer
 {
-	protected $indentation = "\t";
-	protected $linesBetweenProperties = 0;
-	protected $linesBetweenMethods = 1;
-	protected $returnTypeColon = ': ';
+	public int $wrapLength = 120;
+	public string $indentation = "\t";
+	public int $linesBetweenProperties = 0;
+	public int $linesBetweenMethods = 2;
+	public string $returnTypeColon = ': ';
 }
 ```

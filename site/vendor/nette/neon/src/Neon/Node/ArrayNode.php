@@ -19,18 +19,17 @@ abstract class ArrayNode extends Node
 	public $items = [];
 
 
+	/** @return mixed[] */
 	public function toValue(): array
 	{
 		return ArrayItemNode::itemsToArray($this->items);
 	}
 
 
-	public function getSubNodes(): array
+	public function &getIterator(): \Generator
 	{
-		$res = [];
 		foreach ($this->items as &$item) {
-			$res[] = &$item;
+			yield $item;
 		}
-		return $res;
 	}
 }
