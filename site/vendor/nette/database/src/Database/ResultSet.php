@@ -51,8 +51,12 @@ class ResultSet implements \Iterator, IRowContainer
 	private $types;
 
 
-	public function __construct(Connection $connection, string $queryString, array $params, callable $normalizer = null)
-	{
+	public function __construct(
+		Connection $connection,
+		string $queryString,
+		array $params,
+		?callable $normalizer = null
+	) {
 		$time = microtime(true);
 		$this->connection = $connection;
 		$this->queryString = $queryString;
@@ -70,6 +74,7 @@ class ResultSet implements \Iterator, IRowContainer
 					$type = gettype($value);
 					$this->pdoStatement->bindValue(is_int($key) ? $key + 1 : $key, $value, $types[$type] ?? PDO::PARAM_STR);
 				}
+
 				$this->pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
 				@$this->pdoStatement->execute(); // @ PHP generates warning when ATTR_ERRMODE = ERRMODE_EXCEPTION bug #73878
 			}
@@ -79,6 +84,7 @@ class ResultSet implements \Iterator, IRowContainer
 			$e->params = $params;
 			throw $e;
 		}
+
 		$this->time = microtime(true) - $time;
 	}
 
@@ -128,6 +134,7 @@ class ResultSet implements \Iterator, IRowContainer
 		if ($this->types === null) {
 			$this->types = $this->connection->getDriver()->getColumnTypes($this->pdoStatement);
 		}
+
 		return $this->types;
 	}
 
@@ -236,6 +243,7 @@ class ResultSet implements \Iterator, IRowContainer
 		if (func_num_args()) {
 			trigger_error(__METHOD__ . '() argument is deprecated.', E_USER_DEPRECATED);
 		}
+
 		$row = $this->fetch();
 		return $row ? $row[$column] : null;
 	}
@@ -271,6 +279,7 @@ class ResultSet implements \Iterator, IRowContainer
 		if ($this->rows === null) {
 			$this->rows = iterator_to_array($this);
 		}
+
 		return $this->rows;
 	}
 

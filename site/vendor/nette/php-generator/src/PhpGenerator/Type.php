@@ -52,22 +52,10 @@ class Type
 	}
 
 
-	public static function getType($value): ?string
+	/** @deprecated  use get_debug_type() */
+	public static function getType(mixed $value): ?string
 	{
-		if (is_object($value)) {
-			return get_class($value);
-		} elseif (is_int($value)) {
-			return self::INT;
-		} elseif (is_float($value)) {
-			return self::FLOAT;
-		} elseif (is_string($value)) {
-			return self::STRING;
-		} elseif (is_bool($value)) {
-			return self::BOOL;
-		} elseif (is_array($value)) {
-			return self::ARRAY;
-		} else {
-			return null;
-		}
+		trigger_error(__METHOD__ . '() is deprecated, use PHP function get_debug_type()', E_USER_DEPRECATED);
+		return is_resource($value) ? null : get_debug_type($value);
 	}
 }

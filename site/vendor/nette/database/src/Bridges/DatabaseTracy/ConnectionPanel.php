@@ -50,6 +50,29 @@ class ConnectionPanel implements Tracy\IBarPanel
 	private $blueScreen;
 
 
+	public static function initialize(
+		Connection $connection,
+		bool $addBarPanel = false,
+		string $name = '',
+		bool $explain = true,
+		?Tracy\Bar $bar = null,
+		?Tracy\BlueScreen $blueScreen = null
+	): ?self {
+		$blueScreen = $blueScreen ?? Tracy\Debugger::getBlueScreen();
+		$blueScreen->addPanel([self::class, 'renderException']);
+
+		if ($addBarPanel) {
+			$panel = new self($connection, $blueScreen);
+			$panel->explain = $explain;
+			$panel->name = $name;
+			$bar = $bar ?? Tracy\Debugger::getBar();
+			$bar->addPanel($panel);
+		}
+
+		return $panel ?? null;
+	}
+
+
 	public function __construct(Connection $connection, Tracy\BlueScreen $blueScreen)
 	{
 		$connection->onQuery[] = \Closure::fromCallable([$this, 'logQuery']);
@@ -62,6 +85,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 		if ($this->disabled) {
 			return;
 		}
+
 		$this->count++;
 
 		$source = null;
@@ -78,12 +102,12 @@ class ConnectionPanel implements Tracy\IBarPanel
 				break;
 			}
 		}
+
 		if ($result instanceof Nette\Database\ResultSet) {
 			$this->totalTime += $result->getTime();
 			if ($this->count < $this->maxQueries) {
 				$this->queries[] = [$connection, $result->getQueryString(), $result->getParameters(), $source, $result->getTime(), $result->getRowCount(), null];
 			}
-
 		} elseif ($result instanceof \PDOException && $this->count < $this->maxQueries) {
 			$this->queries[] = [$connection, $result->queryString, null, $source, null, null, $result->getMessage()];
 		}
@@ -95,12 +119,14 @@ class ConnectionPanel implements Tracy\IBarPanel
 		if (!$e instanceof \PDOException) {
 			return null;
 		}
+
 		if (isset($e->queryString)) {
 			$sql = $e->queryString;
 
 		} elseif ($item = Tracy\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
 			$sql = $item['args'][0];
 		}
+
 		return isset($sql) ? [
 			'tab' => 'SQL',
 			'panel' => Helpers::dumpSql($sql, $e->params ?? []),
@@ -141,6 +167,7 @@ class ConnectionPanel implements Tracy\IBarPanel
 				} catch (\PDOException $e) {
 				}
 			}
+
 			$query[] = $command;
 			$query[] = $explain;
 			$queries[] = $query;

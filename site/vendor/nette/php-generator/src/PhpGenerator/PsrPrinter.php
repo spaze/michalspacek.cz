@@ -15,9 +15,6 @@ namespace Nette\PhpGenerator;
  */
 final class PsrPrinter extends Printer
 {
-	/** @var string */
-	protected $indentation = '    ';
-
-	/** @var int */
-	protected $linesBetweenMethods = 1;
+	public string $indentation = '    ';
+	public int $linesBetweenMethods = 1;
 }
