@@ -491,6 +491,7 @@ return array(
     'Tester\\Helpers' => $vendorDir . '/nette/tester/src/Framework/Helpers.php',
     'Tester\\Runner\\CliTester' => $vendorDir . '/nette/tester/src/Runner/CliTester.php',
     'Tester\\Runner\\CommandLine' => $vendorDir . '/nette/tester/src/Runner/CommandLine.php',
+    'Tester\\Runner\\InterruptException' => $vendorDir . '/nette/tester/src/Runner/exceptions.php',
     'Tester\\Runner\\Job' => $vendorDir . '/nette/tester/src/Runner/Job.php',
     'Tester\\Runner\\OutputHandler' => $vendorDir . '/nette/tester/src/Runner/OutputHandler.php',
     'Tester\\Runner\\Output\\ConsolePrinter' => $vendorDir . '/nette/tester/src/Runner/Output/ConsolePrinter.php',
