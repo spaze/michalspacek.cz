@@ -30,6 +30,7 @@ parameters:
 		-
 			function: 'pcntl_*()'
 			allowIn:
+				- vendor/nette/tester/src/Runner/CliTester.php
 				- vendor/nette/tester/src/Runner/Runner.php
 		# bundled disallowed-dangerous-calls.neon
 		-
