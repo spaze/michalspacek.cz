@@ -49,6 +49,13 @@ class TrainingFilesCollectionTest extends TestCase
 		Assert::same(456, $this->collection->getNewestFile()->getId());
 	}
 
+
+	public function testGetNewestFileButNoFiles(): void
+	{
+		$this->collection = new TrainingFilesCollection();
+		Assert::null($this->collection->getNewestFile());
+	}
+
 }
 
 (new TrainingFilesCollectionTest())->run();
