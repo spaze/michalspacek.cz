@@ -42,7 +42,7 @@ class TrainingFilesCollection implements IteratorAggregate, Countable
 	{
 		$newest = null;
 		foreach ($this->files as $file) {
-			if ($newest === null || $file->getAdded() > $newest) {
+			if ($newest === null || $file->getAdded() > $newest->getAdded()) {
 				$newest = $file;
 			}
 		}
