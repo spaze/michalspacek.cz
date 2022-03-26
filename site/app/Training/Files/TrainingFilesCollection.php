@@ -38,11 +38,11 @@ class TrainingFilesCollection implements IteratorAggregate, Countable
 	}
 
 
-	public function getNewestFile(): TrainingFile
+	public function getNewestFile(): ?TrainingFile
 	{
 		$newest = null;
 		foreach ($this->files as $file) {
-			if ($newest === null || $file->getAdded() > $newest) {
+			if ($newest === null || $file->getAdded() > $newest->getAdded()) {
 				$newest = $file;
 			}
 		}

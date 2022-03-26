@@ -75,7 +75,7 @@ class TrainingMailsOutboxFactory
 					}
 					break;
 				case Statuses::STATUS_MATERIALS_SENT:
-					$uploadedAfterStart = $files->getNewestFile()->getAdded() > $application->trainingStart;
+					$uploadedAfterStart = $files->getNewestFile()?->getAdded() > $application->trainingStart;
 					$checked = $filesCount > 0 && $uploadedAfterStart;
 					$disabled = !$checked;
 					if ($filesCount === 0) {
