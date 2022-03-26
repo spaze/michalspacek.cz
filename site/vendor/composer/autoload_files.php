@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     '9b38cf48e83f5d8f60375221cd213eee' => $vendorDir . '/phpstan/phpstan/bootstrap.php',
-    'd507e002f7fce7f0c6dbf1f22edcb902' => $vendorDir . '/tracy/tracy/src/Tracy/functions.php',
     '6e3fae29631ef280660b3cdad06f25a8' => $vendorDir . '/symfony/deprecation-contracts/function.php',
     'a1105708a18b76903365ca1c4aa61b02' => $vendorDir . '/symfony/translation/Resources/functions.php',
+    'd507e002f7fce7f0c6dbf1f22edcb902' => $vendorDir . '/tracy/tracy/src/Tracy/functions.php',
 );
