@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'cf8b5345a1a4d6d39e34e9f3f48056a03553a0d0',
+        'reference' => '5842a39437d8f864c49b9cbe1f262109e7207ce7',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'cf8b5345a1a4d6d39e34e9f3f48056a03553a0d0',
+            'reference' => '5842a39437d8f864c49b9cbe1f262109e7207ce7',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
@@ -433,12 +433,12 @@
             'dev_requirement' => false,
         ),
         'spaze/phpstan-disallowed-calls' => array(
-            'pretty_version' => 'v2.2.0',
-            'version' => '2.2.0.0',
+            'pretty_version' => 'v2.3.0',
+            'version' => '2.3.0.0',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../spaze/phpstan-disallowed-calls',
             'aliases' => array(),
-            'reference' => '2eafca7bb34fc64e6f415506897d9aaf56041c08',
+            'reference' => 'a16e9219f02c3b70099fe640abbb39b0452aa8d4',
             'dev_requirement' => true,
         ),
         'spaze/phpstan-disallowed-calls-nette' => array(

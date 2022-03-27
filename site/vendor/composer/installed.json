@@ -3168,17 +3168,17 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v2.2.0",
-            "version_normalized": "2.2.0.0",
+            "version": "v2.3.0",
+            "version_normalized": "2.3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "2eafca7bb34fc64e6f415506897d9aaf56041c08"
+                "reference": "a16e9219f02c3b70099fe640abbb39b0452aa8d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/2eafca7bb34fc64e6f415506897d9aaf56041c08",
-                "reference": "2eafca7bb34fc64e6f415506897d9aaf56041c08",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/a16e9219f02c3b70099fe640abbb39b0452aa8d4",
+                "reference": "a16e9219f02c3b70099fe640abbb39b0452aa8d4",
                 "shasum": ""
             },
             "require": {
@@ -3188,12 +3188,12 @@
             "require-dev": {
                 "nette/neon": "^3.2",
                 "nikic/php-parser": "^4.13",
-                "php-parallel-lint/php-console-highlighter": "^0.5.0",
+                "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpunit/phpunit": "^7.0 || ^9.4.2",
                 "spaze/coding-standard": "^0.0"
             },
-            "time": "2022-01-05T04:33:49+00:00",
+            "time": "2022-03-27T03:39:58+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -3222,7 +3222,7 @@
             "description": "Disallowed method and function calls plug-in for PHPStan",
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.2.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.3.0"
             },
             "install-path": "../spaze/phpstan-disallowed-calls"
         },
