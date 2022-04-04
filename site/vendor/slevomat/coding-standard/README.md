@@ -95,6 +95,10 @@ Sniff provides the following settings:
 * `shortNullable`: `yes` requires usage of `?` for nullable type hint, `no` disallows it. None is set by default so both are enabled.
 * `nullPosition`: `first` requires `null` on first position in the type hint, `last` requires last position. None is set by default so `null` can be everywhere.
 
+#### SlevomatCodingStandard.Exceptions.DisallowNonCapturingCatch
+
+This sniff forbids use of non-capturing catch introduced in PHP 8.0 [PHP RFC: non-capturing catches](https://wiki.php.net/rfc/non-capturing_catches).
+
 #### SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly 🔧🚧
 
 In PHP 7.0, a [`Throwable` interface was added](https://wiki.php.net/rfc/throwable-interface) that allows catching and handling errors in more cases than `Exception` previously allowed. So, if the catch statement contained `Exception` on PHP 5.x, it means it should probably be rewritten to reference `Throwable` on PHP 7.x. This sniff enforces that.
@@ -179,6 +183,10 @@ Disallows late static binding for constants.
 #### SlevomatCodingStandard.Classes.ForbiddenPublicProperty
 
 Disallows using public properties.
+
+#### SlevomatCodingStandard.Classes.RequireAbstractOrFinal 🔧
+
+Requires the class to be declared either as abstract or as final.
 
 #### SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion 🔧
 
@@ -289,6 +297,8 @@ Reports closures not using `$this` that are not declared `static`.
 
 Disallows long functions. This sniff provides the following setting:
 
+* `includeComments`: should comments be included in the count (default value is false).
+* `includeWhitespace`: shoud empty lines be included in the count (default value is false).
 * `maxLinesLength`: specifies max allowed function lines length (default value is 20).
 
 #### SlevomatCodingStandard.PHP.DisallowDirectMagicInvokeCall 🔧
@@ -889,6 +899,7 @@ This sniff provides the following setting:
 * `enable`: either to enable or not this sniff. By default, it is enabled for PHP versions 7.4 or higher.
 * `minDigitsBeforeDecimalPoint`: the mininum digits before decimal point to require separator.
 * `minDigitsAfterDecimalPoint`: the mininum digits after decimal point to require separator.
+* `ignoreOctalNumbers`: to ignore octal numbers.
 
 #### SlevomatCodingStandard.PHP.ReferenceSpacing 🔧
 
