@@ -141,7 +141,7 @@ class BlogPresenter extends BasePresenter
 		$this->texyFormatter->disableCache();
 		$post = new Data();
 		$post->slug = $this->request->getPost('slug');
-		$post->title = $this->request->getPost('title');
+		$post->titleTexy = $this->request->getPost('title');
 		$post->leadTexy = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));
 		$post->textTexy = $this->request->getPost('text');
 		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
