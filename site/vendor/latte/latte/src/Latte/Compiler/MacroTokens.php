@@ -111,6 +111,10 @@ class MacroTokens extends TokenIterator
 			$expr = $this->nextValue('(') . $this->joinUntilSameDepth(')') . $this->nextValue(')');
 		} else {
 			$expr = $this->joinUntilSameDepth(self::T_WHITESPACE, ',');
+			if (preg_match('~[\w-]+\{?\$~A', $expr)) {
+				trigger_error("The expression '$expr' should be put in double quotes.", E_USER_DEPRECATED);
+			}
+
 			if ($this->isNext(...[
 				'%', '&', '*', '.', '<', '=', '>', '?', '^', '|', ':',
 				'::', '=>', '->', '?->', '??->', '<<', '>>', '<=>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||', '??', '**',
@@ -174,7 +178,7 @@ class MacroTokens extends TokenIterator
 		$pos = $this->position;
 		if (
 			($mod = $this->nextValue(...$modifiers))
-			&& $this->nextToken($this::T_WHITESPACE)
+			&& ($this->nextToken($this::T_WHITESPACE) || !ctype_alnum($mod))
 			&& ($name = $this->fetchWord())
 		) {
 			return [$name, $mod];

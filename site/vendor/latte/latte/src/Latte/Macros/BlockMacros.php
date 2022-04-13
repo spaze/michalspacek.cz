@@ -134,13 +134,14 @@ class BlockMacros extends MacroSet
 
 		$node->tokenizer->reset();
 
-		[$name, $mod] = $node->tokenizer->fetchWordWithModifier(['block', 'file']);
-		if ($mod !== 'block') {
-			if ($mod === 'file' || !$name || !preg_match('~#|[\w-]+$~DA', $name)) {
-				return false; // {include file}
-			}
-
-			$name = ltrim($name, '#');
+		[$name, $mod] = $node->tokenizer->fetchWordWithModifier(['block', 'file', '#']);
+		if (!$mod && preg_match('~([\'"])[\w-]+\\1$~DA', $name)) {
+			trigger_error("Change {include $name} to {include file $name} for clarity (on line $node->startLine)", E_USER_NOTICE);
+		}
+		if ($mod !== 'block' && $mod !== '#'
+			&& ($mod === 'file' || !$name || !preg_match('~[\w-]+$~DA', $name))
+		) {
+			return false; // {include file}
 		}
 
 		if ($name === 'parent' && $node->modifiers !== '') {
@@ -197,7 +198,7 @@ class BlockMacros extends MacroSet
 	 */
 	public function macroIncludeBlock(MacroNode $node, PhpWriter $writer): string
 	{
-		trigger_error("Macro {includeblock} is deprecated, use {include $node->args with blocks} or similar macro {import}.", E_USER_DEPRECATED);
+		trigger_error("Macro {includeblock} is deprecated, use {include $node->args with blocks} or similar macro {import} (on line $node->startLine)", E_USER_DEPRECATED);
 		$node->replaced = false;
 		$node->validate(true);
 		return $writer->write(
@@ -599,6 +600,9 @@ class BlockMacros extends MacroSet
 		$this->blocks[$this->index] = [];
 
 		[$name, $mod] = $node->tokenizer->fetchWordWithModifier(['block', 'file']);
+		if (!$mod && preg_match('~([\'"])[\w-]+\\1$~DA', $name)) {
+			trigger_error("Change {embed $name} to {embed file $name} for clarity (on line $node->startLine)", E_USER_NOTICE);
+		}
 		$mod = $mod ?? (preg_match('~^[\w-]+$~DA', $name) ? 'block' : 'file');
 
 		$node->openingCode = $writer->write(
@@ -652,9 +656,9 @@ class BlockMacros extends MacroSet
 		}
 
 		$list = [];
-		while ([$name, $block] = $node->tokenizer->fetchWordWithModifier('block')) {
-			$list[] = $block || preg_match('~#|\w[\w-]*$~DA', $name)
-				? '$this->hasBlock(' . $writer->formatWord(ltrim($name, '#')) . ')'
+		while ([$name, $block] = $node->tokenizer->fetchWordWithModifier(['block', '#'])) {
+			$list[] = $block || preg_match('~\w[\w-]*$~DA', $name)
+				? '$this->hasBlock(' . $writer->formatWord($name) . ')'
 				: 'isset(' . $writer->formatArgs(new Latte\MacroTokens($name)) . ')';
 		}
 

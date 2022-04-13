@@ -68,6 +68,9 @@ class Compiler
 	/** @var string[] of orig name */
 	private $functions = [];
 
+	/** @var string[] of orig name */
+	private $filters = [];
+
 	/** @var int[] Macro flags */
 	private $flags;
 
@@ -111,7 +114,7 @@ class Compiler
 	 */
 	public function addMacro(string $name, Macro $macro, ?int $flags = null)
 	{
-		if (!preg_match('#^[a-z_=]\w*(?:[.:-]\w+)*$#iD', $name)) {
+		if (!preg_match('#^[a-z_=]\w*(?:-\w+)*$#iD', $name)) {
 			throw new \LogicException("Invalid tag name '$name'.");
 
 		} elseif (!isset($this->flags[$name])) {
@@ -134,6 +137,13 @@ class Compiler
 	public function setFunctions(array $names)
 	{
 		$this->functions = array_combine(array_map('strtolower', $names), $names);
+		return $this;
+	}
+
+
+	public function setFilters(array $names)
+	{
+		$this->filters = $names;
 		return $this;
 	}
 
@@ -306,6 +316,15 @@ class Compiler
 
 
 	/**
+	 * @return string[]
+	 */
+	public function getFilters(): array
+	{
+		return $this->filters;
+	}
+
+
+	/**
 	 * Returns current line number.
 	 */
 	public function getLine(): ?int
@@ -427,7 +446,7 @@ class Compiler
 				$token->empty = $t ? !$t->closing : true;
 				if ($token->empty) {
 					$tmp = substr($token->text, 0, -1) . ' /}';
-					trigger_error("Auto-empty behaviour is deprecated, replace {$token->text} with $tmp in line " . $this->getLine(), E_USER_DEPRECATED);
+					trigger_error("Auto-empty behaviour is deprecated, replace {$token->text} with $tmp (on line {$this->getLine()})", E_USER_DEPRECATED);
 				}
 			}
 
@@ -743,7 +762,7 @@ class Compiler
 				continue;
 			}
 			if ($empty) {
-				trigger_error("Unexpected n:$attrName on void element <{$this->htmlNode->name}>", E_USER_WARNING);
+				trigger_error("Unexpected n:$attrName on void element <{$this->htmlNode->name}> (on line {$this->getLine()}", E_USER_WARNING);
 			}
 
 			if ($this->htmlNode->closing) {
@@ -778,7 +797,7 @@ class Compiler
 				continue;
 			}
 			if ($empty) {
-				trigger_error("Unexpected n:$attrName on void element <{$this->htmlNode->name}>", E_USER_WARNING);
+				trigger_error("Unexpected n:$attrName on void element <{$this->htmlNode->name}> (on line {$this->getLine()}", E_USER_WARNING);
 			}
 
 			$left[] = function () use ($name, $attrs, $attrName) {
