@@ -79,11 +79,11 @@ class TrainingApplicationFactory
 			$form->addSelect('trainingId', $label, $inputDates)
 				->setRequired('Vyberte prosím termín a místo školení')
 				->setPrompt('- vyberte termín a místo -')
-				->addRule(Form::INTEGER);
+				->addRule($form::INTEGER);
 		} else {
 			$key = key($inputDates);
 			$field = new HiddenFieldWithLabel($label, (string)$key, $inputDates[$key]);
-			$field->addRule(Form::INTEGER);
+			$field->addRule($form::INTEGER);
 			$form->addComponent($field, 'trainingId');
 		}
 

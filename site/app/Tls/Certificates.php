@@ -5,10 +5,10 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
-use MichalSpacekCz\User\Manager;
 use Nette\Database\DriverException;
 use Nette\Database\Explorer;
 use Nette\Security\AuthenticationException;
+use Nette\Security\Authenticator;
 use Nette\Utils\DateTime as NetteDateTime;
 use RuntimeException;
 use Tracy\Debugger;
@@ -59,11 +59,11 @@ class Certificates
 	public function authenticate(string $user, string $key): void
 	{
 		if (!isset($this->users[$user])) {
-			throw new AuthenticationException('Unknown user', Manager::IDENTITY_NOT_FOUND);
+			throw new AuthenticationException('Unknown user', Authenticator::IDENTITY_NOT_FOUND);
 		}
 
 		if (!hash_equals($this->users[$user], hash('sha512', $key))) {
-			throw new AuthenticationException('Invalid key', Manager::INVALID_CREDENTIAL);
+			throw new AuthenticationException('Invalid key', Authenticator::INVALID_CREDENTIAL);
 		}
 	}
 
