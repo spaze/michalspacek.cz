@@ -247,7 +247,7 @@ class Post
 			'slug' => $post->slug,
 			'preview' => ($post->needsPreviewKey() ? $post->previewKey : null),
 		];
-		if ($post->locale === null || $post->locale === $this->translator->getDefaultLocale()) {
+		if (!isset($post->locale) || $post->locale === $this->translator->getDefaultLocale()) {
 			$post->href = $this->linkGenerator->link('Www:Post:', $params);
 		} else {
 			$links = $this->localeLinkGenerator->links('Www:Post:', $this->localeLinkGenerator->defaultParams($params));
