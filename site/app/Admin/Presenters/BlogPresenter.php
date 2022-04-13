@@ -151,6 +151,7 @@ class BlogPresenter extends BasePresenter
 		$post->recommended = (empty($this->request->getPost('recommended')) ? [] : Json::decode($this->request->getPost('recommended')));
 		$post->cspSnippets = $this->request->getPost('cspSnippets') ?? [];
 		$post->allowedTags = $this->request->getPost('allowedTags') ?? [];
+		$post->previewKey = null;
 		$this->blogPost->enrich($post);
 		/** @var Template $preview */
 		$preview = $this->createTemplate();
