@@ -141,7 +141,7 @@ class BlogPresenter extends BasePresenter
 		$this->texyFormatter->disableCache();
 		$post = new Data();
 		$post->slug = $this->request->getPost('slug');
-		$post->title = $this->request->getPost('title');
+		$post->titleTexy = $this->request->getPost('title');
 		$post->leadTexy = (empty($this->request->getPost('lead')) ? null : $this->request->getPost('lead'));
 		$post->textTexy = $this->request->getPost('text');
 		$post->originallyTexy = (empty($this->request->getPost('originally')) ? null : $this->request->getPost('originally'));
@@ -151,6 +151,7 @@ class BlogPresenter extends BasePresenter
 		$post->recommended = (empty($this->request->getPost('recommended')) ? [] : Json::decode($this->request->getPost('recommended')));
 		$post->cspSnippets = $this->request->getPost('cspSnippets') ?? [];
 		$post->allowedTags = $this->request->getPost('allowedTags') ?? [];
+		$post->previewKey = null;
 		$this->blogPost->enrich($post);
 		/** @var Template $preview */
 		$preview = $this->createTemplate();

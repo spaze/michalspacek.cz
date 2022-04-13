@@ -47,9 +47,8 @@ class PostFormFactory
 	public function create(callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
-		$form->addText('translationGroup', 'Skupina překladů:')
-			->setRequired(false)
-			->setHtmlType('number');
+		$form->addInteger('translationGroup', 'Skupina překladů:')
+			->setRequired(false);
 		$form->addSelect('locale', 'Jazyk:', $this->blogPost->getAllLocales())
 			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');
