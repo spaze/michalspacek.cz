@@ -71,6 +71,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('r', '?>}<?php');
 
 		$me->addMacro('_', [$me, 'macroTranslate'], [$me, 'macroTranslate']);
+		$me->addMacro('translate', [$me, 'macroTranslate'], [$me, 'macroTranslate']);
 		$me->addMacro('=', [$me, 'macroExpr']);
 
 		$me->addMacro('capture', [$me, 'macroCapture'], [$me, 'macroCaptureEnd']);
@@ -250,6 +251,9 @@ class CoreMacros extends MacroSet
 		if (!$node->prefix || $node->prefix !== MacroNode::PREFIX_NONE) {
 			throw new CompileException("Unknown {$node->getNotation()}, use n:{$node->name} attribute.");
 		}
+		if ($node->htmlNode->empty) {
+			trigger_error("Unnecessary n:ifcontent on empty element <{$node->htmlNode->name}> (on line {$this->getCompiler()->getLine()})", E_USER_DEPRECATED);
+		}
 
 		$node->validate(false);
 	}
@@ -334,6 +338,7 @@ class CoreMacros extends MacroSet
 
 	/**
 	 * {_$var |modifiers}
+	 * {translate|modifiers}
 	 */
 	public function macroTranslate(MacroNode $node, PhpWriter $writer): string
 	{
@@ -359,8 +364,11 @@ class CoreMacros extends MacroSet
 				implode('', $node->context)
 			);
 
-		} elseif ($node->empty = ($node->args !== '')) {
+		} elseif ($node->empty = ($node->args !== '') && $node->name === '_') {
 			return $writer->write('echo %modify(($this->filters->translate)(%node.args)) %node.line;');
+
+		} elseif ($node->name === '_') {
+			trigger_error("As a pair tag for translation, {translate} ... {/translate} should be used instead of {_} ... {/} (on line $node->startLine)", E_USER_DEPRECATED);
 		}
 
 		return '';
@@ -741,7 +749,7 @@ class CoreMacros extends MacroSet
 					|| !$tokens->isNext(...$tokens::SIGNIFICANT)
 				)
 			) {
-				trigger_error("Inside tag {{$node->name} {$node->args}} should be '{$tokens->currentValue()}' replaced with '\${$tokens->currentValue()}'", E_USER_DEPRECATED);
+				trigger_error("Inside tag {{$node->name} {$node->args}} should be '{$tokens->currentValue()}' replaced with '\${$tokens->currentValue()}' (on line $node->startLine)", E_USER_DEPRECATED);
 
 			} elseif ($var && !$hasType && $tokens->isCurrent($tokens::T_SYMBOL, '?', 'null', '\\')) { // type
 				$tokens->nextToken();
@@ -761,7 +769,7 @@ class CoreMacros extends MacroSet
 
 			} elseif ($tokens->isCurrent('=', '=>') && $tokens->depth === 0) {
 				if ($tokens->isCurrent('=>')) {
-					trigger_error("Inside tag {{$node->name} {$node->args}} should be => replaced with =", E_USER_DEPRECATED);
+					trigger_error("Inside tag {{$node->name} {$node->args}} should be '=>' replaced with '=' (on line $node->startLine)", E_USER_DEPRECATED);
 				}
 
 				$res->append($node->name === 'default' ? '=>' : '=');
@@ -789,6 +797,7 @@ class CoreMacros extends MacroSet
 		}
 
 		$res = $writer->preprocess($res);
+		$writer->validateKeywords($res);
 		$out = $writer->quotingPass($res)->joinAll();
 		return $writer->write($node->name === 'default'
 			? 'extract([%raw], EXTR_SKIP) %node.line;'
@@ -872,6 +881,7 @@ class CoreMacros extends MacroSet
 		$node->validate(true);
 
 		$tokens = $node->tokenizer;
+		$writer->validateKeywords($tokens);
 		$params = [];
 		while ($tokens->isNext(...$tokens::SIGNIFICANT)) {
 			if ($tokens->nextToken($tokens::T_SYMBOL, '?', 'null', '\\')) { // type

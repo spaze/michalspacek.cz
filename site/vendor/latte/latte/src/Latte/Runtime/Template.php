@@ -109,18 +109,14 @@ class Template
 	 */
 	public function getParameters(): array
 	{
-		$params = $this->params;
-		unset($params['_l'], $params['_g']);
-		return $params;
+		return $this->params;
 	}
 
 
-	/**
-	 * Returns parameter.
-	 * @return mixed
-	 */
+	/** @deprecated */
 	public function getParameter(string $name)
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use getParameters()', E_USER_DEPRECATED);
 		if (!array_key_exists($name, $this->params)) {
 			trigger_error("The variable '$name' does not exist in template.", E_USER_NOTICE);
 		}

@@ -17,8 +17,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.11.0';
-	public const VERSION_ID = 21100;
+	public const VERSION = '2.11.1';
+	public const VERSION_ID = 21101;
 
 	/** Content types */
 	public const
@@ -158,6 +158,7 @@ class Engine
 			$code = $this->getCompiler()
 				->setContentType($this->contentType)
 				->setFunctions(array_keys((array) $this->functions))
+				->setFilters($this->filters->_origNames)
 				->setPolicy($this->sandboxed ? $this->policy : null)
 				->compile($tokens, $this->getTemplateClass($name), $comment, $this->strictTypes);
 
@@ -282,7 +283,13 @@ class Engine
 
 	public function getTemplateClass(string $name): string
 	{
-		$key = serialize([$this->getLoader()->getUniqueId($name), self::VERSION, array_keys((array) $this->functions), $this->sandboxed]);
+		$key = serialize([
+			$this->getLoader()->getUniqueId($name),
+			self::VERSION,
+			array_keys((array) $this->functions),
+			$this->sandboxed,
+			$this->contentType,
+		]);
 		return 'Template' . substr(md5($key), 0, 10);
 	}
 
