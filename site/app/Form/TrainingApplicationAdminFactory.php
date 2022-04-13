@@ -140,14 +140,14 @@ class TrainingApplicationAdminFactory
 		$form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
-			->addRule(Form::FLOAT)
+			->addRule($form::FLOAT)
 			->setHtmlAttribute('title', 'Po případné slevě');
 		$form->addText('vatRate', 'DPH:')
 			->setHtmlType('number');
 		$form->addText('priceVat', 'Cena s DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
-			->addRule(Form::FLOAT)
+			->addRule($form::FLOAT)
 			->setHtmlAttribute('title', 'Po případné slevě');
 		$form->addText('discount', 'Sleva:')
 			->setHtmlType('number');
