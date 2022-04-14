@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Post;
 
+use DateTime;
 use DateTimeInterface;
-use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 use stdClass;
 
@@ -75,7 +75,7 @@ class Data
 	public array $allowedTags = [];
 
 
-	public function needsPreviewKey(DateTimeInterface $when = new DateTime()): bool
+	public function needsPreviewKey(DateTime $when = new DateTime()): bool
 	{
 		return $this->published === null || $this->published > $when;
 	}
