@@ -27,13 +27,6 @@ class Loader
 	}
 
 
-	/**
-	 * Check whether the post exists.
-	 *
-	 * @param string $post
-	 * @param string|null $previewKey
-	 * @return bool
-	 */
 	public function exists(string $post, ?string $previewKey = null): bool
 	{
 		return (bool)$this->fetch($post, $previewKey);
@@ -41,8 +34,6 @@ class Loader
 
 
 	/**
-	 * Fetch post.
-	 *
 	 * @param string $post
 	 * @param string|null $previewKey
 	 * @return Row<mixed>|null

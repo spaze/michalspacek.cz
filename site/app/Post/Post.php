@@ -45,18 +45,12 @@ class Post
 	}
 
 
-	/**
-	 * @return int
-	 */
 	public function getUpdatedInfoThreshold(): int
 	{
 		return $this->updatedInfoThreshold;
 	}
 
 
-	/**
-	 * @param int $updatedInfoThreshold
-	 */
 	public function setUpdatedInfoThreshold(int $updatedInfoThreshold): void
 	{
 		$this->updatedInfoThreshold = $updatedInfoThreshold;
@@ -82,11 +76,6 @@ class Post
 
 
 	/**
-	 * Get post.
-	 *
-	 * @param string $post
-	 * @param string $previewKey
-	 * @return Data|null
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 * @throws Throwable
@@ -99,10 +88,6 @@ class Post
 
 
 	/**
-	 * Get post by id.
-	 *
-	 * @param int $id
-	 * @return Data|null
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 * @throws Throwable
@@ -143,8 +128,6 @@ class Post
 
 
 	/**
-	 * Get all posts.
-	 *
 	 * @return Data[]
 	 * @throws InvalidLinkException
 	 * @throws JsonException
@@ -187,9 +170,6 @@ class Post
 
 
 	/**
-	 * Enrich post data object.
-	 *
-	 * @param Data $post
 	 * @throws InvalidLinkException
 	 */
 	public function enrich(Data $post): void
@@ -208,10 +188,6 @@ class Post
 
 
 	/**
-	 * Format post data.
-	 *
-	 * @param Data $post
-	 * @return Data
 	 * @throws Throwable
 	 */
 	public function format(Data $post): Data
@@ -239,9 +215,6 @@ class Post
 
 
 	/**
-	 * Add a post.
-	 *
-	 * @param Data $post
 	 * @throws JsonException
 	 */
 	public function add(Data $post): void
@@ -283,9 +256,6 @@ class Post
 
 
 	/**
-	 * Update a post.
-	 *
-	 * @param Data $post
 	 * @throws JsonException
 	 */
 	public function update(Data $post): void
@@ -348,8 +318,6 @@ class Post
 
 
 	/**
-	 * Get all Twitter card types.
-	 *
 	 * @return Row[]
 	 */
 	public function getAllTwitterCards(): array
@@ -358,10 +326,6 @@ class Post
 	}
 
 
-	/**
-	 * @param string $card
-	 * @return int
-	 */
 	private function getTwitterCardId(string $card): int
 	{
 		return $this->database->fetchField('SELECT id_twitter_card_type FROM twitter_card_types WHERE card = ?', $card);
@@ -369,8 +333,6 @@ class Post
 
 
 	/**
-	 * Get all blog post locales.
-	 *
 	 * @return array<int, string> of id => locale
 	 */
 	public function getAllLocales(): array
@@ -382,12 +344,6 @@ class Post
 	}
 
 
-	/**
-	 * Get locale by its id.
-	 *
-	 * @param int $id
-	 * @return string|null
-	 */
 	public function getLocaleById(int $id): ?string
 	{
 		return $this->getAllLocales()[$id] ?? null;
