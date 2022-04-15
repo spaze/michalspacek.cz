@@ -120,6 +120,7 @@ class BlogPresenter extends BasePresenter
 			'recommended' => (empty($this->post->recommended) ? null : Json::encode($this->post->recommended)),
 			'cspSnippets' => $this->post->cspSnippets,
 			'allowedTags' => $this->post->allowedTags,
+			'omitExports' => $this->post->omitExports,
 		);
 		$form->setDefaults($values);
 		$form->getComponent('editSummary')

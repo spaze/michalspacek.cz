@@ -45,18 +45,12 @@ class Post
 	}
 
 
-	/**
-	 * @return int
-	 */
 	public function getUpdatedInfoThreshold(): int
 	{
 		return $this->updatedInfoThreshold;
 	}
 
 
-	/**
-	 * @param int $updatedInfoThreshold
-	 */
 	public function setUpdatedInfoThreshold(int $updatedInfoThreshold): void
 	{
 		$this->updatedInfoThreshold = $updatedInfoThreshold;
@@ -82,11 +76,6 @@ class Post
 
 
 	/**
-	 * Get post.
-	 *
-	 * @param string $post
-	 * @param string $previewKey
-	 * @return Data|null
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 * @throws Throwable
@@ -94,36 +83,11 @@ class Post
 	public function get(string $post, ?string $previewKey = null): ?Data
 	{
 		$result = $this->loader->fetch($post, $previewKey);
-		$post = new Data();
-		$post->postId = $result->postId;
-		$post->localeId = $result->localeId;
-		$post->translationGroupId = $result->translationGroupId;
-		$post->locale = $result->locale;
-		$post->slug = $result->slug;
-		$post->titleTexy = $result->titleTexy;
-		$post->leadTexy = $result->leadTexy;
-		$post->textTexy = $result->textTexy;
-		$post->published = $result->published;
-		$post->previewKey = $result->previewKey;
-		$post->originallyTexy = $result->originallyTexy;
-		$post->ogImage = $result->ogImage;
-		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
-		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
-		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : []);
-		$post->twitterCard = $result->twitterCard;
-		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
-		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
-		$this->enrich($post);
-
-		return ($result ? $this->format($post) : null);
+		return ($result ? $this->buildPost($result) : null);
 	}
 
 
 	/**
-	 * Get post by id.
-	 *
-	 * @param int $id
-	 * @return Data|null
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 * @throws Throwable
@@ -147,8 +111,9 @@ class Post
 				bp.tags,
 				bp.slug_tags AS slugTags,
 				bp.recommended,
-				bp.csp_snippets as cspSnippets,
-				bp.allowed_tags as allowedTags,
+				bp.csp_snippets AS cspSnippets,
+				bp.allowed_tags AS allowedTags,
+				bp.omit_exports AS omitExports,
 				tct.card AS twitterCard
 			FROM blog_posts bp
 			LEFT JOIN blog_post_locales l
@@ -158,33 +123,11 @@ class Post
 			WHERE bp.id_blog_post = ?',
 			$id,
 		);
-		$post = new Data();
-		$post->postId = $result->postId;
-		$post->translationGroupId = $result->translationGroupId;
-		$post->locale = $result->locale;
-		$post->localeId = $result->localeId;
-		$post->slug = $result->slug;
-		$post->titleTexy = $result->titleTexy;
-		$post->leadTexy = $result->leadTexy;
-		$post->textTexy = $result->textTexy;
-		$post->originallyTexy = $result->originallyTexy;
-		$post->published = $result->published;
-		$post->previewKey = $result->previewKey;
-		$post->ogImage = $result->ogImage;
-		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
-		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
-		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : []);
-		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
-		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
-		$post->twitterCard = $result->twitterCard;
-		$this->enrich($post);
-		return ($result ? $this->format($post) : null);
+		return ($result ? $this->buildPost($result) : null);
 	}
 
 
 	/**
-	 * Get all posts.
-	 *
 	 * @return Data[]
 	 * @throws InvalidLinkException
 	 * @throws JsonException
@@ -205,8 +148,14 @@ class Post
 				bp.published,
 				bp.preview_key AS previewKey,
 				bp.originally AS originallyTexy,
+				bp.og_image AS ogImage,
 				bp.tags,
-				bp.slug_tags AS slugTags
+				bp.slug_tags AS slugTags,
+				null AS recommended,
+				null AS cspSnippets,
+				null AS allowedTags,
+				bp.omit_exports AS omitExports,
+				null AS twitterCard
 			FROM
 				blog_posts bp
 			LEFT JOIN blog_post_locales l
@@ -214,31 +163,13 @@ class Post
 			ORDER BY
 				published, slug';
 		foreach ($this->database->fetchAll($sql) as $row) {
-			$post = new Data();
-			$post->postId = $row->postId;
-			$post->translationGroupId = $row->translationGroupId;
-			$post->locale = $row->locale;
-			$post->localeId = $row->localeId;
-			$post->slug = $row->slug;
-			$post->titleTexy = $row->titleTexy;
-			$post->leadTexy = $row->leadTexy;
-			$post->textTexy = $row->textTexy;
-			$post->originallyTexy = $row->originallyTexy;
-			$post->published = $row->published;
-			$post->previewKey = $row->previewKey;
-			$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : []);
-			$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
-			$this->enrich($post);
-			$posts[] = $this->format($post);
+			$posts[] = $this->buildPost($row);
 		}
 		return $posts;
 	}
 
 
 	/**
-	 * Enrich post data object.
-	 *
-	 * @param Data $post
 	 * @throws InvalidLinkException
 	 */
 	public function enrich(Data $post): void
@@ -257,10 +188,6 @@ class Post
 
 
 	/**
-	 * Format post data.
-	 *
-	 * @param Data $post
-	 * @return Data
 	 * @throws Throwable
 	 */
 	public function format(Data $post): Data
@@ -288,9 +215,6 @@ class Post
 
 
 	/**
-	 * Add a post.
-	 *
-	 * @param Data $post
 	 * @throws JsonException
 	 */
 	public function add(Data $post): void
@@ -319,6 +243,7 @@ class Post
 					'recommended' => $post->recommended ? Json::encode($post->recommended) : null,
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
+					'omit_exports' => $post->omitExports,
 				),
 			);
 			$post->postId = (int)$this->database->getInsertId();
@@ -331,9 +256,6 @@ class Post
 
 
 	/**
-	 * Update a post.
-	 *
-	 * @param Data $post
 	 * @throws JsonException
 	 */
 	public function update(Data $post): void
@@ -362,6 +284,7 @@ class Post
 					'recommended' => ($post->recommended ? Json::encode($post->recommended) : null),
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
+					'omit_exports' => $post->omitExports,
 				),
 				$post->postId,
 			);
@@ -395,8 +318,6 @@ class Post
 
 
 	/**
-	 * Get all Twitter card types.
-	 *
 	 * @return Row[]
 	 */
 	public function getAllTwitterCards(): array
@@ -405,10 +326,6 @@ class Post
 	}
 
 
-	/**
-	 * @param string $card
-	 * @return int
-	 */
 	private function getTwitterCardId(string $card): int
 	{
 		return $this->database->fetchField('SELECT id_twitter_card_type FROM twitter_card_types WHERE card = ?', $card);
@@ -416,8 +333,6 @@ class Post
 
 
 	/**
-	 * Get all blog post locales.
-	 *
 	 * @return array<int, string> of id => locale
 	 */
 	public function getAllLocales(): array
@@ -429,12 +344,6 @@ class Post
 	}
 
 
-	/**
-	 * Get locale by its id.
-	 *
-	 * @param int $id
-	 * @return string|null
-	 */
 	public function getLocaleById(int $id): ?string
 	{
 		return $this->getAllLocales()[$id] ?? null;
@@ -469,6 +378,37 @@ class Post
 			$edits[] = $edit;
 		}
 		return $edits;
+	}
+
+
+	/**
+	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 */
+	private function buildPost(Row $row): Data
+	{
+		$post = new Data();
+		$post->postId = $row->postId;
+		$post->translationGroupId = $row->translationGroupId;
+		$post->locale = $row->locale;
+		$post->localeId = $row->localeId;
+		$post->slug = $row->slug;
+		$post->titleTexy = $row->titleTexy;
+		$post->leadTexy = $row->leadTexy;
+		$post->textTexy = $row->textTexy;
+		$post->originallyTexy = $row->originallyTexy;
+		$post->published = $row->published;
+		$post->previewKey = $row->previewKey;
+		$post->ogImage = $row->ogImage;
+		$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : []);
+		$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
+		$post->recommended = ($row->recommended !== null ? Json::decode($row->recommended) : []);
+		$post->twitterCard = $row->twitterCard;
+		$post->cspSnippets = ($row->cspSnippets !== null ? Json::decode($row->cspSnippets) : []);
+		$post->allowedTags = ($row->allowedTags !== null ? Json::decode($row->allowedTags) : []);
+		$post->omitExports = (bool)$row->omitExports;
+		$this->enrich($post);
+		return $this->format($post);
 	}
 
 }

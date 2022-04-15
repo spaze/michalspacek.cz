@@ -39,7 +39,7 @@ class Articles
 		$query = 'SELECT
 				a.id_article AS articleId,
 				a.title,
-       			NULL as slug,
+				NULL AS slug,
 				a.href,
 				a.date AS published,
 				a.excerpt,
@@ -47,7 +47,8 @@ class Articles
 				s.name AS sourceName,
 				s.href AS sourceHref,
 				null AS tags,
-				null AS slugTags
+				null AS slugTags,
+				null AS omitExports
 			FROM articles a
 				JOIN article_sources s ON a.key_article_source = s.id_article_source
 			UNION ALL
@@ -62,7 +63,8 @@ class Articles
 					null,
 					null,
 					bp.tags,
-					bp.slug_tags
+					bp.slug_tags,
+					bp.omit_exports AS omitExports
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale
@@ -91,12 +93,13 @@ class Articles
 					bp.title,
 					bp.slug,
 					bp.published,
-					bp.lead as excerpt,
+					bp.lead AS excerpt,
 					bp.text,
 					null AS sourceName,
 					null AS sourceHref,
 					bp.tags,
-					bp.slug_tags AS slugTags
+					bp.slug_tags AS slugTags,
+					bp.omit_exports AS omitExports
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale

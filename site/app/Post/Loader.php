@@ -27,13 +27,6 @@ class Loader
 	}
 
 
-	/**
-	 * Check whether the post exists.
-	 *
-	 * @param string $post
-	 * @param string|null $previewKey
-	 * @return bool
-	 */
 	public function exists(string $post, ?string $previewKey = null): bool
 	{
 		return (bool)$this->fetch($post, $previewKey);
@@ -41,8 +34,6 @@ class Loader
 
 
 	/**
-	 * Fetch post.
-	 *
 	 * @param string $post
 	 * @param string|null $previewKey
 	 * @return Row<mixed>|null
@@ -68,8 +59,9 @@ class Loader
 					bp.tags,
 					bp.slug_tags AS slugTags,
 					bp.recommended,
-					bp.csp_snippets as cspSnippets,
-					bp.allowed_tags as allowedTags,
+					bp.csp_snippets AS cspSnippets,
+					bp.allowed_tags AS allowedTags,
+					bp.omit_exports as omitExports,
 					tct.card AS twitterCard
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
