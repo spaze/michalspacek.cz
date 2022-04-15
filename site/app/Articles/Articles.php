@@ -39,7 +39,7 @@ class Articles
 		$query = 'SELECT
 				a.id_article AS articleId,
 				a.title,
-       			NULL as slug,
+				NULL AS slug,
 				a.href,
 				a.date AS published,
 				a.excerpt,
@@ -93,13 +93,13 @@ class Articles
 					bp.title,
 					bp.slug,
 					bp.published,
-					bp.lead as excerpt,
+					bp.lead AS excerpt,
 					bp.text,
 					null AS sourceName,
 					null AS sourceHref,
 					bp.tags,
 					bp.slug_tags AS slugTags,
-					bp.omit_exports as omitExports
+					bp.omit_exports AS omitExports
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale

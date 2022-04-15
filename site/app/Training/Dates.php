@@ -322,7 +322,7 @@ class Dates
 					d.remote,
 					v.id_venue AS venueId,
 					v.name AS venueName,
-					v.city as venueCity,
+					v.city AS venueCity,
 					d.note
 				FROM training_dates d
 					JOIN trainings t ON d.key_training = t.id_training
