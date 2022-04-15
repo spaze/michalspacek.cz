@@ -70,6 +70,7 @@ class Loader
 					bp.recommended,
 					bp.csp_snippets AS cspSnippets,
 					bp.allowed_tags AS allowedTags,
+					bp.omit_exports as omitExports,
 					tct.card AS twitterCard
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l

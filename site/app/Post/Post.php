@@ -94,28 +94,7 @@ class Post
 	public function get(string $post, ?string $previewKey = null): ?Data
 	{
 		$result = $this->loader->fetch($post, $previewKey);
-		$post = new Data();
-		$post->postId = $result->postId;
-		$post->localeId = $result->localeId;
-		$post->translationGroupId = $result->translationGroupId;
-		$post->locale = $result->locale;
-		$post->slug = $result->slug;
-		$post->titleTexy = $result->titleTexy;
-		$post->leadTexy = $result->leadTexy;
-		$post->textTexy = $result->textTexy;
-		$post->published = $result->published;
-		$post->previewKey = $result->previewKey;
-		$post->originallyTexy = $result->originallyTexy;
-		$post->ogImage = $result->ogImage;
-		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
-		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
-		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : []);
-		$post->twitterCard = $result->twitterCard;
-		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
-		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
-		$this->enrich($post);
-
-		return ($result ? $this->format($post) : null);
+		return ($result ? $this->buildPost($result) : null);
 	}
 
 
@@ -159,28 +138,7 @@ class Post
 			WHERE bp.id_blog_post = ?',
 			$id,
 		);
-		$post = new Data();
-		$post->postId = $result->postId;
-		$post->translationGroupId = $result->translationGroupId;
-		$post->locale = $result->locale;
-		$post->localeId = $result->localeId;
-		$post->slug = $result->slug;
-		$post->titleTexy = $result->titleTexy;
-		$post->leadTexy = $result->leadTexy;
-		$post->textTexy = $result->textTexy;
-		$post->originallyTexy = $result->originallyTexy;
-		$post->published = $result->published;
-		$post->previewKey = $result->previewKey;
-		$post->ogImage = $result->ogImage;
-		$post->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
-		$post->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
-		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : []);
-		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
-		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
-		$post->omitExports = (bool)$result->omitExports;
-		$post->twitterCard = $result->twitterCard;
-		$this->enrich($post);
-		return ($result ? $this->format($post) : null);
+		return ($result ? $this->buildPost($result) : null);
 	}
 
 
@@ -207,9 +165,14 @@ class Post
 				bp.published,
 				bp.preview_key AS previewKey,
 				bp.originally AS originallyTexy,
+				bp.og_image AS ogImage,
 				bp.tags,
 				bp.slug_tags AS slugTags,
-				bp.omit_exports AS omitExports
+				null AS recommended,
+				null AS cspSnippets,
+				null AS allowedTags,
+				bp.omit_exports AS omitExports,
+				null AS twitterCard
 			FROM
 				blog_posts bp
 			LEFT JOIN blog_post_locales l
@@ -217,23 +180,7 @@ class Post
 			ORDER BY
 				published, slug';
 		foreach ($this->database->fetchAll($sql) as $row) {
-			$post = new Data();
-			$post->postId = $row->postId;
-			$post->translationGroupId = $row->translationGroupId;
-			$post->locale = $row->locale;
-			$post->localeId = $row->localeId;
-			$post->slug = $row->slug;
-			$post->titleTexy = $row->titleTexy;
-			$post->leadTexy = $row->leadTexy;
-			$post->textTexy = $row->textTexy;
-			$post->originallyTexy = $row->originallyTexy;
-			$post->published = $row->published;
-			$post->previewKey = $row->previewKey;
-			$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : []);
-			$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
-			$post->omitExports = (bool)$row->omitExports;
-			$this->enrich($post);
-			$posts[] = $this->format($post);
+			$posts[] = $this->buildPost($row);
 		}
 		return $posts;
 	}
@@ -475,6 +422,37 @@ class Post
 			$edits[] = $edit;
 		}
 		return $edits;
+	}
+
+
+	/**
+	 * @throws InvalidLinkException
+	 * @throws JsonException
+	 */
+	private function buildPost(Row $row): Data
+	{
+		$post = new Data();
+		$post->postId = $row->postId;
+		$post->translationGroupId = $row->translationGroupId;
+		$post->locale = $row->locale;
+		$post->localeId = $row->localeId;
+		$post->slug = $row->slug;
+		$post->titleTexy = $row->titleTexy;
+		$post->leadTexy = $row->leadTexy;
+		$post->textTexy = $row->textTexy;
+		$post->originallyTexy = $row->originallyTexy;
+		$post->published = $row->published;
+		$post->previewKey = $row->previewKey;
+		$post->ogImage = $row->ogImage;
+		$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : []);
+		$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
+		$post->recommended = ($row->recommended !== null ? Json::decode($row->recommended) : []);
+		$post->twitterCard = $row->twitterCard;
+		$post->cspSnippets = ($row->cspSnippets !== null ? Json::decode($row->cspSnippets) : []);
+		$post->allowedTags = ($row->allowedTags !== null ? Json::decode($row->allowedTags) : []);
+		$post->omitExports = (bool)$row->omitExports;
+		$this->enrich($post);
+		return $this->format($post);
 	}
 
 }
