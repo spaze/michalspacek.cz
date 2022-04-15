@@ -49,7 +49,7 @@ class ExportsTest extends TestCase
 			}
 
 
-			public function addBlogPost(int $articleId, DateTime $published, string $suffix, ?array $edits = null): void
+			public function addBlogPost(int $articleId, DateTime $published, string $suffix, ?array $edits = null, ?bool $omitExports = null): void
 			{
 				$this->articles[] = Row::from([
 					'articleId' => $articleId,
@@ -61,6 +61,7 @@ class ExportsTest extends TestCase
 					'edits' => $edits,
 					'isBlogPost' => true,
 					'slugTags' => [],
+					'omitExports' => $omitExports !== null ? (bool)$omitExports : null,
 				]);
 			}
 
@@ -129,6 +130,19 @@ class ExportsTest extends TestCase
 		$xml = simplexml_load_string((string)$feed);
 		$this->assertEntry($xml->entry[0], 'one', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>14.3.</strong> Edit one one</em></li><li><em><strong>14.4.</strong> Edit one two</em></li></ul>Text one');
 		$this->assertEntry($xml->entry[1], 'two', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>15.3.</strong> Edit two one</em></li></ul>Text two');
+	}
+
+
+	public function testGetArticlesOmitExports(): void
+	{
+		$this->articles->addBlogPost(1, new DateTime(), 'one', omitExports: null);
+		$this->articles->addBlogPost(2, new DateTime(), 'two', omitExports: true);
+		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: false);
+		$feed = $this->exports->getArticles('https://example.com/');
+		$xml = simplexml_load_string((string)$feed);
+		$this->assertEntry($xml->entry[0], 'one');
+		$this->assertEntry($xml->entry[1], 'three');
+		Assert::count(2, $xml->entry);
 	}
 
 

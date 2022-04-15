@@ -115,6 +115,8 @@ class PostFormFactory
 		}
 		$form->addMultiSelect('allowedTags', 'Povolené tagy:', $items);
 
+		$form->addCheckbox('omitExports', 'Vynechat z RSS');
+
 		$form->addSubmit('submit', 'Přidat');
 		$form->addButton('preview', 'Náhled')
 			->setHtmlAttribute('data-alt', 'Moment…');
@@ -163,6 +165,7 @@ class PostFormFactory
 		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
 		$post->cspSnippets = (empty($values->cspSnippets) ? [] : $values->cspSnippets);
 		$post->allowedTags = (empty($values->allowedTags) ? [] : $values->allowedTags);
+		$post->omitExports = !empty($values->omitExports);
 		return $post;
 	}
 

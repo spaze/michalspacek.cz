@@ -58,6 +58,9 @@ class Exports
 			$feedUpdated = null;
 			$cacheTags = [];
 			foreach ($articles as $article) {
+				if ($article->omitExports) {
+					continue;
+				}
 				$updated = ($article->updated ?? $article->published);
 				$entry = new Entry(
 					$article->href,

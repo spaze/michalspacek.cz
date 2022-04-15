@@ -74,6 +74,8 @@ class Data
 	/** @var array<int, string> */
 	public array $allowedTags = [];
 
+	public bool $omitExports;
+
 
 	public function needsPreviewKey(DateTime $when = new DateTime()): bool
 	{

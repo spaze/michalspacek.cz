@@ -149,6 +149,7 @@ class Post
 				bp.recommended,
 				bp.csp_snippets as cspSnippets,
 				bp.allowed_tags as allowedTags,
+				bp.omit_exports AS omitExports,
 				tct.card AS twitterCard
 			FROM blog_posts bp
 			LEFT JOIN blog_post_locales l
@@ -176,6 +177,7 @@ class Post
 		$post->recommended = ($result->recommended !== null ? Json::decode($result->recommended) : []);
 		$post->cspSnippets = ($result->cspSnippets !== null ? Json::decode($result->cspSnippets) : []);
 		$post->allowedTags = ($result->allowedTags !== null ? Json::decode($result->allowedTags) : []);
+		$post->omitExports = (bool)$result->omitExports;
 		$post->twitterCard = $result->twitterCard;
 		$this->enrich($post);
 		return ($result ? $this->format($post) : null);
@@ -206,7 +208,8 @@ class Post
 				bp.preview_key AS previewKey,
 				bp.originally AS originallyTexy,
 				bp.tags,
-				bp.slug_tags AS slugTags
+				bp.slug_tags AS slugTags,
+				bp.omit_exports as omitExports
 			FROM
 				blog_posts bp
 			LEFT JOIN blog_post_locales l
@@ -228,6 +231,7 @@ class Post
 			$post->previewKey = $row->previewKey;
 			$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : []);
 			$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
+			$post->omitExports = (bool)$row->omitExports;
 			$this->enrich($post);
 			$posts[] = $this->format($post);
 		}
@@ -319,6 +323,7 @@ class Post
 					'recommended' => $post->recommended ? Json::encode($post->recommended) : null,
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
+					'omit_exports' => $post->omitExports,
 				),
 			);
 			$post->postId = (int)$this->database->getInsertId();
@@ -362,6 +367,7 @@ class Post
 					'recommended' => ($post->recommended ? Json::encode($post->recommended) : null),
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
+					'omit_exports' => $post->omitExports,
 				),
 				$post->postId,
 			);
