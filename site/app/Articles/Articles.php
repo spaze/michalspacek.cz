@@ -194,14 +194,15 @@ class Articles
 	 */
 	public function getNearestPublishDate(): ?DateTime
 	{
-		$query = 'SELECT a.date FROM articles a
+		$query = 'SELECT a.date FROM articles a WHERE a.date > ?
 			UNION ALL
 			SELECT bp.published FROM blog_posts bp
 				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
 			WHERE bp.published IS NOT NULL AND bp.published > ? AND l.locale = ?
 			ORDER BY date
 			LIMIT 1';
-		return ($this->database->fetchField($query, new NetteDateTime(), $this->translator->getDefaultLocale()) ?: null);
+		$now = new DateTime();
+		return ($this->database->fetchField($query, $now, $now, $this->translator->getDefaultLocale()) ?: null);
 	}
 
 
