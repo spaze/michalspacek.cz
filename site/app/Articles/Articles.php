@@ -10,9 +10,11 @@ use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\DateTime as NetteDateTime;
+use Nette\Utils\JsonException;
 
 class Articles
 {
@@ -33,6 +35,8 @@ class Articles
 	 *
 	 * @param int|null $limit Null means all, for real
 	 * @return Row[]
+	 * @throws InvalidLinkException
+	 * @throws JsonException
 	 */
 	public function getAll(?int $limit = null): array
 	{
@@ -85,6 +89,8 @@ class Articles
 	 * @param string[] $tags
 	 * @param int|null $limit Null means all, for real
 	 * @return Row[]
+	 * @throws InvalidLinkException
+	 * @throws JsonException
 	 */
 	public function getAllByTags(array $tags, ?int $limit = null): array
 	{
@@ -117,9 +123,8 @@ class Articles
 
 
 	/**
-	 * Get all tags.
-	 *
 	 * @return string[]
+	 * @throws JsonException
 	 */
 	public function getAllTags(): array
 	{
@@ -153,10 +158,9 @@ class Articles
 
 
 	/**
-	 * Get label by tags.
-	 *
 	 * @param string $tag
 	 * @return string|null
+	 * @throws JsonException
 	 */
 	public function getLabelByTag(string $tag): ?string
 	{
@@ -207,10 +211,9 @@ class Articles
 
 
 	/**
-	 * Get nearest publish date of an article by a tag.
-	 *
 	 * @param string[] $tags
 	 * @return DateTime|null
+	 * @throws JsonException
 	 */
 	public function getNearestPublishDateByTags(array $tags): ?DateTime
 	{
@@ -229,6 +232,8 @@ class Articles
 	/**
 	 * @param Row[] $articles
 	 * @return Row[]
+	 * @throws JsonException
+	 * @throws InvalidLinkException
 	 */
 	private function enrichArticles(array $articles): array
 	{
