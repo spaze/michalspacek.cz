@@ -220,7 +220,7 @@ class Articles
 				AND bp.published IS NOT NULL
 				AND bp.published > ?
 				AND l.locale = ?
-			ORDER BY bp.published ASC
+			ORDER BY bp.published
 			LIMIT 1';
 		return ($this->database->fetchField($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale()) ?: null);
 	}
