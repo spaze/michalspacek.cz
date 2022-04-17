@@ -9,8 +9,9 @@ use DateTime;
 use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Formatter\Texy;
 use MichalSpacekCz\Post\Edit;
+use MichalSpacekCz\Test\NoOpTranslator;
+use MichalSpacekCz\Test\ServicesTrait;
 use Nette\Caching\Storage;
-use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Row;
 use Nette\Utils\Html;
 use SimpleXMLElement;
@@ -23,9 +24,13 @@ require __DIR__ . '/../bootstrap.php';
 class ExportsTest extends TestCase
 {
 
+	use ServicesTrait;
+
+
 	private Articles $articles;
 	private Texy $texyFormatter;
 	private Storage $cacheStorage;
+	private NoOpTranslator $translator;
 	private Exports $exports;
 
 
@@ -90,8 +95,10 @@ class ExportsTest extends TestCase
 			}
 
 		};
-		$this->cacheStorage = new DevNullStorage();
-		$this->exports = new Exports($this->articles, $this->texyFormatter, $this->cacheStorage);
+		$this->cacheStorage = $this->getCacheStorage();
+		$this->translator = $this->getTranslator();
+		$this->translator->setDefaultLocale('cs_CZ');
+		$this->exports = new Exports($this->articles, $this->texyFormatter, $this->translator, $this->cacheStorage);
 	}
 
 
