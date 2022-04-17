@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Feed;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Formatter\Texy;
@@ -23,25 +24,24 @@ class Exports
 	/** @var int */
 	private const ITEMS = 5;
 
-	private Articles $articles;
-
-	private Texy $texyFormatter;
-
 	private Cache $cache;
 
 
-	public function __construct(Articles $articles, Texy $texyFormatter, Storage $cacheStorage)
-	{
-		$this->articles = $articles;
-		$this->texyFormatter = $texyFormatter;
+	public function __construct(
+		private Articles $articles,
+		private Texy $texyFormatter,
+		private Translator $translator,
+		Storage $cacheStorage,
+	) {
 		$this->cache = new Cache($cacheStorage, self::class);
 	}
 
 
 	public function getArticles(string $self, ?string $filter = null): Feed
 	{
+		$key = sprintf('Atom/%s/%s', $this->translator->getDefaultLocale(), $filter ? "ArticlesByTag/{$filter}" : 'AllArticles');
 		/** @var Feed $feed */
-		$feed = $this->cache->load(($filter ? "Atom/ArticlesByTag/{$filter}" : 'Atom/AllArticles'), function (&$dependencies) use ($self, $filter) {
+		$feed = $this->cache->load($key, function (&$dependencies) use ($self, $filter) {
 			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate());
 			$dependencies[Cache::EXPIRATION] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 
