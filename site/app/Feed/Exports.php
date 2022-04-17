@@ -23,17 +23,14 @@ class Exports
 	/** @var int */
 	private const ITEMS = 5;
 
-	private Articles $articles;
-
-	private Texy $texyFormatter;
-
 	private Cache $cache;
 
 
-	public function __construct(Articles $articles, Texy $texyFormatter, Storage $cacheStorage)
-	{
-		$this->articles = $articles;
-		$this->texyFormatter = $texyFormatter;
+	public function __construct(
+		private Articles $articles,
+		private Texy $texyFormatter,
+		Storage $cacheStorage,
+	) {
 		$this->cache = new Cache($cacheStorage, self::class);
 	}
 
