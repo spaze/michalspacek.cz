@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application\Routers;
 
 use MichalSpacekCz\Post\Loader;
-use Nette\Application\Routers\Route as NetteRoute;
+use Nette\Application\Routers\Route;
 use Nette\Http\IRequest;
 
 /**
  * The bidirectional route is responsible for mapping
  * HTTP request to a Request object for dispatch and vice-versa.
  */
-class Route extends NetteRoute
+class BlogPostRoute extends Route
 {
 
 	private Loader $blogPostLoader;

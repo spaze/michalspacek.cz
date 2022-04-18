@@ -4,10 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\Routers\Route;
+use MichalSpacekCz\Application\Routers\BlogPostRoute;
 use MichalSpacekCz\Post\Loader;
-use Nette\Application\Routers\Route as NetteRoute;
+use Nette\Application\Routers\Route as ApplicationRoute;
 use Nette\Application\Routers\RouteList;
+use Nette\Routing\Route;
 use Nette\Routing\Router;
 
 class RouterFactory
@@ -170,7 +171,7 @@ class RouterFactory
 		$this->addRoute('<presenter>[/<action>]', 'Default', 'default');
 
 		$this->initRouterLists(self::MODULE_PULSE);
-		$this->addRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [NetteRoute::Pattern => '.+']]);
+		$this->addRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::Pattern => '.+']]);
 		$this->addRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 
 		$this->initRouterLists(self::MODULE_UPC);
@@ -186,7 +187,7 @@ class RouterFactory
 		$this->addRoute('/<action>[/<param>]', 'Exports', 'default');
 		$this->addRoute('/<name>', 'Venues', 'venue');
 		$this->addRoute('/<tag>', 'Tags', 'tag');
-		$this->addRoute('<slug>', 'Post', 'default', null, Route::class);
+		$this->addRoute('<slug>', 'Post', 'default', null, BlogPostRoute::class);
 		$this->addRoute('<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
 
 		return $this->router;
@@ -198,23 +199,23 @@ class RouterFactory
 	 * @param string $defaultPresenter
 	 * @param string $defaultAction
 	 * @param array<string, array<string, string>>|null $initialMetadata
-	 * @param class-string<NetteRoute> $class
+	 * @param class-string<ApplicationRoute> $class
 	 */
-	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = NetteRoute::class): void
+	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = ApplicationRoute::class): void
 	{
 		$host = self::HOSTS[$this->currentModule];
 		foreach ($this->supportedLocales[$host] as $locale => $domain) {
 			$metadata = $initialMetadata ?? [];
 			$maskPrefix = (isset($this->translatedRoutes[$this->currentModule][$defaultPresenter]) ? $this->translatedRoutes[$this->currentModule][$defaultPresenter]['mask'][$locale] : null);
-			$metadata['presenter'] = [NetteRoute::Value => $defaultPresenter];
-			$metadata['action'] = [NetteRoute::Value => $defaultAction];
+			$metadata['presenter'] = [Route::Value => $defaultPresenter];
+			$metadata['action'] = [Route::Value => $defaultAction];
 			if (isset($this->translatedPresenters[$this->currentModule])) {
 				if ($maskPrefix === null) {
-					$metadata['presenter'][NetteRoute::FilterTable] = $this->translatedPresenters[$this->currentModule][$locale];
+					$metadata['presenter'][Route::FilterTable] = $this->translatedPresenters[$this->currentModule][$locale];
 				} else {
 					$presenter = $this->translatedPresenters[$this->currentModule][$locale][$maskPrefix];
-					$metadata['presenter'][NetteRoute::FilterTable] = array($maskPrefix => $presenter);
-					$metadata['action'][NetteRoute::FilterTable] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
+					$metadata['presenter'][Route::FilterTable] = array($maskPrefix => $presenter);
+					$metadata['action'][Route::FilterTable] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
 				}
 			}
 			$hostMask = sprintf(
@@ -241,7 +242,7 @@ class RouterFactory
 	/**
 	 * Route factory.
 	 *
-	 * @param class-string<NetteRoute> $class
+	 * @param class-string<ApplicationRoute> $class
 	 * @param string $mask
 	 * @param array<string, array<string, array<string, string>|string>> $metadata
 	 * @return Router
@@ -249,7 +250,7 @@ class RouterFactory
 	private function createRoute(string $class, string $mask, array $metadata): Router
 	{
 		switch ($class) {
-			case Route::class:
+			case BlogPostRoute::class:
 				$route = new $class($this->blogPostLoader, $mask, $metadata);
 				break;
 			default:

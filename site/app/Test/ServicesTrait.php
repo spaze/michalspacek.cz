@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Test;
 
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Application\RouterFactory;
-use MichalSpacekCz\Application\Routers\Route;
+use MichalSpacekCz\Application\Routers\BlogPostRoute;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\Http\SecurityHeaders;
 use MichalSpacekCz\Post\Loader as BlogPostLoader;
@@ -145,11 +145,11 @@ trait ServicesTrait
 	}
 
 
-	public function getRoute(): Route
+	public function getRoute(): BlogPostRoute
 	{
 		static $service;
 		if (!$service) {
-			$service = new Route($this->getBlogPostLoader(), '');
+			$service = new BlogPostRoute($this->getBlogPostLoader(), '');
 		}
 		return $service;
 	}
