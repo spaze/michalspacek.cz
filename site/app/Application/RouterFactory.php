@@ -170,7 +170,7 @@ class RouterFactory
 		$this->addRoute('<presenter>[/<action>]', 'Default', 'default');
 
 		$this->initRouterLists(self::MODULE_PULSE);
-		$this->addRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [NetteRoute::PATTERN => '.+']]);
+		$this->addRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [NetteRoute::Pattern => '.+']]);
 		$this->addRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 
 		$this->initRouterLists(self::MODULE_UPC);
@@ -206,15 +206,15 @@ class RouterFactory
 		foreach ($this->supportedLocales[$host] as $locale => $domain) {
 			$metadata = $initialMetadata ?? [];
 			$maskPrefix = (isset($this->translatedRoutes[$this->currentModule][$defaultPresenter]) ? $this->translatedRoutes[$this->currentModule][$defaultPresenter]['mask'][$locale] : null);
-			$metadata['presenter'] = [NetteRoute::VALUE => $defaultPresenter];
-			$metadata['action'] = [NetteRoute::VALUE => $defaultAction];
+			$metadata['presenter'] = [NetteRoute::Value => $defaultPresenter];
+			$metadata['action'] = [NetteRoute::Value => $defaultAction];
 			if (isset($this->translatedPresenters[$this->currentModule])) {
 				if ($maskPrefix === null) {
-					$metadata['presenter'][NetteRoute::FILTER_TABLE] = $this->translatedPresenters[$this->currentModule][$locale];
+					$metadata['presenter'][NetteRoute::FilterTable] = $this->translatedPresenters[$this->currentModule][$locale];
 				} else {
 					$presenter = $this->translatedPresenters[$this->currentModule][$locale][$maskPrefix];
-					$metadata['presenter'][NetteRoute::FILTER_TABLE] = array($maskPrefix => $presenter);
-					$metadata['action'][NetteRoute::FILTER_TABLE] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
+					$metadata['presenter'][NetteRoute::FilterTable] = array($maskPrefix => $presenter);
+					$metadata['action'][NetteRoute::FilterTable] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
 				}
 			}
 			$hostMask = sprintf(
