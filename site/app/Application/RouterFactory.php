@@ -70,7 +70,7 @@ class RouterFactory
 	private array $localeRouters;
 
 	/** @var string[] */
-	private array $availableLocales = [];
+	private array $availableLocales;
 
 
 	public function __construct(
@@ -151,6 +151,7 @@ class RouterFactory
 
 	/**
 	 * @return RouteList<Router>
+	 * @noinspection RequiredAttributes Because <param> is not an HTML tag here
 	 */
 	public function createRouter(): RouteList
 	{
@@ -215,7 +216,7 @@ class RouterFactory
 				} else {
 					$presenter = $this->translatedPresenters[$this->currentModule][$locale][$maskPrefix];
 					$metadata['presenter'][Route::FilterTable] = array($maskPrefix => $presenter);
-					$metadata['action'][Route::FilterTable] = (isset($this->translatedActions[$this->currentModule][$presenter][$locale]) ? $this->translatedActions[$this->currentModule][$presenter][$locale] : []);
+					$metadata['action'][Route::FilterTable] = $this->translatedActions[$this->currentModule][$presenter][$locale] ?? [];
 				}
 			}
 			$hostMask = sprintf(
@@ -249,15 +250,10 @@ class RouterFactory
 	 */
 	private function createRoute(string $class, string $mask, array $metadata): Router
 	{
-		switch ($class) {
-			case BlogPostRoute::class:
-				$route = new $class($this->blogPostLoader, $mask, $metadata);
-				break;
-			default:
-				$route = new $class($mask, $metadata);
-				break;
-		}
-		return $route;
+		return match ($class) {
+			BlogPostRoute::class => new $class($this->blogPostLoader, $mask, $metadata),
+			default => new $class($mask, $metadata),
+		};
 	}
 
 
