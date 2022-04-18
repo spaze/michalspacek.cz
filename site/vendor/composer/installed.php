@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '2939b258571f6cddbcfcc58eab4fa56d10be8293',
+        'reference' => NULL,
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -185,12 +185,12 @@
             'dev_requirement' => false,
         ),
         'nette/routing' => array(
-            'pretty_version' => 'v3.0.2',
-            'version' => '3.0.2.0',
+            'pretty_version' => 'v3.0.3',
+            'version' => '3.0.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/routing',
             'aliases' => array(),
-            'reference' => '5532e7e3612e13def357f089c1a5c25793a16843',
+            'reference' => '5e02bdde257029db0223d3291c281d913abd587f',
             'dev_requirement' => false,
         ),
         'nette/schema' => array(
@@ -296,21 +296,21 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpdoc-parser' => array(
-            'pretty_version' => '1.4.3',
-            'version' => '1.4.3.0',
+            'pretty_version' => '1.4.4',
+            'version' => '1.4.4.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
             'aliases' => array(),
-            'reference' => '34545bb30a6f8bd86cfa371dbd42140a657bbf0d',
+            'reference' => 'd8e9fd97ca11f2f24fc1aafbcfb1f78bce762267',
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.5.4',
-            'version' => '1.5.4.0',
+            'pretty_version' => '1.5.6',
+            'version' => '1.5.6.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => 'bbf68cae24f6dc023c607ea0f87da55dd9d55c2b',
+            'reference' => '799dd8c2d2c9c704bb55d2078078cb970cf0f6d1',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '21d0504612c544af1d8ce000e5e0301aa8bbde7c',
+            'reference' => 'dad1e44d86f958c5be9c5f355c9554ce22f1b1a7',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
@@ -388,12 +388,12 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '2939b258571f6cddbcfcc58eab4fa56d10be8293',
+            'reference' => NULL,
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
