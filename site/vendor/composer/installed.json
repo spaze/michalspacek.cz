@@ -170,17 +170,17 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.11.1",
-            "version_normalized": "2.11.1.0",
+            "version": "v2.11.2",
+            "version_normalized": "2.11.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "21316b42fb0a4e43df01f73c55d52bd531823fda"
+                "reference": "2e21dbadb2ceae296a51d59d2f336f722b52caf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/21316b42fb0a4e43df01f73c55d52bd531823fda",
-                "reference": "21316b42fb0a4e43df01f73c55d52bd531823fda",
+                "url": "https://api.github.com/repos/nette/latte/zipball/2e21dbadb2ceae296a51d59d2f336f722b52caf7",
+                "reference": "2e21dbadb2ceae296a51d59d2f336f722b52caf7",
                 "shasum": ""
             },
             "require": {
@@ -193,9 +193,9 @@
             },
             "require-dev": {
                 "nette/php-generator": "^3.3.4",
-                "nette/tester": "~2.0",
+                "nette/tester": "^2.0",
                 "nette/utils": "^3.0",
-                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan": "^1",
                 "tracy/tracy": "^2.3"
             },
             "suggest": {
@@ -205,7 +205,7 @@
                 "nette/php-generator": "to use tag {templatePrint}",
                 "nette/utils": "to use filter |webalize"
             },
-            "time": "2022-04-07T13:21:53+00:00",
+            "time": "2022-04-20T00:12:51+00:00",
             "bin": [
                 "bin/latte-lint"
             ],
@@ -251,7 +251,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v2.11.1"
+                "source": "https://github.com/nette/latte/tree/v2.11.2"
             },
             "install-path": "../latte/latte"
         },
@@ -2029,17 +2029,17 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.5.6",
-            "version_normalized": "1.5.6.0",
+            "version": "1.5.7",
+            "version_normalized": "1.5.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "799dd8c2d2c9c704bb55d2078078cb970cf0f6d1"
+                "reference": "7fb7e2e1e9f3d59a26a413b2d3d5e47f0edb75ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/799dd8c2d2c9c704bb55d2078078cb970cf0f6d1",
-                "reference": "799dd8c2d2c9c704bb55d2078078cb970cf0f6d1",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7fb7e2e1e9f3d59a26a413b2d3d5e47f0edb75ac",
+                "reference": "7fb7e2e1e9f3d59a26a413b2d3d5e47f0edb75ac",
                 "shasum": ""
             },
             "require": {
@@ -2048,7 +2048,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2022-04-15T11:13:37+00:00",
+            "time": "2022-04-20T12:20:27+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -2067,7 +2067,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.5.6"
+                "source": "https://github.com/phpstan/phpstan/tree/1.5.7"
             },
             "funding": [
                 {
@@ -3180,17 +3180,17 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v2.3.1",
-            "version_normalized": "2.3.1.0",
+            "version": "v2.3.2",
+            "version_normalized": "2.3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "8a377dca9fd00ab25fc1c7be87f15aafc23ad724"
+                "reference": "91930525db3939e6248c6f4500c815b435e936f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/8a377dca9fd00ab25fc1c7be87f15aafc23ad724",
-                "reference": "8a377dca9fd00ab25fc1c7be87f15aafc23ad724",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/91930525db3939e6248c6f4500c815b435e936f4",
+                "reference": "91930525db3939e6248c6f4500c815b435e936f4",
                 "shasum": ""
             },
             "require": {
@@ -3205,7 +3205,7 @@
                 "phpunit/phpunit": "^7.0 || ^9.4.2",
                 "spaze/coding-standard": "^0.0"
             },
-            "time": "2022-03-29T04:12:55+00:00",
+            "time": "2022-04-20T14:02:41+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -3231,10 +3231,10 @@
                     "homepage": "https://www.michalspacek.cz"
                 }
             ],
-            "description": "Disallowed method and function calls plug-in for PHPStan",
+            "description": "PHPStan rules to detect disallowed method & function calls, constant, namespace & superglobal usages",
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.3.1"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.3.2"
             },
             "install-path": "../spaze/phpstan-disallowed-calls"
         },
