@@ -59,12 +59,12 @@
             ),
         ),
         'latte/latte' => array(
-            'pretty_version' => 'v2.11.1',
-            'version' => '2.11.1.0',
+            'pretty_version' => 'v2.11.2',
+            'version' => '2.11.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../latte/latte',
             'aliases' => array(),
-            'reference' => '21316b42fb0a4e43df01f73c55d52bd531823fda',
+            'reference' => '2e21dbadb2ceae296a51d59d2f336f722b52caf7',
             'dev_requirement' => false,
         ),
         'nette/application' => array(
@@ -305,12 +305,12 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.5.6',
-            'version' => '1.5.6.0',
+            'pretty_version' => '1.5.7',
+            'version' => '1.5.7.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => '799dd8c2d2c9c704bb55d2078078cb970cf0f6d1',
+            'reference' => '7fb7e2e1e9f3d59a26a413b2d3d5e47f0edb75ac',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -433,12 +433,12 @@
             'dev_requirement' => false,
         ),
         'spaze/phpstan-disallowed-calls' => array(
-            'pretty_version' => 'v2.3.1',
-            'version' => '2.3.1.0',
+            'pretty_version' => 'v2.3.2',
+            'version' => '2.3.2.0',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../spaze/phpstan-disallowed-calls',
             'aliases' => array(),
-            'reference' => '8a377dca9fd00ab25fc1c7be87f15aafc23ad724',
+            'reference' => '91930525db3939e6248c6f4500c815b435e936f4',
             'dev_requirement' => true,
         ),
         'spaze/phpstan-disallowed-calls-nette' => array(

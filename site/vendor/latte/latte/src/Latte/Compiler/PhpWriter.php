@@ -184,6 +184,18 @@ class PhpWriter
 			return $this->formatArgs(new MacroTokens($s));
 		}
 
+		if ($s
+			&& !preg_match('~^\w+(?:-+\w+)*$~', $s) // T_SYMBOL
+			&& !preg_match('~ ([./@_a-z0-9#!-] | :(?!:) | \{\$ [_a-z0-9\[\]()>-]+ })++ $ ~xAi', $s) // Latte 3 tokenizeUnquotedString()
+		) {
+			if (preg_match('~[\w-]+\$~A', $s)) {
+				$hint = preg_replace('~\$\w+(->\w+)?~', '{$0}', $s);
+				trigger_error("Put variables in curly brackets, replace '$s' with '$hint' (or wrap whole expression in double quotes)", E_USER_DEPRECATED);
+			} else {
+				trigger_error("Expression '$s' should be wrapped in double quotes.", E_USER_DEPRECATED);
+			}
+		}
+
 		return '"' . $s . '"';
 	}
 
@@ -801,13 +813,13 @@ class PhpWriter
 					&& $tokens->isNext(':')
 				) {
 					$hint = (clone $tokens)->reset()->joinAll();
-					trigger_error("Colon as argument separator is deprecated, use comma in '$hint'.", E_USER_DEPRECATED);
+					trigger_error("Colon as argument separator is deprecated, replace ':' with ',' in '$hint'", E_USER_DEPRECATED);
 					$res->append($tokens->currentToken());
 
 				} else {
 					if ($tokens->isNext(':') && !$tokens->depth) {
 						$hint = (clone $tokens)->reset()->joinAll();
-						trigger_error("Colon as argument separator is deprecated, use comma in '$hint'.", E_USER_DEPRECATED);
+						trigger_error("Colon as argument separator is deprecated, replace ':' with ',' in '$hint'", E_USER_DEPRECATED);
 					}
 					$res->append($tokens->currentToken());
 				}
