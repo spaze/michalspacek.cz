@@ -2,11 +2,6 @@ parameters:
 	paths:
 		- app
 	level: 7
-	ignoreErrors:
-		- # https://github.com/phpstan/phpstan-src/pull/898
-			message: '#^Parameter \#2 \$value of function ini_set expects string,#'
-			path: app/Www/Presenters/BasePresenter.php
-			count: 2
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
