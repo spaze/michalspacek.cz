@@ -296,21 +296,21 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpdoc-parser' => array(
-            'pretty_version' => '1.4.4',
-            'version' => '1.4.4.0',
+            'pretty_version' => '1.4.5',
+            'version' => '1.4.5.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
             'aliases' => array(),
-            'reference' => 'd8e9fd97ca11f2f24fc1aafbcfb1f78bce762267',
+            'reference' => '129a63b3bc7caeb593c224c41f420675e63cfefc',
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.5.7',
-            'version' => '1.5.7.0',
+            'pretty_version' => '1.6.1',
+            'version' => '1.6.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => '7fb7e2e1e9f3d59a26a413b2d3d5e47f0edb75ac',
+            'reference' => 'e8852764cf5ec8dcd2a3fa8ea03cbcf523639419',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => 'dad1e44d86f958c5be9c5f355c9554ce22f1b1a7',
+            'reference' => 'e5e096c731d21614b952983804581389eb2a484f',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
