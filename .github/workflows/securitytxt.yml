@@ -12,10 +12,10 @@ jobs:
       matrix:
         php-version:
           - "8.1"
-        uri:
-          - https://www.michalspacek.cz/.well-known/security.txt
-          - https://www.michalspacek.com/.well-known/security.txt
-          - https://upcwifikeys.com/.well-known/security.txt
+        host:
+          - www.michalspacek.cz
+          - www.michalspacek.com
+          - upcwifikeys.com
     steps:
     - name: Set PHP version
       run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
@@ -26,11 +26,11 @@ jobs:
         apt-fast install -y --no-install-recommends php${{ matrix.php-version }}-gnupg
     - name: Install the checker
       run: composer require spaze/security-txt:dev-main
-    - name: Check security.txt at ${{ matrix.uri }}
+    - name: Check security.txt at ${{ matrix.host }}
       run: |
         php \
         vendor/spaze/security-txt/bin/checksecuritytxt.php \
-        ${{ matrix.uri }} \
+        ${{ matrix.host }} \
         10 \
         --colors \
         --strict
