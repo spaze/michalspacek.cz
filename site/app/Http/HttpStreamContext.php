@@ -11,7 +11,7 @@ class HttpStreamContext
 	/**
 	 * @param string $userAgent
 	 * @param array<string, string|int> $httpOptions
-	 * @param array<string, string> $httpHeaders
+	 * @param array<int, string> $httpHeaders
 	 * @param array<string, string|bool> $sslOptions
 	 * @return resource
 	 */

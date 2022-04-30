@@ -56,7 +56,7 @@ class CertificateGatherer
 				'follow_location' => 0,
 			],
 			[
-				'Host' => $hostname,
+				"Host: {$hostname}",
 			],
 			[
 				'capture_peer_cert' => true,
