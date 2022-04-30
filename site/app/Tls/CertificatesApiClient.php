@@ -16,9 +16,9 @@ class CertificatesApiClient
 {
 
 	public function __construct(
-		private LinkGenerator $linkGenerator,
-		private CertificateFactory $certificateFactory,
-		private HttpStreamContext $httpStreamContext,
+		private readonly LinkGenerator $linkGenerator,
+		private readonly CertificateFactory $certificateFactory,
+		private readonly HttpStreamContext $httpStreamContext,
 	) {
 	}
 

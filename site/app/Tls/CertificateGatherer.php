@@ -14,9 +14,9 @@ class CertificateGatherer
 {
 
 	public function __construct(
-		private CertificateFactory $certificateFactory,
-		private HttpStreamContext $httpStreamContext,
-		private DnsResolver $dnsResolver,
+		private readonly CertificateFactory $certificateFactory,
+		private readonly HttpStreamContext $httpStreamContext,
+		private readonly DnsResolver $dnsResolver,
 	) {
 	}
 

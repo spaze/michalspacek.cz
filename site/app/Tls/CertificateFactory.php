@@ -17,7 +17,7 @@ class CertificateFactory
 {
 
 	public function __construct(
-		private int $expiringThreshold,
+		private readonly int $expiringThreshold,
 	) {
 	}
 

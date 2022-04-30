@@ -23,8 +23,8 @@ class Certificates
 
 
 	public function __construct(
-		private Explorer $database,
-		private CertificateFactory $certificateFactory,
+		private readonly Explorer $database,
+		private readonly CertificateFactory $certificateFactory,
 	) {
 	}
 

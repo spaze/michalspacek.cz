@@ -13,9 +13,9 @@ class CertificateMonitor
 
 
 	public function __construct(
-		private CertificateGatherer $certificateGatherer,
-		private CertificatesApiClient $certificatesApiClient,
-		private ConsoleColor $color,
+		private readonly CertificateGatherer $certificateGatherer,
+		private readonly CertificatesApiClient $certificatesApiClient,
+		private readonly ConsoleColor $color,
 	) {
 	}
 
