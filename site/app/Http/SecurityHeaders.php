@@ -12,10 +12,6 @@ use Spaze\ContentSecurityPolicy\Config;
 class SecurityHeaders
 {
 
-	private IRequest $httpRequest;
-	private IResponse $httpResponse;
-	private Config $contentSecurityPolicy;
-	private LocaleLinkGenerator $localeLinkGenerator;
 	private string $presenterName;
 	private string $actionName;
 
@@ -24,15 +20,11 @@ class SecurityHeaders
 
 
 	public function __construct(
-		IRequest $httpRequest,
-		IResponse $httpResponse,
-		Config $contentSecurityPolicy,
-		LocaleLinkGenerator $localeLinkGenerator,
+		private readonly IRequest $httpRequest,
+		private readonly IResponse $httpResponse,
+		private readonly Config $contentSecurityPolicy,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
 	) {
-		$this->httpRequest = $httpRequest;
-		$this->httpResponse = $httpResponse;
-		$this->contentSecurityPolicy = $contentSecurityPolicy;
-		$this->localeLinkGenerator = $localeLinkGenerator;
 	}
 
 
@@ -55,11 +47,9 @@ class SecurityHeaders
 		foreach ($values as &$value) {
 			if ($value === 'none' || $value === null) {
 				$value = '';
-			} elseif ($value === 'self') {
-				$value = 'self';
 			} elseif (is_array($value)) {
 				$this->normalizePermissionsPolicyValues($value);
-			} else {
+			} elseif ($value !== 'self') {
 				$value = trim($value);
 				if ($value !== '') {
 					$value = sprintf('"%s"', $value);
@@ -97,13 +87,6 @@ class SecurityHeaders
 	}
 
 
-	/**
-	 * Set Content Security Policy.
-	 *
-	 * @param string $presenterName
-	 * @param string $actionName
-	 * @return self
-	 */
 	public function setCsp(string $presenterName, string $actionName): self
 	{
 		$this->presenterName = $presenterName;
@@ -112,11 +95,6 @@ class SecurityHeaders
 	}
 
 
-	/**
-	 * Set default Content Security Policy.
-	 *
-	 * @return self
-	 */
 	public function setDefaultCsp(): self
 	{
 		$this->presenterName = $this->actionName = $this->contentSecurityPolicy->getDefaultKey();
@@ -125,7 +103,7 @@ class SecurityHeaders
 
 
 	/**
-	 * Generates Access-Control-Allow-Origin header, if there's a Origin request header and it matches any source link.
+	 * Generates Access-Control-Allow-Origin header, if there's an Origin request header, and it matches any source link.
 	 *
 	 * @param string $source URL to allow in format "[[[module:]presenter:]action] [#fragment]"
 	 */

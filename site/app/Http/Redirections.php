@@ -9,21 +9,12 @@ use Nette\Http\UrlScript;
 class Redirections
 {
 
-	private Explorer $database;
-
-
-	public function __construct(Explorer $context)
-	{
-		$this->database = $context;
+	public function __construct(
+		private readonly Explorer $database,
+	) {
 	}
 
 
-	/**
-	 * Get destination.
-	 *
-	 * @param UrlScript $sourceUrl
-	 * @return string|null
-	 */
 	public function getDestination(UrlScript $sourceUrl): ?string
 	{
 		$destination = $this->database->fetchField('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath()) ?: null;
