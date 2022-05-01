@@ -305,12 +305,12 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.6.1',
-            'version' => '1.6.1.0',
+            'pretty_version' => '1.6.3',
+            'version' => '1.6.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => 'e8852764cf5ec8dcd2a3fa8ea03cbcf523639419',
+            'reference' => '6128620b98292e0b69ea6d799871d77163681c8e',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => 'e5e096c731d21614b952983804581389eb2a484f',
+            'reference' => '0e5a0abdd695cd45870e442647ef03a70f2ec1e5',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
@@ -469,12 +469,12 @@
             'dev_requirement' => false,
         ),
         'symfony/config' => array(
-            'pretty_version' => 'v5.4.7',
-            'version' => '5.4.7.0',
+            'pretty_version' => 'v5.4.8',
+            'version' => '5.4.8.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/config',
             'aliases' => array(),
-            'reference' => '05624c386afa1b4ccc1357463d830fade8d9d404',
+            'reference' => '9f8964f56f7234f8ace16f66cb3fbae950c04e68',
             'dev_requirement' => false,
         ),
         'symfony/deprecation-contracts' => array(
@@ -526,12 +526,12 @@
             ),
         ),
         'symfony/translation' => array(
-            'pretty_version' => 'v5.4.7',
-            'version' => '5.4.7.0',
+            'pretty_version' => 'v5.4.8',
+            'version' => '5.4.8.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
-            'reference' => 'e1eb790575202ee3ac2659f55b93b05853726f8e',
+            'reference' => 'f5c0f6d1f20993b2606f3a5f36b1dc8c1899170b',
             'dev_requirement' => false,
         ),
         'symfony/translation-contracts' => array(
@@ -559,12 +559,12 @@
             'dev_requirement' => false,
         ),
         'tracy/tracy' => array(
-            'pretty_version' => 'v2.9.1',
-            'version' => '2.9.1.0',
+            'pretty_version' => 'v2.9.2',
+            'version' => '2.9.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tracy/tracy',
             'aliases' => array(),
-            'reference' => '4180b3221ff852fe10d5eab30d80be6f6ab7221e',
+            'reference' => '03965a7cb94d284dbf7e3b788b3691715c13d401',
             'dev_requirement' => false,
         ),
     ),
