@@ -51,6 +51,8 @@ services:
 	- MichalSpacekCz\UpcKeys\Presenters\HomepagePresenter
 
 	# pulse module
+	- MichalSpacekCz\Pulse\Presenters\ErrorGenericPresenter
+	- MichalSpacekCz\Pulse\Presenters\ErrorPresenter
 	- MichalSpacekCz\Pulse\Presenters\HomepagePresenter
 	- MichalSpacekCz\Pulse\Presenters\PasswordsPresenter
 	- MichalSpacekCz\Pulse\Presenters\PasswordsStoragesPresenter
