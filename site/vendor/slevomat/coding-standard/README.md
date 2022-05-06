@@ -807,6 +807,10 @@ This sniff disallows usage of named arguments.
 
 This sniff disallows trailing commas in multi-line calls.
 
+This sniff provides the following setting:
+
+* `onlySingleLine`: to enable checks only for single-line calls.
+
 #### SlevomatCodingStandard.Functions.RequireTrailingCommaInCall 🔧
 
 Commas after the last parameter in function or method call make adding a new parameter easier and result in a cleaner versioning diff.
@@ -817,9 +821,31 @@ This sniff provides the following setting:
 
 * `enable`: either to enable or not this sniff. By default, it is enabled for PHP versions 7.3 or higher.
 
+#### SlevomatCodingStandard.Functions.DisallowTrailingCommaInClosureUse 🔧
+
+This sniff disallows trailing commas in multi-line `use` of closure declaration.
+
+This sniff provides the following setting:
+
+* `onlySingleLine`: to enable checks only for single-line `use` declarations.
+
+#### SlevomatCodingStandard.Functions.RequireTrailingCommaInClosureUse 🔧
+
+Commas after the last inherited variable in multi-line `use` of closure declaration make adding a new variable easier and result in a cleaner versioning diff.
+
+This sniff enforces trailing commas in multi-line declarations.
+
+This sniff provides the following setting:
+
+* `enable`: either to enable or not this sniff. By default, it is enabled for PHP versions 8.0 or higher.
+
 #### SlevomatCodingStandard.Functions.DisallowTrailingCommaInDeclaration 🔧
 
 This sniff disallows trailing commas in multi-line declarations.
+
+This sniff provides the following setting:
+
+* `onlySingleLine`: to enable checks only for single-line declarations.
 
 #### SlevomatCodingStandard.Functions.RequireTrailingCommaInDeclaration 🔧
 
@@ -965,6 +991,7 @@ Sniff provides the following settings:
 * `ignoreSpacesInAnnotation`: to allow multiple spaces to align annotations.
 * `ignoreSpacesInComment`: to allow multiple spaces to align content of the comment.
 * `ignoreSpacesInParameters`: to allow multiple spaces to align parameters.
+* `ignoreSpacesInMatch`: to allow multiple spaces to align `match` expressions.
 
 #### SlevomatCodingStandard.Files.TypeNameMatchesFileName
 
