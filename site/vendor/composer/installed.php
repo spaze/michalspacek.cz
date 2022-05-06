@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '7909c7fff8b1f6a1fde9d1816c5bb6361686fb17',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -296,21 +296,21 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpdoc-parser' => array(
-            'pretty_version' => '1.4.5',
-            'version' => '1.4.5.0',
+            'pretty_version' => '1.5.1',
+            'version' => '1.5.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
             'aliases' => array(),
-            'reference' => '129a63b3bc7caeb593c224c41f420675e63cfefc',
+            'reference' => '981cc368a216c988e862a75e526b6076987d1b50',
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.6.3',
-            'version' => '1.6.3.0',
+            'pretty_version' => '1.6.7',
+            'version' => '1.6.7.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => '6128620b98292e0b69ea6d799871d77163681c8e',
+            'reference' => 'd41c39cb2e487663bce9bbd97c660e244b73abad',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '0e5a0abdd695cd45870e442647ef03a70f2ec1e5',
+            'reference' => '2658dd564ed1a63989404083d7ccb9cb10e07701',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
@@ -388,12 +388,12 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '7909c7fff8b1f6a1fde9d1816c5bb6361686fb17',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
