@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '7909c7fff8b1f6a1fde9d1816c5bb6361686fb17',
+        'reference' => '9c7e04c694308f8beaa15d81346103abdb4f7519',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -339,16 +339,16 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '2658dd564ed1a63989404083d7ccb9cb10e07701',
+            'reference' => 'c99945852fb9e9de3bc89c90f24b4c8ef47668fd',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
-            'pretty_version' => '7.1',
-            'version' => '7.1.0.0',
+            'pretty_version' => '7.2.0',
+            'version' => '7.2.0.0',
             'type' => 'phpcodesniffer-standard',
             'install_path' => __DIR__ . '/../slevomat/coding-standard',
             'aliases' => array(),
-            'reference' => 'b521bd358b5f7a7d69e9637fd139e036d8adeb6f',
+            'reference' => 'b4f96a8beea515d2d89141b7b9ad72f526d84071',
             'dev_requirement' => false,
         ),
         'spaze/coding-standard' => array(
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '7909c7fff8b1f6a1fde9d1816c5bb6361686fb17',
+            'reference' => '9c7e04c694308f8beaa15d81346103abdb4f7519',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
