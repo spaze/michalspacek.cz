@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9c7e04c694308f8beaa15d81346103abdb4f7519',
+        'reference' => '8da2591ef3d879ada7971879933423b96c5414ad',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -59,12 +59,12 @@
             ),
         ),
         'latte/latte' => array(
-            'pretty_version' => 'v2.11.2',
-            'version' => '2.11.2.0',
+            'pretty_version' => 'v2.11.3',
+            'version' => '2.11.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../latte/latte',
             'aliases' => array(),
-            'reference' => '2e21dbadb2ceae296a51d59d2f336f722b52caf7',
+            'reference' => 'f2e16d3ec6968854029740452c20c38a514e6842',
             'dev_requirement' => false,
         ),
         'nette/application' => array(
@@ -305,12 +305,12 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.6.7',
-            'version' => '1.6.7.0',
+            'pretty_version' => '1.6.8',
+            'version' => '1.6.8.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
-            'reference' => 'd41c39cb2e487663bce9bbd97c660e244b73abad',
+            'reference' => 'd76498c5531232cb8386ceb6004f7e013138d3ba',
             'dev_requirement' => true,
         ),
         'phpstan/phpstan-deprecation-rules' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => 'c99945852fb9e9de3bc89c90f24b4c8ef47668fd',
+            'reference' => '2ed308386e65cafaadd54723f5b57775374c2ae8',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9c7e04c694308f8beaa15d81346103abdb4f7519',
+            'reference' => '8da2591ef3d879ada7971879933423b96c5414ad',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(

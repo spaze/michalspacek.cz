@@ -178,7 +178,7 @@ class PhpWriter
 	public function formatWord(string $s): string
 	{
 		if (is_numeric($s)
-			|| preg_match('#^[$([]|[\'"\ ]|^(true|TRUE)$|^(false|FALSE)$|^(null|NULL)$|^[\w\\\\]{3,}::[A-Z0-9_]{2,}$#D', $s)
+			|| preg_match('#^[$([]|[\'"\ ]|^(true|TRUE)$|^(false|FALSE)$|^(null|NULL)$|^[\w\\\\]{3,}::[A-Z][A-Za-z0-9_]{2,}$#D', $s)
 		) {
 			$s = preg_match('#\s#', $s) ? "($s)" : $s;
 			return $this->formatArgs(new MacroTokens($s));
@@ -833,7 +833,10 @@ class PhpWriter
 					}
 
 					$tokens->nextToken('|');
-				} elseif (!strcasecmp($tokens->currentValue(), 'checkurl')) {
+				} elseif (!strcasecmp($tokens->currentValue(), 'checkUrl')) {
+					if ($tokens->currentValue() !== 'checkUrl') {
+						trigger_error("Case mismatch on filter name |{$tokens->currentValue()}, correct name is |checkUrl.", E_USER_WARNING);
+					}
 					$res->prepend('LR\Filters::safeUrl(');
 					$inside = true;
 				} elseif (

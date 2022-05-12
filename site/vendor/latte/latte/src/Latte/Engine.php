@@ -17,8 +17,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '2.11.2';
-	public const VERSION_ID = 21102;
+	public const VERSION = '2.11.3';
+	public const VERSION_ID = 21103;
 
 	/** Content types */
 	public const
@@ -300,7 +300,9 @@ class Engine
 	 */
 	public function addFilter(?string $name, callable $callback)
 	{
-		if ($name !== null && !preg_match('#^[a-z]\w*$#iD', $name)) {
+		if ($name === null) {
+			trigger_error('For dynamic filters, use the addFilterLoader() where you pass a callback as a parameter that returns the filter callback.', E_USER_DEPRECATED);
+		} elseif (!preg_match('#^[a-z]\w*$#iD', $name)) {
 			throw new \LogicException("Invalid filter name '$name'.");
 		}
 
