@@ -37,8 +37,9 @@ class TemplateFactory extends NetteTemplateFactory
 		/** @var Template $template */
 		$template = parent::createTemplate($control, $class);
 		$template->darkMode = $this->theme->isDarkMode();
-		$template->addFilter(null, [$this->netxtenHelpers, 'loader']);
-		$template->addFilter(null, [$this->templateHelpers, 'loader']);
+		$template->getLatte()
+			->addFilterLoader([$this->netxtenHelpers, 'loader'])
+			->addFilterLoader([$this->templateHelpers, 'loader']);
 		$template->setTranslator($this->translator);
 		return $template;
 	}

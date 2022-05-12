@@ -4,14 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Templating;
 
 use MichalSpacekCz\Formatter\Texy;
-use Nette\SmartObject;
 use Nette\Utils\Html;
 
 class Helpers
 {
-
-	use SmartObject;
-
 
 	private Texy $texyFormatter;
 
@@ -22,18 +18,10 @@ class Helpers
 	}
 
 
-	/**
-	 * @param string $helper
-	 * @param mixed ...$args
-	 * @return mixed
-	 */
-	public function loader(string $helper, ...$args)
+	public function loader(string $filter): ?callable
 	{
-		if (method_exists($this, $helper)) {
-			return $this->$helper(...$args);
-		} else {
-			return null;
-		}
+		$callback = [$this, $filter];
+		return is_callable($callback) ? $callback : null;
 	}
 
 
