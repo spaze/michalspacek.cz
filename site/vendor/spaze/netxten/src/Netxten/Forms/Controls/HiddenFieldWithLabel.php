@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Netxten\Forms\Controls;
 
+use InvalidArgumentException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -32,10 +33,14 @@ class HiddenFieldWithLabel extends BaseControl
 	 */
 	public function getControl(): Html
 	{
+		if (!$this->value instanceof Html && !is_string($this->value) && !is_null($this->value)) {
+			throw new InvalidArgumentException("This shouldn't happen, unexpected type: " . gettype($this->value));
+		}
+
 		/** @var Html $control */
 		$control = parent::getControl();
 		$input = $control
-			->value($this->value === null ? '' : $this->value)
+			->value((string)$this->value)
 			->data('nette-rules', null);
 
 		$container = Html::el();
