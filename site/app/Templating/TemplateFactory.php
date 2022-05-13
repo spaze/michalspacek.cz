@@ -42,4 +42,15 @@ class TemplateFactory extends NetteTemplateFactory
 		return $template;
 	}
 
+
+	/**
+	 * @return array<int, string>
+	 */
+	public function getCustomFilters(): array
+	{
+		$filters = array_keys($this->filters->getAll());
+		sort($filters);
+		return $filters;
+	}
+
 }
