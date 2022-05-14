@@ -6,12 +6,9 @@ namespace MichalSpacekCz\Training;
 class Prices
 {
 
-	private ?float $vatRate;
-
-
-	public function setVatRate(float $vatRate): void
-	{
-		$this->vatRate = $vatRate;
+	public function __construct(
+		private readonly float $vatRate,
+	) {
 	}
 
 

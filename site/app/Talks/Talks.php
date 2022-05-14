@@ -25,24 +25,20 @@ class Talks
 	/** @var int */
 	private const SLIDE_MAX_HEIGHT = 450;
 
-	private Explorer $database;
-
-	private TexyFormatter $texyFormatter;
-
 	/**
 	 * Slides root, just directory no FQND, no leading slash, no trailing slash.
 	 */
-	private string $slidesRoot;
+	private readonly string $slidesRoot;
 
 	/**
 	 * Static files root FQDN, no trailing slash.
 	 */
-	private string $staticRoot;
+	private readonly string $staticRoot;
 
 	/**
 	 * Physical location root directory, no trailing slash.
 	 */
-	private string $locationRoot;
+	private readonly string $locationRoot;
 
 	/** @var string[] */
 	private array $deleteFiles = [];
@@ -63,46 +59,16 @@ class Talks
 	];
 
 
-	public function __construct(Explorer $context, TexyFormatter $texyFormatter)
-	{
-		$this->database = $context;
-		$this->texyFormatter = $texyFormatter;
-	}
-
-
-	/**
-	 * Set static content URL root.
-	 *
-	 * @param string $root
-	 */
-	public function setStaticRoot($root): void
-	{
-		$this->staticRoot = rtrim($root, '/');
-	}
-
-
-	/**
-	 * Set location root directory.
-	 *
-	 * @param string $root
-	 */
-	public function setLocationRoot($root): void
-	{
-		$this->locationRoot = rtrim($root, '/');
-	}
-
-
-	/**
-	 * Set slides root directory.
-	 *
-	 * Removes both leading and trailing forward slashes.
-	 *
-	 * @param string $root
-	 * @param string $slidesRoot
-	 */
-	public function setSlidesRoot(string $root, string $slidesRoot): void
-	{
-		$this->slidesRoot = trim($root, '/') . '/' . trim($slidesRoot, '/');
+	public function __construct(
+		private readonly Explorer $database,
+		private readonly TexyFormatter $texyFormatter,
+		string $staticRoot,
+		string $imagesRoot,
+		string $locationRoot,
+	) {
+		$this->staticRoot = rtrim($staticRoot, '/');
+		$this->slidesRoot = trim($imagesRoot, '/') . '/talks';
+		$this->locationRoot = rtrim($locationRoot, '/');
 	}
 
 

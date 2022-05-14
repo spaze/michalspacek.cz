@@ -23,15 +23,10 @@ class RegisterUz implements CompanyDataInterface
 
 	private const COUNTRY_CODE = 'sk';
 
-	private string $rootUrl;
+	private readonly string $rootUrl;
 
 
-	/**
-	 * Root URL of the service, ends with a slash.
-	 *
-	 * @param string $rootUrl
-	 */
-	public function setRootUrl(string $rootUrl): void
+	public function __construct(string $rootUrl)
 	{
 		if ($rootUrl[strlen($rootUrl) - 1] !== '/') {
 			$rootUrl .= '/';

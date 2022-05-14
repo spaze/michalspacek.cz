@@ -16,38 +16,15 @@ use Tracy\Debugger;
 class Certificates
 {
 
-	/** @var array<string, string> */
-	private array $users;
-
-	private int $hideExpiredAfter;
-
-
+	/**
+	 * @param array<string, string> $users
+	 */
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly CertificateFactory $certificateFactory,
+		private readonly array $users,
+		private readonly int $hideExpiredAfter,
 	) {
-	}
-
-
-	/**
-	 * Set users authentication info.
-	 *
-	 * @param array<string, string> $users
-	 */
-	public function setUsers(array $users): void
-	{
-		$this->users = $users;
-	}
-
-
-	/**
-	 * Set hide expired after interval.
-	 *
-	 * @param int $hideExpiredAfter in days
-	 */
-	public function setHideExpiredAfter(int $hideExpiredAfter): void
-	{
-		$this->hideExpiredAfter = $hideExpiredAfter;
 	}
 
 

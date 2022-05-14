@@ -44,12 +44,6 @@ class Manager implements Authenticator
 
 	private StaticKey $passwordEncryption;
 
-	private string $returningUserCookie;
-
-	private string $permanentLoginCookie;
-
-	private string $permanentLoginInterval;
-
 	private ?string $authCookiesPath = null;
 
 
@@ -60,6 +54,9 @@ class Manager implements Authenticator
 		Passwords $passwords,
 		StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator,
+		private readonly string $returningUserCookie,
+		private readonly string $permanentLoginCookie,
+		private readonly string $permanentLoginInterval,
 	) {
 		$this->database = $context;
 		$this->httpRequest = $httpRequest;
@@ -188,29 +185,6 @@ class Manager implements Authenticator
 	{
 		$cookie = $this->httpRequest->getCookie($this->returningUserCookie);
 		return ($cookie && $this->verifyReturningUser($cookie));
-	}
-
-
-	public function setReturningUserCookie(string $cookie): void
-	{
-		$this->returningUserCookie = $cookie;
-	}
-
-
-	public function setPermanentLoginCookie(string $cookie): void
-	{
-		$this->permanentLoginCookie = $cookie;
-	}
-
-
-	/**
-	 * Set permanent login interval.
-	 *
-	 * @param string $interval
-	 */
-	public function setPermanentLoginInterval(string $interval): void
-	{
-		$this->permanentLoginInterval = $interval;
 	}
 
 

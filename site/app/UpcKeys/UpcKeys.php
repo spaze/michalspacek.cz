@@ -37,9 +37,11 @@ class UpcKeys
 	private array $keys;
 
 
-	public function addRouter(RouterInterface $router): void
+	public function __construct(RouterInterface ...$routers)
 	{
-		$this->routers[get_class($router)] = $router;
+		foreach ($routers as $router) {
+			$this->routers[$router::class] = $router;
+		}
 	}
 
 

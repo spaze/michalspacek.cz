@@ -17,8 +17,7 @@ class PricesTest extends TestCase
 
 	public function setUp()
 	{
-		$this->prices = new Prices();
-		$this->prices->setVatRate(0.21);
+		$this->prices = new Prices(0.21);
 	}
 
 

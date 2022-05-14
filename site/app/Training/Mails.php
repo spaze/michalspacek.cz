@@ -20,10 +20,6 @@ class Mails
 
 	private const REMINDER_DAYS = 5;
 
-	private string $emailFrom;
-
-	private string $phoneNumber;
-
 
 	public function __construct(
 		private readonly Mailer $mailer,
@@ -33,6 +29,8 @@ class Mails
 		private readonly Venues $trainingVenues,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly DateTimeFormatter $dateTimeFormatter,
+		private readonly string $emailFrom,
+		private readonly string $phoneNumber,
 	) {
 	}
 
@@ -83,18 +81,6 @@ class Mails
 
 		$subject = 'Potvrzení registrace na školení ' . $trainingName;
 		$this->sendMail($recipientAddress, $recipientName, $subject, $template);
-	}
-
-
-	public function setEmailFrom(string $from): void
-	{
-		$this->emailFrom = $from;
-	}
-
-
-	public function setPhoneNumber(string $number): void
-	{
-		$this->phoneNumber = $number;
 	}
 
 

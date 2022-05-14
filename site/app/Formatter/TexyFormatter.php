@@ -70,19 +70,14 @@ class TexyFormatter
 		private readonly LocaleLinkGenerator $localeLinkGenerator,
 		private readonly LocaleUrls $blogPostLocaleUrls,
 		private readonly DateTimeFormatter $dateTimeFormatter,
+		string $staticRoot,
+		string $imagesRoot,
+		string $locationRoot,
 	) {
-		$this->cacheNamespace = 'TexyFormatted' . '.' . $this->translator->getLocale();
-	}
-
-
-	/**
-	 * Set static content URL root.
-	 *
-	 * @param string $root
-	 */
-	public function setStaticRoot(string $root): void
-	{
-		$this->staticRoot = rtrim($root, '/');
+		$this->staticRoot = rtrim($staticRoot, '/');
+		$this->imagesRoot = trim($imagesRoot, '/');
+		$this->locationRoot = rtrim($locationRoot, '/');
+		$this->cacheNamespace = 'TexyFormatted.' . $this->translator->getLocale();
 	}
 
 
@@ -98,17 +93,6 @@ class TexyFormatter
 
 
 	/**
-	 * Set images root directory.
-	 *
-	 * @param string $root
-	 */
-	public function setImagesRoot(string $root): void
-	{
-		$this->imagesRoot = trim($root, '/');
-	}
-
-
-	/**
 	 * Get absolute URL of the image.
 	 *
 	 * @param string $filename
@@ -117,17 +101,6 @@ class TexyFormatter
 	public function getImagesRoot(string $filename): string
 	{
 		return sprintf('%s/%s/%s', $this->staticRoot, $this->imagesRoot, ltrim($filename, '/'));
-	}
-
-
-	/**
-	 * Set location root directory.
-	 *
-	 * @param string $root
-	 */
-	public function setLocationRoot(string $root): void
-	{
-		$this->locationRoot = rtrim($root, '/');
 	}
 
 

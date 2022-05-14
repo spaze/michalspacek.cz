@@ -16,39 +16,34 @@ class SecurityHeaders
 	private string $actionName;
 
 	/** @var array<string|string[]> */
-	private array $permissionsPolicy;
+	private readonly array $permissionsPolicy;
 
 
+	/**
+	 * @param array<string|null|string[]> $permissionsPolicy
+	 */
 	public function __construct(
 		private readonly IRequest $httpRequest,
 		private readonly IResponse $httpResponse,
 		private readonly Config $contentSecurityPolicy,
 		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		array $permissionsPolicy,
 	) {
-	}
-
-
-	/**
-	 * @param array<string|null|string[]> $policy
-	 */
-	public function setPermissionsPolicy(array $policy): void
-	{
-		$permissionsPolicy = $policy;
-		$this->normalizePermissionsPolicyValues($permissionsPolicy);
-		$this->permissionsPolicy = $permissionsPolicy;
+		$this->permissionsPolicy = $this->normalizePermissionsPolicyValues($permissionsPolicy);
 	}
 
 
 	/**
 	 * @param array<string|null|string[]> $values
+	 * @return array<string|string[]>
 	 */
-	private function normalizePermissionsPolicyValues(array &$values): void
+	private function normalizePermissionsPolicyValues(array $values): array
 	{
 		foreach ($values as &$value) {
 			if ($value === 'none' || $value === null) {
 				$value = '';
 			} elseif (is_array($value)) {
-				$this->normalizePermissionsPolicyValues($value);
+				$value = $this->normalizePermissionsPolicyValues($value);
 			} elseif ($value !== 'self') {
 				$value = trim($value);
 				if ($value !== '') {
@@ -56,6 +51,7 @@ class SecurityHeaders
 				}
 			}
 		}
+		return $values;
 	}
 
 

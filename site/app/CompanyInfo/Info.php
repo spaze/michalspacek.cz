@@ -11,19 +11,15 @@ use RuntimeException;
 class Info
 {
 
-	private Ares $ares;
-
-	private RegisterUz $registerUz;
-
 	private Cache $cache;
 
-	private bool $loadCompanyDataVisible = true;
 
-
-	public function __construct(Ares $ares, RegisterUz $registerUz, Storage $cacheStorage)
-	{
-		$this->ares = $ares;
-		$this->registerUz = $registerUz;
+	public function __construct(
+		private readonly Ares $ares,
+		private readonly RegisterUz $registerUz,
+		Storage $cacheStorage,
+		private bool $loadCompanyDataVisible = true,
+	) {
 		$this->cache = new Cache($cacheStorage, self::class);
 	}
 

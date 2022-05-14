@@ -1,39 +1,20 @@
 services:
 	webApplication: MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	application: Nette\Application\Application
-	routerFactory:
-		factory: MichalSpacekCz\Application\RouterFactory
-		setup:
-			- setSupportedLocales(%locales.supported%)
-			- setLocaleRootDomainMapping(%locales.rootDomainMapping%)
-			- setTranslatedRoutes(%translatedRoutes.presenters%)
+	routerFactory: MichalSpacekCz\Application\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	router: @routerFactory::createRouter
 	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator
-	texyFormatter:
-		factory: MichalSpacekCz\Formatter\TexyFormatter
-		setup:
-			- setStaticRoot(%domain.sharedStaticRoot%)
-			- setImagesRoot(%domain.imagesRoot%)
-			- setLocationRoot(%domain.locationRoot%)
+	texyFormatter: MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	latte.templateFactory: MichalSpacekCz\Templating\TemplateFactory
 	redirections: MichalSpacekCz\Http\Redirections
 	httpStreamContext: MichalSpacekCz\Http\HttpStreamContext
 	articles: MichalSpacekCz\Articles\Articles
-	talks:
-		factory: MichalSpacekCz\Talks\Talks
-		setup:
-			- setStaticRoot(%domain.sharedStaticRoot%)
-			- setLocationRoot(%domain.locationRoot%)
-			- setSlidesRoot(%domain.imagesRoot%, 'talks')
+	talks: MichalSpacekCz\Talks\Talks(staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%, imagesRoot: %domain.imagesRoot%)
 	trainings: MichalSpacekCz\Training\Trainings
 	companyTrainings: MichalSpacekCz\Training\CompanyTrainings
 	interviews: MichalSpacekCz\Interviews\Interviews
 	trainingApplications: MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
-	trainingMails:
-		factory: MichalSpacekCz\Training\Mails
-		setup:
-			- setEmailFrom('Michal Špaček <mail@michalspacek.cz>')
-			- setPhoneNumber(%contact.phoneNumber%)
+	trainingMails: MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
 	trainingDates: MichalSpacekCz\Training\Dates
 	trainingVenues: MichalSpacekCz\Training\Venues
 	trainingStatuses: MichalSpacekCz\Training\Statuses
@@ -42,77 +23,35 @@ services:
 	trainingFiles: MichalSpacekCz\Training\Files\TrainingFiles
 	trainingLocales: MichalSpacekCz\Training\Locales
 	trainingReviews: MichalSpacekCz\Training\Reviews
-	trainingPrices:
-		factory: MichalSpacekCz\Training\Prices
-		setup:
-			- setVatRate(%vatRate%)
+	trainingPrices: MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
 	vranaResolver: MichalSpacekCz\Training\Resolver\Vrana
-	authenticator:
-		factory: MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption)
-		setup:
-			- setPermanentLoginCookie(%permanentLogin.cookie%)
-			- setPermanentLoginInterval(%permanentLogin.interval%)
-			- setReturningUserCookie(%returningUser.cookie%)
+	authenticator: MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
 	embed: MichalSpacekCz\Templating\Embed
 	httpResponse:
 		setup:
 			- $cookieSecure(true)
 	dateTimeFormatter: MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	filters: MichalSpacekCz\Templating\Filters
-	securityHeaders:
-		factory: MichalSpacekCz\Http\SecurityHeaders
-		setup:
-			- setPermissionsPolicy(%permissionsPolicy%)
+	securityHeaders: MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
 	passwordEncryption: Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
 	emailEncryption: Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
 	sessionEncryption: Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
-	companyInfo:
-		factory: MichalSpacekCz\CompanyInfo\Info
-		setup:
-			- setLoadCompanyDataVisible(%loadCompanyDataVisible%)
-	ares:
-		factory: MichalSpacekCz\CompanyInfo\Ares
-		setup:
-			- setUrl(%ares.url%)
-	registerUz:
-		factory: MichalSpacekCz\CompanyInfo\RegisterUz
-		setup:
-			- setRootUrl(%registerUz.rootUrl%)
-	upcKeys:
-		factory: MichalSpacekCz\UpcKeys\UpcKeys
-		setup:
-			- addRouter(@upcKeysTechnicolor)
-			- addRouter(@upcKeysUbee)
-	upcKeysTechnicolor:
-		factory: MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context)
-		setup:
-			- setUrl(%awsLambda.upcKeys.url%)
-			- setApiKey(%awsLambda.upcKeys.apiKey%)
-			- setModel(%upcKeys.technicolor.model%)
-			- setPrefixes(%upcKeys.technicolor.prefixes%)
-	upcKeysUbee:
-		factory: MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context)
-		setup:
-			- setModel(%upcKeys.ubee.model%)
-			- setPrefixes(%upcKeys.ubee.prefixes%)
+	companyInfo: MichalSpacekCz\CompanyInfo\Info(loadCompanyDataVisible: %loadCompanyDataVisible%)
+	ares: MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
+	registerUz: MichalSpacekCz\CompanyInfo\RegisterUz(rootUrl: %registerUz.rootUrl%)
+	upcKeys: MichalSpacekCz\UpcKeys\UpcKeys(routers: [@upcKeysTechnicolor, @upcKeysUbee])
+	upcKeysTechnicolor: MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%, model: %upcKeys.technicolor.model%, serialNumberPrefixes: %upcKeys.technicolor.prefixes%)
+	upcKeysUbee: MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context, model: %upcKeys.ubee.model%, serialNumberPrefixes: %upcKeys.ubee.prefixes%)
 	pulseCompanies: MichalSpacekCz\Pulse\Companies(@database.pulse.context)
 	pulseSites: MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	pulsePasswords: MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	pulsePasswordsRating: MichalSpacekCz\Pulse\Passwords\Rating
 	pulsePasswordsSorting: MichalSpacekCz\Pulse\Passwords\PasswordsSorting
-	blogPost:
-		factory: MichalSpacekCz\Post\Post(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class))
-		setup:
-			- setUpdatedInfoThreshold(%blog.updatedInfoThreshold%)
-			- setAllowedTags(%blog.allowedTags%)
+	blogPost: MichalSpacekCz\Post\Post(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
 	blogPostLoader: MichalSpacekCz\Post\Loader
 	blogPostLocaleUrls: MichalSpacekCz\Post\LocaleUrls
-	certificatesApi:
-		factory: MichalSpacekCz\Tls\Certificates
-		setup:
-			- setUsers(%certificatesApi.users%)
-			- setHideExpiredAfter(%certificatesApi.hideExpiredAfter%)
+	certificatesApi: MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)
 	certificatesApiClient: MichalSpacekCz\Tls\CertificatesApiClient
 	certificateGatherer: MichalSpacekCz\Tls\CertificateGatherer
 	certificateMonitor: MichalSpacekCz\Tls\CertificateMonitor
