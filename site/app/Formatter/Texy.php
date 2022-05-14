@@ -58,14 +58,14 @@ class Texy extends NetxtenTexy
 
 	public function __construct(
 		Storage $cacheStorage,
-		private Translator $translator,
-		private Application $application,
-		private Dates $trainingDates,
-		private Prices $prices,
-		private Locales $trainingLocales,
-		private LocaleLinkGenerator $localeLinkGenerator,
-		private LocaleUrls $blogPostLocaleUrls,
-		private DateTimeFormatter $dateTimeFormatter,
+		private readonly Translator $translator,
+		private readonly Application $application,
+		private readonly Dates $trainingDates,
+		private readonly Prices $prices,
+		private readonly Locales $trainingLocales,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly LocaleUrls $blogPostLocaleUrls,
+		private readonly DateTimeFormatter $dateTimeFormatter,
 	) {
 		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
 	}

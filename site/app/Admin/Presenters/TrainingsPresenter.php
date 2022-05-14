@@ -31,26 +31,6 @@ use Nette\Utils\Html;
 class TrainingsPresenter extends BasePresenter
 {
 
-	private Applications $trainingApplications;
-
-	private Dates $trainingDates;
-
-	private Statuses $trainingStatuses;
-
-	private Trainings $trainings;
-
-	private Venues $trainingVenues;
-
-	private TrainingFiles $trainingFiles;
-
-	private Reviews $trainingReviews;
-
-	private TrainingControlsFactory $trainingControlsFactory;
-
-	private DeletePersonalDataFormFactory $deletePersonalDataFormFactory;
-
-	private TrainingApplicationAdminFactory $trainingApplicationAdminFactory;
-
 	/** @var Row[] */
 	private array $applications;
 
@@ -74,29 +54,19 @@ class TrainingsPresenter extends BasePresenter
 
 
 	public function __construct(
-		Applications $trainingApplications,
-		Dates $trainingDates,
-		Statuses $trainingStatuses,
-		Trainings $trainings,
-		Venues $trainingVenues,
-		TrainingFiles $trainingFiles,
-		Reviews $trainingReviews,
-		TrainingControlsFactory $trainingControlsFactory,
+		private readonly Applications $trainingApplications,
+		private readonly Dates $trainingDates,
+		private readonly Statuses $trainingStatuses,
+		private readonly Trainings $trainings,
+		private readonly Venues $trainingVenues,
+		private readonly TrainingFiles $trainingFiles,
+		private readonly Reviews $trainingReviews,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly DateTimeFormatter $dateTimeFormatter,
-		DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
-		TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
-		private TrainingFileFormFactory $trainingFileFormFactory,
+		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
+		private readonly TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
+		private readonly TrainingFileFormFactory $trainingFileFormFactory,
 	) {
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingDates = $trainingDates;
-		$this->trainingStatuses = $trainingStatuses;
-		$this->trainings = $trainings;
-		$this->trainingVenues = $trainingVenues;
-		$this->trainingFiles = $trainingFiles;
-		$this->trainingReviews = $trainingReviews;
-		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->deletePersonalDataFormFactory = $deletePersonalDataFormFactory;
-		$this->trainingApplicationAdminFactory = $trainingApplicationAdminFactory;
 		parent::__construct();
 	}
 

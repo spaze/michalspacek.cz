@@ -20,38 +20,20 @@ class Mails
 
 	private const REMINDER_DAYS = 5;
 
-	private Mailer $mailer;
-
-	private Applications $trainingApplications;
-
-	private Dates $trainingDates;
-
-	private Statuses $trainingStatuses;
-
-	private Venues $trainingVenues;
-
-	private TrainingFiles $trainingFiles;
-
 	private string $emailFrom;
 
 	private string $phoneNumber;
 
 
 	public function __construct(
-		Mailer $mailer,
-		Applications $trainingApplications,
-		Dates $trainingDates,
-		Statuses $trainingStatuses,
-		Venues $trainingVenues,
-		TrainingFiles $trainingFiles,
+		private readonly Mailer $mailer,
+		private readonly Applications $trainingApplications,
+		private readonly Dates $trainingDates,
+		private readonly Statuses $trainingStatuses,
+		private readonly Venues $trainingVenues,
+		private readonly TrainingFiles $trainingFiles,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 	) {
-		$this->mailer = $mailer;
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingDates = $trainingDates;
-		$this->trainingStatuses = $trainingStatuses;
-		$this->trainingVenues = $trainingVenues;
-		$this->trainingFiles = $trainingFiles;
 	}
 
 

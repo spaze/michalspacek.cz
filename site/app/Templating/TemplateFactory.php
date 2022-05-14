@@ -17,13 +17,13 @@ class TemplateFactory extends NetteTemplateFactory
 {
 
 	public function __construct(
-		private LatteFactory $latteFactory,
-		private Theme $theme,
-		private Filters $filters,
-		private Translator $translator,
-		private ?IRequest $httpRequest = null,
-		private ?User $user = null,
-		private ?Storage $cacheStorage = null,
+		private readonly LatteFactory $latteFactory,
+		private readonly Theme $theme,
+		private readonly Filters $filters,
+		private readonly Translator $translator,
+		private readonly ?IRequest $httpRequest = null,
+		private readonly ?User $user = null,
+		private readonly ?Storage $cacheStorage = null,
 		string $templateClass = null,
 	) {
 		parent::__construct($this->latteFactory, $this->httpRequest, $this->user, $this->cacheStorage, $templateClass);

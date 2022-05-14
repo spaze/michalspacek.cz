@@ -10,12 +10,10 @@ use Nette\Utils\Html;
 class Filters
 {
 
-	private Texy $texyFormatter;
-
-
-	public function __construct(Texy $texyFormatter, private DateTimeFormatter $dateTimeFormatter)
-	{
-		$this->texyFormatter = $texyFormatter;
+	public function __construct(
+		private readonly Texy $texyFormatter,
+		private readonly DateTimeFormatter $dateTimeFormatter,
+	) {
 	}
 
 

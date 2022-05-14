@@ -32,11 +32,11 @@ class Dates
 
 
 	public function __construct(
-		private Explorer $database,
-		private Statuses $trainingStatuses,
-		private Prices $prices,
-		private DateTimeFormatter $dateTimeFormatter,
-		private Translator $translator,
+		private readonly Explorer $database,
+		private readonly Statuses $trainingStatuses,
+		private readonly Prices $prices,
+		private readonly DateTimeFormatter $dateTimeFormatter,
+		private readonly Translator $translator,
 	) {
 	}
 
