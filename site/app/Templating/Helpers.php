@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
+use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Formatter\Texy;
 use Nette\Utils\Html;
 
@@ -12,16 +13,26 @@ class Helpers
 	private Texy $texyFormatter;
 
 
-	public function __construct(Texy $texyFormatter)
+	public function __construct(Texy $texyFormatter, private DateTimeFormatter $dateTimeFormatter)
 	{
 		$this->texyFormatter = $texyFormatter;
 	}
 
 
-	public function loader(string $filter): ?callable
+	/**
+	 * @return array<string, callable>
+	 */
+	public function getAll(): array
 	{
-		$callback = [$this, $filter];
-		return is_callable($callback) ? $callback : null;
+		return [
+			'staticUrl' => [$this, 'staticUrl'],
+			'staticImageUrl' => [$this, 'staticImageUrl'],
+			'format' => [$this, 'format'],
+			'localeDay' => [$this->dateTimeFormatter, 'localeDay'],
+			'localeMonth' => [$this->dateTimeFormatter, 'localeMonth'],
+			'localeIntervalDay' => [$this->dateTimeFormatter, 'localeIntervalDay'],
+			'localeIntervalMonth' => [$this->dateTimeFormatter, 'localeIntervalMonth'],
+		];
 	}
 
 

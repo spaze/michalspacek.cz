@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Formatter;
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates;
@@ -19,7 +20,6 @@ use Nette\Database\Row;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use Netxten\Formatter\Texy as NetxtenTexy;
-use Netxten\Templating\Helpers;
 use Texy\HandlerInvocation;
 use Texy\HtmlElement;
 use Texy\Link;
@@ -65,7 +65,7 @@ class Texy extends NetxtenTexy
 		private Locales $trainingLocales,
 		private LocaleLinkGenerator $localeLinkGenerator,
 		private LocaleUrls $blogPostLocaleUrls,
-		private Helpers $netxtenHelpers,
+		private DateTimeFormatter $dateTimeFormatter,
 	) {
 		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
 	}
@@ -350,7 +350,7 @@ class Texy extends NetxtenTexy
 			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
 		} else {
 			foreach ($upcoming[$name]['dates'] as $date) {
-				$trainingDate = ($date->tentative ? $this->netxtenHelpers->localeIntervalMonth($date->start, $date->end) : $this->netxtenHelpers->localeIntervalDay($date->start, $date->end));
+				$trainingDate = ($date->tentative ? $this->dateTimeFormatter->localeIntervalMonth($date->start, $date->end) : $this->dateTimeFormatter->localeIntervalDay($date->start, $date->end));
 				$el = Html::el()
 					->addHtml(Html::el('strong')->setText($trainingDate))
 					->addHtml(Html::el()->setText(' '))

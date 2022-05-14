@@ -58,7 +58,7 @@ services:
 	httpResponse:
 		setup:
 			- $cookieSecure(true)
-	netxtenHelpers: Netxten\Templating\Helpers(@translation.translator::getDefaultLocale())
+	dateTimeFormatter: MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	helpers: MichalSpacekCz\Templating\Helpers
 	securityHeaders:
 		factory: MichalSpacekCz\Http\SecurityHeaders

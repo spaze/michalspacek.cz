@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
+use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Bridges\ApplicationLatte\Template;
@@ -12,7 +13,6 @@ use Nette\Http\FileUpload;
 use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Nette\Utils\Html;
-use Netxten\Templating\Helpers;
 use Tracy\Debugger;
 
 class Mails
@@ -32,8 +32,6 @@ class Mails
 
 	private TrainingFiles $trainingFiles;
 
-	private Helpers $netxtenHelpers;
-
 	private string $emailFrom;
 
 	private string $phoneNumber;
@@ -46,7 +44,7 @@ class Mails
 		Statuses $trainingStatuses,
 		Venues $trainingVenues,
 		TrainingFiles $trainingFiles,
-		Helpers $netxtenHelpers,
+		private readonly DateTimeFormatter $dateTimeFormatter,
 	) {
 		$this->mailer = $mailer;
 		$this->trainingApplications = $trainingApplications;
@@ -54,7 +52,6 @@ class Mails
 		$this->trainingStatuses = $trainingStatuses;
 		$this->trainingVenues = $trainingVenues;
 		$this->trainingFiles = $trainingFiles;
-		$this->netxtenHelpers = $netxtenHelpers;
 	}
 
 
@@ -310,7 +307,7 @@ class Mails
 			case Statuses::STATUS_INVOICE_SENT_AFTER:
 				return new MailMessageAdmin($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->training->name);
 			case Statuses::STATUS_REMINDED:
-				$start = $this->netxtenHelpers->localeIntervalDay($application->trainingStart, $application->trainingEnd, 'cs_CZ');
+				$start = $this->dateTimeFormatter->localeIntervalDay($application->trainingStart, $application->trainingEnd, 'cs_CZ');
 				return new MailMessageAdmin($application->remote ? 'reminderRemote' : 'reminder', 'Připomenutí školení ' . $application->training->name . ' ' . $start);
 			default:
 				throw new ShouldNotHappenException();

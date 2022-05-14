@@ -6,11 +6,11 @@ namespace MichalSpacekCz\Training;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
+use MichalSpacekCz\DateTime\DateTimeFormatter;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
-use Netxten\Templating\Helpers;
 
 class Dates
 {
@@ -35,7 +35,7 @@ class Dates
 		private Explorer $database,
 		private Statuses $trainingStatuses,
 		private Prices $prices,
-		private Helpers $netxtenHelpers,
+		private DateTimeFormatter $dateTimeFormatter,
 		private Translator $translator,
 	) {
 	}
@@ -550,7 +550,7 @@ class Dates
 	{
 		return sprintf(
 			'%s, %s',
-			$this->netxtenHelpers->localeIntervalDay($date->start, $date->end),
+			$this->dateTimeFormatter->localeIntervalDay($date->start, $date->end),
 			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity,
 		);
 	}
@@ -562,7 +562,7 @@ class Dates
 		$end = $date->end ?? $date->trainingEnd;
 		return sprintf(
 			'%s, %s%s',
-			$date->tentative ? $this->netxtenHelpers->localeIntervalMonth($start, $end) : $this->netxtenHelpers->localeIntervalDay($start, $end),
+			$date->tentative ? $this->dateTimeFormatter->localeIntervalMonth($start, $end) : $this->dateTimeFormatter->localeIntervalDay($start, $end),
 			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity,
 			$date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '',
 		);

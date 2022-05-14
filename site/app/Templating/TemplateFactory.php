@@ -12,7 +12,6 @@ use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
 use Nette\Caching\Storage;
 use Nette\Http\IRequest;
 use Nette\Security\User;
-use Netxten\Templating\Helpers as NetxtenHelpers;
 
 class TemplateFactory extends NetteTemplateFactory
 {
@@ -20,7 +19,6 @@ class TemplateFactory extends NetteTemplateFactory
 	public function __construct(
 		private LatteFactory $latteFactory,
 		private Theme $theme,
-		private NetxtenHelpers $netxtenHelpers,
 		private Helpers $templateHelpers,
 		private Translator $translator,
 		private ?IRequest $httpRequest = null,
@@ -37,9 +35,9 @@ class TemplateFactory extends NetteTemplateFactory
 		/** @var Template $template */
 		$template = parent::createTemplate($control, $class);
 		$template->darkMode = $this->theme->isDarkMode();
-		$template->getLatte()
-			->addFilterLoader([$this->netxtenHelpers, 'loader'])
-			->addFilterLoader([$this->templateHelpers, 'loader']);
+		foreach ($this->templateHelpers->getAll() as $name => $callback) {
+			$template->addFilter($name, $callback);
+		}
 		$template->setTranslator($this->translator);
 		return $template;
 	}

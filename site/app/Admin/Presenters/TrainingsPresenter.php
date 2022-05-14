@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
+use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
@@ -26,7 +27,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
-use Netxten\Templating\Helpers;
 
 class TrainingsPresenter extends BasePresenter
 {
@@ -46,8 +46,6 @@ class TrainingsPresenter extends BasePresenter
 	private Reviews $trainingReviews;
 
 	private TrainingControlsFactory $trainingControlsFactory;
-
-	private Helpers $netxtenHelpers;
 
 	private DeletePersonalDataFormFactory $deletePersonalDataFormFactory;
 
@@ -84,7 +82,7 @@ class TrainingsPresenter extends BasePresenter
 		TrainingFiles $trainingFiles,
 		Reviews $trainingReviews,
 		TrainingControlsFactory $trainingControlsFactory,
-		Helpers $netxtenHelpers,
+		private readonly DateTimeFormatter $dateTimeFormatter,
 		DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
 		TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
 		private TrainingFileFormFactory $trainingFileFormFactory,
@@ -97,7 +95,6 @@ class TrainingsPresenter extends BasePresenter
 		$this->trainingFiles = $trainingFiles;
 		$this->trainingReviews = $trainingReviews;
 		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->netxtenHelpers = $netxtenHelpers;
 		$this->deletePersonalDataFormFactory = $deletePersonalDataFormFactory;
 		$this->trainingApplicationAdminFactory = $trainingApplicationAdminFactory;
 		parent::__construct();
@@ -248,7 +245,7 @@ class TrainingsPresenter extends BasePresenter
 		$trainings = $this->trainings->getPastWithPersonalData();
 		$this->addApplications($trainings);
 
-		$this->template->pageTitle = 'Minulá školení s osobními daty starší než ' . $this->netxtenHelpers->localeDay($this->trainingDates->getDataRetentionDate());
+		$this->template->pageTitle = 'Minulá školení s osobními daty starší než ' . $this->dateTimeFormatter->localeDay($this->trainingDates->getDataRetentionDate());
 		$this->template->trainings = $trainings;
 	}
 
