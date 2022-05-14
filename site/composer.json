@@ -33,7 +33,6 @@
 		"spaze/encryption": "^1.0",
 		"spaze/feed-exports": "~0.2",
 		"spaze/mysql-session-handler": "^2.0",
-		"spaze/netxten": "^2.0",
 		"spaze/nonce-generator": "^3.0",
 		"spaze/phpinfo": "^0.1.0",
 		"spaze/sri-macros": "~0.1",
