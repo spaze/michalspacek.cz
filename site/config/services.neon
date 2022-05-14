@@ -12,7 +12,6 @@ services:
 	texyFormatter:
 		factory: MichalSpacekCz\Formatter\Texy
 		setup:
-			- addHandlers()
 			- setStaticRoot(%domain.sharedStaticRoot%)
 			- setImagesRoot(%domain.imagesRoot%)
 			- setLocationRoot(%domain.locationRoot%)

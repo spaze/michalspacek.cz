@@ -15,11 +15,11 @@ use MichalSpacekCz\Training\Prices;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
-use Netxten\Formatter\Texy as NetxtenTexy;
 use Texy\HandlerInvocation;
 use Texy\HtmlElement;
 use Texy\Link;
@@ -27,13 +27,17 @@ use Texy\Modifier;
 use Texy\Texy as TexyTexy;
 use Throwable;
 
-class Texy extends NetxtenTexy
+class Texy
 {
 
 	/** @var string */
 	private const TRAINING_DATE = 'TRAINING_DATE';
 
 	private ?TexyTexy $texy = null;
+
+	private string $cacheNamespace;
+
+	private bool $cacheResult = true;
 
 	/**
 	 * Static files root FQDN, no trailing slash.
@@ -57,7 +61,7 @@ class Texy extends NetxtenTexy
 
 
 	public function __construct(
-		Storage $cacheStorage,
+		private readonly Storage $cacheStorage,
 		private readonly Translator $translator,
 		private readonly Application $application,
 		private readonly Dates $trainingDates,
@@ -67,7 +71,7 @@ class Texy extends NetxtenTexy
 		private readonly LocaleUrls $blogPostLocaleUrls,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 	) {
-		parent::__construct($cacheStorage, self::DEFAULT_NAMESPACE . '.' . $this->translator->getLocale());
+		$this->cacheNamespace = 'TexyFormatted' . '.' . $this->translator->getLocale();
 	}
 
 
@@ -150,17 +154,18 @@ class Texy extends NetxtenTexy
 	 */
 	public function getTexy(): TexyTexy
 	{
-		$texy = parent::getTexy();
-		$texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
-		$texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
-		$texy->figureModule->widthDelta = false;  // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
-		$texy->headingModule->generateID = true;
-		$texy->headingModule->idPrefix = '';
-		$texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2);  // en_US → en
-		$texy->allowed['phrase/del'] = true;
-		$this->texy = $texy;
+		$this->texy = new TexyTexy();
+		$this->texy->allowedTags = $this->texy::NONE;
+		$this->texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
+		$this->texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
+		$this->texy->figureModule->widthDelta = false;  // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
+		$this->texy->headingModule->generateID = true;
+		$this->texy->headingModule->idPrefix = '';
+		$this->texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2);  // en_US → en
+		$this->texy->allowed['phrase/del'] = true;
+		$this->texy->addHandler('phrase', [$this, 'phraseHandler']);
 		$this->setTopHeading($this->topHeading);
-		return $texy;
+		return $this->texy;
 	}
 
 
@@ -186,12 +191,6 @@ class Texy extends NetxtenTexy
 	public function translate(string $message, array $replacements = []): Html
 	{
 		return $this->substitute($this->translator->translate($message), $replacements);
-	}
-
-
-	public function addHandlers(): void
-	{
-		$this->addHandler('phrase', [$this, 'phraseHandler']);
 	}
 
 
@@ -297,6 +296,10 @@ class Texy extends NetxtenTexy
 
 
 	/**
+	 * Format string and strip surrounding P element.
+	 *
+	 * Suitable for "inline" strings like headers.
+	 *
 	 * @param string|null $text
 	 * @param TexyTexy|null $texy
 	 * @return Html<Html|string>|null
@@ -304,11 +307,18 @@ class Texy extends NetxtenTexy
 	 */
 	public function format(?string $text, ?TexyTexy $texy = null): ?Html
 	{
-		return (empty($text) ? null : $this->replace(parent::format($text, $texy)));
+		if (empty($text)) {
+			return null;
+		}
+		return $this->replace($this->cache("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
+			return preg_replace('~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1', ($texy ?? $this->getTexy())->process($text));
+		}));
 	}
 
 
 	/**
+	 * Format string.
+	 *
 	 * @param string|null $text
 	 * @param TexyTexy|null $texy
 	 * @return Html<Html|string>|null
@@ -316,7 +326,12 @@ class Texy extends NetxtenTexy
 	 */
 	public function formatBlock(?string $text, ?TexyTexy $texy = null): ?Html
 	{
-		return (empty($text) ? null : $this->replace(parent::formatBlock($text, $texy)));
+		if (empty($text)) {
+			return null;
+		}
+		return $this->replace($this->cache("{$text}|" . __FUNCTION__, function () use ($text, $texy) {
+			return ($texy ?? $this->getTexy())->process($text);
+		}));
 	}
 
 
@@ -391,6 +406,41 @@ class Texy extends NetxtenTexy
 			]);
 		}
 		return $training;
+	}
+
+
+	/**
+	 * Cache formatted string.
+	 *
+	 * @param string $text
+	 * @param callable $callback
+	 * @return Html
+	 * @throws Throwable
+	 */
+	private function cache(string $text, callable $callback): Html
+	{
+		if ($this->cacheResult) {
+			$cache = new Cache($this->cacheStorage, $this->cacheNamespace);
+			// Nette Cache itself generates the key by hashing the key passed in load() so we can use whatever we want
+			$formatted = $cache->load($text, $callback);
+		} else {
+			$formatted = $callback();
+		}
+		return Html::el()->setHtml($formatted);
+	}
+
+
+	public function disableCache(): self
+	{
+		$this->cacheResult = false;
+		return $this;
+	}
+
+
+	public function enableCache(): self
+	{
+		$this->cacheResult = true;
+		return $this;
 	}
 
 }

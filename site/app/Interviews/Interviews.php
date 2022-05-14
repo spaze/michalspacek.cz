@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Interviews;
 
 use DateTime;
+use MichalSpacekCz\Formatter\Texy;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Netxten\Formatter\Texy;
 
 class Interviews
 {
