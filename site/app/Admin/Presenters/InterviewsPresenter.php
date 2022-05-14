@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\Interview;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Interviews;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
@@ -14,7 +14,7 @@ use Nette\Utils\ArrayHash;
 class InterviewsPresenter extends BasePresenter
 {
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private Interviews $interviews;
 
@@ -22,7 +22,7 @@ class InterviewsPresenter extends BasePresenter
 	private Row $interview;
 
 
-	public function __construct(Texy $texyFormatter, Interviews $interviews)
+	public function __construct(TexyFormatter $texyFormatter, Interviews $interviews)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->interviews = $interviews;

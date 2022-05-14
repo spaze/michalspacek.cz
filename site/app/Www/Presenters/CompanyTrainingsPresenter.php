@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Prices;
@@ -15,7 +15,7 @@ use Nette\Http\IResponse;
 class CompanyTrainingsPresenter extends BasePresenter
 {
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private Trainings $trainings;
 
@@ -31,7 +31,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 
 
 	public function __construct(
-		Texy $texyFormatter,
+		TexyFormatter $texyFormatter,
 		Trainings $trainings,
 		CompanyTrainings $companyTrainings,
 		Locales $trainingLocales,

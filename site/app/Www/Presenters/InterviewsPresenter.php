@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Templating\Embed;
 use Nette\Application\BadRequestException;
@@ -11,7 +11,7 @@ use Nette\Application\BadRequestException;
 class InterviewsPresenter extends BasePresenter
 {
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private Interviews $interviews;
 
@@ -19,7 +19,7 @@ class InterviewsPresenter extends BasePresenter
 
 
 	public function __construct(
-		Texy $texyFormatter,
+		TexyFormatter $texyFormatter,
 		Interviews $interviews,
 		Embed $embed,
 	) {

@@ -3,15 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 
 class PhotoPresenter extends BasePresenter
 {
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 
-	public function __construct(Texy $texyFormatter)
+	public function __construct(TexyFormatter $texyFormatter)
 	{
 		$this->texyFormatter = $texyFormatter;
 		parent::__construct();

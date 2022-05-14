@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
@@ -15,7 +15,7 @@ class TagsPresenter extends BasePresenter
 
 	private Articles $articles;
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private Strings $strings;
 
@@ -25,7 +25,7 @@ class TagsPresenter extends BasePresenter
 	private array $localeLinkParams = [];
 
 
-	public function __construct(Articles $articles, Strings $strings, Texy $texyFormatter, LocaleUrls $localeUrls)
+	public function __construct(Articles $articles, Strings $strings, TexyFormatter $texyFormatter, LocaleUrls $localeUrls)
 	{
 		$this->articles = $articles;
 		$this->strings = $strings;

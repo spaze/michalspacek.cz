@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use DateTime;
 use MichalSpacekCz\Form\Controls\Date;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Data;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
@@ -29,12 +29,12 @@ class PostFormFactory
 
 	private Tags $tags;
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private CspConfig $contentSecurityPolicy;
 
 
-	public function __construct(FormFactory $factory, Post $blogPost, Tags $tags, Texy $texyFormatter, CspConfig $contentSecurityPolicy)
+	public function __construct(FormFactory $factory, Post $blogPost, Tags $tags, TexyFormatter $texyFormatter, CspConfig $contentSecurityPolicy)
 	{
 		$this->factory = $factory;
 		$this->blogPost = $blogPost;

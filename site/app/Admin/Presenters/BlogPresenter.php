@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
 use MichalSpacekCz\Form\PostFormFactory;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Data;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
@@ -23,7 +23,7 @@ class BlogPresenter extends BasePresenter
 
 	private Post $blogPost;
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private Data $post;
 
@@ -34,7 +34,7 @@ class BlogPresenter extends BasePresenter
 	private CspConfig $contentSecurityPolicy;
 
 
-	public function __construct(Post $blogPost, Texy $texyFormatter, Tags $tags, PostFormFactory $postFormFactory, CspConfig $contentSecurityPolicy)
+	public function __construct(Post $blogPost, TexyFormatter $texyFormatter, Tags $tags, PostFormFactory $postFormFactory, CspConfig $contentSecurityPolicy)
 	{
 		$this->blogPost = $blogPost;
 		$this->texyFormatter = $texyFormatter;

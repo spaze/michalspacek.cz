@@ -24,16 +24,16 @@ use Texy\HandlerInvocation;
 use Texy\HtmlElement;
 use Texy\Link;
 use Texy\Modifier;
-use Texy\Texy as TexyTexy;
+use Texy\Texy;
 use Throwable;
 
-class Texy
+class TexyFormatter
 {
 
 	/** @var string */
 	private const TRAINING_DATE = 'TRAINING_DATE';
 
-	private ?TexyTexy $texy = null;
+	private ?Texy $texy = null;
 
 	private string $cacheNamespace;
 
@@ -150,11 +150,11 @@ class Texy
 	/**
 	 * Create Texy object.
 	 *
-	 * @return TexyTexy
+	 * @return Texy
 	 */
-	public function getTexy(): TexyTexy
+	public function getTexy(): Texy
 	{
-		$this->texy = new TexyTexy();
+		$this->texy = new Texy();
 		$this->texy->allowedTags = $this->texy::NONE;
 		$this->texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
 		$this->texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
@@ -301,11 +301,11 @@ class Texy
 	 * Suitable for "inline" strings like headers.
 	 *
 	 * @param string|null $text
-	 * @param TexyTexy|null $texy
+	 * @param Texy|null $texy
 	 * @return Html<Html|string>|null
 	 * @throws Throwable
 	 */
-	public function format(?string $text, ?TexyTexy $texy = null): ?Html
+	public function format(?string $text, ?Texy $texy = null): ?Html
 	{
 		if (empty($text)) {
 			return null;
@@ -320,11 +320,11 @@ class Texy
 	 * Format string.
 	 *
 	 * @param string|null $text
-	 * @param TexyTexy|null $texy
+	 * @param Texy|null $texy
 	 * @return Html<Html|string>|null
 	 * @throws Throwable
 	 */
-	public function formatBlock(?string $text, ?TexyTexy $texy = null): ?Html
+	public function formatBlock(?string $text, ?Texy $texy = null): ?Html
 	{
 		if (empty($text)) {
 			return null;

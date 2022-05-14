@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Templating;
 
 use MichalSpacekCz\DateTime\DateTimeFormatter;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Utils\Html;
 
 class Filters
 {
 
 	public function __construct(
-		private readonly Texy $texyFormatter,
+		private readonly TexyFormatter $texyFormatter,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 	) {
 	}

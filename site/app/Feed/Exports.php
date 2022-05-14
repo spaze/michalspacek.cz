@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Feed;
 use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Post;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Cache;
@@ -29,7 +29,7 @@ class Exports
 
 	public function __construct(
 		private Articles $articles,
-		private Texy $texyFormatter,
+		private TexyFormatter $texyFormatter,
 		private Translator $translator,
 		Storage $cacheStorage,
 	) {

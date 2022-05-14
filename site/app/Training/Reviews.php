@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use DateTime;
 use DateTimeZone;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use RuntimeException;
@@ -15,12 +15,12 @@ class Reviews
 
 	private Explorer $database;
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 
 	public function __construct(
 		Explorer $context,
-		Texy $texyFormatter,
+		TexyFormatter $texyFormatter,
 	) {
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;

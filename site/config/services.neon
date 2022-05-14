@@ -10,7 +10,7 @@ services:
 	router: @routerFactory::createRouter
 	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator
 	texyFormatter:
-		factory: MichalSpacekCz\Formatter\Texy
+		factory: MichalSpacekCz\Formatter\TexyFormatter
 		setup:
 			- setStaticRoot(%domain.sharedStaticRoot%)
 			- setImagesRoot(%domain.imagesRoot%)
