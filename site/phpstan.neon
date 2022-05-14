@@ -1,7 +1,14 @@
 parameters:
 	paths:
 		- app
+		- bin
 	level: 7
+	disallowedFunctionCalls:
+		# local disallowed-calls.neon
+		-
+			function: 'pcntl_*()'
+			allowIn:
+				- bin/latte-lint.php
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
