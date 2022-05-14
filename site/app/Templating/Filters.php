@@ -7,7 +7,7 @@ use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Formatter\Texy;
 use Nette\Utils\Html;
 
-class Helpers
+class Filters
 {
 
 	private Texy $texyFormatter;

@@ -19,7 +19,7 @@ class TemplateFactory extends NetteTemplateFactory
 	public function __construct(
 		private LatteFactory $latteFactory,
 		private Theme $theme,
-		private Helpers $templateHelpers,
+		private Filters $filters,
 		private Translator $translator,
 		private ?IRequest $httpRequest = null,
 		private ?User $user = null,
@@ -35,7 +35,7 @@ class TemplateFactory extends NetteTemplateFactory
 		/** @var Template $template */
 		$template = parent::createTemplate($control, $class);
 		$template->darkMode = $this->theme->isDarkMode();
-		foreach ($this->templateHelpers->getAll() as $name => $callback) {
+		foreach ($this->filters->getAll() as $name => $callback) {
 			$template->addFilter($name, $callback);
 		}
 		$template->setTranslator($this->translator);

@@ -59,7 +59,7 @@ services:
 		setup:
 			- $cookieSecure(true)
 	dateTimeFormatter: MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
-	helpers: MichalSpacekCz\Templating\Helpers
+	filters: MichalSpacekCz\Templating\Filters
 	securityHeaders:
 		factory: MichalSpacekCz\Http\SecurityHeaders
 		setup:
