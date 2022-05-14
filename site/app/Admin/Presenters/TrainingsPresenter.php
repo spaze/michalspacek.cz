@@ -71,14 +71,18 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws BadRequestException
+	 */
 	public function actionDate(int $param): void
 	{
 		$this->dateId = $param;
 		$this->redirectParam = $this->dateId;
-		$this->training = $this->trainingDates->get($this->dateId);
-		if (!$this->training) {
+		$training = $this->trainingDates->get($this->dateId);
+		if (!$training) {
 			throw new BadRequestException("Date id {$param} does not exist, yet");
 		}
+		$this->training = $training;
 		$validCount = 0;
 		$applications = $discarded = [];
 		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
@@ -151,13 +155,17 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws BadRequestException
+	 */
 	public function actionApplication(int $param): void
 	{
 		$this->applicationId = $param;
-		$this->application = $this->trainingApplications->getApplicationById($this->applicationId);
-		if (!$this->application) {
+		$application = $this->trainingApplications->getApplicationById($this->applicationId);
+		if (!$application) {
 			throw new BadRequestException("No application with id {$this->applicationId}");
 		}
+		$this->application = $application;
 
 		if (isset($this->application->dateId)) {
 			$this->dateId = $this->application->dateId;
