@@ -231,7 +231,7 @@ class TrainingsPresenter extends BasePresenter
 	/**
 	 * @param Row[] $trainings
 	 */
-	private function addApplications(array &$trainings): void
+	private function addApplications(array $trainings): void
 	{
 		foreach ($trainings as $training) {
 			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
