@@ -10,9 +10,8 @@ services:
 	router: @routerFactory::createRouter
 	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator
 	texyFormatter:
-		factory: MichalSpacekCz\Formatter\Texy
+		factory: MichalSpacekCz\Formatter\TexyFormatter
 		setup:
-			- addHandlers()
 			- setStaticRoot(%domain.sharedStaticRoot%)
 			- setImagesRoot(%domain.imagesRoot%)
 			- setLocationRoot(%domain.locationRoot%)
@@ -58,8 +57,8 @@ services:
 	httpResponse:
 		setup:
 			- $cookieSecure(true)
-	netxtenHelpers: Netxten\Templating\Helpers(@translation.translator::getDefaultLocale())
-	helpers: MichalSpacekCz\Templating\Helpers
+	dateTimeFormatter: MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
+	filters: MichalSpacekCz\Templating\Filters
 	securityHeaders:
 		factory: MichalSpacekCz\Http\SecurityHeaders
 		setup:

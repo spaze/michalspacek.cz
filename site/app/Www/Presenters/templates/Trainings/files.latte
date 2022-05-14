@@ -14,11 +14,11 @@
 {var $type = $remote ? 'remote' : 'regular'}
 <p>
 	{capture $date}{$trainingStart|localeIntervalDay:$trainingEnd}{/capture}
-	{_messages.trainings.files.thankyou.$type|format:$trainingTitle, $date}
-	{_messages.trainings.files.download.$type.$familiar}
+	{_"messages.trainings.files.thankyou.$type"|format:$trainingTitle, $date}
+	{_"messages.trainings.files.download.$type.$familiar"}
 </p>
 <ul>
 	<li n:foreach="$files as $file"><a n:href="Files:training $file->getFilename()">{$file->getFilename()}</a> ({$file->getFileInfo()->getSize()|bytes}, přidáno {$file->getAdded()|localeDay})</li>
 </ul>
-<p n:if="!$remote">{_messages.trainings.moretrainings.$familiar|format:'link:Www:Trainings:'}</p>
+<p n:if="!$remote">{_"messages.trainings.moretrainings.$familiar"|format:'link:Www:Trainings:'}</p>
 {/define}

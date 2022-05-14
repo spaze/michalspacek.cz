@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Articles;
 use Collator;
 use Contributte\Translation\Translator;
 use DateTime;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
@@ -21,7 +21,7 @@ class Articles
 
 	public function __construct(
 		private Explorer $database,
-		private Texy $texyFormatter,
+		private TexyFormatter $texyFormatter,
 		private LinkGenerator $linkGenerator,
 		private Post $blogPost,
 		private Tags $tags,

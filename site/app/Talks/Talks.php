@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Talks;
 
 use DateTime;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -27,7 +27,7 @@ class Talks
 
 	private Explorer $database;
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	/**
 	 * Slides root, just directory no FQND, no leading slash, no trailing slash.
@@ -63,7 +63,7 @@ class Talks
 	];
 
 
-	public function __construct(Explorer $context, Texy $texyFormatter)
+	public function __construct(Explorer $context, TexyFormatter $texyFormatter)
 	{
 		$this->database = $context;
 		$this->texyFormatter = $texyFormatter;
@@ -564,7 +564,7 @@ class Talks
 		$this->decrementOtherSlides($originalFile);
 		$this->incrementOtherSlides("{$name}.{$extension}");
 		if (!$width || !$height) {
-			list($width, $height) = $replace->getImageSize();
+			[$width, $height] = $replace->getImageSize();
 		}
 		return "{$name}.{$extension}";
 	}

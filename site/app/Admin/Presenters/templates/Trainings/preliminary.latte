@@ -28,8 +28,8 @@
 		</tr>
 		<tr n:foreach="$training->applications as $application">
 			<td><small>{$iterator->getCounter()}.</small></td>
-			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id">{$application->name|ifNull:smazáno}</a></small></td>
-			<td><small>{$application->email|ifNull:smazáno}</small></td>
+			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id">{$application->name ?? smazáno}</a></small></td>
+			<td><small>{$application->email ?? smazáno}</small></td>
 			<td><small><code title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</code></small></td>
 		</tr>
 		{/foreach}

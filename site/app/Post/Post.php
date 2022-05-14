@@ -7,7 +7,7 @@ use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
@@ -35,7 +35,7 @@ class Post
 	public function __construct(
 		private Explorer $database,
 		private Loader $loader,
-		private Texy $texyFormatter,
+		private TexyFormatter $texyFormatter,
 		private Cache $exportsCache,
 		private LinkGenerator $linkGenerator,
 		private LocaleLinkGenerator $localeLinkGenerator,

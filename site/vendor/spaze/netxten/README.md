@@ -1,4 +1,0 @@
-netxten
-=======
-
-Nette Framework Extensions

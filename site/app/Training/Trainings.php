@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
@@ -21,7 +21,7 @@ class Trainings
 
 	public function __construct(
 		private Explorer $database,
-		private Texy $texyFormatter,
+		private TexyFormatter $texyFormatter,
 		private Dates $trainingDates,
 		private Translator $translator,
 	) {

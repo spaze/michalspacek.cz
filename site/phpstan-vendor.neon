@@ -59,6 +59,7 @@ parameters:
 		-
 			function: 'proc_open()'
 			allowIn:
+				- vendor/latte/latte/src/Tools/Linter.php
 				- vendor/nette/tester/src/Runner/Job.php
 				- vendor/nette/tester/src/Runner/PhpInterpreter.php
 				- vendor/php-parallel-lint/php-parallel-lint/src/Process/Process.php

@@ -150,16 +150,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         ),
     );
 
-    public static $prefixesPsr0 = array (
-        'N' => 
-        array (
-            'Netxten' => 
-            array (
-                0 => __DIR__ . '/..' . '/spaze/netxten/src',
-            ),
-        ),
-    );
-
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'JakubOnderka\\PhpParallelLint\\Application' => __DIR__ . '/..' . '/php-parallel-lint/php-parallel-lint/src/Application.php',
@@ -246,6 +236,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Latte\\Token' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Token.php',
         'Latte\\TokenIterator' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/TokenIterator.php',
         'Latte\\Tokenizer' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Tokenizer.php',
+        'Latte\\Tools\\Linter' => __DIR__ . '/..' . '/latte/latte/src/Tools/Linter.php',
         'NetteModule\\ErrorPresenter' => __DIR__ . '/..' . '/nette/application/src/Application/ErrorPresenter.php',
         'NetteModule\\MicroPresenter' => __DIR__ . '/..' . '/nette/application/src/Application/MicroPresenter.php',
         'Nette\\Application\\AbortException' => __DIR__ . '/..' . '/nette/application/src/Application/exceptions.php',
@@ -728,7 +719,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit247de957f14f643f393d210a332dd05b::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit247de957f14f643f393d210a332dd05b::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit247de957f14f643f393d210a332dd05b::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit247de957f14f643f393d210a332dd05b::$classMap;
 
         }, null, ClassLoader::class);

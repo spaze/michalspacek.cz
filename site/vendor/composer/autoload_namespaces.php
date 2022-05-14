@@ -6,5 +6,4 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Netxten' => array($vendorDir . '/spaze/netxten/src'),
 );

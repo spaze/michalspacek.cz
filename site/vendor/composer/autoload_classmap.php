@@ -91,6 +91,7 @@ return array(
     'Latte\\Token' => $vendorDir . '/latte/latte/src/Latte/Compiler/Token.php',
     'Latte\\TokenIterator' => $vendorDir . '/latte/latte/src/Latte/Compiler/TokenIterator.php',
     'Latte\\Tokenizer' => $vendorDir . '/latte/latte/src/Latte/Compiler/Tokenizer.php',
+    'Latte\\Tools\\Linter' => $vendorDir . '/latte/latte/src/Tools/Linter.php',
     'NetteModule\\ErrorPresenter' => $vendorDir . '/nette/application/src/Application/ErrorPresenter.php',
     'NetteModule\\MicroPresenter' => $vendorDir . '/nette/application/src/Application/MicroPresenter.php',
     'Nette\\Application\\AbortException' => $vendorDir . '/nette/application/src/Application/exceptions.php',

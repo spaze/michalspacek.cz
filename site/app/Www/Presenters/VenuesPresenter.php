@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
@@ -12,7 +12,7 @@ use Nette\Application\BadRequestException;
 class VenuesPresenter extends BasePresenter
 {
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private Dates $trainingDates;
 
@@ -22,7 +22,7 @@ class VenuesPresenter extends BasePresenter
 
 
 	public function __construct(
-		Texy $texyFormatter,
+		TexyFormatter $texyFormatter,
 		Dates $trainingDates,
 		Venues $trainingVenues,
 		Trainings $trainings,

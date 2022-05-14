@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Www\Presenters;
 use MichalSpacekCz\CompanyInfo\Info;
 use MichalSpacekCz\Form\TrainingApplicationFactory;
 use MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates;
@@ -24,7 +24,7 @@ use Nette\Http\IResponse;
 class TrainingsPresenter extends BasePresenter
 {
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private Applications $trainingApplications;
 
@@ -56,7 +56,7 @@ class TrainingsPresenter extends BasePresenter
 
 
 	public function __construct(
-		Texy $texyFormatter,
+		TexyFormatter $texyFormatter,
 		Applications $trainingApplications,
 		Dates $trainingDates,
 		TrainingFiles $trainingFiles,

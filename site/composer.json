@@ -11,6 +11,7 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
+		"ext-pcntl": "*",
 		"ext-pdo": "*",
 		"ext-simplexml": "*",
 		"contributte/translation": "^1.0",
@@ -32,7 +33,6 @@
 		"spaze/encryption": "^1.0",
 		"spaze/feed-exports": "~0.2",
 		"spaze/mysql-session-handler": "^2.0",
-		"spaze/netxten": "^1.0",
 		"spaze/nonce-generator": "^3.0",
 		"spaze/phpinfo": "^0.1.0",
 		"spaze/sri-macros": "~0.1",
@@ -79,7 +79,7 @@
 		"cs-fix": "vendor/squizlabs/php_codesniffer/bin/phpcbf app/ public/ tests/",
 		"check-file-patterns": "bin/check-file-patterns.sh",
 		"lint": "vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors app/ public/ tests/",
-		"lint-latte": "vendor/latte/latte/bin/latte-lint app/",
+		"lint-latte": "bin/latte-lint.php app/",
 		"lint-neon": "vendor/nette/neon/bin/neon-lint app/",
 		"phpcs": "vendor/squizlabs/php_codesniffer/bin/phpcs app/ public/ tests/",
 		"phpstan": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon",
@@ -87,11 +87,12 @@
 		"test": [
 			"@check-file-patterns",
 			"@lint",
+			"@lint-latte",
 			"@lint-neon",
 			"@phpcs",
 			"@phpstan",
-			"@phpstan-vendor",
-			"@tester"
+			"@tester",
+			"@phpstan-vendor"
 		],
 		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/"
 	}

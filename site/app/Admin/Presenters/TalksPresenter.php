@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\Talk;
 use MichalSpacekCz\Form\TalkSlides;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Templating\Embed;
 use Nette\Application\BadRequestException;
@@ -21,7 +21,7 @@ use UnexpectedValueException;
 class TalksPresenter extends BasePresenter
 {
 
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 
 	private Talks $talks;
 
@@ -40,7 +40,7 @@ class TalksPresenter extends BasePresenter
 	private int $maxSlideUploads;
 
 
-	public function __construct(Texy $texyFormatter, Talks $talks, LinkGenerator $linkGenerator, Embed $embed)
+	public function __construct(TexyFormatter $texyFormatter, Talks $talks, LinkGenerator $linkGenerator, Embed $embed)
 	{
 		$this->texyFormatter = $texyFormatter;
 		$this->talks = $talks;

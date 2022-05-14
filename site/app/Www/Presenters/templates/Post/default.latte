@@ -17,7 +17,7 @@
 	</div>
 	<div n:if="$post->tags">
 		<span class="lighter">
-		{if ($post->tags|count) === 1}
+		{if ($post->tags|length) === 1}
 			<i class="fas fa-fw fa-tag"></i>
 		{else}
 			<i class="fas fa-fw fa-tags"></i>

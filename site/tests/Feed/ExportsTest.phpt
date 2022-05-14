@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Feed;
 
 use DateTime;
 use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Formatter\Texy;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Edit;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\ServicesTrait;
@@ -28,7 +28,7 @@ class ExportsTest extends TestCase
 
 
 	private Articles $articles;
-	private Texy $texyFormatter;
+	private TexyFormatter $texyFormatter;
 	private Storage $cacheStorage;
 	private NoOpTranslator $translator;
 	private Exports $exports;
@@ -81,7 +81,7 @@ class ExportsTest extends TestCase
 			}
 
 		};
-		$this->texyFormatter = new class () extends Texy {
+		$this->texyFormatter = new class () extends TexyFormatter {
 
 			/** @noinspection PhpMissingParentConstructorInspection Intentionally */
 			public function __construct()
