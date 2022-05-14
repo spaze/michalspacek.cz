@@ -92,8 +92,8 @@
 			"@lint-neon",
 			"@phpcs",
 			"@phpstan",
-			"@phpstan-vendor",
-			"@tester"
+			"@tester",
+			"@phpstan-vendor"
 		],
 		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/"
 	}
