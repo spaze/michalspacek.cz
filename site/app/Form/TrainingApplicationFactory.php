@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Form\Controls\HiddenFieldWithLabel;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
@@ -16,7 +17,6 @@ use Nette\Database\Row;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
-use Netxten\Forms\Controls\HiddenFieldWithLabel;
 use OutOfBoundsException;
 use PDOException;
 use stdClass;
