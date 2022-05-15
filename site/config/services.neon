@@ -1,78 +1,77 @@
 services:
-	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
+	- MichalSpacekCz\Application\Error
+	- MichalSpacekCz\Application\LocaleLinkGenerator
 	- MichalSpacekCz\Application\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\RouterFactory::createRouter
-	- MichalSpacekCz\Application\LocaleLinkGenerator
-	- MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
-	latte.templateFactory: MichalSpacekCz\Templating\TemplateFactory
-	- MichalSpacekCz\Http\Redirections
-	- MichalSpacekCz\Http\HttpStreamContext
-	- MichalSpacekCz\Articles\Articles
-	- MichalSpacekCz\Talks\Talks(staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%, imagesRoot: %domain.imagesRoot%)
-	- MichalSpacekCz\Training\Trainings
-	- MichalSpacekCz\Training\CompanyTrainings
-	- MichalSpacekCz\Interviews\Interviews
-	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
-	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
-	- MichalSpacekCz\Training\Dates
-	- MichalSpacekCz\Training\Venues
-	- MichalSpacekCz\Training\Statuses
-	- MichalSpacekCz\Training\Files\TrainingFileFactory
-	- MichalSpacekCz\Training\Files\TrainingFilesStorage('../../files/trainings')
-	- MichalSpacekCz\Training\Files\TrainingFiles
-	- MichalSpacekCz\Training\Locales
-	- MichalSpacekCz\Training\Reviews
-	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
-	- MichalSpacekCz\Training\Resolver\Vrana
-	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
-	- MichalSpacekCz\Templating\Embed
-	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
-	- MichalSpacekCz\Templating\Filters
-	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
-	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
-	passwordEncryption: Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
-	emailEncryption: Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
-	sessionEncryption: Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
-	- MichalSpacekCz\CompanyInfo\Info(loadCompanyDataVisible: %loadCompanyDataVisible%)
-	- MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
-	- MichalSpacekCz\CompanyInfo\RegisterUz(rootUrl: %registerUz.rootUrl%)
-	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
-	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%, model: %upcKeys.technicolor.model%, serialNumberPrefixes: %upcKeys.technicolor.prefixes%)
-	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context, model: %upcKeys.ubee.model%, serialNumberPrefixes: %upcKeys.ubee.prefixes%)
-	- MichalSpacekCz\Pulse\Companies(@database.pulse.context)
-	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
-	- MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
-	- MichalSpacekCz\Pulse\Passwords\Rating
-	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
-	- MichalSpacekCz\Post\Post(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
-	- MichalSpacekCz\Post\Loader
-	- MichalSpacekCz\Post\LocaleUrls
-	- MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)
-	- MichalSpacekCz\Tls\CertificatesApiClient
-	- MichalSpacekCz\Tls\CertificateGatherer
-	- MichalSpacekCz\Tls\CertificateMonitor
-	- MichalSpacekCz\Tls\CertificateFactory(expiringThreshold: %certificatesApi.expiringThreshold%)
-	- MichalSpacekCz\Feed\Exports
-	- MichalSpacekCz\Utils\Strings
-	- MichalSpacekCz\Application\Error
-	- MichalSpacekCz\Form\TrainingControlsFactory
-	- MichalSpacekCz\EasterEgg\WinterIsComing
-	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Application\Theme
-	- Spaze\PhpInfo\PhpInfo
+	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
+	- MichalSpacekCz\Articles\Articles
+	- MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
+	- MichalSpacekCz\CompanyInfo\Info(loadCompanyDataVisible: %loadCompanyDataVisible%)
+	- MichalSpacekCz\CompanyInfo\RegisterUz(rootUrl: %registerUz.rootUrl%)
+	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	- MichalSpacekCz\EasterEgg\NetteCve202015227
-	- MichalSpacekCz\Training\FormSpam
-	- MichalSpacekCz\Training\FormDataLogger
-	- PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor
-	- MichalSpacekCz\Net\DnsResolver
-
-	- MichalSpacekCz\Form\FormFactory
-	- MichalSpacekCz\Form\UnprotectedFormFactory
+	- MichalSpacekCz\EasterEgg\WinterIsComing
+	- MichalSpacekCz\Feed\Exports
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
+	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\PostFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFactory
 	- MichalSpacekCz\Form\TrainingApplicationFactory
 	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory
+	- MichalSpacekCz\Form\TrainingControlsFactory
 	- MichalSpacekCz\Form\TrainingFileFormFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFactory
+	- MichalSpacekCz\Form\UnprotectedFormFactory
+	- MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
+	- MichalSpacekCz\Http\HttpStreamContext
+	- MichalSpacekCz\Http\Redirections
+	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
+	- MichalSpacekCz\Interviews\Interviews
+	- MichalSpacekCz\Net\DnsResolver
+	- MichalSpacekCz\Post\Loader
+	- MichalSpacekCz\Post\LocaleUrls
+	- MichalSpacekCz\Post\Post(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
+	- MichalSpacekCz\Pulse\Companies(@database.pulse.context)
+	- MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
+	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
+	- MichalSpacekCz\Pulse\Passwords\Rating
+	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
+	- MichalSpacekCz\Tags\Tags
+	- MichalSpacekCz\Talks\Talks(staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%, imagesRoot: %domain.imagesRoot%)
+	- MichalSpacekCz\Templating\Embed
+	- MichalSpacekCz\Templating\Filters
+	latte.templateFactory: MichalSpacekCz\Templating\TemplateFactory
+	- MichalSpacekCz\Tls\CertificateFactory(expiringThreshold: %certificatesApi.expiringThreshold%)
+	- MichalSpacekCz\Tls\CertificateGatherer
+	- MichalSpacekCz\Tls\CertificateMonitor
+	- MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)
+	- MichalSpacekCz\Tls\CertificatesApiClient
+	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
+	- MichalSpacekCz\Training\CompanyTrainings
+	- MichalSpacekCz\Training\Dates
+	- MichalSpacekCz\Training\Files\TrainingFileFactory
+	- MichalSpacekCz\Training\Files\TrainingFiles
+	- MichalSpacekCz\Training\Files\TrainingFilesStorage('../../files/trainings')
+	- MichalSpacekCz\Training\FormDataLogger
+	- MichalSpacekCz\Training\FormSpam
+	- MichalSpacekCz\Training\Locales
+	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
+	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
+	- MichalSpacekCz\Training\Resolver\Vrana
+	- MichalSpacekCz\Training\Reviews
+	- MichalSpacekCz\Training\Statuses
+	- MichalSpacekCz\Training\Trainings
+	- MichalSpacekCz\Training\Venues
+	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%, model: %upcKeys.technicolor.model%, serialNumberPrefixes: %upcKeys.technicolor.prefixes%)
+	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context, model: %upcKeys.ubee.model%, serialNumberPrefixes: %upcKeys.ubee.prefixes%)
+	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
+	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
+	- MichalSpacekCz\Utils\Strings
+	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
+	- PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor
+	emailEncryption: Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
+	passwordEncryption: Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
+	sessionEncryption: Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
+	- Spaze\PhpInfo\PhpInfo
