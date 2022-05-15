@@ -27,9 +27,6 @@ services:
 	vranaResolver: MichalSpacekCz\Training\Resolver\Vrana
 	authenticator: MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
 	embed: MichalSpacekCz\Templating\Embed
-	httpResponse:
-		setup:
-			- $cookieSecure(true)
 	dateTimeFormatter: MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	filters: MichalSpacekCz\Templating\Filters
 	securityHeaders: MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
