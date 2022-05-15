@@ -42,7 +42,9 @@ services:
 	- MichalSpacekCz\Talks\Talks(staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%, imagesRoot: %domain.imagesRoot%)
 	- MichalSpacekCz\Templating\Embed
 	- MichalSpacekCz\Templating\Filters
-	latte.templateFactory: MichalSpacekCz\Templating\TemplateFactory
+	latte.templateFactory:
+		create: MichalSpacekCz\Templating\TemplateFactory()
+		autowired: Nette\Application\UI\TemplateFactory
 	- MichalSpacekCz\Tls\CertificateFactory(expiringThreshold: %certificatesApi.expiringThreshold%)
 	- MichalSpacekCz\Tls\CertificateGatherer
 	- MichalSpacekCz\Tls\CertificateMonitor
@@ -69,6 +71,7 @@ services:
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
 	- MichalSpacekCz\Utils\Strings
+	- Nette\Bridges\ApplicationLatte\TemplateFactory
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
 	- PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor
 	emailEncryption: Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)

@@ -6,34 +6,26 @@ namespace MichalSpacekCz\Templating;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Theme;
 use Nette\Application\UI\Control;
-use Nette\Bridges\ApplicationLatte\LatteFactory;
+use Nette\Application\UI\TemplateFactory as UiTemplateFactory;
 use Nette\Bridges\ApplicationLatte\Template;
-use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
-use Nette\Caching\Storage;
-use Nette\Http\IRequest;
-use Nette\Security\User;
+use Nette\Bridges\ApplicationLatte\TemplateFactory as ApplicationTemplateFactory;
 
-class TemplateFactory extends NetteTemplateFactory
+class TemplateFactory implements UiTemplateFactory
 {
 
 	public function __construct(
-		private readonly LatteFactory $latteFactory,
 		private readonly Theme $theme,
 		private readonly Filters $filters,
 		private readonly Translator $translator,
-		private readonly ?IRequest $httpRequest = null,
-		private readonly ?User $user = null,
-		private readonly ?Storage $cacheStorage = null,
-		string $templateClass = null,
+		private readonly ApplicationTemplateFactory $templateFactory,
 	) {
-		parent::__construct($this->latteFactory, $this->httpRequest, $this->user, $this->cacheStorage, $templateClass);
 	}
 
 
 	public function createTemplate(Control $control = null, string $class = null): Template
 	{
 		/** @var Template $template */
-		$template = parent::createTemplate($control, $class);
+		$template = $this->templateFactory->createTemplate($control, $class);
 		$template->darkMode = $this->theme->isDarkMode();
 		foreach ($this->filters->getAll() as $name => $callback) {
 			$template->addFilter($name, $callback);
