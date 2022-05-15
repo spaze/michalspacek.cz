@@ -129,7 +129,7 @@ trait ServicesTrait
 	{
 		static $service;
 		if (!$service) {
-			$service = new RouterFactory($this->getBlogPostLoader(), $this->getTranslator());
+			$service = new RouterFactory($this->getBlogPostLoader(), $this->getTranslator(), [], [], []);
 		}
 		return $service;
 	}
@@ -175,11 +175,14 @@ trait ServicesTrait
 	}
 
 
-	public function getSecurityHeaders(): SecurityHeaders
+	/**
+	 * @param array<string|null|string[]> $permissionsPolicy
+	 */
+	public function getSecurityHeaders(array $permissionsPolicy): SecurityHeaders
 	{
 		static $service;
 		if (!$service) {
-			$service = new SecurityHeaders($this->getHttpRequest(), $this->getHttpResponse(), $this->getCspConfig(), $this->getLocaleLinkGenerator());
+			$service = new SecurityHeaders($this->getHttpRequest(), $this->getHttpResponse(), $this->getCspConfig(), $this->getLocaleLinkGenerator(), $permissionsPolicy);
 		}
 		return $service;
 	}

@@ -40,15 +40,6 @@ class RouterFactory
 
 	private const ROOT_ONLY = '';
 
-	/** @var array<string, array<string, string>> of host => array of supported locales */
-	private array $supportedLocales;
-
-	/** @var array<string, string> of locale => root domain */
-	private array $rootDomainMapping;
-
-	/** @var array<string, array<string, array{mask:array<string, string>, actions?:array<string, array<string, string>>}>> */
-	private array $translatedRoutes;
-
 	/** @var array<string, array<string, array<string, string>>> */
 	private array $translatedPresenters = [];
 
@@ -73,54 +64,25 @@ class RouterFactory
 	private array $availableLocales;
 
 
-	public function __construct(
-		private Loader $blogPostLoader,
-		private Translator $translator,
-	) {
-		$this->availableLocales = $this->translator->getAvailableLocales();
-	}
-
-
 	/**
-	 * Set supported locales
-	 *
-	 * @param array<string, array<string, string>> $supportedLocales array of host => array of supported locales
-	 */
-	public function setSupportedLocales(array $supportedLocales): void
-	{
-		$this->supportedLocales = $supportedLocales;
-	}
-
-
-	/**
-	 * Set locale to root domain mapping.
-	 *
+	 * @param array<string, array<string, string>> $supportedLocales host => array of supported locales
 	 * @param array<string, string> $rootDomainMapping locale => root domain
-	 */
-	public function setLocaleRootDomainMapping(array $rootDomainMapping): void
-	{
-		$this->rootDomainMapping = $rootDomainMapping;
-	}
-
-
-	/**
-	 * Get locale to root domain mapping.
-	 *
-	 * @return array<string, string> $rootDomainMapping locale => root domain
-	 */
-	public function getLocaleRootDomainMapping(): array
-	{
-		return $this->rootDomainMapping;
-	}
-
-
-	/**
 	 * @param array<string, array<string, array{mask:array<string, string>, actions?:array<string, array<string, string>>}>> $translatedRoutes
 	 */
-	public function setTranslatedRoutes(array $translatedRoutes): void
-	{
-		$this->translatedRoutes = $translatedRoutes;
+	public function __construct(
+		private readonly Loader $blogPostLoader,
+		private readonly Translator $translator,
+		private readonly array $supportedLocales,
+		private readonly array $rootDomainMapping,
+		private readonly array $translatedRoutes,
+	) {
+		$this->availableLocales = $this->translator->getAvailableLocales();
+		$this->setTranslatedPresentersAndActions();
+	}
 
+
+	private function setTranslatedPresentersAndActions(): void
+	{
 		foreach ($this->translatedRoutes as $module => $routes) {
 			foreach ($routes as $presenter => $items) {
 				foreach ($items['mask'] as $locale => $mask) {

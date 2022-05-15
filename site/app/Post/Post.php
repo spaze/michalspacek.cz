@@ -26,12 +26,10 @@ class Post
 	/** @var string[]|null */
 	private ?array $locales = null;
 
-	private int $updatedInfoThreshold;
 
-	/** @var array<string, array<string, array<int, string>>> */
-	private array $allowedTags;
-
-
+	/**
+	 * @param array<string, array<string, array<int, string>>> $allowedTags
+	 */
 	public function __construct(
 		private Explorer $database,
 		private Loader $loader,
@@ -41,6 +39,8 @@ class Post
 		private LocaleLinkGenerator $localeLinkGenerator,
 		private Tags $tags,
 		private Translator $translator,
+		private readonly int $updatedInfoThreshold,
+		private readonly array $allowedTags,
 	) {
 	}
 
@@ -51,27 +51,12 @@ class Post
 	}
 
 
-	public function setUpdatedInfoThreshold(int $updatedInfoThreshold): void
-	{
-		$this->updatedInfoThreshold = $updatedInfoThreshold;
-	}
-
-
 	/**
 	 * @return array<string, array<string, array<int, string>>>
 	 */
 	public function getAllowedTags(): array
 	{
 		return $this->allowedTags;
-	}
-
-
-	/**
-	 * @param array<string, array<string, array<int, string>>> $allowedTags
-	 */
-	public function setAllowedTags(array $allowedTags): void
-	{
-		$this->allowedTags = $allowedTags;
 	}
 
 

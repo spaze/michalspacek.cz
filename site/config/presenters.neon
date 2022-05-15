@@ -10,10 +10,7 @@ services:
 	- MichalSpacekCz\Www\Presenters\ForbiddenPresenter
 	- MichalSpacekCz\Www\Presenters\HomepagePresenter
 	- MichalSpacekCz\Www\Presenters\InterviewsPresenter
-	pgpPresenter:
-		factory: MichalSpacekCz\Www\Presenters\PgpPresenter
-		setup:
-		- setLocationRoot(%domain.locationRoot%)
+	- MichalSpacekCz\Www\Presenters\PgpPresenter(locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Www\Presenters\PhotoPresenter
 	- MichalSpacekCz\Www\Presenters\PostPresenter
 	- MichalSpacekCz\Www\Presenters\RedirectPresenter

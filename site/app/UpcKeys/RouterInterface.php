@@ -9,15 +9,6 @@ interface RouterInterface
 {
 
 	/**
-	 * @param string[] $prefixes
-	 */
-	public function setPrefixes(array $prefixes): void;
-
-
-	public function setModel(string $model): void;
-
-
-	/**
 	 * @return array<string, array<int, string>>
 	 */
 	public function getModelWithPrefixes(): array;

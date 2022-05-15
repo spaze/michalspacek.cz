@@ -13,34 +13,21 @@ class Ubee implements RouterInterface
 	/** @var string */
 	private const OUI_UBEE = '647c34';
 
-	private Explorer $database;
-
-	private string $prefix;
-
-	private string $model;
-
-
-	public function __construct(Explorer $context)
-	{
-		$this->database = $context;
-	}
+	private string $serialNumberPrefix;
 
 
 	/**
-	 * @param string[] $prefixes
+	 * @param string[] $serialNumberPrefixes
 	 */
-	public function setPrefixes(array $prefixes): void
-	{
-		if (count($prefixes) !== 1) {
+	public function __construct(
+		private readonly Explorer $database,
+		private readonly string $model,
+		array $serialNumberPrefixes,
+	) {
+		if (count($serialNumberPrefixes) !== 1) {
 			throw new RuntimeException('Ubee can has only one prefix');
 		}
-		$this->prefix = current($prefixes);
-	}
-
-
-	public function setModel(string $model): void
-	{
-		$this->model = $model;
+		$this->serialNumberPrefix = current($serialNumberPrefixes);
 	}
 
 
@@ -51,7 +38,7 @@ class Ubee implements RouterInterface
 	 */
 	public function getModelWithPrefixes(): array
 	{
-		return [$this->model => [$this->prefix]];
+		return [$this->model => [$this->serialNumberPrefix]];
 	}
 
 
@@ -76,7 +63,7 @@ class Ubee implements RouterInterface
 	private function buildKey(int $mac, int $key): stdClass
 	{
 		$result = new stdClass();
-		$result->serial = $this->prefix;
+		$result->serial = $this->serialNumberPrefix;
 		$result->oui = self::OUI_UBEE;
 		$result->mac = sprintf('%06x', $mac);
 		$result->type = UpcKeys::SSID_TYPE_UNKNOWN;

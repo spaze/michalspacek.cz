@@ -5,33 +5,20 @@ namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
-use MichalSpacekCz\Post\LocaleUrls;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates;
-use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Prices;
-use Nette\Application\Application;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
-use Nette\Utils\Arrays;
 use Nette\Utils\Html;
-use Texy\HandlerInvocation;
-use Texy\HtmlElement;
-use Texy\Link;
-use Texy\Modifier;
 use Texy\Texy;
 use Throwable;
 
 class TexyFormatter
 {
 
-	/** @var string */
-	private const TRAINING_DATE = 'TRAINING_DATE';
+	public const TRAINING_DATE_PLACEHOLDER = 'TRAINING_DATE';
 
 	private ?Texy $texy = null;
 
@@ -63,26 +50,18 @@ class TexyFormatter
 	public function __construct(
 		private readonly Storage $cacheStorage,
 		private readonly Translator $translator,
-		private readonly Application $application,
 		private readonly Dates $trainingDates,
 		private readonly Prices $prices,
-		private readonly Locales $trainingLocales,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
-		private readonly LocaleUrls $blogPostLocaleUrls,
 		private readonly DateTimeFormatter $dateTimeFormatter,
+		private readonly TexyPhraseHandler $phraseHandler,
+		string $staticRoot,
+		string $imagesRoot,
+		string $locationRoot,
 	) {
-		$this->cacheNamespace = 'TexyFormatted' . '.' . $this->translator->getLocale();
-	}
-
-
-	/**
-	 * Set static content URL root.
-	 *
-	 * @param string $root
-	 */
-	public function setStaticRoot(string $root): void
-	{
-		$this->staticRoot = rtrim($root, '/');
+		$this->staticRoot = rtrim($staticRoot, '/');
+		$this->imagesRoot = trim($imagesRoot, '/');
+		$this->locationRoot = rtrim($locationRoot, '/');
+		$this->cacheNamespace = 'TexyFormatted.' . $this->translator->getLocale();
 	}
 
 
@@ -98,17 +77,6 @@ class TexyFormatter
 
 
 	/**
-	 * Set images root directory.
-	 *
-	 * @param string $root
-	 */
-	public function setImagesRoot(string $root): void
-	{
-		$this->imagesRoot = trim($root, '/');
-	}
-
-
-	/**
 	 * Get absolute URL of the image.
 	 *
 	 * @param string $filename
@@ -117,17 +85,6 @@ class TexyFormatter
 	public function getImagesRoot(string $filename): string
 	{
 		return sprintf('%s/%s/%s', $this->staticRoot, $this->imagesRoot, ltrim($filename, '/'));
-	}
-
-
-	/**
-	 * Set location root directory.
-	 *
-	 * @param string $root
-	 */
-	public function setLocationRoot(string $root): void
-	{
-		$this->locationRoot = rtrim($root, '/');
 	}
 
 
@@ -163,7 +120,7 @@ class TexyFormatter
 		$this->texy->headingModule->idPrefix = '';
 		$this->texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2);  // en_US → en
 		$this->texy->allowed['phrase/del'] = true;
-		$this->texy->addHandler('phrase', [$this, 'phraseHandler']);
+		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
 		$this->setTopHeading($this->topHeading);
 		return $this->texy;
 	}
@@ -191,107 +148,6 @@ class TexyFormatter
 	public function translate(string $message, array $replacements = []): Html
 	{
 		return $this->substitute($this->translator->translate($message), $replacements);
-	}
-
-
-	/**
-	 * @param HandlerInvocation $invocation handler invocation
-	 * @param string $phrase
-	 * @param string $content
-	 * @param Modifier $modifier
-	 * @param Link|null $link
-	 * @return HtmlElement<HtmlElement|string>|string|false
-	 * @throws InvalidLinkException
-	 * @throws ShouldNotHappenException
-	 */
-	public function phraseHandler(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
-	{
-		if (!$link) {
-			return $invocation->proceed();
-		}
-
-		$trainingAction = ':Www:Trainings:training';
-		$companyTrainingAction = ':Www:CompanyTrainings:training';
-		/** @var Presenter $presenter */
-		$presenter = $this->application->getPresenter();
-
-		// "title":[link:Module:Presenter:action params]
-		if (strncmp($link->URL, 'link:', 5) === 0) {
-			/** @var string[] $args */
-			$args = preg_split('/[\s,]+/', substr($link->URL, 5));
-			$action = ':' . array_shift($args);
-			if (Arrays::contains([$trainingAction, $companyTrainingAction], $action)) {
-				$args = $this->trainingLocales->getLocaleActions($args[0])[$this->translator->getDefaultLocale()];
-			}
-			$link->URL = $presenter->link("//{$action}", $args);
-		}
-
-		// "title":[blog:post#fragment]
-		if (strncmp($link->URL, 'blog:', 5) === 0) {
-			$link->URL = $this->getBlogLinks(substr($link->URL, 5), $this->translator->getDefaultLocale());
-		}
-
-		// "title":[blog-en_US:post#fragment]
-		if (preg_match('/^blog\-([a-z]{2}_[A-Z]{2}):(.*)\z/', $link->URL, $matches)) {
-			$link->URL = $this->getBlogLinks($matches[2], $matches[1]);
-		}
-
-		// "title":[inhouse-training:training]
-		if (strncmp($link->URL, 'inhouse-training:', 17) === 0) {
-			$args = $this->trainingLocales->getLocaleActions(substr($link->URL, 17))[$this->translator->getDefaultLocale()];
-			$link->URL = $presenter->link("//{$companyTrainingAction}", $args);
-		}
-
-		// "title":[training:training]
-		if (strncmp($link->URL, 'training:', 9) === 0) {
-			$texy = $invocation->getTexy();
-			$name = substr($link->URL, 9);
-			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
-			$link->URL = $presenter->link("//{$trainingAction}", $name);
-			$el = HtmlElement::el();
-			$el->add($texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link));
-			$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
-			return $el;
-		}
-
-		return $invocation->proceed();
-	}
-
-
-	/**
-	 * @param string $url
-	 * @param string $locale
-	 * @return string
-	 * @throws ShouldNotHappenException
-	 */
-	private function getBlogLinks(string $url, string $locale): string
-	{
-		$args = explode('#', $url);
-		$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
-
-		$params = [];
-		foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
-			$params[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
-		}
-		$defaultParams = current($params);
-		if ($defaultParams === false) {
-			throw new ShouldNotHappenException("The blog links array should not be empty, maybe the linked blog post '{$url}' is missing?");
-		}
-		$this->localeLinkGenerator->setDefaultParams($params, $defaultParams);
-		return $this->localeLinkGenerator->allLinks("Www:Post:default{$fragment}", $params)[$locale];
-	}
-
-
-	/**
-	 * @param string $training Training name
-	 * @return string
-	 */
-	private function getTrainingSuffix(string $training): string
-	{
-		$el = Html::el()
-			->addHtml(Html::el()->setText(' '))
-			->addHtml(Html::el('small')->setText(sprintf('(**%s:%s**)', self::TRAINING_DATE, $training)));
-		return $el->render();
 	}
 
 
@@ -342,7 +198,7 @@ class TexyFormatter
 	private function replace(Html $result): Html
 	{
 		$replacements = array(
-			self::TRAINING_DATE => [$this, 'replaceTrainingDate'],
+			self::TRAINING_DATE_PLACEHOLDER => [$this, 'replaceTrainingDate'],
 		);
 
 		$result = preg_replace_callback('~\*\*([^:]+):([^*]+)\*\*~', function ($matches) use ($replacements): string {

@@ -30,7 +30,16 @@ class SecurityHeadersTest extends TestCase
 	{
 		$this->httpResponse = $this->getHttpResponse();
 		$this->cspConfig = $this->getCspConfig();
-		$this->securityHeaders = $this->getSecurityHeaders();
+		$this->securityHeaders = $this->getSecurityHeaders([
+			'camera' => 'none',
+			'geolocation' => null,
+			'midi' => [
+				'self',
+				'none',
+				' ',
+				'https://example.com',
+			],
+		]);
 
 		$this->cspConfig->setPolicy([
 			'*.*' => [
@@ -49,16 +58,6 @@ class SecurityHeadersTest extends TestCase
 	public function testSendHeaders(): void
 	{
 		$this->securityHeaders->setCsp('Foo', 'bar');
-		$this->securityHeaders->setPermissionsPolicy([
-			'camera' => 'none',
-			'geolocation' => null,
-			'midi' => [
-				'self',
-				'none',
-				' ',
-				'https://example.com',
-			],
-		]);
 		$this->securityHeaders->sendHeaders();
 		$expected = [
 			'content-security-policy' => "script-src 'none' example.com; form-action 'self'",

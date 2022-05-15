@@ -15,65 +15,16 @@ use stdClass;
 class Technicolor implements RouterInterface
 {
 
-	private Explorer $database;
-
-	private string $url;
-
-	private string $apiKey;
-
-	/** @var string[] */
-	private array $prefixes;
-
-	private string $model;
-
-
-	public function __construct(Explorer $context)
-	{
-		$this->database = $context;
-	}
-
-
 	/**
-	 * Set URL used by API Gateway.
-	 *
-	 * @param string $url
+	 * @param string[] $serialNumberPrefixes
 	 */
-	public function setUrl(string $url): void
-	{
-		$this->url = $url;
-	}
-
-
-	/**
-	 * Set API Key used by API Gateway.
-	 *
-	 * @param string $apiKey
-	 */
-	public function setApiKey(string $apiKey): void
-	{
-		$this->apiKey = $apiKey;
-	}
-
-
-	/**
-	 * Set serial number prefixes to generate keys for.
-	 *
-	 * @param string[] $prefixes
-	 */
-	public function setPrefixes(array $prefixes): void
-	{
-		$this->prefixes = $prefixes;
-	}
-
-
-	/**
-	 * Set router model.
-	 *
-	 * @param string $model
-	 */
-	public function setModel(string $model): void
-	{
-		$this->model = $model;
+	public function __construct(
+		private readonly Explorer $database,
+		private readonly string $apiUrl,
+		private readonly string $apiKey,
+		private readonly array $serialNumberPrefixes,
+		private readonly string $model,
+	) {
 	}
 
 
@@ -84,7 +35,7 @@ class Technicolor implements RouterInterface
 	 */
 	public function getModelWithPrefixes(): array
 	{
-		return [$this->model => $this->prefixes];
+		return [$this->model => $this->serialNumberPrefixes];
 	}
 
 
@@ -138,7 +89,7 @@ class Technicolor implements RouterInterface
 	 */
 	private function generateKeys(string $ssid): array
 	{
-		$data = Json::decode($this->callApi(sprintf($this->url, $ssid, implode(',', $this->prefixes))));
+		$data = Json::decode($this->callApi(sprintf($this->apiUrl, $ssid, implode(',', $this->serialNumberPrefixes))));
 		$keys = array();
 		foreach (explode("\n", $data) as $line) {
 			if (empty($line)) {
