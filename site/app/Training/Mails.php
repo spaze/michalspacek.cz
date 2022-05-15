@@ -45,10 +45,10 @@ class Mails
 	 * @param string $training
 	 * @param Html<Html|string> $trainingName
 	 * @param bool $remote
-	 * @param string $venueName
+	 * @param string|null $venueName
 	 * @param string|null $venueNameExtended
-	 * @param string $venueAddress
-	 * @param string $venueCity
+	 * @param string|null $venueAddress
+	 * @param string|null $venueCity
 	 */
 	public function sendSignUpMail(
 		int $applicationId,
