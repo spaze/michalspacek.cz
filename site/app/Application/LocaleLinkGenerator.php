@@ -12,7 +12,7 @@ use Nette\Http\IRequest;
 /**
  * Generates links to locales other than current.
  */
-class LocaleLinkGenerator
+class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 {
 
 	/** @var string */

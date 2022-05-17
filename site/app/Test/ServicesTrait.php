@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test;
 
-use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Application\RouterFactory;
 use MichalSpacekCz\Application\Routers\BlogPostRoute;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\Http\SecurityHeaders;
 use MichalSpacekCz\Post\Loader as BlogPostLoader;
+use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
 use Nette\Application\LinkGenerator;
@@ -169,7 +169,7 @@ trait ServicesTrait
 	{
 		static $service;
 		if (!$service) {
-			$service = new LocaleLinkGenerator($this->getRouterFactory(), $this->getHttpRequest(), $this->getPresenterFactory(), $this->getLinkGenerator(), $this->getTranslator());
+			$service = new LocaleLinkGenerator();
 		}
 		return $service;
 	}
