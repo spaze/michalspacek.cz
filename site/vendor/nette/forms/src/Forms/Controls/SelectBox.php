@@ -30,7 +30,7 @@ class SelectBox extends ChoiceControl
 	private $optionAttributes = [];
 
 
-	public function __construct($label = null, array $items = null)
+	public function __construct($label = null, ?array $items = null)
 	{
 		parent::__construct($label, $items);
 		$this->setOption('type', 'select');
@@ -82,8 +82,10 @@ class SelectBox extends ChoiceControl
 					$res[(string) $value] = $value;
 				}
 			}
+
 			$items = $res;
 		}
+
 		$this->options = $items;
 		return parent::setItems(Nette\Utils\Arrays::flatten($items, true));
 	}

@@ -29,7 +29,7 @@ final class DataClassGenerator
 	public $useSmartObject = true;
 
 
-	public function generateCode(Form $form, string $baseName = null): string
+	public function generateCode(Form $form, ?string $baseName = null): string
 	{
 		$baseName = $baseName ?? preg_replace('~Form$~', '', ucwords((string) $form->getName()));
 		return $this->processContainer($form, $baseName);
@@ -60,6 +60,7 @@ final class DataClassGenerator
 						break;
 					}
 				}
+
 				if (!$input->isRequired()) {
 					$type = '?' . $type;
 				}

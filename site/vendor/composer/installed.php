@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '0b601be8479abfb8e47d8c8b7d5eef3711f687b0',
+        'reference' => 'da12581cef8820d550824e11ecb708bc615ebd31',
         'name' => 'spaze/michalspacek.cz',
         'dev' => true,
     ),
@@ -68,12 +68,12 @@
             'dev_requirement' => false,
         ),
         'nette/application' => array(
-            'pretty_version' => 'v3.1.5',
-            'version' => '3.1.5.0',
+            'pretty_version' => 'v3.1.6',
+            'version' => '3.1.6.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/application',
             'aliases' => array(),
-            'reference' => 'fa5da6a90ff71724353568894a4839aec627eae3',
+            'reference' => '2cbc947d057e4ce28ea0296923def3d45ce60885',
             'dev_requirement' => false,
         ),
         'nette/bootstrap' => array(
@@ -86,12 +86,12 @@
             'dev_requirement' => false,
         ),
         'nette/caching' => array(
-            'pretty_version' => 'v3.1.2',
-            'version' => '3.1.2.0',
+            'pretty_version' => 'v3.1.3',
+            'version' => '3.1.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/caching',
             'aliases' => array(),
-            'reference' => '27d8f0048eb1a9c7e49e0268f39b2db7d3ce7ae9',
+            'reference' => '7a59a7762e43ba6d8e4aa0484eaaf6a40835a4ad',
             'dev_requirement' => false,
         ),
         'nette/component-model' => array(
@@ -131,12 +131,12 @@
             'dev_requirement' => false,
         ),
         'nette/forms' => array(
-            'pretty_version' => 'v3.1.6',
-            'version' => '3.1.6.0',
+            'pretty_version' => 'v3.1.7',
+            'version' => '3.1.7.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/forms',
             'aliases' => array(),
-            'reference' => '4ed52434b61d7e532cb3bc77b048717703b91b0b',
+            'reference' => 'fe2109ce8b77846a5f664bc412c7cf3008f63074',
             'dev_requirement' => false,
         ),
         'nette/http' => array(
@@ -339,7 +339,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '2ed308386e65cafaadd54723f5b57775374c2ae8',
+            'reference' => 'c491d086242983f784b8af91cbb9de43d3374971',
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
@@ -393,7 +393,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '0b601be8479abfb8e47d8c8b7d5eef3711f687b0',
+            'reference' => 'da12581cef8820d550824e11ecb708bc615ebd31',
             'dev_requirement' => false,
         ),
         'spaze/mysql-session-handler' => array(
@@ -541,12 +541,12 @@
             ),
         ),
         'texy/texy' => array(
-            'pretty_version' => 'v3.1.5',
-            'version' => '3.1.5.0',
+            'pretty_version' => 'v3.1.6',
+            'version' => '3.1.6.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../texy/texy',
             'aliases' => array(),
-            'reference' => 'a8736caf7581b84a6fce3d8fb9bd713ed0fa4a64',
+            'reference' => 'b5a550e407160a7ac31abb44a7f7685bd20d9a0c',
             'dev_requirement' => false,
         ),
         'tracy/tracy' => array(

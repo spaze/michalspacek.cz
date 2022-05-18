@@ -59,7 +59,7 @@ final class Modifier
 	];
 
 
-	public function __construct(string $s = null)
+	public function __construct(?string $s = null)
 	{
 		$this->setProperties($s);
 	}
@@ -127,7 +127,7 @@ final class Modifier
 			$attrs = $this->attrs;
 
 		} elseif (is_array($texy->allowedTags)) {
-			$attrs = $texy->allowedTags[$name] ?? null;
+			$attrs = $texy->allowedTags[$name] ?? [];
 
 			if ($attrs === $texy::ALL) {
 				$attrs = $this->attrs;
@@ -157,6 +157,7 @@ final class Modifier
 				foreach ($this->classes as $value => $foo) {
 					$attrs['class'][] = $value;
 				}
+
 				$attrs['id'] = $this->id;
 			} elseif (is_array($allowedClasses)) {
 				foreach ($this->classes as $value => $foo) {
@@ -227,6 +228,7 @@ final class Modifier
 			if ($prop === '' || !isset($pair[1])) {
 				continue;
 			}
+
 			$value = trim($pair[1]);
 
 			if (isset(self::$elAttrs[$prop]) || substr($prop, 0, 5) === 'data-') { // attribute
