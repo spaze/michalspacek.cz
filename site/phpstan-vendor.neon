@@ -24,6 +24,12 @@ parameters:
 			- vendor/phpstan/*
 			- vendor/slevomat/coding-standard/*
 			- vendor/squizlabs/php_codesniffer/*
+			# Uses Latte 3 symbols, can be removed once upgraded to Latte 3
+			- vendor/nette/application/src/Bridges/ApplicationLatte/*
+			- vendor/nette/caching/src/Bridges/CacheLatte/*
+			- vendor/nette/forms/examples/latte.php*
+			- vendor/nette/forms/src/Bridges/FormsLatte/*
+			- vendor/texy/texy/src/Bridges/Latte/*
 
 	disallowedFunctionCalls:
 		# local disallowed-calls.neon
