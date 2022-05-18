@@ -8,14 +8,18 @@ use MichalSpacekCz\Application\Routers\BlogPostRoute;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\Http\SecurityHeaders;
 use MichalSpacekCz\Post\Loader as BlogPostLoader;
+use MichalSpacekCz\Post\LocaleUrls as BlogPostLocaleUrls;
+use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
+use MichalSpacekCz\Training\Locales;
+use Nette\Application\Application;
 use Nette\Application\LinkGenerator;
 use Nette\Application\PresenterFactory;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Connection as DatabaseConnection;
-use Nette\Database\Explorer as DatabaseExplorer;
 use Nette\Database\Structure as DatabaseStructure;
 use Nette\Http\UrlScript;
 use Spaze\ContentSecurityPolicy\Config as CspConfig;
@@ -95,11 +99,11 @@ trait ServicesTrait
 	}
 
 
-	public function getDatabase(): DatabaseExplorer
+	public function getDatabase(): Database
 	{
 		static $service;
 		if (!$service) {
-			$service = new DatabaseExplorer($this->getDatabaseConnection(), $this->getDatabaseStructure());
+			$service = new Database($this->getDatabaseConnection(), $this->getDatabaseStructure());
 		}
 		return $service;
 	}
@@ -140,6 +144,16 @@ trait ServicesTrait
 		static $service;
 		if (!$service) {
 			$service = new PresenterFactory();
+		}
+		return $service;
+	}
+
+
+	public function getApplication(): Application
+	{
+		static $service;
+		if (!$service) {
+			$service = new Application($this->getPresenterFactory(), $this->getRoute(), $this->getHttpRequest(), $this->getHttpResponse());
 		}
 		return $service;
 	}
@@ -204,6 +218,36 @@ trait ServicesTrait
 		if (!$service) {
 			$service = new NullLogger();
 			Debugger::setLogger($service);
+		}
+		return $service;
+	}
+
+
+	public function getLocales(): Locales
+	{
+		static $service;
+		if (!$service) {
+			$service = new Locales($this->getDatabase());
+		}
+		return $service;
+	}
+
+
+	public function getTags(): Tags
+	{
+		static $service;
+		if (!$service) {
+			$service = new Tags();
+		}
+		return $service;
+	}
+
+
+	public function getBlogPostLocaleUrls(): BlogPostLocaleUrls
+	{
+		static $service;
+		if (!$service) {
+			$service = new BlogPostLocaleUrls($this->getDatabase(), $this->getTags());
 		}
 		return $service;
 	}

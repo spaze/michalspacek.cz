@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Locales;
@@ -24,7 +24,7 @@ class TexyPhraseHandler
 	public function __construct(
 		private readonly Application $application,
 		private readonly Locales $trainingLocales,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 		private readonly LocaleUrls $blogPostLocaleUrls,
 		private readonly Translator $translator,
 	) {
