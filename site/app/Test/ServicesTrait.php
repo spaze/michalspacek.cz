@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test;
 
-use MichalSpacekCz\Application\RouterFactory;
 use MichalSpacekCz\Application\Routers\BlogPostRoute;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\Http\SecurityHeaders;
@@ -16,7 +15,6 @@ use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Training\Locales;
 use Nette\Application\Application;
-use Nette\Application\LinkGenerator;
 use Nette\Application\PresenterFactory;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Connection as DatabaseConnection;
@@ -129,16 +127,6 @@ trait ServicesTrait
 	}
 
 
-	public function getRouterFactory(): RouterFactory
-	{
-		static $service;
-		if (!$service) {
-			$service = new RouterFactory($this->getBlogPostLoader(), $this->getTranslator(), [], [], []);
-		}
-		return $service;
-	}
-
-
 	public function getPresenterFactory(): PresenterFactory
 	{
 		static $service;
@@ -164,16 +152,6 @@ trait ServicesTrait
 		static $service;
 		if (!$service) {
 			$service = new BlogPostRoute($this->getBlogPostLoader(), '');
-		}
-		return $service;
-	}
-
-
-	public function getLinkGenerator(): LinkGenerator
-	{
-		static $service;
-		if (!$service) {
-			$service = new LinkGenerator($this->getRoute(), new UrlScript());
 		}
 		return $service;
 	}
