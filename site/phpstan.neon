@@ -1,4 +1,5 @@
 parameters:
+	tmpDir: /tmp/phpstan/michalspacek.cz
 	paths:
 		- app
 		- bin

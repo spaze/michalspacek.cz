@@ -1,5 +1,6 @@
 parameters:
 	customRulesetUsed: true
+	tmpDir: /tmp/phpstan/michalspacek.cz-vendor
 	paths:
 		- vendor
 	excludePaths:
