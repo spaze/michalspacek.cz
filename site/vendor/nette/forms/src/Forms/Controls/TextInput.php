@@ -21,7 +21,7 @@ class TextInput extends TextBase
 	/**
 	 * @param  string|object  $label
 	 */
-	public function __construct($label = null, int $maxLength = null)
+	public function __construct($label = null, ?int $maxLength = null)
 	{
 		parent::__construct($label);
 		$this->control->maxlength = $maxLength;
@@ -75,7 +75,7 @@ class TextInput extends TextBase
 		}
 
 		if ($this->control->type === null && in_array($validator, [Form::EMAIL, Form::URL, Form::INTEGER], true)) {
-			static $types = [Form::EMAIL => 'email', Form::URL => 'url', Form::INTEGER => 'number'];
+			$types = [Form::EMAIL => 'email', Form::URL => 'url', Form::INTEGER => 'number'];
 			$this->control->type = $types[$validator];
 
 		} elseif (
@@ -89,11 +89,13 @@ class TextInput extends TextBase
 			} else {
 				$range = $arg;
 			}
+
 			if (isset($range[0]) && is_scalar($range[0])) {
 				$this->control->min = isset($this->control->min)
 					? max($this->control->min, $range[0])
 					: $range[0];
 			}
+
 			if (isset($range[1]) && is_scalar($range[1])) {
 				$this->control->max = isset($this->control->max)
 					? min($this->control->max, $range[1])

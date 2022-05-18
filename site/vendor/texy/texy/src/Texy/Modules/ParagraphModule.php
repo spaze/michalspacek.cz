@@ -45,6 +45,7 @@ final class ParagraphModule extends Texy\Module
 				if ($s === '') {
 					continue;
 				}
+
 				$mod = new Texy\Modifier;
 				$mod->setProperties($mMod);
 			}
@@ -63,7 +64,7 @@ final class ParagraphModule extends Texy\Module
 	public function solve(
 		Texy\HandlerInvocation $invocation,
 		string $content,
-		Texy\Modifier $mod = null
+		?Texy\Modifier $mod = null
 	): ?Texy\HtmlElement {
 		$texy = $this->texy;
 

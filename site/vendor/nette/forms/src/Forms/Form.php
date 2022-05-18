@@ -131,10 +131,7 @@ class Form extends Container implements Nette\HtmlStringable
 	private $beforeRenderCalled;
 
 
-	/**
-	 * Form constructor.
-	 */
-	public function __construct(string $name = null)
+	public function __construct(?string $name = null)
 	{
 		if ($name !== null) {
 			$this->getElementPrototype()->id = 'frm-' . $name;
@@ -143,6 +140,7 @@ class Form extends Container implements Nette\HtmlStringable
 			$this[self::TRACKER_ID] = $tracker;
 			$this->setParent(null, $name);
 		}
+
 		$this->monitor(self::class, function (): void {
 			throw new Nette\InvalidStateException('Nested forms are forbidden.');
 		});
@@ -190,6 +188,7 @@ class Form extends Container implements Nette\HtmlStringable
 		if ($this->httpData !== null) {
 			throw new Nette\InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
 		}
+
 		$this->getElementPrototype()->method = strtolower($method);
 		return $this;
 	}
@@ -236,10 +235,12 @@ class Form extends Container implements Nette\HtmlStringable
 	/**
 	 * Cross-Site Request Forgery (CSRF) form protection.
 	 */
-	public function addProtection(string $errorMessage = null): Controls\CsrfProtection
+	public function addProtection(?string $errorMessage = null): Controls\CsrfProtection
 	{
 		$control = new Controls\CsrfProtection($errorMessage);
-		$this->addComponent($control, self::PROTECTOR_ID, key((array) $this->getComponents()));
+		$children = (array) $this->getComponents();
+		$first = $children ? (string) key($children) : null;
+		$this->addComponent($control, self::PROTECTOR_ID, $first);
 		return $control;
 	}
 
@@ -353,6 +354,7 @@ class Form extends Container implements Nette\HtmlStringable
 		if ($this->httpData === null) {
 			$this->getHttpData();
 		}
+
 		return $this->submittedBy;
 	}
 
@@ -382,19 +384,22 @@ class Form extends Container implements Nette\HtmlStringable
 	 * Returns submitted HTTP data.
 	 * @return mixed
 	 */
-	public function getHttpData(int $type = null, string $htmlName = null)
+	public function getHttpData(?int $type = null, ?string $htmlName = null)
 	{
 		if ($this->httpData === null) {
 			if (!$this->isAnchored()) {
 				throw new Nette\InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
 			}
+
 			$data = $this->receiveHttpData();
 			$this->httpData = (array) $data;
 			$this->submittedBy = is_array($data);
 		}
+
 		if ($htmlName === null) {
 			return $this->httpData;
 		}
+
 		return Helpers::extractHttpData($this->httpData, $htmlName, $type);
 	}
 
@@ -452,6 +457,7 @@ class Form extends Container implements Nette\HtmlStringable
 			} else {
 				$arg0 = $this->getValues($types[0]);
 			}
+
 			$arg1 = isset($params[1]) ? $this->getValues($types[1]) : null;
 			$handler($arg0, $arg1);
 
@@ -488,6 +494,7 @@ class Form extends Container implements Nette\HtmlStringable
 			if (!$this->crossOrigin && !$httpRequest->isSameSite()) {
 				return null;
 			}
+
 			$data = Nette\Utils\Arrays::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
 		} else {
 			$data = $httpRequest->getQuery();
@@ -509,12 +516,13 @@ class Form extends Container implements Nette\HtmlStringable
 	/********************* validation ****************d*g**/
 
 
-	public function validate(array $controls = null): void
+	public function validate(?array $controls = null): void
 	{
 		$this->cleanErrors();
 		if ($controls === null && $this->submittedBy instanceof SubmitterControl) {
 			$controls = $this->submittedBy->getValidationScope();
 		}
+
 		$this->validateMaxPostSize();
 		parent::validate($controls);
 	}
@@ -526,6 +534,7 @@ class Form extends Container implements Nette\HtmlStringable
 		if (!$this->submittedBy || !$this->isMethod('post') || empty($_SERVER['CONTENT_LENGTH'])) {
 			return;
 		}
+
 		$maxSize = Helpers::iniGetSize('post_max_size');
 		if ($maxSize > 0 && $maxSize < $_SERVER['CONTENT_LENGTH']) {
 			$this->addError(sprintf(Validator::$messages[self::MAX_FILE_SIZE], $maxSize));
@@ -542,6 +551,7 @@ class Form extends Container implements Nette\HtmlStringable
 		if ($translate && $this->translator) {
 			$message = $this->translator->translate($message);
 		}
+
 		$this->errors[] = $message;
 	}
 
@@ -589,6 +599,7 @@ class Form extends Container implements Nette\HtmlStringable
 			$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
 			$this->element->method = self::POST;
 		}
+
 		return $this->element;
 	}
 
@@ -612,6 +623,7 @@ class Form extends Container implements Nette\HtmlStringable
 		if ($this->renderer === null) {
 			$this->renderer = new Rendering\DefaultFormRenderer;
 		}
+
 		return $this->renderer;
 	}
 
@@ -658,6 +670,7 @@ class Form extends Container implements Nette\HtmlStringable
 			if (func_num_args() || PHP_VERSION_ID >= 70400) {
 				throw $e;
 			}
+
 			trigger_error('Exception in ' . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 			return '';
 		}
@@ -670,6 +683,7 @@ class Form extends Container implements Nette\HtmlStringable
 		foreach ($this->getComponents(true, Controls\BaseControl::class) as $control) {
 			$toggles = $control->getRules()->getToggleStates($toggles);
 		}
+
 		return $toggles;
 	}
 
@@ -698,6 +712,7 @@ class Form extends Container implements Nette\HtmlStringable
 					. ($file ? " (output started at $file:$line)" : '') . '. '
 				);
 			}
+
 			Nette\Http\Helpers::initCookie(self::$defaultHttpRequest, new Nette\Http\Response);
 		}
 	}
@@ -709,6 +724,7 @@ class Form extends Container implements Nette\HtmlStringable
 			self::initialize();
 			$this->httpRequest = self::$defaultHttpRequest;
 		}
+
 		return $this->httpRequest;
 	}
 }

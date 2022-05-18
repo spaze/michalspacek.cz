@@ -69,7 +69,7 @@ final class ScriptModule extends Texy\Module
 	 * Finish invocation.
 	 * @return Texy\HtmlElement|string|null
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, string $cmd, array $args = null, string $raw = null)
+	public function solve(Texy\HandlerInvocation $invocation, string $cmd, ?array $args = null, ?string $raw = null)
 	{
 		if ($cmd === 'texy' && $args) {
 			switch ($args[0]) {
@@ -77,8 +77,10 @@ final class ScriptModule extends Texy\Module
 					$this->texy->linkModule->forceNoFollow = true;
 					break;
 			}
+
 			return '';
 		}
+
 		return null;
 	}
 }
