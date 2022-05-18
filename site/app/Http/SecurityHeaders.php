@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Http\UrlImmutable;
@@ -26,7 +26,7 @@ class SecurityHeaders
 		private readonly IRequest $httpRequest,
 		private readonly IResponse $httpResponse,
 		private readonly Config $contentSecurityPolicy,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 		array $permissionsPolicy,
 	) {
 		$this->permissionsPolicy = $this->normalizePermissionsPolicyValues($permissionsPolicy);
