@@ -184,6 +184,8 @@ class ReferenceUsedNamesOnlySniff implements Sniff
 			$canonicalName = NamespaceHelper::normalizeToCanonicalName($name);
 			$unqualifiedName = NamespaceHelper::getUnqualifiedNameFromFullyQualifiedName($name);
 
+			$collidingUseStatementUniqueId = UseStatement::getUniqueId($reference->type, $unqualifiedName);
+
 			$isFullyQualified = NamespaceHelper::isFullyQualifiedName($name);
 			$isGlobalFallback = !$isFullyQualified
 				&& !NamespaceHelper::hasNamespace($name)
@@ -221,9 +223,9 @@ class ReferenceUsedNamesOnlySniff implements Sniff
 					}
 
 					if (
-						array_key_exists($lowerCasedUnqualifiedClassName, $useStatements)
+						array_key_exists($collidingUseStatementUniqueId, $useStatements)
 						&& $canonicalName !== NamespaceHelper::normalizeToCanonicalName(
-							$useStatements[$lowerCasedUnqualifiedClassName]->getFullyQualifiedTypeName()
+							$useStatements[$collidingUseStatementUniqueId]->getFullyQualifiedTypeName()
 						)
 					) {
 						continue;
@@ -233,8 +235,26 @@ class ReferenceUsedNamesOnlySniff implements Sniff
 					if (array_key_exists($lowerCasedUnqualifiedFunctionName, $definedFunctionsIndex)) {
 						continue;
 					}
+
+					if (
+						array_key_exists($collidingUseStatementUniqueId, $useStatements)
+						&& $canonicalName !== NamespaceHelper::normalizeToCanonicalName(
+							$useStatements[$collidingUseStatementUniqueId]->getFullyQualifiedTypeName()
+						)
+					) {
+						continue;
+					}
 				} elseif ($reference->isConstant && $this->allowFullyQualifiedNameForCollidingConstants) {
 					if (array_key_exists($unqualifiedName, $definedConstantsIndex)) {
+						continue;
+					}
+
+					if (
+						array_key_exists($collidingUseStatementUniqueId, $useStatements)
+						&& $canonicalName !== NamespaceHelper::normalizeToCanonicalName(
+							$useStatements[$collidingUseStatementUniqueId]->getFullyQualifiedTypeName()
+						)
+					) {
 						continue;
 					}
 				}
