@@ -7,12 +7,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Formatter;
 
 use Closure;
-use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\ServicesTrait;
-use MichalSpacekCz\Training\Locales;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
 use ReflectionProperty;
@@ -31,9 +29,7 @@ class TexyPhraseHandlerTest extends TestCase
 
 	private Database $database;
 	private Application $application;
-	private Locales $trainingLocales;
 	private LocaleLinkGenerator $localeLinkGenerator;
-	private LocaleUrls $blogPostLocaleUrls;
 	private NoOpTranslator $translator;
 	private TexyPhraseHandler $phraseHandler;
 	private Texy $texy;
@@ -44,11 +40,9 @@ class TexyPhraseHandlerTest extends TestCase
 	{
 		$this->database = $this->getDatabase();
 		$this->application = $this->getApplication();
-		$this->trainingLocales = $this->getLocales();
 		$this->localeLinkGenerator = $this->getLocaleLinkGenerator();
-		$this->blogPostLocaleUrls = $this->getBlogPostLocaleUrls();
 		$this->translator = $this->getTranslator();
-		$this->phraseHandler = new TexyPhraseHandler($this->application, $this->trainingLocales, $this->localeLinkGenerator, $this->blogPostLocaleUrls, $this->translator);
+		$this->phraseHandler = $this->getTexyPhraseHandler();
 
 		$this->texy = new Texy();
 		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
