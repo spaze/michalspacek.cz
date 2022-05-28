@@ -9,6 +9,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\TemplateFactory as UiTemplateFactory;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as ApplicationTemplateFactory;
+use Spaze\NonceGenerator\Generator;
 
 class TemplateFactory implements UiTemplateFactory
 {
@@ -18,6 +19,7 @@ class TemplateFactory implements UiTemplateFactory
 		private readonly Filters $filters,
 		private readonly Translator $translator,
 		private readonly ApplicationTemplateFactory $templateFactory,
+		private readonly Generator $nonceGenerator,
 	) {
 	}
 
@@ -31,6 +33,7 @@ class TemplateFactory implements UiTemplateFactory
 			$template->addFilter($name, $callback);
 		}
 		$template->setTranslator($this->translator);
+		$template->getLatte()->addProvider('uiNonce', $this->nonceGenerator->getNonce());
 		return $template;
 	}
 

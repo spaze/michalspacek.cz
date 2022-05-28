@@ -38,6 +38,7 @@ contentSecurityPolicy:
 				- %domain.contentSecurityPolicySelf%
 				- "'report-sample'"
 			style-src:
+				- "'nonce'"
 				- %domain.contentSecurityPolicySelf%
 				- "'report-sample'"
 			frame-ancestors: "'none'"

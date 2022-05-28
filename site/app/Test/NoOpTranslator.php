@@ -29,6 +29,12 @@ class NoOpTranslator extends Translator
 	}
 
 
+	public function getLocale(): string
+	{
+		return $this->defaultLocale;
+	}
+
+
 	public function translate($message, ...$parameters): string
 	{
 		return $message;

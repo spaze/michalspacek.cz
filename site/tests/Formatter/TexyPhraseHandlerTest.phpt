@@ -7,12 +7,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Formatter;
 
 use Closure;
-use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\ServicesTrait;
-use MichalSpacekCz\Training\Locales;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
 use ReflectionProperty;
@@ -29,28 +27,22 @@ class TexyPhraseHandlerTest extends TestCase
 	use ServicesTrait;
 
 
-	private const LOCALE = 'cs_CZ';
-
 	private Database $database;
 	private Application $application;
-	private Locales $trainingLocales;
 	private LocaleLinkGenerator $localeLinkGenerator;
-	private LocaleUrls $blogPostLocaleUrls;
 	private NoOpTranslator $translator;
 	private TexyPhraseHandler $phraseHandler;
 	private Texy $texy;
+	private string $locale;
 
 
 	protected function setUp()
 	{
 		$this->database = $this->getDatabase();
 		$this->application = $this->getApplication();
-		$this->trainingLocales = $this->getLocales();
 		$this->localeLinkGenerator = $this->getLocaleLinkGenerator();
-		$this->blogPostLocaleUrls = $this->getBlogPostLocaleUrls();
 		$this->translator = $this->getTranslator();
-		$this->translator->setDefaultLocale(self::LOCALE);
-		$this->phraseHandler = new TexyPhraseHandler($this->application, $this->trainingLocales, $this->localeLinkGenerator, $this->blogPostLocaleUrls, $this->translator);
+		$this->phraseHandler = $this->getTexyPhraseHandler();
 
 		$this->texy = new Texy();
 		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
@@ -76,6 +68,7 @@ class TexyPhraseHandlerTest extends TestCase
 			}
 
 		});
+		$this->locale = $this->translator->getDefaultLocale();
 	}
 
 
@@ -103,7 +96,7 @@ class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTrainingLink(): void
 	{
-		$this->database->setFetchPairsResult([self::LOCALE => 'fjó']);
+		$this->database->setFetchPairsResult([$this->locale => 'fjó']);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:Trainings:training', ['fjó']),
@@ -117,7 +110,7 @@ class TexyPhraseHandlerTest extends TestCase
 		$enLocale = 'en_US';
 		$this->database->setFetchAllResult([
 			[
-				'locale' => self::LOCALE,
+				'locale' => $this->locale,
 				'slug' => 'fó',
 				'published' => null,
 				'previewKey' => (string)rand(),
@@ -134,11 +127,11 @@ class TexyPhraseHandlerTest extends TestCase
 		$postUrl = 'https://blog.example/fó#fragment';
 		$postEnUrl = 'https://blog.example/foo#fragment';
 		$this->localeLinkGenerator->setAllLinks([
-			self::LOCALE => $postUrl,
+			$this->locale => $postUrl,
 			$enLocale => $postEnUrl,
 		]);
 		$this->assertUrl('le post', $postUrl, '"le post":[blog:post#fragment]');
-		$this->assertUrl('le post', $postUrl, '"le post":[blog-' . self::LOCALE . ':post#fragment]');
+		$this->assertUrl('le post', $postUrl, '"le post":[blog-' . $this->locale . ':post#fragment]');
 		$this->assertUrl('teh post', $postEnUrl, '"teh post":[blog-' . $enLocale . ':post#fragment]');
 	}
 
@@ -154,7 +147,7 @@ class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveInhouseTrainingLink(): void
 	{
-		$this->database->setFetchPairsResult([self::LOCALE => 'fjó']);
+		$this->database->setFetchPairsResult([$this->locale => 'fjó']);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:CompanyTrainings:training', ['fjó']),
@@ -165,7 +158,7 @@ class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTrainingWithDatesLink(): void
 	{
-		$this->database->setFetchPairsResult([self::LOCALE => 'fjó']);
+		$this->database->setFetchPairsResult([$this->locale => 'fjó']);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:Trainings:training', ['fjó']),

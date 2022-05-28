@@ -5,17 +5,27 @@ namespace MichalSpacekCz\Test;
 
 use MichalSpacekCz\Application\Routers\BlogPostRoute;
 use MichalSpacekCz\Application\Theme;
+use MichalSpacekCz\DateTime\DateTimeFormatter;
+use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Formatter\TexyPhraseHandler;
 use MichalSpacekCz\Http\SecurityHeaders;
 use MichalSpacekCz\Post\Loader as BlogPostLoader;
 use MichalSpacekCz\Post\LocaleUrls as BlogPostLocaleUrls;
 use MichalSpacekCz\Tags\Tags;
+use MichalSpacekCz\Templating\Filters;
+use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
+use MichalSpacekCz\Test\Latte\LatteFactory;
+use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Locales;
+use MichalSpacekCz\Training\Prices;
+use MichalSpacekCz\Training\Statuses;
 use Nette\Application\Application;
 use Nette\Application\PresenterFactory;
+use Nette\Bridges\ApplicationLatte\TemplateFactory as NetteTemplateFactory;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Connection as DatabaseConnection;
 use Nette\Database\Structure as DatabaseStructure;
@@ -112,6 +122,7 @@ trait ServicesTrait
 		static $service;
 		if (!$service) {
 			$service = new NoOpTranslator();
+			$service->setDefaultLocale('cs_CZ');
 		}
 		return $service;
 	}
@@ -226,6 +237,106 @@ trait ServicesTrait
 		static $service;
 		if (!$service) {
 			$service = new BlogPostLocaleUrls($this->getDatabase(), $this->getTags());
+		}
+		return $service;
+	}
+
+
+	public function getLatteFactory(): LatteFactory
+	{
+		static $service;
+		if (!$service) {
+			$service = new LatteFactory();
+		}
+		return $service;
+	}
+
+
+	public function getStatuses(): Statuses
+	{
+		static $service;
+		if (!$service) {
+			$service = new Statuses($this->getDatabase());
+		}
+		return $service;
+	}
+
+
+	public function getPrices(): Prices
+	{
+		static $service;
+		if (!$service) {
+			$service = new Prices(0.21);
+		}
+		return $service;
+	}
+
+
+	public function getDateTimeFormatter(): DateTimeFormatter
+	{
+		static $service;
+		if (!$service) {
+			$service = new DateTimeFormatter($this->getTranslator()->getDefaultLocale());
+		}
+		return $service;
+	}
+
+
+	public function getDates(): Dates
+	{
+		static $service;
+		if (!$service) {
+			$service = new Dates($this->getDatabase(), $this->getStatuses(), $this->getPrices(), $this->getDateTimeFormatter(), $this->getTranslator());
+		}
+		return $service;
+	}
+
+
+	public function getTexyPhraseHandler(): TexyPhraseHandler
+	{
+		static $service;
+		if (!$service) {
+			$service = new TexyPhraseHandler($this->getApplication(), $this->getLocales(), $this->getLocaleLinkGenerator(), $this->getBlogPostLocaleUrls(), $this->getTranslator());
+		}
+		return $service;
+	}
+
+
+	public function getTexyFormatter(): TexyFormatter
+	{
+		static $service;
+		if (!$service) {
+			$service = new TexyFormatter($this->getCacheStorage(), $this->getTranslator(), $this->getDates(), $this->getPrices(), $this->getDateTimeFormatter(), $this->getTexyPhraseHandler(), '/', 'i', '/var/www');
+		}
+		return $service;
+	}
+
+
+	public function getFilters(): Filters
+	{
+		static $service;
+		if (!$service) {
+			$service = new Filters($this->getTexyFormatter(), $this->getDateTimeFormatter());
+		}
+		return $service;
+	}
+
+
+	public function getNetteTemplateFactory(): NetteTemplateFactory
+	{
+		static $service;
+		if (!$service) {
+			$service = new NetteTemplateFactory($this->getLatteFactory());
+		}
+		return $service;
+	}
+
+
+	public function getTemplateFactory(): TemplateFactory
+	{
+		static $service;
+		if (!$service) {
+			$service = new TemplateFactory($this->getTheme(), $this->getFilters(), $this->getTranslator(), $this->getNetteTemplateFactory(), $this->getNonceGenerator());
 		}
 		return $service;
 	}

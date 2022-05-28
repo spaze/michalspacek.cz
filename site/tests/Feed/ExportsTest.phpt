@@ -97,7 +97,6 @@ class ExportsTest extends TestCase
 		};
 		$this->cacheStorage = $this->getCacheStorage();
 		$this->translator = $this->getTranslator();
-		$this->translator->setDefaultLocale('cs_CZ');
 		$this->exports = new Exports($this->articles, $this->texyFormatter, $this->translator, $this->cacheStorage);
 	}
 
