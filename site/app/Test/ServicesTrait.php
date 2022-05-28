@@ -112,6 +112,7 @@ trait ServicesTrait
 		static $service;
 		if (!$service) {
 			$service = new NoOpTranslator();
+			$service->setDefaultLocale('cs_CZ');
 		}
 		return $service;
 	}
