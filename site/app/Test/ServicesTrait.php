@@ -13,6 +13,7 @@ use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
+use MichalSpacekCz\Test\Latte\LatteFactory;
 use MichalSpacekCz\Training\Locales;
 use Nette\Application\Application;
 use Nette\Application\PresenterFactory;
@@ -227,6 +228,16 @@ trait ServicesTrait
 		static $service;
 		if (!$service) {
 			$service = new BlogPostLocaleUrls($this->getDatabase(), $this->getTags());
+		}
+		return $service;
+	}
+
+
+	public function getLatteFactory(): LatteFactory
+	{
+		static $service;
+		if (!$service) {
+			$service = new LatteFactory();
 		}
 		return $service;
 	}
