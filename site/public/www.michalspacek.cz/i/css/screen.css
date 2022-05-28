@@ -1,5 +1,4 @@
 body {
-	font: 1em/1.5 Arial, sans-serif;
 	color: #222;
 	background-color: #FFF;
 	margin: 0;
@@ -72,11 +71,7 @@ blockquote {
 }
 q::before { content: "«"; }
 q::after { content: "»"; }
-img {
-	border: none;
-	max-width: 100%;
-	height: auto;
-}
+img { border: none; }
 abbr.dtstart, abbr.dtend { text-decoration: none; }
 code, .highlight pre code {
 	padding: 0.2em 0.1em;
@@ -95,7 +90,6 @@ pre {
 	margin-bottom: 1em;
 	background-color: #F5F5F5;
 	border-radius: 3px;
-	overflow-x: auto;
 }
 .button { cursor: pointer; }
 .container {
