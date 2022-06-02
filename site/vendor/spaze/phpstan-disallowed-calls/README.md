@@ -143,6 +143,23 @@ parameters:
 
 The `message` key is optional. Functions and methods can be specified with or without `()`. Omitting `()` is not recommended though to avoid confusing method calls with class constants.
 
+If you want to disallow multiple calls, constants, class constants (same-class only), namespaces or variables that share the same `message` and other config keys, you can use a list or an array to specify them all:
+```neon
+parameters:
+    disallowedFunctionCalls:
+        -
+            function:
+                - 'var_dump()'
+                - 'print_r()'
+            message: 'use logger instead'
+
+    disallowedConstants:
+        -
+            class: 'DateTimeInterface'
+            constant: ['ISO8601', 'RFC3339', 'W3C']
+            message: 'use DateTimeInterface::ATOM instead'
+```
+
 The `errorIdentifier` key is optional. It can be used to provide a unique identifier to the PHPStan error.
 
 Use wildcard (`*`) to ignore all functions, methods, namespaces starting with a prefix, for example:
@@ -152,7 +169,7 @@ parameters:
         -
             function: 'pcntl_*()'
 ```
-The wildcard makes most sense when used as the rightmost character of the function or method name, optionally followed by `()`, but you can use it anywhere for example to disallow all functions that end with `y`: `function: '*y()'`. The matching is powered by [`fnmatch`](https://www.php.net/function.fnmatch) so you can use even multiple wildcards if you wish because w*y n*t.
+The wildcard makes most sense when used as the rightmost character of the function or method name, optionally followed by `()`, but you can use it anywhere for example to disallow all functions that end with `y`: `function: '*y()'`. The matching is powered by [`fnmatch`](https://www.php.net/function.fnmatch) so you can use even multiple wildcards if you wish because w\*y n\*t.
 
 You can treat some language constructs as functions and disallow it in `disallowedFunctionCalls`. Currently detected language constructs are:
 - `die()`
