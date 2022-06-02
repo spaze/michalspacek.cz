@@ -1,4 +1,4 @@
-name: Checks composer.lock for known vulnz in package deps
+name: Dependency vulnz checker
 
 on:
   push:
