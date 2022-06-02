@@ -1,4 +1,4 @@
-name: Checks security.txt
+name: security.txt checks
 
 on:
   schedule:

@@ -1,4 +1,4 @@
-name: SSL/TLS Scans
+name: SSL/TLS scans
 
 on:
   schedule:
