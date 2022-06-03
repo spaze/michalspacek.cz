@@ -29,6 +29,18 @@ jobs:
     - name: Validate composer.json and composer.lock
       run: composer --working-dir=site validate
 
+  check-file-patterns:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - run: composer --working-dir=site check-file-patterns
+
+
   lint:
     runs-on: ubuntu-latest
     strategy:
@@ -39,6 +51,17 @@ jobs:
     - uses: actions/checkout@v2
     - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
     - run: composer --working-dir=site lint
+
+  lint-latte:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+    steps:
+    - uses: actions/checkout@v2
+    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - run: composer --working-dir=site lint-latte
 
   lint-neon:
     runs-on: ubuntu-latest

@@ -1,2 +1,3 @@
 includes:
 	- extra-michalspacek.cz.neon
+	- common-cli.neon
