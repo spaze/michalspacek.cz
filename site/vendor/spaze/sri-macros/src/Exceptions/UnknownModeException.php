@@ -3,11 +3,8 @@ declare(strict_types = 1);
 
 namespace Spaze\SubresourceIntegrity\Exceptions;
 
-/**
- * UnknownModeException.
- *
- * @author Michal Špaček
- */
-class UnknownModeException extends \RuntimeException
+use RuntimeException;
+
+class UnknownModeException extends RuntimeException
 {
 }

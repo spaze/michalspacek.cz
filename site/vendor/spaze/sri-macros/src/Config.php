@@ -4,60 +4,44 @@ declare(strict_types = 1);
 namespace Spaze\SubresourceIntegrity;
 
 use Spaze\SubresourceIntegrity\Exceptions;
+use Spaze\SubresourceIntegrity\Exceptions\ShouldNotHappenException;
 use Spaze\SubresourceIntegrity\Resource\FileResource;
-use Spaze\SubresourceIntegrity\Resource\ResourceInterface;
 use Spaze\SubresourceIntegrity\Resource\StringResource;
+use stdClass;
 
-/**
- * SubresourceIntegrity\Config service.
- *
- * @author Michal Špaček
- */
 class Config
 {
-
-	/** @internal direct access to local files */
-	public const MODE_DIRECT = 'direct';
-
-	/** @internal build local files, new file for every new resource version */
-	public const MODE_BUILD = 'build';
 
 	/** @internal separator between multiple resources */
 	private const BUILD_SEPARATOR = '+';
 
-	/** @var FileBuilder */
-	private $fileBuilder;
-
-	/** @var array<string, string|array{url: string, hash: string|array<integer, string>}> */
-	protected $resources = [];
+	/** @var array<string, string|array{url: string, hash: string|array<int, string>}> */
+	private array $resources = [];
 
 	/** @var array{url: string, path: string, build: string} */
-	protected $localPrefix = array(
+	private array $localPrefix = [
 		'url' => '',
 		'path' => '',
 		'build' => '',
-	);
+	];
 
-	/** @var string */
-	protected $localMode = self::MODE_DIRECT;
+	private LocalMode $localMode = LocalMode::Direct;
 
-	/** @var array<integer, string> */
-	protected $hashingAlgos = [];
+	/** @var array<int, string> */
+	private array $hashingAlgos = [];
 
-	/** @var array<string, array<string, \stdClass>> */
-	protected $localResources = [];
+	/** @var array<string, array<string, stdClass>> */
+	private array $localResources = [];
 
 
-	public function __construct(FileBuilder $fileBuilder)
-	{
-		$this->fileBuilder = $fileBuilder;
+	public function __construct(
+		private FileBuilder $fileBuilder,
+	) {
 	}
 
 
 	/**
-	 * Set resources.
-	 *
-	 * @param array<string, string|array{url: string, hash: string|array<integer, string>}> $resources
+	 * @param array<string, string|array{url: string, hash: string|array<int, string>}> $resources
 	 */
 	public function setResources(array $resources): void
 	{
@@ -65,12 +49,7 @@ class Config
 	}
 
 
-	/**
-	 * Set prefix for local resources.
-	 *
-	 * @param \stdClass $prefix
-	 */
-	public function setLocalPrefix(\stdClass $prefix): void
+	public function setLocalPrefix(stdClass $prefix): void
 	{
 		foreach (array_keys($this->localPrefix) as $key) {
 			if (isset($prefix->$key)) {
@@ -80,14 +59,9 @@ class Config
 	}
 
 
-	/**
-	 * Set local mode.
-	 *
-	 * @param string $mode
-	 */
-	public function setLocalMode(string $mode): void
+	public function setLocalMode(LocalMode|string $localMode): void
 	{
-		$this->localMode = $mode;
+		$this->localMode = is_string($localMode) ? LocalMode::from($localMode) : $localMode;
 	}
 
 
@@ -103,23 +77,20 @@ class Config
 
 
 	/**
-	 * Get full URL for a resource.
-	 *
-	 * @param string $resource
-	 * @return string
+	 * @throws ShouldNotHappenException
 	 */
 	public function getUrl(string $resource, ?string $extension = null): string
 	{
 		if ($this->isRemote($resource)) {
 			if (!is_array($this->resources[$resource])) {
-				throw new Exceptions\ShouldNotHappenException();
+				throw new ShouldNotHappenException();
 			}
 			$url = $this->resources[$resource]['url'];
 		} else {
 			$url = sprintf(
 				'%s/%s',
 				rtrim($this->localPrefix['url'], '/'),
-				$this->localFile($resource, $extension)->url
+				$this->localFile($resource, $extension)->url,
 			);
 		}
 		return $url;
@@ -127,10 +98,7 @@ class Config
 
 
 	/**
-	 * Get SRI hash for a resource.
-	 *
-	 * @param string $resource
-	 * @return string
+	 * @throws ShouldNotHappenException
 	 */
 	public function getHash(string $resource, ?string $extension = null): string
 	{
@@ -144,7 +112,7 @@ class Config
 				$hash = $this->resources[$resource]['hash'];
 			}
 		} else {
-			$fileHashes = array();
+			$fileHashes = [];
 			foreach ($this->hashingAlgos as $algo) {
 				if (!in_array($algo, ['sha256', 'sha384', 'sha512'])) {
 					throw new Exceptions\UnsupportedHashAlgorithmException();
@@ -173,20 +141,17 @@ class Config
 
 
 	/**
-	 * Get local file data.
-	 *
-	 * @param string $resource
-	 * @return \stdClass
+	 * @throws ShouldNotHappenException
 	 */
-	private function localFile(string $resource, ?string $extension = null): \stdClass
+	private function localFile(string $resource, ?string $extension = null): stdClass
 	{
-		if (empty($this->localResources[$this->localMode][$resource])) {
+		if (empty($this->localResources[$this->localMode->value][$resource])) {
 			switch ($this->localMode) {
-				case self::MODE_DIRECT:
+				case LocalMode::Direct:
 					if ($this->isCombo($resource)) {
 						throw new Exceptions\InvalidResourceAliasException();
 					}
-					$data = new \stdClass();
+					$data = new stdClass();
 					$data->url = $this->getFilePath($resource);
 					$cwd = getcwd();
 					if (!$cwd) {
@@ -194,7 +159,7 @@ class Config
 					}
 					$data->filename = sprintf('%s/%s/%s', rtrim($cwd, '/'), trim($this->localPrefix['path'], '/'), $data->url);
 					break;
-				case self::MODE_BUILD:
+				case LocalMode::Build:
 					$resources = [];
 					foreach (explode(self::BUILD_SEPARATOR, $resource) as $value) {
 						if (preg_match('/^[\'"](.*)[\'"]$/', $value, $matches)) {
@@ -206,11 +171,11 @@ class Config
 					$data = $this->fileBuilder->build($resources, $this->localPrefix['path'], $this->localPrefix['build'], $extension);
 					break;
 				default:
-					throw new Exceptions\UnknownModeException('Unknown local file mode: ' . $this->localMode);
+					throw new Exceptions\UnknownModeException('Unknown local file mode: ' . $this->localMode->value);
 			}
-			$this->localResources[$this->localMode][$resource] = $data;
+			$this->localResources[$this->localMode->value][$resource] = $data;
 		}
-		return $this->localResources[$this->localMode][$resource];
+		return $this->localResources[$this->localMode->value][$resource];
 	}
 
 
@@ -218,7 +183,7 @@ class Config
 	 * Whether the resource is a combination one (e.g. foo+bar).
 	 *
 	 * @param string $resource
-	 * @return boolean
+	 * @return bool
 	 */
 	private function isCombo(string $resource): bool
 	{
@@ -226,6 +191,9 @@ class Config
 	}
 
 
+	/**
+	 * @throws ShouldNotHappenException
+	 */
 	private function getFilePath(string $resource): string
 	{
 		if (is_array($this->resources[$resource])) {

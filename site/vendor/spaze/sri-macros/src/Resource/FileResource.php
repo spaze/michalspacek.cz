@@ -3,26 +3,25 @@ declare(strict_types = 1);
 
 namespace Spaze\SubresourceIntegrity\Resource;
 
-use Spaze\SubresourceIntegrity\Exceptions;
+use Spaze\SubresourceIntegrity\Exceptions\CannotGetFileContentException;
 
 class FileResource implements ResourceInterface
 {
 
-	/** @var string */
-	private $filename;
-
-
-	public function __construct(string $filename)
-	{
-		$this->filename = $filename;
+	public function __construct(
+		private string $filename,
+	) {
 	}
 
 
+	/**
+	 * @throws CannotGetFileContentException
+	 */
 	public function getContent(): string
 	{
 		$content = file_get_contents($this->filename);
 		if (!$content) {
-			throw new Exceptions\CannotGetFileContentException();
+			throw new CannotGetFileContentException($this->filename);
 		}
 		return $content;
 	}
