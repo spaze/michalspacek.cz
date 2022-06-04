@@ -10,7 +10,7 @@
 		}
 	],
 	"require": {
-		"php": "^7.1 || ^8.0",
+		"php": "^8.1",
 		"latte/latte": "^2.8",
 		"nette/di": "^3.0",
 		"spaze/coding-standard": "^0.0"
@@ -21,9 +21,9 @@
 	"require-dev": {
 		"nette/application": "^3.0",
 		"nette/tester": "^2.0",
-		"phpstan/phpstan": "^0.12",
+		"phpstan/phpstan": "^1.7",
 		"php-parallel-lint/php-parallel-lint": "^1.2",
-		"php-parallel-lint/php-console-highlighter": "^0.5.0"
+		"php-parallel-lint/php-console-highlighter": "^1.0"
 	},
 	"suggest": {
 		"spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
@@ -32,20 +32,19 @@
 	"scripts": {
 		"lint": "vendor/bin/parallel-lint --colors src/ tests/",
 		"phpcs": "vendor/bin/phpcs src/ tests/",
+		"cs-fix": "vendor/bin/phpcbf src/ tests/",
 		"phpstan": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon src/",
 		"tester": "vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage coverage.html --coverage-src src/ tests/",
-		"tester-prod": "vendor/nette/tester/src/tester -p php -C --colors 1 tests/",
 		"test": [
 			"@lint",
 			"@phpcs",
 			"@phpstan",
 			"@tester"
-		],
-		"test-prod": [
-			"@lint",
-			"@phpcs",
-			"@phpstan",
-			"@tester-prod"
 		]
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	}
 }

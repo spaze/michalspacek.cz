@@ -3,22 +3,25 @@ declare(strict_types = 1);
 
 namespace Spaze\SubresourceIntegrity\Bridges\Nette;
 
+use Nette\Bridges\ApplicationLatte\LatteFactory;
+use Nette\DI\CompilerExtension;
+use Nette\DI\Definitions\FactoryDefinition;
 use Nette\Schema\Expect;
+use Nette\Schema\Schema;
+use Spaze\SubresourceIntegrity\Bridges\Latte\Macros;
 use Spaze\SubresourceIntegrity\Config;
+use Spaze\SubresourceIntegrity\FileBuilder;
+use Spaze\SubresourceIntegrity\LocalMode;
+use stdClass;
 
-/**
- * SubresourceIntegrity\Config extension.
- *
- * @author Michal Špaček
- */
-class Extension extends \Nette\DI\CompilerExtension
+class Extension extends CompilerExtension
 {
 
-	/** @var \stdClass */
+	/** @var stdClass */
 	protected $config;
 
 
-	public function getConfigSchema(): \Nette\Schema\Schema
+	public function getConfigSchema(): Schema
 	{
 		return Expect::structure([
 			'resources' => Expect::anyOf(
@@ -27,16 +30,16 @@ class Extension extends \Nette\DI\CompilerExtension
 					'url' => Expect::string(),
 					'hash' => Expect::anyOf(
 						Expect::string(),
-						Expect::listOf(Expect::string())
-					)
-				])
+						Expect::listOf(Expect::string()),
+					),
+				]),
 			)->required(),
 			'localPrefix' => Expect::structure([
 				'url' => Expect::string(),
 				'path' => Expect::string(),
 				'build' => Expect::string(),
 			])->required(),
-			'localMode' => Expect::anyOf(Config::MODE_DIRECT, Config::MODE_BUILD)->default(Config::MODE_DIRECT),
+			'localMode' => Expect::anyOf(...LocalMode::allModes())->default(LocalMode::Direct->value),
 			'hashingAlgos' => Expect::listOf(Expect::string()),
 		]);
 	}
@@ -46,28 +49,28 @@ class Extension extends \Nette\DI\CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 
-		$sriConfig = $builder->addDefinition($this->prefix('config'))
-			->setClass(Config::class)
+		$builder->addDefinition($this->prefix('config'))
+			->setType(Config::class)
 			->addSetup('setResources', [$this->config->resources])
 			->addSetup('setLocalPrefix', [$this->config->localPrefix])
 			->addSetup('setLocalMode', [$this->config->localMode])
 			->addSetup('setHashingAlgos', [$this->config->hashingAlgos]);
 
-		$macros = $builder->addDefinition($this->prefix('macros'))
-			->setClass(\Spaze\SubresourceIntegrity\Bridges\Latte\Macros::class);
+		$builder->addDefinition($this->prefix('macros'))
+			->setType(Macros::class);
 
-		$macros = $builder->addDefinition($this->prefix('fileBuilder'))
-			->setClass(\Spaze\SubresourceIntegrity\FileBuilder::class);
+		$builder->addDefinition($this->prefix('fileBuilder'))
+			->setType(FileBuilder::class);
 	}
 
 
 	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
-		$latteFactoryService = $builder->getByType(\Nette\Bridges\ApplicationLatte\ILatteFactory::class) ?: 'nette.latteFactory';
-		/** @var \Nette\DI\Definitions\FactoryDefinition $service */
+		$latteFactoryService = $builder->getByType(LatteFactory::class) ?: 'nette.latteFactory';
+		/** @var FactoryDefinition $service */
 		$service = $builder->getDefinition($latteFactoryService);
-		$service->getResultDefinition()->addSetup('?->onCompile[] = function (Latte\Engine $engine): void { $this->getByType(?)->install($engine->getCompiler()); }', ['@self', \Spaze\SubresourceIntegrity\Bridges\Latte\Macros::class]);
+		$service->getResultDefinition()->addSetup('?->onCompile[] = function (Latte\Engine $engine): void { $this->getByType(?)->install($engine->getCompiler()); }', ['@self', Macros::class]);
 	}
 
 }

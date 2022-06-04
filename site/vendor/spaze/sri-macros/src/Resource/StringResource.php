@@ -6,13 +6,9 @@ namespace Spaze\SubresourceIntegrity\Resource;
 class StringResource implements ResourceInterface
 {
 
-	/** @var string */
-	private $string;
-
-
-	public function __construct(string $string)
-	{
-		$this->string = $string;
+	public function __construct(
+		private string $string,
+	) {
 	}
 
 
