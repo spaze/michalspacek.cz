@@ -9,22 +9,19 @@ use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
 use MichalSpacekCz\Form\TrainingControlsFactory;
-use MichalSpacekCz\Form\TrainingDate;
+use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingReview;
 use MichalSpacekCz\Form\TrainingStatuses;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
-use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings;
-use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -59,7 +56,6 @@ class TrainingsPresenter extends BasePresenter
 		private readonly Dates $trainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly Trainings $trainings,
-		private readonly Venues $trainingVenues,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly Reviews $trainingReviews,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
@@ -67,7 +63,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
 		private readonly TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
-		private readonly TrainingDatesFormValidator $trainingDatesFormValidator,
+		private readonly TrainingDateFormFactory $trainingDateFormFactory,
 	) {
 		parent::__construct();
 	}
@@ -460,95 +456,25 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentDate(string $formName): TrainingDate
+	protected function createComponentDate(): Form
 	{
-		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingDatesFormValidator, $this->trainingVenues, $this->trainingControlsFactory);
-		$form->setTrainingDate($this->training);
-		$form->onValidate[] = [$this, 'validatePrice'];
-		$form->onSuccess[] = [$this, 'submittedDate'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function validatePrice(Form $form, ArrayHash $values): void
-	{
-		$training = $this->trainings->getById($values->training);
-		if ($values->price === '' && $training->price === null) {
-			/** @var TextInput $component */
-			$component = $form->getComponent('price');
-			$component->addError('Běžná cena není nastavena, je třeba nastavit cenu zde');
-		}
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedDate(Form $form, ArrayHash $values): void
-	{
-		$this->trainingDates->update(
-			$this->dateId,
-			$values->training,
-			$values->venue,
-			$values->remote,
-			$values->start,
-			$values->end,
-			$values->label,
-			$values->status,
-			$values->public,
-			$values->cooperation,
-			$values->note,
-			$values->price === '' ? null : (int)$values->price,
-			$values->studentDiscount === '' ? null : (int)$values->studentDiscount,
-			$values->remoteUrl,
-			$values->remoteNotes,
-			$values->videoHref,
-			$values->feedbackHref,
+		return $this->trainingDateFormFactory->create(
+			function (): void {
+				$this->flashMessage('Termín upraven');
+				$this->redirect($this->getAction(), $this->redirectParam);
+			},
+			$this->training,
 		);
-		$this->flashMessage('Termín upraven');
-		$this->redirect($this->getAction(), $this->redirectParam);
 	}
 
 
-	protected function createComponentAddDate(string $formName): TrainingDate
+	protected function createComponentAddDate(): Form
 	{
-		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingDatesFormValidator, $this->trainingVenues, $this->trainingControlsFactory);
-		$form->onValidate[] = [$this, 'validatePrice'];
-		$form->onSuccess[] = [$this, 'submittedAddDate'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedAddDate(Form $form, ArrayHash $values): void
-	{
-		$this->trainingDates->add(
-			$values->training,
-			$values->venue,
-			$values->remote,
-			$values->start,
-			$values->end,
-			$values->label,
-			$values->status,
-			$values->public,
-			$values->cooperation,
-			$values->note,
-			$values->price === '' ? null : (int)$values->price,
-			$values->studentDiscount === '' ? null : (int)$values->studentDiscount,
-			$values->remoteUrl,
-			$values->remoteNotes,
-			$values->videoHref,
-			$values->feedbackHref,
+		return $this->trainingDateFormFactory->create(
+			function (): void {
+				$this->redirect('Trainings:');
+			},
 		);
-		$this->redirect('Trainings:');
 	}
 
 

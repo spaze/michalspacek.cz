@@ -21,6 +21,7 @@ services:
 	- MichalSpacekCz\Form\TrainingApplicationFactory
 	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory
 	- MichalSpacekCz\Form\TrainingControlsFactory
+	- MichalSpacekCz\Form\TrainingDateFormFactory
 	- MichalSpacekCz\Form\TrainingFileFormFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
