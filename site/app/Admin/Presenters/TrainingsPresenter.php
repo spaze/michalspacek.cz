@@ -456,7 +456,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentDate(): Form
+	protected function createComponentEditDate(): Form
 	{
 		return $this->trainingDateFormFactory->create(
 			function (): void {
