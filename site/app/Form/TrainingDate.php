@@ -4,8 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
+use Nette\Application\UI\Form;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
 
@@ -29,6 +31,7 @@ class TrainingDate extends ProtectedForm
 		string $name,
 		Trainings $trainings,
 		Dates $trainingDates,
+		private readonly TrainingDatesFormValidator $trainingDatesFormValidator,
 		Venues $trainingVenues,
 		TrainingControlsFactory $trainingControlsFactory,
 	) {
@@ -74,6 +77,10 @@ class TrainingDate extends ProtectedForm
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím konec')
 			->addRule(self::PATTERN, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
+
+		$this->onValidate[] = function (Form $form): void {
+			$this->trainingDatesFormValidator->validateFormStartEnd($form->getComponent('start'), $form->getComponent('end'));
+		};
 
 		$this->addText('label', 'Label:');
 

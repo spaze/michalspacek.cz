@@ -15,6 +15,7 @@ use MichalSpacekCz\Form\TrainingReview;
 use MichalSpacekCz\Form\TrainingStatuses;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Statuses;
@@ -66,6 +67,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
 		private readonly TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
+		private readonly TrainingDatesFormValidator $trainingDatesFormValidator,
 	) {
 		parent::__construct();
 	}
@@ -460,7 +462,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentDate(string $formName): TrainingDate
 	{
-		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues, $this->trainingControlsFactory);
+		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingDatesFormValidator, $this->trainingVenues, $this->trainingControlsFactory);
 		$form->setTrainingDate($this->training);
 		$form->onValidate[] = [$this, 'validatePrice'];
 		$form->onSuccess[] = [$this, 'submittedDate'];
@@ -515,7 +517,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentAddDate(string $formName): TrainingDate
 	{
-		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingVenues, $this->trainingControlsFactory);
+		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingDatesFormValidator, $this->trainingVenues, $this->trainingControlsFactory);
 		$form->onValidate[] = [$this, 'validatePrice'];
 		$form->onSuccess[] = [$this, 'submittedAddDate'];
 		return $form;

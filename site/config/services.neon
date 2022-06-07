@@ -54,6 +54,7 @@ services:
 	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\CompanyTrainings
 	- MichalSpacekCz\Training\Dates
+	- MichalSpacekCz\Training\Dates\TrainingDatesFormValidator
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
 	- MichalSpacekCz\Training\Files\TrainingFiles
 	- MichalSpacekCz\Training\Files\TrainingFilesStorage('../../files/trainings')

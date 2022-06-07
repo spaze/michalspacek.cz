@@ -101,8 +101,8 @@
 	<tr><th>{label remoteUrl /}</th><td>{input remoteUrl}</td></tr>
 	<tr><th class="align-top">{label remoteNotes /}</th><td>{input remoteNotes, class => wide}</td></tr>
 	<tr><th>{label venue /}</th><td>{input venue}</td></tr>
-	<tr><th>{label start /}</th><td>{input start}</td></tr>
-	<tr><th>{label end /}</th><td>{input end}</td></tr>
+	<tr><th>{label start /}</th><td>{input start} <span n:ifcontent class="error">{inputError start}</span></td></tr>
+	<tr><th>{label end /}</th><td>{input end} <span n:ifcontent class="error">{inputError end}</span></td></tr>
 	<tr><th>{label label /}</th><td>{input label}<br><small><code>{"cs_CZ": "&hellip;", "en_US": "&hellip;"}</code></small></td></tr>
 	<tr><th>{label status /}</th><td>{input status}</td></tr>
 	<tr><th>{label public: /}</th><td>{input public:}</td></tr>
