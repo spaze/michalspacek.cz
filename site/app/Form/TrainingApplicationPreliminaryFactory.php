@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\FormSpam;

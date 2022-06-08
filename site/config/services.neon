@@ -14,6 +14,7 @@ services:
 	- MichalSpacekCz\EasterEgg\WinterIsComing
 	- MichalSpacekCz\Feed\Exports
 	- MichalSpacekCz\Form\Controls\FormControlsFactory
+	- MichalSpacekCz\Form\Controls\TrainingControlsFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\PostFormFactory
@@ -23,7 +24,6 @@ services:
 	- MichalSpacekCz\Form\TrainingApplicationAdminFactory
 	- MichalSpacekCz\Form\TrainingApplicationFactory
 	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory
-	- MichalSpacekCz\Form\TrainingControlsFactory
 	- MichalSpacekCz\Form\TrainingDateFormFactory
 	- MichalSpacekCz\Form\TrainingFileFormFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFactory

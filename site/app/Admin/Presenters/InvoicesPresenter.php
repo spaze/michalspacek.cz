@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
-use MichalSpacekCz\Form\TrainingControlsFactory;
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\TrainingInvoice;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;

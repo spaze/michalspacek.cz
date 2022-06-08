@@ -5,10 +5,10 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
-use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingReview;

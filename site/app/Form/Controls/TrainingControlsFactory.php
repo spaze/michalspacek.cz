@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Form;
+namespace MichalSpacekCz\Form\Controls;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\EasterEgg\WinterIsComing;

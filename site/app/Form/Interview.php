@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
 use Nette\Forms\Controls\TextInput;

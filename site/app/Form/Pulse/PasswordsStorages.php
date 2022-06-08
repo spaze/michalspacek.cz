@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Pulse;
 
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\ProtectedForm;
-use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Sites;

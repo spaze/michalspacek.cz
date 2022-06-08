@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Trainings;

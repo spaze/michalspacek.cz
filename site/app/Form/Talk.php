@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use Latte\Runtime\Filters;
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Talks\Talks;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;

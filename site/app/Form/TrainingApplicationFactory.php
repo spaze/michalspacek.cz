@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\HiddenFieldWithLabel;
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;

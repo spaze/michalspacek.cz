@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\Talk;
 use MichalSpacekCz\Form\TalkSlides;
-use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Templating\Embed;
