@@ -12,6 +12,10 @@ use Nette\Forms\Form;
 class InvoicesPresenter extends BasePresenter
 {
 
+	/** @var array<int, string> */
+	private array $allUnpaidInvoiceIds = [];
+
+
 	public function __construct(
 		private readonly Applications $trainingApplications,
 		private readonly Dates $trainingDates,
@@ -25,7 +29,11 @@ class InvoicesPresenter extends BasePresenter
 	{
 		$dates = array();
 		foreach ($this->trainingDates->getWithUnpaid() as $date) {
-			$date->applications = $this->trainingApplications->getValidUnpaidByDate($date->dateId);
+			$unpaidApplications = $this->trainingApplications->getValidUnpaidByDate($date->dateId);
+			foreach ($unpaidApplications as $application) {
+				$this->allUnpaidInvoiceIds[] = $application->invoiceId;
+			}
+			$date->applications = $unpaidApplications;
 			$date->validCount = count($date->applications);
 			$date->canceledApplications = false;
 			$dates[$date->start->getTimestamp()] = $date;
@@ -49,6 +57,7 @@ class InvoicesPresenter extends BasePresenter
 				}
 				$this->redirect('this');
 			},
+			$this->allUnpaidInvoiceIds,
 		);
 	}
 

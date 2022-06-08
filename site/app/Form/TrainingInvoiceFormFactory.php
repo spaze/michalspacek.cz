@@ -21,13 +21,15 @@ class TrainingInvoiceFormFactory
 
 	/**
 	 * @param callable(int): void $onSuccess
+	 * @param array<int, string> $unpaidInvoiceIds
 	 * @return Form
 	 */
-	public function create(callable $onSuccess): Form
+	public function create(callable $onSuccess, array $unpaidInvoiceIds): Form
 	{
 		$form = $this->factory->create();
 		$form->addText('invoice', 'Faktura:')
-			->setRequired('Zadejte prosím číslo faktury');
+			->setRequired('Zadejte prosím číslo faktury')
+			->addRule($form::IS_IN, 'Zadejte číslo některé z nezaplacených faktur', $unpaidInvoiceIds);
 		$this->trainingControlsFactory->addPaidDate($form, 'paid', 'Zaplaceno:', true);
 		$form->addSubmit('submit', 'Zaplaceno');
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess): void {
