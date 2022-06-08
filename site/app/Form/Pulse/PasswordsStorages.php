@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form\Pulse;
 
-use MichalSpacekCz\Form\Controls\Date;
 use MichalSpacekCz\Form\ProtectedForm;
+use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Sites;
@@ -15,10 +15,7 @@ use Nette\Forms\Controls\TextInput;
 class PasswordsStorages extends ProtectedForm
 {
 
-	use Date;
-
-
-	public function __construct(IContainer $parent, string $name, int $newDisclosures, Companies $companies, Sites $sites, Passwords $passwords)
+	public function __construct(IContainer $parent, string $name, int $newDisclosures, Companies $companies, Sites $sites, Passwords $passwords, private readonly TrainingControlsFactory $trainingControlsFactory)
 	{
 		parent::__construct($parent, $name);
 
@@ -143,7 +140,7 @@ class PasswordsStorages extends ProtectedForm
 
 	private function addFromDate(Container $container, string $name, ?string $label = null, ?bool $required = false): TextInput
 	{
-		return $this->addDate(
+		return $this->trainingControlsFactory->addDate(
 			$container,
 			$name,
 			$label,
@@ -156,7 +153,7 @@ class PasswordsStorages extends ProtectedForm
 
 	private function addPublishedDate(Container $container, string $name, ?string $label = null, ?bool $required = false): TextInput
 	{
-		return $this->addDate(
+		return $this->trainingControlsFactory->addDate(
 			$container,
 			$name,
 			$label,

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\Interview;
+use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Interviews;
 use Nette\Application\BadRequestException;
@@ -21,6 +22,7 @@ class InterviewsPresenter extends BasePresenter
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Interviews $interviews,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
 	) {
 		parent::__construct();
 	}
@@ -47,7 +49,7 @@ class InterviewsPresenter extends BasePresenter
 
 	protected function createComponentEditInterview(string $formName): Interview
 	{
-		$form = new Interview($this, $formName);
+		$form = new Interview($this, $formName, $this->trainingControlsFactory);
 		$form->setInterview($this->interview);
 		$form->onSuccess[] = [$this, 'submittedEditInterview'];
 		return $form;
@@ -81,7 +83,7 @@ class InterviewsPresenter extends BasePresenter
 
 	protected function createComponentAddInterview(string $formName): Interview
 	{
-		$form = new Interview($this, $formName);
+		$form = new Interview($this, $formName, $this->trainingControlsFactory);
 		$form->onSuccess[] = [$this, 'submittedAddInterview'];
 		return $form;
 	}

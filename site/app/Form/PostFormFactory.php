@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use DateTime;
-use MichalSpacekCz\Form\Controls\Date;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Data;
 use MichalSpacekCz\Post\Post;
@@ -20,15 +19,13 @@ use stdClass;
 class PostFormFactory
 {
 
-	use Date;
-
-
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly Post $blogPost,
 		private readonly Tags $tags,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly CspConfig $contentSecurityPolicy,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
 	) {
 	}
 
@@ -161,7 +158,7 @@ class PostFormFactory
 
 	private function addPublishedDate(Form $form, string $name, string $label, bool $required = false): TextInput
 	{
-		return $this->addDate(
+		return $this->trainingControlsFactory->addDate(
 			$form,
 			$name,
 			$label,

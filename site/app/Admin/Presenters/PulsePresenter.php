@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\Pulse\PasswordsStorages;
+use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Sites;
@@ -17,6 +18,7 @@ class PulsePresenter extends BasePresenter
 		private readonly Companies $companies,
 		private readonly Sites $sites,
 		private readonly Passwords $passwords,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
 	) {
 		parent::__construct();
 	}
@@ -38,6 +40,7 @@ class PulsePresenter extends BasePresenter
 			$this->companies,
 			$this->sites,
 			$this->passwords,
+			$this->trainingControlsFactory,
 		);
 		$form->onValidate[] = [$this, 'validatePasswordsStorages'];
 		$form->onSuccess[] = [$this, 'submittedPasswordsStorages'];

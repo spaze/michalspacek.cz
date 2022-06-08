@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use Latte\Runtime\Filters;
-use MichalSpacekCz\Form\Controls\Date;
 use MichalSpacekCz\Talks\Talks;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
@@ -12,9 +11,6 @@ use Nette\Forms\Controls\TextInput;
 
 class Talk extends ProtectedForm
 {
-
-	use Date;
-
 
 	private Talks $talks;
 
@@ -24,6 +20,7 @@ class Talk extends ProtectedForm
 		string $name,
 		?string $talkAction,
 		Talks $talks,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
 	) {
 		parent::__construct($parent, $name);
 		$this->talks = $talks;
@@ -127,7 +124,7 @@ class Talk extends ProtectedForm
 
 	protected function addTalkDate(string $name, string $label, bool $required = false): TextInput
 	{
-		return $this->addDate(
+		return $this->trainingControlsFactory->addDate(
 			$this,
 			$name,
 			$label,

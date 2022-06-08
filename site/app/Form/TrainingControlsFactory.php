@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\EasterEgg\WinterIsComing;
-use MichalSpacekCz\Form\Controls\Date;
 use MichalSpacekCz\Training\Applications;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
@@ -14,9 +13,6 @@ use Nette\Forms\Form;
 
 class TrainingControlsFactory
 {
-
-	use Date;
-
 
 	public function __construct(
 		private Applications $trainingApplications,
@@ -99,6 +95,16 @@ class TrainingControlsFactory
 
 		return $container->addSelect('source', 'Zdroj:', $sources)
 			->setRequired('Vyberte zdroj');
+	}
+
+
+	public function addDate(Container $container, string $name, string $label, bool $required, string $format, string $pattern): TextInput
+	{
+		return $container->addText($name, $label)
+			->setHtmlAttribute('placeholder', $format)
+			->setHtmlAttribute('title', "Formát {$format}")
+			->setRequired($required ? 'Zadejte datum' : false)
+			->addRule(Form::PATTERN, "Datum musí být ve formátu {$format}", $pattern);
 	}
 
 

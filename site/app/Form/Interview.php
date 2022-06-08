@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Form\Controls\Date;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Row;
 use Nette\Forms\Controls\TextInput;
@@ -11,10 +10,7 @@ use Nette\Forms\Controls\TextInput;
 class Interview extends ProtectedForm
 {
 
-	use Date;
-
-
-	public function __construct(IContainer $parent, string $name)
+	public function __construct(IContainer $parent, string $name, private readonly TrainingControlsFactory $trainingControlsFactory)
 	{
 		parent::__construct($parent, $name);
 
@@ -80,7 +76,7 @@ class Interview extends ProtectedForm
 
 	private function addInterviewDate(string $name, string $label, bool $required = false): TextInput
 	{
-		return $this->addDate(
+		return $this->trainingControlsFactory->addDate(
 			$this,
 			$name,
 			$label,

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\Talk;
 use MichalSpacekCz\Form\TalkSlides;
+use MichalSpacekCz\Form\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Templating\Embed;
@@ -37,6 +38,7 @@ class TalksPresenter extends BasePresenter
 		private readonly Talks $talks,
 		private readonly LinkGenerator $linkGenerator,
 		private readonly Embed $embed,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
 	) {
 		parent::__construct();
 	}
@@ -88,7 +90,7 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentEditTalk(string $formName): Talk
 	{
-		$form = new Talk($this, $formName, (string)$this->talk->action, $this->talks);
+		$form = new Talk($this, $formName, (string)$this->talk->action, $this->talks, $this->trainingControlsFactory);
 		$form->setTalk($this->talk);
 		$form->onSuccess[] = [$this, 'submittedEditTalk'];
 		return $form;
@@ -134,7 +136,7 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentAddTalk(string $formName): Talk
 	{
-		$form = new Talk($this, $formName, null, $this->talks);
+		$form = new Talk($this, $formName, null, $this->talks, $this->trainingControlsFactory);
 		$form->onSuccess[] = [$this, 'submittedAddTalk'];
 		return $form;
 	}
