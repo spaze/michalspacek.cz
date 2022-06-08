@@ -8,7 +8,7 @@ use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Application\UI\Form;
 
-class PasswordsStoragesSearchSortFactory
+class PasswordsStoragesSearchSortFormFactory
 {
 
 	private UnprotectedFormFactory $factory;

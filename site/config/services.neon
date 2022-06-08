@@ -18,15 +18,15 @@ services:
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\PostFormFactory
-	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory
+	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory
 	- MichalSpacekCz\Form\SignInFormFactory
 	- MichalSpacekCz\Form\SignInHoneypotFormFactory
-	- MichalSpacekCz\Form\TrainingApplicationAdminFactory
-	- MichalSpacekCz\Form\TrainingApplicationFactory
-	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory
+	- MichalSpacekCz\Form\TrainingApplicationAdminFormFactory
+	- MichalSpacekCz\Form\TrainingApplicationFormFactory
+	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory
 	- MichalSpacekCz\Form\TrainingDateFormFactory
 	- MichalSpacekCz\Form\TrainingFileFormFactory
-	- MichalSpacekCz\Form\TrainingMailsOutboxFactory
+	- MichalSpacekCz\Form\TrainingMailsOutboxFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)

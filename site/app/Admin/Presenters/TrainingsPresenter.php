@@ -7,7 +7,7 @@ use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
-use MichalSpacekCz\Form\TrainingApplicationAdminFactory;
+use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
 use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
@@ -61,7 +61,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
-		private readonly TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
+		private readonly TrainingApplicationAdminFormFactory $trainingApplicationAdminFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
 		private readonly TrainingDateFormFactory $trainingDateFormFactory,
 	) {

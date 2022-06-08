@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\CompanyInfo\Info;
-use MichalSpacekCz\Form\TrainingApplicationFactory;
-use MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory;
+use MichalSpacekCz\Form\TrainingApplicationFormFactory;
+use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
@@ -40,9 +40,9 @@ class TrainingsPresenter extends BasePresenter
 
 	private Reviews $trainingReviews;
 
-	private TrainingApplicationFactory $trainingApplicationFactory;
+	private TrainingApplicationFormFactory $trainingApplicationFactory;
 
-	private TrainingApplicationPreliminaryFactory $trainingApplicationPreliminaryFactory;
+	private TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory;
 
 	private Info $companyInfo;
 
@@ -64,8 +64,8 @@ class TrainingsPresenter extends BasePresenter
 		CompanyTrainings $companyTrainings,
 		Locales $trainingLocales,
 		Reviews $trainingReviews,
-		TrainingApplicationFactory $trainingApplicationFactory,
-		TrainingApplicationPreliminaryFactory $trainingApplicationPreliminaryFactory,
+		TrainingApplicationFormFactory $trainingApplicationFactory,
+		TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
 		Info $companyInfo,
 		IResponse $httpResponse,
 	) {

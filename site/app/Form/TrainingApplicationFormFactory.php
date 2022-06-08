@@ -23,7 +23,7 @@ use PDOException;
 use stdClass;
 use Tracy\Debugger;
 
-class TrainingApplicationFactory
+class TrainingApplicationFormFactory
 {
 
 	public function __construct(

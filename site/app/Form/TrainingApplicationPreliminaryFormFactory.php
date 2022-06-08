@@ -11,7 +11,7 @@ use Nette\Application\UI\Form;
 use stdClass;
 use Tracy\Debugger;
 
-class TrainingApplicationPreliminaryFactory
+class TrainingApplicationPreliminaryFormFactory
 {
 
 	private FormFactory $factory;

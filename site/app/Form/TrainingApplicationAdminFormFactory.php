@@ -12,7 +12,7 @@ use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use stdClass;
 
-class TrainingApplicationAdminFactory
+class TrainingApplicationAdminFormFactory
 {
 
 	private FormFactory $factory;

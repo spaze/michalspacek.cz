@@ -14,7 +14,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Row;
 use stdClass;
 
-class TrainingMailsOutboxFactory
+class TrainingMailsOutboxFormFactory
 {
 
 	private FormFactory $factory;

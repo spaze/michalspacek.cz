@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Form\TrainingMailsOutboxFactory;
+use MichalSpacekCz\Form\TrainingMailsOutboxFormFactory;
 use MichalSpacekCz\Training\Mails;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
@@ -13,13 +13,13 @@ class EmailsPresenter extends BasePresenter
 
 	private Mails $trainingMails;
 
-	private TrainingMailsOutboxFactory $trainingMailsOutboxFactory;
+	private TrainingMailsOutboxFormFactory $trainingMailsOutboxFactory;
 
 	/** @var Row[] */
 	private array $applications;
 
 
-	public function __construct(Mails $trainingMails, TrainingMailsOutboxFactory $trainingMailsOutboxFactory)
+	public function __construct(Mails $trainingMails, TrainingMailsOutboxFormFactory $trainingMailsOutboxFactory)
 	{
 		$this->trainingMails = $trainingMails;
 		$this->trainingMailsOutboxFactory = $trainingMailsOutboxFactory;
