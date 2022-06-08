@@ -23,24 +23,13 @@ class PostFormFactory
 	use Date;
 
 
-	private FormFactory $factory;
-
-	private Post $blogPost;
-
-	private Tags $tags;
-
-	private TexyFormatter $texyFormatter;
-
-	private CspConfig $contentSecurityPolicy;
-
-
-	public function __construct(FormFactory $factory, Post $blogPost, Tags $tags, TexyFormatter $texyFormatter, CspConfig $contentSecurityPolicy)
-	{
-		$this->factory = $factory;
-		$this->blogPost = $blogPost;
-		$this->tags = $tags;
-		$this->texyFormatter = $texyFormatter;
-		$this->contentSecurityPolicy = $contentSecurityPolicy;
+	public function __construct(
+		private readonly FormFactory $factory,
+		private readonly Post $blogPost,
+		private readonly Tags $tags,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly CspConfig $contentSecurityPolicy,
+	) {
 	}
 
 

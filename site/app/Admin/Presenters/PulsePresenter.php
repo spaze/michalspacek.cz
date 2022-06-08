@@ -13,18 +13,11 @@ use Nette\Utils\ArrayHash;
 class PulsePresenter extends BasePresenter
 {
 
-	private Companies $companies;
-
-	private Sites $sites;
-
-	private Passwords $passwords;
-
-
-	public function __construct(Companies $companies, Sites $sites, Passwords $passwords)
-	{
-		$this->companies = $companies;
-		$this->sites = $sites;
-		$this->passwords = $passwords;
+	public function __construct(
+		private readonly Companies $companies,
+		private readonly Sites $sites,
+		private readonly Passwords $passwords,
+	) {
 		parent::__construct();
 	}
 

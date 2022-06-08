@@ -21,31 +21,23 @@ use UnexpectedValueException;
 class TalksPresenter extends BasePresenter
 {
 
-	private TexyFormatter $texyFormatter;
-
-	private Talks $talks;
-
 	/** @var Row<mixed> */
 	private Row $talk;
 
 	/** @var Row[] */
 	private array $slides;
 
-	private Embed $embed;
-
-	private LinkGenerator $linkGenerator;
-
 	private int $newCount;
 
 	private int $maxSlideUploads;
 
 
-	public function __construct(TexyFormatter $texyFormatter, Talks $talks, LinkGenerator $linkGenerator, Embed $embed)
-	{
-		$this->texyFormatter = $texyFormatter;
-		$this->talks = $talks;
-		$this->linkGenerator = $linkGenerator;
-		$this->embed = $embed;
+	public function __construct(
+		private readonly TexyFormatter $texyFormatter,
+		private readonly Talks $talks,
+		private readonly LinkGenerator $linkGenerator,
+		private readonly Embed $embed,
+	) {
 		parent::__construct();
 	}
 
