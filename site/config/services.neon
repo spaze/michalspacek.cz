@@ -25,6 +25,7 @@ services:
 	- MichalSpacekCz\Form\TrainingFileFormFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
+	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Http\HttpStreamContext
