@@ -27,14 +27,14 @@ class TrainingApplicationFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
-		private Translator $translator,
-		private TrainingControlsFactory $trainingControlsFactory,
-		private Dates $trainingDates,
-		private FormDataLogger $formDataLogger,
-		private FormSpam $formSpam,
-		private Applications $trainingApplications,
-		private Mails $trainingMails,
+		private readonly FormFactory $factory,
+		private readonly Translator $translator,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly Dates $trainingDates,
+		private readonly FormDataLogger $formDataLogger,
+		private readonly FormSpam $formSpam,
+		private readonly Applications $trainingApplications,
+		private readonly Mails $trainingMails,
 	) {
 	}
 

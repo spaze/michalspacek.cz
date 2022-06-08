@@ -14,18 +14,12 @@ use Tracy\Debugger;
 class TrainingApplicationPreliminaryFormFactory
 {
 
-	private FormFactory $factory;
-	private TrainingControlsFactory $trainingControlsFactory;
-	private Applications $trainingApplications;
-	private FormSpam $formSpam;
-
-
-	public function __construct(FormFactory $factory, TrainingControlsFactory $trainingControlsFactory, Applications $trainingApplications, FormSpam $formSpam)
-	{
-		$this->factory = $factory;
-		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->trainingApplications = $trainingApplications;
-		$this->formSpam = $formSpam;
+	public function __construct(
+		private readonly FormFactory $factory,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly Applications $trainingApplications,
+		private readonly FormSpam $formSpam,
+	) {
 	}
 
 

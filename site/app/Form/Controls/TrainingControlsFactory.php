@@ -15,9 +15,9 @@ class TrainingControlsFactory
 {
 
 	public function __construct(
-		private Applications $trainingApplications,
-		private WinterIsComing $winterIsComing,
-		private Translator $translator,
+		private readonly Applications $trainingApplications,
+		private readonly WinterIsComing $winterIsComing,
+		private readonly Translator $translator,
 	) {
 	}
 

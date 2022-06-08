@@ -15,16 +15,6 @@ use stdClass;
 class TrainingApplicationAdminFormFactory
 {
 
-	private FormFactory $factory;
-
-	private Applications $trainingApplications;
-
-	private Dates $trainingDates;
-
-	private TrainingControlsFactory $trainingControlsFactory;
-
-	private Statuses $trainingStatuses;
-
 	/** @var string[] */
 	private array $deletableFields = [
 		'name',
@@ -41,17 +31,12 @@ class TrainingApplicationAdminFormFactory
 
 
 	public function __construct(
-		FormFactory $factory,
-		Applications $trainingApplications,
-		Dates $trainingDates,
-		TrainingControlsFactory $trainingControlsFactory,
-		Statuses $trainingStatuses,
+		private readonly FormFactory $factory,
+		private readonly Applications $trainingApplications,
+		private readonly Dates $trainingDates,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly Statuses $trainingStatuses,
 	) {
-		$this->factory = $factory;
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingDates = $trainingDates;
-		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->trainingStatuses = $trainingStatuses;
 	}
 
 

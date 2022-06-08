@@ -11,18 +11,11 @@ use Nette\Application\UI\Form;
 class PasswordsStoragesSearchSortFormFactory
 {
 
-	private UnprotectedFormFactory $factory;
-
-	private Rating $rating;
-
-	private PasswordsSorting $sorting;
-
-
-	public function __construct(UnprotectedFormFactory $factory, Rating $rating, PasswordsSorting $sorting)
-	{
-		$this->factory = $factory;
-		$this->rating = $rating;
-		$this->sorting = $sorting;
+	public function __construct(
+		private readonly UnprotectedFormFactory $factory,
+		private readonly Rating $rating,
+		private readonly PasswordsSorting $sorting,
+	) {
 	}
 
 

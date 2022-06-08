@@ -12,8 +12,8 @@ class TrainingFileFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
-		private TrainingFiles $trainingFiles,
+		private readonly FormFactory $factory,
+		private readonly TrainingFiles $trainingFiles,
 	) {
 	}
 
