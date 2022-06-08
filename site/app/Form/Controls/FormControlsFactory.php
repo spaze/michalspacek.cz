@@ -5,10 +5,10 @@ namespace MichalSpacekCz\Form\Controls;
 
 use Nette\Forms\Container;
 
-trait SignIn
+class FormControlsFactory
 {
 
-	protected function addSignIn(Container $container): void
+	public function addSignIn(Container $container): void
 	{
 		$container->addText('username', 'Uživatel:')
 			->setRequired('Zadejte prosím uživatele');

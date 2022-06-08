@@ -13,10 +13,13 @@ services:
 	- MichalSpacekCz\EasterEgg\NetteCve202015227
 	- MichalSpacekCz\EasterEgg\WinterIsComing
 	- MichalSpacekCz\Feed\Exports
+	- MichalSpacekCz\Form\Controls\FormControlsFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\PostFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory
+	- MichalSpacekCz\Form\SignInFormFactory
+	- MichalSpacekCz\Form\SignInHoneypotFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFactory
 	- MichalSpacekCz\Form\TrainingApplicationFactory
 	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory

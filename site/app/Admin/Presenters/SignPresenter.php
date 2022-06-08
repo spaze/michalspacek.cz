@@ -3,13 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Form\SignIn;
+use MichalSpacekCz\Form\SignInFormFactory;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Forms\Form;
-use Nette\Security\AuthenticationException;
-use Nette\Utils\ArrayHash;
-use Tracy\Debugger;
 
 class SignPresenter extends BasePresenter
 {
@@ -17,12 +14,11 @@ class SignPresenter extends BasePresenter
 	/** @persistent */
 	public string $backlink = '';
 
-	private Manager $authenticator;
 
-
-	public function __construct(Manager $authenticator)
-	{
-		$this->authenticator = $authenticator;
+	public function __construct(
+		private readonly Manager $authenticator,
+		private readonly SignInFormFactory $signInFormFactory,
+	) {
 		parent::__construct();
 	}
 
@@ -61,35 +57,14 @@ class SignPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSignIn(string $formName): SignIn
+	protected function createComponentSignIn(): Form
 	{
-		$form = new SignIn($this, $formName);
-		$form->onSuccess[] = [$this, 'submittedSignIn'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedSignIn(Form $form, ArrayHash $values): void
-	{
-		$this->user->setExpiration('30 minutes', true);
-		try {
-			$this->user->login($values->username, $values->password);
-			Debugger::log("Successful sign-in attempt ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
-			if ($values->remember) {
-				$this->authenticator->storePermanentLogin($this->user);
-			} else {
-				$this->authenticator->clearPermanentLogin($this->user);
-			}
-			$this->restoreRequest($this->backlink);
-			$this->redirect('Homepage:');
-		} catch (AuthenticationException $e) {
-			Debugger::log("Failed sign-in attempt: {$e->getMessage()} ({$values->username}, {$this->getHttpRequest()->getRemoteAddress()})", 'auth');
-			$form->addError('Špatné uživatelské jméno nebo heslo');
-		}
+		return $this->signInFormFactory->create(
+			function (): void {
+				$this->restoreRequest($this->backlink);
+				$this->redirect('Homepage:');
+			},
+		);
 	}
 
 
