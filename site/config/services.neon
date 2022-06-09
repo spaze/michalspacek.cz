@@ -30,6 +30,7 @@ services:
 	- MichalSpacekCz\Form\TrainingFileFormFactory
 	- MichalSpacekCz\Form\TrainingInvoiceFormFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFormFactory
+	- MichalSpacekCz\Form\TrainingReviewFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)

@@ -11,7 +11,7 @@ use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultiple;
 use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
-use MichalSpacekCz\Form\TrainingReview;
+use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\TrainingStatuses;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
@@ -64,6 +64,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingApplicationAdminFormFactory $trainingApplicationAdminFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
 		private readonly TrainingDateFormFactory $trainingDateFormFactory,
+		private readonly TrainingReviewFormFactory $trainingReviewFormFactory,
 	) {
 		parent::__construct();
 	}
@@ -333,87 +334,26 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditReview(string $formName): TrainingReview
+	protected function createComponentEditReview(): Form
 	{
-		$form = new TrainingReview($this, $formName);
-		$form->setReview($this->review);
-		$form->onSuccess[] = [$this, 'submittedEditReview'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedEditReview(Form $form, ArrayHash $values): void
-	{
-		$this->trainingReviews->updateReview(
-			$this->review->reviewId,
+		return $this->trainingReviewFormFactory->create(
+			function (int $dateId): void {
+				$this->redirect('date', $dateId);
+			},
 			$this->review->dateId,
-			$values->name,
-			$values->company,
-			$values->jobTitle ?: null,
-			$values->review,
-			$values->href ?: null,
-			$values->hidden,
-			$values->ranking ?: null,
-			$values->note ?: null,
+			$this->review,
 		);
-
-		$this->redirect('date', $this->review->dateId);
 	}
 
 
-	protected function createComponentAddReview(string $formName): TrainingReview
+	protected function createComponentAddReview(): Form
 	{
-		$reviewApplicationNames = [];
-		foreach ($this->trainingReviews->getReviewsByDateId($this->dateId) as $review) {
-			if ($review->name !== null) {
-				$reviewApplicationNames[] = $review->name;
-			}
-		}
-
-		$applications = [];
-		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
-			if (!$application->discarded) {
-				$option = Html::el('option');
-				if (in_array($application->name, $reviewApplicationNames)) {
-					$option = $option->setDisabled(true);
-				}
-				$option->setText(($application->name ?? 'smazáno') . ($application->company ? ", {$application->company}" : ''));
-				$option->addAttributes([
-					'data-name' => $application->name ?? '',
-					'data-company' => $application->company ?? '',
-				]);
-				$applications[$application->id] = $option;
-			}
-		}
-
-		$form = new TrainingReview($this, $formName, $applications);
-		$form->onSuccess[] = [$this, 'submittedAddReview'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedAddReview(Form $form, ArrayHash $values): void
-	{
-		$this->trainingReviews->addReview(
+		return $this->trainingReviewFormFactory->create(
+			function (int $dateId): void {
+				$this->redirect('date', $dateId);
+			},
 			$this->dateId,
-			$values->name,
-			$values->company,
-			$values->jobTitle ?: null,
-			$values->review,
-			$values->href ?: null,
-			$values->hidden,
-			$values->ranking ?: null,
-			$values->note ?: null,
 		);
-		$this->redirect('date', $this->dateId);
 	}
 
 
