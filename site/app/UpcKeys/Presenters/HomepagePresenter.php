@@ -133,7 +133,7 @@ class HomepagePresenter extends BasePresenter
 	protected function createComponentSsid(): Form
 	{
 		return $this->upcKeysSsidFormFactory->create(
-			function (string $ssid): void {
+			function (string $ssid): never {
 				$this->redirect('this', $ssid);
 			},
 			function (): void {

@@ -60,7 +60,7 @@ class SignPresenter extends BasePresenter
 	protected function createComponentSignIn(): Form
 	{
 		return $this->signInFormFactory->create(
-			function (): void {
+			function (): never {
 				$this->restoreRequest($this->backlink);
 				$this->redirect('Homepage:');
 			},

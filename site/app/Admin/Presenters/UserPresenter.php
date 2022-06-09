@@ -28,7 +28,7 @@ class UserPresenter extends BasePresenter
 	protected function createComponentChangePassword(): Form
 	{
 		return $this->changePasswordFormFactory->create(
-			function (): void {
+			function (): never {
 				$this->redirect('Homepage:');
 			},
 		);
@@ -44,7 +44,7 @@ class UserPresenter extends BasePresenter
 	protected function createComponentRegenerateTokens(): Form
 	{
 		return $this->regenerateTokensFormFactory->create(
-			function (Html|string $message): void {
+			function (Html|string $message): never {
 				$this->flashMessage($message);
 				$this->redirect('Homepage:');
 			},

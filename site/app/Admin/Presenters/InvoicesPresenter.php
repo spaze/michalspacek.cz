@@ -49,7 +49,7 @@ class InvoicesPresenter extends BasePresenter
 	protected function createComponentInvoice(): Form
 	{
 		return $this->trainingInvoiceFormFactory->create(
-			function (int $count): void {
+			function (int $count): never {
 				if ($count) {
 					$this->flashMessage('Počet zaplacených přihlášek: ' . $count);
 				} else {

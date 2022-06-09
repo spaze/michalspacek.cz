@@ -42,7 +42,7 @@ class EmailsPresenter extends BasePresenter
 	protected function createComponentMails(): Form
 	{
 		return $this->trainingMailsOutboxFactory->create(
-			function (int $sent): void {
+			function (int $sent): never {
 				if ($sent) {
 					$this->flashMessage('Počet odeslaných e-mailů: ' . $sent);
 				} else {

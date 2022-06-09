@@ -337,7 +337,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentEditReview(): Form
 	{
 		return $this->trainingReviewFormFactory->create(
-			function (int $dateId): void {
+			function (int $dateId): never {
 				$this->redirect('date', $dateId);
 			},
 			$this->review->dateId,
@@ -349,7 +349,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentAddReview(): Form
 	{
 		return $this->trainingReviewFormFactory->create(
-			function (int $dateId): void {
+			function (int $dateId): never {
 				$this->redirect('date', $dateId);
 			},
 			$this->dateId,
@@ -360,14 +360,14 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentApplicationForm(): Form
 	{
 		return $this->trainingApplicationAdminFactory->create(
-			function (?int $dateId): void {
+			function (?int $dateId): never {
 				if (isset($this->dateId) || isset($dateId)) {
 					$this->redirect('date', $dateId ?? $this->dateId);
 				} else {
 					$this->redirect('preliminary');
 				}
 			},
-			function (): void {
+			function (): never {
 				$this->redirect('this');
 			},
 			$this->application,
@@ -391,7 +391,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentEditDate(): Form
 	{
 		return $this->trainingDateFormFactory->create(
-			function (): void {
+			function (): never {
 				$this->flashMessage('Termín upraven');
 				$this->redirect($this->getAction(), $this->redirectParam);
 			},
@@ -403,7 +403,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentAddDate(): Form
 	{
 		return $this->trainingDateFormFactory->create(
-			function (): void {
+			function (): never {
 				$this->redirect('Trainings:');
 			},
 		);
@@ -412,7 +412,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentDeletePersonalDataForm(): Form
 	{
-		return $this->deletePersonalDataFormFactory->create(function (): void {
+		return $this->deletePersonalDataFormFactory->create(function (): never {
 			$this->flashMessage('Osobní data z minulých školení smazána');
 			$this->redirect('Homepage:');
 		});

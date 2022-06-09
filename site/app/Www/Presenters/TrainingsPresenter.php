@@ -189,7 +189,7 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentApplication(): Form
 	{
 		return $this->trainingApplicationFactory->create(
-			function (string $name): void {
+			function (string $name): never {
 				$this->redirect('success', $name);
 			},
 			function (string $message): void {
@@ -214,7 +214,7 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}");
 		}
 		return $this->trainingApplicationPreliminaryFactory->create(
-			function (string $action): void {
+			function (string $action): never {
 				$this->flashMessage($this->translator->translate('messages.trainings.submitted.preliminary'));
 				$this->redirect('training#' . $this->translator->translate('html.id.application'), $action);
 			},

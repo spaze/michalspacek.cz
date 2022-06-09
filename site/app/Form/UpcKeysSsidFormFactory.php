@@ -19,7 +19,7 @@ class UpcKeysSsidFormFactory
 
 	/**
 	 * @param callable(string): void $onSuccess
-	 * @param callable $onError
+	 * @param callable(): void $onError
 	 * @param string|null $ssid
 	 * @return Form
 	 */

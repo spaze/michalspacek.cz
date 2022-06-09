@@ -29,7 +29,7 @@ class TrainingMailsOutboxFormFactory
 
 
 	/**
-	 * @param callable $onSuccess
+	 * @param callable(int): void $onSuccess
 	 * @param Row[] $applications
 	 * @return Form
 	 */

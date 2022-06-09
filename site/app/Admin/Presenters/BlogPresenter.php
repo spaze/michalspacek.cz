@@ -67,7 +67,7 @@ class BlogPresenter extends BasePresenter
 
 	protected function createComponentAddPost(): Form
 	{
-		$form = $this->postFormFactory->create(function (Data $post): void {
+		$form = $this->postFormFactory->create(function (Data $post): never {
 			$this->blogPost->add($post);
 			$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
 			$this->redirect('Blog:');
@@ -96,7 +96,7 @@ class BlogPresenter extends BasePresenter
 
 	protected function createComponentEditPost(): Form
 	{
-		$form = $this->postFormFactory->create(function (Data $post): void {
+		$form = $this->postFormFactory->create(function (Data $post): never {
 			$post->postId = $this->post->postId;
 			$post->previousSlugTags = $this->post->slugTags;
 			$this->blogPost->update($post);
