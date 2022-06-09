@@ -19,6 +19,7 @@ services:
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
 	- MichalSpacekCz\Form\PostFormFactory
+	- MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory
 	- MichalSpacekCz\Form\RegenerateTokensFormFactory
 	- MichalSpacekCz\Form\SignInFormFactory
