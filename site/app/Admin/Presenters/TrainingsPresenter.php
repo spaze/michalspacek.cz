@@ -378,16 +378,8 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentFile(): Form
 	{
 		return $this->trainingFileFormFactory->create(
-			function (?string $uploadedFilename): void {
-				if ($uploadedFilename !== null) {
-					$this->flashMessage(
-						Html::el()->setText('Soubor ')
-							->addHtml(Html::el('code')->setText($uploadedFilename))
-							->addHtml(Html::el()->setText(' byl přidán')),
-					);
-				} else {
-					$this->flashMessage('Soubor nebyl vybrán nebo došlo k nějaké chybě při nahrávání', 'error');
-				}
+			function (Html|string $message, string $type): never {
+				$this->flashMessage($message, $type);
 				$this->redirect($this->getAction(), $this->redirectParam);
 			},
 			$this->training->start,

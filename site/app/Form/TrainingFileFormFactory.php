@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Form;
 use DateTimeInterface;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Application\UI\Form;
+use Nette\Utils\Html;
 use stdClass;
 
 class TrainingFileFormFactory
@@ -19,7 +20,7 @@ class TrainingFileFormFactory
 
 
 	/**
-	 * @param callable(?string): never $onSuccess
+	 * @param callable(Html|string, string): void $onSuccess
 	 * @param DateTimeInterface $trainingStart
 	 * @param array<int, int> $applicationIdsAllowedFiles
 	 * @return Form
@@ -32,10 +33,13 @@ class TrainingFileFormFactory
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
 			if ($values->file->isOk()) {
 				$filename = $this->trainingFiles->addFile($trainingStart, $values->file, $applicationIdsAllowedFiles);
+				$message = Html::el()->setText('Soubor ')
+					->addHtml(Html::el('code')->setText($filename))
+					->addHtml(Html::el()->setText(' byl přidán'));
+				$onSuccess($message, 'info');
 			} else {
-				$filename = null;
+				$onSuccess('Soubor nebyl vybrán nebo došlo k nějaké chybě při nahrávání', 'error');
 			}
-			$onSuccess($filename);
 		};
 		return $form;
 	}
