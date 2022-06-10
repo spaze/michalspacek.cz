@@ -185,7 +185,7 @@ class TexyFormatter
 		if (empty($text)) {
 			return null;
 		}
-		return $this->replace($this->cache("{$text}|" . __FUNCTION__, function () use ($text, $texy) {
+		return $this->replace($this->cache("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
 			return ($texy ?? $this->getTexy())->process($text);
 		}));
 	}
@@ -269,7 +269,7 @@ class TexyFormatter
 	 * Cache formatted string.
 	 *
 	 * @param string $text
-	 * @param callable $callback
+	 * @param callable(): string $callback
 	 * @return Html
 	 * @throws Throwable
 	 */

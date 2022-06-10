@@ -69,7 +69,7 @@ class UpcKeys
 	{
 		if ($this->prefixes === null) {
 			$this->prefixes = [];
-			$this->routerCall('getModelWithPrefixes', [], function ($prefixes) {
+			$this->routerCall('getModelWithPrefixes', [], function ($prefixes): void {
 				$this->prefixes = array_merge($this->prefixes, current($prefixes));
 			});
 		}
@@ -86,7 +86,7 @@ class UpcKeys
 	{
 		if ($this->modelsWithPrefixes === null) {
 			$this->modelsWithPrefixes = [];
-			$this->routerCall('getModelWithPrefixes', [], function ($prefixes) {
+			$this->routerCall('getModelWithPrefixes', [], function ($prefixes): void {
 				$this->modelsWithPrefixes = array_merge($this->modelsWithPrefixes, $prefixes);
 			});
 		}
