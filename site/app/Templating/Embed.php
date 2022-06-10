@@ -32,7 +32,7 @@ class Embed
 	/**
 	 * @param Row<mixed> $talk
 	 * @param int|null $slide
-	 * @return array<string, string|int|null> with keys slidesEmbed, slidesDataSlide, slidesEmbedType
+	 * @return array{slidesEmbed: string, slidesDataSlide: int|null, slidesEmbedType: string|null}
 	 */
 	public function getSlidesTemplateVars(Row $talk, ?int $slide = null): array
 	{
