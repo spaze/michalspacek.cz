@@ -5,14 +5,13 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
-use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
-use MichalSpacekCz\Form\TrainingApplicationMultiple;
+use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
 use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingReviewFormFactory;
-use MichalSpacekCz\Form\TrainingStatuses;
+use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Files\TrainingFiles;
@@ -21,9 +20,7 @@ use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 class TrainingsPresenter extends BasePresenter
@@ -58,13 +55,14 @@ class TrainingsPresenter extends BasePresenter
 		private readonly Trainings $trainings,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly Reviews $trainingReviews,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
 		private readonly TrainingApplicationAdminFormFactory $trainingApplicationAdminFactory,
+		private readonly TrainingApplicationMultipleFormFactory $trainingApplicationMultipleFormFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
 		private readonly TrainingDateFormFactory $trainingDateFormFactory,
 		private readonly TrainingReviewFormFactory $trainingReviewFormFactory,
+		private readonly TrainingStatusesFormFactory $trainingStatusesFormFactory,
 	) {
 		parent::__construct();
 	}
@@ -241,96 +239,32 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentStatuses(string $formName): TrainingStatuses
+	protected function createComponentStatuses(): Form
 	{
-		$form = new TrainingStatuses($this, $formName, $this->applications, $this->trainingControlsFactory);
-		$form->getComponent('submit')->onClick[] = [$this, 'submittedStatuses'];
-		$form->getComponent('familiar')->onClick[] = [$this, 'submittedFamiliar'];
-		return $form;
-	}
-
-
-	public function submittedStatuses(SubmitButton $button): void
-	{
-		$values = $button->getForm()->getValues();
-		foreach ($values->applications as $id => $status) {
-			if ($status) {
-				$this->trainingStatuses->updateStatus($id, $status, $values->date);
-			}
-		}
-		$this->redirect($this->getAction(), $this->dateId);
-	}
-
-
-	public function submittedFamiliar(SubmitButton $button): void
-	{
-		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
-		$total = 0;
-		foreach (array_keys((array)$button->getForm()->getUnsafeValues(null)->applications) as $id) {
-			$application = $this->trainingApplications->getApplicationById($id);
-			if (in_array($application->status, $attendedStatuses) && !$application->familiar) {
-				$this->trainingApplications->setFamiliar($id);
-				$total++;
-			}
-		}
-
-		$statuses = array();
-		foreach ($attendedStatuses as $status) {
-			$statuses[] = Html::el('code')->setText($status);
-		}
-		$this->flashMessage(
-			Html::el()
-				->setText('Tykání nastaveno pro ' . $total . ' účastníků ve stavu ')
-				->addHtml(implode(', ', $statuses)),
+		return $this->trainingStatusesFormFactory->create(
+			function (?Html $message): never {
+				if ($message) {
+					$this->flashMessage($message);
+				}
+				$this->redirect($this->getAction(), $this->dateId);
+			},
+			$this->applications,
 		);
-
-		$this->redirect($this->getAction(), $this->dateId);
 	}
 
 
-	protected function createComponentApplications(string $formName): TrainingApplicationMultiple
+	protected function createComponentApplications(): Form
 	{
-		$statuses = array();
-		foreach ($this->trainingStatuses->getInitialStatuses() as $status) {
-			$statuses[$status] = $status;
-		}
-
-		$applications = $this->request->getPost('applications');
-		$count = (is_array($applications) ? count($applications) : 1);
-		$form = new TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingControlsFactory);
-		$form->onSuccess[] = [$this, 'submittedApplications'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedApplications(Form $form, ArrayHash $values): void
-	{
-		foreach ($values->applications as $application) {
-			$this->trainingApplications->insertApplication(
-				$this->training->trainingId,
-				$this->dateId,
-				$application->name,
-				$application->email,
-				$application->company,
-				$application->street,
-				$application->city,
-				$application->zip,
-				$values->country,
-				$application->companyId,
-				$application->companyTaxId,
-				$application->note,
-				$this->training->price,
-				$this->training->studentDiscount,
-				$values->status,
-				$values->source,
-				$values->date,
-			);
-		}
-		$this->redirect($this->getAction(), $this->dateId);
+		return $this->trainingApplicationMultipleFormFactory->create(
+			function (int $dateId): never {
+				$this->redirect($this->getAction(), $dateId);
+			},
+			$this->request,
+			$this->training->trainingId,
+			$this->dateId,
+			$this->training->price,
+			$this->training->studentDiscount,
+		);
 	}
 
 

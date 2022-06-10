@@ -29,12 +29,14 @@ services:
 	- MichalSpacekCz\Form\TalkSlidesFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationFormFactory
+	- MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory
 	- MichalSpacekCz\Form\TrainingDateFormFactory
 	- MichalSpacekCz\Form\TrainingFileFormFactory
 	- MichalSpacekCz\Form\TrainingInvoiceFormFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFormFactory
 	- MichalSpacekCz\Form\TrainingReviewFormFactory
+	- MichalSpacekCz\Form\TrainingStatusesFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
