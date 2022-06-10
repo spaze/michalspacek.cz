@@ -3,21 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\Talk;
-use MichalSpacekCz\Form\TalkSlides;
-use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Form\TalkFormFactory;
+use MichalSpacekCz\Form\TalkSlidesFormFactory;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Templating\Embed;
 use Nette\Application\BadRequestException;
-use Nette\Application\LinkGenerator;
 use Nette\Database\Row;
 use Nette\Forms\Form;
-use Nette\Http\FileUpload;
-use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use RuntimeException;
-use UnexpectedValueException;
 
 class TalksPresenter extends BasePresenter
 {
@@ -34,11 +28,10 @@ class TalksPresenter extends BasePresenter
 
 
 	public function __construct(
-		private readonly TexyFormatter $texyFormatter,
 		private readonly Talks $talks,
-		private readonly LinkGenerator $linkGenerator,
 		private readonly Embed $embed,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly TalkFormFactory $talkFormFactory,
+		private readonly TalkSlidesFormFactory $talkSlidesFormFactory,
 	) {
 		parent::__construct();
 	}
@@ -88,131 +81,42 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditTalk(string $formName): Talk
+	protected function createComponentEditTalk(string $formName): Form
 	{
-		$form = new Talk($this, $formName, (string)$this->talk->action, $this->talks, $this->trainingControlsFactory);
-		$form->setTalk($this->talk);
-		$form->onSuccess[] = [$this, 'submittedEditTalk'];
-		return $form;
+		return $this->talkFormFactory->create(
+			function (Html $message): never {
+				$this->flashMessage($message);
+				$this->redirect('Talks:');
+			},
+			$this->talk,
+		);
 	}
 
 
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedEditTalk(Form $form, ArrayHash $values): void
+	protected function createComponentAddTalk(): Form
 	{
-		$this->talks->update(
+		return $this->talkFormFactory->create(
+			function (Html $message): never {
+				$this->flashMessage($message);
+				$this->redirect('Talks:');
+			},
+		);
+	}
+
+
+	protected function createComponentSlides(): Form
+	{
+		return $this->talkSlidesFormFactory->create(
+			function (Html $message, string $type, int $talkId): never {
+				$this->flashMessage($message, $type);
+				$this->redirect('Talks:slides', $talkId);
+			},
 			$this->talk->talkId,
-			$values->action,
-			$values->title,
-			$values->description,
-			$values->date,
-			(int)$values->duration,
-			$values->href,
-			$values->slidesTalk,
-			$values->filenamesTalk,
-			$values->slidesHref,
-			$values->slidesEmbed,
-			$values->videoHref,
-			$values->videoEmbed,
-			$values->event,
-			$values->eventHref,
-			$values->ogImage,
-			$values->transcript,
-			$values->favorite,
-			$values->supersededBy,
-			$values->publishSlides,
+			$this->slides,
+			$this->newCount,
+			$this->maxSlideUploads,
+			$this->request,
 		);
-		$this->flashMessage(
-			Html::el()
-				->setText('Přednáška upravena ')
-				->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit')),
-		);
-		$this->redirect('Talks:');
-	}
-
-
-	protected function createComponentAddTalk(string $formName): Talk
-	{
-		$form = new Talk($this, $formName, null, $this->talks, $this->trainingControlsFactory);
-		$form->onSuccess[] = [$this, 'submittedAddTalk'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedAddTalk(Form $form, ArrayHash $values): void
-	{
-		$this->talks->add(
-			$values->action,
-			$values->title,
-			$values->description,
-			$values->date,
-			(int)$values->duration,
-			$values->href,
-			$values->slidesTalk,
-			$values->filenamesTalk,
-			$values->slidesHref,
-			$values->slidesEmbed,
-			$values->videoHref,
-			$values->videoEmbed,
-			$values->event,
-			$values->eventHref,
-			$values->ogImage,
-			$values->transcript,
-			$values->favorite,
-			$values->supersededBy,
-			$values->publishSlides,
-		);
-		$this->flashMessage('Přednáška přidána');
-		$this->redirect('Talks:');
-	}
-
-
-	protected function createComponentSlides(string $formName): TalkSlides
-	{
-		$form = new TalkSlides($this, $formName, $this->slides, $this->newCount, $this->talks);
-		$form->onSuccess[] = [$this, 'submittedSlides'];
-		$form->onValidate[] = [$this, 'validateSlides'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedSlides(Form $form, ArrayHash $values): void
-	{
-		try {
-			$this->talks->saveSlides($this->talk->talkId, $this->slides, $values);
-			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.slideadded'));
-		} catch (UnexpectedValueException $e) {
-			$this->flashMessage($this->texyFormatter->translate('messages.talks.admin.duplicatealias', [(string)$e->getCode()]), 'error');
-		}
-		$this->redirect('Talks:slides', $this->talk->talkId);
-	}
-
-
-	public function validateSlides(TalkSlides $form): void
-	{
-		// Check whether max allowed file uploads has been reached
-		$uploaded = 0;
-		$files = $this->request->getFiles();
-		array_walk_recursive($files, function ($item) use (&$uploaded) {
-			if ($item instanceof FileUpload) {
-				$uploaded++;
-			}
-		});
-		// If there's no error yet then the number of uploaded just coincidentally matches max allowed
-		if ($form->hasErrors() && $uploaded >= $this->maxSlideUploads) {
-			$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [(string)$this->maxSlideUploads]));
-		}
 	}
 
 }

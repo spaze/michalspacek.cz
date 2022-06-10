@@ -25,6 +25,8 @@ services:
 	- MichalSpacekCz\Form\RegenerateTokensFormFactory
 	- MichalSpacekCz\Form\SignInFormFactory
 	- MichalSpacekCz\Form\SignInHoneypotFormFactory
+	- MichalSpacekCz\Form\TalkFormFactory
+	- MichalSpacekCz\Form\TalkSlidesFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory
