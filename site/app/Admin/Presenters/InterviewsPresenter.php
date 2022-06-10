@@ -9,6 +9,7 @@ use MichalSpacekCz\Interviews\Interviews;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
+use RuntimeException;
 
 class InterviewsPresenter extends BasePresenter
 {
@@ -35,9 +36,10 @@ class InterviewsPresenter extends BasePresenter
 
 	public function actionInterview(int $param): void
 	{
-		$this->interview = $this->interviews->getById($param);
-		if (!$this->interview) {
-			throw new BadRequestException("Interview id {$param} does not exist, yet");
+		try {
+			$this->interview = $this->interviews->getById($param);
+		} catch (RuntimeException $e) {
+			throw new BadRequestException($e->getMessage());
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->title)]);

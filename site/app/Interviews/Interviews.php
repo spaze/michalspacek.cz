@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use RuntimeException;
 
 class Interviews
 {
@@ -112,10 +113,11 @@ class Interviews
 			$id,
 		);
 
-		if ($result) {
-			$this->format($result);
+		if (!$result) {
+			throw new RuntimeException("Interview id {$id} does not exist, yet");
 		}
 
+		$this->format($result);
 		return $result;
 	}
 
