@@ -19,7 +19,7 @@ class PasswordsPresenter extends BasePresenter
 	 *
 	 * Redirects already published URLs.
 	 */
-	public function actionStoragesQuestions(): void
+	public function actionStoragesQuestions(): never
 	{
 		$this->redirectPermanent('PasswordsStorages:questions');
 	}
@@ -30,7 +30,7 @@ class PasswordsPresenter extends BasePresenter
 	 *
 	 * Redirects already published URLs.
 	 */
-	public function actionStoragesRating(): void
+	public function actionStoragesRating(): never
 	{
 		$this->redirectPermanent('PasswordsStorages:rating');
 	}

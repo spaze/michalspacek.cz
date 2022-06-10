@@ -23,13 +23,13 @@ class SignPresenter extends BasePresenter
 	}
 
 
-	public function actionDefault(): void
+	public function actionDefault(): never
 	{
 		$this->redirect('in');
 	}
 
 
-	public function actionKnockKnock(string $param): void
+	public function actionKnockKnock(string $param): never
 	{
 		if ($this->authenticator->verifyReturningUser($param)) {
 			$this->authenticator->setReturningUser($param);
@@ -68,7 +68,7 @@ class SignPresenter extends BasePresenter
 	}
 
 
-	public function actionOut(): void
+	public function actionOut(): never
 	{
 		$this->authenticator->clearPermanentLogin($this->user);
 		$this->user->logout();

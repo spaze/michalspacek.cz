@@ -62,7 +62,7 @@ class WinterIsComing
 	 * @param TextInput $input
 	 * @throws AbortException
 	 */
-	private function sendSyntaxError(TextInput $input): void
+	private function sendSyntaxError(TextInput $input): never
 	{
 		/** @var Presenter $presenter */
 		$presenter = $input->getForm()->getParent();

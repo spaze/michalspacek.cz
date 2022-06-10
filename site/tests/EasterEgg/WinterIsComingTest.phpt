@@ -5,6 +5,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use Nette\Application\AbortException;
 use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
@@ -46,9 +47,10 @@ class WinterIsComingTest extends TestCase
 			}
 
 
-			public function sendResponse(Response $response): void
+			public function sendResponse(Response $response): never
 			{
 				$this->resultObject->response = $response;
+				$this->terminate();
 			}
 
 		};
@@ -65,16 +67,21 @@ class WinterIsComingTest extends TestCase
 	}
 
 
-	public function testRuleEmailFakeError(): void
+	public function getUnfriendlyEmails(): array
 	{
-		($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('winter@example.com'));
-		$this->assertResponse();
+		return [
+			'address' => ['winter@example.com'],
+			'host' => [random_int(0, PHP_INT_MAX) . '@ssemarketing.net'],
+		];
 	}
 
 
-	public function testRuleEmailFakeErrorEmailHost(): void
+	/** @dataProvider getUnfriendlyEmails */
+	public function testRuleEmailFakeError(): void
 	{
-		($this->ruleEmail)($this->form->addText('foo')->setDefaultValue(random_int(0, PHP_INT_MAX) . '@ssemarketing.net'));
+		Assert::throws(function (): void {
+			($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('winter@example.com'));
+		}, AbortException::class);
 		$this->assertResponse();
 	}
 
@@ -86,29 +93,40 @@ class WinterIsComingTest extends TestCase
 	}
 
 
-	public function getRuleStreetStreets(): array
+	public function getRuleStreetNiceStreets(): array
 	{
 		return [
-			['34 Watts road', false],
-			['34 Watts Road', true],
-			['34 Watts', true],
-			['35 Watts road', true],
+			['34 Watts Road'],
+			['34 Watts'],
+			['35 Watts road'],
 		];
 	}
 
 
-	/**
-	 * @dataProvider getRuleStreetStreets
-	 */
-	public function testRuleStreet(string $name, bool $isNice): void
+	/** @dataProvider getRuleStreetNiceStreets */
+	public function testRuleStreetNice(string $name): void
 	{
 		$result = ($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
-		if ($isNice) {
-			Assert::true($result);
-			Assert::hasNotKey('response', (array)$this->resultObject);
-		} else {
-			$this->assertResponse();
-		}
+		Assert::true($result);
+		Assert::hasNotKey('response', (array)$this->resultObject);
+	}
+
+
+	public function getRuleStreetRoughStreets(): array
+	{
+		return [
+			['34 Watts road'],
+		];
+	}
+
+
+	/** @dataProvider getRuleStreetRoughStreets */
+	public function testRuleStreetRough(string $name): void
+	{
+		Assert::throws(function () use (&$result, $name): void {
+			$result = ($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
+		}, AbortException::class);
+		$this->assertResponse();
 	}
 
 

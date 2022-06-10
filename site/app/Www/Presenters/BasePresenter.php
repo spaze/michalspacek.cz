@@ -123,7 +123,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 
-	public function handleDarkFuture(): void
+	public function handleDarkFuture(): never
 	{
 		$this->theme->setDarkMode();
 		$this->httpResponse->setExpiration(null);
@@ -131,7 +131,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 
-	public function handleBrightFuture(): void
+	public function handleBrightFuture(): never
 	{
 		$this->theme->setLightMode();
 		$this->httpResponse->setExpiration(null);
