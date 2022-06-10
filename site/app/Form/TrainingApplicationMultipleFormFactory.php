@@ -43,9 +43,6 @@ class TrainingApplicationMultipleFormFactory
 			$this->trainingControlsFactory->addAttendee($dataContainer);
 			$this->trainingControlsFactory->addCompany($dataContainer);
 			$this->trainingControlsFactory->addNote($dataContainer);
-			$dataContainer->getComponent('name')->caption = 'Jméno:';
-			$dataContainer->getComponent('company')->caption = 'Společnost:';
-			$dataContainer->getComponent('street')->caption = 'Ulice:';
 		}
 
 		$this->trainingControlsFactory->addCountry($form);
