@@ -18,6 +18,7 @@ services:
 	- MichalSpacekCz\Form\Controls\TrainingControlsFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
+	- MichalSpacekCz\Form\InterviewFormFactory
 	- MichalSpacekCz\Form\PostFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory

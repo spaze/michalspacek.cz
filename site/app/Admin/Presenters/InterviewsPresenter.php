@@ -3,14 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Form\Interview;
+use MichalSpacekCz\Form\InterviewFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Interviews;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 
 class InterviewsPresenter extends BasePresenter
 {
@@ -22,7 +20,7 @@ class InterviewsPresenter extends BasePresenter
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Interviews $interviews,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly InterviewFormFactory $interviewFormFactory,
 	) {
 		parent::__construct();
 	}
@@ -47,69 +45,26 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditInterview(string $formName): Interview
+	protected function createComponentEditInterview(string $formName): Form
 	{
-		$form = new Interview($this, $formName, $this->trainingControlsFactory);
-		$form->setInterview($this->interview);
-		$form->onSuccess[] = [$this, 'submittedEditInterview'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedEditInterview(Form $form, ArrayHash $values): void
-	{
-		$this->interviews->update(
-			$this->interview->interviewId,
-			$values->action,
-			$values->title,
-			$values->description,
-			$values->date,
-			$values->href,
-			$values->audioHref,
-			$values->audioEmbed,
-			$values->videoHref,
-			$values->videoEmbed,
-			$values->sourceName,
-			$values->sourceHref,
+		return $this->interviewFormFactory->create(
+			function (): never {
+				$this->flashMessage('Rozhovor upraven');
+				$this->redirect('Interviews:');
+			},
+			$this->interview,
 		);
-		$this->flashMessage('Rozhovor upraven');
-		$this->redirect('Interviews:');
 	}
 
 
-	protected function createComponentAddInterview(string $formName): Interview
+	protected function createComponentAddInterview(string $formName): Form
 	{
-		$form = new Interview($this, $formName, $this->trainingControlsFactory);
-		$form->onSuccess[] = [$this, 'submittedAddInterview'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedAddInterview(Form $form, ArrayHash $values): void
-	{
-		$this->interviews->add(
-			$values->action,
-			$values->title,
-			$values->description,
-			$values->date,
-			$values->href,
-			$values->audioHref,
-			$values->audioEmbed,
-			$values->videoHref,
-			$values->videoEmbed,
-			$values->sourceName,
-			$values->sourceHref,
+		return $this->interviewFormFactory->create(
+			function (): never {
+				$this->flashMessage('Rozhovor přidán');
+				$this->redirect('Interviews:');
+			},
 		);
-		$this->flashMessage('Rozhovor přidán');
-		$this->redirect('Interviews:');
 	}
 
 }
