@@ -13,17 +13,32 @@ services:
 	- MichalSpacekCz\EasterEgg\NetteCve202015227
 	- MichalSpacekCz\EasterEgg\WinterIsComing
 	- MichalSpacekCz\Feed\Exports
+	- MichalSpacekCz\Form\ChangePasswordFormFactory
+	- MichalSpacekCz\Form\Controls\FormControlsFactory
+	- MichalSpacekCz\Form\Controls\TrainingControlsFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
+	- MichalSpacekCz\Form\InterviewFormFactory
 	- MichalSpacekCz\Form\PostFormFactory
-	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory
-	- MichalSpacekCz\Form\TrainingApplicationAdminFactory
-	- MichalSpacekCz\Form\TrainingApplicationFactory
-	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFactory
-	- MichalSpacekCz\Form\TrainingControlsFactory
+	- MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory
+	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory
+	- MichalSpacekCz\Form\RegenerateTokensFormFactory
+	- MichalSpacekCz\Form\SignInFormFactory
+	- MichalSpacekCz\Form\SignInHoneypotFormFactory
+	- MichalSpacekCz\Form\TalkFormFactory
+	- MichalSpacekCz\Form\TalkSlidesFormFactory
+	- MichalSpacekCz\Form\TrainingApplicationAdminFormFactory
+	- MichalSpacekCz\Form\TrainingApplicationFormFactory
+	- MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory
+	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory
+	- MichalSpacekCz\Form\TrainingDateFormFactory
 	- MichalSpacekCz\Form\TrainingFileFormFactory
-	- MichalSpacekCz\Form\TrainingMailsOutboxFactory
+	- MichalSpacekCz\Form\TrainingInvoiceFormFactory
+	- MichalSpacekCz\Form\TrainingMailsOutboxFormFactory
+	- MichalSpacekCz\Form\TrainingReviewFormFactory
+	- MichalSpacekCz\Form\TrainingStatusesFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
+	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Http\HttpStreamContext

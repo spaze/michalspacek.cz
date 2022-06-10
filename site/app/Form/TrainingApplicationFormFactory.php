@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\HiddenFieldWithLabel;
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
@@ -22,18 +23,18 @@ use PDOException;
 use stdClass;
 use Tracy\Debugger;
 
-class TrainingApplicationFactory
+class TrainingApplicationFormFactory
 {
 
 	public function __construct(
-		private FormFactory $factory,
-		private Translator $translator,
-		private TrainingControlsFactory $trainingControlsFactory,
-		private Dates $trainingDates,
-		private FormDataLogger $formDataLogger,
-		private FormSpam $formSpam,
-		private Applications $trainingApplications,
-		private Mails $trainingMails,
+		private readonly FormFactory $factory,
+		private readonly Translator $translator,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly Dates $trainingDates,
+		private readonly FormDataLogger $formDataLogger,
+		private readonly FormSpam $formSpam,
+		private readonly Applications $trainingApplications,
+		private readonly Mails $trainingMails,
 	) {
 	}
 

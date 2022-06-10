@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\FormSpam;
@@ -10,21 +11,15 @@ use Nette\Application\UI\Form;
 use stdClass;
 use Tracy\Debugger;
 
-class TrainingApplicationPreliminaryFactory
+class TrainingApplicationPreliminaryFormFactory
 {
 
-	private FormFactory $factory;
-	private TrainingControlsFactory $trainingControlsFactory;
-	private Applications $trainingApplications;
-	private FormSpam $formSpam;
-
-
-	public function __construct(FormFactory $factory, TrainingControlsFactory $trainingControlsFactory, Applications $trainingApplications, FormSpam $formSpam)
-	{
-		$this->factory = $factory;
-		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->trainingApplications = $trainingApplications;
-		$this->formSpam = $formSpam;
+	public function __construct(
+		private readonly FormFactory $factory,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly Applications $trainingApplications,
+		private readonly FormSpam $formSpam,
+	) {
 	}
 
 

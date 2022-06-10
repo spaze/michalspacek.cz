@@ -3,30 +3,18 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Form\ChangePassword;
-use MichalSpacekCz\Form\RegenerateTokens;
-use MichalSpacekCz\User\Manager;
-use Nette\Application\LinkGenerator;
+use MichalSpacekCz\Form\ChangePasswordFormFactory;
+use MichalSpacekCz\Form\RegenerateTokensFormFactory;
 use Nette\Forms\Form;
-use Nette\Http\Session;
-use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 class UserPresenter extends BasePresenter
 {
 
-	private Manager $authenticator;
-
-	private Session $sessionHandler;
-
-	private LinkGenerator $linkGenerator;
-
-
-	public function __construct(Manager $authenticator, Session $sessionHandler, LinkGenerator $linkGenerator)
-	{
-		$this->authenticator = $authenticator;
-		$this->sessionHandler = $sessionHandler;
-		$this->linkGenerator = $linkGenerator;
+	public function __construct(
+		private readonly RegenerateTokensFormFactory $regenerateTokensFormFactory,
+		private readonly ChangePasswordFormFactory $changePasswordFormFactory,
+	) {
 		parent::__construct();
 	}
 
@@ -37,22 +25,13 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentChangePassword(string $formName): ChangePassword
+	protected function createComponentChangePassword(): Form
 	{
-		$form = new ChangePassword($this, $formName);
-		$form->onSuccess[] = [$this, 'submittedChangePassword'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedChangePassword(Form $form, ArrayHash $values): void
-	{
-		$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
-		$this->redirect('Homepage:');
+		return $this->changePasswordFormFactory->create(
+			function (): never {
+				$this->redirect('Homepage:');
+			},
+		);
 	}
 
 
@@ -62,35 +41,14 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentRegenerateTokens(string $formName): RegenerateTokens
+	protected function createComponentRegenerateTokens(): Form
 	{
-		$form = new RegenerateTokens($this, $formName);
-		$form->onSuccess[] = [$this, 'submittedRegenerateTokens'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedRegenerateTokens(Form $form, ArrayHash $values): void
-	{
-		if ($values->session) {
-			$this->sessionHandler->regenerateId();
-		}
-		if ($values->permanent) {
-			$this->authenticator->regeneratePermanentLogin($this->user);
-		}
-		if ($values->returning) {
-			$selectorToken = $this->authenticator->regenerateReturningUser($this->user);
-		}
-		$message = Html::el()->setText('Tokeny přegenerovány ');
-		if (isset($selectorToken)) {
-			$message->addHtml(Html::el('a')->href($this->linkGenerator->link('Admin:Sign:knockKnock', [$selectorToken]))->setText('Odkaz na přihlášení'));
-		}
-		$this->flashMessage($message);
-		$this->redirect('Homepage:');
+		return $this->regenerateTokensFormFactory->create(
+			function (Html|string $message): never {
+				$this->flashMessage($message);
+				$this->redirect('Homepage:');
+			},
+		);
 	}
 
 }

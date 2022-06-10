@@ -6,27 +6,21 @@ namespace MichalSpacekCz\Admin\Presenters;
 use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
-use MichalSpacekCz\Form\TrainingApplicationAdminFactory;
-use MichalSpacekCz\Form\TrainingApplicationMultiple;
-use MichalSpacekCz\Form\TrainingControlsFactory;
-use MichalSpacekCz\Form\TrainingDate;
+use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
+use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
+use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
-use MichalSpacekCz\Form\TrainingReview;
-use MichalSpacekCz\Form\TrainingStatuses;
+use MichalSpacekCz\Form\TrainingReviewFormFactory;
+use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
-use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings;
-use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
-use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 class TrainingsPresenter extends BasePresenter
@@ -59,15 +53,16 @@ class TrainingsPresenter extends BasePresenter
 		private readonly Dates $trainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly Trainings $trainings,
-		private readonly Venues $trainingVenues,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly Reviews $trainingReviews,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
-		private readonly TrainingApplicationAdminFactory $trainingApplicationAdminFactory,
+		private readonly TrainingApplicationAdminFormFactory $trainingApplicationAdminFactory,
+		private readonly TrainingApplicationMultipleFormFactory $trainingApplicationMultipleFormFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
-		private readonly TrainingDatesFormValidator $trainingDatesFormValidator,
+		private readonly TrainingDateFormFactory $trainingDateFormFactory,
+		private readonly TrainingReviewFormFactory $trainingReviewFormFactory,
+		private readonly TrainingStatusesFormFactory $trainingStatusesFormFactory,
 	) {
 		parent::__construct();
 	}
@@ -244,194 +239,69 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentStatuses(string $formName): TrainingStatuses
+	protected function createComponentStatuses(): Form
 	{
-		$form = new TrainingStatuses($this, $formName, $this->applications, $this->trainingControlsFactory);
-		$form->getComponent('submit')->onClick[] = [$this, 'submittedStatuses'];
-		$form->getComponent('familiar')->onClick[] = [$this, 'submittedFamiliar'];
-		return $form;
-	}
-
-
-	public function submittedStatuses(SubmitButton $button): void
-	{
-		$values = $button->getForm()->getValues();
-		foreach ($values->applications as $id => $status) {
-			if ($status) {
-				$this->trainingStatuses->updateStatus($id, $status, $values->date);
-			}
-		}
-		$this->redirect($this->getAction(), $this->dateId);
-	}
-
-
-	public function submittedFamiliar(SubmitButton $button): void
-	{
-		$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
-		$total = 0;
-		foreach (array_keys((array)$button->getForm()->getUnsafeValues(null)->applications) as $id) {
-			$application = $this->trainingApplications->getApplicationById($id);
-			if (in_array($application->status, $attendedStatuses) && !$application->familiar) {
-				$this->trainingApplications->setFamiliar($id);
-				$total++;
-			}
-		}
-
-		$statuses = array();
-		foreach ($attendedStatuses as $status) {
-			$statuses[] = Html::el('code')->setText($status);
-		}
-		$this->flashMessage(
-			Html::el()
-				->setText('Tykání nastaveno pro ' . $total . ' účastníků ve stavu ')
-				->addHtml(implode(', ', $statuses)),
-		);
-
-		$this->redirect($this->getAction(), $this->dateId);
-	}
-
-
-	protected function createComponentApplications(string $formName): TrainingApplicationMultiple
-	{
-		$statuses = array();
-		foreach ($this->trainingStatuses->getInitialStatuses() as $status) {
-			$statuses[$status] = $status;
-		}
-
-		$applications = $this->request->getPost('applications');
-		$count = (is_array($applications) ? count($applications) : 1);
-		$form = new TrainingApplicationMultiple($this, $formName, max($count, 1), $statuses, $this->trainingControlsFactory);
-		$form->onSuccess[] = [$this, 'submittedApplications'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedApplications(Form $form, ArrayHash $values): void
-	{
-		foreach ($values->applications as $application) {
-			$this->trainingApplications->insertApplication(
-				$this->training->trainingId,
-				$this->dateId,
-				$application->name,
-				$application->email,
-				$application->company,
-				$application->street,
-				$application->city,
-				$application->zip,
-				$values->country,
-				$application->companyId,
-				$application->companyTaxId,
-				$application->note,
-				$this->training->price,
-				$this->training->studentDiscount,
-				$values->status,
-				$values->source,
-				$values->date,
-			);
-		}
-		$this->redirect($this->getAction(), $this->dateId);
-	}
-
-
-	protected function createComponentEditReview(string $formName): TrainingReview
-	{
-		$form = new TrainingReview($this, $formName);
-		$form->setReview($this->review);
-		$form->onSuccess[] = [$this, 'submittedEditReview'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedEditReview(Form $form, ArrayHash $values): void
-	{
-		$this->trainingReviews->updateReview(
-			$this->review->reviewId,
-			$this->review->dateId,
-			$values->name,
-			$values->company,
-			$values->jobTitle ?: null,
-			$values->review,
-			$values->href ?: null,
-			$values->hidden,
-			$values->ranking ?: null,
-			$values->note ?: null,
-		);
-
-		$this->redirect('date', $this->review->dateId);
-	}
-
-
-	protected function createComponentAddReview(string $formName): TrainingReview
-	{
-		$reviewApplicationNames = [];
-		foreach ($this->trainingReviews->getReviewsByDateId($this->dateId) as $review) {
-			if ($review->name !== null) {
-				$reviewApplicationNames[] = $review->name;
-			}
-		}
-
-		$applications = [];
-		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
-			if (!$application->discarded) {
-				$option = Html::el('option');
-				if (in_array($application->name, $reviewApplicationNames)) {
-					$option = $option->setDisabled(true);
+		return $this->trainingStatusesFormFactory->create(
+			function (?Html $message): never {
+				if ($message) {
+					$this->flashMessage($message);
 				}
-				$option->setText(($application->name ?? 'smazáno') . ($application->company ? ", {$application->company}" : ''));
-				$option->addAttributes([
-					'data-name' => $application->name ?? '',
-					'data-company' => $application->company ?? '',
-				]);
-				$applications[$application->id] = $option;
-			}
-		}
-
-		$form = new TrainingReview($this, $formName, $applications);
-		$form->onSuccess[] = [$this, 'submittedAddReview'];
-		return $form;
+				$this->redirect($this->getAction(), $this->dateId);
+			},
+			$this->applications,
+		);
 	}
 
 
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedAddReview(Form $form, ArrayHash $values): void
+	protected function createComponentApplications(): Form
 	{
-		$this->trainingReviews->addReview(
+		return $this->trainingApplicationMultipleFormFactory->create(
+			function (int $dateId): never {
+				$this->redirect($this->getAction(), $dateId);
+			},
+			$this->request,
+			$this->training->trainingId,
 			$this->dateId,
-			$values->name,
-			$values->company,
-			$values->jobTitle ?: null,
-			$values->review,
-			$values->href ?: null,
-			$values->hidden,
-			$values->ranking ?: null,
-			$values->note ?: null,
+			$this->training->price,
+			$this->training->studentDiscount,
 		);
-		$this->redirect('date', $this->dateId);
+	}
+
+
+	protected function createComponentEditReview(): Form
+	{
+		return $this->trainingReviewFormFactory->create(
+			function (int $dateId): never {
+				$this->redirect('date', $dateId);
+			},
+			$this->review->dateId,
+			$this->review,
+		);
+	}
+
+
+	protected function createComponentAddReview(): Form
+	{
+		return $this->trainingReviewFormFactory->create(
+			function (int $dateId): never {
+				$this->redirect('date', $dateId);
+			},
+			$this->dateId,
+		);
 	}
 
 
 	protected function createComponentApplicationForm(): Form
 	{
 		return $this->trainingApplicationAdminFactory->create(
-			function (?int $dateId): void {
+			function (?int $dateId): never {
 				if (isset($this->dateId) || isset($dateId)) {
 					$this->redirect('date', $dateId ?? $this->dateId);
 				} else {
 					$this->redirect('preliminary');
 				}
 			},
-			function (): void {
+			function (): never {
 				$this->redirect('this');
 			},
 			$this->application,
@@ -442,16 +312,8 @@ class TrainingsPresenter extends BasePresenter
 	protected function createComponentFile(): Form
 	{
 		return $this->trainingFileFormFactory->create(
-			function (?string $uploadedFilename): void {
-				if ($uploadedFilename !== null) {
-					$this->flashMessage(
-						Html::el()->setText('Soubor ')
-							->addHtml(Html::el('code')->setText($uploadedFilename))
-							->addHtml(Html::el()->setText(' byl přidán')),
-					);
-				} else {
-					$this->flashMessage('Soubor nebyl vybrán nebo došlo k nějaké chybě při nahrávání', 'error');
-				}
+			function (Html|string $message, string $type): never {
+				$this->flashMessage($message, $type);
 				$this->redirect($this->getAction(), $this->redirectParam);
 			},
 			$this->training->start,
@@ -460,101 +322,31 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentDate(string $formName): TrainingDate
+	protected function createComponentEditDate(): Form
 	{
-		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingDatesFormValidator, $this->trainingVenues, $this->trainingControlsFactory);
-		$form->setTrainingDate($this->training);
-		$form->onValidate[] = [$this, 'validatePrice'];
-		$form->onSuccess[] = [$this, 'submittedDate'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function validatePrice(Form $form, ArrayHash $values): void
-	{
-		$training = $this->trainings->getById($values->training);
-		if ($values->price === '' && $training->price === null) {
-			/** @var TextInput $component */
-			$component = $form->getComponent('price');
-			$component->addError('Běžná cena není nastavena, je třeba nastavit cenu zde');
-		}
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedDate(Form $form, ArrayHash $values): void
-	{
-		$this->trainingDates->update(
-			$this->dateId,
-			$values->training,
-			$values->venue,
-			$values->remote,
-			$values->start,
-			$values->end,
-			$values->label,
-			$values->status,
-			$values->public,
-			$values->cooperation,
-			$values->note,
-			$values->price === '' ? null : (int)$values->price,
-			$values->studentDiscount === '' ? null : (int)$values->studentDiscount,
-			$values->remoteUrl,
-			$values->remoteNotes,
-			$values->videoHref,
-			$values->feedbackHref,
+		return $this->trainingDateFormFactory->create(
+			function (): never {
+				$this->flashMessage('Termín upraven');
+				$this->redirect($this->getAction(), $this->redirectParam);
+			},
+			$this->training,
 		);
-		$this->flashMessage('Termín upraven');
-		$this->redirect($this->getAction(), $this->redirectParam);
 	}
 
 
-	protected function createComponentAddDate(string $formName): TrainingDate
+	protected function createComponentAddDate(): Form
 	{
-		$form = new TrainingDate($this, $formName, $this->trainings, $this->trainingDates, $this->trainingDatesFormValidator, $this->trainingVenues, $this->trainingControlsFactory);
-		$form->onValidate[] = [$this, 'validatePrice'];
-		$form->onSuccess[] = [$this, 'submittedAddDate'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedAddDate(Form $form, ArrayHash $values): void
-	{
-		$this->trainingDates->add(
-			$values->training,
-			$values->venue,
-			$values->remote,
-			$values->start,
-			$values->end,
-			$values->label,
-			$values->status,
-			$values->public,
-			$values->cooperation,
-			$values->note,
-			$values->price === '' ? null : (int)$values->price,
-			$values->studentDiscount === '' ? null : (int)$values->studentDiscount,
-			$values->remoteUrl,
-			$values->remoteNotes,
-			$values->videoHref,
-			$values->feedbackHref,
+		return $this->trainingDateFormFactory->create(
+			function (): never {
+				$this->redirect('Trainings:');
+			},
 		);
-		$this->redirect('Trainings:');
 	}
 
 
 	protected function createComponentDeletePersonalDataForm(): Form
 	{
-		return $this->deletePersonalDataFormFactory->create(function (): void {
+		return $this->deletePersonalDataFormFactory->create(function (): never {
 			$this->flashMessage('Osobní data z minulých školení smazána');
 			$this->redirect('Homepage:');
 		});

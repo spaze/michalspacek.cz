@@ -3,13 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys\Presenters;
 
-use MichalSpacekCz\Form\UpcKeys as UpcKeysForm;
+use MichalSpacekCz\Form\UpcKeysSsidFormFactory;
 use MichalSpacekCz\UpcKeys\UpcKeys;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
-use Nette\Utils\ArrayHash;
 use RuntimeException;
 use stdClass;
 
@@ -17,10 +16,6 @@ class HomepagePresenter extends BasePresenter
 {
 
 	private ?string $ssid;
-
-	private UpcKeys $upcKeys;
-
-	private IResponse $httpResponse;
 
 	/** @var array<int, string> */
 	private array $types = [
@@ -30,10 +25,11 @@ class HomepagePresenter extends BasePresenter
 	];
 
 
-	public function __construct(UpcKeys $upcKeys, IResponse $httpResponse)
-	{
-		$this->upcKeys = $upcKeys;
-		$this->httpResponse = $httpResponse;
+	public function __construct(
+		private readonly UpcKeys $upcKeys,
+		private readonly IResponse $httpResponse,
+		private readonly UpcKeysSsidFormFactory $upcKeysSsidFormFactory,
+	) {
 		parent::__construct();
 	}
 
@@ -134,26 +130,17 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSsid(string $formName): UpcKeysForm
+	protected function createComponentSsid(): Form
 	{
-		$form = new UpcKeysForm($this, $formName, $this->ssid, $this->upcKeys);
-		$form->onSuccess[] = [$this, 'submittedSsid'];
-		return $form;
-	}
-
-
-	/**
-	 * @param Form $form
-	 * @param ArrayHash<int|string> $values
-	 */
-	public function submittedSsid(Form $form, ArrayHash $values): void
-	{
-		$ssid = strtoupper(trim($values->ssid));
-		if (!$this->upcKeys->saveKeys($ssid)) {
-			$this->template->error = 'Oops, something went wrong, please try again in a moment';
-		} else {
-			$this->redirect('this', $ssid);
-		}
+		return $this->upcKeysSsidFormFactory->create(
+			function (string $ssid): never {
+				$this->redirect('this', $ssid);
+			},
+			function (): void {
+				$this->template->error = 'Oops, something went wrong, please try again in a moment';
+			},
+			$this->ssid,
+		);
 	}
 
 }

@@ -13,21 +13,12 @@ use Tracy\Debugger;
 class DeletePersonalDataFormFactory
 {
 
-	private Explorer $database;
-
-	private FormFactory $factory;
-
-	private Trainings $trainings;
-
-	private TrainingFiles $files;
-
-
-	public function __construct(Explorer $context, FormFactory $factory, Trainings $trainings, TrainingFiles $files)
-	{
-		$this->database = $context;
-		$this->factory = $factory;
-		$this->trainings = $trainings;
-		$this->files = $files;
+	public function __construct(
+		private readonly Explorer $database,
+		private readonly FormFactory $factory,
+		private readonly Trainings $trainings,
+		private readonly TrainingFiles $files,
+	) {
 	}
 
 

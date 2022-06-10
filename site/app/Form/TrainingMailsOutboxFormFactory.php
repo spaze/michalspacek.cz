@@ -14,41 +14,22 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Row;
 use stdClass;
 
-class TrainingMailsOutboxFactory
+class TrainingMailsOutboxFormFactory
 {
 
-	private FormFactory $factory;
-
-	private Applications $trainingApplications;
-
-	private Statuses $trainingStatuses;
-
-	private Mails $trainingMails;
-
-	private TemplateFactory $templateFactory;
-
-	private NetteApplication $netteApplication;
-
-
 	public function __construct(
-		FormFactory $factory,
-		Applications $trainingApplications,
-		Statuses $trainingStatuses,
-		Mails $trainingMails,
-		TemplateFactory $templateFactory,
-		NetteApplication $netteApplication,
+		private readonly FormFactory $factory,
+		private readonly Applications $trainingApplications,
+		private readonly Statuses $trainingStatuses,
+		private readonly Mails $trainingMails,
+		private readonly TemplateFactory $templateFactory,
+		private readonly NetteApplication $netteApplication,
 	) {
-		$this->factory = $factory;
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingStatuses = $trainingStatuses;
-		$this->trainingMails = $trainingMails;
-		$this->templateFactory = $templateFactory;
-		$this->netteApplication = $netteApplication;
 	}
 
 
 	/**
-	 * @param callable $onSuccess
+	 * @param callable(int): void $onSuccess
 	 * @param Row[] $applications
 	 * @return Form
 	 */

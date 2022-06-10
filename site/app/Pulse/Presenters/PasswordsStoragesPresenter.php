@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Presenters;
 
-use MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFactory;
+use MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
@@ -18,7 +18,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 
 	private Rating $passwordsRating;
 
-	private PasswordsStoragesSearchSortFactory $searchSortFactory;
+	private PasswordsStoragesSearchSortFormFactory $searchSortFactory;
 
 	private PasswordsSorting $passwordsSorting;
 
@@ -28,7 +28,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 	public function __construct(
 		Passwords $passwords,
 		Rating $passwordsRating,
-		PasswordsStoragesSearchSortFactory $searchSortFactory,
+		PasswordsStoragesSearchSortFormFactory $searchSortFactory,
 		PasswordsSorting $passwordsSorting,
 	) {
 		$this->passwords = $passwords;

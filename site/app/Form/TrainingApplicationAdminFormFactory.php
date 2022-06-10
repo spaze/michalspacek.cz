@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Statuses;
@@ -11,18 +12,8 @@ use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use stdClass;
 
-class TrainingApplicationAdminFactory
+class TrainingApplicationAdminFormFactory
 {
-
-	private FormFactory $factory;
-
-	private Applications $trainingApplications;
-
-	private Dates $trainingDates;
-
-	private TrainingControlsFactory $trainingControlsFactory;
-
-	private Statuses $trainingStatuses;
 
 	/** @var string[] */
 	private array $deletableFields = [
@@ -40,17 +31,12 @@ class TrainingApplicationAdminFactory
 
 
 	public function __construct(
-		FormFactory $factory,
-		Applications $trainingApplications,
-		Dates $trainingDates,
-		TrainingControlsFactory $trainingControlsFactory,
-		Statuses $trainingStatuses,
+		private readonly FormFactory $factory,
+		private readonly Applications $trainingApplications,
+		private readonly Dates $trainingDates,
+		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly Statuses $trainingStatuses,
 	) {
-		$this->factory = $factory;
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingDates = $trainingDates;
-		$this->trainingControlsFactory = $trainingControlsFactory;
-		$this->trainingStatuses = $trainingStatuses;
 	}
 
 
