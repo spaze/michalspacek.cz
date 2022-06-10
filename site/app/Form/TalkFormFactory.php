@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use Latte\Runtime\Filters;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\LinkGenerator;
@@ -11,6 +10,7 @@ use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
+use Nette\Utils\Strings;
 use stdClass;
 
 class TalkFormFactory
@@ -197,8 +197,8 @@ class TalkFormFactory
 		$allTalks = [];
 		foreach ($this->talks->getAll() as $talk) {
 			if ($talkAction !== $talk->action) {
-				$title = Filters::truncate($talk->titleTexy, 40);
-				$event = Filters::truncate($talk->event, 30);
+				$title = Strings::truncate($talk->titleTexy, 40);
+				$event = Strings::truncate($talk->event, 30);
 				$allTalks[(int)$talk->talkId] = sprintf('%s (%s, %s)', $title, $talk->date->format('j. n. Y'), $event);
 			}
 		}
