@@ -76,12 +76,13 @@
 		</tr>
 		</thead>
 		<tbody>
-			<tr n:foreach="$keys as $key" class="p{$key->serialPrefix} t{$key->typeId}{if $iterator->odd} dark{/if}">
+			{varType MichalSpacekCz\UpcKeys\WiFiKey[] $keys}
+			<tr n:foreach="$keys as $key" class="p{$key->getSerialPrefix()} t{$key->getType()->value}{if $iterator->odd} dark{/if}">
 				<td class="nr"><code>{$iterator->counter}.</code></td>
-				<td><code>{$key->serial}</code></td>
-				<td class="mac">{if $key->mac}<code><span>{$key->oui}</span>{$key->mac}</code>{else}<small>unknown</small>{/if}</td>
-				<td class="key"><code>{$key->key}</code></td>
-				<td class="type"><small><span>{$key->type}</span></small></td>
+				<td><code>{$key->getSerial()}</code></td>
+				<td class="mac">{if $key->getMac()}<code><span>{$key->getOui()}</span>{$key->getMac()}</code>{else}<small>unknown</small>{/if}</td>
+				<td class="key"><code>{$key->getKey()}</code></td>
+				<td class="type"><small><span>{$key->getType()->getLabel()}</span></small></td>
 			</tr>
 		</tbody>
 		<tfoot id="footer">

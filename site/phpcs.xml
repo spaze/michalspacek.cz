@@ -7,7 +7,11 @@
 	<arg value="p"/>
 	<rule ref="vendor/spaze/coding-standard/src/ruleset.xml"/>
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+		<exclude-pattern>app/UpcKeys/WiFiBand.php</exclude-pattern>  <!-- Sniffer doesn't support enums yet https://github.com/squizlabs/PHP_CodeSniffer/issues/3474 -->
 		<exclude-pattern>tests/</exclude-pattern>  <!-- PHPStorm's @noinspection must be on the first line, before declare(strict_types = 1) -->
+	</rule>
+	<rule ref="Generic.WhiteSpace.ScopeIndent">
+		<exclude-pattern>app/UpcKeys/WiFiBand.php</exclude-pattern>  <!-- Sniffer doesn't support enums yet https://github.com/squizlabs/PHP_CodeSniffer/issues/3474 -->
 	</rule>
 	<exclude-pattern>public/www.michalspacek.cz/info.php</exclude-pattern>  <!-- Contains only HTML, no PHP code -->
 </ruleset>

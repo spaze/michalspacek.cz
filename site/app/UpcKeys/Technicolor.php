@@ -10,7 +10,6 @@ use Nette\Database\Explorer;
 use Nette\Utils\Json;
 use PDOException;
 use RuntimeException;
-use stdClass;
 
 class Technicolor implements RouterInterface
 {
@@ -28,11 +27,7 @@ class Technicolor implements RouterInterface
 	}
 
 
-	/**
-	 * Get serial number prefixes to generate keys for.
-	 *
-	 * @return array<string, array<int, string>>
-	 */
+	/** @inheritDoc */
 	public function getModelWithPrefixes(): array
 	{
 		return [$this->model => $this->serialNumberPrefixes];
@@ -45,7 +40,7 @@ class Technicolor implements RouterInterface
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @param string $ssid
-	 * @return stdClass[] (serial, key, type)
+	 * @return array<int, WiFiKey>
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -85,7 +80,7 @@ class Technicolor implements RouterInterface
 	 * Get possible keys and serial for an SSID.
 	 *
 	 * @param string $ssid
-	 * @return stdClass[] (serial, key, type)
+	 * @return array<int, WiFiKey>
 	 */
 	private function generateKeys(string $ssid): array
 	{
@@ -134,7 +129,7 @@ class Technicolor implements RouterInterface
 	 * Fetch keys from database.
 	 *
 	 * @param string $ssid
-	 * @return stdClass[] (serial, key, type)
+	 * @return array<int, WiFiKey>
 	 */
 	private function fetchKeys(string $ssid): array
 	{
@@ -177,7 +172,7 @@ class Technicolor implements RouterInterface
 	 * Store keys to database.
 	 *
 	 * @param string $ssid
-	 * @param stdClass[] $keys (serial, key, type)
+	 * @param array<int, WiFiKey> $keys
 	 * @return bool false if no keys to store, true otherwise
 	 */
 	private function storeKeys(string $ssid, array $keys): bool
@@ -205,9 +200,9 @@ class Technicolor implements RouterInterface
 					'INSERT INTO `keys`',
 					array(
 						'key_ssid' => $ssidId,
-						'serial' => $key->serial,
-						'key' => $key->key,
-						'type' => $key->type,
+						'serial' => $key->getSerial(),
+						'key' => $key->getKey(),
+						'type' => $key->getType()->value,
 					),
 				);
 			}
@@ -223,15 +218,14 @@ class Technicolor implements RouterInterface
 	}
 
 
-	private function buildKey(string $serial, string $key, int $type): stdClass
+	private function buildKey(string $serial, string $key, int $type): WiFiKey
 	{
-		$result = new stdClass();
-		$result->serial = $serial;
-		$result->oui = null;
-		$result->mac = null;
-		$result->key = $key;
-		$result->type = $type;
-		return $result;
+		preg_match('/^[a-z]+/i', $serial, $matches);
+		$prefix = current($matches);
+		if (!in_array($prefix, $this->serialNumberPrefixes)) {
+			throw new RuntimeException('Unknown prefix for serial ' . $serial);
+		}
+		return new WiFiKey($serial, $prefix, null, null, $key, WiFiBand::from($type));
 	}
 
 }

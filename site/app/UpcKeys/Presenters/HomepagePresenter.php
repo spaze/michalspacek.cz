@@ -5,24 +5,17 @@ namespace MichalSpacekCz\UpcKeys\Presenters;
 
 use MichalSpacekCz\Form\UpcKeysSsidFormFactory;
 use MichalSpacekCz\UpcKeys\UpcKeys;
+use MichalSpacekCz\UpcKeys\WiFiBand;
+use MichalSpacekCz\UpcKeys\WiFiKey;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
-use RuntimeException;
-use stdClass;
 
 class HomepagePresenter extends BasePresenter
 {
 
 	private ?string $ssid;
-
-	/** @var array<int, string> */
-	private array $types = [
-		UpcKeys::SSID_TYPE_24GHZ => '2.4 GHz',
-		UpcKeys::SSID_TYPE_5GHZ => '5 GHz',
-		UpcKeys::SSID_TYPE_UNKNOWN => 'unknown',
-	];
 
 
 	public function __construct(
@@ -57,9 +50,9 @@ class HomepagePresenter extends BasePresenter
 				foreach ($keys as $key => $value) {
 					$this->template->$key = $value;
 				}
-				$types = $this->types;
-				unset($types[UpcKeys::SSID_TYPE_UNKNOWN]);
-				$this->template->filterTypes = $types;
+				$this->template->filterTypes = array_map(function (WiFiBand $band): string {
+					return $band->getLabel();
+				}, WiFiBand::getKnown());
 				$this->template->modelsWithPrefixes = $this->upcKeys->getModelsWithPrefixes();
 				$this->template->prefixes = $this->upcKeys->getPrefixes();
 				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
@@ -76,7 +69,7 @@ class HomepagePresenter extends BasePresenter
 	/**
 	 * Check if SSID is valid and load keys
 	 *
-	 * @return array<string, string|stdClass[]>
+	 * @return array{}|array{ssid: string, error: string}|array{ssid: string, keys: non-empty-array<int, WiFiKey>}
 	 */
 	protected function loadKeys(): array
 	{
@@ -91,7 +84,7 @@ class HomepagePresenter extends BasePresenter
 				if (!$keys) {
 					$result['error'] = 'Oops, something went wrong, please try again in a moment';
 				} else {
-					$result['keys'] = $this->enrichKeys($keys);
+					$result['keys'] = $keys;
 				}
 			} else {
 				$result['error'] = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
@@ -99,34 +92,6 @@ class HomepagePresenter extends BasePresenter
 			}
 		}
 		return $result;
-	}
-
-
-	/**
-	 * Add information to keys.
-	 *
-	 * @param stdClass[] $keys
-	 * @return stdClass[]
-	 */
-	protected function enrichKeys(array $keys): array
-	{
-		$prefixes = $this->upcKeys->getPrefixes();
-		foreach ($keys as $key) {
-			if (!isset($this->types[$key->type])) {
-				throw new RuntimeException('Unknown network type ' . $key->type);
-			}
-			$key->typeId = $key->type;
-			$key->type = $this->types[$key->typeId];
-
-			$matches = array();
-			preg_match('/^[a-z]+/i', $key->serial, $matches);
-			$prefix = current($matches);
-			if (!in_array($prefix, $prefixes)) {
-				throw new RuntimeException('Unknown prefix for serial ' . $key->serial);
-			}
-			$key->serialPrefix = $prefix;
-		}
-		return $keys;
 	}
 
 

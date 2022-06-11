@@ -5,7 +5,6 @@ namespace MichalSpacekCz\UpcKeys;
 
 use Nette\Database\Explorer;
 use RuntimeException;
-use stdClass;
 
 class Ubee implements RouterInterface
 {
@@ -31,11 +30,7 @@ class Ubee implements RouterInterface
 	}
 
 
-	/**
-	 * Get serial number prefixes to get keys for.
-	 *
-	 * @return array<string, array<int, string>>
-	 */
+	/** @inheritDoc */
 	public function getModelWithPrefixes(): array
 	{
 		return [$this->model => [$this->serialNumberPrefix]];
@@ -46,7 +41,7 @@ class Ubee implements RouterInterface
 	 * Get keys from database.
 	 *
 	 * @param string $ssid
-	 * @return stdClass[] (serial, key, type)
+	 * @return array<int, WiFiKey>
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -60,20 +55,13 @@ class Ubee implements RouterInterface
 	}
 
 
-	private function buildKey(int $mac, int $key): stdClass
+	private function buildKey(int $mac, int $binaryKey): WiFiKey
 	{
-		$result = new stdClass();
-		$result->serial = $this->serialNumberPrefix;
-		$result->oui = self::OUI_UBEE;
-		$result->mac = sprintf('%06x', $mac);
-		$result->type = UpcKeys::SSID_TYPE_UNKNOWN;
-
-		$result->key = '';
+		$key = '';
 		for ($i = 7; $i >= 0; $i--) {
-			$result->key .= chr((($key >> $i * 5) & 0x1F) + 0x41);
+			$key .= chr((($binaryKey >> $i * 5) & 0x1F) + 0x41);
 		}
-
-		return $result;
+		return new WiFiKey($this->serialNumberPrefix, $this->serialNumberPrefix, self::OUI_UBEE, sprintf('%06x', $mac), $key, WiFiBand::Unknown);
 	}
 
 }

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\UpcKeys;
 
 use Nette\Utils\Strings;
-use stdClass;
 
 class UpcKeys
 {
@@ -33,29 +32,11 @@ class UpcKeys
 	/** @var array<string, array<int, string>>|null */
 	private ?array $modelsWithPrefixes = null;
 
-	/** @var stdClass[] */
-	private array $keys;
-
 
 	public function __construct(RouterInterface ...$routers)
 	{
 		foreach ($routers as $router) {
 			$this->routers[$router::class] = $router;
-		}
-	}
-
-
-	/**
-	 * Call a method on all routers
-	 *
-	 * @param string $method
-	 * @param string[] $args
-	 * @param callable $callback
-	 */
-	private function routerCall(string $method, array $args, callable $callback): void
-	{
-		foreach ($this->routers as $router) {
-			$callback($router->$method(...$args));
 		}
 	}
 
@@ -69,9 +50,9 @@ class UpcKeys
 	{
 		if ($this->prefixes === null) {
 			$this->prefixes = [];
-			$this->routerCall('getModelWithPrefixes', [], function ($prefixes): void {
-				$this->prefixes = array_merge($this->prefixes, current($prefixes));
-			});
+			foreach ($this->routers as $router) {
+				$this->prefixes = array_merge($this->prefixes, current($router->getModelWithPrefixes()));
+			}
 		}
 		return $this->prefixes;
 	}
@@ -86,9 +67,9 @@ class UpcKeys
 	{
 		if ($this->modelsWithPrefixes === null) {
 			$this->modelsWithPrefixes = [];
-			$this->routerCall('getModelWithPrefixes', [], function ($prefixes): void {
-				$this->modelsWithPrefixes = array_merge($this->modelsWithPrefixes, $prefixes);
-			});
+			foreach ($this->routers as $router) {
+				$this->modelsWithPrefixes = array_merge($this->modelsWithPrefixes, $router->getModelWithPrefixes());
+			}
 		}
 		return $this->modelsWithPrefixes;
 	}
@@ -100,15 +81,15 @@ class UpcKeys
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @param string $ssid
-	 * @return stdClass[] (serial, key, type)
+	 * @return array<int, WiFiKey>
 	 */
 	public function getKeys(string $ssid): array
 	{
-		$this->keys = [];
-		$this->routerCall('getKeys', [$ssid], function ($keys) {
-			$this->keys = array_merge($this->keys, $keys);
-		});
-		return $this->keys;
+		$keys = [];
+		foreach ($this->routers as $router) {
+			$keys = array_merge($keys, $router->getKeys($ssid));
+		}
+		return $keys;
 	}
 
 

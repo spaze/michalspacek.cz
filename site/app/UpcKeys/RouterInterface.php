@@ -3,20 +3,18 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
-use stdClass;
-
 interface RouterInterface
 {
 
 	/**
-	 * @return array<string, array<int, string>>
+	 * @return non-empty-array<string, array<int, string>>
 	 */
 	public function getModelWithPrefixes(): array;
 
 
 	/**
 	 * @param string $ssid
-	 * @return stdClass[] (serial, key, type)
+	 * @return array<int, WiFiKey>
 	 */
 	public function getKeys(string $ssid): array;
 
