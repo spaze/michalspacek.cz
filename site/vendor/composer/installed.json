@@ -2774,25 +2774,25 @@
         },
         {
             "name": "spaze/coding-standard",
-            "version": "v0.0.13",
-            "version_normalized": "0.0.13.0",
+            "version": "v1.0.0",
+            "version_normalized": "1.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/coding-standard.git",
-                "reference": "092dcf6d5d1c3065e120bb429393aa86a453c516"
+                "reference": "8be15ead84ae97195d5a6ea9d9dddad6312a88e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/092dcf6d5d1c3065e120bb429393aa86a453c516",
-                "reference": "092dcf6d5d1c3065e120bb429393aa86a453c516",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/8be15ead84ae97195d5a6ea9d9dddad6312a88e9",
+                "reference": "8be15ead84ae97195d5a6ea9d9dddad6312a88e9",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0",
-                "slevomat/coding-standard": "^7.0.1",
-                "squizlabs/php_codesniffer": "^3.6.0"
+                "slevomat/coding-standard": "^7.2.1",
+                "squizlabs/php_codesniffer": "^3.7.0"
             },
-            "time": "2021-12-14T00:34:10+00:00",
+            "time": "2022-06-13T16:43:39+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -2814,7 +2814,7 @@
             "description": "Coding Standard – PHP Code Sniffer Rules",
             "support": {
                 "issues": "https://github.com/spaze/coding-standard/issues",
-                "source": "https://github.com/spaze/coding-standard/tree/v0.0.13"
+                "source": "https://github.com/spaze/coding-standard/tree/v1.0.0"
             },
             "install-path": "../spaze/coding-standard"
         },
@@ -3244,37 +3244,37 @@
         },
         {
             "name": "spaze/sri-macros",
-            "version": "v1.0.0",
-            "version_normalized": "1.0.0.0",
+            "version": "v1.0.1",
+            "version_normalized": "1.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "5f957fc21f4aa6f934963b741f18c7e45c148c16"
+                "reference": "fc303665a9d98b5622206b119ef4dde72aa604d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/5f957fc21f4aa6f934963b741f18c7e45c148c16",
-                "reference": "5f957fc21f4aa6f934963b741f18c7e45c148c16",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/fc303665a9d98b5622206b119ef4dde72aa604d1",
+                "reference": "fc303665a9d98b5622206b119ef4dde72aa604d1",
                 "shasum": ""
             },
             "require": {
                 "latte/latte": "^2.8",
                 "nette/di": "^3.0",
-                "php": "^8.1",
-                "spaze/coding-standard": "^0.0"
+                "php": "^8.1"
             },
             "require-dev": {
                 "nette/application": "^3.0",
                 "nette/tester": "^2.0",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan": "^1.7"
+                "phpstan/phpstan": "^1.7",
+                "spaze/coding-standard": "^1.0"
             },
             "suggest": {
                 "spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
                 "spaze/nonce-generator": "Allows to add nonce attribute to script tags automatically"
             },
-            "time": "2022-06-04T06:16:58+00:00",
+            "time": "2022-06-13T17:31:01+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3296,23 +3296,23 @@
             "description": "Subresource Integrity macros for Latte template engine",
             "support": {
                 "issues": "https://github.com/spaze/sri-macros/issues",
-                "source": "https://github.com/spaze/sri-macros/tree/v1.0.0"
+                "source": "https://github.com/spaze/sri-macros/tree/v1.0.1"
             },
             "install-path": "../spaze/sri-macros"
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.6.2",
-            "version_normalized": "3.6.2.0",
+            "version": "3.7.0",
+            "version_normalized": "3.7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "5e4e71592f69da17871dba6e80dd51bce74a351a"
+                "reference": "a2cd51b45bcaef9c1f2a4bda48f2dd2fa2b95563"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/5e4e71592f69da17871dba6e80dd51bce74a351a",
-                "reference": "5e4e71592f69da17871dba6e80dd51bce74a351a",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/a2cd51b45bcaef9c1f2a4bda48f2dd2fa2b95563",
+                "reference": "a2cd51b45bcaef9c1f2a4bda48f2dd2fa2b95563",
                 "shasum": ""
             },
             "require": {
@@ -3324,7 +3324,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
-            "time": "2021-12-12T21:44:58+00:00",
+            "time": "2022-06-13T06:31:38+00:00",
             "bin": [
                 "bin/phpcs",
                 "bin/phpcbf"
@@ -3907,14 +3907,19 @@
     ],
     "dev": true,
     "dev-package-names": [
+        "dealerdirect/phpcodesniffer-composer-installer",
         "nette/tester",
         "php-parallel-lint/php-console-highlighter",
         "php-parallel-lint/php-parallel-lint",
+        "phpstan/phpdoc-parser",
         "phpstan/phpstan",
         "phpstan/phpstan-deprecation-rules",
         "phpstan/phpstan-nette",
         "roave/security-advisories",
+        "slevomat/coding-standard",
+        "spaze/coding-standard",
         "spaze/phpstan-disallowed-calls",
-        "spaze/phpstan-disallowed-calls-nette"
+        "spaze/phpstan-disallowed-calls-nette",
+        "squizlabs/php_codesniffer"
     ]
 }

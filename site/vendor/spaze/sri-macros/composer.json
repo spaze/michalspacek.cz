@@ -12,8 +12,7 @@
 	"require": {
 		"php": "^8.1",
 		"latte/latte": "^2.8",
-		"nette/di": "^3.0",
-		"spaze/coding-standard": "^0.0"
+		"nette/di": "^3.0"
 	},
 	"autoload": {
 		"psr-4": {"Spaze\\SubresourceIntegrity\\": "src"}
@@ -23,7 +22,8 @@
 		"nette/tester": "^2.0",
 		"phpstan/phpstan": "^1.7",
 		"php-parallel-lint/php-parallel-lint": "^1.2",
-		"php-parallel-lint/php-console-highlighter": "^1.0"
+		"php-parallel-lint/php-console-highlighter": "^1.0",
+		"spaze/coding-standard": "^1.0"
 	},
 	"suggest": {
 		"spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
