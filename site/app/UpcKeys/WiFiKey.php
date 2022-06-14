@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
-class WiFiKey
+use JsonSerializable;
+
+class WiFiKey implements JsonSerializable
 {
 
 	public function __construct(
@@ -50,6 +52,23 @@ class WiFiKey
 	public function getType(): WiFiBand
 	{
 		return $this->type;
+	}
+
+
+	/**
+	 * @return array{serial:string, oui:string|null, mac:string|null, key:string, type:string, typeId:int, serialPrefix:string}
+	 */
+	public function jsonSerialize(): array
+	{
+		return [
+			'serial' => $this->serial,
+			'oui' => $this->oui,
+			'mac' => $this->mac,
+			'key' => $this->key,
+			'type' => $this->type->getLabel(),
+			'typeId' => $this->type->value,
+			'serialPrefix' => $this->serialPrefix,
+		];
 	}
 
 }
