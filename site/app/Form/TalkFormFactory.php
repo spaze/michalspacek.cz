@@ -198,7 +198,7 @@ class TalkFormFactory
 		foreach ($this->talks->getAll() as $talk) {
 			if ($talkAction !== $talk->action) {
 				$title = Strings::truncate($talk->titleTexy, 40);
-				$event = Strings::truncate($talk->event, 30);
+				$event = Strings::truncate((string)$talk->event, 30);
 				$allTalks[(int)$talk->talkId] = sprintf('%s (%s, %s)', $title, $talk->date->format('j. n. Y'), $event);
 			}
 		}
