@@ -4,7 +4,8 @@
 # Error: {$error}
 {/ifset}
 {ifset $keys}
+{varType MichalSpacekCz\UpcKeys\WiFiKey[] $keys}
 {foreach $keys as $key}
-{$key->key}
+{$key->getKey()}
 {/foreach}
 {/ifset}
