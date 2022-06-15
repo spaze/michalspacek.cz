@@ -31,7 +31,7 @@ class Algorithm
 
 	private ?string $fullAlgo;
 
-	private ?StorageDisclosure $latestDisclosure = null;
+	private StorageDisclosure $latestDisclosure;
 
 	/** @var array<int, StorageDisclosure> */
 	private array $disclosures = [];
@@ -40,7 +40,7 @@ class Algorithm
 	private array $disclosureTypes = [];
 
 
-	public function __construct(string $id, string $name, string $alias, bool $salted, bool $stretched, ?DateTime $from, bool $fromConfirmed, ?stdClass $attributes, ?string $note)
+	public function __construct(string $id, string $name, string $alias, bool $salted, bool $stretched, ?DateTime $from, bool $fromConfirmed, ?stdClass $attributes, ?string $note, StorageDisclosure $disclosure)
 	{
 		$this->id = $id;
 		$this->name = $name;
@@ -52,6 +52,7 @@ class Algorithm
 		$this->attributes = $attributes;
 		$this->params = $attributes->params ?? null;
 		$this->note = $note;
+		$this->addDisclosure($disclosure);
 		$this->fullAlgo = $this->formatFullAlgo($this->name, $this->attributes);
 	}
 
@@ -172,7 +173,7 @@ class Algorithm
 	}
 
 
-	public function getLatestDisclosure(): ?StorageDisclosure
+	public function getLatestDisclosure(): StorageDisclosure
 	{
 		return $this->latestDisclosure;
 	}
