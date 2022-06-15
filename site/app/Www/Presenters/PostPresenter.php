@@ -18,7 +18,7 @@ class PostPresenter extends BasePresenter
 
 	private Dates $trainingDates;
 
-	/** @var array<string, array<string, string|null>> */
+	/** @var array<string, array{slug: string, preview: string|null}> */
 	private array $localeLinkParams = [];
 
 	private CspConfig $contentSecurityPolicy;
@@ -58,7 +58,7 @@ class PostPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$this->template->edits = $edits;
 		/** @var DateInterval|false $interval */
-		$interval = ($edits ? current($edits)->editedAt->diff($post->published) : false);
+		$interval = ($edits && $post->published ? current($edits)->editedAt->diff($post->published) : false);
 		if ($edits && $interval && $interval->days >= $this->blogPost->getUpdatedInfoThreshold()) {
 			$this->template->edited = current($edits)->editedAt;
 		}
@@ -86,7 +86,7 @@ class PostPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for blog posts.
 	 *
-	 * @return string[][]
+	 * @return array<string, array{slug: string, preview: string|null}>
 	 */
 	protected function getLocaleLinkParams(): array
 	{

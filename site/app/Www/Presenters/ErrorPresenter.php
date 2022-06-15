@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
@@ -63,22 +64,31 @@ class ErrorPresenter extends BaseErrorPresenter
 	 */
 	protected function getLocaleLinkAction(): string
 	{
-		$request = $this->getRequest()->getParameter('request');
+		$request = $this->getRequest();
 		if (!$request) {
+			throw new ShouldNotHappenException('Request should be set before this method is called in UI\Presenter::run()');
+		}
+		$requestParam = $request->getParameter('request');
+		if (!$requestParam) {
 			throw new InvalidLinkException('No request');
 		}
-		return $request->getPresenterName() . ':' . $request->getParameter(self::ACTION_KEY);
+		return $requestParam->getPresenterName() . ':' . $requestParam->getParameter(self::ACTION_KEY);
 	}
 
 
 	/**
 	 * Get original parameters for locale links.
 	 *
-	 * @return array<string, array<string, string>>
+	 * @return array<string, array<string, string|null>>
+	 * @throws ShouldNotHappenException
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->localeLinkGenerator->defaultParams($this->getRequest()->getParameter('request')->getParameters());
+		$request = $this->getRequest();
+		if (!$request) {
+			throw new ShouldNotHappenException('Request should be set before this method is called in UI\Presenter::run()');
+		}
+		return $this->localeLinkGenerator->defaultParams($request->getParameter('request')->getParameters());
 	}
 
 }

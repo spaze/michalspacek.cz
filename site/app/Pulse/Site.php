@@ -13,9 +13,9 @@ class Site
 
 	private bool $isTypeAll;
 
-	private ?string $url;
+	private string $url;
 
-	private ?string $alias;
+	private string $alias;
 
 	/** @var array<int, StorageSharedWith> */
 	private array $sharedWith = [];
@@ -39,13 +39,13 @@ class Site
 	 *
 	 * @param string $id
 	 * @param bool $isTypeAll
-	 * @param string|null $url
-	 * @param string|null $alias
+	 * @param string $url
+	 * @param string $alias
 	 * @param array<int, array{url:string, alias:string}> $sharedWith
 	 * @param Company $company
 	 * @param string $storageId
 	 */
-	public function __construct(string $id, bool $isTypeAll, ?string $url, ?string $alias, array $sharedWith, Company $company, string $storageId)
+	public function __construct(string $id, bool $isTypeAll, string $url, string $alias, array $sharedWith, Company $company, string $storageId)
 	{
 		$this->id = $id;
 		$this->isTypeAll = $isTypeAll;

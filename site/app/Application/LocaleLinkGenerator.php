@@ -33,7 +33,7 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	 * Generates localized URLs.
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
-	 * @param array<string, array<string, string>> $params of locale => [name => value]
+	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
 	 * @return array<string, string> of locale => URL
 	 */
 	public function links(string $destination, array $params = array()): array
@@ -94,9 +94,9 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 
 
 	/**
-	 * @param array<string, array<string, string>> $params
+	 * @param array<string, array<string, string|null>> $params
 	 * @param string $locale
-	 * @return array<string, string>
+	 * @return array<string, string|null>
 	 */
 	private function getParams(array $params, string $locale): array
 	{

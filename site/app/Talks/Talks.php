@@ -507,7 +507,8 @@ class Talks
 		if (!$replace->hasFile()) {
 			return null;
 		}
-		if (!$replace->isOk()) {
+		$contents = $replace->getContents();
+		if ($contents === null) {
 			throw new RuntimeException('Slide image upload failed', $replace->getError());
 		}
 		if (!in_array($replace->getContentType(), array_keys($supported))) {
@@ -517,13 +518,14 @@ class Talks
 			$this->deleteFiles[] = $renamed = $this->getSlideImageFilename($this->locationRoot, $talkId, "__del__{$originalFile}");
 			rename($this->getSlideImageFilename($this->locationRoot, $talkId, $originalFile), $renamed);
 		}
-		$name = strtr(rtrim(base64_encode(sha1($replace->getContents(), true)), '='), '+/', '-_');
+		$name = strtr(rtrim(base64_encode(sha1($contents, true)), '='), '+/', '-_');
 		$extension = $supported[$replace->getContentType()];
 		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
 		$this->decrementOtherSlides($originalFile);
 		$this->incrementOtherSlides("{$name}.{$extension}");
-		if (!$width || !$height) {
-			[$width, $height] = $replace->getImageSize();
+		$imageSize = $replace->getImageSize();
+		if ($imageSize && !($width && $height)) {
+			[$width, $height] = $imageSize;
 		}
 		return "{$name}.{$extension}";
 	}

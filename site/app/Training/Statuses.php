@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Tracy\Debugger;
@@ -198,6 +199,7 @@ class Statuses
 	 * @param int $applicationId
 	 * @param string $status
 	 * @param string|null $date
+	 * @throws TrainingApplicationDoesNotExistException
 	 */
 	private function setStatus(int $applicationId, string $status, ?string $date): void
 	{
@@ -214,6 +216,9 @@ class Statuses
 				id_application = ?',
 			$applicationId,
 		);
+		if (!$prevStatus) {
+			throw new TrainingApplicationDoesNotExistException($applicationId);
+		}
 
 		$datetime = new DateTime($date ?? '');
 

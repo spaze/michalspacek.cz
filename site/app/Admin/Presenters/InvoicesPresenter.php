@@ -57,6 +57,10 @@ class InvoicesPresenter extends BasePresenter
 				}
 				$this->redirect('this');
 			},
+			function (): never {
+				$this->flashMessage('Došlo k chybě při označování přihlášky jako zaplacené', 'error');
+				$this->redirect('this');
+			},
 			$this->allUnpaidInvoiceIds,
 		);
 	}

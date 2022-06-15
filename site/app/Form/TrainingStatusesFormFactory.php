@@ -46,7 +46,9 @@ class TrainingStatusesFormFactory
 		$submitFamiliar = $form->addSubmit('familiar', 'Tykat všem')->setValidationScope([]);
 
 		$submitStatuses->onClick[] = function (SubmitButton $button) use ($onSuccess): void {
-			$values = $button->getForm()->getValues();
+			/** @var Form $form If not, InvalidStateException would be thrown */
+			$form = $button->getForm();
+			$values = $form->getValues();
 			foreach ($values->applications as $id => $status) {
 				if ($status) {
 					$this->trainingStatuses->updateStatus($id, $status, $values->date);
@@ -57,7 +59,9 @@ class TrainingStatusesFormFactory
 		$submitFamiliar->onClick[] = function (SubmitButton $button) use ($onSuccess): void {
 			$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 			$total = 0;
-			foreach (array_keys((array)$button->getForm()->getUnsafeValues(null)->applications) as $id) {
+			/** @var Form $form If not, InvalidStateException would be thrown */
+			$form = $button->getForm();
+			foreach (array_keys((array)$form->getUnsafeValues(null)->applications) as $id) {
 				$application = $this->trainingApplications->getApplicationById($id);
 				if (in_array($application->status, $attendedStatuses) && !$application->familiar) {
 					$this->trainingApplications->setFamiliar($id);

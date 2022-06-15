@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Http\Redirections;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
 use Nette\Http\IResponse;
 use Tracy\ILogger;
@@ -38,7 +39,11 @@ abstract class BaseErrorPresenter extends BasePresenter
 	public function startup(): void
 	{
 		parent::startup();
-		if (!$this->getRequest()->isMethod(Request::FORWARD)) {
+		$request = $this->getRequest();
+		if (!$request) {
+			throw new ShouldNotHappenException('Request should be set before this method is called in UI\Presenter::run()');
+		}
+		if (!$request->isMethod(Request::FORWARD)) {
 			$this->error();
 		}
 
@@ -47,7 +52,7 @@ abstract class BaseErrorPresenter extends BasePresenter
 			$this->redirectUrl($destination, IResponse::S301_MOVED_PERMANENTLY);
 		}
 
-		$e = $this->getRequest()->getParameter('exception');
+		$e = $request->getParameter('exception');
 		$this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
 	}
 

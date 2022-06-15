@@ -63,6 +63,9 @@ class HttpStreamContextTest extends TestCase
 		Assert::throws(function () use ($params): void {
 			call_user_func($params['notification'], 303, STREAM_NOTIFY_SEVERITY_ERR, 'err', 808);
 		}, HttpStreamException::class, 'err (303)', 808);
+		Assert::throws(function () use ($params): void {
+			call_user_func($params['notification'], 418, STREAM_NOTIFY_SEVERITY_ERR, null, 808);
+		}, HttpStreamException::class, '¯\_(ツ)_/¯ (418)', 808);
 	}
 
 }

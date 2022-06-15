@@ -27,12 +27,12 @@ class TrainingApplicationMultipleFormFactory
 	 * @param callable(int): void $onSuccess
 	 * @param Request $request
 	 * @param int $trainingId
-	 * @param int|null $dateId
+	 * @param int $dateId
 	 * @param Price|null $price
 	 * @param int|null $studentDiscount
 	 * @return Form
 	 */
-	public function create(callable $onSuccess, Request $request, int $trainingId, ?int $dateId, ?Price $price, ?int $studentDiscount): Form
+	public function create(callable $onSuccess, Request $request, int $trainingId, int $dateId, ?Price $price, ?int $studentDiscount): Form
 	{
 		$form = $this->factory->create();
 		$applicationsContainer = $form->addContainer('applications');

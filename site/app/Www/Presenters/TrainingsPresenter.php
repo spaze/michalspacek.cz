@@ -375,7 +375,7 @@ class TrainingsPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for trainings.
 	 *
-	 * @return array<string, array<string, string>>
+	 * @return array<string, array<string, string|null>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{

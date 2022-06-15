@@ -12,6 +12,7 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Random;
+use Nette\Utils\Strings;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use RuntimeException;
 use Spaze\Encryption\Symmetric\StaticKey;
@@ -370,7 +371,7 @@ class Applications
 		?string $note,
 		?Price $price,
 		?int $studentDiscount,
-		?string $status,
+		string $status,
 		string $source,
 		?string $date = null,
 	): int {
@@ -855,9 +856,9 @@ class Applications
 	 */
 	private function getSourceNameInitials(string $name): string
 	{
-		$name = preg_replace('/,? s\.r\.o./', '', $name);
-		preg_match_all('/(?<=\s|\b)\pL/u', $name, $matches);
-		return strtoupper(implode('', current($matches)));
+		$name = Strings::replace($name, '/,? s\.r\.o./', '');
+		$matches = Strings::matchAll($name, '/(?<=\s|\b)\pL/u', PREG_PATTERN_ORDER);
+		return Strings::upper(implode('', current($matches)));
 	}
 
 

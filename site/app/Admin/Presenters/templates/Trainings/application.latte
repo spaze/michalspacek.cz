@@ -3,7 +3,7 @@
 &raquo; <a n:href="Homepage:">Administrace</a>
 {if $trainingStart}
 &raquo; <a n:href="Trainings:">Termíny</a>
-&raquo; <a n:href="date $dateId">{$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</a>
+&raquo; <a n:href="date $applicationDateId">{$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</a>
 {else}
 &raquo; <a n:href="preliminary">Předběžné přihlášky</a>
 {/if}

@@ -9,9 +9,10 @@ use Throwable;
 class HttpStreamException extends Exception
 {
 
-	public function __construct(int $notificationCode, string $message, int $messageCode, ?Throwable $previous = null)
+	public function __construct(int $notificationCode, ?string $message, int $messageCode, ?Throwable $previous = null)
 	{
-		parent::__construct(trim($message) . " ({$notificationCode})", $messageCode, $previous);
+		$message = $message ? trim($message) : '¯\_(ツ)_/¯';
+		parent::__construct("{$message} ({$notificationCode})", $messageCode, $previous);
 	}
 
 }
