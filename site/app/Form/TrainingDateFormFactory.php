@@ -192,10 +192,10 @@ class TrainingDateFormFactory
 
 	/**
 	 * @param Form $form
-	 * @param Row<mixed>|null $date
+	 * @param Row<mixed> $date
 	 * @param SubmitButton $submit
 	 */
-	public function setTrainingDate(Form $form, ?Row $date, SubmitButton $submit): void
+	public function setTrainingDate(Form $form, Row $date, SubmitButton $submit): void
 	{
 		$values = array(
 			'training' => $date->trainingId,
