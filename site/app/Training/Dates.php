@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
+use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
@@ -43,9 +44,10 @@ class Dates
 
 	/**
 	 * @param int $dateId
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws TrainingDateDoesNotExistException
 	 */
-	public function get(int $dateId): ?Row
+	public function get(int $dateId): Row
 	{
 		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
@@ -90,10 +92,12 @@ class Dates
 			$this->translator->getDefaultLocale(),
 		);
 
-		if ($result) {
-			$result->price = $result->price ? $this->prices->resolvePriceVat($result->price) : null;
-			$result->name = $this->translator->translate($result->name);
+		if (!$result) {
+			throw new TrainingDateDoesNotExistException($dateId);
 		}
+
+		$result->price = $result->price ? $this->prices->resolvePriceVat($result->price) : null;
+		$result->name = $this->translator->translate($result->name);
 		return $result;
 	}
 

@@ -5,9 +5,9 @@ namespace MichalSpacekCz\Interviews;
 
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use RuntimeException;
 
 class Interviews
 {
@@ -54,9 +54,10 @@ class Interviews
 
 	/**
 	 * @param string $name
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws InterviewDoesNotExistException
 	 */
-	public function get(string $name): ?Row
+	public function get(string $name): Row
 	{
 		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
@@ -78,19 +79,21 @@ class Interviews
 			$name,
 		);
 
-		if ($result) {
-			$this->format($result);
+		if (!$result) {
+			throw new InterviewDoesNotExistException(name: $name);
 		}
 
+		$this->format($result);
 		return $result;
 	}
 
 
 	/**
 	 * @param int $id
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws InterviewDoesNotExistException
 	 */
-	public function getById(int $id): ?Row
+	public function getById(int $id): Row
 	{
 		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
@@ -114,7 +117,7 @@ class Interviews
 		);
 
 		if (!$result) {
-			throw new RuntimeException("Interview id {$id} does not exist, yet");
+			throw new InterviewDoesNotExistException(id: $id);
 		}
 
 		$this->format($result);

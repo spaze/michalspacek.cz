@@ -8,6 +8,7 @@ use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Post\Exceptions\PostDoesNotExistException;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
@@ -63,21 +64,27 @@ class Post
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
+	 * @throws PostDoesNotExistException
 	 * @throws Throwable
 	 */
-	public function get(string $post, ?string $previewKey = null): ?Data
+	public function get(string $post, ?string $previewKey = null): Data
 	{
 		$result = $this->loader->fetch($post, $previewKey);
-		return ($result ? $this->buildPost($result) : null);
+		if (!$result) {
+			throw new PostDoesNotExistException(name: $post, previewKey: $previewKey);
+		} else {
+			return $this->buildPost($result);
+		}
 	}
 
 
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
+	 * @throws PostDoesNotExistException
 	 * @throws Throwable
 	 */
-	public function getById(int $id): ?Data
+	public function getById(int $id): Data
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -108,7 +115,11 @@ class Post
 			WHERE bp.id_blog_post = ?',
 			$id,
 		);
-		return ($result ? $this->buildPost($result) : null);
+		if (!$result) {
+			throw new PostDoesNotExistException(id: $id);
+		} else {
+			return $this->buildPost($result);
+		}
 	}
 
 

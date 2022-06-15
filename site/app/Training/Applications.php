@@ -6,11 +6,13 @@ namespace MichalSpacekCz\Training;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
+use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\Random;
+use ParagonIE\Halite\Alerts\HaliteAlert;
 use PDOException;
 use RuntimeException;
 use Spaze\Encryption\Symmetric\StaticKey;
@@ -578,9 +580,11 @@ class Applications
 
 	/**
 	 * @param int $id
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws TrainingApplicationDoesNotExistException
+	 * @throws HaliteAlert
 	 */
-	public function getApplicationById(int $id): ?Row
+	public function getApplicationById(int $id): Row
 	{
 		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
@@ -629,13 +633,14 @@ class Applications
 			$this->translator->getDefaultLocale(),
 		);
 
-		if ($result) {
-			$result->attended = in_array($result->status, $this->trainingStatuses->getAttendedStatuses(), true);
-			if ($result->email) {
-				$result->email = $this->emailEncryption->decrypt($result->email);
-			}
+		if (!$result) {
+			throw new TrainingApplicationDoesNotExistException($id);
 		}
 
+		$result->attended = in_array($result->status, $this->trainingStatuses->getAttendedStatuses(), true);
+		if ($result->email) {
+			$result->email = $this->emailEncryption->decrypt($result->email);
+		}
 		return $result;
 	}
 

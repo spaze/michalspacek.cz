@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
@@ -12,7 +13,7 @@ use Nette\Utils\ArrayHash;
 class Trainings
 {
 
-	/** @var Row[] */
+	/** @var array<int, Row> */
 	private array $trainingsById = [];
 
 	/** @var Row[] */
@@ -30,9 +31,10 @@ class Trainings
 
 	/**
 	 * @param string $name
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws TrainingDoesNotExistException
 	 */
-	public function get(string $name): ?Row
+	public function get(string $name): Row
 	{
 		return $this->getTraining($name, false);
 	}
@@ -40,9 +42,10 @@ class Trainings
 
 	/**
 	 * @param string $name
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws TrainingDoesNotExistException
 	 */
-	public function getIncludingCustom(string $name): ?Row
+	public function getIncludingCustom(string $name): Row
 	{
 		return $this->getTraining($name, true);
 	}
@@ -51,9 +54,10 @@ class Trainings
 	/**
 	 * @param string $name
 	 * @param bool $includeCustom
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws TrainingDoesNotExistException
 	 */
-	private function getTraining(string $name, bool $includeCustom): ?Row
+	private function getTraining(string $name, bool $includeCustom): Row
 	{
 		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
@@ -87,17 +91,21 @@ class Trainings
 			$includeCustom,
 		);
 
-		return ($result ? $this->texyFormatter->formatTraining($result) : null);
+		if (!$result) {
+			throw new TrainingDoesNotExistException(name: $name);
+		}
+		return $this->texyFormatter->formatTraining($result);
 	}
 
 
 	/**
 	 * @param int $id
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws TrainingDoesNotExistException
 	 */
-	public function getById(int $id): ?Row
+	public function getById(int $id): Row
 	{
-		if (!array_key_exists($id, $this->trainingsById)) {
+		if (!isset($this->trainingsById[$id])) {
 			/** @var Row<mixed>|null $result */
 			$result = $this->database->fetch(
 				'SELECT
@@ -126,7 +134,12 @@ class Trainings
 				$id,
 				$this->translator->getDefaultLocale(),
 			);
-			$this->trainingsById[$id] = ($result ? $this->texyFormatter->formatTraining($result) : null);
+
+			if (!$result) {
+				throw new TrainingDoesNotExistException(id: $id);
+			} else {
+				$this->trainingsById[$id] = ($this->texyFormatter->formatTraining($result));
+			}
 		}
 		return $this->trainingsById[$id];
 	}

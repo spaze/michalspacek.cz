@@ -14,6 +14,8 @@ use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Statuses;
@@ -75,9 +77,10 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->dateId = $param;
 		$this->redirectParam = $this->dateId;
-		$training = $this->trainingDates->get($this->dateId);
-		if (!$training) {
-			throw new BadRequestException("Date id {$param} does not exist, yet");
+		try {
+			$training = $this->trainingDates->get($this->dateId);
+		} catch (TrainingDateDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		$this->training = $training;
 		$validCount = 0;
@@ -158,9 +161,10 @@ class TrainingsPresenter extends BasePresenter
 	public function actionApplication(int $param): void
 	{
 		$this->applicationId = $param;
-		$application = $this->trainingApplications->getApplicationById($this->applicationId);
-		if (!$application) {
-			throw new BadRequestException("No application with id {$this->applicationId}");
+		try {
+			$application = $this->trainingApplications->getApplicationById($this->applicationId);
+		} catch (TrainingApplicationDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		$this->application = $application;
 
