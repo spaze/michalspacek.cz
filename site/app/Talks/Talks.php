@@ -478,8 +478,8 @@ class Talks
 				$row->filenamesTalkId = null;
 			}
 			$row->speakerNotes = $this->texyFormatter->format($row->speakerNotesTexy);
-			$row->image = $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filename);
-			$row->imageAlternative = $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filenameAlternative);
+			$row->image = $row->filename ? $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filename) : null;
+			$row->imageAlternative = $row->filenameAlternative ? $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filenameAlternative) : null;
 			$row->imageAlternativeType = ($row->filenameAlternative ? $alternativeTypes[pathinfo($row->filenameAlternative, PATHINFO_EXTENSION)] : null);
 			$result[$row->number] = $row;
 		}
@@ -487,15 +487,9 @@ class Talks
 	}
 
 
-	/**
-	 * @param string $prefix
-	 * @param int $talkId
-	 * @param string $filename
-	 * @return null|string
-	 */
-	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): ?string
+	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): string
 	{
-		return (empty($filename) ? null : "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}");
+		return "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}";
 	}
 
 
@@ -560,8 +554,8 @@ class Talks
 						'key_talk' => $talkId,
 						'alias' => $slide->alias,
 						'number' => $slide->number,
-						'filename' => $replace ?: $slide->filename,
-						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
+						'filename' => $replace ?? $slide->filename ?? '',
+						'filename_alternative' => $replaceAlternative ?? $slide->filenameAlternative ?? '',
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
 					),
@@ -623,8 +617,8 @@ class Talks
 						'key_talk' => $talkId,
 						'alias' => $slide->alias,
 						'number' => $slideNumber,
-						'filename' => $replace ?: $slide->filename,
-						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
+						'filename' => $replace ?? $slide->filename ?? '',
+						'filename_alternative' => $replaceAlternative ?? $slide->filenameAlternative ?? '',
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
 					),
