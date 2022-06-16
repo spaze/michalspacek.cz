@@ -215,7 +215,7 @@ class Post
 			$timeZone = $post->published?->getTimezone() ?: null;
 			$this->database->query(
 				'INSERT INTO blog_posts',
-				array(
+				[
 					'key_translation_group' => $post->translationGroupId,
 					'key_locale' => $post->localeId,
 					'title' => $post->titleTexy,
@@ -234,7 +234,7 @@ class Post
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
 					'omit_exports' => $post->omitExports,
-				),
+				],
 			);
 			$post->postId = (int)$this->database->getInsertId();
 			$this->exportsCache->clean([Cache::TAGS => array_merge([self::class], $post->slugTags)]);
@@ -256,7 +256,7 @@ class Post
 			$timeZone = $post->published?->getTimezone() ?: null;
 			$this->database->query(
 				'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
-				array(
+				[
 					'key_translation_group' => $post->translationGroupId,
 					'key_locale' => $post->localeId,
 					'title' => $post->titleTexy,
@@ -275,7 +275,7 @@ class Post
 					'csp_snippets' => ($post->cspSnippets ? Json::encode($post->cspSnippets) : null),
 					'allowed_tags' => ($post->allowedTags ? Json::encode($post->allowedTags) : null),
 					'omit_exports' => $post->omitExports,
-				),
+				],
 				$post->postId,
 			);
 			$now = new DateTime();
@@ -284,12 +284,12 @@ class Post
 				$timeZone = $now->getTimezone();
 				$this->database->query(
 					'INSERT INTO blog_post_edits',
-					array(
+					[
 						'key_blog_post' => $post->postId,
 						'edited_at' => $now,
 						'edited_at_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 						'summary' => $post->editSummary,
-					),
+					],
 				);
 			}
 			$cacheTags = [self::class . "/id/{$post->postId}"];
@@ -354,7 +354,7 @@ class Post
 			FROM blog_post_edits
 			WHERE key_blog_post = ?
 			ORDER BY edited_at DESC';
-		$edits = array();
+		$edits = [];
 		foreach ($this->database->fetchAll($sql, $postId) as $row) {
 			$summary = $this->texyFormatter->format($row->summaryTexy);
 			$edit = new Edit();

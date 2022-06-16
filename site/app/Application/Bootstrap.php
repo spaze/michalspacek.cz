@@ -49,7 +49,7 @@ class Bootstrap
 	 */
 	private function getConfigurationFiles(string $extraConfig): array
 	{
-		return array_unique(array(
+		return array_unique([
 			$this->siteDir . '/config/extensions.neon',
 			$this->siteDir . '/config/common.neon',
 			$this->siteDir . '/config/contentsecuritypolicy.neon',
@@ -59,7 +59,7 @@ class Bootstrap
 			$this->siteDir . '/config/routes.neon',
 			$extraConfig,
 			$this->siteDir . '/config/local.neon',
-		));
+		]);
 	}
 
 

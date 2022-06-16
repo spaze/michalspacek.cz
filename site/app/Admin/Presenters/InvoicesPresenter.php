@@ -27,7 +27,7 @@ class InvoicesPresenter extends BasePresenter
 
 	public function actionUnpaid(): void
 	{
-		$dates = array();
+		$dates = [];
 		foreach ($this->trainingDates->getWithUnpaid() as $date) {
 			$unpaidApplications = $this->trainingApplications->getValidUnpaidByDate($date->dateId);
 			foreach ($unpaidApplications as $application) {

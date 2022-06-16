@@ -57,11 +57,11 @@ class Embed
 			}
 		}
 
-		return array(
+		return [
 			'slidesEmbed' => $embedHref,
 			'slidesDataSlide' => $dataSlide,
 			'slidesEmbedType' => $type,
-		);
+		];
 	}
 
 

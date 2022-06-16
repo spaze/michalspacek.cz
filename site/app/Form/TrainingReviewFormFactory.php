@@ -104,7 +104,7 @@ class TrainingReviewFormFactory
 	 */
 	private function setReview(Form $form, Row $review, SubmitButton $submit): void
 	{
-		$values = array(
+		$values = [
 			'name' => $review->name,
 			'company' => $review->company,
 			'jobTitle' => $review->jobTitle,
@@ -113,7 +113,7 @@ class TrainingReviewFormFactory
 			'hidden' => $review->hidden,
 			'ranking' => $review->ranking,
 			'note' => $review->note,
-		);
+		];
 		$form->setDefaults($values);
 		$submit->caption = 'Upravit';
 	}

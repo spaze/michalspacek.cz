@@ -46,7 +46,7 @@ class Ubee implements RouterInterface
 	public function getKeys(string $ssid): array
 	{
 		$rows = $this->database->fetchAll('SELECT mac, `key` FROM keys_ubee WHERE ssid = ?', substr($ssid, 3));
-		$result = array();
+		$result = [];
 		foreach ($rows as $row) {
 			$result[$row->mac] = $this->buildKey($row->mac, (int)$row->key);
 		}

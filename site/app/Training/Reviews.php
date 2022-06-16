@@ -165,7 +165,7 @@ class Reviews
 	{
 		$this->database->query(
 			'UPDATE training_reviews SET ? WHERE id_review = ?',
-			array(
+			[
 				'key_date' => $dateId,
 				'name' => $name,
 				'company' => $company,
@@ -175,7 +175,7 @@ class Reviews
 				'hidden' => $hidden,
 				'ranking' => $ranking,
 				'note' => $note,
-			),
+			],
 			$reviewId,
 		);
 	}
@@ -188,7 +188,7 @@ class Reviews
 		$timeZone = $datetime->getTimezone();
 		$this->database->query(
 			'INSERT INTO training_reviews ?',
-			array(
+			[
 				'key_date' => $dateId,
 				'name' => $name,
 				'company' => $company,
@@ -200,7 +200,7 @@ class Reviews
 				'hidden' => $hidden,
 				'ranking' => $ranking,
 				'note' => $note,
-			),
+			],
 		);
 	}
 

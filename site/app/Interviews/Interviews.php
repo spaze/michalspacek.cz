@@ -150,7 +150,7 @@ class Interviews
 	): void {
 		$this->database->query(
 			'UPDATE interviews SET ? WHERE id_interview = ?',
-			array(
+			[
 				'action' => $action,
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
@@ -162,7 +162,7 @@ class Interviews
 				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
 				'source_name' => (empty($sourceName) ? null : $sourceName),
 				'source_href' => (empty($sourceHref) ? null : $sourceHref),
-			),
+			],
 			$id,
 		);
 	}
@@ -183,7 +183,7 @@ class Interviews
 	): void {
 		$this->database->query(
 			'INSERT INTO interviews',
-			array(
+			[
 				'action' => $action,
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
@@ -195,7 +195,7 @@ class Interviews
 				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
 				'source_name' => (empty($sourceName) ? null : $sourceName),
 				'source_href' => (empty($sourceHref) ? null : $sourceHref),
-			),
+			],
 		);
 	}
 

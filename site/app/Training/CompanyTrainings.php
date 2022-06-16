@@ -87,7 +87,7 @@ class CompanyTrainings
 		);
 		$public = $this->trainingDates->getPublicUpcoming();
 
-		$trainings = array();
+		$trainings = [];
 		foreach ($result as $training) {
 			if (!isset($public[$training->action])) {
 				$trainings[$training->action] = $this->texyFormatter->formatTraining($training);

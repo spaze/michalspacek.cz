@@ -28,7 +28,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->favoriteTalks = $this->talks->getFavorites();
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
 
-		$talks = array();
+		$talks = [];
 		foreach ($this->talks->getAll() as $talk) {
 			$talks[$talk->date->format('Y')][] = $talk;
 		}

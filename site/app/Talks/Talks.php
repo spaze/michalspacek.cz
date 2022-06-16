@@ -290,7 +290,7 @@ class Talks
 			WHERE favorite IS NOT NULL
 			ORDER BY date DESC';
 
-		$result = array();
+		$result = [];
 		foreach ($this->database->fetchAll($query) as $row) {
 			$result[] = $this->texyFormatter->substitute($row['favorite'], [$row['title'], $row['action']]);
 		}
@@ -350,7 +350,7 @@ class Talks
 	): void {
 		$this->database->query(
 			'UPDATE talks SET ? WHERE id_talk = ?',
-			array(
+			[
 				'action' => (empty($action) ? null : $action),
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
@@ -370,7 +370,7 @@ class Talks
 				'favorite' => (empty($favorite) ? null : $favorite),
 				'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
 				'publish_slides' => $publishSlides,
-			),
+			],
 			$id,
 		);
 	}
@@ -402,7 +402,7 @@ class Talks
 	): void {
 		$this->database->query(
 			'INSERT INTO talks',
-			array(
+			[
 				'action' => (empty($action) ? null : $action),
 				'title' => $title,
 				'description' => (empty($description) ? null : $description),
@@ -422,7 +422,7 @@ class Talks
 				'favorite' => (empty($favorite) ? null : $favorite),
 				'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
 				'publish_slides' => $publishSlides,
-			),
+			],
 		);
 	}
 
@@ -551,7 +551,7 @@ class Talks
 				$lastNumber = (int)$slide->number;
 				$this->database->query(
 					'INSERT INTO talk_slides',
-					array(
+					[
 						'key_talk' => $talkId,
 						'alias' => $slide->alias,
 						'number' => $slide->number,
@@ -559,7 +559,7 @@ class Talks
 						'filename_alternative' => $replaceAlternative ?? $slide->filenameAlternative ?? '',
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
-					),
+					],
 				);
 			}
 		} catch (UniqueConstraintViolationException $e) {
@@ -608,7 +608,7 @@ class Talks
 
 				$this->database->query(
 					'UPDATE talk_slides SET ? WHERE id_slide = ?',
-					array(
+					[
 						'key_talk' => $talkId,
 						'alias' => $slide->alias,
 						'number' => $slideNumber,
@@ -616,7 +616,7 @@ class Talks
 						'filename_alternative' => $replaceAlternative ?? $slide->filenameAlternative ?? '',
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
-					),
+					],
 					$id,
 				);
 			}

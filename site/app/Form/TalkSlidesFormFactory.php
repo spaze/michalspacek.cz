@@ -41,14 +41,14 @@ class TalkSlidesFormFactory
 		foreach ($slides as $slide) {
 			$slideIdContainer = $slidesContainer->addContainer($slide->slideId);
 			$this->addSlideFields($form, $slideIdContainer, $slide->filenamesTalkId);
-			$values = array(
+			$values = [
 				'alias' => $slide->alias,
 				'number' => $slide->number,
 				'title' => $slide->title,
 				'filename' => $slide->filename,
 				'filenameAlternative' => $slide->filenameAlternative,
 				'speakerNotes' => $slide->speakerNotesTexy,
-			);
+			];
 			$slideIdContainer->setDefaults($values);
 		}
 

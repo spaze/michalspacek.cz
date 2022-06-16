@@ -36,9 +36,9 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
 	 * @return array<string, string> of locale => URL
 	 */
-	public function links(string $destination, array $params = array()): array
+	public function links(string $destination, array $params = []): array
 	{
-		$links = array();
+		$links = [];
 		foreach ($this->routerFactory->getLocaleRouters() as $locale => $routers) {
 			foreach ($routers->getRouters() as $router) {
 				/** @var RouteList $router */

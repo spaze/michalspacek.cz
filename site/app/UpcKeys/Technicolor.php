@@ -85,7 +85,7 @@ class Technicolor implements RouterInterface
 	private function generateKeys(string $ssid): array
 	{
 		$data = Json::decode($this->callApi(sprintf($this->apiUrl, $ssid, implode(',', $this->serialNumberPrefixes))));
-		$keys = array();
+		$keys = [];
 		foreach (explode("\n", $data) as $line) {
 			if (empty($line)) {
 				continue;
@@ -144,7 +144,7 @@ class Technicolor implements RouterInterface
 			WHERE s.ssid = ?',
 			$ssid,
 		);
-		$result = array();
+		$result = [];
 		foreach ($rows as $row) {
 			$result["{$row->type}-{$row->serial}"] = $this->buildKey($row->serial, $row->key, $row->type);
 		}
@@ -188,22 +188,22 @@ class Technicolor implements RouterInterface
 			$timeZone = $datetime->getTimezone();
 			$this->database->query(
 				'INSERT INTO ssids',
-				array(
+				[
 					'ssid' => $ssid,
 					'added' => $datetime,
 					'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
-				),
+				],
 			);
 			$ssidId = $this->database->getInsertId();
 			foreach ($keys as $key) {
 				$this->database->query(
 					'INSERT INTO `keys`',
-					array(
+					[
 						'key_ssid' => $ssidId,
 						'serial' => $key->getSerial(),
 						'key' => $key->getKey(),
 						'type' => $key->getType()->value,
-					),
+					],
 				);
 			}
 			$this->database->commit();

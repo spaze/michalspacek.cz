@@ -454,7 +454,7 @@ class Trainings
 	{
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE key_date IN (?)',
-			array(
+			[
 				'name' => null,
 				'email' => null,
 				'company' => null,
@@ -465,7 +465,7 @@ class Trainings
 				'company_id' => null,
 				'company_tax_id' => null,
 				'note' => null,
-			),
+			],
 			$dateIds,
 		);
 	}

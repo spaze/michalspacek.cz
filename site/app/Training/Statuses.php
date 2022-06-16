@@ -70,7 +70,7 @@ class Statuses
 	 */
 	public function getAttendedStatuses(): array
 	{
-		return array($this->getStatusId(self::STATUS_ATTENDED) => self::STATUS_ATTENDED) + $this->getDescendantStatuses(self::STATUS_ATTENDED);
+		return [$this->getStatusId(self::STATUS_ATTENDED) => self::STATUS_ATTENDED] + $this->getDescendantStatuses(self::STATUS_ATTENDED);
 	}
 
 
@@ -100,7 +100,7 @@ class Statuses
 	 */
 	public function getCanceledStatus(): array
 	{
-		return array($this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED);
+		return [$this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED];
 	}
 
 
@@ -233,22 +233,22 @@ class Statuses
 		$timeZone = $datetime->getTimezone();
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
-			array(
+			[
 				'key_status' => $statusId,
 				'status_time' => $datetime,
 				'status_time_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
-			),
+			],
 			$applicationId,
 		);
 
 		$this->database->query(
 			'INSERT INTO training_application_status_history',
-			array(
+			[
 				'key_application' => $applicationId,
 				'key_status' => $prevStatus->statusId,
 				'status_time' => $prevStatus->statusTime,
 				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
-			),
+			],
 		);
 	}
 

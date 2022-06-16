@@ -44,7 +44,7 @@ class CompanyPresenter extends BasePresenter
 			$info->status = IResponse::S500_INTERNAL_SERVER_ERROR;
 			$info->statusMessage = $e->getMessage();
 		}
-		$data = array(
+		$data = [
 			'status' => $info->status,
 			'statusMessage' => $info->statusMessage,
 			'companyId' => $info->companyId,
@@ -54,7 +54,7 @@ class CompanyPresenter extends BasePresenter
 			'city' => $info->city ?? '',
 			'zip' => $info->zip ?? '',
 			'country' => $info->country ?? '',
-		);
+		];
 
 		$this->sendJson(array_filter($data));
 	}

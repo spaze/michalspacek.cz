@@ -42,12 +42,12 @@ class TrainingDateFormFactory
 	{
 		$form = $this->factory->create();
 
-		$trainings = array(
+		$trainings = [
 			self::STANDARD => [],
 			self::CUSTOM => [],
 			self::REPLACED => [],
 			self::DISCONTINUED => [],
-		);
+		];
 		foreach ($this->trainings->getNamesIncludingCustomDiscontinued() as $training) {
 			if ($training->discontinuedId !== null) {
 				$key = self::DISCONTINUED;
@@ -61,7 +61,7 @@ class TrainingDateFormFactory
 		$form->addSelect('training', 'Školení:', array_filter($trainings))
 			->setRequired('Vyberte prosím školení');
 
-		$venues = array();
+		$venues = [];
 		foreach ($this->trainingVenues->getAll() as $venue) {
 			$venues[$venue->id] = "{$venue->name}, {$venue->city}";
 		}
@@ -84,7 +84,7 @@ class TrainingDateFormFactory
 
 		$form->addText('label', 'Label:');
 
-		$statuses = array();
+		$statuses = [];
 		foreach ($this->trainingDates->getStatuses() as $status) {
 			$statuses[$status->id] = "{$status->status} – {$status->description}";
 		}
@@ -108,7 +108,7 @@ class TrainingDateFormFactory
 			->setHtmlAttribute('placeholder', $format)
 			->setHtmlAttribute('title', $format);
 
-		$cooperations = array(0 => 'žádná');
+		$cooperations = [0 => 'žádná'];
 		foreach ($this->trainings->getCooperations() as $cooperation) {
 			$cooperations[$cooperation->id] = $cooperation->name;
 		}
@@ -197,7 +197,7 @@ class TrainingDateFormFactory
 	 */
 	public function setTrainingDate(Form $form, Row $date, SubmitButton $submit): void
 	{
-		$values = array(
+		$values = [
 			'training' => $date->trainingId,
 			'venue' => $date->venueId,
 			'remote' => $date->remote,
@@ -214,7 +214,7 @@ class TrainingDateFormFactory
 			'studentDiscount' => ($date->hasCustomStudentDiscount ? $date->studentDiscount : null),
 			'videoHref' => $date->videoHref,
 			'feedbackHref' => $date->feedbackHref,
-		);
+		];
 		$form->setDefaults($values);
 		$submit->caption = 'Upravit';
 	}

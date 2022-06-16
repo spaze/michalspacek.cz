@@ -26,10 +26,10 @@ class Dates
 	private const DATA_RETENTION = 30;
 
 	/** @var array<string, int> */
-	private array $statusIds = array();
+	private array $statusIds = [];
 
 	/** @var array<int, array<string, ArrayHash>> */
-	private array $upcomingDates = array();
+	private array $upcomingDates = [];
 
 
 	public function __construct(
@@ -178,7 +178,7 @@ class Dates
 	): void {
 		$this->database->query(
 			'UPDATE training_dates SET ? WHERE id_date = ?',
-			array(
+			[
 				'key_training' => $trainingId,
 				'key_venue' => $venueId,
 				'remote' => $remote,
@@ -195,7 +195,7 @@ class Dates
 				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
 				'feedback_href' => (empty($feedbackHref) ? null : $feedbackHref),
-			),
+			],
 			$dateId,
 		);
 	}
@@ -221,7 +221,7 @@ class Dates
 	): int {
 		$this->database->query(
 			'INSERT INTO training_dates',
-			array(
+			[
 				'key_training' => $trainingId,
 				'key_venue' => $venueId,
 				'remote' => $remote,
@@ -238,7 +238,7 @@ class Dates
 				'remote_notes' => (empty($remoteNotes) ? null : trim($remoteNotes)),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
 				'feedback_href' => (empty($feedbackHref) ? null : $feedbackHref),
-			),
+			],
 		);
 		return (int)$this->database->getInsertId();
 	}
@@ -288,7 +288,7 @@ class Dates
 	 */
 	public function getPublicUpcomingIds(): array
 	{
-		$upcomingIds = array();
+		$upcomingIds = [];
 		foreach ($this->getPublicUpcoming() as $training) {
 			foreach ($training->dates as $date) {
 				$upcomingIds[] = $date->dateId;
@@ -356,9 +356,9 @@ class Dates
 				ORDER BY
 					d.start";
 
-			$upcoming = array();
+			$upcoming = [];
 			foreach ($this->database->fetchAll($query, $includeNonPublic, $includeNonPublic, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED, $this->translator->getDefaultLocale()) as $row) {
-				$date = array(
+				$date = [
 					'dateId' => $row->dateId,
 					'tentative' => ($row->status == Dates::STATUS_TENTATIVE),
 					'lastFreeSeats' => $this->lastFreeSeats($row),
@@ -373,17 +373,17 @@ class Dates
 					'venueName' => $row->venueName,
 					'venueCity' => $row->venueCity,
 					'note' => $row->note,
-				);
+				];
 				/** @var string $action */
 				$action = $row->action;
-				$upcoming[$action] = ArrayHash::from(array(
+				$upcoming[$action] = ArrayHash::from([
 					'action' => $action,
 					'name' => $date['name'],
 					'dates' => (isset($upcoming[$action]->dates)
-						? $upcoming[$action]->dates = (array)$upcoming[$action]->dates + array($row->dateId => $date)
-						: array($row->dateId => $date)
+						? $upcoming[$action]->dates = (array)$upcoming[$action]->dates + [$row->dateId => $date]
+						: [$row->dateId => $date]
 					),
-				));
+				]);
 			}
 			$this->upcomingDates[(int)$includeNonPublic] = $upcoming;
 		}
@@ -491,7 +491,7 @@ class Dates
 			Dates::STATUS_TENTATIVE,
 			Dates::STATUS_CONFIRMED,
 		);
-		$dates = array();
+		$dates = [];
 		foreach ($result as $row) {
 			$row->remote = (bool)$row->remote;
 			$row->label = $this->decodeLabel($row->labelJson);

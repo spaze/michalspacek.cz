@@ -88,7 +88,7 @@ class TrainingControlsFactory
 
 	public function addSource(Container $container): SelectBox
 	{
-		$sources = array();
+		$sources = [];
 		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {
 			$sources[$source->alias] = $source->name;
 		}

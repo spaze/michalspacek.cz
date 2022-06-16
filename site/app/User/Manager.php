@@ -75,7 +75,7 @@ class Manager implements Authenticator
 	 */
 	public function getIdentity(int $id, string $username): SimpleIdentity
 	{
-		return new SimpleIdentity($id, array(), array('username' => $username));
+		return new SimpleIdentity($id, [], ['username' => $username]);
 	}
 
 
@@ -202,13 +202,13 @@ class Manager implements Authenticator
 		try {
 			$this->database->query(
 				'INSERT INTO auth_tokens',
-				array(
+				[
 					'key_user' => $user->getId(),
 					'selector' => $selector,
 					'token' => $this->hashToken($token),
 					'created' => new DateTime(),
 					'type' => $type,
-				),
+				],
 			);
 		} catch (UniqueConstraintViolationException $e) {
 			// regenerate the access code and try harder this time

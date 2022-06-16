@@ -149,7 +149,7 @@ class TrainingApplicationAdminFormFactory
 	 */
 	public function setApplication(Form $form, Row $application): void
 	{
-		$values = array(
+		$values = [
 			'name' => $application->name,
 			'email' => $application->email,
 			'familiar' => $application->familiar,
@@ -169,7 +169,7 @@ class TrainingApplicationAdminFormFactory
 			'invoiceId' => $application->invoiceId,
 			'paid' => $application->paid,
 			'date' => $application->dateId,
-		);
+		];
 		foreach ($this->deletableFields as $field) {
 			$values["{$field}Set"] = ($application->$field !== null);
 			$form->getComponent($field)->setHtmlAttribute('class', $application->$field === null ? 'transparent' : null);

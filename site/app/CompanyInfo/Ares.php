@@ -138,10 +138,10 @@ class Ares implements CompanyDataInterface
 	 */
 	private function countryCode(SimpleXMLElement $data): string
 	{
-		$codes = array(
+		$codes = [
 			'203' => 'CZ',
 			'703' => 'SK',
-		);
+		];
 		return ($codes[(string)$data->AA->KS] ?? substr((string)$data->DIC, 0, 2) ?: 'CZ');
 	}
 

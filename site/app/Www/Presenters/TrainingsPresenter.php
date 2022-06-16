@@ -142,7 +142,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$data = (array)$session->application;
-		$data[$name] = array('id' => $application->applicationId, 'dateId' => $application->dateId);
+		$data[$name] = ['id' => $application->applicationId, 'dateId' => $application->dateId];
 		$session->application = $data;
 
 		$session->name = $application->name;

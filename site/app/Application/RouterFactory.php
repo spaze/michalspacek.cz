@@ -177,7 +177,7 @@ class RouterFactory
 					$metadata['presenter'][Route::FilterTable] = $this->translatedPresenters[$this->currentModule][$locale];
 				} else {
 					$presenter = $this->translatedPresenters[$this->currentModule][$locale][$maskPrefix];
-					$metadata['presenter'][Route::FilterTable] = array($maskPrefix => $presenter);
+					$metadata['presenter'][Route::FilterTable] = [$maskPrefix => $presenter];
 					$metadata['action'][Route::FilterTable] = $this->translatedActions[$this->currentModule][$presenter][$locale] ?? [];
 				}
 			}

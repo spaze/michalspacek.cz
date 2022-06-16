@@ -125,7 +125,7 @@ class TrainingsPresenter extends BasePresenter
 			$this->redirect('date', $application->dateId);
 		}
 
-		$this->applicationIdsAllowedFiles = array($application->applicationId);
+		$this->applicationIdsAllowedFiles = [$application->applicationId];
 		$this->training = $this->trainingDates->get($application->dateId);
 
 		$this->template->pageTitle = 'Soubory';

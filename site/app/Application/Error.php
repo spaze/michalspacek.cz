@@ -25,7 +25,7 @@ class Error
 		$e = $request->getParameter('exception');
 
 		if ($e instanceof BadRequestException) {
-			list($module, , $sep) = Helpers::splitName($request->getPresenterName());
+			[$module, , $sep] = Helpers::splitName($request->getPresenterName());
 			return new ForwardResponse($request->setPresenterName($module . $sep . 'Error'));
 		}
 

@@ -36,7 +36,7 @@ class HomepagePresenter extends BasePresenter
 				$trainings[] = $date;
 			}
 		}
-		$dates = array();
+		$dates = [];
 		foreach ($trainings as $date) {
 			$date->applications = $this->trainingApplications->getValidByDate($date->dateId);
 			$date->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($date->dateId);

@@ -420,7 +420,7 @@ class Passwords
 	{
 		$result = $this->database->fetchField(
 			'SELECT id FROM password_storages WHERE ?',
-			array(
+			[
 				'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 				'key_password_algos' => $algoId,
 				'key_sites' => ($siteId === Sites::ALL ? null : $siteId),
@@ -428,7 +428,7 @@ class Passwords
 				'from_confirmed' => $fromConfirmed,
 				'attributes' => (empty($attributes) ? null : $attributes),
 				'note' => (empty($note) ? null : $note),
-			),
+			],
 		);
 		return $result ?: null;
 	}
@@ -465,10 +465,10 @@ class Passwords
 	{
 		$this->database->query(
 			'INSERT INTO password_disclosures_password_storages',
-			array(
+			[
 				'key_password_disclosures' => $disclosureId,
 				'key_password_storages' => $storageId,
-			),
+			],
 		);
 	}
 

@@ -90,11 +90,11 @@ class Certificates
 			$expiry = NetteDateTime::from($cert['expiry']);
 			try {
 				$this->database->beginTransaction();
-				$this->database->query('INSERT INTO certificates', array(
+				$this->database->query('INSERT INTO certificates', [
 					'key_certificate_request' => $this->logRequest($cert['cn'], $cert['ext'], true),
 					'not_before' => $start,
 					'not_after' => $expiry,
-				));
+				]);
 				$this->database->commit();
 			} catch (DriverException $e) {
 				Debugger::log($e);
@@ -131,12 +131,12 @@ class Certificates
 	 */
 	private function logRequest(string $cn, string $ext, bool $success): int
 	{
-		$this->database->query('INSERT INTO certificate_requests', array(
+		$this->database->query('INSERT INTO certificate_requests', [
 			'cn' => $cn,
 			'ext' => (empty($ext) ? null : $ext),
 			'time' => new DateTimeImmutable(),
 			'success' => $success,
-		));
+		]);
 		return (int)$this->database->getInsertId();
 	}
 

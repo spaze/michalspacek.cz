@@ -386,7 +386,7 @@ class Applications
 
 		/** @var DateTimeZone|false $timeZone */
 		$timeZone = $datetime->getTimezone();
-		$data = array(
+		$data = [
 			'key_date' => $dateId,
 			'name' => $name,
 			'email' => $this->emailEncryption->encrypt($email),
@@ -406,7 +406,7 @@ class Applications
 			'vat_rate' => $customerPrice->getVatRate(),
 			'price_vat' => $customerPrice->getPriceVat(),
 			'discount' => $customerPrice->getDiscount(),
-		);
+		];
 		if ($dateId === null) {
 			$data['key_training'] = $trainingId;
 		}
@@ -467,7 +467,7 @@ class Applications
 				$price = $this->prices->resolvePriceDiscountVat($date->price, $date->studentDiscount, Statuses::STATUS_SIGNED_UP, $note);
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
-					array(
+					[
 						'name' => $name,
 						'email' => $this->emailEncryption->encrypt($email),
 						'company' => $company,
@@ -482,7 +482,7 @@ class Applications
 						'vat_rate' => $price->getVatRate(),
 						'price_vat' => $price->getPriceVat(),
 						'discount' => $price->getDiscount(),
-					),
+					],
 					$applicationId,
 				);
 			},
@@ -516,7 +516,7 @@ class Applications
 		$paidDate = ($paid ? new DateTime($paid) : null);
 		/** @var DateTimeZone|false $timeZone */
 		$timeZone = ($paidDate ? $paidDate->getTimezone() : false);
-		$data = array(
+		$data = [
 			'name' => $name,
 			'email' => ($email ? $this->emailEncryption->encrypt($email) : null),
 			'company' => $company,
@@ -536,7 +536,7 @@ class Applications
 			'invoice_id' => ((int)$invoiceId ?: null),
 			'paid' => ($paidDate ?: null),
 			'paid_timezone' => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
-		);
+		];
 		if ($dateId !== null) {
 			$data['key_date'] = $dateId;
 		}
@@ -548,9 +548,9 @@ class Applications
 	{
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
-			array(
+			[
 				'invoice_id' => ((int)$invoiceId ?: null),
-			),
+			],
 			$applicationId,
 		);
 	}
@@ -645,7 +645,7 @@ class Applications
 	 */
 	public function getPreliminary(): array
 	{
-		$trainings = array();
+		$trainings = [];
 		$result = $this->database->fetchAll(
 			'SELECT
 				t.id_training AS idTraining,
@@ -666,7 +666,7 @@ class Applications
 		);
 		foreach ($result as $row) {
 			$row->name = $this->translator->translate($row->name);
-			$row->applications = array();
+			$row->applications = [];
 			$trainings[$row->idTraining] = $row;
 		}
 
@@ -725,7 +725,7 @@ class Applications
 			$total += count($training->applications);
 		}
 
-		return array($total, $dateSet);
+		return [$total, $dateSet];
 	}
 
 
@@ -800,10 +800,10 @@ class Applications
 		$timeZone = ($paidDate ? $paidDate->getTimezone() : false);
 		$result = $this->database->query(
 			'UPDATE training_applications SET ? WHERE invoice_id = ?',
-			array(
+			[
 				'paid' => ($paidDate ?: null),
 				'paid_timezone' => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
-			),
+			],
 			(int)$invoiceId,
 		);
 		return $result->getRowCount();

@@ -104,20 +104,20 @@ class TrainingFiles
 		$timeZone = $datetime->getTimezone();
 		$this->database->query(
 			'INSERT INTO files',
-			array(
+			[
 				'filename' => $name,
 				'added' => $datetime,
 				'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
-			),
+			],
 		);
 		$fileId = $this->database->getInsertId();
 		foreach ($applicationIds as $applicationId) {
 			$this->database->query(
 				'INSERT INTO training_materials',
-				array(
+				[
 					'key_file' => $fileId,
 					'key_application' => $applicationId,
-				),
+				],
 			);
 		}
 		$this->database->commit();

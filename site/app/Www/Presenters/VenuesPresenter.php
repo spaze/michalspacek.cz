@@ -43,9 +43,9 @@ class VenuesPresenter extends BasePresenter
 		$this->template->parking = $venue->parking;
 		$this->template->publicTransport = $venue->publicTransport;
 
-		$trainings = array();
+		$trainings = [];
 		foreach ($this->trainingDates->getPublicUpcoming() as $training) {
-			$dates = array();
+			$dates = [];
 			foreach ($training->dates as $date) {
 				if ($date->venueId === $venue->id) {
 					$dates[] = $date;

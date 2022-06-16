@@ -96,7 +96,7 @@ class BlogPresenter extends BasePresenter
 			$this->redirect('Blog:');
 		});
 
-		$values = array(
+		$values = [
 			'translationGroup' => $this->post->translationGroupId,
 			'locale' => $this->post->localeId,
 			'title' => $this->post->titleTexy,
@@ -113,7 +113,7 @@ class BlogPresenter extends BasePresenter
 			'cspSnippets' => $this->post->cspSnippets,
 			'allowedTags' => $this->post->allowedTags,
 			'omitExports' => $this->post->omitExports,
-		);
+		];
 		$form->setDefaults($values);
 		$form->getComponent('editSummary')
 			->setDisabled($this->post->needsPreviewKey());

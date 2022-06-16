@@ -69,7 +69,7 @@ class TrainingStatusesFormFactory
 				}
 			}
 
-			$statuses = array();
+			$statuses = [];
 			foreach ($attendedStatuses as $status) {
 				$statuses[] = Html::el('code')->setText($status);
 			}

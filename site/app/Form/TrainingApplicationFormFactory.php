@@ -60,7 +60,7 @@ class TrainingApplicationFormFactory
 	): Form {
 		$form = $this->factory->create();
 
-		$inputDates = array();
+		$inputDates = [];
 		$multipleDates = count($dates) > 1;
 		foreach ($dates as $date) {
 			$el = Html::el()->setText($this->trainingDates->formatDateVenueForUser($date));
@@ -195,7 +195,7 @@ class TrainingApplicationFormFactory
 	 */
 	private function setApplication(Form $form, SessionSection $application): void
 	{
-		$values = array(
+		$values = [
 			'name' => $application->name,
 			'email' => $application->email,
 			'company' => $application->company,
@@ -206,7 +206,7 @@ class TrainingApplicationFormFactory
 			'companyId' => $application->companyId,
 			'companyTaxId' => $application->companyTaxId,
 			'note' => $application->note,
-		);
+		];
 		$form->setDefaults($values);
 
 		if (!empty($application->country)) {

@@ -192,9 +192,9 @@ class TexyFormatter
 	 */
 	private function replace(Html $result): Html
 	{
-		$replacements = array(
+		$replacements = [
 			self::TRAINING_DATE_PLACEHOLDER => [$this, 'replaceTrainingDate'],
-		);
+		];
 
 		$result = Strings::replace(
 			(string)$result,
@@ -215,7 +215,7 @@ class TexyFormatter
 	private function replaceTrainingDate(string $name): string
 	{
 		$upcoming = $this->trainingDates->getPublicUpcoming();
-		$dates = array();
+		$dates = [];
 		if (!isset($upcoming[$name]) || empty($upcoming[$name]['dates'])) {
 			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
 		} else {
