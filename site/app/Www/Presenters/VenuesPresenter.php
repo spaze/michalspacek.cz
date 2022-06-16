@@ -12,25 +12,12 @@ use Nette\Application\BadRequestException;
 class VenuesPresenter extends BasePresenter
 {
 
-	private TexyFormatter $texyFormatter;
-
-	private Dates $trainingDates;
-
-	private Venues $trainingVenues;
-
-	private Trainings $trainings;
-
-
 	public function __construct(
-		TexyFormatter $texyFormatter,
-		Dates $trainingDates,
-		Venues $trainingVenues,
-		Trainings $trainings,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly Dates $trainingDates,
+		private readonly Venues $trainingVenues,
+		private readonly Trainings $trainings,
 	) {
-		$this->texyFormatter = $texyFormatter;
-		$this->trainingDates = $trainingDates;
-		$this->trainingVenues = $trainingVenues;
-		$this->trainings = $trainings;
 		parent::__construct();
 	}
 

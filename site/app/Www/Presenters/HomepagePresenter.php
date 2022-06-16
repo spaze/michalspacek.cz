@@ -13,33 +13,14 @@ use MichalSpacekCz\Training\Trainings;
 class HomepagePresenter extends BasePresenter
 {
 
-	private Articles $articles;
-
-	private Interviews $interviews;
-
-	private Talks $talks;
-
-	private Dates $trainingDates;
-
-	private Trainings $trainings;
-
-	private CompanyTrainings $companyTrainings;
-
-
 	public function __construct(
-		Articles $articles,
-		Interviews $interviews,
-		Talks $talks,
-		Dates $trainingDates,
-		Trainings $trainings,
-		CompanyTrainings $companyTrainings,
+		private readonly Articles $articles,
+		private readonly Interviews $interviews,
+		private readonly Talks $talks,
+		private readonly Dates $trainingDates,
+		private readonly Trainings $trainings,
+		private readonly CompanyTrainings $companyTrainings,
 	) {
-		$this->articles = $articles;
-		$this->interviews = $interviews;
-		$this->talks = $talks;
-		$this->trainingDates = $trainingDates;
-		$this->trainings = $trainings;
-		$this->companyTrainings = $companyTrainings;
 		parent::__construct();
 	}
 

@@ -16,24 +16,14 @@ class HomepagePresenter extends BasePresenter
 
 	protected bool $haveBacklink = false;
 
-	private Applications $trainingApplications;
 
-	private Mails $trainingMails;
-
-	private Dates $trainingDates;
-
-	private Certificates $certificates;
-
-	private Trainings $trainings;
-
-
-	public function __construct(Applications $trainingApplications, Mails $trainingMails, Dates $trainingDates, Certificates $certificates, Trainings $trainings)
-	{
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingMails = $trainingMails;
-		$this->trainingDates = $trainingDates;
-		$this->certificates = $certificates;
-		$this->trainings = $trainings;
+	public function __construct(
+		private readonly Applications $trainingApplications,
+		private readonly Mails $trainingMails,
+		private readonly Dates $trainingDates,
+		private readonly Certificates $certificates,
+		private readonly Trainings $trainings,
+	) {
 		parent::__construct();
 	}
 
@@ -64,7 +54,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
 		$this->template->certificates = $certificates = $this->certificates->getNewest();
 		$this->template->certificatesNeedAttention = $this->certsNeedAttention($certificates);
-		list($this->template->preliminaryTotal, $this->template->preliminaryDateSet) = $this->trainingApplications->getPreliminaryCounts();
+		[$this->template->preliminaryTotal, $this->template->preliminaryDateSet] = $this->trainingApplications->getPreliminaryCounts();
 		$this->template->pastWithPersonalData = count($this->trainings->getPastWithPersonalData());
 	}
 

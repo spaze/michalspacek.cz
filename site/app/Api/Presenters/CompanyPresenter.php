@@ -15,15 +15,10 @@ use RuntimeException;
 class CompanyPresenter extends BasePresenter
 {
 
-	private Info $companyInfo;
-
-	private SecurityHeaders $securityHeaders;
-
-
-	public function __construct(Info $companyInfo, SecurityHeaders $securityHeaders)
-	{
-		$this->companyInfo = $companyInfo;
-		$this->securityHeaders = $securityHeaders;
+	public function __construct(
+		private readonly Info $companyInfo,
+		private readonly SecurityHeaders $securityHeaders,
+	) {
 		parent::__construct();
 	}
 

@@ -33,35 +33,20 @@ class Manager implements Authenticator
 
 	private const TOKEN_RETURNING_USER = 2;
 
-	private Explorer $database;
-
-	private IRequest $httpRequest;
-
-	private Response $httpResponse;
-
-	private Passwords $passwords;
-
-	private StaticKey $passwordEncryption;
-
 	private ?string $authCookiesPath = null;
 
 
 	public function __construct(
-		Explorer $context,
-		IRequest $httpRequest,
-		Response $httpResponse,
-		Passwords $passwords,
-		StaticKey $passwordEncryption,
+		private readonly Explorer $database,
+		private readonly IRequest $httpRequest,
+		private readonly Response $httpResponse,
+		private readonly Passwords $passwords,
+		private readonly StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator,
 		private readonly string $returningUserCookie,
 		private readonly string $permanentLoginCookie,
 		private readonly string $permanentLoginInterval,
 	) {
-		$this->database = $context;
-		$this->httpRequest = $httpRequest;
-		$this->httpResponse = $httpResponse;
-		$this->passwords = $passwords;
-		$this->passwordEncryption = $passwordEncryption;
 		$this->authCookiesPath = (new Url($linkGenerator->link('Admin:Sign:in')))->getPath();
 	}
 

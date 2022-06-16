@@ -10,14 +10,10 @@ use Nette\Utils\JsonException;
 class LocaleUrls
 {
 
-	private Explorer $database;
-	private Tags $tags;
-
-
-	public function __construct(Explorer $context, Tags $tags)
-	{
-		$this->database = $context;
-		$this->tags = $tags;
+	public function __construct(
+		private readonly Explorer $database,
+		private readonly Tags $tags,
+	) {
 	}
 
 

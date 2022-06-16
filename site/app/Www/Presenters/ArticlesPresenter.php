@@ -8,12 +8,9 @@ use MichalSpacekCz\Articles\Articles;
 class ArticlesPresenter extends BasePresenter
 {
 
-	private Articles $articles;
-
-
-	public function __construct(Articles $articles)
-	{
-		$this->articles = $articles;
+	public function __construct(
+		private readonly Articles $articles,
+	) {
 		parent::__construct();
 	}
 

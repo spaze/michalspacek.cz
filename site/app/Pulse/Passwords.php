@@ -19,29 +19,13 @@ use Nette\Utils\Json;
 class Passwords
 {
 
-	private Explorer $database;
-
-	private Rating $rating;
-
-	private Companies $companies;
-
-	private Sites $sites;
-
-	private PasswordsSorting $sorting;
-
-
 	public function __construct(
-		Explorer $context,
-		Rating $rating,
-		Companies $companies,
-		Sites $sites,
-		PasswordsSorting $sorting,
+		private readonly Explorer $database,
+		private readonly Rating $rating,
+		private readonly Companies $companies,
+		private readonly Sites $sites,
+		private readonly PasswordsSorting $sorting,
 	) {
-		$this->database = $context;
-		$this->rating = $rating;
-		$this->companies = $companies;
-		$this->sites = $sites;
-		$this->sorting = $sorting;
 	}
 
 

@@ -11,18 +11,14 @@ use Nette\Database\Row;
 class EmailsPresenter extends BasePresenter
 {
 
-	private Mails $trainingMails;
-
-	private TrainingMailsOutboxFormFactory $trainingMailsOutboxFactory;
-
 	/** @var Row[] */
 	private array $applications;
 
 
-	public function __construct(Mails $trainingMails, TrainingMailsOutboxFormFactory $trainingMailsOutboxFactory)
-	{
-		$this->trainingMails = $trainingMails;
-		$this->trainingMailsOutboxFactory = $trainingMailsOutboxFactory;
+	public function __construct(
+		private readonly Mails $trainingMails,
+		private readonly TrainingMailsOutboxFormFactory $trainingMailsOutboxFactory,
+	) {
 		parent::__construct();
 	}
 

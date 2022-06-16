@@ -26,30 +26,6 @@ use Nette\Http\IResponse;
 class TrainingsPresenter extends BasePresenter
 {
 
-	private TexyFormatter $texyFormatter;
-
-	private Applications $trainingApplications;
-
-	private Dates $trainingDates;
-
-	private TrainingFiles $trainingFiles;
-
-	private Trainings $trainings;
-
-	private CompanyTrainings $companyTrainings;
-
-	private Locales $trainingLocales;
-
-	private Reviews $trainingReviews;
-
-	private TrainingApplicationFormFactory $trainingApplicationFactory;
-
-	private TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory;
-
-	private Info $companyInfo;
-
-	private IResponse $httpResponse;
-
 	/** @var Row<mixed> */
 	private Row $training;
 
@@ -58,31 +34,19 @@ class TrainingsPresenter extends BasePresenter
 
 
 	public function __construct(
-		TexyFormatter $texyFormatter,
-		Applications $trainingApplications,
-		Dates $trainingDates,
-		TrainingFiles $trainingFiles,
-		Trainings $trainings,
-		CompanyTrainings $companyTrainings,
-		Locales $trainingLocales,
-		Reviews $trainingReviews,
-		TrainingApplicationFormFactory $trainingApplicationFactory,
-		TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
-		Info $companyInfo,
-		IResponse $httpResponse,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly Applications $trainingApplications,
+		private readonly Dates $trainingDates,
+		private readonly TrainingFiles $trainingFiles,
+		private readonly Trainings $trainings,
+		private readonly CompanyTrainings $companyTrainings,
+		private readonly Locales $trainingLocales,
+		private readonly Reviews $trainingReviews,
+		private readonly TrainingApplicationFormFactory $trainingApplicationFactory,
+		private readonly TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
+		private readonly Info $companyInfo,
+		private readonly IResponse $httpResponse,
 	) {
-		$this->texyFormatter = $texyFormatter;
-		$this->trainingApplications = $trainingApplications;
-		$this->trainingDates = $trainingDates;
-		$this->trainingFiles = $trainingFiles;
-		$this->trainings = $trainings;
-		$this->companyTrainings = $companyTrainings;
-		$this->trainingLocales = $trainingLocales;
-		$this->trainingReviews = $trainingReviews;
-		$this->trainingApplicationFactory = $trainingApplicationFactory;
-		$this->trainingApplicationPreliminaryFactory = $trainingApplicationPreliminaryFactory;
-		$this->companyInfo = $companyInfo;
-		$this->httpResponse = $httpResponse;
 		parent::__construct();
 	}
 

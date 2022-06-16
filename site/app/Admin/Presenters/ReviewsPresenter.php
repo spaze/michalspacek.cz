@@ -9,15 +9,10 @@ use MichalSpacekCz\Training\Trainings;
 class ReviewsPresenter extends BasePresenter
 {
 
-	private Trainings $trainings;
-
-	private Reviews $trainingReviews;
-
-
-	public function __construct(Trainings $trainings, Reviews $trainingReviews)
-	{
-		$this->trainings = $trainings;
-		$this->trainingReviews = $trainingReviews;
+	public function __construct(
+		private readonly Trainings $trainings,
+		private readonly Reviews $trainingReviews,
+	) {
 		parent::__construct();
 	}
 

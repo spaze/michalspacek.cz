@@ -15,37 +15,15 @@ use Nette\Http\IResponse;
 class CompanyTrainingsPresenter extends BasePresenter
 {
 
-	private TexyFormatter $texyFormatter;
-
-	private Trainings $trainings;
-
-	private CompanyTrainings $companyTrainings;
-
-	private Locales $trainingLocales;
-
-	private Reviews $trainingReviews;
-
-	private Prices $prices;
-
-	private IResponse $httpResponse;
-
-
 	public function __construct(
-		TexyFormatter $texyFormatter,
-		Trainings $trainings,
-		CompanyTrainings $companyTrainings,
-		Locales $trainingLocales,
-		Reviews $trainingReviews,
-		Prices $price,
-		IResponse $httpResponse,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly Trainings $trainings,
+		private readonly CompanyTrainings $companyTrainings,
+		private readonly Locales $trainingLocales,
+		private readonly Reviews $trainingReviews,
+		private readonly Prices $prices,
+		private readonly IResponse $httpResponse,
 	) {
-		$this->texyFormatter = $texyFormatter;
-		$this->trainings = $trainings;
-		$this->companyTrainings = $companyTrainings;
-		$this->trainingLocales = $trainingLocales;
-		$this->trainingReviews = $trainingReviews;
-		$this->prices = $price;
-		$this->httpResponse = $httpResponse;
 		parent::__construct();
 	}
 

@@ -12,10 +12,10 @@ class CompanyTrainings
 {
 
 	public function __construct(
-		private Explorer $database,
-		private TexyFormatter $texyFormatter,
-		private Dates $trainingDates,
-		private Translator $translator,
+		private readonly Explorer $database,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly Dates $trainingDates,
+		private readonly Translator $translator,
 	) {
 	}
 

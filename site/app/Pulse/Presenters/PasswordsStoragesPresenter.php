@@ -14,27 +14,15 @@ use Nette\Application\UI\Form;
 class PasswordsStoragesPresenter extends BasePresenter
 {
 
-	private Passwords $passwords;
-
-	private Rating $passwordsRating;
-
-	private PasswordsStoragesSearchSortFormFactory $searchSortFactory;
-
-	private PasswordsSorting $passwordsSorting;
-
 	private Form $searchSortForm;
 
 
 	public function __construct(
-		Passwords $passwords,
-		Rating $passwordsRating,
-		PasswordsStoragesSearchSortFormFactory $searchSortFactory,
-		PasswordsSorting $passwordsSorting,
+		private readonly Passwords $passwords,
+		private readonly Rating $passwordsRating,
+		private readonly PasswordsStoragesSearchSortFormFactory $searchSortFactory,
+		private readonly PasswordsSorting $passwordsSorting,
 	) {
-		$this->passwords = $passwords;
-		$this->passwordsRating = $passwordsRating;
-		$this->searchSortFactory = $searchSortFactory;
-		$this->passwordsSorting = $passwordsSorting;
 		parent::__construct();
 	}
 

@@ -22,27 +22,17 @@ use Spaze\ContentSecurityPolicy\Config as CspConfig;
 class BlogPresenter extends BasePresenter
 {
 
-	private Post $blogPost;
-
-	private TexyFormatter $texyFormatter;
-
 	private Data $post;
 
-	private Tags $tags;
 
-	private PostFormFactory $postFormFactory;
-
-	private CspConfig $contentSecurityPolicy;
-
-
-	public function __construct(Post $blogPost, TexyFormatter $texyFormatter, Tags $tags, PostFormFactory $postFormFactory, CspConfig $contentSecurityPolicy)
-	{
-		$this->blogPost = $blogPost;
-		$this->texyFormatter = $texyFormatter;
-		$this->tags = $tags;
-		$this->postFormFactory = $postFormFactory;
+	public function __construct(
+		private readonly Post $blogPost,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly Tags $tags,
+		private readonly PostFormFactory $postFormFactory,
+		private readonly CspConfig $contentSecurityPolicy,
+	) {
 		parent::__construct();
-		$this->contentSecurityPolicy = $contentSecurityPolicy;
 	}
 
 

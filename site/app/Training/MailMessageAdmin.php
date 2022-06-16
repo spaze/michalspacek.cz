@@ -6,15 +6,10 @@ namespace MichalSpacekCz\Training;
 class MailMessageAdmin
 {
 
-	private string $basename;
-
-	private string $subject;
-
-
-	public function __construct(string $basename, string $subject)
-	{
-		$this->basename = $basename;
-		$this->subject = $subject;
+	public function __construct(
+		private readonly string $basename,
+		private readonly string $subject,
+	) {
 	}
 
 

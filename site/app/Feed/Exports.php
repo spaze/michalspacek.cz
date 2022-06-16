@@ -28,9 +28,9 @@ class Exports
 
 
 	public function __construct(
-		private Articles $articles,
-		private TexyFormatter $texyFormatter,
-		private Translator $translator,
+		private readonly Articles $articles,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly Translator $translator,
 		Storage $cacheStorage,
 	) {
 		$this->cache = new Cache($cacheStorage, self::class);

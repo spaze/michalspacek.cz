@@ -13,24 +13,16 @@ use Nette\Database\Row;
 class TagsPresenter extends BasePresenter
 {
 
-	private Articles $articles;
-
-	private TexyFormatter $texyFormatter;
-
-	private Strings $strings;
-
-	private LocaleUrls $localeUrls;
-
 	/** @var string[][] */
 	private array $localeLinkParams = [];
 
 
-	public function __construct(Articles $articles, Strings $strings, TexyFormatter $texyFormatter, LocaleUrls $localeUrls)
-	{
-		$this->articles = $articles;
-		$this->strings = $strings;
-		$this->texyFormatter = $texyFormatter;
-		$this->localeUrls = $localeUrls;
+	public function __construct(
+		private readonly Articles $articles,
+		private readonly Strings $strings,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly LocaleUrls $localeUrls,
+	) {
 		parent::__construct();
 	}
 

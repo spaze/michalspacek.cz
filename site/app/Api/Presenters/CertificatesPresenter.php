@@ -11,12 +11,9 @@ use RuntimeException;
 class CertificatesPresenter extends BasePresenter
 {
 
-	private Certificates $certificates;
-
-
-	public function __construct(Certificates $certificates)
-	{
-		$this->certificates = $certificates;
+	public function __construct(
+		private readonly Certificates $certificates,
+	) {
 		parent::__construct();
 	}
 

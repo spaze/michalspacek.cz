@@ -8,20 +8,16 @@ use MichalSpacekCz\Pulse\Site;
 class Storage
 {
 
-	private string $id;
-
-	private int $companyId;
-
 	/** @var array<string, Site> */
 	private array $sites = [];
 
 	private SearchResult $searchResult;
 
 
-	public function __construct(string $id, int $companyId)
-	{
-		$this->id = $id;
-		$this->companyId = $companyId;
+	public function __construct(
+		private readonly string $id,
+		private readonly int $companyId,
+	) {
 		$this->searchResult = new SearchResult();
 	}
 

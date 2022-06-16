@@ -9,25 +9,7 @@ use stdClass;
 class Algorithm
 {
 
-	private string $id;
-
-	private string $name;
-
-	private string $alias;
-
-	private bool $salted;
-
-	private bool $stretched;
-
-	private ?DateTime $from;
-
-	private bool $fromConfirmed;
-
-	private ?stdClass $attributes;
-
 	private ?stdClass $params;
-
-	private ?string $note;
 
 	private ?string $fullAlgo;
 
@@ -40,18 +22,19 @@ class Algorithm
 	private array $disclosureTypes = [];
 
 
-	public function __construct(string $id, string $name, string $alias, bool $salted, bool $stretched, ?DateTime $from, bool $fromConfirmed, ?stdClass $attributes, ?string $note, StorageDisclosure $disclosure)
-	{
-		$this->id = $id;
-		$this->name = $name;
-		$this->alias = $alias;
-		$this->salted = $salted;
-		$this->stretched = $stretched;
-		$this->from = $from;
-		$this->fromConfirmed = $fromConfirmed;
-		$this->attributes = $attributes;
+	public function __construct(
+		private readonly string $id,
+		private readonly string $name,
+		private readonly string $alias,
+		private readonly bool $salted,
+		private readonly bool $stretched,
+		private readonly ?DateTime $from,
+		private readonly bool $fromConfirmed,
+		private readonly ?stdClass $attributes,
+		private readonly ?string $note,
+		StorageDisclosure $disclosure,
+	) {
 		$this->params = $attributes->params ?? null;
-		$this->note = $note;
 		$this->addDisclosure($disclosure);
 		$this->fullAlgo = $this->formatFullAlgo($this->name, $this->attributes);
 	}

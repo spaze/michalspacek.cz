@@ -14,9 +14,9 @@ class TrainingFile
 
 
 	public function __construct(
-		private int $id,
-		private string $filename,
-		private SplFileInfo $fileInfo,
+		private readonly int $id,
+		private readonly string $filename,
+		private readonly SplFileInfo $fileInfo,
 		DateTimeInterface $added,
 	) {
 		$this->added = DateTimeImmutable::createFromInterface($added);

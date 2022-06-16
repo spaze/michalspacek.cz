@@ -13,15 +13,11 @@ class RedirectPresenter extends BasePresenter
 
 	private const GOOD_NIGHT = 5;
 
-	private Applications $trainingApplications;
 
-	private Articles $articles;
-
-
-	public function __construct(Applications $trainingApplications, Articles $articles)
-	{
-		$this->trainingApplications = $trainingApplications;
-		$this->articles = $articles;
+	public function __construct(
+		private readonly Applications $trainingApplications,
+		private readonly Articles $articles,
+	) {
 		parent::__construct();
 	}
 

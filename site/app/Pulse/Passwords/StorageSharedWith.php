@@ -6,15 +6,10 @@ namespace MichalSpacekCz\Pulse\Passwords;
 class StorageSharedWith
 {
 
-	private string $url;
-
-	private string $alias;
-
-
-	public function __construct(string $url, string $alias)
-	{
-		$this->url = $url;
-		$this->alias = $alias;
+	public function __construct(
+		private readonly string $url,
+		private readonly string $alias,
+	) {
 	}
 
 

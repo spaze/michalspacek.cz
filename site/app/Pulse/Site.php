@@ -9,20 +9,8 @@ use MichalSpacekCz\Pulse\Passwords\StorageSharedWith;
 class Site
 {
 
-	private string $id;
-
-	private bool $isTypeAll;
-
-	private string $url;
-
-	private string $alias;
-
 	/** @var array<int, StorageSharedWith> */
 	private array $sharedWith = [];
-
-	private Company $company;
-
-	private string $storageId;
 
 	/** @var array<string, Algorithm> */
 	private array $algorithms;
@@ -35,24 +23,17 @@ class Site
 
 
 	/**
-	 * Site constructor.
-	 *
-	 * @param string $id
-	 * @param bool $isTypeAll
-	 * @param string $url
-	 * @param string $alias
 	 * @param array<int, array{url:string, alias:string}> $sharedWith
-	 * @param Company $company
-	 * @param string $storageId
 	 */
-	public function __construct(string $id, bool $isTypeAll, string $url, string $alias, array $sharedWith, Company $company, string $storageId)
-	{
-		$this->id = $id;
-		$this->isTypeAll = $isTypeAll;
-		$this->url = $url;
-		$this->alias = $alias;
-		$this->company = $company;
-		$this->storageId = $storageId;
+	public function __construct(
+		private readonly string $id,
+		private readonly bool $isTypeAll,
+		private readonly string $url,
+		private readonly string $alias,
+		array $sharedWith,
+		private readonly Company $company,
+		private readonly string $storageId,
+	) {
 		foreach ($sharedWith as $sharedSite) {
 			$this->sharedWith[] = new StorageSharedWith($sharedSite['url'], $sharedSite['alias']);
 		}

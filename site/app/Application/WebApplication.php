@@ -13,10 +13,10 @@ class WebApplication
 {
 
 	public function __construct(
-		private IResponse $httpResponse,
-		private SecurityHeaders $securityHeaders,
-		private Application $application,
-		private string $fqdn,
+		private readonly IResponse $httpResponse,
+		private readonly SecurityHeaders $securityHeaders,
+		private readonly Application $application,
+		private readonly string $fqdn,
 	) {
 	}
 

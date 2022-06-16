@@ -12,24 +12,17 @@ use Spaze\ContentSecurityPolicy\Config as CspConfig;
 
 class PostPresenter extends BasePresenter
 {
-	private Post $blogPost;
-
-	private LocaleUrls $localeUrls;
-
-	private Dates $trainingDates;
 
 	/** @var array<string, array{slug: string, preview: string|null}> */
 	private array $localeLinkParams = [];
 
-	private CspConfig $contentSecurityPolicy;
 
-
-	public function __construct(Post $blogPost, Dates $trainingDates, LocaleUrls $localeUrls, CspConfig $contentSecurityPolicy)
-	{
-		$this->blogPost = $blogPost;
-		$this->localeUrls = $localeUrls;
-		$this->trainingDates = $trainingDates;
-		$this->contentSecurityPolicy = $contentSecurityPolicy;
+	public function __construct(
+		private readonly Post $blogPost,
+		private readonly Dates $trainingDates,
+		private readonly LocaleUrls $localeUrls,
+		private readonly CspConfig $contentSecurityPolicy,
+	) {
 		parent::__construct();
 	}
 

@@ -9,7 +9,7 @@ class Strings
 {
 
 	public function __construct(
-		private Translator $translator,
+		private readonly Translator $translator,
 	) {
 	}
 

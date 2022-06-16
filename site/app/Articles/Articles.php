@@ -20,12 +20,12 @@ class Articles
 {
 
 	public function __construct(
-		private Explorer $database,
-		private TexyFormatter $texyFormatter,
-		private LinkGenerator $linkGenerator,
-		private Post $blogPost,
-		private Tags $tags,
-		private Translator $translator,
+		private readonly Explorer $database,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly LinkGenerator $linkGenerator,
+		private readonly Post $blogPost,
+		private readonly Tags $tags,
+		private readonly Translator $translator,
 	) {
 	}
 

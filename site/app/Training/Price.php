@@ -8,21 +8,12 @@ use NumberFormatter;
 class Price
 {
 
-	private ?float $price;
-
-	private ?int $discount;
-
-	private ?float $vatRate;
-
-	private ?float $priceVat;
-
-
-	public function __construct(?float $price, ?int $discount, ?float $vatRate, ?float $priceVat = null)
-	{
-		$this->price = $price;
-		$this->discount = $discount;
-		$this->vatRate = $vatRate;
-		$this->priceVat = $priceVat;
+	public function __construct(
+		private readonly ?float $price,
+		private readonly ?int $discount,
+		private readonly ?float $vatRate,
+		private readonly ?float $priceVat = null,
+	) {
 	}
 
 

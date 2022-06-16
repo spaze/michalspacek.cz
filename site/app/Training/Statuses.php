@@ -31,8 +31,6 @@ class Statuses
 	public const STATUS_INVOICE_SENT_AFTER = 'INVOICE_SENT_AFTER';   // 17
 	public const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
 
-	private Explorer $database;
-
 	/** @var array<string, int> */
 	private array $statusIds = [];
 
@@ -49,9 +47,9 @@ class Statuses
 	private array $statusHistory = [];
 
 
-	public function __construct(Explorer $context)
-	{
-		$this->database = $context;
+	public function __construct(
+		private readonly Explorer $database,
+	) {
 	}
 
 

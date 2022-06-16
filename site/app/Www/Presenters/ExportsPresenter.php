@@ -9,12 +9,9 @@ use Spaze\Exports\Bridges\Nette\Atom\Response;
 class ExportsPresenter extends BasePresenter
 {
 
-	private Exports $exports;
-
-
-	public function __construct(Exports $exports)
-	{
-		$this->exports = $exports;
+	public function __construct(
+		private readonly Exports $exports,
+	) {
 		parent::__construct();
 	}
 

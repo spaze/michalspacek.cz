@@ -14,12 +14,9 @@ use Tracy\ILogger;
 class Error
 {
 
-	private ILogger $logger;
-
-
-	public function __construct(ILogger $logger)
-	{
-		$this->logger = $logger;
+	public function __construct(
+		private readonly ILogger $logger,
+	) {
 	}
 
 

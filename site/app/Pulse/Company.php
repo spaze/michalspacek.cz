@@ -6,24 +6,13 @@ namespace MichalSpacekCz\Pulse;
 class Company
 {
 
-	private int $id;
-
-	private string $companyName;
-
-	private ?string $tradeName;
-
-	private string $companyAlias;
-
-	private string $sortName;
-
-
-	public function __construct(int $id, string $companyName, ?string $tradeName, string $companyAlias, string $sortName)
-	{
-		$this->id = $id;
-		$this->companyName = $companyName;
-		$this->tradeName = $tradeName;
-		$this->companyAlias = $companyAlias;
-		$this->sortName = $sortName;
+	public function __construct(
+		private readonly int $id,
+		private readonly string $companyName,
+		private readonly ?string $tradeName,
+		private readonly string $companyAlias,
+		private readonly string $sortName,
+	) {
 	}
 
 

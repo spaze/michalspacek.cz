@@ -13,12 +13,10 @@ class Sites
 	/** @var string */
 	public const ALL = 'all';
 
-	private Explorer $database;
 
-
-	public function __construct(Explorer $context)
-	{
-		$this->database = $context;
+	public function __construct(
+		private readonly Explorer $database,
+	) {
 	}
 
 

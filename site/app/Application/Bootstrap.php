@@ -15,7 +15,7 @@ class Bootstrap
 
 
 	public function __construct(
-		private string $siteDir,
+		private readonly string $siteDir,
 	) {
 	}
 

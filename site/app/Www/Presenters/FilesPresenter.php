@@ -12,12 +12,9 @@ use Nette\Application\Responses\FileResponse;
 class FilesPresenter extends BasePresenter
 {
 
-	private TrainingFiles $trainingFiles;
-
-
-	public function __construct(TrainingFiles $trainingFiles)
-	{
-		$this->trainingFiles = $trainingFiles;
+	public function __construct(
+		private readonly TrainingFiles $trainingFiles,
+	) {
 		parent::__construct();
 	}
 

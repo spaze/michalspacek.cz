@@ -13,18 +13,11 @@ use RuntimeException;
 class TalksPresenter extends BasePresenter
 {
 
-	private Talks $talks;
-
-	private Embed $embed;
-
-	private Dates $trainingDates;
-
-
-	public function __construct(Talks $talks, Embed $embed, Dates $trainingDates)
-	{
-		$this->talks = $talks;
-		$this->embed = $embed;
-		$this->trainingDates = $trainingDates;
+	public function __construct(
+		private readonly Talks $talks,
+		private readonly Embed $embed,
+		private readonly Dates $trainingDates,
+	) {
 		parent::__construct();
 	}
 

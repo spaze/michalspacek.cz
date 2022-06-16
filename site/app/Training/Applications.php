@@ -29,14 +29,14 @@ class Applications
 
 
 	public function __construct(
-		private Explorer $database,
-		private Trainings $trainings,
-		private Dates $trainingDates,
-		private Statuses $trainingStatuses,
-		private StaticKey $emailEncryption,
-		private Prices $prices,
-		private Vrana $vranaResolver,
-		private Translator $translator,
+		private readonly Explorer $database,
+		private readonly Trainings $trainings,
+		private readonly Dates $trainingDates,
+		private readonly Statuses $trainingStatuses,
+		private readonly StaticKey $emailEncryption,
+		private readonly Prices $prices,
+		private readonly Vrana $vranaResolver,
+		private readonly Translator $translator,
 	) {
 	}
 

@@ -21,8 +21,8 @@ class Loader
 
 
 	public function __construct(
-		private Explorer $database,
-		private Translator $translator,
+		private readonly Explorer $database,
+		private readonly Translator $translator,
 	) {
 	}
 

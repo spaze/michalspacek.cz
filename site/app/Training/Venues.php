@@ -10,15 +10,10 @@ use Nette\Database\Row;
 class Venues
 {
 
-	private Explorer $database;
-
-	private TexyFormatter $texyFormatter;
-
-
-	public function __construct(Explorer $context, TexyFormatter $texyFormatter)
-	{
-		$this->database = $context;
-		$this->texyFormatter = $texyFormatter;
+	public function __construct(
+		private readonly Explorer $database,
+		private readonly TexyFormatter $texyFormatter,
+	) {
 	}
 
 

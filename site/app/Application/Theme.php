@@ -17,15 +17,11 @@ class Theme
 
 	private const LIGHT = 'bright';
 
-	private IRequest $httpRequest;
 
-	private IResponse $httpResponse;
-
-
-	public function __construct(IRequest $httpRequest, IResponse $httpResponse)
-	{
-		$this->httpRequest = $httpRequest;
-		$this->httpResponse = $httpResponse;
+	public function __construct(
+		private readonly IRequest $httpRequest,
+		private readonly IResponse $httpResponse,
+	) {
 	}
 
 

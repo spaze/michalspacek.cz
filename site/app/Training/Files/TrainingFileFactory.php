@@ -10,7 +10,7 @@ class TrainingFileFactory
 {
 
 	public function __construct(
-		private TrainingFilesStorage $storage,
+		private readonly TrainingFilesStorage $storage,
 	) {
 	}
 

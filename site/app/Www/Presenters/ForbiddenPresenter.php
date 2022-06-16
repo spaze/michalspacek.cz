@@ -19,8 +19,8 @@ class ForbiddenPresenter extends Presenter
 {
 
 	public function __construct(
-		private Translator $translator,
-		private IResponse $httpResponse,
+		private readonly Translator $translator,
+		private readonly IResponse $httpResponse,
 	) {
 		parent::__construct();
 	}

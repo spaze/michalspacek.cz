@@ -39,12 +39,9 @@ class WinterIsComingTest extends TestCase
 		$this->resultObject = new stdClass();
 		$this->presenter = new class ($this->resultObject) extends Presenter {
 
-			private stdClass $resultObject;
-
-
-			public function __construct(stdClass $resultObject)
-			{
-				$this->resultObject = $resultObject;
+			public function __construct(
+				private readonly stdClass $resultObject,
+			) {
 			}
 
 

@@ -108,8 +108,9 @@ class DateTimeFormatter
 	];
 
 
-	public function __construct(private string $defaultLocale)
-	{
+	public function __construct(
+		private readonly string $defaultLocale,
+	) {
 	}
 
 

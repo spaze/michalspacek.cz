@@ -8,12 +8,9 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 class PhotoPresenter extends BasePresenter
 {
 
-	private TexyFormatter $texyFormatter;
-
-
-	public function __construct(TexyFormatter $texyFormatter)
-	{
-		$this->texyFormatter = $texyFormatter;
+	public function __construct(
+		private readonly TexyFormatter $texyFormatter,
+	) {
 		parent::__construct();
 	}
 

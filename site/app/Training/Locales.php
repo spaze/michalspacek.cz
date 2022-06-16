@@ -8,12 +8,9 @@ use Nette\Database\Explorer;
 class Locales
 {
 
-	private Explorer $database;
-
-
-	public function __construct(Explorer $context)
-	{
-		$this->database = $context;
+	public function __construct(
+		private readonly Explorer $database,
+	) {
 	}
 
 

@@ -15,12 +15,10 @@ class FormSpam
 	 */
 	private const FIELD_MISSING_VALUE = 'missing';
 
-	private FormDataLogger $formDataLogger;
 
-
-	public function __construct(FormDataLogger $formDataLogger)
-	{
-		$this->formDataLogger = $formDataLogger;
+	public function __construct(
+		private readonly FormDataLogger $formDataLogger,
+	) {
 	}
 
 

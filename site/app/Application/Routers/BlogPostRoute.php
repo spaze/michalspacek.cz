@@ -14,18 +14,15 @@ use Nette\Http\IRequest;
 class BlogPostRoute extends Route
 {
 
-	private Loader $blogPostLoader;
-
-
 	/**
-	 * @param Loader $blogPostLoader
-	 * @param string $mask
 	 * @param array<string, array<string, array<string, string>|string>> $metadata
-	 * @param int $flags
 	 */
-	public function __construct(Loader $blogPostLoader, string $mask, array $metadata = [], int $flags = 0)
-	{
-		$this->blogPostLoader = $blogPostLoader;
+	public function __construct(
+		private readonly Loader $blogPostLoader,
+		string $mask,
+		array $metadata = [],
+		int $flags = 0,
+	) {
 		parent::__construct($mask, $metadata, $flags);
 	}
 

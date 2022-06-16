@@ -16,10 +16,10 @@ class TrainingFiles
 {
 
 	public function __construct(
-		private Explorer $database,
-		private Statuses $trainingStatuses,
-		private TrainingFileFactory $trainingFileFactory,
-		private TrainingFilesStorage $trainingFilesStorage,
+		private readonly Explorer $database,
+		private readonly Statuses $trainingStatuses,
+		private readonly TrainingFileFactory $trainingFileFactory,
+		private readonly TrainingFilesStorage $trainingFilesStorage,
 	) {
 	}
 

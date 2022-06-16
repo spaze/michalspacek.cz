@@ -13,17 +13,10 @@ use RuntimeException;
 class Reviews
 {
 
-	private Explorer $database;
-
-	private TexyFormatter $texyFormatter;
-
-
 	public function __construct(
-		Explorer $context,
-		TexyFormatter $texyFormatter,
+		private readonly Explorer $database,
+		private readonly TexyFormatter $texyFormatter,
 	) {
-		$this->database = $context;
-		$this->texyFormatter = $texyFormatter;
 	}
 
 

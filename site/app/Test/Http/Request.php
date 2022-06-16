@@ -11,8 +11,6 @@ use Nette\Http\UrlScript;
 class Request implements IRequest
 {
 
-	private UrlScript $url;
-
 	/** @var array<string, string> */
 	private array $cookies;
 
@@ -33,9 +31,9 @@ class Request implements IRequest
 	private bool $sameSite;
 
 
-	public function __construct(UrlScript $url)
-	{
-		$this->url = $url;
+	public function __construct(
+		private readonly UrlScript $url,
+	) {
 	}
 
 

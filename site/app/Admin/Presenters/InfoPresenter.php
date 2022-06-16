@@ -9,12 +9,9 @@ use Spaze\PhpInfo\PhpInfo;
 class InfoPresenter extends BasePresenter
 {
 
-	private PhpInfo $phpInfo;
-
-
-	public function __construct(PhpInfo $phpInfo)
-	{
-		$this->phpInfo = $phpInfo;
+	public function __construct(
+		private readonly PhpInfo $phpInfo,
+	) {
 		parent::__construct();
 	}
 

@@ -8,12 +8,9 @@ use MichalSpacekCz\Talks\Talks;
 class WhoPresenter extends BasePresenter
 {
 
-	private Talks $talks;
-
-
-	public function __construct(Talks $talks)
-	{
-		$this->talks = $talks;
+	public function __construct(
+		private readonly Talks $talks,
+	) {
 		parent::__construct();
 	}
 

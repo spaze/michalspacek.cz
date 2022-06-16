@@ -13,8 +13,6 @@ use Nette\Http\Url;
 class ErrorPresenter extends BaseErrorPresenter
 {
 
-	private LocaleLinkGenerator $localeLinkGenerator;
-
 	/** @var int[] */
 	private array $statuses = [
 		IResponse::S400_BAD_REQUEST,
@@ -25,9 +23,9 @@ class ErrorPresenter extends BaseErrorPresenter
 	];
 
 
-	public function __construct(LocaleLinkGenerator $localeLinkGenerator)
-	{
-		$this->localeLinkGenerator = $localeLinkGenerator;
+	public function __construct(
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
+	) {
 		parent::__construct();
 	}
 

@@ -13,13 +13,10 @@ use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 class NettePresenter extends Presenter
 {
 
-	private NetteCve202015227 $cve202015227;
-
-
-	public function __construct(NetteCve202015227 $cve202015227)
-	{
+	public function __construct(
+		private readonly NetteCve202015227 $cve202015227,
+	) {
 		parent::__construct();
-		$this->cve202015227 = $cve202015227;
 	}
 
 

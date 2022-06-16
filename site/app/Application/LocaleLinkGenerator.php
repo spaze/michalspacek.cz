@@ -20,11 +20,11 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 
 
 	public function __construct(
-		private RouterFactory $routerFactory,
-		private IRequest $httpRequest,
-		private IPresenterFactory $presenterFactory,
-		private LinkGenerator $linkGenerator,
-		private Translator $translator,
+		private readonly RouterFactory $routerFactory,
+		private readonly IRequest $httpRequest,
+		private readonly IPresenterFactory $presenterFactory,
+		private readonly LinkGenerator $linkGenerator,
+		private readonly Translator $translator,
 	) {
 	}
 

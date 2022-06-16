@@ -31,14 +31,14 @@ class Post
 	 * @param array<string, array<string, array<int, string>>> $allowedTags
 	 */
 	public function __construct(
-		private Explorer $database,
-		private Loader $loader,
-		private TexyFormatter $texyFormatter,
-		private Cache $exportsCache,
-		private LinkGenerator $linkGenerator,
-		private LocaleLinkGenerator $localeLinkGenerator,
-		private Tags $tags,
-		private Translator $translator,
+		private readonly Explorer $database,
+		private readonly Loader $loader,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly Cache $exportsCache,
+		private readonly LinkGenerator $linkGenerator,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly Tags $tags,
+		private readonly Translator $translator,
 		private readonly int $updatedInfoThreshold,
 		private readonly array $allowedTags,
 	) {

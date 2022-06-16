@@ -11,13 +11,12 @@ class SearchMatcher
 
 	private ?string $search;
 
-	private StorageRegistry $storageRegistry;
 
-
-	public function __construct(?string $search, StorageRegistry $storageRegistry)
-	{
+	public function __construct(
+		?string $search,
+		private readonly StorageRegistry $storageRegistry,
+	) {
 		$this->search = $search ? Strings::webalize($search) : null;
-		$this->storageRegistry = $storageRegistry;
 	}
 
 
