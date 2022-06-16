@@ -6,40 +6,17 @@ namespace MichalSpacekCz\CompanyInfo;
 class Data
 {
 
-	/** @var int */
-	public $status;
-
-	/** @var string */
-	public $statusMessage;
-
-	/** @var string */
-	public $companyId;
-
-	/** @var string */
-	public $companyTaxId;
-
-	/** @var string */
-	public $company;
-
-	/** @var string */
-	public $street;
-
-	/** @var string */
-	public $houseNumber;
-
-	/** @var string */
-	public $streetNumber;
-
-	/** @var string */
-	public $streetFull;
-
-	/** @var string */
-	public $city;
-
-	/** @var string */
-	public $zip;
-
-	/** @var string */
-	public $country;
+	public int $status;
+	public string $statusMessage;
+	public string $companyId;
+	public string $companyTaxId;
+	public string $company;
+	public ?string $street;
+	public ?string $houseNumber;
+	public ?string $streetNumber;
+	public ?string $streetFull;
+	public ?string $city;
+	public ?string $zip;
+	public ?string $country;
 
 }

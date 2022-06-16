@@ -113,7 +113,7 @@ class Ares implements CompanyDataInterface
 	}
 
 
-	private function formatStreet(string $city, string $street, string $houseNumber, string $streetNumber): string
+	private function formatStreet(?string $city, ?string $street, ?string $houseNumber, ?string $streetNumber): ?string
 	{
 		$result = $street;
 		if (empty($result)) {
