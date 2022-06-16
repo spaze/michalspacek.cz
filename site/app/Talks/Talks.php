@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Talks;
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
+use MichalSpacekCz\Utils\Base64;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Database\UniqueConstraintViolationException;
@@ -518,7 +519,7 @@ class Talks
 			$this->deleteFiles[] = $renamed = $this->getSlideImageFilename($this->locationRoot, $talkId, "__del__{$originalFile}");
 			rename($this->getSlideImageFilename($this->locationRoot, $talkId, $originalFile), $renamed);
 		}
-		$name = strtr(rtrim(base64_encode(sha1($contents, true)), '='), '+/', '-_');
+		$name = Base64::urlEncode(sha1($contents, true));
 		$extension = $supported[$replace->getContentType()];
 		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
 		$this->decrementOtherSlides($originalFile);
