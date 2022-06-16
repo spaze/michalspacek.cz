@@ -32,7 +32,7 @@ class SecurityHeadersTest extends TestCase
 		$this->cspConfig = $this->getCspConfig();
 		$this->securityHeaders = $this->getSecurityHeaders([
 			'camera' => 'none',
-			'geolocation' => null,
+			'geolocation' => '',
 			'midi' => [
 				'self',
 				'none',
