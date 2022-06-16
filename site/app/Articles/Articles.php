@@ -252,8 +252,8 @@ class Articles
 				$article->sourceHref = null;
 				$this->texyFormatter->setTopHeading(2);
 			}
-			$article->excerpt = $this->texyFormatter->formatBlock($article->excerpt);
-			$article->text = $this->texyFormatter->formatBlock($article->text);
+			$article->excerpt = $article->excerpt ? $this->texyFormatter->formatBlock($article->excerpt) : null;
+			$article->text = $article->text ? $this->texyFormatter->formatBlock($article->text) : null;
 		}
 		return $articles;
 	}

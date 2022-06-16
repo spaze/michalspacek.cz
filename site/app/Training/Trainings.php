@@ -153,8 +153,8 @@ class Trainings
 	{
 		$dates = $this->trainingDates->getDates($trainingId);
 		foreach ($dates as $date) {
-			$date->venueDescription = $this->texyFormatter->format($date->venueDescription);
-			$date->cooperationDescription = $this->texyFormatter->format($date->cooperationDescription);
+			$date->venueDescription = $date->venueDescription ? $this->texyFormatter->format($date->venueDescription) : null;
+			$date->cooperationDescription = $date->cooperationDescription ? $this->texyFormatter->format($date->cooperationDescription) : null;
 		}
 		return $dates;
 	}

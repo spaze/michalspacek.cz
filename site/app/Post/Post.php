@@ -9,7 +9,6 @@ use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Exceptions\PostDoesNotExistException;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
@@ -197,15 +196,10 @@ class Post
 			$texy->allowedTags = $allowedTags;
 		}
 		$this->texyFormatter->setTopHeading(2);
-		$title = $this->texyFormatter->format($post->titleTexy, $texy);
-		$text = $this->texyFormatter->formatBlock($post->textTexy, $texy);
-		if (!isset($title, $text)) {
-			throw new ShouldNotHappenException();
-		}
-		$post->title = $title;
-		$post->text = $text;
-		$post->lead = $this->texyFormatter->formatBlock($post->leadTexy, $texy);
-		$post->originally = $this->texyFormatter->formatBlock($post->originallyTexy, $texy);
+		$post->title = $this->texyFormatter->format($post->titleTexy, $texy);
+		$post->text = $this->texyFormatter->formatBlock($post->textTexy, $texy);
+		$post->lead = $post->leadTexy ? $this->texyFormatter->formatBlock($post->leadTexy, $texy) : null;
+		$post->originally = $post->originallyTexy ? $this->texyFormatter->formatBlock($post->originallyTexy, $texy) : null;
 		return $post;
 	}
 
@@ -363,9 +357,6 @@ class Post
 		$edits = array();
 		foreach ($this->database->fetchAll($sql, $postId) as $row) {
 			$summary = $this->texyFormatter->format($row->summaryTexy);
-			if ($summary === null) {
-				throw new ShouldNotHappenException();
-			}
 			$edit = new Edit();
 			$edit->summaryTexy = $row->summaryTexy;
 			$edit->summary = $summary;

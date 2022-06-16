@@ -12,6 +12,7 @@ use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
 use Nette\Utils\Html;
+use Nette\Utils\Strings;
 use Texy\Texy;
 use Throwable;
 
@@ -156,18 +157,15 @@ class TexyFormatter
 	 *
 	 * Suitable for "inline" strings like headers.
 	 *
-	 * @param string|null $text
+	 * @param string $text
 	 * @param Texy|null $texy
-	 * @return Html<Html|string>|null
+	 * @return Html<Html|string>
 	 * @throws Throwable
 	 */
-	public function format(?string $text, ?Texy $texy = null): ?Html
+	public function format(string $text, ?Texy $texy = null): Html
 	{
-		if (empty($text)) {
-			return null;
-		}
 		return $this->replace($this->cache("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
-			return preg_replace('~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1', ($texy ?? $this->getTexy())->process($text));
+			return Strings::replace(($texy ?? $this->getTexy())->process($text), '~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1');
 		}));
 	}
 
@@ -175,16 +173,13 @@ class TexyFormatter
 	/**
 	 * Format string.
 	 *
-	 * @param string|null $text
+	 * @param string $text
 	 * @param Texy|null $texy
-	 * @return Html<Html|string>|null
+	 * @return Html<Html|string>
 	 * @throws Throwable
 	 */
-	public function formatBlock(?string $text, ?Texy $texy = null): ?Html
+	public function formatBlock(string $text, ?Texy $texy = null): Html
 	{
-		if (empty($text)) {
-			return null;
-		}
 		return $this->replace($this->cache("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
 			return ($texy ?? $this->getTexy())->process($text);
 		}));
@@ -201,9 +196,13 @@ class TexyFormatter
 			self::TRAINING_DATE_PLACEHOLDER => [$this, 'replaceTrainingDate'],
 		);
 
-		$result = preg_replace_callback('~\*\*([^:]+):([^*]+)\*\*~', function ($matches) use ($replacements): string {
-			return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : '');
-		}, (string)$result);
+		$result = Strings::replace(
+			(string)$result,
+			'~\*\*([^:]+):([^*]+)\*\*~',
+			function ($matches) use ($replacements): string {
+				return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : '');
+			},
+		);
 		return Html::el()->setHtml($result);
 	}
 
