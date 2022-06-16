@@ -5,8 +5,8 @@ namespace MichalSpacekCz\UpcKeys;
 
 use DateTime;
 use DateTimeZone;
-use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Json;
 use PDOException;
 use RuntimeException;
@@ -207,11 +207,11 @@ class Technicolor implements RouterInterface
 				);
 			}
 			$this->database->commit();
+		} catch (UniqueConstraintViolationException) {
+			$this->database->rollBack();
 		} catch (PDOException $e) {
 			$this->database->rollBack();
-			if ($e->getCode() != '23000' || $e->errorInfo[1] != MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-				throw $e;
-			}
+			throw $e;
 		}
 
 		return true;

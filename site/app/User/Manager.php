@@ -6,9 +6,9 @@ namespace MichalSpacekCz\User;
 use DateTimeInterface;
 use Exception;
 use Nette\Application\LinkGenerator;
-use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\IRequest;
 use Nette\Http\Response;
 use Nette\Http\Url;
@@ -21,7 +21,6 @@ use Nette\Security\User;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 use ParagonIE\Halite\Alerts\HaliteAlert;
-use PDOException;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
 
@@ -226,14 +225,9 @@ class Manager implements Authenticator
 					'type' => $type,
 				),
 			);
-		} catch (PDOException $e) {
-			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					// regenerate the access code and try harder this time
-					return $this->insertToken($user, $type);
-				}
-			}
-			throw $e;
+		} catch (UniqueConstraintViolationException $e) {
+			// regenerate the access code and try harder this time
+			return $this->insertToken($user, $type);
 		}
 		return $selector . self::AUTH_SELECTOR_TOKEN_SEPARATOR . $token;
 	}

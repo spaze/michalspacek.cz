@@ -5,16 +5,15 @@ namespace MichalSpacekCz\Talks;
 
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use Nette\Database\Drivers\MySqlDriver;
+use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
-use PDOException;
 use RuntimeException;
-use UnexpectedValueException;
 
 class Talks
 {
@@ -535,8 +534,7 @@ class Talks
 	 *
 	 * @param int $talkId
 	 * @param ArrayHash<ArrayHash<int|string>> $slides
-	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
-	 * @throws PDOException
+	 * @throws DuplicatedSlideException
 	 */
 	private function addSlides(int $talkId, ArrayHash $slides): void
 	{
@@ -561,13 +559,8 @@ class Talks
 					),
 				);
 			}
-		} catch (PDOException $e) {
-			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					throw new UnexpectedValueException($e->getMessage(), $lastNumber);
-				}
-			}
-			throw $e;
+		} catch (UniqueConstraintViolationException $e) {
+			throw new DuplicatedSlideException($lastNumber, previous: $e);
 		}
 	}
 
@@ -579,8 +572,7 @@ class Talks
 	 * @param Row[] $originalSlides
 	 * @param ArrayHash<ArrayHash<int|string>> $slides
 	 * @param bool $removeFiles Remove old files?
-	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
-	 * @throws PDOException
+	 * @throws DuplicatedSlideException
 	 */
 	private function updateSlides(int $talkId, array $originalSlides, ArrayHash $slides, bool $removeFiles): void
 	{
@@ -625,13 +617,8 @@ class Talks
 					$id,
 				);
 			}
-		} catch (PDOException $e) {
-			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY && isset($slideNumber)) {
-					throw new UnexpectedValueException($e->getMessage(), $slideNumber);
-				}
-			}
-			throw $e;
+		} catch (UniqueConstraintViolationException $e) {
+			throw new DuplicatedSlideException($slideNumber ?? $slides->getIterator()->current()->number, previous: $e);
 		}
 	}
 
@@ -642,6 +629,7 @@ class Talks
 	 * @param int $talkId
 	 * @param Row[] $originalSlides
 	 * @param ArrayHash<int|string> $newSlides
+	 * @throws DuplicatedSlideException
 	 */
 	public function saveSlides(int $talkId, array $originalSlides, ArrayHash $newSlides): void
 	{

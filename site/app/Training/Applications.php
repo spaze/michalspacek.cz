@@ -8,12 +8,11 @@ use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Resolver\Vrana;
-use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Random;
 use ParagonIE\Halite\Alerts\HaliteAlert;
-use PDOException;
 use RuntimeException;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
@@ -220,15 +219,10 @@ class Applications
 		$data['access_token'] = $token = $this->generateAccessCode();
 		try {
 			$this->database->query('INSERT INTO training_applications', $data);
-		} catch (PDOException $e) {
-			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					// regenerate the access code and try harder this time
-					Debugger::log("Regenerating access token, {$token} already exists");
-					return $this->insertData($data);
-				}
-			}
-			throw $e;
+		} catch (UniqueConstraintViolationException) {
+			// regenerate the access code and try harder this time
+			Debugger::log("Regenerating access token, {$token} already exists");
+			return $this->insertData($data);
 		}
 		return $token;
 	}
