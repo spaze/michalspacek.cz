@@ -51,7 +51,7 @@ class Venues
 		);
 
 		if ($result) {
-			$result->description   = $this->texyFormatter->format($result->description);
+			$result->description = $this->texyFormatter->format($result->description);
 			$result->parking = $this->texyFormatter->format($result->parking);
 			$result->publicTransport = $this->texyFormatter->format($result->publicTransport);
 		}

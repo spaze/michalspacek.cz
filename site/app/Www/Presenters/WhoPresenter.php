@@ -20,7 +20,7 @@ class WhoPresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
-		$this->template->pageTitle  = $this->translator->translate('messages.title.who');
+		$this->template->pageTitle = $this->translator->translate('messages.title.who');
 		$this->template->pageHeader = $this->translator->translate('messages.header.who');
 		$this->template->talksApproxCount = $this->talks->getApproxCount();
 	}

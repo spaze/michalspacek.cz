@@ -99,17 +99,17 @@ class TrainingsPresenter extends BasePresenter
 		}
 		$this->applications = array_merge($applications, $discarded);
 
-		$this->template->pageTitle     = 'Účastníci';
+		$this->template->pageTitle = 'Účastníci';
 		$this->template->trainingStart = $this->training->start;
-		$this->template->trainingEnd   = $this->training->end;
-		$this->template->trainingName  = $this->training->name;
+		$this->template->trainingEnd = $this->training->end;
+		$this->template->trainingName = $this->training->name;
 		$this->template->remote = $this->training->remote;
-		$this->template->venueCity     = $this->training->venueCity;
-		$this->template->venueName     = $this->training->venueName;
-		$this->template->public        = $this->training->public;
-		$this->template->note          = $this->training->note;
-		$this->template->applications  = $this->applications;
-		$this->template->validCount    = $validCount;
+		$this->template->venueCity = $this->training->venueCity;
+		$this->template->venueName = $this->training->venueName;
+		$this->template->public = $this->training->public;
+		$this->template->note = $this->training->note;
+		$this->template->applications = $this->applications;
+		$this->template->validCount = $validCount;
 		$this->template->attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$this->template->filesStatuses = $this->trainingStatuses->getAllowFilesStatuses();
 		$this->template->reviews = $this->trainingReviews->getReviewsByDateId($this->dateId);
@@ -129,13 +129,13 @@ class TrainingsPresenter extends BasePresenter
 		$this->training = $this->trainingDates->get($application->dateId);
 
 		$this->template->pageTitle = 'Soubory';
-		$this->template->files     = $this->trainingFiles->getFiles($this->applicationId);
+		$this->template->files = $this->trainingFiles->getFiles($this->applicationId);
 		$this->template->trainingStart = $this->training->start;
 		$this->template->trainingEnd = $this->training->end;
-		$this->template->trainingName  = $this->training->name;
-		$this->template->trainingCity  = $this->training->venueCity;
-		$this->template->name          = $application->name;
-		$this->template->dateId        = $application->dateId;
+		$this->template->trainingName = $this->training->name;
+		$this->template->trainingCity = $this->training->venueCity;
+		$this->template->name = $application->name;
+		$this->template->dateId = $application->dateId;
 	}
 
 
@@ -146,12 +146,12 @@ class TrainingsPresenter extends BasePresenter
 		$date = $this->trainingDates->get($this->review->dateId);
 
 		$this->template->pageTitle = "Ohlas od {$this->review->name}" . ($this->review->company ? ", {$this->review->company}" : '');
-		$this->template->trainingStart      = $date->start;
+		$this->template->trainingStart = $date->start;
 		$this->template->trainingEnd = $date->end;
-		$this->template->trainingName       = $date->name;
-		$this->template->trainingCity  = $date->venueCity;
-		$this->template->name          = $this->review->name;
-		$this->template->dateId        = $this->review->dateId;
+		$this->template->trainingName = $date->name;
+		$this->template->trainingCity = $date->venueCity;
+		$this->template->name = $this->review->name;
+		$this->template->dateId = $this->review->dateId;
 	}
 
 
@@ -180,22 +180,22 @@ class TrainingsPresenter extends BasePresenter
 			$this->training = $this->trainings->getIncludingCustom($this->application->trainingAction);
 		}
 
-		$this->template->pageTitle     = $this->application->name ?? 'smazáno';
+		$this->template->pageTitle = $this->application->name ?? 'smazáno';
 		$this->template->applicationId = $this->applicationId;
 		$this->template->applicationDateId = $applicationDateId;
-		$this->template->status        = $this->application->status;
-		$this->template->statusTime    = $this->application->statusTime;
-		$this->template->trainingName  = $this->training->name;
+		$this->template->status = $this->application->status;
+		$this->template->statusTime = $this->application->statusTime;
+		$this->template->trainingName = $this->training->name;
 		$this->template->trainingStart = $start;
-		$this->template->trainingEnd   = $end;
+		$this->template->trainingEnd = $end;
 		$this->template->trainingRemote = $isRemote;
-		$this->template->trainingCity  = $city;
-		$this->template->sourceName    = $this->application->sourceName;
-		$this->template->companyId     = $this->application->companyId;
-		$this->template->allowFiles      = in_array($this->application->status, $this->trainingStatuses->getAllowFilesStatuses());
-		$this->template->toBeInvited   = in_array($this->application->status, $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
-		$this->template->accessToken   = $this->application->accessToken;
-		$this->template->history       = $this->trainingStatuses->getStatusHistory($this->applicationId);
+		$this->template->trainingCity = $city;
+		$this->template->sourceName = $this->application->sourceName;
+		$this->template->companyId = $this->application->companyId;
+		$this->template->allowFiles = in_array($this->application->status, $this->trainingStatuses->getAllowFilesStatuses());
+		$this->template->toBeInvited = in_array($this->application->status, $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
+		$this->template->accessToken = $this->application->accessToken;
+		$this->template->history = $this->trainingStatuses->getStatusHistory($this->applicationId);
 	}
 
 

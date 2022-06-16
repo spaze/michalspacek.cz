@@ -21,8 +21,8 @@ use Tracy\Debugger;
 class Applications
 {
 
-	private const SOURCE_MICHAL_SPACEK  = 'michal-spacek';
-	private const SOURCE_JAKUB_VRANA  = 'jakub-vrana';
+	private const SOURCE_MICHAL_SPACEK = 'michal-spacek';
+	private const SOURCE_JAKUB_VRANA = 'jakub-vrana';
 
 	/** @var array<int, array<int, Row>> */
 	private array $byDate = [];
@@ -387,21 +387,21 @@ class Applications
 		/** @var DateTimeZone|false $timeZone */
 		$timeZone = $datetime->getTimezone();
 		$data = array(
-			'key_date'             => $dateId,
-			'name'                 => $name,
-			'email'                => $this->emailEncryption->encrypt($email),
-			'company'              => $company,
-			'street'               => $street,
-			'city'                 => $city,
-			'zip'                  => $zip,
-			'country'              => $country,
-			'company_id'           => $companyId,
-			'company_tax_id'       => $companyTaxId,
-			'note'                 => $note,
-			'key_status'           => $statusId,
-			'status_time'          => $datetime,
+			'key_date' => $dateId,
+			'name' => $name,
+			'email' => $this->emailEncryption->encrypt($email),
+			'company' => $company,
+			'street' => $street,
+			'city' => $city,
+			'zip' => $zip,
+			'country' => $country,
+			'company_id' => $companyId,
+			'company_tax_id' => $companyTaxId,
+			'note' => $note,
+			'key_status' => $statusId,
+			'status_time' => $datetime,
 			'status_time_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
-			'key_source'           => $this->getTrainingApplicationSource($source),
+			'key_source' => $this->getTrainingApplicationSource($source),
 			'price' => $customerPrice->getPrice(),
 			'vat_rate' => $customerPrice->getVatRate(),
 			'price_vat' => $customerPrice->getPriceVat(),
@@ -468,20 +468,20 @@ class Applications
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
 					array(
-						'name'           => $name,
-						'email'          => $this->emailEncryption->encrypt($email),
-						'company'        => $company,
-						'street'         => $street,
-						'city'           => $city,
-						'zip'            => $zip,
-						'country'        => $country,
-						'company_id'     => $companyId,
+						'name' => $name,
+						'email' => $this->emailEncryption->encrypt($email),
+						'company' => $company,
+						'street' => $street,
+						'city' => $city,
+						'zip' => $zip,
+						'country' => $country,
+						'company_id' => $companyId,
 						'company_tax_id' => $companyTaxId,
-						'note'           => $note,
-						'price'          => $price->getPrice(),
-						'vat_rate'       => $price->getVatRate(),
-						'price_vat'      => $price->getPriceVat(),
-						'discount'       => $price->getDiscount(),
+						'note' => $note,
+						'price' => $price->getPrice(),
+						'vat_rate' => $price->getVatRate(),
+						'price_vat' => $price->getPriceVat(),
+						'discount' => $price->getDiscount(),
 					),
 					$applicationId,
 				);
@@ -517,25 +517,25 @@ class Applications
 		/** @var DateTimeZone|false $timeZone */
 		$timeZone = ($paidDate ? $paidDate->getTimezone() : false);
 		$data = array(
-			'name'           => $name,
-			'email'          => ($email ? $this->emailEncryption->encrypt($email) : null),
-			'company'        => $company,
-			'familiar'       => $familiar,
-			'street'         => $street,
-			'city'           => $city,
-			'zip'            => $zip,
-			'country'        => $country,
-			'company_id'     => $companyId,
+			'name' => $name,
+			'email' => ($email ? $this->emailEncryption->encrypt($email) : null),
+			'company' => $company,
+			'familiar' => $familiar,
+			'street' => $street,
+			'city' => $city,
+			'zip' => $zip,
+			'country' => $country,
+			'company_id' => $companyId,
 			'company_tax_id' => $companyTaxId,
-			'note'           => $note,
-			'key_source'     => $this->getTrainingApplicationSource($source),
-			'price'          => ($price || $discount ? $price : null),
-			'vat_rate'       => ($vatRate ?: null),
-			'price_vat'      => ($priceVat ?: null),
-			'discount'       => ($discount ?: null),
-			'invoice_id'     => ((int)$invoiceId ?: null),
-			'paid'           => ($paidDate ?: null),
-			'paid_timezone'  => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
+			'note' => $note,
+			'key_source' => $this->getTrainingApplicationSource($source),
+			'price' => ($price || $discount ? $price : null),
+			'vat_rate' => ($vatRate ?: null),
+			'price_vat' => ($priceVat ?: null),
+			'discount' => ($discount ?: null),
+			'invoice_id' => ((int)$invoiceId ?: null),
+			'paid' => ($paidDate ?: null),
+			'paid_timezone' => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
 		);
 		if ($dateId !== null) {
 			$data['key_date'] = $dateId;
@@ -801,8 +801,8 @@ class Applications
 		$result = $this->database->query(
 			'UPDATE training_applications SET ? WHERE invoice_id = ?',
 			array(
-				'paid'           => ($paidDate ?: null),
-				'paid_timezone'  => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
+				'paid' => ($paidDate ?: null),
+				'paid_timezone' => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
 			),
 			(int)$invoiceId,
 		);

@@ -118,19 +118,19 @@ class TrainingsPresenter extends BasePresenter
 		$session = $this->getSession();
 		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
-		$this->template->name             = $this->training->action;
-		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.training', [$this->training->name]);
-		$this->template->title            = $this->training->name;
-		$this->template->description      = $this->training->description;
-		$this->template->content          = $this->training->content;
-		$this->template->upsell           = $this->training->upsell;
-		$this->template->prerequisites    = $this->training->prerequisites;
-		$this->template->audience         = $this->training->audience;
-		$this->template->capacity         = $this->training->capacity;
-		$this->template->materials        = $this->training->materials;
-		$this->template->lastFreeSeats    = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
-		$this->template->dates            = $this->dates;
-		$this->template->dataRetention    = $this->trainingDates->getDataRetentionDays();
+		$this->template->name = $this->training->action;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.training', [$this->training->name]);
+		$this->template->title = $this->training->name;
+		$this->template->description = $this->training->description;
+		$this->template->content = $this->training->content;
+		$this->template->upsell = $this->training->upsell;
+		$this->template->prerequisites = $this->training->prerequisites;
+		$this->template->audience = $this->training->audience;
+		$this->template->capacity = $this->training->capacity;
+		$this->template->materials = $this->training->materials;
+		$this->template->lastFreeSeats = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
+		$this->template->dates = $this->dates;
+		$this->template->dataRetention = $this->trainingDates->getDataRetentionDays();
 
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);
 
@@ -177,20 +177,20 @@ class TrainingsPresenter extends BasePresenter
 			$this->redirect('training', $name);
 		}
 
-		$data                 = (array)$session->application;
-		$data[$name]          = array('id' => $application->applicationId, 'dateId' => $application->dateId);
+		$data = (array)$session->application;
+		$data[$name] = array('id' => $application->applicationId, 'dateId' => $application->dateId);
 		$session->application = $data;
 
-		$session->name         = $application->name;
-		$session->email        = $application->email;
-		$session->company      = $application->company;
-		$session->street       = $application->street;
-		$session->city         = $application->city;
-		$session->zip          = $application->zip;
-		$session->country      = $application->country;
-		$session->companyId    = $application->companyId;
+		$session->name = $application->name;
+		$session->email = $application->email;
+		$session->company = $application->company;
+		$session->street = $application->street;
+		$session->city = $application->city;
+		$session->zip = $application->zip;
+		$session->country = $application->country;
+		$session->companyId = $application->companyId;
 		$session->companyTaxId = $application->companyTaxId;
-		$session->note         = $application->note;
+		$session->note = $application->note;
 
 		$this->redirect('training', $application->trainingAction);
 	}
@@ -251,10 +251,10 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->redirectToSuccessor($training->successorId);
 
-		$this->template->name             = $training->action;
-		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
-		$this->template->title            = $training->name;
-		$this->template->description      = $training->description;
+		$this->template->name = $training->action;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
+		$this->template->title = $training->name;
+		$this->template->description = $training->description;
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId);
 
 		if ($training->discontinuedId !== null) {
@@ -353,15 +353,15 @@ class TrainingsPresenter extends BasePresenter
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.confirmed'));
 		}
 
-		$this->template->name             = $this->training->action;
-		$this->template->pageTitle        = $this->texyFormatter->translate('messages.title.trainingapplication', [$this->training->name]);
-		$this->template->title            = $this->training->name;
-		$this->template->description      = $this->training->description;
-		$this->template->lastFreeSeats    = false;
-		$this->template->start            = $date->start;
-		$this->template->end              = $date->end;
-		$this->template->venueCity        = $date->venueCity;
-		$this->template->tentative        = $date->tentative;
+		$this->template->name = $this->training->action;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingapplication', [$this->training->name]);
+		$this->template->title = $this->training->name;
+		$this->template->description = $this->training->description;
+		$this->template->lastFreeSeats = false;
+		$this->template->start = $date->start;
+		$this->template->end = $date->end;
+		$this->template->venueCity = $date->venueCity;
+		$this->template->tentative = $date->tentative;
 
 		$upcoming = $this->trainingDates->getPublicUpcoming();
 		unset($upcoming[$name]);

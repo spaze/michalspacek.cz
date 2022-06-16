@@ -14,21 +14,21 @@ use Tracy\Debugger;
 class Statuses
 {
 
-	public const STATUS_CREATED             = 'CREATED';              // 1
-	public const STATUS_TENTATIVE           = 'TENTATIVE';            // 2
-	public const STATUS_INVITED             = 'INVITED';              // 3
-	public const STATUS_SIGNED_UP           = 'SIGNED_UP';            // 4
-	public const STATUS_INVOICE_SENT        = 'INVOICE_SENT';         // 5
-	public const STATUS_NOTIFIED            = 'NOTIFIED';             // 6
-	public const STATUS_ATTENDED            = 'ATTENDED';             // 7
-	public const STATUS_MATERIALS_SENT      = 'MATERIALS_SENT';       // 8
-	public const STATUS_ACCESS_TOKEN_USED   = 'ACCESS_TOKEN_USED';    // 9
-	public const STATUS_CANCELED            = 'CANCELED';             // 10
-	public const STATUS_IMPORTED            = 'IMPORTED';             // 13
+	public const STATUS_CREATED = 'CREATED';              // 1
+	public const STATUS_TENTATIVE = 'TENTATIVE';            // 2
+	public const STATUS_INVITED = 'INVITED';              // 3
+	public const STATUS_SIGNED_UP = 'SIGNED_UP';            // 4
+	public const STATUS_INVOICE_SENT = 'INVOICE_SENT';         // 5
+	public const STATUS_NOTIFIED = 'NOTIFIED';             // 6
+	public const STATUS_ATTENDED = 'ATTENDED';             // 7
+	public const STATUS_MATERIALS_SENT = 'MATERIALS_SENT';       // 8
+	public const STATUS_ACCESS_TOKEN_USED = 'ACCESS_TOKEN_USED';    // 9
+	public const STATUS_CANCELED = 'CANCELED';             // 10
+	public const STATUS_IMPORTED = 'IMPORTED';             // 13
 	public const STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING';  // 14
-	public const STATUS_REMINDED            = 'REMINDED';             // 15
-	public const STATUS_PAID_AFTER          = 'PAID_AFTER';           // 16
-	public const STATUS_INVOICE_SENT_AFTER  = 'INVOICE_SENT_AFTER';   // 17
+	public const STATUS_REMINDED = 'REMINDED';             // 15
+	public const STATUS_PAID_AFTER = 'PAID_AFTER';           // 16
+	public const STATUS_INVOICE_SENT_AFTER = 'INVOICE_SENT_AFTER';   // 17
 	public const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
 
 	private Explorer $database;
@@ -236,8 +236,8 @@ class Statuses
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			array(
-				'key_status'           => $statusId,
-				'status_time'          => $datetime,
+				'key_status' => $statusId,
+				'status_time' => $datetime,
 				'status_time_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 			),
 			$applicationId,
@@ -246,9 +246,9 @@ class Statuses
 		$this->database->query(
 			'INSERT INTO training_application_status_history',
 			array(
-				'key_application'      => $applicationId,
-				'key_status'           => $prevStatus->statusId,
-				'status_time'          => $prevStatus->statusTime,
+				'key_application' => $applicationId,
+				'key_status' => $prevStatus->statusId,
+				'status_time' => $prevStatus->statusTime,
 				'status_time_timezone' => $prevStatus->statusTimeTimeZone,
 			),
 		);

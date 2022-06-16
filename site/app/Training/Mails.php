@@ -69,15 +69,15 @@ class Mails
 
 		$template->setFile(__DIR__ . '/mails/trainingSignUp.latte');
 
-		$template->training     = $training;
+		$template->training = $training;
 		$template->trainingName = $trainingName;
-		$template->start        = $start;
-		$template->end          = $end;
+		$template->start = $start;
+		$template->end = $end;
 		$template->remote = $remote;
-		$template->venueName    = $venueName;
+		$template->venueName = $venueName;
 		$template->venueNameExtended = $venueNameExtended;
 		$template->venueAddress = $venueAddress;
-		$template->venueCity    = $venueCity;
+		$template->venueCity = $venueCity;
 
 		$subject = 'Potvrzení registrace na školení ' . $trainingName;
 		$this->sendMail($recipientAddress, $recipientName, $subject, $template);

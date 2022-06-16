@@ -16,10 +16,10 @@ use Nette\Utils\Json;
 class Dates
 {
 
-	public const STATUS_CREATED   = 'CREATED';    // 1
+	public const STATUS_CREATED = 'CREATED';    // 1
 	public const STATUS_TENTATIVE = 'TENTATIVE';  // 2
 	public const STATUS_CONFIRMED = 'CONFIRMED';  // 3
-	public const STATUS_CANCELED  = 'CANCELED';   // 4
+	public const STATUS_CANCELED = 'CANCELED';   // 4
 
 	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
@@ -359,20 +359,20 @@ class Dates
 			$upcoming = array();
 			foreach ($this->database->fetchAll($query, $includeNonPublic, $includeNonPublic, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED, $this->translator->getDefaultLocale()) as $row) {
 				$date = array(
-					'dateId'        => $row->dateId,
-					'tentative'     => ($row->status == Dates::STATUS_TENTATIVE),
+					'dateId' => $row->dateId,
+					'tentative' => ($row->status == Dates::STATUS_TENTATIVE),
 					'lastFreeSeats' => $this->lastFreeSeats($row),
-					'start'         => $row->start,
-					'end'           => $row->end,
-					'label'         => $this->decodeLabel($row->labelJson),
-					'public'        => $row->public,
-					'status'        => $row->status,
-					'name'          => $this->translator->translate($row->name),
+					'start' => $row->start,
+					'end' => $row->end,
+					'label' => $this->decodeLabel($row->labelJson),
+					'public' => $row->public,
+					'status' => $row->status,
+					'name' => $this->translator->translate($row->name),
 					'remote' => (bool)$row->remote,
-					'venueId'       => $row->venueId,
-					'venueName'     => $row->venueName,
-					'venueCity'     => $row->venueCity,
-					'note'          => $row->note,
+					'venueId' => $row->venueId,
+					'venueName' => $row->venueName,
+					'venueCity' => $row->venueCity,
+					'note' => $row->note,
 				);
 				/** @var string $action */
 				$action = $row->action;

@@ -15,7 +15,7 @@ class PgpPresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
-		$this->template->pageTitle  = $this->translator->translate('messages.title.encryptedmessages');
+		$this->template->pageTitle = $this->translator->translate('messages.title.encryptedmessages');
 		$this->template->keyFile = $keyFile = 'key.asc';
 		$this->template->key = file_get_contents("{$this->locationRoot}/{$keyFile}");
 	}

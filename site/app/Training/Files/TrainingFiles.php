@@ -105,8 +105,8 @@ class TrainingFiles
 		$this->database->query(
 			'INSERT INTO files',
 			array(
-				'filename'       => $name,
-				'added'          => $datetime,
+				'filename' => $name,
+				'added' => $datetime,
 				'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
 			),
 		);
@@ -115,7 +115,7 @@ class TrainingFiles
 			$this->database->query(
 				'INSERT INTO training_materials',
 				array(
-					'key_file'        => $fileId,
+					'key_file' => $fileId,
 					'key_application' => $applicationId,
 				),
 			);

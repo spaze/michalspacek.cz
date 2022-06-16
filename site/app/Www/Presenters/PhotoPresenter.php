@@ -61,7 +61,7 @@ class PhotoPresenter extends BasePresenter
 			),
 		);
 		$this->template->photos = $photos;
-		$this->template->pageTitle  = $this->translator->translate('messages.title.photo');
+		$this->template->pageTitle = $this->translator->translate('messages.title.photo');
 	}
 
 }
