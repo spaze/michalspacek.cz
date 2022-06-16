@@ -51,11 +51,12 @@ class TexyPhraseHandler
 		$companyTrainingAction = ':Www:CompanyTrainings:training';
 		/** @var Presenter $presenter */
 		$presenter = $this->application->getPresenter();
+		$url = $link->URL ?? $link->raw;
 
 		// "title":[link:Module:Presenter:action params]
-		if (str_starts_with($link->URL, 'link:')) {
+		if (str_starts_with($url, 'link:')) {
 			/** @var string[] $args */
-			$args = preg_split('/[\s,]+/', substr($link->URL, 5));
+			$args = preg_split('/[\s,]+/', substr($url, 5));
 			$action = ':' . array_shift($args);
 			if (Arrays::contains([$trainingAction, $companyTrainingAction], $action)) {
 				$args = $this->trainingLocales->getLocaleActions($args[0])[$this->translator->getDefaultLocale()];
@@ -64,31 +65,34 @@ class TexyPhraseHandler
 		}
 
 		// "title":[blog:post#fragment]
-		if (str_starts_with($link->URL, 'blog:')) {
-			$link->URL = $this->getBlogLinks(substr($link->URL, 5), $this->translator->getDefaultLocale());
+		if (str_starts_with($url, 'blog:')) {
+			$link->URL = $this->getBlogLinks(substr($url, 5), $this->translator->getDefaultLocale());
 		}
 
 		// "title":[blog-en_US:post#fragment]
-		if (str_starts_with($link->URL, 'blog-') && preg_match('/^blog\-([a-z]{2}_[A-Z]{2}):(.*)\z/', $link->URL, $matches)) {
+		if (str_starts_with($url, 'blog-') && preg_match('/^blog\-([a-z]{2}_[A-Z]{2}):(.*)\z/', $url, $matches)) {
 			$link->URL = $this->getBlogLinks($matches[2], $matches[1]);
 		}
 
 		// "title":[inhouse-training:training]
-		if (str_starts_with($link->URL, 'inhouse-training:')) {
-			$args = $this->trainingLocales->getLocaleActions(substr($link->URL, 17))[$this->translator->getDefaultLocale()];
+		if (str_starts_with($url, 'inhouse-training:')) {
+			$args = $this->trainingLocales->getLocaleActions(substr($url, 17))[$this->translator->getDefaultLocale()];
 			$link->URL = $presenter->link("//{$companyTrainingAction}", $args);
 		}
 
 		// "title":[training:training]
-		if (str_starts_with($link->URL, 'training:')) {
+		if (str_starts_with($url, 'training:')) {
 			$texy = $invocation->getTexy();
-			$name = substr($link->URL, 9);
+			$name = substr($url, 9);
 			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
 			$link->URL = $presenter->link("//{$trainingAction}", $name);
 			$el = HtmlElement::el();
-			$el->add($texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link));
-			$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
-			return $el;
+			$trainingLink = $texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link);
+			if ($trainingLink) {
+				$el->add($trainingLink);
+				$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
+				return $el;
+			}
 		}
 
 		return $invocation->proceed();

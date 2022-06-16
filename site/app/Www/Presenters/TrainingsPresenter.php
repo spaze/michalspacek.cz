@@ -10,6 +10,8 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Reviews;
@@ -102,9 +104,10 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	public function actionTraining(string $name): void
 	{
-		$training = $this->trainings->get($name);
-		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet");
+		try {
+			$training = $this->trainings->get($name);
+		} catch (TrainingDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		$this->training = $training;
 
@@ -140,11 +143,18 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws BadRequestException
+	 */
 	public function actionApplication(string $name, ?string $param): void
 	{
-		$training  = $this->trainings->get($name);
-		if (!$training || $training->discontinuedId) {
-			throw new BadRequestException("I don't do {$name} training");
+		try {
+			$training = $this->trainings->get($name);
+		} catch (TrainingDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
+		}
+		if ($training->discontinuedId) {
+			throw new BadRequestException("I don't do {$name} training anymore");
 		}
 
 		$session = $this->getSession('training');
@@ -233,9 +243,10 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	public function actionReviews(string $name): void
 	{
-		$training = $this->trainings->get($name);
-		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet");
+		try {
+			$training = $this->trainings->get($name);
+		} catch (TrainingDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		$this->redirectToSuccessor($training->successorId);
@@ -268,14 +279,16 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("Unknown application id, missing or invalid token");
 		}
 
-		$training = $this->trainings->getIncludingCustom($name);
-		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet");
+		try {
+			$training = $this->trainings->getIncludingCustom($name);
+		} catch (TrainingDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
-		$application = $this->trainingApplications->getApplicationById($session->applicationId);
-		if (!$application) {
-			throw new BadRequestException("No training application for id {$session->applicationId}");
+		try {
+			$application = $this->trainingApplications->getApplicationById($session->applicationId);
+		} catch (TrainingApplicationDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		if ($application->trainingAction != $name) {
@@ -308,10 +321,15 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	public function actionSuccess(string $name): void
 	{
-		$training = $this->trainings->get($name);
-		if (!$training || $training->discontinuedId) {
-			throw new BadRequestException("I don't do {$name} training");
+		try {
+			$training = $this->trainings->get($name);
+		} catch (TrainingDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
+		if ($training->discontinuedId) {
+			throw new BadRequestException("I don't do {$name} training anymore");
+		}
+
 		$this->training = $training;
 		$this->dates = $this->trainings->getDates($this->training->trainingId);
 		if (empty($this->dates)) {
@@ -357,7 +375,7 @@ class TrainingsPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for trainings.
 	 *
-	 * @return array<string, array<string, string>>
+	 * @return array<string, array<string, string|null>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{

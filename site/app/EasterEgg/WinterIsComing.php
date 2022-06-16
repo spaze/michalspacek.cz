@@ -5,6 +5,7 @@ namespace MichalSpacekCz\EasterEgg;
 
 use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
+use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Arrays;
@@ -64,8 +65,10 @@ class WinterIsComing
 	 */
 	private function sendSyntaxError(TextInput $input): never
 	{
+		/** @var Form $form If not, InvalidStateException would be thrown */
+		$form = $input->getForm();
 		/** @var Presenter $presenter */
-		$presenter = $input->getForm()->getParent();
+		$presenter = $form->getParent();
 		$presenter->sendResponse(new TextResponse(file_get_contents(__DIR__ . '/templates/sqlSyntaxError.html')));
 	}
 

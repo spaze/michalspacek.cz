@@ -47,7 +47,7 @@ class Request implements IRequest
 
 	public function getQuery(string $key = null)
 	{
-		return func_num_args() === 0 ? $this->url->getQueryParameters() : $this->url->getQueryParameter($key);
+		return $key === null ? $this->url->getQueryParameters() : $this->url->getQueryParameter($key);
 	}
 
 

@@ -22,7 +22,10 @@ class ExportsPresenter extends BasePresenter
 	public function actionArticles(?string $param = null): never
 	{
 		$feed = $this->exports->getArticles($this->link('//this'), $param);
-		$this->lastModified($feed->getUpdated(), sha1((string)$feed), '1 hour');
+		$updated = $feed->getUpdated();
+		if ($updated) {
+			$this->lastModified($updated, sha1((string)$feed), '1 hour');
+		}
 		$this->sendResponse(new Response($feed));
 	}
 

@@ -14,6 +14,8 @@ use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Statuses;
@@ -43,9 +45,9 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Row<mixed> */
 	private Row $training;
 
-	private ?int $dateId;
+	private int $dateId;
 
-	private ?int $redirectParam;
+	private int $redirectParam;
 
 
 	public function __construct(
@@ -75,9 +77,10 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->dateId = $param;
 		$this->redirectParam = $this->dateId;
-		$training = $this->trainingDates->get($this->dateId);
-		if (!$training) {
-			throw new BadRequestException("Date id {$param} does not exist, yet");
+		try {
+			$training = $this->trainingDates->get($this->dateId);
+		} catch (TrainingDateDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		$this->training = $training;
 		$validCount = 0;
@@ -158,27 +161,28 @@ class TrainingsPresenter extends BasePresenter
 	public function actionApplication(int $param): void
 	{
 		$this->applicationId = $param;
-		$application = $this->trainingApplications->getApplicationById($this->applicationId);
-		if (!$application) {
-			throw new BadRequestException("No application with id {$this->applicationId}");
+		try {
+			$application = $this->trainingApplications->getApplicationById($this->applicationId);
+		} catch (TrainingApplicationDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		$this->application = $application;
 
 		if (isset($this->application->dateId)) {
-			$this->dateId = $this->application->dateId;
-			$this->training = $this->trainingDates->get($this->dateId);
+			$applicationDateId = $this->application->dateId;
+			$this->training = $this->trainingDates->get($applicationDateId);
 			$start = $this->training->start;
 			$end = $this->training->end;
 			$city = $this->training->venueCity;
 			$isRemote = $this->training->remote;
 		} else {
-			$this->dateId = $start = $end = $city = $isRemote = null;
+			$applicationDateId = $start = $end = $city = $isRemote = null;
 			$this->training = $this->trainings->getIncludingCustom($this->application->trainingAction);
 		}
 
 		$this->template->pageTitle     = $this->application->name ?? 'smazáno';
 		$this->template->applicationId = $this->applicationId;
-		$this->template->dateId        = $this->dateId;
+		$this->template->applicationDateId = $applicationDateId;
 		$this->template->status        = $this->application->status;
 		$this->template->statusTime    = $this->application->statusTime;
 		$this->template->trainingName  = $this->training->name;

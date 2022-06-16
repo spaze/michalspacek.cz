@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Templating\Embed;
 use Nette\Application\BadRequestException;
@@ -37,11 +38,15 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws BadRequestException
+	 */
 	public function actionInterview(string $name): void
 	{
-		$interview = $this->interviews->get($name);
-		if (!$interview) {
-			throw new BadRequestException("I haven't been interviewed by {$name}, yet");
+		try {
+			$interview = $this->interviews->get($name);
+		} catch (InterviewDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [$interview->title]);

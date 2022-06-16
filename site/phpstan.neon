@@ -3,7 +3,7 @@ parameters:
 	paths:
 		- app
 		- bin
-	level: 7
+	level: 8
 	earlyTerminatingMethodCalls:
 		Nette\Application\UI\Component:
 			# https://github.com/phpstan/phpstan-nette/pull/79 or https://github.com/nette/application/pull/304

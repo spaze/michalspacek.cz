@@ -179,7 +179,7 @@ trait ServicesTrait
 
 
 	/**
-	 * @param array<string|null|string[]> $permissionsPolicy
+	 * @param array<string|string[]> $permissionsPolicy
 	 */
 	public function getSecurityHeaders(array $permissionsPolicy): SecurityHeaders
 	{

@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\Form\PostFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Data;
+use MichalSpacekCz\Post\Exceptions\PostDoesNotExistException;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\AbortException;
@@ -82,9 +83,10 @@ class BlogPresenter extends BasePresenter
 	 */
 	public function actionEdit(int $param): void
 	{
-		$this->post = $this->blogPost->getById($param);
-		if (!$this->post) {
-			throw new BadRequestException("Post id {$param} does not exist, yet");
+		try {
+			$this->post = $this->blogPost->getById($param);
+		} catch (PostDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		$title = Html::el()->setText('Příspěvek ')->addHtml($this->post->title);

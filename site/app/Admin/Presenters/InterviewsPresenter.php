@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\InterviewFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Interviews\Interviews;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
-use RuntimeException;
 
 class InterviewsPresenter extends BasePresenter
 {
@@ -38,8 +38,8 @@ class InterviewsPresenter extends BasePresenter
 	{
 		try {
 			$this->interview = $this->interviews->getById($param);
-		} catch (RuntimeException $e) {
-			throw new BadRequestException($e->getMessage());
+		} catch (InterviewDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->title)]);

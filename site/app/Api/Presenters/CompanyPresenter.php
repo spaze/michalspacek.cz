@@ -55,10 +55,10 @@ class CompanyPresenter extends BasePresenter
 			'companyId' => $info->companyId,
 			'companyTaxId' => $info->companyTaxId,
 			'company' => $info->company,
-			'street' => $info->streetFull,
-			'city' => $info->city,
-			'zip' => $info->zip,
-			'country' => $info->country,
+			'street' => $info->streetFull ?? '',
+			'city' => $info->city ?? '',
+			'zip' => $info->zip ?? '',
+			'country' => $info->country ?? '',
 		);
 
 		$this->sendJson(array_filter($data));

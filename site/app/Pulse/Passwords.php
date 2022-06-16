@@ -277,12 +277,13 @@ class Passwords
 			if (!$registry->getStorage($storageKey)->hasSite($siteId)) {
 				$registry->getStorage($storageKey)->addSite($registry->getSite($siteId));
 			}
-			if (!$registry->getStorage($storageKey)->getSite($siteId)->hasAlgorithm($algoKey)) {
-				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $row->attributes ? Json::decode($row->attributes) : null, $row->note);
-				$registry->getStorage($storageKey)->getSite($siteId)->addAlgorithm($algorithm);
-			}
 			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
-			$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);
+			if (!$registry->getStorage($storageKey)->getSite($siteId)->hasAlgorithm($algoKey)) {
+				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $row->attributes ? Json::decode($row->attributes) : null, $row->note, $disclosure);
+				$registry->getStorage($storageKey)->getSite($siteId)->addAlgorithm($algorithm);
+			} else {
+				$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);
+			}
 		}
 		foreach ($registry->getSites() as $site) {
 			$rating = $this->rating->get($site->getLatestAlgorithm());

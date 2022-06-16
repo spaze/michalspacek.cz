@@ -6,12 +6,14 @@ namespace MichalSpacekCz\Training;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
+use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Resolver\Vrana;
-use Nette\Database\Drivers\MySqlDriver;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Random;
-use PDOException;
+use Nette\Utils\Strings;
+use ParagonIE\Halite\Alerts\HaliteAlert;
 use RuntimeException;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
@@ -218,15 +220,10 @@ class Applications
 		$data['access_token'] = $token = $this->generateAccessCode();
 		try {
 			$this->database->query('INSERT INTO training_applications', $data);
-		} catch (PDOException $e) {
-			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					// regenerate the access code and try harder this time
-					Debugger::log("Regenerating access token, {$token} already exists");
-					return $this->insertData($data);
-				}
-			}
-			throw $e;
+		} catch (UniqueConstraintViolationException) {
+			// regenerate the access code and try harder this time
+			Debugger::log("Regenerating access token, {$token} already exists");
+			return $this->insertData($data);
 		}
 		return $token;
 	}
@@ -374,7 +371,7 @@ class Applications
 		?string $note,
 		?Price $price,
 		?int $studentDiscount,
-		?string $status,
+		string $status,
 		string $source,
 		?string $date = null,
 	): int {
@@ -578,9 +575,11 @@ class Applications
 
 	/**
 	 * @param int $id
-	 * @return Row<mixed>|null
+	 * @return Row<mixed>
+	 * @throws TrainingApplicationDoesNotExistException
+	 * @throws HaliteAlert
 	 */
-	public function getApplicationById(int $id): ?Row
+	public function getApplicationById(int $id): Row
 	{
 		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
@@ -629,13 +628,14 @@ class Applications
 			$this->translator->getDefaultLocale(),
 		);
 
-		if ($result) {
-			$result->attended = in_array($result->status, $this->trainingStatuses->getAttendedStatuses(), true);
-			if ($result->email) {
-				$result->email = $this->emailEncryption->decrypt($result->email);
-			}
+		if (!$result) {
+			throw new TrainingApplicationDoesNotExistException($id);
 		}
 
+		$result->attended = in_array($result->status, $this->trainingStatuses->getAttendedStatuses(), true);
+		if ($result->email) {
+			$result->email = $this->emailEncryption->decrypt($result->email);
+		}
 		return $result;
 	}
 
@@ -856,9 +856,9 @@ class Applications
 	 */
 	private function getSourceNameInitials(string $name): string
 	{
-		$name = preg_replace('/,? s\.r\.o./', '', $name);
-		preg_match_all('/(?<=\s|\b)\pL/u', $name, $matches);
-		return strtoupper(implode('', current($matches)));
+		$name = Strings::replace($name, '/,? s\.r\.o./', '');
+		$matches = Strings::matchAll($name, '/(?<=\s|\b)\pL/u', PREG_PATTERN_ORDER);
+		return Strings::upper(implode('', current($matches)));
 	}
 
 

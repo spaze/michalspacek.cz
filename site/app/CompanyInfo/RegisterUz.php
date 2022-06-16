@@ -88,7 +88,8 @@ class RegisterUz implements CompanyDataInterface
 		}
 		$content = file_get_contents("{$this->rootUrl}{$method}{$query}");
 		if (!$content) {
-			throw new RuntimeException(error_get_last()['message'], IResponse::S500_INTERNAL_SERVER_ERROR);
+			$lastError = error_get_last();
+			throw new RuntimeException($lastError ? $lastError['message'] : '', IResponse::S500_INTERNAL_SERVER_ERROR);
 		}
 		return Json::decode($content);
 	}

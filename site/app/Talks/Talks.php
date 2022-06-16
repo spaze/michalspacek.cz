@@ -5,16 +5,15 @@ namespace MichalSpacekCz\Talks;
 
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use Nette\Database\Drivers\MySqlDriver;
+use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
-use PDOException;
 use RuntimeException;
-use UnexpectedValueException;
 
 class Talks
 {
@@ -478,8 +477,8 @@ class Talks
 				$row->filenamesTalkId = null;
 			}
 			$row->speakerNotes = $this->texyFormatter->format($row->speakerNotesTexy);
-			$row->image = $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filename);
-			$row->imageAlternative = $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filenameAlternative);
+			$row->image = $row->filename ? $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filename) : null;
+			$row->imageAlternative = $row->filenameAlternative ? $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filenameAlternative) : null;
 			$row->imageAlternativeType = ($row->filenameAlternative ? $alternativeTypes[pathinfo($row->filenameAlternative, PATHINFO_EXTENSION)] : null);
 			$result[$row->number] = $row;
 		}
@@ -487,15 +486,9 @@ class Talks
 	}
 
 
-	/**
-	 * @param string $prefix
-	 * @param int $talkId
-	 * @param string $filename
-	 * @return null|string
-	 */
-	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): ?string
+	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): string
 	{
-		return (empty($filename) ? null : "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}");
+		return "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}";
 	}
 
 
@@ -514,7 +507,8 @@ class Talks
 		if (!$replace->hasFile()) {
 			return null;
 		}
-		if (!$replace->isOk()) {
+		$contents = $replace->getContents();
+		if ($contents === null) {
 			throw new RuntimeException('Slide image upload failed', $replace->getError());
 		}
 		if (!in_array($replace->getContentType(), array_keys($supported))) {
@@ -524,13 +518,14 @@ class Talks
 			$this->deleteFiles[] = $renamed = $this->getSlideImageFilename($this->locationRoot, $talkId, "__del__{$originalFile}");
 			rename($this->getSlideImageFilename($this->locationRoot, $talkId, $originalFile), $renamed);
 		}
-		$name = strtr(rtrim(base64_encode(sha1($replace->getContents(), true)), '='), '+/', '-_');
+		$name = strtr(rtrim(base64_encode(sha1($contents, true)), '='), '+/', '-_');
 		$extension = $supported[$replace->getContentType()];
 		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
 		$this->decrementOtherSlides($originalFile);
 		$this->incrementOtherSlides("{$name}.{$extension}");
-		if (!$width || !$height) {
-			[$width, $height] = $replace->getImageSize();
+		$imageSize = $replace->getImageSize();
+		if ($imageSize && !($width && $height)) {
+			[$width, $height] = $imageSize;
 		}
 		return "{$name}.{$extension}";
 	}
@@ -541,8 +536,7 @@ class Talks
 	 *
 	 * @param int $talkId
 	 * @param ArrayHash<ArrayHash<int|string>> $slides
-	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
-	 * @throws PDOException
+	 * @throws DuplicatedSlideException
 	 */
 	private function addSlides(int $talkId, ArrayHash $slides): void
 	{
@@ -560,20 +554,15 @@ class Talks
 						'key_talk' => $talkId,
 						'alias' => $slide->alias,
 						'number' => $slide->number,
-						'filename' => $replace ?: $slide->filename,
-						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
+						'filename' => $replace ?? $slide->filename ?? '',
+						'filename_alternative' => $replaceAlternative ?? $slide->filenameAlternative ?? '',
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
 					),
 				);
 			}
-		} catch (PDOException $e) {
-			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY) {
-					throw new UnexpectedValueException($e->getMessage(), $lastNumber);
-				}
-			}
-			throw $e;
+		} catch (UniqueConstraintViolationException $e) {
+			throw new DuplicatedSlideException($lastNumber, previous: $e);
 		}
 	}
 
@@ -585,8 +574,7 @@ class Talks
 	 * @param Row[] $originalSlides
 	 * @param ArrayHash<ArrayHash<int|string>> $slides
 	 * @param bool $removeFiles Remove old files?
-	 * @throws UnexpectedValueException on duplicate entry (key_talk, number)
-	 * @throws PDOException
+	 * @throws DuplicatedSlideException
 	 */
 	private function updateSlides(int $talkId, array $originalSlides, ArrayHash $slides, bool $removeFiles): void
 	{
@@ -623,21 +611,16 @@ class Talks
 						'key_talk' => $talkId,
 						'alias' => $slide->alias,
 						'number' => $slideNumber,
-						'filename' => $replace ?: $slide->filename,
-						'filename_alternative' => $replaceAlternative ?: $slide->filenameAlternative,
+						'filename' => $replace ?? $slide->filename ?? '',
+						'filename_alternative' => $replaceAlternative ?? $slide->filenameAlternative ?? '',
 						'title' => $slide->title,
 						'speaker_notes' => $slide->speakerNotes,
 					),
 					$id,
 				);
 			}
-		} catch (PDOException $e) {
-			if ($e->getCode() == '23000') {
-				if ($e->errorInfo[1] == MySqlDriver::ERROR_DUPLICATE_ENTRY && isset($slideNumber)) {
-					throw new UnexpectedValueException($e->getMessage(), $slideNumber);
-				}
-			}
-			throw $e;
+		} catch (UniqueConstraintViolationException $e) {
+			throw new DuplicatedSlideException($slideNumber ?? $slides->getIterator()->current()->number, previous: $e);
 		}
 	}
 
@@ -648,6 +631,7 @@ class Talks
 	 * @param int $talkId
 	 * @param Row[] $originalSlides
 	 * @param ArrayHash<int|string> $newSlides
+	 * @throws DuplicatedSlideException
 	 */
 	public function saveSlides(int $talkId, array $originalSlides, ArrayHash $newSlides): void
 	{

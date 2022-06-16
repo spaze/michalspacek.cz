@@ -20,7 +20,7 @@ class SecurityHeaders
 
 
 	/**
-	 * @param array<string|null|string[]> $permissionsPolicy
+	 * @param array<string|string[]> $permissionsPolicy
 	 */
 	public function __construct(
 		private readonly IRequest $httpRequest,
@@ -34,13 +34,13 @@ class SecurityHeaders
 
 
 	/**
-	 * @param array<string|null|string[]> $values
+	 * @param array<string|string[]> $values
 	 * @return array<string|string[]>
 	 */
 	private function normalizePermissionsPolicyValues(array $values): array
 	{
 		foreach ($values as &$value) {
-			if ($value === 'none' || $value === null) {
+			if ($value === 'none') {
 				$value = '';
 			} elseif (is_array($value)) {
 				$value = $this->normalizePermissionsPolicyValues($value);

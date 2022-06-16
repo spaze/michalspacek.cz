@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\Request;
 use Nette\Application\UI\Form;
@@ -12,7 +13,6 @@ use Nette\Forms\Container;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
-use UnexpectedValueException;
 
 class TalkSlidesFormFactory
 {
@@ -69,8 +69,8 @@ class TalkSlidesFormFactory
 				$this->talks->saveSlides($talkId, $slides, $values);
 				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
-			} catch (UnexpectedValueException $e) {
-				$message = $this->texyFormatter->translate('messages.talks.admin.duplicatealias', [(string)$e->getCode()]);
+			} catch (DuplicatedSlideException $e) {
+				$message = $this->texyFormatter->translate('messages.talks.admin.duplicatealias', [(string)$e->getLastUniqueNumber()]);
 				$type = 'error';
 			}
 			$onSuccess($message, $type, $talkId);
