@@ -253,7 +253,11 @@ class Passwords
 				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
 			}
 			if (!$registry->hasSite($siteId)) {
-				$registry->addSite(new Site($siteId, $row->siteId === null, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, Json::FORCE_ARRAY) : [], $registry->getCompany($row->companyId), $storageKey));
+				if ($row->siteId === null) {
+					$registry->addSite(new WildcardSite($siteId, $registry->getCompany($row->companyId), $storageKey));
+				} else {
+					$registry->addSite(new SpecificSite($siteId, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, Json::FORCE_ARRAY) : [], $registry->getCompany($row->companyId), $storageKey));
+				}
 			}
 			if (!$registry->hasStorage($storageKey)) {
 				$registry->addStorage(new Storage($storageKey, $row->companyId));

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Pulse\Passwords;
 
 use Collator;
 use MichalSpacekCz\Pulse\Site;
+use MichalSpacekCz\Pulse\SpecificSite;
 use MichalSpacekCz\ShouldNotHappenException;
 
 class PasswordsSorting
@@ -47,7 +48,9 @@ class PasswordsSorting
 							}
 							$result = $collator->getSortKey($storages->getCompany($siteA->getCompany()->getId())->getSortName()) <=> $collator->getSortKey($storages->getCompany($siteB->getCompany()->getId())->getSortName());
 							if ($result === 0) {
-								$result = $siteA->getUrl() <=> $siteB->getUrl();
+								$subKeyA = $siteA instanceof SpecificSite ? $siteA->getUrl() : $siteA->getLatestAlgorithm()->getAlias();
+								$subKeyB = $siteB instanceof SpecificSite ? $siteB->getUrl() : $siteB->getLatestAlgorithm()->getAlias();
+								$result = $subKeyA <=> $subKeyB;
 							}
 						}
 						return $result;

@@ -40,7 +40,7 @@
 	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))">{$data->getCompany($storage->getCompanyId())->getTradeName()}</span> <small>(<span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span>)</small></h2>
 	{foreach $storage->getSites() as $site}
 		{var $noFollow = ($site->isSecureStorage() ? false : 'nofollow')}
-		{if !$site->isTypeAll()}
+		{if $site instanceof \MichalSpacekCz\Pulse\SpecificSite}
 			{var $detailsLink = 'site'}
 			{var $detailsParam = $site->getAlias()}
 			{var $htmlId = $site->getAlias()}
@@ -51,7 +51,7 @@
 		{/if}
 		<div id="{$htmlId}" class="site-container">
 			<div class="left">
-				{if !$site->isTypeAll()}
+				{if $site instanceof \MichalSpacekCz\Pulse\SpecificSite}
 					<a n:href="site $site->getAlias()" title="Open details" n:class="$storage->getSearchResult()->isSiteAliasMatch($site) ? search-result">{$site->getAlias()}</a>
 					<small n:class="$storage->getSearchResult()->isSiteUrlMatch($site) ? search-result"><a href="{$site->getUrl()}" n:attr="rel => $noFollow" title="Go to site"><span class="lighter"><i class="fas fa-fw fa-link"></i></span></a></small>
 					{foreach $site->getSharedWith() as $sharedSite}
