@@ -4,143 +4,46 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse;
 
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
-use MichalSpacekCz\Pulse\Passwords\StorageSharedWith;
 
-class Site
+interface Site
 {
 
-	/** @var array<int, StorageSharedWith> */
-	private array $sharedWith = [];
-
-	/** @var array<string, Algorithm> */
-	private array $algorithms;
-
-	private string $rating;
-
-	private bool $secureStorage;
-
-	private ?string $recommendation;
+	public function getId(): string;
 
 
-	/**
-	 * @param array<int, array{url:string, alias:string}> $sharedWith
-	 */
-	public function __construct(
-		private readonly string $id,
-		private readonly bool $isTypeAll,
-		private readonly string $url,
-		private readonly string $alias,
-		array $sharedWith,
-		private readonly Company $company,
-		private readonly string $storageId,
-	) {
-		foreach ($sharedWith as $sharedSite) {
-			$this->sharedWith[] = new StorageSharedWith($sharedSite['url'], $sharedSite['alias']);
-		}
-	}
+	public function getCompany(): Company;
 
 
-	public function getId(): string
-	{
-		return $this->id;
-	}
+	public function getStorageId(): string;
 
 
-	public function isTypeAll(): bool
-	{
-		return $this->isTypeAll;
-	}
+	public function getAlgorithm(string $id): Algorithm;
 
 
-	public function getUrl(): string
-	{
-		return $this->url;
-	}
+	public function hasAlgorithm(string $id): bool;
 
 
-	public function getAlias(): string
-	{
-		return $this->alias;
-	}
+	public function addAlgorithm(Algorithm $algorithm): void;
 
 
-	/**
-	 * @return array<int, StorageSharedWith>
-	 */
-	public function getSharedWith(): array
-	{
-		return $this->sharedWith;
-	}
+	public function getLatestAlgorithm(): Algorithm;
 
 
-	public function getCompany(): Company
-	{
-		return $this->company;
-	}
+	public function getRating(): string;
 
 
-	public function getStorageId(): string
-	{
-		return $this->storageId;
-	}
-
-
-	public function getAlgorithm(string $id): Algorithm
-	{
-		return $this->algorithms[$id];
-	}
-
-
-	public function hasAlgorithm(string $id): bool
-	{
-		return isset($this->algorithms[$id]);
-	}
-
-
-	public function addAlgorithm(Algorithm $algorithm): void
-	{
-		$this->algorithms[$algorithm->getId()] = $algorithm;
-	}
-
-
-	public function getLatestAlgorithm(): Algorithm
-	{
-		return $this->algorithms[array_key_first($this->algorithms)];
-	}
-
-
-	public function getRating(): string
-	{
-		return $this->rating;
-	}
-
-
-	public function setRating(string $rating, bool $secureStorage, ?string $recommendation): void
-	{
-		$this->rating = $rating;
-		$this->secureStorage = $secureStorage;
-		$this->recommendation = $recommendation;
-	}
+	public function setRating(string $rating, bool $secureStorage, ?string $recommendation): void;
 
 
 	/**
 	 * @return array<string, Algorithm>
 	 */
-	public function getAlgorithms(): array
-	{
-		return $this->algorithms;
-	}
+	public function getAlgorithms(): array;
 
 
-	public function isSecureStorage(): bool
-	{
-		return $this->secureStorage;
-	}
+	public function isSecureStorage(): bool;
 
 
-	public function getRecommendation(): ?string
-	{
-		return $this->recommendation;
-	}
+	public function getRecommendation(): ?string;
 
 }

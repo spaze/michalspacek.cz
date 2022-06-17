@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use MichalSpacekCz\Pulse\Site;
+use MichalSpacekCz\Pulse\SpecificSite;
 use Nette\Utils\Strings;
 
 class SearchMatcher
@@ -37,11 +38,11 @@ class SearchMatcher
 			$match = true;
 			$result->addTradeNameMatch($company);
 		}
-		if (!$site->isTypeAll() && Strings::contains($site->getUrl(), $this->search)) {
+		if ($site instanceof SpecificSite && Strings::contains($site->getUrl(), $this->search)) {
 			$match = true;
 			$result->addSiteUrlMatch($site);
 		}
-		if (!$site->isTypeAll() && Strings::contains($site->getAlias(), $this->search)) {
+		if ($site instanceof SpecificSite && Strings::contains($site->getAlias(), $this->search)) {
 			$match = true;
 			$result->addSiteAliasMatch($site);
 		}
