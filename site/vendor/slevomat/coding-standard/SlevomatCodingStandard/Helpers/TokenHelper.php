@@ -20,6 +20,7 @@ use const T_DOC_COMMENT_STAR;
 use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
+use const T_ENUM;
 use const T_EXIT;
 use const T_FALSE;
 use const T_FN;
@@ -36,12 +37,19 @@ use const T_PHPCS_ENABLE;
 use const T_PHPCS_IGNORE;
 use const T_PHPCS_IGNORE_FILE;
 use const T_PHPCS_SET;
+use const T_PRIVATE;
+use const T_PROTECTED;
+use const T_PUBLIC;
+use const T_READONLY;
 use const T_RETURN;
 use const T_SELF;
+use const T_STATIC;
 use const T_STRING;
 use const T_THROW;
 use const T_TRAIT;
+use const T_TYPE_INTERSECTION;
 use const T_TYPE_UNION;
+use const T_VAR;
 use const T_WHITESPACE;
 
 /**
@@ -55,6 +63,7 @@ class TokenHelper
 		T_CLASS,
 		T_TRAIT,
 		T_INTERFACE,
+		T_ENUM,
 	];
 
 	/** @var (int|string)[] */
@@ -99,6 +108,16 @@ class TokenHelper
 		T_FUNCTION,
 		T_CLOSURE,
 		T_FN,
+	];
+
+	/** @var (int|string)[] */
+	public static $propertyModifiersTokenCodes = [
+		T_VAR,
+		T_PUBLIC,
+		T_PROTECTED,
+		T_PRIVATE,
+		T_READONLY,
+		T_STATIC,
 	];
 
 	/**
@@ -309,7 +328,7 @@ class TokenHelper
 
 		do {
 			$pointer--;
-		} while ($tokens[$pointer]['line'] === $line);
+		} while ($pointer >= 0 && $tokens[$pointer]['line'] === $line);
 
 		return self::findNextExcluding($phpcsFile, [T_WHITESPACE, T_DOC_COMMENT_WHITESPACE], $pointer + 1);
 	}
@@ -443,7 +462,7 @@ class TokenHelper
 		if ($typeHintTokenCodes === null) {
 			$typeHintTokenCodes = array_merge(
 				self::getOnlyTypeHintTokenCodes(),
-				[T_TYPE_UNION]
+				[T_TYPE_UNION, T_TYPE_INTERSECTION]
 			);
 		}
 

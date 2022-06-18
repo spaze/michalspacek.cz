@@ -69,6 +69,9 @@ class ParameterTypeHintSniff implements Sniff
 	/** @var bool|null */
 	public $enableUnionTypeHint = null;
 
+	/** @var bool|null */
+	public $enableIntersectionTypeHint = null;
+
 	/** @var string[] */
 	public $traversableTypeHints = [];
 
@@ -94,6 +97,7 @@ class ParameterTypeHintSniff implements Sniff
 		$this->enableObjectTypeHint = SniffSettingsHelper::isEnabledByPhpVersion($this->enableObjectTypeHint, 70200);
 		$this->enableMixedTypeHint = SniffSettingsHelper::isEnabledByPhpVersion($this->enableMixedTypeHint, 80000);
 		$this->enableUnionTypeHint = SniffSettingsHelper::isEnabledByPhpVersion($this->enableUnionTypeHint, 80000);
+		$this->enableIntersectionTypeHint = SniffSettingsHelper::isEnabledByPhpVersion($this->enableIntersectionTypeHint, 80100);
 
 		if (SuppressHelper::isSniffSuppressed($phpcsFile, $functionPointer, self::NAME)) {
 			return;
@@ -270,7 +274,7 @@ class ParameterTypeHintSniff implements Sniff
 			}
 			$typeHintsWithConvertedUnion = array_unique($typeHintsWithConvertedUnion);
 
-			if (count($typeHintsWithConvertedUnion) > 1 && !$canTryUnionTypeHint) {
+			if (count($typeHintsWithConvertedUnion) > 1 && !$canTryUnionTypeHint && !$this->enableIntersectionTypeHint) {
 				continue;
 			}
 
@@ -316,6 +320,8 @@ class ParameterTypeHintSniff implements Sniff
 
 			if (in_array('mixed', $typeHintsWithConvertedUnion, true)) {
 				$parameterTypeHint = 'mixed';
+			} elseif ($originalParameterTypeNode instanceof IntersectionTypeNode) {
+				$parameterTypeHint = implode('&', $typeHintsWithConvertedUnion);
 			} else {
 				$parameterTypeHint = implode('|', $typeHintsWithConvertedUnion);
 				if ($nullableParameterTypeHint) {
@@ -409,6 +415,7 @@ class ParameterTypeHintSniff implements Sniff
 				$hasTraversableTypeHint = true;
 			} elseif (
 				array_key_exists($parameterName, $parametersAnnotations)
+				&& $parametersAnnotations[$parameterName]->getType() !== null
 				&& AnnotationTypeHelper::containsTraversableType(
 					$parametersAnnotations[$parameterName]->getType(),
 					$phpcsFile,
@@ -443,6 +450,9 @@ class ParameterTypeHintSniff implements Sniff
 			}
 
 			$parameterTypeNode = $parametersAnnotations[$parameterName]->getType();
+			if ($parameterTypeNode === null) {
+				continue;
+			}
 
 			if (
 				(
@@ -508,6 +518,9 @@ class ParameterTypeHintSniff implements Sniff
 			}
 
 			$parameterAnnotation = $parametersAnnotations[$parameterName];
+			if ($parameterAnnotation->getType() === null) {
+				continue;
+			}
 
 			if (!AnnotationHelper::isAnnotationUseless(
 				$phpcsFile,
@@ -515,7 +528,8 @@ class ParameterTypeHintSniff implements Sniff
 				$parameterTypeHint,
 				$parameterAnnotation,
 				$this->getTraversableTypeHints(),
-				$this->enableUnionTypeHint
+				$this->enableUnionTypeHint,
+				$this->enableIntersectionTypeHint
 			)) {
 				continue;
 			}

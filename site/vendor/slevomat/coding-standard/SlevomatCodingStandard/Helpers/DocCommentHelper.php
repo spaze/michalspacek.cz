@@ -3,12 +3,14 @@
 namespace SlevomatCodingStandard\Helpers;
 
 use PHP_CodeSniffer\Files\File;
+use function array_merge;
 use function count;
 use function in_array;
+use function preg_match;
 use function stripos;
-use function strpos;
 use function trim;
 use const T_ABSTRACT;
+use const T_ATTRIBUTE;
 use const T_CLASS;
 use const T_CLOSE_CURLY_BRACKET;
 use const T_CONST;
@@ -18,15 +20,20 @@ use const T_DOC_COMMENT_STAR;
 use const T_DOC_COMMENT_STRING;
 use const T_DOC_COMMENT_TAG;
 use const T_DOC_COMMENT_WHITESPACE;
+use const T_ENUM;
 use const T_FINAL;
+use const T_FUNCTION;
 use const T_INTERFACE;
 use const T_OPEN_CURLY_BRACKET;
 use const T_PRIVATE;
 use const T_PROTECTED;
 use const T_PUBLIC;
+use const T_READONLY;
 use const T_SEMICOLON;
 use const T_STATIC;
 use const T_TRAIT;
+use const T_VAR;
+use const T_VARIABLE;
 use const T_WHITESPACE;
 
 /**
@@ -138,6 +145,46 @@ class DocCommentHelper
 		return null;
 	}
 
+	public static function findDocCommentOwnerPointer(File $phpcsFile, int $docCommentOpenPointer): ?int
+	{
+		$tokens = $phpcsFile->getTokens();
+
+		$docCommentCloserPointer = $tokens[$docCommentOpenPointer]['comment_closer'];
+
+		if (self::isInline($phpcsFile, $docCommentOpenPointer)) {
+			return null;
+		}
+
+		$docCommentOwnerPointer = null;
+
+		for ($i = $docCommentCloserPointer + 1; $i < count($tokens); $i++) {
+			if ($tokens[$i]['code'] === T_ATTRIBUTE) {
+				$i = $tokens[$i]['attribute_closer'];
+				continue;
+			}
+
+			if (in_array(
+				$tokens[$i]['code'],
+				[T_PUBLIC, T_PROTECTED, T_PRIVATE, T_VAR, T_READONLY, T_FINAL, T_STATIC, T_ABSTRACT, T_WHITESPACE],
+				true
+			)) {
+				continue;
+			}
+
+			if (in_array(
+				$tokens[$i]['code'],
+				array_merge([T_FUNCTION, T_VARIABLE, T_CONST], TokenHelper::$typeKeywordTokenCodes),
+				true
+			)) {
+				$docCommentOwnerPointer = $i;
+			}
+
+			break;
+		}
+
+		return $docCommentOwnerPointer;
+	}
+
 	public static function isInline(File $phpcsFile, int $docCommentOpenPointer): bool
 	{
 		$tokens = $phpcsFile->getTokens();
@@ -148,7 +195,7 @@ class DocCommentHelper
 			$nextPointer !== null
 			&& in_array(
 				$tokens[$nextPointer]['code'],
-				[T_PUBLIC, T_PROTECTED, T_PRIVATE, T_FINAL, T_STATIC, T_ABSTRACT, T_CONST, T_CLASS, T_INTERFACE, T_TRAIT],
+				[T_PUBLIC, T_PROTECTED, T_PRIVATE, T_READONLY, T_FINAL, T_STATIC, T_ABSTRACT, T_CONST, T_CLASS, T_INTERFACE, T_TRAIT, T_ENUM],
 				true
 			)
 		) {
@@ -156,7 +203,7 @@ class DocCommentHelper
 		}
 
 		$docCommentContent = self::getDocComment($phpcsFile, $docCommentOpenPointer);
-		return strpos($docCommentContent, '@var') === 0;
+		return preg_match('~^@(?:(?:phpstan|psalm)-)?var~i', $docCommentContent) === 1;
 	}
 
 }

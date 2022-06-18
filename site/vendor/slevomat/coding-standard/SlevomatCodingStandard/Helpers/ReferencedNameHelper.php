@@ -27,6 +27,8 @@ use const T_DECLARE;
 use const T_DOUBLE_COLON;
 use const T_DOUBLE_QUOTED_STRING;
 use const T_ELLIPSIS;
+use const T_ENUM;
+use const T_ENUM_CASE;
 use const T_EXTENDS;
 use const T_FUNCTION;
 use const T_GOTO;
@@ -45,6 +47,7 @@ use const T_OPEN_TAG;
 use const T_PARAM_NAME;
 use const T_STRING;
 use const T_TRAIT;
+use const T_TYPE_INTERSECTION;
 use const T_TYPE_UNION;
 use const T_USE;
 use const T_VARIABLE;
@@ -209,6 +212,13 @@ class ReferencedNameHelper
 			return ReferencedName::TYPE_CLASS;
 		}
 
+		if (
+			$tokens[$previousTokenBeforeStartPointer]['code'] === T_TYPE_INTERSECTION
+			|| $tokens[$nextTokenAfterEndPointer]['code'] === T_TYPE_INTERSECTION
+		) {
+			return ReferencedName::TYPE_CLASS;
+		}
+
 		if ($tokens[$nextTokenAfterEndPointer]['code'] === T_BITWISE_AND) {
 			$tokenAfterNextToken = TokenHelper::findNextEffective($phpcsFile, $nextTokenAfterEndPointer + 1);
 
@@ -317,10 +327,11 @@ class ReferencedNameHelper
 			T_NULLSAFE_OBJECT_OPERATOR,
 			T_NAMESPACE,
 			T_CONST,
+			T_ENUM_CASE,
 		];
 
 		if ($previousToken['code'] === T_USE) {
-			$classPointer = TokenHelper::findPrevious($phpcsFile, [T_CLASS, T_TRAIT, T_ANON_CLASS], $startPointer - 1);
+			$classPointer = TokenHelper::findPrevious($phpcsFile, [T_CLASS, T_TRAIT, T_ANON_CLASS, T_ENUM], $startPointer - 1);
 			if ($classPointer !== null) {
 				$classToken = $tokens[$classPointer];
 				return $startPointer > $classToken['scope_opener'] && $startPointer < $classToken['scope_closer'];
