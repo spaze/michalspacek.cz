@@ -16,6 +16,7 @@
 		<exclude name="PSR12.Traits.UseDeclaration.BlankLineAfterLastUse"/> <!-- Checked by SlevomatCodingStandard.Classes.TraitUseSpacing -->
 		<exclude name="PSR12.Traits.UseDeclaration.UseAfterBrace"/>
 	</rule>
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
 	<rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
 	<rule ref="Generic.WhiteSpace.ScopeIndent">
@@ -43,6 +44,7 @@
 		<properties>
 			<property name="groups" type="array">
 				<element value="uses"/>
+				<element value="enum cases"/>
 				<element value="constants"/>
 				<element value="properties"/>
 				<element value="abstract methods"/>
@@ -67,6 +69,7 @@
 			<property name="maxLinesCountBeforeWithoutComment" value="1"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion"/>
 	<rule ref="SlevomatCodingStandard.Classes.TraitUseDeclaration"/>
 	<rule ref="SlevomatCodingStandard.Classes.TraitUseSpacing">
 		<properties>
@@ -111,7 +114,7 @@
 		</properties>
 	</rule>
 	<rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
-	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHintSpacing"/>
+	<rule ref="SlevomatCodingStandard.Classes.PropertyDeclaration"/>
 	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing">
 		<properties>
 			<property name="spacesCountBeforeColon" value="0"/>
