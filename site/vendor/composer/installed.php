@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'aa4a56776d0753842022df9ec97bd509efd76611',
+        'reference' => '80113413e709bdd39fd21cdd81a08d6ded34f1ce',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'contributte/translation' => array(
-            'pretty_version' => 'v1.0.3',
-            'version' => '1.0.3.0',
-            'reference' => '9796ce36eab5561a3724ddcc8196d044cb0686d3',
+            'pretty_version' => 'v1.1.0',
+            'version' => '1.1.0.0',
+            'reference' => '8f0f7723be4753fa458f4ac36ebbe62d0ec5b5f4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../contributte/translation',
             'aliases' => array(),
@@ -230,9 +230,9 @@
             'dev_requirement' => false,
         ),
         'paragonie/constant_time_encoding' => array(
-            'pretty_version' => 'v2.6.2',
-            'version' => '2.6.2.0',
-            'reference' => 'c1b1d82d109846ba58a4664dc5480c69ad2fc097',
+            'pretty_version' => 'v2.6.3',
+            'version' => '2.6.3.0',
+            'reference' => '58c3f47f650c94ec05a151692652a868995d2938',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/constant_time_encoding',
             'aliases' => array(),
@@ -334,7 +334,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'bf362097fbfe4580b99b696dd8208b24ffd112b2',
+            'reference' => '0a2664d739af6996ce1a24a35cb59ed2bbd27f4b',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
@@ -390,7 +390,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'aa4a56776d0753842022df9ec97bd509efd76611',
+            'reference' => '80113413e709bdd39fd21cdd81a08d6ded34f1ce',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -451,9 +451,9 @@
             'dev_requirement' => false,
         ),
         'squizlabs/php_codesniffer' => array(
-            'pretty_version' => '3.7.0',
-            'version' => '3.7.0.0',
-            'reference' => 'a2cd51b45bcaef9c1f2a4bda48f2dd2fa2b95563',
+            'pretty_version' => '3.7.1',
+            'version' => '3.7.1.0',
+            'reference' => '1359e176e9307e906dc3d890bcc9603ff6d90619',
             'type' => 'library',
             'install_path' => __DIR__ . '/../squizlabs/php_codesniffer',
             'aliases' => array(),
