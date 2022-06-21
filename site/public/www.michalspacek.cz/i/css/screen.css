@@ -80,7 +80,6 @@ code, .highlight pre code {
 	border-radius: 3px;
 }
 button code { background-color: inherit; }
-.highlight code { background-color: hsl(60, 81%, 79%); }
 .flash code { background-color: hsl(60, 100%, 89%); }
 .error code { background-color: hsl(0, 100%, 95%); }
 .notice code { background-color: hsl(240, 100%, 95%); }
