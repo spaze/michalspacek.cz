@@ -114,7 +114,12 @@
 		</properties>
 	</rule>
 	<rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
-	<rule ref="SlevomatCodingStandard.Classes.PropertyDeclaration"/>
+	<rule ref="SlevomatCodingStandard.Classes.PropertyDeclaration">
+		<properties>
+			<property name="checkPromoted" value="true"/>
+			<property name="enableMultipleSpacesBetweenModifiersCheck" value="true"/>
+		</properties>
+	</rule>
 	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing">
 		<properties>
 			<property name="spacesCountBeforeColon" value="0"/>

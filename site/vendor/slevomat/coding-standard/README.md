@@ -187,6 +187,10 @@ Disallows late static binding for constants.
 
 Disallows using public properties.
 
+This sniff provides the following setting:
+
+* `checkPromoted`: will check promoted properties too.
+
 #### SlevomatCodingStandard.Classes.RequireAbstractOrFinal 🔧
 
 Requires the class to be declared either as abstract or as final.
@@ -547,6 +551,8 @@ Sniff provides the following settings:
 Sniff provides the following settings:
 
 * `modifiersOrder`: allows to configurure order of modifiers.
+* `checkPromoted`: will check promoted properties too.
+* `enableMultipleSpacesBetweenModifiersCheck`: checks multiple spaces between modifiers.
 
 #### SlevomatCodingStandard.Classes.PropertySpacing 🔧
 
