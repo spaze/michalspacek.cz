@@ -48,7 +48,7 @@ final class Extractor
 			throw new Nette\InvalidStateException('The input string is not a PHP code.');
 		}
 
-		$this->code = str_replace("\r\n", "\n", $code);
+		$this->code = Nette\Utils\Strings::normalizeNewlines($code);
 		$lexer = new PhpParser\Lexer\Emulative(['usedAttributes' => ['startFilePos', 'endFilePos', 'comments']]);
 		$parser = (new ParserFactory)->create(ParserFactory::ONLY_PHP7, $lexer);
 		$stmts = $parser->parse($this->code);
@@ -391,8 +391,9 @@ final class Extractor
 		$function->setReturnType($node->getReturnType() ? $this->toPhp($node->getReturnType()) : null);
 		foreach ($node->getParams() as $item) {
 			$visibility = $this->toVisibility($item->flags);
+			$isReadonly = (bool) ($item->flags & Node\Stmt\Class_::MODIFIER_READONLY);
 			$param = $visibility
-				? ($function->addPromotedParameter($item->var->name))->setVisibility($visibility)
+				? ($function->addPromotedParameter($item->var->name))->setVisibility($visibility)->setReadonly($isReadonly)
 				: $function->addParameter($item->var->name);
 			$param->setType($item->type ? $this->toPhp($item->type) : null);
 			$param->setReference($item->byRef);
