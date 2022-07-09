@@ -40,6 +40,12 @@
 			<property name="linesCountAfterLastContent" value="0"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.Classes.BackedEnumTypeSpacing">
+		<properties>
+			<property name="spacesCountBeforeColon" value="0"/>
+			<property name="spacesCountBeforeType" value="1"/>
+		</properties>
+	</rule>
 	<rule ref="SlevomatCodingStandard.Classes.ClassStructure">
 		<properties>
 			<property name="groups" type="array">
