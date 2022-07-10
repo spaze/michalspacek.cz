@@ -14,6 +14,7 @@ abstract class BaseErrorPresenter extends BasePresenter
 
 	private Redirections $redirections;
 	private ILogger $logger;
+	protected bool $logAccess = true;
 
 
 	/**
@@ -52,8 +53,10 @@ abstract class BaseErrorPresenter extends BasePresenter
 			$this->redirectUrl($destination, IResponse::S301_MOVED_PERMANENTLY);
 		}
 
-		$e = $request->getParameter('exception');
-		$this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
+		if ($this->logAccess) {
+			$e = $request->getParameter('exception');
+			$this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
+		}
 	}
 
 }

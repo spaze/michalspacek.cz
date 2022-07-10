@@ -10,6 +10,9 @@ use Nette\Application\Responses\TextResponse;
 class ErrorPresenter extends BaseErrorPresenter
 {
 
+	protected bool $logAccess = false;
+
+
 	/**
 	 * @throws AbortException
 	 */
