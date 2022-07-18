@@ -27,6 +27,7 @@ session:
 	cookie_secure: true
 
 di:
+	debugger: false
 	export:
 		parameters: false
 		tags: false
