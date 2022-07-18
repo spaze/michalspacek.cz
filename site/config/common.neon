@@ -26,6 +26,12 @@ session:
 	use_strict_mode: true
 	cookie_secure: true
 
+di:
+	export:
+		parameters: false
+		tags: false
+
+
 database:
 	default:
 		dsn: 'mysql:host=localhost;dbname=cz_michalspacek'
