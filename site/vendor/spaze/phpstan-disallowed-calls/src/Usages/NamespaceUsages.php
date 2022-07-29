@@ -5,6 +5,7 @@ namespace Spaze\PHPStan\Rules\Disallowed\Usages;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
@@ -57,12 +58,14 @@ class NamespaceUsages implements Rule
 	public function processNode(Node $node, Scope $scope): array
 	{
 		if ($node instanceof FullyQualified) {
+			$description = 'Class';
 			$namespaces = [$node->toString()];
 		} elseif ($node instanceof UseUse) {
 			$namespaces = [$node->name->toString()];
 		} elseif ($node instanceof StaticCall && $node->class instanceof Name) {
 			$namespaces = [$node->class->toString()];
 		} elseif ($node instanceof ClassConstFetch && $node->class instanceof Name) {
+			$description = 'Class';
 			$namespaces = [$node->class->toString()];
 		} elseif ($node instanceof Class_ && ($node->extends !== null || count($node->implements) > 0)) {
 			$namespaces = [];
@@ -74,9 +77,12 @@ class NamespaceUsages implements Rule
 			foreach ($node->implements as $implement) {
 				$namespaces[] = $implement->toString();
 			}
+		} elseif ($node instanceof New_ && $node->class instanceof Name) {
+			$description = 'Class';
+			$namespaces = [$node->class->toString()];
 		} elseif ($node instanceof TraitUse) {
+			$description = 'Trait';
 			$namespaces = [];
-
 			foreach ($node->traits as $trait) {
 				$namespaces[] = $trait->toString();
 			}
@@ -88,7 +94,7 @@ class NamespaceUsages implements Rule
 		foreach ($namespaces as $namespace) {
 			$errors = array_merge(
 				$errors,
-				$this->disallowedHelper->getDisallowedMessage(ltrim($namespace, '\\'), $scope, $this->disallowedNamespace)
+				$this->disallowedHelper->getDisallowedMessage(ltrim($namespace, '\\'), $description ?? 'Namespace', $scope, $this->disallowedNamespace)
 			);
 		}
 

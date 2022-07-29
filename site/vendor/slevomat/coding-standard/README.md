@@ -494,6 +494,14 @@ Sniff provides the following settings:
 * `spacesCountBeforeColon`: the number of spaces before `:`.
 * `spacesCountBeforeType`: the number of spaces before type.
 
+#### SlevomatCodingStandard.Classes.ClassLength
+
+Disallows long classes. This sniff provides the following settings:
+
+* `includeComments`: should comments be included in the count (default value is false).
+* `includeWhitespace`: shoud empty lines be included in the count (default value is false).
+* `maxLinesLength`: specifies max allowed function lines length (default value is 250).
+
 #### SlevomatCodingStandard.Classes.ClassMemberSpacing 🔧
 
 Checks lines count between different class members, eg. between last property and first method.
@@ -634,6 +642,14 @@ Sniff provides the following settings:
 * `linesCountAfterLastUse`: allows to configure the number of lines after last `use`.
 * `linesCountAfterLastUseWhenLastInClass`: allows to configure the number of lines after last `use` when the `use` is the last statement in the class.
 
+#### SlevomatCodingStandard.Complexity.Cognitive
+
+Enforces maximum [cognitive complexity](https://www.sonarsource.com/docs/CognitiveComplexity.pdf) for functions.
+
+Sniff provides the following setting:
+
+* `maxComplexity`: defaults to 5
+
 #### SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing 🔧
 
 Enforces configurable number of lines around block control structures (if, foreach, ...).
@@ -772,6 +788,14 @@ Sniff provides the following settings:
 `DisallowYodaComparisonSniff` looks for and fixes such comparisons not only in `if` statements but in the whole code.
 
 However, if you prefer Yoda conditions, you can use `RequireYodaComparisonSniff`.
+
+#### SlevomatCodingStandard.Files.FileLength
+
+Disallows long files. This sniff provides the following settings:
+
+* `includeComments`: should comments be included in the count (default value is false).
+* `includeWhitespace`: shoud empty lines be included in the count (default value is false).
+* `maxLinesLength`: specifies max allowed function lines length (default value is 250).
 
 #### SlevomatCodingStandard.Files.LineLength
 
