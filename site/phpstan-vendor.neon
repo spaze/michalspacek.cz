@@ -77,6 +77,42 @@ parameters:
 				- vendor/nette/tester/src/Runner/Job.php
 				- vendor/nette/tester/src/Runner/PhpInterpreter.php
 				- vendor/php-parallel-lint/php-parallel-lint/src/Process/Process.php
+		# bundled disallowed-insecure-calls.neon
+		-
+			function: 'md5()'
+			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
+			allowIn:
+				- vendor/latte/latte/src/Latte/Engine.php
+				- vendor/nette/caching/src/Caching/Cache.php
+				- vendor/nette/database/src/Database/*.php
+				- vendor/nette/di/src/DI/*.php
+				- vendor/nette/robot-loader/src/RobotLoader/RobotLoader.php
+				- vendor/nette/tester/src/Framework/*.php
+				- vendor/nette/tester/src/Runner/*.php
+				- vendor/php-parallel-lint/php-parallel-lint/src/Output.php
+				- vendor/symfony/config/Resource/DirectoryResource.php
+				- vendor/tracy/tracy/src/Tracy/Logger/Logger.php
+		-
+			function: 'sha1()'
+			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
+			allowIn:
+				- vendor/nette/forms/src/Forms/Controls/CsrfProtection.php
+		-
+			function: 'hash()'
+			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
+			allowIn:
+				- vendor/symfony/cache/Adapter/PhpArrayAdapter.php
+				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
+				- vendor/symfony/cache/Traits/FilesystemCommonTrait.php
+			allowExceptCaseInsensitiveParams:
+				1: 'md5'
+		-
+			function: 'hash_init()'
+			message: 'use hash_init() with at least SHA-256 for secure hash, or password_hash() for passwords'
+			allowIn:
+				- vendor/symfony/config/Resource/*Resource.php
+			allowExceptCaseInsensitiveParams:
+				1: 'md5'
 
 	disallowedStaticCalls:
 		-

@@ -487,6 +487,12 @@ class Talks
 	}
 
 
+	private function getSlideImageFileBasename(string $contents): string
+	{
+		return Base64::urlEncode(sha1($contents, true));
+	}
+
+
 	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): string
 	{
 		return "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}";
@@ -519,7 +525,7 @@ class Talks
 			$this->deleteFiles[] = $renamed = $this->getSlideImageFilename($this->locationRoot, $talkId, "__del__{$originalFile}");
 			rename($this->getSlideImageFilename($this->locationRoot, $talkId, $originalFile), $renamed);
 		}
-		$name = Base64::urlEncode(sha1($contents, true));
+		$name = $this->getSlideImageFileBasename($contents);
 		$extension = $supported[$replace->getContentType()];
 		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
 		$this->decrementOtherSlides($originalFile);

@@ -271,15 +271,20 @@ class TexyFormatter
 	private function cache(string $text, callable $callback): Html
 	{
 		if ($this->cacheResult) {
-			// Make the key shorter because Symfony Cache stores it in comments in cache files
-			// Use MD5 to favor speed over security, which is not an issue here, and Symfony Cache itself uses MD5 as well
-			// Don't hash the locale to make it visible inside cache files
-			$key = md5($text) . '.' . $this->translator->getDefaultLocale();
-			$formatted = $this->cache->get($key, $callback);
+			$formatted = $this->cache->get($this->getCacheKey($text), $callback);
 		} else {
 			$formatted = $callback();
 		}
 		return Html::el()->setHtml($formatted);
+	}
+
+
+	private function getCacheKey(string $text): string
+	{
+		// Make the key shorter because Symfony Cache stores it in comments in cache files
+		// Use MD5 to favor speed over security, which is not an issue here, and Symfony Cache itself uses MD5 as well
+		// Don't hash the locale to make it visible inside cache files
+		return md5($text) . '.' . $this->translator->getDefaultLocale();
 	}
 
 

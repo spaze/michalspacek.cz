@@ -2,6 +2,17 @@ parameters:
 	disallowedFunctionCalls:
 		-
 			function: 'pcntl_*()'
+		-
+			function: 'md5()'
+			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
+			allowInMethods:
+				- 'MichalSpacekCz\Formatter\TexyFormatter::getCacheKey()'
+		-
+			function: 'sha1()'
+			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
+			allowInMethods:
+				- 'MichalSpacekCz\Talks\Talks::getSlideImageFileBasename()'
+				- 'MichalSpacekCz\Www\Presenters\ExportsPresenter::getEtag()'
 	disallowedConstants:
 		-
 			constant: 'LIBXML_NOENT'
@@ -11,4 +22,5 @@ includes:
 	- vendor/spaze/phpstan-disallowed-calls/extension.neon
 	- vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
 	- vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+	- vendor/spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
 	- vendor/spaze/phpstan-disallowed-calls-nette/disallowed-dangerous-calls.neon
