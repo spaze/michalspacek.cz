@@ -32,6 +32,7 @@ use Nette\Database\Structure as DatabaseStructure;
 use Nette\Http\UrlScript;
 use Spaze\ContentSecurityPolicy\Config as CspConfig;
 use Spaze\NonceGenerator\Generator as NonceGenerator;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Tracy\Debugger;
 
 trait ServicesTrait
@@ -92,6 +93,16 @@ trait ServicesTrait
 		static $service;
 		if (!$service) {
 			$service = new DevNullStorage();
+		}
+		return $service;
+	}
+
+
+	public function getCacheAdapter(): ArrayAdapter
+	{
+		static $service;
+		if (!$service) {
+			$service = new ArrayAdapter();
 		}
 		return $service;
 	}
@@ -306,7 +317,7 @@ trait ServicesTrait
 	{
 		static $service;
 		if (!$service) {
-			$service = new TexyFormatter($this->getCacheStorage(), $this->getTranslator(), $this->getDates(), $this->getPrices(), $this->getDateTimeFormatter(), $this->getTexyPhraseHandler(), '/', 'i', '/var/www');
+			$service = new TexyFormatter($this->getCacheAdapter(), $this->getTranslator(), $this->getDates(), $this->getPrices(), $this->getDateTimeFormatter(), $this->getTexyPhraseHandler(), '/', 'i', '/var/www');
 		}
 		return $service;
 	}

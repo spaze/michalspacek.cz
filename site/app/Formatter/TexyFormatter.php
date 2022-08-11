@@ -8,11 +8,10 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Prices;
-use Nette\Caching\Cache;
-use Nette\Caching\Storage;
 use Nette\Database\Row;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
+use Symfony\Contracts\Cache\CacheInterface;
 use Texy\Texy;
 use Throwable;
 
@@ -22,8 +21,6 @@ class TexyFormatter
 	public const TRAINING_DATE_PLACEHOLDER = 'TRAINING_DATE';
 
 	private ?Texy $texy = null;
-
-	private string $cacheNamespace;
 
 	private bool $cacheResult = true;
 
@@ -49,7 +46,7 @@ class TexyFormatter
 
 
 	public function __construct(
-		private readonly Storage $cacheStorage,
+		private readonly CacheInterface $cache,
 		private readonly Translator $translator,
 		private readonly Dates $trainingDates,
 		private readonly Prices $prices,
@@ -62,7 +59,6 @@ class TexyFormatter
 		$this->staticRoot = rtrim($staticRoot, '/');
 		$this->imagesRoot = trim($imagesRoot, '/');
 		$this->locationRoot = rtrim($locationRoot, '/');
-		$this->cacheNamespace = 'TexyFormatted.' . $this->translator->getLocale();
 	}
 
 
@@ -275,9 +271,11 @@ class TexyFormatter
 	private function cache(string $text, callable $callback): Html
 	{
 		if ($this->cacheResult) {
-			$cache = new Cache($this->cacheStorage, $this->cacheNamespace);
-			// Nette Cache itself generates the key by hashing the key passed in load() so we can use whatever we want
-			$formatted = $cache->load($text, $callback);
+			// Make the key shorter because Symfony Cache stores it in comments in cache files
+			// Use MD5 to favor speed over security, which is not an issue here, and Symfony Cache itself uses MD5 as well
+			// Don't hash the locale to make it visible inside cache files
+			$key = md5($text) . '.' . $this->translator->getDefaultLocale();
+			$formatted = $this->cache->get($key, $callback);
 		} else {
 			$formatted = $callback();
 		}

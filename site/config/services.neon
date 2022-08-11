@@ -39,7 +39,7 @@ services:
 	- MichalSpacekCz\Form\TrainingStatusesFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
-	- MichalSpacekCz\Formatter\TexyFormatter(staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
+	- MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
@@ -95,3 +95,4 @@ services:
 	passwordEncryption: Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
 	sessionEncryption: Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
 	- Spaze\PhpInfo\PhpInfo
+	texyFormatterPhpFilesAdapter: Symfony\Component\Cache\Adapter\PhpFilesAdapter(namespace: 'TexyFormatter', directory: '%tempDir%/cache', appendOnly: true)

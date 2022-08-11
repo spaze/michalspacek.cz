@@ -31,6 +31,13 @@ parameters:
 			- vendor/nette/forms/examples/latte.php*
 			- vendor/nette/forms/src/Bridges/FormsLatte/*
 			- vendor/texy/texy/src/Bridges/Latte/*
+	ignoreErrors:
+		-
+			message: '#^Cannot access constant#'
+			paths:
+				- vendor/symfony/cache/Adapter/DoctrineDbalAdapter.php
+				- vendor/symfony/cache/DependencyInjection/CachePoolPass.php
+				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
 
 	disallowedFunctionCalls:
 		# local disallowed-calls.neon
