@@ -588,4 +588,5 @@ return array(
     'Tracy\\OutputDebugger' => $vendorDir . '/tracy/tracy/src/Tracy/OutputDebugger/OutputDebugger.php',
     'Tracy\\ProductionStrategy' => $vendorDir . '/tracy/tracy/src/Tracy/Debugger/ProductionStrategy.php',
     'Tracy\\SessionStorage' => $vendorDir . '/tracy/tracy/src/Tracy/Session/SessionStorage.php',
+    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );
