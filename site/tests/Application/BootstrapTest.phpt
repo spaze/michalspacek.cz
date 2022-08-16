@@ -15,8 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 class BootstrapTest extends TestCase
 {
 
-	private const SITE_DIR = __DIR__ . '/../..';
-	private const EXCEPTION_LOG = self::SITE_DIR . '/log/' . ILogger::EXCEPTION . '.log';
+	private const EXCEPTION_LOG = __DIR__ . '/../../log/' . ILogger::EXCEPTION . '.log';
 	private ?string $tempLog = null;
 
 
@@ -64,7 +63,7 @@ class BootstrapTest extends TestCase
 			$_SERVER['ENVIRONMENT'] = $environment;
 		}
 		Assert::noError(function () use (&$container): void {
-			$container = Bootstrap::boot(self::SITE_DIR);
+			$container = Bootstrap::boot();
 		});
 		Assert::type(Container::class, $container);
 	}

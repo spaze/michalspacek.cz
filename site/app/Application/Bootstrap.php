@@ -12,28 +12,25 @@ class Bootstrap
 {
 
 	private const MODE_DEVELOPMENT = 'development';
+	private const SITE_DIR = __DIR__ . '/../..';
 
-	private static string $siteDir;
 
-
-	public static function boot(string $siteDir): Container
+	public static function boot(): Container
 	{
-		self::$siteDir = $siteDir;
 		return self::createConfigurator(
 			($_SERVER['ENVIRONMENT'] ?? null) === self::MODE_DEVELOPMENT,
-			self::$siteDir . '/config/extra-' . $_SERVER['SERVER_NAME'] . '.neon',
+			self::SITE_DIR . '/config/extra-' . $_SERVER['SERVER_NAME'] . '.neon',
 		)->createContainer();
 	}
 
 
-	public static function bootCli(string $siteDir): Container
+	public static function bootCli(): Container
 	{
-		self::$siteDir = $siteDir;
 		$_SERVER['HTTPS'] = 'on';
 		$debugMode = ($_SERVER['PHP_CLI_ENVIRONMENT'] ?? null) === self::MODE_DEVELOPMENT || Arrays::contains($_SERVER['argv'], '--debug');
 		$container = self::createConfigurator(
 			$debugMode,
-			self::$siteDir . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),
+			self::SITE_DIR . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),
 		)->createContainer();
 		if (Arrays::contains($_SERVER['argv'], '--colors')) {
 			$container->getByType(ConsoleColor::class)->setForceStyle(true);
@@ -48,15 +45,15 @@ class Bootstrap
 	private static function getConfigurationFiles(string $extraConfig): array
 	{
 		return array_unique([
-			self::$siteDir . '/config/extensions.neon',
-			self::$siteDir . '/config/common.neon',
-			self::$siteDir . '/config/contentsecuritypolicy.neon',
-			self::$siteDir . '/config/parameters.neon',
-			self::$siteDir . '/config/presenters.neon',
-			self::$siteDir . '/config/services.neon',
-			self::$siteDir . '/config/routes.neon',
+			self::SITE_DIR . '/config/extensions.neon',
+			self::SITE_DIR . '/config/common.neon',
+			self::SITE_DIR . '/config/contentsecuritypolicy.neon',
+			self::SITE_DIR . '/config/parameters.neon',
+			self::SITE_DIR . '/config/presenters.neon',
+			self::SITE_DIR . '/config/services.neon',
+			self::SITE_DIR . '/config/routes.neon',
 			$extraConfig,
-			self::$siteDir . '/config/local.neon',
+			self::SITE_DIR . '/config/local.neon',
 		]);
 	}
 
@@ -64,15 +61,15 @@ class Bootstrap
 	private static function createConfigurator(bool $debugMode, string $extraConfig): Configurator
 	{
 		$configurator = new Configurator();
-		$configurator->addParameters(['siteDir' => self::$siteDir]);
+		$configurator->addParameters(['siteDir' => self::SITE_DIR]);
 
 		$configurator->setDebugMode($debugMode);
-		$configurator->enableDebugger(self::$siteDir . '/log');
+		$configurator->enableDebugger(self::SITE_DIR . '/log');
 		$configurator->setTimeZone('Europe/Prague');
-		$configurator->setTempDirectory(self::$siteDir . '/temp');
+		$configurator->setTempDirectory(self::SITE_DIR . '/temp');
 
 		$configurator->createRobotLoader()
-			->addDirectory(self::$siteDir . '/app')
+			->addDirectory(self::SITE_DIR . '/app')
 			->register();
 
 		$existingFiles = array_filter(self::getConfigurationFiles($extraConfig), function ($path) {
