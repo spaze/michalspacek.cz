@@ -64,7 +64,7 @@ class BootstrapTest extends TestCase
 			$_SERVER['ENVIRONMENT'] = $environment;
 		}
 		Assert::noError(function () use (&$container): void {
-			$container = (new Bootstrap(self::SITE_DIR))->boot();
+			$container = Bootstrap::boot(self::SITE_DIR);
 		});
 		Assert::type(Container::class, $container);
 	}

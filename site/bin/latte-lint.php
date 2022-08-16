@@ -22,9 +22,7 @@ pcntl_signal(SIGINT, function (): void {
 	exit(1);
 });
 
-$bootstrap = new Bootstrap(__DIR__ . '/..');
-$factory = $bootstrap->bootCli()->getByType(TemplateFactory::class);
-assert($factory instanceof TemplateFactory);
+$factory = Bootstrap::bootCli(__DIR__ . '/..')->getByType(TemplateFactory::class);
 
 echo '
 Latte linter

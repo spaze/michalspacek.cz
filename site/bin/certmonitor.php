@@ -10,7 +10,4 @@ use Nette\Utils\Arrays;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$bootstrap = new Bootstrap(__DIR__ . '/..');
-/** @var CertificateMonitor $certificateMonitor */
-$certificateMonitor = $bootstrap->bootCli()->getByType(CertificateMonitor::class);
-$certificateMonitor->run(!Arrays::contains($_SERVER['argv'], '--no-ipv6'));
+Bootstrap::bootCli(__DIR__ . '/..')->getByType(CertificateMonitor::class)->run(!Arrays::contains($_SERVER['argv'], '--no-ipv6'));
