@@ -1,0 +1,5 @@
+parameters:
+	domain:
+		root: domain.example
+		fqdn: www.%domain.root%
+		contentSecurityPolicySelf: "'self'"
