@@ -1,8 +1,8 @@
 <?php
 declare(strict_types = 1);
 
-use Tester\Environment;
+use MichalSpacekCz\Application\Bootstrap;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-Environment::setup();
+return Bootstrap::bootTest();

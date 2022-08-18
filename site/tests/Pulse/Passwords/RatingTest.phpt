@@ -8,18 +8,15 @@ use RuntimeException;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../../bootstrap.php';
+$container = require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class RatingTest extends TestCase
 {
 
-	private Rating $rating;
-
-
-	public function setUp()
-	{
-		$this->rating = new Rating();
+	public function __construct(
+		private readonly Rating $rating,
+	) {
 	}
 
 
@@ -122,4 +119,6 @@ class RatingTest extends TestCase
 
 }
 
-(new RatingTest())->run();
+(new RatingTest(
+	$container->getByType(Rating::class),
+))->run();

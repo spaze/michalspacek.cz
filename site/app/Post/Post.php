@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Post;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Exceptions\PostDoesNotExistException;
 use MichalSpacekCz\Tags\Tags;
@@ -36,7 +36,7 @@ class Post
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Cache $exportsCache,
 		private readonly LinkGenerator $linkGenerator,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 		private readonly Tags $tags,
 		private readonly Translator $translator,
 		private readonly int $updatedInfoThreshold,

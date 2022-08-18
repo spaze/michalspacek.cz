@@ -1,0 +1,20 @@
+parameters:
+	domain:
+		root: domain.example
+		fqdn: www.%domain.root%
+		contentSecurityPolicySelf: "'self'"
+
+services:
+	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGenerator
+	database.default.explorer: MichalSpacekCz\Test\Database\Database
+	session.session: MichalSpacekCz\Test\Http\NullSession
+	http.request: MichalSpacekCz\Test\Http\Request
+	http.response: MichalSpacekCz\Test\Http\Response
+	- MichalSpacekCz\Test\Http\SecurityHeadersFactory
+	- MichalSpacekCz\Test\NoOpTranslator(defaultLocale: cs_CZ)
+	tracy.logger: MichalSpacekCz\Test\NullLogger
+	cache.storage: Nette\Caching\Storages\DevNullStorage
+	netteHttpResponse:  # Needed for User\Manager because https://github.com/nette/http/issues/200
+		create: Nette\Http\Response
+		autowired: self
+	- Nette\Http\SessionSection(name: test)

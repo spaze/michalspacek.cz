@@ -5,42 +5,27 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Test\Http\Response;
-use MichalSpacekCz\Test\ServicesTrait;
+use MichalSpacekCz\Test\Http\SecurityHeadersFactory;
 use Spaze\ContentSecurityPolicy\Config;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class SecurityHeadersTest extends TestCase
 {
 
-	use ServicesTrait;
+	public function __construct(
+		private readonly Response $httpResponse,
+		private readonly Config $cspConfig,
+		private readonly SecurityHeadersFactory $securityHeadersFactory,
+	) {
+	}
 
 
-	private Response $httpResponse;
-
-	private Config $cspConfig;
-
-	private SecurityHeaders $securityHeaders;
-
-
-	protected function setUp()
+	public function testSendHeaders(): void
 	{
-		$this->httpResponse = $this->getHttpResponse();
-		$this->cspConfig = $this->getCspConfig();
-		$this->securityHeaders = $this->getSecurityHeaders([
-			'camera' => 'none',
-			'geolocation' => '',
-			'midi' => [
-				'self',
-				'none',
-				' ',
-				'https://example.com',
-			],
-		]);
-
 		$this->cspConfig->setPolicy([
 			'*.*' => [
 				'script-src' => [
@@ -52,13 +37,19 @@ class SecurityHeadersTest extends TestCase
 				],
 			],
 		]);
-	}
 
-
-	public function testSendHeaders(): void
-	{
-		$this->securityHeaders->setCsp('Foo', 'bar');
-		$this->securityHeaders->sendHeaders();
+		$securityHeaders = $this->securityHeadersFactory->create([
+			'camera' => 'none',
+			'geolocation' => '',
+			'midi' => [
+				'self',
+				'none',
+				' ',
+				'https://example.com',
+			],
+		]);
+		$securityHeaders->setCsp('Foo', 'bar');
+		$securityHeaders->sendHeaders();
 		$expected = [
 			'content-security-policy' => "script-src 'none' example.com; form-action 'self'",
 			'permissions-policy' => 'camera=(), geolocation=(), midi=(self "https://example.com")',
@@ -68,4 +59,8 @@ class SecurityHeadersTest extends TestCase
 
 }
 
-(new SecurityHeadersTest())->run();
+(new SecurityHeadersTest(
+	$container->getByType(Response::class),
+	$container->getByType(Config::class),
+	$container->getByType(SecurityHeadersFactory::class),
+))->run();

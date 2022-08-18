@@ -10,28 +10,30 @@ use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Edit;
 use MichalSpacekCz\Test\NoOpTranslator;
-use MichalSpacekCz\Test\ServicesTrait;
 use Nette\Caching\Storage;
+use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Row;
 use Nette\Utils\Html;
 use SimpleXMLElement;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ExportsTest extends TestCase
 {
 
-	use ServicesTrait;
-
-
 	private Articles $articles;
 	private TexyFormatter $texyFormatter;
-	private Storage $cacheStorage;
-	private NoOpTranslator $translator;
 	private Exports $exports;
+
+
+	public function __construct(
+		private readonly Storage $cacheStorage,
+		private readonly NoOpTranslator $translator,
+	) {
+	}
 
 
 	protected function setUp()
@@ -95,8 +97,6 @@ class ExportsTest extends TestCase
 			}
 
 		};
-		$this->cacheStorage = $this->getCacheStorage();
-		$this->translator = $this->getTranslator();
 		$this->exports = new Exports($this->articles, $this->texyFormatter, $this->translator, $this->cacheStorage);
 	}
 
@@ -174,4 +174,7 @@ class ExportsTest extends TestCase
 
 }
 
-(new ExportsTest())->run();
+(new ExportsTest(
+	$container->getByType(DevNullStorage::class),
+	$container->getByType(NoOpTranslator::class),
+))->run();

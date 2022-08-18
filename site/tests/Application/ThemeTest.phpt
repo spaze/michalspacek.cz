@@ -4,45 +4,38 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Test\Http\Request;
-use MichalSpacekCz\Test\ServicesTrait;
+use MichalSpacekCz\Test\Http\Response;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ThemeTest extends TestCase
 {
 
-	use ServicesTrait;
-
-
 	private const COOKIE = 'future';
 
 
-	private Request $request;
-
-	private Theme $theme;
-
-
-	protected function setUp()
-	{
-		$this->request = $this->getHttpRequest();
-		$this->theme = $this->getTheme();
+	public function __construct(
+		private readonly Request $request,
+		private readonly Response $response,
+		private readonly Theme $theme,
+	) {
 	}
 
 
 	public function testSetDarkMode(): void
 	{
 		$this->theme->setDarkMode();
-		Assert::same('dark', $this->getHttpResponse()->getCookie('future'));
+		Assert::same('dark', $this->response->getCookie('future'));
 	}
 
 
 	public function testSetLightMode(): void
 	{
 		$this->theme->setLightMode();
-		Assert::same('bright', $this->getHttpResponse()->getCookie('future'));
+		Assert::same('bright', $this->response->getCookie('future'));
 	}
 
 
@@ -81,4 +74,8 @@ class ThemeTest extends TestCase
 
 }
 
-(new ThemeTest())->run();
+(new ThemeTest(
+	$container->getByType(Request::class),
+	$container->getByType(Response::class),
+	$container->getByType(Theme::class),
+))->run();

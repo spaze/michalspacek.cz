@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 
 /**
  * @property-read Template $template
@@ -23,11 +23,11 @@ abstract class BasePresenter extends Presenter
 
 	private Manager $authenticator;
 
-	private LocaleLinkGenerator $localeLinkGenerator;
+	private LocaleLinkGeneratorInterface $localeLinkGenerator;
 
 	private Theme $theme;
 
-	private Response $httpResponse;
+	private IResponse $httpResponse;
 
 
 	/**
@@ -42,9 +42,9 @@ abstract class BasePresenter extends Presenter
 
 	/**
 	 * @internal
-	 * @param LocaleLinkGenerator $localeLinkGenerator
+	 * @param LocaleLinkGeneratorInterface $localeLinkGenerator
 	 */
-	public function injectLocaleLinkGenerator(LocaleLinkGenerator $localeLinkGenerator): void
+	public function injectLocaleLinkGenerator(LocaleLinkGeneratorInterface $localeLinkGenerator): void
 	{
 		$this->localeLinkGenerator = $localeLinkGenerator;
 	}
@@ -62,9 +62,9 @@ abstract class BasePresenter extends Presenter
 
 	/**
 	 * @internal
-	 * @param Response $httpResponse
+	 * @param IResponse $httpResponse
 	 */
-	public function injectHttpResponse(Response $httpResponse): void
+	public function injectHttpResponse(IResponse $httpResponse): void
 	{
 		$this->httpResponse = $httpResponse;
 	}

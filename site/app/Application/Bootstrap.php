@@ -7,6 +7,7 @@ use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
 use Nette\Utils\Arrays;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
+use Tester\Environment;
 
 class Bootstrap
 {
@@ -35,6 +36,14 @@ class Bootstrap
 		if (Arrays::contains($_SERVER['argv'], '--colors')) {
 			$container->getByType(ConsoleColor::class)->setForceStyle(true);
 		}
+		return $container;
+	}
+
+
+	public static function bootTest(): Container
+	{
+		$container = self::createConfigurator(true, self::SITE_DIR . '/config/tests.neon')->createContainer();
+		Environment::setup();
 		return $container;
 	}
 

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -24,7 +24,7 @@ class ErrorPresenter extends BaseErrorPresenter
 
 
 	public function __construct(
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 	) {
 		parent::__construct();
 	}

@@ -15,7 +15,7 @@ use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class WinterIsComingTest extends TestCase
@@ -32,6 +32,12 @@ class WinterIsComingTest extends TestCase
 	private $ruleStreet;
 
 	private stdClass $resultObject;
+
+
+	public function __construct(
+		private readonly WinterIsComing $winterIsComing,
+	) {
+	}
 
 
 	protected function setUp()
@@ -53,9 +59,8 @@ class WinterIsComingTest extends TestCase
 
 		};
 		$this->form = new Form($this->presenter, 'leForm');
-		$winterIsComing = new WinterIsComing();
-		$this->ruleEmail = $winterIsComing->ruleEmail();
-		$this->ruleStreet = $winterIsComing->ruleStreet();
+		$this->ruleEmail = $this->winterIsComing->ruleEmail();
+		$this->ruleStreet = $this->winterIsComing->ruleStreet();
 	}
 
 
@@ -147,4 +152,6 @@ class WinterIsComingTest extends TestCase
 
 }
 
-(new WinterIsComingTest())->run();
+(new WinterIsComingTest(
+	$container->getByType(WinterIsComing::class),
+))->run();

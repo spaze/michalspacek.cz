@@ -20,6 +20,12 @@ class NullSession extends Session
 	}
 
 
+	public function autoStart(bool $forWrite): void
+	{
+		// He who fights with monsters should be careful lest he thereby become a monster.
+	}
+
+
 	public function exists(): bool
 	{
 		return true;

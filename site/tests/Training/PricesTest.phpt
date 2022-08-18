@@ -6,18 +6,15 @@ namespace MichalSpacekCz\Training;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class PricesTest extends TestCase
 {
 
-	private Prices $prices;
-
-
-	public function setUp()
-	{
-		$this->prices = new Prices(0.21);
+	public function __construct(
+		private readonly Prices $prices,
+	) {
 	}
 
 
@@ -88,4 +85,6 @@ class PricesTest extends TestCase
 
 }
 
-(new PricesTest())->run();
+(new PricesTest(
+	$container->getByType(Prices::class),
+))->run();

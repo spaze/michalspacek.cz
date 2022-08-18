@@ -7,18 +7,15 @@ namespace MichalSpacekCz\Tags;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TagsTest extends TestCase
 {
 
-	private Tags $tags;
-
-
-	public function __construct()
-	{
-		$this->tags = new Tags();
+	public function __construct(
+		private readonly Tags $tags,
+	) {
 	}
 
 
@@ -55,4 +52,6 @@ class TagsTest extends TestCase
 
 }
 
-(new TagsTest())->run();
+(new TagsTest(
+	$container->getByType(Tags::class),
+))->run();
