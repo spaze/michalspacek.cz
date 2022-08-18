@@ -3,28 +3,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
-use MichalSpacekCz\Test\ServicesTrait;
 use Spaze\NonceGenerator\Generator;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TemplateFactoryTest extends TestCase
 {
 
-	use ServicesTrait;
-
-
-	private Generator $nonceGenerator;
-	private TemplateFactory $templateFactory;
-
-
-	protected function setUp()
-	{
-		$this->nonceGenerator = $this->getNonceGenerator();
-		$this->templateFactory = $this->getTemplateFactory();
+	public function __construct(
+		private readonly Generator $nonceGenerator,
+		private readonly TemplateFactory $templateFactory,
+	) {
 	}
 
 
@@ -38,4 +30,7 @@ class TemplateFactoryTest extends TestCase
 
 }
 
-(new TemplateFactoryTest())->run();
+(new TemplateFactoryTest(
+	$container->getByType(Generator::class),
+	$container->getByType(TemplateFactory::class),
+))->run();

@@ -30,10 +30,12 @@ class Request implements IRequest
 
 	private bool $sameSite;
 
+	private readonly UrlScript $url;
 
-	public function __construct(
-		private readonly UrlScript $url,
-	) {
+
+	public function __construct()
+	{
+		$this->url = new UrlScript();
 	}
 
 

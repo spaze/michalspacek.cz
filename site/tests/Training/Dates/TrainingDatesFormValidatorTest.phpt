@@ -4,27 +4,20 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use MichalSpacekCz\Test\ServicesTrait;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use Nette\Forms\Controls\TextInput;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../../bootstrap.php';
+$container = require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingDatesFormValidatorTest extends TestCase
 {
 
-	use ServicesTrait;
-
-
-	private TrainingDatesFormValidator $validator;
-
-
-	protected function setUp(): void
-	{
-		$this->validator = new TrainingDatesFormValidator();
+	public function __construct(
+		private readonly TrainingDatesFormValidator $validator,
+	) {
 	}
 
 
@@ -74,4 +67,6 @@ class TrainingDatesFormValidatorTest extends TestCase
 
 }
 
-(new TrainingDatesFormValidatorTest())->run();
+(new TrainingDatesFormValidatorTest(
+	$container->getByType(TrainingDatesFormValidator::class),
+))->run();

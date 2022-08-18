@@ -1,6 +1,6 @@
 services:
 	- MichalSpacekCz\Application\Error
-	- MichalSpacekCz\Application\LocaleLinkGenerator
+	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator
 	- MichalSpacekCz\Application\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\RouterFactory::createRouter
 	- MichalSpacekCz\Application\Theme

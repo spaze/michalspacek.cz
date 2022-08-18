@@ -8,18 +8,15 @@ use MichalSpacekCz\Http\Exceptions\HttpStreamException;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class HttpStreamContextTest extends TestCase
 {
 
-	private readonly HttpStreamContext $httpStreamContext;
-
-
-	protected function setUp(): void
-	{
-		$this->httpStreamContext = new HttpStreamContext();
+	public function __construct(
+		private readonly HttpStreamContext $httpStreamContext,
+	) {
 	}
 
 
@@ -70,4 +67,6 @@ class HttpStreamContextTest extends TestCase
 
 }
 
-(new HttpStreamContextTest())->run();
+(new HttpStreamContextTest(
+	$container->getByType(HttpStreamContext::class),
+))->run();

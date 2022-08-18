@@ -3,47 +3,27 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use MichalSpacekCz\Test\Http\NullSession;
-use MichalSpacekCz\Test\Http\Request;
-use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\NullLogger;
-use MichalSpacekCz\Test\ServicesTrait;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
-use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\ArrayHash;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class FormSpamTest extends TestCase
 {
 
-	use ServicesTrait;
-
-
 	private const FORM_NAME = 'formName';
 
-	private Request $request;
-	private Response $response;
-	private Session $sessionHandler;
-	private SessionSection $session;
-	private NullLogger $nullLogger;
-	private FormDataLogger $formDataLogger;
-	private FormSpam $formSpam;
 
-
-	protected function setUp(): void
-	{
-		$this->request = $this->getHttpRequest();
-		$this->response = $this->getHttpResponse();
-		$this->sessionHandler = new NullSession($this->request, $this->response);
-		$this->session = $this->sessionHandler->getSection('foo');
-		$this->nullLogger = $this->getLogger();
-		$this->formDataLogger = new FormDataLogger();
-		$this->formSpam = new FormSpam($this->formDataLogger);
+	public function __construct(
+		private readonly SessionSection $session,
+		private readonly NullLogger $nullLogger,
+		private readonly FormSpam $formSpam,
+	) {
 	}
 
 
@@ -115,4 +95,8 @@ class FormSpamTest extends TestCase
 
 }
 
-(new FormSpamTest())->run();
+(new FormSpamTest(
+	$container->getByType(SessionSection::class),
+	$container->getByType(NullLogger::class),
+	$container->getByType(FormSpam::class),
+))->run();

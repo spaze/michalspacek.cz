@@ -8,18 +8,15 @@ namespace MichalSpacekCz\EasterEgg;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class NetteCve202015227Test extends TestCase
 {
 
-	private NetteCve202015227 $cve202015227;
-
-
-	protected function setUp()
-	{
-		$this->cve202015227 = new NetteCve202015227();
+	public function __construct(
+		private readonly NetteCve202015227 $cve202015227,
+	) {
 	}
 
 
@@ -96,4 +93,6 @@ class NetteCve202015227Test extends TestCase
 
 }
 
-(new NetteCve202015227Test())->run();
+(new NetteCve202015227Test(
+	$container->getByType(NetteCve202015227::class),
+))->run();

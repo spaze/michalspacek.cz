@@ -7,6 +7,21 @@ interface LocaleLinkGeneratorInterface
 {
 
 	/**
+	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
+	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
+	 * @return array<string, string> of locale => URL
+	 */
+	public function links(string $destination, array $params = []): array;
+
+
+	/**
+	 * @param array<string, string|null> $params
+	 * @return array<string, array<string, string|null>>
+	 */
+	public function defaultParams(array $params): array;
+
+
+	/**
 	 * @param array<string, array<string, string|null>> $params
 	 * @param array<string, string|null> $defaultParams
 	 */

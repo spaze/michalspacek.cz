@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Application;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\TestCase;
+use Tracy\Debugger;
 use Tracy\ILogger;
 
 require __DIR__ . '/../bootstrap.php';
@@ -15,15 +16,16 @@ require __DIR__ . '/../bootstrap.php';
 class BootstrapTest extends TestCase
 {
 
-	private const EXCEPTION_LOG = __DIR__ . '/../../log/' . ILogger::EXCEPTION . '.log';
+	private string $exceptionLog;
 	private ?string $tempLog = null;
 
 
 	public function __construct()
 	{
-		if (file_exists(self::EXCEPTION_LOG)) {
-			$this->tempLog = self::EXCEPTION_LOG . '.' . uniqid(more_entropy: true);
-			rename(self::EXCEPTION_LOG, $this->tempLog);
+		$this->exceptionLog = Debugger::$logDirectory . '/' . ILogger::EXCEPTION . '.log';
+		if (file_exists($this->exceptionLog)) {
+			$this->tempLog = $this->exceptionLog . '.' . uniqid(more_entropy: true);
+			rename($this->exceptionLog, $this->tempLog);
 		}
 		$_SERVER['SERVER_NAME'] = 'michalspacek.cz';
 	}
@@ -31,12 +33,12 @@ class BootstrapTest extends TestCase
 
 	public function __destruct()
 	{
-		if (file_exists(self::EXCEPTION_LOG)) {
-			echo file_get_contents(self::EXCEPTION_LOG);
-			unlink(self::EXCEPTION_LOG);
+		if (file_exists($this->exceptionLog)) {
+			echo file_get_contents($this->exceptionLog);
+			unlink($this->exceptionLog);
 		}
 		if ($this->tempLog && file_exists($this->tempLog)) {
-			rename($this->tempLog, self::EXCEPTION_LOG);
+			rename($this->tempLog, $this->exceptionLog);
 		}
 	}
 

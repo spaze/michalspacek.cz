@@ -10,7 +10,6 @@ use Closure;
 use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
-use MichalSpacekCz\Test\ServicesTrait;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
 use ReflectionProperty;
@@ -18,32 +17,28 @@ use Tester\Assert;
 use Tester\TestCase;
 use Texy\Texy;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TexyPhraseHandlerTest extends TestCase
 {
 
-	use ServicesTrait;
-
-
-	private Database $database;
-	private Application $application;
-	private LocaleLinkGenerator $localeLinkGenerator;
-	private NoOpTranslator $translator;
-	private TexyPhraseHandler $phraseHandler;
 	private Texy $texy;
 	private string $locale;
 
 
+	public function __construct(
+		private readonly Database $database,
+		private readonly Application $application,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly NoOpTranslator $translator,
+		private readonly TexyPhraseHandler $phraseHandler,
+	) {
+	}
+
+
 	protected function setUp()
 	{
-		$this->database = $this->getDatabase();
-		$this->application = $this->getApplication();
-		$this->localeLinkGenerator = $this->getLocaleLinkGenerator();
-		$this->translator = $this->getTranslator();
-		$this->phraseHandler = $this->getTexyPhraseHandler();
-
 		$this->texy = new Texy();
 		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
 		$property = new ReflectionProperty($this->application, 'presenter');
@@ -188,4 +183,10 @@ class TexyPhraseHandlerTest extends TestCase
 
 }
 
-(new TexyPhraseHandlerTest())->run();
+(new TexyPhraseHandlerTest(
+	$container->getByType(Database::class),
+	$container->getByType(Application::class),
+	$container->getByType(LocaleLinkGenerator::class),
+	$container->getByType(NoOpTranslator::class),
+	$container->getByType(TexyPhraseHandler::class),
+))->run();

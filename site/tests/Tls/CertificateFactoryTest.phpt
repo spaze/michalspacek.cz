@@ -9,18 +9,15 @@ use Nette\Utils\Json;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class CertificateFactoryTest extends TestCase
 {
 
-	private CertificateFactory $certificateFactory;
-
-
-	public function setUp()
-	{
-		$this->certificateFactory = new CertificateFactory(3);
+	public function __construct(
+		private readonly CertificateFactory $certificateFactory,
+	) {
 	}
 
 
@@ -40,4 +37,6 @@ class CertificateFactoryTest extends TestCase
 
 }
 
-(new CertificateFactoryTest())->run();
+(new CertificateFactoryTest(
+	$container->getByType(CertificateFactory::class),
+))->run();
