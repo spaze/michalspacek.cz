@@ -28,14 +28,13 @@ class TestCaseRunner
 		$params = [];
 		try {
 			$method = new ReflectionMethod($test, '__construct');
-			foreach ($method->getParameters() as $key => $parameter) {
-				$position = $key + 1;
+			foreach ($method->getParameters() as $parameter) {
 				$type = Reflection::getParameterType($parameter);
 				if ($type === null) {
-					throw new LogicException("Parameter #{$position} \${$parameter->getName()} has no type specified in {$test}::__construct()");
+					throw new LogicException("Parameter #{$parameter->getPosition()} \${$parameter->getName()} has no type specified in {$test}::__construct()");
 				}
 				if (!class_exists($type) && !interface_exists($type)) {
-					throw new LogicException("Parameter #{$position} \${$parameter->getName()} specifies a type {$type} but the class or interface doesn't exist");
+					throw new LogicException("Parameter #{$parameter->getPosition()} \${$parameter->getName()} specifies a type {$type} but the class or interface doesn't exist");
 				}
 				$params[] = $this->container->getByType($type);
 			}
