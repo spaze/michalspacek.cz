@@ -8,7 +8,7 @@ use MichalSpacekCz\Test\Http\Response;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ThemeTest extends TestCase
@@ -74,8 +74,4 @@ class ThemeTest extends TestCase
 
 }
 
-(new ThemeTest(
-	$container->getByType(Request::class),
-	$container->getByType(Response::class),
-	$container->getByType(Theme::class),
-))->run();
+$runner->run(ThemeTest::class);

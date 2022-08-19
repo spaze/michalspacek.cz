@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Utils;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class Base64Test extends TestCase
@@ -29,4 +29,4 @@ class Base64Test extends TestCase
 
 }
 
-(new Base64Test())->run();
+$runner->run(Base64Test::class);

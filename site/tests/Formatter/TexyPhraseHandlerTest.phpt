@@ -17,7 +17,7 @@ use Tester\Assert;
 use Tester\TestCase;
 use Texy\Texy;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TexyPhraseHandlerTest extends TestCase
@@ -183,10 +183,4 @@ class TexyPhraseHandlerTest extends TestCase
 
 }
 
-(new TexyPhraseHandlerTest(
-	$container->getByType(Database::class),
-	$container->getByType(Application::class),
-	$container->getByType(LocaleLinkGenerator::class),
-	$container->getByType(NoOpTranslator::class),
-	$container->getByType(TexyPhraseHandler::class),
-))->run();
+$runner->run(TexyPhraseHandlerTest::class);

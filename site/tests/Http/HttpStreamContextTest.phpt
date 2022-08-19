@@ -8,7 +8,7 @@ use MichalSpacekCz\Http\Exceptions\HttpStreamException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class HttpStreamContextTest extends TestCase
@@ -67,6 +67,4 @@ class HttpStreamContextTest extends TestCase
 
 }
 
-(new HttpStreamContextTest(
-	$container->getByType(HttpStreamContext::class),
-))->run();
+$runner->run(HttpStreamContextTest::class);

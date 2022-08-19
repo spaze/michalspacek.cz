@@ -10,7 +10,7 @@ use Spaze\ContentSecurityPolicy\Config;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class SecurityHeadersTest extends TestCase
@@ -59,8 +59,4 @@ class SecurityHeadersTest extends TestCase
 
 }
 
-(new SecurityHeadersTest(
-	$container->getByType(Response::class),
-	$container->getByType(Config::class),
-	$container->getByType(SecurityHeadersFactory::class),
-))->run();
+$runner->run(SecurityHeadersTest::class);

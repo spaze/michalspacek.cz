@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Tags;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TagsTest extends TestCase
@@ -52,6 +52,4 @@ class TagsTest extends TestCase
 
 }
 
-(new TagsTest(
-	$container->getByType(Tags::class),
-))->run();
+$runner->run(TagsTest::class);

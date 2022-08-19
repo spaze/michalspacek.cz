@@ -13,6 +13,7 @@ services:
 	- MichalSpacekCz\Test\Http\SecurityHeadersFactory
 	- MichalSpacekCz\Test\NoOpTranslator(defaultLocale: cs_CZ)
 	tracy.logger: MichalSpacekCz\Test\NullLogger
+	- MichalSpacekCz\Test\TestCaseRunner
 	cache.storage: Nette\Caching\Storages\DevNullStorage
 	netteHttpResponse:  # Needed for User\Manager because https://github.com/nette/http/issues/200
 		create: Nette\Http\Response
