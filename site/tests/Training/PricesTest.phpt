@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class PricesTest extends TestCase
@@ -85,6 +85,4 @@ class PricesTest extends TestCase
 
 }
 
-(new PricesTest(
-	$container->getByType(Prices::class),
-))->run();
+$runner->run(PricesTest::class);

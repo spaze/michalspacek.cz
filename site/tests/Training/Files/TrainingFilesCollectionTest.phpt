@@ -9,7 +9,7 @@ use SplFileInfo;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../../bootstrap.php';
+$runner = require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingFilesCollectionTest extends TestCase
@@ -58,4 +58,4 @@ class TrainingFilesCollectionTest extends TestCase
 
 }
 
-(new TrainingFilesCollectionTest())->run();
+$runner->run(TrainingFilesCollectionTest::class);

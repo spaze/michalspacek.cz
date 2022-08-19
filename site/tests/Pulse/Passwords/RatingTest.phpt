@@ -8,7 +8,7 @@ use RuntimeException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../../bootstrap.php';
+$runner = require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class RatingTest extends TestCase
@@ -119,6 +119,4 @@ class RatingTest extends TestCase
 
 }
 
-(new RatingTest(
-	$container->getByType(Rating::class),
-))->run();
+$runner->run(RatingTest::class);

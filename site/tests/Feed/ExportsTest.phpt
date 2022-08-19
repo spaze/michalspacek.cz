@@ -11,14 +11,13 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\Edit;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Nette\Caching\Storage;
-use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Row;
 use Nette\Utils\Html;
 use SimpleXMLElement;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ExportsTest extends TestCase
@@ -174,7 +173,4 @@ class ExportsTest extends TestCase
 
 }
 
-(new ExportsTest(
-	$container->getByType(DevNullStorage::class),
-	$container->getByType(NoOpTranslator::class),
-))->run();
+$runner->run(ExportsTest::class);

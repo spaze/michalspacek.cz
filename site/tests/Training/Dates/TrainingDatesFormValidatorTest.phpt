@@ -9,7 +9,7 @@ use Nette\Forms\Controls\TextInput;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../../bootstrap.php';
+$runner = require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingDatesFormValidatorTest extends TestCase
@@ -67,6 +67,4 @@ class TrainingDatesFormValidatorTest extends TestCase
 
 }
 
-(new TrainingDatesFormValidatorTest(
-	$container->getByType(TrainingDatesFormValidator::class),
-))->run();
+$runner->run(TrainingDatesFormValidatorTest::class);

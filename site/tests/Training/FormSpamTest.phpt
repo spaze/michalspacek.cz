@@ -10,7 +10,7 @@ use Nette\Utils\ArrayHash;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class FormSpamTest extends TestCase
@@ -95,8 +95,4 @@ class FormSpamTest extends TestCase
 
 }
 
-(new FormSpamTest(
-	$container->getByType(SessionSection::class),
-	$container->getByType(NullLogger::class),
-	$container->getByType(FormSpam::class),
-))->run();
+$runner->run(FormSpamTest::class);

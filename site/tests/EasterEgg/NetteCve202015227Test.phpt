@@ -8,7 +8,7 @@ namespace MichalSpacekCz\EasterEgg;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class NetteCve202015227Test extends TestCase
@@ -93,6 +93,4 @@ class NetteCve202015227Test extends TestCase
 
 }
 
-(new NetteCve202015227Test(
-	$container->getByType(NetteCve202015227::class),
-))->run();
+$runner->run(NetteCve202015227Test::class);

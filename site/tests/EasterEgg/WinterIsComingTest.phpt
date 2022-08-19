@@ -15,7 +15,7 @@ use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class WinterIsComingTest extends TestCase
@@ -152,6 +152,4 @@ class WinterIsComingTest extends TestCase
 
 }
 
-(new WinterIsComingTest(
-	$container->getByType(WinterIsComing::class),
-))->run();
+$runner->run(WinterIsComingTest::class);

@@ -10,7 +10,7 @@ use Tester\TestCase;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
-require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class BootstrapTest extends TestCase
@@ -72,4 +72,4 @@ class BootstrapTest extends TestCase
 
 }
 
-(new BootstrapTest())->run();
+$runner->run(BootstrapTest::class);

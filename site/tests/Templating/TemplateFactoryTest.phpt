@@ -7,7 +7,7 @@ use Spaze\NonceGenerator\Generator;
 use Tester\Assert;
 use Tester\TestCase;
 
-$container = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TemplateFactoryTest extends TestCase
@@ -30,7 +30,4 @@ class TemplateFactoryTest extends TestCase
 
 }
 
-(new TemplateFactoryTest(
-	$container->getByType(Generator::class),
-	$container->getByType(TemplateFactory::class),
-))->run();
+$runner->run(TemplateFactoryTest::class);
