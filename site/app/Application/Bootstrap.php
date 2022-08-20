@@ -42,7 +42,11 @@ class Bootstrap
 
 	public static function bootTest(): Container
 	{
-		$container = self::createConfigurator(true, self::SITE_DIR . '/config/tests.neon')->createContainer();
+		$configurator = self::createConfigurator(true, self::SITE_DIR . '/config/tests.neon');
+		$configurator->addStaticParameters([
+			'wwwDir' => self::SITE_DIR . '/tests',
+		]);
+		$container = $configurator->createContainer();
 		Environment::setup();
 		return $container;
 	}
