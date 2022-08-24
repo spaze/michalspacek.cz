@@ -36,10 +36,10 @@ jobs:
           - michalspacek.cz
     steps:
     - name: testssl.sh scan
-      uses: mbogh/test-ssl-action@v1
+      uses: mbogh/test-ssl-action@v2
       with:
         host: ${{ matrix.url }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: always()
       with:
         name: testssl.sh reports
