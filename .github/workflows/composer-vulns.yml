@@ -18,3 +18,9 @@ jobs:
     - uses: symfonycorp/security-checker-action@v2
       with:
           lock: site/composer.lock
+
+  composer-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: composer --working-dir=site audit
