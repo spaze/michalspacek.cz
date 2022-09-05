@@ -33,4 +33,5 @@ jobs:
         ${{ matrix.host }} \
         10 \
         --colors \
+        --no-ipv6 \
         --strict
