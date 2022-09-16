@@ -81,6 +81,7 @@ class Statuses
 	{
 		return [
 			$this->getStatusId(self::STATUS_INVOICE_SENT) => self::STATUS_INVOICE_SENT,
+			$this->getStatusId(self::STATUS_PRO_FORMA_INVOICE_SENT) => self::STATUS_PRO_FORMA_INVOICE_SENT,
 			$this->getStatusId(self::STATUS_REMINDED) => self::STATUS_REMINDED,
 		] + $this->getAttendedStatuses();
 	}
