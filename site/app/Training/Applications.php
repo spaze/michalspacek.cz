@@ -569,7 +569,7 @@ class Applications
 
 	private function generateAccessCode(): string
 	{
-		return Random::generate(mt_rand(12, 16), '0-9a-zA-Z');
+		return Random::generate(rand(12, 16), '0-9a-zA-Z');
 	}
 
 
