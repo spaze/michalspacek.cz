@@ -42,7 +42,7 @@
 				{var $dateLineDisplayed = true}
 			{/if}
 		{/if}
-		<tr n:class="summary, $dateLineCheck && !$dateLineDisplayed ? dateLine">
+		<tr n:class="summary, $dateLineCheck && !$dateLineDisplayed ? dateLine, $training->status !== \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED ? lighter">
 			{var $dateLineDisplayed = $dateLineCheck}
 			<td n:if="$order == 'desc'" class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
 			<td n:if="$order == 'asc'" class="positionCell"><small>{$iterator->getCounter()}.</small></td>
@@ -56,7 +56,7 @@
 				<span n:if="$training->label" title="Label: {$training->label}" class="lighter"><i class="far fa-fw fa-comment-alt"></i></span>
 			</td>
 			<td class="iconCell">
-				<small title="{$training->status}" n:class="$training->status !== \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED ? lighter">
+				<small title="{$training->status}">
 					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CREATED}<i class="fas fa-fw fa-plus"></i>{/if}
 					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED}<i class="fas fa-fw fa-check"></i>{/if}
 					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_TENTATIVE}<i class="fas fa-fw fa-asterisk"></i>{/if}
