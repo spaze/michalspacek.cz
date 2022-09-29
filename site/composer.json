@@ -14,7 +14,7 @@
 		"ext-pcntl": "*",
 		"ext-pdo": "*",
 		"ext-simplexml": "*",
-		"contributte/translation": "^1.0",
+		"contributte/translation": "^2.0",
 		"latte/latte": "^2.11",
 		"nette/application": "~3.0",
 		"nette/bootstrap": "~3.0",
