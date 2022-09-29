@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '48518bbddabc02a533a41490734f3a7a8d552d4c',
+        'reference' => 'e93a9dd68bc064489bfeec6f5b7e29a4675c1950',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -373,7 +373,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '50a6bc0d820c35aab4d7818208f5ec815dff1fe1',
+            'reference' => '7501dc2a9c897733161b9e8c2c63257b373401be',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
@@ -382,9 +382,9 @@
             'dev_requirement' => true,
         ),
         'slevomat/coding-standard' => array(
-            'pretty_version' => '8.5.1',
-            'version' => '8.5.1.0',
-            'reference' => '971f489404350bf4608b7e59381e603c47700366',
+            'pretty_version' => '8.5.2',
+            'version' => '8.5.2.0',
+            'reference' => 'f32937dc41b587f3500efed1dbca2f82aa519373',
             'type' => 'phpcodesniffer-standard',
             'install_path' => __DIR__ . '/../slevomat/coding-standard',
             'aliases' => array(),
@@ -429,7 +429,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '48518bbddabc02a533a41490734f3a7a8d552d4c',
+            'reference' => 'e93a9dd68bc064489bfeec6f5b7e29a4675c1950',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
