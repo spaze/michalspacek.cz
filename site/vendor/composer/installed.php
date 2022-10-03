@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'e93a9dd68bc064489bfeec6f5b7e29a4675c1950',
+        'reference' => '21e33a51bbfc7fbd85402d181ba711804e9b6a69',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -373,7 +373,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '7501dc2a9c897733161b9e8c2c63257b373401be',
+            'reference' => '51ff2179e48fdb0d495649a9c0681f46de777f4e',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
@@ -429,7 +429,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e93a9dd68bc064489bfeec6f5b7e29a4675c1950',
+            'reference' => '21e33a51bbfc7fbd85402d181ba711804e9b6a69',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -499,9 +499,9 @@
             'dev_requirement' => true,
         ),
         'symfony/cache' => array(
-            'pretty_version' => 'v6.1.3',
-            'version' => '6.1.3.0',
-            'reference' => '5cf8e75f02932818889e0609380b8d5427a6c86c',
+            'pretty_version' => 'v6.1.5',
+            'version' => '6.1.5.0',
+            'reference' => '9ae74e40fde37aba127ad5db65c5193f41f86f95',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/cache',
             'aliases' => array(),
@@ -541,9 +541,9 @@
             'dev_requirement' => false,
         ),
         'symfony/filesystem' => array(
-            'pretty_version' => 'v6.1.4',
-            'version' => '6.1.4.0',
-            'reference' => '3f39c04d2630c34019907b02f85672dac99f8659',
+            'pretty_version' => 'v6.1.5',
+            'version' => '6.1.5.0',
+            'reference' => '4d216a2beef096edf040a070117c39ca2abce307',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/filesystem',
             'aliases' => array(),
