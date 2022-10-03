@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Spaze\SubresourceIntegrity;
 
-use Spaze\SubresourceIntegrity\Exceptions;
+use Spaze\SubresourceIntegrity\Exceptions\HashFileException;
+use Spaze\SubresourceIntegrity\Exceptions\InvalidResourceAliasException;
 use Spaze\SubresourceIntegrity\Exceptions\ShouldNotHappenException;
+use Spaze\SubresourceIntegrity\Exceptions\UnknownModeException;
+use Spaze\SubresourceIntegrity\Exceptions\UnsupportedHashAlgorithmException;
 use Spaze\SubresourceIntegrity\Resource\FileResource;
 use Spaze\SubresourceIntegrity\Resource\StringResource;
 use stdClass;
@@ -13,7 +16,7 @@ class Config
 {
 
 	/** @internal separator between multiple resources */
-	private const BUILD_SEPARATOR = '+';
+	public const BUILD_SEPARATOR = '+';
 
 	/** @var array<string, string|array{url: string, hash: string|array<int, string>}> */
 	private array $resources = [];
@@ -77,11 +80,12 @@ class Config
 
 
 	/**
+	 * @param string|array<int, string> $resource
 	 * @throws ShouldNotHappenException
 	 */
-	public function getUrl(string $resource, ?string $extension = null): string
+	public function getUrl(string|array $resource, ?HtmlElement $targetHtmlElement = null): string
 	{
-		if ($this->isRemote($resource)) {
+		if (!is_array($resource) && $this->isRemote($resource)) {
 			if (!is_array($this->resources[$resource])) {
 				throw new ShouldNotHappenException();
 			}
@@ -90,7 +94,7 @@ class Config
 			$url = sprintf(
 				'%s/%s',
 				rtrim($this->localPrefix['url'], '/'),
-				$this->localFile($resource, $extension)->url,
+				$this->localFile($resource, $targetHtmlElement)->url,
 			);
 		}
 		return $url;
@@ -98,13 +102,14 @@ class Config
 
 
 	/**
+	 * @param string|array<int, string> $resource
 	 * @throws ShouldNotHappenException
 	 */
-	public function getHash(string $resource, ?string $extension = null): string
+	public function getHash(string|array $resource, ?HtmlElement $targetHtmlElement = null): string
 	{
-		if ($this->isRemote($resource)) {
+		if (!is_array($resource) && $this->isRemote($resource)) {
 			if (!is_array($this->resources[$resource])) {
-				throw new Exceptions\ShouldNotHappenException();
+				throw new ShouldNotHappenException();
 			}
 			if (is_array($this->resources[$resource]['hash'])) {
 				$hash = implode(' ', $this->resources[$resource]['hash']);
@@ -115,12 +120,12 @@ class Config
 			$fileHashes = [];
 			foreach ($this->hashingAlgos as $algo) {
 				if (!in_array($algo, ['sha256', 'sha384', 'sha512'])) {
-					throw new Exceptions\UnsupportedHashAlgorithmException();
+					throw new UnsupportedHashAlgorithmException();
 				}
-				$filename = $this->localFile($resource, $extension)->filename;
+				$filename = $this->localFile($resource, $targetHtmlElement)->filename;
 				$hash = hash_file($algo, $filename, true);
 				if (!$hash) {
-					throw new Exceptions\HashFileException($algo, $filename);
+					throw new HashFileException($algo, $filename);
 				}
 				$fileHashes[] = $algo . '-' . base64_encode($hash);
 			}
@@ -134,60 +139,59 @@ class Config
 	{
 		$isArray = isset($this->resources[$resource]) && is_array($this->resources[$resource]);
 		if ($isArray && $this->isCombo($resource)) {
-			throw new Exceptions\InvalidResourceAliasException();
+			throw new InvalidResourceAliasException();
 		}
 		return $isArray;
 	}
 
 
 	/**
+	 * @param string|array<int, string> $resource
 	 * @throws ShouldNotHappenException
 	 */
-	private function localFile(string $resource, ?string $extension = null): stdClass
+	private function localFile(string|array $resource, ?HtmlElement $targetHtmlElement = null): stdClass
 	{
-		if (empty($this->localResources[$this->localMode->value][$resource])) {
+		$resourceKey = implode(self::BUILD_SEPARATOR, (array)$resource);
+		if (empty($this->localResources[$this->localMode->value][$resourceKey])) {
 			switch ($this->localMode) {
 				case LocalMode::Direct:
-					if ($this->isCombo($resource)) {
-						throw new Exceptions\InvalidResourceAliasException();
+					if (is_array($resource) || $this->isCombo($resource)) {
+						throw new InvalidResourceAliasException();
 					}
 					$data = new stdClass();
 					$data->url = $this->getFilePath($resource);
 					$cwd = getcwd();
 					if (!$cwd) {
-						throw new Exceptions\ShouldNotHappenException();
+						throw new ShouldNotHappenException();
 					}
 					$data->filename = sprintf('%s/%s/%s', rtrim($cwd, '/'), trim($this->localPrefix['path'], '/'), $data->url);
 					break;
 				case LocalMode::Build:
 					$resources = [];
-					foreach (explode(self::BUILD_SEPARATOR, $resource) as $value) {
-						if (preg_match('/^[\'"](.*)[\'"]$/', $value, $matches)) {
-							$resources[] = new StringResource($matches[1]);
+					foreach ((array)$resource as $value) {
+						if (!isset($this->resources[$value])) {
+							$resources[] = new StringResource($value);
 						} else {
 							$resources[] = new FileResource(sprintf('%s/%s', rtrim($this->localPrefix['path'], '/'), $this->getFilePath($value)));
 						}
 					}
-					$data = $this->fileBuilder->build($resources, $this->localPrefix['path'], $this->localPrefix['build'], $extension);
+					$data = $this->fileBuilder->build($resources, $this->localPrefix['path'], $this->localPrefix['build'], $targetHtmlElement);
 					break;
 				default:
-					throw new Exceptions\UnknownModeException('Unknown local file mode: ' . $this->localMode->value);
+					throw new UnknownModeException('Unknown local file mode: ' . $this->localMode->value);
 			}
-			$this->localResources[$this->localMode->value][$resource] = $data;
+			$this->localResources[$this->localMode->value][$resourceKey] = $data;
 		}
-		return $this->localResources[$this->localMode->value][$resource];
+		return $this->localResources[$this->localMode->value][$resourceKey];
 	}
 
 
 	/**
 	 * Whether the resource is a combination one (e.g. foo+bar).
-	 *
-	 * @param string $resource
-	 * @return bool
 	 */
 	private function isCombo(string $resource): bool
 	{
-		return (strpos($resource, self::BUILD_SEPARATOR) !== false);
+		return strpos($resource, self::BUILD_SEPARATOR) !== false;
 	}
 
 
@@ -197,7 +201,7 @@ class Config
 	private function getFilePath(string $resource): string
 	{
 		if (is_array($this->resources[$resource])) {
-			throw new Exceptions\ShouldNotHappenException();
+			throw new ShouldNotHappenException();
 		}
 		return ltrim($this->resources[$resource], '/');
 	}

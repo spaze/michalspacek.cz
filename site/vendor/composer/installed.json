@@ -170,29 +170,29 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.11.5",
-            "version_normalized": "2.11.5.0",
+            "version": "v3.0.3",
+            "version_normalized": "3.0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "89e647e51213af8a270fe9903b8735a2f6c83ad1"
+                "reference": "aad059390316d33c4c81a09703117303ce57f06c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/89e647e51213af8a270fe9903b8735a2f6c83ad1",
-                "reference": "89e647e51213af8a270fe9903b8735a2f6c83ad1",
+                "url": "https://api.github.com/repos/nette/latte/zipball/aad059390316d33c4c81a09703117303ce57f06c",
+                "reference": "aad059390316d33c4c81a09703117303ce57f06c",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-tokenizer": "*",
-                "php": ">=7.1 <8.2"
+                "php": ">=8.0 <8.3"
             },
             "conflict": {
                 "nette/application": "<2.4.1"
             },
             "require-dev": {
-                "nette/php-generator": "^3.3.4",
+                "nette/php-generator": "^3.6 || ^4.0",
                 "nette/tester": "^2.0",
                 "nette/utils": "^3.0",
                 "phpstan/phpstan": "^1",
@@ -205,14 +205,14 @@
                 "nette/php-generator": "to use tag {templatePrint}",
                 "nette/utils": "to use filter |webalize"
             },
-            "time": "2022-06-26T10:12:18+00:00",
+            "time": "2022-09-12T22:35:05+00:00",
             "bin": [
                 "bin/latte-lint"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.11-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "installation-source": "dist",
@@ -251,7 +251,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v2.11.5"
+                "source": "https://github.com/nette/latte/tree/v3.0.3"
             },
             "install-path": "../latte/latte"
         },
@@ -3430,21 +3430,21 @@
         },
         {
             "name": "spaze/sri-macros",
-            "version": "v1.0.1",
-            "version_normalized": "1.0.1.0",
+            "version": "v2.0.0",
+            "version_normalized": "2.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "fc303665a9d98b5622206b119ef4dde72aa604d1"
+                "reference": "87892b438ae18f9e15ed9d7e40001ba539f93b59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/fc303665a9d98b5622206b119ef4dde72aa604d1",
-                "reference": "fc303665a9d98b5622206b119ef4dde72aa604d1",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/87892b438ae18f9e15ed9d7e40001ba539f93b59",
+                "reference": "87892b438ae18f9e15ed9d7e40001ba539f93b59",
                 "shasum": ""
             },
             "require": {
-                "latte/latte": "^2.8",
+                "latte/latte": "^3.0",
                 "nette/di": "^3.0",
                 "php": "^8.1"
             },
@@ -3460,7 +3460,7 @@
                 "spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
                 "spaze/nonce-generator": "Allows to add nonce attribute to script tags automatically"
             },
-            "time": "2022-06-13T17:31:01+00:00",
+            "time": "2022-10-03T22:17:19+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3482,7 +3482,7 @@
             "description": "Subresource Integrity macros for Latte template engine",
             "support": {
                 "issues": "https://github.com/spaze/sri-macros/issues",
-                "source": "https://github.com/spaze/sri-macros/tree/v1.0.1"
+                "source": "https://github.com/spaze/sri-macros/tree/v2.0.0"
             },
             "install-path": "../spaze/sri-macros"
         },
