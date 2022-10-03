@@ -24,13 +24,13 @@
 		}
 	</style>
 	{if $darkMode === null}
-		{stylesheet screen-main+'@media (prefers-color-scheme: dark) {'+screen-main-dark+'}'}
+		{styleSheet screen-main+'@media (prefers-color-scheme: dark) {'+screen-main-dark+'}'}
 	{elseif $darkMode}
-		{stylesheet screen-main+screen-main-dark}
+		{styleSheet screen-main+screen-main-dark}
 	{else}
-		{stylesheet screen-main}
+		{styleSheet screen-main}
 	{/if}
-	{stylesheet fontawesome-css}
+	{styleSheet fontawesome-css}
 	{ifset #preload}{include #preload}{/ifset}
 	{ifset #scriptsReplace}
 		{include #scriptsReplace}
