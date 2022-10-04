@@ -126,7 +126,7 @@ jobs:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-vendor-cache-php${{ matrix.php-version }}
     - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
-    - run: composer --working-dir=site phpstan-vendor
+    - run: composer --working-dir=site run-script --timeout=600 phpstan-vendor
 
   tester:
     runs-on: ubuntu-latest
