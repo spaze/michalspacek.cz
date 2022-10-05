@@ -25,12 +25,9 @@ parameters:
 			- vendor/phpstan/*
 			- vendor/slevomat/coding-standard/*
 			- vendor/squizlabs/php_codesniffer/*
-			# Uses Latte 3 symbols, can be removed once upgraded to Latte 3
-			- vendor/nette/application/src/Bridges/ApplicationLatte/*
-			- vendor/nette/caching/src/Bridges/CacheLatte/*
-			- vendor/nette/forms/examples/latte.php*
-			- vendor/nette/forms/src/Bridges/FormsLatte/*
-			- vendor/texy/texy/src/Bridges/Latte/*
+			# Throws "No error to ignore is reported on line", which can't be ignored, probably because only custom ruleset is used
+			- vendor/contributte/translation/src/DI/TranslationExtension.php
+			- vendor/contributte/translation/src/Latte/Macros.php
 	ignoreErrors:
 		-
 			message: '#^Cannot access constant#'
@@ -38,12 +35,17 @@ parameters:
 				- vendor/symfony/cache/Adapter/DoctrineDbalAdapter.php
 				- vendor/symfony/cache/DependencyInjection/CachePoolPass.php
 				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
+				# Contains Latte 2 symbols
+				- vendor/nette/application/src/Bridges/ApplicationDI/LatteExtension.php
+				- vendor/nette/application/src/Bridges/ApplicationLatte/UIMacros.php
+				- vendor/nette/forms/src/Bridges/FormsLatte/FormMacros.php
 
 	disallowedFunctionCalls:
 		# local disallowed-calls.neon
 		-
 			function: 'pcntl_*()'
 			allowIn:
+				- vendor/latte/latte/src/Tools/Linter.php
 				- vendor/nette/tester/src/Runner/CliTester.php
 				- vendor/nette/tester/src/Runner/Runner.php
 		# bundled disallowed-dangerous-calls.neon

@@ -9,27 +9,23 @@ use stdClass;
 class FileBuilder
 {
 
-	public const EXT_CSS = 'css';
-	public const EXT_JS = 'js';
-
-
 	/**
 	 * Get build file mode data.
 	 *
 	 * @param ResourceInterface[] $resources
 	 * @param string $pathPrefix Should be an absolute path
 	 * @param string $buildPrefix
-	 * @param string|null $extension
+	 * @param HtmlElement|null $targetHtmlElement
 	 * @return stdClass
 	 */
-	public function build(array $resources, string $pathPrefix, string $buildPrefix, ?string $extension = null): stdClass
+	public function build(array $resources, string $pathPrefix, string $buildPrefix, ?HtmlElement $targetHtmlElement = null): stdClass
 	{
 		$content = '';
 		foreach ($resources as $resource) {
 			$content .= $resource->getContent();
-			$extension = $extension ?: $resource->getExtension();
+			$extension = $targetHtmlElement?->getCommonFileExtension() ?: $resource->getExtension();
 		}
-		if (!$extension) {
+		if (!isset($extension)) {
 			throw new Exceptions\UnknownExtensionException();
 		}
 		$build = sprintf(

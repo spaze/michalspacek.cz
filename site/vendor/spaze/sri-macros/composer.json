@@ -11,7 +11,7 @@
 	],
 	"require": {
 		"php": "^8.1",
-		"latte/latte": "^2.8",
+		"latte/latte": "^3.0",
 		"nette/di": "^3.0"
 	},
 	"autoload": {
