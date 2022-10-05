@@ -8,12 +8,6 @@ parameters:
 		Nette\Application\UI\Component:
 			# https://github.com/phpstan/phpstan-nette/pull/79 or https://github.com/nette/application/pull/304
 			- redirectPermanent
-	disallowedFunctionCalls:
-		# local disallowed-calls.neon
-		-
-			function: 'pcntl_*()'
-			allowIn:
-				- bin/latte-lint.php
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon

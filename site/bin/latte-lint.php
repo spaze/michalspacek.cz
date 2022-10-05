@@ -16,12 +16,6 @@ use MichalSpacekCz\Templating\TemplateFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-pcntl_signal(SIGINT, function (): void {
-	pcntl_signal(SIGINT, SIG_DFL);
-	echo "Terminated\n";
-	exit(1);
-});
-
 $factory = Bootstrap::bootCli()->getByType(TemplateFactory::class);
 
 echo '
