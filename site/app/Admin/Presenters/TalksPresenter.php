@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\TalkFormFactory;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
+use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Templating\Embed;
 use Nette\Application\BadRequestException;
@@ -32,6 +33,7 @@ class TalksPresenter extends BasePresenter
 		private readonly Embed $embed,
 		private readonly TalkFormFactory $talkFormFactory,
 		private readonly TalkSlidesFormFactory $talkSlidesFormFactory,
+		private readonly VideoThumbnails $videoThumbnails,
 	) {
 		parent::__construct();
 	}
@@ -55,6 +57,8 @@ class TalksPresenter extends BasePresenter
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
 		$this->template->talk = $this->talk;
+		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
+		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 

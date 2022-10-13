@@ -7,6 +7,35 @@
 	</li>
 {/define}
 
+{define #formVideoThumbnails}
+	<tr>
+		<th>Náhled videa:</th>
+		<td class="narrower">
+			<span id="videoThumbnailFormField">{input videoThumbnail}</span>
+			<span id="currentVideoThumbnail">
+				{ifset $item->videoThumbnailUrl}
+					<img src="{$item->videoThumbnailUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnail}" title="{$item->videoThumbnail}">
+				{/ifset}
+				{ifset $item, $item->videoThumbnail}<small>{input removeVideoThumbnail}</small>{/ifset}
+			</span>
+			<span n:ifcontent class="error">{inputError videoThumbnail}</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="right">WebP:</td>
+		<td class="narrower">
+			<span id="videoThumbnailAlternativeFormField">{input videoThumbnailAlternative}</span>
+			<span id="currentVideoThumbnailAlternative">
+				{ifset $item->videoThumbnailAlternativeUrl}
+					<img src="{$item->videoThumbnailAlternativeUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnailAlternative}" title="{$item->videoThumbnailAlternative}">
+				{/ifset}
+				{ifset $item, $item->videoThumbnailAlternative}<small>{input removeVideoThumbnailAlternative}</small>{/ifset}
+			</span>
+			<span n:ifcontent class="error">{inputError videoThumbnailAlternative}</span>
+		</td>
+	</tr>
+{/define}
+
 {define #talkForm}
 {form $formName class => "aligned wide"}
 <table>
@@ -43,6 +72,7 @@
 	<tr>
 		<th>{label videoHref /}</th><td>{input videoHref}</td>
 	</tr>
+	{include #formVideoThumbnails, item => $talk}
 	<tr class="lighter">
 		<th class="align-top">{label videoEmbed /}</th><td>{input videoEmbed}<br><small><em>deprecated</em></small></td>
 	</tr>

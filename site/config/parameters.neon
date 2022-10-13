@@ -20,7 +20,7 @@ parameters:
 			com: michalspacek.com
 	domain:
 		sharedStaticRoot: https://www.%domain.root%
-		imagesRoot: /i/images
+		imagesRoot: i/images
 		locationRoot: /srv/www/michalspacek.cz/site/public/www.michalspacek.cz
 	reporting:
 		contentSecurityPolicy: https://plz.report-uri.com/r/default/csp/enforce

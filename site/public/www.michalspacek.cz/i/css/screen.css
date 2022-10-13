@@ -258,13 +258,13 @@ form.aligned th { text-align: right; }
 form.aligned th.align-top, form.aligned td.align-top { vertical-align: top; }
 td.short input, form.wide td.short input, form.wide td.short select, #frm-application td.short input { width: 85px; }
 td.narrow input { width: 40px; }
-td.wider input { width: 280px; }
+td.wider input, form.wide td.narrower input { width: 280px; }
 form.wide input, form.wide select, form.wide textarea, textarea.wide, td.wide input { width: 740px; }
 form.wide textarea, textarea.wide { height: 200px; }
 #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 170px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }
-#frm-application input[type=checkbox], form.wide input[type=checkbox] { width: auto; }
+#frm-application input[type=checkbox], form.wide input[type=checkbox], form.wide td.narrower input[type=checkbox] { width: auto; }
 #frm-application #frm-application-trainingId { width: auto; }
 #frm-application #frm-application-note, #frm-applicationForm #frm-applicationForm-note { width: 500px; }
 #frm-date-note, #frm-addDate-note, #frm-date-remoteUrl, #frm-addDate-remoteUrl, #frm-date-label, #frm-addDate-label,
@@ -281,6 +281,11 @@ form.wide textarea, textarea.wide { height: 200px; }
 #frm-slides .type-alternative {
 	width: 25%;
 	vertical-align: top;
+}
+#currentVideoThumbnail img, #currentVideoThumbnailAlternative img { vertical-align: middle; }
+#videoThumbnailFormField[hidden], #videoThumbnailAlternativeFormField[hidden] {
+	display: initial;
+	opacity: 0.3;
 }
 #chyby ul { margin: 0; }
 #chyby {

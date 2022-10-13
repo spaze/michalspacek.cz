@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
@@ -21,6 +22,7 @@ class TalkFormFactory
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly Talks $talks,
 		private readonly LinkGenerator $linkGenerator,
+		private readonly VideoThumbnails $videoThumbnails,
 	) {
 	}
 
@@ -70,6 +72,7 @@ class TalkFormFactory
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
+		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $talk?->videoThumbnail !== null, $talk?->videoThumbnailAlternative !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
@@ -98,7 +101,11 @@ class TalkFormFactory
 		}
 
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($talk, $onSuccess): void {
+			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
+			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($talk) {
+				$removeVideoThumbnail = $values->removeVideoThumbnail ?? false;
+				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
 				$this->talks->update(
 					$talk->talkId,
 					$values->action,
@@ -112,6 +119,8 @@ class TalkFormFactory
 					$values->slidesHref,
 					$values->slidesEmbed,
 					$values->videoHref,
+					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $talk->videoThumbnail),
+					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $talk->videoThumbnailAlternative),
 					$values->videoEmbed,
 					$values->event,
 					$values->eventHref,
@@ -121,9 +130,16 @@ class TalkFormFactory
 					$values->supersededBy,
 					$values->publishSlides,
 				);
+				$this->videoThumbnails->saveVideoThumbnailFiles($talk->talkId, $values);
+				if ($removeVideoThumbnail) {
+					$this->videoThumbnails->deleteFile($talk->talkId, $talk->videoThumbnail);
+				}
+				if ($removeVideoThumbnailAlternative) {
+					$this->videoThumbnails->deleteFile($talk->talkId, $talk->videoThumbnailAlternative);
+				}
 				$message = Html::el()->setText('Přednáška upravena ');
 			} else {
-				$this->talks->add(
+				$talkId = $this->talks->add(
 					$values->action,
 					$values->title,
 					$values->description,
@@ -135,6 +151,8 @@ class TalkFormFactory
 					$values->slidesHref,
 					$values->slidesEmbed,
 					$values->videoHref,
+					$videoThumbnailBasename,
+					$videoThumbnailBasenameAlternative,
 					$values->videoEmbed,
 					$values->event,
 					$values->eventHref,
@@ -144,11 +162,14 @@ class TalkFormFactory
 					$values->supersededBy,
 					$values->publishSlides,
 				);
+				$this->videoThumbnails->saveVideoThumbnailFiles($talkId, $values);
 				$message = Html::el()->setText('Přednáška přidána ');
 			}
 			$message->addHtml(Html::el('a')->href($this->linkGenerator->link('Www:Talks:talk', [$values->action]))->setText('Zobrazit'));
 			$onSuccess($message);
 		};
+
+		$this->videoThumbnails->addOnValidateUploads($form, $videoThumbnailFormFields);
 
 		return $form;
 	}
