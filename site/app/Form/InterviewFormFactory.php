@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Interviews\Interviews;
+use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
@@ -17,6 +18,7 @@ class InterviewFormFactory
 		private readonly FormFactory $factory,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly Interviews $interviews,
+		private readonly VideoThumbnails $videoThumbnails,
 	) {
 	}
 
@@ -57,6 +59,7 @@ class InterviewFormFactory
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
+		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $interview?->videoThumbnail !== null, $interview?->videoThumbnailAlternative !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
@@ -72,7 +75,11 @@ class InterviewFormFactory
 		}
 
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($interview, $onSuccess): void {
+			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
+			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($interview) {
+				$removeVideoThumbnail = $values->removeVideoThumbnail ?? false;
+				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
 				$this->interviews->update(
 					$interview->interviewId,
 					$values->action,
@@ -83,12 +90,21 @@ class InterviewFormFactory
 					$values->audioHref,
 					$values->audioEmbed,
 					$values->videoHref,
+					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $interview->videoThumbnail),
+					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $interview->videoThumbnailAlternative),
 					$values->videoEmbed,
 					$values->sourceName,
 					$values->sourceHref,
 				);
+				$this->videoThumbnails->saveVideoThumbnailFiles($interview->interviewId, $values);
+				if ($removeVideoThumbnail) {
+					$this->videoThumbnails->deleteFile($interview->interviewId, $interview->videoThumbnail);
+				}
+				if ($removeVideoThumbnailAlternative) {
+					$this->videoThumbnails->deleteFile($interview->interviewId, $interview->videoThumbnailAlternative);
+				}
 			} else {
-				$this->interviews->add(
+				$interviewId = $this->interviews->add(
 					$values->action,
 					$values->title,
 					$values->description,
@@ -97,13 +113,18 @@ class InterviewFormFactory
 					$values->audioHref,
 					$values->audioEmbed,
 					$values->videoHref,
+					$videoThumbnailBasename,
+					$videoThumbnailBasenameAlternative,
 					$values->videoEmbed,
 					$values->sourceName,
 					$values->sourceHref,
 				);
+				$this->videoThumbnails->saveVideoThumbnailFiles($interviewId, $values);
 			}
 			$onSuccess();
 		};
+
+		$this->videoThumbnails->addOnValidateUploads($form, $videoThumbnailFormFields);
 
 		return $form;
 	}

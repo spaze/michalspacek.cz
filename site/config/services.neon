@@ -18,7 +18,7 @@ services:
 	- MichalSpacekCz\Form\Controls\TrainingControlsFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
-	- MichalSpacekCz\Form\InterviewFormFactory
+	- MichalSpacekCz\Form\InterviewFormFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Form\PostFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory
@@ -49,6 +49,7 @@ services:
 	talkMediaResources: MichalSpacekCz\Media\Resources\TalkMediaResources(imagesRoot: %domain.imagesRoot%, staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Media\SupportedImageFileFormats
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
+	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Post\Loader
 	- MichalSpacekCz\Post\LocaleUrls
