@@ -10,6 +10,29 @@
 <meta name="twitter:site" content="@spazef0rze">
 {/define}
 
+{define #videoThumbnail}
+	<div id="video-thumbnail-container" n:if="$videoThumbnail->getUrl()">
+		<picture n:tag-if="$videoThumbnail->getAlternativeUrl()">
+			<source n:if="$videoThumbnail->getAlternativeUrl()" srcset="{$videoThumbnail->getAlternativeUrl()}" type="{$videoThumbnail->getAlternativeContentType()}">
+			<img src="{$videoThumbnail->getUrl()}" alt="{_messages.label.videorecording}" width="{$videoThumbnail->getWidth()}" height="{$videoThumbnail->getHeight()}" {if $videoThumbnail->isLazyLoad()}loading="lazy"{/if}>
+		</picture>
+		<a href="{$videoThumbnail->getVideoHref()}" title="{_messages.label.play}">▶</a>
+	</div>
+	<p n:if="$videoThumbnail->getVideoHref()">
+		<small n:tag-if="$videoThumbnail->getUrl()">
+			<span title="{_messages.label.recording}" class="lighter"><i class="fas fa-fw fa-video"></i></span>
+			<a href="{$videoThumbnail->getVideoHref()}">{$videoThumbnail?->getVideoPlatform() ?? $videoThumbnail->getVideoHref()}</a>
+		</small>
+	</p>
+{/define}
+
+{define #videoRecording}
+	{if $talk->videoHref}
+		<h2 id="{_html.id.recording}">{_messages.label.videorecording}</h2>
+		{include #videoThumbnail}
+	{/if}
+{/define}
+
 {define #talkContent}
 <p class="print"><strong>{_messages.talks.onlineversion|format:"link:Www:Talks:talk $talk->action"}</strong></p>
 <div n:if="$talk->supersededByAction" class="flash info"><strong>{_messages.talks.supersededby|format:$talk->supersededByTitle,"link:Www:Talks:talk {$talk->supersededByAction}"}</strong></div>
@@ -18,10 +41,7 @@
 	<p id="{_html.id.slides}"></p>
 	{include #embedSlides}
 	<p><small><span title="{_messages.label.slides}" class="lighter"><i class="fas fa-fw fa-images"></i></span> <a href="{$talk->slidesHref}">{$talk->slidesHref}</a></small></p>
-
-	<p n:if="$talk->videoHref" id="{_html.id.recording}"></p>
-	{include #embedVideo}
-	<p n:if="$talk->videoHref"><small><span title="{_messages.label.recording}" class="lighter"><i class="fas fa-fw fa-video"></i></span> <a href="{$talk->videoHref}">{$talk->videoHref}</a></small></p>
+	{include #videoRecording}
 {/if}
 
 <h2 n:if="$talk->description || $talk->href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
@@ -47,12 +67,7 @@
 		</div>
 	{/foreach}
 	</div>
-
-	{if $talk->videoHref}
-		<h2 id="{_html.id.recording}">{_messages.label.videorecording}</h2>
-		{include #embedVideo}
-		<p><small><span title="{_messages.label.recording}" class="lighter"><i class="fas fa-fw fa-video"></i></span> <a href="{$talk->videoHref}">{$talk->videoHref}</a></small></p>
-	{/if}
+	{include #videoRecording}
 {elseif $talk->transcript}
 	<hr>
 	<h2 id="{_html.id.transcript}">{_messages.talks.transcript}</h2>

@@ -6,7 +6,8 @@ namespace MichalSpacekCz\Www\Presenters;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Interviews\Interviews;
-use MichalSpacekCz\Templating\Embed;
+use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Application\BadRequestException;
 
 class InterviewsPresenter extends BasePresenter
@@ -15,7 +16,7 @@ class InterviewsPresenter extends BasePresenter
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Interviews $interviews,
-		private readonly Embed $embed,
+		private readonly VideoThumbnails $videoThumbnails,
 	) {
 		parent::__construct();
 	}
@@ -30,6 +31,7 @@ class InterviewsPresenter extends BasePresenter
 
 	/**
 	 * @throws BadRequestException
+	 * @throws ContentTypeException
 	 */
 	public function actionInterview(string $name): void
 	{
@@ -47,11 +49,7 @@ class InterviewsPresenter extends BasePresenter
 		$this->template->audioHref = $interview->audioHref;
 		$this->template->sourceName = $interview->sourceName;
 		$this->template->sourceHref = $interview->sourceHref;
-
-		$this->template->videoHref = $interview->videoHref;
-		foreach ($this->embed->getVideoTemplateVars($interview) as $key => $value) {
-			$this->template->$key = $value;
-		}
+		$this->template->videoThumbnail = $this->videoThumbnails->getVideoThumbnail($interview);
 	}
 
 }

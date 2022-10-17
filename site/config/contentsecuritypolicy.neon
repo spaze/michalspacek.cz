@@ -8,15 +8,6 @@ contentSecurityPolicy:
 				- https://speakerdeck.com
 			child-src:
 				- https://speakerdeck.com
-		youtube:
-			child-src:
-				- https://www.youtube-nocookie.com
-		vimeo:
-			child-src:
-				- https://player.vimeo.com
-		slideslive:
-			child-src:
-				- https://slideslive.com
 		exploited.cz:
 			form-action:
 				- https://exploited.cz

@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Templating\Embed;
 use MichalSpacekCz\Training\Dates;
@@ -17,6 +19,7 @@ class TalksPresenter extends BasePresenter
 		private readonly Talks $talks,
 		private readonly Embed $embed,
 		private readonly Dates $trainingDates,
+		private readonly VideoThumbnails $videoThumbnails,
 	) {
 		parent::__construct();
 	}
@@ -41,6 +44,7 @@ class TalksPresenter extends BasePresenter
 	 * @param string|null $slide
 	 * @throws BadRequestException
 	 * @throws InvalidLinkException
+	 * @throws ContentTypeException
 	 */
 	public function actionTalk(string $name, ?string $slide = null): void
 	{
@@ -69,10 +73,8 @@ class TalksPresenter extends BasePresenter
 		$this->template->slides = $slides;
 		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($talk->ogImage !== null ? sprintf($talk->ogImage, $slideNo ?? 1) : null));
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+		$this->template->videoThumbnail = $this->videoThumbnails->getVideoThumbnail($talk)->setLazyLoad(count($slides) > 3);
 		foreach ($this->embed->getSlidesTemplateVars($talk, $slideNo) as $key => $value) {
-			$this->template->$key = $value;
-		}
-		foreach ($this->embed->getVideoTemplateVars($talk) as $key => $value) {
 			$this->template->$key = $value;
 		}
 	}

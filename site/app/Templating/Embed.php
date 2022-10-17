@@ -14,12 +14,6 @@ class Embed
 
 	public const SLIDES_SPEAKERDECK = 'speakerdeck';
 
-	public const VIDEO_VIMEO = 'vimeo';
-
-	public const VIDEO_YOUTUBE = 'youtube';
-
-	public const VIDEO_SLIDESLIVE = 'slideslive';
-
 
 	public function __construct(
 		private readonly Config $contentSecurityPolicy,
@@ -66,26 +60,6 @@ class Embed
 
 
 	/**
-	 * Get template vars for video.
-	 *
-	 * @param Row<mixed> $talk
-	 * @return array{videoEmbed: string|null, videoEmbedType: string|null}
-	 */
-	public function getVideoTemplateVars(Row $talk): array
-	{
-		$type = $this->getVideoType($talk);
-		if ($type !== null) {
-			$this->contentSecurityPolicy->addSnippet($type);
-		}
-
-		return [
-			'videoEmbed' => $talk->videoEmbed,
-			'videoEmbedType' => $type,
-		];
-	}
-
-
-	/**
 	 * @param Row<mixed> $talk
 	 * @return string|null
 	 */
@@ -101,34 +75,6 @@ class Embed
 				break;
 			case 'speakerdeck.com':
 				$type = self::SLIDES_SPEAKERDECK;
-				break;
-			default:
-				$type = null;
-				break;
-		}
-		return $type;
-	}
-
-
-	/**
-	 * @param Row<mixed> $video
-	 * @return string|null
-	 */
-	private function getVideoType(Row $video): ?string
-	{
-		if (!$video->videoHref) {
-			return null;
-		}
-
-		switch (parse_url($video->videoHref, PHP_URL_HOST)) {
-			case 'www.youtube.com':
-				$type = self::VIDEO_YOUTUBE;
-				break;
-			case 'vimeo.com':
-				$type = self::VIDEO_VIMEO;
-				break;
-			case 'slideslive.com':
-				$type = self::VIDEO_SLIDESLIVE;
 				break;
 			default:
 				$type = null;
