@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b25dafa7264f0ab542835424a222e0ea",
+    "content-hash": "2ce53f9256737cd7d498b3b4fc284086",
     "packages": [
         {
             "name": "contributte/translation",
@@ -4297,6 +4297,7 @@
         "php": "^8.1",
         "ext-ctype": "*",
         "ext-fileinfo": "*",
+        "ext-gd": "*",
         "ext-intl": "*",
         "ext-libxml": "*",
         "ext-mbstring": "*",

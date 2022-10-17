@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Media\SlidesPlatform;
+use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
-use MichalSpacekCz\Templating\Embed;
 use MichalSpacekCz\Training\Dates;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -15,8 +17,8 @@ class TalksPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Talks $talks,
-		private readonly Embed $embed,
 		private readonly Dates $trainingDates,
+		private readonly VideoThumbnails $videoThumbnails,
 	) {
 		parent::__construct();
 	}
@@ -41,6 +43,7 @@ class TalksPresenter extends BasePresenter
 	 * @param string|null $slide
 	 * @throws BadRequestException
 	 * @throws InvalidLinkException
+	 * @throws ContentTypeException
 	 */
 	public function actionTalk(string $name, ?string $slide = null): void
 	{
@@ -69,12 +72,8 @@ class TalksPresenter extends BasePresenter
 		$this->template->slides = $slides;
 		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($talk->ogImage !== null ? sprintf($talk->ogImage, $slideNo ?? 1) : null));
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
-		foreach ($this->embed->getSlidesTemplateVars($talk, $slideNo) as $key => $value) {
-			$this->template->$key = $value;
-		}
-		foreach ($this->embed->getVideoTemplateVars($talk) as $key => $value) {
-			$this->template->$key = $value;
-		}
+		$this->template->videoThumbnail = $this->videoThumbnails->getVideoThumbnail($talk)->setLazyLoad(count($slides) > 3);
+		$this->template->slidesPlatform = $talk->slidesHref ? SlidesPlatform::tryFromUrl($talk->slidesHref)?->getName() : null;
 	}
 
 }

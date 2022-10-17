@@ -9,13 +9,13 @@ services:
 	- MichalSpacekCz\Www\Presenters\FilesPresenter
 	- MichalSpacekCz\Www\Presenters\ForbiddenPresenter
 	- MichalSpacekCz\Www\Presenters\HomepagePresenter
-	- MichalSpacekCz\Www\Presenters\InterviewsPresenter
+	- MichalSpacekCz\Www\Presenters\InterviewsPresenter(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Www\Presenters\PgpPresenter(locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Www\Presenters\PhotoPresenter
 	- MichalSpacekCz\Www\Presenters\PostPresenter
 	- MichalSpacekCz\Www\Presenters\RedirectPresenter
 	- MichalSpacekCz\Www\Presenters\TagsPresenter
-	- MichalSpacekCz\Www\Presenters\TalksPresenter
+	- MichalSpacekCz\Www\Presenters\TalksPresenter(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Www\Presenters\TrainingsPresenter
 	- MichalSpacekCz\Www\Presenters\VenuesPresenter
 	- MichalSpacekCz\Www\Presenters\WhoPresenter
@@ -32,12 +32,12 @@ services:
 	- MichalSpacekCz\Admin\Presenters\HomepagePresenter
 	- MichalSpacekCz\Admin\Presenters\HoneypotPresenter
 	- MichalSpacekCz\Admin\Presenters\InfoPresenter
-	- MichalSpacekCz\Admin\Presenters\InterviewsPresenter
+	- MichalSpacekCz\Admin\Presenters\InterviewsPresenter(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Admin\Presenters\InvoicesPresenter
 	- MichalSpacekCz\Admin\Presenters\PulsePresenter
 	- MichalSpacekCz\Admin\Presenters\ReviewsPresenter
 	- MichalSpacekCz\Admin\Presenters\SignPresenter
-	- MichalSpacekCz\Admin\Presenters\TalksPresenter
+	- MichalSpacekCz\Admin\Presenters\TalksPresenter(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Admin\Presenters\TrainingsPresenter
 	- MichalSpacekCz\Admin\Presenters\UserPresenter
 

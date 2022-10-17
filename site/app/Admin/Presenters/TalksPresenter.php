@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\TalkFormFactory;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
+use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
-use MichalSpacekCz\Templating\Embed;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
@@ -29,9 +29,9 @@ class TalksPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Talks $talks,
-		private readonly Embed $embed,
 		private readonly TalkFormFactory $talkFormFactory,
 		private readonly TalkSlidesFormFactory $talkSlidesFormFactory,
+		private readonly VideoThumbnails $videoThumbnails,
 	) {
 		parent::__construct();
 	}
@@ -55,6 +55,8 @@ class TalksPresenter extends BasePresenter
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
 		$this->template->talk = $this->talk;
+		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
+		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 
@@ -71,9 +73,6 @@ class TalksPresenter extends BasePresenter
 		$this->template->talkTitle = $this->talk->title;
 		$this->template->slides = $this->slides;
 		$this->template->talk = $this->talk;
-		foreach ($this->embed->getSlidesTemplateVars($this->talk) as $key => $value) {
-			$this->template->$key = $value;
-		}
 		$this->template->maxSlideUploads = $this->maxSlideUploads = (int)ini_get('max_file_uploads');
 		$count = (is_array($this->request->getPost('new')) ? count($this->request->getPost('new')) : 0);
 		$this->template->newCount = $this->newCount = ($count ?: (int)empty($this->slides));

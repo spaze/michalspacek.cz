@@ -1,5 +1,5 @@
 {define #content}
-{import "../embed.latte"}
+{import "../Talks/talk.latte"}
 <p n:if="$description">{$description}</p>
 <h2 id="{_html.id.eventdate}">{_messages.label.dateforwhom}</h2>
 <p><span class="date">{$date|localeDay}</span>, <a href="{$sourceHref}">{$sourceName}</a></p>
@@ -9,8 +9,7 @@
 	<p><a href="{$href}">{_messages.interview.detail}</a></p>
 {/if}
 
-<h2 n:if="$audioHref || $videoHref" id="{_html.id.recording}">{_messages.label.recording}</h2>
+<h2 n:if="$audioHref || $videoThumbnail->getVideoHref()" id="{_html.id.recording}">{_messages.label.recording}</h2>
 <p n:if="$audioHref"><small><span title="{_messages.label.audiorecording}" class="lighter"><i class="fas fa-fw fa-microphone"></i></span> <a href="{$audioHref}">{$audioHref}</a></small></p>
-{include #embedVideo}
-<p n:if="$videoHref"><small><span title="{_messages.label.videorecording}" class="lighter"><i class="fas fa-fw fa-video"></i></span> <a href="{$videoHref}">{$videoHref}</a></small></p>
+{include #videoThumbnail}
 {/define}

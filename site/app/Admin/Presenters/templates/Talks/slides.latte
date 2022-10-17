@@ -6,9 +6,7 @@
 {/define}
 
 {define #content}
-{import "../../../../Www/Presenters/templates/embed.latte"}
 <p id="{_html.id.slides}"></p>
-{include #embedSlides}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {form slides, data-uploads => $maxSlideUploads, class => blocking, data-dimensions => $dimensions}
 	<fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">

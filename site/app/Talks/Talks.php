@@ -5,6 +5,9 @@ namespace MichalSpacekCz\Talks;
 
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Media\Resources\TalkMediaResources;
+use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Utils\Base64;
 use Nette\Database\Explorer;
@@ -19,26 +22,8 @@ use RuntimeException;
 class Talks
 {
 
-	/** @var int */
 	private const SLIDE_MAX_WIDTH = 800;
-
-	/** @var int */
 	private const SLIDE_MAX_HEIGHT = 450;
-
-	/**
-	 * Slides root, just directory no FQND, no leading slash, no trailing slash.
-	 */
-	private readonly string $slidesRoot;
-
-	/**
-	 * Static files root FQDN, no trailing slash.
-	 */
-	private readonly string $staticRoot;
-
-	/**
-	 * Physical location root directory, no trailing slash.
-	 */
-	private readonly string $locationRoot;
 
 	/** @var string[] */
 	private array $deleteFiles = [];
@@ -46,29 +31,13 @@ class Talks
 	/** @var int[] */
 	private array $otherSlides = [];
 
-	/** @var string[] */
-	private array $supportedImages = [
-		'image/gif' => 'gif',
-		'image/png' => 'png',
-		'image/jpeg' => 'jpg',
-	];
-
-	/** @var string[] */
-	private array $supportedAlternativeImages = [
-		'image/webp' => 'webp',
-	];
-
 
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
-		string $staticRoot,
-		string $imagesRoot,
-		string $locationRoot,
+		private readonly TalkMediaResources $talkMediaResources,
+		private readonly SupportedImageFileFormats $supportedImageFileFormats,
 	) {
-		$this->staticRoot = rtrim($staticRoot, '/');
-		$this->slidesRoot = trim($imagesRoot, '/') . '/talks';
-		$this->locationRoot = rtrim($locationRoot, '/');
 	}
 
 
@@ -100,7 +69,7 @@ class Talks
 
 		$result = $this->database->fetchAll($query, $limit ?? PHP_INT_MAX);
 		foreach ($result as $row) {
-			$this->format($row);
+			$this->enrich($row);
 		}
 
 		return $result;
@@ -145,7 +114,7 @@ class Talks
 
 		$result = $this->database->fetchAll($query);
 		foreach ($result as $row) {
-			$this->format($row);
+			$this->enrich($row);
 		}
 
 		return $result;
@@ -175,6 +144,8 @@ class Talks
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
 				t.video_href AS videoHref,
+				t.video_thumbnail AS videoThumbnail,
+				t.video_thumbnail_alternative AS videoThumbnailAlternative,
 				t.video_embed AS videoEmbed,
 				t.event,
 				t.event AS eventTexy,
@@ -199,7 +170,7 @@ class Talks
 			throw new RuntimeException("I haven't talked about {$name}, yet");
 		}
 
-		$this->format($result);
+		$this->enrich($result);
 		return $result;
 	}
 
@@ -227,6 +198,8 @@ class Talks
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
 				t.video_href AS videoHref,
+				t.video_thumbnail AS videoThumbnail,
+				t.video_thumbnail_alternative AS videoThumbnailAlternative,
 				t.video_embed AS videoEmbed,
 				t.event,
 				t.event AS eventTexy,
@@ -251,7 +224,7 @@ class Talks
 			throw new RuntimeException("I haven't talked about id {$id}, yet");
 		}
 
-		$this->format($result);
+		$this->enrich($result);
 		return $result;
 	}
 
@@ -259,7 +232,7 @@ class Talks
 	/**
 	 * @param Row<mixed> $row
 	 */
-	private function format(Row $row): void
+	private function enrich(Row $row): void
 	{
 		$this->texyFormatter->setTopHeading(3);
 		foreach (['title', 'event'] as $item) {
@@ -272,6 +245,8 @@ class Talks
 				$row[$item] = $this->texyFormatter->formatBlock($row[$item]);
 			}
 		}
+		$row->videoThumbnailUrl = isset($row->videoThumbnail) ? $this->talkMediaResources->getImageUrl($row->talkId, $row->videoThumbnail) : null;
+		$row->videoThumbnailAlternativeUrl = isset($row->videoThumbnailAlternative) ? $this->talkMediaResources->getImageUrl($row->talkId, $row->videoThumbnailAlternative) : null;
 	}
 
 
@@ -339,6 +314,8 @@ class Talks
 		?string $slidesHref,
 		?string $slidesEmbed,
 		?string $videoHref,
+		?string $videoThumbnail,
+		?string $videoThumbnailAlternative,
 		?string $videoEmbed,
 		string $event,
 		?string $eventHref,
@@ -362,6 +339,8 @@ class Talks
 				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
 				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
+				'video_thumbnail' => $videoThumbnail,
+				'video_thumbnail_alternative' => $videoThumbnailAlternative,
 				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
 				'event' => $event,
 				'event_href' => (empty($eventHref) ? null : $eventHref),
@@ -391,6 +370,8 @@ class Talks
 		?string $slidesHref,
 		?string $slidesEmbed,
 		?string $videoHref,
+		?string $videoThumbnail,
+		?string $videoThumbnailAlternative,
 		?string $videoEmbed,
 		string $event,
 		?string $eventHref,
@@ -399,7 +380,7 @@ class Talks
 		?string $favorite,
 		?int $supersededBy,
 		bool $publishSlides,
-	): void {
+	): int {
 		$this->database->query(
 			'INSERT INTO talks',
 			[
@@ -414,6 +395,8 @@ class Talks
 				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
 				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
 				'video_href' => (empty($videoHref) ? null : $videoHref),
+				'video_thumbnail' => $videoThumbnail,
+				'video_thumbnail_alternative' => $videoThumbnailAlternative,
 				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
 				'event' => $event,
 				'event_href' => (empty($eventHref) ? null : $eventHref),
@@ -424,6 +407,7 @@ class Talks
 				'publish_slides' => $publishSlides,
 			],
 		);
+		return (int)$this->database->getInsertId();
 	}
 
 
@@ -433,6 +417,7 @@ class Talks
 	 * @param int $talkId Talk id
 	 * @param int|null $filenamesTalkId
 	 * @return Row[]
+	 * @throws ContentTypeException
 	 */
 	public function getSlides(int $talkId, ?int $filenamesTalkId): array
 	{
@@ -468,7 +453,6 @@ class Talks
 		}
 
 		$result = [];
-		$alternativeTypes = array_flip($this->supportedAlternativeImages);
 		foreach ($slides as $row) {
 			if (isset($filenames[$row->number])) {
 				$row->filename = $filenames[$row->number][0];
@@ -478,9 +462,9 @@ class Talks
 				$row->filenamesTalkId = null;
 			}
 			$row->speakerNotes = $this->texyFormatter->format($row->speakerNotesTexy);
-			$row->image = $row->filename ? $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filename) : null;
-			$row->imageAlternative = $row->filenameAlternative ? $this->getSlideImageFilename($this->staticRoot, $filenamesTalkId ?? $talkId, $row->filenameAlternative) : null;
-			$row->imageAlternativeType = ($row->filenameAlternative ? $alternativeTypes[pathinfo($row->filenameAlternative, PATHINFO_EXTENSION)] : null);
+			$row->image = $row->filename ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talkId, $row->filename) : null;
+			$row->imageAlternative = $row->filenameAlternative ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talkId, $row->filenameAlternative) : null;
+			$row->imageAlternativeType = ($row->filenameAlternative ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($row->filenameAlternative, PATHINFO_EXTENSION)) : null);
 			$result[$row->number] = $row;
 		}
 		return $result;
@@ -493,23 +477,18 @@ class Talks
 	}
 
 
-	private function getSlideImageFilename(string $prefix, int $talkId, string $filename): string
-	{
-		return "{$prefix}/{$this->slidesRoot}/{$talkId}/{$filename}";
-	}
-
-
 	/**
 	 * @param int $talkId
 	 * @param FileUpload $replace
-	 * @param string[] $supported
+	 * @param callable(string): string $getExtension
 	 * @param bool $removeFile
 	 * @param string|null $originalFile
 	 * @param int $width
 	 * @param int $height
 	 * @return null|string
+	 * @throws ContentTypeException
 	 */
-	private function replaceSlideImage(int $talkId, FileUpload $replace, array $supported, bool $removeFile, ?string $originalFile, int &$width, int &$height): ?string
+	private function replaceSlideImage(int $talkId, FileUpload $replace, callable $getExtension, bool $removeFile, ?string $originalFile, int &$width, int &$height): ?string
 	{
 		if (!$replace->hasFile()) {
 			return null;
@@ -518,16 +497,17 @@ class Talks
 		if ($contents === null) {
 			throw new RuntimeException('Slide image upload failed', $replace->getError());
 		}
-		if (!in_array($replace->getContentType(), array_keys($supported))) {
-			throw new RuntimeException('Slide image type not allowed: ' . $replace->getContentType());
+		$contentType = $replace->getContentType();
+		if (!$contentType) {
+			throw new ContentTypeException();
 		}
 		if ($removeFile && !empty($originalFile) && empty($this->otherSlides[$originalFile])) {
-			$this->deleteFiles[] = $renamed = $this->getSlideImageFilename($this->locationRoot, $talkId, "__del__{$originalFile}");
-			rename($this->getSlideImageFilename($this->locationRoot, $talkId, $originalFile), $renamed);
+			$this->deleteFiles[] = $renamed = $this->talkMediaResources->getImageFilename($talkId, "__del__{$originalFile}");
+			rename($this->talkMediaResources->getImageFilename($talkId, $originalFile), $renamed);
 		}
 		$name = $this->getSlideImageFileBasename($contents);
-		$extension = $supported[$replace->getContentType()];
-		$replace->move($this->getSlideImageFilename($this->locationRoot, $talkId, "{$name}.{$extension}"));
+		$extension = $getExtension($contentType);
+		$replace->move($this->talkMediaResources->getImageFilename($talkId, "{$name}.{$extension}"));
 		$this->decrementOtherSlides($originalFile);
 		$this->incrementOtherSlides("{$name}.{$extension}");
 		$imageSize = $replace->getImageSize();
@@ -552,8 +532,8 @@ class Talks
 			foreach ($slides as $slide) {
 				$width = self::SLIDE_MAX_WIDTH;
 				$height = self::SLIDE_MAX_HEIGHT;
-				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, false, null, $width, $height);
-				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, false, null, $width, $height);
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), false, null, $width, $height);
+				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), false, null, $width, $height);
 				$lastNumber = (int)$slide->number;
 				$this->database->query(
 					'INSERT INTO talk_slides',
@@ -599,8 +579,8 @@ class Talks
 
 				$slideNumber = (int)$slide->number;
 				if (isset($slide->replace, $slide->replaceAlternative)) {
-					$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImages, $removeFiles, $originalSlides[$slideNumber]->filename, $width, $height);
-					$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedAlternativeImages, $removeFiles, $originalSlides[$slideNumber]->filenameAlternative, $width, $height);
+					$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), $removeFiles, $originalSlides[$slideNumber]->filename, $width, $height);
+					$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), $removeFiles, $originalSlides[$slideNumber]->filenameAlternative, $width, $height);
 					if ($removeFiles) {
 						foreach ($this->deleteFiles as $key => $value) {
 							if (unlink($value)) {
@@ -661,28 +641,6 @@ class Talks
 	public function pageTitle(string $translationKey, Row $talk): Html
 	{
 		return $this->texyFormatter->translate($translationKey, [strip_tags((string)$talk->title), $talk->event]);
-	}
-
-
-	/**
-	 * Get supported image types.
-	 *
-	 * @return string[] MIME type => extension
-	 */
-	public function getSupportedImages()
-	{
-		return $this->supportedImages;
-	}
-
-
-	/**
-	 * Get supported alternative image types.
-	 *
-	 * @return string[] MIME type => extension
-	 */
-	public function getSupportedAlternativeImages()
-	{
-		return $this->supportedAlternativeImages;
 	}
 
 

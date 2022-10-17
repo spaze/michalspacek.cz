@@ -18,14 +18,14 @@ services:
 	- MichalSpacekCz\Form\Controls\TrainingControlsFactory
 	- MichalSpacekCz\Form\DeletePersonalDataFormFactory
 	- MichalSpacekCz\Form\FormFactory
-	- MichalSpacekCz\Form\InterviewFormFactory
+	- MichalSpacekCz\Form\InterviewFormFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Form\PostFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory
 	- MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory
 	- MichalSpacekCz\Form\RegenerateTokensFormFactory
 	- MichalSpacekCz\Form\SignInFormFactory
 	- MichalSpacekCz\Form\SignInHoneypotFormFactory
-	- MichalSpacekCz\Form\TalkFormFactory
+	- MichalSpacekCz\Form\TalkFormFactory(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Form\TalkSlidesFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationAdminFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationFormFactory
@@ -45,6 +45,11 @@ services:
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
 	- MichalSpacekCz\Interviews\Interviews
+	interviewMediaResources: MichalSpacekCz\Media\Resources\InterviewMediaResources(imagesRoot: %domain.imagesRoot%, staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%)
+	talkMediaResources: MichalSpacekCz\Media\Resources\TalkMediaResources(imagesRoot: %domain.imagesRoot%, staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%)
+	- MichalSpacekCz\Media\SupportedImageFileFormats
+	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
+	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Post\Loader
 	- MichalSpacekCz\Post\LocaleUrls
@@ -55,8 +60,7 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	- MichalSpacekCz\Tags\Tags
-	- MichalSpacekCz\Talks\Talks(staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%, imagesRoot: %domain.imagesRoot%)
-	- MichalSpacekCz\Templating\Embed
+	- MichalSpacekCz\Talks\Talks
 	- MichalSpacekCz\Templating\Filters
 	latte.templateFactory:
 		create: MichalSpacekCz\Templating\TemplateFactory()

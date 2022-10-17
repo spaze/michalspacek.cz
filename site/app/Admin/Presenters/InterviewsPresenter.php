@@ -7,6 +7,7 @@ use MichalSpacekCz\Form\InterviewFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Interviews\Interviews;
+use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
@@ -22,6 +23,7 @@ class InterviewsPresenter extends BasePresenter
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Interviews $interviews,
 		private readonly InterviewFormFactory $interviewFormFactory,
+		private readonly VideoThumbnails $videoThumbnails,
 	) {
 		parent::__construct();
 	}
@@ -44,6 +46,8 @@ class InterviewsPresenter extends BasePresenter
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->title)]);
 		$this->template->interview = $this->interview;
+		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
+		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 

@@ -7,6 +7,7 @@
 {/define}
 
 {define #interviewForm}
+{import "../Talks/default.latte"}
 {form $form class => "aligned wide"}
 <table>
 	<tr>
@@ -27,14 +28,15 @@
 	<tr>
 		<th>{label audioHref /}</th><td>{input audioHref}</td>
 	</tr>
-	<tr>
-		<th>{label audioEmbed /}</th><td>{input audioEmbed}</td>
+	<tr class="lighter">
+		<th class="align-top">{label audioEmbed /}</th><td>{input audioEmbed}<br><small><em>deprecated</em></small></td>
 	</tr>
 	<tr>
 		<th>{label videoHref /}</th><td>{input videoHref}</td>
 	</tr>
-	<tr>
-		<th>{label videoEmbed /}</th><td>{input videoEmbed}</td>
+	{include #formVideoThumbnails, item => $interview ?? null}
+	<tr class="lighter">
+		<th class="align-top">{label videoEmbed /}</th><td>{input videoEmbed}<br><small><em>deprecated</em></small></td>
 	</tr>
 	<tr>
 		<th>{label sourceName /}</th><td>{input sourceName}</td>

@@ -171,9 +171,34 @@ pre {
 img.noshadow { box-shadow: none; }
 img.nobgcolor { background-color: inherit; }
 #slides-container img { margin-bottom: 1em; }
+#video-thumbnail-container { position: relative; }
 .column-content .figure img {
 	margin-bottom: 0.5em;
 	text-align: center;
+}
+#video-thumbnail-container a {
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: block;
+	width: 320px;
+	height: 180px;
+	line-height: 180px;
+	text-align: center;
+	font-size: xxx-large;
+	opacity: 0.75;
+	color: #FFF;
+	text-decoration: none;
+	text-shadow: 0 0 0.1em #000;
+	transition: opacity .5s ease-in-out;
+}
+#video-thumbnail-container a:hover {
+	color: #FFF;
+	opacity: 1;
+}
+#video-thumbnail-container img {
+	margin: auto 0;
+	display: initial;
 }
 .column-content .figure p {
 	text-align: center;
@@ -258,13 +283,13 @@ form.aligned th { text-align: right; }
 form.aligned th.align-top, form.aligned td.align-top { vertical-align: top; }
 td.short input, form.wide td.short input, form.wide td.short select, #frm-application td.short input { width: 85px; }
 td.narrow input { width: 40px; }
-td.wider input { width: 280px; }
+td.wider input, form.wide td.narrower input { width: 280px; }
 form.wide input, form.wide select, form.wide textarea, textarea.wide, td.wide input { width: 740px; }
 form.wide textarea, textarea.wide { height: 200px; }
 #frm-application input, #frm-application select, #frm-applicationPreliminary input { width: 170px; }
 #frm-application #company td { width: 220px; }
 #frm-application #company th.short { width: 104px; }
-#frm-application input[type=checkbox], form.wide input[type=checkbox] { width: auto; }
+#frm-application input[type=checkbox], form.wide input[type=checkbox], form.wide td.narrower input[type=checkbox] { width: auto; }
 #frm-application #frm-application-trainingId { width: auto; }
 #frm-application #frm-application-note, #frm-applicationForm #frm-applicationForm-note { width: 500px; }
 #frm-date-note, #frm-addDate-note, #frm-date-remoteUrl, #frm-addDate-remoteUrl, #frm-date-label, #frm-addDate-label,
@@ -281,6 +306,11 @@ form.wide textarea, textarea.wide { height: 200px; }
 #frm-slides .type-alternative {
 	width: 25%;
 	vertical-align: top;
+}
+#currentVideoThumbnail img, #currentVideoThumbnailAlternative img { vertical-align: middle; }
+#videoThumbnailFormField[hidden], #videoThumbnailAlternativeFormField[hidden] {
+	display: initial;
+	opacity: 0.3;
 }
 #chyby ul { margin: 0; }
 #chyby {
@@ -321,23 +351,6 @@ div.notice {
 	white-space: nowrap;
 }
 .changed { background-color: #F2F2FF; }
-#slides-embed, #video-embed {
-	position: relative;
-	padding-bottom: 56.25%;
-	padding-top: 30px;
-	height: 0;
-	overflow: hidden;
-}
-#slides-embed iframe, #video-embed iframe {
-	border: 0;
-	margin: 0;
-	overflow: hidden;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-}
 #slides-container .highlight {
 	border: 1px solid rgba(49, 24, 206, 0.35);
 	box-shadow: 0 0 2px #311892;
@@ -415,7 +428,7 @@ div.notice {
 @media print {
 	img { max-width: 75%; }
 	.print { display: block; }
-	hr, #header-links, #menu, #video-embed, #footer, h2#detail { display: none; }
+	hr, #header-links, #menu, #footer, h2#detail { display: none; }
 	.nobreak { page-break-inside: avoid; }
 }
 @media (max-width: 64em) {
