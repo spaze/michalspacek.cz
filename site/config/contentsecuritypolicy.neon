@@ -1,13 +1,5 @@
 contentSecurityPolicy:
 	snippets:
-		slideshare:
-			child-src:
-				- https://www.slideshare.net
-		speakerdeck:
-			script-src:
-				- https://speakerdeck.com
-			child-src:
-				- https://speakerdeck.com
 		exploited.cz:
 			form-action:
 				- https://exploited.cz

@@ -351,23 +351,6 @@ div.notice {
 	white-space: nowrap;
 }
 .changed { background-color: #F2F2FF; }
-#slides-embed {
-	position: relative;
-	padding-bottom: 56.25%;
-	padding-top: 30px;
-	height: 0;
-	overflow: hidden;
-}
-#slides-embed iframe {
-	border: 0;
-	margin: 0;
-	overflow: hidden;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-}
 #slides-container .highlight {
 	border: 1px solid rgba(49, 24, 206, 0.35);
 	box-shadow: 0 0 2px #311892;

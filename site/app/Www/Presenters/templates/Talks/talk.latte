@@ -36,13 +36,6 @@
 {define #talkContent}
 <p class="print"><strong>{_messages.talks.onlineversion|format:"link:Www:Talks:talk $talk->action"}</strong></p>
 <div n:if="$talk->supersededByAction" class="flash info"><strong>{_messages.talks.supersededby|format:$talk->supersededByTitle,"link:Www:Talks:talk {$talk->supersededByAction}"}</strong></div>
-{import "../embed.latte"}
-{if $talk->slidesHref}
-	<p id="{_html.id.slides}"></p>
-	{include #embedSlides}
-	<p><small><span title="{_messages.label.slides}" class="lighter"><i class="fas fa-fw fa-images"></i></span> <a href="{$talk->slidesHref}">{$talk->slidesHref}</a></small></p>
-	{include #videoRecording}
-{/if}
 
 <h2 n:if="$talk->description || $talk->href" id="{_html.id.detail}">{_messages.talks.detail}</h2>
 {if $talk->description}{$talk->description}{/if}
@@ -54,9 +47,15 @@
 	<small n:if="$talk->duration || $slides || $talk->videoHref">({if $talk->duration}{_messages.talks.duration|format:$talk->duration}{if $slides || $talk->videoHref}, {/if}{/if}{if $slides}<a href="#{_html.id.slides}">{_messages.talks.slidescount, count($slides)}</a>{if $talk->videoHref}, {/if}{/if}{if $talk->videoHref}<a href="#{_html.id.recording}">{_messages.label.lowercasevideo}</a>{/if})</small>
 </p>
 
-{if !$talk->slidesHref}
+<h2 id="{_html.id.slides}">{_messages.label.slides}</h2>
+{if $talk->slidesHref}
+	<p><span title="{_messages.label.slides}" class="lighter"><i class="fas fa-fw fa-images"></i></span> <a href="{$talk->slidesHref}">{$slidesPlatform ?? $talk->slidesHref}</a></p>
+	{if $talk->transcript}
+		<h2 id="{_html.id.transcript}">{_messages.talks.transcript}</h2>
+		{$talk->transcript}
+	{/if}
+{else}
 	<div n:if="$slides" id="slides-container">
-	<h2 id="{_html.id.slides}">{_messages.label.slides}</h2>
 	{foreach $slides as $slide}
 		<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight, nobreak">
 		<picture n:tag-if="$slide->imageAlternative">
@@ -67,12 +66,8 @@
 		</div>
 	{/foreach}
 	</div>
-	{include #videoRecording}
-{elseif $talk->transcript}
-	<hr>
-	<h2 id="{_html.id.transcript}">{_messages.talks.transcript}</h2>
-	{$talk->transcript}
 {/if}
+{include #videoRecording}
 {/define}
 
 {define #content}

@@ -61,7 +61,6 @@ services:
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\Talks
-	- MichalSpacekCz\Templating\Embed
 	- MichalSpacekCz\Templating\Filters
 	latte.templateFactory:
 		create: MichalSpacekCz\Templating\TemplateFactory()
