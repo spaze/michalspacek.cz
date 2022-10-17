@@ -48,8 +48,8 @@ class Printer
 		$body = Helpers::simplifyTaggedNames($function->getBody(), $this->namespace);
 		$body = ltrim(rtrim(Strings::normalize($body)) . "\n");
 
-		return Helpers::formatDocComment($function->getComment() . "\n")
-			. self::printAttributes($function->getAttributes())
+		return $this->printDocComment($function)
+			. $this->printAttributes($function->getAttributes())
 			. $line
 			. $this->printParameters($function, strlen($line) + strlen($returnType) + 2) // 2 = parentheses
 			. $returnType
@@ -72,7 +72,7 @@ class Printer
 		$body = Helpers::simplifyTaggedNames($closure->getBody(), $this->namespace);
 		$body = ltrim(rtrim(Strings::normalize($body)) . "\n");
 
-		return self::printAttributes($closure->getAttributes(), inline: true)
+		return $this->printAttributes($closure->getAttributes(), inline: true)
 			. 'function '
 			. ($closure->getReturnReference() ? '&' : '')
 			. $this->printParameters($closure)
@@ -93,7 +93,7 @@ class Printer
 
 		$body = Helpers::simplifyTaggedNames($closure->getBody(), $this->namespace);
 
-		return self::printAttributes($closure->getAttributes())
+		return $this->printAttributes($closure->getAttributes())
 			. 'fn'
 			. ($closure->getReturnReference() ? '&' : '')
 			. $this->printParameters($closure)
@@ -119,8 +119,8 @@ class Printer
 		$body = ltrim(rtrim(Strings::normalize($body)) . "\n");
 		$braceOnNextLine = $this->bracesOnNextLine && !str_contains($params, "\n");
 
-		return Helpers::formatDocComment($method->getComment() . "\n")
-			. self::printAttributes($method->getAttributes())
+		return $this->printDocComment($method)
+			. $this->printAttributes($method->getAttributes())
 			. $line
 			. $params
 			. $returnType
@@ -144,7 +144,7 @@ class Printer
 		if ($class instanceof ClassType || $class instanceof TraitType || $class instanceof EnumType) {
 			foreach ($class->getTraits() as $trait) {
 				$resolutions = $trait->getResolutions();
-				$traits[] = Helpers::formatDocComment((string) $trait->getComment())
+				$traits[] = $this->printDocComment($trait)
 					. 'use ' . $resolver($trait->getName())
 					. ($resolutions
 						? " {\n" . $this->indentation . implode(";\n" . $this->indentation, $resolutions) . ";\n}\n"
@@ -158,8 +158,8 @@ class Printer
 			$enumType = $class->getType();
 			foreach ($class->getCases() as $case) {
 				$enumType ??= is_scalar($case->getValue()) ? get_debug_type($case->getValue()) : null;
-				$cases[] = Helpers::formatDocComment((string) $case->getComment())
-					. self::printAttributes($case->getAttributes())
+				$cases[] = $this->printDocComment($case)
+					. $this->printAttributes($case->getAttributes())
 					. 'case ' . $case->getName()
 					. ($case->getValue() === null ? '' : ' = ' . $this->dump($case->getValue()))
 					. ";\n";
@@ -167,26 +167,24 @@ class Printer
 		}
 
 		$consts = [];
-		if ($class instanceof ClassType || $class instanceof InterfaceType || $class instanceof EnumType) {
+		$methods = [];
+		if (
+			$class instanceof ClassType
+			|| $class instanceof InterfaceType
+			|| $class instanceof TraitType
+			|| $class instanceof EnumType
+		) {
 			foreach ($class->getConstants() as $const) {
 				$def = ($const->isFinal() ? 'final ' : '')
 					. ($const->getVisibility() ? $const->getVisibility() . ' ' : '')
 					. 'const ' . $const->getName() . ' = ';
 
-				$consts[] = Helpers::formatDocComment((string) $const->getComment())
-					. self::printAttributes($const->getAttributes())
+				$consts[] = $this->printDocComment($const)
+					. $this->printAttributes($const->getAttributes())
 					. $def
 					. $this->dump($const->getValue(), strlen($def)) . ";\n";
 			}
-		}
 
-		$methods = [];
-		if (
-			$class instanceof ClassType
-			|| $class instanceof InterfaceType
-			|| $class instanceof EnumType
-			|| $class instanceof TraitType
-		) {
 			foreach ($class->getMethods() as $method) {
 				$methods[] = $this->printMethod($method, $namespace, $class->isInterface());
 			}
@@ -204,8 +202,8 @@ class Printer
 					. ltrim($this->printType($type, $property->isNullable()) . ' ')
 					. '$' . $property->getName());
 
-				$properties[] = Helpers::formatDocComment((string) $property->getComment())
-					. self::printAttributes($property->getAttributes())
+				$properties[] = $this->printDocComment($property)
+					. $this->printAttributes($property->getAttributes())
 					. $def
 					. ($property->getValue() === null && !$property->isInitialized()
 						? ''
@@ -226,6 +224,7 @@ class Printer
 		if ($class instanceof ClassType) {
 			$line[] = $class->isAbstract() ? 'abstract' : null;
 			$line[] = $class->isFinal() ? 'final' : null;
+			$line[] = $class->isReadOnly() ? 'readonly' : null;
 		}
 
 		$line[] = match (true) {
@@ -242,8 +241,8 @@ class Printer
 			: null;
 		$line[] = $class->getName() ? null : '{';
 
-		return Helpers::formatDocComment($class->getComment() . "\n")
-			. self::printAttributes($class->getAttributes())
+		return $this->printDocComment($class)
+			. $this->printAttributes($class->getAttributes())
 			. implode(' ', array_filter($line))
 			. ($class->getName() ? "\n{\n" : "\n")
 			. ($members ? $this->indent(implode("\n", $members)) : '')
@@ -295,7 +294,7 @@ class Printer
 		}
 
 		return "<?php\n"
-			. ($file->getComment() ? "\n" . Helpers::formatDocComment($file->getComment() . "\n") : '')
+			. ($file->getComment() ? "\n" . $this->printDocComment($file) : '')
 			. "\n"
 			. ($file->hasStrictTypes() ? "declare(strict_types=1);\n\n" : '')
 			. implode("\n\n", $namespaces);
@@ -332,8 +331,8 @@ class Printer
 			$type = $param->getType();
 			$promoted = $param instanceof PromotedParameter ? $param : null;
 			$params[] =
-				($promoted ? Helpers::formatDocComment((string) $promoted->getComment()) : '')
-				. ($attrs = self::printAttributes($param->getAttributes(), inline: true))
+				($promoted ? $this->printDocComment($promoted) : '')
+				. ($attrs = $this->printAttributes($param->getAttributes(), inline: true))
 				. ($promoted ?
 					($promoted->getVisibility() ?: 'public')
 					. ($promoted->isReadOnly() && $type ? ' readonly' : '')
@@ -372,6 +371,16 @@ class Printer
 		}
 
 		return $type;
+	}
+
+
+	protected function printDocComment(/*Traits\CommentAware*/ $commentable): string
+	{
+		$multiLine = $commentable instanceof GlobalFunction
+			|| $commentable instanceof Method
+			|| $commentable instanceof ClassLike
+			|| $commentable instanceof PhpFile;
+		return Helpers::formatDocComment((string) $commentable->getComment(), $multiLine);
 	}
 
 

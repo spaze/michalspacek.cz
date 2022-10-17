@@ -732,17 +732,17 @@
         },
         {
             "name": "nette/finder",
-            "version": "v2.5.3",
-            "version_normalized": "2.5.3.0",
+            "version": "v2.5.4",
+            "version_normalized": "2.5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/finder.git",
-                "reference": "64dc25b7929b731e72a1bc84a9e57727f5d5d3e8"
+                "reference": "4a1236db9067d86a75c3dcc0d9c2aced17f9bde8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/finder/zipball/64dc25b7929b731e72a1bc84a9e57727f5d5d3e8",
-                "reference": "64dc25b7929b731e72a1bc84a9e57727f5d5d3e8",
+                "url": "https://api.github.com/repos/nette/finder/zipball/4a1236db9067d86a75c3dcc0d9c2aced17f9bde8",
+                "reference": "4a1236db9067d86a75c3dcc0d9c2aced17f9bde8",
                 "shasum": ""
             },
             "require": {
@@ -757,7 +757,7 @@
                 "phpstan/phpstan": "^0.12",
                 "tracy/tracy": "^2.3"
             },
-            "time": "2021-12-12T17:43:24+00:00",
+            "time": "2022-10-13T01:30:47+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -796,7 +796,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/finder/issues",
-                "source": "https://github.com/nette/finder/tree/v2.5.3"
+                "source": "https://github.com/nette/finder/tree/v2.5.4"
             },
             "install-path": "../nette/finder"
         },
@@ -1109,17 +1109,17 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v4.0.3",
-            "version_normalized": "4.0.3.0",
+            "version": "v4.0.4",
+            "version_normalized": "4.0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "ce449138b73ee788e818afeb41af51df3ec03710"
+                "reference": "80f158a2d2fa44c1785b16a3dcdabef3120b3e71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/ce449138b73ee788e818afeb41af51df3ec03710",
-                "reference": "ce449138b73ee788e818afeb41af51df3ec03710",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/80f158a2d2fa44c1785b16a3dcdabef3120b3e71",
+                "reference": "80f158a2d2fa44c1785b16a3dcdabef3120b3e71",
                 "shasum": ""
             },
             "require": {
@@ -1128,14 +1128,14 @@
             },
             "require-dev": {
                 "nette/tester": "^2.4",
-                "nikic/php-parser": "^4.13",
+                "nikic/php-parser": "^4.15",
                 "phpstan/phpstan": "^1.0",
                 "tracy/tracy": "^2.8"
             },
             "suggest": {
                 "nikic/php-parser": "to use ClassType::from(withBodies: true) & ClassType::fromCode()"
             },
-            "time": "2022-09-12T23:43:02+00:00",
+            "time": "2022-10-06T21:43:12+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1164,7 +1164,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🐘 Nette PHP Generator: generates neat PHP code for you. Supports new PHP 8.1 features.",
+            "description": "🐘 Nette PHP Generator: generates neat PHP code for you. Supports new PHP 8.2 features.",
             "homepage": "https://nette.org",
             "keywords": [
                 "code",
@@ -1174,7 +1174,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/php-generator/issues",
-                "source": "https://github.com/nette/php-generator/tree/v4.0.3"
+                "source": "https://github.com/nette/php-generator/tree/v4.0.4"
             },
             "install-path": "../nette/php-generator"
         },
@@ -1380,35 +1380,36 @@
         },
         {
             "name": "nette/security",
-            "version": "v3.1.5",
-            "version_normalized": "3.1.5.0",
+            "version": "v3.1.6",
+            "version_normalized": "3.1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/security.git",
-                "reference": "c120893f561b09494486c66594720b2abcb099b2"
+                "reference": "77a20cac539d62f5bcde15cd29244ae13890b483"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/security/zipball/c120893f561b09494486c66594720b2abcb099b2",
-                "reference": "c120893f561b09494486c66594720b2abcb099b2",
+                "url": "https://api.github.com/repos/nette/security/zipball/77a20cac539d62f5bcde15cd29244ae13890b483",
+                "reference": "77a20cac539d62f5bcde15cd29244ae13890b483",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^3.2.1",
-                "php": ">=7.2 <8.2"
+                "php": ">=7.2 <8.3"
             },
             "conflict": {
                 "nette/di": "<3.0-stable",
                 "nette/http": "<3.1.3"
             },
             "require-dev": {
+                "mockery/mockery": "^1.5",
                 "nette/di": "^3.0.1",
                 "nette/http": "^3.0.0",
                 "nette/tester": "^2.0",
-                "phpstan/phpstan-nette": "^0.12",
+                "phpstan/phpstan-nette": "^1.0",
                 "tracy/tracy": "^2.4"
             },
-            "time": "2021-09-20T15:20:25+00:00",
+            "time": "2022-10-12T22:40:37+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1447,7 +1448,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/security/issues",
-                "source": "https://github.com/nette/security/tree/v3.1.5"
+                "source": "https://github.com/nette/security/tree/v3.1.6"
             },
             "install-path": "../nette/security"
         },
@@ -1982,17 +1983,17 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.8.0",
-            "version_normalized": "1.8.0.0",
+            "version": "1.11.0",
+            "version_normalized": "1.11.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "8dd908dd6156e974b9a0f8bb4cd5ad0707830f04"
+                "reference": "7d1e81213b0c7eb8d5a9f524456cbc2778ed5c65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/8dd908dd6156e974b9a0f8bb4cd5ad0707830f04",
-                "reference": "8dd908dd6156e974b9a0f8bb4cd5ad0707830f04",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/7d1e81213b0c7eb8d5a9f524456cbc2778ed5c65",
+                "reference": "7d1e81213b0c7eb8d5a9f524456cbc2778ed5c65",
                 "shasum": ""
             },
             "require": {
@@ -2007,7 +2008,7 @@
                 "phpunit/phpunit": "^9.5",
                 "symfony/process": "^5.2"
             },
-            "time": "2022-09-04T18:59:06+00:00",
+            "time": "2022-10-14T13:32:28+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -2024,23 +2025,23 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.8.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.11.0"
             },
             "install-path": "../phpstan/phpdoc-parser"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.8.7",
-            "version_normalized": "1.8.7.0",
+            "version": "1.8.10",
+            "version_normalized": "1.8.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "536ff0ed719b5679e9f09c17aeaee9b31969cb8e"
+                "reference": "0c4459dc42c568b818b3f25186589f3acddc1823"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/536ff0ed719b5679e9f09c17aeaee9b31969cb8e",
-                "reference": "536ff0ed719b5679e9f09c17aeaee9b31969cb8e",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0c4459dc42c568b818b3f25186589f3acddc1823",
+                "reference": "0c4459dc42c568b818b3f25186589f3acddc1823",
                 "shasum": ""
             },
             "require": {
@@ -2049,7 +2050,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2022-10-04T14:09:33+00:00",
+            "time": "2022-10-17T14:23:35+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -2072,7 +2073,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.8.7"
+                "source": "https://github.com/phpstan/phpstan/tree/1.8.10"
             },
             "funding": [
                 {
@@ -2375,12 +2376,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "b0d3e99ce9c8ec237338a70277dd409ffcf6cedc"
+                "reference": "1d3484a08d3875e28bc2ad66697b0947cd6a2d99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b0d3e99ce9c8ec237338a70277dd409ffcf6cedc",
-                "reference": "b0d3e99ce9c8ec237338a70277dd409ffcf6cedc",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1d3484a08d3875e28bc2ad66697b0947cd6a2d99",
+                "reference": "1d3484a08d3875e28bc2ad66697b0947cd6a2d99",
                 "shasum": ""
             },
             "conflict": {
@@ -2431,7 +2432,7 @@
                 "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "codeception/codeception": "<3.1.3|>=4,<4.1.22",
                 "codeigniter/framework": "<=3.0.6",
-                "codeigniter4/framework": "<4.1.9",
+                "codeigniter4/framework": "<4.2.7",
                 "codeigniter4/shield": "= 1.0.0-beta",
                 "codiad/codiad": "<=2.8.4",
                 "composer/composer": "<1.10.26|>=2-alpha.1,<2.2.12|>=2.3,<2.3.5",
@@ -2594,6 +2595,9 @@
                 "matyhtf/framework": "<3.0.6",
                 "mautic/core": "<4.3|= 2.13.1",
                 "mediawiki/core": ">=1.27,<1.27.6|>=1.29,<1.29.3|>=1.30,<1.30.2|>=1.31,<1.31.9|>=1.32,<1.32.6|>=1.32.99,<1.33.3|>=1.33.99,<1.34.3|>=1.34.99,<1.35",
+                "melisplatform/melis-asset-manager": "<5.0.1",
+                "melisplatform/melis-cms": "<5.0.1",
+                "melisplatform/melis-front": "<5.0.1",
                 "mezzio/mezzio-swoole": "<3.7|>=4,<4.3",
                 "microweber/microweber": "<=1.3.1",
                 "miniorange/miniorange-saml": "<1.4.3",
@@ -2623,7 +2627,7 @@
                 "october/cms": "= 1.1.1|= 1.0.471|= 1.0.469|>=1.0.319,<1.0.469",
                 "october/october": ">=1.0.319,<1.0.466|>=2.1,<2.1.12",
                 "october/rain": "<1.0.472|>=1.1,<1.1.2",
-                "october/system": "<1.0.476|>=1.1,<1.1.12|>=2,<2.2.15",
+                "october/system": "<2.2.34|>=3,<3.0.66",
                 "onelogin/php-saml": "<2.10.4",
                 "oneup/uploader-bundle": "<1.9.3|>=2,<2.1.5",
                 "open-web-analytics/open-web-analytics": "<1.7.4",
@@ -2859,7 +2863,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<6.0.22"
             },
-            "time": "2022-10-05T15:07:13+00:00",
+            "time": "2022-10-13T20:04:41+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -2897,35 +2901,35 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "8.5.2",
-            "version_normalized": "8.5.2.0",
+            "version": "8.6.0",
+            "version_normalized": "8.6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "f32937dc41b587f3500efed1dbca2f82aa519373"
+                "reference": "d4175d8bf1246f4bf8be04ab688fbdc6fed18ece"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/f32937dc41b587f3500efed1dbca2f82aa519373",
-                "reference": "f32937dc41b587f3500efed1dbca2f82aa519373",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/d4175d8bf1246f4bf8be04ab688fbdc6fed18ece",
+                "reference": "d4175d8bf1246f4bf8be04ab688fbdc6fed18ece",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpdoc-parser": ">=1.7.0 <1.9.0",
+                "phpstan/phpdoc-parser": ">=1.11.0 <1.12.0",
                 "squizlabs/php_codesniffer": "^3.7.1"
             },
             "require-dev": {
                 "phing/phing": "2.17.4",
                 "php-parallel-lint/php-parallel-lint": "1.3.2",
-                "phpstan/phpstan": "1.4.10|1.8.6",
+                "phpstan/phpstan": "1.4.10|1.8.9",
                 "phpstan/phpstan-deprecation-rules": "1.0.0",
                 "phpstan/phpstan-phpunit": "1.0.0|1.1.1",
                 "phpstan/phpstan-strict-rules": "1.4.4",
                 "phpunit/phpunit": "7.5.20|8.5.21|9.5.25"
             },
-            "time": "2022-09-27T16:45:37+00:00",
+            "time": "2022-10-16T10:31:02+00:00",
             "type": "phpcodesniffer-standard",
             "extra": {
                 "branch-alias": {
@@ -2943,9 +2947,13 @@
                 "MIT"
             ],
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
+            "keywords": [
+                "dev",
+                "phpcs"
+            ],
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/8.5.2"
+                "source": "https://github.com/slevomat/coding-standard/tree/8.6.0"
             },
             "funding": [
                 {
@@ -2961,24 +2969,24 @@
         },
         {
             "name": "spaze/coding-standard",
-            "version": "v1.3.0",
-            "version_normalized": "1.3.0.0",
+            "version": "v1.3.1",
+            "version_normalized": "1.3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/coding-standard.git",
-                "reference": "70cca8012e29a2424a3442ed6de13f125b8f45dd"
+                "reference": "498c4ea1088657d9b630e4ce2b40cd28406b0ca7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/70cca8012e29a2424a3442ed6de13f125b8f45dd",
-                "reference": "70cca8012e29a2424a3442ed6de13f125b8f45dd",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/498c4ea1088657d9b630e4ce2b40cd28406b0ca7",
+                "reference": "498c4ea1088657d9b630e4ce2b40cd28406b0ca7",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2 || ^8.0",
                 "slevomat/coding-standard": "^8.2"
             },
-            "time": "2022-07-08T16:32:45+00:00",
+            "time": "2022-10-09T21:42:48+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -2998,9 +3006,12 @@
                 }
             ],
             "description": "Coding Standard – PHP Code Sniffer Rules",
+            "keywords": [
+                "dev"
+            ],
             "support": {
                 "issues": "https://github.com/spaze/coding-standard/issues",
-                "source": "https://github.com/spaze/coding-standard/tree/v1.3.0"
+                "source": "https://github.com/spaze/coding-standard/tree/v1.3.1"
             },
             "install-path": "../spaze/coding-standard"
         },
@@ -3330,21 +3341,21 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v2.5.0",
-            "version_normalized": "2.5.0.0",
+            "version": "v2.7.0",
+            "version_normalized": "2.7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "80945f8fa346b1d8b50d6922cde56b309fb6008f"
+                "reference": "1cd98848bc1805156b4547e75e97274be70af4a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/80945f8fa346b1d8b50d6922cde56b309fb6008f",
-                "reference": "80945f8fa346b1d8b50d6922cde56b309fb6008f",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/1cd98848bc1805156b4547e75e97274be70af4a7",
+                "reference": "1cd98848bc1805156b4547e75e97274be70af4a7",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0",
+                "php": "^7.2 || ^8.0",
                 "phpstan/phpstan": "^1.0"
             },
             "require-dev": {
@@ -3353,9 +3364,9 @@
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpunit/phpunit": "^7.0 || ^9.4.2",
-                "spaze/coding-standard": "^0.0"
+                "spaze/coding-standard": "^1.3"
             },
-            "time": "2022-07-21T00:34:16+00:00",
+            "time": "2022-10-08T18:34:05+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -3384,30 +3395,30 @@
             "description": "PHPStan rules to detect disallowed method & function calls, constant, namespace & superglobal usages",
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.5.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.7.0"
             },
             "install-path": "../spaze/phpstan-disallowed-calls"
         },
         {
             "name": "spaze/phpstan-disallowed-calls-nette",
-            "version": "v2.0.0",
-            "version_normalized": "2.0.0.0",
+            "version": "v2.0.1",
+            "version_normalized": "2.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls-nette.git",
-                "reference": "68e76c92de924ac284f974bfd5779c088814154b"
+                "reference": "7ed93785bb170f15b8c001306c6b3ed6ccb96ec2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls-nette/zipball/68e76c92de924ac284f974bfd5779c088814154b",
-                "reference": "68e76c92de924ac284f974bfd5779c088814154b",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls-nette/zipball/7ed93785bb170f15b8c001306c6b3ed6ccb96ec2",
+                "reference": "7ed93785bb170f15b8c001306c6b3ed6ccb96ec2",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0",
                 "spaze/phpstan-disallowed-calls": "^1.4.0 || ^2.0.0"
             },
-            "time": "2021-11-02T01:11:14+00:00",
+            "time": "2022-10-09T21:31:17+00:00",
             "type": "library",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
@@ -3422,9 +3433,12 @@
                 }
             ],
             "description": "Nette Framework-specific configuration for Disallowed method and function calls plug-in for PHPStan",
+            "keywords": [
+                "static analysis"
+            ],
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls-nette/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls-nette/tree/v2.0.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls-nette/tree/v2.0.1"
             },
             "install-path": "../spaze/phpstan-disallowed-calls-nette"
         },
@@ -4032,17 +4046,17 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v6.1.4",
-            "version_normalized": "6.1.4.0",
+            "version": "v6.1.6",
+            "version_normalized": "6.1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "45d0f5bb8df7255651ca91c122fab604e776af03"
+                "reference": "e6cd330e5a072518f88d65148f3f165541807494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/45d0f5bb8df7255651ca91c122fab604e776af03",
-                "reference": "45d0f5bb8df7255651ca91c122fab604e776af03",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/e6cd330e5a072518f88d65148f3f165541807494",
+                "reference": "e6cd330e5a072518f88d65148f3f165541807494",
                 "shasum": ""
             },
             "require": {
@@ -4080,7 +4094,7 @@
                 "symfony/config": "",
                 "symfony/yaml": ""
             },
-            "time": "2022-08-02T16:17:38+00:00",
+            "time": "2022-10-07T08:04:03+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4111,7 +4125,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v6.1.4"
+                "source": "https://github.com/symfony/translation/tree/v6.1.6"
             },
             "funding": [
                 {
