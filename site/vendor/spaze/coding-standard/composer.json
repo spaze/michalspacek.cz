@@ -9,6 +9,9 @@
 			"email": "mail@michalspacek.cz"
 		}
 	],
+	"keywords": [
+		"dev"
+	],
 	"require": {
 		"php": "^7.2 || ^8.0",
 		"slevomat/coding-standard": "^8.2"

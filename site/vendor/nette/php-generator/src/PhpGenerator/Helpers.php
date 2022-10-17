@@ -77,13 +77,13 @@ final class Helpers
 	}
 
 
-	public static function formatDocComment(string $content): string
+	public static function formatDocComment(string $content, bool $forceMultiLine = false): string
 	{
 		$s = trim($content);
 		$s = str_replace('*/', '* /', $s);
 		if ($s === '') {
 			return '';
-		} elseif (str_contains($content, "\n")) {
+		} elseif ($forceMultiLine || str_contains($content, "\n")) {
 			$s = str_replace("\n", "\n * ", "/**\n$s") . "\n */";
 			return Nette\Utils\Strings::normalize($s) . "\n";
 		} else {
@@ -170,14 +170,19 @@ final class Helpers
 
 	public static function validateType(?string $type, bool &$nullable): ?string
 	{
+		$nullable = false;
 		if ($type === '' || $type === null) {
 			return null;
 		}
 
-		if (!preg_match('#(?:
-			\?[\w\\\\]+|
-			[\w\\\\]+ (?: (&[\w\\\\]+)* | (\|[\w\\\\]+)* )
-		)()$#xAD', $type)) {
+		if (!preg_match(<<<'XX'
+			~(?n)
+			(
+				\?? (?<type> [\w\\]+)|
+				(?<intersection> (?&type) (& (?&type))+  )|
+				(?<upart> (?&type) | \( (?&intersection) \) )  (\| (?&upart) )+
+			)$~xAD
+			XX, $type)) {
 			throw new Nette\InvalidArgumentException("Value '$type' is not valid type.");
 		}
 
