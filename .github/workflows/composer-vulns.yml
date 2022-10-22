@@ -9,8 +9,8 @@ jobs:
   composer-vulnz:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
       id: cache-db
       with:
           path: ~/.symfony/cache
@@ -22,5 +22,5 @@ jobs:
   composer-audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: composer --working-dir=site audit
