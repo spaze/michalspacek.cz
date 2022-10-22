@@ -84,7 +84,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Get PHP_CodeSniffer cache file pattern
       id: phpcs-cache
-      run: echo "::set-output name=file::$(php -r "echo sys_get_temp_dir() . '/phpcs.*';")"
+      run: echo "file=$(php -r "echo sys_get_temp_dir() . '/phpcs.*';")" >> $GITHUB_OUTPUT
     - uses: actions/cache@v3
       with:
         path: ${{ steps.phpcs-cache.outputs.file }}
@@ -102,7 +102,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Get PHPStan result cache directory
       id: phpstan-cache
-      run: echo "::set-output name=dir::$(php -r "echo sys_get_temp_dir() . '/phpstan';")"
+      run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
     - uses: actions/cache@v3
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
@@ -120,7 +120,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Get PHPStan result cache directory
       id: phpstan-cache
-      run: echo "::set-output name=dir::$(php -r "echo sys_get_temp_dir() . '/phpstan';")"
+      run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
     - uses: actions/cache@v3
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
