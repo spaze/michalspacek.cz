@@ -4,3 +4,4 @@ extensions:
 	nonceGenerator: Spaze\NonceGenerator\Bridges\Nette\GeneratorExtension
 	contentSecurityPolicy: Spaze\ContentSecurityPolicy\Bridges\Nette\ConfigExtension
 	subresourceIntegrity: Spaze\SubresourceIntegrity\Bridges\Nette\Extension
+	svgIcons: Spaze\SvgIcons\NetteExtension

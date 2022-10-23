@@ -94,3 +94,7 @@ subresourceIntegrity:
 
 sessionHandler:
 	encryptionService: @sessionEncryption
+
+svgIcons:
+	iconsDir: '%domain.locationRoot%/../../node_modules/humbleicons/icons'
+	cssClass: 'humbleicons'
