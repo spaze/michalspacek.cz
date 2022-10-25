@@ -99,7 +99,7 @@
 <h2 id="{_html.id.content}">{_messages.label.trainingcontent}</h2>
 <div>{$content}</div>
 
-<p><small><i class="fas fa-fw fa-bolt"></i> {$upsell}</small></p>
+<p>{icon bulb} <small>{$upsell}</small></p>
 <hr>
 
 <h2 id="{_html.id.lecturer}">{_messages.label.traininglecturer}</h2>
@@ -132,15 +132,15 @@
 		{if $date->cooperationDescription}<br><small>{$date->cooperationDescription}</small>{/if}
 	</p>
 	<div class="indent">
-	<p n:if="$date->price"><i class="fas fa-fw fa-coins lighter"></i> {_messages.trainings.price|format:$date->price->getPriceWithCurrency(), $date->price->getPriceVatWithCurrency()}{if $date->studentDiscount}, {_messages.trainings.studentdiscount|format:$date->studentDiscount}{/if}</p>
+	<p n:if="$date->price">{icon coins} {_messages.trainings.price|format:$date->price->getPriceWithCurrency(), $date->price->getPriceVatWithCurrency()}{if $date->studentDiscount}, {_messages.trainings.studentdiscount|format:$date->studentDiscount}{/if}</p>
 	{if $date->remote}
-		<p><i class="fas fa-fw fa-bolt lighter"></i> {_messages.trainings.remoteindividualqa}</p>
+		<p>{icon bulb-off} {_messages.trainings.remoteindividualqa}</p>
 		<p>
 			{_messages.trainings.remotedescription.1}
 			{_messages.trainings.remotedescription.2}
 		</p>
 	{else}
-		<p class="location vcard"><i class="fas fa-fw fa-map-marker-alt lighter"></i> <strong>
+		<p class="location vcard">{icon location} <strong>
 			<a n:href=":Www:Venues:venue $date->venueAction" class="fn org">{$date->venueName}</a>{if $date->venueNameExtended}, {$date->venueNameExtended}{/if},
 			<span class="adr"><span class="street-address">{$date->venueAddress}</span>, <span class="locality">{$date->venueCity}</span></span>
 		</strong></p>

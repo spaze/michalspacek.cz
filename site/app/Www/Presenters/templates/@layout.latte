@@ -30,7 +30,6 @@
 	{else}
 		{styleSheet screen-main}
 	{/if}
-	{styleSheet fontawesome-css}
 	{ifset #preload}{include #preload}{/ifset}
 	{ifset #scriptsReplace}
 		{include #scriptsReplace}
@@ -38,7 +37,6 @@
 		{script jquery+scripts async, defer}
 		{script netteForms async, defer}
 		{script remove-fbclid async, defer}
-		{script fontawesome-js defer, data-auto-add-css => 'false'}
 	{/ifset}
 	{ifset #scripts}{include #scripts}{/ifset}
 	{ifset #styles}{include #styles}{/ifset}
@@ -82,7 +80,7 @@
 <div n:class="container, $containerExtraClass">
 	<div id="footer-name">
 		<strong xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Michal Špaček</strong>
-		• <a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="{_messages.license.content}"><i class="fab fa-fw fa-creative-commons"></i><i class="fab fa-fw fa-creative-commons-by"></i></a>
+		• <a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="{_messages.license.content}">{icon creative-commons}{icon creative-commons-by}</a>
 	</div>
 	<div id="footer-links">
 		<a n:href=":Www:Contact:">{_messages.label.contact}</a>
@@ -91,19 +89,19 @@
 		• <a href="https://www.facebook.com/spaze">{_messages.label.facebook}</a>
 		• <a href="https://github.com/spaze">{_messages.label.github}</a>
 		• <a href="mailto:mail&#x40;michalspacek.cz">mail&#x40;michalspacek.cz</a>
-		• <a n:href=":Www:Exports:articles">RSS <i class="fas fa-fw fa-rss-square"></i></a>
+		• <a n:href=":Www:Exports:articles">RSS {icon rss}</a>
 	</div>
 	<div class="clear"></div>
 </div>
 </footer>
 <div n:class="container, $containerExtraClass" id="header-links">
-	<a n:href="darkFuture!" title="{_messages.label.mode.dark}" id="theme-dark" class="tools"><small><span class="lighter"><i class="fas fa-fw fa-moon"></i></span></small></a>
-	<a n:href="brightFuture!" title="{_messages.label.mode.light}" id="theme-light" class="tools"><small><span class="lighter"><i class="fas fa-fw fa-sun"></i></span></small></a>
+	<a n:href="darkFuture!" title="{_messages.label.mode.dark}" id="theme-dark" class="tools"><small>{icon moon}</small></a>
+	<a n:href="brightFuture!" title="{_messages.label.mode.light}" id="theme-light" class="tools"><small>{icon sun}</small></a>
 	{if !isset($headerLinks) || $headerLinks !== false}
-		<a n:foreach="$localeLinks as $language => $url" href="{$url}" lang="{_"html.langs.$language"}" class="tools"><small><span class="lighter"><i class="fas fa-fw fa-flag"></i></span> {_"messages.langs.$language"}</small></a>
-		<a n:href=":UpcKeys:Homepage:" title="{_messages.label.upckeys}"><small><span class="lighter"><i class="fas fa-fw fa-wifi"></i></span> {_messages.label.upckeys}</small></a>
-		<a n:href=":Pulse:PasswordsStorages:" title="{_messages.label.pulse.passwordstorages}"><small><span class="lighter"><i class="fas fa-fw fa-key"></i></span> {_messages.label.pulse.passwordstorages}</small></a>
-		<a n:href=":Www:Projects:" title="{_messages.label.otherprojects}" id="other-projects"><small><span class="lighter"><i class="fas fa-fw fa-project-diagram"></i></span> {_messages.label.otherprojects}</small></a>
+		<a n:foreach="$localeLinks as $language => $url" href="{$url}" lang="{_"html.langs.$language"}" class="tools"><small>{icon flag} {_"messages.langs.$language"}</small></a>
+		<a n:href=":UpcKeys:Homepage:" title="{_messages.label.upckeys}"><small>{icon wifi} {_messages.label.upckeys}</small></a>
+		<a n:href=":Pulse:PasswordsStorages:" title="{_messages.label.pulse.passwordstorages}"><small>{icon key} {_messages.label.pulse.passwordstorages}</small></a>
+		<a n:href=":Www:Projects:" title="{_messages.label.otherprojects}" id="other-projects"><small>{icon dots-horizontal} {_messages.label.otherprojects}</small></a>
 	{/if}
 </div>
 </body>

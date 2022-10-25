@@ -24,6 +24,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\Config\\' => 25,
             'Symfony\\Component\\Cache\\' => 24,
+            'Spaze\\SvgIcons\\' => 15,
             'Spaze\\SubresourceIntegrity\\' => 27,
             'Spaze\\PhpInfo\\' => 14,
             'Spaze\\PHPStan\\Rules\\Disallowed\\' => 31,
@@ -93,6 +94,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Symfony\\Component\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
+        ),
+        'Spaze\\SvgIcons\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spaze/svg-icons-latte/src',
         ),
         'Spaze\\SubresourceIntegrity\\' => 
         array (

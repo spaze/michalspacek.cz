@@ -1,0 +1,48 @@
+{
+	"name": "spaze/svg-icons-latte",
+	"description": "SVG Icons Custom Tag for Latte Templating System",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.com/"
+		}
+	],
+	"require": {
+		"ext-dom": "*",
+		"latte/latte": "^3.0",
+		"nette/application": "^3.1",
+		"nette/di": "^3.0",
+		"nette/schema": "^1.2"
+	},
+	"require-dev": {
+		"php": "^8.1",
+		"php-parallel-lint/php-console-highlighter": "^1.0",
+		"php-parallel-lint/php-parallel-lint": "^1.3",
+		"phpstan/phpstan": "^1.8",
+		"spaze/coding-standard": "^1.3",
+		"spaze/phpstan-disallowed-calls": "^2.8"
+	},
+	"config": {
+		"sort-packages": true,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"Spaze\\SvgIcons\\": "src/"
+		}
+	},
+	"scripts": {
+		"cs-fix": "vendor/squizlabs/php_codesniffer/bin/phpcbf src/",
+		"lint": "vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors src/",
+		"phpcs": "vendor/squizlabs/php_codesniffer/bin/phpcs src/",
+		"phpstan": "vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon",
+		"test": [
+			"@lint",
+			"@phpcs",
+			"@phpstan"
+		]
+	}
+}

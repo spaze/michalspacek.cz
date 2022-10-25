@@ -6,10 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Pulse</title>
 	{styleSheet screen-pulse+rating}
-	{styleSheet fontawesome-css}
 	{script jquery+pulse async, defer}
 	{script remove-fbclid async, defer}
-	{script fontawesome-js defer, data-auto-add-css => 'false'}
 	{ifset #metas}{include #metas}{/ifset}
 	{ifset $canonicalLink}
 		<link rel="canonical" href="{$canonicalLink}">

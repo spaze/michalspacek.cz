@@ -3506,6 +3506,61 @@
             "install-path": "../spaze/sri-macros"
         },
         {
+            "name": "spaze/svg-icons-latte",
+            "version": "v1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spaze/svg-icons-latte.git",
+                "reference": "23f4d1ee31a91f190f0b048415486140a387126b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spaze/svg-icons-latte/zipball/23f4d1ee31a91f190f0b048415486140a387126b",
+                "reference": "23f4d1ee31a91f190f0b048415486140a387126b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "latte/latte": "^3.0",
+                "nette/application": "^3.1",
+                "nette/di": "^3.0",
+                "nette/schema": "^1.2"
+            },
+            "require-dev": {
+                "php": "^8.1",
+                "php-parallel-lint/php-console-highlighter": "^1.0",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpstan/phpstan": "^1.8",
+                "spaze/coding-standard": "^1.3",
+                "spaze/phpstan-disallowed-calls": "^2.8"
+            },
+            "time": "2022-10-25T00:42:48+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Spaze\\SvgIcons\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michal Špaček",
+                    "homepage": "https://www.michalspacek.com/"
+                }
+            ],
+            "description": "SVG Icons Custom Tag for Latte Templating System",
+            "support": {
+                "issues": "https://github.com/spaze/svg-icons-latte/issues",
+                "source": "https://github.com/spaze/svg-icons-latte/tree/v1.0.0"
+            },
+            "install-path": "../spaze/svg-icons-latte"
+        },
+        {
             "name": "squizlabs/php_codesniffer",
             "version": "3.7.1",
             "version_normalized": "3.7.1.0",

@@ -81,8 +81,6 @@ subresourceIntegrity:
 		upckeys: /i/js/upckeys.js
 		openpgp: /i/js/openpgp.min.js
 		pulse: /i/js/pulse.js
-		fontawesome-js: /i/fontawesome/js/used.min.js
-		fontawesome-css: /i/fontawesome/css/svg-with-js.min.css
 		remove-fbclid: /i/js/remove-fbclid.js
 		rating: /i/css/rating.css
 		screen-main: /i/css/screen.css
@@ -94,3 +92,7 @@ subresourceIntegrity:
 
 sessionHandler:
 	encryptionService: @sessionEncryption
+
+svgIcons:
+	iconsDir: '%domain.locationRoot%/../../node_modules/humbleicons/icons'
+	cssClass: 'humbleicons'

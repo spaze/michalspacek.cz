@@ -14,6 +14,7 @@ return array(
     'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
     'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
     'Symfony\\Component\\Cache\\' => array($vendorDir . '/symfony/cache'),
+    'Spaze\\SvgIcons\\' => array($vendorDir . '/spaze/svg-icons-latte/src'),
     'Spaze\\SubresourceIntegrity\\' => array($vendorDir . '/spaze/sri-macros/src'),
     'Spaze\\PhpInfo\\' => array($vendorDir . '/spaze/phpinfo/src'),
     'Spaze\\PHPStan\\Rules\\Disallowed\\' => array($vendorDir . '/spaze/phpstan-disallowed-calls/src'),
