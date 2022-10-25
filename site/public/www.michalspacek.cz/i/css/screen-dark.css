@@ -29,9 +29,6 @@ input, select, textarea, button {
 }
 input[type=submit], button { background-color: #224E34; }
 input[type=submit]:hover, button:hover { background-color: #2A6040; }
-.danger { color: #FF1453; }
-button.danger { background-color: #732530; }
-button.danger:hover { background-color: #B82839; }
 small, .small, .column-content .figure p { color: #A9A9A9; }
 small a, .small a { color: #C9C9C9 !important; }
 blockquote, .indent { border-left-color: #2B2B2B; }
@@ -72,3 +69,4 @@ img.nobgcolor { background-color: inherit; }
 #pubkey { background-color: #2D282B; }
 #phpinfo table { box-shadow: 1px 2px 3px #05080A; }
 #phpinfo td, th { border-color: #333; }
+.humbleicons { opacity: 0.5; }

@@ -11,7 +11,7 @@
 <p>
 {$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd}
 <small>{if $remote}{_messages.label.remote}{else}{$venueCity}{/if}{if !$public}, {$venueName}{/if}</small>
-{if $note}<br><span title="Poznámka" class="lighter"><i class="far fa-fw fa-comment"></i></span> <small>{$note}</small>{/if}
+{if $note}<br><span title="Poznámka">{icon clipboard}</span> <small>{$note}</small>{/if}
 </p>
 {form statuses}
 <div id="applications">

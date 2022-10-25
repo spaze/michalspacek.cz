@@ -52,16 +52,14 @@
 					<a n:href="Trainings:date $training->dateId">{$training->start|localeIntervalDay:$training->end}</a>
 				</small>
 				</strong>
-				<span n:if="$training->note" title="Poznámka: {$training->note}" class="lighter"><i class="far fa-fw fa-comment"></i></span>
-				<span n:if="$training->label" title="Label: {$training->label}" class="lighter"><i class="far fa-fw fa-comment-alt"></i></span>
+				<span n:if="$training->note" title="Poznámka: {$training->note}">{icon clipboard}</span>
+				<span n:if="$training->label" title="Label: {$training->label}">{icon asterisk-simple}</span>
 			</td>
-			<td class="iconCell">
-				<small title="{$training->status}">
-					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CREATED}<i class="fas fa-fw fa-plus"></i>{/if}
-					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED}<i class="fas fa-fw fa-check"></i>{/if}
-					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_TENTATIVE}<i class="fas fa-fw fa-asterisk"></i>{/if}
-					{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CANCELED}<i class="fas fa-fw fa-times"></i>{/if}
-				</small>
+			<td class="iconCell" title="{$training->status}">
+				{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CREATED}{icon plus-circle}{/if}
+				{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED}{icon check-circle}{/if}
+				{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_TENTATIVE}{icon circle}{/if}
+				{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CANCELED}{icon times-circle}{/if}
 			</td>
 			<td class="nameCell" data-date="{$training->dateId}">{$training->name}{if $training->public || $training->validCount > 0} ({$training->validCount}){/if}</td>
 			<td><small>{if $training->remote}{_messages.label.remote}{else}{$training->venueCity}{/if}{if !$training->public}, {$training->venueName}{/if}</small></td>

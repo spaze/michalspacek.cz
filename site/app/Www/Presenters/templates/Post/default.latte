@@ -9,26 +9,24 @@
 {define #headerIcons}
 <div id="header-icons">
 	<div>
-		<span class="lighter"><i class="fas fa-fw fa-calendar"></i></span>
+		{icon calendar}
 		<small>
 			<strong>{$post->published|localeDay}</strong>
 			{ifset $edited}({_messages.blog.post.edited} {$edited|localeDay}){/ifset}
 		</small>
 	</div>
 	<div n:if="$post->tags">
-		<span class="lighter">
 		{if ($post->tags|length) === 1}
-			<i class="fas fa-fw fa-tag"></i>
+			{icon tag}
 		{else}
-			<i class="fas fa-fw fa-tags"></i>
+			{icon tags}
 		{/if}
-		</span>
 		<small>
 			{foreach $post->tags as $key => $tag}<a n:href=":Www:Tags:tag $post->slugTags[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
 		</small>
 	</div>
 	<div n:ifset="$post->sourceHref">
-		<span class="lighter"><i class="fas fa-fw fa-external-link-square-alt"></i></span>
+		{icon external-link}
 		<small><a href="{$post->sourceHref}">{$post->sourceName}</a></small>
 	</div>
 	<div class="clear"></div>

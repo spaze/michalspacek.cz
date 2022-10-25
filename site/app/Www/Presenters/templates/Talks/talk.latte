@@ -20,7 +20,7 @@
 	</div>
 	<p n:if="$videoThumbnail->getVideoHref()">
 		<small n:tag-if="$videoThumbnail->getUrl()">
-			<span title="{_messages.label.recording}" class="lighter"><i class="fas fa-fw fa-video"></i></span>
+			<span title="{_messages.label.recording}">{icon camera-video}</span>
 			<a href="{$videoThumbnail->getVideoHref()}">{$videoThumbnail?->getVideoPlatform() ?? $videoThumbnail->getVideoHref()}</a>
 		</small>
 	</p>
@@ -49,7 +49,7 @@
 
 <h2 id="{_html.id.slides}">{_messages.label.slides}</h2>
 {if $talk->slidesHref}
-	<p><span title="{_messages.label.slides}" class="lighter"><i class="fas fa-fw fa-images"></i></span> <a href="{$talk->slidesHref}">{$slidesPlatform ?? $talk->slidesHref}</a></p>
+	<p><span title="{_messages.label.slides}">{icon images}</span> <a href="{$talk->slidesHref}">{$slidesPlatform ?? $talk->slidesHref}</a></p>
 	{if $talk->transcript}
 		<h2 id="{_html.id.transcript}">{_messages.talks.transcript}</h2>
 		{$talk->transcript}
