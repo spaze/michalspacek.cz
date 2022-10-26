@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+const init = function() {
 	const supported = Boolean(window.Promise);
 	let encrypted = false;
 	const feedback = document.querySelector(document.queryCommandSupported('copy') ? '#copied' : '#copythis');
@@ -78,4 +78,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		area.value = button.dataset.unsupported;
 		area.disabled = true;
 	}
-});
+};
+if (document.readyState !== 'loading') {
+	init();
+} else {
+	document.addEventListener('DOMContentLoaded', init);
+}
