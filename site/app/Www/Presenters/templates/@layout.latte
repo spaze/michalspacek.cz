@@ -24,11 +24,11 @@
 		}
 	</style>
 	{if $darkMode === null}
-		{styleSheet screen-main+'@media (prefers-color-scheme: dark) {'+screen-main-dark+'}'}
+		{styleSheet screen-main+humbleicons+'@media (prefers-color-scheme: dark) {'+screen-main-dark+'}'}
 	{elseif $darkMode}
-		{styleSheet screen-main+screen-main-dark}
+		{styleSheet screen-main+humbleicons+screen-main-dark}
 	{else}
-		{styleSheet screen-main}
+		{styleSheet screen-main+humbleicons}
 	{/if}
 	{ifset #preload}{include #preload}{/ifset}
 	{ifset #scriptsReplace}

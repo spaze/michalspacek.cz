@@ -418,15 +418,6 @@ div.notice {
 }
 #theme-dark { display: initial !important; }
 #theme-light { display: none !important; }
-.humbleicons {
-	width: 1.2em;
-	height: 1.2em;
-	display: inline-block;
-	align-self: center;
-	vertical-align: middle;
-	margin-top: -0.2em;
-	opacity: 0.3;
-}
 #footer .humbleicons { opacity: inherit; }
 @media print {
 	img { max-width: 75%; }
