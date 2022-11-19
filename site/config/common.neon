@@ -83,6 +83,7 @@ subresourceIntegrity:
 		pulse: /i/js/pulse.js
 		remove-fbclid: /i/js/remove-fbclid.js
 		rating: /i/css/rating.css
+		humbleicons: /i/css/humbleicons.css
 		screen-main: /i/css/screen.css
 		screen-main-dark: /i/css/screen-dark.css
 		screen-upc: /i/css/upc/screen.css
