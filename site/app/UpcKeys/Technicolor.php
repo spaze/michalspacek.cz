@@ -91,9 +91,11 @@ class Technicolor implements RouterInterface
 				continue;
 			}
 
-			if (sscanf($line, '%20[^,],%20[^,],%d', $serial, $key, $type) != 3) {
+			$tokens = sscanf($line, '%20[^,],%20[^,],%d');
+			if (!isset($tokens[0], $tokens[1], $tokens[2])) {
 				throw new RuntimeException('Incorrect number of tokens in ' . $line);
 			}
+			[$serial, $key, $type] = $tokens;
 			$keys["{$type}-{$serial}"] = $this->buildKey($serial, $key, $type);
 		}
 		ksort($keys);
