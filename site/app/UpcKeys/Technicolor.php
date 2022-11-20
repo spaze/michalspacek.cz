@@ -224,7 +224,7 @@ class Technicolor implements RouterInterface
 	{
 		preg_match('/^[a-z]+/i', $serial, $matches);
 		$prefix = current($matches);
-		if (!in_array($prefix, $this->serialNumberPrefixes)) {
+		if (!$prefix || !in_array($prefix, $this->serialNumberPrefixes)) {
 			throw new RuntimeException('Unknown prefix for serial ' . $serial);
 		}
 		return new WiFiKey($serial, $prefix, null, null, $key, WiFiBand::from($type));
