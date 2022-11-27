@@ -16,8 +16,14 @@ class Response implements IResponse
 	/** @var array<string, array<int, string>> */
 	private array $allHeaders;
 
-	/** @var array<string, string> */
+	/** @var array<string, Cookie> */
 	private array $cookies;
+
+	public string $cookieDomain = '';
+
+	public string $cookiePath = '/';
+
+	public bool $cookieSecure = false;
 
 	private string $contentType;
 
@@ -117,7 +123,14 @@ class Response implements IResponse
 
 	public function setCookie(string $name, string $value, $expire, string $path = null, string $domain = null, bool $secure = null, bool $httpOnly = null, string $sameSite = null): self
 	{
-		$this->cookies[$name] = $value;
+		$this->cookies[$name] = new Cookie(
+			$name,
+			$value,
+			$expire,
+			$path ?? $this->cookiePath,
+			$domain ?? $this->cookieDomain,
+			$secure ?? $this->cookieSecure,
+		);
 		return $this;
 	}
 
@@ -128,7 +141,7 @@ class Response implements IResponse
 	}
 
 
-	public function getCookie(string $name): ?string
+	public function getCookie(string $name): ?Cookie
 	{
 		return $this->cookies[$name] ?? null;
 	}
