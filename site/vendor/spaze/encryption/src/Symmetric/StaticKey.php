@@ -3,9 +3,19 @@ declare(strict_types = 1);
 
 namespace Spaze\Encryption\Symmetric;
 
+use OutOfBoundsException;
+use OutOfRangeException;
 use ParagonIE\ConstantTime\Hex;
+use ParagonIE\Halite\Alerts\CannotPerformOperation;
+use ParagonIE\Halite\Alerts\InvalidDigestLength;
+use ParagonIE\Halite\Alerts\InvalidKey;
+use ParagonIE\Halite\Alerts\InvalidMessage;
+use ParagonIE\Halite\Alerts\InvalidSignature;
+use ParagonIE\Halite\Alerts\InvalidType;
 use ParagonIE\Halite\Symmetric;
 use ParagonIE\HiddenString\HiddenString;
+use SodiumException;
+use TypeError;
 
 /**
  * StaticKey encryption service.
@@ -18,18 +28,15 @@ class StaticKey
 	private const KEY_CIPHERTEXT_SEPARATOR = '$';
 
 	/** @var string[][] */
-	private $keys;
+	private array $keys;
 
 	/** @var string[] */
-	private $activeKeyIds;
+	private array $activeKeyIds;
 
-	/** @var string */
-	private $keyGroup;
+	private string $keyGroup;
 
 
 	/**
-	 * StaticKey constructor.
-	 *
 	 * @param string $keyGroup The group from which to read the key
 	 * @param string[][] $keys
 	 * @param string[] $activeKeyIds
@@ -50,12 +57,13 @@ class StaticKey
 	 *
 	 * @param string $data The plaintext
 	 * @return string
-	 * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
-	 * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
-	 * @throws \ParagonIE\Halite\Alerts\InvalidKey
-	 * @throws \ParagonIE\Halite\Alerts\InvalidMessage
-	 * @throws \ParagonIE\Halite\Alerts\InvalidType
-	 * @throws \TypeError
+	 * @throws CannotPerformOperation
+	 * @throws InvalidDigestLength
+	 * @throws InvalidKey
+	 * @throws InvalidMessage
+	 * @throws InvalidType
+	 * @throws SodiumException
+	 * @throws TypeError
 	 */
 	public function encrypt(string $data): string
 	{
@@ -71,17 +79,18 @@ class StaticKey
 	 *
 	 * @param string $data
 	 * @return string
-	 * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
-	 * @throws \ParagonIE\Halite\Alerts\InvalidDigestLength
-	 * @throws \ParagonIE\Halite\Alerts\InvalidKey
-	 * @throws \ParagonIE\Halite\Alerts\InvalidMessage
-	 * @throws \ParagonIE\Halite\Alerts\InvalidSignature
-	 * @throws \ParagonIE\Halite\Alerts\InvalidType
-	 * @throws \TypeError
+	 * @throws CannotPerformOperation
+	 * @throws InvalidDigestLength
+	 * @throws InvalidKey
+	 * @throws InvalidMessage
+	 * @throws InvalidSignature
+	 * @throws InvalidType
+	 * @throws SodiumException
+	 * @throws TypeError
 	 */
 	public function decrypt(string $data): string
 	{
-		list($keyId, $cipherText) = $this->parseKeyCipherText($data);
+		[$keyId, $cipherText] = $this->parseKeyCipherText($data);
 		$key = $this->getKey($keyId);
 		return Symmetric\Crypto::decrypt($cipherText, $key)->getString();
 	}
@@ -95,7 +104,7 @@ class StaticKey
 	 */
 	public function needsReEncrypt(string $data): bool
 	{
-		list($keyId) = $this->parseKeyCipherText($data);
+		[$keyId] = $this->parseKeyCipherText($data);
 		return $keyId !== $this->getActiveKeyId();
 	}
 
@@ -105,15 +114,15 @@ class StaticKey
 	 *
 	 * @param string $keyId
 	 * @return Symmetric\EncryptionKey
-	 * @throws \ParagonIE\Halite\Alerts\InvalidKey
-	 * @throws \TypeError
+	 * @throws InvalidKey
+	 * @throws TypeError
 	 */
 	private function getKey(string $keyId): Symmetric\EncryptionKey
 	{
 		if (isset($this->keys[$this->keyGroup][$keyId])) {
 			return new Symmetric\EncryptionKey(new HiddenString(Hex::decode($this->keys[$this->keyGroup][$keyId])));
 		} else {
-			throw new \OutOfRangeException('Unknown encryption key id: ' . $keyId);
+			throw new OutOfRangeException('Unknown encryption key id: ' . $keyId);
 		}
 	}
 
@@ -141,7 +150,7 @@ class StaticKey
 	{
 		$data = \explode(self::KEY_CIPHERTEXT_SEPARATOR, $data);
 		if (\count($data) !== 3) {
-			throw new \OutOfBoundsException('Data must have cipher, key, iv, and ciphertext. Now look at the Oxford comma!');
+			throw new OutOfBoundsException('Data must have cipher, key, iv, and ciphertext. Now look at the Oxford comma!');
 		}
 		return [$data[1], $data[2]];
 	}

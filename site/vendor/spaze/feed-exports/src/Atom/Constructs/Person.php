@@ -11,21 +11,11 @@ namespace Spaze\Exports\Atom\Constructs;
 class Person
 {
 
-	/** @var string */
-	protected $name;
-
-	/** @var string|null */
-	protected $email;
-
-	/** @var string|null */
-	protected $uri;
-
-
-	public function __construct(string $name, ?string $email = null, ?string $uri = null)
-	{
-		$this->name = $name;
-		$this->email = $email;
-		$this->uri = $uri;
+	public function __construct(
+		private string $name,
+		private ?string $email = null,
+		private ?string $uri = null,
+	) {
 	}
 
 

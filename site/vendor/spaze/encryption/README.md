@@ -2,6 +2,8 @@
 
 Various encryption helpers, uses [`paragonie/halite`](https://github.com/paragonie/halite) (which uses [Sodium](https://php.net/sodium)) for cryptography. Support key rotation.
 
+[![PHP Tests](https://github.com/spaze/encryption/actions/workflows/php.yml/badge.svg)](https://github.com/spaze/encryption/actions/workflows/php.yml)
+
 ## Usage in Nette framework
 
 ### Define encryption keys

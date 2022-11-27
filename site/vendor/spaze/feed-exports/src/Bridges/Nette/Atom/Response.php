@@ -3,40 +3,29 @@ declare(strict_types = 1);
 
 namespace Spaze\Exports\Bridges\Nette\Atom;
 
-use Spaze\Exports\Atom;
+use Nette\Application\Response as NetteResponse;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
+use Spaze\Exports\Atom\Feed;
 
 /**
  * Atom export response.
  *
  * @author Michal Špaček
  */
-class Response implements \Nette\Application\IResponse
+class Response implements NetteResponse
 {
 
-	/** @var string */
 	public const CONTENT_TYPE = 'application/atom+xml';
 
-	/** @var Atom\Feed */
-	protected $feed;
 
-
-	/**
-	 * Response constructor.
-	 *
-	 * @param Atom\Feed $feed
-	 */
-	public function __construct(Atom\Feed $feed)
-	{
-		$this->feed = $feed;
+	public function __construct(
+		private Feed $feed,
+	) {
 	}
 
 
-	/**
-	 * Sends response to output.
-	 *
-	 * @return void
-	 */
-	public function send(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse): void
+	public function send(IRequest $httpRequest, IResponse $httpResponse): void
 	{
 		$httpResponse->setContentType('application/atom+xml', 'utf-8');
 		$feed = (string)$this->feed;

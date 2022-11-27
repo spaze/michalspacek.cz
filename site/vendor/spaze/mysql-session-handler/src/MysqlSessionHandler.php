@@ -19,8 +19,6 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	use SmartObject;
 
 
-	private Explorer $explorer;
-
 	private ?StaticKeyEncryption $encryptionService = null;
 
 	private string $tableName;
@@ -51,9 +49,9 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	public $onBeforeDataWrite;
 
 
-	public function __construct(Explorer $explorer)
-	{
-		$this->explorer = $explorer;
+	public function __construct(
+		private Explorer $explorer,
+	) {
 	}
 
 
