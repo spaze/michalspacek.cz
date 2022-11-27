@@ -11,23 +11,14 @@ namespace Spaze\Exports\Atom\Constructs;
 class Text
 {
 
-	/** @var string */
 	public const TYPE_TEXT = 'text';
-
-	/** @var string */
 	public const TYPE_HTML = 'html';
 
-	/** @var string */
-	protected $text;
 
-	/** @var string|null */
-	protected $type;
-
-
-	public function __construct(string $text, ?string $type = null)
-	{
-		$this->text = $text;
-		$this->type = $type;
+	public function __construct(
+		private string $text,
+		private ?string $type = null,
+	) {
 	}
 
 

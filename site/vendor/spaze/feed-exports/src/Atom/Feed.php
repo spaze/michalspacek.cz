@@ -3,6 +3,11 @@ declare(strict_types = 1);
 
 namespace Spaze\Exports\Atom;
 
+use DateTimeInterface;
+use Spaze\Exports\Atom\Constructs\Person;
+use Spaze\Exports\Atom\Elements\Entry;
+use XMLWriter;
+
 /**
  * Atom feed.
  *
@@ -11,43 +16,29 @@ namespace Spaze\Exports\Atom;
 class Feed
 {
 
-	/** @var string */
-	protected $xml;
+	private ?string $xml = null;
 
-	/** @var \XMLWriter */
-	protected $writer;
+	private XMLWriter $writer;
 
-	/** @var string */
-	protected $id;
+	/** @var array<string, array<int, Elements\Link>> */
+	private array $links = [];
 
-	/** @var string */
-	protected $title;
+	private Person $author;
 
-	/** @var \DateTimeInterface|null */
-	protected $updated;
-
-	/** @var array<string, array<integer, Elements\Link>> */
-	protected $links = [];
-
-	/** @var Constructs\Person */
-	protected $author;
-
-	/** @var Elements\Entry[] */
-	protected $entries = [];
+	/** @var Entry[] */
+	private array $entries = [];
 
 
-	public function __construct(string $id, string $title, ?\DateTimeInterface $updated = null)
-	{
-		$this->id = $id;
-		$this->title = $title;
-		$this->updated = $updated;
+	public function __construct(
+		private string $id,
+		private string $title,
+		private ?DateTimeInterface $updated = null,
+	) {
 	}
 
 
 	/**
 	 * Set link with rel="self".
-	 *
-	 * @param string $href
 	 */
 	public function setLinkSelf(string $href): void
 	{
@@ -61,13 +52,13 @@ class Feed
 	}
 
 
-	public function setUpdated(\DateTimeInterface $updated): void
+	public function setUpdated(DateTimeInterface $updated): void
 	{
 		$this->updated = $updated;
 	}
 
 
-	public function getUpdated(): ?\DateTimeInterface
+	public function getUpdated(): ?DateTimeInterface
 	{
 		return $this->updated;
 	}
@@ -138,9 +129,9 @@ class Feed
 		$this->writer->startElement('entry');
 		$this->writer->writeElement('id', $entry->getId());
 		if ($entry->getPublished() !== null) {
-			$this->writer->writeElement('published', $entry->getPublished()->format(\DateTime::ATOM));
+			$this->writer->writeElement('published', $entry->getPublished()->format(DateTimeInterface::ATOM));
 		}
-		$this->writer->writeElement('updated', $entry->getUpdated()->format(\DateTime::ATOM));
+		$this->writer->writeElement('updated', $entry->getUpdated()->format(DateTimeInterface::ATOM));
 		if ($entry->getSummary() !== null) {
 			$this->addConstructText('summary', $entry->getSummary());
 		}
@@ -159,14 +150,14 @@ class Feed
 
 	private function getXml(): string
 	{
-		$this->writer = new \XMLWriter();
+		$this->writer = new XMLWriter();
 		$this->writer->openMemory();
 		$this->writer->startDocument('1.0', 'UTF-8');
 		$this->writer->startElementNs(null, 'feed', 'http://www.w3.org/2005/Atom');
 		$this->writer->writeElement('id', $this->id);
 		$this->writer->writeElement('title', $this->title);
 		if ($this->updated !== null) {
-			$this->writer->writeElement('updated', $this->updated->format(\DateTime::ATOM));
+			$this->writer->writeElement('updated', $this->updated->format(DateTimeInterface::ATOM));
 		}
 		$this->addElementAuthor();
 		foreach ($this->links as $links) {

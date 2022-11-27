@@ -11,47 +11,21 @@ namespace Spaze\Exports\Atom\Elements;
 class Link
 {
 
-	/** @var string */
 	public const REL_SELF = 'self';
-
-	/** @var string */
 	public const REL_ALTERNATE = 'alternate';
-
-	/** @var string */
-	protected $href;
-
-	/** @var string|null */
-	protected $rel;
-
-	/** @var string|null */
-	protected $type;
-
-	/** @var string|null */
-	protected $hreflang;
-
-	/** @var string|null */
-	protected $title;
-
-	/** @var integer|null */
-	protected $length;
 
 
 	/**
-	 * @param string $href
-	 * @param string|null $rel
-	 * @param string|null $type
-	 * @param string|null $hreflang
-	 * @param string|null $title
 	 * @param int|null $length An advisory length of the linked content in octets
 	 */
-	public function __construct(string $href, ?string $rel = null, ?string $type = null, ?string $hreflang = null, ?string $title = null, ?int $length = null)
-	{
-		$this->href = $href;
-		$this->rel = $rel;
-		$this->type = $type;
-		$this->hreflang = $hreflang;
-		$this->title = $title;
-		$this->length = $length;
+	public function __construct(
+		private string $href,
+		private ?string $rel = null,
+		private ?string $type = null,
+		private ?string $hreflang = null,
+		private ?string $title = null,
+		private ?int $length = null,
+	) {
 	}
 
 

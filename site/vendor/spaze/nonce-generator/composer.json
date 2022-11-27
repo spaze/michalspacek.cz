@@ -10,18 +10,18 @@
 		}
 	],
 	"require": {
-		"php": "^7.1 || ^8.0"
+		"php": "^8.0"
 	},
 	"autoload": {
 		"psr-4": {"Spaze\\NonceGenerator\\": "src"}
 	},
 	"require-dev": {
 		"nette/di": "^3.0",
-		"nette/tester": "^2.0",
-		"phpstan/phpstan": "^0.12",
-		"spaze/coding-standard": "^0.0.4",
+		"nette/tester": "^2.4",
+		"phpstan/phpstan": "^1.9",
+		"spaze/coding-standard": "^1.3",
 		"php-parallel-lint/php-parallel-lint": "^1.2",
-		"php-parallel-lint/php-console-highlighter": "^0.5.0"
+		"php-parallel-lint/php-console-highlighter": "^1.0"
 	},
 	"scripts": {
 		"lint": "vendor/bin/parallel-lint --colors src/ tests/",
@@ -38,5 +38,10 @@
 	"suggest": {
 		"spaze/csp-config": "Build and send Content Security Policy header, possibly including nonce, if enabled",
 		"spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	}
 }

@@ -5,7 +5,7 @@ namespace Spaze\Session\DI;
 
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\Statement;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 use Spaze\Encryption\Symmetric\StaticKey;
