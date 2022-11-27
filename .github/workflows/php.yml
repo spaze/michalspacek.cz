@@ -9,6 +9,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - name: OS info
       run: cat /etc/os-release
@@ -27,6 +28,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - name: Validate composer.json and composer.lock
@@ -38,6 +40,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - uses: shivammathur/setup-php@v2
@@ -53,6 +56,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - uses: shivammathur/setup-php@v2
@@ -67,6 +71,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - uses: shivammathur/setup-php@v2
@@ -81,6 +86,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - uses: shivammathur/setup-php@v2
@@ -95,6 +101,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - name: Get PHP_CodeSniffer cache file pattern
@@ -116,6 +123,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - name: Get PHPStan result cache directory
@@ -137,6 +145,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - name: Get PHPStan result cache directory
@@ -158,6 +167,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - uses: shivammathur/setup-php@v2
