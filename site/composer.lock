@@ -180,16 +180,16 @@
         },
         {
             "name": "nette/application",
-            "version": "v3.1.7",
+            "version": "v3.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "a831a22c8291638624b39a673d40935c854371e3"
+                "reference": "84cca12ef6869ffd8cd783d2ada765b9d5460e8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/a831a22c8291638624b39a673d40935c854371e3",
-                "reference": "a831a22c8291638624b39a673d40935c854371e3",
+                "url": "https://api.github.com/repos/nette/application/zipball/84cca12ef6869ffd8cd783d2ada765b9d5460e8e",
+                "reference": "84cca12ef6869ffd8cd783d2ada765b9d5460e8e",
                 "shasum": ""
             },
             "require": {
@@ -208,7 +208,7 @@
                 "tracy/tracy": "<2.5"
             },
             "require-dev": {
-                "latte/latte": "^2.10.2 || ^3.0.1",
+                "latte/latte": "^2.10.2 || ^3.0.3",
                 "mockery/mockery": "^1.0",
                 "nette/di": "^v3.0",
                 "nette/forms": "^3.0",
@@ -265,9 +265,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/application/issues",
-                "source": "https://github.com/nette/application/tree/v3.1.7"
+                "source": "https://github.com/nette/application/tree/v3.1.8"
             },
-            "time": "2022-06-01T12:25:37+00:00"
+            "time": "2022-11-28T00:04:47+00:00"
         },
         {
             "name": "nette/bootstrap",
