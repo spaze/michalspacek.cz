@@ -18,6 +18,9 @@ http:
 	frames: false
 	cookieSecure: true
 
+tracy:
+	netteMailer: false
+
 session:
 	name: __Host-yourluckynumbers
 	sid_length: 64

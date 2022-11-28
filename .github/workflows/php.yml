@@ -9,10 +9,14 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - name: OS info
       run: cat /etc/os-release
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - name: PHP info
       run: |
         php -v
@@ -24,6 +28,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - name: Validate composer.json and composer.lock
@@ -35,9 +40,13 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site check-file-patterns
 
 
@@ -47,9 +56,13 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site lint
 
   lint-latte:
@@ -58,9 +71,13 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site lint-latte
 
   lint-neon:
@@ -69,9 +86,13 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site lint-neon
 
   phpcs:
@@ -80,6 +101,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - name: Get PHP_CodeSniffer cache file pattern
@@ -89,7 +111,10 @@ jobs:
       with:
         path: ${{ steps.phpcs-cache.outputs.file }}
         key: phpcs-cache-php${{ matrix.php-version }}
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site phpcs
 
   phpstan:
@@ -98,6 +123,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - name: Get PHPStan result cache directory
@@ -107,7 +133,10 @@ jobs:
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-cache-php${{ matrix.php-version }}
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site phpstan
 
   phpstan-vendor:
@@ -116,6 +145,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
     - name: Get PHPStan result cache directory
@@ -125,7 +155,10 @@ jobs:
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
         key: phpstan-vendor-cache-php${{ matrix.php-version }}
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site run-script --timeout=600 phpstan-vendor
 
   tester:
@@ -134,9 +167,13 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
     steps:
     - uses: actions/checkout@v3
-    - run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site tester
     - name: Failed test output, if any
       if: failure()
