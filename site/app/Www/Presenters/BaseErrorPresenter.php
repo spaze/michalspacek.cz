@@ -50,7 +50,7 @@ abstract class BaseErrorPresenter extends BasePresenter
 
 		$destination = $this->redirections->getDestination($this->getHttpRequest()->getUrl());
 		if ($destination) {
-			$this->redirectUrl($destination, IResponse::S301_MOVED_PERMANENTLY);
+			$this->redirectUrl($destination, IResponse::S301_MovedPermanently);
 		}
 
 		if ($this->logAccess) {

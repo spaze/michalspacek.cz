@@ -41,7 +41,7 @@ class CompanyPresenter extends BasePresenter
 			$info = $this->companyInfo->getData($country, $companyId);
 		} catch (RuntimeException $e) {
 			$info = new Data();
-			$info->status = IResponse::S500_INTERNAL_SERVER_ERROR;
+			$info->status = IResponse::S500_InternalServerError;
 			$info->statusMessage = $e->getMessage();
 		}
 		$data = [

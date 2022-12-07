@@ -102,7 +102,7 @@ class TrainingsPresenter extends BasePresenter
 
 		if ($this->training->discontinuedId !== null) {
 			$this->template->discontinued = [$this->trainings->getDiscontinued($this->training->discontinuedId)];
-			$this->httpResponse->setCode(IResponse::S410_GONE);
+			$this->httpResponse->setCode(IResponse::S410_Gone);
 		}
 	}
 
@@ -223,7 +223,7 @@ class TrainingsPresenter extends BasePresenter
 
 		if ($training->discontinuedId !== null) {
 			$this->template->discontinued = [$this->trainings->getDiscontinued($training->discontinuedId)];
-			$this->httpResponse->setCode(IResponse::S410_GONE);
+			$this->httpResponse->setCode(IResponse::S410_Gone);
 		}
 	}
 
@@ -297,7 +297,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->training = $training;
 		$this->dates = $this->trainings->getDates($this->training->trainingId);
 		if (empty($this->dates)) {
-			throw new BadRequestException("No dates for {$name} training", IResponse::S503_SERVICE_UNAVAILABLE);
+			throw new BadRequestException("No dates for {$name} training", IResponse::S503_ServiceUnavailable);
 		}
 
 		$session = $this->getSession('training');

@@ -76,14 +76,14 @@ class Ares implements CompanyDataInterface
 			$company->country = $country;
 		} catch (UnexpectedValueException $e) {
 			Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
-			$company->status = IResponse::S400_BAD_REQUEST;
+			$company->status = IResponse::S400_BadRequest;
 			$company->statusMessage = 'Not Found';
 		} catch (RuntimeException $e) {
-			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
+			$company->status = IResponse::S500_InternalServerError;
 			$company->statusMessage = 'Error';
 		} catch (Exception $e) {
 			Debugger::log($e);
-			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
+			$company->status = IResponse::S500_InternalServerError;
 			$company->statusMessage = 'Error';
 		}
 

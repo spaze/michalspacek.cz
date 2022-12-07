@@ -59,14 +59,14 @@ class RegisterUz implements CompanyDataInterface
 			$company->country = self::COUNTRY_CODE;
 		} catch (UnexpectedValueException $e) {
 			Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
-			$company->status = IResponse::S400_BAD_REQUEST;
+			$company->status = IResponse::S400_BadRequest;
 			$company->statusMessage = 'Not Found';
 		} catch (RuntimeException $e) {
-			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
+			$company->status = IResponse::S500_InternalServerError;
 			$company->statusMessage = 'Error';
 		} catch (Exception $e) {
 			Debugger::log($e);
-			$company->status = IResponse::S500_INTERNAL_SERVER_ERROR;
+			$company->status = IResponse::S500_InternalServerError;
 			$company->statusMessage = 'Error';
 		}
 
@@ -89,7 +89,7 @@ class RegisterUz implements CompanyDataInterface
 		$content = file_get_contents("{$this->rootUrl}{$method}{$query}");
 		if (!$content) {
 			$lastError = error_get_last();
-			throw new RuntimeException($lastError ? $lastError['message'] : '', IResponse::S500_INTERNAL_SERVER_ERROR);
+			throw new RuntimeException($lastError ? $lastError['message'] : '', IResponse::S500_InternalServerError);
 		}
 		return Json::decode($content);
 	}

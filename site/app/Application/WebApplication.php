@@ -41,7 +41,7 @@ class WebApplication
 		$uri = $_SERVER['REQUEST_URI'];
 		if ($_SERVER['HTTP_HOST'] !== $this->fqdn) {
 			$this->securityHeaders->setDefaultCsp()->sendHeaders();
-			$this->httpResponse->redirect("https://{$this->fqdn}{$uri}", IResponse::S301_MOVED_PERMANENTLY);
+			$this->httpResponse->redirect("https://{$this->fqdn}{$uri}", IResponse::S301_MovedPermanently);
 			exit();
 		}
 	}

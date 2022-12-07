@@ -77,7 +77,7 @@ class Response implements IResponse
 	}
 
 
-	public function redirect(string $url, int $code = self::S302_FOUND): void
+	public function redirect(string $url, int $code = self::S302_Found): void
 	{
 		$this->redirectTo = $url;
 		$this->redirectCode = $code;
