@@ -63,7 +63,6 @@ class RequestFactory
 		$url = new Url;
 		$this->getServer($url);
 		$this->getPathAndQuery($url);
-		$this->getUserAndPassword($url);
 		[$post, $cookies] = $this->getGetPostCookie($url);
 		[$remoteAddr, $remoteHost] = $this->getClient($url);
 
@@ -112,13 +111,6 @@ class RequestFactory
 		$path = Strings::fixEncoding(Strings::replace($path, $this->urlFilters['path']));
 		$url->setPath($path);
 		$url->setQuery($tmp[1] ?? '');
-	}
-
-
-	private function getUserAndPassword(Url $url): void
-	{
-		$url->setUser($_SERVER['PHP_AUTH_USER'] ?? '');
-		$url->setPassword($_SERVER['PHP_AUTH_PW'] ?? '');
 	}
 
 
@@ -229,6 +221,7 @@ class RequestFactory
 					'name' => $v['name'][$k],
 					'type' => $v['type'][$k],
 					'size' => $v['size'][$k],
+					'full_path' => $v['full_path'][$k] ?? null,
 					'tmp_name' => $v['tmp_name'][$k],
 					'error' => $v['error'][$k],
 					'@' => &$v['@'][$k],
@@ -243,27 +236,35 @@ class RequestFactory
 	private function getHeaders(): array
 	{
 		if (function_exists('apache_request_headers')) {
-			return apache_request_headers();
+			$headers = apache_request_headers();
+		} else {
+			$headers = [];
+			foreach ($_SERVER as $k => $v) {
+				if (strncmp($k, 'HTTP_', 5) === 0) {
+					$k = substr($k, 5);
+				} elseif (strncmp($k, 'CONTENT_', 8)) {
+					continue;
+				}
+
+				$headers[strtr($k, '_', '-')] = $v;
+			}
 		}
 
-		$headers = [];
-		foreach ($_SERVER as $k => $v) {
-			if (strncmp($k, 'HTTP_', 5) === 0) {
-				$k = substr($k, 5);
-			} elseif (strncmp($k, 'CONTENT_', 8)) {
-				continue;
+		if (!isset($headers['Authorization'])) {
+			if (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+				$headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
+			} elseif (isset($_SERVER['PHP_AUTH_DIGEST'])) {
+				$headers['Authorization'] = 'Digest ' . $_SERVER['PHP_AUTH_DIGEST'];
 			}
-
-			$headers[strtr($k, '_', '-')] = $v;
 		}
 
 		return $headers;
 	}
 
 
-	private function getMethod(): ?string
+	private function getMethod(): string
 	{
-		$method = $_SERVER['REQUEST_METHOD'] ?? null;
+		$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 		if (
 			$method === 'POST'
 			&& preg_match('#^[A-Z]+$#D', $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? '')
