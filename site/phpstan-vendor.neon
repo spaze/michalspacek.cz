@@ -115,7 +115,23 @@ parameters:
 				- vendor/symfony/config/Resource/*Resource.php
 			allowExceptCaseInsensitiveParams:
 				1: 'md5'
-
+		-
+			function: 'mt_rand()'
+			message: 'it is not a cryptographically secure generator, use random_int() instead'
+			allowIn:
+				- vendor/nette/caching/src/Caching/Storages/FileStorage.php
+				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
+				- vendor/symfony/filesystem/Filesystem.php
+				- vendor/symfony/translation/PseudoLocalizationTranslator.php
+				- vendor/tracy/tracy/src/Tracy/Session/FileSession.php
+		-
+			function: 'uniqid()'
+			message: 'it is not a cryptographically secure generator, use random_bytes() instead'
+			allowIn:
+				- vendor/nette/tester/src/Framework/Dumper.php
+				- vendor/symfony/cache/Adapter/PhpArrayAdapter.php
+				- vendor/symfony/filesystem/Filesystem.php
+				- vendor/tracy/tracy/src/Tracy/Logger/FireLogger.php
 	disallowedStaticCalls:
 		-
 			method: 'Tracy\Debugger::barDump()'
