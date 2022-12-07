@@ -70,7 +70,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);
 		if ($training->discontinuedId !== null) {
 			$this->template->discontinued = [$this->trainings->getDiscontinued($training->discontinuedId)];
-			$this->httpResponse->setCode(IResponse::S410_GONE);
+			$this->httpResponse->setCode(IResponse::S410_Gone);
 		}
 	}
 

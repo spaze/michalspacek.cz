@@ -88,7 +88,7 @@ class HomepagePresenter extends BasePresenter
 				}
 			} else {
 				$result['error'] = 'Wi-Fi network name is not "UPC" and 7 numbers, the password cannot be recovered by this tool';
-				$this->httpResponse->setCode(IResponse::S404_NOT_FOUND);
+				$this->httpResponse->setCode(IResponse::S404_NotFound);
 			}
 		}
 		return $result;

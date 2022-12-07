@@ -15,11 +15,11 @@ class ErrorPresenter extends BaseErrorPresenter
 
 	/** @var int[] */
 	private array $statuses = [
-		IResponse::S400_BAD_REQUEST,
-		IResponse::S403_FORBIDDEN,
-		IResponse::S404_NOT_FOUND,
-		IResponse::S405_METHOD_NOT_ALLOWED,
-		IResponse::S410_GONE,
+		IResponse::S400_BadRequest,
+		IResponse::S403_Forbidden,
+		IResponse::S404_NotFound,
+		IResponse::S405_MethodNotAllowed,
+		IResponse::S410_Gone,
 	];
 
 
@@ -32,7 +32,7 @@ class ErrorPresenter extends BaseErrorPresenter
 
 	public function actionDefault(BadRequestException $exception): void
 	{
-		$code = (in_array($exception->getCode(), $this->statuses) ? $exception->getCode() : IResponse::S400_BAD_REQUEST);
+		$code = (in_array($exception->getCode(), $this->statuses) ? $exception->getCode() : IResponse::S400_BadRequest);
 		$this->template->errorCode = $code;
 		$this->template->pageTitle = $this->translator->translate("messages.title.error{$code}");
 		$this->template->note =  $this->translator->translate("messages.error.{$code}");
