@@ -1,0 +1,10 @@
+parameters:
+	customRulesetUsed: true
+	tmpDir: /tmp/phpstan/michalspacek.cz-latte-templates
+	paths:
+		- app
+	latte:
+		engineBootstrap: app/PhpStan/latteEngine.php
+
+includes:
+	- vendor/efabrica/phpstan-latte/rules.neon
