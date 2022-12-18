@@ -129,8 +129,12 @@ class Resolver
 
 			$this->addDependency($reflection);
 
-			$type = Nette\Utils\Type::fromReflection($reflection) ?? Helpers::getReturnTypeAnnotation($reflection);
+			$type = Nette\Utils\Type::fromReflection($reflection) ?? ($annotation = Helpers::getReturnTypeAnnotation($reflection));
 			if ($type && !in_array((string) $type, ['object', 'mixed'], true)) {
+				if (isset($annotation)) {
+					trigger_error('Annotation @return should be replaced with native return type at ' . Callback::toString($entity), E_USER_DEPRECATED);
+				}
+
 				return Helpers::ensureClassType($type, sprintf('return type of %s()', Callback::toString($entity)));
 			}
 
@@ -143,7 +147,7 @@ class Resolver
 			if (!class_exists($entity)) {
 				throw new ServiceCreationException(sprintf(
 					interface_exists($entity)
-						? "Interface %s can not be used as 'factory', did you mean 'implement'?"
+						? "Interface %s can not be used as 'create' or 'factory', did you mean 'implement'?"
 						: "Class '%s' not found.",
 					$entity
 				));
@@ -194,12 +198,8 @@ class Resolver
 				break;
 
 			case $entity === 'not':
-				if (count($arguments) > 1) {
-					throw new ServiceCreationException(sprintf(
-						'Function %s() expects at most 1 parameter, %s given.',
-						$entity,
-						count($arguments)
-					));
+				if (count($arguments) !== 1) {
+					throw new ServiceCreationException(sprintf('Function %s() expects 1 parameter, %s given.', $entity, count($arguments)));
 				}
 
 				$entity = ['', '!'];
@@ -209,12 +209,8 @@ class Resolver
 			case $entity === 'int':
 			case $entity === 'float':
 			case $entity === 'string':
-				if (count($arguments) > 1) {
-					throw new ServiceCreationException(sprintf(
-						'Function %s() expects at most 1 parameter, %s given.',
-						$entity,
-						count($arguments)
-					));
+				if (count($arguments) !== 1) {
+					throw new ServiceCreationException(sprintf('Function %s() expects 1 parameter, %s given.', $entity, count($arguments)));
 				}
 
 				$arguments = [$arguments[0], $entity];
@@ -241,7 +237,7 @@ class Resolver
 				break;
 
 			case $entity instanceof Reference:
-				$entity = [new Reference(ContainerBuilder::THIS_CONTAINER), Container::getMethodName($entity->getValue())];
+				$entity = [new Reference(ContainerBuilder::ThisContainer), Container::getMethodName($entity->getValue())];
 				break;
 
 			case is_array($entity):
@@ -386,7 +382,7 @@ class Resolver
 			}
 
 			return $this->currentService && $service === $this->currentService->getName()
-				? new Reference(Reference::SELF)
+				? new Reference(Reference::Self)
 				: $ref;
 		}
 
@@ -418,7 +414,7 @@ class Resolver
 			&& $this->currentServiceAllowed
 			&& is_a($this->currentServiceType, $type, true)
 		) {
-			return new Reference(Reference::SELF);
+			return new Reference(Reference::Self);
 		}
 
 		$name = $this->builder->getByType($type, true);
@@ -509,7 +505,7 @@ class Resolver
 				$pair = explode('::', substr($val, 1), 2);
 				if (!isset($pair[1])) { // @service
 					$val = new Reference($pair[0]);
-				} elseif (preg_match('#^[A-Z][A-Z0-9_]*$#D', $pair[1], $m)) { // @service::CONSTANT
+				} elseif (preg_match('#^[A-Z][a-zA-Z0-9_]*$#D', $pair[1], $m)) { // @service::CONSTANT
 					$val = ContainerBuilder::literal($this->resolveReferenceType(new Reference($pair[0])) . '::' . $pair[1]);
 				} else { // @service::property
 					$val = new Statement([new Reference($pair[0]), '$' . $pair[1]]);
@@ -583,12 +579,23 @@ class Resolver
 					$useName = true;
 				} else {
 					$res[$num] = null;
+					trigger_error(sprintf(
+						'The parameter %s should have a declared value in the configuration.',
+						Reflection::toString($param)
+					), E_USER_DEPRECATED);
 				}
 
 			} else {
 				$res[$num] = $param->isDefaultValueAvailable()
 					? Reflection::getParameterDefaultValue($param)
 					: null;
+
+				if (!$param->isOptional()) {
+					trigger_error(sprintf(
+						'The parameter %s should have a declared value in the configuration.',
+						Reflection::toString($param)
+					), E_USER_DEPRECATED);
+				}
 			}
 
 			if (PHP_VERSION_ID < 80000) {
@@ -629,7 +636,7 @@ class Resolver
 		$desc = Reflection::toString($parameter);
 		$type = Nette\Utils\Type::fromReflection($parameter);
 
-		if ($parameter->getType() instanceof \ReflectionIntersectionType) {
+		if ($type && $type->isIntersection()) {
 			throw new ServiceCreationException(sprintf(
 				'Parameter %s has intersection type, so its value must be specified.',
 				$desc

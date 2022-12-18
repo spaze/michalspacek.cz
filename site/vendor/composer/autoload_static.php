@@ -173,8 +173,8 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         ),
         'PHPStan\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
-            1 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
+            0 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
+            1 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
         ),
         'MichalSpacekCz\\' => 
         array (
@@ -534,7 +534,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\DI\\Config\\Adapter' => __DIR__ . '/..' . '/nette/di/src/DI/Config/Adapter.php',
         'Nette\\DI\\Config\\Adapters\\NeonAdapter' => __DIR__ . '/..' . '/nette/di/src/DI/Config/Adapters/NeonAdapter.php',
         'Nette\\DI\\Config\\Adapters\\PhpAdapter' => __DIR__ . '/..' . '/nette/di/src/DI/Config/Adapters/PhpAdapter.php',
-        'Nette\\DI\\Config\\DefinitionSchema' => __DIR__ . '/..' . '/nette/di/src/DI/Config/DefinitionSchema.php',
         'Nette\\DI\\Config\\Helpers' => __DIR__ . '/..' . '/nette/di/src/DI/Config/Helpers.php',
         'Nette\\DI\\Config\\IAdapter' => __DIR__ . '/..' . '/nette/di/src/compatibility.php',
         'Nette\\DI\\Config\\Loader' => __DIR__ . '/..' . '/nette/di/src/DI/Config/Loader.php',
@@ -554,6 +553,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\DI\\Extensions\\ConstantsExtension' => __DIR__ . '/..' . '/nette/di/src/DI/Extensions/ConstantsExtension.php',
         'Nette\\DI\\Extensions\\DIExtension' => __DIR__ . '/..' . '/nette/di/src/DI/Extensions/DIExtension.php',
         'Nette\\DI\\Extensions\\DecoratorExtension' => __DIR__ . '/..' . '/nette/di/src/DI/Extensions/DecoratorExtension.php',
+        'Nette\\DI\\Extensions\\DefinitionSchema' => __DIR__ . '/..' . '/nette/di/src/DI/Extensions/DefinitionSchema.php',
         'Nette\\DI\\Extensions\\ExtensionsExtension' => __DIR__ . '/..' . '/nette/di/src/DI/Extensions/ExtensionsExtension.php',
         'Nette\\DI\\Extensions\\InjectExtension' => __DIR__ . '/..' . '/nette/di/src/DI/Extensions/InjectExtension.php',
         'Nette\\DI\\Extensions\\ParametersExtension' => __DIR__ . '/..' . '/nette/di/src/DI/Extensions/ParametersExtension.php',
