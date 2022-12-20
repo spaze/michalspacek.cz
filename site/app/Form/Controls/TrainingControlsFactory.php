@@ -48,8 +48,8 @@ class TrainingControlsFactory
 			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200)
 			->getLabelPrototype()
 			->addAttributes([
-				'data-label-cz' => $this->translator->translate('messages.label.taxid.cz') . ':',
-				'data-label-sk' => $this->translator->translate('messages.label.taxid.sk') . ':',
+				'data-cz' => $this->translator->translate('messages.label.taxid.cz') . ':',
+				'data-sk' => $this->translator->translate('messages.label.taxid.sk') . ':',
 			]);
 		$container->addText('company', 'Obchodní jméno:')
 			->setRequired(false)
