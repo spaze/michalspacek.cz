@@ -3,6 +3,7 @@ name: security.txt checks
 on:
   schedule:
     - cron:  '37 13 * * *'
+  workflow_dispatch:
 
 jobs:
   securitytxt:

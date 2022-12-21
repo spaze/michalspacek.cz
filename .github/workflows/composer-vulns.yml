@@ -4,6 +4,7 @@ on:
   push:
   schedule:
     - cron:  '25 */2 * * *'
+  workflow_dispatch:
 
 jobs:
   composer-vulnz:
