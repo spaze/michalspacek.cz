@@ -17,8 +17,10 @@ jobs:
           - www.michalspacek.com
           - upcwifikeys.com
     steps:
-    - name: Set PHP version
-      run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
     - name: Install ext-gnupg
       run: |
         sudo add-apt-repository ppa:ondrej/php
