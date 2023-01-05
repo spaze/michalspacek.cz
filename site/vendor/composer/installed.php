@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '9e193c98a9ed70686f87461513a2512c57a45458',
+        'reference' => '49191fcf05ebc8acf2c499e38c27c963e5c4335e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -41,8 +41,8 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../efabrica/phpstan-latte',
             'aliases' => array(
-                0 => '0.3.0',
-                1 => '9999999-dev',
+                0 => '9999999-dev',
+                1 => '0.3.0',
             ),
             'dev_requirement' => true,
         ),
@@ -441,7 +441,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9e193c98a9ed70686f87461513a2512c57a45458',
+            'reference' => '49191fcf05ebc8acf2c499e38c27c963e5c4335e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
