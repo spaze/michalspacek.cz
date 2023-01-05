@@ -19,6 +19,9 @@ class FileResource implements ResourceInterface
 	 */
 	public function getContent(): string
 	{
+		if (!file_exists($this->filename)) {
+			throw new CannotGetFileContentException($this->filename);
+		}
 		$content = file_get_contents($this->filename);
 		if (!$content) {
 			throw new CannotGetFileContentException($this->filename);

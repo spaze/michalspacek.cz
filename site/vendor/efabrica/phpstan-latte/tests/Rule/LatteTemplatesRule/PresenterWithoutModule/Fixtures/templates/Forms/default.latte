@@ -1,0 +1,53 @@
+{form firstForm}
+    {input text} <label n:name="text">Text</label><input n:name="text">
+    {input textarea id => "myId"}
+    {input password}
+    {input submit, ['class' => 'btn']}
+{/form}
+
+{form secondForm}
+    {input select}
+    {input username}
+    {input password}
+    {input checkbox}{label checkbox /} <label n:name="checkbox"><input n:name="checkbox">Checkbox</label>
+    {input second_submit, ['class' => 'btn']}{label second_submit_label /}
+{/form}
+
+{form customForm}
+{*    {$form->getRenderer()->renderControls($form->getGroup('General'), true) |noescape}*}
+    {$form->getRenderer()->renderPair($form['custom_text'])}
+    {$form->getRenderer()->someCustomMethod($form['custom_textarea'])}
+    {$form->getRenderer()->someNonExistingCustomMethod($form['submit'])}
+{/form}
+
+{form indirectForm}
+    {input select}
+    {input username}
+    {input password}
+    {input submit}
+{/form}
+
+{form indirectThroughtParentForm}
+    {input select}
+    {input username}
+    {input password}
+    {input submit}
+{/form}
+
+{form indirectFormFields}
+    {input select}
+    {input username}
+    {input password}
+    {input submit}
+{/form}
+
+{form notExisting}
+    {input username}
+{/form}
+
+{form firstForm}
+    {var $name = "text"}
+    {input $name}
+    {var $textarea = $form['textarea']}
+    {input $textarea}
+{/form}

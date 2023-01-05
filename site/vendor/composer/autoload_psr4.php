@@ -35,6 +35,7 @@ return array(
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-deprecation-rules/src', $vendorDir . '/phpstan/phpstan-nette/src'),
     'MichalSpacekCz\\' => array($baseDir . '/app'),
+    'Efabrica\\PHPStanLatte\\' => array($vendorDir . '/efabrica/phpstan-latte/src'),
     'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),
     'Contributte\\Translation\\' => array($vendorDir . '/contributte/translation/src'),
 );

@@ -6,4 +6,4 @@ declare(strict_types = 1);
 use MichalSpacekCz\Application\Bootstrap;
 use MichalSpacekCz\Templating\TemplateFactory;
 
-return Bootstrap::bootTest()->getByType(TemplateFactory::class)->createTemplate()->getLatte();
+return Bootstrap::bootCli()->getByType(TemplateFactory::class)->createTemplate()->getLatte();

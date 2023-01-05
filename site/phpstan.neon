@@ -10,6 +10,9 @@ parameters:
 			- redirectPermanent
 	latte:
 		engineBootstrap: tests/latteEngine.php
+		errorPatternsToIgnore:
+			- '/Calling extract\(\) is forbidden, do not use extract\(\) and especially not on untrusted data/'
+		tmpDir: tmp
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon

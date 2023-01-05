@@ -1,0 +1,6 @@
+parameters:
+    latte:
+        errorPatternsToIgnore:
+            - '#.*unknown class Placeholder\\Var.*#'
+            - '#PHPDoc tag @var for variable .* contains unknown class Placeholder\\.*#'
+            - '#Call to method redrawControl\(\) on an unknown class Placeholder\\.*#'
