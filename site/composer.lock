@@ -3172,12 +3172,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/efabrica-team/phpstan-latte.git",
-                "reference": "8eed8cf0246a964b3538c75042c6ea3700d994b2"
+                "reference": "a8217cce8ebb26dda899344b18288272d9a4a2ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/8eed8cf0246a964b3538c75042c6ea3700d994b2",
-                "reference": "8eed8cf0246a964b3538c75042c6ea3700d994b2",
+                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/a8217cce8ebb26dda899344b18288272d9a4a2ad",
+                "reference": "a8217cce8ebb26dda899344b18288272d9a4a2ad",
                 "shasum": ""
             },
             "require": {
@@ -3211,7 +3211,7 @@
                 "issues": "https://github.com/efabrica-team/phpstan-latte/issues",
                 "source": "https://github.com/efabrica-team/phpstan-latte/tree/main"
             },
-            "time": "2023-01-05T21:59:27+00:00"
+            "time": "2023-01-07T01:46:14+00:00"
         },
         {
             "name": "nette/tester",
@@ -4270,16 +4270,16 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v2.11.2",
+            "version": "v2.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "f1f319bda7cc706f6bc5079f5a564ebfcc8ad5f3"
+                "reference": "800f5f8f6e30cb2136488996e82899a029176c0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/f1f319bda7cc706f6bc5079f5a564ebfcc8ad5f3",
-                "reference": "f1f319bda7cc706f6bc5079f5a564ebfcc8ad5f3",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/800f5f8f6e30cb2136488996e82899a029176c0b",
+                "reference": "800f5f8f6e30cb2136488996e82899a029176c0b",
                 "shasum": ""
             },
             "require": {
@@ -4324,9 +4324,9 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.11.2"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.11.3"
             },
-            "time": "2022-12-26T14:16:10+00:00"
+            "time": "2023-01-06T18:04:04+00:00"
         },
         {
             "name": "spaze/phpstan-disallowed-calls-nette",

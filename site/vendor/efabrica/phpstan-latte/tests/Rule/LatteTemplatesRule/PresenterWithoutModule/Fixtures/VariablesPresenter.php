@@ -23,11 +23,19 @@ final class VariablesPresenter extends ParentPresenter
         $this->baz();
         $this->overwritten();
         $this->overwrittenThroughtParent();
+        $this->calledParentOverwritten();
         $this->getTemplate()->viaGetTemplate = 'foobar';
         $this->template->stringLists = $this->stringLists;
         $localStrings = ['foo', 'bar', 'baz'];
         $this->template->localStrings = $localStrings;
         $this->template->obj = $this;
+
+        $items = ['first item', 'second item'];
+        [$this->template->array1, $this->template->array2] = $items;
+        list($this->template->list1, $this->template->list2) = $items;
+
+        [$this->template->array1WithoutType, $this->template->array2WithoutType] = $this->itemsToArrayAssignWithoutTypes();
+        list($this->template->list1WithType, $this->template->list2WithType) = $this->itemsToArrayAssignWithTypes();
     }
 
     public function renderDefault(): void
@@ -53,6 +61,17 @@ final class VariablesPresenter extends ParentPresenter
     protected function parentOverwritten(): void
     {
         $this->template->parentOverwritting = 'overwritting';
+    }
+
+    protected function calledParentOverwritten(): void
+    {
+        parent::calledParentOverwritten();
+        $this->template->calledParentOverwritting = 'overwritted';
+    }
+
+    protected function calledParentSecondOverwritten(): void
+    {
+        $this->template->calledParentSecondOverwritting = 'overwritted';
     }
 
     public function actionDirectRender(): void
@@ -100,5 +119,18 @@ final class VariablesPresenter extends ParentPresenter
     public function renderDifferent2(): void
     {
         $this->template->fromDifferentRender2 = 'from different render 2';
+    }
+
+    private function itemsToArrayAssignWithoutTypes(): array
+    {
+        return ['one', 'two'];
+    }
+
+    /**
+     * @return array{0: string, 1: int}
+     */
+    private function itemsToArrayAssignWithTypes(): array
+    {
+        return ['three', 4];
     }
 }

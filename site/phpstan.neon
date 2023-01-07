@@ -11,8 +11,11 @@ parameters:
 	latte:
 		engineBootstrap: tests/latteEngine.php
 		errorPatternsToIgnore:
-			- '/Calling extract\(\) is forbidden, do not use extract\(\) and especially not on untrusted data/'
+			- '/Calling extract\(\) is forbidden, do not use extract\(\) and especially not on untrusted data/' # extract is very often used in compiled latte templates and it is necessary to let them there
 		tmpDir: tmp
+
+		applicationMapping: # we  have to copy mapping from config while this issue is not solved https://github.com/efabrica-team/phpstan-latte/issues/27
+			*: MichalSpacekCz\*\Presenters\*Presenter
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon

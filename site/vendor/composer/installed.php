@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '49191fcf05ebc8acf2c499e38c27c963e5c4335e',
+        'reference' => 'e46e78abe23a09e2c49583febf30853fe061647c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -37,7 +37,7 @@
         'efabrica/phpstan-latte' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '8eed8cf0246a964b3538c75042c6ea3700d994b2',
+            'reference' => 'a8217cce8ebb26dda899344b18288272d9a4a2ad',
             'type' => 'library',
             'install_path' => __DIR__ . '/../efabrica/phpstan-latte',
             'aliases' => array(
@@ -441,7 +441,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '49191fcf05ebc8acf2c499e38c27c963e5c4335e',
+            'reference' => 'e46e78abe23a09e2c49583febf30853fe061647c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -475,9 +475,9 @@
             'dev_requirement' => false,
         ),
         'spaze/phpstan-disallowed-calls' => array(
-            'pretty_version' => 'v2.11.2',
-            'version' => '2.11.2.0',
-            'reference' => 'f1f319bda7cc706f6bc5079f5a564ebfcc8ad5f3',
+            'pretty_version' => 'v2.11.3',
+            'version' => '2.11.3.0',
+            'reference' => '800f5f8f6e30cb2136488996e82899a029176c0b',
             'type' => 'phpstan-extension',
             'install_path' => __DIR__ . '/../spaze/phpstan-disallowed-calls',
             'aliases' => array(),
