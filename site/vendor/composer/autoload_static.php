@@ -47,14 +47,11 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPStan\\' => 8,
+            'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 57,
         ),
         'M' => 
         array (
             'MichalSpacekCz\\' => 15,
-        ),
-        'D' => 
-        array (
-            'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 55,
         ),
         'C' => 
         array (
@@ -176,13 +173,13 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             0 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
             1 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
         ),
+        'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
+        ),
         'MichalSpacekCz\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
-        ),
-        'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
         ),
         'Contributte\\Translation\\' => 
         array (
@@ -489,13 +486,14 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Bridges\\FormsDI\\FormsExtension' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsDI/FormsExtension.php',
         'Nette\\Bridges\\FormsLatte\\FormMacros' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/FormMacros.php',
         'Nette\\Bridges\\FormsLatte\\FormsExtension' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/FormsExtension.php',
+        'Nette\\Bridges\\FormsLatte\\Nodes\\FieldNNameNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/FieldNNameNode.php',
         'Nette\\Bridges\\FormsLatte\\Nodes\\FormContainerNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/FormContainerNode.php',
+        'Nette\\Bridges\\FormsLatte\\Nodes\\FormNNameNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/FormNNameNode.php',
         'Nette\\Bridges\\FormsLatte\\Nodes\\FormNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/FormNode.php',
         'Nette\\Bridges\\FormsLatte\\Nodes\\FormPrintNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/FormPrintNode.php',
         'Nette\\Bridges\\FormsLatte\\Nodes\\InputErrorNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/InputErrorNode.php',
         'Nette\\Bridges\\FormsLatte\\Nodes\\InputNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/InputNode.php',
         'Nette\\Bridges\\FormsLatte\\Nodes\\LabelNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/LabelNode.php',
-        'Nette\\Bridges\\FormsLatte\\Nodes\\NNameNode' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Nodes/NNameNode.php',
         'Nette\\Bridges\\FormsLatte\\Runtime' => __DIR__ . '/..' . '/nette/forms/src/Bridges/FormsLatte/Runtime.php',
         'Nette\\Bridges\\HttpDI\\HttpExtension' => __DIR__ . '/..' . '/nette/http/src/Bridges/HttpDI/HttpExtension.php',
         'Nette\\Bridges\\HttpDI\\SessionExtension' => __DIR__ . '/..' . '/nette/http/src/Bridges/HttpDI/SessionExtension.php',
