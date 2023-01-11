@@ -11,6 +11,7 @@ use Nette\Schema\Schema;
 use Spaze\SubresourceIntegrity\Bridges\Latte\LatteExtension;
 use Spaze\SubresourceIntegrity\Config;
 use Spaze\SubresourceIntegrity\FileBuilder;
+use Spaze\SubresourceIntegrity\HashingAlgo;
 use Spaze\SubresourceIntegrity\LocalMode;
 use stdClass;
 
@@ -40,7 +41,7 @@ class Extension extends CompilerExtension
 				'build' => Expect::string(),
 			])->required(),
 			'localMode' => Expect::anyOf(...LocalMode::allModes())->default(LocalMode::Direct->value),
-			'hashingAlgos' => Expect::listOf(Expect::string()),
+			'hashingAlgos' => Expect::listOf(Expect::anyOf(...HashingAlgo::allAlgos())),
 		]);
 	}
 

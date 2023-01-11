@@ -15,10 +15,10 @@ use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeWithClassName;
+use PHPStan\Type\UnionType;
 use Spaze\PHPStan\Rules\Disallowed\Params\DisallowedCallParam;
 
 class DisallowedHelper
@@ -109,11 +109,18 @@ class DisallowedHelper
 
 		foreach ($allowConfig as $param) {
 			$type = $this->getArgType($node, $scope, $param);
-			if (!$type instanceof ConstantScalarType) {
+			if ($type === null) {
 				return !$paramsRequired;
 			}
-			if (!$param->matches($type)) {
-				return false;
+			if ($type instanceof UnionType) {
+				$types = $type->getTypes();
+			} else {
+				$types = [$type];
+			}
+			foreach ($types as $type) {
+				if (!$param->matches($type)) {
+					return false;
+				}
 			}
 		}
 		return true;

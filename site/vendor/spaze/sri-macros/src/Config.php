@@ -7,7 +7,6 @@ use Spaze\SubresourceIntegrity\Exceptions\HashFileException;
 use Spaze\SubresourceIntegrity\Exceptions\InvalidResourceAliasException;
 use Spaze\SubresourceIntegrity\Exceptions\ShouldNotHappenException;
 use Spaze\SubresourceIntegrity\Exceptions\UnknownModeException;
-use Spaze\SubresourceIntegrity\Exceptions\UnsupportedHashAlgorithmException;
 use Spaze\SubresourceIntegrity\Resource\FileResource;
 use Spaze\SubresourceIntegrity\Resource\StringResource;
 use stdClass;
@@ -30,7 +29,7 @@ class Config
 
 	private LocalMode $localMode = LocalMode::Direct;
 
-	/** @var array<int, string> */
+	/** @var array<int, HashingAlgo> */
 	private array $hashingAlgos = [];
 
 	/** @var array<string, array<string, stdClass>> */
@@ -71,11 +70,14 @@ class Config
 	/**
 	 * Set one or more hashing algorithms.
 	 *
-	 * @param string[] $algos
+	 * @param array<int, HashingAlgo|string> $algos
 	 */
 	public function setHashingAlgos(array $algos): void
 	{
-		$this->hashingAlgos = $algos;
+		$this->hashingAlgos = array_map(
+			fn(HashingAlgo|string $algo) => is_string($algo) ? HashingAlgo::from($algo) : $algo,
+			$algos,
+		);
 	}
 
 
@@ -119,15 +121,12 @@ class Config
 		} else {
 			$fileHashes = [];
 			foreach ($this->hashingAlgos as $algo) {
-				if (!in_array($algo, ['sha256', 'sha384', 'sha512'])) {
-					throw new UnsupportedHashAlgorithmException();
-				}
 				$filename = $this->localFile($resource, $targetHtmlElement)->filename;
-				$hash = hash_file($algo, $filename, true);
+				$hash = hash_file($algo->value, $filename, true);
 				if (!$hash) {
 					throw new HashFileException($algo, $filename);
 				}
-				$fileHashes[] = $algo . '-' . base64_encode($hash);
+				$fileHashes[] = $algo->value . '-' . base64_encode($hash);
 			}
 			$hash = implode(' ', $fileHashes);
 		}
