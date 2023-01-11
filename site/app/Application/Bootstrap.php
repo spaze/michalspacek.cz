@@ -81,10 +81,6 @@ class Bootstrap
 		$configurator->setTimeZone('Europe/Prague');
 		$configurator->setTempDirectory(self::SITE_DIR . '/temp');
 
-		$configurator->createRobotLoader()
-			->addDirectory(self::SITE_DIR . '/app')
-			->register();
-
 		$existingFiles = array_filter(self::getConfigurationFiles($extraConfig), function ($path) {
 			return is_file($path);
 		});
