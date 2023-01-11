@@ -5,6 +5,8 @@ parameters:
 		- app
 	latte:
 		engineBootstrap: app/PhpStan/latteEngine.php
+		applicationMapping:  # Copy of mapping from common.neon until https://github.com/efabrica-team/phpstan-latte/issues/27 is resolved somehow
+			*: MichalSpacekCz\*\Presenters\*Presenter
 
 includes:
 	- vendor/efabrica/phpstan-latte/rules.neon
