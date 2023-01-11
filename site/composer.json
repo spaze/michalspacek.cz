@@ -25,7 +25,6 @@
 		"nette/http": "^3.1.6",
 		"nette/mail": "^3.1.8",
 		"nette/neon": "^3.3.3",
-		"nette/robot-loader": "^3.4.1",
 		"nette/security": "~3.1.4",
 		"nette/utils": "^3.2.8",
 		"paragonie/halite": "^5.1",
