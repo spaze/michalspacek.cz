@@ -7,6 +7,8 @@ parameters:
 		engineBootstrap: app/PhpStan/latteEngine.php
 		applicationMapping:  # Copy of mapping from common.neon until https://github.com/efabrica-team/phpstan-latte/issues/27 is resolved somehow
 			*: MichalSpacekCz\*\Presenters\*Presenter
+	ignoreErrors:
+		- '#^Form field with name "0" probably does not exist#'  # https://github.com/efabrica-team/phpstan-latte/issues/106
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
