@@ -47,9 +47,7 @@ class TalkFormFactory
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka popisu je %d znaků', 65535);
 		$this->trainingControlsFactory->addDate(
-			$form,
-			'date',
-			'Datum:',
+			$form->addText('date', 'Datum:'),
 			true,
 			'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM',
 			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})',

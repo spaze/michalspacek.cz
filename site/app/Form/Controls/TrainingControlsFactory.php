@@ -98,22 +98,21 @@ class TrainingControlsFactory
 	}
 
 
-	public function addDate(Container $container, string $name, string $label, bool $required, string $format, string $pattern): TextInput
+	public function addDate(TextInput $field, bool $required, string $format, string $pattern): TextInput
 	{
-		return $container->addText($name, $label)
+		$field
 			->setHtmlAttribute('placeholder', $format)
 			->setHtmlAttribute('title', "Formát {$format}")
 			->setRequired($required ? 'Zadejte datum' : false)
 			->addRule(Form::PATTERN, "Datum musí být ve formátu {$format}", $pattern);
+		return $field;
 	}
 
 
-	public function addStatusDate(Container $container, string $name, string $label, bool $required): TextInput
+	public function addStatusDate(TextInput $field, bool $required): TextInput
 	{
 		return $this->addDate(
-			$container,
-			$name,
-			$label,
+			$field,
 			$required,
 			'YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY HH:MM:SS nebo NOW',
 			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2}:\d{2})|[Nn][Oo][Ww]',
@@ -121,12 +120,10 @@ class TrainingControlsFactory
 	}
 
 
-	public function addPaidDate(Container $container, string $name, string $label, bool $required): TextInput
+	public function addPaidDate(TextInput $field, bool $required): TextInput
 	{
 		return $this->addDate(
-			$container,
-			$name,
-			$label,
+			$field,
 			$required,
 			'YYYY-MM-DD nebo YYYY-MM-DD HH:MM:SS nebo DD.MM.YYYY nebo NOW',
 			'((\d{4}-\d{1,2}-\d{1,2})( \d{1,2}:\d{2}:\d{2})?)|(\d{1,2}\.\d{1,2}\.\d{4})|[Nn][Oo][Ww]',

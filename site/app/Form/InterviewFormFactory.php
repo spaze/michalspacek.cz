@@ -40,9 +40,7 @@ class InterviewFormFactory
 		$form->addTextArea('description', 'Popis:')
 			->setRequired(false);
 		$this->trainingControlsFactory->addDate(
-			$form,
-			'date',
-			'Datum:',
+			$form->addText('date', 'Datum:'),
 			true,
 			'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM',
 			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})',

@@ -140,7 +140,7 @@ class TrainingApplicationAdminFormFactory
 			->setHtmlType('number');
 		$form->addText('invoiceId', 'Faktura č.:')
 			->setHtmlType('number');
-		$this->trainingControlsFactory->addPaidDate($form, 'paid', 'Zaplaceno:', false);
+		$this->trainingControlsFactory->addPaidDate($form->addText('paid', 'Zaplaceno:'), false);
 	}
 
 
