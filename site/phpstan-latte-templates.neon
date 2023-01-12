@@ -9,4 +9,6 @@ parameters:
 			*: MichalSpacekCz\*\Presenters\*Presenter
 
 includes:
+	- vendor/phpstan/phpstan-nette/extension.neon
+	- vendor/phpstan/phpstan-nette/rules.neon
 	- vendor/efabrica/phpstan-latte/rules.neon
