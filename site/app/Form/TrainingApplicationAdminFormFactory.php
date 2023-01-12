@@ -9,25 +9,15 @@ use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
+use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
 use stdClass;
 
 class TrainingApplicationAdminFormFactory
 {
 
-	/** @var string[] */
-	private array $deletableFields = [
-		'name',
-		'email',
-		'company',
-		'street',
-		'city',
-		'zip',
-		'country',
-		'companyId',
-		'companyTaxId',
-		'note',
-	];
+	/** @var array<string, Checkbox> */
+	private array $deletableFields;
 
 
 	public function __construct(
@@ -71,8 +61,19 @@ class TrainingApplicationAdminFormFactory
 			->setRequired($required)
 			->setDisabled(!$required);
 
-		foreach ($this->deletableFields as $field) {
-			$form->addCheckbox("{$field}Set")->setHtmlAttribute('class', 'disableInput');
+		$this->deletableFields['name'] = $form->addCheckbox('nameSet');
+		$this->deletableFields['email'] = $form->addCheckbox('emailSet');
+		$this->deletableFields['company'] = $form->addCheckbox('companySet');
+		$this->deletableFields['street'] = $form->addCheckbox('streetSet');
+		$this->deletableFields['city'] = $form->addCheckbox('citySet');
+		$this->deletableFields['zip'] = $form->addCheckbox('zipSet');
+		$this->deletableFields['country'] = $form->addCheckbox('countrySet');
+		$this->deletableFields['companyId'] = $form->addCheckbox('companyIdSet');
+		$this->deletableFields['companyTaxId'] = $form->addCheckbox('companyTaxIdSet');
+		$this->deletableFields['note'] = $form->addCheckbox('noteSet');
+
+		foreach ($this->deletableFields as $field => $checkbox) {
+			$checkbox->setHtmlAttribute('class', 'disableInput');
 			$form->getComponent($field)
 				->setHtmlAttribute('class', 'transparent')
 				->setRequired(false);
@@ -147,7 +148,7 @@ class TrainingApplicationAdminFormFactory
 	 * @param Form $form
 	 * @param Row<mixed> $application
 	 */
-	public function setApplication(Form $form, Row $application): void
+	private function setApplication(Form $form, Row $application): void
 	{
 		$values = [
 			'name' => $application->name,
@@ -170,8 +171,8 @@ class TrainingApplicationAdminFormFactory
 			'paid' => $application->paid,
 			'date' => $application->dateId,
 		];
-		foreach ($this->deletableFields as $field) {
-			$values["{$field}Set"] = ($application->$field !== null);
+		foreach ($this->deletableFields as $field => $checkbox) {
+			$values[$checkbox->getName()] = ($application->$field !== null);
 			$form->getComponent($field)->setHtmlAttribute('class', $application->$field === null ? 'transparent' : null);
 		}
 		$form->setDefaults($values);
