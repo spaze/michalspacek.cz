@@ -1,8 +1,8 @@
 parameters:
-	customRulesetUsed: true
 	tmpDir: /tmp/phpstan/michalspacek.cz-latte-templates
 	paths:
 		- app
+	level: 0
 	latte:
 		engineBootstrap: app/PhpStan/latteEngine.php
 		applicationMapping:  # Copy of mapping from common.neon until https://github.com/efabrica-team/phpstan-latte/issues/27 is resolved somehow
