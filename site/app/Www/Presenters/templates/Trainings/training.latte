@@ -84,12 +84,10 @@
 {/define}
 
 {define #content}
-{import "reviews.latte"}
-{import "default.latte"}
 <p>{$description}</p>
 
 <div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
-<div n:ifset="$discontinued" class="flash notice">{include #discontinued}</div>
+<div n:ifset="$discontinued" class="flash notice">{include "common/discontinued.latte"}</div>
 
 <div class="vcalendar">
 <h2 id="{_html.id.title}">{_messages.label.trainingname}</h2>
@@ -170,7 +168,7 @@
 <div id="{_html.id.reviews}">
 <h2>{_messages.label.trainingreviews}</h2>
 {foreach $reviews as $review}
-	{include #itemReview, review => $review}
+	{include "common/itemReview.latte", review => $review}
 {/foreach}
 </div>
 <p><a n:href="Trainings:reviews $name">{_messages.trainings.allreviews}</a></p>

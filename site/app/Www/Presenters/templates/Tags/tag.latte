@@ -3,10 +3,9 @@
 {/define}
 
 {define #content}
-{import "../Articles/default.latte"}
 <h2>{_messages.label.writtenarticles}</h2>
 <div n:foreach="$articles as $article">
-	{include #itemArticle, article => $article}
+	{include "../Articles/common/itemArticle.latte", article => $article}
 </div>
 <p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
 {/define}

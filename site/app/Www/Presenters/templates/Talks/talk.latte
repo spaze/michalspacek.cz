@@ -11,25 +11,12 @@
 {/define}
 
 {define #videoThumbnail}
-	<div id="video-thumbnail-container" n:if="$videoThumbnail->getUrl()">
-		<picture n:tag-if="$videoThumbnail->getAlternativeUrl()">
-			<source n:if="$videoThumbnail->getAlternativeUrl()" srcset="{$videoThumbnail->getAlternativeUrl()}" type="{$videoThumbnail->getAlternativeContentType()}">
-			<img src="{$videoThumbnail->getUrl()}" alt="{_messages.label.videorecording}" width="{$videoThumbnail->getWidth()}" height="{$videoThumbnail->getHeight()}" {if $videoThumbnail->isLazyLoad()}loading="lazy"{/if}>
-		</picture>
-		<a href="{$videoThumbnail->getVideoHref()}" title="{_messages.label.play}">▶</a>
-	</div>
-	<p n:if="$videoThumbnail->getVideoHref()">
-		<small n:tag-if="$videoThumbnail->getUrl()">
-			<span title="{_messages.label.recording}">{icon camera-video}</span>
-			<a href="{$videoThumbnail->getVideoHref()}">{$videoThumbnail?->getVideoPlatform() ?? $videoThumbnail->getVideoHref()}</a>
-		</small>
-	</p>
 {/define}
 
 {define #videoRecording}
 	{if $talk->videoHref}
 		<h2 id="{_html.id.recording}">{_messages.label.videorecording}</h2>
-		{include #videoThumbnail}
+		{include "common/videoThumbnail.latte"}
 	{/if}
 {/define}
 
@@ -71,12 +58,11 @@
 {/define}
 
 {define #content}
-{import "../widgets.latte"}
 <div class="column-content">
 {include #talkContent}
 </div>
 <div class="column-sidebar">
-{include #widgets}
+	{include "../Post/common/sidebar.latte"}
 </div>
 <div class="clear"></div>
 {/define}

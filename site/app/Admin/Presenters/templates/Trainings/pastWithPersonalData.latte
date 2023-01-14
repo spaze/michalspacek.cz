@@ -1,11 +1,9 @@
-{import "default.latte"}
-
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 {if !$trainings}
 	<p>Žádná minulá školení s osobními daty</p>
 {else}
-	{include #list, order => 'desc'}
+	{include "common/dateList.latte", order => 'desc'}
 	<form n:name="deletePersonalDataForm">
 		<p>{input delete}</p>
 	</form>

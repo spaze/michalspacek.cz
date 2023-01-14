@@ -1,5 +1,4 @@
 {define #content}
-{import "../Trainings/default.latte"}
 <h3>{_messages.venues.nameaddress}</h3>
 {var $search = $name . ', ' . $address . ', ' . $city}
 <p><strong><a href="{$href}">{$name}</a>{if $nameExtended}, {$nameExtended}{/if}, {$address}, {$city}</strong> (<a href="https://www.google.com/maps/search/{$search|escapeUrl}">{_messages.label.map}</a>)</p>
@@ -20,6 +19,6 @@
 {if empty($upcomingTrainings)}
 <p>{_messages.venues.notraininghere|format:"link:Www:Contact:"}</p>
 {else}
-{include #list}
+{include "../Trainings/common/dateList.latte"}
 {/if}
 {/define}

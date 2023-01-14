@@ -1,23 +1,19 @@
 {define #content}
-{import "../Articles/default.latte"}
-{import "../Talks/default.latte"}
-{import "../Interviews/default.latte"}
-{import "../Trainings/default.latte"}
 {_messages.homepage.tagline}
 <small>(<a n:href="Who:">{_messages.homepage.aboutme}</a>, <a n:href="Contact:">{_messages.homepage.contact}</a>)</small>
 <h2 id="{_html.id.trainings}">{_messages.label.mytrainings}</h2>
 <p>{_messages.trainings.intro.intro}: <em>{_messages.trainings.intro.review}</em> &mdash; {_messages.trainings.intro.author}</p>
 <h3>{_messages.label.publictrainings}</h3>
 <p>{_messages.homepage.trainings}:</p>
-{include #list}
+{include "../Trainings/common/dateList.latte"}
 <h3>{_messages.label.companytrainings}</h3>
 <p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
-{include #company}
-<p>{include #discontinued}</p>
+{include "../Trainings/common/company.latte"}
+<p>{include "../Trainings/common/discontinued.latte"}</p>
 <hr>
 <h2 id="{_html.id.articles}">{_messages.label.myarticles}</h2>
 <div n:foreach="$articles as $article">
-	{include #itemArticle, article => $article}
+	{include "../Articles/common/itemArticle.latte", article => $article}
 </div>
 <p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
 <hr>
@@ -30,19 +26,19 @@
 </ul>
 <h3>{_messages.label.upcomingtalks}</h3>
 <p class="indent" n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
-	{include #itemTalk, talk => $talk}
+	{include "../Talks/common/itemTalk.latte", talk => $talk}
 </p>
 <p n:if="$upcomingTalks">{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
 <p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
 <h3>{_messages.label.pasttalks}</h3>
 <p class="indent" n:foreach="$talks as $talk">
-		{include #itemTalk, talk => $talk}
+	{include "../Talks/common/itemTalk.latte", talk => $talk}
 </p>
 <p><a n:href="Talks:">{_messages.label.alltalks}</a></p>
 <hr>
 <h2 id="{_html.id.interviews}">{_messages.label.myinterviews}</h2>
 <p class="indent" n:foreach="$interviews as $interview">
-	{include #itemInterview, interview => $interview}
+	{include "../Interviews/common/itemInterview.latte", interview => $interview}
 </p>
 <p><a n:href="Interviews:">{_messages.label.allinterviews}</a></p>
 {/define}

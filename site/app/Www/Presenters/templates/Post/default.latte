@@ -6,78 +6,17 @@
 <meta n:if="$post->twitterCard" name="twitter:card" content="{$post->twitterCard}">
 <meta n:if="$post->twitterCard" name="twitter:site" content="@spazef0rze">
 {/define}
-{define #headerIcons}
-<div id="header-icons">
-	<div>
-		{icon calendar}
-		<small>
-			<strong>{$post->published|localeDay}</strong>
-			{ifset $edited}({_messages.blog.post.edited} {$edited|localeDay}){/ifset}
-		</small>
-	</div>
-	<div n:if="$post->tags">
-		{if ($post->tags|length) === 1}
-			{icon tag}
-		{else}
-			{icon tags}
-		{/if}
-		<small>
-			{foreach $post->tags as $key => $tag}<a n:href=":Www:Tags:tag $post->slugTags[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
-		</small>
-	</div>
-	<div n:ifset="$post->sourceHref">
-		{icon external-link}
-		<small><a href="{$post->sourceHref}">{$post->sourceName}</a></small>
-	</div>
-	<div class="clear"></div>
-</div>
-{/define}
-
-{define #blogPost}
-{include #headerIcons}
-<em n:if="$post->lead">{$post->lead}</em>
-{$post->text}
-{$post->originally}
-{if $post->recommended}
-	<hr>
-	<h3>{_messages.blog.post.recommendedreading}</h3>
-	<ul n:inner-foreach="$post->recommended as $item">
-		<li>{=$item->text|format:$item->url}</li>
-	</ul>
-{/if}
-{/define}
 
 {define #content}
 <div class="column-content">
-{include #blogPost}
+{include "common/blogPost.latte"}
 </div>
 <div class="column-sidebar">
-<div class="widget" n:if="$edits">
-<h3>{_messages.blog.post.edits}</h3>
-<p n:foreach="$edits as $edit"><strong>{$edit->editedAt|localeDay}</strong> {$edit->summary}</p>
-</div>
-<div class="widget">
-	<div class="header">
-		<a n:href=":Www:Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="{_messages.label.tohomepage}"></a>
-		<h3>Michal Špaček</h3>
+	<div class="widget" n:if="$edits">
+		<h3>{_messages.blog.post.edits}</h3>
+		<p n:foreach="$edits as $edit"><strong>{$edit->editedAt|localeDay}</strong> {$edit->summary}</p>
 	</div>
-	<p class="clear">{_messages.homepage.tagline}</p>
-</div>
-<div class="widget">
-<h3>{_messages.label.publictrainings}</h3>
-<p>{_messages.homepage.trainings}:</p>
-{foreach $upcomingTrainings as $item}
-	<p>
-		<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a><br>
-		<small>
-			{foreach $item[dates] as $date}
-				{first}({/first}<strong>{if $date[tentative]}{$date[start]|localeMonth}{else}{$date[start]|localeIntervalDay:$date[end]}{/if}</strong>
-				{$date[venueCity]}{sep}, {/sep}{last}){/last}
-			{/foreach}
-		</small>
-	</p>
-{/foreach}
-</div>
+	{include "common/sidebar.latte"}
 </div>
 <div class="clear"></div>
 {/define}

@@ -1,0 +1,3 @@
+<a href="{$article->href}"><strong>{$article->title}</strong></a>
+{include "../../Post/common/headerIcons.latte", post => $article}
+<div class="indent small">{$article->excerpt} <p>(<a href="{$article->href}">{_messages.articles.readmore}</a>)</p></div>

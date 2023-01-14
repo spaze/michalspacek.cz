@@ -2,63 +2,17 @@
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 {/define}
 
-{define #list}
-<div n:if="isset($lastFreeSeats) && $lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
-<ul class="vcalendar" id="training-dates">
- 	{foreach $upcomingTrainings as $item}
-		<li class="vevent">
-			<a n:href=":Www:Trainings:training $item[action]" class="url"><strong class="summary description">{$item[name]}</strong></a>
-			{icon calendar class => calendar}
-			<small n:foreach="$item[dates] as $date" class="date">
-				<strong>
-					{if $date[tentative]}
-						{$date[start]|localeMonth}
-					{else}
-						<abbr title="{$date[start]|date:DateTime::ISO8601}" class="dtstart">{$date[start]|localeIntervalDay:$date[end]}</abbr>
-						<abbr title="{$date[end]|date:DateTime::ISO8601}" class="dtend"></abbr>
-					{/if}
-				</strong>
-				<span class="location">{if $date[remote]}{_messages.label.remote}{else}{$date[venueCity]}{/if}</span><span n:if="$date[label]" class="label">{$date[label]}</span>{sep}{if !$date[label]}<span class="separator">, </span>{/if}{/sep}
-			</small>
-		</li>
-	{/foreach}
-</ul>
-<p><small>{_messages.trainings.regularlyeveryquarter}</small></p>
-{/define}
-
-{define #company}
-<ul>
- 	{foreach $companyTrainings as $item}
-		<li><a n:href=":Www:CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
-	{/foreach}
-</ul>
-{/define}
-
-{define #partnerTrainings}
-<ul>
-	<li><small>{_messages.trainings.partnertrainings.frontend|format:'https://www.vzhurudolu.cz/kurzy/responzivni-design', 'https://www.vzhurudolu.cz/kurzy'}</small></li>
-	<li><small>{_messages.trainings.partnertrainings.nette|format:'https://www.skoleniphp.cz/skoleni-nette-vyvoj-webovych-aplikaci', 'https://www.skoleniphp.cz/skoleni-mistrovstvi-v-nette'}</small></li>
-</ul>
-{/define}
-
-{define #discontinued}
-{foreach $discontinued as $training}
-	{capture $names}{foreach $training[trainings] as $trainingName}**{$trainingName|translate}**{sep}, {/sep}{/foreach}{/capture}
-	{_$training[description]|format:$names, $training[href]}
-{/foreach}
-{/define}
-
 {define #content}
 <p><em>{_messages.trainings.intro.review}</em> &mdash; {_messages.trainings.intro.author}</p>
 <h3>{_messages.label.publictrainings}</h3>
 <p>{_messages.trainings.welcome}</p>
-{include #list}
+{include "common/dateList.latte"}
 <h3>{_messages.label.companytrainings}</h3>
 <p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
-{include #company}
-<p>{include #discontinued}</p>
+{include "common/company.latte"}
+<p>{include "common/discontinued.latte"}</p>
 <hr>
 <h4>{_messages.label.partnertrainings}</h4>
 <p><small>{_messages.trainings.partnertrainings.intro|format}</small></p>
-{include #partnerTrainings}
+{include "common/partnerTrainings.latte"}
 {/define}
