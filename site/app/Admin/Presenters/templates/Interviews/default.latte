@@ -1,11 +1,3 @@
-{define #itemInterview}
-	<li><a n:href="Interviews:interview $item->interviewId">{$item->title}</a>
-	<small><strong class="date">{$item->date|localeDay}</strong>, {$item->sourceName}</small>
-	<span n:if="$item->audioHref" title="{_messages.label.audiorecording}">{icon microphone}</span>
-	<span n:if="$item->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
-	</li>
-{/define}
-
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-rozhovor">
@@ -17,7 +9,11 @@
 <hr>
 <ol reversed>
 {foreach $interviews as $item}
-	{include #itemInterview}
+	<li><a n:href="Interviews:interview $item->interviewId">{$item->title}</a>
+		<small><strong class="date">{$item->date|localeDay}</strong>, {$item->sourceName}</small>
+		<span n:if="$item->audioHref" title="{_messages.label.audiorecording}">{icon microphone}</span>
+		<span n:if="$item->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
+	</li>
 {/foreach}
 </ol>
 {/define}
