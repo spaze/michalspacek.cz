@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'spaze/michalspacek.cz',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '944397800c076ad948e8c8cc73c5b526d35202a4',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => NULL,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -33,6 +33,15 @@
             'replaced' => array(
                 0 => '*',
             ),
+        ),
+        'efabrica/phpstan-latte' => array(
+            'pretty_version' => '0.4.0',
+            'version' => '0.4.0.0',
+            'reference' => 'e3ff4ad7bdcbd43d5ea9a2fb128f6d5905a2333a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../efabrica/phpstan-latte',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'grogy/php-parallel-lint' => array(
             'dev_requirement' => true,
@@ -427,9 +436,9 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '944397800c076ad948e8c8cc73c5b526d35202a4',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => NULL,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

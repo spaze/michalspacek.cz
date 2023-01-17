@@ -172,6 +172,55 @@
             "install-path": "../dealerdirect/phpcodesniffer-composer-installer"
         },
         {
+            "name": "efabrica/phpstan-latte",
+            "version": "0.4.0",
+            "version_normalized": "0.4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/efabrica-team/phpstan-latte.git",
+                "reference": "e3ff4ad7bdcbd43d5ea9a2fb128f6d5905a2333a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/e3ff4ad7bdcbd43d5ea9a2fb128f6d5905a2333a",
+                "reference": "e3ff4ad7bdcbd43d5ea9a2fb128f6d5905a2333a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "latte/latte": "^2.11.6 | ^3.0.4",
+                "nette/finder": "^2.5",
+                "nette/utils": "^3.2",
+                "php": ">=7.4 <8.3",
+                "phpstan/phpstan": "^1.9.4",
+                "phpstan/phpstan-nette": "^1.2"
+            },
+            "require-dev": {
+                "efabrica/coding-standard": "^0.4",
+                "nette/application": "^3.1.2",
+                "nette/forms": "^3.1",
+                "nikic/php-parser": "^4.15",
+                "phpunit/phpunit": "^9.5"
+            },
+            "time": "2023-01-16T09:25:59+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Efabrica\\PHPStanLatte\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "issues": "https://github.com/efabrica-team/phpstan-latte/issues",
+                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.4.0"
+            },
+            "install-path": "../efabrica/phpstan-latte"
+        },
+        {
             "name": "latte/latte",
             "version": "v3.0.5",
             "version_normalized": "3.0.5.0",
@@ -4563,6 +4612,7 @@
     "dev": true,
     "dev-package-names": [
         "dealerdirect/phpcodesniffer-composer-installer",
+        "efabrica/phpstan-latte",
         "nette/tester",
         "php-parallel-lint/php-console-highlighter",
         "php-parallel-lint/php-parallel-lint",

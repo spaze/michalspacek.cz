@@ -1,0 +1,190 @@
+parameters:
+    usePathConstantsAsConstantString: true
+    latte:
+        strictMode: false
+        tmpDir: null
+        globalVariables: []
+        filters:
+            translate: [Nette\Localization\Translator, translate]
+        errorPatternsToIgnore: []
+        applicationMapping: []
+        engineBootstrap: null
+        macros: []
+        extensions: []
+        resolveAllPossiblePaths: false
+        reportUnanalysedTemplates: false
+        collectedPaths: []
+    ignoreErrors:
+        -
+            messages:
+                - '#Unknown PHPDoc tag: @phpstan-latte-template#'
+                - '#Unknown PHPDoc tag: @phpstan-latte-var#'
+                - '#Unknown PHPDoc tag: @phpstan-latte-component#'
+                - '#Unknown PHPDoc tag: @phpstan-latte-ignore#'
+            reportUnmatched: false
+
+parametersSchema:
+    latte: structure([
+        strictMode: bool()
+        tmpDir: schema(string(), nullable())
+        globalVariables: arrayOf(string(), string())
+        filters: arrayOf(anyOf(string(), arrayOf(string())), string())
+        errorPatternsToIgnore: arrayOf(string())
+        applicationMapping: arrayOf(string(), string())
+        engineBootstrap: schema(string(), nullable())
+        macros: arrayOf(string())
+        extensions: arrayOf(object())
+        resolveAllPossiblePaths: bool()
+        reportUnanalysedTemplates: bool()
+        collectedPaths: arrayOf(string())
+    ])
+
+rules:
+    - Efabrica\PHPStanLatte\Rule\LatteCompileErrorsRule
+
+services:
+    latteCurrentPhpVersionRichParser:
+        factory: @latteCachedCurrentPhpVersionRichParser
+        arguments!: []
+
+    latteCachedCurrentPhpVersionRichParser:
+        class: PHPStan\Parser\CachedParser
+        arguments:
+            originalParser: @currentPhpVersionRichParser
+            cachedNodesByStringCountMax: 1024
+        autowired: no
+
+    phpstanLatteCompiler:
+        class: Efabrica\PHPStanLatte\Compiler\Compiler\CompilerInterface
+        factory: @Efabrica\PHPStanLatte\Compiler\Compiler\CompilerFactory::create
+
+    -
+        class: Efabrica\PHPStanLatte\Compiler\Compiler\CompilerFactory
+        arguments:
+            engineBootstrap: %latte.engineBootstrap%
+            strictMode: %latte.strictMode%
+            filters: %latte.filters%
+            macros: %latte.macros%
+            extensions: %latte.extensions%
+
+    - Efabrica\PHPStanLatte\Analyser\FileAnalyserFactory
+    - Efabrica\PHPStanLatte\Analyser\AnalysedTemplatesRegistry(%analysedPaths%, %latte.reportUnanalysedTemplates%)
+    - Efabrica\PHPStanLatte\Compiler\LatteToPhpCompiler(%latte.tmpDir%, ::md5(::json_encode(%latte%)))
+
+    -
+        factory: Efabrica\PHPStanLatte\Compiler\Postprocessor
+        arguments:
+            parser: @latteCurrentPhpVersionRichParser
+
+    - Efabrica\PHPStanLatte\Compiler\LineMapper
+    - Efabrica\PHPStanLatte\Compiler\TypeToPhpDoc
+    - Efabrica\PHPStanLatte\LinkProcessor\PresenterFactoryFaker(%latte.applicationMapping%)
+    -
+        factory: Efabrica\PHPStanLatte\Analyser\LatteContextAnalyser
+        arguments:
+            parser: @latteCurrentPhpVersionRichParser
+
+    # Latte template resolvers
+    - Efabrica\PHPStanLatte\LatteTemplateResolver\Nette\NetteApplicationUIPresenter
+    - Efabrica\PHPStanLatte\LatteTemplateResolver\Nette\NetteApplicationUIPresenterStandalone
+    - Efabrica\PHPStanLatte\LatteTemplateResolver\Nette\NetteApplicationUIControl
+
+    # Type resolvers
+    - Efabrica\PHPStanLatte\Resolver\TypeResolver\TypeResolver
+    - Efabrica\PHPStanLatte\Resolver\TypeResolver\TemplateTypeResolver
+
+    # Value resolvers
+    - Efabrica\PHPStanLatte\Resolver\ValueResolver\ValueResolver()
+    - Efabrica\PHPStanLatte\Resolver\ValueResolver\PathResolver(%latte.resolveAllPossiblePaths%)
+
+    # Name resolvers
+    - Efabrica\PHPStanLatte\Resolver\NameResolver\NameResolver
+
+    # Method resolvers
+    - Efabrica\PHPStanLatte\Resolver\CallResolver\CalledClassResolver
+    - Efabrica\PHPStanLatte\Resolver\CallResolver\TerminatingCallResolver(%earlyTerminatingMethodCalls%)
+    - Efabrica\PHPStanLatte\Resolver\CallResolver\OutputCallResolver()
+
+    phpstanLatteNodeVisitorStorage:
+        factory: Efabrica\PHPStanLatte\Compiler\NodeVisitor\NodeVisitorStorage
+        setup:
+            - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddParametersForBlockNodeVisitor())
+            - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\CopyDefinedVarsToOtherMethodsNodeVisitor())
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RemoveExtractParamsNodeVisitor())
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RenderBlockNodeVisitor())
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddExtractParamsToTopNodeVisitor())
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor(@phpstanLatteCompiler::getFilters()))
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformNClassNodeVisitor())
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformForeachWithIteratorNodeVisitor())
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\LinkNodeVisitor())
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeNotNullToEqualsNullNodeVisitor())
+            - addNodeVisitor(300, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddFormClassesNodeVisitor())
+            - addNodeVisitor(9900, Efabrica\PHPStanLatte\Compiler\NodeVisitor\CleanupNodeVisitor())
+            - addNodeVisitor(10000, Efabrica\PHPStanLatte\Compiler\NodeVisitor\LineNumberNodeVisitor())
+
+    # Link processors
+    - Efabrica\PHPStanLatte\LinkProcessor\LinkProcessorFactory
+    - Efabrica\PHPStanLatte\LinkProcessor\LinkParamsProcessor
+    - Efabrica\PHPStanLatte\LinkProcessor\PresenterActionLinkProcessor
+    - Efabrica\PHPStanLatte\LinkProcessor\SignalLinkProcessor
+
+    - Efabrica\PHPStanLatte\PhpDoc\LattePhpDocResolver
+
+    # Collectors
+    -
+        factory: Efabrica\PHPStanLatte\Collector\Collector\ResolvedNodeCollector
+        tags:
+            - phpstan.collector
+
+    - Efabrica\PHPStanLatte\LatteContext\LatteContextFactory
+
+    # Latte context collectors
+    - Efabrica\PHPStanLatte\LatteContext\Collector\VariableCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\VariableMethodPhpDocCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\ComponentCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\ComponentMethodPhpDocCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\FilterCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\MethodReturnCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\MethodTerminatingCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\MethodCallCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\MethodOutputCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\TemplatePathCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\TemplateRenderCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\TemplateRenderMethodPhpDocCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\FormFieldCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\FormCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\RelatedFilesCollector(%analysedPaths%, %latte.collectedPaths%)
+    - Efabrica\PHPStanLatte\LatteContext\Collector\NetteApplicationUIPresenterCollector
+
+    # Latte context subcollectors
+    # Variable subcollectors
+    - Efabrica\PHPStanLatte\LatteContext\Collector\VariableCollector\AssignToTemplateVariableCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\VariableCollector\AssignToArrayOfTemplateVariablesCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\VariableCollector\SetParametersToTemplateVariableCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\VariableCollector\AddToTemplateVariableCollector
+
+    # TemplatePath subcollectors
+    - Efabrica\PHPStanLatte\LatteContext\Collector\TemplatePathCollector\SetFileTemplatePathCollector
+
+    # Variable collectors
+    variableCollectorStorage:
+        factory: Efabrica\PHPStanLatte\VariableCollector\VariableCollectorStorage
+    - Efabrica\PHPStanLatte\VariableCollector\DefaultTemplateVariables
+    - Efabrica\PHPStanLatte\VariableCollector\GlobalTemplateVariables(%latte.globalVariables%)
+    - Efabrica\PHPStanLatte\VariableCollector\DynamicFilterVariables()
+
+    # Error builder
+    - Efabrica\PHPStanLatte\Error\ErrorBuilder(%latte.errorPatternsToIgnore%, %latte.applicationMapping%)
+
+    # Error transformers
+    - Efabrica\PHPStanLatte\Error\Transformer\UndefinedLatteFilterErrorTransformer
+    - Efabrica\PHPStanLatte\Error\Transformer\UnknownTagErrorTransformer
+    - Efabrica\PHPStanLatte\Error\Transformer\CallActionWithParametersMissingCorrespondingMethodErrorTransformer
+    - Efabrica\PHPStanLatte\Error\Transformer\BlockParameterErrorTransformer
+
+    errorFormatter.table!:
+        class: Efabrica\PHPStanLatte\Error\TableErrorFormatter
+        arguments:
+            simpleRelativePathHelper: @simpleRelativePathHelper
+            showTipsOfTheDay: %tipsOfTheDay%
+            editorUrl: %editorUrl%

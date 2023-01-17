@@ -53,6 +53,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'MichalSpacekCz\\' => 15,
         ),
+        'E' => 
+        array (
+            'Efabrica\\PHPStanLatte\\' => 22,
+        ),
         'C' => 
         array (
             'Contributte\\Translation\\' => 24,
@@ -180,6 +184,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'MichalSpacekCz\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+        'Efabrica\\PHPStanLatte\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/efabrica/phpstan-latte/src',
         ),
         'Contributte\\Translation\\' => 
         array (
