@@ -43,7 +43,7 @@ class Exports
 		/** @var Feed $feed */
 		$feed = $this->cache->load($key, function (&$dependencies) use ($self, $filter) {
 			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate());
-			$dependencies[Cache::EXPIRATION] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
+			$dependencies[Cache::Expire] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 
 			$title = ($filter ? $this->texyFormatter->translate('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.label.allarticles'));
 			$feed = new Feed($self, "Michal Špaček: {$title}");
@@ -100,7 +100,7 @@ class Exports
 				$cacheTags[$type] = $type;
 				$cacheTags[] = "{$type}/id/{$article->articleId}";
 			}
-			$dependencies[Cache::TAGS] = array_values($cacheTags);
+			$dependencies[Cache::Tags] = array_values($cacheTags);
 			$feed->setUpdated($feedUpdated);
 			return $feed;
 		});
