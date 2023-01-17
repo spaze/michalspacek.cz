@@ -66,9 +66,10 @@ final class LatteExtension extends Nette\DI\CompilerExtension
 				->addSetup('setStrictTypes', [$config->strictTypes]);
 
 		if (version_compare(Latte\Engine::VERSION, '3', '<')) {
-			$latteFactory
-				->addSetup('setContentType', [$config->xhtml ? Latte\Compiler::CONTENT_XHTML : Latte\Compiler::CONTENT_HTML])
-				->addSetup('Nette\Utils\Html::$xhtml = ?', [$config->xhtml]);
+			$latteFactory->addSetup('setContentType', [$config->xhtml ? Latte\Compiler::CONTENT_XHTML : Latte\Compiler::CONTENT_HTML]);
+			if ($config->xhtml) {
+				$latteFactory->addSetup('Nette\Utils\Html::$xhtml = ?', [true]);
+			}
 			foreach ($config->macros as $macro) {
 				$this->addMacro($macro);
 			}
@@ -117,7 +118,11 @@ final class LatteExtension extends Nette\DI\CompilerExtension
 			$control = $template->getLatte()->getProviders()['uiControl'] ?? null;
 			if ($all || $control instanceof Nette\Application\UI\Presenter) {
 				$name = $all && $control ? (new \ReflectionObject($control))->getShortName() : '';
-				$template->getLatte()->addExtension(new Latte\Bridges\Tracy\TracyExtension($name));
+				if (version_compare(Latte\Engine::VERSION, '3', '<')) {
+					$bar->addPanel(new Latte\Bridges\Tracy\LattePanel($template->getLatte(), $name));
+				} else {
+					$template->getLatte()->addExtension(new Latte\Bridges\Tracy\TracyExtension($name));
+				}
 			}
 		};
 	}
