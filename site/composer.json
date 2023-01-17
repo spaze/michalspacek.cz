@@ -17,7 +17,7 @@
 		"ext-simplexml": "*",
 		"contributte/translation": "^2.0",
 		"latte/latte": "^3.0.3",
-		"nette/application": "^3.1.7",
+		"nette/application": "^3.1.10",
 		"nette/bootstrap": "^3.1.2",
 		"nette/component-model": "^3.0.2",
 		"nette/database": "^3.1.5",
