@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Spaze\SubresourceIntegrity\Bridges\Latte\Nodes;
 
+use Generator;
 use Latte\CompileException;
 use Latte\Compiler\Nodes\Php\Expression\ArrayItemNode;
 use Latte\Compiler\Nodes\Php\Expression\BinaryOpNode;
@@ -131,6 +132,16 @@ abstract class SriNode extends StatementNode
 			$attributes + $this->attributes,
 			static::$targetHtmlElement?->value,
 		);
+	}
+
+
+	public function &getIterator(): Generator
+	{
+		/**
+		 * @noinspection PhpBooleanCanBeSimplifiedInspection
+		 * @phpstan-ignore-next-line
+		 */
+		false && yield;
 	}
 
 }

@@ -49,7 +49,7 @@ class NameNode extends Node
 	}
 
 
-	private function isKeyword(): bool
+	public function isKeyword(): bool
 	{
 		static $keywords;
 		$keywords ??= array_flip([
@@ -85,5 +85,11 @@ class NameNode extends Node
 			self::KindFullyQualified => '\\',
 		};
 		return $prefix . implode('\\', $this->parts);
+	}
+
+
+	public function &getIterator(): \Generator
+	{
+		false && yield;
 	}
 }

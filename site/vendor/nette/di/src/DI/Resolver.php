@@ -130,7 +130,7 @@ class Resolver
 			$this->addDependency($reflection);
 
 			$type = Nette\Utils\Type::fromReflection($reflection) ?? ($annotation = Helpers::getReturnTypeAnnotation($reflection));
-			if ($type && !in_array((string) $type, ['object', 'mixed'], true)) {
+			if ($type && !in_array($type->getSingleName(), ['object', 'mixed'], true)) {
 				if (isset($annotation)) {
 					trigger_error('Annotation @return should be replaced with native return type at ' . Callback::toString($entity), E_USER_DEPRECATED);
 				}
@@ -632,17 +632,10 @@ class Resolver
 	 */
 	private static function autowireArgument(\ReflectionParameter $parameter, callable $getter)
 	{
-		$method = $parameter->getDeclaringFunction();
 		$desc = Reflection::toString($parameter);
 		$type = Nette\Utils\Type::fromReflection($parameter);
 
-		if ($type && $type->isIntersection()) {
-			throw new ServiceCreationException(sprintf(
-				'Parameter %s has intersection type, so its value must be specified.',
-				$desc
-			));
-
-		} elseif ($type && $type->isClass()) {
+		if ($type && $type->isClass()) {
 			$class = $type->getSingleName();
 			try {
 				$res = $getter($class, true);
@@ -667,13 +660,8 @@ class Resolver
 					$desc
 				));
 			}
-		} elseif (
-			$method instanceof \ReflectionMethod
-			&& $type && $type->getSingleName() === 'array'
-			&& preg_match('#@param[ \t]+(?|([\w\\\\]+)\[\]|array<int,\s*([\w\\\\]+)>)[ \t]+\$' . $parameter->name . '#', (string) $method->getDocComment(), $m)
-			&& ($itemType = Reflection::expandClassName($m[1], $method->getDeclaringClass()))
-			&& (class_exists($itemType) || interface_exists($itemType))
-		) {
+
+		} elseif ($itemType = self::isArrayOf($parameter, $type)) {
 			return $getter($itemType, false);
 
 		} elseif (
@@ -691,8 +679,26 @@ class Resolver
 			throw new ServiceCreationException(sprintf(
 				'Parameter %s has %s, so its value must be specified.',
 				$desc,
-				$type && $type->isUnion() ? 'union type and no default value' : 'no class type or default value'
+				$type && !$type->isSingle() ? 'complex type and no default value' : 'no class type or default value'
 			));
 		}
+	}
+
+
+	private static function isArrayOf(\ReflectionParameter $parameter, ?Nette\Utils\Type $type): ?string
+	{
+		$method = $parameter->getDeclaringFunction();
+		return $method instanceof \ReflectionMethod
+			&& $type
+			&& $type->getSingleName() === 'array'
+			&& preg_match(
+				'#@param[ \t]+(?|([\w\\\\]+)\[\]|array<int,\s*([\w\\\\]+)>)[ \t]+\$' . $parameter->name . '#',
+				(string) $method->getDocComment(),
+				$m
+			)
+			&& ($itemType = Reflection::expandClassName($m[1], $method->getDeclaringClass()))
+			&& (class_exists($itemType) || interface_exists($itemType))
+				? $itemType
+				: null;
 	}
 }

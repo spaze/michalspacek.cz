@@ -74,10 +74,10 @@ class Bootstrap
 	private static function createConfigurator(bool $debugMode, string $extraConfig): Configurator
 	{
 		$configurator = new Configurator();
-		$configurator->addParameters(['siteDir' => self::SITE_DIR]);
+		$configurator->addStaticParameters(['siteDir' => self::SITE_DIR]);
 
 		$configurator->setDebugMode($debugMode);
-		$configurator->enableDebugger(self::SITE_DIR . '/log');
+		$configurator->enableTracy(self::SITE_DIR . '/log');
 		$configurator->setTimeZone('Europe/Prague');
 		$configurator->setTempDirectory(self::SITE_DIR . '/temp');
 

@@ -10,6 +10,8 @@ parameters:
 			- vendor/paragonie/constant_time_encoding/tests/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
 			- vendor/paragonie/hidden-string/test/*  # phpunit/phpunit not installed, PHPUnit\Framework\TestCase missing
 			- vendor/nette/forms/src/compatibility.php  # throws `Class 'Nette\Forms\SubmitterControl' not found` for some reason
+			- vendor/spaze/sri-macros/src/Bridges/Latte/Nodes/SriNode.php  # throws No error to ignore is reported on line
+			- vendor/spaze/svg-icons-latte/src/Nodes/IconNode.php  # throws No error to ignore is reported on line
 			- vendor/symfony/translation-contracts/Test/*  # Symfony packages not installed
 			- vendor/symfony/translation/Command/*Command.php
 			- vendor/symfony/translation/DataCollector/TranslationDataCollector.php

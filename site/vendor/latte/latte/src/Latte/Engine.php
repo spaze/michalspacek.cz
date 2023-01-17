@@ -19,8 +19,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '3.0.4';
-	public const VERSION_ID = 30004;
+	public const VERSION = '3.0.5';
+	public const VERSION_ID = 30005;
 
 	/** @deprecated use ContentType::* */
 	public const
@@ -313,7 +313,10 @@ class Engine
 			$this->contentType,
 		];
 		foreach ($this->extensions as $extension) {
-			$key[] = [$extension::class, $extension->getCacheKey($this)];
+			$key[] = [
+				preg_replace('~\$.*~', '', $extension::class), // remove id from anonymous class
+				$extension->getCacheKey($this),
+			];
 		}
 
 		return 'Template' . substr(md5(serialize($key)), 0, 10);

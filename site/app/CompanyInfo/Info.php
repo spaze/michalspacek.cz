@@ -37,7 +37,7 @@ class Info
 				default:
 					throw new RuntimeException('Unsupported country');
 			}
-			$dependencies[Cache::EXPIRATION] = ($data->status === IResponse::S200_OK ? '3 days' : '15 minutes');
+			$dependencies[Cache::Expire] = ($data->status === IResponse::S200_OK ? '3 days' : '15 minutes');
 			return $data;
 		});
 	}

@@ -237,7 +237,7 @@ class Post
 				],
 			);
 			$post->postId = (int)$this->database->getInsertId();
-			$this->exportsCache->clean([Cache::TAGS => array_merge([self::class], $post->slugTags)]);
+			$this->exportsCache->clean([Cache::Tags => array_merge([self::class], $post->slugTags)]);
 			$this->database->commit();
 		} catch (Exception) {
 			$this->database->rollBack();
@@ -299,7 +299,7 @@ class Post
 			if ($post->needsPreviewKey($now)) {
 				$cacheTags[] = self::class;
 			}
-			$this->exportsCache->clean([Cache::TAGS => $cacheTags]);
+			$this->exportsCache->clean([Cache::Tags => $cacheTags]);
 			$this->database->commit();
 		} catch (Exception) {
 			$this->database->rollBack();
