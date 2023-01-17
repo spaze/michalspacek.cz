@@ -116,10 +116,8 @@ final class LatteExtension extends Nette\DI\CompilerExtension
 		$factory->onCreate[] = function (ApplicationLatte\Template $template) use ($bar, $all) {
 			$control = $template->getLatte()->getProviders()['uiControl'] ?? null;
 			if ($all || $control instanceof Nette\Application\UI\Presenter) {
-				$bar->addPanel(new Latte\Bridges\Tracy\LattePanel(
-					$template->getLatte(),
-					$all && $control ? (new \ReflectionObject($control))->getShortName() : ''
-				));
+				$name = $all && $control ? (new \ReflectionObject($control))->getShortName() : '';
+				$template->getLatte()->addExtension(new Latte\Bridges\Tracy\TracyExtension($name));
 			}
 		};
 	}

@@ -343,11 +343,7 @@ final class TemplateParserHtml
 			name: preg_replace('~(inner-|tag-|)~', '', $name),
 			tokens: $tokens,
 			position: $nameToken->position,
-			prefix: match (true) {
-				str_starts_with($name, 'inner-') => Tag::PrefixInner,
-				str_starts_with($name, 'tag-') => Tag::PrefixTag,
-				default => Tag::PrefixNone,
-			},
+			prefix: $this->getPrefix($name),
 			location: $this->parser->location,
 			htmlElement: $this->element,
 			data: (object) ['node' => $node = new Nodes\TextNode('')], // TODO: better
@@ -424,7 +420,7 @@ final class TemplateParserHtml
 		$res = [];
 		foreach ($this->attrParsers as $name => $foo) {
 			if ($tag = $attrs[$name] ?? null) {
-				$prefix = substr($name, 0, (int) strpos($name, '-'));
+				$prefix = $this->getPrefix($name);
 				if (!$prefix || !$void) {
 					$res[$prefix][] = $tag;
 					unset($attrs[$name]);
@@ -458,6 +454,7 @@ final class TemplateParserHtml
 
 			} elseif ($res instanceof Node) {
 				$this->parser->ensureIsConsumed($tag);
+				$this->parser->checkNodeCompatibility($res);
 				$res->position = $tag->position;
 				$tag->replaceNAttribute($res);
 				$this->parser->popTag();
@@ -481,6 +478,7 @@ final class TemplateParserHtml
 		while ([$gen, $tag] = array_pop($toClose)) {
 			$gen->send([$node, null]);
 			$node = $gen->getReturn();
+			$this->parser->checkNodeCompatibility($node);
 			$node->position = $tag->position;
 			$this->parser->popTag();
 			$this->parser->ensureIsConsumed($tag);
@@ -502,5 +500,15 @@ final class TemplateParserHtml
 			throw new SecurityViolationException("Attribute n:$name is not allowed", $pos);
 		}
 		return $this->attrParsers[$name];
+	}
+
+
+	private function getPrefix(string $name): string
+	{
+		return match (true) {
+			str_starts_with($name, 'inner-') => Tag::PrefixInner,
+			str_starts_with($name, 'tag-') => Tag::PrefixTag,
+			default => Tag::PrefixNone,
+		};
 	}
 }
