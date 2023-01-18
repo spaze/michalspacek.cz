@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
 use Nette\Application\UI\Presenter;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
 
 /**
@@ -13,7 +13,7 @@ use Nette\Http\IResponse;
  *
  * Does not extend BasePresenter to avoid loop in startup().
  *
- * @property-read Template $template
+ * @property-read DefaultTemplate $template
  */
 class ForbiddenPresenter extends Presenter
 {

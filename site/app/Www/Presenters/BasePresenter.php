@@ -9,11 +9,11 @@ use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
 
 /**
- * @property-read Template $template
+ * @property-read DefaultTemplate $template
  */
 abstract class BasePresenter extends Presenter
 {
