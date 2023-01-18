@@ -4,6 +4,6 @@
 
 {define #content}
 <p class="indent" n:foreach="$interviews as $interview">
-	{include "common/itemInterview.latte"}
+	{include "common/itemInterview.latte", interview: $interview}
 </p>
 {/define}

@@ -5,6 +5,6 @@
 {define #content}
 <h2>{_messages.label.writtenarticles}</h2>
 <div n:foreach="$articles as $article">
-	{include "common/itemArticle.latte"}
+	{include "common/itemArticle.latte", article: $article}
 </div>
 {/define}

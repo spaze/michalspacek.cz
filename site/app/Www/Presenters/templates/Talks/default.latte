@@ -22,7 +22,7 @@
 {foreach $talks as $year => $items}
 	<h3>{$year}</h3>
 	<p class="indent" n:foreach="$items as $talk">
-		{include "common/itemTalk.latte"}
+		{include "common/itemTalk.latte", talk: $talk}
 	</p>
 {/foreach}
 {_messages.talks.more|format:'https://www.slideshare.net/spaze/presentations', 'https://speakerdeck.com/u/spaze'}

@@ -17,7 +17,7 @@
 	<div id="{_html.id.reviews}">
 	<h2>{_messages.label.trainingreviews}</h2>
 	{foreach $reviews as $review}
-		{include "common/itemReview.latte"}
+		{include "common/itemReview.latte", review: $review}
 	{/foreach}
 	</div>
 	<p>
