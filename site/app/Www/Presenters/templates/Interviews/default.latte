@@ -2,15 +2,8 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
-{define #itemInterview}
-	<a n:href="Interviews:interview $interview->action"><strong>{$interview->title}</strong></a><br>
-	<small><strong class="date">{$interview->date|localeDay}</strong>, {$interview->sourceName}</small>
-	<span n:if="$interview->audioHref" title="{_messages.label.audiorecording}">{icon microphone}</span>
-	<span n:if="$interview->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
-{/define}
-
 {define #content}
 <p class="indent" n:foreach="$interviews as $interview">
-	{include #itemInterview}
+	{include "common/itemInterview.latte"}
 </p>
 {/define}

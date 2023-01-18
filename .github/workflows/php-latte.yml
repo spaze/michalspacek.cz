@@ -1,0 +1,28 @@
+name: PHPStan Latte template tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  phpstan-latte-templates:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get PHPStan result cache directory
+      id: phpstan-cache
+      run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
+    - uses: actions/cache@v3
+      with:
+        path: ${{ steps.phpstan-cache.outputs.dir }}
+        key: phpstan-vendor-cache-php${{ matrix.php-version }}
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
+    - run: composer --working-dir=site run-script --timeout=600 phpstan-latte-templates

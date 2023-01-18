@@ -2,16 +2,9 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
-{define #itemArticle}
-	{import "../../templates/Post/default.latte"}
-	<a href="{$article->href}"><strong>{$article->title}</strong></a>
-	{include #headerIcons, post => $article}
-	<div class="indent small">{$article->excerpt} <p>(<a href="{$article->href}">{_messages.articles.readmore}</a>)</p></div>
-{/define}
-
 {define #content}
 <h2>{_messages.label.writtenarticles}</h2>
 <div n:foreach="$articles as $article">
-	{include #itemArticle}
+	{include "common/itemArticle.latte"}
 </div>
 {/define}

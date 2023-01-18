@@ -1,0 +1,24 @@
+<div id="header-icons">
+	<div>
+		{icon calendar}
+		<small>
+			<strong>{$post->published|localeDay}</strong>
+			{ifset $edited}({_messages.blog.post.edited} {$edited|localeDay}){/ifset}
+		</small>
+	</div>
+	<div n:if="$post->tags">
+		{if ($post->tags|length) === 1}
+			{icon tag}
+		{else}
+			{icon tags}
+		{/if}
+		<small>
+			{foreach $post->tags as $key => $tag}<a n:href=":Www:Tags:tag $post->slugTags[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
+		</small>
+	</div>
+	<div n:ifset="$post->sourceHref">
+		{icon external-link}
+		<small><a href="{$post->sourceHref}">{$post->sourceName}</a></small>
+	</div>
+	<div class="clear"></div>
+</div>

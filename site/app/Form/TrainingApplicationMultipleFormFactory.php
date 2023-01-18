@@ -46,7 +46,7 @@ class TrainingApplicationMultipleFormFactory
 		}
 
 		$this->trainingControlsFactory->addCountry($form);
-		$this->trainingControlsFactory->addStatusDate($form, 'date', 'Datum:', true);
+		$this->trainingControlsFactory->addStatusDate($form->addText('date', 'Datum:'), true);
 
 		$statuses = [];
 		foreach ($this->trainingStatuses->getInitialStatuses() as $status) {

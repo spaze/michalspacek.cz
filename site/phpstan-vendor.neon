@@ -61,6 +61,7 @@ parameters:
 			function: 'print_r()'
 			message: 'use some logger instead'
 			allowIn:
+				- vendor/efabrica/phpstan-latte/tests/*.php  # https://github.com/efabrica-team/phpstan-latte/pull/232
 				- vendor/texy/texy/examples/*
 			allowParamsAnywhere:
 				2: true
@@ -69,6 +70,11 @@ parameters:
 			message: 'might overwrite existing variables'
 			allowIn:
 				- vendor/nette/tester/src/Runner/Job.php
+		-
+			function: 'var_dump()'
+			message: 'use some logger instead'
+			allowIn:
+				- vendor/efabrica/phpstan-latte/tests/*.php  # https://github.com/efabrica-team/phpstan-latte/pull/232
 		# bundled disallowed-execution-calls.neon
 		-
 			function: 'exec()'
@@ -86,6 +92,9 @@ parameters:
 			function: 'md5()'
 			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
 			allowIn:
+				- vendor/efabrica/phpstan-latte/src/Compiler/*.php
+				- vendor/efabrica/phpstan-latte/src/Error/ErrorBuilder.php
+				- vendor/efabrica/phpstan-latte/src/Template/Template.php
 				- vendor/latte/latte/src/Latte/Engine.php
 				- vendor/nette/caching/src/Caching/Cache.php
 				- vendor/nette/database/src/Database/*.php
@@ -130,6 +139,8 @@ parameters:
 			function: 'uniqid()'
 			message: 'it is not a cryptographically secure generator, use random_bytes() instead'
 			allowIn:
+				- vendor/efabrica/phpstan-latte/src/Compiler/*.php
+				- vendor/efabrica/phpstan-latte/tests/*.php  # https://github.com/efabrica-team/phpstan-latte/pull/232
 				- vendor/nette/tester/src/Framework/Dumper.php
 				- vendor/symfony/cache/Adapter/PhpArrayAdapter.php
 				- vendor/symfony/filesystem/Filesystem.php

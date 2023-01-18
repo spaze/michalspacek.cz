@@ -7,109 +7,12 @@
 	</li>
 {/define}
 
-{define #formVideoThumbnails}
-	<tr>
-		<th>Náhled videa:</th>
-		<td class="narrower">
-			<span id="videoThumbnailFormField">{input videoThumbnail}</span>
-			<span id="currentVideoThumbnail">
-				{ifset $item->videoThumbnailUrl}
-					<img src="{$item->videoThumbnailUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnail}" title="{$item->videoThumbnail}">
-				{/ifset}
-				{ifset $item, $item->videoThumbnail}<small>{input removeVideoThumbnail}</small>{/ifset}
-			</span>
-			<span n:ifcontent class="error">{inputError videoThumbnail}</span>
-		</td>
-	</tr>
-	<tr>
-		<td class="right">WebP:</td>
-		<td class="narrower">
-			<span id="videoThumbnailAlternativeFormField">{input videoThumbnailAlternative}</span>
-			<span id="currentVideoThumbnailAlternative">
-				{ifset $item->videoThumbnailAlternativeUrl}
-					<img src="{$item->videoThumbnailAlternativeUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnailAlternative}" title="{$item->videoThumbnailAlternative}">
-				{/ifset}
-				{ifset $item, $item->videoThumbnailAlternative}<small>{input removeVideoThumbnailAlternative}</small>{/ifset}
-			</span>
-			<span n:ifcontent class="error">{inputError videoThumbnailAlternative}</span>
-		</td>
-	</tr>
-{/define}
-
-{define #talkForm}
-{form $formName class => "aligned wide"}
-<table>
-	<tr>
-		<th class="align-top">{label action /}</th><td>{input action}<br><small>nevyplňujte, pokud nechcete samostatnou stránku pro přednášku</small></td>
-	</tr>
-	<tr>
-		<th n:class="$talk && $talk->action ? align-top">{label title /}</th><td>{input title}<br><small n:if="$talk && $talk->action"><a n:href=":Www:Talks:talk $talk->action">zobrazit přednášku</a></small></td>
-	</tr>
-	<tr>
-		<th class="align-top">{label description /}</th><td>{input description}</td>
-	</tr>
-	<tr>
-		<th>{label date /}</th><td>{input date}</td>
-	</tr>
-	<tr>
-		<th>{label href /}</th><td>{input href}</td>
-	</tr>
-	<tr>
-		<th>{label duration /}</th><td class="short">{input duration} minut</td>
-	</tr>
-	<tr>
-		<th>{label slidesTalk /}</th><td>{input slidesTalk}</td>
-	</tr>
-	<tr>
-		<th>{label filenamesTalk /}</th><td>{input filenamesTalk}</td>
-	</tr>
-	<tr>
-		<th>{label slidesHref /}</th><td>{input slidesHref}</td>
-	</tr>
-	<tr class="lighter">
-		<th class="align-top">{label slidesEmbed /}</th><td>{input slidesEmbed}<br><small><em>deprecated</em></small></td>
-	</tr>
-	<tr>
-		<th>{label videoHref /}</th><td>{input videoHref}</td>
-	</tr>
-	{include #formVideoThumbnails, item => $talk}
-	<tr class="lighter">
-		<th class="align-top">{label videoEmbed /}</th><td>{input videoEmbed}<br><small><em>deprecated</em></small></td>
-	</tr>
-	<tr>
-		<th>{label event /}</th><td>{input event}</td>
-	</tr>
-	<tr>
-		<th>{label eventHref /}</th><td>{input eventHref}</td>
-	</tr>
-	<tr>
-		<th class="align-top">{label ogImage /}</th><td>{input ogImage}<br><small>místo čísla slajdu v URL použijte <code>%d</code></small></td>
-	</tr>
-	<tr>
-		<th class="align-top">{label transcript /}</th><td>{input transcript}</td>
-	</tr>
-	<tr>
-		<th class="align-top">{label favorite /}</th><td>{input favorite}</td>
-	</tr>
-	<tr>
-		<th>{label supersededBy /}</th><td>{input supersededBy}</td>
-	</tr>
-	<tr>
-		<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$formName == editTalk" n:href="slides $talk->talkId">Upravit slajdy</a></td>
-	</tr>
-	<tr>
-		<th></th><td class="short"><p>{input submit}</p></td>
-	</tr>
-</table>
-{/form}
-{/define}
-
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-prednasku">
 	<p><a href="#pridat-prednasku" class="open-container block">Přidat přednášku</a></p>
 	<div id="pridat-prednasku-container" class="hidden">
-	{include #talkForm, formName => addTalk, talk => null}
+	{include "common/talkForm.latte", formName => addTalk, talk => null}
 	</div>
 </div>
 <hr>

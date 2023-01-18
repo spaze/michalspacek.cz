@@ -3,7 +3,6 @@
 {/define}
 
 {define #content}
-{import "../Trainings/default.latte"}
 <p>
 	{_messages.companytrainings.offer}
 </p>
@@ -13,9 +12,9 @@
 	{/foreach}
 </ul>
 <p>{_messages.companytrainings.publictraining|format:'link:Www:Trainings:'}</p>
-<p>{include #discontinued}</p>
+<p>{include "../Trainings/common/discontinued.latte"}</p>
 <hr>
 <h4>{_messages.label.partnertrainings}</h4>
 <p><small>{_messages.trainings.partnertrainings.companyintro|format}</small></p>
-{include #partnerTrainings}
+{include "../Trainings/common/partnerTrainings.latte"}
 {/define}

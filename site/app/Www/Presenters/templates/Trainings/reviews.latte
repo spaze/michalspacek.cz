@@ -4,13 +4,7 @@
 &raquo; <a n:href="Trainings:training $name">{$title}</a>
 {/define}
 
-{define #itemReview}
-	<p><strong>{$review->name}{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
-	<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
-{/define}
-
 {define #content}
-{import "default.latte"}
 <p>
 	{$description}
 	{if !isset($discontinued)}
@@ -18,12 +12,12 @@
 		<small>(<a n:href="$link $name">{_messages.label.lowercaseapplication}</a>, <a n:href="CompanyTrainings:training $name">{_messages.label.lowercasecompanytraining}</a>)</small>
 	{/if}
 </p>
-<div n:ifset="$discontinued" class="flash notice">{include #discontinued}</div>
+<div n:ifset="$discontinued" class="flash notice">{include "common/discontinued.latte"}</div>
 {if $reviews}
 	<div id="{_html.id.reviews}">
 	<h2>{_messages.label.trainingreviews}</h2>
 	{foreach $reviews as $review}
-		{include #itemReview}
+		{include "common/itemReview.latte"}
 	{/foreach}
 	</div>
 	<p>

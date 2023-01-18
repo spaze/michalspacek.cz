@@ -6,10 +6,9 @@
 {define #content}
 <p n:if="!$unpaidApplications">Žádné nezaplacené faktury, hurá!</p>
 {if $unpaidApplications}
-{import "../Trainings/default.latte"}
 <p></p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{include #list, trainings => $unpaidApplications, order => 'asc'}
+{include "../Trainings/common/dateList.latte", trainings => $unpaidApplications, order => 'asc'}
 <p></p>
 <hr>
 <div>

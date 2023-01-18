@@ -1,68 +1,19 @@
-{define #itemInterview}
-	<li><a n:href="Interviews:interview $item->interviewId">{$item->title}</a>
-	<small><strong class="date">{$item->date|localeDay}</strong>, {$item->sourceName}</small>
-	<span n:if="$item->audioHref" title="{_messages.label.audiorecording}">{icon microphone}</span>
-	<span n:if="$item->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
-	</li>
-{/define}
-
-{define #interviewForm}
-{import "../Talks/default.latte"}
-{form $form class => "aligned wide"}
-<table>
-	<tr>
-		<th>{label action /}</th><td>{input action}<br></td>
-	</tr>
-	<tr>
-		<th>{label title /}</th><td>{input title}<br><small><a n:ifset="$interview->action" n:href=":Www:Interviews:interview $interview->action">zobrazit rozhovor</a></small></td>
-	</tr>
-	<tr>
-		<th class="align-top">{label description /}</th><td>{input description}</td>
-	</tr>
-	<tr>
-		<th>{label date /}</th><td>{input date}</td>
-	</tr>
-	<tr>
-		<th>{label href /}</th><td>{input href}</td>
-	</tr>
-	<tr>
-		<th>{label audioHref /}</th><td>{input audioHref}</td>
-	</tr>
-	<tr class="lighter">
-		<th class="align-top">{label audioEmbed /}</th><td>{input audioEmbed}<br><small><em>deprecated</em></small></td>
-	</tr>
-	<tr>
-		<th>{label videoHref /}</th><td>{input videoHref}</td>
-	</tr>
-	{include #formVideoThumbnails, item => $interview ?? null}
-	<tr class="lighter">
-		<th class="align-top">{label videoEmbed /}</th><td>{input videoEmbed}<br><small><em>deprecated</em></small></td>
-	</tr>
-	<tr>
-		<th>{label sourceName /}</th><td>{input sourceName}</td>
-	</tr>
-	<tr>
-		<th>{label sourceHref /}</th><td>{input sourceHref}</td>
-	</tr>
-	<tr>
-		<th></th><td class="short"><p>{input submit}</p></td>
-	</tr>
-</table>
-{/form}
-{/define}
-
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-rozhovor">
 	<p><a href="#pridat-rozhovor" class="open-container block">Přidat rozhovor</a></p>
 	<div id="pridat-rozhovor-container" class="hidden">
-	{include #interviewForm, form => addInterview}
+	{include "common/interviewForm.latte", form => addInterview}
 	</div>
 </div>
 <hr>
 <ol reversed>
 {foreach $interviews as $item}
-	{include #itemInterview}
+	<li><a n:href="Interviews:interview $item->interviewId">{$item->title}</a>
+		<small><strong class="date">{$item->date|localeDay}</strong>, {$item->sourceName}</small>
+		<span n:if="$item->audioHref" title="{_messages.label.audiorecording}">{icon microphone}</span>
+		<span n:if="$item->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
+	</li>
 {/foreach}
 </ol>
 {/define}

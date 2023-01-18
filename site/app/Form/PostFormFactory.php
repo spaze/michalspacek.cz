@@ -45,7 +45,7 @@ class PostFormFactory
 		$form->addText('slug', 'Slug:')
 			->setRequired('Zadejte prosím slug')
 			->addRule($form::MIN_LENGTH, 'Slug musí mít alespoň %d znaky', 3);
-		$this->addPublishedDate($form, 'published', 'Vydáno:')
+		$this->addPublishedDate($form->addText('published', 'Vydáno:'))
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
 		$form->addText('previewKey', 'Klíč pro náhled:')
 			->setRequired(false)
@@ -157,12 +157,10 @@ class PostFormFactory
 	}
 
 
-	private function addPublishedDate(Form $form, string $name, string $label, bool $required = false): TextInput
+	private function addPublishedDate(TextInput $field, bool $required = false): TextInput
 	{
 		return $this->trainingControlsFactory->addDate(
-			$form,
-			$name,
-			$label,
+			$field,
 			$required,
 			'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM',
 			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})',

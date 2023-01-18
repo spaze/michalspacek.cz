@@ -6,43 +6,9 @@
 {/define}
 
 {define #form}
-{form $form class => aligned}
-<table>
-	<tr n:ifset="$applications">
-		<th>{label application /}</th><td>{input application}</td>
-	</tr>
-	<tr>
-		<th>{label name /}</th><td>{input name}</td>
-	</tr>
-	<tr>
-		<th>{label company /}</th><td>{input company}</td>
-	</tr>
-	<tr>
-		<th>{label jobTitle /}</th><td>{input jobTitle}</td>
-	</tr>
-	<tr>
-		<th class="align-top">{label review /}</th><td>{input review, class => wide}</td>
-	</tr>
-	<tr>
-		<th>{label href /}</th><td>{input href}</td>
-	</tr>
-	<tr>
-		<th>{label hidden: /}</th><td>{input hidden:}</td>
-	</tr>
-	<tr>
-		<th>{label ranking /}</th><td class="narrow">{input ranking}</td>
-	</tr>
-	<tr>
-		<th>{label note: /}</th><td class="wide">{input note:}</td>
-	</tr>
-	<tr>
-		<th></th><td>{input submit}</td>
-	</tr>
-</table>
-{/form}
 {/define}
 
 {define #content}
 <p>{$name} {$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</p>
-{include #form, form => editReview}
+{include "common/reviewForm.latte", form => editReview}
 {/define}

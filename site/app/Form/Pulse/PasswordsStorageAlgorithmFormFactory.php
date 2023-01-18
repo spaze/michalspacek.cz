@@ -96,9 +96,7 @@ class PasswordsStorageAlgorithmFormFactory
 		$selectAlgo = $algoContainer->addSelect('id', 'Algorithm:', $items)
 			->setPrompt('- select algorithm -');
 		$this->trainingControlsFactory->addDate(
-			$algoContainer,
-			'from',
-			'From:',
+			$algoContainer->addText('from', 'From:'),
 			false,
 			'YYYY-MM(-DD (HH:MM(:SS)))',
 			'(\d{4}-\d{1,2}(-\d{1,2}( \d{1,2}:\d{2}(:\d{2})?)?)?)',
@@ -138,9 +136,7 @@ class PasswordsStorageAlgorithmFormFactory
 			$inputArchive = $disclosureNewCountContainer->addText('archive', 'Archive:');
 			$disclosureNewCountContainer->addText('note', 'Note:');
 			$inputPublished = $this->trainingControlsFactory->addDate(
-				$disclosureNewCountContainer,
-				'published',
-				'Published:',
+				$disclosureNewCountContainer->addText('published', 'Published:'),
 				false,
 				'YYYY-MM-DD (HH:MM(:SS))',
 				'(\d{4}-\d{1,2}-\d{1,2}( \d{1,2}:\d{2}(:\d{2})?)?)',

@@ -14,7 +14,9 @@ use Nette\Application\UI\Form;
 class PasswordsStoragesPresenter extends BasePresenter
 {
 
-	private Form $searchSortForm;
+	private ?string $rating;
+	private ?string $sort;
+	private ?string $search;
 
 
 	public function __construct(
@@ -34,14 +36,17 @@ class PasswordsStoragesPresenter extends BasePresenter
 			$this->redirectPermanent('site', $param);
 		}
 
-		$this->searchSortForm = $this->searchSortFactory->create($rating, $sort, $search);
-		$rating = $rating === null || $rating === 'all' || !array_key_exists($rating, $this->passwordsRating->getRatings()) ? null : strtoupper($rating);
-		$data = $this->passwords->getAllStorages($rating, $sort === null ? $this->passwordsSorting->getDefaultSort() : $sort, $search);
+		$this->rating = $rating;
+		$this->sort = $sort;
+		$this->search = $search;
+
+		$this->rating = $this->rating === null || $this->rating === 'all' || !array_key_exists($this->rating, $this->passwordsRating->getRatings()) ? null : strtoupper($this->rating);
+		$data = $this->passwords->getAllStorages($this->rating, $this->sort === null ? $this->passwordsSorting->getDefaultSort() : $this->sort, $this->search);
 		$this->template->isDetail = false;
 		$this->template->pageTitle = 'Password storage disclosures';
 		$this->template->data = $data;
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->template->openSearchSort = $rating !== null || $sort !== null || $search !== null;
+		$this->template->openSearchSort = $this->rating !== null || $this->sort !== null || $this->search !== null;
 		$this->template->canonicalLink = $this->link("//{$this->action}");  // Not using 'this' as the destination to omit params
 	}
 
@@ -125,7 +130,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 
 	protected function createComponentSearchSort(): Form
 	{
-		return $this->searchSortForm;
+		return $this->searchSortFactory->create($this->rating, $this->sort, $this->search);
 	}
 
 }

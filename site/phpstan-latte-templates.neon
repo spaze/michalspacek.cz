@@ -1,0 +1,20 @@
+parameters:
+	customRulesetUsed: true
+	tmpDir: /tmp/phpstan/michalspacek.cz-latte-templates
+	paths:
+		- app
+	latte:
+		engineBootstrap: app/PhpStan/latteEngine.php
+		applicationMapping:  # Copy of mapping from common.neon until https://github.com/efabrica-team/phpstan-latte/issues/27 is resolved somehow
+			*: MichalSpacekCz\*\Presenters\*Presenter
+	earlyTerminatingMethodCalls:
+		Nette\Application\UI\Component:
+			# https://github.com/efabrica-team/phpstan-latte/issues/261
+			- redirectPermanent
+	ignoreErrors:
+		- '#^Form field with name "0" probably does not exist#'  # https://github.com/efabrica-team/phpstan-latte/issues/106
+
+includes:
+	- vendor/phpstan/phpstan-nette/extension.neon
+	- vendor/phpstan/phpstan-nette/rules.neon
+	- vendor/efabrica/phpstan-latte/rules.neon

@@ -41,7 +41,7 @@ class TrainingStatusesFormFactory
 					->setPrompt('nelze dále měnit');
 			}
 		}
-		$this->trainingControlsFactory->addStatusDate($form, 'date', 'Datum:', true);
+		$this->trainingControlsFactory->addStatusDate($form->addText('date', 'Datum:'), true);
 		$submitStatuses = $form->addSubmit('submit', 'Změnit');
 		$submitFamiliar = $form->addSubmit('familiar', 'Tykat všem')->setValidationScope([]);
 

@@ -2,13 +2,6 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
-{define #itemTalk}
-	<a n:href="Talks:talk $talk->action" n:tag-if="$talk->action"><strong>{$talk->title}</strong></a><br>
-	<small><strong class="date">{$talk->date|localeDay}</strong>, {$talk->event}{if $talk->duration} ({_messages.talks.durationshort|format:$talk->duration}){/if}</small>
-	<span n:if="$talk->hasSlides" title="{_messages.label.slides}">{icon images}</span>
-	<span n:if="$talk->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
-{/define}
-
 {define #content}
 <h2>{_messages.label.favorite}</h2>
 <ul>
@@ -29,7 +22,7 @@
 {foreach $talks as $year => $items}
 	<h3>{$year}</h3>
 	<p class="indent" n:foreach="$items as $talk">
-		{include #itemTalk}
+		{include "common/itemTalk.latte"}
 	</p>
 {/foreach}
 {_messages.talks.more|format:'https://www.slideshare.net/spaze/presentations', 'https://speakerdeck.com/u/spaze'}
