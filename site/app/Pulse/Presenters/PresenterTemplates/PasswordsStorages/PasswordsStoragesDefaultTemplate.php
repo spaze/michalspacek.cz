@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse\Presenters\PasswordsStoragesTemplates;
+namespace MichalSpacekCz\Pulse\Presenters\PresenterTemplates\PasswordsStorages;
 
 use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
 use Nette\Bridges\ApplicationLatte\Template;
