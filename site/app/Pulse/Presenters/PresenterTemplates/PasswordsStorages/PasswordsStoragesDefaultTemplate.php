@@ -20,6 +20,6 @@ class PasswordsStoragesDefaultTemplate extends Template
 
 	public bool $openSearchSort;
 
-	public string $canonicalLink;
+	public ?string $canonicalLink;
 
 }
