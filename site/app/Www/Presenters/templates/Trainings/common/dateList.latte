@@ -1,4 +1,4 @@
-<div n:if="isset($lastFreeSeats) && $lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
+<div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
 <ul class="vcalendar" id="training-dates">
 	{foreach $upcomingTrainings as $item}
 		<li class="vevent">
