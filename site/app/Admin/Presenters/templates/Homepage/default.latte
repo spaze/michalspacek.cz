@@ -2,7 +2,7 @@
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <h2>Školení</h2>
-{include "../Trainings/common/dateList.latte", trainings => $upcomingApplications, order => 'asc'}
+{include "../Trainings/common/dateList.latte", trainings: $upcomingApplications, order: 'asc'}
 <h2>Certifikáty</h2>
 <p id="certificates-toggle" class="small">
 	<span id="certificatesShow" n:class="$certificatesNeedAttention ? hidden">Zobrazit</span>

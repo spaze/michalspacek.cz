@@ -13,7 +13,7 @@
 <hr>
 <h2 id="{_html.id.articles}">{_messages.label.myarticles}</h2>
 <div n:foreach="$articles as $article">
-	{include "../Articles/common/itemArticle.latte", article => $article}
+	{include "../Articles/common/itemArticle.latte", article: $article}
 </div>
 <p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
 <hr>
@@ -26,19 +26,19 @@
 </ul>
 <h3>{_messages.label.upcomingtalks}</h3>
 <p class="indent" n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
-	{include "../Talks/common/itemTalk.latte", talk => $talk}
+	{include "../Talks/common/itemTalk.latte", talk: $talk}
 </p>
 <p n:if="$upcomingTalks">{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
 <p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
 <h3>{_messages.label.pasttalks}</h3>
 <p class="indent" n:foreach="$talks as $talk">
-	{include "../Talks/common/itemTalk.latte", talk => $talk}
+	{include "../Talks/common/itemTalk.latte", talk: $talk}
 </p>
 <p><a n:href="Talks:">{_messages.label.alltalks}</a></p>
 <hr>
 <h2 id="{_html.id.interviews}">{_messages.label.myinterviews}</h2>
 <p class="indent" n:foreach="$interviews as $interview">
-	{include "../Interviews/common/itemInterview.latte", interview => $interview}
+	{include "../Interviews/common/itemInterview.latte", interview: $interview}
 </p>
 <p><a n:href="Interviews:">{_messages.label.allinterviews}</a></p>
 {/define}

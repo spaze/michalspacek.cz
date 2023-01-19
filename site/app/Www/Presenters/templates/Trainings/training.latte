@@ -168,7 +168,7 @@
 <div id="{_html.id.reviews}">
 <h2>{_messages.label.trainingreviews}</h2>
 {foreach $reviews as $review}
-	{include "common/itemReview.latte", review => $review}
+	{include "common/itemReview.latte", review: $review}
 {/foreach}
 </div>
 <p><a n:href="Trainings:reviews $name">{_messages.trainings.allreviews}</a></p>

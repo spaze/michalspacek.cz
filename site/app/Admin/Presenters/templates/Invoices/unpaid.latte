@@ -8,7 +8,7 @@
 {if $unpaidApplications}
 <p></p>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
-{include "../Trainings/common/dateList.latte", trainings => $unpaidApplications, order => 'asc'}
+{include "../Trainings/common/dateList.latte", trainings: $unpaidApplications, order: 'asc'}
 <p></p>
 <hr>
 <div>
