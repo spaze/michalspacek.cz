@@ -1,0 +1,19 @@
+name: Gitleaks
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "49 21 * * *"
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # fetch all history for all branches and tags
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Used to comment on PRs
