@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanLatte\Compiler;
 
-use Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddTypeToComponentNodeVisitor;
-use Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddVarTypesNodeVisitor;
+use Efabrica\PHPStanLatte\Compiler\Compiler\CompilerInterface;
 use Efabrica\PHPStanLatte\Compiler\NodeVisitor\Behavior\ActualClassNodeVisitorInterface;
+use Efabrica\PHPStanLatte\Compiler\NodeVisitor\Behavior\ComponentsNodeVisitorInterface;
+use Efabrica\PHPStanLatte\Compiler\NodeVisitor\Behavior\FiltersNodeVisitorInterface;
 use Efabrica\PHPStanLatte\Compiler\NodeVisitor\Behavior\FormsNodeVisitorInterface;
-use Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor;
+use Efabrica\PHPStanLatte\Compiler\NodeVisitor\Behavior\VariablesNodeVisitorInterface;
 use Efabrica\PHPStanLatte\Compiler\NodeVisitor\NodeVisitorStorage;
 use Efabrica\PHPStanLatte\Template\Template;
-use Efabrica\PHPStanLatte\VariableCollector\DynamicFilterVariables;
-use Efabrica\PHPStanLatte\VariableCollector\VariableCollectorStorage;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
@@ -28,78 +27,67 @@ final class Postprocessor
 
     private Standard $printerStandard;
 
-    private TypeToPhpDoc $typeToPhpDoc;
-
-    private DynamicFilterVariables $dynamicFilterVariables;
-
-    private VariableCollectorStorage $variableCollectorStorage;
+    private CompilerInterface $compiler;
 
     public function __construct(
         Parser $parser,
         NodeVisitorStorage $nodeVisitorStorage,
         Standard $printerStandard,
-        TypeToPhpDoc $typeToPhpDoc,
-        DynamicFilterVariables $dynamicFilterVariables,
-        VariableCollectorStorage $variableCollectorStorage
+        CompilerInterface $compiler
     ) {
         $this->parser = $parser;
         $this->nodeVisitorStorage = $nodeVisitorStorage;
         $this->printerStandard = $printerStandard;
-        $this->typeToPhpDoc = $typeToPhpDoc;
-        $this->dynamicFilterVariables = $dynamicFilterVariables;
-        $this->variableCollectorStorage = $variableCollectorStorage;
+        $this->compiler = $compiler;
     }
 
     public function postProcess(string $phpContent, Template $template): string
     {
-        $filters = [];
-        foreach ($template->getFilters() as $filter) {
-            $filters[$filter->getName()] = $filter->getTypeAsString();
-        }
-
-        $this->dynamicFilterVariables->addFilters($filters);
-
-        $addVarTypeNodeVisitor = new AddVarTypesNodeVisitor($template->getVariables(), $this->typeToPhpDoc);
-        $this->nodeVisitorStorage->addTemporaryNodeVisitor(100, $addVarTypeNodeVisitor);
-
-        $addVarTypeFromCollectorStorageNodeVisitor = new AddVarTypesNodeVisitor($this->variableCollectorStorage->collectVariables(), $this->typeToPhpDoc);
-        $this->nodeVisitorStorage->addTemporaryNodeVisitor(100, $addVarTypeFromCollectorStorageNodeVisitor);
-
-        $addTypeToComponentNodeVisitor = new AddTypeToComponentNodeVisitor($template->getComponents(), $this->typeToPhpDoc);
-        $this->nodeVisitorStorage->addTemporaryNodeVisitor(100, $addTypeToComponentNodeVisitor);
-
-        $changeFilterNodeVisitor = new ChangeFiltersNodeVisitor($filters);
-        $this->nodeVisitorStorage->addTemporaryNodeVisitor(200, $changeFilterNodeVisitor);
-
+        $phpStmts = $this->findNodes($phpContent);
         foreach ($this->nodeVisitorStorage->getNodeVisitors() as $nodeVisitors) {
-            $phpContent = $this->processNodeVisitors($phpContent, $nodeVisitors, $template);
+            $phpStmts = $this->processNodeVisitors($phpStmts, $nodeVisitors, $template);
         }
 
-        $this->nodeVisitorStorage->resetTemporaryNodeVisitors();
-        return $phpContent;
+        return $this->printerStandard->prettyPrintFile($phpStmts);
     }
 
     /**
+     * @param Node[] $phpStmts
      * @param NodeVisitor[] $nodeVisitors
+     * @return Node[]
      */
-    private function processNodeVisitors(string $phpContent, array $nodeVisitors, Template $template): string
+    private function processNodeVisitors(array $phpStmts, array $nodeVisitors, Template $template): array
     {
-        $phpStmts = $this->findNodes($phpContent);
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor(new ParentConnectingVisitor()); // symplify/phpstan-rules compatibility
-        foreach ($nodeVisitors as $nodeVisitor) {
+        foreach ($nodeVisitors as $cleanNodeVisitor) {
+            $nodeVisitor = clone $cleanNodeVisitor;
             $this->setupVisitor($nodeVisitor, $template);
             $nodeTraverser->addVisitor($nodeVisitor);
         }
 
-        $newPhpStmts = $nodeTraverser->traverse($phpStmts);
-        return $this->printerStandard->prettyPrintFile($newPhpStmts);
+        return $nodeTraverser->traverse($phpStmts);
     }
 
     private function setupVisitor(NodeVisitor $nodeVisitor, Template $template): void
     {
         if ($nodeVisitor instanceof ActualClassNodeVisitorInterface) {
             $nodeVisitor->setActualClass($template->getActualClass());
+        }
+        if ($nodeVisitor instanceof VariablesNodeVisitorInterface) {
+            $nodeVisitor->setVariables($template->getVariables());
+        }
+        if ($nodeVisitor instanceof ComponentsNodeVisitorInterface) {
+            $nodeVisitor->setComponents($template->getComponents());
+        }
+        if ($nodeVisitor instanceof FiltersNodeVisitorInterface) {
+            $filters = [];
+            foreach ($template->getFilters() as $filter) {
+                $filters[$filter->getName()] = $filter->getTypeAsString();
+            }
+            $filters = array_merge($filters, $this->compiler->getFilters());
+            $filters = LatteVersion::isLatte2() ? array_change_key_case($filters) : $filters;
+            $nodeVisitor->setFilters($filters);
         }
         if ($nodeVisitor instanceof FormsNodeVisitorInterface) {
             $nodeVisitor->setForms($template->getForms());
@@ -111,6 +99,6 @@ final class Postprocessor
      */
     private function findNodes(string $phpContent): array
     {
-        return (array)$this->parser->parseString($phpContent);
+        return $this->parser->parseString($phpContent);
     }
 }

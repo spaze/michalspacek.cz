@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanLatte\Error;
 
-use Efabrica\PHPStanLatte\Compiler\LineMapper;
 use Efabrica\PHPStanLatte\Error\Error as LatteError;
+use Efabrica\PHPStanLatte\Error\LineMapper\LineMap;
+use Efabrica\PHPStanLatte\Error\LineMapper\LineMapper;
 use Efabrica\PHPStanLatte\Error\Transformer\ErrorTransformerInterface;
 use PHPStan\Analyser\Error;
+use PHPStan\Rules\FileRuleError;
+use PHPStan\Rules\IdentifierRuleError;
+use PHPStan\Rules\LineRuleError;
+use PHPStan\Rules\MetadataRuleError;
+use PHPStan\Rules\NonIgnorableRuleError;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Rules\TipRuleError;
 
 final class ErrorBuilder
 {
@@ -39,6 +46,9 @@ final class ErrorBuilder
         '/Instantiated class MissingBlockParameter not found\./', # missing block parameter palceholder
     ];
 
+    /** @var string[] */
+    private array $warningPatterns;
+
     /** @var ErrorTransformerInterface[] */
     private array $errorTransformers;
 
@@ -46,16 +56,19 @@ final class ErrorBuilder
 
     /**
      * @param string[] $errorPatternsToIgnore
+     * @param string[] $warningPatterns
      * @param array<string, string> $applicationMapping
      * @param ErrorTransformerInterface[] $errorTransformers
      */
     public function __construct(
         array $errorPatternsToIgnore,
+        array $warningPatterns,
         array $applicationMapping,
         array $errorTransformers,
         LineMapper $lineMapper
     ) {
         $this->errorPatternsToIgnore = array_merge($this->errorPatternsToIgnore, $errorPatternsToIgnore);
+        $this->warningPatterns = $warningPatterns;
         $this->errorTransformers = $errorTransformers;
         $this->lineMapper = $lineMapper;
         if (count($applicationMapping) === 0) {
@@ -67,12 +80,12 @@ final class ErrorBuilder
      * @param Error[] $originalErrors
      * @return RuleError[]
      */
-    public function buildErrors(array $originalErrors, string $templatePath, ?string $context = null): array
+    public function buildErrors(array $originalErrors, string $templatePath, ?string $compiledTemplatePath, ?string $context = null): array
     {
         $errorSignatures = [];
         $errors = [];
         foreach ($originalErrors as $originalError) {
-            $error = $this->buildError($originalError, $templatePath, $context);
+            $error = $this->buildError($originalError, $templatePath, $compiledTemplatePath, $context);
             if ($error === null) {
                 continue;
             }
@@ -83,28 +96,74 @@ final class ErrorBuilder
             $errorSignatures[$errorSignature] = true;
             $errors[] = $error;
         }
-        $this->lineMapper->reset();
         return $errors;
     }
 
-    public function buildError(Error $originalError, string $templatePath, ?string $context = null): ?RuleError
+    public function buildError(Error $originalError, string $templatePath, ?string $compiledTemplatePath, ?string $context = null): ?RuleError
     {
+        $lineMap = $compiledTemplatePath ? $this->lineMapper->getLineMap($compiledTemplatePath) : new LineMap();
+
         $error = new LatteError($originalError->getMessage(), $originalError->getTip());
         $error = $this->transformError($error);
 
         $ruleErrorBuilder = RuleErrorBuilder::message($error->getMessage())
             ->file($templatePath)
-            ->metadata(array_merge($originalError->getMetadata(), ['context' => $context === '' ? null : $context]));
+            ->metadata(array_merge($originalError->getMetadata(), ['context' => $context === '' ? null : $context, 'is_warning' => $this->isWarning($error->getMessage())]));
         if ($originalError->getLine()) {
-            $ruleErrorBuilder->line($this->lineMapper->get($originalError->getLine()));
+            $ruleErrorBuilder->line($lineMap->get($originalError->getLine()));
         }
         if ($error->getTip()) {
             $ruleErrorBuilder->tip($error->getTip());
         }
-        if ($this->shouldErrorBeIgnored($error)) {
+        if ($this->shouldErrorBeIgnored($error->getMessage())) {
             return null;
         }
         return $ruleErrorBuilder->build();
+    }
+
+    /**
+     * @param RuleError[] $ruleErrors
+     * @return RuleError[]
+     */
+    public function buildRuleErrors(array $ruleErrors): array
+    {
+        $newRuleErrors = [];
+        foreach ($ruleErrors as $ruleError) {
+            if ($this->shouldErrorBeIgnored($ruleError->getMessage())) {
+                continue;
+            }
+
+            $newRuleError = RuleErrorBuilder::message($ruleError->getMessage());
+
+            $metaData = [];
+            if ($ruleError instanceof MetadataRuleError) {
+                $metaData = $ruleError->getMetadata();
+            }
+            $metaData['is_warning'] = $this->isWarning($ruleError->getMessage());
+            $newRuleError->metadata($metaData);
+
+            if ($ruleError instanceof FileRuleError) {
+                $newRuleError->file($ruleError->getFile());
+            }
+
+            if ($ruleError instanceof LineRuleError) {
+                $newRuleError->line($ruleError->getLine());
+            }
+
+            if ($ruleError instanceof TipRuleError) {
+                $newRuleError->tip($ruleError->getTip());
+            }
+
+            if ($ruleError instanceof IdentifierRuleError) {
+                $newRuleError->identifier($ruleError->getIdentifier());
+            }
+
+            if ($ruleError instanceof NonIgnorableRuleError) {
+                $newRuleError->nonIgnorable();
+            }
+            $newRuleErrors[] = $newRuleError->build();
+        }
+        return $newRuleErrors;
     }
 
     private function errorSignature(RuleError $error): string
@@ -114,10 +173,20 @@ final class ErrorBuilder
         return md5((string)json_encode($values));
     }
 
-    private function shouldErrorBeIgnored(LatteError $error): bool
+    private function shouldErrorBeIgnored(string $message): bool
     {
         foreach ($this->errorPatternsToIgnore as $errorPatternToIgnore) {
-            if (preg_match($errorPatternToIgnore, $error->getMessage())) {
+            if (preg_match($errorPatternToIgnore, $message)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function isWarning(string $message): bool
+    {
+        foreach ($this->warningPatterns as $warningPattern) {
+            if (preg_match($warningPattern, $message)) {
                 return true;
             }
         }

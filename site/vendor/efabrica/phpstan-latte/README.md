@@ -21,9 +21,17 @@ The extension is based on Tomas Votruba's [blog series](https://tomasvotruba.com
 - If you use some non-standard and magic using rendering you can implement your own template resolvers (experimental)
 
 ## Installation
+
+To use this extension, require it in [Composer](https://getcomposer.org/):
+
 ```shell
 composer require efabrica/phpstan-latte --dev
 ```
+
+If you also install [phpstan/extension-installer](https://github.com/phpstan/extension-installer) then you're all set!
+
+<details>
+  <summary>Manual installation</summary>
 
 Add this line to your phpstan.neon:
 ```neon
@@ -31,13 +39,9 @@ includes:
     - vendor/efabrica/phpstan-latte/rules.neon
 ```
 
+</details>
+
 It is recommended to use this extension with [phpstan-nette](https://github.com/phpstan/phpstan-nette) extension for better analysis of templates.
-Add also these lines to your phpstan.neon:
-```neon
-includes:
-    - vendor/phpstan/phpstan-nette/extension.neon
-    - vendor/phpstan/phpstan-nette/rules.neon
-```
 
 ## Configuration
 
@@ -46,6 +50,8 @@ includes:
 * [Ignoring errors](docs/configuration.md#ignoring-errors)
 * [Link checking](docs/configuration.md#link-checking)
 * [Other configuration options](docs/configuration.md#other-configuration-options)
+
+If analysis reports errors about missing context (variables/components, ...) set in external packages you need to set option `latte.collectedPaths` as descibed in [Analyser configuration](docs/configuration.md#analyser-configuration).
 
 ## Annotations
 

@@ -5,34 +5,44 @@ declare(strict_types=1);
 namespace Efabrica\PHPStanLatte\LatteContext\Collector\VariableCollector;
 
 use Efabrica\PHPStanLatte\LatteContext\CollectedData\CollectedVariable;
+use Efabrica\PHPStanLatte\LatteContext\Collector\AbstractLatteContextSubCollector;
 use Efabrica\PHPStanLatte\Resolver\NameResolver\NameResolver;
 use Efabrica\PHPStanLatte\Resolver\TypeResolver\TemplateTypeResolver;
+use Efabrica\PHPStanLatte\Resolver\ValueResolver\ValueResolver;
 use PhpParser\Node;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
-use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\List_;
+use PhpParser\Node\Expr\PropertyFetch;
 use PHPStan\Analyser\Scope;
 use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\MixedType;
 
-final class AssignToArrayOfTemplateVariablesCollector implements VariableCollectorInterface
+/**
+ * @extends AbstractLatteContextSubCollector<CollectedVariable>
+ */
+final class AssignToArrayOfTemplateVariablesCollector extends AbstractLatteContextSubCollector implements VariableCollectorInterface
 {
     private NameResolver $nameResolver;
+
+    private ValueResolver $valueResolver;
 
     protected TemplateTypeResolver $templateTypeResolver;
 
     public function __construct(
         NameResolver $nameResolver,
+        ValueResolver $valueResolver,
         TemplateTypeResolver $templateTypeResolver
     ) {
         $this->nameResolver = $nameResolver;
+        $this->valueResolver = $valueResolver;
         $this->templateTypeResolver = $templateTypeResolver;
     }
 
-    public function isSupported(Node $node): bool
+    public function getNodeTypes(): array
     {
-        return $node instanceof Assign;
+        return [Assign::class];
     }
 
     /**
@@ -44,9 +54,6 @@ final class AssignToArrayOfTemplateVariablesCollector implements VariableCollect
             return null;
         }
 
-        /** @var ArrayItem[] $arrayItems */
-        $arrayItems = (array)$node->var->items;
-
         $types = [];
         $expressionTypes = $scope->getType($node->expr);
         if ($expressionTypes instanceof ConstantArrayType) {
@@ -55,10 +62,24 @@ final class AssignToArrayOfTemplateVariablesCollector implements VariableCollect
 
         $variables = [];
         $containsTemplateVariable = false;
+
+        $arrayItems = $node->var->items;
         foreach ($arrayItems as $key => $arrayItem) {
+            if ($arrayItem === null) {
+                continue;
+            }
             $arrayItemValue = $arrayItem->value;
-            $variableName = $this->nameResolver->resolve($arrayItemValue);
-            if ($variableName === null) {
+
+            $resolvedVariableName = $this->nameResolver->resolve($arrayItemValue);
+            if ($resolvedVariableName !== null) {
+                $variableNames = [$resolvedVariableName];
+            } elseif ($arrayItemValue instanceof PropertyFetch && $arrayItemValue->name instanceof Expr) {
+                $variableNames = $this->valueResolver->resolveStrings($arrayItemValue->name, $scope);
+            } else {
+                continue;
+            }
+
+            if ($variableNames === null) {
                 continue;
             }
 
@@ -68,7 +89,9 @@ final class AssignToArrayOfTemplateVariablesCollector implements VariableCollect
 
             $containsTemplateVariable = true;
             $variableType = $types[$key] ?? new MixedType();
-            $variables[] = CollectedVariable::build($node, $scope, $variableName, $variableType);
+            foreach ($variableNames as $variableName) {
+                $variables[] = CollectedVariable::build($node, $scope, $variableName, $variableType);
+            }
         }
 
         return $containsTemplateVariable ? $variables : null;

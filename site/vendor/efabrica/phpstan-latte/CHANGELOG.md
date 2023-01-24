@@ -2,6 +2,22 @@
 
 ## [Unreleased][unreleased]
 
+## [0.5.0] - 2023-01-24
+### Added
+- Compiled template cache for better performance of repeated analysis
+- Better error messages for render/include of non existing template files
+- PHPStan extension installer support
+- Parameter excludePaths can be used to exclude latte templates from analysis
+- PHPDoc cache
+- Collecting dynamic template variables `$this->template->{$name} = $value`
+- Support for union types for components
+
+## Fixed
+- Performance issues
+- Errors for skipped items in array deconstruct 
+- Removed no needed if statemen in compiled template for $formField->getLabel() when $formField is CheckboxList or RadioList 
+- Ignore all named extra parameters in links check (Nette appends them to query string)
+
 ## [0.4.0] - 2023-01-16
 ### Added
 - Collect FormField name default value
@@ -62,7 +78,8 @@
     - Transform components to explicit calls
 - Error mapper for better DX
 
-[unreleased]: https://github.com/efabrica-team/phpstan-latte/compare/0.4.0...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-latte/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.1.0...0.2.0

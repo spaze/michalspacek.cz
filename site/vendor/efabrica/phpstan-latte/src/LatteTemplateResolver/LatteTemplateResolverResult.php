@@ -67,13 +67,13 @@ final class LatteTemplateResolverResult
     public function addTemplateFromRender(CollectedTemplateRender $templateRender, TemplateContext $templateContext, string $className, string $action): void
     {
         $templatePath = $templateRender->getTemplatePath();
-        if ($templatePath === false) {
-            $this->addErrorFromBuilder(RuleErrorBuilder::message('Cannot automatically resolve latte template from expression.')
+        if ($templatePath === null) {
+            $this->addErrorFromBuilder(RuleErrorBuilder::message('Cannot resolve rendered latte template.')
                 ->file($templateRender->getFile())
                 ->line($templateRender->getLine()));
             return;
-        } elseif ($templatePath === null) {
-            $this->addErrorFromBuilder(RuleErrorBuilder::message("Latte template was not set for $className::$action")
+        } elseif (!is_file($templatePath)) {
+            $this->addErrorFromBuilder(RuleErrorBuilder::message('Rendered latte template ' . $templatePath . ' does not exist.')
                 ->file($templateRender->getFile())
                 ->line($templateRender->getLine()));
             return;

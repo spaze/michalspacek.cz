@@ -30,8 +30,6 @@ final class CopyDefinedVarsToOtherMethodsNodeVisitor extends NodeVisitorAbstract
 
     public function beforeTraverse(array $nodes)
     {
-        // reset defined vars
-        $this->definedVarsStatements = [];
         foreach ($nodes as $node) {
             if (!$node instanceof Class_) {
                 continue;
