@@ -46,9 +46,6 @@ final class RenderBlockNodeVisitor extends NodeVisitorAbstract
 
     public function beforeTraverse(array $nodes)
     {
-        // reset block methods
-        $this->blockMethods = [];
-
         foreach ($nodes as $node) {
             if (!$node instanceof Class_) {
                 continue;

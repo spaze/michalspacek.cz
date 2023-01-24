@@ -23,9 +23,9 @@ class NettePresenter extends Presenter
 	public function actionMicro(string $callback): void
 	{
 		sleep(random_int(5, 20));
-		[$view, $params] = $this->cve202015227->rce($callback, $this->getParameters());
-		$this->setView($view);
-		$this->template->setParameters($params);
+		$rce = $this->cve202015227->rce($callback, $this->getParameters());
+		$this->setView($rce->getView()->value);
+		$this->template->setParameters($rce->getParameters());
 	}
 
 }

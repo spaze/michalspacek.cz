@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Efabrica\PHPStanLatte\Analyser;
 
 use Nette\Utils\Finder;
+use PHPStan\File\FileExcluder;
+use SplFileInfo;
 
 final class AnalysedTemplatesRegistry
 {
+    private FileExcluder $fileExcluder;
+
     /** @var string[] */
     private array $analysedPaths = [];
 
@@ -19,13 +23,19 @@ final class AnalysedTemplatesRegistry
     /**
      * @param string[] $analysedPaths
      */
-    public function __construct(array $analysedPaths, bool $reportUnanalysedTemplates)
+    public function __construct(FileExcluder $fileExcluder, array $analysedPaths, bool $reportUnanalysedTemplates)
     {
+        $this->fileExcluder = $fileExcluder;
         $this->analysedPaths = $analysedPaths;
         $this->reportUnanalysedTemplates = $reportUnanalysedTemplates;
         foreach ($this->getExistingTemplates() as $file) {
             $this->templateFiles[$file] = false;
         }
+    }
+
+    public function isExcludedFromAnalysing(string $path): bool
+    {
+        return $this->fileExcluder->isExcludedFromAnalysing($path);
     }
 
     public function templateAnalysed(string $path): void
@@ -43,9 +53,13 @@ final class AnalysedTemplatesRegistry
             if (!is_dir($analysedPath)) {
                 continue;
             }
-            /** @var string $file */
+            /** @var SplFileInfo $file */
             foreach (Finder::findFiles('*.latte')->from($analysedPath) as $file) {
-                $files[] = (string)$file;
+                $filePath = (string)$file;
+                if ($this->isExcludedFromAnalysing($filePath)) {
+                    continue;
+                }
+                $files[] = $filePath;
             }
         }
         $files = array_unique($files);

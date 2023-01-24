@@ -7,14 +7,16 @@ namespace Efabrica\PHPStanLatte\LatteContext\Finder;
 use Efabrica\PHPStanLatte\Analyser\LatteContextData;
 use Efabrica\PHPStanLatte\LatteContext\CollectedData\CollectedTemplatePath;
 use Efabrica\PHPStanLatte\Resolver\ValueResolver\PathResolver;
-use PHPStan\BetterReflection\BetterReflection;
+use PHPStan\Reflection\ReflectionProvider;
 
 final class TemplatePathFinder
 {
     /**
-     * @var array<string, array<string, array<?string>>>
+     * @var array<string, array<string, array<string>>>
      */
     private array $collectedTemplatePaths = [];
+
+    private ReflectionProvider $reflectionProvider;
 
     private MethodCallFinder $methodCallFinder;
 
@@ -22,8 +24,9 @@ final class TemplatePathFinder
 
     private PathResolver $pathResolver;
 
-    public function __construct(LatteContextData $latteContext, MethodCallFinder $methodCallFinder, MethodFinder $methodFinder, PathResolver $pathResolver)
+    public function __construct(LatteContextData $latteContext, ReflectionProvider $reflectionProvider, MethodCallFinder $methodCallFinder, MethodFinder $methodFinder, PathResolver $pathResolver)
     {
+        $this->reflectionProvider = $reflectionProvider;
         $this->methodCallFinder = $methodCallFinder;
         $this->methodFinder = $methodFinder;
         $this->pathResolver = $pathResolver;
@@ -37,17 +40,15 @@ final class TemplatePathFinder
             }
             $templatePaths = $this->pathResolver->expand($collectedTemplatePath->getTemplatePath(), $this->methodFinder);
             if ($templatePaths !== null) {
-                foreach ($templatePaths as $templatePath) {
+                foreach (array_filter($templatePaths) as $templatePath) {
                     $this->collectedTemplatePaths[$className][$methodName][] = $templatePath;
                 }
-            } else {
-                $this->collectedTemplatePaths[$className][$methodName][] = null;
             }
         }
     }
 
     /**
-     * @return array<?string>
+     * @return array<string>
      */
     public function find(string $className, string ...$methodNames): array
     {
@@ -63,14 +64,14 @@ final class TemplatePathFinder
     }
 
     /**
-     * @return array<?string>
+     * @return array<string>
      */
     private function findInParents(string $className)
     {
-        $classReflection = (new BetterReflection())->reflector()->reflectClass($className);
+        $classReflection = $this->reflectionProvider->getClass($className);
 
         $collectedTemplatePaths = [];
-        foreach ($classReflection->getParentClassNames() as $parentClass) {
+        foreach ($classReflection->getParentClassesNames() as $parentClass) {
             $collectedTemplatePaths = array_merge(
                 $this->collectedTemplatePaths[$parentClass][''] ?? [],
                 $collectedTemplatePaths
@@ -80,7 +81,7 @@ final class TemplatePathFinder
     }
 
     /**
-     * @return array<?string>
+     * @return array<string>
      */
     private function findInMethodCalls(string $className, string $methodName, string $currentClassName = null): array
     {

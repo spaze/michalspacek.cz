@@ -7,6 +7,7 @@ parameters:
         filters:
             translate: [Nette\Localization\Translator, translate]
         errorPatternsToIgnore: []
+        warningPatterns: []
         applicationMapping: []
         engineBootstrap: null
         macros: []
@@ -30,6 +31,7 @@ parametersSchema:
         globalVariables: arrayOf(string(), string())
         filters: arrayOf(anyOf(string(), arrayOf(string())), string())
         errorPatternsToIgnore: arrayOf(string())
+        warningPatterns: arrayOf(string())
         applicationMapping: arrayOf(string(), string())
         engineBootstrap: schema(string(), nullable())
         macros: arrayOf(string())
@@ -51,7 +53,7 @@ services:
         class: PHPStan\Parser\CachedParser
         arguments:
             originalParser: @currentPhpVersionRichParser
-            cachedNodesByStringCountMax: 1024
+            cachedNodesByStringCountMax: 128
         autowired: no
 
     phpstanLatteCompiler:
@@ -68,15 +70,18 @@ services:
             extensions: %latte.extensions%
 
     - Efabrica\PHPStanLatte\Analyser\FileAnalyserFactory
-    - Efabrica\PHPStanLatte\Analyser\AnalysedTemplatesRegistry(%analysedPaths%, %latte.reportUnanalysedTemplates%)
-    - Efabrica\PHPStanLatte\Compiler\LatteToPhpCompiler(%latte.tmpDir%, ::md5(::json_encode(%latte%)))
-
+    - Efabrica\PHPStanLatte\Analyser\AnalysedTemplatesRegistry(@fileExcluderAnalyse, %analysedPaths%, %latte.reportUnanalysedTemplates%)
+    -
+        class: Efabrica\PHPStanLatte\Compiler\LatteToPhpCompiler
+        arguments:
+            tmpDir: %latte.tmpDir%
+            cacheKey: ::md5(::json_encode(%latte%))
+            debugMode: %debugMode%
     -
         factory: Efabrica\PHPStanLatte\Compiler\Postprocessor
         arguments:
             parser: @latteCurrentPhpVersionRichParser
 
-    - Efabrica\PHPStanLatte\Compiler\LineMapper
     - Efabrica\PHPStanLatte\Compiler\TypeToPhpDoc
     - Efabrica\PHPStanLatte\LinkProcessor\PresenterFactoryFaker(%latte.applicationMapping%)
     -
@@ -110,17 +115,18 @@ services:
         setup:
             - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddParametersForBlockNodeVisitor())
             - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\CopyDefinedVarsToOtherMethodsNodeVisitor())
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddTypeToComponentNodeVisitor())
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddVarTypesNodeVisitor(%latte.globalVariables%))
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RemoveExtractParamsNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RenderBlockNodeVisitor())
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor(...))
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddExtractParamsToTopNodeVisitor())
-            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor(@phpstanLatteCompiler::getFilters()))
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformNClassNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformForeachWithIteratorNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\LinkNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeNotNullToEqualsNullNodeVisitor())
             - addNodeVisitor(300, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddFormClassesNodeVisitor())
             - addNodeVisitor(9900, Efabrica\PHPStanLatte\Compiler\NodeVisitor\CleanupNodeVisitor())
-            - addNodeVisitor(10000, Efabrica\PHPStanLatte\Compiler\NodeVisitor\LineNumberNodeVisitor())
 
     # Link processors
     - Efabrica\PHPStanLatte\LinkProcessor\LinkProcessorFactory
@@ -166,15 +172,9 @@ services:
     # TemplatePath subcollectors
     - Efabrica\PHPStanLatte\LatteContext\Collector\TemplatePathCollector\SetFileTemplatePathCollector
 
-    # Variable collectors
-    variableCollectorStorage:
-        factory: Efabrica\PHPStanLatte\VariableCollector\VariableCollectorStorage
-    - Efabrica\PHPStanLatte\VariableCollector\DefaultTemplateVariables
-    - Efabrica\PHPStanLatte\VariableCollector\GlobalTemplateVariables(%latte.globalVariables%)
-    - Efabrica\PHPStanLatte\VariableCollector\DynamicFilterVariables()
-
     # Error builder
-    - Efabrica\PHPStanLatte\Error\ErrorBuilder(%latte.errorPatternsToIgnore%, %latte.applicationMapping%)
+    - Efabrica\PHPStanLatte\Error\LineMapper\LineMapper(@latteCurrentPhpVersionRichParser, %debugMode%)
+    - Efabrica\PHPStanLatte\Error\ErrorBuilder(%latte.errorPatternsToIgnore%, %latte.warningPatterns%, %latte.applicationMapping%)
 
     # Error transformers
     - Efabrica\PHPStanLatte\Error\Transformer\UndefinedLatteFilterErrorTransformer

@@ -1,6 +1,9 @@
 {
     "name": "efabrica/phpstan-latte",
     "license": ["MIT"],
+    "keywords": [
+        "static analysis"
+    ],
     "require": {
         "php": ">=7.4 <8.3",
         "ext-json": "*",
@@ -15,7 +18,16 @@
         "nette/application": "^3.1.2",
         "nette/forms": "^3.1",
         "nikic/php-parser": "^4.15",
-        "efabrica/coding-standard": "^0.4"
+        "efabrica/coding-standard": "^0.4",
+        "phpstan/phpstan-strict-rules": "^1.4",
+        "spaze/phpstan-disallowed-calls": "^2.11"
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "rules.neon"
+            ]
+        }
     },
     "autoload": {
         "psr-4": {

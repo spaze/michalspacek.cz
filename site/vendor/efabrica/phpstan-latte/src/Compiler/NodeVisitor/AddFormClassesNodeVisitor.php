@@ -34,6 +34,7 @@ use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Expression;
+use PhpParser\Node\Stmt\If_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\NodeVisitorAbstract;
 use PHPStan\ShouldNotHappenException;
@@ -46,19 +47,15 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
 
     private NameResolver $nameResolver;
 
-    /** @var array<array{node: Node, field: string}> */
+    /** @var array<array{node: string, field: string}> */
     private array $errorFieldNodes = [];
+
+    /** @var string[] */
+    private array $possibleAlwaysTrueLabels = [];
 
     public function __construct(NameResolver $nameResolver)
     {
         $this->nameResolver = $nameResolver;
-    }
-
-    public function beforeTraverse(array $nodes)
-    {
-        $this->resetForms();
-        $this->errorFieldNodes = [];
-        return null;
     }
 
     public function enterNode(Node $node): ?Node
@@ -187,6 +184,11 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                     ];
                     return null;
                 }
+
+                $formFieldType = $formField->getType();
+                if ($formFieldType instanceof ObjectType && ($formFieldType->isInstanceOf('Nette\Forms\Controls\CheckboxList')->yes() || $formFieldType->isInstanceOf('Nette\Forms\Controls\RadioList')->yes())) {
+                    $this->possibleAlwaysTrueLabels[] = $this->findParentStmt($node);
+                }
             } elseif ($node->dim instanceof Variable) {
                 // dynamic field
             } else {
@@ -203,11 +205,39 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
     public function leaveNode(Node $node)
     {
         foreach ($this->errorFieldNodes as $errorFieldNode) {
-            if ($errorFieldNode['node'] === $node) {
+            if ($errorFieldNode['node'] === spl_object_hash($node)) {
                 $error = new Error('Form field with name "' . $errorFieldNode['field'] . '" probably does not exist.');
                 $errorNode = $error->toNode();
                 $errorNode->setAttributes($node->getAttributes());
                 return $errorNode;
+            }
+        }
+
+        /**
+         * Replace:
+         * <code>
+         * if ($ʟ_label = $form["foo"]->getLabel()) {
+         *     echo $ʟ_label;
+         * }
+         * </code>
+         *
+         * With:
+         * <code>
+         * $ʟ_label = $form["foo"]->getLabel();
+         * echo $ʟ_label;
+         * </code>
+         *
+         * for RadioList and CheckboxList
+         */
+        if ($node instanceof If_) {
+            foreach ($this->possibleAlwaysTrueLabels as $possibleAlwaysTrueLabel) {
+                if ($possibleAlwaysTrueLabel === spl_object_hash($node)) {
+                    if ($node->cond instanceof Assign) {
+                        if (in_array($this->nameResolver->resolve($node->cond->var), ['ʟ_label', '_label'], true) && $node->cond->expr instanceof MethodCall && $this->nameResolver->resolve($node->cond->expr) === 'getLabel') {
+                            return array_merge([new Expression($node->cond)], $node->stmts);
+                        }
+                    }
+                }
             }
         }
 
@@ -236,10 +266,10 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
          * </code>
          */
         if ($node instanceof Echo_ && ($node->exprs[0] ?? null) instanceof MethodCall) {
-            /** @var MethodCall $methodCall */
-            $methodCall = $node->exprs[0];
-            $methodCallVar = $methodCall->var;
-            $methodCalls[] = $methodCall;
+            /** @var MethodCall $methodCallExpr */
+            $methodCallExpr = $node->exprs[0];
+            $methodCallVar = $methodCallExpr->var;
+            $methodCalls[] = $methodCallExpr;
             while ($methodCallVar instanceof MethodCall) {
                 $methodCalls[] = $methodCallVar;
                 $methodCallVar = $methodCallVar->var;
@@ -281,7 +311,7 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
         return null;
     }
 
-    private function findParentStmt(Node $node): Stmt
+    private function findParentStmt(Node $node): string
     {
         $rootParentNode = $node;
         while (true) {
@@ -294,7 +324,7 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                 break;
             }
         }
-        return $rootParentNode;
+        return spl_object_hash($rootParentNode);
     }
 
     /**
@@ -336,6 +366,7 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                 ->addStmts([$method]);
             $nodes[] = $builderClass->getNode();
         }
+
         return $nodes;
     }
 

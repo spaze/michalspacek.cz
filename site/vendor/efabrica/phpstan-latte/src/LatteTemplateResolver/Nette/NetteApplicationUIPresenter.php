@@ -55,10 +55,9 @@ final class NetteApplicationUIPresenter extends AbstractClassTemplateResolver
 
             // alternative renders (changed by setView in startup or action* method)
             $setViewCalls = array_merge(
-                $latteContext->methodCallFinder()->findCalledOfType($reflectionClass->getName(), $reflectionMethod->getName(), self::CALL_SET_VIEW),
-                $latteContext->methodCallFinder()->findCalledOfType($reflectionClass->getName(), 'startup', self::CALL_SET_VIEW)
+                $latteContext->methodCallFinder()->findAllCalledOfType($reflectionClass->getName(), $reflectionMethod->getName(), self::CALL_SET_VIEW),
+                $latteContext->methodCallFinder()->findAllCalledOfType($reflectionClass->getName(), 'startup', self::CALL_SET_VIEW)
             );
-            $defaultRenderReached = true;
             foreach ($setViewCalls as $setViewCall) {
                 $view = (string)$setViewCall->getParams()['view'];
                 $actionViewName = $actionName . "($view)";
@@ -68,12 +67,14 @@ final class NetteApplicationUIPresenter extends AbstractClassTemplateResolver
                 if ($renderMethod !== null) {
                     $this->updateActionDefinitionByMethod($actions[$actionViewName], $reflectionClass, $renderMethod, $latteContext);
                 }
-                if (!$setViewCall->isCalledConditionally()) {
-                    $defaultRenderReached = false;
-                }
             }
 
-            if ($defaultRenderReached) {
+            $alwaysSetViewCalls = array_merge(
+                $latteContext->methodCallFinder()->findAllAlwaysCalledOfType($reflectionClass->getName(), $reflectionMethod->getName(), self::CALL_SET_VIEW),
+                $latteContext->methodCallFinder()->findAllAlwaysCalledOfType($reflectionClass->getName(), 'startup', self::CALL_SET_VIEW)
+            );
+
+            if (count($alwaysSetViewCalls) === 0) {
                 $renderMethod = $reflectionClass->getMethod('render' . ucfirst($actionName));
                 if ($renderMethod !== null) {
                     $this->updateActionDefinitionByMethod($actions[$actionName], $reflectionClass, $renderMethod, $latteContext);
@@ -102,7 +103,6 @@ final class NetteApplicationUIPresenter extends AbstractClassTemplateResolver
 
             // default render with set template path
             foreach ($actionDefinition['templatePaths'] as $template) {
-                // TODO better location of unresolved expression - must become part of CollectedTemplatePath and CollectedTemplatePathFinder must return ValueObject not only strings
                 if ($template === null) {
                     $result->addErrorFromBuilder(RuleErrorBuilder::message('Cannot automatically resolve latte template from expression.')
                     ->file($reflectionClass->getFileName() ?? 'unknown')
@@ -152,8 +152,8 @@ final class NetteApplicationUIPresenter extends AbstractClassTemplateResolver
         $actionDefinition['line'] = $reflectionMethod->getStartLine();
         $actionDefinition['renders'] = array_merge($actionDefinition['renders'], $latteContext->templateRenderFinder()->find($reflectionClass->getName(), $reflectionMethod->getName()));
         $actionDefinition['templatePaths'] = array_merge($actionDefinition['templatePaths'], $latteContext->templatePathFinder()->find($reflectionClass->getName(), $reflectionMethod->getName()));
-        $actionDefinition['terminated'] = $actionDefinition['terminated'] || $latteContext->methodCallFinder()->hasAnyTerminatingCalls($reflectionClass->getName(), $reflectionMethod->getName());
-        $actionDefinition['terminated'] = $actionDefinition['terminated'] || $latteContext->methodFinder()->hasAnyAlwaysTerminated($reflectionClass->getName(), $reflectionMethod->getName());
+        $actionDefinition['terminated'] = $actionDefinition['terminated'] || $latteContext->methodCallFinder()->hasAlwaysTerminatingCalls($reflectionClass->getName(), $reflectionMethod->getName());
+        $actionDefinition['terminated'] = $actionDefinition['terminated'] || $latteContext->methodFinder()->isAlwaysTerminated($reflectionClass->getName(), $reflectionMethod->getName());
     }
 
     private function findDefaultTemplateFilePath(ReflectionClass $reflectionClass, string $actionName): ?string

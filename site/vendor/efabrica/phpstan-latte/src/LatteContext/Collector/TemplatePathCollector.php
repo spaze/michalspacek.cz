@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanLatte\LatteContext\Collector;
 
+use Efabrica\PHPStanLatte\LatteContext\CollectedData\CollectedError;
 use Efabrica\PHPStanLatte\LatteContext\CollectedData\CollectedTemplatePath;
 use Efabrica\PHPStanLatte\LatteContext\Collector\TemplatePathCollector\TemplatePathCollectorInterface;
 use Efabrica\PHPStanLatte\PhpDoc\LattePhpDocResolver;
@@ -13,7 +14,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 
 /**
- * @extends AbstractLatteContextCollector<Node, CollectedTemplatePath>
+ * @extends AbstractLatteContextCollector<CollectedTemplatePath|CollectedError>
  */
 final class TemplatePathCollector extends AbstractLatteContextCollector
 {
@@ -36,13 +37,17 @@ final class TemplatePathCollector extends AbstractLatteContextCollector
         $this->lattePhpDocResolver = $lattePhpDocResolver;
     }
 
-    public function getNodeType(): string
+    public function getNodeTypes(): array
     {
-        return Node::class;
+        $nodeTypes = [];
+        foreach ($this->templatePathCollectors as $collector) {
+            $nodeTypes = array_merge($nodeTypes, $collector->getNodeTypes());
+        }
+        return array_unique($nodeTypes);
     }
 
     /**
-     * @phpstan-return null|CollectedTemplatePath[]
+     * @phpstan-return null|array<CollectedTemplatePath|CollectedError>
      */
     public function collectData(Node $node, Scope $scope): ?array
     {
@@ -80,7 +85,7 @@ final class TemplatePathCollector extends AbstractLatteContextCollector
         $actualClassName = $classReflection->getName();
         if ($paths === null) {
             // failed to resolve
-            return [new CollectedTemplatePath($actualClassName, $functionName, null)];
+            return [CollectedError::build($node, $scope, 'Cannot automatically resolve latte template from expression.')];
         }
         $paths = array_unique($paths);
         $templatePaths = [];
