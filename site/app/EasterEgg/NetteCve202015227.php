@@ -13,16 +13,11 @@ class NetteCve202015227
 {
 
 	/**
-	 * @param string $callback
 	 * @param array<string, string> $params
-	 * @return array{0:string, 1:array<string, string>}
 	 * @throws BadRequestException
 	 */
-	public function rce(string $callback, array $params): array
+	public function rce(string $callback, array $params): NetteCve202015227Rce
 	{
-		$view = null;
-		$data = [];
-
 		$callback = strtolower($callback);
 		$paramNames = [
 			'exec' => 'command',
@@ -50,30 +45,30 @@ class NetteCve202015227
 					$data['lo' . $dir . $type] = $this->getRandom();
 				}
 			}
-			$view = 'nette.micro-ifconfig';
+			$view = NetteCve202015227View::Ifconfig;
 		} elseif (Strings::contains($param, 'ls')) {
-			$view = 'nette.micro-ls';
+			$view = NetteCve202015227View::Ls;
 		} elseif (Strings::contains($param, 'wget')) {
-			$view = 'nette.micro-wget';
+			$view = NetteCve202015227View::Wget;
 		} elseif (Strings::contains($param, 'echo')) {
 			$data['command'] = 'echo';
-			$view = 'nette.micro-not-found';
+			$view = NetteCve202015227View::NotFound;
 		} elseif (Strings::contains($param, 'bash')) {
 			$data['command'] = 'bash';
-			$view = 'nette.micro-not-found';
+			$view = NetteCve202015227View::NotFound;
 		} elseif (Strings::contains($param, 'sa.exe')) {
 			$data['command'] = 'sa.exe';
-			$view = 'nette.micro-not-recognized';
+			$view = NetteCve202015227View::NotRecognized;
 		} elseif (Strings::contains($param, 'certutil')) {
 			$data['command'] = 'certutil.exe';
-			$view = 'nette.micro-not-recognized';
+			$view = NetteCve202015227View::NotRecognized;
 		} elseif (Strings::contains($param, 'sh')) {
 			$data['command'] = 'zsh';
-			$view = 'nette.micro-not-found';
+			$view = NetteCve202015227View::NotFound;
 		} else {
 			throw new BadRequestException(sprintf("[%s] Unknown value '%s' for callback '%s' and param '%s'", __CLASS__, $param, $callback, $paramNames[$callback]));
 		}
-		return [$view, $data];
+		return new NetteCve202015227Rce($view, $data ?? []);
 	}
 
 
