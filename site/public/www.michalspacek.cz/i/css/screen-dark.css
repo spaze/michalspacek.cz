@@ -69,4 +69,6 @@ img.nobgcolor { background-color: inherit; }
 #pubkey { background-color: #2D282B; }
 #phpinfo table { box-shadow: 1px 2px 3px #05080A; }
 #phpinfo td, th { border-color: #333; }
+.crossref { background-color: #202530; }
+.crossref::before { color: #00D700; }
 .humbleicons { opacity: 0.5; }

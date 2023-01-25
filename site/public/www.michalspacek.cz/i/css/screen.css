@@ -409,6 +409,16 @@ div.notice {
 	font-weight: bold;
 	background-color: #FEE;
 }
+.crossref {
+	background-color: #FAFAFA;
+	padding: 1em;
+	border-radius: 3px;
+}
+.crossref::before {
+	content: "» ";
+	opacity: 0.3;
+	color: #337;
+}
 .shrug {
 	color: #FFF;
 	text-shadow: 0 0 0.1em #333;
