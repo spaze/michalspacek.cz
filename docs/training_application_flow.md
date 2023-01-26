@@ -6,12 +6,14 @@ flowchart TD
 	1-->14
 	2[2 TENTATIVE]-->3
 	2-->10
+	2-->19
 	3[3 INVITED]-->4
 	3-->10
 	4[4 SIGNED_UP]-->5
 	4-->10
 	4-->16
 	4-->18
+	4-->19
 	5[5 INVOICE_SENT]-->10
 	5-->15
 	6{{"⛔ 6 NOTIFIED"}}-.->10
@@ -40,4 +42,5 @@ flowchart TD
 	18[18 PRO_FORMA_INVOICE_SENT]-->5
 	18-->10
 	18-->15
+	19[19 SPAM]-->FAIL
 ```

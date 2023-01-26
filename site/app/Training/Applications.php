@@ -133,8 +133,10 @@ class Applications
 					JOIN training_application_status s ON a.key_status = s.id_status
 					JOIN training_application_sources sr ON a.key_source = sr.id_source
 				WHERE
-					key_date = ?',
+					key_date = ?
+					AND s.status != ?',
 				$dateId,
+				Statuses::STATUS_SPAM,
 			);
 			if ($this->byDate[$dateId]) {
 				$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
