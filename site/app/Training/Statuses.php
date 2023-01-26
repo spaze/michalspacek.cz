@@ -30,6 +30,7 @@ class Statuses
 	public const STATUS_PAID_AFTER = 'PAID_AFTER';           // 16
 	public const STATUS_INVOICE_SENT_AFTER = 'INVOICE_SENT_AFTER';   // 17
 	public const STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
+	public const STATUS_SPAM = 'SPAM'; // 19
 
 	/** @var array<string, int> */
 	private array $statusIds = [];
