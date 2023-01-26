@@ -25,6 +25,7 @@ class WinterIsComing
 	private array $hosts = [
 		'burpcollaborator.net',
 		'mailrez.com',
+		'mailto.plus',
 		'ourtimesupport.com',
 		'ssemarketing.net',
 	];
