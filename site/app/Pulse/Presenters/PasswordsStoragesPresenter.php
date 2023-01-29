@@ -68,10 +68,9 @@ class PasswordsStoragesPresenter extends BasePresenter
 			throw new BadRequestException('Unknown site alias');
 		}
 
-		$this->template->isDetail = true;
 		$this->template->pageTitle = implode(', ', $sites) . ' password storage disclosures';
 		$this->template->data = $data;
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+		$this->setDetailDefaultTemplateVars();
 		$this->setView('default');
 	}
 
@@ -98,11 +97,19 @@ class PasswordsStoragesPresenter extends BasePresenter
 			$names[] = $item->getDisplayName();
 		}
 
-		$this->template->isDetail = true;
 		$this->template->pageTitle = implode(', ', $names) . ' password storage disclosures';
 		$this->template->data = $data;
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+		$this->setDetailDefaultTemplateVars();
 		$this->setView('default');
+	}
+
+
+	private function setDetailDefaultTemplateVars(): void
+	{
+		$this->template->isDetail = true;
+		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
+		$this->template->openSearchSort = false;
+		$this->template->canonicalLink = null;
 	}
 
 

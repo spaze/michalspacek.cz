@@ -1,5 +1,5 @@
 {define #listItems}
-	<tr class="summary">
+	<tr class="summary" n:foreach="$applications as $application">
 		<td><small>{$iterator->getCounter()}.</small></td>
 		<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id">{$application->name ?? smazáno}</a></small></td>
 		<td><small>{$application->email ?? smazáno}</small></td>
@@ -78,8 +78,8 @@
 						<th><small>Status</small></th>
 						<th><small title="Cena bez DPH">Cena</small></th>
 					</thead>
-					<tbody n:if="$training->applications" n:inner-foreach="$training->applications as $application">{include #listItems}</tbody>
-					<tbody n:if="$training->canceledApplications" class="discarded" n:inner-foreach="$training->canceledApplications as $application">{include #listItems}</tbody>
+					<tbody n:if="$training->applications">{include #listItems, applications: $training->applications}</tbody>
+					<tbody n:if="$training->canceledApplications" class="discarded">{include #listItems, applications: $training->canceledApplications}</tbody>
 				</table>
 			{else}
 				<span class="indent"><small>{if $training->public}Žádní přihlášení účastníci{else}Neznámý počet účastníků firemního školení{/if}</small></span>
