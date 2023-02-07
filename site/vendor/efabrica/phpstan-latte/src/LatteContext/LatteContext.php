@@ -115,6 +115,22 @@ final class LatteContext
         return $this->templateRenderFinder;
     }
 
+    /**
+     * @param class-string $className
+     */
+    public function getClassTemplateContext(string $className): TemplateContext
+    {
+        return new TemplateContext(
+            $this->variableFinder()->find($className),
+            $this->componentFinder()->find($className),
+            $this->formFinder()->find($className),
+            $this->filterFinder()->find($className)
+        );
+    }
+
+    /**
+     * @param class-string $className
+     */
     public function getMethodTemplateContext(string $className, string $methodName): TemplateContext
     {
         return new TemplateContext(
