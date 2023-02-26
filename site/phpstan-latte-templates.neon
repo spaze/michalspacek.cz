@@ -6,10 +6,6 @@ parameters:
 	latte:
 		engineBootstrap: app/PhpStan/latteEngine.php
 		presenterFactoryBootstrap: app/PhpStan/presenterFactory.php
-	earlyTerminatingMethodCalls:
-		Nette\Application\UI\Component:
-			# https://github.com/efabrica-team/phpstan-latte/issues/261
-			- redirectPermanent
 	ignoreErrors:
 		- '#^Form field with name "0" probably does not exist#'  # https://github.com/efabrica-team/phpstan-latte/issues/106
 
