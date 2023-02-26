@@ -5,8 +5,7 @@ parameters:
 	level: 0
 	latte:
 		engineBootstrap: app/PhpStan/latteEngine.php
-		applicationMapping:  # Copy of mapping from common.neon until https://github.com/efabrica-team/phpstan-latte/issues/27 is resolved somehow
-			*: MichalSpacekCz\*\Presenters\*Presenter
+		presenterFactoryBootstrap: app/PhpStan/presenterFactory.php
 	earlyTerminatingMethodCalls:
 		Nette\Application\UI\Component:
 			# https://github.com/efabrica-team/phpstan-latte/issues/261
