@@ -18,8 +18,7 @@ class Tags
 	 */
 	public function toArray(string $tags): array
 	{
-		/** @var string[] $values */
-		$values = preg_split('/\s*,\s*/', $tags);
+		$values = Strings::split($tags, '/\s*,\s*/');
 		return array_values(array_filter($values));
 	}
 
