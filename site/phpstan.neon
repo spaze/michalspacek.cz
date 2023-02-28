@@ -6,6 +6,7 @@ parameters:
 	level: 8
 
 includes:
+	- phar://phpstan.phar/conf/bleedingEdge.neon
 	- vendor/phpstan/phpstan-nette/extension.neon
 	- vendor/phpstan/phpstan-nette/rules.neon
 	- disallowed-calls.neon

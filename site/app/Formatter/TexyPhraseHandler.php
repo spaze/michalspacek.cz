@@ -13,6 +13,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
+use Nette\Utils\Strings;
 use Texy\HandlerInvocation;
 use Texy\HtmlElement;
 use Texy\Link;
@@ -55,8 +56,7 @@ class TexyPhraseHandler
 
 		// "title":[link:Module:Presenter:action params]
 		if (str_starts_with($url, 'link:')) {
-			/** @var string[] $args */
-			$args = preg_split('/[\s,]+/', substr($url, 5));
+			$args = Strings::split(substr($url, 5), '/[\s,]+/');
 			$action = ':' . array_shift($args);
 			if (Arrays::contains([$trainingAction, $companyTrainingAction], $action)) {
 				$args = $this->trainingLocales->getLocaleActions($args[0])[$this->translator->getDefaultLocale()];

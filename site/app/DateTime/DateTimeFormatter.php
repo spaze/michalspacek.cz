@@ -22,7 +22,7 @@ class DateTimeFormatter
 	private const INTERVAL_FORMAT_SEPARATOR = 2;
 	private const INTERVAL_FORMAT_END = 3;
 
-	/** @var array<string, array<string, array{1:string, 2:array<int,string>, 3:array<int, string>, 4?:array<int, string>}>>> */
+	/** @var array<string, array<string, array{1:string, 2:array<int,string>, 3:array<int, string>, 4?:array<int, string>}>> */
 	private array $localDateFormat = [
 		'en_US' => [
 			self::DATE_DAY => [

@@ -252,7 +252,6 @@ class Post
 	{
 		$this->database->beginTransaction();
 		try {
-			/** @var DateTimeZone|false $timeZone */
 			$timeZone = $post->published?->getTimezone() ?: null;
 			$this->database->query(
 				'UPDATE blog_posts SET ? WHERE id_blog_post = ?',
