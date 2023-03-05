@@ -3300,23 +3300,23 @@
         },
         {
             "name": "spaze/mysql-session-handler",
-            "version": "v2.3.1",
-            "version_normalized": "2.3.1.0",
+            "version": "v2.3.2",
+            "version_normalized": "2.3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/mysql-session-handler.git",
-                "reference": "75c419a6d96245328eecdb65002bd34090dd8e5c"
+                "reference": "80e4ee4e4997a57eda446cfce0431d349d8b0149"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/75c419a6d96245328eecdb65002bd34090dd8e5c",
-                "reference": "75c419a6d96245328eecdb65002bd34090dd8e5c",
+                "url": "https://api.github.com/repos/spaze/mysql-session-handler/zipball/80e4ee4e4997a57eda446cfce0431d349d8b0149",
+                "reference": "80e4ee4e4997a57eda446cfce0431d349d8b0149",
                 "shasum": ""
             },
             "require": {
                 "nette/database": "^3.1",
                 "nette/di": "^3.0",
-                "nette/utils": "^3.2",
+                "nette/utils": "^3.2|^4.0",
                 "php": "^8.1"
             },
             "require-dev": {
@@ -3331,7 +3331,7 @@
             "suggest": {
                 "spaze/encryption": "Adds a support for encrypted session storage"
             },
-            "time": "2022-11-26T21:46:15+00:00",
+            "time": "2023-03-05T19:30:45+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3356,7 +3356,7 @@
             ],
             "description": "MySQL session handler for Nette Framework with optionally encrypted storage",
             "support": {
-                "source": "https://github.com/spaze/mysql-session-handler/tree/v2.3.1"
+                "source": "https://github.com/spaze/mysql-session-handler/tree/v2.3.2"
             },
             "install-path": "../spaze/mysql-session-handler"
         },
