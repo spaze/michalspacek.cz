@@ -142,6 +142,7 @@ parameters:
 				- vendor/efabrica/phpstan-latte/src/Compiler/*.php
 				- vendor/efabrica/phpstan-latte/tests/*.php  # https://github.com/efabrica-team/phpstan-latte/pull/232
 				- vendor/nette/tester/src/Framework/Dumper.php
+				- vendor/nette/tester/src/Runner/Job.php
 				- vendor/symfony/cache/Adapter/PhpArrayAdapter.php
 				- vendor/symfony/filesystem/Filesystem.php
 				- vendor/tracy/tracy/src/Tracy/Logger/FireLogger.php
