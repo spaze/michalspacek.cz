@@ -27,11 +27,14 @@ class ChangePasswordFormFactory
 	{
 		$form = $this->factory->create();
 		$form->addPassword('password', 'Současné heslo:')
+			->setHtmlAttribute('autocomplete', 'current-password')
 			->setRequired('Zadejte prosím současné heslo');
 		$newPassword = $form->addPassword('newPassword', 'Nové heslo:')
+			->setHtmlAttribute('autocomplete', 'new-password')
 			->setRequired('Zadejte prosím nové heslo')
 			->addRule($form::MIN_LENGTH, 'Nové heslo musí mít alespoň %d znaků', 15);
 		$form->addPassword('newPasswordVerify', 'Nové heslo pro kontrolu:')
+			->setHtmlAttribute('autocomplete', 'new-password')
 			->setRequired('Zadejte prosím nové heslo pro kontrolu')
 			->addRule($form::EQUAL, 'Hesla se neshodují', $newPassword);
 		$form->addSubmit('save', 'Uložit');
