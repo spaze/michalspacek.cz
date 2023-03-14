@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User;
 
 use DateTimeInterface;
 use Exception;
+use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -80,6 +81,19 @@ class Manager implements Authenticator
 
 
 	/**
+	 * @throws IdentityNotSimpleIdentityException
+	 */
+	public function getIdentityByUser(User $user): SimpleIdentity
+	{
+		$identity = $user->getIdentity();
+		if (!$identity instanceof SimpleIdentity) {
+			throw new IdentityNotSimpleIdentityException($identity);
+		}
+		return $identity;
+	}
+
+
+	/**
 	 * @param string $username
 	 * @param string $password
 	 * @return int User id
@@ -123,12 +137,11 @@ class Manager implements Authenticator
 	 * @param string $newPassword
 	 * @throws AuthenticationException
 	 * @throws HaliteAlert
+	 * @throws IdentityNotSimpleIdentityException
 	 */
 	public function changePassword(User $user, string $password, string $newPassword): void
 	{
-		/** @var SimpleIdentity $identity */
-		$identity = $user->getIdentity();
-		$this->verifyPassword($identity->username, $password);
+		$this->verifyPassword($this->getIdentityByUser($user)->username, $password);
 		$this->updatePassword($user->getId(), $newPassword);
 		$this->clearPermanentLogin($user);
 	}
