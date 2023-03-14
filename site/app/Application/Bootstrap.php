@@ -79,7 +79,7 @@ class Bootstrap
 		$configurator->setDebugMode($debugMode);
 		$configurator->enableTracy(self::SITE_DIR . '/log');
 		$configurator->setTimeZone('Europe/Prague');
-		$configurator->setTempDirectory(self::SITE_DIR . '/temp');
+		$configurator->setTempDirectory($_SERVER['TEMP_DIR'] ?? self::SITE_DIR . '/temp');
 
 		$existingFiles = array_filter(self::getConfigurationFiles($extraConfig), function ($path) {
 			return is_file($path);
