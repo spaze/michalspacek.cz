@@ -30,7 +30,7 @@ class ChangePasswordFormFactory
 			->setRequired('Zadejte prosím současné heslo');
 		$newPassword = $form->addPassword('newPassword', 'Nové heslo:')
 			->setRequired('Zadejte prosím nové heslo')
-			->addRule($form::MIN_LENGTH, 'Nové heslo musí mít alespoň %d znaků', 6);
+			->addRule($form::MIN_LENGTH, 'Nové heslo musí mít alespoň %d znaků', 15);
 		$form->addPassword('newPasswordVerify', 'Nové heslo pro kontrolu:')
 			->setRequired('Zadejte prosím nové heslo pro kontrolu')
 			->addRule($form::EQUAL, 'Hesla se neshodují', $newPassword);
