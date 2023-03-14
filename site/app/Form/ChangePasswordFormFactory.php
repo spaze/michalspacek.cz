@@ -30,7 +30,6 @@ class ChangePasswordFormFactory
 		$form = $this->factory->create();
 		$form->addText('username')
 			->setDefaultValue($this->authenticator->getIdentityByUser($this->user)->username)
-			->setHtmlAttribute('passwordrules', 'minlength: 42; required: lower; required: upper; required: digit; required: [ !#$%&*+,./:;=?@_~];')
 			->setHtmlAttribute('autocomplete', 'username')
 			->setHtmlAttribute('class', 'hidden');
 		$form->addPassword('password', 'Současné heslo:')
@@ -38,6 +37,7 @@ class ChangePasswordFormFactory
 			->setRequired('Zadejte prosím současné heslo');
 		$newPassword = $form->addPassword('newPassword', 'Nové heslo:')
 			->setHtmlAttribute('autocomplete', 'new-password')
+			->setHtmlAttribute('passwordrules', 'minlength: 42; required: lower; required: upper; required: digit; required: [ !#$%&*+,./:;=?@_~];')
 			->setRequired('Zadejte prosím nové heslo')
 			->addRule($form::MIN_LENGTH, 'Nové heslo musí mít alespoň %d znaků', 15);
 		$form->addPassword('newPasswordVerify', 'Nové heslo pro kontrolu:')
