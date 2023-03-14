@@ -125,6 +125,7 @@ class RouterFactory
 		$this->router->withModule('EasterEgg')->addRoute('/nette.micro', 'Nette:micro');
 
 		$this->initRouterLists(self::MODULE_ADMIN);
+		$this->addRoute('.well-known[/<action>]', 'WellKnown', 'default');
 		$this->addRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
 
 		$this->initRouterLists(self::MODULE_HEARTBLEED);
