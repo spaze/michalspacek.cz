@@ -19,8 +19,8 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '3.0.5';
-	public const VERSION_ID = 30005;
+	public const VERSION = '3.0.6';
+	public const VERSION_ID = 30006;
 
 	/** @deprecated use ContentType::* */
 	public const
@@ -248,6 +248,8 @@ class Engine
 		if ((include $file) === false) {
 			throw new RuntimeException("Unable to load '$file'.");
 		}
+
+		flock($lock, LOCK_UN);
 	}
 
 
@@ -314,7 +316,7 @@ class Engine
 		];
 		foreach ($this->extensions as $extension) {
 			$key[] = [
-				preg_replace('~\$.*~', '', $extension::class), // remove id from anonymous class
+				get_debug_type($extension),
 				$extension->getCacheKey($this),
 			];
 		}
@@ -550,8 +552,6 @@ class Engine
 	{
 		if (is_array($params)) {
 			return $params;
-		} elseif (!is_object($params)) {
-			throw new \InvalidArgumentException(sprintf('Engine::render() expects array|object, %s given.', gettype($params)));
 		}
 
 		$methods = (new \ReflectionClass($params))->getMethods(\ReflectionMethod::IS_PUBLIC);
