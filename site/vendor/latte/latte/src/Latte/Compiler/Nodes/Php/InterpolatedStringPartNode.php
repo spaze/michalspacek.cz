@@ -7,18 +7,17 @@
 
 declare(strict_types=1);
 
-namespace Latte\Compiler\Nodes\Php\Expression;
+namespace Latte\Compiler\Nodes\Php;
 
 use Latte\Compiler\Node;
 use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
 
 
-class ClosureUseNode extends Node
+class InterpolatedStringPartNode extends Node
 {
 	public function __construct(
-		public VariableNode $var,
-		public bool $byRef = false,
+		public string $value,
 		public ?Position $position = null,
 	) {
 	}
@@ -26,12 +25,12 @@ class ClosureUseNode extends Node
 
 	public function print(PrintContext $context): string
 	{
-		return ($this->byRef ? '&' : '') . $this->var->print($context);
+		throw new \LogicException('Cannot directly print InterpolatedStringPart');
 	}
 
 
 	public function &getIterator(): \Generator
 	{
-		yield $this->var;
+		false && yield;
 	}
 }

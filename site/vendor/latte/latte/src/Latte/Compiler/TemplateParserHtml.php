@@ -256,7 +256,9 @@ final class TemplateParserHtml
 				default => null,
 			});
 		} catch (CompileException $e) {
-			if ($followsLatte) {
+			if ($followsLatte // attribute name together with the value inside the tag
+				&& $stream->peek() // it is not lexer exception
+			) {
 				$stream->seek($save);
 				return $this->parser->parseLatteStatement();
 			}
@@ -454,7 +456,6 @@ final class TemplateParserHtml
 
 			} elseif ($res instanceof Node) {
 				$this->parser->ensureIsConsumed($tag);
-				$this->parser->checkNodeCompatibility($res);
 				$res->position = $tag->position;
 				$tag->replaceNAttribute($res);
 				$this->parser->popTag();
@@ -478,7 +479,6 @@ final class TemplateParserHtml
 		while ([$gen, $tag] = array_pop($toClose)) {
 			$gen->send([$node, null]);
 			$node = $gen->getReturn();
-			$this->parser->checkNodeCompatibility($node);
 			$node->position = $tag->position;
 			$this->parser->popTag();
 			$this->parser->ensureIsConsumed($tag);

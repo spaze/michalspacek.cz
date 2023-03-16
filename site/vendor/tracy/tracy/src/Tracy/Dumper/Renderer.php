@@ -20,41 +20,24 @@ final class Renderer
 {
 	private const TypeArrayKey = 'array';
 
-	/** @var int|bool */
-	public $collapseTop = 14;
+	public int|bool $collapseTop = 14;
+	public int $collapseSub = 7;
+	public bool $classLocation = false;
+	public bool $sourceLocation = false;
 
-	/** @var int */
-	public $collapseSub = 7;
-
-	/** @var bool */
-	public $classLocation = false;
-
-	/** @var bool */
-	public $sourceLocation = false;
-
-	/** @var bool|null  lazy-loading via JavaScript? true=full, false=none, null=collapsed parts */
-	public $lazy;
-
-	/** @var bool */
-	public $hash = true;
-
-	/** @var string */
-	public $theme = 'light';
-
-	/** @var bool */
-	public $collectingMode = false;
+	/** lazy-loading via JavaScript? true=full, false=none, null=collapsed parts */
+	public ?bool $lazy = null;
+	public bool $hash = true;
+	public ?string $theme = 'light';
+	public bool $collectingMode = false;
 
 	/** @var Value[] */
-	private $snapshot = [];
+	private array $snapshot = [];
 
 	/** @var Value[]|null */
-	private $snapshotSelection;
-
-	/** @var array */
-	private $parents = [];
-
-	/** @var array */
-	private $above = [];
+	private ?array $snapshotSelection = null;
+	private array $parents = [];
+	private array $above = [];
 
 
 	public function renderAsHtml(\stdClass $model): string
@@ -91,7 +74,7 @@ final class Renderer
 				$uri ?? '#',
 				$file,
 				$line,
-				$uri ? "\nClick to open in editor" : ''
+				$uri ? "\nClick to open in editor" : '',
 			) . Helpers::encodeString($code, 50) . " 📍</a\n>";
 		}
 
@@ -130,11 +113,7 @@ final class Renderer
 	}
 
 
-	/**
-	 * @param  mixed  $value
-	 * @param  string|int|null  $keyType
-	 */
-	private function renderVar($value, int $depth = 0, $keyType = null): string
+	private function renderVar(mixed $value, int $depth = 0, string|int|null $keyType = null): string
 	{
 		switch (true) {
 			case $value === null:
@@ -181,11 +160,7 @@ final class Renderer
 	}
 
 
-	/**
-	 * @param  string|Value  $str
-	 * @param  string|int|null  $keyType
-	 */
-	private function renderString($str, int $depth, $keyType): string
+	private function renderString(string|Value $str, int $depth, string|int|null $keyType): string
 	{
 		if ($keyType === self::TypeArrayKey) {
 			$indent = '<span class="tracy-dump-indent">   ' . str_repeat('|  ', $depth - 1) . ' </span>';
@@ -258,10 +233,7 @@ final class Renderer
 	}
 
 
-	/**
-	 * @param  array|Value  $array
-	 */
-	private function renderArray($array, int $depth): string
+	private function renderArray(array|Value $array, int $depth): string
 	{
 		$out = '<span class="tracy-dump-array">array</span> (';
 
@@ -339,7 +311,7 @@ final class Renderer
 				$object->editor->line,
 				$object->editor->url ? "\nCtrl-Click to open in editor" : '',
 				"\nAlt-Click to expand/collapse all child nodes",
-				$object->editor->url
+				$object->editor->url,
 			);
 		}
 
@@ -439,7 +411,7 @@ final class Renderer
 	}
 
 
-	private function copySnapshot($value): void
+	private function copySnapshot(mixed $value): void
 	{
 		if ($this->collectingMode) {
 			return;
@@ -466,11 +438,11 @@ final class Renderer
 	}
 
 
-	public static function jsonEncode($snapshot): string
+	public static function jsonEncode(mixed $value): string
 	{
 		$old = @ini_set('serialize_precision', '-1'); // @ may be disabled
 		try {
-			return json_encode($snapshot, JSON_HEX_APOS | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+			return json_encode($value, JSON_HEX_APOS | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 		} finally {
 			if ($old !== false) {
 				ini_set('serialize_precision', $old);
@@ -493,7 +465,7 @@ final class Renderer
 
 				return "\033[" . end($stack) . 'm';
 			},
-			$s
+			$s,
 		);
 		$s = preg_replace('/\e\[0m(\n*)(?=\e)/', '$1', $s);
 		return $s;

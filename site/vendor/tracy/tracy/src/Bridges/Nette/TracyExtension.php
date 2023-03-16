@@ -22,17 +22,11 @@ class TracyExtension extends Nette\DI\CompilerExtension
 {
 	private const ErrorSeverityPattern = 'E_(?:ALL|PARSE|STRICT|RECOVERABLE_ERROR|(?:CORE|COMPILE)_(?:ERROR|WARNING)|(?:USER_)?(?:ERROR|WARNING|NOTICE|DEPRECATED))';
 
-	/** @var bool */
-	private $debugMode;
 
-	/** @var bool */
-	private $cliMode;
-
-
-	public function __construct(bool $debugMode = false, bool $cliMode = false)
-	{
-		$this->debugMode = $debugMode;
-		$this->cliMode = $cliMode;
+	public function __construct(
+		private bool $debugMode = false,
+		private bool $cliMode = false,
+	) {
 	}
 
 
@@ -116,7 +110,7 @@ class TracyExtension extends Nette\DI\CompilerExtension
 				];
 				$initialize->addBody($builder->formatPhp(
 					($tbl[$key] ?? 'Tracy\Debugger::$' . $key . ' = ?') . ';',
-					Nette\DI\Helpers::filterArguments([$value])
+					Nette\DI\Helpers::filterArguments([$value]),
 				));
 			}
 		}
@@ -137,7 +131,7 @@ class TracyExtension extends Nette\DI\CompilerExtension
 
 				$initialize->addBody($builder->formatPhp(
 					'$this->getService(?)->addPanel(?);',
-					Nette\DI\Helpers::filterArguments([$this->prefix('bar'), $item])
+					Nette\DI\Helpers::filterArguments([$this->prefix('bar'), $item]),
 				));
 			}
 
@@ -154,7 +148,7 @@ class TracyExtension extends Nette\DI\CompilerExtension
 		foreach ($this->config->blueScreen as $item) {
 			$initialize->addBody($builder->formatPhp(
 				'$this->getService(?)->addPanel(?);',
-				Nette\DI\Helpers::filterArguments([$this->prefix('blueScreen'), $item])
+				Nette\DI\Helpers::filterArguments([$this->prefix('blueScreen'), $item]),
 			));
 		}
 
@@ -171,7 +165,7 @@ class TracyExtension extends Nette\DI\CompilerExtension
 	/**
 	 * @param  string|string[]  $value
 	 */
-	private function parseErrorSeverity($value): int
+	private function parseErrorSeverity(string|array $value): int
 	{
 		$value = implode('|', (array) $value);
 		$res = (int) @parse_ini_string('e = ' . $value)['e']; // @ may fail

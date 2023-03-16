@@ -1,0 +1,15 @@
+<?php
+
+namespace Latte\Essential;
+
+final class Filters
+{
+    /**
+     * @template T
+     * @param string|array<T> $value
+     * @return ($value is string ? string : array<T>)
+     */
+    public static function slice($value, int $start, ?int $length = null, bool $preserveKeys = false)
+    {
+    }
+}

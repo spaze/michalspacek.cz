@@ -1,5 +1,6 @@
 parameters:
     stubFiles:
+        - stubs/Latte/Essential/Filters.stub
         - stubs/Latte/Runtime/FilterInfo.stub
         - stubs/Latte/Runtime/Filters.stub
         - stubs/Latte/Runtime/HtmlStringable.stub
@@ -8,6 +9,7 @@ parameters:
         - stubs/Stringable.stub
         - stubs/Nette/Forms/Control.stub
         - stubs/Nette/Bridges/FormsLatte/Runtime.stub
+        - stubs/Nette/Application/UI/Multiplier.stub
     usePathConstantsAsConstantString: true
     latte:
         strictMode: false
@@ -15,6 +17,7 @@ parameters:
         globalVariables: []
         filters:
             translate: [Nette\Localization\Translator, translate]
+        functions: []
         errorPatternsToIgnore: []
         warningPatterns: []
         applicationMapping: []
@@ -40,6 +43,7 @@ parametersSchema:
         tmpDir: schema(string(), nullable())
         globalVariables: arrayOf(string(), string())
         filters: arrayOf(anyOf(string(), arrayOf(string())), string())
+        functions: arrayOf(anyOf(string(), arrayOf(string())), string())
         errorPatternsToIgnore: arrayOf(string())
         warningPatterns: arrayOf(string())
         applicationMapping: arrayOf(string(), string())
@@ -77,6 +81,7 @@ services:
             engineBootstrap: %latte.engineBootstrap%
             strictMode: %latte.strictMode%
             filters: %latte.filters%
+            functions: %latte.functions%
             macros: %latte.macros%
             extensions: %latte.extensions%
 
@@ -124,21 +129,23 @@ services:
     phpstanLatteNodeVisitorStorage:
         factory: Efabrica\PHPStanLatte\Compiler\NodeVisitor\NodeVisitorStorage
         setup:
+            # no scope node visitors
             - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddParametersForBlockNodeVisitor())
             - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\CopyDefinedVarsToOtherMethodsNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddTypeToComponentNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddVarTypesNodeVisitor(%latte.globalVariables%))
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RemoveExtractParamsNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RenderBlockNodeVisitor())
-            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor(...))
-            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddExtractParamsToTopNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformNClassNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformForeachWithIteratorNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\LinkNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeNotNullToEqualsNullNodeVisitor())
             - addNodeVisitor(300, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddFormClassesNodeVisitor())
             - addNodeVisitor(9900, Efabrica\PHPStanLatte\Compiler\NodeVisitor\CleanupNodeVisitor())
-
+            # scope node visitors
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor())
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFunctionsNodeVisitor())
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddExtractParamsToTopNodeVisitor())
     # Link processors
     - Efabrica\PHPStanLatte\LinkProcessor\LinkProcessorFactory
     - Efabrica\PHPStanLatte\LinkProcessor\LinkParamsProcessor
