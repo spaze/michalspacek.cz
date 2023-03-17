@@ -236,6 +236,7 @@ talks:
 trainings:
 	spammyapplication: "Přihláška vypadá jako spam, takhle by to nešlo."
 	errorapplication: "Ups, něco se rozbilo a přihlášku se nepodařilo odeslat, zkuste to za chvíli znovu."
+	wrongdateapplication: "Na tento den není vypsáno žádné školení"
 	submitted:
 		tentative: "Díky, přihláška odeslána! Dám vám vědět, jakmile budu znát přesný termín."
 		confirmed: "Díky, přihláška odeslána! Potvrzení přijde za chvíli e-mailem, fakturu zašlu během několika dní. Pokud do školení zbývá ještě dost času, může mi to trvat o chvilku déle."

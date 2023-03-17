@@ -9,6 +9,7 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
 use MichalSpacekCz\Training\FormDataLogger;
 use MichalSpacekCz\Training\FormSpam;
 use MichalSpacekCz\Training\Mails;
@@ -18,7 +19,6 @@ use Nette\Database\Row;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
-use OutOfBoundsException;
 use PDOException;
 use stdClass;
 use Tracy\Debugger;
@@ -179,6 +179,8 @@ class TrainingApplicationFormFactory
 			} catch (SpammyApplicationException $e) {
 				Debugger::log($e);
 				$onError('messages.trainings.spammyapplication');
+			} catch (TrainingDateNotUpcomingException) {
+				$onError('messages.trainings.wrongdateapplication');
 			} catch (PDOException $e) {
 				Debugger::log($e, Debugger::ERROR);
 				$onError('messages.trainings.errorapplication');
@@ -226,13 +228,13 @@ class TrainingApplicationFormFactory
 	 * @param string $name
 	 * @param Row[] $dates
 	 * @param SessionSection $sessionSection
+	 * @throws TrainingDateNotUpcomingException
 	 */
 	private function checkTrainingDate(stdClass $values, string $name, array $dates, SessionSection $sessionSection): void
 	{
 		if (!isset($dates[$values->trainingId])) {
 			$this->formDataLogger->log($values, $name, $sessionSection);
-			$message = "Training date id {$values->trainingId} is not an upcoming training, should be one of " . implode(', ', array_keys($dates));
-			throw new OutOfBoundsException($message);
+			throw new TrainingDateNotUpcomingException($values->trainingId, $dates);
 		}
 	}
 
