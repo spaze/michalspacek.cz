@@ -33,7 +33,10 @@ class UpcKeys
 	private ?array $modelsWithPrefixes = null;
 
 
-	public function __construct(RouterInterface ...$routers)
+	/**
+	 * @param non-empty-list<RouterInterface> $routers
+	 */
+	public function __construct(array $routers)
 	{
 		foreach ($routers as $router) {
 			$this->routers[$router::class] = $router;
