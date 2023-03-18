@@ -111,6 +111,7 @@ label:
 	othertrainings: "Other trainings"
 	date: "Date"
 	tentativedate: "tentative date"
+	trainingdate: "Training date"
 	remote: remote
 	participant: "Participant"
 	companydetails: "Company details"

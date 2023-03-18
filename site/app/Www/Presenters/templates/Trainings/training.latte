@@ -11,7 +11,11 @@
 	<legend>{_messages.label.date}</legend>
 	<table>
 		<tr>
-			<th>{label trainingId /}</th><td>{input trainingId}</td>
+			{if $singleDate}
+				<th>{_messages.label.trainingdate}</th><td>{$singleDate}</td>
+			{else}
+				<th>{label trainingId /}</th><td>{input trainingId}</td>
+			{/if}
 		</tr>
 	</table>
 </fieldset>

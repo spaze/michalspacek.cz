@@ -94,6 +94,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->materials = $this->training->materials;
 		$this->template->lastFreeSeats = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates = $this->dates;
+		$this->template->singleDate = count($this->dates) === 1 ? $this->trainingDates->formatDateVenueForUser(reset($this->dates)) : null;
 		$this->template->dataRetention = $this->trainingDates->getDataRetentionDays();
 
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);

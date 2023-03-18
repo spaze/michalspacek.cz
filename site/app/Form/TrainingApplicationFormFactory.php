@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Form\Controls\HiddenFieldWithLabel;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotAvailableException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
 use MichalSpacekCz\Training\FormDataLogger;
 use MichalSpacekCz\Training\FormSpam;
@@ -74,18 +74,12 @@ class TrainingApplicationFormFactory
 			$inputDates[$date->dateId] = $el;
 		}
 
-		$label = 'Termín školení:';
 		// trainingId is actually dateId, oh well
 		if ($multipleDates) {
-			$form->addSelect('trainingId', $label, $inputDates)
+			$form->addSelect('trainingId', $this->translator->translate('label.trainingdate'), $inputDates)
 				->setRequired('Vyberte prosím termín a místo školení')
 				->setPrompt('- vyberte termín a místo -')
 				->addRule($form::INTEGER);
-		} else {
-			$key = key($inputDates);
-			$field = new HiddenFieldWithLabel($label, (string)$key, $inputDates[$key]);
-			$field->addRule($form::INTEGER);
-			$form->addComponent($field, 'trainingId');
 		}
 
 		$this->trainingControlsFactory->addAttendee($form);
@@ -96,12 +90,19 @@ class TrainingApplicationFormFactory
 
 		$form->addSubmit('signUp', 'Odeslat');
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError, $createTemplate, $action, $name, $dates, $sessionSection): void {
+		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError, $createTemplate, $action, $name, $dates, $multipleDates, $sessionSection): void {
 			try {
 				$this->formSpam->check($values, $action, $sessionSection);
-				$this->checkTrainingDate($values, $action, $dates, $sessionSection);
+				if ($multipleDates) {
+					$this->checkTrainingDate($values, $action, $dates, $sessionSection);
+					$date = $dates[$values->trainingId] ?? false;
+				} else {
+					$date = reset($dates);
+				}
+				if (!$date) {
+					throw new TrainingDateNotAvailableException();
+				}
 
-				$date = $dates[$values->trainingId];
 				if ($date->tentative) {
 					$this->trainingApplications->addInvitation(
 						$date,
@@ -180,6 +181,9 @@ class TrainingApplicationFormFactory
 				Debugger::log($e);
 				$onError('messages.trainings.spammyapplication');
 			} catch (TrainingDateNotUpcomingException) {
+				$onError('messages.trainings.wrongdateapplication');
+			} catch (TrainingDateNotAvailableException $e) {
+				Debugger::log($e);
 				$onError('messages.trainings.wrongdateapplication');
 			} catch (PDOException $e) {
 				Debugger::log($e, Debugger::ERROR);
