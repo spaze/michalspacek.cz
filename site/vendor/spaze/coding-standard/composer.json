@@ -14,9 +14,14 @@
 	],
 	"require": {
 		"php": "^7.2 || ^8.0",
-		"slevomat/coding-standard": "^8.2"
+		"slevomat/coding-standard": "^8.9"
 	},
 	"autoload": {
 		"psr-4": {"Spaze\\CodingStandard\\": "src"}
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	}
 }

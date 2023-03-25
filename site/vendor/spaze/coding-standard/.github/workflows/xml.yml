@@ -1,0 +1,16 @@
+name: XML Lint
+
+on: [push, pull_request]
+
+jobs:
+  xml-linter:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: composer update --no-progress --no-interaction
+    - name: Lint ruleset.xml
+      uses: ChristophWurst/xmllint-action@v1
+      with:
+        xml-file: src/ruleset.xml
+        xml-schema-file: vendor/squizlabs/php_codesniffer/phpcs.xsd

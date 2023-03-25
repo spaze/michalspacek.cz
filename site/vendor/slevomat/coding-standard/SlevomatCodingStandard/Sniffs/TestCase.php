@@ -46,7 +46,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 			$codeSniffer->ruleset->ruleset[self::getSniffName()]['properties'] = $sniffProperties;
 		}
 
-		$sniffClassName = self::getSniffClassName();
+		$sniffClassName = static::getSniffClassName();
 		/** @var Sniff $sniff */
 		$sniff = new $sniffClassName();
 
@@ -76,6 +76,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 		self::assertEmpty($errors, sprintf('No errors expected, but %d errors found.', count($errors)));
 	}
 
+	protected static function assertNoSniffWarningInFile(File $phpcsFile): void
+	{
+		$warnings = $phpcsFile->getWarnings();
+		self::assertEmpty($warnings, sprintf('No warnings expected, but %d warnings found.', count($warnings)));
+	}
+
 	protected static function assertSniffError(File $phpcsFile, int $line, string $code, ?string $message = null): void
 	{
 		$errors = $phpcsFile->getErrors();
@@ -87,6 +93,31 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 			self::hasError($errors[$line], $sniffCode, $message),
 			sprintf(
 				'Expected error %s%s, but none found on line %d.%sErrors found on line %d:%s%s%s',
+				$sniffCode,
+				$message !== null
+					? sprintf(' with message "%s"', $message)
+					: '',
+				$line,
+				PHP_EOL . PHP_EOL,
+				$line,
+				PHP_EOL,
+				self::getFormattedErrors($errors[$line]),
+				PHP_EOL
+			)
+		);
+	}
+
+	protected static function assertSniffWarning(File $phpcsFile, int $line, string $code, ?string $message = null): void
+	{
+		$errors = $phpcsFile->getWarnings();
+		self::assertTrue(isset($errors[$line]), sprintf('Expected warning on line %s, but none found.', $line));
+
+		$sniffCode = sprintf('%s.%s', self::getSniffName(), $code);
+
+		self::assertTrue(
+			self::hasError($errors[$line], $sniffCode, $message),
+			sprintf(
+				'Expected warning %s%s, but none found on line %d.%sWarnings found on line %d:%s%s%s',
 				$sniffCode,
 				$message !== null
 					? sprintf(' with message "%s"', $message)
@@ -123,6 +154,17 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 		self::assertStringEqualsFile(preg_replace('~(\\.php)$~', '.fixed\\1', $phpcsFile->getFilename()), $phpcsFile->fixer->getContents());
 	}
 
+	/**
+	 * @return class-string
+	 */
+	protected static function getSniffClassName(): string
+	{
+		/** @var class-string $sniffClassName */
+		$sniffClassName = substr(static::class, 0, -strlen('Test'));
+
+		return $sniffClassName;
+	}
+
 	private static function getSniffName(): string
 	{
 		return preg_replace(
@@ -136,26 +178,15 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 				'',
 				'',
 			],
-			self::getSniffClassName()
+			static::getSniffClassName()
 		);
-	}
-
-	/**
-	 * @return class-string
-	 */
-	private static function getSniffClassName(): string
-	{
-		/** @var class-string $sniffClassName */
-		$sniffClassName = substr(static::class, 0, -strlen('Test'));
-
-		return $sniffClassName;
 	}
 
 	private static function getSniffClassReflection(): ReflectionClass
 	{
 		static $reflections = [];
 
-		$className = self::getSniffClassName();
+		$className = static::getSniffClassName();
 
 		return $reflections[$className] ?? $reflections[$className] = new ReflectionClass($className);
 	}

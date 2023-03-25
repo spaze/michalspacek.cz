@@ -185,6 +185,7 @@ class TypeHintHelper
 				'callable-string',
 				'numeric-string',
 				'non-empty-string',
+				'non-falsy-string',
 				'literal-string',
 				'array-key',
 				'list',
@@ -401,7 +402,7 @@ class TypeHintHelper
 
 		if (count($convertedHints) > 1) {
 			$convertedHints = array_map(static function (string $part): string {
-				return TypeHintHelper::isVoidTypeHint($part) ? 'null' : $part;
+				return self::isVoidTypeHint($part) ? 'null' : $part;
 			}, $convertedHints);
 		}
 

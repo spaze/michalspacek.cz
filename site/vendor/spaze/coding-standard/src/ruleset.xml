@@ -2,6 +2,14 @@
 <ruleset name="SpazeCodingStandard">
 	<arg name="tab-width" value="4"/>
 	<config name="installed_paths" value="../../slevomat/coding-standard"/>
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+	<rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
+	<rule ref="Generic.WhiteSpace.ScopeIndent">
+		<properties>
+			<property name="tabIndent" value="true"/>
+		</properties>
+	</rule>
 	<rule ref="PSR2.ControlStructures.ControlStructureSpacing">
 		<exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/> <!-- Put first expression of multiline condition on the next line -->
 	</rule>
@@ -16,30 +24,7 @@
 		<exclude name="PSR12.Traits.UseDeclaration.BlankLineAfterLastUse"/> <!-- Checked by SlevomatCodingStandard.Classes.TraitUseSpacing -->
 		<exclude name="PSR12.Traits.UseDeclaration.UseAfterBrace"/>
 	</rule>
-	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
-	<rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
-	<rule ref="Generic.WhiteSpace.ScopeIndent">
-		<properties>
-			<property name="tabIndent" value="true"/>
-		</properties>
-	</rule>
 	<rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
-	<rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
-	<rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses"/>
-	<rule ref="SlevomatCodingStandard.ControlStructures.RequireMultiLineCondition">
-		<properties>
-			<property name="minLineLength" value="150"/>
-		</properties>
-	</rule>
-	<rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
-		<properties>
-			<property name="linesCountBeforeFirstContent" value="0"/>
-			<property name="linesCountBetweenDescriptionAndAnnotations" value="1"/>
-			<property name="linesCountBetweenDifferentAnnotationsTypes" value="0"/>
-			<property name="linesCountAfterLastContent" value="0"/>
-		</properties>
-	</rule>
 	<rule ref="SlevomatCodingStandard.Classes.BackedEnumTypeSpacing">
 		<properties>
 			<property name="spacesCountBeforeColon" value="0"/>
@@ -67,6 +52,12 @@
 			<property name="maxLinesCountBeforeWithoutComment" value="1"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.Classes.PropertyDeclaration">
+		<properties>
+			<property name="checkPromoted" value="true"/>
+			<property name="enableMultipleSpacesBetweenModifiersCheck" value="true"/>
+		</properties>
+	</rule>
 	<rule ref="SlevomatCodingStandard.Classes.PropertySpacing">
 		<properties>
 			<property name="minLinesCountBeforeWithComment" value="1"/>
@@ -84,6 +75,23 @@
 			<property name="linesCountBetweenUses" value="0"/>
 			<property name="linesCountAfterLastUse" value="2"/>
 			<property name="linesCountAfterLastUseWhenLastInClass" value="1"/>
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+		<properties>
+			<property name="linesCountBeforeFirstContent" value="0"/>
+			<property name="linesCountBetweenDescriptionAndAnnotations" value="1"/>
+			<property name="linesCountBetweenDifferentAnnotationsTypes" value="0"/>
+			<property name="linesCountAfterLastContent" value="0"/>
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
+	<rule ref="SlevomatCodingStandard.ControlStructures.DisallowTrailingMultiLineTernaryOperator"/>
+	<rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
+	<rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses"/>
+	<rule ref="SlevomatCodingStandard.ControlStructures.RequireMultiLineCondition">
+		<properties>
+			<property name="minLineLength" value="150"/>
 		</properties>
 	</rule>
 	<rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInCall"/>
@@ -120,24 +128,18 @@
 		</properties>
 	</rule>
 	<rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
-	<rule ref="SlevomatCodingStandard.Classes.PropertyDeclaration">
-		<properties>
-			<property name="checkPromoted" value="true"/>
-			<property name="enableMultipleSpacesBetweenModifiersCheck" value="true"/>
-		</properties>
-	</rule>
 	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing">
 		<properties>
 			<property name="spacesCountBeforeColon" value="0"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.Variables.DisallowVariableVariable"/>
 	<rule ref="Squiz.Strings.ConcatenationSpacing">
 		<properties>
 			<property name="spacing" value="1"/>
 			<property name="ignoreNewlines" value="true"/>
 		</properties>
 	</rule>
-	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 	<rule ref="Squiz.WhiteSpace.FunctionSpacing">
 		<properties>
 			<property name="spacing" value="2" />
@@ -145,4 +147,5 @@
 			<property name="spacingAfterLast" value="1"/>
 		</properties>
 	</rule>
+	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 </ruleset>
