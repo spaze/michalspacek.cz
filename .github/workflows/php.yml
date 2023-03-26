@@ -92,6 +92,12 @@ jobs:
         php-version: ${{ matrix.php-version }}
     - run: composer --working-dir=site lint-neon
 
+  lint-xml:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: composer --working-dir=site lint-xml -- --auto-install-with-apt-fast
+
   phpcs:
     runs-on: ubuntu-latest
     strategy:
