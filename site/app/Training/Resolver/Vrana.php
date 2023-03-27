@@ -10,7 +10,7 @@ class Vrana implements ApplicationSourceResolverInterface
 
 	public function isTrainingApplicationOwner(string $note): bool
 	{
-		return (Strings::contains(Strings::lower($note), 'jakub vrána') || Strings::contains(Strings::lower($note), 'od jakuba'));
+		return (str_contains(Strings::lower($note), 'jakub vrána') || str_contains(Strings::lower($note), 'od jakuba'));
 	}
 
 }

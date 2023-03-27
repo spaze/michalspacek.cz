@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\EasterEgg;
 
 use Nette\Application\BadRequestException;
-use Nette\Utils\Strings;
 
 /**
  * Nette CVE-2020-15227, here to easter-egg some bots
@@ -37,7 +36,7 @@ class NetteCve202015227
 			throw new BadRequestException(sprintf("[%s] Empty param '%s' for callback '%s'", __CLASS__, $paramNames[$callback], $callback));
 		}
 
-		if (Strings::contains($param, 'ifconfig')) {
+		if (str_contains($param, 'ifconfig')) {
 			foreach (['Rx', 'Tx'] as $dir) {
 				foreach (['Packets', 'Bytes'] as $type) {
 					$data['eth0' . $dir . $type] = $this->getRandom();
@@ -46,23 +45,23 @@ class NetteCve202015227
 				}
 			}
 			$view = NetteCve202015227View::Ifconfig;
-		} elseif (Strings::contains($param, 'ls')) {
+		} elseif (str_contains($param, 'ls')) {
 			$view = NetteCve202015227View::Ls;
-		} elseif (Strings::contains($param, 'wget')) {
+		} elseif (str_contains($param, 'wget')) {
 			$view = NetteCve202015227View::Wget;
-		} elseif (Strings::contains($param, 'echo')) {
+		} elseif (str_contains($param, 'echo')) {
 			$data['command'] = 'echo';
 			$view = NetteCve202015227View::NotFound;
-		} elseif (Strings::contains($param, 'bash')) {
+		} elseif (str_contains($param, 'bash')) {
 			$data['command'] = 'bash';
 			$view = NetteCve202015227View::NotFound;
-		} elseif (Strings::contains($param, 'sa.exe')) {
+		} elseif (str_contains($param, 'sa.exe')) {
 			$data['command'] = 'sa.exe';
 			$view = NetteCve202015227View::NotRecognized;
-		} elseif (Strings::contains($param, 'certutil')) {
+		} elseif (str_contains($param, 'certutil')) {
 			$data['command'] = 'certutil.exe';
 			$view = NetteCve202015227View::NotRecognized;
-		} elseif (Strings::contains($param, 'sh')) {
+		} elseif (str_contains($param, 'sh')) {
 			$data['command'] = 'zsh';
 			$view = NetteCve202015227View::NotFound;
 		} else {
