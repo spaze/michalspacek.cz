@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '3330992c0c95225d47b3565299afde2ed1af6f3a',
+        'reference' => 'c258bf84b958961a03d8399582b0d2f639afa64e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -131,13 +131,10 @@
             'dev_requirement' => false,
         ),
         'nette/finder' => array(
-            'pretty_version' => 'v3.0.0',
-            'version' => '3.0.0.0',
-            'reference' => '027395c638637de95c8e9fad49a7c51249404ed2',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../nette/finder',
-            'aliases' => array(),
             'dev_requirement' => false,
+            'replaced' => array(
+                0 => '3.0',
+            ),
         ),
         'nette/forms' => array(
             'pretty_version' => 'v3.1.11',
@@ -438,7 +435,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '3330992c0c95225d47b3565299afde2ed1af6f3a',
+            'reference' => 'c258bf84b958961a03d8399582b0d2f639afa64e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

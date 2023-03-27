@@ -42,6 +42,7 @@
 		"tracy/tracy": "^2.9.4"
 	},
 	"replace": {
+		"nette/finder": "3.0",
 		"paragonie/random_compat": "9.99.99",
 		"paragonie/sodium_compat": "*",
 		"symfony/polyfill-ctype": "*",
