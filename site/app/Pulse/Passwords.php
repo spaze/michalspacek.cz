@@ -256,7 +256,7 @@ class Passwords
 				if ($row->siteId === null) {
 					$registry->addSite(new WildcardSite($siteId, $registry->getCompany($row->companyId), $storageKey));
 				} else {
-					$registry->addSite(new SpecificSite($siteId, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, Json::FORCE_ARRAY) : [], $registry->getCompany($row->companyId), $storageKey));
+					$registry->addSite(new SpecificSite($siteId, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, forceArrays: true) : [], $registry->getCompany($row->companyId), $storageKey));
 				}
 			}
 			if (!$registry->hasStorage($storageKey)) {

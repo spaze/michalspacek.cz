@@ -48,7 +48,7 @@ class CertificatesApiClient
 			throw new CertificatesApiException(sprintf('Failure getting data from %s: %s', $url, Helpers::getLastError()));
 		}
 		$certificates = [];
-		$decoded = Json::decode($json, Json::FORCE_ARRAY);
+		$decoded = Json::decode($json, forceArrays: true);
 		if (!is_array($decoded)) {
 			throw new CertificatesApiException(sprintf('Decoded response type from %s is %s (`%s`) not array', $url, gettype($decoded), $json));
 		}

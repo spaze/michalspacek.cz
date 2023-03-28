@@ -33,7 +33,7 @@ return array(
     'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' => array($vendorDir . '/php-parallel-lint/php-console-highlighter/src'),
     'PHP_Parallel_Lint\\PhpConsoleColor\\' => array($vendorDir . '/php-parallel-lint/php-console-color/src'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
-    'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-nette/src', $vendorDir . '/phpstan/phpstan-deprecation-rules/src'),
+    'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-deprecation-rules/src', $vendorDir . '/phpstan/phpstan-nette/src'),
     'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),
     'MichalSpacekCz\\' => array($baseDir . '/app'),
     'Efabrica\\PHPStanLatte\\' => array($vendorDir . '/efabrica/phpstan-latte/src'),

@@ -30,25 +30,25 @@ class SearchMatcher
 
 		$match = false;
 		$company = $site->getCompany();
-		if (Strings::contains(Strings::webalize($company->getCompanyName()), $this->search)) {
+		if (str_contains(Strings::webalize($company->getCompanyName()), $this->search)) {
 			$match = true;
 			$result->addCompanyNameMatch($company);
 		}
-		if ($company->getTradeName() && Strings::contains(Strings::webalize($company->getTradeName()), $this->search)) {
+		if ($company->getTradeName() && str_contains(Strings::webalize($company->getTradeName()), $this->search)) {
 			$match = true;
 			$result->addTradeNameMatch($company);
 		}
-		if ($site instanceof SpecificSite && Strings::contains($site->getUrl(), $this->search)) {
+		if ($site instanceof SpecificSite && str_contains($site->getUrl(), $this->search)) {
 			$match = true;
 			$result->addSiteUrlMatch($site);
 		}
-		if ($site instanceof SpecificSite && Strings::contains($site->getAlias(), $this->search)) {
+		if ($site instanceof SpecificSite && str_contains($site->getAlias(), $this->search)) {
 			$match = true;
 			$result->addSiteAliasMatch($site);
 		}
 		$i = 0;
 		foreach ($site->getAlgorithms() as $algorithm) {
-			if (Strings::contains(Strings::webalize($algorithm->getName()), $this->search)) {
+			if (str_contains(Strings::webalize($algorithm->getName()), $this->search)) {
 				$match = true;
 				$result->addAlgorithmNameMatch($algorithm);
 				if ($i > 0) {
@@ -56,7 +56,7 @@ class SearchMatcher
 				}
 			}
 			foreach ($algorithm->getDisclosures() as $disclosure) {
-				if (Strings::contains(Strings::webalize($disclosure->getUrl()), $this->search)) {
+				if (str_contains(Strings::webalize($disclosure->getUrl()), $this->search)) {
 					$match = true;
 					$result->addDisclosureUrlMatch($disclosure);
 					if ($i > 0) {
