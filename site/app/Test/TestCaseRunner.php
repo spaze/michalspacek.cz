@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Test;
 
 use LogicException;
 use Nette\DI\Container;
-use Nette\Utils\Reflection;
+use Nette\Utils\Type;
 use ReflectionException;
 use ReflectionMethod;
 use Tester\TestCase;
@@ -29,14 +29,24 @@ class TestCaseRunner
 		try {
 			$method = new ReflectionMethod($test, '__construct');
 			foreach ($method->getParameters() as $parameter) {
-				$type = Reflection::getParameterType($parameter);
+				$type = Type::fromReflection($parameter);
+				$paramIdent = "Parameter #{$parameter->getPosition()} \${$parameter->getName()}";
 				if ($type === null) {
-					throw new LogicException("Parameter #{$parameter->getPosition()} \${$parameter->getName()} has no type specified in {$test}::__construct()");
+					throw new LogicException("{$paramIdent} has no type specified in {$test}::__construct()");
 				}
-				if (!class_exists($type) && !interface_exists($type)) {
-					throw new LogicException("Parameter #{$parameter->getPosition()} \${$parameter->getName()} specifies a type {$type} but the class or interface doesn't exist");
+				if ($type->isUnion()) {
+					throw new LogicException("{$paramIdent} specifies a union type {$type} but only a simple type is supported");
 				}
-				$params[] = $this->container->getByType($type);
+				if ($type->isIntersection()) {
+					throw new LogicException("{$paramIdent} specifies an intersection type {$type} but only a simple type is supported");
+				}
+				if (!$type->getSingleName()) {
+					throw new LogicException("{$paramIdent} specifies a non-simple type");
+				}
+				if (!class_exists($type->getSingleName()) && !interface_exists($type->getSingleName())) {
+					throw new LogicException("{$paramIdent} specifies a type {$type} but the class or interface doesn't exist");
+				}
+				$params[] = $this->container->getByType($type->getSingleName());
 			}
 		} catch (ReflectionException) {
 			// pass, __construct() does not exist
