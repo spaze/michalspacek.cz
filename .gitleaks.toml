@@ -1,5 +1,5 @@
 [extend]
-useDefault = true  # The default config file is https://github.com/zricethezav/gitleaks/blob/master/config/gitleaks.toml
+useDefault = true  # The default config file is https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
 
 [[rules]]
 # This is the same as the "Generic API Key" rule from the default config file except
