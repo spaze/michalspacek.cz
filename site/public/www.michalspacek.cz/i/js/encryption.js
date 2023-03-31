@@ -43,7 +43,8 @@ const init = function() {
 		}
 		feedback.style.opacity = '1';
 	};
-	document.querySelector('#copied .button, #copythis .button').addEventListener('click', function() {
+	feedback.style.transition = 'opacity 0.2s';
+	feedback.querySelector('.button').addEventListener('click', function() {
 		area.value = '';
 		reset();
 	});
