@@ -1,3 +1,10 @@
+const onLoad = function(element, handler) {
+	if (document.readyState !== 'loading') {
+		handler();
+	} else {
+		element.addEventListener('DOMContentLoaded', handler);
+	}
+}
 const init = function() {
 	const supported = Boolean(window.Promise);
 	let encrypted = false;
@@ -29,27 +36,6 @@ const init = function() {
 			});
 		});
 	};
-	const load = function(e) {
-		button.title = button.dataset.loading;
-		let script = document.createElement('script');
-		script.async = true;
-		script.integrity = button.dataset.integrity;
-		script.src = button.dataset.lib;
-		script.crossorigin = 'anonymous';
-		script.addEventListener('load', function() {
-			area.removeEventListener('click', load);
-			area.removeEventListener('focus', load);
-			button.removeEventListener('click', load);
-			button.removeEventListener('focus', load);
-			button.removeEventListener('mouseover', load);
-			button.addEventListener('click', handler)
-			button.removeAttribute('title');
-			if (e.target === button[0] && e.type === 'click') {
-				handler();
-			}
-		});
-		document.getElementsByTagName('head')[0].appendChild(script);
-	};
 	const copy = function() {
 		area.select();
 		if (document.queryCommandSupported('copy')) {
@@ -61,17 +47,17 @@ const init = function() {
 		area.value = '';
 		reset();
 	});
+	button.title = button.dataset.loading;
+	onLoad(document.getElementById('encryption-js'), function() {
+		button.addEventListener('click', handler)
+		button.removeAttribute('title');
+	});
 	if (supported) {
 		area.addEventListener('input', function(e) {
 			if (e.target.value === '') {
 				reset();
 			}
 		});
-		area.addEventListener('click', load);
-		area.addEventListener('focus', load);
-		button.addEventListener('click', load);
-		button.addEventListener('focus', load);
-		button.addEventListener('mouseover', load);
 		button.removeAttribute('title');
 		button.removeAttribute('disabled');
 	} else {
@@ -79,8 +65,4 @@ const init = function() {
 		area.disabled = true;
 	}
 };
-if (document.readyState !== 'loading') {
-	init();
-} else {
-	document.addEventListener('DOMContentLoaded', init);
-}
+onLoad(document, init);
