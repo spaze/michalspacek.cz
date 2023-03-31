@@ -43,7 +43,7 @@ const init = function() {
 		}
 		feedback.style.opacity = '1';
 	};
-	document.querySelector('#copied .button, #copythis .button').addEventListener('click', function() {
+	feedback.querySelector('.button').addEventListener('click', function() {
 		area.value = '';
 		reset();
 	});
