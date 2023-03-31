@@ -2,10 +2,6 @@
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
-{define #scripts}
-{script encryption async, defer}
-{/define}
-
 {define #content}
 <p>
 	{_messages.pgp.howto.1|format:'mail@michalspacek.cz','mail@michalspacek.cz'}
@@ -19,8 +15,6 @@
 		data-loading="{_messages.pgp.loading}"
 		data-encrypt="{_messages.label.encrypt}"
 		data-copy="{_messages.label.copy}"
-		data-lib="{resourceUrl openpgp}"
-		data-integrity="{resourceHash openpgp}"
 		data-unsupported="{_messages.pgp.unsupported}"
 		disabled
 		title="{_messages.pgp.requirements}"
@@ -35,4 +29,8 @@
 	<strong>{_messages.label.keybase}</strong>: <a href="https://keybase.io/spaze">spaze</a>
 </p>
 <pre id="pubkey">{$key}</pre>
+{/define}
+
+{define #footerScripts}
+	{script openpgp+encryption id => "encryption-js"}
 {/define}
