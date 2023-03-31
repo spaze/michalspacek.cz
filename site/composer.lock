@@ -2161,16 +2161,16 @@
         },
         {
             "name": "symfony/cache",
-            "version": "v6.2.7",
+            "version": "v6.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "01a36b32f930018764bcbde006fbbe421fa6b61e"
+                "reference": "76babfd82f6bfd8f6cbe851a153b95dd074ffc53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/01a36b32f930018764bcbde006fbbe421fa6b61e",
-                "reference": "01a36b32f930018764bcbde006fbbe421fa6b61e",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/76babfd82f6bfd8f6cbe851a153b95dd074ffc53",
+                "reference": "76babfd82f6bfd8f6cbe851a153b95dd074ffc53",
                 "shasum": ""
             },
             "require": {
@@ -2237,7 +2237,7 @@
                 "psr6"
             ],
             "support": {
-                "source": "https://github.com/symfony/cache/tree/v6.2.7"
+                "source": "https://github.com/symfony/cache/tree/v6.2.8"
             },
             "funding": [
                 {
@@ -2253,7 +2253,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-21T16:15:44+00:00"
+            "time": "2023-03-30T07:37:32+00:00"
         },
         {
             "name": "symfony/cache-contracts",
@@ -2628,16 +2628,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v6.2.7",
+            "version": "v6.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "90db1c6138c90527917671cd9ffa9e8b359e3a73"
+                "reference": "817535dbb1721df8b3a8f2489dc7e50bcd6209b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/90db1c6138c90527917671cd9ffa9e8b359e3a73",
-                "reference": "90db1c6138c90527917671cd9ffa9e8b359e3a73",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/817535dbb1721df8b3a8f2489dc7e50bcd6209b5",
+                "reference": "817535dbb1721df8b3a8f2489dc7e50bcd6209b5",
                 "shasum": ""
             },
             "require": {
@@ -2706,7 +2706,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v6.2.7"
+                "source": "https://github.com/symfony/translation/tree/v6.2.8"
             },
             "funding": [
                 {
@@ -2722,7 +2722,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-24T10:42:00+00:00"
+            "time": "2023-03-31T09:14:44+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -2807,16 +2807,16 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v6.2.7",
+            "version": "v6.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "86062dd0103530e151588c8f60f5b85a139f1442"
+                "reference": "8302bb670204500d492c6b8c595ee9a27da62cd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/86062dd0103530e151588c8f60f5b85a139f1442",
-                "reference": "86062dd0103530e151588c8f60f5b85a139f1442",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/8302bb670204500d492c6b8c595ee9a27da62cd6",
+                "reference": "8302bb670204500d492c6b8c595ee9a27da62cd6",
                 "shasum": ""
             },
             "require": {
@@ -2856,12 +2856,12 @@
                 "export",
                 "hydrate",
                 "instantiate",
-                "lazy loading",
+                "lazy-loading",
                 "proxy",
                 "serialize"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-exporter/tree/v6.2.7"
+                "source": "https://github.com/symfony/var-exporter/tree/v6.2.8"
             },
             "funding": [
                 {
@@ -2877,7 +2877,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-24T10:42:00+00:00"
+            "time": "2023-03-14T15:48:45+00:00"
         },
         {
             "name": "texy/texy",
@@ -2947,16 +2947,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.10.0",
+            "version": "v2.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "e580b9578858403762fceb2a8664550515167530"
+                "reference": "882fee7cf4258a602ad4a37461e837ed2ca1406b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/e580b9578858403762fceb2a8664550515167530",
-                "reference": "e580b9578858403762fceb2a8664550515167530",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/882fee7cf4258a602ad4a37461e837ed2ca1406b",
+                "reference": "882fee7cf4258a602ad4a37461e837ed2ca1406b",
                 "shasum": ""
             },
             "require": {
@@ -3015,9 +3015,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.10.0"
+                "source": "https://github.com/nette/tracy/tree/v2.10.2"
             },
-            "time": "2023-03-09T00:37:06+00:00"
+            "time": "2023-03-29T12:34:53+00:00"
         }
     ],
     "packages-dev": [
@@ -3388,16 +3388,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.8",
+            "version": "1.10.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "0166aef76e066f0dd2adc2799bdadfa1635711e9"
+                "reference": "9b13dafe3d66693d20fe5729c3dde1d31bb64703"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0166aef76e066f0dd2adc2799bdadfa1635711e9",
-                "reference": "0166aef76e066f0dd2adc2799bdadfa1635711e9",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9b13dafe3d66693d20fe5729c3dde1d31bb64703",
+                "reference": "9b13dafe3d66693d20fe5729c3dde1d31bb64703",
                 "shasum": ""
             },
             "require": {
@@ -3446,7 +3446,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-24T10:28:16+00:00"
+            "time": "2023-03-30T08:58:01+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -3563,12 +3563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "08c832d96735c46a9d5849a5412fc4304e12d242"
+                "reference": "945aadf4c174c61973464b4000f4d7529aeb84a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/08c832d96735c46a9d5849a5412fc4304e12d242",
-                "reference": "08c832d96735c46a9d5849a5412fc4304e12d242",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/945aadf4c174c61973464b4000f4d7529aeb84a0",
+                "reference": "945aadf4c174c61973464b4000f4d7529aeb84a0",
                 "shasum": ""
             },
             "conflict": {
@@ -3882,12 +3882,13 @@
                 "phpoffice/phpspreadsheet": "<1.16",
                 "phpseclib/phpseclib": "<2.0.31|>=3,<3.0.19",
                 "phpservermon/phpservermon": "<=3.5.2",
+                "phpsysinfo/phpsysinfo": "<3.2.5",
                 "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5,<5.6.3",
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
                 "phpxmlrpc/phpxmlrpc": "<4.9.2",
                 "pimcore/data-hub": "<1.2.4",
-                "pimcore/pimcore": "<11",
+                "pimcore/pimcore": "<10.5.20",
                 "pixelfed/pixelfed": "<=0.11.4",
                 "pocketmine/bedrock-protocol": "<8.0.2",
                 "pocketmine/pocketmine-mp": "<4.12.5|>= 4.0.0-BETA5, < 4.4.2",
@@ -3956,7 +3957,7 @@
                 "simplito/elliptic-php": "<1.0.6",
                 "sitegeist/fluid-components": "<3.5",
                 "slim/slim": "<2.6",
-                "smarty/smarty": "<3.1.47|>=4,<4.2.1",
+                "smarty/smarty": "<3.1.48|>=4,<4.3.1",
                 "snipe/snipe-it": "<=6.0.14|>= 6.0.0-RC-1, <= 6.0.0-RC-5",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
@@ -4150,7 +4151,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-27T09:04:40+00:00"
+            "time": "2023-03-30T21:04:19+00:00"
         },
         {
             "name": "slevomat/coding-standard",
