@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	const SlidePreview = SlidePreview || {};
 	$('.open-container').on('click', function(event) {
 		event.preventDefault();
 		var container = $('body').find($(this).attr('href') + '-container');
@@ -126,8 +127,8 @@ $(document).ready(function() {
 		})
 		.css('cursor', 'pointer');
 
-	var FORMATTEXY = FORMATTEXY || {};
-	FORMATTEXY.loadData = function(event) {
+	const FormatTexy = {};
+	FormatTexy.loadData = function(event) {
 		var p = $(this);
 		var alt = p.data('alt');
 		var form = $('body').find(event.data.form);
@@ -150,8 +151,8 @@ $(document).ready(function() {
 			disabled.prop('disabled', false);
 		});
 	};
-	$('#frm-addPost #preview').on('click', {form: '#frm-addPost'}, FORMATTEXY.loadData);
-	$('#frm-editPost #preview').on('click', {form: '#frm-editPost'}, FORMATTEXY.loadData);
+	$('#frm-addPost #preview').on('click', {form: '#frm-addPost'}, FormatTexy.loadData);
+	$('#frm-editPost #preview').on('click', {form: '#frm-editPost'}, FormatTexy.loadData);
 
 	$('#frm-addReview-application').change(function() {
 		console.log($(this));
@@ -164,7 +165,7 @@ $(document).ready(function() {
 		var slide = tbody.clone(true);
 		var index = 0;
 		slide.addClass('new-slide changed').find(':input:not(.slide-nr)').val('');
-		SLIDEPREVIEW.clearDimensions(slide.find('img'));
+		SlidePreview.clearDimensions(slide.find('img'));
 		slide.find('img').hide().removeAttr('src').removeAttr('alt').removeAttr('title').removeAttr('width').removeAttr('height');
 		slide.find('.transparent').removeClass('transparent').prop('readonly', false);
 		tbody.after(slide);
@@ -179,47 +180,46 @@ $(document).ready(function() {
 		});
 	});
 
-	var SLIDEPREVIEW = SLIDEPREVIEW || {};
-	SLIDEPREVIEW.getDimensions = function() {
+	SlidePreview.getDimensions = function() {
 		return $('#frm-slides').data('dimensions');
 	};
-	SLIDEPREVIEW.checkDimensions = function(preview) {
-		var dimensions = SLIDEPREVIEW.getDimensions();
+	SlidePreview.checkDimensions = function(preview) {
+		var dimensions = SlidePreview.getDimensions();
 		return ((preview.prop('naturalWidth') / dimensions.ratio.width * dimensions.ratio.height === preview.prop('naturalHeight')) && preview.prop('naturalWidth') <= dimensions.max.width && preview.prop('naturalHeight') <= dimensions.max.height);
 	};
-	SLIDEPREVIEW.textRatio = function() {
-		var dimensions = SLIDEPREVIEW.getDimensions();
+	SlidePreview.textRatio = function() {
+		var dimensions = SlidePreview.getDimensions();
 		return dimensions.ratio.width + ':' + dimensions.ratio.height;
 	};
-	SLIDEPREVIEW.textMax = function() {
-		var dimensions = SLIDEPREVIEW.getDimensions();
+	SlidePreview.textMax = function() {
+		var dimensions = SlidePreview.getDimensions();
 		return dimensions.max.width + '×' + dimensions.max.height;
 	};
-	SLIDEPREVIEW.setDimensions = function(image) {
+	SlidePreview.setDimensions = function(image) {
 		var tbody = image.closest('tbody');
 		var target = tbody.find('.dimensions.type-' + image.data('type'));
 		target.removeClass('error');
 		if (image.attr('src')) {
 			target.text(image.prop('naturalWidth') + '×' + image.prop('naturalHeight'));
 		}
-		if (!SLIDEPREVIEW.checkDimensions(image)) {
+		if (!SlidePreview.checkDimensions(image)) {
 			target.addClass('error');
 			setTimeout(function() {
 				var slide = tbody.find('.slide-nr').val();
-				alert((slide ? 'Slajd ' + slide : 'Nový slajd') + ': nesprávná velikost ' + image.prop('naturalWidth') + '×' + image.prop('naturalHeight') + ', správné rozměry jsou ' + SLIDEPREVIEW.textRatio() + ', max ' + SLIDEPREVIEW.textMax());
+				alert((slide ? 'Slajd ' + slide : 'Nový slajd') + ': nesprávná velikost ' + image.prop('naturalWidth') + '×' + image.prop('naturalHeight') + ', správné rozměry jsou ' + SlidePreview.textRatio() + ', max ' + SlidePreview.textMax());
 			}, 100);
 		}
 	};
-	SLIDEPREVIEW.clearDimensions = function(image) {
+	SlidePreview.clearDimensions = function(image) {
 		image.closest('tbody').find('.dimensions').removeClass('error').text('');
 	};
 
 	$('#frm-slides img.type-image, #frm-slides img.type-alternative')
 		.each(function() {
-			SLIDEPREVIEW.setDimensions($(this));
+			SlidePreview.setDimensions($(this));
 		})
 		.on('load', function() {
-			SLIDEPREVIEW.setDimensions($(this));
+			SlidePreview.setDimensions($(this));
 		});
 
 	$('#frm-slides input:file').change(function() {
@@ -255,7 +255,7 @@ $(document).ready(function() {
 				preview.attr('src', preview.data('prev'));
 			} else {
 				preview.removeAttr('src');
-				SLIDEPREVIEW.clearDimensions(preview);
+				SlidePreview.clearDimensions(preview);
 			}
 		}
 	});
