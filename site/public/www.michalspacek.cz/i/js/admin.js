@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	const SlidePreview = SlidePreview || {};
+	const SlidePreview = {};
 	$('.open-container').on('click', function (event) {
 		event.preventDefault();
 		var container = $('body').find($(this).attr('href') + '-container');
