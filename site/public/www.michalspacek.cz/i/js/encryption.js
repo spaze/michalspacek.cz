@@ -1,4 +1,4 @@
-const init = function() {
+App.onLoad(document, function () {
 	const supported = Boolean(window.Promise);
 	let encrypted = false;
 	const feedback = document.querySelector(document.queryCommandSupported('copy') ? '#copied' : '#copythis');
@@ -58,5 +58,4 @@ const init = function() {
 		area.value = button.dataset.unsupported;
 		area.disabled = true;
 	}
-};
-App.onLoad(document, init);
+});
