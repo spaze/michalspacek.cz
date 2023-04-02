@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+APPLICATION.onLoad(document, function () {
 	document.querySelectorAll('.open-button').forEach(function (item) {
 		item.addEventListener('click', function (event) {
 			event.preventDefault();
