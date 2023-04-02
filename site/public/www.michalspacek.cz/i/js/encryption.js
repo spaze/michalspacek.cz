@@ -42,7 +42,7 @@ const init = function() {
 		reset();
 	});
 	button.title = button.dataset.loading;
-	APPLICATION.onLoad(document.getElementById('encryption-js'), function() {
+	App.onLoad(document.getElementById('encryption-js'), function() {
 		button.addEventListener('click', handler)
 		button.removeAttribute('title');
 	});
@@ -59,4 +59,4 @@ const init = function() {
 		area.disabled = true;
 	}
 };
-APPLICATION.onLoad(document, init);
+App.onLoad(document, init);
