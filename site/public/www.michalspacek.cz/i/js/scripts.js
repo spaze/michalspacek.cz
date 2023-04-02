@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+App.onLoad(document, function () {
 	const dateElement = document.querySelector('#termin a[href="#prihlaska"]');
 	if (dateElement) {
 		dateElement.addEventListener('click', function () {
@@ -8,24 +8,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const countryElement = document.querySelector('#frm-application-country');
 	const companyIdElement = document.querySelector('#frm-application-companyId');
-	APPLICATION.hideLoadControls = function () {
+	App.hideLoadControls = function () {
 		document.querySelectorAll('#loadDataControls span').forEach(function (item) {
 			item.classList.add('hidden');
 		});
 	};
-	APPLICATION.showLoadControls = function (selector) {
+	App.showLoadControls = function (selector) {
 		document.querySelectorAll(selector).forEach(function (item) {
 			item.classList.remove('hidden');
 		});
 	};
-	APPLICATION.loadData = function (event) {
+	App.loadData = function (event) {
 		event.preventDefault();
 		if (!countryElement || countryElement.value === '' || companyIdElement.value.replace(/ /g, '') === '') {
 			alert(document.querySelector('#errorCountryCompanyMissing').innerText);
 			return;
 		}
-		APPLICATION.hideLoadControls();
-		APPLICATION.showLoadControls('#loadDataWait');
+		App.hideLoadControls();
+		App.showLoadControls('#loadDataWait');
 		const loadDataElement = document.querySelector('#loadData')
 		if (!loadDataElement) {
 			return;
@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				return response.json()
 			})
 			.then((data) => {
-				APPLICATION.hideLoadControls();
-				APPLICATION.showLoadControls('#loadDataAgain');
+				App.hideLoadControls();
+				App.showLoadControls('#loadDataAgain');
 				if (data.status === 200) {
 					['companyId', 'companyTaxId', 'company', 'street', 'city', 'zip', 'country'].forEach(function (value) {
 						const companyElement = document.querySelector('#company');
@@ -55,24 +55,24 @@ document.addEventListener('DOMContentLoaded', function () {
 						}
 					});
 				} else if (data.status === 400) {
-					APPLICATION.showLoadControls('#loadDataNotFound');
+					App.showLoadControls('#loadDataNotFound');
 				} else {
-					APPLICATION.showLoadControls('#loadDataError');
+					App.showLoadControls('#loadDataError');
 				}
 			})
 			.catch((error) => {
-				APPLICATION.hideLoadControls();
-				APPLICATION.showLoadControls('#loadDataAgain, #loadDataError');
+				App.hideLoadControls();
+				App.showLoadControls('#loadDataAgain, #loadDataError');
 				console.error('🐶⚾ fetch error:', error);
 			});
 	};
 	document.querySelectorAll('#loadData a, #loadDataAgain a').forEach(function (item) {
-		item.addEventListener('click', APPLICATION.loadData);
+		item.addEventListener('click', App.loadData);
 	});
 	if (companyIdElement) {
 		companyIdElement.addEventListener('keypress', function (e) {
 			if (e.which === 13) {
-				APPLICATION.loadData(e);
+				App.loadData(e);
 			}
 		});
 	}
@@ -80,9 +80,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (loadDataDisabledElement) {
 		loadDataDisabledElement.classList.add('hidden');
 	}
-	APPLICATION.hideLoadControls();
-	APPLICATION.showLoadControls('#loadDataControls, #loadData');
-	APPLICATION.changeLabels = function () {
+	App.hideLoadControls();
+	App.showLoadControls('#loadDataControls, #loadData');
+	App.changeLabels = function () {
 		document.querySelectorAll('#frm-application label').forEach(function (item) {
 			if (countryElement) {
 				let label = item.dataset[countryElement.value];
@@ -93,9 +93,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 	if (countryElement) {
-		countryElement.addEventListener('change', APPLICATION.changeLabels);
+		countryElement.addEventListener('change', App.changeLabels);
 	}
-	APPLICATION.changeLabels();
+	App.changeLabels();
 
 	const columnContentElement = document.querySelector('.column-content');
 	if (columnContentElement && window.location.hash) {

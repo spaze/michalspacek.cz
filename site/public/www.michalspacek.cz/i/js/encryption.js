@@ -1,17 +1,17 @@
-const init = function() {
+App.onLoad(document, function () {
 	const supported = Boolean(window.Promise);
 	let encrypted = false;
 	const feedback = document.querySelector(document.queryCommandSupported('copy') ? '#copied' : '#copythis');
 	const button = document.querySelector('#encrypt');
 	const area = document.querySelector('#message');
-	const reset = function() {
+	const reset = function () {
 		encrypted = false;
 		button.innerText = button.dataset.encrypt;
 		button.removeEventListener('click', copy);
 		button.addEventListener('click', handler);
 		feedback.style.opacity = '0';
 	};
-	const handler = function() {
+	const handler = function () {
 		if (encrypted || !supported) {
 			return;
 		}
@@ -29,7 +29,7 @@ const init = function() {
 			});
 		});
 	};
-	const copy = function() {
+	const copy = function () {
 		area.select();
 		if (document.queryCommandSupported('copy')) {
 			document.execCommand('copy');
@@ -37,17 +37,17 @@ const init = function() {
 		feedback.style.opacity = '1';
 	};
 	feedback.style.transition = 'opacity 0.2s';
-	feedback.querySelector('.button').addEventListener('click', function() {
+	feedback.querySelector('.button').addEventListener('click', function () {
 		area.value = '';
 		reset();
 	});
 	button.title = button.dataset.loading;
-	APPLICATION.onLoad(document.getElementById('encryption-js'), function() {
+	App.onLoad(document.getElementById('encryption-js'), function () {
 		button.addEventListener('click', handler)
 		button.removeAttribute('title');
 	});
 	if (supported) {
-		area.addEventListener('input', function(e) {
+		area.addEventListener('input', function (e) {
 			if (e.target.value === '') {
 				reset();
 			}
@@ -58,5 +58,4 @@ const init = function() {
 		area.value = button.dataset.unsupported;
 		area.disabled = true;
 	}
-};
-APPLICATION.onLoad(document, init);
+});

@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	var param = 'fbclid';
 	if (location.search.indexOf(param + '=') !== -1) {
 		var replace = '';
