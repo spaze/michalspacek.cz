@@ -1,4 +1,4 @@
-const APPLICATION = APPLICATION || {};
+const APPLICATION = {};
 APPLICATION.onLoad = function(element, handler) {
 	if (document.readyState !== 'loading') {
 		handler();

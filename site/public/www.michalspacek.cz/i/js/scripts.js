@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const countryElement = document.querySelector('#frm-application-country');
 	const companyIdElement = document.querySelector('#frm-application-companyId');
-	const APPLICATION = APPLICATION || {};
 	APPLICATION.hideLoadControls = function () {
 		document.querySelectorAll('#loadDataControls span').forEach(function (item) {
 			item.classList.add('hidden');
