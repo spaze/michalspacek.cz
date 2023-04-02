@@ -1,11 +1,17 @@
-$(document).ready(function() {
-	$('.open-button').on('click', function (event) {
-		event.preventDefault();
-		const elements = $(this).data('open') ? $('body').find($(this).data('open')) : $(this).parent().nextAll('.expandable');
-		elements.slideToggle(100);
-		$(this).toggleClass('open');
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('.open-button').forEach(function (item) {
+		item.addEventListener('click', function (event) {
+			event.preventDefault();
+			const element = this.dataset.open ? document.querySelector(this.dataset.open) : this.parentElement.nextElementSibling.matches('.expandable') ? this.parentElement.nextElementSibling : null;
+			if (element) {
+				element.classList.toggle('hidden');
+			}
+			this.classList.toggle('open');
+		});
 	});
-	$('#frm-searchSort select').on('change', function () {
-		this.form.submit();
-	})
+	document.querySelectorAll('#frm-searchSort select').forEach(function (item) {
+		item.addEventListener('change', function () {
+			this.form.submit();
+		});
+	});
 });
