@@ -1,10 +1,3 @@
-const onLoad = function(element, handler) {
-	if (document.readyState !== 'loading') {
-		handler();
-	} else {
-		element.addEventListener('DOMContentLoaded', handler);
-	}
-}
 const init = function() {
 	const supported = Boolean(window.Promise);
 	let encrypted = false;
@@ -49,7 +42,7 @@ const init = function() {
 		reset();
 	});
 	button.title = button.dataset.loading;
-	onLoad(document.getElementById('encryption-js'), function() {
+	APPLICATION.onLoad(document.getElementById('encryption-js'), function() {
 		button.addEventListener('click', handler)
 		button.removeAttribute('title');
 	});
@@ -66,4 +59,4 @@ const init = function() {
 		area.disabled = true;
 	}
 };
-onLoad(document, init);
+APPLICATION.onLoad(document, init);
