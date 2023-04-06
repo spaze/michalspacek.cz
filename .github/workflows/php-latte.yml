@@ -20,7 +20,7 @@ jobs:
     - uses: actions/cache@v3
       with:
         path: ${{ steps.phpstan-cache.outputs.dir }}
-        key: phpstan-vendor-cache-php${{ matrix.php-version }}
+        key: phpstan-latte-templates-cache-php${{ matrix.php-version }}
     - uses: shivammathur/setup-php@v2
       with:
         coverage: none
