@@ -101,7 +101,7 @@ class Ares implements CompanyDataInterface
 				}
 			},
 			'options' => [
-				'http' => ['ignore_errors' => true],  // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
+				'http' => ['ignore_errors' => true], // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
 			],
 		]);
 		$url = sprintf($this->url, $companyId);

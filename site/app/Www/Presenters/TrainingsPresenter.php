@@ -80,7 +80,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->dates = $this->trainings->getDates($this->training->trainingId);
 
 		$session = $this->getSession();
-		$session->start();  // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
+		$session->start(); // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
 		$this->template->name = $this->training->action;
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.training', [$this->training->name]);

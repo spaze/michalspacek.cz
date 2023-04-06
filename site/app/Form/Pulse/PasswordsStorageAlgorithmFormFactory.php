@@ -71,7 +71,7 @@ class PasswordsStorageAlgorithmFormFactory
 
 		$selectSite->addConditionOn($inputUrl, $form::BLANK)
 			->setRequired('Choose site or add a new one');
-		$inputUrl->addCondition($form::FILLED)  // intentionally addCondition(), there's a matching endCondition() below
+		$inputUrl->addCondition($form::FILLED) // intentionally addCondition(), there's a matching endCondition() below
 			->addRule($form::URL, 'Incorrect site URL')
 			->endCondition()
 			->addConditionOn($selectSite, $form::FILLED)
@@ -148,7 +148,7 @@ class PasswordsStorageAlgorithmFormFactory
 				$selectDisclosure->addConditionOn($inputUrl, $form::FILLED)
 					->setRequired('Enter disclosure type');
 			}
-			$inputUrl->addCondition($form::FILLED)  // intentionally addCondition(), there's a matching endCondition() below
+			$inputUrl->addCondition($form::FILLED) // intentionally addCondition(), there's a matching endCondition() below
 				->addRule($form::URL, 'Incorrect disclosure URL')
 				->endCondition()
 				->addConditionOn($selectDisclosure, $form::FILLED)

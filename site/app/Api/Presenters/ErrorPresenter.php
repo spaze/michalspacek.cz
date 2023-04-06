@@ -26,7 +26,7 @@ class ErrorPresenter extends BaseErrorPresenter
 		$this->sendJson([
 			'status' => $code,
 			'statusMessage' => $this->statuses[$code],
-			'token' => base64_encode('https://media.giphy.com/media/Vuw9m5wXviFIQ/giphy.gif'),  // Never gonna decode you up
+			'token' => base64_encode('https://media.giphy.com/media/Vuw9m5wXviFIQ/giphy.gif'), // Never gonna decode you up
 		]);
 	}
 

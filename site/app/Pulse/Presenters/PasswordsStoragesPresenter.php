@@ -47,7 +47,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 		$this->template->data = $data;
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
 		$this->template->openSearchSort = $this->rating !== null || $this->sort !== null || $this->search !== null;
-		$this->template->canonicalLink = $this->link("//{$this->action}");  // Not using 'this' as the destination to omit params
+		$this->template->canonicalLink = $this->link("//{$this->action}"); // Not using 'this' as the destination to omit params
 	}
 
 

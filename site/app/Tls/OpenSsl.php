@@ -16,7 +16,7 @@ class OpenSsl
 	 */
 	public static function x509parse(OpenSSLCertificate|string $certificate): array
 	{
-		$info = @openssl_x509_parse($certificate, false);  // intentionally @, warning converted to exception
+		$info = @openssl_x509_parse($certificate, false); // intentionally @, warning converted to exception
 		if ($info === false) {
 			throw new OpenSslException();
 		}

@@ -152,7 +152,7 @@ class RouterFactory
 		$this->addRoute('/<name>', 'Venues', 'venue');
 		$this->addRoute('/<tag>', 'Tags', 'tag');
 		$this->addRoute('<slug>', 'Post', 'default', null, BlogPostRoute::class);
-		$this->addRoute('<presenter>', 'Homepage', 'default');  // Intentionally no action, use presenter-specific route if you need actions
+		$this->addRoute('<presenter>', 'Homepage', 'default'); // Intentionally no action, use presenter-specific route if you need actions
 
 		return $this->router;
 	}
