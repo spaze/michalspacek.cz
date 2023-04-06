@@ -248,7 +248,7 @@ class Mails
 			->addBcc($this->emailFrom)
 			->setSubject($subject)
 			->setBody((string)$template)
-			->clearHeader('X-Mailer');  // Hide Nette Mailer banner
+			->clearHeader('X-Mailer'); // Hide Nette Mailer banner
 		if ($cc) {
 			$mail->addCc($cc);
 		}

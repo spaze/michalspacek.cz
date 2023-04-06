@@ -112,10 +112,10 @@ class TexyFormatter
 		$this->texy->allowedTags = $this->texy::NONE;
 		$this->texy->imageModule->root = "{$this->staticRoot}/{$this->imagesRoot}";
 		$this->texy->imageModule->fileRoot = "{$this->locationRoot}/{$this->imagesRoot}";
-		$this->texy->figureModule->widthDelta = false;  // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
+		$this->texy->figureModule->widthDelta = false; // prevents adding 'unsafe-inline' style="width: Xpx" attribute to <div class="figure">
 		$this->texy->headingModule->generateID = true;
 		$this->texy->headingModule->idPrefix = '';
-		$this->texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2);  // en_US → en
+		$this->texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2); // en_US → en
 		$this->texy->allowed['phrase/del'] = true;
 		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
 		$this->setTopHeading($this->topHeading);

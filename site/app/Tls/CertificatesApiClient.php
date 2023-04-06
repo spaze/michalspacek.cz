@@ -34,7 +34,7 @@ class CertificatesApiClient
 	public function getLoggedCertificates(): array
 	{
 		$url = $this->linkGenerator->link('Api:Certificates:');
-		$json = @file_get_contents($url, context: $this->httpStreamContext->create(  // intentionally @, warning converted to exception
+		$json = @file_get_contents($url, context: $this->httpStreamContext->create( // intentionally @, warning converted to exception
 			__METHOD__,
 			[
 				'method' => 'POST',

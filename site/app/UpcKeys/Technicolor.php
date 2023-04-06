@@ -114,7 +114,7 @@ class Technicolor implements RouterInterface
 			},
 			'options' => [
 				'http' => [
-					'ignore_errors' => true,  // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
+					'ignore_errors' => true, // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
 					'header' => 'X-API-Key: ' . $this->apiKey,
 				],
 			],

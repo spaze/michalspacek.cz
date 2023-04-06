@@ -40,7 +40,7 @@ class TrainingReviewFormFactory
 			->addRule($form::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
 		$form->addText('company', 'Firma:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka firmy je %d znaků', 200);  // No min length to allow _removal_ of company name from a review by using an empty string
+			->addRule($form::MAX_LENGTH, 'Maximální délka firmy je %d znaků', 200); // No min length to allow _removal_ of company name from a review by using an empty string
 		$form->addText('jobTitle', 'Pozice:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka pozice je %d znaků', 200);

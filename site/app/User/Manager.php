@@ -40,7 +40,7 @@ class Manager implements Authenticator
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly IRequest $httpRequest,
-		private readonly Response $httpResponse,  // Not IResponse because https://github.com/nette/http/issues/200
+		private readonly Response $httpResponse, // Not IResponse because https://github.com/nette/http/issues/200
 		private readonly Passwords $passwords,
 		private readonly StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator,

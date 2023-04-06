@@ -16,10 +16,10 @@ use Nette\Utils\Json;
 class Dates
 {
 
-	public const STATUS_CREATED = 'CREATED';    // 1
-	public const STATUS_TENTATIVE = 'TENTATIVE';  // 2
-	public const STATUS_CONFIRMED = 'CONFIRMED';  // 3
-	public const STATUS_CANCELED = 'CANCELED';   // 4
+	public const STATUS_CREATED = 'CREATED'; // 1
+	public const STATUS_TENTATIVE = 'TENTATIVE'; // 2
+	public const STATUS_CONFIRMED = 'CONFIRMED'; // 3
+	public const STATUS_CANCELED = 'CANCELED'; // 4
 
 	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 

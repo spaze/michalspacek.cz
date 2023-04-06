@@ -289,7 +289,7 @@ class Talks
 		$slideNo = $this->database->fetchField('SELECT number FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
 		if ($slideNo === false) {
 			if (ctype_digit($slide)) {
-				$slideNo = (int)$slide;  // Too keep deprecated but already existing numerical links (/talk-title/123) working
+				$slideNo = (int)$slide; // Too keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {
 				throw new RuntimeException("Unknown slide {$slide} for talk {$talkId}");
 			}

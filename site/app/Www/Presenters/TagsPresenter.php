@@ -73,7 +73,7 @@ class TagsPresenter extends BasePresenter
 		foreach ($articles as $article) {
 			$posts = $this->localeUrls->get($article->slug);
 			if (count($posts) === 1) {
-				continue;  // post and tags not translated yet
+				continue; // post and tags not translated yet
 			}
 			$tagKey = array_search($tag, $article->slugTags);
 			foreach ($posts as $post) {

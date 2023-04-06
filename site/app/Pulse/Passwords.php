@@ -495,7 +495,7 @@ class Passwords
 		$this->database->beginTransaction();
 		$companyId = (empty($newCompany->name) ? (int)$values->company->id : $this->companies->add($newCompany->name, $newCompany->dba, $newCompany->alias));
 		$siteId = (string)(empty($newSite->url)
-			? $values->site->id  // the value can also be "all"
+			? $values->site->id // the value can also be "all"
 			: $this->sites->add($newSite->url, $newSite->alias, $newSite->sharedWith, $companyId)
 		);
 		$algoId = (empty($newAlgo->algo) ? (int)$values->algo->id : $this->addAlgorithm($newAlgo->algo, $newAlgo->alias, $newAlgo->salted, $newAlgo->stretched));
