@@ -134,6 +134,7 @@
 		</properties>
 	</rule>
 	<rule ref="SlevomatCodingStandard.Variables.DisallowVariableVariable"/>
+	<rule ref="SlevomatCodingStandard.Whitespaces.DuplicateSpaces"/>
 	<rule ref="Squiz.Strings.ConcatenationSpacing">
 		<properties>
 			<property name="spacing" value="1"/>

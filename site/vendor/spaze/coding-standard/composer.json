@@ -16,6 +16,9 @@
 		"php": "^7.2 || ^8.0",
 		"slevomat/coding-standard": "^8.9"
 	},
+	"require-dev": {
+		"ext-simplexml": "*"
+	},
 	"autoload": {
 		"psr-4": {"Spaze\\CodingStandard\\": "src"}
 	},
