@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -25,6 +26,7 @@ class ErrorPresenter extends BaseErrorPresenter
 
 	public function __construct(
 		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
+		private readonly FourOhFourButFound $fourOhFourButFound,
 	) {
 		parent::__construct();
 	}
@@ -32,6 +34,7 @@ class ErrorPresenter extends BaseErrorPresenter
 
 	public function actionDefault(BadRequestException $exception): void
 	{
+		$this->fourOhFourButFound->sendItMaybe($this);
 		$code = (in_array($exception->getCode(), $this->statuses) ? $exception->getCode() : IResponse::S400_BadRequest);
 		$this->template->errorCode = $code;
 		$this->template->pageTitle = $this->translator->translate("messages.title.error{$code}");
