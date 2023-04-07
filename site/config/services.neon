@@ -10,6 +10,7 @@ services:
 	- MichalSpacekCz\CompanyInfo\Info(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\RegisterUz(rootUrl: %registerUz.rootUrl%)
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
+	- MichalSpacekCz\EasterEgg\FourOhFourButFound
 	- MichalSpacekCz\EasterEgg\NetteCve202015227
 	- MichalSpacekCz\EasterEgg\WinterIsComing
 	- MichalSpacekCz\Feed\Exports
