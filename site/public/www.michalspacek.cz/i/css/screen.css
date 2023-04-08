@@ -273,7 +273,6 @@ td.dateCell { width: 80px; }
 td.nameCell { width: 200px; }
 tr.dateLine td, li.dateLine { border-top: 2px solid #EEE; }
 #pridat-ucastniky th, #pridat-ucastniky td { padding: 1px; }
-#pridat-ucastniky .delete { display: none; }
 #statuses th, #statuses td, #applications th, #applications td, #certificates th, #certificates td { padding: 1px 5px; }
 #statuses tr.summary:hover, #certificates tbody tr:hover, #applications tbody tr:hover, #slides tbody:hover, table .row:hover { background-color: #F0F0F0; }
 .discarded, #statuses .discarded, .lighter { opacity: 0.3; }
