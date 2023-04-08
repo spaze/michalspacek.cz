@@ -6,3 +6,8 @@ App.onLoad = function (element, handler) {
 		element.addEventListener('DOMContentLoaded', handler);
 	}
 }
+App.on = function (type, selector, listener) {
+	document.querySelectorAll(selector).forEach(function (item) {
+		item.addEventListener(type, listener);
+	});
+}

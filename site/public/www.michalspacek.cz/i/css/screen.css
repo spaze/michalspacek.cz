@@ -94,7 +94,7 @@ pre {
 	background-color: #F5F5F5;
 	border-radius: 3px;
 }
-.button { cursor: pointer; }
+.button, #statuses td[data-date], #statusesShow, #statusesHide, #certificatesShow, #certificatesHide { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
 .container {
 	max-width: 820px;

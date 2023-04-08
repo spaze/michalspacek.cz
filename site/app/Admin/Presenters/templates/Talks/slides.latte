@@ -47,9 +47,9 @@
 				<td></td>
 				<td colspan="5">
 					<img n:if="$slide->image" src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" class="type-image" data-type="image">
-					<img n:if="!$slide->image" src="" class="hidden type-image">
+					<img n:if="!$slide->image" src="" class="hidden type-image" data-type="image">
 					<img n:if="$slide->imageAlternative" src="{$slide->imageAlternative}" alt="{$slide->title}" title="{$slide->title}" class="type-alternative" data-type="alternative">
-					<img n:if="!$slide->imageAlternative" src="" class="hidden type-alternative">
+					<img n:if="!$slide->imageAlternative" src="" class="hidden type-alternative" data-type="alternative">
 				</td>
 			</tr>
 			<tr>
