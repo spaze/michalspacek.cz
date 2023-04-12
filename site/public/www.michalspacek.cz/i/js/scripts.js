@@ -66,9 +66,7 @@ App.onLoad(document, function () {
 				console.error('🐶⚾ fetch error:', error);
 			});
 	};
-	document.querySelectorAll('#loadData a, #loadDataAgain a').forEach(function (item) {
-		item.addEventListener('click', App.loadData);
-	});
+	App.onClick('#loadData a, #loadDataAgain a', App.loadData);
 	if (companyIdElement) {
 		companyIdElement.addEventListener('keypress', function (e) {
 			if (e.which === 13) {
