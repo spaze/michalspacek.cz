@@ -1,5 +1,5 @@
 App.onLoad(document, function () {
-	App.on('click', '.open-container', function (event) {
+	App.onClick('.open-container', function (event) {
 		event.preventDefault();
 		const container = document.querySelector(this.getAttribute('href') + '-container');
 		if (container) {
@@ -27,7 +27,7 @@ App.onLoad(document, function () {
 		}
 	};
 
-	App.on('click', '#pridat-ucastniky .add', function () {
+	App.onClick('#pridat-ucastniky .add', function () {
 		for (const item of document.querySelectorAll('#pridat-ucastniky .delete')) {
 			item.classList.remove('hidden');
 		}
@@ -43,7 +43,7 @@ App.onLoad(document, function () {
 			}
 		}
 	});
-	App.on('click', '#pridat-ucastniky .delete', function () {
+	App.onClick('#pridat-ucastniky .delete', function () {
 		const tr = this.parentElement.parentElement;
 		tr.classList.add('highlight');
 		if (confirm('Odebrat účastníka?')) {
@@ -68,32 +68,32 @@ App.onLoad(document, function () {
 		}
 	});
 
-	App.on('click', '#statuses td[data-date]', function () {
+	App.onClick('#statuses td[data-date]', function () {
 		for (const item of document.querySelectorAll('#statuses #date-' + this.dataset.date)) {
 			item.classList.toggle('hidden');
 		}
 		return false;
 	});
 
-	App.on('click', '#statusesShow', function () {
+	App.onClick('#statusesShow', function () {
 		for (const item of document.querySelectorAll('#statuses td[data-date]')) {
 			item.parentElement.nextElementSibling.classList.remove('hidden');
 		}
 	});
 
-	App.on('click', '#statusesHide', function () {
+	App.onClick('#statusesHide', function () {
 		for (const item of document.querySelectorAll('#statuses td[data-date]')) {
 			item.parentElement.nextElementSibling.classList.add('hidden');
 		}
 	});
 
-	App.on('click', '#statusesShow, #statusesHide', function () {
+	App.onClick('#statusesShow, #statusesHide', function () {
 		for (const item of document.querySelectorAll('#statuses-links span')) {
 			item.classList.toggle('hidden');
 		}
 	});
 
-	App.on('click', '.preset', function (event) {
+	App.onClick('.preset', function (event) {
 		event.preventDefault();
 		document.querySelector('#frm-statuses-date').value = this.dataset.start;
 		for (const item of document.querySelectorAll('#applications .status option')) {
@@ -104,25 +104,25 @@ App.onLoad(document, function () {
 		}
 	});
 
-	App.on('click', '#emails tbody .button', function () {
+	App.onClick('#emails tbody .button', function () {
 		for (const item of this.parentElement.parentElement.querySelectorAll('.expand-container')) {
 			item.classList.toggle('hidden');
 		}
 	});
-	App.on('click', '#emails #checkAll', function (event) {
+	App.onClick('#emails #checkAll', function (event) {
 		event.preventDefault();
 		for (const item of document.querySelectorAll('#emails .row .send:enabled')) {
 			item.checked = true;
 		}
 	});
-	App.on('click', '#emails #uncheckAll', function (event) {
+	App.onClick('#emails #uncheckAll', function (event) {
 		event.preventDefault();
 		for (const item of document.querySelectorAll('#emails .row .send:enabled')) {
 			item.checked = false;
 		}
 	});
 
-	App.on('click', 'a[href*="#new"]', function (event) {
+	App.onClick('a[href*="#new"]', function (event) {
 		event.preventDefault();
 		const button = document.querySelector('#pridat-storage');
 		const container = button.querySelector(this.getAttribute('href'));
@@ -142,7 +142,7 @@ App.onLoad(document, function () {
 		}
 	});
 
-	App.on('click', '#certificatesShow, #certificatesHide', function (event) {
+	App.onClick('#certificatesShow, #certificatesHide', function (event) {
 		event.preventDefault();
 		document.querySelector('#certificates').classList.toggle('hidden');
 		for (const item of document.querySelectorAll('#certificates-toggle span')) {
@@ -188,17 +188,17 @@ App.onLoad(document, function () {
 				preview.innerHTML = data.formatted;
 			});
 	};
-	App.on('click', '#frm-addPost #preview, #frm-editPost #preview', function () {
+	App.onClick('#frm-addPost #preview, #frm-editPost #preview', function () {
 		FormatTexy.loadData(this);
 	});
 
-	App.on('change', '#frm-addReview-application', function () {
+	App.onChange('#frm-addReview-application', function () {
 		const dataset = this.options[this.selectedIndex].dataset;
 		document.querySelector('#frm-addReview-name').value = dataset.name ?? '';
 		document.querySelector('#frm-addReview-company').value = dataset.company ?? '';
 	});
 
-	App.on('click', '#frm-slides .add-after', function () {
+	App.onClick('#frm-slides .add-after', function () {
 		const tbody = this.parentElement.parentElement.parentElement;
 		const slide = tbody.cloneNode(true);
 		let index = 0;
@@ -287,7 +287,7 @@ App.onLoad(document, function () {
 	});
 
 	const inputs = '#frm-slides input[type=file]';
-	App.on('change', inputs, function (event) {
+	App.onChange(inputs, function (event) {
 		const elements = document.querySelectorAll(inputs);
 		const files = Array.from(elements).filter((input) => input.value).length;
 		elements.forEach(function (element) {
@@ -326,7 +326,7 @@ App.onLoad(document, function () {
 	const blockingForm = 'form.blocking';
 	const beforeUnloadListener = (e) => e.returnValue = 'ORLY?'; // The value is ignored and not displayed
 	const beforeUnloadType = 'beforeunload';
-	App.on('change', blockingForm + ' input:not(.non-blocking), textarea, select', function () {
+	App.onChange(blockingForm + ' input:not(.non-blocking), textarea, select', function () {
 		this.closest('tbody').classList.add('changed');
 		window.addEventListener(beforeUnloadType, beforeUnloadListener);
 	});
@@ -334,26 +334,26 @@ App.onLoad(document, function () {
 		window.removeEventListener(beforeUnloadType, beforeUnloadListener);
 	});
 
-	App.on('change', '.disableInput', function () {
+	App.onChange('.disableInput', function () {
 		this.nextElementSibling.classList.toggle('transparent');
 	});
 
 	const change = '#change-training-date';
 	const changeCancel = '#change-training-date-cancel';
 	const dateForm = '#frm-applicationForm-date';
-	App.on('click', [change, changeCancel].join(), function (event) {
+	App.onClick([change, changeCancel].join(), function (event) {
 		event.preventDefault();
 		for (const item of document.querySelectorAll(['#training-date', change, changeCancel, dateForm].join())) {
 			item.classList.toggle('hidden');
 		}
 	});
-	App.on('click', changeCancel, function (event) {
+	App.onClick(changeCancel, function (event) {
 		event.preventDefault();
 		const dateSelect = document.querySelector(dateForm);
 		dateSelect.value = dateSelect.dataset.originalDateId;
 	});
 
-	App.on('click', '.confirm-click', function () {
+	App.onClick('.confirm-click', function () {
 		return confirm(this.dataset.confirm);
 	})
 });

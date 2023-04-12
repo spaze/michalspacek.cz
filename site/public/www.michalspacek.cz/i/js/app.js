@@ -11,3 +11,9 @@ App.on = function (type, selector, listener) {
 		item.addEventListener(type, listener);
 	});
 }
+App.onClick = function (selector, listener) {
+	App.on('click', selector, listener);
+}
+App.onChange = function (selector, listener) {
+	App.on('change', selector, listener);
+}
