@@ -70,7 +70,7 @@
 			<td class="type">
 				<select id="filterType" disabled title="Loading, please wait">
 					<option value="">all</option>
-					<option n:foreach="$filterTypes as $id => $type" value="t{$id}">{$type}</option>
+					<option n:foreach="$filterTypes as $type" value="t{$type->value}">{$type->getLabel()}</option>
 				</select>
 			</td>
 		</tr>

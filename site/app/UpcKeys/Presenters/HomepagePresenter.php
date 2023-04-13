@@ -60,9 +60,7 @@ class HomepagePresenter extends BasePresenter
 				$this->setView('text');
 				break;
 			case 'html':
-				$this->template->filterTypes = array_map(function (WiFiBand $band): string {
-					return $band->getLabel();
-				}, WiFiBand::getKnown());
+				$this->template->filterTypes = WiFiBand::getKnown();
 				$this->template->modelsWithPrefixes = $this->upcKeys->getModelsWithPrefixes();
 				$this->template->prefixes = $this->upcKeys->getPrefixes();
 				$this->template->placeholder = $this->upcKeys->getSsidPlaceholder();
