@@ -1,291 +1,359 @@
-$(document).ready(function () {
-	const SlidePreview = {};
-	$('.open-container').on('click', function (event) {
+App.onLoad(document, function () {
+	App.onClick('.open-container', function (event) {
 		event.preventDefault();
-		var container = $('body').find($(this).attr('href') + '-container');
-		container.fadeToggle('fast');
-		if (container.data('display')) {
-			container.css('display', container.data('display'));
+		const container = document.querySelector(this.getAttribute('href') + '-container');
+		if (container) {
+			container.classList.toggle('hidden');
+		}
+		if (container.dataset.display) {
+			container.style.display = container.dataset.display;
 		}
 	});
 
-	var FormFields = {};
+	const FormFields = {};
 	FormFields.reindex = function (element, index, formName, oldName, newName) {
-		if (element.attr('name') !== undefined) {
-			element.attr('name', function (i, value) {
-				var re = new RegExp('^' + oldName + '\\[\\d+\\]')
-				return value.replace(re, newName + '[' + index + ']');
-			});
+		let attr;
+		attr = element.getAttribute('name');
+		if (attr) {
+			element.setAttribute('name', attr.replace(new RegExp('^' + oldName + '\\[\\d+\\]'), newName + '[' + index + ']'));
 		}
-		if (element.attr('id') !== undefined) {
-			element.attr('id', function (i, value) {
-				var re = new RegExp('^' + formName + '-' + oldName + '-\\d+-')
-				return value.replace(re, formName + '-' + newName + '-' + index + '-');
-			});
+		attr = element.getAttribute('id');
+		if (attr) {
+			element.setAttribute('id', attr.replace(new RegExp('^' + formName + '-' + oldName + '-\\d+-'), formName + '-' + newName + '-' + index + '-'));
 		}
-		if (element.attr('data-nette-rules') !== undefined) {
-			var re = new RegExp('"' + oldName + '\\[\\d+\\]')
-			element.attr('data-nette-rules', element.attr('data-nette-rules').replace(re, '"' + newName + '[' + index + ']'));
+		attr = element.getAttribute('data-nette-rules');
+		if (attr) {
+			element.setAttribute('data-nette-rules', attr.replace(new RegExp('"' + oldName + '\\[\\d+\\]'), '"' + newName + '[' + index + ']'));
 		}
 	};
-	$('#pridat-ucastniky .add').on('click', function () {
-		$('#pridat-ucastniky .delete').show();
-		var index = 0;
-		tr = $(this).parent().parent();
-		tr.after(tr.clone(true));
-		tr.parent().children('tr').each(function () {
-			$(this).find('input').each(function () {
-				FormFields.reindex($(this), index, 'frm-applications', 'applications', 'applications');
-			});
-			index++;
-		});
-	});
-	$('#pridat-ucastniky .delete').on('click', function () {
-		var index = 0;
-		tr = $(this).parent().parent();
-		tr.addClass('highlight');
-		if (confirm('Odebrat účastníka?')) {
-			tbody = tr.parent();
-			tr.remove();
-			tbody.children('tr').each(function () {
-				$(this).find('input').each(function () {
-					FormFields.reindex($(this), index, 'frm-applications', 'applications', 'applications');
-				});
+
+	App.onClick('#pridat-ucastniky .add', function () {
+		for (const item of document.querySelectorAll('#pridat-ucastniky .delete')) {
+			item.classList.remove('hidden');
+		}
+		const tr = this.parentElement.parentElement;
+		tr.after(tr.cloneNode(true));
+		let index = 0;
+		for (const child of tr.parentElement.children) {
+			if (child instanceof HTMLTableRowElement) {
+				for (const item of child.querySelectorAll('input')) {
+					FormFields.reindex(item, index, 'frm-applications', 'applications', 'applications');
+				}
 				index++;
-			});
-			if (tbody.children('tr').length == 1) {
-				$('#pridat-ucastniky .delete').hide();
+			}
+		}
+	});
+	App.onClick('#pridat-ucastniky .delete', function () {
+		const tr = this.parentElement.parentElement;
+		tr.classList.add('highlight');
+		if (confirm('Odebrat účastníka?')) {
+			const tbody = tr.parentElement;
+			tr.remove();
+			let index = 0;
+			for (const child of tbody.children) {
+				if (child instanceof HTMLTableRowElement) {
+					for (const item of child.querySelectorAll('input')) {
+						FormFields.reindex(item, index, 'frm-applications', 'applications', 'applications');
+					}
+					index++;
+				}
+			}
+			if (index === 1) {
+				for (const item of document.querySelectorAll('#pridat-ucastniky .delete')) {
+					item.classList.add('hidden');
+				}
 			}
 		} else {
-			tr.removeClass('highlight');
+			tr.classList.remove('highlight');
 		}
 	});
 
-	$('#statuses td[data-date]')
-		.on('click', function () {
-			$('#statuses').find('#date-' + $(this).data('date')).toggleClass('hidden');
-			return false;
-		})
-		.css('cursor', 'pointer');
-
-	$('#statusesShow').on('click', function () {
-		$('#statuses td[data-date]').parent().next().removeClass('hidden');
+	App.onClick('#statuses td[data-date]', function () {
+		for (const item of document.querySelectorAll('#statuses #date-' + this.dataset.date)) {
+			item.classList.toggle('hidden');
+		}
+		return false;
 	});
 
-	$('#statusesHide').on('click', function () {
-		$('#statuses td[data-date]').parent().next().addClass('hidden');
+	App.onClick('#statusesShow', function () {
+		for (const item of document.querySelectorAll('#statuses td[data-date]')) {
+			item.parentElement.nextElementSibling.classList.remove('hidden');
+		}
 	});
 
-	$('#statusesShow, #statusesHide')
-		.on('click', function () {
-			$('#statuses-links').find('span').toggle();
-		})
-		.css('cursor', 'pointer');
+	App.onClick('#statusesHide', function () {
+		for (const item of document.querySelectorAll('#statuses td[data-date]')) {
+			item.parentElement.nextElementSibling.classList.add('hidden');
+		}
+	});
 
-	$('.preset').on('click', function (event) {
+	App.onClick('#statusesShow, #statusesHide', function () {
+		for (const item of document.querySelectorAll('#statuses-links span')) {
+			item.classList.toggle('hidden');
+		}
+	});
+
+	App.onClick('.preset', function (event) {
 		event.preventDefault();
-		var preset = $(this).data('preset');
-		$('#frm-statuses-date').val($(this).data('start'));
-		$('#applications .status option').each(function () {
-			if (this.value == preset) {
-				$(this).parent().val(preset);
+		document.querySelector('#frm-statuses-date').value = this.dataset.start;
+		for (const item of document.querySelectorAll('#applications .status option')) {
+			if (item.value === this.dataset.preset) {
+				item.parentElement.value = this.dataset.preset;
 				return;
 			}
-		});
-	});
-
-	$('#emails tbody .button').on('click', function () {
-		$(this).closest('tr').nextUntil('.row', '.expand-container').toggleClass('hidden');
-	});
-
-	$('#emails #checkAll').on('click', function (event) {
-		event.preventDefault();
-		$('#emails .row .send:enabled').prop('checked', true).attr('checked', true);
-	});
-
-	$('#emails #uncheckAll').on('click', function (event) {
-		event.preventDefault();
-		$('#emails .row .send:enabled').prop('checked', false).attr('checked', false);
-	});
-
-	$('a[href*="#new"]').on('click', function (event) {
-		event.preventDefault();
-		var container = $('#pridat-storage').find($(this).attr('href'));
-		container.toggleClass('hidden');
-		if (!$('#pridat-storage').find($(this).data('parent')).toggleClass('transparent').hasClass('transparent')) {
-			container.find(':input').val('');
-			container.find(':checkbox').prop('checked', false);
 		}
-		$(this).children('span').toggle();
 	});
 
-	$('#certificatesShow, #certificatesHide')
-		.on('click', function (event) {
-			event.preventDefault();
-			$('#certificates').toggle();
-			$('#certificates-toggle span').toggle();
-		})
-		.css('cursor', 'pointer');
+	App.onClick('#emails tbody .button', function () {
+		for (const item of this.parentElement.parentElement.querySelectorAll('.expand-container')) {
+			item.classList.toggle('hidden');
+		}
+	});
+	App.onClick('#emails #checkAll', function (event) {
+		event.preventDefault();
+		for (const item of document.querySelectorAll('#emails .row .send:enabled')) {
+			item.checked = true;
+		}
+	});
+	App.onClick('#emails #uncheckAll', function (event) {
+		event.preventDefault();
+		for (const item of document.querySelectorAll('#emails .row .send:enabled')) {
+			item.checked = false;
+		}
+	});
+
+	App.onClick('a[href*="#new"]', function (event) {
+		event.preventDefault();
+		const button = document.querySelector('#pridat-storage');
+		const container = button.querySelector(this.getAttribute('href'));
+		const parent = button.querySelector(this.dataset.parent);
+		container.classList.toggle('hidden');
+		parent.classList.toggle('transparent')
+		if (!parent.classList.contains('transparent')) {
+			for (const item of container.querySelectorAll('input')) {
+				item.value = '';
+				item.checked = false;
+			}
+		}
+		for (const child of this.children) {
+			if (child instanceof HTMLSpanElement) {
+				child.classList.toggle('hidden');
+			}
+		}
+	});
+
+	App.onClick('#certificatesShow, #certificatesHide', function (event) {
+		event.preventDefault();
+		document.querySelector('#certificates').classList.toggle('hidden');
+		for (const item of document.querySelectorAll('#certificates-toggle span')) {
+			item.classList.toggle('hidden');
+		}
+	});
 
 	const FormatTexy = {};
-	FormatTexy.loadData = function (event) {
-		var p = $(this);
-		var alt = p.data('alt');
-		var form = $('body').find(event.data.form);
-		p.data('alt', p.val());
-		p.val(alt);
-		var disabled = form.find('input:hidden, input:button, input:submit').prop('disabled', true);
-		var data = form.serializeArray();
-		data.push({name: 'postId', value: form.data('post-id')});
-		var load = $.post({
-			url: $(this).data('url'),
-			data: data,
-		});
-		load.done(function (data) {
-			$('#preview-target').show().html(data.formatted);
-		});
-		load.always(function (data) {
-			var alt = p.data('alt');
-			p.data('alt', p.val());
-			p.val(alt);
-			disabled.prop('disabled', false);
-		});
-	};
-	$('#frm-addPost #preview').on('click', {form: '#frm-addPost'}, FormatTexy.loadData);
-	$('#frm-editPost #preview').on('click', {form: '#frm-editPost'}, FormatTexy.loadData);
+	FormatTexy.loadData = function (button) {
+		const alt = button.dataset.alt;
+		button.dataset.alt = button.value;
+		button.value = alt;
+		const data = new FormData();
+		data.append('postId', button.form.dataset.postId);
+		for (const field of button.form.querySelectorAll('input[type=text], textarea')) {
+			data.append(field.name, field.value);
+		}
 
-	$('#frm-addReview-application').change(function () {
-		console.log($(this));
-		$('#frm-addReview-name').val($(this).find(':selected').data('name'));
-		$('#frm-addReview-company').val($(this).find(':selected').data('company'));
-	});
-
-	$('#frm-slides .add-after').on('click', function () {
-		var tbody = $(this).parent().parent().parent();
-		var slide = tbody.clone(true);
-		var index = 0;
-		slide.addClass('new-slide changed').find(':input:not(.slide-nr)').val('');
-		SlidePreview.clearDimensions(slide.find('img'));
-		slide.find('img').hide().removeAttr('src').removeAttr('alt').removeAttr('title').removeAttr('width').removeAttr('height');
-		slide.find('.transparent').removeClass('transparent').prop('readonly', false);
-		tbody.after(slide);
-		tbody.nextAll().find('.slide-nr').val(function (index, value) {
-			return ++value;
-		});
-		tbody.parent().find('.new-slide').each(function () {
-			$(this).find(':input').each(function () {
-				FormFields.reindex($(this), index, 'frm-slides', '(slides|new)', 'new');
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000);
+		const init = {
+			method: 'POST',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			body: data,
+			signal: controller.signal
+		};
+		fetch(button.dataset.url, init)
+			.then((response) => {
+				clearTimeout(timeoutId);
+				const alt = button.dataset.alt;
+				button.dataset.alt = button.value;
+				button.value = alt;
+				if (!response.ok) {
+					throw new Error('Network response not ok');
+				}
+				return response.json()
+			})
+			.then((data) => {
+				const preview = document.querySelector('#preview-target');
+				preview.classList.remove('hidden');
+				preview.innerHTML = data.formatted;
 			});
-			index++;
-		});
+	};
+	App.onClick('#frm-addPost #preview, #frm-editPost #preview', function () {
+		FormatTexy.loadData(this);
 	});
 
+	App.onChange('#frm-addReview-application', function () {
+		const dataset = this.options[this.selectedIndex].dataset;
+		document.querySelector('#frm-addReview-name').value = dataset.name ?? '';
+		document.querySelector('#frm-addReview-company').value = dataset.company ?? '';
+	});
+
+	App.onClick('#frm-slides .add-after', function () {
+		const tbody = this.parentElement.parentElement.parentElement;
+		const slide = tbody.cloneNode(true);
+		let index = 0;
+		slide.classList.add('new-slide', 'changed');
+		for (const input of slide.querySelectorAll('input:not(.slide-nr), textarea')) {
+			input.value = '';
+		}
+		for (const image of slide.querySelectorAll('img')) {
+			SlidePreview.clearDimensions(image);
+			image.classList.add('hidden');
+			image.removeAttribute('src');
+			image.removeAttribute('alt');
+			image.removeAttribute('title');
+			image.removeAttribute('width');
+			image.removeAttribute('height');
+		}
+		for (const item of slide.querySelectorAll('.transparent')) {
+			item.classList.remove('transparent');
+			item.readOnly = false;
+		}
+		tbody.after(slide);
+		let newTbody = tbody;
+		while (newTbody.nextElementSibling) {
+			const slideNr = newTbody.querySelector('.slide-nr');
+			if (slideNr) {
+				++slideNr.value;
+			}
+			newTbody = newTbody.nextElementSibling;
+		}
+		for (const slide of tbody.parentElement.querySelectorAll('.new-slide')) {
+			for (const input of slide.querySelectorAll('input, textarea')) {
+				FormFields.reindex(input, index, 'frm-slides', '(slides|new)', 'new');
+			}
+			index++;
+		}
+	});
+
+	const SlidePreview = {};
 	SlidePreview.getDimensions = function () {
-		return $('#frm-slides').data('dimensions');
+		return JSON.parse(document.querySelector('#frm-slides').dataset.dimensions);
 	};
 	SlidePreview.checkDimensions = function (preview) {
-		var dimensions = SlidePreview.getDimensions();
-		return ((preview.prop('naturalWidth') / dimensions.ratio.width * dimensions.ratio.height === preview.prop('naturalHeight')) && preview.prop('naturalWidth') <= dimensions.max.width && preview.prop('naturalHeight') <= dimensions.max.height);
+		const dimensions = SlidePreview.getDimensions();
+		return preview.naturalWidth / dimensions.ratio.width * dimensions.ratio.height === preview.naturalHeight && preview.naturalWidth <= dimensions.max.width && preview.naturalHeight <= dimensions.max.height;
 	};
 	SlidePreview.textRatio = function () {
-		var dimensions = SlidePreview.getDimensions();
+		const dimensions = SlidePreview.getDimensions();
 		return dimensions.ratio.width + ':' + dimensions.ratio.height;
 	};
 	SlidePreview.textMax = function () {
-		var dimensions = SlidePreview.getDimensions();
+		const dimensions = SlidePreview.getDimensions();
 		return dimensions.max.width + '×' + dimensions.max.height;
 	};
+	SlidePreview.selectDimensionsElement = function (element, image) {
+		return element.querySelector('.dimensions.type-' + image.dataset.type);
+	};
 	SlidePreview.setDimensions = function (image) {
-		var tbody = image.closest('tbody');
-		var target = tbody.find('.dimensions.type-' + image.data('type'));
-		target.removeClass('error');
-		if (image.attr('src')) {
-			target.text(image.prop('naturalWidth') + '×' + image.prop('naturalHeight'));
+		const tbody = image.closest('tbody');
+		const target = SlidePreview.selectDimensionsElement(tbody, image);
+		target.classList.remove('error');
+		if (image.getAttribute('src')) {
+			target.innerText = image.naturalWidth + '×AAA' + image.naturalHeight;
 		}
 		if (!SlidePreview.checkDimensions(image)) {
-			target.addClass('error');
+			target.classList.add('error');
 			setTimeout(function () {
-				var slide = tbody.find('.slide-nr').val();
-				alert((slide ? 'Slajd ' + slide : 'Nový slajd') + ': nesprávná velikost ' + image.prop('naturalWidth') + '×' + image.prop('naturalHeight') + ', správné rozměry jsou ' + SlidePreview.textRatio() + ', max ' + SlidePreview.textMax());
+				const slide = tbody.querySelector('.slide-nr').value;
+				alert((slide ? 'Slajd ' + slide : 'Nový slajd') + ': nesprávná velikost ' + image.naturalWidth + '×' + image.naturalHeight + ', správné rozměry jsou ' + SlidePreview.textRatio() + ', max ' + SlidePreview.textMax());
 			}, 100);
 		}
 	};
 	SlidePreview.clearDimensions = function (image) {
-		image.closest('tbody').find('.dimensions').removeClass('error').text('');
+		const item = SlidePreview.selectDimensionsElement(image.closest('tbody'), image);
+		if (item) {
+			item.classList.remove('error');
+			item.innerText = '';
+		}
 	};
 
-	$('#frm-slides img.type-image, #frm-slides img.type-alternative')
-		.each(function () {
-			SlidePreview.setDimensions($(this));
-		})
-		.on('load', function () {
-			SlidePreview.setDimensions($(this));
-		});
+	const images = '#frm-slides img.type-image, #frm-slides img.type-alternative';
+	for (const image of document.querySelectorAll(images)) {
+		SlidePreview.setDimensions(image);
+	}
+	App.on('load', images, function () {
+		SlidePreview.setDimensions(this);
+	});
 
-	$('#frm-slides input:file').change(function () {
-		var files = 0;
-		$('#frm-slides input:file').each(function () {
-			if ($(this).val()) {
-				files++;
+	const inputs = '#frm-slides input[type=file]';
+	App.onChange(inputs, function (event) {
+		const elements = document.querySelectorAll(inputs);
+		const files = Array.from(elements).filter((input) => input.value).length;
+		elements.forEach(function (element) {
+			if (!element.value) {
+				element.disabled = files >= document.querySelector('#frm-slides').dataset.uploads;
 			}
 		});
-		$('#frm-slides input:file').each(function () {
-			if (!$(this).val()) {
-				$(this).prop('disabled', (files >= $('#frm-slides').data('uploads')));
-			}
-		});
-		$('#uploading').text(files);
-		var field = $(this);
-		var tr = field.parent().parent();
-		var fields = tr.find('.slide-filename');
-		var preview = tr.nextAll('tr.image-previews').find('img.type-' + field.data('type'));
-		if (field.val()) {
-			var reader = new FileReader();
+		document.querySelector('#uploading').innerText = files;
+		const tr = this.parentElement.parentElement;
+		const field = tr.querySelector('.slide-filename');
+		const preview = tr.parentElement.querySelector('tr.image-previews img.type-' + this.dataset.type);
+		if (this.value) {
+			const reader = new FileReader();
 			reader.onload = function (event) {
-				fields.addClass('transparent').prop('readonly', true);
-				if (!preview.data('prev')) {
-					preview.data('prev', preview.attr('src'));
+				field.classList.add('transparent');
+				field.readOnly = true;
+				if (!preview.dataset.prev) {
+					preview.dataset.prev = preview.src;
 				}
-				preview.attr('src', event.target.result).show();
+				preview.src = event.target.result;
+				preview.classList.remove('hidden');
 			};
 			reader.readAsDataURL(event.target.files[0]);
 		} else {
-			fields.removeClass('transparent').prop('readonly', false);
-			if (preview.data('prev')) {
-				preview.attr('src', preview.data('prev'));
+			field.classList.remove('transparent');
+			field.readOnly = false;
+			if (preview.dataset.prev) {
+				preview.src = preview.dataset.prev;
 			} else {
-				preview.removeAttr('src');
+				preview.removeAttribute('src');
 				SlidePreview.clearDimensions(preview);
 			}
 		}
 	});
 
-	$('form.blocking').find('input:input:not(.non-blocking), textarea, select').change(function () {
-		$(this).closest('tbody').addClass('changed');
-		$(window).on('beforeunload', function (e) {
-			return e.returnValue = 'ORLY?';  // The value is ignored and not displayed
-		});
+	const blockingForm = 'form.blocking';
+	const beforeUnloadListener = (e) => e.returnValue = 'ORLY?'; // The value is ignored and not displayed
+	const beforeUnloadType = 'beforeunload';
+	App.onChange(blockingForm + ' input:not(.non-blocking), textarea, select', function () {
+		this.closest('tbody').classList.add('changed');
+		window.addEventListener(beforeUnloadType, beforeUnloadListener);
 	});
-	$('form.blocking').on('submit', function () {
-		$(window).off('beforeunload');
-	});
-
-	$('.disableInput').change(function () {
-		var checked = $(this).is(':checked');
-		$(this).siblings(':input').toggleClass('transparent');
+	App.on('submit', blockingForm, function () {
+		window.removeEventListener(beforeUnloadType, beforeUnloadListener);
 	});
 
-	$('#change-training-date, #change-training-date-cancel').on('click', function (event) {
+	App.onChange('.disableInput', function () {
+		this.nextElementSibling.classList.toggle('transparent');
+	});
+
+	const change = '#change-training-date';
+	const changeCancel = '#change-training-date-cancel';
+	const dateForm = '#frm-applicationForm-date';
+	App.onClick([change, changeCancel].join(), function (event) {
 		event.preventDefault();
-		$('#training-date, #change-training-date, #change-training-date-cancel, #frm-applicationForm-date').toggleClass('hidden');
+		for (const item of document.querySelectorAll(['#training-date', change, changeCancel, dateForm].join())) {
+			item.classList.toggle('hidden');
+		}
 	});
-	$('#change-training-date-cancel').on('click', function (event) {
+	App.onClick(changeCancel, function (event) {
 		event.preventDefault();
-		var dateSelect = $('#frm-applicationForm-date');
-		dateSelect.val(dateSelect.data('original-date-id'));
+		const dateSelect = document.querySelector(dateForm);
+		dateSelect.value = dateSelect.dataset.originalDateId;
 	});
 
-	$('.confirm-click').on('click', function () {
-		return confirm($(this).data('confirm'));
+	App.onClick('.confirm-click', function () {
+		return confirm(this.dataset.confirm);
 	})
 });

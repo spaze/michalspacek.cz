@@ -9,14 +9,14 @@ App.onLoad(document, function () {
 	const countryElement = document.querySelector('#frm-application-country');
 	const companyIdElement = document.querySelector('#frm-application-companyId');
 	App.hideLoadControls = function () {
-		document.querySelectorAll('#loadDataControls span').forEach(function (item) {
+		for (const item of document.querySelectorAll('#loadDataControls span')) {
 			item.classList.add('hidden');
-		});
+		}
 	};
 	App.showLoadControls = function (selector) {
-		document.querySelectorAll(selector).forEach(function (item) {
+		for (const item of document.querySelectorAll(selector)) {
 			item.classList.remove('hidden');
-		});
+		}
 	};
 	App.loadData = function (event) {
 		event.preventDefault();
@@ -66,9 +66,7 @@ App.onLoad(document, function () {
 				console.error('🐶⚾ fetch error:', error);
 			});
 	};
-	document.querySelectorAll('#loadData a, #loadDataAgain a').forEach(function (item) {
-		item.addEventListener('click', App.loadData);
-	});
+	App.onClick('#loadData a, #loadDataAgain a', App.loadData);
 	if (companyIdElement) {
 		companyIdElement.addEventListener('keypress', function (e) {
 			if (e.which === 13) {
@@ -83,14 +81,14 @@ App.onLoad(document, function () {
 	App.hideLoadControls();
 	App.showLoadControls('#loadDataControls, #loadData');
 	App.changeLabels = function () {
-		document.querySelectorAll('#frm-application label').forEach(function (item) {
+		for (const item of document.querySelectorAll('#frm-application label')) {
 			if (countryElement) {
 				let label = item.dataset[countryElement.value];
 				if (label) {
 					item.innerText = label;
 				}
 			}
-		});
+		}
 	};
 	if (countryElement) {
 		countryElement.addEventListener('change', App.changeLabels);
