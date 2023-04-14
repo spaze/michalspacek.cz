@@ -80,7 +80,6 @@ div.error {
 	color: #F34;
 	background-color: #FEE;
 }
-#footer .nr, #footer .type { background-color: #FFF; }
 #result td:nth-child(3) { font-size: 90%; }
 #result td:nth-child(3) small { color: #CCC; }
 .pUAAP td:nth-child(2) code::after {
