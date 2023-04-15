@@ -8,6 +8,8 @@ use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\MixedType;
+use PHPStan\Type\NullType;
+use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeCombinator;
 use function count;
@@ -36,15 +38,30 @@ class ComponentModelDynamicReturnTypeExtension implements DynamicMethodReturnTyp
 	): Type
 	{
 		$calledOnType = $scope->getType($methodCall->var);
-		$mixedType = new MixedType();
+		$defaultType = ParametersAcceptorSelector::selectSingle($calledOnType->getMethod('createComponent', $scope)->getVariants())->getReturnType();
+		if ($defaultType->isSuperTypeOf(new ObjectType('Nette\ComponentModel\IComponent'))->yes()) {
+			$defaultType = new MixedType();
+		}
 		$args = $methodCall->getArgs();
-		if (count($args) !== 1) {
-			return $mixedType;
+		if (count($args) < 1) {
+			return $defaultType;
+		}
+
+		$throw = true;
+		if (isset($args[1])) {
+			$throwType = $scope->getType($args[1]->value);
+			if (!$throwType->isTrue()->yes()) {
+				$throw = false;
+			}
+		}
+
+		if ($throw) {
+			$defaultType = TypeCombinator::remove($defaultType, new NullType());
 		}
 
 		$argType = $scope->getType($args[0]->value);
 		if (count($argType->getConstantStrings()) === 0) {
-			return $mixedType;
+			return $defaultType;
 		}
 
 		$types = [];
@@ -53,7 +70,7 @@ class ComponentModelDynamicReturnTypeExtension implements DynamicMethodReturnTyp
 
 			$methodName = sprintf('createComponent%s', ucfirst($componentName));
 			if (!$calledOnType->hasMethod($methodName)->yes()) {
-				return $mixedType;
+				return $defaultType;
 			}
 
 			$method = $calledOnType->getMethod($methodName, $scope);
