@@ -34,12 +34,12 @@ contentSecurityPolicy:
 			@extends: www.*.*
 			connect-src: 'https://api.%locales.rootDomainMapping.cz%'
 		admin.*.*:
-		 	@extends: www.*.*
+			@extends: www.*.*
 		admin.blog.add:
-		 	@extends: admin.*.*
-		 	connect-src: "'self'"
+			@extends: admin.*.*
+			connect-src: "'self'"
 		admin.blog.edit:
-		 	@extends: admin.blog.add
+			@extends: admin.blog.add
 		admin.info.php:
 			@extends: www.*.*
 			img-src:
