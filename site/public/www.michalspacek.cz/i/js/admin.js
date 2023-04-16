@@ -150,48 +150,6 @@ App.onLoad(document, function () {
 		}
 	});
 
-	const FormatTexy = {};
-	FormatTexy.loadData = function (button) {
-		const alt = button.dataset.alt;
-		button.dataset.alt = button.value;
-		button.value = alt;
-		const data = new FormData();
-		data.append('postId', button.form.dataset.postId);
-		for (const field of button.form.querySelectorAll('input[type=text], textarea')) {
-			data.append(field.name, field.value);
-		}
-
-		const controller = new AbortController();
-		const timeoutId = setTimeout(() => controller.abort(), 10000);
-		const init = {
-			method: 'POST',
-			headers: {
-				'X-Requested-With': 'XMLHttpRequest'
-			},
-			body: data,
-			signal: controller.signal
-		};
-		fetch(button.dataset.url, init)
-			.then((response) => {
-				clearTimeout(timeoutId);
-				const alt = button.dataset.alt;
-				button.dataset.alt = button.value;
-				button.value = alt;
-				if (!response.ok) {
-					throw new Error('Network response not ok');
-				}
-				return response.json()
-			})
-			.then((data) => {
-				const preview = document.querySelector('#preview-target');
-				preview.classList.remove('hidden');
-				preview.innerHTML = data.formatted;
-			});
-	};
-	App.onClick('#frm-addPost #preview, #frm-editPost #preview', function () {
-		FormatTexy.loadData(this);
-	});
-
 	App.onChange('#frm-addReview-application', function () {
 		const dataset = this.options[this.selectedIndex].dataset;
 		document.querySelector('#frm-addReview-name').value = dataset.name ?? '';

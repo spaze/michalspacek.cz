@@ -1,4 +1,4 @@
-{form $form class => "aligned wide blocking", data-post-id => $postId}
+{form $form class => "aligned wide blocking"}
 	<div n:foreach="$form->errors as $error" class="flash error"><strong>{$error}</strong></div>
 	<table>
 		<tbody><tr><th>{label translationGroup /}</th><td class="short">{input translationGroup}</td></tr></tbody>
@@ -19,8 +19,8 @@
 		<tbody><tr><th>{label omitExports: /}</th><td>{input omitExports:}</td></tr></tbody>
 		<tbody><tr><th>{label editSummary /}</th><td>{input editSummary}<br><small>Shrnutí editace bude u článku zobrazeno jako aktualizace, ponechte prázdné pro malé editace</small></td></tr></tbody>
 		{capture $link}{link preview}{/capture}
-		<tr><td></td><td class="short"><p>{input submit} {input preview id => preview, data-url => $link}</p></td></tr>
+		<tr><td></td><td class="short"><p>{input submit} {input preview class => lighter, formtarget => preview}</p></td></tr>
 	</table>
 {/form}
-<div id="preview-target" class="hidden column-content"></div>
+<iframe id="preview-frame" name="preview" class="column-content"></iframe>
 <div class="clear"></div>

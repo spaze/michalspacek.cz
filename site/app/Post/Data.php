@@ -11,7 +11,7 @@ use stdClass;
 class Data
 {
 
-	public int $postId;
+	public ?int $postId;
 
 	public string $slug;
 

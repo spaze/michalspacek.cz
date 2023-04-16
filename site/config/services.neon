@@ -52,6 +52,7 @@ services:
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
+	- MichalSpacekCz\Post\BlogPostPreview
 	- MichalSpacekCz\Post\Loader
 	- MichalSpacekCz\Post\LocaleUrls
 	- MichalSpacekCz\Post\Post(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)

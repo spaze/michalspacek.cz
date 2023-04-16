@@ -395,7 +395,7 @@ div.notice {
 	text-decoration: underline;
 	color: #444;
 }
-#preview-target {
+#preview-frame {
 	max-width: 720px;
 	padding: 2em;
 	margin: 2em;
