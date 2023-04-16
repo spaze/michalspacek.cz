@@ -1,3 +1,4 @@
+{layout "@layout.latte"}
 {define #metas}
 <meta n:if="$post->ogImage" property="og:image" content="{$post->ogImage|staticImageUrl}">
 <meta n:if="$post->ogImage || $post->twitterCard" property="og:title" content="{$pageTitle}">
