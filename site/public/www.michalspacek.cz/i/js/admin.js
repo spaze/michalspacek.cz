@@ -314,4 +314,13 @@ App.onLoad(document, function () {
 	App.onClick('.confirm-click', function () {
 		return confirm(this.dataset.confirm);
 	})
+
+	App.onClick('#preview-button', function () {
+		const button = this;
+		const originalValue = button.value;
+		button.value = button.dataset.loadingValue;
+		App.on('load', '#preview-frame', function () {
+			button.value = originalValue;
+		});
+	});
 });

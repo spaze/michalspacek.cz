@@ -111,6 +111,7 @@ class PostFormFactory
 
 		$form->addSubmit('submit', 'Přidat');
 		$form->addSubmit('preview', 'Náhled')
+			->setHtmlAttribute('data-loading-value', 'Moment…')
 			->onClick[] = function (SubmitButton $button) use ($postId, $template, $sendTemplate): void {
 				$form = $button->getForm();
 				if (!$form) {
