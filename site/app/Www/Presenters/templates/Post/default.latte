@@ -10,7 +10,17 @@
 
 {define #content}
 <div class="column-content">
-{include "common/blogPost.latte"}
+	{include "common/headerIcons.latte"}
+	<em n:if="$post->lead">{$post->lead}</em>
+	{$post->text}
+	{$post->originally}
+	{if $post->recommended}
+		<hr>
+		<h3>{_messages.blog.post.recommendedreading}</h3>
+		<ul n:inner-foreach="$post->recommended as $item">
+			<li>{=$item->text|format:$item->url}</li>
+		</ul>
+	{/if}
 </div>
 <div class="column-sidebar">
 	<div class="widget" n:if="$edits">
