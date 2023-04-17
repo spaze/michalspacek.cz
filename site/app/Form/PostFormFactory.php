@@ -10,7 +10,6 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Post\BlogPostPreview;
 use MichalSpacekCz\Post\Data;
 use MichalSpacekCz\Post\Post;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
@@ -34,6 +33,7 @@ class PostFormFactory
 		private readonly CspConfig $contentSecurityPolicy,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly BlogPostPreview $blogPostPreview,
+		private readonly FormValues $formValues,
 	) {
 	}
 
@@ -115,11 +115,7 @@ class PostFormFactory
 		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
 			->setHtmlAttribute('data-loading-value', 'Moment…')
 			->onClick[] = function (SubmitButton $button) use ($postId, $template, $sendTemplate): void {
-				$form = $button->getForm();
-				if (!$form) {
-					throw new ShouldNotHappenException('If not, InvalidStateException would be thrown');
-				}
-				$post = $this->buildPost($form->getValues(), $postId);
+				$post = $this->buildPost($this->formValues->getValues($button), $postId);
 				$this->blogPostPreview->sendPreview($post, $template, $sendTemplate);
 			};
 
