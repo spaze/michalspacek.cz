@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -26,6 +27,7 @@ class PostFormFactory
 
 	public function __construct(
 		private readonly FormFactory $factory,
+		private readonly Translator $translator,
 		private readonly Post $blogPost,
 		private readonly Tags $tags,
 		private readonly TexyFormatter $texyFormatter,
@@ -110,7 +112,7 @@ class PostFormFactory
 		$form->addCheckbox('omitExports', 'Vynechat z RSS');
 
 		$form->addSubmit('submit', 'Přidat');
-		$form->addSubmit('preview', 'Náhled')
+		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
 			->setHtmlAttribute('data-loading-value', 'Moment…')
 			->onClick[] = function (SubmitButton $button) use ($postId, $template, $sendTemplate): void {
 				$form = $button->getForm();

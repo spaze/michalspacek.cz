@@ -132,6 +132,7 @@ label:
 	mode:
 		dark: Dark mode
 		light: Light mode
+	preview: Preview
 contact:
 	twitter: "@spazef0rze"
 	skypename: spazef0rze
