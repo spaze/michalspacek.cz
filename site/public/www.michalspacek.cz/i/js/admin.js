@@ -1,4 +1,4 @@
-App.onLoad(document, function () {
+App.ready(document, function () {
 	App.onClick('.open-container', function (event) {
 		event.preventDefault();
 		const container = document.querySelector(this.getAttribute('href') + '-container');
@@ -240,7 +240,7 @@ App.onLoad(document, function () {
 	for (const image of document.querySelectorAll(images)) {
 		SlidePreview.setDimensions(image);
 	}
-	App.on('load', images, function () {
+	App.onLoad(images, function () {
 		SlidePreview.setDimensions(this);
 	});
 
@@ -320,7 +320,7 @@ App.onLoad(document, function () {
 		const button = this;
 		const originalValue = button.value;
 		button.value = button.dataset.loadingValue;
-		App.on('load', '#preview-frame', function () {
+		App.onLoad('#preview-frame', function () {
 			button.value = originalValue;
 		});
 	});

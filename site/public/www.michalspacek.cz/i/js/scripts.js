@@ -1,4 +1,4 @@
-App.onLoad(document, function () {
+App.ready(document, function () {
 	const dateElement = document.querySelector('#termin a[href="#prihlaska"]');
 	if (dateElement) {
 		dateElement.addEventListener('click', function () {
