@@ -316,6 +316,7 @@ App.onLoad(document, function () {
 	})
 
 	App.onClick('#preview-button', function () {
+		document.querySelector('#preview').classList.remove('hidden');
 		const button = this;
 		const originalValue = button.value;
 		button.value = button.dataset.loadingValue;
