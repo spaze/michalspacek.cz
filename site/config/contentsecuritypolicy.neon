@@ -37,7 +37,8 @@ contentSecurityPolicy:
 			@extends: www.*.*
 		admin.blog.add:
 			@extends: admin.*.*
-			connect-src: "'self'"
+			'!frame-ancestors': "'self'"
+			frame-src: "'self'"
 		admin.blog.edit:
 			@extends: admin.blog.add
 		admin.info.php:

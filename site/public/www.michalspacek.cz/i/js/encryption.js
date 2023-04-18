@@ -1,4 +1,4 @@
-App.onLoad(document, function () {
+App.ready(document, function () {
 	const supported = Boolean(window.Promise);
 	let encrypted = false;
 	const feedback = document.querySelector(document.queryCommandSupported('copy') ? '#copied' : '#copythis');
@@ -42,7 +42,7 @@ App.onLoad(document, function () {
 		reset();
 	});
 	button.title = button.dataset.loading;
-	App.onLoad(document.getElementById('encryption-js'), function () {
+	App.ready(document.getElementById('encryption-js'), function () {
 		button.addEventListener('click', handler)
 		button.removeAttribute('title');
 	});

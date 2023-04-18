@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Www\Presenters;
 use DateInterval;
 use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Post\Post;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates;
 use Nette\Application\AbortException;
 use Spaze\ContentSecurityPolicy\Config as CspConfig;
@@ -31,6 +32,7 @@ class PostPresenter extends BasePresenter
 	 * @param string $slug
 	 * @param string|null $preview
 	 * @throws AbortException
+	 * @throws ShouldNotHappenException
 	 */
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
@@ -43,6 +45,9 @@ class PostPresenter extends BasePresenter
 				$this->redirect($this->getAction(), $slug);
 			}
 			$this->template->robots = 'noindex';
+		}
+		if ($post->postId === null) {
+			throw new ShouldNotHappenException('Never thought it would be possible to have a published blog post without an id');
 		}
 		$edits = $this->blogPost->getEdits($post->postId);
 		$this->template->post = $post;

@@ -1,4 +1,4 @@
-App.onLoad(document, function () {
+App.ready(document, function () {
 	let submitted = false;
 	let timer = null;
 	let orig = null;

@@ -12,10 +12,12 @@ use MichalSpacekCz\Post\Exceptions\PostDoesNotExistException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Caching\Cache;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Neon\Exception;
+use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Throwable;
@@ -395,6 +397,14 @@ class Post
 		$post->omitExports = (bool)$row->omitExports;
 		$this->enrich($post);
 		return $this->format($post);
+	}
+
+
+	public function setTemplateTitleAndHeader(Data $post, DefaultTemplate $template, ?Html $el = null): void
+	{
+		$title = ($el ?? Html::el())->addHtml($post->title);
+		$template->pageTitle = strip_tags((string)$title);
+		$template->pageHeader = $title;
 	}
 
 }

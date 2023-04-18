@@ -3,14 +3,18 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Post\BlogPostPreview;
 use MichalSpacekCz\Post\Data;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\UI\Form;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\UniqueConstraintViolationException;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -22,16 +26,19 @@ class PostFormFactory
 
 	public function __construct(
 		private readonly FormFactory $factory,
+		private readonly Translator $translator,
 		private readonly Post $blogPost,
 		private readonly Tags $tags,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly CspConfig $contentSecurityPolicy,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private readonly BlogPostPreview $blogPostPreview,
+		private readonly FormValues $formValues,
 	) {
 	}
 
 
-	public function create(callable $onSuccess): Form
+	public function create(callable $onSuccess, DefaultTemplate $template, callable $sendTemplate, ?int $postId = null): Form
 	{
 		$form = $this->factory->create();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
@@ -105,19 +112,23 @@ class PostFormFactory
 		$form->addCheckbox('omitExports', 'Vynechat z RSS');
 
 		$form->addSubmit('submit', 'Přidat');
-		$form->addButton('preview', 'Náhled')
-			->setHtmlAttribute('data-alt', 'Moment…');
+		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
+			->setHtmlAttribute('data-loading-value', 'Moment…')
+			->onClick[] = function (SubmitButton $button) use ($postId, $template, $sendTemplate): void {
+				$post = $this->buildPost($this->formValues->getValues($button), $postId);
+				$this->blogPostPreview->sendPreview($post, $template, $sendTemplate);
+			};
 
-		$form->onValidate[] = function (Form $form, stdClass $values): void {
-			$post = $this->buildPost($values);
+		$form->onValidate[] = function (Form $form, stdClass $values) use ($postId): void {
+			$post = $this->buildPost($values, $postId);
 			if ($post->needsPreviewKey() && $post->previewKey === null) {
 				/** @var TextInput $input */
 				$input = $form->getComponent('previewKey');
 				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $post->published === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess): void {
-			$post = $this->buildPost($values);
+		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $postId): void {
+			$post = $this->buildPost($values, $postId);
 			$this->blogPost->enrich($post);
 			try {
 				$onSuccess($post);
@@ -131,9 +142,10 @@ class PostFormFactory
 	}
 
 
-	private function buildPost(stdClass $values): Data
+	private function buildPost(stdClass $values, ?int $postId): Data
 	{
 		$post = new Data();
+		$post->postId = $postId;
 		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
 		$post->localeId = $values->locale;
 		$post->locale = $this->blogPost->getLocaleById($values->locale);

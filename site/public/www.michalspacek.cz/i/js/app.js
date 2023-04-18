@@ -1,5 +1,5 @@
 const App = {};
-App.onLoad = function (element, handler) {
+App.ready = function (element, handler) {
 	if (document.readyState !== 'loading') {
 		handler();
 	} else {
@@ -16,4 +16,7 @@ App.onClick = function (selector, listener) {
 }
 App.onChange = function (selector, listener) {
 	App.on('change', selector, listener);
+}
+App.onLoad = function (selector, listener) {
+	App.on('load', selector, listener);
 }

@@ -70,13 +70,15 @@
 	<h1>{$pageHeader}</h1>
 	<p>{ifset $tagLine}{$tagLine}{/ifset}</p>
 	<hr>
-	{ifset #menu}<div id="menu">{include #menu}</div><hr>{/ifset}
+	{if !isset($showBreadcrumbsMenu) || $showBreadcrumbsMenu !== false}
+		{ifset #menu}<div id="menu">{include #menu}</div><hr>{/ifset}
+	{/if}
 	</div>
 	<div class="{$containerColsClass}">{include #content}</div>
 	</div>
 {/block}
 </div>
-<footer id="footer">
+<footer n:if="!isset($showFooter) || $showFooter !== false" id="footer">
 <div n:class="container, $containerExtraClass">
 	<div id="footer-name">
 		<strong xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Michal Špaček</strong>
@@ -94,7 +96,7 @@
 	<div class="clear"></div>
 </div>
 </footer>
-<div n:class="container, $containerExtraClass" id="header-links">
+<div n:if="!isset($showHeaderTabs) || $showHeaderTabs !== false" n:class="container, $containerExtraClass" id="header-links">
 	<a n:href="darkFuture!" title="{_messages.label.mode.dark}" id="theme-dark" class="tools"><small>{icon moon}</small></a>
 	<a n:href="brightFuture!" title="{_messages.label.mode.light}" id="theme-light" class="tools"><small>{icon sun}</small></a>
 	{if !isset($headerLinks) || $headerLinks !== false}
