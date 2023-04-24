@@ -77,6 +77,8 @@
 			<property name="linesCountAfterLastUseWhenLastInClass" value="1"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.Commenting.AnnotationName"/>
+	<rule ref="SlevomatCodingStandard.Commenting.DeprecatedAnnotationDeclaration"/>
 	<rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
 		<properties>
 			<property name="linesCountBeforeFirstContent" value="0"/>
@@ -85,6 +87,8 @@
 			<property name="linesCountAfterLastContent" value="0"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+	<rule ref="SlevomatCodingStandard.Commenting.UselessInheritDocComment"/>
 	<rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
 	<rule ref="SlevomatCodingStandard.ControlStructures.DisallowTrailingMultiLineTernaryOperator"/>
 	<rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
