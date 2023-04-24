@@ -39,7 +39,7 @@ class AnnotationTypeHelper
 {
 
 	/**
-	 * @return IdentifierTypeNode[]|ThisTypeNode[]
+	 * @return list<IdentifierTypeNode>|list<ThisTypeNode>
 	 */
 	public static function getIdentifierTypeNodes(TypeNode $typeNode): array
 	{
@@ -120,7 +120,7 @@ class AnnotationTypeHelper
 	}
 
 	/**
-	 * @return ConstTypeNode[]
+	 * @return list<ConstTypeNode>
 	 */
 	public static function getConstantTypeNodes(TypeNode $typeNode): array
 	{
@@ -199,7 +199,7 @@ class AnnotationTypeHelper
 	}
 
 	/**
-	 * @return UnionTypeNode[]
+	 * @return list<UnionTypeNode>
 	 */
 	public static function getUnionTypeNodes(TypeNode $typeNode): array
 	{
@@ -275,7 +275,7 @@ class AnnotationTypeHelper
 	}
 
 	/**
-	 * @return ArrayTypeNode[]
+	 * @return list<ArrayTypeNode>
 	 */
 	public static function getArrayTypeNodes(TypeNode $typeNode): array
 	{
@@ -419,7 +419,9 @@ class AnnotationTypeHelper
 		if ($masterTypeNode instanceof ArrayShapeNode) {
 			$arrayShapeItemNodes = [];
 			foreach ($masterTypeNode->items as $arrayShapeItemNode) {
-				$arrayShapeItemNodes[] = self::change($arrayShapeItemNode, $typeNodeToChange, $changedTypeNode);
+				/** @var ArrayShapeItemNode $changedArrayShapeItemNode */
+				$changedArrayShapeItemNode = self::change($arrayShapeItemNode, $typeNodeToChange, $changedTypeNode);
+				$arrayShapeItemNodes[] = $changedArrayShapeItemNode;
 			}
 
 			return new ArrayShapeNode($arrayShapeItemNodes, $masterTypeNode->sealed, $masterTypeNode->kind);
@@ -436,7 +438,9 @@ class AnnotationTypeHelper
 		if ($masterTypeNode instanceof ObjectShapeNode) {
 			$objectShapeItemNodes = [];
 			foreach ($masterTypeNode->items as $objectShapeItemNode) {
-				$objectShapeItemNodes[] = self::change($objectShapeItemNode, $typeNodeToChange, $changedTypeNode);
+				/** @var ObjectShapeItemNode $changedObjectShapeItemNode */
+				$changedObjectShapeItemNode = self::change($objectShapeItemNode, $typeNodeToChange, $changedTypeNode);
+				$objectShapeItemNodes[] = $changedObjectShapeItemNode;
 			}
 
 			return new ObjectShapeNode($objectShapeItemNodes);
@@ -827,7 +831,7 @@ class AnnotationTypeHelper
 	/**
 	 * @param UnionTypeNode|IntersectionTypeNode $typeNode
 	 * @param array<int, string> $traversableTypeHints
-	 * @return string[]
+	 * @return list<string>
 	 */
 	public static function getTraversableTypeHintsFromType(
 		TypeNode $typeNode,

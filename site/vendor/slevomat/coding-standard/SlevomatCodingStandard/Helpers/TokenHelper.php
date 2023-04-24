@@ -141,7 +141,7 @@ class TokenHelper
 
 	/**
 	 * @param int|string|array<int|string, int|string> $types
-	 * @return int[]
+	 * @return list<int>
 	 */
 	public static function findNextAll(File $phpcsFile, $types, int $startPointer, ?int $endPointer = null): array
 	{
@@ -454,7 +454,6 @@ class TokenHelper
 	}
 
 	/**
-	 * @internal
 	 * @return array<int, (int|string)>
 	 */
 	public static function getNameTokenCodes(): array
@@ -463,7 +462,6 @@ class TokenHelper
 	}
 
 	/**
-	 * @internal
 	 * @return array<int, (int|string)>
 	 */
 	public static function getOnlyNameTokenCodes(): array

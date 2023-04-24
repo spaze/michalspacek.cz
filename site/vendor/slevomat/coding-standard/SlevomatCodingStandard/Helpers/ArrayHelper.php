@@ -25,7 +25,7 @@ class ArrayHelper
 	protected static $tokens;
 
 	/**
-	 * @return ArrayKeyValue[]
+	 * @return list<ArrayKeyValue>
 	 */
 	public static function parse(File $phpcsFile, int $pointer): array
 	{
@@ -109,7 +109,7 @@ class ArrayHelper
 	}
 
 	/**
-	 * @param ArrayKeyValue[] $keyValues
+	 * @param list<ArrayKeyValue> $keyValues
 	 */
 	public static function getIndentation(array $keyValues): ?string
 	{
@@ -128,7 +128,7 @@ class ArrayHelper
 	}
 
 	/**
-	 * @param ArrayKeyValue[] $keyValues
+	 * @param list<ArrayKeyValue> $keyValues
 	 */
 	public static function isKeyed(array $keyValues): bool
 	{
@@ -141,12 +141,12 @@ class ArrayHelper
 	}
 
 	/**
-	 * @param ArrayKeyValue[] $keyValues
+	 * @param list<ArrayKeyValue> $keyValues
 	 */
 	public static function isKeyedAll(array $keyValues): bool
 	{
 		foreach ($keyValues as $keyValue) {
-			if ($keyValue->getKey() === null) {
+			if (!$keyValue->isUnpacking() && $keyValue->getKey() === null) {
 				return false;
 			}
 		}
@@ -183,18 +183,23 @@ class ArrayHelper
 	}
 
 	/**
-	 * @param ArrayKeyValue[] $keyValues
+	 * @param list<ArrayKeyValue> $keyValues
 	 */
 	public static function isSortedByKey(array $keyValues): bool
 	{
-		$prev = '';
+		$previousKey = '';
 		foreach ($keyValues as $keyValue) {
-			$cmp = strnatcasecmp((string) $prev, (string) $keyValue->getKey());
-			if ($cmp === 1) {
+			if ($keyValue->isUnpacking()) {
+				continue;
+			}
+
+			if (strnatcasecmp($previousKey, $keyValue->getKey()) === 1) {
 				return false;
 			}
-			$prev = $keyValue->getKey();
+
+			$previousKey = $keyValue->getKey();
 		}
+
 		return true;
 	}
 
