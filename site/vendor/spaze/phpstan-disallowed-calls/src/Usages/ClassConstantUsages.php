@@ -84,7 +84,8 @@ class ClassConstantUsages implements Rule
 			throw new ShouldNotHappenException(sprintf('$node->name should be %s but is %s', Identifier::class, get_class($node->name)));
 		}
 		$constant = (string)$node->name;
-		$usedOnType = $this->typeResolver->getType($node->class, $scope);
+		$type = $this->typeResolver->getType($node->class, $scope);
+		$usedOnType = $type->getObjectTypeOrClassStringObjectType();
 
 		if (strtolower($constant) === 'class') {
 			return [];
@@ -94,21 +95,23 @@ class ClassConstantUsages implements Rule
 		if ($usedOnType->getConstantStrings()) {
 			$classNames = array_map(
 				function (ConstantStringType $constantString): string {
-					return ltrim($constantString->getValue(), '\\');
+					return $constantString->getValue();
 				},
 				$usedOnType->getConstantStrings()
 			);
 		} else {
-			if ($usedOnType->hasConstant($constant)->no()) {
+			if ($usedOnType->hasConstant($constant)->yes()) {
+				$classNames = [$usedOnType->getConstant($constant)->getDeclaringClass()->getDisplayName()];
+			} elseif ($type->hasConstant($constant)->no()) {
 				return [
 					RuleErrorBuilder::message(sprintf(
 						'Cannot access constant %s on %s',
 						$constant,
-						$usedOnType->describe(VerbosityLevel::getRecommendedLevelByType($usedOnType))
+						$type->describe(VerbosityLevel::getRecommendedLevelByType($type))
 					))->build(),
 				];
 			} else {
-				$classNames = [$usedOnType->getConstant($constant)->getDeclaringClass()->getDisplayName()];
+				return [];
 			}
 		}
 		return $this->disallowedConstantRuleErrors->get($this->getFullyQualified($classNames, $constant), $scope, $displayName, $this->disallowedConstants);
