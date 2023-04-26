@@ -1974,17 +1974,17 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.20.2",
-            "version_normalized": "1.20.2.0",
+            "version": "1.20.3",
+            "version_normalized": "1.20.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "90490bd8fd8530a272043c4950c180b6d0cf5f81"
+                "reference": "6c04009f6cae6eda2f040745b6b846080ef069c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/90490bd8fd8530a272043c4950c180b6d0cf5f81",
-                "reference": "90490bd8fd8530a272043c4950c180b6d0cf5f81",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/6c04009f6cae6eda2f040745b6b846080ef069c2",
+                "reference": "6c04009f6cae6eda2f040745b6b846080ef069c2",
                 "shasum": ""
             },
             "require": {
@@ -1999,7 +1999,7 @@
                 "phpunit/phpunit": "^9.5",
                 "symfony/process": "^5.2"
             },
-            "time": "2023-04-22T12:59:35+00:00",
+            "time": "2023-04-25T09:01:03+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -2016,7 +2016,7 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.20.2"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.20.3"
             },
             "install-path": "../phpstan/phpdoc-parser"
         },
@@ -2369,12 +2369,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "1f742625cd069120b577015b3930fefa1e46c8ff"
+                "reference": "5eb9b0587e4625150e4892e569bb223714c86256"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1f742625cd069120b577015b3930fefa1e46c8ff",
-                "reference": "1f742625cd069120b577015b3930fefa1e46c8ff",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5eb9b0587e4625150e4892e569bb223714c86256",
+                "reference": "5eb9b0587e4625150e4892e569bb223714c86256",
                 "shasum": ""
             },
             "conflict": {
@@ -2403,7 +2403,7 @@
                 "awesome-support/awesome-support": "<=6.0.7",
                 "aws/aws-sdk-php": ">=3,<3.2.1",
                 "azuracast/azuracast": "<0.18",
-                "backdrop/backdrop": "<=1.23",
+                "backdrop/backdrop": "<1.24.2",
                 "badaso/core": "<2.7",
                 "bagisto/bagisto": "<0.1.5",
                 "barrelstrength/sprout-base-email": "<1.2.7",
@@ -2445,9 +2445,9 @@
                 "concrete5/concrete5": "<=9.1.3|>= 9.0.0RC1, < 9.1.3",
                 "concrete5/core": "<8.5.8|>=9,<9.1",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
-                "contao/contao": ">=4,<4.4.56|>=4.5,<4.9.18|>=4.10,<4.11.7|>=4.13,<4.13.3",
+                "contao/contao": ">=4,<4.4.56|>=4.5,<4.9.40|>=4.10,<4.11.7|>=4.13,<4.13.21|>=5.1,<5.1.4",
                 "contao/core": ">=2,<3.5.39",
-                "contao/core-bundle": "<4.9.18|>=4.10,<4.11.7|>=4.13,<4.13.3|= 4.10.0",
+                "contao/core-bundle": "<4.9.40|>=4.10,<4.11.7|>=4.13,<4.13.21|>=5.1,<5.1.4|= 4.10.0",
                 "contao/listing-bundle": ">=4,<4.4.8",
                 "contao/managed-edition": "<=1.5",
                 "craftcms/cms": "<3.7.64|>= 4.0.0-RC1, < 4.3.7|>= 4.0.0-RC1, < 4.2.1",
@@ -2594,7 +2594,7 @@
                 "krayin/laravel-crm": "<1.2.2",
                 "kreait/firebase-php": ">=3.2,<3.8.1",
                 "la-haute-societe/tcpdf": "<6.2.22",
-                "laminas/laminas-diactoros": "<2.11.1",
+                "laminas/laminas-diactoros": "<2.18.1|>=2.24,<2.24.2|>=2.25,<2.25.2|= 2.23.0|= 2.22.0|= 2.21.0|= 2.20.0|= 2.19.0",
                 "laminas/laminas-form": "<2.17.1|>=3,<3.0.2|>=3.1,<3.1.1",
                 "laminas/laminas-http": "<2.14.2",
                 "laravel/fortify": "<1.11.1",
@@ -2710,7 +2710,7 @@
                 "prestashop/blockwishlist": ">=2,<2.1.1",
                 "prestashop/contactform": ">=1.0.1,<4.3",
                 "prestashop/gamification": "<2.3.2",
-                "prestashop/prestashop": "<8.0.1",
+                "prestashop/prestashop": "<8.0.4",
                 "prestashop/productcomments": "<5.0.2",
                 "prestashop/ps_emailsubscription": "<2.6.1",
                 "prestashop/ps_facetedsearch": "<3.4.1",
@@ -2930,7 +2930,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<6.0.22"
             },
-            "time": "2023-04-24T21:04:22+00:00",
+            "time": "2023-04-25T20:04:17+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -3427,17 +3427,17 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v2.13.0",
-            "version_normalized": "2.13.0.0",
+            "version": "v2.14.1",
+            "version_normalized": "2.14.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "ad3a6d043463c441e73f1d190c1a4a19890abf83"
+                "reference": "b991392c0904fdb3320c978e812da872c768e518"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/ad3a6d043463c441e73f1d190c1a4a19890abf83",
-                "reference": "ad3a6d043463c441e73f1d190c1a4a19890abf83",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/b991392c0904fdb3320c978e812da872c768e518",
+                "reference": "b991392c0904fdb3320c978e812da872c768e518",
                 "shasum": ""
             },
             "require": {
@@ -3452,7 +3452,7 @@
                 "phpunit/phpunit": "^8.5 || ^10.1",
                 "spaze/coding-standard": "^1.6"
             },
-            "time": "2023-04-24T00:48:17+00:00",
+            "time": "2023-04-26T01:51:29+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -3484,7 +3484,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.13.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.14.1"
             },
             "funding": [
                 {
