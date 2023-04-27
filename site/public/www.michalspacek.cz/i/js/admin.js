@@ -284,7 +284,7 @@ App.ready(document, function () {
 	const blockingForm = 'form.blocking';
 	const beforeUnloadListener = (e) => e.returnValue = 'ORLY?'; // The value is ignored and not displayed
 	const beforeUnloadType = 'beforeunload';
-	App.onChange(blockingForm + ' input:not(.non-blocking), textarea, select', function () {
+	App.onChange(`${blockingForm} input:not(.non-blocking), ${blockingForm} textarea, ${blockingForm} select`, function () {
 		this.closest('tbody').classList.add('changed');
 		window.addEventListener(beforeUnloadType, beforeUnloadListener);
 	});
