@@ -19,7 +19,7 @@
 		• <a href="{$post->href}">{if $post->needsPreviewKey()}Zobrazit náhled{else}Zobrazit{/if}</a>
 		<small n:if="!$post->needsPreviewKey()">
 			• <a href="https://developers.facebook.com/tools/debug/sharing/?q={$post->href}">Facebook Sharing Debugger</a>
-			• <a href="https://cards-dev.twitter.com/validator">Twitter Card validator</a></small>
+			• <a href="https://twitter.com/intent/tweet?text={$post->href}">Tweet Composer</a></small>
 		</small>
 	</li>
 {/foreach}
