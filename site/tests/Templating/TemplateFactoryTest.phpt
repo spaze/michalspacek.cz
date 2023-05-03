@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
-use Spaze\NonceGenerator\Generator;
+use Spaze\NonceGenerator\Nonce;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -14,7 +14,7 @@ class TemplateFactoryTest extends TestCase
 {
 
 	public function __construct(
-		private readonly Generator $nonceGenerator,
+		private readonly Nonce $nonce,
 		private readonly TemplateFactory $templateFactory,
 	) {
 	}
@@ -25,7 +25,7 @@ class TemplateFactoryTest extends TestCase
 		$template = $this->templateFactory->createTemplate();
 		$providers = $template->getLatte()->getProviders();
 		Assert::hasKey('uiNonce', $providers);
-		Assert::same($this->nonceGenerator->getNonce(), $providers['uiNonce']);
+		Assert::same($this->nonce->getValue(), $providers['uiNonce']);
 	}
 
 }
