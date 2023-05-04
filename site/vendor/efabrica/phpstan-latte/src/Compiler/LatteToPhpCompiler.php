@@ -6,8 +6,10 @@ namespace Efabrica\PHPStanLatte\Compiler;
 
 use Composer\InstalledVersions;
 use Efabrica\PHPStanLatte\Compiler\Compiler\CompilerInterface;
+use Efabrica\PHPStanLatte\Exception\ParseException;
 use Efabrica\PHPStanLatte\Template\Template;
 use InvalidArgumentException;
+use Latte\CompileException;
 use Latte\Engine;
 
 final class LatteToPhpCompiler
@@ -40,6 +42,10 @@ final class LatteToPhpCompiler
         $this->debugMode = $debugMode;
     }
 
+    /**
+     * @throws CompileException
+     * @throws ParseException
+     */
     public function compileFile(Template $template, string $context = ''): string
     {
         $templatePath = $template->getPath();

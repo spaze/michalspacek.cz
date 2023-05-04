@@ -130,7 +130,7 @@ services:
         factory: Efabrica\PHPStanLatte\Compiler\NodeVisitor\NodeVisitorStorage
         setup:
             # no scope node visitors
-            - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddParametersForBlockNodeVisitor())
+            - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddParametersForBlockNodeVisitor(parser: @latteCurrentPhpVersionRichParser))
             - addNodeVisitor(50, Efabrica\PHPStanLatte\Compiler\NodeVisitor\CopyDefinedVarsToOtherMethodsNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddTypeToComponentNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddVarTypesNodeVisitor(%latte.globalVariables%))
@@ -149,6 +149,8 @@ services:
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFunctionsNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddExtractParamsToTopNodeVisitor())
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\NotNullableSnippetDriverNodeVisitor())
+
     # Link processors
     - Efabrica\PHPStanLatte\LinkProcessor\LinkProcessorFactory
     - Efabrica\PHPStanLatte\LinkProcessor\LinkParamsProcessor
@@ -194,7 +196,7 @@ services:
     - Efabrica\PHPStanLatte\LatteContext\Collector\TemplatePathCollector\SetFileTemplatePathCollector
 
     # Error builder
-    - Efabrica\PHPStanLatte\Error\LineMapper\LineMapper(@latteCurrentPhpVersionRichParser, %debugMode%)
+    - Efabrica\PHPStanLatte\Error\LineMapper\LineMapper(%debugMode%)
     - Efabrica\PHPStanLatte\Error\ErrorBuilder(%latte.errorPatternsToIgnore%, %latte.warningPatterns%)
 
     # Error transformers
@@ -202,6 +204,7 @@ services:
     - Efabrica\PHPStanLatte\Error\Transformer\UnknownTagErrorTransformer
     - Efabrica\PHPStanLatte\Error\Transformer\CallActionWithParametersMissingCorrespondingMethodErrorTransformer
     - Efabrica\PHPStanLatte\Error\Transformer\BlockParameterErrorTransformer
+    - Efabrica\PHPStanLatte\Error\Transformer\RemoveTipAboutPhpDocErrorTransformer
 
     errorFormatter.table!:
         class: Efabrica\PHPStanLatte\Error\TableErrorFormatter
