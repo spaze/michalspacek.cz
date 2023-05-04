@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Spaze\NonceGenerator\Bridges\Nette;
 
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Bridges\ApplicationLatte\TemplateFactory;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Definitions\FactoryDefinition;
+use Nette\DI\Definitions\ServiceDefinition;
+use Spaze\NonceGenerator\Bridges\Latte\LatteExtension;
 use Spaze\NonceGenerator\Generator;
 
 class GeneratorExtension extends CompilerExtension
@@ -12,32 +15,23 @@ class GeneratorExtension extends CompilerExtension
 
 	public function loadConfiguration(): void
 	{
-		$this->getContainerBuilder()
-			->addDefinition($this->prefix('generator'))
-			->setClass(Generator::class);
+		$builder = $this->getContainerBuilder();
+		$builder->addDefinition($this->prefix('generator'))
+			->setType(Generator::class);
+		$builder->addDefinition($this->prefix('nonce'))
+			->setFactory([$this->prefix('@generator'), 'createNonce']);
 	}
 
 
 	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
-
-		$register = function (FactoryDefinition $service) {
-			$service->getResultDefinition()->addSetup('addProvider', ['nonceGenerator', $this->prefix('@generator')]);
-		};
-
-		// A string is used in getByType() instead of ::class so we don't need to depend on nette/application
-		$latteFactoryService = $builder->getByType('\Nette\Bridges\ApplicationLatte\ILatteFactory') ?: 'nette.latteFactory';
-		if ($builder->hasDefinition($latteFactoryService)) {
-			/** @var FactoryDefinition $definition */
-			$definition = $builder->getDefinition($latteFactoryService);
-			$register($definition);
-		}
-
-		if ($builder->hasDefinition('nette.latte')) {
-			/** @var FactoryDefinition $definition */
-			$definition = $builder->getDefinition('nette.latte');
-			$register($definition);
+		$extension = $builder->addDefinition($this->prefix('latte.extension'))->setFactory(LatteExtension::class);
+		$service = $builder->getByType(TemplateFactory::class);
+		if ($service) {
+			/** @var ServiceDefinition $definition */
+			$definition = $builder->getDefinition($service);
+			$definition->addSetup('?->onCreate[] = function (' . Template::class . ' $template): void { $template->getLatte()->addExtension(?); }', ['@self', $extension]);
 		}
 	}
 

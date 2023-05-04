@@ -10,13 +10,15 @@
 		}
 	],
 	"require": {
-		"php": "^8.0"
+		"php": "^8.2",
+		"latte/latte": "^3.0",
+		"nette/application": "^3.1",
+		"nette/di": "^3.0"
 	},
 	"autoload": {
 		"psr-4": {"Spaze\\NonceGenerator\\": "src"}
 	},
 	"require-dev": {
-		"nette/di": "^3.0",
 		"nette/tester": "^2.4",
 		"phpstan/phpstan": "^1.9",
 		"spaze/coding-standard": "^1.3",

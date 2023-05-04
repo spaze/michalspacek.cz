@@ -2,6 +2,29 @@
 
 ## [Unreleased][unreleased]
 
+## [0.11.0] - 2023-05-02
+### Added
+- Line of compilation error (if available) instead of -1 
+- Handling for parse errors
+
+### Fixed
+- Typehint for `$this->global->snippetDriver` in compiled template
+
+## [0.10.0] - 2023-04-21
+### Changed
+- Improved processing of block's missing parameters - default value is used if it is available
+
+### Added
+- Support for any expression as default value of block parameters
+
+### Removed
+- Tip about type of variable comming from PHPDoc (all variable types in compiled templates are from PHPDoc, so this tip doesn't make sense)
+
+### Fixed
+- String default values for blocks
+- Blocks called with no parameters are also transfered to method call
+- Dynamic labels in form templates
+
 ## [0.9.0] - 2023-04-11
 ### Changed
 - Params in block / define are analysed in the same way as they are defined by developer - they are no longer optional with default value `null` 
@@ -121,7 +144,9 @@
     - Transform components to explicit calls
 - Error mapper for better DX
 
-[unreleased]: https://github.com/efabrica-team/phpstan-latte/compare/0.9.0...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-latte/compare/0.11.0...HEAD
+[0.11.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.10.0...0.11.0
+[0.10.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.9.0...0.10.0
 [0.9.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.8.0...0.9.0
 [0.8.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.6.0...0.7.0

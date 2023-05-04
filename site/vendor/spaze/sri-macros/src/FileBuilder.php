@@ -31,7 +31,7 @@ class FileBuilder
 		$build = sprintf(
 			'%s/%s.%s',
 			trim($buildPrefix, '/'),
-			rtrim(strtr(base64_encode(hash('sha256', $content, true)), '+/', '-_'), '='),  // Encoded to base64url, see https://tools.ietf.org/html/rfc4648#section-5
+			rtrim(strtr(base64_encode(hash('sha256', $content, true)), '+/', '-_'), '='), // Encoded to base64url, see https://tools.ietf.org/html/rfc4648#section-5
 			$extension,
 		);
 		$buildFilename = sprintf('%s/%s', rtrim($pathPrefix, '/'), $build);
