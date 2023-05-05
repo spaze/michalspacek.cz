@@ -325,6 +325,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->lastFreeSeats = false;
 		$this->template->start = $date->start;
 		$this->template->end = $date->end;
+		$this->template->remote = $date->remote;
 		$this->template->venueCity = $date->venueCity;
 		$this->template->tentative = $date->tentative;
 

@@ -13,7 +13,7 @@
 	<table>
 		<tr>
 			<th>{_messages.label.trainingdate}</th>
-			<td>{if $tentative}{$start|localeMonth}{else}{$start|localeIntervalDay:$end}{/if}, {$venueCity}{if $tentative} ({_messages.label.tentativedate}){/if}</td>
+			<td>{if $tentative}{$start|localeMonth}{else}{$start|localeIntervalDay:$end}{/if}, {if $remote}{_messages.label.remote}{else}{$venueCity}{/if}{if $tentative} ({_messages.label.tentativedate}){/if}</td>
 		</tr>
 	</table>
 </fieldset>
