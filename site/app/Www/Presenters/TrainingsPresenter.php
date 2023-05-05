@@ -18,7 +18,6 @@ use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Database\Row;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
@@ -169,11 +168,6 @@ class TrainingsPresenter extends BasePresenter
 			},
 			function (string $message): void {
 				$this->flashMessage($this->translator->translate($message), 'error');
-			},
-			function (): Template {
-				/** @var Template $template */
-				$template = $this->createTemplate();
-				return $template;
 			},
 			$this->training->action,
 			$this->training->name,

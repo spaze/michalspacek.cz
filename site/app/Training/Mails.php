@@ -7,7 +7,7 @@ use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
 use Nette\Mail\Mailer;
@@ -37,7 +37,7 @@ class Mails
 
 	/**
 	 * @param int $applicationId
-	 * @param Template $template
+	 * @param DefaultTemplate $template
 	 * @param string $recipientAddress
 	 * @param string $recipientName
 	 * @param DateTime $start
@@ -52,7 +52,7 @@ class Mails
 	 */
 	public function sendSignUpMail(
 		int $applicationId,
-		Template $template,
+		DefaultTemplate $template,
 		string $recipientAddress,
 		string $recipientName,
 		DateTime $start,
@@ -151,11 +151,11 @@ class Mails
 
 	/**
 	 * @param Row<mixed> $application
-	 * @param Template $template
+	 * @param DefaultTemplate $template
 	 * @param string $additional
 	 * @throws ShouldNotHappenException
 	 */
-	public function sendInvitation(Row $application, Template $template, string $additional): void
+	public function sendInvitation(Row $application, DefaultTemplate $template, string $additional): void
 	{
 		Debugger::log("Sending invitation email application id: {$application->id}, training: {$application->training->action}");
 		$message = $this->getMailMessage($application);
@@ -168,12 +168,12 @@ class Mails
 
 	/**
 	 * @param Row<mixed> $application
-	 * @param Template $template
+	 * @param DefaultTemplate $template
 	 * @param bool $feedbackRequest
 	 * @param string $additional
 	 * @throws ShouldNotHappenException
 	 */
-	public function sendMaterials(Row $application, Template $template, bool $feedbackRequest, string $additional): void
+	public function sendMaterials(Row $application, DefaultTemplate $template, bool $feedbackRequest, string $additional): void
 	{
 		Debugger::log("Sending materials email application id: {$application->id}, training: {$application->training->action}");
 		$message = $this->getMailMessage($application);
@@ -187,13 +187,13 @@ class Mails
 
 	/**
 	 * @param Row<mixed> $application
-	 * @param Template $template
+	 * @param DefaultTemplate $template
 	 * @param FileUpload $invoice
 	 * @param string|null $cc
 	 * @param string $additional
 	 * @throws ShouldNotHappenException
 	 */
-	public function sendInvoice(Row $application, Template $template, FileUpload $invoice, ?string $cc, string $additional): void
+	public function sendInvoice(Row $application, DefaultTemplate $template, FileUpload $invoice, ?string $cc, string $additional): void
 	{
 		Debugger::log("Sending invoice email to application id: {$application->id}, training: {$application->training->action}");
 		$message = $this->getMailMessage($application);
@@ -206,11 +206,11 @@ class Mails
 
 	/**
 	 * @param Row<mixed> $application
-	 * @param Template $template
+	 * @param DefaultTemplate $template
 	 * @param string $additional
 	 * @throws ShouldNotHappenException
 	 */
-	public function sendReminder(Row $application, Template $template, string $additional): void
+	public function sendReminder(Row $application, DefaultTemplate $template, string $additional): void
 	{
 		Debugger::log("Sending reminder email application id: {$application->id}, training: {$application->training->action}");
 		$message = $this->getMailMessage($application);
@@ -229,11 +229,11 @@ class Mails
 	 * @param string $recipientAddress
 	 * @param string $recipientName
 	 * @param string $subject
-	 * @param Template $template
+	 * @param DefaultTemplate $template
 	 * @param string[] $attachments
 	 * @param string|null $cc
 	 */
-	private function sendMail(string $recipientAddress, string $recipientName, string $subject, Template $template, array $attachments = [], ?string $cc = null): void
+	private function sendMail(string $recipientAddress, string $recipientName, string $subject, DefaultTemplate $template, array $attachments = [], ?string $cc = null): void
 	{
 		$mail = new Message();
 		foreach ($attachments as $name => $file) {

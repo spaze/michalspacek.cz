@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
@@ -13,8 +14,9 @@ use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
 use MichalSpacekCz\Training\FormDataLogger;
 use MichalSpacekCz\Training\FormSpam;
 use MichalSpacekCz\Training\Mails;
+use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Form;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Row;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
@@ -35,6 +37,8 @@ class TrainingApplicationFormFactory
 		private readonly FormSpam $formSpam,
 		private readonly Applications $trainingApplications,
 		private readonly Mails $trainingMails,
+		private readonly TemplateFactory $templateFactory,
+		private readonly NetteApplication $netteApplication,
 	) {
 	}
 
@@ -42,7 +46,6 @@ class TrainingApplicationFormFactory
 	/**
 	 * @param callable(string): void $onSuccess
 	 * @param callable(string): void $onError
-	 * @param callable(): Template $createTemplate
 	 * @param string $action
 	 * @param Html $name
 	 * @param Row[] $dates
@@ -52,7 +55,6 @@ class TrainingApplicationFormFactory
 	public function create(
 		callable $onSuccess,
 		callable $onError,
-		callable $createTemplate,
 		string $action,
 		Html $name,
 		array $dates,
@@ -90,7 +92,7 @@ class TrainingApplicationFormFactory
 
 		$form->addSubmit('signUp', 'Odeslat');
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError, $createTemplate, $action, $name, $dates, $multipleDates, $sessionSection): void {
+		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
 			try {
 				$this->formSpam->check($values, $action, $sessionSection);
 				if ($multipleDates) {
@@ -149,9 +151,11 @@ class TrainingApplicationFormFactory
 							$values->note,
 						);
 					}
+					/** @var Presenter $presenter */
+					$presenter = $this->netteApplication->getPresenter();
 					$this->trainingMails->sendSignUpMail(
 						$applicationId,
-						$createTemplate(),
+						$this->templateFactory->createTemplate($presenter),
 						$values->email,
 						$values->name,
 						$date->start,

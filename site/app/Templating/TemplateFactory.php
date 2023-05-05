@@ -5,9 +5,10 @@ namespace MichalSpacekCz\Templating;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Theme;
+use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\TemplateFactory as UiTemplateFactory;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as ApplicationTemplateFactory;
 
 class TemplateFactory implements UiTemplateFactory
@@ -22,10 +23,12 @@ class TemplateFactory implements UiTemplateFactory
 	}
 
 
-	public function createTemplate(Control $control = null, string $class = null): Template
+	public function createTemplate(Control $control = null, string $class = null): DefaultTemplate
 	{
-		/** @var Template $template */
 		$template = $this->templateFactory->createTemplate($control, $class);
+		if (!$template instanceof DefaultTemplate) {
+			throw new WrongTemplateClassException($template::class, DefaultTemplate::class);
+		}
 		$template->darkMode = $this->theme->isDarkMode();
 		foreach ($this->filters->getAll() as $name => $callback) {
 			$template->addFilter($name, $callback);
