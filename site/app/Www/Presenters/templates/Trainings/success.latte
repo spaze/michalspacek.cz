@@ -12,7 +12,7 @@
 	<legend>{_messages.label.date}</legend>
 	<table>
 		<tr>
-			<th>{$form[trainingId]->caption}</th>
+			<th>{_messages.label.trainingdate}</th>
 			<td>{if $tentative}{$start|localeMonth}{else}{$start|localeIntervalDay:$end}{/if}, {$venueCity}{if $tentative} ({_messages.label.tentativedate}){/if}</td>
 		</tr>
 	</table>

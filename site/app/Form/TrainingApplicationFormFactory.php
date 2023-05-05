@@ -165,7 +165,7 @@ class TrainingApplicationFormFactory
 						$date->venueCity,
 					);
 				}
-				$sessionSection->trainingId = $values->trainingId;
+				$sessionSection->trainingId = $date->dateId;
 				$sessionSection->name = $values->name;
 				$sessionSection->email = $values->email;
 				$sessionSection->company = $values->company;
