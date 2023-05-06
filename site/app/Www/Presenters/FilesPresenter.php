@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use finfo;
 use MichalSpacekCz\Training\Files\TrainingFiles;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 
@@ -19,11 +18,6 @@ class FilesPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $filename
-	 * @throws BadRequestException
-	 * @throws AbortException
-	 */
 	public function actionTraining(string $filename): void
 	{
 		$session = $this->getSession('application');
@@ -41,10 +35,6 @@ class FilesPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $filename
-	 * @throws BadRequestException
-	 */
 	public function actionFile(string $filename): void
 	{
 		throw new BadRequestException("Cannot download {$filename}");

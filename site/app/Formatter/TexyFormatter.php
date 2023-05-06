@@ -13,7 +13,6 @@ use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Symfony\Contracts\Cache\CacheInterface;
 use Texy\Texy;
-use Throwable;
 
 class TexyFormatter
 {
@@ -127,7 +126,6 @@ class TexyFormatter
 	 * @param string $format
 	 * @param string[] $args
 	 * @return Html<Html|string>
-	 * @throws Throwable
 	 */
 	public function substitute(string $format, array $args): Html
 	{
@@ -140,7 +138,6 @@ class TexyFormatter
 	 * @param string[] $replacements
 	 * @return Html<Html|string>
 	 * @throws InvalidArgument
-	 * @throws Throwable
 	 */
 	public function translate(string $message, array $replacements = []): Html
 	{
@@ -156,7 +153,6 @@ class TexyFormatter
 	 * @param string $text
 	 * @param Texy|null $texy
 	 * @return Html<Html|string>
-	 * @throws Throwable
 	 */
 	public function format(string $text, ?Texy $texy = null): Html
 	{
@@ -172,7 +168,6 @@ class TexyFormatter
 	 * @param string $text
 	 * @param Texy|null $texy
 	 * @return Html<Html|string>
-	 * @throws Throwable
 	 */
 	public function formatBlock(string $text, ?Texy $texy = null): Html
 	{
@@ -238,7 +233,6 @@ class TexyFormatter
 	 * @param Row<mixed> $training
 	 * @return Row<mixed>
 	 * @throws InvalidArgument
-	 * @throws Throwable
 	 */
 	public function formatTraining(Row $training): Row
 	{
@@ -266,7 +260,6 @@ class TexyFormatter
 	 * @param string $text
 	 * @param callable(): string $callback
 	 * @return Html
-	 * @throws Throwable
 	 */
 	private function cache(string $text, callable $callback): Html
 	{

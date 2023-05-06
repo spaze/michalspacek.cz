@@ -13,7 +13,6 @@ class NetteCve202015227
 
 	/**
 	 * @param array<string, string> $params
-	 * @throws BadRequestException
 	 */
 	public function rce(string $callback, array $params): NetteCve202015227Rce
 	{

@@ -38,10 +38,6 @@ class TagsPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $tag
-	 * @throws BadRequestException
-	 */
 	public function actionTag(string $tag): void
 	{
 		$label = $this->articles->getLabelByTag($tag);

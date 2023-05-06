@@ -30,7 +30,6 @@ class InterviewsPresenter extends BasePresenter
 
 
 	/**
-	 * @throws BadRequestException
 	 * @throws ContentTypeException
 	 */
 	public function actionInterview(string $name): void

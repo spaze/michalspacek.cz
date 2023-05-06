@@ -16,7 +16,6 @@ use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
@@ -62,8 +61,6 @@ class TrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param string $name
-	 * @throws BadRequestException
-	 * @throws AbortException
 	 */
 	public function actionTraining(string $name): void
 	{
@@ -107,9 +104,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @throws BadRequestException
-	 */
 	public function actionApplication(string $name, ?string $param): void
 	{
 		try {
@@ -196,10 +190,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $name
-	 * @throws BadRequestException
-	 */
 	public function actionReviews(string $name): void
 	{
 		try {
@@ -273,11 +263,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $name
-	 * @throws BadRequestException
-	 * @throws AbortException
-	 */
 	public function actionSuccess(string $name): void
 	{
 		try {

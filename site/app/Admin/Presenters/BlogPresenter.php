@@ -64,10 +64,6 @@ class BlogPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param int $param
-	 * @throws BadRequestException
-	 */
 	public function actionEdit(int $param): void
 	{
 		try {

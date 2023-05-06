@@ -38,7 +38,6 @@ class CompanyTrainingsPresenter extends BasePresenter
 
 	/**
 	 * @param string $name
-	 * @throws BadRequestException
 	 */
 	public function actionTraining(string $name): void
 	{
