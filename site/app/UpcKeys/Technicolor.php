@@ -175,12 +175,11 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string $ssid
 	 * @param array<int, WiFiKey> $keys
-	 * @return bool false if no keys to store, true otherwise
 	 */
-	private function storeKeys(string $ssid, array $keys): bool
+	private function storeKeys(string $ssid, array $keys): void
 	{
 		if (!$keys) {
-			return false;
+			return;
 		}
 
 		$datetime = new DateTime();
@@ -215,8 +214,6 @@ class Technicolor implements RouterInterface
 			$this->database->rollBack();
 			throw $e;
 		}
-
-		return true;
 	}
 
 
