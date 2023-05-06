@@ -14,15 +14,6 @@ class UpcKeys
 	/** @var string */
 	private const SSID_PLACEHOLDER = 'UPC1234567';
 
-	/** @var int */
-	public const SSID_TYPE_24GHZ = 1;
-
-	/** @var int */
-	public const SSID_TYPE_5GHZ = 2;
-
-	/** @var int */
-	public const SSID_TYPE_UNKNOWN = 3;
-
 	/** @var RouterInterface[] */
 	private array $routers;
 
