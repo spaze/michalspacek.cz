@@ -153,7 +153,6 @@ class Mails
 	 * @param Row<mixed> $application
 	 * @param DefaultTemplate $template
 	 * @param string $additional
-	 * @throws ShouldNotHappenException
 	 */
 	public function sendInvitation(Row $application, DefaultTemplate $template, string $additional): void
 	{
@@ -171,7 +170,6 @@ class Mails
 	 * @param DefaultTemplate $template
 	 * @param bool $feedbackRequest
 	 * @param string $additional
-	 * @throws ShouldNotHappenException
 	 */
 	public function sendMaterials(Row $application, DefaultTemplate $template, bool $feedbackRequest, string $additional): void
 	{
@@ -191,7 +189,6 @@ class Mails
 	 * @param FileUpload $invoice
 	 * @param string|null $cc
 	 * @param string $additional
-	 * @throws ShouldNotHappenException
 	 */
 	public function sendInvoice(Row $application, DefaultTemplate $template, FileUpload $invoice, ?string $cc, string $additional): void
 	{
@@ -208,7 +205,6 @@ class Mails
 	 * @param Row<mixed> $application
 	 * @param DefaultTemplate $template
 	 * @param string $additional
-	 * @throws ShouldNotHappenException
 	 */
 	public function sendReminder(Row $application, DefaultTemplate $template, string $additional): void
 	{
@@ -259,7 +255,6 @@ class Mails
 	/**
 	 * @param Row $application
 	 * @return MailMessageAdmin
-	 * @throws ShouldNotHappenException
 	 */
 	public function getMailMessage(Row $application): MailMessageAdmin
 	{

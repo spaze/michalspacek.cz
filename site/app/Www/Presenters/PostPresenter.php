@@ -27,11 +27,6 @@ class PostPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $slug
-	 * @param string|null $preview
-	 * @throws ShouldNotHappenException
-	 */
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
 		$post = $this->blogPost->get($slug, $preview);

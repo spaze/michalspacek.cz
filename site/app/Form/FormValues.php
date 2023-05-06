@@ -13,18 +13,12 @@ use Nette\Utils\ArrayHash;
 class FormValues
 {
 
-	/**
-	 * @throws ShouldNotHappenException
-	 */
 	public function getValues(BaseControl $control): ArrayHash
 	{
 		return $this->getForm($control)->getValues();
 	}
 
 
-	/**
-	 * @throws ShouldNotHappenException
-	 */
 	public function getUntrustedValues(BaseControl $control): ArrayHash
 	{
 		$values = $this->getForm($control)->getUntrustedValues(null);
@@ -35,9 +29,6 @@ class FormValues
 	}
 
 
-	/**
-	 * @throws ShouldNotHappenException
-	 */
 	private function getForm(BaseControl $control): Form
 	{
 		$form = $control->getForm();

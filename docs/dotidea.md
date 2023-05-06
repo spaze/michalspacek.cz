@@ -9,6 +9,7 @@ Add the following lines to files mentioned:
       <fqn value="\Contributte\Translation\Exceptions\InvalidArgument" />
       <fqn value="\Error" />
       <fqn value="\LogicException" />
+      <fqn value="\MichalSpacekCz\ShouldNotHappenException" />
       <fqn value="\Nette\Application\AbortException" />
       <fqn value="\Nette\Application\BadRequestException" />
       <fqn value="\Psr\Cache\InvalidArgumentException" />

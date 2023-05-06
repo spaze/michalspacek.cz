@@ -40,7 +40,6 @@ class TexyPhraseHandler
 	 * @param Link|null $link
 	 * @return HtmlElement<HtmlElement|string>|string|false
 	 * @throws InvalidLinkException
-	 * @throws ShouldNotHappenException
 	 */
 	public function solve(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
@@ -99,12 +98,6 @@ class TexyPhraseHandler
 	}
 
 
-	/**
-	 * @param string $url
-	 * @param string $locale
-	 * @return string
-	 * @throws ShouldNotHappenException
-	 */
 	private function getBlogLinks(string $url, string $locale): string
 	{
 		$args = explode('#', $url);

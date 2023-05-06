@@ -81,7 +81,6 @@ class ErrorPresenter extends BaseErrorPresenter
 	 * Get original parameters for locale links.
 	 *
 	 * @return array<string, array<string, string|null>>
-	 * @throws ShouldNotHappenException
 	 */
 	protected function getLocaleLinkParams(): array
 	{
