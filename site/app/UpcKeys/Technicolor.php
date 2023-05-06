@@ -51,7 +51,7 @@ class Technicolor implements RouterInterface
 				$this->storeKeys($ssid, $keys);
 			}
 			return $keys;
-		} catch (RuntimeException $e) {
+		} catch (RuntimeException) {
 			return [];
 		}
 	}
@@ -70,7 +70,7 @@ class Technicolor implements RouterInterface
 				$this->storeKeys($ssid, $this->generateKeys($ssid));
 			}
 			return true;
-		} catch (RuntimeException $e) {
+		} catch (RuntimeException) {
 			return false;
 		}
 	}

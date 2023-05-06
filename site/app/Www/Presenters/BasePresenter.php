@@ -84,7 +84,7 @@ abstract class BasePresenter extends Presenter
 	{
 		try {
 			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
-		} catch (InvalidLinkException $e) {
+		} catch (InvalidLinkException) {
 			$this->template->localeLinks = $this->getLocaleLinkDefault();
 		}
 	}

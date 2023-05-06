@@ -132,7 +132,7 @@ class PostFormFactory
 			$this->blogPost->enrich($post);
 			try {
 				$onSuccess($post);
-			} catch (UniqueConstraintViolationException $e) {
+			} catch (UniqueConstraintViolationException) {
 				/** @var TextInput $slug */
 				$slug = $form->getComponent('slug');
 				$slug->addError($this->texyFormatter->translate('messages.blog.admin.duplicateslug'));

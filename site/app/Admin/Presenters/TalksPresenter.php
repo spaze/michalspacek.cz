@@ -80,7 +80,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditTalk(string $formName): Form
+	protected function createComponentEditTalk(): Form
 	{
 		return $this->talkFormFactory->create(
 			function (Html $message): never {

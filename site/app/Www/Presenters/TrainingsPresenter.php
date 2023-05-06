@@ -171,7 +171,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplicationPreliminary(string $formName): Form
+	protected function createComponentApplicationPreliminary(): Form
 	{
 		if ($this->training->discontinuedId) {
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}");

@@ -223,7 +223,7 @@ class Manager implements Authenticator
 					'type' => $type,
 				],
 			);
-		} catch (UniqueConstraintViolationException $e) {
+		} catch (UniqueConstraintViolationException) {
 			// regenerate the access code and try harder this time
 			return $this->insertToken($user, $type);
 		}
