@@ -139,7 +139,6 @@ abstract class BasePresenter extends Presenter
 	}
 
 
-	/** @inheritDoc */
 	public function lastModified($lastModified, string $etag = null, string $expire = null): void
 	{
 		$compression = ini_get('zlib.output_compression');

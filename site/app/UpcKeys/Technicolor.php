@@ -27,7 +27,6 @@ class Technicolor implements RouterInterface
 	}
 
 
-	/** @inheritDoc */
 	public function getModelWithPrefixes(): array
 	{
 		return [$this->model => $this->serialNumberPrefixes];
