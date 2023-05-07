@@ -41,7 +41,6 @@ class TalksPresenter extends BasePresenter
 	/**
 	 * @param string $name
 	 * @param string|null $slide
-	 * @throws BadRequestException
 	 * @throws InvalidLinkException
 	 * @throws ContentTypeException
 	 */

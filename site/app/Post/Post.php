@@ -20,7 +20,6 @@ use Nette\Neon\Exception;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
-use Throwable;
 
 class Post
 {
@@ -66,7 +65,6 @@ class Post
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 * @throws PostDoesNotExistException
-	 * @throws Throwable
 	 */
 	public function get(string $post, ?string $previewKey = null): Data
 	{
@@ -83,7 +81,6 @@ class Post
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 * @throws PostDoesNotExistException
-	 * @throws Throwable
 	 */
 	public function getById(int $id): Data
 	{
@@ -128,7 +125,6 @@ class Post
 	 * @return Data[]
 	 * @throws InvalidLinkException
 	 * @throws JsonException
-	 * @throws Throwable
 	 */
 	public function getAll(): array
 	{
@@ -184,9 +180,6 @@ class Post
 	}
 
 
-	/**
-	 * @throws Throwable
-	 */
 	public function format(Data $post): Data
 	{
 		$texy = $this->texyFormatter->getTexy();
@@ -344,7 +337,6 @@ class Post
 	/**
 	 * @param int $postId
 	 * @return Edit[]
-	 * @throws Throwable
 	 */
 	public function getEdits(int $postId): array
 	{

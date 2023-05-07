@@ -8,7 +8,6 @@ use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates;
-use Nette\Application\AbortException;
 use Spaze\ContentSecurityPolicy\Config as CspConfig;
 
 class PostPresenter extends BasePresenter
@@ -28,12 +27,6 @@ class PostPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $slug
-	 * @param string|null $preview
-	 * @throws AbortException
-	 * @throws ShouldNotHappenException
-	 */
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
 		$post = $this->blogPost->get($slug, $preview);

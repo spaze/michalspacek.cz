@@ -35,7 +35,7 @@ class ExportsTest extends TestCase
 	}
 
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->articles = new class () extends Articles {
 

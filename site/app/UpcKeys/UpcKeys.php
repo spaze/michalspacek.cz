@@ -14,19 +14,10 @@ class UpcKeys
 	/** @var string */
 	private const SSID_PLACEHOLDER = 'UPC1234567';
 
-	/** @var int */
-	public const SSID_TYPE_24GHZ = 1;
-
-	/** @var int */
-	public const SSID_TYPE_5GHZ = 2;
-
-	/** @var int */
-	public const SSID_TYPE_UNKNOWN = 3;
-
-	/** @var RouterInterface[] */
+	/** @var array<class-string<RouterInterface>, RouterInterface> */
 	private array $routers;
 
-	/** @var string[]|null */
+	/** @var list<string>|null */
 	private ?array $prefixes = null;
 
 	/** @var array<string, array<int, string>>|null */
@@ -47,7 +38,7 @@ class UpcKeys
 	/**
 	 * Get serial number prefixes to get keys for.
 	 *
-	 * @return string[]
+	 * @return list<string>
 	 */
 	public function getPrefixes(): array
 	{
@@ -93,20 +84,6 @@ class UpcKeys
 			$keys = array_merge($keys, $router->getKeys($ssid));
 		}
 		return $keys;
-	}
-
-
-	/**
-	 * Save keys to a database if not already there.
-	 *
-	 * @param string $ssid
-	 * @return bool
-	 */
-	public function saveKeys(string $ssid): bool
-	{
-		/** @var Technicolor $router */
-		$router = $this->routers[Technicolor::class];
-		return $router->saveKeys($ssid);
 	}
 
 

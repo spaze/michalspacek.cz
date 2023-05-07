@@ -78,7 +78,7 @@ class Ares implements CompanyDataInterface
 			Debugger::log(get_class($e) . ": {$e->getMessage()}, code: {$e->getCode()}, company id: {$companyId}");
 			$company->status = IResponse::S400_BadRequest;
 			$company->statusMessage = 'Not Found';
-		} catch (RuntimeException $e) {
+		} catch (RuntimeException) {
 			$company->status = IResponse::S500_InternalServerError;
 			$company->statusMessage = 'Error';
 		} catch (Exception $e) {

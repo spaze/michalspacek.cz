@@ -70,9 +70,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @throws BadRequestException
-	 */
 	public function actionDate(int $param): void
 	{
 		$this->dateId = $param;
@@ -155,9 +152,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @throws BadRequestException
-	 */
 	public function actionApplication(int $param): void
 	{
 		$this->applicationId = $param;

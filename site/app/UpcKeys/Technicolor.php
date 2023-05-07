@@ -27,7 +27,6 @@ class Technicolor implements RouterInterface
 	}
 
 
-	/** @inheritDoc */
 	public function getModelWithPrefixes(): array
 	{
 		return [$this->model => $this->serialNumberPrefixes];
@@ -51,7 +50,7 @@ class Technicolor implements RouterInterface
 				$this->storeKeys($ssid, $keys);
 			}
 			return $keys;
-		} catch (RuntimeException $e) {
+		} catch (RuntimeException) {
 			return [];
 		}
 	}
@@ -70,7 +69,7 @@ class Technicolor implements RouterInterface
 				$this->storeKeys($ssid, $this->generateKeys($ssid));
 			}
 			return true;
-		} catch (RuntimeException $e) {
+		} catch (RuntimeException) {
 			return false;
 		}
 	}
@@ -175,12 +174,11 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string $ssid
 	 * @param array<int, WiFiKey> $keys
-	 * @return bool false if no keys to store, true otherwise
 	 */
-	private function storeKeys(string $ssid, array $keys): bool
+	private function storeKeys(string $ssid, array $keys): void
 	{
 		if (!$keys) {
-			return false;
+			return;
 		}
 
 		$datetime = new DateTime();
@@ -215,8 +213,6 @@ class Technicolor implements RouterInterface
 			$this->database->rollBack();
 			throw $e;
 		}
-
-		return true;
 	}
 
 

@@ -189,9 +189,9 @@ class Manager implements Authenticator
 	 * Hash token used for permanent login.
 	 *
 	 * @param string $token
-	 * @return string SHA-512 hash of the token
+	 * @return non-empty-string SHA-512 hash of the token
 	 */
-	private function hashToken($token)
+	private function hashToken(string $token): string
 	{
 		return hash('sha512', $token);
 	}
@@ -204,10 +204,10 @@ class Manager implements Authenticator
 	 *
 	 * @param User $user
 	 * @param int $type
-	 * @return string Concatenation of selector, separator, token
+	 * @return non-empty-string Concatenation of selector, separator, token
 	 * @throws Exception
 	 */
-	private function insertToken(User $user, int $type)
+	private function insertToken(User $user, int $type): string
 	{
 		$selector = Random::generate(32, '0-9a-zA-Z');
 		$token = Random::generate(64, '0-9a-zA-Z');
@@ -223,7 +223,7 @@ class Manager implements Authenticator
 					'type' => $type,
 				],
 			);
-		} catch (UniqueConstraintViolationException $e) {
+		} catch (UniqueConstraintViolationException) {
 			// regenerate the access code and try harder this time
 			return $this->insertToken($user, $type);
 		}

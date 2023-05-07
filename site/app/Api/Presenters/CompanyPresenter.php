@@ -7,7 +7,6 @@ use MichalSpacekCz\CompanyInfo\Data;
 use MichalSpacekCz\CompanyInfo\Info;
 use MichalSpacekCz\Http\SecurityHeaders;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use RuntimeException;
@@ -23,12 +22,6 @@ class CompanyPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string|null $country
-	 * @param string|null $companyId
-	 * @throws BadRequestException
-	 * @throws AbortException
-	 */
 	public function actionDefault(?string $country, ?string $companyId): void
 	{
 		if ($country === null || $companyId === null) {

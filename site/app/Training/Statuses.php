@@ -261,7 +261,7 @@ class Statuses
 		try {
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$this->database->rollBack();
 		}
 	}
@@ -276,7 +276,7 @@ class Statuses
 			$applicationId = $callback();
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$this->database->rollBack();
 		}
 		return $applicationId;
@@ -290,7 +290,7 @@ class Statuses
 			$callback();
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$this->database->rollBack();
 		}
 	}

@@ -12,27 +12,18 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	private array $allLinks;
 
 
-	/**
-	 * @inheritDoc
-	 */
 	public function links(string $destination, array $params = []): array
 	{
 		return [];
 	}
 
 
-	/**
-	 * @inheritDoc
-	 */
 	public function defaultParams(array $params): array
 	{
 		return [];
 	}
 
 
-	/**
-	 * @inheritDoc
-	 */
 	public function setDefaultParams(array &$params, array $defaultParams): void
 	{
 	}
@@ -47,9 +38,6 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	}
 
 
-	/**
-	 * @inheritDoc
-	 */
 	public function allLinks(string $destination, array $params = []): array
 	{
 		return $this->allLinks;

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
-use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
@@ -61,10 +60,6 @@ class WinterIsComing
 	}
 
 
-	/**
-	 * @param TextInput $input
-	 * @throws AbortException
-	 */
 	private function sendSyntaxError(TextInput $input): never
 	{
 		/** @var Form $form If not, InvalidStateException would be thrown */

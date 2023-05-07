@@ -51,7 +51,7 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditInterview(string $formName): Form
+	protected function createComponentEditInterview(): Form
 	{
 		return $this->interviewFormFactory->create(
 			function (): never {
@@ -63,7 +63,7 @@ class InterviewsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddInterview(string $formName): Form
+	protected function createComponentAddInterview(): Form
 	{
 		return $this->interviewFormFactory->create(
 			function (): never {

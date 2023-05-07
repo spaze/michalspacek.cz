@@ -30,7 +30,6 @@ class Ubee implements RouterInterface
 	}
 
 
-	/** @inheritDoc */
 	public function getModelWithPrefixes(): array
 	{
 		return [$this->model => [$this->serialNumberPrefix]];

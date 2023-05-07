@@ -142,7 +142,6 @@ class Rating
 	 * Get ratings.
 	 *
 	 * @return array<string, string>
-	 * @throws ShouldNotHappenException
 	 */
 	public function getRatings(): array
 	{

@@ -23,7 +23,7 @@ class CertificatesPresenter extends BasePresenter
 		parent::startup();
 		try {
 			$this->certificates->authenticate($this->request->getPost('user') ?? '', $this->request->getPost('key') ?? '');
-		} catch (AuthenticationException $e) {
+		} catch (AuthenticationException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Invalid credentials']);
 		}
 	}
@@ -44,7 +44,7 @@ class CertificatesPresenter extends BasePresenter
 				'statusMessage' => 'Certificates reported successfully',
 				'count' => $count,
 			]);
-		} catch (RuntimeException $e) {
+		} catch (RuntimeException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
 		}
 	}

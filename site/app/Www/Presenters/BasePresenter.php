@@ -84,7 +84,7 @@ abstract class BasePresenter extends Presenter
 	{
 		try {
 			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
-		} catch (InvalidLinkException $e) {
+		} catch (InvalidLinkException) {
 			$this->template->localeLinks = $this->getLocaleLinkDefault();
 		}
 	}
@@ -139,7 +139,6 @@ abstract class BasePresenter extends Presenter
 	}
 
 
-	/** @inheritDoc */
 	public function lastModified($lastModified, string $etag = null, string $expire = null): void
 	{
 		$compression = ini_get('zlib.output_compression');
