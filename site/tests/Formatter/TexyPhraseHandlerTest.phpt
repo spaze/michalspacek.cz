@@ -37,7 +37,7 @@ class TexyPhraseHandlerTest extends TestCase
 	}
 
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->texy = new Texy();
 		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
