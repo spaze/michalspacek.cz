@@ -2,7 +2,7 @@ parameters:
 	tmpDir: /tmp/phpstan/michalspacek.cz-latte-templates
 	paths:
 		- app
-	level: 0
+	level: 1
 	latte:
 		engineBootstrap: app/PhpStan/latteEngine.php
 		presenterFactoryBootstrap: app/PhpStan/presenterFactory.php
