@@ -218,7 +218,7 @@ App.ready(document, function () {
 		const target = SlidePreview.selectDimensionsElement(tbody, image);
 		target.classList.remove('error');
 		if (image.getAttribute('src')) {
-			target.innerText = image.naturalWidth + '×AAA' + image.naturalHeight;
+			target.innerText = image.naturalWidth + '×' + image.naturalHeight;
 		}
 		if (!SlidePreview.checkDimensions(image)) {
 			target.classList.add('error');
