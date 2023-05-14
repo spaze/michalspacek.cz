@@ -32,7 +32,7 @@ App.ready(document, function () {
 			item.classList.remove('hidden');
 		}
 		const tr = this.parentElement.parentElement;
-		tr.after(tr.cloneNode(true));
+		tr.after(App.clone(tr));
 		let index = 0;
 		for (const child of tr.parentElement.children) {
 			if (child instanceof HTMLTableRowElement) {
@@ -158,7 +158,7 @@ App.ready(document, function () {
 
 	App.onClick('#frm-slides .add-after', function () {
 		const tbody = this.parentElement.parentElement.parentElement;
-		const slide = tbody.cloneNode(true);
+		const slide = App.clone(tbody);
 		let index = 0;
 		slide.classList.add('new-slide', 'changed');
 		for (const input of slide.querySelectorAll('input:not(.slide-nr), textarea')) {
@@ -180,11 +180,11 @@ App.ready(document, function () {
 		tbody.after(slide);
 		let newTbody = tbody;
 		while (newTbody.nextElementSibling) {
+			newTbody = newTbody.nextElementSibling;
 			const slideNr = newTbody.querySelector('.slide-nr');
 			if (slideNr) {
 				++slideNr.value;
 			}
-			newTbody = newTbody.nextElementSibling;
 		}
 		for (const slide of tbody.parentElement.querySelectorAll('.new-slide')) {
 			for (const input of slide.querySelectorAll('input, textarea')) {
