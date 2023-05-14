@@ -5,6 +5,7 @@ services:
 	- @MichalSpacekCz\Application\RouterFactory::createRouter
 	- MichalSpacekCz\Application\Theme
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
+	- MichalSpacekCz\Application\WindowsSubsystemForLinux
 	- MichalSpacekCz\Articles\Articles
 	- MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
 	- MichalSpacekCz\CompanyInfo\Info(loadCompanyDataVisible: %loadCompanyDataVisible%)

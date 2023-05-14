@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Talks;
 
 use DateTime;
+use MichalSpacekCz\Application\WindowsSubsystemForLinux;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Resources\TalkMediaResources;
@@ -14,6 +15,7 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\FileUpload;
+use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -37,6 +39,7 @@ class Talks
 		private readonly TexyFormatter $texyFormatter,
 		private readonly TalkMediaResources $talkMediaResources,
 		private readonly SupportedImageFileFormats $supportedImageFileFormats,
+		private readonly WindowsSubsystemForLinux $windowsSubsystemForLinux,
 	) {
 	}
 
@@ -507,10 +510,16 @@ class Talks
 		}
 		$name = $this->getSlideImageFileBasename($contents);
 		$extension = $getExtension($contentType);
-		$replace->move($this->talkMediaResources->getImageFilename($talkId, "{$name}.{$extension}"));
+		$imageSize = $replace->getImageSize();
+		try {
+			$replace->move($this->talkMediaResources->getImageFilename($talkId, "{$name}.{$extension}"));
+		} catch (InvalidStateException $e) {
+			if (!$this->windowsSubsystemForLinux->isWsl()) {
+				throw $e;
+			}
+		}
 		$this->decrementOtherSlides($originalFile);
 		$this->incrementOtherSlides("{$name}.{$extension}");
-		$imageSize = $replace->getImageSize();
 		if ($imageSize && !($width && $height)) {
 			[$width, $height] = $imageSize;
 		}
