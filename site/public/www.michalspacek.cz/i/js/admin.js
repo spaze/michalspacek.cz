@@ -180,11 +180,11 @@ App.ready(document, function () {
 		tbody.after(slide);
 		let newTbody = tbody;
 		while (newTbody.nextElementSibling) {
+			newTbody = newTbody.nextElementSibling;
 			const slideNr = newTbody.querySelector('.slide-nr');
 			if (slideNr) {
 				++slideNr.value;
 			}
-			newTbody = newTbody.nextElementSibling;
 		}
 		for (const slide of tbody.parentElement.querySelectorAll('.new-slide')) {
 			for (const input of slide.querySelectorAll('input, textarea')) {
