@@ -100,6 +100,8 @@ class TrainingsPresenter extends BasePresenter
 		if ($this->training->discontinuedId !== null) {
 			$this->template->discontinued = [$this->trainings->getDiscontinued($this->training->discontinuedId)];
 			$this->httpResponse->setCode(IResponse::S410_Gone);
+		} else {
+			$this->template->discontinued = null;
 		}
 	}
 
