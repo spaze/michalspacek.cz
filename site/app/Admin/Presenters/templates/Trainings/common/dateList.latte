@@ -1,4 +1,4 @@
-{define #listItems}
+{define #listItems, Nette\Database\Row[] $applications}
 	<tr class="summary" n:foreach="$applications as $application">
 		<td><small>{$iterator->getCounter()}.</small></td>
 		<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id">{$application->name ?? smazáno}</a></small></td>

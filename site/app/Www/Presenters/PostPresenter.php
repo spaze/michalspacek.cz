@@ -52,6 +52,8 @@ class PostPresenter extends BasePresenter
 		$interval = ($edits && $post->published ? current($edits)->editedAt->diff($post->published) : false);
 		if ($edits && $interval && $interval->days >= $this->blogPost->getUpdatedInfoThreshold()) {
 			$this->template->edited = current($edits)->editedAt;
+		} else {
+			$this->template->edited = null;
 		}
 
 		foreach ($this->localeUrls->get($post->slug) as $localePost) {
