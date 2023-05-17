@@ -6,5 +6,5 @@
 	{include "common/dateForm.latte", form: addDate, id: pridat-termin-container}
 </div>
 <hr>
-{include "common/dateList.latte", order: 'desc'}
+{include "common/dateList.latte", order: 'desc', upcomingIds: $upcomingIds, now: $now}
 {/define}
