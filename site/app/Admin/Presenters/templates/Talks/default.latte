@@ -1,4 +1,4 @@
-{define #itemTalk}
+{define #itemTalk, Nette\Database\Row $item, bool $upcoming}
 	<li><a n:href="Talks:talk $item->talkId"><strong n:tag-if="$upcoming">{$item->title}</strong></a>
 	<small><strong class="date">{$item->date|localeDay}</strong>, {$item->event}</small>
 	<span n:if="$item->hasSlides" title="{_messages.label.slides}">{icon images}</span>
@@ -19,11 +19,11 @@
 <ol reversed>
 {foreach $upcomingTalks as $item}
 	{var $upcoming = true}
-	{include #itemTalk}
+	{include #itemTalk, item: $item, upcoming: $upcoming}
 {/foreach}
 {foreach $talks as $item}
 	{var $upcoming = false}
-	{include #itemTalk}
+	{include #itemTalk, item: $item, upcoming: $upcoming}
 {/foreach}
 </ol>
 {/define}

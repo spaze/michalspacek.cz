@@ -1,6 +1,7 @@
+{varType bool $applications}
 {form $form class => aligned}
 	<table>
-		<tr n:ifset="$applications">
+		<tr n:if="$applications">
 			<th>{label application /}</th><td>{input application}</td>
 		</tr>
 		<tr>

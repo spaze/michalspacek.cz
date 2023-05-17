@@ -10,5 +10,5 @@
 
 {define #content}
 <p>{$name} {$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</p>
-{include "common/reviewForm.latte", form: editReview}
+{include "common/reviewForm.latte", form: editReview, applications: false}
 {/define}
