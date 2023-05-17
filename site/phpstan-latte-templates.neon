@@ -4,6 +4,7 @@ parameters:
 		- app
 	level: 1
 	latte:
+		tmpDir: %currentWorkingDirectory%/temp/phpstan-latte
 		engineBootstrap: app/PhpStan/latteEngine.php
 		presenterFactoryBootstrap: app/PhpStan/presenterFactory.php
 	ignoreErrors:

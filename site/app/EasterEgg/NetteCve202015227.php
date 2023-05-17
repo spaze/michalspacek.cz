@@ -35,14 +35,16 @@ class NetteCve202015227
 			throw new BadRequestException(sprintf("[%s] Empty param '%s' for callback '%s'", __CLASS__, $paramNames[$callback], $callback));
 		}
 
-		if (str_contains($param, 'ifconfig')) {
-			foreach (['Rx', 'Tx'] as $dir) {
-				foreach (['Packets', 'Bytes'] as $type) {
-					$data['eth0' . $dir . $type] = $this->getRandom();
-					$data['eth1' . $dir . $type] = $this->getRandom();
-					$data['lo' . $dir . $type] = $this->getRandom();
-				}
+		$data = ['command' => ''];
+		foreach (['Rx', 'Tx'] as $dir) {
+			foreach (['Packets', 'Bytes'] as $type) {
+				$data['eth0' . $dir . $type] = str_contains($param, 'ifconfig') ? $this->getRandom() : '';
+				$data['eth1' . $dir . $type] = str_contains($param, 'ifconfig') ? $this->getRandom() : '';
+				$data['lo' . $dir . $type] = str_contains($param, 'ifconfig') ? $this->getRandom() : '';
 			}
+		}
+
+		if (str_contains($param, 'ifconfig')) {
 			$view = NetteCve202015227View::Ifconfig;
 		} elseif (str_contains($param, 'ls')) {
 			$view = NetteCve202015227View::Ls;
@@ -66,7 +68,7 @@ class NetteCve202015227
 		} else {
 			throw new BadRequestException(sprintf("[%s] Unknown value '%s' for callback '%s' and param '%s'", __CLASS__, $param, $callback, $paramNames[$callback]));
 		}
-		return new NetteCve202015227Rce($view, $data ?? []);
+		return new NetteCve202015227Rce($view, $data);
 	}
 
 
