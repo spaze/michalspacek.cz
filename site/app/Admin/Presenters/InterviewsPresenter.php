@@ -33,6 +33,8 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.interviews');
 		$this->template->interviews = $this->interviews->getAll();
+		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
+		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 

@@ -1,4 +1,6 @@
 {templateType MichalSpacekCz\Admin\Presenters\PresenterTemplates\Interviews\InterviewsInterview}
+{varType int $videoThumbnailWidth}
+{varType int $videoThumbnailHeight}
 {define #menu}
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
@@ -6,5 +8,5 @@
 {/define}
 
 {define #content}
-{include "common/interviewForm.latte", form: editInterview}
+{include "common/interviewForm.latte", form: editInterview, videoThumbnailWidth: $videoThumbnailWidth, videoThumbnailHeight: $videoThumbnailHeight}
 {/define}

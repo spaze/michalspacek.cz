@@ -1,10 +1,12 @@
 {templateType MichalSpacekCz\Admin\Presenters\PresenterTemplates\Interviews\InterviewsDefault}
+{varType int $videoThumbnailWidth}
+{varType int $videoThumbnailHeight}
 {define #content}
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-rozhovor">
 	<p><a href="#pridat-rozhovor" class="open-container block">Přidat rozhovor</a></p>
 	<div id="pridat-rozhovor-container" class="hidden">
-	{include "common/interviewForm.latte", form: addInterview, interview: null}
+	{include "common/interviewForm.latte", form: addInterview, interview: null, videoThumbnailWidth: $videoThumbnailWidth, videoThumbnailHeight: $videoThumbnailHeight}
 	</div>
 </div>
 <hr>

@@ -1,7 +1,9 @@
+{varType int $videoThumbnailWidth}
+{varType int $videoThumbnailHeight}
 <tr>
 	<th>Náhled videa:</th>
 	<td class="narrower">
-		<span id="videoThumbnailFormField">{input videoThumbnail}</span>
+		<span id="videoThumbnailFormField">{input videoThumbnail} <small>{$videoThumbnailWidth}×{$videoThumbnailHeight}</small></span>
 		<span id="currentVideoThumbnail">
 			{ifset $item->videoThumbnailUrl}
 				<img src="{$item->videoThumbnailUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnail}" title="{$item->videoThumbnail}">
@@ -14,7 +16,7 @@
 <tr>
 	<td class="right">WebP:</td>
 	<td class="narrower">
-		<span id="videoThumbnailAlternativeFormField">{input videoThumbnailAlternative}</span>
+		<span id="videoThumbnailAlternativeFormField">{input videoThumbnailAlternative} <small>{$videoThumbnailWidth}×{$videoThumbnailHeight}</small></span>
 		<span id="currentVideoThumbnailAlternative">
 			{ifset $item->videoThumbnailAlternativeUrl}
 				<img src="{$item->videoThumbnailAlternativeUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnailAlternative}" title="{$item->videoThumbnailAlternative}">
