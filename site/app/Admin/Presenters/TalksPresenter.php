@@ -42,6 +42,8 @@ class TalksPresenter extends BasePresenter
 		$this->template->pageTitle = $this->translator->translate('messages.title.talks');
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
 		$this->template->talks = $this->talks->getAll();
+		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
+		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 

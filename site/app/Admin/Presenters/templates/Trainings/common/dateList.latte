@@ -1,5 +1,5 @@
 {varType int[] $upcomingIds}
-{varType \DateTime $now}
+{varType \DateTime|null $now}
 {define #listItems, Nette\Database\Row[] $applications}
 	<tr class="summary" n:foreach="$applications as $application">
 		<td><small>{$iterator->getCounter()}.</small></td>
@@ -37,9 +37,9 @@
 	<tbody n:inner-foreach="$trainings as $training">
 	{var $upcoming = in_array($training->dateId, $upcomingIds)}
 	{if $order == 'desc'}
-		{var $dateLineCheck = $training->start < $now}
+		{var $dateLineCheck = $now && $training->start < $now}
 	{else}
-		{var $dateLineCheck = $training->start > $now}
+		{var $dateLineCheck = $now && $training->start > $now}
 		{if $dateLineCheck && $iterator->first}
 			{var $dateLineDisplayed = true}
 		{/if}
@@ -50,7 +50,7 @@
 		<td n:if="$order == 'asc'" class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 		<td class="dateCell">
 			<strong n:tag-if="$upcoming">
-				<small n:tag-if="!$upcoming && $training->start > $now">
+				<small n:tag-if="!$upcoming && $now && $training->start > $now">
 					<a n:href="Trainings:date $training->dateId">{$training->start|localeIntervalDay:$training->end}</a>
 				</small>
 			</strong>

@@ -1,3 +1,5 @@
+{varType int $videoThumbnailWidth}
+{varType int $videoThumbnailHeight}
 {form $formName class => "aligned wide"}
 	<table>
 		<tr>
@@ -33,7 +35,7 @@
 		<tr>
 			<th>{label videoHref /}</th><td>{input videoHref}</td>
 		</tr>
-		{include "formVideoThumbnails.latte", item: $talk}
+		{include "formVideoThumbnails.latte", item: $talk, videoThumbnailWidth: $videoThumbnailWidth, videoThumbnailHeight: $videoThumbnailHeight}
 		<tr class="lighter">
 			<th class="align-top">{label videoEmbed /}</th><td>{input videoEmbed}<br><small><em>deprecated</em></small></td>
 		</tr>
