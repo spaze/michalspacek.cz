@@ -1,5 +1,5 @@
 <pre>
-Command '{$command}' not found, but can be installed with:
+Command '{$command ?? ''}' not found, but can be installed with:
 
-pkg install {$command}
+pkg install {$command ?? ''}
 </pre>
