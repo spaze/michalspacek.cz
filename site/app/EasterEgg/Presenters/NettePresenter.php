@@ -24,8 +24,20 @@ class NettePresenter extends Presenter
 	{
 		sleep(random_int(5, 20));
 		$rce = $this->cve202015227->rce($callback, $this->getParameters());
-		$this->setView($rce->getView()->value);
-		$this->template->setParameters($rce->getParameters());
+		$this->setView($rce->view->value);
+		$this->template->eth0RxPackets = $rce->eth0RxPackets;
+		$this->template->eth1RxPackets = $rce->eth1RxPackets;
+		$this->template->loRxPackets = $rce->loRxPackets;
+		$this->template->eth0RxBytes = $rce->eth0RxBytes;
+		$this->template->eth1RxBytes = $rce->eth1RxBytes;
+		$this->template->loRxBytes = $rce->loRxBytes;
+		$this->template->eth0TxPackets = $rce->eth0TxPackets;
+		$this->template->eth1TxPackets = $rce->eth1TxPackets;
+		$this->template->loTxPackets = $rce->loTxPackets;
+		$this->template->eth0TxBytes = $rce->eth0TxBytes;
+		$this->template->eth1TxBytes = $rce->eth1TxBytes;
+		$this->template->loTxBytes = $rce->loTxBytes;
+		$this->template->command = $rce->command;
 	}
 
 }

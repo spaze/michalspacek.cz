@@ -49,46 +49,75 @@ class NetteCve202015227Test extends TestCase
 
 	public function testRceLs(): void
 	{
-		Assert::equal(new NetteCve202015227Rce(NetteCve202015227View::Ls, []), $this->cve202015227->rce('exec', ['command' => 'ls foo']));
+		$rce = $this->cve202015227->rce('exec', ['command' => 'ls foo']);
+		Assert::same(NetteCve202015227View::Ls, $rce->view);
 	}
 
 
 	public function testRceIfconfig(): void
 	{
 		$rce = $this->cve202015227->rce('exec', ['command' => 'ifconfig bar']);
-		Assert::same(NetteCve202015227View::Ifconfig, $rce->getView());
-
-		$keys = [
-			'eth0RxPackets',
-			'eth1RxPackets',
-			'loRxPackets',
-			'eth0RxBytes',
-			'eth1RxBytes',
-			'loRxBytes',
-			'eth0TxPackets',
-			'eth1TxPackets',
-			'loTxPackets',
-			'eth0TxBytes',
-			'eth1TxBytes',
-			'loTxBytes',
-		];
-		Assert::equal($keys, array_keys($rce->getParameters()));
+		Assert::same(NetteCve202015227View::Ifconfig, $rce->view);
+		Assert::type('string', $rce->eth0RxPackets);
+		Assert::type('string', $rce->eth1RxPackets);
+		Assert::type('string', $rce->loRxPackets);
+		Assert::type('string', $rce->eth0RxBytes);
+		Assert::type('string', $rce->eth1RxBytes);
+		Assert::type('string', $rce->loRxBytes);
+		Assert::type('string', $rce->eth0TxPackets);
+		Assert::type('string', $rce->eth1TxPackets);
+		Assert::type('string', $rce->loTxPackets);
+		Assert::type('string', $rce->eth0TxBytes);
+		Assert::type('string', $rce->eth1TxBytes);
+		Assert::type('string', $rce->loTxBytes);
 	}
 
 
 	public function testRceWget(): void
 	{
-		Assert::equal(new NetteCve202015227Rce(NetteCve202015227View::Wget, []), $this->cve202015227->rce('shell_exec', ['cmd' => 'wget example.com']));
+		$rce = $this->cve202015227->rce('shell_exec', ['cmd' => 'wget example.com']);
+		Assert::same(NetteCve202015227View::Wget, $rce->view);
 	}
 
 
-	public function testRceNotFound(): void
+	/** @dataProvider getCommands */
+	public function testRceNotFound(NetteCve202015227View $view, string $command, string $cmd): void
 	{
-		Assert::equal(new NetteCve202015227Rce(NetteCve202015227View::NotFound, ['command' => 'echo']), $this->cve202015227->rce('shell_exec', ['cmd' => 'echo something']));
-		Assert::equal(new NetteCve202015227Rce(NetteCve202015227View::NotFound, ['command' => 'bash']), $this->cve202015227->rce('shell_exec', ['cmd' => 'bash something']));
-		Assert::equal(new NetteCve202015227Rce(NetteCve202015227View::NotFound, ['command' => 'zsh']), $this->cve202015227->rce('shell_exec', ['cmd' => 'sh something']));
-		Assert::equal(new NetteCve202015227Rce(NetteCve202015227View::NotRecognized, ['command' => 'certutil.exe']), $this->cve202015227->rce('shell_exec', ['cmd' => 'certutil something']));
-		Assert::equal(new NetteCve202015227Rce(NetteCve202015227View::NotRecognized, ['command' => 'sa.exe']), $this->cve202015227->rce('shell_exec', ['cmd' => 'sa.exe something']));
+		$rce = $this->cve202015227->rce('shell_exec', ['cmd' => $cmd]);
+		Assert::same($view, $rce->view);
+		Assert::same($command, $rce->command);
+	}
+
+
+	public function getCommands(): array
+	{
+		return [
+			[
+				'view' => NetteCve202015227View::NotFound,
+				'command' => 'echo',
+				'cmd' => 'echo something',
+			],
+			[
+				'view' => NetteCve202015227View::NotFound,
+				'command' => 'bash',
+				'cmd' => 'bash something',
+			],
+			[
+				'view' => NetteCve202015227View::NotFound,
+				'command' => 'zsh',
+				'cmd' => 'sh something',
+			],
+			[
+				'view' => NetteCve202015227View::NotRecognized,
+				'command' => 'certutil.exe',
+				'cmd' => 'certutil something',
+			],
+			[
+				'view' => NetteCve202015227View::NotRecognized,
+				'command' => 'sa.exe',
+				'cmd' => 'sa.exe something',
+			],
+		];
 	}
 
 }

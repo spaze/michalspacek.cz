@@ -6,28 +6,22 @@ namespace MichalSpacekCz\EasterEgg;
 class NetteCve202015227Rce
 {
 
-	/**
-	 * @param array<string, string> $parameters
-	 */
 	public function __construct(
-		private readonly NetteCve202015227View $view,
-		private readonly array $parameters,
+		public NetteCve202015227View $view,
+		public string $eth0RxPackets = '',
+		public string $eth1RxPackets = '',
+		public string $loRxPackets = '',
+		public string $eth0RxBytes = '',
+		public string $eth1RxBytes = '',
+		public string $loRxBytes = '',
+		public string $eth0TxPackets = '',
+		public string $eth1TxPackets = '',
+		public string $loTxPackets = '',
+		public string $eth0TxBytes = '',
+		public string $eth1TxBytes = '',
+		public string $loTxBytes = '',
+		public string $command = '',
 	) {
-	}
-
-
-	public function getView(): NetteCve202015227View
-	{
-		return $this->view;
-	}
-
-
-	/**
-	 * @return array<string, string>
-	 */
-	public function getParameters(): array
-	{
-		return $this->parameters;
 	}
 
 }

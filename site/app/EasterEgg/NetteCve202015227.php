@@ -30,11 +30,12 @@ class NetteCve202015227
 			throw new BadRequestException(sprintf("[%s] Unknown callback '%s'", __CLASS__, $callback));
 		}
 
+		$data = [];
+
 		$param = $params[$paramNames[$callback]] ?? null;
 		if (!$param) {
 			throw new BadRequestException(sprintf("[%s] Empty param '%s' for callback '%s'", __CLASS__, $paramNames[$callback], $callback));
 		}
-
 		if (str_contains($param, 'ifconfig')) {
 			foreach (['Rx', 'Tx'] as $dir) {
 				foreach (['Packets', 'Bytes'] as $type) {
@@ -66,7 +67,7 @@ class NetteCve202015227
 		} else {
 			throw new BadRequestException(sprintf("[%s] Unknown value '%s' for callback '%s' and param '%s'", __CLASS__, $param, $callback, $paramNames[$callback]));
 		}
-		return new NetteCve202015227Rce($view, $data ?? []);
+		return new NetteCve202015227Rce($view, ...$data);
 	}
 
 
