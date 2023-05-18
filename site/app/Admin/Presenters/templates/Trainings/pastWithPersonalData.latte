@@ -3,7 +3,7 @@
 {if !$trainings}
 	<p>Žádná minulá školení s osobními daty</p>
 {else}
-	{include "common/dateList.latte", order: 'desc', upcomingIds: $upcomingIds, now: $now}
+	{include "common/dateList.latte", order: 'desc', upcomingIds: [], now: null}
 	<form n:name="deletePersonalDataForm">
 		<p>{input delete}</p>
 	</form>
