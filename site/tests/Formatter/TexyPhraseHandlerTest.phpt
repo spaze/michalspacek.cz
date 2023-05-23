@@ -86,6 +86,11 @@ class TexyPhraseHandlerTest extends TestCase
 			$this->buildUrl('//:Module:Presenter:action', ['params']),
 			'"title":[link:Module:Presenter:action params]',
 		);
+		$this->assertUrl(
+			'title',
+			$this->buildUrl('//:en_US:Module:Presenter:action', ['params']),
+			'"title":[link-en_US:Module:Presenter:action params]',
+		);
 	}
 
 
