@@ -81,10 +81,16 @@ class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveGeneralLink(): void
 	{
+		$destination = '//:Module:Presenter:action';
 		$this->assertUrl(
 			'title',
-			$this->buildUrl('//:Module:Presenter:action', ['params']),
+			$this->buildUrl($destination, ['params']),
 			'"title":[link:Module:Presenter:action params]',
+		);
+		$this->assertUrl(
+			'title',
+			$this->buildUrl($destination, ['params']),
+			'"title":[link-en_US:Module:Presenter:action params]',
 		);
 	}
 

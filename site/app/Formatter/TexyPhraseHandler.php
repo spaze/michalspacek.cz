@@ -22,6 +22,10 @@ use Texy\Modifier;
 class TexyPhraseHandler
 {
 
+	private const TRAINING_ACTION = ':Www:Trainings:training';
+	private const COMPANY_TRAINING_ACTION = ':Www:CompanyTrainings:training';
+
+
 	public function __construct(
 		private readonly Application $application,
 		private readonly Locales $trainingLocales,
@@ -47,36 +51,35 @@ class TexyPhraseHandler
 			return $invocation->proceed();
 		}
 
-		$trainingAction = ':Www:Trainings:training';
-		$companyTrainingAction = ':Www:CompanyTrainings:training';
+		$localeRegExp = '([a-z]{2}_[A-Z]{2})';
 		/** @var Presenter $presenter */
 		$presenter = $this->application->getPresenter();
 		$url = $link->URL ?? $link->raw;
 
 		// "title":[link:Module:Presenter:action params]
 		if (str_starts_with($url, 'link:')) {
-			$args = Strings::split(substr($url, 5), '/[\s,]+/');
-			$action = ':' . array_shift($args);
-			if (Arrays::contains([$trainingAction, $companyTrainingAction], $action)) {
-				$args = $this->trainingLocales->getLocaleActions($args[0])[$this->translator->getDefaultLocale()];
-			}
-			$link->URL = $presenter->link("//{$action}", $args);
+			$link->URL = $this->getLink($presenter, substr($url, 5), $this->translator->getDefaultLocale());
+		}
+
+		// "title":[link-en_US:Module:Presenter:action params]
+		if (str_starts_with($url, 'link-') && preg_match("/^link-{$localeRegExp}:(.*)\\z/", $url, $matches)) {
+			$link->URL = $this->getLink($presenter, $matches[2], $matches[1]);
 		}
 
 		// "title":[blog:post#fragment]
 		if (str_starts_with($url, 'blog:')) {
-			$link->URL = $this->getBlogLinks(substr($url, 5), $this->translator->getDefaultLocale());
+			$link->URL = $this->getBlogLink(substr($url, 5), $this->translator->getDefaultLocale());
 		}
 
 		// "title":[blog-en_US:post#fragment]
-		if (str_starts_with($url, 'blog-') && preg_match('/^blog\-([a-z]{2}_[A-Z]{2}):(.*)\z/', $url, $matches)) {
-			$link->URL = $this->getBlogLinks($matches[2], $matches[1]);
+		if (str_starts_with($url, 'blog-') && preg_match("/^blog-{$localeRegExp}:(.*)\\z/", $url, $matches)) {
+			$link->URL = $this->getBlogLink($matches[2], $matches[1]);
 		}
 
 		// "title":[inhouse-training:training]
 		if (str_starts_with($url, 'inhouse-training:')) {
 			$args = $this->trainingLocales->getLocaleActions(substr($url, 17))[$this->translator->getDefaultLocale()];
-			$link->URL = $presenter->link("//{$companyTrainingAction}", $args);
+			$link->URL = $presenter->link("//" . self::COMPANY_TRAINING_ACTION, $args);
 		}
 
 		// "title":[training:training]
@@ -84,7 +87,7 @@ class TexyPhraseHandler
 			$texy = $invocation->getTexy();
 			$name = substr($url, 9);
 			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
-			$link->URL = $presenter->link("//{$trainingAction}", $name);
+			$link->URL = $presenter->link("//" . self::TRAINING_ACTION, $name);
 			$el = HtmlElement::el();
 			$trainingLink = $texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link);
 			if ($trainingLink) {
@@ -98,7 +101,21 @@ class TexyPhraseHandler
 	}
 
 
-	private function getBlogLinks(string $url, string $locale): string
+	/**
+	 * @throws InvalidLinkException
+	 */
+	private function getLink(Presenter $presenter, string $url, string $locale): string
+	{
+		$args = Strings::split($url, '/[\s,]+/');
+		$action = ':' . array_shift($args);
+		if (Arrays::contains([self::TRAINING_ACTION, self::COMPANY_TRAINING_ACTION], $action)) {
+			$args = $this->trainingLocales->getLocaleActions($args[0])[$locale];
+		}
+		return $presenter->link("//{$action}", $args);
+	}
+
+
+	private function getBlogLink(string $url, string $locale): string
 	{
 		$args = explode('#', $url);
 		$fragment = (empty($args[1]) ? '' : "#{$args[1]}");
