@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use DateInterval;
-use MichalSpacekCz\Post\LocaleUrls;
-use MichalSpacekCz\Post\Post;
+use MichalSpacekCz\Blog\BlogPostLocaleUrls;
+use MichalSpacekCz\Blog\BlogPosts;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates;
 use Spaze\ContentSecurityPolicy\Config as CspConfig;
@@ -18,9 +18,9 @@ class PostPresenter extends BasePresenter
 
 
 	public function __construct(
-		private readonly Post $blogPost,
+		private readonly BlogPosts $blogPosts,
 		private readonly Dates $trainingDates,
-		private readonly LocaleUrls $localeUrls,
+		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly CspConfig $contentSecurityPolicy,
 	) {
 		parent::__construct();
@@ -29,7 +29,7 @@ class PostPresenter extends BasePresenter
 
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
-		$post = $this->blogPost->get($slug, $preview);
+		$post = $this->blogPosts->get($slug, $preview);
 		if ($slug !== $post->slug) {
 			$this->redirectPermanent($this->getAction(), [$post->slug, $preview]);
 		}
@@ -42,7 +42,7 @@ class PostPresenter extends BasePresenter
 		if ($post->postId === null) {
 			throw new ShouldNotHappenException('Never thought it would be possible to have a published blog post without an id');
 		}
-		$edits = $this->blogPost->getEdits($post->postId);
+		$edits = $this->blogPosts->getEdits($post->postId);
 		$this->template->post = $post;
 		$this->template->pageTitle = htmlspecialchars_decode(strip_tags((string)$post->title));
 		$this->template->pageHeader = $post->title;
@@ -50,13 +50,13 @@ class PostPresenter extends BasePresenter
 		$this->template->edits = $edits;
 		/** @var DateInterval|false $interval */
 		$interval = ($edits && $post->published ? current($edits)->editedAt->diff($post->published) : false);
-		if ($edits && $interval && $interval->days >= $this->blogPost->getUpdatedInfoThreshold()) {
+		if ($edits && $interval && $interval->days >= $this->blogPosts->getUpdatedInfoThreshold()) {
 			$this->template->edited = current($edits)->editedAt;
 		} else {
 			$this->template->edited = null;
 		}
 
-		foreach ($this->localeUrls->get($post->slug) as $localePost) {
+		foreach ($this->blogPostLocaleUrls->get($post->slug) as $localePost) {
 			$this->localeLinkParams[$localePost->locale] = ['slug' => $localePost->slug, 'preview' => ($localePost->needsPreviewKey() ? $localePost->previewKey : null)];
 		}
 		foreach ($post->cspSnippets as $snippet) {

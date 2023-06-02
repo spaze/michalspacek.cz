@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Articles\Articles;
+use MichalSpacekCz\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Post\LocaleUrls;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
@@ -21,7 +21,7 @@ class TagsPresenter extends BasePresenter
 		private readonly Articles $articles,
 		private readonly Strings $strings,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly LocaleUrls $localeUrls,
+		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 	) {
 		parent::__construct();
 	}
@@ -67,7 +67,7 @@ class TagsPresenter extends BasePresenter
 	private function findLocaleLinkParams(array $articles, string $tag): void
 	{
 		foreach ($articles as $article) {
-			$posts = $this->localeUrls->get($article->slug);
+			$posts = $this->blogPostLocaleUrls->get($article->slug);
 			if (count($posts) === 1) {
 				continue; // post and tags not translated yet
 			}

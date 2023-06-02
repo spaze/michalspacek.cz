@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use DateTime;
+use MichalSpacekCz\Blog\BlogPost;
+use MichalSpacekCz\Blog\BlogPostPreview;
+use MichalSpacekCz\Blog\BlogPosts;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Post\BlogPostPreview;
-use MichalSpacekCz\Post\Data;
-use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
@@ -27,7 +27,7 @@ class PostFormFactory
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly Translator $translator,
-		private readonly Post $blogPost,
+		private readonly BlogPosts $blogPosts,
 		private readonly Tags $tags,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly CspConfig $contentSecurityPolicy,
@@ -43,7 +43,7 @@ class PostFormFactory
 		$form = $this->factory->create();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
 			->setRequired(false);
-		$form->addSelect('locale', 'Jazyk:', $this->blogPost->getAllLocales())
+		$form->addSelect('locale', 'Jazyk:', $this->blogPosts->getAllLocales())
 			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');
 		$form->addText('title', 'Titulek:')
@@ -71,7 +71,7 @@ class PostFormFactory
 			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na obrázek je %d znaků', 200);
 
 		$cards = ['' => 'Žádná karta'];
-		foreach ($this->blogPost->getAllTwitterCards() as $card) {
+		foreach ($this->blogPosts->getAllTwitterCards() as $card) {
 			$cards[$card->card] = $card->title;
 		}
 		$form->addSelect('twitterCard', 'Twitter card', $cards);
@@ -100,7 +100,7 @@ class PostFormFactory
 		$form->addMultiSelect('cspSnippets', $label, $items);
 
 		$items = [];
-		foreach ($this->blogPost->getAllowedTags() as $name => $tags) {
+		foreach ($this->blogPosts->getAllowedTags() as $name => $tags) {
 			$allowed = [];
 			foreach ($tags as $tag => $attributes) {
 				$allowed[] = trim('<' . trim($tag . ' ' . implode(' ', $attributes)) . '>');
@@ -129,7 +129,7 @@ class PostFormFactory
 		};
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $postId): void {
 			$post = $this->buildPost($values, $postId);
-			$this->blogPost->enrich($post);
+			$this->blogPosts->enrich($post);
 			try {
 				$onSuccess($post);
 			} catch (UniqueConstraintViolationException) {
@@ -142,13 +142,13 @@ class PostFormFactory
 	}
 
 
-	private function buildPost(stdClass $values, ?int $postId): Data
+	private function buildPost(stdClass $values, ?int $postId): BlogPost
 	{
-		$post = new Data();
+		$post = new BlogPost();
 		$post->postId = $postId;
 		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
 		$post->localeId = $values->locale;
-		$post->locale = $this->blogPost->getLocaleById($values->locale);
+		$post->locale = $this->blogPosts->getLocaleById($values->locale);
 		$post->slug = $values->slug;
 		$post->titleTexy = $values->title;
 		$post->leadTexy = (empty($values->lead) ? null : $values->lead);

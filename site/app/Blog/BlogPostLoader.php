@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Post;
+namespace MichalSpacekCz\Blog;
 
 use Contributte\Translation\Translator;
 use Nette\Database\Explorer;
@@ -13,7 +13,7 @@ use Nette\Utils\DateTime;
  *
  * Fast loader, no extra work, no formatting, no circular references.
  */
-class Loader
+class BlogPostLoader
 {
 
 	/** @var Row<mixed>|null */
