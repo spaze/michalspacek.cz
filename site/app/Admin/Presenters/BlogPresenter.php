@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
+use MichalSpacekCz\Blog\BlogPost;
+use MichalSpacekCz\Blog\BlogPosts;
+use MichalSpacekCz\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Form\PostFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Post\Data;
-use MichalSpacekCz\Post\Exceptions\PostDoesNotExistException;
-use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -18,11 +18,11 @@ use Nette\Utils\Json;
 class BlogPresenter extends BasePresenter
 {
 
-	private Data $post;
+	private BlogPost $post;
 
 
 	public function __construct(
-		private readonly Post $blogPost,
+		private readonly BlogPosts $blogPosts,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Tags $tags,
 		private readonly PostFormFactory $postFormFactory,
@@ -34,7 +34,7 @@ class BlogPresenter extends BasePresenter
 	public function actionDefault(): void
 	{
 		$posts = [];
-		foreach ($this->blogPost->getAll() as $post) {
+		foreach ($this->blogPosts->getAll() as $post) {
 			$posts[($post->published?->getTimestamp() ?: PHP_INT_MAX) . '|' . $post->slug] = $post;
 		}
 		krsort($posts, SORT_NATURAL);
@@ -53,8 +53,8 @@ class BlogPresenter extends BasePresenter
 	protected function createComponentAddPost(): Form
 	{
 		return $this->postFormFactory->create(
-			function (Data $post): never {
-				$this->blogPost->add($post);
+			function (BlogPost $post): never {
+				$this->blogPosts->add($post);
 				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
 				$this->redirect('Blog:');
 			},
@@ -67,20 +67,20 @@ class BlogPresenter extends BasePresenter
 	public function actionEdit(int $param): void
 	{
 		try {
-			$this->post = $this->blogPost->getById($param);
-		} catch (PostDoesNotExistException $e) {
+			$this->post = $this->blogPosts->getById($param);
+		} catch (BlogPostDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-		$this->blogPost->setTemplateTitleAndHeader($this->post, $this->template, Html::el()->setText('Příspěvek '));
+		$this->blogPosts->setTemplateTitleAndHeader($this->post, $this->template, Html::el()->setText('Příspěvek '));
 	}
 
 
 	protected function createComponentEditPost(): Form
 	{
 		$form = $this->postFormFactory->create(
-			function (Data $post): never {
+			function (BlogPost $post): never {
 				$post->previousSlugTags = $this->post->slugTags;
-				$this->blogPost->update($post);
+				$this->blogPosts->update($post);
 				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
 				$this->redirect('Blog:');
 			},

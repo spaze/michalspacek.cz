@@ -6,8 +6,8 @@ namespace MichalSpacekCz\Articles;
 use Collator;
 use Contributte\Translation\Translator;
 use DateTime;
+use MichalSpacekCz\Blog\BlogPosts;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Post\Post;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
@@ -23,7 +23,7 @@ class Articles
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly LinkGenerator $linkGenerator,
-		private readonly Post $blogPost,
+		private readonly BlogPosts $blogPosts,
 		private readonly Tags $tags,
 		private readonly Translator $translator,
 	) {
@@ -245,7 +245,7 @@ class Articles
 			$article->isBlogPost = ($article->sourceHref === null);
 			$article->title = $this->texyFormatter->format($article->title);
 			if ($article->isBlogPost) {
-				$article->edits = $this->blogPost->getEdits($article->articleId);
+				$article->edits = $this->blogPosts->getEdits($article->articleId);
 				$article->updated = ($article->edits ? current($article->edits)->editedAt : null);
 				$article->href = $this->linkGenerator->link('Www:Post:', [$article->slug]);
 				$article->sourceName = null;

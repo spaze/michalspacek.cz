@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Application;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Routers\BlogPostRoute;
-use MichalSpacekCz\Post\Loader;
+use MichalSpacekCz\Blog\BlogPostLoader;
 use Nette\Application\Routers\Route as ApplicationRoute;
 use Nette\Application\Routers\RouteList;
 use Nette\Routing\Route;
@@ -70,7 +70,7 @@ class RouterFactory
 	 * @param array<string, array<string, array{mask:array<string, string>, actions?:array<string, array<string, string>>}>> $translatedRoutes
 	 */
 	public function __construct(
-		private readonly Loader $blogPostLoader,
+		private readonly BlogPostLoader $blogPostLoader,
 		private readonly Translator $translator,
 		private readonly array $supportedLocales,
 		private readonly array $rootDomainMapping,

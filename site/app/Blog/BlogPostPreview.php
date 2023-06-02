@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Post;
+namespace MichalSpacekCz\Blog;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Dates;
@@ -13,7 +13,7 @@ class BlogPostPreview
 
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
-		private readonly Post $blogPost,
+		private readonly BlogPosts $blogPosts,
 		private readonly Dates $trainingDates,
 		private readonly Config $contentSecurityPolicy,
 	) {
@@ -21,22 +21,22 @@ class BlogPostPreview
 
 
 	/**
-	 * @param Data $post
+	 * @param BlogPost $post
 	 * @param DefaultTemplate $template
 	 * @param callable(): never $sendTemplate
 	 * @return never
 	 */
-	public function sendPreview(Data $post, DefaultTemplate $template, callable $sendTemplate): never
+	public function sendPreview(BlogPost $post, DefaultTemplate $template, callable $sendTemplate): never
 	{
 		$this->texyFormatter->disableCache();
 		$template->setFile(__DIR__ . '/../Www/Presenters/templates/Post/default.latte');
-		$template->post = $this->blogPost->format($post);
-		$template->edits = $post->postId ? $this->blogPost->getEdits($post->postId) : [];
+		$template->post = $this->blogPosts->format($post);
+		$template->edits = $post->postId ? $this->blogPosts->getEdits($post->postId) : [];
 		$template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$template->showBreadcrumbsMenu = false;
 		$template->showHeaderTabs = false;
 		$template->showFooter = false;
-		$this->blogPost->setTemplateTitleAndHeader($post, $template);
+		$this->blogPosts->setTemplateTitleAndHeader($post, $template);
 		foreach ($post->cspSnippets as $snippet) {
 			$this->contentSecurityPolicy->addSnippet($snippet);
 		}
