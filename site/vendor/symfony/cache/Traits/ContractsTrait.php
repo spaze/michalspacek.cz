@@ -54,14 +54,12 @@ trait ContractsTrait
         }
 
         $previousWrapper = $this->callbackWrapper;
-        $this->callbackWrapper = $callbackWrapper ?? static function (callable $callback, ItemInterface $item, bool &$save, CacheInterface $pool, \Closure $setMetadata, ?LoggerInterface $logger) {
-            return $callback($item, $save);
-        };
+        $this->callbackWrapper = $callbackWrapper ?? static fn (callable $callback, ItemInterface $item, bool &$save, CacheInterface $pool, \Closure $setMetadata, ?LoggerInterface $logger) => $callback($item, $save);
 
         return $previousWrapper;
     }
 
-    private function doGet(AdapterInterface $pool, string $key, callable $callback, ?float $beta, array &$metadata = null)
+    private function doGet(AdapterInterface $pool, string $key, callable $callback, ?float $beta, array &$metadata = null): mixed
     {
         if (0 > $beta ??= 1.0) {
             throw new InvalidArgumentException(sprintf('Argument "$beta" provided to "%s::get()" must be a positive number, %f given.', static::class, $beta));
