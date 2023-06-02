@@ -83,7 +83,7 @@ final class LockRegistry
         return $previousFiles;
     }
 
-    public static function compute(callable $callback, ItemInterface $item, bool &$save, CacheInterface $pool, \Closure $setMetadata = null, LoggerInterface $logger = null)
+    public static function compute(callable $callback, ItemInterface $item, bool &$save, CacheInterface $pool, \Closure $setMetadata = null, LoggerInterface $logger = null): mixed
     {
         if ('\\' === \DIRECTORY_SEPARATOR && null === self::$lockedFiles) {
             // disable locking on Windows by default
@@ -101,7 +101,6 @@ final class LockRegistry
 
         while (true) {
             try {
-                $locked = false;
                 // race to get the lock in non-blocking mode
                 $locked = flock($lock, \LOCK_EX | \LOCK_NB, $wouldBlock);
 
@@ -147,6 +146,9 @@ final class LockRegistry
         return null;
     }
 
+    /**
+     * @return resource|false
+     */
     private static function open(int $key)
     {
         if (null !== $h = self::$openedFiles[$key] ?? null) {
