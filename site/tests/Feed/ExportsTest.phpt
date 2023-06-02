@@ -7,8 +7,8 @@ namespace MichalSpacekCz\Feed;
 
 use DateTime;
 use MichalSpacekCz\Articles\Articles;
+use MichalSpacekCz\Blog\BlogPostEdit;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Post\Edit;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
@@ -162,9 +162,9 @@ class ExportsTest extends TestCase
 	}
 
 
-	private function buildEdit(string $editedAt, string $summary): Edit
+	private function buildEdit(string $editedAt, string $summary): BlogPostEdit
 	{
-		$edit = new Edit();
+		$edit = new BlogPostEdit();
 		$edit->editedAt = new DateTime($editedAt);
 		$edit->summary = Html::el()->setHtml($summary);
 		$edit->summaryTexy = $summary;

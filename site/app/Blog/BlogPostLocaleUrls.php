@@ -1,13 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Post;
+namespace MichalSpacekCz\Blog;
 
 use MichalSpacekCz\Tags\Tags;
 use Nette\Database\Explorer;
 use Nette\Utils\JsonException;
 
-class LocaleUrls
+class BlogPostLocaleUrls
 {
 
 	public function __construct(
@@ -21,7 +21,7 @@ class LocaleUrls
 	 * Get locales and URLs for a blog post.
 	 *
 	 * @param string $slug
-	 * @return Data[]
+	 * @return BlogPost[]
 	 * @throws JsonException
 	 */
 	public function get(string $slug): array
@@ -40,7 +40,7 @@ class LocaleUrls
 				OR bp.slug = ?
 			ORDER BY l.id_blog_post_locale';
 		foreach ($this->database->fetchAll($sql, $slug, $slug) as $row) {
-			$post = new Data();
+			$post = new BlogPost();
 			$post->locale = $row->locale;
 			$post->slug = $row->slug;
 			$post->published = $row->published;

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Post\Exceptions;
+namespace MichalSpacekCz\Blog\Exceptions;
 
 use Throwable;
 
-class PostDoesNotExistException extends PostException
+class BlogPostDoesNotExistException extends BlogPostException
 {
 
 	public function __construct(?int $id = null, ?string $name = null, ?string $previewKey = null, ?Throwable $previous = null)
