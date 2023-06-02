@@ -116,27 +116,41 @@ class ArrayKeyValue
 		$key = '';
 		$tokens = $phpcsFile->getTokens();
 		$firstNonWhitespace = null;
-		$pointerCloser = null;
-		for ($pointer = $this->pointerStart; $pointer <= $this->pointerEnd; $pointer++) {
-			if ($pointer < $pointerCloser) {
+
+		for ($i = $this->pointerStart; $i <= $this->pointerEnd; $i++) {
+			$token = $tokens[$i];
+
+			if (in_array($token['code'], TokenHelper::$arrayTokenCodes, true)) {
+				$i = ArrayHelper::openClosePointers($token)[1];
 				continue;
 			}
-			$token = $tokens[$pointer];
-			if (in_array($token['code'], TokenHelper::$arrayTokenCodes, true)) {
-				$pointerCloser = ArrayHelper::openClosePointers($token)[1];
-			} elseif ($token['code'] === T_DOUBLE_ARROW) {
-				$this->pointerArrow = $pointer;
-			} elseif ($token['code'] === T_COMMA) {
-				$this->pointerComma = $pointer;
-			} elseif ($token['code'] === T_ELLIPSIS) {
+
+			if ($token['code'] === T_DOUBLE_ARROW) {
+				$this->pointerArrow = $i;
+				continue;
+			}
+
+			if ($token['code'] === T_COMMA) {
+				$this->pointerComma = $i;
+				continue;
+
+			}
+
+			if ($token['code'] === T_ELLIPSIS) {
 				$this->unpacking = true;
-			} elseif ($this->pointerArrow === null) {
-				if ($firstNonWhitespace === null && $token['code'] !== T_WHITESPACE) {
-					$firstNonWhitespace = $pointer;
-				}
-				if (in_array($token['code'], TokenHelper::$inlineCommentTokenCodes, true) === false) {
-					$key .= $token['content'];
-				}
+				continue;
+			}
+
+			if ($this->pointerArrow !== null) {
+				continue;
+			}
+
+			if ($firstNonWhitespace === null && $token['code'] !== T_WHITESPACE) {
+				$firstNonWhitespace = $i;
+			}
+
+			if (in_array($token['code'], TokenHelper::$inlineCommentTokenCodes, true) === false) {
+				$key .= $token['content'];
 			}
 		}
 		$haveIndent = $firstNonWhitespace !== null && TokenHelper::findFirstNonWhitespaceOnLine(
