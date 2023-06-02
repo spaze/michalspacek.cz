@@ -1,14 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Post;
+namespace MichalSpacekCz\Blog;
 
 use DateTime;
 use DateTimeInterface;
 use Nette\Utils\Html;
 use stdClass;
 
-class Data
+class BlogPost
 {
 
 	public ?int $postId;
@@ -65,7 +65,7 @@ class Data
 
 	public ?string $editSummary;
 
-	/** @var array<int, Edit> */
+	/** @var array<int, BlogPostEdit> */
 	public array $edits;
 
 	/** @var array<int, string> */

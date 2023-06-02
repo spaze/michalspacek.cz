@@ -7,6 +7,10 @@ services:
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	- MichalSpacekCz\Application\WindowsSubsystemForLinux
 	- MichalSpacekCz\Articles\Articles
+	- MichalSpacekCz\Blog\BlogPostLoader
+	- MichalSpacekCz\Blog\BlogPostLocaleUrls
+	- MichalSpacekCz\Blog\BlogPostPreview
+	- MichalSpacekCz\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
 	- MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
 	- MichalSpacekCz\CompanyInfo\Info(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\RegisterUz(rootUrl: %registerUz.rootUrl%)
@@ -54,10 +58,6 @@ services:
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
-	- MichalSpacekCz\Post\BlogPostPreview
-	- MichalSpacekCz\Post\Loader
-	- MichalSpacekCz\Post\LocaleUrls
-	- MichalSpacekCz\Post\Post(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting

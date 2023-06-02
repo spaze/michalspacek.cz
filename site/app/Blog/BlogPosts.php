@@ -1,14 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Post;
+namespace MichalSpacekCz\Blog;
 
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Post\Exceptions\PostDoesNotExistException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
@@ -21,7 +21,7 @@ use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class Post
+class BlogPosts
 {
 
 	/** @var string[]|null */
@@ -33,7 +33,7 @@ class Post
 	 */
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly Loader $loader,
+		private readonly BlogPostLoader $loader,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Cache $exportsCache,
 		private readonly LinkGenerator $linkGenerator,
@@ -64,13 +64,13 @@ class Post
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
-	 * @throws PostDoesNotExistException
+	 * @throws BlogPostDoesNotExistException
 	 */
-	public function get(string $post, ?string $previewKey = null): Data
+	public function get(string $post, ?string $previewKey = null): BlogPost
 	{
 		$result = $this->loader->fetch($post, $previewKey);
 		if (!$result) {
-			throw new PostDoesNotExistException(name: $post, previewKey: $previewKey);
+			throw new BlogPostDoesNotExistException(name: $post, previewKey: $previewKey);
 		} else {
 			return $this->buildPost($result);
 		}
@@ -80,9 +80,9 @@ class Post
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
-	 * @throws PostDoesNotExistException
+	 * @throws BlogPostDoesNotExistException
 	 */
-	public function getById(int $id): Data
+	public function getById(int $id): BlogPost
 	{
 		$result = $this->database->fetch(
 			'SELECT
@@ -114,7 +114,7 @@ class Post
 			$id,
 		);
 		if (!$result) {
-			throw new PostDoesNotExistException(id: $id);
+			throw new BlogPostDoesNotExistException(id: $id);
 		} else {
 			return $this->buildPost($result);
 		}
@@ -122,7 +122,7 @@ class Post
 
 
 	/**
-	 * @return Data[]
+	 * @return BlogPost[]
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
@@ -165,7 +165,7 @@ class Post
 	/**
 	 * @throws InvalidLinkException
 	 */
-	public function enrich(Data $post): void
+	public function enrich(BlogPost $post): void
 	{
 		$params = [
 			'slug' => $post->slug,
@@ -180,7 +180,7 @@ class Post
 	}
 
 
-	public function format(Data $post): Data
+	public function format(BlogPost $post): BlogPost
 	{
 		$texy = $this->texyFormatter->getTexy();
 		if ($post->allowedTags) {
@@ -202,7 +202,7 @@ class Post
 	/**
 	 * @throws JsonException
 	 */
-	public function add(Data $post): void
+	public function add(BlogPost $post): void
 	{
 		$this->database->beginTransaction();
 		try {
@@ -243,7 +243,7 @@ class Post
 	/**
 	 * @throws JsonException
 	 */
-	public function update(Data $post): void
+	public function update(BlogPost $post): void
 	{
 		$this->database->beginTransaction();
 		try {
@@ -336,7 +336,7 @@ class Post
 
 	/**
 	 * @param int $postId
-	 * @return Edit[]
+	 * @return BlogPostEdit[]
 	 */
 	public function getEdits(int $postId): array
 	{
@@ -350,7 +350,7 @@ class Post
 		$edits = [];
 		foreach ($this->database->fetchAll($sql, $postId) as $row) {
 			$summary = $this->texyFormatter->format($row->summaryTexy);
-			$edit = new Edit();
+			$edit = new BlogPostEdit();
 			$edit->summaryTexy = $row->summaryTexy;
 			$edit->summary = $summary;
 			$edit->editedAt = $row->editedAt;
@@ -365,9 +365,9 @@ class Post
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
-	private function buildPost(Row $row): Data
+	private function buildPost(Row $row): BlogPost
 	{
-		$post = new Data();
+		$post = new BlogPost();
 		$post->postId = $row->postId;
 		$post->translationGroupId = $row->translationGroupId;
 		$post->locale = $row->locale;
@@ -392,7 +392,7 @@ class Post
 	}
 
 
-	public function setTemplateTitleAndHeader(Data $post, DefaultTemplate $template, ?Html $el = null): void
+	public function setTemplateTitleAndHeader(BlogPost $post, DefaultTemplate $template, ?Html $el = null): void
 	{
 		$title = ($el ?? Html::el())->addHtml($post->title);
 		$template->pageTitle = strip_tags((string)$title);

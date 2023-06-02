@@ -6,8 +6,8 @@ namespace MichalSpacekCz\Feed;
 use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Articles\Articles;
+use MichalSpacekCz\Blog\BlogPosts;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Post\Post;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
@@ -93,7 +93,7 @@ class Exports
 				if ($updated > $feedUpdated) {
 					$feedUpdated = $updated;
 				}
-				$type = ($article->isBlogPost ? Post::class : Articles::class);
+				$type = ($article->isBlogPost ? BlogPosts::class : Articles::class);
 				foreach ($article->slugTags as $slugTag) {
 					$cacheTags["{$type}/tag/{$slugTag}"] = "{$type}/tag/{$slugTag}";
 				}

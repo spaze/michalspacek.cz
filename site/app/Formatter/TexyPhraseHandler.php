@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
-use MichalSpacekCz\Post\LocaleUrls;
+use MichalSpacekCz\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Locales;
 use Nette\Application\Application;
@@ -30,7 +30,7 @@ class TexyPhraseHandler
 		private readonly Application $application,
 		private readonly Locales $trainingLocales,
 		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
-		private readonly LocaleUrls $blogPostLocaleUrls,
+		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly Translator $translator,
 	) {
 	}
