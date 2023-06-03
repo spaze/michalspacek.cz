@@ -5,9 +5,9 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use DateTime;
-use MichalSpacekCz\Blog\BlogPost;
-use MichalSpacekCz\Blog\BlogPostPreview;
-use MichalSpacekCz\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\BlogPost;
+use MichalSpacekCz\Articles\Blog\BlogPostPreview;
+use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;

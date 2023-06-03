@@ -1,0 +1,144 @@
+<?php
+/** @noinspection PhpUnhandledExceptionInspection */
+declare(strict_types = 1);
+
+namespace MichalSpacekCz\Articles;
+
+use DateTime;
+use MichalSpacekCz\Articles\Blog\BlogPost;
+use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\NoOpTranslator;
+use Tester\Assert;
+use Tester\TestCase;
+
+$runner = require __DIR__ . '/../bootstrap.php';
+
+/** @testCase */
+class ArticlesTest extends TestCase
+{
+
+	public function __construct(
+		private readonly Database $database,
+		private readonly Articles $articles,
+		private readonly NoOpTranslator $translator,
+	) {
+	}
+
+
+	protected function tearDown(): void
+	{
+		$this->database->reset();
+	}
+
+
+	public function testGetAll(): void
+	{
+		$fetchResult = [
+			[
+				'id' => 10,
+				'localeId' => null,
+				'translationGroupId' => null,
+				'locale' => null,
+				'titleTexy' => 'Article 1',
+				'slug' => null,
+				'href' => 'https://example.com/article-1',
+				'published' => new DateTime('3 years ago'),
+				'excerptTexy' => 'Excerpt 1',
+				'textTexy' => null,
+				'sourceName' => 'Source 1',
+				'sourceHref' => 'https://source1.example/',
+				'previewKey' => null,
+				'originallyTexy' => null,
+				'ogImage' => null,
+				'tags' => null,
+				'slugTags' => null,
+				'recommended' => null,
+				'cspSnippets' => null,
+				'allowedTags' => null,
+				'twitterCard' => null,
+				'omitExports' => null,
+			],
+			[
+				'id' => 20,
+				'localeId' => 1,
+				'translationGroupId' => 3,
+				'locale' => $this->translator->getDefaultLocale(),
+				'titleTexy' => 'Blog 1',
+				'slug' => 'blog-1',
+				'href' => null,
+				'published' => new DateTime('2 years ago'),
+				'excerptTexy' => 'Lead 1',
+				'textTexy' => 'Text 1',
+				'sourceName' => null,
+				'sourceHref' => null,
+				'previewKey' => null,
+				'originallyTexy' => null,
+				'ogImage' => null,
+				'tags' => null,
+				'slugTags' => null,
+				'recommended' => null,
+				'cspSnippets' => null,
+				'allowedTags' => null,
+				'twitterCard' => null,
+				'omitExports' => null,
+			],
+			[
+				'id' => 30,
+				'localeId' => null,
+				'translationGroupId' => null,
+				'locale' => null,
+				'titleTexy' => 'Article 2',
+				'slug' => null,
+				'href' => 'https://example.com/article-2',
+				'published' => new DateTime('1 year ago'),
+				'excerptTexy' => 'Excerpt 2',
+				'textTexy' => null,
+				'sourceName' => 'Source 2',
+				'sourceHref' => 'https://source2.example/',
+				'previewKey' => null,
+				'originallyTexy' => null,
+				'ogImage' => null,
+				'tags' => null,
+				'slugTags' => null,
+				'recommended' => null,
+				'cspSnippets' => null,
+				'allowedTags' => null,
+				'twitterCard' => null,
+				'omitExports' => null,
+			],
+			[
+				'id' => 40,
+				'localeId' => 1,
+				'translationGroupId' => 5,
+				'locale' => $this->translator->getDefaultLocale(),
+				'titleTexy' => 'Blog 2',
+				'slug' => 'blog-2',
+				'href' => null,
+				'published' => new DateTime('1 month ago'),
+				'excerptTexy' => 'Lead 2',
+				'textTexy' => 'Text 2',
+				'sourceName' => null,
+				'sourceHref' => null,
+				'previewKey' => null,
+				'originallyTexy' => null,
+				'ogImage' => null,
+				'tags' => null,
+				'slugTags' => null,
+				'recommended' => null,
+				'cspSnippets' => null,
+				'allowedTags' => null,
+				'twitterCard' => null,
+				'omitExports' => null,
+			],
+		];
+		$this->database->addFetchAllResult($fetchResult);
+		$articles = $this->articles->getAll();
+		Assert::type(Article::class, $articles[0]);
+		Assert::type(BlogPost::class, $articles[1]);
+		Assert::type(Article::class, $articles[2]);
+		Assert::type(BlogPost::class, $articles[3]);
+	}
+
+}
+
+$runner->run(ArticlesTest::class);

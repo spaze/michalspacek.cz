@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Application;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\Routers\BlogPostRoute;
-use MichalSpacekCz\Blog\BlogPostLoader;
+use MichalSpacekCz\Articles\Blog\BlogPostLoader;
 use Nette\Application\Routers\Route as ApplicationRoute;
 use Nette\Application\Routers\RouteList;
 use Nette\Routing\Route;

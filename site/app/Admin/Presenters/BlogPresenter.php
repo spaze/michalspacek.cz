@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
-use MichalSpacekCz\Blog\BlogPost;
-use MichalSpacekCz\Blog\BlogPosts;
-use MichalSpacekCz\Blog\Exceptions\BlogPostDoesNotExistException;
+use MichalSpacekCz\Articles\Blog\BlogPost;
+use MichalSpacekCz\Articles\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Form\PostFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;

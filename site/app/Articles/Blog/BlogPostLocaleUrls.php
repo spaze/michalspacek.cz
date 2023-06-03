@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog;
+namespace MichalSpacekCz\Articles\Blog;
 
 use MichalSpacekCz\Tags\Tags;
 use Nette\Database\Explorer;

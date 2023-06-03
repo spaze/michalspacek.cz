@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog;
+namespace MichalSpacekCz\Articles\Blog;
 
 use Contributte\Translation\Translator;
 use Nette\Database\Explorer;

@@ -12,14 +12,21 @@ class Database extends Explorer
 	/** @var array<string, string> */
 	private array $fetchPairsResult = [];
 
-	/** @var array<int, Row> */
-	private array $fetchAllResult = [];
+	/** @var list<Row> */
+	private array $fetchAllDefaultResult = [];
+
+	/** @var list<list<Row>> */
+	private array $fetchAllResults = [];
+
+	private int $fetchAllResultsPosition = 0;
 
 
 	public function reset(): void
 	{
 		$this->fetchPairsResult = [];
-		$this->fetchAllResult = [];
+		$this->fetchAllDefaultResult = [];
+		$this->fetchAllResults = [];
+		$this->fetchAllResultsPosition = 0;
 	}
 
 
@@ -44,26 +51,47 @@ class Database extends Explorer
 
 
 	/**
-	 * @param array<int, array<string, string|null>> $fetchAllResult
+	 * @param list<array<string, string|null>> $fetchAllDefaultResult
 	 * @return void
 	 */
-	public function setFetchAllResult(array $fetchAllResult): void
+	public function setFetchAllDefaultResult(array $fetchAllDefaultResult): void
 	{
-		$this->fetchAllResult = [];
+		$this->fetchAllDefaultResult = $this->getRows($fetchAllDefaultResult);
+	}
+
+
+	/**
+	 * @param list<array<string, string|null>> $fetchAllResult
+	 * @return void
+	 */
+	public function addFetchAllResult(array $fetchAllResult): void
+	{
+		$this->fetchAllResults[] = $this->getRows($fetchAllResult);
+	}
+
+
+	/**
+	 * @param list<array<string, string|null>> $fetchAllResult
+	 * @return list<Row>
+	 */
+	private function getRows(array $fetchAllResult): array
+	{
+		$result = [];
 		foreach ($fetchAllResult as $row) {
-			$this->fetchAllResult[] = Row::from($row);
+			$result[] = Row::from($row);
 		}
+		return $result;
 	}
 
 
 	/**
 	 * @param literal-string $sql
 	 * @param string ...$params
-	 * @return array<int, Row>
+	 * @return list<Row>
 	 */
 	public function fetchAll(string $sql, ...$params): array
 	{
-		return $this->fetchAllResult;
+		return $this->fetchAllResults[$this->fetchAllResultsPosition++] ?? $this->fetchAllDefaultResult;
 	}
 
 }

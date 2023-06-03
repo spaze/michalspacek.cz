@@ -6,10 +6,10 @@ namespace MichalSpacekCz\Articles;
 use Collator;
 use Contributte\Translation\Translator;
 use DateTime;
-use MichalSpacekCz\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\BlogPost;
+use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;
-use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -22,7 +22,6 @@ class Articles
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly LinkGenerator $linkGenerator,
 		private readonly BlogPosts $blogPosts,
 		private readonly Tags $tags,
 		private readonly Translator $translator,
@@ -34,30 +33,43 @@ class Articles
 	 * Get articles sorted by date, newest first.
 	 *
 	 * @param int|null $limit Null means all, for real
-	 * @return Row[]
+	 * @return list<Article|BlogPost>
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
 	public function getAll(?int $limit = null): array
 	{
 		$query = 'SELECT
-				a.id_article AS articleId,
-				a.title,
+				a.id_article AS id,
+				null AS localeId,
+				null AS translationGroupId,
+				null AS locale,
+				a.title AS titleTexy,
 				NULL AS slug,
 				a.href,
 				a.date AS published,
-				a.excerpt,
-				null AS text,
+				a.excerpt AS excerptTexy,
+				null AS textTexy,
 				s.name AS sourceName,
 				s.href AS sourceHref,
+				null AS previewKey,
+				null AS originallyTexy,
+				null AS ogImage,
 				null AS tags,
 				null AS slugTags,
+				null AS recommended,
+				null AS cspSnippets,
+				null AS allowedTags,
+				null AS twitterCard,
 				null AS omitExports
 			FROM articles a
 				JOIN article_sources s ON a.key_article_source = s.id_article_source
 			UNION ALL
 				SELECT
 					bp.id_blog_post,
+					l.id_blog_post_locale,
+					bp.key_translation_group,
+					l.locale,
 					bp.title,
 					bp.slug,
 					null,
@@ -66,8 +78,15 @@ class Articles
 					bp.text,
 					null,
 					null,
+					bp.preview_key,
+					bp.originally,
+					bp.og_image AS ogImage,
 					bp.tags,
 					bp.slug_tags,
+					null AS recommended,
+					null AS cspSnippets,
+					null AS allowedTags,
+					null AS twitterCard,
 					bp.omit_exports AS omitExports
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
@@ -86,25 +105,35 @@ class Articles
 	/**
 	 * Get articles filtered by tags, sorted by date, newest first.
 	 *
-	 * @param string[] $tags
+	 * @param list<string> $tags
 	 * @param int|null $limit Null means all, for real
-	 * @return Row[]
+	 * @return list<Article|BlogPost>
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
 	public function getAllByTags(array $tags, ?int $limit = null): array
 	{
 		$query = 'SELECT
-					bp.id_blog_post AS articleId,
-					bp.title,
+					bp.id_blog_post AS id,
+					l.id_blog_post_locale AS localeId,
+					bp.key_translation_group AS translationGroupId,
+					l.locale,
+					bp.title AS titleTexy,
 					bp.slug,
 					bp.published,
-					bp.lead AS excerpt,
-					bp.text,
+					bp.lead AS excerptTexy,
+					bp.text AS textTexy,
 					null AS sourceName,
 					null AS sourceHref,
+					bp.preview_key AS previewKey,
+					bp.originally AS originallyTexy,
+					bp.og_image AS ogImage,
 					bp.tags,
 					bp.slug_tags AS slugTags,
+					null AS recommended,
+					null AS cspSnippets,
+					null AS allowedTags,
+					null AS twitterCard,
 					bp.omit_exports AS omitExports
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
@@ -211,7 +240,7 @@ class Articles
 
 
 	/**
-	 * @param string[] $tags
+	 * @param list<string> $tags
 	 * @return DateTime|null
 	 * @throws JsonException
 	 */
@@ -231,31 +260,43 @@ class Articles
 
 	/**
 	 * @param Row[] $articles
-	 * @return Row[]
+	 * @return list<Article|BlogPost>
 	 * @throws JsonException
 	 * @throws InvalidLinkException
 	 */
 	private function enrichArticles(array $articles): array
 	{
+		$result = [];
 		foreach ($articles as $article) {
-			$article->updated = null;
-			$article->edits = null;
-			$article->tags = (isset($article->tags) ? $this->tags->unserialize($article->tags) : []);
-			$article->slugTags = (isset($article->slugTags) ? $this->tags->unserialize($article->slugTags) : []);
-			$article->isBlogPost = ($article->sourceHref === null);
-			$article->title = $this->texyFormatter->format($article->title);
-			if ($article->isBlogPost) {
-				$article->edits = $this->blogPosts->getEdits($article->articleId);
-				$article->updated = ($article->edits ? current($article->edits)->editedAt : null);
-				$article->href = $this->linkGenerator->link('Www:Post:', [$article->slug]);
-				$article->sourceName = null;
-				$article->sourceHref = null;
-				$this->texyFormatter->setTopHeading(2);
+			if ($article->sourceHref === null) {
+				$article->postId = $article->id;
+				$article->leadTexy = $article->excerptTexy;
+				$result[] = $this->blogPosts->buildPost($article);
+			} else {
+				$article->articleId = $article->id;
+				$result[] = $this->buildArticle($article);
 			}
-			$article->excerpt = $article->excerpt ? $this->texyFormatter->formatBlock($article->excerpt) : null;
-			$article->text = $article->text ? $this->texyFormatter->formatBlock($article->text) : null;
 		}
-		return $articles;
+		return $result;
+	}
+
+
+	public function buildArticle(Row $row): Article
+	{
+		$article = new Article();
+		$article->articleId = $row->articleId;
+		$article->titleTexy = $row->titleTexy;
+		$article->href = $row->href;
+		$article->published = $row->published;
+		$article->excerptTexy = $row->excerptTexy;
+		$article->sourceName = $row->sourceName;
+		$article->sourceHref = $row->sourceHref;
+
+		$texy = $this->texyFormatter->getTexy();
+		$this->texyFormatter->setTopHeading(2);
+		$article->title = $this->texyFormatter->format($article->titleTexy, $texy);
+		$article->excerpt = $this->texyFormatter->format($article->excerptTexy, $texy);
+		return $article;
 	}
 
 }
