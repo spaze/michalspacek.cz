@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog;
+namespace MichalSpacekCz\Articles\Blog;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Dates;
@@ -31,7 +31,7 @@ class BlogPostPreview
 		$this->texyFormatter->disableCache();
 		$template->setFile(__DIR__ . '/../Www/Presenters/templates/Post/default.latte');
 		$template->post = $this->blogPosts->format($post);
-		$template->edits = $post->postId ? $this->blogPosts->getEdits($post->postId) : [];
+		$template->edits = $post->postId ? $post->edits : [];
 		$template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
 		$template->showBreadcrumbsMenu = false;
 		$template->showHeaderTabs = false;

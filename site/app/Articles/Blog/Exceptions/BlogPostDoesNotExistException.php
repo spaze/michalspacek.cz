@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog\Exceptions;
+namespace MichalSpacekCz\Articles\Blog\Exceptions;
 
 use Throwable;
 

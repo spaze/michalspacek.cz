@@ -6,8 +6,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Feed;
 
 use DateTime;
+use MichalSpacekCz\Articles\ArticleEdit;
 use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Blog\BlogPostEdit;
+use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Nette\Caching\Storage;
@@ -55,20 +56,19 @@ class ExportsTest extends TestCase
 			}
 
 
-			public function addBlogPost(int $articleId, DateTime $published, string $suffix, ?array $edits = null, ?bool $omitExports = null): void
+			public function addBlogPost(int $postId, DateTime $published, string $suffix, array $edits = [], bool $omitExports = false): void
 			{
-				$this->articles[] = Row::from([
-					'articleId' => $articleId,
-					'title' => "Title {$suffix}",
-					'href' => "https://example.com/{$suffix}",
-					'published' => $published,
-					'excerpt' => "Excerpt {$suffix}",
-					'text' => "Text {$suffix}",
-					'edits' => $edits,
-					'isBlogPost' => true,
-					'slugTags' => [],
-					'omitExports' => $omitExports !== null ? (bool)$omitExports : null,
-				]);
+				$post = new BlogPost();
+				$post->postId = $postId;
+				$post->title = Html::fromText("Title {$suffix}");
+				$post->href = "https://example.com/{$suffix}";
+				$post->published = $published;
+				$post->lead = Html::fromText("Excerpt {$suffix}");
+				$post->text = Html::fromText("Text {$suffix}");
+				$post->edits = $edits;
+				$post->slugTags = [];
+				$post->omitExports = $omitExports;
+				$this->articles[] = $post;
 			}
 
 
@@ -140,7 +140,7 @@ class ExportsTest extends TestCase
 
 	public function testGetArticlesOmitExports(): void
 	{
-		$this->articles->addBlogPost(1, new DateTime(), 'one', omitExports: null);
+		$this->articles->addBlogPost(1, new DateTime(), 'one');
 		$this->articles->addBlogPost(2, new DateTime(), 'two', omitExports: true);
 		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: false);
 		$feed = $this->exports->getArticles('https://example.com/');
@@ -148,6 +148,19 @@ class ExportsTest extends TestCase
 		$this->assertEntry($xml->entry[0], 'one');
 		$this->assertEntry($xml->entry[1], 'three');
 		Assert::count(2, $xml->entry);
+		Assert::notNull($feed->getUpdated());
+	}
+
+
+	public function testGetArticlesOmitExportsOnly(): void
+	{
+		$this->articles->addBlogPost(1, new DateTime(), 'one', omitExports: true);
+		$this->articles->addBlogPost(2, new DateTime(), 'two', omitExports: true);
+		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: true);
+		$feed = $this->exports->getArticles('https://example.com/');
+		$xml = simplexml_load_string((string)$feed);
+		Assert::count(0, $xml->entry);
+		Assert::null($feed->getUpdated());
 	}
 
 
@@ -162,9 +175,9 @@ class ExportsTest extends TestCase
 	}
 
 
-	private function buildEdit(string $editedAt, string $summary): BlogPostEdit
+	private function buildEdit(string $editedAt, string $summary): ArticleEdit
 	{
-		$edit = new BlogPostEdit();
+		$edit = new ArticleEdit();
 		$edit->editedAt = new DateTime($editedAt);
 		$edit->summary = Html::el()->setHtml($summary);
 		$edit->summaryTexy = $summary;

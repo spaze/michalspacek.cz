@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog;
+namespace MichalSpacekCz\Articles;
 
 use DateTime;
 use Nette\Utils\Html;
 
-class BlogPostEdit
+class ArticleEdit
 {
 
 	public DateTime $editedAt;

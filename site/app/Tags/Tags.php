@@ -14,7 +14,7 @@ class Tags
 	 * Convert tags string to array.
 	 *
 	 * @param string $tags
-	 * @return string[]
+	 * @return list<string>
 	 */
 	public function toArray(string $tags): array
 	{
@@ -24,7 +24,7 @@ class Tags
 
 
 	/**
-	 * @param string[] $tags
+	 * @param list<string> $tags
 	 * @return string
 	 */
 	public function toString(array $tags): string
@@ -35,7 +35,7 @@ class Tags
 
 	/**
 	 * @param string $tags
-	 * @return string[]
+	 * @return list<string>
 	 */
 	public function toSlugArray(string $tags): array
 	{
@@ -44,7 +44,7 @@ class Tags
 
 
 	/**
-	 * @param string[] $tags
+	 * @param list<string> $tags
 	 * @return string
 	 * @throws JsonException
 	 */
@@ -56,7 +56,7 @@ class Tags
 
 	/**
 	 * @param string $tags
-	 * @return string[]
+	 * @return list<string>
 	 * @throws JsonException
 	 */
 	public function unserialize(string $tags): array
