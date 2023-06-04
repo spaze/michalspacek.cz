@@ -98,7 +98,7 @@ class Articles
 			LIMIT ?';
 
 		$articles = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
-		return $this->enrichArticles($articles);
+		return $this->enrichArticles(array_values($articles));
 	}
 
 
@@ -147,12 +147,12 @@ class Articles
 			LIMIT ?';
 
 		$articles = $this->database->fetchAll($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
-		return $this->enrichArticles($articles);
+		return $this->enrichArticles(array_values($articles));
 	}
 
 
 	/**
-	 * @return string[]
+	 * @return array<string, string> slug => tag
 	 * @throws JsonException
 	 */
 	public function getAllTags(): array
@@ -259,7 +259,7 @@ class Articles
 
 
 	/**
-	 * @param Row[] $articles
+	 * @param list<Row<mixed>> $articles
 	 * @return list<ArticlePublishedElsewhere|BlogPost>
 	 * @throws JsonException
 	 * @throws InvalidLinkException

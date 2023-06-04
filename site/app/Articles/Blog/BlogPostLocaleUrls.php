@@ -21,7 +21,7 @@ class BlogPostLocaleUrls
 	 * Get locales and URLs for a blog post.
 	 *
 	 * @param string $slug
-	 * @return BlogPost[]
+	 * @return list<BlogPost>
 	 * @throws JsonException
 	 */
 	public function get(string $slug): array

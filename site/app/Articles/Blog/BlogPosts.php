@@ -25,7 +25,7 @@ use Nette\Utils\JsonException;
 class BlogPosts
 {
 
-	/** @var string[]|null */
+	/** @var array<int, string>|null */
 	private ?array $locales = null;
 
 
@@ -123,7 +123,7 @@ class BlogPosts
 
 
 	/**
-	 * @return BlogPost[]
+	 * @return list<BlogPost>
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
@@ -303,11 +303,11 @@ class BlogPosts
 
 
 	/**
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function getAllTwitterCards(): array
 	{
-		return $this->database->fetchAll('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types ORDER BY card');
+		return array_values($this->database->fetchAll('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types ORDER BY card'));
 	}
 
 
