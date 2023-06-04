@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Articles\Article;
+use MichalSpacekCz\Articles\ArticlePublishedElsewhere;
 use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
@@ -64,7 +64,7 @@ class TagsPresenter extends BasePresenter
 	 * - tags in Czech: hesla, stroj
 	 * This seems a bit weird but otherwise, we'd have to use and build and maintain a translation table for tags. Thanks, but no thanks.
 	 *
-	 * @param list<Article|BlogPost> $articles
+	 * @param list<ArticlePublishedElsewhere|BlogPost> $articles
 	 * @param string $tag
 	 */
 	private function findLocaleLinkParams(array $articles, string $tag): void

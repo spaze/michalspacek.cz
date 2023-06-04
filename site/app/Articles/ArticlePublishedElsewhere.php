@@ -9,7 +9,7 @@ use MichalSpacekCz\Articles\Components\ArticleWithPublishTime;
 use MichalSpacekCz\Articles\Components\ArticleWithSummary;
 use Nette\Utils\Html;
 
-class Article implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
+class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
 {
 
 	public int $articleId;

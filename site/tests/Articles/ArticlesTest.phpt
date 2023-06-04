@@ -133,9 +133,9 @@ class ArticlesTest extends TestCase
 		];
 		$this->database->addFetchAllResult($fetchResult);
 		$articles = $this->articles->getAll();
-		Assert::type(Article::class, $articles[0]);
+		Assert::type(ArticlePublishedElsewhere::class, $articles[0]);
 		Assert::type(BlogPost::class, $articles[1]);
-		Assert::type(Article::class, $articles[2]);
+		Assert::type(ArticlePublishedElsewhere::class, $articles[2]);
 		Assert::type(BlogPost::class, $articles[3]);
 	}
 
