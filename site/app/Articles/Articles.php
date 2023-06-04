@@ -33,7 +33,7 @@ class Articles
 	 * Get articles sorted by date, newest first.
 	 *
 	 * @param int|null $limit Null means all, for real
-	 * @return list<Article|BlogPost>
+	 * @return list<ArticlePublishedElsewhere|BlogPost>
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
@@ -107,7 +107,7 @@ class Articles
 	 *
 	 * @param list<string> $tags
 	 * @param int|null $limit Null means all, for real
-	 * @return list<Article|BlogPost>
+	 * @return list<ArticlePublishedElsewhere|BlogPost>
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
@@ -260,7 +260,7 @@ class Articles
 
 	/**
 	 * @param Row[] $articles
-	 * @return list<Article|BlogPost>
+	 * @return list<ArticlePublishedElsewhere|BlogPost>
 	 * @throws JsonException
 	 * @throws InvalidLinkException
 	 */
@@ -281,9 +281,9 @@ class Articles
 	}
 
 
-	public function buildArticle(Row $row): Article
+	public function buildArticle(Row $row): ArticlePublishedElsewhere
 	{
-		$article = new Article();
+		$article = new ArticlePublishedElsewhere();
 		$article->articleId = $row->articleId;
 		$article->titleTexy = $row->titleTexy;
 		$article->href = $row->href;
