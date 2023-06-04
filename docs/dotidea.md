@@ -31,6 +31,7 @@ Add the following lines to files mentioned:
     <pattern value="\*Presenter" member="createComponent*()" />
     <pattern value="\*Presenter" member="inject*()" />
     <pattern value="\*Presenter" member="handle*()" />
+    <pattern value="\*Test" member="test*()" />
   </component>
   <!-- Some more COMPONENT tags here -->
 </project>
