@@ -1,22 +1,24 @@
+{varType MichalSpacekCz\Articles\ArticlePublishedElsewhere|MichalSpacekCz\Articles\Blog\BlogPost $post}
+{varType ?\DateTime $edited}
 <div id="header-icons">
-	<div>
+	<div n:if="$post instanceof MichalSpacekCz\Articles\Components\ArticleWithPublishTime">
 		{icon calendar}
 		<small>
 			<strong>{$post->published|localeDay}</strong>
 			{ifset $edited}({_messages.blog.post.edited} {$edited|localeDay}){/ifset}
 		</small>
 	</div>
-	<div n:if="$post->tags">
-		{if ($post->tags|length) === 1}
+	<div n:if="$post instanceof MichalSpacekCz\Articles\Components\ArticleWithTags && $post->getTags()">
+		{if ($post->getTags()|length) === 1}
 			{icon tag}
 		{else}
 			{icon tags}
 		{/if}
 		<small>
-			{foreach $post->tags as $key => $tag}<a n:href=":Www:Tags:tag $post->slugTags[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
+			{foreach $post->getTags() as $key => $tag}<a n:href=":Www:Tags:tag $post->getSlugTags()[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
 		</small>
 	</div>
-	<div n:ifset="$post->sourceHref">
+	<div n:if="$post instanceof MichalSpacekCz\Articles\ArticlePublishedElsewhere">
 		{icon external-link}
 		<small><a href="{$post->sourceHref}">{$post->sourceName}</a></small>
 	</div>

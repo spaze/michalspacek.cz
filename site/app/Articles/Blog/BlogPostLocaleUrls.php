@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog;
+namespace MichalSpacekCz\Articles\Blog;
 
 use MichalSpacekCz\Tags\Tags;
 use Nette\Database\Explorer;
@@ -21,7 +21,7 @@ class BlogPostLocaleUrls
 	 * Get locales and URLs for a blog post.
 	 *
 	 * @param string $slug
-	 * @return BlogPost[]
+	 * @return list<BlogPost>
 	 * @throws JsonException
 	 */
 	public function get(string $slug): array

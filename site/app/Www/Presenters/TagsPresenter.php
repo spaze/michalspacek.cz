@@ -3,12 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use MichalSpacekCz\Articles\ArticlePublishedElsewhere;
 use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Blog\BlogPostLocaleUrls;
+use MichalSpacekCz\Articles\Blog\BlogPost;
+use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
+use MichalSpacekCz\Articles\Components\ArticleWithSlug;
+use MichalSpacekCz\Articles\Components\ArticleWithTags;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
-use Nette\Database\Row;
 
 class TagsPresenter extends BasePresenter
 {
@@ -61,17 +64,20 @@ class TagsPresenter extends BasePresenter
 	 * - tags in Czech: hesla, stroj
 	 * This seems a bit weird but otherwise, we'd have to use and build and maintain a translation table for tags. Thanks, but no thanks.
 	 *
-	 * @param Row[] $articles
+	 * @param list<ArticlePublishedElsewhere|BlogPost> $articles
 	 * @param string $tag
 	 */
 	private function findLocaleLinkParams(array $articles, string $tag): void
 	{
 		foreach ($articles as $article) {
-			$posts = $this->blogPostLocaleUrls->get($article->slug);
+			if (!$article instanceof ArticleWithSlug || !$article instanceof ArticleWithTags) {
+				continue;
+			}
+			$posts = $this->blogPostLocaleUrls->get($article->getSlug());
 			if (count($posts) === 1) {
 				continue; // post and tags not translated yet
 			}
-			$tagKey = array_search($tag, $article->slugTags);
+			$tagKey = array_search($tag, $article->getSlugTags());
 			foreach ($posts as $post) {
 				if (isset($post->slugTags[$tagKey])) {
 					$this->localeLinkParams[$post->locale] = ['tag' => $post->slugTags[$tagKey]];

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Routers;
 
-use MichalSpacekCz\Blog\BlogPostLoader;
+use MichalSpacekCz\Articles\Blog\BlogPostLoader;
 use Nette\Application\Routers\Route;
 use Nette\Http\IRequest;
 

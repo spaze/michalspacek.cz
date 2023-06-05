@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Blog;
+namespace MichalSpacekCz\Articles\Blog;
 
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
-use MichalSpacekCz\Blog\Exceptions\BlogPostDoesNotExistException;
+use MichalSpacekCz\Articles\ArticleEdit;
+use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\LinkGenerator;
@@ -24,7 +25,7 @@ use Nette\Utils\JsonException;
 class BlogPosts
 {
 
-	/** @var string[]|null */
+	/** @var array<int, string>|null */
 	private ?array $locales = null;
 
 
@@ -64,7 +65,7 @@ class BlogPosts
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
-	 * @throws BlogPostDoesNotExistException
+	 * @throws \MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException
 	 */
 	public function get(string $post, ?string $previewKey = null): BlogPost
 	{
@@ -122,7 +123,7 @@ class BlogPosts
 
 
 	/**
-	 * @return BlogPost[]
+	 * @return list<BlogPost>
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
@@ -302,11 +303,11 @@ class BlogPosts
 
 
 	/**
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function getAllTwitterCards(): array
 	{
-		return $this->database->fetchAll('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types ORDER BY card');
+		return array_values($this->database->fetchAll('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types ORDER BY card'));
 	}
 
 
@@ -335,10 +336,9 @@ class BlogPosts
 
 
 	/**
-	 * @param int $postId
-	 * @return BlogPostEdit[]
+	 * @return list<ArticleEdit>
 	 */
-	public function getEdits(int $postId): array
+	private function getEdits(int $postId): array
 	{
 		$sql = 'SELECT
 				edited_at AS editedAt,
@@ -350,7 +350,7 @@ class BlogPosts
 		$edits = [];
 		foreach ($this->database->fetchAll($sql, $postId) as $row) {
 			$summary = $this->texyFormatter->format($row->summaryTexy);
-			$edit = new BlogPostEdit();
+			$edit = new ArticleEdit();
 			$edit->summaryTexy = $row->summaryTexy;
 			$edit->summary = $summary;
 			$edit->editedAt = $row->editedAt;
@@ -365,7 +365,7 @@ class BlogPosts
 	 * @throws InvalidLinkException
 	 * @throws JsonException
 	 */
-	private function buildPost(Row $row): BlogPost
+	public function buildPost(Row $row): BlogPost
 	{
 		$post = new BlogPost();
 		$post->postId = $row->postId;
@@ -387,6 +387,7 @@ class BlogPosts
 		$post->cspSnippets = ($row->cspSnippets !== null ? Json::decode($row->cspSnippets) : []);
 		$post->allowedTags = ($row->allowedTags !== null ? Json::decode($row->allowedTags) : []);
 		$post->omitExports = (bool)$row->omitExports;
+		$post->edits = $this->getEdits($post->postId);
 		$this->enrich($post);
 		return $this->format($post);
 	}

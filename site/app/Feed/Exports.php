@@ -6,8 +6,12 @@ namespace MichalSpacekCz\Feed;
 use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Components\ArticleWithEdits;
+use MichalSpacekCz\Articles\Components\ArticleWithTags;
+use MichalSpacekCz\Articles\Components\ArticleWithText;
+use MichalSpacekCz\Articles\Components\ArticleWithUpdateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
@@ -58,25 +62,28 @@ class Exports
 			$feedUpdated = null;
 			$cacheTags = [];
 			foreach ($articles as $article) {
-				if ($article->omitExports) {
+				if ($article instanceof ExportsOmittable && $article->omitExports()) {
 					continue;
 				}
-				$updated = ($article->updated ?? $article->published);
+				if ($article->getPublishTime() === null) {
+					throw new ShouldNotHappenException('The $articles array items should all be published already');
+				}
+				$updated = $article instanceof ArticleWithUpdateTime && $article->getUpdateTime() ? $article->getUpdateTime() : $article->getPublishTime();
 				$entry = new Entry(
 					$article->href,
 					new Text((string)$article->title, Text::TYPE_HTML),
 					$updated,
-					$article->published,
+					$article->getPublishTime(),
 				);
-				if ($article->excerpt) {
-					$entry->setSummary(new Text(trim((string)$article->excerpt), Text::TYPE_HTML));
+				if ($article->hasSummary()) {
+					$entry->setSummary(new Text(trim((string)$article->getSummary()), Text::TYPE_HTML));
 				}
-				if ($article->text) {
+				if ($article instanceof ArticleWithText) {
 					$content = Html::el();
-					if ($article->edits) {
+					if ($article instanceof ArticleWithEdits && $article->getEdits()) {
 						$content->addHtml(Html::el('h3')->setText($this->texyFormatter->translate('messages.blog.post.edits')));
 						$edits = Html::el('ul');
-						foreach ($article->edits as $edit) {
+						foreach ($article->getEdits() as $edit) {
 							$edits->create('li')
 								->addHtml(Html::el('em')
 									->addHtml(Html::el('strong')->addText($edit->editedAt->format('j.n.')))
@@ -85,7 +92,7 @@ class Exports
 						}
 						$content->addHtml($edits);
 					}
-					$content->addHtml($article->text);
+					$content->addHtml($article->getText());
 					$entry->setContent(new Text(trim($content->render()), Text::TYPE_HTML));
 				}
 				$entry->addLink(new Link($article->href, Link::REL_ALTERNATE, 'text/' . Text::TYPE_HTML));
@@ -93,15 +100,21 @@ class Exports
 				if ($updated > $feedUpdated) {
 					$feedUpdated = $updated;
 				}
-				$type = ($article->isBlogPost ? BlogPosts::class : Articles::class);
-				foreach ($article->slugTags as $slugTag) {
-					$cacheTags["{$type}/tag/{$slugTag}"] = "{$type}/tag/{$slugTag}";
+				$type = $article::class;
+				if ($article instanceof ArticleWithTags) {
+					foreach ($article->getSlugTags() as $slugTag) {
+						$cacheTags["{$type}/tag/{$slugTag}"] = "{$type}/tag/{$slugTag}";
+					}
 				}
 				$cacheTags[$type] = $type;
-				$cacheTags[] = "{$type}/id/{$article->articleId}";
+				if ($article->hasId()) {
+					$cacheTags[] = "{$type}/id/{$article->getId()}";
+				}
 			}
 			$dependencies[Cache::Tags] = array_values($cacheTags);
-			$feed->setUpdated($feedUpdated);
+			if ($feedUpdated) {
+				$feed->setUpdated($feedUpdated);
+			}
 			return $feed;
 		});
 		return $feed;
