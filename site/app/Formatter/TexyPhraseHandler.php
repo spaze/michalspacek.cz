@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
-use MichalSpacekCz\Blog\BlogPostLocaleUrls;
+use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Locales;
 use Nette\Application\Application;

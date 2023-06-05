@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use DateInterval;
-use MichalSpacekCz\Blog\BlogPostLocaleUrls;
-use MichalSpacekCz\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
+use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates;
 use Spaze\ContentSecurityPolicy\Config as CspConfig;
@@ -42,16 +42,15 @@ class PostPresenter extends BasePresenter
 		if ($post->postId === null) {
 			throw new ShouldNotHappenException('Never thought it would be possible to have a published blog post without an id');
 		}
-		$edits = $this->blogPosts->getEdits($post->postId);
 		$this->template->post = $post;
 		$this->template->pageTitle = htmlspecialchars_decode(strip_tags((string)$post->title));
 		$this->template->pageHeader = $post->title;
 		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
-		$this->template->edits = $edits;
+		$this->template->edits = $post->edits;
 		/** @var DateInterval|false $interval */
-		$interval = ($edits && $post->published ? current($edits)->editedAt->diff($post->published) : false);
-		if ($edits && $interval && $interval->days >= $this->blogPosts->getUpdatedInfoThreshold()) {
-			$this->template->edited = current($edits)->editedAt;
+		$interval = ($post->edits && $post->published ? current($post->edits)->editedAt->diff($post->published) : false);
+		if ($post->edits && $interval && $interval->days >= $this->blogPosts->getUpdatedInfoThreshold()) {
+			$this->template->edited = current($post->edits)->editedAt;
 		} else {
 			$this->template->edited = null;
 		}

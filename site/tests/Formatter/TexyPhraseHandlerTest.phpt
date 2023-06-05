@@ -109,7 +109,7 @@ class TexyPhraseHandlerTest extends TestCase
 	public function testSolveBlogPostLink(): void
 	{
 		$enLocale = 'en_US';
-		$this->database->setFetchAllResult([
+		$this->database->setFetchAllDefaultResult([
 			[
 				'locale' => $this->locale,
 				'slug' => 'fó',

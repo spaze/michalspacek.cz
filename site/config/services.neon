@@ -7,10 +7,10 @@ services:
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	- MichalSpacekCz\Application\WindowsSubsystemForLinux
 	- MichalSpacekCz\Articles\Articles
-	- MichalSpacekCz\Blog\BlogPostLoader
-	- MichalSpacekCz\Blog\BlogPostLocaleUrls
-	- MichalSpacekCz\Blog\BlogPostPreview
-	- MichalSpacekCz\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
+	- MichalSpacekCz\Articles\Blog\BlogPostLoader
+	- MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls
+	- MichalSpacekCz\Articles\Blog\BlogPostPreview
+	- MichalSpacekCz\Articles\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
 	- MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
 	- MichalSpacekCz\CompanyInfo\Info(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\RegisterUz(rootUrl: %registerUz.rootUrl%)
