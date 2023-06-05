@@ -58,7 +58,7 @@
 			<th>{label supersededBy /}</th><td>{input supersededBy}</td>
 		</tr>
 		<tr>
-			<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$formName == editTalk" n:href="slides $talk->talkId">Upravit slajdy</a></td>
+			<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$talk && $talk->talkId" n:href="slides $talk->talkId">Upravit slajdy</a></td>
 		</tr>
 		<tr>
 			<th></th><td class="short"><p>{input submit}</p></td>
