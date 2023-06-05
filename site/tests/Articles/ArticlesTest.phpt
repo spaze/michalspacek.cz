@@ -55,7 +55,7 @@ class ArticlesTest extends TestCase
 				'recommended' => null,
 				'cspSnippets' => null,
 				'allowedTags' => null,
-				'twitterCard' => null,
+				'twitterCardId' => null,
 				'omitExports' => null,
 			],
 			[
@@ -79,7 +79,7 @@ class ArticlesTest extends TestCase
 				'recommended' => null,
 				'cspSnippets' => null,
 				'allowedTags' => null,
-				'twitterCard' => null,
+				'twitterCardId' => null,
 				'omitExports' => null,
 			],
 			[
@@ -103,7 +103,7 @@ class ArticlesTest extends TestCase
 				'recommended' => null,
 				'cspSnippets' => null,
 				'allowedTags' => null,
-				'twitterCard' => null,
+				'twitterCardId' => null,
 				'omitExports' => null,
 			],
 			[
@@ -127,7 +127,7 @@ class ArticlesTest extends TestCase
 				'recommended' => null,
 				'cspSnippets' => null,
 				'allowedTags' => null,
-				'twitterCard' => null,
+				'twitterCardId' => null,
 				'omitExports' => null,
 			],
 		];
