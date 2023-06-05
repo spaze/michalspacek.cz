@@ -8,7 +8,7 @@
 			<th>{label action /}</th><td>{input action}<br></td>
 		</tr>
 		<tr>
-			<th>{label title /}</th><td>{input title}<br><small><a n:ifset="$interview->action" n:href=":Www:Interviews:interview $interview->action">zobrazit rozhovor</a></small></td>
+			<th>{label title /}</th><td>{input title}<br><small><a n:if="$interview && $interview->action" n:href=":Www:Interviews:interview $interview->action">zobrazit rozhovor</a></small></td>
 		</tr>
 		<tr>
 			<th class="align-top">{label description /}</th><td>{input description}</td>
