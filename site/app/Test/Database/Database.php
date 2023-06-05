@@ -9,6 +9,9 @@ use Nette\Database\Row;
 class Database extends Explorer
 {
 
+	/** @var array<string, int|string|null> */
+	private array $fetchResult = [];
+
 	/** @var array<string, string> */
 	private array $fetchPairsResult = [];
 
@@ -23,10 +26,31 @@ class Database extends Explorer
 
 	public function reset(): void
 	{
+		$this->fetchResult = [];
 		$this->fetchPairsResult = [];
 		$this->fetchAllDefaultResult = [];
 		$this->fetchAllResults = [];
 		$this->fetchAllResultsPosition = 0;
+	}
+
+
+	/**
+	 * @param array<string, int|string|null> $fetchResult
+	 */
+	public function setFetchResult(array $fetchResult): void
+	{
+		$this->fetchResult = $fetchResult;
+	}
+
+
+	/**
+	 * @param literal-string $sql
+	 * @param string ...$params
+	 */
+	public function fetch(string $sql, ...$params): ?Row
+	{
+		$row = Row::from($this->fetchResult);
+		return $row->count() > 0 ? $row : null;
 	}
 
 

@@ -11,6 +11,7 @@ use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;
+use MichalSpacekCz\Twitter\TwitterCards;
 use Nette\Application\UI\Form;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\UniqueConstraintViolationException;
@@ -34,6 +35,7 @@ class PostFormFactory
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly BlogPostPreview $blogPostPreview,
 		private readonly FormValues $formValues,
+		private readonly TwitterCards $twitterCards,
 	) {
 	}
 
@@ -71,8 +73,8 @@ class PostFormFactory
 			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na obrázek je %d znaků', 200);
 
 		$cards = ['' => 'Žádná karta'];
-		foreach ($this->blogPosts->getAllTwitterCards() as $card) {
-			$cards[$card->card] = $card->title;
+		foreach ($this->twitterCards->getAll() as $card) {
+			$cards[$card->getCard()] = $card->getTitle();
 		}
 		$form->addSelect('twitterCard', 'Twitter card', $cards);
 
@@ -160,7 +162,7 @@ class PostFormFactory
 		$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));
 		$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
 		$post->recommended = (empty($values->recommended) ? [] : Json::decode($values->recommended));
-		$post->twitterCard = (empty($values->twitterCard) ? null : $values->twitterCard);
+		$post->twitterCard = (empty($values->twitterCard) ? null : $this->twitterCards->getCard($values->twitterCard));
 		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
 		$post->cspSnippets = (empty($values->cspSnippets) ? [] : $values->cspSnippets);
 		$post->allowedTags = (empty($values->allowedTags) ? [] : $values->allowedTags);

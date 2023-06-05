@@ -11,6 +11,7 @@ use MichalSpacekCz\Articles\ArticleEdit;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;
+use MichalSpacekCz\Twitter\TwitterCards;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
@@ -41,6 +42,7 @@ class BlogPosts
 		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 		private readonly Tags $tags,
 		private readonly Translator $translator,
+		private readonly TwitterCards $twitterCards,
 		private readonly int $updatedInfoThreshold,
 		private readonly array $allowedTags,
 	) {
@@ -105,7 +107,9 @@ class BlogPosts
 				bp.csp_snippets AS cspSnippets,
 				bp.allowed_tags AS allowedTags,
 				bp.omit_exports AS omitExports,
-				tct.card AS twitterCard
+				tct.id_twitter_card_type AS twitterCardId,
+				tct.card AS twitterCard,
+				tct.title AS twitterCardTitle
 			FROM blog_posts bp
 			LEFT JOIN blog_post_locales l
 				ON l.id_blog_post_locale = bp.key_locale
@@ -149,7 +153,7 @@ class BlogPosts
 				null AS cspSnippets,
 				null AS allowedTags,
 				bp.omit_exports AS omitExports,
-				null AS twitterCard
+				null AS twitterCardId
 			FROM
 				blog_posts bp
 			LEFT JOIN blog_post_locales l
@@ -222,7 +226,7 @@ class BlogPosts
 					'published' => $post->published,
 					'published_timezone' => $post->published ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null,
 					'originally' => $post->originallyTexy,
-					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
+					'key_twitter_card_type' => $post->twitterCard?->getId(),
 					'og_image' => $post->ogImage,
 					'tags' => $post->tags ? $this->tags->serialize($post->tags) : null,
 					'slug_tags' => $this->tags->serialize($post->slugTags),
@@ -262,7 +266,7 @@ class BlogPosts
 					'published' => $post->published,
 					'published_timezone' => $post->published ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null,
 					'originally' => $post->originallyTexy,
-					'key_twitter_card_type' => ($post->twitterCard !== null ? $this->getTwitterCardId($post->twitterCard) : null),
+					'key_twitter_card_type' => $post->twitterCard?->getId(),
 					'og_image' => $post->ogImage,
 					'tags' => ($post->tags ? $this->tags->serialize($post->tags) : null),
 					'slug_tags' => ($post->slugTags ? $this->tags->serialize($post->slugTags) : null),
@@ -299,21 +303,6 @@ class BlogPosts
 		} catch (Exception) {
 			$this->database->rollBack();
 		}
-	}
-
-
-	/**
-	 * @return list<Row>
-	 */
-	public function getAllTwitterCards(): array
-	{
-		return array_values($this->database->fetchAll('SELECT id_twitter_card_type AS cardId, card, title FROM twitter_card_types ORDER BY card'));
-	}
-
-
-	private function getTwitterCardId(string $card): int
-	{
-		return $this->database->fetchField('SELECT id_twitter_card_type FROM twitter_card_types WHERE card = ?', $card);
 	}
 
 
@@ -383,7 +372,7 @@ class BlogPosts
 		$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : []);
 		$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
 		$post->recommended = ($row->recommended !== null ? Json::decode($row->recommended) : []);
-		$post->twitterCard = $row->twitterCard;
+		$post->twitterCard = $row->twitterCardId !== null ? $this->twitterCards->buildCard($row->twitterCardId, $row->twitterCard, $row->twitterCardTitle) : null;
 		$post->cspSnippets = ($row->cspSnippets !== null ? Json::decode($row->cspSnippets) : []);
 		$post->allowedTags = ($row->allowedTags !== null ? Json::decode($row->allowedTags) : []);
 		$post->omitExports = (bool)$row->omitExports;
