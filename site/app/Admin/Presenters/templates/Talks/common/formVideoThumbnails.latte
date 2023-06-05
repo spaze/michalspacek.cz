@@ -5,10 +5,8 @@
 	<td class="narrower">
 		<span id="videoThumbnailFormField">{input videoThumbnail} <small>{$videoThumbnailWidth}×{$videoThumbnailHeight}</small></span>
 		<span id="currentVideoThumbnail">
-			{ifset $item->videoThumbnailUrl}
-				<img src="{$item->videoThumbnailUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnail}" title="{$item->videoThumbnail}">
-			{/ifset}
-			{ifset $item->videoThumbnail}<small>{input removeVideoThumbnail}</small>{/ifset}
+			<img n:if="$item && $item->videoThumbnailUrl" src="{$item->videoThumbnailUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnail}" title="{$item->videoThumbnail}">
+			<small n:if="$item && $item->videoThumbnail">{input removeVideoThumbnail}</small>
 		</span>
 		<span n:ifcontent class="error">{inputError videoThumbnail}</span>
 	</td>
@@ -18,10 +16,8 @@
 	<td class="narrower">
 		<span id="videoThumbnailAlternativeFormField">{input videoThumbnailAlternative} <small>{$videoThumbnailWidth}×{$videoThumbnailHeight}</small></span>
 		<span id="currentVideoThumbnailAlternative">
-			{ifset $item->videoThumbnailAlternativeUrl}
-				<img src="{$item->videoThumbnailAlternativeUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnailAlternative}" title="{$item->videoThumbnailAlternative}">
-			{/ifset}
-			{ifset $item->videoThumbnailAlternative}<small>{input removeVideoThumbnailAlternative}</small>{/ifset}
+			<img n:if="$item && $item->videoThumbnailAlternativeUrl" src="{$item->videoThumbnailAlternativeUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnailAlternative}" title="{$item->videoThumbnailAlternative}">
+			<small n:if="$item && $item->videoThumbnailAlternative">{input removeVideoThumbnailAlternative}</small>
 		</span>
 		<span n:ifcontent class="error">{inputError videoThumbnailAlternative}</span>
 	</td>
