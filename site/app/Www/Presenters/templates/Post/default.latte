@@ -1,10 +1,11 @@
 {layout "@layout.latte"}
+{varType MichalSpacekCz\Articles\Blog\BlogPost $post}
 {define #metas}
 <meta n:if="$post->ogImage" property="og:image" content="{$post->ogImage|staticImageUrl}">
 <meta n:if="$post->ogImage || $post->twitterCard" property="og:title" content="{$pageTitle}">
 {var $ogDescription = $post->lead ?: $post->text}
 <meta n:if="$post->ogImage || $post->twitterCard" property="og:description" content="{$ogDescription|striptags|strip}">
-<meta n:if="$post->twitterCard" name="twitter:card" content="{$post->twitterCard}">
+<meta n:if="$post->twitterCard" name="twitter:card" content="{$post->twitterCard->getCard()}">
 <meta n:if="$post->twitterCard" name="twitter:site" content="@spazef0rze">
 {/define}
 
