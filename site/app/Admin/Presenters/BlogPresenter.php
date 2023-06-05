@@ -100,7 +100,7 @@ class BlogPresenter extends BasePresenter
 			'text' => $this->post->textTexy,
 			'originally' => $this->post->originallyTexy,
 			'ogImage' => $this->post->ogImage,
-			'twitterCard' => $this->post->twitterCard,
+			'twitterCard' => $this->post->twitterCard?->getCard(),
 			'tags' => ($this->post->tags ? $this->tags->toString($this->post->tags) : null),
 			'recommended' => (empty($this->post->recommended) ? null : Json::encode($this->post->recommended)),
 			'cspSnippets' => $this->post->cspSnippets,

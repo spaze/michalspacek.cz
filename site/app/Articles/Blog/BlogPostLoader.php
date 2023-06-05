@@ -62,7 +62,9 @@ class BlogPostLoader
 					bp.csp_snippets AS cspSnippets,
 					bp.allowed_tags AS allowedTags,
 					bp.omit_exports as omitExports,
-					tct.card AS twitterCard
+					tct.id_twitter_card_type AS twitterCardId,
+					tct.card AS twitterCard,
+					tct.title AS twitterCardTitle
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
 					ON l.id_blog_post_locale = bp.key_locale

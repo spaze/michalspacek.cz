@@ -60,7 +60,7 @@ class Articles
 				null AS recommended,
 				null AS cspSnippets,
 				null AS allowedTags,
-				null AS twitterCard,
+				null AS twitterCardId,
 				null AS omitExports
 			FROM articles a
 				JOIN article_sources s ON a.key_article_source = s.id_article_source
@@ -86,7 +86,7 @@ class Articles
 					null AS recommended,
 					null AS cspSnippets,
 					null AS allowedTags,
-					null AS twitterCard,
+					null AS twitterCardId,
 					bp.omit_exports AS omitExports
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
@@ -133,7 +133,7 @@ class Articles
 					null AS recommended,
 					null AS cspSnippets,
 					null AS allowedTags,
-					null AS twitterCard,
+					null AS twitterCardId,
 					bp.omit_exports AS omitExports
 				FROM blog_posts bp
 				LEFT JOIN blog_post_locales l
