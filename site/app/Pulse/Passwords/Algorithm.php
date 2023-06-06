@@ -4,12 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
-use stdClass;
 
 class Algorithm
 {
-
-	private ?stdClass $params;
 
 	private ?string $fullAlgo;
 
@@ -30,13 +27,12 @@ class Algorithm
 		private readonly bool $stretched,
 		private readonly ?DateTime $from,
 		private readonly bool $fromConfirmed,
-		private readonly ?stdClass $attributes,
+		private readonly AlgorithmAttributes $attributes,
 		private readonly ?string $note,
 		StorageDisclosure $disclosure,
 	) {
-		$this->params = $attributes->params ?? null;
 		$this->addDisclosure($disclosure);
-		$this->fullAlgo = $this->formatFullAlgo($this->name, $this->attributes);
+		$this->fullAlgo = $this->formatFullAlgo($this->name, $this->attributes->getInner(), $this->attributes->getOuter());
 	}
 
 
@@ -44,28 +40,29 @@ class Algorithm
 	 * Format full algo, if needed
 	 *
 	 * @param string $name main algo name
-	 * @param stdClass|null $attrs attributes
+	 * @param list<string>|null $inner
+	 * @param list<string>|null $outer
 	 * @return string|null String of formatted algos, null if no inner or outer hashes used
 	 */
-	private function formatFullAlgo(string $name, ?stdClass $attrs = null): ?string
+	private function formatFullAlgo(string $name, ?array $inner, ?array $outer): ?string
 	{
-		if (!isset($attrs->inner) && !isset($attrs->outer)) {
+		if (!$inner && !$outer) {
 			return null;
 		}
 
 		$result = '';
 		$count = 0;
-		if (isset($attrs->outer)) {
-			for ($i = count($attrs->outer) - 1; $i >= 0; $i--) {
-				$result .= $attrs->outer[$i] . '(';
+		if ($outer) {
+			for ($i = count($outer) - 1; $i >= 0; $i--) {
+				$result .= $outer[$i] . '(';
 				$count++;
 			}
 		}
 		$result .= $name . '(';
 		$count++;
-		if (isset($attrs->inner)) {
-			for ($i = count($attrs->inner) - 1; $i >= 0; $i--) {
-				$result .= $attrs->inner[$i] . '(';
+		if ($inner) {
+			for ($i = count($inner) - 1; $i >= 0; $i--) {
+				$result .= $inner[$i] . '(';
 				$count++;
 			}
 		}
@@ -115,15 +112,18 @@ class Algorithm
 	}
 
 
-	public function getAttributes(): ?stdClass
+	public function getAttributes(): AlgorithmAttributes
 	{
 		return $this->attributes;
 	}
 
 
-	public function getParams(): ?stdClass
+	/**
+	 * @return array<string, string>|null
+	 */
+	public function getParams(): ?array
 	{
-		return $this->params;
+		return $this->attributes->getParams();
 	}
 
 
