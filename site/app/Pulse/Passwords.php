@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Pulse;
 
 use DateTime;
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
+use MichalSpacekCz\Pulse\Passwords\AlgorithmAttributesFactory;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\SearchMatcher;
@@ -25,6 +26,7 @@ class Passwords
 		private readonly Companies $companies,
 		private readonly Sites $sites,
 		private readonly PasswordsSorting $sorting,
+		private readonly AlgorithmAttributesFactory $algorithmAttributesFactory,
 	) {
 	}
 
@@ -267,7 +269,7 @@ class Passwords
 			}
 			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
 			if (!$registry->getStorage($storageKey)->getSite($siteId)->hasAlgorithm($algoKey)) {
-				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $row->attributes ? Json::decode($row->attributes) : null, $row->note, $disclosure);
+				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
 				$registry->getStorage($storageKey)->getSite($siteId)->addAlgorithm($algorithm);
 			} else {
 				$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);

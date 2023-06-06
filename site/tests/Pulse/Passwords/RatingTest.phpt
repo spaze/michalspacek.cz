@@ -110,7 +110,7 @@ class RatingTest extends TestCase
 	private function getAlgo(string $alias, bool $salted, bool $stretched, array $disclosureTypes): Algorithm
 	{
 		$disclosure = new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', array_shift($disclosureTypes));
-		$algorithm = new Algorithm('1', 'foo', $alias, $salted, $stretched, new DateTime(), true, null, null, $disclosure);
+		$algorithm = new Algorithm('1', 'foo', $alias, $salted, $stretched, new DateTime(), true, new AlgorithmAttributes(null, null, null), null, $disclosure);
 		foreach ($disclosureTypes as $typeAlias) {
 			$algorithm->addDisclosure(new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', $typeAlias));
 		}
