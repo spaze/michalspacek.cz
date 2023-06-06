@@ -60,6 +60,7 @@ services:
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
+	- MichalSpacekCz\Pulse\Passwords\AlgorithmAttributesFactory
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
@@ -98,6 +99,7 @@ services:
 	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
 	- MichalSpacekCz\Utils\Strings
 	- Nette\Bridges\ApplicationLatte\TemplateFactory
+	- Nette\Schema\Processor
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
 	- PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor
 	emailEncryption: Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
