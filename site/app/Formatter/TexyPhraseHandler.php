@@ -22,8 +22,8 @@ use Texy\Modifier;
 class TexyPhraseHandler
 {
 
-	private const TRAINING_ACTION = ':Www:Trainings:training';
-	private const COMPANY_TRAINING_ACTION = ':Www:CompanyTrainings:training';
+	private const TRAINING_ACTION = 'Www:Trainings:training';
+	private const COMPANY_TRAINING_ACTION = 'Www:CompanyTrainings:training';
 
 
 	public function __construct(
@@ -58,12 +58,12 @@ class TexyPhraseHandler
 
 		// "title":[link:Module:Presenter:action params]
 		if (str_starts_with($url, 'link:')) {
-			$link->URL = $this->getLink($presenter, substr($url, 5), $this->translator->getDefaultLocale());
+			$link->URL = $this->getLink(substr($url, 5), $this->translator->getDefaultLocale());
 		}
 
 		// "title":[link-en_US:Module:Presenter:action params]
 		if (str_starts_with($url, 'link-') && preg_match("/^link-{$localeRegExp}:(.*)\\z/", $url, $matches)) {
-			$link->URL = $this->getLink($presenter, $matches[2], $matches[1]);
+			$link->URL = $this->getLink($matches[2], $matches[1]);
 		}
 
 		// "title":[blog:post#fragment]
@@ -79,7 +79,7 @@ class TexyPhraseHandler
 		// "title":[inhouse-training:training]
 		if (str_starts_with($url, 'inhouse-training:')) {
 			$args = $this->trainingLocales->getLocaleActions(substr($url, 17))[$this->translator->getDefaultLocale()];
-			$link->URL = $presenter->link("//" . self::COMPANY_TRAINING_ACTION, $args);
+			$link->URL = $presenter->link('//:' . self::COMPANY_TRAINING_ACTION, $args);
 		}
 
 		// "title":[training:training]
@@ -87,7 +87,7 @@ class TexyPhraseHandler
 			$texy = $invocation->getTexy();
 			$name = substr($url, 9);
 			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
-			$link->URL = $presenter->link("//" . self::TRAINING_ACTION, $name);
+			$link->URL = $presenter->link('//:' . self::TRAINING_ACTION, $name);
 			$el = HtmlElement::el();
 			$trainingLink = $texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link);
 			if ($trainingLink) {
@@ -101,17 +101,14 @@ class TexyPhraseHandler
 	}
 
 
-	/**
-	 * @throws InvalidLinkException
-	 */
-	private function getLink(Presenter $presenter, string $url, string $locale): string
+	private function getLink(string $url, string $locale): string
 	{
 		$args = Strings::split($url, '/[\s,]+/');
-		$action = ':' . array_shift($args);
+		$action = array_shift($args);
 		if (Arrays::contains([self::TRAINING_ACTION, self::COMPANY_TRAINING_ACTION], $action)) {
-			$args = $this->trainingLocales->getLocaleActions($args[0])[$locale];
+			$args = [$this->trainingLocales->getLocaleActions($args[0])[$locale]];
 		}
-		return $presenter->link("//{$action}", $args);
+		return $this->getLinkWithParams($action, [$locale => $args], $locale);
 	}
 
 
@@ -124,12 +121,21 @@ class TexyPhraseHandler
 		foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
 			$params[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
 		}
-		$defaultParams = current($params);
-		if ($defaultParams === false) {
+		if (!$params) {
 			throw new ShouldNotHappenException("The blog links array should not be empty, maybe the linked blog post '{$url}' is missing?");
 		}
+		return $this->getLinkWithParams("Www:Post:default{$fragment}", $params, $locale);
+	}
+
+
+	/**
+	 * @param non-empty-array<string, array<string, string|null>> $params
+	 */
+	private function getLinkWithParams(string $destination, array $params, string $locale): string
+	{
+		$defaultParams = current($params);
 		$this->localeLinkGenerator->setDefaultParams($params, $defaultParams);
-		return $this->localeLinkGenerator->allLinks("Www:Post:default{$fragment}", $params)[$locale];
+		return $this->localeLinkGenerator->allLinks($destination, $params)[$locale];
 	}
 
 
