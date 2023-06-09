@@ -291,7 +291,7 @@ class Trainings
 	 */
 	public function getCooperations(): array
 	{
-		$result = $this->database->fetchAll(
+		return $this->database->fetchAll(
 			'SELECT
 				c.id_cooperation AS id,
 				c.name
@@ -299,7 +299,6 @@ class Trainings
 			ORDER BY
 				c.id_cooperation',
 		);
-		return $result;
 	}
 
 

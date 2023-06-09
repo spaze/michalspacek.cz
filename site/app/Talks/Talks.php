@@ -594,7 +594,7 @@ class Talks
 						foreach ($this->deleteFiles as $key => $value) {
 							if (unlink($value)) {
 								unset($this->deleteFiles[$key]);
-							};
+							}
 						}
 					}
 				} else {

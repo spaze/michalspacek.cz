@@ -60,7 +60,7 @@ class Venues
 	 */
 	public function getAll(): array
 	{
-		$result = $this->database->fetchAll(
+		return $this->database->fetchAll(
 			'SELECT
 				v.id_venue AS id,
 				v.name,
@@ -69,7 +69,6 @@ class Venues
 			ORDER BY
 				v.order IS NULL, v.order, v.name',
 		);
-		return $result;
 	}
 
 }
