@@ -12,6 +12,7 @@ parameters:
 services:
 	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGenerator
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
+	database.upcKeys.explorer: @database.default.explorer
 	session.session: MichalSpacekCz\Test\Http\NullSession
 	http.request: MichalSpacekCz\Test\Http\Request
 	http.response: MichalSpacekCz\Test\Http\Response
