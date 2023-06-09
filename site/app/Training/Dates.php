@@ -249,7 +249,7 @@ class Dates
 	 */
 	public function getStatuses(): array
 	{
-		$result = $this->database->fetchAll(
+		return $this->database->fetchAll(
 			'SELECT
 				s.id_status AS id,
 				s.status,
@@ -258,7 +258,6 @@ class Dates
 			ORDER BY
 				s.id_status',
 		);
-		return $result;
 	}
 
 

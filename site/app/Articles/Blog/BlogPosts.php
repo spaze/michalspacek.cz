@@ -67,7 +67,7 @@ class BlogPosts
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
-	 * @throws \MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException
+	 * @throws BlogPostDoesNotExistException
 	 */
 	public function get(string $post, ?string $previewKey = null): BlogPost
 	{

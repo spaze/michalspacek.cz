@@ -81,7 +81,7 @@ class TrainingMailsOutboxFormFactory
 					break;
 				case Statuses::STATUS_REMINDED:
 					if ($application->remote) {
-						$checked = $filesCount > 0 && (bool)$application->remoteUrl;
+						$checked = $filesCount > 0 && $application->remoteUrl;
 						$disabled = !$checked;
 						if ($filesCount === 0) {
 							$sendCheckboxTitle['files'] = 'Není nahrán žádný soubor';

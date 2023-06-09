@@ -229,7 +229,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		if (!$session->applicationId || !$session->token) {
-			throw new BadRequestException("Unknown application id, missing or invalid token");
+			throw new BadRequestException('Unknown application id, missing or invalid token');
 		}
 
 		try {

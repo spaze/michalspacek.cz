@@ -183,7 +183,7 @@ class Applications
 
 	public function getValidUnpaidCount(): int
 	{
-		$result = $this->database->fetchField(
+		return $this->database->fetchField(
 			'SELECT
 				COUNT(1)
 			FROM
@@ -194,7 +194,6 @@ class Applications
 				AND paid IS NULL',
 			array_keys($this->trainingStatuses->getDiscardedStatuses()),
 		);
-		return $result;
 	}
 
 
