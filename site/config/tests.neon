@@ -3,6 +3,11 @@ parameters:
 		root: domain.example
 		fqdn: www.%domain.root%
 		contentSecurityPolicySelf: "'self'"
+	locales:
+		rootDomainMapping:
+			cz: rizek.test
+			com: burger.test
+
 
 services:
 	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGenerator

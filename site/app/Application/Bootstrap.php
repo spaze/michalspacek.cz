@@ -42,7 +42,7 @@ class Bootstrap
 
 	public static function bootTest(): Container
 	{
-		$configurator = self::createConfigurator(true, self::SITE_DIR . '/config/tests.neon');
+		$configurator = self::createConfigurator(true, finalConfig: self::SITE_DIR . '/config/tests.neon');
 		$configurator->addStaticParameters([
 			'wwwDir' => self::SITE_DIR . '/tests',
 		]);
@@ -53,9 +53,9 @@ class Bootstrap
 
 
 	/**
-	 * @return string[]
+	 * @return non-empty-array<int, string|null>
 	 */
-	private static function getConfigurationFiles(string $extraConfig): array
+	private static function getConfigurationFiles(?string $extraConfig = null, ?string $finalConfig = null): array
 	{
 		return array_unique([
 			self::SITE_DIR . '/config/extensions.neon',
@@ -67,11 +67,12 @@ class Bootstrap
 			self::SITE_DIR . '/config/routes.neon',
 			$extraConfig,
 			self::SITE_DIR . '/config/local.neon',
+			$finalConfig,
 		]);
 	}
 
 
-	private static function createConfigurator(bool $debugMode, string $extraConfig): Configurator
+	private static function createConfigurator(bool $debugMode, ?string $extraConfig = null, ?string $finalConfig = null): Configurator
 	{
 		$configurator = new Configurator();
 		$configurator->addStaticParameters(['siteDir' => self::SITE_DIR]);
@@ -81,8 +82,8 @@ class Bootstrap
 		$configurator->setTimeZone('Europe/Prague');
 		$configurator->setTempDirectory($_SERVER['TEMP_DIR'] ?? self::SITE_DIR . '/temp');
 
-		$existingFiles = array_filter(self::getConfigurationFiles($extraConfig), function ($path) {
-			return is_file($path);
+		$existingFiles = array_filter(self::getConfigurationFiles($extraConfig, $finalConfig), function (?string $path) {
+			return $path && is_file($path);
 		});
 		foreach ($existingFiles as $filename) {
 			$configurator->addConfig($filename);
