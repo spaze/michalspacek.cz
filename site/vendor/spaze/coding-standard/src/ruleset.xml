@@ -124,6 +124,12 @@
 			<property name="linesCountAfterLastUse" value="1"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.PHP.UselessParentheses">
+		<properties>
+			<property name="ignoreComplexTernaryConditions" value="true"/>
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
 	<rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
 		<properties>
 			<property name="linesCountBeforeDeclare" value="0"/>
@@ -137,6 +143,7 @@
 			<property name="spacesCountBeforeColon" value="0"/>
 		</properties>
 	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint"/>
 	<rule ref="SlevomatCodingStandard.Variables.DisallowVariableVariable"/>
 	<rule ref="SlevomatCodingStandard.Whitespaces.DuplicateSpaces"/>
 	<rule ref="Squiz.Strings.ConcatenationSpacing">
