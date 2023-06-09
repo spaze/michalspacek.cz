@@ -109,6 +109,23 @@ class LocaleLinkGeneratorTest extends TestCase
 		$this->localeLinkGenerator->allLinks('Exist:Does:not');
 	}
 
+
+	public function testDefaultParams(): void
+	{
+		$params = ['foo' => 'bar'];
+		Assert::same(['*' => $params], $this->localeLinkGenerator->defaultParams($params));
+	}
+
+
+	public function testSetDefaultParams(): void
+	{
+		$params = ['foo' => ['bar' => 'baz']];
+		$defaultParams = ['default' => 'params'];
+		$expected = array_merge($params, ['*' => $defaultParams]);
+		$this->localeLinkGenerator->setDefaultParams($params, $defaultParams);
+		Assert::same($expected, $params);
+	}
+
 }
 
 $runner->run(LocaleLinkGeneratorTest::class);
