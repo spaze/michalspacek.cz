@@ -87,7 +87,7 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	 */
 	public function allLinks(string $destination, array $params = []): array
 	{
-		$locale = (string)$this->translator->getDefaultLocale();
+		$locale = $this->translator->getDefaultLocale();
 		try {
 			$links = $this->links($destination, $params);
 		} catch (InvalidLinkException) {
