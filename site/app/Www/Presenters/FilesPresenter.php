@@ -22,7 +22,7 @@ class FilesPresenter extends BasePresenter
 	{
 		$session = $this->getSession('application');
 		if (!$session->applicationId) {
-			throw new BadRequestException("Unknown application id, missing or invalid token");
+			throw new BadRequestException('Unknown application id, missing or invalid token');
 		}
 
 		$file = $this->trainingFiles->getFile($session->applicationId, $session->token, $filename);
