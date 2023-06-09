@@ -16,7 +16,6 @@ use Nette\Http\IRequest;
 class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 {
 
-	/** @var string */
 	private const DEFAULT_PARAMS = '*';
 
 

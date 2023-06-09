@@ -25,7 +25,6 @@ use Spaze\Exports\Atom\Feed;
 class Exports
 {
 
-	/** @var int */
 	private const ITEMS = 5;
 
 	private Cache $cache;

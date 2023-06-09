@@ -10,7 +10,6 @@ use Nette\Database\Row;
 class Sites
 {
 
-	/** @var string */
 	public const ALL = 'all';
 
 
