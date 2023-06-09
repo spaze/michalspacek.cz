@@ -9,7 +9,6 @@ use RuntimeException;
 class Ubee implements RouterInterface
 {
 
-	/** @var string */
 	private const OUI_UBEE = '647c34';
 
 	private string $serialNumberPrefix;
@@ -58,7 +57,7 @@ class Ubee implements RouterInterface
 	{
 		$key = '';
 		for ($i = 7; $i >= 0; $i--) {
-			$key .= chr((($binaryKey >> $i * 5) & 0x1F) + 0x41);
+			$key .= chr(($binaryKey >> $i * 5 & 0x1F) + 0x41);
 		}
 		return new WiFiKey($this->serialNumberPrefix, $this->serialNumberPrefix, self::OUI_UBEE, sprintf('%06x', $mac), $key, WiFiBand::Unknown);
 	}

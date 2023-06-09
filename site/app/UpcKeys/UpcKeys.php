@@ -8,10 +8,8 @@ use Nette\Utils\Strings;
 class UpcKeys
 {
 
-	/** @var string */
 	private const SSID_VALID_PATTERN = '([Uu][Pp][Cc])[0-9]{7}';
 
-	/** @var string */
 	private const SSID_PLACEHOLDER = 'UPC1234567';
 
 	/** @var array<class-string<RouterInterface>, RouterInterface> */

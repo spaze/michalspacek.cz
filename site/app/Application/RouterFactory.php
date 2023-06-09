@@ -14,9 +14,6 @@ use Nette\Routing\Router;
 class RouterFactory
 {
 
-	/**
-	 * @var string
-	 */
 	private const MODULE_ADMIN = 'Admin';
 	private const MODULE_API = 'Api';
 	private const MODULE_HEARTBLEED = 'Webleed';
@@ -26,8 +23,6 @@ class RouterFactory
 
 	/**
 	 * Module names mapped to hostnames.
-	 *
-	 * @var array<string, string>
 	 */
 	private const HOSTS = [
 		self::MODULE_ADMIN => 'admin',

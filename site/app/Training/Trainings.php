@@ -138,7 +138,7 @@ class Trainings
 			if (!$result) {
 				throw new TrainingDoesNotExistException(id: $id);
 			} else {
-				$this->trainingsById[$id] = ($this->texyFormatter->formatTraining($result));
+				$this->trainingsById[$id] = $this->texyFormatter->formatTraining($result);
 			}
 		}
 		return $this->trainingsById[$id];
