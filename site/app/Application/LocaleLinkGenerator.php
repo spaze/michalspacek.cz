@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\LinkGenerator;
 use Nette\Application\Routers\RouteList;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IRequest;
 
 /**
@@ -35,6 +36,7 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
 	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
 	 * @return array<string, string> of locale => URL
+	 * @throws InvalidLinkException
 	 */
 	public function links(string $destination, array $params = []): array
 	{
@@ -86,9 +88,14 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	public function allLinks(string $destination, array $params = []): array
 	{
 		$locale = (string)$this->translator->getDefaultLocale();
+		try {
+			$links = $this->links($destination, $params);
+		} catch (InvalidLinkException) {
+			$links = [];
+		}
 		return array_merge(
 			[$locale => $this->linkGenerator->link($destination, $this->getParams($params, $locale))],
-			$this->links($destination, $params),
+			$links,
 		);
 	}
 

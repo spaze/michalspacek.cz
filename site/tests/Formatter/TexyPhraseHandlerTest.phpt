@@ -23,8 +23,10 @@ $runner = require __DIR__ . '/../bootstrap.php';
 class TexyPhraseHandlerTest extends TestCase
 {
 
+	private const EN_LOCALE = 'en_US';
+
 	private Texy $texy;
-	private string $locale;
+	private string $defaultLocale;
 
 
 	public function __construct(
@@ -63,7 +65,7 @@ class TexyPhraseHandlerTest extends TestCase
 			}
 
 		});
-		$this->locale = $this->translator->getDefaultLocale();
+		$this->defaultLocale = $this->translator->getDefaultLocale();
 	}
 
 
@@ -81,44 +83,40 @@ class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveGeneralLink(): void
 	{
-		$destination = '//:Module:Presenter:action';
-		$this->assertUrl(
-			'title',
-			$this->buildUrl($destination, ['params']),
-			'"title":[link:Module:Presenter:action params]',
-		);
-		$this->assertUrl(
-			'title',
-			$this->buildUrl($destination, ['params']),
-			'"title":[link-en_US:Module:Presenter:action params]',
-		);
+		$defaultLocaleUrl = 'https://cz.example/prezentr/akce?paramy';
+		$enLocaleUrl = 'https://example.com/presenter/action?params';
+		$this->localeLinkGenerator->setAllLinks([
+			$this->defaultLocale => $defaultLocaleUrl,
+			self::EN_LOCALE => $enLocaleUrl,
+		]);
+		$this->assertUrl('title', $defaultLocaleUrl, '"title":[link:Module:Presenter:action params]');
+		$this->assertUrl('title', $enLocaleUrl, '"title":[link-' . self::EN_LOCALE . ':Module:Presenter:action params]');
 	}
 
 
 	public function testSolveTrainingLink(): void
 	{
-		$this->database->setFetchPairsResult([$this->locale => 'fjó']);
-		$this->assertUrl(
-			'title',
-			$this->buildUrl('//:Www:Trainings:training', ['fjó']),
-			'"title":[link:Www:Trainings:training foo]',
-		);
+		$this->database->setFetchPairsResult([$this->defaultLocale => 'fjó']);
+		$defaultLocaleUrl = 'https://cz.example/skoleni/foo';
+		$this->localeLinkGenerator->setAllLinks([
+			$this->defaultLocale => $defaultLocaleUrl,
+		]);
+		$this->assertUrl('title', $defaultLocaleUrl, '"title":[link:Www:Trainings:training foo]');
 	}
 
 
 	public function testSolveBlogPostLink(): void
 	{
-		$enLocale = 'en_US';
 		$this->database->setFetchAllDefaultResult([
 			[
-				'locale' => $this->locale,
+				'locale' => $this->defaultLocale,
 				'slug' => 'fó',
 				'published' => null,
 				'previewKey' => (string)rand(),
 				'slugTags' => null,
 			],
 			[
-				'locale' => $enLocale,
+				'locale' => self::EN_LOCALE,
 				'slug' => 'foo',
 				'published' => null,
 				'previewKey' => (string)rand(),
@@ -128,12 +126,12 @@ class TexyPhraseHandlerTest extends TestCase
 		$postUrl = 'https://blog.example/fó#fragment';
 		$postEnUrl = 'https://blog.example/foo#fragment';
 		$this->localeLinkGenerator->setAllLinks([
-			$this->locale => $postUrl,
-			$enLocale => $postEnUrl,
+			$this->defaultLocale => $postUrl,
+			self::EN_LOCALE => $postEnUrl,
 		]);
 		$this->assertUrl('le post', $postUrl, '"le post":[blog:post#fragment]');
-		$this->assertUrl('le post', $postUrl, '"le post":[blog-' . $this->locale . ':post#fragment]');
-		$this->assertUrl('teh post', $postEnUrl, '"teh post":[blog-' . $enLocale . ':post#fragment]');
+		$this->assertUrl('le post', $postUrl, '"le post":[blog-' . $this->defaultLocale . ':post#fragment]');
+		$this->assertUrl('teh post', $postEnUrl, '"teh post":[blog-' . self::EN_LOCALE . ':post#fragment]');
 	}
 
 
@@ -148,7 +146,7 @@ class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveInhouseTrainingLink(): void
 	{
-		$this->database->setFetchPairsResult([$this->locale => 'fjó']);
+		$this->database->setFetchPairsResult([$this->defaultLocale => 'fjó']);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:CompanyTrainings:training', ['fjó']),
@@ -159,7 +157,7 @@ class TexyPhraseHandlerTest extends TestCase
 
 	public function testSolveTrainingWithDatesLink(): void
 	{
-		$this->database->setFetchPairsResult([$this->locale => 'fjó']);
+		$this->database->setFetchPairsResult([$this->defaultLocale => 'fjó']);
 		$this->assertUrl(
 			'title',
 			$this->buildUrl('//:Www:Trainings:training', ['fjó']),

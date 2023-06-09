@@ -3,6 +3,11 @@ parameters:
 		root: domain.example
 		fqdn: www.%domain.root%
 		contentSecurityPolicySelf: "'self'"
+	locales:
+		rootDomainMapping:
+			cz: rizek.test
+			com: burger.test
+
 
 services:
 	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGenerator
@@ -11,7 +16,7 @@ services:
 	http.request: MichalSpacekCz\Test\Http\Request
 	http.response: MichalSpacekCz\Test\Http\Response
 	- MichalSpacekCz\Test\Http\SecurityHeadersFactory
-	- MichalSpacekCz\Test\NoOpTranslator(defaultLocale: cs_CZ)
+	translation.translator: MichalSpacekCz\Test\NoOpTranslator(availableLocales: [cs_CZ, en_US], defaultLocale: cs_CZ)
 	tracy.logger: MichalSpacekCz\Test\NullLogger
 	- MichalSpacekCz\Test\TestCaseRunner
 	cache.storage: Nette\Caching\Storages\DevNullStorage

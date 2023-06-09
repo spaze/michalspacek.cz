@@ -9,7 +9,11 @@ use Contributte\Translation\Translator;
 class NoOpTranslator extends Translator
 {
 
+	/**
+	 * @param list<string> $availableLocales
+	 */
 	public function __construct(
+		private readonly array $availableLocales,
 		private readonly string $defaultLocale,
 	) {
 	}
@@ -33,12 +37,14 @@ class NoOpTranslator extends Translator
 	}
 
 
-	/**
-	 * @return string[]
-	 */
 	public function getAvailableLocales(): array
 	{
-		return [];
+		return $this->availableLocales;
+	}
+
+
+	public function setFallbackLocales(array $locales): void
+	{
 	}
 
 }
