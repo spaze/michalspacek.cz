@@ -1,6 +1,6 @@
-.PHONY: test audit cs-fix check-file-patterns lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor tester
+.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor tester
 
-test: audit check-file-patterns lint-php lint-latte lint-neon lint-xml phpcs phpstan tester phpstan-vendor
+test: audit check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml phpcs phpstan tester phpstan-vendor
 
 audit:
 	composer audit
@@ -10,6 +10,9 @@ cs-fix:
 
 check-file-patterns:
 	bin/check-file-patterns.sh
+
+check-makefile:
+	bin/check-makefile.php
 
 lint-php:
 	vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors app/ public/ tests/

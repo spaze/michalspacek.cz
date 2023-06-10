@@ -49,6 +49,19 @@ jobs:
         php-version: ${{ matrix.php-version }}
     - run: make --directory=site check-file-patterns
 
+  check-makefile:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+    steps:
+    - uses: actions/checkout@v3
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
+    - run: make --directory=site check-makefile
 
   lint:
     runs-on: ubuntu-latest
