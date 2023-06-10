@@ -63,7 +63,7 @@ jobs:
         php-version: ${{ matrix.php-version }}
     - run: make --directory=site check-makefile
 
-  lint:
+  lint-php:
     runs-on: ubuntu-latest
     strategy:
       matrix:
