@@ -25,4 +25,4 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site run-script --timeout=600 phpstan-latte-templates
+    - run: make --directory=site phpstan-latte-templates

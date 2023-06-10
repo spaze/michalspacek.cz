@@ -47,10 +47,9 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site check-file-patterns
+    - run: make --directory=site check-file-patterns
 
-
-  lint:
+  check-makefile:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -62,7 +61,21 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site lint
+    - run: make --directory=site check-makefile
+
+  lint-php:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+    steps:
+    - uses: actions/checkout@v3
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.php-version }}
+    - run: make --directory=site lint-php
 
   lint-latte:
     runs-on: ubuntu-latest
@@ -76,7 +89,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site lint-latte
+    - run: make --directory=site lint-latte
 
   lint-neon:
     runs-on: ubuntu-latest
@@ -90,13 +103,13 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site lint-neon
+    - run: make --directory=site lint-neon
 
   lint-xml:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - run: composer --working-dir=site lint-xml -- --auto-install-with-apt-fast
+    - run: make --directory=site lint-xml-auto-install
 
   phpcs:
     runs-on: ubuntu-latest
@@ -117,7 +130,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site phpcs
+    - run: make --directory=site phpcs
 
   phpstan:
     runs-on: ubuntu-latest
@@ -138,7 +151,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site phpstan
+    - run: make --directory=site phpstan
 
   phpstan-vendor:
     runs-on: ubuntu-latest
@@ -159,7 +172,7 @@ jobs:
       with:
         coverage: none
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site run-script --timeout=600 phpstan-vendor
+    - run: make --directory=site phpstan-vendor
 
   tester:
     runs-on: ubuntu-latest
@@ -173,7 +186,7 @@ jobs:
       with:
         coverage: pcov
         php-version: ${{ matrix.php-version }}
-    - run: composer --working-dir=site tester
+    - run: make --directory=site tester
     - name: Failed test output, if any
       if: failure()
       run: for i in $(find ./site/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
