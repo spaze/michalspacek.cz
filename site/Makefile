@@ -1,4 +1,4 @@
-.PHONY: test audit cs-fix check-file-patterns lint-php lint-latte lint-neon lint-xml phpcs phpstan phpstan-latte-templates phpstan-vendor tester
+.PHONY: test audit cs-fix check-file-patterns lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor tester
 
 test: audit check-file-patterns lint-php lint-latte lint-neon lint-xml phpcs phpstan tester phpstan-vendor
 
@@ -22,6 +22,9 @@ lint-neon:
 
 lint-xml:
 	bin/xmllint.sh
+
+lint-xml-auto-install:
+	bin/xmllint.sh --auto-install-with-apt-fast
 
 phpcs:
 	vendor/squizlabs/php_codesniffer/bin/phpcs app/ public/ tests/
