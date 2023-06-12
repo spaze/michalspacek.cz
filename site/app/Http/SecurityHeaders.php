@@ -4,16 +4,16 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
+use Nette\Application\Application;
+use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Http\UrlImmutable;
-use Spaze\ContentSecurityPolicy\Config;
+use Spaze\ContentSecurityPolicy\CspConfig;
 
 class SecurityHeaders
 {
-
-	private string $presenterName;
-	private string $actionName;
 
 	/** @var array<string|string[]> */
 	private readonly array $permissionsPolicy;
@@ -25,7 +25,8 @@ class SecurityHeaders
 	public function __construct(
 		private readonly IRequest $httpRequest,
 		private readonly IResponse $httpResponse,
-		private readonly Config $contentSecurityPolicy,
+		private readonly Application $application,
+		private readonly CspConfig $contentSecurityPolicy,
 		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 		array $permissionsPolicy,
 	) {
@@ -68,33 +69,25 @@ class SecurityHeaders
 	}
 
 
-	public function sendHeaders(): void
+	public function sendHeaders(CspValues $cspValues = CspValues::Specific): void
 	{
-		$header = $this->contentSecurityPolicy->getHeader($this->presenterName, $this->actionName);
+		if ($cspValues === CspValues::Specific) {
+			/** @var Presenter $presenter */
+			$presenter = $this->application->getPresenter();
+			$actionName = $presenter->getAction(true);
+		} else {
+			$actionName = $this->contentSecurityPolicy->getDefaultKey();
+		}
+		$header = $this->contentSecurityPolicy->getHeader($actionName);
 		if (!empty($header)) {
 			$this->httpResponse->setHeader('Content-Security-Policy', $header);
 		}
-		$header = $this->contentSecurityPolicy->getHeaderReportOnly($this->presenterName, $this->actionName);
+		$header = $this->contentSecurityPolicy->getHeaderReportOnly($actionName);
 		if ($header) {
 			$this->httpResponse->setHeader('Content-Security-Policy-Report-Only', $header);
 		}
 
 		$this->httpResponse->setHeader('Permissions-Policy', $this->getPermissionsPolicyHeader());
-	}
-
-
-	public function setCsp(string $presenterName, string $actionName): self
-	{
-		$this->presenterName = $presenterName;
-		$this->actionName = $actionName;
-		return $this;
-	}
-
-
-	public function setDefaultCsp(): self
-	{
-		$this->presenterName = $this->actionName = $this->contentSecurityPolicy->getDefaultKey();
-		return $this;
 	}
 
 
