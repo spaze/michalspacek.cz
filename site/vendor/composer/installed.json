@@ -3094,17 +3094,17 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v3.0.0",
-            "version_normalized": "3.0.0.0",
+            "version": "v4.0.0",
+            "version_normalized": "4.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "4eb006ac43f4640a4bc1ba943cdc4f300d584aa0"
+                "reference": "f19c06347389a4b03558e0d3b6b61e1b4107c250"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/4eb006ac43f4640a4bc1ba943cdc4f300d584aa0",
-                "reference": "4eb006ac43f4640a4bc1ba943cdc4f300d584aa0",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/f19c06347389a4b03558e0d3b6b61e1b4107c250",
+                "reference": "f19c06347389a4b03558e0d3b6b61e1b4107c250",
                 "shasum": ""
             },
             "require": {
@@ -3124,7 +3124,7 @@
             "suggest": {
                 "spaze/sri-macros": "For script tags with automatically added nonces, and Subresource Integrity hashes, too"
             },
-            "time": "2023-05-04T17:52:46+00:00",
+            "time": "2023-06-12T21:50:30+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3146,7 +3146,7 @@
             "description": "Build Content Security Policy from a config file",
             "support": {
                 "issues": "https://github.com/spaze/csp-config/issues",
-                "source": "https://github.com/spaze/csp-config/tree/v3.0.0"
+                "source": "https://github.com/spaze/csp-config/tree/v4.0.0"
             },
             "install-path": "../spaze/csp-config"
         },
