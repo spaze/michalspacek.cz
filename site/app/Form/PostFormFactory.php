@@ -19,7 +19,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
-use Spaze\ContentSecurityPolicy\Config as CspConfig;
+use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
 class PostFormFactory

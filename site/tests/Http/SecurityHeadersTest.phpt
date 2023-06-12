@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\Http\SecurityHeadersFactory;
-use Spaze\ContentSecurityPolicy\Config;
+use Spaze\ContentSecurityPolicy\CspConfig;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -18,7 +18,7 @@ class SecurityHeadersTest extends TestCase
 
 	public function __construct(
 		private readonly Response $httpResponse,
-		private readonly Config $cspConfig,
+		private readonly CspConfig $cspConfig,
 		private readonly SecurityHeadersFactory $securityHeadersFactory,
 	) {
 	}

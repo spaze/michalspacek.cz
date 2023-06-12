@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Articles\Blog;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Dates;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
-use Spaze\ContentSecurityPolicy\Config;
+use Spaze\ContentSecurityPolicy\CspConfig;
 
 class BlogPostPreview
 {
@@ -15,7 +15,7 @@ class BlogPostPreview
 		private readonly TexyFormatter $texyFormatter,
 		private readonly BlogPosts $blogPosts,
 		private readonly Dates $trainingDates,
-		private readonly Config $contentSecurityPolicy,
+		private readonly CspConfig $contentSecurityPolicy,
 	) {
 	}
 
