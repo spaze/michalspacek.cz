@@ -8,6 +8,7 @@ contentSecurityPolicy:
 			default-src: "'none'"
 			form-action: "'none'"
 			require-trusted-types-for: "'script'"
+			trusted-types:
 			report-uri: %reporting.contentSecurityPolicy%
 			report-to: default
 		*.*.*:
