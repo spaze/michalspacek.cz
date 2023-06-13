@@ -8,7 +8,7 @@ use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates;
-use Spaze\ContentSecurityPolicy\Config as CspConfig;
+use Spaze\ContentSecurityPolicy\CspConfig;
 
 class PostPresenter extends BasePresenter
 {

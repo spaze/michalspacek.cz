@@ -2,6 +2,6 @@ extensions:
 	sessionHandler: Spaze\Session\DI\MysqlSessionHandlerExtension
 	translation: Contributte\Translation\DI\TranslationExtension
 	nonceGenerator: Spaze\NonceGenerator\Bridges\Nette\GeneratorExtension
-	contentSecurityPolicy: Spaze\ContentSecurityPolicy\Bridges\Nette\ConfigExtension
+	contentSecurityPolicy: Spaze\ContentSecurityPolicy\Bridges\Nette\CspConfigExtension
 	subresourceIntegrity: Spaze\SubresourceIntegrity\Bridges\Nette\Extension
 	svgIcons: Spaze\SvgIcons\NetteExtension

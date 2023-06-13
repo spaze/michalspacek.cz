@@ -6,7 +6,10 @@ namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\Http\SecurityHeadersFactory;
-use Spaze\ContentSecurityPolicy\Config;
+use Nette\Application\Application;
+use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\Presenter;
+use Spaze\ContentSecurityPolicy\CspConfig;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -18,8 +21,10 @@ class SecurityHeadersTest extends TestCase
 
 	public function __construct(
 		private readonly Response $httpResponse,
-		private readonly Config $cspConfig,
+		private readonly CspConfig $cspConfig,
 		private readonly SecurityHeadersFactory $securityHeadersFactory,
+		private readonly IPresenterFactory $presenterFactory,
+		private readonly Application $application,
 	) {
 	}
 
@@ -48,7 +53,18 @@ class SecurityHeadersTest extends TestCase
 				'https://example.com',
 			],
 		]);
-		$securityHeaders->setCsp('Foo', 'bar');
+
+		/** @var Presenter $presenter */
+		$presenter = $this->presenterFactory->createPresenter('Www:Homepage'); // Has to be a real presenter
+		/** @noinspection PhpInternalEntityUsedInspection */
+		$presenter->setParent(null, 'Foo'); // Set the name and also rename it
+		$presenter->changeAction('bar');
+		Assert::same(':Foo:bar', $presenter->getAction(true));
+		Assert::with($this->application, function () use ($presenter): void {
+			/** @noinspection PhpDynamicFieldDeclarationInspection $this is $this->application */
+			$this->presenter = $presenter;
+		});
+
 		$securityHeaders->sendHeaders();
 		$expected = [
 			'content-security-policy' => "script-src 'none' example.com; form-action 'self'",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f67fc8e1965e42f425ef9535c661a69",
+    "content-hash": "9f1fe8f77e0f2fe41ec16e7bd158d6c3",
     "packages": [
         {
             "name": "contributte/translation",
@@ -1735,16 +1735,16 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v3.0.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "4eb006ac43f4640a4bc1ba943cdc4f300d584aa0"
+                "reference": "f19c06347389a4b03558e0d3b6b61e1b4107c250"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/4eb006ac43f4640a4bc1ba943cdc4f300d584aa0",
-                "reference": "4eb006ac43f4640a4bc1ba943cdc4f300d584aa0",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/f19c06347389a4b03558e0d3b6b61e1b4107c250",
+                "reference": "f19c06347389a4b03558e0d3b6b61e1b4107c250",
                 "shasum": ""
             },
             "require": {
@@ -1784,9 +1784,9 @@
             "description": "Build Content Security Policy from a config file",
             "support": {
                 "issues": "https://github.com/spaze/csp-config/issues",
-                "source": "https://github.com/spaze/csp-config/tree/v3.0.0"
+                "source": "https://github.com/spaze/csp-config/tree/v4.0.0"
             },
-            "time": "2023-05-04T17:52:46+00:00"
+            "time": "2023-06-12T21:50:30+00:00"
         },
         {
             "name": "spaze/encryption",
