@@ -64,11 +64,6 @@ contentSecurityPolicy:
 			report-to: default
 		webleed.*.*:
 			@extends: www.*.*
-			img-src:
-				- 'blob:'
-			style-src:
-				- "'unsafe-inline'"
-			form-action: "https://export.highcharts.com"
 		pulse.*.*:
 			@extends: www.*.*
 		upckeys.*.*:
