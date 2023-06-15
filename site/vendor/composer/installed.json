@@ -173,17 +173,17 @@
         },
         {
             "name": "efabrica/phpstan-latte",
-            "version": "0.13.0",
-            "version_normalized": "0.13.0.0",
+            "version": "0.13.1",
+            "version_normalized": "0.13.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/efabrica-team/phpstan-latte.git",
-                "reference": "6e94b7828e5c5433257ebb25ed59adfc05b93d6a"
+                "reference": "63fb7bd0452b5fd12683e3f8c10005dd88a37f9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/6e94b7828e5c5433257ebb25ed59adfc05b93d6a",
-                "reference": "6e94b7828e5c5433257ebb25ed59adfc05b93d6a",
+                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/63fb7bd0452b5fd12683e3f8c10005dd88a37f9a",
+                "reference": "63fb7bd0452b5fd12683e3f8c10005dd88a37f9a",
                 "shasum": ""
             },
             "require": {
@@ -204,7 +204,7 @@
                 "phpunit/phpunit": "^9.5",
                 "spaze/phpstan-disallowed-calls": "^2.11"
             },
-            "time": "2023-06-05T10:29:27+00:00",
+            "time": "2023-06-12T10:33:03+00:00",
             "type": "library",
             "extra": {
                 "phpstan": {
@@ -228,7 +228,7 @@
             ],
             "support": {
                 "issues": "https://github.com/efabrica-team/phpstan-latte/issues",
-                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.13.0"
+                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.13.1"
             },
             "install-path": "../efabrica/phpstan-latte"
         },
@@ -2022,17 +2022,17 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.18",
-            "version_normalized": "1.10.18.0",
+            "version": "1.10.19",
+            "version_normalized": "1.10.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "52b6416c579663eebdd2f1d97df21971daf3b43f"
+                "reference": "af5a296ff02610c1bfb4ddfac9fd4a08657b9046"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/52b6416c579663eebdd2f1d97df21971daf3b43f",
-                "reference": "52b6416c579663eebdd2f1d97df21971daf3b43f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/af5a296ff02610c1bfb4ddfac9fd4a08657b9046",
+                "reference": "af5a296ff02610c1bfb4ddfac9fd4a08657b9046",
                 "shasum": ""
             },
             "require": {
@@ -2041,7 +2041,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2023-06-07T22:00:43+00:00",
+            "time": "2023-06-14T15:26:58+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
