@@ -34,7 +34,7 @@ class WebApplication
 
 	private function redirectToSecure(): void
 	{
-		if ($_SERVER['HTTP_HOST'] !== $this->fqdn) {
+		if (ServerEnv::tryGetString('HTTP_HOST') !== $this->fqdn) {
 			$this->securityHeaders->sendHeaders(CspValues::Default);
 			$url = $this->httpRequest->getUrl()->withScheme('https')->withHost($this->fqdn);
 			$this->httpResponse->redirect($url->getAbsoluteUrl(), IResponse::S301_MovedPermanently);
