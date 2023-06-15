@@ -17,6 +17,12 @@ parameters:
 		-
 			constant: 'LIBXML_NOENT'
 			message: 'libxml_disable_entity_loader() has been deprecated in PHP 8.0, no longer needed to protect against XXE attacks, unless the (still vulnerable) LIBXML_NOENT is used https://www.php.net/migration80.deprecated#migration80.deprecated.libxml'
+	disallowedSuperglobals:
+		-
+			superglobal: '$_SERVER'
+			message: 'use Application\ServerEnv instead'
+			allowIn:
+				- app/Application/ServerEnv.php
 
 includes:
 	- vendor/spaze/phpstan-disallowed-calls/extension.neon

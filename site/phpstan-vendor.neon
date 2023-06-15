@@ -152,6 +152,14 @@ parameters:
 			message: 'use logger instead, debug bar is not visible in production'
 			allowIn:
 				- vendor/tracy/tracy/src/Tracy/functions.php
+	disallowedSuperglobals:
+		-
+			superglobal: '$_SERVER'
+			allowIn:
+				- vendor/nette/*.php
+				- vendor/php-parallel-lint/*.php
+				- vendor/symfony/*.php
+				- vendor/tracy/*.php
 
 includes:
 	- disallowed-calls.neon

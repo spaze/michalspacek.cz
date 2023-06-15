@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
+use MichalSpacekCz\Application\ServerEnv;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\Http\HttpStreamContext;
 use MichalSpacekCz\Tls\Exceptions\CertificatesApiException;
@@ -74,8 +75,8 @@ class CertificatesApiClient
 	private function getPostData(): string
 	{
 		$postData = [
-			'user' => $_SERVER['CERTMONITOR_USER'] ?? '',
-			'key' => $_SERVER['CERTMONITOR_KEY'] ?? '',
+			'user' => ServerEnv::tryGetString('CERTMONITOR_USER') ?? '',
+			'key' => ServerEnv::tryGetString('CERTMONITOR_KEY') ?? '',
 		];
 		return http_build_query($postData);
 	}

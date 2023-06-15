@@ -19,21 +19,21 @@ class Bootstrap
 	public static function boot(): Container
 	{
 		return self::createConfigurator(
-			($_SERVER['ENVIRONMENT'] ?? null) === self::MODE_DEVELOPMENT,
-			self::SITE_DIR . '/config/extra-' . $_SERVER['SERVER_NAME'] . '.neon',
+			ServerEnv::tryGetString('ENVIRONMENT') === self::MODE_DEVELOPMENT,
+			self::SITE_DIR . '/config/extra-' . ServerEnv::tryGetString('SERVER_NAME') . '.neon',
 		)->createContainer();
 	}
 
 
 	public static function bootCli(): Container
 	{
-		$_SERVER['HTTPS'] = 'on';
-		$debugMode = ($_SERVER['PHP_CLI_ENVIRONMENT'] ?? null) === self::MODE_DEVELOPMENT || Arrays::contains($_SERVER['argv'], '--debug');
+		ServerEnv::setString('HTTPS', 'on');
+		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || Arrays::contains(ServerEnv::tryGetList('argv') ?? [], '--debug');
 		$container = self::createConfigurator(
 			$debugMode,
 			self::SITE_DIR . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),
 		)->createContainer();
-		if (Arrays::contains($_SERVER['argv'], '--colors')) {
+		if (Arrays::contains(ServerEnv::tryGetList('argv') ?? [], '--colors')) {
 			$container->getByType(ConsoleColor::class)->setForceStyle(true);
 		}
 		return $container;
@@ -80,7 +80,7 @@ class Bootstrap
 		$configurator->setDebugMode($debugMode);
 		$configurator->enableTracy(self::SITE_DIR . '/log');
 		$configurator->setTimeZone('Europe/Prague');
-		$configurator->setTempDirectory($_SERVER['TEMP_DIR'] ?? self::SITE_DIR . '/temp');
+		$configurator->setTempDirectory(ServerEnv::tryGetString('TEMP_DIR') ?? self::SITE_DIR . '/temp');
 
 		$existingFiles = array_filter(self::getConfigurationFiles($extraConfig, $finalConfig), function (?string $path) {
 			return $path && is_file($path);
