@@ -8,6 +8,7 @@ use MichalSpacekCz\Tls\Certificate;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Trainings;
 
@@ -41,7 +42,7 @@ class HomepagePresenter extends BasePresenter
 			$date->applications = $this->trainingApplications->getValidByDate($date->dateId);
 			$date->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($date->dateId);
 			$date->validCount = count($date->applications);
-			$date->requiresAttention = ($date->canceledApplications || ($date->status == Dates::STATUS_CANCELED && $date->validCount));
+			$date->requiresAttention = ($date->canceledApplications || ($date->status == TrainingDateStatus::Canceled->value && $date->validCount));
 			$dates[$date->start->getTimestamp()] = $date;
 		}
 		ksort($dates);

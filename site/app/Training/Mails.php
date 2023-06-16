@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training;
 use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\Row;
@@ -98,7 +99,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($this->trainingDates->get($application->dateId)->status == Dates::STATUS_CONFIRMED) {
+				if ($this->trainingDates->get($application->dateId)->status === TrainingDateStatus::Confirmed->value) {
 					$application->nextStatus = Statuses::STATUS_INVITED;
 					$applications[$application->id] = $application;
 				}

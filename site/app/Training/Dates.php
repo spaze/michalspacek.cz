@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
+use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -15,11 +16,6 @@ use Nette\Utils\Json;
 
 class Dates
 {
-
-	public const STATUS_CREATED = 'CREATED'; // 1
-	public const STATUS_TENTATIVE = 'TENTATIVE'; // 2
-	public const STATUS_CONFIRMED = 'CONFIRMED'; // 3
-	public const STATUS_CANCELED = 'CANCELED'; // 4
 
 	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
@@ -356,10 +352,10 @@ class Dates
 					d.start";
 
 			$upcoming = [];
-			foreach ($this->database->fetchAll($query, $includeNonPublic, $includeNonPublic, Dates::STATUS_TENTATIVE, Dates::STATUS_CONFIRMED, $this->translator->getDefaultLocale()) as $row) {
+			foreach ($this->database->fetchAll($query, $includeNonPublic, $includeNonPublic, TrainingDateStatus::Tentative->value, TrainingDateStatus::Confirmed->value, $this->translator->getDefaultLocale()) as $row) {
 				$date = [
 					'dateId' => $row->dateId,
-					'tentative' => ($row->status == Dates::STATUS_TENTATIVE),
+					'tentative' => $row->status === TrainingDateStatus::Tentative->value,
 					'lastFreeSeats' => $this->lastFreeSeats($row),
 					'start' => $row->start,
 					'end' => $row->end,
@@ -487,14 +483,14 @@ class Dates
 			ORDER BY
 				d.start",
 			$trainingId,
-			Dates::STATUS_TENTATIVE,
-			Dates::STATUS_CONFIRMED,
+			TrainingDateStatus::Tentative->value,
+			TrainingDateStatus::Confirmed->value,
 		);
 		$dates = [];
 		foreach ($result as $row) {
 			$row->remote = (bool)$row->remote;
 			$row->label = $this->decodeLabel($row->labelJson);
-			$row->tentative = ($row->status == Dates::STATUS_TENTATIVE);
+			$row->tentative = ($row->status === TrainingDateStatus::Tentative->value);
 			$row->lastFreeSeats = $this->lastFreeSeats($row);
 			$row->price = $row->price ? $this->prices->resolvePriceVat($row->price) : null;
 			$dates[$row->dateId] = $row;
@@ -510,7 +506,7 @@ class Dates
 	private function lastFreeSeats(Row $date): bool
 	{
 		$now = new DateTime();
-		return ($date->start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $date->start > $now && $date->status !== Dates::STATUS_TENTATIVE);
+		return ($date->start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $date->start > $now && $date->status !== TrainingDateStatus::Tentative->value);
 	}
 
 
