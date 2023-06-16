@@ -1,20 +1,21 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Dates;
 
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
-use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
+use MichalSpacekCz\Training\Prices;
+use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 
-class Dates
+class TrainingDates
 {
 
 	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;

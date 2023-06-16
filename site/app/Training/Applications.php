@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Database\Explorer;
@@ -31,7 +32,7 @@ class Applications
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly Trainings $trainings,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly StaticKey $emailEncryption,
 		private readonly Prices $prices,

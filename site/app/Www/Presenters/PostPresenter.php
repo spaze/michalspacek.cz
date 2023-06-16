@@ -7,7 +7,7 @@ use DateInterval;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\ShouldNotHappenException;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
 class PostPresenter extends BasePresenter
@@ -19,7 +19,7 @@ class PostPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly BlogPosts $blogPosts,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly CspConfig $contentSecurityPolicy,
 	) {

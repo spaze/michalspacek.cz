@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
@@ -23,7 +23,7 @@ class TrainingApplicationAdminFormFactory
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly Applications $trainingApplications,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly Statuses $trainingStatuses,
 	) {

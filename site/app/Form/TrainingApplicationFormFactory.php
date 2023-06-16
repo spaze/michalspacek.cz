@@ -7,7 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotAvailableException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
@@ -32,7 +32,7 @@ class TrainingApplicationFormFactory
 		private readonly FormFactory $factory,
 		private readonly Translator $translator,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly FormDataLogger $formDataLogger,
 		private readonly FormSpam $formSpam,
 		private readonly Applications $trainingApplications,

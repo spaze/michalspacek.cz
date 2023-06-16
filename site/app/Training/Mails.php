@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training;
 use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
@@ -25,7 +26,7 @@ class Mails
 	public function __construct(
 		private readonly Mailer $mailer,
 		private readonly Applications $trainingApplications,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly Venues $trainingVenues,
 		private readonly TrainingFiles $trainingFiles,

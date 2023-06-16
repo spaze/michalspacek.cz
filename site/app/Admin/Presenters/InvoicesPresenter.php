@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 use DateTime;
 use MichalSpacekCz\Form\TrainingInvoiceFormFactory;
 use MichalSpacekCz\Training\Applications;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use Nette\Forms\Form;
 
 class InvoicesPresenter extends BasePresenter
@@ -18,7 +18,7 @@ class InvoicesPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Applications $trainingApplications,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly TrainingInvoiceFormFactory $trainingInvoiceFormFactory,
 	) {
 		parent::__construct();

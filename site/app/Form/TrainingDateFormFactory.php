@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
@@ -25,7 +25,7 @@ class TrainingDateFormFactory
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly Trainings $trainings,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly TrainingDatesFormValidator $trainingDatesFormValidator,
 		private readonly Venues $trainingVenues,
 		private readonly TrainingControlsFactory $trainingControlsFactory,

@@ -9,7 +9,7 @@ use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
@@ -34,7 +34,7 @@ class TrainingsPresenter extends BasePresenter
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Applications $trainingApplications,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly Trainings $trainings,
 		private readonly CompanyTrainings $companyTrainings,

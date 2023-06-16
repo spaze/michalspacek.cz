@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Formatter;
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Prices;
 use Nette\Database\Row;
 use Nette\Utils\Html;
@@ -47,7 +47,7 @@ class TexyFormatter
 	public function __construct(
 		private readonly CacheInterface $cache,
 		private readonly Translator $translator,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly Prices $prices,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly TexyPhraseHandler $phraseHandler,

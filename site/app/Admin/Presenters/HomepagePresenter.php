@@ -7,7 +7,7 @@ use DateTime;
 use MichalSpacekCz\Tls\Certificate;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Training\Applications;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Trainings;
@@ -21,7 +21,7 @@ class HomepagePresenter extends BasePresenter
 	public function __construct(
 		private readonly Applications $trainingApplications,
 		private readonly Mails $trainingMails,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly Certificates $certificates,
 		private readonly Trainings $trainings,
 	) {

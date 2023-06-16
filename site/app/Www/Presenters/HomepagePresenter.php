@@ -7,7 +7,7 @@ use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Training\CompanyTrainings;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Trainings;
 
 class HomepagePresenter extends BasePresenter
@@ -17,7 +17,7 @@ class HomepagePresenter extends BasePresenter
 		private readonly Articles $articles,
 		private readonly Interviews $interviews,
 		private readonly Talks $talks,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
 		private readonly Trainings $trainings,
 		private readonly CompanyTrainings $companyTrainings,
 	) {
