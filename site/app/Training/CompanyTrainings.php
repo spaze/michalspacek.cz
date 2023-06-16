@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
@@ -15,7 +15,7 @@ class CompanyTrainings
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Translator $translator,
 	) {
 	}
@@ -86,7 +86,7 @@ class CompanyTrainings
 			ORDER BY t.order IS NULL, t.order',
 			$this->translator->getDefaultLocale(),
 		);
-		$public = $this->trainingDates->getPublicUpcoming();
+		$public = $this->upcomingTrainingDates->getPublicUpcoming();
 
 		$trainings = [];
 		foreach ($result as $training) {

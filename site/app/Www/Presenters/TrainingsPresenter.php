@@ -10,9 +10,11 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Reviews;
 use MichalSpacekCz\Training\Trainings;
@@ -35,8 +37,10 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Applications $trainingApplications,
 		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly Trainings $trainings,
+		private readonly FreeSeats $freeSeats,
 		private readonly CompanyTrainings $companyTrainings,
 		private readonly Locales $trainingLocales,
 		private readonly Reviews $trainingReviews,
@@ -52,7 +56,7 @@ class TrainingsPresenter extends BasePresenter
 	public function renderDefault(): void
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
-		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
 		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
 		$this->template->discontinued = $this->trainings->getAllDiscontinued();
@@ -88,7 +92,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->audience = $this->training->audience;
 		$this->template->capacity = $this->training->capacity;
 		$this->template->materials = $this->training->materials;
-		$this->template->lastFreeSeats = $this->trainingDates->lastFreeSeatsAnyDate($this->dates);
+		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates = $this->dates;
 		$this->template->singleDate = count($this->dates) === 1 ? $this->trainingDates->formatDateVenueForUser(reset($this->dates)) : null;
 		$this->template->dataRetention = $this->trainingDates->getDataRetentionDays();
@@ -312,7 +316,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->venueCity = $date->venueCity;
 		$this->template->tentative = $date->tentative;
 
-		$upcoming = $this->trainingDates->getPublicUpcoming();
+		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		unset($upcoming[$name]);
 		$this->template->upcomingTrainings = $upcoming;
 

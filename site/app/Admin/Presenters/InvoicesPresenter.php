@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\Form\TrainingInvoiceFormFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Forms\Form;
 
 class InvoicesPresenter extends BasePresenter
@@ -19,6 +20,7 @@ class InvoicesPresenter extends BasePresenter
 	public function __construct(
 		private readonly Applications $trainingApplications,
 		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TrainingInvoiceFormFactory $trainingInvoiceFormFactory,
 	) {
 		parent::__construct();
@@ -41,7 +43,7 @@ class InvoicesPresenter extends BasePresenter
 		ksort($dates);
 		$this->template->unpaidApplications = $dates;
 		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
+		$this->template->upcomingIds = $this->upcomingTrainingDates->getPublicUpcomingIds();
 		$this->template->pageTitle = 'Nezaplacené faktury';
 	}
 

@@ -14,6 +14,7 @@ use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
@@ -53,6 +54,7 @@ class TrainingsPresenter extends BasePresenter
 	public function __construct(
 		private readonly Applications $trainingApplications,
 		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly Trainings $trainings,
 		private readonly TrainingFiles $trainingFiles,
@@ -197,7 +199,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Předběžné přihlášky';
 		$this->template->preliminaryApplications = $this->trainingApplications->getPreliminary();
-		$this->template->upcoming = $this->trainingDates->getPublicUpcoming();
+		$this->template->upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 	}
 
 
@@ -209,7 +211,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pageTitle = 'Školení';
 		$this->template->trainings = $trainings;
 		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
+		$this->template->upcomingIds = $this->upcomingTrainingDates->getPublicUpcomingIds();
 	}
 
 

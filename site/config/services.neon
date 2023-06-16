@@ -78,13 +78,16 @@ services:
 	- MichalSpacekCz\Tls\CertificatesApiClient
 	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\CompanyTrainings
+	- MichalSpacekCz\Training\Dates\TrainingDateLabel
 	- MichalSpacekCz\Training\Dates\TrainingDates
 	- MichalSpacekCz\Training\Dates\TrainingDatesFormValidator
+	- MichalSpacekCz\Training\Dates\UpcomingTrainingDates
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
 	- MichalSpacekCz\Training\Files\TrainingFiles
 	- MichalSpacekCz\Training\Files\TrainingFilesStorage('../../files/trainings')
 	- MichalSpacekCz\Training\FormDataLogger
 	- MichalSpacekCz\Training\FormSpam
+	- MichalSpacekCz\Training\FreeSeats
 	- MichalSpacekCz\Training\Locales
 	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
 	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)

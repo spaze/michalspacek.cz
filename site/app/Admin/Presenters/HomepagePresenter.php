@@ -9,6 +9,7 @@ use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Trainings;
 
@@ -22,6 +23,7 @@ class HomepagePresenter extends BasePresenter
 		private readonly Applications $trainingApplications,
 		private readonly Mails $trainingMails,
 		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Certificates $certificates,
 		private readonly Trainings $trainings,
 	) {
@@ -32,7 +34,7 @@ class HomepagePresenter extends BasePresenter
 	public function actionDefault(): void
 	{
 		$trainings = $this->trainingDates->getAllTrainingsInterval('-1 week');
-		foreach ($this->trainingDates->getAllUpcoming() as $training) {
+		foreach ($this->upcomingTrainingDates->getAllUpcoming() as $training) {
 			foreach ($training->dates as $date) {
 				$trainings[] = $date;
 			}
@@ -48,7 +50,7 @@ class HomepagePresenter extends BasePresenter
 		ksort($dates);
 		$this->template->upcomingApplications = $dates;
 		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
+		$this->template->upcomingIds = $this->upcomingTrainingDates->getPublicUpcomingIds();
 
 		$this->template->pageTitle = 'Administrace';
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());

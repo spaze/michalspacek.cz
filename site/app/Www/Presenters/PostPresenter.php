@@ -7,7 +7,7 @@ use DateInterval;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\ShouldNotHappenException;
-use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
 class PostPresenter extends BasePresenter
@@ -19,7 +19,7 @@ class PostPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly BlogPosts $blogPosts,
-		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly CspConfig $contentSecurityPolicy,
 	) {
@@ -45,7 +45,7 @@ class PostPresenter extends BasePresenter
 		$this->template->post = $post;
 		$this->template->pageTitle = htmlspecialchars_decode(strip_tags((string)$post->title));
 		$this->template->pageHeader = $post->title;
-		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->edits = $post->edits;
 		/** @var DateInterval|false $interval */
 		$interval = ($post->edits && $post->published ? current($post->edits)->editedAt->diff($post->published) : false);

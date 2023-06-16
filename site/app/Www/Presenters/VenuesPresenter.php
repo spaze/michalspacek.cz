@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
@@ -14,7 +14,7 @@ class VenuesPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
-		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Venues $trainingVenues,
 		private readonly Trainings $trainings,
 	) {
@@ -44,7 +44,7 @@ class VenuesPresenter extends BasePresenter
 		$this->template->publicTransport = $venue->publicTransport;
 
 		$trainings = [];
-		foreach ($this->trainingDates->getPublicUpcoming() as $training) {
+		foreach ($this->upcomingTrainingDates->getPublicUpcoming() as $training) {
 			$dates = [];
 			foreach ($training->dates as $date) {
 				if ($date->venueId === $venue->id) {

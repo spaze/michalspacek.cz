@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
-use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Database\Explorer;
@@ -32,7 +32,7 @@ class Applications
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly Trainings $trainings,
-		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly StaticKey $emailEncryption,
 		private readonly Prices $prices,
@@ -717,7 +717,7 @@ class Applications
 	 */
 	public function getPreliminaryCounts(): array
 	{
-		$upcoming = array_keys($this->trainingDates->getPublicUpcoming());
+		$upcoming = array_keys($this->upcomingTrainingDates->getPublicUpcoming());
 
 		$total = $dateSet = 0;
 		foreach ($this->getPreliminary() as $training) {
@@ -736,7 +736,7 @@ class Applications
 	 */
 	public function getPreliminaryWithDateSet(): array
 	{
-		$upcoming = array_keys($this->trainingDates->getPublicUpcoming());
+		$upcoming = array_keys($this->upcomingTrainingDates->getPublicUpcoming());
 
 		$applications = [];
 		foreach ($this->getPreliminary() as $training) {

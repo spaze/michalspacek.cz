@@ -8,25 +8,20 @@ use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
+use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Json;
 
 class TrainingDates
 {
-
-	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
 	private const DATA_RETENTION = 30;
 
 	/** @var array<string, int> */
 	private array $statusIds = [];
-
-	/** @var array<int, array<string, ArrayHash>> */
-	private array $upcomingDates = [];
 
 
 	public function __construct(
@@ -35,6 +30,8 @@ class TrainingDates
 		private readonly Prices $prices,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly Translator $translator,
+		private readonly FreeSeats $freeSeats,
+		private readonly TrainingDateLabel $dateLabel,
 	) {
 	}
 
@@ -148,7 +145,7 @@ class TrainingDates
 
 		foreach ($result as $date) {
 			$date->name = $this->translator->translate($date->name);
-			$date->label = $this->decodeLabel($date->labelJson);
+			$date->label = $this->dateLabel->decodeLabel($date->labelJson);
 		}
 		return $result;
 	}
@@ -271,124 +268,6 @@ class TrainingDates
 
 
 	/**
-	 * @return array<string, ArrayHash>
-	 */
-	public function getPublicUpcoming(): array
-	{
-		return $this->getUpcoming(false);
-	}
-
-
-	/**
-	 * @return int[]
-	 */
-	public function getPublicUpcomingIds(): array
-	{
-		$upcomingIds = [];
-		foreach ($this->getPublicUpcoming() as $training) {
-			foreach ($training->dates as $date) {
-				$upcomingIds[] = $date->dateId;
-			}
-		}
-		return $upcomingIds;
-	}
-
-
-	/**
-	 * @return array<string, ArrayHash>
-	 */
-	public function getAllUpcoming(): array
-	{
-		return $this->getUpcoming(true);
-	}
-
-
-	/**
-	 * @param bool $includeNonPublic
-	 * @return array<string, ArrayHash>
-	 */
-	private function getUpcoming(bool $includeNonPublic): array
-	{
-		if (!isset($this->upcomingDates[(int)$includeNonPublic])) {
-			$query = "SELECT
-					d.id_date AS dateId,
-					a.action,
-					t.name,
-					s.status,
-					d.start,
-					d.end,
-					d.label AS labelJson,
-					d.public,
-					d.remote,
-					v.id_venue AS venueId,
-					v.name AS venueName,
-					v.city AS venueCity,
-					d.note
-				FROM training_dates d
-					JOIN trainings t ON d.key_training = t.id_training
-					JOIN training_url_actions ta ON t.id_training = ta.key_training
-					JOIN url_actions a ON ta.key_url_action = a.id_url_action
-					JOIN languages l ON a.key_language = l.id_language
-					JOIN training_date_status s ON d.key_status = s.id_status
-					LEFT JOIN training_venues v ON d.key_venue = v.id_venue
-					JOIN (
-						SELECT
-							t2.id_training,
-							d2.key_venue,
-							d2.start
-						FROM
-							trainings t2
-							JOIN training_dates d2 ON t2.id_training = d2.key_training
-							JOIN training_date_status s2 ON d2.key_status = s2.id_status
-						WHERE
-							(d2.public != ? OR TRUE = ?)
-							AND d2.end > NOW()
-							AND s2.status IN (?, ?)
-					) u ON t.id_training = u.id_training AND (v.id_venue = u.key_venue OR u.key_venue IS NULL) AND d.start = u.start
-				WHERE
-					t.key_successor IS NULL
-					AND t.key_discontinued IS NULL
-					AND l.language = ?
-				ORDER BY
-					d.start";
-
-			$upcoming = [];
-			foreach ($this->database->fetchAll($query, $includeNonPublic, $includeNonPublic, TrainingDateStatus::Tentative->value, TrainingDateStatus::Confirmed->value, $this->translator->getDefaultLocale()) as $row) {
-				$date = [
-					'dateId' => $row->dateId,
-					'tentative' => $row->status === TrainingDateStatus::Tentative->value,
-					'lastFreeSeats' => $this->lastFreeSeats($row),
-					'start' => $row->start,
-					'end' => $row->end,
-					'label' => $this->decodeLabel($row->labelJson),
-					'public' => $row->public,
-					'status' => $row->status,
-					'name' => $this->translator->translate($row->name),
-					'remote' => (bool)$row->remote,
-					'venueId' => $row->venueId,
-					'venueName' => $row->venueName,
-					'venueCity' => $row->venueCity,
-					'note' => $row->note,
-				];
-				/** @var string $action */
-				$action = $row->action;
-				$upcoming[$action] = ArrayHash::from([
-					'action' => $action,
-					'name' => $date['name'],
-					'dates' => (isset($upcoming[$action]->dates)
-						? $upcoming[$action]->dates = (array)$upcoming[$action]->dates + [$row->dateId => $date]
-						: [$row->dateId => $date]
-					),
-				]);
-			}
-			$this->upcomingDates[(int)$includeNonPublic] = $upcoming;
-		}
-
-		return $this->upcomingDates[(int)$includeNonPublic];
-	}
-
-
-	/**
 	 * @param string $from
 	 * @param string $to
 	 * @return Row[]
@@ -430,7 +309,7 @@ class TrainingDates
 
 		foreach ($result as $date) {
 			$date->name = $this->translator->translate($date->name);
-			$date->label = $this->decodeLabel($date->labelJson);
+			$date->label = $this->dateLabel->decodeLabel($date->labelJson);
 		}
 		return $result;
 	}
@@ -490,41 +369,13 @@ class TrainingDates
 		$dates = [];
 		foreach ($result as $row) {
 			$row->remote = (bool)$row->remote;
-			$row->label = $this->decodeLabel($row->labelJson);
+			$row->label = $this->dateLabel->decodeLabel($row->labelJson);
 			$row->tentative = ($row->status === TrainingDateStatus::Tentative->value);
-			$row->lastFreeSeats = $this->lastFreeSeats($row);
+			$row->lastFreeSeats = $this->freeSeats->lastFreeSeats($row);
 			$row->price = $row->price ? $this->prices->resolvePriceVat($row->price) : null;
 			$dates[$row->dateId] = $row;
 		}
 		return $dates;
-	}
-
-
-	/**
-	 * @param Row<mixed> $date
-	 * @return bool
-	 */
-	private function lastFreeSeats(Row $date): bool
-	{
-		$now = new DateTime();
-		return ($date->start->diff($now)->days <= self::LAST_FREE_SEATS_THRESHOLD_DAYS && $date->start > $now && $date->status !== TrainingDateStatus::Tentative->value);
-	}
-
-
-	/**
-	 * @param Row[] $dates
-	 * @return bool
-	 */
-	public function lastFreeSeatsAnyDate(array $dates): bool
-	{
-		$lastFreeSeats = false;
-		foreach ($dates as $date) {
-			if ($date->lastFreeSeats) {
-				$lastFreeSeats = true;
-				break;
-			}
-		}
-		return $lastFreeSeats;
 	}
 
 
@@ -537,12 +388,6 @@ class TrainingDates
 	public function getDataRetentionDate(): DateTimeImmutable
 	{
 		return new DateTimeImmutable("-{$this->getDataRetentionDays()} days");
-	}
-
-
-	public function decodeLabel(?string $json): ?string
-	{
-		return ($json ? Json::decode($json)->{$this->translator->getDefaultLocale()} : null);
 	}
 
 

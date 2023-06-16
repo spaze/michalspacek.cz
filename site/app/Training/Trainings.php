@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Training\Dates\TrainingDateLabel;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
@@ -25,6 +26,8 @@ class Trainings
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly TrainingDates $trainingDates,
+		private readonly FreeSeats $freeSeats,
+		private readonly TrainingDateLabel $trainingDateLabel,
 		private readonly Translator $translator,
 	) {
 	}
@@ -169,7 +172,7 @@ class Trainings
 	{
 		$lastFreeSeats = false;
 		foreach ($trainings as $training) {
-			if ($this->trainingDates->lastFreeSeatsAnyDate((array)$training->dates)) {
+			if ($this->freeSeats->lastFreeSeatsAnyDate((array)$training->dates)) {
 				$lastFreeSeats = true;
 				break;
 			}
@@ -215,7 +218,7 @@ class Trainings
 
 		foreach ($result as $training) {
 			$this->texyFormatter->formatTraining($training);
-			$training->label = $this->trainingDates->decodeLabel($training->labelJson);
+			$training->label = $this->trainingDateLabel->decodeLabel($training->labelJson);
 		}
 		return $result;
 	}
@@ -441,7 +444,7 @@ class Trainings
 
 		foreach ($result as $training) {
 			$this->texyFormatter->formatTraining($training);
-			$training->label = $this->trainingDates->decodeLabel($training->labelJson);
+			$training->label = $this->trainingDateLabel->decodeLabel($training->labelJson);
 		}
 		return $this->pastWithPersonalData = $result;
 	}
