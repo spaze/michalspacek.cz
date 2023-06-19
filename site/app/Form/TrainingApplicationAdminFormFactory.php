@@ -52,8 +52,8 @@ class TrainingApplicationAdminFormFactory
 			$dates[$application->dateId] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($application->dateId));
 		}
 		if (isset($upcoming[$application->trainingAction])) {
-			foreach ($upcoming[$application->trainingAction]->dates as $date) {
-				$dates[$date->dateId] = $this->trainingDates->formatDateVenueForAdmin($date);
+			foreach ($upcoming[$application->trainingAction]->getDates() as $date) {
+				$dates[$date->getId()] = $this->trainingDates->formatDateVenueForAdmin($date);
 			}
 		}
 		$required = (bool)$dates;

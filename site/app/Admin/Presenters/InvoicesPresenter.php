@@ -31,14 +31,12 @@ class InvoicesPresenter extends BasePresenter
 	{
 		$dates = [];
 		foreach ($this->trainingDates->getWithUnpaid() as $date) {
-			$unpaidApplications = $this->trainingApplications->getValidUnpaidByDate($date->dateId);
+			$unpaidApplications = $this->trainingApplications->getValidUnpaidByDate($date->getId());
 			foreach ($unpaidApplications as $application) {
 				$this->allUnpaidInvoiceIds[] = $application->invoiceId;
 			}
-			$date->applications = $unpaidApplications;
-			$date->validCount = count($date->applications);
-			$date->canceledApplications = false;
-			$dates[$date->start->getTimestamp()] = $date;
+			$date->setApplications($unpaidApplications);
+			$dates[$date->getStart()->getTimestamp()] = $date;
 		}
 		ksort($dates);
 		$this->template->unpaidApplications = $dates;

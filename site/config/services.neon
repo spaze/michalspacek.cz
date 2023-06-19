@@ -46,8 +46,12 @@ services:
 	- MichalSpacekCz\Form\TrainingStatusesFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
-	- MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
+	- MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\TexyFormatterPlaceholder), staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
+	texyFormatterNoPlaceholders:
+		create: MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: [], staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
+		autowired: false
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
+	- MichalSpacekCz\Formatter\TrainingDateTexyFormatterPlaceholder
 	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
@@ -78,6 +82,7 @@ services:
 	- MichalSpacekCz\Tls\CertificatesApiClient
 	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\CompanyTrainings
+	- MichalSpacekCz\Training\Dates\TrainingDateFactory(texyFormatter: @texyFormatterNoPlaceholders)
 	- MichalSpacekCz\Training\Dates\TrainingDateLabel
 	- MichalSpacekCz\Training\Dates\TrainingDates
 	- MichalSpacekCz\Training\Dates\TrainingDatesFormValidator

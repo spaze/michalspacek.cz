@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Exceptions;
 
-use Nette\Database\Row;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use Throwable;
 
 class TrainingDateNotUpcomingException extends TrainingDateException
@@ -11,7 +11,7 @@ class TrainingDateNotUpcomingException extends TrainingDateException
 
 	/**
 	 * @param int $dateId
-	 * @param Row[] $dates
+	 * @param array<int, TrainingDate> $dates
 	 * @param Throwable|null $previous
 	 */
 	public function __construct(int $dateId, array $dates, ?Throwable $previous = null)

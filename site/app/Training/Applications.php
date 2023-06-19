@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Resolver\Vrana;
@@ -25,7 +26,7 @@ class Applications
 	private const SOURCE_MICHAL_SPACEK = 'michal-spacek';
 	private const SOURCE_JAKUB_VRANA = 'jakub-vrana';
 
-	/** @var array<int, array<int, Row>> */
+	/** @var array<int, list<Row>> */
 	private array $byDate = [];
 
 
@@ -67,11 +68,11 @@ class Applications
 				d.remote_notes AS remoteNotes,
 				d.video_href AS videoHref,
 				d.feedback_href AS feedbackHref,
+				v.action AS venueAction,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,
 				v.city AS venueCity,
-				v.action AS venueAction,
 				a.price,
 				a.vat_rate AS vatRate,
 				a.price_vat AS priceVat,
@@ -107,13 +108,12 @@ class Applications
 
 
 	/**
-	 * @param int $dateId
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function getByDate(int $dateId): array
 	{
 		if (!isset($this->byDate[$dateId])) {
-			$this->byDate[$dateId] = $this->database->fetchAll(
+			$this->byDate[$dateId] = array_values($this->database->fetchAll(
 				'SELECT
 					a.id_application AS id,
 					a.name,
@@ -138,7 +138,7 @@ class Applications
 					AND s.status != ?',
 				$dateId,
 				Statuses::STATUS_SPAM,
-			);
+			));
 			if ($this->byDate[$dateId]) {
 				$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
 				$allowFilesStatuses = $this->trainingStatuses->getAllowFilesStatuses();
@@ -158,27 +158,25 @@ class Applications
 
 
 	/**
-	 * @param int $dateId
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function getValidByDate(int $dateId): array
 	{
 		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
-		return array_filter($this->getByDate($dateId), function ($value) use ($discardedStatuses) {
+		return array_values(array_filter($this->getByDate($dateId), function ($value) use ($discardedStatuses) {
 			return !in_array($value->status, $discardedStatuses);
-		});
+		}));
 	}
 
 
 	/**
-	 * @param int $dateId
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function getValidUnpaidByDate(int $dateId): array
 	{
-		return array_filter($this->getValidByDate($dateId), function ($value) {
+		return array_values(array_filter($this->getValidByDate($dateId), function ($value) {
 			return (isset($value->invoiceId) && !isset($value->paid));
-		});
+		}));
 	}
 
 
@@ -201,15 +199,14 @@ class Applications
 	/**
 	 * Get canceled but already paid applications by date id.
 	 *
-	 * @param int $dateId
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function getCanceledPaidByDate(int $dateId): array
 	{
 		$canceledStatus = $this->trainingStatuses->getCanceledStatus();
-		return array_filter($this->getByDate($dateId), function ($value) use ($canceledStatus) {
+		return array_values(array_filter($this->getByDate($dateId), function ($value) use ($canceledStatus) {
 			return ($value->paid && in_array($value->status, $canceledStatus));
-		});
+		}));
 	}
 
 
@@ -231,22 +228,8 @@ class Applications
 	}
 
 
-	/**
-	 * @param Row<mixed> $date
-	 * @param string $name
-	 * @param string $email
-	 * @param string $company
-	 * @param string $street
-	 * @param string $city
-	 * @param string $zip
-	 * @param string $country
-	 * @param string $companyId
-	 * @param string $companyTaxId
-	 * @param string $note
-	 * @return int
-	 */
 	public function addInvitation(
-		Row $date,
+		TrainingDate $date,
 		string $name,
 		string $email,
 		string $company,
@@ -259,8 +242,8 @@ class Applications
 		string $note,
 	): int {
 		return $this->insertApplication(
-			$date->trainingId,
-			$date->dateId,
+			$date->getTrainingId(),
+			$date->getId(),
 			$name,
 			$email,
 			$company,
@@ -271,30 +254,16 @@ class Applications
 			$companyId,
 			$companyTaxId,
 			$note,
-			$date->price,
-			$date->studentDiscount,
+			$date->getPrice(),
+			$date->getStudentDiscount(),
 			Statuses::STATUS_TENTATIVE,
 			$this->resolveSource($note),
 		);
 	}
 
 
-	/**
-	 * @param Row<mixed> $date
-	 * @param string $name
-	 * @param string $email
-	 * @param string $company
-	 * @param string $street
-	 * @param string $city
-	 * @param string $zip
-	 * @param string $country
-	 * @param string $companyId
-	 * @param string $companyTaxId
-	 * @param string $note
-	 * @return int
-	 */
 	public function addApplication(
-		Row $date,
+		TrainingDate $date,
 		string $name,
 		string $email,
 		string $company,
@@ -307,8 +276,8 @@ class Applications
 		string $note,
 	): int {
 		return $this->insertApplication(
-			$date->trainingId,
-			$date->dateId,
+			$date->getTrainingId(),
+			$date->getId(),
 			$name,
 			$email,
 			$company,
@@ -319,8 +288,8 @@ class Applications
 			$companyId,
 			$companyTaxId,
 			$note,
-			$date->price,
-			$date->studentDiscount,
+			$date->getPrice(),
+			$date->getStudentDiscount(),
 			Statuses::STATUS_SIGNED_UP,
 			$this->resolveSource($note),
 		);
@@ -419,23 +388,8 @@ class Applications
 	}
 
 
-	/**
-	 * @param Row<mixed> $date
-	 * @param int $applicationId
-	 * @param string $name
-	 * @param string $email
-	 * @param string $company
-	 * @param string $street
-	 * @param string $city
-	 * @param string $zip
-	 * @param string $country
-	 * @param string $companyId
-	 * @param string $companyTaxId
-	 * @param string $note
-	 * @return int
-	 */
 	public function updateApplication(
-		Row $date,
+		TrainingDate $date,
 		int $applicationId,
 		string $name,
 		string $email,
@@ -466,7 +420,7 @@ class Applications
 				$companyTaxId,
 				$note
 			): void {
-				$price = $this->prices->resolvePriceDiscountVat($date->price, $date->studentDiscount, Statuses::STATUS_SIGNED_UP, $note);
+				$price = $this->prices->resolvePriceDiscountVat($date->getPrice(), $date->getStudentDiscount(), Statuses::STATUS_SIGNED_UP, $note);
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
 					[

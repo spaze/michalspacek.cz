@@ -7,10 +7,10 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Dates\TrainingDateLabel;
 use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTraining;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Utils\ArrayHash;
 
 class Trainings
 {
@@ -150,29 +150,14 @@ class Trainings
 
 
 	/**
-	 * @param int $trainingId
-	 * @return Row[]
-	 */
-	public function getDates(int $trainingId): array
-	{
-		$dates = $this->trainingDates->getDates($trainingId);
-		foreach ($dates as $date) {
-			$date->venueDescription = $date->venueDescription ? $this->texyFormatter->format($date->venueDescription) : null;
-			$date->cooperationDescription = $date->cooperationDescription ? $this->texyFormatter->format($date->cooperationDescription) : null;
-		}
-		return $dates;
-	}
-
-
-	/**
-	 * @param ArrayHash[] $trainings
+	 * @param list<UpcomingTraining>|UpcomingTraining[] $trainings
 	 * @return bool
 	 */
 	public function lastFreeSeatsAnyTraining(array $trainings): bool
 	{
 		$lastFreeSeats = false;
 		foreach ($trainings as $training) {
-			if ($this->freeSeats->lastFreeSeatsAnyDate((array)$training->dates)) {
+			if ($this->freeSeats->lastFreeSeatsAnyDate($training->getDates())) {
 				$lastFreeSeats = true;
 				break;
 			}

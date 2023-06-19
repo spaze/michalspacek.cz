@@ -147,7 +147,7 @@ class TexyPhraseHandler
 	{
 		$el = Html::el()
 			->addHtml(Html::el()->setText(' '))
-			->addHtml(Html::el('small')->setText(sprintf('(**%s:%s**)', TexyFormatter::TRAINING_DATE_PLACEHOLDER, $training)));
+			->addHtml(Html::el('small')->setText(sprintf('(**%s:%s**)', TrainingDateTexyFormatterPlaceholder::getPlaceholder(), $training)));
 		return $el->render();
 	}
 

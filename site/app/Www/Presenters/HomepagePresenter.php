@@ -27,15 +27,16 @@ class HomepagePresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
+		$upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->pageHeader = 'Michal Špaček';
 		$this->template->articles = $this->articles->getAll(3);
 		$this->template->talks = $this->talks->getAll(5);
 		$this->template->favoriteTalks = $this->talks->getFavorites();
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
-		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
+		$this->template->upcomingTrainings = $upcomingTrainings;
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
 		$this->template->interviews = $this->interviews->getAll(5);
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
+		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($upcomingTrainings);
 		$this->template->discontinued = $this->trainings->getAllDiscontinued();
 	}
 

@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotAvailableException;
@@ -17,7 +18,6 @@ use MichalSpacekCz\Training\Mails;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Row;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
@@ -48,7 +48,7 @@ class TrainingApplicationFormFactory
 	 * @param callable(string): void $onError
 	 * @param string $action
 	 * @param Html $name
-	 * @param Row[] $dates
+	 * @param array<int, TrainingDate> $dates
 	 * @param SessionSection<string> $sessionSection
 	 * @return Form
 	 */
@@ -66,14 +66,14 @@ class TrainingApplicationFormFactory
 		$multipleDates = count($dates) > 1;
 		foreach ($dates as $date) {
 			$el = Html::el()->setText($this->trainingDates->formatDateVenueForUser($date));
-			if ($date->label) {
+			if ($date->getLabel()) {
 				if ($multipleDates) {
-					$el->addText(" [{$date->label}]");
+					$el->addText(" [{$date->getLabel()}]");
 				} else {
-					$el->addHtml(Html::el('small', ['class' => 'label'])->setText($date->label));
+					$el->addHtml(Html::el('small', ['class' => 'label'])->setText($date->getLabel()));
 				}
 			}
-			$inputDates[$date->dateId] = $el;
+			$inputDates[$date->getId()] = $el;
 		}
 
 		// trainingId is actually dateId, oh well
@@ -105,7 +105,7 @@ class TrainingApplicationFormFactory
 					throw new TrainingDateNotAvailableException();
 				}
 
-				if ($date->tentative) {
+				if ($date->isTentative()) {
 					$this->trainingApplications->addInvitation(
 						$date,
 						$values->name,
@@ -158,18 +158,18 @@ class TrainingApplicationFormFactory
 						$this->templateFactory->createTemplate($presenter),
 						$values->email,
 						$values->name,
-						$date->start,
-						$date->end,
+						$date->getStart(),
+						$date->getEnd(),
 						$action,
 						$name,
-						$date->remote,
-						$date->venueName,
-						$date->venueNameExtended,
-						$date->venueAddress,
-						$date->venueCity,
+						$date->isRemote(),
+						$date->getVenueName(),
+						$date->getVenueNameExtended(),
+						$date->getVenueAddress(),
+						$date->getVenueCity(),
 					);
 				}
-				$sessionSection->trainingId = $date->dateId;
+				$sessionSection->trainingId = $date->getId();
 				$sessionSection->name = $values->name;
 				$sessionSection->email = $values->email;
 				$sessionSection->company = $values->company;
@@ -234,7 +234,7 @@ class TrainingApplicationFormFactory
 	/**
 	 * @param stdClass $values
 	 * @param string $name
-	 * @param Row[] $dates
+	 * @param array<int, TrainingDate> $dates
 	 * @param SessionSection $sessionSection
 	 * @throws TrainingDateNotUpcomingException
 	 */

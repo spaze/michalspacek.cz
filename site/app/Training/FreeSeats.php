@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use Nette\Database\Row;
 
@@ -25,14 +26,14 @@ class FreeSeats
 
 
 	/**
-	 * @param Row[] $dates
+	 * @param list<TrainingDate>|TrainingDate[] $dates
 	 * @return bool
 	 */
 	public function lastFreeSeatsAnyDate(array $dates): bool
 	{
 		$lastFreeSeats = false;
 		foreach ($dates as $date) {
-			if ($date->lastFreeSeats) {
+			if ($date->isLastFreeSeats()) {
 				$lastFreeSeats = true;
 				break;
 			}

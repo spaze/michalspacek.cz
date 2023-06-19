@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
 use Nette\Application\UI\Form;
-use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use stdClass;
 
@@ -35,10 +35,10 @@ class TrainingDateFormFactory
 
 	/**
 	 * @param callable(): void $onSuccess
-	 * @param Row<mixed>|null $date
+	 * @param TrainingDate|null $date
 	 * @return Form
 	 */
-	public function create(callable $onSuccess, ?Row $date = null): Form
+	public function create(callable $onSuccess, ?TrainingDate $date = null): Form
 	{
 		$form = $this->factory->create();
 
@@ -145,7 +145,7 @@ class TrainingDateFormFactory
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $date): void {
 			if ($date) {
 				$this->trainingDates->update(
-					$date->dateId,
+					$date->getId(),
 					$values->training,
 					$values->venue,
 					$values->remote,
@@ -190,30 +190,25 @@ class TrainingDateFormFactory
 	}
 
 
-	/**
-	 * @param Form $form
-	 * @param Row<mixed> $date
-	 * @param SubmitButton $submit
-	 */
-	public function setTrainingDate(Form $form, Row $date, SubmitButton $submit): void
+	public function setTrainingDate(Form $form, TrainingDate $date, SubmitButton $submit): void
 	{
 		$values = [
-			'training' => $date->trainingId,
-			'venue' => $date->venueId,
-			'remote' => $date->remote,
-			'remoteUrl' => $date->remoteUrl,
-			'remoteNotes' => $date->remoteNotes,
-			'start' => $date->start->format('Y-m-d H:i'),
-			'end' => $date->end->format('Y-m-d H:i'),
-			'label' => $date->labelJson,
-			'status' => $this->trainingDates->getStatusId($date->status),
-			'public' => $date->public,
-			'cooperation' => $date->cooperationId,
-			'note' => $date->note,
-			'price' => ($date->hasCustomPrice ? $date->price->getPrice() : null),
-			'studentDiscount' => ($date->hasCustomStudentDiscount ? $date->studentDiscount : null),
-			'videoHref' => $date->videoHref,
-			'feedbackHref' => $date->feedbackHref,
+			'training' => $date->getTrainingId(),
+			'venue' => $date->getVenueId(),
+			'remote' => $date->isRemote(),
+			'remoteUrl' => $date->getRemoteUrl(),
+			'remoteNotes' => $date->getRemoteNotes(),
+			'start' => $date->getStart()->format('Y-m-d H:i'),
+			'end' => $date->getEnd()->format('Y-m-d H:i'),
+			'label' => $date->getLabelJson(),
+			'status' => $this->trainingDates->getStatusId($date->getStatus()),
+			'public' => $date->isPublic(),
+			'cooperation' => $date->getCooperationId(),
+			'note' => $date->getNote(),
+			'price' => $date->hasCustomPrice() ? $date->getPrice()?->getPrice() : null,
+			'studentDiscount' => $date->hasCustomStudentDiscount() ? $date->getStudentDiscount() : null,
+			'videoHref' => $date->getVideoHref(),
+			'feedbackHref' => $date->getFeedbackHref(),
 		];
 		$form->setDefaults($values);
 		$submit->caption = 'Upravit';

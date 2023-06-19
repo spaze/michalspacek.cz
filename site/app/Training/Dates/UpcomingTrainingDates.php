@@ -4,32 +4,38 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Dates;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Training\FreeSeats;
 use Nette\Database\Explorer;
-use Nette\Utils\ArrayHash;
 
 class UpcomingTrainingDates
 {
 
-	/** @var array<int, array<string, ArrayHash>> */
+	/** @var array<int, array<string, UpcomingTraining>> */
 	private array $upcomingDates = [];
 
 
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly Translator $translator,
-		private readonly FreeSeats $freeSeats,
-		private readonly TrainingDateLabel $dateLabel,
+		private readonly TrainingDateFactory $trainingDateFactory,
 	) {
 	}
 
 
 	/**
-	 * @return array<string, ArrayHash>
+	 * @return array<string, UpcomingTraining>
 	 */
 	public function getPublicUpcoming(): array
 	{
 		return $this->getUpcoming(false);
+	}
+
+
+	/**
+	 * @return array<string, UpcomingTraining>
+	 */
+	public function getPublicUpcomingAtVenue(int $venueId): array
+	{
+		return $this->getUpcoming(false, $venueId);
 	}
 
 
@@ -40,8 +46,8 @@ class UpcomingTrainingDates
 	{
 		$upcomingIds = [];
 		foreach ($this->getPublicUpcoming() as $training) {
-			foreach ($training->dates as $date) {
-				$upcomingIds[] = $date->dateId;
+			foreach ($training->getDates() as $date) {
+				$upcomingIds[] = $date->getId();
 			}
 		}
 		return $upcomingIds;
@@ -49,7 +55,7 @@ class UpcomingTrainingDates
 
 
 	/**
-	 * @return array<string, ArrayHash>
+	 * @return array<string, UpcomingTraining>
 	 */
 	public function getAllUpcoming(): array
 	{
@@ -58,25 +64,40 @@ class UpcomingTrainingDates
 
 
 	/**
-	 * @param bool $includeNonPublic
-	 * @return array<string, ArrayHash>
+	 * @return array<string, UpcomingTraining>
 	 */
-	private function getUpcoming(bool $includeNonPublic): array
+	private function getUpcoming(bool $includeNonPublic, ?int $venueId = null): array
 	{
 		if (!isset($this->upcomingDates[(int)$includeNonPublic])) {
 			$query = "SELECT
 					d.id_date AS dateId,
+					t.id_training AS trainingId,
 					a.action,
 					t.name,
-					s.status,
+					COALESCE(d.price, t.price) AS price,
+					COALESCE(d.student_discount, t.student_discount) AS studentDiscount,
+					d.price IS NOT NULL AS hasCustomPrice,
+					d.student_discount IS NOT NULL AS hasCustomStudentDiscount,
 					d.start,
 					d.end,
 					d.label AS labelJson,
+					s.status,
 					d.public,
 					d.remote,
+					d.remote_url AS remoteUrl,
+					d.remote_notes AS remoteNotes,
 					v.id_venue AS venueId,
+					v.action AS venueAction,
+					v.href AS venueHref,
 					v.name AS venueName,
+					v.name_extended AS venueNameExtended,
+					v.address AS venueAddress,
 					v.city AS venueCity,
+					v.description AS venueDescription,
+					c.id_cooperation AS cooperationId,
+					c.description AS cooperationDescription,
+					d.video_href AS videoHref,
+					d.feedback_href AS feedbackHref,
 					d.note
 				FROM training_dates d
 					JOIN trainings t ON d.key_training = t.id_training
@@ -85,6 +106,7 @@ class UpcomingTrainingDates
 					JOIN languages l ON a.key_language = l.id_language
 					JOIN training_date_status s ON d.key_status = s.id_status
 					LEFT JOIN training_venues v ON d.key_venue = v.id_venue
+				    LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
 					JOIN (
 						SELECT
 							t2.id_training,
@@ -108,32 +130,14 @@ class UpcomingTrainingDates
 
 			$upcoming = [];
 			foreach ($this->database->fetchAll($query, $includeNonPublic, $includeNonPublic, TrainingDateStatus::Tentative->value, TrainingDateStatus::Confirmed->value, $this->translator->getDefaultLocale()) as $row) {
-				$date = [
-					'dateId' => $row->dateId,
-					'tentative' => $row->status === TrainingDateStatus::Tentative->value,
-					'lastFreeSeats' => $this->freeSeats->lastFreeSeats($row),
-					'start' => $row->start,
-					'end' => $row->end,
-					'label' => $this->dateLabel->decodeLabel($row->labelJson),
-					'public' => $row->public,
-					'status' => $row->status,
-					'name' => $this->translator->translate($row->name),
-					'remote' => (bool)$row->remote,
-					'venueId' => $row->venueId,
-					'venueName' => $row->venueName,
-					'venueCity' => $row->venueCity,
-					'note' => $row->note,
-				];
-				/** @var string $action */
-				$action = $row->action;
-				$upcoming[$action] = ArrayHash::from([
-					'action' => $action,
-					'name' => $date['name'],
-					'dates' => (isset($upcoming[$action]->dates)
-						? $upcoming[$action]->dates = (array)$upcoming[$action]->dates + [$row->dateId => $date]
-						: [$row->dateId => $date]
-					),
-				]);
+				if ($venueId !== null && $venueId !== $row->venueId) {
+					continue;
+				}
+				$date = $this->trainingDateFactory->get($row);
+				if (!isset($upcoming[$date->getAction()])) {
+					$upcoming[$date->getAction()] = new UpcomingTraining($date->getAction(), $date->getName());
+				}
+				$upcoming[$date->getAction()]->addDate($date);
 			}
 			$this->upcomingDates[(int)$includeNonPublic] = $upcoming;
 		}

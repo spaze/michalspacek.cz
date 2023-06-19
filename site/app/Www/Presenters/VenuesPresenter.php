@@ -28,6 +28,7 @@ class VenuesPresenter extends BasePresenter
 		if (!$venue) {
 			throw new BadRequestException("Where in the world is {$name}?");
 		}
+		$trainings = $this->upcomingTrainingDates->getPublicUpcomingAtVenue($venue->id);
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->name]);
 		$this->template->name = $venue->name;
@@ -42,21 +43,6 @@ class VenuesPresenter extends BasePresenter
 		$this->template->streetview = $venue->streetview;
 		$this->template->parking = $venue->parking;
 		$this->template->publicTransport = $venue->publicTransport;
-
-		$trainings = [];
-		foreach ($this->upcomingTrainingDates->getPublicUpcoming() as $training) {
-			$dates = [];
-			foreach ($training->dates as $date) {
-				if ($date->venueId === $venue->id) {
-					$dates[] = $date;
-				}
-			}
-			if (!empty($dates)) {
-				$training->dates = $dates;
-				$trainings[] = $training;
-			}
-		}
-
 		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($trainings);
 		$this->template->upcomingTrainings = $trainings;
 	}

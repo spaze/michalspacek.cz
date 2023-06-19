@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use Nette\Database\Row;
 use Tester\Assert;
@@ -42,18 +43,57 @@ class FreeSeatsTest extends TestCase
 		Assert::false($this->freeSeats->lastFreeSeatsAnyDate([]));
 
 		$rows = [
-			Row::from(['lastFreeSeats' => false]),
-			Row::from(['lastFreeSeats' => false]),
-			Row::from(['lastFreeSeats' => false]),
+			$this->buildTrainingDate(false),
+			$this->buildTrainingDate(false),
+			$this->buildTrainingDate(false),
 		];
 		Assert::false($this->freeSeats->lastFreeSeatsAnyDate($rows));
 
 		$rows = [
-			Row::from(['lastFreeSeats' => false]),
-			Row::from(['lastFreeSeats' => true]),
-			Row::from(['lastFreeSeats' => false]),
+			$this->buildTrainingDate(false),
+			$this->buildTrainingDate(true),
+			$this->buildTrainingDate(false),
 		];
 		Assert::true($this->freeSeats->lastFreeSeatsAnyDate($rows));
+	}
+
+
+	private function buildTrainingDate(bool $lastFreeSeats): TrainingDate
+	{
+		return new TrainingDate(
+			1,
+			'',
+			1,
+			true,
+			$lastFreeSeats,
+			new DateTime(),
+			new DateTime(),
+			null,
+			null,
+			true,
+			TrainingDateStatus::Confirmed,
+			'',
+			false,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			false,
+			null,
+			false,
+			null,
+			null,
+			null,
+			null,
+		);
 	}
 
 }

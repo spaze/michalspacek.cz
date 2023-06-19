@@ -9,6 +9,7 @@ use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
@@ -29,7 +30,7 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Row<mixed> */
 	private Row $training;
 
-	/** @var Row[] */
+	/** @var array<int, TrainingDate> id => date */
 	private array $dates;
 
 
@@ -55,10 +56,11 @@ class TrainingsPresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
+		$upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
-		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
+		$this->template->upcomingTrainings = $upcomingTrainings;
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($this->template->upcomingTrainings);
+		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($upcomingTrainings);
 		$this->template->discontinued = $this->trainings->getAllDiscontinued();
 	}
 
@@ -77,7 +79,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->redirectToSuccessor($this->training->successorId);
 
-		$this->dates = $this->trainings->getDates($this->training->trainingId);
+		$this->dates = $this->trainingDates->getDates($this->training->trainingId);
 
 		$session = $this->getSession();
 		$session->start(); // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
@@ -283,7 +285,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->training = $training;
-		$this->dates = $this->trainings->getDates($this->training->trainingId);
+		$this->dates = $this->trainingDates->getDates($this->training->trainingId);
 		if (empty($this->dates)) {
 			throw new BadRequestException("No dates for {$name} training", IResponse::S503_ServiceUnavailable);
 		}
@@ -295,11 +297,11 @@ class TrainingsPresenter extends BasePresenter
 
 		if (!isset($this->dates[$session->trainingId])) {
 			$date = $this->trainingDates->get($session->trainingId);
-			$this->redirect('success', $date->action);
+			$this->redirect('success', $date->getAction());
 		}
 
 		$date = $this->dates[$session->trainingId];
-		if ($date->tentative) {
+		if ($date->isTentative()) {
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.tentative'));
 		} else {
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.confirmed'));
@@ -310,11 +312,11 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->title = $this->training->name;
 		$this->template->description = $this->training->description;
 		$this->template->lastFreeSeats = false;
-		$this->template->start = $date->start;
-		$this->template->end = $date->end;
-		$this->template->remote = $date->remote;
-		$this->template->venueCity = $date->venueCity;
-		$this->template->tentative = $date->tentative;
+		$this->template->start = $date->getStart();
+		$this->template->end = $date->getEnd();
+		$this->template->remote = $date->isRemote();
+		$this->template->venueCity = $date->getVenueCity();
+		$this->template->tentative = $date->isTentative();
 
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		unset($upcoming[$name]);

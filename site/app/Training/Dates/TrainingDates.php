@@ -8,12 +8,9 @@ use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
-use MichalSpacekCz\Training\FreeSeats;
-use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Utils\ArrayHash;
 
 class TrainingDates
 {
@@ -27,23 +24,18 @@ class TrainingDates
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly Statuses $trainingStatuses,
-		private readonly Prices $prices,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly Translator $translator,
-		private readonly FreeSeats $freeSeats,
-		private readonly TrainingDateLabel $dateLabel,
+		private readonly TrainingDateFactory $trainingDateFactory,
 	) {
 	}
 
 
 	/**
-	 * @param int $dateId
-	 * @return Row<mixed>
 	 * @throws TrainingDateDoesNotExistException
 	 */
-	public function get(int $dateId): Row
+	public function get(int $dateId): TrainingDate
 	{
-		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
 				d.id_date AS dateId,
@@ -59,15 +51,19 @@ class TrainingDates
 				d.label AS labelJson,
 				d.public,
 				s.status,
-				v.id_venue AS venueId,
 				d.remote,
+				v.id_venue AS venueId,
+				v.action AS venueAction,
 				d.remote_url AS remoteUrl,
 				d.remote_notes AS remoteNotes,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
+				v.address AS venueAddress,
 				v.city AS venueCity,
+				v.description AS venueDescription,
 				c.id_cooperation AS cooperationId,
+				c.description AS cooperationDescription,
 				d.video_href AS videoHref,
 				d.feedback_href AS feedbackHref,
 				d.note
@@ -89,33 +85,45 @@ class TrainingDates
 		if (!$result) {
 			throw new TrainingDateDoesNotExistException($dateId);
 		}
-
-		$result->price = $result->price ? $this->prices->resolvePriceVat($result->price) : null;
-		$result->name = $this->translator->translate($result->name);
-		return $result;
+		return $this->trainingDateFactory->get($result);
 	}
 
 
 	/**
-	 * @return Row[]
+	 * @return list<TrainingDate>
 	 */
 	public function getWithUnpaid(): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
+				t.id_training AS trainingId,
 				a.action,
 				t.name,
+				COALESCE(d.price, t.price) AS price,
+				COALESCE(d.student_discount, t.student_discount) AS studentDiscount,
+				d.price IS NOT NULL AS hasCustomPrice,
+				d.student_discount IS NOT NULL AS hasCustomStudentDiscount,
 				d.start,
 				d.end,
 				d.label AS labelJson,
 				d.public,
 				s.status,
 				d.remote,
+				d.remote_url AS remoteUrl,
+				d.remote_notes AS remoteNotes,
+				v.id_venue AS venueId,
+				v.action AS venueAction,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
+				v.address AS venueAddress,
 				v.city AS venueCity,
+				v.description AS venueDescription,
+				c.id_cooperation AS cooperationId,
+				c.description AS cooperationDescription,
+				d.video_href AS videoHref,
+				d.feedback_href AS feedbackHref,
 				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
@@ -124,6 +132,7 @@ class TrainingDates
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
 				JOIN languages l ON a.key_language = l.id_language
+				LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
 			WHERE
 				EXISTS (
 					SELECT
@@ -143,11 +152,11 @@ class TrainingDates
 			$this->translator->getDefaultLocale(),
 		);
 
-		foreach ($result as $date) {
-			$date->name = $this->translator->translate($date->name);
-			$date->label = $this->dateLabel->decodeLabel($date->labelJson);
+		$dates = [];
+		foreach ($result as $row) {
+			$dates[] = $this->trainingDateFactory->get($row);
 		}
-		return $result;
+		return $dates;
 	}
 
 
@@ -255,40 +264,53 @@ class TrainingDates
 	}
 
 
-	public function getStatusId(string $status): int
+	public function getStatusId(TrainingDateStatus $status): int
 	{
-		if (!isset($this->statusIds[$status])) {
-			$this->statusIds[$status] = $this->database->fetchField(
+		if (!isset($this->statusIds[$status->value])) {
+			$this->statusIds[$status->value] = $this->database->fetchField(
 				'SELECT id_status FROM training_date_status WHERE status = ?',
-				$status,
+				$status->value,
 			);
 		}
-		return $this->statusIds[$status];
+		return $this->statusIds[$status->value];
 	}
 
 
 	/**
-	 * @param string $from
-	 * @param string $to
-	 * @return Row[]
+	 * @return list<TrainingDate>
 	 */
 	public function getAllTrainingsInterval(string $from, string $to = ''): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
 				d.id_date AS dateId,
+				t.id_training AS trainingId,
 				a.action,
 				t.name,
+				COALESCE(d.price, t.price) AS price,
+				COALESCE(d.student_discount, t.student_discount) AS studentDiscount,
+				d.price IS NOT NULL AS hasCustomPrice,
+				d.student_discount IS NOT NULL AS hasCustomStudentDiscount,
 				d.start,
 				d.end,
 				d.label AS labelJson,
 				d.public,
 				s.status,
 				d.remote,
+				d.remote_url AS remoteUrl,
+				d.remote_notes AS remoteNotes,
+				v.id_venue AS venueId,
+				v.action AS venueAction,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
+				v.address AS venueAddress,
 				v.city AS venueCity,
+				v.description AS venueDescription,
+				NULL AS cooperationId,
+				NULL AS cooperationDescription,
+				d.video_href AS videoHref,
+				d.feedback_href AS feedbackHref,
 				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
@@ -307,17 +329,17 @@ class TrainingDates
 			$this->translator->getDefaultLocale(),
 		);
 
-		foreach ($result as $date) {
-			$date->name = $this->translator->translate($date->name);
-			$date->label = $this->dateLabel->decodeLabel($date->labelJson);
+		$dates = [];
+		foreach ($result as $row) {
+			$dates[] = $this->trainingDateFactory->get($row);
 		}
-		return $result;
+		return $dates;
 	}
 
 
 	/**
 	 * @param int $trainingId
-	 * @return Row[]
+	 * @return array<int, TrainingDate> id => date
 	 */
 	public function getDates(int $trainingId): array
 	{
@@ -325,25 +347,39 @@ class TrainingDates
 			"SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
+				a.action,
+				t.name,
 				COALESCE(d.price, t.price) AS price,
 				COALESCE(d.student_discount, t.student_discount) AS studentDiscount,
+				d.price IS NOT NULL AS hasCustomPrice,
+				d.student_discount IS NOT NULL AS hasCustomStudentDiscount,
 				d.start,
 				d.end,
 				d.label AS labelJson,
+				d.public,
 				s.status,
 				d.remote,
+				d.remote_url AS remoteUrl,
+				d.remote_notes AS remoteNotes,
+				v.id_venue AS venueId,
+				v.action AS venueAction,
 				v.href AS venueHref,
 				v.name AS venueName,
 				v.name_extended AS venueNameExtended,
 				v.address AS venueAddress,
 				v.city AS venueCity,
 				v.description AS venueDescription,
-				v.action AS venueAction,
-				c.description AS cooperationDescription
+				c.id_cooperation AS cooperationId,
+				c.description AS cooperationDescription,
+				d.video_href AS videoHref,
+				d.feedback_href AS feedbackHref,
+				d.note
 			FROM training_dates d
 				JOIN trainings t ON d.key_training = t.id_training
 				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
 				JOIN training_date_status s ON d.key_status = s.id_status
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
 				LEFT JOIN training_cooperations c ON d.key_cooperation = c.id_cooperation
 				JOIN (
 					SELECT
@@ -366,14 +402,11 @@ class TrainingDates
 			TrainingDateStatus::Tentative->value,
 			TrainingDateStatus::Confirmed->value,
 		);
+
 		$dates = [];
 		foreach ($result as $row) {
-			$row->remote = (bool)$row->remote;
-			$row->label = $this->dateLabel->decodeLabel($row->labelJson);
-			$row->tentative = ($row->status === TrainingDateStatus::Tentative->value);
-			$row->lastFreeSeats = $this->freeSeats->lastFreeSeats($row);
-			$row->price = $row->price ? $this->prices->resolvePriceVat($row->price) : null;
-			$dates[$row->dateId] = $row;
+			$date = $this->trainingDateFactory->get($row);
+			$dates[$date->getId()] = $date;
 		}
 		return $dates;
 	}
@@ -391,25 +424,26 @@ class TrainingDates
 	}
 
 
-	public function formatDateVenueForAdmin(ArrayHash $date): string
+	public function formatDateVenueForAdmin(TrainingDate $date): string
 	{
 		return sprintf(
 			'%s, %s',
-			$this->dateTimeFormatter->localeIntervalDay($date->start, $date->end),
-			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity,
+			$this->dateTimeFormatter->localeIntervalDay($date->getStart(), $date->getEnd()),
+			$date->isRemote() ? $this->translator->translate('messages.label.remote') : $date->getVenueCity(),
 		);
 	}
 
 
-	public function formatDateVenueForUser(ArrayHash $date): string
+	public function formatDateVenueForUser(TrainingDate $date): string
 	{
-		$start = $date->start ?? $date->trainingStart;
-		$end = $date->end ?? $date->trainingEnd;
+		$interval = $date->isTentative()
+			? $this->dateTimeFormatter->localeIntervalMonth($date->getStart(), $date->getEnd())
+			: $this->dateTimeFormatter->localeIntervalDay($date->getStart(), $date->getEnd());
 		return sprintf(
 			'%s, %s%s',
-			$date->tentative ? $this->dateTimeFormatter->localeIntervalMonth($start, $end) : $this->dateTimeFormatter->localeIntervalDay($start, $end),
-			$date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity,
-			$date->tentative ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '',
+			$interval,
+			$date->isRemote() ? $this->translator->translate('messages.label.remote') : $date->getVenueCity(),
+			$date->isTentative() ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '',
 		);
 	}
 

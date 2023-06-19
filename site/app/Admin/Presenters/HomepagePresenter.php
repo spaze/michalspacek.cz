@@ -8,7 +8,6 @@ use MichalSpacekCz\Tls\Certificate;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates\TrainingDates;
-use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Trainings;
@@ -35,17 +34,15 @@ class HomepagePresenter extends BasePresenter
 	{
 		$trainings = $this->trainingDates->getAllTrainingsInterval('-1 week');
 		foreach ($this->upcomingTrainingDates->getAllUpcoming() as $training) {
-			foreach ($training->dates as $date) {
+			foreach ($training->getDates() as $date) {
 				$trainings[] = $date;
 			}
 		}
 		$dates = [];
 		foreach ($trainings as $date) {
-			$date->applications = $this->trainingApplications->getValidByDate($date->dateId);
-			$date->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($date->dateId);
-			$date->validCount = count($date->applications);
-			$date->requiresAttention = ($date->canceledApplications || ($date->status == TrainingDateStatus::Canceled->value && $date->validCount));
-			$dates[$date->start->getTimestamp()] = $date;
+			$date->setApplications($this->trainingApplications->getValidByDate($date->getId()));
+			$date->setCanceledApplications($this->trainingApplications->getCanceledPaidByDate($date->getId()));
+			$dates[$date->getStart()->getTimestamp()] = $date;
 		}
 		ksort($dates);
 		$this->template->upcomingApplications = $dates;

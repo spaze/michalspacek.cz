@@ -100,7 +100,7 @@ class Mails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($this->trainingDates->get($application->dateId)->status === TrainingDateStatus::Confirmed->value) {
+				if ($this->trainingDates->get($application->dateId)->getStatus() === TrainingDateStatus::Confirmed) {
 					$application->nextStatus = Statuses::STATUS_INVITED;
 					$applications[$application->id] = $application;
 				}
