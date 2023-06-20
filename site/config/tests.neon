@@ -10,6 +10,7 @@ parameters:
 
 
 services:
+	- MichalSpacekCz\Test\Application\ApplicationPresenter
 	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGenerator
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
 	database.upcKeys.explorer: @database.default.explorer
@@ -25,3 +26,4 @@ services:
 		create: Nette\Http\Response
 		autowired: self
 	- Nette\Http\SessionSection(name: test)
+	texyFormatterPhpFilesAdapter: Symfony\Component\Cache\Adapter\NullAdapter

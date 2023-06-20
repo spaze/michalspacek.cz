@@ -6,13 +6,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
-use Closure;
+use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Nette\Application\Application;
-use Nette\Application\UI\Presenter;
-use ReflectionProperty;
 use Tester\Assert;
 use Tester\TestCase;
 use Texy\Texy;
@@ -32,6 +30,7 @@ class TexyPhraseHandlerTest extends TestCase
 	public function __construct(
 		private readonly Database $database,
 		private readonly Application $application,
+		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly LocaleLinkGenerator $localeLinkGenerator,
 		private readonly NoOpTranslator $translator,
 		private readonly TexyPhraseHandler $phraseHandler,
@@ -43,28 +42,7 @@ class TexyPhraseHandlerTest extends TestCase
 	{
 		$this->texy = new Texy();
 		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
-		$property = new ReflectionProperty($this->application, 'presenter');
-		$property->setValue($this->application, new class ($this->buildUrl(...)) extends Presenter {
-
-			/**
-			 * @param Closure(string, string[]): string $buildLink
-			 * @noinspection PhpMissingParentConstructorInspection
-			 */
-			public function __construct(
-				private readonly Closure $buildLink,
-			) {
-			}
-
-
-			public function link(string $destination, $args = []): string
-			{
-				$args = func_num_args() < 3 && is_array($args)
-					? $args
-					: array_slice(func_get_args(), 1);
-				return ($this->buildLink)($destination, $args);
-			}
-
-		});
+		$this->applicationPresenter->setLinkCallback($this->application, $this->buildUrl(...));
 		$this->defaultLocale = $this->translator->getDefaultLocale();
 	}
 
