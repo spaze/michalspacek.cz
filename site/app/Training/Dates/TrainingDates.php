@@ -16,9 +16,6 @@ class TrainingDates
 
 	private const DATA_RETENTION = 30;
 
-	/** @var array<string, int> */
-	private array $statusIds = [];
-
 
 	public function __construct(
 		private readonly Explorer $database,
@@ -243,18 +240,6 @@ class TrainingDates
 			],
 		);
 		return (int)$this->database->getInsertId();
-	}
-
-
-	public function getStatusId(TrainingDateStatus $status): int
-	{
-		if (!isset($this->statusIds[$status->value])) {
-			$this->statusIds[$status->value] = $this->database->fetchField(
-				'SELECT id_status FROM training_date_status WHERE status = ?',
-				$status->value,
-			);
-		}
-		return $this->statusIds[$status->value];
 	}
 
 

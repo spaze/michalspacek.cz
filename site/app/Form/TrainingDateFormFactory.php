@@ -203,7 +203,7 @@ class TrainingDateFormFactory
 			'start' => $date->getStart()->format('Y-m-d H:i'),
 			'end' => $date->getEnd()->format('Y-m-d H:i'),
 			'label' => $date->getLabelJson(),
-			'status' => $this->trainingDates->getStatusId($date->getStatus()),
+			'status' => $date->getStatus()->id(),
 			'public' => $date->isPublic(),
 			'cooperation' => $date->getCooperationId(),
 			'note' => $date->getNote(),
