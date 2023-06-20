@@ -82,6 +82,7 @@ services:
 	- MichalSpacekCz\Tls\CertificatesApiClient
 	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\CompanyTrainings
+	- MichalSpacekCz\Training\Dates\TrainingDateStatuses
 	- MichalSpacekCz\Training\Dates\TrainingDateFactory(texyFormatter: @texyFormatterNoPlaceholders)
 	- MichalSpacekCz\Training\Dates\TrainingDateLabel
 	- MichalSpacekCz\Training\Dates\TrainingDates

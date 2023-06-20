@@ -10,7 +10,6 @@ use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 
 class TrainingDates
 {
@@ -244,23 +243,6 @@ class TrainingDates
 			],
 		);
 		return (int)$this->database->getInsertId();
-	}
-
-
-	/**
-	 * @return Row[]
-	 */
-	public function getStatuses(): array
-	{
-		return $this->database->fetchAll(
-			'SELECT
-				s.id_status AS id,
-				s.status,
-				description
-			FROM training_date_status s
-			ORDER BY
-				s.id_status',
-		);
 	}
 
 

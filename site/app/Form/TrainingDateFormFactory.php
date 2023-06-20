@@ -7,6 +7,7 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
+use MichalSpacekCz\Training\Dates\TrainingDateStatuses;
 use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
 use Nette\Application\UI\Form;
@@ -26,6 +27,7 @@ class TrainingDateFormFactory
 		private readonly FormFactory $factory,
 		private readonly Trainings $trainings,
 		private readonly TrainingDates $trainingDates,
+		private readonly TrainingDateStatuses $trainingDateStatuses,
 		private readonly TrainingDatesFormValidator $trainingDatesFormValidator,
 		private readonly Venues $trainingVenues,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
@@ -85,8 +87,8 @@ class TrainingDateFormFactory
 		$form->addText('label', 'Label:');
 
 		$statuses = [];
-		foreach ($this->trainingDates->getStatuses() as $status) {
-			$statuses[$status->id] = "{$status->status} – {$status->description}";
+		foreach ($this->trainingDateStatuses->getStatuses() as $status) {
+			$statuses[$status->id()] = "{$status->value} – {$status->description()}";
 		}
 		$form->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte prosím status');
