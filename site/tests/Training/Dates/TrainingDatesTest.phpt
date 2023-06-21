@@ -182,6 +182,77 @@ class TrainingDatesFormValidatorTest extends TestCase
 		Assert::same(20, $dates[1]->getId());
 	}
 
+
+	/**
+	 * @return array<array{start:DateTime, status:TrainingDateStatus, freeSeats:bool}>
+	 */
+	public function getDateStartStatus(): array
+	{
+		return [
+			[
+				'start' => new DateTime('-2 days'),
+				'status' => TrainingDateStatus::Confirmed,
+				'lastFreeSeats' => false,
+			],
+			[
+				'start' => new DateTime('+10 days'),
+				'status' => TrainingDateStatus::Confirmed,
+				'lastFreeSeats' => false,
+			],
+			[
+				'start' => new DateTime('+2 days'),
+				'status' => TrainingDateStatus::Confirmed,
+				'lastFreeSeats' => true,
+			],
+			[
+				'start' => new DateTime('+2 days'),
+				'status' => TrainingDateStatus::Tentative,
+				'lastFreeSeats' => false,
+			],
+		];
+	}
+
+
+	/**
+	 * @dataProvider getDateStartStatus
+	 */
+	public function testLastFreeSeats(DateTime $start, TrainingDateStatus $status, bool $lastFreeSeats): void
+	{
+		$this->database->setFetchResult([
+			'dateId' => 1,
+			'trainingId' => 1,
+			'action' => 'action-1',
+			'name' => 'Name',
+			'price' => 2600,
+			'studentDiscount' => null,
+			'hasCustomPrice' => false,
+			'hasCustomStudentDiscount' => false,
+			'start' => $start,
+			'end' => new DateTime('+2 days'),
+			'labelJson' => null,
+			'public' => true,
+			'status' => $status->value,
+			'remote' => true,
+			'remoteUrl' => null,
+			'remoteNotes' => null,
+			'venueId' => null,
+			'venueAction' => null,
+			'venueHref' => null,
+			'venueName' => null,
+			'venueNameExtended' => null,
+			'venueAddress' => null,
+			'venueCity' => null,
+			'venueDescription' => null,
+			'cooperationId' => null,
+			'cooperationDescription' => null,
+			'videoHref' => null,
+			'feedbackHref' => null,
+			'note' => null,
+		]);
+		$trainingDate = $this->trainingDates->get(1);
+		Assert::same($lastFreeSeats, $trainingDate->isLastFreeSeats());
+	}
+
 }
 
 $runner->run(TrainingDatesFormValidatorTest::class);

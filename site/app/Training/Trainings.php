@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Training\Dates\UpcomingTraining;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -20,7 +19,6 @@ class Trainings
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly FreeSeats $freeSeats,
 		private readonly Translator $translator,
 	) {
 	}

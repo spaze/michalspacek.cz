@@ -7,7 +7,6 @@ use DateTime;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Dates\UpcomingTraining;
-use Nette\Database\Row;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -20,22 +19,6 @@ class FreeSeatsTest extends TestCase
 	public function __construct(
 		private readonly FreeSeats $freeSeats,
 	) {
-	}
-
-
-	public function testLastFreeSeats(): void
-	{
-		$row = Row::from([
-			'start' => new DateTime('-2 days'),
-			'status' => TrainingDateStatus::Confirmed->value,
-		]);
-		Assert::false($this->freeSeats->lastFreeSeats($row));
-		$row->start = new DateTime('+10 days');
-		Assert::false($this->freeSeats->lastFreeSeats($row));
-		$row->start = new DateTime('+2 days');
-		Assert::true($this->freeSeats->lastFreeSeats($row));
-		$row->status = TrainingDateStatus::Tentative->value;
-		Assert::false($this->freeSeats->lastFreeSeats($row));
 	}
 
 
