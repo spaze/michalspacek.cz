@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
@@ -14,7 +14,7 @@ class BlogPostPreview
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly BlogPosts $blogPosts,
-		private readonly Dates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly CspConfig $contentSecurityPolicy,
 	) {
 	}
@@ -32,7 +32,7 @@ class BlogPostPreview
 		$template->setFile(__DIR__ . '/../Www/Presenters/templates/Post/default.latte');
 		$template->post = $this->blogPosts->format($post);
 		$template->edits = $post->postId ? $post->edits : [];
-		$template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+		$template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$template->showBreadcrumbsMenu = false;
 		$template->showHeaderTabs = false;
 		$template->showFooter = false;

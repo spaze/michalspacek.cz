@@ -13,7 +13,9 @@ use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDate;
+use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
@@ -42,8 +44,7 @@ class TrainingsPresenter extends BasePresenter
 	/** @var Row<mixed> */
 	private Row $review;
 
-	/** @var Row<mixed> */
-	private Row $training;
+	private TrainingDate $training;
 
 	private int $dateId;
 
@@ -52,7 +53,8 @@ class TrainingsPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Applications $trainingApplications,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly Trainings $trainings,
 		private readonly TrainingFiles $trainingFiles,
@@ -75,11 +77,10 @@ class TrainingsPresenter extends BasePresenter
 		$this->dateId = $param;
 		$this->redirectParam = $this->dateId;
 		try {
-			$training = $this->trainingDates->get($this->dateId);
+			$this->training = $this->trainingDates->get($this->dateId);
 		} catch (TrainingDateDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-		$this->training = $training;
 		$validCount = 0;
 		$applications = $discarded = [];
 		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
@@ -97,14 +98,14 @@ class TrainingsPresenter extends BasePresenter
 		$this->applications = array_merge($applications, $discarded);
 
 		$this->template->pageTitle = 'Účastníci';
-		$this->template->trainingStart = $this->training->start;
-		$this->template->trainingEnd = $this->training->end;
-		$this->template->trainingName = $this->training->name;
-		$this->template->remote = $this->training->remote;
-		$this->template->venueCity = $this->training->venueCity;
-		$this->template->venueName = $this->training->venueName;
-		$this->template->public = $this->training->public;
-		$this->template->note = $this->training->note;
+		$this->template->trainingStart = $this->training->getStart();
+		$this->template->trainingEnd = $this->training->getEnd();
+		$this->template->trainingName = $this->training->getName();
+		$this->template->remote = $this->training->isRemote();
+		$this->template->venueCity = $this->training->getVenueCity();
+		$this->template->venueName = $this->training->getVenueName();
+		$this->template->public = $this->training->isPublic();
+		$this->template->note = $this->training->getNote();
 		$this->template->applications = $this->applications;
 		$this->template->validCount = $validCount;
 		$this->template->attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
@@ -127,10 +128,10 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->template->pageTitle = 'Soubory';
 		$this->template->files = $this->trainingFiles->getFiles($this->applicationId);
-		$this->template->trainingStart = $this->training->start;
-		$this->template->trainingEnd = $this->training->end;
-		$this->template->trainingName = $this->training->name;
-		$this->template->trainingCity = $this->training->venueCity;
+		$this->template->trainingStart = $this->training->getStart();
+		$this->template->trainingEnd = $this->training->getEnd();
+		$this->template->trainingName = $this->training->getName();
+		$this->template->trainingCity = $this->training->getVenueCity();
 		$this->template->name = $application->name;
 		$this->template->dateId = $application->dateId;
 	}
@@ -143,10 +144,10 @@ class TrainingsPresenter extends BasePresenter
 		$date = $this->trainingDates->get($this->review->dateId);
 
 		$this->template->pageTitle = "Ohlas od {$this->review->name}" . ($this->review->company ? ", {$this->review->company}" : '');
-		$this->template->trainingStart = $date->start;
-		$this->template->trainingEnd = $date->end;
-		$this->template->trainingName = $date->name;
-		$this->template->trainingCity = $date->venueCity;
+		$this->template->trainingStart = $date->getStart();
+		$this->template->trainingEnd = $date->getEnd();
+		$this->template->trainingName = $date->getName();
+		$this->template->trainingCity = $date->getVenueCity();
 		$this->template->name = $this->review->name;
 		$this->template->dateId = $this->review->dateId;
 	}
@@ -164,14 +165,15 @@ class TrainingsPresenter extends BasePresenter
 
 		if (isset($this->application->dateId)) {
 			$applicationDateId = $this->application->dateId;
-			$this->training = $this->trainingDates->get($applicationDateId);
-			$start = $this->training->start;
-			$end = $this->training->end;
-			$city = $this->training->venueCity;
-			$isRemote = $this->training->remote;
+			$training = $this->trainingDates->get($applicationDateId);
+			$name = $training->getName();
+			$start = $training->getStart();
+			$end = $training->getEnd();
+			$city = $training->getVenueCity();
+			$isRemote = $training->isRemote();
 		} else {
 			$applicationDateId = $start = $end = $city = $isRemote = null;
-			$this->training = $this->trainings->getIncludingCustom($this->application->trainingAction);
+			$name = $this->trainings->getIncludingCustom($this->application->trainingAction)->name;
 		}
 
 		$this->template->pageTitle = $this->application->name ?? 'smazáno';
@@ -179,7 +181,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->applicationDateId = $applicationDateId;
 		$this->template->status = $this->application->status;
 		$this->template->statusTime = $this->application->statusTime;
-		$this->template->trainingName = $this->training->name;
+		$this->template->trainingName = $name;
 		$this->template->trainingStart = $start;
 		$this->template->trainingEnd = $end;
 		$this->template->trainingRemote = $isRemote;
@@ -197,25 +199,25 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Předběžné přihlášky';
 		$this->template->preliminaryApplications = $this->trainingApplications->getPreliminary();
-		$this->template->upcoming = $this->trainingDates->getPublicUpcoming();
+		$this->template->upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 	}
 
 
 	public function renderDefault(): void
 	{
-		$trainings = $this->trainings->getAllTrainings();
+		$trainings = $this->trainingDates->getAllTrainings();
 		$this->addApplications($trainings);
 
 		$this->template->pageTitle = 'Školení';
 		$this->template->trainings = $trainings;
 		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->trainingDates->getPublicUpcomingIds();
+		$this->template->upcomingIds = $this->upcomingTrainingDates->getPublicUpcomingIds();
 	}
 
 
 	public function renderPastWithPersonalData(): void
 	{
-		$trainings = $this->trainings->getPastWithPersonalData();
+		$trainings = $this->trainingDates->getPastWithPersonalData();
 		$this->addApplications($trainings);
 
 		$this->template->pageTitle = 'Minulá školení s osobními daty starší než ' . $this->dateTimeFormatter->localeDay($this->trainingDates->getDataRetentionDate());
@@ -224,15 +226,13 @@ class TrainingsPresenter extends BasePresenter
 
 
 	/**
-	 * @param Row[] $trainings
+	 * @param list<TrainingDate> $trainings
 	 */
 	private function addApplications(array $trainings): void
 	{
 		foreach ($trainings as $training) {
-			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
-			$training->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($training->dateId);
-			$training->validCount = count($training->applications);
-			$training->requiresAttention = false;
+			$training->setApplications($this->trainingApplications->getValidByDate($training->getId()));
+			$training->setCanceledApplications($this->trainingApplications->getCanceledPaidByDate($training->getId()));
 		}
 	}
 
@@ -258,10 +258,10 @@ class TrainingsPresenter extends BasePresenter
 				$this->redirect($this->getAction(), $dateId);
 			},
 			$this->request,
-			$this->training->trainingId,
+			$this->training->getTrainingId(),
 			$this->dateId,
-			$this->training->price,
-			$this->training->studentDiscount,
+			$this->training->getPrice(),
+			$this->training->getStudentDiscount(),
 		);
 	}
 
@@ -314,7 +314,7 @@ class TrainingsPresenter extends BasePresenter
 				$this->flashMessage($message, $type);
 				$this->redirect($this->getAction(), $this->redirectParam);
 			},
-			$this->training->start,
+			$this->training->getStart(),
 			$this->applicationIdsAllowedFiles,
 		);
 	}

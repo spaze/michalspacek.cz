@@ -7,7 +7,7 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use RuntimeException;
@@ -17,7 +17,7 @@ class TalksPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Talks $talks,
-		private readonly Dates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly VideoThumbnails $videoThumbnails,
 	) {
 		parent::__construct();
@@ -70,7 +70,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->slideNo = $slideNo;
 		$this->template->slides = $slides;
 		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($talk->ogImage !== null ? sprintf($talk->ogImage, $slideNo ?? 1) : null));
-		$this->template->upcomingTrainings = $this->trainingDates->getPublicUpcoming();
+		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->videoThumbnail = $this->videoThumbnails->getVideoThumbnail($talk)->setLazyLoad(count($slides) > 3);
 		$this->template->slidesPlatform = $talk->slidesHref ? SlidesPlatform::tryFromUrl($talk->slidesHref)?->getName() : null;
 	}

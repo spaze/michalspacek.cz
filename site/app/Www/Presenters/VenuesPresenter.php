@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Training\Dates;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
+use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
 
@@ -14,9 +14,9 @@ class VenuesPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
-		private readonly Dates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Venues $trainingVenues,
-		private readonly Trainings $trainings,
+		private readonly FreeSeats $freeSeats,
 	) {
 		parent::__construct();
 	}
@@ -28,6 +28,7 @@ class VenuesPresenter extends BasePresenter
 		if (!$venue) {
 			throw new BadRequestException("Where in the world is {$name}?");
 		}
+		$trainings = $this->upcomingTrainingDates->getPublicUpcomingAtVenue($venue->id);
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->name]);
 		$this->template->name = $venue->name;
@@ -42,22 +43,7 @@ class VenuesPresenter extends BasePresenter
 		$this->template->streetview = $venue->streetview;
 		$this->template->parking = $venue->parking;
 		$this->template->publicTransport = $venue->publicTransport;
-
-		$trainings = [];
-		foreach ($this->trainingDates->getPublicUpcoming() as $training) {
-			$dates = [];
-			foreach ($training->dates as $date) {
-				if ($date->venueId === $venue->id) {
-					$dates[] = $date;
-				}
-			}
-			if (!empty($dates)) {
-				$training->dates = $dates;
-				$trainings[] = $training;
-			}
-		}
-
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($trainings);
+		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyTraining($trainings);
 		$this->template->upcomingTrainings = $trainings;
 	}
 

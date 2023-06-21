@@ -5,7 +5,8 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
-use MichalSpacekCz\Training\Dates;
+use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
@@ -23,7 +24,8 @@ class TrainingApplicationAdminFormFactory
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly Applications $trainingApplications,
-		private readonly Dates $trainingDates,
+		private readonly TrainingDates $trainingDates,
+		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly Statuses $trainingStatuses,
 	) {
@@ -44,14 +46,14 @@ class TrainingApplicationAdminFormFactory
 		$this->addPaymentInfo($form);
 		$form->addSubmit('submit', 'Uložit');
 
-		$upcoming = $this->trainingDates->getPublicUpcoming();
+		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		$dates = [];
 		if ($application->dateId) {
 			$dates[$application->dateId] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($application->dateId));
 		}
 		if (isset($upcoming[$application->trainingAction])) {
-			foreach ($upcoming[$application->trainingAction]->dates as $date) {
-				$dates[$date->dateId] = $this->trainingDates->formatDateVenueForAdmin($date);
+			foreach ($upcoming[$application->trainingAction]->getDates() as $date) {
+				$dates[$date->getId()] = $this->trainingDates->formatDateVenueForAdmin($date);
 			}
 		}
 		$required = (bool)$dates;

@@ -1,4 +1,5 @@
 {varType int[] $upcomingIds}
+{varType array<int, MichalSpacekCz\Training\Dates\TrainingDate> $trainings}
 {varType \DateTime|null $now}
 {define #listItems, Nette\Database\Row[] $applications}
 	<tr class="summary" n:foreach="$applications as $application">
@@ -35,40 +36,40 @@
 <table id="statuses">
 	{var $dateLineDisplayed = false}
 	<tbody n:inner-foreach="$trainings as $training">
-	{var $upcoming = in_array($training->dateId, $upcomingIds)}
+	{var $upcoming = in_array($training->getId(), $upcomingIds)}
 	{if $order == 'desc'}
-		{var $dateLineCheck = $now && $training->start < $now}
+		{var $dateLineCheck = $now && $training->getStart() < $now}
 	{else}
-		{var $dateLineCheck = $now && $training->start > $now}
+		{var $dateLineCheck = $now && $training->getStart() > $now}
 		{if $dateLineCheck && $iterator->first}
 			{var $dateLineDisplayed = true}
 		{/if}
 	{/if}
-	<tr n:class="summary, $dateLineCheck && !$dateLineDisplayed ? dateLine, $training->status !== \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED ? lighter">
+	<tr n:class="summary, $dateLineCheck && !$dateLineDisplayed ? dateLine, $training->getStatus() !== \MichalSpacekCz\Training\Dates\TrainingDateStatus::Confirmed ? lighter">
 		{var $dateLineDisplayed = $dateLineCheck}
 		<td n:if="$order == 'desc'" class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
 		<td n:if="$order == 'asc'" class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 		<td class="dateCell">
 			<strong n:tag-if="$upcoming">
-				<small n:tag-if="!$upcoming && $now && $training->start > $now">
-					<a n:href="Trainings:date $training->dateId">{$training->start|localeIntervalDay:$training->end}</a>
+				<small n:tag-if="!$upcoming && $now && $training->getStart() > $now">
+					<a n:href="Trainings:date $training->getId()">{$training->getStart()|localeIntervalDay:$training->getEnd()}</a>
 				</small>
 			</strong>
-			<span n:if="$training->note" title="Poznámka: {$training->note}">{icon clipboard}</span>
-			<span n:if="$training->label" title="Label: {$training->label}">{icon asterisk-simple}</span>
+			<span n:if="$training->getNote()" title="Poznámka: {$training->getNote()}">{icon clipboard}</span>
+			<span n:if="$training->getLabel()" title="Label: {$training->getLabel()}">{icon asterisk-simple}</span>
 		</td>
-		<td class="iconCell" title="{$training->status}">
-			{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CREATED}{icon plus-circle}{/if}
-			{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CONFIRMED}{icon check-circle}{/if}
-			{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_TENTATIVE}{icon circle}{/if}
-			{if $training->status == \MichalSpacekCz\Training\Dates::STATUS_CANCELED}{icon times-circle}{/if}
+		<td class="iconCell" title="{$training->getStatus()->value}">
+			{if $training->getStatus() === \MichalSpacekCz\Training\Dates\TrainingDateStatus::Created}{icon plus-circle}{/if}
+			{if $training->getStatus() === \MichalSpacekCz\Training\Dates\TrainingDateStatus::Confirmed}{icon check-circle}{/if}
+			{if $training->getStatus() === \MichalSpacekCz\Training\Dates\TrainingDateStatus::Tentative}{icon circle}{/if}
+			{if $training->getStatus() === \MichalSpacekCz\Training\Dates\TrainingDateStatus::Canceled}{icon times-circle}{/if}
 		</td>
-		<td class="nameCell" data-date="{$training->dateId}">{$training->name}{if $training->public || $training->validCount > 0} ({$training->validCount}){/if}</td>
-		<td><small>{if $training->remote}{_messages.label.remote}{else}{$training->venueCity}{/if}{if !$training->public}, {$training->venueName}{/if}</small></td>
+		<td class="nameCell" data-date="{$training->getId()}">{$training->getName()}{if $training->isPublic() || $training->getValidApplicationsCount() > 0} ({$training->getValidApplicationsCount()}){/if}</td>
+		<td><small>{if $training->isRemote()}{_messages.label.remote}{else}{$training->getVenueCity()}{/if}{if !$training->isPublic()}, {$training->getVenueName()}{/if}</small></td>
 	</tr>
-	<tr id="date-{$training->dateId}" n:class="empty($training->requiresAttention) ? hidden">
+	<tr id="date-{$training->getId()}" n:class="empty($training->requiresAttention()) ? hidden">
 		<td colspan="5">
-			{if $training->applications || $training->canceledApplications}
+			{if $training->getApplications() || $training->getCanceledApplications()}
 				<table class="indent">
 					<thead>
 					<tr>
@@ -80,11 +81,11 @@
 						<th><small>Status</small></th>
 						<th><small title="Cena bez DPH">Cena</small></th>
 					</thead>
-					<tbody n:if="$training->applications">{include #listItems, applications: $training->applications}</tbody>
-					<tbody n:if="$training->canceledApplications" class="discarded">{include #listItems, applications: $training->canceledApplications}</tbody>
+					<tbody n:if="$training->getApplications()">{include #listItems, applications: $training->getApplications()}</tbody>
+					<tbody n:if="$training->getCanceledApplications()" class="discarded">{include #listItems, applications: $training->getCanceledApplications()}</tbody>
 				</table>
 			{else}
-				<span class="indent"><small>{if $training->public}Žádní přihlášení účastníci{else}Neznámý počet účastníků firemního školení{/if}</small></span>
+				<span class="indent"><small>{if $training->isPublic()}Žádní přihlášení účastníci{else}Neznámý počet účastníků firemního školení{/if}</small></span>
 			{/if}
 		</td>
 	</tr>

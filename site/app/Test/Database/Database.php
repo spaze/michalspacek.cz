@@ -12,6 +12,9 @@ class Database extends Explorer
 	/** @var array<string, int|string|null> */
 	private array $fetchResult = [];
 
+	/** @var mixed */
+	private mixed $fetchFieldResult = null;
+
 	/** @var array<string, string> */
 	private array $fetchPairsResult = [];
 
@@ -51,6 +54,22 @@ class Database extends Explorer
 	{
 		$row = Row::from($this->fetchResult);
 		return $row->count() > 0 ? $row : null;
+	}
+
+
+	public function setFetchFieldResult(mixed $fetchFieldResult): void
+	{
+		$this->fetchFieldResult = $fetchFieldResult;
+	}
+
+
+	/**
+	 * @param literal-string $sql
+	 * @param string ...$params
+	 */
+	public function fetchField(string $sql, ...$params): mixed
+	{
+		return $this->fetchFieldResult;
 	}
 
 

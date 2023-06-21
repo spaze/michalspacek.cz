@@ -1,3 +1,4 @@
+{varType array<int, MichalSpacekCz\Training\Dates\UpcomingTraining> $upcomingTrainings}
 <div class="widget">
 	<div class="header">
 		<a n:href=":Www:Homepage:"><img src="{='michal-spacek.jpg'|staticImageUrl}" width="50" height="50" alt="Michal Špaček" title="{_messages.label.tohomepage}"></a>
@@ -10,11 +11,11 @@
 	<p>{_messages.homepage.trainings}:</p>
 	{foreach $upcomingTrainings as $item}
 		<p>
-			<a n:href=":Www:Trainings:training $item[action]"><strong>{$item[name]}</strong></a><br>
+			<a n:href=":Www:Trainings:training $item->getAction()"><strong>{$item->getName()}</strong></a><br>
 			<small>
-				{foreach $item[dates] as $date}
-					{first}({/first}<strong>{if $date[tentative]}{$date[start]|localeMonth}{else}{$date[start]|localeIntervalDay:$date[end]}{/if}</strong>
-					{$date[venueCity]}{sep}, {/sep}{last}){/last}
+				{foreach $item->getDates() as $date}
+					{first}({/first}<strong>{if $date->isTentative()}{$date->getStart()|localeMonth}{else}{$date->getStart()|localeIntervalDay:$date->getEnd()}{/if}</strong>
+					{if $date->isRemote()}{_messages.label.remote}{else}{$date->getVenueCity()}{/if}{sep}, {/sep}{last}){/last}
 				{/foreach}
 			</small>
 		</p>

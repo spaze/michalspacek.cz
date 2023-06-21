@@ -1,19 +1,20 @@
+{varType array<int, MichalSpacekCz\Training\Dates\UpcomingTraining> $upcomingTrainings}
 <div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
 <ul class="vcalendar" id="training-dates">
 	{foreach $upcomingTrainings as $item}
 		<li class="vevent">
-			<a n:href=":Www:Trainings:training $item[action]" class="url"><strong class="summary description">{$item[name]}</strong></a>
+			<a n:href=":Www:Trainings:training $item->getAction()" class="url"><strong class="summary description">{$item->getName()}</strong></a>
 			{icon calendar class => calendar}
-			<small n:foreach="$item[dates] as $date" class="date">
+			<small n:foreach="$item->getDates() as $date" class="date">
 				<strong>
-					{if $date[tentative]}
-						{$date[start]|localeMonth}
+					{if $date->isTentative()}
+						{$date->getStart()|localeMonth}
 					{else}
-						<abbr title="{$date[start]|date:DateTime::ISO8601}" class="dtstart">{$date[start]|localeIntervalDay:$date[end]}</abbr>
-						<abbr title="{$date[end]|date:DateTime::ISO8601}" class="dtend"></abbr>
+						<abbr title="{$date->getStart()|date:DateTime::ISO8601}" class="dtstart">{$date->getStart()|localeIntervalDay:$date->getEnd()}</abbr>
+						<abbr title="{$date->getEnd()|date:DateTime::ISO8601}" class="dtend"></abbr>
 					{/if}
 				</strong>
-				<span class="location">{if $date[remote]}{_messages.label.remote}{else}{$date[venueCity]}{/if}</span><span n:if="$date[label]" class="label">{$date[label]}</span>{sep}{if !$date[label]}<span class="separator">, </span>{/if}{/sep}
+				<span class="location">{if $date->isRemote()}{_messages.label.remote}{else}{$date->getVenueCity()}{/if}</span><span n:if="$date->getLabel()" class="label">{$date->getLabel()}</span>{sep}{if !$date->getLabel()}<span class="separator">, </span>{/if}{/sep}
 			</small>
 		</li>
 	{/foreach}

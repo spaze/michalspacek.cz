@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use Exception;
+use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\UI\Form;
@@ -17,6 +18,7 @@ class DeletePersonalDataFormFactory
 		private readonly Explorer $database,
 		private readonly FormFactory $factory,
 		private readonly Trainings $trainings,
+		private readonly TrainingDates $trainingDates,
 		private readonly TrainingFiles $files,
 	) {
 	}
@@ -29,7 +31,10 @@ class DeletePersonalDataFormFactory
 		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
 			$this->database->beginTransaction();
 			try {
-				$pastIds = array_keys($this->trainings->getPastWithPersonalData());
+				$pastIds = [];
+				foreach ($this->trainingDates->getPastWithPersonalData() as $date) {
+					$pastIds[] = $date->getId();
+				}
 				$this->trainings->deletePersonalData($pastIds);
 				$this->files->deleteFiles($pastIds);
 				$this->database->commit();

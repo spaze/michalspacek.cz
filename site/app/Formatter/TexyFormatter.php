@@ -5,8 +5,6 @@ namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
-use MichalSpacekCz\DateTime\DateTimeFormatter;
-use MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\Training\Prices;
 use Nette\Database\Row;
 use Nette\Utils\Html;
@@ -16,8 +14,6 @@ use Texy\Texy;
 
 class TexyFormatter
 {
-
-	public const TRAINING_DATE_PLACEHOLDER = 'TRAINING_DATE';
 
 	private ?Texy $texy = null;
 
@@ -44,13 +40,15 @@ class TexyFormatter
 	private int $topHeading = 1;
 
 
+	/**
+	 * @param list<TexyFormatterPlaceholder> $placeholders
+	 */
 	public function __construct(
 		private readonly CacheInterface $cache,
 		private readonly Translator $translator,
-		private readonly Dates $trainingDates,
 		private readonly Prices $prices,
-		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly TexyPhraseHandler $phraseHandler,
+		private readonly array $placeholders,
 		string $staticRoot,
 		string $imagesRoot,
 		string $locationRoot,
@@ -183,9 +181,10 @@ class TexyFormatter
 	 */
 	private function replace(Html $result): Html
 	{
-		$replacements = [
-			self::TRAINING_DATE_PLACEHOLDER => [$this, 'replaceTrainingDate'],
-		];
+		$replacements = [];
+		foreach ($this->placeholders as $placeholder) {
+			$replacements[$placeholder::getPlaceholder()] = $placeholder->replace(...);
+		}
 
 		$result = Strings::replace(
 			(string)$result,
@@ -195,35 +194,6 @@ class TexyFormatter
 			},
 		);
 		return Html::el()->setHtml($result);
-	}
-
-
-	/**
-	 * @param string $name
-	 * @return string
-	 * @throws InvalidArgument
-	 */
-	private function replaceTrainingDate(string $name): string
-	{
-		$upcoming = $this->trainingDates->getPublicUpcoming();
-		$dates = [];
-		if (!isset($upcoming[$name]) || empty($upcoming[$name]['dates'])) {
-			$dates[] = $this->translator->translate('messages.trainings.nodateyet.short');
-		} else {
-			foreach ($upcoming[$name]['dates'] as $date) {
-				$trainingDate = ($date->tentative ? $this->dateTimeFormatter->localeIntervalMonth($date->start, $date->end) : $this->dateTimeFormatter->localeIntervalDay($date->start, $date->end));
-				$el = Html::el()
-					->addHtml(Html::el('strong')->setText($trainingDate))
-					->addHtml(Html::el()->setText(' '))
-					->addHtml(Html::el()->setText($date->remote ? $this->translator->translate('messages.label.remote') : $date->venueCity));
-				$dates[] = $el;
-			}
-		}
-		return sprintf(
-			'%s: %s',
-			count($dates) > 1 ? $this->translator->translate('messages.trainings.nextdates') : $this->translator->translate('messages.trainings.nextdate'),
-			implode(', ', $dates),
-		);
 	}
 
 
