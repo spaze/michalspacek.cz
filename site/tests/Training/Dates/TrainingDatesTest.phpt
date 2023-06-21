@@ -67,7 +67,7 @@ class TrainingDatesFormValidatorTest extends TestCase
 				'hasCustomStudentDiscount' => false,
 				'start' => new DateTime('2020-02-05 04:03:02'),
 				'end' => new DateTime('2020-02-07 04:03:02'),
-				'labelJson' => '{"cs_CZ": "lej-bl", "en_US": "la-bel"}',
+				'labelJson' => null,
 				'public' => true,
 				'status' => 'CONFIRMED',
 				'remote' => true,
@@ -169,6 +169,8 @@ class TrainingDatesFormValidatorTest extends TestCase
 		Assert::count(2, $dates);
 		Assert::same(10, $dates[0]->getId());
 		Assert::same(20, $dates[1]->getId());
+		Assert::same('lej-bl', $dates[0]->getLabel());
+		Assert::null($dates[1]->getLabel());
 	}
 
 

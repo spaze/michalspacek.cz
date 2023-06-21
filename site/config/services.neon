@@ -84,7 +84,6 @@ services:
 	- MichalSpacekCz\Training\CompanyTrainings
 	- MichalSpacekCz\Training\Dates\TrainingDateStatuses
 	- MichalSpacekCz\Training\Dates\TrainingDateFactory(texyFormatter: @texyFormatterNoPlaceholders)
-	- MichalSpacekCz\Training\Dates\TrainingDateLabel
 	- MichalSpacekCz\Training\Dates\TrainingDates
 	- MichalSpacekCz\Training\Dates\TrainingDatesFormValidator
 	- MichalSpacekCz\Training\Dates\UpcomingTrainingDates

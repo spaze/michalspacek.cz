@@ -8,13 +8,13 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Prices;
 use Nette\Database\Row;
+use Nette\Utils\Json;
 
 class TrainingDateFactory
 {
 
 	public function __construct(
 		private readonly FreeSeats $freeSeats,
-		private readonly TrainingDateLabel $dateLabel,
 		private readonly Translator $translator,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Prices $prices,
@@ -33,7 +33,7 @@ class TrainingDateFactory
 			$this->freeSeats->lastFreeSeats($row),
 			$row->start,
 			$row->end,
-			$this->dateLabel->decodeLabel($row->labelJson),
+			$row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null,
 			$row->labelJson,
 			(bool)$row->public,
 			$status,
