@@ -60,7 +60,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
 		$this->template->upcomingTrainings = $upcomingTrainings;
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($upcomingTrainings);
+		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyTraining($upcomingTrainings);
 		$this->template->discontinued = $this->trainings->getAllDiscontinued();
 	}
 

@@ -8,6 +8,7 @@ use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
+use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Trainings;
 
 class HomepagePresenter extends BasePresenter
@@ -20,6 +21,7 @@ class HomepagePresenter extends BasePresenter
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Trainings $trainings,
 		private readonly CompanyTrainings $companyTrainings,
+		private readonly FreeSeats $freeSeats,
 	) {
 		parent::__construct();
 	}
@@ -36,7 +38,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->upcomingTrainings = $upcomingTrainings;
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
 		$this->template->interviews = $this->interviews->getAll(5);
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($upcomingTrainings);
+		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyTraining($upcomingTrainings);
 		$this->template->discontinued = $this->trainings->getAllDiscontinued();
 	}
 

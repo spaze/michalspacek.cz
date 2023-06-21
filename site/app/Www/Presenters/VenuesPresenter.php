@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Venues;
 use Nette\Application\BadRequestException;
 
@@ -16,7 +16,7 @@ class VenuesPresenter extends BasePresenter
 		private readonly TexyFormatter $texyFormatter,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Venues $trainingVenues,
-		private readonly Trainings $trainings,
+		private readonly FreeSeats $freeSeats,
 	) {
 		parent::__construct();
 	}
@@ -43,7 +43,7 @@ class VenuesPresenter extends BasePresenter
 		$this->template->streetview = $venue->streetview;
 		$this->template->parking = $venue->parking;
 		$this->template->publicTransport = $venue->publicTransport;
-		$this->template->lastFreeSeats = $this->trainings->lastFreeSeatsAnyTraining($trainings);
+		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyTraining($trainings);
 		$this->template->upcomingTrainings = $trainings;
 	}
 

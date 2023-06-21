@@ -143,23 +143,6 @@ class Trainings
 
 
 	/**
-	 * @param list<UpcomingTraining>|UpcomingTraining[] $trainings
-	 * @return bool
-	 */
-	public function lastFreeSeatsAnyTraining(array $trainings): bool
-	{
-		$lastFreeSeats = false;
-		foreach ($trainings as $training) {
-			if ($this->freeSeats->lastFreeSeatsAnyDate($training->getDates())) {
-				$lastFreeSeats = true;
-				break;
-			}
-		}
-		return $lastFreeSeats;
-	}
-
-
-	/**
 	 * Get all training names without custom training names.
 	 *
 	 * @return Row[]

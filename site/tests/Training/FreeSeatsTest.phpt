@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training;
 use DateTime;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
+use MichalSpacekCz\Training\Dates\UpcomingTraining;
 use Nette\Database\Row;
 use Tester\Assert;
 use Tester\TestCase;
@@ -58,10 +59,26 @@ class FreeSeatsTest extends TestCase
 	}
 
 
+	public function testLastFreeSeatsAnyTraining(): void
+	{
+		Assert::false($this->freeSeats->lastFreeSeatsAnyTraining([]));
+		$training1 = new UpcomingTraining('action-1', 'name-1');
+		$training1->addDate($this->buildTrainingDate(false));
+		$training1->addDate($this->buildTrainingDate(false));
+		$training1->addDate($this->buildTrainingDate(false));
+		$training2 = new UpcomingTraining('action-2', 'name-2');
+		$training2->addDate($this->buildTrainingDate(false));
+		$training2->addDate($this->buildTrainingDate(true));
+		$training2->addDate($this->buildTrainingDate(false));
+		Assert::true($this->freeSeats->lastFreeSeatsAnyTraining([$training1, $training2]));
+	}
+
+
 	private function buildTrainingDate(bool $lastFreeSeats): TrainingDate
 	{
+		static $id = 1;
 		return new TrainingDate(
-			1,
+			$id++,
 			'',
 			1,
 			true,
