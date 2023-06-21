@@ -205,7 +205,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
-		$trainings = $this->trainings->getAllTrainings();
+		$trainings = $this->trainingDates->getAllTrainings();
 		$this->addApplications($trainings);
 
 		$this->template->pageTitle = 'Školení';
@@ -217,7 +217,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function renderPastWithPersonalData(): void
 	{
-		$trainings = $this->trainings->getPastWithPersonalData();
+		$trainings = $this->trainingDates->getPastWithPersonalData();
 		$this->addApplications($trainings);
 
 		$this->template->pageTitle = 'Minulá školení s osobními daty starší než ' . $this->dateTimeFormatter->localeDay($this->trainingDates->getDataRetentionDate());
@@ -226,15 +226,13 @@ class TrainingsPresenter extends BasePresenter
 
 
 	/**
-	 * @param Row[] $trainings
+	 * @param list<TrainingDate> $trainings
 	 */
 	private function addApplications(array $trainings): void
 	{
 		foreach ($trainings as $training) {
-			$training->applications = $this->trainingApplications->getValidByDate($training->dateId);
-			$training->canceledApplications = $this->trainingApplications->getCanceledPaidByDate($training->dateId);
-			$training->validCount = count($training->applications);
-			$training->requiresAttention = false;
+			$training->setApplications($this->trainingApplications->getValidByDate($training->getId()));
+			$training->setCanceledApplications($this->trainingApplications->getCanceledPaidByDate($training->getId()));
 		}
 	}
 

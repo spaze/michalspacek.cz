@@ -5,8 +5,6 @@ namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Training\Dates\TrainingDateLabel;
-use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTraining;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
@@ -18,16 +16,11 @@ class Trainings
 	/** @var array<int, Row> */
 	private array $trainingsById = [];
 
-	/** @var Row[] */
-	private ?array $pastWithPersonalData = null;
-
 
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly TrainingDates $trainingDates,
 		private readonly FreeSeats $freeSeats,
-		private readonly TrainingDateLabel $trainingDateLabel,
 		private readonly Translator $translator,
 	) {
 	}
@@ -163,49 +156,6 @@ class Trainings
 			}
 		}
 		return $lastFreeSeats;
-	}
-
-
-	/**
-	 * @return Row[]
-	 */
-	public function getAllTrainings(): array
-	{
-		$result = $this->database->fetchAll(
-			'SELECT
-				d.id_date AS dateId,
-				a.action,
-				t.name,
-				d.start,
-				d.end,
-				d.label AS labelJson,
-				d.public,
-				s.status,
-				d.remote,
-				v.href AS venueHref,
-				v.name AS venueName,
-				v.name_extended AS venueNameExtended,
-				v.city AS venueCity,
-				d.note
-			FROM training_dates d
-				JOIN trainings t ON d.key_training = t.id_training
-				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
-				JOIN training_date_status s ON d.key_status = s.id_status
-				JOIN training_url_actions ta ON t.id_training = ta.key_training
-				JOIN url_actions a ON ta.key_url_action = a.id_url_action
-				JOIN languages l ON a.key_language = l.id_language
-			WHERE
-				l.language = ?
-			ORDER BY
-				d.start DESC',
-			$this->translator->getDefaultLocale(),
-		);
-
-		foreach ($result as $training) {
-			$this->texyFormatter->formatTraining($training);
-			$training->label = $this->trainingDateLabel->decodeLabel($training->labelJson);
-		}
-		return $result;
 	}
 
 
@@ -370,68 +320,6 @@ class Trainings
 			'href' => $row->href,
 			'trainings' => $trainings,
 		]);
-	}
-
-
-	/**
-	 * @return Row[]
-	 */
-	public function getPastWithPersonalData(): array
-	{
-		if ($this->pastWithPersonalData !== null) {
-			return $this->pastWithPersonalData;
-		}
-
-		$result = $this->database->query(
-			'SELECT DISTINCT
-				d.id_date AS dateId,
-				ua.action,
-				t.name,
-				d.start,
-				d.end,
-				d.label AS labelJson,
-				d.public,
-				s.status,
-				d.remote,
-				tv.href AS venueHref,
-				tv.name AS venueName,
-				tv.name_extended AS venueNameExtended,
-				tv.city AS venueCity,
-				d.note
-			FROM training_dates d
-				JOIN trainings t ON d.key_training = t.id_training
-				JOIN training_applications ta ON d.id_date = ta.key_date
-				LEFT JOIN training_venues tv ON d.key_venue = tv.id_venue
-				JOIN training_date_status s ON d.key_status = s.id_status
-				JOIN training_url_actions tua ON t.id_training = tua.key_training
-				JOIN url_actions ua ON tua.key_url_action = ua.id_url_action
-				JOIN languages l ON ua.key_language = l.id_language
-			WHERE
-				l.language = ?
-				AND d.end < ?
-				AND (
-					ta.name IS NOT NULL OR
-					ta.email IS NOT NULL OR
-					ta.company IS NOT NULL OR
-					ta.street IS NOT NULL OR
-					ta.city IS NOT NULL OR
-					ta.zip IS NOT NULL OR
-					ta.country IS NOT NULL OR
-					ta.company_id IS NOT NULL OR
-					ta.company_tax_id IS NOT NULL OR
-					ta.note IS NOT NULL
-				)
-			ORDER BY
-				d.start DESC',
-			$this->translator->getDefaultLocale(),
-			$this->trainingDates->getDataRetentionDate(),
-		)->fetchAssoc('dateId->');
-
-		foreach ($result as $training) {
-			$this->texyFormatter->formatTraining($training);
-			$training->label = $this->trainingDateLabel->decodeLabel($training->labelJson);
-		}
-		return $this->pastWithPersonalData = $result;
 	}
 
 

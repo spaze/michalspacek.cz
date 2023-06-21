@@ -16,6 +16,9 @@ class TrainingDates
 
 	private const DATA_RETENTION = 30;
 
+	/** @var list<TrainingDate>|null */
+	private ?array $pastWithPersonalData = null;
+
 
 	public function __construct(
 		private readonly Explorer $database,
@@ -246,6 +249,64 @@ class TrainingDates
 	/**
 	 * @return list<TrainingDate>
 	 */
+	public function getAllTrainings(): array
+	{
+		$result = $this->database->fetchAll(
+			'SELECT
+				d.id_date AS dateId,
+				t.id_training AS trainingId,
+				a.action,
+				t.name,
+				COALESCE(d.price, t.price) AS price,
+				COALESCE(d.student_discount, t.student_discount) AS studentDiscount,
+				d.price IS NOT NULL AS hasCustomPrice,
+				d.student_discount IS NOT NULL AS hasCustomStudentDiscount,
+				d.start,
+				d.end,
+				d.label AS labelJson,
+				d.public,
+				s.status,
+				d.remote,
+				d.remote_url AS remoteUrl,
+				d.remote_notes AS remoteNotes,
+				v.id_venue AS venueId,
+				v.action AS venueAction,
+				v.href AS venueHref,
+				v.name AS venueName,
+				v.name_extended AS venueNameExtended,
+				v.address AS venueAddress,
+				v.city AS venueCity,
+				v.description AS venueDescription,
+				NULL AS cooperationId,
+				NULL AS cooperationDescription,
+				d.video_href AS videoHref,
+				d.feedback_href AS feedbackHref,
+				d.note
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				LEFT JOIN training_venues v ON d.key_venue = v.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
+				JOIN training_url_actions ta ON t.id_training = ta.key_training
+				JOIN url_actions a ON ta.key_url_action = a.id_url_action
+				JOIN languages l ON a.key_language = l.id_language
+			WHERE
+				l.language = ?
+			ORDER BY
+				d.start DESC',
+			$this->translator->getDefaultLocale(),
+		);
+
+		$dates = [];
+		foreach ($result as $row) {
+			$dates[] = $this->trainingDateFactory->get($row);
+		}
+		return $dates;
+	}
+
+
+	/**
+	 * @return list<TrainingDate>
+	 */
 	public function getAllTrainingsInterval(string $from, string $to = ''): array
 	{
 		$result = $this->database->fetchAll(
@@ -301,6 +362,84 @@ class TrainingDates
 			$dates[] = $this->trainingDateFactory->get($row);
 		}
 		return $dates;
+	}
+
+
+	/**
+	 * @return list<TrainingDate>
+	 */
+	public function getPastWithPersonalData(): array
+	{
+		if ($this->pastWithPersonalData !== null) {
+			return $this->pastWithPersonalData;
+		}
+
+		$result = $this->database->fetchAll(
+			'SELECT DISTINCT
+				d.id_date AS dateId,
+				t.id_training AS trainingId,
+				ua.action,
+				t.name,
+				COALESCE(d.price, t.price) AS price,
+				COALESCE(d.student_discount, t.student_discount) AS studentDiscount,
+				d.price IS NOT NULL AS hasCustomPrice,
+				d.student_discount IS NOT NULL AS hasCustomStudentDiscount,
+				d.start,
+				d.end,
+				d.label AS labelJson,
+				d.public,
+				s.status,
+				d.remote,
+				d.remote_url AS remoteUrl,
+				d.remote_notes AS remoteNotes,
+				tv.id_venue AS venueId,
+				tv.action AS venueAction,
+				tv.href AS venueHref,
+				tv.name AS venueName,
+				tv.name_extended AS venueNameExtended,
+				tv.address AS venueAddress,
+				tv.city AS venueCity,
+				tv.description AS venueDescription,
+				NULL AS cooperationId,
+				NULL AS cooperationDescription,
+				d.video_href AS videoHref,
+				d.feedback_href AS feedbackHref,
+				d.note
+			FROM training_dates d
+				JOIN trainings t ON d.key_training = t.id_training
+				JOIN training_applications ta ON d.id_date = ta.key_date
+				LEFT JOIN training_venues tv ON d.key_venue = tv.id_venue
+				JOIN training_date_status s ON d.key_status = s.id_status
+				JOIN training_url_actions tua ON t.id_training = tua.key_training
+				JOIN url_actions ua ON tua.key_url_action = ua.id_url_action
+				JOIN languages l ON ua.key_language = l.id_language
+			WHERE
+				l.language = ?
+				AND d.end < ?
+				AND (
+					ta.name IS NOT NULL OR
+					ta.email IS NOT NULL OR
+					ta.company IS NOT NULL OR
+					ta.street IS NOT NULL OR
+					ta.city IS NOT NULL OR
+					ta.zip IS NOT NULL OR
+					ta.country IS NOT NULL OR
+					ta.company_id IS NOT NULL OR
+					ta.company_tax_id IS NOT NULL OR
+					ta.note IS NOT NULL
+				)
+			ORDER BY
+				d.start DESC',
+			$this->translator->getDefaultLocale(),
+			$this->getDataRetentionDate(),
+		);
+
+		$dates = [];
+		foreach ($result as $row) {
+			$date = $this->trainingDateFactory->get($row);
+			$dates[] = $date;
+		}
+		return $this->pastWithPersonalData = $dates;
 	}
 
 

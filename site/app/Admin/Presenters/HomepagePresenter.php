@@ -10,7 +10,6 @@ use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Mails;
-use MichalSpacekCz\Training\Trainings;
 
 class HomepagePresenter extends BasePresenter
 {
@@ -24,7 +23,6 @@ class HomepagePresenter extends BasePresenter
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Certificates $certificates,
-		private readonly Trainings $trainings,
 	) {
 		parent::__construct();
 	}
@@ -55,7 +53,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->certificates = $certificates = $this->certificates->getNewest();
 		$this->template->certificatesNeedAttention = $this->certsNeedAttention($certificates);
 		[$this->template->preliminaryTotal, $this->template->preliminaryDateSet] = $this->trainingApplications->getPreliminaryCounts();
-		$this->template->pastWithPersonalData = count($this->trainings->getPastWithPersonalData());
+		$this->template->pastWithPersonalData = count($this->trainingDates->getPastWithPersonalData());
 	}
 
 

@@ -1,3 +1,4 @@
+{varType array<int, MichalSpacekCz\Training\Dates\TrainingDate> $dates}
 {define #form}
 {form application class => aligned}
 <fieldset id="{_html.id.errors}" n:if="$form->hasErrors()">
@@ -120,22 +121,22 @@
 <h2>{if count($dates) > 1}{_messages.trainings.date.more}{else}{_messages.trainings.date.one}{/if}</h2>
 <div n:foreach="$dates as $date" class="vevent">
 	<p>
-		<strong>{if $date->tentative}{$date->start|localeMonth}{else}{$date->start|localeIntervalDay:$date->end}{/if}</strong>
-		<span class="summary">{if $date->remote}<span class="location">{_messages.label.remote}</span>{else}{$date->venueCity}{/if}</span>,
-		<abbr title="{$date->start|date:DateTime::ISO8601}" class="dtstart">{$date->start|date:'H:i'}</abbr> &ndash; <abbr title="{$date->end|date:DateTime::ISO8601}" class="dtend">{$date->end|date:'H:i'}</abbr>{if !$date->remote},
+		<strong>{if $date->isTentative()}{$date->getStart()|localeMonth}{else}{$date->getStart()|localeIntervalDay:$date->getEnd()}{/if}</strong>
+		<span class="summary">{if $date->isRemote()}<span class="location">{_messages.label.remote}</span>{else}{$date->getVenueCity()}{/if}</span>,
+		<abbr title="{$date->getStart()|date:DateTime::ISO8601}" class="dtstart">{$date->getStart()|date:'H:i'}</abbr> &ndash; <abbr title="{$date->getEnd()|date:DateTime::ISO8601}" class="dtend">{$date->getEnd()|date:'H:i'}</abbr>{if !$date->isRemote()},
 		{_messages.trainings.lunchbreak}{/if}
-		<small n:if="$date->label" class="label">{$date->label}</small>
-		<small>(<a href="#{_html.id.application}" data-id="{$date->dateId}" class="url">{_messages.label.signup}</a> {_messages.trainings.signupforpreposition} <span class="description">{_messages.trainings.training|format:$title}</span>)</small>
-		{if $date->tentative}
+		<small n:if="$date->getLabel()" class="label">{$date->getLabel()}</small>
+		<small>(<a href="#{_html.id.application}" data-id="{$date->getId()}" class="url">{_messages.label.signup}</a> {_messages.trainings.signupforpreposition} <span class="description">{_messages.trainings.training|format:$title}</span>)</small>
+		{if $date->isTentative()}
 			<br><small>{_messages.trainings.tentativedate|format}</small>
 		{else}
 			<br><small>{_messages.trainings.extendedtime}</small>
 		{/if}
-		{if $date->cooperationDescription}<br><small>{$date->cooperationDescription}</small>{/if}
+		{if $date->getCooperationDescription()}<br><small>{$date->getCooperationDescription()}</small>{/if}
 	</p>
 	<div class="indent">
-	<p n:if="$date->price">{icon coins} {_messages.trainings.price|format:$date->price->getPriceWithCurrency(), $date->price->getPriceVatWithCurrency()}{if $date->studentDiscount}, {_messages.trainings.studentdiscount|format:$date->studentDiscount}{/if}</p>
-	{if $date->remote}
+	<p n:if="$date->getPrice()">{icon coins} {_messages.trainings.price|format:$date->getPrice()->getPriceWithCurrency(), $date->getPrice()->getPriceVatWithCurrency()}{if $date->getStudentDiscount()}, {_messages.trainings.studentdiscount|format:$date->getStudentDiscount()}{/if}</p>
+	{if $date->isRemote()}
 		<p>{icon bulb-off} {_messages.trainings.remoteindividualqa}</p>
 		<p>
 			{_messages.trainings.remotedescription.1}
@@ -143,10 +144,10 @@
 		</p>
 	{else}
 		<p class="location vcard">{icon location} <strong>
-			<a n:href=":Www:Venues:venue $date->venueAction" class="fn org">{$date->venueName}</a>{if $date->venueNameExtended}, {$date->venueNameExtended}{/if},
-			<span class="adr"><span class="street-address">{$date->venueAddress}</span>, <span class="locality">{$date->venueCity}</span></span>
+			<a n:href=":Www:Venues:venue $date->getVenueAction()" class="fn org">{$date->getVenueName()}</a>{if $date->getVenueNameExtended()}, {$date->getVenueNameExtended()}{/if},
+			<span class="adr"><span class="street-address">{$date->getVenueAddress()}</span>, <span class="locality">{$date->getVenueCity()}</span></span>
 		</strong></p>
-		{if $date->venueDescription}<p>{$date->venueDescription}</p>{/if}
+		{if $date->getVenueDescription()}<p>{$date->getVenueDescription()}</p>{/if}
 	{/if}
 	</div>
 </div>
