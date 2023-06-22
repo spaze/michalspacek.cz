@@ -71,9 +71,8 @@ class SecurityHeaders
 
 	public function sendHeaders(CspValues $cspValues = CspValues::Specific): void
 	{
-		if ($cspValues === CspValues::Specific) {
-			/** @var Presenter $presenter */
-			$presenter = $this->application->getPresenter();
+		$presenter = $this->application->getPresenter();
+		if ($cspValues === CspValues::Specific && $presenter instanceof Presenter) {
 			$actionName = $presenter->getAction(true);
 		} else {
 			$actionName = $this->contentSecurityPolicy->getDefaultKey();
