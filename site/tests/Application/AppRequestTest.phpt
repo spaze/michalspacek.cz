@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application;
 
 use DateTime;
+use Exception;
 use Nette\Application\Request;
 use Tester\Assert;
 use Tester\TestCase;
@@ -58,6 +59,52 @@ class AppRequestTest extends TestCase
 		$request = new Request('foo');
 		$request->setParameters(['request' => $original]);
 		Assert::same($original, $this->appRequest->getOriginalRequest($request));
+	}
+
+
+	/**
+	 * @throws \MichalSpacekCz\ShouldNotHappenException Not an exception
+	 */
+	public function testGetExceptionNoException(): void
+	{
+		$this->appRequest->getException(new Request('foo'));
+	}
+
+
+	/**
+	 * @throws \MichalSpacekCz\ShouldNotHappenException Not an exception
+	 */
+	public function testGetExceptionNotAnException(): void
+	{
+		$request = new Request('foo');
+		$request->setParameters([
+			'exception' => null,
+		]);
+		$this->appRequest->getException($request);
+	}
+
+
+	/**
+	 * @throws \MichalSpacekCz\ShouldNotHappenException Not an exception
+	 */
+	public function testGetExceptionInvalidException(): void
+	{
+		$request = new Request('foo');
+		$request->setParameters([
+			'exception' => new DateTime(),
+		]);
+		$this->appRequest->getException($request);
+	}
+
+
+	public function testGetException(): void
+	{
+		$e = new Exception();
+		$request = new Request('foo');
+		$request->setParameters([
+			'exception' => $e,
+		]);
+		Assert::same($e, $this->appRequest->getException($request));
 	}
 
 }
