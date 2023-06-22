@@ -3,11 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use MichalSpacekCz\Application\AppRequest;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound;
-use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
 use Nette\Http\Url;
 
@@ -27,6 +26,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	public function __construct(
 		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 		private readonly FourOhFourButFound $fourOhFourButFound,
+		private readonly AppRequest $appRequest,
 	) {
 		parent::__construct();
 	}
@@ -65,15 +65,8 @@ class ErrorPresenter extends BaseErrorPresenter
 	 */
 	protected function getLocaleLinkAction(): string
 	{
-		$request = $this->getRequest();
-		if (!$request) {
-			throw new ShouldNotHappenException('Request should be set before this method is called in UI\Presenter::run()');
-		}
-		$requestParam = $request->getParameter('request');
-		if (!$requestParam) {
-			throw new InvalidLinkException('No request');
-		}
-		return $requestParam->getPresenterName() . ':' . $requestParam->getParameter(self::ACTION_KEY);
+		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
+		return $requestParam->getPresenterName() . ':' . $requestParam->getParameter(self::ActionKey);
 	}
 
 
@@ -84,11 +77,8 @@ class ErrorPresenter extends BaseErrorPresenter
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		$request = $this->getRequest();
-		if (!$request) {
-			throw new ShouldNotHappenException('Request should be set before this method is called in UI\Presenter::run()');
-		}
-		return $this->localeLinkGenerator->defaultParams($request->getParameter('request')->getParameters());
+		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
+		return $this->localeLinkGenerator->defaultParams($requestParam->getParameters());
 	}
 
 }
