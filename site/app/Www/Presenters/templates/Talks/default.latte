@@ -11,7 +11,7 @@
 </ul>
 <h2>{_messages.label.upcomingtalks}</h2>
 <p n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
-	{include #itemTalk}
+	{include "common/itemTalk.latte", talk: $talk}
 </p>
 <p n:if="$upcomingTalks">{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
 <p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
