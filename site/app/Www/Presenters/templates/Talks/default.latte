@@ -10,11 +10,14 @@
 {/foreach}
 </ul>
 <h2>{_messages.label.upcomingtalks}</h2>
-<p n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
-	{include "common/itemTalk.latte", talk: $talk}
-</p>
-<p n:if="$upcomingTalks">{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
-<p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
+{if $upcomingTalks}
+	<p n:foreach="$upcomingTalks as $talk">
+		{include "common/itemTalk.latte", talk: $talk}
+	</p>
+	<p>{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
+{else}
+	<p>{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
+{/if}
 <h2>{_messages.label.pasttalks}</h2>
 <p>
 	{_messages.talks.wastalking|format:'link:Www:Talks:talk technicke-chyby-vas-pripravi-o-penize-webtop100', 'link:Www:Talks:talk hash-store-profit-passwords', 'link:Www:Talks:talk the-problem-with-the-real-world-passwords', 'link:Www:Talks:talk i-forgot-my-password-passwords', 'link:Www:Talks:talk disclosing-password-hashing-policies-passwords', 'link:Www:Talks:talk identitu-byste-neukradli-identity-management'}

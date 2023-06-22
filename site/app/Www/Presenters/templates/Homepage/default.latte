@@ -25,11 +25,14 @@
 {/foreach}
 </ul>
 <h3>{_messages.label.upcomingtalks}</h3>
-<p class="indent" n:if="$upcomingTalks" n:foreach="$upcomingTalks as $talk">
-	{include "../Talks/common/itemTalk.latte", talk: $talk}
-</p>
-<p n:if="$upcomingTalks">{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
-<p n:if="!$upcomingTalks">{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
+{if $upcomingTalks}
+	<p class="indent" n:foreach="$upcomingTalks as $talk">
+		{include "../Talks/common/itemTalk.latte", talk: $talk}
+	</p>
+	<p>{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
+{else}
+	<p>{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
+{/if}
 <h3>{_messages.label.pasttalks}</h3>
 <p class="indent" n:foreach="$talks as $talk">
 	{include "../Talks/common/itemTalk.latte", talk: $talk}
