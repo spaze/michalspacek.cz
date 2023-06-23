@@ -31,6 +31,9 @@ class NoOpTranslator extends Translator
 	}
 
 
+	/**
+	 * @param string $message
+	 */
 	public function translate($message, ...$parameters): string
 	{
 		return $message;
