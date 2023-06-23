@@ -33,6 +33,7 @@ class AlgorithmAttributesFactory
 			'outer' => Expect::listOf(Expect::string()),
 			'params' => Expect::arrayOf(Expect::anyOf(Expect::string(), Expect::int()), Expect::string()),
 		]);
+		/** @var object{inner:list<string>|null, outer:list<string>|null, params:array<string, string>|null} $data */
 		$data = $this->schemaProcessor->process($schema, $decoded);
 		return new AlgorithmAttributes($data->inner, $data->outer, $data->params);
 	}
