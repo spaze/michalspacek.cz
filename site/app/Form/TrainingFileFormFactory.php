@@ -7,7 +7,6 @@ use DateTimeInterface;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Application\UI\Form;
 use Nette\Utils\Html;
-use stdClass;
 
 class TrainingFileFormFactory
 {
@@ -30,7 +29,8 @@ class TrainingFileFormFactory
 		$form = $this->factory->create();
 		$form->addUpload('file', 'Soubor:');
 		$form->addSubmit('submit', 'Přidat');
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
+			$values = $form->getValues();
 			if ($values->file->isOk()) {
 				$filename = $this->trainingFiles->addFile($trainingStart, $values->file, $applicationIdsAllowedFiles);
 				$message = Html::el()->setText('Soubor ')

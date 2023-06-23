@@ -7,7 +7,6 @@ use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\Form;
 use Nette\Security\User;
-use stdClass;
 
 class ChangePasswordFormFactory
 {
@@ -46,7 +45,8 @@ class ChangePasswordFormFactory
 			->addRule($form::EQUAL, 'Hesla se neshodují', $newPassword);
 		$form->addSubmit('save', 'Uložit');
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$values = $form->getValues();
 			$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
 			$onSuccess();
 		};

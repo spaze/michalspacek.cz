@@ -160,11 +160,11 @@ class PasswordsStorageAlgorithmFormFactory
 		}
 
 		$form->addSubmit('submit', 'Add');
-		$form->onValidate[] = function (Form $form, ArrayHash $values): void {
-			$this->validatePasswordsStorages($form, $values);
+		$form->onValidate[] = function (Form $form): void {
+			$this->validatePasswordsStorages($form, $form->getValues());
 		};
-		$form->onSuccess[] = function (Form $form, ArrayHash $values) use ($onSuccess): void {
-			$onSuccess($this->passwords->addStorage($values) ? 'Password storage added successfully' : null);
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$onSuccess($this->passwords->addStorage($form->getValues()) ? 'Password storage added successfully' : null);
 		};
 		return $form;
 	}

@@ -121,15 +121,16 @@ class PostFormFactory
 				$this->blogPostPreview->sendPreview($post, $template, $sendTemplate);
 			};
 
-		$form->onValidate[] = function (Form $form, stdClass $values) use ($postId): void {
-			$post = $this->buildPost($values, $postId);
+		$form->onValidate[] = function (Form $form) use ($postId): void {
+			$post = $this->buildPost($form->getValues(), $postId);
 			if ($post->needsPreviewKey() && $post->previewKey === null) {
 				/** @var TextInput $input */
 				$input = $form->getComponent('previewKey');
 				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $post->published === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $postId): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $postId): void {
+			$values = $form->getValues();
 			$post = $this->buildPost($values, $postId);
 			$this->blogPosts->enrich($post);
 			try {

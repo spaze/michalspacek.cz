@@ -7,7 +7,6 @@ use MichalSpacekCz\Form\Controls\FormControlsFactory;
 use Nette\Application\UI\Form;
 use Nette\Http\IRequest;
 use Nette\Utils\Html;
-use stdClass;
 use Tracy\Debugger;
 
 class SignInHoneypotFormFactory
@@ -25,7 +24,8 @@ class SignInHoneypotFormFactory
 	{
 		$form = $this->factory->create();
 		$this->controlsFactory->addSignIn($form);
-		$form->onSuccess[] = function (Form $form, stdClass $values): void {
+		$form->onSuccess[] = function (Form $form): void {
+			$values = $form->getValues();
 			Debugger::log("Sign-in attempt: {$values->username}, {$values->password}, {$this->httpRequest->getRemoteAddress()}", 'honeypot');
 			$creds = $values->username . ':' . $values->password;
 			if (preg_match('~\slimit\s~i', $creds)) {

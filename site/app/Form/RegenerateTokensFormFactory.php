@@ -9,7 +9,6 @@ use Nette\Application\UI\Form;
 use Nette\Http\Session;
 use Nette\Security\User;
 use Nette\Utils\Html;
-use stdClass;
 
 class RegenerateTokensFormFactory
 {
@@ -36,7 +35,8 @@ class RegenerateTokensFormFactory
 		$form->addCheckbox('returning', 'Returning user token')->setDefaultValue(true);
 		$form->addSubmit('regenerate', 'Přegenerovat');
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$values = $form->getValues();
 			if ($values->session) {
 				$this->sessionHandler->regenerateId();
 			}

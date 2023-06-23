@@ -12,7 +12,6 @@ use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Container;
 use Nette\Http\FileUpload;
-use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 class TalkSlidesFormFactory
@@ -66,9 +65,9 @@ class TalkSlidesFormFactory
 		$form->addCheckbox('deleteReplaced', 'Smazat nahrazené soubory?');
 		$form->addSubmit('submit', 'Upravit');
 
-		$form->onSuccess[] = function (Form $form, ArrayHash $values) use ($slides, $onSuccess, $talkId): void {
+		$form->onSuccess[] = function (Form $form) use ($slides, $onSuccess, $talkId): void {
 			try {
-				$this->talks->saveSlides($talkId, $slides, $values);
+				$this->talks->saveSlides($talkId, $slides, $form->getValues());
 				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
 			} catch (DuplicatedSlideException $e) {

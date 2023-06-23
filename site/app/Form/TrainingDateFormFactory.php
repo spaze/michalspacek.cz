@@ -12,7 +12,6 @@ use MichalSpacekCz\Training\Trainings;
 use MichalSpacekCz\Training\Venues;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use stdClass;
 
 class TrainingDateFormFactory
 {
@@ -121,7 +120,8 @@ class TrainingDateFormFactory
 		$price = $form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná cena');
-		$form->onValidate[] = function (Form $form, stdClass $values) use ($price): void {
+		$form->onValidate[] = function (Form $form) use ($price): void {
+			$values = $form->getValues();
 			$training = $this->trainings->getById($values->training);
 			if ($values->price === '' && $training->price === null) {
 				$price->addError('Běžná cena není nastavena, je třeba nastavit cenu zde');
@@ -144,7 +144,8 @@ class TrainingDateFormFactory
 			$this->setTrainingDate($form, $date, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $date): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $date): void {
+			$values = $form->getValues();
 			if ($date) {
 				$this->trainingDates->update(
 					$date->getId(),

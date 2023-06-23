@@ -132,7 +132,8 @@ class TrainingMailsOutboxFormFactory
 			}
 		}
 		$form->addSubmit('submit', 'Odeslat');
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($applications, $onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($applications, $onSuccess): void {
+			$values = $form->getValues();
 			$sent = 0;
 			/** @var stdClass $data */
 			foreach ($values->applications as $id => $data) {

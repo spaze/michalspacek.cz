@@ -76,7 +76,8 @@ class VideoThumbnails
 
 	public function addOnValidateUploads(Form $form, VideoThumbnailFormFields $formFields): void
 	{
-		$form->onValidate[] = function (Form $form, stdClass $values) use ($formFields): void {
+		$form->onValidate[] = function (Form $form) use ($formFields): void {
+			$values = $form->getValues();
 			$this->validateUpload($values->videoThumbnail, $formFields->getVideoThumbnail());
 			$this->validateUpload($values->videoThumbnailAlternative, $formFields->getVideoThumbnailAlternative());
 		};

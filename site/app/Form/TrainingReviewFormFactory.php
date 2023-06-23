@@ -9,7 +9,6 @@ use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
-use stdClass;
 
 class TrainingReviewFormFactory
 {
@@ -63,7 +62,8 @@ class TrainingReviewFormFactory
 			$this->setReview($form, $review, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $review, $dateId): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $review, $dateId): void {
+			$values = $form->getValues();
 			if ($review) {
 				$this->trainingReviews->updateReview(
 					$review->reviewId,

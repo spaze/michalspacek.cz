@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications;
 use Nette\Application\UI\Form;
-use stdClass;
 
 class TrainingInvoiceFormFactory
 {
@@ -33,7 +32,8 @@ class TrainingInvoiceFormFactory
 			->addRule($form::IS_IN, 'Zadejte číslo některé z nezaplacených faktur', $unpaidInvoiceIds);
 		$this->trainingControlsFactory->addPaidDate($form->addText('paid', 'Zaplaceno:'), true);
 		$form->addSubmit('submit', 'Zaplaceno');
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError): void {
+			$values = $form->getValues();
 			$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);
 			if ($count === null) {
 				$onError();

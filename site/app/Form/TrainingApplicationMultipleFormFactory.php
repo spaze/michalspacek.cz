@@ -9,7 +9,6 @@ use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\Request;
 use Nette\Application\UI\Form;
-use stdClass;
 
 class TrainingApplicationMultipleFormFactory
 {
@@ -60,7 +59,8 @@ class TrainingApplicationMultipleFormFactory
 
 		$form->addSubmit('submit', 'Přidat');
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($trainingId, $dateId, $price, $studentDiscount, $onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($trainingId, $dateId, $price, $studentDiscount, $onSuccess): void {
+			$values = $form->getValues();
 			foreach ($values->applications as $application) {
 				$this->trainingApplications->insertApplication(
 					$trainingId,
