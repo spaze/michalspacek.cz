@@ -9,6 +9,9 @@ use MichalSpacekCz\Http\HttpStreamContext;
 use MichalSpacekCz\Tls\Exceptions\CertificatesApiException;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Schema\Expect;
+use Nette\Schema\Processor;
+use Nette\Schema\ValidationException;
 use Nette\Utils\Helpers;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -20,6 +23,7 @@ class CertificatesApiClient
 		private readonly LinkGenerator $linkGenerator,
 		private readonly CertificateFactory $certificateFactory,
 		private readonly HttpStreamContext $httpStreamContext,
+		private readonly Processor $schemaProcessor,
 	) {
 	}
 
@@ -50,23 +54,45 @@ class CertificatesApiClient
 		}
 		$certificates = [];
 		$decoded = Json::decode($json, forceArrays: true);
-		if (!is_array($decoded)) {
-			throw new CertificatesApiException(sprintf('Decoded response type from %s is %s (`%s`) not array', $url, gettype($decoded), $json));
+		$schema = Expect::structure([
+			'status' => Expect::string(),
+			'certificates' => Expect::listOf(
+				Expect::structure([
+					'commonName' => Expect::string()->required(),
+					'commonNameExt' => Expect::string()->required()->nullable(),
+					'notBefore' => Expect::string()->required(),
+					'notBeforeTz' => Expect::string()->required(),
+					'notAfter' => Expect::string()->required(),
+					'notAfterTz' => Expect::string()->required(),
+					'expiringThreshold' => Expect::int()->required(),
+					'serialNumber' => Expect::string()->required()->nullable(),
+					'now' => Expect::string()->required(),
+					'nowTz' => Expect::string()->required(),
+				]),
+			),
+		]);
+		try {
+			/** @var object{status:string, certificates:list<object{commonName:string, commonNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string}>} $data */
+			$data = $this->schemaProcessor->process($schema, $decoded);
+		} catch (ValidationException $e) {
+			throw new CertificatesApiException(sprintf('Cannot validate response from %s (`%s`): %s', $url, $json, implode(', ', $e->getMessages())), previous: $e);
 		}
-		if (!isset($decoded['status'])) {
-			throw new CertificatesApiException(sprintf('Decoded response from %s (`%s`) has no field `status`', $url, $json));
-		}
-		if ($decoded['status'] !== 'ok') {
+		if ($data->status !== 'ok') {
 			throw new CertificatesApiException(sprintf('Response from %s (`%s`) not ok', $url, $json));
 		}
-		if (!isset($decoded['certificates'])) {
-			throw new CertificatesApiException(sprintf('Decoded response from %s (`%s`) has no field `certificates`', $url, $json));
-		}
-		if (!is_array($decoded['certificates'])) {
-			throw new CertificatesApiException(sprintf("Response from %s (`%s`) has `certificates` but it's not an array", $url, $json));
-		}
-		foreach ($decoded['certificates'] as $details) {
-			$certificates[] = $this->certificateFactory->fromArray($details);
+		foreach ($data->certificates as $details) {
+			$certificates[] = $this->certificateFactory->get(
+				$details->commonName,
+				$details->commonNameExt,
+				$details->notBefore,
+				$details->notBeforeTz,
+				$details->notAfter,
+				$details->notAfterTz,
+				$details->expiringThreshold,
+				$details->serialNumber,
+				$details->now,
+				$details->nowTz,
+			);
 		}
 		return $certificates;
 	}

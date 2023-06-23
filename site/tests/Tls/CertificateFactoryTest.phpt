@@ -21,9 +21,9 @@ class CertificateFactoryTest extends TestCase
 	}
 
 
-	public function testFromArray(): void
+	public function testGet(): void
 	{
-		$certificate = new Certificate(
+		$expected = new Certificate(
 			'cn',
 			'cn-ext',
 			new DateTimeImmutable('-2 weeks'),
@@ -31,8 +31,20 @@ class CertificateFactoryTest extends TestCase
 			3,
 			'CafeCe37',
 		);
-		$array = Json::decode(Json::encode($certificate), forceArrays: true);
-		Assert::equal($certificate, $this->certificateFactory->fromArray($array));
+		$array = Json::decode(Json::encode($expected), forceArrays: true);
+		$certificate = $this->certificateFactory->get(
+			$array['commonName'],
+			$array['commonNameExt'],
+			$array['notBefore'],
+			$array['notBeforeTz'],
+			$array['notAfter'],
+			$array['notAfterTz'],
+			$array['expiringThreshold'],
+			$array['serialNumber'],
+			$array['now'],
+			$array['nowTz'],
+		);
+		Assert::equal($expected, $certificate);
 	}
 
 }
