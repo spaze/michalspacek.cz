@@ -53,6 +53,7 @@ services:
 		autowired: false
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Formatter\TrainingDateTexyFormatterPlaceholder
+	- MichalSpacekCz\Http\HttpInput
 	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)

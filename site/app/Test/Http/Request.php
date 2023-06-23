@@ -11,7 +11,7 @@ use Nette\Http\UrlScript;
 class Request implements IRequest
 {
 
-	/** @var array<string, string> */
+	/** @var array<string, mixed> */
 	private array $cookies;
 
 	/** @var array<string, FileUpload> */
@@ -82,14 +82,14 @@ class Request implements IRequest
 	}
 
 
-	public function getCookie(string $key): ?string
+	public function getCookie(string $key): mixed
 	{
 		return $this->cookies[$key] ?? null;
 	}
 
 
 	/**
-	 * @return array<string, string>
+	 * @return array<string, mixed>
 	 */
 	public function getCookies(): array
 	{

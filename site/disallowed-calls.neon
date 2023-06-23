@@ -13,6 +13,12 @@ parameters:
 			allowInMethods:
 				- 'MichalSpacekCz\Talks\Talks::getSlideImageFileBasename()'
 				- 'MichalSpacekCz\Www\Presenters\ExportsPresenter::getEtag()'
+	disallowedMethodCalls:
+		-
+			method: 'Nette\Http\IRequest::getCookie()'
+			message: 'instead use methods from MichalSpacekCz\Http\HttpInput with more handy return types'
+			allowInMethods:
+				- 'MichalSpacekCz\Http\HttpInput::getCookieString()'
 	disallowedConstants:
 		-
 			constant: 'LIBXML_NOENT'

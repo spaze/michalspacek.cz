@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Test\Http\Response as TestResponse;
-use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Http\Response;
 
@@ -19,7 +19,7 @@ class Theme
 
 
 	public function __construct(
-		private readonly IRequest $httpRequest,
+		private readonly HttpInput $httpInput,
 		private readonly IResponse $httpResponse,
 	) {
 	}
@@ -39,7 +39,7 @@ class Theme
 
 	public function isDarkMode(): ?bool
 	{
-		$cookie = $this->httpRequest->getCookie(self::COOKIE);
+		$cookie = $this->httpInput->getCookieString(self::COOKIE);
 		return $cookie === self::DARK ? true : ($cookie === self::LIGHT ? false : null);
 	}
 

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User;
 
 use DateTimeInterface;
 use Exception;
+use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Explorer;
@@ -41,6 +42,7 @@ class Manager implements Authenticator
 		private readonly Explorer $database,
 		private readonly IRequest $httpRequest,
 		private readonly Response $httpResponse, // Not IResponse because https://github.com/nette/http/issues/200
+		private readonly HttpInput $httpInput,
 		private readonly Passwords $passwords,
 		private readonly StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator,
@@ -180,7 +182,7 @@ class Manager implements Authenticator
 
 	public function isReturningUser(): bool
 	{
-		$cookie = $this->httpRequest->getCookie($this->returningUserCookie);
+		$cookie = $this->httpInput->getCookieString($this->returningUserCookie);
 		return ($cookie && $this->verifyReturningUser($cookie));
 	}
 
@@ -278,7 +280,7 @@ class Manager implements Authenticator
 	 */
 	public function verifyPermanentLogin(): ?Row
 	{
-		$cookie = $this->httpRequest->getCookie($this->permanentLoginCookie) ?? '';
+		$cookie = $this->httpInput->getCookieString($this->permanentLoginCookie) ?? '';
 		return $this->verifyToken($cookie, DateTime::from("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
 	}
 
