@@ -16,7 +16,6 @@ use MichalSpacekCz\Articles\Components\ArticleWithUpdateTime;
 use MichalSpacekCz\Feed\ExportsOmittable;
 use MichalSpacekCz\Twitter\TwitterCard;
 use Nette\Utils\Html;
-use stdClass;
 
 class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, ArticleWithSummary, ArticleWithText, ArticleWithTags, ArticleWithUpdateTime, ArticleWithPublishTime, ArticleWithEdits
 {
@@ -66,7 +65,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	/** @var array<int, string> */
 	public array $previousSlugTags = [];
 
-	/** @var array<int, stdClass> */
+	/** @var array<int, BlogPostRecommendedLink> */
 	public array $recommended;
 
 	public ?TwitterCard $twitterCard;
