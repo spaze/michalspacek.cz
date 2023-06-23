@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Http\HttpInput;
-use MichalSpacekCz\Test\Http\Response as TestResponse;
 use Nette\Http\IResponse;
 use Nette\Http\Response;
 
@@ -46,7 +45,7 @@ class Theme
 
 	private function setCookie(string $mode): void
 	{
-		/** @var Response|TestResponse $response */
+		/** @var Response $response Not IResponse because https://github.com/nette/http/issues/200 */
 		$response = $this->httpResponse;
 		$response->setCookie(self::COOKIE, $mode, '+10 years', null, null, null, null, 'None');
 	}
