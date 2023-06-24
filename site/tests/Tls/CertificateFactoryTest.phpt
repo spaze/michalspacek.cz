@@ -31,7 +31,7 @@ class CertificateFactoryTest extends TestCase
 			3,
 			'CafeCe37',
 		);
-		$array = Json::decode(Json::encode($certificate), Json::FORCE_ARRAY);
+		$array = Json::decode(Json::encode($certificate), forceArrays: true);
 		Assert::equal($certificate, $this->certificateFactory->fromArray($array));
 	}
 

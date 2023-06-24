@@ -26,7 +26,7 @@ class WiFiKeyTest extends TestCase
 			'typeId' => 2,
 			'serialPrefix' => 'Le',
 		];
-		Assert::same($expected, Json::decode(Json::encode($key), Json::FORCE_ARRAY));
+		Assert::same($expected, Json::decode(Json::encode($key), forceArrays: true));
 	}
 
 }
