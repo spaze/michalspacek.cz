@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
+use MichalSpacekCz\User\Exceptions\IdentityException;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\Form;
 use Nette\Security\User;
@@ -22,13 +22,13 @@ class ChangePasswordFormFactory
 	/**
 	 * @param callable(): void $onSuccess
 	 * @return Form
-	 * @throws IdentityNotSimpleIdentityException
+	 * @throws IdentityException
 	 */
 	public function create(callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
 		$form->addText('username')
-			->setDefaultValue($this->authenticator->getIdentityByUser($this->user)->username)
+			->setDefaultValue($this->authenticator->getIdentityUsernameByUser($this->user))
 			->setHtmlAttribute('autocomplete', 'username')
 			->setHtmlAttribute('class', 'hidden');
 		$form->addPassword('password', 'Současné heslo:')

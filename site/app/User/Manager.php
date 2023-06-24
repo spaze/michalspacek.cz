@@ -6,7 +6,11 @@ namespace MichalSpacekCz\User;
 use DateTimeInterface;
 use Exception;
 use MichalSpacekCz\Http\HttpInput;
+use MichalSpacekCz\User\Exceptions\IdentityException;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
+use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
+use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -84,14 +88,22 @@ class Manager implements Authenticator
 
 	/**
 	 * @throws IdentityNotSimpleIdentityException
+	 * @throws IdentityWithoutUsernameException
+	 * @throws IdentityUsernameNotStringException
 	 */
-	public function getIdentityByUser(User $user): SimpleIdentity
+	public function getIdentityUsernameByUser(User $user): string
 	{
 		$identity = $user->getIdentity();
 		if (!$identity instanceof SimpleIdentity) {
 			throw new IdentityNotSimpleIdentityException($identity);
 		}
-		return $identity;
+		if (!isset($identity->username)) {
+			throw new IdentityWithoutUsernameException();
+		}
+		if (!is_string($identity->username)) {
+			throw new IdentityUsernameNotStringException(get_debug_type($identity->username));
+		}
+		return $identity->username;
 	}
 
 
@@ -139,12 +151,16 @@ class Manager implements Authenticator
 	 * @param string $newPassword
 	 * @throws AuthenticationException
 	 * @throws HaliteAlert
-	 * @throws IdentityNotSimpleIdentityException
+	 * @throws IdentityException
 	 */
 	public function changePassword(User $user, string $password, string $newPassword): void
 	{
-		$this->verifyPassword($this->getIdentityByUser($user)->username, $password);
-		$this->updatePassword($user->getId(), $newPassword);
+		$userId = $user->getId();
+		if (!is_int($userId)) {
+			throw new IdentityIdNotIntException(get_debug_type($userId));
+		}
+		$this->verifyPassword($this->getIdentityUsernameByUser($user), $password);
+		$this->updatePassword($userId, $newPassword);
 		$this->clearPermanentLogin($user);
 	}
 
