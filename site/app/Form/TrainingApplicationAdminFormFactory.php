@@ -94,7 +94,7 @@ class TrainingApplicationAdminFormFactory
 		}
 
 		$form->onSuccess[] = function (Form $form, stdClass $values) use ($application, $onSuccess): void {
-			$dateId = isset($values->date) ? $values->date : null;
+			$dateId = $values->date ?? null;
 			$this->trainingApplications->updateApplicationData(
 				$application->applicationId,
 				$values->nameSet ? $values->name : null,
