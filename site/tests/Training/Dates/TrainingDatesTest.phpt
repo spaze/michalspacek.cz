@@ -12,7 +12,7 @@ use Tester\TestCase;
 $runner = require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingDatesFormValidatorTest extends TestCase
+class TrainingDatesTest extends TestCase
 {
 
 	public function __construct(
@@ -255,4 +255,4 @@ class TrainingDatesFormValidatorTest extends TestCase
 
 }
 
-$runner->run(TrainingDatesFormValidatorTest::class);
+$runner->run(TrainingDatesTest::class);
