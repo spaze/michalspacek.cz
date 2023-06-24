@@ -23,4 +23,28 @@ class HttpInput
 		return $cookie;
 	}
 
+
+	public function getPostString(string $key): ?string
+	{
+		$data = $this->request->getPost($key);
+		if (!is_string($data)) {
+			return null;
+		}
+		return $data;
+	}
+
+
+	/**
+	 * @return array<mixed>|null
+	 * @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection Need to specify value type for the array, and it's 'mixed'
+	 */
+	public function getPostArray(string $key): ?array
+	{
+		$data = $this->request->getPost($key);
+		if (!is_array($data)) {
+			return null;
+		}
+		return $data;
+	}
+
 }

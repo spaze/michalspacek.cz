@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Api\Presenters;
 
+use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Security\AuthenticationException;
@@ -13,6 +14,7 @@ class CertificatesPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Certificates $certificates,
+		private readonly HttpInput $httpInput,
 	) {
 		parent::__construct();
 	}
@@ -22,7 +24,7 @@ class CertificatesPresenter extends BasePresenter
 	{
 		parent::startup();
 		try {
-			$this->certificates->authenticate($this->request->getPost('user') ?? '', $this->request->getPost('key') ?? '');
+			$this->certificates->authenticate($this->httpInput->getPostString('user') ?? '', $this->httpInput->getPostString('key') ?? '');
 		} catch (AuthenticationException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Invalid credentials']);
 		}
@@ -38,7 +40,7 @@ class CertificatesPresenter extends BasePresenter
 	public function actionLogIssued(): void
 	{
 		try {
-			$count = $this->certificates->log($this->request->getPost('certs') ?? [], $this->request->getPost('failure') ?? []);
+			$count = $this->certificates->log($this->httpInput->getPostArray('certs') ?? [], $this->httpInput->getPostArray('failure') ?? []);
 			$this->sendJson([
 				'status' => 'ok',
 				'statusMessage' => 'Certificates reported successfully',

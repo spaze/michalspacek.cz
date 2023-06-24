@@ -12,6 +12,9 @@ class Request implements IRequest
 {
 
 	/** @var array<string, mixed> */
+	private array $post;
+
+	/** @var array<string, mixed> */
 	private array $cookies;
 
 	/** @var array<string, FileUpload> */
@@ -59,7 +62,13 @@ class Request implements IRequest
 
 	public function getPost(string $key = null)
 	{
-		// TODO: Implement getPost() method.
+		return func_num_args() === 0 ? $this->post : $this->post[$key] ?? null;
+	}
+
+
+	public function setPost(string $key, mixed $value): void
+	{
+		$this->post[$key] = $value;
 	}
 
 

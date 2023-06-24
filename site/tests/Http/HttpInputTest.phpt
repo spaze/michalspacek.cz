@@ -32,6 +32,26 @@ class HttpInputTest extends TestCase
 		Assert::null($this->httpInput->getCookieString('waldo'));
 	}
 
+
+	public function testGetPostString(): void
+	{
+		Assert::null($this->httpInput->getPostString('foo'));
+		$this->request->setPost('foo', 'bar');
+		Assert::same('bar', $this->httpInput->getPostString('foo'));
+		$this->request->setPost('waldo', ['quux' => 'foobar']);
+		Assert::null($this->httpInput->getPostString('waldo'));
+	}
+
+
+	public function testGetPostArray(): void
+	{
+		Assert::null($this->httpInput->getPostArray('foo'));
+		$this->request->setPost('foo', 'bar');
+		Assert::null($this->httpInput->getPostArray('foo'));
+		$this->request->setPost('waldo', ['quux' => 'foobar']);
+		Assert::same(['quux' => 'foobar'], $this->httpInput->getPostArray('waldo'));
+	}
+
 }
 
 $runner->run(HttpInputTest::class);

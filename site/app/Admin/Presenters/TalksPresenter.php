@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\TalkFormFactory;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
+use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\BadRequestException;
@@ -32,6 +33,7 @@ class TalksPresenter extends BasePresenter
 		private readonly TalkFormFactory $talkFormFactory,
 		private readonly TalkSlidesFormFactory $talkSlidesFormFactory,
 		private readonly VideoThumbnails $videoThumbnails,
+		private readonly HttpInput $httpInput,
 	) {
 		parent::__construct();
 	}
@@ -76,7 +78,8 @@ class TalksPresenter extends BasePresenter
 		$this->template->slides = $this->slides;
 		$this->template->talk = $this->talk;
 		$this->template->maxSlideUploads = $this->maxSlideUploads = (int)ini_get('max_file_uploads');
-		$count = (is_array($this->request->getPost('new')) ? count($this->request->getPost('new')) : 0);
+		$new = $this->httpInput->getPostArray('new');
+		$count = $new ? count($new) : 0;
 		$this->template->newCount = $this->newCount = ($count ?: (int)empty($this->slides));
 		$this->template->dimensions = $this->talks->getSlideDimensions();
 	}
