@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Tracy\Debugger;
@@ -54,13 +55,20 @@ class Statuses
 	}
 
 
+	/**
+	 * @throws TrainingStatusIdNotIntException
+	 */
 	public function getStatusId(string $status): int
 	{
 		if (!isset($this->statusIds[$status])) {
-			$this->statusIds[$status] = $this->database->fetchField(
+			$statusId = $this->database->fetchField(
 				'SELECT id_status FROM training_application_status WHERE status = ?',
 				$status,
 			);
+			if (!is_int($statusId)) {
+				throw new TrainingStatusIdNotIntException($status, $statusId);
+			}
+			$this->statusIds[$status] = $statusId;
 		}
 		return $this->statusIds[$status];
 	}
