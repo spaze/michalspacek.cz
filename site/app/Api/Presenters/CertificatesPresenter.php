@@ -5,9 +5,9 @@ namespace MichalSpacekCz\Api\Presenters;
 
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Tls\Certificates;
+use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Security\AuthenticationException;
-use RuntimeException;
 
 class CertificatesPresenter extends BasePresenter
 {
@@ -46,7 +46,7 @@ class CertificatesPresenter extends BasePresenter
 				'statusMessage' => 'Certificates reported successfully',
 				'count' => $count,
 			]);
-		} catch (RuntimeException) {
+		} catch (SomeCertificatesLoggedToFileException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
 		}
 	}

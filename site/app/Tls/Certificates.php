@@ -5,12 +5,12 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
+use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Database\DriverException;
 use Nette\Database\Explorer;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Authenticator;
 use Nette\Utils\DateTime as NetteDateTime;
-use RuntimeException;
 use Tracy\Debugger;
 
 class Certificates
@@ -81,6 +81,7 @@ class Certificates
 	 * @param array<string, array<string, string>> $certs
 	 * @param array<string, array<string, string>> $failures
 	 * @return array{certificates:int, failures:int} with counts
+	 * @throws SomeCertificatesLoggedToFileException
 	 */
 	public function log(array $certs, array $failures): array
 	{
@@ -113,7 +114,7 @@ class Certificates
 		}
 
 		if (!$databaseLoggedAll) {
-			throw new RuntimeException('Error logging to database, some certificates logged to file instead');
+			throw new SomeCertificatesLoggedToFileException();
 		}
 
 		return [
