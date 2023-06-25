@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Api\Presenters;
 
 use MichalSpacekCz\Http\HttpInput;
+use MichalSpacekCz\Tls\CertificateAttemptFactory;
+use MichalSpacekCz\Tls\CertificateFactory;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
@@ -14,6 +16,8 @@ class CertificatesPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Certificates $certificates,
+		private readonly CertificateFactory $certificateFactory,
+		private readonly CertificateAttemptFactory $certificateAttemptFactory,
 		private readonly HttpInput $httpInput,
 	) {
 		parent::__construct();
@@ -39,8 +43,10 @@ class CertificatesPresenter extends BasePresenter
 
 	public function actionLogIssued(): void
 	{
+		$certs = $this->certificateFactory->listFromLogRequest($this->httpInput->getPostArray('certs') ?? []);
+		$failures = $this->certificateAttemptFactory->listFromLogRequest($this->httpInput->getPostArray('failure') ?? []);
 		try {
-			$count = $this->certificates->log($this->httpInput->getPostArray('certs') ?? [], $this->httpInput->getPostArray('failure') ?? []);
+			$count = $this->certificates->log($certs, $failures);
 			$this->sendJson([
 				'status' => 'ok',
 				'statusMessage' => 'Certificates reported successfully',

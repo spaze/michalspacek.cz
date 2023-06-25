@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
+use MichalSpacekCz\DateTime\DateTime;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Database\DriverException;
 use Nette\Database\Explorer;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Authenticator;
-use Nette\Utils\DateTime as NetteDateTime;
 use Tracy\Debugger;
 
 class Certificates
@@ -76,45 +76,47 @@ class Certificates
 
 
 	/**
-	 * Log certificates.
-	 *
-	 * @param array<string, array<string, string>> $certs
-	 * @param array<string, array<string, string>> $failures
+	 * @param list<Certificate> $certs
+	 * @param list<CertificateAttempt> $failures
 	 * @return array{certificates:int, failures:int} with counts
 	 * @throws SomeCertificatesLoggedToFileException
 	 */
 	public function log(array $certs, array $failures): array
 	{
-		$databaseLoggedAll = true;
-		foreach ($certs as $cnext => $cert) {
-			$start = NetteDateTime::from($cert['start']);
-			$expiry = NetteDateTime::from($cert['expiry']);
+		$dbException = null;
+		foreach ($certs as $cert) {
 			try {
 				$this->database->beginTransaction();
 				$this->database->query('INSERT INTO certificates', [
-					'key_certificate_request' => $this->logRequest($cert['cn'], $cert['ext'], true),
-					'not_before' => $start,
-					'not_after' => $expiry,
+					'key_certificate_request' => $this->logRequest($cert, true),
+					'not_before' => $cert->getNotBefore(),
+					'not_after' => $cert->getNotAfter(),
 				]);
 				$this->database->commit();
 			} catch (DriverException $e) {
 				Debugger::log($e);
-				Debugger::log("OK $cnext from $start to $expiry", 'cert');
-				$databaseLoggedAll = false;
+				Debugger::log(sprintf(
+					'OK %s%s from %s to %s',
+					$cert->getCommonName(),
+					$cert->getCommonNameExt(),
+					$cert->getNotBefore()->format(DateTime::DATE_RFC3339_MICROSECONDS),
+					$cert->getNotAfter()->format(DateTime::DATE_RFC3339_MICROSECONDS),
+				), 'cert');
+				$dbException = $e;
 			}
 		}
-		foreach ($failures as $cnext => $cert) {
+		foreach ($failures as $cert) {
 			try {
-				$this->logRequest($cert['cn'], $cert['ext'], false);
+				$this->logRequest($cert, false);
 			} catch (DriverException $e) {
 				Debugger::log($e);
-				Debugger::log("FAIL $cnext", 'cert');
-				$databaseLoggedAll = false;
+				Debugger::log("FAIL {$cert->getCommonName()}{$cert->getCommonNameExt()}", 'cert');
+				$dbException = $e;
 			}
 		}
 
-		if (!$databaseLoggedAll) {
-			throw new SomeCertificatesLoggedToFileException();
+		if ($dbException) {
+			throw new SomeCertificatesLoggedToFileException(previous: $dbException);
 		}
 
 		return [
@@ -124,17 +126,11 @@ class Certificates
 	}
 
 
-	/**
-	 * @param string $cn
-	 * @param string $ext
-	 * @param bool $success
-	 * @return int
-	 */
-	private function logRequest(string $cn, string $ext, bool $success): int
+	private function logRequest(Certificate|CertificateAttempt $certificate, bool $success): int
 	{
 		$this->database->query('INSERT INTO certificate_requests', [
-			'cn' => $cn,
-			'ext' => (empty($ext) ? null : $ext),
+			'cn' => $certificate->getCommonName(),
+			'ext' => $certificate->getCommonNameExt(),
 			'time' => new DateTimeImmutable(),
 			'success' => $success,
 		]);
