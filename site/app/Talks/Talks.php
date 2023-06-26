@@ -9,6 +9,7 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Resources\TalkMediaResources;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Utils\Base64;
 use Nette\Database\Explorer;
@@ -296,6 +297,8 @@ class Talks
 			} else {
 				throw new RuntimeException("Unknown slide {$slide} for talk {$talkId}");
 			}
+		} elseif (!is_int($slideNo)) {
+			throw new ShouldNotHappenException(sprintf("Slide number for slide '%s' of '%s' is a %s not an integer", $slide, $talkId, get_debug_type($slideNo)));
 		}
 		return $slideNo;
 	}
