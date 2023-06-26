@@ -604,23 +604,32 @@ class Talks
 					$replace = $replaceAlternative = $slide->filename = $slide->filenameAlternative = null;
 				}
 
-				$this->database->query(
-					'UPDATE talk_slides SET ? WHERE id_slide = ?',
-					[
-						'key_talk' => $talkId,
-						'alias' => $slide->alias,
-						'number' => $slideNumber,
-						'filename' => $replace ?? $slide->filename ?? '',
-						'filename_alternative' => $replaceAlternative ?? $slide->filenameAlternative ?? '',
-						'title' => $slide->title,
-						'speaker_notes' => $slide->speakerNotes,
-					],
-					$id,
-				);
+				$this->updateSlidesRow($talkId, $slide->alias, $slideNumber, $replace ?? $slide->filename ?? '', $replaceAlternative ?? $slide->filenameAlternative ?? '', $slide->title, $slide->speakerNotes, $id);
 			}
 		} catch (UniqueConstraintViolationException $e) {
-			throw new DuplicatedSlideException($slideNumber ?? $slides->getIterator()->current()->number, previous: $e);
+			throw new DuplicatedSlideException($slideNumber, previous: $e);
 		}
+	}
+
+
+	/**
+	 * @throws UniqueConstraintViolationException
+	 */
+	private function updateSlidesRow(int $talkId, string $alias, int $slideNumber, string $filename, string $filenameAlternative, string $title, string $speakerNotes, mixed $id): void
+	{
+		$this->database->query(
+			'UPDATE talk_slides SET ? WHERE id_slide = ?',
+			[
+				'key_talk' => $talkId,
+				'alias' => $alias,
+				'number' => $slideNumber,
+				'filename' => $filename,
+				'filename_alternative' => $filenameAlternative,
+				'title' => $title,
+				'speaker_notes' => $speakerNotes,
+			],
+			$id,
+		);
 	}
 
 
