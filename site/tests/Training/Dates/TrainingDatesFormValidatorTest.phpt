@@ -51,12 +51,33 @@ class TrainingDatesFormValidatorTest extends TestCase
 					'Začátek a konec jsou od sebe 93 dní, mohou být maximálně 14',
 				],
 			],
+			'start int, end string' => [
+				2022,
+				'2022-06-08 18:00',
+				[
+					'Začátek i školení musí být řetězec',
+				],
+			],
+			'start string, end int' => [
+				'2022-03-07 13:00',
+				2022,
+				[
+					'Začátek i školení musí být řetězec',
+				],
+			],
+			'start int, end int' => [
+				2022,
+				2022,
+				[
+					'Začátek i školení musí být řetězec',
+				],
+			],
 		];
 	}
 
 
 	/** @dataProvider getStartEnd */
-	public function testValidateFormStartEnd(string $inputStart, string $inputEnd, array $expectedErrors): void
+	public function testValidateFormStartEnd(string|int $inputStart, string|int $inputEnd, array $expectedErrors): void
 	{
 		$start = (new TextInput())->setDefaultValue($inputStart);
 		$end = (new TextInput())->setDefaultValue($inputEnd);
