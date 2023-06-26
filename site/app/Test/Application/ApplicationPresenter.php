@@ -21,7 +21,7 @@ class ApplicationPresenter
 		$property->setValue($application, new class ($buildLink) extends Presenter {
 
 			/**
-			 * @param Closure(string, string[]): string $buildLink
+			 * @param Closure(string, list<mixed>): string $buildLink
 			 * @noinspection PhpMissingParentConstructorInspection
 			 */
 			public function __construct(
@@ -30,12 +30,15 @@ class ApplicationPresenter
 			}
 
 
+			/**
+			 * @param list<mixed>|mixed $args
+			 */
 			public function link(string $destination, $args = []): string
 			{
 				$args = func_num_args() < 3 && is_array($args)
 					? $args
 					: array_slice(func_get_args(), 1);
-				return ($this->buildLink)($destination, $args);
+				return ($this->buildLink)($destination, array_values($args));
 			}
 
 		});
