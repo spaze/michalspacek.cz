@@ -4,8 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Talks;
 
 use DateTime;
+use Exception;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Resources\TalkMediaResources;
+use MichalSpacekCz\Talks\Exceptions\TalkDateTimeException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\Html;
@@ -26,7 +28,7 @@ class Talks
 	 * Get all talks, or almost all talks.
 	 *
 	 * @param int|null $limit
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function getAll(?int $limit = null): array
 	{
@@ -53,7 +55,7 @@ class Talks
 			$this->enrich($row);
 		}
 
-		return $result;
+		return array_values($result);
 	}
 
 
@@ -72,7 +74,7 @@ class Talks
 	/**
 	 * Get upcoming talks.
 	 *
-	 * @return Row[]
+	 * @return list<Row>
 	 */
 	public function getUpcoming(): array
 	{
@@ -98,7 +100,7 @@ class Talks
 			$this->enrich($row);
 		}
 
-		return $result;
+		return array_values($result);
 	}
 
 
@@ -234,7 +236,7 @@ class Talks
 	/**
 	 * Get favorite talks.
 	 *
-	 * @return Html[]
+	 * @return list<Html>
 	 */
 	public function getFavorites(): array
 	{
@@ -257,6 +259,8 @@ class Talks
 
 	/**
 	 * Update talk data.
+	 *
+	 * @throws TalkDateTimeException
 	 */
 	public function update(
 		int $id,
@@ -282,38 +286,37 @@ class Talks
 		?int $supersededBy,
 		bool $publishSlides,
 	): void {
-		$this->database->query(
-			'UPDATE talks SET ? WHERE id_talk = ?',
-			[
-				'action' => (empty($action) ? null : $action),
-				'title' => $title,
-				'description' => (empty($description) ? null : $description),
-				'date' => new DateTime($date),
-				'duration' => (empty($duration) ? null : $duration),
-				'href' => (empty($href) ? null : $href),
-				'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
-				'key_talk_filenames' => (empty($filenamesTalk) ? null : $filenamesTalk),
-				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
-				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
-				'video_href' => (empty($videoHref) ? null : $videoHref),
-				'video_thumbnail' => $videoThumbnail,
-				'video_thumbnail_alternative' => $videoThumbnailAlternative,
-				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
-				'event' => $event,
-				'event_href' => (empty($eventHref) ? null : $eventHref),
-				'og_image' => (empty($ogImage) ? null : $ogImage),
-				'transcript' => (empty($transcript) ? null : $transcript),
-				'favorite' => (empty($favorite) ? null : $favorite),
-				'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
-				'publish_slides' => $publishSlides,
-			],
-			$id,
+		$params = $this->getAddUpdateParams(
+			$action,
+			$title,
+			$description,
+			$date,
+			$duration,
+			$href,
+			$slidesTalk,
+			$filenamesTalk,
+			$slidesHref,
+			$slidesEmbed,
+			$videoHref,
+			$videoThumbnail,
+			$videoThumbnailAlternative,
+			$videoEmbed,
+			$event,
+			$eventHref,
+			$ogImage,
+			$transcript,
+			$favorite,
+			$supersededBy,
+			$publishSlides,
 		);
+		$this->database->query('UPDATE talks SET ? WHERE id_talk = ?', $params, $id);
 	}
 
 
 	/**
 	 * Insert talk data.
+	 *
+	 * @throws TalkDateTimeException
 	 */
 	public function add(
 		?string $action,
@@ -338,32 +341,30 @@ class Talks
 		?int $supersededBy,
 		bool $publishSlides,
 	): int {
-		$this->database->query(
-			'INSERT INTO talks',
-			[
-				'action' => (empty($action) ? null : $action),
-				'title' => $title,
-				'description' => (empty($description) ? null : $description),
-				'date' => new DateTime($date),
-				'duration' => (empty($duration) ? null : $duration),
-				'href' => (empty($href) ? null : $href),
-				'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
-				'key_talk_filenames' => (empty($filenamesTalk) ? null : $filenamesTalk),
-				'slides_href' => (empty($slidesHref) ? null : $slidesHref),
-				'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
-				'video_href' => (empty($videoHref) ? null : $videoHref),
-				'video_thumbnail' => $videoThumbnail,
-				'video_thumbnail_alternative' => $videoThumbnailAlternative,
-				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
-				'event' => $event,
-				'event_href' => (empty($eventHref) ? null : $eventHref),
-				'og_image' => (empty($ogImage) ? null : $ogImage),
-				'transcript' => (empty($transcript) ? null : $transcript),
-				'favorite' => (empty($favorite) ? null : $favorite),
-				'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
-				'publish_slides' => $publishSlides,
-			],
+		$params = $this->getAddUpdateParams(
+			$action,
+			$title,
+			$description,
+			$date,
+			$duration,
+			$href,
+			$slidesTalk,
+			$filenamesTalk,
+			$slidesHref,
+			$slidesEmbed,
+			$videoHref,
+			$videoThumbnail,
+			$videoThumbnailAlternative,
+			$videoEmbed,
+			$event,
+			$eventHref,
+			$ogImage,
+			$transcript,
+			$favorite,
+			$supersededBy,
+			$publishSlides,
 		);
+		$this->database->query('INSERT INTO talks', $params);
 		return (int)$this->database->getInsertId();
 	}
 
@@ -378,6 +379,64 @@ class Talks
 	public function pageTitle(string $translationKey, Row $talk): Html
 	{
 		return $this->texyFormatter->translate($translationKey, [strip_tags((string)$talk->title), $talk->event]);
+	}
+
+
+	/**
+	 * @return array{action:string|null, title:string, description:string|null, date:DateTime, duration:int|null, href:string|null, key_talk_slides:int|null, key_talk_filenames:int|null, slides_href:string|null, slides_embed:string|null, video_href:string|null, video_thumbnail:string|null, video_thumbnail_alternative:string|null, video_embed:string|null, event:string, event_href:string|null, og_image:string|null, transcript:string|null, favorite:string|null, key_superseded_by:int|null, publish_slides:bool}
+	 * @throws TalkDateTimeException
+	 */
+	private function getAddUpdateParams(
+		?string $action,
+		string $title,
+		?string $description,
+		string $date,
+		?int $duration,
+		?string $href,
+		?int $slidesTalk,
+		?int $filenamesTalk,
+		?string $slidesHref,
+		?string $slidesEmbed,
+		?string $videoHref,
+		?string $videoThumbnail,
+		?string $videoThumbnailAlternative,
+		?string $videoEmbed,
+		string $event,
+		?string $eventHref,
+		?string $ogImage,
+		?string $transcript,
+		?string $favorite,
+		?int $supersededBy,
+		bool $publishSlides,
+	): array {
+		try {
+			$dateTime = new DateTime($date);
+		} catch (Exception $e) {
+			throw new TalkDateTimeException($date, $e);
+		}
+		return [
+			'action' => (empty($action) ? null : $action),
+			'title' => $title,
+			'description' => (empty($description) ? null : $description),
+			'date' => $dateTime,
+			'duration' => (empty($duration) ? null : $duration),
+			'href' => (empty($href) ? null : $href),
+			'key_talk_slides' => (empty($slidesTalk) ? null : $slidesTalk),
+			'key_talk_filenames' => (empty($filenamesTalk) ? null : $filenamesTalk),
+			'slides_href' => (empty($slidesHref) ? null : $slidesHref),
+			'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
+			'video_href' => (empty($videoHref) ? null : $videoHref),
+			'video_thumbnail' => $videoThumbnail,
+			'video_thumbnail_alternative' => $videoThumbnailAlternative,
+			'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
+			'event' => $event,
+			'event_href' => (empty($eventHref) ? null : $eventHref),
+			'og_image' => (empty($ogImage) ? null : $ogImage),
+			'transcript' => (empty($transcript) ? null : $transcript),
+			'favorite' => (empty($favorite) ? null : $favorite),
+			'key_superseded_by' => (empty($supersededBy) ? null : $supersededBy),
+			'publish_slides' => $publishSlides,
+		];
 	}
 
 }

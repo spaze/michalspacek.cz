@@ -10,6 +10,8 @@ use MichalSpacekCz\Media\Resources\TalkMediaResources;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
+use MichalSpacekCz\Talks\Exceptions\SlideImageUploadFailedException;
+use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Utils\Base64;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -18,7 +20,7 @@ use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
-use RuntimeException;
+use Nette\Utils\JsonException;
 
 class TalkSlides
 {
@@ -26,10 +28,10 @@ class TalkSlides
 	private const SLIDE_MAX_WIDTH = 800;
 	private const SLIDE_MAX_HEIGHT = 450;
 
-	/** @var string[] */
+	/** @var list<string> */
 	private array $deleteFiles = [];
 
-	/** @var int[] */
+	/** @var array<string, int> filename => count */
 	private array $otherSlides = [];
 
 
@@ -46,9 +48,8 @@ class TalkSlides
 	/**
 	 * Return slide number by given alias.
 	 *
-	 * @param int $talkId
-	 * @param string|null $slide
 	 * @return int|null Slide number or null if no slide given, or slide not found
+	 * @throws UnknownSlideException
 	 */
 	public function getSlideNo(int $talkId, ?string $slide): ?int
 	{
@@ -60,7 +61,7 @@ class TalkSlides
 			if (ctype_digit($slide)) {
 				$slideNo = (int)$slide; // To keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {
-				throw new RuntimeException("Unknown slide {$slide} for talk {$talkId}");
+				throw new UnknownSlideException($slide, $talkId);
 			}
 		} elseif (!is_int($slideNo)) {
 			throw new ShouldNotHappenException(sprintf("Slide number for slide '%s' of '%s' is a %s not an integer", $slide, $talkId, get_debug_type($slideNo)));
@@ -72,9 +73,7 @@ class TalkSlides
 	/**
 	 * Get slides for talk.
 	 *
-	 * @param int $talkId Talk id
-	 * @param int|null $filenamesTalkId
-	 * @return Row[]
+	 * @return array<int, Row> slide number => data
 	 * @throws ContentTypeException
 	 */
 	public function getSlides(int $talkId, ?int $filenamesTalkId): array
@@ -123,7 +122,7 @@ class TalkSlides
 			$row->image = $row->filename ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talkId, $row->filename) : null;
 			$row->imageAlternative = $row->filenameAlternative ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talkId, $row->filenameAlternative) : null;
 			$row->imageAlternativeType = ($row->filenameAlternative ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($row->filenameAlternative, PATHINFO_EXTENSION)) : null);
-			$result[$row->number] = $row;
+			$result[(int)$row->number] = $row;
 		}
 		return $result;
 	}
@@ -145,6 +144,7 @@ class TalkSlides
 	 * @param int $height
 	 * @return null|string
 	 * @throws ContentTypeException
+	 * @throws SlideImageUploadFailedException
 	 */
 	private function replaceSlideImage(int $talkId, FileUpload $replace, callable $getExtension, bool $removeFile, ?string $originalFile, int &$width, int &$height): ?string
 	{
@@ -153,7 +153,7 @@ class TalkSlides
 		}
 		$contents = $replace->getContents();
 		if ($contents === null) {
-			throw new RuntimeException('Slide image upload failed', $replace->getError());
+			throw new SlideImageUploadFailedException($replace->getError());
 		}
 		$contentType = $replace->getContentType();
 		if (!$contentType) {
@@ -188,6 +188,8 @@ class TalkSlides
 	 * @param int $talkId
 	 * @param ArrayHash<ArrayHash<int|string>> $slides
 	 * @throws DuplicatedSlideException
+	 * @throws ContentTypeException
+	 * @throws SlideImageUploadFailedException
 	 */
 	private function addSlides(int $talkId, ArrayHash $slides): void
 	{
@@ -222,10 +224,12 @@ class TalkSlides
 	 * Update slides.
 	 *
 	 * @param int $talkId
-	 * @param Row[] $originalSlides
+	 * @param array<int, Row> $originalSlides
 	 * @param ArrayHash<ArrayHash<int|string>> $slides
 	 * @param bool $removeFiles Remove old files?
 	 * @throws DuplicatedSlideException
+	 * @throws ContentTypeException
+	 * @throws SlideImageUploadFailedException
 	 */
 	private function updateSlides(int $talkId, array $originalSlides, ArrayHash $slides, bool $removeFiles): void
 	{
@@ -289,9 +293,11 @@ class TalkSlides
 	 * Save new slides.
 	 *
 	 * @param int $talkId
-	 * @param Row[] $originalSlides
+	 * @param array<int, Row> $originalSlides
 	 * @param ArrayHash<int|string> $newSlides
 	 * @throws DuplicatedSlideException
+	 * @throws ContentTypeException
+	 * @throws SlideImageUploadFailedException
 	 */
 	public function saveSlides(int $talkId, array $originalSlides, ArrayHash $newSlides): void
 	{
@@ -304,11 +310,6 @@ class TalkSlides
 	}
 
 
-	/**
-	 * Increment other slides count.
-	 *
-	 * @param string $filename
-	 */
 	private function incrementOtherSlides(string $filename): void
 	{
 		if (isset($this->otherSlides[$filename])) {
@@ -319,11 +320,6 @@ class TalkSlides
 	}
 
 
-	/**
-	 * Increment other slides count.
-	 *
-	 * @param string|null $filename
-	 */
 	private function decrementOtherSlides(?string $filename): void
 	{
 		if (!empty($filename) && $this->otherSlides[$filename] > 0) {
@@ -335,7 +331,7 @@ class TalkSlides
 	/**
 	 * Get max slide dimensions and aspect ratio as JSON string.
 	 *
-	 * @return string
+	 * @throws JsonException
 	 */
 	public function getSlideDimensions(): string
 	{

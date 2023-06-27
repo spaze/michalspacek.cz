@@ -1,11 +1,12 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Talks;
 
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Test\Database\Database;
-use RuntimeException;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -32,7 +33,7 @@ class TalkSlidesTest extends TestCase
 		$this->database->setFetchFieldResult(false);
 		Assert::throws(function (): void {
 			$this->talkSlides->getSlideNo(1, 'yo');
-		}, RuntimeException::class, 'Unknown slide yo for talk 1');
+		}, UnknownSlideException::class, "Unknown slide 'yo' for talk id '1'");
 
 		$this->database->setFetchFieldResult(808);
 		Assert::same(808, $this->talkSlides->getSlideNo(1, 'yo'));
