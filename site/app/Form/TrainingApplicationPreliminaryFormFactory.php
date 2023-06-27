@@ -8,7 +8,6 @@ use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\FormSpam;
 use Nette\Application\UI\Form;
-use stdClass;
 use Tracy\Debugger;
 
 class TrainingApplicationPreliminaryFormFactory
@@ -28,7 +27,8 @@ class TrainingApplicationPreliminaryFormFactory
 		$form = $this->factory->create();
 		$this->trainingControlsFactory->addAttendee($form);
 		$form->addSubmit('signUp', 'Odeslat');
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError, $trainingId, $action): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $trainingId, $action): void {
+			$values = $form->getValues();
 			try {
 				$this->formSpam->check($values, $action);
 				$this->trainingApplications->addPreliminaryInvitation($trainingId, $values->name, $values->email);

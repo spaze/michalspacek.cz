@@ -146,7 +146,7 @@ class TexyPhraseHandlerTest extends TestCase
 
 
 	/**
-	 * @param array<int, string> $args
+	 * @param list<mixed> $args
 	 */
 	private function buildUrl(string $destination, array $args = []): string
 	{

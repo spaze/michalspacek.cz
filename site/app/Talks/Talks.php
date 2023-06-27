@@ -9,6 +9,7 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Resources\TalkMediaResources;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Utils\Base64;
 use Nette\Database\Explorer;
@@ -296,6 +297,8 @@ class Talks
 			} else {
 				throw new RuntimeException("Unknown slide {$slide} for talk {$talkId}");
 			}
+		} elseif (!is_int($slideNo)) {
+			throw new ShouldNotHappenException(sprintf("Slide number for slide '%s' of '%s' is a %s not an integer", $slide, $talkId, get_debug_type($slideNo)));
 		}
 		return $slideNo;
 	}
@@ -601,23 +604,32 @@ class Talks
 					$replace = $replaceAlternative = $slide->filename = $slide->filenameAlternative = null;
 				}
 
-				$this->database->query(
-					'UPDATE talk_slides SET ? WHERE id_slide = ?',
-					[
-						'key_talk' => $talkId,
-						'alias' => $slide->alias,
-						'number' => $slideNumber,
-						'filename' => $replace ?? $slide->filename ?? '',
-						'filename_alternative' => $replaceAlternative ?? $slide->filenameAlternative ?? '',
-						'title' => $slide->title,
-						'speaker_notes' => $slide->speakerNotes,
-					],
-					$id,
-				);
+				$this->updateSlidesRow($talkId, $slide->alias, $slideNumber, $replace ?? $slide->filename ?? '', $replaceAlternative ?? $slide->filenameAlternative ?? '', $slide->title, $slide->speakerNotes, $id);
 			}
 		} catch (UniqueConstraintViolationException $e) {
-			throw new DuplicatedSlideException($slideNumber ?? $slides->getIterator()->current()->number, previous: $e);
+			throw new DuplicatedSlideException($slideNumber, previous: $e);
 		}
+	}
+
+
+	/**
+	 * @throws UniqueConstraintViolationException
+	 */
+	private function updateSlidesRow(int $talkId, string $alias, int $slideNumber, string $filename, string $filenameAlternative, string $title, string $speakerNotes, mixed $id): void
+	{
+		$this->database->query(
+			'UPDATE talk_slides SET ? WHERE id_slide = ?',
+			[
+				'key_talk' => $talkId,
+				'alias' => $alias,
+				'number' => $slideNumber,
+				'filename' => $filename,
+				'filename_alternative' => $filenameAlternative,
+				'title' => $title,
+				'speaker_notes' => $speakerNotes,
+			],
+			$id,
+		);
 	}
 
 

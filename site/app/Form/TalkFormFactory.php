@@ -12,7 +12,6 @@ use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
-use stdClass;
 
 class TalkFormFactory
 {
@@ -98,7 +97,8 @@ class TalkFormFactory
 			$this->setTalk($form, $talk, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($talk, $onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($talk, $onSuccess): void {
+			$values = $form->getValues();
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($talk) {

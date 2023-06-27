@@ -16,13 +16,14 @@ class Error
 
 	public function __construct(
 		private readonly ILogger $logger,
+		private readonly AppRequest $appRequest,
 	) {
 	}
 
 
 	public function response(Request $request): Response
 	{
-		$e = $request->getParameter('exception');
+		$e = $this->appRequest->getException($request);
 
 		if ($e instanceof BadRequestException) {
 			[$module, , $sep] = Helpers::splitName($request->getPresenterName());

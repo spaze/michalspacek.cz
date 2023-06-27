@@ -3,16 +3,22 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Api\Presenters;
 
+use MichalSpacekCz\Http\HttpInput;
+use MichalSpacekCz\Tls\CertificateAttemptFactory;
+use MichalSpacekCz\Tls\CertificateFactory;
 use MichalSpacekCz\Tls\Certificates;
+use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Security\AuthenticationException;
-use RuntimeException;
 
 class CertificatesPresenter extends BasePresenter
 {
 
 	public function __construct(
 		private readonly Certificates $certificates,
+		private readonly CertificateFactory $certificateFactory,
+		private readonly CertificateAttemptFactory $certificateAttemptFactory,
+		private readonly HttpInput $httpInput,
 	) {
 		parent::__construct();
 	}
@@ -22,7 +28,7 @@ class CertificatesPresenter extends BasePresenter
 	{
 		parent::startup();
 		try {
-			$this->certificates->authenticate($this->request->getPost('user') ?? '', $this->request->getPost('key') ?? '');
+			$this->certificates->authenticate($this->httpInput->getPostString('user') ?? '', $this->httpInput->getPostString('key') ?? '');
 		} catch (AuthenticationException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Invalid credentials']);
 		}
@@ -37,14 +43,16 @@ class CertificatesPresenter extends BasePresenter
 
 	public function actionLogIssued(): void
 	{
+		$certs = $this->certificateFactory->listFromLogRequest($this->httpInput->getPostArray('certs') ?? []);
+		$failures = $this->certificateAttemptFactory->listFromLogRequest($this->httpInput->getPostArray('failure') ?? []);
 		try {
-			$count = $this->certificates->log($this->request->getPost('certs') ?? [], $this->request->getPost('failure') ?? []);
+			$count = $this->certificates->log($certs, $failures);
 			$this->sendJson([
 				'status' => 'ok',
 				'statusMessage' => 'Certificates reported successfully',
 				'count' => $count,
 			]);
-		} catch (RuntimeException) {
+		} catch (SomeCertificatesLoggedToFileException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
 		}
 	}

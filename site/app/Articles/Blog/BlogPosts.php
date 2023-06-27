@@ -43,6 +43,7 @@ class BlogPosts
 		private readonly Tags $tags,
 		private readonly Translator $translator,
 		private readonly TwitterCards $twitterCards,
+		private readonly BlogPostRecommendedLinks $recommendedLinks,
 		private readonly int $updatedInfoThreshold,
 		private readonly array $allowedTags,
 	) {
@@ -371,7 +372,7 @@ class BlogPosts
 		$post->ogImage = $row->ogImage;
 		$post->tags = ($row->tags !== null ? $this->tags->unserialize($row->tags) : []);
 		$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
-		$post->recommended = ($row->recommended !== null ? Json::decode($row->recommended) : []);
+		$post->recommended = (empty($row->recommended) ? [] : $this->recommendedLinks->getFromJson($row->recommended));
 		$post->twitterCard = $row->twitterCardId !== null ? $this->twitterCards->buildCard($row->twitterCardId, $row->twitterCard, $row->twitterCardTitle) : null;
 		$post->cspSnippets = ($row->cspSnippets !== null ? Json::decode($row->cspSnippets) : []);
 		$post->allowedTags = ($row->allowedTags !== null ? Json::decode($row->allowedTags) : []);

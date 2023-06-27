@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use MichalSpacekCz\Application\AppRequest;
 use MichalSpacekCz\Http\Redirections;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
@@ -14,12 +15,12 @@ abstract class BaseErrorPresenter extends BasePresenter
 
 	private Redirections $redirections;
 	private ILogger $logger;
+	private AppRequest $appRequest;
 	protected bool $logAccess = true;
 
 
 	/**
 	 * @internal
-	 * @param Redirections $redirections
 	 */
 	public function injectRedirections(Redirections $redirections): void
 	{
@@ -29,11 +30,19 @@ abstract class BaseErrorPresenter extends BasePresenter
 
 	/**
 	 * @internal
-	 * @param ILogger $logger
 	 */
 	public function injectLogger(ILogger $logger): void
 	{
 		$this->logger = $logger;
+	}
+
+
+	/**
+	 * @internal
+	 */
+	public function injectAppRequest(AppRequest $appRequest): void
+	{
+		$this->appRequest = $appRequest;
 	}
 
 
@@ -54,7 +63,7 @@ abstract class BaseErrorPresenter extends BasePresenter
 		}
 
 		if ($this->logAccess) {
-			$e = $request->getParameter('exception');
+			$e = $this->appRequest->getException($request);
 			$this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
 		}
 	}

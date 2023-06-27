@@ -58,21 +58,29 @@ class CertificateFactory
 
 
 	/**
-	 * @param array{commonName:string, commonNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string} $details
-	 * @return Certificate
 	 * @throws CannotParseDateTimeException
 	 * @throws CertificateException
 	 */
-	public function fromArray(array $details): Certificate
-	{
+	public function get(
+		string $commonName,
+		?string $commonNameExt,
+		string $notBefore,
+		string $notBeforeTz,
+		string $notAfter,
+		string $notAfterTz,
+		int $expiringThreshold,
+		?string $serialNumber,
+		string $now,
+		string $nowTz,
+	): Certificate {
 		return new Certificate(
-			$details['commonName'],
-			$details['commonNameExt'],
-			$this->createDateTimeImmutable($details['notBefore'], $details['notBeforeTz']),
-			$this->createDateTimeImmutable($details['notAfter'], $details['notAfterTz']),
-			$details['expiringThreshold'],
-			$details['serialNumber'],
-			$this->createDateTimeImmutable($details['now'], $details['nowTz']),
+			$commonName,
+			$commonNameExt,
+			$this->createDateTimeImmutable($notBefore, $notBeforeTz),
+			$this->createDateTimeImmutable($notAfter, $notAfterTz),
+			$expiringThreshold,
+			$serialNumber,
+			$this->createDateTimeImmutable($now, $nowTz),
 		);
 	}
 
@@ -86,6 +94,36 @@ class CertificateFactory
 	private function createDateTimeImmutable(string $time, string $timeZone): DateTimeImmutable
 	{
 		return DateTimeParser::createFromFormat(DateTime::DATE_RFC3339_MICROSECONDS, $time)->setTimezone(new DateTimeZone($timeZone));
+	}
+
+
+	/**
+	 * @param array<string|int, mixed> $request
+	 * @return list<Certificate>
+	 */
+	public function listFromLogRequest(array $request): array
+	{
+		$certs = [];
+		foreach ($request as $cert) {
+			if (
+				is_array($cert)
+				&& isset($cert['cn'], $cert['ext'], $cert['start'], $cert['expiry'])
+				&& is_string($cert['cn'])
+				&& is_string($cert['ext'])
+				&& is_numeric($cert['start'])
+				&& is_numeric($cert['expiry'])
+			) {
+				$certs[] = new Certificate(
+					$cert['cn'],
+					$cert['ext'] ?: null,
+					new DateTimeImmutable("@{$cert['start']}"),
+					new DateTimeImmutable("@{$cert['expiry']}"),
+					$this->expiringThreshold,
+					null,
+				);
+			}
+		}
+		return $certs;
 	}
 
 }

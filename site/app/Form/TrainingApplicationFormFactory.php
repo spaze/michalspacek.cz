@@ -92,7 +92,8 @@ class TrainingApplicationFormFactory
 
 		$form->addSubmit('signUp', 'Odeslat');
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
+			$values = $form->getValues();
 			try {
 				$this->formSpam->check($values, $action, $sessionSection);
 				if ($multipleDates) {

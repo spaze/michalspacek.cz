@@ -3,12 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User\Exceptions;
 
-use Exception;
 use Nette\Security\IIdentity;
 use Nette\Security\SimpleIdentity;
 use Throwable;
 
-class IdentityNotSimpleIdentityException extends Exception
+class IdentityNotSimpleIdentityException extends IdentityException
 {
 
 	public function __construct(?IIdentity $identity, ?Throwable $previous = null)

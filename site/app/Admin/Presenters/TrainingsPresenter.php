@@ -257,7 +257,6 @@ class TrainingsPresenter extends BasePresenter
 			function (int $dateId): never {
 				$this->redirect($this->getAction(), $dateId);
 			},
-			$this->request,
 			$this->training->getTrainingId(),
 			$this->dateId,
 			$this->training->getPrice(),

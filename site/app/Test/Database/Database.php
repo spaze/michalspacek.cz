@@ -3,11 +3,21 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Database;
 
+use DateTimeInterface;
+use MichalSpacekCz\Test\WillThrow;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
 class Database extends Explorer
 {
+
+	use WillThrow;
+
+
+	private string $insertId = '';
+
+	/** @var array<string, array<string|int, string|int|DateTimeInterface|null>> */
+	private array $queries = [];
 
 	/** @var array<string, int|string|null> */
 	private array $fetchResult = [];
@@ -29,11 +39,57 @@ class Database extends Explorer
 
 	public function reset(): void
 	{
+		$this->queries = [];
 		$this->fetchResult = [];
 		$this->fetchPairsResult = [];
 		$this->fetchAllDefaultResult = [];
 		$this->fetchAllResults = [];
 		$this->fetchAllResultsPosition = 0;
+		$this->wontThrow();
+	}
+
+
+	public function beginTransaction(): void
+	{
+	}
+
+
+	public function commit(): void
+	{
+	}
+
+
+	public function setInsertId(string $insertId): void
+	{
+		$this->insertId = $insertId;
+	}
+
+
+	public function getInsertId(?string $sequence = null): string
+	{
+		return $this->insertId;
+	}
+
+
+	/**
+	 * @param literal-string $sql
+	 * @param string|int|DateTimeInterface|null ...$params
+	 * @return ResultSet
+	 */
+	public function query(string $sql, ...$params): ResultSet
+	{
+		$this->maybeThrow();
+		$this->queries[$sql] = array_merge($this->queries[$sql] ?? [], $params);
+		return new ResultSet();
+	}
+
+
+	/**
+	 * @return array<string|int, string|int|DateTimeInterface|null>
+	 */
+	public function getParamsForQuery(string $query): array
+	{
+		return $this->queries[$query] ?? [];
 	}
 
 

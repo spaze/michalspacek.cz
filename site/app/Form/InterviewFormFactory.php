@@ -9,7 +9,6 @@ use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
-use stdClass;
 
 class InterviewFormFactory
 {
@@ -72,7 +71,8 @@ class InterviewFormFactory
 			$this->setInterview($form, $interview, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($interview, $onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($interview, $onSuccess): void {
+			$values = $form->getValues();
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($interview) {

@@ -3,8 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use MichalSpacekCz\Test\Http\Response as TestResponse;
-use Nette\Http\IRequest;
+use MichalSpacekCz\Http\HttpInput;
 use Nette\Http\IResponse;
 use Nette\Http\Response;
 
@@ -19,7 +18,7 @@ class Theme
 
 
 	public function __construct(
-		private readonly IRequest $httpRequest,
+		private readonly HttpInput $httpInput,
 		private readonly IResponse $httpResponse,
 	) {
 	}
@@ -39,14 +38,14 @@ class Theme
 
 	public function isDarkMode(): ?bool
 	{
-		$cookie = $this->httpRequest->getCookie(self::COOKIE);
+		$cookie = $this->httpInput->getCookieString(self::COOKIE);
 		return $cookie === self::DARK ? true : ($cookie === self::LIGHT ? false : null);
 	}
 
 
 	private function setCookie(string $mode): void
 	{
-		/** @var Response|TestResponse $response */
+		/** @var Response $response Not IResponse because https://github.com/nette/http/issues/200 */
 		$response = $this->httpResponse;
 		$response->setCookie(self::COOKIE, $mode, '+10 years', null, null, null, null, 'None');
 	}

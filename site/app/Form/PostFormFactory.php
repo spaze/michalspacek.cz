@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostPreview;
+use MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -18,7 +19,6 @@ use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
-use Nette\Utils\Json;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
@@ -36,6 +36,7 @@ class PostFormFactory
 		private readonly BlogPostPreview $blogPostPreview,
 		private readonly FormValues $formValues,
 		private readonly TwitterCards $twitterCards,
+		private readonly BlogPostRecommendedLinks $recommendedLinks,
 	) {
 	}
 
@@ -121,15 +122,16 @@ class PostFormFactory
 				$this->blogPostPreview->sendPreview($post, $template, $sendTemplate);
 			};
 
-		$form->onValidate[] = function (Form $form, stdClass $values) use ($postId): void {
-			$post = $this->buildPost($values, $postId);
+		$form->onValidate[] = function (Form $form) use ($postId): void {
+			$post = $this->buildPost($form->getValues(), $postId);
 			if ($post->needsPreviewKey() && $post->previewKey === null) {
 				/** @var TextInput $input */
 				$input = $form->getComponent('previewKey');
 				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $post->published === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $postId): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $postId): void {
+			$values = $form->getValues();
 			$post = $this->buildPost($values, $postId);
 			$this->blogPosts->enrich($post);
 			try {
@@ -161,7 +163,7 @@ class PostFormFactory
 		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
 		$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));
 		$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
-		$post->recommended = (empty($values->recommended) ? [] : Json::decode($values->recommended));
+		$post->recommended = $values->recommended ? $this->recommendedLinks->getFromJson($values->recommended) : [];
 		$post->twitterCard = (empty($values->twitterCard) ? null : $this->twitterCards->getCard($values->twitterCard));
 		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
 		$post->cspSnippets = (empty($values->cspSnippets) ? [] : $values->cspSnippets);

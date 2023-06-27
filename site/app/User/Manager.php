@@ -5,7 +5,12 @@ namespace MichalSpacekCz\User;
 
 use DateTimeInterface;
 use Exception;
+use MichalSpacekCz\Http\HttpInput;
+use MichalSpacekCz\User\Exceptions\IdentityException;
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
+use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
+use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -41,6 +46,7 @@ class Manager implements Authenticator
 		private readonly Explorer $database,
 		private readonly IRequest $httpRequest,
 		private readonly Response $httpResponse, // Not IResponse because https://github.com/nette/http/issues/200
+		private readonly HttpInput $httpInput,
 		private readonly Passwords $passwords,
 		private readonly StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator,
@@ -82,14 +88,22 @@ class Manager implements Authenticator
 
 	/**
 	 * @throws IdentityNotSimpleIdentityException
+	 * @throws IdentityWithoutUsernameException
+	 * @throws IdentityUsernameNotStringException
 	 */
-	public function getIdentityByUser(User $user): SimpleIdentity
+	public function getIdentityUsernameByUser(User $user): string
 	{
 		$identity = $user->getIdentity();
 		if (!$identity instanceof SimpleIdentity) {
 			throw new IdentityNotSimpleIdentityException($identity);
 		}
-		return $identity;
+		if (!isset($identity->username)) {
+			throw new IdentityWithoutUsernameException();
+		}
+		if (!is_string($identity->username)) {
+			throw new IdentityUsernameNotStringException(get_debug_type($identity->username));
+		}
+		return $identity->username;
 	}
 
 
@@ -137,12 +151,16 @@ class Manager implements Authenticator
 	 * @param string $newPassword
 	 * @throws AuthenticationException
 	 * @throws HaliteAlert
-	 * @throws IdentityNotSimpleIdentityException
+	 * @throws IdentityException
 	 */
 	public function changePassword(User $user, string $password, string $newPassword): void
 	{
-		$this->verifyPassword($this->getIdentityByUser($user)->username, $password);
-		$this->updatePassword($user->getId(), $newPassword);
+		$userId = $user->getId();
+		if (!is_int($userId)) {
+			throw new IdentityIdNotIntException(get_debug_type($userId));
+		}
+		$this->verifyPassword($this->getIdentityUsernameByUser($user), $password);
+		$this->updatePassword($userId, $newPassword);
 		$this->clearPermanentLogin($user);
 	}
 
@@ -180,7 +198,7 @@ class Manager implements Authenticator
 
 	public function isReturningUser(): bool
 	{
-		$cookie = $this->httpRequest->getCookie($this->returningUserCookie);
+		$cookie = $this->httpInput->getCookieString($this->returningUserCookie);
 		return ($cookie && $this->verifyReturningUser($cookie));
 	}
 
@@ -278,7 +296,7 @@ class Manager implements Authenticator
 	 */
 	public function verifyPermanentLogin(): ?Row
 	{
-		$cookie = $this->httpRequest->getCookie($this->permanentLoginCookie) ?? '';
+		$cookie = $this->httpInput->getCookieString($this->permanentLoginCookie) ?? '';
 		return $this->verifyToken($cookie, DateTime::from("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
 	}
 

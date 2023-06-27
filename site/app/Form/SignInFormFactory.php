@@ -9,7 +9,6 @@ use Nette\Application\UI\Form;
 use Nette\Http\IRequest;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
-use stdClass;
 use Tracy\Debugger;
 
 class SignInFormFactory
@@ -33,7 +32,8 @@ class SignInFormFactory
 	{
 		$form = $this->factory->create();
 		$this->controlsFactory->addSignIn($form);
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$values = $form->getValues();
 			$this->user->setExpiration('30 minutes', true);
 			try {
 				$this->user->login($values->username, $values->password);

@@ -4,12 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Statuses;
-use Nette\Application\Request;
 use Nette\Application\UI\Form;
-use stdClass;
 
 class TrainingApplicationMultipleFormFactory
 {
@@ -19,25 +18,25 @@ class TrainingApplicationMultipleFormFactory
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly Applications $trainingApplications,
 		private readonly Statuses $trainingStatuses,
+		private readonly HttpInput $httpInput,
 	) {
 	}
 
 
 	/**
 	 * @param callable(int): void $onSuccess
-	 * @param Request $request
 	 * @param int $trainingId
 	 * @param int $dateId
 	 * @param Price|null $price
 	 * @param int|null $studentDiscount
 	 * @return Form
 	 */
-	public function create(callable $onSuccess, Request $request, int $trainingId, int $dateId, ?Price $price, ?int $studentDiscount): Form
+	public function create(callable $onSuccess, int $trainingId, int $dateId, ?Price $price, ?int $studentDiscount): Form
 	{
 		$form = $this->factory->create();
 		$applicationsContainer = $form->addContainer('applications');
-		$applications = $request->getPost('applications');
-		$count = max(is_array($applications) ? count($applications) : 1, 1);
+		$applications = $this->httpInput->getPostArray('applications');
+		$count = max($applications ? count($applications) : 1, 1);
 		for ($i = 0; $i < $count; $i++) {
 			$dataContainer = $applicationsContainer->addContainer($i);
 			$this->trainingControlsFactory->addAttendee($dataContainer);
@@ -60,7 +59,8 @@ class TrainingApplicationMultipleFormFactory
 
 		$form->addSubmit('submit', 'Přidat');
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($trainingId, $dateId, $price, $studentDiscount, $onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($trainingId, $dateId, $price, $studentDiscount, $onSuccess): void {
+			$values = $form->getValues();
 			foreach ($values->applications as $application) {
 				$this->trainingApplications->insertApplication(
 					$trainingId,

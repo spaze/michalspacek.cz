@@ -146,6 +146,18 @@ parameters:
 				- vendor/symfony/cache/Adapter/PhpArrayAdapter.php
 				- vendor/symfony/filesystem/Filesystem.php
 				- vendor/tracy/tracy/src/Tracy/Logger/FireLogger.php
+	disallowedMethodCalls:
+		-
+			method:
+				- 'Nette\Application\Request::getPost()'
+				- 'Nette\Http\IRequest::getCookie()'
+				- 'Nette\Http\IRequest::getPost()'
+			message: 'instead use methods from MichalSpacekCz\Http\HttpInput with more handy return types'
+			allowIn:
+				- vendor/nette/application/src/Application/*
+				- vendor/nette/forms/src/Forms/Form.php
+				- vendor/nette/http/src/Http/Session.php
+				- vendor/nette/security/src/Bridges/SecurityHttp/CookieStorage.php
 	disallowedStaticCalls:
 		-
 			method: 'Tracy\Debugger::barDump()'

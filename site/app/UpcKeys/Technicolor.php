@@ -5,9 +5,11 @@ namespace MichalSpacekCz\UpcKeys;
 
 use DateTime;
 use DateTimeZone;
+use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiResponseInvalidException;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use PDOException;
 use RuntimeException;
 
@@ -38,8 +40,8 @@ class Technicolor implements RouterInterface
 	 *
 	 * If the keys are not already in the database, store them.
 	 *
-	 * @param string $ssid
 	 * @return array<int, WiFiKey>
+	 * @throws UpcKeysApiResponseInvalidException
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -59,8 +61,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Save keys to a database if not already there.
 	 *
-	 * @param string $ssid
-	 * @return bool
+	 * @throws UpcKeysApiResponseInvalidException
 	 */
 	public function saveKeys(string $ssid): bool
 	{
@@ -80,10 +81,19 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string $ssid
 	 * @return array<int, WiFiKey>
+	 * @throws UpcKeysApiResponseInvalidException
 	 */
 	private function generateKeys(string $ssid): array
 	{
-		$data = Json::decode($this->callApi(sprintf($this->apiUrl, $ssid, implode(',', $this->serialNumberPrefixes))));
+		$json = $this->callApi(sprintf($this->apiUrl, $ssid, implode(',', $this->serialNumberPrefixes)));
+		try {
+			$data = Json::decode($json);
+		} catch (JsonException $e) {
+			throw new UpcKeysApiResponseInvalidException(previous: $e);
+		}
+		if (!is_string($data)) {
+			throw new UpcKeysApiResponseInvalidException($json);
+		}
 		$keys = [];
 		foreach (explode("\n", $data) as $line) {
 			if (empty($line)) {

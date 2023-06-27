@@ -3,11 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
+use MichalSpacekCz\User\Exceptions\IdentityException;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\Form;
 use Nette\Security\User;
-use stdClass;
 
 class ChangePasswordFormFactory
 {
@@ -23,13 +22,13 @@ class ChangePasswordFormFactory
 	/**
 	 * @param callable(): void $onSuccess
 	 * @return Form
-	 * @throws IdentityNotSimpleIdentityException
+	 * @throws IdentityException
 	 */
 	public function create(callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
 		$form->addText('username')
-			->setDefaultValue($this->authenticator->getIdentityByUser($this->user)->username)
+			->setDefaultValue($this->authenticator->getIdentityUsernameByUser($this->user))
 			->setHtmlAttribute('autocomplete', 'username')
 			->setHtmlAttribute('class', 'hidden');
 		$form->addPassword('password', 'Současné heslo:')
@@ -46,7 +45,8 @@ class ChangePasswordFormFactory
 			->addRule($form::EQUAL, 'Hesla se neshodují', $newPassword);
 		$form->addSubmit('save', 'Uložit');
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
+			$values = $form->getValues();
 			$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
 			$onSuccess();
 		};

@@ -12,7 +12,6 @@ use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
-use stdClass;
 
 class TrainingApplicationAdminFormFactory
 {
@@ -93,7 +92,8 @@ class TrainingApplicationAdminFormFactory
 				};
 		}
 
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($application, $onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($application, $onSuccess): void {
+			$values = $form->getValues();
 			$dateId = $values->date ?? null;
 			$this->trainingApplications->updateApplicationData(
 				$application->applicationId,

@@ -1,4 +1,5 @@
 services:
+	- MichalSpacekCz\Application\AppRequest
 	- MichalSpacekCz\Application\Error
 	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator
 	- MichalSpacekCz\Application\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
@@ -11,6 +12,7 @@ services:
 	- MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls
 	- MichalSpacekCz\Articles\Blog\BlogPostPreview
 	- MichalSpacekCz\Articles\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
+	- MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks
 	- MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
 	- MichalSpacekCz\CompanyInfo\Info(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\RegisterUz(rootUrl: %registerUz.rootUrl%)
@@ -52,6 +54,7 @@ services:
 		autowired: false
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Formatter\TrainingDateTexyFormatterPlaceholder
+	- MichalSpacekCz\Http\HttpInput
 	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
@@ -75,6 +78,7 @@ services:
 	latte.templateFactory:
 		create: MichalSpacekCz\Templating\TemplateFactory()
 		autowired: Nette\Application\UI\TemplateFactory
+	- MichalSpacekCz\Tls\CertificateAttemptFactory
 	- MichalSpacekCz\Tls\CertificateFactory(expiringThreshold: %certificatesApi.expiringThreshold%)
 	- MichalSpacekCz\Tls\CertificateGatherer
 	- MichalSpacekCz\Tls\CertificateMonitor

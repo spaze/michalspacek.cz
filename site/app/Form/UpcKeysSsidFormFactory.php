@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\UpcKeys\Technicolor;
 use MichalSpacekCz\UpcKeys\UpcKeys;
 use Nette\Application\UI\Form;
-use stdClass;
 
 class UpcKeysSsidFormFactory
 {
@@ -37,7 +36,8 @@ class UpcKeysSsidFormFactory
 		$form->addSubmit('submit', 'Get keys')
 			->setHtmlId('submit')
 			->setHtmlAttribute('data-alt', 'Wait…');
-		$form->onSuccess[] = function (Form $form, stdClass $values) use ($onSuccess, $onError): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError): void {
+			$values = $form->getValues();
 			$ssid = strtoupper(trim($values->ssid));
 			if (!$this->technicolor->saveKeys($ssid)) {
 				$onError();

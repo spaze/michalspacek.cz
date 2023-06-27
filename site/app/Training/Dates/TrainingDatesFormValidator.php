@@ -15,8 +15,14 @@ class TrainingDatesFormValidator
 	 */
 	public function validateFormStartEnd(TextInput $inputStart, TextInput $inputEnd): void
 	{
-		$start = new DateTimeImmutable($inputStart->getValue());
-		$end = new DateTimeImmutable($inputEnd->getValue());
+		$valueStart = $inputStart->getValue();
+		$valueEnd = $inputEnd->getValue();
+		if (!is_string($valueStart) || !is_string($valueEnd)) {
+			$inputEnd->addError('Začátek i školení musí být řetězec');
+			return;
+		}
+		$start = new DateTimeImmutable($valueStart);
+		$end = new DateTimeImmutable($valueEnd);
 
 		if ($end->format('H:i') === $start->format('H:i')) {
 			$inputEnd->addError('Školení nemůže začínat a končit ve stejný čas');
