@@ -7,6 +7,7 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
+use MichalSpacekCz\Talks\TalkSlides;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -17,6 +18,7 @@ class TalksPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Talks $talks,
+		private readonly TalkSlides $talkSlides,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly VideoThumbnails $videoThumbnails,
 	) {
@@ -50,12 +52,12 @@ class TalksPresenter extends BasePresenter
 			$talk = $this->talks->get($name);
 			if ($talk->slidesTalkId) {
 				$slidesTalk = $this->talks->getById($talk->slidesTalkId);
-				$slides = ($slidesTalk->publishSlides ? $this->talks->getSlides($slidesTalk->talkId, $slidesTalk->filenamesTalkId) : []);
-				$slideNo = $this->talks->getSlideNo($talk->slidesTalkId, $slide);
+				$slides = ($slidesTalk->publishSlides ? $this->talkSlides->getSlides($slidesTalk->talkId, $slidesTalk->filenamesTalkId) : []);
+				$slideNo = $this->talkSlides->getSlideNo($talk->slidesTalkId, $slide);
 				$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$slidesTalk->action]);
 			} else {
-				$slides = ($talk->publishSlides ? $this->talks->getSlides($talk->talkId, $talk->filenamesTalkId) : []);
-				$slideNo = $this->talks->getSlideNo($talk->talkId, $slide);
+				$slides = ($talk->publishSlides ? $this->talkSlides->getSlides($talk->talkId, $talk->filenamesTalkId) : []);
+				$slideNo = $this->talkSlides->getSlideNo($talk->talkId, $slide);
 				if ($slideNo !== null) {
 					$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$talk->action]);
 				}

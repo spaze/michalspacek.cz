@@ -11,7 +11,7 @@ parameters:
 			function: 'sha1()'
 			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
 			allowInMethods:
-				- 'MichalSpacekCz\Talks\Talks::getSlideImageFileBasename()'
+				- 'MichalSpacekCz\Talks\TalkSlides::getSlideImageFileBasename()'
 				- 'MichalSpacekCz\Www\Presenters\ExportsPresenter::getEtag()'
 	disallowedMethodCalls:
 		-

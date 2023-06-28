@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
-use MichalSpacekCz\Talks\Talks;
+use MichalSpacekCz\Talks\TalkSlides;
 use Nette\Application\Request;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
@@ -19,7 +19,7 @@ class TalkSlidesFormFactory
 
 	public function __construct(
 		private readonly FormFactory $factory,
-		private readonly Talks $talks,
+		private readonly TalkSlides $talkSlides,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly SupportedImageFileFormats $supportedImageFileFormats,
 	) {
@@ -67,7 +67,7 @@ class TalkSlidesFormFactory
 
 		$form->onSuccess[] = function (Form $form) use ($slides, $onSuccess, $talkId): void {
 			try {
-				$this->talks->saveSlides($talkId, $slides, $form->getValues());
+				$this->talkSlides->saveSlides($talkId, $slides, $form->getValues());
 				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
 			} catch (DuplicatedSlideException $e) {

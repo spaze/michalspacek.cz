@@ -8,6 +8,7 @@ use MichalSpacekCz\Form\TalkSlidesFormFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talks;
+use MichalSpacekCz\Talks\TalkSlides;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
@@ -30,6 +31,7 @@ class TalksPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Talks $talks,
+		private readonly TalkSlides $talkSlides,
 		private readonly TalkFormFactory $talkFormFactory,
 		private readonly TalkSlidesFormFactory $talkSlidesFormFactory,
 		private readonly VideoThumbnails $videoThumbnails,
@@ -68,7 +70,7 @@ class TalksPresenter extends BasePresenter
 	{
 		try {
 			$this->talk = $this->talks->getById((int)$param);
-			$this->slides = $this->talks->getSlides($this->talk->talkId, $this->talk->filenamesTalkId);
+			$this->slides = $this->talkSlides->getSlides($this->talk->talkId, $this->talk->filenamesTalkId);
 		} catch (RuntimeException $e) {
 			throw new BadRequestException($e->getMessage());
 		}
@@ -81,7 +83,7 @@ class TalksPresenter extends BasePresenter
 		$new = $this->httpInput->getPostArray('new');
 		$count = $new ? count($new) : 0;
 		$this->template->newCount = $this->newCount = ($count ?: (int)empty($this->slides));
-		$this->template->dimensions = $this->talks->getSlideDimensions();
+		$this->template->dimensions = $this->talkSlides->getSlideDimensions();
 	}
 
 
