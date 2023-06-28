@@ -71,6 +71,7 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\AlgorithmAttributesFactory
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
+	- MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\Talks

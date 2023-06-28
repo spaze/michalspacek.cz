@@ -8,25 +8,18 @@ use MichalSpacekCz\Pulse\Passwords\StorageSharedWith;
 class SpecificSite extends WildcardSite
 {
 
-	/** @var array<int, StorageSharedWith> */
-	private array $sharedWith = [];
-
-
 	/**
-	 * @param array<int, array{url:string, alias:string}> $sharedWith
+	 * @param list<StorageSharedWith> $sharedWith
 	 */
 	public function __construct(
 		string $id,
 		private readonly string $url,
 		private readonly string $alias,
-		array $sharedWith,
+		private readonly array $sharedWith,
 		Company $company,
 		string $storageId,
 	) {
 		parent::__construct($id, $company, $storageId);
-		foreach ($sharedWith as $sharedSite) {
-			$this->sharedWith[] = new StorageSharedWith($sharedSite['url'], $sharedSite['alias']);
-		}
 	}
 
 
@@ -43,7 +36,7 @@ class SpecificSite extends WildcardSite
 
 
 	/**
-	 * @return array<int, StorageSharedWith>
+	 * @return list<StorageSharedWith>
 	 */
 	public function getSharedWith(): array
 	{
