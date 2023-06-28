@@ -4,8 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\CompanyInfo;
 
 use Exception;
+use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use Nette\Http\IResponse;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use RuntimeException;
 use stdClass;
 use Tracy\Debugger;
@@ -78,6 +80,8 @@ class RegisterUz implements CompanyDataInterface
 	 * @param string $method
 	 * @param array<string, string> $parameters
 	 * @return stdClass JSON object
+	 * @throws JsonException
+	 * @throws CompanyInfoException
 	 */
 	private function call(string $method, ?array $parameters = null): stdClass
 	{
@@ -91,7 +95,11 @@ class RegisterUz implements CompanyDataInterface
 			$lastError = error_get_last();
 			throw new RuntimeException($lastError ? $lastError['message'] : '', IResponse::S500_InternalServerError);
 		}
-		return Json::decode($content);
+		$data = Json::decode($content);
+		if (!$data instanceof stdClass) {
+			throw new CompanyInfoException(sprintf("Decoded JSON is a '%s' not a '%s' object (JSON: %s)", get_debug_type($data), stdClass::class, $content));
+		}
+		return $data;
 	}
 
 }

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -224,7 +225,7 @@ class Trainings
 
 	public function getActionById(int $id): string
 	{
-		return $this->database->fetchField(
+		$action = $this->database->fetchField(
 			'SELECT
 				a.action
 			FROM trainings t
@@ -237,6 +238,10 @@ class Trainings
 			$id,
 			$this->translator->getDefaultLocale(),
 		);
+		if (!is_string($action)) {
+			throw new ShouldNotHappenException(sprintf("Action for id '%s' is a %s not a string", $id, get_debug_type($action)));
+		}
+		return $action;
 	}
 
 

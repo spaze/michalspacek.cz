@@ -9,6 +9,7 @@ use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\SearchMatcher;
 use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
 use MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
@@ -333,7 +334,13 @@ class Passwords
 
 	private function getDisclosureId(string $url, string $archive): ?int
 	{
-		return $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive) ?: null;
+		$id = $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
+		if (!$id) {
+			return null;
+		} elseif (!is_int($id)) {
+			throw new ShouldNotHappenException(sprintf("Disclosure id for URL '%s' and archive '%s' is a %s not an integer", $url, $archive, get_debug_type($id)));
+		}
+		return $id;
 	}
 
 
@@ -387,7 +394,13 @@ class Passwords
 				'note' => (empty($note) ? null : $note),
 			],
 		);
-		return $result ?: null;
+
+		if (!$result) {
+			return null;
+		} elseif (!is_int($result)) {
+			throw new ShouldNotHappenException(sprintf("Storage id for company id '%s' and site id '%s' is a %s not an integer", $companyId, $algoId, get_debug_type($result)));
+		}
+		return $result;
 	}
 
 

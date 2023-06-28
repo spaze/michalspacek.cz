@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Articles;
 
 use DateTime;
 use MichalSpacekCz\Articles\Blog\BlogPost;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Tester\Assert;
@@ -137,6 +138,44 @@ class ArticlesTest extends TestCase
 		Assert::type(BlogPost::class, $articles[1]);
 		Assert::type(ArticlePublishedElsewhere::class, $articles[2]);
 		Assert::type(BlogPost::class, $articles[3]);
+	}
+
+
+	public function testGetNearestPublishDate(): void
+	{
+		$this->database->setFetchFieldResult(null);
+		Assert::null($this->articles->getNearestPublishDate());
+
+		$this->database->setFetchFieldResult(false);
+		Assert::null($this->articles->getNearestPublishDate());
+
+		$nearest = new DateTime('+3 days');
+		$this->database->setFetchFieldResult($nearest);
+		Assert::same($nearest, $this->articles->getNearestPublishDate());
+
+		Assert::throws(function (): void {
+			$this->database->setFetchFieldResult('\o/');
+			$this->articles->getNearestPublishDate();
+		}, ShouldNotHappenException::class, 'Nearest published date is a string not a DateTime object');
+	}
+
+
+	public function testGetNearestPublishDateByTags(): void
+	{
+		$this->database->setFetchFieldResult(null);
+		Assert::null($this->articles->getNearestPublishDateByTags(['foo']));
+
+		$this->database->setFetchFieldResult(false);
+		Assert::null($this->articles->getNearestPublishDateByTags(['foo']));
+
+		$nearest = new DateTime('+3 days');
+		$this->database->setFetchFieldResult($nearest);
+		Assert::same($nearest, $this->articles->getNearestPublishDateByTags(['foo']));
+
+		Assert::throws(function (): void {
+			$this->database->setFetchFieldResult('\o/');
+			$this->articles->getNearestPublishDateByTags(['foo']);
+		}, ShouldNotHappenException::class, 'Nearest published date is a string not a DateTime object');
 	}
 
 }
