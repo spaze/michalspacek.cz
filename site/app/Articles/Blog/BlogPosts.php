@@ -12,6 +12,9 @@ use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Twitter\TwitterCards;
+use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
+use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
+use MichalSpacekCz\Utils\JsonUtils;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
@@ -44,6 +47,7 @@ class BlogPosts
 		private readonly Translator $translator,
 		private readonly TwitterCards $twitterCards,
 		private readonly BlogPostRecommendedLinks $recommendedLinks,
+		private readonly JsonUtils $jsonUtils,
 		private readonly int $updatedInfoThreshold,
 		private readonly array $allowedTags,
 	) {
@@ -354,6 +358,8 @@ class BlogPosts
 	/**
 	 * @throws InvalidLinkException
 	 * @throws JsonException
+	 * @throws JsonItemNotStringException
+	 * @throws JsonItemsNotArrayException
 	 */
 	public function buildPost(Row $row): BlogPost
 	{
@@ -374,8 +380,8 @@ class BlogPosts
 		$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
 		$post->recommended = (empty($row->recommended) ? [] : $this->recommendedLinks->getFromJson($row->recommended));
 		$post->twitterCard = $row->twitterCardId !== null ? $this->twitterCards->buildCard($row->twitterCardId, $row->twitterCard, $row->twitterCardTitle) : null;
-		$post->cspSnippets = ($row->cspSnippets !== null ? Json::decode($row->cspSnippets) : []);
-		$post->allowedTags = ($row->allowedTags !== null ? Json::decode($row->allowedTags) : []);
+		$post->cspSnippets = ($row->cspSnippets !== null ? $this->jsonUtils->decodeListOfStrings($row->cspSnippets) : []);
+		$post->allowedTags = ($row->allowedTags !== null ? $this->jsonUtils->decodeListOfStrings($row->allowedTags) : []);
 		$post->omitExports = (bool)$row->omitExports;
 		$post->edits = $this->getEdits($post->postId);
 		$this->enrich($post);
