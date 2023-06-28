@@ -3,12 +3,21 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tags;
 
+use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
+use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
+use MichalSpacekCz\Utils\JsonUtils;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nette\Utils\Strings;
 
 class Tags
 {
+
+	public function __construct(
+		private readonly JsonUtils $jsonUtils,
+	) {
+	}
+
 
 	/**
 	 * Convert tags string to array.
@@ -58,10 +67,12 @@ class Tags
 	 * @param string $tags
 	 * @return list<string>
 	 * @throws JsonException
+	 * @throws JsonItemNotStringException
+	 * @throws JsonItemsNotArrayException
 	 */
 	public function unserialize(string $tags): array
 	{
-		return Json::decode($tags);
+		return $this->jsonUtils->decodeListOfStrings($tags);
 	}
 
 }
