@@ -30,23 +30,24 @@ class Lexer
 	public const TOKEN_OPEN_PHPDOC = 15;
 	public const TOKEN_CLOSE_PHPDOC = 16;
 	public const TOKEN_PHPDOC_TAG = 17;
-	public const TOKEN_FLOAT = 18;
-	public const TOKEN_INTEGER = 19;
-	public const TOKEN_SINGLE_QUOTED_STRING = 20;
-	public const TOKEN_DOUBLE_QUOTED_STRING = 21;
-	public const TOKEN_IDENTIFIER = 22;
-	public const TOKEN_THIS_VARIABLE = 23;
-	public const TOKEN_VARIABLE = 24;
-	public const TOKEN_HORIZONTAL_WS = 25;
-	public const TOKEN_PHPDOC_EOL = 26;
-	public const TOKEN_OTHER = 27;
-	public const TOKEN_END = 28;
-	public const TOKEN_COLON = 29;
-	public const TOKEN_WILDCARD = 30;
-	public const TOKEN_OPEN_CURLY_BRACKET = 31;
-	public const TOKEN_CLOSE_CURLY_BRACKET = 32;
-	public const TOKEN_NEGATED = 33;
-	public const TOKEN_ARROW = 34;
+	public const TOKEN_DOCTRINE_TAG = 18;
+	public const TOKEN_FLOAT = 19;
+	public const TOKEN_INTEGER = 20;
+	public const TOKEN_SINGLE_QUOTED_STRING = 21;
+	public const TOKEN_DOUBLE_QUOTED_STRING = 22;
+	public const TOKEN_IDENTIFIER = 23;
+	public const TOKEN_THIS_VARIABLE = 24;
+	public const TOKEN_VARIABLE = 25;
+	public const TOKEN_HORIZONTAL_WS = 26;
+	public const TOKEN_PHPDOC_EOL = 27;
+	public const TOKEN_OTHER = 28;
+	public const TOKEN_END = 29;
+	public const TOKEN_COLON = 30;
+	public const TOKEN_WILDCARD = 31;
+	public const TOKEN_OPEN_CURLY_BRACKET = 32;
+	public const TOKEN_CLOSE_CURLY_BRACKET = 33;
+	public const TOKEN_NEGATED = 34;
+	public const TOKEN_ARROW = 35;
 
 	public const TOKEN_LABELS = [
 		self::TOKEN_REFERENCE => '\'&\'',
@@ -72,6 +73,7 @@ class Lexer
 		self::TOKEN_OPEN_PHPDOC => '\'/**\'',
 		self::TOKEN_CLOSE_PHPDOC => '\'*/\'',
 		self::TOKEN_PHPDOC_TAG => 'TOKEN_PHPDOC_TAG',
+		self::TOKEN_DOCTRINE_TAG => 'TOKEN_DOCTRINE_TAG',
 		self::TOKEN_PHPDOC_EOL => 'TOKEN_PHPDOC_EOL',
 		self::TOKEN_FLOAT => 'TOKEN_FLOAT',
 		self::TOKEN_INTEGER => 'TOKEN_INTEGER',
@@ -90,8 +92,16 @@ class Lexer
 	public const TYPE_OFFSET = 1;
 	public const LINE_OFFSET = 2;
 
+	/** @var bool */
+	private $parseDoctrineAnnotations;
+
 	/** @var string|null */
 	private $regexp;
+
+	public function __construct(bool $parseDoctrineAnnotations = false)
+	{
+		$this->parseDoctrineAnnotations = $parseDoctrineAnnotations;
+	}
 
 	/**
 	 * @return list<array{string, int, int}>
@@ -160,16 +170,20 @@ class Lexer
 			self::TOKEN_PHPDOC_TAG => '@(?:[a-z][a-z0-9-\\\\]+:)?[a-z][a-z0-9-\\\\]*+',
 			self::TOKEN_PHPDOC_EOL => '\\r?+\\n[\\x09\\x20]*+(?:\\*(?!/)\\x20?+)?',
 
-			self::TOKEN_FLOAT => '(?:-?[0-9]++\\.[0-9]*+(?:e-?[0-9]++)?)|(?:-?[0-9]*+\\.[0-9]++(?:e-?[0-9]++)?)|(?:-?[0-9]++e-?[0-9]++)',
-			self::TOKEN_INTEGER => '-?(?:(?:0b[0-1]++)|(?:0o[0-7]++)|(?:0x[0-9a-f]++)|(?:[0-9]++))',
+			self::TOKEN_FLOAT => '[+\-]?(?:(?:[0-9]++(_[0-9]++)*\\.[0-9]*+(_[0-9]++)*(?:e[+\-]?[0-9]++(_[0-9]++)*)?)|(?:[0-9]*+(_[0-9]++)*\\.[0-9]++(_[0-9]++)*(?:e[+\-]?[0-9]++(_[0-9]++)*)?)|(?:[0-9]++(_[0-9]++)*e[+\-]?[0-9]++(_[0-9]++)*))',
+			self::TOKEN_INTEGER => '[+\-]?(?:(?:0b[0-1]++(_[0-1]++)*)|(?:0o[0-7]++(_[0-7]++)*)|(?:0x[0-9a-f]++(_[0-9a-f]++)*)|(?:[0-9]++(_[0-9]++)*))',
 			self::TOKEN_SINGLE_QUOTED_STRING => '\'(?:\\\\[^\\r\\n]|[^\'\\r\\n\\\\])*+\'',
 			self::TOKEN_DOUBLE_QUOTED_STRING => '"(?:\\\\[^\\r\\n]|[^"\\r\\n\\\\])*+"',
 
 			self::TOKEN_WILDCARD => '\\*',
-
-			// anything but TOKEN_CLOSE_PHPDOC or TOKEN_HORIZONTAL_WS or TOKEN_EOL
-			self::TOKEN_OTHER => '(?:(?!\\*/)[^\\s])++',
 		];
+
+		if ($this->parseDoctrineAnnotations) {
+			$patterns[self::TOKEN_DOCTRINE_TAG] = '@[a-z_\\\\][a-z0-9_\:\\\\]*[a-z_][a-z0-9_]*';
+		}
+
+		// anything but TOKEN_CLOSE_PHPDOC or TOKEN_HORIZONTAL_WS or TOKEN_EOL
+		$patterns[self::TOKEN_OTHER] = '(?:(?!\\*/)[^\\s])++';
 
 		foreach ($patterns as $type => &$pattern) {
 			$pattern = '(?:' . $pattern . ')(*MARK:' . $type . ')';
