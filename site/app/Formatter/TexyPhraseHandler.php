@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Formatter;
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
+use MichalSpacekCz\Formatter\Exceptions\UnexpectedHandlerInvocationReturnType;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Locales;
 use Nette\Application\Application;
@@ -44,11 +45,12 @@ class TexyPhraseHandler
 	 * @param Link|null $link
 	 * @return HtmlElement<HtmlElement|string>|string|false
 	 * @throws InvalidLinkException
+	 * @throws UnexpectedHandlerInvocationReturnType
 	 */
 	public function solve(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
 		if (!$link) {
-			return $invocation->proceed();
+			return $this->proceed($invocation);
 		}
 
 		$localeRegExp = '([a-z]{2}_[A-Z]{2})';
@@ -97,7 +99,7 @@ class TexyPhraseHandler
 			}
 		}
 
-		return $invocation->proceed();
+		return $this->proceed($invocation);
 	}
 
 
@@ -149,6 +151,19 @@ class TexyPhraseHandler
 			->addHtml(Html::el()->setText(' '))
 			->addHtml(Html::el('small')->setText(sprintf('(**%s:%s**)', TrainingDateTexyFormatterPlaceholder::getPlaceholder(), $training)));
 		return $el->render();
+	}
+
+
+	/**
+	 * @throws UnexpectedHandlerInvocationReturnType
+	 */
+	private function proceed(HandlerInvocation $invocation): HtmlElement|string|false
+	{
+		$result = $invocation->proceed();
+		if (!$result instanceof HtmlElement && !is_string($result) && $result !== false) {
+			throw new UnexpectedHandlerInvocationReturnType($result);
+		}
+		return $result;
 	}
 
 }
