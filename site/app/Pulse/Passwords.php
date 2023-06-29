@@ -4,18 +4,15 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse;
 
 use DateTime;
-use MichalSpacekCz\Pulse\Passwords\Algorithm;
-use MichalSpacekCz\Pulse\Passwords\AlgorithmAttributesFactory;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\SearchMatcher;
-use MichalSpacekCz\Pulse\Passwords\Storage;
-use MichalSpacekCz\Pulse\Passwords\StorageDisclosure;
 use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
+use MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Json;
 
 class Passwords
 {
@@ -26,7 +23,7 @@ class Passwords
 		private readonly Companies $companies,
 		private readonly Sites $sites,
 		private readonly PasswordsSorting $sorting,
-		private readonly AlgorithmAttributesFactory $algorithmAttributesFactory,
+		private readonly StorageRegistryFactory $storageRegistryFactory,
 	) {
 	}
 
@@ -74,7 +71,7 @@ class Passwords
 			'ps.from' => false,
 			'disclosurePublished' => true,
 		];
-		$storages = $this->processStorages($this->database->fetchAll($query, $orderBy), $sort);
+		$storages = $this->storageRegistryFactory->get($this->database->fetchAll($query, $orderBy), $sort);
 		$searchMatcher = new SearchMatcher($search, $storages);
 		foreach ($storages->getSites() as $site) {
 			if (($rating && $site->getRating() !== $rating) || !$searchMatcher->match($site)) {
@@ -134,7 +131,7 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $sites), $this->sorting->getDefaultSort());
+		return $this->storageRegistryFactory->get($this->database->fetchAll($query, $sites), $this->sorting->getDefaultSort());
 	}
 
 
@@ -187,7 +184,7 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $companies), $this->sorting->getDefaultSort());
+		return $this->storageRegistryFactory->get($this->database->fetchAll($query, $companies), $this->sorting->getDefaultSort());
 	}
 
 
@@ -234,52 +231,7 @@ class Passwords
 				ps.from DESC,
 				pd.published';
 
-		return $this->processStorages($this->database->fetchAll($query, $companyId), $this->sorting->getDefaultSort());
-	}
-
-
-	/**
-	 * @param Row[] $data
-	 * @param string $sort
-	 * @return StorageRegistry
-	 */
-	private function processStorages(array $data, string $sort): StorageRegistry
-	{
-		$registry = new StorageRegistry();
-		foreach ($data as $row) {
-			$siteId = $this->sites->generateId($row->siteId, $row->companyId);
-			$storageKey = $this->sorting->isAnyCompanyAlphabetically($sort) ? (string)$row->companyId : $siteId;
-			$algoKey = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
-
-			if (!$registry->hasCompany($row->companyId)) {
-				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
-			}
-			if (!$registry->hasSite($siteId)) {
-				if ($row->siteId === null) {
-					$registry->addSite(new WildcardSite($siteId, $registry->getCompany($row->companyId), $storageKey));
-				} else {
-					$registry->addSite(new SpecificSite($siteId, $row->siteUrl, $row->siteAlias, $row->sharedWith ? Json::decode($row->sharedWith, forceArrays: true) : [], $registry->getCompany($row->companyId), $storageKey));
-				}
-			}
-			if (!$registry->hasStorage($storageKey)) {
-				$registry->addStorage(new Storage($storageKey, $row->companyId));
-			}
-			if (!$registry->getStorage($storageKey)->hasSite($siteId)) {
-				$registry->getStorage($storageKey)->addSite($registry->getSite($siteId));
-			}
-			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
-			if (!$registry->getStorage($storageKey)->getSite($siteId)->hasAlgorithm($algoKey)) {
-				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
-				$registry->getStorage($storageKey)->getSite($siteId)->addAlgorithm($algorithm);
-			} else {
-				$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);
-			}
-		}
-		foreach ($registry->getSites() as $site) {
-			$rating = $this->rating->get($site->getLatestAlgorithm());
-			$site->setRating($rating, $this->rating->isSecureStorage($rating), $this->rating->getRecommendation($rating));
-		}
-		return $this->sorting->sort($registry, $sort);
+		return $this->storageRegistryFactory->get($this->database->fetchAll($query, $companyId), $this->sorting->getDefaultSort());
 	}
 
 
@@ -382,7 +334,13 @@ class Passwords
 
 	private function getDisclosureId(string $url, string $archive): ?int
 	{
-		return $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive) ?: null;
+		$id = $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
+		if (!$id) {
+			return null;
+		} elseif (!is_int($id)) {
+			throw new ShouldNotHappenException(sprintf("Disclosure id for URL '%s' and archive '%s' is a %s not an integer", $url, $archive, get_debug_type($id)));
+		}
+		return $id;
 	}
 
 
@@ -436,7 +394,13 @@ class Passwords
 				'note' => (empty($note) ? null : $note),
 			],
 		);
-		return $result ?: null;
+
+		if (!$result) {
+			return null;
+		} elseif (!is_int($result)) {
+			throw new ShouldNotHappenException(sprintf("Storage id for company id '%s' and site id '%s' is a %s not an integer", $companyId, $algoId, get_debug_type($result)));
+		}
+		return $result;
 	}
 
 

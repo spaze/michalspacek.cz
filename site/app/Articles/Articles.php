@@ -9,6 +9,7 @@ use DateTime;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Explorer;
@@ -235,7 +236,13 @@ class Articles
 			ORDER BY date
 			LIMIT 1';
 		$now = new DateTime();
-		return ($this->database->fetchField($query, $now, $now, $this->translator->getDefaultLocale()) ?: null);
+		$result = $this->database->fetchField($query, $now, $now, $this->translator->getDefaultLocale());
+		if (!$result) {
+			return null;
+		} elseif (!$result instanceof DateTime) {
+			throw new ShouldNotHappenException(sprintf("Nearest published date is a %s not a DateTime object", get_debug_type($result)));
+		}
+		return $result;
 	}
 
 
@@ -254,7 +261,13 @@ class Articles
 				AND l.locale = ?
 			ORDER BY bp.published
 			LIMIT 1';
-		return ($this->database->fetchField($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale()) ?: null);
+		$result = $this->database->fetchField($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale());
+		if (!$result) {
+			return null;
+		} elseif (!$result instanceof DateTime) {
+			throw new ShouldNotHappenException(sprintf("Nearest published date is a %s not a DateTime object", get_debug_type($result)));
+		}
+		return $result;
 	}
 
 

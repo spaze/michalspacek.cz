@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
+use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Http\IResponse;
 use RuntimeException;
+use Throwable;
 
 class Info
 {
@@ -24,9 +26,13 @@ class Info
 	}
 
 
+	/**
+	 * @throws Throwable
+	 * @throws CompanyInfoException
+	 */
 	public function getData(string $country, string $companyId): Data
 	{
-		return $this->cache->load("{$country}/{$companyId}", function (&$dependencies) use ($country, $companyId) {
+		$cached = $this->cache->load("{$country}/{$companyId}", function (&$dependencies) use ($country, $companyId) {
 			switch ($country) {
 				case 'cz':
 					$data = $this->ares->getData($companyId);
@@ -40,6 +46,10 @@ class Info
 			$dependencies[Cache::Expire] = ($data->status === IResponse::S200_OK ? '3 days' : '15 minutes');
 			return $data;
 		});
+		if (!$cached instanceof Data) {
+			throw new CompanyInfoException(sprintf("Cached data for %s/%s is a '%s' not a '%s' object", $country, $companyId, get_debug_type($cached), Data::class));
+		}
+		return $cached;
 	}
 
 

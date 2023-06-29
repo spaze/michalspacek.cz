@@ -77,10 +77,10 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	/** @var list<ArticleEdit> */
 	public array $edits;
 
-	/** @var array<int, string> */
+	/** @var list<string> */
 	public array $cspSnippets = [];
 
-	/** @var array<int, string> */
+	/** @var list<string> */
 	public array $allowedTags = [];
 
 	public bool $omitExports;

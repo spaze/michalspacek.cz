@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training;
 use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeZone;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
@@ -182,7 +183,7 @@ class Applications
 
 	public function getValidUnpaidCount(): int
 	{
-		return $this->database->fetchField(
+		$count = $this->database->fetchField(
 			'SELECT
 				COUNT(1)
 			FROM
@@ -193,6 +194,10 @@ class Applications
 				AND paid IS NULL',
 			array_keys($this->trainingStatuses->getDiscardedStatuses()),
 		);
+		if (!is_int($count)) {
+			throw new ShouldNotHappenException(sprintf("Count is a %s not an integer", get_debug_type($count)));
+		}
+		return $count;
 	}
 
 
@@ -768,7 +773,11 @@ class Applications
 
 	private function getTrainingApplicationSource(string $source): int
 	{
-		return $this->database->fetchField('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
+		$id = $this->database->fetchField('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
+		if (!is_int($id)) {
+			throw new ShouldNotHappenException(sprintf("Source id for source '%s' is a %s not an integer", $source, get_debug_type($id)));
+		}
+		return $id;
 	}
 
 

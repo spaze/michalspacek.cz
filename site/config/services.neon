@@ -71,6 +71,7 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\AlgorithmAttributesFactory
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
+	- MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\Talks
@@ -112,6 +113,7 @@ services:
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
 	- MichalSpacekCz\Utils\Strings
+	- MichalSpacekCz\Utils\JsonUtils
 	- Nette\Bridges\ApplicationLatte\TemplateFactory
 	- Nette\Schema\Processor
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
