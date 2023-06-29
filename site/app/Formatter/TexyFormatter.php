@@ -122,7 +122,7 @@ class TexyFormatter
 
 	/**
 	 * @param string $format
-	 * @param string[] $args
+	 * @param list<string|int> $args
 	 * @return Html<Html|string>
 	 */
 	public function substitute(string $format, array $args): Html
@@ -133,7 +133,7 @@ class TexyFormatter
 
 	/**
 	 * @param string $message
-	 * @param string[] $replacements
+	 * @param list<string> $replacements
 	 * @return Html<Html|string>
 	 * @throws InvalidArgument
 	 */

@@ -48,13 +48,12 @@ class Filters
 
 	/**
 	 * @param string $message
+	 * @param string|int ...$args
 	 * @return Html<Html|string>
 	 */
-	public function format(string $message): Html
+	public function format(string $message, string|int ...$args): Html
 	{
-		$args = func_get_args();
-		array_shift($args);
-		return $this->texyFormatter->substitute($message, $args);
+		return $this->texyFormatter->substitute($message, array_values($args));
 	}
 
 }
