@@ -1,6 +1,6 @@
 <?php
-/** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpFullyQualifiedNameUsageInspection */
 declare(strict_types = 1);
 
@@ -40,7 +40,7 @@ class AppRequestTest extends TestCase
 		$request->setParameters(['request' => null]);
 		Assert::throws(function () use ($request): void {
 			$this->appRequest->getOriginalRequest($request);
-		}, NoOriginalRequestException::class, 'No original request');
+		}, NoOriginalRequestException::class);
 	}
 
 
@@ -50,7 +50,7 @@ class AppRequestTest extends TestCase
 		$request->setParameters(['request' => new DateTime()]);
 		Assert::throws(function () use ($request): void {
 			$this->appRequest->getOriginalRequest($request);
-		}, NoOriginalRequestException::class, 'No original request');
+		}, NoOriginalRequestException::class);
 	}
 
 

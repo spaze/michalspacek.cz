@@ -21,7 +21,7 @@ class AppRequest
 		}
 		$requestParam = $request->getParameter('request');
 		if (!$requestParam instanceof Request) {
-			throw new NoOriginalRequestException('No original request');
+			throw new NoOriginalRequestException();
 		}
 		return $requestParam;
 	}

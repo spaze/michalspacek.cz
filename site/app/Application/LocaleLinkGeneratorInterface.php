@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use Nette\Application\UI\InvalidLinkException;
+
 interface LocaleLinkGeneratorInterface
 {
 
@@ -10,6 +12,7 @@ interface LocaleLinkGeneratorInterface
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
 	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
 	 * @return array<string, string> of locale => URL
+	 * @throws InvalidLinkException
 	 */
 	public function links(string $destination, array $params = []): array;
 

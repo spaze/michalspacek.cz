@@ -8,6 +8,7 @@ use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
 use Nette\Http\Url;
 
@@ -33,12 +34,15 @@ class ErrorPresenter extends BaseErrorPresenter
 	}
 
 
-	protected function addLocaleLinks(): void
+	/**
+	 * @throws InvalidLinkException
+	 */
+	protected function getLocaleLinksGeneratorParams(): array
 	{
 		try {
-			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
-		} catch (NoOriginalRequestException) {
-			$this->template->localeLinks = $this->getLocaleLinkDefault();
+			return [$this->getLocaleLinkAction(), $this->getLocaleLinkParams()];
+		} catch (NoOriginalRequestException $e) {
+			throw new InvalidLinkException(previous: $e);
 		}
 	}
 
@@ -77,8 +81,8 @@ class ErrorPresenter extends BaseErrorPresenter
 	 */
 	protected function getLocaleLinkAction(): string
 	{
-		$originalRequest = $this->appRequest->getOriginalRequest($this->getRequest());
-		return $originalRequest->getPresenterName() . ':' . $originalRequest->getParameter(self::ActionKey);
+		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
+		return $requestParam->getPresenterName() . ':' . $requestParam->getParameter(self::ActionKey);
 	}
 
 
@@ -90,8 +94,8 @@ class ErrorPresenter extends BaseErrorPresenter
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		$originalRequest = $this->appRequest->getOriginalRequest($this->getRequest());
-		return $this->localeLinkGenerator->defaultParams($originalRequest->getParameters());
+		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
+		return $this->localeLinkGenerator->defaultParams($requestParam->getParameters());
 	}
 
 }
