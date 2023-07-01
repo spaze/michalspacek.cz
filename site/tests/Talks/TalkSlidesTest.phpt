@@ -31,7 +31,7 @@ class TalkSlidesTest extends TestCase
 		Assert::same(303, $this->talkSlides->getSlideNo(1, '303'));
 
 		$this->database->setFetchFieldResult(false);
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			$this->talkSlides->getSlideNo(1, 'yo');
 		}, UnknownSlideException::class, "Unknown slide 'yo' for talk id '1'");
 
@@ -39,7 +39,7 @@ class TalkSlidesTest extends TestCase
 		Assert::same(808, $this->talkSlides->getSlideNo(1, 'yo'));
 
 		$this->database->setFetchFieldResult('808');
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			$this->talkSlides->getSlideNo(1, 'yo');
 		}, ShouldNotHappenException::class, "Slide number for slide 'yo' of '1' is a string not an integer");
 	}

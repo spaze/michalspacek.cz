@@ -1,14 +1,14 @@
 <?php
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Templating;
 
+use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\InvalidArgumentException;
 use Spaze\NonceGenerator\Nonce;
 use Tester\Assert;
 use Tester\TestCase;
@@ -37,25 +37,23 @@ class TemplateFactoryTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException
-	 */
 	public function testCreateTemplateWrongClassExtendsTemplateOnly(): void
 	{
 		$class = new class ($this->latteFactory->create()) extends Template {
 		};
-		$this->templateFactory->createTemplate(class: $class::class);
+		Assert::exception(function () use ($class): void {
+			$this->templateFactory->createTemplate(class: $class::class);
+		}, WrongTemplateClassException::class);
 	}
 
 
-	/**
-	 * @throws \Nette\InvalidArgumentException
-	 */
 	public function testCreateTemplateWrongClass(): void
 	{
 		$class = new class () {
 		};
-		$this->templateFactory->createTemplate(class: $class::class);
+		Assert::exception(function () use ($class): void {
+			$this->templateFactory->createTemplate(class: $class::class);
+		}, InvalidArgumentException::class);
 	}
 
 }

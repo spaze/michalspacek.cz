@@ -1,7 +1,4 @@
 <?php
-/** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
 declare(strict_types = 1);
 
 namespace Form;
@@ -9,6 +6,7 @@ namespace Form;
 use MichalSpacekCz\Form\FormValues;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -36,21 +34,19 @@ class FormValuesTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \Nette\InvalidStateException Component of type 'Nette\Forms\Controls\SubmitButton' is not attached to 'Nette\Forms\Form'.
-	 */
 	public function testGetValuesButtonNotAttached(): void
 	{
-		$this->formValues->getValues(new SubmitButton());
+		Assert::exception(function (): void {
+			$this->formValues->getValues(new SubmitButton());
+		}, InvalidStateException::class, "Component of type 'Nette\Forms\Controls\SubmitButton' is not attached to 'Nette\Forms\Form'.");
 	}
 
 
-	/**
-	 * @throws \Nette\InvalidStateException Component of type 'Nette\Forms\Controls\SubmitButton' is not attached to 'Nette\Forms\Form'.
-	 */
 	public function testGetUntrustedValuesButtonNotAttached(): void
 	{
-		$this->formValues->getUntrustedValues(new SubmitButton());
+		Assert::exception(function (): void {
+			$this->formValues->getUntrustedValues(new SubmitButton());
+		}, InvalidStateException::class, "Component of type 'Nette\Forms\Controls\SubmitButton' is not attached to 'Nette\Forms\Form'.");
 	}
 
 }

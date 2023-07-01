@@ -85,7 +85,7 @@ class CertificatesTest extends TestCase
 		$certificates = [
 			new Certificate('foo.example', null, $this->notBefore, $this->notAfter, 0, null),
 		];
-		Assert::throws(function () use ($certificates): void {
+		Assert::exception(function () use ($certificates): void {
 			$this->certificates->log($certificates, []);
 		}, SomeCertificatesLoggedToFileException::class, 'Error logging to database, some certificates logged to file instead');
 		Assert::same($exception, $this->logger->getAllLogged()[0]);

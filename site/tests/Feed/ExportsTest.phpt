@@ -1,6 +1,5 @@
 <?php
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
-/** @noinspection PhpDocRedundantThrowsInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Feed;
@@ -11,6 +10,7 @@ use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Test\NoOpTranslator;
+use Nette\Application\BadRequestException;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
 use Nette\Utils\Html;
@@ -25,7 +25,7 @@ class ExportsTest extends TestCase
 {
 
 	private Articles $articles;
-	private TexyFormatter $texyFormatter;
+
 	private Exports $exports;
 
 
@@ -33,11 +33,6 @@ class ExportsTest extends TestCase
 		private readonly Storage $cacheStorage,
 		private readonly NoOpTranslator $translator,
 	) {
-	}
-
-
-	protected function setUp(): void
-	{
 		$this->articles = new class () extends Articles {
 
 			/** @var array<int, Row> */
@@ -81,8 +76,14 @@ class ExportsTest extends TestCase
 				return $this->articles;
 			}
 
+
+			public function reset(): void
+			{
+				$this->articles = [];
+			}
+
 		};
-		$this->texyFormatter = new class () extends TexyFormatter {
+		$texyFormatter = new class () extends TexyFormatter {
 
 			/** @noinspection PhpMissingParentConstructorInspection Intentionally */
 			public function __construct()
@@ -96,16 +97,21 @@ class ExportsTest extends TestCase
 			}
 
 		};
-		$this->exports = new Exports($this->articles, $this->texyFormatter, $this->translator, $this->cacheStorage);
+		$this->exports = new Exports($this->articles, $texyFormatter, $this->translator, $this->cacheStorage);
 	}
 
 
-	/**
-	 * @throws \Nette\Application\BadRequestException No articles
-	 */
+	protected function tearDown(): void
+	{
+		$this->articles->reset();
+	}
+
+
 	public function testGetArticlesNoArticles(): void
 	{
-		$this->exports->getArticles('https://example.com/no-articles');
+		Assert::exception(function (): void {
+			$this->exports->getArticles('https://example.com/no-articles');
+		}, BadRequestException::class, "No articles");
 	}
 
 

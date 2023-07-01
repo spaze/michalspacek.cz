@@ -22,17 +22,17 @@ class ServerEnvTest extends TestCase
 		Assert::same('bar', ServerEnv::getString('foo'));
 
 		$_SERVER['foo'] = 123;
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			ServerEnv::getString('foo');
 		}, ServerEnvNotStringException::class);
 
 		$_SERVER['foo'] = ['foo', 'bar'];
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			ServerEnv::getString('foo');
 		}, ServerEnvNotStringException::class);
 
 		unset($_SERVER['foo']);
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			ServerEnv::getString('foo');
 		}, ServerEnvNotFoundException::class);
 	}
@@ -70,12 +70,12 @@ class ServerEnvTest extends TestCase
 		Assert::same(['foo', 'bar'], ServerEnv::getList('foo'));
 
 		$_SERVER['foo'] = 123;
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			ServerEnv::getList('foo');
 		}, ServerEnvNotArrayException::class);
 
 		unset($_SERVER['foo']);
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			ServerEnv::getList('foo');
 		}, ServerEnvNotFoundException::class);
 	}

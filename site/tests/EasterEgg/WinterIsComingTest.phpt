@@ -11,6 +11,7 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\TextInput;
+use Nette\InvalidStateException;
 use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
@@ -20,8 +21,6 @@ $runner = require __DIR__ . '/../bootstrap.php';
 /** @testCase */
 class WinterIsComingTest extends TestCase
 {
-
-	private Presenter $presenter;
 
 	private Form $form;
 
@@ -43,7 +42,7 @@ class WinterIsComingTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->resultObject = new stdClass();
-		$this->presenter = new class ($this->resultObject) extends Presenter {
+		$presenter = new class ($this->resultObject) extends Presenter {
 
 			public function __construct(
 				private readonly stdClass $resultObject,
@@ -58,7 +57,7 @@ class WinterIsComingTest extends TestCase
 			}
 
 		};
-		$this->form = new Form($this->presenter, 'leForm');
+		$this->form = new Form($presenter, 'leForm');
 		$this->ruleEmail = $this->winterIsComing->ruleEmail();
 		$this->ruleStreet = $this->winterIsComing->ruleStreet();
 	}
@@ -82,7 +81,7 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getUnfriendlyEmails */
 	public function testRuleEmailFakeError(): void
 	{
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('winter@example.com'));
 		}, AbortException::class);
 		$this->assertResponse();
@@ -126,19 +125,18 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getRuleStreetRoughStreets */
 	public function testRuleStreetRough(string $name): void
 	{
-		Assert::throws(function () use (&$result, $name): void {
+		Assert::exception(function () use (&$result, $name): void {
 			$result = ($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
 		}, AbortException::class);
 		$this->assertResponse();
 	}
 
 
-	/**
-	 * @throws \Nette\InvalidStateException Component of type 'Nette\Forms\Controls\TextInput' is not attached to 'Nette\Forms\Form'.
-	 */
 	public function testNoForm(): void
 	{
-		($this->ruleEmail)((new TextInput())->setDefaultValue('winter@example.com'));
+		Assert::exception(function (): void {
+			($this->ruleEmail)((new TextInput())->setDefaultValue('winter@example.com'));
+		}, InvalidStateException::class, "Component of type 'Nette\Forms\Controls\TextInput' is not attached to 'Nette\Forms\Form'.");
 	}
 
 

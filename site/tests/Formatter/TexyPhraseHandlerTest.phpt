@@ -1,11 +1,10 @@
 <?php
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
-/** @noinspection PhpDocRedundantThrowsInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Formatter;
 
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Test\Database\Database;
@@ -113,12 +112,11 @@ class TexyPhraseHandlerTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\ShouldNotHappenException The blog links array should not be empty, maybe the linked blog post 'post#fragment' is missing?
-	 */
 	public function testSolveBlogPostLinkMissingPost(): void
 	{
-		$this->assertUrl('le post', '[irrelevant]', '"le post":[blog:post#fragment]');
+		Assert::exception(function (): void {
+			$this->assertUrl('le post', '[irrelevant]', '"le post":[blog:post#fragment]');
+		}, ShouldNotHappenException::class, "The blog links array should not be empty, maybe the linked blog post 'post#fragment' is missing?");
 	}
 
 

@@ -1,7 +1,5 @@
 <?php
 /** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
-/** @noinspection PhpDocRedundantThrowsInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
@@ -9,6 +7,7 @@ namespace MichalSpacekCz\Application;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IRequest;
 use Tester\Assert;
 use Tester\TestCase;
@@ -50,25 +49,23 @@ class LocaleLinkGeneratorTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \Nette\Application\UI\InvalidLinkException No route for Pulse:PasswordsStorages:site(param=foo)
-	 */
 	public function testLinksNoRoute(): void
 	{
 		$params = [
 			'en_US' => ['param' => 'foo'],
 			'cs_CZ' => ['param' => 'fuu'],
 		];
-		$this->localeLinkGenerator->links('Pulse:PasswordsStorages:site', $params);
+		Assert::exception(function () use ($params): void {
+			$this->localeLinkGenerator->links('Pulse:PasswordsStorages:site', $params);
+		}, InvalidLinkException::class, 'No route for Pulse:PasswordsStorages:site(param=foo)');
 	}
 
 
-	/**
-	 * @throws \Nette\Application\UI\InvalidLinkException Cannot load presenter 'Does:Not', class 'MichalSpacekCz\Does\Presenters\NotPresenter' was not found.
-	 */
 	public function testLinksUnknownRoute(): void
 	{
-		$this->localeLinkGenerator->links('Does:Not:exist');
+		Assert::exception(function (): void {
+			$this->localeLinkGenerator->links('Does:Not:exist');
+		}, InvalidLinkException::class, "Cannot load presenter 'Does:Not', class 'MichalSpacekCz\Does\Presenters\NotPresenter' was not found.");
 	}
 
 
@@ -101,12 +98,11 @@ class LocaleLinkGeneratorTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \Nette\Application\UI\InvalidLinkException Cannot load presenter 'Exist:Does', class 'MichalSpacekCz\Exist\Presenters\DoesPresenter' was not found.
-	 */
 	public function testAllLinksUnknownRoute(): void
 	{
-		$this->localeLinkGenerator->allLinks('Exist:Does:not');
+		Assert::exception(function (): void {
+			$this->localeLinkGenerator->allLinks('Exist:Does:not');
+		}, InvalidLinkException::class, "Cannot load presenter 'Exist:Does', class 'MichalSpacekCz\Exist\Presenters\DoesPresenter' was not found.");
 	}
 
 

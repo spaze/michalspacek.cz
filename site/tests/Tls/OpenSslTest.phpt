@@ -1,11 +1,10 @@
 <?php
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
-/** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
+use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -23,12 +22,11 @@ class OpenSslTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\Tls\Exceptions\OpenSslException error:04800066:PEM routines::bad end line
-	 */
 	public function testX509ParseError(): void
 	{
-		OpenSsl::x509parse('-----BEGIN ¯\_(ツ)_/¯ END-----');
+		Assert::exception(function (): void {
+			OpenSsl::x509parse('-----BEGIN ¯\_(ツ)_/¯ END-----');
+		}, OpenSslException::class, 'error:04800066:PEM routines::bad end line');
 	}
 
 }

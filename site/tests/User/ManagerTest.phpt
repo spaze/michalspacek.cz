@@ -1,6 +1,4 @@
 <?php
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpDynamicFieldDeclarationInspection */
 /** @noinspection PhpUndefinedFieldInspection */
@@ -8,6 +6,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User;
 
+use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
+use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
+use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
+use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Tester\Assert;
@@ -45,38 +47,35 @@ class ManagerTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException Identity is of class <null> but should be Nette\Security\SimpleIdentity
-	 */
 	public function testGetIdentityUsernameByUserNoIdentity(): void
 	{
-		$this->authenticator->getIdentityUsernameByUser($this->user);
+		Assert::exception(function (): void {
+			$this->authenticator->getIdentityUsernameByUser($this->user);
+		}, IdentityNotSimpleIdentityException::class, 'Identity is of class <null> but should be Nette\Security\SimpleIdentity');
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException
-	 */
 	public function testGetIdentityUsernameByUserNoUsername(): void
 	{
 		Assert::with($this->user, function (): void {
 			$this->authenticated = true;
 			$this->identity = new SimpleIdentity(1337);
 		});
-		$this->authenticator->getIdentityUsernameByUser($this->user);
+		Assert::exception(function (): void {
+			$this->authenticator->getIdentityUsernameByUser($this->user);
+		}, IdentityWithoutUsernameException::class);
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException Identity username is of type int, not a string
-	 */
 	public function testGetIdentityUsernameByUserUsernameNotString(): void
 	{
 		Assert::with($this->user, function (): void {
 			$this->authenticated = true;
 			$this->identity = new SimpleIdentity(1337, [], ['username' => 303]);
 		});
-		$this->authenticator->getIdentityUsernameByUser($this->user);
+		Assert::exception(function (): void {
+			$this->authenticator->getIdentityUsernameByUser($this->user);
+		}, IdentityUsernameNotStringException::class, 'Identity username is of type int, not a string');
 	}
 
 
@@ -93,16 +92,15 @@ class ManagerTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\User\Exceptions\IdentityIdNotIntException Identity id is of type string, not an integer
-	 */
 	public function testChangePasswordUserIdNotInt(): void
 	{
 		Assert::with($this->user, function (): void {
 			$this->authenticated = true;
 			$this->identity = new SimpleIdentity('e1337', [], ['username' => '303']);
 		});
-		$this->authenticator->changePassword($this->user, 'hunter2', 'hunter3');
+		Assert::exception(function (): void {
+			$this->authenticator->changePassword($this->user, 'hunter2', 'hunter3');
+		}, IdentityIdNotIntException::class, 'Identity id is of type string, not an integer');
 	}
 
 }

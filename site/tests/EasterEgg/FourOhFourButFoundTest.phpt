@@ -80,7 +80,7 @@ class FourOhFourButFoundTest extends TestCase
 			$this->fourOhFourButFound->sendItMaybe($this->presenter);
 			Assert::null($this->resultObject->response);
 		} else {
-			Assert::throws(function (): void {
+			Assert::exception(function (): void {
 				$this->fourOhFourButFound->sendItMaybe($this->presenter);
 			}, AbortException::class);
 			Assert::type(TextResponse::class, $this->resultObject->response);

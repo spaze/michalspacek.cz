@@ -1,10 +1,9 @@
 <?php
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
-/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Dates;
 
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use Tester\Assert;
 use Tester\TestCase;
@@ -59,9 +58,6 @@ class TrainingDateStatusesTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\ShouldNotHappenException Training data status enum doesn't match database values for status 'CREATED'
-	 */
 	public function testGetStatusesIdMismatch(): void
 	{
 		$this->database->setFetchAllDefaultResult([
@@ -71,13 +67,12 @@ class TrainingDateStatusesTest extends TestCase
 				'description' => 'Displayed in admin only',
 			],
 		]);
-		$this->trainingDateStatuses->getStatuses();
+		Assert::exception(function (): void {
+			$this->trainingDateStatuses->getStatuses();
+		}, ShouldNotHappenException::class, "Training data status enum doesn't match database values for status 'CREATED'");
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\ShouldNotHappenException Training data status enum doesn't match database values for status 'TENTATIVE'
-	 */
 	public function testGetStatusesDescriptionMismatch(): void
 	{
 		$this->database->setFetchAllDefaultResult([
@@ -87,7 +82,9 @@ class TrainingDateStatusesTest extends TestCase
 				'description' => 'Foo',
 			],
 		]);
-		$this->trainingDateStatuses->getStatuses();
+		Assert::exception(function (): void {
+			$this->trainingDateStatuses->getStatuses();
+		}, ShouldNotHappenException::class, "Training data status enum doesn't match database values for status 'TENTATIVE'");
 	}
 
 }
