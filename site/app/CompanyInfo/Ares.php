@@ -16,7 +16,7 @@ use UnexpectedValueException;
  * See https://wwwinfo.mfcr.cz/ares/xml_doc/schemas/documentation/zkr_103.txt
  * for meaning of abbreviations like AA, NU, CD, CO etc. (in Czech)
  */
-class Ares implements CompanyDataInterface
+class Ares implements CompanyRegistry
 {
 
 	/**
@@ -31,9 +31,9 @@ class Ares implements CompanyDataInterface
 	}
 
 
-	public function getData(string $companyId): Data
+	public function getDetails(string $companyId): CompanyDetails
 	{
-		$company = new Data();
+		$company = new CompanyDetails();
 		try {
 			if (empty($companyId)) {
 				throw new RuntimeException('Company Id is empty');

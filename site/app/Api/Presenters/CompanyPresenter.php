@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Api\Presenters;
 
-use MichalSpacekCz\CompanyInfo\Data;
-use MichalSpacekCz\CompanyInfo\Info;
+use MichalSpacekCz\CompanyInfo\CompanyDetails;
+use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Http\SecurityHeaders;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
@@ -15,7 +15,7 @@ class CompanyPresenter extends BasePresenter
 {
 
 	public function __construct(
-		private readonly Info $companyInfo,
+		private readonly CompanyInfo $companyInfo,
 		private readonly SecurityHeaders $securityHeaders,
 	) {
 		parent::__construct();
@@ -33,7 +33,7 @@ class CompanyPresenter extends BasePresenter
 		try {
 			$info = $this->companyInfo->getData($country, $companyId);
 		} catch (RuntimeException $e) {
-			$info = new Data();
+			$info = new CompanyDetails();
 			$info->status = IResponse::S500_InternalServerError;
 			$info->statusMessage = $e->getMessage();
 		}

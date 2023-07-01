@@ -18,7 +18,7 @@ use UnexpectedValueException;
  *
  * See http://www.registeruz.sk/cruz-public/static/api.html for the docs.
  */
-class RegisterUz implements CompanyDataInterface
+class RegisterUz implements CompanyRegistry
 {
 
 	private const DAY_ONE = '1993-01-01';
@@ -37,9 +37,9 @@ class RegisterUz implements CompanyDataInterface
 	}
 
 
-	public function getData(string $companyId): Data
+	public function getDetails(string $companyId): CompanyDetails
 	{
-		$company = new Data();
+		$company = new CompanyDetails();
 		try {
 			if (empty($companyId)) {
 				throw new RuntimeException('Company Id is empty');

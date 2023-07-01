@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\CompanyInfo\Info;
+use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Form\TrainingApplicationFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -47,7 +47,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly Reviews $trainingReviews,
 		private readonly TrainingApplicationFormFactory $trainingApplicationFactory,
 		private readonly TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
-		private readonly Info $companyInfo,
+		private readonly CompanyInfo $companyInfo,
 		private readonly IResponse $httpResponse,
 	) {
 		parent::__construct();

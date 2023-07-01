@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
-class Data
+class CompanyDetails
 {
 
 	public int $status;

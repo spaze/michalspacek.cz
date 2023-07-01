@@ -10,7 +10,7 @@ use Nette\Http\IResponse;
 use RuntimeException;
 use Throwable;
 
-class Info
+class CompanyInfo
 {
 
 	private Cache $cache;
@@ -30,15 +30,15 @@ class Info
 	 * @throws Throwable
 	 * @throws CompanyInfoException
 	 */
-	public function getData(string $country, string $companyId): Data
+	public function getData(string $country, string $companyId): CompanyDetails
 	{
 		$cached = $this->cache->load("{$country}/{$companyId}", function (&$dependencies) use ($country, $companyId) {
 			switch ($country) {
 				case 'cz':
-					$data = $this->ares->getData($companyId);
+					$data = $this->ares->getDetails($companyId);
 					break;
 				case 'sk':
-					$data = $this->registerUz->getData($companyId);
+					$data = $this->registerUz->getDetails($companyId);
 					break;
 				default:
 					throw new RuntimeException('Unsupported country');
@@ -46,8 +46,8 @@ class Info
 			$dependencies[Cache::Expire] = ($data->status === IResponse::S200_OK ? '3 days' : '15 minutes');
 			return $data;
 		});
-		if (!$cached instanceof Data) {
-			throw new CompanyInfoException(sprintf("Cached data for %s/%s is a '%s' not a '%s' object", $country, $companyId, get_debug_type($cached), Data::class));
+		if (!$cached instanceof CompanyDetails) {
+			throw new CompanyInfoException(sprintf("Cached data for %s/%s is a '%s' not a '%s' object", $country, $companyId, get_debug_type($cached), CompanyDetails::class));
 		}
 		return $cached;
 	}
