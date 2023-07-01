@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Application\AppRequest;
+use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use Nette\Application\BadRequestException;
@@ -29,6 +30,16 @@ class ErrorPresenter extends BaseErrorPresenter
 		private readonly AppRequest $appRequest,
 	) {
 		parent::__construct();
+	}
+
+
+	protected function addLocaleLinks(): void
+	{
+		try {
+			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
+		} catch (NoOriginalRequestException) {
+			$this->template->localeLinks = $this->getLocaleLinkDefault();
+		}
 	}
 
 
@@ -62,11 +73,12 @@ class ErrorPresenter extends BaseErrorPresenter
 	 * Get original module:presenter:action for locale links.
 	 *
 	 * @return string
+	 * @throws NoOriginalRequestException
 	 */
 	protected function getLocaleLinkAction(): string
 	{
-		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
-		return $requestParam->getPresenterName() . ':' . $requestParam->getParameter(self::ActionKey);
+		$originalRequest = $this->appRequest->getOriginalRequest($this->getRequest());
+		return $originalRequest->getPresenterName() . ':' . $originalRequest->getParameter(self::ActionKey);
 	}
 
 
@@ -74,11 +86,12 @@ class ErrorPresenter extends BaseErrorPresenter
 	 * Get original parameters for locale links.
 	 *
 	 * @return array<string, array<string, string|null>>
+	 * @throws NoOriginalRequestException
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
-		return $this->localeLinkGenerator->defaultParams($requestParam->getParameters());
+		$originalRequest = $this->appRequest->getOriginalRequest($this->getRequest());
+		return $this->localeLinkGenerator->defaultParams($originalRequest->getParameters());
 	}
 
 }
