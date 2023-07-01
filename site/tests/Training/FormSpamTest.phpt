@@ -88,7 +88,7 @@ class FormSpamTest extends TestCase
 			Assert::noError($check);
 			Assert::null($this->nullLogger->getLogged());
 		} else {
-			Assert::throws($check, SpammyApplicationException::class);
+			Assert::exception($check, SpammyApplicationException::class);
 			Assert::same($logged, $this->nullLogger->getLogged());
 		}
 	}

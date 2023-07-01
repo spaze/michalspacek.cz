@@ -36,7 +36,7 @@ class RedirectionsTest extends TestCase
 		$this->database->setFetchFieldResult('/foo.bar');
 		Assert::same('https://com.example/foo.bar', $this->redirections->getDestination(new UrlScript('https://com.example/waldo')));
 
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			$this->database->setFetchFieldResult(3.14);
 			$this->redirections->getDestination(new UrlScript('https://com.example/waldo'));
 		}, ShouldNotHappenException::class, "Redirect destination for '/waldo' is a float not a string");

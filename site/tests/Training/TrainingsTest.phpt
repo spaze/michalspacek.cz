@@ -27,7 +27,7 @@ class TrainingsTest extends TestCase
 		Assert::same('pulled pork', $this->trainings->getActionById(303));
 
 		$this->database->setFetchFieldResult(808);
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			$this->trainings->getActionById(303);
 		}, ShouldNotHappenException::class, "Action for id '303' is a int not a string");
 	}

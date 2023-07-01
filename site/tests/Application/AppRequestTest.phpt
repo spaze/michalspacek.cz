@@ -36,7 +36,7 @@ class AppRequestTest extends TestCase
 	{
 		$request = new Request('name');
 		$request->setParameters(['request' => null]);
-		Assert::throws(function () use ($request): void {
+		Assert::exception(function () use ($request): void {
 			$this->appRequest->getOriginalRequest($request);
 		}, NoOriginalRequestException::class);
 	}
@@ -46,7 +46,7 @@ class AppRequestTest extends TestCase
 	{
 		$request = new Request('name');
 		$request->setParameters(['request' => new DateTime()]);
-		Assert::throws(function () use ($request): void {
+		Assert::exception(function () use ($request): void {
 			$this->appRequest->getOriginalRequest($request);
 		}, NoOriginalRequestException::class);
 	}

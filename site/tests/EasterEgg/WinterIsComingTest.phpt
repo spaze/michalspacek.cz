@@ -83,7 +83,7 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getUnfriendlyEmails */
 	public function testRuleEmailFakeError(): void
 	{
-		Assert::throws(function (): void {
+		Assert::exception(function (): void {
 			($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('winter@example.com'));
 		}, AbortException::class);
 		$this->assertResponse();
@@ -127,7 +127,7 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getRuleStreetRoughStreets */
 	public function testRuleStreetRough(string $name): void
 	{
-		Assert::throws(function () use (&$result, $name): void {
+		Assert::exception(function () use (&$result, $name): void {
 			$result = ($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
 		}, AbortException::class);
 		$this->assertResponse();
