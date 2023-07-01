@@ -1,6 +1,4 @@
 <?php
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpFullyQualifiedNameUsageInspection */
 declare(strict_types = 1);
 
@@ -8,7 +6,6 @@ namespace MichalSpacekCz\Application;
 
 use DateTime;
 use Exception;
-use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use Nette\Application\Request;
 use Tester\Assert;
 use Tester\TestCase;
@@ -34,23 +31,25 @@ class AppRequestTest extends TestCase
 	}
 
 
+	/**
+	 * @throws \MichalSpacekCz\ShouldNotHappenException No original request
+	 */
 	public function testGetOriginalRequestNoOriginalRequest(): void
 	{
 		$request = new Request('name');
 		$request->setParameters(['request' => null]);
-		Assert::throws(function () use ($request): void {
-			$this->appRequest->getOriginalRequest($request);
-		}, NoOriginalRequestException::class, 'No original request');
+		$this->appRequest->getOriginalRequest($request);
 	}
 
 
+	/**
+	 * @throws \MichalSpacekCz\ShouldNotHappenException No original request
+	 */
 	public function testGetOriginalRequestInvalidOriginalRequest(): void
 	{
 		$request = new Request('name');
 		$request->setParameters(['request' => new DateTime()]);
-		Assert::throws(function () use ($request): void {
-			$this->appRequest->getOriginalRequest($request);
-		}, NoOriginalRequestException::class, 'No original request');
+		$this->appRequest->getOriginalRequest($request);
 	}
 
 

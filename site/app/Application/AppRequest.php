@@ -4,16 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application;
 
 use Exception;
-use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
 
 class AppRequest
 {
 
-	/**
-	 * @throws NoOriginalRequestException
-	 */
 	public function getOriginalRequest(?Request $request): Request
 	{
 		if (!$request) {
@@ -21,7 +17,7 @@ class AppRequest
 		}
 		$requestParam = $request->getParameter('request');
 		if (!$requestParam instanceof Request) {
-			throw new NoOriginalRequestException('No original request');
+			throw new ShouldNotHappenException('No original request');
 		}
 		return $requestParam;
 	}
