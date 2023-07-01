@@ -4,9 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Application\AppRequest;
+use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
 use Nette\Http\Url;
 
@@ -29,6 +31,19 @@ class ErrorPresenter extends BaseErrorPresenter
 		private readonly AppRequest $appRequest,
 	) {
 		parent::__construct();
+	}
+
+
+	/**
+	 * @throws InvalidLinkException
+	 */
+	protected function getLocaleLinksGeneratorParams(): array
+	{
+		try {
+			return [$this->getLocaleLinkAction(), $this->getLocaleLinkParams()];
+		} catch (NoOriginalRequestException $e) {
+			throw new InvalidLinkException(previous: $e);
+		}
 	}
 
 
@@ -62,6 +77,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	 * Get original module:presenter:action for locale links.
 	 *
 	 * @return string
+	 * @throws NoOriginalRequestException
 	 */
 	protected function getLocaleLinkAction(): string
 	{
@@ -74,6 +90,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	 * Get original parameters for locale links.
 	 *
 	 * @return array<string, array<string, string|null>>
+	 * @throws NoOriginalRequestException
 	 */
 	protected function getLocaleLinkParams(): array
 	{
