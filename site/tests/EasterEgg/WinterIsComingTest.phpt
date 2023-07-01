@@ -22,8 +22,6 @@ $runner = require __DIR__ . '/../bootstrap.php';
 class WinterIsComingTest extends TestCase
 {
 
-	private Presenter $presenter;
-
 	private Form $form;
 
 	/** @var callable */
@@ -44,7 +42,7 @@ class WinterIsComingTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->resultObject = new stdClass();
-		$this->presenter = new class ($this->resultObject) extends Presenter {
+		$presenter = new class ($this->resultObject) extends Presenter {
 
 			public function __construct(
 				private readonly stdClass $resultObject,
@@ -59,7 +57,7 @@ class WinterIsComingTest extends TestCase
 			}
 
 		};
-		$this->form = new Form($this->presenter, 'leForm');
+		$this->form = new Form($presenter, 'leForm');
 		$this->ruleEmail = $this->winterIsComing->ruleEmail();
 		$this->ruleStreet = $this->winterIsComing->ruleStreet();
 	}

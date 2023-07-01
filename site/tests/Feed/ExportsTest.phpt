@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Feed;
@@ -24,7 +25,7 @@ class ExportsTest extends TestCase
 {
 
 	private Articles $articles;
-	private TexyFormatter $texyFormatter;
+
 	private Exports $exports;
 
 
@@ -81,7 +82,7 @@ class ExportsTest extends TestCase
 			}
 
 		};
-		$this->texyFormatter = new class () extends TexyFormatter {
+		$texyFormatter = new class () extends TexyFormatter {
 
 			/** @noinspection PhpMissingParentConstructorInspection Intentionally */
 			public function __construct()
@@ -95,7 +96,7 @@ class ExportsTest extends TestCase
 			}
 
 		};
-		$this->exports = new Exports($this->articles, $this->texyFormatter, $this->translator, $this->cacheStorage);
+		$this->exports = new Exports($this->articles, $texyFormatter, $this->translator, $this->cacheStorage);
 	}
 
 
