@@ -33,11 +33,6 @@ class ExportsTest extends TestCase
 		private readonly Storage $cacheStorage,
 		private readonly NoOpTranslator $translator,
 	) {
-	}
-
-
-	protected function setUp(): void
-	{
 		$this->articles = new class () extends Articles {
 
 			/** @var array<int, Row> */
@@ -81,6 +76,12 @@ class ExportsTest extends TestCase
 				return $this->articles;
 			}
 
+
+			public function reset(): void
+			{
+				$this->articles = [];
+			}
+
 		};
 		$texyFormatter = new class () extends TexyFormatter {
 
@@ -97,6 +98,12 @@ class ExportsTest extends TestCase
 
 		};
 		$this->exports = new Exports($this->articles, $texyFormatter, $this->translator, $this->cacheStorage);
+	}
+
+
+	protected function tearDown(): void
+	{
+		$this->articles->reset();
 	}
 
 
