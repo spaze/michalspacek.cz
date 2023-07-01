@@ -33,16 +33,11 @@ class CompanyInfo
 	public function getData(string $country, string $companyId): CompanyDetails
 	{
 		$cached = $this->cache->load("{$country}/{$companyId}", function (&$dependencies) use ($country, $companyId) {
-			switch ($country) {
-				case 'cz':
-					$data = $this->ares->getDetails($companyId);
-					break;
-				case 'sk':
-					$data = $this->registerUz->getDetails($companyId);
-					break;
-				default:
-					throw new RuntimeException('Unsupported country');
-			}
+			$data = match ($country) {
+				'cz' => $this->ares->getDetails($companyId),
+				'sk' => $this->registerUz->getDetails($companyId),
+				default => throw new RuntimeException('Unsupported country'),
+			};
 			$dependencies[Cache::Expire] = ($data->status === IResponse::S200_OK ? '3 days' : '15 minutes');
 			return $data;
 		});
