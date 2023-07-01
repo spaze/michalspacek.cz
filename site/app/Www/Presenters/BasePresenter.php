@@ -7,7 +7,6 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\User\Manager;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
@@ -82,11 +81,13 @@ abstract class BasePresenter extends Presenter
 
 	public function beforeRender(): void
 	{
-		try {
-			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
-		} catch (InvalidLinkException) {
-			$this->template->localeLinks = $this->getLocaleLinkDefault();
-		}
+		$this->addLocaleLinks();
+	}
+
+
+	protected function addLocaleLinks(): void
+	{
+		$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinkAction(), $this->getLocaleLinkParams());
 	}
 
 
