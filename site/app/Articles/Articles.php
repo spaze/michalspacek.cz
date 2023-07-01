@@ -14,7 +14,6 @@ use MichalSpacekCz\Tags\Tags;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use Nette\Utils\DateTime as NetteDateTime;
 use Nette\Utils\JsonException;
 
 class Articles
@@ -98,7 +97,7 @@ class Articles
 			ORDER BY published DESC
 			LIMIT ?';
 
-		$articles = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
+		$articles = $this->database->fetchAll($query, new DateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
 		return $this->enrichArticles(array_values($articles));
 	}
 
@@ -147,7 +146,7 @@ class Articles
 			ORDER BY bp.published DESC
 			LIMIT ?';
 
-		$articles = $this->database->fetchAll($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
+		$articles = $this->database->fetchAll($query, $this->tags->serialize($tags), new DateTime(), $this->translator->getDefaultLocale(), $limit ?? PHP_INT_MAX);
 		return $this->enrichArticles(array_values($articles));
 	}
 
@@ -173,7 +172,7 @@ class Articles
 			ORDER BY bp.published DESC';
 
 		$result = [];
-		$rows = $this->database->fetchAll($query, new NetteDateTime(), $this->translator->getDefaultLocale());
+		$rows = $this->database->fetchAll($query, new DateTime(), $this->translator->getDefaultLocale());
 		foreach ($rows as $row) {
 			$tags = $this->tags->unserialize($row->tags);
 			$slugTags = $this->tags->unserialize($row->slugTags);
@@ -206,7 +205,7 @@ class Articles
 					AND bp.published <= ?
 					AND l.locale = ?
 			LIMIT 1';
-		$result = $this->database->fetch($query, $this->tags->serialize([$tag]), new NetteDateTime(), $this->translator->getDefaultLocale());
+		$result = $this->database->fetch($query, $this->tags->serialize([$tag]), new DateTime(), $this->translator->getDefaultLocale());
 		if ($result) {
 			$result->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
 			$result->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
@@ -261,7 +260,7 @@ class Articles
 				AND l.locale = ?
 			ORDER BY bp.published
 			LIMIT 1';
-		$result = $this->database->fetchField($query, $this->tags->serialize($tags), new NetteDateTime(), $this->translator->getDefaultLocale());
+		$result = $this->database->fetchField($query, $this->tags->serialize($tags), new DateTime(), $this->translator->getDefaultLocale());
 		if (!$result) {
 			return null;
 		} elseif (!$result instanceof DateTime) {
