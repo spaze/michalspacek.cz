@@ -1,10 +1,9 @@
 <?php
-/** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use Nette\Application\BadRequestException;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -20,30 +19,27 @@ class NetteCve202015227Test extends TestCase
 	}
 
 
-	/**
-	 * @throws \Nette\Application\BadRequestException [MichalSpacekCz\EasterEgg\NetteCve202015227] Unknown callback 'foo'
-	 */
 	public function testRceUnknownCallback(): void
 	{
-		$this->cve202015227->rce('foo', ['bar' => 'baz']);
+		Assert::exception(function (): void {
+			$this->cve202015227->rce('foo', ['bar' => 'baz']);
+		}, BadRequestException::class, "[MichalSpacekCz\EasterEgg\NetteCve202015227] Unknown callback 'foo'");
 	}
 
 
-	/**
-	 * @throws \Nette\Application\BadRequestException [MichalSpacekCz\EasterEgg\NetteCve202015227] Empty param 'command' for callback 'exec'
-	 */
 	public function testRceEmptyParam(): void
 	{
-		$this->cve202015227->rce('exec', ['bar' => 'baz']);
+		Assert::exception(function (): void {
+			$this->cve202015227->rce('exec', ['bar' => 'baz']);
+		}, BadRequestException::class, "[MichalSpacekCz\EasterEgg\NetteCve202015227] Empty param 'command' for callback 'exec'");
 	}
 
 
-	/**
-	 * @throws \Nette\Application\BadRequestException [MichalSpacekCz\EasterEgg\NetteCve202015227] Unknown value 'baz' for callback 'exec' and param 'command'
-	 */
 	public function testRceUnknownValue(): void
 	{
-		$this->cve202015227->rce('exec', ['command' => 'baz']);
+		Assert::exception(function (): void {
+			$this->cve202015227->rce('exec', ['command' => 'baz']);
+		}, BadRequestException::class, "[MichalSpacekCz\EasterEgg\NetteCve202015227] Unknown value 'baz' for callback 'exec' and param 'command'");
 	}
 
 

@@ -1,6 +1,4 @@
 <?php
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
-/** @noinspection PhpDocRedundantThrowsInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Feed;
@@ -11,6 +9,7 @@ use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Test\NoOpTranslator;
+use Nette\Application\BadRequestException;
 use Nette\Caching\Storage;
 use Nette\Database\Row;
 use Nette\Utils\Html;
@@ -100,12 +99,11 @@ class ExportsTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \Nette\Application\BadRequestException No articles
-	 */
 	public function testGetArticlesNoArticles(): void
 	{
-		$this->exports->getArticles('https://example.com/no-articles');
+		Assert::exception(function (): void {
+			$this->exports->getArticles('https://example.com/no-articles');
+		}, BadRequestException::class, "No articles");
 	}
 
 

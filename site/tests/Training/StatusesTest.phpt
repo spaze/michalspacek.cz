@@ -1,11 +1,11 @@
 <?php
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -42,13 +42,12 @@ class StatusesTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException Training status 'SIGNED_UP' id is a string not an integer
-	 */
 	public function testGetStatusIdNotInt(): void
 	{
 		$this->database->setFetchFieldResult('donut');
-		$this->trainingStatuses->getStatusId(Statuses::STATUS_SIGNED_UP);
+		Assert::exception(function (): void {
+			$this->trainingStatuses->getStatusId(Statuses::STATUS_SIGNED_UP);
+		}, TrainingStatusIdNotIntException::class, "Training status 'SIGNED_UP' id is a string not an integer");
 	}
 
 }

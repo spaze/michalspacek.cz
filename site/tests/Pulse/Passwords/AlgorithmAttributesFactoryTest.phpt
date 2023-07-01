@@ -1,12 +1,12 @@
 <?php
 /** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
+use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -22,30 +22,27 @@ class AlgorithmAttributesFactoryTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \Nette\Utils\JsonException
-	 */
 	public function testGetBadJson(): void
 	{
-		$this->algorithmAttributesFactory->get('foo');
+		Assert::exception(function (): void {
+			$this->algorithmAttributesFactory->get('foo');
+		}, JsonException::class);
 	}
 
 
-	/**
-	 * @throws \Nette\Schema\ValidationException Unexpected item 'foo'.
-	 */
 	public function testGetBadSchemaUnexpectedItem(): void
 	{
-		$this->algorithmAttributesFactory->get(Json::encode(['foo' => 'bar']));
+		Assert::exception(function (): void {
+			$this->algorithmAttributesFactory->get(Json::encode(['foo' => 'bar']));
+		}, ValidationException::class, "Unexpected item 'foo'.");
 	}
 
 
-	/**
-	 * @throws \Nette\Schema\ValidationException The item 'inner' expects to be list, 'bar' given.
-	 */
 	public function testGetBadSchemaExpectsList(): void
 	{
-		$this->algorithmAttributesFactory->get(Json::encode(['inner' => 'bar']));
+		Assert::exception(function (): void {
+			$this->algorithmAttributesFactory->get(Json::encode(['inner' => 'bar']));
+		}, ValidationException::class, "The item 'inner' expects to be list, 'bar' given.");
 	}
 
 

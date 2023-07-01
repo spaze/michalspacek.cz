@@ -1,11 +1,10 @@
 <?php
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
-/** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Articles\Blog;
 
+use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Tester\Assert;
 use Tester\TestCase;
@@ -46,23 +45,21 @@ class BlogPostRecommendedLinksTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \Nette\Schema\ValidationException The mandatory item '0 › text' is missing.
-	 */
 	public function testGetFromJsonMissingText(): void
 	{
 		$json = Json::encode([['url' => 'https://invalid.example/']]);
-		$this->recommendedLinks->getFromJson($json);
+		Assert::exception(function () use ($json): void {
+			$this->recommendedLinks->getFromJson($json);
+		}, ValidationException::class, "The mandatory item '0 › text' is missing.");
 	}
 
 
-	/**
-	 * @throws \Nette\Schema\ValidationException The mandatory item '0 › url' is missing.
-	 */
 	public function testGetFromJsonMissingUrl(): void
 	{
 		$json = Json::encode([['text' => 'Invalid example']]);
-		$this->recommendedLinks->getFromJson($json);
+		Assert::exception(function () use ($json): void {
+			$this->recommendedLinks->getFromJson($json);
+		}, ValidationException::class, "The mandatory item '0 › url' is missing.");
 	}
 
 }

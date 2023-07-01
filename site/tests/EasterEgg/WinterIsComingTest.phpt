@@ -11,6 +11,7 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\TextInput;
+use Nette\InvalidStateException;
 use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
@@ -133,12 +134,11 @@ class WinterIsComingTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \Nette\InvalidStateException Component of type 'Nette\Forms\Controls\TextInput' is not attached to 'Nette\Forms\Form'.
-	 */
 	public function testNoForm(): void
 	{
-		($this->ruleEmail)((new TextInput())->setDefaultValue('winter@example.com'));
+		Assert::exception(function (): void {
+			($this->ruleEmail)((new TextInput())->setDefaultValue('winter@example.com'));
+		}, InvalidStateException::class, "Component of type 'Nette\Forms\Controls\TextInput' is not attached to 'Nette\Forms\Form'.");
 	}
 
 

@@ -1,7 +1,5 @@
 <?php
 /** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
@@ -9,6 +7,7 @@ namespace MichalSpacekCz\Application;
 use DateTime;
 use Exception;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
 use Tester\Assert;
 use Tester\TestCase;
@@ -25,12 +24,11 @@ class AppRequestTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\ShouldNotHappenException Request should be set before this method is called in UI\Presenter::run()
-	 */
 	public function testGetOriginalRequestNoRequest(): void
 	{
-		$this->appRequest->getOriginalRequest(null);
+		Assert::exception(function (): void {
+			$this->appRequest->getOriginalRequest(null);
+		}, ShouldNotHappenException::class, 'Request should be set before this method is called in UI\Presenter::run()');
 	}
 
 
@@ -63,38 +61,35 @@ class AppRequestTest extends TestCase
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\ShouldNotHappenException Not an exception
-	 */
 	public function testGetExceptionNoException(): void
 	{
-		$this->appRequest->getException(new Request('foo'));
+		Assert::exception(function (): void {
+			$this->appRequest->getException(new Request('foo'));
+		}, ShouldNotHappenException::class, "Not an exception");
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\ShouldNotHappenException Not an exception
-	 */
 	public function testGetExceptionNotAnException(): void
 	{
 		$request = new Request('foo');
 		$request->setParameters([
 			'exception' => null,
 		]);
-		$this->appRequest->getException($request);
+		Assert::exception(function () use ($request): void {
+			$this->appRequest->getException($request);
+		}, ShouldNotHappenException::class, "Not an exception");
 	}
 
 
-	/**
-	 * @throws \MichalSpacekCz\ShouldNotHappenException Not an exception
-	 */
 	public function testGetExceptionInvalidException(): void
 	{
 		$request = new Request('foo');
 		$request->setParameters([
 			'exception' => new DateTime(),
 		]);
-		$this->appRequest->getException($request);
+		Assert::exception(function () use ($request): void {
+			$this->appRequest->getException($request);
+		}, ShouldNotHappenException::class, "Not an exception");
 	}
 
 
