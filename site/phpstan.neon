@@ -3,7 +3,7 @@ parameters:
 	paths:
 		- app
 		- bin
-	level: 8
+	level: max
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
