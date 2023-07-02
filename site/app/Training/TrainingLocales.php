@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use Nette\Database\Explorer;
 
-class Locales
+class TrainingLocales
 {
 
 	public function __construct(

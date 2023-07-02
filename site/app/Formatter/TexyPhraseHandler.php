@@ -8,7 +8,7 @@ use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Formatter\Exceptions\UnexpectedHandlerInvocationReturnType;
 use MichalSpacekCz\ShouldNotHappenException;
-use MichalSpacekCz\Training\Locales;
+use MichalSpacekCz\Training\TrainingLocales;
 use Nette\Application\Application;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -29,7 +29,7 @@ class TexyPhraseHandler
 
 	public function __construct(
 		private readonly Application $application,
-		private readonly Locales $trainingLocales,
+		private readonly TrainingLocales $trainingLocales,
 		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly Translator $translator,

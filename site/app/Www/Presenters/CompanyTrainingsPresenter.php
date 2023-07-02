@@ -5,9 +5,9 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\CompanyTrainings;
-use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -22,7 +22,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Trainings $trainings,
 		private readonly CompanyTrainings $companyTrainings,
-		private readonly Locales $trainingLocales,
+		private readonly TrainingLocales $trainingLocales,
 		private readonly Reviews $trainingReviews,
 		private readonly Prices $prices,
 		private readonly IResponse $httpResponse,

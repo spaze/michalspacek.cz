@@ -16,8 +16,8 @@ use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\FreeSeats;
-use MichalSpacekCz\Training\Locales;
 use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
@@ -45,7 +45,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly Trainings $trainings,
 		private readonly FreeSeats $freeSeats,
 		private readonly CompanyTrainings $companyTrainings,
-		private readonly Locales $trainingLocales,
+		private readonly TrainingLocales $trainingLocales,
 		private readonly Reviews $trainingReviews,
 		private readonly TrainingApplicationFormFactory $trainingApplicationFactory,
 		private readonly TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,

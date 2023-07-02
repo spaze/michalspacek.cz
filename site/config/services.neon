@@ -100,12 +100,12 @@ services:
 	- MichalSpacekCz\Training\FormDataLogger
 	- MichalSpacekCz\Training\FormSpam
 	- MichalSpacekCz\Training\FreeSeats
-	- MichalSpacekCz\Training\Locales
 	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
 	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
 	- MichalSpacekCz\Training\Resolver\Vrana
 	- MichalSpacekCz\Training\Reviews
 	- MichalSpacekCz\Training\Statuses
+	- MichalSpacekCz\Training\TrainingLocales
 	- MichalSpacekCz\Training\Trainings
 	- MichalSpacekCz\Training\Venues
 	- MichalSpacekCz\Twitter\TwitterCards
