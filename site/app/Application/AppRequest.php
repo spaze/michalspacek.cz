@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use Exception;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
+use Throwable;
 
 class AppRequest
 {
@@ -27,11 +27,11 @@ class AppRequest
 	}
 
 
-	public function getException(Request $request): Exception
+	public function getException(Request $request): Throwable
 	{
 		$e = $request->getParameter('exception');
-		if (!$e instanceof Exception) {
-			throw new ShouldNotHappenException('Not an exception');
+		if (!$e instanceof Throwable) {
+			throw new ShouldNotHappenException('Neither an exception nor an error');
 		}
 		return $e;
 	}
