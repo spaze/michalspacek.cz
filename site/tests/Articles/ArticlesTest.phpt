@@ -6,7 +6,10 @@ namespace MichalSpacekCz\Articles;
 
 use DateTime;
 use MichalSpacekCz\Articles\Blog\BlogPost;
+use MichalSpacekCz\Articles\Blog\BlogPosts;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Tester\Assert;
@@ -18,11 +21,23 @@ $runner = require __DIR__ . '/../bootstrap.php';
 class ArticlesTest extends TestCase
 {
 
+	private Articles $articles;
+
+
 	public function __construct(
 		private readonly Database $database,
-		private readonly Articles $articles,
+		private readonly TexyFormatter $texyFormatter,
+		private readonly BlogPosts $blogPosts,
+		private readonly Tags $tags,
 		private readonly NoOpTranslator $translator,
 	) {
+		$this->articles = new Articles(
+			$this->database,
+			$this->texyFormatter,
+			$this->blogPosts,
+			$this->tags,
+			$this->translator,
+		);
 	}
 
 

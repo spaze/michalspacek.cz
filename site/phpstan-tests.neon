@@ -5,7 +5,7 @@ parameters:
 	fileExtensions:
 		- php
 		- phpt
-	level: 1
+	level: 2
 	disallowedFunctionCalls:
 		-
 			function: 'rand()'

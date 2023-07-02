@@ -13,6 +13,7 @@ parameters:
 
 services:
 	- MichalSpacekCz\Test\Application\ApplicationPresenter
+	articles: MichalSpacekCz\Test\Articles\ArticlesMock
 	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGenerator
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
 	database.upcKeys.explorer: @database.default.explorer

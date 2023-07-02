@@ -6,13 +6,11 @@ namespace MichalSpacekCz\Feed;
 
 use DateTime;
 use MichalSpacekCz\Articles\ArticleEdit;
-use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Test\Articles\ArticlesMock;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Storage;
-use Nette\Database\Row;
 use Nette\Utils\Html;
 use SimpleXMLElement;
 use Tester\Assert;
@@ -24,65 +22,14 @@ $runner = require __DIR__ . '/../bootstrap.php';
 class ExportsTest extends TestCase
 {
 
-	private Articles $articles;
-
 	private Exports $exports;
 
 
 	public function __construct(
+		private readonly ArticlesMock $articles,
 		private readonly Storage $cacheStorage,
 		private readonly NoOpTranslator $translator,
 	) {
-		$this->articles = new class () extends Articles {
-
-			/** @var array<int, Row> */
-			private array $articles = [];
-
-
-			/** @noinspection PhpMissingParentConstructorInspection Intentionally */
-			public function __construct()
-			{
-			}
-
-
-			public function getNearestPublishDate(): ?DateTime
-			{
-				return null;
-			}
-
-
-			public function addBlogPost(int $postId, DateTime $published, string $suffix, array $edits = [], bool $omitExports = false): void
-			{
-				$post = new BlogPost();
-				$post->postId = $postId;
-				$post->title = Html::fromText("Title {$suffix}");
-				$post->href = "https://example.com/{$suffix}";
-				$post->published = $published;
-				$post->lead = Html::fromText("Excerpt {$suffix}");
-				$post->text = Html::fromText("Text {$suffix}");
-				$post->edits = $edits;
-				$post->slugTags = [];
-				$post->omitExports = $omitExports;
-				$this->articles[] = $post;
-			}
-
-
-			/**
-			 * @param int|null $limit
-			 * @return array<int, Row>
-			 */
-			public function getAll(?int $limit = null): array
-			{
-				return $this->articles;
-			}
-
-
-			public function reset(): void
-			{
-				$this->articles = [];
-			}
-
-		};
 		$texyFormatter = new class () extends TexyFormatter {
 
 			/** @noinspection PhpMissingParentConstructorInspection Intentionally */
