@@ -1,9 +1,11 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Test\Http\Request;
+use MichalSpacekCz\Test\PrivateProperty;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -25,10 +27,7 @@ class HttpInputTest extends TestCase
 		Assert::null($this->httpInput->getCookieString('foo'));
 		$this->request->setCookie('foo', 'bar');
 		Assert::same('bar', $this->httpInput->getCookieString('foo'));
-		Assert::with($this->request, function (): void {
-			/** @noinspection PhpDynamicFieldDeclarationInspection $this is $this->request */
-			$this->cookies = ['waldo' => ['quux' => 'foobar']];
-		});
+		PrivateProperty::setValue($this->request, 'cookies', ['waldo' => ['quux' => 'foobar']]);
 		Assert::null($this->httpInput->getCookieString('waldo'));
 	}
 

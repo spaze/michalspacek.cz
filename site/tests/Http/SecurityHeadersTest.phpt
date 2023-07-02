@@ -1,11 +1,12 @@
 <?php
-/** @noinspection PhpMissingParentConstructorInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\Http\SecurityHeadersFactory;
+use MichalSpacekCz\Test\PrivateProperty;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
@@ -74,10 +75,7 @@ class SecurityHeadersTest extends TestCase
 		$presenter->setParent(null, 'Foo'); // Set the name and also rename it
 		$presenter->changeAction('bar');
 		Assert::same(':Foo:bar', $presenter->getAction(true));
-		Assert::with($this->application, function () use ($presenter): void {
-			/** @noinspection PhpDynamicFieldDeclarationInspection $this is $this->application */
-			$this->presenter = $presenter;
-		});
+		PrivateProperty::setValue($this->application, 'presenter', $presenter);
 
 		$this->securityHeaders->sendHeaders();
 		$expected = [
@@ -91,10 +89,7 @@ class SecurityHeadersTest extends TestCase
 	public function testSendHeadersImplementsIPresenterGetsDefaultPolicy(): void
 	{
 		$presenter = $this->presenterFactory->createPresenter('Www:ErrorGeneric'); // Has to be a real presenter implementing IPresenter
-		Assert::with($this->application, function () use ($presenter): void {
-			/** @noinspection PhpDynamicFieldDeclarationInspection $this is $this->application */
-			$this->presenter = $presenter;
-		});
+		PrivateProperty::setValue($this->application, 'presenter', $presenter);
 
 		$this->securityHeaders->sendHeaders();
 		$expected = [

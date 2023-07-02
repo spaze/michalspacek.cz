@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Tester\Assert;
 use Tester\TestCase;
@@ -25,10 +26,7 @@ class StatusesTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
-		Assert::with($this->trainingStatuses, function (): void {
-			/** @noinspection PhpDynamicFieldDeclarationInspection $this is $this->trainingStatuses */
-			$this->statusIds = [];
-		});
+		PrivateProperty::setValue($this->trainingStatuses, 'statusIds', []);
 	}
 
 
