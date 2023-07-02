@@ -33,6 +33,8 @@ class TrainingsPresenter extends BasePresenter
 	/** @var array<int, TrainingDate> id => date */
 	private array $dates;
 
+	private ?string $trainingAction = null;
+
 
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
@@ -65,11 +67,9 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $name
-	 */
 	public function actionTraining(string $name): void
 	{
+		$this->trainingAction = $name;
 		try {
 			$training = $this->trainings->get($name);
 		} catch (TrainingDoesNotExistException $e) {
@@ -114,6 +114,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function actionApplication(string $name, ?string $param): void
 	{
+		$this->trainingAction = $name;
 		try {
 			$training = $this->trainings->get($name);
 		} catch (TrainingDoesNotExistException $e) {
@@ -200,6 +201,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function actionReviews(string $name): void
 	{
+		$this->trainingAction = $name;
 		try {
 			$training = $this->trainings->get($name);
 		} catch (TrainingDoesNotExistException $e) {
@@ -225,6 +227,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function actionFiles(string $name, ?string $param): void
 	{
+		$this->trainingAction = $name;
 		$session = $this->getSession('application');
 
 		if ($param !== null) {
@@ -275,6 +278,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function actionSuccess(string $name): void
 	{
+		$this->trainingAction = $name;
 		try {
 			$training = $this->trainings->get($name);
 		} catch (TrainingDoesNotExistException $e) {
@@ -334,11 +338,11 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		if ($this->getAction() === 'default') {
+		if (!$this->trainingAction) {
 			return parent::getLocaleLinkParams();
 		} else {
 			$params = [];
-			foreach ($this->trainingLocales->getLocaleActions($this->getParameter('name')) as $key => $value) {
+			foreach ($this->trainingLocales->getLocaleActions($this->trainingAction) as $key => $value) {
 				$params[$key] = ['name' => $value];
 			}
 			return $params;

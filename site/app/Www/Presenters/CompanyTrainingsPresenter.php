@@ -15,6 +15,9 @@ use Nette\Http\IResponse;
 class CompanyTrainingsPresenter extends BasePresenter
 {
 
+	private ?string $trainingAction = null;
+
+
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Trainings $trainings,
@@ -36,11 +39,9 @@ class CompanyTrainingsPresenter extends BasePresenter
 	}
 
 
-	/**
-	 * @param string $name
-	 */
 	public function actionTraining(string $name): void
 	{
+		$this->trainingAction = $name;
 		$training = $this->companyTrainings->getInfo($name);
 		if (!$training) {
 			throw new BadRequestException("I don't do {$name} training, yet");
@@ -83,11 +84,11 @@ class CompanyTrainingsPresenter extends BasePresenter
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		if ($this->getAction() === 'default') {
+		if (!$this->trainingAction) {
 			return parent::getLocaleLinkParams();
 		} else {
 			$params = [];
-			foreach ($this->trainingLocales->getLocaleActions($this->getParameter('name')) as $key => $value) {
+			foreach ($this->trainingLocales->getLocaleActions($this->trainingAction) as $key => $value) {
 				$params[$key] = ['name' => $value];
 			}
 			return $params;
