@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
-use DateTimeZone;
 use Exception;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
@@ -242,14 +241,13 @@ class Statuses
 			$datetime->format(DateTime::ATOM),
 		));
 
-		/** @var DateTimeZone|false $timeZone */
-		$timeZone = $datetime->getTimezone();
+		$timeZone = $datetime->getTimezone()->getName();
 		$this->database->query(
 			'UPDATE training_applications SET ? WHERE id_application = ?',
 			[
 				'key_status' => $statusId,
 				'status_time' => $datetime,
-				'status_time_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
+				'status_time_timezone' => $timeZone,
 			],
 			$applicationId,
 		);

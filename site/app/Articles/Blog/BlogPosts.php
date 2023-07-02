@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use Contributte\Translation\Translator;
 use DateTime;
-use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Articles\ArticleEdit;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
@@ -222,8 +221,7 @@ class BlogPosts
 	{
 		$this->database->beginTransaction();
 		try {
-			/** @var DateTimeZone|null $timeZone */
-			$timeZone = $post->published?->getTimezone() ?: null;
+			$timeZone = $post->published?->getTimezone()->getName();
 			$this->database->query(
 				'INSERT INTO blog_posts',
 				[
@@ -235,7 +233,7 @@ class BlogPosts
 					'lead' => $post->leadTexy,
 					'text' => $post->textTexy,
 					'published' => $post->published,
-					'published_timezone' => $post->published ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null,
+					'published_timezone' => $timeZone,
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => $post->twitterCard?->getId(),
 					'og_image' => $post->ogImage,
@@ -290,14 +288,13 @@ class BlogPosts
 			);
 			$now = new DateTime();
 			if ($post->editSummary) {
-				/** @var DateTimeZone|false $timeZone */
-				$timeZone = $now->getTimezone();
+				$timeZone = $now->getTimezone()->getName();
 				$this->database->query(
 					'INSERT INTO blog_post_edits',
 					[
 						'key_blog_post' => $post->postId,
 						'edited_at' => $now,
-						'edited_at_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
+						'edited_at_timezone' => $timeZone,
 						'summary' => $post->editSummary,
 					],
 				);

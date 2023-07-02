@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Training\Files;
 
 use DateTime;
 use DateTimeInterface;
-use DateTimeZone;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -100,14 +99,13 @@ class TrainingFiles
 		$datetime = new DateTime();
 		$this->database->beginTransaction();
 
-		/** @var DateTimeZone|false $timeZone */
-		$timeZone = $datetime->getTimezone();
+		$timeZone = $datetime->getTimezone()->getName();
 		$this->database->query(
 			'INSERT INTO files',
 			[
 				'filename' => $name,
 				'added' => $datetime,
-				'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
+				'added_timezone' => $timeZone,
 			],
 		);
 		$fileId = $this->database->getInsertId();
