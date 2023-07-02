@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
 use DateTime;
-use DateTimeZone;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
@@ -360,8 +359,7 @@ class Applications
 
 		$customerPrice = $this->prices->resolvePriceDiscountVat($price, $studentDiscount, $status, $note ?? '');
 
-		/** @var DateTimeZone|false $timeZone */
-		$timeZone = $datetime->getTimezone();
+		$timeZone = $datetime->getTimezone()->getName();
 		$data = [
 			'key_date' => $dateId,
 			'name' => $name,
@@ -376,7 +374,7 @@ class Applications
 			'note' => $note,
 			'key_status' => $statusId,
 			'status_time' => $datetime,
-			'status_time_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
+			'status_time_timezone' => $timeZone,
 			'key_source' => $this->getTrainingApplicationSource($source),
 			'price' => $customerPrice->getPrice(),
 			'vat_rate' => $customerPrice->getVatRate(),
@@ -475,8 +473,7 @@ class Applications
 		?int $dateId = null,
 	): void {
 		$paidDate = ($paid ? new DateTime($paid) : null);
-		/** @var DateTimeZone|false $timeZone */
-		$timeZone = ($paidDate ? $paidDate->getTimezone() : false);
+		$timeZone = $paidDate?->getTimezone()->getName();
 		$data = [
 			'name' => $name,
 			'email' => ($email ? $this->emailEncryption->encrypt($email) : null),
@@ -495,8 +492,8 @@ class Applications
 			'price_vat' => ($priceVat ?: null),
 			'discount' => ($discount ?: null),
 			'invoice_id' => ((int)$invoiceId ?: null),
-			'paid' => ($paidDate ?: null),
-			'paid_timezone' => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
+			'paid' => $paidDate,
+			'paid_timezone' => $timeZone,
 		];
 		if ($dateId !== null) {
 			$data['key_date'] = $dateId;
@@ -757,13 +754,12 @@ class Applications
 	public function setPaidDate(string $invoiceId, string $paid): ?int
 	{
 		$paidDate = ($paid ? new DateTime($paid) : null);
-		/** @var DateTimeZone|false $timeZone */
-		$timeZone = ($paidDate ? $paidDate->getTimezone() : false);
+		$timeZone = $paidDate?->getTimezone()->getName();
 		$result = $this->database->query(
 			'UPDATE training_applications SET ? WHERE invoice_id = ?',
 			[
-				'paid' => ($paidDate ?: null),
-				'paid_timezone' => ($paidDate ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null),
+				'paid' => $paidDate,
+				'paid_timezone' => $timeZone,
 			],
 			(int)$invoiceId,
 		);

@@ -24,6 +24,11 @@ parameters:
 				- 'MichalSpacekCz\Http\HttpInput::getCookieString()'
 				- 'MichalSpacekCz\Http\HttpInput::getPostString()'
 				- 'MichalSpacekCz\Http\HttpInput::getPostArray()'
+		-
+			method: 'DateTimeZone::__construct()'
+			message: 'use MichalSpacekCz\DateTime\DateTimeZoneFactory::get() instead, throws a more specific exception'
+			allowInMethods:
+				- 'MichalSpacekCz\DateTime\DateTimeZoneFactory::get()'
 	disallowedConstants:
 		-
 			constant: 'LIBXML_NOENT'

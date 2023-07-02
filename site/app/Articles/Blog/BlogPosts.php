@@ -5,10 +5,11 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use Contributte\Translation\Translator;
 use DateTime;
-use DateTimeZone;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Articles\ArticleEdit;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
+use MichalSpacekCz\DateTime\DateTimeZoneFactory;
+use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Twitter\TwitterCards;
@@ -48,6 +49,7 @@ class BlogPosts
 		private readonly TwitterCards $twitterCards,
 		private readonly BlogPostRecommendedLinks $recommendedLinks,
 		private readonly JsonUtils $jsonUtils,
+		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
 		private readonly int $updatedInfoThreshold,
 		private readonly array $allowedTags,
 	) {
@@ -71,6 +73,7 @@ class BlogPosts
 
 	/**
 	 * @throws InvalidLinkException
+	 * @throws InvalidTimezoneException
 	 * @throws JsonException
 	 * @throws BlogPostDoesNotExistException
 	 */
@@ -87,6 +90,7 @@ class BlogPosts
 
 	/**
 	 * @throws InvalidLinkException
+	 * @throws InvalidTimezoneException
 	 * @throws JsonException
 	 * @throws BlogPostDoesNotExistException
 	 */
@@ -134,6 +138,7 @@ class BlogPosts
 	/**
 	 * @return list<BlogPost>
 	 * @throws InvalidLinkException
+	 * @throws InvalidTimezoneException
 	 * @throws JsonException
 	 */
 	public function getAll(): array
@@ -216,8 +221,7 @@ class BlogPosts
 	{
 		$this->database->beginTransaction();
 		try {
-			/** @var DateTimeZone|null $timeZone */
-			$timeZone = $post->published?->getTimezone() ?: null;
+			$timeZone = $post->published?->getTimezone()->getName();
 			$this->database->query(
 				'INSERT INTO blog_posts',
 				[
@@ -229,7 +233,7 @@ class BlogPosts
 					'lead' => $post->leadTexy,
 					'text' => $post->textTexy,
 					'published' => $post->published,
-					'published_timezone' => $post->published ? ($timeZone ? $timeZone->getName() : date_default_timezone_get()) : null,
+					'published_timezone' => $timeZone,
 					'originally' => $post->originallyTexy,
 					'key_twitter_card_type' => $post->twitterCard?->getId(),
 					'og_image' => $post->ogImage,
@@ -284,14 +288,13 @@ class BlogPosts
 			);
 			$now = new DateTime();
 			if ($post->editSummary) {
-				/** @var DateTimeZone|false $timeZone */
-				$timeZone = $now->getTimezone();
+				$timeZone = $now->getTimezone()->getName();
 				$this->database->query(
 					'INSERT INTO blog_post_edits',
 					[
 						'key_blog_post' => $post->postId,
 						'edited_at' => $now,
-						'edited_at_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
+						'edited_at_timezone' => $timeZone,
 						'summary' => $post->editSummary,
 					],
 				);
@@ -331,6 +334,7 @@ class BlogPosts
 
 	/**
 	 * @return list<ArticleEdit>
+	 * @throws InvalidTimezoneException
 	 */
 	private function getEdits(int $postId): array
 	{
@@ -348,7 +352,7 @@ class BlogPosts
 			$edit->summaryTexy = $row->summaryTexy;
 			$edit->summary = $summary;
 			$edit->editedAt = $row->editedAt;
-			$edit->editedAt->setTimezone(new DateTimeZone($row->editedAtTimezone));
+			$edit->editedAt->setTimezone($this->dateTimeZoneFactory->get($row->editedAtTimezone));
 			$edits[] = $edit;
 		}
 		return $edits;
@@ -360,6 +364,7 @@ class BlogPosts
 	 * @throws JsonException
 	 * @throws JsonItemNotStringException
 	 * @throws JsonItemsNotArrayException
+	 * @throws InvalidTimezoneException
 	 */
 	public function buildPost(Row $row): BlogPost
 	{

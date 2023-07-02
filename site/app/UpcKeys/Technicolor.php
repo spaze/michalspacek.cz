@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\UpcKeys;
 
 use DateTime;
-use DateTimeZone;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiResponseInvalidException;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
@@ -194,14 +193,13 @@ class Technicolor implements RouterInterface
 		$datetime = new DateTime();
 		$this->database->beginTransaction();
 		try {
-			/** @var DateTimeZone|false $timeZone */
-			$timeZone = $datetime->getTimezone();
+			$timeZone = $datetime->getTimezone()->getName();
 			$this->database->query(
 				'INSERT INTO ssids',
 				[
 					'ssid' => $ssid,
 					'added' => $datetime,
-					'added_timezone' => ($timeZone ? $timeZone->getName() : date_default_timezone_get()),
+					'added_timezone' => $timeZone,
 				],
 			);
 			$ssidId = $this->database->getInsertId();
