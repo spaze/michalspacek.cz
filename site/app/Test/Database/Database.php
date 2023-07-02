@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Database;
 
+use DateTime;
 use DateTimeInterface;
 use MichalSpacekCz\Test\WillThrow;
 use Nette\Database\Explorer;
@@ -94,7 +95,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param array<string, int|string|null> $fetchResult
+	 * @param array<string, int|string|bool|DateTime|null> $fetchResult
 	 */
 	public function setFetchResult(array $fetchResult): void
 	{
@@ -150,7 +151,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param list<array<string, string|null>> $fetchAllDefaultResult
+	 * @param list<array<string, int|string|bool|DateTime|null>> $fetchAllDefaultResult
 	 * @return void
 	 */
 	public function setFetchAllDefaultResult(array $fetchAllDefaultResult): void
@@ -160,7 +161,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param list<array<string, string|null>> $fetchAllResult
+	 * @param list<array<string, int|string|bool|DateTime|null>> $fetchAllResult
 	 * @return void
 	 */
 	public function addFetchAllResult(array $fetchAllResult): void
@@ -170,7 +171,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param list<array<string, string|null>> $fetchAllResult
+	 * @param list<array<string, int|string|bool|DateTime|null>> $fetchAllResult
 	 * @return list<Row>
 	 */
 	private function getRows(array $fetchAllResult): array
