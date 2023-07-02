@@ -1,4 +1,4 @@
-.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor tester
+.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-tests phpstan-vendor tester
 
 test: audit check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml phpcs phpstan tester phpstan-vendor
 
@@ -37,6 +37,9 @@ phpstan:
 
 phpstan-latte-templates:
 	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-latte-templates.neon
+
+phpstan-tests:
+	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-tests.neon
 
 phpstan-vendor:
 	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon
