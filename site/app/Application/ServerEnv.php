@@ -75,4 +75,10 @@ class ServerEnv
 		return array_values($_SERVER[$key]);
 	}
 
+
+	public static function unset(string $key): void
+	{
+		unset($_SERVER[$key]);
+	}
+
 }

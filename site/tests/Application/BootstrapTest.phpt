@@ -27,7 +27,7 @@ class BootstrapTest extends TestCase
 			$this->tempLog = $this->exceptionLog . '.' . uniqid(more_entropy: true);
 			rename($this->exceptionLog, $this->tempLog);
 		}
-		$_SERVER['SERVER_NAME'] = 'michalspacek.cz';
+		ServerEnv::setString('SERVER_NAME', 'michalspacek.cz');
 	}
 
 
@@ -60,9 +60,9 @@ class BootstrapTest extends TestCase
 	public function testBoot(?string $environment): void
 	{
 		if ($environment === null) {
-			unset($_SERVER['ENVIRONMENT']);
+			ServerEnv::unset('ENVIRONMENT');
 		} else {
-			$_SERVER['ENVIRONMENT'] = $environment;
+			ServerEnv::setString('ENVIRONMENT', $environment);
 		}
 		Assert::noError(function () use (&$container): void {
 			$container = Bootstrap::boot();
