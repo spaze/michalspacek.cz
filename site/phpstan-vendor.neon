@@ -158,6 +158,11 @@ parameters:
 				- vendor/nette/forms/src/Forms/Form.php
 				- vendor/nette/http/src/Http/Session.php
 				- vendor/nette/security/src/Bridges/SecurityHttp/CookieStorage.php
+		-
+			method: 'DateTimeZone::__construct()'
+			message: 'use MichalSpacekCz\DateTime\DateTimeZoneFactory::get() instead, throws a more specific exception'
+			allowIn:
+				- vendor/*.php
 	disallowedStaticCalls:
 		-
 			method: 'Tracy\Debugger::barDump()'
