@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application;
 
 use DateTime;
+use Error;
 use Exception;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -65,7 +66,7 @@ class AppRequestTest extends TestCase
 	{
 		Assert::exception(function (): void {
 			$this->appRequest->getException(new Request('foo'));
-		}, ShouldNotHappenException::class, "Not an exception");
+		}, ShouldNotHappenException::class, 'Neither an exception nor an error');
 	}
 
 
@@ -77,7 +78,7 @@ class AppRequestTest extends TestCase
 		]);
 		Assert::exception(function () use ($request): void {
 			$this->appRequest->getException($request);
-		}, ShouldNotHappenException::class, "Not an exception");
+		}, ShouldNotHappenException::class, 'Neither an exception nor an error');
 	}
 
 
@@ -89,7 +90,7 @@ class AppRequestTest extends TestCase
 		]);
 		Assert::exception(function () use ($request): void {
 			$this->appRequest->getException($request);
-		}, ShouldNotHappenException::class, "Not an exception");
+		}, ShouldNotHappenException::class, 'Neither an exception nor an error');
 	}
 
 
@@ -97,6 +98,12 @@ class AppRequestTest extends TestCase
 	{
 		$e = new Exception();
 		$request = new Request('foo');
+		$request->setParameters([
+			'exception' => $e,
+		]);
+		Assert::same($e, $this->appRequest->getException($request));
+
+		$e = new Error();
 		$request->setParameters([
 			'exception' => $e,
 		]);
