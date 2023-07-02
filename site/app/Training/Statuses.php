@@ -6,6 +6,8 @@ namespace MichalSpacekCz\Training;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use MichalSpacekCz\DateTime\DateTimeZoneFactory;
+use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Nette\Database\Explorer;
@@ -51,6 +53,7 @@ class Statuses
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
 	) {
 	}
 
@@ -307,6 +310,7 @@ class Statuses
 	/**
 	 * @param int $applicationId
 	 * @return Row[]
+	 * @throws InvalidTimezoneException
 	 */
 	public function getStatusHistory(int $applicationId): array
 	{
@@ -325,7 +329,7 @@ class Statuses
 				$applicationId,
 			);
 			foreach ($this->statusHistory[$applicationId] as &$row) {
-				$row->statusTime->setTimezone(new DateTimeZone($row->statusTimeTimeZone));
+				$row->statusTime->setTimezone($this->dateTimeZoneFactory->get($row->statusTimeTimeZone));
 				unset($row->statusTimeTimeZone);
 			}
 		}
