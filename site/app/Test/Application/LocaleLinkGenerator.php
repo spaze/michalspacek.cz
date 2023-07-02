@@ -20,12 +20,13 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 
 	public function defaultParams(array $params): array
 	{
-		return [];
+		return ['*' => $params];
 	}
 
 
 	public function setDefaultParams(array &$params, array $defaultParams): void
 	{
+		$params['*'] = $defaultParams;
 	}
 
 

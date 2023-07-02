@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use Nette\Database\Explorer;
 
 class TrainingLocales
@@ -10,6 +11,7 @@ class TrainingLocales
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 	) {
 	}
 
@@ -39,6 +41,25 @@ class TrainingLocales
 			)',
 			$action,
 		);
+	}
+
+
+	/**
+	 * Translated locale parameters for trainings.
+	 *
+	 * @param array<string, string|null> $defaultParams
+	 * @return array<string, array<string, string|null>>
+	 */
+	public function getLocaleLinkParams(?string $trainingAction, array $defaultParams): array
+	{
+		if (!$trainingAction) {
+			return $this->localeLinkGenerator->defaultParams($defaultParams);
+		}
+		$params = [];
+		foreach ($this->getLocaleActions($trainingAction) as $key => $value) {
+			$params[$key] = ['name' => $value];
+		}
+		return $params;
 	}
 
 }

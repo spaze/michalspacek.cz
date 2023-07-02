@@ -338,15 +338,7 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		if (!$this->trainingAction) {
-			return parent::getLocaleLinkParams();
-		} else {
-			$params = [];
-			foreach ($this->trainingLocales->getLocaleActions($this->trainingAction) as $key => $value) {
-				$params[$key] = ['name' => $value];
-			}
-			return $params;
-		}
+		return $this->trainingLocales->getLocaleLinkParams($this->trainingAction, $this->getParameters());
 	}
 
 
