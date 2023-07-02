@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Media\Resources\InterviewMediaResources;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
@@ -134,6 +135,9 @@ class Interviews
 	{
 		foreach (['description'] as $item) {
 			if (isset($row[$item])) {
+				if (!is_string($row[$item])) {
+					throw new ShouldNotHappenException(sprintf("Item '%s' is a %s not a string", $item, get_debug_type($row[$item])));
+				}
 				$row[$item] = $this->texyFormatter->formatBlock($row[$item]);
 			}
 		}

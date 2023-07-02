@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training;
 
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use RuntimeException;
@@ -90,6 +91,9 @@ class Reviews
 	private function format(array $reviews): array
 	{
 		foreach ($reviews as &$review) {
+			if (!is_string($review['review'])) {
+				throw new ShouldNotHappenException(sprintf("Review is a %s not a string", get_debug_type($review['review'])));
+			}
 			$review['review'] = $this->texyFormatter->format($review['review']);
 		}
 		return $reviews;

@@ -7,6 +7,7 @@ use DateTime;
 use Exception;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Resources\TalkMediaResources;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\TalkDateTimeException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -220,11 +221,17 @@ class Talks
 		$this->texyFormatter->setTopHeading(3);
 		foreach (['title', 'event'] as $item) {
 			if (isset($row[$item])) {
+				if (!is_string($row[$item])) {
+					throw new ShouldNotHappenException(sprintf("Item '%s' is a %s not a string", $item, get_debug_type($row[$item])));
+				}
 				$row[$item] = $this->texyFormatter->format($row[$item]);
 			}
 		}
 		foreach (['description', 'transcript'] as $item) {
 			if (isset($row[$item])) {
+				if (!is_string($row[$item])) {
+					throw new ShouldNotHappenException(sprintf("Item '%s' is a %s not a string", $item, get_debug_type($row[$item])));
+				}
 				$row[$item] = $this->texyFormatter->formatBlock($row[$item]);
 			}
 		}
