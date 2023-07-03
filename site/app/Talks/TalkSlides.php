@@ -48,7 +48,7 @@ class TalkSlides
 	/**
 	 * Return slide number by given alias.
 	 *
-	 * @return int|null Slide number or null if no slide given, or slide not found
+	 * @return int|null Slide number or null if no slide given
 	 * @throws UnknownSlideException
 	 */
 	public function getSlideNo(int $talkId, ?string $slide): ?int
@@ -57,7 +57,7 @@ class TalkSlides
 			return null;
 		}
 		$slideNo = $this->database->fetchField('SELECT number FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
-		if ($slideNo === false) {
+		if (!$slideNo) {
 			if (ctype_digit($slide)) {
 				$slideNo = (int)$slide; // To keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {

@@ -27,10 +27,10 @@ class TalkSlidesTest extends TestCase
 	{
 		Assert::null($this->talkSlides->getSlideNo(1, null));
 
-		$this->database->setFetchFieldResult(false);
+		$this->database->setFetchFieldResult(null);
 		Assert::same(303, $this->talkSlides->getSlideNo(1, '303'));
 
-		$this->database->setFetchFieldResult(false);
+		$this->database->setFetchFieldResult(null);
 		Assert::exception(function (): void {
 			$this->talkSlides->getSlideNo(1, 'yo');
 		}, UnknownSlideException::class, "Unknown slide 'yo' for talk id '1'");

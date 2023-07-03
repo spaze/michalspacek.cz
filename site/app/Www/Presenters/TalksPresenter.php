@@ -6,12 +6,12 @@ namespace MichalSpacekCz\Www\Presenters;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Media\VideoThumbnails;
+use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalkSlides;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use RuntimeException;
 
 class TalksPresenter extends BasePresenter
 {
@@ -62,8 +62,8 @@ class TalksPresenter extends BasePresenter
 					$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$talk->action]);
 				}
 			}
-		} catch (RuntimeException $e) {
-			throw new BadRequestException($e->getMessage());
+		} catch (UnknownSlideException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $talk);
