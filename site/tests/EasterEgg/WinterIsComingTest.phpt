@@ -155,7 +155,10 @@ class WinterIsComingTest extends TestCase
 		/** @var TextResponse $response */
 		$response = $this->resultObject->response;
 		Assert::type(TextResponse::class, $response);
-		Assert::contains('Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation', $response->getSource());
+		/** @var string $source */
+		$source = $response->getSource();
+		Assert::type('string', $source);
+		Assert::contains('Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation', $source);
 	}
 
 }
