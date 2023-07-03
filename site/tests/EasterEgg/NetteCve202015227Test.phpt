@@ -85,6 +85,9 @@ class NetteCve202015227Test extends TestCase
 	}
 
 
+	/**
+	 * @return list<array{view:NetteCve202015227View, command:string, cmd:string}>
+	 */
 	public function getCommands(): array
 	{
 		return [

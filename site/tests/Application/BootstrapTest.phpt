@@ -43,6 +43,9 @@ class BootstrapTest extends TestCase
 	}
 
 
+	/**
+	 * @return array<string, array{environment:string|null}>
+	 */
 	public function getBootEnvironments(): array
 	{
 		return [

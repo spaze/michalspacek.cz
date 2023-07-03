@@ -16,6 +16,9 @@ class AlgorithmTest extends TestCase
 	private const ALGO = 'bcrypt';
 
 
+	/**
+	 * @return list<array{inner:list<string>|null, outer:list<string>|null, expected:string|null}>
+	 */
 	public function getInnerOuterExpected(): array
 	{
 		return [

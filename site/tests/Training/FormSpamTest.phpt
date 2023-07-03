@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpDocMissingThrowsInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
@@ -33,6 +35,9 @@ class FormSpamTest extends TestCase
 	}
 
 
+	/**
+	 * @return list<array{0:array<string, string>, 1:bool, 2:string|null}>
+	 */
 	public function getValues(): array
 	{
 		return [
@@ -77,6 +82,7 @@ class FormSpamTest extends TestCase
 
 
 	/**
+	 * @param array<string, string> $values
 	 * @dataProvider getValues
 	 */
 	public function testIsSpam(array $values, bool $isNice, ?string $logged): void
