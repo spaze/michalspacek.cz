@@ -184,7 +184,7 @@ class TrainingDatesTest extends TestCase
 
 
 	/**
-	 * @return array<array{start:DateTime, status:TrainingDateStatus, freeSeats:bool}>
+	 * @return array<array{start:DateTime, status:TrainingDateStatus, lastFreeSeats:bool}>
 	 */
 	public function getDateStartStatus(): array
 	{

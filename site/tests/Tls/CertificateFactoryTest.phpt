@@ -32,6 +32,7 @@ class CertificateFactoryTest extends TestCase
 			3,
 			'CafeCe37',
 		);
+		/** @var array{commonName:string, commonNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string} $array */
 		$array = Json::decode(Json::encode($expected), forceArrays: true);
 		$certificate = $this->certificateFactory->get(
 			$array['commonName'],

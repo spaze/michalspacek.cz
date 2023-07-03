@@ -6,6 +6,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User;
 
+use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
@@ -57,10 +58,8 @@ class ManagerTest extends TestCase
 
 	public function testGetIdentityUsernameByUserNoUsername(): void
 	{
-		Assert::with($this->user, function (): void {
-			$this->authenticated = true;
-			$this->identity = new SimpleIdentity(1337);
-		});
+		PrivateProperty::setValue($this->user, 'authenticated', true);
+		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337));
 		Assert::exception(function (): void {
 			$this->authenticator->getIdentityUsernameByUser($this->user);
 		}, IdentityWithoutUsernameException::class);
@@ -69,10 +68,8 @@ class ManagerTest extends TestCase
 
 	public function testGetIdentityUsernameByUserUsernameNotString(): void
 	{
-		Assert::with($this->user, function (): void {
-			$this->authenticated = true;
-			$this->identity = new SimpleIdentity(1337, [], ['username' => 303]);
-		});
+		PrivateProperty::setValue($this->user, 'authenticated', true);
+		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity(1337, [], ['username' => 303]));
 		Assert::exception(function (): void {
 			$this->authenticator->getIdentityUsernameByUser($this->user);
 		}, IdentityUsernameNotStringException::class, 'Identity username is of type int, not a string');
@@ -84,20 +81,16 @@ class ManagerTest extends TestCase
 		$id = 1337;
 		$username = 'pizza';
 		$identity = $this->authenticator->getIdentity($id, $username);
-		Assert::with($this->user, function () use ($identity): void {
-			$this->authenticated = true;
-			$this->identity = $identity;
-		});
+		PrivateProperty::setValue($this->user, 'authenticated', true);
+		PrivateProperty::setValue($this->user, 'identity', $identity);
 		Assert::same($username, $this->authenticator->getIdentityUsernameByUser($this->user));
 	}
 
 
 	public function testChangePasswordUserIdNotInt(): void
 	{
-		Assert::with($this->user, function (): void {
-			$this->authenticated = true;
-			$this->identity = new SimpleIdentity('e1337', [], ['username' => '303']);
-		});
+		PrivateProperty::setValue($this->user, 'authenticated', true);
+		PrivateProperty::setValue($this->user, 'identity', new SimpleIdentity('e1337', [], ['username' => '303']));
 		Assert::exception(function (): void {
 			$this->authenticator->changePassword($this->user, 'hunter2', 'hunter3');
 		}, IdentityIdNotIntException::class, 'Identity id is of type string, not an integer');

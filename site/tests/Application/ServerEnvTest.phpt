@@ -96,6 +96,14 @@ class ServerEnvTest extends TestCase
 		Assert::null(ServerEnv::tryGetList('foo'));
 	}
 
+
+	public function testUnset(): void
+	{
+		$_SERVER['foo'] = 123;
+		ServerEnv::unset('foo');
+		Assert::hasNotKey('foo', $_SERVER);
+	}
+
 }
 
 $runner->run(ServerEnvTest::class);

@@ -9,7 +9,7 @@ class AlgorithmAttributes
 	/**
 	 * @param list<string>|null $inner
 	 * @param list<string>|null $outer
-	 * @param array<string, string>|null $params
+	 * @param array<string, string|int>|null $params
 	 */
 	public function __construct(
 		private readonly ?array $inner,
@@ -38,7 +38,7 @@ class AlgorithmAttributes
 
 
 	/**
-	 * @return array<string, string>|null
+	 * @return array<string, string|int>|null
 	 */
 	public function getParams(): ?array
 	{

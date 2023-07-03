@@ -107,6 +107,9 @@ class RatingTest extends TestCase
 	}
 
 
+	/**
+	 * @param non-empty-list<string> $disclosureTypes
+	 */
 	private function getAlgo(string $alias, bool $salted, bool $stretched, array $disclosureTypes): Algorithm
 	{
 		$disclosure = new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', array_shift($disclosureTypes));

@@ -3,6 +3,10 @@ parameters:
 	paths:
 		- app
 		- bin
+		- tests
+	fileExtensions:
+		- php
+		- phpt
 	level: max
 
 includes:

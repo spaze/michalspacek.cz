@@ -7,7 +7,7 @@ services:
 	- MichalSpacekCz\Application\Theme
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	- MichalSpacekCz\Application\WindowsSubsystemForLinux
-	- MichalSpacekCz\Articles\Articles
+	articles: MichalSpacekCz\Articles\Articles
 	- MichalSpacekCz\Articles\Blog\BlogPostLoader
 	- MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls
 	- MichalSpacekCz\Articles\Blog\BlogPostPreview

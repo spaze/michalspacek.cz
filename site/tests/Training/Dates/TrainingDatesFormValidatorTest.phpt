@@ -21,6 +21,9 @@ class TrainingDatesFormValidatorTest extends TestCase
 	}
 
 
+	/**
+	 * @return array<string, array{0:string|int, 1:string|int, 2:list<string>}>
+	 */
 	public function getStartEnd(): array
 	{
 		return [
@@ -76,7 +79,10 @@ class TrainingDatesFormValidatorTest extends TestCase
 	}
 
 
-	/** @dataProvider getStartEnd */
+	/**
+	 * @param list<string> $expectedErrors
+	 * @dataProvider getStartEnd
+	 */
 	public function testValidateFormStartEnd(string|int $inputStart, string|int $inputEnd, array $expectedErrors): void
 	{
 		$start = (new TextInput())->setDefaultValue($inputStart);

@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpMissingParentConstructorInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
@@ -69,20 +70,23 @@ class WinterIsComingTest extends TestCase
 	}
 
 
+	/**
+	 * @return array<string, array{email:string}>
+	 */
 	public function getUnfriendlyEmails(): array
 	{
 		return [
-			'address' => ['winter@example.com'],
-			'host' => [random_int(0, PHP_INT_MAX) . '@ssemarketing.net'],
+			'address' => ['email' => 'winter@example.com'],
+			'host' => ['email' => random_int(0, PHP_INT_MAX) . '@ssemarketing.net'],
 		];
 	}
 
 
 	/** @dataProvider getUnfriendlyEmails */
-	public function testRuleEmailFakeError(): void
+	public function testRuleEmailFakeError(string $email): void
 	{
-		Assert::exception(function (): void {
-			($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('winter@example.com'));
+		Assert::exception(function () use ($email): void {
+			($this->ruleEmail)($this->form->addText('foo')->setDefaultValue($email));
 		}, AbortException::class);
 		$this->assertResponse();
 	}
@@ -95,12 +99,15 @@ class WinterIsComingTest extends TestCase
 	}
 
 
+	/**
+	 * @return list<array{name:string}>
+	 */
 	public function getRuleStreetNiceStreets(): array
 	{
 		return [
-			['34 Watts Road'],
-			['34 Watts'],
-			['35 Watts road'],
+			['name' => '34 Watts Road'],
+			['name' => '34 Watts'],
+			['name' => '35 Watts road'],
 		];
 	}
 
@@ -114,10 +121,13 @@ class WinterIsComingTest extends TestCase
 	}
 
 
+	/**
+	 * @return list<array{name:string}>
+	 */
 	public function getRuleStreetRoughStreets(): array
 	{
 		return [
-			['34 Watts road'],
+			['name' => '34 Watts road'],
 		];
 	}
 
@@ -145,7 +155,10 @@ class WinterIsComingTest extends TestCase
 		/** @var TextResponse $response */
 		$response = $this->resultObject->response;
 		Assert::type(TextResponse::class, $response);
-		Assert::contains('Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation', $response->getSource());
+		/** @var string $source */
+		$source = $response->getSource();
+		Assert::type('string', $source);
+		Assert::contains('Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation', $source);
 	}
 
 }
