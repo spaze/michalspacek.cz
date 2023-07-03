@@ -13,6 +13,16 @@ parameters:
 			allowInMethods:
 				- 'MichalSpacekCz\Talks\TalkSlides::getSlideImageFileBasename()'
 				- 'MichalSpacekCz\Www\Presenters\ExportsPresenter::getEtag()'
+		-
+			function: 'rand()'
+			message: 'it is not a cryptographically secure generator, use random_int() instead'
+			allowIn:
+				- tests/*.phpt
+		-
+			function: 'uniqid()'
+			message: 'it is not a cryptographically secure generator, use random_bytes() instead'
+			allowIn:
+				- tests/*.phpt
 	disallowedMethodCalls:
 		-
 			method:
@@ -39,6 +49,7 @@ parameters:
 			message: 'use Application\ServerEnv instead'
 			allowIn:
 				- app/Application/ServerEnv.php
+				- tests/Application/ServerEnvTest.phpt
 
 includes:
 	- vendor/spaze/phpstan-disallowed-calls/extension.neon
