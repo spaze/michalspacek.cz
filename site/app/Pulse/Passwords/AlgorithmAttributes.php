@@ -38,7 +38,7 @@ class AlgorithmAttributes
 
 
 	/**
-	 * @return array<string, string>|null
+	 * @return array<string, string|int>|null
 	 */
 	public function getParams(): ?array
 	{

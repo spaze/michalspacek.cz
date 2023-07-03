@@ -54,7 +54,7 @@ class CertificatesTest extends TestCase
 		];
 		$count = $this->certificates->log($certificates, $failures);
 		Assert::same(['certificates' => 2, 'failures' => 2], $count);
-		$params = $this->database->getParamsForQuery('INSERT INTO certificate_requests');
+		$params = $this->database->getParamsArrayForQuery('INSERT INTO certificate_requests');
 		Assert::count(4, $params);
 		Assert::same('foo.example', $params[0]['cn']);
 		Assert::null($params[0]['ext']);
@@ -69,7 +69,7 @@ class CertificatesTest extends TestCase
 		Assert::null($params[3]['ext']);
 		Assert::false($params[3]['success']);
 
-		$params = $this->database->getParamsForQuery('INSERT INTO certificates');
+		$params = $this->database->getParamsArrayForQuery('INSERT INTO certificates');
 		Assert::same(42, $params[0]['key_certificate_request']);
 		Assert::same($this->notBefore, $params[0]['not_before']);
 		Assert::same($this->notAfter, $params[0]['not_after']);

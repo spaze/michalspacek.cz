@@ -68,8 +68,12 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(2, new DateTime(), 'two');
 		$feed = $this->exports->getArticles('https://example.com/');
 		$xml = simplexml_load_string((string)$feed);
-		$this->assertEntry($xml->entry[0], 'one');
-		$this->assertEntry($xml->entry[1], 'two');
+		if (!$xml) {
+			Assert::fail('Cannot load the feed');
+		} else {
+			$this->assertEntry($xml->entry[0], 'one');
+			$this->assertEntry($xml->entry[1], 'two');
+		}
 	}
 
 
@@ -86,8 +90,12 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(2, new DateTime(), 'two', $editsTwo);
 		$feed = $this->exports->getArticles('https://example.com/');
 		$xml = simplexml_load_string((string)$feed);
-		$this->assertEntry($xml->entry[0], 'one', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>14.3.</strong> Edit one one</em></li><li><em><strong>14.4.</strong> Edit one two</em></li></ul>Text one');
-		$this->assertEntry($xml->entry[1], 'two', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>15.3.</strong> Edit two one</em></li></ul>Text two');
+		if (!$xml) {
+			Assert::fail('Cannot load the feed');
+		} else {
+			$this->assertEntry($xml->entry[0], 'one', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>14.3.</strong> Edit one one</em></li><li><em><strong>14.4.</strong> Edit one two</em></li></ul>Text one');
+			$this->assertEntry($xml->entry[1], 'two', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>15.3.</strong> Edit two one</em></li></ul>Text two');
+		}
 	}
 
 
@@ -98,10 +106,14 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: false);
 		$feed = $this->exports->getArticles('https://example.com/');
 		$xml = simplexml_load_string((string)$feed);
-		$this->assertEntry($xml->entry[0], 'one');
-		$this->assertEntry($xml->entry[1], 'three');
-		Assert::count(2, $xml->entry);
-		Assert::notNull($feed->getUpdated());
+		if (!$xml) {
+			Assert::fail('Cannot load the feed');
+		} else {
+			$this->assertEntry($xml->entry[0], 'one');
+			$this->assertEntry($xml->entry[1], 'three');
+			Assert::count(2, $xml->entry);
+			Assert::notNull($feed->getUpdated());
+		}
 	}
 
 
@@ -112,8 +124,12 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: true);
 		$feed = $this->exports->getArticles('https://example.com/');
 		$xml = simplexml_load_string((string)$feed);
-		Assert::count(0, $xml->entry);
-		Assert::null($feed->getUpdated());
+		if (!$xml) {
+			Assert::fail('Cannot load the feed');
+		} else {
+			Assert::count(0, $xml->entry);
+			Assert::null($feed->getUpdated());
+		}
 	}
 
 

@@ -17,10 +17,13 @@ class Database extends Explorer
 
 	private string $insertId = '';
 
-	/** @var array<string, array<string|int, string|int|DateTimeInterface|null>> */
-	private array $queries = [];
+	/** @var array<string, array<string|int, string|int|bool|DateTimeInterface|null>> */
+	private array $queriesScalarParams = [];
 
-	/** @var array<string, int|string|null> */
+	/** @var array<string, array<int, array<string, string|int|bool|DateTimeInterface|null>>> */
+	private array $queriesArrayParams = [];
+
+	/** @var array<string, int|string|bool|DateTime|null> */
 	private array $fetchResult = [];
 
 	/** @var mixed */
@@ -40,7 +43,7 @@ class Database extends Explorer
 
 	public function reset(): void
 	{
-		$this->queries = [];
+		$this->queriesScalarParams = [];
 		$this->fetchResult = [];
 		$this->fetchPairsResult = [];
 		$this->fetchAllDefaultResult = [];
@@ -74,23 +77,38 @@ class Database extends Explorer
 
 	/**
 	 * @param literal-string $sql
-	 * @param string|int|DateTimeInterface|null ...$params
+	 * @param string|int|bool|DateTimeInterface|null|array<string, string|int|bool|DateTimeInterface|null> ...$params
 	 * @return ResultSet
 	 */
 	public function query(string $sql, ...$params): ResultSet
 	{
 		$this->maybeThrow();
-		$this->queries[$sql] = array_merge($this->queries[$sql] ?? [], $params);
+		foreach ($params as $param) {
+			if (is_array($param)) {
+				$this->queriesArrayParams[$sql][] = $param;
+			} else {
+				$this->queriesScalarParams[$sql][] = $param;
+			}
+		}
 		return new ResultSet();
 	}
 
 
 	/**
-	 * @return array<string|int, string|int|DateTimeInterface|null>
+	 * @return array<string|int, string|int|bool|DateTimeInterface|null>
 	 */
 	public function getParamsForQuery(string $query): array
 	{
-		return $this->queries[$query] ?? [];
+		return $this->queriesScalarParams[$query] ?? [];
+	}
+
+
+	/**
+	 * @return array<int, array<string, string|int|bool|DateTimeInterface|null>>
+	 */
+	public function getParamsArrayForQuery(string $query): array
+	{
+		return $this->queriesArrayParams[$query] ?? [];
 	}
 
 

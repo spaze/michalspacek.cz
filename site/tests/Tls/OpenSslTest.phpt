@@ -16,9 +16,15 @@ class OpenSslTest extends TestCase
 
 	public function testX509Parse(): void
 	{
-		Assert::noError(function (): void {
-			Assert::type('array', OpenSsl::x509parse(file_get_contents(__DIR__ . '/certificate.pem')));
-		});
+		$file = __DIR__ . '/certificate.pem';
+		$certificate = @file_get_contents($file); // @ intentionally, converted to a failure
+		if (!$certificate) {
+			Assert::fail('Cannot read ' . $file);
+		} else {
+			Assert::noError(function () use ($certificate): void {
+				Assert::type('array', OpenSsl::x509parse($certificate));
+			});
+		}
 	}
 
 
