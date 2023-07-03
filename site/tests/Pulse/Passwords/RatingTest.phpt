@@ -108,7 +108,7 @@ class RatingTest extends TestCase
 
 
 	/**
-	 * @param list<string> $disclosureTypes
+	 * @param non-empty-list<string> $disclosureTypes
 	 */
 	private function getAlgo(string $alias, bool $salted, bool $stretched, array $disclosureTypes): Algorithm
 	{
