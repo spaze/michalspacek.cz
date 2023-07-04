@@ -9,10 +9,10 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Resources\TalkMediaResources;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\TalkDateTimeException;
+use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\Html;
-use RuntimeException;
 
 class Talks
 {
@@ -110,6 +110,7 @@ class Talks
 	 *
 	 * @param string $name
 	 * @return Row<mixed>
+	 * @throws TalkDoesNotExistException
 	 */
 	public function get(string $name): Row
 	{
@@ -151,7 +152,7 @@ class Talks
 		);
 
 		if (!$result) {
-			throw new RuntimeException("I haven't talked about {$name}, yet");
+			throw new TalkDoesNotExistException(name: $name);
 		}
 
 		$this->enrich($result);
@@ -164,6 +165,7 @@ class Talks
 	 *
 	 * @param int $id
 	 * @return Row<mixed>
+	 * @throws TalkDoesNotExistException
 	 */
 	public function getById(int $id): Row
 	{
@@ -205,7 +207,7 @@ class Talks
 		);
 
 		if (!$result) {
-			throw new RuntimeException("I haven't talked about id {$id}, yet");
+			throw new TalkDoesNotExistException(id: $id);
 		}
 
 		$this->enrich($result);

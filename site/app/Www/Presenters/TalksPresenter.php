@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Www\Presenters;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Media\VideoThumbnails;
+use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalkSlides;
@@ -62,7 +63,7 @@ class TalksPresenter extends BasePresenter
 					$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$talk->action]);
 				}
 			}
-		} catch (UnknownSlideException $e) {
+		} catch (UnknownSlideException | TalkDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 

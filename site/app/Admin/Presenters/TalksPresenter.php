@@ -6,14 +6,15 @@ namespace MichalSpacekCz\Admin\Presenters;
 use MichalSpacekCz\Form\TalkFormFactory;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
 use MichalSpacekCz\Http\HttpInput;
+use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\VideoThumbnails;
+use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalkSlides;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
-use RuntimeException;
 
 class TalksPresenter extends BasePresenter
 {
@@ -55,8 +56,8 @@ class TalksPresenter extends BasePresenter
 	{
 		try {
 			$this->talk = $this->talks->getById((int)$param);
-		} catch (RuntimeException $e) {
-			throw new BadRequestException($e->getMessage());
+		} catch (TalkDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
@@ -71,8 +72,8 @@ class TalksPresenter extends BasePresenter
 		try {
 			$this->talk = $this->talks->getById((int)$param);
 			$this->slides = $this->talkSlides->getSlides($this->talk->talkId, $this->talk->filenamesTalkId);
-		} catch (RuntimeException $e) {
-			throw new BadRequestException($e->getMessage());
+		} catch (ContentTypeException | TalkDoesNotExistException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.admin.talkslides', $this->talk);
