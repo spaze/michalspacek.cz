@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
@@ -27,9 +28,10 @@ class CertificatesTest extends TestCase
 		private readonly Certificates $certificates,
 		private readonly Database $database,
 		private readonly NullLogger $logger,
+		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
 	) {
-		$this->notBefore = new DateTimeImmutable('-42 days');
-		$this->notAfter = new DateTimeImmutable('+42 days');
+		$this->notBefore = new DateTimeImmutable('-42 days Indian/Reunion');
+		$this->notAfter = new DateTimeImmutable('+42 days Atlantic/Bermuda');
 	}
 
 
@@ -57,22 +59,24 @@ class CertificatesTest extends TestCase
 		$params = $this->database->getParamsArrayForQuery('INSERT INTO certificate_requests');
 		Assert::count(4, $params);
 		Assert::same('foo.example', $params[0]['cn']);
-		Assert::null($params[0]['ext']);
 		Assert::true($params[0]['success']);
 		Assert::same('bar.example', $params[1]['cn']);
-		Assert::null($params[1]['ext']);
 		Assert::true($params[1]['success']);
 		Assert::same('fail.test', $params[2]['cn']);
-		Assert::null($params[2]['ext']);
 		Assert::false($params[2]['success']);
 		Assert::same('bier.test', $params[3]['cn']);
-		Assert::null($params[3]['ext']);
 		Assert::false($params[3]['success']);
+		foreach ($params as $values) {
+			Assert::null($values['ext']);
+			Assert::hasKey('time', $values);
+			Assert::hasKey('time_timezone', $values);
+		}
 
+		/** @var list<array{key_certificate_request:int, not_before:string, not_before_timezone:string, not_after:string, not_after_timezone:string}> $params */
 		$params = $this->database->getParamsArrayForQuery('INSERT INTO certificates');
 		Assert::same(42, $params[0]['key_certificate_request']);
-		Assert::same($this->notBefore, $params[0]['not_before']);
-		Assert::same($this->notAfter, $params[0]['not_after']);
+		Assert::same($this->notBefore->getTimestamp(), (new DateTimeImmutable($params[0]['not_before'], $this->dateTimeZoneFactory->get($params[0]['not_before_timezone'])))->getTimestamp());
+		Assert::same($this->notAfter->getTimestamp(), (new DateTimeImmutable($params[0]['not_after'], $this->dateTimeZoneFactory->get($params[0]['not_after_timezone'])))->getTimestamp());
 
 		Assert::count(0, $this->logger->getAllLogged());
 	}

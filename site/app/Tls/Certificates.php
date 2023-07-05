@@ -90,7 +90,9 @@ class Certificates
 				$this->database->query('INSERT INTO certificates', [
 					'key_certificate_request' => $this->logRequest($cert, true),
 					'not_before' => $cert->getNotBefore(),
+					'not_before_timezone' => $cert->getNotBefore()->getTimezone()->getName(),
 					'not_after' => $cert->getNotAfter(),
+					'not_after_timezone' => $cert->getNotAfter()->getTimezone()->getName(),
 				]);
 				$this->database->commit();
 			} catch (DriverException $e) {
@@ -128,10 +130,12 @@ class Certificates
 
 	private function logRequest(Certificate|CertificateAttempt $certificate, bool $success): int
 	{
+		$now = new DateTimeImmutable();
 		$this->database->query('INSERT INTO certificate_requests', [
 			'cn' => $certificate->getCommonName(),
 			'ext' => $certificate->getCommonNameExt(),
-			'time' => new DateTimeImmutable(),
+			'time' => $now,
+			'time_timezone' => $now->getTimezone()->getName(),
 			'success' => $success,
 		]);
 		return (int)$this->database->getInsertId();
