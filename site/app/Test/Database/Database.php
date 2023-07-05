@@ -17,10 +17,10 @@ class Database extends Explorer
 
 	private string $insertId = '';
 
-	/** @var array<string, array<string|int, string|int|bool|DateTimeInterface|null>> */
+	/** @var array<string, array<string|int, string|int|bool|null>> */
 	private array $queriesScalarParams = [];
 
-	/** @var array<string, array<int, array<string, string|int|bool|DateTimeInterface|null>>> */
+	/** @var array<string, array<int, array<string, string|int|bool|null>>> */
 	private array $queriesArrayParams = [];
 
 	/** @var array<string, int|string|bool|DateTime|null> */
@@ -85,12 +85,31 @@ class Database extends Explorer
 		$this->maybeThrow();
 		foreach ($params as $param) {
 			if (is_array($param)) {
-				$this->queriesArrayParams[$sql][] = $param;
+				$arrayParams = [];
+				foreach ($param as $key => $value) {
+					$arrayParams[$key] = $this->formatValue($value);
+				}
+				$this->queriesArrayParams[$sql][] = $arrayParams;
 			} else {
-				$this->queriesScalarParams[$sql][] = $param;
+				$this->queriesScalarParams[$sql][] = $this->formatValue($param);
 			}
 		}
 		return new ResultSet();
+	}
+
+
+	/**
+	 * Emulate how values are stored in database.
+	 *
+	 * For example datetime is stored without timezone info.
+	 * The DateTime format here is the same as in \Nette\Database\Drivers\MySqlDriver::formatDateTime() but without the quotes.
+	 *
+	 * @param string|int|bool|DateTimeInterface|null $value
+	 * @return string|int|bool|null
+	 */
+	private function formatValue(string|int|bool|DateTimeInterface|null $value): string|int|bool|null
+	{
+		return $value instanceof DateTimeInterface ? $value->format('Y-m-d H:i:s') : $value;
 	}
 
 
