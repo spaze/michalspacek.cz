@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTime;
-use MichalSpacekCz\DateTime\DateTimeParser;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
@@ -51,8 +51,8 @@ class CertificateFactory
 		return new Certificate(
 			$details['subject']['commonName'],
 			null,
-			DateTimeParser::createFromFormat('U', (string)$details['validFrom_time_t']),
-			DateTimeParser::createFromFormat('U', (string)$details['validTo_time_t']),
+			DateTimeFactory::createFromFormat('U', (string)$details['validFrom_time_t']),
+			DateTimeFactory::createFromFormat('U', (string)$details['validTo_time_t']),
 			$this->expiringThreshold,
 			$details['serialNumberHex'],
 		);
@@ -97,7 +97,7 @@ class CertificateFactory
 	 */
 	private function createDateTimeImmutable(string $time, string $timeZone): DateTimeImmutable
 	{
-		return DateTimeParser::createFromFormat(DateTime::DATE_RFC3339_MICROSECONDS, $time)->setTimezone($this->dateTimeZoneFactory->get($timeZone));
+		return DateTimeFactory::createFromFormat(DateTime::DATE_RFC3339_MICROSECONDS, $time)->setTimezone($this->dateTimeZoneFactory->get($timeZone));
 	}
 
 

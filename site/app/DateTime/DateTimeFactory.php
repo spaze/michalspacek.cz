@@ -7,7 +7,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 
-class DateTimeParser
+class DateTimeFactory
 {
 
 	/**
