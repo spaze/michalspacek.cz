@@ -12,7 +12,10 @@ abstract class DateTimeException extends Exception
 
 	public function __construct(string $message, Throwable $previous = null)
 	{
-		$message .= ' ' . Json::encode(date_get_last_errors());
+		$errors = date_get_last_errors();
+		if ($errors) {
+			$message .= ' ' . Json::encode($errors);
+		}
 		parent::__construct($message, 0, $previous);
 	}
 

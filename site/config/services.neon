@@ -16,6 +16,7 @@ services:
 	- MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
 	- MichalSpacekCz\CompanyInfo\CompanyInfo(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\RegisterUz(rootUrl: %registerUz.rootUrl%)
+	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	- MichalSpacekCz\DateTime\DateTimeZoneFactory
 	- MichalSpacekCz\EasterEgg\FourOhFourButFound

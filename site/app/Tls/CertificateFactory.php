@@ -8,6 +8,7 @@ use MichalSpacekCz\DateTime\DateTime;
 use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
+use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
@@ -19,6 +20,7 @@ class CertificateFactory
 
 	public function __construct(
 		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
+		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly int $expiringThreshold,
 	) {
 	}
@@ -26,14 +28,15 @@ class CertificateFactory
 
 	/**
 	 * @throws CertificateException
+	 * @throws DateTimeException
 	 */
 	public function fromDatabaseRow(Row $row): Certificate
 	{
 		return new Certificate(
 			$row->cn,
 			$row->ext,
-			DateTimeImmutable::createFromInterface($row->notBefore),
-			DateTimeImmutable::createFromInterface($row->notAfter),
+			$this->dateTimeFactory->createFrom($row->notBefore, $row->notBeforeTimezone),
+			$this->dateTimeFactory->createFrom($row->notAfter, $row->notAfterTimezone),
 			$this->expiringThreshold,
 			null,
 		);

@@ -3,10 +3,9 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\DateTime\Exceptions;
 
-use Exception;
 use Throwable;
 
-class InvalidTimezoneException extends Exception
+class InvalidTimezoneException extends DateTimeException
 {
 
 	public function __construct(string $timezone, ?Throwable $previous = null)
