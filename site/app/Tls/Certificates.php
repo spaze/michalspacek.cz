@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Database\DriverException;
@@ -50,18 +51,25 @@ class Certificates
 	 *
 	 * @return array<int, Certificate>
 	 * @throws CertificateException
+	 * @throws DateTimeException
 	 */
 	public function getNewest(): array
 	{
 		$query = 'SELECT
 			cr.cn,
 			cr.ext,
-			MAX(c.not_before) AS notBefore,
-			MAX(c.not_after) AS notAfter
+			c.not_before AS notBefore,
+			c.not_before_timezone AS notBeforeTimezone,
+			c.not_after AS notAfter,
+			c.not_after_timezone AS notAfterTimezone
 			FROM certificates c
 				JOIN certificate_requests cr ON c.key_certificate_request = cr.id_certificate_request
-			WHERE NOT c.hidden
-			GROUP BY cr.cn, cr.ext
+			WHERE c.id_certificate IN (
+				SELECT MAX(c.id_certificate)
+				FROM certificates c JOIN certificate_requests cr ON c.key_certificate_request = cr.id_certificate_request
+				WHERE NOT c.hidden
+				GROUP BY cr.cn, cr.ext
+			)
 			ORDER BY cr.cn, cr.ext';
 		$certificates = [];
 		foreach ($this->database->fetchAll($query) as $data) {
@@ -90,7 +98,9 @@ class Certificates
 				$this->database->query('INSERT INTO certificates', [
 					'key_certificate_request' => $this->logRequest($cert, true),
 					'not_before' => $cert->getNotBefore(),
+					'not_before_timezone' => $cert->getNotBefore()->getTimezone()->getName(),
 					'not_after' => $cert->getNotAfter(),
+					'not_after_timezone' => $cert->getNotAfter()->getTimezone()->getName(),
 				]);
 				$this->database->commit();
 			} catch (DriverException $e) {
@@ -128,10 +138,12 @@ class Certificates
 
 	private function logRequest(Certificate|CertificateAttempt $certificate, bool $success): int
 	{
+		$now = new DateTimeImmutable();
 		$this->database->query('INSERT INTO certificate_requests', [
 			'cn' => $certificate->getCommonName(),
 			'ext' => $certificate->getCommonNameExt(),
-			'time' => new DateTimeImmutable(),
+			'time' => $now,
+			'time_timezone' => $now->getTimezone()->getName(),
 			'success' => $success,
 		]);
 		return (int)$this->database->getInsertId();

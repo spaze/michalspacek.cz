@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTime;
+use Nette\Database\Row;
 use Nette\Utils\Json;
 use Tester\Assert;
 use Tester\TestCase;
@@ -71,6 +72,26 @@ class CertificateFactoryTest extends TestCase
 		Assert::null($certs[1]->getCommonNameExt());
 		Assert::same('2023-05-26T12:14:12.000000+00:00', $certs[0]->getNotBefore()->format(DateTime::DATE_RFC3339_MICROSECONDS));
 		Assert::same('2023-06-25T12:13:58.000000+00:00', $certs[0]->getNotAfter()->format(DateTime::DATE_RFC3339_MICROSECONDS));
+	}
+
+
+	public function testFromDatabaseRow(): void
+	{
+		$data = [
+			'cn' => 'foo.example',
+			'ext' => 'ec',
+			'notBefore' => new DateTimeImmutable('2020-10-05 04:03:02'),
+			'notBeforeTimezone' => 'UTC',
+			'notAfter' => new DateTimeImmutable('2021-11-06 14:13:12'),
+			'notAfterTimezone' => 'Europe/Prague',
+		];
+		$certificate = $this->certificateFactory->fromDatabaseRow(Row::from($data));
+		Assert::same('foo.example', $certificate->getCommonName());
+		Assert::same('ec', $certificate->getCommonNameExt());
+		Assert::same(1601870582, $certificate->getNotBefore()->getTimestamp());
+		Assert::same('UTC', $certificate->getNotBefore()->getTimezone()->getName());
+		Assert::same(1636204392, $certificate->getNotAfter()->getTimestamp());
+		Assert::same('Europe/Prague', $certificate->getNotAfter()->getTimezone()->getName());
 	}
 
 }

@@ -5,12 +5,14 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTime;
-use MichalSpacekCz\DateTime\DateTimeParser;
+use MichalSpacekCz\DateTime\DateTimeFactory;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
+use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
+use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 use Nette\Database\Row;
 use OpenSSLCertificate;
 
@@ -19,6 +21,7 @@ class CertificateFactory
 
 	public function __construct(
 		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
+		private readonly DateTimeFactory $dateTimeFactory,
 		private readonly int $expiringThreshold,
 	) {
 	}
@@ -26,14 +29,15 @@ class CertificateFactory
 
 	/**
 	 * @throws CertificateException
+	 * @throws DateTimeException
 	 */
 	public function fromDatabaseRow(Row $row): Certificate
 	{
 		return new Certificate(
 			$row->cn,
 			$row->ext,
-			DateTimeImmutable::createFromInterface($row->notBefore),
-			DateTimeImmutable::createFromInterface($row->notAfter),
+			$this->dateTimeFactory->createFrom($row->notBefore, $row->notBeforeTimezone),
+			$this->dateTimeFactory->createFrom($row->notAfter, $row->notAfterTimezone),
 			$this->expiringThreshold,
 			null,
 		);
@@ -44,6 +48,7 @@ class CertificateFactory
 	 * @throws OpenSslException
 	 * @throws CannotParseDateTimeException
 	 * @throws CertificateException
+	 * @throws OpenSslX509ParseException
 	 */
 	public function fromObject(OpenSSLCertificate $certificate): Certificate
 	{
@@ -51,8 +56,8 @@ class CertificateFactory
 		return new Certificate(
 			$details['subject']['commonName'],
 			null,
-			DateTimeParser::createFromFormat('U', (string)$details['validFrom_time_t']),
-			DateTimeParser::createFromFormat('U', (string)$details['validTo_time_t']),
+			$this->dateTimeFactory->createFromFormat('U', (string)$details['validFrom_time_t']),
+			$this->dateTimeFactory->createFromFormat('U', (string)$details['validTo_time_t']),
 			$this->expiringThreshold,
 			$details['serialNumberHex'],
 		);
@@ -97,13 +102,14 @@ class CertificateFactory
 	 */
 	private function createDateTimeImmutable(string $time, string $timeZone): DateTimeImmutable
 	{
-		return DateTimeParser::createFromFormat(DateTime::DATE_RFC3339_MICROSECONDS, $time)->setTimezone($this->dateTimeZoneFactory->get($timeZone));
+		return $this->dateTimeFactory->createFromFormat(DateTime::DATE_RFC3339_MICROSECONDS, $time)->setTimezone($this->dateTimeZoneFactory->get($timeZone));
 	}
 
 
 	/**
 	 * @param array<string|int, mixed> $request
 	 * @return list<Certificate>
+	 * @throws CertificateException
 	 */
 	public function listFromLogRequest(array $request): array
 	{

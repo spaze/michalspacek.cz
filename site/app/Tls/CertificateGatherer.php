@@ -9,6 +9,7 @@ use MichalSpacekCz\Net\DnsResolver;
 use MichalSpacekCz\Net\Exceptions\DnsGetRecordException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
+use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 
 class CertificateGatherer
 {
@@ -29,6 +30,7 @@ class CertificateGatherer
 	 * @throws CertificateException
 	 * @throws OpenSslException
 	 * @throws DnsGetRecordException
+	 * @throws OpenSslX509ParseException
 	 */
 	public function fetchCertificates(string $hostname, bool $includeIpv6): array
 	{
@@ -45,6 +47,7 @@ class CertificateGatherer
 	 * @throws OpenSslException
 	 * @throws CertificateException
 	 * @throws CannotParseDateTimeException
+	 * @throws OpenSslX509ParseException
 	 */
 	private function fetchCertificate(string $hostname, ?string $ipv4, ?string $ipv6): Certificate
 	{

@@ -7,9 +7,11 @@ use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Tls\CertificateAttemptFactory;
 use MichalSpacekCz\Tls\CertificateFactory;
 use MichalSpacekCz\Tls\Certificates;
+use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Security\AuthenticationException;
+use Tracy\Debugger;
 
 class CertificatesPresenter extends BasePresenter
 {
@@ -43,9 +45,9 @@ class CertificatesPresenter extends BasePresenter
 
 	public function actionLogIssued(): void
 	{
-		$certs = $this->certificateFactory->listFromLogRequest($this->httpInput->getPostArray('certs') ?? []);
-		$failures = $this->certificateAttemptFactory->listFromLogRequest($this->httpInput->getPostArray('failure') ?? []);
 		try {
+			$certs = $this->certificateFactory->listFromLogRequest($this->httpInput->getPostArray('certs') ?? []);
+			$failures = $this->certificateAttemptFactory->listFromLogRequest($this->httpInput->getPostArray('failure') ?? []);
 			$count = $this->certificates->log($certs, $failures);
 			$this->sendJson([
 				'status' => 'ok',
@@ -54,6 +56,9 @@ class CertificatesPresenter extends BasePresenter
 			]);
 		} catch (SomeCertificatesLoggedToFileException) {
 			$this->sendJson(['status' => 'error', 'statusMessage' => 'Some certs logged to file']);
+		} catch (CertificateException $e) {
+			Debugger::log($e);
+			$this->sendJson(['status' => 'error', 'statusMessage' => 'Request logged but certs not']);
 		}
 	}
 
