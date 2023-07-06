@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\DateTime;
 
 use DateTimeImmutable;
+use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use Tester\Assert;
 use Tester\TestCase;
@@ -18,6 +19,19 @@ class DateTimeFactoryTest extends TestCase
 	public function __construct(
 		private readonly DateTimeFactory $dateTimeFactory,
 	) {
+	}
+
+
+	public function testCreateFromFormat(): void
+	{
+		$dateTime = $this->dateTimeFactory->createFromFormat('j-M-Y', '15-Feb-2009');
+		Assert::same('2009', $dateTime->format('Y'));
+		Assert::same('02', $dateTime->format('m'));
+		Assert::same('15', $dateTime->format('d'));
+
+		Assert::exception(function (): void {
+			$this->dateTimeFactory->createFromFormat('foo', '15-Feb-2009');
+		}, CannotParseDateTimeException::class, "~^Cannot parse '15-Feb-2009' using format 'foo'~");
 	}
 
 

@@ -56,8 +56,8 @@ class CertificateFactory
 		return new Certificate(
 			$details['subject']['commonName'],
 			null,
-			DateTimeFactory::createFromFormat('U', (string)$details['validFrom_time_t']),
-			DateTimeFactory::createFromFormat('U', (string)$details['validTo_time_t']),
+			$this->dateTimeFactory->createFromFormat('U', (string)$details['validFrom_time_t']),
+			$this->dateTimeFactory->createFromFormat('U', (string)$details['validTo_time_t']),
 			$this->expiringThreshold,
 			$details['serialNumberHex'],
 		);
@@ -102,7 +102,7 @@ class CertificateFactory
 	 */
 	private function createDateTimeImmutable(string $time, string $timeZone): DateTimeImmutable
 	{
-		return DateTimeFactory::createFromFormat(DateTime::DATE_RFC3339_MICROSECONDS, $time)->setTimezone($this->dateTimeZoneFactory->get($timeZone));
+		return $this->dateTimeFactory->createFromFormat(DateTime::DATE_RFC3339_MICROSECONDS, $time)->setTimezone($this->dateTimeZoneFactory->get($timeZone));
 	}
 
 
