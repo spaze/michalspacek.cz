@@ -75,7 +75,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	public ?string $editSummary;
 
 	/** @var list<ArticleEdit> */
-	public array $edits;
+	public array $edits = [];
 
 	/** @var list<string> */
 	public array $cspSnippets = [];
