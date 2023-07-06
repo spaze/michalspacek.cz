@@ -25,10 +25,10 @@ class WinterIsComingTest extends TestCase
 
 	private Form $form;
 
-	/** @var callable */
+	/** @var callable(TextInput): true */
 	private $ruleEmail;
 
-	/** @var callable */
+	/** @var callable(TextInput): true */
 	private $ruleStreet;
 
 	private stdClass $resultObject;
@@ -152,13 +152,17 @@ class WinterIsComingTest extends TestCase
 
 	private function assertResponse(): void
 	{
-		/** @var TextResponse $response */
 		$response = $this->resultObject->response;
-		Assert::type(TextResponse::class, $response);
-		/** @var string $source */
-		$source = $response->getSource();
-		Assert::type('string', $source);
-		Assert::contains('Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation', $source);
+		if (!$response instanceof TextResponse) {
+			Assert::fail('Response is of a wrong type ' . get_debug_type($response));
+		} else {
+			$source = $response->getSource();
+			if (!is_string($source)) {
+				Assert::fail('Source should be a string but is ' . get_debug_type($source));
+			} else {
+				Assert::contains('Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation', $source);
+			}
+		}
 	}
 
 }

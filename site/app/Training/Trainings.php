@@ -266,8 +266,10 @@ class Trainings
 		);
 		$trainings = [];
 		foreach ($result as $row) {
-			/** @var int $id */
 			$id = $row->id;
+			if (!is_int($id)) {
+				throw new ShouldNotHappenException(sprintf("Discontinued training id is a %s not an integer", get_debug_type($id)));
+			}
 			$trainings[$id]['description'] = (string)$row->description;
 			$trainings[$id]['href'] = (string)$row->href;
 			if (!isset($trainings[$id]['trainings'])) {

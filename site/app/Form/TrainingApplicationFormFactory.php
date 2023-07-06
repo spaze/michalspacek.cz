@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Dates\TrainingDate;
@@ -152,8 +153,10 @@ class TrainingApplicationFormFactory
 							$values->note,
 						);
 					}
-					/** @var Presenter $presenter */
 					$presenter = $this->netteApplication->getPresenter();
+					if (!$presenter instanceof Presenter) {
+						throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", Presenter::class, get_debug_type($presenter)));
+					}
 					$this->trainingMails->sendSignUpMail(
 						$applicationId,
 						$this->templateFactory->createTemplate($presenter),
@@ -224,8 +227,10 @@ class TrainingApplicationFormFactory
 			$message = "messages.label.taxid.{$application->country}";
 			$caption = $this->translator->translate($message);
 			if ($caption !== $message) {
-				/** @var TextInput $input */
 				$input = $form->getComponent('companyTaxId');
+				if (!$input instanceof TextInput) {
+					throw new ShouldNotHappenException(sprintf("The 'companyTaxId' component should be '%s' but it's a %s", TextInput::class, get_debug_type($input)));
+				}
 				$input->caption = "{$caption}:";
 			}
 		}

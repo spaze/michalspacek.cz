@@ -11,6 +11,7 @@ use MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Twitter\TwitterCards;
 use Nette\Application\UI\Form;
@@ -125,8 +126,10 @@ class PostFormFactory
 		$form->onValidate[] = function (Form $form) use ($postId): void {
 			$post = $this->buildPost($form->getValues(), $postId);
 			if ($post->needsPreviewKey() && $post->previewKey === null) {
-				/** @var TextInput $input */
 				$input = $form->getComponent('previewKey');
+				if (!$input instanceof TextInput) {
+					throw new ShouldNotHappenException(sprintf("The 'previewKey' component should be '%s' but it's a %s", TextInput::class, get_debug_type($input)));
+				}
 				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $post->published === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
@@ -137,8 +140,10 @@ class PostFormFactory
 			try {
 				$onSuccess($post);
 			} catch (UniqueConstraintViolationException) {
-				/** @var TextInput $slug */
 				$slug = $form->getComponent('slug');
+				if (!$slug instanceof TextInput) {
+					throw new ShouldNotHappenException(sprintf("The 'slug' component should be '%s' but it's a %s", TextInput::class, get_debug_type($slug)));
+				}
 				$slug->addError($this->texyFormatter->translate('messages.blog.admin.duplicateslug'));
 			}
 		};

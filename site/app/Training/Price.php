@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use MichalSpacekCz\ShouldNotHappenException;
 use NumberFormatter;
 
 class Price
@@ -73,8 +74,11 @@ class Price
 			$formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
 		}
 
-		/** @var string $formatted */
-		$formatted = $formatter->formatCurrency($price, 'CZK');
+		$currency = 'CZK';
+		$formatted = $formatter->formatCurrency($price, $currency);
+		if (!is_string($formatted)) {
+			throw new ShouldNotHappenException(sprintf("Formatting '%s' %s with %s should not fail", $price, $currency, $formatter->getAttribute(NumberFormatter::FRACTION_DIGITS)));
+		}
 		return $formatted;
 	}
 

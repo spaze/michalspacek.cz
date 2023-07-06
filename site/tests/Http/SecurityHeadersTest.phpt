@@ -69,20 +69,23 @@ class SecurityHeadersTest extends TestCase
 
 	public function testSendHeadersExtendsUiPresenter(): void
 	{
-		/** @var Presenter $presenter */
 		$presenter = $this->presenterFactory->createPresenter('Www:Homepage'); // Has to be a real presenter that extends Ui\Presenter
-		/** @noinspection PhpInternalEntityUsedInspection */
-		$presenter->setParent(null, 'Foo'); // Set the name and also rename it
-		$presenter->changeAction('bar');
-		Assert::same(':Foo:bar', $presenter->getAction(true));
-		PrivateProperty::setValue($this->application, 'presenter', $presenter);
+		if (!$presenter instanceof Presenter) {
+			Assert::fail('Presenter is of a wrong class ' . get_debug_type($presenter));
+		} else {
+			/** @noinspection PhpInternalEntityUsedInspection */
+			$presenter->setParent(null, 'Foo'); // Set the name and also rename it
+			$presenter->changeAction('bar');
+			Assert::same(':Foo:bar', $presenter->getAction(true));
+			PrivateProperty::setValue($this->application, 'presenter', $presenter);
 
-		$this->securityHeaders->sendHeaders();
-		$expected = [
-			'content-security-policy' => "script-src 'none' example.com; form-action 'self'",
-			'permissions-policy' => 'camera=(), geolocation=(), midi=(self "https://example.com")',
-		];
-		Assert::same($expected, $this->httpResponse->getHeaders());
+			$this->securityHeaders->sendHeaders();
+			$expected = [
+				'content-security-policy' => "script-src 'none' example.com; form-action 'self'",
+				'permissions-policy' => 'camera=(), geolocation=(), midi=(self "https://example.com")',
+			];
+			Assert::same($expected, $this->httpResponse->getHeaders());
+		}
 	}
 
 

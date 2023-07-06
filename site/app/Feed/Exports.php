@@ -43,8 +43,7 @@ class Exports
 	public function getArticles(string $self, ?string $filter = null): Feed
 	{
 		$key = sprintf('Atom/%s/%s', $this->translator->getDefaultLocale(), $filter ? "ArticlesByTag/{$filter}" : 'AllArticles');
-		/** @var Feed $feed */
-		$feed = $this->cache->load($key, function (&$dependencies) use ($self, $filter) {
+		$feed = $this->cache->load($key, function (&$dependencies) use ($self, $filter): Feed {
 			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate());
 			$dependencies[Cache::Expire] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 
@@ -116,6 +115,9 @@ class Exports
 			}
 			return $feed;
 		});
+		if (!$feed instanceof Feed) {
+			throw new ShouldNotHappenException(sprintf("The cached feed should be a '%s' object but is a %s", Feed::class, get_debug_type($feed)));
+		}
 		return $feed;
 	}
 

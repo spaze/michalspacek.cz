@@ -26,7 +26,6 @@ class Database extends Explorer
 	/** @var array<string, int|string|bool|DateTime|null> */
 	private array $fetchResult = [];
 
-	/** @var mixed */
 	private mixed $fetchFieldResult = null;
 
 	/** @var array<string, string> */

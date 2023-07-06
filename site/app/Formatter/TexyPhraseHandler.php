@@ -54,8 +54,10 @@ class TexyPhraseHandler
 		}
 
 		$localeRegExp = '([a-z]{2}_[A-Z]{2})';
-		/** @var Presenter $presenter */
 		$presenter = $this->application->getPresenter();
+		if (!$presenter instanceof Presenter) {
+			throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", Presenter::class, get_debug_type($presenter)));
+		}
 		$url = $link->URL ?? $link->raw;
 
 		// "title":[link:Module:Presenter:action params]

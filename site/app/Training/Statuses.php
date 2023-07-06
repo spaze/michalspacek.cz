@@ -276,12 +276,14 @@ class Statuses
 	}
 
 
+	/**
+	 * @param callable(): int $callback
+	 */
 	public function updateStatusCallbackReturnId(callable $callback, string $status, ?string $date): int
 	{
 		$applicationId = null;
 		$this->database->beginTransaction();
 		try {
-			/** @var int $applicationId */
 			$applicationId = $callback();
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();

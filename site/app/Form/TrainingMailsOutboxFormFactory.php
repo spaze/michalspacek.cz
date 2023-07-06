@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\Files\TrainingFilesCollection;
@@ -44,9 +45,10 @@ class TrainingMailsOutboxFormFactory
 			$checked = true;
 			$disabled = false;
 			$sendCheckboxTitle = [];
-			/** @var TrainingFilesCollection $files */
-			$files = $application->files;
-			$filesCount = count($files);
+			if (!$application->files instanceof TrainingFilesCollection) {
+				throw new ShouldNotHappenException(sprintf("The files property should be a '%s' but it's a %s", TrainingFilesCollection::class, get_debug_type($application->files)));
+			}
+			$filesCount = count($application->files);
 			switch ($application->nextStatus) {
 				case Statuses::STATUS_INVITED:
 					$checked = isset($application->dateId);
@@ -56,7 +58,7 @@ class TrainingMailsOutboxFormFactory
 					}
 					break;
 				case Statuses::STATUS_MATERIALS_SENT:
-					$uploadedAfterStart = $files->getNewestFile()?->getAdded() > $application->trainingStart;
+					$uploadedAfterStart = $application->files->getNewestFile()?->getAdded() > $application->trainingStart;
 					$checked = $filesCount > 0 && $uploadedAfterStart;
 					$disabled = !$checked;
 					if ($filesCount === 0) {
@@ -135,14 +137,18 @@ class TrainingMailsOutboxFormFactory
 		$form->onSuccess[] = function (Form $form) use ($applications, $onSuccess): void {
 			$values = $form->getValues();
 			$sent = 0;
-			/** @var stdClass $data */
 			foreach ($values->applications as $id => $data) {
+				if (!$data instanceof stdClass) {
+					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", stdClass::class, get_debug_type($data)));
+				}
 				if (empty($data->send) || !isset($applications[$id])) {
 					continue;
 				}
 				$additional = trim($data->additional);
-				/** @var Presenter $presenter */
 				$presenter = $this->netteApplication->getPresenter();
+				if (!$presenter instanceof Presenter) {
+					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", Presenter::class, get_debug_type($presenter)));
+				}
 				$template = $this->templateFactory->createTemplate($presenter);
 
 				if ($applications[$id]->nextStatus === Statuses::STATUS_INVITED) {

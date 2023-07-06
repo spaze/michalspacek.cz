@@ -45,7 +45,7 @@ class Theme
 
 	private function setCookie(string $mode): void
 	{
-		/** @var Response $response Not IResponse because https://github.com/nette/http/issues/200 */
+		/** @var Response $response Not IResponse because https://github.com/nette/http/issues/200, can't use instanceof check because it's a different Response in tests */
 		$response = $this->httpResponse;
 		$response->setCookie(self::COOKIE, $mode, '+10 years', null, null, null, null, 'None');
 	}
