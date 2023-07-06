@@ -9,7 +9,7 @@ use UnexpectedValueException;
 class SpammyApplicationException extends UnexpectedValueException
 {
 
-	public function __construct(Throwable $previous = null)
+	public function __construct(?Throwable $previous = null)
 	{
 		parent::__construct('Spammy application', 0, $previous);
 	}

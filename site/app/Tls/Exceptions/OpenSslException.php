@@ -9,7 +9,7 @@ use Throwable;
 class OpenSslException extends Exception
 {
 
-	public function __construct(Throwable $previous = null)
+	public function __construct(?Throwable $previous = null)
 	{
 		$messages = [];
 		while ($message = openssl_error_string()) {

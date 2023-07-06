@@ -10,7 +10,7 @@ use Throwable;
 abstract class DateTimeException extends Exception
 {
 
-	public function __construct(string $message, Throwable $previous = null)
+	public function __construct(string $message, ?Throwable $previous = null)
 	{
 		$errors = date_get_last_errors();
 		if ($errors) {
