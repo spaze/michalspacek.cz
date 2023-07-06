@@ -12,6 +12,7 @@ use MichalSpacekCz\DateTime\Exceptions\DateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
+use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 use Nette\Database\Row;
 use OpenSSLCertificate;
 
@@ -47,6 +48,7 @@ class CertificateFactory
 	 * @throws OpenSslException
 	 * @throws CannotParseDateTimeException
 	 * @throws CertificateException
+	 * @throws OpenSslX509ParseException
 	 */
 	public function fromObject(OpenSSLCertificate $certificate): Certificate
 	{
@@ -107,6 +109,7 @@ class CertificateFactory
 	/**
 	 * @param array<string|int, mixed> $request
 	 * @return list<Certificate>
+	 * @throws CertificateException
 	 */
 	public function listFromLogRequest(array $request): array
 	{
