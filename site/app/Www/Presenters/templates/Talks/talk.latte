@@ -4,7 +4,7 @@
 
 {define #metas}
 <meta n:if="$ogImage" property="og:image" content="{$ogImage}">
-<meta n:if="$pageTitle" property="og:title" content="{$pageTitle}">
+<meta property="og:title" content="{$pageTitle}">
 <meta n:if="$talk->description" property="og:description" content="{$talk->description|striptags|strip|truncate:160}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@spazef0rze">
