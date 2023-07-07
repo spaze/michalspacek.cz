@@ -8,6 +8,6 @@
 <p n:if="$videoThumbnail->getVideoHref()">
 	<small n:tag-if="$videoThumbnail->getUrl()">
 		<span title="{_messages.label.recording}">{icon camera-video}</span>
-		<a href="{$videoThumbnail->getVideoHref()}">{$videoThumbnail?->getVideoPlatform() ?? $videoThumbnail->getVideoHref()}</a>
+		<a href="{$videoThumbnail->getVideoHref()}">{$videoThumbnail->getVideoPlatform() ?? $videoThumbnail->getVideoHref()}</a>
 	</small>
 </p>
