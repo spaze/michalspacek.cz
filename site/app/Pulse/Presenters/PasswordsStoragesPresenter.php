@@ -37,10 +37,9 @@ class PasswordsStoragesPresenter extends BasePresenter
 			$this->redirectPermanent('site', $param);
 		}
 
-		$this->rating = $rating;
 		$this->sort = $sort;
 		$this->search = $search;
-		$this->rating = $this->rating === null || $this->rating === 'all' || !array_key_exists($this->rating, $this->passwordsRating->getRatings()) ? null : strtoupper($this->rating);
+		$this->rating = $rating === null || $rating === 'all' || !array_key_exists($rating, $this->passwordsRating->getRatings()) ? null : strtoupper($rating);
 
 		$this->setDefaultViewAndVars(
 			'Password storage disclosures',
