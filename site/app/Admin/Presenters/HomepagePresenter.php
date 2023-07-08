@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use DateTime;
 use MichalSpacekCz\Tls\Certificate;
 use MichalSpacekCz\Tls\Certificates;
 use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\DateList\DateListOrder;
+use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
+use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Mails;
@@ -23,6 +25,7 @@ class HomepagePresenter extends BasePresenter
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Certificates $certificates,
+		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 	) {
 		parent::__construct();
 	}
@@ -30,23 +33,6 @@ class HomepagePresenter extends BasePresenter
 
 	public function actionDefault(): void
 	{
-		$trainings = $this->trainingDates->getAllTrainingsInterval('-1 week');
-		foreach ($this->upcomingTrainingDates->getAllUpcoming() as $training) {
-			foreach ($training->getDates() as $date) {
-				$trainings[] = $date;
-			}
-		}
-		$dates = [];
-		foreach ($trainings as $date) {
-			$date->setApplications($this->trainingApplications->getValidByDate($date->getId()));
-			$date->setCanceledApplications($this->trainingApplications->getCanceledPaidByDate($date->getId()));
-			$dates[$date->getStart()->getTimestamp()] = $date;
-		}
-		ksort($dates);
-		$this->template->upcomingApplications = $dates;
-		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->upcomingTrainingDates->getPublicUpcomingIds();
-
 		$this->template->pageTitle = 'Administrace';
 		$this->template->emailsToSend = count($this->trainingMails->getApplications());
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
@@ -71,6 +57,25 @@ class HomepagePresenter extends BasePresenter
 			}
 		}
 		return false;
+	}
+
+
+	protected function createComponentTrainingApplicationsList(): TrainingApplicationsList
+	{
+		$trainings = $this->trainingDates->getAllTrainingsInterval('-1 week');
+		foreach ($this->upcomingTrainingDates->getAllUpcoming() as $training) {
+			foreach ($training->getDates() as $date) {
+				$trainings[] = $date;
+			}
+		}
+		$dates = [];
+		foreach ($trainings as $date) {
+			$date->setApplications($this->trainingApplications->getValidByDate($date->getId()));
+			$date->setCanceledApplications($this->trainingApplications->getCanceledPaidByDate($date->getId()));
+			$dates[$date->getStart()->getTimestamp()] = $date;
+		}
+		ksort($dates);
+		return $this->trainingApplicationsListFactory->create(array_values($dates), DateListOrder::Asc);
 	}
 
 }

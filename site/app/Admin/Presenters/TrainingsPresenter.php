@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
@@ -13,6 +12,9 @@ use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\DateList\DateListOrder;
+use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
+use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
@@ -50,6 +52,9 @@ class TrainingsPresenter extends BasePresenter
 
 	private int $redirectParam;
 
+	/** @var list<TrainingDate> */
+	private array $pastWithPersonalData = [];
+
 
 	public function __construct(
 		private readonly Applications $trainingApplications,
@@ -67,6 +72,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingDateFormFactory $trainingDateFormFactory,
 		private readonly TrainingReviewFormFactory $trainingReviewFormFactory,
 		private readonly TrainingStatusesFormFactory $trainingStatusesFormFactory,
+		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 	) {
 		parent::__construct();
 	}
@@ -205,23 +211,15 @@ class TrainingsPresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
-		$trainings = $this->trainingDates->getAllTrainings();
-		$this->addApplications($trainings);
-
 		$this->template->pageTitle = 'Školení';
-		$this->template->trainings = $trainings;
-		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->upcomingTrainingDates->getPublicUpcomingIds();
 	}
 
 
-	public function renderPastWithPersonalData(): void
+	public function actionPastWithPersonalData(): void
 	{
-		$trainings = $this->trainingDates->getPastWithPersonalData();
-		$this->addApplications($trainings);
-
+		$this->pastWithPersonalData = $this->trainingDates->getPastWithPersonalData();
 		$this->template->pageTitle = 'Minulá školení s osobními daty starší než ' . $this->dateTimeFormatter->localeDay($this->trainingDates->getDataRetentionDate());
-		$this->template->trainings = $trainings;
+		$this->template->trainings = (bool)$this->pastWithPersonalData;
 	}
 
 
@@ -347,6 +345,21 @@ class TrainingsPresenter extends BasePresenter
 			$this->flashMessage('Osobní data z minulých školení smazána');
 			$this->redirect('Homepage:');
 		});
+	}
+
+
+	protected function createComponentTrainingApplicationsList(): TrainingApplicationsList
+	{
+		$dates = $this->trainingDates->getAllTrainings();
+		$this->addApplications($dates);
+		return $this->trainingApplicationsListFactory->create($dates, DateListOrder::Desc);
+	}
+
+
+	protected function createComponentPastWithPersonalDataTrainingApplicationsList(): TrainingApplicationsList
+	{
+		$this->addApplications($this->pastWithPersonalData);
+		return $this->trainingApplicationsListFactory->create($this->pastWithPersonalData, DateListOrder::Desc, true);
 	}
 
 }

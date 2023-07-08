@@ -3,11 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use DateTime;
 use MichalSpacekCz\Form\TrainingInvoiceFormFactory;
 use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\DateList\DateListOrder;
+use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
+use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
-use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Forms\Form;
 
 class InvoicesPresenter extends BasePresenter
@@ -16,12 +18,15 @@ class InvoicesPresenter extends BasePresenter
 	/** @var array<int, string> */
 	private array $allUnpaidInvoiceIds = [];
 
+	/** @var list<TrainingDate> */
+	private array $datesWithUnpaid = [];
+
 
 	public function __construct(
 		private readonly Applications $trainingApplications,
 		private readonly TrainingDates $trainingDates,
-		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TrainingInvoiceFormFactory $trainingInvoiceFormFactory,
+		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 	) {
 		parent::__construct();
 	}
@@ -39,9 +44,9 @@ class InvoicesPresenter extends BasePresenter
 			$dates[$date->getStart()->getTimestamp()] = $date;
 		}
 		ksort($dates);
-		$this->template->unpaidApplications = $dates;
-		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->upcomingTrainingDates->getPublicUpcomingIds();
+		$this->template->unpaidApplications = (bool)$dates;
+		$this->datesWithUnpaid = array_values($dates);
+
 		$this->template->pageTitle = 'Nezaplacené faktury';
 	}
 
@@ -63,6 +68,12 @@ class InvoicesPresenter extends BasePresenter
 			},
 			$this->allUnpaidInvoiceIds,
 		);
+	}
+
+
+	protected function createComponentTrainingApplicationsList(): TrainingApplicationsList
+	{
+		return $this->trainingApplicationsListFactory->create($this->datesWithUnpaid, DateListOrder::Asc);
 	}
 
 }
