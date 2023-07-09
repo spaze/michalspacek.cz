@@ -6,7 +6,7 @@
 <p><em>{_messages.trainings.intro.review}</em> &mdash; {_messages.trainings.intro.author}</p>
 <h3>{_messages.label.publictrainings}</h3>
 <p>{_messages.trainings.welcome}</p>
-{include "common/dateList.latte"}
+{control upcomingDatesList}
 <h3>{_messages.label.companytrainings}</h3>
 <p>{_messages.trainings.companyextratraining|format:'link:Www:CompanyTrainings:'}</p>
 {include "common/company.latte"}

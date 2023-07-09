@@ -19,6 +19,6 @@
 {if empty($upcomingTrainings)}
 <p>{_messages.venues.notraininghere|format:"link:Www:Contact:"}</p>
 {else}
-{include "../Trainings/common/dateList.latte"}
+{control upcomingDatesList}
 {/if}
 {/define}
