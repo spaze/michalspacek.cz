@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Reviews;
 
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -10,7 +10,7 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use RuntimeException;
 
-class Reviews
+class TrainingReviews
 {
 
 	public function __construct(

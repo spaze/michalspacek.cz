@@ -111,7 +111,7 @@ services:
 	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
 	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
 	- MichalSpacekCz\Training\Resolver\Vrana
-	- MichalSpacekCz\Training\Reviews
+	- MichalSpacekCz\Training\Reviews\TrainingReviews
 	- MichalSpacekCz\Training\Statuses
 	- MichalSpacekCz\Training\TrainingLocales
 	- MichalSpacekCz\Training\Trainings

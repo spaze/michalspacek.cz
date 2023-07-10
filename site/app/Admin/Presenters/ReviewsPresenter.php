@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Trainings;
 
 class ReviewsPresenter extends BasePresenter
@@ -11,7 +11,7 @@ class ReviewsPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly Trainings $trainings,
-		private readonly Reviews $trainingReviews,
+		private readonly TrainingReviews $trainingReviews,
 	) {
 		parent::__construct();
 	}

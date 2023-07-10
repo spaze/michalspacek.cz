@@ -21,7 +21,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
-use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\BadRequestException;
@@ -63,7 +63,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly Statuses $trainingStatuses,
 		private readonly Trainings $trainings,
 		private readonly TrainingFiles $trainingFiles,
-		private readonly Reviews $trainingReviews,
+		private readonly TrainingReviews $trainingReviews,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
 		private readonly TrainingApplicationAdminFormFactory $trainingApplicationAdminFactory,
