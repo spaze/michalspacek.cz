@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Media;
 
 use Nette\Forms\Controls\UploadControl;
 
-class VideoThumbnailFormFields
+class VideoThumbnailFileUploads
 {
 
 	public function __construct(
