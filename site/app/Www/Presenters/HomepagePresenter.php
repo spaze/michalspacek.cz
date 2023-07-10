@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Articles\Articles;
+use MichalSpacekCz\Articles\ArticleSummary;
+use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Training\CompanyTrainings;
@@ -21,6 +23,7 @@ class HomepagePresenter extends BasePresenter
 		private readonly Trainings $trainings,
 		private readonly CompanyTrainings $companyTrainings,
 		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
+		private readonly ArticleSummaryFactory $articleSummaryFactory,
 	) {
 		parent::__construct();
 	}
@@ -42,6 +45,12 @@ class HomepagePresenter extends BasePresenter
 	protected function createComponentUpcomingDatesList(): UpcomingTrainingDatesList
 	{
 		return $this->upcomingTrainingDatesListFactory->create(null, true);
+	}
+
+
+	protected function createComponentArticleSummary(): ArticleSummary
+	{
+		return $this->articleSummaryFactory->create();
 	}
 
 }

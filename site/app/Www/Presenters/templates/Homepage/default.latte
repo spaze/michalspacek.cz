@@ -13,7 +13,7 @@
 <hr>
 <h2 id="{_html.id.articles}">{_messages.label.myarticles}</h2>
 <div n:foreach="$articles as $article">
-	{include "../Articles/common/itemArticle.latte", article: $article}
+	{control articleSummary $article}
 </div>
 <p><a n:href="Articles:">{_messages.label.allarticles}</a></p>
 <hr>

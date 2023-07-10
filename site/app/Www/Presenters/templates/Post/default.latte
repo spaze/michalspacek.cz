@@ -11,7 +11,7 @@
 
 {define #content}
 <div class="column-content">
-	{include "common/headerIcons.latte"}
+	{control articleHeaderIcons $post}
 	<em n:if="$post->lead">{$post->lead}</em>
 	{$post->text}
 	{$post->originally}
