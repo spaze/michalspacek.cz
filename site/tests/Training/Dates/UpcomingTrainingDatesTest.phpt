@@ -149,9 +149,9 @@ class UpcomingTrainingDatesTest extends TestCase
 				'note' => 'Note 4',
 			],
 		];
-		$result = array_filter($result, function (array $row) use ($includeNonPublic): bool {
+		$result = array_values(array_filter($result, function (array $row) use ($includeNonPublic): bool {
 			return $includeNonPublic || $row['public'];
-		});
+		}));
 		$this->database->setFetchAllDefaultResult($result);
 	}
 
