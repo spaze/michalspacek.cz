@@ -9,7 +9,6 @@ use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
 use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
-use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\DateList\DateListOrder;
@@ -21,6 +20,8 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
+use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings;
@@ -70,9 +71,9 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingApplicationMultipleFormFactory $trainingApplicationMultipleFormFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
 		private readonly TrainingDateFormFactory $trainingDateFormFactory,
-		private readonly TrainingReviewFormFactory $trainingReviewFormFactory,
 		private readonly TrainingStatusesFormFactory $trainingStatusesFormFactory,
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
+		private readonly TrainingReviewInputsFactory $trainingReviewInputsFactory,
 	) {
 		parent::__construct();
 	}
@@ -263,29 +264,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditReview(): Form
-	{
-		return $this->trainingReviewFormFactory->create(
-			function (int $dateId): never {
-				$this->redirect('date', $dateId);
-			},
-			$this->review->dateId,
-			$this->review,
-		);
-	}
-
-
-	protected function createComponentAddReview(): Form
-	{
-		return $this->trainingReviewFormFactory->create(
-			function (int $dateId): never {
-				$this->redirect('date', $dateId);
-			},
-			$this->dateId,
-		);
-	}
-
-
 	protected function createComponentApplicationForm(): Form
 	{
 		return $this->trainingApplicationAdminFactory->create(
@@ -360,6 +338,18 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->addApplications($this->pastWithPersonalData);
 		return $this->trainingApplicationsListFactory->create($this->pastWithPersonalData, DateListOrder::Desc, true);
+	}
+
+
+	protected function createComponentEditReviewInputs(): TrainingReviewInputs
+	{
+		return $this->trainingReviewInputsFactory->create(false, $this->review->dateId, $this->review);
+	}
+
+
+	protected function createComponentAddReviewInputs(): TrainingReviewInputs
+	{
+		return $this->trainingReviewInputsFactory->create(true, $this->dateId);
 	}
 
 }

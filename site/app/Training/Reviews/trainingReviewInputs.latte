@@ -1,7 +1,6 @@
-{varType bool $applications}
-{form $form class => aligned}
+{form trainingReview class => aligned}
 	<table>
-		<tr n:if="$applications">
+		<tr n:if="$showApplications">
 			<th>{label application /}</th><td>{input application}</td>
 		</tr>
 		<tr>
