@@ -1,4 +1,4 @@
-<a n:href="Talks:talk $talk->action" n:tag-if="$talk->action"><strong>{$talk->title}</strong></a><br>
-<small><strong class="date">{$talk->date|localeDay}</strong>, {$talk->event}{if $talk->duration} ({_messages.talks.durationshort|format:$talk->duration}){/if}</small>
-<span n:if="$talk->hasSlides" title="{_messages.label.slides}">{icon images}</span>
-<span n:if="$talk->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
+<a n:href="Talks:talk $talk->getAction()" n:tag-if="$talk->getAction()"><strong>{$talk->getTitle()}</strong></a><br>
+<small><strong class="date">{$talk->getDate()|localeDay}</strong>, {$talk->getEvent()}{if $talk->getDuration()} ({_messages.talks.durationshort|format:$talk->getDuration()}){/if}</small>
+<span n:if="$talk->isHasSlides()" title="{_messages.label.slides}">{icon images}</span>
+<span n:if="$talk->getVideo()->getVideoHref()" title="{_messages.label.videorecording}">{icon camera-video}</span>

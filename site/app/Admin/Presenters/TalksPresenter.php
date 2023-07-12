@@ -9,6 +9,7 @@ use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
+use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalkSlides;
 use Nette\Application\BadRequestException;
@@ -19,8 +20,7 @@ use Nette\Utils\Html;
 class TalksPresenter extends BasePresenter
 {
 
-	/** @var Row<mixed> */
-	private Row $talk;
+	private Talk $talk;
 
 	/** @var Row[] */
 	private array $slides;
@@ -71,13 +71,13 @@ class TalksPresenter extends BasePresenter
 	{
 		try {
 			$this->talk = $this->talks->getById((int)$param);
-			$this->slides = $this->talkSlides->getSlides($this->talk->talkId, $this->talk->filenamesTalkId);
+			$this->slides = $this->talkSlides->getSlides($this->talk->getId(), $this->talk->getFilenamesTalkId());
 		} catch (ContentTypeException | TalkDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.admin.talkslides', $this->talk);
-		$this->template->talkTitle = $this->talk->title;
+		$this->template->talkTitle = $this->talk->getTitle();
 		$this->template->slides = $this->slides;
 		$this->template->talk = $this->talk;
 		$this->template->maxSlideUploads = $this->maxSlideUploads = (int)ini_get('max_file_uploads');
@@ -118,7 +118,7 @@ class TalksPresenter extends BasePresenter
 				$this->flashMessage($message, $type);
 				$this->redirect('Talks:slides', $talkId);
 			},
-			$this->talk->talkId,
+			$this->talk->getId(),
 			$this->slides,
 			$this->newCount,
 			$this->maxSlideUploads,
