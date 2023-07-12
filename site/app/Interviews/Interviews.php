@@ -6,8 +6,8 @@ namespace MichalSpacekCz\Interviews;
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
-use MichalSpacekCz\Media\Resources\InterviewMediaResources;
-use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Media\VideoFactory;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
@@ -16,26 +16,30 @@ class Interviews
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly VideoFactory $videoFactory,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly InterviewMediaResources $interviewMediaResources,
 	) {
 	}
 
 
 	/**
-	 * @param int|null $limit
-	 * @return Row[]
+	 * @return list<Interview>
 	 */
 	public function getAll(?int $limit = null): array
 	{
 		$query = 'SELECT
-				id_interview AS interviewId,
+				id_interview AS id,
 				action,
 				title,
+				description,
 				date,
 				href,
-				video_href AS videoHref,
 				audio_href AS audioHref,
+				audio_embed AS audioEmbed,
+				video_href AS videoHref,
+				video_thumbnail AS videoThumbnail,
+				video_thumbnail_alternative AS videoThumbnailAlternative,
+				video_embed AS videoEmbed,
 				source_name AS sourceName,
 				source_href AS sourceHref
 			FROM interviews
@@ -43,25 +47,22 @@ class Interviews
 			LIMIT ?';
 
 		$result = $this->database->fetchAll($query, $limit ?? PHP_INT_MAX);
+		$interviews = [];
 		foreach ($result as $row) {
-			$this->enrich($row);
+			$interviews[] = $this->createFromDatabaseRow($row);
 		}
-
-		return $result;
+		return $interviews;
 	}
 
 
 	/**
-	 * @param string $name
-	 * @return Row<mixed>
 	 * @throws InterviewDoesNotExistException
 	 */
-	public function get(string $name): Row
+	public function get(string $name): Interview
 	{
-		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
-				id_interview AS interviewId,
+				id_interview AS id,
 				action,
 				title,
 				description,
@@ -83,27 +84,21 @@ class Interviews
 		if (!$result) {
 			throw new InterviewDoesNotExistException(name: $name);
 		}
-
-		$this->enrich($result);
-		return $result;
+		return $this->createFromDatabaseRow($result);
 	}
 
 
 	/**
-	 * @param int $id
-	 * @return Row<mixed>
 	 * @throws InterviewDoesNotExistException
 	 */
-	public function getById(int $id): Row
+	public function getById(int $id): Interview
 	{
-		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
-				id_interview AS interviewId,
+				id_interview AS id,
 				action,
 				title,
 				description,
-				description AS descriptionTexy,
 				date,
 				href,
 				audio_href AS audioHref,
@@ -122,27 +117,31 @@ class Interviews
 		if (!$result) {
 			throw new InterviewDoesNotExistException(id: $id);
 		}
-
-		$this->enrich($result);
-		return $result;
+		return $this->createFromDatabaseRow($result);
 	}
 
 
 	/**
-	 * @param Row<mixed> $row
+	 * @throws ContentTypeException
 	 */
-	private function enrich(Row $row): void
+	private function createFromDatabaseRow(Row $row): Interview
 	{
-		foreach (['description'] as $item) {
-			if (isset($row[$item])) {
-				if (!is_string($row[$item])) {
-					throw new ShouldNotHappenException(sprintf("Item '%s' is a %s not a string", $item, get_debug_type($row[$item])));
-				}
-				$row[$item] = $this->texyFormatter->formatBlock($row[$item]);
-			}
-		}
-		$row->videoThumbnailUrl = isset($row->videoThumbnail) ? $this->interviewMediaResources->getImageUrl($row->interviewId, $row->videoThumbnail) : null;
-		$row->videoThumbnailAlternativeUrl = isset($row->videoThumbnailAlternative) ? $this->interviewMediaResources->getImageUrl($row->interviewId, $row->videoThumbnailAlternative) : null;
+
+		return new Interview(
+			$row->id,
+			$row->action,
+			$row->title,
+			$row->description,
+			$row->description ? $this->texyFormatter->formatBlock($row->description) : null,
+			$row->date,
+			$row->href,
+			$row->audioHref,
+			$row->audioEmbed,
+			$this->videoFactory->createFromDatabaseRow($row),
+			$row->videoEmbed,
+			$row->sourceName,
+			$row->sourceHref,
+		);
 	}
 
 

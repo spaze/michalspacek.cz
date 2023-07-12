@@ -11,11 +11,11 @@
 </div>
 <hr>
 <ol reversed>
-{foreach $interviews as $item}
-	<li><a n:href="Interviews:interview $item->interviewId">{$item->title}</a>
-		<small><strong class="date">{$item->date|localeDay}</strong>, {$item->sourceName}</small>
-		<span n:if="$item->audioHref" title="{_messages.label.audiorecording}">{icon microphone}</span>
-		<span n:if="$item->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
+{foreach $interviews as $interview}
+	<li><a n:href="Interviews:interview $interview->getId()">{$interview->getTitle()}</a>
+		<small><strong class="date">{$interview->getDate()|localeDay}</strong>, {$interview->getSourceName()}</small>
+		<span n:if="$interview->getAudioHref()" title="{_messages.label.audiorecording}">{icon microphone}</span>
+		<span n:if="$interview->getVideo()->getVideoHref()" title="{_messages.label.videorecording}">{icon camera-video}</span>
 	</li>
 {/foreach}
 </ol>

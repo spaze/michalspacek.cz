@@ -1,3 +1,4 @@
+{varType MichalSpacekCz\Media\Video|null $video}
 {varType int $videoThumbnailWidth}
 {varType int $videoThumbnailHeight}
 <tr>
@@ -5,8 +6,8 @@
 	<td class="narrower">
 		<span id="videoThumbnailFormField">{input videoThumbnail} <small>{$videoThumbnailWidth}×{$videoThumbnailHeight}</small></span>
 		<span id="currentVideoThumbnail">
-			<img n:if="$item && $item->videoThumbnailUrl" src="{$item->videoThumbnailUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnail}" title="{$item->videoThumbnail}">
-			<small n:if="$item && $item->videoThumbnail">{input removeVideoThumbnail}</small>
+			<img n:if="$video?->getThumbnailUrl()" src="{$video->getThumbnailUrl()}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$video->getThumbnailFilename()}" title="{$video->getThumbnailFilename()}">
+			<small n:if="$video?->getThumbnailFilename()">{input removeVideoThumbnail}</small>
 		</span>
 		<span n:ifcontent class="error">{inputError videoThumbnail}</span>
 	</td>
@@ -16,8 +17,8 @@
 	<td class="narrower">
 		<span id="videoThumbnailAlternativeFormField">{input videoThumbnailAlternative} <small>{$videoThumbnailWidth}×{$videoThumbnailHeight}</small></span>
 		<span id="currentVideoThumbnailAlternative">
-			<img n:if="$item && $item->videoThumbnailAlternativeUrl" src="{$item->videoThumbnailAlternativeUrl}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$item->videoThumbnailAlternative}" title="{$item->videoThumbnailAlternative}">
-			<small n:if="$item && $item->videoThumbnailAlternative">{input removeVideoThumbnailAlternative}</small>
+			<img n:if="$video?->getThumbnailAlternativeUrl()" src="{$video->getThumbnailAlternativeUrl()}" width="{$videoThumbnailWidth / 4}" height="{$videoThumbnailHeight / 4}" alt="{$video->getThumbnailAlternativeFilename()}" title="{$video->getThumbnailAlternativeFilename()}">
+			<small n:if="$video?->getThumbnailAlternativeFilename()">{input removeVideoThumbnailAlternative}</small>
 		</span>
 		<span n:ifcontent class="error">{inputError videoThumbnailAlternative}</span>
 	</td>

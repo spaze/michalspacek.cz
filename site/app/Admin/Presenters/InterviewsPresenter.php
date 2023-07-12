@@ -6,17 +6,16 @@ namespace MichalSpacekCz\Admin\Presenters;
 use MichalSpacekCz\Form\InterviewFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
+use MichalSpacekCz\Interviews\Interview;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Application\BadRequestException;
-use Nette\Database\Row;
 use Nette\Forms\Form;
 
 class InterviewsPresenter extends BasePresenter
 {
 
-	/** @var Row<mixed> */
-	private Row $interview;
+	private Interview $interview;
 
 
 	public function __construct(
@@ -46,7 +45,7 @@ class InterviewsPresenter extends BasePresenter
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->title)]);
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->getTitle())]);
 		$this->template->interview = $this->interview;
 		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
 		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();

@@ -5,10 +5,10 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Media\VideoThumbnails;
+use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Form;
-use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
@@ -28,13 +28,13 @@ class TalkFormFactory
 
 	/**
 	 * @param callable(Html): void $onSuccess
-	 * @param Row|null $talk
+	 * @param Talk|null $talk
 	 * @return Form
 	 */
-	public function create(callable $onSuccess, ?Row $talk = null): Form
+	public function create(callable $onSuccess, ?Talk $talk = null): Form
 	{
 		$form = $this->factory->create();
-		$allTalks = $this->getAllTalksExcept($talk ? (string)$talk->action : null);
+		$allTalks = $this->getAllTalksExcept($talk ? (string)$talk->getAction() : null);
 
 		$form->addText('action', 'Akce:')
 			->setRequired(false)
@@ -69,7 +69,7 @@ class TalkFormFactory
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
-		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $talk?->videoThumbnail !== null, $talk?->videoThumbnailAlternative !== null);
+		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $talk?->getVideo()->getThumbnailFilename() !== null, $talk?->getVideo()->getThumbnailAlternativeContentType() !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
@@ -105,7 +105,7 @@ class TalkFormFactory
 				$removeVideoThumbnail = $values->removeVideoThumbnail ?? false;
 				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
 				$this->talks->update(
-					$talk->talkId,
+					$talk->getId(),
 					$values->action,
 					$values->title,
 					$values->description,
@@ -117,8 +117,8 @@ class TalkFormFactory
 					$values->slidesHref,
 					$values->slidesEmbed,
 					$values->videoHref,
-					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $talk->videoThumbnail),
-					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $talk->videoThumbnailAlternative),
+					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $talk->getVideo()->getThumbnailFilename()),
+					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $talk->getVideo()->getThumbnailAlternativeFilename()),
 					$values->videoEmbed,
 					$values->event,
 					$values->eventHref,
@@ -128,12 +128,12 @@ class TalkFormFactory
 					$values->supersededBy,
 					$values->publishSlides,
 				);
-				$this->videoThumbnails->saveVideoThumbnailFiles($talk->talkId, $values);
-				if ($removeVideoThumbnail) {
-					$this->videoThumbnails->deleteFile($talk->talkId, $talk->videoThumbnail);
+				$this->videoThumbnails->saveVideoThumbnailFiles($talk->getId(), $values);
+				if ($removeVideoThumbnail && $talk->getVideo()->getThumbnailFilename()) {
+					$this->videoThumbnails->deleteFile($talk->getId(), $talk->getVideo()->getThumbnailFilename());
 				}
-				if ($removeVideoThumbnailAlternative) {
-					$this->videoThumbnails->deleteFile($talk->talkId, $talk->videoThumbnailAlternative);
+				if ($removeVideoThumbnailAlternative && $talk->getVideo()->getThumbnailAlternativeFilename()) {
+					$this->videoThumbnails->deleteFile($talk->getId(), $talk->getVideo()->getThumbnailAlternativeFilename());
 				}
 				$message = Html::el()->setText('Přednáška upravena ');
 			} else {
@@ -173,34 +173,28 @@ class TalkFormFactory
 	}
 
 
-	/**
-	 * @param Form $form
-	 * @param Row<mixed> $talk
-	 * @param SubmitButton $submit
-	 * @return void
-	 */
-	public function setTalk(Form $form, Row $talk, SubmitButton $submit): void
+	public function setTalk(Form $form, Talk $talk, SubmitButton $submit): void
 	{
 		$values = [
-			'action' => $talk->action,
-			'title' => $talk->titleTexy,
-			'description' => $talk->descriptionTexy,
-			'date' => $talk->date->format('Y-m-d H:i'),
-			'href' => $talk->href,
-			'duration' => $talk->duration,
-			'slidesTalk' => $talk->slidesTalkId,
-			'filenamesTalk' => $talk->filenamesTalkId,
-			'slidesHref' => $talk->slidesHref,
-			'slidesEmbed' => $talk->slidesEmbed,
-			'videoHref' => $talk->videoHref,
-			'videoEmbed' => $talk->videoEmbed,
-			'event' => $talk->eventTexy,
-			'eventHref' => $talk->eventHref,
-			'ogImage' => $talk->ogImage,
-			'transcript' => $talk->transcriptTexy,
-			'favorite' => $talk->favorite,
-			'supersededBy' => $talk->supersededById,
-			'publishSlides' => $talk->publishSlides,
+			'action' => $talk->getAction(),
+			'title' => $talk->getTitleTexy(),
+			'description' => $talk->getDescriptionTexy(),
+			'date' => $talk->getDate()->format('Y-m-d H:i'),
+			'href' => $talk->getHref(),
+			'duration' => $talk->getDuration(),
+			'slidesTalk' => $talk->getSlidesTalkId(),
+			'filenamesTalk' => $talk->getFilenamesTalkId(),
+			'slidesHref' => $talk->getSlidesHref(),
+			'slidesEmbed' => $talk->getSlidesEmbed(),
+			'videoHref' => $talk->getVideo()->getVideoHref(),
+			'videoEmbed' => $talk->getVideoEmbed(),
+			'event' => $talk->getEventTexy(),
+			'eventHref' => $talk->getEventHref(),
+			'ogImage' => $talk->getOgImage(),
+			'transcript' => $talk->getTranscriptTexy(),
+			'favorite' => $talk->getFavorite(),
+			'supersededBy' => $talk->getSupersededById(),
+			'publishSlides' => $talk->isPublishSlides(),
 		];
 		$form->setDefaults($values);
 		$submit->caption = 'Upravit';
@@ -215,10 +209,10 @@ class TalkFormFactory
 	{
 		$allTalks = [];
 		foreach ($this->talks->getAll() as $talk) {
-			if ($talkAction !== $talk->action) {
-				$title = Strings::truncate($talk->titleTexy, 40);
-				$event = Strings::truncate((string)$talk->event, 30);
-				$allTalks[(int)$talk->talkId] = sprintf('%s (%s, %s)', $title, $talk->date->format('j. n. Y'), $event);
+			if ($talkAction !== $talk->getAction()) {
+				$title = Strings::truncate($talk->getTitleTexy(), 40);
+				$event = Strings::truncate(strip_tags($talk->getEvent()->render()), 30);
+				$allTalks[$talk->getId()] = sprintf('%s (%s, %s)', $title, $talk->getDate()->format('j. n. Y'), $event);
 			}
 		}
 		return $allTalks;

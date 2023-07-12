@@ -1,4 +1,5 @@
-<a n:href="Interviews:interview $interview->action"><strong>{$interview->title}</strong></a><br>
-<small><strong class="date">{$interview->date|localeDay}</strong>, {$interview->sourceName}</small>
-<span n:if="$interview->audioHref" title="{_messages.label.audiorecording}">{icon microphone}</span>
-<span n:if="$interview->videoHref" title="{_messages.label.videorecording}">{icon camera-video}</span>
+{varType MichalSpacekCz\Interviews\Interview $interview}
+<a n:href="Interviews:interview $interview->getAction()"><strong>{$interview->getTitle()}</strong></a><br>
+<small><strong class="date">{$interview->getDate()|localeDay}</strong>, {$interview->getSourceName()}</small>
+<span n:if="$interview->getAudioHref()" title="{_messages.label.audiorecording}">{icon microphone}</span>
+<span n:if="$interview->getVideo()->getVideoHref()" title="{_messages.label.videorecording}">{icon camera-video}</span>

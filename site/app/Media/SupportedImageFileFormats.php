@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Media;
 
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Media\Exceptions\ExtensionWithNoContentTypeException;
+use MichalSpacekCz\Media\Exceptions\UnsupportedContentTypeException;
 
 class SupportedImageFileFormats
 {
@@ -27,7 +29,7 @@ class SupportedImageFileFormats
 	public function getMainExtensionByContentType(string $contentType): string
 	{
 		if (!isset($this->supportedMainImages[$contentType])) {
-			throw new ContentTypeException();
+			throw new UnsupportedContentTypeException($contentType, $this->supportedMainImages);
 		}
 		return $this->supportedMainImages[$contentType];
 	}
@@ -39,7 +41,7 @@ class SupportedImageFileFormats
 	public function getAlternativeExtensionByContentType(string $contentType): string
 	{
 		if (!isset($this->supportedAlternativeImages[$contentType])) {
-			throw new ContentTypeException();
+			throw new UnsupportedContentTypeException($contentType, $this->supportedAlternativeImages);
 		}
 		return $this->supportedAlternativeImages[$contentType];
 	}
@@ -52,7 +54,7 @@ class SupportedImageFileFormats
 	{
 		$types = array_flip($this->supportedAlternativeImages);
 		if (!isset($types[$extension])) {
-			throw new ContentTypeException();
+			throw new ExtensionWithNoContentTypeException($extension, $this->supportedAlternativeImages);
 		}
 		return $types[$extension];
 	}

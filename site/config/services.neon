@@ -60,11 +60,13 @@ services:
 	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
-	- MichalSpacekCz\Interviews\Interviews
+	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)
 	- MichalSpacekCz\Makefile\Makefile
 	interviewMediaResources: MichalSpacekCz\Media\Resources\InterviewMediaResources(imagesRoot: %domain.imagesRoot%, staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%)
 	talkMediaResources: MichalSpacekCz\Media\Resources\TalkMediaResources(imagesRoot: %domain.imagesRoot%, staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Media\SupportedImageFileFormats
+	talkVideoFactory: MichalSpacekCz\Media\VideoFactory(mediaResources: @talkMediaResources, videoThumbnails: @talkVideoThumbnails)
+	interviewVideoFactory: MichalSpacekCz\Media\VideoFactory(mediaResources: @interviewMediaResources, videoThumbnails: @interviewVideoThumbnails)
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
@@ -76,6 +78,7 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	- MichalSpacekCz\Tags\Tags
+	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
 	- MichalSpacekCz\Talks\Talks
 	- MichalSpacekCz\Talks\TalkSlides
 	- MichalSpacekCz\Templating\Filters

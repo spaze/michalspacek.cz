@@ -6,12 +6,10 @@ namespace MichalSpacekCz\Talks;
 use DateTime;
 use Exception;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Media\Resources\TalkMediaResources;
-use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Talks\Exceptions\TalkDateTimeException;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Nette\Utils\Html;
 
 class Talks
@@ -20,43 +18,54 @@ class Talks
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly TalkMediaResources $talkMediaResources,
+		private readonly TalkFactory $talkFactory,
 	) {
 	}
 
 
 	/**
-	 * Get all talks, or almost all talks.
-	 *
-	 * @param int|null $limit
-	 * @return list<Row>
+	 * @return list<Talk>
+	 * @throws ContentTypeException
 	 */
 	public function getAll(?int $limit = null): array
 	{
 		$query = 'SELECT
-				t.id_talk AS talkId,
+				t.id_talk AS id,
 				t.action,
 				t.title,
-				t.title AS titleTexy,
+				t.description,
 				t.date,
 				t.duration,
 				t.href,
 				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
+				t.slides_href AS slidesHref,
+				t.slides_embed AS slidesEmbed,
 				t.video_href AS videoHref,
+				t.video_thumbnail AS videoThumbnail,
+				t.video_thumbnail_alternative AS videoThumbnailAlternative,
+				t.video_embed AS videoEmbed,
 				t.event,
-				t.event AS eventTexy,
-				t.event_href AS eventHref
+				t.event_href AS eventHref,
+				t.og_image AS ogImage,
+				t.transcript,
+				t.favorite,
+				t.key_talk_slides AS slidesTalkId,
+				t.key_talk_filenames AS filenamesTalkId,
+				t.key_superseded_by AS supersededById,
+				ts.action AS supersededByAction,
+				ts.title AS supersededByTitle,
+				t.publish_slides AS publishSlides
 			FROM talks t
+				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.date <= NOW()
 			ORDER BY t.date DESC
 			LIMIT ?';
 
-		$result = $this->database->fetchAll($query, $limit ?? PHP_INT_MAX);
-		foreach ($result as $row) {
-			$this->enrich($row);
+		$talks = [];
+		foreach ($this->database->fetchAll($query, $limit ?? PHP_INT_MAX) as $row) {
+			$talks[] = $this->talkFactory->createFromDatabaseRow($row);
 		}
-
-		return array_values($result);
+		return $talks;
 	}
 
 
@@ -73,59 +82,20 @@ class Talks
 
 
 	/**
-	 * Get upcoming talks.
-	 *
-	 * @return list<Row>
+	 * @return list<Talk>
+	 * @throws ContentTypeException
 	 */
 	public function getUpcoming(): array
 	{
 		$query = 'SELECT
-				t.id_talk AS talkId,
+				t.id_talk AS id,
 				t.action,
 				t.title,
-				t.title AS titleTexy,
+				t.description,
 				t.date,
 				t.duration,
 				t.href,
 				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
-				t.video_href AS videoHref,
-				t.event,
-				t.event AS eventTexy,
-				t.event_href AS eventHref
-			FROM talks t
-			WHERE t.date > NOW()
-			ORDER BY t.date';
-
-		$result = $this->database->fetchAll($query);
-		foreach ($result as $row) {
-			$this->enrich($row);
-		}
-
-		return array_values($result);
-	}
-
-
-	/**
-	 * Get talk data.
-	 *
-	 * @param string $name
-	 * @return Row<mixed>
-	 * @throws TalkDoesNotExistException
-	 */
-	public function get(string $name): Row
-	{
-		/** @var Row<mixed>|null $result */
-		$result = $this->database->fetch(
-			'SELECT
-				t.id_talk AS talkId,
-				t.action,
-				t.title,
-				t.title AS titleTexy,
-				t.description,
-				t.description AS descriptionTexy,
-				t.date,
-				t.duration,
-				t.href,
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
 				t.video_href AS videoHref,
@@ -133,11 +103,55 @@ class Talks
 				t.video_thumbnail_alternative AS videoThumbnailAlternative,
 				t.video_embed AS videoEmbed,
 				t.event,
-				t.event AS eventTexy,
 				t.event_href AS eventHref,
 				t.og_image AS ogImage,
 				t.transcript,
-				t.transcript AS transcriptTexy,
+				t.favorite,
+				t.key_talk_slides AS slidesTalkId,
+				t.key_talk_filenames AS filenamesTalkId,
+				t.key_superseded_by AS supersededById,
+				ts.action AS supersededByAction,
+				ts.title AS supersededByTitle,
+				t.publish_slides AS publishSlides
+			FROM talks t
+				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
+			WHERE t.date > NOW()
+			ORDER BY t.date';
+
+		$talks = [];
+		foreach ($this->database->fetchAll($query) as $row) {
+			$talks[] = $this->talkFactory->createFromDatabaseRow($row);
+		}
+		return $talks;
+	}
+
+
+	/**
+	 * @throws TalkDoesNotExistException
+	 * @throws ContentTypeException
+	 */
+	public function get(string $name): Talk
+	{
+		$result = $this->database->fetch(
+			'SELECT
+				t.id_talk AS id,
+				t.action,
+				t.title,
+				t.description,
+				t.date,
+				t.duration,
+				t.href,
+				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
+				t.slides_href AS slidesHref,
+				t.slides_embed AS slidesEmbed,
+				t.video_href AS videoHref,
+				t.video_thumbnail AS videoThumbnail,
+				t.video_thumbnail_alternative AS videoThumbnailAlternative,
+				t.video_embed AS videoEmbed,
+				t.event,
+				t.event_href AS eventHref,
+				t.og_image AS ogImage,
+				t.transcript,
 				t.favorite,
 				t.key_talk_slides AS slidesTalkId,
 				t.key_talk_filenames AS filenamesTalkId,
@@ -154,33 +168,26 @@ class Talks
 		if (!$result) {
 			throw new TalkDoesNotExistException(name: $name);
 		}
-
-		$this->enrich($result);
-		return $result;
+		return $this->talkFactory->createFromDatabaseRow($result);
 	}
 
 
 	/**
-	 * Get talk data by id.
-	 *
-	 * @param int $id
-	 * @return Row<mixed>
 	 * @throws TalkDoesNotExistException
+	 * @throws ContentTypeException
 	 */
-	public function getById(int $id): Row
+	public function getById(int $id): Talk
 	{
-		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
-				t.id_talk AS talkId,
+				t.id_talk AS id,
 				t.action,
 				t.title,
-				t.title AS titleTexy,
 				t.description,
-				t.description AS descriptionTexy,
 				t.date,
 				t.duration,
 				t.href,
+				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
 				t.video_href AS videoHref,
@@ -188,11 +195,9 @@ class Talks
 				t.video_thumbnail_alternative AS videoThumbnailAlternative,
 				t.video_embed AS videoEmbed,
 				t.event,
-				t.event AS eventTexy,
 				t.event_href AS eventHref,
 				t.og_image AS ogImage,
 				t.transcript,
-				t.transcript AS transcriptTexy,
 				t.favorite,
 				t.key_talk_slides AS slidesTalkId,
 				t.key_talk_filenames AS filenamesTalkId,
@@ -209,36 +214,7 @@ class Talks
 		if (!$result) {
 			throw new TalkDoesNotExistException(id: $id);
 		}
-
-		$this->enrich($result);
-		return $result;
-	}
-
-
-	/**
-	 * @param Row<mixed> $row
-	 */
-	private function enrich(Row $row): void
-	{
-		$this->texyFormatter->setTopHeading(3);
-		foreach (['title', 'event'] as $item) {
-			if (isset($row[$item])) {
-				if (!is_string($row[$item])) {
-					throw new ShouldNotHappenException(sprintf("Item '%s' is a %s not a string", $item, get_debug_type($row[$item])));
-				}
-				$row[$item] = $this->texyFormatter->format($row[$item]);
-			}
-		}
-		foreach (['description', 'transcript'] as $item) {
-			if (isset($row[$item])) {
-				if (!is_string($row[$item])) {
-					throw new ShouldNotHappenException(sprintf("Item '%s' is a %s not a string", $item, get_debug_type($row[$item])));
-				}
-				$row[$item] = $this->texyFormatter->formatBlock($row[$item]);
-			}
-		}
-		$row->videoThumbnailUrl = isset($row->videoThumbnail) ? $this->talkMediaResources->getImageUrl($row->talkId, $row->videoThumbnail) : null;
-		$row->videoThumbnailAlternativeUrl = isset($row->videoThumbnailAlternative) ? $this->talkMediaResources->getImageUrl($row->talkId, $row->videoThumbnailAlternative) : null;
+		return $this->talkFactory->createFromDatabaseRow($result);
 	}
 
 
@@ -382,12 +358,12 @@ class Talks
 	 * Build page title for the talk.
 	 *
 	 * @param string $translationKey
-	 * @param Row<mixed> $talk
+	 * @param Talk $talk
 	 * @return Html<Html|string>
 	 */
-	public function pageTitle(string $translationKey, Row $talk): Html
+	public function pageTitle(string $translationKey, Talk $talk): Html
 	{
-		return $this->texyFormatter->translate($translationKey, [strip_tags((string)$talk->title), $talk->event]);
+		return $this->texyFormatter->translate($translationKey, [strip_tags($talk->getTitle()->render()), strip_tags($talk->getEvent()->render())]);
 	}
 
 
