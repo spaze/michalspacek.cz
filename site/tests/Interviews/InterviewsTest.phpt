@@ -26,7 +26,7 @@ class InterviewsTest extends TestCase
 	{
 		$this->database->setFetchAllDefaultResult([
 			[
-				'interviewId' => 1,
+				'id' => 1,
 				'action' => 'action-1',
 				'title' => 'Action 1',
 				'description' => 'desc**rip**',
@@ -42,7 +42,7 @@ class InterviewsTest extends TestCase
 				'sourceHref' => null,
 			],
 			[
-				'interviewId' => 2,
+				'id' => 2,
 				'action' => 'action-2',
 				'title' => 'Action 2',
 				'description' => 'desc**trip**',
@@ -63,22 +63,22 @@ class InterviewsTest extends TestCase
 		Assert::same(1, $interviews[0]->getId());
 		Assert::same("<p>desc<strong>rip</strong></p>\n", $interviews[0]->getDescription()?->render());
 		Assert::same('desc**rip**', $interviews[0]->getDescriptionTexy());
-		Assert::null($interviews[0]->getVideoThumbnail()->getVideoHref());
-		Assert::null($interviews[0]->getVideoThumbnail()->getUrl());
-		Assert::null($interviews[0]->getVideoThumbnail()->getAlternativeUrl());
+		Assert::null($interviews[0]->getVideo()->getVideoHref());
+		Assert::null($interviews[0]->getVideo()->getThumbnailUrl());
+		Assert::null($interviews[0]->getVideo()->getThumbnailAlternativeUrl());
 		Assert::same(2, $interviews[1]->getId());
 		Assert::same("<p>desc<strong>trip</strong></p>\n", $interviews[1]->getDescription()?->render());
 		Assert::same('desc**trip**', $interviews[1]->getDescriptionTexy());
-		Assert::same('https://video.href.example', $interviews[1]->getVideoThumbnail()->getVideoHref());
-		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.jpg', $interviews[1]->getVideoThumbnail()->getUrl());
-		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.webp', $interviews[1]->getVideoThumbnail()->getAlternativeUrl());
+		Assert::same('https://video.href.example', $interviews[1]->getVideo()->getVideoHref());
+		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.jpg', $interviews[1]->getVideo()->getThumbnailUrl());
+		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.webp', $interviews[1]->getVideo()->getThumbnailAlternativeUrl());
 	}
 
 
 	public function testGet(): void
 	{
 		$this->database->setFetchResult([
-			'interviewId' => 1,
+			'id' => 1,
 			'action' => 'action-1',
 			'title' => 'Action 1',
 			'description' => 'desc**rip**',
@@ -97,16 +97,16 @@ class InterviewsTest extends TestCase
 		Assert::same(1, $interview->getId());
 		Assert::same("<p>desc<strong>rip</strong></p>\n", $interview->getDescription()?->render());
 		Assert::same('desc**rip**', $interview->getDescriptionTexy());
-		Assert::null($interview->getVideoThumbnail()->getVideoHref());
-		Assert::null($interview->getVideoThumbnail()->getUrl());
-		Assert::null($interview->getVideoThumbnail()->getAlternativeUrl());
+		Assert::null($interview->getVideo()->getVideoHref());
+		Assert::null($interview->getVideo()->getThumbnailUrl());
+		Assert::null($interview->getVideo()->getThumbnailAlternativeUrl());
 	}
 
 
 	public function testGetById(): void
 	{
 		$this->database->setFetchResult([
-			'interviewId' => 2,
+			'id' => 2,
 			'action' => 'action-2',
 			'title' => 'Action 2',
 			'description' => 'desc**trip**',
@@ -125,9 +125,9 @@ class InterviewsTest extends TestCase
 		Assert::same(2, $interview->getId());
 		Assert::same("<p>desc<strong>trip</strong></p>\n", $interview->getDescription()?->render());
 		Assert::same('desc**trip**', $interview->getDescriptionTexy());
-		Assert::same('https://video.href.example', $interview->getVideoThumbnail()->getVideoHref());
-		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.jpg', $interview->getVideoThumbnail()->getUrl());
-		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.webp', $interview->getVideoThumbnail()->getAlternativeUrl());
+		Assert::same('https://video.href.example', $interview->getVideo()->getVideoHref());
+		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.jpg', $interview->getVideo()->getThumbnailUrl());
+		Assert::same('https://www.domain.example/i/images/interviews/2/thumbnail.webp', $interview->getVideo()->getThumbnailAlternativeUrl());
 	}
 
 }

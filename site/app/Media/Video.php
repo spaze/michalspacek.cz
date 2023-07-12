@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Media;
 
-class VideoThumbnail
+class Video
 {
 
 	private bool $lazyLoad = false;
@@ -12,12 +12,12 @@ class VideoThumbnail
 	public function __construct(
 		private readonly ?string $videoHref,
 		private readonly ?string $thumbnailFilename,
-		private readonly ?string $url,
+		private readonly ?string $thumbnailUrl,
 		private readonly ?string $thumbnailAlternativeFilename,
-		private readonly ?string $alternativeUrl,
-		private readonly ?string $alternativeContentType,
-		private readonly int $width,
-		private readonly int $height,
+		private readonly ?string $thumbnailAlternativeUrl,
+		private readonly ?string $thumbnailAlternativeContentType,
+		private readonly int $thumbnailWidth,
+		private readonly int $thumbnailHeight,
 		private readonly ?string $videoPlatform,
 	) {
 	}
@@ -35,9 +35,9 @@ class VideoThumbnail
 	}
 
 
-	public function getUrl(): ?string
+	public function getThumbnailUrl(): ?string
 	{
-		return $this->url;
+		return $this->thumbnailUrl;
 	}
 
 
@@ -47,27 +47,27 @@ class VideoThumbnail
 	}
 
 
-	public function getAlternativeUrl(): ?string
+	public function getThumbnailAlternativeUrl(): ?string
 	{
-		return $this->alternativeUrl;
+		return $this->thumbnailAlternativeUrl;
 	}
 
 
-	public function getAlternativeContentType(): ?string
+	public function getThumbnailAlternativeContentType(): ?string
 	{
-		return $this->alternativeContentType;
+		return $this->thumbnailAlternativeContentType;
 	}
 
 
-	public function getWidth(): int
+	public function getThumbnailWidth(): int
 	{
-		return $this->width;
+		return $this->thumbnailWidth;
 	}
 
 
-	public function getHeight(): int
+	public function getThumbnailHeight(): int
 	{
-		return $this->height;
+		return $this->thumbnailHeight;
 	}
 
 

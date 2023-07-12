@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
-use MichalSpacekCz\Media\VideoThumbnails;
+use MichalSpacekCz\Media\VideoFactory;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Talks\Talks;
@@ -21,7 +21,7 @@ class TalksPresenter extends BasePresenter
 		private readonly Talks $talks,
 		private readonly TalkSlides $talkSlides,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
-		private readonly VideoThumbnails $videoThumbnails,
+		private readonly VideoFactory $videoFactory,
 	) {
 		parent::__construct();
 	}
@@ -74,7 +74,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->slides = $slides;
 		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($talk->ogImage !== null ? sprintf($talk->ogImage, $slideNo ?? 1) : null));
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
-		$this->template->videoThumbnail = $this->videoThumbnails->getVideoThumbnail($talk)->setLazyLoad(count($slides) > 3);
+		$this->template->video = $this->videoFactory->createFromDatabaseRow($talk)->setLazyLoad(count($slides) > 3);
 		$this->template->slidesPlatform = $talk->slidesHref ? SlidesPlatform::tryFromUrl($talk->slidesHref)?->getName() : null;
 	}
 

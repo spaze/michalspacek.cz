@@ -8,7 +8,6 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Exceptions\MissingContentTypeException;
 use MichalSpacekCz\Media\Resources\MediaResources;
 use Nette\Application\UI\Form;
-use Nette\Database\Row;
 use Nette\Forms\Controls\UploadControl;
 use Nette\Http\FileUpload;
 use Nette\Utils\Callback;
@@ -164,25 +163,6 @@ class VideoThumbnails
 		if ($basename) {
 			$values->videoThumbnailAlternative->move($this->mediaResources->getImageFilename($id, $basename));
 		}
-	}
-
-
-	/**
-	 * @throws ContentTypeException
-	 */
-	public function getVideoThumbnail(Row $item): VideoThumbnail
-	{
-		return new VideoThumbnail(
-			$item->videoHref,
-			$item->videoThumbnail,
-			$item->videoThumbnail ? $this->mediaResources->getImageUrl($item->interviewId, $item->videoThumbnail) : null,
-			$item->videoThumbnailAlternative,
-			$item->videoThumbnailAlternative ? $this->mediaResources->getImageUrl($item->interviewId, $item->videoThumbnailAlternative) : null,
-			$item->videoThumbnailAlternative ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($item->videoThumbnailAlternative, PATHINFO_EXTENSION)) : null,
-			$this->getWidth(),
-			$this->getHeight(),
-			$item->videoHref ? VideoPlatform::tryFromUrl($item->videoHref)?->getName() : null,
-		);
 	}
 
 }

@@ -56,7 +56,7 @@ class InterviewFormFactory
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
-		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $interview?->getVideoThumbnail()->getThumbnailFilename() !== null, $interview?->getVideoThumbnail()->getThumbnailAlternativeFilename() !== null);
+		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $interview?->getVideo()->getThumbnailFilename() !== null, $interview?->getVideo()->getThumbnailAlternativeFilename() !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
@@ -88,18 +88,18 @@ class InterviewFormFactory
 					$values->audioHref,
 					$values->audioEmbed,
 					$values->videoHref,
-					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $interview->getVideoThumbnail()->getThumbnailFilename()),
-					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $interview->getVideoThumbnail()->getThumbnailAlternativeFilename()),
+					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $interview->getVideo()->getThumbnailFilename()),
+					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $interview->getVideo()->getThumbnailAlternativeFilename()),
 					$values->videoEmbed,
 					$values->sourceName,
 					$values->sourceHref,
 				);
 				$this->videoThumbnails->saveVideoThumbnailFiles($interview->getId(), $values);
-				if ($removeVideoThumbnail && $interview->getVideoThumbnail()->getThumbnailFilename()) {
-					$this->videoThumbnails->deleteFile($interview->getId(), $interview->getVideoThumbnail()->getThumbnailFilename());
+				if ($removeVideoThumbnail && $interview->getVideo()->getThumbnailFilename()) {
+					$this->videoThumbnails->deleteFile($interview->getId(), $interview->getVideo()->getThumbnailFilename());
 				}
-				if ($removeVideoThumbnailAlternative && $interview->getVideoThumbnail()->getThumbnailAlternativeFilename()) {
-					$this->videoThumbnails->deleteFile($interview->getId(), $interview->getVideoThumbnail()->getThumbnailAlternativeFilename());
+				if ($removeVideoThumbnailAlternative && $interview->getVideo()->getThumbnailAlternativeFilename()) {
+					$this->videoThumbnails->deleteFile($interview->getId(), $interview->getVideo()->getThumbnailAlternativeFilename());
 				}
 			} else {
 				$interviewId = $this->interviews->add(
@@ -138,7 +138,7 @@ class InterviewFormFactory
 			'href' => $interview->getHref(),
 			'audioHref' => $interview->getAudioHref(),
 			'audioEmbed' => $interview->getAudioEmbed(),
-			'videoHref' => $interview->getVideoThumbnail()->getVideoHref(),
+			'videoHref' => $interview->getVideo()->getVideoHref(),
 			'videoEmbed' => $interview->getVideoEmbed(),
 			'sourceName' => $interview->getSourceName(),
 			'sourceHref' => $interview->getSourceHref(),

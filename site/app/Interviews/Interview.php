@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Interviews;
 
 use DateTime;
-use MichalSpacekCz\Media\VideoThumbnail;
+use MichalSpacekCz\Media\Video;
 use Nette\Utils\Html;
 
 class Interview
@@ -20,7 +20,7 @@ class Interview
 		private readonly string $href,
 		private readonly ?string $audioHref,
 		private readonly ?string $audioEmbed,
-		private readonly VideoThumbnail $videoThumbnail,
+		private readonly Video $video,
 		private readonly ?string $videoEmbed,
 		private readonly ?string $sourceName,
 		private readonly ?string $sourceHref,
@@ -82,9 +82,9 @@ class Interview
 	}
 
 
-	public function getVideoThumbnail(): VideoThumbnail
+	public function getVideo(): Video
 	{
-		return $this->videoThumbnail;
+		return $this->video;
 	}
 
 

@@ -46,7 +46,7 @@ class InterviewsPresenter extends BasePresenter
 		$this->template->audioHref = $interview->getAudioHref();
 		$this->template->sourceName = $interview->getSourceName();
 		$this->template->sourceHref = $interview->getSourceHref();
-		$this->template->videoThumbnail = $interview->getVideoThumbnail();
+		$this->template->video = $interview->getVideo();
 	}
 
 }

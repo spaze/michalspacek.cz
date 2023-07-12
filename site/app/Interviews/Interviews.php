@@ -7,7 +7,7 @@ use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
-use MichalSpacekCz\Media\VideoThumbnails;
+use MichalSpacekCz\Media\VideoFactory;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
@@ -16,7 +16,7 @@ class Interviews
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly VideoThumbnails $videoThumbnails,
+		private readonly VideoFactory $videoFactory,
 		private readonly TexyFormatter $texyFormatter,
 	) {
 	}
@@ -28,7 +28,7 @@ class Interviews
 	public function getAll(?int $limit = null): array
 	{
 		$query = 'SELECT
-				id_interview AS interviewId,
+				id_interview AS id,
 				action,
 				title,
 				description,
@@ -62,7 +62,7 @@ class Interviews
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				id_interview AS interviewId,
+				id_interview AS id,
 				action,
 				title,
 				description,
@@ -95,7 +95,7 @@ class Interviews
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				id_interview AS interviewId,
+				id_interview AS id,
 				action,
 				title,
 				description,
@@ -128,7 +128,7 @@ class Interviews
 	{
 
 		return new Interview(
-			$row->interviewId,
+			$row->id,
 			$row->action,
 			$row->title,
 			$row->description,
@@ -137,7 +137,7 @@ class Interviews
 			$row->href,
 			$row->audioHref,
 			$row->audioEmbed,
-			$this->videoThumbnails->getVideoThumbnail($row),
+			$this->videoFactory->createFromDatabaseRow($row),
 			$row->videoEmbed,
 			$row->sourceName,
 			$row->sourceHref,
