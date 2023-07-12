@@ -11,7 +11,9 @@ class VideoThumbnail
 
 	public function __construct(
 		private readonly ?string $videoHref,
+		private readonly ?string $thumbnailFilename,
 		private readonly ?string $url,
+		private readonly ?string $thumbnailAlternativeFilename,
 		private readonly ?string $alternativeUrl,
 		private readonly ?string $alternativeContentType,
 		private readonly int $width,
@@ -27,9 +29,21 @@ class VideoThumbnail
 	}
 
 
+	public function getThumbnailFilename(): ?string
+	{
+		return $this->thumbnailFilename;
+	}
+
+
 	public function getUrl(): ?string
 	{
 		return $this->url;
+	}
+
+
+	public function getThumbnailAlternativeFilename(): ?string
+	{
+		return $this->thumbnailAlternativeFilename;
 	}
 
 

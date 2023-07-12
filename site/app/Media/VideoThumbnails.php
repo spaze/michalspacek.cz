@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Media;
 
 use MichalSpacekCz\Media\Exceptions\CannotDeleteMediaException;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Media\Exceptions\MissingContentTypeException;
 use MichalSpacekCz\Media\Resources\MediaResources;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
@@ -135,7 +136,7 @@ class VideoThumbnails
 	 * @param FileUpload $thumbnail
 	 * @param callable(string): string $getExtension
 	 * @return string|null
-	 * @throws ContentTypeException
+	 * @throws MissingContentTypeException
 	 */
 	private function getUploadedFileBasename(FileUpload $thumbnail, callable $getExtension): ?string
 	{
@@ -144,7 +145,7 @@ class VideoThumbnails
 		}
 		$contentType = $thumbnail->getContentType();
 		if (!$contentType) {
-			throw new ContentTypeException();
+			throw new MissingContentTypeException();
 		}
 		return 'video-thumbnail.' . $getExtension($contentType);
 	}
@@ -173,9 +174,11 @@ class VideoThumbnails
 	{
 		return new VideoThumbnail(
 			$item->videoHref,
-			$item->videoThumbnailUrl,
-			$item->videoThumbnailAlternativeUrl,
-			$item->videoThumbnailUrl ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($item->videoThumbnailAlternative, PATHINFO_EXTENSION)) : null,
+			$item->videoThumbnail,
+			$item->videoThumbnail ? $this->mediaResources->getImageUrl($item->interviewId, $item->videoThumbnail) : null,
+			$item->videoThumbnailAlternative,
+			$item->videoThumbnailAlternative ? $this->mediaResources->getImageUrl($item->interviewId, $item->videoThumbnailAlternative) : null,
+			$item->videoThumbnailAlternative ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($item->videoThumbnailAlternative, PATHINFO_EXTENSION)) : null,
 			$this->getWidth(),
 			$this->getHeight(),
 			$item->videoHref ? VideoPlatform::tryFromUrl($item->videoHref)?->getName() : null,

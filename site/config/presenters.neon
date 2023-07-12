@@ -9,7 +9,7 @@ services:
 	- MichalSpacekCz\Www\Presenters\FilesPresenter
 	- MichalSpacekCz\Www\Presenters\ForbiddenPresenter
 	- MichalSpacekCz\Www\Presenters\HomepagePresenter
-	- MichalSpacekCz\Www\Presenters\InterviewsPresenter(videoThumbnails: @interviewVideoThumbnails)
+	- MichalSpacekCz\Www\Presenters\InterviewsPresenter
 	- MichalSpacekCz\Www\Presenters\PgpPresenter(locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Www\Presenters\PhotoPresenter
 	- MichalSpacekCz\Www\Presenters\PostPresenter

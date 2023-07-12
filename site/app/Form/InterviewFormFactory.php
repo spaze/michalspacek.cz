@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Interviews\Interview;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Application\UI\Form;
-use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 
 class InterviewFormFactory
@@ -24,10 +24,10 @@ class InterviewFormFactory
 
 	/**
 	 * @param callable(): void $onSuccess
-	 * @param Row|null $interview
+	 * @param Interview|null $interview
 	 * @return Form
 	 */
-	public function create(callable $onSuccess, ?Row $interview = null): Form
+	public function create(callable $onSuccess, ?Interview $interview = null): Form
 	{
 		$form = $this->factory->create();
 		$form->addText('action', 'Akce:')
@@ -56,7 +56,7 @@ class InterviewFormFactory
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
-		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $interview?->videoThumbnail !== null, $interview?->videoThumbnailAlternative !== null);
+		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $interview?->getVideoThumbnail()->getThumbnailFilename() !== null, $interview?->getVideoThumbnail()->getThumbnailAlternativeFilename() !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
@@ -79,7 +79,7 @@ class InterviewFormFactory
 				$removeVideoThumbnail = $values->removeVideoThumbnail ?? false;
 				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
 				$this->interviews->update(
-					$interview->interviewId,
+					$interview->getId(),
 					$values->action,
 					$values->title,
 					$values->description,
@@ -88,18 +88,18 @@ class InterviewFormFactory
 					$values->audioHref,
 					$values->audioEmbed,
 					$values->videoHref,
-					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $interview->videoThumbnail),
-					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $interview->videoThumbnailAlternative),
+					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $interview->getVideoThumbnail()->getThumbnailFilename()),
+					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $interview->getVideoThumbnail()->getThumbnailAlternativeFilename()),
 					$values->videoEmbed,
 					$values->sourceName,
 					$values->sourceHref,
 				);
-				$this->videoThumbnails->saveVideoThumbnailFiles($interview->interviewId, $values);
-				if ($removeVideoThumbnail) {
-					$this->videoThumbnails->deleteFile($interview->interviewId, $interview->videoThumbnail);
+				$this->videoThumbnails->saveVideoThumbnailFiles($interview->getId(), $values);
+				if ($removeVideoThumbnail && $interview->getVideoThumbnail()->getThumbnailFilename()) {
+					$this->videoThumbnails->deleteFile($interview->getId(), $interview->getVideoThumbnail()->getThumbnailFilename());
 				}
-				if ($removeVideoThumbnailAlternative) {
-					$this->videoThumbnails->deleteFile($interview->interviewId, $interview->videoThumbnailAlternative);
+				if ($removeVideoThumbnailAlternative && $interview->getVideoThumbnail()->getThumbnailAlternativeFilename()) {
+					$this->videoThumbnails->deleteFile($interview->getId(), $interview->getVideoThumbnail()->getThumbnailAlternativeFilename());
 				}
 			} else {
 				$interviewId = $this->interviews->add(
@@ -128,25 +128,20 @@ class InterviewFormFactory
 	}
 
 
-	/**
-	 * @param Form $form
-	 * @param Row<mixed> $interview
-	 * @param SubmitButton $submit
-	 */
-	public function setInterview(Form $form, Row $interview, SubmitButton $submit): void
+	public function setInterview(Form $form, Interview $interview, SubmitButton $submit): void
 	{
 		$values = [
-			'action' => $interview->action,
-			'title' => $interview->title,
-			'description' => $interview->descriptionTexy,
-			'date' => $interview->date->format('Y-m-d H:i'),
-			'href' => $interview->href,
-			'audioHref' => $interview->audioHref,
-			'audioEmbed' => $interview->audioEmbed,
-			'videoHref' => $interview->videoHref,
-			'videoEmbed' => $interview->videoEmbed,
-			'sourceName' => $interview->sourceName,
-			'sourceHref' => $interview->sourceHref,
+			'action' => $interview->getAction(),
+			'title' => $interview->getTitle(),
+			'description' => $interview->getDescriptionTexy(),
+			'date' => $interview->getDate()->format('Y-m-d H:i'),
+			'href' => $interview->getHref(),
+			'audioHref' => $interview->getAudioHref(),
+			'audioEmbed' => $interview->getAudioEmbed(),
+			'videoHref' => $interview->getVideoThumbnail()->getVideoHref(),
+			'videoEmbed' => $interview->getVideoEmbed(),
+			'sourceName' => $interview->getSourceName(),
+			'sourceHref' => $interview->getSourceHref(),
 		];
 		$form->setDefaults($values);
 		$submit->caption = 'Upravit';

@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Talks;
 use MichalSpacekCz\Application\WindowsSubsystemForLinux;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\Media\Exceptions\MissingContentTypeException;
 use MichalSpacekCz\Media\Resources\TalkMediaResources;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -157,7 +158,7 @@ class TalkSlides
 		}
 		$contentType = $replace->getContentType();
 		if (!$contentType) {
-			throw new ContentTypeException();
+			throw new MissingContentTypeException();
 		}
 		if ($removeFile && !empty($originalFile) && empty($this->otherSlides[$originalFile])) {
 			$this->deleteFiles[] = $renamed = $this->talkMediaResources->getImageFilename($talkId, "__del__{$originalFile}");
