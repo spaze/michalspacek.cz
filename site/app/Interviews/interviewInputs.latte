@@ -2,13 +2,13 @@
 {varType MichalSpacekCz\Interviews\Interview|null $interview}
 {varType int $videoThumbnailWidth}
 {varType int $videoThumbnailHeight}
-{form $form class => "aligned wide"}
+{form interview class => "aligned wide"}
 	<table>
 		<tr>
 			<th>{label action /}</th><td>{input action}<br></td>
 		</tr>
 		<tr>
-			<th>{label title /}</th><td>{input title}<br><small><a n:if="$interview?->getAction()" n:href=":Www:Interviews:interview $interview->getAction()">zobrazit rozhovor</a></small></td>
+			<th>{label title /}</th><td>{input title}<br><small><a n:if="$interview?->getAction()" href="{plink :Www:Interviews:interview $interview->getAction()}">zobrazit rozhovor</a></small></td>
 		</tr>
 		<tr>
 			<th class="align-top">{label description /}</th><td>{input description}</td>
@@ -28,7 +28,7 @@
 		<tr>
 			<th>{label videoHref /}</th><td>{input videoHref}</td>
 		</tr>
-		{include "../../Talks/common/formVideoThumbnails.latte", video: $interview?->getVideo(), videoThumbnailWidth: $videoThumbnailWidth, videoThumbnailHeight: $videoThumbnailHeight}
+		{include "../Media/Thumbnails/videoThumbnailsInputs.latte", video: $interview?->getVideo(), videoThumbnailWidth: $videoThumbnailWidth, videoThumbnailHeight: $videoThumbnailHeight}
 		<tr class="lighter">
 			<th class="align-top">{label videoEmbed /}</th><td>{input videoEmbed}<br><small><em>deprecated</em></small></td>
 		</tr>

@@ -32,7 +32,7 @@ services:
 	- MichalSpacekCz\Admin\Presenters\HomepagePresenter
 	- MichalSpacekCz\Admin\Presenters\HoneypotPresenter
 	- MichalSpacekCz\Admin\Presenters\InfoPresenter
-	- MichalSpacekCz\Admin\Presenters\InterviewsPresenter(videoThumbnails: @interviewVideoThumbnails)
+	- MichalSpacekCz\Admin\Presenters\InterviewsPresenter
 	- MichalSpacekCz\Admin\Presenters\InvoicesPresenter
 	- MichalSpacekCz\Admin\Presenters\PulsePresenter
 	- MichalSpacekCz\Admin\Presenters\ReviewsPresenter

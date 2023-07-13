@@ -62,6 +62,7 @@ services:
 	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
+	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)
 	- MichalSpacekCz\Makefile\Makefile
 	interviewMediaResources: MichalSpacekCz\Media\Resources\InterviewMediaResources(imagesRoot: %domain.imagesRoot%, staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%)
