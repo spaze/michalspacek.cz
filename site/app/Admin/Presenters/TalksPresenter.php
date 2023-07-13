@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Form\TalkFormFactory;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
-use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Talk;
+use MichalSpacekCz\Talks\TalkInputs;
+use MichalSpacekCz\Talks\TalkInputsFactory;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalkSlides;
 use Nette\Application\BadRequestException;
@@ -33,9 +33,8 @@ class TalksPresenter extends BasePresenter
 	public function __construct(
 		private readonly Talks $talks,
 		private readonly TalkSlides $talkSlides,
-		private readonly TalkFormFactory $talkFormFactory,
+		private readonly TalkInputsFactory $talkInputsFactory,
 		private readonly TalkSlidesFormFactory $talkSlidesFormFactory,
-		private readonly VideoThumbnails $videoThumbnails,
 		private readonly HttpInput $httpInput,
 	) {
 		parent::__construct();
@@ -47,8 +46,6 @@ class TalksPresenter extends BasePresenter
 		$this->template->pageTitle = $this->translator->translate('messages.title.talks');
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
 		$this->template->talks = $this->talks->getAll();
-		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
-		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 
@@ -62,8 +59,6 @@ class TalksPresenter extends BasePresenter
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $this->talk);
 		$this->template->talk = $this->talk;
-		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
-		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 
@@ -88,26 +83,15 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditTalk(): Form
+	protected function createComponentEditTalkInputs(): TalkInputs
 	{
-		return $this->talkFormFactory->create(
-			function (Html $message): never {
-				$this->flashMessage($message);
-				$this->redirect('Talks:');
-			},
-			$this->talk,
-		);
+		return $this->talkInputsFactory->createFor($this->talk);
 	}
 
 
-	protected function createComponentAddTalk(): Form
+	protected function createComponentAddTalkInputs(): TalkInputs
 	{
-		return $this->talkFormFactory->create(
-			function (Html $message): never {
-				$this->flashMessage($message);
-				$this->redirect('Talks:');
-			},
-		);
+		return $this->talkInputsFactory->create();
 	}
 
 

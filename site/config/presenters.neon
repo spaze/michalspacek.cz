@@ -37,7 +37,7 @@ services:
 	- MichalSpacekCz\Admin\Presenters\PulsePresenter
 	- MichalSpacekCz\Admin\Presenters\ReviewsPresenter
 	- MichalSpacekCz\Admin\Presenters\SignPresenter
-	- MichalSpacekCz\Admin\Presenters\TalksPresenter(videoThumbnails: @talkVideoThumbnails)
+	- MichalSpacekCz\Admin\Presenters\TalksPresenter
 	- MichalSpacekCz\Admin\Presenters\TrainingsPresenter
 	- MichalSpacekCz\Admin\Presenters\UserPresenter
 

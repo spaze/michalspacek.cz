@@ -1,13 +1,13 @@
-{varType MichalSpacekCz\Talks\Talk $talk}
+{varType MichalSpacekCz\Talks\Talk|null $talk}
 {varType int $videoThumbnailWidth}
 {varType int $videoThumbnailHeight}
-{form $formName class => "aligned wide"}
+{form talk class => "aligned wide"}
 	<table>
 		<tr>
 			<th class="align-top">{label action /}</th><td>{input action}<br><small>nevyplňujte, pokud nechcete samostatnou stránku pro přednášku</small></td>
 		</tr>
 		<tr>
-			<th n:class="$talk?->getAction() ? align-top">{label title /}</th><td>{input title}<br><small n:if="$talk?->getAction()"><a n:href=":Www:Talks:talk $talk->getAction()">zobrazit přednášku</a></small></td>
+			<th n:class="$talk?->getAction() ? align-top">{label title /}</th><td>{input title}<br><small n:if="$talk?->getAction()"><a href="{plink :Www:Talks:talk $talk->getAction()}">zobrazit přednášku</a></small></td>
 		</tr>
 		<tr>
 			<th class="align-top">{label description /}</th><td>{input description}</td>
@@ -36,7 +36,7 @@
 		<tr>
 			<th>{label videoHref /}</th><td>{input videoHref}</td>
 		</tr>
-		{include "../../../../../Media/Thumbnails/videoThumbnailsInputs.latte", video: $talk?->getVideo(), videoThumbnailWidth: $videoThumbnailWidth, videoThumbnailHeight: $videoThumbnailHeight}
+		{include "../Media/Thumbnails/videoThumbnailsInputs.latte", video: $talk?->getVideo(), videoThumbnailWidth: $videoThumbnailWidth, videoThumbnailHeight: $videoThumbnailHeight}
 		<tr class="lighter">
 			<th class="align-top">{label videoEmbed /}</th><td>{input videoEmbed}<br><small><em>deprecated</em></small></td>
 		</tr>
@@ -59,7 +59,7 @@
 			<th>{label supersededBy /}</th><td>{input supersededBy}</td>
 		</tr>
 		<tr>
-			<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$talk?->getId()" n:href="slides $talk->getId()">Upravit slajdy</a></td>
+			<th>{label publishSlides: /}</th><td>{input publishSlides:} <a n:if="$talk?->getId()" href="{plink slides $talk->getId()}">Upravit slajdy</a></td>
 		</tr>
 		<tr>
 			<th></th><td class="short"><p>{input submit}</p></td>
