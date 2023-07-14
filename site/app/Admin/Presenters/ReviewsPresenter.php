@@ -24,12 +24,12 @@ class ReviewsPresenter extends BasePresenter
 	}
 
 
-	public function actionTraining(string $param): void
+	public function actionTraining(int $param): void
 	{
-		$training = $this->trainings->getById((int)$param);
+		$training = $this->trainings->getById($param);
 
 		$this->template->pageTitle = 'Ohlasy na ' . $training->name;
-		$this->template->reviews = $this->trainingReviews->getAllReviews((int)$param);
+		$this->template->reviews = $this->trainingReviews->getAllReviews($param);
 	}
 
 }

@@ -49,10 +49,10 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function actionTalk(string $param): void
+	public function actionTalk(int $param): void
 	{
 		try {
-			$this->talk = $this->talks->getById((int)$param);
+			$this->talk = $this->talks->getById($param);
 		} catch (TalkDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
@@ -62,10 +62,10 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	public function actionSlides(string $param): void
+	public function actionSlides(int $param): void
 	{
 		try {
-			$this->talk = $this->talks->getById((int)$param);
+			$this->talk = $this->talks->getById($param);
 			$this->slides = $this->talkSlides->getSlides($this->talk->getId(), $this->talk->getFilenamesTalkId());
 		} catch (ContentTypeException | TalkDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
