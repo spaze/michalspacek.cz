@@ -50,8 +50,7 @@
 {/form application}
 <hr>
 <p class="separated">
-	{capture $link}Trainings:application#{_html.id.application}{/capture}
-	<a n:href="$link $name">{_messages.trainings.addanother}</a>
+	<a href="{link Trainings:application $name}#{_html.id.application}">{_messages.trainings.addanother}</a>
 </p>
 
 <h2>{_messages.label.othertrainings}</h2>
