@@ -20,6 +20,7 @@ use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
+use Nette\Utils\Json;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
@@ -42,7 +43,7 @@ class PostFormFactory
 	}
 
 
-	public function create(callable $onSuccess, DefaultTemplate $template, callable $sendTemplate, ?int $postId = null): Form
+	public function create(callable $onSuccessAdd, callable $onSuccessEdit, DefaultTemplate $template, callable $sendTemplate, ?BlogPost $post): Form
 	{
 		$form = $this->factory->create();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
@@ -118,27 +119,31 @@ class PostFormFactory
 		$form->addSubmit('submit', 'Přidat');
 		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
 			->setHtmlAttribute('data-loading-value', 'Moment…')
-			->onClick[] = function (SubmitButton $button) use ($postId, $template, $sendTemplate): void {
-				$post = $this->buildPost($this->formValues->getValues($button), $postId);
-				$this->blogPostPreview->sendPreview($post, $template, $sendTemplate);
+			->onClick[] = function (SubmitButton $button) use ($post, $template, $sendTemplate): void {
+				$newPost = $this->buildPost($this->formValues->getValues($button), $post?->postId);
+				$this->blogPostPreview->sendPreview($newPost, $template, $sendTemplate);
 			};
 
-		$form->onValidate[] = function (Form $form) use ($postId): void {
-			$post = $this->buildPost($form->getValues(), $postId);
-			if ($post->needsPreviewKey() && $post->previewKey === null) {
+		$form->onValidate[] = function (Form $form) use ($post): void {
+			$newPost = $this->buildPost($form->getValues(), $post?->postId);
+			if ($newPost->needsPreviewKey() && $newPost->previewKey === null) {
 				$input = $form->getComponent('previewKey');
 				if (!$input instanceof TextInput) {
 					throw new ShouldNotHappenException(sprintf("The 'previewKey' component should be '%s' but it's a %s", TextInput::class, get_debug_type($input)));
 				}
-				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $post->published === null ? 'nepublikovaný' : 'budoucí'));
+				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->published === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $postId): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
 			$values = $form->getValues();
-			$post = $this->buildPost($values, $postId);
-			$this->blogPosts->enrich($post);
+			$newPost = $this->buildPost($values, $post?->postId);
+			$this->blogPosts->enrich($newPost);
 			try {
-				$onSuccess($post);
+				if ($post) {
+					$onSuccessEdit($newPost);
+				} else {
+					$onSuccessAdd($newPost);
+				}
 			} catch (UniqueConstraintViolationException) {
 				$slug = $form->getComponent('slug');
 				if (!$slug instanceof TextInput) {
@@ -147,6 +152,9 @@ class PostFormFactory
 				$slug->addError($this->texyFormatter->translate('messages.blog.admin.duplicateslug'));
 			}
 		};
+		if ($post) {
+			$this->setDefaults($post, $form);
+		}
 		return $form;
 	}
 
@@ -186,6 +194,33 @@ class PostFormFactory
 			'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM',
 			'(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})',
 		);
+	}
+
+
+	private function setDefaults(BlogPost $post, Form $form): void
+	{
+		$values = [
+			'translationGroup' => $post->translationGroupId,
+			'locale' => $post->localeId,
+			'title' => $post->titleTexy,
+			'slug' => $post->slug,
+			'published' => $post->published?->format('Y-m-d H:i'),
+			'previewKey' => $post->previewKey,
+			'lead' => $post->leadTexy,
+			'text' => $post->textTexy,
+			'originally' => $post->originallyTexy,
+			'ogImage' => $post->ogImage,
+			'twitterCard' => $post->twitterCard?->getCard(),
+			'tags' => ($post->tags ? $this->tags->toString($post->tags) : null),
+			'recommended' => (empty($post->recommended) ? null : Json::encode($post->recommended)),
+			'cspSnippets' => $post->cspSnippets,
+			'allowedTags' => $post->allowedTags,
+			'omitExports' => $post->omitExports,
+		];
+		$form->setDefaults($values);
+		$form->getComponent('editSummary')
+			->setDisabled($post->needsPreviewKey());
+		$form->getComponent('submit')->caption = 'Upravit';
 	}
 
 }

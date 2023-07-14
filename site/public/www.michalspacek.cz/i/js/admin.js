@@ -150,10 +150,10 @@ App.ready(document, function () {
 		}
 	});
 
-	App.onChange('#frm-addReview-application', function () {
+	App.onChange('#frm-addReviewInputs-trainingReview-application', function () {
 		const dataset = this.options[this.selectedIndex].dataset;
-		document.querySelector('#frm-addReview-name').value = dataset.name ?? '';
-		document.querySelector('#frm-addReview-company').value = dataset.company ?? '';
+		document.querySelector('#frm-addReviewInputs-trainingReview-name').value = dataset.name ?? '';
+		document.querySelector('#frm-addReviewInputs-trainingReview-company').value = dataset.company ?? '';
 	});
 
 	App.onClick('#frm-slides .add-after', function () {

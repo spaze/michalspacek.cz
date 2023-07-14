@@ -3,14 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use MichalSpacekCz\Form\InterviewFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Interviews\Interview;
+use MichalSpacekCz\Interviews\InterviewInputs;
+use MichalSpacekCz\Interviews\InterviewInputsFactory;
 use MichalSpacekCz\Interviews\Interviews;
-use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Form;
 
 class InterviewsPresenter extends BasePresenter
 {
@@ -21,8 +20,7 @@ class InterviewsPresenter extends BasePresenter
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Interviews $interviews,
-		private readonly InterviewFormFactory $interviewFormFactory,
-		private readonly VideoThumbnails $videoThumbnails,
+		private readonly InterviewInputsFactory $interviewInputsFactory,
 	) {
 		parent::__construct();
 	}
@@ -32,8 +30,6 @@ class InterviewsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.interviews');
 		$this->template->interviews = $this->interviews->getAll();
-		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
-		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 
@@ -46,32 +42,18 @@ class InterviewsPresenter extends BasePresenter
 		}
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.interview', [strip_tags($this->interview->getTitle())]);
-		$this->template->interview = $this->interview;
-		$this->template->videoThumbnailWidth = $this->videoThumbnails->getWidth();
-		$this->template->videoThumbnailHeight = $this->videoThumbnails->getHeight();
 	}
 
 
-	protected function createComponentEditInterview(): Form
+	protected function createComponentEditInterviewInputs(): InterviewInputs
 	{
-		return $this->interviewFormFactory->create(
-			function (): never {
-				$this->flashMessage('Rozhovor upraven');
-				$this->redirect('Interviews:');
-			},
-			$this->interview,
-		);
+		return $this->interviewInputsFactory->createFor($this->interview);
 	}
 
 
-	protected function createComponentAddInterview(): Form
+	protected function createComponentAddInterviewInputs(): InterviewInputs
 	{
-		return $this->interviewFormFactory->create(
-			function (): never {
-				$this->flashMessage('Rozhovor přidán');
-				$this->redirect('Interviews:');
-			},
-		);
+		return $this->interviewInputsFactory->create();
 	}
 
 }

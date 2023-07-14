@@ -7,6 +7,7 @@ use MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
+use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -36,18 +37,17 @@ class PasswordsStoragesPresenter extends BasePresenter
 			$this->redirectPermanent('site', $param);
 		}
 
-		$this->rating = $rating;
 		$this->sort = $sort;
 		$this->search = $search;
+		$this->rating = $rating === null || $rating === 'all' || !array_key_exists($rating, $this->passwordsRating->getRatings()) ? null : strtoupper($rating);
 
-		$this->rating = $this->rating === null || $this->rating === 'all' || !array_key_exists($this->rating, $this->passwordsRating->getRatings()) ? null : strtoupper($this->rating);
-		$data = $this->passwords->getAllStorages($this->rating, $this->sort === null ? $this->passwordsSorting->getDefaultSort() : $this->sort, $this->search);
-		$this->template->isDetail = false;
-		$this->template->pageTitle = 'Password storage disclosures';
-		$this->template->data = $data;
-		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->template->openSearchSort = $this->rating !== null || $this->sort !== null || $this->search !== null;
-		$this->template->canonicalLink = $this->link("//{$this->action}"); // Not using 'this' as the destination to omit params
+		$this->setDefaultViewAndVars(
+			'Password storage disclosures',
+			false,
+			$this->rating !== null || $this->sort !== null || $this->search !== null,
+			$this->link("//{$this->action}"), // Not using 'this' as the destination to omit params
+			$this->passwords->getAllStorages($this->rating, $this->sort === null ? $this->passwordsSorting->getDefaultSort() : $this->sort, $this->search),
+		);
 	}
 
 
@@ -68,10 +68,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 			throw new BadRequestException('Unknown site alias');
 		}
 
-		$this->template->pageTitle = implode(', ', $sites) . ' password storage disclosures';
-		$this->template->data = $data;
-		$this->setDetailDefaultTemplateVars();
-		$this->setView('default');
+		$this->setDefaultViewAndVars(implode(', ', $sites) . ' password storage disclosures', true, false, null, $data);
 	}
 
 
@@ -97,19 +94,19 @@ class PasswordsStoragesPresenter extends BasePresenter
 			$names[] = $item->getDisplayName();
 		}
 
-		$this->template->pageTitle = implode(', ', $names) . ' password storage disclosures';
-		$this->template->data = $data;
-		$this->setDetailDefaultTemplateVars();
-		$this->setView('default');
+		$this->setDefaultViewAndVars(implode(', ', $names) . ' password storage disclosures', true, false, null, $data);
 	}
 
 
-	private function setDetailDefaultTemplateVars(): void
+	private function setDefaultViewAndVars(string $pageTitle, bool $isDetail, bool $openSearchSort, ?string $canonicalLink, StorageRegistry $data): void
 	{
-		$this->template->isDetail = true;
+		$this->template->pageTitle = $pageTitle;
+		$this->template->isDetail = $isDetail;
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->template->openSearchSort = false;
-		$this->template->canonicalLink = null;
+		$this->template->openSearchSort = $openSearchSort;
+		$this->template->canonicalLink = $canonicalLink;
+		$this->template->data = $data;
+		$this->setView('default');
 	}
 
 

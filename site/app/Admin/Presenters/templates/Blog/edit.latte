@@ -5,5 +5,33 @@
 {/define}
 
 {define #content}
-{include "common/postForm.latte", form: editPost}
+{form post class => "aligned wide blocking"}
+	<div n:foreach="$form->errors as $error" class="flash error"><strong>{$error}</strong></div>
+	<table>
+		<tbody><tr><th>{label translationGroup /}</th><td class="short">{input translationGroup}</td></tr></tbody>
+		<tbody><tr><th>{label locale /}</th><td class="short">{input locale}</td></tr></tbody>
+		<tbody><tr><th>{label title /}</th><td>{input title}</td></tr></tbody>
+		<tbody><tr><th>{label slug /}</th><td>{input slug}</td></tr></tbody>
+		<tbody><tr><th>{label published /}</th><td>{input published}</td></tr></tbody>
+		<tbody><tr><th>{label previewKey /}</th><td>{input previewKey}</td></tr></tbody>
+		<tbody><tr><th class="align-top">{label lead /}</th><td>{input lead}</td></tr></tbody>
+		<tbody><tr><th class="align-top">{label text /}</th><td>{input text}</td></tr></tbody>
+		<tbody><tr><th class="align-top">{label originally /}</th><td>{input originally}</td></tr></tbody>
+		<tbody><tr><th>{label twitterCard /}</th><td>{input twitterCard}</td></tr></tbody>
+		<tbody><tr><th>{label ogImage /}</th><td>{input ogImage}</td></tr></tbody>
+		<tbody><tr><th>{label tags /}</th><td>{input tags}</td></tr></tbody>
+		<tbody><tr><th>{label recommended /}</th><td>{input recommended}</td></tr></tbody>
+		<tbody><tr><th>{label cspSnippets /}</th><td>{input cspSnippets}</td></tr></tbody>
+		<tbody><tr><th>{label allowedTags /}</th><td>{input allowedTags}</td></tr></tbody>
+		<tbody><tr><th>{label omitExports: /}</th><td>{input omitExports:}</td></tr></tbody>
+		<tbody><tr><th>{label editSummary /}</th><td>{input editSummary}<br><small>Shrnutí editace bude u článku zobrazeno jako aktualizace, ponechte prázdné pro malé editace</small></td></tr></tbody>
+		{capture $link}{link preview}{/capture}
+		<tr><td></td><td class="short"><p>{input submit} {input preview id => preview-button, class => lighter, formtarget => preview}</p></td></tr>
+	</table>
+{/form}
+<div id="preview" class="hidden">
+	<h2>{_messages.label.preview}</h2>
+	<iframe id="preview-frame" name="preview" class="column-content"></iframe>
+</div>
+<div class="clear"></div>
 {/define}

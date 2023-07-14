@@ -4,7 +4,7 @@
 {define #listItems, Nette\Database\Row[] $applications}
 	<tr class="summary" n:foreach="$applications as $application">
 		<td><small>{$iterator->getCounter()}.</small></td>
-		<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id">{$application->name ?? smazáno}</a></small></td>
+		<td><small n:tag-if="$application->name === null"><a href="{plink Trainings:application $application->id}">{$application->name ?? smazáno}</a></small></td>
 		<td><small>{$application->email ?? smazáno}</small></td>
 		<td><span n:tag-if="$application->company && ($application->company|length) > 40" title="{$application->company}">{$application->company|truncate:40}</span></td>
 		<td><small{if $application->note && ($application->note|length) > 20} title="{$application->note}"{/if}>{$application->note|truncate:20}</small></td>
@@ -37,7 +37,7 @@
 	{var $dateLineDisplayed = false}
 	<tbody n:inner-foreach="$trainings as $training">
 	{var $upcoming = in_array($training->getId(), $upcomingIds)}
-	{if $order == 'desc'}
+	{if $order === MichalSpacekCz\Training\DateList\DateListOrder::Desc}
 		{var $dateLineCheck = $now && $training->getStart() < $now}
 	{else}
 		{var $dateLineCheck = $now && $training->getStart() > $now}
@@ -47,12 +47,12 @@
 	{/if}
 	<tr n:class="summary, $dateLineCheck && !$dateLineDisplayed ? dateLine, $training->getStatus() !== \MichalSpacekCz\Training\Dates\TrainingDateStatus::Confirmed ? lighter">
 		{var $dateLineDisplayed = $dateLineCheck}
-		<td n:if="$order == 'desc'" class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
-		<td n:if="$order == 'asc'" class="positionCell"><small>{$iterator->getCounter()}.</small></td>
+		<td n:if="$order === MichalSpacekCz\Training\DateList\DateListOrder::Desc" class="positionCell"><small>{$iterator->count() - $iterator->getCounter() + 1}.</small></td>
+		<td n:if="$order === MichalSpacekCz\Training\DateList\DateListOrder::Asc" class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 		<td class="dateCell">
 			<strong n:tag-if="$upcoming">
 				<small n:tag-if="!$upcoming && $now && $training->getStart() > $now">
-					<a n:href="Trainings:date $training->getId()">{$training->getStart()|localeIntervalDay:$training->getEnd()}</a>
+					<a href="{plink Trainings:date $training->getId()}">{$training->getStart()|localeIntervalDay:$training->getEnd()}</a>
 				</small>
 			</strong>
 			<span n:if="$training->getNote()" title="Poznámka: {$training->getNote()}">{icon clipboard}</span>

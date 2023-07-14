@@ -3,23 +3,27 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
-use DateTime;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
-use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
-use MichalSpacekCz\Form\TrainingReviewFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\DateList\DateListOrder;
+use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
+use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
+use MichalSpacekCz\Training\Dates\TrainingDateInputs;
+use MichalSpacekCz\Training\Dates\TrainingDateInputsFactory;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
-use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
+use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
+use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\BadRequestException;
@@ -50,6 +54,9 @@ class TrainingsPresenter extends BasePresenter
 
 	private int $redirectParam;
 
+	/** @var list<TrainingDate> */
+	private array $pastWithPersonalData = [];
+
 
 	public function __construct(
 		private readonly Applications $trainingApplications,
@@ -58,15 +65,16 @@ class TrainingsPresenter extends BasePresenter
 		private readonly Statuses $trainingStatuses,
 		private readonly Trainings $trainings,
 		private readonly TrainingFiles $trainingFiles,
-		private readonly Reviews $trainingReviews,
+		private readonly TrainingReviews $trainingReviews,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
 		private readonly TrainingApplicationAdminFormFactory $trainingApplicationAdminFactory,
 		private readonly TrainingApplicationMultipleFormFactory $trainingApplicationMultipleFormFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
-		private readonly TrainingDateFormFactory $trainingDateFormFactory,
-		private readonly TrainingReviewFormFactory $trainingReviewFormFactory,
+		private readonly TrainingDateInputsFactory $trainingDateInputsFactory,
 		private readonly TrainingStatusesFormFactory $trainingStatusesFormFactory,
+		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
+		private readonly TrainingReviewInputsFactory $trainingReviewInputsFactory,
 	) {
 		parent::__construct();
 	}
@@ -205,23 +213,15 @@ class TrainingsPresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
-		$trainings = $this->trainingDates->getAllTrainings();
-		$this->addApplications($trainings);
-
 		$this->template->pageTitle = 'Školení';
-		$this->template->trainings = $trainings;
-		$this->template->now = new DateTime();
-		$this->template->upcomingIds = $this->upcomingTrainingDates->getPublicUpcomingIds();
 	}
 
 
-	public function renderPastWithPersonalData(): void
+	public function actionPastWithPersonalData(): void
 	{
-		$trainings = $this->trainingDates->getPastWithPersonalData();
-		$this->addApplications($trainings);
-
+		$this->pastWithPersonalData = $this->trainingDates->getPastWithPersonalData();
 		$this->template->pageTitle = 'Minulá školení s osobními daty starší než ' . $this->dateTimeFormatter->localeDay($this->trainingDates->getDataRetentionDate());
-		$this->template->trainings = $trainings;
+		$this->template->trainings = (bool)$this->pastWithPersonalData;
 	}
 
 
@@ -265,29 +265,6 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditReview(): Form
-	{
-		return $this->trainingReviewFormFactory->create(
-			function (int $dateId): never {
-				$this->redirect('date', $dateId);
-			},
-			$this->review->dateId,
-			$this->review,
-		);
-	}
-
-
-	protected function createComponentAddReview(): Form
-	{
-		return $this->trainingReviewFormFactory->create(
-			function (int $dateId): never {
-				$this->redirect('date', $dateId);
-			},
-			$this->dateId,
-		);
-	}
-
-
 	protected function createComponentApplicationForm(): Form
 	{
 		return $this->trainingApplicationAdminFactory->create(
@@ -319,25 +296,15 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditDate(): Form
+	protected function createComponentEditTrainingDateInputs(): TrainingDateInputs
 	{
-		return $this->trainingDateFormFactory->create(
-			function (): never {
-				$this->flashMessage('Termín upraven');
-				$this->redirect($this->getAction(), $this->redirectParam);
-			},
-			$this->training,
-		);
+		return $this->trainingDateInputsFactory->createFor($this->training, $this->redirectParam);
 	}
 
 
-	protected function createComponentAddDate(): Form
+	protected function createComponentAddTrainingDateInputs(): TrainingDateInputs
 	{
-		return $this->trainingDateFormFactory->create(
-			function (): never {
-				$this->redirect('Trainings:');
-			},
-		);
+		return $this->trainingDateInputsFactory->create();
 	}
 
 
@@ -347,6 +314,33 @@ class TrainingsPresenter extends BasePresenter
 			$this->flashMessage('Osobní data z minulých školení smazána');
 			$this->redirect('Homepage:');
 		});
+	}
+
+
+	protected function createComponentTrainingApplicationsList(): TrainingApplicationsList
+	{
+		$dates = $this->trainingDates->getAllTrainings();
+		$this->addApplications($dates);
+		return $this->trainingApplicationsListFactory->create($dates, DateListOrder::Desc);
+	}
+
+
+	protected function createComponentPastWithPersonalDataTrainingApplicationsList(): TrainingApplicationsList
+	{
+		$this->addApplications($this->pastWithPersonalData);
+		return $this->trainingApplicationsListFactory->create($this->pastWithPersonalData, DateListOrder::Desc, true);
+	}
+
+
+	protected function createComponentEditReviewInputs(): TrainingReviewInputs
+	{
+		return $this->trainingReviewInputsFactory->create(false, $this->review->dateId, $this->review);
+	}
+
+
+	protected function createComponentAddReviewInputs(): TrainingReviewInputs
+	{
+		return $this->trainingReviewInputsFactory->create(true, $this->dateId);
 	}
 
 }

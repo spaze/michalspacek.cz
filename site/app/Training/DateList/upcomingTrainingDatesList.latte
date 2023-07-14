@@ -3,7 +3,7 @@
 <ul class="vcalendar" id="training-dates">
 	{foreach $upcomingTrainings as $item}
 		<li class="vevent">
-			<a n:href=":Www:Trainings:training $item->getAction()" class="url"><strong class="summary description">{$item->getName()}</strong></a>
+			<a href="{plink :Www:Trainings:training $item->getAction()}" class="url"><strong class="summary description">{$item->getName()}</strong></a>
 			{icon calendar class => calendar}
 			<small n:foreach="$item->getDates() as $date" class="date">
 				<strong>

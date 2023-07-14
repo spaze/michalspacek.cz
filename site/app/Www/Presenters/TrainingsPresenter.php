@@ -9,14 +9,15 @@ use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Applications;
 use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
+use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
-use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\FreeSeats;
-use MichalSpacekCz\Training\Reviews;
+use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\BadRequestException;
@@ -40,15 +41,15 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Applications $trainingApplications,
 		private readonly TrainingDates $trainingDates,
-		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly Trainings $trainings,
 		private readonly FreeSeats $freeSeats,
 		private readonly CompanyTrainings $companyTrainings,
 		private readonly TrainingLocales $trainingLocales,
-		private readonly Reviews $trainingReviews,
+		private readonly TrainingReviews $trainingReviews,
 		private readonly TrainingApplicationFormFactory $trainingApplicationFactory,
 		private readonly TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
+		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
 		private readonly CompanyInfo $companyInfo,
 		private readonly IResponse $httpResponse,
 	) {
@@ -58,12 +59,15 @@ class TrainingsPresenter extends BasePresenter
 
 	public function renderDefault(): void
 	{
-		$upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
-		$this->template->upcomingTrainings = $upcomingTrainings;
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
-		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyTraining($upcomingTrainings);
 		$this->template->discontinued = $this->trainings->getAllDiscontinued();
+	}
+
+
+	protected function createComponentUpcomingDatesList(): UpcomingTrainingDatesList
+	{
+		return $this->upcomingTrainingDatesListFactory->create(null, true);
 	}
 
 
@@ -315,19 +319,19 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingapplication', [$this->training->name]);
 		$this->template->title = $this->training->name;
 		$this->template->description = $this->training->description;
-		$this->template->lastFreeSeats = false;
 		$this->template->start = $date->getStart();
 		$this->template->end = $date->getEnd();
 		$this->template->remote = $date->isRemote();
 		$this->template->venueCity = $date->getVenueCity();
 		$this->template->tentative = $date->isTentative();
-
-		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
-		unset($upcoming[$name]);
-		$this->template->upcomingTrainings = $upcoming;
-
 		$this->template->form = $this->createComponentApplication();
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);
+	}
+
+
+	protected function createComponentOtherUpcomingDatesList(): UpcomingTrainingDatesList
+	{
+		return $this->upcomingTrainingDatesListFactory->create($this->trainingAction, false);
 	}
 
 

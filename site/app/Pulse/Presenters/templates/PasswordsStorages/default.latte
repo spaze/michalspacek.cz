@@ -73,7 +73,7 @@
 		{foreach $site->getAlgorithms() as $algo}
 			{if $iterator->counter === 2}<div><div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open, $storage->getSearchResult()->hasDisclosureHistoryMatch() ? search-result">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
 				<div class="algo">
-					<strong n:class="$storage->getSearchResult()->isAlgorithmNameMatch($algo) ? search-result">{$algo->getName()}</strong>{if $algo->getFrom() || $algo->getLatestDisclosure()} (<span n:if="$algo->getFrom() && $algo->isFromConfirmed()" title="{$algo->getFrom()|date:'Y-m'}">since {$algo->getFrom()|date:'F Y'}</span>{if $algo->getFrom() && $algo->isFromConfirmed() && $algo->getLatestDisclosure()}, {/if}<span n:if="$algo->getLatestDisclosure()" title="{$algo->getLatestDisclosure()->getPublished()|date:'Y-m-d'}">disclosed {$algo->getLatestDisclosure()->getPublished()|date:'F Y'}</span>){/if}
+					<strong n:class="$storage->getSearchResult()->isAlgorithmNameMatch($algo) ? search-result">{$algo->getName()}</strong> (<span n:if="$algo->getFrom() && $algo->isFromConfirmed()" title="{$algo->getFrom()|date:'Y-m'}">since {$algo->getFrom()|date:'F Y'}</span>{if $algo->getFrom() && $algo->isFromConfirmed()}, {/if}<span title="{$algo->getLatestDisclosure()->getPublished()|date:'Y-m-d'}">disclosed {$algo->getLatestDisclosure()->getPublished()|date:'F Y'}</span>)
 				</div>
 				<div class="details">
 				{if $algo->getDisclosures()}

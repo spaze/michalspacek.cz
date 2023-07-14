@@ -7,7 +7,9 @@ services:
 	- MichalSpacekCz\Application\Theme
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	- MichalSpacekCz\Application\WindowsSubsystemForLinux
+	- MichalSpacekCz\Articles\ArticleHeaderIconsFactory
 	articles: MichalSpacekCz\Articles\Articles
+	- MichalSpacekCz\Articles\ArticleSummaryFactory
 	- MichalSpacekCz\Articles\Blog\BlogPostLoader
 	- MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls
 	- MichalSpacekCz\Articles\Blog\BlogPostPreview
@@ -60,6 +62,7 @@ services:
 	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
+	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
 	- MichalSpacekCz\Interviews\Interviews(videoFactory: @interviewVideoFactory)
 	- MichalSpacekCz\Makefile\Makefile
 	interviewMediaResources: MichalSpacekCz\Media\Resources\InterviewMediaResources(imagesRoot: %domain.imagesRoot%, staticRoot: %domain.sharedStaticRoot%, locationRoot: %domain.locationRoot%)
@@ -79,6 +82,7 @@ services:
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
+	- MichalSpacekCz\Talks\TalkInputsFactory(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Talks\Talks
 	- MichalSpacekCz\Talks\TalkSlides
 	- MichalSpacekCz\Templating\Filters
@@ -93,6 +97,9 @@ services:
 	- MichalSpacekCz\Tls\CertificatesApiClient
 	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\CompanyTrainings
+	- MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory
+	- MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory
+	- MichalSpacekCz\Training\Dates\TrainingDateInputsFactory
 	- MichalSpacekCz\Training\Dates\TrainingDateStatuses
 	- MichalSpacekCz\Training\Dates\TrainingDateFactory(texyFormatter: @texyFormatterNoPlaceholders)
 	- MichalSpacekCz\Training\Dates\TrainingDates
@@ -107,7 +114,8 @@ services:
 	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
 	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
 	- MichalSpacekCz\Training\Resolver\Vrana
-	- MichalSpacekCz\Training\Reviews
+	- MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory
+	- MichalSpacekCz\Training\Reviews\TrainingReviews
 	- MichalSpacekCz\Training\Statuses
 	- MichalSpacekCz\Training\TrainingLocales
 	- MichalSpacekCz\Training\Trainings

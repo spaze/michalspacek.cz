@@ -40,7 +40,7 @@ class VideoThumbnails
 	}
 
 
-	public function addFormFields(Form $form, bool $hasMainVideoThumbnail, bool $hasAlternativeVideoThumbnail): VideoThumbnailFormFields
+	public function addFormFields(Form $form, bool $hasMainVideoThumbnail, bool $hasAlternativeVideoThumbnail): VideoThumbnailFileUploads
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
@@ -70,11 +70,11 @@ class VideoThumbnails
 			$videoThumbnailAlternative->addCondition($form::FILLED, true)
 				->toggle('#currentVideoThumbnailAlternative', false);
 		}
-		return new VideoThumbnailFormFields($videoThumbnail, $videoThumbnailAlternative);
+		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative);
 	}
 
 
-	public function addOnValidateUploads(Form $form, VideoThumbnailFormFields $formFields): void
+	public function addOnValidateUploads(Form $form, VideoThumbnailFileUploads $formFields): void
 	{
 		$form->onValidate[] = function (Form $form) use ($formFields): void {
 			$values = $form->getValues();

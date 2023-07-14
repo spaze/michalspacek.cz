@@ -129,7 +129,7 @@
 <hr>
 <div id="upravit-termin">
 	<p><a href="#upravit-termin" class="open-container block separated">Upravit termín</a></p>
-	{include "common/dateForm.latte", form: editDate, id: upravit-termin-container}
+	{control editTrainingDateInputs upravit-termin-container}
 </div>
 <hr>
 <div id="ohlasy">
@@ -144,7 +144,7 @@
 		</div>
 		<fieldset>
 			<legend><a href="#pridat-ohlas" class="open-container">Přidat ohlas</a></legend>
-			<div id="pridat-ohlas-container" class="hidden">{include "common/reviewForm.latte", form: addReview, applications: true}</div>
+			<div id="pridat-ohlas-container" class="hidden">{control addReviewInputs}</div>
 		</fieldset>
 	</div>
 </div>

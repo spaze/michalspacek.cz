@@ -35,11 +35,12 @@ class TrainingDateFormFactory
 
 
 	/**
-	 * @param callable(): void $onSuccess
+	 * @param callable(): void $onSuccessAdd
+	 * @param callable(): void $onSuccessEdit
 	 * @param TrainingDate|null $date
 	 * @return Form
 	 */
-	public function create(callable $onSuccess, ?TrainingDate $date = null): Form
+	public function create(callable $onSuccessAdd, callable $onSuccessEdit, ?TrainingDate $date = null): Form
 	{
 		$form = $this->factory->create();
 
@@ -144,7 +145,7 @@ class TrainingDateFormFactory
 			$this->setTrainingDate($form, $date, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $date): void {
+		$form->onSuccess[] = function (Form $form) use ($onSuccessAdd, $onSuccessEdit, $date): void {
 			$values = $form->getValues();
 			if ($date) {
 				$this->trainingDates->update(
@@ -186,7 +187,7 @@ class TrainingDateFormFactory
 					$values->feedbackHref,
 				);
 			}
-			$onSuccess();
+			$date ? $onSuccessEdit() : $onSuccessAdd();
 		};
 
 		return $form;

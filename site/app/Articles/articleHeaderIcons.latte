@@ -15,7 +15,7 @@
 			{icon tags}
 		{/if}
 		<small>
-			{foreach $post->getTags() as $key => $tag}<a n:href=":Www:Tags:tag $post->getSlugTags()[$key]">{$tag}</a>{sep}, {/sep}{/foreach}
+			{foreach $post->getTags() as $key => $tag}<a href="{plink :Www:Tags:tag $post->getSlugTags()[$key]}">{$tag}</a>{sep}, {/sep}{/foreach}
 		</small>
 	</div>
 	<div n:if="$post instanceof MichalSpacekCz\Articles\ArticlePublishedElsewhere">

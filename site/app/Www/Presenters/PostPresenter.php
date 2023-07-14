@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use MichalSpacekCz\Articles\ArticleHeaderIcons;
+use MichalSpacekCz\Articles\ArticleHeaderIconsFactory;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -21,6 +23,7 @@ class PostPresenter extends BasePresenter
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly CspConfig $contentSecurityPolicy,
+		private readonly ArticleHeaderIconsFactory $articleHeaderIconsFactory,
 	) {
 		parent::__construct();
 	}
@@ -46,12 +49,6 @@ class PostPresenter extends BasePresenter
 		$this->template->pageHeader = $post->title;
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->edits = $post->edits;
-		$interval = ($post->edits && $post->published ? current($post->edits)->editedAt->diff($post->published) : false);
-		if ($post->edits && $interval && $interval->days >= $this->blogPosts->getUpdatedInfoThreshold()) {
-			$this->template->edited = current($post->edits)->editedAt;
-		} else {
-			$this->template->edited = null;
-		}
 
 		foreach ($this->blogPostLocaleUrls->get($post->slug) as $localePost) {
 			$this->localeLinkParams[$localePost->locale] = ['slug' => $localePost->slug, 'preview' => ($localePost->needsPreviewKey() ? $localePost->previewKey : null)];
@@ -81,6 +78,12 @@ class PostPresenter extends BasePresenter
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->localeLinkParams;
+	}
+
+
+	protected function createComponentArticleHeaderIcons(): ArticleHeaderIcons
+	{
+		return $this->articleHeaderIconsFactory->create();
 	}
 
 }

@@ -5,6 +5,8 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Articles\ArticlePublishedElsewhere;
 use MichalSpacekCz\Articles\Articles;
+use MichalSpacekCz\Articles\ArticleSummary;
+use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Articles\Components\ArticleWithSlug;
@@ -25,6 +27,7 @@ class TagsPresenter extends BasePresenter
 		private readonly Strings $strings,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
+		private readonly ArticleSummaryFactory $articleSummaryFactory,
 	) {
 		parent::__construct();
 	}
@@ -87,6 +90,12 @@ class TagsPresenter extends BasePresenter
 				return;
 			}
 		}
+	}
+
+
+	protected function createComponentArticleSummary(): ArticleSummary
+	{
+		return $this->articleSummaryFactory->create();
 	}
 
 
