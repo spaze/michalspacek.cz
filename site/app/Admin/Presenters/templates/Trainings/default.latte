@@ -3,7 +3,7 @@
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}"><strong>{$flash->message}</strong></div>
 <div id="pridat-termin">
 	<p><a href="#pridat-termin" class="open-container block">Přidat termín</a></p>
-	{include "common/dateForm.latte", form: addDate, id: pridat-termin-container}
+	{control addTrainingDateInputs pridat-termin-container}
 </div>
 <hr>
 {control trainingApplicationsList}

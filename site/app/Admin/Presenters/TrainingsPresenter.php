@@ -7,7 +7,6 @@ use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
-use MichalSpacekCz\Form\TrainingDateFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Training\Applications;
@@ -15,6 +14,8 @@ use MichalSpacekCz\Training\DateList\DateListOrder;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
+use MichalSpacekCz\Training\Dates\TrainingDateInputs;
+use MichalSpacekCz\Training\Dates\TrainingDateInputsFactory;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
@@ -70,7 +71,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingApplicationAdminFormFactory $trainingApplicationAdminFactory,
 		private readonly TrainingApplicationMultipleFormFactory $trainingApplicationMultipleFormFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
-		private readonly TrainingDateFormFactory $trainingDateFormFactory,
+		private readonly TrainingDateInputsFactory $trainingDateInputsFactory,
 		private readonly TrainingStatusesFormFactory $trainingStatusesFormFactory,
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 		private readonly TrainingReviewInputsFactory $trainingReviewInputsFactory,
@@ -295,25 +296,15 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentEditDate(): Form
+	protected function createComponentEditTrainingDateInputs(): TrainingDateInputs
 	{
-		return $this->trainingDateFormFactory->create(
-			function (): never {
-				$this->flashMessage('Termín upraven');
-				$this->redirect($this->getAction(), $this->redirectParam);
-			},
-			$this->training,
-		);
+		return $this->trainingDateInputsFactory->createFor($this->training, $this->redirectParam);
 	}
 
 
-	protected function createComponentAddDate(): Form
+	protected function createComponentAddTrainingDateInputs(): TrainingDateInputs
 	{
-		return $this->trainingDateFormFactory->create(
-			function (): never {
-				$this->redirect('Trainings:');
-			},
-		);
+		return $this->trainingDateInputsFactory->create();
 	}
 
 

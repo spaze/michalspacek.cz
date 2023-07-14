@@ -99,6 +99,7 @@ services:
 	- MichalSpacekCz\Training\CompanyTrainings
 	- MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory
 	- MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory
+	- MichalSpacekCz\Training\Dates\TrainingDateInputsFactory
 	- MichalSpacekCz\Training\Dates\TrainingDateStatuses
 	- MichalSpacekCz\Training\Dates\TrainingDateFactory(texyFormatter: @texyFormatterNoPlaceholders)
 	- MichalSpacekCz\Training\Dates\TrainingDates
