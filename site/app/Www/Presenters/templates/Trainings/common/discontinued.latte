@@ -1,4 +1,4 @@
 {foreach $discontinued as $training}
 	{capture $names}{foreach $training->getTrainings() as $trainingName}**{$trainingName|translate}**{sep}, {/sep}{/foreach}{/capture}
-	{_$training->getDescription()|format:$names, $training->getNewHref()}
+	{_$training->getDescription()|format:(string)$names, $training->getNewHref()}
 {/foreach}
