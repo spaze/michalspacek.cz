@@ -50,7 +50,7 @@
 					{/ifset}
 					{else}–{/ifset}
 				{/capture}
-				<small title="{$title|strip}">
+				<small title="{(string)$title|strip}">
 					{ifset $application->priceWithCurrency}{$application->priceWithCurrency}{if $application->price > 0 && !isset($application->paid)} <strong>!</strong>{/if}{else}–{/ifset}
 				</small>
 			</td>

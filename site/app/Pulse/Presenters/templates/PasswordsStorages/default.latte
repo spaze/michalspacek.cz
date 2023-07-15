@@ -12,7 +12,7 @@
 {define #metas}
 {if count($data->getSites()) === 1}
 {capture $currentRating}{=current($data->getSites())->getRating()|lower}{/capture}
-{var MichalSpacekCz\Pulse\Passwords\Algorithm $currentAlgo = current(current(current($data->getStorages())->getSites())->getAlgorithms())}
+{var MichalSpacekCz\Pulse\Passwords\Algorithm $currentAlgo = current($data->getSites())->getLatestAlgorithm()}
 <meta property="og:image" content="{="pulse/rating-$currentRating.png"|staticImageUrl}">
 <meta property="og:description" content="{=$currentAlgo->getId()}{if $currentAlgo->getFrom() || $currentAlgo->getLatestDisclosure()->getPublished()} ({if $currentAlgo->getFrom() && $currentAlgo->isFromConfirmed()}since {$currentAlgo->getFrom()|date:'F Y'}{/if}{if $currentAlgo->getFrom() && $currentAlgo->isFromConfirmed() && $currentAlgo->getLatestDisclosure()->getPublished()}, {/if}{if $currentAlgo->getLatestDisclosure()->getPublished()}disclosed {$currentAlgo->getLatestDisclosure()->getPublished()|date:'F Y'}{/if}){/if}">
 {else}

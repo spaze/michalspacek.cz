@@ -1,7 +1,7 @@
 {define #content}
 
 <p>{$description}</p>
-<div n:ifset="$discontinued" class="flash notice">{include "../Trainings/common/discontinued.latte"}</div>
+<div n:if="$discontinued" class="flash notice">{include "../Trainings/common/discontinued.latte"}</div>
 <p>{icon bulb} <small>{$upsell}</small></p>
 
 <h2 id="{_html.id.title}">{_messages.label.trainingname}</h2>

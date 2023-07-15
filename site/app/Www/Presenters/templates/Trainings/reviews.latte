@@ -7,12 +7,11 @@
 {define #content}
 <p>
 	{$description}
-	{if !isset($discontinued)}
-		{capture $link}Trainings:training#{_html.id.application}{/capture}
-		<small>(<a n:href="$link $name">{_messages.label.lowercaseapplication}</a>, <a n:href="CompanyTrainings:training $name">{_messages.label.lowercasecompanytraining}</a>)</small>
+	{if !$discontinued}
+		<small>(<a href="{link Trainings:training $name}#{_html.id.application}">{_messages.label.lowercaseapplication}</a>, <a n:href="CompanyTrainings:training $name">{_messages.label.lowercasecompanytraining}</a>)</small>
 	{/if}
 </p>
-<div n:ifset="$discontinued" class="flash notice">{include "common/discontinued.latte"}</div>
+<div n:if="$discontinued" class="flash notice">{include "common/discontinued.latte"}</div>
 {if $reviews}
 	<div id="{_html.id.reviews}">
 	<h2>{_messages.label.trainingreviews}</h2>

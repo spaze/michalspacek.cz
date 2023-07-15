@@ -92,7 +92,7 @@
 <p>{$description}</p>
 
 <div n:if="$lastFreeSeats" class="flash notice"><strong>{_messages.trainings.fewseatsleft}</strong></div>
-<div n:ifset="$discontinued" class="flash notice">{include "common/discontinued.latte"}</div>
+<div n:if="$discontinued" class="flash notice">{include "common/discontinued.latte"}</div>
 
 <div class="vcalendar">
 <h2 id="{_html.id.title}">{_messages.label.trainingname}</h2>
@@ -153,7 +153,7 @@
 </div>
 <p n:if="!$dates">
 	{capture $anchor}#{_html.id.application}{/capture}
-	{_messages.trainings.nodateyet.long|format:$anchor}
+	{_messages.trainings.nodateyet.long|format:(string)$anchor}
 	{_messages.trainings.companythistraining|format:"link:Www:CompanyTrainings:training $name"}
 </p>
 <p><small>{_messages.trainings.regularlyeveryquarter}</small></p>
@@ -179,7 +179,7 @@
 <p><a n:href="Trainings:reviews $name">{_messages.trainings.allreviews}</a></p>
 {/if}
 
-{if empty($discontinued)}
+{if !$discontinued}
 <hr>
 {if count($dates)}
 <h2 id="{_html.id.application}">{_messages.label.application}</h2>
