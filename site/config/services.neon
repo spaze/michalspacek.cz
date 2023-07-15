@@ -105,6 +105,7 @@ services:
 	- MichalSpacekCz\Training\Dates\TrainingDates
 	- MichalSpacekCz\Training\Dates\TrainingDatesFormValidator
 	- MichalSpacekCz\Training\Dates\UpcomingTrainingDates
+	- MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
 	- MichalSpacekCz\Training\Files\TrainingFiles
 	- MichalSpacekCz\Training\Files\TrainingFilesStorage('../../files/trainings')

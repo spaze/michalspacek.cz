@@ -11,7 +11,7 @@ use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Training\CompanyTrainings;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
 
 class HomepagePresenter extends BasePresenter
 {
@@ -20,8 +20,8 @@ class HomepagePresenter extends BasePresenter
 		private readonly Articles $articles,
 		private readonly Interviews $interviews,
 		private readonly Talks $talks,
-		private readonly Trainings $trainings,
 		private readonly CompanyTrainings $companyTrainings,
+		private readonly DiscontinuedTrainings $discontinuedTrainings,
 		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
 		private readonly ArticleSummaryFactory $articleSummaryFactory,
 	) {
@@ -38,7 +38,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->upcomingTalks = $this->talks->getUpcoming();
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
 		$this->template->interviews = $this->interviews->getAll(5);
-		$this->template->discontinued = $this->trainings->getAllDiscontinued();
+		$this->template->discontinued = $this->discontinuedTrainings->getAllDiscontinued();
 	}
 
 

@@ -13,6 +13,7 @@ use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
@@ -45,6 +46,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly Trainings $trainings,
 		private readonly FreeSeats $freeSeats,
 		private readonly CompanyTrainings $companyTrainings,
+		private readonly DiscontinuedTrainings $discontinuedTrainings,
 		private readonly TrainingLocales $trainingLocales,
 		private readonly TrainingReviews $trainingReviews,
 		private readonly TrainingApplicationFormFactory $trainingApplicationFactory,
@@ -61,7 +63,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.trainings');
 		$this->template->companyTrainings = $this->companyTrainings->getWithoutPublicUpcoming();
-		$this->template->discontinued = $this->trainings->getAllDiscontinued();
+		$this->template->discontinued = $this->discontinuedTrainings->getAllDiscontinued();
 	}
 
 
@@ -108,7 +110,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
 
 		if ($this->training->discontinuedId !== null) {
-			$this->template->discontinued = [$this->trainings->getDiscontinued($this->training->discontinuedId)];
+			$this->template->discontinued = [$this->discontinuedTrainings->getDiscontinued($this->training->discontinuedId)];
 			$this->httpResponse->setCode(IResponse::S410_Gone);
 		} else {
 			$this->template->discontinued = null;
@@ -221,7 +223,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId);
 
 		if ($training->discontinuedId !== null) {
-			$this->template->discontinued = [$this->trainings->getDiscontinued($training->discontinuedId)];
+			$this->template->discontinued = [$this->discontinuedTrainings->getDiscontinued($training->discontinuedId)];
 			$this->httpResponse->setCode(IResponse::S410_Gone);
 		} else {
 			$this->template->discontinued = null;

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
 use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
@@ -22,6 +23,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Trainings $trainings,
 		private readonly CompanyTrainings $companyTrainings,
+		private readonly DiscontinuedTrainings $discontinuedTrainings,
 		private readonly TrainingLocales $trainingLocales,
 		private readonly TrainingReviews $trainingReviews,
 		private readonly Prices $prices,
@@ -35,7 +37,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = $this->translator->translate('messages.title.companytrainings');
 		$this->template->trainings = $this->trainings->getNames();
-		$this->template->discontinued = $this->trainings->getAllDiscontinued();
+		$this->template->discontinued = $this->discontinuedTrainings->getAllDiscontinued();
 	}
 
 
@@ -69,7 +71,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->materials = $training->materials;
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);
 		if ($training->discontinuedId !== null) {
-			$this->template->discontinued = [$this->trainings->getDiscontinued($training->discontinuedId)];
+			$this->template->discontinued = [$this->discontinuedTrainings->getDiscontinued($training->discontinuedId)];
 			$this->httpResponse->setCode(IResponse::S410_Gone);
 		} else {
 			$this->template->discontinued = null;
