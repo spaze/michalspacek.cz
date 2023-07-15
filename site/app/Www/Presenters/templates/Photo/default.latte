@@ -1,15 +1,16 @@
+{varType MichalSpacekCz\Media\Photo[] $photos}
 {define #menu}
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
 
 {define #content}
 {foreach $photos as $photo}
-<h3>{$photo['header']}</h3>
-<p><img src="{='photos/' . $photo['file']|staticImageUrl}" width="400" height="268" alt="{$photo['header']}" title="{$photo['header']}"></p>
-<p n:ifset="$photo['desc']">{$photo['desc']}</p>
+<h3>{$photo->getTitle()}</h3>
+<p><img src="{='photos/' . $photo->getFile()|staticImageUrl}" width="400" height="268" alt="{$photo->getTitle()}" title="{$photo->getTitle()}"></p>
+<p>{$photo->getDescription()}</p>
 <p>
 	<strong>{_messages.photo.downloadsizes}</strong>
-	{foreach $photo['sizes'] as $size => $file}
+	{foreach $photo->getSizes() as $size => $file}
 		<a href="{='photos/' . $file|staticImageUrl}">{$size}</a>{sep}, {/sep}
 	{/foreach}
 </p>
