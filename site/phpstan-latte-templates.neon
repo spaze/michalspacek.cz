@@ -6,6 +6,13 @@ parameters:
 	latte:
 		engineBootstrap: app/PhpStan/latteEngine.php
 		presenterFactoryBootstrap: app/PhpStan/presenterFactory.php
+	ignoreErrors:
+		- # `<button n:name="$record->id" ...>` in `{formContainer statusHistoryDelete}` https://github.com/efabrica-team/phpstan-latte/pull/380
+			message: '#^Call to an undefined method ApplicationForm_[a-f0-9]+_statusHistoryDelete\|Nette\\Forms\\Controls\\BaseControl::getControlPart\(\)#'
+			path: app/Admin/Presenters/templates/Trainings/application.latte
+		- # `{input "applications-{$application->id}" ...}` is an `$application->id` input in `applications` container https://github.com/efabrica-team/phpstan-latte/pull/380
+			message: '#^Call to an undefined method Nette\\Forms\\Controls\\BaseControl\|Statuses_[a-f0-9]+_applications::getControl\(\)#'
+			path: app/Admin/Presenters/templates/Trainings/date.latte
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
