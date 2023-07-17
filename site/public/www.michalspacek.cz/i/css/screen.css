@@ -376,6 +376,9 @@ div.notice {
 	margin-left: 1.1em;
 	line-height: 0;
 }
+#frm-mails .expand-container:not(:has(.expanded)) {
+	display: none;
+}
 #frm-passwordsStorages #frm-passwordsStorages-algo-from { width: 200px; }
 #pubkey {
 	background-color: #F7F7FF;

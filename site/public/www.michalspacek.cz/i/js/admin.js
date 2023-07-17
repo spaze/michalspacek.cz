@@ -106,7 +106,10 @@ App.ready(document, function () {
 
 	App.onClick('#emails tbody .button', function () {
 		for (const item of this.parentElement.parentElement.querySelectorAll('.expand-container')) {
-			item.classList.toggle('hidden');
+			const classTarget = item.querySelector(item.dataset.classTarget);
+			if (classTarget) {
+				classTarget.classList.toggle('expanded');
+			}
 		}
 	});
 	App.onClick('#emails #checkAll', function (event) {
