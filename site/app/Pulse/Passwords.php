@@ -464,12 +464,12 @@ class Passwords
 			? $values->site->id // the value can also be "all"
 			: $this->sites->add($newSite->url, $newSite->alias, $newSite->sharedWith, $companyId)
 		);
-		$algoId = (empty($newAlgo->algo) ? (int)$values->algo->id : $this->addAlgorithm($newAlgo->algo, $newAlgo->alias, $newAlgo->salted, $newAlgo->stretched));
+		$algoId = (empty($newAlgo->algoName) ? (int)$values->algo->id : $this->addAlgorithm($newAlgo->algoName, $newAlgo->alias, $newAlgo->salted, $newAlgo->stretched));
 		foreach ($values->disclosure->new as $disclosure) {
 			if ($disclosure->url) {
 				$disclosureId = $this->getDisclosureId($disclosure->url, $disclosure->archive);
 				if (!$disclosureId) {
-					$disclosureId = $this->addDisclosure($disclosure->disclosure, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
+					$disclosureId = $this->addDisclosure($disclosure->disclosureType, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
 				}
 				$storageId = $this->getStorageId($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
 				if (!$storageId) {

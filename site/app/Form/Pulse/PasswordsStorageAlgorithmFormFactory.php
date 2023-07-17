@@ -105,7 +105,7 @@ class PasswordsStorageAlgorithmFormFactory
 		$algoContainer->addText('attributes', 'Attributes:');
 		$algoContainer->addText('note', 'Algorithm note:');
 		$newAlgoContainer = $algoContainer->addContainer('new');
-		$inputAlgo = $newAlgoContainer->addText('algo', 'Algorithm:');
+		$inputAlgo = $newAlgoContainer->addText('algoName', 'Algorithm:');
 		$inputAlias = $newAlgoContainer->addText('alias', 'Alias:');
 		$newAlgoContainer->addCheckbox('salted', 'Salted:');
 		$newAlgoContainer->addCheckbox('stretched', 'Stretched:');
@@ -129,7 +129,7 @@ class PasswordsStorageAlgorithmFormFactory
 		$disclosureNewContainer = $disclosureContainer->addContainer('new');
 		for ($i = 0; $i < $newDisclosures; $i++) {
 			$disclosureNewCountContainer = $disclosureNewContainer->addContainer($i);
-			$selectDisclosure = $disclosureNewCountContainer->addSelect('disclosure', 'Disclosure:', $items)
+			$selectDisclosure = $disclosureNewCountContainer->addSelect('disclosureType', 'Disclosure:', $items)
 				->setPrompt('- select disclosure type -');
 			$inputUrl = $disclosureNewCountContainer->addText('url', 'URL:')
 				->setHtmlType('url');
