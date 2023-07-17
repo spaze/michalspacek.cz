@@ -39,6 +39,7 @@ class TrainingMailsOutboxFormFactory
 		$form = $this->factory->create();
 
 		$applicationsContainer = $form->addContainer('applications');
+		$additionalInputs = [];
 
 		foreach ($applications as $application) {
 			$applicationIdsContainer = $applicationsContainer->addContainer($application->id);
@@ -101,7 +102,7 @@ class TrainingMailsOutboxFormFactory
 			if ($sendCheckboxTitle) {
 				$send->setHtmlAttribute('title', implode("\n", $sendCheckboxTitle));
 			}
-			$applicationIdsContainer->addTextArea('additional')
+			$additionalInputs[] = $applicationIdsContainer->addTextArea('additional')
 				->setHtmlAttribute('placeholder', 'Dodatečný text')
 				->setHtmlAttribute('cols', 80)
 				->setHtmlAttribute('rows', 3);
@@ -180,6 +181,13 @@ class TrainingMailsOutboxFormFactory
 				}
 			}
 			$onSuccess($sent);
+		};
+		$form->onAnchor[] = function () use ($additionalInputs): void {
+			foreach ($additionalInputs as $additionalInput) {
+				if ($additionalInput->getValue()) {
+					$additionalInput->setHtmlAttribute('class', 'expanded');
+				}
+			}
 		};
 		return $form;
 	}
