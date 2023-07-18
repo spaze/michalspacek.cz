@@ -5,9 +5,11 @@ namespace MichalSpacekCz\Training;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Utils\Html;
 
 class CompanyTrainings
 {
@@ -66,7 +68,7 @@ class CompanyTrainings
 
 
 	/**
-	 * @return Row[]
+	 * @return array<string, Html> action => name
 	 */
 	public function getWithoutPublicUpcoming(): array
 	{
@@ -90,8 +92,11 @@ class CompanyTrainings
 
 		$trainings = [];
 		foreach ($result as $training) {
+			if (!is_string($training->action)) {
+				throw new ShouldNotHappenException('Action should be a string but is ' . get_debug_type($training->action));
+			}
 			if (!isset($public[$training->action])) {
-				$trainings[$training->action] = $this->texyFormatter->formatTraining($training);
+				$trainings[$training->action] = $this->texyFormatter->translate($training->name);
 			}
 		}
 
