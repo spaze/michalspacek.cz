@@ -1,9 +1,14 @@
 <?php
+/** @noinspection PhpUndefinedFieldInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Discontinued;
 
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Http\Response;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
+use Nette\Bridges\ApplicationLatte\LatteFactory;
+use Nette\Http\IResponse;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -16,7 +21,15 @@ class DiscontinuedTrainingsTest extends TestCase
 	public function __construct(
 		private readonly Database $database,
 		private readonly DiscontinuedTrainings $discontinuedTrainings,
+		private readonly Response $httpResponse,
+		private readonly LatteFactory $latteFactory,
 	) {
+	}
+
+
+	protected function tearDown(): void
+	{
+		$this->database->reset();
 	}
 
 
@@ -53,9 +66,18 @@ class DiscontinuedTrainingsTest extends TestCase
 	}
 
 
-	public function testGetDiscontinued(): void
+	public function testMaybeMarkAsDiscontinued(): void
 	{
-		Assert::null($this->discontinuedTrainings->getDiscontinued(404));
+		$this->httpResponse->setCode(IResponse::S200_OK);
+		$template = new DefaultTemplate($this->latteFactory->create());
+
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($template, null);
+		Assert::same([], $template->discontinued);
+		Assert::same(IResponse::S200_OK, $this->httpResponse->getCode());
+
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($template, 404);
+		Assert::same([], $template->discontinued);
+		Assert::same(IResponse::S200_OK, $this->httpResponse->getCode());
 
 		$this->database->setFetchAllDefaultResult([
 			[
@@ -69,10 +91,12 @@ class DiscontinuedTrainingsTest extends TestCase
 				'href' => 'https://foo.example',
 			],
 		]);
-		$discontinued = $this->discontinuedTrainings->getDiscontinued(302);
-		Assert::same('foo', $discontinued?->getDescription());
-		Assert::same(['intro', 'classes'], $discontinued?->getTrainings());
-		Assert::same('https://foo.example', $discontinued?->getNewHref());
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($template, 302);
+		Assert::type(DiscontinuedTraining::class, $template->discontinued[0]);
+		Assert::same('foo', $template->discontinued[0]->getDescription());
+		Assert::same(['intro', 'classes'], $template->discontinued[0]->getTrainings());
+		Assert::same('https://foo.example', $template->discontinued[0]->getNewHref());
+		Assert::same(IResponse::S410_Gone, $this->httpResponse->getCode());
 	}
 
 }
