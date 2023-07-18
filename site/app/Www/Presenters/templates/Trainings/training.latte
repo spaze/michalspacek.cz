@@ -142,7 +142,7 @@
 			{_messages.trainings.remotedescription.1}
 			{_messages.trainings.remotedescription.2}
 		</p>
-	{else}
+	{elseif $date->getVenueAction()}
 		<p class="location vcard">{icon location} <strong>
 			<a n:href=":Www:Venues:venue $date->getVenueAction()" class="fn org">{$date->getVenueName()}</a>{if $date->getVenueNameExtended()}, {$date->getVenueNameExtended()}{/if},
 			<span class="adr"><span class="street-address">{$date->getVenueAddress()}</span>, <span class="locality">{$date->getVenueCity()}</span></span>

@@ -38,8 +38,8 @@ class InterviewsTest extends TestCase
 				'videoThumbnail' => null,
 				'videoThumbnailAlternative' => null,
 				'videoEmbed' => null,
-				'sourceName' => null,
-				'sourceHref' => null,
+				'sourceName' => 'Source Name',
+				'sourceHref' => 'https://source.example',
 			],
 			[
 				'id' => 2,
@@ -90,8 +90,8 @@ class InterviewsTest extends TestCase
 			'videoThumbnail' => null,
 			'videoThumbnailAlternative' => null,
 			'videoEmbed' => null,
-			'sourceName' => null,
-			'sourceHref' => null,
+			'sourceName' => 'Source Name',
+			'sourceHref' => 'https://source.example',
 		]);
 		$interview = $this->interviews->get('action-1');
 		Assert::same(1, $interview->getId());

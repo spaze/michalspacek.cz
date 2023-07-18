@@ -11,7 +11,6 @@ use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 
 class CompanyTrainingsPresenter extends BasePresenter
 {
@@ -27,7 +26,6 @@ class CompanyTrainingsPresenter extends BasePresenter
 		private readonly TrainingLocales $trainingLocales,
 		private readonly TrainingReviews $trainingReviews,
 		private readonly Prices $prices,
-		private readonly IResponse $httpResponse,
 	) {
 		parent::__construct();
 	}
@@ -70,12 +68,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		$this->template->alternativeDurationPriceText = $training->alternativeDurationPriceText;
 		$this->template->materials = $training->materials;
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);
-		if ($training->discontinuedId !== null) {
-			$this->template->discontinued = [$this->discontinuedTrainings->getDiscontinued($training->discontinuedId)];
-			$this->httpResponse->setCode(IResponse::S410_Gone);
-		} else {
-			$this->template->discontinued = null;
-		}
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->discontinuedId);
 	}
 
 

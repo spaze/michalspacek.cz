@@ -15,7 +15,7 @@
 		<strong>{$post->title}</strong>
 		<small class="date" n:ifset="$post->published" title="{$post->published|localeDay} {$post->published|date:'H:i'}">{$post->published|localeDay}</small>
 		<br>
-		<a n:href="edit $post->postId">Upravit</a>
+		<a n:if="$post->postId" n:href="edit $post->postId">Upravit</a>
 		• <a href="{$post->href}">{if $post->needsPreviewKey()}Zobrazit náhled{else}Zobrazit{/if}</a>
 		<small n:if="!$post->needsPreviewKey()">
 			• <a href="https://developers.facebook.com/tools/debug/sharing/?q={$post->href}">Facebook Sharing Debugger</a>

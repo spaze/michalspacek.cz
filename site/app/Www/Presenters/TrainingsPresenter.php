@@ -53,7 +53,6 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
 		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
 		private readonly CompanyInfo $companyInfo,
-		private readonly IResponse $httpResponse,
 	) {
 		parent::__construct();
 	}
@@ -104,17 +103,9 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->dates = $this->dates;
 		$this->template->singleDate = count($this->dates) === 1 ? $this->trainingDates->formatDateVenueForUser(reset($this->dates)) : null;
 		$this->template->dataRetention = $this->trainingDates->getDataRetentionDays();
-
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);
-
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
-
-		if ($this->training->discontinuedId !== null) {
-			$this->template->discontinued = [$this->discontinuedTrainings->getDiscontinued($this->training->discontinuedId)];
-			$this->httpResponse->setCode(IResponse::S410_Gone);
-		} else {
-			$this->template->discontinued = null;
-		}
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $this->training->discontinuedId);
 	}
 
 
@@ -221,13 +212,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->title = $training->name;
 		$this->template->description = $training->description;
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId);
-
-		if ($training->discontinuedId !== null) {
-			$this->template->discontinued = [$this->discontinuedTrainings->getDiscontinued($training->discontinuedId)];
-			$this->httpResponse->setCode(IResponse::S410_Gone);
-		} else {
-			$this->template->discontinued = null;
-		}
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->discontinuedId);
 	}
 
 

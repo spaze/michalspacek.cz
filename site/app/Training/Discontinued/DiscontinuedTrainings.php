@@ -4,13 +4,16 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Discontinued;
 
 use MichalSpacekCz\ShouldNotHappenException;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\Explorer;
+use Nette\Http\IResponse;
 
 class DiscontinuedTrainings
 {
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly IResponse $httpResponse,
 	) {
 	}
 
@@ -55,32 +58,35 @@ class DiscontinuedTrainings
 	}
 
 
-	/**
-	 * Get discontinued trainings with description.
-	 *
-	 * @param int $id
-	 * @return DiscontinuedTraining|null
-	 */
-	public function getDiscontinued(int $id): ?DiscontinuedTraining
+	public function maybeMarkAsDiscontinued(DefaultTemplate $template, ?int $discontinuedId): void
 	{
+		$template->discontinued = [];
+		if ($discontinuedId === null) {
+			return;
+		}
+
 		$query = $this->database->fetchAll(
 			'SELECT
-				td.description,
-				t.name AS training,
-				td.href
-			FROM trainings_discontinued td
-				JOIN trainings t ON t.key_discontinued = td.id_trainings_discontinued
-			WHERE
-				td.id_trainings_discontinued = ?
-			ORDER BY
-				t.id_training',
-			$id,
+			td.description,
+			t.name AS training,
+			td.href
+		FROM trainings_discontinued td
+			JOIN trainings t ON t.key_discontinued = td.id_trainings_discontinued
+		WHERE
+			td.id_trainings_discontinued = ?
+		ORDER BY
+			t.id_training',
+			$discontinuedId,
 		);
 		$trainings = [];
 		foreach ($query as $row) {
 			$trainings[] = $row->training;
 		}
-		return empty($row) ? null : new DiscontinuedTraining($row->description, $trainings, $row->href);
+		if (isset($row)) {
+			$template->discontinued = [new DiscontinuedTraining($row->description, $trainings, $row->href)];
+			$this->httpResponse->setCode(IResponse::S410_Gone);
+			return;
+		}
 	}
 
 }

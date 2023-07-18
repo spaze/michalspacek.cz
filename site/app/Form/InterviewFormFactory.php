@@ -61,10 +61,10 @@ class InterviewFormFactory
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
 		$form->addText('sourceName', 'Název zdroje:')
-			->setRequired(false)
+			->setRequired('Zadejte prosím název zdroje')
 			->addRule($form::MAX_LENGTH, 'Maximální délka názvu zdroje je %d znaků', 200);
 		$form->addText('sourceHref', 'Odkaz na zdroj:')
-			->setRequired(false)
+			->setRequired('Zadejte prosím odkaz na zdroj')
 			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na zdroj je %d znaků', 200);
 		$submit = $form->addSubmit('submit', 'Přidat');
 		if ($interview) {
