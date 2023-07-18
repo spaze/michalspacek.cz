@@ -22,8 +22,8 @@ class Interview
 		private readonly ?string $audioEmbed,
 		private readonly Video $video,
 		private readonly ?string $videoEmbed,
-		private readonly ?string $sourceName,
-		private readonly ?string $sourceHref,
+		private readonly string $sourceName,
+		private readonly string $sourceHref,
 	) {
 	}
 
@@ -94,13 +94,13 @@ class Interview
 	}
 
 
-	public function getSourceName(): ?string
+	public function getSourceName(): string
 	{
 		return $this->sourceName;
 	}
 
 
-	public function getSourceHref(): ?string
+	public function getSourceHref(): string
 	{
 		return $this->sourceHref;
 	}

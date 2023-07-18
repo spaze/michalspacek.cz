@@ -175,8 +175,8 @@ class Interviews
 				'video_thumbnail' => $videoThumbnail,
 				'video_thumbnail_alternative' => $videoThumbnailAlternative,
 				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
-				'source_name' => (empty($sourceName) ? null : $sourceName),
-				'source_href' => (empty($sourceHref) ? null : $sourceHref),
+				'source_name' => $sourceName,
+				'source_href' => $sourceHref,
 			],
 			$id,
 		);
@@ -212,8 +212,8 @@ class Interviews
 				'video_thumbnail' => $videoThumbnail,
 				'video_thumbnail_alternative' => $videoThumbnailAlternative,
 				'video_embed' => (empty($videoEmbed) ? null : $videoEmbed),
-				'source_name' => (empty($sourceName) ? null : $sourceName),
-				'source_href' => (empty($sourceHref) ? null : $sourceHref),
+				'source_name' => $sourceName,
+				'source_href' => $sourceHref,
 			],
 		);
 		return (int)$this->database->getInsertId();
