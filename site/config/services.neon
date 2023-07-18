@@ -96,7 +96,7 @@ services:
 	- MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)
 	- MichalSpacekCz\Tls\CertificatesApiClient
 	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
-	- MichalSpacekCz\Training\CompanyTrainings
+	- MichalSpacekCz\Training\Company\CompanyTrainings
 	- MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory
 	- MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory
 	- MichalSpacekCz\Training\Dates\TrainingDateInputsFactory

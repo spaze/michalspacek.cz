@@ -8,7 +8,7 @@ use MichalSpacekCz\Form\TrainingApplicationFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Applications;
-use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;

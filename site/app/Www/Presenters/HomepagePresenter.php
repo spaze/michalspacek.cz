@@ -8,7 +8,7 @@ use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Talks\Talks;
-use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
