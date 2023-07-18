@@ -1,18 +1,19 @@
+{varType MichalSpacekCz\Training\Venues\TrainingVenue $venue}
 {define #content}
 <h3>{_messages.venues.nameaddress}</h3>
-{var $search = $name . ', ' . $address . ', ' . $city}
-<p><strong><a href="{$href}">{$name}</a>{if $nameExtended}, {$nameExtended}{/if}, {$address}, {$city}</strong> (<a href="https://www.google.com/maps/search/{$search|escapeUrl}">{_messages.label.map}</a>)</p>
+{var $search = $venue->getName() . ', ' . $venue->getAddress() . ', ' . $venue->getCity()}
+<p><strong><a href="{$venue->getHref()}">{$venue->getName()}</a>{if $venue->getNameExtended()}, {$venue->getNameExtended()}{/if}, {$venue->getAddress()}, {$venue->getCity()}</strong> (<a href="https://www.google.com/maps/search/{$search|escapeUrl}">{_messages.label.map}</a>)</p>
 
 <h3>{_messages.venues.entrance}</h3>
 <p>
-<img src="{='venues/' . $entrance|staticImageUrl}" width="800" height="450" alt="{_messages.venues.entrance}" title="{_messages.venues.entrance}"><br>
-{if $entranceNavigation}<img src="{='venues/' . $entranceNavigation|staticImageUrl}" width="800" height="450" alt="{_messages.venues.entrancenavigation}" title="{_messages.venues.entrancenavigation}"><br>{/if}
-<small>(<a href="{$streetview}">{_messages.venues.streetview}</a>)</small>
+{if $venue->getEntrance()}<img src="{='venues/' . $venue->getEntrance()|staticImageUrl}" width="800" height="450" alt="{_messages.venues.entrance}" title="{_messages.venues.entrance}"><br>{/if}
+{if $venue->getEntranceNavigation()}<img src="{='venues/' . $venue->getEntranceNavigation()|staticImageUrl}" width="800" height="450" alt="{_messages.venues.entrancenavigation}" title="{_messages.venues.entrancenavigation}"><br>{/if}
+{if $venue->getStreetview()}<small>(<a href="{$venue->getStreetview()}">{_messages.venues.streetview}</a>)</small>{/if}
 </p>
 
 <h3>{_messages.venues.transportationparking}</h3>
 <p>
-{$publicTransport} {$parking}
+{$venue->getPublicTransport()} {$venue->getParking()}
 </p>
 
 <h3>{_messages.venues.trainingshere}</h3>

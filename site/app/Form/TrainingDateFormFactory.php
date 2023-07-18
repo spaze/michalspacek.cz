@@ -9,7 +9,7 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Dates\TrainingDateStatuses;
 use MichalSpacekCz\Training\Trainings;
-use MichalSpacekCz\Training\Venues;
+use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 
@@ -28,7 +28,7 @@ class TrainingDateFormFactory
 		private readonly TrainingDates $trainingDates,
 		private readonly TrainingDateStatuses $trainingDateStatuses,
 		private readonly TrainingDatesFormValidator $trainingDatesFormValidator,
-		private readonly Venues $trainingVenues,
+		private readonly TrainingVenues $trainingVenues,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 	) {
 	}
@@ -65,7 +65,7 @@ class TrainingDateFormFactory
 
 		$venues = [];
 		foreach ($this->trainingVenues->getAll() as $venue) {
-			$venues[$venue->id] = "{$venue->name}, {$venue->city}";
+			$venues[$venue->getId()] = "{$venue->getName()}, {$venue->getCity()}";
 		}
 		$selectVenue = $form->addSelect('venue', 'Místo:', $venues)
 			->setPrompt('- vyberte místo -');

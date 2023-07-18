@@ -120,7 +120,7 @@ services:
 	- MichalSpacekCz\Training\Statuses
 	- MichalSpacekCz\Training\TrainingLocales
 	- MichalSpacekCz\Training\Trainings
-	- MichalSpacekCz\Training\Venues
+	- MichalSpacekCz\Training\Venues\TrainingVenues
 	- MichalSpacekCz\Twitter\TwitterCards
 	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%, model: %upcKeys.technicolor.model%, serialNumberPrefixes: %upcKeys.technicolor.prefixes%)
 	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context, model: %upcKeys.ubee.model%, serialNumberPrefixes: %upcKeys.ubee.prefixes%)

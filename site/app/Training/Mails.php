@@ -9,6 +9,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\Row;
 use Nette\Http\FileUpload;
@@ -28,7 +29,7 @@ class Mails
 		private readonly Applications $trainingApplications,
 		private readonly TrainingDates $trainingDates,
 		private readonly Statuses $trainingStatuses,
-		private readonly Venues $trainingVenues,
+		private readonly TrainingVenues $trainingVenues,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly string $emailFrom,
