@@ -1,4 +1,4 @@
-<div id="video-thumbnail-container" n:if="$video->getThumbnailUrl()">
+<div id="video-thumbnail-container" n:if="$video->getThumbnailUrl() && $video->getVideoHref()">
 	<picture n:tag-if="$video->getThumbnailAlternativeUrl()">
 		<source n:if="$video->getThumbnailAlternativeUrl()" srcset="{$video->getThumbnailAlternativeUrl()}" type="{$video->getThumbnailAlternativeContentType()}">
 		<img src="{$video->getThumbnailUrl()}" alt="{_messages.label.videorecording}" width="{$video->getThumbnailWidth()}" height="{$video->getThumbnailHeight()}" {if $video->isLazyLoad()}loading="lazy"{/if}>

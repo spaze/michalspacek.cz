@@ -1,7 +1,7 @@
 {varType MichalSpacekCz\Articles\ArticlePublishedElsewhere|MichalSpacekCz\Articles\Blog\BlogPost $post}
 {varType ?\DateTime $edited}
 <div id="header-icons">
-	<div n:if="$post instanceof MichalSpacekCz\Articles\Components\ArticleWithPublishTime">
+	<div n:if="$post instanceof MichalSpacekCz\Articles\Components\ArticleWithPublishTime && $post->published">
 		{icon calendar}
 		<small>
 			<strong>{$post->published|localeDay}</strong>

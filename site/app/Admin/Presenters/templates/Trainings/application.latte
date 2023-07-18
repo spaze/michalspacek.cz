@@ -1,7 +1,7 @@
 {define #menu}
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
-{if $trainingStart}
+{if $trainingStart && $trainingEnd}
 &raquo; <a n:href="Trainings:">Termíny</a>
 &raquo; <a n:href="date $applicationDateId">{$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</a>
 {else}
@@ -20,7 +20,7 @@
 	<tr>
 		<th>Datum:</th>
 		<td>
-			{if $trainingStart}
+			{if $trainingStart && $trainingEnd}
 				<span id="training-date">{$trainingStart|localeIntervalDay:$trainingEnd}, {if $trainingRemote}{_messages.label.remote}{else}{$trainingCity}{/if}</span>
 				<small><a href="#zmenit" id="change-training-date">Změnit</a></small>
 				{input date class => hidden}
