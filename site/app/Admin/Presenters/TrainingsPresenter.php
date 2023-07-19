@@ -21,6 +21,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
@@ -60,6 +61,7 @@ class TrainingsPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly TrainingApplications $trainingApplications,
+		private readonly PreliminaryTrainings $trainingPreliminaryApplications,
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Statuses $trainingStatuses,
@@ -205,7 +207,7 @@ class TrainingsPresenter extends BasePresenter
 	public function actionPreliminary(): void
 	{
 		$this->template->pageTitle = 'Předběžné přihlášky';
-		$this->template->preliminaryApplications = $this->trainingApplications->getPreliminary();
+		$this->template->preliminaryApplications = $this->trainingPreliminaryApplications->getPreliminary();
 		$this->template->upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 	}
 

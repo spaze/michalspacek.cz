@@ -96,6 +96,8 @@ services:
 	- MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)
 	- MichalSpacekCz\Tls\CertificatesApiClient
 	- MichalSpacekCz\Training\Applications\TrainingApplications(emailEncryption: @emailEncryption)
+	- MichalSpacekCz\Training\Applications\TrainingApplicationSources
+	- MichalSpacekCz\Training\Applications\TrainingApplicationStorage(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\Company\CompanyTrainings
 	- MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory
 	- MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory
@@ -113,6 +115,7 @@ services:
 	- MichalSpacekCz\Training\FormSpam
 	- MichalSpacekCz\Training\FreeSeats
 	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
+	- MichalSpacekCz\Training\Preliminary\PreliminaryTrainings(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
 	- MichalSpacekCz\Training\Resolver\Vrana
 	- MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory

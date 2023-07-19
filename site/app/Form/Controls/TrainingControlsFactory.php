@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form\Controls;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\EasterEgg\WinterIsComing;
-use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\Applications\TrainingApplicationSources;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
@@ -15,7 +15,7 @@ class TrainingControlsFactory
 {
 
 	public function __construct(
-		private readonly TrainingApplications $trainingApplications,
+		private readonly TrainingApplicationSources $trainingApplicationSources,
 		private readonly WinterIsComing $winterIsComing,
 		private readonly Translator $translator,
 	) {
@@ -88,12 +88,7 @@ class TrainingControlsFactory
 
 	public function addSource(Container $container): SelectBox
 	{
-		$sources = [];
-		foreach ($this->trainingApplications->getTrainingApplicationSources() as $source) {
-			$sources[$source->alias] = $source->name;
-		}
-
-		return $container->addSelect('source', 'Zdroj:', $sources)
+		return $container->addSelect('source', 'Zdroj:', $this->trainingApplicationSources->getAll())
 			->setRequired('Vyberte zdroj');
 	}
 

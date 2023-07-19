@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
-use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Files\TrainingFilesCollection;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Statuses;
@@ -20,7 +20,7 @@ class TrainingMailsOutboxFormFactory
 
 	public function __construct(
 		private readonly FormFactory $factory,
-		private readonly TrainingApplications $trainingApplications,
+		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 		private readonly Statuses $trainingStatuses,
 		private readonly Mails $trainingMails,
 		private readonly TemplateFactory $templateFactory,
@@ -166,7 +166,7 @@ class TrainingMailsOutboxFormFactory
 
 				if (in_array($applications[$id]->nextStatus, [Statuses::STATUS_INVOICE_SENT, Statuses::STATUS_INVOICE_SENT_AFTER])) {
 					if ($data->invoice->isOk()) {
-						$this->trainingApplications->updateApplicationInvoiceData($id, $data->invoiceId);
+						$this->trainingApplicationStorage->updateApplicationInvoiceData($id, $data->invoiceId);
 						$applications[$id]->invoiceId = $data->invoiceId;
 						$this->trainingMails->sendInvoice($applications[$id], $template, $data->invoice, $data->cc ?: null, $additional);
 						$this->trainingStatuses->updateStatus($id, $applications[$id]->nextStatus);

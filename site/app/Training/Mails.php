@@ -10,6 +10,7 @@ use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\Row;
@@ -28,6 +29,7 @@ class Mails
 	public function __construct(
 		private readonly Mailer $mailer,
 		private readonly TrainingApplications $trainingApplications,
+		private readonly PreliminaryTrainings $trainingPreliminaryApplications,
 		private readonly TrainingDates $trainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly TrainingVenues $trainingVenues,
@@ -95,7 +97,7 @@ class Mails
 	{
 		$applications = [];
 
-		foreach ($this->trainingApplications->getPreliminaryWithDateSet() as $application) {
+		foreach ($this->trainingPreliminaryApplications->getPreliminaryWithDateSet() as $application) {
 			$application->nextStatus = Statuses::STATUS_INVITED;
 			$applications[$application->id] = $application;
 		}

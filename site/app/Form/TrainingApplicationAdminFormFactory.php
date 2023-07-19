@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Statuses;
@@ -22,7 +22,7 @@ class TrainingApplicationAdminFormFactory
 
 	public function __construct(
 		private readonly FormFactory $factory,
-		private readonly TrainingApplications $trainingApplications,
+		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
@@ -95,7 +95,7 @@ class TrainingApplicationAdminFormFactory
 		$form->onSuccess[] = function (Form $form) use ($application, $onSuccess): void {
 			$values = $form->getValues();
 			$dateId = $values->date ?? null;
-			$this->trainingApplications->updateApplicationData(
+			$this->trainingApplicationStorage->updateApplicationData(
 				$application->applicationId,
 				$values->nameSet ? $values->name : null,
 				$values->emailSet ? $values->email : null,
