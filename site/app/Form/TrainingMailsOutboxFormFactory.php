@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Files\TrainingFilesCollection;
 use MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\Training\Statuses;
@@ -20,7 +20,7 @@ class TrainingMailsOutboxFormFactory
 
 	public function __construct(
 		private readonly FormFactory $factory,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly Statuses $trainingStatuses,
 		private readonly Mails $trainingMails,
 		private readonly TemplateFactory $templateFactory,

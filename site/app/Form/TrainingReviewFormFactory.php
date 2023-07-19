@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use Nette\Application\UI\Form;
@@ -15,7 +15,7 @@ class TrainingReviewFormFactory
 
 	public function __construct(
 		private readonly FormFactory $factory,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly TrainingReviews $trainingReviews,
 	) {
 	}

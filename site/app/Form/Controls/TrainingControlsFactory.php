@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form\Controls;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\EasterEgg\WinterIsComing;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
@@ -15,7 +15,7 @@ class TrainingControlsFactory
 {
 
 	public function __construct(
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly WinterIsComing $winterIsComing,
 		private readonly Translator $translator,
 	) {

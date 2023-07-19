@@ -7,7 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
@@ -36,7 +36,7 @@ class TrainingApplicationFormFactory
 		private readonly TrainingDates $trainingDates,
 		private readonly FormDataLogger $formDataLogger,
 		private readonly FormSpam $formSpam,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly Mails $trainingMails,
 		private readonly TemplateFactory $templateFactory,
 		private readonly NetteApplication $netteApplication,

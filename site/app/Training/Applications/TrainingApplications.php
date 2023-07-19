@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Applications;
 
 use Contributte\Translation\Translator;
 use DateTime;
@@ -9,7 +9,10 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
+use MichalSpacekCz\Training\Price;
+use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Resolver\Vrana;
+use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -21,7 +24,7 @@ use RuntimeException;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
 
-class Applications
+class TrainingApplications
 {
 
 	private const SOURCE_MICHAL_SPACEK = 'michal-spacek';

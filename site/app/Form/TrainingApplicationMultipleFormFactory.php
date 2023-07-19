@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Http\HttpInput;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
@@ -16,7 +16,7 @@ class TrainingApplicationMultipleFormFactory
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly Statuses $trainingStatuses,
 		private readonly HttpInput $httpInput,
 	) {
