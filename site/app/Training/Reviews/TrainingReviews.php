@@ -5,10 +5,9 @@ namespace MichalSpacekCz\Training\Reviews;
 
 use DateTime;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Training\Exceptions\TrainingReviewNotFoundException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
-use RuntimeException;
 
 class TrainingReviews
 {
@@ -21,21 +20,21 @@ class TrainingReviews
 
 
 	/**
-	 * Get visible reviews by training id.
-	 *
-	 * @param int $id
-	 * @param int|null $limit
-	 * @return Row[]
+	 * @return list<TrainingReview>
 	 */
 	public function getVisibleReviews(int $id, ?int $limit = null): array
 	{
 		$query = 'SELECT
-				r.id_review AS reviewId,
-				r.name AS name,
-				r.company AS company,
+				r.id_review AS id,
+				r.name,
+				r.company,
 				r.job_title AS jobTitle,
 				r.review,
-				r.href
+				r.href,
+				r.hidden,
+				r.ranking,
+				r.note,
+				d.id_date AS dateId
 			FROM
 				training_reviews r
 				JOIN training_dates d ON r.key_date = d.id_date
@@ -48,27 +47,32 @@ class TrainingReviews
 			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC
 			LIMIT ?';
 
-		return $this->format($this->database->fetchAll($query, $id, $id, $limit ?? PHP_INT_MAX));
+		$reviews = [];
+		foreach ($this->database->fetchAll($query, $id, $id, $limit ?? PHP_INT_MAX) as $row) {
+			$reviews[] = $this->createFromDatabaseRow($row);
+		}
+		return $reviews;
 	}
 
 
 	/**
 	 * Get all reviews including hidden by training id.
 	 *
-	 * @param int $id
-	 * @return Row[]
+	 * @return list<TrainingReview>
 	 */
 	public function getAllReviews(int $id): array
 	{
 		$query = 'SELECT
-				r.id_review AS reviewId,
-				r.name AS name,
-				r.company AS company,
+				r.id_review AS id,
+				r.name,
+				r.company,
 				r.job_title AS jobTitle,
 				r.review,
 				r.href,
 				r.hidden,
-				r.ranking
+				r.ranking,
+				r.note,
+				d.id_date AS dateId
 			FROM
 				training_reviews r
 				JOIN training_dates d ON r.key_date = d.id_date
@@ -78,41 +82,22 @@ class TrainingReviews
 				(t.id_training = ? OR t2.id_training = ?)
 			ORDER BY r.ranking IS NULL, r.ranking, r.added DESC';
 
-		return $this->format($this->database->fetchAll($query, $id, $id));
-	}
-
-
-	/**
-	 * Format reviews.
-	 *
-	 * @param Row[] $reviews
-	 * @return Row[]
-	 */
-	private function format(array $reviews): array
-	{
-		foreach ($reviews as &$review) {
-			if (!is_string($review['review'])) {
-				throw new ShouldNotHappenException(sprintf("Review is a %s not a string", get_debug_type($review['review'])));
-			}
-			$review['review'] = $this->texyFormatter->format($review['review']);
+		$reviews = [];
+		foreach ($this->database->fetchAll($query, $id, $id) as $row) {
+			$reviews[] = $this->createFromDatabaseRow($row);
 		}
 		return $reviews;
 	}
 
 
 	/**
-	 * Get review by id.
-	 *
-	 * @param int $reviewId
-	 * @return Row<mixed>
-	 * @throws RuntimeException
+	 * @throws TrainingReviewNotFoundException
 	 */
-	public function getReview(int $reviewId): Row
+	public function getReview(int $reviewId): TrainingReview
 	{
-		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
-				r.id_review AS reviewId,
+				r.id_review AS id,
 				r.name,
 				r.company,
 				r.job_title AS jobTitle,
@@ -131,36 +116,39 @@ class TrainingReviews
 		);
 
 		if (!$result) {
-			throw new RuntimeException("No review id {$reviewId}, yet");
+			throw new TrainingReviewNotFoundException($reviewId);
 		}
-
-		return $result;
+		return $this->createFromDatabaseRow($result);
 	}
 
 
 	/**
-	 * Get review by date id.
-	 *
-	 * @param int $dateId
-	 * @return Row[]
+	 * @return list<TrainingReview>
 	 */
 	public function getReviewsByDateId(int $dateId): array
 	{
 		$query = 'SELECT
-				r.id_review AS reviewId,
-				r.name AS name,
-				r.company AS company,
+				r.id_review AS id,
+				r.name,
+				r.company,
 				r.job_title AS jobTitle,
 				r.review,
 				r.href,
 				r.hidden,
-				r.ranking
+				r.ranking,
+				r.note,
+				d.id_date AS dateId
 			FROM
 				training_reviews r
+				LEFT JOIN training_dates d ON r.key_date = d.id_date
 			WHERE
 				r.key_date = ?';
 
-		return $this->format($this->database->fetchAll($query, $dateId));
+		$reviews = [];
+		foreach ($this->database->fetchAll($query, $dateId) as $row) {
+			$reviews[] = $this->createFromDatabaseRow($row);
+		}
+		return $reviews;
 	}
 
 
@@ -203,6 +191,24 @@ class TrainingReviews
 				'ranking' => $ranking,
 				'note' => $note,
 			],
+		);
+	}
+
+
+	private function createFromDatabaseRow(Row $row): TrainingReview
+	{
+		return new TrainingReview(
+			$row->id,
+			$row->name,
+			$row->company,
+			$row->jobTitle,
+			$this->texyFormatter->format($row->review),
+			$row->review,
+			$row->href,
+			(bool)$row->hidden,
+			$row->ranking,
+			$row->note,
+			$row->dateId,
 		);
 	}
 

@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Training\Reviews;
 
 use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Form\TrainingReviewFormFactory;
-use Nette\Database\Row;
 use Nette\Forms\Form;
 
 class TrainingReviewInputs extends UiControl
@@ -15,7 +14,7 @@ class TrainingReviewInputs extends UiControl
 		private readonly TrainingReviewFormFactory $trainingReviewFormFactory,
 		private readonly bool $showApplications,
 		private readonly int $dateId,
-		private readonly ?Row $review,
+		private readonly ?TrainingReview $review,
 	) {
 	}
 
@@ -34,7 +33,7 @@ class TrainingReviewInputs extends UiControl
 				$this->getPresenter()->redirect('date', $dateId);
 			},
 			$this->dateId,
-			$this->review ?? null,
+			$this->review,
 		);
 	}
 

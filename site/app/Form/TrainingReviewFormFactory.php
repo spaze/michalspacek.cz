@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use Nette\Application\UI\Form;
-use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 
@@ -24,7 +24,7 @@ class TrainingReviewFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 */
-	public function create(callable $onSuccess, int $dateId, ?Row $review = null): Form
+	public function create(callable $onSuccess, int $dateId, ?TrainingReview $review = null): Form
 	{
 		$form = $this->factory->create();
 
@@ -66,7 +66,7 @@ class TrainingReviewFormFactory
 			$values = $form->getValues();
 			if ($review) {
 				$this->trainingReviews->updateReview(
-					$review->reviewId,
+					$review->getId(),
 					$dateId,
 					$values->name,
 					$values->company,
@@ -97,22 +97,17 @@ class TrainingReviewFormFactory
 	}
 
 
-	/**
-	 * @param Form $form
-	 * @param Row<mixed> $review
-	 * @param SubmitButton $submit
-	 */
-	private function setReview(Form $form, Row $review, SubmitButton $submit): void
+	private function setReview(Form $form, TrainingReview $review, SubmitButton $submit): void
 	{
 		$values = [
-			'name' => $review->name,
-			'company' => $review->company,
-			'jobTitle' => $review->jobTitle,
-			'review' => $review->review,
-			'href' => $review->href,
-			'hidden' => $review->hidden,
-			'ranking' => $review->ranking,
-			'note' => $review->note,
+			'name' => $review->getName(),
+			'company' => $review->getCompany(),
+			'jobTitle' => $review->getJobTitle(),
+			'review' => $review->getReviewTexy(),
+			'href' => $review->getHref(),
+			'hidden' => $review->isHidden(),
+			'ranking' => $review->getRanking(),
+			'note' => $review->getNote(),
 		];
 		$form->setDefaults($values);
 		$submit->caption = 'Upravit';
@@ -126,9 +121,7 @@ class TrainingReviewFormFactory
 	{
 		$reviewApplicationNames = [];
 		foreach ($this->trainingReviews->getReviewsByDateId($dateId) as $review) {
-			if ($review->name !== null) {
-				$reviewApplicationNames[] = $review->name;
-			}
+			$reviewApplicationNames[] = $review->getName();
 		}
 
 		$applications = [];

@@ -21,6 +21,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
@@ -45,8 +46,7 @@ class TrainingsPresenter extends BasePresenter
 
 	private int $applicationId;
 
-	/** @var Row<mixed> */
-	private Row $review;
+	private TrainingReview $review;
 
 	private TrainingDate $training;
 
@@ -148,16 +148,15 @@ class TrainingsPresenter extends BasePresenter
 	public function actionReview(int $param): void
 	{
 		$this->review = $this->trainingReviews->getReview($param);
+		$date = $this->trainingDates->get($this->review->getDateId());
 
-		$date = $this->trainingDates->get($this->review->dateId);
-
-		$this->template->pageTitle = "Ohlas od {$this->review->name}" . ($this->review->company ? ", {$this->review->company}" : '');
+		$this->template->pageTitle = "Ohlas od {$this->review->getName()}" . ($this->review->getCompany() ? ", {$this->review->getCompany()}" : '');
 		$this->template->trainingStart = $date->getStart();
 		$this->template->trainingEnd = $date->getEnd();
 		$this->template->trainingName = $date->getName();
 		$this->template->trainingCity = $date->getVenueCity();
-		$this->template->name = $this->review->name;
-		$this->template->dateId = $this->review->dateId;
+		$this->template->name = $this->review->getName();
+		$this->template->dateId = $this->review->getDateId();
 	}
 
 
@@ -334,7 +333,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditReviewInputs(): TrainingReviewInputs
 	{
-		return $this->trainingReviewInputsFactory->create(false, $this->review->dateId, $this->review);
+		return $this->trainingReviewInputsFactory->create(false, $this->review->getDateId(), $this->review);
 	}
 
 

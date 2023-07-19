@@ -1,3 +1,4 @@
+{varType MichalSpacekCz\Training\Reviews\TrainingReview[] $reviews}
 {define #menu}
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
@@ -135,12 +136,12 @@
 <div id="ohlasy">
 	<p><a href="#ohlasy" class="open-container block separated">Ohlasy</a></p>
 	<div id="ohlasy-container" class="hidden">
-		<div n:class="$review->hidden ? discarded" n:foreach="$reviews as $review">
+		<div n:foreach="$reviews as $review" n:class="$review->isHidden() ? discarded">
 			<p>
-				<small n:ifset="$review->ranking" title="Pořadí ve výpisu všech ohlasů">#{$review->ranking}</small>
-				<strong><a n:href="Trainings:review $review->reviewId">{$review->name}</a>{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong>
+				<small n:if="$review->getRanking()" title="Pořadí ve výpisu všech ohlasů">#{$review->getRanking()}</small>
+				<strong><a n:href="Trainings:review $review->getId()">{$review->getName()}</a>{if $review->getJobTitle()}, {$review->getJobTitle()}{/if}{if $review->getCompany()}, {$review->getCompany()}{/if}</strong>
 			</p>
-			<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
+			<div class="indent"><p>{$review->getReview()} <small n:if="$review->getHref()">(<a href="{$review->getHref()}">{_messages.trainings.more}</a>)</small></p></div>
 		</div>
 		<fieldset>
 			<legend><a href="#pridat-ohlas" class="open-container">Přidat ohlas</a></legend>
