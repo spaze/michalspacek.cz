@@ -1,64 +1,54 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Trainings;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 
 class Trainings
 {
 
-	/** @var array<int, Row> */
+	/** @var array<int, Training> */
 	private array $trainingsById = [];
 
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly TexyFormatter $texyFormatter,
 		private readonly Translator $translator,
+		private readonly TrainingFactory $trainingFactory,
 	) {
 	}
 
 
 	/**
-	 * @param string $name
-	 * @return Row<mixed>
 	 * @throws TrainingDoesNotExistException
 	 */
-	public function get(string $name): Row
+	public function get(string $name): Training
 	{
 		return $this->getTraining($name, false);
 	}
 
 
 	/**
-	 * @param string $name
-	 * @return Row<mixed>
 	 * @throws TrainingDoesNotExistException
 	 */
-	public function getIncludingCustom(string $name): Row
+	public function getIncludingCustom(string $name): Training
 	{
 		return $this->getTraining($name, true);
 	}
 
 
 	/**
-	 * @param string $name
-	 * @param bool $includeCustom
-	 * @return Row<mixed>
 	 * @throws TrainingDoesNotExistException
 	 */
-	private function getTraining(string $name, bool $includeCustom): Row
+	private function getTraining(string $name, bool $includeCustom): Training
 	{
-		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
-				t.id_training AS trainingId,
+				t.id_training AS id,
 				a.action,
 				t.name,
 				t.description,
@@ -90,22 +80,19 @@ class Trainings
 		if (!$result) {
 			throw new TrainingDoesNotExistException(name: $name);
 		}
-		return $this->texyFormatter->formatTraining($result);
+		return $this->trainingFactory->createFromDatabaseRow($result);
 	}
 
 
 	/**
-	 * @param int $id
-	 * @return Row<mixed>
 	 * @throws TrainingDoesNotExistException
 	 */
-	public function getById(int $id): Row
+	public function getById(int $id): Training
 	{
 		if (!isset($this->trainingsById[$id])) {
-			/** @var Row<mixed>|null $result */
 			$result = $this->database->fetch(
 				'SELECT
-					t.id_training AS trainingId,
+					t.id_training AS id,
 					a.action,
 					t.name,
 					t.description,
@@ -133,9 +120,8 @@ class Trainings
 
 			if (!$result) {
 				throw new TrainingDoesNotExistException(id: $id);
-			} else {
-				$this->trainingsById[$id] = $this->texyFormatter->formatTraining($result);
 			}
+			$this->trainingsById[$id] = $this->trainingFactory->createFromDatabaseRow($result);
 		}
 		return $this->trainingsById[$id];
 	}
@@ -144,7 +130,7 @@ class Trainings
 	/**
 	 * Get all training names without custom training names.
 	 *
-	 * @return Row[]
+	 * @return list<Training>
 	 */
 	public function getNames(): array
 	{
@@ -152,7 +138,19 @@ class Trainings
 			'SELECT
 				t.id_training AS id,
 				a.action,
-				t.name
+				t.name,
+				t.description,
+				t.content,
+				t.upsell,
+				t.prerequisites,
+				t.audience,
+				t.capacity,
+				t.price,
+				t.student_discount AS studentDiscount,
+				t.materials,
+				t.custom,
+				t.key_successor AS successorId,
+				t.key_discontinued AS discontinuedId
 			FROM trainings t
 				JOIN training_url_actions ta ON t.id_training = ta.key_training
 				JOIN url_actions a ON ta.key_url_action = a.id_url_action
@@ -167,17 +165,18 @@ class Trainings
 			$this->translator->getDefaultLocale(),
 		);
 
-		foreach ($result as $training) {
-			$this->texyFormatter->formatTraining($training);
+		$trainings = [];
+		foreach ($result as $row) {
+			$trainings[] = $this->trainingFactory->createFromDatabaseRow($row);
 		}
-		return $result;
+		return $trainings;
 	}
 
 
 	/**
 	 * Get all training names including custom and discontinued training names.
 	 *
-	 * @return Row[]
+	 * @return list<Training>
 	 */
 	public function getNamesIncludingCustomDiscontinued(): array
 	{
@@ -186,6 +185,15 @@ class Trainings
 				t.id_training AS id,
 				a.action,
 				t.name,
+				t.description,
+				t.content,
+				t.upsell,
+				t.prerequisites,
+				t.audience,
+				t.capacity,
+				t.price,
+				t.student_discount AS studentDiscount,
+				t.materials,
 				t.custom,
 				t.key_successor AS successorId,
 				t.key_discontinued AS discontinuedId
@@ -199,20 +207,20 @@ class Trainings
 				t.order IS NULL, t.order',
 			$this->translator->getDefaultLocale(),
 		);
-
-		foreach ($result as $training) {
-			$this->texyFormatter->formatTraining($training);
+		$trainings = [];
+		foreach ($result as $row) {
+			$trainings[] = $this->trainingFactory->createFromDatabaseRow($row);
 		}
-		return $result;
+		return $trainings;
 	}
 
 
 	/**
-	 * @return Row[]
+	 * @return array<int, string>
 	 */
 	public function getCooperations(): array
 	{
-		return $this->database->fetchAll(
+		return $this->database->fetchPairs(
 			'SELECT
 				c.id_cooperation AS id,
 				c.name

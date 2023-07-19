@@ -10,6 +10,7 @@ use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Resolver\Vrana;
+use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Database\UniqueConstraintViolationException;

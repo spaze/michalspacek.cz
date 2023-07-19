@@ -25,7 +25,7 @@ use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Statuses;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
 use Nette\Forms\Form;
@@ -181,7 +181,7 @@ class TrainingsPresenter extends BasePresenter
 			$isRemote = $training->isRemote();
 		} else {
 			$applicationDateId = $start = $end = $city = $isRemote = null;
-			$name = $this->trainings->getIncludingCustom($this->application->trainingAction)->name;
+			$name = $this->trainings->getIncludingCustom($this->application->trainingAction)->getName();
 		}
 
 		$this->template->pageTitle = $this->application->name ?? 'smazáno';

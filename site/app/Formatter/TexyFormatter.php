@@ -5,8 +5,6 @@ namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Training\Prices;
-use Nette\Database\Row;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -46,7 +44,6 @@ class TexyFormatter
 	public function __construct(
 		private readonly CacheInterface $cache,
 		private readonly Translator $translator,
-		private readonly Prices $prices,
 		private readonly TexyPhraseHandler $phraseHandler,
 		private readonly array $placeholders,
 		string $staticRoot,
@@ -194,33 +191,6 @@ class TexyFormatter
 			},
 		);
 		return Html::el()->setHtml($result);
-	}
-
-
-	/**
-	 * Format training items.
-	 *
-	 * @param Row<mixed> $training
-	 * @return Row<mixed>
-	 * @throws InvalidArgument
-	 */
-	public function formatTraining(Row $training): Row
-	{
-		$this->setTopHeading(3);
-		foreach (['name', 'description', 'content', 'upsell', 'prerequisites', 'audience', 'materials', 'duration', 'alternativeDuration'] as $key) {
-			if (isset($training->$key)) {
-				$training->$key = $this->translate($training->$key);
-			}
-		}
-
-		if (isset($training->alternativeDurationPriceText)) {
-			$price = $this->prices->resolvePriceVat($training->alternativeDurationPrice);
-			$training->alternativeDurationPriceText = $this->translate($training->alternativeDurationPriceText, [
-				$price->getPriceWithCurrency(),
-				$price->getPriceVatWithCurrency(),
-			]);
-		}
-		return $training;
 	}
 
 

@@ -8,7 +8,7 @@ use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Dates\TrainingDateStatuses;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Trainings\Trainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -51,14 +51,14 @@ class TrainingDateFormFactory
 			self::DISCONTINUED => [],
 		];
 		foreach ($this->trainings->getNamesIncludingCustomDiscontinued() as $training) {
-			if ($training->discontinuedId !== null) {
+			if ($training->getDiscontinuedId() !== null) {
 				$key = self::DISCONTINUED;
-			} elseif ($training->successorId !== null) {
+			} elseif ($training->getSuccessorId() !== null) {
 				$key = self::REPLACED;
 			} else {
-				$key = ($training->custom ? self::CUSTOM : self::STANDARD);
+				$key = ($training->isCustom() ? self::CUSTOM : self::STANDARD);
 			}
-			$trainings[$key][$training->id] = $training->name;
+			$trainings[$key][$training->getId()] = $training->getName();
 		}
 		$form->addSelect('training', 'Školení:', array_filter($trainings))
 			->setRequired('Vyberte prosím školení');
@@ -110,11 +110,7 @@ class TrainingDateFormFactory
 			->setHtmlAttribute('placeholder', $format)
 			->setHtmlAttribute('title', $format);
 
-		$cooperations = [0 => 'žádná'];
-		foreach ($this->trainings->getCooperations() as $cooperation) {
-			$cooperations[$cooperation->id] = $cooperation->name;
-		}
-		$form->addSelect('cooperation', 'Spolupráce:', $cooperations)
+		$form->addSelect('cooperation', 'Spolupráce:', [0 => 'žádná'] + $this->trainings->getCooperations())
 			->addRule($form::INTEGER);
 		$this->trainingControlsFactory->addNote($form);
 
@@ -124,7 +120,7 @@ class TrainingDateFormFactory
 		$form->onValidate[] = function (Form $form) use ($price): void {
 			$values = $form->getValues();
 			$training = $this->trainings->getById($values->training);
-			if ($values->price === '' && $training->price === null) {
+			if ($values->price === '' && $training->getPrice() === null) {
 				$price->addError('Běžná cena není nastavena, je třeba nastavit cenu zde');
 			}
 		};

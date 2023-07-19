@@ -10,7 +10,7 @@ use MichalSpacekCz\Training\Exceptions\CompanyTrainingDoesNotExistException;
 use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 
 class CompanyTrainingsPresenter extends BasePresenter

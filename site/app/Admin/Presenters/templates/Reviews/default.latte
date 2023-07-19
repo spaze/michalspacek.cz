@@ -1,3 +1,4 @@
+{varType MichalSpacekCz\Training\Trainings\Training[] $trainings}
 {define #menu}
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
@@ -5,6 +6,6 @@
 
 {define #content}
 <ol n:inner-foreach="$trainings as $training">
-	<li><a n:href="training $training->id">{$training->name}</a></li>
+	<li><a n:href="training $training->getId()">{$training->getName()}</a></li>
 </ol>
 {/define}

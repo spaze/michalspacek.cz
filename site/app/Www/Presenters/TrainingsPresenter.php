@@ -20,17 +20,16 @@ use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Trainings\Training;
+use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
-use Nette\Database\Row;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
 
 class TrainingsPresenter extends BasePresenter
 {
 
-	/** @var Row<mixed> */
-	private Row $training;
+	private Training $training;
 
 	/** @var array<int, TrainingDate> id => date */
 	private array $dates;
@@ -82,30 +81,22 @@ class TrainingsPresenter extends BasePresenter
 		}
 		$this->training = $training;
 
-		$this->redirectToSuccessor($this->training->successorId);
+		$this->redirectToSuccessor($this->training->getSuccessorId());
 
-		$this->dates = $this->trainingDates->getDates($this->training->trainingId);
+		$this->dates = $this->trainingDates->getDates($this->training->getId());
 
 		$session = $this->getSession();
 		$session->start(); // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
-		$this->template->name = $this->training->action;
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.training', [$this->training->name]);
-		$this->template->title = $this->training->name;
-		$this->template->description = $this->training->description;
-		$this->template->content = $this->training->content;
-		$this->template->upsell = $this->training->upsell;
-		$this->template->prerequisites = $this->training->prerequisites;
-		$this->template->audience = $this->training->audience;
-		$this->template->capacity = $this->training->capacity;
-		$this->template->materials = $this->training->materials;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.training', [$this->training->getName()->render()]);
+		$this->template->training = $this->training;
 		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates = $this->dates;
 		$this->template->singleDate = count($this->dates) === 1 ? $this->trainingDates->formatDateVenueForUser(reset($this->dates)) : null;
 		$this->template->dataRetention = $this->trainingDates->getDataRetentionDays();
-		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->getId(), 3);
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
-		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $this->training->discontinuedId);
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $this->training->getDiscontinuedId());
 	}
 
 
@@ -117,7 +108,7 @@ class TrainingsPresenter extends BasePresenter
 		} catch (TrainingDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-		if ($training->discontinuedId) {
+		if ($training->getDiscontinuedId()) {
 			throw new BadRequestException("I don't do {$name} training anymore");
 		}
 
@@ -169,8 +160,8 @@ class TrainingsPresenter extends BasePresenter
 			function (string $message): void {
 				$this->flashMessage($this->translator->translate($message), 'error');
 			},
-			$this->training->action,
-			$this->training->name,
+			$this->training->getAction(),
+			$this->training->getName(),
 			$this->dates,
 			$this->session->getSection('training'),
 		);
@@ -179,8 +170,8 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplicationPreliminary(): Form
 	{
-		if ($this->training->discontinuedId) {
-			throw new BadRequestException("No signups for discontinued trainings id {$this->training->discontinuedId}");
+		if ($this->training->getDiscontinuedId()) {
+			throw new BadRequestException("No signups for discontinued trainings id {$this->training->getDiscontinuedId()}");
 		}
 		return $this->trainingApplicationPreliminaryFactory->create(
 			function (string $action): never {
@@ -190,8 +181,8 @@ class TrainingsPresenter extends BasePresenter
 			function (string $message): void {
 				$this->flashMessage($this->translator->translate($message), 'error');
 			},
-			$this->training->trainingId,
-			$this->training->action,
+			$this->training->getId(),
+			$this->training->getAction(),
 		);
 	}
 
@@ -205,14 +196,14 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 
-		$this->redirectToSuccessor($training->successorId);
+		$this->redirectToSuccessor($training->getSuccessorId());
 
-		$this->template->name = $training->action;
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->name]);
-		$this->template->title = $training->name;
-		$this->template->description = $training->description;
-		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId);
-		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->discontinuedId);
+		$this->template->name = $training->getAction();
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingreviews', [$training->getName()->render()]);
+		$this->template->title = $training->getName();
+		$this->template->description = $training->getDescription();
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->getId());
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->getDiscontinuedId());
 	}
 
 
@@ -254,15 +245,15 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("No files for application id {$session->applicationId}");
 		}
 
-		$this->template->trainingTitle = $training->name;
-		$this->template->trainingName = ($training->custom ? null : $training->action);
+		$this->template->trainingTitle = $training->getName();
+		$this->template->trainingName = ($training->isCustom() ? null : $training->getAction());
 		$this->template->trainingStart = $application->trainingStart;
 		$this->template->trainingEnd = $application->trainingEnd;
 		$this->template->familiar = $application->familiar;
 		$remote = $application->remote && !$application->attended;
 		$this->template->remote = $remote;
 
-		$this->template->pageTitle = $this->texyFormatter->translate(($remote ? 'messages.title.trainingmaterials.remote' : 'messages.title.trainingmaterials.regular'), [$training->name]);
+		$this->template->pageTitle = $this->texyFormatter->translate(($remote ? 'messages.title.trainingmaterials.remote' : 'messages.title.trainingmaterials.regular'), [$training->getName()->render()]);
 		$this->template->files = $files;
 	}
 
@@ -275,12 +266,12 @@ class TrainingsPresenter extends BasePresenter
 		} catch (TrainingDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-		if ($training->discontinuedId) {
+		if ($training->getDiscontinuedId()) {
 			throw new BadRequestException("I don't do {$name} training anymore");
 		}
 
 		$this->training = $training;
-		$this->dates = $this->trainingDates->getDates($this->training->trainingId);
+		$this->dates = $this->trainingDates->getDates($this->training->getId());
 		if (empty($this->dates)) {
 			throw new BadRequestException("No dates for {$name} training", IResponse::S503_ServiceUnavailable);
 		}
@@ -302,17 +293,17 @@ class TrainingsPresenter extends BasePresenter
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.confirmed'));
 		}
 
-		$this->template->name = $this->training->action;
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingapplication', [$this->training->name]);
-		$this->template->title = $this->training->name;
-		$this->template->description = $this->training->description;
+		$this->template->name = $this->training->getAction();
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.trainingapplication', [$this->training->getName()->render()]);
+		$this->template->title = $this->training->getName();
+		$this->template->description = $this->training->getDescription();
 		$this->template->start = $date->getStart();
 		$this->template->end = $date->getEnd();
 		$this->template->remote = $date->isRemote();
 		$this->template->venueCity = $date->getVenueCity();
 		$this->template->tentative = $date->isTentative();
 		$this->template->form = $this->createComponentApplication();
-		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->trainingId, 3);
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->getId(), 3);
 	}
 
 

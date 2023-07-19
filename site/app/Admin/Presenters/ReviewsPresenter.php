@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Trainings\Trainings;
 
 class ReviewsPresenter extends BasePresenter
 {
@@ -27,8 +27,7 @@ class ReviewsPresenter extends BasePresenter
 	public function actionTraining(int $param): void
 	{
 		$training = $this->trainings->getById($param);
-
-		$this->template->pageTitle = 'Ohlasy na ' . $training->name;
+		$this->template->pageTitle = 'Ohlasy na ' . $training->getName();
 		$this->template->reviews = $this->trainingReviews->getAllReviews($param);
 	}
 
