@@ -7,6 +7,7 @@ use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Form\TrainingApplicationFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
@@ -16,7 +17,6 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
-use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
@@ -41,7 +41,6 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TexyFormatter $texyFormatter,
 		private readonly TrainingApplications $trainingApplications,
 		private readonly TrainingDates $trainingDates,
-		private readonly TrainingFiles $trainingFiles,
 		private readonly Trainings $trainings,
 		private readonly FreeSeats $freeSeats,
 		private readonly CompanyTrainings $companyTrainings,
@@ -133,21 +132,21 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$data = (array)$session->application;
-		$data[$name] = ['id' => $application->applicationId, 'dateId' => $application->dateId];
+		$data[$name] = ['id' => $application->getId(), 'dateId' => $application->getDateId()];
 		$session->application = $data;
 
-		$session->name = $application->name;
-		$session->email = $application->email;
-		$session->company = $application->company;
-		$session->street = $application->street;
-		$session->city = $application->city;
-		$session->zip = $application->zip;
-		$session->country = $application->country;
-		$session->companyId = $application->companyId;
-		$session->companyTaxId = $application->companyTaxId;
-		$session->note = $application->note;
+		$session->name = $application->getName();
+		$session->email = $application->getEmail();
+		$session->company = $application->getCompany();
+		$session->street = $application->getStreet();
+		$session->city = $application->getCity();
+		$session->zip = $application->getZip();
+		$session->country = $application->getCountry();
+		$session->companyId = $application->getCompanyId();
+		$session->companyTaxId = $application->getCompanyTaxId();
+		$session->note = $application->getNote();
 
-		$this->redirect('training', $application->trainingAction);
+		$this->redirect('training', $application->getTrainingAction());
 	}
 
 
@@ -215,8 +214,8 @@ class TrainingsPresenter extends BasePresenter
 		if ($param !== null) {
 			$application = $this->trainingApplications->getApplicationByToken($param);
 			$session->token = $param;
-			$session->applicationId = ($application ? $application->applicationId : null);
-			$this->redirect('files', ($application ? $application->trainingAction : $name));
+			$session->applicationId = $application?->getId();
+			$this->redirect('files', ($application?->getTrainingAction() ?? $name));
 		}
 
 		if (!$session->applicationId || !$session->token) {
@@ -234,27 +233,31 @@ class TrainingsPresenter extends BasePresenter
 		} catch (TrainingApplicationDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-
-		if ($application->trainingAction != $name) {
-			$this->redirect('files', $application->trainingAction);
+		$trainingStart = $application->getTrainingStart();
+		$trainingEnd = $application->getTrainingEnd();
+		if (!$trainingStart || !$trainingEnd) {
+			throw new ShouldNotHappenException(sprintf("Training application id '%s' should have both training start and end set", $application->getId()));
 		}
 
-		$files = $this->trainingFiles->getFiles($application->applicationId);
+		if ($application->getTrainingAction() !== $name) {
+			$this->redirect('files', $application->getTrainingAction());
+		}
+
 		$this->trainingApplications->setAccessTokenUsed($application);
-		if (count($files) === 0) {
+		if (count($application->getFiles()) === 0) {
 			throw new BadRequestException("No files for application id {$session->applicationId}");
 		}
 
 		$this->template->trainingTitle = $training->getName();
 		$this->template->trainingName = ($training->isCustom() ? null : $training->getAction());
-		$this->template->trainingStart = $application->trainingStart;
-		$this->template->trainingEnd = $application->trainingEnd;
-		$this->template->familiar = $application->familiar;
-		$remote = $application->remote && !$application->attended;
+		$this->template->trainingStart = $trainingStart;
+		$this->template->trainingEnd = $trainingEnd;
+		$this->template->familiar = $application->isFamiliar();
+		$remote = $application->isRemote() && !$application->isAttended();
 		$this->template->remote = $remote;
 
 		$this->template->pageTitle = $this->texyFormatter->translate(($remote ? 'messages.title.trainingmaterials.remote' : 'messages.title.trainingmaterials.regular'), [$training->getName()->render()]);
-		$this->template->files = $files;
+		$this->template->files = $application->getFiles();
 	}
 
 

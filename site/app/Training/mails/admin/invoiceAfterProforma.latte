@@ -1,9 +1,9 @@
 Zdravím,
 
 v příloze posílám daňový doklad za uhrazenou zálohu na školení
-{$application->training->name} {$application->trainingStart|localeIntervalDay:$application->trainingEnd, 'cs_CZ'}
+{$application->getTrainingName()} {$application->getTrainingStart()|localeIntervalDay:$application->getTrainingEnd(), 'cs_CZ'}
 
-Jen pro úplnost: záloha {$application->priceVatWithCurrency} již byla uhrazena, tuhle fakturu není třeba platit.
+Jen pro úplnost: záloha {$application->getPriceVatWithCurrency()} již byla uhrazena, tuhle fakturu není třeba platit.
 
 {if $additional}
 {$additional}

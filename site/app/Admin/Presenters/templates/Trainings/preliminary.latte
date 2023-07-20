@@ -1,4 +1,5 @@
 {varType array<string, MichalSpacekCz\Training\Dates\UpcomingTraining> $upcoming}
+{varType MichalSpacekCz\Training\Preliminary\PreliminaryTraining[] $preliminaryApplications}
 {define #menu}
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
@@ -21,17 +22,17 @@
 		{foreach $preliminaryApplications as $training}
 		<tr>
 			<td colspan="5">
-				<strong n:tag-if="isset($upcoming[$training->action])">{$training->name}</strong>
-				{if isset($upcoming[$training->action])}
-					(Vypsané termíny: {foreach $upcoming[$training->action]->getDates() as $date}<a n:href="Trainings:date $date->getId()">{$date->getStart()|localeIntervalDay:$date->getEnd()}</a>{sep}, {/sep}{/foreach})
+				<strong n:tag-if="isset($upcoming[$training->getAction()])">{$training->getName()}</strong>
+				{if isset($upcoming[$training->getAction()])}
+					(Vypsané termíny: {foreach $upcoming[$training->getAction()]->getDates() as $date}<a n:href="Trainings:date $date->getId()">{$date->getStart()|localeIntervalDay:$date->getEnd()}</a>{sep}, {/sep}{/foreach})
 				{/if}
 			</td>
 		</tr>
-		<tr n:foreach="$training->applications as $application">
+		<tr n:foreach="$training->getApplications() as $application">
 			<td><small>{$iterator->getCounter()}.</small></td>
-			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id">{$application->name ?? smazáno}</a></small></td>
-			<td><small>{$application->email ?? smazáno}</small></td>
-			<td><small><code title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</code></small></td>
+			<td><small n:tag-if="$application->getName() === null"><a n:href="Trainings:application $application->getId()">{$application->getName() ?? smazáno}</a></small></td>
+			<td><small>{$application->getEmail() ?? smazáno}</small></td>
+			<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()}</code></small></td>
 		</tr>
 		{/foreach}
 	</tbody>

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training\Files;
 
 use DateTime;
 use DateTimeInterface;
+use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -23,11 +24,7 @@ class TrainingFiles
 	}
 
 
-	/**
-	 * @param int $applicationId
-	 * @return TrainingFilesCollection<int, TrainingFile>
-	 */
-	public function getFiles(int $applicationId): TrainingFilesCollection
+	public function getFiles(TrainingApplication $application): TrainingFilesCollection
 	{
 		$rows = $this->database->fetchAll(
 			'SELECT
@@ -44,7 +41,7 @@ class TrainingFiles
 			WHERE
 				a.id_application = ?
 				AND s.status IN (?)',
-			$applicationId,
+			$application->getId(),
 			$this->trainingStatuses->getAllowFilesStatuses(),
 		);
 

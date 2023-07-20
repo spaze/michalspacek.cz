@@ -4,20 +4,21 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
-use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
-use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
-use Nette\Database\Row;
 use Nette\Http\FileUpload;
 use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Nette\Utils\Html;
+use ParagonIE\Halite\Alerts\HaliteAlert;
+use SodiumException;
 use Tracy\Debugger;
 
 class Mails
@@ -33,8 +34,7 @@ class Mails
 		private readonly TrainingDates $trainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly TrainingVenues $trainingVenues,
-		private readonly TrainingFiles $trainingFiles,
-		private readonly DateTimeFormatter $dateTimeFormatter,
+		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
 		private readonly string $emailFrom,
 		private readonly string $phoneNumber,
 	) {
@@ -91,152 +91,136 @@ class Mails
 
 
 	/**
-	 * @return Row[]
+	 * @return list<TrainingApplication>
+	 * @throws TrainingDateDoesNotExistException
+	 * @throws HaliteAlert
+	 * @throws SodiumException
 	 */
 	public function getApplications(): array
 	{
 		$applications = [];
 
 		foreach ($this->trainingPreliminaryApplications->getPreliminaryWithDateSet() as $application) {
-			$application->nextStatus = Statuses::STATUS_INVITED;
-			$applications[$application->id] = $application;
+			$application->setNextStatus(Statuses::STATUS_INVITED);
+			$applications[$application->getId()] = $application;
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($this->trainingDates->get($application->dateId)->getStatus() === TrainingDateStatus::Confirmed) {
-					$application->nextStatus = Statuses::STATUS_INVITED;
-					$applications[$application->id] = $application;
+				if (
+					$application->getDateId()
+					&& $this->trainingDates->get($application->getDateId())->getStatus() === TrainingDateStatus::Confirmed
+				) {
+					$application->setNextStatus(Statuses::STATUS_INVITED);
+					$applications[$application->getId()] = $application;
 				}
 			}
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_MATERIALS_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($status !== Statuses::STATUS_ATTENDED || !$this->trainingStatuses->sendInvoiceAfter($application->id)) {
-					$application->nextStatus = Statuses::STATUS_MATERIALS_SENT;
-					$applications[$application->id] = $application;
+				if ($status !== Statuses::STATUS_ATTENDED || !$this->trainingStatuses->sendInvoiceAfter($application->getId())) {
+					$application->setNextStatus(Statuses::STATUS_MATERIALS_SENT);
+					$applications[$application->getId()] = $application;
 				}
 			}
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVOICE_SENT) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				$application->nextStatus = Statuses::STATUS_INVOICE_SENT;
-				$applications[$application->id] = $application;
+				$application->setNextStatus(Statuses::STATUS_INVOICE_SENT);
+				$applications[$application->getId()] = $application;
 			}
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVOICE_SENT_AFTER) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($status !== Statuses::STATUS_ATTENDED || $this->trainingStatuses->sendInvoiceAfter($application->id)) {
-					$application->nextStatus = Statuses::STATUS_INVOICE_SENT_AFTER;
-					$applications[$application->id] = $application;
+				if ($status !== Statuses::STATUS_ATTENDED || $this->trainingStatuses->sendInvoiceAfter($application->getId())) {
+					$application->setNextStatus(Statuses::STATUS_INVOICE_SENT_AFTER);
+					$applications[$application->getId()] = $application;
 				}
 			}
 		}
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_REMINDED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($application->status === Statuses::STATUS_PRO_FORMA_INVOICE_SENT && $application->paid) {
+				if ($application->getStatus() === Statuses::STATUS_PRO_FORMA_INVOICE_SENT && $application->getPaid()) {
 					continue;
 				}
-				if ($application->trainingStart->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
-					$application->nextStatus = Statuses::STATUS_REMINDED;
-					$applications[$application->id] = $application;
+				if (!$application->getTrainingStart()) {
+					throw new ShouldNotHappenException(sprintf("Training application id '%s' with status '%s' should have a training start set", $application->getId(), $application->getStatus()));
+				}
+				if ($application->getTrainingStart()->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
+					$application->setNextStatus(Statuses::STATUS_REMINDED);
+					$applications[$application->getId()] = $application;
 				}
 			}
 		}
 
-		foreach ($applications as $application) {
-			$application->files = $this->trainingFiles->getFiles($application->id);
-		}
-		return $applications;
+		return array_values($applications);
 	}
 
 
-	/**
-	 * @param Row<mixed> $application
-	 * @param DefaultTemplate $template
-	 * @param string $additional
-	 */
-	public function sendInvitation(Row $application, DefaultTemplate $template, string $additional): void
+	public function sendInvitation(TrainingApplication $application, DefaultTemplate $template, string $additional): void
 	{
-		Debugger::log("Sending invitation email application id: {$application->id}, training: {$application->training->action}");
-		$message = $this->getMailMessage($application);
+		Debugger::log("Sending invitation email application id: {$application->getId()}, training: {$application->getTrainingAction()}");
+		$message = $this->trainingMailMessageFactory->getMailMessage($application);
 		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $message->getSubject(), $template);
+		$this->sendMail($application->getEmail(), $application->getName(), $message->getSubject(), $template);
 	}
 
 
-	/**
-	 * @param Row<mixed> $application
-	 * @param DefaultTemplate $template
-	 * @param bool $feedbackRequest
-	 * @param string $additional
-	 */
-	public function sendMaterials(Row $application, DefaultTemplate $template, bool $feedbackRequest, string $additional): void
+	public function sendMaterials(TrainingApplication $application, DefaultTemplate $template, bool $feedbackRequest, string $additional): void
 	{
-		Debugger::log("Sending materials email application id: {$application->id}, training: {$application->training->action}");
-		$message = $this->getMailMessage($application);
+		Debugger::log("Sending materials email application id: {$application->getId()}, training: {$application->getTrainingAction()}");
+		$message = $this->trainingMailMessageFactory->getMailMessage($application);
 		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->feedbackRequest = $feedbackRequest;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $message->getSubject(), $template);
+		$this->sendMail($application->getEmail(), $application->getName(), $message->getSubject(), $template);
 	}
 
 
-	/**
-	 * @param Row<mixed> $application
-	 * @param DefaultTemplate $template
-	 * @param FileUpload $invoice
-	 * @param string|null $cc
-	 * @param string $additional
-	 */
-	public function sendInvoice(Row $application, DefaultTemplate $template, FileUpload $invoice, ?string $cc, string $additional): void
+	public function sendInvoice(TrainingApplication $application, DefaultTemplate $template, FileUpload $invoice, ?string $cc, string $additional): void
 	{
-		Debugger::log("Sending invoice email to application id: {$application->id}, training: {$application->training->action}");
-		$message = $this->getMailMessage($application);
+		Debugger::log("Sending invoice email to application id: {$application->getId()}, training: {$application->getTrainingAction()}");
+		$message = $this->trainingMailMessageFactory->getMailMessage($application);
 		$template->setFile($message->getFilename());
 		$template->application = $application;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $message->getSubject(), $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()], $cc);
+		$this->sendMail($application->getEmail(), $application->getName(), $message->getSubject(), $template, [$invoice->getUntrustedName() => $invoice->getTemporaryFile()], $cc);
 	}
 
 
-	/**
-	 * @param Row<mixed> $application
-	 * @param DefaultTemplate $template
-	 * @param string $additional
-	 */
-	public function sendReminder(Row $application, DefaultTemplate $template, string $additional): void
+	public function sendReminder(TrainingApplication $application, DefaultTemplate $template, string $additional): void
 	{
-		Debugger::log("Sending reminder email application id: {$application->id}, training: {$application->training->action}");
-		$message = $this->getMailMessage($application);
+		Debugger::log("Sending reminder email application id: {$application->getId()}, training: {$application->getTrainingAction()}");
+		$message = $this->trainingMailMessageFactory->getMailMessage($application);
 		$template->setFile($message->getFilename());
-		if (!$application->remote) {
-			$template->venue = $this->trainingVenues->get($application->venueAction);
+		if (!$application->isRemote()) {
+			if (!$application->getVenueAction()) {
+				throw new ShouldNotHappenException("Application id '{$application->getId()}' for in-person training should have a venue set at this point");
+			}
+			$template->venue = $this->trainingVenues->get($application->getVenueAction());
 		}
 		$template->application = $application;
 		$template->phoneNumber = $this->phoneNumber;
 		$template->additional = $additional;
-		$this->sendMail($application->email, $application->name, $message->getSubject(), $template);
+		$this->sendMail($application->getEmail(), $application->getName(), $message->getSubject(), $template);
 	}
 
 
 	/**
-	 * @param string $recipientAddress
-	 * @param string $recipientName
-	 * @param string $subject
-	 * @param DefaultTemplate $template
-	 * @param string[] $attachments
-	 * @param string|null $cc
+	 * @param array<string, string> $attachments name => filename
 	 */
-	private function sendMail(string $recipientAddress, string $recipientName, string $subject, DefaultTemplate $template, array $attachments = [], ?string $cc = null): void
+	private function sendMail(?string $recipientAddress, ?string $recipientName, string $subject, DefaultTemplate $template, array $attachments = [], ?string $cc = null): void
 	{
+		if (!$recipientAddress || !$recipientName) {
+			throw new ShouldNotHappenException(sprintf("To send an email, training application must have both name and address set, this one has '%s <%s>'", $recipientName ?? '<null>', $recipientAddress ?? '<null>'));
+		}
 		$mail = new Message();
 		foreach ($attachments as $name => $file) {
 			$contents = file_get_contents($file);
@@ -255,32 +239,6 @@ class Mails
 			$mail->addCc($cc);
 		}
 		$this->mailer->send($mail);
-	}
-
-
-	/**
-	 * @param Row $application
-	 * @return MailMessageAdmin
-	 */
-	public function getMailMessage(Row $application): MailMessageAdmin
-	{
-		switch ($application->nextStatus) {
-			case Statuses::STATUS_INVITED:
-				return new MailMessageAdmin('invitation', 'Pozvánka na školení ' . $application->training->name);
-			case Statuses::STATUS_MATERIALS_SENT:
-				return new MailMessageAdmin($application->familiar ? 'materialsFamiliar' : 'materials', 'Materiály ze školení ' . $application->training->name);
-			case Statuses::STATUS_INVOICE_SENT:
-				return $application->status === Statuses::STATUS_PRO_FORMA_INVOICE_SENT || $this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id)
-					? new MailMessageAdmin('invoiceAfterProforma', 'Faktura za školení ' . $application->training->name)
-					: new MailMessageAdmin('invoice', 'Potvrzení registrace na školení ' . $application->training->name . ' a faktura');
-			case Statuses::STATUS_INVOICE_SENT_AFTER:
-				return new MailMessageAdmin($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->id) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->training->name);
-			case Statuses::STATUS_REMINDED:
-				$start = $this->dateTimeFormatter->localeIntervalDay($application->trainingStart, $application->trainingEnd, 'cs_CZ');
-				return new MailMessageAdmin($application->remote ? 'reminderRemote' : 'reminder', 'Připomenutí školení ' . $application->training->name . ' ' . $start);
-			default:
-				throw new ShouldNotHappenException();
-		}
 	}
 
 }

@@ -126,17 +126,17 @@ class TrainingReviewFormFactory
 
 		$applications = [];
 		foreach ($this->trainingApplications->getByDate($dateId) as $application) {
-			if (!$application->discarded) {
+			if (!$application->isDiscarded()) {
 				$option = Html::el('option');
-				if (in_array($application->name, $reviewApplicationNames)) {
+				if (in_array($application->getName(), $reviewApplicationNames)) {
 					$option->disabled = true;
 				}
-				$option->setText(($application->name ?? 'smazáno') . ($application->company ? ", {$application->company}" : ''));
+				$option->setText(($application->getName() ?? 'smazáno') . ($application->getCompany() ? ", {$application->getCompany()}" : ''));
 				$option->addAttributes([
-					'data-name' => $application->name ?? '',
-					'data-company' => $application->company ?? '',
+					'data-name' => $application->getName() ?? '',
+					'data-company' => $application->getCompany() ?? '',
 				]);
-				$applications[(int)$application->id] = $option;
+				$applications[(int)$application->getId()] = $option;
 			}
 		}
 		return $applications;

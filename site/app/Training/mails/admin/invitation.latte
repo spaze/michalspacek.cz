@@ -1,17 +1,17 @@
 Dobrý den,
 
-posílám pozvánku na školení {$application->training->name} na které jste se
-nezávazně přihlásili na mých webových stránkách dne {$application->statusTime|localeDay:'cs_CZ'}.
+posílám pozvánku na školení {$application->getTrainingName()} na které jste se
+nezávazně přihlásili na mých webových stránkách dne {$application->getStatusTime()|localeDay:'cs_CZ'}.
 
-Termín školení je {$application->trainingStart|localeIntervalDay:$application->trainingEnd, 'cs_CZ'} v čase {$application->trainingStart|date:'H:i'}–{$application->trainingEnd|date:'H:i'},
-{if $application->remote}
+Termín školení je {$application->getTrainingStart()|localeIntervalDay:$application->getTrainingEnd(), 'cs_CZ'} v čase {$application->getTrainingStart()|date:'H:i'}–{$application->getTrainingEnd()|date:'H:i'},
+{if $application->isRemote()}
 bude se konat online, nemusíte nikam chodit.
 {else}
-bude se konat na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
+bude se konat na adrese {$application->getVenueName()}{if $application->getVenueNameExtended()}, {$application->getVenueNameExtended()}{/if}, {$application->getVenueAddress()}, {$application->getVenueCity()}.
 {/if}
 
 Přihlaste se prosím na adrese
-{link '//:Www:Redirect:application' $application->accessToken}
+{link '//:Www:Redirect:application' $application->getAccessToken()}
 
 Registrační formulář bude předvyplněn údaji, které jste zadali při
 nezávazné registraci. Pokud z jakýchkoliv důvodů nemůžete na školení

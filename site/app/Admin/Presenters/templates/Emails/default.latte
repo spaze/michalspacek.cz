@@ -1,3 +1,4 @@
+{varType MichalSpacekCz\Training\Applications\TrainingApplication[] $applications}
 {define #menu}
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
@@ -25,37 +26,37 @@
 		</tr>
 	</thead>
 	{foreach $applications as $application}
-		{formContainer $application->id}
+		{formContainer "{$application->getId()}"}
 		<tbody class="row">
 		<tr>
 			<td class="positionCell"><small>{$iterator->getCounter()}.</small></td>
 			<td>{input send}</td>
-			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id" n:attr="title => $application->company">{$application->name ?? smazáno}</a></small></td>
-			<td class="button"><small>{$application->email ?? smazáno}</small></td>
+			<td><small n:tag-if="$application->getName() === null"><a n:href="Trainings:application $application->getId()" n:attr="title => $application->getCompany()">{$application->getName() ?? smazáno}</a></small></td>
+			<td class="button"><small>{$application->getEmail() ?? smazáno}</small></td>
 			<td>
-				{$application->training->name}
+				{$application->getTrainingName()}
 				<small>
-					{ifset $application->dateId}
-						{$application->trainingStart|date:'j. n.'} {if $application->remote}{_messages.label.remote}{else}{$application->venueCity}{/if}
+					{if $application->getDateId()}
+						{$application->getTrainingStart()|date:'j. n.'} {if $application->isRemote()}{_messages.label.remote}{else}{$application->getVenueCity()}{/if}
 					{else}
 						zvolte termín
-					{/ifset}
+					{/if}
 				</small>
 			</td>
-			<td><small><code><span title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</span> → {$application->nextStatus}</code></small></td>
+			<td><small><code><span title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()}</span>{if $application->getNextStatus()} → {$application->getNextStatus()}{/if}</code></small></td>
 			<td>
-				{if in_array($application->nextStatus, [\MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT, \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER])}
-					{if $application->price && $application->vatRate && $application->priceVat}
+				{if in_array($application->getNextStatus(), [\MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT, \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER])}
+					{if $application->getPrice() && $application->getVatRate() && $application->getPriceVat()}
 						{input invoiceId}
 						{input invoice}
-						<span title="Cena v Kč bez DPH po případné slevě">{$application->priceWithCurrency}</span>
-						<small title="Cena v Kč s DPH po případné slevě">{$application->priceVatWithCurrency}</small>
-						<small n:if="$application->discount" title="Sleva {$application->discount} %"><strong>{$application->discount} %</strong></small>
+						<span title="Cena v Kč bez DPH po případné slevě">{$application->getPriceWithCurrency()}</span>
+						<small title="Cena v Kč s DPH po případné slevě">{$application->getPriceVatWithCurrency()}</small>
+						<small n:if="$application->getDiscount()" title="Sleva {$application->getDiscount()} %"><strong>{$application->getDiscount()} %</strong></small>
 					{/if}
 				{/if}
 			</td>
 		</tr>
-		<tr n:if="$application->nextStatus == \MichalSpacekCz\Training\Statuses::STATUS_MATERIALS_SENT">
+		<tr n:if="$application->getNextStatus() == \MichalSpacekCz\Training\Statuses::STATUS_MATERIALS_SENT">
 			<td></td>
 			<td></td>
 			<td colspan="5">{input feedbackRequest}</td>
@@ -65,9 +66,9 @@
 			<td></td>
 			<td colspan="5">
 				<p>
-					Template: <code>{$application->mailMessage->getBasename()}</code><br>
-					Subject: <em>{$application->mailMessage->getSubject()}</em>
-					{if $application->nextStatus == \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT || $application->nextStatus == \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER}
+					Template: <code>{$application->getMailMessage()->getBasename()}</code><br>
+					Subject: <em>{$application->getMailMessage()->getSubject()}</em>
+					{if $application->getNextStatus() === \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT || $application->getNextStatus() === \MichalSpacekCz\Training\Statuses::STATUS_INVOICE_SENT_AFTER}
 						<br>{label cc /} {input cc}
 					{/if}
 				</p>

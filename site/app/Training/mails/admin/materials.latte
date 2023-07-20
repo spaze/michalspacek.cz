@@ -1,18 +1,18 @@
 Dobrý den!
 
 Ještě jednou bych Vám chtěl poděkovat za účast na školení
-{$application->training->name} a doufám, že splnilo Vaše očekávání.
+{$application->getTrainingName()} a doufám, že splnilo Vaše očekávání.
 
 Na níže uvedeném odkazu si během následujících 30 dní můžete pro Vaši
 osobní potřebu stáhnout materiály ze školení, včetně certifikátu v PDF.
-{link '//:Www:Redirect:files' $application->accessToken}
+{link '//:Www:Redirect:files' $application->getAccessToken()}
 
-{if $application->videoHref}
+{if $application->getVideoHref()}
 Záznam školení bude dostupný neomezeně dlouho, najdete ho na
-{$application->videoHref}
+{$application->getVideoHref()}
 
 {/if}
-{if $application->training->action == 'bezpecnost-php-aplikaci'}
+{if $application->getTrainingAction() == 'bezpecnost-php-aplikaci'}
 Nově nabyté vědomosti si, prosím, ověřujte pouze na vlastních webech
 a aplikacích a na příkladech, které jsou přiloženy k materiálům, případně
 na webech, které jsou k učení a prověřování znalostí přímo určené.
@@ -21,7 +21,7 @@ na webech, které jsou k učení a prověřování znalostí přímo určené.
 {if $feedbackRequest}
 Zároveň bych Vás chtěl poprosit o zpětnou vazbu, abych mohl další školení udělat
 ještě lepší. Zabere to jen pár minut, děkuju! Formulář s otázkami najdete tu:
-{$application->feedbackHref}
+{$application->getFeedbackHref()}
 
 {/if}
 Pokud používáte LinkedIn nebo Facebook, pošlete mi žádost o propojení:

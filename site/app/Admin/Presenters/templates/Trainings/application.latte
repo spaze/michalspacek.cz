@@ -1,7 +1,7 @@
 {define #menu}
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
-{if $trainingStart && $trainingEnd}
+{if $applicationDateId && $trainingStart && $trainingEnd}
 &raquo; <a n:href="Trainings:">Termíny</a>
 &raquo; <a n:href="date $applicationDateId">{$trainingName} {$trainingStart|localeIntervalDay:$trainingEnd} {$trainingCity}</a>
 {else}

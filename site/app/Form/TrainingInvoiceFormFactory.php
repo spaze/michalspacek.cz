@@ -21,7 +21,7 @@ class TrainingInvoiceFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 * @param callable(): void $onError
-	 * @param array<int, string> $unpaidInvoiceIds
+	 * @param list<int> $unpaidInvoiceIds
 	 * @return Form
 	 */
 	public function create(callable $onSuccess, callable $onError, array $unpaidInvoiceIds): Form

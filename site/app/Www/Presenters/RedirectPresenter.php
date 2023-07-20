@@ -26,7 +26,7 @@ class RedirectPresenter extends BasePresenter
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
-			$this->redirect(':Www:Trainings:files', $application->trainingAction, $token);
+			$this->redirect(':Www:Trainings:files', $application->getTrainingAction(), $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}
@@ -37,7 +37,7 @@ class RedirectPresenter extends BasePresenter
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
-			$this->redirect(':Www:Trainings:application', $application->trainingAction, $token);
+			$this->redirect(':Www:Trainings:application', $application->getTrainingAction(), $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}

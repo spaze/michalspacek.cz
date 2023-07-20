@@ -4,17 +4,17 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Dates;
 
 use DateTime;
+use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Price;
-use Nette\Database\Row;
 use Nette\Utils\Html;
 
 class TrainingDate
 {
 
-	/** @var list<Row> */
+	/** @var list<TrainingApplication> */
 	private array $applications = [];
 
-	/** @var list<Row> */
+	/** @var list<TrainingApplication> */
 	private array $canceledApplications = [];
 
 
@@ -248,7 +248,7 @@ class TrainingDate
 
 
 	/**
-	 * @param list<Row> $applications
+	 * @param list<TrainingApplication> $applications
 	 */
 	public function setApplications(array $applications): void
 	{
@@ -257,7 +257,7 @@ class TrainingDate
 
 
 	/**
-	 * @return list<Row>
+	 * @return list<TrainingApplication>
 	 */
 	public function getApplications(): array
 	{
@@ -266,7 +266,7 @@ class TrainingDate
 
 
 	/**
-	 * @param list<Row> $applications
+	 * @param list<TrainingApplication> $applications
 	 */
 	public function setCanceledApplications(array $applications): void
 	{
@@ -275,7 +275,7 @@ class TrainingDate
 
 
 	/**
-	 * @return list<Row>
+	 * @return list<TrainingApplication>
 	 */
 	public function getCanceledApplications(): array
 	{
