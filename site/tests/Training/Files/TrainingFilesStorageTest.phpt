@@ -22,10 +22,10 @@ class TrainingFilesStorageTest extends TestCase
 
 	public function testGetFilesDir(): void
 	{
-		Assert::noError(function () use (&$dir): void {
+		Assert::noError(function (): void {
 			$dir = $this->trainingFilesStorage->getFilesDir(new DateTimeImmutable('2020-10-20 20:30:40'));
+			Assert::match('~^.{10,}/files/trainings/2020-10-20/$~', $dir);
 		});
-		Assert::match('~^.{10,}/files/trainings/2020-10-20/$~', $dir);
 	}
 
 }

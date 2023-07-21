@@ -37,7 +37,7 @@ class TrainingMailMessageFactory
 				$start = $this->dateTimeFormatter->localeIntervalDay($application->getTrainingStart(), $application->getTrainingEnd(), 'cs_CZ');
 				return new MailMessageAdmin($application->isRemote() ? 'reminderRemote' : 'reminder', 'Připomenutí školení ' . $application->getTrainingName() . ' ' . $start);
 			default:
-				throw new ShouldNotHappenException();
+				throw new ShouldNotHappenException(sprintf("Unsupported next status: '%s'", $application->getNextStatus() ?? '<null>'));
 		}
 	}
 
