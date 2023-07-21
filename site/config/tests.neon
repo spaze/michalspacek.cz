@@ -7,6 +7,12 @@ parameters:
 		rootDomainMapping:
 			cz: rizek.test
 			com: burger.test
+	encryption:
+		keys:
+			email:
+				test: "17fa3225effc107a689eb72fd8c20983bbc690bf9ea42a2f0306e0c226720845"
+		activeKeyIds:
+			email: test
 	certificatesApi:
 		users:
 			foo: f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7 # foo

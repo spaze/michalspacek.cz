@@ -67,7 +67,7 @@ class TrainingApplicationStorageTest extends TestCase
 		if (!is_string($params['email'])) {
 			Assert::fail('Email should be a string but is ' . get_debug_type($params['email']));
 		} else {
-			Assert::match('~\$dev\d+\$[^@]+$~', $params['email']);
+			Assert::match('~\$test\$[^@]+$~', $params['email']);
 		}
 		Assert::same('company', $params['company']);
 		Assert::same('street', $params['street']);
