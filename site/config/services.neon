@@ -111,7 +111,7 @@ services:
 	- MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
 	- MichalSpacekCz\Training\Files\TrainingFiles
-	- MichalSpacekCz\Training\Files\TrainingFilesStorage('../../files/trainings')
+	- MichalSpacekCz\Training\Files\TrainingFilesStorage
 	- MichalSpacekCz\Training\FormDataLogger
 	- MichalSpacekCz\Training\FormSpam
 	- MichalSpacekCz\Training\FreeSeats
