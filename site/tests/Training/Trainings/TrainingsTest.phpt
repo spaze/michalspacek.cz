@@ -1,14 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Trainings;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingsTest extends TestCase

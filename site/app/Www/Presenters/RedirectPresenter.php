@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Articles\Articles;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Http\IResponse;
 
@@ -15,7 +15,7 @@ class RedirectPresenter extends BasePresenter
 
 
 	public function __construct(
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly Articles $articles,
 	) {
 		parent::__construct();
@@ -26,7 +26,7 @@ class RedirectPresenter extends BasePresenter
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
-			$this->redirect(':Www:Trainings:files', $application->trainingAction, $token);
+			$this->redirect(':Www:Trainings:files', $application->getTrainingAction(), $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}
@@ -37,7 +37,7 @@ class RedirectPresenter extends BasePresenter
 	{
 		$application = $this->trainingApplications->getApplicationByToken($token);
 		if ($application) {
-			$this->redirect(':Www:Trainings:application', $application->trainingAction, $token);
+			$this->redirect(':Www:Trainings:application', $application->getTrainingAction(), $token);
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}

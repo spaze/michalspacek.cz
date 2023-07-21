@@ -1,16 +1,16 @@
 Dobrý den,
 
-rád bych Vám připomněl, že dne {$application->trainingStart|localeIntervalDay:$application->trainingEnd, 'cs_CZ'} se koná online školení
-{$application->training->name}, na které jste přihlášeni.
+rád bych Vám připomněl, že dne {$application->getTrainingStart()|localeIntervalDay:$application->getTrainingEnd(), 'cs_CZ'} se koná online školení
+{$application->getTrainingName()}, na které jste přihlášeni.
 
 Adresa pro připojení:
-{$application->remoteUrl}
-{$application->remoteNotes}
+{$application->getRemoteUrl()}
+{$application->getRemoteNotes()}
 
 Prezentaci ke stažení a případnému vytištění pro zapisování poznámek najdete na
-{link '//:Www:Redirect:files' $application->accessToken}
+{link '//:Www:Redirect:files' $application->getAccessToken()}
 
-Školení začíná v {$application->trainingStart|date:'H:i'}.
+Školení začíná v {$application->getTrainingStart()|date:'H:i'}.
 V případě jakýchkoliv komplikací mě kontaktujte na telefonu {$phoneNumber}.
 
 {if $additional}

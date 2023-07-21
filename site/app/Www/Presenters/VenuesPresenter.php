@@ -6,7 +6,8 @@ namespace MichalSpacekCz\Www\Presenters;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
-use MichalSpacekCz\Training\Venues;
+use MichalSpacekCz\Training\Exceptions\TrainingVenueNotFoundException;
+use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Application\BadRequestException;
 
 class VenuesPresenter extends BasePresenter
@@ -17,7 +18,7 @@ class VenuesPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
-		private readonly Venues $trainingVenues,
+		private readonly TrainingVenues $trainingVenues,
 		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
 	) {
 		parent::__construct();
@@ -26,25 +27,15 @@ class VenuesPresenter extends BasePresenter
 
 	public function actionVenue(string $name): void
 	{
-		$venue = $this->trainingVenues->get($name);
-		if (!$venue) {
-			throw new BadRequestException("Where in the world is {$name}?");
+		try {
+			$venue = $this->trainingVenues->get($name);
+		} catch (TrainingVenueNotFoundException $e) {
+			throw new BadRequestException("Where in the world is {$name}?", previous: $e);
 		}
-		$this->venueId = $venue->id;
+		$this->venueId = $venue->getId();
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->name]);
-		$this->template->name = $venue->name;
-		$this->template->nameExtended = $venue->nameExtended;
-		$this->template->href = $venue->href;
-		$this->template->address = $venue->address;
-		$this->template->city = $venue->city;
-		$this->template->description = $venue->description;
-		$this->template->action = $venue->action;
-		$this->template->entrance = $venue->entrance;
-		$this->template->entranceNavigation = $venue->entranceNavigation;
-		$this->template->streetview = $venue->streetview;
-		$this->template->parking = $venue->parking;
-		$this->template->publicTransport = $venue->publicTransport;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->getName()]);
+		$this->template->venue = $venue;
 	}
 
 

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use Nette\Application\UI\Form;
 
 class TrainingInvoiceFormFactory
@@ -12,7 +12,7 @@ class TrainingInvoiceFormFactory
 
 	public function __construct(
 		private readonly FormFactory $factory,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 	) {
 	}
@@ -21,7 +21,7 @@ class TrainingInvoiceFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 * @param callable(): void $onError
-	 * @param array<int, string> $unpaidInvoiceIds
+	 * @param list<int> $unpaidInvoiceIds
 	 * @return Form
 	 */
 	public function create(callable $onSuccess, callable $onError, array $unpaidInvoiceIds): Form

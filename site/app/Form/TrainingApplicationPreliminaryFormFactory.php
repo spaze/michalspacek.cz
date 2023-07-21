@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\FormSpam;
 use Nette\Application\UI\Form;
@@ -16,7 +16,7 @@ class TrainingApplicationPreliminaryFormFactory
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 		private readonly FormSpam $formSpam,
 	) {
 	}
@@ -31,7 +31,7 @@ class TrainingApplicationPreliminaryFormFactory
 			$values = $form->getValues();
 			try {
 				$this->formSpam->check($values, $action);
-				$this->trainingApplications->addPreliminaryInvitation($trainingId, $values->name, $values->email);
+				$this->trainingApplicationStorage->addPreliminaryInvitation($trainingId, $values->name, $values->email);
 				$onSuccess($action);
 			} catch (SpammyApplicationException $e) {
 				Debugger::log($e);

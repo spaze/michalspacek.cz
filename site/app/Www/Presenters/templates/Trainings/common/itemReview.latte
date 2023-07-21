@@ -1,2 +1,3 @@
-<p><strong>{$review->name}{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong></p>
-<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
+{varType MichalSpacekCz\Training\Reviews\TrainingReview $review}
+<p><strong>{$review->getName()}{if $review->getJobTitle()}, {$review->getJobTitle()}{/if}{if $review->getCompany()}, {$review->getCompany()}{/if}</strong></p>
+<div class="indent"><p>{$review->getReview()} <small n:if="$review->getHref()">(<a href="{$review->getHref()}">{_messages.trainings.more}</a>)</small></p></div>

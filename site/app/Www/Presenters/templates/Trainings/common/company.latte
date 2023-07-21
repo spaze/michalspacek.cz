@@ -1,5 +1,5 @@
 <ul>
-	{foreach $companyTrainings as $item}
-		<li><a n:href=":Www:CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
+	{foreach $companyTrainings as $action => $name}
+		<li><a n:href=":Www:CompanyTrainings:training $action"><strong>{$name}</strong></a></li>
 	{/foreach}
 </ul>

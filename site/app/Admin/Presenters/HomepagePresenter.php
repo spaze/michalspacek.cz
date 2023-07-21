@@ -5,13 +5,14 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Tls\Certificate;
 use MichalSpacekCz\Tls\Certificates;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\DateList\DateListOrder;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Mails;
+use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 
 class HomepagePresenter extends BasePresenter
 {
@@ -20,7 +21,8 @@ class HomepagePresenter extends BasePresenter
 
 
 	public function __construct(
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
+		private readonly PreliminaryTrainings $trainingPreliminaryApplications,
 		private readonly Mails $trainingMails,
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
@@ -38,7 +40,7 @@ class HomepagePresenter extends BasePresenter
 		$this->template->unpaidInvoices = $this->trainingApplications->getValidUnpaidCount();
 		$this->template->certificates = $certificates = $this->certificates->getNewest();
 		$this->template->certificatesNeedAttention = $this->certsNeedAttention($certificates);
-		[$this->template->preliminaryTotal, $this->template->preliminaryDateSet] = $this->trainingApplications->getPreliminaryCounts();
+		[$this->template->preliminaryTotal, $this->template->preliminaryDateSet] = $this->trainingPreliminaryApplications->getPreliminaryCounts();
 		$this->template->pastWithPersonalData = count($this->trainingDates->getPastWithPersonalData());
 	}
 

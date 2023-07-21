@@ -4,25 +4,25 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
-use Nette\Database\Row;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
 
 class TrainingApplicationAdminFormFactory
 {
 
-	/** @var array<string, Checkbox> */
+	/** @var array<string, array{0:Checkbox, 1:mixed}> */
 	private array $deletableFields;
 
 
 	public function __construct(
 		private readonly FormFactory $factory,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
@@ -31,7 +31,7 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, Row $application): Form
+	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): Form
 	{
 		$form = $this->factory->create();
 
@@ -47,33 +47,33 @@ class TrainingApplicationAdminFormFactory
 
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		$dates = [];
-		if ($application->dateId) {
-			$dates[$application->dateId] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($application->dateId));
+		if ($application->getDateId()) {
+			$dates[$application->getDateId()] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($application->getDateId()));
 		}
-		if (isset($upcoming[$application->trainingAction])) {
-			foreach ($upcoming[$application->trainingAction]->getDates() as $date) {
+		if (isset($upcoming[$application->getTrainingAction()])) {
+			foreach ($upcoming[$application->getTrainingAction()]->getDates() as $date) {
 				$dates[$date->getId()] = $this->trainingDates->formatDateVenueForAdmin($date);
 			}
 		}
 		$required = (bool)$dates;
 		$form->addSelect('date', 'Datum:', $dates)
 			->setPrompt($dates ? false : 'Žádný vypsaný termín')
-			->setHtmlAttribute('data-original-date-id', $application->dateId)
+			->setHtmlAttribute('data-original-date-id', $application->getDateId())
 			->setRequired($required)
 			->setDisabled(!$required);
 
-		$this->deletableFields['name'] = $form->addCheckbox('nameSet');
-		$this->deletableFields['email'] = $form->addCheckbox('emailSet');
-		$this->deletableFields['company'] = $form->addCheckbox('companySet');
-		$this->deletableFields['street'] = $form->addCheckbox('streetSet');
-		$this->deletableFields['city'] = $form->addCheckbox('citySet');
-		$this->deletableFields['zip'] = $form->addCheckbox('zipSet');
-		$this->deletableFields['country'] = $form->addCheckbox('countrySet');
-		$this->deletableFields['companyId'] = $form->addCheckbox('companyIdSet');
-		$this->deletableFields['companyTaxId'] = $form->addCheckbox('companyTaxIdSet');
-		$this->deletableFields['note'] = $form->addCheckbox('noteSet');
+		$this->deletableFields['name'] = [$form->addCheckbox('nameSet'), $application->getName()];
+		$this->deletableFields['email'] = [$form->addCheckbox('emailSet'), $application->getEmail()];
+		$this->deletableFields['company'] = [$form->addCheckbox('companySet'), $application->getCompany()];
+		$this->deletableFields['street'] = [$form->addCheckbox('streetSet'), $application->getStreet()];
+		$this->deletableFields['city'] = [$form->addCheckbox('citySet'), $application->getCity()];
+		$this->deletableFields['zip'] = [$form->addCheckbox('zipSet'), $application->getZip()];
+		$this->deletableFields['country'] = [$form->addCheckbox('countrySet'), $application->getCountry()];
+		$this->deletableFields['companyId'] = [$form->addCheckbox('companyIdSet'), $application->getCompanyId()];
+		$this->deletableFields['companyTaxId'] = [$form->addCheckbox('companyTaxIdSet'), $application->getCompanyTaxId()];
+		$this->deletableFields['note'] = [$form->addCheckbox('noteSet'), $application->getNote()];
 
-		foreach ($this->deletableFields as $field => $checkbox) {
+		foreach ($this->deletableFields as $field => [$checkbox]) {
 			$checkbox->setHtmlAttribute('class', 'disableInput');
 			$form->getComponent($field)
 				->setHtmlAttribute('class', 'transparent')
@@ -82,12 +82,12 @@ class TrainingApplicationAdminFormFactory
 
 		$containerName = 'statusHistoryDelete';
 		$historyContainer = $form->addContainer($containerName);
-		foreach ($this->trainingStatuses->getStatusHistory($application->applicationId) as $history) {
+		foreach ($this->trainingStatuses->getStatusHistory($application->getId()) as $history) {
 			$historyContainer
 				->addSubmit((string)$history->id)
 				->setValidationScope([$form[$containerName]])
 				->onClick[] = function (SubmitButton $button) use ($application, $onStatusHistoryDeleteSuccess): void {
-					$this->trainingStatuses->deleteHistoryRecord($application->applicationId, (int)$button->getName());
+					$this->trainingStatuses->deleteHistoryRecord($application->getId(), (int)$button->getName());
 					$onStatusHistoryDeleteSuccess();
 				};
 		}
@@ -95,8 +95,8 @@ class TrainingApplicationAdminFormFactory
 		$form->onSuccess[] = function (Form $form) use ($application, $onSuccess): void {
 			$values = $form->getValues();
 			$dateId = $values->date ?? null;
-			$this->trainingApplications->updateApplicationData(
-				$application->applicationId,
+			$this->trainingApplicationStorage->updateApplicationData(
+				$application->getId(),
 				$values->nameSet ? $values->name : null,
 				$values->emailSet ? $values->email : null,
 				$values->companySet ? $values->company : null,
@@ -146,36 +146,32 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	/**
-	 * @param Form $form
-	 * @param Row<mixed> $application
-	 */
-	private function setApplication(Form $form, Row $application): void
+	private function setApplication(Form $form, TrainingApplication $application): void
 	{
 		$values = [
-			'name' => $application->name,
-			'email' => $application->email,
-			'familiar' => $application->familiar,
-			'source' => $application->sourceAlias,
-			'company' => $application->company,
-			'street' => $application->street,
-			'city' => $application->city,
-			'zip' => $application->zip,
-			'country' => $application->country,
-			'companyId' => $application->companyId,
-			'companyTaxId' => $application->companyTaxId,
-			'note' => $application->note,
-			'price' => $application->price,
-			'vatRate' => ($application->vatRate ? $application->vatRate * 100 : $application->vatRate),
-			'priceVat' => $application->priceVat,
-			'discount' => $application->discount,
-			'invoiceId' => $application->invoiceId,
-			'paid' => $application->paid,
-			'date' => $application->dateId,
+			'name' => $application->getName(),
+			'email' => $application->getEmail(),
+			'familiar' => $application->isFamiliar(),
+			'source' => $application->getSourceAlias(),
+			'company' => $application->getCompany(),
+			'street' => $application->getStreet(),
+			'city' => $application->getCity(),
+			'zip' => $application->getZip(),
+			'country' => $application->getCountry(),
+			'companyId' => $application->getCompanyId(),
+			'companyTaxId' => $application->getCompanyTaxId(),
+			'note' => $application->getNote(),
+			'price' => $application->getPrice(),
+			'vatRate' => $application->getVatRate() ? $application->getVatRate() * 100 : $application->getVatRate(),
+			'priceVat' => $application->getPriceVat(),
+			'discount' => $application->getDiscount(),
+			'invoiceId' => $application->getInvoiceId(),
+			'paid' => $application->getPaid(),
+			'date' => $application->getDateId(),
 		];
-		foreach ($this->deletableFields as $field => $checkbox) {
-			$values[$checkbox->getName()] = ($application->$field !== null);
-			$form->getComponent($field)->setHtmlAttribute('class', $application->$field === null ? 'transparent' : null);
+		foreach ($this->deletableFields as $field => [$checkbox, $value]) {
+			$values[$checkbox->getName()] = ($value !== null);
+			$form->getComponent($field)->setHtmlAttribute('class', $value === null ? 'transparent' : null);
 		}
 		$form->setDefaults($values);
 	}

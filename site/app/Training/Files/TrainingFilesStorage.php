@@ -12,17 +12,7 @@ class TrainingFilesStorage
 	/**
 	 * Files directory, does not end with a slash.
 	 */
-	private string $filesDir;
-
-
-	public function __construct(string $filesDir)
-	{
-		$path = realpath($filesDir);
-		if (!$path) {
-			throw new RuntimeException("Can't get absolute path, maybe {$filesDir} doesn't exist?");
-		}
-		$this->filesDir = $path;
-	}
+	private const FILES_DIR = __DIR__ . '/../../../files/trainings';
 
 
 	/**
@@ -30,7 +20,11 @@ class TrainingFilesStorage
 	 */
 	public function getFilesDir(DateTimeInterface $date): string
 	{
-		return $this->filesDir . '/' . $date->format('Y-m-d') . '/';
+		$path = realpath(self::FILES_DIR);
+		if (!$path) {
+			throw new RuntimeException(sprintf("Can't get real path, maybe '%s' doesn't exist? ", self::FILES_DIR));
+		}
+		return $path . '/' . $date->format('Y-m-d') . '/';
 	}
 
 }

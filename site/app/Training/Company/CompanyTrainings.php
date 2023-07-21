@@ -1,13 +1,17 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Company;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
+use MichalSpacekCz\Training\Exceptions\CompanyTrainingDoesNotExistException;
+use MichalSpacekCz\Training\Prices;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Utils\Html;
 
 class CompanyTrainings
 {
@@ -17,20 +21,19 @@ class CompanyTrainings
 		private readonly TexyFormatter $texyFormatter,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Translator $translator,
+		private readonly Prices $prices,
 	) {
 	}
 
 
 	/**
-	 * @param string $name
-	 * @return Row<mixed>|null
+	 * @throws CompanyTrainingDoesNotExistException
 	 */
-	public function getInfo(string $name): ?Row
+	public function getInfo(string $name): CompanyTraining
 	{
-		/** @var Row<mixed>|null $result */
 		$result = $this->database->fetch(
 			'SELECT
-				t.id_training AS trainingId,
+				t.id_training AS id,
 				a.action,
 				t.name,
 				tc.description,
@@ -60,13 +63,15 @@ class CompanyTrainings
 			$name,
 			$this->translator->getDefaultLocale(),
 		);
-
-		return ($result ? $this->texyFormatter->formatTraining($result) : null);
+		if (!$result) {
+			throw new CompanyTrainingDoesNotExistException($name);
+		}
+		return $this->createFromDatabaseRow($result);
 	}
 
 
 	/**
-	 * @return Row[]
+	 * @return array<string, Html> action => name
 	 */
 	public function getWithoutPublicUpcoming(): array
 	{
@@ -90,12 +95,48 @@ class CompanyTrainings
 
 		$trainings = [];
 		foreach ($result as $training) {
+			if (!is_string($training->action)) {
+				throw new ShouldNotHappenException('Action should be a string but is ' . get_debug_type($training->action));
+			}
 			if (!isset($public[$training->action])) {
-				$trainings[$training->action] = $this->texyFormatter->formatTraining($training);
+				$trainings[$training->action] = $this->texyFormatter->translate($training->name);
 			}
 		}
 
 		return $trainings;
+	}
+
+
+	private function createFromDatabaseRow(Row $row): CompanyTraining
+	{
+		if (isset($row->alternativeDurationPriceText)) {
+			$price = $this->prices->resolvePriceVat($row->alternativeDurationPrice);
+			$alternativeDurationPriceText = $this->texyFormatter->translate($row->alternativeDurationPriceText, [
+				$price->getPriceWithCurrency(),
+				$price->getPriceVatWithCurrency(),
+			]);
+		}
+		return new CompanyTraining(
+			$row->id,
+			$row->action,
+			$this->texyFormatter->translate($row->name),
+			$row->description ? $this->texyFormatter->translate($row->description) : null,
+			$this->texyFormatter->translate($row->content),
+			$row->upsell ? $this->texyFormatter->translate($row->upsell) : null,
+			$row->prerequisites ? $this->texyFormatter->translate($row->prerequisites) : null,
+			$row->audience ? $this->texyFormatter->translate($row->audience) : null,
+			$row->capacity,
+			$row->price,
+			$row->alternativeDurationPrice,
+			$row->studentDiscount,
+			$row->materials ? $this->texyFormatter->translate($row->materials) : null,
+			(bool)$row->custom,
+			$this->texyFormatter->translate($row->duration),
+			$this->texyFormatter->translate($row->alternativeDuration),
+			$alternativeDurationPriceText ?? null,
+			$row->successorId,
+			$row->discontinuedId,
+		);
 	}
 
 }

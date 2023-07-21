@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Http\HttpInput;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
@@ -16,7 +16,7 @@ class TrainingApplicationMultipleFormFactory
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 		private readonly Statuses $trainingStatuses,
 		private readonly HttpInput $httpInput,
 	) {
@@ -62,7 +62,7 @@ class TrainingApplicationMultipleFormFactory
 		$form->onSuccess[] = function (Form $form) use ($trainingId, $dateId, $price, $studentDiscount, $onSuccess): void {
 			$values = $form->getValues();
 			foreach ($values->applications as $application) {
-				$this->trainingApplications->insertApplication(
+				$this->trainingApplicationStorage->insertApplication(
 					$trainingId,
 					$dateId,
 					$application->name,

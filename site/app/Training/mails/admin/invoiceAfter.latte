@@ -1,8 +1,8 @@
 Dobrý den,
 
-díky za účast na školení {$application->training->name} {$application->trainingStart|localeIntervalDay:$application->trainingEnd, 'cs_CZ'}
+díky za účast na školení {$application->getTrainingName()} {$application->getTrainingStart()|localeIntervalDay:$application->getTrainingEnd(), 'cs_CZ'}
 
-V příloze naleznete fakturu na částku {$application->priceWithCurrency} bez DPH, {$application->priceVatWithCurrency} s DPH,
+V příloze naleznete fakturu na částku {$application->getPriceWithCurrency()} bez DPH, {$application->getPriceVatWithCurrency()} s DPH,
 proplaťte ji, prosím, do stanoveného data.
 
 {if $additional}

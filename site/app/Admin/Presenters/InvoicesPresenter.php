@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\TrainingInvoiceFormFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\DateList\DateListOrder;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
@@ -15,7 +15,7 @@ use Nette\Forms\Form;
 class InvoicesPresenter extends BasePresenter
 {
 
-	/** @var array<int, string> */
+	/** @var list<int> */
 	private array $allUnpaidInvoiceIds = [];
 
 	/** @var list<TrainingDate> */
@@ -23,7 +23,7 @@ class InvoicesPresenter extends BasePresenter
 
 
 	public function __construct(
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly TrainingDates $trainingDates,
 		private readonly TrainingInvoiceFormFactory $trainingInvoiceFormFactory,
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
@@ -38,7 +38,9 @@ class InvoicesPresenter extends BasePresenter
 		foreach ($this->trainingDates->getWithUnpaid() as $date) {
 			$unpaidApplications = $this->trainingApplications->getValidUnpaidByDate($date->getId());
 			foreach ($unpaidApplications as $application) {
-				$this->allUnpaidInvoiceIds[] = $application->invoiceId;
+				if ($application->getInvoiceId()) {
+					$this->allUnpaidInvoiceIds[] = $application->getInvoiceId();
+				}
 			}
 			$date->setApplications($unpaidApplications);
 			$dates[$date->getStart()->getTimestamp()] = $date;

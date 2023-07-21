@@ -7,7 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
@@ -36,7 +36,7 @@ class TrainingApplicationFormFactory
 		private readonly TrainingDates $trainingDates,
 		private readonly FormDataLogger $formDataLogger,
 		private readonly FormSpam $formSpam,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 		private readonly Mails $trainingMails,
 		private readonly TemplateFactory $templateFactory,
 		private readonly NetteApplication $netteApplication,
@@ -108,7 +108,7 @@ class TrainingApplicationFormFactory
 				}
 
 				if ($date->isTentative()) {
-					$this->trainingApplications->addInvitation(
+					$this->trainingApplicationStorage->addInvitation(
 						$date,
 						$values->name,
 						$values->email,
@@ -123,7 +123,7 @@ class TrainingApplicationFormFactory
 					);
 				} else {
 					if (isset($sessionSection->application[$action]) && $sessionSection->application[$action]['dateId'] == $values->trainingId) {
-						$applicationId = $this->trainingApplications->updateApplication(
+						$applicationId = $this->trainingApplicationStorage->updateApplication(
 							$date,
 							$sessionSection->application[$action]['id'],
 							$values->name,
@@ -139,7 +139,7 @@ class TrainingApplicationFormFactory
 						);
 						$sessionSection->application[$action] = null;
 					} else {
-						$applicationId = $this->trainingApplications->addApplication(
+						$applicationId = $this->trainingApplicationStorage->addApplication(
 							$date,
 							$values->name,
 							$values->email,

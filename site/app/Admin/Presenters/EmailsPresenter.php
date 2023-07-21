@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\TrainingMailsOutboxFormFactory;
+use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Mails;
 use Nette\Application\UI\Form;
-use Nette\Database\Row;
 
 class EmailsPresenter extends BasePresenter
 {
 
-	/** @var Row[] */
+	/** @var list<TrainingApplication> */
 	private array $applications;
 
 
@@ -25,12 +25,8 @@ class EmailsPresenter extends BasePresenter
 
 	public function actionDefault(): void
 	{
-		$applications = $this->trainingMails->getApplications();
-		foreach ($applications as $application) {
-			$application->mailMessage = $this->trainingMails->getMailMessage($application);
-		}
+		$this->applications = $this->trainingMails->getApplications();
 		$this->template->pageTitle = 'E-maily k odeslání';
-		$this->applications = $applications;
 		$this->template->applications = $this->applications;
 	}
 

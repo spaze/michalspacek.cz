@@ -1,3 +1,4 @@
+{varType MichalSpacekCz\Training\Trainings\Training[] $trainings}
 {define #menu}
 &raquo; <a n:href="Homepage:">Michal Špaček</a>
 {/define}
@@ -7,8 +8,8 @@
 	{_messages.companytrainings.offer}
 </p>
 <ul>
-	{foreach $trainings as $item}
-		<li><a n:href="CompanyTrainings:training $item[action]"><strong>{$item[name]}</strong></a></li>
+	{foreach $trainings as $training}
+		<li><a n:href="CompanyTrainings:training $training->getAction()"><strong>{$training->getName()}</strong></a></li>
 	{/foreach}
 </ul>
 <p>{_messages.companytrainings.publictraining|format:'link:Www:Trainings:'}</p>

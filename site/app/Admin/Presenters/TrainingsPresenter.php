@@ -9,7 +9,8 @@ use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\DateList\DateListOrder;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
@@ -20,33 +21,31 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
-use MichalSpacekCz\Training\Files\TrainingFiles;
+use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
+use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Statuses;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
-use Nette\Database\Row;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 class TrainingsPresenter extends BasePresenter
 {
 
-	/** @var Row[] */
+	/** @var list<TrainingApplication> */
 	private array $applications;
 
 	/** @var int[] */
 	private array $applicationIdsAllowedFiles = [];
 
-	/** @var Row<mixed> */
-	private Row $application;
+	private TrainingApplication $application;
 
 	private int $applicationId;
 
-	/** @var Row<mixed> */
-	private Row $review;
+	private TrainingReview $review;
 
 	private TrainingDate $training;
 
@@ -59,12 +58,12 @@ class TrainingsPresenter extends BasePresenter
 
 
 	public function __construct(
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
+		private readonly PreliminaryTrainings $trainingPreliminaryApplications,
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Statuses $trainingStatuses,
 		private readonly Trainings $trainings,
-		private readonly TrainingFiles $trainingFiles,
 		private readonly TrainingReviews $trainingReviews,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly DeletePersonalDataFormFactory $deletePersonalDataFormFactory,
@@ -92,16 +91,15 @@ class TrainingsPresenter extends BasePresenter
 		$validCount = 0;
 		$applications = $discarded = [];
 		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
-			if (!$application->discarded) {
+			if (!$application->isDiscarded()) {
 				$validCount++;
 				$applications[] = $application;
 			} else {
 				$discarded[] = $application;
 			}
-			if ($application->allowFiles) {
-				$this->applicationIdsAllowedFiles[] = $application->id;
+			if ($application->isAllowFiles()) {
+				$this->applicationIdsAllowedFiles[] = $application->getId();
 			}
-			$application->childrenStatuses = $this->trainingStatuses->getChildrenStatusesForApplicationId($application->status, $application->id);
 		}
 		$this->applications = array_merge($applications, $discarded);
 
@@ -127,37 +125,40 @@ class TrainingsPresenter extends BasePresenter
 		$this->applicationId = $param;
 		$this->redirectParam = $this->applicationId;
 		$application = $this->trainingApplications->getApplicationById($this->applicationId);
-		if (!in_array($application->status, $this->trainingStatuses->getAllowFilesStatuses(), true)) {
-			$this->redirect('date', $application->dateId);
+		$dateId = $application->getDateId();
+		if (!$dateId) {
+			throw new BadRequestException("The application id '{$this->applicationId}' should have a training date set");
+		}
+		if (!in_array($application->getStatus(), $this->trainingStatuses->getAllowFilesStatuses(), true)) {
+			$this->redirect('date', $dateId);
 		}
 
-		$this->applicationIdsAllowedFiles = [$application->applicationId];
-		$this->training = $this->trainingDates->get($application->dateId);
+		$this->applicationIdsAllowedFiles = [$application->getId()];
+		$this->training = $this->trainingDates->get($dateId);
 
 		$this->template->pageTitle = 'Soubory';
-		$this->template->files = $this->trainingFiles->getFiles($this->applicationId);
+		$this->template->files = $this->application->getFiles();
 		$this->template->trainingStart = $this->training->getStart();
 		$this->template->trainingEnd = $this->training->getEnd();
 		$this->template->trainingName = $this->training->getName();
 		$this->template->trainingCity = $this->training->getVenueCity();
-		$this->template->name = $application->name;
-		$this->template->dateId = $application->dateId;
+		$this->template->name = $application->getName();
+		$this->template->dateId = $dateId;
 	}
 
 
 	public function actionReview(int $param): void
 	{
 		$this->review = $this->trainingReviews->getReview($param);
+		$date = $this->trainingDates->get($this->review->getDateId());
 
-		$date = $this->trainingDates->get($this->review->dateId);
-
-		$this->template->pageTitle = "Ohlas od {$this->review->name}" . ($this->review->company ? ", {$this->review->company}" : '');
+		$this->template->pageTitle = "Ohlas od {$this->review->getName()}" . ($this->review->getCompany() ? ", {$this->review->getCompany()}" : '');
 		$this->template->trainingStart = $date->getStart();
 		$this->template->trainingEnd = $date->getEnd();
 		$this->template->trainingName = $date->getName();
 		$this->template->trainingCity = $date->getVenueCity();
-		$this->template->name = $this->review->name;
-		$this->template->dateId = $this->review->dateId;
+		$this->template->name = $this->review->getName();
+		$this->template->dateId = $this->review->getDateId();
 	}
 
 
@@ -171,8 +172,8 @@ class TrainingsPresenter extends BasePresenter
 		}
 		$this->application = $application;
 
-		if (isset($this->application->dateId)) {
-			$applicationDateId = $this->application->dateId;
+		if ($this->application->getDateId()) {
+			$applicationDateId = $this->application->getDateId();
 			$training = $this->trainingDates->get($applicationDateId);
 			$name = $training->getName();
 			$start = $training->getStart();
@@ -181,24 +182,24 @@ class TrainingsPresenter extends BasePresenter
 			$isRemote = $training->isRemote();
 		} else {
 			$applicationDateId = $start = $end = $city = $isRemote = null;
-			$name = $this->trainings->getIncludingCustom($this->application->trainingAction)->name;
+			$name = $this->trainings->getIncludingCustom($this->application->getTrainingAction())->getName();
 		}
 
-		$this->template->pageTitle = $this->application->name ?? 'smazáno';
+		$this->template->pageTitle = $this->application->getName() ?? 'smazáno';
 		$this->template->applicationId = $this->applicationId;
 		$this->template->applicationDateId = $applicationDateId;
-		$this->template->status = $this->application->status;
-		$this->template->statusTime = $this->application->statusTime;
+		$this->template->status = $this->application->getStatus();
+		$this->template->statusTime = $this->application->getStatusTime();
 		$this->template->trainingName = $name;
 		$this->template->trainingStart = $start;
 		$this->template->trainingEnd = $end;
 		$this->template->trainingRemote = $isRemote;
 		$this->template->trainingCity = $city;
-		$this->template->sourceName = $this->application->sourceName;
-		$this->template->companyId = $this->application->companyId;
-		$this->template->allowFiles = in_array($this->application->status, $this->trainingStatuses->getAllowFilesStatuses());
-		$this->template->toBeInvited = in_array($this->application->status, $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
-		$this->template->accessToken = $this->application->accessToken;
+		$this->template->sourceName = $this->application->getSourceName();
+		$this->template->companyId = $this->application->getCompanyId();
+		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingStatuses->getAllowFilesStatuses());
+		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
+		$this->template->accessToken = $this->application->getAccessToken();
 		$this->template->history = $this->trainingStatuses->getStatusHistory($this->applicationId);
 	}
 
@@ -206,7 +207,7 @@ class TrainingsPresenter extends BasePresenter
 	public function actionPreliminary(): void
 	{
 		$this->template->pageTitle = 'Předběžné přihlášky';
-		$this->template->preliminaryApplications = $this->trainingApplications->getPreliminary();
+		$this->template->preliminaryApplications = $this->trainingPreliminaryApplications->getPreliminary();
 		$this->template->upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 	}
 
@@ -334,7 +335,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditReviewInputs(): TrainingReviewInputs
 	{
-		return $this->trainingReviewInputsFactory->create(false, $this->review->dateId, $this->review);
+		return $this->trainingReviewInputsFactory->create(false, $this->review->getDateId(), $this->review);
 	}
 
 

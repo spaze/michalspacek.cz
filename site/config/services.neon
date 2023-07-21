@@ -95,8 +95,11 @@ services:
 	- MichalSpacekCz\Tls\CertificateMonitor
 	- MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)
 	- MichalSpacekCz\Tls\CertificatesApiClient
-	- MichalSpacekCz\Training\Applications(emailEncryption: @emailEncryption)
-	- MichalSpacekCz\Training\CompanyTrainings
+	- MichalSpacekCz\Training\Applications\TrainingApplications
+	- MichalSpacekCz\Training\Applications\TrainingApplicationFactory(emailEncryption: @emailEncryption)
+	- MichalSpacekCz\Training\Applications\TrainingApplicationSources
+	- MichalSpacekCz\Training\Applications\TrainingApplicationStorage(emailEncryption: @emailEncryption)
+	- MichalSpacekCz\Training\Company\CompanyTrainings
 	- MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory
 	- MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory
 	- MichalSpacekCz\Training\Dates\TrainingDateInputsFactory
@@ -108,19 +111,22 @@ services:
 	- MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
 	- MichalSpacekCz\Training\Files\TrainingFiles
-	- MichalSpacekCz\Training\Files\TrainingFilesStorage('../../files/trainings')
+	- MichalSpacekCz\Training\Files\TrainingFilesStorage
 	- MichalSpacekCz\Training\FormDataLogger
 	- MichalSpacekCz\Training\FormSpam
 	- MichalSpacekCz\Training\FreeSeats
 	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
+	- MichalSpacekCz\Training\Preliminary\PreliminaryTrainings
 	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
 	- MichalSpacekCz\Training\Resolver\Vrana
 	- MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory
 	- MichalSpacekCz\Training\Reviews\TrainingReviews
 	- MichalSpacekCz\Training\Statuses
 	- MichalSpacekCz\Training\TrainingLocales
-	- MichalSpacekCz\Training\Trainings
-	- MichalSpacekCz\Training\Venues
+	- MichalSpacekCz\Training\TrainingMailMessageFactory
+	- MichalSpacekCz\Training\Trainings\TrainingFactory
+	- MichalSpacekCz\Training\Trainings\Trainings
+	- MichalSpacekCz\Training\Venues\TrainingVenues
 	- MichalSpacekCz\Twitter\TwitterCards
 	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%, model: %upcKeys.technicolor.model%, serialNumberPrefixes: %upcKeys.technicolor.prefixes%)
 	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context, model: %upcKeys.ubee.model%, serialNumberPrefixes: %upcKeys.ubee.prefixes%)

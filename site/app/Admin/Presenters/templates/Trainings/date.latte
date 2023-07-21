@@ -1,3 +1,5 @@
+{varType MichalSpacekCz\Training\Reviews\TrainingReview[] $reviews}
+{varType MichalSpacekCz\Training\Applications\TrainingApplication[] $applications}
 {define #menu}
 &raquo; <a n:href=":Www:Homepage:">Michal Špaček</a>
 &raquo; <a n:href="Homepage:">Administrace</a>
@@ -28,30 +30,30 @@
 		</tr>
 	</thead>
 	<tbody n:inner-foreach="$applications as $application">
-		<tr n:class="$application->discarded ? discarded">
+		<tr n:class="$application->isDiscarded() ? discarded">
 			<td><small>{$iterator->getCounter()}.</small></td>
-			<td><small n:tag-if="$application->name === null"><a n:href="Trainings:application $application->id">{$application->name ?? smazáno}</a></small></td>
-			<td><small>{$application->email ?? smazáno}</small></td>
-			<td><span n:tag-if="$application->company && ($application->company|length) > 40" title="{$application->company}">{$application->company|truncate:40}</span></td>
-			<td><small{if $application->note && ($application->note|length) > 20} title="{$application->note}"{/if}>{$application->note|truncate:20}</small></td>
-			<td><small><code title="{$application->statusTime|localeDay} {$application->statusTime|date:'H:i:s'}">{$application->status}</code></small></td>
+			<td><small n:tag-if="$application->getName() === null"><a n:href="Trainings:application $application->getId()">{$application->getName() ?? smazáno}</a></small></td>
+			<td><small>{$application->getEmail() ?? smazáno}</small></td>
+			<td><span n:tag-if="$application->getCompany() && ($application->getCompany()|length) > 40" title="{$application->getCompany()}">{$application->getCompany()|truncate:40}</span></td>
+			<td><small{if $application->getNote() && ($application->getNote()|length) > 20} title="{$application->getNote()}"{/if}>{$application->getNote()|truncate:20}</small></td>
+			<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()}</code></small></td>
 			<td><small>&raquo;</small></td>
-			<td>{input "applications-{$application->id}" class => status}</td>
+			<td>{input "applications-{$application->getId()}" class => status}</td>
 			<td>
-				<small><code title="Zdroj {$application->sourceName}">{$application->sourceNameInitials}</code></small>
+				<small><code title="Zdroj {$application->getSourceName()}">{$application->getSourceNameInitials()}</code></small>
 				{capture $title}
-					{ifset $application->priceVatWithCurrency}{$application->priceVatWithCurrency} s DPH, {/ifset}
-					faktura č. {ifset $application->invoiceId}{$application->invoiceId},
-					{ifset $application->paid}
-						{capture $paidTime}{$application->paid|date:'H:i'}{/capture}
-						zaplaceno {$application->paid|localeDay}{if $paidTime != '00:00'} {$paidTime}{/if}
+					{if $application->getPriceVatWithCurrency()}{$application->getPriceVatWithCurrency()} s DPH, {/if}
+					faktura č. {if $application->getInvoiceId()}{$application->getInvoiceId()},
+					{if $application->getPaid()}
+						{capture $paidTime}{$application->getPaid()|date:'H:i'}{/capture}
+						zaplaceno {$application->getPaid()|localeDay}{if $paidTime != '00:00'} {$paidTime}{/if}
 					{else}
 						nezaplaceno
-					{/ifset}
-					{else}–{/ifset}
+					{/if}
+					{else}–{/if}
 				{/capture}
 				<small title="{(string)$title|strip}">
-					{ifset $application->priceWithCurrency}{$application->priceWithCurrency}{if $application->price > 0 && !isset($application->paid)} <strong>!</strong>{/if}{else}–{/ifset}
+					{if $application->getPriceWithCurrency()}{$application->getPriceWithCurrency()}{if $application->getPrice() > 0 && !$application->getPaid()} <strong>!</strong>{/if}{else}–{/if}
 				</small>
 			</td>
 		</tr>
@@ -135,12 +137,12 @@
 <div id="ohlasy">
 	<p><a href="#ohlasy" class="open-container block separated">Ohlasy</a></p>
 	<div id="ohlasy-container" class="hidden">
-		<div n:class="$review->hidden ? discarded" n:foreach="$reviews as $review">
+		<div n:foreach="$reviews as $review" n:class="$review->isHidden() ? discarded">
 			<p>
-				<small n:ifset="$review->ranking" title="Pořadí ve výpisu všech ohlasů">#{$review->ranking}</small>
-				<strong><a n:href="Trainings:review $review->reviewId">{$review->name}</a>{if $review->jobTitle}, {$review->jobTitle}{/if}{if $review->company}, {$review->company}{/if}</strong>
+				<small n:if="$review->getRanking()" title="Pořadí ve výpisu všech ohlasů">#{$review->getRanking()}</small>
+				<strong><a n:href="Trainings:review $review->getId()">{$review->getName()}</a>{if $review->getJobTitle()}, {$review->getJobTitle()}{/if}{if $review->getCompany()}, {$review->getCompany()}{/if}</strong>
 			</p>
-			<div class="indent"><p>{$review->review} <small n:if="$review->href">(<a href="{$review->href}">{_messages.trainings.more}</a>)</small></p></div>
+			<div class="indent"><p>{$review->getReview()} <small n:if="$review->getHref()">(<a href="{$review->getHref()}">{_messages.trainings.more}</a>)</small></p></div>
 		</div>
 		<fieldset>
 			<legend><a href="#pridat-ohlas" class="open-container">Přidat ohlas</a></legend>

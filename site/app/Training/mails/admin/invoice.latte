@@ -1,19 +1,19 @@
 Dobrý den,
 
-potvrzuji Vaši registraci ze dne {$application->statusTime|localeDay:'cs_CZ'} na {if $application->remote}online {/if}školení
+potvrzuji Vaši registraci ze dne {$application->getStatusTime()|localeDay:'cs_CZ'} na {if $application->isRemote()}online {/if}školení
 
-{$application->training->name} ({$application->trainingStart|localeIntervalDay:$application->trainingEnd, 'cs_CZ'} v čase {$application->trainingStart|date:'H:i'}–{$application->trainingEnd|date:'H:i'})
-{if !$application->remote}adresa {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}
-{/if}{link //:Www:Trainings:training $application->training->action}
+{$application->getTrainingName()} ({$application->getTrainingStart()|localeIntervalDay:$application->getTrainingEnd(), 'cs_CZ'} v čase {$application->getTrainingStart()|date:'H:i'}–{$application->getTrainingEnd()|date:'H:i'})
+{if !$application->isRemote()}adresa {$application->getVenueName()}{if $application->getVenueNameExtended()}, {$application->getVenueNameExtended()}{/if}, {$application->getVenueAddress()}, {$application->getVenueCity()}
+{/if}{link //:Www:Trainings:training $application->getTrainingAction()}
 
-V příloze naleznete fakturu na částku {$application->priceWithCurrency} bez DPH, {$application->priceVatWithCurrency} s DPH,
-proplaťte ji, prosím, do stanoveného data.{if $application->remote} Další informace pošlu nejpozději den před školením.{/if}
+V příloze naleznete fakturu na částku {$application->getPriceWithCurrency()} bez DPH, {$application->getPriceVatWithCurrency()} s DPH,
+proplaťte ji, prosím, do stanoveného data.{if $application->isRemote()} Další informace pošlu nejpozději den před školením.{/if}
 
 {if $additional}
 {$additional}
 
 {/if}
-Děkuji a brzy na {if $application->remote}viděnou{else}shledanou{/if}!
+Děkuji a brzy na {if $application->isRemote()}viděnou{else}shledanou{/if}!
 Michal Špaček
 
 {include "../signature.latte"}

@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Form;
 use Exception;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Files\TrainingFiles;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\UI\Form;
 use Nette\Database\Explorer;
 use Tracy\Debugger;

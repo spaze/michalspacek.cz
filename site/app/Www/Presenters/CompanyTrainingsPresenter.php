@@ -4,12 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\Training\CompanyTrainings;
+use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
+use MichalSpacekCz\Training\Exceptions\CompanyTrainingDoesNotExistException;
 use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
-use MichalSpacekCz\Training\Trainings;
+use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 
 class CompanyTrainingsPresenter extends BasePresenter
@@ -42,33 +43,21 @@ class CompanyTrainingsPresenter extends BasePresenter
 	public function actionTraining(string $name): void
 	{
 		$this->trainingAction = $name;
-		$training = $this->companyTrainings->getInfo($name);
-		if (!$training) {
-			throw new BadRequestException("I don't do {$name} training, yet");
+		try {
+			$training = $this->companyTrainings->getInfo($name);
+		} catch (CompanyTrainingDoesNotExistException $e) {
+			throw new BadRequestException("I don't do {$name} training, yet", previous: $e);
 		}
 
-		if ($training->successorId !== null) {
-			$this->redirectPermanent('this', $this->trainings->getActionById($training->successorId));
+		if ($training->getSuccessorId() !== null) {
+			$this->redirectPermanent('this', $this->trainings->getActionById($training->getSuccessorId()));
 		}
 
-		$price = $this->prices->resolvePriceVat($training->price);
-
-		$this->template->name = $training->action;
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->name]);
-		$this->template->title = $training->name;
-		$this->template->description = $training->description;
-		$this->template->content = $training->content;
-		$this->template->upsell = $training->upsell;
-		$this->template->prerequisites = $training->prerequisites;
-		$this->template->audience = $training->audience;
-		$this->template->duration = $training->duration;
-		$this->template->alternativeDuration = $training->alternativeDuration;
-		$this->template->priceWithCurrency = $price->getPriceWithCurrency();
-		$this->template->priceVatWithCurrency = $price->getPriceVatWithCurrency();
-		$this->template->alternativeDurationPriceText = $training->alternativeDurationPriceText;
-		$this->template->materials = $training->materials;
-		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->trainingId, 3);
-		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->discontinuedId);
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->getName()->render()]);
+		$this->template->training = $training;
+		$this->template->price = $training->getPrice() ? $this->prices->resolvePriceVat($training->getPrice()) : null;
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->getId(), 3);
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->getDiscontinuedId());
 	}
 
 

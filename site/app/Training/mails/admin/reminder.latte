@@ -1,22 +1,22 @@
 Dobrý den,
 
-rád bych Vám připomněl, že dne {$application->trainingStart|localeIntervalDay:$application->trainingEnd, 'cs_CZ'} se koná školení
-{$application->training->name}, na které jste přihlášeni.
-Školení proběhne na adrese {$application->venueName}{if $application->venueNameExtended}, {$application->venueNameExtended}{/if}, {$application->venueAddress}, {$application->venueCity}.
+rád bych Vám připomněl, že dne {$application->getTrainingStart()|localeIntervalDay:$application->getTrainingEnd(), 'cs_CZ'} se koná školení
+{$application->getTrainingName()}, na které jste přihlášeni.
+Školení proběhne na adrese {$application->getVenueName()}{if $application->getVenueNameExtended()}, {$application->getVenueNameExtended()}{/if}, {$application->getVenueAddress()}, {$application->getVenueCity()}.
 
-{if $application->publicDate}
-Pohled na vchod: {='venues/' . $venue->entrance|staticImageUrl}
-{if $venue->entranceNavigation}
-Cesta ke vchodu: {='venues/' . $venue->entranceNavigation|staticImageUrl}
+{if $application->isPublicDate()}
+Pohled na vchod: {='venues/' . $venue->getEntrance()|staticImageUrl}
+{if $venue->getEntranceNavigation()}
+Cesta ke vchodu: {='venues/' . $venue->getEntranceNavigation()|staticImageUrl}
 {/if}
 
-{$venue->publicTransport|striptags}
-{$venue->parking|striptags}
+{$venue->getPublicTransport()|striptags}
+{$venue->getParking()|striptags}
 
-Mapa místa a další informace: {link //:Www:Venues:venue $venue->action}
+Mapa místa a další informace: {link //:Www:Venues:venue $venue->getAction()}
 
 {/if}
-Školení začíná v {$application->trainingStart|date:'H:i'}. Pokud si chcete přinést vlastní počítač, tak na něj nezapomeňte.
+Školení začíná v {$application->getTrainingStart()|date:'H:i'}. Pokud si chcete přinést vlastní počítač, tak na něj nezapomeňte.
 V případě jakýchkoliv komplikací mě kontaktujte na telefonu {$phoneNumber}.
 
 {if $additional}

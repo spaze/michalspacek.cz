@@ -154,9 +154,9 @@ php5securityperformance2days:
 	audience: ''
 	materials: ''
 	content: '''
-		- PHP 5 (30%)
-		- bezpečnost (20%)
-		- výkonnost webových aplikací (50%)
+		- PHP 5 (30%%)
+		- bezpečnost (20%%)
+		- výkonnost webových aplikací (50%%)
 	'''
 
 securityusers:

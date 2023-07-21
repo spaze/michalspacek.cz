@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
-use MichalSpacekCz\Training\Applications;
+use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
-use Nette\Database\Row;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 
@@ -17,7 +17,7 @@ class TrainingStatusesFormFactory
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Applications $trainingApplications,
+		private readonly TrainingApplications $trainingApplications,
 		private readonly Statuses $trainingStatuses,
 		private readonly FormValues $formValues,
 	) {
@@ -26,7 +26,7 @@ class TrainingStatusesFormFactory
 
 	/**
 	 * @param callable(Html|null): void $onSuccess
-	 * @param Row[] $applications
+	 * @param list<TrainingApplication> $applications
 	 * @return Form
 	 */
 	public function create(callable $onSuccess, array $applications): Form
@@ -34,10 +34,10 @@ class TrainingStatusesFormFactory
 		$form = $this->factory->create();
 		$container = $form->addContainer('applications');
 		foreach ($applications as $application) {
-			$select = $container->addSelect((string)$application->id, 'Status')
+			$select = $container->addSelect((string)$application->getId(), 'Status')
 				->setPrompt('- změnit na -')
-				->setItems($application->childrenStatuses, false);
-			if (empty($application->childrenStatuses)) {
+				->setItems($application->getChildrenStatuses(), false);
+			if (empty($application->getChildrenStatuses())) {
 				$select->setDisabled()
 					->setPrompt('nelze dále měnit');
 			}
@@ -60,7 +60,7 @@ class TrainingStatusesFormFactory
 			$total = 0;
 			foreach (array_keys((array)$this->formValues->getUntrustedValues($button)->applications) as $id) {
 				$application = $this->trainingApplications->getApplicationById($id);
-				if (in_array($application->status, $attendedStatuses) && !$application->familiar) {
+				if (in_array($application->getStatus(), $attendedStatuses) && !$application->isFamiliar()) {
 					$this->trainingApplications->setFamiliar($id);
 					$total++;
 				}
