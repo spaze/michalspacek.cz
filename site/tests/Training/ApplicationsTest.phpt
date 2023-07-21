@@ -23,10 +23,10 @@ class ApplicationsTest extends TestCase
 
 	public function testGetValidUnpaidCount(): void
 	{
-		$this->database->setFetchFieldResult(909);
+		$this->database->setFetchFieldDefaultResult(909);
 		Assert::same(909, $this->applications->getValidUnpaidCount());
 
-		$this->database->setFetchFieldResult('\o/');
+		$this->database->setFetchFieldDefaultResult('\o/');
 		Assert::exception(function (): void {
 			$this->applications->getValidUnpaidCount();
 		}, ShouldNotHappenException::class, 'Count is a string not an integer');

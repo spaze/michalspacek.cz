@@ -23,10 +23,10 @@ class TrainingsTest extends TestCase
 
 	public function testGetActionById(): void
 	{
-		$this->database->setFetchFieldResult('pulled pork');
+		$this->database->setFetchFieldDefaultResult('pulled pork');
 		Assert::same('pulled pork', $this->trainings->getActionById(303));
 
-		$this->database->setFetchFieldResult(808);
+		$this->database->setFetchFieldDefaultResult(808);
 		Assert::exception(function (): void {
 			$this->trainings->getActionById(303);
 		}, ShouldNotHappenException::class, "Action for id '303' is a int not a string");

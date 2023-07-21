@@ -32,17 +32,17 @@ class StatusesTest extends TestCase
 
 	public function testGetStatusId(): void
 	{
-		$this->database->setFetchFieldResult(303);
+		$this->database->setFetchFieldDefaultResult(303);
 		Assert::same(303, $this->trainingStatuses->getStatusId(Statuses::STATUS_SIGNED_UP));
 
-		$this->database->setFetchFieldResult('nah, it cached');
+		$this->database->setFetchFieldDefaultResult('nah, it cached');
 		Assert::same(303, $this->trainingStatuses->getStatusId(Statuses::STATUS_SIGNED_UP));
 	}
 
 
 	public function testGetStatusIdNotInt(): void
 	{
-		$this->database->setFetchFieldResult('donut');
+		$this->database->setFetchFieldDefaultResult('donut');
 		Assert::exception(function (): void {
 			$this->trainingStatuses->getStatusId(Statuses::STATUS_SIGNED_UP);
 		}, TrainingStatusIdNotIntException::class, "Training status 'SIGNED_UP' id is a string not an integer");

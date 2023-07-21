@@ -24,20 +24,20 @@ class RedirectionsTest extends TestCase
 
 	public function testGetDestination(): void
 	{
-		$this->database->setFetchFieldResult(null);
+		$this->database->setFetchFieldDefaultResult(null);
 		Assert::null($this->redirections->getDestination(new UrlScript()));
 
-		$this->database->setFetchFieldResult(false);
+		$this->database->setFetchFieldDefaultResult(false);
 		Assert::null($this->redirections->getDestination(new UrlScript()));
 
-		$this->database->setFetchFieldResult('https://example.com/');
+		$this->database->setFetchFieldDefaultResult('https://example.com/');
 		Assert::same('https://example.com/', $this->redirections->getDestination(new UrlScript()));
 
-		$this->database->setFetchFieldResult('/foo.bar');
+		$this->database->setFetchFieldDefaultResult('/foo.bar');
 		Assert::same('https://com.example/foo.bar', $this->redirections->getDestination(new UrlScript('https://com.example/waldo')));
 
 		Assert::exception(function (): void {
-			$this->database->setFetchFieldResult(3.14);
+			$this->database->setFetchFieldDefaultResult(3.14);
 			$this->redirections->getDestination(new UrlScript('https://com.example/waldo'));
 		}, ShouldNotHappenException::class, "Redirect destination for '/waldo' is a float not a string");
 	}

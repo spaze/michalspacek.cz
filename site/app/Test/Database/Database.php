@@ -26,7 +26,12 @@ class Database extends Explorer
 	/** @var array<string, int|string|bool|DateTime|null> */
 	private array $fetchResult = [];
 
-	private mixed $fetchFieldResult = null;
+	private mixed $fetchFieldDefaultResult = null;
+
+	/** @var list<mixed> */
+	private array $fetchFieldResults = [];
+
+	private int $fetchFieldResultsPosition = 0;
 
 	/** @var array<string, string> */
 	private array $fetchPairsResult = [];
@@ -45,6 +50,9 @@ class Database extends Explorer
 		$this->queriesScalarParams = [];
 		$this->fetchResult = [];
 		$this->fetchPairsResult = [];
+		$this->fetchFieldDefaultResult = [];
+		$this->fetchFieldResults = [];
+		$this->fetchFieldResultsPosition = 0;
 		$this->fetchAllDefaultResult = [];
 		$this->fetchAllResults = [];
 		$this->fetchAllResultsPosition = 0;
@@ -150,9 +158,15 @@ class Database extends Explorer
 	}
 
 
-	public function setFetchFieldResult(mixed $fetchFieldResult): void
+	public function setFetchFieldDefaultResult(mixed $fetchFieldDefaultResult): void
 	{
-		$this->fetchFieldResult = $fetchFieldResult;
+		$this->fetchFieldDefaultResult = $fetchFieldDefaultResult;
+	}
+
+
+	public function addFetchFieldResult(mixed $fetchFieldResult): void
+	{
+		$this->fetchFieldResults[] = $fetchFieldResult;
 	}
 
 
@@ -162,7 +176,7 @@ class Database extends Explorer
 	 */
 	public function fetchField(string $sql, ...$params): mixed
 	{
-		return $this->fetchFieldResult;
+		return $this->fetchFieldResults[$this->fetchFieldResultsPosition++] ?? $this->fetchFieldDefaultResult;
 	}
 
 

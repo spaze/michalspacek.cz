@@ -158,18 +158,18 @@ class ArticlesTest extends TestCase
 
 	public function testGetNearestPublishDate(): void
 	{
-		$this->database->setFetchFieldResult(null);
+		$this->database->setFetchFieldDefaultResult(null);
 		Assert::null($this->articles->getNearestPublishDate());
 
-		$this->database->setFetchFieldResult(false);
+		$this->database->setFetchFieldDefaultResult(false);
 		Assert::null($this->articles->getNearestPublishDate());
 
 		$nearest = new DateTime('+3 days');
-		$this->database->setFetchFieldResult($nearest);
+		$this->database->setFetchFieldDefaultResult($nearest);
 		Assert::same($nearest, $this->articles->getNearestPublishDate());
 
 		Assert::exception(function (): void {
-			$this->database->setFetchFieldResult('\o/');
+			$this->database->setFetchFieldDefaultResult('\o/');
 			$this->articles->getNearestPublishDate();
 		}, ShouldNotHappenException::class, 'Nearest published date is a string not a DateTime object');
 	}
@@ -177,18 +177,18 @@ class ArticlesTest extends TestCase
 
 	public function testGetNearestPublishDateByTags(): void
 	{
-		$this->database->setFetchFieldResult(null);
+		$this->database->setFetchFieldDefaultResult(null);
 		Assert::null($this->articles->getNearestPublishDateByTags(['foo']));
 
-		$this->database->setFetchFieldResult(false);
+		$this->database->setFetchFieldDefaultResult(false);
 		Assert::null($this->articles->getNearestPublishDateByTags(['foo']));
 
 		$nearest = new DateTime('+3 days');
-		$this->database->setFetchFieldResult($nearest);
+		$this->database->setFetchFieldDefaultResult($nearest);
 		Assert::same($nearest, $this->articles->getNearestPublishDateByTags(['foo']));
 
 		Assert::exception(function (): void {
-			$this->database->setFetchFieldResult('\o/');
+			$this->database->setFetchFieldDefaultResult('\o/');
 			$this->articles->getNearestPublishDateByTags(['foo']);
 		}, ShouldNotHappenException::class, 'Nearest published date is a string not a DateTime object');
 	}

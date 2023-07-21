@@ -155,7 +155,7 @@ class TrainingDatesTest extends TestCase
 
 	public function testGetWithUnpaid(): void
 	{
-		$this->database->setFetchFieldResult(rand());
+		$this->database->setFetchFieldDefaultResult(rand());
 		$dates = $this->trainingDates->getWithUnpaid();
 		Assert::count(2, $dates);
 		Assert::same(10, $dates[0]->getId());
