@@ -15,7 +15,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingDateNotAvailableException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
 use MichalSpacekCz\Training\FormDataLogger;
 use MichalSpacekCz\Training\FormSpam;
-use MichalSpacekCz\Training\Mails;
+use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
@@ -37,7 +37,7 @@ class TrainingApplicationFormFactory
 		private readonly FormDataLogger $formDataLogger,
 		private readonly FormSpam $formSpam,
 		private readonly TrainingApplicationStorage $trainingApplicationStorage,
-		private readonly Mails $trainingMails,
+		private readonly TrainingMails $trainingMails,
 		private readonly TemplateFactory $templateFactory,
 		private readonly NetteApplication $netteApplication,
 	) {

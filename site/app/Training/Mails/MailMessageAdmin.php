@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Mails;
 
 class MailMessageAdmin
 {
@@ -21,7 +21,7 @@ class MailMessageAdmin
 
 	public function getFilename(): string
 	{
-		return sprintf('%s/mails/admin/%s.latte', __DIR__, $this->getBasename());
+		return sprintf('%s/templates/admin/%s.latte', __DIR__, $this->getBasename());
 	}
 
 

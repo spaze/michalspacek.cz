@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\TrainingMailsOutboxFormFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
-use MichalSpacekCz\Training\Mails;
+use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\UI\Form;
 
 class EmailsPresenter extends BasePresenter
@@ -16,7 +16,7 @@ class EmailsPresenter extends BasePresenter
 
 
 	public function __construct(
-		private readonly Mails $trainingMails,
+		private readonly TrainingMails $trainingMails,
 		private readonly TrainingMailsOutboxFormFactory $trainingMailsOutboxFactory,
 	) {
 		parent::__construct();

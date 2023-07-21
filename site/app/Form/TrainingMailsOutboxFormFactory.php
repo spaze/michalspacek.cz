@@ -7,7 +7,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
-use MichalSpacekCz\Training\Mails;
+use MichalSpacekCz\Training\Mails\TrainingMails;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Form;
@@ -21,7 +21,7 @@ class TrainingMailsOutboxFormFactory
 		private readonly FormFactory $factory,
 		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 		private readonly Statuses $trainingStatuses,
-		private readonly Mails $trainingMails,
+		private readonly TrainingMails $trainingMails,
 		private readonly TemplateFactory $templateFactory,
 		private readonly NetteApplication $netteApplication,
 	) {

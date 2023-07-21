@@ -115,7 +115,8 @@ services:
 	- MichalSpacekCz\Training\FormDataLogger
 	- MichalSpacekCz\Training\FormSpam
 	- MichalSpacekCz\Training\FreeSeats
-	- MichalSpacekCz\Training\Mails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
+	- MichalSpacekCz\Training\Mails\TrainingMailMessageFactory
+	- MichalSpacekCz\Training\Mails\TrainingMails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
 	- MichalSpacekCz\Training\Preliminary\PreliminaryTrainings
 	- MichalSpacekCz\Training\Prices(vatRate: %vatRate%)
 	- MichalSpacekCz\Training\Resolver\Vrana
@@ -123,7 +124,6 @@ services:
 	- MichalSpacekCz\Training\Reviews\TrainingReviews
 	- MichalSpacekCz\Training\Statuses
 	- MichalSpacekCz\Training\TrainingLocales
-	- MichalSpacekCz\Training\TrainingMailMessageFactory
 	- MichalSpacekCz\Training\Trainings\TrainingFactory
 	- MichalSpacekCz\Training\Trainings\Trainings
 	- MichalSpacekCz\Training\Venues\TrainingVenues

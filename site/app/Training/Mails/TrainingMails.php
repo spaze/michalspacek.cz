@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Mails;
 
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -11,6 +11,7 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
+use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\FileUpload;
@@ -21,7 +22,7 @@ use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 use Tracy\Debugger;
 
-class Mails
+class TrainingMails
 {
 
 	private const REMINDER_DAYS = 5;
@@ -73,7 +74,7 @@ class Mails
 	): void {
 		Debugger::log("Sending sign-up email to application id: {$applicationId}, training: {$training}");
 
-		$template->setFile(__DIR__ . '/mails/trainingSignUp.latte');
+		$template->setFile(__DIR__ . '/templates/trainingSignUp.latte');
 
 		$template->training = $training;
 		$template->trainingName = $trainingName;

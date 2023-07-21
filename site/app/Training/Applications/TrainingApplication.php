@@ -7,9 +7,9 @@ use DateTime;
 use MichalSpacekCz\Training\Files\TrainingFile;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Files\TrainingFilesCollection;
-use MichalSpacekCz\Training\MailMessageAdmin;
+use MichalSpacekCz\Training\Mails\MailMessageAdmin;
+use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use MichalSpacekCz\Training\Statuses;
-use MichalSpacekCz\Training\TrainingMailMessageFactory;
 use Nette\Utils\Html;
 
 class TrainingApplication

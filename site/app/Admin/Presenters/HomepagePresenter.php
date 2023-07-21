@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
-use MichalSpacekCz\Training\Mails;
+use MichalSpacekCz\Training\Mails\TrainingMails;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 
 class HomepagePresenter extends BasePresenter
@@ -23,7 +23,7 @@ class HomepagePresenter extends BasePresenter
 	public function __construct(
 		private readonly TrainingApplications $trainingApplications,
 		private readonly PreliminaryTrainings $trainingPreliminaryApplications,
-		private readonly Mails $trainingMails,
+		private readonly TrainingMails $trainingMails,
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Certificates $certificates,
