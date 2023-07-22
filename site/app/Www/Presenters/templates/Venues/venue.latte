@@ -17,7 +17,7 @@
 </p>
 
 <h3>{_messages.venues.trainingshere}</h3>
-{if empty($upcomingTrainings)}
+{if !$hasUpcomingTrainings}
 <p>{_messages.venues.notraininghere|format:"link:Www:Contact:"}</p>
 {else}
 {control upcomingDatesList}

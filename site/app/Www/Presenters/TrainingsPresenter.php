@@ -34,7 +34,7 @@ class TrainingsPresenter extends BasePresenter
 	/** @var array<int, TrainingDate> id => date */
 	private array $dates;
 
-	private ?string $trainingAction = null;
+	private string $trainingAction;
 
 
 	public function __construct(
@@ -66,7 +66,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentUpcomingDatesList(): UpcomingTrainingDatesList
 	{
-		return $this->upcomingTrainingDatesListFactory->create(null, true);
+		return $this->upcomingTrainingDatesListFactory->create();
 	}
 
 
@@ -312,7 +312,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentOtherUpcomingDatesList(): UpcomingTrainingDatesList
 	{
-		return $this->upcomingTrainingDatesListFactory->create($this->trainingAction, false);
+		return $this->upcomingTrainingDatesListFactory->createExclude($this->trainingAction);
 	}
 
 

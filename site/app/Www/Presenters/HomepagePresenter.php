@@ -44,7 +44,7 @@ class HomepagePresenter extends BasePresenter
 
 	protected function createComponentUpcomingDatesList(): UpcomingTrainingDatesList
 	{
-		return $this->upcomingTrainingDatesListFactory->create(null, true);
+		return $this->upcomingTrainingDatesListFactory->create();
 	}
 
 

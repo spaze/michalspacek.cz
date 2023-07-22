@@ -14,6 +14,7 @@ class VenuesPresenter extends BasePresenter
 {
 
 	private int $venueId;
+	private UpcomingTrainingDatesList $upcomingTrainingDatesList;
 
 
 	public function __construct(
@@ -33,15 +34,17 @@ class VenuesPresenter extends BasePresenter
 			throw new BadRequestException("Where in the world is {$name}?", previous: $e);
 		}
 		$this->venueId = $venue->getId();
+		$this->upcomingTrainingDatesList = $this->upcomingTrainingDatesListFactory->createForVenue($this->venueId);
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->getName()]);
 		$this->template->venue = $venue;
+		$this->template->hasUpcomingTrainings = count($this->upcomingTrainingDatesList) > 0;
 	}
 
 
 	protected function createComponentUpcomingDatesList(): UpcomingTrainingDatesList
 	{
-		return $this->upcomingTrainingDatesListFactory->create(null, true, $this->venueId);
+		return $this->upcomingTrainingDatesList;
 	}
 
 }
