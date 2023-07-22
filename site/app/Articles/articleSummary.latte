@@ -1,4 +1,4 @@
 {varType MichalSpacekCz\Articles\ArticlePublishedElsewhere|MichalSpacekCz\Articles\Blog\BlogPost $article}
 <a href="{$article->href}"><strong>{$article->title}</strong></a>
 {control articleHeaderIcons $article}
-<div class="indent small" n:if="$article instanceof MichalSpacekCz\Articles\Components\ArticleWithSummary">{$article->getSummary()} <p>(<a href="{$article->href}">{_messages.articles.readmore}</a>)</p></div>
+<div class="indent small">{$article->getSummary()} <p>(<a href="{$article->href}">{_messages.articles.readmore}</a>)</p></div>
