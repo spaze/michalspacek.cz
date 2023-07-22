@@ -59,7 +59,7 @@
 	<div class="indent"><p>{$review->getReview()} <small n:if="$review->getHref()">(<a href="{$review->getHref()}">{_messages.trainings.more}</a>)</small></p></div>
 {/foreach}
 </div>
-<p>{_messages.companytrainings.morereviews|format:"link:Www:Trainings:reviews {$training->getName()}"}</p>
+<p>{_messages.companytrainings.morereviews|format:"link:Www:Trainings:reviews {$training->getAction()}"}</p>
 <hr>
 {/if}
 
