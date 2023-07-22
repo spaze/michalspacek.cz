@@ -20,6 +20,7 @@ parameters:
 				- app/EasterEgg/Presenters/NettePresenter.php
 
 includes:
+	- phar://phpstan.phar/conf/bleedingEdge.neon
 	- vendor/phpstan/phpstan-nette/extension.neon
 	- vendor/phpstan/phpstan-nette/rules.neon
 	- vendor/efabrica/phpstan-latte/rules.neon
