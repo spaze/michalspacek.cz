@@ -13,6 +13,11 @@ parameters:
 		- # `{input "applications-{$application->id}" ...}` is an `$application->id` input in `applications` container https://github.com/efabrica-team/phpstan-latte/pull/380 or https://github.com/efabrica-team/phpstan-latte/issues/400
 			message: '#^Call to an undefined method Nette\\Forms\\Controls\\BaseControl\|Statuses_[a-f0-9]+_applications::getControl\(\)#'
 			path: app/Admin/Presenters/templates/Trainings/date.latte
+		- # Uses `setView()` https://github.com/efabrica-team/phpstan-latte/issues/402
+			message: '#^Cannot resolve latte template for action#'
+			paths:
+				- app/Admin/Presenters/BlogPresenter.php
+				- app/EasterEgg/Presenters/NettePresenter.php
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
