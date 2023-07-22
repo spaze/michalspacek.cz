@@ -15,7 +15,7 @@ class UpcomingTrainingDatesList extends UiControl
 		private readonly FreeSeats $freeSeats,
 		private readonly ?string $excludeTraining,
 		private readonly bool $showLastFreeSeats,
-		private readonly ?int $venueId = null,
+		private readonly ?int $venueId,
 	) {
 	}
 

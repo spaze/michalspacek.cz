@@ -41,7 +41,7 @@ class VenuesPresenter extends BasePresenter
 
 	protected function createComponentUpcomingDatesList(): UpcomingTrainingDatesList
 	{
-		return $this->upcomingTrainingDatesListFactory->create(null, true, $this->venueId);
+		return $this->upcomingTrainingDatesListFactory->createForVenue($this->venueId);
 	}
 
 }
