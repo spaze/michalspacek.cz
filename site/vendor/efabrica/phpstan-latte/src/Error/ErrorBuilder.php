@@ -46,7 +46,11 @@ final class ErrorBuilder
         '/Cannot call method addAttributes\(\) on Nette\\\\Utils\\\\Html\|null\./', // we will not test latte compiler itself
         '/Instantiated class MissingBlockParameter not found\./', # missing block parameter palceholder
         '/Variable \$ʟ_it on left side of \?\? always exists and is not nullable\./', // $ʟ_it in try / catch in foreach is always set
+        '/Variable \$ʟ_it on left side of \?\? is never defined\./', // $ʟ_it in try / catch in foreach is never defined
         '/Cannot call method render\(\) on mixed\./', // redundant error for unknown components with phpstan-nette extension
+        '/PHPDoc tag @var for variable \$__variables__ has no value type specified in iterable type array\./', // fake variable $__variables__ can have not specified array type
+        '/Cannot call method startTag\(\) on Nette\\\\Utils\\\\Html\|string\./', // nette/forms error https://github.com/nette/forms/issues/308
+        '/Cannot call method endTag\(\) on Nette\\\\Utils\\\\Html\|string\./', // nette/forms error https://github.com/nette/forms/issues/308
     ];
 
     /** @var string[] */
@@ -65,6 +69,7 @@ final class ErrorBuilder
     public function __construct(
         array $errorPatternsToIgnore,
         array $warningPatterns,
+        bool $strictMode,
         PresenterFactoryFaker $presenterFactoryFaker,
         array $errorTransformers,
         LineMapper $lineMapper
@@ -73,6 +78,9 @@ final class ErrorBuilder
         $this->warningPatterns = $warningPatterns;
         $this->errorTransformers = $errorTransformers;
         $this->lineMapper = $lineMapper;
+        if ($strictMode === false) {
+            $this->errorPatternsToIgnore[] = '/Parameter #1 \$destination of method Nette\\\\Application\\\\UI\\\\Component::link\(\) expects string, Latte\\\\Runtime\\\\Html\|string\|false given\./'; // nette/application error https://github.com/nette/application/issues/313 found by https://github.com/efabrica-team/phpstan-latte/issues/398
+        }
         if ($presenterFactoryFaker->getPresenterFactory() === null) {
             $this->errorPatternsToIgnore[] = '/Cannot load presenter .*/';
         }

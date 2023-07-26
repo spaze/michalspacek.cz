@@ -3088,16 +3088,16 @@
         },
         {
             "name": "efabrica/phpstan-latte",
-            "version": "0.13.2",
+            "version": "0.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/efabrica-team/phpstan-latte.git",
-                "reference": "da57a12197c2c646b4056fc29a84fb7c39e832d9"
+                "reference": "9fa98eba6d4ab640718410b1c984abb8a7402229"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/da57a12197c2c646b4056fc29a84fb7c39e832d9",
-                "reference": "da57a12197c2c646b4056fc29a84fb7c39e832d9",
+                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/9fa98eba6d4ab640718410b1c984abb8a7402229",
+                "reference": "9fa98eba6d4ab640718410b1c984abb8a7402229",
                 "shasum": ""
             },
             "require": {
@@ -3140,9 +3140,9 @@
             ],
             "support": {
                 "issues": "https://github.com/efabrica-team/phpstan-latte/issues",
-                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.13.2"
+                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.14.0"
             },
-            "time": "2023-07-10T07:51:26+00:00"
+            "time": "2023-07-26T19:04:37+00:00"
         },
         {
             "name": "nette/tester",
