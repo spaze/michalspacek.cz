@@ -29,7 +29,7 @@ class BlogPostPreview
 	public function sendPreview(BlogPost $post, DefaultTemplate $template, callable $sendTemplate): never
 	{
 		$this->texyFormatter->disableCache();
-		$template->setFile(__DIR__ . '/../../Www/Presenters/templates/Post/default.latte');
+		$template->setFile(__DIR__ . '/../Www/Presenters/templates/Post/default.latte');
 		$template->post = $this->blogPosts->format($post);
 		$template->edits = $post->postId ? $post->edits : [];
 		$template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
