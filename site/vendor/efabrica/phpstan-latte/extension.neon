@@ -150,10 +150,11 @@ services:
             # scope node visitors
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFunctionsNodeVisitor())
-            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddExtractParamsToTopNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\NotNullableSnippetDriverNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ContainerArrayFetchChangeIntegerToStringNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RemoveEmptyStringFromLabelAndControlPartNodeVisitor())
+            - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RemoveTernaryConditionWithDynamicFormFieldsNodeVisitor())
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformFormStackToGetFormNodeVisitor())
 
     # Link processors
     - Efabrica\PHPStanLatte\LinkProcessor\LinkProcessorFactory
@@ -204,7 +205,7 @@ services:
 
     # Error builder
     - Efabrica\PHPStanLatte\Error\LineMapper\LineMapper(%debugMode%)
-    - Efabrica\PHPStanLatte\Error\ErrorBuilder(%latte.errorPatternsToIgnore%, %latte.warningPatterns%)
+    - Efabrica\PHPStanLatte\Error\ErrorBuilder(%latte.errorPatternsToIgnore%, %latte.warningPatterns%, %latte.strictMode%)
 
     # Error transformers
     - Efabrica\PHPStanLatte\Error\Transformer\UndefinedLatteFilterErrorTransformer
@@ -219,3 +220,8 @@ services:
             simpleRelativePathHelper: @simpleRelativePathHelper
             showTipsOfTheDay: %tipsOfTheDay%
             editorUrl: %editorUrl%
+
+    -   # Add parent back to nodes - was removed in bleeding edge. TODO rewrite according to the instructions on https://phpstan.org/blog/preprocessing-ast-for-custom-rules
+        factory: PhpParser\NodeVisitor\ParentConnectingVisitor
+        tags:
+            - phpstan.parser.richParserNodeVisitor

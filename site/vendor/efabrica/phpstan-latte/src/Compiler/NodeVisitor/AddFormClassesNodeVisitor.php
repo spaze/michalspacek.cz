@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanLatte\Compiler\NodeVisitor;
 
+use Efabrica\PHPStanLatte\Compiler\Helper\FormHelper;
 use Efabrica\PHPStanLatte\Compiler\NodeVisitor\Behavior\FormsNodeVisitorBehavior;
 use Efabrica\PHPStanLatte\Compiler\NodeVisitor\Behavior\FormsNodeVisitorInterface;
 use Efabrica\PHPStanLatte\Error\Error;
@@ -23,24 +24,31 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayDimFetch;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
-use PhpParser\Node\Expr\Ternary;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt;
+use PhpParser\Node\Stmt\Class_ as StmtClass_;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
+use PhpParser\Node\Stmt\Property;
+use PhpParser\Node\Stmt\PropertyProperty;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\NodeVisitorAbstract;
+use PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprStringNode;
+use PHPStan\PhpDocParser\Ast\Type\ArrayShapeItemNode;
+use PHPStan\PhpDocParser\Ast\Type\ArrayShapeNode;
 use PHPStan\ShouldNotHappenException;
+use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
 
@@ -104,8 +112,11 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                     )
                 );
             }
+
             $this->actualForm = $this->forms[$formName] ?? null;
-            return new Assign(new Variable('form'), new New_(new Name($formClassName)));
+            return new Assign(new Variable('form'), new StaticCall(new Name(FormHelper::class), 'getForm', [
+                new Arg(new ClassConstFetch(new Name($formClassName), 'class')),
+            ]));
         } elseif ($node instanceof StaticCall) {
             if ($this->nameResolver->resolve($node->class) === 'Nette\Bridges\FormsLatte\Runtime') {
                 if ($this->nameResolver->resolve($node->name) === 'renderFormEnd') {
@@ -134,8 +145,8 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                     $itemArgument = $node->getArgs()[0] ?? null;
                     $itemArgumentValue = $itemArgument ? $itemArgument->value : null;
 
-                    if ($itemArgumentValue instanceof String_) {
-                        $controlName = $itemArgumentValue->value;
+                    if ($itemArgumentValue instanceof String_ || $itemArgumentValue instanceof LNumber) {
+                        $controlName = (string)$itemArgumentValue->value;
                         // TODO remove when container are supported
                         $controlNameParts = explode('-', $controlName);
                         $controlName = end($controlNameParts);
@@ -178,8 +189,8 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                 return null;
             }
 
-            if ($node->dim instanceof String_) {
-                $controlName = $node->dim->value;
+            if ($node->dim instanceof String_ || $node->dim instanceof LNumber) {
+                $controlName = (string)$node->dim->value;
                 // TODO remove when container are supported
                 $controlNameParts = explode('-', $controlName);
                 $controlName = end($controlNameParts);
@@ -245,17 +256,6 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                         }
                     }
                 }
-            }
-        }
-
-        // dynamic inputs
-        if ($node instanceof Expression && $node->expr instanceof Assign &&
-            ($node->expr->expr instanceof Ternary || ($node->expr->expr instanceof Assign && $node->expr->expr->expr instanceof Ternary))
-        ) {
-            $varName = $this->nameResolver->resolve($node->expr->var);
-            if ($varName === 'ʟ_input' || $varName === '_input') {
-                $node->setDocComment(new Doc('/** @var Nette\Forms\Controls\BaseControl $' . $varName . ' @phpstan-ignore-next-line */'));
-                return $node;
             }
         }
 
@@ -382,8 +382,29 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
      */
     public function afterTraverse(array $nodes): array
     {
-        $componentType = '\Nette\Forms\Controls\BaseControl';
-        $componentTypePlaceholder = '%%TYPE%%';
+        $templateClass = false;
+        foreach ($nodes as $node) {
+            if ($node instanceof StmtClass_) {
+                if ($templateClass === false) {
+                    // skip Template class
+                    $templateClass = true;
+                    continue;
+                }
+                // use Template->global class
+
+                $arrayShapeItems = [];
+                foreach ($this->formClassNames as $formName => $form) {
+                    $arrayShapeItems[] = new ArrayShapeItemNode(new ConstExprStringNode($formName), false, (new ConstantStringType($form))->toPhpDocNode());
+                }
+                $arrayShape = new ArrayShapeNode($arrayShapeItems);
+                $node->stmts[] = new Property(StmtClass_::MODIFIER_PUBLIC, [
+                    new PropertyProperty('formNamesToFormClasses'),
+                ], [
+                    'comments' => [new Doc('/** @var ' . $arrayShape->__toString() . ' */')],
+                ], 'array');
+                break;
+            }
+        }
 
         $controlAssign = new Expression(new Assign(new Variable('control'), new StaticCall(
             new Name('parent'),
