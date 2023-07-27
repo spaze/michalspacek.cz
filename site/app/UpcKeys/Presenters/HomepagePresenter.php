@@ -57,8 +57,9 @@ class HomepagePresenter extends BasePresenter
 		$this->template->keys = isset($keys) && !isset($error) ? $keys : null;
 		switch ($format) {
 			case 'text':
-				$this->setView('text');
-				break;
+				$this->httpResponse->setContentType('text/plain');
+				$this->sendResponse($this->upcKeys->getTextResponse($this->ssid, $error ?? null, $keys ?? []));
+				// no break, Presenter::sendResponse() is in earlyTerminatingMethodCalls defined in the phpstan-nette extension config
 			case 'html':
 				$this->template->filterTypes = WiFiBand::getKnown();
 				$this->template->modelsWithPrefixes = $this->upcKeys->getModelsWithPrefixes();
