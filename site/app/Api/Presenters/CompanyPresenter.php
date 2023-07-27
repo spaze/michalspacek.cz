@@ -40,9 +40,9 @@ class CompanyPresenter extends BasePresenter
 		$data = [
 			'status' => $info->status,
 			'statusMessage' => $info->statusMessage,
-			'companyId' => $info->companyId,
-			'companyTaxId' => $info->companyTaxId,
-			'company' => $info->company,
+			'companyId' => $info->companyId ?? '',
+			'companyTaxId' => $info->companyTaxId ?? '',
+			'company' => $info->company ?? '',
 			'street' => $info->streetFull ?? '',
 			'city' => $info->city ?? '',
 			'zip' => $info->zip ?? '',
