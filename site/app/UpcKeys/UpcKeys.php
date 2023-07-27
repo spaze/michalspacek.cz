@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
+use Nette\Application\Responses\TextResponse;
 use Nette\Utils\Strings;
 
 class UpcKeys
@@ -117,6 +118,20 @@ class UpcKeys
 	public function getSsidPlaceholder(): string
 	{
 		return self::SSID_PLACEHOLDER;
+	}
+
+
+	/**
+	 * @param array<int, WiFiKey> $keys
+	 */
+	public function getTextResponse(?string $ssid, ?string $error, array $keys): TextResponse
+	{
+		$output = $ssid ? "# {$ssid}\n" : '';
+		$output .= $error ? "# Error: {$error}\n" : '';
+		foreach ($keys as $key) {
+			$output .= $key->getKey() . "\n";
+		}
+		return new TextResponse($output);
 	}
 
 }
