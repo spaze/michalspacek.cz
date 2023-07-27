@@ -13,12 +13,6 @@ parameters:
 		- # `{input "applications-{$application->id}" ...}` is an `$application->id` input in `applications` container https://github.com/efabrica-team/phpstan-latte/pull/380 or https://github.com/efabrica-team/phpstan-latte/issues/400
 			message: '#^Call to an undefined method Nette\\Forms\\Controls\\BaseControl\|Statuses_[a-f0-9]+_applications::getControl\(\)#'
 			path: app/Admin/Presenters/templates/Trainings/date.latte
-		- # https://github.com/efabrica-team/phpstan-latte/issues/415
-			messages:
-				- '#^Variable \$(ssid|error|keys) in isset\(\) is never defined#'
-				- '#^Undefined variable: \$(ssid|error|keys)#'
-			paths:
-				- app/UpcKeys/Presenters/templates/Homepage/text.latte
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
