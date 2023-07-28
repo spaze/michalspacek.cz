@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use DateTime;
+use MichalSpacekCz\Articles\ArticleHeaderIcons;
+use MichalSpacekCz\Articles\ArticleHeaderIconsFactory;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
@@ -23,6 +25,7 @@ class BlogPresenter extends BasePresenter
 		private readonly BlogPosts $blogPosts,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly PostFormFactory $postFormFactory,
+		private readonly ArticleHeaderIconsFactory $articleHeaderIconsFactory,
 	) {
 		parent::__construct();
 	}
@@ -77,6 +80,12 @@ class BlogPresenter extends BasePresenter
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		$this->blogPosts->setTemplateTitleAndHeader($this->post, $this->template, Html::el()->setText('Příspěvek '));
+	}
+
+
+	protected function createComponentArticleHeaderIcons(): ArticleHeaderIcons
+	{
+		return $this->articleHeaderIconsFactory->create();
 	}
 
 }
