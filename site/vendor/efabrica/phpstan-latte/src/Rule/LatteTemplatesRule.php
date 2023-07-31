@@ -116,6 +116,7 @@ final class LatteTemplatesRule implements Rule
         foreach ($this->analysedTemplatesRegistry->getReportedUnanalysedTemplates() as $templatePath) {
             $errors[] = RuleErrorBuilder::message('Latte template ' . pathinfo($templatePath, PATHINFO_BASENAME) . ' was not analysed.')
                 ->file($templatePath)
+                ->tip('Please make sure your template path is correct. If you use some non-standard way of resolving your templates, read our extension guide https://github.com/efabrica-team/phpstan-latte/blob/main/docs/extension.md#template-resolvers')
                 ->build();
         }
 
@@ -152,6 +153,8 @@ final class LatteTemplatesRule implements Rule
             $actualAction = $template->getActualAction();
             if ($actualAction !== null) {
                 $context .= '::' . $actualAction;
+            } else {
+                $context .= ' (standalone template, 💡see https://github.com/efabrica-team/phpstan-latte/blob/main/docs/how_it_works.md#variable-baz-might-not-be-defined Point 2 for more details)';
             }
             foreach ($template->getParentTemplatePaths() as $parentTemplate) {
                 $context .= ' included in ' . $this->relativePathHelper->getRelativePath(realpath($parentTemplate) ?: '');
@@ -162,7 +165,7 @@ final class LatteTemplatesRule implements Rule
             } catch (CompileException $e) {
                 $ruleErrorBuilder = RuleErrorBuilder::message($e->getMessage())
                     ->file($template->getPath())
-                    ->metadata(['context' => $context === '' ? null : $context]);
+                    ->metadata(['context' => $context]);
                 if ($e->sourceLine) {
                     $ruleErrorBuilder->line($e->sourceLine);
                 }
