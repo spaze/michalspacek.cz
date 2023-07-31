@@ -2,11 +2,26 @@
 
 ## [Unreleased][unreleased]
 
-## [0.14.0] - 2023-07-26
+## [0.15.0] - 2023-07-31
 ### Added
-- Changed types handling - used smart extract feature from PHPStan (**Possible problems** please report any issue connected with variable types)
+- Support for form groups
+- Collecting options for checkbox list and radio list and report if some non-existing option is used
+- Tip for error message "Latte template xxx.latte was not analysed"
+- Tip for standalone templates
+- Feature: Transform dynamic form controls to "dynamic" string (control with name $record->id will be transformed to "$record->id") (Turn this feature with parameter `latte.features.transformDynamicFormControlNamesToString: true`)
+- Support for object shape variables
+- latte extension to fileExtensions parameter to report unmatched errors also in latte (If it's causing any problems in your applications, please report issue and we will remove it)
+
+### Fixed
+- `If condition is always true` for CheckboxList::getLabelPart(), CheckboxList::getControlPart(), RadioList::getLabelPart() and RadioList::getControlPart() 
+
+## [0.14.0] - 2023-07-26
+### Changed
+- Types handling - used smart extract feature from PHPStan (**Possible problems** please report any issue connected with variable types)
 - Not defined variables are marked with error `Undefined variable ...` (**BC break** - if error was ignored, you need to change ignored error pattern)
-- Added type `int` as param for Runtime::item() method to support integer names of Form containers
+
+### Added
+- Type `int` as param for Runtime::item() method to support integer names of Form containers
 - Transformer for ternary condition with is_object and dynamic form fields - it removes always true / always false condition errors
 - Errors `Cannot call method endTag() on Nette\Utils\Html|string.` and `Cannot call method startTag() on Nette\Utils\Html|string.` added to ignore list until they are fixed in nette/forms
 - Support for dynamic forms with known name
@@ -201,7 +216,8 @@
     - Transform components to explicit calls
 - Error mapper for better DX
 
-[unreleased]: https://github.com/efabrica-team/phpstan-latte/compare/0.14.0...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-latte/compare/0.15.0...HEAD
+[0.15.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.14.0...0.15.0
 [0.14.0]: https://github.com/efabrica-team/phpstan-latte/compare/0.13.2...0.14.0
 [0.13.2]: https://github.com/efabrica-team/phpstan-latte/compare/0.13.1...0.13.2
 [0.13.1]: https://github.com/efabrica-team/phpstan-latte/compare/0.13.0...0.13.1

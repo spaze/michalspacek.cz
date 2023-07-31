@@ -68,7 +68,7 @@ It is important to check the context first (text after path of Latte file - rend
      5      Variable $baz might not be defined.                      
     ------ ------------------------------------------------------------------------------------- 
     ```
-    Nette is sometimes tricky how it handles Latte templates. All Latte files in `templates` directory can be visited even without Presenter's action/render method.
+    Nette is sometimes tricky how it handles Latte templates. All Latte files in `templates` directory can be visited even without Presenter's action/render method (see more details [here](https://doc.nette.org/en/application/presenters#toc-life-cycle-of-presenter)).
     In the example above we can see there is no `::bar` action after FooPresenter so this is exactly the case when `bar.latte` exists but `actionBar` neither `renderBar` exists, so no variables are sent to this template in `bar` context.
 
 #### If condition is always true./If condition is always false.
@@ -155,10 +155,118 @@ $this->template->foo = $this->foo;
 
     Now the type of `$baz` will be `'bar'|null` and isset() in condition will be valid.
 
-<!-- TODO
 ## Components
--->
 
-<!-- TODO
+Components are collected from PHP classes (e.g. Presenters or Controls) when using one of these ways:
+
+1) class method createComponent()
+```php
+protected function createComponentSomething(): SomeControl
+{
+    return new SomeControl();
+}
+```
+
+2) calling method addComponent()
+```php
+public function actionDefault(): void
+{
+    $this->addComponent('something', new SomeControl());
+}
+```
+
+3) assign to `$this`:
+```php
+public function actionDefault(): void
+{
+    $this['something'] = new SomeControl();
+}
+```
+
+Subcomponents of components are also collected, so it is possible to use this:
+```latte
+{control someControl}
+{control someControl-header}
+{control someControl-body}
+```
+
+### Common errors
+
+#### Component with name "xxx" probably doesn't exist.
+First of all, check if your component is registered in Presenter / Control using one of way described above and if the name fits.
+
+
 ## Forms
--->
+
+Forms are collected from PHP classes (e.g. Presenters or Controls) when they are registered as components via `createComponent*` or `addComponent` method if this method returns instance of `Nette\Forms\Form`.
+Form fields, containers, groups and fields options are also collected and can be then analysed.
+
+### Common errors
+
+#### Form control with name "xxx" probably does not exist.
+Let's say you register form like this:
+
+```php
+
+use Nette\Application\UI\Form;
+
+protected function createComponentContainerForm(): Form
+{
+    $form = new Form();
+    $form->setMethod('get');
+    $form->addCheckbox('checkbox', 'Checkbox');
+    $part1 = $form->addContainer('part1');
+    $part1->addText('text1', 'Text 1');
+    $part1->addSubmit('submit1', 'Submit 1');
+
+    $part2 = $form->addContainer('part2');
+    $part2->addText('text2', 'Text 2');
+    $part2->addSubmit('submit2', 'Submit 2');
+
+    return $form;
+}
+```
+
+Then you can access all registered fields in latte this way:
+```latte
+{form containerForm}
+    {$form[part1][text1]->getHtmlId()}
+    {input part1-text1}
+    {input part1-submit1}
+
+    {input part2-text2}
+    {input part2-submit2}
+
+    {input checkbox:}
+
+    {input xxx} <-- this field is not registered in createComponent method therefore it is marked as non-existing 
+{/form}
+```
+
+### Features
+By default, controls with dynamic names which can't be resolved as constant string or integer are not collected.
+
+Example:
+```php
+$form->addText('text1', 'Text 1'); // <- this is collected
+$text2 = 'text2'; 
+$form->addText($text2, 'Text 2'); // <- this is collected
+$text3 = $this->name; // some dynamic name 
+$form->addText($text3, 'Text 3'); // <- this is not collected 
+```
+
+With feature flag `transformDynamicFormControlNamesToString` it is collected. Try it:
+```neon
+parameters:
+    latte:
+        features:
+            transformDynamicFormControlNamesToString: true    
+```
+
+Form field is collected and if it is used with the same name in latte, it will be identified as TextInput.
+For Form above use latte:
+```latte
+{input text1}
+{input text2}
+{input $text3}
+```

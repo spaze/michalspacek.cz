@@ -1,4 +1,6 @@
 parameters:
+    fileExtensions: # adding latte to file extensions list to report unmatched errors also in latte
+        - latte
     stubFiles:
         - stubs/Latte/Essential/Filters.stub
         - stubs/Latte/Runtime/FilterInfo.stub
@@ -29,6 +31,8 @@ parameters:
         resolveAllPossiblePaths: false
         reportUnanalysedTemplates: false
         collectedPaths: []
+        features:
+            transformDynamicFormControlNamesToString: false
     ignoreErrors:
         -
             messages:
@@ -55,6 +59,7 @@ parametersSchema:
         resolveAllPossiblePaths: bool()
         reportUnanalysedTemplates: bool()
         collectedPaths: arrayOf(string())
+        features: arrayOf(bool(), string())
     ])
 
 rules:
@@ -121,6 +126,7 @@ services:
 
     # Name resolvers
     - Efabrica\PHPStanLatte\Resolver\NameResolver\NameResolver
+    - Efabrica\PHPStanLatte\Resolver\NameResolver\FormControlNameResolver(%latte.features.transformDynamicFormControlNamesToString%)
 
     # Method resolvers
     - Efabrica\PHPStanLatte\Resolver\CallResolver\CalledClassResolver
@@ -146,6 +152,7 @@ services:
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\LinkNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeNotNullToEqualsNullNodeVisitor())
             - addNodeVisitor(300, Efabrica\PHPStanLatte\Compiler\NodeVisitor\AddFormClassesNodeVisitor())
+            - addNodeVisitor(300, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ReportNonExistingFieldOptionNodeVisitor())
             - addNodeVisitor(9900, Efabrica\PHPStanLatte\Compiler\NodeVisitor\CleanupNodeVisitor())
             # scope node visitors
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\ChangeFiltersNodeVisitor())
@@ -155,6 +162,7 @@ services:
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RemoveEmptyStringFromLabelAndControlPartNodeVisitor())
             - addNodeVisitor(100, Efabrica\PHPStanLatte\Compiler\NodeVisitor\RemoveTernaryConditionWithDynamicFormFieldsNodeVisitor())
             - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformFormStackToGetFormNodeVisitor())
+            - addNodeVisitor(200, Efabrica\PHPStanLatte\Compiler\NodeVisitor\TransformDynamicFormControlsToDynamicStringNodeVisitor(%latte.features.transformDynamicFormControlNamesToString%))
 
     # Link processors
     - Efabrica\PHPStanLatte\LinkProcessor\LinkProcessorFactory
@@ -185,8 +193,9 @@ services:
     - Efabrica\PHPStanLatte\LatteContext\Collector\TemplatePathCollector
     - Efabrica\PHPStanLatte\LatteContext\Collector\TemplateRenderCollector
     - Efabrica\PHPStanLatte\LatteContext\Collector\TemplateRenderMethodPhpDocCollector
-    - Efabrica\PHPStanLatte\LatteContext\Collector\FormControlCollector
     - Efabrica\PHPStanLatte\LatteContext\Collector\FormCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\FormControlCollector
+    - Efabrica\PHPStanLatte\LatteContext\Collector\FormGroupCollector
     - Efabrica\PHPStanLatte\LatteContext\Collector\RelatedFilesCollector(%analysedPaths%, %latte.collectedPaths%)
     - Efabrica\PHPStanLatte\LatteContext\Collector\NetteApplicationUIPresenterCollector
 

@@ -13,6 +13,7 @@ use Efabrica\PHPStanLatte\Template\Form\Container;
 use Efabrica\PHPStanLatte\Template\Form\ControlHolderInterface;
 use Efabrica\PHPStanLatte\Template\Form\ControlInterface;
 use Efabrica\PHPStanLatte\Template\Form\Form;
+use Efabrica\PHPStanLatte\Template\Form\Group;
 use PhpParser\Builder\Class_;
 use PhpParser\Builder\Method;
 use PhpParser\Builder\Param;
@@ -58,7 +59,11 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
 
     private const COMPONENT_TYPE = '\Nette\Forms\Controls\BaseControl';
 
-    private const COMPONENT_TYPE_PLACEHOLDER = '%%TYPE%%';
+    private const COMPONENT_TYPE_PLACEHOLDER = '%%COMPONENT_TYPE%%';
+
+    private const GROUP_TYPE_PLACEHOLDER = '%%GROUP_TYPE%%';
+
+    private const GROUP_TYPE = '\Nette\Forms\ControlGroup';
 
     private NameResolver $nameResolver;
 
@@ -145,6 +150,7 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                     $itemArgument = $node->getArgs()[0] ?? null;
                     $itemArgumentValue = $itemArgument ? $itemArgument->value : null;
 
+                    $formControl = null;
                     if ($itemArgumentValue instanceof String_ || $itemArgumentValue instanceof LNumber) {
                         $controlName = (string)$itemArgumentValue->value;
                         // TODO remove when container are supported
@@ -161,10 +167,14 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                     } elseif ($itemArgumentValue instanceof Variable) {
                         return null;
                     }
+                    $attributes = $node->getAttributes();
+                    if ($formControl !== null) {
+                        $attributes['formControl'] = $formControl;
+                    }
                     return new ArrayDimFetch(
                         new Variable('form'),
                         $itemArgumentValue,
-                        $node->getAttributes()
+                        $attributes
                     );
                 }
             }
@@ -189,6 +199,7 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                 return null;
             }
 
+            $formControl = null;
             if ($node->dim instanceof String_ || $node->dim instanceof LNumber) {
                 $controlName = (string)$node->dim->value;
                 // TODO remove when container are supported
@@ -214,6 +225,10 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
             }
 
             $node->var = new Variable('form');
+            if ($formControl !== null) {
+                $node->setAttribute('formControl', $formControl);
+            }
+
             return $node;
         }
 
@@ -245,14 +260,21 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
          * echo $ʟ_label;
          * </code>
          *
-         * for RadioList and CheckboxList
+         * for RadioList and CheckboxList methods getLabel, getLabelPart, getControlPart
          */
         if ($node instanceof If_) {
             foreach ($this->possibleAlwaysTrueLabels as $possibleAlwaysTrueLabel) {
                 if ($possibleAlwaysTrueLabel === spl_object_hash($node)) {
                     if ($node->cond instanceof Assign) {
-                        if (in_array($this->nameResolver->resolve($node->cond->var), ['ʟ_label', '_label'], true) && $node->cond->expr instanceof MethodCall && $this->nameResolver->resolve($node->cond->expr) === 'getLabel') {
-                            return array_merge([new Expression($node->cond)], $node->stmts);
+                        if (in_array($this->nameResolver->resolve($node->cond->var), ['ʟ_label', '_label'], true) &&
+                            (
+                                $node->cond->expr instanceof MethodCall && in_array($this->nameResolver->resolve($node->cond->expr), ['getLabel', 'getLabelPart', 'getControlPart'], true) ||
+                                $node->cond->expr instanceof ArrayDimFetch && $node->cond->expr->var instanceof Array_ && isset($node->cond->expr->var->items[0]) && $node->cond->expr->var->items[0]->value instanceof MethodCall && in_array($this->nameResolver->resolve($node->cond->expr->var->items[0]->value), ['getLabel', 'getLabelPart', 'getControlPart'], true)
+                            )
+                        ) {
+                            $expression = new Expression($node->cond);
+                            $expression->setAttributes($node->getAttributes());
+                            return array_merge([$expression], $node->stmts);
                         }
                     }
                 }
@@ -455,25 +477,49 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
      */
     private function createClassNode(string $parentClassName, ControlHolderInterface $controlHolder, Method $baseOffsetGetMethod): Node
     {
-        $comment = $this->createConditionalReturnTypeComment($parentClassName, $controlHolder->getControls());
+        $offsetGetComment = $this->createOffsetGetConditionalReturnTypeComment($parentClassName, $controlHolder->getControls());
 
-        $method = clone $baseOffsetGetMethod;
-        $method->setDocComment('/** ' . $comment . ' */');
+        $offsetGetMethod = clone $baseOffsetGetMethod;
+        $offsetGetMethod->setDocComment('/** ' . $offsetGetComment . ' */');
+
+        $methods = [
+            $offsetGetMethod,
+        ];
 
         $className = $parentClassName;
         if ($controlHolder instanceof Container) {
             $className .= '_' . $controlHolder->getName();
         }
 
-        $builderClass = (new Class_($className))->extend($controlHolder->getType()->describe(VerbosityLevel::typeOnly()))
-            ->addStmts([$method]);
+        if ($controlHolder instanceof Form) {
+            $getGroupMethod = (new Method('getGroup'))
+                ->addParam(new Param('name'))
+                ->addStmts([
+                    new Return_(new StaticCall(
+                        new Name('parent'),
+                        new Identifier('getGroup'),
+                        [
+                            new Arg(new Variable('name')),
+                        ]
+                    )),
+                ])
+                ->makePublic()
+                ->setReturnType('?Nette\Forms\ControlGroup');
+
+            $getGroupComment = $this->createGetGroupConditionalReturnTypeComment($controlHolder->getGroups());
+            $getGroupMethod->setDocComment('/** ' . $getGroupComment . ' */');
+            $methods[] = $getGroupMethod;
+        }
+
+        $builderClass = (new Class_($this->fixClassName($className)))->extend($controlHolder->getType()->describe(VerbosityLevel::typeOnly()))
+            ->addStmts($methods);
         return $builderClass->getNode();
     }
 
     /**
      * @param ControlInterface[] $controls
      */
-    private function createConditionalReturnTypeComment(string $parentName, array $controls): string
+    private function createOffsetGetConditionalReturnTypeComment(string $parentName, array $controls): string
     {
         $comment = '@return ' . self::COMPONENT_TYPE_PLACEHOLDER;
         foreach ($controls as $control) {
@@ -483,9 +529,21 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                 $controlType = $control->getTypeAsString();
             }
 
-            $comment = str_replace(self::COMPONENT_TYPE_PLACEHOLDER, '($name is \'' . $control->getName() . '\' ? ' . $controlType . ' : ' . self::COMPONENT_TYPE_PLACEHOLDER . ')', $comment);
+            $comment = str_replace(self::COMPONENT_TYPE_PLACEHOLDER, '($name is \'' . $control->getName() . '\' ? ' . $this->fixClassName($controlType) . ' : ' . self::COMPONENT_TYPE_PLACEHOLDER . ')', $comment);
         }
         return str_replace(self::COMPONENT_TYPE_PLACEHOLDER, self::COMPONENT_TYPE, $comment);
+    }
+
+    /**
+     * @param Group[] $groups
+     */
+    private function createGetGroupConditionalReturnTypeComment(array $groups): string
+    {
+        $comment = '@return ' . self::GROUP_TYPE_PLACEHOLDER;
+        foreach ($groups as $group) {
+            $comment = str_replace(self::GROUP_TYPE_PLACEHOLDER, '($name is \'' . $group->getName() . '\' ? ' . self::GROUP_TYPE . ' : ' . self::GROUP_TYPE_PLACEHOLDER . ')', $comment);
+        }
+        return str_replace(self::GROUP_TYPE_PLACEHOLDER, 'null', $comment);
     }
 
     private function isUiControl(Expr $expr): bool
@@ -544,5 +602,10 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
         }
 
         return true;
+    }
+
+    private function fixClassName(string $className): string
+    {
+        return str_replace(['$', '->'], ['_dollar_', '_arrow_'], $className);
     }
 }
