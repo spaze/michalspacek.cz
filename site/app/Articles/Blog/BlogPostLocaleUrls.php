@@ -35,10 +35,10 @@ class BlogPostLocaleUrls
 				bp.slug_tags AS slugTags
 			FROM
 				blog_posts bp
-			LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
+			LEFT JOIN locales l ON l.id_locale = bp.key_locale
 			WHERE bp.key_translation_group = (SELECT key_translation_group FROM blog_posts WHERE slug = ?)
 				OR bp.slug = ?
-			ORDER BY l.id_blog_post_locale';
+			ORDER BY l.id_locale';
 		foreach ($this->database->fetchAll($sql, $slug, $slug) as $row) {
 			$post = new BlogPost();
 			$post->locale = $row->locale;

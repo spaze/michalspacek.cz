@@ -99,7 +99,7 @@ class BlogPosts
 		$result = $this->database->fetch(
 			'SELECT
 				bp.id_blog_post AS postId,
-				l.id_blog_post_locale AS localeId,
+				l.id_locale AS localeId,
 				bp.key_translation_group AS translationGroupId,
 				l.locale,
 				bp.slug,
@@ -120,8 +120,8 @@ class BlogPosts
 				tct.card AS twitterCard,
 				tct.title AS twitterCardTitle
 			FROM blog_posts bp
-			LEFT JOIN blog_post_locales l
-				ON l.id_blog_post_locale = bp.key_locale
+			LEFT JOIN locales l
+				ON l.id_locale = bp.key_locale
 			LEFT JOIN twitter_card_types tct
 				ON tct.id_twitter_card_type = bp.key_twitter_card_type
 			WHERE bp.id_blog_post = ?',
@@ -146,7 +146,7 @@ class BlogPosts
 		$posts = [];
 		$sql = 'SELECT
 				bp.id_blog_post AS postId,
-				l.id_blog_post_locale AS localeId,
+				l.id_locale AS localeId,
 				bp.key_translation_group AS translationGroupId,
 				l.locale,
 				bp.slug,
@@ -166,8 +166,8 @@ class BlogPosts
 				null AS twitterCardId
 			FROM
 				blog_posts bp
-			LEFT JOIN blog_post_locales l
-				ON l.id_blog_post_locale = bp.key_locale
+			LEFT JOIN locales l
+				ON l.id_locale = bp.key_locale
 			ORDER BY
 				published, slug';
 		foreach ($this->database->fetchAll($sql) as $row) {
@@ -320,7 +320,7 @@ class BlogPosts
 	public function getAllLocales(): array
 	{
 		if ($this->locales === null) {
-			$this->locales = $this->database->fetchPairs('SELECT id_blog_post_locale, locale FROM blog_post_locales ORDER BY id_blog_post_locale');
+			$this->locales = $this->database->fetchPairs('SELECT id_locale, locale FROM locales ORDER BY id_locale');
 		}
 		return $this->locales;
 	}
