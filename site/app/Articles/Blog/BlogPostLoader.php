@@ -45,7 +45,7 @@ class BlogPostLoader
 			$result = $this->database->fetch(
 				'SELECT
 					bp.id_blog_post AS postId,
-					l.id_blog_post_locale AS localeId,
+					l.id_locale AS localeId,
 					bp.key_translation_group AS translationGroupId,
 					l.locale,
 					bp.slug,
@@ -66,8 +66,8 @@ class BlogPostLoader
 					tct.card AS twitterCard,
 					tct.title AS twitterCardTitle
 				FROM blog_posts bp
-				LEFT JOIN blog_post_locales l
-					ON l.id_blog_post_locale = bp.key_locale
+				LEFT JOIN locales l
+					ON l.id_locale = bp.key_locale
 				LEFT JOIN twitter_card_types tct
 					ON tct.id_twitter_card_type = bp.key_twitter_card_type
 				WHERE bp.slug = ?

@@ -67,7 +67,7 @@ class Articles
 			UNION ALL
 				SELECT
 					bp.id_blog_post,
-					l.id_blog_post_locale,
+					l.id_locale,
 					bp.key_translation_group,
 					l.locale,
 					bp.title,
@@ -89,8 +89,8 @@ class Articles
 					null AS twitterCardId,
 					bp.omit_exports AS omitExports
 				FROM blog_posts bp
-				LEFT JOIN blog_post_locales l
-					ON l.id_blog_post_locale = bp.key_locale
+				LEFT JOIN locales l
+					ON l.id_locale = bp.key_locale
 				WHERE bp.published IS NOT NULL
 					AND bp.published <= ?
 					AND l.locale = ?
@@ -115,7 +115,7 @@ class Articles
 	{
 		$query = 'SELECT
 					bp.id_blog_post AS id,
-					l.id_blog_post_locale AS localeId,
+					l.id_locale AS localeId,
 					bp.key_translation_group AS translationGroupId,
 					l.locale,
 					bp.title AS titleTexy,
@@ -136,8 +136,8 @@ class Articles
 					null AS twitterCardId,
 					bp.omit_exports AS omitExports
 				FROM blog_posts bp
-				LEFT JOIN blog_post_locales l
-					ON l.id_blog_post_locale = bp.key_locale
+				LEFT JOIN locales l
+					ON l.id_locale = bp.key_locale
 				WHERE
 					JSON_CONTAINS(bp.slug_tags, ?)
 					AND bp.published IS NOT NULL
@@ -162,8 +162,8 @@ class Articles
 					bp.slug_tags AS slugTags,
 					bp.published
 				FROM blog_posts bp
-				LEFT JOIN blog_post_locales l
-					ON l.id_blog_post_locale = bp.key_locale
+				LEFT JOIN locales l
+					ON l.id_locale = bp.key_locale
 				WHERE
 					bp.tags IS NOT NULL
 					AND bp.published IS NOT NULL
@@ -197,8 +197,8 @@ class Articles
 					bp.tags,
 					bp.slug_tags AS slugTags
 				FROM blog_posts bp
-				LEFT JOIN blog_post_locales l
-					ON l.id_blog_post_locale = bp.key_locale
+				LEFT JOIN locales l
+					ON l.id_locale = bp.key_locale
 				WHERE
 					JSON_CONTAINS(bp.slug_tags, ?)
 					AND bp.published IS NOT NULL
@@ -230,7 +230,7 @@ class Articles
 		$query = 'SELECT a.date FROM articles a WHERE a.date > ?
 			UNION ALL
 			SELECT bp.published FROM blog_posts bp
-				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
+				LEFT JOIN locales l ON l.id_locale = bp.key_locale
 			WHERE bp.published IS NOT NULL AND bp.published > ? AND l.locale = ?
 			ORDER BY date
 			LIMIT 1';
@@ -253,7 +253,7 @@ class Articles
 	public function getNearestPublishDateByTags(array $tags): ?DateTime
 	{
 		$query = 'SELECT bp.published FROM blog_posts bp
-				LEFT JOIN blog_post_locales l ON l.id_blog_post_locale = bp.key_locale
+				LEFT JOIN locales l ON l.id_locale = bp.key_locale
 			WHERE JSON_CONTAINS(bp.slug_tags, ?)
 				AND bp.published IS NOT NULL
 				AND bp.published > ?
