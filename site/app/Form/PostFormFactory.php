@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use DateTime;
+use MichalSpacekCz\Application\Locales;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostPreview;
 use MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks;
@@ -39,6 +40,7 @@ class PostFormFactory
 		private readonly FormValues $formValues,
 		private readonly TwitterCards $twitterCards,
 		private readonly BlogPostRecommendedLinks $recommendedLinks,
+		private readonly Locales $locales,
 	) {
 	}
 
@@ -48,7 +50,7 @@ class PostFormFactory
 		$form = $this->factory->create();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
 			->setRequired(false);
-		$form->addSelect('locale', 'Jazyk:', $this->blogPosts->getAllLocales())
+		$form->addSelect('locale', 'Jazyk:', $this->locales->getAllLocales())
 			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');
 		$form->addText('title', 'Titulek:')
@@ -165,7 +167,7 @@ class PostFormFactory
 		$post->postId = $postId;
 		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
 		$post->localeId = $values->locale;
-		$post->locale = $this->blogPosts->getLocaleById($values->locale);
+		$post->locale = $this->locales->getLocaleById($values->locale);
 		$post->slug = $values->slug;
 		$post->titleTexy = $values->title;
 		$post->leadTexy = (empty($values->lead) ? null : $values->lead);
