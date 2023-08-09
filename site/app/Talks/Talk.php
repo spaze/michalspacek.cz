@@ -12,6 +12,7 @@ class Talk
 
 	public function __construct(
 		private readonly int $id,
+		private readonly int $localeId,
 		private readonly ?string $action,
 		private readonly Html $title,
 		private readonly string $titleTexy,
@@ -45,6 +46,12 @@ class Talk
 	public function getId(): int
 	{
 		return $this->id;
+	}
+
+
+	public function getLocaleId(): int
+	{
+		return $this->localeId;
 	}
 
 
