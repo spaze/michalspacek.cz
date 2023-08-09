@@ -2,6 +2,7 @@ services:
 	- MichalSpacekCz\Application\AppRequest
 	- MichalSpacekCz\Application\Error
 	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator
+	- MichalSpacekCz\Application\Locales
 	- MichalSpacekCz\Application\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\RouterFactory::createRouter
 	- MichalSpacekCz\Application\Theme

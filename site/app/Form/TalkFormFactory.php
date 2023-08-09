@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Application\Locales;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talk;
@@ -22,6 +23,7 @@ class TalkFormFactory
 		private readonly Talks $talks,
 		private readonly LinkGenerator $linkGenerator,
 		private readonly VideoThumbnails $videoThumbnails,
+		private readonly Locales $locales,
 	) {
 	}
 
@@ -36,6 +38,9 @@ class TalkFormFactory
 		$form = $this->factory->create();
 		$allTalks = $this->getAllTalksExcept($talk ? (string)$talk->getAction() : null);
 
+		$form->addSelect('locale', 'Jazyk:', $this->locales->getAllLocales())
+			->setRequired('Zadejte prosím jazyk')
+			->setPrompt('- vyberte -');
 		$form->addText('action', 'Akce:')
 			->setRequired(false)
 			->addRule($form::MAX_LENGTH, 'Maximální délka akce je %d znaků', 200);
@@ -106,6 +111,7 @@ class TalkFormFactory
 				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
 				$this->talks->update(
 					$talk->getId(),
+					$values->locale,
 					$values->action,
 					$values->title,
 					$values->description,
@@ -138,6 +144,7 @@ class TalkFormFactory
 				$message = Html::el()->setText('Přednáška upravena ');
 			} else {
 				$talkId = $this->talks->add(
+					$values->locale,
 					$values->action,
 					$values->title,
 					$values->description,
@@ -177,6 +184,7 @@ class TalkFormFactory
 	{
 		$values = [
 			'action' => $talk->getAction(),
+			'locale' => $talk->getLocaleId(),
 			'title' => $talk->getTitleTexy(),
 			'description' => $talk->getDescriptionTexy(),
 			'date' => $talk->getDate()->format('Y-m-d H:i'),

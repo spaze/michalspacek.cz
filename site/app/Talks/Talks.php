@@ -31,6 +31,7 @@ class Talks
 	{
 		$query = 'SELECT
 				t.id_talk AS id,
+				t.key_locale AS localeId,
 				t.action,
 				t.title,
 				t.description,
@@ -89,6 +90,7 @@ class Talks
 	{
 		$query = 'SELECT
 				t.id_talk AS id,
+				t.key_locale AS localeId,
 				t.action,
 				t.title,
 				t.description,
@@ -135,6 +137,7 @@ class Talks
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_talk AS id,
+				t.key_locale AS localeId,
 				t.action,
 				t.title,
 				t.description,
@@ -181,6 +184,7 @@ class Talks
 		$result = $this->database->fetch(
 			'SELECT
 				t.id_talk AS id,
+				t.key_locale AS localeId,
 				t.action,
 				t.title,
 				t.description,
@@ -249,6 +253,7 @@ class Talks
 	 */
 	public function update(
 		int $id,
+		int $localeId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -272,6 +277,7 @@ class Talks
 		bool $publishSlides,
 	): void {
 		$params = $this->getAddUpdateParams(
+			$localeId,
 			$action,
 			$title,
 			$description,
@@ -304,6 +310,7 @@ class Talks
 	 * @throws TalkDateTimeException
 	 */
 	public function add(
+		int $localeId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -327,6 +334,7 @@ class Talks
 		bool $publishSlides,
 	): int {
 		$params = $this->getAddUpdateParams(
+			$localeId,
 			$action,
 			$title,
 			$description,
@@ -372,6 +380,7 @@ class Talks
 	 * @throws TalkDateTimeException
 	 */
 	private function getAddUpdateParams(
+		int $localeId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -400,6 +409,7 @@ class Talks
 			throw new TalkDateTimeException($date, $e);
 		}
 		return [
+			'key_locale' => $localeId,
 			'action' => (empty($action) ? null : $action),
 			'title' => $title,
 			'description' => (empty($description) ? null : $description),

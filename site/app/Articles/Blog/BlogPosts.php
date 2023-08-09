@@ -30,10 +30,6 @@ use Nette\Utils\JsonException;
 class BlogPosts
 {
 
-	/** @var array<int, string>|null */
-	private ?array $locales = null;
-
-
 	/**
 	 * @param array<string, array<string, array<int, string>>> $allowedTags
 	 */
@@ -311,24 +307,6 @@ class BlogPosts
 		} catch (Exception) {
 			$this->database->rollBack();
 		}
-	}
-
-
-	/**
-	 * @return array<int, string> of id => locale
-	 */
-	public function getAllLocales(): array
-	{
-		if ($this->locales === null) {
-			$this->locales = $this->database->fetchPairs('SELECT id_locale, locale FROM locales ORDER BY id_locale');
-		}
-		return $this->locales;
-	}
-
-
-	public function getLocaleById(int $id): ?string
-	{
-		return $this->getAllLocales()[$id] ?? null;
 	}
 
 
