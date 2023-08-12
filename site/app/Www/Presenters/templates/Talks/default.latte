@@ -11,9 +11,7 @@
 </ul>
 <h2>{_messages.label.upcomingtalks}</h2>
 {if $upcomingTalks}
-	<p n:foreach="$upcomingTalks as $talk">
-		{include "common/itemTalk.latte", talk: $talk}
-	</p>
+	{control talksList $upcomingTalks}
 	<p>{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
 {else}
 	<p>{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
@@ -24,9 +22,7 @@
 </p>
 {foreach $talks as $year => $items}
 	<h3>{$year}</h3>
-	<p class="indent" n:foreach="$items as $talk">
-		{include "common/itemTalk.latte", talk: $talk}
-	</p>
+	{control talksList $items}
 {/foreach}
 {_messages.talks.more|format:'https://www.slideshare.net/spaze/presentations', 'https://speakerdeck.com/u/spaze'}
 {/define}

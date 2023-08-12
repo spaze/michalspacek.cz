@@ -9,6 +9,8 @@ use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalkSlides;
+use MichalSpacekCz\Talks\TalksList;
+use MichalSpacekCz\Talks\TalksListFactory;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -20,6 +22,7 @@ class TalksPresenter extends BasePresenter
 		private readonly Talks $talks,
 		private readonly TalkSlides $talkSlides,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
+		private readonly TalksListFactory $talksListFactory,
 	) {
 		parent::__construct();
 	}
@@ -77,6 +80,12 @@ class TalksPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->video = $talk->getVideo()->setLazyLoad(count($slides) > 3);
 		$this->template->slidesPlatform = $talk->getSlidesHref() ? SlidesPlatform::tryFromUrl($talk->getSlidesHref())?->getName() : null;
+	}
+
+
+	protected function createComponentTalksList(string $name): TalksList
+	{
+		return $this->talksListFactory->create();
 	}
 
 }

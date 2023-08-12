@@ -8,6 +8,8 @@ use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Talks\Talks;
+use MichalSpacekCz\Talks\TalksList;
+use MichalSpacekCz\Talks\TalksListFactory;
 use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
@@ -24,6 +26,7 @@ class HomepagePresenter extends BasePresenter
 		private readonly DiscontinuedTrainings $discontinuedTrainings,
 		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
 		private readonly ArticleSummaryFactory $articleSummaryFactory,
+		private readonly TalksListFactory $talksListFactory,
 	) {
 		parent::__construct();
 	}
@@ -51,6 +54,12 @@ class HomepagePresenter extends BasePresenter
 	protected function createComponentArticleSummary(): ArticleSummary
 	{
 		return $this->articleSummaryFactory->create();
+	}
+
+
+	protected function createComponentTalksList(string $name): TalksList
+	{
+		return $this->talksListFactory->create();
 	}
 
 }

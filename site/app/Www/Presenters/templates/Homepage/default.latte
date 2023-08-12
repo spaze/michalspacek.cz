@@ -26,17 +26,13 @@
 </ul>
 <h3>{_messages.label.upcomingtalks}</h3>
 {if $upcomingTalks}
-	<p class="indent" n:foreach="$upcomingTalks as $talk">
-		{include "../Talks/common/itemTalk.latte", talk: $talk}
-	</p>
+	{control talksList $upcomingTalks}
 	<p>{_messages.talks.atyourevent.upcoming|format:'mail@michalspacek.cz'}</p>
 {else}
 	<p>{_messages.talks.atyourevent.noupcoming|format:'mail@michalspacek.cz'}</p>
 {/if}
 <h3>{_messages.label.pasttalks}</h3>
-<p class="indent" n:foreach="$talks as $talk">
-	{include "../Talks/common/itemTalk.latte", talk: $talk}
-</p>
+{control talksList $talks}
 <p><a n:href="Talks:">{_messages.label.alltalks}</a></p>
 <hr>
 <h2 id="{_html.id.interviews}">{_messages.label.myinterviews}</h2>
