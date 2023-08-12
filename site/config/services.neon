@@ -86,6 +86,7 @@ services:
 	- MichalSpacekCz\Talks\TalkInputsFactory(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Talks\Talks
 	- MichalSpacekCz\Talks\TalkSlides
+	- MichalSpacekCz\Talks\TalksListFactory
 	- MichalSpacekCz\Templating\Filters
 	latte.templateFactory:
 		create: MichalSpacekCz\Templating\TemplateFactory()
