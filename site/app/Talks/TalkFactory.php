@@ -26,6 +26,7 @@ class TalkFactory
 		return new Talk(
 			$row->id,
 			$row->localeId,
+			$row->locale,
 			$row->action,
 			$this->texyFormatter->format($row->title),
 			$row->title,

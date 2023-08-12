@@ -13,6 +13,7 @@ class Talk
 	public function __construct(
 		private readonly int $id,
 		private readonly int $localeId,
+		private readonly string $locale,
 		private readonly ?string $action,
 		private readonly Html $title,
 		private readonly string $titleTexy,
@@ -52,6 +53,12 @@ class Talk
 	public function getLocaleId(): int
 	{
 		return $this->localeId;
+	}
+
+
+	public function getLocale(): string
+	{
+		return $this->locale;
 	}
 
 

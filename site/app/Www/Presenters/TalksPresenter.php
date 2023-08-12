@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
@@ -14,6 +15,7 @@ use MichalSpacekCz\Talks\TalksListFactory;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Http\IResponse;
 
 class TalksPresenter extends BasePresenter
 {
@@ -23,6 +25,7 @@ class TalksPresenter extends BasePresenter
 		private readonly TalkSlides $talkSlides,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TalksListFactory $talksListFactory,
+		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
 	) {
 		parent::__construct();
 	}
@@ -55,6 +58,9 @@ class TalksPresenter extends BasePresenter
 	{
 		try {
 			$talk = $this->talks->get($name);
+			if ($talk->getLocale() !== $this->translator->getDefaultLocale()) {
+				$this->redirectUrl($this->localeLinkGenerator->links(...$this->getLocaleLinksGeneratorParams())[$talk->getLocale()], IResponse::S301_MovedPermanently);
+			}
 			if ($talk->getSlidesTalkId()) {
 				$slidesTalk = $this->talks->getById($talk->getSlidesTalkId());
 				$slides = ($slidesTalk->isPublishSlides() ? $this->talkSlides->getSlides($slidesTalk->getId(), $slidesTalk->getFilenamesTalkId()) : []);
