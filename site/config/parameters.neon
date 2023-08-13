@@ -1,5 +1,13 @@
 parameters:
 	locales:
+		all: [cs_CZ, en_US]
+		languages:
+			cs_CZ:
+				code: cs
+				name: Česky
+			en_US:
+				code: en
+				name: English
 		supported:
 			# The value is a FQDN if it ends with a dot, otherwise the rootDomainMapping.$value domain is appended to the host name
 			admin:

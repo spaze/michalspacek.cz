@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Application\LocaleLink;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\User\Manager;
@@ -102,11 +103,11 @@ abstract class BasePresenter extends Presenter
 	/**
 	 * The default locale links.
 	 *
-	 * @return string[]|null
+	 * @return array<string, LocaleLink>
 	 */
-	protected function getLocaleLinkDefault(): ?array
+	protected function getLocaleLinkDefault(): array
 	{
-		return null;
+		return [];
 	}
 
 

@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Application\AppRequest;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
+use MichalSpacekCz\Application\LocaleLink;
 use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use Nette\Application\BadRequestException;
@@ -60,14 +61,14 @@ class ErrorPresenter extends BaseErrorPresenter
 	/**
 	 * The default locale links.
 	 *
-	 * @return string[]|null
+	 * @return array<string, LocaleLink> of locale => URL
 	 */
-	protected function getLocaleLinkDefault(): ?array
+	protected function getLocaleLinkDefault(): array
 	{
+		$links = [];
 		// Change the request host to the localized "homepage" host
-		$links = $this->localeLinkGenerator->links('Www:Homepage:');
-		foreach ($links as &$link) {
-			$link = $this->getHttpRequest()->getUrl()->withHost((new Url($link))->getHost())->getAbsoluteUrl();
+		foreach ($this->localeLinkGenerator->links('Www:Homepage:') as $locale => $link) {
+			$links[$locale] = $link->withUrl($this->getHttpRequest()->getUrl()->withHost((new Url($link->getUrl()))->getHost())->getAbsoluteUrl());
 		}
 		return $links;
 	}
