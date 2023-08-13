@@ -1,3 +1,6 @@
+locales:
+	cs_CZ: česky
+	en_US: anglicky
 title:
 	who: "Kdo?"
 	contact: Kontakt

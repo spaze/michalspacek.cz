@@ -1,3 +1,6 @@
+locales:
+	cs_CZ: Czech
+	en_US: English
 title:
 	who: "Who?"
 	contact: Contact
