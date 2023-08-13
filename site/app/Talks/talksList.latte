@@ -1,9 +1,11 @@
 {varType MichalSpacekCz\Talks\Talk[] $talks}
 {varType string $defaultLocale}
 <p class="indent" n:foreach="$talks as $talk">
-	<a href="{plink Talks:talk $talk->getAction()}" n:tag-if="$talk->getAction()"><strong>{$talk->getTitle()}</strong></a>
 	{if $talk->getLocale() !== $defaultLocale}
+		<a href="{$talk->getUrl()}" n:tag-if="$talk->getUrl()"><strong>{$talk->getTitle()}</strong></a>
 		<small>{icon flag} {_"messages.locales.{$talk->getLocale()}"}</small>
+	{else}
+		<a href="{plink Talks:talk $talk->getAction()}" n:tag-if="$talk->getAction()"><strong>{$talk->getTitle()}</strong></a>
 	{/if}
 	<br>
 	<small><strong class="date">{$talk->getDate()|localeDay}</strong>, {$talk->getEvent()}{if $talk->getDuration()} ({_messages.talks.durationshort|format:$talk->getDuration()}){/if}</small>
