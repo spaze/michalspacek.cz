@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
@@ -27,7 +27,7 @@ class SecurityHeaders
 		private readonly IResponse $httpResponse,
 		private readonly Application $application,
 		private readonly CspConfig $contentSecurityPolicy,
-		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
 		array $permissionsPolicy,
 	) {
 		$this->permissionsPolicy = $this->normalizePermissionsPolicyValues($permissionsPolicy);

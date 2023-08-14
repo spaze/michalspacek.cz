@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 use Nette\Database\Explorer;
 
 class TrainingLocales
@@ -11,7 +11,7 @@ class TrainingLocales
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
 	) {
 	}
 

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
@@ -31,7 +31,7 @@ class TalksPresenter extends BasePresenter
 		private readonly TalkLocaleUrls $talkLocaleUrls,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TalksListFactory $talksListFactory,
-		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
 	) {
 		parent::__construct();
 	}

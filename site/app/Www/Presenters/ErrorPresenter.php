@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Www\Presenters;
 use MichalSpacekCz\Application\AppRequest;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\Application\LocaleLink;
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -27,7 +27,7 @@ class ErrorPresenter extends BaseErrorPresenter
 
 
 	public function __construct(
-		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
 		private readonly FourOhFourButFound $fourOhFourButFound,
 		private readonly AppRequest $appRequest,
 	) {

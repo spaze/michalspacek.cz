@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use Contributte\Translation\Translator;
 use DateTime;
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Articles\ArticleEdit;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
@@ -39,7 +39,7 @@ class BlogPosts
 		private readonly TexyFormatter $texyFormatter,
 		private readonly Cache $exportsCache,
 		private readonly LinkGenerator $linkGenerator,
-		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
 		private readonly Tags $tags,
 		private readonly Translator $translator,
 		private readonly TwitterCards $twitterCards,

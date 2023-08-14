@@ -14,7 +14,7 @@ use Nette\Http\IRequest;
 /**
  * Generates links to locales other than current.
  */
-class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
+class LocaleLinkGenerator
 {
 
 	private const DEFAULT_PARAMS = '*';

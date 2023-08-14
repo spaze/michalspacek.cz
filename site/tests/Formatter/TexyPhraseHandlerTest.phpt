@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Formatter;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
-use MichalSpacekCz\Test\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use Nette\Application\Application;
@@ -30,7 +30,7 @@ class TexyPhraseHandlerTest extends TestCase
 		private readonly Database $database,
 		private readonly Application $application,
 		private readonly ApplicationPresenter $applicationPresenter,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
 		private readonly NoOpTranslator $translator,
 		private readonly TexyPhraseHandler $phraseHandler,
 	) {

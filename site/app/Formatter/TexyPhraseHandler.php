@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Formatter\Exceptions\UnexpectedHandlerInvocationReturnType;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -30,7 +30,7 @@ class TexyPhraseHandler
 	public function __construct(
 		private readonly Application $application,
 		private readonly TrainingLocales $trainingLocales,
-		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
 		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly Translator $translator,
 	) {

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Talks;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\VideoFactory;
@@ -18,7 +18,7 @@ class TalkFactory
 		private readonly TexyFormatter $texyFormatter,
 		private readonly VideoFactory $videoFactory,
 		private readonly Translator $translator,
-		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
+		private readonly LocaleLinkGenerator $localeLinkGenerator,
 	) {
 	}
 

@@ -3,13 +3,19 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Application;
 
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 
-class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
+class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 {
 
 	/** @var array<string, string> */
 	private array $allLinks;
+
+
+	/** @noinspection PhpMissingParentConstructorInspection Intentionally */
+	public function __construct()
+	{
+	}
 
 
 	public function links(string $destination, array $params = []): array

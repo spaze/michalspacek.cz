@@ -24,7 +24,7 @@ parameters:
 services:
 	- MichalSpacekCz\Test\Application\ApplicationPresenter
 	articles: MichalSpacekCz\Test\Articles\ArticlesMock
-	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGenerator
+	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
 	database.upcKeys.explorer: @database.default.explorer
 	session.session: MichalSpacekCz\Test\Http\NullSession

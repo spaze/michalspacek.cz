@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLink;
-use MichalSpacekCz\Application\LocaleLinkGeneratorInterface;
+use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Application\Theme;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\InvalidLinkException;
@@ -24,7 +24,7 @@ abstract class BasePresenter extends Presenter
 
 	private Manager $authenticator;
 
-	private LocaleLinkGeneratorInterface $localeLinkGenerator;
+	private LocaleLinkGenerator $localeLinkGenerator;
 
 	private Theme $theme;
 
@@ -43,9 +43,8 @@ abstract class BasePresenter extends Presenter
 
 	/**
 	 * @internal
-	 * @param LocaleLinkGeneratorInterface $localeLinkGenerator
 	 */
-	public function injectLocaleLinkGenerator(LocaleLinkGeneratorInterface $localeLinkGenerator): void
+	public function injectLocaleLinkGenerator(LocaleLinkGenerator $localeLinkGenerator): void
 	{
 		$this->localeLinkGenerator = $localeLinkGenerator;
 	}
