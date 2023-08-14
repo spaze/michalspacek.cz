@@ -186,7 +186,7 @@ class BlogPosts
 			$post->href = $this->linkGenerator->link('Www:Post:', $params);
 		} else {
 			$links = $this->localeLinkGenerator->links('Www:Post:', $this->localeLinkGenerator->defaultParams($params));
-			$post->href = $links[$post->locale];
+			$post->href = $links[$post->locale]->getUrl();
 		}
 	}
 

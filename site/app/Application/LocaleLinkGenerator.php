@@ -20,12 +20,16 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	private const DEFAULT_PARAMS = '*';
 
 
+	/**
+	 * @param array<string, array{code:string, name:string}> $languages
+	 */
 	public function __construct(
 		private readonly RouterFactory $routerFactory,
 		private readonly IRequest $httpRequest,
 		private readonly IPresenterFactory $presenterFactory,
 		private readonly LinkGenerator $linkGenerator,
 		private readonly Translator $translator,
+		private readonly array $languages,
 	) {
 	}
 
@@ -35,7 +39,7 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
 	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
-	 * @return array<string, string> of locale => URL
+	 * @return array<string, LocaleLink> of locale => URL
 	 * @throws InvalidLinkException
 	 */
 	public function links(string $destination, array $params = []): array
@@ -48,7 +52,12 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 				}
 				if (count($router->getRouters())) {
 					$linkGenerator = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
-					$links[$locale] = $linkGenerator->link($destination, $this->getParams($params, $locale));
+					$links[$locale] = new LocaleLink(
+						$locale,
+						$this->languages[$locale]['code'],
+						$this->languages[$locale]['name'],
+						$linkGenerator->link($destination, $this->getParams($params, $locale)),
+					);
 				}
 			}
 		}
@@ -97,7 +106,7 @@ class LocaleLinkGenerator implements LocaleLinkGeneratorInterface
 		}
 		return array_merge(
 			[$locale => $this->linkGenerator->link($destination, $this->getParams($params, $locale))],
-			$links,
+			array_map(fn(LocaleLink $localeLink): string => $localeLink->getUrl(), $links),
 		);
 	}
 

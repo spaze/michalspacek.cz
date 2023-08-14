@@ -13,7 +13,10 @@ class Talk
 	public function __construct(
 		private readonly int $id,
 		private readonly int $localeId,
+		private readonly string $locale,
+		private readonly ?int $translationGroupId,
 		private readonly ?string $action,
+		private readonly ?string $url,
 		private readonly Html $title,
 		private readonly string $titleTexy,
 		private readonly ?Html $description,
@@ -55,9 +58,27 @@ class Talk
 	}
 
 
+	public function getLocale(): string
+	{
+		return $this->locale;
+	}
+
+
+	public function getTranslationGroupId(): ?int
+	{
+		return $this->translationGroupId;
+	}
+
+
 	public function getAction(): ?string
 	{
 		return $this->action;
+	}
+
+
+	public function getUrl(): ?string
+	{
+		return $this->url;
 	}
 
 

@@ -1,5 +1,5 @@
-langs:
-	cs_CZ: Česky
+locales:
+	cs_CZ: Czech
 	en_US: English
 title:
 	who: "Who?"

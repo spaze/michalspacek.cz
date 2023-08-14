@@ -32,6 +32,8 @@ class Talks
 		$query = 'SELECT
 				t.id_talk AS id,
 				t.key_locale AS localeId,
+				l.locale,
+				t.key_translation_group AS translationGroupId,
 				t.action,
 				t.title,
 				t.description,
@@ -57,6 +59,7 @@ class Talks
 				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
+			    LEFT JOIN locales l ON l.id_locale = t.key_locale
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.date <= NOW()
 			ORDER BY t.date DESC
@@ -91,6 +94,8 @@ class Talks
 		$query = 'SELECT
 				t.id_talk AS id,
 				t.key_locale AS localeId,
+				l.locale,
+				t.key_translation_group AS translationGroupId,
 				t.action,
 				t.title,
 				t.description,
@@ -116,6 +121,7 @@ class Talks
 				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
+			    LEFT JOIN locales l ON l.id_locale = t.key_locale
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.date > NOW()
 			ORDER BY t.date';
@@ -138,6 +144,8 @@ class Talks
 			'SELECT
 				t.id_talk AS id,
 				t.key_locale AS localeId,
+				l.locale,
+				t.key_translation_group AS translationGroupId,
 				t.action,
 				t.title,
 				t.description,
@@ -163,6 +171,7 @@ class Talks
 				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
+			    LEFT JOIN locales l ON l.id_locale = t.key_locale
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.action = ?',
 			$name,
@@ -185,6 +194,8 @@ class Talks
 			'SELECT
 				t.id_talk AS id,
 				t.key_locale AS localeId,
+				l.locale,
+				t.key_translation_group AS translationGroupId,
 				t.action,
 				t.title,
 				t.description,
@@ -210,6 +221,7 @@ class Talks
 				ts.title AS supersededByTitle,
 				t.publish_slides AS publishSlides
 			FROM talks t
+			    LEFT JOIN locales l ON l.id_locale = t.key_locale
 				LEFT JOIN talks ts ON t.key_superseded_by = ts.id_talk
 			WHERE t.id_talk = ?',
 			$id,
@@ -254,6 +266,7 @@ class Talks
 	public function update(
 		int $id,
 		int $localeId,
+		?int $translationGroupId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -278,6 +291,7 @@ class Talks
 	): void {
 		$params = $this->getAddUpdateParams(
 			$localeId,
+			$translationGroupId,
 			$action,
 			$title,
 			$description,
@@ -311,6 +325,7 @@ class Talks
 	 */
 	public function add(
 		int $localeId,
+		?int $translationGroupId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -335,6 +350,7 @@ class Talks
 	): int {
 		$params = $this->getAddUpdateParams(
 			$localeId,
+			$translationGroupId,
 			$action,
 			$title,
 			$description,
@@ -381,6 +397,7 @@ class Talks
 	 */
 	private function getAddUpdateParams(
 		int $localeId,
+		?int $translationGroupId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -410,6 +427,7 @@ class Talks
 		}
 		return [
 			'key_locale' => $localeId,
+			'key_translation_group' => empty($translationGroupId) ? null : $translationGroupId,
 			'action' => (empty($action) ? null : $action),
 			'title' => $title,
 			'description' => (empty($description) ? null : $description),

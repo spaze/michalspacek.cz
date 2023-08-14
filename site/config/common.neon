@@ -62,7 +62,7 @@ database:
 translation:
 	locales:
 		default: cs_CZ
-		whitelist: [cs_CZ, en_US]
+		whitelist: %locales.all%
 	localeResolvers!: []
 	dirs:
 		- %siteDir%/app/lang

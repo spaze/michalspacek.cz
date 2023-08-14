@@ -1,7 +1,7 @@
 services:
 	- MichalSpacekCz\Application\AppRequest
 	- MichalSpacekCz\Application\Error
-	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator
+	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locales
 	- MichalSpacekCz\Application\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\RouterFactory::createRouter
@@ -84,6 +84,7 @@ services:
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
 	- MichalSpacekCz\Talks\TalkInputsFactory(videoThumbnails: @talkVideoThumbnails)
+	- MichalSpacekCz\Talks\TalkLocaleUrls
 	- MichalSpacekCz\Talks\Talks
 	- MichalSpacekCz\Talks\TalkSlides
 	- MichalSpacekCz\Talks\TalksListFactory

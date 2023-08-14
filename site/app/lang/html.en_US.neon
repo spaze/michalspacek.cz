@@ -27,6 +27,3 @@ id:
 	transcript: transcript
 attribute:
 	lang: en
-langs:
-	cs_CZ: cs
-	en_US: en

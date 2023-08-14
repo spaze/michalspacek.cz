@@ -33,7 +33,16 @@ class LocaleLinkGeneratorTest extends TestCase
 
 	protected function setUp(): void
 	{
-		$this->localeLinkGenerator = new LocaleLinkGenerator($this->routerFactory, $this->httpRequest, $this->presenterFactory, $this->linkGenerator, $this->translator);
+		$this->localeLinkGenerator = new LocaleLinkGenerator($this->routerFactory, $this->httpRequest, $this->presenterFactory, $this->linkGenerator, $this->translator, [
+			'cs_CZ' => [
+				'code' => 'cs',
+				'name' => 'Česky',
+			],
+			'en_US' => [
+				'code' => 'en',
+				'name' => 'English',
+			],
+		]);
 	}
 
 
@@ -45,7 +54,7 @@ class LocaleLinkGeneratorTest extends TestCase
 		];
 		$links = $this->localeLinkGenerator->links('Www:Talks:talk', $params);
 		Assert::same('cs_CZ', $this->translator->getDefaultLocale());
-		Assert::same(['en_US' => 'https://www.burger.test/talks/foo'], $links);
+		Assert::equal(['en_US' => new LocaleLink('en_US', 'en', 'English', 'https://www.burger.test/talks/foo')], $links);
 	}
 
 
