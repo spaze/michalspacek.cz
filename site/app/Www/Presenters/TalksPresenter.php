@@ -8,6 +8,7 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
+use MichalSpacekCz\Talks\TalkLocaleUrls;
 use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalkSlides;
 use MichalSpacekCz\Talks\TalksList;
@@ -20,9 +21,14 @@ use Nette\Http\IResponse;
 class TalksPresenter extends BasePresenter
 {
 
+	/** @var array<string, array{name: string}> */
+	private array $localeLinkParams = [];
+
+
 	public function __construct(
 		private readonly Talks $talks,
 		private readonly TalkSlides $talkSlides,
+		private readonly TalkLocaleUrls $talkLocaleUrls,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TalksListFactory $talksListFactory,
 		private readonly LocaleLinkGeneratorInterface $localeLinkGenerator,
@@ -76,6 +82,9 @@ class TalksPresenter extends BasePresenter
 		} catch (UnknownSlideException | TalkDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
+		foreach ($this->talkLocaleUrls->get($talk) as $locale => $action) {
+			$this->localeLinkParams[$locale] = ['name' => $action];
+		}
 
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $talk);
 		$this->template->pageHeader = $talk->getTitle();
@@ -86,6 +95,21 @@ class TalksPresenter extends BasePresenter
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->video = $talk->getVideo()->setLazyLoad(count($slides) > 3);
 		$this->template->slidesPlatform = $talk->getSlidesHref() ? SlidesPlatform::tryFromUrl($talk->getSlidesHref())?->getName() : null;
+	}
+
+
+	protected function getLocaleLinkAction(): string
+	{
+		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Talks:');
+	}
+
+
+	/**
+	 * @return array<string, array{name: string}>
+	 */
+	protected function getLocaleLinkParams(): array
+	{
+		return $this->localeLinkParams;
 	}
 
 
