@@ -37,6 +37,7 @@ class TalkFactory
 			$row->id,
 			$row->localeId,
 			$row->locale,
+			$row->translationGroupId,
 			$row->action,
 			$url ?? null,
 			$this->texyFormatter->format($row->title),

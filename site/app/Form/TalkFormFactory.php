@@ -38,6 +38,8 @@ class TalkFormFactory
 		$form = $this->factory->create();
 		$allTalks = $this->getAllTalksExcept($talk ? (string)$talk->getAction() : null);
 
+		$form->addInteger('translationGroup', 'Skupina překladů:')
+			->setRequired(false);
 		$form->addSelect('locale', 'Jazyk:', $this->locales->getAllLocales())
 			->setRequired('Zadejte prosím jazyk')
 			->setPrompt('- vyberte -');
@@ -112,6 +114,7 @@ class TalkFormFactory
 				$this->talks->update(
 					$talk->getId(),
 					$values->locale,
+					$values->translationGroup,
 					$values->action,
 					$values->title,
 					$values->description,
@@ -145,6 +148,7 @@ class TalkFormFactory
 			} else {
 				$talkId = $this->talks->add(
 					$values->locale,
+					$values->translationGroup,
 					$values->action,
 					$values->title,
 					$values->description,
@@ -185,6 +189,7 @@ class TalkFormFactory
 		$values = [
 			'action' => $talk->getAction(),
 			'locale' => $talk->getLocaleId(),
+			'translationGroup' => $talk->getTranslationGroupId(),
 			'title' => $talk->getTitleTexy(),
 			'description' => $talk->getDescriptionTexy(),
 			'date' => $talk->getDate()->format('Y-m-d H:i'),

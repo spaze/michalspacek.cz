@@ -33,6 +33,7 @@ class Talks
 				t.id_talk AS id,
 				t.key_locale AS localeId,
 				l.locale,
+				t.key_translation_group AS translationGroupId,
 				t.action,
 				t.title,
 				t.description,
@@ -94,6 +95,7 @@ class Talks
 				t.id_talk AS id,
 				t.key_locale AS localeId,
 				l.locale,
+				t.key_translation_group AS translationGroupId,
 				t.action,
 				t.title,
 				t.description,
@@ -143,6 +145,7 @@ class Talks
 				t.id_talk AS id,
 				t.key_locale AS localeId,
 				l.locale,
+				t.key_translation_group AS translationGroupId,
 				t.action,
 				t.title,
 				t.description,
@@ -192,6 +195,7 @@ class Talks
 				t.id_talk AS id,
 				t.key_locale AS localeId,
 				l.locale,
+				t.key_translation_group AS translationGroupId,
 				t.action,
 				t.title,
 				t.description,
@@ -262,6 +266,7 @@ class Talks
 	public function update(
 		int $id,
 		int $localeId,
+		?int $translationGroupId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -286,6 +291,7 @@ class Talks
 	): void {
 		$params = $this->getAddUpdateParams(
 			$localeId,
+			$translationGroupId,
 			$action,
 			$title,
 			$description,
@@ -319,6 +325,7 @@ class Talks
 	 */
 	public function add(
 		int $localeId,
+		?int $translationGroupId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -343,6 +350,7 @@ class Talks
 	): int {
 		$params = $this->getAddUpdateParams(
 			$localeId,
+			$translationGroupId,
 			$action,
 			$title,
 			$description,
@@ -389,6 +397,7 @@ class Talks
 	 */
 	private function getAddUpdateParams(
 		int $localeId,
+		?int $translationGroupId,
 		?string $action,
 		string $title,
 		?string $description,
@@ -418,6 +427,7 @@ class Talks
 		}
 		return [
 			'key_locale' => $localeId,
+			'key_translation_group' => empty($translationGroupId) ? null : $translationGroupId,
 			'action' => (empty($action) ? null : $action),
 			'title' => $title,
 			'description' => (empty($description) ? null : $description),
