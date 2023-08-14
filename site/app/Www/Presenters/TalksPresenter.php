@@ -65,7 +65,8 @@ class TalksPresenter extends BasePresenter
 		try {
 			$talk = $this->talks->get($name);
 			if ($talk->getLocale() !== $this->translator->getDefaultLocale()) {
-				$this->redirectUrl($this->localeLinkGenerator->links(...$this->getLocaleLinksGeneratorParams())[$talk->getLocale()]->getUrl(), IResponse::S301_MovedPermanently);
+				$links = $this->localeLinkGenerator->links(parent::getLocaleLinkAction(), parent::getLocaleLinkParams());
+				$this->redirectUrl($links[$talk->getLocale()]->getUrl(), IResponse::S301_MovedPermanently);
 			}
 			if ($talk->getSlidesTalkId()) {
 				$slidesTalk = $this->talks->getById($talk->getSlidesTalkId());
