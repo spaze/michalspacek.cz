@@ -11,7 +11,6 @@ class FreeSeats
 
 	/**
 	 * @param list<TrainingDate>|TrainingDate[] $dates
-	 * @return bool
 	 */
 	public function lastFreeSeatsAnyDate(array $dates): bool
 	{
@@ -28,7 +27,6 @@ class FreeSeats
 
 	/**
 	 * @param list<UpcomingTraining>|UpcomingTraining[] $trainings array keys are irrelevant
-	 * @return bool
 	 */
 	public function lastFreeSeatsAnyTraining(array $trainings): bool
 	{

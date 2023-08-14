@@ -49,7 +49,6 @@ class TalkSlides
 	/**
 	 * Return slide number by given alias.
 	 *
-	 * @return int|null Slide number or null if no slide given
 	 * @throws UnknownSlideException
 	 */
 	public function getSlideNo(int $talkId, ?string $slide): ?int
@@ -136,14 +135,7 @@ class TalkSlides
 
 
 	/**
-	 * @param int $talkId
-	 * @param FileUpload $replace
 	 * @param callable(string): string $getExtension
-	 * @param bool $removeFile
-	 * @param string|null $originalFile
-	 * @param int $width
-	 * @param int $height
-	 * @return null|string
 	 * @throws ContentTypeException
 	 * @throws SlideImageUploadFailedException
 	 */

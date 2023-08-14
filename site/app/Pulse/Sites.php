@@ -45,10 +45,6 @@ class Sites
 	/**
 	 * Add site.
 	 *
-	 * @param string $url
-	 * @param string $alias
-	 * @param string $sharedWith
-	 * @param int $companyId
 	 * @return int Id of newly inserted site
 	 */
 	public function add(string $url, string $alias, string $sharedWith, int $companyId): int

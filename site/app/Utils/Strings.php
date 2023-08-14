@@ -16,9 +16,6 @@ class Strings
 
 	/**
 	 * Get initial letter because sometimes it might be two letters.
-	 *
-	 * @param string $string
-	 * @return string
 	 */
 	public function getInitialLetterUppercase(string $string): string
 	{

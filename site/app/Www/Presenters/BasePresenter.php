@@ -33,7 +33,6 @@ abstract class BasePresenter extends Presenter
 
 	/**
 	 * @internal
-	 * @param Manager $authenticator
 	 */
 	public function injectAuthenticator(Manager $authenticator): void
 	{
@@ -52,7 +51,6 @@ abstract class BasePresenter extends Presenter
 
 	/**
 	 * @internal
-	 * @param Theme $theme
 	 */
 	public function injectTheme(Theme $theme): void
 	{
@@ -62,7 +60,6 @@ abstract class BasePresenter extends Presenter
 
 	/**
 	 * @internal
-	 * @param IResponse $httpResponse
 	 */
 	public function injectHttpResponse(IResponse $httpResponse): void
 	{
@@ -112,8 +109,6 @@ abstract class BasePresenter extends Presenter
 
 	/**
 	 * Default module:presenter:action for locale links.
-	 *
-	 * @return string
 	 */
 	protected function getLocaleLinkAction(): string
 	{

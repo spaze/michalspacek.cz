@@ -75,8 +75,6 @@ class Talks
 
 	/**
 	 * Get approximate number of talks.
-	 *
-	 * @return int
 	 */
 	public function getApproxCount(): int
 	{

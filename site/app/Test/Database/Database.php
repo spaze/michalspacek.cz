@@ -110,9 +110,6 @@ class Database extends Explorer
 	 *
 	 * For example datetime is stored without timezone info.
 	 * The DateTime format here is the same as in \Nette\Database\Drivers\MySqlDriver::formatDateTime() but without the quotes.
-	 *
-	 * @param string|int|bool|DateTimeInterface|null $value
-	 * @return string|int|bool|null
 	 */
 	private function formatValue(string|int|bool|DateTimeInterface|null $value): string|int|bool|null
 	{

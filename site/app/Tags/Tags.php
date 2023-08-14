@@ -34,7 +34,6 @@ class Tags
 
 	/**
 	 * @param list<string> $tags
-	 * @return string
 	 */
 	public function toString(array $tags): string
 	{
@@ -54,7 +53,6 @@ class Tags
 
 	/**
 	 * @param list<string> $tags
-	 * @return string
 	 * @throws JsonException
 	 */
 	public function serialize(array $tags): string

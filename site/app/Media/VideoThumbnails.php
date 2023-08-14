@@ -132,9 +132,7 @@ class VideoThumbnails
 
 
 	/**
-	 * @param FileUpload $thumbnail
 	 * @param callable(string): string $getExtension
-	 * @return string|null
 	 * @throws MissingContentTypeException
 	 */
 	private function getUploadedFileBasename(FileUpload $thumbnail, callable $getExtension): ?string

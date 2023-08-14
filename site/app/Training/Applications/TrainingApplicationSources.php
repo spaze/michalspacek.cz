@@ -62,9 +62,6 @@ class TrainingApplicationSources
 	 * Example:
 	 *   Michal Špaček -> MŠ
 	 *   Internet Info, s.r.o. -> II
-	 *
-	 * @param string $name
-	 * @return string
 	 */
 	public function getSourceNameInitials(string $name): string
 	{

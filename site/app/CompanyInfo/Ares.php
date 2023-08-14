@@ -132,9 +132,6 @@ class Ares implements CompanyRegistry
 
 	/**
 	 * Return ISO 3166-1 alpha-2 by ISO 3166-1 numeric.
-	 *
-	 * @param SimpleXMLElement $data
-	 * @return string
 	 */
 	private function countryCode(SimpleXMLElement $data): string
 	{

@@ -101,8 +101,6 @@ class TagsPresenter extends BasePresenter
 
 	/**
 	 * Get original module:presenter:action for locale links.
-	 *
-	 * @return string
 	 */
 	protected function getLocaleLinkAction(): string
 	{

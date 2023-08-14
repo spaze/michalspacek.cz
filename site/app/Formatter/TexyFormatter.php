@@ -58,8 +58,6 @@ class TexyFormatter
 
 	/**
 	 * Get static content URL root.
-	 *
-	 * @return string
 	 */
 	public function getStaticRoot(): string
 	{
@@ -69,9 +67,6 @@ class TexyFormatter
 
 	/**
 	 * Get absolute URL of the image.
-	 *
-	 * @param string $filename
-	 * @return string
 	 */
 	public function getImagesRoot(string $filename): string
 	{

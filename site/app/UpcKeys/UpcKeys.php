@@ -88,8 +88,6 @@ class UpcKeys
 
 	/**
 	 * Return SSID validation pattern to detect whether the SSID is a valid one.
-	 *
-	 * @return string
 	 */
 	public function getValidSsidPattern(): string
 	{
@@ -99,9 +97,6 @@ class UpcKeys
 
 	/**
 	 * Check whether the SSID is valid for upc_keys to work.
-	 *
-	 * @param string $ssid
-	 * @return bool
 	 */
 	public function isValidSsid(string $ssid): bool
 	{
@@ -112,8 +107,6 @@ class UpcKeys
 
 	/**
 	 * Return SSID placeholder.
-	 *
-	 * @return string
 	 */
 	public function getSsidPlaceholder(): string
 	{

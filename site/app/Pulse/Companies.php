@@ -42,9 +42,6 @@ class Companies
 	/**
 	 * Add company.
 	 *
-	 * @param string $name
-	 * @param string $tradeName
-	 * @param string $alias
 	 * @return int Id of newly inserted company
 	 */
 	public function add(string $name, string $tradeName, string $alias): int

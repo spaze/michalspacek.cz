@@ -339,8 +339,6 @@ class Statuses
 
 	/**
 	 * @param string[] $statuses
-	 * @param int $applicationId
-	 * @return bool
 	 */
 	public function historyContainsStatuses(array $statuses, int $applicationId): bool
 	{

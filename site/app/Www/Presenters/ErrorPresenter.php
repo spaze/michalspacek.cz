@@ -77,7 +77,6 @@ class ErrorPresenter extends BaseErrorPresenter
 	/**
 	 * Get original module:presenter:action for locale links.
 	 *
-	 * @return string
 	 * @throws NoOriginalRequestException
 	 */
 	protected function getLocaleLinkAction(): string

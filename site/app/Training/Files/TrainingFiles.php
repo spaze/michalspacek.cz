@@ -83,10 +83,7 @@ class TrainingFiles
 
 
 	/**
-	 * @param DateTimeInterface $start
-	 * @param FileUpload $file
 	 * @param int[] $applicationIds
-	 * @return string
 	 */
 	public function addFile(DateTimeInterface $start, FileUpload $file, array $applicationIds): string
 	{

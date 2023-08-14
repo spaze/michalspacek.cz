@@ -49,7 +49,6 @@ class HomepagePresenter extends BasePresenter
 	 * Check if at least one certificate is expired or expires soon.
 	 *
 	 * @param array<int, Certificate> $certificates
-	 * @return bool
 	 */
 	private function certsNeedAttention(array $certificates): bool
 	{

@@ -108,8 +108,6 @@ class Manager implements Authenticator
 
 
 	/**
-	 * @param string $username
-	 * @param string $password
 	 * @return int User id
 	 * @throws AuthenticationException
 	 */
@@ -316,9 +314,7 @@ class Manager implements Authenticator
 	/**
 	 * Regenerate returning user token.
 	 *
-	 * @param User $user
 	 * @throws Exception
-	 * @return string
 	 */
 	public function regenerateReturningUser(User $user): string
 	{

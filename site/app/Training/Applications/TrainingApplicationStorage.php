@@ -99,9 +99,6 @@ class TrainingApplicationStorage
 	/**
 	 * Add preliminary invitation, to a training with no date set.
 	 *
-	 * @param int $trainingId
-	 * @param string $name
-	 * @param string $email
 	 * @return int application id
 	 */
 	public function addPreliminaryInvitation(int $trainingId, string $name, string $email): int

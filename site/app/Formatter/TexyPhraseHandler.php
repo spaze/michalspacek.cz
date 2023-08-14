@@ -143,10 +143,6 @@ class TexyPhraseHandler
 	}
 
 
-	/**
-	 * @param string $training Training name
-	 * @return string
-	 */
 	private function getTrainingSuffix(string $training): string
 	{
 		$el = Html::el()

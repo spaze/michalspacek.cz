@@ -187,8 +187,6 @@ class Articles
 
 
 	/**
-	 * @param string $tag
-	 * @return string|null
 	 * @throws JsonException
 	 */
 	public function getLabelByTag(string $tag): ?string
