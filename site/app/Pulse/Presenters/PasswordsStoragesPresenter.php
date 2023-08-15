@@ -11,6 +11,7 @@ use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\InvalidLinkException;
 
 class PasswordsStoragesPresenter extends BasePresenter
 {
@@ -30,6 +31,9 @@ class PasswordsStoragesPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws InvalidLinkException
+	 */
 	public function actionDefault(?string $param, ?string $rating, ?string $sort, ?string $search): void
 	{
 		// Keep old, published URLs alive
@@ -45,7 +49,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 			'Password storage disclosures',
 			false,
 			$this->rating !== null || $this->sort !== null || $this->search !== null,
-			$this->link("//{$this->action}"), // Not using 'this' as the destination to omit params
+			$this->link('//' . $this->getAction()), // Not using 'this' as the destination to omit params
 			$this->passwords->getAllStorages($this->rating, $this->sort === null ? $this->passwordsSorting->getDefaultSort() : $this->sort, $this->search),
 		);
 	}
