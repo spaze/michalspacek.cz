@@ -23,32 +23,32 @@ class RatingTest extends TestCase
 	public function testGradeA(): void
 	{
 		$algo = $this->getAlgo('bcrypt', true, true, ['docs', 'foo']);
-		Assert::same('A', $this->rating->get($algo));
+		Assert::same(RatingGrade::A, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('bcrypt', true, true, ['facebook-private', 'docs']);
-		Assert::same('A', $this->rating->get($algo));
+		Assert::same(RatingGrade::A, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('scrypt', true, true, ['facebook-private', 'docs']);
-		Assert::same('A', $this->rating->get($algo));
+		Assert::same(RatingGrade::A, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('pbkdf2', true, true, ['facebook-private', 'docs']);
-		Assert::same('A', $this->rating->get($algo));
+		Assert::same(RatingGrade::A, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('argon2', true, true, ['facebook-private', 'docs']);
-		Assert::same('A', $this->rating->get($algo));
+		Assert::same(RatingGrade::A, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('md5', true, true, ['facebook-private', 'docs']);
-		Assert::notSame('A', $this->rating->get($algo));
+		Assert::notSame(RatingGrade::A, $this->rating->get($algo));
 	}
 
 
 	public function testGradeB(): void
 	{
 		$algo = $this->getAlgo('bcrypt', true, true, ['facebook-private', 'blog']);
-		Assert::same('B', $this->rating->get($algo));
+		Assert::same(RatingGrade::B, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('bcrypt', true, true, ['facebook-private', 'docs']);
-		Assert::notSame('B', $this->rating->get($algo));
+		Assert::notSame(RatingGrade::B, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('scrypt', true, true, ['foo']);
 		Assert::exception(function () use ($algo): void {
@@ -60,50 +60,51 @@ class RatingTest extends TestCase
 	public function testGradeCDE(): void
 	{
 		$algo = $this->getAlgo('md5', true, true, ['facebook-private', 'docs']);
-		Assert::same('C', $this->rating->get($algo));
-		Assert::notSame('D', $this->rating->get($algo));
-		Assert::notSame('E', $this->rating->get($algo));
+		Assert::same(RatingGrade::C, $this->rating->get($algo));
+		Assert::notSame(RatingGrade::D, $this->rating->get($algo));
+		Assert::notSame(RatingGrade::E, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('md5', false, true, ['facebook-private', 'docs']);
-		Assert::notSame('C', $this->rating->get($algo));
-		Assert::notSame('D', $this->rating->get($algo));
-		Assert::same('E', $this->rating->get($algo));
+		Assert::notSame(RatingGrade::C, $this->rating->get($algo));
+		Assert::notSame(RatingGrade::D, $this->rating->get($algo));
+		Assert::same(RatingGrade::E, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('md5', true, false, ['facebook-private', 'docs']);
-		Assert::notSame('C', $this->rating->get($algo));
-		Assert::same('D', $this->rating->get($algo));
-		Assert::notSame('E', $this->rating->get($algo));
+		Assert::notSame(RatingGrade::C, $this->rating->get($algo));
+		Assert::same(RatingGrade::D, $this->rating->get($algo));
+		Assert::notSame(RatingGrade::E, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('md5', false, false, ['facebook-private', 'docs']);
-		Assert::notSame('C', $this->rating->get($algo));
-		Assert::notSame('D', $this->rating->get($algo));
-		Assert::same('E', $this->rating->get($algo));
+		Assert::notSame(RatingGrade::C, $this->rating->get($algo));
+		Assert::notSame(RatingGrade::D, $this->rating->get($algo));
+		Assert::same(RatingGrade::E, $this->rating->get($algo));
 	}
 
 
 	public function testGradeF(): void
 	{
 		$algo = $this->getAlgo('plaintext', false, false, ['facebook-private', 'docs']);
-		Assert::same('F', $this->rating->get($algo));
+		Assert::same(RatingGrade::F, $this->rating->get($algo));
 
 		$algo = $this->getAlgo('encrypted', false, false, ['facebook-private', 'docs']);
-		Assert::same('F', $this->rating->get($algo));
+		Assert::same(RatingGrade::F, $this->rating->get($algo));
 	}
 
 
 	public function testSecureStorage(): void
 	{
-		$rating = [
-			'A' => true,
-			'B' => true,
-			'C' => false,
-			'D' => false,
-			'E' => false,
-			'F' => false,
-		];
-		foreach ($rating as $grade => $expected) {
-			Assert::same($expected, $this->rating->isSecureStorage($grade));
-		}
+		Assert::true($this->rating->isSecureStorage(RatingGrade::A));
+		Assert::true($this->rating->isSecureStorage(RatingGrade::B));
+		Assert::false($this->rating->isSecureStorage(RatingGrade::C));
+		Assert::false($this->rating->isSecureStorage(RatingGrade::D));
+		Assert::false($this->rating->isSecureStorage(RatingGrade::E));
+		Assert::false($this->rating->isSecureStorage(RatingGrade::F));
+	}
+
+
+	public function testGetRatings(): void
+	{
+		Assert::same(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D', 'e' => 'E', 'f' => 'F'], $this->rating->getRatings());
 	}
 
 

@@ -11,7 +11,7 @@
 
 {define #metas}
 {if count($data->getSites()) === 1}
-{capture $currentRating}{=current($data->getSites())->getRating()|lower}{/capture}
+{capture $currentRating}{=current($data->getSites())->getRating()->name|lower}{/capture}
 {var MichalSpacekCz\Pulse\Passwords\Algorithm $currentAlgo = current($data->getSites())->getLatestAlgorithm()}
 <meta property="og:image" content="{="pulse/rating-$currentRating.png"|staticImageUrl}">
 <meta property="og:description" content="{=$currentAlgo->getId()}{if $currentAlgo->getFrom() || $currentAlgo->getLatestDisclosure()->getPublished()} ({if $currentAlgo->getFrom() && $currentAlgo->isFromConfirmed()}since {$currentAlgo->getFrom()|date:'F Y'}{/if}{if $currentAlgo->getFrom() && $currentAlgo->isFromConfirmed() && $currentAlgo->getLatestDisclosure()->getPublished()}, {/if}{if $currentAlgo->getLatestDisclosure()->getPublished()}disclosed {$currentAlgo->getLatestDisclosure()->getPublished()|date:'F Y'}{/if}){/if}">
@@ -66,7 +66,7 @@
 					<p><a n:href="company $data->getCompany($storage->getCompanyId())->getCompanyAlias()" title="Open details">All sites</a></p>
 				{/if}
 			</div>
-			<div class="right rating">Rating <strong class="right rating-{$site->getRating()|lower}" title="{$ratingGuide[$site->getRating()]}">{$site->getRating()}</strong></div>
+			<div class="right rating">Rating <strong class="right rating-{$site->getRating()->name|lower}" title="{$ratingGuide[$site->getRating()->name]}">{$site->getRating()->name}</strong></div>
 			<div class="clear"></div>
 		</div>
 		<div class="algo-container">
@@ -92,9 +92,9 @@
 			{if $iterator->count() > 1 && $iterator->last}</div></div>{/if}
 		{/foreach}
 		<div>
-			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why &quot;{$site->getRating()}&quot;?</a></div>
+			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why &quot;{$site->getRating()->name}&quot;?</a></div>
 			<div n:class="expandable, !$isDetail ? hidden">
-				<p>{$ratingGuide[$site->getRating()]}</p>
+				<p>{$ratingGuide[$site->getRating()->name]}</p>
 				<p n:if="$site->getRecommendation()"><small><strong>Recommended change</strong>: {$site->getRecommendation()|format}</small></p>
 			</div>
 		</div>

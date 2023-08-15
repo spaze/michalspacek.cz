@@ -40,7 +40,7 @@ class PasswordsSorting
 			case self::RATING_F_A:
 				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
 					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, Site $siteA, Site $siteB, string $sort): int {
-						$result = $sort === self::RATING_A_F ? $siteA->getRating() <=> $siteB->getRating() : $siteB->getRating() <=> $siteA->getRating();
+						$result = $sort === self::RATING_A_F ? $siteA->getRating()->name <=> $siteB->getRating()->name : $siteB->getRating()->name <=> $siteA->getRating()->name;
 						if ($result === 0) {
 							static $collator;
 							if (!$collator) {

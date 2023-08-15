@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse;
 
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
+use MichalSpacekCz\Pulse\Passwords\RatingGrade;
 
 interface Site
 {
@@ -29,10 +30,10 @@ interface Site
 	public function getLatestAlgorithm(): Algorithm;
 
 
-	public function getRating(): string;
+	public function getRating(): RatingGrade;
 
 
-	public function setRating(string $rating, bool $secureStorage, ?string $recommendation): void;
+	public function setRating(RatingGrade $rating, bool $secureStorage, ?string $recommendation): void;
 
 
 	/**

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse;
 
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
+use MichalSpacekCz\Pulse\Passwords\RatingGrade;
 
 class WildcardSite implements Site
 {
@@ -11,7 +12,7 @@ class WildcardSite implements Site
 	/** @var array<string, Algorithm> */
 	private array $algorithms;
 
-	private string $rating;
+	private RatingGrade $rating;
 
 	private bool $secureStorage;
 
@@ -68,13 +69,13 @@ class WildcardSite implements Site
 	}
 
 
-	public function getRating(): string
+	public function getRating(): RatingGrade
 	{
 		return $this->rating;
 	}
 
 
-	public function setRating(string $rating, bool $secureStorage, ?string $recommendation): void
+	public function setRating(RatingGrade $rating, bool $secureStorage, ?string $recommendation): void
 	{
 		$this->rating = $rating;
 		$this->secureStorage = $secureStorage;

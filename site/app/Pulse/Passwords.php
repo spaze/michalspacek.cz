@@ -74,7 +74,7 @@ class Passwords
 		$storages = $this->storageRegistryFactory->get($this->database->fetchAll($query, $orderBy), $sort);
 		$searchMatcher = new SearchMatcher($search, $storages);
 		foreach ($storages->getSites() as $site) {
-			if (($rating && $site->getRating() !== $rating) || !$searchMatcher->match($site)) {
+			if (($rating && $site->getRating()->name !== $rating) || !$searchMatcher->match($site)) {
 				$storages->removeStorageSite($site);
 			}
 		}
