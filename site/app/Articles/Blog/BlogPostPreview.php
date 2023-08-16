@@ -36,6 +36,7 @@ class BlogPostPreview
 		$template->showBreadcrumbsMenu = false;
 		$template->showHeaderTabs = false;
 		$template->showFooter = false;
+		$template->localeLinks = [];
 		$this->blogPosts->setTemplateTitleAndHeader($post, $template);
 		foreach ($post->cspSnippets as $snippet) {
 			$this->contentSecurityPolicy->addSnippet($snippet);
