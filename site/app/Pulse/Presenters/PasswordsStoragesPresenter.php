@@ -36,22 +36,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 	 */
 	public function actionDefault(?string $param, ?string $rating, ?string $sort, ?string $search): void
 	{
-		// Keep old, published URLs alive
-		if ($param) {
-			$this->redirectPermanent('site', $param);
-		}
-
-		$this->sort = $sort;
-		$this->search = $search;
-		$this->rating = $rating === null || $rating === 'all' || !array_key_exists($rating, $this->passwordsRating->getRatings()) ? null : strtoupper($rating);
-
-		$this->setDefaultViewAndVars(
-			'Password storage disclosures',
-			false,
-			$this->rating !== null || $this->sort !== null || $this->search !== null,
-			$this->link('//' . $this->getAction()), // Not using 'this' as the destination to omit params
-			$this->passwords->getAllStorages($this->rating, $this->sort === null ? $this->passwordsSorting->getDefaultSort() : $this->sort, $this->search),
-		);
+		$this->template->grade = Passwords\RatingGrade::B;
 	}
 
 
