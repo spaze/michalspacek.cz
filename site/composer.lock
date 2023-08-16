@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4adab65533d442d9fedc1a439ad8d147",
+    "content-hash": "2856f278b3871db2356d537b6a505ba5",
     "packages": [
         {
             "name": "contributte/translation",
@@ -3090,16 +3090,16 @@
         },
         {
             "name": "efabrica/phpstan-latte",
-            "version": "0.15.0",
+            "version": "dev-lower-on-object",
             "source": {
                 "type": "git",
                 "url": "https://github.com/efabrica-team/phpstan-latte.git",
-                "reference": "8f4e844baf3b8245fa590a778ccbb3940e37ffd2"
+                "reference": "374423f3eae95de2856eeff3e6e628fcfeb0ea97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/8f4e844baf3b8245fa590a778ccbb3940e37ffd2",
-                "reference": "8f4e844baf3b8245fa590a778ccbb3940e37ffd2",
+                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/374423f3eae95de2856eeff3e6e628fcfeb0ea97",
+                "reference": "374423f3eae95de2856eeff3e6e628fcfeb0ea97",
                 "shasum": ""
             },
             "require": {
@@ -3142,9 +3142,9 @@
             ],
             "support": {
                 "issues": "https://github.com/efabrica-team/phpstan-latte/issues",
-                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.15.0"
+                "source": "https://github.com/efabrica-team/phpstan-latte/tree/lower-on-object"
             },
-            "time": "2023-07-31T15:49:29+00:00"
+            "time": "2023-08-16T21:57:20+00:00"
         },
         {
             "name": "nette/tester",
@@ -4477,6 +4477,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "efabrica/phpstan-latte": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
