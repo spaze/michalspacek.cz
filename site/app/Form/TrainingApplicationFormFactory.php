@@ -96,7 +96,7 @@ class TrainingApplicationFormFactory
 		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
 			$values = $form->getValues();
 			try {
-				$this->formSpam->check($values, $action, $sessionSection);
+				$this->formSpam->check($values);
 				if ($multipleDates) {
 					$this->checkTrainingDate($values, $action, $dates, $sessionSection);
 					$date = $dates[$values->trainingId] ?? false;
@@ -186,7 +186,6 @@ class TrainingApplicationFormFactory
 				$sessionSection->note = $values->note;
 				$onSuccess($action);
 			} catch (SpammyApplicationException $e) {
-				Debugger::log($e);
 				$onError('messages.trainings.spammyapplication');
 			} catch (TrainingDateNotUpcomingException) {
 				$onError('messages.trainings.wrongdateapplication');
