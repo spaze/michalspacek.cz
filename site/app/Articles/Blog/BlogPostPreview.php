@@ -21,9 +21,9 @@ class BlogPostPreview
 
 
 	/**
-	 * @param callable(?DefaultTemplate): never $sendTemplate
+	 * @param callable(?DefaultTemplate): void $sendTemplate
 	 */
-	public function sendPreview(BlogPost $post, DefaultTemplate $template, callable $sendTemplate): never
+	public function sendPreview(BlogPost $post, DefaultTemplate $template, callable $sendTemplate): void
 	{
 		$this->texyFormatter->disableCache();
 		$template->setFile(__DIR__ . '/../../Www/Presenters/templates/Post/default.latte');
