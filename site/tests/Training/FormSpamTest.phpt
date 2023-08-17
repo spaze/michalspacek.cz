@@ -7,7 +7,6 @@ namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
-use Nette\Http\SessionSection;
 use Nette\Utils\ArrayHash;
 use Tester\Assert;
 use Tester\TestCase;
@@ -18,25 +17,15 @@ $runner = require __DIR__ . '/../bootstrap.php';
 class FormSpamTest extends TestCase
 {
 
-	private const FORM_NAME = 'formName';
-
-
 	public function __construct(
-		private readonly SessionSection $session,
 		private readonly NullLogger $nullLogger,
 		private readonly FormSpam $formSpam,
 	) {
 	}
 
 
-	protected function tearDown(): void
-	{
-		$this->nullLogger->reset();
-	}
-
-
 	/**
-	 * @return list<array{0:array<string, string>, 1:bool, 2:string|null}>
+	 * @return list<array{0:array<string, string>, 1:bool}>
 	 */
 	public function getValues(): array
 	{
@@ -46,7 +35,6 @@ class FormSpamTest extends TestCase
 					'note' => 'foo href="https:// example" bar baz',
 				],
 				false,
-				'Application session data for ' . self::FORM_NAME . ': empty, form values: note => "foo href="https:// example" bar baz"',
 			],
 			[
 				[
@@ -56,26 +44,34 @@ class FormSpamTest extends TestCase
 					'company' => 'qzpormrfcq',
 				],
 				false,
-				'Application session data for ' . self::FORM_NAME . ': empty, form values: name => "zggnbijhah", companyId => "vwetyeofcx", companyTaxId => "tyqvukaims", company => "qzpormrfcq"',
 			],
 			[
 				[
 					'name' => 'zggnbijhah',
 				],
 				false,
-				'Application session data for ' . self::FORM_NAME . ': empty, form values: name => "zggnbijhah"',
 			],
 			[
 				[],
 				false,
-				'Application session data for ' . self::FORM_NAME . ': empty, form values: empty',
 			],
 			[
 				[
 					'name' => 'foo bar',
 				],
 				true,
-				null,
+			],
+			[
+				[
+					'companyId' => 'foobar1',
+				],
+				true,
+			],
+			[
+				[
+					'companyTaxId' => 'foobar1',
+				],
+				true,
 			],
 		];
 	}
@@ -85,18 +81,17 @@ class FormSpamTest extends TestCase
 	 * @param array<string, string> $values
 	 * @dataProvider getValues
 	 */
-	public function testIsSpam(array $values, bool $isNice, ?string $logged): void
+	public function testIsSpam(array $values, bool $isNice): void
 	{
 		$check = function () use ($values): void {
-			$this->formSpam->check(ArrayHash::from($values), self::FORM_NAME, $this->session);
+			$this->formSpam->check(ArrayHash::from($values));
 		};
 		if ($isNice) {
 			Assert::noError($check);
-			Assert::null($this->nullLogger->getLogged());
 		} else {
 			Assert::exception($check, SpammyApplicationException::class);
-			Assert::same($logged, $this->nullLogger->getLogged());
 		}
+		Assert::same([], $this->nullLogger->getAllLogged());
 	}
 
 }
