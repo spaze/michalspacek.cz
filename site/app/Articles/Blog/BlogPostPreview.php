@@ -21,10 +21,7 @@ class BlogPostPreview
 
 
 	/**
-	 * @param BlogPost $post
-	 * @param DefaultTemplate $template
-	 * @param callable(): never $sendTemplate
-	 * @return never
+	 * @param callable(?DefaultTemplate): never $sendTemplate
 	 */
 	public function sendPreview(BlogPost $post, DefaultTemplate $template, callable $sendTemplate): never
 	{
@@ -41,7 +38,7 @@ class BlogPostPreview
 		foreach ($post->cspSnippets as $snippet) {
 			$this->contentSecurityPolicy->addSnippet($snippet);
 		}
-		$sendTemplate();
+		$sendTemplate($template);
 	}
 
 }
