@@ -236,7 +236,7 @@ talks:
 		duplicatealias: "Alias for slide %s already exists"
 		maxslideuploadsexceeded: "Maximum number of simultaneously uploaded slide images (%d) exceeded"
 trainings:
-	spammyapplication: "The application looks like spam, this is a no-go."
+	spammyapplication: "The application looks like spam and wasn't stored."
 	errorapplication: "Oops, something went wrong. The application was not submitted, please try again in a while."
 	wrongdateapplication: "There's no training on this date"
 	submitted:

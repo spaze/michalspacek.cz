@@ -34,7 +34,6 @@ class TrainingApplicationPreliminaryFormFactory
 				$this->trainingApplicationStorage->addPreliminaryInvitation($trainingId, $values->name, $values->email);
 				$onSuccess($action);
 			} catch (SpammyApplicationException $e) {
-				Debugger::log($e);
 				$onError('messages.trainings.spammyapplication');
 			}
 		};

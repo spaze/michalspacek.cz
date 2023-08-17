@@ -186,7 +186,6 @@ class TrainingApplicationFormFactory
 				$sessionSection->note = $values->note;
 				$onSuccess($action);
 			} catch (SpammyApplicationException $e) {
-				Debugger::log($e);
 				$onError('messages.trainings.spammyapplication');
 			} catch (TrainingDateNotUpcomingException) {
 				$onError('messages.trainings.wrongdateapplication');
