@@ -197,6 +197,10 @@ jobs:
       with:
         coverage: pcov
         php-version: ${{ matrix.php-version }}
+    - name: Create symlink in /srv/www
+      run: |
+        sudo mkdir --parents /srv/www
+        sudo ln --symbolic $GITHUB_WORKSPACE /srv/www
     - run: make --directory=site tester
     - name: Failed test output, if any
       if: failure()
