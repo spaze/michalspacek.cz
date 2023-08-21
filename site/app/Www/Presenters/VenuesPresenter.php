@@ -13,7 +13,6 @@ use Nette\Application\BadRequestException;
 class VenuesPresenter extends BasePresenter
 {
 
-	private int $venueId;
 	private UpcomingTrainingDatesList $upcomingTrainingDatesList;
 
 
@@ -33,8 +32,7 @@ class VenuesPresenter extends BasePresenter
 		} catch (TrainingVenueNotFoundException $e) {
 			throw new BadRequestException("Where in the world is {$name}?", previous: $e);
 		}
-		$this->venueId = $venue->getId();
-		$this->upcomingTrainingDatesList = $this->upcomingTrainingDatesListFactory->createForVenue($this->venueId);
+		$this->upcomingTrainingDatesList = $this->upcomingTrainingDatesListFactory->createForVenue($venue->getId());
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.venue', [$venue->getName()]);
 		$this->template->venue = $venue;
