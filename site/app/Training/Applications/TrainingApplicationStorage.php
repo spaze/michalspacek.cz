@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
 use MichalSpacekCz\Training\Dates\TrainingDate;
+use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Statuses;
@@ -28,6 +29,9 @@ class TrainingApplicationStorage
 	}
 
 
+	/**
+	 * @throws CannotUpdateTrainingApplicationStatusException
+	 */
 	public function addInvitation(
 		TrainingDate $date,
 		string $name,
@@ -62,6 +66,9 @@ class TrainingApplicationStorage
 	}
 
 
+	/**
+	 * @throws CannotUpdateTrainingApplicationStatusException
+	 */
 	public function addApplication(
 		TrainingDate $date,
 		string $name,
@@ -100,6 +107,7 @@ class TrainingApplicationStorage
 	 * Add preliminary invitation, to a training with no date set.
 	 *
 	 * @return int application id
+	 * @throws CannotUpdateTrainingApplicationStatusException
 	 */
 	public function addPreliminaryInvitation(int $trainingId, string $name, string $email): int
 	{
@@ -124,6 +132,9 @@ class TrainingApplicationStorage
 	}
 
 
+	/**
+	 * @throws CannotUpdateTrainingApplicationStatusException
+	 */
 	public function insertApplication(
 		int $trainingId,
 		?int $dateId,

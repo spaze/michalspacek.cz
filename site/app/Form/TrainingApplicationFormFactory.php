@@ -10,6 +10,7 @@ use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotAvailableException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
@@ -192,7 +193,7 @@ class TrainingApplicationFormFactory
 			} catch (TrainingDateNotAvailableException $e) {
 				Debugger::log($e);
 				$onError('messages.trainings.wrongdateapplication');
-			} catch (PDOException $e) {
+			} catch (PDOException | CannotUpdateTrainingApplicationStatusException $e) {
 				Debugger::log($e, Debugger::ERROR);
 				$onError('messages.trainings.errorapplication');
 			}
