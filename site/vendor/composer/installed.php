@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '9b1abd774a4cfa8bc4b2b08f8d1ff626087a87c3',
+        'reference' => '6d37f33556b2764ae906418d22bb5cc0df567cb4',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -337,6 +337,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'psalm/phar' => array(
+            'pretty_version' => '5.14.1',
+            'version' => '5.14.1.0',
+            'reference' => '7b832de0cfa7791f663f056b8e01af262027a3d8',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psalm/phar',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'psr/cache' => array(
             'pretty_version' => '3.0.0',
             'version' => '3.0.0.0',
@@ -435,7 +444,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '9b1abd774a4cfa8bc4b2b08f8d1ff626087a87c3',
+            'reference' => '6d37f33556b2764ae906418d22bb5cc0df567cb4',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
