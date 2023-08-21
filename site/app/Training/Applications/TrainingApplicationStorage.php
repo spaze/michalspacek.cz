@@ -6,13 +6,16 @@ namespace MichalSpacekCz\Training\Applications;
 use DateTime;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
+use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Prices;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Random;
+use ParagonIE\Halite\Alerts\HaliteAlert;
 use RuntimeException;
+use SodiumException;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
 
@@ -31,6 +34,9 @@ class TrainingApplicationStorage
 
 	/**
 	 * @throws CannotUpdateTrainingApplicationStatusException
+	 * @throws TrainingStatusIdNotIntException
+	 * @throws SodiumException
+	 * @throws HaliteAlert
 	 */
 	public function addInvitation(
 		TrainingDate $date,
@@ -68,6 +74,9 @@ class TrainingApplicationStorage
 
 	/**
 	 * @throws CannotUpdateTrainingApplicationStatusException
+	 * @throws TrainingStatusIdNotIntException
+	 * @throws SodiumException
+	 * @throws HaliteAlert
 	 */
 	public function addApplication(
 		TrainingDate $date,
@@ -108,6 +117,9 @@ class TrainingApplicationStorage
 	 *
 	 * @return int application id
 	 * @throws CannotUpdateTrainingApplicationStatusException
+	 * @throws TrainingStatusIdNotIntException
+	 * @throws SodiumException
+	 * @throws HaliteAlert
 	 */
 	public function addPreliminaryInvitation(int $trainingId, string $name, string $email): int
 	{
@@ -134,6 +146,9 @@ class TrainingApplicationStorage
 
 	/**
 	 * @throws CannotUpdateTrainingApplicationStatusException
+	 * @throws TrainingStatusIdNotIntException
+	 * @throws SodiumException
+	 * @throws HaliteAlert
 	 */
 	public function insertApplication(
 		int $trainingId,
@@ -278,6 +293,10 @@ class TrainingApplicationStorage
 	}
 
 
+	/**
+	 * @throws SodiumException
+	 * @throws HaliteAlert
+	 */
 	public function updateApplicationData(
 		int $applicationId,
 		?string $name,
