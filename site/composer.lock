@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4adab65533d442d9fedc1a439ad8d147",
+    "content-hash": "8fff274a42fa800fc16c787809b38f8c",
     "packages": [
         {
             "name": "contributte/translation",
@@ -3548,6 +3548,41 @@
                 "source": "https://github.com/phpstan/phpstan-nette/tree/1.2.9"
             },
             "time": "2023-04-12T14:11:53+00:00"
+        },
+        {
+            "name": "psalm/phar",
+            "version": "5.14.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/psalm/phar.git",
+                "reference": "7b832de0cfa7791f663f056b8e01af262027a3d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/7b832de0cfa7791f663f056b8e01af262027a3d8",
+                "reference": "7b832de0cfa7791f663f056b8e01af262027a3d8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "conflict": {
+                "vimeo/psalm": "*"
+            },
+            "bin": [
+                "psalm.phar"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Composer-based Psalm Phar",
+            "support": {
+                "issues": "https://github.com/psalm/phar/issues",
+                "source": "https://github.com/psalm/phar/tree/5.14.1"
+            },
+            "time": "2023-08-01T06:05:09+00:00"
         },
         {
             "name": "roave/security-advisories",

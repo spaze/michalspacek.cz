@@ -4,9 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Exceptions;
 
 use Throwable;
-use UnexpectedValueException;
 
-class SpammyApplicationException extends UnexpectedValueException
+class SpammyApplicationException extends TrainingApplicationException
 {
 
 	public function __construct(?Throwable $previous = null)

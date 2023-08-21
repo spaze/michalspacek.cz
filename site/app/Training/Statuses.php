@@ -7,6 +7,7 @@ use DateTime;
 use Exception;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
+use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Nette\Database\Explorer;
@@ -278,17 +279,18 @@ class Statuses
 
 	/**
 	 * @param callable(): int $callback
+	 * @throws CannotUpdateTrainingApplicationStatusException
 	 */
 	public function updateStatusCallbackReturnId(callable $callback, string $status, ?string $date): int
 	{
-		$applicationId = null;
 		$this->database->beginTransaction();
 		try {
 			$applicationId = $callback();
 			$this->setStatus($applicationId, $status, $date);
 			$this->database->commit();
-		} catch (Exception) {
+		} catch (Exception $e) {
 			$this->database->rollBack();
+			throw new CannotUpdateTrainingApplicationStatusException(previous: $e);
 		}
 		return $applicationId;
 	}

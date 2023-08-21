@@ -80,19 +80,25 @@ abstract class BasePresenter extends Presenter
 	public function beforeRender(): void
 	{
 		try {
-			$this->template->localeLinks = $this->localeLinkGenerator->links(...$this->getLocaleLinksGeneratorParams());
+			$this->template->localeLinks = $this->localeLinkGenerator->links($this->getLocaleLinksGeneratorDestination(), $this->getLocaleLinksGeneratorParams());
 		} catch (InvalidLinkException) {
 			$this->template->localeLinks = $this->getLocaleLinkDefault();
 		}
 	}
 
 
+	protected function getLocaleLinksGeneratorDestination(): string
+	{
+		return $this->getLocaleLinkAction();
+	}
+
+
 	/**
-	 * @return array{0:string, 1:array<string, array<string, string|null>>}
+	 * @return array<string, array<string, string|null>>
 	 */
 	protected function getLocaleLinksGeneratorParams(): array
 	{
-		return [$this->getLocaleLinkAction(), $this->getLocaleLinkParams()];
+		return $this->getLocaleLinkParams();
 	}
 
 

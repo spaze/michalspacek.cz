@@ -60,6 +60,7 @@
 		"phpstan/phpstan": "^1.9.12",
 		"phpstan/phpstan-deprecation-rules": "^1.1.1",
 		"phpstan/phpstan-nette": "^1.2.1",
+		"psalm/phar": "^5.14",
 		"roave/security-advisories": "dev-latest",
 		"spaze/coding-standard": "^1.7",
 		"spaze/phpstan-disallowed-calls": "^2.11.4",

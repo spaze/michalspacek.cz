@@ -38,10 +38,23 @@ class ErrorPresenter extends BaseErrorPresenter
 	/**
 	 * @throws InvalidLinkException
 	 */
+	protected function getLocaleLinksGeneratorDestination(): string
+	{
+		try {
+			return $this->getLocaleLinkAction();
+		} catch (NoOriginalRequestException $e) {
+			throw new InvalidLinkException(previous: $e);
+		}
+	}
+
+
+	/**
+	 * @throws InvalidLinkException
+	 */
 	protected function getLocaleLinksGeneratorParams(): array
 	{
 		try {
-			return [$this->getLocaleLinkAction(), $this->getLocaleLinkParams()];
+			return $this->getLocaleLinkParams();
 		} catch (NoOriginalRequestException $e) {
 			throw new InvalidLinkException(previous: $e);
 		}

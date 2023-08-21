@@ -2204,6 +2204,44 @@
             "install-path": "../phpstan/phpstan-nette"
         },
         {
+            "name": "psalm/phar",
+            "version": "5.14.1",
+            "version_normalized": "5.14.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/psalm/phar.git",
+                "reference": "7b832de0cfa7791f663f056b8e01af262027a3d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/7b832de0cfa7791f663f056b8e01af262027a3d8",
+                "reference": "7b832de0cfa7791f663f056b8e01af262027a3d8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "conflict": {
+                "vimeo/psalm": "*"
+            },
+            "time": "2023-08-01T06:05:09+00:00",
+            "bin": [
+                "psalm.phar"
+            ],
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Composer-based Psalm Phar",
+            "support": {
+                "issues": "https://github.com/psalm/phar/issues",
+                "source": "https://github.com/psalm/phar/tree/5.14.1"
+            },
+            "install-path": "../psalm/phar"
+        },
+        {
             "name": "psr/cache",
             "version": "3.0.0",
             "version_normalized": "3.0.0.0",
@@ -4649,6 +4687,7 @@
         "phpstan/phpstan",
         "phpstan/phpstan-deprecation-rules",
         "phpstan/phpstan-nette",
+        "psalm/phar",
         "roave/security-advisories",
         "slevomat/coding-standard",
         "spaze/coding-standard",
