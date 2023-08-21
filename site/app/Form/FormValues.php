@@ -15,7 +15,7 @@ class FormValues
 
 	public function getValues(BaseControl $control): ArrayHash
 	{
-		$values = $this->getForm($control)->getValues();
+		$values = $this->getForm($control)->getValues(null);
 		if (!$values instanceof ArrayHash) {
 			throw new ShouldNotHappenException();
 		}
