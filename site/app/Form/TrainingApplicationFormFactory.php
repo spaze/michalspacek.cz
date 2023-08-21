@@ -186,7 +186,7 @@ class TrainingApplicationFormFactory
 				$sessionSection->companyTaxId = $values->companyTaxId;
 				$sessionSection->note = $values->note;
 				$onSuccess($action);
-			} catch (SpammyApplicationException $e) {
+			} catch (SpammyApplicationException) {
 				$onError('messages.trainings.spammyapplication');
 			} catch (TrainingDateNotUpcomingException) {
 				$onError('messages.trainings.wrongdateapplication');

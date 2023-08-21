@@ -32,7 +32,7 @@ class TrainingApplicationPreliminaryFormFactory
 				$this->formSpam->check($values);
 				$this->trainingApplicationStorage->addPreliminaryInvitation($trainingId, $values->name, $values->email);
 				$onSuccess($action);
-			} catch (SpammyApplicationException $e) {
+			} catch (SpammyApplicationException) {
 				$onError('messages.trainings.spammyapplication');
 			}
 		};
