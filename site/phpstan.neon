@@ -3,6 +3,7 @@ parameters:
 	paths:
 		- app
 		- bin
+		- public
 		- tests
 	fileExtensions:
 		- php
