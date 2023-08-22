@@ -8,10 +8,8 @@ use Tracy\ILogger;
 class NullLogger implements ILogger
 {
 
-	private mixed $logged;
-
 	/** @var array<int, mixed> */
-	private array $allLogged = [];
+	private array $logged = [];
 
 
 	/**
@@ -21,31 +19,23 @@ class NullLogger implements ILogger
 	 */
 	public function log($value, $level = self::INFO): ?string
 	{
-		$this->logged = $value;
-		$this->allLogged[] = $value;
+		$this->logged[] = $value;
 		return null;
-	}
-
-
-	public function getLogged(): mixed
-	{
-		return $this->logged;
 	}
 
 
 	/**
 	 * @return array<int, mixed>
 	 */
-	public function getAllLogged(): array
+	public function getLogged(): array
 	{
-		return $this->allLogged;
+		return $this->logged;
 	}
 
 
 	public function reset(): void
 	{
-		$this->logged = null;
-		$this->allLogged = [];
+		$this->logged = [];
 	}
 
 }

@@ -39,7 +39,7 @@ class CertificatesTest extends TestCase
 	{
 		$count = $this->certificates->log([], []);
 		Assert::same(['certificates' => 0, 'failures' => 0], $count);
-		Assert::count(0, $this->logger->getAllLogged());
+		Assert::count(0, $this->logger->getLogged());
 	}
 
 
@@ -78,7 +78,7 @@ class CertificatesTest extends TestCase
 		Assert::same($this->notBefore->getTimestamp(), (new DateTimeImmutable($params[0]['not_before'], $this->dateTimeZoneFactory->get($params[0]['not_before_timezone'])))->getTimestamp());
 		Assert::same($this->notAfter->getTimestamp(), (new DateTimeImmutable($params[0]['not_after'], $this->dateTimeZoneFactory->get($params[0]['not_after_timezone'])))->getTimestamp());
 
-		Assert::count(0, $this->logger->getAllLogged());
+		Assert::count(0, $this->logger->getLogged());
 	}
 
 
@@ -92,9 +92,9 @@ class CertificatesTest extends TestCase
 		Assert::exception(function () use ($certificates): void {
 			$this->certificates->log($certificates, []);
 		}, SomeCertificatesLoggedToFileException::class, 'Error logging to database, some certificates logged to file instead');
-		Assert::same($exception, $this->logger->getAllLogged()[0]);
+		Assert::same($exception, $this->logger->getLogged()[0]);
 		$message = 'OK foo.example from ' . $this->notBefore->format(DateTime::DATE_RFC3339_MICROSECONDS) . ' to ' . $this->notAfter->format(DateTime::DATE_RFC3339_MICROSECONDS);
-		Assert::same($message, $this->logger->getAllLogged()[1]);
+		Assert::same($message, $this->logger->getLogged()[1]);
 	}
 
 }
