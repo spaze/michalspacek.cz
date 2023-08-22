@@ -212,19 +212,17 @@ class TrainingApplicationStorage
 
 	/**
 	 * @param array<string, string|int|float|DateTime|null> $data
-	 * @return string Generated access token
 	 */
-	private function insertData(array $data): string
+	private function insertData(array $data): void
 	{
-		$data['access_token'] = $token = $this->generateAccessCode();
+		$data['access_token'] = $this->generateAccessCode();
 		try {
 			$this->database->query('INSERT INTO training_applications', $data);
 		} catch (UniqueConstraintViolationException) {
 			// regenerate the access code and try harder this time
-			Debugger::log("Regenerating access token, {$token} already exists");
-			return $this->insertData($data);
+			Debugger::log("Regenerating access token, {$data['access_token']} already exists");
+			$this->insertData($data);
 		}
-		return $token;
 	}
 
 
