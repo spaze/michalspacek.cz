@@ -11,10 +11,7 @@ class CompanyDetails
 	public string $companyId;
 	public string $companyTaxId;
 	public string $company;
-	public ?string $street;
-	public ?string $houseNumber;
-	public ?string $streetNumber;
-	public ?string $streetFull;
+	public ?string $streetAndNumber;
 	public ?string $city;
 	public ?string $zip;
 	public ?string $country;

@@ -55,7 +55,7 @@ class RegisterUz implements CompanyRegistry
 			$company->companyId = $unit->ico;
 			$company->companyTaxId = (isset($unit->dic) ? strtoupper(self::COUNTRY_CODE) . $unit->dic : '');
 			$company->company = $unit->nazovUJ;
-			$company->streetFull = $unit->ulica;
+			$company->streetAndNumber = $unit->ulica;
 			$company->city = $unit->mesto;
 			$company->zip = $unit->psc;
 			$company->country = self::COUNTRY_CODE;

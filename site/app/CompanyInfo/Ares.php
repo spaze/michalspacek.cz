@@ -67,10 +67,7 @@ class Ares implements CompanyRegistry
 			$company->companyId = (string)$data->ICO;
 			$company->companyTaxId = (string)$data->DIC;
 			$company->company = (string)$data->OF;
-			$company->street = $street;
-			$company->houseNumber = $houseNumber;
-			$company->streetNumber = $streetNumber;
-			$company->streetFull = $this->formatStreet($city, $street, $houseNumber, $streetNumber);
+			$company->streetAndNumber = $this->formatStreet($city, $street, $houseNumber, $streetNumber);
 			$company->city = $city;
 			$company->zip = $zip;
 			$company->country = $country;
