@@ -10,8 +10,14 @@
 >
 	<projectFiles>
 		<directory name="app" />
+		<directory name="public" />
+		<directory name="tests" />
 		<ignoreFiles>
 			<directory name="vendor" />
 		</ignoreFiles>
 	</projectFiles>
+	<fileExtensions>
+		<extension name="php"/>
+		<extension name="phpt"/>
+	</fileExtensions>
 </psalm>
