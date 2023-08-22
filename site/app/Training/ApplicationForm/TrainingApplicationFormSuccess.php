@@ -87,10 +87,10 @@ class TrainingApplicationFormSuccess
 					$values->note,
 				);
 			} else {
-				if (isset($sessionSection->application[$action]) && $sessionSection->application[$action]['dateId'] == $values->trainingId) {
+				if (($sessionSection->get('application')[$action]['dateId'] ?? null) === $values->trainingId) {
 					$applicationId = $this->trainingApplicationStorage->updateApplication(
 						$date,
-						$sessionSection->application[$action]['id'],
+						$sessionSection->get('application')[$action]['id'],
 						$values->name,
 						$values->email,
 						$values->company,
@@ -102,7 +102,7 @@ class TrainingApplicationFormSuccess
 						$values->companyTaxId,
 						$values->note,
 					);
-					$sessionSection->application[$action] = null;
+					$sessionSection->set('application', array_merge($sessionSection->get('application'), [$action => null]));
 				} else {
 					$applicationId = $this->trainingApplicationStorage->addApplication(
 						$date,
@@ -138,17 +138,17 @@ class TrainingApplicationFormSuccess
 					$date->getVenueCity(),
 				);
 			}
-			$sessionSection->trainingId = $date->getId();
-			$sessionSection->name = $values->name;
-			$sessionSection->email = $values->email;
-			$sessionSection->company = $values->company;
-			$sessionSection->street = $values->street;
-			$sessionSection->city = $values->city;
-			$sessionSection->zip = $values->zip;
-			$sessionSection->country = $values->country;
-			$sessionSection->companyId = $values->companyId;
-			$sessionSection->companyTaxId = $values->companyTaxId;
-			$sessionSection->note = $values->note;
+			$sessionSection->set('trainingId', $date->getId());
+			$sessionSection->set('name', $values->name);
+			$sessionSection->set('email', $values->email);
+			$sessionSection->set('company', $values->company);
+			$sessionSection->set('street', $values->street);
+			$sessionSection->set('city', $values->city);
+			$sessionSection->set('zip', $values->zip);
+			$sessionSection->set('country', $values->country);
+			$sessionSection->set('companyId', $values->companyId);
+			$sessionSection->set('companyTaxId', $values->companyTaxId);
+			$sessionSection->set('note', $values->note);
 			$onSuccess($action);
 		} catch (SpammyApplicationException) {
 			$onError('messages.trainings.spammyapplication');

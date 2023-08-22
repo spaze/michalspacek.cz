@@ -115,36 +115,36 @@ class TrainingsPresenter extends BasePresenter
 
 		$application = $param ? $this->trainingApplications->getApplicationByToken($param) : null;
 		if (!$application) {
-			unset(
-				$session->application,
-				$session->name,
-				$session->email,
-				$session->company,
-				$session->street,
-				$session->city,
-				$session->zip,
-				$session->country,
-				$session->companyId,
-				$session->companyTaxId,
-				$session->note,
-			);
+			$session->remove([
+				'application',
+				'name',
+				'email',
+				'company',
+				'street',
+				'city',
+				'zip',
+				'country',
+				'companyId',
+				'companyTaxId',
+				'note',
+			]);
 			$this->redirect('training', $name);
 		}
 
-		$data = (array)$session->application;
+		$data = (array)$session->get('application');
 		$data[$name] = ['id' => $application->getId(), 'dateId' => $application->getDateId()];
-		$session->application = $data;
+		$session->set('application', $data);
 
-		$session->name = $application->getName();
-		$session->email = $application->getEmail();
-		$session->company = $application->getCompany();
-		$session->street = $application->getStreet();
-		$session->city = $application->getCity();
-		$session->zip = $application->getZip();
-		$session->country = $application->getCountry();
-		$session->companyId = $application->getCompanyId();
-		$session->companyTaxId = $application->getCompanyTaxId();
-		$session->note = $application->getNote();
+		$session->set('name', $application->getName());
+		$session->set('email', $application->getEmail());
+		$session->set('company', $application->getCompany());
+		$session->set('street', $application->getStreet());
+		$session->set('city', $application->getCity());
+		$session->set('zip', $application->getZip());
+		$session->set('country', $application->getCountry());
+		$session->set('companyId', $application->getCompanyId());
+		$session->set('companyTaxId', $application->getCompanyTaxId());
+		$session->set('note', $application->getNote());
 
 		$this->redirect('training', $application->getTrainingAction());
 	}
@@ -213,12 +213,12 @@ class TrainingsPresenter extends BasePresenter
 
 		if ($param !== null) {
 			$application = $this->trainingApplications->getApplicationByToken($param);
-			$session->token = $param;
-			$session->applicationId = $application?->getId();
+			$session->set('token', $param);
+			$session->set('applicationId', $application?->getId());
 			$this->redirect('files', ($application?->getTrainingAction() ?? $name));
 		}
 
-		if (!$session->applicationId || !$session->token) {
+		if (!$session->get('applicationId') || !$session->get('token')) {
 			throw new BadRequestException('Unknown application id, missing or invalid token');
 		}
 
@@ -229,7 +229,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		try {
-			$application = $this->trainingApplications->getApplicationById($session->applicationId);
+			$application = $this->trainingApplications->getApplicationById($session->get('applicationId'));
 		} catch (TrainingApplicationDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
@@ -245,7 +245,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->trainingApplications->setAccessTokenUsed($application);
 		if (count($application->getFiles()) === 0) {
-			throw new BadRequestException("No files for application id {$session->applicationId}");
+			throw new BadRequestException('No files for application id ' . $session->get('applicationId'));
 		}
 
 		$this->template->trainingTitle = $training->getName();
@@ -280,16 +280,16 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$session = $this->getSession('training');
-		if (!isset($session->trainingId)) {
+		if (!$session->get('trainingId')) {
 			$this->redirect('training', $name);
 		}
 
-		if (!isset($this->dates[$session->trainingId])) {
-			$date = $this->trainingDates->get($session->trainingId);
+		if (!isset($this->dates[$session->get('trainingId')])) {
+			$date = $this->trainingDates->get($session->get('trainingId'));
 			$this->redirect('success', $date->getAction());
 		}
 
-		$date = $this->dates[$session->trainingId];
+		$date = $this->dates[$session->get('trainingId')];
 		if ($date->isTentative()) {
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.tentative'));
 		} else {

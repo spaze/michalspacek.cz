@@ -21,13 +21,13 @@ class FilesPresenter extends BasePresenter
 	public function actionTraining(string $filename): void
 	{
 		$session = $this->getSession('application');
-		if (!$session->applicationId) {
+		if (!$session->get('applicationId')) {
 			throw new BadRequestException('Unknown application id, missing or invalid token');
 		}
 
-		$file = $this->trainingFiles->getFile($session->applicationId, $session->token, $filename);
+		$file = $this->trainingFiles->getFile($session->get('applicationId'), $session->get('token'), $filename);
 		if (!$file) {
-			throw new BadRequestException("No file {$filename} for application id {$session->applicationId}");
+			throw new BadRequestException(sprintf('No file %s for application id %s', $filename, $session->get('applicationId')));
 		}
 		$pathname = $file->getFileInfo()->getPathname();
 		$fileInfo = new finfo(FILEINFO_MIME_TYPE);

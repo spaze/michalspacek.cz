@@ -91,16 +91,16 @@ class TrainingApplicationFormFactory
 	private function setApplication(Form $form, SessionSection $application): void
 	{
 		$values = [
-			'name' => $application->name,
-			'email' => $application->email,
-			'company' => $application->company,
-			'street' => $application->street,
-			'city' => $application->city,
-			'zip' => $application->zip,
-			'country' => $application->country,
-			'companyId' => $application->companyId,
-			'companyTaxId' => $application->companyTaxId,
-			'note' => $application->note,
+			'name' => $application->get('name'),
+			'email' => $application->get('email'),
+			'company' => $application->get('company'),
+			'street' => $application->get('street'),
+			'city' => $application->get('city'),
+			'zip' => $application->get('zip'),
+			'country' => $application->get('country'),
+			'companyId' => $application->get('companyId'),
+			'companyTaxId' => $application->get('companyTaxId'),
+			'note' => $application->get('note'),
 		];
 		$form->setDefaults($values);
 

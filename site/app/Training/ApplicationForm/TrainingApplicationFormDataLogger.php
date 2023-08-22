@@ -13,13 +13,11 @@ class TrainingApplicationFormDataLogger
 	public function log(stdClass $values, string $name, ?SessionSection $sessionSection): void
 	{
 		$logValues = $logSession = [];
-		if (isset($sessionSection->application[$name])) {
-			foreach ($sessionSection->application[$name] as $key => $value) {
-				$logSession[] = "{$key} => \"{$value}\"";
-			}
+		foreach ($sessionSection?->get('application')[$name] ?? [] as $key => $value) {
+			$logSession[] = sprintf('%s => "%s"', $key, $value);
 		}
 		foreach ((array)$values as $key => $value) {
-			$logValues[] = "{$key} => \"{$value}\"";
+			$logValues[] = sprintf('%s => "%s"', $key, $value);
 		}
 		$message = sprintf(
 			'Application session data for %s: %s, form values: %s',
