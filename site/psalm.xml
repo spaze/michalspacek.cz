@@ -20,4 +20,30 @@
 		<extension name="php"/>
 		<extension name="phpt"/>
 	</fileExtensions>
+	<issueHandlers>
+		<MissingFile>
+			<errorLevel type="suppress">
+				<file name="public/www.michalspacek.cz/app.php" /> <!-- Can't require maintenance.php but https://github.com/vimeo/psalm/issues/3886 -->
+			</errorLevel>
+		</MissingFile>
+		<PossiblyUnusedMethod>
+			<errorLevel type="suppress">
+				<referencedMethod name="/.*::__construct$/" /> <!-- All services -->
+				<referencedMethod name="/.*::createComponent.*/" /> <!-- Classes that extend Nette\Application\UI\Control -->
+				<referencedMethod name="/.*::jsonSerialize$/" /> <!-- Used by Nette\Application\UI\Presenter::sendJson() or by Nette\Utils\Json::encode() -->
+				<referencedMethod name="/.*::render$/" /> <!-- Classes that extend Nette\Application\UI\Control -->
+				<referencedMethod name="/.*Presenter::handle.*/" />
+				<referencedMethod name="/.*Presenter::inject.*/" />
+				<referencedMethod name="/.*Test::test.*/" />
+				<referencedMethod name="MichalSpacekCz\Application\RouterFactory::createRouter" /> <!-- Used in services.neon -->
+			</errorLevel>
+		</PossiblyUnusedMethod>
+		<UnusedClass>
+			<errorLevel type="suppress">
+				<referencedClass name="*Presenter" />
+				<referencedClass name="MichalSpacekCz\Test\Http\NullSession" /> <!-- Used in tests.neon -->
+				<referencedClass name="MichalSpacekCz\Tls\CertificateMonitor" /> <!-- Used in bin/certmonitor.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
+			</errorLevel>
+		</UnusedClass>
+	</issueHandlers>
 </psalm>
