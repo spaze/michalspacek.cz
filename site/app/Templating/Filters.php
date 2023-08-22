@@ -24,13 +24,13 @@ class Filters
 	public function getAll(): array
 	{
 		return [
-			'staticUrl' => [$this, 'staticUrl'],
-			'staticImageUrl' => [$this, 'staticImageUrl'],
-			'format' => [$this, 'format'],
-			'localeDay' => [$this->dateTimeFormatter, 'localeDay'],
-			'localeMonth' => [$this->dateTimeFormatter, 'localeMonth'],
-			'localeIntervalDay' => [$this->dateTimeFormatter, 'localeIntervalDay'],
-			'localeIntervalMonth' => [$this->dateTimeFormatter, 'localeIntervalMonth'],
+			'staticUrl' => $this->staticUrl(...),
+			'staticImageUrl' => $this->staticImageUrl(...),
+			'format' => $this->format(...),
+			'localeDay' => $this->dateTimeFormatter->localeDay(...),
+			'localeMonth' => $this->dateTimeFormatter->localeMonth(...),
+			'localeIntervalDay' => $this->dateTimeFormatter->localeIntervalDay(...),
+			'localeIntervalMonth' => $this->dateTimeFormatter->localeIntervalMonth(...),
 		];
 	}
 
