@@ -34,6 +34,7 @@
 				<referencedMethod name="/.*::render$/" /> <!-- Classes that extend Nette\Application\UI\Control -->
 				<referencedMethod name="/.*Presenter::handle.*/" />
 				<referencedMethod name="/.*Presenter::inject.*/" />
+				<referencedMethod name="/.*Test::get.*/" /> <!-- Methods used in @dataProvider -->
 				<referencedMethod name="/.*Test::test.*/" />
 				<referencedMethod name="MichalSpacekCz\Application\RouterFactory::createRouter" /> <!-- Used in services.neon -->
 			</errorLevel>
