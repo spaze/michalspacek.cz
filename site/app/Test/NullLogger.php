@@ -12,12 +12,7 @@ class NullLogger implements ILogger
 	private array $logged = [];
 
 
-	/**
-	 * @param mixed $value
-	 * @param string $level
-	 * @return string|null
-	 */
-	public function log($value, $level = self::INFO): ?string
+	public function log(mixed $value, string $level = self::INFO): ?string
 	{
 		$this->logged[] = $value;
 		return null;
