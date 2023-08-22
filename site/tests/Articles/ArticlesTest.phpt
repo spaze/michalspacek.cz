@@ -26,16 +26,16 @@ class ArticlesTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly BlogPosts $blogPosts,
-		private readonly Tags $tags,
 		private readonly NoOpTranslator $translator,
+		TexyFormatter $texyFormatter,
+		BlogPosts $blogPosts,
+		Tags $tags,
 	) {
 		$this->articles = new Articles(
 			$this->database,
-			$this->texyFormatter,
-			$this->blogPosts,
-			$this->tags,
+			$texyFormatter,
+			$blogPosts,
+			$tags,
 			$this->translator,
 		);
 	}
