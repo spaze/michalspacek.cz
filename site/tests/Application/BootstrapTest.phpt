@@ -67,6 +67,7 @@ class BootstrapTest extends TestCase
 		} else {
 			ServerEnv::setString('ENVIRONMENT', $environment);
 		}
+		$container = null;
 		Assert::noError(function () use (&$container): void {
 			$container = Bootstrap::boot();
 		});

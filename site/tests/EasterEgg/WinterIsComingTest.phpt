@@ -135,8 +135,8 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getRuleStreetRoughStreets */
 	public function testRuleStreetRough(string $name): void
 	{
-		Assert::exception(function () use (&$result, $name): void {
-			$result = ($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
+		Assert::exception(function () use ($name): void {
+			($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
 		}, AbortException::class);
 		$this->assertResponse();
 	}
