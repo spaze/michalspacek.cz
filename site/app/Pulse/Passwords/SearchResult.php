@@ -102,7 +102,7 @@ class SearchResult
 	}
 
 
-	public function hasDisclosureUrlMatch(Algorithm $algorithm): bool
+	public function isAlgorithmDisclosureUrlMatch(Algorithm $algorithm): bool
 	{
 		foreach ($algorithm->getDisclosures() as $disclosure) {
 			if ($this->isDisclosureUrlMatch($disclosure)) {
@@ -119,7 +119,7 @@ class SearchResult
 	}
 
 
-	public function hasDisclosureHistoryMatch(): bool
+	public function isDisclosureHistoryMatch(): bool
 	{
 		return $this->disclosureHistoryMatch;
 	}
