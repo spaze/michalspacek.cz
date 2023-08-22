@@ -35,6 +35,12 @@ class CertificatesTest extends TestCase
 	}
 
 
+	protected function tearDown(): void
+	{
+		$this->logger->reset();
+	}
+
+
 	public function testLogNothing(): void
 	{
 		$count = $this->certificates->log([], []);
