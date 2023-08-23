@@ -43,6 +43,14 @@
 				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Response::(deleteHeader|sent).*/" /> <!-- Not used but keep them just in case -->
 			</errorLevel>
 		</PossiblyUnusedMethod>
+		<PossiblyUnusedProperty>
+			<errorLevel type="suppress">
+				<referencedProperty name="MichalSpacekCz\Articles\ArticleEdit::$summaryTexy" /> <!-- Not used because it's not possible to edit article edits, but keep for completeness -->
+				<referencedProperty name="MichalSpacekCz\Articles\ArticlePublishedElsewhere::$sourceName" /> <!-- Used in templates -->
+				<referencedProperty name="MichalSpacekCz\Articles\ArticlePublishedElsewhere::$sourceHref" /> <!-- Used in templates -->
+				<referencedProperty name="MichalSpacekCz\Articles\Blog\BlogPost::$originally" /> <!-- Used in templates -->
+			</errorLevel>
+		</PossiblyUnusedProperty>
 		<UnusedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
