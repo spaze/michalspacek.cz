@@ -222,11 +222,4 @@ class TexyFormatter
 		return $this;
 	}
 
-
-	public function enableCache(): self
-	{
-		$this->cacheResult = true;
-		return $this;
-	}
-
 }
