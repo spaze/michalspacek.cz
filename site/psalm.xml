@@ -40,6 +40,8 @@
 				<referencedMethod name="/.*Test::get.*/" /> <!-- Methods used in @dataProvider -->
 				<referencedMethod name="/.*Test::test.*/" />
 				<referencedMethod name="MichalSpacekCz\Application\RouterFactory::createRouter" /> <!-- Used in services.neon -->
+				<referencedMethod name="MichalSpacekCz\DateTime\DateTimeFormatter::localeMonth" /> <!-- Used in templates -->
+				<referencedMethod name="/^MichalSpacekCz\\Templating\\Filters::(staticUrl|staticImageUrl)$/" /> <!-- Used in templates -->
 				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Request::(set|add).*/" /> <!-- Not used but keep them just in case -->
 				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Response::(deleteHeader|sent).*/" /> <!-- Not used but keep them just in case -->
 			</errorLevel>
@@ -55,6 +57,7 @@
 		<PossiblyUnusedReturnValue>
 			<errorLevel type="suppress">
 				<file name="app/Form/Controls/TrainingControlsFactory.php" /> <!-- Keep all add<Field>() methods similar and return even if not used -->
+				<file name="app/Formatter/TexyPhraseHandler.php" /> <!-- https://github.com/spaze/michalspacek.cz/pull/208 -->
 				<file name="app/Training/Applications/TrainingApplicationStorage.php" /> <!-- Keep addPreliminaryInvitation() similar to the other methods and return even if not used -->
 				<file name="app/Training/Dates/TrainingDates.php" /> <!-- Keep add() similar to other methods and return even if not used -->
 			</errorLevel>
