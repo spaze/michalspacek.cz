@@ -1,13 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\ApplicationForm;
 
 use Nette\Http\SessionSection;
 use stdClass;
 use Tracy\Debugger;
 
-class FormDataLogger
+class TrainingApplicationFormDataLogger
 {
 
 	public function log(stdClass $values, string $name, ?SessionSection $sessionSection): void

@@ -98,6 +98,8 @@ services:
 	- MichalSpacekCz\Tls\CertificateMonitor
 	- MichalSpacekCz\Tls\Certificates(users: %certificatesApi.users%, hideExpiredAfter: %certificatesApi.hideExpiredAfter%)
 	- MichalSpacekCz\Tls\CertificatesApiClient
+	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormDataLogger
+	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam
 	- MichalSpacekCz\Training\Applications\TrainingApplications
 	- MichalSpacekCz\Training\Applications\TrainingApplicationFactory(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\Applications\TrainingApplicationSources
@@ -115,8 +117,6 @@ services:
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
 	- MichalSpacekCz\Training\Files\TrainingFiles
 	- MichalSpacekCz\Training\Files\TrainingFilesStorage
-	- MichalSpacekCz\Training\FormDataLogger
-	- MichalSpacekCz\Training\FormSpam
 	- MichalSpacekCz\Training\FreeSeats
 	- MichalSpacekCz\Training\Mails\TrainingMailMessageFactory
 	- MichalSpacekCz\Training\Mails\TrainingMails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)

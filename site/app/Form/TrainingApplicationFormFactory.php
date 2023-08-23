@@ -7,6 +7,8 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
+use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormDataLogger;
+use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
@@ -14,8 +16,6 @@ use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusExce
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotAvailableException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
-use MichalSpacekCz\Training\FormDataLogger;
-use MichalSpacekCz\Training\FormSpam;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Form;
@@ -35,8 +35,8 @@ class TrainingApplicationFormFactory
 		private readonly Translator $translator,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly TrainingDates $trainingDates,
-		private readonly FormDataLogger $formDataLogger,
-		private readonly FormSpam $formSpam,
+		private readonly TrainingApplicationFormDataLogger $formDataLogger,
+		private readonly TrainingApplicationFormSpam $formSpam,
 		private readonly TrainingApplicationStorage $trainingApplicationStorage,
 		private readonly TrainingMails $trainingMails,
 		private readonly TemplateFactory $templateFactory,
