@@ -30,6 +30,8 @@
 			<errorLevel type="suppress">
 				<referencedMethod name="/.*::__construct$/" /> <!-- All services -->
 				<referencedMethod name="/.*::createComponent.*/" /> <!-- Classes that extend Nette\Application\UI\Control -->
+				<referencedMethod name="/.*::get.*/" /> <!-- Getters used mostly in templates -->
+				<referencedMethod name="/.*::is.*/" /> <!-- Used mostly in templates -->
 				<referencedMethod name="/.*::jsonSerialize$/" /> <!-- Used by Nette\Application\UI\Presenter::sendJson() or by Nette\Utils\Json::encode() -->
 				<referencedMethod name="/.*::render$/" /> <!-- Classes that extend Nette\Application\UI\Control -->
 				<referencedMethod name="/.*Presenter::handle.*/" />
