@@ -51,6 +51,13 @@
 				<referencedProperty name="MichalSpacekCz\Articles\Blog\BlogPost::$originally" /> <!-- Used in templates -->
 			</errorLevel>
 		</PossiblyUnusedProperty>
+		<PossiblyUnusedReturnValue>
+			<errorLevel type="suppress">
+				<file name="app/Form/Controls/TrainingControlsFactory.php" /> <!-- Keep all add<Field>() methods similar and return even if not used -->
+				<file name="app/Training/Applications/TrainingApplicationStorage.php" /> <!-- Keep addPreliminaryInvitation() similar to the other methods and return even if not used -->
+				<file name="app/Training/Dates/TrainingDates.php" /> <!-- Keep add() similar to other methods and return even if not used -->
+			</errorLevel>
+		</PossiblyUnusedReturnValue>
 		<UnusedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
