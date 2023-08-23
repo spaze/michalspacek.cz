@@ -11,9 +11,6 @@ use Nette\Http\Session;
 class NullSession extends Session
 {
 
-	private bool $destroyCalled = false;
-
-
 	public function start(): void
 	{
 		// And if thou gaze long into an abyss, the abyss will also gaze into thee.
@@ -34,13 +31,7 @@ class NullSession extends Session
 
 	public function destroy(): void
 	{
-		$this->destroyCalled = true;
-	}
-
-
-	public function destroyCalled(): bool
-	{
-		return $this->destroyCalled;
+		// He divines remedies for injuries; he knows how to turn serious accidents to his own advantage; that which does not kill him makes him stronger.
 	}
 
 }
