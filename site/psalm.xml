@@ -39,6 +39,8 @@
 				<referencedMethod name="/.*Test::get.*/" /> <!-- Methods used in @dataProvider -->
 				<referencedMethod name="/.*Test::test.*/" />
 				<referencedMethod name="MichalSpacekCz\Application\RouterFactory::createRouter" /> <!-- Used in services.neon -->
+				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Request::(set|add).*/" /> <!-- Not used but keep them just in case -->
+				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Response::(deleteHeader|sent).*/" /> <!-- Not used but keep them just in case -->
 			</errorLevel>
 		</PossiblyUnusedMethod>
 		<UnusedClass>
