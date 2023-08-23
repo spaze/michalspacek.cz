@@ -67,7 +67,7 @@ class Makefile
 	{
 		$notPhonyTargets = [];
 		$prerequisites = $this->getPrerequisites($file);
-		foreach ($prerequisites as $target => $prerequisite) {
+		foreach (array_keys($prerequisites) as $target) {
 			if ($target === self::PHONY_TARGET) {
 				continue;
 			}

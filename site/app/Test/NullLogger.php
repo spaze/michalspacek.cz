@@ -8,44 +8,29 @@ use Tracy\ILogger;
 class NullLogger implements ILogger
 {
 
-	private mixed $logged;
-
 	/** @var array<int, mixed> */
-	private array $allLogged = [];
+	private array $logged = [];
 
 
-	/**
-	 * @param mixed $value
-	 * @param string $level
-	 * @return string|null
-	 */
-	public function log($value, $level = self::INFO): ?string
+	public function log(mixed $value, string $level = self::INFO): ?string
 	{
-		$this->logged = $value;
-		$this->allLogged[] = $value;
+		$this->logged[] = $value;
 		return null;
-	}
-
-
-	public function getLogged(): mixed
-	{
-		return $this->logged;
 	}
 
 
 	/**
 	 * @return array<int, mixed>
 	 */
-	public function getAllLogged(): array
+	public function getLogged(): array
 	{
-		return $this->allLogged;
+		return $this->logged;
 	}
 
 
 	public function reset(): void
 	{
-		$this->logged = null;
-		$this->allLogged = [];
+		$this->logged = [];
 	}
 
 }

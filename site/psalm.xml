@@ -1,17 +1,73 @@
 <?xml version="1.0"?>
 <psalm
-    errorLevel="7"
-    resolveFromConfigFile="true"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-    findUnusedBaselineEntry="true"
-    findUnusedCode="false"
+	errorLevel="7"
+	resolveFromConfigFile="true"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://getpsalm.org/schema/config"
+	xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+	findUnusedBaselineEntry="true"
+	findUnusedCode="true"
+	findUnusedPsalmSuppress="true"
 >
-    <projectFiles>
-        <directory name="app" />
-        <ignoreFiles>
-            <directory name="vendor" />
-        </ignoreFiles>
-    </projectFiles>
+	<projectFiles>
+		<directory name="app" />
+		<directory name="public" />
+		<directory name="tests" />
+		<ignoreFiles>
+			<directory name="vendor" />
+		</ignoreFiles>
+	</projectFiles>
+	<fileExtensions>
+		<extension name="php"/>
+		<extension name="phpt"/>
+	</fileExtensions>
+	<issueHandlers>
+		<MissingFile>
+			<errorLevel type="suppress">
+				<file name="public/www.michalspacek.cz/app.php" /> <!-- Can't require maintenance.php but https://github.com/vimeo/psalm/issues/3886 -->
+			</errorLevel>
+		</MissingFile>
+		<PossiblyUnusedMethod>
+			<errorLevel type="suppress">
+				<referencedMethod name="/.*::__construct$/" /> <!-- All services -->
+				<referencedMethod name="/.*::createComponent.*/" /> <!-- Classes that extend Nette\Application\UI\Control -->
+				<referencedMethod name="/.*::get.*/" /> <!-- Getters used mostly in templates -->
+				<referencedMethod name="/.*::is.*/" /> <!-- Used mostly in templates -->
+				<referencedMethod name="/.*::jsonSerialize$/" /> <!-- Used by Nette\Application\UI\Presenter::sendJson() or by Nette\Utils\Json::encode() -->
+				<referencedMethod name="/.*::render$/" /> <!-- Classes that extend Nette\Application\UI\Control -->
+				<referencedMethod name="/.*Presenter::handle.*/" />
+				<referencedMethod name="/.*Presenter::inject.*/" />
+				<referencedMethod name="/.*Test::get.*/" /> <!-- Methods used in @dataProvider -->
+				<referencedMethod name="/.*Test::test.*/" />
+				<referencedMethod name="MichalSpacekCz\Application\RouterFactory::createRouter" /> <!-- Used in services.neon -->
+				<referencedMethod name="MichalSpacekCz\DateTime\DateTimeFormatter::localeMonth" /> <!-- Used in templates -->
+				<referencedMethod name="/^MichalSpacekCz\\Templating\\Filters::(staticUrl|staticImageUrl)$/" /> <!-- Used in templates -->
+				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Request::(set|add).*/" /> <!-- Not used but keep them just in case -->
+				<referencedMethod name="/^MichalSpacekCz\\Test\\Http\\Response::(deleteHeader|sent).*/" /> <!-- Not used but keep them just in case -->
+			</errorLevel>
+		</PossiblyUnusedMethod>
+		<PossiblyUnusedProperty>
+			<errorLevel type="suppress">
+				<referencedProperty name="MichalSpacekCz\Articles\ArticleEdit::$summaryTexy" /> <!-- Not used because it's not possible to edit article edits, but keep for completeness -->
+				<referencedProperty name="MichalSpacekCz\Articles\ArticlePublishedElsewhere::$sourceName" /> <!-- Used in templates -->
+				<referencedProperty name="MichalSpacekCz\Articles\ArticlePublishedElsewhere::$sourceHref" /> <!-- Used in templates -->
+				<referencedProperty name="MichalSpacekCz\Articles\Blog\BlogPost::$originally" /> <!-- Used in templates -->
+			</errorLevel>
+		</PossiblyUnusedProperty>
+		<PossiblyUnusedReturnValue>
+			<errorLevel type="suppress">
+				<file name="app/Form/Controls/TrainingControlsFactory.php" /> <!-- Keep all add<Field>() methods similar and return even if not used -->
+				<file name="app/Formatter/TexyPhraseHandler.php" /> <!-- https://github.com/spaze/michalspacek.cz/pull/208 -->
+				<file name="app/Training/Applications/TrainingApplicationStorage.php" /> <!-- Keep addPreliminaryInvitation() similar to the other methods and return even if not used -->
+				<file name="app/Training/Dates/TrainingDates.php" /> <!-- Keep add() similar to other methods and return even if not used -->
+			</errorLevel>
+		</PossiblyUnusedReturnValue>
+		<UnusedClass>
+			<errorLevel type="suppress">
+				<referencedClass name="*Presenter" />
+				<referencedClass name="MichalSpacekCz\Test\Http\NullSession" /> <!-- Used in tests.neon -->
+				<referencedClass name="MichalSpacekCz\Tls\CertificateMonitor" /> <!-- Used in bin/certmonitor.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
+			</errorLevel>
+		</UnusedClass>
+	</issueHandlers>
 </psalm>

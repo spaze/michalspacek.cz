@@ -27,8 +27,8 @@ class ExportsTest extends TestCase
 
 	public function __construct(
 		private readonly ArticlesMock $articles,
-		private readonly Storage $cacheStorage,
-		private readonly NoOpTranslator $translator,
+		Storage $cacheStorage,
+		NoOpTranslator $translator,
 	) {
 		$texyFormatter = new class () extends TexyFormatter {
 
@@ -44,7 +44,7 @@ class ExportsTest extends TestCase
 			}
 
 		};
-		$this->exports = new Exports($this->articles, $texyFormatter, $this->translator, $this->cacheStorage);
+		$this->exports = new Exports($this->articles, $texyFormatter, $translator, $cacheStorage);
 	}
 
 

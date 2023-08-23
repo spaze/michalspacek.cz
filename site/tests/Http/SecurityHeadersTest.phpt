@@ -25,12 +25,12 @@ class SecurityHeadersTest extends TestCase
 
 	public function __construct(
 		private readonly Response $httpResponse,
-		private readonly CspConfig $cspConfig,
-		private readonly SecurityHeadersFactory $securityHeadersFactory,
+		CspConfig $cspConfig,
+		SecurityHeadersFactory $securityHeadersFactory,
 		private readonly IPresenterFactory $presenterFactory,
 		private readonly Application $application,
 	) {
-		$this->cspConfig->setPolicy([
+		$cspConfig->setPolicy([
 			'*.*' => [
 				'script-src' => [
 					'default.example',
@@ -54,7 +54,7 @@ class SecurityHeadersTest extends TestCase
 			],
 		]);
 
-		$this->securityHeaders = $this->securityHeadersFactory->create([
+		$this->securityHeaders = $securityHeadersFactory->create([
 			'camera' => 'none',
 			'geolocation' => '',
 			'midi' => [

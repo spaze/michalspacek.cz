@@ -43,7 +43,7 @@ class CompanyPresenter extends BasePresenter
 			'companyId' => $info->companyId ?? '',
 			'companyTaxId' => $info->companyTaxId ?? '',
 			'company' => $info->company ?? '',
-			'street' => $info->streetFull ?? '',
+			'street' => $info->streetAndNumber ?? '',
 			'city' => $info->city ?? '',
 			'zip' => $info->zip ?? '',
 			'country' => $info->country ?? '',

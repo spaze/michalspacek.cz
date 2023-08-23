@@ -289,7 +289,7 @@ class TrainingDate
 	}
 
 
-	public function requiresAttention(): bool
+	public function isAttentionRequired(): bool
 	{
 		return $this->canceledApplications || $this->getStatus() === TrainingDateStatus::Canceled && $this->getValidApplicationsCount();
 	}

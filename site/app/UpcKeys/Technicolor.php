@@ -114,7 +114,7 @@ class Technicolor implements RouterInterface
 	private function callApi(string $url): string
 	{
 		$context = stream_context_create();
-		stream_context_set_params($context, [
+		$setResult = stream_context_set_params($context, [
 			'notification' => function ($notificationCode, $severity, $message, $messageCode) {
 				if ($notificationCode == STREAM_NOTIFY_FAILURE && $messageCode >= 500) {
 					throw new RuntimeException(trim($message), $messageCode);
@@ -127,6 +127,9 @@ class Technicolor implements RouterInterface
 				],
 			],
 		]);
+		if (!$setResult) {
+			throw new RuntimeException("Can't set stream context params to get contents from {$url}");
+		}
 		$result = file_get_contents($url, false, $context);
 		if (!$result) {
 			throw new RuntimeException("Can't get result from {$url}");

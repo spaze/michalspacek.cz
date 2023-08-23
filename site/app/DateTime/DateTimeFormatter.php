@@ -114,13 +114,6 @@ class DateTimeFormatter
 	}
 
 
-	public function loader(string $filter): ?callable
-	{
-		$callback = [$this, $filter];
-		return is_callable($callback) ? $callback : null;
-	}
-
-
 	private function localeDate(DateTimeInterface $start, ?DateTimeInterface $end, string $format, ?string $locale): string
 	{
 		if ($locale === null) {

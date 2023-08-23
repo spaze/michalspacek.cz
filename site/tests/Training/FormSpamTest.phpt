@@ -91,7 +91,7 @@ class FormSpamTest extends TestCase
 		} else {
 			Assert::exception($check, SpammyApplicationException::class);
 		}
-		Assert::same([], $this->nullLogger->getAllLogged());
+		Assert::same([], $this->nullLogger->getLogged());
 	}
 
 }

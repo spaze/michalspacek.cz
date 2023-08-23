@@ -16,15 +16,13 @@ class VideoFactoryTest extends TestCase
 {
 
 	private readonly VideoFactory $videoFactory;
-	private readonly VideoThumbnails $videoThumbnails;
 
 
 	public function __construct(
-		private readonly InterviewMediaResources $mediaResources,
-		private readonly SupportedImageFileFormats $supportedImageFileFormats,
+		InterviewMediaResources $mediaResources,
+		SupportedImageFileFormats $supportedImageFileFormats,
 	) {
-		$this->videoThumbnails = new VideoThumbnails($this->mediaResources, $this->supportedImageFileFormats);
-		$this->videoFactory = new VideoFactory($this->mediaResources, $this->supportedImageFileFormats, $this->videoThumbnails);
+		$this->videoFactory = new VideoFactory($mediaResources, $supportedImageFileFormats, new VideoThumbnails($mediaResources, $supportedImageFileFormats));
 	}
 
 

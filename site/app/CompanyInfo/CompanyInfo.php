@@ -20,7 +20,7 @@ class CompanyInfo
 		private readonly Ares $ares,
 		private readonly RegisterUz $registerUz,
 		Storage $cacheStorage,
-		private bool $loadCompanyDataVisible = true,
+		private readonly bool $loadCompanyDataVisible = true,
 	) {
 		$this->cache = new Cache($cacheStorage, self::class);
 	}
@@ -45,12 +45,6 @@ class CompanyInfo
 			throw new CompanyInfoException(sprintf("Cached data for %s/%s is a '%s' not a '%s' object", $country, $companyId, get_debug_type($cached), CompanyDetails::class));
 		}
 		return $cached;
-	}
-
-
-	public function setLoadCompanyDataVisible(bool $visible): void
-	{
-		$this->loadCompanyDataVisible = $visible;
 	}
 
 

@@ -57,7 +57,7 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
-	protected function createComponentTalksList(string $name): TalksList
+	protected function createComponentTalksList(): TalksList
 	{
 		return $this->talksListFactory->create();
 	}

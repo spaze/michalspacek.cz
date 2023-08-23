@@ -68,7 +68,7 @@
 		<td class="nameCell" data-date="{$training->getId()}">{$training->getName()}{if $training->isPublic() || $training->getValidApplicationsCount() > 0} ({$training->getValidApplicationsCount()}){/if}</td>
 		<td><small>{if $training->isRemote()}{_messages.label.remote}{else}{$training->getVenueCity()}{/if}{if !$training->isPublic()}, {$training->getVenueName()}{/if}</small></td>
 	</tr>
-	<tr id="date-{$training->getId()}" n:class="empty($training->requiresAttention()) ? hidden">
+	<tr id="date-{$training->getId()}" n:class="empty($training->isAttentionRequired()) ? hidden">
 		<td colspan="5">
 			{if $training->getApplications() || $training->getCanceledApplications()}
 				<table class="indent">

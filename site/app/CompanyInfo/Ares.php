@@ -67,10 +67,7 @@ class Ares implements CompanyRegistry
 			$company->companyId = (string)$data->ICO;
 			$company->companyTaxId = (string)$data->DIC;
 			$company->company = (string)$data->OF;
-			$company->street = $street;
-			$company->houseNumber = $houseNumber;
-			$company->streetNumber = $streetNumber;
-			$company->streetFull = $this->formatStreet($city, $street, $houseNumber, $streetNumber);
+			$company->streetAndNumber = $this->formatStreet($city, $street, $houseNumber, $streetNumber);
 			$company->city = $city;
 			$company->zip = $zip;
 			$company->country = $country;
@@ -94,7 +91,7 @@ class Ares implements CompanyRegistry
 	private function fetch(string $companyId): string
 	{
 		$context = stream_context_create();
-		stream_context_set_params($context, [
+		$setResult = stream_context_set_params($context, [
 			'notification' => function ($notificationCode, $severity, $message, $messageCode) {
 				if ($severity === STREAM_NOTIFY_SEVERITY_ERR) {
 					throw new RuntimeException(trim($message) . " ({$notificationCode})", $messageCode);
@@ -105,6 +102,9 @@ class Ares implements CompanyRegistry
 			],
 		]);
 		$url = sprintf($this->url, $companyId);
+		if (!$setResult) {
+			throw new RuntimeException("Can't set stream context params to get contents from {$url}");
+		}
 		$result = file_get_contents($url, false, $context);
 		if (!$result) {
 			throw new RuntimeException("Can't get result from {$url}");
