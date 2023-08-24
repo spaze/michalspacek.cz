@@ -48,6 +48,7 @@ class Database extends Explorer
 	public function reset(): void
 	{
 		$this->queriesScalarParams = [];
+		$this->queriesArrayParams = [];
 		$this->fetchResult = [];
 		$this->fetchPairsResult = [];
 		$this->fetchFieldDefaultResult = [];
