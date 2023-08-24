@@ -100,6 +100,7 @@ services:
 	- MichalSpacekCz\Tls\CertificatesApiClient
 	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormDataLogger
 	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam
+	- MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess
 	- MichalSpacekCz\Training\Applications\TrainingApplications
 	- MichalSpacekCz\Training\Applications\TrainingApplicationFactory(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\Applications\TrainingApplicationSources
