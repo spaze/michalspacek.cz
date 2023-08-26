@@ -245,7 +245,7 @@ class TrainingApplicationStorage
 		string $companyId,
 		string $companyTaxId,
 		string $note,
-	): int {
+	): void {
 		$this->trainingStatuses->updateStatusCallback(
 			$applicationId,
 			Statuses::STATUS_SIGNED_UP,
@@ -287,7 +287,6 @@ class TrainingApplicationStorage
 				);
 			},
 		);
-		return $applicationId;
 	}
 
 
