@@ -7,15 +7,19 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess;
+use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
-use Nette\Http\SessionSection;
 use Nette\Utils\Html;
 
 class TrainingApplicationFormFactory
 {
+
+	private SelectBox $country;
+
 
 	public function __construct(
 		private readonly FormFactory $factory,
@@ -33,7 +37,7 @@ class TrainingApplicationFormFactory
 	 * @param string $action
 	 * @param Html $name
 	 * @param array<int, TrainingDate> $dates
-	 * @param SessionSection<string> $sessionSection
+	 * @param TrainingApplicationSessionSection<string> $sessionSection
 	 * @return Form
 	 */
 	public function create(
@@ -42,7 +46,7 @@ class TrainingApplicationFormFactory
 		string $action,
 		Html $name,
 		array $dates,
-		SessionSection $sessionSection,
+		TrainingApplicationSessionSection $sessionSection,
 	): Form {
 		$form = $this->factory->create();
 
@@ -72,7 +76,7 @@ class TrainingApplicationFormFactory
 		$this->trainingControlsFactory->addCompany($form);
 		$this->trainingControlsFactory->addNote($form)
 			->setHtmlAttribute('placeholder', $this->translator->translate('messages.trainings.applicationform.note'));
-		$this->trainingControlsFactory->addCountry($form);
+		$this->country = $this->trainingControlsFactory->addCountry($form);
 
 		$form->addSubmit('signUp', 'Odeslat');
 
@@ -86,34 +90,19 @@ class TrainingApplicationFormFactory
 
 	/**
 	 * @param Form $form
-	 * @param SessionSection<string> $application
+	 * @param TrainingApplicationSessionSection<string> $application
 	 */
-	private function setApplication(Form $form, SessionSection $application): void
+	private function setApplication(Form $form, TrainingApplicationSessionSection $application): void
 	{
-		$values = [
-			'name' => $application->get('name'),
-			'email' => $application->get('email'),
-			'company' => $application->get('company'),
-			'street' => $application->get('street'),
-			'city' => $application->get('city'),
-			'zip' => $application->get('zip'),
-			'country' => $application->get('country'),
-			'companyId' => $application->get('companyId'),
-			'companyTaxId' => $application->get('companyTaxId'),
-			'note' => $application->get('note'),
-		];
-		$form->setDefaults($values);
-
-		if (!empty($application->country)) {
-			$message = "messages.label.taxid.{$application->country}";
-			$caption = $this->translator->translate($message);
-			if ($caption !== $message) {
-				$input = $form->getComponent('companyTaxId');
-				if (!$input instanceof TextInput) {
-					throw new ShouldNotHappenException(sprintf("The 'companyTaxId' component should be '%s' but it's a %s", TextInput::class, get_debug_type($input)));
-				}
-				$input->caption = "{$caption}:";
+		$form->setDefaults($application->getApplicationValues());
+		$message = "messages.label.taxid.{$this->country->getValue()}";
+		$caption = $this->translator->translate($message);
+		if ($caption !== $message) {
+			$input = $form->getComponent('companyTaxId');
+			if (!$input instanceof TextInput) {
+				throw new ShouldNotHappenException(sprintf("The 'companyTaxId' component should be '%s' but it's a %s", TextInput::class, get_debug_type($input)));
 			}
+			$input->caption = "{$caption}:";
 		}
 	}
 

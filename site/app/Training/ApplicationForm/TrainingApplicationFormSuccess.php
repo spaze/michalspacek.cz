@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training\ApplicationForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use MichalSpacekCz\Templating\TemplateFactory;
+use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
@@ -17,7 +18,6 @@ use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
-use Nette\Http\SessionSection;
 use Nette\Utils\Html;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use PDOException;
@@ -43,7 +43,7 @@ class TrainingApplicationFormSuccess
 	 * @param callable(string): void $onSuccess
 	 * @param callable(string): void $onError
 	 * @param array<int, TrainingDate> $dates
-	 * @param SessionSection<string> $sessionSection
+	 * @param TrainingApplicationSessionSection<string> $sessionSection
 	 * @throws HaliteAlert
 	 * @throws SodiumException
 	 * @throws TrainingStatusIdNotIntException
@@ -57,7 +57,7 @@ class TrainingApplicationFormSuccess
 		Html $name,
 		array $dates,
 		bool $multipleDates,
-		SessionSection $sessionSection,
+		TrainingApplicationSessionSection $sessionSection,
 	): void {
 		$values = $form->getValues();
 		try {
@@ -87,10 +87,11 @@ class TrainingApplicationFormSuccess
 					$values->note,
 				);
 			} else {
-				if (($sessionSection->get('application')[$action]['dateId'] ?? null) === $values->trainingId) {
-					$applicationId = $this->trainingApplicationStorage->updateApplication(
+				$applicationId = $sessionSection->getApplicationIdByDateId($action, $values->trainingId);
+				if ($applicationId !== null) {
+					$this->trainingApplicationStorage->updateApplication(
 						$date,
-						$sessionSection->get('application')[$action]['id'],
+						$applicationId,
 						$values->name,
 						$values->email,
 						$values->company,
@@ -102,7 +103,7 @@ class TrainingApplicationFormSuccess
 						$values->companyTaxId,
 						$values->note,
 					);
-					$sessionSection->set('application', array_merge($sessionSection->get('application'), [$action => null]));
+					$sessionSection->removeApplication($action);
 				} else {
 					$applicationId = $this->trainingApplicationStorage->addApplication(
 						$date,
@@ -138,17 +139,7 @@ class TrainingApplicationFormSuccess
 					$date->getVenueCity(),
 				);
 			}
-			$sessionSection->set('trainingId', $date->getId());
-			$sessionSection->set('name', $values->name);
-			$sessionSection->set('email', $values->email);
-			$sessionSection->set('company', $values->company);
-			$sessionSection->set('street', $values->street);
-			$sessionSection->set('city', $values->city);
-			$sessionSection->set('zip', $values->zip);
-			$sessionSection->set('country', $values->country);
-			$sessionSection->set('companyId', $values->companyId);
-			$sessionSection->set('companyTaxId', $values->companyTaxId);
-			$sessionSection->set('note', $values->note);
+			$sessionSection->setOnSuccess($date, $values);
 			$onSuccess($action);
 		} catch (SpammyApplicationException) {
 			$onError('messages.trainings.spammyapplication');
@@ -165,16 +156,13 @@ class TrainingApplicationFormSuccess
 
 
 	/**
-	 * @param stdClass $values
-	 * @param string $name
 	 * @param array<int, TrainingDate> $dates
-	 * @param SessionSection $sessionSection
 	 * @throws TrainingDateNotUpcomingException
 	 */
-	private function checkTrainingDate(stdClass $values, string $name, array $dates, SessionSection $sessionSection): void
+	private function checkTrainingDate(stdClass $values, string $name, array $dates, TrainingApplicationSessionSection $sessionSection): void
 	{
 		if (!isset($dates[$values->trainingId])) {
-			$this->formDataLogger->log($values, $name, $sessionSection);
+			$this->formDataLogger->log($values, $name, $values->trainingId, $sessionSection);
 			throw new TrainingDateNotUpcomingException($values->trainingId, $dates);
 		}
 	}

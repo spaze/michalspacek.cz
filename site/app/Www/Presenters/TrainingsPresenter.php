@@ -9,6 +9,7 @@ use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
@@ -111,7 +112,7 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("I don't do {$name} training anymore");
 		}
 
-		$session = $this->getSession('training');
+		$session = $this->getTrainingSessionSection();
 
 		$application = $param ? $this->trainingApplications->getApplicationByToken($param) : null;
 		if (!$application) {
@@ -130,22 +131,7 @@ class TrainingsPresenter extends BasePresenter
 			]);
 			$this->redirect('training', $name);
 		}
-
-		$data = (array)$session->get('application');
-		$data[$name] = ['id' => $application->getId(), 'dateId' => $application->getDateId()];
-		$session->set('application', $data);
-
-		$session->set('name', $application->getName());
-		$session->set('email', $application->getEmail());
-		$session->set('company', $application->getCompany());
-		$session->set('street', $application->getStreet());
-		$session->set('city', $application->getCity());
-		$session->set('zip', $application->getZip());
-		$session->set('country', $application->getCountry());
-		$session->set('companyId', $application->getCompanyId());
-		$session->set('companyTaxId', $application->getCompanyTaxId());
-		$session->set('note', $application->getNote());
-
+		$session->setApplicationForTraining($name, $application);
 		$this->redirect('training', $application->getTrainingAction());
 	}
 
@@ -162,7 +148,7 @@ class TrainingsPresenter extends BasePresenter
 			$this->training->getAction(),
 			$this->training->getName(),
 			$this->dates,
-			$this->session->getSection('training'),
+			$this->getTrainingSessionSection(),
 		);
 	}
 
@@ -279,17 +265,18 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("No dates for {$name} training", IResponse::S503_ServiceUnavailable);
 		}
 
-		$session = $this->getSession('training');
-		if (!$session->get('trainingId')) {
+		$session = $this->getTrainingSessionSection();
+		$dateId = $session->getDateId();
+		if (!$dateId) {
 			$this->redirect('training', $name);
 		}
 
-		if (!isset($this->dates[$session->get('trainingId')])) {
-			$date = $this->trainingDates->get($session->get('trainingId'));
+		if (!isset($this->dates[$dateId])) {
+			$date = $this->trainingDates->get($dateId);
 			$this->redirect('success', $date->getAction());
 		}
 
-		$date = $this->dates[$session->get('trainingId')];
+		$date = $this->dates[$dateId];
 		if ($date->isTentative()) {
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.tentative'));
 		} else {
@@ -332,6 +319,16 @@ class TrainingsPresenter extends BasePresenter
 		if ($successorId !== null) {
 			$this->redirectPermanent('this', $this->trainings->getActionById($successorId));
 		}
+	}
+
+
+	private function getTrainingSessionSection(): TrainingApplicationSessionSection
+	{
+		$session = $this->getSession()->getSection('training', TrainingApplicationSessionSection::class);
+		if (!$session instanceof TrainingApplicationSessionSection) {
+			throw new ShouldNotHappenException(sprintf('Session section type is %s, but should be %s', get_debug_type($session), TrainingApplicationSessionSection::class));
+		}
+		return $session;
 	}
 
 }

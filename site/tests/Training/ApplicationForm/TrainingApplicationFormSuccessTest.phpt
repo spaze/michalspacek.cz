@@ -12,13 +12,13 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\PrivateProperty;
+use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
-use Nette\Http\SessionSection;
 use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
@@ -47,7 +47,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	private ?string $onSuccessAction = null;
 	private ?string $onErrorMessage = null;
 	private Form $form;
-	private SessionSection $sessionSection;
+	private TrainingApplicationSessionSection $sessionSection;
 
 
 	public function __construct(
@@ -83,7 +83,11 @@ class TrainingApplicationFormSuccessTest extends TestCase
 			'note' => self::NOTE,
 			'country' => self::COUNTRY,
 		]);
-		$this->sessionSection = $session->getSection('section');
+		$sectionSection = $session->getSection('section', TrainingApplicationSessionSection::class);
+		if (!$sectionSection instanceof TrainingApplicationSessionSection) {
+			throw new ShouldNotHappenException(sprintf('Session section type is %s, but should be %s', get_debug_type($sectionSection), TrainingApplicationSessionSection::class));
+		}
+		$this->sessionSection = $sectionSection;
 	}
 
 
