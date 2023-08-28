@@ -6,14 +6,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
-use Nette\Application\AbortException;
-use Nette\Application\Response;
+use MichalSpacekCz\Test\Application\ApplicationPresenter;
+use MichalSpacekCz\Test\Application\UiPresenterMock;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\TextInput;
 use Nette\InvalidStateException;
-use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -31,34 +29,20 @@ class WinterIsComingTest extends TestCase
 	/** @var callable(TextInput): true */
 	private $ruleStreet;
 
-	private stdClass $resultObject;
+	private UiPresenterMock $presenter;
 
 
 	public function __construct(
 		private readonly WinterIsComing $winterIsComing,
+		private readonly ApplicationPresenter $applicationPresenter,
 	) {
 	}
 
 
 	protected function setUp(): void
 	{
-		$this->resultObject = new stdClass();
-		$presenter = new class ($this->resultObject) extends Presenter {
-
-			public function __construct(
-				private readonly stdClass $resultObject,
-			) {
-			}
-
-
-			public function sendResponse(Response $response): never
-			{
-				$this->resultObject->response = $response;
-				$this->terminate();
-			}
-
-		};
-		$this->form = new Form($presenter, 'leForm');
+		$this->presenter = new UiPresenterMock();
+		$this->form = new Form($this->presenter, 'leForm');
 		$this->ruleEmail = $this->winterIsComing->ruleEmail();
 		$this->ruleStreet = $this->winterIsComing->ruleStreet();
 	}
@@ -85,9 +69,9 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getUnfriendlyEmails */
 	public function testRuleEmailFakeError(string $email): void
 	{
-		Assert::exception(function () use ($email): void {
+		Assert::true($this->applicationPresenter->expectSendResponse(function () use ($email): void {
 			($this->ruleEmail)($this->form->addText('foo')->setDefaultValue($email));
-		}, AbortException::class);
+		}));
 		$this->assertResponse();
 	}
 
@@ -95,7 +79,7 @@ class WinterIsComingTest extends TestCase
 	public function testRuleEmailNiceHost(): void
 	{
 		($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('kuddelmuddel@fussemarketing.net'));
-		Assert::hasNotKey('response', (array)$this->resultObject);
+		Assert::false($this->presenter->isResponseSent());
 	}
 
 
@@ -115,9 +99,8 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getRuleStreetNiceStreets */
 	public function testRuleStreetNice(string $name): void
 	{
-		$result = ($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
-		Assert::true($result);
-		Assert::hasNotKey('response', (array)$this->resultObject);
+		Assert::true(($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name)));
+		Assert::false($this->presenter->isResponseSent());
 	}
 
 
@@ -135,9 +118,9 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getRuleStreetRoughStreets */
 	public function testRuleStreetRough(string $name): void
 	{
-		Assert::exception(function () use ($name): void {
+		Assert::true($this->applicationPresenter->expectSendResponse(function () use ($name): void {
 			($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
-		}, AbortException::class);
+		}));
 		$this->assertResponse();
 	}
 
@@ -152,7 +135,7 @@ class WinterIsComingTest extends TestCase
 
 	private function assertResponse(): void
 	{
-		$response = $this->resultObject->response;
+		$response = $this->presenter->getResponse();
 		if (!$response instanceof TextResponse) {
 			Assert::fail('Response is of a wrong type ' . get_debug_type($response));
 		} else {
