@@ -2,7 +2,7 @@ name: SSL/TLS scans
 
 on:
   schedule:
-    - cron:  '34 2 * * *'
+    - cron: '34 2 * * *'
   workflow_dispatch:
 
 jobs:
