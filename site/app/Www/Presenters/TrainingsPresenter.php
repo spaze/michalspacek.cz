@@ -16,8 +16,8 @@ use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
-use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
+use MichalSpacekCz\Training\Files\TrainingFilesDownload;
 use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
@@ -26,6 +26,8 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
+use ParagonIE\Halite\Alerts\HaliteAlert;
+use SodiumException;
 
 class TrainingsPresenter extends BasePresenter
 {
@@ -52,6 +54,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
 		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
 		private readonly CompanyInfo $companyInfo,
+		private readonly TrainingFilesDownload $trainingFilesDownload,
 	) {
 		parent::__construct();
 	}
@@ -192,33 +195,19 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws HaliteAlert
+	 * @throws SodiumException
+	 */
 	public function actionFiles(string $name, ?string $param): void
 	{
 		$this->trainingAction = $name;
-		$session = $this->getSession('application');
-
-		if ($param !== null) {
-			$application = $this->trainingApplications->getApplicationByToken($param);
-			$session->set('token', $param);
-			$session->set('applicationId', $application?->getId());
-			$this->redirect('files', ($application?->getTrainingAction() ?? $name));
-		}
-
-		if (!$session->get('applicationId') || !$session->get('token')) {
-			throw new BadRequestException('Unknown application id, missing or invalid token');
-		}
-
 		try {
 			$training = $this->trainings->getIncludingCustom($name);
 		} catch (TrainingDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-
-		try {
-			$application = $this->trainingApplications->getApplicationById($session->get('applicationId'));
-		} catch (TrainingApplicationDoesNotExistException $e) {
-			throw new BadRequestException($e->getMessage(), previous: $e);
-		}
+		$application = $this->trainingFilesDownload->start($this->trainingAction, $param);
 		$trainingStart = $application->getTrainingStart();
 		$trainingEnd = $application->getTrainingEnd();
 		if (!$trainingStart || !$trainingEnd) {
@@ -231,7 +220,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->trainingApplications->setAccessTokenUsed($application);
 		if (count($application->getFiles()) === 0) {
-			throw new BadRequestException('No files for application id ' . $session->get('applicationId'));
+			throw new BadRequestException('No files for application id ' . $application->getId());
 		}
 
 		$this->template->trainingTitle = $training->getName();

@@ -117,6 +117,7 @@ services:
 	- MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
 	- MichalSpacekCz\Training\Files\TrainingFiles
+	- MichalSpacekCz\Training\Files\TrainingFilesDownload
 	- MichalSpacekCz\Training\Files\TrainingFilesStorage
 	- MichalSpacekCz\Training\FreeSeats
 	- MichalSpacekCz\Training\Mails\TrainingMailMessageFactory
