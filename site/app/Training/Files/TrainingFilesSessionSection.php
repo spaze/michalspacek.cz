@@ -3,12 +3,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Files;
 
+use MichalSpacekCz\Http\SessionSectionDeprecatedGetSet;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use Nette\Http\SessionSection;
 
 class TrainingFilesSessionSection extends SessionSection
 {
+
+	use SessionSectionDeprecatedGetSet;
+
 
 	public function setValues(string $token, ?TrainingApplication $application): void
 	{

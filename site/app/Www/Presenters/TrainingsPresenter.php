@@ -119,19 +119,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$application = $param ? $this->trainingApplications->getApplicationByToken($param) : null;
 		if (!$application) {
-			$session->remove([
-				'application',
-				'name',
-				'email',
-				'company',
-				'street',
-				'city',
-				'zip',
-				'country',
-				'companyId',
-				'companyTaxId',
-				'note',
-			]);
+			$session->removeApplicationValues();
 			$this->redirect('training', $name);
 		}
 		$session->setApplicationForTraining($name, $application);

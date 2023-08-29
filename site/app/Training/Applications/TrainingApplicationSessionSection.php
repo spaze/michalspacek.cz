@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Applications;
 
+use MichalSpacekCz\Http\SessionSectionDeprecatedGetSet;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use Nette\Http\SessionSection;
@@ -10,6 +11,9 @@ use stdClass;
 
 class TrainingApplicationSessionSection extends SessionSection
 {
+
+	use SessionSectionDeprecatedGetSet;
+
 
 	public function setApplicationForTraining(string $trainingAction, TrainingApplication $application): void
 	{
@@ -109,6 +113,24 @@ class TrainingApplicationSessionSection extends SessionSection
 			'companyTaxId' => parent::get('companyTaxId'),
 			'note' => parent::get('note'),
 		];
+	}
+
+
+	public function removeApplicationValues(): void
+	{
+		parent::remove([
+			'application',
+			'name',
+			'email',
+			'company',
+			'street',
+			'city',
+			'zip',
+			'country',
+			'companyId',
+			'companyTaxId',
+			'note',
+		]);
 	}
 
 }

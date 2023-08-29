@@ -20,6 +20,8 @@ use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
+use ReflectionClass;
+use ReflectionMethod;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -48,6 +50,8 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	private ?string $onErrorMessage = null;
 	private Form $form;
 	private TrainingApplicationSessionSection $sessionSection;
+	private ReflectionMethod $sessionSectionParentGet;
+	private ReflectionMethod $sessionSectionParentSet;
 
 
 	public function __construct(
@@ -88,6 +92,12 @@ class TrainingApplicationFormSuccessTest extends TestCase
 			throw new ShouldNotHappenException(sprintf('Session section type is %s, but should be %s', get_debug_type($sectionSection), TrainingApplicationSessionSection::class));
 		}
 		$this->sessionSection = $sectionSection;
+		$parentClass = (new ReflectionClass($this->sessionSection))->getParentClass();
+		if (!$parentClass) {
+			throw new ShouldNotHappenException(sprintf('Parent class of %s should exist', $this->sessionSection::class));
+		}
+		$this->sessionSectionParentGet = $parentClass->getMethod('get');
+		$this->sessionSectionParentSet = $parentClass->getMethod('set');
 	}
 
 
@@ -145,7 +155,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 
 	public function testSuccessUpdateApplication(): void
 	{
-		$this->sessionSection->set('application', [
+		$this->sessionSectionSet('application', [
 			self::TRAINING_ACTION => ['dateId' => self::DATE_ID, 'id' => self::APPLICATION_ID],
 			'foo' => 'bar',
 		]);
@@ -162,7 +172,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 
 		$this->assertSessionSection();
 
-		$application = $this->sessionSection->get('application');
+		$application = $this->sessionSectionGet('application');
 		if (is_array($application)) {
 			Assert::null($application[self::TRAINING_ACTION]);
 			Assert::same('bar', $application['foo']);
@@ -238,17 +248,29 @@ class TrainingApplicationFormSuccessTest extends TestCase
 
 	private function assertSessionSection(): void
 	{
-		Assert::same(self::DATE_ID, $this->sessionSection->get('trainingId'));
-		Assert::same(self::NAME, $this->sessionSection->get('name'));
-		Assert::same(self::EMAIL, $this->sessionSection->get('email'));
-		Assert::same(self::COMPANY, $this->sessionSection->get('company'));
-		Assert::same(self::STREET, $this->sessionSection->get('street'));
-		Assert::same(self::CITY, $this->sessionSection->get('city'));
-		Assert::same(self::ZIP, $this->sessionSection->get('zip'));
-		Assert::same(self::COUNTRY, $this->sessionSection->get('country'));
-		Assert::same(self::COMPANY_ID, $this->sessionSection->get('companyId'));
-		Assert::same(self::COMPANY_TAX_ID, $this->sessionSection->get('companyTaxId'));
-		Assert::same(self::NOTE, $this->sessionSection->get('note'));
+		Assert::same(self::DATE_ID, $this->sessionSectionGet('trainingId'));
+		Assert::same(self::NAME, $this->sessionSectionGet('name'));
+		Assert::same(self::EMAIL, $this->sessionSectionGet('email'));
+		Assert::same(self::COMPANY, $this->sessionSectionGet('company'));
+		Assert::same(self::STREET, $this->sessionSectionGet('street'));
+		Assert::same(self::CITY, $this->sessionSectionGet('city'));
+		Assert::same(self::ZIP, $this->sessionSectionGet('zip'));
+		Assert::same(self::COUNTRY, $this->sessionSectionGet('country'));
+		Assert::same(self::COMPANY_ID, $this->sessionSectionGet('companyId'));
+		Assert::same(self::COMPANY_TAX_ID, $this->sessionSectionGet('companyTaxId'));
+		Assert::same(self::NOTE, $this->sessionSectionGet('note'));
+	}
+
+
+	private function sessionSectionGet(string $name): mixed
+	{
+		return $this->sessionSectionParentGet->invoke($this->sessionSection, $name);
+	}
+
+
+	private function sessionSectionSet(string $name, mixed $value): void
+	{
+		$this->sessionSectionParentSet->invoke($this->sessionSection, $name, $value);
 	}
 
 }
