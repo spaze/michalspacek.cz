@@ -8,6 +8,7 @@ use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Statuses;
@@ -15,7 +16,7 @@ use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingMailMessageFactoryTest extends TestCase
@@ -150,4 +151,4 @@ class TrainingMailMessageFactoryTest extends TestCase
 
 }
 
-$runner->run(TrainingMailMessageFactoryTest::class);
+TestCaseRunner::run(TrainingMailMessageFactoryTest::class);

@@ -3,11 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Trainings;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Row;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingFactoryTest extends TestCase
@@ -96,4 +97,4 @@ class TrainingFactoryTest extends TestCase
 
 }
 
-$runner->run(TrainingFactoryTest::class);
+TestCaseRunner::run(TrainingFactoryTest::class);

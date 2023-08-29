@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Http;
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\Http\SecurityHeadersFactory;
 use MichalSpacekCz\Test\PrivateProperty;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
@@ -14,7 +15,7 @@ use Spaze\ContentSecurityPolicy\CspConfig;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class SecurityHeadersTest extends TestCase
@@ -104,4 +105,4 @@ class SecurityHeadersTest extends TestCase
 
 }
 
-$runner->run(SecurityHeadersTest::class);
+TestCaseRunner::run(SecurityHeadersTest::class);

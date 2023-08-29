@@ -7,10 +7,11 @@ namespace MichalSpacekCz\Application;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotArrayException;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotFoundException;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotStringException;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ServerEnvTest extends TestCase
@@ -106,4 +107,4 @@ class ServerEnvTest extends TestCase
 
 }
 
-$runner->run(ServerEnvTest::class);
+TestCaseRunner::run(ServerEnvTest::class);

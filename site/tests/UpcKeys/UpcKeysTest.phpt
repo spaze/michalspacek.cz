@@ -3,10 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class UpcKeysTest extends TestCase
@@ -35,4 +36,4 @@ class UpcKeysTest extends TestCase
 
 }
 
-$runner->run(UpcKeysTest::class);
+TestCaseRunner::run(UpcKeysTest::class);

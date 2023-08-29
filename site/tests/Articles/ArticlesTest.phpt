@@ -12,10 +12,11 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ArticlesTest extends TestCase
@@ -195,4 +196,4 @@ class ArticlesTest extends TestCase
 
 }
 
-$runner->run(ArticlesTest::class);
+TestCaseRunner::run(ArticlesTest::class);

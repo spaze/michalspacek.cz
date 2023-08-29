@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Test\NoOpTranslator;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
@@ -12,7 +13,7 @@ use Nette\Http\IRequest;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class LocaleLinkGeneratorTest extends TestCase
@@ -133,4 +134,4 @@ class LocaleLinkGeneratorTest extends TestCase
 
 }
 
-$runner->run(LocaleLinkGeneratorTest::class);
+TestCaseRunner::run(LocaleLinkGeneratorTest::class);

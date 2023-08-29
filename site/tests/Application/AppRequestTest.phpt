@@ -9,11 +9,12 @@ use Error;
 use Exception;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Request;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class AppRequestTest extends TestCase
@@ -112,4 +113,4 @@ class AppRequestTest extends TestCase
 
 }
 
-$runner->run(AppRequestTest::class);
+TestCaseRunner::run(AppRequestTest::class);

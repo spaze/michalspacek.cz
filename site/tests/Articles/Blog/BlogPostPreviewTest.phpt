@@ -6,13 +6,14 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
 use MichalSpacekCz\Templating\TemplateFactory;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class BlogPostPreviewTest extends TestCase
@@ -63,4 +64,4 @@ class BlogPostPreviewTest extends TestCase
 
 }
 
-$runner->run(BlogPostPreviewTest::class);
+TestCaseRunner::run(BlogPostPreviewTest::class);

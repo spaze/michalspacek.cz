@@ -12,6 +12,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\NullMailer;
 use MichalSpacekCz\Test\PrivateProperty;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
@@ -26,7 +27,7 @@ use ReflectionMethod;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingApplicationFormSuccessTest extends TestCase
@@ -282,4 +283,4 @@ class TrainingApplicationFormSuccessTest extends TestCase
 
 }
 
-$runner->run(TrainingApplicationFormSuccessTest::class);
+TestCaseRunner::run(TrainingApplicationFormSuccessTest::class);

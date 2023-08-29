@@ -4,13 +4,14 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use DateTime;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Dates\UpcomingTraining;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class FreeSeatsTest extends TestCase
@@ -98,4 +99,4 @@ class FreeSeatsTest extends TestCase
 
 }
 
-$runner->run(FreeSeatsTest::class);
+TestCaseRunner::run(FreeSeatsTest::class);

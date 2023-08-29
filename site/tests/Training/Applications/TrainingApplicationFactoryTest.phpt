@@ -6,11 +6,12 @@ namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Row;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingApplicationFactoryTest extends TestCase
@@ -88,4 +89,4 @@ class TrainingApplicationFactoryTest extends TestCase
 
 }
 
-$runner->run(TrainingApplicationFactoryTest::class);
+TestCaseRunner::run(TrainingApplicationFactoryTest::class);

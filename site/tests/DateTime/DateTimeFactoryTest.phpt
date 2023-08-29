@@ -7,10 +7,11 @@ namespace MichalSpacekCz\DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class DateTimeFactoryTest extends TestCase
@@ -51,4 +52,4 @@ class DateTimeFactoryTest extends TestCase
 
 }
 
-$runner->run(DateTimeFactoryTest::class);
+TestCaseRunner::run(DateTimeFactoryTest::class);

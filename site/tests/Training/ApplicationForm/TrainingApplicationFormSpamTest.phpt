@@ -6,12 +6,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\ApplicationForm;
 
 use MichalSpacekCz\Test\NullLogger;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use Nette\Utils\ArrayHash;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingApplicationFormSpamTest extends TestCase
@@ -96,4 +97,4 @@ class TrainingApplicationFormSpamTest extends TestCase
 
 }
 
-$runner->run(TrainingApplicationFormSpamTest::class);
+TestCaseRunner::run(TrainingApplicationFormSpamTest::class);

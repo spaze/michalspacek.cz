@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Templating;
 
 use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Bridges\ApplicationLatte\Template;
@@ -13,7 +14,7 @@ use Spaze\NonceGenerator\Nonce;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TemplateFactoryTest extends TestCase
@@ -58,4 +59,4 @@ class TemplateFactoryTest extends TestCase
 
 }
 
-$runner->run(TemplateFactoryTest::class);
+TestCaseRunner::run(TemplateFactoryTest::class);

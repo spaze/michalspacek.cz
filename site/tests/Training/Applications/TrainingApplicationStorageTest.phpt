@@ -6,13 +6,14 @@ namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use RuntimeException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingApplicationStorageTest extends TestCase
@@ -187,4 +188,4 @@ class TrainingApplicationStorageTest extends TestCase
 
 }
 
-$runner->run(TrainingApplicationStorageTest::class);
+TestCaseRunner::run(TrainingApplicationStorageTest::class);

@@ -4,13 +4,14 @@ declare(strict_types = 1);
 namespace Form;
 
 use MichalSpacekCz\Form\FormValues;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class FormValuesTest extends TestCase
@@ -51,4 +52,4 @@ class FormValuesTest extends TestCase
 
 }
 
-$runner->run(FormValuesTest::class);
+TestCaseRunner::run(FormValuesTest::class);

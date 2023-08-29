@@ -4,11 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
+use MichalSpacekCz\Test\TestCaseRunner;
 use RuntimeException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class RatingTest extends TestCase
@@ -123,4 +124,4 @@ class RatingTest extends TestCase
 
 }
 
-$runner->run(RatingTest::class);
+TestCaseRunner::run(RatingTest::class);

@@ -4,11 +4,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Json;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class WiFiKeyTest extends TestCase
@@ -31,4 +32,4 @@ class WiFiKeyTest extends TestCase
 
 }
 
-$runner->run(WiFiKeyTest::class);
+TestCaseRunner::run(WiFiKeyTest::class);

@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\NullLogger;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormDataLogger;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
@@ -17,7 +18,7 @@ use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingApplicationFormDataLoggerTest extends TestCase
@@ -154,4 +155,4 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 
 }
 
-$runner->run(TrainingApplicationFormDataLoggerTest::class);
+TestCaseRunner::run(TrainingApplicationFormDataLoggerTest::class);

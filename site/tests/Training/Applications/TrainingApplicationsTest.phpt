@@ -5,11 +5,12 @@ namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingApplicationsTest extends TestCase
@@ -35,4 +36,4 @@ class TrainingApplicationsTest extends TestCase
 
 }
 
-$runner->run(TrainingApplicationsTest::class);
+TestCaseRunner::run(TrainingApplicationsTest::class);

@@ -4,12 +4,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Articles\Blog;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class BlogPostRecommendedLinksTest extends TestCase
@@ -64,4 +65,4 @@ class BlogPostRecommendedLinksTest extends TestCase
 
 }
 
-$runner->run(BlogPostRecommendedLinksTest::class);
+TestCaseRunner::run(BlogPostRecommendedLinksTest::class);

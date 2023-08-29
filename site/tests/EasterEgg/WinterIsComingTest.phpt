@@ -8,6 +8,7 @@ namespace MichalSpacekCz\EasterEgg;
 
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
@@ -15,7 +16,7 @@ use Nette\InvalidStateException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class WinterIsComingTest extends TestCase
@@ -150,4 +151,4 @@ class WinterIsComingTest extends TestCase
 
 }
 
-$runner->run(WinterIsComingTest::class);
+TestCaseRunner::run(WinterIsComingTest::class);

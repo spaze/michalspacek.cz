@@ -6,11 +6,12 @@ namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class StatusesTest extends TestCase
@@ -50,4 +51,4 @@ class StatusesTest extends TestCase
 
 }
 
-$runner->run(StatusesTest::class);
+TestCaseRunner::run(StatusesTest::class);

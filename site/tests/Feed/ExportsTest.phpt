@@ -9,6 +9,7 @@ use MichalSpacekCz\Articles\ArticleEdit;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Test\Articles\ArticlesMock;
 use MichalSpacekCz\Test\NoOpTranslator;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Storage;
 use Nette\Utils\Html;
@@ -16,7 +17,7 @@ use SimpleXMLElement;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ExportsTest extends TestCase
@@ -155,4 +156,4 @@ class ExportsTest extends TestCase
 
 }
 
-$runner->run(ExportsTest::class);
+TestCaseRunner::run(ExportsTest::class);

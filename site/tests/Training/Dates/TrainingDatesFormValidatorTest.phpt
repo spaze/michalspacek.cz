@@ -4,12 +4,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use Nette\Forms\Controls\TextInput;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingDatesFormValidatorTest extends TestCase
@@ -94,4 +95,4 @@ class TrainingDatesFormValidatorTest extends TestCase
 
 }
 
-$runner->run(TrainingDatesFormValidatorTest::class);
+TestCaseRunner::run(TrainingDatesFormValidatorTest::class);

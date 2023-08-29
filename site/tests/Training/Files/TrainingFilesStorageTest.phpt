@@ -5,10 +5,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Files;
 
 use DateTimeImmutable;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingFilesStorageTest extends TestCase
@@ -30,4 +31,4 @@ class TrainingFilesStorageTest extends TestCase
 
 }
 
-$runner->run(TrainingFilesStorageTest::class);
+TestCaseRunner::run(TrainingFilesStorageTest::class);
