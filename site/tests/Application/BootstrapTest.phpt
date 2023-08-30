@@ -4,13 +4,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\TestCase;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class BootstrapTest extends TestCase
@@ -76,4 +77,4 @@ class BootstrapTest extends TestCase
 
 }
 
-$runner->run(BootstrapTest::class);
+TestCaseRunner::run(BootstrapTest::class);

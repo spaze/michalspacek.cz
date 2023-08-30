@@ -8,12 +8,13 @@ namespace MichalSpacekCz\EasterEgg;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\UiPresenterMock;
 use MichalSpacekCz\Test\Http\Request;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Responses\TextResponse;
 use Nette\Http\UrlScript;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class FourOhFourButFoundTest extends TestCase
@@ -71,4 +72,4 @@ class FourOhFourButFoundTest extends TestCase
 
 }
 
-$runner->run(FourOhFourButFoundTest::class);
+TestCaseRunner::run(FourOhFourButFoundTest::class);

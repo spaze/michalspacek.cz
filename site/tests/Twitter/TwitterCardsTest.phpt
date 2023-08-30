@@ -5,11 +5,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Twitter;
 
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TwitterCardsTest extends TestCase
@@ -85,4 +86,4 @@ class TwitterCardsTest extends TestCase
 
 }
 
-$runner->run(TwitterCardsTest::class);
+TestCaseRunner::run(TwitterCardsTest::class);

@@ -6,12 +6,13 @@ namespace MichalSpacekCz\Tls;
 
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTime;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Row;
 use Nette\Utils\Json;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class CertificateFactoryTest extends TestCase
@@ -96,4 +97,4 @@ class CertificateFactoryTest extends TestCase
 
 }
 
-$runner->run(CertificateFactoryTest::class);
+TestCaseRunner::run(CertificateFactoryTest::class);

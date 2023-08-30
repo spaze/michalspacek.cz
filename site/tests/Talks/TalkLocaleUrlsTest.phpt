@@ -6,11 +6,12 @@ namespace MichalSpacekCz\Talks;
 use DateTime;
 use MichalSpacekCz\Media\Video;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TalkLocaleUrlsTest extends TestCase
@@ -82,4 +83,4 @@ class TalkLocaleUrlsTest extends TestCase
 
 }
 
-$runner->run(TalkLocaleUrlsTest::class);
+TestCaseRunner::run(TalkLocaleUrlsTest::class);

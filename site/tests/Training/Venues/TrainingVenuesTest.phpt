@@ -5,11 +5,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Venues;
 
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Exceptions\TrainingVenueNotFoundException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingVenuesTest extends TestCase
@@ -64,4 +65,4 @@ class TrainingVenuesTest extends TestCase
 
 }
 
-$runner->run(TrainingVenuesTest::class);
+TestCaseRunner::run(TrainingVenuesTest::class);

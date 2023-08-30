@@ -9,12 +9,13 @@ use MichalSpacekCz\DateTime\DateTime;
 use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NullLogger;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Database\DriverException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class CertificatesTest extends TestCase
@@ -105,4 +106,4 @@ class CertificatesTest extends TestCase
 
 }
 
-$runner->run(CertificatesTest::class);
+TestCaseRunner::run(CertificatesTest::class);

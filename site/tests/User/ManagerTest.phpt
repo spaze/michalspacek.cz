@@ -7,6 +7,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\User;
 
 use MichalSpacekCz\Test\PrivateProperty;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
@@ -16,7 +17,7 @@ use Nette\Security\User;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ManagerTest extends TestCase
@@ -98,4 +99,4 @@ class ManagerTest extends TestCase
 
 }
 
-$runner->run(ManagerTest::class);
+TestCaseRunner::run(ManagerTest::class);

@@ -10,13 +10,14 @@ use MichalSpacekCz\Test\Application\UiPresenterMock;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\PrivateProperty;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingFilesDownloadTest extends TestCase
@@ -132,4 +133,4 @@ class TrainingFilesDownloadTest extends TestCase
 
 }
 
-$runner->run(TrainingFilesDownloadTest::class);
+TestCaseRunner::run(TrainingFilesDownloadTest::class);

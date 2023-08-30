@@ -6,11 +6,12 @@ namespace MichalSpacekCz\Makefile;
 
 use MichalSpacekCz\Makefile\Exceptions\MakefileContainsRealTargetsException;
 use MichalSpacekCz\Makefile\Exceptions\MakefileNotFoundException;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\FileMock;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class MakefileTest extends TestCase
@@ -66,4 +67,4 @@ class MakefileTest extends TestCase
 
 }
 
-$runner->run(MakefileTest::class);
+TestCaseRunner::run(MakefileTest::class);

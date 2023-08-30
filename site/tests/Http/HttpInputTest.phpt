@@ -6,10 +6,11 @@ namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\PrivateProperty;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class HttpInputTest extends TestCase
@@ -53,4 +54,4 @@ class HttpInputTest extends TestCase
 
 }
 
-$runner->run(HttpInputTest::class);
+TestCaseRunner::run(HttpInputTest::class);

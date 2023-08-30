@@ -5,10 +5,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Http\Exceptions\HttpStreamException;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class HttpStreamContextTest extends TestCase
@@ -67,4 +68,4 @@ class HttpStreamContextTest extends TestCase
 
 }
 
-$runner->run(HttpStreamContextTest::class);
+TestCaseRunner::run(HttpStreamContextTest::class);

@@ -6,13 +6,14 @@ namespace MichalSpacekCz\Training\Discontinued;
 
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\Response;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Http\IResponse;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class DiscontinuedTrainingsTest extends TestCase
@@ -101,4 +102,4 @@ class DiscontinuedTrainingsTest extends TestCase
 
 }
 
-$runner->run(DiscontinuedTrainingsTest::class);
+TestCaseRunner::run(DiscontinuedTrainingsTest::class);

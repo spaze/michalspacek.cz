@@ -5,11 +5,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Files;
 
 use DateTimeImmutable;
+use MichalSpacekCz\Test\TestCaseRunner;
 use SplFileInfo;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingFilesCollectionTest extends TestCase
@@ -58,4 +59,4 @@ class TrainingFilesCollectionTest extends TestCase
 
 }
 
-$runner->run(TrainingFilesCollectionTest::class);
+TestCaseRunner::run(TrainingFilesCollectionTest::class);

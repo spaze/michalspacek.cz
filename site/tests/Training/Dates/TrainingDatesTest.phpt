@@ -6,10 +6,11 @@ namespace MichalSpacekCz\Training\Dates;
 
 use DateTime;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingDatesTest extends TestCase
@@ -255,4 +256,4 @@ class TrainingDatesTest extends TestCase
 
 }
 
-$runner->run(TrainingDatesTest::class);
+TestCaseRunner::run(TrainingDatesTest::class);

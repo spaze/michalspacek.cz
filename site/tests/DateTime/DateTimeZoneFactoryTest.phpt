@@ -5,10 +5,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\DateTime;
 
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class DateTimeZoneFactoryTest extends TestCase
@@ -34,4 +35,4 @@ class DateTimeZoneFactoryTest extends TestCase
 
 }
 
-$runner->run(DateTimeZoneFactoryTest::class);
+TestCaseRunner::run(DateTimeZoneFactoryTest::class);

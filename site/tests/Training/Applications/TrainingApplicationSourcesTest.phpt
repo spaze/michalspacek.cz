@@ -3,10 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Applications;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingApplicationSourcesTest extends TestCase
@@ -43,4 +44,4 @@ class TrainingApplicationSourcesTest extends TestCase
 
 }
 
-$runner->run(TrainingApplicationSourcesTest::class);
+TestCaseRunner::run(TrainingApplicationSourcesTest::class);

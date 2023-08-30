@@ -4,13 +4,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class AlgorithmAttributesFactoryTest extends TestCase
@@ -84,4 +85,4 @@ class AlgorithmAttributesFactoryTest extends TestCase
 
 }
 
-$runner->run(AlgorithmAttributesFactoryTest::class);
+TestCaseRunner::run(AlgorithmAttributesFactoryTest::class);

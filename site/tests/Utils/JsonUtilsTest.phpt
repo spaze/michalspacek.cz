@@ -3,12 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Utils;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
 use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class JsonUtilsTest extends TestCase
@@ -37,4 +38,4 @@ class JsonUtilsTest extends TestCase
 
 }
 
-$runner->run(JsonUtilsTest::class);
+TestCaseRunner::run(JsonUtilsTest::class);

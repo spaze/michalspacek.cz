@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Test;
 
 use LogicException;
-use Nette\DI\Container;
+use MichalSpacekCz\Application\Bootstrap;
 use Nette\Utils\Type;
 use ReflectionException;
 use ReflectionMethod;
@@ -13,21 +13,16 @@ use Tester\TestCase;
 class TestCaseRunner
 {
 
-	public function __construct(
-		private readonly Container $container,
-	) {
-	}
-
-
 	/**
 	 * @param class-string<TestCase> $test
 	 * @return void
 	 */
-	public function run(string $test): void
+	public static function run(string $test): void
 	{
 		$params = [];
 		try {
 			$method = new ReflectionMethod($test, '__construct');
+			$container = Bootstrap::bootTest();
 			foreach ($method->getParameters() as $parameter) {
 				$type = Type::fromReflection($parameter);
 				$paramIdent = "Parameter #{$parameter->getPosition()} \${$parameter->getName()}";
@@ -46,7 +41,7 @@ class TestCaseRunner
 				if (!class_exists($type->getSingleName()) && !interface_exists($type->getSingleName())) {
 					throw new LogicException("{$paramIdent} specifies a type {$type} but the class or interface doesn't exist");
 				}
-				$params[] = $this->container->getByType($type->getSingleName());
+				$params[] = $container->getByType($type->getSingleName());
 			}
 		} catch (ReflectionException) {
 			// pass, __construct() does not exist

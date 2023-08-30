@@ -7,10 +7,11 @@ namespace MichalSpacekCz\Talks;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TalkSlidesTest extends TestCase
@@ -46,4 +47,4 @@ class TalkSlidesTest extends TestCase
 
 }
 
-$runner->run(TalkSlidesTest::class);
+TestCaseRunner::run(TalkSlidesTest::class);

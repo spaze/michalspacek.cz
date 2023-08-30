@@ -9,11 +9,12 @@ namespace MichalSpacekCz\Formatter;
 use DateTime;
 use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TexyFormatterTest extends TestCase
@@ -135,4 +136,4 @@ class TexyFormatterTest extends TestCase
 
 }
 
-$runner->run(TexyFormatterTest::class);
+TestCaseRunner::run(TexyFormatterTest::class);

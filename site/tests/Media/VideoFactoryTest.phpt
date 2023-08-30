@@ -5,11 +5,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Media;
 
 use MichalSpacekCz\Media\Resources\InterviewMediaResources;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Row;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class VideoFactoryTest extends TestCase
@@ -65,4 +66,4 @@ class VideoFactoryTest extends TestCase
 
 }
 
-$runner->run(VideoFactoryTest::class);
+TestCaseRunner::run(VideoFactoryTest::class);

@@ -3,11 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\BadRequestException;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class NetteCve202015227Test extends TestCase
@@ -121,4 +122,4 @@ class NetteCve202015227Test extends TestCase
 
 }
 
-$runner->run(NetteCve202015227Test::class);
+TestCaseRunner::run(NetteCve202015227Test::class);

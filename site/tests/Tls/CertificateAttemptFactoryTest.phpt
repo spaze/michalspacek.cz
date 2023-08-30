@@ -4,10 +4,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class CertificateAttemptFactoryTest extends TestCase
@@ -39,4 +40,4 @@ class CertificateAttemptFactoryTest extends TestCase
 
 }
 
-$runner->run(CertificateAttemptFactoryTest::class);
+TestCaseRunner::run(CertificateAttemptFactoryTest::class);

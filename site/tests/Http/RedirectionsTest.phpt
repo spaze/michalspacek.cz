@@ -5,11 +5,12 @@ namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Http\UrlScript;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class RedirectionsTest extends TestCase
@@ -44,4 +45,4 @@ class RedirectionsTest extends TestCase
 
 }
 
-$runner->run(RedirectionsTest::class);
+TestCaseRunner::run(RedirectionsTest::class);

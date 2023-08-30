@@ -9,12 +9,13 @@ use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Tester\Assert;
 use Tester\TestCase;
 use Texy\Texy;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class TexyPhraseHandlerTest extends TestCase
@@ -163,4 +164,4 @@ class TexyPhraseHandlerTest extends TestCase
 
 }
 
-$runner->run(TexyPhraseHandlerTest::class);
+TestCaseRunner::run(TexyPhraseHandlerTest::class);

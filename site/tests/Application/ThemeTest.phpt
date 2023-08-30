@@ -5,10 +5,11 @@ namespace MichalSpacekCz\Application;
 
 use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\Http\Response;
+use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
 class ThemeTest extends TestCase
@@ -74,4 +75,4 @@ class ThemeTest extends TestCase
 
 }
 
-$runner->run(ThemeTest::class);
+TestCaseRunner::run(ThemeTest::class);

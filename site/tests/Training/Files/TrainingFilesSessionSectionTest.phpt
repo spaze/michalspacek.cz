@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training\Files;
 
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use MichalSpacekCz\Training\Statuses;
@@ -14,7 +15,7 @@ use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class TrainingFilesSessionSectionTest extends TestCase
@@ -165,4 +166,4 @@ class TrainingFilesSessionSectionTest extends TestCase
 
 }
 
-$runner->run(TrainingFilesSessionSectionTest::class);
+TestCaseRunner::run(TrainingFilesSessionSectionTest::class);
