@@ -47,4 +47,10 @@ class UiPresenterMock extends Presenter
 		$this->sendResponse(new RedirectResponse($destination));
 	}
 
+
+	public function reset(): void
+	{
+		$this->responseSent = false;
+	}
+
 }

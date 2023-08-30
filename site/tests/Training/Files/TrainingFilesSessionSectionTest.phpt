@@ -31,22 +31,17 @@ class TrainingFilesSessionSectionTest extends TestCase
 
 
 	public function __construct(
-		private readonly Session $sessionHandler,
 		private readonly Statuses $trainingStatuses,
 		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
 		private readonly TrainingFiles $trainingFiles,
+		Session $sessionHandler,
 	) {
-	}
-
-
-	protected function setUp(): void
-	{
-		$trainingFilesSessionSection = $this->sessionHandler->getSection('training', TrainingFilesSessionSection::class);
+		$trainingFilesSessionSection = $sessionHandler->getSection('training', TrainingFilesSessionSection::class);
 		if (!$trainingFilesSessionSection instanceof TrainingFilesSessionSection) {
 			throw new ShouldNotHappenException();
 		}
 		$this->trainingFilesSessionSection = $trainingFilesSessionSection;
-		$this->sessionSection = $this->sessionHandler->getSection('training');
+		$this->sessionSection = $sessionHandler->getSection('training');
 	}
 
 

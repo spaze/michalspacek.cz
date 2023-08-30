@@ -27,17 +27,12 @@ class TexyFormatterTest extends TestCase
 
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
-		private readonly Database $database,
-		private readonly Application $application,
-		private readonly ApplicationPresenter $applicationPresenter,
+		Database $database,
+		Application $application,
+		ApplicationPresenter $applicationPresenter,
 	) {
-	}
-
-
-	protected function setUp(): void
-	{
-		$this->applicationPresenter->setLinkCallback($this->application, $this->buildUrl(...));
-		$this->database->setFetchAllDefaultResult([
+		$applicationPresenter->setLinkCallback($application, $this->buildUrl(...));
+		$database->setFetchAllDefaultResult([
 			[
 				'dateId' => 1,
 				'trainingId' => 1,
@@ -101,7 +96,7 @@ class TexyFormatterTest extends TestCase
 				'note' => 'Note 2',
 			],
 		]);
-		$this->database->setFetchPairsResult([
+		$database->setFetchPairsResult([
 			'cs_CZ' => 'bezpecnost-php-aplikaci',
 			'en_US' => 'php-application-security',
 		]);

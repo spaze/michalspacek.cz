@@ -9,6 +9,7 @@ use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
+use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Tester\Assert;
@@ -29,27 +30,23 @@ class TexyPhraseHandlerTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly Application $application,
-		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly LocaleLinkGeneratorMock $localeLinkGenerator,
-		private readonly NoOpTranslator $translator,
-		private readonly TexyPhraseHandler $phraseHandler,
+		Application $application,
+		ApplicationPresenter $applicationPresenter,
+		NoOpTranslator $translator,
+		TexyPhraseHandler $phraseHandler,
 	) {
-	}
-
-
-	protected function setUp(): void
-	{
 		$this->texy = new Texy();
-		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
-		$this->applicationPresenter->setLinkCallback($this->application, $this->buildUrl(...));
-		$this->defaultLocale = $this->translator->getDefaultLocale();
+		$this->texy->addHandler('phrase', [$phraseHandler, 'solve']);
+		$applicationPresenter->setLinkCallback($application, $this->buildUrl(...));
+		$this->defaultLocale = $translator->getDefaultLocale();
 	}
 
 
 	protected function tearDown(): void
 	{
 		$this->database->reset();
+		PrivateProperty::setValue($this->texy, 'processing', false);
 	}
 
 
