@@ -46,11 +46,6 @@ class Filters
 	}
 
 
-	/**
-	 * @param string $message
-	 * @param string|int ...$args
-	 * @return Html<Html|string>
-	 */
 	public function format(string $message, string|int ...$args): Html
 	{
 		return $this->texyFormatter->substitute($message, array_values($args));

@@ -43,7 +43,6 @@ class TrainingApplicationFormSuccess
 	 * @param callable(string): void $onSuccess
 	 * @param callable(string): void $onError
 	 * @param array<int, TrainingDate> $dates
-	 * @param TrainingApplicationSessionSection<string> $sessionSection
 	 * @throws HaliteAlert
 	 * @throws SodiumException
 	 * @throws TrainingStatusIdNotIntException

@@ -30,17 +30,14 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 
 	public ?string $locale;
 
-	/** @var Html<Html|string> */
 	public Html $title;
 
 	public string $titleTexy;
 
-	/** @var Html<Html|string>|null */
 	public ?Html $lead;
 
 	public ?string $leadTexy;
 
-	/** @var Html<Html|string> */
 	public Html $text;
 
 	public string $textTexy;
@@ -49,7 +46,6 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 
 	public ?string $previewKey;
 
-	/** @var Html<Html|string>|null */
 	public ?Html $originally;
 
 	public ?string $originallyTexy;

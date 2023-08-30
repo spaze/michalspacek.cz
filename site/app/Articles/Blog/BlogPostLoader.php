@@ -16,7 +16,6 @@ use Nette\Utils\DateTime;
 class BlogPostLoader
 {
 
-	/** @var Row<mixed>|null */
 	private ?Row $post = null;
 
 
@@ -33,15 +32,9 @@ class BlogPostLoader
 	}
 
 
-	/**
-	 * @param string $post
-	 * @param string|null $previewKey
-	 * @return Row<mixed>|null
-	 */
 	public function fetch(string $post, ?string $previewKey = null): ?Row
 	{
 		if ($this->post === null) {
-			/** @var Row<mixed>|null $result */
 			$result = $this->database->fetch(
 				'SELECT
 					bp.id_blog_post AS postId,

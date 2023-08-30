@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
-use MichalSpacekCz\Training\Files\TrainingFile;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Files\TrainingFilesCollection;
 use MichalSpacekCz\Training\Mails\MailMessageAdmin;
@@ -20,7 +19,6 @@ class TrainingApplication
 	/** @var array<int, string>|null */
 	private ?array $childrenStatuses = null;
 
-	/** @var TrainingFilesCollection<int, TrainingFile>|null */
 	private ?TrainingFilesCollection $files = null;
 
 
@@ -390,9 +388,6 @@ class TrainingApplication
 	}
 
 
-	/**
-	 * @return TrainingFilesCollection<int, TrainingFile>
-	 */
 	public function getFiles(): TrainingFilesCollection
 	{
 		if ($this->files === null) {

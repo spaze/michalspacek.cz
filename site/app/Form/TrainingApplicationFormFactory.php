@@ -34,11 +34,7 @@ class TrainingApplicationFormFactory
 	/**
 	 * @param callable(string): void $onSuccess
 	 * @param callable(string): void $onError
-	 * @param string $action
-	 * @param Html $name
 	 * @param array<int, TrainingDate> $dates
-	 * @param TrainingApplicationSessionSection<string> $sessionSection
-	 * @return Form
 	 */
 	public function create(
 		callable $onSuccess,
@@ -88,10 +84,6 @@ class TrainingApplicationFormFactory
 	}
 
 
-	/**
-	 * @param Form $form
-	 * @param TrainingApplicationSessionSection<string> $application
-	 */
 	private function setApplication(Form $form, TrainingApplicationSessionSection $application): void
 	{
 		$form->setDefaults($application->getApplicationValues());

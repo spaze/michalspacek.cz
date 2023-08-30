@@ -8,7 +8,6 @@ use DateTimeInterface;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
 
@@ -55,7 +54,6 @@ class TrainingFiles
 
 	public function getFile(int $applicationId, string $token, string $filename): ?TrainingFile
 	{
-		/** @var Row<mixed>|null $row */
 		$row = $this->database->fetch(
 			'SELECT
 				f.added,

@@ -43,13 +43,11 @@ class RouterFactory
 
 	private string $currentModule;
 
-	/** @var RouteList<Router> */
 	private RouteList $currentRouteList;
 
 	/** @var RouteList[] */
 	private array $currentLocaleRouteList;
 
-	/** @var RouteList<Router> */
 	private RouteList $router;
 
 	/** @var array<string, RouteList> */
@@ -107,7 +105,6 @@ class RouterFactory
 
 
 	/**
-	 * @return RouteList<Router>
 	 * @noinspection RequiredAttributes Because <param> is not an HTML tag here
 	 */
 	public function createRouter(): RouteList
