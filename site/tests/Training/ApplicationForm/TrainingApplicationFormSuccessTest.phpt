@@ -19,6 +19,7 @@ use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 use ReflectionClass;
 use ReflectionMethod;
@@ -49,6 +50,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	private ?string $onSuccessAction = null;
 	private ?string $onErrorMessage = null;
 	private Form $form;
+	private ?SelectBox $trainingIdSelect = null;
 	private TrainingApplicationSessionSection $sessionSection;
 	private ReflectionMethod $sessionSectionParentGet;
 	private ReflectionMethod $sessionSectionParentSet;
@@ -69,13 +71,11 @@ class TrainingApplicationFormSuccessTest extends TestCase
 		}
 		PrivateProperty::setValue($application, 'presenter', $presenter);
 		$this->form = new Form($presenter, 'form');
-		$this->form->addSelect('trainingId', 'Date', [self::DATE_ID => 'Training']);
 		$trainingControlsFactory->addAttendee($this->form);
 		$trainingControlsFactory->addCompany($this->form);
 		$trainingControlsFactory->addNote($this->form);
 		$trainingControlsFactory->addCountry($this->form);
 		$this->form->setDefaults([
-			'trainingId' => self::DATE_ID,
 			'name' => self::NAME,
 			'email' => self::EMAIL,
 			'company' => self::COMPANY,
@@ -190,6 +190,13 @@ class TrainingApplicationFormSuccessTest extends TestCase
 		if ($dates === null) {
 			$dates = [self::DATE_ID => $this->buildTrainingDate(self::DATE_ID)];
 		}
+		$multipleDates = count($dates) > 1;
+		if ($multipleDates && !$this->trainingIdSelect) {
+			$this->trainingIdSelect = $this->form->addSelect('trainingId', 'Date', [self::DATE_ID => 'Training'])->setDefaultValue(self::DATE_ID);
+		} elseif (!$multipleDates && $this->trainingIdSelect) {
+			$this->form->removeComponent($this->trainingIdSelect);
+			$this->trainingIdSelect = null;
+		}
 		$this->formSuccess->success(
 			$this->form,
 			function (string $action): void {
@@ -201,7 +208,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 			self::TRAINING_ACTION,
 			Html::fromText('name'),
 			$dates,
-			count($dates) > 1,
+			$multipleDates,
 			$this->sessionSection,
 		);
 	}

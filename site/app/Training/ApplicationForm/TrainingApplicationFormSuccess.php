@@ -87,7 +87,7 @@ class TrainingApplicationFormSuccess
 					$values->note,
 				);
 			} else {
-				$applicationId = $sessionSection->getApplicationIdByDateId($action, $values->trainingId);
+				$applicationId = $sessionSection->getApplicationIdByDateId($action, $date->getId());
 				if ($applicationId !== null) {
 					$this->trainingApplicationStorage->updateApplication(
 						$date,
