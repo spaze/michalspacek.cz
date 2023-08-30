@@ -22,6 +22,10 @@
 		<extension name="php"/>
 		<extension name="phpt"/>
 	</fileExtensions>
+	<universalObjectCrates>
+		<class name="Nette\Bridges\ApplicationLatte\DefaultTemplate"/>
+		<class name="Nette\Utils\ArrayHash"/>
+	</universalObjectCrates>
 	<issueHandlers>
 		<MissingFile>
 			<errorLevel type="suppress">
