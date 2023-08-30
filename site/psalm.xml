@@ -8,6 +8,7 @@
 	findUnusedBaselineEntry="true"
 	findUnusedCode="true"
 	findUnusedPsalmSuppress="true"
+	maxStringLength="2600"
 >
 	<projectFiles>
 		<directory name="app" />
