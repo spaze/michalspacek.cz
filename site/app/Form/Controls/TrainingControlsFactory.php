@@ -71,9 +71,9 @@ class TrainingControlsFactory
 	}
 
 
-	public function addCountry(Container $container): void
+	public function addCountry(Container $container): SelectBox
 	{
-		$container->addSelect('country', 'Země:', ['cz' => 'Česká republika', 'sk' => 'Slovensko'])
+		return $container->addSelect('country', 'Země:', ['cz' => 'Česká republika', 'sk' => 'Slovensko'])
 			->setRequired('Vyberte prosím zemi');
 	}
 

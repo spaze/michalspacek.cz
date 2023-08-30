@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\ApplicationForm;
 
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use stdClass;
 
-class FormSpam
+class TrainingApplicationFormSpam
 {
 
 	/**

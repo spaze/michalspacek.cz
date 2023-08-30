@@ -9,14 +9,15 @@ use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
-use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
+use MichalSpacekCz\Training\Files\TrainingFilesDownload;
 use MichalSpacekCz\Training\FreeSeats;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
@@ -25,6 +26,8 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
+use ParagonIE\Halite\Alerts\HaliteAlert;
+use SodiumException;
 
 class TrainingsPresenter extends BasePresenter
 {
@@ -51,6 +54,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingApplicationPreliminaryFormFactory $trainingApplicationPreliminaryFactory,
 		private readonly UpcomingTrainingDatesListFactory $upcomingTrainingDatesListFactory,
 		private readonly CompanyInfo $companyInfo,
+		private readonly TrainingFilesDownload $trainingFilesDownload,
 	) {
 		parent::__construct();
 	}
@@ -111,41 +115,14 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("I don't do {$name} training anymore");
 		}
 
-		$session = $this->getSession('training');
+		$session = $this->getTrainingSessionSection();
 
 		$application = $param ? $this->trainingApplications->getApplicationByToken($param) : null;
 		if (!$application) {
-			unset(
-				$session->application,
-				$session->name,
-				$session->email,
-				$session->company,
-				$session->street,
-				$session->city,
-				$session->zip,
-				$session->country,
-				$session->companyId,
-				$session->companyTaxId,
-				$session->note,
-			);
+			$session->removeApplicationValues();
 			$this->redirect('training', $name);
 		}
-
-		$data = (array)$session->application;
-		$data[$name] = ['id' => $application->getId(), 'dateId' => $application->getDateId()];
-		$session->application = $data;
-
-		$session->name = $application->getName();
-		$session->email = $application->getEmail();
-		$session->company = $application->getCompany();
-		$session->street = $application->getStreet();
-		$session->city = $application->getCity();
-		$session->zip = $application->getZip();
-		$session->country = $application->getCountry();
-		$session->companyId = $application->getCompanyId();
-		$session->companyTaxId = $application->getCompanyTaxId();
-		$session->note = $application->getNote();
-
+		$session->setApplicationForTraining($name, $application);
 		$this->redirect('training', $application->getTrainingAction());
 	}
 
@@ -162,7 +139,7 @@ class TrainingsPresenter extends BasePresenter
 			$this->training->getAction(),
 			$this->training->getName(),
 			$this->dates,
-			$this->session->getSection('training'),
+			$this->getTrainingSessionSection(),
 		);
 	}
 
@@ -206,33 +183,19 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws HaliteAlert
+	 * @throws SodiumException
+	 */
 	public function actionFiles(string $name, ?string $param): void
 	{
 		$this->trainingAction = $name;
-		$session = $this->getSession('application');
-
-		if ($param !== null) {
-			$application = $this->trainingApplications->getApplicationByToken($param);
-			$session->token = $param;
-			$session->applicationId = $application?->getId();
-			$this->redirect('files', ($application?->getTrainingAction() ?? $name));
-		}
-
-		if (!$session->applicationId || !$session->token) {
-			throw new BadRequestException('Unknown application id, missing or invalid token');
-		}
-
 		try {
 			$training = $this->trainings->getIncludingCustom($name);
 		} catch (TrainingDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-
-		try {
-			$application = $this->trainingApplications->getApplicationById($session->applicationId);
-		} catch (TrainingApplicationDoesNotExistException $e) {
-			throw new BadRequestException($e->getMessage(), previous: $e);
-		}
+		$application = $this->trainingFilesDownload->start($this->trainingAction, $param);
 		$trainingStart = $application->getTrainingStart();
 		$trainingEnd = $application->getTrainingEnd();
 		if (!$trainingStart || !$trainingEnd) {
@@ -245,7 +208,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->trainingApplications->setAccessTokenUsed($application);
 		if (count($application->getFiles()) === 0) {
-			throw new BadRequestException("No files for application id {$session->applicationId}");
+			throw new BadRequestException('No files for application id ' . $application->getId());
 		}
 
 		$this->template->trainingTitle = $training->getName();
@@ -279,17 +242,18 @@ class TrainingsPresenter extends BasePresenter
 			throw new BadRequestException("No dates for {$name} training", IResponse::S503_ServiceUnavailable);
 		}
 
-		$session = $this->getSession('training');
-		if (!isset($session->trainingId)) {
+		$session = $this->getTrainingSessionSection();
+		$dateId = $session->getDateId();
+		if (!$dateId) {
 			$this->redirect('training', $name);
 		}
 
-		if (!isset($this->dates[$session->trainingId])) {
-			$date = $this->trainingDates->get($session->trainingId);
+		if (!isset($this->dates[$dateId])) {
+			$date = $this->trainingDates->get($dateId);
 			$this->redirect('success', $date->getAction());
 		}
 
-		$date = $this->dates[$session->trainingId];
+		$date = $this->dates[$dateId];
 		if ($date->isTentative()) {
 			$this->flashMessage($this->translator->translate('messages.trainings.submitted.tentative'));
 		} else {
@@ -332,6 +296,16 @@ class TrainingsPresenter extends BasePresenter
 		if ($successorId !== null) {
 			$this->redirectPermanent('this', $this->trainings->getActionById($successorId));
 		}
+	}
+
+
+	private function getTrainingSessionSection(): TrainingApplicationSessionSection
+	{
+		$session = $this->getSession()->getSection('training', TrainingApplicationSessionSection::class);
+		if (!$session instanceof TrainingApplicationSessionSection) {
+			throw new ShouldNotHappenException(sprintf('Session section type is %s, but should be %s', get_debug_type($session), TrainingApplicationSessionSection::class));
+		}
+		return $session;
 	}
 
 }

@@ -1,16 +1,15 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpMissingParentConstructorInspection */
 declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
+use MichalSpacekCz\Test\Application\ApplicationPresenter;
+use MichalSpacekCz\Test\Application\UiPresenterMock;
 use MichalSpacekCz\Test\Http\Request;
-use Nette\Application\AbortException;
-use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\Presenter;
 use Nette\Http\UrlScript;
-use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -20,37 +19,11 @@ $runner = require __DIR__ . '/../bootstrap.php';
 class FourOhFourButFoundTest extends TestCase
 {
 
-	private stdClass $resultObject;
-
-	private Presenter $presenter;
-
-
 	public function __construct(
 		private readonly FourOhFourButFound $fourOhFourButFound,
 		private readonly Request $request,
+		private readonly ApplicationPresenter $applicationPresenter,
 	) {
-	}
-
-
-	protected function setUp(): void
-	{
-		$this->resultObject = new stdClass();
-		$this->resultObject->response = null;
-		$this->presenter = new class ($this->resultObject) extends Presenter {
-
-			public function __construct(
-				private readonly stdClass $resultObject,
-			) {
-			}
-
-
-			public function sendResponse(Response $response): never
-			{
-				$this->resultObject->response = $response;
-				$this->terminate();
-			}
-
-		};
 	}
 
 
@@ -75,16 +48,24 @@ class FourOhFourButFoundTest extends TestCase
 	/** @dataProvider getUrlContains */
 	public function testSendItMaybe(string $url, ?string $contains): void
 	{
+		$presenter = new UiPresenterMock();
 		$this->request->setUrl(new UrlScript($url));
 		if ($contains === null) {
-			$this->fourOhFourButFound->sendItMaybe($this->presenter);
-			Assert::null($this->resultObject->response);
+			Assert::false($this->applicationPresenter->expectSendResponse(function () use ($presenter): void {
+				$this->fourOhFourButFound->sendItMaybe($presenter);
+			}));
 		} else {
-			Assert::exception(function (): void {
-				$this->fourOhFourButFound->sendItMaybe($this->presenter);
-			}, AbortException::class);
-			Assert::type(TextResponse::class, $this->resultObject->response);
-			Assert::contains($contains, $this->resultObject->response->getSource());
+			Assert::true($this->applicationPresenter->expectSendResponse(function () use ($presenter): void {
+				$this->fourOhFourButFound->sendItMaybe($presenter);
+			}));
+			$response = $presenter->getResponse();
+			if (!$response instanceof TextResponse) {
+				Assert::fail('Response is of a wrong type ' . get_debug_type($response));
+			} elseif (!is_string($response->getSource())) {
+				Assert::fail('Source should be a string but is ' . get_debug_type($response->getSource()));
+			} else {
+				Assert::contains($contains, $response->getSource());
+			}
 		}
 	}
 

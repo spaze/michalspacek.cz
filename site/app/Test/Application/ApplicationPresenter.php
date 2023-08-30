@@ -4,10 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Test\Application;
 
 use Closure;
+use MichalSpacekCz\Test\PrivateProperty;
+use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
-use ReflectionProperty;
 
 class ApplicationPresenter
 {
@@ -17,8 +18,7 @@ class ApplicationPresenter
 	 */
 	public function setLinkCallback(Application $application, Closure $buildLink): void
 	{
-		$property = new ReflectionProperty($application, 'presenter');
-		$property->setValue($application, new class ($buildLink) extends Presenter {
+		PrivateProperty::setValue($application, 'presenter', new class ($buildLink) extends Presenter {
 
 			/**
 			 * @param Closure(string, list<mixed>): string $buildLink
@@ -42,6 +42,17 @@ class ApplicationPresenter
 			}
 
 		});
+	}
+
+
+	public function expectSendResponse(callable $function): bool
+	{
+		try {
+			$function();
+			return false;
+		} catch (AbortException) {
+			return true;
+		}
 	}
 
 }

@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
-use MichalSpacekCz\Training\FormSpam;
 use Nette\Application\UI\Form;
 
 class TrainingApplicationPreliminaryFormFactory
@@ -16,7 +16,7 @@ class TrainingApplicationPreliminaryFormFactory
 		private readonly FormFactory $factory,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly TrainingApplicationStorage $trainingApplicationStorage,
-		private readonly FormSpam $formSpam,
+		private readonly TrainingApplicationFormSpam $formSpam,
 	) {
 	}
 

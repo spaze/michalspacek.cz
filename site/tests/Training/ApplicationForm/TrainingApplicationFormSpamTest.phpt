@@ -3,7 +3,7 @@
 /** @noinspection PhpDocMissingThrowsInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\ApplicationForm;
 
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
@@ -11,15 +11,15 @@ use Nette\Utils\ArrayHash;
 use Tester\Assert;
 use Tester\TestCase;
 
-$runner = require __DIR__ . '/../bootstrap.php';
+$runner = require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class FormSpamTest extends TestCase
+class TrainingApplicationFormSpamTest extends TestCase
 {
 
 	public function __construct(
 		private readonly NullLogger $nullLogger,
-		private readonly FormSpam $formSpam,
+		private readonly TrainingApplicationFormSpam $formSpam,
 	) {
 	}
 
@@ -96,4 +96,4 @@ class FormSpamTest extends TestCase
 
 }
 
-$runner->run(FormSpamTest::class);
+$runner->run(TrainingApplicationFormSpamTest::class);
