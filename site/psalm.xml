@@ -67,6 +67,12 @@
 				<file name="app/Training/Dates/TrainingDates.php" /> <!-- Keep add() similar to other methods and return even if not used -->
 			</errorLevel>
 		</PossiblyUnusedReturnValue>
+		<PropertyNotSetInConstructor>
+			<errorLevel type="suppress">
+				<referencedProperty name="Nette\Application\UI\Presenter::$invalidLinkMode" />
+				<referencedProperty name="Nette\Application\UI\Control::$snippetMode" />
+			</errorLevel>
+		</PropertyNotSetInConstructor>
 		<UnusedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
