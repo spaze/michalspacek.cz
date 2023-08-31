@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Company\CompanyTrainings;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
@@ -27,6 +28,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 		private readonly TrainingLocales $trainingLocales,
 		private readonly TrainingReviews $trainingReviews,
 		private readonly Prices $prices,
+		private readonly Translator $translator,
 	) {
 		parent::__construct();
 	}

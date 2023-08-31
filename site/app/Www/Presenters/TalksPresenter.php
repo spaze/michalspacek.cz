@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
@@ -32,6 +33,7 @@ class TalksPresenter extends BasePresenter
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly TalksListFactory $talksListFactory,
 		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private readonly Translator $translator,
 	) {
 		parent::__construct();
 	}

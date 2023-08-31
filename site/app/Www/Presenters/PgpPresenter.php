@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
+
 class PgpPresenter extends BasePresenter
 {
 
 	public function __construct(
+		private readonly Translator $translator,
 		private readonly string $locationRoot,
 	) {
 		parent::__construct();

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Articles\ArticlePublishedElsewhere;
 use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Articles\ArticleSummary;
@@ -28,6 +29,7 @@ class TagsPresenter extends BasePresenter
 		private readonly TexyFormatter $texyFormatter,
 		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
 		private readonly ArticleSummaryFactory $articleSummaryFactory,
+		private readonly Translator $translator,
 	) {
 		parent::__construct();
 	}

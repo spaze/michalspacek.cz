@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
@@ -36,6 +37,7 @@ class TalksPresenter extends BasePresenter
 		private readonly TalkInputsFactory $talkInputsFactory,
 		private readonly TalkSlidesFormFactory $talkSlidesFormFactory,
 		private readonly HttpInput $httpInput,
+		private readonly Translator $translator,
 	) {
 		parent::__construct();
 	}
