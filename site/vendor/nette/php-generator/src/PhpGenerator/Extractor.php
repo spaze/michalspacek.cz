@@ -357,7 +357,10 @@ final class Extractor
 	}
 
 
-	private function addCommentAndAttributes($element, Node $node): void
+	private function addCommentAndAttributes(
+		PhpFile|ClassLike|Constant|Property|GlobalFunction|Method|Parameter|EnumCase|TraitUse $element,
+		Node $node,
+	): void
 	{
 		if ($node->getDocComment()) {
 			$comment = $node->getDocComment()->getReformattedText();
@@ -429,9 +432,11 @@ final class Extractor
 	}
 
 
-	private function toPhp(mixed $value): string
+	private function toPhp(Node $value): string
 	{
-		return $this->printer->prettyPrint([$value]);
+		$dolly = clone $value;
+		$dolly->setAttribute('comments', []);
+		return $this->printer->prettyPrint([$dolly]);
 	}
 
 

@@ -33,6 +33,8 @@ parameters:
         collectedPaths: []
         features:
             transformDynamicFormControlNamesToString: false
+            phpstanCommand: null
+            analyseLayoutFiles: false
     ignoreErrors:
         -
             messages:
@@ -59,7 +61,11 @@ parametersSchema:
         resolveAllPossiblePaths: bool()
         reportUnanalysedTemplates: bool()
         collectedPaths: arrayOf(string())
-        features: arrayOf(bool(), string())
+        features: structure([
+            transformDynamicFormControlNamesToString: bool()
+            phpstanCommand: schema(string(), nullable())
+            analyseLayoutFiles: bool()
+        ])
     ])
 
 rules:
@@ -93,10 +99,15 @@ services:
 
     - Efabrica\PHPStanLatte\Analyser\FileAnalyserFactory
     - Efabrica\PHPStanLatte\Analyser\AnalysedTemplatesRegistry(@fileExcluderAnalyse, %analysedPaths%, %latte.reportUnanalysedTemplates%)
+
+    -
+        factory: Efabrica\PHPStanLatte\Compiler\CompiledTemplateDirResolver
+        arguments:
+            tmpDir: %latte.tmpDir%
+
     -
         class: Efabrica\PHPStanLatte\Compiler\LatteToPhpCompiler
         arguments:
-            tmpDir: %latte.tmpDir%
             cacheKey: ::md5(::json_encode(%latte%))
             debugMode: %debugMode%
     -
@@ -105,6 +116,7 @@ services:
             parser: @latteCurrentPhpVersionRichParser
 
     - Efabrica\PHPStanLatte\Compiler\TypeToPhpDoc
+    - Efabrica\PHPStanLatte\Compiler\Helper\TemplateContextHelper
     - Efabrica\PHPStanLatte\LinkProcessor\PresenterFactoryFaker(%latte.applicationMapping%, %latte.presenterFactoryBootstrap%)
     -
         factory: Efabrica\PHPStanLatte\Analyser\LatteContextAnalyser
@@ -132,6 +144,8 @@ services:
     - Efabrica\PHPStanLatte\Resolver\CallResolver\CalledClassResolver
     - Efabrica\PHPStanLatte\Resolver\CallResolver\TerminatingCallResolver(%earlyTerminatingMethodCalls%, %earlyTerminatingFunctionCalls%)
     - Efabrica\PHPStanLatte\Resolver\CallResolver\OutputCallResolver()
+
+    - Efabrica\PHPStanLatte\Resolver\LayoutResolver\LayoutPathResolver(%latte.features.analyseLayoutFiles%)
 
     phpstanLatteNodeVisitorStorage:
         factory: Efabrica\PHPStanLatte\Compiler\NodeVisitor\NodeVisitorStorage

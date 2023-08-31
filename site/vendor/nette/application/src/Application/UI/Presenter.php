@@ -74,6 +74,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var bool  use absolute Urls or paths? */
 	public $absoluteUrls = false;
 
+	/** @var string[] */
+	public $allowedMethods = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'];
+
 	/** @var Nette\Application\Request|null */
 	private $request;
 
@@ -215,6 +218,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		try {
 			// STARTUP
 			$this->checkRequirements(static::getReflection());
+			$this->checkHttpMethod();
 			Arrays::invoke($this->onStartup, $this);
 			$this->startup();
 			if (!$this->startupCheck) {
@@ -329,6 +333,17 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->redirect('this');
 		} catch (InvalidLinkException $e) {
 			throw new Nette\Application\BadRequestException($e->getMessage());
+		}
+	}
+
+
+	protected function checkHttpMethod(): void
+	{
+		if ($this->allowedMethods &&
+			!in_array($method = $this->httpRequest->getMethod(), $this->allowedMethods, true)
+		) {
+			$this->httpResponse->setHeader('Allow', implode(',', $this->allowedMethods));
+			$this->error("Method $method is not allowed", Nette\Http\IResponse::S405_MethodNotAllowed);
 		}
 	}
 
@@ -469,21 +484,26 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		$template = $template ?? $this->getTemplate();
 		if (!$template->getFile()) {
-			$files = $this->formatTemplateFiles();
-			foreach ($files as $file) {
-				if (is_file($file)) {
-					$template->setFile($file);
-					break;
-				}
-			}
+			$template->setFile($this->findTemplateFile());
+		}
+		$this->sendResponse(new Responses\TextResponse($template));
+	}
 
-			if (!$template->getFile()) {
-				$file = strtr(Arrays::first($files), '/', DIRECTORY_SEPARATOR);
-				$this->error("Page not found. Missing template '$file'.");
+
+	/**
+	 * Finds template file name.
+	 */
+	public function findTemplateFile(): string
+	{
+		$files = $this->formatTemplateFiles();
+		foreach ($files as $file) {
+			if (is_file($file)) {
+				return $file;
 			}
 		}
 
-		$this->sendResponse(new Responses\TextResponse($template));
+		$file = strtr(Arrays::first($files), '/', DIRECTORY_SEPARATOR);
+		$this->error("Page not found. Missing template '$file'.");
 	}
 
 
@@ -1332,7 +1352,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$pos = strrpos($param, '-');
 			if ($pos) {
 				$this->signalReceiver = substr($param, 0, $pos);
-				$this->signal = (string) substr($param, $pos + 1);
+				$this->signal = substr($param, $pos + 1);
 			} else {
 				$this->signalReceiver = $this->getUniqueId();
 				$this->signal = $param;
