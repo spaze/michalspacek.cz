@@ -83,10 +83,14 @@ parameters:
 		-
 			function: 'proc_open()'
 			allowIn:
-				- vendor/latte/latte/src/Tools/Linter.php
+				- vendor/latte/latte/src/Latte/Compiler/PhpHelpers.php
 				- vendor/nette/tester/src/Runner/Job.php
 				- vendor/nette/tester/src/Runner/PhpInterpreter.php
 				- vendor/php-parallel-lint/php-parallel-lint/src/Process/Process.php
+		-
+			function: 'shell_exec()'
+			allowIn:
+				- vendor/efabrica/phpstan-latte/src/Rule/LatteTemplatesRule.php
 		# bundled disallowed-insecure-calls.neon
 		-
 			function: 'md5()'
