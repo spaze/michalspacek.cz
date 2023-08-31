@@ -24,6 +24,8 @@
 	<li>{$talk}</li>
 {/foreach}
 </ul>
+	{capture $link}:Www:Talks:talk "foo&#43;bar"{/capture}
+<a n:href="$link">
 <h3>{_messages.label.upcomingtalks}</h3>
 {if $upcomingTalks}
 	{control talksList $upcomingTalks}

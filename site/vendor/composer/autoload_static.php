@@ -174,8 +174,8 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         ),
         'PHPStan\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
-            1 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
+            0 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
+            1 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
         ),
         'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
         array (
@@ -252,7 +252,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Latte\\Compiler\\Nodes\\Html\\BogusTagNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Html/BogusTagNode.php',
         'Latte\\Compiler\\Nodes\\Html\\CommentNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Html/CommentNode.php',
         'Latte\\Compiler\\Nodes\\Html\\ElementNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Html/ElementNode.php',
-        'Latte\\Compiler\\Nodes\\Html\\QuotedValue' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Html/QuotedValue.php',
         'Latte\\Compiler\\Nodes\\NopNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/NopNode.php',
         'Latte\\Compiler\\Nodes\\Php\\ArgumentNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/ArgumentNode.php',
         'Latte\\Compiler\\Nodes\\Php\\ArrayItemNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/ArrayItemNode.php',
@@ -264,6 +263,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Latte\\Compiler\\Nodes\\Php\\Expression\\ArrayNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/ArrayNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\AssignNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/AssignNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\AssignOpNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/AssignOpNode.php',
+        'Latte\\Compiler\\Nodes\\Php\\Expression\\AuxiliaryNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/AuxiliaryNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\BinaryOpNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/BinaryOpNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\CastNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/CastNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\ClassConstantFetchNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/ClassConstantFetchNode.php',
@@ -289,6 +289,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Latte\\Compiler\\Nodes\\Php\\Expression\\StaticCallNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/StaticCallNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\StaticCallableNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/StaticCallableNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\StaticPropertyFetchNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/StaticPropertyFetchNode.php',
+        'Latte\\Compiler\\Nodes\\Php\\Expression\\TemporaryNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/TemporaryNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\TernaryNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/TernaryNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\UnaryOpNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/UnaryOpNode.php',
         'Latte\\Compiler\\Nodes\\Php\\Expression\\VariableNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/Expression/VariableNode.php',
@@ -296,6 +297,8 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Latte\\Compiler\\Nodes\\Php\\IdentifierNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/IdentifierNode.php',
         'Latte\\Compiler\\Nodes\\Php\\InterpolatedStringPartNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/InterpolatedStringPartNode.php',
         'Latte\\Compiler\\Nodes\\Php\\IntersectionTypeNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/IntersectionTypeNode.php',
+        'Latte\\Compiler\\Nodes\\Php\\ListItemNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/ListItemNode.php',
+        'Latte\\Compiler\\Nodes\\Php\\ListNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/ListNode.php',
         'Latte\\Compiler\\Nodes\\Php\\MatchArmNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/MatchArmNode.php',
         'Latte\\Compiler\\Nodes\\Php\\ModifierNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/ModifierNode.php',
         'Latte\\Compiler\\Nodes\\Php\\NameNode' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Nodes/Php/NameNode.php',
