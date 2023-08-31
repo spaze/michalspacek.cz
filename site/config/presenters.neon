@@ -13,6 +13,7 @@ services:
 	- MichalSpacekCz\Www\Presenters\PgpPresenter(locationRoot: %domain.locationRoot%)
 	- MichalSpacekCz\Www\Presenters\PhotoPresenter
 	- MichalSpacekCz\Www\Presenters\PostPresenter
+	- MichalSpacekCz\Www\Presenters\ProjectsPresenter
 	- MichalSpacekCz\Www\Presenters\RedirectPresenter
 	- MichalSpacekCz\Www\Presenters\TagsPresenter
 	- MichalSpacekCz\Www\Presenters\TalksPresenter
