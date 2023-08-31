@@ -18,9 +18,6 @@ use Nette\Utils\Html;
 class TrainingApplicationFormFactory
 {
 
-	private SelectBox $country;
-
-
 	public function __construct(
 		private readonly FormFactory $factory,
 		private readonly Translator $translator,
@@ -72,22 +69,22 @@ class TrainingApplicationFormFactory
 		$this->trainingControlsFactory->addCompany($form);
 		$this->trainingControlsFactory->addNote($form)
 			->setHtmlAttribute('placeholder', $this->translator->translate('messages.trainings.applicationform.note'));
-		$this->country = $this->trainingControlsFactory->addCountry($form);
+		$country = $this->trainingControlsFactory->addCountry($form);
 
 		$form->addSubmit('signUp', 'Odeslat');
 
 		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
 			$this->formSuccess->success($form, $onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection);
 		};
-		$this->setApplication($form, $sessionSection);
+		$this->setApplication($form, $sessionSection, $country);
 		return $form;
 	}
 
 
-	private function setApplication(Form $form, TrainingApplicationSessionSection $application): void
+	private function setApplication(Form $form, TrainingApplicationSessionSection $application, SelectBox $country): void
 	{
 		$form->setDefaults($application->getApplicationValues());
-		$message = "messages.label.taxid.{$this->country->getValue()}";
+		$message = "messages.label.taxid.{$country->getValue()}";
 		$caption = $this->translator->translate($message);
 		if ($caption !== $message) {
 			$input = $form->getComponent('companyTaxId');

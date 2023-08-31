@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Application;
 
+use LogicException;
 use Nette\Application\Response;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\UI\Presenter;
@@ -10,7 +11,7 @@ use Nette\Application\UI\Presenter;
 class UiPresenterMock extends Presenter
 {
 
-	private Response $response;
+	private ?Response $response = null;
 	private bool $responseSent = false;
 
 
@@ -32,6 +33,9 @@ class UiPresenterMock extends Presenter
 
 	public function getResponse(): Response
 	{
+		if (!$this->response) {
+			throw new LogicException('Send response first with sendResponse()');
+		}
 		return $this->response;
 	}
 
