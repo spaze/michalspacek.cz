@@ -450,7 +450,7 @@ class TrainingDates
 	public function getDates(int $trainingId): array
 	{
 		$result = $this->database->fetchAll(
-			"SELECT
+			'SELECT
 				d.id_date AS dateId,
 				t.id_training AS trainingId,
 				a.action,
@@ -503,7 +503,7 @@ class TrainingDates
 						AND s2.status IN (?, ?)
 				) u ON t.id_training = u.id_training AND (v.id_venue = u.key_venue OR u.key_venue IS NULL) AND d.start = u.start
 			ORDER BY
-				d.start",
+				d.start',
 			$trainingId,
 			TrainingDateStatus::Tentative->value,
 			TrainingDateStatus::Confirmed->value,
