@@ -11,7 +11,6 @@ class ArticleEdit
 
 	public DateTime $editedAt;
 
-	/** @var Html<Html|string> */
 	public Html $summary;
 
 	public string $summaryTexy;

@@ -139,7 +139,7 @@ class Algorithm
 	}
 
 
-	public function addDisclosure(StorageDisclosure $disclosure): void
+	final public function addDisclosure(StorageDisclosure $disclosure): void
 	{
 		$this->disclosures[] = $disclosure;
 		$this->latestDisclosure = $disclosure;

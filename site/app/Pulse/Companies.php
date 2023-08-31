@@ -27,15 +27,9 @@ class Companies
 	}
 
 
-	/**
-	 * @param string $name
-	 * @return Row<mixed>|null
-	 */
 	public function getByName(string $name): ?Row
 	{
-		/** @var Row<mixed>|null $result */
-		$result = $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name);
-		return $result;
+		return $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name);
 	}
 
 

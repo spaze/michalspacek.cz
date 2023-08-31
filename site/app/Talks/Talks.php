@@ -378,10 +378,6 @@ class Talks
 
 	/**
 	 * Build page title for the talk.
-	 *
-	 * @param string $translationKey
-	 * @param Talk $talk
-	 * @return Html<Html|string>
 	 */
 	public function pageTitle(string $translationKey, Talk $talk): Html
 	{

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Articles\ArticleSummary;
 use MichalSpacekCz\Articles\ArticleSummaryFactory;
@@ -13,6 +14,7 @@ class ArticlesPresenter extends BasePresenter
 	public function __construct(
 		private readonly Articles $articles,
 		private readonly ArticleSummaryFactory $articleSummaryFactory,
+		private readonly Translator $translator,
 	) {
 		parent::__construct();
 	}

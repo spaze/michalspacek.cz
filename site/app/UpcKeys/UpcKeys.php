@@ -14,7 +14,7 @@ class UpcKeys
 	private const SSID_PLACEHOLDER = 'UPC1234567';
 
 	/** @var array<class-string<RouterInterface>, RouterInterface> */
-	private array $routers;
+	private array $routers = [];
 
 	/** @var list<string>|null */
 	private ?array $prefixes = null;

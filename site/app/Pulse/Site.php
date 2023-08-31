@@ -33,9 +33,6 @@ interface Site
 	public function getRating(): RatingGrade;
 
 
-	public function setRating(RatingGrade $rating, bool $secureStorage, ?string $recommendation): void;
-
-
 	/**
 	 * @return array<string, Algorithm>
 	 */

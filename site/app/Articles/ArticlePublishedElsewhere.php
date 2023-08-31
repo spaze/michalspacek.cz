@@ -14,7 +14,6 @@ class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, Ar
 
 	public int $articleId;
 
-	/** @var Html<Html|string> */
 	public Html $title;
 
 	public string $titleTexy;
@@ -23,7 +22,6 @@ class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, Ar
 
 	public DateTime $published;
 
-	/** @var Html<Html|string> */
 	public Html $excerpt;
 
 	public string $excerptTexy;

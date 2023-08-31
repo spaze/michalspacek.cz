@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Interviews\Exceptions\InterviewDoesNotExistException;
 use MichalSpacekCz\Interviews\Interview;
@@ -19,6 +20,7 @@ class InterviewsPresenter extends BasePresenter
 
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
+		private readonly Translator $translator,
 		private readonly Interviews $interviews,
 		private readonly InterviewInputsFactory $interviewInputsFactory,
 	) {

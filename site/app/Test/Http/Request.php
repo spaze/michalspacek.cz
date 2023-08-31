@@ -12,26 +12,26 @@ class Request implements IRequest
 {
 
 	/** @var array<string, mixed> */
-	private array $post;
+	private array $post = [];
 
 	/** @var array<string, mixed> */
-	private array $cookies;
+	private array $cookies = [];
 
 	/** @var array<string, FileUpload> */
-	private array $files;
+	private array $files = [];
 
-	private string $method;
+	private string $method = '';
 
 	/** @var array<string, string> */
-	private array $headers;
+	private array $headers = [];
 
-	private ?string $remoteAddress;
+	private ?string $remoteAddress = null;
 
-	private ?string $remoteHost;
+	private ?string $remoteHost = null;
 
-	private ?string $rawBody;
+	private ?string $rawBody = null;
 
-	private bool $sameSite;
+	private bool $sameSite = false;
 
 	private UrlScript $url;
 

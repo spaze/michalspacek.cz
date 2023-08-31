@@ -11,9 +11,6 @@ interface ArticleWithSummary
 	public function hasSummary(): bool;
 
 
-	/**
-	 * @return Html<Html|string>|null
-	 */
 	public function getSummary(): ?Html;
 
 }

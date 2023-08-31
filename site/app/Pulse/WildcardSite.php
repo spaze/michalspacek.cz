@@ -4,22 +4,20 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse;
 
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
+use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\RatingGrade;
 
 class WildcardSite implements Site
 {
 
 	/** @var array<string, Algorithm> */
-	private array $algorithms;
+	private array $algorithms = [];
 
-	private RatingGrade $rating;
-
-	private bool $secureStorage;
-
-	private ?string $recommendation;
+	private ?RatingGrade $ratingGrade = null;
 
 
 	public function __construct(
+		private readonly Rating $rating,
 		private readonly string $id,
 		private readonly Company $company,
 		private readonly string $storageId,
@@ -71,15 +69,10 @@ class WildcardSite implements Site
 
 	public function getRating(): RatingGrade
 	{
-		return $this->rating;
-	}
-
-
-	public function setRating(RatingGrade $rating, bool $secureStorage, ?string $recommendation): void
-	{
-		$this->rating = $rating;
-		$this->secureStorage = $secureStorage;
-		$this->recommendation = $recommendation;
+		if (!$this->ratingGrade) {
+			$this->ratingGrade = $this->rating->get($this->getLatestAlgorithm());
+		}
+		return $this->ratingGrade;
 	}
 
 
@@ -94,13 +87,13 @@ class WildcardSite implements Site
 
 	public function isSecureStorage(): bool
 	{
-		return $this->secureStorage;
+		return $this->rating->isSecureStorage($this->getRating());
 	}
 
 
 	public function getRecommendation(): ?string
 	{
-		return $this->recommendation;
+		return $this->rating->getRecommendation($this->getRating());
 	}
 
 }

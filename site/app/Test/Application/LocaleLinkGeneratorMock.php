@@ -9,7 +9,7 @@ class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 {
 
 	/** @var array<string, string> */
-	private array $allLinks;
+	private array $allLinks = [];
 
 
 	/** @noinspection PhpMissingParentConstructorInspection Intentionally */

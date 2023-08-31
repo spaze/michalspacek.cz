@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\LocaleLink;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Application\Theme;
@@ -18,9 +17,6 @@ use Nette\Http\IResponse;
  */
 abstract class BasePresenter extends Presenter
 {
-
-	/** @inject */
-	public Translator $translator;
 
 	private Manager $authenticator;
 

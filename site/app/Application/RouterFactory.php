@@ -41,19 +41,11 @@ class RouterFactory
 	/** @var array<string, array<string, array<string, array<string, string>>>> */
 	private array $translatedActions = [];
 
-	private string $currentModule;
-
-	/** @var RouteList<Router> */
-	private RouteList $currentRouteList;
-
-	/** @var RouteList[] */
-	private array $currentLocaleRouteList;
-
-	/** @var RouteList<Router> */
-	private RouteList $router;
+	/** @var array<string, RouteList> */
+	private array $currentLocaleRouteList = [];
 
 	/** @var array<string, RouteList> */
-	private array $localeRouters;
+	private array $localeRouters = [];
 
 	/** @var string[] */
 	private array $availableLocales;
@@ -107,93 +99,85 @@ class RouterFactory
 
 
 	/**
-	 * @return RouteList<Router>
 	 * @noinspection RequiredAttributes Because <param> is not an HTML tag here
 	 */
 	public function createRouter(): RouteList
 	{
-		$this->router = new RouteList();
+		$router = new RouteList();
 		foreach ($this->availableLocales as $locale) {
 			$this->localeRouters[$locale] = new RouteList();
 		}
 
-		$this->router->withModule('EasterEgg')->addRoute('/nette.micro', 'Nette:micro');
+		$router->withModule('EasterEgg')->addRoute('/nette.micro', 'Nette:micro');
 
-		$this->initRouterLists(self::MODULE_ADMIN);
-		$this->addRoute('.well-known[/<action>]', 'WellKnown', 'default');
-		$this->addRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
+		$this->initRouterLists($router, self::MODULE_ADMIN, [
+			new RouterFactoryRoute('.well-known[/<action>]', 'WellKnown', 'default'),
+			new RouterFactoryRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default'),
+		]);
 
-		$this->initRouterLists(self::MODULE_HEARTBLEED);
-		$this->addRoute(self::ROOT_ONLY, 'Homepage', 'default');
+		$this->initRouterLists($router, self::MODULE_HEARTBLEED, [
+			new RouterFactoryRoute(self::ROOT_ONLY, 'Homepage', 'default'),
+		]);
 
-		$this->initRouterLists(self::MODULE_API);
-		$this->addRoute('<presenter>[/<action>]', 'Default', 'default');
+		$this->initRouterLists($router, self::MODULE_API, [
+			new RouterFactoryRoute('<presenter>[/<action>]', 'Default', 'default'),
+		]);
 
-		$this->initRouterLists(self::MODULE_PULSE);
-		$this->addRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::Pattern => '.+']]);
-		$this->addRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default');
+		$this->initRouterLists($router, self::MODULE_PULSE, [
+			new RouterFactoryRoute('passwords/storages[/<action>][/<param>]', 'PasswordsStorages', 'default', ['param' => [Route::Pattern => '.+']]),
+			new RouterFactoryRoute('[<presenter>][/<action>][/<param>]', 'Homepage', 'default'),
+		]);
 
-		$this->initRouterLists(self::MODULE_UPC);
-		$this->addRoute('[<ssid>][/<format>]', 'Homepage', 'default');
+		$this->initRouterLists($router, self::MODULE_UPC, [
+			new RouterFactoryRoute('[<ssid>][/<format>]', 'Homepage', 'default'),
+		]);
 
-		$this->initRouterLists(self::MODULE_WWW);
-		$this->addRoute('/<name>', 'Interviews', 'interview');
-		$this->addRoute('/<name>[/<slide>]', 'Talks', 'talk');
-		$this->addRoute('[/<action>]/<filename>', 'Files', 'file');
-		$this->addRoute('/<name>[/<action>[/<param>]]', 'Trainings', 'training');
-		$this->addRoute('/<name>[/<action>]', 'CompanyTrainings', 'training');
-		$this->addRoute('/<action>/<token>', 'Redirect', 'default');
-		$this->addRoute('/<action>[/<param>]', 'Exports', 'default');
-		$this->addRoute('/<name>', 'Venues', 'venue');
-		$this->addRoute('/<tag>', 'Tags', 'tag');
-		$this->addRoute('<slug>', 'Post', 'default', null, BlogPostRoute::class);
-		$this->addRoute('<presenter>', 'Homepage', 'default'); // Intentionally no action, use presenter-specific route if you need actions
+		$this->initRouterLists($router, self::MODULE_WWW, [
+			new RouterFactoryRoute('/<name>', 'Interviews', 'interview'),
+			new RouterFactoryRoute('/<name>[/<slide>]', 'Talks', 'talk'),
+			new RouterFactoryRoute('[/<action>]/<filename>', 'Files', 'file'),
+			new RouterFactoryRoute('/<name>[/<action>[/<param>]]', 'Trainings', 'training'),
+			new RouterFactoryRoute('/<name>[/<action>]', 'CompanyTrainings', 'training'),
+			new RouterFactoryRoute('/<action>/<token>', 'Redirect', 'default'),
+			new RouterFactoryRoute('/<action>[/<param>]', 'Exports', 'default'),
+			new RouterFactoryRoute('/<name>', 'Venues', 'venue'),
+			new RouterFactoryRoute('/<tag>', 'Tags', 'tag'),
+			new RouterFactoryRoute('<slug>', 'Post', 'default', null, BlogPostRoute::class),
+			new RouterFactoryRoute('<presenter>', 'Homepage', 'default'), // Intentionally no action, use presenter-specific route if you need actions
+		]);
 
-		return $this->router;
+		return $router;
 	}
 
 
-	/**
-	 * @param string $mask
-	 * @param string $defaultPresenter
-	 * @param string $defaultAction
-	 * @param array<string, array<string, string>>|null $initialMetadata
-	 * @param class-string<ApplicationRoute> $class
-	 */
-	private function addRoute(string $mask, string $defaultPresenter, string $defaultAction, ?array $initialMetadata = null, string $class = ApplicationRoute::class): void
+	private function addRoute(string $currentModule, RouteList $currentRouteList, RouterFactoryRoute $route): void
 	{
-		$host = self::HOSTS[$this->currentModule];
+		$host = self::HOSTS[$currentModule];
 		foreach ($this->supportedLocales[$host] as $locale => $domain) {
-			$metadata = $initialMetadata ?? [];
-			$maskPrefix = (isset($this->translatedRoutes[$this->currentModule][$defaultPresenter]) ? $this->translatedRoutes[$this->currentModule][$defaultPresenter]['mask'][$locale] : null);
-			$metadata['presenter'] = [Route::Value => $defaultPresenter];
-			$metadata['action'] = [Route::Value => $defaultAction];
-			if (isset($this->translatedPresenters[$this->currentModule])) {
+			$metadata = $route->initialMetadata ?? [];
+			$maskPrefix = (isset($this->translatedRoutes[$currentModule][$route->defaultPresenter]) ? $this->translatedRoutes[$currentModule][$route->defaultPresenter]['mask'][$locale] : null);
+			$metadata['presenter'] = [Route::Value => $route->defaultPresenter];
+			$metadata['action'] = [Route::Value => $route->defaultAction];
+			if (isset($this->translatedPresenters[$currentModule])) {
 				if ($maskPrefix === null) {
-					$metadata['presenter'][Route::FilterTable] = $this->translatedPresenters[$this->currentModule][$locale];
+					$metadata['presenter'][Route::FilterTable] = $this->translatedPresenters[$currentModule][$locale];
 				} else {
-					$presenter = $this->translatedPresenters[$this->currentModule][$locale][$maskPrefix];
+					$presenter = $this->translatedPresenters[$currentModule][$locale][$maskPrefix];
 					$metadata['presenter'][Route::FilterTable] = [$maskPrefix => $presenter];
-					$metadata['action'][Route::FilterTable] = $this->translatedActions[$this->currentModule][$presenter][$locale] ?? [];
+					$metadata['action'][Route::FilterTable] = $this->translatedActions[$currentModule][$presenter][$locale] ?? [];
 				}
 			}
 			$hostMask = sprintf(
 				'https://%s/%s%s',
 				str_ends_with($domain, '.') ? rtrim($domain, '.') : "{$host}.{$this->rootDomainMapping[$domain]}",
 				$maskPrefix,
-				$mask,
+				$route->mask,
 			);
-			$this->addToRouter($this->createRoute($class, $hostMask, $metadata), $locale, $host);
-		}
-	}
-
-
-	private function addToRouter(Router $route, string $locale, string $host): void
-	{
-		if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
-			$this->currentLocaleRouteList[$locale]->add($route);
-		} else {
-			$this->currentRouteList->add($route);
+			if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {
+				$this->currentLocaleRouteList[$locale]->add($this->createRoute($route->class, $hostMask, $metadata));
+			} else {
+				$currentRouteList->add($this->createRoute($route->class, $hostMask, $metadata));
+			}
 		}
 	}
 
@@ -215,12 +199,17 @@ class RouterFactory
 	}
 
 
-	private function initRouterLists(string $module): void
+	/**
+	 * @param list<RouterFactoryRoute> $routes
+	 */
+	private function initRouterLists(RouteList $router, string $module, array $routes): void
 	{
-		$this->currentModule = $module;
-		$this->currentRouteList = $this->router->withModule($module);
 		foreach ($this->availableLocales as $locale) {
 			$this->currentLocaleRouteList[$locale] = $this->localeRouters[$locale]->withModule($module);
+		}
+		$currentRouteList = $router->withModule($module);
+		foreach ($routes as $route) {
+			$this->addRoute($module, $currentRouteList, $route);
 		}
 	}
 

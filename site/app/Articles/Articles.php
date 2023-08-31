@@ -269,7 +269,7 @@ class Articles
 
 
 	/**
-	 * @param list<Row<mixed>> $articles
+	 * @param list<Row> $articles
 	 * @return list<ArticlePublishedElsewhere|BlogPost>
 	 * @throws JsonException
 	 * @throws InvalidLinkException

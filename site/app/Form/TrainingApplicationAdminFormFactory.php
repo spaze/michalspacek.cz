@@ -17,7 +17,7 @@ class TrainingApplicationAdminFormFactory
 {
 
 	/** @var array<string, array{0:Checkbox, 1:mixed}> */
-	private array $deletableFields;
+	private array $deletableFields = [];
 
 
 	public function __construct(

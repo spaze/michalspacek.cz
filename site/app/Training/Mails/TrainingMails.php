@@ -43,21 +43,6 @@ class TrainingMails
 	}
 
 
-	/**
-	 * @param int $applicationId
-	 * @param DefaultTemplate $template
-	 * @param string $recipientAddress
-	 * @param string $recipientName
-	 * @param DateTime $start
-	 * @param DateTime $end
-	 * @param string $training
-	 * @param Html<Html|string> $trainingName
-	 * @param bool $remote
-	 * @param string|null $venueName
-	 * @param string|null $venueNameExtended
-	 * @param string|null $venueAddress
-	 * @param string|null $venueCity
-	 */
 	public function sendSignUpMail(
 		int $applicationId,
 		DefaultTemplate $template,

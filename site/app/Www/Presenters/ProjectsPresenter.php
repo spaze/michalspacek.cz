@@ -3,8 +3,17 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
+
 class ProjectsPresenter extends BasePresenter
 {
+
+	public function __construct(
+		private readonly Translator $translator,
+	) {
+		parent::__construct();
+	}
+
 
 	public function renderDefault(): void
 	{

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use Contributte\Translation\Translator;
 use MichalSpacekCz\Application\AppRequest;
 use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\Application\LocaleLink;
@@ -30,6 +31,7 @@ class ErrorPresenter extends BaseErrorPresenter
 		private readonly LocaleLinkGenerator $localeLinkGenerator,
 		private readonly FourOhFourButFound $fourOhFourButFound,
 		private readonly AppRequest $appRequest,
+		private readonly Translator $translator,
 	) {
 		parent::__construct();
 	}

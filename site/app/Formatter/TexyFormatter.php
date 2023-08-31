@@ -113,9 +113,7 @@ class TexyFormatter
 
 
 	/**
-	 * @param string $format
 	 * @param list<string|int> $args
-	 * @return Html<Html|string>
 	 */
 	public function substitute(string $format, array $args): Html
 	{
@@ -124,9 +122,7 @@ class TexyFormatter
 
 
 	/**
-	 * @param string $message
 	 * @param list<string> $replacements
-	 * @return Html<Html|string>
 	 * @throws InvalidArgument
 	 */
 	public function translate(string $message, array $replacements = []): Html
@@ -139,10 +135,6 @@ class TexyFormatter
 	 * Format string and strip surrounding P element.
 	 *
 	 * Suitable for "inline" strings like headers.
-	 *
-	 * @param string $text
-	 * @param Texy|null $texy
-	 * @return Html<Html|string>
 	 */
 	public function format(string $text, ?Texy $texy = null): Html
 	{
@@ -154,10 +146,6 @@ class TexyFormatter
 
 	/**
 	 * Format string.
-	 *
-	 * @param string $text
-	 * @param Texy|null $texy
-	 * @return Html<Html|string>
 	 */
 	public function formatBlock(string $text, ?Texy $texy = null): Html
 	{
@@ -167,10 +155,6 @@ class TexyFormatter
 	}
 
 
-	/**
-	 * @param Html<Html|string> $result
-	 * @return Html<Html|string>
-	 */
 	private function replace(Html $result): Html
 	{
 		$replacements = [];

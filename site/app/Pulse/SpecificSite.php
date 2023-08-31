@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
+use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\StorageSharedWith;
 
 class SpecificSite extends WildcardSite
@@ -12,6 +13,7 @@ class SpecificSite extends WildcardSite
 	 * @param list<StorageSharedWith> $sharedWith
 	 */
 	public function __construct(
+		Rating $rating,
 		string $id,
 		private readonly string $url,
 		private readonly string $alias,
@@ -19,7 +21,7 @@ class SpecificSite extends WildcardSite
 		Company $company,
 		string $storageId,
 	) {
-		parent::__construct($id, $company, $storageId);
+		parent::__construct($rating, $id, $company, $storageId);
 	}
 
 

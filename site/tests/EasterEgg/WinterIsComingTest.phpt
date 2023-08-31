@@ -22,7 +22,7 @@ require __DIR__ . '/../bootstrap.php';
 class WinterIsComingTest extends TestCase
 {
 
-	private Form $form;
+	private TextInput $textInput;
 
 	/** @var callable(TextInput): true */
 	private $ruleEmail;
@@ -34,24 +34,25 @@ class WinterIsComingTest extends TestCase
 
 
 	public function __construct(
-		private readonly WinterIsComing $winterIsComing,
 		private readonly ApplicationPresenter $applicationPresenter,
+		WinterIsComing $winterIsComing,
 	) {
+		$this->presenter = new UiPresenterMock();
+		$this->textInput = (new Form($this->presenter, 'leForm'))->addText('foo');
+		$this->ruleEmail = $winterIsComing->ruleEmail();
+		$this->ruleStreet = $winterIsComing->ruleStreet();
 	}
 
 
-	protected function setUp(): void
+	protected function tearDown(): void
 	{
-		$this->presenter = new UiPresenterMock();
-		$this->form = new Form($this->presenter, 'leForm');
-		$this->ruleEmail = $this->winterIsComing->ruleEmail();
-		$this->ruleStreet = $this->winterIsComing->ruleStreet();
+		$this->presenter->reset();
 	}
 
 
 	public function testRuleEmail(): void
 	{
-		Assert::true(($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('foo@bar.com')));
+		Assert::true(($this->ruleEmail)($this->textInput->setDefaultValue('foo@bar.com')));
 	}
 
 
@@ -71,7 +72,7 @@ class WinterIsComingTest extends TestCase
 	public function testRuleEmailFakeError(string $email): void
 	{
 		Assert::true($this->applicationPresenter->expectSendResponse(function () use ($email): void {
-			($this->ruleEmail)($this->form->addText('foo')->setDefaultValue($email));
+			($this->ruleEmail)($this->textInput->setDefaultValue($email));
 		}));
 		$this->assertResponse();
 	}
@@ -79,7 +80,7 @@ class WinterIsComingTest extends TestCase
 
 	public function testRuleEmailNiceHost(): void
 	{
-		($this->ruleEmail)($this->form->addText('foo')->setDefaultValue('kuddelmuddel@fussemarketing.net'));
+		($this->ruleEmail)($this->textInput->setDefaultValue('kuddelmuddel@fussemarketing.net'));
 		Assert::false($this->presenter->isResponseSent());
 	}
 
@@ -100,7 +101,7 @@ class WinterIsComingTest extends TestCase
 	/** @dataProvider getRuleStreetNiceStreets */
 	public function testRuleStreetNice(string $name): void
 	{
-		Assert::true(($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name)));
+		Assert::true(($this->ruleStreet)($this->textInput->setDefaultValue($name)));
 		Assert::false($this->presenter->isResponseSent());
 	}
 
@@ -120,7 +121,7 @@ class WinterIsComingTest extends TestCase
 	public function testRuleStreetRough(string $name): void
 	{
 		Assert::true($this->applicationPresenter->expectSendResponse(function () use ($name): void {
-			($this->ruleStreet)($this->form->addText('foo')->setDefaultValue($name));
+			($this->ruleStreet)($this->textInput->setDefaultValue($name));
 		}));
 		$this->assertResponse();
 	}

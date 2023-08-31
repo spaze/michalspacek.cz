@@ -38,12 +38,6 @@ class TexyPhraseHandler
 
 
 	/**
-	 * @param HandlerInvocation $invocation handler invocation
-	 * @param string $phrase
-	 * @param string $content
-	 * @param Modifier $modifier
-	 * @param Link|null $link
-	 * @return HtmlElement<HtmlElement|string>|string|false
 	 * @throws InvalidLinkException
 	 * @throws UnexpectedHandlerInvocationReturnType
 	 */

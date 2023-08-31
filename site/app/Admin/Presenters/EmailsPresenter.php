@@ -12,7 +12,7 @@ class EmailsPresenter extends BasePresenter
 {
 
 	/** @var list<TrainingApplication> */
-	private array $applications;
+	private array $applications = [];
 
 
 	public function __construct(

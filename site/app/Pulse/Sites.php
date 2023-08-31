@@ -30,15 +30,9 @@ class Sites
 	}
 
 
-	/**
-	 * @param string $url
-	 * @return Row<mixed>|null
-	 */
 	public function getByUrl(string $url): ?Row
 	{
-		/** @var Row<mixed>|null $result */
-		$result = $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
-		return $result;
+		return $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
 	}
 
 

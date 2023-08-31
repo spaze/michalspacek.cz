@@ -23,18 +23,13 @@ class LocaleLinkGeneratorTest extends TestCase
 
 
 	public function __construct(
-		private readonly RouterFactory $routerFactory,
-		private readonly IRequest $httpRequest,
-		private readonly IPresenterFactory $presenterFactory,
-		private readonly LinkGenerator $linkGenerator,
 		private readonly NoOpTranslator $translator,
+		RouterFactory $routerFactory,
+		IRequest $httpRequest,
+		IPresenterFactory $presenterFactory,
+		LinkGenerator $linkGenerator,
 	) {
-	}
-
-
-	protected function setUp(): void
-	{
-		$this->localeLinkGenerator = new LocaleLinkGenerator($this->routerFactory, $this->httpRequest, $this->presenterFactory, $this->linkGenerator, $this->translator, [
+		$this->localeLinkGenerator = new LocaleLinkGenerator($routerFactory, $httpRequest, $presenterFactory, $linkGenerator, $translator, [
 			'cs_CZ' => [
 				'code' => 'cs',
 				'name' => 'Česky',
