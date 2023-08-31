@@ -19,6 +19,7 @@ use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Nette\Utils\Html;
 use ParagonIE\Halite\Alerts\HaliteAlert;
+use RuntimeException;
 use SodiumException;
 use Tracy\Debugger;
 
@@ -226,7 +227,7 @@ class TrainingMails
 		foreach ($attachments as $name => $file) {
 			$contents = file_get_contents($file);
 			if (!$contents) {
-				throw new \RuntimeException("Can't read file {$file}");
+				throw new RuntimeException("Can't read file {$file}");
 			}
 			$mail->addAttachment($name, $contents);
 		}
