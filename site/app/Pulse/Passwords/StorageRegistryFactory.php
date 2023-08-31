@@ -46,9 +46,10 @@ class StorageRegistryFactory
 			}
 			if (!$registry->hasSite($siteId)) {
 				if ($row->siteId === null) {
-					$registry->addSite(new WildcardSite($siteId, $registry->getCompany($row->companyId), $storageKey));
+					$registry->addSite(new WildcardSite($this->rating, $siteId, $registry->getCompany($row->companyId), $storageKey));
 				} else {
 					$registry->addSite(new SpecificSite(
+						$this->rating,
 						$siteId,
 						$row->siteUrl,
 						$row->siteAlias,
@@ -71,10 +72,6 @@ class StorageRegistryFactory
 			} else {
 				$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);
 			}
-		}
-		foreach ($registry->getSites() as $site) {
-			$rating = $this->rating->get($site->getLatestAlgorithm());
-			$site->setRating($rating, $this->rating->isSecureStorage($rating), $this->rating->getRecommendation($rating));
 		}
 		return $this->sorting->sort($registry, $sort);
 	}
