@@ -137,7 +137,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->training = $this->trainingDates->get($dateId);
 
 		$this->template->pageTitle = 'Soubory';
-		$this->template->files = $this->application->getFiles();
+		$this->template->files = $application->getFiles();
 		$this->template->trainingStart = $this->training->getStart();
 		$this->template->trainingEnd = $this->training->getEnd();
 		$this->template->trainingName = $this->training->getName();
