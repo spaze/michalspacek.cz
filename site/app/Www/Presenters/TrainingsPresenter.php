@@ -36,9 +36,9 @@ class TrainingsPresenter extends BasePresenter
 	private Training $training;
 
 	/** @var array<int, TrainingDate> id => date */
-	private array $dates;
+	private array $dates = [];
 
-	private string $trainingAction;
+	private ?string $trainingAction = null;
 
 
 	public function __construct(
@@ -197,7 +197,7 @@ class TrainingsPresenter extends BasePresenter
 		} catch (TrainingDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-		$application = $this->trainingFilesDownload->start($this->trainingAction, $param);
+		$application = $this->trainingFilesDownload->start($name, $param);
 		$trainingStart = $application->getTrainingStart();
 		$trainingEnd = $application->getTrainingEnd();
 		if (!$trainingStart || !$trainingEnd) {
@@ -289,7 +289,7 @@ class TrainingsPresenter extends BasePresenter
 	 */
 	protected function getLocaleLinkParams(): array
 	{
-		return $this->trainingLocales->getLocaleLinkParams($this->trainingAction ?? null, $this->getParameters());
+		return $this->trainingLocales->getLocaleLinkParams($this->trainingAction, $this->getParameters());
 	}
 
 

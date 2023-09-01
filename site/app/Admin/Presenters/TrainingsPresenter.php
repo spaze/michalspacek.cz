@@ -43,15 +43,9 @@ class TrainingsPresenter extends BasePresenter
 
 	private TrainingApplication $application;
 
-	private int $applicationId;
-
 	private TrainingReview $review;
 
 	private TrainingDate $training;
-
-	private int $dateId;
-
-	private int $redirectParam;
 
 	/** @var list<TrainingDate> */
 	private array $pastWithPersonalData = [];
@@ -81,16 +75,14 @@ class TrainingsPresenter extends BasePresenter
 
 	public function actionDate(int $param): void
 	{
-		$this->dateId = $param;
-		$this->redirectParam = $this->dateId;
 		try {
-			$this->training = $this->trainingDates->get($this->dateId);
+			$this->training = $this->trainingDates->get($param);
 		} catch (TrainingDateDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		$validCount = 0;
 		$applications = $discarded = [];
-		foreach ($this->trainingApplications->getByDate($this->dateId) as $application) {
+		foreach ($this->trainingApplications->getByDate($param) as $application) {
 			if (!$application->isDiscarded()) {
 				$validCount++;
 				$applications[] = $application;
@@ -116,18 +108,16 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->validCount = $validCount;
 		$this->template->attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 		$this->template->filesStatuses = $this->trainingStatuses->getAllowFilesStatuses();
-		$this->template->reviews = $this->trainingReviews->getReviewsByDateId($this->dateId);
+		$this->template->reviews = $this->trainingReviews->getReviewsByDateId($param);
 	}
 
 
 	public function actionFiles(int $param): void
 	{
-		$this->applicationId = $param;
-		$this->redirectParam = $this->applicationId;
-		$application = $this->trainingApplications->getApplicationById($this->applicationId);
+		$application = $this->trainingApplications->getApplicationById($param);
 		$dateId = $application->getDateId();
 		if (!$dateId) {
-			throw new BadRequestException("The application id '{$this->applicationId}' should have a training date set");
+			throw new BadRequestException("The application id '{$param}' should have a training date set");
 		}
 		if (!in_array($application->getStatus(), $this->trainingStatuses->getAllowFilesStatuses(), true)) {
 			$this->redirect('date', $dateId);
@@ -164,9 +154,8 @@ class TrainingsPresenter extends BasePresenter
 
 	public function actionApplication(int $param): void
 	{
-		$this->applicationId = $param;
 		try {
-			$application = $this->trainingApplications->getApplicationById($this->applicationId);
+			$application = $this->trainingApplications->getApplicationById($param);
 		} catch (TrainingApplicationDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
@@ -186,7 +175,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 
 		$this->template->pageTitle = $this->application->getName() ?? 'smazáno';
-		$this->template->applicationId = $this->applicationId;
+		$this->template->applicationId = $param;
 		$this->template->applicationDateId = $applicationDateId;
 		$this->template->status = $this->application->getStatus();
 		$this->template->statusTime = $this->application->getStatusTime();
@@ -200,7 +189,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingStatuses->getAllowFilesStatuses());
 		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
 		$this->template->accessToken = $this->application->getAccessToken();
-		$this->template->history = $this->trainingStatuses->getStatusHistory($this->applicationId);
+		$this->template->history = $this->trainingStatuses->getStatusHistory($param);
 	}
 
 
@@ -245,7 +234,7 @@ class TrainingsPresenter extends BasePresenter
 				if ($message) {
 					$this->flashMessage($message);
 				}
-				$this->redirect($this->getAction(), $this->dateId);
+				$this->redirect($this->getAction(), $this->getParameters());
 			},
 			$this->applications,
 		);
@@ -258,10 +247,7 @@ class TrainingsPresenter extends BasePresenter
 			function (int $dateId): never {
 				$this->redirect($this->getAction(), $dateId);
 			},
-			$this->training->getTrainingId(),
-			$this->dateId,
-			$this->training->getPrice(),
-			$this->training->getStudentDiscount(),
+			$this->training,
 		);
 	}
 
@@ -270,8 +256,8 @@ class TrainingsPresenter extends BasePresenter
 	{
 		return $this->trainingApplicationAdminFactory->create(
 			function (?int $dateId): never {
-				if (isset($this->dateId) || isset($dateId)) {
-					$this->redirect('date', $dateId ?? $this->dateId);
+				if ($dateId) {
+					$this->redirect('date', $dateId);
 				} else {
 					$this->redirect('preliminary');
 				}
@@ -289,7 +275,7 @@ class TrainingsPresenter extends BasePresenter
 		return $this->trainingFileFormFactory->create(
 			function (Html|string $message, string $type): never {
 				$this->flashMessage($message, $type);
-				$this->redirect($this->getAction(), $this->redirectParam);
+				$this->redirect($this->getAction(), $this->getParameters());
 			},
 			$this->training->getStart(),
 			$this->applicationIdsAllowedFiles,
@@ -299,7 +285,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditTrainingDateInputs(): TrainingDateInputs
 	{
-		return $this->trainingDateInputsFactory->createFor($this->training, $this->redirectParam);
+		return $this->trainingDateInputsFactory->createFor($this->training);
 	}
 
 
@@ -341,7 +327,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentAddReviewInputs(): TrainingReviewInputs
 	{
-		return $this->trainingReviewInputsFactory->create(true, $this->dateId);
+		return $this->trainingReviewInputsFactory->create(true, $this->training->getId());
 	}
 
 }

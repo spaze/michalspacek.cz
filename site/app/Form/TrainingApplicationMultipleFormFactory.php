@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
-use MichalSpacekCz\Training\Price;
+use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\UI\Form;
 
@@ -25,13 +25,8 @@ class TrainingApplicationMultipleFormFactory
 
 	/**
 	 * @param callable(int): void $onSuccess
-	 * @param int $trainingId
-	 * @param int $dateId
-	 * @param Price|null $price
-	 * @param int|null $studentDiscount
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, int $trainingId, int $dateId, ?Price $price, ?int $studentDiscount): Form
+	public function create(callable $onSuccess, TrainingDate $trainingDate): Form
 	{
 		$form = $this->factory->create();
 		$applicationsContainer = $form->addContainer('applications');
@@ -59,12 +54,12 @@ class TrainingApplicationMultipleFormFactory
 
 		$form->addSubmit('submit', 'Přidat');
 
-		$form->onSuccess[] = function (Form $form) use ($trainingId, $dateId, $price, $studentDiscount, $onSuccess): void {
+		$form->onSuccess[] = function (Form $form) use ($trainingDate, $onSuccess): void {
 			$values = $form->getValues();
 			foreach ($values->applications as $application) {
 				$this->trainingApplicationStorage->insertApplication(
-					$trainingId,
-					$dateId,
+					$trainingDate->getTrainingId(),
+					$trainingDate->getId(),
 					$application->name,
 					$application->email,
 					$application->company,
@@ -75,14 +70,14 @@ class TrainingApplicationMultipleFormFactory
 					$application->companyId,
 					$application->companyTaxId,
 					$application->note,
-					$price,
-					$studentDiscount,
+					$trainingDate->getPrice(),
+					$trainingDate->getStudentDiscount(),
 					$values->status,
 					$values->source,
 					$values->date,
 				);
 			}
-			$onSuccess($dateId);
+			$onSuccess($trainingDate->getId());
 		};
 
 		return $form;

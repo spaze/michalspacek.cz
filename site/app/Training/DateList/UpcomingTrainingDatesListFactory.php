@@ -22,7 +22,7 @@ class UpcomingTrainingDatesListFactory
 	}
 
 
-	public function createExclude(string $excludeTraining): UpcomingTrainingDatesList
+	public function createExclude(?string $excludeTraining): UpcomingTrainingDatesList
 	{
 		return new UpcomingTrainingDatesList($this->upcomingTrainingDates, $this->freeSeats, $excludeTraining, false, null);
 	}

@@ -36,7 +36,7 @@ class TrainingDateFormFactory
 
 	/**
 	 * @param callable(): void $onSuccessAdd
-	 * @param callable(): void $onSuccessEdit
+	 * @param callable(int): void $onSuccessEdit
 	 * @param TrainingDate|null $date
 	 * @return Form
 	 */
@@ -183,7 +183,7 @@ class TrainingDateFormFactory
 					$values->feedbackHref,
 				);
 			}
-			$date ? $onSuccessEdit() : $onSuccessAdd();
+			$date ? $onSuccessEdit($date->getId()) : $onSuccessAdd();
 		};
 
 		return $form;

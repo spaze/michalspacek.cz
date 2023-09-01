@@ -31,11 +31,10 @@ class TalkSlidesFormFactory
 	 * @param int $talkId
 	 * @param Row[] $slides
 	 * @param int $newCount
-	 * @param int $maxSlideUploads
 	 * @param Request $request
 	 * @return Form
 	 */
-	public function create(callable $onSuccess, int $talkId, array $slides, int $newCount, int $maxSlideUploads, Request $request): Form
+	public function create(callable $onSuccess, int $talkId, array $slides, int $newCount, Request $request): Form
 	{
 		$form = $this->factory->create();
 		$slidesContainer = $form->addContainer('slides');
@@ -76,7 +75,7 @@ class TalkSlidesFormFactory
 			}
 			$onSuccess($message, $type, $talkId);
 		};
-		$form->onValidate[] = function (Form $form) use ($request, $maxSlideUploads): void {
+		$form->onValidate[] = function (Form $form) use ($request): void {
 			// Check whether max allowed file uploads has been reached
 			$uploaded = 0;
 			$files = $request->getFiles();
@@ -86,8 +85,8 @@ class TalkSlidesFormFactory
 				}
 			});
 			// If there's no error yet then the number of uploaded just coincidentally matches max allowed
-			if ($form->hasErrors() && $uploaded >= $maxSlideUploads) {
-				$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [(string)$maxSlideUploads]));
+			if ($form->hasErrors() && $uploaded >= $this->getMaxSlideUploads()) {
+				$form->addError($this->texyFormatter->translate('messages.talks.admin.maxslideuploadsexceeded', [(string)$this->getMaxSlideUploads()]));
 			}
 		};
 
@@ -130,6 +129,12 @@ class TalkSlidesFormFactory
 			->setHtmlAttribute('class', 'slide-filename');
 		$container->addTextArea('speakerNotes', 'Poznámky:')
 			->setRequired('Zadejte prosím poznámky');
+	}
+
+
+	public function getMaxSlideUploads(): int
+	{
+		return (int)ini_get('max_file_uploads');
 	}
 
 }

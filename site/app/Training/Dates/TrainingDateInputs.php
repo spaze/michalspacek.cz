@@ -13,7 +13,6 @@ class TrainingDateInputs extends UiControl
 	public function __construct(
 		private readonly TrainingDateFormFactory $trainingDateFormFactory,
 		private readonly ?TrainingDate $trainingDate,
-		private readonly ?int $redirectParam,
 	) {
 	}
 
@@ -31,9 +30,9 @@ class TrainingDateInputs extends UiControl
 			function (): never {
 				$this->getPresenter()->redirect('Trainings:');
 			},
-			function (): never {
+			function (int $dateId): never {
 				$this->flashMessage('Termín upraven');
-				$this->getPresenter()->redirect($this->getPresenter()->getAction(), $this->redirectParam);
+				$this->getPresenter()->redirect($this->getPresenter()->getAction(), $dateId);
 			},
 			$this->trainingDate,
 		);
