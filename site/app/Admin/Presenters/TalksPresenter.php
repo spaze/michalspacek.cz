@@ -23,8 +23,8 @@ class TalksPresenter extends BasePresenter
 
 	private Talk $talk;
 
-	/** @var Row[] */
-	private array $slides;
+	/** @var array<int, Row> slide number => data */
+	private array $slides = [];
 
 	private int $newCount;
 

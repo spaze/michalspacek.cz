@@ -16,9 +16,9 @@ use Nette\Application\UI\InvalidLinkException;
 class PasswordsStoragesPresenter extends BasePresenter
 {
 
-	private ?string $rating;
-	private ?string $sort;
-	private ?string $search;
+	private ?string $rating = null;
+	private ?string $sort = null;
+	private ?string $search = null;
 
 
 	public function __construct(

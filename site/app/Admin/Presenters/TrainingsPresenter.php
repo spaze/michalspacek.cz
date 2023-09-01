@@ -36,7 +36,7 @@ class TrainingsPresenter extends BasePresenter
 {
 
 	/** @var list<TrainingApplication> */
-	private array $applications;
+	private array $applications = [];
 
 	/** @var int[] */
 	private array $applicationIdsAllowedFiles = [];
