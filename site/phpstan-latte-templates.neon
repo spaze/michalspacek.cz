@@ -8,7 +8,7 @@ parameters:
 		presenterFactoryBootstrap: app/PhpStan/presenterFactory.php
 		features:
 			transformDynamicFormControlNamesToString: true
-			phpstanCommand: vendor/phpstan/phpstan/phpstan analyse --configuration phpstan-latte-templates.neon
+			phpstanCommand: vendor/phpstan/phpstan/phpstan analyse {dir} --configuration phpstan-latte-templates.neon
 
 	ignoreErrors:
 		- # `{input "applications-{$application->id}" ...}` is an `$application->id` input in `applications` container https://github.com/efabrica-team/phpstan-latte/pull/380 or https://github.com/efabrica-team/phpstan-latte/issues/400
