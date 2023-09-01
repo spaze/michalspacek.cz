@@ -48,7 +48,7 @@ class Articles
 				NULL AS slug,
 				a.href,
 				a.date AS published,
-				a.excerpt AS excerptTexy,
+				a.excerpt AS leadTexy,
 				null AS textTexy,
 				s.name AS sourceName,
 				s.href AS sourceHref,
@@ -121,7 +121,7 @@ class Articles
 					bp.title AS titleTexy,
 					bp.slug,
 					bp.published,
-					bp.lead AS excerptTexy,
+					bp.lead AS leadTexy,
 					bp.text AS textTexy,
 					null AS sourceName,
 					null AS sourceHref,
@@ -277,14 +277,7 @@ class Articles
 	{
 		$result = [];
 		foreach ($articles as $article) {
-			if ($article->sourceHref === null) {
-				$article->postId = $article->id;
-				$article->leadTexy = $article->excerptTexy;
-				$result[] = $this->blogPosts->buildPost($article);
-			} else {
-				$article->articleId = $article->id;
-				$result[] = $this->buildArticle($article);
-			}
+			$result[] = $article->sourceHref === null ? $this->blogPosts->buildPost($article) : $this->buildArticle($article);
 		}
 		return $result;
 	}
@@ -293,11 +286,11 @@ class Articles
 	public function buildArticle(Row $row): ArticlePublishedElsewhere
 	{
 		$article = new ArticlePublishedElsewhere();
-		$article->articleId = $row->articleId;
+		$article->articleId = $row->id;
 		$article->titleTexy = $row->titleTexy;
 		$article->href = $row->href;
 		$article->published = $row->published;
-		$article->excerptTexy = $row->excerptTexy;
+		$article->excerptTexy = $row->leadTexy;
 		$article->sourceName = $row->sourceName;
 		$article->sourceHref = $row->sourceHref;
 
