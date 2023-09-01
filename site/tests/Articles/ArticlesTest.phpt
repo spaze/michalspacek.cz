@@ -194,6 +194,18 @@ class ArticlesTest extends TestCase
 		}, ShouldNotHappenException::class, 'Nearest published date is a string not a DateTime object');
 	}
 
+
+	public function testGetLabelByTag(): void
+	{
+		Assert::null($this->articles->getLabelByTag('foo'));
+		$this->database->setFetchResult([
+			'tags' => '["HTTP Secure", "HTTP/2"]',
+			'slugTags' => '["https", "http-2"]',
+		]);
+		Assert::same('HTTP Secure', $this->articles->getLabelByTag('https'));
+		Assert::same('HTTP/2', $this->articles->getLabelByTag('http-2'));
+	}
+
 }
 
 TestCaseRunner::run(ArticlesTest::class);

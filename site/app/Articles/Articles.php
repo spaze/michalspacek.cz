@@ -205,12 +205,11 @@ class Articles
 			LIMIT 1';
 		$result = $this->database->fetch($query, $this->tags->serialize([$tag]), new DateTime(), $this->translator->getDefaultLocale());
 		if ($result) {
-			$result->tags = ($result->tags !== null ? $this->tags->unserialize($result->tags) : []);
-			$result->slugTags = ($result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : []);
-
-			foreach ($result->slugTags as $key => $slug) {
+			$tags = $result->tags !== null ? $this->tags->unserialize($result->tags) : [];
+			$slugTags = $result->slugTags !== null ? $this->tags->unserialize($result->slugTags) : [];
+			foreach ($slugTags as $key => $slug) {
 				if ($slug === $tag) {
-					return $result->tags[$key] ?? null;
+					return $tags[$key] ?? null;
 				}
 			}
 		}
