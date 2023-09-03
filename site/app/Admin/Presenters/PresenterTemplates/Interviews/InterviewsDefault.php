@@ -4,16 +4,17 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters\PresenterTemplates\Interviews;
 
 use MichalSpacekCz\Interviews\Interview;
-use Nette\Bridges\ApplicationLatte\Template;
 
-class InterviewsDefault extends Template
+class InterviewsDefault
 {
 
-	public string $pageTitle;
-
-	/** @var list<Interview> */
-	public array $interviews;
-
-	public null $interview;
+	/**
+	 * @param list<Interview> $interviews
+	 */
+	public function __construct(
+		public string $pageTitle,
+		public array $interviews,
+	) {
+	}
 
 }

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesList;
 use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Exceptions\TrainingVenueNotFoundException;
@@ -13,7 +14,7 @@ use Nette\Application\BadRequestException;
 class VenuesPresenter extends BasePresenter
 {
 
-	private UpcomingTrainingDatesList $upcomingTrainingDatesList;
+	private ?UpcomingTrainingDatesList $upcomingTrainingDatesList = null;
 
 
 	public function __construct(
@@ -42,6 +43,9 @@ class VenuesPresenter extends BasePresenter
 
 	protected function createComponentUpcomingDatesList(): UpcomingTrainingDatesList
 	{
+		if (!$this->upcomingTrainingDatesList) {
+			throw new ShouldNotHappenException('actionVenue() will be called first');
+		}
 		return $this->upcomingTrainingDatesList;
 	}
 

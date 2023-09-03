@@ -10,12 +10,13 @@ use MichalSpacekCz\Interviews\Interview;
 use MichalSpacekCz\Interviews\InterviewInputs;
 use MichalSpacekCz\Interviews\InterviewInputsFactory;
 use MichalSpacekCz\Interviews\Interviews;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 
 class InterviewsPresenter extends BasePresenter
 {
 
-	private Interview $interview;
+	private ?Interview $interview = null;
 
 
 	public function __construct(
@@ -49,6 +50,9 @@ class InterviewsPresenter extends BasePresenter
 
 	protected function createComponentEditInterviewInputs(): InterviewInputs
 	{
+		if (!$this->interview) {
+			throw new ShouldNotHappenException('actionInterview() will be called first');
+		}
 		return $this->interviewInputsFactory->createFor($this->interview);
 	}
 

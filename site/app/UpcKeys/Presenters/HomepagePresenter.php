@@ -14,7 +14,7 @@ use Nette\Http\IResponse;
 class HomepagePresenter extends BasePresenter
 {
 
-	private ?string $ssid;
+	private ?string $ssid = null;
 
 
 	public function __construct(

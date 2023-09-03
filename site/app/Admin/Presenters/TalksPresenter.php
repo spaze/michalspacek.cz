@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\TalkInputs;
@@ -21,14 +22,12 @@ use Nette\Utils\Html;
 class TalksPresenter extends BasePresenter
 {
 
-	private Talk $talk;
+	private ?Talk $talk = null;
 
-	/** @var Row[] */
-	private array $slides;
+	/** @var array<int, Row> slide number => data */
+	private array $slides = [];
 
-	private int $newCount;
-
-	private int $maxSlideUploads;
+	private int $newCount = 0;
 
 
 	public function __construct(
@@ -78,7 +77,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->talkTitle = $this->talk->getTitle();
 		$this->template->slides = $this->slides;
 		$this->template->talk = $this->talk;
-		$this->template->maxSlideUploads = $this->maxSlideUploads = (int)ini_get('max_file_uploads');
+		$this->template->maxSlideUploads = $this->talkSlidesFormFactory->getMaxSlideUploads();
 		$new = $this->httpInput->getPostArray('new');
 		$count = $new ? count($new) : 0;
 		$this->template->newCount = $this->newCount = ($count ?: (int)empty($this->slides));
@@ -88,6 +87,9 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentEditTalkInputs(): TalkInputs
 	{
+		if (!$this->talk) {
+			throw new ShouldNotHappenException('actionTalk() will be called first');
+		}
 		return $this->talkInputsFactory->createFor($this->talk);
 	}
 
@@ -100,6 +102,9 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentSlides(): Form
 	{
+		if (!$this->talk) {
+			throw new ShouldNotHappenException('actionSlides() will be called first');
+		}
 		return $this->talkSlidesFormFactory->create(
 			function (Html $message, string $type, int $talkId): never {
 				$this->flashMessage($message, $type);
@@ -108,7 +113,6 @@ class TalksPresenter extends BasePresenter
 			$this->talk->getId(),
 			$this->slides,
 			$this->newCount,
-			$this->maxSlideUploads,
 			$this->request,
 		);
 	}

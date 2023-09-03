@@ -14,15 +14,15 @@ class TrainingDateInputsFactory
 	}
 
 
-	public function createFor(TrainingDate $trainingDate, int $redirectParam): TrainingDateInputs
+	public function createFor(TrainingDate $trainingDate): TrainingDateInputs
 	{
-		return new TrainingDateInputs($this->trainingDateFormFactory, $trainingDate, $redirectParam);
+		return new TrainingDateInputs($this->trainingDateFormFactory, $trainingDate);
 	}
 
 
 	public function create(): TrainingDateInputs
 	{
-		return new TrainingDateInputs($this->trainingDateFormFactory, null, null);
+		return new TrainingDateInputs($this->trainingDateFormFactory, null);
 	}
 
 }
