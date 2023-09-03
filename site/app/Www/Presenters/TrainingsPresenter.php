@@ -33,7 +33,7 @@ use SodiumException;
 class TrainingsPresenter extends BasePresenter
 {
 
-	private Training $training;
+	private ?Training $training = null;
 
 	/** @var array<int, TrainingDate> id => date */
 	private array $dates = [];
@@ -86,22 +86,22 @@ class TrainingsPresenter extends BasePresenter
 		}
 		$this->training = $training;
 
-		$this->redirectToSuccessor($this->training->getSuccessorId());
+		$this->redirectToSuccessor($training->getSuccessorId());
 
-		$this->dates = $this->trainingDates->getDates($this->training->getId());
+		$this->dates = $this->trainingDates->getDates($training->getId());
 
 		$session = $this->getSession();
 		$session->start(); // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
-		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.training', [$this->training->getName()->render()]);
-		$this->template->training = $this->training;
+		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.training', [$training->getName()->render()]);
+		$this->template->training = $training;
 		$this->template->lastFreeSeats = $this->freeSeats->lastFreeSeatsAnyDate($this->dates);
 		$this->template->dates = $this->dates;
 		$this->template->singleDate = count($this->dates) === 1 ? $this->trainingDates->formatDateVenueForUser(reset($this->dates)) : null;
 		$this->template->dataRetention = $this->trainingDates->getDataRetentionDays();
-		$this->template->reviews = $this->trainingReviews->getVisibleReviews($this->training->getId(), 3);
+		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->getId(), 3);
 		$this->template->loadCompanyDataVisible = $this->companyInfo->isLoadCompanyDataVisible();
-		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $this->training->getDiscontinuedId());
+		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->getDiscontinuedId());
 	}
 
 
@@ -131,6 +131,9 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplication(): Form
 	{
+		if (!$this->training) {
+			throw new ShouldNotHappenException('actionTraining() or actionSuccess() will be called first');
+		}
 		return $this->trainingApplicationFactory->create(
 			function (string $name): never {
 				$this->redirect('success', $name);
@@ -148,6 +151,9 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplicationPreliminary(): Form
 	{
+		if (!$this->training) {
+			throw new ShouldNotHappenException('actionTraining() will be called first');
+		}
 		if ($this->training->getDiscontinuedId()) {
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->getDiscontinuedId()}");
 		}

@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\TalkInputs;
@@ -21,7 +22,7 @@ use Nette\Utils\Html;
 class TalksPresenter extends BasePresenter
 {
 
-	private Talk $talk;
+	private ?Talk $talk = null;
 
 	/** @var array<int, Row> slide number => data */
 	private array $slides = [];
@@ -86,6 +87,9 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentEditTalkInputs(): TalkInputs
 	{
+		if (!$this->talk) {
+			throw new ShouldNotHappenException('actionTalk() will be called first');
+		}
 		return $this->talkInputsFactory->createFor($this->talk);
 	}
 
@@ -98,6 +102,9 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentSlides(): Form
 	{
+		if (!$this->talk) {
+			throw new ShouldNotHappenException('actionSlides() will be called first');
+		}
 		return $this->talkSlidesFormFactory->create(
 			function (Html $message, string $type, int $talkId): never {
 				$this->flashMessage($message, $type);

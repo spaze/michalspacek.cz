@@ -9,6 +9,7 @@ use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\DateList\DateListOrder;
@@ -41,11 +42,11 @@ class TrainingsPresenter extends BasePresenter
 	/** @var int[] */
 	private array $applicationIdsAllowedFiles = [];
 
-	private TrainingApplication $application;
+	private ?TrainingApplication $application = null;
 
-	private TrainingReview $review;
+	private ?TrainingReview $review = null;
 
-	private TrainingDate $training;
+	private ?TrainingDate $training = null;
 
 	/** @var list<TrainingDate> */
 	private array $pastWithPersonalData = [];
@@ -243,6 +244,9 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplications(): Form
 	{
+		if (!$this->training) {
+			throw new ShouldNotHappenException('actionDate() will be called first');
+		}
 		return $this->trainingApplicationMultipleFormFactory->create(
 			function (int $dateId): never {
 				$this->redirect($this->getAction(), $dateId);
@@ -254,6 +258,9 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentApplicationForm(): Form
 	{
+		if (!$this->application) {
+			throw new ShouldNotHappenException('actionApplication() will be called first');
+		}
 		return $this->trainingApplicationAdminFactory->create(
 			function (?int $dateId): never {
 				if ($dateId) {
@@ -272,6 +279,9 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentFile(): Form
 	{
+		if (!$this->training) {
+			throw new ShouldNotHappenException('actionDate() or actionFiles() will be called first');
+		}
 		return $this->trainingFileFormFactory->create(
 			function (Html|string $message, string $type): never {
 				$this->flashMessage($message, $type);
@@ -285,6 +295,9 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditTrainingDateInputs(): TrainingDateInputs
 	{
+		if (!$this->training) {
+			throw new ShouldNotHappenException('actionDate() will be called first');
+		}
 		return $this->trainingDateInputsFactory->createFor($this->training);
 	}
 
@@ -321,12 +334,18 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentEditReviewInputs(): TrainingReviewInputs
 	{
+		if (!$this->review) {
+			throw new ShouldNotHappenException('actionReview() will be called first');
+		}
 		return $this->trainingReviewInputsFactory->create(false, $this->review->getDateId(), $this->review);
 	}
 
 
 	protected function createComponentAddReviewInputs(): TrainingReviewInputs
 	{
+		if (!$this->training) {
+			throw new ShouldNotHappenException('actionDate() will be called first');
+		}
 		return $this->trainingReviewInputsFactory->create(true, $this->training->getId());
 	}
 
