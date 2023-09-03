@@ -60,7 +60,7 @@ class ArticlesTest extends TestCase
 				'slug' => null,
 				'href' => 'https://example.com/article-1',
 				'published' => new DateTime('3 years ago'),
-				'excerptTexy' => 'Excerpt 1',
+				'leadTexy' => 'Excerpt 1',
 				'textTexy' => null,
 				'sourceName' => 'Source 1',
 				'sourceHref' => 'https://source1.example/',
@@ -84,7 +84,7 @@ class ArticlesTest extends TestCase
 				'slug' => 'blog-1',
 				'href' => null,
 				'published' => new DateTime('2 years ago'),
-				'excerptTexy' => 'Lead 1',
+				'leadTexy' => 'Lead 1',
 				'textTexy' => 'Text 1',
 				'sourceName' => null,
 				'sourceHref' => null,
@@ -108,7 +108,7 @@ class ArticlesTest extends TestCase
 				'slug' => null,
 				'href' => 'https://example.com/article-2',
 				'published' => new DateTime('1 year ago'),
-				'excerptTexy' => 'Excerpt 2',
+				'leadTexy' => 'Excerpt 2',
 				'textTexy' => null,
 				'sourceName' => 'Source 2',
 				'sourceHref' => 'https://source2.example/',
@@ -132,7 +132,7 @@ class ArticlesTest extends TestCase
 				'slug' => 'blog-2',
 				'href' => null,
 				'published' => new DateTime('1 month ago'),
-				'excerptTexy' => 'Lead 2',
+				'leadTexy' => 'Lead 2',
 				'textTexy' => 'Text 2',
 				'sourceName' => null,
 				'sourceHref' => null,
@@ -192,6 +192,18 @@ class ArticlesTest extends TestCase
 			$this->database->setFetchFieldDefaultResult('\o/');
 			$this->articles->getNearestPublishDateByTags(['foo']);
 		}, ShouldNotHappenException::class, 'Nearest published date is a string not a DateTime object');
+	}
+
+
+	public function testGetLabelByTag(): void
+	{
+		Assert::null($this->articles->getLabelByTag('foo'));
+		$this->database->setFetchResult([
+			'tags' => '["HTTP Secure", "HTTP/2"]',
+			'slugTags' => '["https", "http-2"]',
+		]);
+		Assert::same('HTTP Secure', $this->articles->getLabelByTag('https'));
+		Assert::same('HTTP/2', $this->articles->getLabelByTag('http-2'));
 	}
 
 }

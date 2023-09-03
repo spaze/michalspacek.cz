@@ -94,7 +94,7 @@ class BlogPosts
 	{
 		$result = $this->database->fetch(
 			'SELECT
-				bp.id_blog_post AS postId,
+				bp.id_blog_post AS id,
 				l.id_locale AS localeId,
 				bp.key_translation_group AS translationGroupId,
 				l.locale,
@@ -141,7 +141,7 @@ class BlogPosts
 	{
 		$posts = [];
 		$sql = 'SELECT
-				bp.id_blog_post AS postId,
+				bp.id_blog_post AS id,
 				l.id_locale AS localeId,
 				bp.key_translation_group AS translationGroupId,
 				l.locale,
@@ -347,7 +347,7 @@ class BlogPosts
 	public function buildPost(Row $row): BlogPost
 	{
 		$post = new BlogPost();
-		$post->postId = $row->postId;
+		$post->postId = $row->id;
 		$post->translationGroupId = $row->translationGroupId;
 		$post->locale = $row->locale;
 		$post->localeId = $row->localeId;

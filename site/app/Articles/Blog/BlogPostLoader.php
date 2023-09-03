@@ -37,7 +37,7 @@ class BlogPostLoader
 		if ($this->post === null) {
 			$result = $this->database->fetch(
 				'SELECT
-					bp.id_blog_post AS postId,
+					bp.id_blog_post AS id,
 					l.id_locale AS localeId,
 					bp.key_translation_group AS translationGroupId,
 					l.locale,
