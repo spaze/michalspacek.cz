@@ -20,7 +20,7 @@
 	</div>
 	<div n:if="$post instanceof MichalSpacekCz\Articles\ArticlePublishedElsewhere">
 		{icon external-link}
-		<small><a href="{$post->sourceHref}">{$post->sourceName}</a></small>
+		<small><a href="{$post->getSourceHref()}">{$post->getSourceName()}</a></small>
 	</div>
 	<div class="clear"></div>
 </div>

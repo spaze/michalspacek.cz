@@ -19,14 +19,14 @@
 		<hr>
 		<h3>{_messages.blog.post.recommendedreading}</h3>
 		<ul n:inner-foreach="$post->getRecommended() as $item">
-			<li>{=$item->text|format:$item->url}</li>
+			<li>{=$item->getText()|format:$item->getUrl()}</li>
 		</ul>
 	{/if}
 </div>
 <div class="column-sidebar">
-	<div class="widget" n:if="$edits">
+	<div class="widget" n:if="$post->getEdits()">
 		<h3>{_messages.blog.post.edits}</h3>
-		<p n:foreach="$edits as $edit"><strong>{$edit->editedAt|localeDay}</strong> {$edit->summary}</p>
+		<p n:foreach="$post->getEdits() as $edit"><strong>{$edit->getEditedAt()|localeDay}</strong> {$edit->getSummary()}</p>
 	</div>
 	{include "common/sidebar.latte"}
 </div>

@@ -84,9 +84,9 @@ class Exports
 						foreach ($article->getEdits() as $edit) {
 							$edits->create('li')
 								->addHtml(Html::el('em')
-									->addHtml(Html::el('strong')->addText($edit->editedAt->format('j.n.')))
+									->addHtml(Html::el('strong')->addText($edit->getEditedAt()->format('j.n.')))
 									->addText(' ')
-									->addHtml($edit->summary));
+									->addHtml($edit->getSummary()));
 						}
 						$content->addHtml($edits);
 					}

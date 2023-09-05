@@ -29,9 +29,9 @@ class ArticleHeaderIcons extends UiControl
 	private function getEdited(ArticlePublishedElsewhere|BlogPost $article): ?DateTime
 	{
 		$edits = $article instanceof ArticleWithEdits ? $article->getEdits() : [];
-		$interval = $edits && $article->getPublishTime() ? current($edits)->editedAt->diff($article->getPublishTime()) : false;
+		$interval = $edits && $article->getPublishTime() ? current($edits)->getEditedAt()->diff($article->getPublishTime()) : false;
 		if ($edits && $interval && $interval->days >= $this->blogPosts->getUpdatedInfoThreshold()) {
-			return current($edits)->editedAt;
+			return current($edits)->getEditedAt();
 		}
 		return null;
 	}

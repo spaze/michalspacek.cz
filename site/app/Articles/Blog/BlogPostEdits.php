@@ -35,13 +35,9 @@ class BlogPostEdits
 			ORDER BY edited_at DESC';
 		$edits = [];
 		foreach ($this->database->fetchAll($sql, $postId) as $row) {
-			$summary = $this->texyFormatter->format($row->summaryTexy);
-			$edit = new ArticleEdit();
-			$edit->summaryTexy = $row->summaryTexy;
-			$edit->summary = $summary;
-			$edit->editedAt = $row->editedAt;
-			$edit->editedAt->setTimezone($this->dateTimeZoneFactory->get($row->editedAtTimezone));
-			$edits[] = $edit;
+			$editedAt = $row->editedAt;
+			$editedAt->setTimezone($this->dateTimeZoneFactory->get($row->editedAtTimezone));
+			$edits[] = new ArticleEdit($editedAt, $this->texyFormatter->format($row->summaryTexy), $row->summaryTexy);
 		}
 		return $edits;
 	}

@@ -208,7 +208,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 
 	public function getUpdateTime(): ?DateTime
 	{
-		return $this->edits ? current($this->edits)->editedAt : null;
+		return $this->edits ? current($this->edits)->getEditedAt() : null;
 	}
 
 

@@ -8,8 +8,23 @@ use JsonSerializable;
 class BlogPostRecommendedLink implements JsonSerializable
 {
 
-	public string $url;
-	public string $text;
+	public function __construct(
+		private readonly string $url,
+		private readonly string $text,
+	) {
+	}
+
+
+	public function getUrl(): string
+	{
+		return $this->url;
+	}
+
+
+	public function getText(): string
+	{
+		return $this->text;
+	}
 
 
 	/**

@@ -290,20 +290,19 @@ class Articles
 
 	public function buildArticle(Row $row): ArticlePublishedElsewhere
 	{
-		$article = new ArticlePublishedElsewhere();
-		$article->articleId = $row->id;
-		$article->titleTexy = $row->titleTexy;
-		$article->href = $row->href;
-		$article->published = $row->published;
-		$article->excerptTexy = $row->leadTexy;
-		$article->sourceName = $row->sourceName;
-		$article->sourceHref = $row->sourceHref;
-
 		$texy = $this->texyFormatter->getTexy();
 		$this->texyFormatter->setTopHeading(2);
-		$article->title = $this->texyFormatter->format($article->titleTexy, $texy);
-		$article->excerpt = $this->texyFormatter->format($article->excerptTexy, $texy);
-		return $article;
+		return new ArticlePublishedElsewhere(
+			$row->id,
+			$this->texyFormatter->format($row->titleTexy, $texy),
+			$row->titleTexy,
+			$row->href,
+			$row->published,
+			$this->texyFormatter->format($row->leadTexy, $texy),
+			$row->leadTexy,
+			$row->sourceName,
+			$row->sourceHref,
+		);
 	}
 
 }

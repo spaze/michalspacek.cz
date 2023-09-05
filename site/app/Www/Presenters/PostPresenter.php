@@ -48,7 +48,6 @@ class PostPresenter extends BasePresenter
 		$this->template->pageTitle = htmlspecialchars_decode(strip_tags((string)$post->getTitle()));
 		$this->template->pageHeader = $post->getTitle();
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
-		$this->template->edits = $post->getEdits();
 
 		foreach ($this->blogPostLocaleUrls->get($post->getSlug()) as $localePost) {
 			$this->localeLinkParams[$localePost->getLocale()] = ['slug' => $localePost->getSlug(), 'preview' => $localePost->getPreviewKey()];
