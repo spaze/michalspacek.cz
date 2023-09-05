@@ -27,15 +27,15 @@ class BlogPostPreview
 	{
 		$this->texyFormatter->disableCache();
 		$template->setFile(__DIR__ . '/../../Www/Presenters/templates/Post/default.latte');
-		$template->post = $this->blogPosts->format($post);
-		$template->edits = $post->postId ? $post->edits : [];
+		$template->post = $post;
+		$template->edits = $post->hasId() ? $post->getEdits() : [];
 		$template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$template->showBreadcrumbsMenu = false;
 		$template->showHeaderTabs = false;
 		$template->showFooter = false;
 		$template->localeLinks = [];
 		$this->blogPosts->setTemplateTitleAndHeader($post, $template);
-		foreach ($post->cspSnippets as $snippet) {
+		foreach ($post->getCspSnippets() as $snippet) {
 			$this->contentSecurityPolicy->addSnippet($snippet);
 		}
 		$sendTemplate($template);

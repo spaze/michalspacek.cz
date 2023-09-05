@@ -68,8 +68,8 @@ class Exports
 				}
 				$updated = $article instanceof ArticleWithUpdateTime && $article->getUpdateTime() ? $article->getUpdateTime() : $article->getPublishTime();
 				$entry = new Entry(
-					$article->href,
-					new Text((string)$article->title, Text::TYPE_HTML),
+					$article->getHref(),
+					new Text((string)$article->getTitle(), Text::TYPE_HTML),
 					$updated,
 					$article->getPublishTime(),
 				);
@@ -93,7 +93,7 @@ class Exports
 					$content->addHtml($article->getText());
 					$entry->setContent(new Text(trim($content->render()), Text::TYPE_HTML));
 				}
-				$entry->addLink(new Link($article->href, Link::REL_ALTERNATE, 'text/' . Text::TYPE_HTML));
+				$entry->addLink(new Link($article->getHref(), Link::REL_ALTERNATE, 'text/' . Text::TYPE_HTML));
 				$feed->addEntry($entry);
 				if ($updated > $feedUpdated) {
 					$feedUpdated = $updated;

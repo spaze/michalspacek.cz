@@ -21,7 +21,7 @@ class BlogPostLocaleUrls
 	 * Get locales and URLs for a blog post.
 	 *
 	 * @param string $slug
-	 * @return list<BlogPost>
+	 * @return list<BlogPostLocaleUrl>
 	 * @throws JsonException
 	 */
 	public function get(string $slug): array
@@ -40,12 +40,13 @@ class BlogPostLocaleUrls
 				OR bp.slug = ?
 			ORDER BY l.id_locale';
 		foreach ($this->database->fetchAll($sql, $slug, $slug) as $row) {
-			$post = new BlogPost();
-			$post->locale = $row->locale;
-			$post->slug = $row->slug;
-			$post->published = $row->published;
-			$post->previewKey = $row->previewKey;
-			$post->slugTags = ($row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : []);
+			$post = new BlogPostLocaleUrl(
+				$row->locale,
+				$row->slug,
+				$row->published,
+				$row->previewKey,
+				$row->slugTags !== null ? $this->tags->unserialize($row->slugTags) : [],
+			);
 			$posts[] = $post;
 		}
 		return $posts;

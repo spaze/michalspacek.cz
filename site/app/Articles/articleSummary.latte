@@ -1,4 +1,4 @@
 {varType MichalSpacekCz\Articles\ArticlePublishedElsewhere|MichalSpacekCz\Articles\Blog\BlogPost $article}
-<a href="{$article->href}"><strong>{$article->title}</strong></a>
+<a href="{$article->getHref()}"><strong>{$article->getTitle()}</strong></a>
 {control articleHeaderIcons $article}
-<div class="indent small">{$article->getSummary()} <p>(<a href="{$article->href}">{_messages.articles.readmore}</a>)</p></div>
+<div class="indent small">{$article->getSummary()} <p>(<a href="{$article->getHref()}">{_messages.articles.readmore}</a>)</p></div>

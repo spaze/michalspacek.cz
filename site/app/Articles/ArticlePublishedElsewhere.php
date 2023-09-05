@@ -43,6 +43,18 @@ class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, Ar
 	}
 
 
+	public function getTitle(): Html
+	{
+		return $this->title;
+	}
+
+
+	public function getHref(): string
+	{
+		return $this->href;
+	}
+
+
 	public function hasSummary(): bool
 	{
 		return true;

@@ -117,7 +117,7 @@ class TexyPhraseHandler
 
 		$params = [];
 		foreach ($this->blogPostLocaleUrls->get($args[0]) as $post) {
-			$params[$post->locale] = ['slug' => $post->slug, 'preview' => ($post->needsPreviewKey() ? $post->previewKey : null)];
+			$params[$post->getLocale()] = ['slug' => $post->getSlug(), 'preview' => $post->getPreviewKey()];
 		}
 		if (!$params) {
 			throw new ShouldNotHappenException("The blog links array should not be empty, maybe the linked blog post '{$url}' is missing?");

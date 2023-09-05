@@ -32,8 +32,8 @@ class PostPresenter extends BasePresenter
 	public function actionDefault(string $slug, ?string $preview = null): void
 	{
 		$post = $this->blogPosts->get($slug, $preview);
-		if ($slug !== $post->slug) {
-			$this->redirectPermanent($this->getAction(), [$post->slug, $preview]);
+		if ($slug !== $post->getSlug()) {
+			$this->redirectPermanent($this->getAction(), [$post->getSlug(), $preview]);
 		}
 		if ($preview !== null) {
 			if (!$post->needsPreviewKey()) {
@@ -41,19 +41,19 @@ class PostPresenter extends BasePresenter
 			}
 			$this->template->robots = 'noindex';
 		}
-		if ($post->postId === null) {
+		if (!$post->hasId()) {
 			throw new ShouldNotHappenException('Never thought it would be possible to have a published blog post without an id');
 		}
 		$this->template->post = $post;
-		$this->template->pageTitle = htmlspecialchars_decode(strip_tags((string)$post->title));
-		$this->template->pageHeader = $post->title;
+		$this->template->pageTitle = htmlspecialchars_decode(strip_tags((string)$post->getTitle()));
+		$this->template->pageHeader = $post->getTitle();
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
-		$this->template->edits = $post->edits;
+		$this->template->edits = $post->getEdits();
 
-		foreach ($this->blogPostLocaleUrls->get($post->slug) as $localePost) {
-			$this->localeLinkParams[$localePost->locale] = ['slug' => $localePost->slug, 'preview' => ($localePost->needsPreviewKey() ? $localePost->previewKey : null)];
+		foreach ($this->blogPostLocaleUrls->get($post->getSlug()) as $localePost) {
+			$this->localeLinkParams[$localePost->getLocale()] = ['slug' => $localePost->getSlug(), 'preview' => $localePost->getPreviewKey()];
 		}
-		foreach ($post->cspSnippets as $snippet) {
+		foreach ($post->getCspSnippets() as $snippet) {
 			$this->contentSecurityPolicy->addSnippet($snippet);
 		}
 	}

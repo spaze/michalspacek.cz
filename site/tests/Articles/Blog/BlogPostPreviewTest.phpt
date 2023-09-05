@@ -5,11 +5,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
+use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
+use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -23,24 +25,44 @@ class BlogPostPreviewTest extends TestCase
 		private readonly BlogPostPreview $blogPostPreview,
 		private readonly TemplateFactory $templateFactory,
 		private readonly IPresenterFactory $presenterFactory,
+		private readonly TexyFormatter $texyFormatter,
 	) {
 	}
 
 
 	public function testSendPreview(): void
 	{
-		$post = new BlogPost();
-		$post->postId = 1;
-		$post->titleTexy = 'Title something';
-		$post->href = 'https://example.com/something';
-		$post->published = new DateTime();
-		$post->leadTexy = 'Excerpt something';
-		$post->textTexy = 'Text **something**';
-		$post->originallyTexy = null;
-		$post->omitExports = false;
-		$post->ogImage = null;
-		$post->twitterCard = null;
-		$post->recommended = [];
+		$title = 'Title something';
+		$lead = 'Excerpt something';
+		$text = 'Text **something**';
+		$post = new BlogPost(
+			1,
+			'',
+			2,
+			'en_US',
+			null,
+			Html::fromText($title),
+			$title,
+			Html::fromText($lead),
+			$lead,
+			$this->texyFormatter->formatBlock($text),
+			$text,
+			new DateTime(),
+			false,
+			null,
+			null,
+			null,
+			null,
+			[],
+			[],
+			[],
+			null,
+			'https://example.com/something',
+			[],
+			[],
+			[],
+			false,
+		);
 
 		$name = 'Admin:Blog';
 		$presenter = $this->presenterFactory->createPresenter($name); // Has to be a real presenter that extends Ui\Presenter

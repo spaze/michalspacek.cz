@@ -7,10 +7,13 @@ use Collator;
 use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Articles\Blog\BlogPost;
-use MichalSpacekCz\Articles\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\BlogPostFactory;
+use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
+use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
+use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -22,7 +25,7 @@ class Articles
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly TexyFormatter $texyFormatter,
-		private readonly BlogPosts $blogPosts,
+		private readonly BlogPostFactory $blogPostFactory,
 		private readonly Tags $tags,
 		private readonly Translator $translator,
 	) {
@@ -271,13 +274,15 @@ class Articles
 	 * @param list<Row> $articles
 	 * @return list<ArticlePublishedElsewhere|BlogPost>
 	 * @throws JsonException
-	 * @throws InvalidLinkException
+	 * @throws InvalidTimezoneException
+	 * @throws JsonItemNotStringException
+	 * @throws JsonItemsNotArrayException
 	 */
 	private function enrichArticles(array $articles): array
 	{
 		$result = [];
 		foreach ($articles as $article) {
-			$result[] = $article->sourceHref === null ? $this->blogPosts->buildPost($article) : $this->buildArticle($article);
+			$result[] = $article->sourceHref === null ? $this->blogPostFactory->createFromDatabaseRow($article) : $this->buildArticle($article);
 		}
 		return $result;
 	}
