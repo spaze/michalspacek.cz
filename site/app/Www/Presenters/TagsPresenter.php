@@ -84,11 +84,11 @@ class TagsPresenter extends BasePresenter
 			}
 			$tagKey = array_search($tag, $article->getSlugTags());
 			foreach ($posts as $post) {
-				if (isset($post->slugTags[$tagKey])) {
-					$this->localeLinkParams[$post->locale] = ['tag' => $post->slugTags[$tagKey]];
+				if (isset($post->getSlugTags()[$tagKey])) {
+					$this->localeLinkParams[$post->getLocale()] = ['tag' => $post->getSlugTags()[$tagKey]];
 				}
 			}
-			if (isset($post) && isset($this->localeLinkParams[$post->locale])) {
+			if (isset($post) && isset($this->localeLinkParams[$post->getLocale()])) {
 				return;
 			}
 		}

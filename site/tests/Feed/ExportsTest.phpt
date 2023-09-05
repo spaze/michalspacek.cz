@@ -147,11 +147,11 @@ class ExportsTest extends TestCase
 
 	private function buildEdit(string $editedAt, string $summary): ArticleEdit
 	{
-		$edit = new ArticleEdit();
-		$edit->editedAt = new DateTime($editedAt);
-		$edit->summary = Html::el()->setHtml($summary);
-		$edit->summaryTexy = $summary;
-		return $edit;
+		return new ArticleEdit(
+			new DateTime($editedAt),
+			Html::el()->setHtml($summary),
+			$summary,
+		);
 	}
 
 }

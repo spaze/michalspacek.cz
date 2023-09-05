@@ -17,12 +17,8 @@ class BlogPostRecommendedLinkTest extends TestCase
 
 	public function testGetFromJson(): void
 	{
-		$link1 = new BlogPostRecommendedLink();
-		$link1->url = 'https://example.com/';
-		$link1->text = 'Link 1';
-		$link2 = new BlogPostRecommendedLink();
-		$link2->url = 'https://example.net/';
-		$link2->text = 'Link 2';
+		$link1 = new BlogPostRecommendedLink('https://example.com/', 'Link 1');
+		$link2 = new BlogPostRecommendedLink('https://example.net/', 'Link 2');
 		$expected = Json::encode([
 			[
 				'url' => 'https://example.com/',

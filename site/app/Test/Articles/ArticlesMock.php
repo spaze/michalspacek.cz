@@ -33,16 +33,37 @@ class ArticlesMock extends Articles
 	 */
 	public function addBlogPost(int $postId, DateTime $published, string $suffix, array $edits = [], bool $omitExports = false): void
 	{
-		$post = new BlogPost();
-		$post->postId = $postId;
-		$post->title = Html::fromText("Title {$suffix}");
-		$post->href = "https://example.com/{$suffix}";
-		$post->published = $published;
-		$post->lead = Html::fromText("Excerpt {$suffix}");
-		$post->text = Html::fromText("Text {$suffix}");
-		$post->edits = $edits;
-		$post->slugTags = [];
-		$post->omitExports = $omitExports;
+		$title = "Title {$suffix}";
+		$lead = "Excerpt {$suffix}";
+		$text = "Text {$suffix}";
+		$post = new BlogPost(
+			$postId,
+			'',
+			1,
+			'en_US',
+			null,
+			Html::fromText($title),
+			$title,
+			Html::fromText($lead),
+			$lead,
+			Html::fromText($text),
+			$text,
+			$published,
+			false,
+			null,
+			null,
+			null,
+			null,
+			[],
+			[],
+			[],
+			null,
+			"https://example.com/{$suffix}",
+			$edits,
+			[],
+			[],
+			$omitExports,
+		);
 		$this->articles[] = $post;
 	}
 

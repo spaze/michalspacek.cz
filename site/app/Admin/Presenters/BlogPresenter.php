@@ -35,7 +35,7 @@ class BlogPresenter extends BasePresenter
 	{
 		$posts = [];
 		foreach ($this->blogPosts->getAll() as $post) {
-			$posts[($post->published?->getTimestamp() ?: PHP_INT_MAX) . '|' . $post->slug] = $post;
+			$posts[($post->getPublishTime()?->getTimestamp() ?: PHP_INT_MAX) . '|' . $post->getSlug()] = $post;
 		}
 		krsort($posts, SORT_NATURAL);
 		$this->template->posts = $posts;
@@ -55,14 +55,11 @@ class BlogPresenter extends BasePresenter
 	{
 		return $this->postFormFactory->create(
 			function (BlogPost $post): never {
-				$this->blogPosts->add($post);
-				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
+				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postadded', [$post->getTitleTexy(), $this->link('edit', [$post->getId()]), $post->getHref()]));
 				$this->redirect('Blog:');
 			},
 			function (BlogPost $post): never {
-				$post->previousSlugTags = $this->post->slugTags ?? [];
-				$this->blogPosts->update($post);
-				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$post->titleTexy, $this->link('edit', [$post->postId]), $post->href]));
+				$this->flashMessage($this->texyFormatter->translate('messages.blog.admin.postupdated', [$post->getTitleTexy(), $this->link('edit', [$post->getId()]), $post->getHref()]));
 				$this->redirect('Blog:');
 			},
 			$this->template,

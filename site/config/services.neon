@@ -11,10 +11,12 @@ services:
 	- MichalSpacekCz\Articles\ArticleHeaderIconsFactory
 	articles: MichalSpacekCz\Articles\Articles
 	- MichalSpacekCz\Articles\ArticleSummaryFactory
+	- MichalSpacekCz\Articles\Blog\BlogPostEdits
+	- MichalSpacekCz\Articles\Blog\BlogPostFactory(allowedTags: %blog.allowedTags%)
 	- MichalSpacekCz\Articles\Blog\BlogPostLoader
 	- MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls
 	- MichalSpacekCz\Articles\Blog\BlogPostPreview
-	- MichalSpacekCz\Articles\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%, allowedTags: %blog.allowedTags%)
+	- MichalSpacekCz\Articles\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%)
 	- MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks
 	- MichalSpacekCz\CompanyInfo\Ares(url: %ares.url%)
 	- MichalSpacekCz\CompanyInfo\CompanyInfo(loadCompanyDataVisible: %loadCompanyDataVisible%)

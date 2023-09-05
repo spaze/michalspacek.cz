@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Articles;
 
 use DateTime;
 use MichalSpacekCz\Articles\Blog\BlogPost;
-use MichalSpacekCz\Articles\Blog\BlogPosts;
+use MichalSpacekCz\Articles\Blog\BlogPostFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
@@ -29,13 +29,13 @@ class ArticlesTest extends TestCase
 		private readonly Database $database,
 		private readonly NoOpTranslator $translator,
 		TexyFormatter $texyFormatter,
-		BlogPosts $blogPosts,
+		BlogPostFactory $blogPostFactory,
 		Tags $tags,
 	) {
 		$this->articles = new Articles(
 			$this->database,
 			$texyFormatter,
-			$blogPosts,
+			$blogPostFactory,
 			$tags,
 			$this->translator,
 		);

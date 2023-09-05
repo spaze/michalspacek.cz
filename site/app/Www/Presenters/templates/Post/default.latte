@@ -1,32 +1,32 @@
 {layout "@layout.latte"}
 {varType MichalSpacekCz\Articles\Blog\BlogPost $post}
 {define #metas}
-<meta n:if="$post->ogImage" property="og:image" content="{$post->ogImage|staticImageUrl}">
-<meta n:if="$post->ogImage || $post->twitterCard" property="og:title" content="{$pageTitle}">
-{var $ogDescription = $post->lead ?: $post->text}
-<meta n:if="$post->ogImage || $post->twitterCard" property="og:description" content="{$ogDescription|striptags|strip}">
-<meta n:if="$post->twitterCard" name="twitter:card" content="{$post->twitterCard->getCard()}">
-<meta n:if="$post->twitterCard" name="twitter:site" content="@spazef0rze">
+<meta n:if="$post->getOgImage()" property="og:image" content="{$post->getOgImage()|staticImageUrl}">
+<meta n:if="$post->getOgImage() || $post->getTwitterCard()" property="og:title" content="{$pageTitle}">
+{var $ogDescription = $post->getSummary() ?: $post->getText()}
+<meta n:if="$post->getOgImage() || $post->getTwitterCard()" property="og:description" content="{$ogDescription|striptags|strip}">
+<meta n:if="$post->getTwitterCard()" name="twitter:card" content="{$post->getTwitterCard()->getCard()}">
+<meta n:if="$post->getTwitterCard()" name="twitter:site" content="@spazef0rze">
 {/define}
 
 {define #content}
 <div class="column-content">
 	{control articleHeaderIcons $post}
-	<em n:if="$post->lead">{$post->lead}</em>
-	{$post->text}
-	{$post->originally}
-	{if $post->recommended}
+	<em n:if="$post->getSummary()">{$post->getSummary()}</em>
+	{$post->getText()}
+	{$post->getOriginally()}
+	{if $post->getRecommended()}
 		<hr>
 		<h3>{_messages.blog.post.recommendedreading}</h3>
-		<ul n:inner-foreach="$post->recommended as $item">
-			<li>{=$item->text|format:$item->url}</li>
+		<ul n:inner-foreach="$post->getRecommended() as $item">
+			<li>{=$item->getText()|format:$item->getUrl()}</li>
 		</ul>
 	{/if}
 </div>
 <div class="column-sidebar">
-	<div class="widget" n:if="$edits">
+	<div class="widget" n:if="$post->getEdits()">
 		<h3>{_messages.blog.post.edits}</h3>
-		<p n:foreach="$edits as $edit"><strong>{$edit->editedAt|localeDay}</strong> {$edit->summary}</p>
+		<p n:foreach="$post->getEdits() as $edit"><strong>{$edit->getEditedAt()|localeDay}</strong> {$edit->getSummary()}</p>
 	</div>
 	{include "common/sidebar.latte"}
 </div>

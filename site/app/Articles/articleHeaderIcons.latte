@@ -1,10 +1,10 @@
 {varType MichalSpacekCz\Articles\ArticlePublishedElsewhere|MichalSpacekCz\Articles\Blog\BlogPost $post}
 {varType ?\DateTime $edited}
 <div id="header-icons">
-	<div n:if="$post->published">
+	<div n:if="$post->getPublishTime()">
 		{icon calendar}
 		<small>
-			<strong>{$post->published|localeDay}</strong>
+			<strong>{$post->getPublishTime()|localeDay}</strong>
 			{ifset $edited}({_messages.blog.post.edited} {$edited|localeDay}){/ifset}
 		</small>
 	</div>
@@ -20,7 +20,7 @@
 	</div>
 	<div n:if="$post instanceof MichalSpacekCz\Articles\ArticlePublishedElsewhere">
 		{icon external-link}
-		<small><a href="{$post->sourceHref}">{$post->sourceName}</a></small>
+		<small><a href="{$post->getSourceHref()}">{$post->getSourceName()}</a></small>
 	</div>
 	<div class="clear"></div>
 </div>

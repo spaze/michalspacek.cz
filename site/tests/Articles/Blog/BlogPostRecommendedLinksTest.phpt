@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Articles\Blog;
 
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
-use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Tester\Assert;
 use Tester\TestCase;
@@ -39,10 +39,10 @@ class BlogPostRecommendedLinksTest extends TestCase
 			],
 		]);
 		$links = $this->recommendedLinks->getFromJson($json);
-		Assert::same($url1, $links[0]->url);
-		Assert::same($text1, $links[0]->text);
-		Assert::same($url2, $links[1]->url);
-		Assert::same($text2, $links[1]->text);
+		Assert::same($url1, $links[0]->getUrl());
+		Assert::same($text1, $links[0]->getText());
+		Assert::same($url2, $links[1]->getUrl());
+		Assert::same($text2, $links[1]->getText());
 	}
 
 
@@ -51,7 +51,7 @@ class BlogPostRecommendedLinksTest extends TestCase
 		$json = Json::encode([['url' => 'https://invalid.example/']]);
 		Assert::exception(function () use ($json): void {
 			$this->recommendedLinks->getFromJson($json);
-		}, ValidationException::class, "The mandatory item '0 › text' is missing.");
+		}, ShouldNotHappenException::class, 'Decoded data > link should have url and text keys, but has these: url');
 	}
 
 
@@ -60,7 +60,7 @@ class BlogPostRecommendedLinksTest extends TestCase
 		$json = Json::encode([['text' => 'Invalid example']]);
 		Assert::exception(function () use ($json): void {
 			$this->recommendedLinks->getFromJson($json);
-		}, ValidationException::class, "The mandatory item '0 › url' is missing.");
+		}, ShouldNotHappenException::class, 'Decoded data > link should have url and text keys, but has these: text');
 	}
 
 }

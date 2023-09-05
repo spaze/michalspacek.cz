@@ -7,21 +7,26 @@ use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Application\Locales;
 use MichalSpacekCz\Articles\Blog\BlogPost;
+use MichalSpacekCz\Articles\Blog\BlogPostFactory;
 use MichalSpacekCz\Articles\Blog\BlogPostPreview;
 use MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
+use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
+use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use MichalSpacekCz\Twitter\TwitterCards;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
@@ -32,6 +37,7 @@ class PostFormFactory
 		private readonly FormFactory $factory,
 		private readonly Translator $translator,
 		private readonly BlogPosts $blogPosts,
+		private readonly BlogPostFactory $blogPostFactory,
 		private readonly Tags $tags,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly CspConfig $contentSecurityPolicy,
@@ -107,7 +113,7 @@ class PostFormFactory
 		$form->addMultiSelect('cspSnippets', $label, $items);
 
 		$items = [];
-		foreach ($this->blogPosts->getAllowedTags() as $name => $tags) {
+		foreach ($this->blogPostFactory->getAllowedTags() as $name => $tags) {
 			$allowed = [];
 			foreach ($tags as $tag => $attributes) {
 				$allowed[] = trim('<' . trim($tag . ' ' . implode(' ', $attributes)) . '>');
@@ -122,28 +128,29 @@ class PostFormFactory
 		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
 			->setHtmlAttribute('data-loading-value', 'Moment…')
 			->onClick[] = function (SubmitButton $button) use ($post, $template, $sendTemplate): void {
-				$newPost = $this->buildPost($this->formValues->getValues($button), $post?->postId);
+				$newPost = $this->buildPost($this->formValues->getValues($button), $post?->getId());
 				$this->blogPostPreview->sendPreview($newPost, $template, $sendTemplate);
 			};
 
 		$form->onValidate[] = function (Form $form) use ($post): void {
-			$newPost = $this->buildPost($form->getValues(), $post?->postId);
-			if ($newPost->needsPreviewKey() && $newPost->previewKey === null) {
+			$newPost = $this->buildPost($form->getValues(), $post?->getId());
+			if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
 				$input = $form->getComponent('previewKey');
 				if (!$input instanceof TextInput) {
 					throw new ShouldNotHappenException(sprintf("The 'previewKey' component should be '%s' but it's a %s", TextInput::class, get_debug_type($input)));
 				}
-				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->published === null ? 'nepublikovaný' : 'budoucí'));
+				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
 		$form->onSuccess[] = function (Form $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
 			$values = $form->getValues();
-			$newPost = $this->buildPost($values, $post?->postId);
-			$this->blogPosts->enrich($newPost);
+			$newPost = $this->buildPost($values, $post?->getId());
 			try {
 				if ($post) {
+					$this->blogPosts->update($newPost, empty($values->editSummary) ? null : $values->editSummary, $post->getSlugTags());
 					$onSuccessEdit($newPost);
 				} else {
+					$this->blogPosts->add($newPost);
 					$onSuccessAdd($newPost);
 				}
 			} catch (UniqueConstraintViolationException) {
@@ -161,30 +168,35 @@ class PostFormFactory
 	}
 
 
+	/**
+	 * @throws TwitterCardNotFoundException
+	 * @throws JsonException
+	 * @throws InvalidTimezoneException
+	 * @throws InvalidLinkException
+	 */
 	private function buildPost(stdClass $values, ?int $postId): BlogPost
 	{
-		$post = new BlogPost();
-		$post->postId = $postId;
-		$post->translationGroupId = (empty($values->translationGroup) ? null : $values->translationGroup);
-		$post->localeId = $values->locale;
-		$post->locale = $this->locales->getLocaleById($values->locale);
-		$post->slug = $values->slug;
-		$post->titleTexy = $values->title;
-		$post->leadTexy = (empty($values->lead) ? null : $values->lead);
-		$post->textTexy = $values->text;
-		$post->originallyTexy = (empty($values->originally) ? null : $values->originally);
-		$post->published = (empty($values->published) ? null : new DateTime($values->published));
-		$post->previewKey = (empty($values->previewKey) ? null : $values->previewKey);
-		$post->ogImage = (empty($values->ogImage) ? null : $values->ogImage);
-		$post->tags = (empty($values->tags) ? [] : $this->tags->toArray($values->tags));
-		$post->slugTags = (empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags));
-		$post->recommended = $values->recommended ? $this->recommendedLinks->getFromJson($values->recommended) : [];
-		$post->twitterCard = (empty($values->twitterCard) ? null : $this->twitterCards->getCard($values->twitterCard));
-		$post->editSummary = (empty($values->editSummary) ? null : $values->editSummary);
-		$post->cspSnippets = (empty($values->cspSnippets) ? [] : $values->cspSnippets);
-		$post->allowedTags = (empty($values->allowedTags) ? [] : $values->allowedTags);
-		$post->omitExports = !empty($values->omitExports);
-		return $post;
+		return $this->blogPostFactory->create(
+			$postId,
+			$values->slug,
+			$values->locale,
+			$this->locales->getLocaleById($values->locale),
+			empty($values->translationGroup) ? null : $values->translationGroup,
+			$values->title,
+			empty($values->lead) ? null : $values->lead,
+			$values->text,
+			empty($values->published) ? null : new DateTime($values->published),
+			empty($values->previewKey) ? null : $values->previewKey,
+			empty($values->originally) ? null : $values->originally,
+			empty($values->ogImage) ? null : $values->ogImage,
+			empty($values->tags) ? [] : $this->tags->toArray($values->tags),
+			empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags),
+			$values->recommended ? $this->recommendedLinks->getFromJson($values->recommended) : [],
+			empty($values->twitterCard) ? null : $this->twitterCards->getCard($values->twitterCard),
+			empty($values->cspSnippets) ? [] : $values->cspSnippets,
+			empty($values->allowedTags) ? [] : $values->allowedTags,
+			!empty($values->omitExports),
+		);
 	}
 
 
@@ -202,22 +214,22 @@ class PostFormFactory
 	private function setDefaults(BlogPost $post, Form $form): void
 	{
 		$values = [
-			'translationGroup' => $post->translationGroupId,
-			'locale' => $post->localeId,
-			'title' => $post->titleTexy,
-			'slug' => $post->slug,
-			'published' => $post->published?->format('Y-m-d H:i'),
-			'previewKey' => $post->previewKey,
-			'lead' => $post->leadTexy,
-			'text' => $post->textTexy,
-			'originally' => $post->originallyTexy,
-			'ogImage' => $post->ogImage,
-			'twitterCard' => $post->twitterCard?->getCard(),
-			'tags' => ($post->tags ? $this->tags->toString($post->tags) : null),
-			'recommended' => (empty($post->recommended) ? null : Json::encode($post->recommended)),
-			'cspSnippets' => $post->cspSnippets,
-			'allowedTags' => $post->allowedTags,
-			'omitExports' => $post->omitExports,
+			'translationGroup' => $post->getTranslationGroupId(),
+			'locale' => $post->getLocaleId(),
+			'title' => $post->getTitleTexy(),
+			'slug' => $post->getSlug(),
+			'published' => $post->getPublishTime()?->format('Y-m-d H:i'),
+			'previewKey' => $post->getPreviewKey(),
+			'lead' => $post->getSummaryTexy(),
+			'text' => $post->getTextTexy(),
+			'originally' => $post->getOriginallyTexy(),
+			'ogImage' => $post->getOgImage(),
+			'twitterCard' => $post->getTwitterCard()?->getCard(),
+			'tags' => $post->getTags() ? $this->tags->toString($post->getTags()) : null,
+			'recommended' => empty($post->getRecommended()) ? null : Json::encode($post->getRecommended()),
+			'cspSnippets' => $post->getCspSnippets(),
+			'allowedTags' => $post->getAllowedTagsGroups(),
+			'omitExports' => $post->omitExports(),
 		];
 		$form->setDefaults($values);
 		$form->getComponent('editSummary')

@@ -48,7 +48,7 @@ class RedirectPresenter extends BasePresenter
 	{
 		$article = current($this->articles->getAllByTags([$token], 1));
 		if ($article) {
-			$this->sendResponse(new RedirectResponse($article->href, IResponse::S302_Found));
+			$this->sendResponse(new RedirectResponse($article->getHref(), IResponse::S302_Found));
 		} else {
 			sleep(self::GOOD_NIGHT);
 		}
