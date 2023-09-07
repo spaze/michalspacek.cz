@@ -11,6 +11,8 @@ use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
+use Nette\Utils\Html;
+use Stringable;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -115,6 +117,37 @@ class TexyFormatterTest extends TestCase
 	public function testFormatBlock(): void
 	{
 		Assert::same("<p>{$this->expectedFormatted}</p>\n", $this->texyFormatter->formatBlock('**foo "bar":[training:' . self::TRAINING_ACTION . ']**')->toHtml());
+	}
+
+
+	public function testSubstitute(): void
+	{
+		Assert::same('<em>foo</em> bar 303', $this->texyFormatter->substitute('*foo* %s %d', ['bar', 303])->render());
+
+		$toString = new class () implements Stringable {
+
+			public function __toString(): string
+			{
+				return __FUNCTION__;
+			}
+
+		};
+		$toStringNoInterface = new class () {
+
+			public function __toString(): string
+			{
+				return __FUNCTION__;
+			}
+
+		};
+		$html = Html::fromText('foo');
+		Assert::same('__toString', $this->texyFormatter->substitute($toString, [])->render());
+		Assert::same('<code>__toString</code>', $this->texyFormatter->substitute("`%s`", [$toString])->render());
+		Assert::same('__toString', $this->texyFormatter->substitute($toStringNoInterface, [])->render());
+		Assert::same('<code>__toString</code>', $this->texyFormatter->substitute("`%s`", [$toStringNoInterface])->render());
+
+		Assert::same('foo', $this->texyFormatter->substitute($html, [])->render());
+		Assert::same('<strong>foo</strong>', $this->texyFormatter->substitute("**%s**", [$html])->render());
 	}
 
 

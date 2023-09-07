@@ -7,6 +7,7 @@ use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
+use Stringable;
 use Symfony\Contracts\Cache\CacheInterface;
 use Texy\Texy;
 
@@ -113,11 +114,11 @@ class TexyFormatter
 
 
 	/**
-	 * @param list<string|int> $args
+	 * @param list<string|Stringable|int> $args
 	 */
-	public function substitute(string $format, array $args): Html
+	public function substitute(string|Stringable $format, array $args): Html
 	{
-		return $this->format(vsprintf($format, $args));
+		return $this->format(vsprintf((string)$format, $args));
 	}
 
 

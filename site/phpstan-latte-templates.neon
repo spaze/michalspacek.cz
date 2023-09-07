@@ -4,6 +4,7 @@ parameters:
 		- app
 	level: max
 	latte:
+		strictMode: true
 		engineBootstrap: app/PhpStan/latteEngine.php
 		presenterFactoryBootstrap: app/PhpStan/presenterFactory.php
 		features:

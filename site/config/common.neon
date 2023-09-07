@@ -35,6 +35,8 @@ di:
 		parameters: false
 		tags: false
 
+latte:
+	strictTypes: true
 
 database:
 	default:

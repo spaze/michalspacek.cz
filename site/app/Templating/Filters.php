@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Templating;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Utils\Html;
+use Stringable;
 
 class Filters
 {
@@ -46,7 +47,7 @@ class Filters
 	}
 
 
-	public function format(string $message, string|int ...$args): Html
+	public function format(string|Stringable $message, string|Stringable|int ...$args): Html
 	{
 		return $this->texyFormatter->substitute($message, array_values($args));
 	}
