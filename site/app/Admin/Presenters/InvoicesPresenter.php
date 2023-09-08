@@ -38,8 +38,9 @@ class InvoicesPresenter extends BasePresenter
 		foreach ($this->trainingDates->getWithUnpaid() as $date) {
 			$unpaidApplications = $this->trainingApplications->getValidUnpaidByDate($date->getId());
 			foreach ($unpaidApplications as $application) {
-				if ($application->getInvoiceId()) {
-					$this->allUnpaidInvoiceIds[] = $application->getInvoiceId();
+				$invoiceId = $application->getInvoiceId();
+				if ($invoiceId) {
+					$this->allUnpaidInvoiceIds[] = $invoiceId;
 				}
 			}
 			$date->setApplications($unpaidApplications);
