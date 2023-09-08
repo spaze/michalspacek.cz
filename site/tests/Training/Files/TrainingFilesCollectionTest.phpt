@@ -19,7 +19,7 @@ class TrainingFilesCollectionTest extends TestCase
 	private TrainingFilesCollection $collection;
 
 
-	protected function setUp(): void
+	public function __construct()
 	{
 		$this->collection = new TrainingFilesCollection();
 		$this->collection->add(new TrainingFile(123, 'foo', new SplFileInfo(''), new DateTimeImmutable('2022-03-11 00:00:00')));
