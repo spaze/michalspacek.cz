@@ -16,7 +16,7 @@ use UnexpectedValueException;
  * See https://wwwinfo.mfcr.cz/ares/xml_doc/schemas/documentation/zkr_103.txt
  * for meaning of abbreviations like AA, NU, CD, CO etc. (in Czech)
  */
-class Ares implements CompanyRegistry
+class Ares implements CompanyRegister
 {
 
 	/**

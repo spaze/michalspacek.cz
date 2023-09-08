@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\CompanyInfo;
 
-interface CompanyRegistry
+interface CompanyRegister
 {
 
 	public function getDetails(string $companyId): CompanyDetails;

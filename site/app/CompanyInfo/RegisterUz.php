@@ -18,7 +18,7 @@ use UnexpectedValueException;
  *
  * See http://www.registeruz.sk/cruz-public/static/api.html for the docs.
  */
-class RegisterUz implements CompanyRegistry
+class RegisterUz implements CompanyRegister
 {
 
 	private const DAY_ONE = '1993-01-01';
