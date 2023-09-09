@@ -142,7 +142,7 @@ class RouterFactory
 			new RouterFactoryRoute('/<action>[/<param>]', 'Exports', 'default'),
 			new RouterFactoryRoute('/<name>', 'Venues', 'venue'),
 			new RouterFactoryRoute('/<tag>', 'Tags', 'tag'),
-			new RouterFactoryRoute('<slug>', 'Post', 'default', null, BlogPostRoute::class),
+			new RouterFactoryRoute('<slug>', 'Post', 'default', null, RouterRoutes::BlogPostRoute),
 			new RouterFactoryRoute('<presenter>', 'Homepage', 'default'), // Intentionally no action, use presenter-specific route if you need actions
 		]);
 
@@ -183,18 +183,13 @@ class RouterFactory
 
 
 	/**
-	 * Route factory.
-	 *
-	 * @param class-string<ApplicationRoute> $class
-	 * @param string $mask
 	 * @param array<string, array<string, array<string, string>|string>> $metadata
-	 * @return Router
 	 */
-	private function createRoute(string $class, string $mask, array $metadata): Router
+	private function createRoute(RouterRoutes $class, string $mask, array $metadata): Router
 	{
 		return match ($class) {
-			BlogPostRoute::class => new $class($this->blogPostLoader, $mask, $metadata),
-			default => new $class($mask, $metadata),
+			RouterRoutes::BlogPostRoute => new BlogPostRoute($this->blogPostLoader, $mask, $metadata),
+			RouterRoutes::Route => new ApplicationRoute($mask, $metadata),
 		};
 	}
 

@@ -73,6 +73,11 @@
 				<referencedProperty name="Nette\Application\UI\Control::$snippetMode" />
 			</errorLevel>
 		</PropertyNotSetInConstructor>
+		<UnsafeInstantiation>
+			<errorLevel type="suppress">
+				<file name="app/Test/TestCaseRunner.php" /> <!-- Correct params are figured for each TestCase child in MichalSpacekCz\Test\TestCaseRunner::run() -->
+			</errorLevel>
+		</UnsafeInstantiation>
 		<UnusedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
