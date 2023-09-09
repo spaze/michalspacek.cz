@@ -11,6 +11,7 @@ class ServerEnv
 {
 
 	/**
+	 * @param non-empty-string $key
 	 * @throws ServerEnvNotFoundException
 	 * @throws ServerEnvNotStringException
 	 */
@@ -26,6 +27,9 @@ class ServerEnv
 	}
 
 
+	/**
+	 * @param non-empty-string $key
+	 */
 	public static function tryGetString(string $key): ?string
 	{
 		if (!isset($_SERVER[$key])) {
@@ -38,6 +42,9 @@ class ServerEnv
 	}
 
 
+	/**
+	 * @param non-empty-string $key
+	 */
 	public static function setString(string $key, string $value): void
 	{
 		$_SERVER[$key] = $value;
@@ -45,6 +52,7 @@ class ServerEnv
 
 
 	/**
+	 * @param non-empty-string $key
 	 * @return list<mixed>
 	 * @throws ServerEnvNotFoundException
 	 * @throws ServerEnvNotArrayException
@@ -62,6 +70,7 @@ class ServerEnv
 
 
 	/**
+	 * @param non-empty-string $key
 	 * @return list<mixed>|null
 	 */
 	public static function tryGetList(string $key): ?array
@@ -76,6 +85,9 @@ class ServerEnv
 	}
 
 
+	/**
+	 * @param non-empty-string $key
+	 */
 	public static function unset(string $key): void
 	{
 		unset($_SERVER[$key]);
