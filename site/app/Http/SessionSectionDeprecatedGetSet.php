@@ -38,7 +38,7 @@ trait SessionSectionDeprecatedGetSet
 	/**
 	 * @deprecated Add set<Property>() method instead
 	 */
-	public function set(string $name, $value, ?string $expire = null): void
+	public function set(string $name, mixed $value, ?string $expire = null): void
 	{
 		trigger_error('Add set<Property>() method instead', E_USER_DEPRECATED);
 	}
@@ -64,6 +64,7 @@ trait SessionSectionDeprecatedGetSet
 
 
 	/**
+	 * @param string|list<string>|null $name
 	 * @deprecated Add remove<Property>() method instead
 	 */
 	public function remove($name = null): void
