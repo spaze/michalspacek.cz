@@ -43,7 +43,7 @@ class Exports
 	public function getArticles(string $self, ?string $filter = null): Feed
 	{
 		$key = sprintf('Atom/%s/%s', $this->translator->getDefaultLocale(), $filter ? "ArticlesByTag/{$filter}" : 'AllArticles');
-		$feed = $this->cache->load($key, function (&$dependencies) use ($self, $filter): Feed {
+		$feed = $this->cache->load($key, function (array|null &$dependencies) use ($self, $filter): Feed {
 			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate());
 			$dependencies[Cache::Expire] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 

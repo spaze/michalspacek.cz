@@ -166,7 +166,7 @@ class TexyFormatter
 		$result = Strings::replace(
 			(string)$result,
 			'~\*\*([^:]+):([^*]+)\*\*~',
-			function ($matches) use ($replacements): string {
+			function (array $matches) use ($replacements): string {
 				return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : '');
 			},
 		);

@@ -11,7 +11,6 @@ use Nette\Application\Request;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Container;
-use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 
 class TalkSlidesFormFactory
@@ -79,10 +78,8 @@ class TalkSlidesFormFactory
 			// Check whether max allowed file uploads has been reached
 			$uploaded = 0;
 			$files = $request->getFiles();
-			array_walk_recursive($files, function ($item) use (&$uploaded) {
-				if ($item instanceof FileUpload) {
-					$uploaded++;
-				}
+			array_walk_recursive($files, function () use (&$uploaded) {
+				$uploaded++;
 			});
 			// If there's no error yet then the number of uploaded just coincidentally matches max allowed
 			if ($form->hasErrors() && $uploaded >= $this->getMaxSlideUploads()) {

@@ -34,7 +34,7 @@ class CompanyInfo
 	{
 		try {
 			$register = $this->getRegister($country);
-			$cached = $this->cache->load("{$country}/{$companyId}", function (&$dependencies) use ($companyId, $register): CompanyInfoDetails {
+			$cached = $this->cache->load("{$country}/{$companyId}", function (array|null &$dependencies) use ($companyId, $register): CompanyInfoDetails {
 				$data = $register->getDetails($companyId);
 				$dependencies[Cache::Expire] = $data->getStatus() === IResponse::S200_OK ? '3 days' : '15 minutes';
 				return $data;
