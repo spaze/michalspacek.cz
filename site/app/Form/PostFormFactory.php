@@ -21,7 +21,6 @@ use MichalSpacekCz\Twitter\TwitterCards;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\UniqueConstraintViolationException;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -42,7 +41,6 @@ class PostFormFactory
 		private readonly CspConfig $contentSecurityPolicy,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly BlogPostPreview $blogPostPreview,
-		private readonly FormValues $formValues,
 		private readonly TwitterCards $twitterCards,
 		private readonly BlogPostRecommendedLinks $recommendedLinks,
 		private readonly Locales $locales,
@@ -126,8 +124,8 @@ class PostFormFactory
 		$form->addSubmit('submit', 'Přidat');
 		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
 			->setHtmlAttribute('data-loading-value', 'Moment…')
-			->onClick[] = function (SubmitButton $button) use ($post, $template, $sendTemplate): void {
-				$newPost = $this->buildPost($this->formValues->getValues($button), $post?->getId());
+			->onClick[] = function () use ($form, $post, $template, $sendTemplate): void {
+				$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
 				$this->blogPostPreview->sendPreview($newPost, $template, $sendTemplate);
 			};
 

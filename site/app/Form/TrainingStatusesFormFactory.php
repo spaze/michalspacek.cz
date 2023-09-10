@@ -7,7 +7,6 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Statuses;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 
 class TrainingStatusesFormFactory
@@ -18,7 +17,6 @@ class TrainingStatusesFormFactory
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly TrainingApplications $trainingApplications,
 		private readonly Statuses $trainingStatuses,
-		private readonly FormValues $formValues,
 	) {
 	}
 
@@ -44,8 +42,8 @@ class TrainingStatusesFormFactory
 		$submitStatuses = $form->addSubmit('submit', 'Změnit');
 		$submitFamiliar = $form->addSubmit('familiar', 'Tykat všem')->setValidationScope([]);
 
-		$submitStatuses->onClick[] = function (SubmitButton $button) use ($onSuccess): void {
-			$values = $this->formValues->getValues($button);
+		$submitStatuses->onClick[] = function () use ($form, $onSuccess): void {
+			$values = $form->getFormValues();
 			foreach ($values->applications as $id => $status) {
 				if ($status) {
 					$this->trainingStatuses->updateStatus($id, $status, $values->date);
@@ -53,10 +51,10 @@ class TrainingStatusesFormFactory
 			}
 			$onSuccess(null);
 		};
-		$submitFamiliar->onClick[] = function (SubmitButton $button) use ($onSuccess): void {
+		$submitFamiliar->onClick[] = function () use ($form, $onSuccess): void {
 			$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
 			$total = 0;
-			foreach (array_keys((array)$this->formValues->getUntrustedValues($button)->applications) as $id) {
+			foreach (array_keys((array)$form->getUntrustedFormValues()->applications) as $id) {
 				$application = $this->trainingApplications->getApplicationById($id);
 				if (in_array($application->getStatus(), $attendedStatuses) && !$application->isFamiliar()) {
 					$this->trainingApplications->setFamiliar($id);

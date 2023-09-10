@@ -20,6 +20,16 @@ class UiForm extends Form
 	}
 
 
+	public function getUntrustedFormValues(): ArrayHash
+	{
+		$values = parent::getUntrustedValues();
+		if (!$values instanceof ArrayHash) {
+			throw new ShouldNotHappenException();
+		}
+		return $values;
+	}
+
+
 	/**
 	 * @param string|object|null $returnType
 	 * @return object|array<string, mixed>
@@ -31,6 +41,20 @@ class UiForm extends Form
 			trigger_error('Use getFormValues() instead', E_USER_DEPRECATED);
 		}
 		return parent::getValues($returnType, $controls);
+	}
+
+
+	/**
+	 * @param string|object|null $returnType
+	 * @return object|array<string, mixed>
+	 * @deprecated Use getUntrustedFormValues() instead
+	 * */
+	public function getUntrustedValues($returnType = ArrayHash::class, ?array $controls = null): object|array
+	{
+		if (func_num_args() === 0) {
+			trigger_error('Use getUntrustedFormValues() instead', E_USER_DEPRECATED);
+		}
+		return parent::getUntrustedValues($returnType, $controls);
 	}
 
 }
