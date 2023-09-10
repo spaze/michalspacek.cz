@@ -61,7 +61,7 @@ class TrainingApplicationFormFactory
 			$form->addSelect('trainingId', $this->translator->translate('label.trainingdate'), $inputDates)
 				->setRequired('Vyberte prosím termín a místo školení')
 				->setPrompt('- vyberte termín a místo -')
-				->addRule($form::INTEGER);
+				->addRule($form::Integer);
 		}
 
 		$this->trainingControlsFactory->addAttendee($form);

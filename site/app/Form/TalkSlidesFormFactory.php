@@ -93,7 +93,7 @@ class TalkSlidesFormFactory
 		$disableSlideUploads = (bool)$filenamesTalkId;
 		$container->addText('alias', 'Alias:')
 			->setRequired('Zadejte prosím alias')
-			->addRule($form::PATTERN, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
+			->addRule($form::Pattern, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
 		$container->addText('number', 'Slajd:')
 			->setHtmlType('number')
 			->setDefaultValue(1)
@@ -103,17 +103,17 @@ class TalkSlidesFormFactory
 			->setRequired('Zadejte prosím titulek');
 		$upload = $container->addUpload('replace', 'Nahradit:')
 			->setDisabled($disableSlideUploads)
-			->addRule($form::MIME_TYPE, "Soubor musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
+			->addRule($form::MimeType, "Soubor musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
 			->setHtmlAttribute('title', "Nahradit soubor ({$supportedImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getMainContentTypes()));
 		$container->addText('filename', 'Soubor:')
 			->setDisabled($disableSlideUploads)
 			->setHtmlAttribute('class', 'slide-filename')
-			->addConditionOn($upload, $form::BLANK)
+			->addConditionOn($upload, $form::Blank)
 				->setRequired('Zadejte prosím soubor');
 		$container->addUpload('replaceAlternative', 'Nahradit:')
 			->setDisabled($disableSlideUploads)
-			->addRule($form::MIME_TYPE, "Alternativní soubor musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
+			->addRule($form::MimeType, "Alternativní soubor musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
 			->setHtmlAttribute('title', "Nahradit alternativní soubor ({$supportedAlternativeImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getAlternativeContentTypes()));
 		$container->addText('filenameAlternative', 'Soubor:')

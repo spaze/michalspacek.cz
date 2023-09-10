@@ -36,11 +36,11 @@ class ChangePasswordFormFactory
 			->setHtmlAttribute('autocomplete', 'new-password')
 			->setHtmlAttribute('passwordrules', 'minlength: 42; required: lower; required: upper; required: digit; required: [ !#$%&*+,./:;=?@_~];')
 			->setRequired('Zadejte prosím nové heslo')
-			->addRule($form::MIN_LENGTH, 'Nové heslo musí mít alespoň %d znaků', 15);
+			->addRule($form::MinLength, 'Nové heslo musí mít alespoň %d znaků', 15);
 		$form->addPassword('newPasswordVerify', 'Nové heslo pro kontrolu:')
 			->setHtmlAttribute('autocomplete', 'new-password')
 			->setRequired('Zadejte prosím nové heslo pro kontrolu')
-			->addRule($form::EQUAL, 'Hesla se neshodují', $newPassword);
+			->addRule($form::Equal, 'Hesla se neshodují', $newPassword);
 		$form->addSubmit('save', 'Uložit');
 
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {

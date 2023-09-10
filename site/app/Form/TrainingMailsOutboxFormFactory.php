@@ -116,14 +116,14 @@ class TrainingMailsOutboxFormFactory
 						->setHtmlAttribute('placeholder', 'Faktura č.')
 						->setHtmlAttribute('title', 'Faktura č.')
 						->setDefaultValue($application->getInvoiceId())
-						->addConditionOn($send, $form::FILLED)
-						->addRule($form::FILLED, 'Chybí číslo faktury');
+						->addConditionOn($send, $form::Filled)
+						->addRule($form::Filled, 'Chybí číslo faktury');
 					$applicationIdsContainer->addUpload('invoice')
 						->setHtmlAttribute('title', 'Faktura v PDF')
 						->setHtmlAttribute('accept', 'application/pdf')
-						->addConditionOn($send, $form::FILLED)
-						->addRule($form::FILLED, 'Chybí faktura')
-						->addRule($form::MIME_TYPE, 'Faktura není v PDF', 'application/pdf');
+						->addConditionOn($send, $form::Filled)
+						->addRule($form::Filled, 'Chybí faktura')
+						->addRule($form::MimeType, 'Faktura není v PDF', 'application/pdf');
 					$applicationIdsContainer->addEmail('cc', 'Cc:')->setRequired(false);
 					break;
 			}

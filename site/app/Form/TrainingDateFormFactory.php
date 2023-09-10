@@ -71,12 +71,12 @@ class TrainingDateFormFactory
 			->setHtmlAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím začátek')
-			->addRule($form::PATTERN, 'Začátek musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
+			->addRule($form::Pattern, 'Začátek musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
 		$form->addText('end', 'Konec:')
 			->setHtmlAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím konec')
-			->addRule($form::PATTERN, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
+			->addRule($form::Pattern, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
 		$form->onValidate[] = function (UiForm $form): void {
 			$this->trainingDatesFormValidator->validateFormStartEnd($form->getComponent('start'), $form->getComponent('end'));
 		};
@@ -92,15 +92,15 @@ class TrainingDateFormFactory
 
 		$checkboxPublic = $form->addCheckbox('public', 'Veřejné:');
 		$checkboxRemote = $form->addCheckbox('remote', 'Online:');
-		$checkboxRemote->addConditionOn($selectVenue, $form::FILLED)
-			->addConditionOn($checkboxPublic, $form::FILLED)
-			->addRule($form::BLANK, 'Je vybráno místo, veřejné školení nemůže být online');
-		$selectVenue->addConditionOn($checkboxRemote, $form::BLANK)
+		$checkboxRemote->addConditionOn($selectVenue, $form::Filled)
+			->addConditionOn($checkboxPublic, $form::Filled)
+			->addRule($form::Blank, 'Je vybráno místo, veřejné školení nemůže být online');
+		$selectVenue->addConditionOn($checkboxRemote, $form::Blank)
 			->setRequired('Vyberte prosím místo nebo školení označte jako online');
 
 		$form->addText('remoteUrl', 'Online URL:')
 			->addRule($form::URL, 'Online URL musí být validní URL')
-			->addRule($form::MAX_LENGTH, 'Maximální délka URL je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka URL je %d znaků', 200);
 
 		$format = "Bez HTML značek,\nodřádkování bude v pozvánce zachováno";
 		$form->addTextArea('remoteNotes', 'Online poznámky:')
@@ -108,7 +108,7 @@ class TrainingDateFormFactory
 			->setHtmlAttribute('title', $format);
 
 		$form->addSelect('cooperation', 'Spolupráce:', [0 => 'žádná'] + $this->trainings->getCooperations())
-			->addRule($form::INTEGER);
+			->addRule($form::Integer);
 		$this->trainingControlsFactory->addNote($form);
 
 		$price = $form->addText('price', 'Cena bez DPH:')
@@ -128,10 +128,10 @@ class TrainingDateFormFactory
 
 		$form->addText('videoHref', 'Odkaz na záznam:')
 			->addRule($form::URL, 'Odkaz na záznam musí být validní URL')
-			->addRule($form::MAX_LENGTH, 'Maximální délka URL je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka URL je %d znaků', 200);
 		$form->addText('feedbackHref', 'Odkaz na feedback formulář:')
 			->addRule($form::URL, 'Odkaz na feedback formulář musí být validní URL')
-			->addRule($form::MAX_LENGTH, 'Maximální délka URL je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka URL je %d znaků', 200);
 
 		$submit = $form->addSubmit('submit', 'Přidat');
 		if ($date) {

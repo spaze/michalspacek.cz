@@ -58,27 +58,27 @@ class PostFormFactory
 			->setPrompt('- vyberte -');
 		$form->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
-			->addRule($form::MIN_LENGTH, 'Titulek musí mít alespoň %d znaky', 3);
+			->addRule($form::MinLength, 'Titulek musí mít alespoň %d znaky', 3);
 		$form->addText('slug', 'Slug:')
 			->setRequired('Zadejte prosím slug')
-			->addRule($form::MIN_LENGTH, 'Slug musí mít alespoň %d znaky', 3);
+			->addRule($form::MinLength, 'Slug musí mít alespoň %d znaky', 3);
 		$this->addPublishedDate($form->addText('published', 'Vydáno:'))
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
 		$form->addText('previewKey', 'Klíč pro náhled:')
 			->setRequired(false)
-			->addRule($form::MIN_LENGTH, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
+			->addRule($form::MinLength, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
 		$form->addTextArea('lead', 'Perex:')
-			->addCondition($form::FILLED)
-			->addRule($form::MIN_LENGTH, 'Perex musí mít alespoň %d znaky', 3);
+			->addCondition($form::Filled)
+			->addRule($form::MinLength, 'Perex musí mít alespoň %d znaky', 3);
 		$form->addTextArea('text', 'Text:')
 			->setRequired('Zadejte prosím text')
-			->addRule($form::MIN_LENGTH, 'Text musí mít alespoň %d znaky', 3);
+			->addRule($form::MinLength, 'Text musí mít alespoň %d znaky', 3);
 		$form->addTextArea('originally', 'Původně vydáno:')
-			->addCondition($form::FILLED)
-			->addRule($form::MIN_LENGTH, 'Původně vydáno musí mít alespoň %d znaky', 3);
+			->addCondition($form::Filled)
+			->addRule($form::MinLength, 'Původně vydáno musí mít alespoň %d znaky', 3);
 		$form->addText('ogImage', 'Odkaz na obrázek:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na obrázek je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na obrázek je %d znaků', 200);
 
 		$cards = ['' => 'Žádná karta'];
 		foreach ($this->twitterCards->getAll() as $card) {
@@ -93,10 +93,10 @@ class PostFormFactory
 		$form->addText('editSummary', 'Shrnutí editace:')
 			->setRequired(false)
 			->setDisabled(true)
-			->addCondition($form::FILLED)
-			->addRule($form::MIN_LENGTH, 'Shrnutí editace musí mít alespoň %d znaky', 3)
+			->addCondition($form::Filled)
+			->addRule($form::MinLength, 'Shrnutí editace musí mít alespoň %d znaky', 3)
 			->endCondition()
-			->addRule($form::MAX_LENGTH, 'Maximální délka shrnutí editace je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka shrnutí editace je %d znaků', 200);
 
 		$label = Html::el()->addText(Html::el('span', ['title' => 'Content Security Policy'])->setText('CSP'))->addText(' snippety:');
 		$items = [];

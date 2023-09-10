@@ -29,10 +29,10 @@ class InterviewFormFactory
 		$form = $this->factory->create();
 		$form->addText('action', 'Akce:')
 			->setRequired('Zadejte prosím akci')
-			->addRule($form::MAX_LENGTH, 'Maximální délka akce je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka akce je %d znaků', 200);
 		$form->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
-			->addRule($form::MAX_LENGTH, 'Maximální délka názvu je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
 		$form->addTextArea('description', 'Popis:')
 			->setRequired(false);
 		$this->trainingControlsFactory->addDate(
@@ -43,26 +43,26 @@ class InterviewFormFactory
 		);
 		$form->addText('href', 'Odkaz na rozhovor:')
 			->setRequired('Zadejte prosím odkaz na rozhovor')
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na rozhovor je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na rozhovor je %d znaků', 200);
 		$form->addText('audioHref', 'Odkaz na audio:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na audio je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na audio je %d znaků', 200);
 		$form->addText('audioEmbed', 'Embed odkaz na audio:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na audio je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka embed odkazu na audio je %d znaků', 200);
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
 		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $interview?->getVideo()->getThumbnailFilename() !== null, $interview?->getVideo()->getThumbnailAlternativeFilename() !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
 		$form->addText('sourceName', 'Název zdroje:')
 			->setRequired('Zadejte prosím název zdroje')
-			->addRule($form::MAX_LENGTH, 'Maximální délka názvu zdroje je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka názvu zdroje je %d znaků', 200);
 		$form->addText('sourceHref', 'Odkaz na zdroj:')
 			->setRequired('Zadejte prosím odkaz na zdroj')
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na zdroj je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na zdroj je %d znaků', 200);
 		$submit = $form->addSubmit('submit', 'Přidat');
 		if ($interview) {
 			$this->setInterview($form, $interview, $submit);

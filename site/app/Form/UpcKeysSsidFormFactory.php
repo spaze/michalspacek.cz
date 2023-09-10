@@ -29,7 +29,7 @@ class UpcKeysSsidFormFactory
 			->setHtmlAttribute('title', '"UPC" and 7 digits')
 			->setDefaultValue($ssid)
 			->setRequired('Please enter an SSID')
-			->addRule($form::PATTERN, 'Wi-Fi network name has to be "UPC" and 7 digits (UPC1234567)', '\s*' . $this->upcKeys->getValidSsidPattern() . '\s*');
+			->addRule($form::Pattern, 'Wi-Fi network name has to be "UPC" and 7 digits (UPC1234567)', '\s*' . $this->upcKeys->getValidSsidPattern() . '\s*');
 		$form->addSubmit('submit', 'Get keys')
 			->setHtmlId('submit')
 			->setHtmlAttribute('data-alt', 'Wait…');
