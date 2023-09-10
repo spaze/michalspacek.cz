@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Form\TalkSlidesFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\ShouldNotHappenException;
@@ -16,7 +17,6 @@ use MichalSpacekCz\Talks\Talks;
 use MichalSpacekCz\Talks\TalkSlides;
 use Nette\Application\BadRequestException;
 use Nette\Database\Row;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 class TalksPresenter extends BasePresenter
@@ -100,7 +100,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSlides(): Form
+	protected function createComponentSlides(): UiForm
 	{
 		if (!$this->talk) {
 			throw new ShouldNotHappenException('actionSlides() will be called first');

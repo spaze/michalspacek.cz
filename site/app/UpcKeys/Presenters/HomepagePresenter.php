@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys\Presenters;
 
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Form\UpcKeysSsidFormFactory;
 use MichalSpacekCz\UpcKeys\UpcKeys;
 use MichalSpacekCz\UpcKeys\WiFiBand;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Form;
 use Nette\Http\IResponse;
 
 class HomepagePresenter extends BasePresenter
@@ -79,7 +79,7 @@ class HomepagePresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSsid(): Form
+	protected function createComponentSsid(): UiForm
 	{
 		return $this->upcKeysSsidFormFactory->create(
 			function (string $ssid): never {

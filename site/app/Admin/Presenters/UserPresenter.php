@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\ChangePasswordFormFactory;
 use MichalSpacekCz\Form\RegenerateTokensFormFactory;
-use Nette\Forms\Form;
+use MichalSpacekCz\Form\UiForm;
 use Nette\Utils\Html;
 
 class UserPresenter extends BasePresenter
@@ -25,7 +25,7 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentChangePassword(): Form
+	protected function createComponentChangePassword(): UiForm
 	{
 		return $this->changePasswordFormFactory->create(
 			function (): never {
@@ -41,7 +41,7 @@ class UserPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentRegenerateTokens(): Form
+	protected function createComponentRegenerateTokens(): UiForm
 	{
 		return $this->regenerateTokensFormFactory->create(
 			function (Html|string $message): never {
