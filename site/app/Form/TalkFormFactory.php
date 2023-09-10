@@ -9,7 +9,6 @@ use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\LinkGenerator;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
@@ -30,10 +29,8 @@ class TalkFormFactory
 
 	/**
 	 * @param callable(Html): void $onSuccess
-	 * @param Talk|null $talk
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, ?Talk $talk = null): Form
+	public function create(callable $onSuccess, ?Talk $talk = null): UiForm
 	{
 		$form = $this->factory->create();
 		$allTalks = $this->getAllTalksExcept($talk ? (string)$talk->getAction() : null);
@@ -104,8 +101,8 @@ class TalkFormFactory
 			$this->setTalk($form, $talk, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($talk, $onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($talk, $onSuccess): void {
+			$values = $form->getFormValues();
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($talk) {
@@ -184,7 +181,7 @@ class TalkFormFactory
 	}
 
 
-	public function setTalk(Form $form, Talk $talk, SubmitButton $submit): void
+	public function setTalk(UiForm $form, Talk $talk, SubmitButton $submit): void
 	{
 		$values = [
 			'action' => $talk->getAction(),

@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use DateTimeInterface;
 use MichalSpacekCz\Training\Files\TrainingFiles;
-use Nette\Application\UI\Form;
 use Nette\Utils\Html;
 
 class TrainingFileFormFactory
@@ -20,17 +19,15 @@ class TrainingFileFormFactory
 
 	/**
 	 * @param callable(Html|string, string): void $onSuccess
-	 * @param DateTimeInterface $trainingStart
 	 * @param array<int, int> $applicationIdsAllowedFiles
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, DateTimeInterface $trainingStart, array $applicationIdsAllowedFiles): Form
+	public function create(callable $onSuccess, DateTimeInterface $trainingStart, array $applicationIdsAllowedFiles): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addUpload('file', 'Soubor:');
 		$form->addSubmit('submit', 'Přidat');
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $trainingStart, $applicationIdsAllowedFiles): void {
+			$values = $form->getFormValues();
 			if ($values->file->isOk()) {
 				$filename = $this->trainingFiles->addFile($trainingStart, $values->file, $applicationIdsAllowedFiles);
 				$message = Html::el()->setText('Soubor ')

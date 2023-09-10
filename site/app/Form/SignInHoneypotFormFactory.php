@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\FormControlsFactory;
-use Nette\Application\UI\Form;
 use Nette\Http\IRequest;
 use Nette\Utils\Html;
 use Tracy\Debugger;
@@ -20,12 +19,12 @@ class SignInHoneypotFormFactory
 	}
 
 
-	public function create(): Form
+	public function create(): UiForm
 	{
 		$form = $this->factory->create();
 		$this->controlsFactory->addSignIn($form);
-		$form->onSuccess[] = function (Form $form): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form): void {
+			$values = $form->getFormValues();
 			Debugger::log("Sign-in attempt: {$values->username}, {$values->password}, {$this->httpRequest->getRemoteAddress()}", 'honeypot');
 			$creds = $values->username . ':' . $values->password;
 			if (preg_match('~\slimit\s~i', $creds)) {

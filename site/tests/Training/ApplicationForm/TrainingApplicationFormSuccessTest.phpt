@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Training\ApplicationForm;
 
 use DateTime;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\NullSession;
@@ -18,7 +19,6 @@ use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
-use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -50,7 +50,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 
 	private ?string $onSuccessAction = null;
 	private ?string $onErrorMessage = null;
-	private Form $form;
+	private UiForm $form;
 	private ?SelectBox $trainingIdSelect = null;
 	private TrainingApplicationSessionSection $sessionSection;
 	private ReflectionMethod $sessionSectionParentGet;
@@ -71,7 +71,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 			throw new ShouldNotHappenException();
 		}
 		PrivateProperty::setValue($application, 'presenter', $presenter);
-		$this->form = new Form($presenter, 'form');
+		$this->form = new UiForm($presenter, 'form');
 		$trainingControlsFactory->addAttendee($this->form);
 		$trainingControlsFactory->addCompany($this->form);
 		$trainingControlsFactory->addNote($this->form);

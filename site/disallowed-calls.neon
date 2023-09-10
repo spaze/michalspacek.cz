@@ -50,6 +50,12 @@ parameters:
 			allowIn:
 				- app/Application/ServerEnv.php
 				- tests/Application/ServerEnvTest.phpt
+	disallowedClasses:
+		-
+			class: 'Nette\Application\UI\Form'
+			message: 'use MichalSpacekCz\Form\UiForm for better type declarations'
+			allowIn:
+				- app/Form/UiForm.php
 
 includes:
 	- vendor/spaze/phpstan-disallowed-calls/extension.neon

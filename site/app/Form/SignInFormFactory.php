@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\FormControlsFactory;
 use MichalSpacekCz\User\Manager;
-use Nette\Application\UI\Form;
 use Nette\Http\IRequest;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
@@ -26,14 +25,13 @@ class SignInFormFactory
 
 	/**
 	 * @param callable(): void $onSuccess
-	 * @return Form
 	 */
-	public function create(callable $onSuccess): Form
+	public function create(callable $onSuccess): UiForm
 	{
 		$form = $this->factory->create();
 		$this->controlsFactory->addSignIn($form);
-		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
+			$values = $form->getFormValues();
 			$this->user->setExpiration('30 minutes', true);
 			try {
 				$this->user->login($values->username, $values->password);

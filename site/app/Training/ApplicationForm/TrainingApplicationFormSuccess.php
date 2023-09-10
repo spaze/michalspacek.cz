@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\ApplicationForm;
 
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\Exceptions\WrongTemplateClassException;
 use MichalSpacekCz\Templating\TemplateFactory;
@@ -16,7 +17,6 @@ use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
-use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 use ParagonIE\Halite\Alerts\HaliteAlert;
@@ -49,7 +49,7 @@ class TrainingApplicationFormSuccess
 	 * @throws WrongTemplateClassException
 	 */
 	public function success(
-		Form $form,
+		UiForm $form,
 		callable $onSuccess,
 		callable $onError,
 		string $action,
@@ -58,7 +58,7 @@ class TrainingApplicationFormSuccess
 		bool $multipleDates,
 		TrainingApplicationSessionSection $sessionSection,
 	): void {
-		$values = $form->getValues();
+		$values = $form->getFormValues();
 		try {
 			$this->formSpam->check($values);
 			if ($multipleDates) {

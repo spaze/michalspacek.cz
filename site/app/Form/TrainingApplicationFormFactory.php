@@ -10,7 +10,6 @@ use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
@@ -40,7 +39,7 @@ class TrainingApplicationFormFactory
 		Html $name,
 		array $dates,
 		TrainingApplicationSessionSection $sessionSection,
-	): Form {
+	): UiForm {
 		$form = $this->factory->create();
 
 		$inputDates = [];
@@ -73,7 +72,7 @@ class TrainingApplicationFormFactory
 
 		$form->addSubmit('signUp', 'Odeslat');
 
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
 			$this->formSuccess->success($form, $onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection);
 		};
 		$this->setApplication($form, $sessionSection, $country);
@@ -81,7 +80,7 @@ class TrainingApplicationFormFactory
 	}
 
 
-	private function setApplication(Form $form, TrainingApplicationSessionSection $application, SelectBox $country): void
+	private function setApplication(UiForm $form, TrainingApplicationSessionSection $application, SelectBox $country): void
 	{
 		$form->setDefaults($application->getApplicationValues());
 		$message = "messages.label.taxid.{$country->getValue()}";

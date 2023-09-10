@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Media;
 
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Media\Exceptions\CannotDeleteMediaException;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Exceptions\MissingContentTypeException;
 use MichalSpacekCz\Media\Resources\MediaResources;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\UploadControl;
 use Nette\Http\FileUpload;
 use Nette\Utils\Callback;
@@ -40,7 +40,7 @@ class VideoThumbnails
 	}
 
 
-	public function addFormFields(Form $form, bool $hasMainVideoThumbnail, bool $hasAlternativeVideoThumbnail): VideoThumbnailFileUploads
+	public function addFormFields(UiForm $form, bool $hasMainVideoThumbnail, bool $hasAlternativeVideoThumbnail): VideoThumbnailFileUploads
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
@@ -74,10 +74,10 @@ class VideoThumbnails
 	}
 
 
-	public function addOnValidateUploads(Form $form, VideoThumbnailFileUploads $formFields): void
+	public function addOnValidateUploads(UiForm $form, VideoThumbnailFileUploads $formFields): void
 	{
-		$form->onValidate[] = function (Form $form) use ($formFields): void {
-			$values = $form->getValues();
+		$form->onValidate[] = function (UiForm $form) use ($formFields): void {
+			$values = $form->getFormValues();
 			$this->validateUpload($values->videoThumbnail, $formFields->getVideoThumbnail());
 			$this->validateUpload($values->videoThumbnailAlternative, $formFields->getVideoThumbnailAlternative());
 		};

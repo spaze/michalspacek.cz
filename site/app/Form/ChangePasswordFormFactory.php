@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\User\Exceptions\IdentityException;
 use MichalSpacekCz\User\Manager;
-use Nette\Application\UI\Form;
 use Nette\Security\User;
 
 class ChangePasswordFormFactory
@@ -21,10 +20,9 @@ class ChangePasswordFormFactory
 
 	/**
 	 * @param callable(): void $onSuccess
-	 * @return Form
 	 * @throws IdentityException
 	 */
-	public function create(callable $onSuccess): Form
+	public function create(callable $onSuccess): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addText('username')
@@ -45,8 +43,8 @@ class ChangePasswordFormFactory
 			->addRule($form::EQUAL, 'Hesla se neshodují', $newPassword);
 		$form->addSubmit('save', 'Uložit');
 
-		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
+			$values = $form->getFormValues();
 			$this->authenticator->changePassword($this->user, $values->password, $values->newPassword);
 			$onSuccess();
 		};

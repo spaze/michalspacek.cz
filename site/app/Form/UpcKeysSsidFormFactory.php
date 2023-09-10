@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\UpcKeys\Technicolor;
 use MichalSpacekCz\UpcKeys\UpcKeys;
-use Nette\Application\UI\Form;
 
 class UpcKeysSsidFormFactory
 {
@@ -21,10 +20,8 @@ class UpcKeysSsidFormFactory
 	/**
 	 * @param callable(string): void $onSuccess
 	 * @param callable(): void $onError
-	 * @param string|null $ssid
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, callable $onError, ?string $ssid): Form
+	public function create(callable $onSuccess, callable $onError, ?string $ssid): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addText('ssid', 'SSID:')
@@ -36,8 +33,8 @@ class UpcKeysSsidFormFactory
 		$form->addSubmit('submit', 'Get keys')
 			->setHtmlId('submit')
 			->setHtmlAttribute('data-alt', 'Wait…');
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError): void {
+			$values = $form->getFormValues();
 			$ssid = strtoupper(trim($values->ssid));
 			if (!$this->technicolor->saveKeys($ssid)) {
 				$onError();

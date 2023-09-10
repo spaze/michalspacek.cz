@@ -9,7 +9,6 @@ use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Statuses;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
 
@@ -31,7 +30,7 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): Form
+	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): UiForm
 	{
 		$form = $this->factory->create();
 
@@ -92,8 +91,8 @@ class TrainingApplicationAdminFormFactory
 				};
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($application, $onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($application, $onSuccess): void {
+			$values = $form->getFormValues();
 			$dateId = $values->date ?? null;
 			$this->trainingApplicationStorage->updateApplicationData(
 				$application->getId(),
@@ -124,7 +123,7 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	private function addPaymentInfo(Form $form): void
+	private function addPaymentInfo(UiForm $form): void
 	{
 		$form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
@@ -146,7 +145,7 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	private function setApplication(Form $form, TrainingApplication $application): void
+	private function setApplication(UiForm $form, TrainingApplication $application): void
 	{
 		$values = [
 			'name' => $application->getName(),

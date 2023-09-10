@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Form\TrainingApplicationFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
@@ -25,7 +26,6 @@ use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings\Training;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
@@ -129,7 +129,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication(): Form
+	protected function createComponentApplication(): UiForm
 	{
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionTraining() or actionSuccess() will be called first');
@@ -149,7 +149,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplicationPreliminary(): Form
+	protected function createComponentApplicationPreliminary(): UiForm
 	{
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionTraining() will be called first');

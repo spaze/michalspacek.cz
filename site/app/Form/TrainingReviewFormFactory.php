@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 
@@ -24,7 +23,7 @@ class TrainingReviewFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 */
-	public function create(callable $onSuccess, int $dateId, ?TrainingReview $review = null): Form
+	public function create(callable $onSuccess, int $dateId, ?TrainingReview $review = null): UiForm
 	{
 		$form = $this->factory->create();
 
@@ -62,8 +61,8 @@ class TrainingReviewFormFactory
 			$this->setReview($form, $review, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $review, $dateId): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $review, $dateId): void {
+			$values = $form->getFormValues();
 			if ($review) {
 				$this->trainingReviews->updateReview(
 					$review->getId(),
@@ -97,7 +96,7 @@ class TrainingReviewFormFactory
 	}
 
 
-	private function setReview(Form $form, TrainingReview $review, SubmitButton $submit): void
+	private function setReview(UiForm $form, TrainingReview $review, SubmitButton $submit): void
 	{
 		$values = [
 			'name' => $review->getName(),

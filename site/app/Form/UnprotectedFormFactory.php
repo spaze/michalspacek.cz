@@ -3,14 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
-use Nette\Application\UI\Form;
-
 final class UnprotectedFormFactory
 {
 
-	public function create(): Form
+	public function create(): UiForm
 	{
-		return new Form();
+		return new UiForm();
 	}
 
 }

@@ -10,7 +10,6 @@ use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use MichalSpacekCz\Training\Dates\TrainingDateStatuses;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 
 class TrainingDateFormFactory
@@ -37,10 +36,8 @@ class TrainingDateFormFactory
 	/**
 	 * @param callable(): void $onSuccessAdd
 	 * @param callable(int): void $onSuccessEdit
-	 * @param TrainingDate|null $date
-	 * @return Form
 	 */
-	public function create(callable $onSuccessAdd, callable $onSuccessEdit, ?TrainingDate $date = null): Form
+	public function create(callable $onSuccessAdd, callable $onSuccessEdit, ?TrainingDate $date = null): UiForm
 	{
 		$form = $this->factory->create();
 
@@ -80,7 +77,7 @@ class TrainingDateFormFactory
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím konec')
 			->addRule($form::PATTERN, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
-		$form->onValidate[] = function (Form $form): void {
+		$form->onValidate[] = function (UiForm $form): void {
 			$this->trainingDatesFormValidator->validateFormStartEnd($form->getComponent('start'), $form->getComponent('end'));
 		};
 
@@ -117,8 +114,8 @@ class TrainingDateFormFactory
 		$price = $form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('title', 'Ponechte prázdné, aby se použila běžná cena');
-		$form->onValidate[] = function (Form $form) use ($price): void {
-			$values = $form->getValues();
+		$form->onValidate[] = function (UiForm $form) use ($price): void {
+			$values = $form->getFormValues();
 			$training = $this->trainings->getById($values->training);
 			if ($values->price === '' && $training->getPrice() === null) {
 				$price->addError('Běžná cena není nastavena, je třeba nastavit cenu zde');
@@ -141,8 +138,8 @@ class TrainingDateFormFactory
 			$this->setTrainingDate($form, $date, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($onSuccessAdd, $onSuccessEdit, $date): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccessAdd, $onSuccessEdit, $date): void {
+			$values = $form->getFormValues();
 			if ($date) {
 				$this->trainingDates->update(
 					$date->getId(),
@@ -190,7 +187,7 @@ class TrainingDateFormFactory
 	}
 
 
-	public function setTrainingDate(Form $form, TrainingDate $date, SubmitButton $submit): void
+	public function setTrainingDate(UiForm $form, TrainingDate $date, SubmitButton $submit): void
 	{
 		$values = [
 			'training' => $date->getTrainingId(),

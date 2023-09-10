@@ -7,7 +7,6 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Interviews\Interview;
 use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 
 class InterviewFormFactory
@@ -24,10 +23,8 @@ class InterviewFormFactory
 
 	/**
 	 * @param callable(): void $onSuccess
-	 * @param Interview|null $interview
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, ?Interview $interview = null): Form
+	public function create(callable $onSuccess, ?Interview $interview = null): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addText('action', 'Akce:')
@@ -71,8 +68,8 @@ class InterviewFormFactory
 			$this->setInterview($form, $interview, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($interview, $onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($interview, $onSuccess): void {
+			$values = $form->getFormValues();
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($interview) {
@@ -128,7 +125,7 @@ class InterviewFormFactory
 	}
 
 
-	public function setInterview(Form $form, Interview $interview, SubmitButton $submit): void
+	public function setInterview(UiForm $form, Interview $interview, SubmitButton $submit): void
 	{
 		$values = [
 			'action' => $interview->getAction(),

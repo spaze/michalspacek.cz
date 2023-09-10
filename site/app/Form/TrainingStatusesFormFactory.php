@@ -7,7 +7,6 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Statuses;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 
@@ -27,9 +26,8 @@ class TrainingStatusesFormFactory
 	/**
 	 * @param callable(Html|null): void $onSuccess
 	 * @param list<TrainingApplication> $applications
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, array $applications): Form
+	public function create(callable $onSuccess, array $applications): UiForm
 	{
 		$form = $this->factory->create();
 		$container = $form->addContainer('applications');

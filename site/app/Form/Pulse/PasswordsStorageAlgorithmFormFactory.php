@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Form\Pulse;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords;
 use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\Pulse\SpecificSite;
-use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
 class PasswordsStorageAlgorithmFormFactory
@@ -27,10 +27,8 @@ class PasswordsStorageAlgorithmFormFactory
 
 	/**
 	 * @param callable(?string): void $onSuccess
-	 * @param int $newDisclosures
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, int $newDisclosures): Form
+	public function create(callable $onSuccess, int $newDisclosures): UiForm
 	{
 		$form = $this->factory->create();
 
@@ -160,11 +158,11 @@ class PasswordsStorageAlgorithmFormFactory
 		}
 
 		$form->addSubmit('submit', 'Add');
-		$form->onValidate[] = function (Form $form): void {
-			$this->validatePasswordsStorages($form, $form->getValues());
+		$form->onValidate[] = function (UiForm $form): void {
+			$this->validatePasswordsStorages($form, $form->getFormValues());
 		};
-		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
-			$onSuccess($this->passwords->addStorage($form->getValues()) ? 'Password storage added successfully' : null);
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
+			$onSuccess($this->passwords->addStorage($form->getFormValues()) ? 'Password storage added successfully' : null);
 		};
 		return $form;
 	}
@@ -182,10 +180,9 @@ class PasswordsStorageAlgorithmFormFactory
 	 * - existing company, another algo without "from" when there's one already
 	 * - existing company, existing site => check if the combination already exists
 	 *
-	 * @param Form $form
 	 * @param ArrayHash<int|string> $values
 	 */
-	private function validatePasswordsStorages(Form $form, ArrayHash $values): void
+	private function validatePasswordsStorages(UiForm $form, ArrayHash $values): void
 	{
 		if (empty($values->company->new->name)) {
 			$storages = $this->passwords->getStoragesByCompanyId($values->company->id);

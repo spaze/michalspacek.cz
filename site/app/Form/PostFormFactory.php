@@ -18,7 +18,6 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use MichalSpacekCz\Twitter\TwitterCards;
-use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\UniqueConstraintViolationException;
@@ -51,7 +50,7 @@ class PostFormFactory
 	}
 
 
-	public function create(callable $onSuccessAdd, callable $onSuccessEdit, DefaultTemplate $template, callable $sendTemplate, ?BlogPost $post): Form
+	public function create(callable $onSuccessAdd, callable $onSuccessEdit, DefaultTemplate $template, callable $sendTemplate, ?BlogPost $post): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
@@ -132,8 +131,8 @@ class PostFormFactory
 				$this->blogPostPreview->sendPreview($newPost, $template, $sendTemplate);
 			};
 
-		$form->onValidate[] = function (Form $form) use ($post): void {
-			$newPost = $this->buildPost($form->getValues(), $post?->getId());
+		$form->onValidate[] = function (UiForm $form) use ($post): void {
+			$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
 			if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
 				$input = $form->getComponent('previewKey');
 				if (!$input instanceof TextInput) {
@@ -142,8 +141,8 @@ class PostFormFactory
 				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
-		$form->onSuccess[] = function (Form $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
+			$values = $form->getFormValues();
 			$newPost = $this->buildPost($values, $post?->getId());
 			try {
 				if ($post) {
@@ -211,7 +210,7 @@ class PostFormFactory
 	}
 
 
-	private function setDefaults(BlogPost $post, Form $form): void
+	private function setDefaults(BlogPost $post, UiForm $form): void
 	{
 		$values = [
 			'translationGroup' => $post->getTranslationGroupId(),

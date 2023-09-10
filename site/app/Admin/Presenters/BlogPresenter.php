@@ -10,9 +10,9 @@ use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Form\PostFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
 use Nette\Utils\Html;
 
 class BlogPresenter extends BasePresenter
@@ -51,7 +51,7 @@ class BlogPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentPost(): Form
+	protected function createComponentPost(): UiForm
 	{
 		return $this->postFormFactory->create(
 			function (BlogPost $post): never {
