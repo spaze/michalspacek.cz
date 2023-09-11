@@ -181,6 +181,14 @@ parameters:
 				- vendor/php-parallel-lint/*.php
 				- vendor/symfony/*.php
 				- vendor/tracy/*.php
+	disallowedClasses:
+		-
+			class:
+				- 'Nette\Application\UI\Form'
+				- 'Nette\Forms\Form'
+			message: 'use MichalSpacekCz\Form\UiForm for better type declarations'
+			allowIn:
+				- vendor/*.php
 
 includes:
 	- disallowed-calls.neon
