@@ -24,6 +24,7 @@
 	</fileExtensions>
 	<universalObjectCrates>
 		<class name="Nette\Bridges\ApplicationLatte\DefaultTemplate"/>
+		<class name="Nette\Database\Row"/>
 		<class name="Nette\Utils\ArrayHash"/>
 	</universalObjectCrates>
 	<issueHandlers>

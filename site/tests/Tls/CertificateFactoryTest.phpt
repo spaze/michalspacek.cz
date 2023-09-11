@@ -78,15 +78,15 @@ class CertificateFactoryTest extends TestCase
 
 	public function testFromDatabaseRow(): void
 	{
-		$data = [
-			'cn' => 'foo.example',
-			'ext' => 'ec',
-			'notBefore' => new DateTimeImmutable('2020-10-05 04:03:02'),
-			'notBeforeTimezone' => 'UTC',
-			'notAfter' => new DateTimeImmutable('2021-11-06 14:13:12'),
-			'notAfterTimezone' => 'Europe/Prague',
-		];
-		$certificate = $this->certificateFactory->fromDatabaseRow(Row::from($data));
+		$row = new Row();
+		$row->cn = 'foo.example';
+		$row->ext = 'ec';
+		$row->notBefore = new DateTimeImmutable('2020-10-05 04:03:02');
+		$row->notBeforeTimezone = 'UTC';
+		$row->notAfter = new DateTimeImmutable('2021-11-06 14:13:12');
+		$row->notAfterTimezone = 'Europe/Prague';
+
+		$certificate = $this->certificateFactory->fromDatabaseRow($row);
 		Assert::same('foo.example', $certificate->getCommonName());
 		Assert::same('ec', $certificate->getCommonNameExt());
 		Assert::same(1601870582, $certificate->getNotBefore()->getTimestamp());
