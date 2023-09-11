@@ -35,7 +35,7 @@ class TestCaseRunner
 				if ($type->isIntersection()) {
 					throw new LogicException("{$paramIdent} specifies an intersection type {$type} but only a simple type is supported");
 				}
-				if (!$type->getSingleName()) {
+				if ($type->getSingleName() === null) {
 					throw new LogicException("{$paramIdent} specifies a non-simple type");
 				}
 				if (!class_exists($type->getSingleName()) && !interface_exists($type->getSingleName())) {
