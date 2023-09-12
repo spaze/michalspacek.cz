@@ -16,6 +16,7 @@ use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
+use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -139,7 +140,7 @@ class TrainingApplicationSessionSectionTest extends TestCase
 	public function testSetOnSuccess(): void
 	{
 		$trainingDate = $this->buildTrainingDate();
-		$this->trainingApplicationSessionSection->setOnSuccess($trainingDate, (object)$this->buildValues());
+		$this->trainingApplicationSessionSection->setOnSuccess($trainingDate, $this->buildValues());
 		Assert::same(self::DATE_ID, $this->sessionSection->get('trainingId'));
 		Assert::same('Name', $this->sessionSection->get('name'));
 		Assert::same('Email', $this->sessionSection->get('email'));
@@ -170,7 +171,7 @@ class TrainingApplicationSessionSectionTest extends TestCase
 
 	public function testGetApplicationValues(): void
 	{
-		$values = $this->buildValues();
+		$values = (array)$this->buildValues();
 		foreach ($values as $key => $value) {
 			$this->sessionSection->set($key, $value);
 		}
@@ -180,7 +181,7 @@ class TrainingApplicationSessionSectionTest extends TestCase
 
 	public function testRemoveApplicationValues(): void
 	{
-		$values = $this->buildValues();
+		$values = (array)$this->buildValues();
 		foreach ($values as $key => $value) {
 			$this->sessionSection->set($key, $value);
 		}
@@ -286,23 +287,20 @@ class TrainingApplicationSessionSectionTest extends TestCase
 	}
 
 
-	/**
-	 * @return array<string, string>
-	 */
-	private function buildValues(): array
+	private function buildValues(): stdClass
 	{
-		return [
-			'name' => 'Name',
-			'email' => 'Email',
-			'company' => 'Company',
-			'street' => 'Street',
-			'city' => 'City',
-			'zip' => 'Zip',
-			'country' => 'Country',
-			'companyId' => 'CompanyId',
-			'companyTaxId' => 'CompanyTaxId',
-			'note' => 'Note',
-		];
+		$values = new stdClass();
+		$values->name = 'Name';
+		$values->email = 'Email';
+		$values->company = 'Company';
+		$values->street = 'Street';
+		$values->city = 'City';
+		$values->zip = 'Zip';
+		$values->country = 'Country';
+		$values->companyId = 'CompanyId';
+		$values->companyTaxId = 'CompanyTaxId';
+		$values->note = 'Note';
+		return $values;
 	}
 
 }

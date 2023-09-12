@@ -67,18 +67,18 @@ class TrainingDateFormFactory
 		$selectVenue = $form->addSelect('venue', 'Místo:', $venues)
 			->setPrompt('- vyberte místo -');
 
-		$form->addText('start', 'Začátek:')
+		$start = $form->addText('start', 'Začátek:')
 			->setHtmlAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím začátek')
 			->addRule($form::Pattern, 'Začátek musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
-		$form->addText('end', 'Konec:')
+		$end = $form->addText('end', 'Konec:')
 			->setHtmlAttribute('placeholder', 'YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setHtmlAttribute('title', 'Formát YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM')
 			->setRequired('Zadejte prosím konec')
 			->addRule($form::Pattern, 'Konec musí být ve formátu YYYY-MM-DD HH:MM nebo DD.MM.YYYY HH:MM', '(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2})|(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{2})');
-		$form->onValidate[] = function (UiForm $form): void {
-			$this->trainingDatesFormValidator->validateFormStartEnd($form->getComponent('start'), $form->getComponent('end'));
+		$form->onValidate[] = function () use ($start, $end): void {
+			$this->trainingDatesFormValidator->validateFormStartEnd($start, $end);
 		};
 
 		$form->addText('label', 'Label:');

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\DateTime\DateTimeFormatter;
+use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
@@ -23,6 +24,7 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
@@ -162,8 +164,8 @@ class TrainingsPresenter extends BasePresenter
 		}
 		$this->application = $application;
 
-		if ($this->application->getDateId()) {
-			$applicationDateId = $this->application->getDateId();
+		$applicationDateId = $this->application->getDateId();
+		if ($applicationDateId) {
 			$training = $this->trainingDates->get($applicationDateId);
 			$name = $training->getName();
 			$start = $training->getStart();
@@ -256,6 +258,11 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws TrainingDateDoesNotExistException
+	 * @throws TrainingDateNotRemoteNoVenueException
+	 * @throws InvalidTimezoneException
+	 */
 	protected function createComponentApplicationForm(): UiForm
 	{
 		if (!$this->application) {

@@ -75,6 +75,8 @@ class InterviewFormFactory
 			if ($interview) {
 				$removeVideoThumbnail = $values->removeVideoThumbnail ?? false;
 				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
+				$thumbnailFilename = $interview->getVideo()->getThumbnailFilename();
+				$thumbnailAlternativeFilename = $interview->getVideo()->getThumbnailAlternativeFilename();
 				$this->interviews->update(
 					$interview->getId(),
 					$values->action,
@@ -85,18 +87,18 @@ class InterviewFormFactory
 					$values->audioHref,
 					$values->audioEmbed,
 					$values->videoHref,
-					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $interview->getVideo()->getThumbnailFilename()),
-					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $interview->getVideo()->getThumbnailAlternativeFilename()),
+					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $thumbnailFilename),
+					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $thumbnailAlternativeFilename),
 					$values->videoEmbed,
 					$values->sourceName,
 					$values->sourceHref,
 				);
 				$this->videoThumbnails->saveVideoThumbnailFiles($interview->getId(), $values);
-				if ($removeVideoThumbnail && $interview->getVideo()->getThumbnailFilename()) {
-					$this->videoThumbnails->deleteFile($interview->getId(), $interview->getVideo()->getThumbnailFilename());
+				if ($removeVideoThumbnail && $thumbnailFilename) {
+					$this->videoThumbnails->deleteFile($interview->getId(), $thumbnailFilename);
 				}
-				if ($removeVideoThumbnailAlternative && $interview->getVideo()->getThumbnailAlternativeFilename()) {
-					$this->videoThumbnails->deleteFile($interview->getId(), $interview->getVideo()->getThumbnailAlternativeFilename());
+				if ($removeVideoThumbnailAlternative && $thumbnailAlternativeFilename) {
+					$this->videoThumbnails->deleteFile($interview->getId(), $thumbnailAlternativeFilename);
 				}
 			} else {
 				$interviewId = $this->interviews->add(

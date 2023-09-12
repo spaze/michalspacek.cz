@@ -63,15 +63,22 @@ class Exports
 				if ($article instanceof ExportsOmittable && $article->omitExports()) {
 					continue;
 				}
-				if ($article->getPublishTime() === null) {
+				$publishTime = $article->getPublishTime();
+				if ($publishTime === null) {
 					throw new ShouldNotHappenException('The $articles array items should all be published already');
 				}
-				$updated = $article instanceof ArticleWithUpdateTime && $article->getUpdateTime() ? $article->getUpdateTime() : $article->getPublishTime();
+				$updated = $publishTime;
+				if ($article instanceof ArticleWithUpdateTime) {
+					$updateTime = $article->getUpdateTime();
+					if ($updateTime !== null) {
+						$updated = $updateTime;
+					}
+				}
 				$entry = new Entry(
 					$article->getHref(),
 					new Text((string)$article->getTitle(), Text::TYPE_HTML),
 					$updated,
-					$article->getPublishTime(),
+					$publishTime,
 				);
 				if ($article->hasSummary()) {
 					$entry->setSummary(new Text(trim((string)$article->getSummary()), Text::TYPE_HTML));

@@ -3,11 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
+use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
@@ -30,6 +33,11 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
+	/**
+	 * @throws TrainingDateDoesNotExistException
+	 * @throws TrainingDateNotRemoteNoVenueException
+	 * @throws InvalidTimezoneException
+	 */
 	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): UiForm
 	{
 		$form = $this->factory->create();
@@ -46,8 +54,9 @@ class TrainingApplicationAdminFormFactory
 
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		$dates = [];
-		if ($application->getDateId()) {
-			$dates[$application->getDateId()] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($application->getDateId()));
+		$dateId = $application->getDateId();
+		if ($dateId) {
+			$dates[$dateId] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($dateId));
 		}
 		if (isset($upcoming[$application->getTrainingAction()])) {
 			foreach ($upcoming[$application->getTrainingAction()]->getDates() as $date) {
@@ -57,7 +66,7 @@ class TrainingApplicationAdminFormFactory
 		$required = (bool)$dates;
 		$form->addSelect('date', 'Datum:', $dates)
 			->setPrompt($dates ? false : 'Žádný vypsaný termín')
-			->setHtmlAttribute('data-original-date-id', $application->getDateId())
+			->setHtmlAttribute('data-original-date-id', $dateId)
 			->setRequired($required)
 			->setDisabled(!$required);
 

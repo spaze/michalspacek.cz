@@ -18,6 +18,7 @@ use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFilesDownload;
 use MichalSpacekCz\Training\FreeSeats;
@@ -76,6 +77,9 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws TrainingDateNotRemoteNoVenueException
+	 */
 	public function actionTraining(string $name): void
 	{
 		$this->trainingAction = $name;

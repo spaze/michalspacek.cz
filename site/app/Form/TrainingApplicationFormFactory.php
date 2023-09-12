@@ -10,6 +10,7 @@ use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
@@ -31,6 +32,7 @@ class TrainingApplicationFormFactory
 	 * @param callable(string): void $onSuccess
 	 * @param callable(string): void $onError
 	 * @param array<int, TrainingDate> $dates
+	 * @throws TrainingDateNotRemoteNoVenueException
 	 */
 	public function create(
 		callable $onSuccess,

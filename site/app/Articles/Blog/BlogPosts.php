@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
+use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostWithoutIdException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Tags\Tags;
 use Nette\Application\UI\InvalidLinkException;
@@ -185,9 +186,14 @@ class BlogPosts
 	/**
 	 * @param list<string> $previousSlugTags
 	 * @throws JsonException
+	 * @throws BlogPostWithoutIdException
 	 */
 	public function update(BlogPost $post, ?string $editSummary, array $previousSlugTags): void
 	{
+		$postId = $post->getId();
+		if ($postId === null) {
+			throw new BlogPostWithoutIdException($post->getSlug());
+		}
 		$this->database->beginTransaction();
 		try {
 			$timeZone = $post->getPublishTime()?->getTimezone() ?: null;
@@ -213,7 +219,7 @@ class BlogPosts
 					'allowed_tags' => ($post->getAllowedTagsGroups() ? Json::encode($post->getAllowedTagsGroups()) : null),
 					'omit_exports' => $post->omitExports(),
 				],
-				$post->getId(),
+				$postId,
 			);
 			$editedAt = new DateTime();
 			if ($editSummary) {
@@ -221,14 +227,14 @@ class BlogPosts
 				$this->database->query(
 					'INSERT INTO blog_post_edits',
 					[
-						'key_blog_post' => $post->getId(),
+						'key_blog_post' => $postId,
 						'edited_at' => $editedAt,
 						'edited_at_timezone' => $timeZone,
 						'summary' => $editSummary,
 					],
 				);
 			}
-			$cacheTags = [sprintf('%s/id/%s', self::class, $post->getId())];
+			$cacheTags = [sprintf('%s/id/%s', self::class, $postId)];
 			foreach (array_merge(array_diff($post->getSlugTags(), $previousSlugTags), array_diff($previousSlugTags, $post->getSlugTags())) as $tag) {
 				$cacheTags[] = self::class . "/tag/{$tag}";
 			}

@@ -8,6 +8,7 @@ use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Database\Explorer;
 
@@ -530,25 +531,41 @@ class TrainingDates
 	}
 
 
+	/**
+	 * @throws TrainingDateNotRemoteNoVenueException
+	 */
 	public function formatDateVenueForAdmin(TrainingDate $date): string
 	{
+		$isRemote = $date->isRemote();
+		$venueCity = $date->getVenueCity();
+		if (!$isRemote && $venueCity === null) {
+			throw new TrainingDateNotRemoteNoVenueException($date->getId());
+		}
 		return sprintf(
 			'%s, %s',
 			$this->dateTimeFormatter->localeIntervalDay($date->getStart(), $date->getEnd()),
-			$date->isRemote() ? $this->translator->translate('messages.label.remote') : $date->getVenueCity(),
+			$isRemote ? $this->translator->translate('messages.label.remote') : $venueCity,
 		);
 	}
 
 
+	/**
+	 * @throws TrainingDateNotRemoteNoVenueException
+	 */
 	public function formatDateVenueForUser(TrainingDate $date): string
 	{
 		$interval = $date->isTentative()
 			? $this->dateTimeFormatter->localeIntervalMonth($date->getStart(), $date->getEnd())
 			: $this->dateTimeFormatter->localeIntervalDay($date->getStart(), $date->getEnd());
+		$isRemote = $date->isRemote();
+		$venueCity = $date->getVenueCity();
+		if (!$isRemote && $venueCity === null) {
+			throw new TrainingDateNotRemoteNoVenueException($date->getId());
+		}
 		return sprintf(
 			'%s, %s%s',
 			$interval,
-			$date->isRemote() ? $this->translator->translate('messages.label.remote') : $date->getVenueCity(),
+			$isRemote ? $this->translator->translate('messages.label.remote') : $venueCity,
 			$date->isTentative() ? ' (' . $this->translator->translate('messages.label.tentativedate') . ')' : '',
 		);
 	}

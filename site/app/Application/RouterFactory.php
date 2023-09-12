@@ -170,7 +170,7 @@ class RouterFactory
 			$hostMask = sprintf(
 				'https://%s/%s%s',
 				str_ends_with($domain, '.') ? rtrim($domain, '.') : "{$host}.{$this->rootDomainMapping[$domain]}",
-				$maskPrefix,
+				$maskPrefix ?? '',
 				$route->mask,
 			);
 			if (count($this->supportedLocales[$host]) > 1 && $locale !== $this->translator->getLocale()) {

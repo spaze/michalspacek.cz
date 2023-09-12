@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Training\Dates;
 use DateTime;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -252,6 +253,73 @@ class TrainingDatesTest extends TestCase
 		]);
 		$trainingDate = $this->trainingDates->get(1);
 		Assert::same($lastFreeSeats, $trainingDate->isLastFreeSeats());
+	}
+
+
+	public function testFormatDateVenueForAdmin(): void
+	{
+		Assert::exception(function (): void {
+			$this->trainingDates->formatDateVenueForAdmin($this->buildTrainingDate(false, false, null, new DateTime(), new DateTime()));
+		}, TrainingDateNotRemoteNoVenueException::class, 'Training date id 123 is not remote, but has no venue specified');
+		$date = $this->buildTrainingDate(false, true, null, new DateTime('2023-02-18 10:00'), new DateTime('2023-02-20 17:00'));
+		Assert::same('18.–20. února 2023, messages.label.remote', $this->trainingDates->formatDateVenueForAdmin($date));
+		$date = $this->buildTrainingDate(false, false, 'Las Vegas', new DateTime('2023-02-28 10:00'), new DateTime('2023-03-01 17:00'));
+		Assert::same('28. února – 1. března 2023, Las Vegas', $this->trainingDates->formatDateVenueForAdmin($date));
+	}
+
+
+	public function testFormatDateVenueForUser(): void
+	{
+		Assert::exception(function (): void {
+			$this->trainingDates->formatDateVenueForUser($this->buildTrainingDate(false, false, null, new DateTime(), new DateTime()));
+		}, TrainingDateNotRemoteNoVenueException::class, 'Training date id 123 is not remote, but has no venue specified');
+		$date = $this->buildTrainingDate(false, true, null, new DateTime('2023-02-18 10:00'), new DateTime('2023-02-20 17:00'));
+		Assert::same('18.–20. února 2023, messages.label.remote', $this->trainingDates->formatDateVenueForUser($date));
+		$date = $this->buildTrainingDate(false, false, 'Las Vegas', new DateTime('2023-02-28 10:00'), new DateTime('2023-03-01 17:00'));
+		Assert::same('28. února – 1. března 2023, Las Vegas', $this->trainingDates->formatDateVenueForUser($date));
+		$date = $this->buildTrainingDate(true, true, null, new DateTime('2023-02-18 10:00'), new DateTime('2023-02-20 17:00'));
+		Assert::same('únor 2023, messages.label.remote (messages.label.tentativedate)', $this->trainingDates->formatDateVenueForUser($date));
+		$date = $this->buildTrainingDate(true, false, 'Las Vegas', new DateTime('2023-02-28 10:00'), new DateTime('2023-03-01 17:00'));
+		Assert::same('únor–březen 2023, Las Vegas (messages.label.tentativedate)', $this->trainingDates->formatDateVenueForUser($date));
+	}
+
+
+	private function buildTrainingDate(bool $tentative, bool $remote, ?string $venueCity, DateTime $start, DateTime $end): TrainingDate
+	{
+		return new TrainingDate(
+			123,
+			'',
+			1,
+			$tentative,
+			false,
+			$start,
+			$end,
+			null,
+			null,
+			true,
+			TrainingDateStatus::Confirmed,
+			'',
+			$remote,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			$venueCity,
+			null,
+			null,
+			null,
+			null,
+			null,
+			false,
+			null,
+			false,
+			null,
+			null,
+			null,
+			null,
+		);
 	}
 
 }
