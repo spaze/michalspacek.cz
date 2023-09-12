@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\DI\Container;
 use Tester\Assert;
@@ -23,6 +24,9 @@ class BootstrapTest extends TestCase
 
 	public function __construct()
 	{
+		if (!Debugger::$logDirectory) {
+			throw new ShouldNotHappenException('Call Nette\Bootstrap\Configurator::enableTracy() first, possibly in MichalSpacekCz\Application\Bootstrap::createConfigurator()');
+		}
 		$this->exceptionLog = Debugger::$logDirectory . '/' . ILogger::EXCEPTION . '.log';
 		if (file_exists($this->exceptionLog)) {
 			$this->tempLog = $this->exceptionLog . '.' . uniqid(more_entropy: true);

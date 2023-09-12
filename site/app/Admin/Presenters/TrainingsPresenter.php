@@ -4,11 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\DateTime\DateTimeFormatter;
+use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
 use MichalSpacekCz\Form\TrainingStatusesFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
@@ -22,6 +24,7 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
@@ -30,7 +33,6 @@ use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Statuses;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 class TrainingsPresenter extends BasePresenter
@@ -162,8 +164,8 @@ class TrainingsPresenter extends BasePresenter
 		}
 		$this->application = $application;
 
-		if ($this->application->getDateId()) {
-			$applicationDateId = $this->application->getDateId();
+		$applicationDateId = $this->application->getDateId();
+		if ($applicationDateId) {
 			$training = $this->trainingDates->get($applicationDateId);
 			$name = $training->getName();
 			$start = $training->getStart();
@@ -228,7 +230,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentStatuses(): Form
+	protected function createComponentStatuses(): UiForm
 	{
 		return $this->trainingStatusesFormFactory->create(
 			function (?Html $message): never {
@@ -242,7 +244,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplications(): Form
+	protected function createComponentApplications(): UiForm
 	{
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionDate() will be called first');
@@ -256,7 +258,12 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplicationForm(): Form
+	/**
+	 * @throws TrainingDateDoesNotExistException
+	 * @throws TrainingDateNotRemoteNoVenueException
+	 * @throws InvalidTimezoneException
+	 */
+	protected function createComponentApplicationForm(): UiForm
 	{
 		if (!$this->application) {
 			throw new ShouldNotHappenException('actionApplication() will be called first');
@@ -277,7 +284,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentFile(): Form
+	protected function createComponentFile(): UiForm
 	{
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionDate() or actionFiles() will be called first');
@@ -308,7 +315,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentDeletePersonalDataForm(): Form
+	protected function createComponentDeletePersonalDataForm(): UiForm
 	{
 		return $this->deletePersonalDataFormFactory->create(function (): never {
 			$this->flashMessage('Osobní data z minulých školení smazána');

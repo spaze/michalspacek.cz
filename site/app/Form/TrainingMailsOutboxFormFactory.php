@@ -10,7 +10,6 @@ use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Application\Application as NetteApplication;
-use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use stdClass;
 
@@ -31,9 +30,8 @@ class TrainingMailsOutboxFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 * @param list<TrainingApplication> $applications
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, array $applications): Form
+	public function create(callable $onSuccess, array $applications): UiForm
 	{
 		$form = $this->factory->create();
 
@@ -118,21 +116,21 @@ class TrainingMailsOutboxFormFactory
 						->setHtmlAttribute('placeholder', 'Faktura č.')
 						->setHtmlAttribute('title', 'Faktura č.')
 						->setDefaultValue($application->getInvoiceId())
-						->addConditionOn($send, $form::FILLED)
-						->addRule($form::FILLED, 'Chybí číslo faktury');
+						->addConditionOn($send, $form::Filled)
+						->addRule($form::Filled, 'Chybí číslo faktury');
 					$applicationIdsContainer->addUpload('invoice')
 						->setHtmlAttribute('title', 'Faktura v PDF')
 						->setHtmlAttribute('accept', 'application/pdf')
-						->addConditionOn($send, $form::FILLED)
-						->addRule($form::FILLED, 'Chybí faktura')
-						->addRule($form::MIME_TYPE, 'Faktura není v PDF', 'application/pdf');
+						->addConditionOn($send, $form::Filled)
+						->addRule($form::Filled, 'Chybí faktura')
+						->addRule($form::MimeType, 'Faktura není v PDF', 'application/pdf');
 					$applicationIdsContainer->addEmail('cc', 'Cc:')->setRequired(false);
 					break;
 			}
 		}
 		$form->addSubmit('submit', 'Odeslat');
-		$form->onSuccess[] = function (Form $form) use ($applications, $onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($applications, $onSuccess): void {
+			$values = $form->getFormValues();
 			$sent = 0;
 			foreach ($values->applications as $id => $data) {
 				if (!$data instanceof stdClass) {

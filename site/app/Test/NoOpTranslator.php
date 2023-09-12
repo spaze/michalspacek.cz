@@ -34,7 +34,7 @@ class NoOpTranslator extends Translator
 	/**
 	 * @param string $message
 	 */
-	public function translate($message, ...$parameters): string
+	public function translate($message, mixed ...$parameters): string
 	{
 		return $message;
 	}

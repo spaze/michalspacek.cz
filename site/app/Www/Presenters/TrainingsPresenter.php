@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Form\TrainingApplicationFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
@@ -17,6 +18,7 @@ use MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Discontinued\DiscontinuedTrainings;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use MichalSpacekCz\Training\Files\TrainingFilesDownload;
 use MichalSpacekCz\Training\FreeSeats;
@@ -25,7 +27,6 @@ use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings\Training;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
@@ -76,6 +77,9 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
+	/**
+	 * @throws TrainingDateNotRemoteNoVenueException
+	 */
 	public function actionTraining(string $name): void
 	{
 		$this->trainingAction = $name;
@@ -129,7 +133,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplication(): Form
+	protected function createComponentApplication(): UiForm
 	{
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionTraining() or actionSuccess() will be called first');
@@ -149,7 +153,7 @@ class TrainingsPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentApplicationPreliminary(): Form
+	protected function createComponentApplicationPreliminary(): UiForm
 	{
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionTraining() will be called first');

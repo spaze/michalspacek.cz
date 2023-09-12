@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\User\Manager;
 use Nette\Application\LinkGenerator;
-use Nette\Application\UI\Form;
 use Nette\Http\Session;
 use Nette\Security\User;
 use Nette\Utils\Html;
@@ -25,9 +24,8 @@ class RegenerateTokensFormFactory
 
 	/**
 	 * @param callable(Html|string): void $onSuccess
-	 * @return Form
 	 */
-	public function create(callable $onSuccess): Form
+	public function create(callable $onSuccess): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addCheckbox('session', 'Session id')->setDefaultValue(true);
@@ -35,8 +33,8 @@ class RegenerateTokensFormFactory
 		$form->addCheckbox('returning', 'Returning user token')->setDefaultValue(true);
 		$form->addSubmit('regenerate', 'Přegenerovat');
 
-		$form->onSuccess[] = function (Form $form) use ($onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess): void {
+			$values = $form->getFormValues();
 			if ($values->session) {
 				$this->sessionHandler->regenerateId();
 			}

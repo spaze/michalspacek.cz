@@ -5,8 +5,8 @@ namespace MichalSpacekCz\Talks;
 
 use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Form\TalkFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Media\VideoThumbnails;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 class TalkInputs extends UiControl
@@ -29,7 +29,7 @@ class TalkInputs extends UiControl
 	}
 
 
-	protected function createComponentTalk(): Form
+	protected function createComponentTalk(): UiForm
 	{
 		return $this->talkFormFactory->create(
 			function (Html $message): never {

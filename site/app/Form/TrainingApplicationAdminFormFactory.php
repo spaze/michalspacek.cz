@@ -3,13 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
+use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Statuses;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
 
@@ -31,7 +33,12 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): Form
+	/**
+	 * @throws TrainingDateDoesNotExistException
+	 * @throws TrainingDateNotRemoteNoVenueException
+	 * @throws InvalidTimezoneException
+	 */
+	public function create(callable $onSuccess, callable $onStatusHistoryDeleteSuccess, TrainingApplication $application): UiForm
 	{
 		$form = $this->factory->create();
 
@@ -47,8 +54,9 @@ class TrainingApplicationAdminFormFactory
 
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		$dates = [];
-		if ($application->getDateId()) {
-			$dates[$application->getDateId()] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($application->getDateId()));
+		$dateId = $application->getDateId();
+		if ($dateId) {
+			$dates[$dateId] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($dateId));
 		}
 		if (isset($upcoming[$application->getTrainingAction()])) {
 			foreach ($upcoming[$application->getTrainingAction()]->getDates() as $date) {
@@ -58,7 +66,7 @@ class TrainingApplicationAdminFormFactory
 		$required = (bool)$dates;
 		$form->addSelect('date', 'Datum:', $dates)
 			->setPrompt($dates ? false : 'Žádný vypsaný termín')
-			->setHtmlAttribute('data-original-date-id', $application->getDateId())
+			->setHtmlAttribute('data-original-date-id', $dateId)
 			->setRequired($required)
 			->setDisabled(!$required);
 
@@ -92,8 +100,8 @@ class TrainingApplicationAdminFormFactory
 				};
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($application, $onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($application, $onSuccess): void {
+			$values = $form->getFormValues();
 			$dateId = $values->date ?? null;
 			$this->trainingApplicationStorage->updateApplicationData(
 				$application->getId(),
@@ -124,19 +132,19 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	private function addPaymentInfo(Form $form): void
+	private function addPaymentInfo(UiForm $form): void
 	{
 		$form->addText('price', 'Cena bez DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
-			->addRule($form::FLOAT)
+			->addRule($form::Float)
 			->setHtmlAttribute('title', 'Po případné slevě');
 		$form->addText('vatRate', 'DPH:')
 			->setHtmlType('number');
 		$form->addText('priceVat', 'Cena s DPH:')
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
-			->addRule($form::FLOAT)
+			->addRule($form::Float)
 			->setHtmlAttribute('title', 'Po případné slevě');
 		$form->addText('discount', 'Sleva:')
 			->setHtmlType('number');
@@ -146,7 +154,7 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	private function setApplication(Form $form, TrainingApplication $application): void
+	private function setApplication(UiForm $form, TrainingApplication $application): void
 	{
 		$values = [
 			'name' => $application->getName(),

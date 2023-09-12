@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\SignInFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
-use Nette\Forms\Form;
 
 class SignPresenter extends BasePresenter
 {
@@ -57,7 +57,7 @@ class SignPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSignIn(): Form
+	protected function createComponentSignIn(): UiForm
 	{
 		return $this->signInFormFactory->create(
 			function (): never {

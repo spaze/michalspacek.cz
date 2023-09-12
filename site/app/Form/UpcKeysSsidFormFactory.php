@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\UpcKeys\Technicolor;
 use MichalSpacekCz\UpcKeys\UpcKeys;
-use Nette\Application\UI\Form;
 
 class UpcKeysSsidFormFactory
 {
@@ -21,10 +20,8 @@ class UpcKeysSsidFormFactory
 	/**
 	 * @param callable(string): void $onSuccess
 	 * @param callable(): void $onError
-	 * @param string|null $ssid
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, callable $onError, ?string $ssid): Form
+	public function create(callable $onSuccess, callable $onError, ?string $ssid): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addText('ssid', 'SSID:')
@@ -32,12 +29,12 @@ class UpcKeysSsidFormFactory
 			->setHtmlAttribute('title', '"UPC" and 7 digits')
 			->setDefaultValue($ssid)
 			->setRequired('Please enter an SSID')
-			->addRule($form::PATTERN, 'Wi-Fi network name has to be "UPC" and 7 digits (UPC1234567)', '\s*' . $this->upcKeys->getValidSsidPattern() . '\s*');
+			->addRule($form::Pattern, 'Wi-Fi network name has to be "UPC" and 7 digits (UPC1234567)', '\s*' . $this->upcKeys->getValidSsidPattern() . '\s*');
 		$form->addSubmit('submit', 'Get keys')
 			->setHtmlId('submit')
 			->setHtmlAttribute('data-alt', 'Wait…');
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError): void {
+			$values = $form->getFormValues();
 			$ssid = strtoupper(trim($values->ssid));
 			if (!$this->technicolor->saveKeys($ssid)) {
 				$onError();

@@ -8,7 +8,6 @@ use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Statuses;
-use Nette\Application\UI\Form;
 
 class TrainingApplicationMultipleFormFactory
 {
@@ -26,7 +25,7 @@ class TrainingApplicationMultipleFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 */
-	public function create(callable $onSuccess, TrainingDate $trainingDate): Form
+	public function create(callable $onSuccess, TrainingDate $trainingDate): UiForm
 	{
 		$form = $this->factory->create();
 		$applicationsContainer = $form->addContainer('applications');
@@ -54,8 +53,8 @@ class TrainingApplicationMultipleFormFactory
 
 		$form->addSubmit('submit', 'Přidat');
 
-		$form->onSuccess[] = function (Form $form) use ($trainingDate, $onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($trainingDate, $onSuccess): void {
+			$values = $form->getFormValues();
 			foreach ($values->applications as $application) {
 				$this->trainingApplicationStorage->insertApplication(
 					$trainingDate->getTrainingId(),

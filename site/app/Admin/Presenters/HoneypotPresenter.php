@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\SignInHoneypotFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
-use Nette\Forms\Form;
 
 class HoneypotPresenter extends BasePresenter
 {
@@ -23,7 +23,7 @@ class HoneypotPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentSignIn(): Form
+	protected function createComponentSignIn(): UiForm
 	{
 		return $this->signInHoneypotFormFactory->create();
 	}

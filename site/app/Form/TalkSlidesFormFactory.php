@@ -8,10 +8,8 @@ use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\TalkSlides;
 use Nette\Application\Request;
-use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Forms\Container;
-use Nette\Http\FileUpload;
 use Nette\Utils\Html;
 
 class TalkSlidesFormFactory
@@ -28,13 +26,9 @@ class TalkSlidesFormFactory
 
 	/**
 	 * @param callable(Html, string, int): void $onSuccess
-	 * @param int $talkId
 	 * @param Row[] $slides
-	 * @param int $newCount
-	 * @param Request $request
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, int $talkId, array $slides, int $newCount, Request $request): Form
+	public function create(callable $onSuccess, int $talkId, array $slides, int $newCount, Request $request): UiForm
 	{
 		$form = $this->factory->create();
 		$slidesContainer = $form->addContainer('slides');
@@ -64,9 +58,9 @@ class TalkSlidesFormFactory
 		$form->addCheckbox('deleteReplaced', 'Smazat nahrazené soubory?');
 		$form->addSubmit('submit', 'Upravit');
 
-		$form->onSuccess[] = function (Form $form) use ($slides, $onSuccess, $talkId): void {
+		$form->onSuccess[] = function (UiForm $form) use ($slides, $onSuccess, $talkId): void {
 			try {
-				$this->talkSlides->saveSlides($talkId, $slides, $form->getValues());
+				$this->talkSlides->saveSlides($talkId, $slides, $form->getFormValues());
 				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
 			} catch (DuplicatedSlideException $e) {
@@ -75,14 +69,12 @@ class TalkSlidesFormFactory
 			}
 			$onSuccess($message, $type, $talkId);
 		};
-		$form->onValidate[] = function (Form $form) use ($request): void {
+		$form->onValidate[] = function (UiForm $form) use ($request): void {
 			// Check whether max allowed file uploads has been reached
 			$uploaded = 0;
 			$files = $request->getFiles();
-			array_walk_recursive($files, function ($item) use (&$uploaded) {
-				if ($item instanceof FileUpload) {
-					$uploaded++;
-				}
+			array_walk_recursive($files, function () use (&$uploaded) {
+				$uploaded++;
 			});
 			// If there's no error yet then the number of uploaded just coincidentally matches max allowed
 			if ($form->hasErrors() && $uploaded >= $this->getMaxSlideUploads()) {
@@ -94,14 +86,14 @@ class TalkSlidesFormFactory
 	}
 
 
-	private function addSlideFields(Form $form, Container $container, ?int $filenamesTalkId): void
+	private function addSlideFields(UiForm $form, Container $container, ?int $filenamesTalkId): void
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
 		$disableSlideUploads = (bool)$filenamesTalkId;
 		$container->addText('alias', 'Alias:')
 			->setRequired('Zadejte prosím alias')
-			->addRule($form::PATTERN, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
+			->addRule($form::Pattern, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
 		$container->addText('number', 'Slajd:')
 			->setHtmlType('number')
 			->setDefaultValue(1)
@@ -111,17 +103,17 @@ class TalkSlidesFormFactory
 			->setRequired('Zadejte prosím titulek');
 		$upload = $container->addUpload('replace', 'Nahradit:')
 			->setDisabled($disableSlideUploads)
-			->addRule($form::MIME_TYPE, "Soubor musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
+			->addRule($form::MimeType, "Soubor musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
 			->setHtmlAttribute('title', "Nahradit soubor ({$supportedImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getMainContentTypes()));
 		$container->addText('filename', 'Soubor:')
 			->setDisabled($disableSlideUploads)
 			->setHtmlAttribute('class', 'slide-filename')
-			->addConditionOn($upload, $form::BLANK)
+			->addConditionOn($upload, $form::Blank)
 				->setRequired('Zadejte prosím soubor');
 		$container->addUpload('replaceAlternative', 'Nahradit:')
 			->setDisabled($disableSlideUploads)
-			->addRule($form::MIME_TYPE, "Alternativní soubor musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
+			->addRule($form::MimeType, "Alternativní soubor musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
 			->setHtmlAttribute('title', "Nahradit alternativní soubor ({$supportedAlternativeImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getAlternativeContentTypes()));
 		$container->addText('filenameAlternative', 'Soubor:')

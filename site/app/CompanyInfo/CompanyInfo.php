@@ -4,11 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\CompanyInfo;
 
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
+use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
+use MichalSpacekCz\CompanyInfo\Exceptions\UnsupportedCountryException;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Http\IResponse;
-use RuntimeException;
 use Throwable;
+use Tracy\Debugger;
 
 class CompanyInfo
 {
@@ -16,9 +18,11 @@ class CompanyInfo
 	private Cache $cache;
 
 
+	/**
+	 * @param array<int, CompanyRegister> $registers This is a list, support added in https://github.com/nette/di/pull/293
+	 */
 	public function __construct(
-		private readonly Ares $ares,
-		private readonly RegisterUz $registerUz,
+		private readonly array $registers,
 		Storage $cacheStorage,
 		private readonly bool $loadCompanyDataVisible = true,
 	) {
@@ -26,25 +30,42 @@ class CompanyInfo
 	}
 
 
-	/**
-	 * @throws Throwable
-	 * @throws CompanyInfoException
-	 */
-	public function getData(string $country, string $companyId): CompanyDetails
+	public function getDetails(string $country, string $companyId): CompanyInfoDetails
 	{
-		$cached = $this->cache->load("{$country}/{$companyId}", function (&$dependencies) use ($country, $companyId) {
-			$data = match ($country) {
-				'cz' => $this->ares->getDetails($companyId),
-				'sk' => $this->registerUz->getDetails($companyId),
-				default => throw new RuntimeException('Unsupported country'),
-			};
-			$dependencies[Cache::Expire] = ($data->status === IResponse::S200_OK ? '3 days' : '15 minutes');
-			return $data;
-		});
-		if (!$cached instanceof CompanyDetails) {
-			throw new CompanyInfoException(sprintf("Cached data for %s/%s is a '%s' not a '%s' object", $country, $companyId, get_debug_type($cached), CompanyDetails::class));
+		try {
+			$register = $this->getRegister($country);
+			$cached = $this->cache->load("{$country}/{$companyId}", function (array|null &$dependencies) use ($companyId, $register): CompanyInfoDetails {
+				$data = $register->getDetails($companyId);
+				$dependencies[Cache::Expire] = $data->getStatus() === IResponse::S200_OK ? '3 days' : '15 minutes';
+				return $data;
+			});
+			if (!$cached instanceof CompanyInfoDetails) {
+				throw new CompanyInfoException(sprintf("Cached data for %s/%s is a '%s' not a '%s' object", $country, $companyId, get_debug_type($cached), CompanyInfoDetails::class));
+			}
+			return $cached;
+		} catch (CompanyNotFoundException $e) {
+			Debugger::log(sprintf("%s: %s, %s company id: %s", $e::class, $e->getMessage(), $country, $companyId));
+			return new CompanyInfoDetails(IResponse::S400_BadRequest, 'Not found');
+		} catch (UnsupportedCountryException) {
+			return new CompanyInfoDetails(IResponse::S500_InternalServerError, 'Unsupported country');
+		} catch (Throwable $e) {
+			Debugger::log($e);
+			return new CompanyInfoDetails(IResponse::S500_InternalServerError, 'Aww crap');
 		}
-		return $cached;
+	}
+
+
+	/**
+	 * @throws UnsupportedCountryException
+	 */
+	private function getRegister(string $country): CompanyRegister
+	{
+		foreach ($this->registers as $register) {
+			if ($register->getCountry() === $country) {
+				return $register;
+			}
+		}
+		throw new UnsupportedCountryException();
 	}
 
 

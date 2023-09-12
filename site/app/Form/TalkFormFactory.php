@@ -9,7 +9,6 @@ use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
 use Nette\Application\LinkGenerator;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
@@ -30,10 +29,8 @@ class TalkFormFactory
 
 	/**
 	 * @param callable(Html): void $onSuccess
-	 * @param Talk|null $talk
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, ?Talk $talk = null): Form
+	public function create(callable $onSuccess, ?Talk $talk = null): UiForm
 	{
 		$form = $this->factory->create();
 		$allTalks = $this->getAllTalksExcept($talk ? (string)$talk->getAction() : null);
@@ -45,13 +42,13 @@ class TalkFormFactory
 			->setPrompt('- vyberte -');
 		$form->addText('action', 'Akce:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka akce je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka akce je %d znaků', 200);
 		$form->addText('title', 'Název:')
 			->setRequired('Zadejte prosím název')
-			->addRule($form::MAX_LENGTH, 'Maximální délka názvu je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka názvu je %d znaků', 200);
 		$form->addTextArea('description', 'Popis:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka popisu je %d znaků', 65535);
+			->addRule($form::MaxLength, 'Maximální délka popisu je %d znaků', 65535);
 		$this->trainingControlsFactory->addDate(
 			$form->addText('date', 'Datum:'),
 			true,
@@ -60,7 +57,7 @@ class TalkFormFactory
 		);
 		$form->addText('href', 'Odkaz na přednášku:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na přednášku je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na přednášku je %d znaků', 200);
 		$form->addText('duration', 'Délka:')
 			->setHtmlType('number');
 		$form->addSelect('slidesTalk', 'Použít slajdy z:', $allTalks)
@@ -69,32 +66,32 @@ class TalkFormFactory
 			->setPrompt('Vyberte prosím přednášku, ze které se použijí soubory pro slajdy');
 		$form->addText('slidesHref', 'Odkaz na slajdy:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na slajdy je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na slajdy je %d znaků', 200);
 		$form->addText('slidesEmbed', 'Embed odkaz na slajdy:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na slajdy je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka embed odkazu na slajdy je %d znaků', 200);
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na video je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
 		$videoThumbnailFormFields = $this->videoThumbnails->addFormFields($form, $talk?->getVideo()->getThumbnailFilename() !== null, $talk?->getVideo()->getThumbnailAlternativeContentType() !== null);
 		$form->addText('videoEmbed', 'Embed odkaz na video:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka embed odkazu na video je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka embed odkazu na video je %d znaků', 200);
 		$form->addText('event', 'Událost:')
 			->setRequired('Zadejte prosím událost')
-			->addRule($form::MAX_LENGTH, 'Maximální délka události je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka události je %d znaků', 200);
 		$form->addText('eventHref', 'Odkaz na událost:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na událost je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na událost je %d znaků', 200);
 		$form->addText('ogImage', 'Odkaz na obrázek:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na obrázek je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na obrázek je %d znaků', 200);
 		$form->addTextArea('transcript', 'Přepis:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka přepisu je %d znaků', 65535);
+			->addRule($form::MaxLength, 'Maximální délka přepisu je %d znaků', 65535);
 		$form->addTextArea('favorite', 'Popis pro oblíbené:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka popisu pro oblíbené je %d znaků', 65535);
+			->addRule($form::MaxLength, 'Maximální délka popisu pro oblíbené je %d znaků', 65535);
 		$form->addSelect('supersededBy', 'Nahrazeno přednáškou:', $allTalks)
 			->setPrompt('Vyberte prosím přednášku, kterou se tato nahradí');
 		$form->addCheckbox('publishSlides', 'Publikovat slajdy:');
@@ -104,13 +101,15 @@ class TalkFormFactory
 			$this->setTalk($form, $talk, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($talk, $onSuccess): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($talk, $onSuccess): void {
+			$values = $form->getFormValues();
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($talk) {
 				$removeVideoThumbnail = $values->removeVideoThumbnail ?? false;
 				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
+				$thumbnailFilename = $talk->getVideo()->getThumbnailFilename();
+				$thumbnailAlternativeFilename = $talk->getVideo()->getThumbnailAlternativeFilename();
 				$this->talks->update(
 					$talk->getId(),
 					$values->locale,
@@ -126,8 +125,8 @@ class TalkFormFactory
 					$values->slidesHref,
 					$values->slidesEmbed,
 					$values->videoHref,
-					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $talk->getVideo()->getThumbnailFilename()),
-					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $talk->getVideo()->getThumbnailAlternativeFilename()),
+					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $thumbnailFilename),
+					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $thumbnailAlternativeFilename),
 					$values->videoEmbed,
 					$values->event,
 					$values->eventHref,
@@ -138,11 +137,11 @@ class TalkFormFactory
 					$values->publishSlides,
 				);
 				$this->videoThumbnails->saveVideoThumbnailFiles($talk->getId(), $values);
-				if ($removeVideoThumbnail && $talk->getVideo()->getThumbnailFilename()) {
-					$this->videoThumbnails->deleteFile($talk->getId(), $talk->getVideo()->getThumbnailFilename());
+				if ($removeVideoThumbnail && $thumbnailFilename) {
+					$this->videoThumbnails->deleteFile($talk->getId(), $thumbnailFilename);
 				}
-				if ($removeVideoThumbnailAlternative && $talk->getVideo()->getThumbnailAlternativeFilename()) {
-					$this->videoThumbnails->deleteFile($talk->getId(), $talk->getVideo()->getThumbnailAlternativeFilename());
+				if ($removeVideoThumbnailAlternative && $thumbnailAlternativeFilename) {
+					$this->videoThumbnails->deleteFile($talk->getId(), $thumbnailAlternativeFilename);
 				}
 				$message = Html::el()->setText('Přednáška upravena ');
 			} else {
@@ -184,7 +183,7 @@ class TalkFormFactory
 	}
 
 
-	public function setTalk(Form $form, Talk $talk, SubmitButton $submit): void
+	public function setTalk(UiForm $form, Talk $talk, SubmitButton $submit): void
 	{
 		$values = [
 			'action' => $talk->getAction(),

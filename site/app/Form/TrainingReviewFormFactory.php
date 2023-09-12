@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 
@@ -24,7 +23,7 @@ class TrainingReviewFormFactory
 	/**
 	 * @param callable(int): void $onSuccess
 	 */
-	public function create(callable $onSuccess, int $dateId, ?TrainingReview $review = null): Form
+	public function create(callable $onSuccess, int $dateId, ?TrainingReview $review = null): UiForm
 	{
 		$form = $this->factory->create();
 
@@ -35,35 +34,35 @@ class TrainingReviewFormFactory
 		}
 		$form->addText('name', 'Jméno:')
 			->setRequired('Zadejte prosím jméno')
-			->addRule($form::MIN_LENGTH, 'Minimální délka jména je %d znaky', 3)
-			->addRule($form::MAX_LENGTH, 'Maximální délka jména je %d znaků', 200);
+			->addRule($form::MinLength, 'Minimální délka jména je %d znaky', 3)
+			->addRule($form::MaxLength, 'Maximální délka jména je %d znaků', 200);
 		$form->addText('company', 'Firma:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka firmy je %d znaků', 200); // No min length to allow _removal_ of company name from a review by using an empty string
+			->addRule($form::MaxLength, 'Maximální délka firmy je %d znaků', 200); // No min length to allow _removal_ of company name from a review by using an empty string
 		$form->addText('jobTitle', 'Pozice:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka pozice je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka pozice je %d znaků', 200);
 		$form->addTextArea('review', 'Ohlas:')
 			->setRequired('Zadejte prosím ohlas')
-			->addRule($form::MIN_LENGTH, 'Minimální délka ohlasu je %d znaky', 3)
-			->addRule($form::MAX_LENGTH, 'Maximální délka ohlasu je %d znaků', 2000);
+			->addRule($form::MinLength, 'Minimální délka ohlasu je %d znaky', 3)
+			->addRule($form::MaxLength, 'Maximální délka ohlasu je %d znaků', 2000);
 		$form->addText('href', 'Odkaz:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu je %d znaků', 200);
 		$form->addCheckbox('hidden', 'Skrýt:');
 		$form->addText('ranking', 'Pořadí:')
 			->setRequired(false)
 			->setHtmlType('number');
 		$form->addText('note', 'Poznámka:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
+			->addRule($form::MaxLength, 'Maximální délka poznámky je %d znaků', 2000);
 		$submit = $form->addSubmit('submit', 'Přidat');
 		if ($review) {
 			$this->setReview($form, $review, $submit);
 		}
 
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $review, $dateId): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $review, $dateId): void {
+			$values = $form->getFormValues();
 			if ($review) {
 				$this->trainingReviews->updateReview(
 					$review->getId(),
@@ -97,7 +96,7 @@ class TrainingReviewFormFactory
 	}
 
 
-	private function setReview(Form $form, TrainingReview $review, SubmitButton $submit): void
+	private function setReview(UiForm $form, TrainingReview $review, SubmitButton $submit): void
 	{
 		$values = [
 			'name' => $review->getName(),

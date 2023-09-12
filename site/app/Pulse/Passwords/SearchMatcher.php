@@ -34,7 +34,8 @@ class SearchMatcher
 			$match = true;
 			$result->addCompanyNameMatch($company);
 		}
-		if ($company->getTradeName() && str_contains(Strings::webalize($company->getTradeName()), $this->search)) {
+		$tradeName = $company->getTradeName();
+		if ($tradeName && str_contains(Strings::webalize($tradeName), $this->search)) {
 			$match = true;
 			$result->addTradeNameMatch($company);
 		}

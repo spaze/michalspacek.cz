@@ -94,10 +94,8 @@ class TrainingMails
 
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if (
-					$application->getDateId()
-					&& $this->trainingDates->get($application->getDateId())->getStatus() === TrainingDateStatus::Confirmed
-				) {
+				$dateId = $application->getDateId();
+				if ($dateId && $this->trainingDates->get($dateId)->getStatus() === TrainingDateStatus::Confirmed) {
 					$application->setNextStatus(Statuses::STATUS_INVITED);
 					$applications[$application->getId()] = $application;
 				}
@@ -188,10 +186,11 @@ class TrainingMails
 		$message = $this->trainingMailMessageFactory->getMailMessage($application);
 		$template->setFile($message->getFilename());
 		if (!$application->isRemote()) {
-			if (!$application->getVenueAction()) {
+			$venueAction = $application->getVenueAction();
+			if (!$venueAction) {
 				throw new ShouldNotHappenException("Application id '{$application->getId()}' for in-person training should have a venue set at this point");
 			}
-			$template->venue = $this->trainingVenues->get($application->getVenueAction());
+			$template->venue = $this->trainingVenues->get($venueAction);
 		}
 		$template->application = $application;
 		$template->phoneNumber = $this->phoneNumber;

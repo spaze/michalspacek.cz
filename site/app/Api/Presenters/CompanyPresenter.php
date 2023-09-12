@@ -3,13 +3,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Api\Presenters;
 
-use MichalSpacekCz\CompanyInfo\CompanyDetails;
 use MichalSpacekCz\CompanyInfo\CompanyInfo;
 use MichalSpacekCz\Http\SecurityHeaders;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
-use RuntimeException;
 
 class CompanyPresenter extends BasePresenter
 {
@@ -29,27 +26,7 @@ class CompanyPresenter extends BasePresenter
 		}
 
 		$this->securityHeaders->accessControlAllowOrigin('Www:Homepage:');
-
-		try {
-			$info = $this->companyInfo->getData($country, $companyId);
-		} catch (RuntimeException $e) {
-			$info = new CompanyDetails();
-			$info->status = IResponse::S500_InternalServerError;
-			$info->statusMessage = $e->getMessage();
-		}
-		$data = [
-			'status' => $info->status,
-			'statusMessage' => $info->statusMessage,
-			'companyId' => $info->companyId ?? '',
-			'companyTaxId' => $info->companyTaxId ?? '',
-			'company' => $info->company ?? '',
-			'street' => $info->streetAndNumber ?? '',
-			'city' => $info->city ?? '',
-			'zip' => $info->zip ?? '',
-			'country' => $info->country ?? '',
-		];
-
-		$this->sendJson(array_filter($data));
+		$this->sendJson($this->companyInfo->getDetails($country, $companyId));
 	}
 
 }

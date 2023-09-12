@@ -20,7 +20,8 @@ class TrainingMailMessageFactory
 
 	public function getMailMessage(TrainingApplication $application): MailMessageAdmin
 	{
-		switch ($application->getNextStatus()) {
+		$nextStatus = $application->getNextStatus();
+		switch ($nextStatus) {
 			case Statuses::STATUS_INVITED:
 				return new MailMessageAdmin('invitation', 'Pozvánka na školení ' . $application->getTrainingName());
 			case Statuses::STATUS_MATERIALS_SENT:
@@ -32,13 +33,15 @@ class TrainingMailMessageFactory
 			case Statuses::STATUS_INVOICE_SENT_AFTER:
 				return new MailMessageAdmin($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId()) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->getTrainingName());
 			case Statuses::STATUS_REMINDED:
-				if (!$application->getTrainingStart() || !$application->getTrainingEnd()) {
-					throw new ShouldNotHappenException(sprintf("Training application id '%s' with next status '%s' should have both training start and end set", $application->getId(), $application->getNextStatus()));
+				$trainingStart = $application->getTrainingStart();
+				$trainingEnd = $application->getTrainingEnd();
+				if (!$trainingStart || !$trainingEnd) {
+					throw new ShouldNotHappenException(sprintf("Training application id '%s' with next status '%s' should have both training start and end set", $application->getId(), $nextStatus));
 				}
-				$start = $this->dateTimeFormatter->localeIntervalDay($application->getTrainingStart(), $application->getTrainingEnd(), 'cs_CZ');
+				$start = $this->dateTimeFormatter->localeIntervalDay($trainingStart, $trainingEnd, 'cs_CZ');
 				return new MailMessageAdmin($application->isRemote() ? 'reminderRemote' : 'reminder', 'Připomenutí školení ' . $application->getTrainingName() . ' ' . $start);
 			default:
-				throw new ShouldNotHappenException(sprintf("Unsupported next status: '%s'", $application->getNextStatus() ?? '<null>'));
+				throw new ShouldNotHappenException(sprintf("Unsupported next status: '%s'", $nextStatus ?? '<null>'));
 		}
 	}
 

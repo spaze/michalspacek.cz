@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\Pulse\PasswordsStorageAlgorithmFormFactory;
-use Nette\Forms\Form;
+use MichalSpacekCz\Form\UiForm;
 
 class PulsePresenter extends BasePresenter
 {
@@ -26,7 +26,7 @@ class PulsePresenter extends BasePresenter
 	}
 
 
-	protected function createComponentAddPasswordsStorageAlgorithm(): Form
+	protected function createComponentAddPasswordsStorageAlgorithm(): UiForm
 	{
 		return $this->passwordsStoragesFormFactory->create(
 			function (?string $message): never {

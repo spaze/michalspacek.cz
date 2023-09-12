@@ -151,7 +151,7 @@ class Database extends Explorer
 	 */
 	public function fetch(string $sql, ...$params): ?Row
 	{
-		$row = Row::from($this->fetchResult);
+		$row = $this->createRow($this->fetchResult);
 		return $row->count() > 0 ? $row : null;
 	}
 
@@ -226,7 +226,7 @@ class Database extends Explorer
 	{
 		$result = [];
 		foreach ($fetchAllResult as $row) {
-			$result[] = Row::from($row);
+			$result[] = $this->createRow($row);
 		}
 		return $result;
 	}
@@ -240,6 +240,21 @@ class Database extends Explorer
 	public function fetchAll(string $sql, ...$params): array
 	{
 		return $this->fetchAllResults[$this->fetchAllResultsPosition++] ?? $this->fetchAllDefaultResult;
+	}
+
+
+	/**
+	 * Almost the same as Row::from() but with better/simpler types.
+	 *
+	 * @param array<string, int|string|bool|DateTime|null> $array
+	 */
+	private function createRow(array $array): Row
+	{
+		$row = new Row();
+		foreach ($array as $key => $value) {
+			$row->$key = $value;
+		}
+		return $row;
 	}
 
 }

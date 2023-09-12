@@ -44,7 +44,11 @@ class ManagerTest extends TestCase
 		Assert::type(SimpleIdentity::class, $identity);
 		Assert::same($id, $identity->id);
 		Assert::same($id, $identity->getId());
-		Assert::same($username, $identity->username);
+		if (!isset($identity->username)) {
+			Assert::fail('The username property should be set');
+		} else {
+			Assert::same($username, $identity->username);
+		}
 		Assert::same($username, $identity->getData()['username']);
 	}
 

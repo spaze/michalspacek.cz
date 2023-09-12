@@ -108,7 +108,7 @@ class Certificates
 				Debugger::log(sprintf(
 					'OK %s%s from %s to %s',
 					$cert->getCommonName(),
-					$cert->getCommonNameExt(),
+					$cert->getCommonNameExt() ?? '',
 					$cert->getNotBefore()->format(DateTime::DATE_RFC3339_MICROSECONDS),
 					$cert->getNotAfter()->format(DateTime::DATE_RFC3339_MICROSECONDS),
 				), 'cert');

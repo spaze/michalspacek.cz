@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
-use Nette\Application\UI\Form;
 
 class TrainingInvoiceFormFactory
 {
@@ -22,18 +21,17 @@ class TrainingInvoiceFormFactory
 	 * @param callable(int): void $onSuccess
 	 * @param callable(): void $onError
 	 * @param list<int> $unpaidInvoiceIds
-	 * @return Form
 	 */
-	public function create(callable $onSuccess, callable $onError, array $unpaidInvoiceIds): Form
+	public function create(callable $onSuccess, callable $onError, array $unpaidInvoiceIds): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addText('invoice', 'Faktura:')
 			->setRequired('Zadejte prosím číslo faktury')
-			->addRule($form::IS_IN, 'Zadejte číslo některé z nezaplacených faktur', $unpaidInvoiceIds);
+			->addRule($form::IsIn, 'Zadejte číslo některé z nezaplacených faktur', $unpaidInvoiceIds);
 		$this->trainingControlsFactory->addPaidDate($form->addText('paid', 'Zaplaceno:'), true);
 		$form->addSubmit('submit', 'Zaplaceno');
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError): void {
+			$values = $form->getFormValues();
 			$count = $this->trainingApplications->setPaidDate($values->invoice, $values->paid);
 			if ($count === null) {
 				$onError();

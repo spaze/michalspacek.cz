@@ -22,23 +22,23 @@ class TrainingFactoryTest extends TestCase
 
 	public function testCreateFromDatabaseRowCustom(): void
 	{
-		$row = Row::from([
-			'id' => 1,
-			'action' => 'action',
-			'name' => '**Name**',
-			'description' => '//Description//',
-			'content' => 'Le **content**',
-			'upsell' => null,
-			'prerequisites' => null,
-			'audience' => null,
-			'capacity' => null,
-			'price' => null,
-			'studentDiscount' => null,
-			'materials' => null,
-			'custom' => 1,
-			'successorId' => null,
-			'discontinuedId' => null,
-		]);
+		$row = new Row();
+		$row->id = 1;
+		$row->action = 'action';
+		$row->name = '**Name**';
+		$row->description = '//Description//';
+		$row->content = 'Le **content**';
+		$row->upsell = null;
+		$row->prerequisites = null;
+		$row->audience = null;
+		$row->capacity = null;
+		$row->price = null;
+		$row->studentDiscount = null;
+		$row->materials = null;
+		$row->custom = 1;
+		$row->successorId = null;
+		$row->discontinuedId = null;
+
 		$training = $this->trainingFactory->createFromDatabaseRow($row);
 		Assert::same(1, $training->getId());
 		Assert::same('action', $training->getAction());
@@ -60,23 +60,23 @@ class TrainingFactoryTest extends TestCase
 
 	public function testCreateFromDatabaseRow(): void
 	{
-		$row = Row::from([
-			'id' => 1,
-			'action' => 'action',
-			'name' => '**Name**',
-			'description' => '//Description//',
-			'content' => 'Le **content**',
-			'upsell' => '//Upsell//',
-			'prerequisites' => '//Prerequisites//',
-			'audience' => '//Audience//',
-			'capacity' => 303,
-			'price' => 404,
-			'studentDiscount' => 42,
-			'materials' => '**Mat**//aerials//',
-			'custom' => 0,
-			'successorId' => 808,
-			'discontinuedId' => 909,
-		]);
+		$row = new Row();
+		$row->id = 1;
+		$row->action = 'action';
+		$row->name = '**Name**';
+		$row->description = '//Description//';
+		$row->content = 'Le **content**';
+		$row->upsell = '//Upsell//';
+		$row->prerequisites = '//Prerequisites//';
+		$row->audience = '//Audience//';
+		$row->capacity = 303;
+		$row->price = 404;
+		$row->studentDiscount = 42;
+		$row->materials = '**Mat**//aerials//';
+		$row->custom = 0;
+		$row->successorId = 808;
+		$row->discontinuedId = 909;
+
 		$training = $this->trainingFactory->createFromDatabaseRow($row);
 		Assert::same(1, $training->getId());
 		Assert::same('action', $training->getAction());

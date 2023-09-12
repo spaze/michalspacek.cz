@@ -24,6 +24,7 @@
 	</fileExtensions>
 	<universalObjectCrates>
 		<class name="Nette\Bridges\ApplicationLatte\DefaultTemplate"/>
+		<class name="Nette\Database\Row"/>
 		<class name="Nette\Utils\ArrayHash"/>
 	</universalObjectCrates>
 	<issueHandlers>
@@ -73,9 +74,15 @@
 				<referencedProperty name="Nette\Application\UI\Control::$snippetMode" />
 			</errorLevel>
 		</PropertyNotSetInConstructor>
+		<UnsafeInstantiation>
+			<errorLevel type="suppress">
+				<file name="app/Test/TestCaseRunner.php" /> <!-- Correct params are figured for each TestCase child in MichalSpacekCz\Test\TestCaseRunner::run() -->
+			</errorLevel>
+		</UnsafeInstantiation>
 		<UnusedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="*Presenter" />
+				<referencedClass name="MichalSpacekCz\CompanyInfo\CompanyRegister*" /> <!-- An array of these is passed to MichalSpacekCz\CompanyInfo\CompanyInfo::__construct() by the DIC -->
 				<referencedClass name="MichalSpacekCz\Test\Http\NullSession" /> <!-- Used in tests.neon -->
 				<referencedClass name="MichalSpacekCz\Tls\CertificateMonitor" /> <!-- Used in bin/certmonitor.php but can't analyze bin because https://github.com/vimeo/psalm/issues/10143 -->
 			</errorLevel>

@@ -51,13 +51,15 @@ class CompanyTrainingsPresenter extends BasePresenter
 			throw new BadRequestException("I don't do {$name} training, yet", previous: $e);
 		}
 
-		if ($training->getSuccessorId() !== null) {
-			$this->redirectPermanent('this', $this->trainings->getActionById($training->getSuccessorId()));
+		$successorId = $training->getSuccessorId();
+		if ($successorId !== null) {
+			$this->redirectPermanent('this', $this->trainings->getActionById($successorId));
 		}
 
+		$price = $training->getPrice();
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.companytraining', [$training->getName()->render()]);
 		$this->template->training = $training;
-		$this->template->price = $training->getPrice() ? $this->prices->resolvePriceVat($training->getPrice()) : null;
+		$this->template->price = $price ? $this->prices->resolvePriceVat($price) : null;
 		$this->template->reviews = $this->trainingReviews->getVisibleReviews($training->getId(), 3);
 		$this->discontinuedTrainings->maybeMarkAsDiscontinued($this->template, $training->getDiscontinuedId());
 	}

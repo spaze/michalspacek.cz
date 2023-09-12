@@ -70,10 +70,11 @@ class TalksPresenter extends BasePresenter
 				$links = $this->localeLinkGenerator->links(parent::getLocaleLinkAction(), parent::getLocaleLinkParams());
 				$this->redirectUrl($links[$talk->getLocale()]->getUrl(), IResponse::S301_MovedPermanently);
 			}
-			if ($talk->getSlidesTalkId()) {
-				$slidesTalk = $this->talks->getById($talk->getSlidesTalkId());
+			$slidesTalkId = $talk->getSlidesTalkId();
+			if ($slidesTalkId !== null) {
+				$slidesTalk = $this->talks->getById($slidesTalkId);
 				$slides = ($slidesTalk->isPublishSlides() ? $this->talkSlides->getSlides($slidesTalk->getId(), $slidesTalk->getFilenamesTalkId()) : []);
-				$slideNo = $this->talkSlides->getSlideNo($talk->getSlidesTalkId(), $slide);
+				$slideNo = $this->talkSlides->getSlideNo($slidesTalkId, $slide);
 				$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$slidesTalk->getAction()]);
 			} else {
 				$slides = ($talk->isPublishSlides() ? $this->talkSlides->getSlides($talk->getId(), $talk->getFilenamesTalkId()) : []);
@@ -89,15 +90,17 @@ class TalksPresenter extends BasePresenter
 			$this->localeLinkParams[$locale] = ['name' => $action];
 		}
 
+		$ogImage = $talk->getOgImage();
+		$slidesHref = $talk->getSlidesHref();
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $talk);
 		$this->template->pageHeader = $talk->getTitle();
 		$this->template->talk = $talk;
 		$this->template->slideNo = $slideNo;
 		$this->template->slides = $slides;
-		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($talk->getOgImage() !== null ? sprintf($talk->getOgImage(), $slideNo ?? 1) : null));
+		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($ogImage !== null ? sprintf($ogImage, $slideNo ?? 1) : null));
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->video = $talk->getVideo()->setLazyLoad(count($slides) > 3);
-		$this->template->slidesPlatform = $talk->getSlidesHref() ? SlidesPlatform::tryFromUrl($talk->getSlidesHref())?->getName() : null;
+		$this->template->slidesPlatform = $slidesHref !== null ? SlidesPlatform::tryFromUrl($slidesHref)?->getName() : null;
 	}
 
 

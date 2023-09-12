@@ -8,16 +8,16 @@ use Nette\Http\IResponse;
 class Response implements IResponse
 {
 
-	private int $code;
+	private int $code = IResponse::S200_OK;
 
 	/** @var array<string, string> */
-	private array $headers;
+	private array $headers = [];
 
 	/** @var array<string, array<int, string>> */
-	private array $allHeaders;
+	private array $allHeaders = [];
 
 	/** @var array<string, Cookie> */
-	private array $cookies;
+	private array $cookies = [];
 
 	public string $cookieDomain = '';
 
@@ -25,17 +25,17 @@ class Response implements IResponse
 
 	public bool $cookieSecure = false;
 
-	private string $contentType;
+	private string $contentType = '';
 
-	private ?string $contentCharset;
+	private ?string $contentCharset = null;
 
-	private string $redirectTo;
+	private string $redirectTo = '';
 
-	private int $redirectCode;
+	private int $redirectCode = IResponse::S302_Found;
 
-	private ?string $expiration;
+	private ?string $expiration = null;
 
-	private bool $isSent;
+	private bool $isSent = false;
 
 
 	public function setCode(int $code, string $reason = null): self

@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Form\TrainingInvoiceFormFactory;
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\DateList\DateListOrder;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
-use Nette\Forms\Form;
 
 class InvoicesPresenter extends BasePresenter
 {
@@ -38,8 +38,9 @@ class InvoicesPresenter extends BasePresenter
 		foreach ($this->trainingDates->getWithUnpaid() as $date) {
 			$unpaidApplications = $this->trainingApplications->getValidUnpaidByDate($date->getId());
 			foreach ($unpaidApplications as $application) {
-				if ($application->getInvoiceId()) {
-					$this->allUnpaidInvoiceIds[] = $application->getInvoiceId();
+				$invoiceId = $application->getInvoiceId();
+				if ($invoiceId) {
+					$this->allUnpaidInvoiceIds[] = $invoiceId;
 				}
 			}
 			$date->setApplications($unpaidApplications);
@@ -53,7 +54,7 @@ class InvoicesPresenter extends BasePresenter
 	}
 
 
-	protected function createComponentInvoice(): Form
+	protected function createComponentInvoice(): UiForm
 	{
 		return $this->trainingInvoiceFormFactory->create(
 			function (int $count): never {

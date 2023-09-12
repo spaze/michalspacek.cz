@@ -18,11 +18,9 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use MichalSpacekCz\Twitter\TwitterCards;
-use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\UniqueConstraintViolationException;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -43,7 +41,6 @@ class PostFormFactory
 		private readonly CspConfig $contentSecurityPolicy,
 		private readonly TrainingControlsFactory $trainingControlsFactory,
 		private readonly BlogPostPreview $blogPostPreview,
-		private readonly FormValues $formValues,
 		private readonly TwitterCards $twitterCards,
 		private readonly BlogPostRecommendedLinks $recommendedLinks,
 		private readonly Locales $locales,
@@ -51,7 +48,7 @@ class PostFormFactory
 	}
 
 
-	public function create(callable $onSuccessAdd, callable $onSuccessEdit, DefaultTemplate $template, callable $sendTemplate, ?BlogPost $post): Form
+	public function create(callable $onSuccessAdd, callable $onSuccessEdit, DefaultTemplate $template, callable $sendTemplate, ?BlogPost $post): UiForm
 	{
 		$form = $this->factory->create();
 		$form->addInteger('translationGroup', 'Skupina překladů:')
@@ -61,27 +58,27 @@ class PostFormFactory
 			->setPrompt('- vyberte -');
 		$form->addText('title', 'Titulek:')
 			->setRequired('Zadejte prosím titulek')
-			->addRule($form::MIN_LENGTH, 'Titulek musí mít alespoň %d znaky', 3);
+			->addRule($form::MinLength, 'Titulek musí mít alespoň %d znaky', 3);
 		$form->addText('slug', 'Slug:')
 			->setRequired('Zadejte prosím slug')
-			->addRule($form::MIN_LENGTH, 'Slug musí mít alespoň %d znaky', 3);
+			->addRule($form::MinLength, 'Slug musí mít alespoň %d znaky', 3);
 		$this->addPublishedDate($form->addText('published', 'Vydáno:'))
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
 		$form->addText('previewKey', 'Klíč pro náhled:')
 			->setRequired(false)
-			->addRule($form::MIN_LENGTH, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
+			->addRule($form::MinLength, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
 		$form->addTextArea('lead', 'Perex:')
-			->addCondition($form::FILLED)
-			->addRule($form::MIN_LENGTH, 'Perex musí mít alespoň %d znaky', 3);
+			->addCondition($form::Filled)
+			->addRule($form::MinLength, 'Perex musí mít alespoň %d znaky', 3);
 		$form->addTextArea('text', 'Text:')
 			->setRequired('Zadejte prosím text')
-			->addRule($form::MIN_LENGTH, 'Text musí mít alespoň %d znaky', 3);
+			->addRule($form::MinLength, 'Text musí mít alespoň %d znaky', 3);
 		$form->addTextArea('originally', 'Původně vydáno:')
-			->addCondition($form::FILLED)
-			->addRule($form::MIN_LENGTH, 'Původně vydáno musí mít alespoň %d znaky', 3);
+			->addCondition($form::Filled)
+			->addRule($form::MinLength, 'Původně vydáno musí mít alespoň %d znaky', 3);
 		$form->addText('ogImage', 'Odkaz na obrázek:')
 			->setRequired(false)
-			->addRule($form::MAX_LENGTH, 'Maximální délka odkazu na obrázek je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka odkazu na obrázek je %d znaků', 200);
 
 		$cards = ['' => 'Žádná karta'];
 		foreach ($this->twitterCards->getAll() as $card) {
@@ -96,10 +93,10 @@ class PostFormFactory
 		$form->addText('editSummary', 'Shrnutí editace:')
 			->setRequired(false)
 			->setDisabled(true)
-			->addCondition($form::FILLED)
-			->addRule($form::MIN_LENGTH, 'Shrnutí editace musí mít alespoň %d znaky', 3)
+			->addCondition($form::Filled)
+			->addRule($form::MinLength, 'Shrnutí editace musí mít alespoň %d znaky', 3)
 			->endCondition()
-			->addRule($form::MAX_LENGTH, 'Maximální délka shrnutí editace je %d znaků', 200);
+			->addRule($form::MaxLength, 'Maximální délka shrnutí editace je %d znaků', 200);
 
 		$label = Html::el()->addText(Html::el('span', ['title' => 'Content Security Policy'])->setText('CSP'))->addText(' snippety:');
 		$items = [];
@@ -127,13 +124,13 @@ class PostFormFactory
 		$form->addSubmit('submit', 'Přidat');
 		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
 			->setHtmlAttribute('data-loading-value', 'Moment…')
-			->onClick[] = function (SubmitButton $button) use ($post, $template, $sendTemplate): void {
-				$newPost = $this->buildPost($this->formValues->getValues($button), $post?->getId());
+			->onClick[] = function () use ($form, $post, $template, $sendTemplate): void {
+				$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
 				$this->blogPostPreview->sendPreview($newPost, $template, $sendTemplate);
 			};
 
-		$form->onValidate[] = function (Form $form) use ($post): void {
-			$newPost = $this->buildPost($form->getValues(), $post?->getId());
+		$form->onValidate[] = function (UiForm $form) use ($post): void {
+			$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
 			if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
 				$input = $form->getComponent('previewKey');
 				if (!$input instanceof TextInput) {
@@ -142,8 +139,8 @@ class PostFormFactory
 				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
-		$form->onSuccess[] = function (Form $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
-			$values = $form->getValues();
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
+			$values = $form->getFormValues();
 			$newPost = $this->buildPost($values, $post?->getId());
 			try {
 				if ($post) {
@@ -211,7 +208,7 @@ class PostFormFactory
 	}
 
 
-	private function setDefaults(BlogPost $post, Form $form): void
+	private function setDefaults(BlogPost $post, UiForm $form): void
 	{
 		$values = [
 			'translationGroup' => $post->getTranslationGroupId(),

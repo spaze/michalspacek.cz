@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Media;
 
+use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Media\Exceptions\CannotDeleteMediaException;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Exceptions\MissingContentTypeException;
 use MichalSpacekCz\Media\Resources\MediaResources;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\UploadControl;
 use Nette\Http\FileUpload;
 use Nette\Utils\Callback;
@@ -40,44 +40,44 @@ class VideoThumbnails
 	}
 
 
-	public function addFormFields(Form $form, bool $hasMainVideoThumbnail, bool $hasAlternativeVideoThumbnail): VideoThumbnailFileUploads
+	public function addFormFields(UiForm $form, bool $hasMainVideoThumbnail, bool $hasAlternativeVideoThumbnail): VideoThumbnailFileUploads
 	{
 		$supportedImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getMainExtensions());
 		$supportedAlternativeImages = '*.' . implode(', *.', $this->supportedImageFileFormats->getAlternativeExtensions());
 		$videoThumbnail = $form->addUpload('videoThumbnail', 'Video náhled:')
-			->addRule($form::MIME_TYPE, "%label musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
+			->addRule($form::MimeType, "%label musí být obrázek typu {$supportedImages}", $this->supportedImageFileFormats->getMainContentTypes())
 			->setHtmlAttribute('title', "Vyberte soubor ({$supportedImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getMainContentTypes()));
 		$videoThumbnailAlternative = $form->addUpload('videoThumbnailAlternative', 'Alternativní video náhled:')
-			->addRule($form::MIME_TYPE, "%label musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
+			->addRule($form::MimeType, "%label musí být obrázek typu {$supportedAlternativeImages}", $this->supportedImageFileFormats->getAlternativeContentTypes())
 			->setHtmlAttribute('title', "Vyberte alternativní soubor ({$supportedAlternativeImages})")
 			->setHtmlAttribute('accept', implode(',', $this->supportedImageFileFormats->getAlternativeContentTypes()));
 		if ($hasMainVideoThumbnail) {
 			$form->addCheckbox('removeVideoThumbnail', 'Odstranit')
-				->addCondition($form::FILLED, true)
+				->addCondition($form::Filled, true)
 				->toggle('#videoThumbnailFormField', false)
-				->addConditionOn($videoThumbnail, $form::FILLED, true)
-				->addRule($form::BLANK, 'Nelze zároveň nahrávat a mazat video náhled');
-			$videoThumbnail->addCondition($form::FILLED, true)
+				->addConditionOn($videoThumbnail, $form::Filled, true)
+				->addRule($form::Blank, 'Nelze zároveň nahrávat a mazat video náhled');
+			$videoThumbnail->addCondition($form::Filled, true)
 				->toggle('#currentVideoThumbnail', false);
 		}
 		if ($hasAlternativeVideoThumbnail) {
 			$form->addCheckbox('removeVideoThumbnailAlternative', 'Odstranit')
-				->addCondition($form::FILLED, true)
+				->addCondition($form::Filled, true)
 				->toggle('#videoThumbnailAlternativeFormField', false)
-				->addConditionOn($videoThumbnailAlternative, $form::FILLED, true)
-				->addRule($form::BLANK, 'Nelze zároveň nahrávat a mazat alternativní video náhled');
-			$videoThumbnailAlternative->addCondition($form::FILLED, true)
+				->addConditionOn($videoThumbnailAlternative, $form::Filled, true)
+				->addRule($form::Blank, 'Nelze zároveň nahrávat a mazat alternativní video náhled');
+			$videoThumbnailAlternative->addCondition($form::Filled, true)
 				->toggle('#currentVideoThumbnailAlternative', false);
 		}
 		return new VideoThumbnailFileUploads($videoThumbnail, $videoThumbnailAlternative);
 	}
 
 
-	public function addOnValidateUploads(Form $form, VideoThumbnailFileUploads $formFields): void
+	public function addOnValidateUploads(UiForm $form, VideoThumbnailFileUploads $formFields): void
 	{
-		$form->onValidate[] = function (Form $form) use ($formFields): void {
-			$values = $form->getValues();
+		$form->onValidate[] = function (UiForm $form) use ($formFields): void {
+			$values = $form->getFormValues();
 			$this->validateUpload($values->videoThumbnail, $formFields->getVideoThumbnail());
 			$this->validateUpload($values->videoThumbnailAlternative, $formFields->getVideoThumbnailAlternative());
 		};

@@ -386,7 +386,7 @@ class Talks
 
 
 	/**
-	 * @return array{action:string|null, title:string, description:string|null, date:DateTime, duration:int|null, href:string|null, key_talk_slides:int|null, key_talk_filenames:int|null, slides_href:string|null, slides_embed:string|null, video_href:string|null, video_thumbnail:string|null, video_thumbnail_alternative:string|null, video_embed:string|null, event:string, event_href:string|null, og_image:string|null, transcript:string|null, favorite:string|null, key_superseded_by:int|null, publish_slides:bool}
+	 * @return array{key_locale:int, key_translation_group:int|null, action:string|null, title:string, description:string|null, date:DateTime, duration:int|null, href:string|null, key_talk_slides:int|null, key_talk_filenames:int|null, slides_href:string|null, slides_embed:string|null, video_href:string|null, video_thumbnail:string|null, video_thumbnail_alternative:string|null, video_embed:string|null, event:string, event_href:string|null, og_image:string|null, transcript:string|null, favorite:string|null, key_superseded_by:int|null, publish_slides:bool}
 	 * @throws TalkDateTimeException
 	 */
 	private function getAddUpdateParams(

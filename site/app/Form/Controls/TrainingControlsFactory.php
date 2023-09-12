@@ -26,12 +26,12 @@ class TrainingControlsFactory
 	{
 		$container->addText('name', 'Jméno a příjmení:')
 			->setRequired('Zadejte prosím jméno a příjmení')
-			->addRule(Form::MIN_LENGTH, 'Minimální délka jména a příjmení je %d znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka jména a příjmení je %d znaků', 200);
+			->addRule(Form::MinLength, 'Minimální délka jména a příjmení je %d znaky', 3)
+			->addRule(Form::MaxLength, 'Maximální délka jména a příjmení je %d znaků', 200);
 		$container->addText('email', 'E-mail:')
 			->setRequired('Zadejte prosím e-mailovou adresu')
-			->addRule(Form::EMAIL, 'Zadejte platnou e-mailovou adresu')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka e-mailu je %d znaků', 200)
+			->addRule(Form::Email, 'Zadejte platnou e-mailovou adresu')
+			->addRule(Form::MaxLength, 'Maximální délka e-mailu je %d znaků', 200)
 			->addRule($this->winterIsComing->ruleEmail(), 'Winter is actually not coming');
 	}
 
@@ -40,12 +40,12 @@ class TrainingControlsFactory
 	{
 		$container->addText('companyId', 'IČO:')
 			->setRequired(false)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka IČO je %d znaky', 6)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka IČO je %d znaků', 200);
+			->addRule(Form::MinLength, 'Minimální délka IČO je %d znaky', 6)
+			->addRule(Form::MaxLength, 'Maximální délka IČO je %d znaků', 200);
 		$container->addText('companyTaxId', 'DIČ:')
 			->setRequired(false)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka DIČ je %d znaky', 6)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka DIČ je %d znaků', 200)
+			->addRule(Form::MinLength, 'Minimální délka DIČ je %d znaky', 6)
+			->addRule(Form::MaxLength, 'Maximální délka DIČ je %d znaků', 200)
 			->getLabelPrototype()
 			->addAttributes([
 				'data-cz' => $this->translator->translate('messages.label.taxid.cz') . ':',
@@ -53,21 +53,21 @@ class TrainingControlsFactory
 			]);
 		$container->addText('company', 'Obchodní jméno:')
 			->setRequired(false)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka obchodního jména je %d znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka obchodního jména je %d znaků', 200);
+			->addRule(Form::MinLength, 'Minimální délka obchodního jména je %d znaky', 3)
+			->addRule(Form::MaxLength, 'Maximální délka obchodního jména je %d znaků', 200);
 		$container->addText('street', 'Ulice a číslo:')
 			->setRequired(false)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka ulice a čísla je %d znaky', 3)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka ulice a čísla je %d znaků', 200)
+			->addRule(Form::MinLength, 'Minimální délka ulice a čísla je %d znaky', 3)
+			->addRule(Form::MaxLength, 'Maximální délka ulice a čísla je %d znaků', 200)
 			->addRule($this->winterIsComing->ruleStreet(), 'Winter is actually not coming');
 		$container->addText('city', 'Město:')
 			->setRequired(false)
-			->addRule(Form::MIN_LENGTH, 'Minimální délka města je %d znaky', 2)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka města je %d znaků', 200);
+			->addRule(Form::MinLength, 'Minimální délka města je %d znaky', 2)
+			->addRule(Form::MaxLength, 'Maximální délka města je %d znaků', 200);
 		$container->addText('zip', 'PSČ:')
 			->setRequired(false)
-			->addRule(Form::PATTERN, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
-			->addRule(Form::MAX_LENGTH, 'Maximální délka PSČ je %d znaků', 200);
+			->addRule(Form::Pattern, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
+			->addRule(Form::MaxLength, 'Maximální délka PSČ je %d znaků', 200);
 	}
 
 
@@ -82,7 +82,7 @@ class TrainingControlsFactory
 	{
 		return $container->addText('note', 'Poznámka:')
 			->setRequired(false)
-			->addRule(Form::MAX_LENGTH, 'Maximální délka poznámky je %d znaků', 2000);
+			->addRule(Form::MaxLength, 'Maximální délka poznámky je %d znaků', 2000);
 	}
 
 
@@ -99,7 +99,7 @@ class TrainingControlsFactory
 			->setHtmlAttribute('placeholder', $format)
 			->setHtmlAttribute('title', "Formát {$format}")
 			->setRequired($required ? 'Zadejte datum' : false)
-			->addRule(Form::PATTERN, "Datum musí být ve formátu {$format}", $pattern);
+			->addRule(Form::Pattern, "Datum musí být ve formátu {$format}", $pattern);
 		return $field;
 	}
 

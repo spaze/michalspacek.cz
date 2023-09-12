@@ -10,7 +10,7 @@ use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSuccess;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDates;
-use Nette\Application\UI\Form;
+use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
@@ -32,6 +32,7 @@ class TrainingApplicationFormFactory
 	 * @param callable(string): void $onSuccess
 	 * @param callable(string): void $onError
 	 * @param array<int, TrainingDate> $dates
+	 * @throws TrainingDateNotRemoteNoVenueException
 	 */
 	public function create(
 		callable $onSuccess,
@@ -40,7 +41,7 @@ class TrainingApplicationFormFactory
 		Html $name,
 		array $dates,
 		TrainingApplicationSessionSection $sessionSection,
-	): Form {
+	): UiForm {
 		$form = $this->factory->create();
 
 		$inputDates = [];
@@ -62,7 +63,7 @@ class TrainingApplicationFormFactory
 			$form->addSelect('trainingId', $this->translator->translate('label.trainingdate'), $inputDates)
 				->setRequired('Vyberte prosím termín a místo školení')
 				->setPrompt('- vyberte termín a místo -')
-				->addRule($form::INTEGER);
+				->addRule($form::Integer);
 		}
 
 		$this->trainingControlsFactory->addAttendee($form);
@@ -73,7 +74,7 @@ class TrainingApplicationFormFactory
 
 		$form->addSubmit('signUp', 'Odeslat');
 
-		$form->onSuccess[] = function (Form $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
+		$form->onSuccess[] = function (UiForm $form) use ($onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection): void {
 			$this->formSuccess->success($form, $onSuccess, $onError, $action, $name, $dates, $multipleDates, $sessionSection);
 		};
 		$this->setApplication($form, $sessionSection, $country);
@@ -81,7 +82,7 @@ class TrainingApplicationFormFactory
 	}
 
 
-	private function setApplication(Form $form, TrainingApplicationSessionSection $application, SelectBox $country): void
+	private function setApplication(UiForm $form, TrainingApplicationSessionSection $application, SelectBox $country): void
 	{
 		$form->setDefaults($application->getApplicationValues());
 		$message = "messages.label.taxid.{$country->getValue()}";

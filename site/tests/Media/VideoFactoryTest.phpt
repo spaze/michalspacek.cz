@@ -29,12 +29,12 @@ class VideoFactoryTest extends TestCase
 
 	public function testCreateFromDatabaseRow(): void
 	{
-		$row = Row::from([
-			'id' => 123,
-			'videoHref' => 'https://youtube.com/foo',
-			'videoThumbnail' => 'thumb.jpg',
-			'videoThumbnailAlternative' => 'thumb.webp',
-		]);
+		$row = new Row();
+		$row->id = 123;
+		$row->videoHref = 'https://youtube.com/foo';
+		$row->videoThumbnail = 'thumb.jpg';
+		$row->videoThumbnailAlternative = 'thumb.webp';
+
 		$video = $this->videoFactory->createFromDatabaseRow($row);
 		Assert::same('https://youtube.com/foo', $video->getVideoHref());
 		Assert::same('thumb.jpg', $video->getThumbnailFilename());
@@ -46,12 +46,12 @@ class VideoFactoryTest extends TestCase
 		Assert::same(180, $video->getThumbnailHeight());
 		Assert::same('YouTube', $video->getVideoPlatform());
 
-		$row = Row::from([
-			'id' => 123,
-			'videoHref' => null,
-			'videoThumbnail' => null,
-			'videoThumbnailAlternative' => null,
-		]);
+		$row = new Row();
+		$row->id = 123;
+		$row->videoHref = null;
+		$row->videoThumbnail = null;
+		$row->videoThumbnailAlternative = null;
+
 		$video = $this->videoFactory->createFromDatabaseRow($row);
 		Assert::null($video->getVideoHref());
 		Assert::null($video->getThumbnailFilename());
