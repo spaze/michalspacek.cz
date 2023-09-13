@@ -1,5 +1,6 @@
 services:
 	- MichalSpacekCz\Application\AppRequest
+	- MichalSpacekCz\Application\CriticalCssFactory
 	- MichalSpacekCz\Application\Error
 	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locales

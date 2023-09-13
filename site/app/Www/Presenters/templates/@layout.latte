@@ -11,18 +11,7 @@
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Michal Špaček</title>
-	<style n:nonce>
-		body {
-			font: 1em/1.5 Arial, sans-serif;
-		}
-		img {
-			max-width: 100%;
-			height: auto;
-		}
-		pre {
-			overflow-x: auto;
-		}
-	</style>
+	{control criticalCss}
 	{if $darkMode === null}
 		{styleSheet screen-main+humbleicons+'@media (prefers-color-scheme: dark) {'+screen-main-dark+'}'}
 	{elseif $darkMode}
