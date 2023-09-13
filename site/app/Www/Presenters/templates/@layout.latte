@@ -13,11 +13,11 @@
 	<title>{if isset($pageTitle)}{$pageTitle} | {/if}Michal Špaček</title>
 	{control criticalCss}
 	{if $darkMode === null}
-		{styleSheet screen-main+humbleicons+'@media (prefers-color-scheme: dark) {'+screen-main-dark+'}'}
+		{styleSheet screen-main+'@media (prefers-color-scheme: dark) {'+screen-main-dark+'}'}
 	{elseif $darkMode}
-		{styleSheet screen-main+humbleicons+screen-main-dark}
+		{styleSheet screen-main+screen-main-dark}
 	{else}
-		{styleSheet screen-main+humbleicons}
+		{styleSheet screen-main}
 	{/if}
 	{ifset #preload}{include #preload}{/ifset}
 	{ifset #scriptsReplace}
