@@ -89,9 +89,9 @@ class CompanyRegisterAres implements CompanyRegister
 	{
 		$context = stream_context_create();
 		$setResult = stream_context_set_params($context, [
-			'notification' => function (int $notificationCode, int $severity, string $message, int $messageCode) {
+			'notification' => function (int $notificationCode, int $severity, ?string $message, int $messageCode) {
 				if ($severity === STREAM_NOTIFY_SEVERITY_ERR) {
-					throw new CompanyInfoException(trim($message) . " ({$notificationCode})", $messageCode);
+					throw new CompanyInfoException($notificationCode . ($message ? trim(' ' . $message) : ''), $messageCode);
 				}
 			},
 			'options' => [
