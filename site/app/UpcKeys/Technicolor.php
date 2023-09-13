@@ -115,9 +115,9 @@ class Technicolor implements RouterInterface
 	{
 		$context = stream_context_create();
 		$setResult = stream_context_set_params($context, [
-			'notification' => function (int $notificationCode, int $severity, string $message, int $messageCode) {
+			'notification' => function (int $notificationCode, int $severity, ?string $message, int $messageCode) {
 				if ($notificationCode == STREAM_NOTIFY_FAILURE && $messageCode >= 500) {
-					throw new RuntimeException(trim($message), $messageCode);
+					throw new RuntimeException($message ? trim($message) : '', $messageCode);
 				}
 			},
 			'options' => [
