@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Formatter\Exceptions\UnexpectedHandlerInvocationReturnType;
 use MichalSpacekCz\ShouldNotHappenException;
