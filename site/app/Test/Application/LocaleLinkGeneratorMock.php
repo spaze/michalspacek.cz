@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Application;
 
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 
 class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 {

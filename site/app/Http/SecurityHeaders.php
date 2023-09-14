@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Http\ContentSecurityPolicy\CspValues;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;

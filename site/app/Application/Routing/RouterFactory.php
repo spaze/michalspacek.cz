@@ -1,10 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Application;
+namespace MichalSpacekCz\Application\Routing;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\Routers\BlogPostRoute;
 use MichalSpacekCz\Articles\Blog\BlogPostLoader;
 use Nette\Application\Routers\Route as ApplicationRoute;
 use Nette\Application\Routers\RouteList;

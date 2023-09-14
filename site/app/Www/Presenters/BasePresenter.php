@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
-use MichalSpacekCz\Application\CriticalCss;
-use MichalSpacekCz\Application\CriticalCssFactory;
-use MichalSpacekCz\Application\LocaleLink;
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\Locale\LocaleLink;
+use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Application\Theme;
+use MichalSpacekCz\Css\CriticalCss;
+use MichalSpacekCz\Css\CriticalCssFactory;
 use MichalSpacekCz\User\Manager;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;

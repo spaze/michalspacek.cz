@@ -2,8 +2,9 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Application;
+namespace MichalSpacekCz\Application\Locale;
 
+use MichalSpacekCz\Application\Routing\RouterFactory;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\IPresenterFactory;
@@ -13,7 +14,7 @@ use Nette\Http\IRequest;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class LocaleLinkGeneratorTest extends TestCase

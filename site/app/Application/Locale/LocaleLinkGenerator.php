@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Application;
+namespace MichalSpacekCz\Application\Locale;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Application\Routing\RouterFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\LinkGenerator;

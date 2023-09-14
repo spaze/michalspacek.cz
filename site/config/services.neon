@@ -1,11 +1,10 @@
 services:
 	- MichalSpacekCz\Application\AppRequest
-	- MichalSpacekCz\Application\CriticalCssFactory
 	- MichalSpacekCz\Application\Error
-	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator(languages: %locales.languages%)
-	- MichalSpacekCz\Application\Locales
-	- MichalSpacekCz\Application\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
-	- @MichalSpacekCz\Application\RouterFactory::createRouter
+	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
+	- MichalSpacekCz\Application\Locale\Locales
+	- MichalSpacekCz\Application\Routing\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
+	- @MichalSpacekCz\Application\Routing\RouterFactory::createRouter
 	- MichalSpacekCz\Application\Theme
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	- MichalSpacekCz\Application\WindowsSubsystemForLinux
@@ -22,6 +21,7 @@ services:
 	- MichalSpacekCz\CompanyInfo\CompanyInfo(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres(url: %ares.url%)
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz(rootUrl: %registerUz.rootUrl%)
+	- MichalSpacekCz\Css\CriticalCssFactory
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	- MichalSpacekCz\DateTime\DateTimeZoneFactory

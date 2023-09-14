@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;

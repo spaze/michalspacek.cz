@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use Contributte\Translation\Translator;
 use DateTime;
-use MichalSpacekCz\Application\LocaleLinkGenerator;
+use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Tags\Tags;

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Form;
 
 use Contributte\Translation\Translator;
 use DateTime;
-use MichalSpacekCz\Application\Locales;
+use MichalSpacekCz\Application\Locale\Locales;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostFactory;
 use MichalSpacekCz\Articles\Blog\BlogPostPreview;

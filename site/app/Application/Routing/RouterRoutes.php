@@ -1,9 +1,8 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Application;
+namespace MichalSpacekCz\Application\Routing;
 
-use MichalSpacekCz\Application\Routers\BlogPostRoute;
 use Nette\Application\Routers\Route;
 
 enum RouterRoutes: string

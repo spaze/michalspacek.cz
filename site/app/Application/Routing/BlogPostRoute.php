@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Application\Routers;
+namespace MichalSpacekCz\Application\Routing;
 
 use MichalSpacekCz\Articles\Blog\BlogPostLoader;
 use Nette\Application\Routers\Route;
