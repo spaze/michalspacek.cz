@@ -1,6 +1,5 @@
 services:
 	- MichalSpacekCz\Application\AppRequest
-	- MichalSpacekCz\Application\CriticalCssFactory
 	- MichalSpacekCz\Application\Error
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locale\Locales
@@ -22,6 +21,7 @@ services:
 	- MichalSpacekCz\CompanyInfo\CompanyInfo(loadCompanyDataVisible: %loadCompanyDataVisible%)
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres(url: %ares.url%)
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz(rootUrl: %registerUz.rootUrl%)
+	- MichalSpacekCz\Css\CriticalCssFactory
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	- MichalSpacekCz\DateTime\DateTimeZoneFactory

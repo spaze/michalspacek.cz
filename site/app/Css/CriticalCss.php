@@ -1,7 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Application;
+namespace MichalSpacekCz\Css;
+
+use MichalSpacekCz\Application\UiControl;
 
 class CriticalCss extends UiControl
 {
