@@ -4,8 +4,8 @@ services:
 	- MichalSpacekCz\Application\Error
 	localeLinkGenerator: MichalSpacekCz\Application\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locales
-	- MichalSpacekCz\Application\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
-	- @MichalSpacekCz\Application\RouterFactory::createRouter
+	- MichalSpacekCz\Application\Routing\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
+	- @MichalSpacekCz\Application\Routing\RouterFactory::createRouter
 	- MichalSpacekCz\Application\Theme
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	- MichalSpacekCz\Application\WindowsSubsystemForLinux

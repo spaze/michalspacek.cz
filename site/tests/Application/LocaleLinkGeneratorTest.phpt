@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use MichalSpacekCz\Application\Routing\RouterFactory;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\IPresenterFactory;
