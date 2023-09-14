@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use MichalSpacekCz\Application\CriticalCss;
+use MichalSpacekCz\Application\CriticalCssFactory;
 use MichalSpacekCz\Application\LocaleLink;
 use MichalSpacekCz\Application\LocaleLinkGenerator;
 use MichalSpacekCz\Application\Theme;
@@ -25,6 +27,8 @@ abstract class BasePresenter extends Presenter
 	private Theme $theme;
 
 	private IResponse $httpResponse;
+
+	private CriticalCssFactory $criticalCssFactory;
 
 
 	/**
@@ -60,6 +64,15 @@ abstract class BasePresenter extends Presenter
 	public function injectHttpResponse(IResponse $httpResponse): void
 	{
 		$this->httpResponse = $httpResponse;
+	}
+
+
+	/**
+	 * @internal
+	 */
+	public function injectCriticalCssFactory(CriticalCssFactory $criticalCssFactory): void
+	{
+		$this->criticalCssFactory = $criticalCssFactory;
 	}
 
 
@@ -152,6 +165,12 @@ abstract class BasePresenter extends Presenter
 		parent::lastModified($lastModified, $etag, $expire);
 		// If the response was HTTP 304 then the following line won't be reached and 304s won't be compressed
 		ini_set('zlib.output_compression', $compression);
+	}
+
+
+	protected function createComponentCriticalCss(): CriticalCss
+	{
+		return $this->criticalCssFactory->create();
 	}
 
 }
