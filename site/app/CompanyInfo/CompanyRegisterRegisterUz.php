@@ -39,7 +39,7 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 			throw new CompanyInfoException('Company Id is empty');
 		}
 		$units = $this->call('uctovne-jednotky', ['zmenene-od' => self::DAY_ONE, 'ico' => $companyId]);
-		if (!isset($units->id)) {
+		if (empty($units->id)) {
 			throw new CompanyNotFoundException();
 		}
 		$unit = $this->call('uctovna-jednotka', ['id' => reset($units->id)]);
