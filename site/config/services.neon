@@ -19,8 +19,8 @@ services:
 	- MichalSpacekCz\Articles\Blog\BlogPosts(exportsCache: Nette\Caching\Cache(namespace: MichalSpacekCz\Feed\Exports::class), updatedInfoThreshold: %blog.updatedInfoThreshold%)
 	- MichalSpacekCz\Articles\Blog\BlogPostRecommendedLinks
 	- MichalSpacekCz\CompanyInfo\CompanyInfo(loadCompanyDataVisible: %loadCompanyDataVisible%)
-	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres(url: %ares.url%)
-	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz(rootUrl: %registerUz.rootUrl%)
+	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres
+	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz
 	- MichalSpacekCz\Css\CriticalCssFactory
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())

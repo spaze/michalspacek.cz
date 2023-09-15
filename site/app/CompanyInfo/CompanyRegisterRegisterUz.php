@@ -22,17 +22,6 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 
 	private const COUNTRY_CODE = 'sk';
 
-	private readonly string $rootUrl;
-
-
-	public function __construct(string $rootUrl)
-	{
-		if ($rootUrl[strlen($rootUrl) - 1] !== '/') {
-			$rootUrl .= '/';
-		}
-		$this->rootUrl = $rootUrl;
-	}
-
 
 	public function getCountry(): string
 	{
@@ -82,7 +71,7 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 		} else {
 			$query = '';
 		}
-		$content = file_get_contents("{$this->rootUrl}{$method}{$query}");
+		$content = file_get_contents("http://www.registeruz.sk/cruz-public/api/{$method}{$query}");
 		if (!$content) {
 			$lastError = error_get_last();
 			throw new CompanyInfoException($lastError ? $lastError['message'] : '', IResponse::S500_InternalServerError);

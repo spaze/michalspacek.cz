@@ -34,10 +34,6 @@ parameters:
 		contentSecurityPolicy: https://plz.report-uri.com/r/default/csp/enforce
 	vatRate: 0.21
 	loadCompanyDataVisible: true
-	ares:
-		url: 'https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/%s'
-	registerUz:
-		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	returningUser:
 		cookie: __Secure-beenhere
 	permanentLogin:

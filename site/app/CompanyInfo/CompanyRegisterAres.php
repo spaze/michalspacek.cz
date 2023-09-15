@@ -22,7 +22,6 @@ class CompanyRegisterAres implements CompanyRegister
 {
 
 	public function __construct(
-		private readonly string $url,
 		private readonly Processor $schemaProcessor,
 	) {
 	}
@@ -92,6 +91,7 @@ class CompanyRegisterAres implements CompanyRegister
 	 */
 	private function fetch(string $companyId): string
 	{
+		$url = "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/{$companyId}";
 		$context = stream_context_create();
 		$setResult = stream_context_set_params($context, [
 			'notification' => function (int $notificationCode, int $severity, ?string $message, int $messageCode) {
@@ -103,7 +103,6 @@ class CompanyRegisterAres implements CompanyRegister
 				'http' => ['ignore_errors' => true], // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
 			],
 		]);
-		$url = sprintf($this->url, $companyId);
 		if (!$setResult) {
 			throw new CompanyInfoException("Can't set stream context params to get contents from {$url}");
 		}
