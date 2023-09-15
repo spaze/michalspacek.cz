@@ -13,7 +13,7 @@ use stdClass;
 /**
  * Register účtovných závierok service.
  *
- * See http://www.registeruz.sk/cruz-public/static/api.html for the docs.
+ * See https://www.registeruz.sk/cruz-public/home/api for the docs.
  */
 class CompanyRegisterRegisterUz implements CompanyRegister
 {
@@ -39,7 +39,7 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 			throw new CompanyInfoException('Company Id is empty');
 		}
 		$units = $this->call('uctovne-jednotky', ['zmenene-od' => self::DAY_ONE, 'ico' => $companyId]);
-		if (!isset($units->id)) {
+		if (empty($units->id)) {
 			throw new CompanyNotFoundException();
 		}
 		$unit = $this->call('uctovna-jednotka', ['id' => reset($units->id)]);
@@ -71,7 +71,7 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 		} else {
 			$query = '';
 		}
-		$content = file_get_contents("http://www.registeruz.sk/cruz-public/api/{$method}{$query}");
+		$content = file_get_contents("https://www.registeruz.sk/cruz-public/api/{$method}{$query}");
 		if (!$content) {
 			$lastError = error_get_last();
 			throw new CompanyInfoException($lastError ? $lastError['message'] : '', IResponse::S500_InternalServerError);
