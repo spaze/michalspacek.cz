@@ -71,7 +71,7 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 		} else {
 			$query = '';
 		}
-		$content = file_get_contents("http://www.registeruz.sk/cruz-public/api/{$method}{$query}");
+		$content = file_get_contents("https://www.registeruz.sk/cruz-public/api/{$method}{$query}");
 		if (!$content) {
 			$lastError = error_get_last();
 			throw new CompanyInfoException($lastError ? $lastError['message'] : '', IResponse::S500_InternalServerError);
