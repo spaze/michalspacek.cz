@@ -121,14 +121,14 @@ class CompanyRegisterAres implements CompanyRegister
 			$result = $city;
 		}
 		if (!empty($streetLetter)) {
-			$streetNumber .= $streetLetter;
+			$streetNumber = ($streetNumber ?? '') . $streetLetter;
 		}
 		if (!empty($houseNumber) && !empty($streetNumber)) {
-			$result .= " {$houseNumber}/{$streetNumber}";
+			$result = "{$result} {$houseNumber}/{$streetNumber}";
 		} elseif (!empty($houseNumber)) {
-			$result .= " {$houseNumber}";
+			$result = "{$result} {$houseNumber}";
 		} elseif (!empty($streetNumber)) {
-			$result .= " {$streetNumber}";
+			$result = "{$result} {$streetNumber}";
 		}
 		return $result;
 	}
