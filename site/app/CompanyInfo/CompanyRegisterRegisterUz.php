@@ -13,7 +13,7 @@ use stdClass;
 /**
  * Register účtovných závierok service.
  *
- * See http://www.registeruz.sk/cruz-public/static/api.html for the docs.
+ * See https://www.registeruz.sk/cruz-public/home/api for the docs.
  */
 class CompanyRegisterRegisterUz implements CompanyRegister
 {
