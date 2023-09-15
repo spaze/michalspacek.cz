@@ -35,7 +35,7 @@ parameters:
 	vatRate: 0.21
 	loadCompanyDataVisible: true
 	ares:
-		url: 'https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=%s'
+		url: 'https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/%s'
 	registerUz:
 		rootUrl: 'http://www.registeruz.sk/cruz-public/api/'
 	returningUser:

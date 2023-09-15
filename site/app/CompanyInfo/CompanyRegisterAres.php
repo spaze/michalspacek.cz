@@ -6,25 +6,24 @@ namespace MichalSpacekCz\CompanyInfo;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
 use Nette\Http\IResponse;
-use SimpleXMLElement;
+use Nette\Schema\Expect;
+use Nette\Schema\Processor;
+use Nette\Schema\ValidationException;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  * ARES service.
  *
- * See https://wwwinfo.mfcr.cz/ares/xml_doc/schemas/documentation/zkr_103.txt
- * for meaning of abbreviations like AA, NU, CD, CO etc. (in Czech)
+ * See https://ares.gov.cz/stranky/vyvojar-info & https://ares.gov.cz/swagger-ui/ for the docs.
+ * This is using the /ekonomicke-subjekty endpoint because it returns DIČ/tax id as well.
  */
 class CompanyRegisterAres implements CompanyRegister
 {
 
-	/**
-	 * See kod_vyhledani in https://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_datatypes/v_1.0.5/ares_datatypes_v_1.0.5.xsd
-	 */
-	private const STATUS_FOUND = 1;
-
-
 	public function __construct(
 		private readonly string $url,
+		private readonly Processor $schemaProcessor,
 	) {
 	}
 
@@ -45,45 +44,51 @@ class CompanyRegisterAres implements CompanyRegister
 			throw new CompanyInfoException('Company Id is empty');
 		}
 		$content = $this->fetch($companyId);
-		$xml = simplexml_load_string($content);
-		if (!$xml) {
-			throw new CompanyInfoException("Can't parse XML received for company {$companyId}");
-		}
-		/** @var array<string, string> $ns */
-		$ns = $xml->getDocNamespaces();
-		$result = $xml->children($ns['are'])->children($ns['D'])->VH;
-		$data = $xml->children($ns['are'])->children($ns['D'])->VBAS;
-		if ((int)$result->K !== self::STATUS_FOUND) {
-			throw new CompanyNotFoundException((int)$result->K);
-		}
-
-		if (isset($data->AA)) {
-			$street = (string)$data->AA->NU;
-			$houseNumber = (string)$data->AA->CD;
-			$streetNumber = (string)$data->AA->CO;
-			$city = (string)$data->AA->N;
-			$zip = (string)$data->AA->PSC;
-			$country = strtolower($this->countryCode($data));
-		} else {
-			$street = $houseNumber = $streetNumber = $city = $zip = $country = null;
+		try {
+			$schema = Expect::structure([
+				'ico' => Expect::string()->required(),
+				'dic' => Expect::string(),
+				'obchodniJmeno' => Expect::string()->required(),
+				'sidlo' => Expect::structure([
+					'nazevObce' => Expect::string(),
+					'nazevUlice' => Expect::string(),
+					'cisloDomovni' => Expect::int(),
+					'cisloOrientacni' => Expect::int(),
+					'cisloOrientacniPismeno' => Expect::string(),
+					'psc' => Expect::int(),
+					'kodStatu' => Expect::string(),
+				])->otherItems(),
+			])->otherItems();
+			/** @var object{ico:string, dic:string, obchodniJmeno:string, sidlo:object{nazevObce:string, nazevUlice:string, cisloDomovni:int, cisloOrientacni:int, cisloOrientacniPismeno:string, psc:int, kodStatu:string}} $data */
+			$data = $this->schemaProcessor->process($schema, Json::decode($content));
+		} catch (JsonException | ValidationException $e) {
+			throw new CompanyInfoException($e->getMessage(), previous: $e);
 		}
 
+		$streetAndNumber = $this->formatStreet(
+			$data->sidlo->nazevObce,
+			$data->sidlo->nazevUlice,
+			$data->sidlo->cisloDomovni,
+			$data->sidlo->cisloOrientacni,
+			$data->sidlo->cisloOrientacniPismeno,
+		);
 		return new CompanyInfoDetails(
 			IResponse::S200_OK,
 			'OK',
-			(string)$data->ICO,
-			(string)$data->DIC,
-			(string)$data->OF,
-			$this->formatStreet($city, $street, $houseNumber, $streetNumber),
-			$city,
-			$zip,
-			$country,
+			$data->ico,
+			$data->dic ? $data->sidlo->kodStatu . $data->dic : '',
+			$data->obchodniJmeno,
+			$streetAndNumber,
+			$data->sidlo->nazevObce,
+			(string)$data->sidlo->psc,
+			strtolower($data->sidlo->kodStatu),
 		);
 	}
 
 
 	/**
 	 * @throws CompanyInfoException
+	 * @throws CompanyNotFoundException
 	 */
 	private function fetch(string $companyId): string
 	{
@@ -91,7 +96,7 @@ class CompanyRegisterAres implements CompanyRegister
 		$setResult = stream_context_set_params($context, [
 			'notification' => function (int $notificationCode, int $severity, ?string $message, int $messageCode) {
 				if ($severity === STREAM_NOTIFY_SEVERITY_ERR) {
-					throw new CompanyInfoException($notificationCode . ($message ? trim(' ' . $message) : ''), $messageCode);
+					throw new CompanyNotFoundException($messageCode !== IResponse::S404_NotFound ? $messageCode : null);
 				}
 			},
 			'options' => [
@@ -110,11 +115,14 @@ class CompanyRegisterAres implements CompanyRegister
 	}
 
 
-	private function formatStreet(?string $city, ?string $street, ?string $houseNumber, ?string $streetNumber): ?string
+	private function formatStreet(?string $city, ?string $street, ?int $houseNumber, ?int $streetNumber, ?string $streetLetter): ?string
 	{
 		$result = $street;
 		if (empty($result)) {
 			$result = $city;
+		}
+		if (!empty($streetLetter)) {
+			$streetNumber .= $streetLetter;
 		}
 		if (!empty($houseNumber) && !empty($streetNumber)) {
 			$result .= " {$houseNumber}/{$streetNumber}";
@@ -124,19 +132,6 @@ class CompanyRegisterAres implements CompanyRegister
 			$result .= " {$streetNumber}";
 		}
 		return $result;
-	}
-
-
-	/**
-	 * Return ISO 3166-1 alpha-2 by ISO 3166-1 numeric.
-	 */
-	private function countryCode(SimpleXMLElement $data): string
-	{
-		$codes = [
-			'203' => 'CZ',
-			'703' => 'SK',
-		];
-		return ($codes[(string)$data->AA->KS] ?? substr((string)$data->DIC, 0, 2) ?: 'CZ');
 	}
 
 }
