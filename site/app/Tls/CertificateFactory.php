@@ -54,12 +54,12 @@ class CertificateFactory
 	{
 		$details = OpenSsl::x509parse($certificate);
 		return new Certificate(
-			$details['subject']['commonName'],
+			$details->getCommonName(),
 			null,
-			$this->dateTimeFactory->createFromFormat('U', (string)$details['validFrom_time_t']),
-			$this->dateTimeFactory->createFromFormat('U', (string)$details['validTo_time_t']),
+			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidFromTimeT()),
+			$this->dateTimeFactory->createFromFormat('U', (string)$details->getValidToTimeT()),
 			$this->expiringThreshold,
-			$details['serialNumberHex'],
+			$details->getSerialNumberHex(),
 		);
 	}
 

@@ -22,9 +22,8 @@ class OpenSslTest extends TestCase
 		if (!$certificate) {
 			Assert::fail('Cannot read ' . $file);
 		} else {
-			Assert::noError(function () use ($certificate): void {
-				Assert::type('array', OpenSsl::x509parse($certificate));
-			});
+			$expected = new OpenSslX509ParseResult('michalspacek.cz', 1682947521, 1690723520, '03F3ABC4EB1C13E0D4447CA61298423C0F02');
+			Assert::equal($expected, OpenSsl::x509parse($certificate));
 		}
 	}
 
