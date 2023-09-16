@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8fff274a42fa800fc16c787809b38f8c",
+    "content-hash": "b43fbf7f79edb94f5496801af9f77993",
     "packages": [
         {
             "name": "contributte/translation",
@@ -421,6 +421,68 @@
                 "source": "https://github.com/nette/caching/tree/v3.2.2"
             },
             "time": "2023-02-04T13:52:33+00:00"
+        },
+        {
+            "name": "nette/command-line",
+            "version": "v1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/command-line.git",
+                "reference": "ff1ba481afa981a7e5a7c5e75c7f55668d471c1e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/command-line/zipball/ff1ba481afa981a7e5a7c5e75c7f55668d471c1e",
+                "reference": "ff1ba481afa981a7e5a7c5e75c7f55668d471c1e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2 <8.3"
+            },
+            "require-dev": {
+                "nette/tester": "^2.0",
+                "phpstan/phpstan": "^0.12",
+                "tracy/tracy": "^2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0-only",
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "Nette Command Line: options and arguments parser.",
+            "homepage": "https://nette.org",
+            "keywords": [
+                "cmd",
+                "cmd-line",
+                "nette"
+            ],
+            "support": {
+                "issues": "https://github.com/nette/command-line/issues",
+                "source": "https://github.com/nette/command-line/tree/v1.6"
+            },
+            "time": "2022-12-12T17:46:11+00:00"
         },
         {
             "name": "nette/component-model",

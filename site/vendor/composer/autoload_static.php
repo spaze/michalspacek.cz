@@ -174,8 +174,8 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         ),
         'PHPStan\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
-            1 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
+            0 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
+            1 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
         ),
         'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
         array (
@@ -531,6 +531,8 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'Nette\\Caching\\Storages\\MemoryStorage' => __DIR__ . '/..' . '/nette/caching/src/Caching/Storages/MemoryStorage.php',
         'Nette\\Caching\\Storages\\SQLiteJournal' => __DIR__ . '/..' . '/nette/caching/src/Caching/Storages/SQLiteJournal.php',
         'Nette\\Caching\\Storages\\SQLiteStorage' => __DIR__ . '/..' . '/nette/caching/src/Caching/Storages/SQLiteStorage.php',
+        'Nette\\CommandLine\\Console' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Console.php',
+        'Nette\\CommandLine\\Parser' => __DIR__ . '/..' . '/nette/command-line/src/CommandLine/Parser.php',
         'Nette\\ComponentModel\\ArrayAccess' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/ArrayAccess.php',
         'Nette\\ComponentModel\\Component' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/Component.php',
         'Nette\\ComponentModel\\Container' => __DIR__ . '/..' . '/nette/component-model/src/ComponentModel/Container.php',
