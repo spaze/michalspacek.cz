@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use MichalSpacekCz\Application\Exceptions\ServerEnvNotArrayException;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotFoundException;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotStringException;
 
@@ -48,40 +47,6 @@ class ServerEnv
 	public static function setString(string $key, string $value): void
 	{
 		$_SERVER[$key] = $value;
-	}
-
-
-	/**
-	 * @param non-empty-string $key
-	 * @return list<mixed>
-	 * @throws ServerEnvNotFoundException
-	 * @throws ServerEnvNotArrayException
-	 */
-	public static function getList(string $key): array
-	{
-		if (!isset($_SERVER[$key])) {
-			throw new ServerEnvNotFoundException();
-		}
-		if (!is_array($_SERVER[$key])) {
-			throw new ServerEnvNotArrayException();
-		}
-		return array_values($_SERVER[$key]);
-	}
-
-
-	/**
-	 * @param non-empty-string $key
-	 * @return list<mixed>|null
-	 */
-	public static function tryGetList(string $key): ?array
-	{
-		if (!isset($_SERVER[$key])) {
-			return null;
-		}
-		if (!is_array($_SERVER[$key])) {
-			return null;
-		}
-		return array_values($_SERVER[$key]);
 	}
 
 

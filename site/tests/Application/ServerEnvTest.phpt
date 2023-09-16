@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use MichalSpacekCz\Application\Exceptions\ServerEnvNotArrayException;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotFoundException;
 use MichalSpacekCz\Application\Exceptions\ServerEnvNotStringException;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -59,42 +58,6 @@ class ServerEnvTest extends TestCase
 	{
 		ServerEnv::setString('what', 'ever');
 		Assert::same('ever', $_SERVER['what']);
-	}
-
-
-	public function testGetList(): void
-	{
-		$_SERVER['foo'] = ['foo' => 'bar', 'waldo' => 'quux', 303];
-		Assert::same(['bar', 'quux', 303], ServerEnv::getList('foo'));
-
-		$_SERVER['foo'] = ['foo', 'bar'];
-		Assert::same(['foo', 'bar'], ServerEnv::getList('foo'));
-
-		$_SERVER['foo'] = 123;
-		Assert::exception(function (): void {
-			ServerEnv::getList('foo');
-		}, ServerEnvNotArrayException::class);
-
-		unset($_SERVER['foo']);
-		Assert::exception(function (): void {
-			ServerEnv::getList('foo');
-		}, ServerEnvNotFoundException::class);
-	}
-
-
-	public function testTryGetList(): void
-	{
-		$_SERVER['foo'] = ['foo' => 'bar', 'waldo' => 'quux', 303];
-		Assert::same(['bar', 'quux', 303], ServerEnv::tryGetList('foo'));
-
-		$_SERVER['foo'] = ['foo', 'bar'];
-		Assert::same(['foo', 'bar'], ServerEnv::tryGetList('foo'));
-
-		$_SERVER['foo'] = 123;
-		Assert::null(ServerEnv::tryGetList('foo'));
-
-		unset($_SERVER['foo']);
-		Assert::null(ServerEnv::tryGetList('foo'));
 	}
 
 

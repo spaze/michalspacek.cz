@@ -4,10 +4,14 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use Exception;
+use MichalSpacekCz\Application\Cli\CliArgs;
+use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
-class CertificateMonitor
+class CertificateMonitor implements CliArgsProvider
 {
+
+	private const NO_IPV6 = '--no-ipv6';
 
 	private bool $hasErrors = false;
 
@@ -16,16 +20,22 @@ class CertificateMonitor
 		private readonly CertificateGatherer $certificateGatherer,
 		private readonly CertificatesApiClient $certificatesApiClient,
 		private readonly ConsoleColor $color,
+		private readonly CliArgs $cliArgs,
 	) {
 	}
 
 
-	public function run(bool $includeIpv6): never
+	public function run(): never
 	{
+		$cliArgsError = $this->cliArgs->getError();
+		if ($cliArgsError) {
+			$this->error(null, $cliArgsError);
+			exit(3);
+		}
 		try {
 			// Not running in parallel because those sites are hosted on just a few tiny servers
 			foreach ($this->certificatesApiClient->getLoggedCertificates() as $loggedCertificate) {
-				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificates($loggedCertificate->getCommonName(), $includeIpv6));
+				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificates($loggedCertificate->getCommonName(), $this->cliArgs->getFlag(self::NO_IPV6)));
 			}
 			exit($this->hasErrors ? 1 : 0);
 		} catch (Exception $e) {
@@ -136,6 +146,12 @@ class CertificateMonitor
 			$certificate ? $certificate->getCommonName() : __CLASS__,
 			$message,
 		);
+	}
+
+
+	public static function getArgs(): array
+	{
+		return [self::NO_IPV6];
 	}
 
 }

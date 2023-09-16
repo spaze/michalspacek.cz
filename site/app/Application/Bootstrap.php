@@ -3,9 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use Exception;
+use MichalSpacekCz\Application\Cli\CliArgs;
+use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\Bootstrap\Configurator;
+use Nette\CommandLine\Parser;
 use Nette\DI\Container;
-use Nette\Utils\Arrays;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 use Tester\Environment;
 
@@ -14,6 +17,8 @@ class Bootstrap
 
 	private const MODE_DEVELOPMENT = 'development';
 	private const SITE_DIR = __DIR__ . '/../..';
+	private const DEBUG = '--debug';
+	private const COLORS = '--colors';
 
 
 	public static function boot(): Container
@@ -25,17 +30,22 @@ class Bootstrap
 	}
 
 
-	public static function bootCli(): Container
+	/**
+	 * @param class-string<CliArgsProvider> $argsProvider
+	 */
+	public static function bootCli(string $argsProvider): Container
 	{
 		ServerEnv::setString('HTTPS', 'on');
-		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || Arrays::contains(ServerEnv::tryGetList('argv') ?? [], '--debug');
+		$cliArgs = self::getCliArgs($argsProvider);
+		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || $cliArgs->getFlag(self::DEBUG);
 		$container = self::createConfigurator(
 			$debugMode,
 			self::SITE_DIR . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),
 		)->createContainer();
-		if (Arrays::contains(ServerEnv::tryGetList('argv') ?? [], '--colors')) {
+		if ($cliArgs->getFlag(self::COLORS)) {
 			$container->getByType(ConsoleColor::class)->setForceStyle(true);
 		}
+		$container->addService('cliArgs', $cliArgs);
 		return $container;
 	}
 
@@ -90,6 +100,24 @@ class Bootstrap
 		}
 
 		return $configurator;
+	}
+
+
+	/**
+	 * @param class-string<CliArgsProvider> $argsProvider
+	 */
+	private static function getCliArgs(string $argsProvider): CliArgs
+	{
+		$args = $argsProvider::getArgs();
+		$args[] = self::DEBUG;
+		$args[] = self::COLORS;
+		$cliArgsParser = new Parser("\n " . implode("\n ", $args));
+		try {
+			$cliArgsParsed = $cliArgsParser->parse();
+		} catch (Exception $e) {
+			$cliArgsError = $e->getMessage();
+		}
+		return new CliArgs($cliArgsParsed ?? [], $cliArgsError ?? null);
 	}
 
 }

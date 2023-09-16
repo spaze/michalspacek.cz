@@ -1,5 +1,8 @@
 services:
 	- MichalSpacekCz\Application\AppRequest
+	cliArgs:
+		type: MichalSpacekCz\Application\Cli\CliArgs
+		imported: true
 	- MichalSpacekCz\Application\Error
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locale\Locales
