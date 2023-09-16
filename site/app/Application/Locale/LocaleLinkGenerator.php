@@ -94,7 +94,7 @@ class LocaleLinkGenerator
 	 * Generates all URLs, including a link to the current language version.
 	 *
 	 * @param string $destination destination in format "[[[module:]presenter:]action] [#fragment]"
-	 * @param array<string, array<string, string>> $params of locale => [name => value]
+	 * @param array<string, array<string, string|null>> $params of locale => [name => value]
 	 * @return array<string, string> of locale => URL
 	 */
 	public function allLinks(string $destination, array $params = []): array
