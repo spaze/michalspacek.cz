@@ -64,7 +64,7 @@ trait SessionSectionDeprecatedGetSet
 
 
 	/**
-	 * @param string|list<string>|null $name
+	 * @param string|array<array-key, string>|null $name
 	 * @deprecated Add remove<Property>() method instead
 	 */
 	public function remove($name = null): void
