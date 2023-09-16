@@ -118,6 +118,9 @@ class TexyFormatter
 	 */
 	public function substitute(string|Stringable $format, array $args): Html
 	{
+		array_walk($args, function (string|Stringable|int $value): string {
+			return (string)$value;
+		});
 		return $this->format(vsprintf((string)$format, $args));
 	}
 
