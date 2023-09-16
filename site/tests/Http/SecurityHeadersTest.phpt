@@ -4,13 +4,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
+use MichalSpacekCz\Test\Application\ApplicationPresenter;
 use MichalSpacekCz\Test\Http\Response;
 use MichalSpacekCz\Test\Http\SecurityHeadersFactory;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
-use Nette\Application\UI\Presenter;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use Tester\Assert;
 use Tester\TestCase;
@@ -29,6 +29,7 @@ class SecurityHeadersTest extends TestCase
 		CspConfig $cspConfig,
 		SecurityHeadersFactory $securityHeadersFactory,
 		private readonly IPresenterFactory $presenterFactory,
+		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly Application $application,
 	) {
 		$cspConfig->setPolicy([
@@ -70,23 +71,20 @@ class SecurityHeadersTest extends TestCase
 
 	public function testSendHeadersExtendsUiPresenter(): void
 	{
-		$presenter = $this->presenterFactory->createPresenter('Www:Homepage'); // Has to be a real presenter that extends Ui\Presenter
-		if (!$presenter instanceof Presenter) {
-			Assert::fail('Presenter is of a wrong class ' . get_debug_type($presenter));
-		} else {
-			/** @noinspection PhpInternalEntityUsedInspection */
-			$presenter->setParent(null, 'Foo'); // Set the name and also rename it
-			$presenter->changeAction('bar');
-			Assert::same(':Foo:bar', $presenter->getAction(true));
-			PrivateProperty::setValue($this->application, 'presenter', $presenter);
+		$presenter = $this->applicationPresenter->createUiPresenter(
+			'Www:Homepage', // Has to be a real presenter that extends Ui\Presenter
+			'Foo',
+			'bar',
+		);
+		Assert::same(':Foo:bar', $presenter->getAction(true));
+		PrivateProperty::setValue($this->application, 'presenter', $presenter);
 
-			$this->securityHeaders->sendHeaders();
-			$expected = [
-				'content-security-policy' => "script-src 'none' example.com; form-action 'self'",
-				'permissions-policy' => 'camera=(), geolocation=(), midi=(self "https://example.com")',
-			];
-			Assert::same($expected, $this->httpResponse->getHeaders());
-		}
+		$this->securityHeaders->sendHeaders();
+		$expected = [
+			'content-security-policy' => "script-src 'none' example.com; form-action 'self'",
+			'permissions-policy' => 'camera=(), geolocation=(), midi=(self "https://example.com")',
+		];
+		Assert::same($expected, $this->httpResponse->getHeaders());
 	}
 
 

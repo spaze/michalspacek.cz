@@ -28,6 +28,11 @@
 		<class name="Nette\Utils\ArrayHash"/>
 	</universalObjectCrates>
 	<issueHandlers>
+		<InternalMethod>
+			<errorLevel type="suppress">
+				<referencedMethod name="Nette\ComponentModel\Component::setParent" /> <!-- Used in tests -->
+			</errorLevel>
+		</InternalMethod>
 		<MissingFile>
 			<errorLevel type="suppress">
 				<file name="public/www.michalspacek.cz/app.php" /> <!-- Can't require maintenance.php but https://github.com/vimeo/psalm/issues/3886 -->
