@@ -1,14 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse;
+namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
-use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
-use MichalSpacekCz\Pulse\Passwords\Rating;
-use MichalSpacekCz\Pulse\Passwords\SearchMatcher;
-use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
-use MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory;
+use MichalSpacekCz\Pulse\Companies;
+use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;

@@ -80,8 +80,8 @@ services:
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.context)
-	- MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords\AlgorithmAttributesFactory
+	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory

@@ -27,6 +27,7 @@ services:
 	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
 	database.upcKeys.explorer: @database.default.explorer
+	database.pulse.explorer: @database.default.explorer
 	session.session: MichalSpacekCz\Test\Http\NullSession
 	http.request: MichalSpacekCz\Test\Http\Request
 	http.response: MichalSpacekCz\Test\Http\Response
