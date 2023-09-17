@@ -114,38 +114,38 @@ class DateTimeFormatter
 	}
 
 
-	private function localeDate(DateTimeInterface $start, ?DateTimeInterface $end, string $format, ?string $locale): string
+	private function localeDate(DateTimeInterface $start, ?DateTimeInterface $end, string $type, ?string $locale): string
 	{
 		if ($locale === null) {
 			$locale = $this->defaultLocale;
 		}
 
 		$formatter = new IntlDateFormatter($locale, IntlDateFormatter::NONE, IntlDateFormatter::NONE);
-		if ($end === null || $this->sameDates($start, $end, $format, self::NO_INTERVAL)) {
-			$formatter->setPattern($this->localDateFormat[$locale][$format][self::NO_INTERVAL]);
+		if ($end === null || $this->sameDates($start, $end, $type, self::NO_INTERVAL)) {
+			$formatter->setPattern($this->localDateFormat[$locale][$type][self::NO_INTERVAL]);
 			$result = $formatter->format($start);
 		} else {
-			if ($this->sameDates($start, $end, $format, self::INTERVAL)) {
-				$key = self::INTERVAL;
+			if ($this->sameDates($start, $end, $type, self::INTERVAL)) {
+				$format = $this->localDateFormat[$locale][$type][self::INTERVAL];
 			} elseif (
-				isset($this->comparisonFormat[$format][self::INTERVAL_BOUNDARY])
-				&& !$this->sameDates($start, $end, $format, self::INTERVAL_BOUNDARY)
+				isset($this->localDateFormat[$locale][$type][self::INTERVAL_BOUNDARIES])
+				&& !$this->sameDates($start, $end, $type, self::INTERVAL_BOUNDARY)
 			) {
-				$key = self::INTERVAL_BOUNDARIES;
+				$format = $this->localDateFormat[$locale][$type][self::INTERVAL_BOUNDARIES];
 			} else {
-				$key = self::INTERVAL_BOUNDARY;
+				$format = $this->localDateFormat[$locale][$type][self::INTERVAL_BOUNDARY];
 			}
 
-			$formatter->setPattern($this->localDateFormat[$locale][$format][$key][self::INTERVAL_FORMAT_START]);
+			$formatter->setPattern($format[self::INTERVAL_FORMAT_START]);
 			$result = $formatter->format($start);
 
-			$result .= $this->localDateFormat[$locale][$format][$key][self::INTERVAL_FORMAT_SEPARATOR];
+			$result .= $format[self::INTERVAL_FORMAT_SEPARATOR];
 
-			$formatter->setPattern($this->localDateFormat[$locale][$format][$key][self::INTERVAL_FORMAT_END]);
+			$formatter->setPattern($format[self::INTERVAL_FORMAT_END]);
 			$result .= $formatter->format($end);
 		}
 		if (!$result) {
-			throw new RuntimeException("Format '{$format}' using {$locale} has failed");
+			throw new RuntimeException("Format '{$type}' using {$locale} has failed");
 		}
 		return $result;
 	}
@@ -175,9 +175,9 @@ class DateTimeFormatter
 	}
 
 
-	private function sameDates(DateTimeInterface $start, DateTimeInterface $end, string $format, int $level): bool
+	private function sameDates(DateTimeInterface $start, DateTimeInterface $end, string $type, int $level): bool
 	{
-		return isset($this->comparisonFormat[$format][$level]) && ($start->format($this->comparisonFormat[$format][$level]) === $end->format($this->comparisonFormat[$format][$level]));
+		return isset($this->comparisonFormat[$type][$level]) && ($start->format($this->comparisonFormat[$type][$level]) === $end->format($this->comparisonFormat[$type][$level]));
 	}
 
 }
