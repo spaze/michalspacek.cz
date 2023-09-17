@@ -44,9 +44,12 @@ class StorageRegistryFactory
 			if (!$registry->hasCompany($row->companyId)) {
 				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
 			}
-			if (!$registry->hasSite($siteId)) {
+			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
+			$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
+			$addSite = !$registry->hasSite($siteId);
+			if ($addSite) {
 				if ($row->siteId === null) {
-					$registry->addSite(new WildcardSite($this->rating, $siteId, $registry->getCompany($row->companyId), $storageKey));
+					$registry->addSite(new WildcardSite($this->rating, $siteId, $registry->getCompany($row->companyId), $storageKey, $algorithm));
 				} else {
 					$registry->addSite(new SpecificSite(
 						$this->rating,
@@ -56,6 +59,7 @@ class StorageRegistryFactory
 						$row->sharedWith ? $this->getSharedWith($row->sharedWith) : [],
 						$registry->getCompany($row->companyId),
 						$storageKey,
+						$algorithm,
 					));
 				}
 			}
@@ -65,11 +69,9 @@ class StorageRegistryFactory
 			if (!$registry->getStorage($storageKey)->hasSite($siteId)) {
 				$registry->getStorage($storageKey)->addSite($registry->getSite($siteId));
 			}
-			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
 			if (!$registry->getStorage($storageKey)->getSite($siteId)->hasAlgorithm($algoKey)) {
-				$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
 				$registry->getStorage($storageKey)->getSite($siteId)->addAlgorithm($algorithm);
-			} else {
+			} elseif (!$addSite) {
 				$registry->getStorage($storageKey)->getSite($siteId)->getAlgorithm($algoKey)->addDisclosure($disclosure);
 			}
 		}

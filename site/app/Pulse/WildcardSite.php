@@ -10,8 +10,8 @@ use MichalSpacekCz\Pulse\Passwords\RatingGrade;
 class WildcardSite implements Site
 {
 
-	/** @var array<string, Algorithm> */
-	private array $algorithms = [];
+	/** @var non-empty-array<string, Algorithm> */
+	private array $algorithms;
 
 	private ?RatingGrade $ratingGrade = null;
 
@@ -21,7 +21,9 @@ class WildcardSite implements Site
 		private readonly string $id,
 		private readonly Company $company,
 		private readonly string $storageId,
+		Algorithm $algorithm,
 	) {
+		$this->algorithms = [$algorithm->getId() => $algorithm];
 	}
 
 
