@@ -233,30 +233,30 @@ class TalkSlides
 				}
 			}
 		}
-		try {
-			foreach ($slides as $id => $slide) {
-				$width = self::SLIDE_MAX_WIDTH;
-				$height = self::SLIDE_MAX_HEIGHT;
+		foreach ($slides as $id => $slide) {
+			$width = self::SLIDE_MAX_WIDTH;
+			$height = self::SLIDE_MAX_HEIGHT;
 
-				$slideNumber = (int)$slide->number;
-				if (isset($slide->replace, $slide->replaceAlternative)) {
-					$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), $removeFiles, $originalSlides[$slideNumber]->filename, $width, $height);
-					$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), $removeFiles, $originalSlides[$slideNumber]->filenameAlternative, $width, $height);
-					if ($removeFiles) {
-						foreach ($this->deleteFiles as $key => $value) {
-							if (unlink($value)) {
-								unset($this->deleteFiles[$key]);
-							}
+			$slideNumber = (int)$slide->number;
+			if (isset($slide->replace, $slide->replaceAlternative)) {
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), $removeFiles, $originalSlides[$slideNumber]->filename, $width, $height);
+				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), $removeFiles, $originalSlides[$slideNumber]->filenameAlternative, $width, $height);
+				if ($removeFiles) {
+					foreach ($this->deleteFiles as $key => $value) {
+						if (unlink($value)) {
+							unset($this->deleteFiles[$key]);
 						}
 					}
-				} else {
-					$replace = $replaceAlternative = $slide->filename = $slide->filenameAlternative = null;
 				}
-
-				$this->updateSlidesRow($talkId, $slide->alias, $slideNumber, $replace ?? $slide->filename ?? '', $replaceAlternative ?? $slide->filenameAlternative ?? '', $slide->title, $slide->speakerNotes, $id);
+			} else {
+				$replace = $replaceAlternative = $slide->filename = $slide->filenameAlternative = null;
 			}
-		} catch (UniqueConstraintViolationException $e) {
-			throw new DuplicatedSlideException($slideNumber, previous: $e);
+
+			try {
+				$this->updateSlidesRow($talkId, $slide->alias, $slideNumber, $replace ?? $slide->filename ?? '', $replaceAlternative ?? $slide->filenameAlternative ?? '', $slide->title, $slide->speakerNotes, $id);
+			} catch (UniqueConstraintViolationException $e) {
+				throw new DuplicatedSlideException($slideNumber, previous: $e);
+			}
 		}
 	}
 
