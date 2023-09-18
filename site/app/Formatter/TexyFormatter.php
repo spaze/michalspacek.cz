@@ -191,7 +191,7 @@ class TexyFormatter
 	}
 
 
-	private function getCacheKey(string $text): string
+	public function getCacheKey(string $text): string
 	{
 		// Make the key shorter because Symfony Cache stores it in comments in cache files
 		// Use MD5 to favor speed over security, which is not an issue here, and Symfony Cache itself uses MD5 as well
