@@ -108,6 +108,11 @@ class TrainingApplicationSessionSectionTest extends TestCase
 		$this->sessionSection->set('application', [$trainingAction => ['dateId' => 808]]);
 		Assert::null($this->trainingApplicationSessionSection->getApplicationIdByDateId($trainingAction, $dateId));
 
+		$this->sessionSection->set('application', [$trainingAction => ['dateId' => $dateId, 'foo' => 'bar']]);
+		Assert::exception(function () use ($trainingAction, $dateId): void {
+			$this->trainingApplicationSessionSection->getApplicationIdByDateId($trainingAction, $dateId);
+		}, ShouldNotHappenException::class, "Session key application > {$trainingAction} > id doesn't exist");
+
 		$this->sessionSection->set('application', [$trainingAction => ['dateId' => $dateId, 'id' => 'not an int']]);
 		Assert::exception(function () use ($trainingAction, $dateId): void {
 			$this->trainingApplicationSessionSection->getApplicationIdByDateId($trainingAction, $dateId);

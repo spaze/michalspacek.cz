@@ -49,7 +49,9 @@ class TrainingApplicationSessionSection extends SessionSection
 			throw new ShouldNotHappenException("Session key {$applicationKey} > {$trainingAction} type should be array, but it's a " . get_debug_type($application[$trainingAction]));
 		} elseif (!isset($application[$trainingAction][$dateIdKey]) || $application[$trainingAction][$dateIdKey] !== $dateId) {
 			return null;
-		} elseif (!isset($application[$trainingAction][$applicationIdKey]) || !is_int($application[$trainingAction][$applicationIdKey])) {
+		} elseif (!isset($application[$trainingAction][$applicationIdKey])) {
+			throw new ShouldNotHappenException("Session key {$applicationKey} > {$trainingAction} > {$applicationIdKey} doesn't exist");
+		} elseif (!is_int($application[$trainingAction][$applicationIdKey])) {
 			throw new ShouldNotHappenException("Session key {$applicationKey} > {$trainingAction} > {$applicationIdKey} type should be int, but it's a " . get_debug_type($application[$trainingAction][$applicationIdKey]));
 		}
 		return $application[$trainingAction][$applicationIdKey];
