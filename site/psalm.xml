@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <psalm
-	errorLevel="4"
+	errorLevel="3"
 	resolveFromConfigFile="true"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="https://getpsalm.org/schema/config"
@@ -27,6 +27,10 @@
 		<class name="Nette\Database\Row"/>
 		<class name="Nette\Utils\ArrayHash"/>
 	</universalObjectCrates>
+	<stubs>
+		<file name="stubs/Nette/Application/UI/Component.phpstub"/>
+		<file name="stubs/Nette/DI/Container.phpstub"/>
+	</stubs>
 	<issueHandlers>
 		<InternalMethod>
 			<errorLevel type="suppress">
