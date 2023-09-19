@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Spaze\SubresourceIntegrity;
 
+use Spaze\SubresourceIntegrity\Exceptions\CannotGetFilePathForRemoteResourceException;
 use Spaze\SubresourceIntegrity\Exceptions\HashFileException;
 use Spaze\SubresourceIntegrity\Exceptions\InvalidResourceAliasException;
 use Spaze\SubresourceIntegrity\Exceptions\ShouldNotHappenException;
@@ -147,6 +148,7 @@ class Config
 	/**
 	 * @param string|array<int, string> $resource
 	 * @throws ShouldNotHappenException
+	 * @throws CannotGetFilePathForRemoteResourceException
 	 */
 	private function localFile(string|array $resource, ?HtmlElement $targetHtmlElement = null): stdClass
 	{
@@ -171,7 +173,7 @@ class Config
 						if (!isset($this->resources[$value])) {
 							$resources[] = new StringResource($value);
 						} else {
-							$resources[] = new FileResource(sprintf('%s/%s', rtrim($this->localPrefix['path'], '/'), $this->getFilePath($value)));
+							$resources[] = $this->getFileResource($value);
 						}
 					}
 					$data = $this->fileBuilder->build($resources, $this->localPrefix['path'], $this->localPrefix['build'], $targetHtmlElement);
@@ -195,14 +197,23 @@ class Config
 
 
 	/**
-	 * @throws ShouldNotHappenException
+	 * @throws CannotGetFilePathForRemoteResourceException
 	 */
 	private function getFilePath(string $resource): string
 	{
 		if (is_array($this->resources[$resource])) {
-			throw new ShouldNotHappenException();
+			throw new CannotGetFilePathForRemoteResourceException($resource);
 		}
 		return ltrim($this->resources[$resource], '/');
+	}
+
+
+	/**
+	 * @throws CannotGetFilePathForRemoteResourceException
+	 */
+	public function getFileResource(string $resource): FileResource
+	{
+		return new FileResource(sprintf('%s/%s', rtrim($this->localPrefix['path'], '/'), $this->getFilePath($resource)));
 	}
 
 }

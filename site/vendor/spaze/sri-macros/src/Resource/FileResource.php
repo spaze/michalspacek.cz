@@ -14,6 +14,12 @@ class FileResource implements ResourceInterface
 	}
 
 
+	public function getFilename(): string
+	{
+		return $this->filename;
+	}
+
+
 	/**
 	 * @throws CannotGetFileContentException
 	 */

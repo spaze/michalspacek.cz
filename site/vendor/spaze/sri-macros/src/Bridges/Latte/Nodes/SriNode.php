@@ -54,7 +54,7 @@ abstract class SriNode extends StatementNode
 		/** @var array<string, string|null> $attributes */
 		$attributes = [];
 		foreach ($attributeNodes->items as $attributeNode) {
-			if (!$attributeNode || !$attributeNode->value instanceof StringNode) {
+			if (!$attributeNode->value instanceof StringNode) {
 				throw new ShouldNotHappenException();
 			}
 			if ($attributeNode->key) {

@@ -18,12 +18,12 @@
 		"psr-4": {"Spaze\\SubresourceIntegrity\\": "src"}
 	},
 	"require-dev": {
-		"nette/application": "^3.0",
-		"nette/tester": "^2.0",
-		"phpstan/phpstan": "^1.7",
-		"php-parallel-lint/php-parallel-lint": "^1.2",
+		"nette/application": "^3.1.13",
+		"nette/tester": "^2.5.1",
+		"phpstan/phpstan": "^1.10.33",
+		"php-parallel-lint/php-parallel-lint": "^1.3.2",
 		"php-parallel-lint/php-console-highlighter": "^1.0",
-		"spaze/coding-standard": "^1.0"
+		"spaze/coding-standard": "^1.7"
 	},
 	"suggest": {
 		"spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",

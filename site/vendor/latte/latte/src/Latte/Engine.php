@@ -19,8 +19,13 @@ class Engine
 {
 	use Strict;
 
-	public const VERSION = '3.0.8';
-	public const VERSION_ID = 30008;
+	public const Version = '3.0.9';
+	public const VersionId = 30009;
+
+	/** @deprecated use Engine::Version */
+	public const
+		VERSION = self::Version,
+		VERSION_ID = self::VersionId;
 
 	/** @deprecated use ContentType::* */
 	public const
@@ -317,7 +322,7 @@ class Engine
 	{
 		$key = [
 			$this->getLoader()->getUniqueId($name),
-			self::VERSION,
+			self::Version,
 			array_keys((array) $this->functions),
 			$this->contentType,
 		];
