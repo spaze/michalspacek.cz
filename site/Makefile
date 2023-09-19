@@ -1,6 +1,6 @@
-.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor tester
+.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester
 
-test: audit check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml phpcs phpstan tester phpstan-vendor
+test: audit check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor
 
 audit:
 	composer audit
@@ -15,7 +15,7 @@ check-makefile:
 	bin/check-makefile.php
 
 lint-php:
-	vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors app/ public/ tests/
+	vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub app/ public/ stubs/ tests/
 
 lint-latte:
 	bin/latte-lint.php app/
@@ -40,6 +40,9 @@ phpstan-latte-templates:
 
 phpstan-vendor:
 	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan-vendor.neon
+
+psalm:
+	vendor/bin/psalm.phar
 
 tester:
 	vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/

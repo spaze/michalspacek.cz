@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Pulse\Presenters;
 
 use MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory;
 use MichalSpacekCz\Form\UiForm;
-use MichalSpacekCz\Pulse\Passwords;
+use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\StorageRegistry;

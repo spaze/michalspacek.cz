@@ -7,7 +7,7 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Companies;
-use MichalSpacekCz\Pulse\Passwords;
+use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\Pulse\SpecificSite;
 use Nette\Utils\ArrayHash;

@@ -5,10 +5,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\ApplicationForm;
 
+use Generator;
 use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
-use Nette\Utils\ArrayHash;
+use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -25,67 +26,45 @@ class TrainingApplicationFormSpamTest extends TestCase
 	}
 
 
-	/**
-	 * @return list<array{0:array<string, string>, 1:bool}>
-	 */
-	public function getValues(): array
+	public function getValues(): Generator
 	{
-		return [
-			[
-				[
-					'note' => 'foo href="https:// example" bar baz',
-				],
-				false,
-			],
-			[
-				[
-					'name' => 'zggnbijhah',
-					'companyId' => 'vwetyeofcx',
-					'companyTaxId' => 'tyqvukaims',
-					'company' => 'qzpormrfcq',
-				],
-				false,
-			],
-			[
-				[
-					'name' => 'zggnbijhah',
-				],
-				false,
-			],
-			[
-				[],
-				false,
-			],
-			[
-				[
-					'name' => 'foo bar',
-				],
-				true,
-			],
-			[
-				[
-					'companyId' => 'foobar1',
-				],
-				true,
-			],
-			[
-				[
-					'companyTaxId' => 'foobar1',
-				],
-				true,
-			],
-		];
+		$values = new stdClass();
+		$values->note = 'foo href="https:// example" bar baz';
+		yield [$values, false];
+
+		$values = new stdClass();
+		$values->name = 'zggnbijhah';
+		$values->companyId = 'vwetyeofcx';
+		$values->companyTaxId = 'tyqvukaims';
+		$values->company = 'qzpormrfcq';
+		yield [$values, false];
+
+		$values = new stdClass();
+		$values->name = 'zggnbijhah';
+		yield [$values, false];
+
+		yield [new stdClass(), false];
+		$values = new stdClass();
+		$values->name = 'foo bar';
+		yield [$values, true];
+
+		$values = new stdClass();
+		$values->companyId = 'foobar1';
+		yield [$values, true];
+
+		$values = new stdClass();
+		$values->companyTaxId = 'foobar1';
+		yield [$values, true];
 	}
 
 
 	/**
-	 * @param array<string, string> $values
 	 * @dataProvider getValues
 	 */
-	public function testIsSpam(array $values, bool $isNice): void
+	public function testIsSpam(stdClass $values, bool $isNice): void
 	{
 		$check = function () use ($values): void {
-			$this->formSpam->check(ArrayHash::from($values));
+			$this->formSpam->check($values);
 		};
 		if ($isNice) {
 			Assert::noError($check);

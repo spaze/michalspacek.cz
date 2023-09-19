@@ -9,7 +9,7 @@ class MakefileContainsRealTargetsException extends MakefileException
 {
 
 	/**
-	 * @param array<string, non-empty-list<int>> $notPhonyTargets
+	 * @param array<string, list<int>> $notPhonyTargets
 	 */
 	public function __construct(array $notPhonyTargets, ?Throwable $previous = null)
 	{

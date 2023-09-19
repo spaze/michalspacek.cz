@@ -1,0 +1,15 @@
+<?php
+declare(strict_types=1);
+
+namespace Nette\Application\UI;
+
+use Nette;
+
+abstract class Component extends Nette\ComponentModel\Container implements SignalReceiver, StatePersistent, \ArrayAccess
+{
+
+	public function getPresenter(): Presenter
+	{
+	}
+
+}

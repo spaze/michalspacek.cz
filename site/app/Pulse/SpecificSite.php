@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
+use MichalSpacekCz\Pulse\Passwords\Algorithm;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\StorageSharedWith;
 
@@ -20,8 +21,9 @@ class SpecificSite extends WildcardSite
 		private readonly array $sharedWith,
 		Company $company,
 		string $storageId,
+		Algorithm $algorithm,
 	) {
-		parent::__construct($rating, $id, $company, $storageId);
+		parent::__construct($rating, $id, $company, $storageId, $algorithm);
 	}
 
 

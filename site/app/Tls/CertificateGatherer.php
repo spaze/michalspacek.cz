@@ -37,7 +37,15 @@ class CertificateGatherer
 		$certificates = [];
 		$records = $this->dnsResolver->getRecords($hostname, $includeIpv6 ? DNS_A | DNS_AAAA : DNS_A);
 		foreach ($records as $record) {
-			$certificates[$record->getIpv6() ?? $record->getIp()] = $this->fetchCertificate($hostname, $record->getIp() ?? null, $record->getIpv6() ?? null);
+			if ($record->getIpv6() !== null) {
+				$ipAddress = "[{$record->getIpv6()}]";
+			} elseif ($record->getIp() !== null) {
+				$ipAddress = $record->getIp();
+			}
+			if (!isset($ipAddress)) {
+				throw new DnsGetRecordException("No IPv4/v6 address for {$hostname}");
+			}
+			$certificates[$ipAddress] = $this->fetchCertificate($hostname, $ipAddress);
 		}
 		return $certificates;
 	}
@@ -49,9 +57,9 @@ class CertificateGatherer
 	 * @throws CannotParseDateTimeException
 	 * @throws OpenSslX509ParseException
 	 */
-	private function fetchCertificate(string $hostname, ?string $ipv4, ?string $ipv6): Certificate
+	private function fetchCertificate(string $hostname, string $ipAddress): Certificate
 	{
-		$url = 'https://' . ($ipv6 ? "[{$ipv6}]" : $ipv4) . '/';
+		$url = "https://{$ipAddress}/";
 		$fp = fopen($url, 'r', context: $this->httpStreamContext->create(
 			__METHOD__,
 			[

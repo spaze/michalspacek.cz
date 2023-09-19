@@ -135,7 +135,7 @@ class TrainingReviewFormFactory
 					'data-name' => $application->getName() ?? '',
 					'data-company' => $application->getCompany() ?? '',
 				]);
-				$applications[(int)$application->getId()] = $option;
+				$applications[$application->getId()] = $option;
 			}
 		}
 		return $applications;

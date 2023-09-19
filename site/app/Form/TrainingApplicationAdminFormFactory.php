@@ -12,15 +12,12 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Statuses;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
 
 class TrainingApplicationAdminFormFactory
 {
-
-	/** @var array<string, array{0:Checkbox, 1:mixed}> */
-	private array $deletableFields = [];
-
 
 	public function __construct(
 		private readonly FormFactory $factory,
@@ -42,13 +39,12 @@ class TrainingApplicationAdminFormFactory
 	{
 		$form = $this->factory->create();
 
-		$this->trainingControlsFactory->addAttendee($form);
+		$attendeeInputs = $this->trainingControlsFactory->addAttendee($form);
 		$form->addCheckbox('familiar', 'Tykání:');
 		$this->trainingControlsFactory->addSource($form);
-		$this->trainingControlsFactory->addCompany($form);
-		$this->trainingControlsFactory->addCountry($form);
-		$form->getComponent('country')->setPrompt('- vyberte zemi -');
-		$this->trainingControlsFactory->addNote($form);
+		$companyInputs = $this->trainingControlsFactory->addCompany($form);
+		$countryInput = $this->trainingControlsFactory->addCountry($form)->setPrompt('- vyberte zemi -');
+		$noteInput = $this->trainingControlsFactory->addNote($form);
 		$this->addPaymentInfo($form);
 		$form->addSubmit('submit', 'Uložit');
 
@@ -70,23 +66,16 @@ class TrainingApplicationAdminFormFactory
 			->setRequired($required)
 			->setDisabled(!$required);
 
-		$this->deletableFields['name'] = [$form->addCheckbox('nameSet'), $application->getName()];
-		$this->deletableFields['email'] = [$form->addCheckbox('emailSet'), $application->getEmail()];
-		$this->deletableFields['company'] = [$form->addCheckbox('companySet'), $application->getCompany()];
-		$this->deletableFields['street'] = [$form->addCheckbox('streetSet'), $application->getStreet()];
-		$this->deletableFields['city'] = [$form->addCheckbox('citySet'), $application->getCity()];
-		$this->deletableFields['zip'] = [$form->addCheckbox('zipSet'), $application->getZip()];
-		$this->deletableFields['country'] = [$form->addCheckbox('countrySet'), $application->getCountry()];
-		$this->deletableFields['companyId'] = [$form->addCheckbox('companyIdSet'), $application->getCompanyId()];
-		$this->deletableFields['companyTaxId'] = [$form->addCheckbox('companyTaxIdSet'), $application->getCompanyTaxId()];
-		$this->deletableFields['note'] = [$form->addCheckbox('noteSet'), $application->getNote()];
-
-		foreach ($this->deletableFields as $field => [$checkbox]) {
-			$checkbox->setHtmlAttribute('class', 'disableInput');
-			$form->getComponent($field)
-				->setHtmlAttribute('class', 'transparent')
-				->setRequired(false);
-		}
+		$this->addDeletableFieldCheckbox($attendeeInputs->getName(), $form->addCheckbox('nameSet'), $application->getName());
+		$this->addDeletableFieldCheckbox($attendeeInputs->getEmail(), $form->addCheckbox('emailSet'), $application->getEmail());
+		$this->addDeletableFieldCheckbox($companyInputs->getCompany(), $form->addCheckbox('companySet'), $application->getCompany());
+		$this->addDeletableFieldCheckbox($companyInputs->getStreet(), $form->addCheckbox('streetSet'), $application->getStreet());
+		$this->addDeletableFieldCheckbox($companyInputs->getCity(), $form->addCheckbox('citySet'), $application->getCity());
+		$this->addDeletableFieldCheckbox($companyInputs->getZip(), $form->addCheckbox('zipSet'), $application->getZip());
+		$this->addDeletableFieldCheckbox($countryInput, $form->addCheckbox('countrySet'), $application->getCountry());
+		$this->addDeletableFieldCheckbox($companyInputs->getCompanyId(), $form->addCheckbox('companyIdSet'), $application->getCompanyId());
+		$this->addDeletableFieldCheckbox($companyInputs->getCompanyTaxId(), $form->addCheckbox('companyTaxIdSet'), $application->getCompanyTaxId());
+		$this->addDeletableFieldCheckbox($noteInput, $form->addCheckbox('noteSet'), $application->getNote());
 
 		$containerName = 'statusHistoryDelete';
 		$historyContainer = $form->addContainer($containerName);
@@ -156,6 +145,7 @@ class TrainingApplicationAdminFormFactory
 
 	private function setApplication(UiForm $form, TrainingApplication $application): void
 	{
+		$vatRate = $application->getVatRate();
 		$values = [
 			'name' => $application->getName(),
 			'email' => $application->getEmail(),
@@ -170,18 +160,30 @@ class TrainingApplicationAdminFormFactory
 			'companyTaxId' => $application->getCompanyTaxId(),
 			'note' => $application->getNote(),
 			'price' => $application->getPrice(),
-			'vatRate' => $application->getVatRate() ? $application->getVatRate() * 100 : $application->getVatRate(),
+			'vatRate' => $vatRate ? $vatRate * 100 : $vatRate,
 			'priceVat' => $application->getPriceVat(),
 			'discount' => $application->getDiscount(),
 			'invoiceId' => $application->getInvoiceId(),
 			'paid' => $application->getPaid(),
 			'date' => $application->getDateId(),
 		];
-		foreach ($this->deletableFields as $field => [$checkbox, $value]) {
-			$values[$checkbox->getName()] = ($value !== null);
-			$form->getComponent($field)->setHtmlAttribute('class', $value === null ? 'transparent' : null);
-		}
 		$form->setDefaults($values);
+	}
+
+
+	private function addDeletableFieldCheckbox(BaseControl $control, Checkbox $checkbox, ?string $fieldValue): void
+	{
+		$form = $control->getForm();
+		$name = $control->getName();
+		if ($form === null || $name === null) {
+			return;
+		}
+		$control
+			->setHtmlAttribute('class', $fieldValue === null ? 'transparent' : null)
+			->setRequired(false);
+		$checkbox
+			->setDefaultValue($fieldValue !== null)
+			->setHtmlAttribute('class', 'disableInput');
 	}
 
 }

@@ -1,5 +1,8 @@
 services:
 	- MichalSpacekCz\Application\AppRequest
+	cliArgs:
+		type: MichalSpacekCz\Application\Cli\CliArgs
+		imported: true
 	- MichalSpacekCz\Application\Error
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locale\Locales
@@ -77,8 +80,8 @@ services:
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.context)
-	- MichalSpacekCz\Pulse\Passwords(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords\AlgorithmAttributesFactory
+	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory

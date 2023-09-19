@@ -165,7 +165,7 @@ class TrainingMailsOutboxFormFactory
 				if (in_array($nextStatus, [Statuses::STATUS_INVOICE_SENT, Statuses::STATUS_INVOICE_SENT_AFTER])) {
 					if ($data->invoice->isOk()) {
 						$this->trainingApplicationStorage->updateApplicationInvoiceData($id, $data->invoiceId);
-						$applications[$id]->setInvoiceId($data->invoiceId);
+						$applications[$id]->setInvoiceId((int)$data->invoiceId);
 						$this->trainingMails->sendInvoice($applications[$id], $template, $data->invoice, $data->cc ?: null, $additional);
 						$this->trainingStatuses->updateStatus($id, $nextStatus);
 						$sent++;

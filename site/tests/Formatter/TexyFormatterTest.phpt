@@ -13,6 +13,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Utils\Html;
 use Stringable;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -29,6 +30,7 @@ class TexyFormatterTest extends TestCase
 
 	public function __construct(
 		private readonly TexyFormatter $texyFormatter,
+		private readonly AdapterInterface $cacheInterface,
 		Database $database,
 		Application $application,
 		ApplicationPresenter $applicationPresenter,
@@ -117,6 +119,22 @@ class TexyFormatterTest extends TestCase
 	public function testFormatBlock(): void
 	{
 		Assert::same("<p>{$this->expectedFormatted}</p>\n", $this->texyFormatter->formatBlock('**foo "bar":[training:' . self::TRAINING_ACTION . ']**')->toHtml());
+	}
+
+
+	public function testDisableCache(): void
+	{
+		$text = '**anoff**';
+		$expected = '<strong>anoff</strong>';
+
+		$key = $this->texyFormatter->getCacheKey("{$text}|format");
+		Assert::same($expected, $this->texyFormatter->format($text)->toHtml());
+		Assert::true($this->cacheInterface->getItem($key)->isHit());
+
+		$this->cacheInterface->clear();
+		$this->texyFormatter->disableCache();
+		Assert::same($expected, $this->texyFormatter->format($text)->toHtml());
+		Assert::false($this->cacheInterface->getItem($key)->isHit());
 	}
 
 

@@ -17,6 +17,9 @@ require __DIR__ . '/../bootstrap.php';
 class FreeSeatsTest extends TestCase
 {
 
+	private int $id = 1;
+
+
 	public function __construct(
 		private readonly FreeSeats $freeSeats,
 	) {
@@ -60,9 +63,8 @@ class FreeSeatsTest extends TestCase
 
 	private function buildTrainingDate(bool $lastFreeSeats): TrainingDate
 	{
-		static $id = 1;
 		return new TrainingDate(
-			$id++,
+			$this->id++,
 			'',
 			1,
 			true,

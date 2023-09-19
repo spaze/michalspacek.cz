@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Preliminary;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationFactory;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
@@ -121,7 +122,11 @@ class PreliminaryTrainings
 
 		foreach ($applications as $row) {
 			$application = $this->trainingApplicationFactory->createFromDatabaseRow($row);
-			$trainings[$application->getTrainingId()]->addApplication($application);
+			$trainingId = $application->getTrainingId();
+			if ($trainingId === null) {
+				throw new ShouldNotHappenException();
+			}
+			$trainings[$trainingId]->addApplication($application);
 		}
 		return array_values($trainings);
 	}

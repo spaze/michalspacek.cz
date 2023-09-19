@@ -9,6 +9,7 @@ use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Stringable;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Texy\Texy;
 
 class TexyFormatter
@@ -118,6 +119,9 @@ class TexyFormatter
 	 */
 	public function substitute(string|Stringable $format, array $args): Html
 	{
+		array_walk($args, function (string|Stringable|int $value): string {
+			return (string)$value;
+		});
 		return $this->format(vsprintf((string)$format, $args));
 	}
 
@@ -139,9 +143,9 @@ class TexyFormatter
 	 */
 	public function format(string $text, ?Texy $texy = null): Html
 	{
-		return $this->replace($this->cache("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
+		return $this->replace("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
 			return Strings::replace(($texy ?? $this->getTexy())->process($text), '~^\s*<p[^>]*>(.*)</p>\s*$~s', '$1');
-		}));
+		});
 	}
 
 
@@ -150,21 +154,34 @@ class TexyFormatter
 	 */
 	public function formatBlock(string $text, ?Texy $texy = null): Html
 	{
-		return $this->replace($this->cache("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
+		return $this->replace("{$text}|" . __FUNCTION__, function () use ($text, $texy): string {
 			return ($texy ?? $this->getTexy())->process($text);
-		}));
+		});
 	}
 
 
-	private function replace(Html $result): Html
+	/**
+	 * @param callable(): string $callback
+	 */
+	private function replace(string $key, callable $callback): Html
 	{
+		if ($this->cacheResult) {
+			$result = $this->cache->get($this->getCacheKey($key), function (ItemInterface $item, bool &$save) use ($callback): string {
+				$item->expiresAt(null);
+				$save = true;
+				return $callback();
+			});
+		} else {
+			$result = $callback();
+		}
+
 		$replacements = [];
 		foreach ($this->placeholders as $placeholder) {
 			$replacements[$placeholder::getPlaceholder()] = $placeholder->replace(...);
 		}
 
 		$result = Strings::replace(
-			(string)$result,
+			$result,
 			'~\*\*([^:]+):([^*]+)\*\*~',
 			function (array $matches) use ($replacements): string {
 				return (isset($replacements[$matches[1]]) ? $replacements[$matches[1]]($matches[2]) : '');
@@ -174,25 +191,7 @@ class TexyFormatter
 	}
 
 
-	/**
-	 * Cache formatted string.
-	 *
-	 * @param string $text
-	 * @param callable(): string $callback
-	 * @return Html
-	 */
-	private function cache(string $text, callable $callback): Html
-	{
-		if ($this->cacheResult) {
-			$formatted = $this->cache->get($this->getCacheKey($text), $callback);
-		} else {
-			$formatted = $callback();
-		}
-		return Html::el()->setHtml($formatted);
-	}
-
-
-	private function getCacheKey(string $text): string
+	public function getCacheKey(string $text): string
 	{
 		// Make the key shorter because Symfony Cache stores it in comments in cache files
 		// Use MD5 to favor speed over security, which is not an issue here, and Symfony Cache itself uses MD5 as well

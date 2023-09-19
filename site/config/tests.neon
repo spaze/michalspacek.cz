@@ -27,6 +27,7 @@ services:
 	localeLinkGenerator: MichalSpacekCz\Test\Application\LocaleLinkGeneratorMock
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
 	database.upcKeys.explorer: @database.default.explorer
+	database.pulse.explorer: @database.default.explorer
 	session.session: MichalSpacekCz\Test\Http\NullSession
 	http.request: MichalSpacekCz\Test\Http\Request
 	http.response: MichalSpacekCz\Test\Http\Response
@@ -40,4 +41,4 @@ services:
 		create: Nette\Http\Response
 		autowired: self
 	- Nette\Http\SessionSection(name: test)
-	texyFormatterPhpFilesAdapter: Symfony\Component\Cache\Adapter\NullAdapter
+	texyFormatterPhpFilesAdapter: Symfony\Component\Cache\Adapter\ArrayAdapter

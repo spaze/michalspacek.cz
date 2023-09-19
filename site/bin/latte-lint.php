@@ -12,11 +12,12 @@ namespace MichalSpacekCz\Bin;
 
 use Latte\Tools\Linter;
 use MichalSpacekCz\Application\Bootstrap;
+use MichalSpacekCz\Application\Cli\NoCliArgs;
 use MichalSpacekCz\Templating\TemplateFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$factory = Bootstrap::bootCli()->getByType(TemplateFactory::class);
+$factory = Bootstrap::bootCli(NoCliArgs::class)->getByType(TemplateFactory::class);
 
 echo '
 Latte linter

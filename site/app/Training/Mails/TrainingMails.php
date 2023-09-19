@@ -132,10 +132,11 @@ class TrainingMails
 				if ($application->getStatus() === Statuses::STATUS_PRO_FORMA_INVOICE_SENT && $application->getPaid()) {
 					continue;
 				}
-				if (!$application->getTrainingStart()) {
+				$trainingStart = $application->getTrainingStart();
+				if (!$trainingStart) {
 					throw new ShouldNotHappenException(sprintf("Training application id '%s' with status '%s' should have a training start set", $application->getId(), $application->getStatus()));
 				}
-				if ($application->getTrainingStart()->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
+				if ($trainingStart->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
 					$application->setNextStatus(Statuses::STATUS_REMINDED);
 					$applications[$application->getId()] = $application;
 				}

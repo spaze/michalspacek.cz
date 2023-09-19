@@ -12,7 +12,7 @@ class BlogPostLocaleUrl
 	 * @param list<string> $slugTags
 	 */
 	public function __construct(
-		private readonly ?string $locale,
+		private readonly string $locale,
 		private readonly string $slug,
 		private readonly ?DateTime $published,
 		private readonly ?string $previewKey,
@@ -21,7 +21,7 @@ class BlogPostLocaleUrl
 	}
 
 
-	public function getLocale(): ?string
+	public function getLocale(): string
 	{
 		return $this->locale;
 	}

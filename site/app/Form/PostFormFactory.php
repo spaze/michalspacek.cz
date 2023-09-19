@@ -21,6 +21,7 @@ use MichalSpacekCz\Twitter\TwitterCards;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\UniqueConstraintViolationException;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -64,7 +65,7 @@ class PostFormFactory
 			->addRule($form::MinLength, 'Slug musí mít alespoň %d znaky', 3);
 		$this->addPublishedDate($form->addText('published', 'Vydáno:'))
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
-		$form->addText('previewKey', 'Klíč pro náhled:')
+		$previewKeyInput = $form->addText('previewKey', 'Klíč pro náhled:')
 			->setRequired(false)
 			->addRule($form::MinLength, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
 		$form->addTextArea('lead', 'Perex:')
@@ -90,8 +91,8 @@ class PostFormFactory
 			->setRequired(false);
 		$form->addText('recommended', 'Doporučené:')
 			->setRequired(false);
-		$form->addText('editSummary', 'Shrnutí editace:')
-			->setRequired(false)
+		$editSummaryInput = $form->addText('editSummary', 'Shrnutí editace:');
+		$editSummaryInput->setRequired(false)
 			->setDisabled(true)
 			->addCondition($form::Filled)
 			->addRule($form::MinLength, 'Shrnutí editace musí mít alespoň %d znaky', 3)
@@ -121,7 +122,7 @@ class PostFormFactory
 
 		$form->addCheckbox('omitExports', 'Vynechat z RSS');
 
-		$form->addSubmit('submit', 'Přidat');
+		$submitButton = $form->addSubmit('submit', 'Přidat');
 		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
 			->setHtmlAttribute('data-loading-value', 'Moment…')
 			->onClick[] = function () use ($form, $post, $template, $sendTemplate): void {
@@ -129,14 +130,10 @@ class PostFormFactory
 				$this->blogPostPreview->sendPreview($newPost, $template, $sendTemplate);
 			};
 
-		$form->onValidate[] = function (UiForm $form) use ($post): void {
+		$form->onValidate[] = function (UiForm $form) use ($post, $previewKeyInput): void {
 			$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
 			if ($newPost->needsPreviewKey() && $newPost->getPreviewKey() === null) {
-				$input = $form->getComponent('previewKey');
-				if (!$input instanceof TextInput) {
-					throw new ShouldNotHappenException(sprintf("The 'previewKey' component should be '%s' but it's a %s", TextInput::class, get_debug_type($input)));
-				}
-				$input->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
+				$previewKeyInput->addError(sprintf('Tento %s příspěvek vyžaduje klíč pro náhled', $newPost->getPublishTime() === null ? 'nepublikovaný' : 'budoucí'));
 			}
 		};
 		$form->onSuccess[] = function (UiForm $form) use ($onSuccessAdd, $onSuccessEdit, $post): void {
@@ -159,7 +156,7 @@ class PostFormFactory
 			}
 		};
 		if ($post) {
-			$this->setDefaults($post, $form);
+			$this->setDefaults($post, $form, $editSummaryInput, $submitButton);
 		}
 		return $form;
 	}
@@ -208,7 +205,7 @@ class PostFormFactory
 	}
 
 
-	private function setDefaults(BlogPost $post, UiForm $form): void
+	private function setDefaults(BlogPost $post, UiForm $form, TextInput $editSummaryInput, SubmitButton $submitButton): void
 	{
 		$values = [
 			'translationGroup' => $post->getTranslationGroupId(),
@@ -229,9 +226,8 @@ class PostFormFactory
 			'omitExports' => $post->omitExports(),
 		];
 		$form->setDefaults($values);
-		$form->getComponent('editSummary')
-			->setDisabled($post->needsPreviewKey());
-		$form->getComponent('submit')->caption = 'Upravit';
+		$editSummaryInput->setDisabled($post->needsPreviewKey());
+		$submitButton->caption = 'Upravit';
 	}
 
 }

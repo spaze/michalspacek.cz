@@ -19,7 +19,7 @@ use Nette\Application\BadRequestException;
 class TagsPresenter extends BasePresenter
 {
 
-	/** @var string[][] */
+	/** @var array<string, array<string, string>> */
 	private array $localeLinkParams = [];
 
 
@@ -113,7 +113,7 @@ class TagsPresenter extends BasePresenter
 	/**
 	 * Translated locale parameters for tags.
 	 *
-	 * @return string[][]
+	 * @return array<string, array<string, string>>
 	 */
 	protected function getLocaleLinkParams(): array
 	{

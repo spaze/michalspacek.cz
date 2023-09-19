@@ -22,28 +22,29 @@ class TrainingControlsFactory
 	}
 
 
-	public function addAttendee(Container $container): void
+	public function addAttendee(Container $container): TrainingControlsAttendee
 	{
-		$container->addText('name', 'Jméno a příjmení:')
+		$nameInput = $container->addText('name', 'Jméno a příjmení:')
 			->setRequired('Zadejte prosím jméno a příjmení')
 			->addRule(Form::MinLength, 'Minimální délka jména a příjmení je %d znaky', 3)
 			->addRule(Form::MaxLength, 'Maximální délka jména a příjmení je %d znaků', 200);
-		$container->addText('email', 'E-mail:')
+		$emailInput = $container->addText('email', 'E-mail:')
 			->setRequired('Zadejte prosím e-mailovou adresu')
 			->addRule(Form::Email, 'Zadejte platnou e-mailovou adresu')
 			->addRule(Form::MaxLength, 'Maximální délka e-mailu je %d znaků', 200)
 			->addRule($this->winterIsComing->ruleEmail(), 'Winter is actually not coming');
+		return new TrainingControlsAttendee($nameInput, $emailInput);
 	}
 
 
-	public function addCompany(Container $container): void
+	public function addCompany(Container $container): TrainingControlsCompany
 	{
-		$container->addText('companyId', 'IČO:')
+		$companyIdInput = $container->addText('companyId', 'IČO:')
 			->setRequired(false)
 			->addRule(Form::MinLength, 'Minimální délka IČO je %d znaky', 6)
 			->addRule(Form::MaxLength, 'Maximální délka IČO je %d znaků', 200);
-		$container->addText('companyTaxId', 'DIČ:')
-			->setRequired(false)
+		$companyTaxIdInput = $container->addText('companyTaxId', 'DIČ:');
+		$companyTaxIdInput->setRequired(false)
 			->addRule(Form::MinLength, 'Minimální délka DIČ je %d znaky', 6)
 			->addRule(Form::MaxLength, 'Maximální délka DIČ je %d znaků', 200)
 			->getLabelPrototype()
@@ -51,23 +52,24 @@ class TrainingControlsFactory
 				'data-cz' => $this->translator->translate('messages.label.taxid.cz') . ':',
 				'data-sk' => $this->translator->translate('messages.label.taxid.sk') . ':',
 			]);
-		$container->addText('company', 'Obchodní jméno:')
+		$companyInput = $container->addText('company', 'Obchodní jméno:')
 			->setRequired(false)
 			->addRule(Form::MinLength, 'Minimální délka obchodního jména je %d znaky', 3)
 			->addRule(Form::MaxLength, 'Maximální délka obchodního jména je %d znaků', 200);
-		$container->addText('street', 'Ulice a číslo:')
+		$streetInput = $container->addText('street', 'Ulice a číslo:')
 			->setRequired(false)
 			->addRule(Form::MinLength, 'Minimální délka ulice a čísla je %d znaky', 3)
 			->addRule(Form::MaxLength, 'Maximální délka ulice a čísla je %d znaků', 200)
 			->addRule($this->winterIsComing->ruleStreet(), 'Winter is actually not coming');
-		$container->addText('city', 'Město:')
+		$cityInput = $container->addText('city', 'Město:')
 			->setRequired(false)
 			->addRule(Form::MinLength, 'Minimální délka města je %d znaky', 2)
 			->addRule(Form::MaxLength, 'Maximální délka města je %d znaků', 200);
-		$container->addText('zip', 'PSČ:')
+		$zipInput = $container->addText('zip', 'PSČ:')
 			->setRequired(false)
 			->addRule(Form::Pattern, 'PSČ musí mít 5 číslic', '([0-9]\s*){5}')
 			->addRule(Form::MaxLength, 'Maximální délka PSČ je %d znaků', 200);
+		return new TrainingControlsCompany($companyIdInput, $companyTaxIdInput, $companyInput, $streetInput, $cityInput, $zipInput);
 	}
 
 

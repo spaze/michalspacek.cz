@@ -13,7 +13,7 @@ class Makefile
 
 	private const PHONY_TARGET = '.PHONY';
 
-	/** @var array<string, non-empty-list<int>> target => lines */
+	/** @var array<string, list<int>> target => lines */
 	private array $targetDefinitions = [];
 
 
