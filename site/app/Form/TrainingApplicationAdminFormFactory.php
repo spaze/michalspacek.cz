@@ -13,6 +13,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
 
 class TrainingApplicationAdminFormFactory
@@ -65,16 +66,16 @@ class TrainingApplicationAdminFormFactory
 			->setRequired($required)
 			->setDisabled(!$required);
 
-		$this->addDeletableFieldCheckbox($attendeeInputs->getName(), $application->getName());
-		$this->addDeletableFieldCheckbox($attendeeInputs->getEmail(), $application->getEmail());
-		$this->addDeletableFieldCheckbox($companyInputs->getCompany(), $application->getCompany());
-		$this->addDeletableFieldCheckbox($companyInputs->getStreet(), $application->getStreet());
-		$this->addDeletableFieldCheckbox($companyInputs->getCity(), $application->getCity());
-		$this->addDeletableFieldCheckbox($companyInputs->getZip(), $application->getZip());
-		$this->addDeletableFieldCheckbox($countryInput, $application->getCountry());
-		$this->addDeletableFieldCheckbox($companyInputs->getCompanyId(), $application->getCompanyId());
-		$this->addDeletableFieldCheckbox($companyInputs->getCompanyTaxId(), $application->getCompanyTaxId());
-		$this->addDeletableFieldCheckbox($noteInput, $application->getNote());
+		$this->addDeletableFieldCheckbox($attendeeInputs->getName(), $form->addCheckbox('nameSet'), $application->getName());
+		$this->addDeletableFieldCheckbox($attendeeInputs->getEmail(), $form->addCheckbox('emailSet'), $application->getEmail());
+		$this->addDeletableFieldCheckbox($companyInputs->getCompany(), $form->addCheckbox('companySet'), $application->getCompany());
+		$this->addDeletableFieldCheckbox($companyInputs->getStreet(), $form->addCheckbox('streetSet'), $application->getStreet());
+		$this->addDeletableFieldCheckbox($companyInputs->getCity(), $form->addCheckbox('citySet'), $application->getCity());
+		$this->addDeletableFieldCheckbox($companyInputs->getZip(), $form->addCheckbox('zipSet'), $application->getZip());
+		$this->addDeletableFieldCheckbox($countryInput, $form->addCheckbox('countrySet'), $application->getCountry());
+		$this->addDeletableFieldCheckbox($companyInputs->getCompanyId(), $form->addCheckbox('companyIdSet'), $application->getCompanyId());
+		$this->addDeletableFieldCheckbox($companyInputs->getCompanyTaxId(), $form->addCheckbox('companyTaxIdSet'), $application->getCompanyTaxId());
+		$this->addDeletableFieldCheckbox($noteInput, $form->addCheckbox('noteSet'), $application->getNote());
 
 		$containerName = 'statusHistoryDelete';
 		$historyContainer = $form->addContainer($containerName);
@@ -170,7 +171,7 @@ class TrainingApplicationAdminFormFactory
 	}
 
 
-	private function addDeletableFieldCheckbox(BaseControl $control, ?string $fieldValue): void
+	private function addDeletableFieldCheckbox(BaseControl $control, Checkbox $checkbox, ?string $fieldValue): void
 	{
 		$form = $control->getForm();
 		$name = $control->getName();
@@ -180,7 +181,7 @@ class TrainingApplicationAdminFormFactory
 		$control
 			->setHtmlAttribute('class', $fieldValue === null ? 'transparent' : null)
 			->setRequired(false);
-		$form->addCheckbox($name . 'Set')
+		$checkbox
 			->setDefaultValue($fieldValue !== null)
 			->setHtmlAttribute('class', 'disableInput');
 	}
