@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <psalm
-	errorLevel="3"
+	errorLevel="2"
 	resolveFromConfigFile="true"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="https://getpsalm.org/schema/config"
@@ -32,6 +32,13 @@
 		<file name="stubs/Nette/DI/Container.phpstub"/>
 	</stubs>
 	<issueHandlers>
+		<DeprecatedInterface>
+			<errorLevel type="suppress">
+				<referencedClass name="Nette\Database\IRowContainer"/> <!-- MichalSpacekCz\Test\Database\ResultSet implements Nette\Database\ResultSet which in turn implements IRowContainer for backwards compatibility -->
+				<referencedClass name="Nette\Localization\ITranslator"/> <!-- MichalSpacekCz\Test\NoOpTranslator implements Contributte\Translation\Translator which in turn implements the deprecated Nette\Localization\ITranslator -->
+				<referencedClass name="Nette\Security\IAuthenticator"/> <!-- MichalSpacekCz\User\Manager implements Nette\Security\Authenticator which in turn extends Nette\Security\IAuthenticator for backwards compatibility -->
+			</errorLevel>
+		</DeprecatedInterface>
 		<InternalMethod>
 			<errorLevel type="suppress">
 				<referencedMethod name="Nette\ComponentModel\Component::setParent" /> <!-- Used in tests -->
