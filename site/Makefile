@@ -15,7 +15,7 @@ check-makefile:
 	bin/check-makefile.php
 
 lint-php:
-	vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors app/ public/ tests/
+	vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub app/ public/ stubs/ tests/
 
 lint-latte:
 	bin/latte-lint.php app/
