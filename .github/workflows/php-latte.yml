@@ -14,7 +14,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT

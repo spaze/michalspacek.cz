@@ -33,7 +33,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Validate composer.json and composer.lock
       run: composer --working-dir=site validate
 
@@ -45,7 +45,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: shivammathur/setup-php@v2
       with:
         coverage: none
@@ -60,7 +60,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: shivammathur/setup-php@v2
       with:
         coverage: none
@@ -75,7 +75,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: shivammathur/setup-php@v2
       with:
         coverage: none
@@ -90,7 +90,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: shivammathur/setup-php@v2
       with:
         coverage: none
@@ -105,7 +105,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: shivammathur/setup-php@v2
       with:
         coverage: none
@@ -115,7 +115,7 @@ jobs:
   lint-xml:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - run: make --directory=site lint-xml-auto-install
 
   phpcs:
@@ -126,7 +126,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Get PHP_CodeSniffer cache file pattern
       id: phpcs-cache
       run: echo "file=$(php -r "echo sys_get_temp_dir() . '/phpcs.*';")" >> $GITHUB_OUTPUT
@@ -148,7 +148,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
@@ -170,7 +170,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Get PHPStan result cache directory
       id: phpstan-cache
       run: echo "dir=$(php -r "echo sys_get_temp_dir() . '/phpstan';")" >> $GITHUB_OUTPUT
@@ -192,7 +192,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: shivammathur/setup-php@v2
       with:
         coverage: pcov
@@ -221,7 +221,7 @@ jobs:
           - "8.2"
           - "8.3"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           coverage: none
