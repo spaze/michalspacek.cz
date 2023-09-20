@@ -35,7 +35,7 @@ class CertificateMonitor implements CliArgsProvider
 		try {
 			// Not running in parallel because those sites are hosted on just a few tiny servers
 			foreach ($this->certificatesApiClient->getLoggedCertificates() as $loggedCertificate) {
-				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificates($loggedCertificate->getCommonName(), $this->cliArgs->getFlag(self::NO_IPV6)));
+				$this->compareCertificates($loggedCertificate, $this->certificateGatherer->fetchCertificates($loggedCertificate->getCommonName(), !$this->cliArgs->getFlag(self::NO_IPV6)));
 			}
 			exit($this->hasErrors ? 1 : 0);
 		} catch (Exception $e) {
