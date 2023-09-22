@@ -102,7 +102,7 @@ class Technicolor implements RouterInterface
 			if (!preg_match('/([^,]+),([^,]+),(\d+)/', $line, $matches)) {
 				throw new RuntimeException('Incorrect number of tokens in ' . $line);
 			}
-			[$serial, $key, $type] = $matches;
+			[, $serial, $key, $type] = $matches;
 			$keys["{$type}-{$serial}"] = $this->buildKey($serial, $key, (int)$type);
 		}
 		ksort($keys);
