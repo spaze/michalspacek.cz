@@ -39,17 +39,6 @@ parameters:
 	permanentLogin:
 		cookie: __Secure-permanent
 		interval: 14 days
-	upcKeys:
-		technicolor:
-			model: "Technicolor TC7200"
-			prefixes:
-				- SAAP
-				- SAPP
-				- SBAP
-		ubee:
-			model: "Ubee EVW3226"
-			prefixes:
-				- UAAP
 	certificatesApi:
 		expiringThreshold: 20
 		hideExpiredAfter: 10

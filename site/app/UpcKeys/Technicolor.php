@@ -21,23 +21,21 @@ use Tracy\Debugger;
 class Technicolor implements RouterInterface
 {
 
-	/**
-	 * @param string[] $serialNumberPrefixes
-	 */
+	private const PREFIXES = ['SAAP', 'SAPP', 'SBAP'];
+
+
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly HttpClient $httpClient,
 		private readonly string $apiUrl,
 		private readonly string $apiKey,
-		private readonly array $serialNumberPrefixes,
-		private readonly string $model,
 	) {
 	}
 
 
 	public function getModelWithPrefixes(): array
 	{
-		return [$this->model => $this->serialNumberPrefixes];
+		return ['Technicolor TC7200' => self::PREFIXES];
 	}
 
 
@@ -77,7 +75,7 @@ class Technicolor implements RouterInterface
 	 */
 	private function generateKeys(string $ssid): array
 	{
-		$request = new HttpClientRequest(sprintf($this->apiUrl, $ssid, implode(',', $this->serialNumberPrefixes)));
+		$request = new HttpClientRequest(sprintf($this->apiUrl, $ssid, implode(',', self::PREFIXES)));
 		$request->addHeader('X-API-Key', $this->apiKey);
 		$json = $this->httpClient->get($request);
 		try {
@@ -187,7 +185,7 @@ class Technicolor implements RouterInterface
 	{
 		preg_match('/^[a-z]+/i', $serial, $matches);
 		$prefix = current($matches);
-		if (!$prefix || !in_array($prefix, $this->serialNumberPrefixes)) {
+		if (!$prefix || !in_array($prefix, self::PREFIXES)) {
 			throw new UpcKeysApiUnknownPrefixException($serial);
 		}
 		return new WiFiKey($serial, $prefix, null, null, $key, WiFiBand::from($type));
