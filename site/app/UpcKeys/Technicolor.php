@@ -66,25 +66,6 @@ class Technicolor implements RouterInterface
 
 
 	/**
-	 * Save keys to a database if not already there.
-	 *
-	 * @throws HttpClientGetException
-	 */
-	public function saveKeys(string $ssid): bool
-	{
-		try {
-			if (!$this->hasKeys($ssid)) {
-				$this->storeKeys($ssid, $this->generateKeys($ssid));
-			}
-			return true;
-		} catch (UpcKeysApiException $e) {
-			Debugger::log($e);
-			return false;
-		}
-	}
-
-
-	/**
 	 * Get possible keys and serial for an SSID.
 	 *
 	 * @param string $ssid
@@ -150,21 +131,6 @@ class Technicolor implements RouterInterface
 		}
 		ksort($result);
 		return array_values($result);
-	}
-
-
-	private function hasKeys(string $ssid): bool
-	{
-		$result = $this->database->fetchField(
-			'SELECT
-				COUNT(1)
-			FROM
-				`keys` k
-				JOIN ssids s ON k.key_ssid = s.id_ssid
-			WHERE s.ssid = ?',
-			$ssid,
-		);
-		return (bool)$result;
 	}
 
 
