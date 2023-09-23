@@ -22,7 +22,7 @@ class HttpStreamContext
 				'ssl' => $sslOptions,
 				'http' => $httpOptions + [
 					'ignore_errors' => true,
-					'user_agent' => HttpHeader::normalizeValue($userAgent),
+					'user_agent' => str_replace('\\', '/', $userAgent),
 					'header' => $httpHeaders,
 				],
 			],
