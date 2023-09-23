@@ -4,13 +4,19 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\UpcKeys;
 
 use DateTime;
+use MichalSpacekCz\Http\Client\HttpClient;
+use MichalSpacekCz\Http\Client\HttpClientRequest;
+use MichalSpacekCz\Http\Exceptions\HttpClientGetException;
+use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiException;
+use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiIncorrectTokensException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiResponseInvalidException;
+use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiUnknownPrefixException;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use PDOException;
-use RuntimeException;
+use Tracy\Debugger;
 
 class Technicolor implements RouterInterface
 {
@@ -20,6 +26,7 @@ class Technicolor implements RouterInterface
 	 */
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly HttpClient $httpClient,
 		private readonly string $apiUrl,
 		private readonly string $apiKey,
 		private readonly array $serialNumberPrefixes,
@@ -40,7 +47,7 @@ class Technicolor implements RouterInterface
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @return array<int, WiFiKey>
-	 * @throws UpcKeysApiResponseInvalidException
+	 * @throws HttpClientGetException
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -51,7 +58,8 @@ class Technicolor implements RouterInterface
 				$this->storeKeys($ssid, $keys);
 			}
 			return $keys;
-		} catch (RuntimeException) {
+		} catch (UpcKeysApiException $e) {
+			Debugger::log($e);
 			return [];
 		}
 	}
@@ -60,7 +68,7 @@ class Technicolor implements RouterInterface
 	/**
 	 * Save keys to a database if not already there.
 	 *
-	 * @throws UpcKeysApiResponseInvalidException
+	 * @throws HttpClientGetException
 	 */
 	public function saveKeys(string $ssid): bool
 	{
@@ -69,7 +77,8 @@ class Technicolor implements RouterInterface
 				$this->storeKeys($ssid, $this->generateKeys($ssid));
 			}
 			return true;
-		} catch (RuntimeException) {
+		} catch (UpcKeysApiException $e) {
+			Debugger::log($e);
 			return false;
 		}
 	}
@@ -80,11 +89,16 @@ class Technicolor implements RouterInterface
 	 *
 	 * @param string $ssid
 	 * @return array<int, WiFiKey>
+	 * @throws UpcKeysApiIncorrectTokensException
 	 * @throws UpcKeysApiResponseInvalidException
+	 * @throws UpcKeysApiUnknownPrefixException
+	 * @throws HttpClientGetException
 	 */
 	private function generateKeys(string $ssid): array
 	{
-		$json = $this->callApi(sprintf($this->apiUrl, $ssid, implode(',', $this->serialNumberPrefixes)));
+		$request = new HttpClientRequest(sprintf($this->apiUrl, $ssid, implode(',', $this->serialNumberPrefixes)));
+		$request->addHeader('X-API-Key', $this->apiKey);
+		$json = $this->httpClient->get($request);
 		try {
 			$data = Json::decode($json);
 		} catch (JsonException $e) {
@@ -100,7 +114,7 @@ class Technicolor implements RouterInterface
 			}
 
 			if (!preg_match('/([^,]+),([^,]+),(\d+)/', $line, $matches)) {
-				throw new RuntimeException('Incorrect number of tokens in ' . $line);
+				throw new UpcKeysApiIncorrectTokensException($json, $line);
 			}
 			[, $serial, $key, $type] = $matches;
 			$keys["{$type}-{$serial}"] = $this->buildKey($serial, $key, (int)$type);
@@ -110,38 +124,12 @@ class Technicolor implements RouterInterface
 	}
 
 
-	private function callApi(string $url): string
-	{
-		$context = stream_context_create();
-		$setResult = stream_context_set_params($context, [
-			'notification' => function (int $notificationCode, int $severity, ?string $message, int $messageCode) {
-				if ($notificationCode == STREAM_NOTIFY_FAILURE && $messageCode >= 500) {
-					throw new RuntimeException($message ? trim($message) : '', $messageCode);
-				}
-			},
-			'options' => [
-				'http' => [
-					'ignore_errors' => true, // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
-					'header' => 'X-API-Key: ' . $this->apiKey,
-				],
-			],
-		]);
-		if (!$setResult) {
-			throw new RuntimeException("Can't set stream context params to get contents from {$url}");
-		}
-		$result = file_get_contents($url, false, $context);
-		if (!$result) {
-			throw new RuntimeException("Can't get result from {$url}");
-		}
-		return $result;
-	}
-
-
 	/**
 	 * Fetch keys from database.
 	 *
 	 * @param string $ssid
 	 * @return array<int, WiFiKey>
+	 * @throws UpcKeysApiUnknownPrefixException
 	 */
 	private function fetchKeys(string $ssid): array
 	{
@@ -226,12 +214,15 @@ class Technicolor implements RouterInterface
 	}
 
 
+	/**
+	 * @throws UpcKeysApiUnknownPrefixException
+	 */
 	private function buildKey(string $serial, string $key, int $type): WiFiKey
 	{
 		preg_match('/^[a-z]+/i', $serial, $matches);
 		$prefix = current($matches);
 		if (!$prefix || !in_array($prefix, $this->serialNumberPrefixes)) {
-			throw new RuntimeException('Unknown prefix for serial ' . $serial);
+			throw new UpcKeysApiUnknownPrefixException($serial);
 		}
 		return new WiFiKey($serial, $prefix, null, null, $key, WiFiBand::from($type));
 	}

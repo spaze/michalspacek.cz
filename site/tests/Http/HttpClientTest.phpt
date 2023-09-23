@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
+use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Exceptions\HttpStreamException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
@@ -12,19 +13,19 @@ use Tester\TestCase;
 require __DIR__ . '/../bootstrap.php';
 
 /** @testCase */
-class HttpStreamContextTest extends TestCase
+class HttpClientTest extends TestCase
 {
 
 	public function __construct(
-		private readonly HttpStreamContext $httpStreamContext,
+		private readonly HttpClient $httpStreamContext,
 	) {
 	}
 
 
-	public function testCreate(): void
+	public function testCreateStreamContext(): void
 	{
 		$hostname = 'example.com';
-		$context = $this->httpStreamContext->create(
+		$context = $this->httpStreamContext->createStreamContext(
 			'Foo\Bar',
 			[
 				'method' => 'HEAD',
@@ -48,10 +49,10 @@ class HttpStreamContextTest extends TestCase
 				'method' => 'HEAD',
 				'follow_location' => 0,
 				'ignore_errors' => true,
-				'user_agent' => 'Foo/Bar',
 				'header' => [
 					"Host: {$hostname}",
 				],
+				'user_agent' => 'Foo/Bar',
 			],
 		];
 		Assert::same($expected, $params['options']);
@@ -68,4 +69,4 @@ class HttpStreamContextTest extends TestCase
 
 }
 
-TestCaseRunner::run(HttpStreamContextTest::class);
+TestCaseRunner::run(HttpClientTest::class);

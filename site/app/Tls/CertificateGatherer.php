@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
-use MichalSpacekCz\Http\HttpStreamContext;
+use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Net\DnsResolver;
 use MichalSpacekCz\Net\Exceptions\DnsGetRecordException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
@@ -16,7 +16,7 @@ class CertificateGatherer
 
 	public function __construct(
 		private readonly CertificateFactory $certificateFactory,
-		private readonly HttpStreamContext $httpStreamContext,
+		private readonly HttpClient $httpClient,
 		private readonly DnsResolver $dnsResolver,
 	) {
 	}
@@ -60,7 +60,7 @@ class CertificateGatherer
 	private function fetchCertificate(string $hostname, string $ipAddress): Certificate
 	{
 		$url = "https://{$ipAddress}/";
-		$fp = fopen($url, 'r', context: $this->httpStreamContext->create(
+		$fp = fopen($url, 'r', context: $this->httpClient->createStreamContext(
 			__METHOD__,
 			[
 				'method' => 'HEAD',

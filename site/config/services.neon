@@ -64,8 +64,8 @@ services:
 		autowired: false
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Formatter\TrainingDateTexyFormatterPlaceholder
+	httpClient: MichalSpacekCz\Http\Client\HttpClient
 	- MichalSpacekCz\Http\HttpInput
-	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
 	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
