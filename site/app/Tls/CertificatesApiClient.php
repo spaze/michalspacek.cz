@@ -5,7 +5,9 @@ namespace MichalSpacekCz\Tls;
 
 use MichalSpacekCz\Application\ServerEnv;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
-use MichalSpacekCz\Http\HttpStreamContext;
+use MichalSpacekCz\Http\Client\HttpClient;
+use MichalSpacekCz\Http\Client\HttpClientRequest;
+use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use MichalSpacekCz\Tls\Exceptions\CertificatesApiException;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
@@ -22,7 +24,7 @@ class CertificatesApiClient
 	public function __construct(
 		private readonly LinkGenerator $linkGenerator,
 		private readonly CertificateFactory $certificateFactory,
-		private readonly HttpStreamContext $httpStreamContext,
+		private readonly HttpClient $httpClient,
 		private readonly Processor $schemaProcessor,
 	) {
 	}
@@ -38,19 +40,15 @@ class CertificatesApiClient
 	 */
 	public function getLoggedCertificates(): array
 	{
-		$url = $this->linkGenerator->link('Api:Certificates:');
-		$json = @file_get_contents($url, context: $this->httpStreamContext->create( // intentionally @, warning converted to exception
-			__METHOD__,
-			[
-				'method' => 'POST',
-				'content' => $this->getPostData(),
-			],
-			[
-				'Content-Type: application/x-www-form-urlencoded',
-			],
-		));
-		if (!$json) {
-			throw new CertificatesApiException(sprintf('Failure getting data from %s: %s', $url, Helpers::getLastError()));
+		$request = new HttpClientRequest($this->linkGenerator->link('Api:Certificates:'));
+		$request->setUserAgent(__METHOD__);
+		try {
+			$json = $this->httpClient->postForm($request, [
+				'user' => ServerEnv::tryGetString('CERTMONITOR_USER') ?? '',
+				'key' => ServerEnv::tryGetString('CERTMONITOR_KEY') ?? '',
+			])->getBody();
+		} catch (HttpClientRequestException $e) {
+			throw new CertificatesApiException(sprintf('Failure getting data from %s: %s', $request->getUrl(), Helpers::getLastError()), previous: $e);
 		}
 		$certificates = [];
 		$decoded = Json::decode($json, forceArrays: true);
@@ -75,10 +73,10 @@ class CertificatesApiClient
 			/** @var object{status:string, certificates:list<object{commonName:string, commonNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string}>} $data */
 			$data = $this->schemaProcessor->process($schema, $decoded);
 		} catch (ValidationException $e) {
-			throw new CertificatesApiException(sprintf('Cannot validate response from %s (`%s`): %s', $url, $json, implode(', ', $e->getMessages())), previous: $e);
+			throw new CertificatesApiException(sprintf('Cannot validate response from %s (`%s`): %s', $request->getUrl(), $json, implode(', ', $e->getMessages())), previous: $e);
 		}
 		if ($data->status !== 'ok') {
-			throw new CertificatesApiException(sprintf('Response from %s (`%s`) not ok', $url, $json));
+			throw new CertificatesApiException(sprintf('Response from %s (`%s`) not ok', $request->getUrl(), $json));
 		}
 		foreach ($data->certificates as $details) {
 			$certificates[] = $this->certificateFactory->get(
@@ -95,16 +93,6 @@ class CertificatesApiClient
 			);
 		}
 		return $certificates;
-	}
-
-
-	private function getPostData(): string
-	{
-		$postData = [
-			'user' => ServerEnv::tryGetString('CERTMONITOR_USER') ?? '',
-			'key' => ServerEnv::tryGetString('CERTMONITOR_KEY') ?? '',
-		];
-		return http_build_query($postData);
 	}
 
 }

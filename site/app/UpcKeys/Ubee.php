@@ -4,34 +4,23 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\UpcKeys;
 
 use Nette\Database\Explorer;
-use RuntimeException;
 
 class Ubee implements RouterInterface
 {
 
 	private const OUI_UBEE = '647c34';
+	private const PREFIX = 'UAAP';
 
-	private string $serialNumberPrefix;
 
-
-	/**
-	 * @param string[] $serialNumberPrefixes
-	 */
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly string $model,
-		array $serialNumberPrefixes,
 	) {
-		if (count($serialNumberPrefixes) !== 1) {
-			throw new RuntimeException('Ubee can has only one prefix');
-		}
-		$this->serialNumberPrefix = current($serialNumberPrefixes);
 	}
 
 
 	public function getModelWithPrefixes(): array
 	{
-		return [$this->model => [$this->serialNumberPrefix]];
+		return ['Ubee EVW3226' => [self::PREFIX]];
 	}
 
 
@@ -59,7 +48,7 @@ class Ubee implements RouterInterface
 		for ($i = 7; $i >= 0; $i--) {
 			$key .= chr(($binaryKey >> $i * 5 & 0x1F) + 0x41);
 		}
-		return new WiFiKey($this->serialNumberPrefix, $this->serialNumberPrefix, self::OUI_UBEE, sprintf('%06x', $mac), $key, WiFiBand::Unknown);
+		return new WiFiKey(self::PREFIX, self::PREFIX, self::OUI_UBEE, sprintf('%06x', $mac), $key, WiFiBand::Unknown);
 	}
 
 }

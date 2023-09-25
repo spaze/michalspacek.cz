@@ -64,8 +64,8 @@ services:
 		autowired: false
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Formatter\TrainingDateTexyFormatterPlaceholder
+	httpClient: MichalSpacekCz\Http\Client\HttpClient
 	- MichalSpacekCz\Http\HttpInput
-	- MichalSpacekCz\Http\HttpStreamContext
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
 	- MichalSpacekCz\Interviews\InterviewInputsFactory(videoThumbnails: @interviewVideoThumbnails)
@@ -138,8 +138,8 @@ services:
 	- MichalSpacekCz\Training\Trainings\Trainings
 	- MichalSpacekCz\Training\Venues\TrainingVenues
 	- MichalSpacekCz\Twitter\TwitterCards
-	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%, model: %upcKeys.technicolor.model%, serialNumberPrefixes: %upcKeys.technicolor.prefixes%)
-	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context, model: %upcKeys.ubee.model%, serialNumberPrefixes: %upcKeys.ubee.prefixes%)
+	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%)
+	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context)
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
 	- MichalSpacekCz\Utils\Strings

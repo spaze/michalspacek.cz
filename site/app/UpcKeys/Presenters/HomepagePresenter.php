@@ -85,9 +85,6 @@ class HomepagePresenter extends BasePresenter
 			function (string $ssid): never {
 				$this->redirect('this', $ssid);
 			},
-			function (): void {
-				$this->template->error = 'Oops, something went wrong, please try again in a moment';
-			},
 			$this->ssid,
 		);
 	}

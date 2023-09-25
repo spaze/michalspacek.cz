@@ -28,6 +28,7 @@ services:
 	database.default.explorer: MichalSpacekCz\Test\Database\Database
 	database.upcKeys.explorer: @database.default.explorer
 	database.pulse.explorer: @database.default.explorer
+	httpClient: MichalSpacekCz\Test\Http\Client\HttpClientMock
 	session.session: MichalSpacekCz\Test\Http\NullSession
 	http.request: MichalSpacekCz\Test\Http\Request
 	http.response: MichalSpacekCz\Test\Http\Response

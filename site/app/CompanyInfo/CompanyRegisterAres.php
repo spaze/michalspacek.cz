@@ -5,6 +5,9 @@ namespace MichalSpacekCz\CompanyInfo;
 
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
+use MichalSpacekCz\Http\Client\HttpClient;
+use MichalSpacekCz\Http\Client\HttpClientRequest;
+use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use Nette\Http\IResponse;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
@@ -23,6 +26,7 @@ class CompanyRegisterAres implements CompanyRegister
 
 	public function __construct(
 		private readonly Processor $schemaProcessor,
+		private readonly HttpClient $httpClient,
 	) {
 	}
 
@@ -86,31 +90,16 @@ class CompanyRegisterAres implements CompanyRegister
 
 
 	/**
-	 * @throws CompanyInfoException
 	 * @throws CompanyNotFoundException
 	 */
 	private function fetch(string $companyId): string
 	{
 		$url = "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/{$companyId}";
-		$context = stream_context_create();
-		$setResult = stream_context_set_params($context, [
-			'notification' => function (int $notificationCode, int $severity, ?string $message, int $messageCode) {
-				if ($severity === STREAM_NOTIFY_SEVERITY_ERR) {
-					throw new CompanyNotFoundException($messageCode !== IResponse::S404_NotFound ? $messageCode : null);
-				}
-			},
-			'options' => [
-				'http' => ['ignore_errors' => true], // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
-			],
-		]);
-		if (!$setResult) {
-			throw new CompanyInfoException("Can't set stream context params to get contents from {$url}");
+		try {
+			return $this->httpClient->get(new HttpClientRequest($url))->getBody();
+		} catch (HttpClientRequestException $e) {
+			throw new CompanyNotFoundException($e->getCode() !== IResponse::S404_NotFound ? $e->getCode() : null, $e);
 		}
-		$result = file_get_contents($url, false, $context);
-		if (!$result) {
-			throw new CompanyInfoException("Can't get result from {$url}");
-		}
-		return $result;
 	}
 
 

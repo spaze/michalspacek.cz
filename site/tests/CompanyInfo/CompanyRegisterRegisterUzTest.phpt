@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\CompanyInfo;
 
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
+use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\Environment;
@@ -16,9 +17,12 @@ require __DIR__ . '/../bootstrap.php';
 class CompanyRegisterRegisterUzTest extends TestCase
 {
 
-	public function __construct(
-		private readonly CompanyRegisterRegisterUz $registerUz,
-	) {
+	private readonly CompanyRegisterRegisterUz $registerUz;
+
+
+	public function __construct()
+	{
+		$this->registerUz = new CompanyRegisterRegisterUz(new HttpClient());
 	}
 
 

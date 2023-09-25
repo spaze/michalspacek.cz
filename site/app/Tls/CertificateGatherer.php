@@ -4,7 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Tls;
 
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
-use MichalSpacekCz\Http\HttpStreamContext;
+use MichalSpacekCz\Http\Client\HttpClient;
+use MichalSpacekCz\Http\Client\HttpClientRequest;
+use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
+use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotAvailableException;
+use MichalSpacekCz\Http\Exceptions\HttpClientTlsCertificateNotCapturedException;
 use MichalSpacekCz\Net\DnsResolver;
 use MichalSpacekCz\Net\Exceptions\DnsGetRecordException;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
@@ -16,7 +20,7 @@ class CertificateGatherer
 
 	public function __construct(
 		private readonly CertificateFactory $certificateFactory,
-		private readonly HttpStreamContext $httpStreamContext,
+		private readonly HttpClient $httpClient,
 		private readonly DnsResolver $dnsResolver,
 	) {
 	}
@@ -31,6 +35,9 @@ class CertificateGatherer
 	 * @throws OpenSslException
 	 * @throws DnsGetRecordException
 	 * @throws OpenSslX509ParseException
+	 * @throws HttpClientRequestException
+	 * @throws HttpClientTlsCertificateNotAvailableException
+	 * @throws HttpClientTlsCertificateNotCapturedException
 	 */
 	public function fetchCertificates(string $hostname, bool $includeIpv6): array
 	{
@@ -56,30 +63,19 @@ class CertificateGatherer
 	 * @throws CertificateException
 	 * @throws CannotParseDateTimeException
 	 * @throws OpenSslX509ParseException
+	 * @throws HttpClientRequestException
+	 * @throws HttpClientTlsCertificateNotAvailableException
+	 * @throws HttpClientTlsCertificateNotCapturedException
 	 */
 	private function fetchCertificate(string $hostname, string $ipAddress): Certificate
 	{
-		$url = "https://{$ipAddress}/";
-		$fp = fopen($url, 'r', context: $this->httpStreamContext->create(
-			__METHOD__,
-			[
-				'method' => 'HEAD',
-				'follow_location' => 0,
-			],
-			[
-				"Host: {$hostname}",
-			],
-			[
-				'capture_peer_cert' => true,
-				'peer_name' => $hostname,
-			],
-		));
-		if (!$fp) {
-			throw new CertificateException("Unable to open {$url}");
-		}
-		$options = stream_context_get_options($fp);
-		fclose($fp);
-		return $this->certificateFactory->fromObject($options['ssl']['peer_certificate']);
+		$request = new HttpClientRequest("https://{$ipAddress}/");
+		$request->setUserAgent(__METHOD__);
+		$request->setFollowLocation(false);
+		$request->addHeader('Host', $hostname);
+		$request->setTlsCaptureCertificate(true);
+		$request->setTlsServerName($hostname);
+		return $this->certificateFactory->fromObject($this->httpClient->head($request)->getTlsCertificate());
 	}
 
 }
