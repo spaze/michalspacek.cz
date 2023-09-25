@@ -58,7 +58,7 @@ class CompanyRegisterAres implements CompanyRegister
 					'kodStatu' => Expect::string(),
 				])->otherItems(),
 			])->otherItems();
-			/** @var object{ico:string, dic:string, obchodniJmeno:string, sidlo:object{nazevObce:string, nazevUlice:string, cisloDomovni:int, cisloOrientacni:int, cisloOrientacniPismeno:string, psc:int, kodStatu:string}} $data */
+			/** @var object{ico:string, dic:string|null, obchodniJmeno:string, sidlo:object{nazevObce:string, nazevUlice:string, cisloDomovni:int, cisloOrientacni:int, cisloOrientacniPismeno:string, psc:int, kodStatu:string}} $data */
 			$data = $this->schemaProcessor->process($schema, Json::decode($content));
 		} catch (JsonException | ValidationException $e) {
 			throw new CompanyInfoException($e->getMessage(), previous: $e);
