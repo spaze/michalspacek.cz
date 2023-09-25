@@ -5,6 +5,9 @@ namespace MichalSpacekCz\CompanyInfo;
 
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyInfoException;
 use MichalSpacekCz\CompanyInfo\Exceptions\CompanyNotFoundException;
+use MichalSpacekCz\Http\Client\HttpClient;
+use MichalSpacekCz\Http\Client\HttpClientRequest;
+use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use Nette\Http\IResponse;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -21,6 +24,12 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 	private const DAY_ONE = '1993-01-01';
 
 	private const COUNTRY_CODE = 'sk';
+
+
+	public function __construct(
+		private readonly HttpClient $httpClient,
+	) {
+	}
 
 
 	public function getCountry(): string
@@ -71,10 +80,10 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 		} else {
 			$query = '';
 		}
-		$content = file_get_contents("https://www.registeruz.sk/cruz-public/api/{$method}{$query}");
-		if (!$content) {
-			$lastError = error_get_last();
-			throw new CompanyInfoException($lastError ? $lastError['message'] : '', IResponse::S500_InternalServerError);
+		try {
+			$content = $this->httpClient->get(new HttpClientRequest("https://www.registeruz.sk/cruz-public/api/{$method}{$query}"))->getBody();
+		} catch (HttpClientRequestException $e) {
+			throw new CompanyInfoException(code: IResponse::S500_InternalServerError, previous: $e);
 		}
 		try {
 			$data = Json::decode($content);
