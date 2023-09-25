@@ -75,7 +75,7 @@ class CompanyRegisterAres implements CompanyRegister
 			IResponse::S200_OK,
 			'OK',
 			$data->ico,
-			$data->dic ? $data->sidlo->kodStatu . $data->dic : '',
+			$data->dic ?? '',
 			$data->obchodniJmeno,
 			$streetAndNumber,
 			$data->sidlo->nazevObce,
