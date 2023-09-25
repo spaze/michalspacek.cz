@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Http\Exceptions;
 use Exception;
 use Throwable;
 
-class HttpClientGetException extends Exception
+class HttpClientRequestException extends Exception
 {
 
 	public function __construct(string $url, int $code = 0, ?Throwable $previous = null)

@@ -5,22 +5,23 @@ namespace MichalSpacekCz\Test\Http\Client;
 
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
+use MichalSpacekCz\Http\Client\HttpClientResponse;
 
 class HttpClientMock extends HttpClient
 {
 
-	private string $getResult = '';
+	private string $response = '';
 
 
-	public function setGetResult(string $getResult): void
+	public function setResponse(string $response): void
 	{
-		$this->getResult = $getResult;
+		$this->response = $response;
 	}
 
 
-	public function get(HttpClientRequest $request): string
+	public function get(HttpClientRequest $request): HttpClientResponse
 	{
-		return $this->getResult;
+		return new HttpClientResponse($request, $this->response, null);
 	}
 
 }

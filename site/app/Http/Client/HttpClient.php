@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http\Client;
 
-use MichalSpacekCz\Http\Exceptions\HttpClientGetException;
+use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use MichalSpacekCz\Http\Exceptions\HttpStreamException;
 
 class HttpClient
@@ -11,24 +11,30 @@ class HttpClient
 
 	/**
 	 * @param array<string, string|int> $httpOptions
-	 * @param array<int, string> $httpHeaders
-	 * @param array<string, string|bool> $sslOptions
+	 * @param array<string, string|bool> $tlsOptions
 	 * @return resource
 	 */
-	public function createStreamContext(?string $userAgent = null, array $httpOptions = [], array $httpHeaders = [], array $sslOptions = [])
+	private function createStreamContext(HttpClientRequest $request, array $httpOptions = [], array $tlsOptions = [])
 	{
-		$httpOptions += [
+		$httpOptions = [
 			'ignore_errors' => true, // To suppress PHP Warning: [...] HTTP/1.0 500 Internal Server Error
-			'header' => $httpHeaders,
-		];
-		if ($userAgent) {
-			$httpOptions += [
-				'user_agent' => str_replace('\\', '/', $userAgent),
-			];
+			'header' => $request->getHeaders(),
+		] + $httpOptions;
+		if ($request->getUserAgent() !== null) {
+			$httpOptions = ['user_agent' => str_replace('\\', '/', $request->getUserAgent())] + $httpOptions;
+		}
+		if ($request->getFollowLocation() !== null) {
+			$httpOptions = ['follow_location' => (int)$request->getFollowLocation()] + $httpOptions;
+		}
+		if ($request->getTlsCaptureCertificate() !== null) {
+			$tlsOptions = ['capture_peer_cert' => $request->getTlsCaptureCertificate()] + $tlsOptions;
+		}
+		if ($request->getTlsServerName() !== null) {
+			$tlsOptions = ['peer_name' => $request->getTlsServerName()] + $tlsOptions;
 		}
 		return stream_context_create(
 			[
-				'ssl' => $sslOptions,
+				'ssl' => $tlsOptions,
 				'http' => $httpOptions,
 			],
 			[
@@ -43,48 +49,65 @@ class HttpClient
 
 
 	/**
-	 * @throws HttpClientGetException
+	 * @throws HttpClientRequestException
 	 */
-	public function get(HttpClientRequest $request): string
+	public function get(HttpClientRequest $request): HttpClientResponse
 	{
-		$context = $this->createStreamContext(userAgent: $request->getUserAgent(), httpHeaders: $request->getHeaders());
+		$context = $this->createStreamContext($request);
 		return $this->request($request, $context);
 	}
 
 
 	/**
-	 * @param array<string, string> $formData
-	 * @throws HttpClientGetException
+	 * @throws HttpClientRequestException
 	 */
-	public function postForm(HttpClientRequest $request, array $formData = []): string
+	public function head(HttpClientRequest $request): HttpClientResponse
 	{
 		$context = $this->createStreamContext(
-			$request->getUserAgent(),
-			['method' => 'POST', 'content' => http_build_query($formData)],
-			['Content-Type: application/x-www-form-urlencoded'] + $request->getHeaders(),
+			$request,
+			['method' => 'HEAD'],
 		);
 		return $this->request($request, $context);
 	}
 
 
 	/**
-	 * @param HttpClientRequest $request
+	 * @param array<string, string> $formData
+	 * @throws HttpClientRequestException
+	 */
+	public function postForm(HttpClientRequest $request, array $formData = []): HttpClientResponse
+	{
+		$request->addHeader('Content-Type', 'application/x-www-form-urlencoded');
+		$context = $this->createStreamContext(
+			$request,
+			['method' => 'POST', 'content' => http_build_query($formData)],
+		);
+		return $this->request($request, $context);
+	}
+
+
+	/**
 	 * @param resource $context
-	 * @return string
-	 * @throws HttpClientGetException
+	 * @throws HttpClientRequestException
 	 * @noinspection PhpRedundantCatchClauseInspection A notification callback created by self::createStreamContext() may throw HttpStreamException
 	 */
-	private function request(HttpClientRequest $request, $context): string
+	private function request(HttpClientRequest $request, $context): HttpClientResponse
 	{
 		try {
-			$result = file_get_contents($request->getUrl(), false, $context);
+			$fp = fopen($request->getUrl(), 'r', context: $context);
+			if (!$fp) {
+				throw new HttpClientRequestException($request->getUrl());
+			}
+			$result = stream_get_contents($fp);
+			$options = stream_context_get_options($fp);
+			fclose($fp);
 		} catch (HttpStreamException $e) {
-			throw new HttpClientGetException($request->getUrl(), $e->getCode(), $e);
+			throw new HttpClientRequestException($request->getUrl(), $e->getCode(), $e);
 		}
-		if (!$result) {
-			throw new HttpClientGetException($request->getUrl());
+		if ($result === false) {
+			throw new HttpClientRequestException($request->getUrl());
 		}
-		return $result;
+		return new HttpClientResponse($request, $result, $options['ssl']['peer_certificate'] ?? null);
 	}
 
 }

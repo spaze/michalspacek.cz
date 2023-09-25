@@ -7,7 +7,7 @@ use MichalSpacekCz\Application\ServerEnv;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
-use MichalSpacekCz\Http\Exceptions\HttpClientGetException;
+use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use MichalSpacekCz\Tls\Exceptions\CertificatesApiException;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
@@ -46,8 +46,8 @@ class CertificatesApiClient
 			$json = $this->httpClient->postForm($request, [
 				'user' => ServerEnv::tryGetString('CERTMONITOR_USER') ?? '',
 				'key' => ServerEnv::tryGetString('CERTMONITOR_KEY') ?? '',
-			]);
-		} catch (HttpClientGetException $e) {
+			])->getBody();
+		} catch (HttpClientRequestException $e) {
 			throw new CertificatesApiException(sprintf('Failure getting data from %s: %s', $request->getUrl(), Helpers::getLastError()), previous: $e);
 		}
 		$certificates = [];

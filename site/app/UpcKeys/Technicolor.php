@@ -6,7 +6,7 @@ namespace MichalSpacekCz\UpcKeys;
 use DateTime;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
-use MichalSpacekCz\Http\Exceptions\HttpClientGetException;
+use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiIncorrectTokensException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiResponseInvalidException;
@@ -45,7 +45,7 @@ class Technicolor implements RouterInterface
 	 * If the keys are not already in the database, store them.
 	 *
 	 * @return array<int, WiFiKey>
-	 * @throws HttpClientGetException
+	 * @throws HttpClientRequestException
 	 */
 	public function getKeys(string $ssid): array
 	{
@@ -71,13 +71,13 @@ class Technicolor implements RouterInterface
 	 * @throws UpcKeysApiIncorrectTokensException
 	 * @throws UpcKeysApiResponseInvalidException
 	 * @throws UpcKeysApiUnknownPrefixException
-	 * @throws HttpClientGetException
+	 * @throws HttpClientRequestException
 	 */
 	private function generateKeys(string $ssid): array
 	{
 		$request = new HttpClientRequest(sprintf($this->apiUrl, $ssid, implode(',', self::PREFIXES)));
 		$request->addHeader('X-API-Key', $this->apiKey);
-		$json = $this->httpClient->get($request);
+		$json = $this->httpClient->get($request)->getBody();
 		try {
 			$data = Json::decode($json);
 		} catch (JsonException $e) {

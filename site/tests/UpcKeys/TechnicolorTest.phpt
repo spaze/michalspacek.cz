@@ -95,12 +95,12 @@ class TechnicolorTest extends TestCase
 	public function testGetKeysGenerateAndStore(): void
 	{
 		$ssid = 'UPC1234567';
-		$this->httpClient->setGetResult(Json::encode(''));
+		$this->httpClient->setResponse(Json::encode(''));
 		Assert::same([], $this->technicolor->getKeys($ssid));
 		Assert::same([], $this->logger->getLogged());
 		Assert::count(0, $this->database->getParamsArrayForQuery('INSERT INTO ssids'));
 
-		$this->httpClient->setGetResult(Json::encode("SBAP303,foo,1\n\nSBAP808,bar,2"));
+		$this->httpClient->setResponse(Json::encode("SBAP303,foo,1\n\nSBAP808,bar,2"));
 		$keys = $this->technicolor->getKeys($ssid);
 		$expected = [
 			new WiFiKey('SBAP303', 'SBAP', null, null, 'foo', WiFiBand::Band24GHz),
@@ -119,7 +119,7 @@ class TechnicolorTest extends TestCase
 
 	public function testGetKeysGenerateAndStoreNoJson(): void
 	{
-		$this->httpClient->setGetResult('');
+		$this->httpClient->setResponse('');
 		$keys = $this->technicolor->getKeys('UPC1234568');
 		Assert::same([], $keys);
 		$exception = $this->logger->getLogged()[0];
@@ -135,7 +135,7 @@ class TechnicolorTest extends TestCase
 	public function testGetKeysGenerateAndStoreBadJson(): void
 	{
 		$json = Json::encode(['303', 808]);
-		$this->httpClient->setGetResult($json);
+		$this->httpClient->setResponse($json);
 		$keys = $this->technicolor->getKeys('UPC1234568');
 		Assert::same([], $keys);
 		$exception = $this->logger->getLogged()[0];
@@ -152,7 +152,7 @@ class TechnicolorTest extends TestCase
 	{
 		$line = "SBAP303,foo,not-a-number";
 		$json = Json::encode($line);
-		$this->httpClient->setGetResult($json);
+		$this->httpClient->setResponse($json);
 		$keys = $this->technicolor->getKeys('UPC1234568');
 		Assert::same([], $keys);
 		$exception = $this->logger->getLogged()[0];

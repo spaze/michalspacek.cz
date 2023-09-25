@@ -11,6 +11,12 @@ final class HttpClientRequest
 	/** @var list<string> */
 	private array $headers = [];
 
+	private ?bool $followLocation = null;
+
+	private ?string $tlsServerName = null;
+
+	private ?bool $tlsCaptureCertificate = null;
+
 
 	public function __construct(
 		private readonly string $url,
@@ -50,6 +56,45 @@ final class HttpClientRequest
 	public function getHeaders(): array
 	{
 		return $this->headers;
+	}
+
+
+	public function getFollowLocation(): ?bool
+	{
+		return $this->followLocation;
+	}
+
+
+	public function setFollowLocation(bool $followLocation): self
+	{
+		$this->followLocation = $followLocation;
+		return $this;
+	}
+
+
+	public function getTlsServerName(): ?string
+	{
+		return $this->tlsServerName;
+	}
+
+
+	public function setTlsServerName(string $tlsServerName): self
+	{
+		$this->tlsServerName = $tlsServerName;
+		return $this;
+	}
+
+
+	public function getTlsCaptureCertificate(): ?bool
+	{
+		return $this->tlsCaptureCertificate;
+	}
+
+
+	public function setTlsCaptureCertificate(bool $tlsCaptureCertificate): self
+	{
+		$this->tlsCaptureCertificate = $tlsCaptureCertificate;
+		return $this;
 	}
 
 }

@@ -5,8 +5,10 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Http\Client\HttpClient;
+use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Exceptions\HttpStreamException;
 use MichalSpacekCz\Test\TestCaseRunner;
+use ReflectionMethod;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -17,42 +19,55 @@ class HttpClientTest extends TestCase
 {
 
 	public function __construct(
-		private readonly HttpClient $httpStreamContext,
+		private readonly HttpClient $httpClient,
 	) {
 	}
 
 
-	public function testCreateStreamContext(): void
+	public function testCreateStreamContextNotification(): void
 	{
 		$hostname = 'example.com';
-		$context = $this->httpStreamContext->createStreamContext(
-			'Foo\Bar',
+		$request = new HttpClientRequest("https://{$hostname}/");
+		$request->setUserAgent('Foo\Bar');
+		$request->setFollowLocation(false);
+		$request->addHeader('Host', $hostname);
+		$request->setTlsCaptureCertificate(true);
+		$request->setTlsServerName($hostname);
+
+		$method = new ReflectionMethod($this->httpClient, 'createStreamContext');
+		$context = $method->invoke(
+			$this->httpClient,
+			$request,
 			[
+				'ignore_errors' => false,
 				'method' => 'HEAD',
-				'follow_location' => 0,
+				'follow_location' => 1,
+				'user_agent' => 'overwritten-anyway/1.0',
 			],
 			[
-				"Host: {$hostname}",
-			],
-			[
-				'capture_peer_cert' => true,
-				'peer_name' => $hostname,
+				'capture_peer_cert' => false,
+				'peer_name' => 'will.be.overwritten.anyway',
 			],
 		);
+		if (!is_resource($context)) {
+			Assert::fail('Context is of a wrong type ' . get_debug_type($context));
+			return;
+		}
+
 		$params = stream_context_get_params($context);
 		$expected = [
 			'ssl' => [
-				'capture_peer_cert' => true,
 				'peer_name' => $hostname,
+				'capture_peer_cert' => true,
 			],
 			'http' => [
-				'method' => 'HEAD',
 				'follow_location' => 0,
+				'user_agent' => 'Foo/Bar',
 				'ignore_errors' => true,
 				'header' => [
 					"Host: {$hostname}",
 				],
-				'user_agent' => 'Foo/Bar',
+				'method' => 'HEAD',
 			],
 		];
 		Assert::same($expected, $params['options']);
