@@ -150,7 +150,23 @@ parameters:
 				- vendor/symfony/cache/Adapter/PhpArrayAdapter.php
 				- vendor/symfony/filesystem/Filesystem.php
 				- vendor/tracy/tracy/src/Tracy/Logger/FireLogger.php
+		-
+			function: 'setcookie()'
+			message: 'use methods from MichalSpacekCz\Http\Cookies'
+			allowIn:
+				- vendor/nette/http/src/Http/Response.php
+				- vendor/paragonie/halite/src/Cookie.php # Unused
+				- vendor/tracy/tracy/src/Tracy/Session/FileSession.php
 	disallowedMethodCalls:
+		-
+			method:
+				- 'Nette\Http\IRequest::getCookie()'
+				- 'Nette\Http\IResponse::setCookie()'
+				- 'Nette\Http\Response::deleteCookie()'
+			message: 'instead use methods from MichalSpacekCz\Http\Cookies'
+			allowIn:
+				- vendor/nette/http/src/Http/*.php
+				- vendor/nette/security/src/Bridges/SecurityHttp/CookieStorage.php # Unused
 		-
 			method:
 				- 'Nette\Application\Request::getPost()'

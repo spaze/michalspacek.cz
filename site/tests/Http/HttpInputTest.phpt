@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Http;
 
 use MichalSpacekCz\Test\Http\Request;
-use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
@@ -20,16 +19,6 @@ class HttpInputTest extends TestCase
 		private readonly Request $request,
 		private readonly HttpInput $httpInput,
 	) {
-	}
-
-
-	public function testGetCookieString(): void
-	{
-		Assert::null($this->httpInput->getCookieString('foo'));
-		$this->request->setCookie('foo', 'bar');
-		Assert::same('bar', $this->httpInput->getCookieString('foo'));
-		PrivateProperty::setValue($this->request, 'cookies', ['waldo' => ['quux' => 'foobar']]);
-		Assert::null($this->httpInput->getCookieString('waldo'));
 	}
 
 

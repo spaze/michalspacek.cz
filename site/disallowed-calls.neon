@@ -23,15 +23,26 @@ parameters:
 			message: 'it is not a cryptographically secure generator, use random_bytes() instead'
 			allowIn:
 				- tests/*.phpt
+		-
+			function: 'setcookie()'
+			message: 'use methods from MichalSpacekCz\Http\Cookies'
 	disallowedMethodCalls:
 		-
 			method:
-				- 'Nette\Application\Request::getPost()'
 				- 'Nette\Http\IRequest::getCookie()'
+				- 'Nette\Http\IResponse::setCookie()'
+				- 'Nette\Http\Response::deleteCookie()'
+			message: 'instead use methods from MichalSpacekCz\Http\Cookies'
+			allowInMethods:
+				- 'MichalSpacekCz\Http\Cookies\Cookies::getString()'
+				- 'MichalSpacekCz\Http\Cookies\Cookies::set()'
+				- 'MichalSpacekCz\Http\Cookies\Cookies::deleteCookie()'
+		-
+			method:
+				- 'Nette\Application\Request::getPost()'
 				- 'Nette\Http\IRequest::getPost()'
 			message: 'instead use methods from MichalSpacekCz\Http\HttpInput with more handy return types'
 			allowInMethods:
-				- 'MichalSpacekCz\Http\HttpInput::getCookieString()'
 				- 'MichalSpacekCz\Http\HttpInput::getPostString()'
 				- 'MichalSpacekCz\Http\HttpInput::getPostArray()'
 		-

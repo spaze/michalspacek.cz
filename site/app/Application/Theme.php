@@ -3,9 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
-use MichalSpacekCz\Http\HttpInput;
-use Nette\Http\IResponse;
-use Nette\Http\Response;
+use MichalSpacekCz\Http\Cookies\Cookies;
 
 class Theme
 {
@@ -18,8 +16,7 @@ class Theme
 
 
 	public function __construct(
-		private readonly HttpInput $httpInput,
-		private readonly IResponse $httpResponse,
+		private readonly Cookies $cookies,
 	) {
 	}
 
@@ -38,16 +35,14 @@ class Theme
 
 	public function isDarkMode(): ?bool
 	{
-		$cookie = $this->httpInput->getCookieString(self::COOKIE);
+		$cookie = $this->cookies->getString(self::COOKIE);
 		return $cookie === self::DARK ? true : ($cookie === self::LIGHT ? false : null);
 	}
 
 
 	private function setCookie(string $mode): void
 	{
-		/** @var Response $response Not IResponse because https://github.com/nette/http/issues/200, can't use instanceof check because it's a different Response in tests */
-		$response = $this->httpResponse;
-		$response->setCookie(self::COOKIE, $mode, '+10 years', null, null, null, null, 'None');
+		$this->cookies->set(self::COOKIE, $mode, '+10 years', sameSite: 'None');
 	}
 
 }
