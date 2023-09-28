@@ -25,11 +25,11 @@ class CookiesTest extends TestCase
 
 	public function testGetString(): void
 	{
-		Assert::null($this->cookies->getString('foo'));
-		$this->request->setCookie('foo', 'bar');
-		Assert::same('bar', $this->cookies->getString('foo'));
-		PrivateProperty::setValue($this->request, 'cookies', ['waldo' => ['quux' => 'foobar']]);
-		Assert::null($this->cookies->getString('waldo'));
+		Assert::null($this->cookies->getString(CookieName::Theme));
+		$this->request->setCookie(CookieName::Theme->value, 'bar');
+		Assert::same('bar', $this->cookies->getString(CookieName::Theme));
+		PrivateProperty::setValue($this->request, 'cookies', [CookieName::ReturningUser->value => ['quux' => 'foobar']]);
+		Assert::null($this->cookies->getString(CookieName::ReturningUser));
 	}
 
 }

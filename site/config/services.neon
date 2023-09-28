@@ -142,7 +142,7 @@ services:
 	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%)
 	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context)
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
-	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
+	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginInterval: %permanentLogin.interval%)
 	- MichalSpacekCz\Utils\Strings
 	- MichalSpacekCz\Utils\JsonUtils
 	- Nette\Bridges\ApplicationLatte\TemplateFactory

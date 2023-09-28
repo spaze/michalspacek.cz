@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User;
 
 use DateTimeInterface;
 use Exception;
+use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\User\Exceptions\IdentityException;
 use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
@@ -48,8 +49,6 @@ class Manager implements Authenticator
 		private readonly Passwords $passwords,
 		private readonly StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator,
-		private readonly string $returningUserCookie,
-		private readonly string $permanentLoginCookie,
 		private readonly string $permanentLoginInterval,
 	) {
 		$this->authCookiesPath = (new Url($linkGenerator->link('Admin:Sign:in')))->getPath();
@@ -188,13 +187,13 @@ class Manager implements Authenticator
 
 	public function setReturningUser(string $value): void
 	{
-		$this->cookies->set($this->returningUserCookie, $value, '+10 years', $this->authCookiesPath, sameSite: 'Strict');
+		$this->cookies->set(CookieName::ReturningUser, $value, '+10 years', $this->authCookiesPath, sameSite: 'Strict');
 	}
 
 
 	public function isReturningUser(): bool
 	{
-		$cookie = $this->cookies->getString($this->returningUserCookie);
+		$cookie = $this->cookies->getString(CookieName::ReturningUser);
 		return ($cookie && $this->verifyReturningUser($cookie));
 	}
 
@@ -254,7 +253,7 @@ class Manager implements Authenticator
 	public function storePermanentLogin(User $user): void
 	{
 		$value = $this->insertToken($user, self::TOKEN_PERMANENT_LOGIN);
-		$this->cookies->set($this->permanentLoginCookie, $value, $this->permanentLoginInterval, $this->authCookiesPath, sameSite: 'Strict');
+		$this->cookies->set(CookieName::PermanentLogin, $value, $this->permanentLoginInterval, $this->authCookiesPath, sameSite: 'Strict');
 	}
 
 
@@ -266,7 +265,7 @@ class Manager implements Authenticator
 	public function clearPermanentLogin(User $user): void
 	{
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
-		$this->cookies->delete($this->permanentLoginCookie, $this->authCookiesPath);
+		$this->cookies->delete(CookieName::PermanentLogin, $this->authCookiesPath);
 	}
 
 
@@ -290,7 +289,7 @@ class Manager implements Authenticator
 	 */
 	public function verifyPermanentLogin(): ?Row
 	{
-		$cookie = $this->cookies->getString($this->permanentLoginCookie) ?? '';
+		$cookie = $this->cookies->getString(CookieName::PermanentLogin) ?? '';
 		return $this->verifyToken($cookie, DateTime::from("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
 	}
 

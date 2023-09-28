@@ -34,10 +34,7 @@ parameters:
 		contentSecurityPolicy: https://plz.report-uri.com/r/default/csp/enforce
 	vatRate: 0.21
 	loadCompanyDataVisible: true
-	returningUser:
-		cookie: __Secure-beenhere
 	permanentLogin:
-		cookie: __Secure-permanent
 		interval: 14 days
 	certificatesApi:
 		expiringThreshold: 20

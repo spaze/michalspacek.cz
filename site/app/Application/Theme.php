@@ -3,12 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
 
 class Theme
 {
-
-	private const COOKIE = 'future';
 
 	private const DARK = 'dark';
 
@@ -35,14 +34,14 @@ class Theme
 
 	public function isDarkMode(): ?bool
 	{
-		$cookie = $this->cookies->getString(self::COOKIE);
+		$cookie = $this->cookies->getString(CookieName::Theme);
 		return $cookie === self::DARK ? true : ($cookie === self::LIGHT ? false : null);
 	}
 
 
 	private function setCookie(string $mode): void
 	{
-		$this->cookies->set(self::COOKIE, $mode, '+10 years', sameSite: 'None');
+		$this->cookies->set(CookieName::Theme, $mode, '+10 years', sameSite: 'None');
 	}
 
 }
