@@ -352,6 +352,12 @@ class Manager implements Authenticator
 	}
 
 
+	public function getPermanentLoginCookieLifetime(): string
+	{
+		return $this->permanentLoginInterval;
+	}
+
+
 	public function getReturningUserCookieLifetime(): string
 	{
 		return '365 days';

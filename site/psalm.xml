@@ -44,6 +44,11 @@
 				<referencedMethod name="Nette\ComponentModel\Component::setParent" /> <!-- Used in tests -->
 			</errorLevel>
 		</InternalMethod>
+		<InternalProperty>
+			<errorLevel type="suppress">
+				<referencedProperty name="Nette\Http\Helpers::StrictCookieName"/> <!-- Used in MichalSpacekCz\Http\Cookies\CookieDescriptions::get() -->
+			</errorLevel>
+		</InternalProperty>
 		<MissingFile>
 			<errorLevel type="suppress">
 				<file name="public/www.michalspacek.cz/app.php" /> <!-- Can't require maintenance.php but https://github.com/vimeo/psalm/issues/3886 -->

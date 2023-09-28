@@ -29,6 +29,7 @@ title:
 	projects: Projects
 	blog: Blog
 	encryptedmessages: "Encrypted messages"
+	cookies: Cookies
 	admin:
 		talkslides: "Slides from %s (%s)"
 header:
@@ -364,3 +365,10 @@ blog:
 		duplicateslug: "Blog post with such slug already exists"
 license:
 	content: Content licensed under a Creative Commons Attribution 4.0 International License
+cookies:
+	cookie:
+		permanentLogin: "Contains a permanent login identifier."
+		returningUser: "An identifier which, if correct, will allow the login form to be displayed correctly."
+		theme: "The value specifies the color mode in which the pages are displayed."
+		netteSession: "The cookie holds the session identifier."
+		netteSameSiteCheck: "Used to detect //same-site// requests."
