@@ -41,7 +41,13 @@ class Theme
 
 	private function setCookie(string $mode): void
 	{
-		$this->cookies->set(CookieName::Theme, $mode, '+10 years', sameSite: 'None');
+		$this->cookies->set(CookieName::Theme, $mode, $this->getCookieLifetime(), sameSite: 'None');
+	}
+
+
+	public function getCookieLifetime(): string
+	{
+		return '365 days';
 	}
 
 }

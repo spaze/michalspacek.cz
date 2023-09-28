@@ -187,7 +187,7 @@ class Manager implements Authenticator
 
 	public function setReturningUser(string $value): void
 	{
-		$this->cookies->set(CookieName::ReturningUser, $value, '+10 years', $this->authCookiesPath, sameSite: 'Strict');
+		$this->cookies->set(CookieName::ReturningUser, $value, $this->getReturningUserCookieLifetime(), $this->authCookiesPath, sameSite: 'Strict');
 	}
 
 
@@ -349,6 +349,12 @@ class Manager implements Authenticator
 			}
 		}
 		return $result;
+	}
+
+
+	public function getReturningUserCookieLifetime(): string
+	{
+		return '365 days';
 	}
 
 }
