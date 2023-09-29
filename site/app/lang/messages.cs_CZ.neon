@@ -366,6 +366,11 @@ blog:
 license:
 	content: Obsah podléhá licenci Creative Commons Uveďte původ 4.0 Mezinárodní
 cookies:
+	theseAreUsed: "Tento web používá pouze technické //1st-party// cookies, zde je jejich seznam:"
+	public: "Pro všechny návštěvníky"
+	internal: "Navíc pro interní uživatele, což vy nejste, sorry!"
+	expires: "Expiruje po jednom dni.|Expiruje po %count% dnech.|Expiruje po %count% dnech."
+	expiresEndOfSession: "Expiruje na konci sezení."
 	cookie:
 		permanentLogin: "Obsahuje identifikátor pro permanentní přihlášení."
 		returningUser: "Identifikátor pro správné zobrazení přihlašovacího formuláře, bez něj se nezobrazí."

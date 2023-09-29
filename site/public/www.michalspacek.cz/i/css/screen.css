@@ -139,7 +139,10 @@ button:disabled { cursor: not-allowed; }
 #footer .container.admin { max-width: 1180px; }
 #footer .container.talk { max-width: 1080px; }
 #footer-name { float: left; }
-#footer-links { float: right; }
+#footer-links {
+	float: right;
+	text-align: right;
+}
 #header-links {
 	position: absolute;
 	top: 0;

@@ -366,6 +366,11 @@ blog:
 license:
 	content: Content licensed under a Creative Commons Attribution 4.0 International License
 cookies:
+	theseAreUsed: "This site uses only so called technical 1st-party cookies, here's the list:"
+	public: "For all visitors"
+	internal: "Extra for internal users which you're not, sorry!"
+	expires: "Expires after one day.|Expires after %count% days."
+	expiresEndOfSession: "Expires at the end of the session."
 	cookie:
 		permanentLogin: "Contains a permanent login identifier."
 		returningUser: "An identifier which, if correct, will allow the login form to be displayed correctly."
