@@ -5,7 +5,8 @@ namespace MichalSpacekCz\User;
 
 use DateTimeInterface;
 use Exception;
-use MichalSpacekCz\Http\HttpInput;
+use MichalSpacekCz\Http\Cookies\CookieName;
+use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\User\Exceptions\IdentityException;
 use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
@@ -16,7 +17,6 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\IRequest;
-use Nette\Http\Response;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Authenticator;
@@ -45,13 +45,10 @@ class Manager implements Authenticator
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly IRequest $httpRequest,
-		private readonly Response $httpResponse, // Not IResponse because https://github.com/nette/http/issues/200
-		private readonly HttpInput $httpInput,
+		private readonly Cookies $cookies,
 		private readonly Passwords $passwords,
 		private readonly StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator,
-		private readonly string $returningUserCookie,
-		private readonly string $permanentLoginCookie,
 		private readonly string $permanentLoginInterval,
 	) {
 		$this->authCookiesPath = (new Url($linkGenerator->link('Admin:Sign:in')))->getPath();
@@ -190,13 +187,13 @@ class Manager implements Authenticator
 
 	public function setReturningUser(string $value): void
 	{
-		$this->httpResponse->setCookie($this->returningUserCookie, $value, '+10 years', $this->authCookiesPath, null, null, null, 'Strict');
+		$this->cookies->set(CookieName::ReturningUser, $value, $this->getReturningUserCookieLifetime(), $this->authCookiesPath, sameSite: 'Strict');
 	}
 
 
 	public function isReturningUser(): bool
 	{
-		$cookie = $this->httpInput->getCookieString($this->returningUserCookie);
+		$cookie = $this->cookies->getString(CookieName::ReturningUser);
 		return ($cookie && $this->verifyReturningUser($cookie));
 	}
 
@@ -256,7 +253,7 @@ class Manager implements Authenticator
 	public function storePermanentLogin(User $user): void
 	{
 		$value = $this->insertToken($user, self::TOKEN_PERMANENT_LOGIN);
-		$this->httpResponse->setCookie($this->permanentLoginCookie, $value, $this->permanentLoginInterval, $this->authCookiesPath, null, null, null, 'Strict');
+		$this->cookies->set(CookieName::PermanentLogin, $value, $this->permanentLoginInterval, $this->authCookiesPath, sameSite: 'Strict');
 	}
 
 
@@ -268,7 +265,7 @@ class Manager implements Authenticator
 	public function clearPermanentLogin(User $user): void
 	{
 		$this->database->query('DELETE FROM auth_tokens WHERE key_user = ? AND type = ?', $user->getId(), self::TOKEN_PERMANENT_LOGIN);
-		$this->httpResponse->deleteCookie($this->permanentLoginCookie, $this->authCookiesPath);
+		$this->cookies->delete(CookieName::PermanentLogin, $this->authCookiesPath);
 	}
 
 
@@ -292,7 +289,7 @@ class Manager implements Authenticator
 	 */
 	public function verifyPermanentLogin(): ?Row
 	{
-		$cookie = $this->httpInput->getCookieString($this->permanentLoginCookie) ?? '';
+		$cookie = $this->cookies->getString(CookieName::PermanentLogin) ?? '';
 		return $this->verifyToken($cookie, DateTime::from("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
 	}
 
@@ -352,6 +349,18 @@ class Manager implements Authenticator
 			}
 		}
 		return $result;
+	}
+
+
+	public function getPermanentLoginCookieLifetime(): string
+	{
+		return $this->permanentLoginInterval;
+	}
+
+
+	public function getReturningUserCookieLifetime(): string
+	{
+		return '365 days';
 	}
 
 }

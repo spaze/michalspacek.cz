@@ -1,0 +1,27 @@
+{varType MichalSpacekCz\Http\Cookies\CookieDescription[] $internalCookies}
+{varType MichalSpacekCz\Http\Cookies\CookieDescription[] $publicCookies}
+{define #menu}
+&raquo; <a n:href="Homepage:">Michal Špaček</a>
+{/define}
+
+{define #cookies MichalSpacekCz\Http\Cookies\CookieDescription $cookie}
+<code>{$cookie->getName()}</code>:
+{$cookie->getDescription()}
+{if $cookie->getValidDays()}
+	{_messages.cookies.expires, $cookie->getValidDays()}
+{else}
+	{_messages.cookies.expiresEndOfSession}
+{/if}
+{/define}
+
+{define #content}
+{_messages.cookies.theseAreUsed|format}
+<h3>{_messages.cookies.public}</h3>
+<ol>
+	<li n:foreach="$publicCookies as $cookie">{include #cookies $cookie}</li>
+</ol>
+<h3>{_messages.cookies.internal}</h3>
+<ol>
+	<li n:foreach="$internalCookies as $cookie">{include #cookies $cookie}</li>
+</ol>
+{/define}

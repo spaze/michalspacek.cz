@@ -3,6 +3,7 @@ services:
 	- MichalSpacekCz\Www\Presenters\ArticlesPresenter
 	- MichalSpacekCz\Www\Presenters\CompanyTrainingsPresenter
 	- MichalSpacekCz\Www\Presenters\ContactPresenter
+	- MichalSpacekCz\Www\Presenters\CookiesPresenter
 	- MichalSpacekCz\Www\Presenters\ErrorPresenter
 	- MichalSpacekCz\Www\Presenters\ErrorGenericPresenter
 	- MichalSpacekCz\Www\Presenters\ExportsPresenter

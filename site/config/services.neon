@@ -25,6 +25,7 @@ services:
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz
 	- MichalSpacekCz\Css\CriticalCssFactory
+	- MichalSpacekCz\DateTime\DateTime
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	- MichalSpacekCz\DateTime\DateTimeZoneFactory
@@ -65,6 +66,8 @@ services:
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Formatter\TrainingDateTexyFormatterPlaceholder
 	httpClient: MichalSpacekCz\Http\Client\HttpClient
+	- MichalSpacekCz\Http\Cookies\CookieDescriptions
+	- MichalSpacekCz\Http\Cookies\Cookies
 	- MichalSpacekCz\Http\HttpInput
 	- MichalSpacekCz\Http\Redirections
 	- MichalSpacekCz\Http\SecurityHeaders(permissionsPolicy: %permissionsPolicy%)
@@ -141,7 +144,7 @@ services:
 	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%)
 	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context)
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
-	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginCookie: %permanentLogin.cookie%, permanentLoginInterval: %permanentLogin.interval%, returningUserCookie: %returningUser.cookie%)
+	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginInterval: %permanentLogin.interval%)
 	- MichalSpacekCz\Utils\Strings
 	- MichalSpacekCz\Utils\JsonUtils
 	- Nette\Bridges\ApplicationLatte\TemplateFactory

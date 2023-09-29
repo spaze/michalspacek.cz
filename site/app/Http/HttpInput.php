@@ -14,16 +14,6 @@ class HttpInput
 	}
 
 
-	public function getCookieString(string $key): ?string
-	{
-		$cookie = $this->request->getCookie($key);
-		if (!is_string($cookie)) {
-			return null;
-		}
-		return $cookie;
-	}
-
-
 	public function getPostString(string $key): ?string
 	{
 		$data = $this->request->getPost($key);
