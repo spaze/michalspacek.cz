@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Nette\PhpGenerator;
 
-use Nette;
-
 
 /**
  * Instance of PHP file.
@@ -22,7 +20,6 @@ use Nette;
  */
 final class PhpFile
 {
-	use Nette\SmartObject;
 	use Traits\CommentAware;
 
 	/** @var PhpNamespace[] */
@@ -146,14 +143,6 @@ final class PhpFile
 
 	public function hasStrictTypes(): bool
 	{
-		return $this->strictTypes;
-	}
-
-
-	/** @deprecated  use hasStrictTypes() */
-	public function getStrictTypes(): bool
-	{
-		trigger_error(__METHOD__ . '() is deprecated, use hasStrictTypes().', E_USER_DEPRECATED);
 		return $this->strictTypes;
 	}
 

@@ -14,8 +14,6 @@ use Nette;
 
 class DkimSigner implements Signer
 {
-	use Nette\SmartObject;
-
 	private const DefaultSignHeaders = [
 		'From',
 		'To',
@@ -33,7 +31,9 @@ class DkimSigner implements Signer
 	public function __construct(
 		private string $domain,
 		private string $selector,
+		#[\SensitiveParameter]
 		private string $privateKey,
+		#[\SensitiveParameter]
 		private ?string $passPhrase = null,
 		private array $signHeaders = self::DefaultSignHeaders,
 	) {

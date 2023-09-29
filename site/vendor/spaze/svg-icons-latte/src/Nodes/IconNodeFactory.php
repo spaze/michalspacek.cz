@@ -34,9 +34,6 @@ class IconNodeFactory
 		}
 		$cssClasses = $this->cssClass ? [$this->cssClass] : [];
 		foreach ($tag->parser->parseArguments()->items as $argument) {
-			if (!$argument) {
-				continue;
-			}
 			if (!$argument->value instanceof StringNode) {
 				throw new IconTagException('Only strings supported', $tag, $resource);
 			}

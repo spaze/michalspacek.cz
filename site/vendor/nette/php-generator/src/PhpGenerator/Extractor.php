@@ -22,8 +22,6 @@ use PhpParser\ParserFactory;
  */
 final class Extractor
 {
-	use Nette\SmartObject;
-
 	private string $code;
 
 	/** @var Node[] */
@@ -295,7 +293,7 @@ final class Extractor
 	private function addTraitToClass(ClassLike $class, Node\Stmt\TraitUse $node): void
 	{
 		foreach ($node->traits as $item) {
-			$trait = $class->addTrait($item->toString(), true);
+			$trait = $class->addTrait($item->toString());
 		}
 
 		foreach ($node->adaptations as $item) {
