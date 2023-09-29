@@ -18,8 +18,6 @@ use Nette\Utils\Reflection;
  */
 final class Factory
 {
-	use Nette\SmartObject;
-
 	/** @var string[][]  */
 	private array $bodyCache = [];
 
@@ -31,12 +29,8 @@ final class Factory
 	public function fromClassReflection(
 		\ReflectionClass $from,
 		bool $withBodies = false,
-		?bool $materializeTraits = null,
 	): ClassLike
 	{
-		if ($materializeTraits !== null) {
-			trigger_error(__METHOD__ . '() parameter $materializeTraits has been removed (is always false).', E_USER_DEPRECATED);
-		}
 		if ($withBodies && $from->isAnonymous()) {
 			throw new Nette\NotSupportedException('The $withBodies parameter cannot be used for anonymous functions.');
 		}

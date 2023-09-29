@@ -702,6 +702,7 @@ return array(
     'Tracy\\Bridges\\Nette\\TracyExtension' => $vendorDir . '/tracy/tracy/src/Bridges/Nette/TracyExtension.php',
     'Tracy\\Bridges\\Psr\\PsrToTracyLoggerAdapter' => $vendorDir . '/tracy/tracy/src/Bridges/Psr/PsrToTracyLoggerAdapter.php',
     'Tracy\\Bridges\\Psr\\TracyToPsrLoggerAdapter' => $vendorDir . '/tracy/tracy/src/Bridges/Psr/TracyToPsrLoggerAdapter.php',
+    'Tracy\\CodeHighlighter' => $vendorDir . '/tracy/tracy/src/Tracy/BlueScreen/CodeHighlighter.php',
     'Tracy\\Debugger' => $vendorDir . '/tracy/tracy/src/Tracy/Debugger/Debugger.php',
     'Tracy\\DefaultBarPanel' => $vendorDir . '/tracy/tracy/src/Tracy/Bar/DefaultBarPanel.php',
     'Tracy\\DeferredContent' => $vendorDir . '/tracy/tracy/src/Tracy/Debugger/DeferredContent.php',

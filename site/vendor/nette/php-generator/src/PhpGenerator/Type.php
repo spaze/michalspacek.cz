@@ -83,9 +83,9 @@ class Type
 	public const STATIC = self::Static;
 
 
-	public static function nullable(string $type, bool $state = true): string
+	public static function nullable(string $type, bool $nullable = true): string
 	{
-		return ($state ? '?' : '') . ltrim($type, '?');
+		return ($nullable ? '?' : '') . ltrim($type, '?');
 	}
 
 
@@ -98,13 +98,5 @@ class Type
 	public static function intersection(string ...$types): string
 	{
 		return implode('&', $types);
-	}
-
-
-	/** @deprecated  use get_debug_type() */
-	public static function getType(mixed $value): ?string
-	{
-		trigger_error(__METHOD__ . '() is deprecated, use PHP function get_debug_type()', E_USER_DEPRECATED);
-		return is_resource($value) ? null : get_debug_type($value);
 	}
 }

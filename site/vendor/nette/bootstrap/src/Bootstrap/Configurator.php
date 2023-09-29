@@ -21,8 +21,6 @@ use Tracy;
  */
 class Configurator
 {
-	use Nette\SmartObject;
-
 	public const CookieSecret = 'nette-debug';
 
 	/** @deprecated  use Configurator::CookieSecret */
@@ -30,7 +28,7 @@ class Configurator
 
 
 	/** @var callable[]  function (Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
-	public iterable $onCompile = [];
+	public array $onCompile = [];
 
 	public array $defaultExtensions = [
 		'application' => [Nette\Bridges\ApplicationDI\ApplicationExtension::class, ['%debugMode%', ['%appDir%'], '%tempDir%/cache/nette.application']],
