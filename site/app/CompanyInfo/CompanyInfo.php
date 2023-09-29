@@ -19,7 +19,7 @@ class CompanyInfo
 
 
 	/**
-	 * @param array<int, CompanyRegister> $registers This is a list, support added in https://github.com/nette/di/pull/293
+	 * @param list<CompanyRegister> $registers
 	 */
 	public function __construct(
 		private readonly array $registers,
