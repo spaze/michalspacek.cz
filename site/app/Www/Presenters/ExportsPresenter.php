@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Www\Presenters;
 
 use MichalSpacekCz\Feed\Exports;
-use Spaze\Exports\Atom\Feed;
+use MichalSpacekCz\Utils\Hash;
 use Spaze\Exports\Bridges\Nette\Atom\Response;
 
 class ExportsPresenter extends BasePresenter
@@ -22,15 +22,9 @@ class ExportsPresenter extends BasePresenter
 		$feed = $this->exports->getArticles($this->link('//this'), $param);
 		$updated = $feed->getUpdated();
 		if ($updated) {
-			$this->lastModified($updated, $this->getEtag($feed), '1 hour');
+			$this->lastModified($updated, Hash::nonCryptographic((string)$feed), '1 hour');
 		}
 		$this->sendResponse(new Response($feed));
-	}
-
-
-	private function getEtag(Feed $feed): string
-	{
-		return sha1((string)$feed);
 	}
 
 }
