@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Formatter;
 
 use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Utils\Hash;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Stringable;
@@ -194,9 +195,8 @@ class TexyFormatter
 	public function getCacheKey(string $text): string
 	{
 		// Make the key shorter because Symfony Cache stores it in comments in cache files
-		// Use MD5 to favor speed over security, which is not an issue here, and Symfony Cache itself uses MD5 as well
 		// Don't hash the locale to make it visible inside cache files
-		return md5($text) . '.' . $this->translator->getDefaultLocale();
+		return Hash::nonCryptographic($text) . '.' . $this->translator->getDefaultLocale();
 	}
 
 

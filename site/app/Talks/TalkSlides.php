@@ -14,6 +14,7 @@ use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Exceptions\SlideImageUploadFailedException;
 use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Utils\Base64;
+use MichalSpacekCz\Utils\Hash;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Database\UniqueConstraintViolationException;
@@ -130,7 +131,7 @@ class TalkSlides
 
 	private function getSlideImageFileBasename(string $contents): string
 	{
-		return Base64::urlEncode(sha1($contents, true));
+		return Base64::urlEncode(Hash::nonCryptographic($contents, true));
 	}
 
 

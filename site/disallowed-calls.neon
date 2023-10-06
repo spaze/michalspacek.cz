@@ -3,17 +3,6 @@ parameters:
 		-
 			function: 'pcntl_*()'
 		-
-			function: 'md5()'
-			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
-			allowInMethods:
-				- 'MichalSpacekCz\Formatter\TexyFormatter::getCacheKey()'
-		-
-			function: 'sha1()'
-			message: 'use hash() with at least SHA-256 for secure hash, or password_hash() for passwords'
-			allowInMethods:
-				- 'MichalSpacekCz\Talks\TalkSlides::getSlideImageFileBasename()'
-				- 'MichalSpacekCz\Www\Presenters\ExportsPresenter::getEtag()'
-		-
 			function: 'rand()'
 			message: 'it is not a cryptographically secure generator, use random_int() instead'
 			allowIn:
