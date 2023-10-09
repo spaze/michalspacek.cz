@@ -26,6 +26,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
+use Nette\Utils\Random;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
@@ -67,6 +68,7 @@ class PostFormFactory
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
 		$previewKeyInput = $form->addText('previewKey', 'Klíč pro náhled:')
 			->setRequired(false)
+			->setDefaultValue(Random::generate(9, '0-9a-zA-Z'))
 			->addRule($form::MinLength, 'Klíč pro náhled musí mít alespoň %d znaky', 3);
 		$form->addTextArea('lead', 'Perex:')
 			->addCondition($form::Filled)
@@ -213,7 +215,6 @@ class PostFormFactory
 			'title' => $post->getTitleTexy(),
 			'slug' => $post->getSlug(),
 			'published' => $post->getPublishTime()?->format('Y-m-d H:i'),
-			'previewKey' => $post->getPreviewKey(),
 			'lead' => $post->getSummaryTexy(),
 			'text' => $post->getTextTexy(),
 			'originally' => $post->getOriginallyTexy(),
@@ -225,6 +226,9 @@ class PostFormFactory
 			'allowedTags' => $post->getAllowedTagsGroups(),
 			'omitExports' => $post->omitExports(),
 		];
+		if ($post->getPreviewKey()) {
+			$values['previewKey'] = $post->getPreviewKey();
+		}
 		$form->setDefaults($values);
 		$editSummaryInput->setDisabled($post->needsPreviewKey());
 		$submitButton->caption = 'Upravit';
