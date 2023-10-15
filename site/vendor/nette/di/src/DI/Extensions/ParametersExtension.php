@@ -68,22 +68,25 @@ final class ParametersExtension extends Nette\DI\CompilerExtension
 
 		$resolver = new Nette\DI\Resolver($builder);
 		$generator = new Nette\DI\PhpGenerator($builder);
-		$getOne = Method::from([Container::class, 'getDynamicParameter']);
-		$class->addMember($getOne);
-		$getAll = Method::from([Container::class, 'getParameters']);
-		$class->addMember($getAll);
-		$getOne->addBody('switch (true) {');
+		$method = Method::from([Container::class, 'getDynamicParameter']);
+		$class->addMember($method);
+		$method->addBody('switch (true) {');
 		foreach ($dynamicParams as $key) {
 			$value = Nette\DI\Helpers::expand($this->config[$key] ?? null, $builder->parameters);
 			$value = $resolver->completeArguments(Nette\DI\Helpers::filterArguments([$value]));
-			$getOne->addBody("\tcase \$key === ?: return ?;", [$key, $generator->convertArguments($value)[0]]);
-			$getAll->addBody('$this->getParameter(?);', [$key]);
+			$method->addBody("\tcase \$key === ?: return ?;", [$key, $generator->convertArguments($value)[0]]);
 		}
-		$getOne->addBody("\tdefault: parent::getDynamicParameter(\$key);\n};");
-		$getAll->addBody('return parent::getParameters();');
+		$method->addBody("\tdefault: return parent::getDynamicParameter(\$key);\n};");
+
+		$method = Method::from([Container::class, 'getParameters']);
+		$class->addMember($method);
+		$method->addBody('array_map(function ($key) { $this->getParameter($key); }, ?);', [array_values($dynamicParams)]);
+		$method->addBody('return parent::getParameters();');
 
 		foreach ($this->dynamicValidators as [$param, $expected]) {
-			$this->initialization->addBody('Nette\Utils\Validators::assert(?, ?, ?);', [$param, $expected, 'dynamic parameter']);
+			if (!$param instanceof Nette\DI\Definitions\Statement) {
+				$this->initialization->addBody('Nette\Utils\Validators::assert(?, ?, ?);', [$param, $expected, 'dynamic parameter']);
+			}
 		}
 	}
 
