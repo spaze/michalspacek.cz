@@ -45,4 +45,4 @@ psalm:
 	vendor/bin/psalm.phar
 
 tester:
-	vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/
+	vendor/nette/tester/src/tester -s -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/
