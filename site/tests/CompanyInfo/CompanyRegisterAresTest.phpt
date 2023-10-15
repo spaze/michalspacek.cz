@@ -10,7 +10,6 @@ use MichalSpacekCz\Test\Http\Client\HttpClientMock;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Schema\Processor;
 use Tester\Assert;
-use Tester\Environment;
 use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
@@ -32,10 +31,7 @@ class CompanyRegisterAresTest extends TestCase
 
 	public function testGetDetails(): void
 	{
-		if (getenv(Environment::VariableRunner)) {
-			$file = basename(__FILE__);
-			Environment::skip("The test uses the Internet, to not skip the test run it with `php {$file}`");
-		}
+		TestCaseRunner::skip('The test uses the Internet, to not skip the test case run it with `' . TestCaseRunner::ENV_VAR . '`');
 		$expected = new CompanyInfoDetails(
 			200,
 			'OK',
