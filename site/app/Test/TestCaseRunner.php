@@ -8,10 +8,16 @@ use MichalSpacekCz\Application\Bootstrap;
 use Nette\Utils\Type;
 use ReflectionException;
 use ReflectionMethod;
+use Tester\Environment;
 use Tester\TestCase;
 
 class TestCaseRunner
 {
+
+	private const ENV_VAR_NAME = 'TEST_CASE_RUNNER_INCLUDE_SKIPPED';
+	private const ENV_VAR_VALUE = '1';
+	public const ENV_VAR = self::ENV_VAR_NAME . '=' . self::ENV_VAR_VALUE;
+
 
 	/**
 	 * @param class-string<TestCase> $test
@@ -48,6 +54,15 @@ class TestCaseRunner
 			// pass, __construct() does not exist
 		}
 		(new $test(...$params))->run();
+	}
+
+
+	public static function skip(string $message): void
+	{
+		if (getenv(self::ENV_VAR_NAME) === self::ENV_VAR_VALUE) {
+			return;
+		}
+		Environment::skip($message);
 	}
 
 }

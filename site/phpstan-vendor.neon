@@ -189,6 +189,11 @@ parameters:
 			message: 'use logger instead, debug bar is not visible in production'
 			allowIn:
 				- vendor/tracy/tracy/src/Tracy/functions.php
+		-
+			method: 'Tester\Environment::skip()'
+			message: 'use TestCaseRunner::skip() instead, it can ignore skipping with an environment variable'
+			allowIn:
+				- vendor/nette/tester/src/Framework/TestCase.php
 	disallowedSuperglobals:
 		-
 			superglobal: '$_SERVER'

@@ -1,4 +1,4 @@
-.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester
+.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester tester-include-skipped
 
 test: audit check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor
 
@@ -45,4 +45,8 @@ psalm:
 	vendor/bin/psalm.phar
 
 tester:
-	vendor/nette/tester/src/tester -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/
+	vendor/nette/tester/src/tester -s -c tests/php-unix.ini --colors 1 --coverage temp/coverage.html --coverage-src app/ tests/
+
+tester-include-skipped:
+	TEST_CASE_RUNNER_INCLUDE_SKIPPED=1 \
+	$(MAKE) tester

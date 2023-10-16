@@ -15,6 +15,12 @@ parameters:
 		-
 			function: 'setcookie()'
 			message: 'use methods from MichalSpacekCz\Http\Cookies'
+	disallowedStaticCalls:
+		-
+			method: 'Tester\Environment::skip()'
+			message: 'use TestCaseRunner::skip() instead, it can ignore skipping with an environment variable'
+			allowInMethods:
+				- 'MichalSpacekCz\Test\TestCaseRunner::skip()'
 	disallowedMethodCalls:
 		-
 			method:
