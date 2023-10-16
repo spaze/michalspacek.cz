@@ -14,9 +14,8 @@ use Tester\TestCase;
 class TestCaseRunner
 {
 
-	private const ENV_VAR_NAME = 'TEST_CASE_RUNNER_INCLUDE_SKIPPED';
-	private const ENV_VAR_VALUE = '1';
-	public const ENV_VAR = self::ENV_VAR_NAME . '=' . self::ENV_VAR_VALUE;
+	private const INCLUDE_SKIPPED_ENV_VAR_NAME = 'TEST_CASE_RUNNER_INCLUDE_SKIPPED';
+	private const INCLUDE_SKIPPED_ENV_VAR_VALUE = '1';
 
 
 	/**
@@ -59,10 +58,16 @@ class TestCaseRunner
 
 	public static function skip(string $message): void
 	{
-		if (getenv(self::ENV_VAR_NAME) === self::ENV_VAR_VALUE) {
+		if (getenv(self::INCLUDE_SKIPPED_ENV_VAR_NAME) === self::INCLUDE_SKIPPED_ENV_VAR_VALUE) {
 			return;
 		}
 		Environment::skip($message);
+	}
+
+
+	public static function includeSkippedEnvVarUsage(): string
+	{
+		return self::INCLUDE_SKIPPED_ENV_VAR_NAME . '=' . self::INCLUDE_SKIPPED_ENV_VAR_VALUE;
 	}
 
 }

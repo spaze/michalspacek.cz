@@ -27,7 +27,7 @@ class CompanyRegisterRegisterUzTest extends TestCase
 
 	public function testGetDetails(): void
 	{
-		TestCaseRunner::skip('The test uses the Internet, to not skip the test case run it with `' . TestCaseRunner::ENV_VAR . '`');
+		TestCaseRunner::skip('The test uses the Internet, to not skip the test case run it with `' . TestCaseRunner::includeSkippedEnvVarUsage() . '`');
 		$expected = new CompanyInfoDetails(
 			200,
 			'OK',
