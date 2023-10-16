@@ -27,11 +27,14 @@ $customFilters = $factory->getCustomFilters();
 echo 'Custom filters: ' . ($customFilters ? implode(', ', $customFilters) : 'none installed') . "\n";
 
 if ($argc < 2) {
-	echo "Usage: latte-lint <path>\n";
+	echo "Usage: latte-lint <path> [--debug]\n";
 	exit(1);
 }
 
 $debug = in_array('--debug', $argv, true);
+if ($debug) {
+	echo "Debug mode enabled\n";
+}
 $path = $argv[1];
 $linter = new Linter($factory->createTemplate()->getLatte(), $debug);
 $ok = $linter->scanDirectory($path);
