@@ -1,0 +1,36 @@
+name: PHP tests, including skipped tests
+
+on:
+  schedule:
+    - cron: '45 23 * * 4'
+  workflow_dispatch:
+
+jobs:
+  tester-include-skipped:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+          - "8.3"
+    steps:
+    - uses: actions/checkout@v4
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: pcov
+        php-version: ${{ matrix.php-version }}
+    - name: Create symlink in /srv/www
+      run: |
+        sudo mkdir --parents /srv/www
+        sudo ln --symbolic $GITHUB_WORKSPACE /srv/www
+    - run: make --directory=site tester-include-skipped
+    - name: Failed test output, if any
+      if: failure()
+      run: for i in $(find ./site/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
+    - name: Upload test code coverage
+      uses: actions/upload-artifact@v3
+      if: success()
+      with:
+        name: Test code coverage (PHP ${{ matrix.php-version }})
+        path: 'site/temp/coverage.html'
+        retention-days: 5
