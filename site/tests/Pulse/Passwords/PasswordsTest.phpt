@@ -307,6 +307,7 @@ class PasswordsTest extends TestCase
 			Assert::count(2, $disclosures);
 			Assert::same(2, $disclosures[0]->getId());
 			Assert::same(3, $disclosures[1]->getId());
+			Assert::same([$bcryptKey, $sha1Key], array_keys($site->getHistoricalAlgorithms()));
 		}
 
 		$site = $storageRegistry->getSite('111');
@@ -318,6 +319,7 @@ class PasswordsTest extends TestCase
 			Assert::null($latestAlgorithm->getFullAlgo());
 			Assert::same('bcrypt', $latestAlgorithm->getName());
 			Assert::same(158, $latestAlgorithm->getLatestDisclosure()->getId());
+			Assert::same([], array_keys($site->getHistoricalAlgorithms()));
 		}
 
 		$company = $storageRegistry->getCompany(3);
@@ -340,6 +342,7 @@ class PasswordsTest extends TestCase
 			$disclosures = $site->getAlgorithms()[$sha256Key]->getDisclosures();
 			Assert::count(1, $disclosures);
 			Assert::same(6, $site->getAlgorithms()[$sha256Key]->getDisclosures()[0]->getId());
+			Assert::same([$sha256Key], array_keys($site->getHistoricalAlgorithms()));
 		}
 	}
 
