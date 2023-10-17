@@ -36,6 +36,7 @@ di:
 		tags: false
 
 latte:
+	strictParsing: true
 	strictTypes: true
 
 database:
