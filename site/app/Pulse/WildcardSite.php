@@ -69,6 +69,15 @@ class WildcardSite implements Site
 	}
 
 
+	/**
+	 * @return array<string, Algorithm>
+	 */
+	public function getHistoricalAlgorithms(): array
+	{
+		return array_slice($this->algorithms, 1);
+	}
+
+
 	public function getRating(): RatingGrade
 	{
 		if (!$this->ratingGrade) {

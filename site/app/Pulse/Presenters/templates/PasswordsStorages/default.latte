@@ -24,6 +24,26 @@
 <meta name="twitter:site" content="@spazef0rze">
 {/define}
 
+{define #algoItem, MichalSpacekCz\Pulse\Passwords\Storage $storage, MichalSpacekCz\Pulse\Passwords\Algorithm $algo, string $detailsLink, string $detailsParam, ?string $noFollow}
+<div class="algo">
+	<strong n:class="$storage->getSearchResult()->isAlgorithmNameMatch($algo) ? search-result">{$algo->getName()}</strong> (<span n:if="$algo->getFrom() && $algo->isFromConfirmed()" title="{$algo->getFrom()|date:'Y-m'}">since {$algo->getFrom()|date:'F Y'}</span>{if $algo->getFrom() && $algo->isFromConfirmed()}, {/if}<span title="{$algo->getLatestDisclosure()->getPublished()|date:'Y-m-d'}">disclosed {$algo->getLatestDisclosure()->getPublished()|date:'F Y'}</span>)
+</div>
+<div class="details">
+	{if $algo->getDisclosures()}
+		<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open, $storage->getSearchResult()->isAlgorithmDisclosureUrlMatch($algo) ? search-result">Details</a></div>
+		<div n:class="expandable, !$isDetail ? hidden">
+			<p n:if="$algo->getNote()">Note: {$algo->getNote()|format}</p>
+			<p n:if="$algo->getParams()">Params: {foreach $algo->getParams() as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
+			<p n:if="$algo->getFullAlgo()">Full algorithm: <code>{$algo->getFullAlgo()}</code></p>
+			<p>Disclosures:</p>
+			<ul n:inner-foreach="$algo->getDisclosures() as $disclosure">
+				<li><small title="{$disclosure->getPublished()|date:'Y-m-d H:i'}">{$disclosure->getPublished()|date:'Y-m-d'}</small> <a href="{$disclosure->getUrl()}" n:attr="rel => $noFollow" n:class="$storage->getSearchResult()->isDisclosureUrlMatch($disclosure) ? search-result">{$disclosure->getType()}</a>{if $disclosure->getArchive()} <sup><a href="{$disclosure->getArchive()}" title="archived">arch</a></sup>{/if}{if $disclosure->getNote()}<small> ({$disclosure->getNote()|format})</small>{/if}</li>
+			</ul>
+		</div>
+	{/if}
+</div>
+{/define}
+
 {define #content}
 <div n:if="!$isDetail" id="search-sort" n:class="inner-container, !$openSearchSort ? hidden">
 	<form n:name="searchSort">
@@ -39,7 +59,7 @@
 	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="!$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span></h2>
 	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))">{$data->getCompany($storage->getCompanyId())->getTradeName()}</span> <small>(<span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span>)</small></h2>
 	{foreach $storage->getSites() as $site}
-		{var $noFollow = ($site->isSecureStorage() ? false : 'nofollow')}
+		{var $noFollow = ($site->isSecureStorage() ? null : 'nofollow')}
 		{if $site instanceof \MichalSpacekCz\Pulse\SpecificSite}
 			{var $detailsLink = 'site'}
 			{var $detailsParam = $site->getAlias()}
@@ -70,27 +90,13 @@
 			<div class="clear"></div>
 		</div>
 		<div class="algo-container">
-		{foreach $site->getAlgorithms() as $algo}
-			{if $iterator->counter === 2}<div><div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open, $storage->getSearchResult()->isDisclosureHistoryMatch() ? search-result">History</a></div><div n:class="history, expandable, !$isDetail ? hidden">{/if}
-				<div class="algo">
-					<strong n:class="$storage->getSearchResult()->isAlgorithmNameMatch($algo) ? search-result">{$algo->getName()}</strong> (<span n:if="$algo->getFrom() && $algo->isFromConfirmed()" title="{$algo->getFrom()|date:'Y-m'}">since {$algo->getFrom()|date:'F Y'}</span>{if $algo->getFrom() && $algo->isFromConfirmed()}, {/if}<span title="{$algo->getLatestDisclosure()->getPublished()|date:'Y-m-d'}">disclosed {$algo->getLatestDisclosure()->getPublished()|date:'F Y'}</span>)
-				</div>
-				<div class="details">
-				{if $algo->getDisclosures()}
-					<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open, $storage->getSearchResult()->isAlgorithmDisclosureUrlMatch($algo) ? search-result">Details</a></div>
-					<div n:class="expandable, !$isDetail ? hidden">
-					<p n:if="$algo->getNote()">Note: {$algo->getNote()|format}</p>
-					<p n:if="$algo->getParams()">Params: {foreach $algo->getParams() as $key => $value}<code>{$key}={$value}</code>{sep}, {/sep}{/foreach}</p>
-					<p n:if="$algo->getFullAlgo()">Full algorithm: <code>{$algo->getFullAlgo()}</code></p>
-					<p>Disclosures:</p>
-					<ul n:inner-foreach="$algo->getDisclosures() as $disclosure">
-						<li><small title="{$disclosure->getPublished()|date:'Y-m-d H:i'}">{$disclosure->getPublished()|date:'Y-m-d'}</small> <a href="{$disclosure->getUrl()}" n:attr="rel => $noFollow" n:class="$storage->getSearchResult()->isDisclosureUrlMatch($disclosure) ? search-result">{$disclosure->getType()}</a>{if $disclosure->getArchive()} <sup><a href="{$disclosure->getArchive()}" title="archived">arch</a></sup>{/if}{if $disclosure->getNote()}<small> ({$disclosure->getNote()|format})</small>{/if}</li>
-					</ul>
-					</div>
-				{/if}
-				</div>
-			{if $iterator->count() > 1 && $iterator->last}</div></div>{/if}
-		{/foreach}
+		{include #algoItem, storage: $storage, algo: $site->getLatestAlgorithm(), detailsLink: $detailsLink, detailsParam: $detailsParam, noFollow: $noFollow}
+		<div n:if="$site->getHistoricalAlgorithms()">
+			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open, $storage->getSearchResult()->isDisclosureHistoryMatch() ? search-result">History</a></div>
+			<div n:class="history, expandable, !$isDetail ? hidden" n:foreach="$site->getHistoricalAlgorithms() as $algo">
+				{include #algoItem, storage: $storage, algo: $algo, detailsLink: $detailsLink, detailsParam: $detailsParam, noFollow: $noFollow}
+			</div>
+		</div>
 		<div>
 			<div><a n:href="$detailsLink $detailsParam" n:class="open-button, $isDetail ? open">Why &quot;{$site->getRating()->name}&quot;?</a></div>
 			<div n:class="expandable, !$isDetail ? hidden">

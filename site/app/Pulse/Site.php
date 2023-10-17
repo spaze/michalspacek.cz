@@ -30,6 +30,12 @@ interface Site
 	public function getLatestAlgorithm(): Algorithm;
 
 
+	/**
+	 * @return array<string, Algorithm>
+	 */
+	public function getHistoricalAlgorithms(): array;
+
+
 	public function getRating(): RatingGrade;
 
 
