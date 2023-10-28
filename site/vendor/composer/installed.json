@@ -1163,17 +1163,17 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v4.1.0",
-            "version_normalized": "4.1.0.0",
+            "version": "v4.1.1",
+            "version_normalized": "4.1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "8b728c622c49b196513c0f95508f2f66342d1e8f"
+                "reference": "d915b7fa643cd0cf6ffe306c25ac5c3db24914a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/8b728c622c49b196513c0f95508f2f66342d1e8f",
-                "reference": "8b728c622c49b196513c0f95508f2f66342d1e8f",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/d915b7fa643cd0cf6ffe306c25ac5c3db24914a4",
+                "reference": "d915b7fa643cd0cf6ffe306c25ac5c3db24914a4",
                 "shasum": ""
             },
             "require": {
@@ -1190,7 +1190,7 @@
             "suggest": {
                 "nikic/php-parser": "to use ClassType::from(withBodies: true) & ClassType::fromCode()"
             },
-            "time": "2023-09-26T12:28:52+00:00",
+            "time": "2023-10-17T08:36:10+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1229,7 +1229,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/php-generator/issues",
-                "source": "https://github.com/nette/php-generator/tree/v4.1.0"
+                "source": "https://github.com/nette/php-generator/tree/v4.1.1"
             },
             "install-path": "../nette/php-generator"
         },
@@ -1434,22 +1434,22 @@
         },
         {
             "name": "nette/security",
-            "version": "v3.1.7",
-            "version_normalized": "3.1.7.0",
+            "version": "v3.1.8",
+            "version_normalized": "3.1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/security.git",
-                "reference": "4c5f0435fe8534ba5a7e2eac595b8a777cc7fff1"
+                "reference": "9b8e5c76b2e738350498470c35a36a6f0d0e38d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/security/zipball/4c5f0435fe8534ba5a7e2eac595b8a777cc7fff1",
-                "reference": "4c5f0435fe8534ba5a7e2eac595b8a777cc7fff1",
+                "url": "https://api.github.com/repos/nette/security/zipball/9b8e5c76b2e738350498470c35a36a6f0d0e38d6",
+                "reference": "9b8e5c76b2e738350498470c35a36a6f0d0e38d6",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^3.2.1 || ~4.0.0",
-                "php": ">=7.2 <8.3"
+                "php": "7.2 - 8.3"
             },
             "conflict": {
                 "nette/di": "<3.0-stable",
@@ -1463,7 +1463,7 @@
                 "phpstan/phpstan-nette": "^1.0",
                 "tracy/tracy": "^2.4"
             },
-            "time": "2023-01-18T05:37:48+00:00",
+            "time": "2023-10-18T17:05:31+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1502,7 +1502,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/security/issues",
-                "source": "https://github.com/nette/security/tree/v3.1.7"
+                "source": "https://github.com/nette/security/tree/v3.1.8"
             },
             "install-path": "../nette/security"
         },
@@ -2088,17 +2088,17 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.38",
-            "version_normalized": "1.10.38.0",
+            "version": "1.10.39",
+            "version_normalized": "1.10.39.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "5302bb402c57f00fb3c2c015bac86e0827e4b691"
+                "reference": "d9dedb0413f678b4d03cbc2279a48f91592c97c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/5302bb402c57f00fb3c2c015bac86e0827e4b691",
-                "reference": "5302bb402c57f00fb3c2c015bac86e0827e4b691",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d9dedb0413f678b4d03cbc2279a48f91592c97c4",
+                "reference": "d9dedb0413f678b4d03cbc2279a48f91592c97c4",
                 "shasum": ""
             },
             "require": {
@@ -2107,7 +2107,7 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "time": "2023-10-06T14:19:14+00:00",
+            "time": "2023-10-17T15:46:26+00:00",
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -2473,12 +2473,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "efd339340c840237fad050f3ea6fd8bbbbfc7ed6"
+                "reference": "85369a784d2c97074c3e3432a510bfcae8eee02e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/efd339340c840237fad050f3ea6fd8bbbbfc7ed6",
-                "reference": "efd339340c840237fad050f3ea6fd8bbbbfc7ed6",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/85369a784d2c97074c3e3432a510bfcae8eee02e",
+                "reference": "85369a784d2c97074c3e3432a510bfcae8eee02e",
                 "shasum": ""
             },
             "conflict": {
@@ -2515,13 +2515,14 @@
                 "azuracast/azuracast": "<0.18.3",
                 "backdrop/backdrop": "<1.24.2",
                 "backpack/crud": "<3.4.9",
+                "bacula-web/bacula-web": "<8.0.0.0-RC2-dev",
                 "badaso/core": "<2.7",
                 "bagisto/bagisto": "<0.1.5",
                 "barrelstrength/sprout-base-email": "<1.2.7",
                 "barrelstrength/sprout-forms": "<3.9",
                 "barryvdh/laravel-translation-manager": "<0.6.2",
                 "barzahlen/barzahlen-php": "<2.0.1",
-                "baserproject/basercms": "<4.7.5",
+                "baserproject/basercms": "<4.8",
                 "bassjobsen/bootstrap-3-typeahead": ">4.0.2",
                 "bigfork/silverstripe-form-capture": ">=3,<3.1.1",
                 "billz/raspap-webgui": "<=2.9.2",
@@ -2580,14 +2581,14 @@
                 "derhansen/sf_event_mgt": "<4.3.1|>=5,<5.1.1",
                 "desperado/xml-bundle": "<=0.1.7",
                 "directmailteam/direct-mail": "<5.2.4",
-                "doctrine/annotations": ">=1,<1.2.7",
-                "doctrine/cache": ">=1,<1.3.2|>=1.4,<1.4.2",
-                "doctrine/common": ">=2,<2.4.3|>=2.5,<2.5.1",
+                "doctrine/annotations": "<1.2.7",
+                "doctrine/cache": "<1.3.2|>=1.4,<1.4.2",
+                "doctrine/common": "<2.4.3|>=2.5,<2.5.1",
                 "doctrine/dbal": ">=2,<2.0.8|>=2.1,<2.1.2|>=3,<3.1.4",
                 "doctrine/doctrine-bundle": "<1.5.2",
                 "doctrine/doctrine-module": "<=0.7.1",
-                "doctrine/mongodb-odm": ">=1,<1.0.2",
-                "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
+                "doctrine/mongodb-odm": "<1.0.2",
+                "doctrine/mongodb-odm-bundle": "<3.0.1",
                 "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1|>=2.8.3,<2.8.4",
                 "dolibarr/dolibarr": "<18",
                 "dompdf/dompdf": "<2.0.2|==2.0.2",
@@ -2603,6 +2604,7 @@
                 "enshrined/svg-sanitize": "<0.15",
                 "erusev/parsedown": "<1.7.2",
                 "ether/logs": "<3.0.4",
+                "evolutioncms/evolution": "<=3.2.3",
                 "exceedone/exment": "<4.4.3|>=5,<5.0.3",
                 "exceedone/laravel-admin": "<2.2.3|==3",
                 "ezsystems/demobundle": ">=5.4,<5.4.6.1-dev",
@@ -2618,7 +2620,7 @@
                 "ezsystems/ezplatform-richtext": ">=2.3,<2.3.7.1-dev",
                 "ezsystems/ezplatform-user": ">=1,<1.0.1",
                 "ezsystems/ezpublish-kernel": "<6.13.8.2-dev|>=7,<7.5.30",
-                "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.6,<=2019.03.5.1",
+                "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.06,<=2019.03.5.1",
                 "ezsystems/platform-ui-assets-bundle": ">=4.2,<4.2.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1-dev|>=2.5,<2.5.15",
                 "ezyang/htmlpurifier": "<4.1.1",
@@ -2756,7 +2758,7 @@
                 "magento/magento1ee": ">=1,<1.14.4.3-dev",
                 "magento/product-community-edition": ">=2,<2.2.10|>=2.3,<2.3.2.0-patch2",
                 "maikuolan/phpmussel": ">=1,<1.6",
-                "mantisbt/mantisbt": "<=2.25.5",
+                "mantisbt/mantisbt": "<=2.25.7",
                 "marcwillmann/turn": "<0.3.3",
                 "matyhtf/framework": "<3.0.6",
                 "mautic/core": "<4.3",
@@ -2776,6 +2778,7 @@
                 "mongodb/mongodb": ">=1,<1.9.2",
                 "monolog/monolog": ">=1.8,<1.12",
                 "moodle/moodle": "<4.2.0.0-RC2-dev|==4.2",
+                "mos/cimage": "<0.7.19",
                 "movim/moxl": ">=0.8,<=0.10",
                 "mpdf/mpdf": "<=7.1.7",
                 "mustache/mustache": ">=2,<2.14.1",
@@ -2791,6 +2794,7 @@
                 "nette/application": ">=2,<2.0.19|>=2.1,<2.1.13|>=2.2,<2.2.10|>=2.3,<2.3.14|>=2.4,<2.4.16|>=3,<3.0.6",
                 "nette/nette": ">=2,<2.0.19|>=2.1,<2.1.13",
                 "nilsteampassnet/teampass": "<3.0.10",
+                "nonfiction/nterchange": "<4.1.1",
                 "notrinos/notrinos-erp": "<=0.7",
                 "noumo/easyii": "<=0.9",
                 "nukeviet/nukeviet": "<4.5.02",
@@ -2802,6 +2806,7 @@
                 "october/october": "<=3.4.4",
                 "october/rain": "<1.0.472|>=1.1,<1.1.2",
                 "october/system": "<1.0.476|>=1.1,<1.1.12|>=2,<2.2.34|>=3,<3.0.66",
+                "omeka/omeka-s": "<4.0.3",
                 "onelogin/php-saml": "<2.10.4",
                 "oneup/uploader-bundle": "<1.9.3|>=2,<2.1.5",
                 "open-web-analytics/open-web-analytics": "<1.7.4",
@@ -2908,7 +2913,7 @@
                 "silverstripe/comments": ">=1.3,<1.9.99|>=2,<2.9.99|>=3,<3.1.1",
                 "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
                 "silverstripe/framework": "<4.13.14|>=5,<5.0.13",
-                "silverstripe/graphql": "<3.5.2|>=4.0.0.0-alpha1,<4.0.0.0-alpha2|>=4.1.1,<4.1.2|>=4.2.2,<4.2.3",
+                "silverstripe/graphql": "<3.8.2|>=4,<4.1.3|>=4.2,<4.2.5|>=4.3,<4.3.4|>=5,<5.0.3",
                 "silverstripe/hybridsessions": ">=1,<2.4.1|>=2.5,<2.5.1",
                 "silverstripe/recipe-cms": ">=4.5,<4.5.3",
                 "silverstripe/registry": ">=2.1,<2.1.2|>=2.2,<2.2.1",
@@ -3001,7 +3006,7 @@
                 "thinkcmf/thinkcmf": "<=5.1.7",
                 "thorsten/phpmyfaq": "<3.2.0.0-beta2",
                 "tikiwiki/tiki-manager": "<=17.1",
-                "tinymce/tinymce": "<5.10.7|>=6,<6.3.1",
+                "tinymce/tinymce": "<5.10.8|>=6,<6.7.1",
                 "tinymighty/wiki-seo": "<1.2.2",
                 "titon/framework": "<9.9.99",
                 "tobiasbg/tablepress": "<=2.0.0.0-RC1",
@@ -3074,7 +3079,7 @@
                 "yourls/yourls": "<=1.8.2",
                 "zencart/zencart": "<=1.5.7.0-beta",
                 "zendesk/zendesk_api_client_php": "<2.2.11",
-                "zendframework/zend-cache": ">=2.4,<2.4.8|>=2.5,<2.5.3",
+                "zendframework/zend-cache": "<2.4.8|>=2.5,<2.5.3",
                 "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
                 "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
                 "zendframework/zend-db": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.10|>=2.3,<2.3.5",
@@ -3106,11 +3111,11 @@
                 "zenstruck/collection": "<0.2.1",
                 "zetacomponents/mail": "<1.8.2",
                 "zf-commons/zfc-user": "<1.2.2",
-                "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
+                "zfcampus/zf-apigility-doctrine": "<1.0.3",
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<6.0.22"
             },
-            "time": "2023-10-11T21:04:21+00:00",
+            "time": "2023-10-26T21:04:25+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
@@ -3270,17 +3275,17 @@
         },
         {
             "name": "spaze/csp-config",
-            "version": "v4.0.0",
-            "version_normalized": "4.0.0.0",
+            "version": "v4.0.1",
+            "version_normalized": "4.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/csp-config.git",
-                "reference": "f19c06347389a4b03558e0d3b6b61e1b4107c250"
+                "reference": "a1b5cc51b6b10d9d18a5275bc01170d388420c78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/csp-config/zipball/f19c06347389a4b03558e0d3b6b61e1b4107c250",
-                "reference": "f19c06347389a4b03558e0d3b6b61e1b4107c250",
+                "url": "https://api.github.com/repos/spaze/csp-config/zipball/a1b5cc51b6b10d9d18a5275bc01170d388420c78",
+                "reference": "a1b5cc51b6b10d9d18a5275bc01170d388420c78",
                 "shasum": ""
             },
             "require": {
@@ -3300,7 +3305,7 @@
             "suggest": {
                 "spaze/sri-macros": "For script tags with automatically added nonces, and Subresource Integrity hashes, too"
             },
-            "time": "2023-06-12T21:50:30+00:00",
+            "time": "2023-10-28T14:01:59+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3322,23 +3327,23 @@
             "description": "Build Content Security Policy from a config file",
             "support": {
                 "issues": "https://github.com/spaze/csp-config/issues",
-                "source": "https://github.com/spaze/csp-config/tree/v4.0.0"
+                "source": "https://github.com/spaze/csp-config/tree/v4.0.1"
             },
             "install-path": "../spaze/csp-config"
         },
         {
             "name": "spaze/encryption",
-            "version": "v1.0.1",
-            "version_normalized": "1.0.1.0",
+            "version": "v1.0.2",
+            "version_normalized": "1.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/encryption.git",
-                "reference": "a7634082951fdd6e9124204e2129ba956d879e96"
+                "reference": "5d50c09281257977ed94600d37f50cefd536ec1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/encryption/zipball/a7634082951fdd6e9124204e2129ba956d879e96",
-                "reference": "a7634082951fdd6e9124204e2129ba956d879e96",
+                "url": "https://api.github.com/repos/spaze/encryption/zipball/5d50c09281257977ed94600d37f50cefd536ec1d",
+                "reference": "5d50c09281257977ed94600d37f50cefd536ec1d",
                 "shasum": ""
             },
             "require": {
@@ -3353,7 +3358,7 @@
                 "phpstan/phpstan": "^1.4",
                 "spaze/coding-standard": "^0.0"
             },
-            "time": "2022-11-27T01:45:08+00:00",
+            "time": "2023-09-20T02:09:18+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3375,23 +3380,23 @@
             "description": "Various encryption helpers, uses Halite (which uses Sodium) for cryptography",
             "support": {
                 "issues": "https://github.com/spaze/encryption/issues",
-                "source": "https://github.com/spaze/encryption/tree/v1.0.1"
+                "source": "https://github.com/spaze/encryption/tree/v1.0.2"
             },
             "install-path": "../spaze/encryption"
         },
         {
             "name": "spaze/feed-exports",
-            "version": "v1.0.0",
-            "version_normalized": "1.0.0.0",
+            "version": "v1.0.1",
+            "version_normalized": "1.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/feed-exports.git",
-                "reference": "df3a16e56822ae7f2bf32a590f2cdda7d6ab6c84"
+                "reference": "2fb00867117812966afb82932dd043fe116c7c7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/feed-exports/zipball/df3a16e56822ae7f2bf32a590f2cdda7d6ab6c84",
-                "reference": "df3a16e56822ae7f2bf32a590f2cdda7d6ab6c84",
+                "url": "https://api.github.com/repos/spaze/feed-exports/zipball/2fb00867117812966afb82932dd043fe116c7c7e",
+                "reference": "2fb00867117812966afb82932dd043fe116c7c7e",
                 "shasum": ""
             },
             "require": {
@@ -3406,7 +3411,7 @@
                 "phpstan/phpstan": "^1.9",
                 "spaze/coding-standard": "^1.3"
             },
-            "time": "2022-11-27T00:49:26+00:00",
+            "time": "2023-09-20T01:49:23+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3428,7 +3433,7 @@
             "description": "Atom feed Response and related objects for Nette framework",
             "support": {
                 "issues": "https://github.com/spaze/feed-exports/issues",
-                "source": "https://github.com/spaze/feed-exports/tree/v1.0.0"
+                "source": "https://github.com/spaze/feed-exports/tree/v1.0.1"
             },
             "install-path": "../spaze/feed-exports"
         },
@@ -3496,17 +3501,17 @@
         },
         {
             "name": "spaze/nonce-generator",
-            "version": "v4.0.0",
-            "version_normalized": "4.0.0.0",
+            "version": "v4.0.1",
+            "version_normalized": "4.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/nonce-generator.git",
-                "reference": "25d969ad6dd7f894c22f2123f3ee4844e77e12c2"
+                "reference": "74de6707c8858cd5c43104baef84f27d2a940b04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/25d969ad6dd7f894c22f2123f3ee4844e77e12c2",
-                "reference": "25d969ad6dd7f894c22f2123f3ee4844e77e12c2",
+                "url": "https://api.github.com/repos/spaze/nonce-generator/zipball/74de6707c8858cd5c43104baef84f27d2a940b04",
+                "reference": "74de6707c8858cd5c43104baef84f27d2a940b04",
                 "shasum": ""
             },
             "require": {
@@ -3526,7 +3531,7 @@
                 "spaze/csp-config": "Build and send Content Security Policy header, possibly including nonce, if enabled",
                 "spaze/sri-macros": "For script tags with automatically added Content Security Policy nonces, and Subresource Integrity hashes, too"
             },
-            "time": "2023-05-04T15:14:26+00:00",
+            "time": "2023-09-20T01:39:26+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3548,23 +3553,23 @@
             "description": "Content Security Policy nonce generator",
             "support": {
                 "issues": "https://github.com/spaze/nonce-generator/issues",
-                "source": "https://github.com/spaze/nonce-generator/tree/v4.0.0"
+                "source": "https://github.com/spaze/nonce-generator/tree/v4.0.1"
             },
             "install-path": "../spaze/nonce-generator"
         },
         {
             "name": "spaze/phpinfo",
-            "version": "v1.0.0",
-            "version_normalized": "1.0.0.0",
+            "version": "v1.0.1",
+            "version_normalized": "1.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpinfo.git",
-                "reference": "85cb39b71ec564408810ebc69b8b7da1c1022277"
+                "reference": "ef9cbbc47b4b236bb1e2b88e3b8fc7e451e55f7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/85cb39b71ec564408810ebc69b8b7da1c1022277",
-                "reference": "85cb39b71ec564408810ebc69b8b7da1c1022277",
+                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/ef9cbbc47b4b236bb1e2b88e3b8fc7e451e55f7a",
+                "reference": "ef9cbbc47b4b236bb1e2b88e3b8fc7e451e55f7a",
                 "shasum": ""
             },
             "require": {
@@ -3577,7 +3582,7 @@
                 "phpstan/phpstan": "^1.9",
                 "spaze/coding-standard": "^1.3"
             },
-            "time": "2022-11-26T19:20:29+00:00",
+            "time": "2023-09-20T01:32:46+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3603,23 +3608,23 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpinfo/issues",
-                "source": "https://github.com/spaze/phpinfo/tree/v1.0.0"
+                "source": "https://github.com/spaze/phpinfo/tree/v1.0.1"
             },
             "install-path": "../spaze/phpinfo"
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v2.16.0",
-            "version_normalized": "2.16.0.0",
+            "version": "v2.16.1",
+            "version_normalized": "2.16.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "c7a80cc9747e6307bfa6f5ea88ed3f9b1804790c"
+                "reference": "1500f90ff6a705009731cc14e50d4faf2d202bf3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/c7a80cc9747e6307bfa6f5ea88ed3f9b1804790c",
-                "reference": "c7a80cc9747e6307bfa6f5ea88ed3f9b1804790c",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/1500f90ff6a705009731cc14e50d4faf2d202bf3",
+                "reference": "1500f90ff6a705009731cc14e50d4faf2d202bf3",
                 "shasum": ""
             },
             "require": {
@@ -3635,7 +3640,7 @@
                 "spaze/coding-standard": "^1.7",
                 "symfony/polyfill-php80": "^1.27"
             },
-            "time": "2023-07-26T11:37:27+00:00",
+            "time": "2023-10-28T15:29:27+00:00",
             "type": "phpstan-extension",
             "extra": {
                 "phpstan": {
@@ -3667,7 +3672,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.16.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.16.1"
             },
             "funding": [
                 {
@@ -3722,17 +3727,17 @@
         },
         {
             "name": "spaze/sri-macros",
-            "version": "v2.2.0",
-            "version_normalized": "2.2.0.0",
+            "version": "v2.2.1",
+            "version_normalized": "2.2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "6efca8831b00e1f9234c72118dae395fc20239cc"
+                "reference": "efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/6efca8831b00e1f9234c72118dae395fc20239cc",
-                "reference": "6efca8831b00e1f9234c72118dae395fc20239cc",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c",
+                "reference": "efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c",
                 "shasum": ""
             },
             "require": {
@@ -3752,7 +3757,7 @@
                 "spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
                 "spaze/nonce-generator": "Allows to add nonce attribute to script tags automatically"
             },
-            "time": "2023-09-12T17:16:57+00:00",
+            "time": "2023-09-20T01:00:06+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3774,7 +3779,7 @@
             "description": "Subresource Integrity macros for Latte template engine",
             "support": {
                 "issues": "https://github.com/spaze/sri-macros/issues",
-                "source": "https://github.com/spaze/sri-macros/tree/v2.2.0"
+                "source": "https://github.com/spaze/sri-macros/tree/v2.2.1"
             },
             "install-path": "../spaze/sri-macros"
         },
@@ -3895,17 +3900,17 @@
         },
         {
             "name": "symfony/cache",
-            "version": "v6.3.5",
-            "version_normalized": "6.3.5.0",
+            "version": "v6.3.6",
+            "version_normalized": "6.3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "6c1a3ea078c4d88ee892530945df63a87981b2da"
+                "reference": "84aff8d948d6292d2b5a01ac622760be44dddc72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/6c1a3ea078c4d88ee892530945df63a87981b2da",
-                "reference": "6c1a3ea078c4d88ee892530945df63a87981b2da",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/84aff8d948d6292d2b5a01ac622760be44dddc72",
+                "reference": "84aff8d948d6292d2b5a01ac622760be44dddc72",
                 "shasum": ""
             },
             "require": {
@@ -3914,7 +3919,7 @@
                 "psr/log": "^1.1|^2|^3",
                 "symfony/cache-contracts": "^2.5|^3",
                 "symfony/service-contracts": "^2.5|^3",
-                "symfony/var-exporter": "^6.2.10"
+                "symfony/var-exporter": "^6.3.6"
             },
             "conflict": {
                 "doctrine/dbal": "<2.13.1",
@@ -3929,7 +3934,7 @@
             },
             "require-dev": {
                 "cache/integration-tests": "dev-master",
-                "doctrine/dbal": "^2.13.1|^3.0",
+                "doctrine/dbal": "^2.13.1|^3|^4",
                 "predis/predis": "^1.1|^2.0",
                 "psr/simple-cache": "^1.0|^2.0|^3.0",
                 "symfony/config": "^5.4|^6.0",
@@ -3939,7 +3944,7 @@
                 "symfony/messenger": "^5.4|^6.0",
                 "symfony/var-dumper": "^5.4|^6.0"
             },
-            "time": "2023-09-26T15:48:55+00:00",
+            "time": "2023-10-17T14:44:58+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3974,7 +3979,7 @@
                 "psr6"
             ],
             "support": {
-                "source": "https://github.com/symfony/cache/tree/v6.3.5"
+                "source": "https://github.com/symfony/cache/tree/v6.3.6"
             },
             "funding": [
                 {
@@ -4372,17 +4377,17 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v6.3.3",
-            "version_normalized": "6.3.3.0",
+            "version": "v6.3.6",
+            "version_normalized": "6.3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "3ed078c54bc98bbe4414e1e9b2d5e85ed5a5c8bd"
+                "reference": "869b26c7a9d4b8a48afdd77ab36031909c87e3a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/3ed078c54bc98bbe4414e1e9b2d5e85ed5a5c8bd",
-                "reference": "3ed078c54bc98bbe4414e1e9b2d5e85ed5a5c8bd",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/869b26c7a9d4b8a48afdd77ab36031909c87e3a2",
+                "reference": "869b26c7a9d4b8a48afdd77ab36031909c87e3a2",
                 "shasum": ""
             },
             "require": {
@@ -4419,7 +4424,7 @@
                 "symfony/service-contracts": "^2.5|^3",
                 "symfony/yaml": "^5.4|^6.0"
             },
-            "time": "2023-07-31T07:08:24+00:00",
+            "time": "2023-10-17T11:32:53+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4450,7 +4455,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v6.3.3"
+                "source": "https://github.com/symfony/translation/tree/v6.3.6"
             },
             "funding": [
                 {
@@ -4551,17 +4556,17 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v6.3.4",
-            "version_normalized": "6.3.4.0",
+            "version": "v6.3.6",
+            "version_normalized": "6.3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "df1f8aac5751871b83d30bf3e2c355770f8f0691"
+                "reference": "374d289c13cb989027274c86206ddc63b16a2441"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/df1f8aac5751871b83d30bf3e2c355770f8f0691",
-                "reference": "df1f8aac5751871b83d30bf3e2c355770f8f0691",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/374d289c13cb989027274c86206ddc63b16a2441",
+                "reference": "374d289c13cb989027274c86206ddc63b16a2441",
                 "shasum": ""
             },
             "require": {
@@ -4570,7 +4575,7 @@
             "require-dev": {
                 "symfony/var-dumper": "^5.4|^6.0"
             },
-            "time": "2023-08-16T18:14:47+00:00",
+            "time": "2023-10-13T09:16:49+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4608,7 +4613,7 @@
                 "serialize"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-exporter/tree/v6.3.4"
+                "source": "https://github.com/symfony/var-exporter/tree/v6.3.6"
             },
             "funding": [
                 {
@@ -4702,12 +4707,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "138b2d7b85341f5db854b431c6d027b3b65b075e"
+                "reference": "86bdba4aa0f707d3f125933931d3df6e5c7aad79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/138b2d7b85341f5db854b431c6d027b3b65b075e",
-                "reference": "138b2d7b85341f5db854b431c6d027b3b65b075e",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/86bdba4aa0f707d3f125933931d3df6e5c7aad79",
+                "reference": "86bdba4aa0f707d3f125933931d3df6e5c7aad79",
                 "shasum": ""
             },
             "require": {
@@ -4728,7 +4733,7 @@
                 "phpstan/phpstan": "^1.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
-            "time": "2023-10-16T21:38:02+00:00",
+            "time": "2023-10-16T21:54:18+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {

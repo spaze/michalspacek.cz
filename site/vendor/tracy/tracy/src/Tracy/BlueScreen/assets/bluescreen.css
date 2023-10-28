@@ -330,6 +330,7 @@ html.tracy-bs-visible body {
 
 #tracy-bs .tracy-callstack {
 	display: grid;
+	overflow: auto;
 	grid-template-columns: max-content 1fr;
 	row-gap: calc(.5 * var(--tracy-space));
 }
