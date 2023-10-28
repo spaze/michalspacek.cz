@@ -87,29 +87,21 @@ final class Helpers
 				foreach (explode('.', $part) as $key) {
 					if (is_array($val) && array_key_exists($key, $val)) {
 						$val = $val[$key];
-						if ($val instanceof DynamicParameter || $val instanceof Statement) {
-							$val = '$this->getParameter';
-							foreach (explode('.', $part) as $i => $key) {
-								$key = var_export($key, true);
-								$val .= $i ? "[$key]" : "($key)";
-							}
-							$val = new DynamicParameter($val);
-							break;
+						if ($recursive) {
+							$val = self::expand($val, $params, (is_array($recursive) ? $recursive : []) + [$part => 1]);
 						}
+					} elseif ($val instanceof DynamicParameter) {
+						$val = new DynamicParameter($val . '[' . var_export($key, true) . ']');
 					} else {
 						throw new Nette\InvalidArgumentException(sprintf("Missing parameter '%s'.", $part));
 					}
-				}
-
-				if ($recursive) {
-					$val = self::expand($val, $params, (is_array($recursive) ? $recursive : []) + [$part => 1]);
 				}
 
 				if (strlen($part) + 2 === strlen($var)) {
 					return $val;
 				}
 
-				if ($val instanceof DynamicParameter) {
+				if ($val instanceof DynamicParameter || $val instanceof Statement) {
 					$php = true;
 				} elseif (!is_scalar($val)) {
 					throw new Nette\InvalidArgumentException(sprintf("Unable to concatenate non-scalar parameter '%s' into '%s'.", $part, $var));
@@ -119,17 +111,9 @@ final class Helpers
 			}
 		}
 
-		if ($php) {
-			$res = array_filter($res, function ($val): bool { return $val !== ''; });
-			$res = array_map(function ($val): string {
-				return $val instanceof DynamicParameter
-					? (string) $val
-					: var_export((string) $val, true);
-			}, $res);
-			return new DynamicParameter(implode(' . ', $res));
-		}
-
-		return implode('', $res);
+		return $php
+			? new Statement('::implode', ['', $res])
+			: implode($res);
 	}
 
 
