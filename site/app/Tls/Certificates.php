@@ -37,11 +37,11 @@ class Certificates
 	public function authenticate(string $user, string $key): void
 	{
 		if (!isset($this->users[$user])) {
-			throw new AuthenticationException('Unknown user', Authenticator::IDENTITY_NOT_FOUND);
+			throw new AuthenticationException('Unknown user', Authenticator::IdentityNotFound);
 		}
 
 		if (!hash_equals($this->users[$user], hash('sha512', $key))) {
-			throw new AuthenticationException('Invalid key', Authenticator::INVALID_CREDENTIAL);
+			throw new AuthenticationException('Invalid key', Authenticator::InvalidCredential);
 		}
 	}
 
