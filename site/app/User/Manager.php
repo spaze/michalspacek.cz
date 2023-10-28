@@ -122,19 +122,19 @@ class Manager implements Authenticator
 			$username,
 		);
 		if (!$user) {
-			throw new AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
+			throw new AuthenticationException('The username is incorrect.', self::IdentityNotFound);
 		}
 		$userId = (int)$user->userId;
 		try {
 			$hash = $this->passwordEncryption->decrypt((string)$user->password);
 			if (!$this->passwords->verify($password, $hash)) {
-				throw new AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
+				throw new AuthenticationException('The password is incorrect.', self::InvalidCredential);
 			} elseif ($this->passwords->needsRehash($hash)) {
 				$this->updatePassword($userId, $password);
 			}
 		} catch (HaliteAlert $e) {
 			Debugger::log($e);
-			throw new AuthenticationException('Oops... Something went wrong.', self::FAILURE);
+			throw new AuthenticationException('Oops... Something went wrong.', self::Failure);
 		}
 		return $userId;
 	}
