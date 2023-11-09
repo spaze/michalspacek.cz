@@ -29,6 +29,8 @@ input, select, textarea, button {
 }
 input[type=submit], button { background-color: #224E34; }
 input[type=submit]:hover, button:hover { background-color: #2A6040; }
+.container.blog table th { background-color: hsl(204 64% 14%); }
+.container.blog table tbody tr:nth-child(even) { background-color: hsl(204 44% 14%); }
 small, .small, .column-content .figure p { color: #A9A9A9; }
 small a, .small a { color: #C9C9C9 !important; }
 blockquote, .indent { border-left-color: #2B2B2B; }

@@ -103,6 +103,14 @@ button:disabled { cursor: not-allowed; }
 	word-break: break-word;
 }
 .container.blog { max-width: 1020px; }
+.container.blog table {
+	margin-right: auto;
+	margin-left: auto;
+	text-align: left;
+}
+.container.blog table th { background-color: hsl(204 64% 97%); }
+.container.blog table tbody tr:nth-child(even) { background-color: hsl(204 44% 97%); }
+.container.blog div:has(table) { overflow-x: auto; }
 .container.admin { max-width: 1200px; }
 .container.talk { max-width: 1100px; }
 #header {
