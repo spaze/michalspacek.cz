@@ -43,6 +43,7 @@ class Talks
 				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
+				t.slides_note AS slidesNote,
 				t.video_href AS videoHref,
 				t.video_thumbnail AS videoThumbnail,
 				t.video_thumbnail_alternative AS videoThumbnailAlternative,
@@ -103,6 +104,7 @@ class Talks
 				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
+				t.slides_note AS slidesNote,
 				t.video_href AS videoHref,
 				t.video_thumbnail AS videoThumbnail,
 				t.video_thumbnail_alternative AS videoThumbnailAlternative,
@@ -153,6 +155,7 @@ class Talks
 				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
+				t.slides_note AS slidesNote,
 				t.video_href AS videoHref,
 				t.video_thumbnail AS videoThumbnail,
 				t.video_thumbnail_alternative AS videoThumbnailAlternative,
@@ -203,6 +206,7 @@ class Talks
 				t.slides_href IS NOT NULL OR EXISTS (SELECT * FROM talk_slides s WHERE s.key_talk = COALESCE(t.key_talk_slides, t.id_talk)) AS hasSlides,
 				t.slides_href AS slidesHref,
 				t.slides_embed AS slidesEmbed,
+				t.slides_note AS slidesNote,
 				t.video_href AS videoHref,
 				t.video_thumbnail AS videoThumbnail,
 				t.video_thumbnail_alternative AS videoThumbnailAlternative,
@@ -275,6 +279,7 @@ class Talks
 		?int $filenamesTalk,
 		?string $slidesHref,
 		?string $slidesEmbed,
+		?string $slidesNote,
 		?string $videoHref,
 		?string $videoThumbnail,
 		?string $videoThumbnailAlternative,
@@ -300,6 +305,7 @@ class Talks
 			$filenamesTalk,
 			$slidesHref,
 			$slidesEmbed,
+			$slidesNote,
 			$videoHref,
 			$videoThumbnail,
 			$videoThumbnailAlternative,
@@ -334,6 +340,7 @@ class Talks
 		?int $filenamesTalk,
 		?string $slidesHref,
 		?string $slidesEmbed,
+		?string $slidesNote,
 		?string $videoHref,
 		?string $videoThumbnail,
 		?string $videoThumbnailAlternative,
@@ -359,6 +366,7 @@ class Talks
 			$filenamesTalk,
 			$slidesHref,
 			$slidesEmbed,
+			$slidesNote,
 			$videoHref,
 			$videoThumbnail,
 			$videoThumbnailAlternative,
@@ -386,7 +394,7 @@ class Talks
 
 
 	/**
-	 * @return array{key_locale:int, key_translation_group:int|null, action:string|null, title:string, description:string|null, date:DateTime, duration:int|null, href:string|null, key_talk_slides:int|null, key_talk_filenames:int|null, slides_href:string|null, slides_embed:string|null, video_href:string|null, video_thumbnail:string|null, video_thumbnail_alternative:string|null, video_embed:string|null, event:string, event_href:string|null, og_image:string|null, transcript:string|null, favorite:string|null, key_superseded_by:int|null, publish_slides:bool}
+	 * @return array{key_locale:int, key_translation_group:int|null, action:string|null, title:string, description:string|null, date:DateTime, duration:int|null, href:string|null, key_talk_slides:int|null, key_talk_filenames:int|null, slides_href:string|null, slides_embed:string|null, slides_note:string|null, video_href:string|null, video_thumbnail:string|null, video_thumbnail_alternative:string|null, video_embed:string|null, event:string, event_href:string|null, og_image:string|null, transcript:string|null, favorite:string|null, key_superseded_by:int|null, publish_slides:bool}
 	 * @throws TalkDateTimeException
 	 */
 	private function getAddUpdateParams(
@@ -402,6 +410,7 @@ class Talks
 		?int $filenamesTalk,
 		?string $slidesHref,
 		?string $slidesEmbed,
+		?string $slidesNote,
 		?string $videoHref,
 		?string $videoThumbnail,
 		?string $videoThumbnailAlternative,
@@ -432,6 +441,7 @@ class Talks
 			'key_talk_filenames' => (empty($filenamesTalk) ? null : $filenamesTalk),
 			'slides_href' => (empty($slidesHref) ? null : $slidesHref),
 			'slides_embed' => (empty($slidesEmbed) ? null : $slidesEmbed),
+			'slides_note' => (empty($slidesNote) ? null : $slidesNote),
 			'video_href' => (empty($videoHref) ? null : $videoHref),
 			'video_thumbnail' => $videoThumbnail,
 			'video_thumbnail_alternative' => $videoThumbnailAlternative,

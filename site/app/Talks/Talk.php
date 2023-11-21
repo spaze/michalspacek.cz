@@ -27,6 +27,8 @@ class Talk
 		private readonly bool $hasSlides,
 		private readonly ?string $slidesHref,
 		private readonly ?string $slidesEmbed,
+		private readonly ?Html $slidesNote,
+		private readonly ?string $slidesNoteTexy,
 		private readonly Video $video,
 		private readonly ?string $videoEmbed,
 		private readonly Html $event,
@@ -139,6 +141,18 @@ class Talk
 	public function getSlidesEmbed(): ?string
 	{
 		return $this->slidesEmbed;
+	}
+
+
+	public function getSlidesNote(): ?Html
+	{
+		return $this->slidesNote;
+	}
+
+
+	public function getSlidesNoteTexy(): ?string
+	{
+		return $this->slidesNoteTexy;
 	}
 
 

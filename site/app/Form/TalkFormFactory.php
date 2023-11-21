@@ -70,6 +70,9 @@ class TalkFormFactory
 		$form->addText('slidesEmbed', 'Embed odkaz na slajdy:')
 			->setRequired(false)
 			->addRule($form::MaxLength, 'Maximální délka embed odkazu na slajdy je %d znaků', 200);
+		$form->addTextArea('slidesNote', 'Poznámka ke slajdům:')
+			->setRequired(false)
+			->addRule($form::MaxLength, 'Maximální délka poznámek je %d znaků', 65535);
 		$form->addText('videoHref', 'Odkaz na video:')
 			->setRequired(false)
 			->addRule($form::MaxLength, 'Maximální délka odkazu na video je %d znaků', 200);
@@ -124,6 +127,7 @@ class TalkFormFactory
 					$values->filenamesTalk,
 					$values->slidesHref,
 					$values->slidesEmbed,
+					$values->slidesNote,
 					$values->videoHref,
 					$videoThumbnailBasename ?? ($removeVideoThumbnail ? null : $thumbnailFilename),
 					$videoThumbnailBasenameAlternative ?? ($removeVideoThumbnailAlternative ? null : $thumbnailAlternativeFilename),
@@ -158,6 +162,7 @@ class TalkFormFactory
 					$values->filenamesTalk,
 					$values->slidesHref,
 					$values->slidesEmbed,
+					$values->slidesNote,
 					$values->videoHref,
 					$videoThumbnailBasename,
 					$videoThumbnailBasenameAlternative,
@@ -198,6 +203,7 @@ class TalkFormFactory
 			'filenamesTalk' => $talk->getFilenamesTalkId(),
 			'slidesHref' => $talk->getSlidesHref(),
 			'slidesEmbed' => $talk->getSlidesEmbed(),
+			'slidesNote' => $talk->getSlidesNoteTexy(),
 			'videoHref' => $talk->getVideo()->getVideoHref(),
 			'videoEmbed' => $talk->getVideoEmbed(),
 			'event' => $talk->getEventTexy(),

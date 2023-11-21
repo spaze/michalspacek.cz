@@ -34,7 +34,8 @@
 	<small n:if="$talk->getDuration() || $slides || $talk->getVideo()->getVideoHref()">({if $talk->getDuration()}{_messages.talks.duration|format:$talk->getDuration()}{if $slides || $talk->getVideo()->getVideoHref()}, {/if}{/if}{if $slides}<a href="#{_html.id.slides}">{_messages.talks.slidescount, count($slides)}</a>{if $talk->getVideo()->getVideoHref()}, {/if}{/if}{if $talk->getVideo()->getVideoHref()}<a href="#{_html.id.recording}">{_messages.label.lowercasevideo}</a>{/if})</small>
 </p>
 
-<h2 n:if="$talk->isHasSlides()" id="{_html.id.slides}">{_messages.label.slides}</h2>
+<h2 n:if="$talk->isHasSlides() || $talk->getSlidesNote()" id="{_html.id.slides}">{_messages.label.slides}</h2>
+{if $talk->getSlidesNote()}{$talk->getSlidesNote()}{/if}
 {if $talk->getSlidesHref()}
 	<p><span title="{_messages.label.slides}">{icon images}</span> <a href="{$talk->getSlidesHref()}">{$slidesPlatform ?? $talk->getSlidesHref()}</a></p>
 	{if $talk->getTranscript()}

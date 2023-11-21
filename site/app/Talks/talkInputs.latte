@@ -40,6 +40,9 @@
 			<th class="align-top">{label slidesEmbed /}</th><td>{input slidesEmbed}<br><small><em>deprecated</em></small></td>
 		</tr>
 		<tr>
+			<th class="align-top">{label slidesNote /}</th><td>{input slidesNote}</td>
+		</tr>
+		<tr>
 			<th>{label videoHref /}</th><td>{input videoHref}</td>
 		</tr>
 		{include "../Media/Thumbnails/videoThumbnailsInputs.latte", video: $talk?->getVideo(), videoThumbnailWidth: $videoThumbnailWidth, videoThumbnailHeight: $videoThumbnailHeight}

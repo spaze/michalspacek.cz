@@ -50,6 +50,8 @@ class TalkFactory
 			(bool)$row->hasSlides,
 			$row->slidesHref,
 			$row->slidesEmbed,
+			$row->slidesNote ? $this->texyFormatter->formatBlock($row->slidesNote) : null,
+			$row->slidesNote,
 			$this->videoFactory->createFromDatabaseRow($row),
 			$row->videoEmbed,
 			$this->texyFormatter->format($row->event),

@@ -63,6 +63,8 @@ class TalkLocaleUrlsTest extends TestCase
 			false,
 			null,
 			null,
+			null,
+			null,
 			$video,
 			null,
 			Html::fromText('event'),
