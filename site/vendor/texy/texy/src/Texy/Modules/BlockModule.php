@@ -33,13 +33,13 @@ final class BlockModule extends Texy\Module
 		$texy->allowed['block/comment'] = true;
 		$texy->allowed['block/div'] = true;
 
-		$texy->addHandler('block', [$this, 'solve']);
-		$texy->addHandler('beforeBlockParse', [$this, 'beforeBlockParse']);
+		$texy->addHandler('block', $this->solve(...));
+		$texy->addHandler('beforeBlockParse', $this->beforeBlockParse(...));
 
 		$texy->registerBlockPattern(
-			[$this, 'pattern'],
+			$this->pattern(...),
 			'#^/--++ *+(.*)' . Texy\Patterns::MODIFIER_H . '?$((?:\n(?0)|\n.*+)*)(?:\n\\\\--.*$|\z)#mUi',
-			'blocks'
+			'blocks',
 		);
 	}
 
@@ -47,13 +47,13 @@ final class BlockModule extends Texy\Module
 	/**
 	 * Single block pre-processing.
 	 */
-	public function beforeBlockParse(Texy\BlockParser $parser, string &$text): void
+	private function beforeBlockParse(Texy\BlockParser $parser, string &$text): void
 	{
 		// autoclose exclusive blocks
 		$text = Texy\Regexp::replace(
 			$text,
 			'#^(/--++ *+(?!div|texysource).*)$((?:\n.*+)*?)(?:\n\\\\--.*$|(?=(\n/--.*$)))#mi',
-			"\$1\$2\n\\--"
+			"\$1\$2\n\\--",
 		);
 	}
 
@@ -64,10 +64,8 @@ final class BlockModule extends Texy\Module
 	 * ....
 	 * ....
 	 * \----
-	 *
-	 * @return HtmlElement|string|null
 	 */
-	public function pattern(Texy\BlockParser $parser, array $matches)
+	public function pattern(Texy\BlockParser $parser, array $matches): HtmlElement|string|null
 	{
 		[, $mParam, $mMod, $mContent] = $matches;
 		// [1] => code | text | ...
@@ -86,13 +84,18 @@ final class BlockModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return HtmlElement|string|null
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, string $blocktype, string $s, $param, Texy\Modifier $mod)
+	private function solve(
+		Texy\HandlerInvocation $invocation,
+		string $blocktype,
+		string $s,
+		$param,
+		Texy\Modifier $mod,
+	): HtmlElement|string|null
 	{
 		$texy = $this->texy;
-		/** @var Texy\BlockParser $parser */
 		$parser = $invocation->getParser();
+		\assert($parser instanceof Texy\BlockParser);
 
 		if ($blocktype === 'block/texy') {
 			return $this->blockTexy($s, $texy, $parser);
@@ -128,10 +131,7 @@ final class BlockModule extends Texy\Module
 	}
 
 
-	/**
-	 * @return string|HtmlElement
-	 */
-	private function blockTexySource(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param)
+	private function blockTexySource(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param): string|HtmlElement
 	{
 		$s = Helpers::outdent($s);
 		if ($s === '') {
@@ -150,10 +150,7 @@ final class BlockModule extends Texy\Module
 	}
 
 
-	/**
-	 * @return string|HtmlElement
-	 */
-	private function blockCode(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param)
+	private function blockCode(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param): string|HtmlElement
 	{
 		$s = Helpers::outdent($s);
 		if ($s === '') {
@@ -170,10 +167,7 @@ final class BlockModule extends Texy\Module
 	}
 
 
-	/**
-	 * @return string|HtmlElement
-	 */
-	private function blockDefault(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param)
+	private function blockDefault(string $s, Texy\Texy $texy, Texy\Modifier $mod, $param): string|HtmlElement
 	{
 		$s = Helpers::outdent($s);
 		if ($s === '') {
@@ -190,10 +184,7 @@ final class BlockModule extends Texy\Module
 	}
 
 
-	/**
-	 * @return string|HtmlElement
-	 */
-	private function blockPre(string $s, Texy\Texy $texy, Texy\Modifier $mod)
+	private function blockPre(string $s, Texy\Texy $texy, Texy\Modifier $mod): string|HtmlElement
 	{
 		$s = Helpers::outdent($s);
 		if ($s === '') {

@@ -15,8 +15,5 @@ namespace Texy;
  */
 abstract class Module
 {
-	use Strict;
-
-	/** @var Texy */
-	protected $texy;
+	protected Texy $texy;
 }

@@ -21,22 +21,20 @@ namespace Texy;
  */
 class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 {
-	use Strict;
-
 	public const InnerText = '%TEXT';
 	public const InnerTransparent = '%TRANS';
 
 	/** @var array<string, string|int|bool|string[]|null>  element's attributes */
-	public $attrs = [];
+	public array $attrs = [];
 
 	/** @var array<string, int>  void elements */
-	public static $emptyElements = [
+	public static array $emptyElements = [
 		'area' => 1, 'base' => 1, 'br' => 1, 'col' => 1, 'embed' => 1, 'hr' => 1, 'img' => 1, 'input' => 1,
 		'link' => 1, 'meta' => 1, 'param' => 1, 'source' => 1, 'track' => 1, 'wbr' => 1,
 	];
 
 	/** @var array<string, int>  phrasing elements; replaced elements + br have value 1 */
-	public static $inlineElements = [
+	public static array $inlineElements = [
 		'a' => 0, 'abbr' => 0, 'area' => 0, 'audio' => 0, 'b' => 0, 'bdi' => 0, 'bdo' => 0, 'br' => 1, 'button' => 1, 'canvas' => 1,
 		'cite' => 0, 'code' => 0, 'data' => 0, 'datalist' => 0, 'del' => 0, 'dfn' => 0, 'em' => 0, 'embed' => 1, 'i' => 0, 'iframe' => 1,
 		'img' => 1, 'input' => 1, 'ins' => 0, 'kbd' => 0, 'label' => 0, 'link' => 0, 'map' => 0, 'mark' => 0, 'math' => 1, 'meta' => 0,
@@ -46,13 +44,13 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	];
 
 	/** @var array<string, int>  elements with optional end tag in HTML */
-	public static $optionalEnds = [
+	public static array $optionalEnds = [
 		'body' => 1, 'head' => 1, 'html' => 1, 'colgroup' => 1, 'dd' => 1, 'dt' => 1, 'li' => 1,
 		'option' => 1, 'p' => 1, 'tbody' => 1, 'td' => 1, 'tfoot' => 1, 'th' => 1, 'thead' => 1, 'tr' => 1,
 	];
 
 	/** @var array<string, array<int, string>> */
-	public static $prohibits = [
+	public static array $prohibits = [
 		'a' => ['a', 'button'],
 		'button' => ['a', 'button'],
 		'details' => ['a', 'button'],
@@ -84,19 +82,15 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	];
 
 	/** @var array<int, HtmlElement|string> nodes */
-	protected $children = [];
-
-	/** @var string|null  element's name */
-	private $name;
-
-	/** @var bool  is element empty? */
-	private $isEmpty;
+	protected array $children = [];
+	private ?string $name;
+	private bool $isEmpty;
 
 
 	/**
 	 * @param  array|string  $attrs  element's attributes (or textual content)
 	 */
-	public function __construct(?string $name = null, $attrs = null)
+	public function __construct(?string $name = null, array|string|null $attrs = null)
 	{
 		$this->setName($name);
 		if (is_array($attrs)) {
@@ -107,7 +101,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	}
 
 
-	public static function el(?string $name = null, $attrs = null): self
+	public static function el(?string $name = null, $attrs = null): static
 	{
 		return new self($name, $attrs);
 	}
@@ -116,7 +110,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	/**
 	 * Changes element's name.
 	 */
-	final public function setName(?string $name, ?bool $empty = null): self
+	final public function setName(?string $name, ?bool $empty = null): static
 	{
 		$this->name = $name;
 		$this->isEmpty = $empty === null
@@ -165,7 +159,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	/**
 	 * Sets element's attribute.
 	 */
-	final public function setAttribute(string $name, $value): self
+	final public function setAttribute(string $name, $value): static
 	{
 		$this->attrs[$name] = $value;
 		return $this;
@@ -185,7 +179,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	/**
 	 * Special setter for element's attribute.
 	 */
-	final public function href(string $path, ?array $query = null): self
+	final public function href(string $path, ?array $query = null): static
 	{
 		if ($query) {
 			$query = http_build_query($query, '', '&');
@@ -202,7 +196,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	/**
 	 * Sets element's textual content.
 	 */
-	final public function setText(string $text): self
+	final public function setText(string $text): static
 	{
 		$this->removeChildren();
 		$this->children = [$text];
@@ -230,9 +224,8 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 
 	/**
 	 * Adds new element's child.
-	 * @param  HtmlElement|string  $child node
 	 */
-	final public function add($child): self
+	final public function add(self|string $child): static
 	{
 		return $this->insert(null, $child);
 	}
@@ -240,9 +233,8 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 
 	/**
 	 * Creates and adds a new HtmlElement child.
-	 * @param  array|string  $attrs element's attributes (or textual content)
 	 */
-	final public function create(string $name, $attrs = null): self
+	final public function create(string $name, array|string|null $attrs = null): static
 	{
 		$this->insert(null, $child = new self($name, $attrs));
 		return $child;
@@ -251,15 +243,9 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 
 	/**
 	 * Inserts child node.
-	 * @param  HtmlElement|string  $child node
-	 * @throws \InvalidArgumentException
 	 */
-	public function insert(?int $index, $child, bool $replace = false): self
+	public function insert(?int $index, self|string $child, bool $replace = false): static
 	{
-		if (!$child instanceof self && !is_string($child)) {
-			throw new \InvalidArgumentException('Child node must be scalar or HtmlElement object.');
-		}
-
 		if ($index === null) { // append
 			$this->children[] = $child;
 
@@ -282,13 +268,11 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	}
 
 
-	#[\ReturnTypeWillChange]
 	/**
 	 * Returns child node (ArrayAccess implementation).
 	 * @param  int  $index
-	 * @return mixed
 	 */
-	final public function offsetGet($index)
+	final public function offsetGet($index): mixed
 	{
 		return $this->children[$index];
 	}
@@ -490,7 +474,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 				if (
 					!isset($allowed[$attr])
 					&& (!isset($allowed['data-*'])
-						|| substr((string) $attr, 0, 5) !== 'data-')
+						|| !str_starts_with((string) $attr, 'data-'))
 				) {
 					unset($this->attrs[$attr]);
 				}

@@ -21,7 +21,7 @@ final class ParagraphModule extends Texy\Module
 	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
-		$texy->addHandler('paragraph', [$this, 'solve']);
+		$texy->addHandler('paragraph', $this->solve(...));
 	}
 
 
@@ -61,11 +61,12 @@ final class ParagraphModule extends Texy\Module
 	/**
 	 * Finish invocation.
 	 */
-	public function solve(
+	private function solve(
 		Texy\HandlerInvocation $invocation,
 		string $content,
-		?Texy\Modifier $mod = null
-	): ?Texy\HtmlElement {
+		?Texy\Modifier $mod = null,
+	): ?Texy\HtmlElement
+	{
 		$texy = $this->texy;
 
 		// find hard linebreaks
@@ -81,11 +82,11 @@ final class ParagraphModule extends Texy\Module
 
 		// check content type
 		// block contains block tag
-		if (strpos($content, $texy::CONTENT_BLOCK) !== false) {
+		if (str_contains($content, $texy::CONTENT_BLOCK)) {
 			$el->setName(null); // ignores modifier!
 
 		// block contains text (protected)
-		} elseif (strpos($content, $texy::CONTENT_TEXTUAL) !== false) {
+		} elseif (str_contains($content, $texy::CONTENT_TEXTUAL)) {
 			// leave element p
 
 		// block contains text
@@ -93,14 +94,14 @@ final class ParagraphModule extends Texy\Module
 			// leave element p
 
 		// block contains only replaced element
-		} elseif (strpos($content, $texy::CONTENT_REPLACED) !== false) {
+		} elseif (str_contains($content, $texy::CONTENT_REPLACED)) {
 			if ($texy->nontextParagraph instanceof Texy\HtmlElement) {
 				$el = (clone $texy->nontextParagraph)->setText($content);
 			} else {
 				$el->setName($texy->nontextParagraph);
 			}
 
-			// block contains only markup tags or spaces or nothing
+		// block contains only markup tags or spaces or nothing
 		} else {
 			// if {ignoreEmptyStuff} return null;
 			if (!$mod) {
@@ -115,7 +116,7 @@ final class ParagraphModule extends Texy\Module
 			}
 
 			// add <br>
-			if (strpos($content, "\r") !== false) {
+			if (str_contains($content, "\r")) {
 				$key = $texy->protect('<br>', $texy::CONTENT_REPLACED);
 				$content = str_replace("\r", $key, $content);
 			}

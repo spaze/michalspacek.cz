@@ -22,12 +22,11 @@ use Texy\Regexp;
 final class TableModule extends Texy\Module
 {
 	/** @deprecated */
-	public $oddClass;
+	public ?string $oddClass = null;
 
 	/** @deprecated */
-	public $evenClass;
-
-	private $disableTables;
+	public ?string $evenClass = null;
+	private ?bool $disableTables = null;
 
 
 	public function __construct(Texy\Texy $texy)
@@ -35,10 +34,10 @@ final class TableModule extends Texy\Module
 		$this->texy = $texy;
 
 		$texy->registerBlockPattern(
-			[$this, 'patternTable'],
+			$this->patternTable(...),
 			'#^(?:' . Patterns::MODIFIER_HV . '\n)?' // .{color: red}
 			. '\|.*()$#mU', // | ....
-			'table'
+			'table',
 		);
 	}
 
@@ -51,10 +50,8 @@ final class TableModule extends Texy\Module
 	 * | xxx | xxx | xxx | .(..){..}[..]
 	 * |------------------
 	 * | aa | bb | cc |
-	 *
-	 * @return HtmlElement|string|null
 	 */
-	public function patternTable(Texy\BlockParser $parser, array $matches)
+	public function patternTable(Texy\BlockParser $parser, array $matches): HtmlElement|string|null
 	{
 		if ($this->disableTables) {
 			return null;
@@ -159,8 +156,9 @@ final class TableModule extends Texy\Module
 		array &$prevRow,
 		array &$colModifier,
 		int &$colCounter,
-		int $rowCounter
-	): HtmlElement {
+		int $rowCounter,
+	): HtmlElement
+	{
 		$elRow = new HtmlElement('tr');
 		$mod = new Modifier($mMod);
 		$mod->decorate($texy, $elRow);
@@ -227,8 +225,9 @@ final class TableModule extends Texy\Module
 		string $cell,
 		?Modifier &$cellModifier,
 		bool $isHead,
-		Texy\Texy $texy
-	): ?TableCellElement {
+		Texy\Texy $texy,
+	): ?TableCellElement
+	{
 		$matches = Regexp::match($cell, '#(\*??)[\ \t]*' . Patterns::MODIFIER_HV . '??(.*)' . Patterns::MODIFIER_HV . '?[\ \t]*()$#AU');
 		if (!$matches) {
 			return null;
@@ -271,7 +270,7 @@ final class TableModule extends Texy\Module
 				}
 
 				$text = rtrim((string) $elCell->text);
-				if (strpos($text, "\n") !== false) {
+				if (str_contains($text, "\n")) {
 					// multiline parse as block
 					// HACK: disable tables
 					$this->disableTables = true;

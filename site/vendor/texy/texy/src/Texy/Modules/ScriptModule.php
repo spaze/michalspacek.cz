@@ -17,30 +17,28 @@ use Texy;
  */
 final class ScriptModule extends Texy\Module
 {
-	/** @var string  arguments separator */
-	public $separator = ',';
+	/** arguments separator */
+	public string $separator = ',';
 
 
 	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
-		$texy->addHandler('script', [$this, 'solve']);
+		$texy->addHandler('script', $this->solve(...));
 
 		$texy->registerLinePattern(
-			[$this, 'pattern'],
+			$this->pattern(...),
 			'#\{\{((?:[^' . Texy\Patterns::MARK . '}]++|[}])+)\}\}()#U',
-			'script'
+			'script',
 		);
 	}
 
 
 	/**
 	 * Callback for: {{...}}.
-	 *
-	 * @return Texy\HtmlElement|string|null
 	 */
-	public function pattern(Texy\LineParser $parser, array $matches)
+	public function pattern(Texy\LineParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
 		[, $mContent] = $matches;
 		// [1] => ...
@@ -67,9 +65,13 @@ final class ScriptModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|string|null
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, string $cmd, ?array $args = null, ?string $raw = null)
+	private function solve(
+		Texy\HandlerInvocation $invocation,
+		string $cmd,
+		?array $args = null,
+		?string $raw = null,
+	): Texy\HtmlElement|string|null
 	{
 		if ($cmd === 'texy' && $args) {
 			switch ($args[0]) {

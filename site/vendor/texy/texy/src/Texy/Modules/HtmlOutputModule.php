@@ -19,38 +19,38 @@ use Texy\Regexp;
  */
 final class HtmlOutputModule extends Texy\Module
 {
-	/** @var bool  indent HTML code? */
-	public $indent = true;
+	/** indent HTML code? */
+	public bool $indent = true;
 
 	/** @var string[] */
-	public $preserveSpaces = ['textarea', 'pre', 'script', 'code', 'samp', 'kbd'];
+	public array $preserveSpaces = ['textarea', 'pre', 'script', 'code', 'samp', 'kbd'];
 
-	/** @var int  base indent level */
-	public $baseIndent = 0;
+	/** base indent level */
+	public int $baseIndent = 0;
 
-	/** @var int  wrap width, doesn't include indent space */
-	public $lineWrap = 80;
+	/** wrap width, doesn't include indent space */
+	public int $lineWrap = 80;
 
 	/** @deprecated */
-	public $removeOptional = false;
+	public bool $removeOptional = false;
 
-	/** @var int  indent space counter */
-	private $space = 0;
+	/** indent space counter */
+	private int $space = 0;
 
 	/** @var array<string, int> */
-	private $tagUsed = [];
+	private array $tagUsed = [];
 
 	/** @var array<int, array{tag: string, open: string, close: string, dtdContent: array<string, int>, indent: int}> */
-	private $tagStack = [];
+	private array $tagStack = [];
 
 	/** @var array<string, int>  content DTD used, when context is not defined */
-	private $baseDTD = [];
+	private array $baseDTD = [];
 
 
 	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
-		$texy->addHandler('postProcess', [$this, 'postProcess']);
+		$texy->addHandler('postProcess', $this->postProcess(...));
 	}
 
 
@@ -58,7 +58,7 @@ final class HtmlOutputModule extends Texy\Module
 	 * Converts <strong><em> ... </strong> ... </em>.
 	 * into <strong><em> ... </em></strong><em> ... </em>
 	 */
-	public function postProcess(Texy\Texy $texy, string &$s): void
+	private function postProcess(Texy\Texy $texy, string &$s): void
 	{
 		$this->space = $this->baseIndent;
 		$this->tagStack = [];
@@ -72,7 +72,7 @@ final class HtmlOutputModule extends Texy\Module
 		$s = Regexp::replace(
 			$s . '</end/>',
 			'#([^<]*+)<(?:(!--.*--)|(/?)([a-z][a-z0-9._:-]*)(|[ \n].*)\s*(/?))>()#Uis',
-			[$this, 'cb']
+			$this->cb(...),
 		);
 
 		// empty out stack
@@ -97,7 +97,7 @@ final class HtmlOutputModule extends Texy\Module
 			$s = Regexp::replace(
 				$s,
 				'#^(\t*)(.*)$#m',
-				[$this, 'wrap']
+				$this->wrap(...),
 			);
 		}
 	}
@@ -105,9 +105,8 @@ final class HtmlOutputModule extends Texy\Module
 
 	/**
 	 * Callback function: <tag> | </tag> | ....
-	 * @internal
 	 */
-	public function cb(array $matches): string
+	private function cb(array $matches): string
 	{
 		// html tag
 		[, $mText, $mComment, $mEnd, $mTag, $mAttr, $mEmpty] = $matches;
@@ -308,7 +307,8 @@ final class HtmlOutputModule extends Texy\Module
 			// auto-close hidden, optional and inline tags
 			if (
 				$item['close']
-				&& (!isset(HtmlElement::$optionalEnds[$itemTag])
+				&& (
+					!isset(HtmlElement::$optionalEnds[$itemTag])
 					&& !isset(HtmlElement::$inlineElements[$itemTag])
 				)
 			) {
@@ -329,9 +329,8 @@ final class HtmlOutputModule extends Texy\Module
 
 	/**
 	 * Callback function: wrap lines.
-	 * @internal
 	 */
-	public function wrap(array $m): string
+	private function wrap(array $m): string
 	{
 		[, $space, $s] = $m;
 		return $space . wordwrap($s, $this->lineWrap, "\n" . $space);

@@ -10,32 +10,31 @@ declare(strict_types=1);
 
 $texy = new Texy;
 $handler = new myHandler;
-$texy->addHandler('emoticon', [$handler, 'emoticon']);
-$texy->addHandler('image', [$handler, 'image']);
-$texy->addHandler('linkReference', [$handler, 'linkReference']);
-$texy->addHandler('linkEmail', [$handler, 'linkEmail']);
-$texy->addHandler('linkURL', [$handler, 'linkURL']);
-$texy->addHandler('phrase', [$handler, 'phrase']);
-$texy->addHandler('newReference', [$handler, 'newReference']);
-$texy->addHandler('htmlComment', [$handler, 'htmlComment']);
-$texy->addHandler('htmlTag', [$handler, 'htmlTag']);
-$texy->addHandler('script', [$handler, 'script']);
+$texy->addHandler('emoticon', $handler->emoticon(...));
+$texy->addHandler('image', $handler->image(...));
+$texy->addHandler('linkReference', $handler->linkReference(...));
+$texy->addHandler('linkEmail', $handler->linkEmail(...));
+$texy->addHandler('linkURL', $handler->linkURL(...));
+$texy->addHandler('phrase', $handler->phrase(...));
+$texy->addHandler('newReference', $handler->newReference(...));
+$texy->addHandler('htmlComment', $handler->htmlComment(...));
+$texy->addHandler('htmlTag', $handler->htmlTag(...));
+$texy->addHandler('script', $handler->script(...));
 //$texy->addHandler('paragraph', array($handler, 'paragraph'));
-$texy->addHandler('figure', [$handler, 'figure']);
-$texy->addHandler('heading', [$handler, 'heading']);
-$texy->addHandler('horizline', [$handler, 'horizline']);
-$texy->addHandler('block', [$handler, 'block']);
-$texy->addHandler('afterList', [$handler, 'afterList']);
-$texy->addHandler('afterDefinitionList', [$handler, 'afterDefinitionList']);
-$texy->addHandler('afterTable', [$handler, 'afterTable']);
-$texy->addHandler('afterBlockquote', [$handler, 'afterBlockquote']);
-$texy->addHandler('beforeParse', [$handler, 'beforeParse']);
-$texy->addHandler('afterParse', [$handler, 'afterParse']);
+$texy->addHandler('figure', $handler->figure(...));
+$texy->addHandler('heading', $handler->heading(...));
+$texy->addHandler('horizline', $handler->horizline(...));
+$texy->addHandler('block', $handler->block(...));
+$texy->addHandler('afterList', $handler->afterList(...));
+$texy->addHandler('afterDefinitionList', $handler->afterDefinitionList(...));
+$texy->addHandler('afterTable', $handler->afterTable(...));
+$texy->addHandler('afterBlockquote', $handler->afterBlockquote(...));
+$texy->addHandler('beforeParse', $handler->beforeParse(...));
+$texy->addHandler('afterParse', $handler->afterParse(...));
 
 
 class myHandler
 {
-
 	/** Line parsing */
 
 
@@ -53,11 +52,11 @@ class myHandler
 	}
 
 
-	/**
-	 * @param  Texy\HandlerInvocation  handler invocation
-	 * @return Texy\HtmlElement|string|null
-	 */
-	public function linkReference(Texy\HandlerInvocation $invocation, Texy\Link $link, string $content)
+	public function linkReference(
+		Texy\HandlerInvocation $invocation,
+		Texy\Link $link,
+		string $content
+	): Texy\HtmlElement|string|null
 	{
 		return $invocation->proceed();
 	}
@@ -83,7 +82,7 @@ class myHandler
 		$phrase,
 		$content,
 		Texy\Modifier $modifier,
-		Texy\Link $link = null
+		Texy\Link $link = null,
 	) {
 		return $invocation->proceed();
 	}
@@ -134,7 +133,7 @@ class myHandler
 		Texy\Image $image,
 		Texy\Link $link = null,
 		$content,
-		Texy\Modifier $modifier
+		Texy\Modifier $modifier,
 	) {
 		return $invocation->proceed();
 	}
@@ -146,7 +145,7 @@ class myHandler
 		$level,
 		$content,
 		Texy\Modifier $modifier,
-		$isSurrounded
+		$isSurrounded,
 	) {
 		return $invocation->proceed();
 	}
@@ -174,8 +173,9 @@ class myHandler
 	public function afterDefinitionList(
 		Texy\BlockParser $parser,
 		Texy\HtmlElement $element,
-		Texy\Modifier $modifier
-	): void {
+		Texy\Modifier $modifier,
+	): void
+	{
 	}
 
 

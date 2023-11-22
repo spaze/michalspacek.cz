@@ -20,26 +20,26 @@ use Texy\Patterns;
  */
 final class ImageModule extends Texy\Module
 {
-	/** @var string  root of relative images (http) */
-	public $root = 'images/';
+	/** root of relative images (http) */
+	public ?string $root = 'images/';
 
-	/** @var string  root of linked images (http) */
-	public $linkedRoot = 'images/';
+	/** root of linked images (http) */
+	public ?string $linkedRoot = 'images/';
 
-	/** @var string|null  physical location of images on server */
-	public $fileRoot;
+	/** physical location of images on server */
+	public ?string $fileRoot = null;
 
-	/** @var string|null  left-floated images CSS class */
-	public $leftClass;
+	/** left-floated images CSS class */
+	public ?string $leftClass = null;
 
-	/** @var string|null  right-floated images CSS class */
-	public $rightClass;
+	/** right-floated images CSS class */
+	public ?string $rightClass = null;
 
-	/** @var string|null  default alternative text */
-	public $defaultAlt = '';
+	/** default alternative text */
+	public ?string $defaultAlt = '';
 
 	/** @var array<string, Image> image references */
-	private $references = [];
+	private array $references = [];
 
 
 	public function __construct(Texy\Texy $texy)
@@ -47,15 +47,15 @@ final class ImageModule extends Texy\Module
 		$this->texy = $texy;
 
 		$texy->allowed['image/definition'] = true;
-		$texy->addHandler('image', [$this, 'solve']);
-		$texy->addHandler('beforeParse', [$this, 'beforeParse']);
+		$texy->addHandler('image', $this->solve(...));
+		$texy->addHandler('beforeParse', $this->beforeParse(...));
 
 		// [*image*]:LINK
 		$texy->registerLinePattern(
-			[$this, 'patternImage'],
+			$this->patternImage(...),
 			'#\[\* *+([^\n' . Patterns::MARK . ']{1,1000})' . Patterns::MODIFIER . '? *+(\*|(?<!<)>|<)\]' // [* urls .(title)[class]{style} >]
 			. '(?::(' . Patterns::LINK_URL . '|:))??()#Uu',
-			'image'
+			'image',
 		);
 	}
 
@@ -63,14 +63,14 @@ final class ImageModule extends Texy\Module
 	/**
 	 * Text pre-processing.
 	 */
-	public function beforeParse(Texy\Texy $texy, &$text): void
+	private function beforeParse(Texy\Texy $texy, &$text): void
 	{
 		if (!empty($texy->allowed['image/definition'])) {
 			// [*image*]: urls .(title)[class]{style}
 			$text = Texy\Regexp::replace(
 				$text,
 				'#^\[\*([^\n]{1,100})\*\]:[\ \t]+(.{1,1000})[\ \t]*' . Patterns::MODIFIER . '?\s*()$#mUu',
-				[$this, 'patternReferenceDef']
+				$this->patternReferenceDef(...),
 			);
 		}
 	}
@@ -78,10 +78,8 @@ final class ImageModule extends Texy\Module
 
 	/**
 	 * Callback for: [*image*]: urls .(title)[class]{style}.
-	 *
-	 * @internal
 	 */
-	public function patternReferenceDef(array $matches): string
+	private function patternReferenceDef(array $matches): string
 	{
 		[, $mRef, $mURLs, $mMod] = $matches;
 		// [1] => [* (reference) *]
@@ -96,9 +94,8 @@ final class ImageModule extends Texy\Module
 
 	/**
 	 * Callback for [* small.jpg 80x13 || big.jpg .(alternative text)[class]{style}>]:LINK.
-	 * @return Texy\HtmlElement|string|null
 	 */
-	public function patternImage(Texy\LineParser $parser, array $matches)
+	public function patternImage(Texy\LineParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
 		[, $mURLs, $mMod, $mAlign, $mLink] = $matches;
 		// [1] => URLs
@@ -195,8 +192,9 @@ final class ImageModule extends Texy\Module
 	public function solve(
 		?Texy\HandlerInvocation $invocation,
 		Image $image,
-		?Texy\Link $link = null
-	): ?Texy\HtmlElement {
+		?Texy\Link $link = null,
+	): ?Texy\HtmlElement
+	{
 		if ($image->URL == null) {
 			return null;
 		}
@@ -252,7 +250,7 @@ final class ImageModule extends Texy\Module
 	private function detectDimensions(Image $image): void
 	{
 		// absolute URL & security check for double dot
-		if (!Helpers::isRelative($image->URL) || strpos($image->URL, '..') !== false) {
+		if (!Helpers::isRelative($image->URL) || str_contains($image->URL, '..')) {
 			return;
 		}
 
