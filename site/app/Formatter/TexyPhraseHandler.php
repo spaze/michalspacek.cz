@@ -44,7 +44,7 @@ class TexyPhraseHandler
 	public function solve(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
 		if (!$link) {
-			return $this->proceed($invocation);
+			return $this->proceed($invocation, $phrase, $content, $modifier, $link);
 		}
 
 		$localeRegExp = '([a-z]{2}_[A-Z]{2})';
@@ -87,7 +87,7 @@ class TexyPhraseHandler
 			$name = $this->trainingLocales->getLocaleActions($name)[$this->translator->getDefaultLocale()];
 			$link->URL = $presenter->link('//:' . self::TRAINING_ACTION, $name);
 			$el = HtmlElement::el();
-			$trainingLink = $texy->phraseModule->solve($invocation, $phrase, $content, $modifier, $link);
+			$trainingLink = $this->proceed($invocation, $phrase, $content, $modifier, $link);
 			if ($trainingLink) {
 				$el->add($trainingLink);
 				$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
@@ -95,7 +95,7 @@ class TexyPhraseHandler
 			}
 		}
 
-		return $this->proceed($invocation);
+		return $this->proceed($invocation, $phrase, $content, $modifier, $link);
 	}
 
 
@@ -149,9 +149,9 @@ class TexyPhraseHandler
 	/**
 	 * @throws UnexpectedHandlerInvocationReturnType
 	 */
-	private function proceed(HandlerInvocation $invocation): HtmlElement|string|false
+	private function proceed(HandlerInvocation $invocation, string $phrase, string $content, Modifier $modifier, ?Link $link): HtmlElement|string|false
 	{
-		$result = $invocation->proceed();
+		$result = $invocation->proceed($phrase, $content, $modifier, $link);
 		if (!$result instanceof HtmlElement && !is_string($result) && $result !== false) {
 			throw new UnexpectedHandlerInvocationReturnType($result);
 		}
