@@ -786,17 +786,17 @@
         },
         {
             "name": "nette/di",
-            "version": "v3.1.6",
-            "version_normalized": "3.1.6.0",
+            "version": "v3.1.8",
+            "version_normalized": "3.1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/di.git",
-                "reference": "3b69f36529a793460d557503bbbae38ef19cbf1d"
+                "reference": "adf475076dae08109dd0d57b1a48668d1d1bedf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/di/zipball/3b69f36529a793460d557503bbbae38ef19cbf1d",
-                "reference": "3b69f36529a793460d557503bbbae38ef19cbf1d",
+                "url": "https://api.github.com/repos/nette/di/zipball/adf475076dae08109dd0d57b1a48668d1d1bedf0",
+                "reference": "adf475076dae08109dd0d57b1a48668d1d1bedf0",
                 "shasum": ""
             },
             "require": {
@@ -813,7 +813,7 @@
                 "phpstan/phpstan": "^1.0",
                 "tracy/tracy": "^2.9"
             },
-            "time": "2023-10-15T12:31:50+00:00",
+            "time": "2023-11-03T00:12:52+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -855,7 +855,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/di/issues",
-                "source": "https://github.com/nette/di/tree/v3.1.6"
+                "source": "https://github.com/nette/di/tree/v3.1.8"
             },
             "install-path": "../nette/di"
         },

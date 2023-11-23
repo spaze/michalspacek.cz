@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "749cb990563085f964cba5c0d74f42f1",
+    "content-hash": "a437890668eea03e1efea54b913ce1bd",
     "packages": [
         {
             "name": "contributte/translation",
@@ -626,16 +626,16 @@
         },
         {
             "name": "nette/di",
-            "version": "v3.1.6",
+            "version": "v3.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/di.git",
-                "reference": "3b69f36529a793460d557503bbbae38ef19cbf1d"
+                "reference": "adf475076dae08109dd0d57b1a48668d1d1bedf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/di/zipball/3b69f36529a793460d557503bbbae38ef19cbf1d",
-                "reference": "3b69f36529a793460d557503bbbae38ef19cbf1d",
+                "url": "https://api.github.com/repos/nette/di/zipball/adf475076dae08109dd0d57b1a48668d1d1bedf0",
+                "reference": "adf475076dae08109dd0d57b1a48668d1d1bedf0",
                 "shasum": ""
             },
             "require": {
@@ -692,9 +692,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/di/issues",
-                "source": "https://github.com/nette/di/tree/v3.1.6"
+                "source": "https://github.com/nette/di/tree/v3.1.8"
             },
-            "time": "2023-10-15T12:31:50+00:00"
+            "time": "2023-11-03T00:12:52+00:00"
         },
         {
             "name": "nette/forms",

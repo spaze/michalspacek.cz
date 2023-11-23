@@ -12,6 +12,7 @@ namespace Nette\DI\Extensions;
 use Nette;
 use Nette\DI\Container;
 use Nette\DI\DynamicParameter;
+use Nette\DI\Helpers;
 use Nette\PhpGenerator\Method;
 
 
@@ -39,13 +40,16 @@ final class ParametersExtension extends Nette\DI\CompilerExtension
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$params = array_fill_keys($this->dynamicParams, new DynamicParameter('')) + $this->config;
+		$params = $this->config;
+		foreach ($this->dynamicParams as $key) {
+			$params[$key] = new DynamicParameter('$this->getParameter(' . var_export($key, true) . ')');
+		}
 
-		$builder->parameters = Nette\DI\Helpers::expand($params, $params, true);
+		$builder->parameters = Helpers::expand($params, $params, true);
 
 		// expand all except 'services'
 		$slice = array_diff_key($this->compilerConfig, ['services' => 1]);
-		$slice = Nette\DI\Helpers::expand($slice, $builder->parameters);
+		$slice = Helpers::expand($slice, $builder->parameters);
 		$this->compilerConfig = $slice + $this->compilerConfig;
 	}
 
@@ -53,21 +57,23 @@ final class ParametersExtension extends Nette\DI\CompilerExtension
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		$builder = $this->getContainerBuilder();
-		$dynamicParams = $this->dynamicParams;
+		$dynamicParams = array_fill_keys($this->dynamicParams, true);
 		foreach ($builder->parameters as $key => $value) {
 			$value = [$value];
 			array_walk_recursive($value, function ($val) use (&$dynamicParams, $key): void {
-				if ($val instanceof DynamicParameter || $val instanceof Nette\DI\Definitions\Statement) {
-					$dynamicParams[] = $key;
+				if ($val instanceof DynamicParameter) {
+					$dynamicParams[$key] = $dynamicParams[$key] ?? true;
+				} elseif ($val instanceof Nette\DI\Definitions\Statement) {
+					$dynamicParams[$key] = false;
 				}
 			});
 		}
-		$dynamicParams = array_values(array_unique($dynamicParams));
 
 		$method = Method::from([Container::class, 'getStaticParameters'])
-			->addBody('return ?;', [array_diff_key($builder->parameters, array_flip($dynamicParams))]);
+			->addBody('return ?;', [array_diff_key($builder->parameters, $dynamicParams)]);
 		$class->addMember($method);
 
+		$dynamicParams = array_keys($dynamicParams, true, true);
 		if (!$dynamicParams) {
 			return;
 		}
@@ -78,15 +84,15 @@ final class ParametersExtension extends Nette\DI\CompilerExtension
 		$class->addMember($method);
 		$method->addBody('switch (true) {');
 		foreach ($dynamicParams as $key) {
-			$value = Nette\DI\Helpers::expand($this->config[$key] ?? null, $builder->parameters);
-			$value = $resolver->completeArguments(Nette\DI\Helpers::filterArguments([$value]));
-			$method->addBody("\tcase \$key === ?: return ?;", [$key, $generator->convertArguments($value)[0]]);
+			$value = Helpers::expand($this->config[$key] ?? null, $builder->parameters);
+			$value = $generator->convertArguments($resolver->completeArguments(Helpers::filterArguments([$value])))[0];
+			$method->addBody("\tcase \$key === ?: return ?;", [$key, $value]);
 		}
 		$method->addBody("\tdefault: return parent::getDynamicParameter(\$key);\n};");
 
 		$method = Method::from([Container::class, 'getParameters']);
 		$class->addMember($method);
-		$method->addBody('array_map(function ($key) { $this->getParameter($key); }, ?);', [$dynamicParams]);
+		$method->addBody('array_map([$this, \'getParameter\'], ?);', [$dynamicParams]);
 		$method->addBody('return parent::getParameters();');
 
 		foreach ($this->dynamicValidators as [$param, $expected, $path]) {
