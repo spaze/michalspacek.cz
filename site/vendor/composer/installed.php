@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '047331769c6076534b5033b2cf7dd1ef57a1ce8c',
+        'reference' => 'ad936c27d78195da749b56c8fd1951fdaccf561c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -397,7 +397,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '7b92ded2e25a622c3547604d545a2a614dc66a05',
+            'reference' => '2b23329e299c9a6cd98a82f5137ab4909c8e506d',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
@@ -453,7 +453,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '047331769c6076534b5033b2cf7dd1ef57a1ce8c',
+            'reference' => 'ad936c27d78195da749b56c8fd1951fdaccf561c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
