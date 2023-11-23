@@ -37,7 +37,7 @@ class TexyPhraseHandlerTest extends TestCase
 		TexyPhraseHandler $phraseHandler,
 	) {
 		$this->texy = new Texy();
-		$this->texy->addHandler('phrase', [$phraseHandler, 'solve']);
+		$this->texy->addHandler('phrase', $phraseHandler->solve(...));
 		$applicationPresenter->setLinkCallback($application, $this->buildUrl(...));
 		$this->defaultLocale = $translator->getDefaultLocale();
 	}

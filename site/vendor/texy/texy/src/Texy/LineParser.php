@@ -16,10 +16,8 @@ namespace Texy;
 class LineParser extends Parser
 {
 	/** @var array<string, array{handler: callable, pattern: string, again: ?string}> */
-	public $patterns;
-
-	/** @var bool */
-	public $again;
+	public array $patterns;
+	public bool $again;
 
 
 	public function __construct(Texy $texy, HtmlElement $element)
@@ -69,7 +67,7 @@ class LineParser extends Parser
 				$text,
 				(string) $res,
 				$start,
-				$len
+				$len,
 			);
 
 			$delta = strlen($res) - $len;
@@ -119,7 +117,7 @@ class LineParser extends Parser
 					$text,
 					$this->patterns[$name]['pattern'],
 					Regexp::OFFSET_CAPTURE,
-					$offset + $delta
+					$offset + $delta,
 				)) {
 					$m = &$matches[$name];
 					if (!strlen($m[0][0])) {

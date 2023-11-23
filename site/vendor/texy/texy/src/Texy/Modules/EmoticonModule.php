@@ -18,7 +18,7 @@ use Texy;
 final class EmoticonModule extends Texy\Module
 {
 	/** @var array<string, string>  supported emoticons and image files / chars */
-	public $icons = [
+	public array $icons = [
 		':-)' => '🙂',
 		':-(' => '☹',
 		';-)' => '😉',
@@ -32,25 +32,25 @@ final class EmoticonModule extends Texy\Module
 	];
 
 	/** @deprecated */
-	public $class;
+	public ?string $class = null;
 
 	/** @deprecated */
-	public $root;
+	public ?string $root = null;
 
 	/** @deprecated */
-	public $fileRoot;
+	public ?string $fileRoot = null;
 
 
 	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 		$texy->allowed['emoticon'] = false;
-		$texy->addHandler('emoticon', [$this, 'solve']);
-		$texy->addHandler('beforeParse', [$this, 'beforeParse']);
+		$texy->addHandler('emoticon', $this->solve(...));
+		$texy->addHandler('beforeParse', $this->beforeParse(...));
 	}
 
 
-	public function beforeParse(): void
+	private function beforeParse(): void
 	{
 		if (empty($this->texy->allowed['emoticon'])) {
 			return;
@@ -64,19 +64,18 @@ final class EmoticonModule extends Texy\Module
 		}
 
 		$this->texy->registerLinePattern(
-			[$this, 'pattern'],
+			$this->pattern(...),
 			'#(?<=^|[\x00-\x20])(' . implode('|', $pattern) . ')#',
 			'emoticon',
-			'#' . implode('|', $pattern) . '#'
+			'#' . implode('|', $pattern) . '#',
 		);
 	}
 
 
 	/**
 	 * Callback for: :-))).
-	 * @return Texy\HtmlElement|string|null
 	 */
-	public function pattern(Texy\LineParser $parser, array $matches)
+	public function pattern(Texy\LineParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
 		$match = $matches[0];
 
@@ -93,13 +92,12 @@ final class EmoticonModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|string
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, string $emoticon, string $raw)
+	private function solve(Texy\HandlerInvocation $invocation, string $emoticon, string $raw): Texy\HtmlElement|string
 	{
 		$texy = $this->texy;
 		$file = $this->icons[$emoticon];
-		if (strpos($file, '.') === false) {
+		if (!str_contains($file, '.')) {
 			return $file;
 		}
 

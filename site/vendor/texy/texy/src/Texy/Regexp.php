@@ -12,18 +12,8 @@ namespace Texy;
 
 class Regexp
 {
-	use Strict;
-
 	public const ALL = 1;
 	public const OFFSET_CAPTURE = 2;
-
-	private static $messages = [
-		PREG_INTERNAL_ERROR => 'Internal error',
-		PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit was exhausted',
-		PREG_RECURSION_LIMIT_ERROR => 'Recursion limit was exhausted',
-		PREG_BAD_UTF8_ERROR => 'Malformed UTF-8 data',
-		5 => 'Offset didn\'t correspond to the begin of a valid UTF-8 code point', // PREG_BAD_UTF8_OFFSET_ERROR
-	];
 
 
 	/**
@@ -35,7 +25,7 @@ class Regexp
 		$reFlags = (($flags & self::OFFSET_CAPTURE) ? PREG_SPLIT_OFFSET_CAPTURE : 0) | PREG_SPLIT_DELIM_CAPTURE;
 		$res = preg_split($pattern, $subject, -1, $reFlags);
 		if (preg_last_error()) { // run-time error
-			trigger_error(@self::$messages[preg_last_error()], E_USER_WARNING);
+			trigger_error(preg_last_error_msg(), E_USER_WARNING);
 		}
 
 		return $res;
@@ -45,10 +35,8 @@ class Regexp
 	/**
 	 * Performs a regular expression match.
 	 * @param  int $flags  OFFSET_CAPTURE, ALL
-	 * @param  int $offset  offset in bytes
-	 * @return mixed
 	 */
-	public static function match(string $subject, string $pattern, int $flags = 0, int $offset = 0)
+	public static function match(string $subject, string $pattern, int $flags = 0, int $offset = 0): mixed
 	{
 		$empty = $flags & self::ALL ? [] : null;
 		if ($offset > strlen($subject)) {
@@ -60,7 +48,7 @@ class Regexp
 			? preg_match_all($pattern, $subject, $m, $reFlags | PREG_SET_ORDER, $offset)
 			: preg_match($pattern, $subject, $m, $reFlags, $offset);
 		if (preg_last_error()) { // run-time error
-			trigger_error(@self::$messages[preg_last_error()], E_USER_WARNING);
+			trigger_error(preg_last_error_msg(), E_USER_WARNING);
 		} elseif ($res) {
 			return $m;
 		}
@@ -71,15 +59,17 @@ class Regexp
 
 	/**
 	 * Perform a regular expression search and replace.
-	 * @param  string|array $pattern
-	 * @param  string|callable $replacement
 	 */
-	public static function replace(string $subject, $pattern, $replacement = null): string
+	public static function replace(
+		string $subject,
+		string|array $pattern,
+		string|callable|null $replacement = null,
+	): string
 	{
 		if (is_object($replacement) || is_array($replacement)) {
 			$res = preg_replace_callback($pattern, $replacement, $subject);
 			if ($res === null && preg_last_error()) { // run-time error
-				trigger_error(@self::$messages[preg_last_error()], E_USER_WARNING);
+				trigger_error(preg_last_error_msg(), E_USER_WARNING);
 			}
 
 			return $res;
@@ -91,7 +81,7 @@ class Regexp
 
 		$res = preg_replace($pattern, $replacement, $subject);
 		if (preg_last_error()) { // run-time error
-			trigger_error(@self::$messages[preg_last_error()], E_USER_WARNING);
+			trigger_error(preg_last_error_msg(), E_USER_WARNING);
 		}
 
 		return $res;

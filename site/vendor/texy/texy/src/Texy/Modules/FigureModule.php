@@ -18,39 +18,38 @@ use Texy\Patterns;
  */
 final class FigureModule extends Texy\Module
 {
-	/** @var string|null  non-floated box CSS class */
-	public $class = 'figure';
+	/** non-floated box CSS class */
+	public ?string $class = 'figure';
 
-	/** @var string|null  left-floated box CSS class */
-	public $leftClass;
+	/** left-floated box CSS class */
+	public ?string $leftClass = null;
 
-	/** @var string|null  right-floated box CSS class */
-	public $rightClass;
+	/** right-floated box CSS class */
+	public ?string $rightClass = null;
 
-	/** @var int|false  how calculate div's width */
-	public $widthDelta = 10;
+	/** how calculate div's width */
+	public int|false $widthDelta = 10;
 
 
 	public function __construct(Texy\Texy $texy)
 	{
 		$this->texy = $texy;
 
-		$texy->addHandler('figure', [$this, 'solve']);
+		$texy->addHandler('figure', $this->solve(...));
 
 		$texy->registerBlockPattern(
-			[$this, 'pattern'],
+			$this->pattern(...),
 			'#^\[\* *+([^\n' . Patterns::MARK . ']{1,1000})' . Patterns::MODIFIER . '? *+(\*|(?<!<)>|<)\]' // [* urls .(title)[class]{style} >]
 			. '(?::(' . Patterns::LINK_URL . '|:))?? ++\*\*\* ++(.{0,2000})' . Patterns::MODIFIER_H . '?()$#mUu',
-			'figure'
+			'figure',
 		);
 	}
 
 
 	/**
 	 * Callback for [*image*]:link *** .... .(title)[class]{style}>.
-	 * @return Texy\HtmlElement|string|null
 	 */
-	public function pattern(Texy\BlockParser $parser, array $matches)
+	public function pattern(Texy\BlockParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
 		[, $mURLs, $mImgMod, $mAlign, $mLink, $mContent, $mMod] = $matches;
 		// [1] => URLs
@@ -84,13 +83,14 @@ final class FigureModule extends Texy\Module
 	/**
 	 * Finish invocation.
 	 */
-	public function solve(
+	private function solve(
 		Texy\HandlerInvocation $invocation,
 		Texy\Image $image,
 		?Texy\Link $link,
 		string $content,
-		Texy\Modifier $mod
-	): ?Texy\HtmlElement {
+		Texy\Modifier $mod,
+	): ?Texy\HtmlElement
+	{
 		$texy = $this->texy;
 
 		$hAlign = $image->modifier->hAlign;

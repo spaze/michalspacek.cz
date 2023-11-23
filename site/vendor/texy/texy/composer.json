@@ -11,13 +11,13 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1"
+		"php": "8.1 - 8.3"
 	},
 	"require-dev": {
-		"nette/tester": "^2.0",
-		"tracy/tracy": "^2.4",
+		"nette/tester": "^2.5",
+		"tracy/tracy": "^2.9",
 		"latte/latte": "^2.6 || ^3.0.2",
-		"phpstan/phpstan": "^0.12"
+		"phpstan/phpstan": "^1"
 	},
 	"replace": {
 		"dg/texy": "*"
@@ -31,7 +31,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "3.1-dev"
+			"dev-master": "3.2-dev"
 		}
 	}
 }

@@ -28,14 +28,14 @@ $texy->allowed['phrase/em-alt2'] = false;
 $texy->registerLinePattern(
 	'userInlineHandler',  // callback function or method
 	'#(?<!\*)\*(?!\ |\*)(.+)' . Texy\Patterns::MODIFIER . '?(?<!\ |\*)\*(?!\*)()#U', // regular expression
-	'myInlineSyntax1' // any syntax name
+	'myInlineSyntax1', // any syntax name
 );
 
 // add new syntax: _italic_
 $texy->registerLinePattern(
 	'userInlineHandler',
 	'#(?<!_)_(?!\ |_)(.+)' . Texy\Patterns::MODIFIER . '?(?<!\ |_)_(?!_)()#U',
-	'myInlineSyntax2'
+	'myInlineSyntax2',
 );
 
 
@@ -43,18 +43,14 @@ $texy->registerLinePattern(
 $texy->registerBlockPattern(
 	'userBlockHandler',
 	'#^\.([a-z0-9]+)\n(.+)$#m', // block patterns must be multiline and line-anchored
-	'myBlockSyntax1'
+	'myBlockSyntax1',
 );
 
 
 /**
  * Pattern handler for inline syntaxes
- *
- * @param  array $matches   reg-exp matches
- * @param  string $name  pattern name (myInlineSyntax1 or myInlineSyntax2)
- * @return Texy\HtmlElement|string
  */
-function userInlineHandler(Texy\LineParser $parser, array $matches, string $name)
+function userInlineHandler(Texy\LineParser $parser, array $matches, string $name): Texy\HtmlElement|string
 {
 	[, $mContent, $mMod] = $matches;
 
@@ -83,9 +79,8 @@ function userInlineHandler(Texy\LineParser $parser, array $matches, string $name
  *
  * @param  array $matches      regexp matches
  * @param  string $name     pattern name (myBlockSyntax1)
- * @return Texy\HtmlElement|string|null
  */
-function userBlockHandler(Texy\BlockParser $parser, array $matches, string $name)
+function userBlockHandler(Texy\BlockParser $parser, array $matches, string $name): Texy\HtmlElement|string|null
 {
 	[, $mTag, $mText] = $matches;
 

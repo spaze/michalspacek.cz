@@ -21,26 +21,25 @@ use Texy\Patterns;
  */
 final class LinkModule extends Texy\Module
 {
-	/** @var string  root of relative links */
-	public $root = '';
+	/** root of relative links */
+	public ?string $root = null;
 
-	/** @var string|null linked image class */
-	public $imageClass;
+	/** linked image class */
+	public ?string $imageClass = null;
 
-	/** @var bool  always use rel="nofollow" for absolute links? */
-	public $forceNoFollow = false;
+	/** always use rel="nofollow" for absolute links? */
+	public bool $forceNoFollow = false;
 
-	/** @var bool  shorten URLs to more readable form? */
-	public $shorten = true;
+	/** shorten URLs to more readable form? */
+	public bool $shorten = true;
 
 	/** @var array<string, Link> link references */
-	private $references = [];
+	private array $references = [];
 
 	/** @var array<string, bool> */
-	private static $livelock;
+	private static array $livelock;
 
-	/** @var string */
-	private static $EMAIL;
+	private static string $EMAIL;
 
 
 	public function __construct(Texy\Texy $texy)
@@ -48,34 +47,34 @@ final class LinkModule extends Texy\Module
 		$this->texy = $texy;
 
 		$texy->allowed['link/definition'] = true;
-		$texy->addHandler('newReference', [$this, 'solveNewReference']);
-		$texy->addHandler('linkReference', [$this, 'solve']);
-		$texy->addHandler('linkEmail', [$this, 'solveUrlEmail']);
-		$texy->addHandler('linkURL', [$this, 'solveUrlEmail']);
-		$texy->addHandler('beforeParse', [$this, 'beforeParse']);
+		$texy->addHandler('newReference', $this->solveNewReference(...));
+		$texy->addHandler('linkReference', $this->solve(...));
+		$texy->addHandler('linkEmail', $this->solveUrlEmail(...));
+		$texy->addHandler('linkURL', $this->solveUrlEmail(...));
+		$texy->addHandler('beforeParse', $this->beforeParse(...));
 
 		// [reference]
 		$texy->registerLinePattern(
-			[$this, 'patternReference'],
+			$this->patternReference(...),
 			'#(\[[^\[\]\*\n' . Patterns::MARK . ']++\])#U',
-			'link/reference'
+			'link/reference',
 		);
 
 		// direct url; charaters not allowed in URL <>[\]^`{|}
 		$texy->registerLinePattern(
-			[$this, 'patternUrlEmail'],
+			$this->patternUrlEmail(...),
 			'#(?<=^|[\s([<:\x17])(?:https?://|www\.|ftp://)[0-9.' . Patterns::CHAR . '-][/\d' . Patterns::CHAR . '+\.~%&?@=_:;\#$!,*()\x{ad}-]{1,1000}[/\d' . Patterns::CHAR . '+~?@=_\#$*]#u',
 			'link/url',
-			'#(?:https?://|www\.|ftp://)#u'
+			'#(?:https?://|www\.|ftp://)#u',
 		);
 
 		// direct email
 		self::$EMAIL = '[' . Patterns::CHAR . '][0-9.+_' . Patterns::CHAR . '-]{0,63}@[0-9.+_' . Patterns::CHAR . '\x{ad}-]{1,252}\.[' . Patterns::CHAR . '\x{ad}]{2,19}';
 		$texy->registerLinePattern(
-			[$this, 'patternUrlEmail'],
+			$this->patternUrlEmail(...),
 			'#(?<=^|[\s([<\x17])' . self::$EMAIL . '#u',
 			'link/email',
-			'#' . self::$EMAIL . '#u'
+			'#' . self::$EMAIL . '#u',
 		);
 	}
 
@@ -83,7 +82,7 @@ final class LinkModule extends Texy\Module
 	/**
 	 * Text pre-processing.
 	 */
-	public function beforeParse(Texy\Texy $texy, &$text): void
+	private function beforeParse(Texy\Texy $texy, &$text): void
 	{
 		self::$livelock = [];
 
@@ -92,7 +91,7 @@ final class LinkModule extends Texy\Module
 			$text = Texy\Regexp::replace(
 				$text,
 				'#^\[([^\[\]\#\?\*\n]{1,100})\]: ++(\S{1,1000})([\ \t].{1,1000})?' . Patterns::MODIFIER . '?\s*()$#mUu',
-				[$this, 'patternReferenceDef']
+				$this->patternReferenceDef(...),
 			);
 		}
 	}
@@ -100,9 +99,8 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: [la trine]: http://www.latrine.cz/ text odkazu .(title)[class]{style}.
-	 * @internal
 	 */
-	public function patternReferenceDef(array $matches): string
+	private function patternReferenceDef(array $matches): string
 	{
 		[, $mRef, $mLink, $mLabel, $mMod] = $matches;
 		// [1] => [ (reference) ]
@@ -121,9 +119,8 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: [ref].
-	 * @return Texy\HtmlElement|string|null
 	 */
-	public function patternReference(LineParser $parser, array $matches)
+	public function patternReference(LineParser $parser, array $matches): Texy\HtmlElement|string|null
 	{
 		[, $mRef] = $matches;
 		// [1] => [ref]
@@ -161,9 +158,8 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Callback for: http://davidgrudl.com david@grudl.com.
-	 * @return Texy\HtmlElement|string|null
 	 */
-	public function patternUrlEmail(LineParser $parser, array $matches, string $name)
+	public function patternUrlEmail(LineParser $parser, array $matches, string $name): Texy\HtmlElement|string|null
 	{
 		[$mURL] = $matches;
 		// [0] => URL
@@ -174,7 +170,7 @@ final class LinkModule extends Texy\Module
 		return $this->texy->invokeAroundHandlers(
 			$name === 'link/email' ? 'linkEmail' : 'linkURL',
 			$parser,
-			[$link]
+			[$link],
 		);
 	}
 
@@ -245,7 +241,7 @@ final class LinkModule extends Texy\Module
 			$this->checkLink($link);
 		}
 
-		if (strpos((string) $link->URL, '%s') !== false) {
+		if (str_contains((string) $link->URL, '%s')) {
 			$link->URL = str_replace('%s', urlencode($texy->stringToText($label)), $link->URL);
 		}
 
@@ -257,11 +253,12 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 *
-	 * @param  Texy\HtmlElement|string $content
-	 * @return Texy\HtmlElement|string
 	 */
-	public function solve(?HandlerInvocation $invocation, Link $link, $content = null)
+	public function solve(
+		?HandlerInvocation $invocation,
+		Link $link,
+		Texy\HtmlElement|string|null $content = null,
+	): Texy\HtmlElement|string
 	{
 		if ($link->URL == null) {
 			return $content;
@@ -290,7 +287,7 @@ final class LinkModule extends Texy\Module
 			$el->attrs['href'] = Texy\Helpers::prependRoot($link->URL, $this->root);
 
 			// rel="nofollow"
-			if ($nofollow || ($this->forceNoFollow && strpos($el->attrs['href'], '//') !== false)) {
+			if ($nofollow || ($this->forceNoFollow && str_contains($el->attrs['href'], '//'))) {
 				$el->attrs['rel'] = 'nofollow';
 			}
 		}
@@ -307,9 +304,8 @@ final class LinkModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|string
 	 */
-	public function solveUrlEmail(HandlerInvocation $invocation, Link $link)
+	private function solveUrlEmail(HandlerInvocation $invocation, Link $link): Texy\HtmlElement|string
 	{
 		$content = $this->textualUrl($link);
 		$content = $this->texy->protect($content, Texy\Texy::CONTENT_TEXTUAL);
@@ -320,7 +316,7 @@ final class LinkModule extends Texy\Module
 	/**
 	 * Finish invocation.
 	 */
-	public function solveNewReference(HandlerInvocation $invocation, string $name)
+	private function solveNewReference(HandlerInvocation $invocation, string $name)
 	{
 		// no change
 	}

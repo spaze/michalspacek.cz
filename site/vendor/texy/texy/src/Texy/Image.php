@@ -15,28 +15,25 @@ namespace Texy;
  */
 final class Image
 {
-	use Strict;
+	/** base image URL */
+	public ?string $URL = null;
 
-	/** @var string|null  base image URL */
-	public $URL;
+	/** anchored image URL */
+	public ?string $linkedURL = null;
 
-	/** @var string|null  anchored image URL */
-	public $linkedURL;
+	/** optional image width */
+	public ?int $width = null;
 
-	/** @var int|null  optional image width */
-	public $width;
+	/** optional image height */
+	public ?int $height = null;
 
-	/** @var int|null  optional image height */
-	public $height;
+	/** image width and height are maximal */
+	public bool $asMax = false;
 
-	/** @var bool  image width and height are maximal */
-	public $asMax;
+	public ?Modifier $modifier;
 
-	/** @var Modifier|null */
-	public $modifier;
-
-	/** @var string|null  reference name (if is stored as reference) */
-	public $name;
+	/** reference name (if is stored as reference) */
+	public ?string $name;
 
 
 	public function __construct()

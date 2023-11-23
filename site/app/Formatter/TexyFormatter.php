@@ -109,7 +109,7 @@ class TexyFormatter
 		$this->texy->headingModule->idPrefix = '';
 		$this->texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2); // en_US → en
 		$this->texy->allowed['phrase/del'] = true;
-		$this->texy->addHandler('phrase', [$this->phraseHandler, 'solve']);
+		$this->texy->addHandler('phrase', $this->phraseHandler->solve(...));
 		$this->setTopHeading($this->topHeading);
 		return $this->texy;
 	}
