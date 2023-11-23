@@ -15,6 +15,9 @@ class DateTimeZoneFactory
 	 */
 	public function get(string $timezone): DateTimeZone
 	{
+		if ($timezone === '') {
+			throw new InvalidTimezoneException($timezone);
+		}
 		try {
 			return new DateTimeZone($timezone);
 		} catch (Exception $e) {
