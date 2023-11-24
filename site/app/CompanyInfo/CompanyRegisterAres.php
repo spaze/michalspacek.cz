@@ -61,9 +61,8 @@ class CompanyRegisterAres implements CompanyRegister
 					'psc' => Expect::int(),
 					'kodStatu' => Expect::string(),
 				])->otherItems(),
-				'primarniZdroj' => Expect::string(),
 			])->otherItems();
-			/** @var object{ico:string, dic:string|null, obchodniJmeno:string, sidlo:object{nazevObce:string, nazevUlice:string, cisloDomovni:int, cisloOrientacni:int, cisloOrientacniPismeno:string, psc:int, kodStatu:string}, primarniZdroj:string|null} $data */
+			/** @var object{ico:string, dic:string|null, obchodniJmeno:string, sidlo:object{nazevObce:string, nazevUlice:string, cisloDomovni:int, cisloOrientacni:int, cisloOrientacniPismeno:string, psc:int, kodStatu:string}} $data */
 			$data = $this->schemaProcessor->process($schema, Json::decode($content));
 		} catch (JsonException | ValidationException $e) {
 			throw new CompanyInfoException($e->getMessage(), previous: $e);
@@ -85,7 +84,7 @@ class CompanyRegisterAres implements CompanyRegister
 			$streetAndNumber,
 			$data->sidlo->nazevObce,
 			(string)$data->sidlo->psc,
-			$this->resolveCountryCode($data->primarniZdroj, $data->sidlo->kodStatu, $companyId),
+			strtolower($data->sidlo->kodStatu),
 		);
 	}
 
@@ -121,22 +120,6 @@ class CompanyRegisterAres implements CompanyRegister
 			$result = "{$result} {$streetNumber}";
 		}
 		return $result;
-	}
-
-
-	/**
-	 * @throws CompanyInfoException
-	 */
-	private function resolveCountryCode(?string $source, string $code, string $companyId): string
-	{
-		if ($source === 'res') {
-			if ($code === '1') {
-				return 'cz';
-			} else {
-				throw new CompanyInfoException("Invalid country code {$code} from source {$source} for company {$companyId}");
-			}
-		}
-		return strtolower($code);
 	}
 
 }
