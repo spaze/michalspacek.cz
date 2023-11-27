@@ -424,20 +424,20 @@
         },
         {
             "name": "nette/command-line",
-            "version": "v1.6",
+            "version": "v1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/command-line.git",
-                "reference": "ff1ba481afa981a7e5a7c5e75c7f55668d471c1e"
+                "reference": "fafa1c5626400be673e45949bc01e4349b3a8b41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/command-line/zipball/ff1ba481afa981a7e5a7c5e75c7f55668d471c1e",
-                "reference": "ff1ba481afa981a7e5a7c5e75c7f55668d471c1e",
+                "url": "https://api.github.com/repos/nette/command-line/zipball/fafa1c5626400be673e45949bc01e4349b3a8b41",
+                "reference": "fafa1c5626400be673e45949bc01e4349b3a8b41",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2 <8.3"
+                "php": "7.2 - 8.3"
             },
             "require-dev": {
                 "nette/tester": "^2.0",
@@ -480,9 +480,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/command-line/issues",
-                "source": "https://github.com/nette/command-line/tree/v1.6"
+                "source": "https://github.com/nette/command-line/tree/v1.7"
             },
-            "time": "2022-12-12T17:46:11+00:00"
+            "time": "2023-11-26T23:12:04+00:00"
         },
         {
             "name": "nette/component-model",
@@ -3155,16 +3155,16 @@
         },
         {
             "name": "efabrica/phpstan-latte",
-            "version": "0.16.2",
+            "version": "0.16.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/efabrica-team/phpstan-latte.git",
-                "reference": "833b8e80a30c9e95426456fe90742de70968067a"
+                "reference": "e4945f10ec159df5ef6b0add9a87799a7883414d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/833b8e80a30c9e95426456fe90742de70968067a",
-                "reference": "833b8e80a30c9e95426456fe90742de70968067a",
+                "url": "https://api.github.com/repos/efabrica-team/phpstan-latte/zipball/e4945f10ec159df5ef6b0add9a87799a7883414d",
+                "reference": "e4945f10ec159df5ef6b0add9a87799a7883414d",
                 "shasum": ""
             },
             "require": {
@@ -3172,7 +3172,7 @@
                 "latte/latte": "^2.11.6 | ^3.0.4",
                 "nette/finder": "^2.5|^3.0",
                 "nette/utils": "^3.2|^4.0",
-                "php": ">=7.4 <8.3",
+                "php": ">=7.4 <8.4",
                 "phpstan/phpstan": "^1.10.21",
                 "phpstan/phpstan-nette": "^1.2.6"
             },
@@ -3207,9 +3207,9 @@
             ],
             "support": {
                 "issues": "https://github.com/efabrica-team/phpstan-latte/issues",
-                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.16.2"
+                "source": "https://github.com/efabrica-team/phpstan-latte/tree/0.16.3"
             },
-            "time": "2023-11-22T13:11:59+00:00"
+            "time": "2023-11-26T22:53:13+00:00"
         },
         {
             "name": "nette/tester",
@@ -3397,16 +3397,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.24.3",
+            "version": "1.24.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "12f01d214f1c73b9c91fdb3b1c415e4c70652083"
+                "reference": "6bd0c26f3786cd9b7c359675cb789e35a8e07496"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/12f01d214f1c73b9c91fdb3b1c415e4c70652083",
-                "reference": "12f01d214f1c73b9c91fdb3b1c415e4c70652083",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/6bd0c26f3786cd9b7c359675cb789e35a8e07496",
+                "reference": "6bd0c26f3786cd9b7c359675cb789e35a8e07496",
                 "shasum": ""
             },
             "require": {
@@ -3438,9 +3438,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.24.3"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.24.4"
             },
-            "time": "2023-11-18T20:15:32+00:00"
+            "time": "2023-11-26T18:29:22+00:00"
         },
         {
             "name": "phpstan/phpstan",
