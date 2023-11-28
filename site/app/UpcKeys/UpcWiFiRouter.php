@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\UpcKeys;
 
-interface RouterInterface
+interface UpcWiFiRouter
 {
 
 	/**

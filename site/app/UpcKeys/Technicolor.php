@@ -18,7 +18,7 @@ use Nette\Utils\JsonException;
 use PDOException;
 use Tracy\Debugger;
 
-class Technicolor implements RouterInterface
+class Technicolor implements UpcWiFiRouter
 {
 
 	private const PREFIXES = ['SAAP', 'SAPP', 'SBAP'];

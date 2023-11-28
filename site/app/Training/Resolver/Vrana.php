@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Resolver;
 
 use Nette\Utils\Strings;
 
-class Vrana implements ApplicationSourceResolverInterface
+class Vrana implements ApplicationSourceResolver
 {
 
 	public function isTrainingApplicationOwner(string $note): bool

@@ -5,7 +5,7 @@ namespace MichalSpacekCz\UpcKeys;
 
 use Nette\Database\Explorer;
 
-class Ubee implements RouterInterface
+class Ubee implements UpcWiFiRouter
 {
 
 	private const OUI_UBEE = '647c34';

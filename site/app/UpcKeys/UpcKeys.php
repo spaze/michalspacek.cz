@@ -13,7 +13,7 @@ class UpcKeys
 
 	private const SSID_PLACEHOLDER = 'UPC1234567';
 
-	/** @var array<class-string<RouterInterface>, RouterInterface> */
+	/** @var array<class-string<UpcWiFiRouter>, UpcWiFiRouter> */
 	private array $routers = [];
 
 	/** @var list<string>|null */
@@ -24,7 +24,7 @@ class UpcKeys
 
 
 	/**
-	 * @param non-empty-list<RouterInterface> $routers
+	 * @param non-empty-list<UpcWiFiRouter> $routers
 	 */
 	public function __construct(array $routers)
 	{
