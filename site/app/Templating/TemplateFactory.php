@@ -10,6 +10,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\TemplateFactory as UiTemplateFactory;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as ApplicationTemplateFactory;
+use Override;
 
 class TemplateFactory implements UiTemplateFactory
 {
@@ -23,6 +24,7 @@ class TemplateFactory implements UiTemplateFactory
 	}
 
 
+	#[Override]
 	public function createTemplate(Control $control = null, string $class = null): DefaultTemplate
 	{
 		$template = $this->templateFactory->createTemplate($control, $class);

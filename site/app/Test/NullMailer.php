@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Test;
 use LogicException;
 use Nette\Mail\Mailer;
 use Nette\Mail\Message;
+use Override;
 
 class NullMailer implements Mailer
 {
@@ -13,6 +14,7 @@ class NullMailer implements Mailer
 	private ?Message $mail = null;
 
 
+	#[Override]
 	public function send(Message $mail): void
 	{
 		$this->mail = $mail;

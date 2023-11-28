@@ -8,6 +8,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -24,6 +25,7 @@ class StatusesTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

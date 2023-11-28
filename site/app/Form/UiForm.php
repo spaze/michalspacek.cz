@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Override;
 
 class UiForm extends Form
 {
@@ -35,6 +36,7 @@ class UiForm extends Form
 	 * @return object|array<string, mixed>
 	 * @deprecated Use getFormValues() instead
 	 */
+	#[Override]
 	public function getValues($returnType = null, ?array $controls = null): object|array
 	{
 		if (func_num_args() === 0) {
@@ -49,6 +51,7 @@ class UiForm extends Form
 	 * @return object|array<string, mixed>
 	 * @deprecated Use getUntrustedFormValues() instead
 	 * */
+	#[Override]
 	public function getUntrustedValues($returnType = ArrayHash::class, ?array $controls = null): object|array
 	{
 		if (func_num_args() === 0) {

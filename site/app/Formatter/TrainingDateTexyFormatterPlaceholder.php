@@ -7,6 +7,7 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Utils\Html;
+use Override;
 
 class TrainingDateTexyFormatterPlaceholder implements TexyFormatterPlaceholder
 {
@@ -19,12 +20,14 @@ class TrainingDateTexyFormatterPlaceholder implements TexyFormatterPlaceholder
 	}
 
 
+	#[Override]
 	public static function getPlaceholder(): string
 	{
 		return 'TRAINING_DATE';
 	}
 
 
+	#[Override]
 	public function replace(string $placeholder): string
 	{
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();

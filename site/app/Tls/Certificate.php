@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use JsonSerializable;
 use MichalSpacekCz\DateTime\DateTime;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
+use Override;
 
 class Certificate implements JsonSerializable
 {
@@ -102,6 +103,7 @@ class Certificate implements JsonSerializable
 	/**
 	 * @return array{commonName:string, commonNameExt:string|null, notBefore:string, notBeforeTz:string, notAfter:string, notAfterTz:string, expiringThreshold:int, serialNumber:string|null, now:string, nowTz:string}
 	 */
+	#[Override]
 	public function jsonSerialize(): array
 	{
 		return [

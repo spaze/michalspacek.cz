@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test;
 
+use Override;
 use Tracy\ILogger;
 
 class NullLogger implements ILogger
@@ -12,6 +13,7 @@ class NullLogger implements ILogger
 	private array $logged = [];
 
 
+	#[Override]
 	public function log(mixed $value, string $level = self::INFO): ?string
 	{
 		$this->logged[] = $value;

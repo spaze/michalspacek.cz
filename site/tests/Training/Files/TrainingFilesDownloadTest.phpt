@@ -14,6 +14,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\RedirectResponse;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -41,6 +42,7 @@ class TrainingFilesDownloadTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

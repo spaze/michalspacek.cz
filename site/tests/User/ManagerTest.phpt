@@ -18,6 +18,7 @@ use Nette\DI\Container;
 use Nette\Security\Passwords;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
+use Override;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tester\Assert;
 use Tester\TestCase;
@@ -46,6 +47,7 @@ class ManagerTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->user->refreshStorage();

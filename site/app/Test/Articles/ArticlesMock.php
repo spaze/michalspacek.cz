@@ -8,6 +8,7 @@ use MichalSpacekCz\Articles\ArticleEdit;
 use MichalSpacekCz\Articles\Articles;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use Nette\Utils\Html;
+use Override;
 
 class ArticlesMock extends Articles
 {
@@ -22,6 +23,7 @@ class ArticlesMock extends Articles
 	}
 
 
+	#[Override]
 	public function getNearestPublishDate(): ?DateTime
 	{
 		return null;
@@ -71,6 +73,7 @@ class ArticlesMock extends Articles
 	/**
 	 * @return list<BlogPost>
 	 */
+	#[Override]
 	public function getAll(?int $limit = null): array
 	{
 		return $this->articles;

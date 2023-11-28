@@ -13,6 +13,7 @@ use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiResponseInvalidException;
 use MichalSpacekCz\UpcKeys\Exceptions\UpcKeysApiUnknownPrefixException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -31,6 +32,7 @@ class TechnicolorTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

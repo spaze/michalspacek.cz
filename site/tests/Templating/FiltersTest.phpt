@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Templating;
 
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Utils\Html;
+use Override;
 use Stringable;
 use Tester\Assert;
 use Tester\TestCase;
@@ -28,6 +29,7 @@ class FiltersTest extends TestCase
 
 		$toString = new class () implements Stringable {
 
+			#[Override]
 			public function __toString(): string
 			{
 				return __FUNCTION__;
@@ -36,6 +38,7 @@ class FiltersTest extends TestCase
 		};
 		$toStringNoInterface = new class () {
 
+			#[Override]
 			public function __toString(): string
 			{
 				return __FUNCTION__;

@@ -22,6 +22,7 @@ use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
+use Override;
 use ReflectionClass;
 use ReflectionMethod;
 use Tester\Assert;
@@ -102,6 +103,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function setUp(): void
 	{
 		$this->onSuccessAction = null;
@@ -121,6 +123,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

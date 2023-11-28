@@ -12,6 +12,7 @@ use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Tls\Exceptions\SomeCertificatesLoggedToFileException;
 use Nette\Database\DriverException;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -36,6 +37,7 @@ class CertificatesTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->logger->reset();

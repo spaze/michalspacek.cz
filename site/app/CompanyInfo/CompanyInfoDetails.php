@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\CompanyInfo;
 
 use JsonSerializable;
+use Override;
 
 class CompanyInfoDetails implements JsonSerializable
 {
@@ -31,6 +32,7 @@ class CompanyInfoDetails implements JsonSerializable
 	/**
 	 * @return array<string, int|string|null>
 	 */
+	#[Override]
 	public function jsonSerialize(): array
 	{
 		return array_filter([

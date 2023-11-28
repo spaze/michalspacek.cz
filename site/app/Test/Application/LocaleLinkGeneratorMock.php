@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Test\Application;
 
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
+use Override;
 
 class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 {
@@ -18,18 +19,21 @@ class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	}
 
 
+	#[Override]
 	public function links(string $destination, array $params = []): array
 	{
 		return [];
 	}
 
 
+	#[Override]
 	public function defaultParams(array $params): array
 	{
 		return ['*' => $params];
 	}
 
 
+	#[Override]
 	public function setDefaultParams(array &$params, array $defaultParams): void
 	{
 		$params['*'] = $defaultParams;
@@ -45,6 +49,7 @@ class LocaleLinkGeneratorMock extends LocaleLinkGenerator
 	}
 
 
+	#[Override]
 	public function allLinks(string $destination, array $params = []): array
 	{
 		return $this->allLinks;

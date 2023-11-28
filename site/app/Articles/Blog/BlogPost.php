@@ -16,6 +16,7 @@ use MichalSpacekCz\Articles\Components\ArticleWithUpdateTime;
 use MichalSpacekCz\Feed\ExportsOmittable;
 use MichalSpacekCz\Twitter\TwitterCard;
 use Nette\Utils\Html;
+use Override;
 
 class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, ArticleWithSummary, ArticleWithText, ArticleWithTags, ArticleWithUpdateTime, ArticleWithPublishTime, ArticleWithEdits
 {
@@ -59,18 +60,21 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	}
 
 
+	#[Override]
 	public function hasId(): bool
 	{
 		return $this->id !== null;
 	}
 
 
+	#[Override]
 	public function getId(): ?int
 	{
 		return $this->id;
 	}
 
 
+	#[Override]
 	public function getSlug(): string
 	{
 		return $this->slug;
@@ -107,12 +111,14 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	}
 
 
+	#[Override]
 	public function hasSummary(): bool
 	{
 		return $this->lead !== null;
 	}
 
 
+	#[Override]
 	public function getSummary(): ?Html
 	{
 		return $this->lead;
@@ -125,6 +131,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	}
 
 
+	#[Override]
 	public function getText(): Html
 	{
 		return $this->text;
@@ -149,6 +156,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	}
 
 
+	#[Override]
 	public function getPublishTime(): ?DateTime
 	{
 		return $this->published;
@@ -176,6 +184,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	/**
 	 * @return list<string>
 	 */
+	#[Override]
 	public function getTags(): array
 	{
 		return $this->tags;
@@ -185,6 +194,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	/**
 	 * @return list<string>
 	 */
+	#[Override]
 	public function getSlugTags(): array
 	{
 		return $this->slugTags;
@@ -206,6 +216,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	}
 
 
+	#[Override]
 	public function getUpdateTime(): ?DateTime
 	{
 		return $this->edits ? current($this->edits)->getEditedAt() : null;
@@ -221,6 +232,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	/**
 	 * @return list<ArticleEdit>
 	 */
+	#[Override]
 	public function getEdits(): array
 	{
 		return $this->edits;
@@ -245,6 +257,7 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	}
 
 
+	#[Override]
 	public function omitExports(): bool
 	{
 		return $this->omitExports;

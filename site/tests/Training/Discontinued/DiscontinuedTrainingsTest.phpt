@@ -10,6 +10,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Http\IResponse;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -28,6 +29,7 @@ class DiscontinuedTrainingsTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

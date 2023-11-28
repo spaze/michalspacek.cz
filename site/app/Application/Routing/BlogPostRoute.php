@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Application\Routing;
 use MichalSpacekCz\Articles\Blog\BlogPostLoader;
 use Nette\Application\Routers\Route;
 use Nette\Http\IRequest;
+use Override;
 
 /**
  * The bidirectional route is responsible for mapping
@@ -33,6 +34,7 @@ class BlogPostRoute extends Route
 	 * @param IRequest $httpRequest
 	 * @return array<string, string>|null
 	 */
+	#[Override]
 	public function match(IRequest $httpRequest): ?array
 	{
 		$url = $httpRequest->getUrl();

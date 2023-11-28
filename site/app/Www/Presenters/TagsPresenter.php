@@ -15,6 +15,7 @@ use MichalSpacekCz\Articles\Components\ArticleWithTags;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Utils\Strings;
 use Nette\Application\BadRequestException;
+use Override;
 
 class TagsPresenter extends BasePresenter
 {
@@ -104,6 +105,7 @@ class TagsPresenter extends BasePresenter
 	/**
 	 * Get original module:presenter:action for locale links.
 	 */
+	#[Override]
 	protected function getLocaleLinkAction(): string
 	{
 		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Tags:');
@@ -115,6 +117,7 @@ class TagsPresenter extends BasePresenter
 	 *
 	 * @return array<string, array<string, string>>
 	 */
+	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->localeLinkParams;

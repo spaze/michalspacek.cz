@@ -10,6 +10,7 @@ use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
+use Override;
 use ReflectionException;
 
 class ApplicationPresenter
@@ -41,6 +42,7 @@ class ApplicationPresenter
 			/**
 			 * @param list<mixed>|mixed $args
 			 */
+			#[Override]
 			public function link(string $destination, $args = []): string
 			{
 				$args = func_num_args() < 3 && is_array($args)

@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training\Files;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use Override;
 
 /**
  * @implements IteratorAggregate<int, TrainingFile>
@@ -26,12 +27,14 @@ class TrainingFilesCollection implements IteratorAggregate, Countable
 	/**
 	 * @return ArrayIterator<int, TrainingFile>
 	 */
+	#[Override]
 	public function getIterator(): ArrayIterator
 	{
 		return new ArrayIterator($this->files);
 	}
 
 
+	#[Override]
 	public function count(): int
 	{
 		return count($this->files);

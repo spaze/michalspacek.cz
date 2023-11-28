@@ -7,6 +7,7 @@ use Nette\Http\FileUpload;
 use Nette\Http\IRequest;
 use Nette\Http\UrlImmutable;
 use Nette\Http\UrlScript;
+use Override;
 
 class Request implements IRequest
 {
@@ -42,6 +43,7 @@ class Request implements IRequest
 	}
 
 
+	#[Override]
 	public function getUrl(): UrlScript
 	{
 		return $this->url;
@@ -54,12 +56,14 @@ class Request implements IRequest
 	}
 
 
+	#[Override]
 	public function getQuery(string $key = null)
 	{
 		return $key === null ? $this->url->getQueryParameters() : $this->url->getQueryParameter($key);
 	}
 
 
+	#[Override]
 	public function getPost(string $key = null)
 	{
 		return func_num_args() === 0 ? $this->post : $this->post[$key] ?? null;
@@ -76,6 +80,7 @@ class Request implements IRequest
 	 * @param string $key
 	 * @return FileUpload|null
 	 */
+	#[Override]
 	public function getFile(string $key): ?FileUpload
 	{
 		return $this->files[$key] ?? null;
@@ -85,12 +90,14 @@ class Request implements IRequest
 	/**
 	 * @return array<string, FileUpload>
 	 */
+	#[Override]
 	public function getFiles(): array
 	{
 		return $this->files;
 	}
 
 
+	#[Override]
 	public function getCookie(string $key): mixed
 	{
 		return $this->cookies[$key] ?? null;
@@ -100,24 +107,28 @@ class Request implements IRequest
 	/**
 	 * @return array<string, mixed>
 	 */
+	#[Override]
 	public function getCookies(): array
 	{
 		return $this->cookies;
 	}
 
 
+	#[Override]
 	public function getMethod(): string
 	{
 		return $this->method;
 	}
 
 
+	#[Override]
 	public function isMethod(string $method): bool
 	{
 		return strcasecmp($this->method, $method) === 0;
 	}
 
 
+	#[Override]
 	public function getHeader(string $header): ?string
 	{
 		return $this->headers[strtolower($header)] ?? null;
@@ -127,36 +138,42 @@ class Request implements IRequest
 	/**
 	 * @return array<string, string>
 	 */
+	#[Override]
 	public function getHeaders(): array
 	{
 		return $this->headers;
 	}
 
 
+	#[Override]
 	public function isSecured(): bool
 	{
 		return $this->url->getScheme() === 'https';
 	}
 
 
+	#[Override]
 	public function isAjax(): bool
 	{
 		return $this->getHeader('X-Requested-With') === 'XMLHttpRequest';
 	}
 
 
+	#[Override]
 	public function getRemoteAddress(): ?string
 	{
 		return $this->remoteAddress;
 	}
 
 
+	#[Override]
 	public function getRemoteHost(): ?string
 	{
 		return $this->remoteHost;
 	}
 
 
+	#[Override]
 	public function getRawBody(): ?string
 	{
 		return $this->rawBody;
