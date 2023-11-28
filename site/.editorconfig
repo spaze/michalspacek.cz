@@ -7,6 +7,7 @@ indent_style = tab
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+ij_php_attributes_wrap = split_into_lines
 ij_php_spaces_around_assignment_in_declare = true
 ij_php_blank_lines_around_class = 1
 ij_php_blank_lines_around_constants = 1
