@@ -9,6 +9,7 @@ parameters:
 		- php
 		- phpt
 	level: max
+	checkMissingOverrideMethodAttribute: true
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
