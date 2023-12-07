@@ -7,7 +7,7 @@
 	<arg value="p"/>
 	<rule ref="vendor/spaze/coding-standard/src/ruleset.xml"/>
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
-		<exclude-pattern>tests/</exclude-pattern>  <!-- PHPStorm's @noinspection must be on the first line, before declare(strict_types = 1) -->
+		<exclude-pattern>tests/</exclude-pattern> <!-- PHPStorm's @noinspection must be on the first line, before declare(strict_types = 1) -->
 	</rule>
-	<exclude-pattern>public/www.michalspacek.cz/info.php</exclude-pattern>  <!-- Contains only HTML, no PHP code -->
+	<exclude-pattern>public/www.michalspacek.cz/info.php</exclude-pattern> <!-- Contains only HTML, no PHP code -->
 </ruleset>
