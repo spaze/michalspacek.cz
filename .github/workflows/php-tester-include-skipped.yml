@@ -27,7 +27,7 @@ jobs:
       if: failure()
       run: for i in $(find ./site/tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
     - name: Upload test code coverage
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: success()
       with:
         name: Test code coverage (PHP ${{ matrix.php-version }})
