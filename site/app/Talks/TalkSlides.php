@@ -295,6 +295,7 @@ class TalkSlides
 	 */
 	public function saveSlides(int $talkId, array $originalSlides, ArrayHash $newSlides): void
 	{
+		$this->otherSlides = [];
 		$this->database->beginTransaction();
 		// Reset slide numbers so they can be shifted around without triggering duplicated key violations
 		$this->database->query('UPDATE talk_slides SET number = null WHERE key_talk = ?', $talkId);
