@@ -9,9 +9,12 @@ parameters:
 			com: burger.test
 	encryption:
 		keys:
+			password:
+				test: "f015033d6b0b24e77bc9cbd86ec52ed5bc94ca4901c9f1378768423ec0278d66"
 			email:
 				test: "17fa3225effc107a689eb72fd8c20983bbc690bf9ea42a2f0306e0c226720845"
 		activeKeyIds:
+			password: test
 			email: test
 	awsLambda:
 		upcKeys:

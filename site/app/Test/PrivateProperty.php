@@ -18,4 +18,14 @@ class PrivateProperty
 		$property->setValue($object, $value);
 	}
 
+
+	/**
+	 * @throws ReflectionException
+	 */
+	public static function getValue(object $object, string $property): mixed
+	{
+		$property = new ReflectionProperty($object, $property);
+		return $property->getValue($object);
+	}
+
 }
