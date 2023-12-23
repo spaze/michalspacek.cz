@@ -6,9 +6,9 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
-use MichalSpacekCz\Talks\TalkSlides;
+use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
+use MichalSpacekCz\Talks\Slides\TalkSlides;
 use Nette\Application\Request;
-use Nette\Database\Row;
 use Nette\Forms\Container;
 use Nette\Utils\Html;
 
@@ -26,27 +26,26 @@ class TalkSlidesFormFactory
 
 	/**
 	 * @param callable(Html, string, int): void $onSuccess
-	 * @param Row[] $slides
 	 */
-	public function create(callable $onSuccess, int $talkId, array $slides, int $newCount, Request $request): UiForm
+	public function create(callable $onSuccess, int $talkId, TalkSlideCollection $slides, int $newCount, Request $request): UiForm
 	{
 		$form = $this->factory->create();
 		$slidesContainer = $form->addContainer('slides');
 		foreach ($slides as $slide) {
-			$slideIdContainer = $slidesContainer->addContainer($slide->slideId);
-			$this->addSlideFields($form, $slideIdContainer, $slide->filenamesTalkId);
+			$slideIdContainer = $slidesContainer->addContainer($slide->getId());
+			$this->addSlideFields($form, $slideIdContainer, $slide->getFilenamesTalkId());
 			$values = [
-				'alias' => $slide->alias,
-				'number' => $slide->number,
-				'title' => $slide->title,
-				'filename' => $slide->filename,
-				'filenameAlternative' => $slide->filenameAlternative,
-				'speakerNotes' => $slide->speakerNotesTexy,
+				'alias' => $slide->getAlias(),
+				'number' => $slide->getNumber(),
+				'title' => $slide->getTitle(),
+				'filename' => $slide->getFilename(),
+				'filenameAlternative' => $slide->getFilenameAlternative(),
+				'speakerNotes' => $slide->getSpeakerNotesTexy(),
 			];
 			$slideIdContainer->setDefaults($values);
 		}
 
-		if (empty($slides) && $newCount === 0) {
+		if (count($slides) === 0 && $newCount === 0) {
 			$newCount = 1;
 		}
 		$newContainer = $form->addContainer('new');
@@ -60,7 +59,8 @@ class TalkSlidesFormFactory
 
 		$form->onSuccess[] = function (UiForm $form) use ($slides, $onSuccess, $talkId): void {
 			try {
-				$this->talkSlides->saveSlides($talkId, $slides, $form->getFormValues());
+				$values = $form->getFormValues();
+				$this->talkSlides->saveSlides($talkId, $slides, (array)$values->slides, array_values((array)$values->new), $values->deleteReplaced);
 				$message = $this->texyFormatter->translate('messages.talks.admin.slideadded');
 				$type = 'info';
 			} catch (DuplicatedSlideException $e) {
@@ -94,7 +94,7 @@ class TalkSlidesFormFactory
 		$container->addText('alias', 'Alias:')
 			->setRequired('Zadejte prosím alias')
 			->addRule($form::Pattern, 'Alias musí být ve formátu [_.,a-z0-9-]+', '[_.,a-z0-9-]+');
-		$container->addText('number', 'Slajd:')
+		$container->addInteger('number', 'Slajd:')
 			->setHtmlType('number')
 			->setDefaultValue(1)
 			->setHtmlAttribute('class', 'right slide-nr')

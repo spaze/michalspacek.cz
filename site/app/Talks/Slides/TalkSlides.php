@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Talks;
+namespace MichalSpacekCz\Talks\Slides;
 
 use MichalSpacekCz\Application\WindowsSubsystemForLinux;
 use MichalSpacekCz\Formatter\TexyFormatter;
@@ -12,11 +12,12 @@ use MichalSpacekCz\Media\SupportedImageFileFormats;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Exceptions\SlideImageUploadFailedException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
+use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Utils\Base64;
 use MichalSpacekCz\Utils\Hash;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
@@ -72,16 +73,13 @@ class TalkSlides
 
 
 	/**
-	 * Get slides for talk.
-	 *
-	 * @return array<int, Row> slide number => data
 	 * @throws ContentTypeException
 	 */
-	public function getSlides(int $talkId, ?int $filenamesTalkId): array
+	public function getSlides(Talk $talk): TalkSlideCollection
 	{
 		$slides = $this->database->fetchAll(
 			'SELECT
-				id_slide AS slideId,
+				id_slide AS id,
 				alias,
 				number,
 				filename,
@@ -91,11 +89,11 @@ class TalkSlides
 			FROM talk_slides
 			WHERE key_talk = ?
 			ORDER BY number',
-			$talkId,
+			$talk->getId(),
 		);
 
 		$filenames = [];
-		if ($filenamesTalkId) {
+		if ($talk->getFilenamesTalkId()) {
 			$result = $this->database->fetchAll(
 				'SELECT
        				number,
@@ -103,27 +101,39 @@ class TalkSlides
 					filename_alternative AS filenameAlternative
 				FROM talk_slides
 				WHERE key_talk = ?',
-				$filenamesTalkId,
+				$talk->getFilenamesTalkId(),
 			);
 			foreach ($result as $row) {
 				$filenames[$row->number] = [$row->filename, $row->filenameAlternative];
 			}
 		}
 
-		$result = [];
+		$result = new TalkSlideCollection($talk->getId());
 		foreach ($slides as $row) {
 			if (isset($filenames[$row->number])) {
-				$row->filename = $filenames[$row->number][0];
-				$row->filenameAlternative = $filenames[$row->number][1];
-				$row->filenamesTalkId = $filenamesTalkId;
+				$filename = $filenames[$row->number][0];
+				$filenameAlternative = $filenames[$row->number][1];
+				$filenamesTalkId = $talk->getFilenamesTalkId();
 			} else {
-				$row->filenamesTalkId = null;
+				$filename = $row->filename;
+				$filenameAlternative = $row->filenameAlternative;
+				$filenamesTalkId = null;
 			}
-			$row->speakerNotes = $this->texyFormatter->format($row->speakerNotesTexy);
-			$row->image = $row->filename ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talkId, $row->filename) : null;
-			$row->imageAlternative = $row->filenameAlternative ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talkId, $row->filenameAlternative) : null;
-			$row->imageAlternativeType = ($row->filenameAlternative ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($row->filenameAlternative, PATHINFO_EXTENSION)) : null);
-			$result[(int)$row->number] = $row;
+			$slide = new TalkSlide(
+				$row->id,
+				$row->alias,
+				$row->number,
+				$filename ?: null,
+				$filenameAlternative ?: null,
+				$filenamesTalkId,
+				$row->title,
+				$this->texyFormatter->format($row->speakerNotesTexy),
+				$row->speakerNotesTexy,
+				$filename ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talk->getId(), $filename) : null,
+				$filenameAlternative ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talk->getId(), $filenameAlternative) : null,
+				$filenameAlternative ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($filenameAlternative, PATHINFO_EXTENSION)) : null,
+			);
+			$result->add($slide);
 		}
 		return $result;
 	}
@@ -180,12 +190,12 @@ class TalkSlides
 	 * Insert slides.
 	 *
 	 * @param int $talkId
-	 * @param ArrayHash<ArrayHash<int|string>> $slides
+	 * @param list<ArrayHash<int|string|FileUpload|null>> $slides
 	 * @throws DuplicatedSlideException
 	 * @throws ContentTypeException
 	 * @throws SlideImageUploadFailedException
 	 */
-	private function addSlides(int $talkId, ArrayHash $slides): void
+	private function addSlides(int $talkId, array $slides): void
 	{
 		$lastNumber = 0;
 		try {
@@ -217,31 +227,27 @@ class TalkSlides
 	/**
 	 * Update slides.
 	 *
-	 * @param int $talkId
-	 * @param array<int, Row> $originalSlides
-	 * @param ArrayHash<ArrayHash<int|string>> $slides
+	 * @param array<int, ArrayHash<int|string|FileUpload|null>> $slides
 	 * @param bool $removeFiles Remove old files?
 	 * @throws DuplicatedSlideException
 	 * @throws ContentTypeException
 	 * @throws SlideImageUploadFailedException
+	 * @throws TalkSlideDoesNotExistException
 	 */
-	private function updateSlides(int $talkId, array $originalSlides, ArrayHash $slides, bool $removeFiles): void
+	private function updateSlides(int $talkId, TalkSlideCollection $originalSlides, array $slides, bool $removeFiles): void
 	{
 		foreach ($originalSlides as $slide) {
-			foreach ([$slide->filename, $slide->filenameAlternative] as $filename) {
-				if (!empty($filename)) {
-					$this->incrementOtherSlides($filename);
-				}
+			foreach ($slide->getAllFilenames() as $filename) {
+				$this->incrementOtherSlides($filename);
 			}
 		}
 		foreach ($slides as $id => $slide) {
 			$width = self::SLIDE_MAX_WIDTH;
 			$height = self::SLIDE_MAX_HEIGHT;
 
-			$slideNumber = (int)$slide->number;
 			if (isset($slide->replace, $slide->replaceAlternative)) {
-				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), $removeFiles, $originalSlides[$slideNumber]->filename, $width, $height);
-				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), $removeFiles, $originalSlides[$slideNumber]->filenameAlternative, $width, $height);
+				$replace = $this->replaceSlideImage($talkId, $slide->replace, $this->supportedImageFileFormats->getMainExtensionByContentType(...), $removeFiles, $originalSlides->getByNumber($slide->number)->getFilename(), $width, $height);
+				$replaceAlternative = $this->replaceSlideImage($talkId, $slide->replaceAlternative, $this->supportedImageFileFormats->getAlternativeExtensionByContentType(...), $removeFiles, $originalSlides->getByNumber($slide->number)->getFilenameAlternative(), $width, $height);
 				if ($removeFiles) {
 					foreach ($this->deleteFiles as $key => $value) {
 						if (unlink($value)) {
@@ -254,9 +260,9 @@ class TalkSlides
 			}
 
 			try {
-				$this->updateSlidesRow($talkId, $slide->alias, $slideNumber, $replace ?? $slide->filename ?? '', $replaceAlternative ?? $slide->filenameAlternative ?? '', $slide->title, $slide->speakerNotes, $id);
+				$this->updateSlidesRow($talkId, $slide->alias, $slide->number, $replace ?? $slide->filename ?? '', $replaceAlternative ?? $slide->filenameAlternative ?? '', $slide->title, $slide->speakerNotes, $id);
 			} catch (UniqueConstraintViolationException $e) {
-				throw new DuplicatedSlideException($slideNumber, previous: $e);
+				throw new DuplicatedSlideException($slide->number, previous: $e);
 			}
 		}
 	}
@@ -265,7 +271,7 @@ class TalkSlides
 	/**
 	 * @throws UniqueConstraintViolationException
 	 */
-	private function updateSlidesRow(int $talkId, string $alias, int $slideNumber, string $filename, string $filenameAlternative, string $title, string $speakerNotes, mixed $id): void
+	private function updateSlidesRow(int $talkId, string $alias, int $slideNumber, string $filename, string $filenameAlternative, string $title, string $speakerNotes, int $id): void
 	{
 		$this->database->query(
 			'UPDATE talk_slides SET ? WHERE id_slide = ?',
@@ -284,23 +290,21 @@ class TalkSlides
 
 
 	/**
-	 * Save new slides.
-	 *
-	 * @param int $talkId
-	 * @param array<int, Row> $originalSlides
-	 * @param ArrayHash<int|string> $newSlides
-	 * @throws DuplicatedSlideException
+	 * @param array<int, ArrayHash<int|string|FileUpload|null>> $updateSlides
+	 * @param list<ArrayHash<int|string|FileUpload|null>> $newSlides
 	 * @throws ContentTypeException
+	 * @throws DuplicatedSlideException
 	 * @throws SlideImageUploadFailedException
+	 * @throws TalkSlideDoesNotExistException
 	 */
-	public function saveSlides(int $talkId, array $originalSlides, ArrayHash $newSlides): void
+	public function saveSlides(int $talkId, TalkSlideCollection $originalSlides, array $updateSlides, array $newSlides, bool $deleteReplaced): void
 	{
 		$this->otherSlides = [];
 		$this->database->beginTransaction();
 		// Reset slide numbers so they can be shifted around without triggering duplicated key violations
 		$this->database->query('UPDATE talk_slides SET number = null WHERE key_talk = ?', $talkId);
-		$this->updateSlides($talkId, $originalSlides, $newSlides->slides, $newSlides->deleteReplaced);
-		$this->addSlides($talkId, $newSlides->new);
+		$this->updateSlides($talkId, $originalSlides, $updateSlides, $deleteReplaced);
+		$this->addSlides($talkId, $newSlides);
 		$this->database->commit();
 	}
 

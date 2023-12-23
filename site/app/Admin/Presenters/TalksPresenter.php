@@ -10,13 +10,13 @@ use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
+use MichalSpacekCz\Talks\Slides\TalkSlideCollection;
+use MichalSpacekCz\Talks\Slides\TalkSlides;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\TalkInputs;
 use MichalSpacekCz\Talks\TalkInputsFactory;
 use MichalSpacekCz\Talks\Talks;
-use MichalSpacekCz\Talks\TalkSlides;
 use Nette\Application\BadRequestException;
-use Nette\Database\Row;
 use Nette\Utils\Html;
 
 class TalksPresenter extends BasePresenter
@@ -24,8 +24,7 @@ class TalksPresenter extends BasePresenter
 
 	private ?Talk $talk = null;
 
-	/** @var array<int, Row> slide number => data */
-	private array $slides = [];
+	private ?TalkSlideCollection $slides = null;
 
 	private int $newCount = 0;
 
@@ -68,7 +67,7 @@ class TalksPresenter extends BasePresenter
 	{
 		try {
 			$this->talk = $this->talks->getById($param);
-			$this->slides = $this->talkSlides->getSlides($this->talk->getId(), $this->talk->getFilenamesTalkId());
+			$this->slides = $this->talkSlides->getSlides($this->talk);
 		} catch (ContentTypeException | TalkDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
@@ -79,8 +78,7 @@ class TalksPresenter extends BasePresenter
 		$this->template->talk = $this->talk;
 		$this->template->maxSlideUploads = $this->talkSlidesFormFactory->getMaxSlideUploads();
 		$new = $this->httpInput->getPostArray('new');
-		$count = $new ? count($new) : 0;
-		$this->template->newCount = $this->newCount = ($count ?: (int)empty($this->slides));
+		$this->template->newCount = $this->newCount = $new ? count($new) : (int)(count($this->slides) === 0);
 		$this->template->dimensions = $this->talkSlides->getSlideDimensions();
 	}
 
@@ -102,7 +100,7 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentSlides(): UiForm
 	{
-		if (!$this->talk) {
+		if (!$this->talk || !$this->slides) {
 			throw new ShouldNotHappenException('actionSlides() will be called first');
 		}
 		return $this->talkSlidesFormFactory->create(

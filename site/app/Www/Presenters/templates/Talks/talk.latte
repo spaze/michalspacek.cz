@@ -45,12 +45,12 @@
 {else}
 	<div n:if="$slides" id="slides-container">
 	{foreach $slides as $slide}
-		<div id="slide-{$slide->alias}" n:class="$slide->number === $slideNo ? highlight, nobreak">
-		<picture n:tag-if="$slide->imageAlternative">
-			<source n:if="$slide->imageAlternative" srcset="{$slide->imageAlternative}" type="{$slide->imageAlternativeType}">
-			<img src="{$slide->image}" alt="{$slide->title}" title="{$slide->title}" width="800" height="450" {if $iterator->counter > 3}loading="lazy"{/if}>
+		<div id="slide-{$slide->getAlias()}" n:class="$slide->getNumber() === $slideNo ? highlight, nobreak">
+		<picture n:tag-if="$slide->getImageAlternative()">
+			<source n:if="$slide->getImageAlternative()" srcset="{$slide->getImageAlternative()}" type="{$slide->getImageAlternativeType()}">
+			<img n:if="$slide->getImage()" src="{$slide->getImage()}" alt="{$slide->getTitle()}" title="{$slide->getTitle()}" width="800" height="450" {if $iterator->counter > 3}loading="lazy"{/if}>
 		</picture>
-		<p><strong><a n:href="this $talk->getAction(), $slide->alias">#{$slide->number}</a></strong> {$slide->speakerNotes}</p>
+		<p><strong><a n:href="this $talk->getAction(), $slide->getAlias()">#{$slide->getNumber()}</a></strong> {$slide->getSpeakerNotes()}</p>
 		</div>
 	{/foreach}
 	</div>

@@ -90,11 +90,11 @@ services:
 	- MichalSpacekCz\Pulse\Passwords\StorageRegistryFactory
 	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
 	- MichalSpacekCz\Tags\Tags
+	- MichalSpacekCz\Talks\Slides\TalkSlides
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
 	- MichalSpacekCz\Talks\TalkInputsFactory(videoThumbnails: @talkVideoThumbnails)
 	- MichalSpacekCz\Talks\TalkLocaleUrls
 	- MichalSpacekCz\Talks\Talks
-	- MichalSpacekCz\Talks\TalkSlides
 	- MichalSpacekCz\Talks\TalksListFactory
 	- MichalSpacekCz\Templating\Filters
 	latte.templateFactory:

@@ -8,10 +8,11 @@ use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
+use MichalSpacekCz\Talks\Slides\TalkSlides;
 use MichalSpacekCz\Talks\TalkLocaleUrls;
 use MichalSpacekCz\Talks\Talks;
-use MichalSpacekCz\Talks\TalkSlides;
 use MichalSpacekCz\Talks\TalksList;
 use MichalSpacekCz\Talks\TalksListFactory;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
@@ -61,6 +62,7 @@ class TalksPresenter extends BasePresenter
 	 * @param string|null $slide
 	 * @throws InvalidLinkException
 	 * @throws ContentTypeException
+	 * @throws TalkSlideDoesNotExistException
 	 */
 	public function actionTalk(string $name, ?string $slide = null): void
 	{
@@ -73,11 +75,11 @@ class TalksPresenter extends BasePresenter
 			$slidesTalkId = $talk->getSlidesTalkId();
 			if ($slidesTalkId !== null) {
 				$slidesTalk = $this->talks->getById($slidesTalkId);
-				$slides = ($slidesTalk->isPublishSlides() ? $this->talkSlides->getSlides($slidesTalk->getId(), $slidesTalk->getFilenamesTalkId()) : []);
+				$slides = $slidesTalk->isPublishSlides() ? $this->talkSlides->getSlides($slidesTalk) : null;
 				$slideNo = $this->talkSlides->getSlideNo($slidesTalkId, $slide);
 				$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$slidesTalk->getAction()]);
 			} else {
-				$slides = ($talk->isPublishSlides() ? $this->talkSlides->getSlides($talk->getId(), $talk->getFilenamesTalkId()) : []);
+				$slides = $talk->isPublishSlides() ? $this->talkSlides->getSlides($talk) : null;
 				$slideNo = $this->talkSlides->getSlideNo($talk->getId(), $slide);
 				if ($slideNo !== null) {
 					$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$talk->getAction()]);
@@ -97,9 +99,9 @@ class TalksPresenter extends BasePresenter
 		$this->template->talk = $talk;
 		$this->template->slideNo = $slideNo;
 		$this->template->slides = $slides;
-		$this->template->ogImage = ($slides[$slideNo ?? 1]->image ?? ($ogImage !== null ? sprintf($ogImage, $slideNo ?? 1) : null));
+		$this->template->ogImage = $slides?->getByNumber($slideNo ?? 1)->getImage() ?? ($ogImage !== null ? sprintf($ogImage, $slideNo ?? 1) : null);
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
-		$this->template->video = $talk->getVideo()->setLazyLoad(count($slides) > 3);
+		$this->template->video = $talk->getVideo()->setLazyLoad($slides && count($slides) > 3);
 		$this->template->slidesPlatform = $slidesHref !== null ? SlidesPlatform::tryFromUrl($slidesHref)?->getName() : null;
 	}
 
