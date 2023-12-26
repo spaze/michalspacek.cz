@@ -91,7 +91,7 @@ abstract class NodeDefinition implements NodeParentInterface
     /**
      * Returns the parent node.
      */
-    public function end(): NodeParentInterface|NodeBuilder|NodeDefinition|ArrayNodeDefinition|VariableNodeDefinition|null
+    public function end(): NodeParentInterface|NodeBuilder|self|ArrayNodeDefinition|VariableNodeDefinition|null
     {
         return $this->parent;
     }
@@ -105,7 +105,7 @@ abstract class NodeDefinition implements NodeParentInterface
             $this->parent = null;
         }
 
-        if (null !== $this->normalization) {
+        if (isset($this->normalization)) {
             $allowedTypes = [];
             foreach ($this->normalization->before as $expr) {
                 $allowedTypes[] = $expr->allowedTypes;
@@ -115,7 +115,7 @@ abstract class NodeDefinition implements NodeParentInterface
             $this->normalization->declaredTypes = $allowedTypes;
         }
 
-        if (null !== $this->validation) {
+        if (isset($this->validation)) {
             $this->validation->rules = ExprBuilder::buildExpressions($this->validation->rules);
         }
 
