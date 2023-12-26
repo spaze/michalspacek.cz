@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\Marshaller\DefaultMarshaller;
 use Symfony\Component\Cache\Marshaller\MarshallerInterface;
@@ -19,21 +18,21 @@ use Symfony\Component\Cache\PruneableInterface;
 
 class PdoAdapter extends AbstractAdapter implements PruneableInterface
 {
-    protected $maxIdLength = 255;
+    private const MAX_KEY_LENGTH = 255;
 
     private MarshallerInterface $marshaller;
-    private \PDO|Connection $conn;
+    private \PDO $conn;
     private string $dsn;
     private string $driver;
     private string $serverVersion;
-    private mixed $table = 'cache_items';
-    private mixed $idCol = 'item_id';
-    private mixed $dataCol = 'item_data';
-    private mixed $lifetimeCol = 'item_lifetime';
-    private mixed $timeCol = 'item_time';
-    private mixed $username = null;
-    private mixed $password = null;
-    private mixed $connectionOptions = [];
+    private string $table = 'cache_items';
+    private string $idCol = 'item_id';
+    private string $dataCol = 'item_data';
+    private string $lifetimeCol = 'item_lifetime';
+    private string $timeCol = 'item_time';
+    private ?string $username = null;
+    private ?string $password = null;
+    private array $connectionOptions = [];
     private string $namespace;
 
     /**
@@ -75,6 +74,7 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
             $this->dsn = $connOrDsn;
         }
 
+        $this->maxIdLength = self::MAX_KEY_LENGTH;
         $this->table = $options['db_table'] ?? $this->table;
         $this->idCol = $options['db_id_col'] ?? $this->idCol;
         $this->dataCol = $options['db_data_col'] ?? $this->dataCol;
@@ -95,17 +95,12 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
      * Cache ID are saved in a column of maximum length 255. Cache data is
      * saved in a BLOB.
      *
-     * @return void
-     *
      * @throws \PDOException    When the table already exists
      * @throws \DomainException When an unsupported PDO driver is used
      */
-    public function createTable()
+    public function createTable(): void
     {
-        // connect if we are not yet
-        $conn = $this->getConnection();
-
-        $sql = match ($this->driver) {
+        $sql = match ($driver = $this->getDriver()) {
             // We use varbinary for the ID column because it prevents unwanted conversions:
             // - character set conversions between server and client
             // - trailing space removal
@@ -116,10 +111,10 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
             'pgsql' => "CREATE TABLE $this->table ($this->idCol VARCHAR(255) NOT NULL PRIMARY KEY, $this->dataCol BYTEA NOT NULL, $this->lifetimeCol INTEGER, $this->timeCol INTEGER NOT NULL)",
             'oci' => "CREATE TABLE $this->table ($this->idCol VARCHAR2(255) NOT NULL PRIMARY KEY, $this->dataCol BLOB NOT NULL, $this->lifetimeCol INTEGER, $this->timeCol INTEGER NOT NULL)",
             'sqlsrv' => "CREATE TABLE $this->table ($this->idCol VARCHAR(255) NOT NULL PRIMARY KEY, $this->dataCol VARBINARY(MAX) NOT NULL, $this->lifetimeCol INTEGER, $this->timeCol INTEGER NOT NULL)",
-            default => throw new \DomainException(sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $this->driver)),
+            default => throw new \DomainException(sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $driver)),
         };
 
-        $conn->exec($sql);
+        $this->getConnection()->exec($sql);
     }
 
     public function prune(): bool
@@ -211,7 +206,7 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
         $conn = $this->getConnection();
 
         if ('' === $namespace) {
-            if ('sqlite' === $this->driver) {
+            if ('sqlite' === $this->getDriver()) {
                 $sql = "DELETE FROM $this->table";
             } else {
                 $sql = "TRUNCATE TABLE $this->table";
@@ -249,7 +244,7 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
 
         $conn = $this->getConnection();
 
-        $driver = $this->driver;
+        $driver = $this->getDriver();
         $insertSql = "INSERT INTO $this->table ($this->idCol, $this->dataCol, $this->lifetimeCol, $this->timeCol) VALUES (:id, :data, :lifetime, :time)";
 
         switch (true) {
@@ -285,8 +280,8 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
         $lifetime = $lifetime ?: null;
         try {
             $stmt = $conn->prepare($sql);
-        } catch (\PDOException) {
-            if (!$conn->inTransaction() || \in_array($this->driver, ['pgsql', 'sqlite', 'sqlsrv'], true)) {
+        } catch (\PDOException $e) {
+            if ($this->isTableMissing($e) && (!$conn->inTransaction() || \in_array($driver, ['pgsql', 'sqlite', 'sqlsrv'], true))) {
                 $this->createTable();
             }
             $stmt = $conn->prepare($sql);
@@ -320,8 +315,8 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
         foreach ($values as $id => $data) {
             try {
                 $stmt->execute();
-            } catch (\PDOException) {
-                if (!$conn->inTransaction() || \in_array($this->driver, ['pgsql', 'sqlite', 'sqlsrv'], true)) {
+            } catch (\PDOException $e) {
+                if ($this->isTableMissing($e) && (!$conn->inTransaction() || \in_array($driver, ['pgsql', 'sqlite', 'sqlsrv'], true))) {
                     $this->createTable();
                 }
                 $stmt->execute();
@@ -343,7 +338,7 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
      */
     protected function getId(mixed $key): string
     {
-        if ('pgsql' !== $this->driver ??= ($this->getConnection() ? $this->driver : null)) {
+        if ('pgsql' !== $this->getDriver()) {
             return parent::getId($key);
         }
 
@@ -360,13 +355,32 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
             $this->conn = new \PDO($this->dsn, $this->username, $this->password, $this->connectionOptions);
             $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
-        $this->driver ??= $this->conn->getAttribute(\PDO::ATTR_DRIVER_NAME);
 
         return $this->conn;
     }
 
+    private function getDriver(): string
+    {
+        return $this->driver ??= $this->getConnection()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+    }
+
     private function getServerVersion(): string
     {
-        return $this->serverVersion ??= $this->conn->getAttribute(\PDO::ATTR_SERVER_VERSION);
+        return $this->serverVersion ??= $this->getConnection()->getAttribute(\PDO::ATTR_SERVER_VERSION);
+    }
+
+    private function isTableMissing(\PDOException $exception): bool
+    {
+        $driver = $this->getDriver();
+        $code = $exception->getCode();
+
+        return match ($driver) {
+            'pgsql' => '42P01' === $code,
+            'sqlite' => str_contains($exception->getMessage(), 'no such table:'),
+            'oci' => 942 === $code,
+            'sqlsrv' => 208 === $code,
+            'mysql' => 1146 === $code,
+            default => false,
+        };
     }
 }

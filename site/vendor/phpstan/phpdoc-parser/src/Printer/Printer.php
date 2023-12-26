@@ -795,6 +795,10 @@ final class Printer
 				throw new LogicException();
 			}
 
+			if ($subEndPos < $subStartPos) {
+				return $this->print($node);
+			}
+
 			if ($subNode === null) {
 				return $this->print($node);
 			}

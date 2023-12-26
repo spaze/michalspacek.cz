@@ -26,10 +26,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class CacheCollectorPass implements CompilerPassInterface
 {
-    /**
-     * @return void
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('data_collector.cache')) {
             return;
@@ -74,6 +71,5 @@ class CacheCollectorPass implements CompilerPassInterface
 
         // Tell the collector to add the new instance
         $collectorDefinition->addMethodCall('addInstance', [$name, new Reference($id)]);
-        $collectorDefinition->setPublic(false);
     }
 }

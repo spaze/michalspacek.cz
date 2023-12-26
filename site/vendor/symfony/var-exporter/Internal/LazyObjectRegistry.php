@@ -23,27 +23,27 @@ class LazyObjectRegistry
     /**
      * @var array<class-string, \ReflectionClass>
      */
-    public static $classReflectors = [];
+    public static array $classReflectors = [];
 
     /**
      * @var array<class-string, array<string, mixed>>
      */
-    public static $defaultProperties = [];
+    public static array $defaultProperties = [];
 
     /**
      * @var array<class-string, list<\Closure>>
      */
-    public static $classResetters = [];
+    public static array $classResetters = [];
 
     /**
      * @var array<class-string, array{get: \Closure, set: \Closure, isset: \Closure, unset: \Closure}>
      */
-    public static $classAccessors = [];
+    public static array $classAccessors = [];
 
     /**
      * @var array<class-string, array{set: bool, isset: bool, unset: bool, clone: bool, serialize: bool, unserialize: bool, sleep: bool, wakeup: bool, destruct: bool, get: int}>
      */
-    public static $parentMethods = [];
+    public static array $parentMethods = [];
 
     public static ?\Closure $noInitializerState = null;
 
@@ -67,18 +67,18 @@ class LazyObjectRegistry
 
         $resetters = [];
         foreach ($classProperties as $scope => $properties) {
-            $resetters[] = \Closure::bind(static function ($instance, $skippedProperties, $onlyProperties = null) use ($properties) {
+            $resetters[] = \Closure::bind(static function ($instance, $skippedProperties) use ($properties) {
                 foreach ($properties as $name => $key) {
-                    if (!\array_key_exists($key, $skippedProperties) && (null === $onlyProperties || \array_key_exists($key, $onlyProperties))) {
+                    if (!\array_key_exists($key, $skippedProperties)) {
                         unset($instance->$name);
                     }
                 }
             }, null, $scope);
         }
 
-        $resetters[] = static function ($instance, $skippedProperties, $onlyProperties = null) {
+        $resetters[] = static function ($instance, $skippedProperties) {
             foreach ((array) $instance as $name => $value) {
-                if ("\0" !== ($name[0] ?? '') && !\array_key_exists($name, $skippedProperties) && (null === $onlyProperties || \array_key_exists($name, $onlyProperties))) {
+                if ("\0" !== ($name[0] ?? '') && !\array_key_exists($name, $skippedProperties)) {
                     unset($instance->$name);
                 }
             }
