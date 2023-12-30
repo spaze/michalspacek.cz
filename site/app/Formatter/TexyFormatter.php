@@ -49,6 +49,7 @@ class TexyFormatter
 		private readonly Translator $translator,
 		private readonly TexyPhraseHandler $phraseHandler,
 		private readonly array $placeholders,
+		private readonly bool $allowedLongWords,
 		string $staticRoot,
 		string $imagesRoot,
 		string $locationRoot,
@@ -109,6 +110,7 @@ class TexyFormatter
 		$this->texy->headingModule->idPrefix = '';
 		$this->texy->typographyModule->locale = substr($this->translator->getDefaultLocale(), 0, 2); // en_US → en
 		$this->texy->allowed['phrase/del'] = true;
+		$this->texy->allowed['longwords'] = $this->allowedLongWords;
 		$this->texy->addHandler('phrase', $this->phraseHandler->solve(...));
 		$this->setTopHeading($this->topHeading);
 		return $this->texy;

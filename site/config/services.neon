@@ -59,9 +59,9 @@ services:
 	- MichalSpacekCz\Form\TrainingStatusesFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
-	- MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\TexyFormatterPlaceholder), staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
+	- MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\TexyFormatterPlaceholder), allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 	texyFormatterNoPlaceholders:
-		create: MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: [], staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
+		create: MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: [], allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
 		autowired: false
 	- MichalSpacekCz\Formatter\TexyPhraseHandler
 	- MichalSpacekCz\Formatter\TrainingDateTexyFormatterPlaceholder

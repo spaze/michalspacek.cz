@@ -7,6 +7,9 @@ parameters:
 		rootDomainMapping:
 			cz: rizek.test
 			com: burger.test
+	texyFormatter:
+		allowed:
+			longWords: false
 	encryption:
 		keys:
 			password:
