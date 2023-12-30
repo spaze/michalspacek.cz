@@ -13,6 +13,7 @@ use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\TrainingLocales;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
+use Override;
 
 class CompanyTrainingsPresenter extends BasePresenter
 {
@@ -70,6 +71,7 @@ class CompanyTrainingsPresenter extends BasePresenter
 	 *
 	 * @return array<string, array<string, string|null>>
 	 */
+	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->trainingLocales->getLocaleLinkParams($this->trainingAction, $this->getParameters());

@@ -12,6 +12,7 @@ use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 use Texy\Texy;
@@ -43,6 +44,7 @@ class TexyPhraseHandlerTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

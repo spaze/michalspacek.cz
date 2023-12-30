@@ -8,6 +8,7 @@ use DateTime;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -24,6 +25,7 @@ class TrainingDatesTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function setUp(): void
 	{
 		$this->database->setFetchAllDefaultResult([
@@ -93,6 +95,7 @@ class TrainingDatesTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

@@ -7,6 +7,7 @@ use MichalSpacekCz\Application\Error;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Response;
+use Override;
 
 class ErrorGenericPresenter implements IPresenter
 {
@@ -17,6 +18,7 @@ class ErrorGenericPresenter implements IPresenter
 	}
 
 
+	#[Override]
 	public function run(Request $request): Response
 	{
 		return $this->error->response($request);

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\UpcKeys;
 
 use JsonSerializable;
+use Override;
 
 class WiFiKey implements JsonSerializable
 {
@@ -58,6 +59,7 @@ class WiFiKey implements JsonSerializable
 	/**
 	 * @return array{serial:string, oui:string|null, mac:string|null, key:string, type:string, typeId:int, serialPrefix:string}
 	 */
+	#[Override]
 	public function jsonSerialize(): array
 	{
 		return [

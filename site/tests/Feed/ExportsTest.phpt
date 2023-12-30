@@ -13,6 +13,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\BadRequestException;
 use Nette\Caching\Storage;
 use Nette\Utils\Html;
+use Override;
 use SimpleXMLElement;
 use Tester\Assert;
 use Tester\TestCase;
@@ -39,6 +40,7 @@ class ExportsTest extends TestCase
 			}
 
 
+			#[Override]
 			public function translate(string $message, array $replacements = []): Html
 			{
 				return Html::el()->setHtml($message);
@@ -49,6 +51,7 @@ class ExportsTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->articles->reset();

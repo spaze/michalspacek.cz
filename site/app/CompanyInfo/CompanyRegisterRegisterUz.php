@@ -11,6 +11,7 @@ use MichalSpacekCz\Http\Exceptions\HttpClientRequestException;
 use Nette\Http\IResponse;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
+use Override;
 use stdClass;
 
 /**
@@ -32,6 +33,7 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 	}
 
 
+	#[Override]
 	public function getCountry(): string
 	{
 		return 'sk';
@@ -42,6 +44,7 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 	 * @throws CompanyInfoException
 	 * @throws CompanyNotFoundException
 	 */
+	#[Override]
 	public function getDetails(string $companyId): CompanyInfoDetails
 	{
 		if (empty($companyId)) {

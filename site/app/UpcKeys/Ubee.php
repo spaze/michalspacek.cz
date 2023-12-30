@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\UpcKeys;
 
 use Nette\Database\Explorer;
+use Override;
 
 class Ubee implements UpcWiFiRouter
 {
@@ -18,6 +19,7 @@ class Ubee implements UpcWiFiRouter
 	}
 
 
+	#[Override]
 	public function getModelWithPrefixes(): array
 	{
 		return ['Ubee EVW3226' => [self::PREFIX]];
@@ -30,6 +32,7 @@ class Ubee implements UpcWiFiRouter
 	 * @param string $ssid
 	 * @return array<int, WiFiKey>
 	 */
+	#[Override]
 	public function getKeys(string $ssid): array
 	{
 		$rows = $this->database->fetchAll('SELECT mac, `key` FROM keys_ubee WHERE ssid = ?', substr($ssid, 3));

@@ -7,6 +7,7 @@ use LogicException;
 use Nette\Application\Response;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\UI\Presenter;
+use Override;
 
 class UiPresenterMock extends Presenter
 {
@@ -23,6 +24,7 @@ class UiPresenterMock extends Presenter
 	}
 
 
+	#[Override]
 	public function sendResponse(Response $response): never
 	{
 		$this->response = $response;
@@ -46,6 +48,7 @@ class UiPresenterMock extends Presenter
 	}
 
 
+	#[Override]
 	public function redirect(string $destination, $args = []): never
 	{
 		$this->sendResponse(new RedirectResponse($destination));

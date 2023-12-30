@@ -12,6 +12,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Application;
 use Nette\Utils\Html;
+use Override;
 use Stringable;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Tester\Assert;
@@ -144,6 +145,7 @@ class TexyFormatterTest extends TestCase
 
 		$toString = new class () implements Stringable {
 
+			#[Override]
 			public function __toString(): string
 			{
 				return __FUNCTION__;
@@ -152,6 +154,7 @@ class TexyFormatterTest extends TestCase
 		};
 		$toStringNoInterface = new class () {
 
+			#[Override]
 			public function __toString(): string
 			{
 				return __FUNCTION__;

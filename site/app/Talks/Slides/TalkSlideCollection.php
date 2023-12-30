@@ -7,6 +7,7 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
+use Override;
 
 /**
  * @implements IteratorAggregate<int, TalkSlide>
@@ -45,12 +46,14 @@ class TalkSlideCollection implements IteratorAggregate, Countable
 	/**
 	 * @return ArrayIterator<int, TalkSlide>
 	 */
+	#[Override]
 	public function getIterator(): ArrayIterator
 	{
 		return new ArrayIterator($this->slides);
 	}
 
 
+	#[Override]
 	public function count(): int
 	{
 		return count($this->slides);

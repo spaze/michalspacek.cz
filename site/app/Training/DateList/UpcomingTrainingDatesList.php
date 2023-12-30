@@ -8,6 +8,7 @@ use MichalSpacekCz\Application\UiControl;
 use MichalSpacekCz\Training\Dates\UpcomingTraining;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\FreeSeats;
+use Override;
 
 class UpcomingTrainingDatesList extends UiControl implements Countable
 {
@@ -50,6 +51,7 @@ class UpcomingTrainingDatesList extends UiControl implements Countable
 	}
 
 
+	#[Override]
 	public function count(): int
 	{
 		return count($this->getUpcomingTrainingDates());

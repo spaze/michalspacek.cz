@@ -8,6 +8,7 @@ use Contributte\Translation\Exceptions\InvalidArgument;
 use Contributte\Translation\Translator;
 use Contributte\Translation\Wrappers\Message;
 use Contributte\Translation\Wrappers\NotTranslate;
+use Override;
 
 class NoOpTranslator extends Translator
 {
@@ -22,18 +23,21 @@ class NoOpTranslator extends Translator
 	}
 
 
+	#[Override]
 	public function getDefaultLocale(): string
 	{
 		return $this->defaultLocale;
 	}
 
 
+	#[Override]
 	public function getLocale(): string
 	{
 		return $this->defaultLocale;
 	}
 
 
+	#[Override]
 	public function translate(mixed $message, mixed ...$parameters): string
 	{
 		if ($message === null || $message === '') {
@@ -54,12 +58,14 @@ class NoOpTranslator extends Translator
 	}
 
 
+	#[Override]
 	public function getAvailableLocales(): array
 	{
 		return $this->availableLocales;
 	}
 
 
+	#[Override]
 	public function setFallbackLocales(array $locales): void
 	{
 	}

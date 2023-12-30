@@ -8,6 +8,7 @@ use MichalSpacekCz\Articles\Components\ArticleWithId;
 use MichalSpacekCz\Articles\Components\ArticleWithPublishTime;
 use MichalSpacekCz\Articles\Components\ArticleWithSummary;
 use Nette\Utils\Html;
+use Override;
 
 class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
 {
@@ -26,12 +27,14 @@ class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, Ar
 	}
 
 
+	#[Override]
 	public function hasId(): bool
 	{
 		return true;
 	}
 
 
+	#[Override]
 	public function getId(): ?int
 	{
 		return $this->articleId;
@@ -56,12 +59,14 @@ class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, Ar
 	}
 
 
+	#[Override]
 	public function hasSummary(): bool
 	{
 		return true;
 	}
 
 
+	#[Override]
 	public function getSummary(): ?Html
 	{
 		return $this->excerpt;
@@ -74,6 +79,7 @@ class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, Ar
 	}
 
 
+	#[Override]
 	public function getPublishTime(): ?DateTime
 	{
 		return $this->published;

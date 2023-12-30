@@ -28,6 +28,7 @@ use MichalSpacekCz\Training\Trainings\Training;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
+use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 
@@ -297,6 +298,7 @@ class TrainingsPresenter extends BasePresenter
 	 *
 	 * @return array<string, array<string, string|null>>
 	 */
+	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->trainingLocales->getLocaleLinkParams($this->trainingAction, $this->getParameters());

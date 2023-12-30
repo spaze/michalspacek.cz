@@ -12,6 +12,7 @@ use MichalSpacekCz\Training\Statuses;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -45,6 +46,7 @@ class TrainingFilesSessionSectionTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->sessionSection->remove();

@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Twitter;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -23,6 +24,7 @@ class TwitterCardsTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

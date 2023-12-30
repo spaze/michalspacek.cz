@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use JsonSerializable;
+use Override;
 
 class BlogPostRecommendedLink implements JsonSerializable
 {
@@ -30,6 +31,7 @@ class BlogPostRecommendedLink implements JsonSerializable
 	/**
 	 * @return array{url:string, text:string}
 	 */
+	#[Override]
 	public function jsonSerialize(): array
 	{
 		return [

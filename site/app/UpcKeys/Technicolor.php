@@ -15,6 +15,7 @@ use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
+use Override;
 use PDOException;
 use Tracy\Debugger;
 
@@ -33,6 +34,7 @@ class Technicolor implements UpcWiFiRouter
 	}
 
 
+	#[Override]
 	public function getModelWithPrefixes(): array
 	{
 		return ['Technicolor TC7200' => self::PREFIXES];
@@ -47,6 +49,7 @@ class Technicolor implements UpcWiFiRouter
 	 * @return array<int, WiFiKey>
 	 * @throws HttpClientRequestException
 	 */
+	#[Override]
 	public function getKeys(string $ssid): array
 	{
 		try {

@@ -8,6 +8,7 @@ use DateTime;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Database\Row;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -24,6 +25,7 @@ class TrainingApplicationFactoryTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function setUp(): void
 	{
 		$this->database->setFetchFieldDefaultResult(303);

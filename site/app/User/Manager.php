@@ -26,6 +26,7 @@ use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
+use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
@@ -63,6 +64,7 @@ class Manager implements Authenticator
 	 * @return IIdentity
 	 * @throws AuthenticationException
 	 */
+	#[Override]
 	public function authenticate(string $user, string $password): IIdentity
 	{
 		$userId = $this->verifyPassword($user, $password);

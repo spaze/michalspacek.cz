@@ -13,6 +13,7 @@ use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\Responses\TextResponse;
 use Nette\Forms\Controls\TextInput;
 use Nette\InvalidStateException;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -44,6 +45,7 @@ class WinterIsComingTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->presenter->reset();

@@ -8,6 +8,7 @@ use MichalSpacekCz\Http\Redirections;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\Request;
 use Nette\Http\IResponse;
+use Override;
 use Tracy\ILogger;
 
 abstract class BaseErrorPresenter extends BasePresenter
@@ -46,6 +47,7 @@ abstract class BaseErrorPresenter extends BasePresenter
 	}
 
 
+	#[Override]
 	public function startup(): void
 	{
 		parent::startup();

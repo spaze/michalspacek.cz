@@ -16,6 +16,7 @@ use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
+use Override;
 use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
@@ -58,6 +59,7 @@ class TrainingApplicationSessionSectionTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->sessionSection->remove();

@@ -14,6 +14,7 @@ use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
+use Override;
 
 /**
  * ARES service.
@@ -31,6 +32,7 @@ class CompanyRegisterAres implements CompanyRegister
 	}
 
 
+	#[Override]
 	public function getCountry(): string
 	{
 		return 'cz';
@@ -41,6 +43,7 @@ class CompanyRegisterAres implements CompanyRegister
 	 * @throws CompanyInfoException
 	 * @throws CompanyNotFoundException
 	 */
+	#[Override]
 	public function getDetails(string $companyId): CompanyInfoDetails
 	{
 		if (empty($companyId)) {

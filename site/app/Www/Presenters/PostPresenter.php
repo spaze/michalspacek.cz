@@ -9,6 +9,7 @@ use MichalSpacekCz\Articles\Blog\BlogPostLocaleUrls;
 use MichalSpacekCz\Articles\Blog\BlogPosts;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
+use Override;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
 class PostPresenter extends BasePresenter
@@ -61,6 +62,7 @@ class PostPresenter extends BasePresenter
 	/**
 	 * Get original module:presenter:action for locale links.
 	 */
+	#[Override]
 	protected function getLocaleLinkAction(): string
 	{
 		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Articles:');
@@ -72,6 +74,7 @@ class PostPresenter extends BasePresenter
 	 *
 	 * @return array<string, array{slug: string, preview: string|null}>
 	 */
+	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->localeLinkParams;

@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Tls;
 use Exception;
 use MichalSpacekCz\Application\Cli\CliArgs;
 use MichalSpacekCz\Application\Cli\CliArgsProvider;
+use Override;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 
 class CertificateMonitor implements CliArgsProvider
@@ -149,6 +150,7 @@ class CertificateMonitor implements CliArgsProvider
 	}
 
 
+	#[Override]
 	public static function getArgs(): array
 	{
 		return [self::NO_IPV6];

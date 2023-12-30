@@ -13,6 +13,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
 use Nette\Http\Url;
+use Override;
 
 class ErrorPresenter extends BaseErrorPresenter
 {
@@ -40,6 +41,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	/**
 	 * @throws InvalidLinkException
 	 */
+	#[Override]
 	protected function getLocaleLinksGeneratorDestination(): string
 	{
 		try {
@@ -53,6 +55,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	/**
 	 * @throws InvalidLinkException
 	 */
+	#[Override]
 	protected function getLocaleLinksGeneratorParams(): array
 	{
 		try {
@@ -78,6 +81,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	 *
 	 * @return array<string, LocaleLink> of locale => URL
 	 */
+	#[Override]
 	protected function getLocaleLinkDefault(): array
 	{
 		$links = [];
@@ -94,6 +98,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	 *
 	 * @throws NoOriginalRequestException
 	 */
+	#[Override]
 	protected function getLocaleLinkAction(): string
 	{
 		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
@@ -107,6 +112,7 @@ class ErrorPresenter extends BaseErrorPresenter
 	 * @return array<string, array<string, string|null>>
 	 * @throws NoOriginalRequestException
 	 */
+	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
 		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());

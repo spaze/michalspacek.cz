@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Test\Http\Client;
 use MichalSpacekCz\Http\Client\HttpClient;
 use MichalSpacekCz\Http\Client\HttpClientRequest;
 use MichalSpacekCz\Http\Client\HttpClientResponse;
+use Override;
 
 class HttpClientMock extends HttpClient
 {
@@ -19,6 +20,7 @@ class HttpClientMock extends HttpClient
 	}
 
 
+	#[Override]
 	public function get(HttpClientRequest $request): HttpClientResponse
 	{
 		return new HttpClientResponse($request, $this->response, null);

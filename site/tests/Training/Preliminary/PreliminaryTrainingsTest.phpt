@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Training\Preliminary;
 use DateTime;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -23,6 +24,7 @@ class PreliminaryTrainingsTest extends TestCase
 	}
 
 
+	#[Override]
 	protected function tearDown(): void
 	{
 		$this->database->reset();

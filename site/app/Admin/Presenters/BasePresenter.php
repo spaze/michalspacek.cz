@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Admin\Presenters;
 
 use MichalSpacekCz\Www\Presenters\BasePresenter as WwwBasePresenter;
 use Nette\Security\User;
+use Override;
 use Spaze\Session\MysqlSessionHandler;
 
 abstract class BasePresenter extends WwwBasePresenter
@@ -36,6 +37,7 @@ abstract class BasePresenter extends WwwBasePresenter
 	}
 
 
+	#[Override]
 	protected function startup(): void
 	{
 		parent::startup();

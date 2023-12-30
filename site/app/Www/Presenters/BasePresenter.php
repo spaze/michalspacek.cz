@@ -13,6 +13,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\IResponse;
+use Override;
 
 /**
  * @property-read DefaultTemplate $template
@@ -76,6 +77,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 
+	#[Override]
 	protected function startup(): void
 	{
 		parent::startup();
@@ -86,6 +88,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 
+	#[Override]
 	public function beforeRender(): void
 	{
 		try {
@@ -158,6 +161,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 
+	#[Override]
 	public function lastModified($lastModified, string $etag = null, string $expire = null): void
 	{
 		$compression = ini_get('zlib.output_compression');

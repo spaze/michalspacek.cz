@@ -8,6 +8,7 @@ use DateTimeInterface;
 use MichalSpacekCz\Test\WillThrow;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Override;
 
 class Database extends Explorer
 {
@@ -61,11 +62,13 @@ class Database extends Explorer
 	}
 
 
+	#[Override]
 	public function beginTransaction(): void
 	{
 	}
 
 
+	#[Override]
 	public function commit(): void
 	{
 	}
@@ -77,6 +80,7 @@ class Database extends Explorer
 	}
 
 
+	#[Override]
 	public function getInsertId(?string $sequence = null): string
 	{
 		return $this->insertId;
@@ -88,6 +92,7 @@ class Database extends Explorer
 	 * @param string|int|bool|DateTimeInterface|null|array<string, string|int|bool|DateTimeInterface|null> ...$params
 	 * @return ResultSet
 	 */
+	#[Override]
 	public function query(string $sql, ...$params): ResultSet
 	{
 		$this->maybeThrow();
@@ -149,6 +154,7 @@ class Database extends Explorer
 	 * @param literal-string $sql
 	 * @param string ...$params
 	 */
+	#[Override]
 	public function fetch(string $sql, ...$params): ?Row
 	{
 		$row = $this->createRow($this->fetchResult);
@@ -172,6 +178,7 @@ class Database extends Explorer
 	 * @param literal-string $sql
 	 * @param string ...$params
 	 */
+	#[Override]
 	public function fetchField(string $sql, ...$params): mixed
 	{
 		return $this->fetchFieldResults[$this->fetchFieldResultsPosition++] ?? $this->fetchFieldDefaultResult;
@@ -192,6 +199,7 @@ class Database extends Explorer
 	 * @param string ...$params
 	 * @return array<int|string, string>
 	 */
+	#[Override]
 	public function fetchPairs(string $sql, ...$params): array
 	{
 		return $this->fetchPairsResult;
@@ -237,6 +245,7 @@ class Database extends Explorer
 	 * @param string ...$params
 	 * @return list<Row>
 	 */
+	#[Override]
 	public function fetchAll(string $sql, ...$params): array
 	{
 		return $this->fetchAllResults[$this->fetchAllResultsPosition++] ?? $this->fetchAllDefaultResult;

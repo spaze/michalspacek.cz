@@ -19,6 +19,7 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
+use Override;
 
 class TalksPresenter extends BasePresenter
 {
@@ -106,6 +107,7 @@ class TalksPresenter extends BasePresenter
 	}
 
 
+	#[Override]
 	protected function getLocaleLinkAction(): string
 	{
 		return (count($this->localeLinkParams) > 1 ? parent::getLocaleLinkAction() : 'Www:Talks:');
@@ -115,6 +117,7 @@ class TalksPresenter extends BasePresenter
 	/**
 	 * @return array<string, array{name: string}>
 	 */
+	#[Override]
 	protected function getLocaleLinkParams(): array
 	{
 		return $this->localeLinkParams;
