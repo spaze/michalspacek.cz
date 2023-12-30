@@ -46,6 +46,9 @@ parameters:
 			forms:
 				form: [action, method, target]
 				button: []
+	texyFormatter:
+		allowed:
+			longWords: true
 	permissionsPolicy:
 		accelerometer: none
 		camera: none
