@@ -28,7 +28,7 @@ readonly class BlogPostLocaleUrls
 	{
 		$posts = [];
 		$sql = 'SELECT
-       			l.locale,
+				l.locale,
 				bp.slug,
 				bp.published,
 				bp.preview_key AS previewKey,

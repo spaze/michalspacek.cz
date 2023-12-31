@@ -96,7 +96,7 @@ class TalkSlides
 		if ($talk->getFilenamesTalkId()) {
 			$result = $this->database->fetchAll(
 				'SELECT
-       				number,
+					number,
 					filename,
 					filename_alternative AS filenameAlternative
 				FROM talk_slides
