@@ -19,23 +19,23 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Row;
 use Nette\Utils\JsonException;
 
-class BlogPostFactory
+readonly class BlogPostFactory
 {
 
 	/**
 	 * @param array<string, array<string, list<string>>> $allowedTags
 	 */
 	public function __construct(
-		private readonly TexyFormatter $texyFormatter,
-		private readonly Tags $tags,
-		private readonly TwitterCards $twitterCards,
-		private readonly BlogPostRecommendedLinks $recommendedLinks,
-		private readonly BlogPostEdits $edits,
-		private readonly JsonUtils $jsonUtils,
-		private readonly LinkGenerator $linkGenerator,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
-		private readonly Translator $translator,
-		private readonly array $allowedTags,
+		private TexyFormatter $texyFormatter,
+		private Tags $tags,
+		private TwitterCards $twitterCards,
+		private BlogPostRecommendedLinks $recommendedLinks,
+		private BlogPostEdits $edits,
+		private JsonUtils $jsonUtils,
+		private LinkGenerator $linkGenerator,
+		private LocaleLinkGenerator $localeLinkGenerator,
+		private Translator $translator,
+		private array $allowedTags,
 	) {
 	}
 

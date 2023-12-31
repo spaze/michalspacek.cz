@@ -9,15 +9,15 @@ use Nette\Http\Session;
 use Nette\Security\User;
 use Nette\Utils\Html;
 
-class RegenerateTokensFormFactory
+readonly class RegenerateTokensFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly Session $sessionHandler,
-		private readonly LinkGenerator $linkGenerator,
-		private readonly Manager $authenticator,
-		private readonly User $user,
+		private FormFactory $factory,
+		private Session $sessionHandler,
+		private LinkGenerator $linkGenerator,
+		private Manager $authenticator,
+		private User $user,
 	) {
 	}
 

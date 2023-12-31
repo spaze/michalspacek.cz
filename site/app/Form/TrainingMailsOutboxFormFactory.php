@@ -13,16 +13,16 @@ use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Presenter;
 use stdClass;
 
-class TrainingMailsOutboxFormFactory
+readonly class TrainingMailsOutboxFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingApplicationStorage $trainingApplicationStorage,
-		private readonly Statuses $trainingStatuses,
-		private readonly TrainingMails $trainingMails,
-		private readonly TemplateFactory $templateFactory,
-		private readonly NetteApplication $netteApplication,
+		private FormFactory $factory,
+		private TrainingApplicationStorage $trainingApplicationStorage,
+		private Statuses $trainingStatuses,
+		private TrainingMails $trainingMails,
+		private TemplateFactory $templateFactory,
+		private NetteApplication $netteApplication,
 	) {
 	}
 

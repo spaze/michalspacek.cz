@@ -7,7 +7,7 @@ use MichalSpacekCz\Pulse\Site;
 use MichalSpacekCz\Pulse\SpecificSite;
 use Nette\Utils\Strings;
 
-class SearchMatcher
+readonly class SearchMatcher
 {
 
 	private ?string $search;
@@ -15,7 +15,7 @@ class SearchMatcher
 
 	public function __construct(
 		?string $search,
-		private readonly StorageRegistry $storageRegistry,
+		private StorageRegistry $storageRegistry,
 	) {
 		$this->search = $search ? Strings::webalize($search) : null;
 	}

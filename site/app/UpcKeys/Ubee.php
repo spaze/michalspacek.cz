@@ -6,7 +6,7 @@ namespace MichalSpacekCz\UpcKeys;
 use Nette\Database\Explorer;
 use Override;
 
-class Ubee implements UpcWiFiRouter
+readonly class Ubee implements UpcWiFiRouter
 {
 
 	private const OUI_UBEE = '647c34';
@@ -14,7 +14,7 @@ class Ubee implements UpcWiFiRouter
 
 
 	public function __construct(
-		private readonly Explorer $database,
+		private Explorer $database,
 	) {
 	}
 

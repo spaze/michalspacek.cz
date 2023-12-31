@@ -11,11 +11,11 @@ use MichalSpacekCz\DateTime\Exceptions\CannotCreateDateTimeObjectException;
 use MichalSpacekCz\DateTime\Exceptions\CannotParseDateTimeException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 
-class DateTimeFactory
+readonly class DateTimeFactory
 {
 
 	public function __construct(
-		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
+		private DateTimeZoneFactory $dateTimeZoneFactory,
 	) {
 	}
 

@@ -6,11 +6,11 @@ namespace MichalSpacekCz\Training\Dates;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 
-class TrainingDateStatuses
+readonly class TrainingDateStatuses
 {
 
 	public function __construct(
-		private readonly Explorer $database,
+		private Explorer $database,
 	) {
 	}
 

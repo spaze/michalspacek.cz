@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Mails;
 
-class MailMessageAdmin
+readonly class MailMessageAdmin
 {
 
 	public function __construct(
-		private readonly string $basename,
-		private readonly string $subject,
+		private string $basename,
+		private string $subject,
 	) {
 	}
 

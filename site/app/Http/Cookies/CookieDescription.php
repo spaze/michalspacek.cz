@@ -5,14 +5,14 @@ namespace MichalSpacekCz\Http\Cookies;
 
 use Nette\Utils\Html;
 
-class CookieDescription
+readonly class CookieDescription
 {
 
 	public function __construct(
-		private readonly string $name,
-		private readonly bool $internal,
-		private readonly Html $description,
-		private readonly ?int $validDays,
+		private string $name,
+		private bool $internal,
+		private Html $description,
+		private ?int $validDays,
 	) {
 	}
 

@@ -3,15 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Cli;
 
-class CliArgs
+readonly class CliArgs
 {
 
 	/**
 	 * @param array<string, mixed> $args
 	 */
 	public function __construct(
-		private readonly array $args,
-		private readonly ?string $error,
+		private array $args,
+		private ?string $error,
 	) {
 	}
 

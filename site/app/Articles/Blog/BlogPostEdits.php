@@ -9,13 +9,13 @@ use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Database\Explorer;
 
-class BlogPostEdits
+readonly class BlogPostEdits
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
-		private readonly TexyFormatter $texyFormatter,
+		private Explorer $database,
+		private DateTimeZoneFactory $dateTimeZoneFactory,
+		private TexyFormatter $texyFormatter,
 	) {
 	}
 

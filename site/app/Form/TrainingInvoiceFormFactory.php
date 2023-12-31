@@ -6,13 +6,13 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
 
-class TrainingInvoiceFormFactory
+readonly class TrainingInvoiceFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingApplications $trainingApplications,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private FormFactory $factory,
+		private TrainingApplications $trainingApplications,
+		private TrainingControlsFactory $trainingControlsFactory,
 	) {
 	}
 

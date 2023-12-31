@@ -7,16 +7,16 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use SplFileInfo;
 
-class TrainingFile
+readonly class TrainingFile
 {
 
 	private DateTimeImmutable $added;
 
 
 	public function __construct(
-		private readonly int $id,
-		private readonly string $filename,
-		private readonly SplFileInfo $fileInfo,
+		private int $id,
+		private string $filename,
+		private SplFileInfo $fileInfo,
 		DateTimeInterface $added,
 	) {
 		$this->added = DateTimeImmutable::createFromInterface($added);

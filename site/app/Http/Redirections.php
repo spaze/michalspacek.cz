@@ -7,11 +7,11 @@ use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use Nette\Http\UrlScript;
 
-class Redirections
+readonly class Redirections
 {
 
 	public function __construct(
-		private readonly Explorer $database,
+		private Explorer $database,
 	) {
 	}
 

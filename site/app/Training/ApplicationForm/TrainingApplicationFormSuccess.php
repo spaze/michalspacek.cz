@@ -25,16 +25,16 @@ use SodiumException;
 use stdClass;
 use Tracy\Debugger;
 
-class TrainingApplicationFormSuccess
+readonly class TrainingApplicationFormSuccess
 {
 
 	public function __construct(
-		private readonly TrainingApplicationFormSpam $formSpam,
-		private readonly TrainingApplicationStorage $trainingApplicationStorage,
-		private readonly TrainingMails $trainingMails,
-		private readonly TemplateFactory $templateFactory,
-		private readonly TrainingApplicationFormDataLogger $formDataLogger,
-		private readonly NetteApplication $netteApplication,
+		private TrainingApplicationFormSpam $formSpam,
+		private TrainingApplicationStorage $trainingApplicationStorage,
+		private TrainingMails $trainingMails,
+		private TemplateFactory $templateFactory,
+		private TrainingApplicationFormDataLogger $formDataLogger,
+		private NetteApplication $netteApplication,
 	) {
 	}
 

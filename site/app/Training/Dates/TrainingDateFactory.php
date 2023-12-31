@@ -10,16 +10,16 @@ use MichalSpacekCz\Training\Prices;
 use Nette\Database\Row;
 use Nette\Utils\Json;
 
-class TrainingDateFactory
+readonly class TrainingDateFactory
 {
 
 	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
 
 	public function __construct(
-		private readonly Translator $translator,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly Prices $prices,
+		private Translator $translator,
+		private TexyFormatter $texyFormatter,
+		private Prices $prices,
 	) {
 	}
 

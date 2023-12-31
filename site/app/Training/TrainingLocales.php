@@ -6,12 +6,12 @@ namespace MichalSpacekCz\Training;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use Nette\Database\Explorer;
 
-class TrainingLocales
+readonly class TrainingLocales
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private Explorer $database,
+		private LocaleLinkGenerator $localeLinkGenerator,
 	) {
 	}
 

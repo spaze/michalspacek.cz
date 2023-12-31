@@ -11,16 +11,16 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 
-class Passwords
+readonly class Passwords
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly Rating $rating,
-		private readonly Companies $companies,
-		private readonly Sites $sites,
-		private readonly PasswordsSorting $sorting,
-		private readonly StorageRegistryFactory $storageRegistryFactory,
+		private Explorer $database,
+		private Rating $rating,
+		private Companies $companies,
+		private Sites $sites,
+		private PasswordsSorting $sorting,
+		private StorageRegistryFactory $storageRegistryFactory,
 	) {
 	}
 

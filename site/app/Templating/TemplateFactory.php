@@ -12,14 +12,14 @@ use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as ApplicationTemplateFactory;
 use Override;
 
-class TemplateFactory implements UiTemplateFactory
+readonly class TemplateFactory implements UiTemplateFactory
 {
 
 	public function __construct(
-		private readonly Theme $theme,
-		private readonly Filters $filters,
-		private readonly Translator $translator,
-		private readonly ApplicationTemplateFactory $templateFactory,
+		private Theme $theme,
+		private Filters $filters,
+		private Translator $translator,
+		private ApplicationTemplateFactory $templateFactory,
 	) {
 	}
 

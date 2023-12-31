@@ -5,25 +5,25 @@ namespace MichalSpacekCz\Training\Trainings;
 
 use Nette\Utils\Html;
 
-class Training
+readonly class Training
 {
 
 	public function __construct(
-		private readonly int $id,
-		private readonly string $action,
-		private readonly Html $name,
-		private readonly Html $description,
-		private readonly Html $content,
-		private readonly ?Html $upsell,
-		private readonly ?Html $prerequisites,
-		private readonly ?Html $audience,
-		private readonly ?int $capacity,
-		private readonly ?int $price,
-		private readonly ?int $studentDiscount,
-		private readonly ?Html $materials,
-		private readonly bool $custom,
-		private readonly ?int $successorId,
-		private readonly ?int $discontinuedId,
+		private int $id,
+		private string $action,
+		private Html $name,
+		private Html $description,
+		private Html $content,
+		private ?Html $upsell,
+		private ?Html $prerequisites,
+		private ?Html $audience,
+		private ?int $capacity,
+		private ?int $price,
+		private ?int $studentDiscount,
+		private ?Html $materials,
+		private bool $custom,
+		private ?int $successorId,
+		private ?int $discontinuedId,
 	) {
 	}
 

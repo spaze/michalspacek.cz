@@ -19,17 +19,17 @@ use Override;
 use PDOException;
 use Tracy\Debugger;
 
-class Technicolor implements UpcWiFiRouter
+readonly class Technicolor implements UpcWiFiRouter
 {
 
 	private const PREFIXES = ['SAAP', 'SAPP', 'SBAP'];
 
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly HttpClient $httpClient,
-		private readonly string $apiUrl,
-		private readonly string $apiKey,
+		private Explorer $database,
+		private HttpClient $httpClient,
+		private string $apiUrl,
+		private string $apiKey,
 	) {
 	}
 

@@ -8,12 +8,12 @@ use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Database\Explorer;
 use Nette\Http\IResponse;
 
-class DiscontinuedTrainings
+readonly class DiscontinuedTrainings
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly IResponse $httpResponse,
+		private Explorer $database,
+		private IResponse $httpResponse,
 	) {
 	}
 

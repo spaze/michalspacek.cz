@@ -17,14 +17,14 @@ use Nette\Http\Session;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 
-class TrainingFilesDownload
+readonly class TrainingFilesDownload
 {
 
 	public function __construct(
-		private readonly Application $application,
-		private readonly TrainingApplications $trainingApplications,
-		private readonly Session $sessionHandler,
-		private readonly TrainingFiles $trainingFiles,
+		private Application $application,
+		private TrainingApplications $trainingApplications,
+		private Session $sessionHandler,
+		private TrainingFiles $trainingFiles,
 	) {
 	}
 

@@ -18,14 +18,14 @@ use Nette\Utils\Helpers;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class CertificatesApiClient
+readonly class CertificatesApiClient
 {
 
 	public function __construct(
-		private readonly LinkGenerator $linkGenerator,
-		private readonly CertificateFactory $certificateFactory,
-		private readonly HttpClient $httpClient,
-		private readonly Processor $schemaProcessor,
+		private LinkGenerator $linkGenerator,
+		private CertificateFactory $certificateFactory,
+		private HttpClient $httpClient,
+		private Processor $schemaProcessor,
 	) {
 	}
 

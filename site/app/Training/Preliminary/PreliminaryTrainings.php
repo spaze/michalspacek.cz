@@ -13,14 +13,14 @@ use Nette\Database\Explorer;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 
-class PreliminaryTrainings
+readonly class PreliminaryTrainings
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly UpcomingTrainingDates $upcomingTrainingDates,
-		private readonly TrainingApplicationFactory $trainingApplicationFactory,
-		private readonly Translator $translator,
+		private Explorer $database,
+		private UpcomingTrainingDates $upcomingTrainingDates,
+		private TrainingApplicationFactory $trainingApplicationFactory,
+		private Translator $translator,
 	) {
 	}
 

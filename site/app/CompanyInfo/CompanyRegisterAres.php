@@ -22,12 +22,12 @@ use Override;
  * See https://ares.gov.cz/stranky/vyvojar-info & https://ares.gov.cz/swagger-ui/ for the docs.
  * This is using the /ekonomicke-subjekty endpoint because it returns DIČ/tax id as well.
  */
-class CompanyRegisterAres implements CompanyRegister
+readonly class CompanyRegisterAres implements CompanyRegister
 {
 
 	public function __construct(
-		private readonly Processor $schemaProcessor,
-		private readonly HttpClient $httpClient,
+		private Processor $schemaProcessor,
+		private HttpClient $httpClient,
 	) {
 	}
 

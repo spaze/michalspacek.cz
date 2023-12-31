@@ -7,7 +7,7 @@ use DateTimeInterface;
 use IntlDateFormatter;
 use RuntimeException;
 
-class DateTimeFormatter
+readonly class DateTimeFormatter
 {
 
 	private const DATE_DAY = 'day';
@@ -107,7 +107,7 @@ class DateTimeFormatter
 
 
 	public function __construct(
-		private readonly string $defaultLocale,
+		private string $defaultLocale,
 	) {
 	}
 

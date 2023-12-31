@@ -15,13 +15,13 @@ use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslException;
 use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 
-class CertificateGatherer
+readonly class CertificateGatherer
 {
 
 	public function __construct(
-		private readonly CertificateFactory $certificateFactory,
-		private readonly HttpClient $httpClient,
-		private readonly DnsResolver $dnsResolver,
+		private CertificateFactory $certificateFactory,
+		private HttpClient $httpClient,
+		private DnsResolver $dnsResolver,
 	) {
 	}
 

@@ -8,12 +8,12 @@ use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Http\Response;
 
-class Cookies
+readonly class Cookies
 {
 
 	public function __construct(
-		private readonly IRequest $request,
-		private readonly IResponse $response,
+		private IRequest $request,
+		private IResponse $response,
 	) {
 	}
 

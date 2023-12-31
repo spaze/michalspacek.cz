@@ -6,12 +6,12 @@ namespace MichalSpacekCz\Interviews;
 use MichalSpacekCz\Form\InterviewFormFactory;
 use MichalSpacekCz\Media\VideoThumbnails;
 
-class InterviewInputsFactory
+readonly class InterviewInputsFactory
 {
 
 	public function __construct(
-		private readonly VideoThumbnails $videoThumbnails,
-		private readonly InterviewFormFactory $interviewFormFactory,
+		private VideoThumbnails $videoThumbnails,
+		private InterviewFormFactory $interviewFormFactory,
 	) {
 	}
 

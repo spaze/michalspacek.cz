@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
-class AlgorithmAttributes
+readonly class AlgorithmAttributes
 {
 
 	/**
@@ -12,9 +12,9 @@ class AlgorithmAttributes
 	 * @param array<string, string|int>|null $params
 	 */
 	public function __construct(
-		private readonly ?array $inner,
-		private readonly ?array $outer,
-		private readonly ?array $params,
+		private ?array $inner,
+		private ?array $outer,
+		private ?array $params,
 	) {
 	}
 

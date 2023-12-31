@@ -5,18 +5,18 @@ namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTimeInterface;
 
-class StorageDisclosure
+readonly class StorageDisclosure
 {
 
 	public function __construct(
-		private readonly int $id,
-		private readonly string $url,
-		private readonly string $archive,
-		private readonly ?string $note,
-		private readonly ?DateTimeInterface $published,
-		private readonly ?DateTimeInterface $added,
-		private readonly string $type,
-		private readonly string $typeAlias,
+		private int $id,
+		private string $url,
+		private string $archive,
+		private ?string $note,
+		private ?DateTimeInterface $published,
+		private ?DateTimeInterface $added,
+		private string $type,
+		private string $typeAlias,
 	) {
 	}
 

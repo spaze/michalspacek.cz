@@ -7,23 +7,23 @@ use DateTime;
 use MichalSpacekCz\Media\Video;
 use Nette\Utils\Html;
 
-class Interview
+readonly class Interview
 {
 
 	public function __construct(
-		private readonly int $id,
-		private readonly string $action,
-		private readonly string $title,
-		private readonly ?string $descriptionTexy,
-		private readonly ?Html $description,
-		private readonly DateTime $date,
-		private readonly string $href,
-		private readonly ?string $audioHref,
-		private readonly ?string $audioEmbed,
-		private readonly Video $video,
-		private readonly ?string $videoEmbed,
-		private readonly string $sourceName,
-		private readonly string $sourceHref,
+		private int $id,
+		private string $action,
+		private string $title,
+		private ?string $descriptionTexy,
+		private ?Html $description,
+		private DateTime $date,
+		private string $href,
+		private ?string $audioHref,
+		private ?string $audioEmbed,
+		private Video $video,
+		private ?string $videoEmbed,
+		private string $sourceName,
+		private string $sourceHref,
 	) {
 	}
 

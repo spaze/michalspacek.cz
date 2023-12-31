@@ -7,13 +7,13 @@ use MichalSpacekCz\User\Exceptions\IdentityException;
 use MichalSpacekCz\User\Manager;
 use Nette\Security\User;
 
-class ChangePasswordFormFactory
+readonly class ChangePasswordFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly Manager $authenticator,
-		private readonly User $user,
+		private FormFactory $factory,
+		private Manager $authenticator,
+		private User $user,
 	) {
 	}
 

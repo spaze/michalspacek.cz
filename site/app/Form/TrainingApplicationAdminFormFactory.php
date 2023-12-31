@@ -16,16 +16,16 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
 
-class TrainingApplicationAdminFormFactory
+readonly class TrainingApplicationAdminFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingApplicationStorage $trainingApplicationStorage,
-		private readonly TrainingDates $trainingDates,
-		private readonly UpcomingTrainingDates $upcomingTrainingDates,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Statuses $trainingStatuses,
+		private FormFactory $factory,
+		private TrainingApplicationStorage $trainingApplicationStorage,
+		private TrainingDates $trainingDates,
+		private UpcomingTrainingDates $upcomingTrainingDates,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private Statuses $trainingStatuses,
 	) {
 	}
 

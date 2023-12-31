@@ -12,22 +12,22 @@ use Nette\Http\IResponse;
 use Nette\Http\UrlImmutable;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
-class SecurityHeaders
+readonly class SecurityHeaders
 {
 
 	/** @var array<string|string[]> */
-	private readonly array $permissionsPolicy;
+	private array $permissionsPolicy;
 
 
 	/**
 	 * @param array<string|string[]> $permissionsPolicy
 	 */
 	public function __construct(
-		private readonly IRequest $httpRequest,
-		private readonly IResponse $httpResponse,
-		private readonly Application $application,
-		private readonly CspConfig $contentSecurityPolicy,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private IRequest $httpRequest,
+		private IResponse $httpResponse,
+		private Application $application,
+		private CspConfig $contentSecurityPolicy,
+		private LocaleLinkGenerator $localeLinkGenerator,
 		array $permissionsPolicy,
 	) {
 		$this->permissionsPolicy = $this->normalizePermissionsPolicyValues($permissionsPolicy);

@@ -11,13 +11,13 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
-class TrainingControlsFactory
+readonly class TrainingControlsFactory
 {
 
 	public function __construct(
-		private readonly TrainingApplicationSources $trainingApplicationSources,
-		private readonly WinterIsComing $winterIsComing,
-		private readonly Translator $translator,
+		private TrainingApplicationSources $trainingApplicationSources,
+		private WinterIsComing $winterIsComing,
+		private Translator $translator,
 	) {
 	}
 

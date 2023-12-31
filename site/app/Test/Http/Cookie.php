@@ -5,16 +5,16 @@ namespace MichalSpacekCz\Test\Http;
 
 use DateTimeInterface;
 
-class Cookie
+readonly class Cookie
 {
 
 	public function __construct(
-		private readonly string $name,
-		private readonly string $value,
-		private readonly string|int|DateTimeInterface|null $expire,
-		private readonly string $path,
-		private readonly string $domain,
-		private readonly bool $secure,
+		private string $name,
+		private string $value,
+		private string|int|DateTimeInterface|null $expire,
+		private string $path,
+		private string $domain,
+		private bool $secure,
 	) {
 	}
 

@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Twitter;
 
-class TwitterCard
+readonly class TwitterCard
 {
 
 	public function __construct(
-		private readonly int $id,
-		private readonly string $card,
-		private readonly string $title,
+		private int $id,
+		private string $card,
+		private string $title,
 	) {
 	}
 

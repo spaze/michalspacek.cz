@@ -9,7 +9,7 @@ use MichalSpacekCz\DateTime\DateTime;
 use MichalSpacekCz\Tls\Exceptions\CertificateException;
 use Override;
 
-class Certificate implements JsonSerializable
+readonly class Certificate implements JsonSerializable
 {
 
 	private int $validDays;
@@ -22,13 +22,13 @@ class Certificate implements JsonSerializable
 	 * @throws CertificateException
 	 */
 	public function __construct(
-		private readonly string $commonName,
-		private readonly ?string $commonNameExt,
-		private readonly DateTimeImmutable $notBefore,
-		private readonly DateTimeImmutable $notAfter,
-		private readonly int $expiringThreshold,
-		private readonly ?string $serialNumber,
-		private readonly DateTimeImmutable $now = new DateTimeImmutable(),
+		private string $commonName,
+		private ?string $commonNameExt,
+		private DateTimeImmutable $notBefore,
+		private DateTimeImmutable $notAfter,
+		private int $expiringThreshold,
+		private ?string $serialNumber,
+		private DateTimeImmutable $now = new DateTimeImmutable(),
 	) {
 		$validDays = $this->notBefore->diff($this->now)->days;
 		if ($validDays === false) {

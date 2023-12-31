@@ -14,17 +14,17 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\Authenticator;
 use Tracy\Debugger;
 
-class Certificates
+readonly class Certificates
 {
 
 	/**
 	 * @param array<string, string> $users
 	 */
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly CertificateFactory $certificateFactory,
-		private readonly array $users,
-		private readonly int $hideExpiredAfter,
+		private Explorer $database,
+		private CertificateFactory $certificateFactory,
+		private array $users,
+		private int $hideExpiredAfter,
 	) {
 	}
 

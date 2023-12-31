@@ -8,12 +8,12 @@ use MichalSpacekCz\Training\Exceptions\TrainingVenueNotFoundException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
-class TrainingVenues
+readonly class TrainingVenues
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly TexyFormatter $texyFormatter,
+		private Explorer $database,
+		private TexyFormatter $texyFormatter,
 	) {
 	}
 

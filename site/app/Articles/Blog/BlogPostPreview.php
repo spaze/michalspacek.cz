@@ -8,14 +8,14 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Spaze\ContentSecurityPolicy\CspConfig;
 
-class BlogPostPreview
+readonly class BlogPostPreview
 {
 
 	public function __construct(
-		private readonly TexyFormatter $texyFormatter,
-		private readonly BlogPosts $blogPosts,
-		private readonly UpcomingTrainingDates $upcomingTrainingDates,
-		private readonly CspConfig $contentSecurityPolicy,
+		private TexyFormatter $texyFormatter,
+		private BlogPosts $blogPosts,
+		private UpcomingTrainingDates $upcomingTrainingDates,
+		private CspConfig $contentSecurityPolicy,
 	) {
 	}
 

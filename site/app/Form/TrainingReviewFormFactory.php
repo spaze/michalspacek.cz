@@ -9,13 +9,13 @@ use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 
-class TrainingReviewFormFactory
+readonly class TrainingReviewFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingApplications $trainingApplications,
-		private readonly TrainingReviews $trainingReviews,
+		private FormFactory $factory,
+		private TrainingApplications $trainingApplications,
+		private TrainingReviews $trainingReviews,
 	) {
 	}
 

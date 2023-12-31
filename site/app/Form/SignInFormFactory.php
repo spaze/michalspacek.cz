@@ -10,15 +10,15 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\User;
 use Tracy\Debugger;
 
-class SignInFormFactory
+readonly class SignInFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly FormControlsFactory $controlsFactory,
-		private readonly User $user,
-		private readonly Manager $authenticator,
-		private readonly IRequest $httpRequest,
+		private FormFactory $factory,
+		private FormControlsFactory $controlsFactory,
+		private User $user,
+		private Manager $authenticator,
+		private IRequest $httpRequest,
 	) {
 	}
 

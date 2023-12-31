@@ -20,7 +20,7 @@ use Texy\HtmlElement;
 use Texy\Link;
 use Texy\Modifier;
 
-class TexyPhraseHandler
+readonly class TexyPhraseHandler
 {
 
 	private const TRAINING_ACTION = 'Www:Trainings:training';
@@ -28,11 +28,11 @@ class TexyPhraseHandler
 
 
 	public function __construct(
-		private readonly Application $application,
-		private readonly TrainingLocales $trainingLocales,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
-		private readonly BlogPostLocaleUrls $blogPostLocaleUrls,
-		private readonly Translator $translator,
+		private Application $application,
+		private TrainingLocales $trainingLocales,
+		private LocaleLinkGenerator $localeLinkGenerator,
+		private BlogPostLocaleUrls $blogPostLocaleUrls,
+		private Translator $translator,
 	) {
 	}
 

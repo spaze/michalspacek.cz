@@ -5,12 +5,12 @@ namespace MichalSpacekCz\Form\Controls;
 
 use Nette\Forms\Controls\TextInput;
 
-class TrainingControlsAttendee
+readonly class TrainingControlsAttendee
 {
 
 	public function __construct(
-		private readonly TextInput $name,
-		private readonly TextInput $email,
+		private TextInput $name,
+		private TextInput $email,
 	) {
 	}
 

@@ -8,13 +8,13 @@ use MichalSpacekCz\Form\UnprotectedFormFactory;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 
-class PasswordsStoragesSearchSortFormFactory
+readonly class PasswordsStoragesSearchSortFormFactory
 {
 
 	public function __construct(
-		private readonly UnprotectedFormFactory $factory,
-		private readonly Rating $rating,
-		private readonly PasswordsSorting $sorting,
+		private UnprotectedFormFactory $factory,
+		private Rating $rating,
+		private PasswordsSorting $sorting,
 	) {
 	}
 

@@ -15,15 +15,15 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
-class TrainingApplicationFormFactory
+readonly class TrainingApplicationFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly Translator $translator,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly TrainingDates $trainingDates,
-		private readonly TrainingApplicationFormSuccess $formSuccess,
+		private FormFactory $factory,
+		private Translator $translator,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private TrainingDates $trainingDates,
+		private TrainingApplicationFormSuccess $formSuccess,
 	) {
 	}
 

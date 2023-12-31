@@ -9,11 +9,11 @@ use Nette\Application\Request;
 use Nette\Application\Response;
 use Override;
 
-class ErrorGenericPresenter implements IPresenter
+readonly class ErrorGenericPresenter implements IPresenter
 {
 
 	public function __construct(
-		private readonly Error $error,
+		private Error $error,
 	) {
 	}
 

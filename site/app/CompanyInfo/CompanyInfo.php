@@ -12,7 +12,7 @@ use Nette\Http\IResponse;
 use Throwable;
 use Tracy\Debugger;
 
-class CompanyInfo
+readonly class CompanyInfo
 {
 
 	private Cache $cache;
@@ -22,9 +22,9 @@ class CompanyInfo
 	 * @param list<CompanyRegister> $registers
 	 */
 	public function __construct(
-		private readonly array $registers,
+		private array $registers,
 		Storage $cacheStorage,
-		private readonly bool $loadCompanyDataVisible = true,
+		private bool $loadCompanyDataVisible = true,
 	) {
 		$this->cache = new Cache($cacheStorage, self::class);
 	}

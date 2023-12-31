@@ -3,16 +3,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Discontinued;
 
-class DiscontinuedTraining
+readonly class DiscontinuedTraining
 {
 
 	/**
 	 * @param list<string> $trainings
 	 */
 	public function __construct(
-		private readonly string $description,
-		private readonly array $trainings,
-		private readonly string $newHref,
+		private string $description,
+		private array $trainings,
+		private string $newHref,
 	) {
 	}
 
