@@ -100,7 +100,8 @@ class TalksPresenter extends BasePresenter
 
 	protected function createComponentSlides(): UiForm
 	{
-		if (!$this->talk || !$this->slides) {
+		$request = $this->getRequest();
+		if (!$this->talk || !$this->slides || !$request) {
 			throw new ShouldNotHappenException('actionSlides() will be called first');
 		}
 		return $this->talkSlidesFormFactory->create(
@@ -111,7 +112,7 @@ class TalksPresenter extends BasePresenter
 			$this->talk->getId(),
 			$this->slides,
 			$this->newCount,
-			$this->request,
+			$request,
 		);
 	}
 

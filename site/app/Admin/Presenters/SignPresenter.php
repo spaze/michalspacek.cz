@@ -7,6 +7,7 @@ use MichalSpacekCz\Form\SignInFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
+use Nette\Security\User;
 
 class SignPresenter extends BasePresenter
 {
@@ -18,6 +19,7 @@ class SignPresenter extends BasePresenter
 	public function __construct(
 		private readonly Manager $authenticator,
 		private readonly SignInFormFactory $signInFormFactory,
+		private readonly User $user,
 	) {
 		parent::__construct();
 	}
