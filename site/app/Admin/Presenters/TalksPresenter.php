@@ -111,7 +111,7 @@ class TalksPresenter extends BasePresenter
 			$this->talk->getId(),
 			$this->slides,
 			$this->newCount,
-			$this->request,
+			$this->getRequest(),
 		);
 	}
 
