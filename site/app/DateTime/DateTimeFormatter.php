@@ -22,8 +22,7 @@ class DateTimeFormatter
 	private const INTERVAL_FORMAT_SEPARATOR = 2;
 	private const INTERVAL_FORMAT_END = 3;
 
-	/** @var array<string, array<string, array{1:string, 2:array<int,string>, 3:array<int, string>, 4?:array<int, string>}>> */
-	private array $localDateFormat = [
+	private const LOCAL_DATE_FORMAT = [
 		'en_US' => [
 			self::DATE_DAY => [
 				self::NO_INTERVAL => 'MMMM d, y',
@@ -93,8 +92,7 @@ class DateTimeFormatter
 		],
 	];
 
-	/** @var array<string, array<int, ?string>> */
-	private array $comparisonFormat = [
+	private const COMPARISON_FORMAT = [
 		self::DATE_DAY => [
 			self::NO_INTERVAL => 'Ymd',
 			self::INTERVAL => 'Ym',
@@ -122,18 +120,18 @@ class DateTimeFormatter
 
 		$formatter = new IntlDateFormatter($locale, IntlDateFormatter::NONE, IntlDateFormatter::NONE);
 		if ($end === null || $this->sameDates($start, $end, $type, self::NO_INTERVAL)) {
-			$formatter->setPattern($this->localDateFormat[$locale][$type][self::NO_INTERVAL]);
+			$formatter->setPattern(self::LOCAL_DATE_FORMAT[$locale][$type][self::NO_INTERVAL]);
 			$result = $formatter->format($start);
 		} else {
 			if ($this->sameDates($start, $end, $type, self::INTERVAL)) {
-				$format = $this->localDateFormat[$locale][$type][self::INTERVAL];
+				$format = self::LOCAL_DATE_FORMAT[$locale][$type][self::INTERVAL];
 			} elseif (
-				isset($this->localDateFormat[$locale][$type][self::INTERVAL_BOUNDARIES])
+				isset(self::LOCAL_DATE_FORMAT[$locale][$type][self::INTERVAL_BOUNDARIES])
 				&& !$this->sameDates($start, $end, $type, self::INTERVAL_BOUNDARY)
 			) {
-				$format = $this->localDateFormat[$locale][$type][self::INTERVAL_BOUNDARIES];
+				$format = self::LOCAL_DATE_FORMAT[$locale][$type][self::INTERVAL_BOUNDARIES];
 			} else {
-				$format = $this->localDateFormat[$locale][$type][self::INTERVAL_BOUNDARY];
+				$format = self::LOCAL_DATE_FORMAT[$locale][$type][self::INTERVAL_BOUNDARY];
 			}
 
 			$formatter->setPattern($format[self::INTERVAL_FORMAT_START]);
@@ -177,7 +175,7 @@ class DateTimeFormatter
 
 	private function sameDates(DateTimeInterface $start, DateTimeInterface $end, string $type, int $level): bool
 	{
-		return isset($this->comparisonFormat[$type][$level]) && ($start->format($this->comparisonFormat[$type][$level]) === $end->format($this->comparisonFormat[$type][$level]));
+		return isset(self::COMPARISON_FORMAT[$type][$level]) && ($start->format(self::COMPARISON_FORMAT[$type][$level]) === $end->format(self::COMPARISON_FORMAT[$type][$level]));
 	}
 
 }

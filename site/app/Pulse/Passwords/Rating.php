@@ -8,29 +8,25 @@ use RuntimeException;
 class Rating
 {
 
-	/** @var string[] */
-	private array $slowHashes = [
+	private const SLOW_HASHES = [
 		'argon2',
 		'bcrypt',
 		'pbkdf2',
 		'scrypt',
 	];
 
-	/** @var string[] */
-	private array $insecure = [
+	private const INSECURE = [
 		'plaintext',
 		'encrypted',
 	];
 
-	/** @var string[] */
-	private array $visibleDisclosures = [
+	private const VISIBLE_DISCLOSURES = [
 		'docs',
 		'faq',
 		'signup-page',
 	];
 
-	/** @var string[] */
-	private array $invisibleDisclosures = [
+	private const INVISIBLE_DISCLOSURES = [
 		'blog',
 		'site-independent',
 		'facebook-independent',
@@ -45,8 +41,7 @@ class Rating
 		'comment',
 	];
 
-	/** @var array<string, string> */
-	private array $rating = [
+	private const RATING = [
 		RatingGrade::A->name => 'Site uses a slow hashing function, this is disclosed "on-site", in the docs, FAQ, etc.',
 		RatingGrade::B->name => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
 		RatingGrade::C->name => 'Passwords hashed with an unsuitable function but at least they are salted and stretched with multiple iterations.',
@@ -55,8 +50,7 @@ class Rating
 		RatingGrade::F->name => 'Passwords stored in plaintext, in their original, readable form, or passwords encrypted instead of hashed.',
 	];
 
-	/** @var array<string, string|null> */
-	private array $recommendations = [
+	private const RECOMMENDATIONS = [
 		RatingGrade::A->name => null,
 		RatingGrade::B->name => 'Publish storage and hashing info details "visibly":[link:Pulse:PasswordsStorages:Rating#on-site] (e.g. in the docs or FAQ), then let me know.',
 		RatingGrade::C->name => 'Start using "&quot;slow&quot; hashes":[link:Pulse:PasswordsStorages:Rating#slow-hashes], don\'t forget to "re-hash existing passwords":[blog:upgrading-existing-password-hashes], publish hashing info "visibly":[link:Pulse:PasswordsStorages:Rating#on-site], then let me know.',
@@ -78,13 +72,13 @@ class Rating
 	 */
 	public function get(Algorithm $algo): RatingGrade
 	{
-		if (in_array($algo->getAlias(), $this->slowHashes, true)) {
-			foreach ($this->visibleDisclosures as $disclosure) {
+		if (in_array($algo->getAlias(), self::SLOW_HASHES, true)) {
+			foreach (self::VISIBLE_DISCLOSURES as $disclosure) {
 				if ($algo->hasDisclosureType($disclosure)) {
 					return RatingGrade::A;
 				}
 			}
-			foreach ($this->invisibleDisclosures as $disclosure) {
+			foreach (self::INVISIBLE_DISCLOSURES as $disclosure) {
 				if ($algo->hasDisclosureType($disclosure)) {
 					return RatingGrade::B;
 				}
@@ -94,7 +88,7 @@ class Rating
 			return RatingGrade::C;
 		} elseif ($algo->isSalted()) {
 			return RatingGrade::D;
-		} elseif (!in_array($algo->getAlias(), $this->insecure, true)) {
+		} elseif (!in_array($algo->getAlias(), self::INSECURE, true)) {
 			return RatingGrade::E;
 		} else {
 			return RatingGrade::F;
@@ -107,7 +101,7 @@ class Rating
 	 */
 	public function getRecommendation(RatingGrade $rating): ?string
 	{
-		return $this->recommendations[$rating->name];
+		return self::RECOMMENDATIONS[$rating->name];
 	}
 
 
@@ -142,7 +136,7 @@ class Rating
 	 */
 	public function getRatingGuide(): array
 	{
-		return $this->rating;
+		return self::RATING;
 	}
 
 
@@ -153,7 +147,7 @@ class Rating
 	 */
 	public function getSlowHashes(): array
 	{
-		return $this->slowHashes;
+		return self::SLOW_HASHES;
 	}
 
 
@@ -164,7 +158,7 @@ class Rating
 	 */
 	public function getInvisibleDisclosures(): array
 	{
-		return $this->invisibleDisclosures;
+		return self::INVISIBLE_DISCLOSURES;
 	}
 
 
@@ -175,7 +169,7 @@ class Rating
 	 */
 	public function getVisibleDisclosures(): array
 	{
-		return $this->visibleDisclosures;
+		return self::VISIBLE_DISCLOSURES;
 	}
 
 }

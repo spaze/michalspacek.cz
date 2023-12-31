@@ -13,15 +13,13 @@ use Nette\Utils\Strings;
 class WinterIsComing
 {
 
-	/** @var array<int, string> */
-	private array $emails = [
+	private const EMAILS = [
 		'winter@example.com',
 		'sample@email.tst',
 		'arachni@email.gr',
 	];
 
-	/** @var array<int, string> */
-	private array $hosts = [
+	private const HOSTS = [
 		'burpcollaborator.net',
 		'mailrez.com',
 		'mailto.plus',
@@ -29,8 +27,7 @@ class WinterIsComing
 		'ssemarketing.net',
 	];
 
-	/** @var array<int, string> */
-	private array $streets = [
+	private const STREETS = [
 		'34 Watts road',
 	];
 
@@ -44,8 +41,8 @@ class WinterIsComing
 			if (
 				is_string($input->getValue())
 				&& (
-					Arrays::contains($this->emails, $input->getValue())
-					|| Strings::match($input->getValue(), '/@(' . implode('|', array_map('preg_quote', $this->hosts)) . ')$/')
+					Arrays::contains(self::EMAILS, $input->getValue())
+					|| Strings::match($input->getValue(), '/@(' . implode('|', array_map('preg_quote', self::HOSTS)) . ')$/')
 				)
 			) {
 				$this->sendSyntaxError($input);
@@ -61,7 +58,7 @@ class WinterIsComing
 	public function ruleStreet(): callable
 	{
 		return function (TextInput $input) {
-			if (Arrays::contains($this->streets, $input->getValue())) {
+			if (Arrays::contains(self::STREETS, $input->getValue())) {
 				$this->sendSyntaxError($input);
 			}
 			return true;

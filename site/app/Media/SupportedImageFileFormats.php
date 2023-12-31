@@ -10,15 +10,13 @@ use MichalSpacekCz\Media\Exceptions\UnsupportedContentTypeException;
 class SupportedImageFileFormats
 {
 
-	/** @var non-empty-array<string, string> */
-	private array $supportedMainImages = [
+	private const SUPPORTED_MAIN_IMAGES = [
 		'image/gif' => 'gif',
 		'image/png' => 'png',
 		'image/jpeg' => 'jpg',
 	];
 
-	/** @var non-empty-array<string, string> */
-	private array $supportedAlternativeImages = [
+	private const SUPPORTED_ALTERNATIVE_IMAGES = [
 		'image/webp' => 'webp',
 	];
 
@@ -28,10 +26,10 @@ class SupportedImageFileFormats
 	 */
 	public function getMainExtensionByContentType(string $contentType): string
 	{
-		if (!isset($this->supportedMainImages[$contentType])) {
-			throw new UnsupportedContentTypeException($contentType, $this->supportedMainImages);
+		if (!isset(self::SUPPORTED_MAIN_IMAGES[$contentType])) {
+			throw new UnsupportedContentTypeException($contentType, self::SUPPORTED_MAIN_IMAGES);
 		}
-		return $this->supportedMainImages[$contentType];
+		return self::SUPPORTED_MAIN_IMAGES[$contentType];
 	}
 
 
@@ -40,10 +38,10 @@ class SupportedImageFileFormats
 	 */
 	public function getAlternativeExtensionByContentType(string $contentType): string
 	{
-		if (!isset($this->supportedAlternativeImages[$contentType])) {
-			throw new UnsupportedContentTypeException($contentType, $this->supportedAlternativeImages);
+		if (!isset(self::SUPPORTED_ALTERNATIVE_IMAGES[$contentType])) {
+			throw new UnsupportedContentTypeException($contentType, self::SUPPORTED_ALTERNATIVE_IMAGES);
 		}
-		return $this->supportedAlternativeImages[$contentType];
+		return self::SUPPORTED_ALTERNATIVE_IMAGES[$contentType];
 	}
 
 
@@ -52,9 +50,9 @@ class SupportedImageFileFormats
 	 */
 	public function getAlternativeContentTypeByExtension(string $extension): string
 	{
-		$types = array_flip($this->supportedAlternativeImages);
+		$types = array_flip(self::SUPPORTED_ALTERNATIVE_IMAGES);
 		if (!isset($types[$extension])) {
-			throw new ExtensionWithNoContentTypeException($extension, $this->supportedAlternativeImages);
+			throw new ExtensionWithNoContentTypeException($extension, self::SUPPORTED_ALTERNATIVE_IMAGES);
 		}
 		return $types[$extension];
 	}
@@ -65,7 +63,7 @@ class SupportedImageFileFormats
 	 */
 	public function getMainContentTypes(): array
 	{
-		return array_keys($this->supportedMainImages);
+		return array_keys(self::SUPPORTED_MAIN_IMAGES);
 	}
 
 
@@ -74,7 +72,7 @@ class SupportedImageFileFormats
 	 */
 	public function getAlternativeContentTypes(): array
 	{
-		return array_keys($this->supportedAlternativeImages);
+		return array_keys(self::SUPPORTED_ALTERNATIVE_IMAGES);
 	}
 
 
@@ -83,7 +81,7 @@ class SupportedImageFileFormats
 	 */
 	public function getMainExtensions(): array
 	{
-		return array_values($this->supportedMainImages);
+		return array_values(self::SUPPORTED_MAIN_IMAGES);
 	}
 
 
@@ -92,7 +90,7 @@ class SupportedImageFileFormats
 	 */
 	public function getAlternativeExtensions(): array
 	{
-		return array_values($this->supportedAlternativeImages);
+		return array_values(self::SUPPORTED_ALTERNATIVE_IMAGES);
 	}
 
 }
