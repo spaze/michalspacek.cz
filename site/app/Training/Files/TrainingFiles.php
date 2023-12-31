@@ -11,14 +11,14 @@ use Nette\Database\Explorer;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
 
-class TrainingFiles
+readonly class TrainingFiles
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly Statuses $trainingStatuses,
-		private readonly TrainingFileFactory $trainingFileFactory,
-		private readonly TrainingFilesStorage $trainingFilesStorage,
+		private Explorer $database,
+		private Statuses $trainingStatuses,
+		private TrainingFileFactory $trainingFileFactory,
+		private TrainingFilesStorage $trainingFilesStorage,
 	) {
 	}
 

@@ -3,16 +3,16 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Net;
 
-class DnsRecord
+readonly class DnsRecord
 {
 
 	public function __construct(
-		private readonly string $host,
-		private readonly string $class,
-		private readonly int $ttl,
-		private readonly string $type,
-		private readonly ?string $ip = null,
-		private readonly ?string $ipv6 = null,
+		private string $host,
+		private string $class,
+		private int $ttl,
+		private string $type,
+		private ?string $ip = null,
+		private ?string $ipv6 = null,
 	) {
 	}
 

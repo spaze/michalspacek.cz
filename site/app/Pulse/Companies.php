@@ -7,11 +7,11 @@ use DateTime;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
-class Companies
+readonly class Companies
 {
 
 	public function __construct(
-		private readonly Explorer $database,
+		private Explorer $database,
 	) {
 	}
 

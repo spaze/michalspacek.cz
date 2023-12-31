@@ -16,13 +16,13 @@ use MichalSpacekCz\Tls\Exceptions\OpenSslX509ParseException;
 use Nette\Database\Row;
 use OpenSSLCertificate;
 
-class CertificateFactory
+readonly class CertificateFactory
 {
 
 	public function __construct(
-		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
-		private readonly DateTimeFactory $dateTimeFactory,
-		private readonly int $expiringThreshold,
+		private DateTimeZoneFactory $dateTimeZoneFactory,
+		private DateTimeFactory $dateTimeFactory,
+		private int $expiringThreshold,
 	) {
 	}
 

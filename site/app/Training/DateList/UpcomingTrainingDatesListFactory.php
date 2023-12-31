@@ -6,12 +6,12 @@ namespace MichalSpacekCz\Training\DateList;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\FreeSeats;
 
-class UpcomingTrainingDatesListFactory
+readonly class UpcomingTrainingDatesListFactory
 {
 
 	public function __construct(
-		private readonly UpcomingTrainingDates $upcomingTrainingDates,
-		private readonly FreeSeats $freeSeats,
+		private UpcomingTrainingDates $upcomingTrainingDates,
+		private FreeSeats $freeSeats,
 	) {
 	}
 

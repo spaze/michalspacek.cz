@@ -9,11 +9,11 @@ use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class AlgorithmAttributesFactory
+readonly class AlgorithmAttributesFactory
 {
 
 	public function __construct(
-		private readonly Processor $schemaProcessor,
+		private Processor $schemaProcessor,
 	) {
 	}
 

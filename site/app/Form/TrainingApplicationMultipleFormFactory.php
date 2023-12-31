@@ -9,15 +9,15 @@ use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Statuses;
 
-class TrainingApplicationMultipleFormFactory
+readonly class TrainingApplicationMultipleFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly TrainingApplicationStorage $trainingApplicationStorage,
-		private readonly Statuses $trainingStatuses,
-		private readonly HttpInput $httpInput,
+		private FormFactory $factory,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private TrainingApplicationStorage $trainingApplicationStorage,
+		private Statuses $trainingStatuses,
+		private HttpInput $httpInput,
 	) {
 	}
 

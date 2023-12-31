@@ -7,13 +7,13 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Resources\MediaResources;
 use Nette\Database\Row;
 
-class VideoFactory
+readonly class VideoFactory
 {
 
 	public function __construct(
-		private readonly MediaResources $mediaResources,
-		private readonly SupportedImageFileFormats $supportedImageFileFormats,
-		private readonly VideoThumbnails $videoThumbnails,
+		private MediaResources $mediaResources,
+		private SupportedImageFileFormats $supportedImageFileFormats,
+		private VideoThumbnails $videoThumbnails,
 	) {
 	}
 

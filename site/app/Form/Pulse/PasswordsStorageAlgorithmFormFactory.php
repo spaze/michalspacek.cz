@@ -12,15 +12,15 @@ use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\Pulse\SpecificSite;
 use Nette\Utils\ArrayHash;
 
-class PasswordsStorageAlgorithmFormFactory
+readonly class PasswordsStorageAlgorithmFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Companies $companies,
-		private readonly Sites $sites,
-		private readonly Passwords $passwords,
+		private FormFactory $factory,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private Companies $companies,
+		private Sites $sites,
+		private Passwords $passwords,
 	) {
 	}
 

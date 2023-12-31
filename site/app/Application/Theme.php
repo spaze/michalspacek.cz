@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Application;
 use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
 
-class Theme
+readonly class Theme
 {
 
 	private const DARK = 'dark';
@@ -15,7 +15,7 @@ class Theme
 
 
 	public function __construct(
-		private readonly Cookies $cookies,
+		private Cookies $cookies,
 	) {
 	}
 

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
-class NetteCve202015227Rce
+readonly class NetteCve202015227Rce
 {
 
 	public function __construct(

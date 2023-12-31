@@ -5,12 +5,12 @@ namespace MichalSpacekCz\Form;
 
 use MichalSpacekCz\UpcKeys\UpcKeys;
 
-class UpcKeysSsidFormFactory
+readonly class UpcKeysSsidFormFactory
 {
 
 	public function __construct(
-		private readonly UnprotectedFormFactory $factory,
-		private readonly UpcKeys $upcKeys,
+		private UnprotectedFormFactory $factory,
+		private UpcKeys $upcKeys,
 	) {
 	}
 

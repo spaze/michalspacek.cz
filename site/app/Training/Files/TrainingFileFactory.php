@@ -6,11 +6,11 @@ namespace MichalSpacekCz\Training\Files;
 use Nette\Database\Row;
 use SplFileInfo;
 
-class TrainingFileFactory
+readonly class TrainingFileFactory
 {
 
 	public function __construct(
-		private readonly TrainingFilesStorage $storage,
+		private TrainingFilesStorage $storage,
 	) {
 	}
 

@@ -8,13 +8,13 @@ use Nette\Http\IRequest;
 use Nette\Utils\Html;
 use Tracy\Debugger;
 
-class SignInHoneypotFormFactory
+readonly class SignInHoneypotFormFactory
 {
 
 	public function __construct(
-		private readonly UnprotectedFormFactory $factory,
-		private readonly FormControlsFactory $controlsFactory,
-		private readonly IRequest $httpRequest,
+		private UnprotectedFormFactory $factory,
+		private FormControlsFactory $controlsFactory,
+		private IRequest $httpRequest,
 	) {
 	}
 

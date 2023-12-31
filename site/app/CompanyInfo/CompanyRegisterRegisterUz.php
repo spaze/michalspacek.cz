@@ -19,7 +19,7 @@ use stdClass;
  *
  * See https://www.registeruz.sk/cruz-public/home/api for the docs.
  */
-class CompanyRegisterRegisterUz implements CompanyRegister
+readonly class CompanyRegisterRegisterUz implements CompanyRegister
 {
 
 	private const DAY_ONE = '1993-01-01';
@@ -28,7 +28,7 @@ class CompanyRegisterRegisterUz implements CompanyRegister
 
 
 	public function __construct(
-		private readonly HttpClient $httpClient,
+		private HttpClient $httpClient,
 	) {
 	}
 

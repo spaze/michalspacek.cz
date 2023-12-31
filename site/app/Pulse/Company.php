@@ -3,15 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse;
 
-class Company
+readonly class Company
 {
 
 	public function __construct(
-		private readonly int $id,
-		private readonly string $companyName,
-		private readonly ?string $tradeName,
-		private readonly string $companyAlias,
-		private readonly string $sortName,
+		private int $id,
+		private string $companyName,
+		private ?string $tradeName,
+		private string $companyAlias,
+		private string $sortName,
 	) {
 	}
 

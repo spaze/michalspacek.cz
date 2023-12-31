@@ -6,13 +6,13 @@ namespace MichalSpacekCz\Articles;
 use DateTime;
 use Nette\Utils\Html;
 
-class ArticleEdit
+readonly class ArticleEdit
 {
 
 	public function __construct(
-		private readonly DateTime $editedAt,
-		private readonly Html $summary,
-		private readonly string $summaryTexy,
+		private DateTime $editedAt,
+		private Html $summary,
+		private string $summaryTexy,
 	) {
 	}
 

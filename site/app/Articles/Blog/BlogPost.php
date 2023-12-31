@@ -18,7 +18,7 @@ use MichalSpacekCz\Twitter\TwitterCard;
 use Nette\Utils\Html;
 use Override;
 
-class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, ArticleWithSummary, ArticleWithText, ArticleWithTags, ArticleWithUpdateTime, ArticleWithPublishTime, ArticleWithEdits
+readonly class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, ArticleWithSummary, ArticleWithText, ArticleWithTags, ArticleWithUpdateTime, ArticleWithPublishTime, ArticleWithEdits
 {
 
 	/**
@@ -30,32 +30,32 @@ class BlogPost implements ExportsOmittable, ArticleWithId, ArticleWithSlug, Arti
 	 * @param list<string> $allowedTagsGroups
 	 */
 	public function __construct(
-		private readonly ?int $id,
-		private readonly string $slug,
-		private readonly int $localeId,
-		private readonly ?string $locale,
-		private readonly ?int $translationGroupId,
-		private readonly Html $title,
-		private readonly string $titleTexy,
-		private readonly ?Html $lead,
-		private readonly ?string $leadTexy,
-		private readonly Html $text,
-		private readonly string $textTexy,
-		private readonly ?DateTime $published,
-		private readonly bool $needsPreviewKey,
-		private readonly ?string $previewKey,
-		private readonly ?Html $originally,
-		private readonly ?string $originallyTexy,
-		private readonly ?string $ogImage,
-		private readonly array $tags,
-		private readonly array $slugTags,
-		private readonly array $recommended,
-		private readonly ?TwitterCard $twitterCard,
-		private readonly string $href,
-		private readonly array $edits,
-		private readonly array $cspSnippets,
-		private readonly array $allowedTagsGroups,
-		private readonly bool $omitExports,
+		private ?int $id,
+		private string $slug,
+		private int $localeId,
+		private ?string $locale,
+		private ?int $translationGroupId,
+		private Html $title,
+		private string $titleTexy,
+		private ?Html $lead,
+		private ?string $leadTexy,
+		private Html $text,
+		private string $textTexy,
+		private ?DateTime $published,
+		private bool $needsPreviewKey,
+		private ?string $previewKey,
+		private ?Html $originally,
+		private ?string $originallyTexy,
+		private ?string $ogImage,
+		private array $tags,
+		private array $slugTags,
+		private array $recommended,
+		private ?TwitterCard $twitterCard,
+		private string $href,
+		private array $edits,
+		private array $cspSnippets,
+		private array $allowedTagsGroups,
+		private bool $omitExports,
 	) {
 	}
 

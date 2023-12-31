@@ -6,11 +6,11 @@ namespace MichalSpacekCz\Twitter;
 use MichalSpacekCz\Twitter\Exceptions\TwitterCardNotFoundException;
 use Nette\Database\Explorer;
 
-class TwitterCards
+readonly class TwitterCards
 {
 
 	public function __construct(
-		private readonly Explorer $database,
+		private Explorer $database,
 	) {
 	}
 

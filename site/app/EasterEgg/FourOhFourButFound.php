@@ -7,7 +7,7 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
 
-class FourOhFourButFound
+readonly class FourOhFourButFound
 {
 
 	private const TEMPLATES = [
@@ -16,7 +16,7 @@ class FourOhFourButFound
 
 
 	public function __construct(
-		private readonly IRequest $httpRequest,
+		private IRequest $httpRequest,
 	) {
 	}
 

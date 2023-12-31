@@ -9,13 +9,13 @@ use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use Nette\Utils\Html;
 use Override;
 
-class TrainingDateTexyFormatterPlaceholder implements TexyFormatterPlaceholder
+readonly class TrainingDateTexyFormatterPlaceholder implements TexyFormatterPlaceholder
 {
 
 	public function __construct(
-		private readonly Translator $translator,
-		private readonly UpcomingTrainingDates $upcomingTrainingDates,
-		private readonly DateTimeFormatter $dateTimeFormatter,
+		private Translator $translator,
+		private UpcomingTrainingDates $upcomingTrainingDates,
+		private DateTimeFormatter $dateTimeFormatter,
 	) {
 	}
 

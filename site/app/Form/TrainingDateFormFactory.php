@@ -12,7 +12,7 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Forms\Controls\SubmitButton;
 
-class TrainingDateFormFactory
+readonly class TrainingDateFormFactory
 {
 
 	private const STANDARD = 'Standardní';
@@ -22,13 +22,13 @@ class TrainingDateFormFactory
 
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly Trainings $trainings,
-		private readonly TrainingDates $trainingDates,
-		private readonly TrainingDateStatuses $trainingDateStatuses,
-		private readonly TrainingDatesFormValidator $trainingDatesFormValidator,
-		private readonly TrainingVenues $trainingVenues,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
+		private FormFactory $factory,
+		private Trainings $trainings,
+		private TrainingDates $trainingDates,
+		private TrainingDateStatuses $trainingDateStatuses,
+		private TrainingDatesFormValidator $trainingDatesFormValidator,
+		private TrainingVenues $trainingVenues,
+		private TrainingControlsFactory $trainingControlsFactory,
 	) {
 	}
 

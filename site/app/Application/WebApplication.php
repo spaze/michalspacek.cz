@@ -9,15 +9,15 @@ use Nette\Application\Application;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 
-class WebApplication
+readonly class WebApplication
 {
 
 	public function __construct(
-		private readonly IRequest $httpRequest,
-		private readonly IResponse $httpResponse,
-		private readonly SecurityHeaders $securityHeaders,
-		private readonly Application $application,
-		private readonly string $fqdn,
+		private IRequest $httpRequest,
+		private IResponse $httpResponse,
+		private SecurityHeaders $securityHeaders,
+		private Application $application,
+		private string $fqdn,
 	) {
 	}
 

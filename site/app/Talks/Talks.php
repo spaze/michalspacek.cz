@@ -12,13 +12,13 @@ use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use Nette\Database\Explorer;
 use Nette\Utils\Html;
 
-class Talks
+readonly class Talks
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly TalkFactory $talkFactory,
+		private Explorer $database,
+		private TexyFormatter $texyFormatter,
+		private TalkFactory $talkFactory,
 	) {
 	}
 

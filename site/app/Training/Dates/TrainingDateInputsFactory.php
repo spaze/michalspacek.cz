@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Training\Dates;
 
 use MichalSpacekCz\Form\TrainingDateFormFactory;
 
-class TrainingDateInputsFactory
+readonly class TrainingDateInputsFactory
 {
 
 	public function __construct(
-		private readonly TrainingDateFormFactory $trainingDateFormFactory,
+		private TrainingDateFormFactory $trainingDateFormFactory,
 	) {
 	}
 

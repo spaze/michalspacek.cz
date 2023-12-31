@@ -9,14 +9,14 @@ use MichalSpacekCz\Training\Applications\TrainingApplications;
 use MichalSpacekCz\Training\Statuses;
 use Nette\Utils\Html;
 
-class TrainingStatusesFormFactory
+readonly class TrainingStatusesFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly TrainingApplications $trainingApplications,
-		private readonly Statuses $trainingStatuses,
+		private FormFactory $factory,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private TrainingApplications $trainingApplications,
+		private Statuses $trainingStatuses,
 	) {
 	}
 

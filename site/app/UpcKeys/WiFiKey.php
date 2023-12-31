@@ -6,16 +6,16 @@ namespace MichalSpacekCz\UpcKeys;
 use JsonSerializable;
 use Override;
 
-class WiFiKey implements JsonSerializable
+readonly class WiFiKey implements JsonSerializable
 {
 
 	public function __construct(
-		private readonly string $serial,
-		private readonly string $serialPrefix,
-		private readonly ?string $oui,
-		private readonly ?string $mac,
-		private readonly string $key,
-		private readonly WiFiBand $type,
+		private string $serial,
+		private string $serialPrefix,
+		private ?string $oui,
+		private ?string $mac,
+		private string $key,
+		private WiFiBand $type,
 	) {
 	}
 

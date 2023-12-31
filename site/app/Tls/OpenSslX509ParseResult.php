@@ -3,14 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
-class OpenSslX509ParseResult
+readonly class OpenSslX509ParseResult
 {
 
 	public function __construct(
-		private readonly string $commonName,
-		private readonly int $validFromTimeT,
-		private readonly int $validToTimeT,
-		private readonly string $serialNumberHex,
+		private string $commonName,
+		private int $validFromTimeT,
+		private int $validToTimeT,
+		private string $serialNumberHex,
 	) {
 	}
 

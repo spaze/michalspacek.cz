@@ -11,14 +11,14 @@ use MichalSpacekCz\Media\VideoFactory;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Row;
 
-class TalkFactory
+readonly class TalkFactory
 {
 
 	public function __construct(
-		private readonly TexyFormatter $texyFormatter,
-		private readonly VideoFactory $videoFactory,
-		private readonly Translator $translator,
-		private readonly LocaleLinkGenerator $localeLinkGenerator,
+		private TexyFormatter $texyFormatter,
+		private VideoFactory $videoFactory,
+		private Translator $translator,
+		private LocaleLinkGenerator $localeLinkGenerator,
 	) {
 	}
 

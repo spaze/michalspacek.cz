@@ -9,14 +9,14 @@ use MichalSpacekCz\Interviews\Interviews;
 use MichalSpacekCz\Media\VideoThumbnails;
 use Nette\Forms\Controls\SubmitButton;
 
-class InterviewFormFactory
+readonly class InterviewFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Interviews $interviews,
-		private readonly VideoThumbnails $videoThumbnails,
+		private FormFactory $factory,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private Interviews $interviews,
+		private VideoThumbnails $videoThumbnails,
 	) {
 	}
 

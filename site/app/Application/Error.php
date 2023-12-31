@@ -11,12 +11,12 @@ use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\Responses\ForwardResponse;
 use Tracy\ILogger;
 
-class Error
+readonly class Error
 {
 
 	public function __construct(
-		private readonly ILogger $logger,
-		private readonly AppRequest $appRequest,
+		private ILogger $logger,
+		private AppRequest $appRequest,
 	) {
 	}
 

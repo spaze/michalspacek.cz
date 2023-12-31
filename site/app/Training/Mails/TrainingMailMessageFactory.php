@@ -8,12 +8,12 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Statuses;
 
-class TrainingMailMessageFactory
+readonly class TrainingMailMessageFactory
 {
 
 	public function __construct(
-		private readonly Statuses $trainingStatuses,
-		private readonly DateTimeFormatter $dateTimeFormatter,
+		private Statuses $trainingStatuses,
+		private DateTimeFormatter $dateTimeFormatter,
 	) {
 	}
 

@@ -14,7 +14,7 @@ use Nette\Utils\Callback;
 use Nette\Utils\ImageException;
 use stdClass;
 
-class VideoThumbnails
+readonly class VideoThumbnails
 {
 
 	private const VIDEO_THUMBNAIL_WIDTH = 320;
@@ -22,8 +22,8 @@ class VideoThumbnails
 
 
 	public function __construct(
-		private readonly MediaResources $mediaResources,
-		private readonly SupportedImageFileFormats $supportedImageFileFormats,
+		private MediaResources $mediaResources,
+		private SupportedImageFileFormats $supportedImageFileFormats,
 	) {
 	}
 

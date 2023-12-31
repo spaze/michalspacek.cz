@@ -5,22 +5,22 @@ namespace MichalSpacekCz\Talks\Slides;
 
 use Nette\Utils\Html;
 
-class TalkSlide
+readonly class TalkSlide
 {
 
 	public function __construct(
-		private readonly int $id,
-		private readonly string $alias,
-		private readonly int $number,
-		private readonly ?string $filename,
-		private readonly ?string $filenameAlternative,
-		private readonly ?int $filenamesTalkId,
-		private readonly string $title,
-		private readonly Html $speakerNotes,
-		private readonly string $speakerNotesTexy,
-		private readonly ?string $image,
-		private readonly ?string $imageAlternative,
-		private readonly ?string $imageAlternativeType,
+		private int $id,
+		private string $alias,
+		private int $number,
+		private ?string $filename,
+		private ?string $filenameAlternative,
+		private ?int $filenamesTalkId,
+		private string $title,
+		private Html $speakerNotes,
+		private string $speakerNotesTexy,
+		private ?string $image,
+		private ?string $imageAlternative,
+		private ?string $imageAlternativeType,
 	) {
 	}
 

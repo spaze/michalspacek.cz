@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-class Prices
+readonly class Prices
 {
 
 	public function __construct(
-		private readonly float $vatRate,
+		private float $vatRate,
 	) {
 	}
 

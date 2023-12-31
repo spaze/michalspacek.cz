@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
-class StorageSharedWith
+readonly class StorageSharedWith
 {
 
 	public function __construct(
-		private readonly string $url,
-		private readonly string $alias,
+		private string $url,
+		private string $alias,
 	) {
 	}
 

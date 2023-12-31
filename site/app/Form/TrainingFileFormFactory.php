@@ -7,12 +7,12 @@ use DateTimeInterface;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use Nette\Utils\Html;
 
-class TrainingFileFormFactory
+readonly class TrainingFileFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingFiles $trainingFiles,
+		private FormFactory $factory,
+		private TrainingFiles $trainingFiles,
 	) {
 	}
 

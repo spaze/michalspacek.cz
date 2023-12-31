@@ -5,17 +5,17 @@ namespace MichalSpacekCz\Media;
 
 use Nette\Utils\Html;
 
-class Photo
+readonly class Photo
 {
 
 	/**
 	 * @param array<string, string> $sizes
 	 */
 	public function __construct(
-		private readonly string $title,
-		private readonly string $file,
-		private readonly string|Html $description,
-		private readonly array $sizes,
+		private string $title,
+		private string $file,
+		private string|Html $description,
+		private array $sizes,
 	) {
 	}
 

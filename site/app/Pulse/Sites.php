@@ -7,14 +7,14 @@ use DateTime;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
-class Sites
+readonly class Sites
 {
 
 	public const ALL = 'all';
 
 
 	public function __construct(
-		private readonly Explorer $database,
+		private Explorer $database,
 	) {
 	}
 

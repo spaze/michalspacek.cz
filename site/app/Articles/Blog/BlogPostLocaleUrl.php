@@ -5,18 +5,18 @@ namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
 
-class BlogPostLocaleUrl
+readonly class BlogPostLocaleUrl
 {
 
 	/**
 	 * @param list<string> $slugTags
 	 */
 	public function __construct(
-		private readonly string $locale,
-		private readonly string $slug,
-		private readonly ?DateTime $published,
-		private readonly ?string $previewKey,
-		private readonly array $slugTags,
+		private string $locale,
+		private string $slug,
+		private ?DateTime $published,
+		private ?string $previewKey,
+		private array $slugTags,
 	) {
 	}
 

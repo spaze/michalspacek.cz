@@ -6,19 +6,19 @@ namespace MichalSpacekCz\CompanyInfo;
 use JsonSerializable;
 use Override;
 
-class CompanyInfoDetails implements JsonSerializable
+readonly class CompanyInfoDetails implements JsonSerializable
 {
 
 	public function __construct(
-		private readonly int $status,
-		private readonly string $statusMessage,
-		private readonly string $companyId = '',
-		private readonly string $companyTaxId = '',
-		private readonly string $company = '',
-		private readonly ?string $streetAndNumber = null,
-		private readonly ?string $city = null,
-		private readonly ?string $zip = null,
-		private readonly ?string $country = null,
+		private int $status,
+		private string $statusMessage,
+		private string $companyId = '',
+		private string $companyTaxId = '',
+		private string $company = '',
+		private ?string $streetAndNumber = null,
+		private ?string $city = null,
+		private ?string $zip = null,
+		private ?string $country = null,
 	) {
 	}
 

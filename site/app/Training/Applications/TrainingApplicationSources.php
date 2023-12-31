@@ -8,12 +8,12 @@ use MichalSpacekCz\Training\Resolver\Vrana;
 use Nette\Database\Explorer;
 use Nette\Utils\Strings;
 
-class TrainingApplicationSources
+readonly class TrainingApplicationSources
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly Vrana $vranaResolver,
+		private Explorer $database,
+		private Vrana $vranaResolver,
 	) {
 	}
 

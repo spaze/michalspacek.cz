@@ -10,19 +10,19 @@ use MichalSpacekCz\Articles\Components\ArticleWithSummary;
 use Nette\Utils\Html;
 use Override;
 
-class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
+readonly class ArticlePublishedElsewhere implements ArticleWithId, ArticleWithSummary, ArticleWithPublishTime
 {
 
 	public function __construct(
-		private readonly int $articleId,
-		private readonly Html $title,
-		private readonly string $titleTexy,
-		private readonly string $href,
-		private readonly DateTime $published,
-		private readonly Html $excerpt,
-		private readonly string $excerptTexy,
-		private readonly string $sourceName,
-		private readonly string $sourceHref,
+		private int $articleId,
+		private Html $title,
+		private string $titleTexy,
+		private string $href,
+		private DateTime $published,
+		private Html $excerpt,
+		private string $excerptTexy,
+		private string $sourceName,
+		private string $sourceHref,
 	) {
 	}
 

@@ -10,15 +10,15 @@ use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 
-class DeletePersonalDataFormFactory
+readonly class DeletePersonalDataFormFactory
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly FormFactory $factory,
-		private readonly Trainings $trainings,
-		private readonly TrainingDates $trainingDates,
-		private readonly TrainingFiles $files,
+		private Explorer $database,
+		private FormFactory $factory,
+		private Trainings $trainings,
+		private TrainingDates $trainingDates,
+		private TrainingFiles $files,
 	) {
 	}
 

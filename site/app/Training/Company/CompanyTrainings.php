@@ -13,15 +13,15 @@ use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Utils\Html;
 
-class CompanyTrainings
+readonly class CompanyTrainings
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly UpcomingTrainingDates $upcomingTrainingDates,
-		private readonly Translator $translator,
-		private readonly Prices $prices,
+		private Explorer $database,
+		private TexyFormatter $texyFormatter,
+		private UpcomingTrainingDates $upcomingTrainingDates,
+		private Translator $translator,
+		private Prices $prices,
 	) {
 	}
 

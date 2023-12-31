@@ -19,15 +19,15 @@ use SodiumException;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
 
-class TrainingApplicationStorage
+readonly class TrainingApplicationStorage
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly Statuses $trainingStatuses,
-		private readonly TrainingApplicationSources $trainingApplicationSources,
-		private readonly StaticKey $emailEncryption,
-		private readonly Prices $prices,
+		private Explorer $database,
+		private Statuses $trainingStatuses,
+		private TrainingApplicationSources $trainingApplicationSources,
+		private StaticKey $emailEncryption,
+		private Prices $prices,
 	) {
 	}
 

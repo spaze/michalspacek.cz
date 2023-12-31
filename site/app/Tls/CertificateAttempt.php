@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Tls;
 
-class CertificateAttempt
+readonly class CertificateAttempt
 {
 
 	public function __construct(
-		private readonly string $commonName,
-		private readonly ?string $commonNameExt,
+		private string $commonName,
+		private ?string $commonNameExt,
 	) {
 	}
 

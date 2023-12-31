@@ -8,12 +8,12 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use Nette\Utils\Html;
 use Stringable;
 
-class Filters
+readonly class Filters
 {
 
 	public function __construct(
-		private readonly TexyFormatter $texyFormatter,
-		private readonly DateTimeFormatter $dateTimeFormatter,
+		private TexyFormatter $texyFormatter,
+		private DateTimeFormatter $dateTimeFormatter,
 	) {
 	}
 

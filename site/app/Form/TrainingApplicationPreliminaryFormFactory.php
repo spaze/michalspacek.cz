@@ -8,14 +8,14 @@ use MichalSpacekCz\Training\ApplicationForm\TrainingApplicationFormSpam;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 
-class TrainingApplicationPreliminaryFormFactory
+readonly class TrainingApplicationPreliminaryFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly TrainingApplicationStorage $trainingApplicationStorage,
-		private readonly TrainingApplicationFormSpam $formSpam,
+		private FormFactory $factory,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private TrainingApplicationStorage $trainingApplicationStorage,
+		private TrainingApplicationFormSpam $formSpam,
 	) {
 	}
 

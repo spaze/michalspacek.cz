@@ -11,13 +11,13 @@ use MichalSpacekCz\Media\VideoFactory;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 
-class Interviews
+readonly class Interviews
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly VideoFactory $videoFactory,
-		private readonly TexyFormatter $texyFormatter,
+		private Explorer $database,
+		private VideoFactory $videoFactory,
+		private TexyFormatter $texyFormatter,
 	) {
 	}
 

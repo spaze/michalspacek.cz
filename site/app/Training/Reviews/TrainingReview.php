@@ -5,24 +5,24 @@ namespace MichalSpacekCz\Training\Reviews;
 
 use Nette\Utils\Html;
 
-class TrainingReview
+readonly class TrainingReview
 {
 
 	/**
 	 * @param positive-int|null $ranking
 	 */
 	public function __construct(
-		private readonly int $id,
-		private readonly string $name,
-		private readonly string $company,
-		private readonly ?string $jobTitle,
-		private readonly Html $review,
-		private readonly string $reviewTexy,
-		private readonly ?string $href,
-		private readonly bool $hidden,
-		private readonly ?int $ranking,
-		private readonly ?string $note,
-		private readonly int $dateId,
+		private int $id,
+		private string $name,
+		private string $company,
+		private ?string $jobTitle,
+		private Html $review,
+		private string $reviewTexy,
+		private ?string $href,
+		private bool $hidden,
+		private ?int $ranking,
+		private ?string $note,
+		private int $dateId,
 	) {
 	}
 

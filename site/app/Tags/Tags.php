@@ -10,11 +10,11 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nette\Utils\Strings;
 
-class Tags
+readonly class Tags
 {
 
 	public function __construct(
-		private readonly JsonUtils $jsonUtils,
+		private JsonUtils $jsonUtils,
 	) {
 	}
 

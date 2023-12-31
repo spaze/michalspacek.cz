@@ -11,15 +11,15 @@ use MichalSpacekCz\User\Manager;
 use Nette\Http\Helpers;
 use Nette\Http\Session;
 
-class CookieDescriptions
+readonly class CookieDescriptions
 {
 
 	public function __construct(
-		private readonly Manager $authenticator,
-		private readonly Theme $theme,
-		private readonly Session $sessionHandler,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly DateTime $dateTime,
+		private Manager $authenticator,
+		private Theme $theme,
+		private Session $sessionHandler,
+		private TexyFormatter $texyFormatter,
+		private DateTime $dateTime,
 	) {
 	}
 

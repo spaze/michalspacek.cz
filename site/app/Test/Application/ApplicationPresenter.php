@@ -13,11 +13,11 @@ use Nette\Application\UI\Presenter;
 use Override;
 use ReflectionException;
 
-class ApplicationPresenter
+readonly class ApplicationPresenter
 {
 
 	public function __construct(
-		private readonly IPresenterFactory $presenterFactory,
+		private IPresenterFactory $presenterFactory,
 	) {
 	}
 

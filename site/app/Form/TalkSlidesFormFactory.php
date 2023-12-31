@@ -12,14 +12,14 @@ use Nette\Application\Request;
 use Nette\Forms\Container;
 use Nette\Utils\Html;
 
-class TalkSlidesFormFactory
+readonly class TalkSlidesFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TalkSlides $talkSlides,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly SupportedImageFileFormats $supportedImageFileFormats,
+		private FormFactory $factory,
+		private TalkSlides $talkSlides,
+		private TexyFormatter $texyFormatter,
+		private SupportedImageFileFormats $supportedImageFileFormats,
 	) {
 	}
 

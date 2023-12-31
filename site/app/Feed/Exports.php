@@ -22,7 +22,7 @@ use Spaze\Exports\Atom\Elements\Entry;
 use Spaze\Exports\Atom\Elements\Link;
 use Spaze\Exports\Atom\Feed;
 
-class Exports
+readonly class Exports
 {
 
 	private const ITEMS = 5;
@@ -31,9 +31,9 @@ class Exports
 
 
 	public function __construct(
-		private readonly Articles $articles,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly Translator $translator,
+		private Articles $articles,
+		private TexyFormatter $texyFormatter,
+		private Translator $translator,
 		Storage $cacheStorage,
 	) {
 		$this->cache = new Cache($cacheStorage, self::class);

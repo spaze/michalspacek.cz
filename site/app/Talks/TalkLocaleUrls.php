@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Talks;
 
 use Nette\Database\Explorer;
 
-class TalkLocaleUrls
+readonly class TalkLocaleUrls
 {
 
 	public function __construct(
-		private readonly Explorer $database,
+		private Explorer $database,
 	) {
 	}
 

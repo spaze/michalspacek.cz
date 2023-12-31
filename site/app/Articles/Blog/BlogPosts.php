@@ -17,16 +17,16 @@ use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class BlogPosts
+readonly class BlogPosts
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly BlogPostLoader $loader,
-		private readonly BlogPostFactory $factory,
-		private readonly Cache $exportsCache,
-		private readonly Tags $tags,
-		private readonly int $updatedInfoThreshold,
+		private Explorer $database,
+		private BlogPostLoader $loader,
+		private BlogPostFactory $factory,
+		private Cache $exportsCache,
+		private Tags $tags,
+		private int $updatedInfoThreshold,
 	) {
 	}
 

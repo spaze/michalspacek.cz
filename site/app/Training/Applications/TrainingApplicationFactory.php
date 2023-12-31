@@ -13,16 +13,16 @@ use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
 use Spaze\Encryption\Symmetric\StaticKey;
 
-class TrainingApplicationFactory
+readonly class TrainingApplicationFactory
 {
 
 	public function __construct(
-		private readonly Statuses $trainingStatuses,
-		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
-		private readonly StaticKey $emailEncryption,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly TrainingApplicationSources $trainingApplicationSources,
-		private readonly TrainingFiles $trainingFiles,
+		private Statuses $trainingStatuses,
+		private TrainingMailMessageFactory $trainingMailMessageFactory,
+		private StaticKey $emailEncryption,
+		private TexyFormatter $texyFormatter,
+		private TrainingApplicationSources $trainingApplicationSources,
+		private TrainingFiles $trainingFiles,
 	) {
 	}
 

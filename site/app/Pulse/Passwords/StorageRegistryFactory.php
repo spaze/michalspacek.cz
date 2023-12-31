@@ -13,14 +13,14 @@ use Nette\Database\Row;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class StorageRegistryFactory
+readonly class StorageRegistryFactory
 {
 
 	public function __construct(
-		private readonly Rating $rating,
-		private readonly Sites $sites,
-		private readonly PasswordsSorting $sorting,
-		private readonly AlgorithmAttributesFactory $algorithmAttributesFactory,
+		private Rating $rating,
+		private Sites $sites,
+		private PasswordsSorting $sorting,
+		private AlgorithmAttributesFactory $algorithmAttributesFactory,
 	) {
 	}
 

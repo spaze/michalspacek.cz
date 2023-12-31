@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Http;
 
 use Nette\Http\IRequest;
 
-class HttpInput
+readonly class HttpInput
 {
 
 	public function __construct(
-		private readonly IRequest $request,
+		private IRequest $request,
 	) {
 	}
 

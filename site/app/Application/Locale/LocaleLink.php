@@ -3,14 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application\Locale;
 
-class LocaleLink
+readonly class LocaleLink
 {
 
 	public function __construct(
-		private readonly string $locale,
-		private readonly string $languageCode,
-		private readonly string $languageName,
-		private readonly string $url,
+		private string $locale,
+		private string $languageCode,
+		private string $languageName,
+		private string $url,
 	) {
 	}
 

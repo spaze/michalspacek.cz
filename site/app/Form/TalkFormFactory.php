@@ -13,16 +13,16 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
-class TalkFormFactory
+readonly class TalkFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly Talks $talks,
-		private readonly LinkGenerator $linkGenerator,
-		private readonly VideoThumbnails $videoThumbnails,
-		private readonly Locales $locales,
+		private FormFactory $factory,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private Talks $talks,
+		private LinkGenerator $linkGenerator,
+		private VideoThumbnails $videoThumbnails,
+		private Locales $locales,
 	) {
 	}
 

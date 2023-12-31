@@ -31,7 +31,7 @@ use ParagonIE\Halite\Alerts\HaliteAlert;
 use Spaze\Encryption\Symmetric\StaticKey;
 use Tracy\Debugger;
 
-class Manager implements Authenticator
+readonly class Manager implements Authenticator
 {
 
 	private const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
@@ -40,17 +40,17 @@ class Manager implements Authenticator
 
 	private const TOKEN_RETURNING_USER = 2;
 
-	private ?string $authCookiesPath = null;
+	private string $authCookiesPath;
 
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly IRequest $httpRequest,
-		private readonly Cookies $cookies,
-		private readonly Passwords $passwords,
-		private readonly StaticKey $passwordEncryption,
+		private Explorer $database,
+		private IRequest $httpRequest,
+		private Cookies $cookies,
+		private Passwords $passwords,
+		private StaticKey $passwordEncryption,
 		LinkGenerator $linkGenerator,
-		private readonly string $permanentLoginInterval,
+		private string $permanentLoginInterval,
 	) {
 		$this->authCookiesPath = (new Url($linkGenerator->link('Admin:Sign:in')))->getPath();
 	}

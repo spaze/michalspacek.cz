@@ -7,12 +7,12 @@ use MichalSpacekCz\Tags\Tags;
 use Nette\Database\Explorer;
 use Nette\Utils\JsonException;
 
-class BlogPostLocaleUrls
+readonly class BlogPostLocaleUrls
 {
 
 	public function __construct(
-		private readonly Explorer $database,
-		private readonly Tags $tags,
+		private Explorer $database,
+		private Tags $tags,
 	) {
 	}
 

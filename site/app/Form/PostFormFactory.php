@@ -30,22 +30,22 @@ use Nette\Utils\Random;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
-class PostFormFactory
+readonly class PostFormFactory
 {
 
 	public function __construct(
-		private readonly FormFactory $factory,
-		private readonly Translator $translator,
-		private readonly BlogPosts $blogPosts,
-		private readonly BlogPostFactory $blogPostFactory,
-		private readonly Tags $tags,
-		private readonly TexyFormatter $texyFormatter,
-		private readonly CspConfig $contentSecurityPolicy,
-		private readonly TrainingControlsFactory $trainingControlsFactory,
-		private readonly BlogPostPreview $blogPostPreview,
-		private readonly TwitterCards $twitterCards,
-		private readonly BlogPostRecommendedLinks $recommendedLinks,
-		private readonly Locales $locales,
+		private FormFactory $factory,
+		private Translator $translator,
+		private BlogPosts $blogPosts,
+		private BlogPostFactory $blogPostFactory,
+		private Tags $tags,
+		private TexyFormatter $texyFormatter,
+		private CspConfig $contentSecurityPolicy,
+		private TrainingControlsFactory $trainingControlsFactory,
+		private BlogPostPreview $blogPostPreview,
+		private TwitterCards $twitterCards,
+		private BlogPostRecommendedLinks $recommendedLinks,
+		private Locales $locales,
 	) {
 	}
 

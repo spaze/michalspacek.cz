@@ -5,11 +5,11 @@ namespace MichalSpacekCz\Utils;
 
 use Contributte\Translation\Translator;
 
-class Strings
+readonly class Strings
 {
 
 	public function __construct(
-		private readonly Translator $translator,
+		private Translator $translator,
 	) {
 	}
 

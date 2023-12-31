@@ -23,22 +23,22 @@ use RuntimeException;
 use SodiumException;
 use Tracy\Debugger;
 
-class TrainingMails
+readonly class TrainingMails
 {
 
 	private const REMINDER_DAYS = 5;
 
 
 	public function __construct(
-		private readonly Mailer $mailer,
-		private readonly TrainingApplications $trainingApplications,
-		private readonly PreliminaryTrainings $trainingPreliminaryApplications,
-		private readonly TrainingDates $trainingDates,
-		private readonly Statuses $trainingStatuses,
-		private readonly TrainingVenues $trainingVenues,
-		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
-		private readonly string $emailFrom,
-		private readonly string $phoneNumber,
+		private Mailer $mailer,
+		private TrainingApplications $trainingApplications,
+		private PreliminaryTrainings $trainingPreliminaryApplications,
+		private TrainingDates $trainingDates,
+		private Statuses $trainingStatuses,
+		private TrainingVenues $trainingVenues,
+		private TrainingMailMessageFactory $trainingMailMessageFactory,
+		private string $emailFrom,
+		private string $phoneNumber,
 	) {
 	}
 

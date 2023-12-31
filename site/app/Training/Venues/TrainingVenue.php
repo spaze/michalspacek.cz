@@ -5,26 +5,26 @@ namespace MichalSpacekCz\Training\Venues;
 
 use Nette\Utils\Html;
 
-class TrainingVenue
+readonly class TrainingVenue
 {
 
 	public function __construct(
-		private readonly int $id,
-		private readonly string $name,
-		private readonly ?string $nameExtended,
-		private readonly string $href,
-		private readonly string $address,
-		private readonly string $city,
-		private readonly ?Html $description,
-		private readonly ?string $descriptionTexy,
-		private readonly ?string $action,
-		private readonly ?string $entrance,
-		private readonly ?string $entranceNavigation,
-		private readonly ?string $streetview,
-		private readonly ?Html $parking,
-		private readonly ?string $parkingTexy,
-		private readonly ?Html $publicTransport,
-		private readonly ?string $publicTransportTexy,
+		private int $id,
+		private string $name,
+		private ?string $nameExtended,
+		private string $href,
+		private string $address,
+		private string $city,
+		private ?Html $description,
+		private ?string $descriptionTexy,
+		private ?string $action,
+		private ?string $entrance,
+		private ?string $entranceNavigation,
+		private ?string $streetview,
+		private ?Html $parking,
+		private ?string $parkingTexy,
+		private ?Html $publicTransport,
+		private ?string $publicTransportTexy,
 	) {
 	}
 

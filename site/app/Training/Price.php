@@ -6,14 +6,14 @@ namespace MichalSpacekCz\Training;
 use MichalSpacekCz\ShouldNotHappenException;
 use NumberFormatter;
 
-class Price
+readonly class Price
 {
 
 	public function __construct(
-		private readonly ?float $price,
-		private readonly ?int $discount,
-		private readonly ?float $vatRate,
-		private readonly ?float $priceVat = null,
+		private ?float $price,
+		private ?int $discount,
+		private ?float $vatRate,
+		private ?float $priceVat = null,
 	) {
 	}
 
