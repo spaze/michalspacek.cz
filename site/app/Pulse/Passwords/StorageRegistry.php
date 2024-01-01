@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use MichalSpacekCz\Pulse\Company;
-use MichalSpacekCz\Pulse\Site;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
 
 class StorageRegistry
 {
@@ -12,7 +12,7 @@ class StorageRegistry
 	/** @var array<int, Company> */
 	private array $companies = [];
 
-	/** @var array<string, Site> */
+	/** @var array<string, StorageSite> */
 	private array $sites = [];
 
 	/** @var array<string, Storage> */
@@ -47,7 +47,7 @@ class StorageRegistry
 
 
 	/**
-	 * @return array<string, Site>
+	 * @return array<string, StorageSite>
 	 */
 	public function getSites(): array
 	{
@@ -55,13 +55,13 @@ class StorageRegistry
 	}
 
 
-	public function getSite(string $id): Site
+	public function getSite(string $id): StorageSite
 	{
 		return $this->sites[$id];
 	}
 
 
-	public function addSite(Site $site): void
+	public function addSite(StorageSite $site): void
 	{
 		$this->sites[$site->getId()] = $site;
 	}
@@ -106,7 +106,7 @@ class StorageRegistry
 	}
 
 
-	public function removeStorageSite(Site $site): void
+	public function removeStorageSite(StorageSite $site): void
 	{
 		$storage = $this->getStorage($site->getStorageId());
 		$storage->removeSite($site);

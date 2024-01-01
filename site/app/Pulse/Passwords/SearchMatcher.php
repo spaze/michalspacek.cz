@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
-use MichalSpacekCz\Pulse\Site;
-use MichalSpacekCz\Pulse\SpecificSite;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use Nette\Utils\Strings;
 
 readonly class SearchMatcher
@@ -21,7 +21,7 @@ readonly class SearchMatcher
 	}
 
 
-	public function match(Site $site): bool
+	public function match(StorageSite $site): bool
 	{
 		$result = $this->storageRegistry->getStorage($site->getStorageId())->getSearchResult();
 		if ($this->search === null || $this->search === '') {
@@ -39,11 +39,11 @@ readonly class SearchMatcher
 			$match = true;
 			$result->addTradeNameMatch($company);
 		}
-		if ($site instanceof SpecificSite && str_contains($site->getUrl(), $this->search)) {
+		if ($site instanceof StorageSpecificSite && str_contains($site->getUrl(), $this->search)) {
 			$match = true;
 			$result->addSiteUrlMatch($site);
 		}
-		if ($site instanceof SpecificSite && str_contains($site->getAlias(), $this->search)) {
+		if ($site instanceof StorageSpecificSite && str_contains($site->getAlias(), $this->search)) {
 			$match = true;
 			$result->addSiteAliasMatch($site);
 		}

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use MichalSpacekCz\Pulse\Company;
-use MichalSpacekCz\Pulse\Site;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
 
 class SearchResult
 {
@@ -18,10 +18,10 @@ class SearchResult
 	/** @var array<string, Algorithm> */
 	private array $algorithmNames = [];
 
-	/** @var array<string, Site> */
+	/** @var array<string, StorageSite> */
 	private array $siteUrls = [];
 
-	/** @var array<string, Site> */
+	/** @var array<string, StorageSite> */
 	private array $siteAliases = [];
 
 	/** @var array<int, StorageDisclosure> */
@@ -66,25 +66,25 @@ class SearchResult
 	}
 
 
-	public function addSiteUrlMatch(Site $site): void
+	public function addSiteUrlMatch(StorageSite $site): void
 	{
 		$this->siteUrls[$site->getId()] = $site;
 	}
 
 
-	public function isSiteUrlMatch(Site $site): bool
+	public function isSiteUrlMatch(StorageSite $site): bool
 	{
 		return isset($this->siteUrls[$site->getId()]);
 	}
 
 
-	public function addSiteAliasMatch(Site $site): void
+	public function addSiteAliasMatch(StorageSite $site): void
 	{
 		$this->siteAliases[$site->getId()] = $site;
 	}
 
 
-	public function isSiteAliasMatch(Site $site): bool
+	public function isSiteAliasMatch(StorageSite $site): bool
 	{
 		return isset($this->siteAliases[$site->getId()]);
 	}
