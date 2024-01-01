@@ -6,8 +6,10 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\User;
 
+use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
+use MichalSpacekCz\Test\Http\Request;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
@@ -37,6 +39,7 @@ class ManagerTest extends TestCase
 		private readonly User $user,
 		private readonly Database $database,
 		private readonly Passwords $passwords,
+		private readonly Request $request,
 		Container $container,
 	) {
 		$service = $container->getService('passwordEncryption');
@@ -51,6 +54,7 @@ class ManagerTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->user->refreshStorage();
+		$this->database->reset();
 	}
 
 
@@ -140,6 +144,66 @@ class ManagerTest extends TestCase
 		Assert::exception(function (): void {
 			$this->authenticator->changePassword($this->user, 'hunter2', 'hunter3');
 		}, IdentityIdNotIntException::class, 'Identity id is of type string, not an integer');
+	}
+
+
+	public function testVerifyPermanentLogin(): void
+	{
+		Assert::null($this->authenticator->verifyPermanentLogin());
+
+		$tokenId = 1337;
+		$token = 'bar';
+		$hash = hash('sha512', $token);
+		$userId = 1338;
+		$username = '🍪🍪🍪';
+		$this->database->setFetchResult([
+			'id' => $tokenId,
+			'token' => $hash,
+			'userId' => $userId,
+			'username' => $username,
+		]);
+		$this->request->setCookie(CookieName::PermanentLogin->value, "foo:{$token}");
+		$authToken = $this->authenticator->verifyPermanentLogin();
+		if (!$authToken instanceof UserAuthToken) {
+			Assert::fail('Token is of a wrong type ' . get_debug_type($authToken));
+		} else {
+			Assert::same($tokenId, $authToken->getId());
+			Assert::same($hash, $authToken->getToken());
+			Assert::same($userId, $authToken->getUserId());
+			Assert::same($username, $authToken->getUsername());
+		}
+
+		$this->request->setCookie(CookieName::PermanentLogin->value, "foo:not{$token}");
+		Assert::null($this->authenticator->verifyPermanentLogin());
+	}
+
+
+	public function testVerifyReturningUser(): void
+	{
+		Assert::null($this->authenticator->verifyReturningUser('foo'));
+
+		$tokenId = 1337;
+		$token = 'baz';
+		$hash = hash('sha512', $token);
+		$userId = 1338;
+		$username = '🍕🍕🍕';
+		$this->database->setFetchResult([
+			'id' => $tokenId,
+			'token' => $hash,
+			'userId' => $userId,
+			'username' => $username,
+		]);
+		$authToken = $this->authenticator->verifyReturningUser("foo:{$token}");
+		if (!$authToken instanceof UserAuthToken) {
+			Assert::fail('Token is of a wrong type ' . get_debug_type($authToken));
+		} else {
+			Assert::same($tokenId, $authToken->getId());
+			Assert::same($hash, $authToken->getToken());
+			Assert::same($userId, $authToken->getUserId());
+			Assert::same($username, $authToken->getUsername());
+		}
+
+		Assert::null($this->authenticator->verifyReturningUser("foo:not{$token}"));
 	}
 
 }

@@ -14,7 +14,6 @@ use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
 use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
 use Nette\Application\LinkGenerator;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
@@ -288,7 +287,7 @@ readonly class Manager implements Authenticator
 	/**
 	 * Verify and return permanent token, if present, and valid.
 	 */
-	public function verifyPermanentLogin(): ?Row
+	public function verifyPermanentLogin(): ?UserAuthToken
 	{
 		$cookie = $this->cookies->getString(CookieName::PermanentLogin) ?? '';
 		return $this->verifyToken($cookie, DateTime::from("-{$this->permanentLoginInterval}"), self::TOKEN_PERMANENT_LOGIN);
@@ -298,7 +297,7 @@ readonly class Manager implements Authenticator
 	/**
 	 * Verify returning user, if present, and valid.
 	 */
-	public function verifyReturningUser(string $value): ?Row
+	public function verifyReturningUser(string $value): ?UserAuthToken
 	{
 		return $this->verifyToken($value, DateTime::fromParts(2000, 1, 1), self::TOKEN_RETURNING_USER);
 	}
@@ -323,33 +322,34 @@ readonly class Manager implements Authenticator
 	/**
 	 * Verify and return any token, if present, and valid.
 	 */
-	private function verifyToken(string $value, DateTimeInterface $validity, int $type): ?Row
+	private function verifyToken(string $value, DateTimeInterface $validity, int $type): ?UserAuthToken
 	{
-		$result = null;
 		$values = explode(self::AUTH_SELECTOR_TOKEN_SEPARATOR, $value);
-		if (count($values) === 2) {
-			$storedToken = $this->database->fetch(
-				'SELECT
-					at.id_auth_token AS tokenId,
-					at.token,
-					u.id_user AS userId,
-					u.username
-				FROM
-					auth_tokens at
-					JOIN users u ON u.id_user = at.key_user
-				WHERE
-					at.selector = ?
-					AND at.created > ?
-					AND type = ?',
-				$values[0],
-				$validity,
-				$type,
-			);
-			if ($storedToken && hash_equals($storedToken->token, $this->hashToken($values[1]))) {
-				$result = $storedToken;
-			}
+		if (count($values) !== 2) {
+			return null;
 		}
-		return $result;
+		$row = $this->database->fetch(
+			'SELECT
+				at.id_auth_token AS id,
+				at.token,
+				u.id_user AS userId,
+				u.username
+			FROM
+				auth_tokens at
+				JOIN users u ON u.id_user = at.key_user
+			WHERE
+				at.selector = ?
+				AND at.created > ?
+				AND type = ?',
+			$values[0],
+			$validity,
+			$type,
+		);
+		if (!$row) {
+			return null;
+		}
+		$authToken = new UserAuthToken($row->id, $row->token, $row->userId, $row->username);
+		return hash_equals($authToken->getToken(), $this->hashToken($values[1])) ? $authToken : null;
 	}
 
 
