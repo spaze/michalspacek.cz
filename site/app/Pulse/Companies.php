@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Pulse;
 
 use DateTime;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 
 readonly class Companies
 {
@@ -17,19 +16,42 @@ readonly class Companies
 
 
 	/**
-	 * Get all companies.
-	 *
-	 * @return Row[]
+	 * @return list<Company>
 	 */
 	public function getAll(): array
 	{
-		return $this->database->fetchAll('SELECT id, name, alias FROM companies ORDER BY name');
+		$rows = $this->database->fetchAll(
+			'SELECT
+				id,
+				name,
+				trade_name AS tradeName,
+				alias,
+				COALESCE(trade_name, name) AS sortName
+			FROM companies
+			ORDER BY name',
+		);
+		$companies = [];
+		foreach ($rows as $row) {
+			$companies[] = new Company($row->id, $row->name, $row->tradeName, $row->alias, $row->sortName);
+		}
+		return $companies;
 	}
 
 
-	public function getByName(string $name): ?Row
+	public function getByName(string $name): ?Company
 	{
-		return $this->database->fetch('SELECT id, name, alias FROM companies WHERE name = ?', $name);
+		$row = $this->database->fetch(
+			'SELECT
+				id,
+				name,
+				trade_name AS tradeName,
+				alias,
+				COALESCE(trade_name, name) AS sortName
+				FROM companies
+				WHERE name = ?',
+			$name,
+		);
+		return $row ? new Company($row->id, $row->name, $row->tradeName, $row->alias, $row->sortName) : null;
 	}
 
 
