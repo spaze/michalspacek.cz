@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use MichalSpacekCz\Pulse\Company;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithm;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageDisclosure;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
 
 class SearchResult
@@ -15,7 +17,7 @@ class SearchResult
 	/** @var array<int, Company> */
 	private array $tradeNames = [];
 
-	/** @var array<string, Algorithm> */
+	/** @var array<string, StorageAlgorithm> */
 	private array $algorithmNames = [];
 
 	/** @var array<string, StorageSite> */
@@ -54,13 +56,13 @@ class SearchResult
 	}
 
 
-	public function addAlgorithmNameMatch(Algorithm $algorithm): void
+	public function addAlgorithmNameMatch(StorageAlgorithm $algorithm): void
 	{
 		$this->algorithmNames[$algorithm->getId()] = $algorithm;
 	}
 
 
-	public function isAlgorithmNameMatch(Algorithm $algorithm): bool
+	public function isAlgorithmNameMatch(StorageAlgorithm $algorithm): bool
 	{
 		return isset($this->algorithmNames[$algorithm->getId()]);
 	}
@@ -102,7 +104,7 @@ class SearchResult
 	}
 
 
-	public function isAlgorithmDisclosureUrlMatch(Algorithm $algorithm): bool
+	public function isAlgorithmDisclosureUrlMatch(StorageAlgorithm $algorithm): bool
 	{
 		foreach ($algorithm->getDisclosures() as $disclosure) {
 			if ($this->isDisclosureUrlMatch($disclosure)) {

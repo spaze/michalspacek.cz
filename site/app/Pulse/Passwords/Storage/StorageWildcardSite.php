@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use MichalSpacekCz\Pulse\Company;
-use MichalSpacekCz\Pulse\Passwords\Algorithm;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\RatingGrade;
 use Override;
@@ -12,7 +11,7 @@ use Override;
 class StorageWildcardSite implements StorageSite
 {
 
-	/** @var non-empty-array<string, Algorithm> */
+	/** @var non-empty-array<string, StorageAlgorithm> */
 	private array $algorithms;
 
 	private ?RatingGrade $ratingGrade = null;
@@ -23,7 +22,7 @@ class StorageWildcardSite implements StorageSite
 		private readonly string $id,
 		private readonly Company $company,
 		private readonly string $storageId,
-		Algorithm $algorithm,
+		StorageAlgorithm $algorithm,
 	) {
 		$this->algorithms = [$algorithm->getId() => $algorithm];
 	}
@@ -51,7 +50,7 @@ class StorageWildcardSite implements StorageSite
 
 
 	#[Override]
-	public function getAlgorithm(string $id): Algorithm
+	public function getAlgorithm(string $id): StorageAlgorithm
 	{
 		return $this->algorithms[$id];
 	}
@@ -65,21 +64,21 @@ class StorageWildcardSite implements StorageSite
 
 
 	#[Override]
-	public function addAlgorithm(Algorithm $algorithm): void
+	public function addAlgorithm(StorageAlgorithm $algorithm): void
 	{
 		$this->algorithms[$algorithm->getId()] = $algorithm;
 	}
 
 
 	#[Override]
-	public function getLatestAlgorithm(): Algorithm
+	public function getLatestAlgorithm(): StorageAlgorithm
 	{
 		return $this->algorithms[array_key_first($this->algorithms)];
 	}
 
 
 	/**
-	 * @return array<string, Algorithm>
+	 * @return array<string, StorageAlgorithm>
 	 */
 	#[Override]
 	public function getHistoricalAlgorithms(): array
@@ -99,7 +98,7 @@ class StorageWildcardSite implements StorageSite
 
 
 	/**
-	 * @return array<string, Algorithm>
+	 * @return array<string, StorageAlgorithm>
 	 */
 	#[Override]
 	public function getAlgorithms(): array

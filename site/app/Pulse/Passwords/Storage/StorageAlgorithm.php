@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse\Passwords;
+namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use DateTime;
 
-class Algorithm
+class StorageAlgorithm
 {
 
 	private ?string $fullAlgo;
@@ -27,7 +27,7 @@ class Algorithm
 		private readonly bool $stretched,
 		private readonly ?DateTime $from,
 		private readonly bool $fromConfirmed,
-		private readonly AlgorithmAttributes $attributes,
+		private readonly StorageAlgorithmAttributes $attributes,
 		private readonly ?string $note,
 		StorageDisclosure $disclosure,
 	) {
@@ -112,7 +112,7 @@ class Algorithm
 	}
 
 
-	public function getAttributes(): AlgorithmAttributes
+	public function getAttributes(): StorageAlgorithmAttributes
 	{
 		return $this->attributes;
 	}

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use MichalSpacekCz\Pulse\Company;
-use MichalSpacekCz\Pulse\Passwords\Algorithm;
 use MichalSpacekCz\Pulse\Passwords\RatingGrade;
 
 interface StorageSite
@@ -19,20 +18,20 @@ interface StorageSite
 	public function getStorageId(): string;
 
 
-	public function getAlgorithm(string $id): Algorithm;
+	public function getAlgorithm(string $id): StorageAlgorithm;
 
 
 	public function hasAlgorithm(string $id): bool;
 
 
-	public function addAlgorithm(Algorithm $algorithm): void;
+	public function addAlgorithm(StorageAlgorithm $algorithm): void;
 
 
-	public function getLatestAlgorithm(): Algorithm;
+	public function getLatestAlgorithm(): StorageAlgorithm;
 
 
 	/**
-	 * @return array<string, Algorithm>
+	 * @return array<string, StorageAlgorithm>
 	 */
 	public function getHistoricalAlgorithms(): array;
 
@@ -41,7 +40,7 @@ interface StorageSite
 
 
 	/**
-	 * @return array<string, Algorithm>
+	 * @return array<string, StorageAlgorithm>
 	 */
 	public function getAlgorithms(): array;
 

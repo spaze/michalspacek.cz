@@ -24,7 +24,7 @@
 <meta name="twitter:site" content="@spazef0rze">
 {/define}
 
-{define #algoItem, MichalSpacekCz\Pulse\Passwords\Storage $storage, MichalSpacekCz\Pulse\Passwords\Algorithm $algo, string $detailsLink, string $detailsParam, ?string $noFollow}
+{define #algoItem, MichalSpacekCz\Pulse\Passwords\Storage\Storage $storage, MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithm $algo, string $detailsLink, string $detailsParam, ?string $noFollow}
 <div class="algo">
 	<strong n:class="$storage->getSearchResult()->isAlgorithmNameMatch($algo) ? search-result">{$algo->getName()}</strong> (<span n:if="$algo->getFrom() && $algo->isFromConfirmed()" title="{$algo->getFrom()|date:'Y-m'}">since {$algo->getFrom()|date:'F Y'}</span>{if $algo->getFrom() && $algo->isFromConfirmed()}, {/if}<span title="{$algo->getLatestDisclosure()->getPublished()|date:'Y-m-d'}">disclosed {$algo->getLatestDisclosure()->getPublished()|date:'F Y'}</span>)
 </div>
@@ -60,7 +60,7 @@
 	<h2 id="{$data->getCompany($storage->getCompanyId())->getCompanyAlias()}" n:if="$data->getCompany($storage->getCompanyId())->getTradeName()"><span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))">{$data->getCompany($storage->getCompanyId())->getTradeName()}</span> <small>(<span n:tag-if="$storage->getSearchResult()->isCompanyNameMatch($data->getCompany($storage->getCompanyId()))" class="search-result">{$data->getCompany($storage->getCompanyId())->getCompanyName()}</span>)</small></h2>
 	{foreach $storage->getSites() as $site}
 		{var $noFollow = ($site->isSecureStorage() ? null : 'nofollow')}
-		{if $site instanceof \MichalSpacekCz\Pulse\SpecificSite}
+		{if $site instanceof \MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite}
 			{var $detailsLink = 'site'}
 			{var $detailsParam = $site->getAlias()}
 			{var $htmlId = $site->getAlias()}
@@ -71,7 +71,7 @@
 		{/if}
 		<div id="{$htmlId}" class="site-container">
 			<div class="left">
-				{if $site instanceof \MichalSpacekCz\Pulse\SpecificSite}
+				{if $site instanceof \MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite}
 					<a n:href="site $site->getAlias()" title="Open details" n:class="$storage->getSearchResult()->isSiteAliasMatch($site) ? search-result">{$site->getAlias()}</a>
 					<small n:class="$storage->getSearchResult()->isSiteUrlMatch($site) ? search-result"><a href="{$site->getUrl()}" n:attr="rel => $noFollow" title="Go to site">{icon link}</a></small>
 					{foreach $site->getSharedWith() as $sharedSite}

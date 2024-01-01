@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithm;
 use RuntimeException;
 
 class Rating
@@ -70,7 +71,7 @@ class Rating
 	 * E - plain MD5, SHA-1, SHA-2, SHA-3, encrypted
 	 * F - plaintext
 	 */
-	public function get(Algorithm $algo): RatingGrade
+	public function get(StorageAlgorithm $algo): RatingGrade
 	{
 		if (in_array($algo->getAlias(), self::SLOW_HASHES, true)) {
 			foreach (self::VISIBLE_DISCLOSURES as $disclosure) {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse\Passwords;
+namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
@@ -9,7 +9,7 @@ use Nette\Schema\ValidationException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-readonly class AlgorithmAttributesFactory
+readonly class StorageAlgorithmAttributesFactory
 {
 
 	public function __construct(
@@ -22,10 +22,10 @@ readonly class AlgorithmAttributesFactory
 	 * @throws JsonException
 	 * @throws ValidationException
 	 */
-	public function get(?string $json): AlgorithmAttributes
+	public function get(?string $json): StorageAlgorithmAttributes
 	{
 		if (!$json) {
-			return new AlgorithmAttributes(null, null, null);
+			return new StorageAlgorithmAttributes(null, null, null);
 		}
 		$decoded = Json::decode($json, true);
 		$schema = Expect::structure([
@@ -35,7 +35,7 @@ readonly class AlgorithmAttributesFactory
 		]);
 		/** @var object{inner:list<string>|null, outer:list<string>|null, params:array<string, string>|null} $data */
 		$data = $this->schemaProcessor->process($schema, $decoded);
-		return new AlgorithmAttributes($data->inner, $data->outer, $data->params);
+		return new StorageAlgorithmAttributes($data->inner, $data->outer, $data->params);
 	}
 
 }

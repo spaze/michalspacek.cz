@@ -5,6 +5,8 @@ namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
 use MichalSpacekCz\Pulse\Companies;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory;
 use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;

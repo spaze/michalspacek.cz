@@ -1,17 +1,17 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse\Passwords;
+namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use DateTime;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
 /** @testCase */
-class AlgorithmTest extends TestCase
+class StorageAlgorithmTest extends TestCase
 {
 
 	private const ALGO = 'bcrypt';
@@ -66,11 +66,11 @@ class AlgorithmTest extends TestCase
 	public function testGetFullAlgo(?array $inner, ?array $outer, ?string $expected): void
 	{
 		$disclosure = new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', 'docs');
-		$attributes = new AlgorithmAttributes($inner, $outer, null);
-		$algorithm = new Algorithm('1', self::ALGO, self::ALGO, true, true, new DateTime(), true, $attributes, null, $disclosure);
+		$attributes = new StorageAlgorithmAttributes($inner, $outer, null);
+		$algorithm = new StorageAlgorithm('1', self::ALGO, self::ALGO, true, true, new DateTime(), true, $attributes, null, $disclosure);
 		Assert::same($expected, $algorithm->getFullAlgo());
 	}
 
 }
 
-TestCaseRunner::run(AlgorithmTest::class);
+TestCaseRunner::run(StorageAlgorithmTest::class);

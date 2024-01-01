@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Presenters\PresenterTemplates\PasswordsStorages;
 
-use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
 
 class PasswordsStoragesDefaultTemplate
 {

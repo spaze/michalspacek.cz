@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse\Passwords;
+namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
-use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
+use MichalSpacekCz\Pulse\Passwords\SearchResult;
 
 class Storage
 {

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use Nette\Utils\Strings;
