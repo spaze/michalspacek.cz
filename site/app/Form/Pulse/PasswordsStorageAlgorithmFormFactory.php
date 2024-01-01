@@ -8,8 +8,8 @@ use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords\Passwords;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\Pulse\Sites;
-use MichalSpacekCz\Pulse\SpecificSite;
 use Nette\Utils\ArrayHash;
 
 readonly class PasswordsStorageAlgorithmFormFactory
@@ -187,7 +187,7 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		if (empty($values->company->new->name)) {
 			$storages = $this->passwords->getStoragesByCompanyId($values->company->id);
 			$specificSites = array_filter($storages->getSites(), function ($site) {
-				return $site instanceof SpecificSite;
+				return $site instanceof StorageSpecificSite;
 			});
 			if ($values->site->id === Sites::ALL && !empty($specificSites)) {
 				$form->addError('Invalid combination, can\'t add disclosure for all sites when sites already exist');

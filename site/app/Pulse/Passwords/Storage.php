@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords;
 
-use MichalSpacekCz\Pulse\Site;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
 
 class Storage
 {
 
-	/** @var array<string, Site> */
+	/** @var array<string, StorageSite> */
 	private array $sites = [];
 
 	private SearchResult $searchResult;
@@ -34,14 +34,14 @@ class Storage
 	}
 
 
-	public function getSite(string $id): Site
+	public function getSite(string $id): StorageSite
 	{
 		return $this->sites[$id];
 	}
 
 
 	/**
-	 * @return array<string, Site>
+	 * @return array<string, StorageSite>
 	 */
 	public function getSites(): array
 	{
@@ -55,13 +55,13 @@ class Storage
 	}
 
 
-	public function addSite(Site $site): void
+	public function addSite(StorageSite $site): void
 	{
 		$this->sites[$site->getId()] = $site;
 	}
 
 
-	public function removeSite(Site $site): void
+	public function removeSite(StorageSite $site): void
 	{
 		unset($this->sites[$site->getId()]);
 	}

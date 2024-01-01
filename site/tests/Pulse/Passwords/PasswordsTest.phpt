@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
-use MichalSpacekCz\Pulse\SpecificSite;
-use MichalSpacekCz\Pulse\WildcardSite;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageWildcardSite;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
@@ -283,8 +283,8 @@ class PasswordsTest extends TestCase
 		]);
 		$storageRegistry = $this->passwords->getAllStorages(null, 'a-z', null);
 		$site = $storageRegistry->getSite('2');
-		if (!$site instanceof SpecificSite) {
-			Assert::fail(sprintf('The site should be a %s instance, but it is a %s', SpecificSite::class, get_debug_type($site)));
+		if (!$site instanceof StorageSpecificSite) {
+			Assert::fail(sprintf('The site should be a %s instance, but it is a %s', StorageSpecificSite::class, get_debug_type($site)));
 		} else {
 			Assert::same('https://www.zlavomat.sk/', $site->getUrl());
 			$latestAlgorithm = $site->getLatestAlgorithm();
@@ -311,8 +311,8 @@ class PasswordsTest extends TestCase
 		}
 
 		$site = $storageRegistry->getSite('111');
-		if (!$site instanceof SpecificSite) {
-			Assert::fail(sprintf('The site should be a %s instance, but it is a %s', SpecificSite::class, get_debug_type($site)));
+		if (!$site instanceof StorageSpecificSite) {
+			Assert::fail(sprintf('The site should be a %s instance, but it is a %s', StorageSpecificSite::class, get_debug_type($site)));
 		} else {
 			Assert::same('SYSYstems, s.r.o.', $site->getCompany()->getCompanyName());
 			$latestAlgorithm = $site->getLatestAlgorithm();
@@ -325,8 +325,8 @@ class PasswordsTest extends TestCase
 		$company = $storageRegistry->getCompany(3);
 		Assert::same('Simplia, s.r.o.', $company->getCompanyName());
 		$site = $storageRegistry->getSite('all-3');
-		if (!$site instanceof WildcardSite) {
-			Assert::fail(sprintf('The site should be a %s instance, but it is a %s', WildcardSite::class, get_debug_type($site)));
+		if (!$site instanceof StorageWildcardSite) {
+			Assert::fail(sprintf('The site should be a %s instance, but it is a %s', StorageWildcardSite::class, get_debug_type($site)));
 		} else {
 			Assert::same('Simplia, s.r.o.', $site->getCompany()->getCompanyName());
 			$latestAlgorithm = $site->getLatestAlgorithm();

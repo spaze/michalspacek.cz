@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse;
+namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
+use MichalSpacekCz\Pulse\Company;
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Passwords\RatingGrade;
 use Override;
 
-class WildcardSite implements Site
+class StorageWildcardSite implements StorageSite
 {
 
 	/** @var non-empty-array<string, Algorithm> */

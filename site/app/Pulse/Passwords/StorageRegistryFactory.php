@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use MichalSpacekCz\Pulse\Company;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageWildcardSite;
 use MichalSpacekCz\Pulse\Sites;
-use MichalSpacekCz\Pulse\SpecificSite;
-use MichalSpacekCz\Pulse\WildcardSite;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStructureException;
 use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use Nette\Database\Row;
@@ -49,9 +49,9 @@ readonly class StorageRegistryFactory
 			$addSite = !$registry->hasSite($siteId);
 			if ($addSite) {
 				if ($row->siteId === null) {
-					$registry->addSite(new WildcardSite($this->rating, $siteId, $registry->getCompany($row->companyId), $storageKey, $algorithm));
+					$registry->addSite(new StorageWildcardSite($this->rating, $siteId, $registry->getCompany($row->companyId), $storageKey, $algorithm));
 				} else {
-					$registry->addSite(new SpecificSite(
+					$registry->addSite(new StorageSpecificSite(
 						$this->rating,
 						$siteId,
 						$row->siteUrl,

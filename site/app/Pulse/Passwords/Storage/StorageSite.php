@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse;
+namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
+use MichalSpacekCz\Pulse\Company;
 use MichalSpacekCz\Pulse\Passwords\Algorithm;
 use MichalSpacekCz\Pulse\Passwords\RatingGrade;
 
-interface Site
+interface StorageSite
 {
 
 	public function getId(): string;

@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use Collator;
-use MichalSpacekCz\Pulse\Site;
-use MichalSpacekCz\Pulse\SpecificSite;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSite;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\ShouldNotHappenException;
 
 class PasswordsSorting
@@ -39,7 +39,7 @@ class PasswordsSorting
 			case self::RATING_A_F:
 			case self::RATING_F_A:
 				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
-					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, Site $siteA, Site $siteB, string $sort): int {
+					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
 						$result = $sort === self::RATING_A_F ? $siteA->getRating()->name <=> $siteB->getRating()->name : $siteB->getRating()->name <=> $siteA->getRating()->name;
 						if ($result === 0) {
 							static $collator;
@@ -48,8 +48,8 @@ class PasswordsSorting
 							}
 							$result = $collator->getSortKey($storages->getCompany($siteA->getCompany()->getId())->getSortName()) <=> $collator->getSortKey($storages->getCompany($siteB->getCompany()->getId())->getSortName());
 							if ($result === 0) {
-								$subKeyA = $siteA instanceof SpecificSite ? $siteA->getUrl() : $siteA->getLatestAlgorithm()->getAlias();
-								$subKeyB = $siteB instanceof SpecificSite ? $siteB->getUrl() : $siteB->getLatestAlgorithm()->getAlias();
+								$subKeyA = $siteA instanceof StorageSpecificSite ? $siteA->getUrl() : $siteA->getLatestAlgorithm()->getAlias();
+								$subKeyB = $siteB instanceof StorageSpecificSite ? $siteB->getUrl() : $siteB->getLatestAlgorithm()->getAlias();
 								$result = $subKeyA <=> $subKeyB;
 							}
 						}
@@ -60,7 +60,7 @@ class PasswordsSorting
 			case self::NEWEST_DISCLOSURES_FIRST:
 			case self::NEWEST_DISCLOSURES_LAST:
 				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
-					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, Site $siteA, Site $siteB, string $sort): int {
+					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
 						return $sort === self::NEWEST_DISCLOSURES_LAST
 							? $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished() <=> $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished()
 							: $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished() <=> $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
@@ -70,7 +70,7 @@ class PasswordsSorting
 			case self::NEWLY_ADDED_FIRST:
 			case self::NEWLY_ADDED_LAST:
 				$sorter = function (Storage $a, Storage $b) use ($storages, $sort): int {
-					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, Site $siteA, Site $siteB, string $sort): int {
+					return $this->sortSites($storages, $a, $b, $sort, function (StorageRegistry $storages, StorageSite $siteA, StorageSite $siteB, string $sort): int {
 						$addedA = $siteA->getLatestAlgorithm()->getLatestDisclosure()->getAdded() ?? $siteA->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
 						$addedB = $siteB->getLatestAlgorithm()->getLatestDisclosure()->getAdded() ?? $siteB->getLatestAlgorithm()->getLatestDisclosure()->getPublished();
 						return $sort === self::NEWLY_ADDED_LAST ? $addedA <=> $addedB : $addedB <=> $addedA;
