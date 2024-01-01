@@ -5,7 +5,6 @@ namespace MichalSpacekCz\Pulse;
 
 use DateTime;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 
 readonly class Sites
 {
@@ -20,19 +19,26 @@ readonly class Sites
 
 
 	/**
-	 * Get all sites.
-	 *
-	 * @return Row[]
+	 * @return list<Site>
 	 */
 	public function getAll(): array
 	{
-		return $this->database->fetchAll('SELECT id, url, alias FROM sites ORDER BY alias');
+		$rows = $this->database->fetchAll('SELECT id, url, alias FROM sites ORDER BY alias');
+		$sites = [];
+		foreach ($rows as $row) {
+			$sites[] = new Site($row->id, $row->url, $row->alias);
+		}
+		return $sites;
 	}
 
 
-	public function getByUrl(string $url): ?Row
+	public function getByUrl(string $url): ?Site
 	{
-		return $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
+		$row = $this->database->fetch('SELECT id, url, alias FROM sites WHERE url = ?', $url);
+		if (!$row) {
+			return null;
+		}
+		return new Site($row->id, $row->url, $row->alias);
 	}
 
 

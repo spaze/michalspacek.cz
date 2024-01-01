@@ -5,6 +5,8 @@ namespace MichalSpacekCz\Pulse\Presenters;
 
 use MichalSpacekCz\Form\Pulse\PasswordsStoragesSearchSortFormFactory;
 use MichalSpacekCz\Form\UiForm;
+use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
+use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
 use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
@@ -26,6 +28,8 @@ class PasswordsStoragesPresenter extends BasePresenter
 		private readonly Rating $passwordsRating,
 		private readonly PasswordsStoragesSearchSortFormFactory $searchSortFactory,
 		private readonly PasswordsSorting $passwordsSorting,
+		private readonly PasswordHashingAlgorithms $passwordHashingAlgorithms,
+		private readonly PasswordHashingDisclosures $passwordHashingDisclosures,
 	) {
 		parent::__construct();
 	}
@@ -121,9 +125,9 @@ class PasswordsStoragesPresenter extends BasePresenter
 	{
 		$this->template->pageTitle = 'Password storage disclosures rating guide';
 		$this->template->ratingGuide = $this->passwordsRating->getRatingGuide();
-		$this->template->slowHashes = $this->passwords->getSlowHashes();
-		$this->template->visibleDisclosures = $this->passwords->getVisibleDisclosures();
-		$this->template->invisibleDisclosures = $this->passwords->getInvisibleDisclosures();
+		$this->template->slowHashes = $this->passwordHashingAlgorithms->getSlowHashes();
+		$this->template->visibleDisclosures = $this->passwordHashingDisclosures->getVisibleDisclosures();
+		$this->template->invisibleDisclosures = $this->passwordHashingDisclosures->getInvisibleDisclosures();
 	}
 
 
