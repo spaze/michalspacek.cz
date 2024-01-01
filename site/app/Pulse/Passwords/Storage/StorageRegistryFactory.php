@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse\Passwords;
+namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use MichalSpacekCz\Pulse\Company;
-use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
-use MichalSpacekCz\Pulse\Passwords\Storage\StorageWildcardSite;
+use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
+use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStructureException;
 use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
@@ -20,7 +20,7 @@ readonly class StorageRegistryFactory
 		private Rating $rating,
 		private Sites $sites,
 		private PasswordsSorting $sorting,
-		private AlgorithmAttributesFactory $algorithmAttributesFactory,
+		private StorageAlgorithmAttributesFactory $algorithmAttributesFactory,
 	) {
 	}
 
@@ -45,7 +45,7 @@ readonly class StorageRegistryFactory
 				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
 			}
 			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
-			$algorithm = new Algorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
+			$algorithm = new StorageAlgorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
 			$addSite = !$registry->hasSite($siteId);
 			if ($addSite) {
 				if ($row->siteId === null) {

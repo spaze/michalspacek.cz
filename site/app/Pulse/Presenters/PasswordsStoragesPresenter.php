@@ -8,7 +8,7 @@ use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
-use MichalSpacekCz\Pulse\Passwords\StorageRegistry;
+use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;

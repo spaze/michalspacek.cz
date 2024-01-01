@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Pulse\Passwords;
+namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Schema\ValidationException;
@@ -11,14 +11,14 @@ use Nette\Utils\JsonException;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
 /** @testCase */
-class AlgorithmAttributesFactoryTest extends TestCase
+class StorageAlgorithmAttributesFactoryTest extends TestCase
 {
 
 	public function __construct(
-		private readonly AlgorithmAttributesFactory $algorithmAttributesFactory,
+		private readonly StorageAlgorithmAttributesFactory $algorithmAttributesFactory,
 	) {
 	}
 
@@ -72,17 +72,17 @@ class AlgorithmAttributesFactoryTest extends TestCase
 			'outer' => ['outer1', 'outer2'],
 			'params' => ['foo' => 'bar', 'baz' => 303],
 		]);
-		$expected = new AlgorithmAttributes(['inner1', 'inner2'], ['outer1', 'outer2'], ['foo' => 'bar', 'baz' => 303]);
+		$expected = new StorageAlgorithmAttributes(['inner1', 'inner2'], ['outer1', 'outer2'], ['foo' => 'bar', 'baz' => 303]);
 		Assert::equal($expected, $this->algorithmAttributesFactory->get($json));
 	}
 
 
 	public function testGetNull(): void
 	{
-		$expected = new AlgorithmAttributes(null, null, null);
+		$expected = new StorageAlgorithmAttributes(null, null, null);
 		Assert::equal($expected, $this->algorithmAttributesFactory->get(null));
 	}
 
 }
 
-TestCaseRunner::run(AlgorithmAttributesFactoryTest::class);
+TestCaseRunner::run(StorageAlgorithmAttributesFactoryTest::class);
