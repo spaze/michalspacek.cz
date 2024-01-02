@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Utils\Html;
 
 readonly class TrainingStatusesFormFactory

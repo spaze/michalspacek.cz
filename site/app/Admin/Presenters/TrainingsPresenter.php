@@ -30,7 +30,7 @@ use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;

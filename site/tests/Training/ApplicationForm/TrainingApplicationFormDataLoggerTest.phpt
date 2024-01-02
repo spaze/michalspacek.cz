@@ -13,6 +13,7 @@ use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Utils\Html;
 use Override;
 use stdClass;

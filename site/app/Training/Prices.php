@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
+use MichalSpacekCz\Training\Statuses\Statuses;
+
 readonly class Prices
 {
 

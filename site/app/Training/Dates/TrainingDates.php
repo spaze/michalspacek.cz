@@ -9,7 +9,7 @@ use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 
 class TrainingDates

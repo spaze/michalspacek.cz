@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
 
 readonly class TrainingMailMessageFactory
