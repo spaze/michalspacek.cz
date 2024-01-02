@@ -5,13 +5,11 @@ namespace MichalSpacekCz\Training;
 
 use DateTime;
 use Exception;
-use MichalSpacekCz\DateTime\DateTimeZoneFactory;
-use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
+use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Tracy\Debugger;
 
 class Statuses
@@ -47,13 +45,10 @@ class Statuses
 	/** @var array<string, array<int, string>> */
 	private array $descendantStatuses = [];
 
-	/** @var array<int, array<int, Row>> */
-	private array $statusHistory = [];
-
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
+		private readonly TrainingStatusHistory $trainingStatusHistory,
 	) {
 	}
 
@@ -309,87 +304,11 @@ class Statuses
 	}
 
 
-	/**
-	 * @param int $applicationId
-	 * @return Row[]
-	 * @throws InvalidTimezoneException
-	 */
-	public function getStatusHistory(int $applicationId): array
-	{
-		if (!isset($this->statusHistory[$applicationId])) {
-			$this->statusHistory[$applicationId] = $this->database->fetchAll(
-				'SELECT
-					h.id_status_log AS id,
-					h.key_status AS statusId,
-					s.status,
-					h.status_time AS statusTime,
-					h.status_time_timezone AS statusTimeTimeZone
-				FROM training_application_status s
-					JOIN training_application_status_history h ON h.key_status = s.id_status
-				WHERE h.key_application = ?
-				ORDER BY h.status_time DESC, h.key_status DESC',
-				$applicationId,
-			);
-			foreach ($this->statusHistory[$applicationId] as &$row) {
-				$row->statusTime->setTimezone($this->dateTimeZoneFactory->get($row->statusTimeTimeZone));
-				unset($row->statusTimeTimeZone);
-			}
-		}
-		return $this->statusHistory[$applicationId];
-	}
-
-
-	/**
-	 * @param string[] $statuses
-	 */
-	public function historyContainsStatuses(array $statuses, int $applicationId): bool
-	{
-		$result = false;
-		foreach ($this->getStatusHistory($applicationId) as $history) {
-			if (in_array($history->status, $statuses)) {
-				$result = true;
-				break;
-			}
-		}
-		return $result;
-	}
-
-
-	public function deleteHistoryRecord(int $applicationId, int $recordId): void
-	{
-		$result = $this->database->fetch(
-			'SELECT
-				key_status AS statusId,
-				status_time AS statusTime
-			FROM training_application_status_history
-			WHERE key_application = ? AND id_status_log = ?',
-			$applicationId,
-			$recordId,
-		);
-		if (!$result) {
-			return;
-		}
-
-		Debugger::log(sprintf(
-			'Deleting status history record for application id: %d, history record id: %d, status: %d, status time: %s',
-			$applicationId,
-			$recordId,
-			$result->statusId,
-			$result->statusTime->format(DateTime::ATOM),
-		));
-		$this->database->query(
-			'DELETE FROM training_application_status_history WHERE key_application = ? AND id_status_log = ?',
-			$applicationId,
-			$recordId,
-		);
-	}
-
-
 	public function sendInvoiceAfter(int $applicationId): bool
 	{
 		return (
-			$this->historyContainsStatuses([self::STATUS_PAID_AFTER, self::STATUS_PRO_FORMA_INVOICE_SENT], $applicationId)
-			&& !$this->historyContainsStatuses([self::STATUS_INVOICE_SENT], $applicationId)
+			$this->trainingStatusHistory->historyContainsStatuses([self::STATUS_PAID_AFTER, self::STATUS_PRO_FORMA_INVOICE_SENT], $applicationId)
+			&& !$this->trainingStatusHistory->historyContainsStatuses([self::STATUS_INVOICE_SENT], $applicationId)
 		);
 	}
 

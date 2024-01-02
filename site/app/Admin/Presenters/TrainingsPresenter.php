@@ -31,6 +31,7 @@ use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
 use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
@@ -60,6 +61,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
 		private readonly Statuses $trainingStatuses,
+		private readonly TrainingStatusHistory $trainingStatusHistory,
 		private readonly Trainings $trainings,
 		private readonly TrainingReviews $trainingReviews,
 		private readonly DateTimeFormatter $dateTimeFormatter,
@@ -192,7 +194,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingStatuses->getAllowFilesStatuses());
 		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
 		$this->template->accessToken = $this->application->getAccessToken();
-		$this->template->history = $this->trainingStatuses->getStatusHistory($param);
+		$this->template->history = $this->trainingStatusHistory->getStatusHistory($param);
 	}
 
 

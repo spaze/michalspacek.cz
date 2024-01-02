@@ -7,12 +7,13 @@ use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
 
 readonly class TrainingMailMessageFactory
 {
 
 	public function __construct(
-		private Statuses $trainingStatuses,
+		private TrainingStatusHistory $trainingStatusHistory,
 		private DateTimeFormatter $dateTimeFormatter,
 	) {
 	}
@@ -27,11 +28,11 @@ readonly class TrainingMailMessageFactory
 			case Statuses::STATUS_MATERIALS_SENT:
 				return new MailMessageAdmin($application->isFamiliar() ? 'materialsFamiliar' : 'materials', 'Materiály ze školení ' . $application->getTrainingName());
 			case Statuses::STATUS_INVOICE_SENT:
-				return $application->getStatus() === Statuses::STATUS_PRO_FORMA_INVOICE_SENT || $this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId())
+				return $application->getStatus() === Statuses::STATUS_PRO_FORMA_INVOICE_SENT || $this->trainingStatusHistory->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId())
 					? new MailMessageAdmin('invoiceAfterProforma', 'Faktura za školení ' . $application->getTrainingName())
 					: new MailMessageAdmin('invoice', 'Potvrzení registrace na školení ' . $application->getTrainingName() . ' a faktura');
 			case Statuses::STATUS_INVOICE_SENT_AFTER:
-				return new MailMessageAdmin($this->trainingStatuses->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId()) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->getTrainingName());
+				return new MailMessageAdmin($this->trainingStatusHistory->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId()) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->getTrainingName());
 			case Statuses::STATUS_REMINDED:
 				$trainingStart = $application->getTrainingStart();
 				$trainingEnd = $application->getTrainingEnd();
