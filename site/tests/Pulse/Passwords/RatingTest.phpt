@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
+use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithm;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithm;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithmAttributes;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageDisclosure;
@@ -118,7 +119,7 @@ class RatingTest extends TestCase
 	private function getAlgo(string $alias, bool $salted, bool $stretched, array $disclosureTypes): StorageAlgorithm
 	{
 		$disclosure = new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', array_shift($disclosureTypes));
-		$algorithm = new StorageAlgorithm('1', 'foo', $alias, $salted, $stretched, new DateTime(), true, new StorageAlgorithmAttributes(null, null, null), null, $disclosure);
+		$algorithm = new StorageAlgorithm('1', new PasswordHashingAlgorithm(9, 'foo', $alias, $salted, $stretched), new DateTime(), true, new StorageAlgorithmAttributes(null, null, null), null, $disclosure);
 		foreach ($disclosureTypes as $typeAlias) {
 			$algorithm->addDisclosure(new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', $typeAlias));
 		}
