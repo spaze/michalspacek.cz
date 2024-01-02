@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use DateTime;
+use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithm;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\TestCase;
@@ -67,7 +68,7 @@ class StorageAlgorithmTest extends TestCase
 	{
 		$disclosure = new StorageDisclosure(123, 'https://example.com/', 'https://archive.example.com', null, new DateTime('yesterday'), new DateTime(), 'type', 'docs');
 		$attributes = new StorageAlgorithmAttributes($inner, $outer, null);
-		$algorithm = new StorageAlgorithm('1', self::ALGO, self::ALGO, true, true, new DateTime(), true, $attributes, null, $disclosure);
+		$algorithm = new StorageAlgorithm('1', new PasswordHashingAlgorithm(21, self::ALGO, self::ALGO, true, true), new DateTime(), true, $attributes, null, $disclosure);
 		Assert::same($expected, $algorithm->getFullAlgo());
 	}
 

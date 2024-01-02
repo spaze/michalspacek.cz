@@ -7,6 +7,8 @@ use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Form\FormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\Pulse\Companies;
+use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
+use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
 use MichalSpacekCz\Pulse\Passwords\Passwords;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageSpecificSite;
 use MichalSpacekCz\Pulse\Sites;
@@ -21,6 +23,8 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		private Companies $companies,
 		private Sites $sites,
 		private Passwords $passwords,
+		private PasswordHashingAlgorithms $hashingAlgorithms,
+		private PasswordHashingDisclosures $hashingDisclosures,
 	) {
 	}
 
@@ -36,7 +40,7 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		$companyContainer = $form->addContainer('company');
 		$items = [];
 		foreach ($this->companies->getAll() as $company) {
-			$items[$company->id] = $company->name;
+			$items[$company->getId()] = $company->getCompanyName();
 		}
 		$selectCompany = $companyContainer->addSelect('id', 'Company:', $items)
 			->setPrompt('- select company -');
@@ -57,7 +61,7 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		$siteContainer = $form->addContainer('site');
 		$items = [Sites::ALL => 'all sites'];
 		foreach ($this->sites->getAll() as $site) {
-			$items[$site->id] = "{$site->alias} ({$site->url})";
+			$items[$site->getId()] = "{$site->getAlias()} ({$site->getUrl()})";
 		}
 		$selectSite = $siteContainer->addSelect('id', 'Site:', $items)
 			->setPrompt('- select site -');
@@ -88,8 +92,8 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		// Algo
 		$algoContainer = $form->addContainer('algo');
 		$items = [];
-		foreach ($this->passwords->getAlgorithms() as $algo) {
-			$items[$algo->id] = $algo->algo;
+		foreach ($this->hashingAlgorithms->getAlgorithms() as $algo) {
+			$items[$algo->getId()] = $algo->getName();
 		}
 		$selectAlgo = $algoContainer->addSelect('id', 'Algorithm:', $items)
 			->setPrompt('- select algorithm -');
@@ -120,8 +124,8 @@ readonly class PasswordsStorageAlgorithmFormFactory
 
 		// Disclosures
 		$items = [];
-		foreach ($this->passwords->getDisclosureTypes() as $disclosure) {
-			$items[$disclosure->id] = $disclosure->type;
+		foreach ($this->hashingDisclosures->getDisclosureTypes() as $disclosure) {
+			$items[$disclosure->getId()] = $disclosure->getType();
 		}
 		$disclosureContainer = $form->addContainer('disclosure');
 		$disclosureNewContainer = $disclosureContainer->addContainer('new');
@@ -201,7 +205,7 @@ readonly class PasswordsStorageAlgorithmFormFactory
 		if (!empty($values->site->new->url) && $this->sites->getByUrl($values->site->new->url)) {
 			$form->addError('Can\'t add new site, duplicated URL');
 		}
-		if (!empty($values->algo->new->algo) && $this->passwords->getAlgorithmByName($values->algo->new->algo)) {
+		if (!empty($values->algo->new->algo) && $this->hashingAlgorithms->getAlgorithmByName($values->algo->new->algo)) {
 			$form->addError('Can\'t add new algorithm, duplicated name');
 		}
 	}

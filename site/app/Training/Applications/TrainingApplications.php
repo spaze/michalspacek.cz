@@ -7,7 +7,7 @@ use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;

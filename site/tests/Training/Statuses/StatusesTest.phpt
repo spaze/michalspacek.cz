@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Statuses;
 
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
@@ -12,7 +12,7 @@ use Override;
 use Tester\Assert;
 use Tester\TestCase;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
 class StatusesTest extends TestCase

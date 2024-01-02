@@ -51,10 +51,11 @@
 				<tbody id="historie-container" class="hidden" data-display="table-row-group">
 				{formContainer statusHistoryDelete}
 				<tr n:foreach="$history as $record" class="row">
-					<td><code>{$record->status}</code></td>
-					<td><small>{$record->statusTime}</small><br></td>
+					{var $statusTime = $record->getStatusTime()->format('Y-m-d H:i:s')}
+					<td><code>{$record->getStatus()}</code></td>
+					<td><small>{$statusTime}</small><br></td>
 					<td class="center">
-						<button n:name="$record->id" class="confirm-click" title="Odstranit status z historie" data-confirm="Odstranit status {$record->status} {$record->statusTime} z historie?">{icon times}</button>
+						<button n:name="(string)$record->getId()" class="confirm-click" title="Odstranit status z historie" data-confirm="Odstranit status {$record->getStatus()} {$statusTime} z historie?">{icon times}</button>
 					</td>
 				</tr>
 				{/formContainer}

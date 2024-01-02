@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Preliminary\PreliminaryTrainings;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use MichalSpacekCz\Training\Venues\TrainingVenues;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Http\FileUpload;

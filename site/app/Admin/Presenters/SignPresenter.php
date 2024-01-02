@@ -50,7 +50,7 @@ class SignPresenter extends BasePresenter
 		$this->getSession()->start();
 		$token = $this->authenticator->verifyPermanentLogin();
 		if ($token !== null) {
-			$this->user->login($this->authenticator->getIdentity($token->userId, $token->username));
+			$this->user->login($this->authenticator->getIdentity($token->getUserId(), $token->getUsername()));
 			$this->authenticator->regeneratePermanentLogin($this->user);
 			$this->restoreRequest($this->backlink);
 			$this->redirect('Homepage:');

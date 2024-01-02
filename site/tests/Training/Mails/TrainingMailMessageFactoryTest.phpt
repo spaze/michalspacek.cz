@@ -4,14 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Mails;
 
 use DateTime;
-use MichalSpacekCz\DateTime\DateTimeFormatter;
-use MichalSpacekCz\DateTime\DateTimeZoneFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Files\TrainingFiles;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
@@ -27,8 +25,6 @@ class TrainingMailMessageFactoryTest extends TestCase
 		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
 		private readonly Statuses $trainingStatuses,
 		private readonly TrainingFiles $trainingFiles,
-		private readonly DateTimeZoneFactory $dateTimeZoneFactory,
-		private readonly DateTimeFormatter $dateTimeFormatter,
 	) {
 	}
 
@@ -77,8 +73,6 @@ class TrainingMailMessageFactoryTest extends TestCase
 
 	public function testGetMailMessageInvoiceAfterProforma(): void
 	{
-		$trainingStatuses = new Statuses($this->database, $this->dateTimeZoneFactory);
-		$factory = new TrainingMailMessageFactory($trainingStatuses, $this->dateTimeFormatter);
 		$this->database->addFetchAllResult([
 			[
 				'id' => 1,
@@ -90,7 +84,7 @@ class TrainingMailMessageFactoryTest extends TestCase
 		]);
 		$application = $this->getApplication();
 		$application->setNextStatus(Statuses::STATUS_INVOICE_SENT_AFTER);
-		Assert::same('invoiceAfterProforma', $factory->getMailMessage($application)->getBasename());
+		Assert::same('invoiceAfterProforma', $this->trainingMailMessageFactory->getMailMessage($application)->getBasename());
 	}
 
 

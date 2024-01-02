@@ -13,6 +13,7 @@ use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;

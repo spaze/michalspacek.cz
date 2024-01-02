@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\SubmitButton;
@@ -25,7 +25,7 @@ readonly class TrainingApplicationAdminFormFactory
 		private TrainingDates $trainingDates,
 		private UpcomingTrainingDates $upcomingTrainingDates,
 		private TrainingControlsFactory $trainingControlsFactory,
-		private Statuses $trainingStatuses,
+		private TrainingStatusHistory $trainingStatusHistory,
 	) {
 	}
 
@@ -79,12 +79,12 @@ readonly class TrainingApplicationAdminFormFactory
 
 		$containerName = 'statusHistoryDelete';
 		$historyContainer = $form->addContainer($containerName);
-		foreach ($this->trainingStatuses->getStatusHistory($application->getId()) as $history) {
+		foreach ($this->trainingStatusHistory->getStatusHistory($application->getId()) as $history) {
 			$historyContainer
-				->addSubmit((string)$history->id)
+				->addSubmit((string)$history->getId())
 				->setValidationScope([$form[$containerName]])
 				->onClick[] = function (SubmitButton $button) use ($application, $onStatusHistoryDeleteSuccess): void {
-					$this->trainingStatuses->deleteHistoryRecord($application->getId(), (int)$button->getName());
+					$this->trainingStatusHistory->deleteHistoryRecord($application->getId(), (int)$button->getName());
 					$onStatusHistoryDeleteSuccess();
 				};
 		}

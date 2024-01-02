@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use MichalSpacekCz\Pulse\Company;
+use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithm;
 use MichalSpacekCz\Pulse\Passwords\PasswordsSorting;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use MichalSpacekCz\Pulse\Sites;
@@ -39,13 +40,14 @@ readonly class StorageRegistryFactory
 		foreach ($data as $row) {
 			$siteId = $this->sites->generateId($row->siteId, $row->companyId);
 			$storageKey = $this->sorting->isAnyCompanyAlphabetically($sort) ? (string)$row->companyId : $siteId;
-			$algoKey = $row->algoId . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
+			$hashingAlgorithm = new PasswordHashingAlgorithm($row->algoId, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched);
+			$algoKey = $hashingAlgorithm->getId() . '-' . ($row->from !== null ? $row->from->getTimestamp() : 'null');
 
 			if (!$registry->hasCompany($row->companyId)) {
 				$registry->addCompany(new Company($row->companyId, $row->companyName, $row->tradeName, $row->companyAlias, $row->sortName));
 			}
 			$disclosure = new StorageDisclosure($row->disclosureId, $row->disclosureUrl, $row->disclosureArchive, $row->disclosureNote, $row->disclosurePublished, $row->disclosureAdded, $row->disclosureType, $row->disclosureTypeAlias);
-			$algorithm = new StorageAlgorithm($algoKey, $row->algoName, $row->algoAlias, (bool)$row->algoSalted, (bool)$row->algoStretched, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
+			$algorithm = new StorageAlgorithm($algoKey, $hashingAlgorithm, $row->from, (bool)$row->fromConfirmed, $this->algorithmAttributesFactory->get($row->attributes), $row->note, $disclosure);
 			$addSite = !$registry->hasSite($siteId);
 			if ($addSite) {
 				if ($row->siteId === null) {

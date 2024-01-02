@@ -8,7 +8,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationFactory;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;

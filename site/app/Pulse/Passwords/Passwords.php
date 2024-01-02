@@ -5,12 +5,13 @@ namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
 use MichalSpacekCz\Pulse\Companies;
+use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
+use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory;
 use MichalSpacekCz\Pulse\Sites;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Nette\Utils\ArrayHash;
 
 readonly class Passwords
@@ -18,11 +19,12 @@ readonly class Passwords
 
 	public function __construct(
 		private Explorer $database,
-		private Rating $rating,
 		private Companies $companies,
 		private Sites $sites,
 		private PasswordsSorting $sorting,
 		private StorageRegistryFactory $storageRegistryFactory,
+		private PasswordHashingAlgorithms $hashingAlgorithms,
+		private PasswordHashingDisclosures $passwordHashingDisclosures,
 	) {
 	}
 
@@ -235,124 +237,6 @@ readonly class Passwords
 
 
 	/**
-	 * Get slow hashes.
-	 *
-	 * @return array<string, string> of alias => name
-	 */
-	public function getSlowHashes(): array
-	{
-		return $this->database->fetchPairs(
-			'SELECT alias, algo FROM password_algos WHERE alias IN (?) ORDER BY algo',
-			$this->rating->getSlowHashes(),
-		);
-	}
-
-
-	/**
-	 * Get disclosure types.
-	 *
-	 * @return Row[] of (id, alias, type)
-	 */
-	public function getDisclosureTypes(): array
-	{
-		return $this->database->fetchAll('SELECT id, alias, type FROM password_disclosure_types ORDER BY type');
-	}
-
-
-	/**
-	 * Get visible disclosures.
-	 *
-	 * @return array<string, string> of alias => name
-	 */
-	public function getVisibleDisclosures(): array
-	{
-		return $this->database->fetchPairs(
-			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
-			$this->rating->getVisibleDisclosures(),
-		);
-	}
-
-
-	/**
-	 * Get invisible disclosures.
-	 *
-	 * @return array<string, string> of alias => name
-	 */
-	public function getInvisibleDisclosures(): array
-	{
-		return $this->database->fetchPairs(
-			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
-			$this->rating->getInvisibleDisclosures(),
-		);
-	}
-
-
-	/**
-	 * Get all algorithms.
-	 *
-	 * @return Row[] of id, algo, alias
-	 */
-	public function getAlgorithms(): array
-	{
-		return $this->database->fetchAll('SELECT id, algo, alias FROM password_algos ORDER BY algo');
-	}
-
-
-	public function getAlgorithmByName(string $name): ?Row
-	{
-		return $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name);
-	}
-
-
-	/**
-	 * Add algorithm.
-	 *
-	 * @return int Id of newly inserted algorithm
-	 */
-	private function addAlgorithm(string $name, string $alias, bool $salted, bool $stretched): int
-	{
-		$this->database->query('INSERT INTO password_algos', [
-			'algo' => $name,
-			'alias' => $alias,
-			'salted' => $salted,
-			'stretched' => $stretched,
-		]);
-		return (int)$this->database->getInsertId();
-	}
-
-
-	private function getDisclosureId(string $url, string $archive): ?int
-	{
-		$id = $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
-		if (!$id) {
-			return null;
-		} elseif (!is_int($id)) {
-			throw new ShouldNotHappenException(sprintf("Disclosure id for URL '%s' and archive '%s' is a %s not an integer", $url, $archive, get_debug_type($id)));
-		}
-		return $id;
-	}
-
-
-	/**
-	 * Add disclosure.
-	 *
-	 * @return int Id of newly inserted disclosure
-	 */
-	private function addDisclosure(int $type, string $url, string $archive, string $note, string $published): int
-	{
-		$this->database->query('INSERT INTO password_disclosures', [
-			'key_password_disclosure_types' => $type,
-			'url' => $url,
-			'archive' => $archive,
-			'note' => (empty($note) ? null : $note),
-			'published' => (empty($published) ? null : new DateTime($published)),
-			'added' => new DateTime(),
-		]);
-		return (int)$this->database->getInsertId();
-	}
-
-
-	/**
 	 * Get storage id by company id, algorithm id, site id.
 	 */
 	private function getStorageId(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, ?string $attributes, ?string $note): ?int
@@ -432,12 +316,12 @@ readonly class Passwords
 			? $values->site->id // the value can also be "all"
 			: $this->sites->add($newSite->url, $newSite->alias, $newSite->sharedWith, $companyId)
 		);
-		$algoId = (empty($newAlgo->algoName) ? (int)$values->algo->id : $this->addAlgorithm($newAlgo->algoName, $newAlgo->alias, $newAlgo->salted, $newAlgo->stretched));
+		$algoId = (empty($newAlgo->algoName) ? (int)$values->algo->id : $this->hashingAlgorithms->addAlgorithm($newAlgo->algoName, $newAlgo->alias, $newAlgo->salted, $newAlgo->stretched));
 		foreach ($values->disclosure->new as $disclosure) {
 			if ($disclosure->url) {
-				$disclosureId = $this->getDisclosureId($disclosure->url, $disclosure->archive);
+				$disclosureId = $this->passwordHashingDisclosures->getDisclosureId($disclosure->url, $disclosure->archive);
 				if (!$disclosureId) {
-					$disclosureId = $this->addDisclosure($disclosure->disclosureType, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
+					$disclosureId = $this->passwordHashingDisclosures->addDisclosure($disclosure->disclosureType, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
 				}
 				$storageId = $this->getStorageId($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
 				if (!$storageId) {

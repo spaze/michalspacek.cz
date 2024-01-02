@@ -7,7 +7,7 @@ use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use MichalSpacekCz\Training\Price;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Row;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;

@@ -1,0 +1,69 @@
+<?php
+declare(strict_types = 1);
+
+namespace MichalSpacekCz\Pulse\Passwords\Algorithms;
+
+use MichalSpacekCz\Pulse\Passwords\Rating;
+use Nette\Database\Explorer;
+
+readonly class PasswordHashingAlgorithms
+{
+
+	public function __construct(
+		private Explorer $database,
+		private Rating $rating,
+	) {
+	}
+
+
+	/**
+	 * @return list<PasswordHashingAlgorithm>
+	 */
+	public function getAlgorithms(): array
+	{
+		$rows = $this->database->fetchAll('SELECT id, algo, alias, salted, stretched FROM password_algos ORDER BY algo');
+		$algorithms = [];
+		foreach ($rows as $row) {
+			$algorithms[] = new PasswordHashingAlgorithm($row->id, $row->algo, $row->alias, (bool)$row->salted, (bool)$row->stretched);
+		}
+		return $algorithms;
+	}
+
+
+	public function getAlgorithmByName(string $name): ?PasswordHashingAlgorithm
+	{
+		$row = $this->database->fetch('SELECT id, algo, alias, salted, stretched FROM password_algos WHERE algo = ?', $name);
+		if (!$row) {
+			return null;
+		}
+		return new PasswordHashingAlgorithm($row->id, $row->algo, $row->alias, (bool)$row->salted, (bool)$row->stretched);
+	}
+
+
+	/**
+	 * @return int The id of the newly inserted algorithm
+	 */
+	public function addAlgorithm(string $name, string $alias, bool $salted, bool $stretched): int
+	{
+		$this->database->query('INSERT INTO password_algos', [
+			'algo' => $name,
+			'alias' => $alias,
+			'salted' => $salted,
+			'stretched' => $stretched,
+		]);
+		return (int)$this->database->getInsertId();
+	}
+
+
+	/**
+	 * @return array<string, string> of alias => name
+	 */
+	public function getSlowHashes(): array
+	{
+		return $this->database->fetchPairs(
+			'SELECT alias, algo FROM password_algos WHERE alias IN (?) ORDER BY algo',
+			$this->rating->getSlowHashes(),
+		);
+	}
+
+}

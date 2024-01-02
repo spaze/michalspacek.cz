@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Tester\Assert;
 use Tester\TestCase;
 

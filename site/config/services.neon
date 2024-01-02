@@ -83,6 +83,8 @@ services:
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.context)
+	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.context)
+	- MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.context)
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
@@ -135,7 +137,8 @@ services:
 	- MichalSpacekCz\Training\Resolver\Vrana
 	- MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory
 	- MichalSpacekCz\Training\Reviews\TrainingReviews
-	- MichalSpacekCz\Training\Statuses
+	- MichalSpacekCz\Training\Statuses\Statuses
+	- MichalSpacekCz\Training\Statuses\TrainingStatusHistory
 	- MichalSpacekCz\Training\TrainingLocales
 	- MichalSpacekCz\Training\Trainings\TrainingFactory
 	- MichalSpacekCz\Training\Trainings\Trainings

@@ -8,7 +8,7 @@ use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
 use MichalSpacekCz\Training\Mails\TrainingMails;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Presenter;
 use stdClass;
