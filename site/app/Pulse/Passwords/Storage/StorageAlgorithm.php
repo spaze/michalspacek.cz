@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords\Storage;
 
 use DateTime;
+use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithm;
 
 class StorageAlgorithm
 {
@@ -21,10 +22,7 @@ class StorageAlgorithm
 
 	public function __construct(
 		private readonly string $id,
-		private readonly string $name,
-		private readonly string $alias,
-		private readonly bool $salted,
-		private readonly bool $stretched,
+		private readonly PasswordHashingAlgorithm $hashingAlgorithm,
 		private readonly ?DateTime $from,
 		private readonly bool $fromConfirmed,
 		private readonly StorageAlgorithmAttributes $attributes,
@@ -32,7 +30,7 @@ class StorageAlgorithm
 		StorageDisclosure $disclosure,
 	) {
 		$this->addDisclosure($disclosure);
-		$this->fullAlgo = $this->formatFullAlgo($this->name, $this->attributes->getInner(), $this->attributes->getOuter());
+		$this->fullAlgo = $this->formatFullAlgo($this->hashingAlgorithm->getName(), $this->attributes->getInner(), $this->attributes->getOuter());
 	}
 
 
@@ -78,25 +76,25 @@ class StorageAlgorithm
 
 	public function getName(): string
 	{
-		return $this->name;
+		return $this->hashingAlgorithm->getName();
 	}
 
 
 	public function getAlias(): string
 	{
-		return $this->alias;
+		return $this->hashingAlgorithm->getAlias();
 	}
 
 
 	public function isSalted(): bool
 	{
-		return $this->salted;
+		return $this->hashingAlgorithm->isSalted();
 	}
 
 
 	public function isStretched(): bool
 	{
-		return $this->stretched;
+		return $this->hashingAlgorithm->isStretched();
 	}
 
 
