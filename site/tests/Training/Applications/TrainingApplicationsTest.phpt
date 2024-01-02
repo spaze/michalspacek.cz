@@ -1,12 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Applications;
 
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\Training\Applications\TrainingApplications;
 use Tester\Assert;
 use Tester\TestCase;
 

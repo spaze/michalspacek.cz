@@ -2,10 +2,9 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Dates;
 
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\Training\Dates\TrainingDatesFormValidator;
 use Nette\Forms\Controls\TextInput;
 use Tester\Assert;
 use Tester\TestCase;
