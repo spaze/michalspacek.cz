@@ -62,7 +62,7 @@
 </div>
 <p>{label date /} {input date} {input submit id => submit}</p>
 <p>
-	<button class="preset" data-preset="{\MichalSpacekCz\Training\Statuses::STATUS_ATTENDED}" data-start="{$trainingStart}">Přednastavit <small><code>{\MichalSpacekCz\Training\Statuses::STATUS_ATTENDED}</code></small></button>
+	<button class="preset" data-preset="{\MichalSpacekCz\Training\Statuses\Statuses::STATUS_ATTENDED}" data-start="{$trainingStart}">Přednastavit <small><code>{\MichalSpacekCz\Training\Statuses\Statuses::STATUS_ATTENDED}</code></small></button>
 	{capture $title}Tykat všem účastníkům ve stavu {foreach $attendedStatuses as $status}{$status}{sep}, {/sep}{/foreach}{/capture}
 	{input familiar title => $title}
 </p>

@@ -9,7 +9,7 @@ use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusExce
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Prices;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Random;

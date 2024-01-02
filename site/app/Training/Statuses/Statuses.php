@@ -1,14 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training;
+namespace MichalSpacekCz\Training\Statuses;
 
 use DateTime;
 use Exception;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
-use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 

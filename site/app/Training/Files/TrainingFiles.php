@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\Files;
 use DateTime;
 use DateTimeInterface;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
-use MichalSpacekCz\Training\Statuses;
+use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
