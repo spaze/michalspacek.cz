@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11d418a98f7cf120863f7eb64594e5cf",
+    "content-hash": "15098962bbec98ed24eb0c942bcf2a9b",
     "packages": [
         {
             "name": "contributte/translation",
@@ -2118,16 +2118,16 @@
         },
         {
             "name": "spaze/sri-macros",
-            "version": "v2.2.1",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c"
+                "reference": "b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c",
-                "reference": "efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6",
+                "reference": "b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6",
                 "shasum": ""
             },
             "require": {
@@ -2167,9 +2167,9 @@
             "description": "Subresource Integrity macros for Latte template engine",
             "support": {
                 "issues": "https://github.com/spaze/sri-macros/issues",
-                "source": "https://github.com/spaze/sri-macros/tree/v2.2.1"
+                "source": "https://github.com/spaze/sri-macros/tree/v2.2.2"
             },
-            "time": "2023-09-20T01:00:06+00:00"
+            "time": "2024-01-13T19:39:38+00:00"
         },
         {
             "name": "spaze/svg-icons-latte",

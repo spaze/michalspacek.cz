@@ -3764,17 +3764,17 @@
         },
         {
             "name": "spaze/sri-macros",
-            "version": "v2.2.1",
-            "version_normalized": "2.2.1.0",
+            "version": "v2.2.2",
+            "version_normalized": "2.2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/sri-macros.git",
-                "reference": "efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c"
+                "reference": "b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c",
-                "reference": "efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c",
+                "url": "https://api.github.com/repos/spaze/sri-macros/zipball/b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6",
+                "reference": "b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6",
                 "shasum": ""
             },
             "require": {
@@ -3794,7 +3794,7 @@
                 "spaze/csp-config": "Sends Content Security Policy header with nonces, if enabled",
                 "spaze/nonce-generator": "Allows to add nonce attribute to script tags automatically"
             },
-            "time": "2023-09-20T01:00:06+00:00",
+            "time": "2024-01-13T19:39:38+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3816,7 +3816,7 @@
             "description": "Subresource Integrity macros for Latte template engine",
             "support": {
                 "issues": "https://github.com/spaze/sri-macros/issues",
-                "source": "https://github.com/spaze/sri-macros/tree/v2.2.1"
+                "source": "https://github.com/spaze/sri-macros/tree/v2.2.2"
             },
             "install-path": "../spaze/sri-macros"
         },

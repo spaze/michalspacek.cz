@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'spaze/michalspacek.cz',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '987a8941d1b068cef474b47f4bb962e18b5b947b',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => NULL,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -451,9 +451,9 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '987a8941d1b068cef474b47f4bb962e18b5b947b',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => NULL,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -505,9 +505,9 @@
             'dev_requirement' => true,
         ),
         'spaze/sri-macros' => array(
-            'pretty_version' => 'v2.2.1',
-            'version' => '2.2.1.0',
-            'reference' => 'efad2b58af5699fa7e6e11e7ef34662f4d9d1f7c',
+            'pretty_version' => 'v2.2.2',
+            'version' => '2.2.2.0',
+            'reference' => 'b94f713ed4c2f1817f6f07f1ac6f7c3774c376d6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spaze/sri-macros',
             'aliases' => array(),
