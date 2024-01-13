@@ -9,7 +9,6 @@ use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\SlidesPlatform;
 use MichalSpacekCz\Talks\Exceptions\TalkDoesNotExistException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
-use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Talks\Slides\TalkSlides;
 use MichalSpacekCz\Talks\TalkLocaleUrls;
 use MichalSpacekCz\Talks\Talks;
@@ -86,21 +85,22 @@ class TalksPresenter extends BasePresenter
 					$this->template->canonicalLink = $this->link('//:Www:Talks:talk', [$talk->getAction()]);
 				}
 			}
-		} catch (UnknownSlideException | TalkDoesNotExistException $e) {
+			$talkOgImage = $talk->getOgImage();
+			$ogImage = $slides?->getByNumber($slideNo ?? 1)->getImage() ?? ($talkOgImage !== null ? sprintf($talkOgImage, $slideNo ?? 1) : null);
+		} catch (TalkSlideDoesNotExistException | TalkDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		foreach ($this->talkLocaleUrls->get($talk) as $locale => $action) {
 			$this->localeLinkParams[$locale] = ['name' => $action];
 		}
 
-		$ogImage = $talk->getOgImage();
 		$slidesHref = $talk->getSlidesHref();
 		$this->template->pageTitle = $this->talks->pageTitle('messages.title.talk', $talk);
 		$this->template->pageHeader = $talk->getTitle();
 		$this->template->talk = $talk;
 		$this->template->slideNo = $slideNo;
 		$this->template->slides = $slides;
-		$this->template->ogImage = $slides?->getByNumber($slideNo ?? 1)->getImage() ?? ($ogImage !== null ? sprintf($ogImage, $slideNo ?? 1) : null);
+		$this->template->ogImage = $ogImage;
 		$this->template->upcomingTrainings = $this->upcomingTrainingDates->getPublicUpcoming();
 		$this->template->video = $talk->getVideo()->setLazyLoad($slides && count($slides) > 3);
 		$this->template->slidesPlatform = $slidesHref !== null ? SlidesPlatform::tryFromUrl($slidesHref)?->getName() : null;

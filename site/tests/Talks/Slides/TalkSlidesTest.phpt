@@ -7,7 +7,7 @@ namespace MichalSpacekCz\Talks\Slides;
 use DateTime;
 use MichalSpacekCz\Media\Video;
 use MichalSpacekCz\ShouldNotHappenException;
-use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
+use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
@@ -41,7 +41,7 @@ class TalkSlidesTest extends TestCase
 		$this->database->setFetchFieldDefaultResult(null);
 		Assert::exception(function (): void {
 			$this->talkSlides->getSlideNo(1, 'yo');
-		}, UnknownSlideException::class, "Unknown slide 'yo' for talk id '1'");
+		}, TalkSlideDoesNotExistException::class, "Talk id 1 doesn't have a slide 'yo'");
 
 		$this->database->setFetchFieldDefaultResult(808);
 		Assert::same(808, $this->talkSlides->getSlideNo(1, 'yo'));

@@ -13,7 +13,6 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Exceptions\SlideImageUploadFailedException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
-use MichalSpacekCz\Talks\Exceptions\UnknownSlideException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Utils\Base64;
 use MichalSpacekCz\Utils\Hash;
@@ -51,7 +50,7 @@ class TalkSlides
 	/**
 	 * Return slide number by given alias.
 	 *
-	 * @throws UnknownSlideException
+	 * @throws TalkSlideDoesNotExistException
 	 */
 	public function getSlideNo(int $talkId, ?string $slide): ?int
 	{
@@ -63,7 +62,7 @@ class TalkSlides
 			if (ctype_digit($slide)) {
 				$slideNo = (int)$slide; // To keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {
-				throw new UnknownSlideException($slide, $talkId);
+				throw new TalkSlideDoesNotExistException($talkId, $slide);
 			}
 		} elseif (!is_int($slideNo)) {
 			throw new ShouldNotHappenException(sprintf("Slide number for slide '%s' of '%s' is a %s not an integer", $slide, $talkId, get_debug_type($slideNo)));

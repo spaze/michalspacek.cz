@@ -8,9 +8,10 @@ use Throwable;
 class TalkSlideDoesNotExistException extends TalkException
 {
 
-	public function __construct(int $talkId, int $number, ?Throwable $previous = null)
+	public function __construct(int $talkId, int|string $slide, ?Throwable $previous = null)
 	{
-		parent::__construct("Talk id $talkId doesn't have a slide number $number", previous: $previous);
+		$desc = is_int($slide) ? "number $slide" : "'$slide'";
+		parent::__construct("Talk id $talkId doesn't have a slide {$desc}", previous: $previous);
 	}
 
 }
