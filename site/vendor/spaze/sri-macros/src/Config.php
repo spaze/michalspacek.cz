@@ -62,6 +62,18 @@ class Config
 	}
 
 
+	public function setLocalBuildPrefix(string $prefix): void
+	{
+		$this->localPrefix['build'] = $prefix;
+	}
+
+
+	public function getLocalPathBuildPrefix(): string
+	{
+		return sprintf('%s/%s', rtrim($this->localPrefix['path'], '/'), trim($this->localPrefix['build'], '/'));
+	}
+
+
 	public function setLocalMode(LocalMode|string $localMode): void
 	{
 		$this->localMode = is_string($localMode) ? LocalMode::from($localMode) : $localMode;
