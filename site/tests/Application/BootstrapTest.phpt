@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Application;
 
+use MichalSpacekCz\Application\Cli\NoCliArgs;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\DI\Container;
@@ -74,7 +75,7 @@ class BootstrapTest extends TestCase
 		}
 		$container = null;
 		Assert::noError(function () use (&$container): void {
-			$container = Bootstrap::boot();
+			$container = Bootstrap::bootCli(NoCliArgs::class);
 		});
 		Assert::type(Container::class, $container);
 	}

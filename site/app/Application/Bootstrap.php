@@ -9,7 +9,9 @@ use MichalSpacekCz\Application\Cli\CliArgsProvider;
 use Nette\Bootstrap\Configurator;
 use Nette\CommandLine\Parser;
 use Nette\DI\Container;
+use Nette\Utils\FileSystem;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
+use Spaze\SubresourceIntegrity\Config;
 use Tester\Environment;
 
 class Bootstrap
@@ -38,10 +40,8 @@ class Bootstrap
 		ServerEnv::setString('HTTPS', 'on');
 		$cliArgs = self::getCliArgs($argsProvider);
 		$debugMode = ServerEnv::tryGetString('PHP_CLI_ENVIRONMENT') === self::MODE_DEVELOPMENT || $cliArgs->getFlag(self::DEBUG);
-		$container = self::createConfigurator(
-			$debugMode,
-			self::SITE_DIR . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'),
-		)->createContainer();
+		$configurator = self::createConfigurator($debugMode, self::SITE_DIR . '/config/' . ($debugMode ? 'extra-cli-debug.neon' : 'extra-cli.neon'));
+		$container = self::createCliContainer($configurator);
 		if ($cliArgs->getFlag(self::COLORS)) {
 			$container->getByType(ConsoleColor::class)->setForceStyle(true);
 		}
@@ -56,7 +56,7 @@ class Bootstrap
 		$configurator->addStaticParameters([
 			'wwwDir' => self::SITE_DIR . '/tests',
 		]);
-		$container = $configurator->createContainer();
+		$container = self::createCliContainer($configurator);
 		Environment::setup();
 		return $container;
 	}
@@ -118,6 +118,22 @@ class Bootstrap
 			$cliArgsError = $e->getMessage();
 		}
 		return new CliArgs($cliArgsParsed ?? [], $cliArgsError ?? null);
+	}
+
+
+	private static function createCliContainer(Configurator $configurator): Container
+	{
+		$tempDir = self::SITE_DIR . '/temp/cli';
+		$configurator->setTempDirectory($tempDir);
+		FileSystem::createDir($tempDir);
+
+		$container = $configurator->createContainer();
+
+		$sriConfig = $container->getByType(Config::class);
+		$sriConfig->setLocalBuildPrefix('/i/build/cli');
+		FileSystem::createDir($sriConfig->getLocalPathBuildPrefix());
+
+		return $container;
 	}
 
 }
