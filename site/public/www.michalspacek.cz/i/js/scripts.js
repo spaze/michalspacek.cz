@@ -109,4 +109,16 @@ App.ready(document, function () {
 			'behavior': 'smooth',
 		});
 	}
+
+	App.on('mouseover', 'abbr', function (event) {
+		event.target.dataset.title = event.target.title;
+		event.target.removeAttribute('title');
+	});
+	App.on('mouseout', 'abbr', function (event) {
+		event.target.title = event.target.dataset.title;
+		event.target.blur();
+	});
+	for (const item of document.querySelectorAll('abbr')) {
+		item.tabIndex = 0;
+	}
 });

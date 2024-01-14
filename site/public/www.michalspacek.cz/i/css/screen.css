@@ -72,7 +72,25 @@ blockquote {
 q::before { content: "«"; }
 q::after { content: "»"; }
 img { border: none; }
-abbr.dtstart, abbr.dtend { text-decoration: none; }
+abbr.dtstart, abbr.dtend { text-decoration: none !important; }
+abbr[data-title] {
+	position: relative;
+	text-decoration: underline dotted;
+}
+abbr[data-title]:hover::after, abbr[data-title]:focus::after {
+	content: attr(data-title);
+	position: absolute;
+	left: 0;
+	bottom: -2.1em;
+	width: auto;
+	white-space: nowrap;
+	background-color: #DEDEDE;
+	color: #1E1E1E;
+	border-radius: 2px;
+	box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.4);
+	font-size: small;
+	padding: 3px 5px;
+}
 code, .highlight pre code {
 	padding: 0.2em 0.1em;
 	margin: 0;
