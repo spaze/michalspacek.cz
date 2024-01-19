@@ -43,9 +43,6 @@ jobs:
           - "8.3"
     steps:
     - uses: actions/checkout@v4
-      with:
-        coverage: none
-        php-version: ${{ matrix.php-version }}
     - run: make --directory=site check-file-patterns
 
   check-makefile:
