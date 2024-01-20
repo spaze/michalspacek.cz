@@ -46,7 +46,5 @@ paths = [
   '''js/openpgp\.min\.js''',
   # Paths otherwise .gitignored should be listed here if you want to run with --no-git
   '''i/build/''',
-  '''site/config/local.*\.neon''',
-  '''site/config/remote.*\.neon''',
   '''site/temp/cache/''',
 ]
