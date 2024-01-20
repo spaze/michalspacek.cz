@@ -27,7 +27,7 @@ use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
-use Spaze\Encryption\Symmetric\StaticKey;
+use Spaze\Encryption\SymmetricKeyEncryption;
 use Tracy\Debugger;
 
 readonly class Manager implements Authenticator
@@ -47,7 +47,7 @@ readonly class Manager implements Authenticator
 		private IRequest $httpRequest,
 		private Cookies $cookies,
 		private Passwords $passwords,
-		private StaticKey $passwordEncryption,
+		private SymmetricKeyEncryption $passwordEncryption,
 		LinkGenerator $linkGenerator,
 		private string $permanentLoginInterval,
 	) {

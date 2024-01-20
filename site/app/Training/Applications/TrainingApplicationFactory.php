@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Row;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
-use Spaze\Encryption\Symmetric\StaticKey;
+use Spaze\Encryption\SymmetricKeyEncryption;
 
 readonly class TrainingApplicationFactory
 {
@@ -19,7 +19,7 @@ readonly class TrainingApplicationFactory
 	public function __construct(
 		private Statuses $trainingStatuses,
 		private TrainingMailMessageFactory $trainingMailMessageFactory,
-		private StaticKey $emailEncryption,
+		private SymmetricKeyEncryption $emailEncryption,
 		private TexyFormatter $texyFormatter,
 		private TrainingApplicationSources $trainingApplicationSources,
 		private TrainingFiles $trainingFiles,

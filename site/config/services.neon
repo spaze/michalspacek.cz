@@ -154,8 +154,8 @@ services:
 	- Nette\Schema\Processor
 	security.passwords: Nette\Security\Passwords(::PASSWORD_ARGON2ID, [memory_cost: 65536, time_cost: 16, threads: 16])
 	- PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor
-	emailEncryption: Spaze\Encryption\Symmetric\StaticKey('email', %encryption.keys%, %encryption.activeKeyIds%)
-	passwordEncryption: Spaze\Encryption\Symmetric\StaticKey('password', %encryption.keys%, %encryption.activeKeyIds%)
-	sessionEncryption: Spaze\Encryption\Symmetric\StaticKey('session', %encryption.keys%, %encryption.activeKeyIds%)
+	emailEncryption: Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.email%, %encryption.activeKeyIds.email%, %encryption.keyPrefixes.email%)
+	passwordEncryption: Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.password%, %encryption.activeKeyIds.password%, %encryption.keyPrefixes.password%)
+	sessionEncryption: Spaze\Encryption\SymmetricKeyEncryption(%encryption.keys.session%, %encryption.activeKeyIds.session%, %encryption.keyPrefixes.session%)
 	- Spaze\PhpInfo\PhpInfo
 	texyFormatterPhpFilesAdapter: Symfony\Component\Cache\Adapter\PhpFilesAdapter(namespace: 'TexyFormatter', directory: '%tempDir%/cache', appendOnly: true)

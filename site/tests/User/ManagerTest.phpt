@@ -21,7 +21,7 @@ use Nette\Security\Passwords;
 use Nette\Security\SimpleIdentity;
 use Nette\Security\User;
 use Override;
-use Spaze\Encryption\Symmetric\StaticKey;
+use Spaze\Encryption\SymmetricKeyEncryption;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -31,7 +31,7 @@ require __DIR__ . '/../bootstrap.php';
 class ManagerTest extends TestCase
 {
 
-	private readonly StaticKey $passwordEncryption;
+	private readonly SymmetricKeyEncryption $passwordEncryption;
 
 
 	public function __construct(
@@ -43,8 +43,8 @@ class ManagerTest extends TestCase
 		Container $container,
 	) {
 		$service = $container->getService('passwordEncryption');
-		if (!$service instanceof StaticKey) {
-			throw new ShouldNotHappenException(sprintf('passwordEncryption should be a %s instance, but it is a %s', StaticKey::class, $service::class));
+		if (!$service instanceof SymmetricKeyEncryption) {
+			throw new ShouldNotHappenException(sprintf('passwordEncryption should be a %s instance, but it is a %s', SymmetricKeyEncryption::class, $service::class));
 		}
 		$this->passwordEncryption = $service;
 	}
