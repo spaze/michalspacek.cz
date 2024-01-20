@@ -66,9 +66,17 @@ parameters:
 		phoneNumber: "123456789"
 	encryption:
 		keys:
-			-
+			password: []
+			email: []
+			session: []
 		activeKeyIds:
-			-
+			password: ""
+			email: ""
+			session: ""
+		keyPrefixes:
+			password: ""
+			email: ""
+			session: ""
 	awsLambda:
 		upcKeys:
 			url:
