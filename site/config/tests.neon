@@ -12,13 +12,20 @@ parameters:
 			longWords: false
 	encryption:
 		keys:
-			password:
-				test: "f015033d6b0b24e77bc9cbd86ec52ed5bc94ca4901c9f1378768423ec0278d66"
-			email:
-				test: "17fa3225effc107a689eb72fd8c20983bbc690bf9ea42a2f0306e0c226720845"
+			password!:
+				test: "mspetest_f015033d6b0b24e77bc9cbd86ec52ed5bc94ca4901c9f1378768423ec0278d66"
+			email!:
+				test: "mseetest_17fa3225effc107a689eb72fd8c20983bbc690bf9ea42a2f0306e0c226720845"
+			session!:
+				test: "mssetest_0d89ba7b95bce3a1f5092faf7aa038bffcaca2a98d264ab18c81aec8f74b90ab"
 		activeKeyIds:
 			password: test
 			email: test
+			session: test
+		keyPrefixes:
+			password: mspetest
+			email: mseetest
+			session: mssetest
 	awsLambda:
 		upcKeys:
 			url: "https://was.example/%s/%s"

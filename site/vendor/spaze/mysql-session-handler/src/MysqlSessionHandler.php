@@ -7,7 +7,7 @@ use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 use SessionHandlerInterface;
-use Spaze\Encryption\Symmetric\StaticKey as StaticKeyEncryption;
+use Spaze\Encryption\SymmetricKeyEncryption;
 
 /**
  * Storing session to database.
@@ -21,7 +21,7 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	use SmartObject;
 
 
-	private ?StaticKeyEncryption $encryptionService = null;
+	private ?SymmetricKeyEncryption $encryptionService = null;
 
 	private string $tableName;
 
@@ -75,7 +75,7 @@ class MysqlSessionHandler implements SessionHandlerInterface
 	}
 
 
-	public function setEncryptionService(StaticKeyEncryption $encryptionService): void
+	public function setEncryptionService(SymmetricKeyEncryption $encryptionService): void
 	{
 		$this->encryptionService = $encryptionService;
 	}

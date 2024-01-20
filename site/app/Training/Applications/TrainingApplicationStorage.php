@@ -16,7 +16,7 @@ use Nette\Utils\Random;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use RuntimeException;
 use SodiumException;
-use Spaze\Encryption\Symmetric\StaticKey;
+use Spaze\Encryption\SymmetricKeyEncryption;
 use Tracy\Debugger;
 
 readonly class TrainingApplicationStorage
@@ -26,7 +26,7 @@ readonly class TrainingApplicationStorage
 		private Explorer $database,
 		private Statuses $trainingStatuses,
 		private TrainingApplicationSources $trainingApplicationSources,
-		private StaticKey $emailEncryption,
+		private SymmetricKeyEncryption $emailEncryption,
 		private Prices $prices,
 	) {
 	}

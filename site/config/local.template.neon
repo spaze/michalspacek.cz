@@ -49,15 +49,19 @@ parameters:
 	encryption:
 		keys:
 			password:
-				dev1: "abadcafec15c0d06f00dcafed00dbeef" # [0-9A-F]{64}
+				dev1: "mspe_abadcafec15c0d06f00dcafed00dbeef" # [0-9A-F]{64}
 			email:
-				dev1: "cafebabe25da1768d69ee80717cc2f30" # [0-9A-F]{64}
+				dev1: "msee_cafebabe25da1768d69ee80717cc2f30" # [0-9A-F]{64}
 			session:
-				dev1: "25da1768d69ee80717cc2f30cafebabe" # [0-9A-F]{64}
+				dev1: "msse_25da1768d69ee80717cc2f30cafebabe" # [0-9A-F]{64}
 		activeKeyIds:
 			password: dev1
 			email: dev1
 			session: dev1
+		keyPrefixes:
+			password: mspe
+			email: msee
+			session: msse
 
 	awsLambda:
 		upcKeys:

@@ -31,13 +31,20 @@ stopwords = [
   '''_training''',
 ]
 
+[[rules]]
+id = "michalspacek.cz-encryption-keys"
+description = "Identified an encryption key, risking data decryption and unauthorized access to sensitive information."
+regex = '''(?:mspe|msee|msse)(?:test)?_([a-fA-F0-9]{32,64})'''
+keywords = [
+  "mspe",
+  "msee",
+  "msse",
+]
+
 [allowlist]
 paths = [
   '''js/openpgp\.min\.js''',
   # Paths otherwise .gitignored should be listed here if you want to run with --no-git
   '''i/build/''',
-  '''site/config/local.*\.neon''',
-  '''site/config/remote.*\.neon''',
   '''site/temp/cache/''',
 ]
-
