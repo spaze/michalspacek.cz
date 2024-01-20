@@ -31,6 +31,16 @@ stopwords = [
   '''_training''',
 ]
 
+[[rules]]
+id = "michalspacek.cz-encryption-keys"
+description = "Identified an encryption key, risking data decryption and unauthorized access to sensitive information."
+regex = '''(?:mspe|msee|msse)(?:test)?_([a-fA-F0-9]{32,64})'''
+keywords = [
+  "mspe",
+  "msee",
+  "msse",
+]
+
 [allowlist]
 paths = [
   '''js/openpgp\.min\.js''',
@@ -40,4 +50,3 @@ paths = [
   '''site/config/remote.*\.neon''',
   '''site/temp/cache/''',
 ]
-
