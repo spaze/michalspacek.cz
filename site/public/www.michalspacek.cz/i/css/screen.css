@@ -481,6 +481,10 @@ div.notice {
 	#frm-application input[type=submit] { width: 170px; }
 	#training-dates .calendar, #training-dates .separator { display: none; }
 	#training-dates .date { display: block; }
+	#footer-name, #footer-links {
+		float: none;
+		text-align: left;
+	}
 }
 @media (max-width: 430px) {
 	#header-links #other-projects { display: block; }
