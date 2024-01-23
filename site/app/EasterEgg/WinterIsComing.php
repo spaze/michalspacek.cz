@@ -68,11 +68,7 @@ class WinterIsComing
 
 	private function sendSyntaxError(TextInput $input): never
 	{
-		$form = $input->getForm();
-		if (!$form) {
-			throw new ShouldNotHappenException('Form should already exist, InvalidStateException would be already thrown if not');
-		}
-		$presenter = $form->getParent();
+		$presenter = $input->form->getParent();
 		if (!$presenter instanceof Presenter) {
 			throw new ShouldNotHappenException(sprintf("This text input's form parent should be a %s but it's a %s", Presenter::class, get_debug_type($presenter)));
 		}
