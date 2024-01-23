@@ -34,7 +34,7 @@ readonly class SignInFormFactory
 			$values = $form->getFormValues();
 			$this->user->setExpiration('30 minutes', true);
 			try {
-				$this->user->login($values->username, $values->password);
+				$this->user->login((string)$values->username, $values->password);
 				Debugger::log("Successful sign-in attempt ({$values->username}, {$this->httpRequest->getRemoteAddress()})", 'auth');
 				if ($values->remember) {
 					$this->authenticator->storePermanentLogin($this->user);
