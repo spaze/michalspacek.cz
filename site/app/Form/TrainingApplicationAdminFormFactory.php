@@ -173,9 +173,8 @@ readonly class TrainingApplicationAdminFormFactory
 
 	private function addDeletableFieldCheckbox(BaseControl $control, Checkbox $checkbox, ?string $fieldValue): void
 	{
-		$form = $control->getForm();
 		$name = $control->getName();
-		if ($form === null || $name === null) {
+		if ($name === null) {
 			return;
 		}
 		$control
