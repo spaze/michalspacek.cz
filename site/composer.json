@@ -65,6 +65,7 @@
 		"psalm/phar": "^5.14",
 		"roave/security-advisories": "dev-latest",
 		"spaze/coding-standard": "^1.7.1",
+		"spaze/phpcs-phar": "^3.8",
 		"spaze/phpstan-disallowed-calls": "^3.0",
 		"spaze/phpstan-disallowed-calls-nette": "^2.0.1"
 	},

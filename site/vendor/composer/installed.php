@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'spaze/michalspacek.cz',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => 'e8f027b2802d515f889fba982d2f8ce3a0c8a3ee',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => NULL,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,13 +20,10 @@
             'dev_requirement' => false,
         ),
         'dealerdirect/phpcodesniffer-composer-installer' => array(
-            'pretty_version' => 'v1.0.0',
-            'version' => '1.0.0.0',
-            'reference' => '4be43904336affa5c2f70744a348312336afd0da',
-            'type' => 'composer-plugin',
-            'install_path' => __DIR__ . '/../dealerdirect/phpcodesniffer-composer-installer',
-            'aliases' => array(),
             'dev_requirement' => true,
+            'replaced' => array(
+                0 => '*',
+            ),
         ),
         'dg/texy' => array(
             'dev_requirement' => false,
@@ -310,6 +307,12 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'phpcsstandards/php_codesniffer' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => '3.8.1',
+            ),
+        ),
         'phpstan/phpdoc-parser' => array(
             'pretty_version' => '1.25.0',
             'version' => '1.25.0.0',
@@ -451,9 +454,9 @@
             'dev_requirement' => false,
         ),
         'spaze/michalspacek.cz' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'e8f027b2802d515f889fba982d2f8ce3a0c8a3ee',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => NULL,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -476,6 +479,15 @@
             'install_path' => __DIR__ . '/../spaze/nonce-generator',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'spaze/phpcs-phar' => array(
+            'pretty_version' => '3.8.1',
+            'version' => '3.8.1.0',
+            'reference' => '5ee407d53308a5b898c85d0ea85e4509303dff01',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spaze/phpcs-phar',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'spaze/phpinfo' => array(
             'pretty_version' => 'v1.0.1',
@@ -523,13 +535,10 @@
             'dev_requirement' => false,
         ),
         'squizlabs/php_codesniffer' => array(
-            'pretty_version' => '3.8.1',
-            'version' => '3.8.1.0',
-            'reference' => '14f5fff1e64118595db5408e946f3a22c75807f7',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../squizlabs/php_codesniffer',
-            'aliases' => array(),
             'dev_requirement' => true,
+            'replaced' => array(
+                0 => '3.8.1',
+            ),
         ),
         'symfony/cache' => array(
             'pretty_version' => 'v7.0.2',

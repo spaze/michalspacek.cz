@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types = 1);
+
+if (is_file(__DIR__ . '/../../autoload.php')) {
+	require_once __DIR__ . '/../../autoload.php';
+}
+
+// Need to skip the stub because phpcbf will be executed, not phpcs
+Phar::loadPhar(__DIR__ . '/phpcs.phar', 'phpcs.phar');
+require_once "phar://phpcs.phar/autoload.php";
+
+$status = (new PHP_CodeSniffer\Runner())->runPHPCBF();
+exit($status);
