@@ -3270,17 +3270,17 @@
         },
         {
             "name": "spaze/coding-standard",
-            "version": "v1.7.0",
-            "version_normalized": "1.7.0.0",
+            "version": "v1.7.1",
+            "version_normalized": "1.7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/coding-standard.git",
-                "reference": "acfcb7c71a4943b584c587995396d77521da6a51"
+                "reference": "4d023c22c6757fa94d7542af749834b30af6bb8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/acfcb7c71a4943b584c587995396d77521da6a51",
-                "reference": "acfcb7c71a4943b584c587995396d77521da6a51",
+                "url": "https://api.github.com/repos/spaze/coding-standard/zipball/4d023c22c6757fa94d7542af749834b30af6bb8d",
+                "reference": "4d023c22c6757fa94d7542af749834b30af6bb8d",
                 "shasum": ""
             },
             "require": {
@@ -3290,7 +3290,7 @@
             "require-dev": {
                 "ext-simplexml": "*"
             },
-            "time": "2023-06-09T17:02:45+00:00",
+            "time": "2024-01-27T03:15:38+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3315,7 +3315,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/coding-standard/issues",
-                "source": "https://github.com/spaze/coding-standard/tree/v1.7.0"
+                "source": "https://github.com/spaze/coding-standard/tree/v1.7.1"
             },
             "install-path": "../spaze/coding-standard"
         },

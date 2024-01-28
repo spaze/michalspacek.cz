@@ -64,7 +64,7 @@
 		"phpstan/phpstan-nette": "^1.2.1",
 		"psalm/phar": "^5.14",
 		"roave/security-advisories": "dev-latest",
-		"spaze/coding-standard": "^1.7",
+		"spaze/coding-standard": "^1.7.1",
 		"spaze/phpstan-disallowed-calls": "^3.0",
 		"spaze/phpstan-disallowed-calls-nette": "^2.0.1"
 	},
