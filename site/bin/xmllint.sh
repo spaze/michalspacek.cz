@@ -23,4 +23,4 @@ if ! hash xmllint 2>/dev/null; then
 		fi
 	fi
 fi
-xmllint --schema vendor/squizlabs/php_codesniffer/phpcs.xsd --noout phpcs.xml
+xmllint --schema vendor/spaze/phpcs-phar/phpcs.xsd --noout phpcs.xml
