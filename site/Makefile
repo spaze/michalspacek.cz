@@ -6,7 +6,7 @@ audit:
 	composer audit
 
 cs-fix:
-	vendor/squizlabs/php_codesniffer/bin/phpcbf app/ public/ tests/
+	vendor/bin/phpcbf app/ public/ tests/
 
 check-file-patterns:
 	bin/check-file-patterns.sh
@@ -30,7 +30,7 @@ lint-xml-auto-install:
 	bin/xmllint.sh --auto-install-with-apt-fast
 
 phpcs:
-	vendor/squizlabs/php_codesniffer/bin/phpcs app/ public/ tests/
+	vendor/bin/phpcs app/ public/ tests/
 
 phpstan:
 	vendor/phpstan/phpstan/phpstan -vvv --ansi analyse --configuration phpstan.neon

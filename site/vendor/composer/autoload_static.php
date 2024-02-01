@@ -47,7 +47,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPStan\\' => 8,
-            'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 57,
         ),
         'M' => 
         array (
@@ -176,10 +175,6 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
             1 => __DIR__ . '/..' . '/phpstan/phpstan-nette/src',
-        ),
-        'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
         ),
         'MichalSpacekCz\\' => 
         array (

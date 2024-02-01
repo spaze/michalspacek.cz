@@ -1,0 +1,24 @@
+{
+	"name": "spaze/phpcs-phar",
+	"description": "PHP_CodeSniffer phar releases",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Michal Špaček",
+			"homepage": "https://www.michalspacek.com",
+			"email": "mail@michalspacek.cz"
+		}
+	],
+	"keywords": [
+		"dev"
+	],
+	"replace": {
+		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"phpcsstandards/php_codesniffer": "3.8.1",
+		"squizlabs/php_codesniffer": "3.8.1"
+	},
+	"bin": [
+		"phpcbf",
+		"phpcs"
+	]
+}
