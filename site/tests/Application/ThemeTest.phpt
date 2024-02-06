@@ -29,14 +29,14 @@ class ThemeTest extends TestCase
 	public function testSetDarkMode(): void
 	{
 		$this->theme->setDarkMode();
-		Assert::same('dark', $this->response->getCookie('future')?->getValue());
+		Assert::same('dark', $this->response->getCookie('future')[0]->getValue());
 	}
 
 
 	public function testSetLightMode(): void
 	{
 		$this->theme->setLightMode();
-		Assert::same('bright', $this->response->getCookie('future')?->getValue());
+		Assert::same('bright', $this->response->getCookie('future')[0]->getValue());
 	}
 
 

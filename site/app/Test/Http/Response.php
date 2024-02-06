@@ -11,13 +11,15 @@ class Response implements IResponse
 
 	private int $code = IResponse::S200_OK;
 
+	private ?string $reason = null;
+
 	/** @var array<string, string> */
 	private array $headers = [];
 
 	/** @var array<string, array<int, string>> */
 	private array $allHeaders = [];
 
-	/** @var array<string, Cookie> */
+	/** @var array<string, list<Cookie>> */
 	private array $cookies = [];
 
 	public string $cookieDomain = '';
@@ -40,9 +42,10 @@ class Response implements IResponse
 
 
 	#[Override]
-	public function setCode(int $code, string $reason = null): self
+	public function setCode(int $code, ?string $reason = null): self
 	{
 		$this->code = $code;
+		$this->reason = $reason;
 		return $this;
 	}
 
@@ -51,6 +54,12 @@ class Response implements IResponse
 	public function getCode(): int
 	{
 		return $this->code;
+	}
+
+
+	public function getReason(): ?string
+	{
+		return $this->reason;
 	}
 
 
@@ -135,7 +144,7 @@ class Response implements IResponse
 	#[Override]
 	public function setCookie(string $name, string $value, $expire, string $path = null, string $domain = null, bool $secure = null, bool $httpOnly = null, string $sameSite = null): self
 	{
-		$this->cookies[$name] = new Cookie(
+		$this->cookies[$name][] = new Cookie(
 			$name,
 			$value,
 			$expire,
@@ -154,9 +163,12 @@ class Response implements IResponse
 	}
 
 
-	public function getCookie(string $name): ?Cookie
+	/**
+	 * @return list<Cookie>
+	 */
+	public function getCookie(string $name): array
 	{
-		return $this->cookies[$name] ?? null;
+		return $this->cookies[$name] ?? [];
 	}
 
 
@@ -202,6 +214,14 @@ class Response implements IResponse
 	public function sent(bool $isSent): void
 	{
 		$this->isSent = $isSent;
+	}
+
+
+	public function reset(): void
+	{
+		$this->headers = [];
+		$this->allHeaders = [];
+		$this->cookies = [];
 	}
 
 }
