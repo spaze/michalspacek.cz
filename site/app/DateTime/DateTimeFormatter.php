@@ -142,7 +142,7 @@ readonly class DateTimeFormatter
 			$formatter->setPattern($format[self::INTERVAL_FORMAT_END]);
 			$result .= $formatter->format($end);
 		}
-		if (!$result) {
+		if ($result === false) {
 			throw new RuntimeException("Format '{$type}' using {$locale} has failed");
 		}
 		return $result;

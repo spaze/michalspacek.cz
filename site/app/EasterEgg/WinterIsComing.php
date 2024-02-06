@@ -42,7 +42,7 @@ class WinterIsComing
 				is_string($input->getValue())
 				&& (
 					Arrays::contains(self::EMAILS, $input->getValue())
-					|| Strings::match($input->getValue(), '/@(' . implode('|', array_map('preg_quote', self::HOSTS)) . ')$/')
+					|| Strings::match($input->getValue(), '/@(' . implode('|', array_map('preg_quote', self::HOSTS)) . ')$/') !== null
 				)
 			) {
 				$this->sendSyntaxError($input);

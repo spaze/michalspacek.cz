@@ -103,10 +103,10 @@ readonly class TalkSlide
 	public function getAllFilenames(): array
 	{
 		$filenames = [];
-		if ($this->filename) {
+		if ($this->filename !== null) {
 			$filenames[] = $this->filename;
 		}
-		if ($this->filenameAlternative) {
+		if ($this->filenameAlternative !== null) {
 			$filenames[] = $this->filenameAlternative;
 		}
 		return $filenames;

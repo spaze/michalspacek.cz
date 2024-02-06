@@ -130,7 +130,7 @@ readonly class TrainingReviewFormFactory
 				if (in_array($application->getName(), $reviewApplicationNames)) {
 					$option->disabled = true;
 				}
-				$option->setText(($application->getName() ?? 'smazáno') . ($application->getCompany() ? ", {$application->getCompany()}" : ''));
+				$option->setText(($application->getName() ?? 'smazáno') . ($application->getCompany() !== null ? ", {$application->getCompany()}" : ''));
 				$option->addAttributes([
 					'data-name' => $application->getName() ?? '',
 					'data-company' => $application->getCompany() ?? '',

@@ -121,7 +121,7 @@ class TrainingsPresenter extends BasePresenter
 	{
 		$application = $this->trainingApplications->getApplicationById($param);
 		$dateId = $application->getDateId();
-		if (!$dateId) {
+		if ($dateId === null) {
 			throw new BadRequestException("The application id '{$param}' should have a training date set");
 		}
 		if (!in_array($application->getStatus(), $this->trainingStatuses->getAllowFilesStatuses(), true)) {
@@ -167,7 +167,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->application = $application;
 
 		$applicationDateId = $this->application->getDateId();
-		if ($applicationDateId) {
+		if ($applicationDateId !== null) {
 			$training = $this->trainingDates->get($applicationDateId);
 			$name = $training->getName();
 			$start = $training->getStart();
@@ -272,7 +272,7 @@ class TrainingsPresenter extends BasePresenter
 		}
 		return $this->trainingApplicationAdminFactory->create(
 			function (?int $dateId): never {
-				if ($dateId) {
+				if ($dateId !== null) {
 					$this->redirect('date', $dateId);
 				} else {
 					$this->redirect('preliminary');

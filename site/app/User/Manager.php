@@ -194,7 +194,7 @@ readonly class Manager implements Authenticator
 	public function isReturningUser(): bool
 	{
 		$cookie = $this->cookies->getString(CookieName::ReturningUser);
-		return ($cookie && $this->verifyReturningUser($cookie));
+		return ($cookie !== null && $this->verifyReturningUser($cookie));
 	}
 
 

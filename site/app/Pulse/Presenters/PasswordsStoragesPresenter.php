@@ -41,7 +41,7 @@ class PasswordsStoragesPresenter extends BasePresenter
 	public function actionDefault(?string $param, ?string $rating, ?string $sort, ?string $search): void
 	{
 		// Keep old, published URLs alive
-		if ($param) {
+		if ($param !== null) {
 			$this->redirectPermanent('site', $param);
 		}
 

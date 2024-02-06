@@ -30,7 +30,7 @@ class PulsePresenter extends BasePresenter
 	{
 		return $this->passwordsStoragesFormFactory->create(
 			function (?string $message): never {
-				if ($message) {
+				if ($message !== null) {
 					$this->flashMessage($message);
 				}
 				$this->redirect('this');

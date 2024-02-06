@@ -119,8 +119,8 @@ class UpcKeys
 	 */
 	public function getTextResponse(?string $ssid, ?string $error, array $keys): TextResponse
 	{
-		$output = $ssid ? "# {$ssid}\n" : '';
-		$output .= $error ? "# Error: {$error}\n" : '';
+		$output = $ssid !== null ? "# {$ssid}\n" : '';
+		$output .= $error !== null ? "# Error: {$error}\n" : '';
 		foreach ($keys as $key) {
 			$output .= $key->getKey() . "\n";
 		}

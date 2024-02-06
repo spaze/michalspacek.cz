@@ -29,7 +29,7 @@ class CertificateMonitor implements CliArgsProvider
 	public function run(): never
 	{
 		$cliArgsError = $this->cliArgs->getError();
-		if ($cliArgsError) {
+		if ($cliArgsError !== null) {
 			$this->error(null, $cliArgsError);
 			exit(3);
 		}

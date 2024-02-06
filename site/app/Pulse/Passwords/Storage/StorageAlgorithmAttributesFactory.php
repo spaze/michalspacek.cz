@@ -24,7 +24,7 @@ readonly class StorageAlgorithmAttributesFactory
 	 */
 	public function get(?string $json): StorageAlgorithmAttributes
 	{
-		if (!$json) {
+		if ($json === null || $json === '') {
 			return new StorageAlgorithmAttributes(null, null, null);
 		}
 		$decoded = Json::decode($json, true);

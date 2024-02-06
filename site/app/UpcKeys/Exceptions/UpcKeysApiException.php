@@ -12,7 +12,7 @@ abstract class UpcKeysApiException extends Exception
 	public function __construct(?string $message = null, int $code = 0, ?Throwable $previous = null)
 	{
 		$exceptionMessage = 'Invalid API response';
-		if ($message) {
+		if ($message !== null) {
 			$exceptionMessage .= ": {$message}";
 		}
 		parent::__construct($exceptionMessage, $code, $previous);

@@ -33,7 +33,7 @@ class NetteCve202015227
 		$data = [];
 
 		$param = $params[$paramNames[$callback]] ?? null;
-		if (!$param) {
+		if ($param === null) {
 			throw new BadRequestException(sprintf("[%s] Empty param '%s' for callback '%s'", __CLASS__, $paramNames[$callback], $callback));
 		}
 		if (str_contains($param, 'ifconfig')) {

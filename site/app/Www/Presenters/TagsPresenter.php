@@ -50,7 +50,7 @@ class TagsPresenter extends BasePresenter
 	public function actionTag(string $tag): void
 	{
 		$label = $this->articles->getLabelByTag($tag);
-		if (!$label) {
+		if ($label === null) {
 			throw new BadRequestException('Unknown tag');
 		}
 

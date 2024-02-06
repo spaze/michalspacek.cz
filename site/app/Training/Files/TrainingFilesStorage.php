@@ -21,7 +21,7 @@ class TrainingFilesStorage
 	public function getFilesDir(DateTimeInterface $date): string
 	{
 		$path = realpath(self::FILES_DIR);
-		if (!$path) {
+		if ($path === false) {
 			throw new RuntimeException(sprintf("Can't get real path, maybe '%s' doesn't exist? ", self::FILES_DIR));
 		}
 		return $path . '/' . $date->format('Y-m-d') . '/';

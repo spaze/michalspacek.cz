@@ -19,7 +19,7 @@ class OpenSslTest extends TestCase
 	{
 		$file = __DIR__ . '/certificate.pem';
 		$certificate = @file_get_contents($file); // @ intentionally, converted to a failure
-		if (!$certificate) {
+		if ($certificate === false) {
 			Assert::fail('Cannot read ' . $file);
 		} else {
 			$expected = new OpenSslX509ParseResult('michalspacek.cz', 1682947521, 1690723520, '03F3ABC4EB1C13E0D4447CA61298423C0F02');

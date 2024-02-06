@@ -72,7 +72,7 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(2, new DateTime(), 'two');
 		$feed = $this->exports->getArticles('https://example.com/');
 		$xml = simplexml_load_string((string)$feed);
-		if (!$xml || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
+		if ($xml === false || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
 			Assert::fail('Cannot load the feed');
 		} else {
 			$this->assertEntry($xml->entry[0], 'one');
@@ -94,7 +94,7 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(2, new DateTime(), 'two', $editsTwo);
 		$feed = $this->exports->getArticles('https://example.com/');
 		$xml = simplexml_load_string((string)$feed);
-		if (!$xml || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
+		if ($xml === false || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
 			Assert::fail('Cannot load the feed');
 		} else {
 			$this->assertEntry($xml->entry[0], 'one', '<h3>messages.blog.post.edits</h3><ul><li><em><strong>14.3.</strong> Edit one one</em></li><li><em><strong>14.4.</strong> Edit one two</em></li></ul>Text one');
@@ -110,7 +110,7 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: false);
 		$feed = $this->exports->getArticles('https://example.com/');
 		$xml = simplexml_load_string((string)$feed);
-		if (!$xml || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
+		if ($xml === false || $xml->entry === null || !isset($xml->entry[0], $xml->entry[1])) {
 			Assert::fail('Cannot load the feed');
 		} else {
 			$this->assertEntry($xml->entry[0], 'one');
@@ -128,7 +128,7 @@ class ExportsTest extends TestCase
 		$this->articles->addBlogPost(3, new DateTime(), 'three', omitExports: true);
 		$feed = $this->exports->getArticles('https://example.com/');
 		$xml = simplexml_load_string((string)$feed);
-		if (!$xml || $xml->entry === null) {
+		if ($xml === false || $xml->entry === null) {
 			Assert::fail('Cannot load the feed');
 		} else {
 			Assert::count(0, $xml->entry);
@@ -143,7 +143,7 @@ class ExportsTest extends TestCase
 		Assert::same($link, (string)$entry->id, $suffix);
 		Assert::same("Excerpt {$suffix}", (string)$entry->summary, $suffix);
 		Assert::same("Title {$suffix}", (string)$entry->title, $suffix);
-		Assert::same($link, $entry->link ? (string)$entry->link['href'] : null, $suffix);
+		Assert::same($link, $entry->link !== null ? (string)$entry->link['href'] : null, $suffix);
 		Assert::same($text ?? "Text {$suffix}", (string)$entry->content, $suffix);
 	}
 

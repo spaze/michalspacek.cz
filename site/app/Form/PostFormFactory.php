@@ -226,7 +226,7 @@ readonly class PostFormFactory
 			'allowedTags' => $post->getAllowedTagsGroups(),
 			'omitExports' => $post->omitExports(),
 		];
-		if ($post->getPreviewKey()) {
+		if ($post->getPreviewKey() !== null) {
 			$values['previewKey'] = $post->getPreviewKey();
 		}
 		$form->setDefaults($values);

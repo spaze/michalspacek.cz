@@ -307,20 +307,23 @@ readonly class TrainingApplicationStorage
 		?string $companyTaxId,
 		?string $note,
 		string $source,
-		?float $price = null,
-		?float $vatRate = null,
-		?float $priceVat = null,
-		?int $discount = null,
-		?string $invoiceId = null,
-		string $paid = null,
-		bool $familiar = false,
-		?int $dateId = null,
+		?float $price,
+		?float $vatRate,
+		?float $priceVat,
+		?int $discount,
+		?string $invoiceId,
+		string $paid,
+		bool $familiar,
+		?int $dateId,
 	): void {
 		$paidDate = ($paid ? new DateTime($paid) : null);
 		$timeZone = $paidDate?->getTimezone()->getName();
+		if ($discount === 0) {
+			$discount = null;
+		}
 		$data = [
 			'name' => $name,
-			'email' => ($email ? $this->emailEncryption->encrypt($email) : null),
+			'email' => $email !== null ? $this->emailEncryption->encrypt($email) : null,
 			'company' => $company,
 			'familiar' => $familiar,
 			'street' => $street,
@@ -331,10 +334,10 @@ readonly class TrainingApplicationStorage
 			'company_tax_id' => $companyTaxId,
 			'note' => $note,
 			'key_source' => $this->trainingApplicationSources->getSourceId($source),
-			'price' => ($price || $discount ? $price : null),
-			'vat_rate' => ($vatRate ?: null),
-			'price_vat' => ($priceVat ?: null),
-			'discount' => ($discount ?: null),
+			'price' => ($price !== null && $price !== 0.0) || $discount !== null ? $price : null,
+			'vat_rate' => $vatRate !== null && $vatRate !== 0.0 ? $vatRate : null,
+			'price_vat' => $priceVat !== null && $priceVat !== 0.0 ? $priceVat : null,
+			'discount' => $discount,
 			'invoice_id' => ((int)$invoiceId ?: null),
 			'paid' => $paidDate,
 			'paid_timezone' => $timeZone,

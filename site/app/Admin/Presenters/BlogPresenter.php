@@ -35,7 +35,8 @@ class BlogPresenter extends BasePresenter
 	{
 		$posts = [];
 		foreach ($this->blogPosts->getAll() as $post) {
-			$posts[($post->getPublishTime()?->getTimestamp() ?: PHP_INT_MAX) . '|' . $post->getSlug()] = $post;
+			$timestamp = $post->getPublishTime()?->getTimestamp();
+			$posts[($timestamp !== null ? $timestamp : PHP_INT_MAX) . '|' . $post->getSlug()] = $post;
 		}
 		krsort($posts, SORT_NATURAL);
 		$this->template->posts = $posts;

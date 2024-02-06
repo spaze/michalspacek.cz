@@ -222,7 +222,7 @@ readonly class BlogPosts
 				$postId,
 			);
 			$editedAt = new DateTime();
-			if ($editSummary) {
+			if ($editSummary !== null) {
 				$timeZone = $editedAt->getTimezone()->getName();
 				$this->database->query(
 					'INSERT INTO blog_post_edits',

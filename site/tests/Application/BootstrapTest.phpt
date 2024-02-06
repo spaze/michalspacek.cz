@@ -24,7 +24,7 @@ class BootstrapTest extends TestCase
 
 	public function __construct()
 	{
-		if (!Debugger::$logDirectory) {
+		if (Debugger::$logDirectory === null) {
 			throw new ShouldNotHappenException('Call Nette\Bootstrap\Configurator::enableTracy() first, possibly in MichalSpacekCz\Application\Bootstrap::createConfigurator()');
 		}
 		$this->exceptionLog = Debugger::$logDirectory . '/' . ILogger::EXCEPTION . '.log';
@@ -42,7 +42,7 @@ class BootstrapTest extends TestCase
 			echo file_get_contents($this->exceptionLog);
 			unlink($this->exceptionLog);
 		}
-		if ($this->tempLog && file_exists($this->tempLog)) {
+		if ($this->tempLog !== null && file_exists($this->tempLog)) {
 			rename($this->tempLog, $this->exceptionLog);
 		}
 	}

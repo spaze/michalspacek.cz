@@ -52,7 +52,7 @@ readonly class TrainingLocales
 	 */
 	public function getLocaleLinkParams(?string $trainingAction, array $defaultParams): array
 	{
-		if (!$trainingAction) {
+		if ($trainingAction === null) {
 			return $this->localeLinkGenerator->defaultParams($defaultParams);
 		}
 		$params = [];

@@ -30,7 +30,7 @@ readonly class TrainingApplicationMultipleFormFactory
 		$form = $this->factory->create();
 		$applicationsContainer = $form->addContainer('applications');
 		$applications = $this->httpInput->getPostArray('applications');
-		$count = max($applications ? count($applications) : 1, 1);
+		$count = max($applications !== null ? count($applications) : 1, 1);
 		for ($i = 0; $i < $count; $i++) {
 			$dataContainer = $applicationsContainer->addContainer($i);
 			$this->trainingControlsFactory->addAttendee($dataContainer);

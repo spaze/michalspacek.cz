@@ -41,7 +41,7 @@ readonly class DateTimeFactory
 	 */
 	public function createFrom(DateTimeInterface $dateTime, ?string $timezoneId = null): DateTimeImmutable
 	{
-		$timezone = $timezoneId ? $this->dateTimeZoneFactory->get($timezoneId) : null;
+		$timezone = $timezoneId !== null ? $this->dateTimeZoneFactory->get($timezoneId) : null;
 		try {
 			return new DateTimeImmutable($dateTime->format('Y-m-d H:i:s.u'), $timezone);
 		} catch (Exception $e) {

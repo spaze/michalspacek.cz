@@ -51,7 +51,7 @@ readonly class TrainingApplicationAdminFormFactory
 		$upcoming = $this->upcomingTrainingDates->getPublicUpcoming();
 		$dates = [];
 		$dateId = $application->getDateId();
-		if ($dateId) {
+		if ($dateId !== null) {
 			$dates[$dateId] = $this->trainingDates->formatDateVenueForAdmin($this->trainingDates->get($dateId));
 		}
 		if (isset($upcoming[$application->getTrainingAction()])) {
@@ -160,7 +160,7 @@ readonly class TrainingApplicationAdminFormFactory
 			'companyTaxId' => $application->getCompanyTaxId(),
 			'note' => $application->getNote(),
 			'price' => $application->getPrice(),
-			'vatRate' => $vatRate ? $vatRate * 100 : $vatRate,
+			'vatRate' => $vatRate !== null ? $vatRate * 100 : null,
 			'priceVat' => $application->getPriceVat(),
 			'discount' => $application->getDiscount(),
 			'invoiceId' => $application->getInvoiceId(),

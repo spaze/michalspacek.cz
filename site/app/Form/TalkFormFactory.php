@@ -109,8 +109,8 @@ readonly class TalkFormFactory
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($talk) {
-				$removeVideoThumbnail = $values->removeVideoThumbnail ?? false;
-				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
+				$removeVideoThumbnail = (bool)$values->removeVideoThumbnail;
+				$removeVideoThumbnailAlternative = (bool)$values->removeVideoThumbnailAlternative;
 				$thumbnailFilename = $talk->getVideo()->getThumbnailFilename();
 				$thumbnailAlternativeFilename = $talk->getVideo()->getThumbnailAlternativeFilename();
 				$this->talks->update(
@@ -141,10 +141,10 @@ readonly class TalkFormFactory
 					$values->publishSlides,
 				);
 				$this->videoThumbnails->saveVideoThumbnailFiles($talk->getId(), $values);
-				if ($removeVideoThumbnail && $thumbnailFilename) {
+				if ($removeVideoThumbnail && $thumbnailFilename !== null) {
 					$this->videoThumbnails->deleteFile($talk->getId(), $thumbnailFilename);
 				}
-				if ($removeVideoThumbnailAlternative && $thumbnailAlternativeFilename) {
+				if ($removeVideoThumbnailAlternative && $thumbnailAlternativeFilename !== null) {
 					$this->videoThumbnails->deleteFile($talk->getId(), $thumbnailAlternativeFilename);
 				}
 				$message = Html::el()->setText('Přednáška upravena ');
