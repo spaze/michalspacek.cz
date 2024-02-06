@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
+use MichalSpacekCz\Http\Exceptions\HttpRedirectDestinationUrlMalformedException;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
@@ -41,6 +42,11 @@ class RedirectionsTest extends TestCase
 			$this->database->setFetchFieldDefaultResult(3.14);
 			$this->redirections->getDestination(new UrlScript('https://com.example/waldo'));
 		}, ShouldNotHappenException::class, "Redirect destination for '/waldo' is a float not a string");
+
+		Assert::exception(function (): void {
+			$this->database->setFetchFieldDefaultResult('https://:80');
+			$this->redirections->getDestination(new UrlScript());
+		}, HttpRedirectDestinationUrlMalformedException::class, "Redirect destination 'https://:80' is a seriously malformed URL");
 	}
 
 }
