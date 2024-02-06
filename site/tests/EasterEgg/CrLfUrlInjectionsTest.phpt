@@ -27,7 +27,7 @@ class CrLfUrlInjectionsTest extends TestCase
 
 
 	#[Override]
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		$this->response->reset();
 	}
