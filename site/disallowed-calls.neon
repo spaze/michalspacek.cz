@@ -32,6 +32,7 @@ parameters:
 				- 'MichalSpacekCz\Http\Cookies\Cookies::getString()'
 				- 'MichalSpacekCz\Http\Cookies\Cookies::set()'
 				- 'MichalSpacekCz\Http\Cookies\Cookies::deleteCookie()'
+				- 'MichalSpacekCz\EasterEgg\CrLfUrlInjections::detectAttempt()' # Bot trolling, not for humans, the cookie is always expired
 		-
 			method:
 				- 'Nette\Application\Request::getPost()'

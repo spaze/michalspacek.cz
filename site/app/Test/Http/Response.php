@@ -11,6 +11,8 @@ class Response implements IResponse
 
 	private int $code = IResponse::S200_OK;
 
+	private ?string $reason = null;
+
 	/** @var array<string, string> */
 	private array $headers = [];
 
@@ -40,9 +42,10 @@ class Response implements IResponse
 
 
 	#[Override]
-	public function setCode(int $code, string $reason = null): self
+	public function setCode(int $code, ?string $reason = null): self
 	{
 		$this->code = $code;
+		$this->reason = $reason;
 		return $this;
 	}
 
@@ -51,6 +54,12 @@ class Response implements IResponse
 	public function getCode(): int
 	{
 		return $this->code;
+	}
+
+
+	public function getReason(): ?string
+	{
+		return $this->reason;
 	}
 
 
@@ -205,6 +214,14 @@ class Response implements IResponse
 	public function sent(bool $isSent): void
 	{
 		$this->isSent = $isSent;
+	}
+
+
+	public function reset(): void
+	{
+		$this->headers = [];
+		$this->allHeaders = [];
+		$this->cookies = [];
 	}
 
 }

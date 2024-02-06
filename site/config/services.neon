@@ -29,6 +29,7 @@ services:
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
 	- MichalSpacekCz\DateTime\DateTimeZoneFactory
+	- MichalSpacekCz\EasterEgg\CrLfUrlInjections
 	- MichalSpacekCz\EasterEgg\FourOhFourButFound
 	- MichalSpacekCz\EasterEgg\NetteCve202015227
 	- MichalSpacekCz\EasterEgg\WinterIsComing
