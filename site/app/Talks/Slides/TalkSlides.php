@@ -169,8 +169,11 @@ class TalkSlides
 			throw new MissingContentTypeException();
 		}
 		if ($removeFile && $originalFile !== null && empty($this->otherSlides[$originalFile])) {
-			$this->deleteFiles[] = $renamed = $this->talkMediaResources->getImageFilename($talkId, "__del__{$originalFile}");
-			rename($this->talkMediaResources->getImageFilename($talkId, $originalFile), $renamed);
+			$imageFilename = $this->talkMediaResources->getImageFilename($talkId, $originalFile);
+			if (file_exists($imageFilename)) {
+				$this->deleteFiles[] = $renamed = $this->talkMediaResources->getImageFilename($talkId, "__del__{$originalFile}");
+				rename($imageFilename, $renamed);
+			}
 		}
 		$name = $this->getSlideImageFileBasename($contents);
 		$extension = $getExtension($contentType);
