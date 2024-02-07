@@ -88,7 +88,7 @@ readonly class TexyPhraseHandler
 			$link->URL = $presenter->link('//:' . self::TRAINING_ACTION, $name);
 			$el = HtmlElement::el();
 			$trainingLink = $this->proceed($invocation, $phrase, $content, $modifier, $link);
-			if ($trainingLink) {
+			if ($trainingLink !== false) {
 				$el->add($trainingLink);
 				$el->add($texy->protect($this->getTrainingSuffix($name), $texy::CONTENT_TEXTUAL));
 				return $el;

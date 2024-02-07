@@ -188,7 +188,7 @@ readonly class Technicolor implements UpcWiFiRouter
 	{
 		preg_match('/^[a-z]+/i', $serial, $matches);
 		$prefix = current($matches);
-		if (!$prefix || !in_array($prefix, self::PREFIXES)) {
+		if ($prefix === false || !in_array($prefix, self::PREFIXES)) {
 			throw new UpcKeysApiUnknownPrefixException($serial);
 		}
 		return new WiFiKey($serial, $prefix, null, null, $key, WiFiBand::from($type));

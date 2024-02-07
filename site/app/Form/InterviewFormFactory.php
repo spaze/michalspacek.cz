@@ -73,8 +73,8 @@ readonly class InterviewFormFactory
 			$videoThumbnailBasename = $this->videoThumbnails->getUploadedMainFileBasename($values);
 			$videoThumbnailBasenameAlternative = $this->videoThumbnails->getUploadedAlternativeFileBasename($values);
 			if ($interview) {
-				$removeVideoThumbnail = $values->removeVideoThumbnail ?? false;
-				$removeVideoThumbnailAlternative = $values->removeVideoThumbnailAlternative ?? false;
+				$removeVideoThumbnail = (bool)$values->removeVideoThumbnail;
+				$removeVideoThumbnailAlternative = (bool)$values->removeVideoThumbnailAlternative;
 				$thumbnailFilename = $interview->getVideo()->getThumbnailFilename();
 				$thumbnailAlternativeFilename = $interview->getVideo()->getThumbnailAlternativeFilename();
 				$this->interviews->update(
@@ -94,10 +94,10 @@ readonly class InterviewFormFactory
 					$values->sourceHref,
 				);
 				$this->videoThumbnails->saveVideoThumbnailFiles($interview->getId(), $values);
-				if ($removeVideoThumbnail && $thumbnailFilename) {
+				if ($removeVideoThumbnail && $thumbnailFilename !== null) {
 					$this->videoThumbnails->deleteFile($interview->getId(), $thumbnailFilename);
 				}
-				if ($removeVideoThumbnailAlternative && $thumbnailAlternativeFilename) {
+				if ($removeVideoThumbnailAlternative && $thumbnailAlternativeFilename !== null) {
 					$this->videoThumbnails->deleteFile($interview->getId(), $thumbnailAlternativeFilename);
 				}
 			} else {

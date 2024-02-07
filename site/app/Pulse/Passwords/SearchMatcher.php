@@ -18,7 +18,7 @@ readonly class SearchMatcher
 		?string $search,
 		private StorageRegistry $storageRegistry,
 	) {
-		$this->search = $search ? Strings::webalize($search) : null;
+		$this->search = $search !== null ? Strings::webalize($search) : null;
 	}
 
 
@@ -36,7 +36,7 @@ readonly class SearchMatcher
 			$result->addCompanyNameMatch($company);
 		}
 		$tradeName = $company->getTradeName();
-		if ($tradeName && str_contains(Strings::webalize($tradeName), $this->search)) {
+		if ($tradeName !== null && str_contains(Strings::webalize($tradeName), $this->search)) {
 			$match = true;
 			$result->addTradeNameMatch($company);
 		}

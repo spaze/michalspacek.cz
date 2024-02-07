@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
+use MichalSpacekCz\Http\Exceptions\HttpRedirectDestinationUrlMalformedException;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use Nette\Http\UrlScript;
@@ -24,7 +25,11 @@ readonly class Redirections
 		} elseif (!is_string($destination)) {
 			throw new ShouldNotHappenException(sprintf("Redirect destination for '%s' is a %s not a string", $sourceUrl->getPath(), get_debug_type($destination)));
 		}
-		if (!parse_url($destination, PHP_URL_HOST)) {
+		$destinationUrl = parse_url($destination);
+		if ($destinationUrl === false) {
+			throw new HttpRedirectDestinationUrlMalformedException($destination);
+		}
+		if (!isset($destinationUrl['host'])) {
 			$destination = $sourceUrl->withPath($destination)->getAbsoluteUrl();
 		}
 		return $destination;

@@ -95,7 +95,7 @@ readonly class TrainingMails
 		foreach ($this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$dateId = $application->getDateId();
-				if ($dateId && $this->trainingDates->get($dateId)->getStatus() === TrainingDateStatus::Confirmed) {
+				if ($dateId !== null && $this->trainingDates->get($dateId)->getStatus() === TrainingDateStatus::Confirmed) {
 					$application->setNextStatus(Statuses::STATUS_INVITED);
 					$applications[$application->getId()] = $application;
 				}
@@ -188,7 +188,7 @@ readonly class TrainingMails
 		$template->setFile($message->getFilename());
 		if (!$application->isRemote()) {
 			$venueAction = $application->getVenueAction();
-			if (!$venueAction) {
+			if ($venueAction === null) {
 				throw new ShouldNotHappenException("Application id '{$application->getId()}' for in-person training should have a venue set at this point");
 			}
 			$template->venue = $this->trainingVenues->get($venueAction);
@@ -205,13 +205,13 @@ readonly class TrainingMails
 	 */
 	private function sendMail(?string $recipientAddress, ?string $recipientName, string $subject, DefaultTemplate $template, array $attachments = [], ?string $cc = null): void
 	{
-		if (!$recipientAddress || !$recipientName) {
+		if ($recipientAddress === null || $recipientName === null) {
 			throw new ShouldNotHappenException(sprintf("To send an email, training application must have both name and address set, this one has '%s <%s>'", $recipientName ?? '<null>', $recipientAddress ?? '<null>'));
 		}
 		$mail = new Message();
 		foreach ($attachments as $name => $file) {
 			$contents = file_get_contents($file);
-			if (!$contents) {
+			if ($contents === false) {
 				throw new RuntimeException("Can't read file {$file}");
 			}
 			$mail->addAttachment($name, $contents);
@@ -222,7 +222,7 @@ readonly class TrainingMails
 			->setSubject($subject)
 			->setBody((string)$template)
 			->clearHeader('X-Mailer'); // Hide Nette Mailer banner
-		if ($cc) {
+		if ($cc !== null) {
 			$mail->addCc($cc);
 		}
 		$this->mailer->send($mail);

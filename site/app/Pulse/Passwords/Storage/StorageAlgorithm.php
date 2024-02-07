@@ -44,13 +44,13 @@ class StorageAlgorithm
 	 */
 	private function formatFullAlgo(string $name, ?array $inner, ?array $outer): ?string
 	{
-		if (!$inner && !$outer) {
+		if (($inner === null || $inner === []) && ($outer === null || $outer === [])) {
 			return null;
 		}
 
 		$result = '';
 		$count = 0;
-		if ($outer) {
+		if ($outer !== null) {
 			for ($i = count($outer) - 1; $i >= 0; $i--) {
 				$result .= $outer[$i] . '(';
 				$count++;
@@ -58,7 +58,7 @@ class StorageAlgorithm
 		}
 		$result .= $name . '(';
 		$count++;
-		if ($inner) {
+		if ($inner !== null) {
 			for ($i = count($inner) - 1; $i >= 0; $i--) {
 				$result .= $inner[$i] . '(';
 				$count++;

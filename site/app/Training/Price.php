@@ -48,7 +48,7 @@ readonly class Price
 
 	public function getPriceVat(): ?float
 	{
-		if ($this->priceVat) {
+		if ($this->priceVat !== null) {
 			return $this->priceVat;
 		}
 

@@ -141,7 +141,7 @@ readonly class VideoThumbnails
 			return null;
 		}
 		$contentType = $thumbnail->getContentType();
-		if (!$contentType) {
+		if ($contentType === null) {
 			throw new MissingContentTypeException();
 		}
 		return 'video-thumbnail.' . $getExtension($contentType);
@@ -154,11 +154,11 @@ readonly class VideoThumbnails
 	public function saveVideoThumbnailFiles(int $id, stdClass $values): void
 	{
 		$basename = $this->getUploadedMainFileBasename($values);
-		if ($basename) {
+		if ($basename !== null) {
 			$values->videoThumbnail->move($this->mediaResources->getImageFilename($id, $basename));
 		}
 		$basename = $this->getUploadedAlternativeFileBasename($values);
-		if ($basename) {
+		if ($basename !== null) {
 			$values->videoThumbnailAlternative->move($this->mediaResources->getImageFilename($id, $basename));
 		}
 	}

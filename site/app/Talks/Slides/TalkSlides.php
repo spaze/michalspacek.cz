@@ -92,7 +92,7 @@ class TalkSlides
 		);
 
 		$filenames = [];
-		if ($talk->getFilenamesTalkId()) {
+		if ($talk->getFilenamesTalkId() !== null) {
 			$result = $this->database->fetchAll(
 				'SELECT
 					number,
@@ -118,19 +118,25 @@ class TalkSlides
 				$filenameAlternative = $row->filenameAlternative;
 				$filenamesTalkId = null;
 			}
+			if ($filename === '') {
+				$filename = null;
+			}
+			if ($filenameAlternative === '') {
+				$filenameAlternative = null;
+			}
 			$slide = new TalkSlide(
 				$row->id,
 				$row->alias,
 				$row->number,
-				$filename ?: null,
-				$filenameAlternative ?: null,
+				$filename,
+				$filenameAlternative,
 				$filenamesTalkId,
 				$row->title,
 				$this->texyFormatter->format($row->speakerNotesTexy),
 				$row->speakerNotesTexy,
-				$filename ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talk->getId(), $filename) : null,
-				$filenameAlternative ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talk->getId(), $filenameAlternative) : null,
-				$filenameAlternative ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($filenameAlternative, PATHINFO_EXTENSION)) : null,
+				$filename !== null ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talk->getId(), $filename) : null,
+				$filenameAlternative !== null ? $this->talkMediaResources->getImageUrl($filenamesTalkId ?? $talk->getId(), $filenameAlternative) : null,
+				$filenameAlternative !== null ? $this->supportedImageFileFormats->getAlternativeContentTypeByExtension(pathinfo($filenameAlternative, PATHINFO_EXTENSION)) : null,
 			);
 			$result->add($slide);
 		}
@@ -159,12 +165,15 @@ class TalkSlides
 			throw new SlideImageUploadFailedException($replace->getError());
 		}
 		$contentType = $replace->getContentType();
-		if (!$contentType) {
+		if ($contentType === null) {
 			throw new MissingContentTypeException();
 		}
-		if ($removeFile && !empty($originalFile) && empty($this->otherSlides[$originalFile])) {
-			$this->deleteFiles[] = $renamed = $this->talkMediaResources->getImageFilename($talkId, "__del__{$originalFile}");
-			rename($this->talkMediaResources->getImageFilename($talkId, $originalFile), $renamed);
+		if ($removeFile && $originalFile !== null && empty($this->otherSlides[$originalFile])) {
+			$imageFilename = $this->talkMediaResources->getImageFilename($talkId, $originalFile);
+			if (file_exists($imageFilename)) {
+				$this->deleteFiles[] = $renamed = $this->talkMediaResources->getImageFilename($talkId, "__del__{$originalFile}");
+				rename($imageFilename, $renamed);
+			}
 		}
 		$name = $this->getSlideImageFileBasename($contents);
 		$extension = $getExtension($contentType);
@@ -178,7 +187,7 @@ class TalkSlides
 		}
 		$this->decrementOtherSlides($originalFile);
 		$this->incrementOtherSlides("{$name}.{$extension}");
-		if ($imageSize && !($width && $height)) {
+		if ($imageSize !== null && !($width && $height)) {
 			[$width, $height] = $imageSize;
 		}
 		return "{$name}.{$extension}";
@@ -320,7 +329,7 @@ class TalkSlides
 
 	private function decrementOtherSlides(?string $filename): void
 	{
-		if (!empty($filename) && $this->otherSlides[$filename] > 0) {
+		if ($filename !== null && $this->otherSlides[$filename] > 0) {
 			$this->otherSlides[$filename]--;
 		}
 	}

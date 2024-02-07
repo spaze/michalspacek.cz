@@ -11,13 +11,13 @@ class BlogPostDoesNotExistException extends BlogPostException
 	public function __construct(?int $id = null, ?string $name = null, ?string $previewKey = null, ?Throwable $previous = null)
 	{
 		$message = 'Post';
-		if ($id) {
+		if ($id !== null) {
 			$message .= " id {$id}";
 		}
-		if ($name) {
+		if ($name !== null) {
 			$message .= " name {$name}";
 		}
-		if ($previewKey) {
+		if ($previewKey !== null) {
 			$message .= " preview key {$previewKey}";
 		}
 		parent::__construct("{$message} doesn't exist", previous: $previous);

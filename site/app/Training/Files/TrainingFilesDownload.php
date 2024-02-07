@@ -72,8 +72,8 @@ readonly class TrainingFilesDownload
 			throw new BadRequestException(sprintf('No file %s for application id %s', $filename, $applicationId));
 		}
 		$pathname = $file->getFileInfo()->getPathname();
-		$fileInfo = new finfo(FILEINFO_MIME_TYPE);
-		return new FileResponse($pathname, null, $fileInfo->file($pathname) ?: null);
+		$mimeType = (new finfo(FILEINFO_MIME_TYPE))->file($pathname);
+		return new FileResponse($pathname, null, $mimeType !== false ? $mimeType : null);
 	}
 
 

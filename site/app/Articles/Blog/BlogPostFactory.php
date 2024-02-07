@@ -89,14 +89,14 @@ readonly class BlogPostFactory
 			$translationGroupId,
 			$this->texyFormatter->format($titleTexy, $texy),
 			$titleTexy,
-			$leadTexy ? $this->texyFormatter->formatBlock($leadTexy, $texy) : null,
+			$leadTexy !== null ? $this->texyFormatter->formatBlock($leadTexy, $texy) : null,
 			$leadTexy,
 			$this->texyFormatter->formatBlock($textTexy, $texy),
 			$textTexy,
 			$published,
 			$needsPreviewKey,
 			$previewKey,
-			$originallyTexy ? $this->texyFormatter->formatBlock($originallyTexy, $texy) : null,
+			$originallyTexy !== null ? $this->texyFormatter->formatBlock($originallyTexy, $texy) : null,
 			$originallyTexy,
 			$ogImage,
 			$tags,
@@ -104,7 +104,7 @@ readonly class BlogPostFactory
 			$recommended,
 			$twitterCard,
 			$this->getHref($slug, $needsPreviewKey ? $previewKey : null, $locale),
-			$id ? $this->edits->getEdits($id) : [],
+			$id !== null ? $this->edits->getEdits($id) : [],
 			$cspSnippets,
 			$allowedTagsGroups,
 			$omitExports,
@@ -154,7 +154,7 @@ readonly class BlogPostFactory
 			'slug' => $slug,
 			'preview' => $previewKey,
 		];
-		if (!$locale || $locale === $this->translator->getDefaultLocale()) {
+		if ($locale === null || $locale === $this->translator->getDefaultLocale()) {
 			return $this->linkGenerator->link('Www:Post:', $params);
 		} else {
 			$links = $this->localeLinkGenerator->links('Www:Post:', $this->localeLinkGenerator->defaultParams($params));

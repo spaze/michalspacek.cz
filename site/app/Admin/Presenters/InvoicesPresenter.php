@@ -39,7 +39,7 @@ class InvoicesPresenter extends BasePresenter
 			$unpaidApplications = $this->trainingApplications->getValidUnpaidByDate($date->getId());
 			foreach ($unpaidApplications as $application) {
 				$invoiceId = $application->getInvoiceId();
-				if ($invoiceId) {
+				if ($invoiceId !== null) {
 					$this->allUnpaidInvoiceIds[] = $invoiceId;
 				}
 			}

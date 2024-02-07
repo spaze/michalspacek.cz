@@ -62,7 +62,7 @@ readonly class Sites
 
 	public function generateId(?int $siteId, int $companyId): string
 	{
-		return $siteId ? (string)$siteId : self::ALL . "-{$companyId}";
+		return $siteId !== null ? (string)$siteId : self::ALL . "-{$companyId}";
 	}
 
 }

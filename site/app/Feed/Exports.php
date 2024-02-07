@@ -42,17 +42,17 @@ readonly class Exports
 
 	public function getArticles(string $self, ?string $filter = null): Feed
 	{
-		$key = sprintf('Atom/%s/%s', $this->translator->getDefaultLocale(), $filter ? "ArticlesByTag/{$filter}" : 'AllArticles');
+		$key = sprintf('Atom/%s/%s', $this->translator->getDefaultLocale(), $filter !== null ? "ArticlesByTag/{$filter}" : 'AllArticles');
 		$feed = $this->cache->load($key, function (array|null &$dependencies) use ($self, $filter): Feed {
-			$nearest = ($filter ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate());
+			$nearest = $filter !== null ? $this->articles->getNearestPublishDateByTags([$filter]) : $this->articles->getNearestPublishDate();
 			$dependencies[Cache::Expire] = ($nearest instanceof DateTime ? $nearest->modify('+1 minute') : null);
 
-			$title = ($filter ? $this->texyFormatter->translate('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.label.allarticles'));
+			$title = $filter !== null ? $this->texyFormatter->translate('messages.label.articlesbytag', [$filter]) : $this->texyFormatter->translate('messages.label.allarticles');
 			$feed = new Feed($self, "Michal Špaček: {$title}");
 			$feed->setLinkSelf($self);
 			$feed->setAuthor(new Person('Michal Špaček'));
 
-			$articles = ($filter ? $this->articles->getAllByTags([$filter], self::ITEMS) : $this->articles->getAll(self::ITEMS));
+			$articles = $filter !== null ? $this->articles->getAllByTags([$filter], self::ITEMS) : $this->articles->getAll(self::ITEMS);
 			if (!$articles) {
 				throw new BadRequestException('No articles');
 			}

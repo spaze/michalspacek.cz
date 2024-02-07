@@ -48,7 +48,7 @@ readonly class TrainingApplicationFormFactory
 		$multipleDates = count($dates) > 1;
 		foreach ($dates as $date) {
 			$el = Html::el()->setText($this->trainingDates->formatDateVenueForUser($date));
-			if ($date->getLabel()) {
+			if ($date->getLabel() !== null) {
 				if ($multipleDates) {
 					$el->addText(" [{$date->getLabel()}]");
 				} else {

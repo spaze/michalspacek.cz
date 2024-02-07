@@ -48,7 +48,7 @@ readonly class TrainingMailsOutboxFormFactory
 				case Statuses::STATUS_INVITED:
 					$checked = (bool)$application->getDateId();
 					$disabled = !$checked;
-					if (!$application->getDateId()) {
+					if ($application->getDateId() === null) {
 						$sendCheckboxTitle['dateId'] = 'Není vybrán datum';
 					}
 					break;
@@ -64,26 +64,38 @@ readonly class TrainingMailsOutboxFormFactory
 					break;
 				case Statuses::STATUS_INVOICE_SENT:
 				case Statuses::STATUS_INVOICE_SENT_AFTER:
-					$checked = ($application->getPrice() && $application->getVatRate() && $application->getPriceVat());
+					$price = $application->getPrice();
+					if ($price === 0.0) {
+						$price = null;
+					}
+					$vatRate = $application->getVatRate();
+					if ($vatRate === 0.0) {
+						$vatRate = null;
+					}
+					$priceVat = $application->getPriceVat();
+					if ($priceVat === 0.0) {
+						$priceVat = null;
+					}
+					$checked = $price !== null && $vatRate !== null && $priceVat !== null;
 					$disabled = !$checked;
-					if (!$application->getPrice()) {
+					if ($price === null) {
 						$sendCheckboxTitle['price'] = 'Chybí cena';
 					}
-					if (!$application->getVatRate()) {
+					if ($vatRate === null) {
 						$sendCheckboxTitle['vatRate'] = 'Chybí DPH';
 					}
-					if (!$application->getPriceVat()) {
+					if ($priceVat === null) {
 						$sendCheckboxTitle['priceVat'] = 'Chybí cena s DPH';
 					}
 					break;
 				case Statuses::STATUS_REMINDED:
 					if ($application->isRemote()) {
-						$checked = $filesCount > 0 && $application->getRemoteUrl();
+						$checked = $filesCount > 0 && $application->getRemoteUrl() !== null;
 						$disabled = !$checked;
 						if ($filesCount === 0) {
 							$sendCheckboxTitle['files'] = 'Není nahrán žádný soubor';
 						}
-						if (!$application->getRemoteUrl()) {
+						if ($application->getRemoteUrl() === null) {
 							$sendCheckboxTitle['remoteUrl'] = 'Chybí online URL';
 						}
 					}
@@ -104,7 +116,7 @@ readonly class TrainingMailsOutboxFormFactory
 				case Statuses::STATUS_MATERIALS_SENT:
 					$feedbackRequestCheckbox = $applicationIdsContainer->addCheckbox('feedbackRequest', 'Požádat o zhodnocení')
 						->setDefaultValue($application->getFeedbackHref());
-					if (!$application->getFeedbackHref()) {
+					if ($application->getFeedbackHref() === null) {
 						$feedbackRequestCheckbox->setHtmlAttribute('title', 'Odkaz na feedback formulář není nastaven')
 							->setDisabled(true);
 					}
@@ -140,7 +152,7 @@ readonly class TrainingMailsOutboxFormFactory
 					continue;
 				}
 				$nextStatus = $applications[$id]->getNextStatus();
-				if (!$nextStatus) {
+				if ($nextStatus === null) {
 					throw new ShouldNotHappenException("Training application id '{$id}' should have a next status set");
 				}
 				$additional = trim($data->additional);

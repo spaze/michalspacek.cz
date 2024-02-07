@@ -118,13 +118,13 @@ class TrainingsPresenter extends BasePresenter
 		} catch (TrainingDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-		if ($training->getDiscontinuedId()) {
+		if ($training->getDiscontinuedId() !== null) {
 			throw new BadRequestException("I don't do {$name} training anymore");
 		}
 
 		$session = $this->getTrainingSessionSection();
 
-		$application = $param ? $this->trainingApplications->getApplicationByToken($param) : null;
+		$application = $param !== null ? $this->trainingApplications->getApplicationByToken($param) : null;
 		if (!$application) {
 			$session->removeApplicationValues();
 			$this->redirect('training', $name);
@@ -159,7 +159,7 @@ class TrainingsPresenter extends BasePresenter
 		if (!$this->training) {
 			throw new ShouldNotHappenException('actionTraining() will be called first');
 		}
-		if ($this->training->getDiscontinuedId()) {
+		if ($this->training->getDiscontinuedId() !== null) {
 			throw new BadRequestException("No signups for discontinued trainings id {$this->training->getDiscontinuedId()}");
 		}
 		return $this->trainingApplicationPreliminaryFactory->create(
@@ -245,7 +245,7 @@ class TrainingsPresenter extends BasePresenter
 		} catch (TrainingDoesNotExistException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
-		if ($training->getDiscontinuedId()) {
+		if ($training->getDiscontinuedId() !== null) {
 			throw new BadRequestException("I don't do {$name} training anymore");
 		}
 
@@ -257,7 +257,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$session = $this->getTrainingSessionSection();
 		$dateId = $session->getDateId();
-		if (!$dateId) {
+		if ($dateId === null) {
 			$this->redirect('training', $name);
 		}
 

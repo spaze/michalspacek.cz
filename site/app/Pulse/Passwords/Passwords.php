@@ -75,7 +75,7 @@ readonly class Passwords
 		$storages = $this->storageRegistryFactory->get($this->database->fetchAll($query, $orderBy), $sort);
 		$searchMatcher = new SearchMatcher($search, $storages);
 		foreach ($storages->getSites() as $site) {
-			if (($rating && $site->getRating()->name !== $rating) || !$searchMatcher->match($site)) {
+			if (($rating !== null && $site->getRating()->name !== $rating) || !$searchMatcher->match($site)) {
 				$storages->removeStorageSite($site);
 			}
 		}
@@ -247,10 +247,10 @@ readonly class Passwords
 				'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
 				'key_password_algos' => $algoId,
 				'key_sites' => ($siteId === Sites::ALL ? null : $siteId),
-				'from' => (empty($from) ? null : new DateTime($from)),
+				'from' => $from !== '' ? new DateTime($from) : null,
 				'from_confirmed' => $fromConfirmed,
-				'attributes' => (empty($attributes) ? null : $attributes),
-				'note' => (empty($note) ? null : $note),
+				'attributes' => $attributes !== null && $attributes !== '' ? $attributes : null,
+				'note' => ($note !== null && $note !== '') ? $note : null,
 			],
 		);
 
@@ -320,11 +320,11 @@ readonly class Passwords
 		foreach ($values->disclosure->new as $disclosure) {
 			if ($disclosure->url) {
 				$disclosureId = $this->passwordHashingDisclosures->getDisclosureId($disclosure->url, $disclosure->archive);
-				if (!$disclosureId) {
+				if ($disclosureId === null) {
 					$disclosureId = $this->passwordHashingDisclosures->addDisclosure($disclosure->disclosureType, $disclosure->url, $disclosure->archive, $disclosure->note, $disclosure->published);
 				}
 				$storageId = $this->getStorageId($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
-				if (!$storageId) {
+				if ($storageId === null) {
 					$storageId = $this->addStorageData($companyId, $algoId, $siteId, $values->algo->from, $values->algo->fromConfirmed, $values->algo->attributes, $values->algo->note);
 				}
 				$this->pairDisclosureStorage($disclosureId, $storageId);

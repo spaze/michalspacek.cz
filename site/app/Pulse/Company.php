@@ -42,7 +42,8 @@ readonly class Company
 
 	public function getDisplayName(): string
 	{
-		return $this->getTradeName() ?: $this->getCompanyName();
+		$tradeName = $this->getTradeName();
+		return $tradeName !== null ? $tradeName : $this->getCompanyName();
 	}
 
 

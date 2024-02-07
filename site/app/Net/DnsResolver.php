@@ -18,7 +18,7 @@ class DnsResolver
 	public function getRecords(string $hostname, int $type): array
 	{
 		$records = @dns_get_record($hostname, $type); // intentionally @, warning converted to exception
-		if (!$records) {
+		if ($records === false) {
 			throw new DnsGetRecordException(Helpers::getLastError());
 		}
 		$result = [];

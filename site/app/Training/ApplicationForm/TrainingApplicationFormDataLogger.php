@@ -13,7 +13,7 @@ class TrainingApplicationFormDataLogger
 	public function log(stdClass $values, string $name, int $dateId, ?TrainingApplicationSessionSection $sessionSection): void
 	{
 		$applicationId = $sessionSection?->getApplicationIdByDateId($name, $dateId);
-		$logSession = $applicationId ? "id => '{$applicationId}', dateId => '{$dateId}'" : null;
+		$logSession = $applicationId !== null ? "id => '{$applicationId}', dateId => '{$dateId}'" : null;
 		$logValues = [];
 		foreach ((array)$values as $key => $value) {
 			$logValues[] = "{$key} => '{$value}'";

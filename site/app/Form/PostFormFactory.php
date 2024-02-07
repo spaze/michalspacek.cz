@@ -177,21 +177,21 @@ readonly class PostFormFactory
 			$values->slug,
 			$values->locale,
 			$this->locales->getLocaleById($values->locale),
-			empty($values->translationGroup) ? null : $values->translationGroup,
+			$values->translationGroup === '' ? null : $values->translationGroup,
 			$values->title,
-			empty($values->lead) ? null : $values->lead,
+			$values->lead === '' ? null : $values->lead,
 			$values->text,
-			empty($values->published) ? null : new DateTime($values->published),
-			empty($values->previewKey) ? null : $values->previewKey,
-			empty($values->originally) ? null : $values->originally,
-			empty($values->ogImage) ? null : $values->ogImage,
-			empty($values->tags) ? [] : $this->tags->toArray($values->tags),
-			empty($values->tags) ? [] : $this->tags->toSlugArray($values->tags),
+			$values->published === '' ? null : new DateTime($values->published),
+			$values->previewKey === '' ? null : $values->previewKey,
+			$values->originally === '' ? null : $values->originally,
+			$values->ogImage === '' ? null : $values->ogImage,
+			$values->tags === '' ? [] : $this->tags->toArray($values->tags),
+			$values->tags === '' ? [] : $this->tags->toSlugArray($values->tags),
 			$values->recommended ? $this->recommendedLinks->getFromJson($values->recommended) : [],
-			empty($values->twitterCard) ? null : $this->twitterCards->getCard($values->twitterCard),
-			empty($values->cspSnippets) ? [] : $values->cspSnippets,
-			empty($values->allowedTags) ? [] : $values->allowedTags,
-			!empty($values->omitExports),
+			$values->twitterCard === '' ? null : $this->twitterCards->getCard($values->twitterCard),
+			$values->cspSnippets,
+			$values->allowedTags,
+			$values->omitExports,
 		);
 	}
 
@@ -226,7 +226,7 @@ readonly class PostFormFactory
 			'allowedTags' => $post->getAllowedTagsGroups(),
 			'omitExports' => $post->omitExports(),
 		];
-		if ($post->getPreviewKey()) {
+		if ($post->getPreviewKey() !== null) {
 			$values['previewKey'] = $post->getPreviewKey();
 		}
 		$form->setDefaults($values);

@@ -11,7 +11,7 @@ class HttpStreamException extends Exception
 
 	public function __construct(int $notificationCode, ?string $message, int $messageCode, ?Throwable $previous = null)
 	{
-		$message = $message ? trim($message) : '¯\_(ツ)_/¯';
+		$message = $message !== null ? trim($message) : '¯\_(ツ)_/¯';
 		parent::__construct("{$message} ({$notificationCode})", $messageCode, $previous);
 	}
 

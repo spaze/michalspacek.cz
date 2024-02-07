@@ -19,7 +19,7 @@ readonly class TalkLocaleUrls
 	 */
 	public function get(Talk $talk): array
 	{
-		if (!$talk->getTranslationGroupId()) {
+		if ($talk->getTranslationGroupId() === null) {
 			return [];
 		}
 		return $this->database->fetchPairs(

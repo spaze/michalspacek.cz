@@ -205,7 +205,7 @@ class TrainingApplications
 	public function getValidUnpaidByDate(int $dateId): array
 	{
 		return array_values(array_filter($this->getValidByDate($dateId), function (TrainingApplication $value): bool {
-			return $value->getInvoiceId() && !$value->getPaid();
+			return $value->getInvoiceId() !== null && !$value->getPaid();
 		}));
 	}
 

@@ -93,7 +93,7 @@ class Bootstrap
 		$configurator->setTempDirectory(self::SITE_DIR . '/temp');
 
 		$existingFiles = array_filter(self::getConfigurationFiles($extraConfig, $finalConfig), function (?string $path) {
-			return $path && is_file($path);
+			return $path !== null && is_file($path);
 		});
 		foreach ($existingFiles as $filename) {
 			$configurator->addConfig($filename);

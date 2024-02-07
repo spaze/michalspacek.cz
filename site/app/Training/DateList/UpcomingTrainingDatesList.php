@@ -42,8 +42,8 @@ class UpcomingTrainingDatesList extends UiControl implements Countable
 	private function getUpcomingTrainingDates(): array
 	{
 		if ($this->upcomingTrainings === null) {
-			$this->upcomingTrainings = $this->venueId ? $this->upcomingTrainingDates->getPublicUpcomingAtVenue($this->venueId) : $this->upcomingTrainingDates->getPublicUpcoming();
-			if ($this->excludeTraining) {
+			$this->upcomingTrainings = $this->venueId !== null ? $this->upcomingTrainingDates->getPublicUpcomingAtVenue($this->venueId) : $this->upcomingTrainingDates->getPublicUpcoming();
+			if ($this->excludeTraining !== null) {
 				unset($this->upcomingTrainings[$this->excludeTraining]);
 			}
 		}
