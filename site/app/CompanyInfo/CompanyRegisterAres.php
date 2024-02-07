@@ -108,18 +108,17 @@ readonly class CompanyRegisterAres implements CompanyRegister
 
 	private function formatStreet(?string $city, ?string $street, ?int $houseNumber, ?int $streetNumber, ?string $streetLetter): ?string
 	{
-		$result = $street;
-		if (empty($result)) {
-			$result = $city;
-		}
-		if (!empty($streetLetter)) {
+		$result = $street !== null && $street !== '' ? $street : $city;
+		if ($streetLetter !== null && $streetLetter !== '') {
 			$streetNumber = ($streetNumber ?? '') . $streetLetter;
 		}
-		if (!empty($houseNumber) && !empty($streetNumber)) {
+		$hasHouseNumber = $houseNumber !== null && $houseNumber !== 0;
+		$hasStreetNumber = $streetNumber !== null && $streetNumber !== 0;
+		if ($hasHouseNumber && $hasStreetNumber) {
 			$result = "{$result} {$houseNumber}/{$streetNumber}";
-		} elseif (!empty($houseNumber)) {
+		} elseif ($hasHouseNumber) {
 			$result = "{$result} {$houseNumber}";
-		} elseif (!empty($streetNumber)) {
+		} elseif ($hasStreetNumber) {
 			$result = "{$result} {$streetNumber}";
 		}
 		return $result;

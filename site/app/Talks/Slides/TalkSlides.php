@@ -168,7 +168,7 @@ class TalkSlides
 		if ($contentType === null) {
 			throw new MissingContentTypeException();
 		}
-		if ($removeFile && !empty($originalFile) && empty($this->otherSlides[$originalFile])) {
+		if ($removeFile && $originalFile !== null && empty($this->otherSlides[$originalFile])) {
 			$this->deleteFiles[] = $renamed = $this->talkMediaResources->getImageFilename($talkId, "__del__{$originalFile}");
 			rename($this->talkMediaResources->getImageFilename($talkId, $originalFile), $renamed);
 		}
@@ -326,7 +326,7 @@ class TalkSlides
 
 	private function decrementOtherSlides(?string $filename): void
 	{
-		if (!empty($filename) && $this->otherSlides[$filename] > 0) {
+		if ($filename !== null && $this->otherSlides[$filename] > 0) {
 			$this->otherSlides[$filename]--;
 		}
 	}
