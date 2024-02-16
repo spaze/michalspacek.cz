@@ -259,7 +259,7 @@ class TalkSlides
 				if ($removeFiles) {
 					foreach ($this->deleteFiles as $key => $value) {
 						if (unlink($value)) {
-							unset($this->deleteFiles[$key]);
+							array_splice($this->deleteFiles, $key, 1);
 						}
 					}
 				}
