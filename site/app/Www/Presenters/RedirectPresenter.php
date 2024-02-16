@@ -11,7 +11,7 @@ use Nette\Http\IResponse;
 class RedirectPresenter extends BasePresenter
 {
 
-	private const GOOD_NIGHT = 5;
+	private const int GOOD_NIGHT = 5;
 
 
 	public function __construct(
