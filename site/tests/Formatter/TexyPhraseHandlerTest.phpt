@@ -23,7 +23,7 @@ require __DIR__ . '/../bootstrap.php';
 class TexyPhraseHandlerTest extends TestCase
 {
 
-	private const EN_LOCALE = 'en_US';
+	private const string EN_LOCALE = 'en_US';
 
 	private Texy $texy;
 	private string $defaultLocale;

@@ -9,8 +9,8 @@ use Override;
 readonly class Ubee implements UpcWiFiRouter
 {
 
-	private const OUI_UBEE = '647c34';
-	private const PREFIX = 'UAAP';
+	private const string OUI_UBEE = '647c34';
+	private const string PREFIX = 'UAAP';
 
 
 	public function __construct(

@@ -24,7 +24,7 @@ require __DIR__ . '/../bootstrap.php';
 class TexyFormatterTest extends TestCase
 {
 
-	private const TRAINING_ACTION = 'bezpecnost-php-aplikaci';
+	private const string TRAINING_ACTION = 'bezpecnost-php-aplikaci';
 
 	private string $expectedFormatted;
 

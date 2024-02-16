@@ -15,7 +15,7 @@ use Nette\Database\Explorer;
 class TrainingDates
 {
 
-	private const DATA_RETENTION = 30;
+	private const int DATA_RETENTION = 30;
 
 	/** @var list<TrainingDate>|null */
 	private ?array $pastWithPersonalData = null;

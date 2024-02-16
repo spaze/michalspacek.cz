@@ -10,7 +10,7 @@ use Nette\Http\IRequest;
 readonly class FourOhFourButFound
 {
 
-	private const TEMPLATES = [
+	private const array TEMPLATES = [
 		'/etc/passwd' => __DIR__ . '/templates/etcPasswd.html',
 	];
 

@@ -26,7 +26,7 @@ use Tracy\Debugger;
 readonly class TrainingMails
 {
 
-	private const REMINDER_DAYS = 5;
+	private const int REMINDER_DAYS = 5;
 
 
 	public function __construct(

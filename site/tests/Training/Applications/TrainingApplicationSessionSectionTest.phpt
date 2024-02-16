@@ -26,18 +26,18 @@ require __DIR__ . '/../../bootstrap.php';
 class TrainingApplicationSessionSectionTest extends TestCase
 {
 
-	private const APPLICATION_ID = 303;
-	private const DATE_ID = 909;
-	private const NAME = 'Foo';
-	private const EMAIL = 'foo@example.example';
-	private const COMPANY = 'Teh Company';
-	private const STREET = 'Street';
-	private const CITY = 'City';
-	private const ZIP = '303808';
-	private const COUNTRY = 'Country';
-	private const COMPANY_ID = '31337';
-	private const COMPANY_TAX_ID = 'CZ31337';
-	private const NOTE = 'Note';
+	private const int APPLICATION_ID = 303;
+	private const int DATE_ID = 909;
+	private const string NAME = 'Foo';
+	private const string EMAIL = 'foo@example.example';
+	private const string COMPANY = 'Teh Company';
+	private const string STREET = 'Street';
+	private const string CITY = 'City';
+	private const string ZIP = '303808';
+	private const string COUNTRY = 'Country';
+	private const string COMPANY_ID = '31337';
+	private const string COMPANY_TAX_ID = 'CZ31337';
+	private const string NOTE = 'Note';
 
 	private TrainingApplicationSessionSection $trainingApplicationSessionSection;
 	private SessionSection $sessionSection;

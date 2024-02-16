@@ -10,13 +10,13 @@ use MichalSpacekCz\Media\Exceptions\UnsupportedContentTypeException;
 class SupportedImageFileFormats
 {
 
-	private const SUPPORTED_MAIN_IMAGES = [
+	private const array SUPPORTED_MAIN_IMAGES = [
 		'image/gif' => 'gif',
 		'image/png' => 'png',
 		'image/jpeg' => 'jpg',
 	];
 
-	private const SUPPORTED_ALTERNATIVE_IMAGES = [
+	private const array SUPPORTED_ALTERNATIVE_IMAGES = [
 		'image/webp' => 'webp',
 	];
 

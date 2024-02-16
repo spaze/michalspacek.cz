@@ -33,11 +33,11 @@ use Tracy\Debugger;
 readonly class Manager implements Authenticator
 {
 
-	private const AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
+	private const string AUTH_SELECTOR_TOKEN_SEPARATOR = ':';
 
-	private const TOKEN_PERMANENT_LOGIN = 1;
+	private const int TOKEN_PERMANENT_LOGIN = 1;
 
-	private const TOKEN_RETURNING_USER = 2;
+	private const int TOKEN_RETURNING_USER = 2;
 
 	private string $authCookiesPath;
 

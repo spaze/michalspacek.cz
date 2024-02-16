@@ -27,8 +27,8 @@ use Nette\Utils\JsonException;
 class TalkSlides
 {
 
-	private const SLIDE_MAX_WIDTH = 800;
-	private const SLIDE_MAX_HEIGHT = 450;
+	private const int SLIDE_MAX_WIDTH = 800;
+	private const int SLIDE_MAX_HEIGHT = 450;
 
 	/** @var list<string> */
 	private array $deleteFiles = [];

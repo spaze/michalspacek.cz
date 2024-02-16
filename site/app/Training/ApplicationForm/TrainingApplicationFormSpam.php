@@ -12,7 +12,7 @@ class TrainingApplicationFormSpam
 	/**
 	 * Must be lowercase string, we need `ctype_lower()` to return true in case the field is missing.
 	 */
-	private const FIELD_MISSING_VALUE = 'missing';
+	private const string FIELD_MISSING_VALUE = 'missing';
 
 
 	public function check(stdClass $values): void

@@ -13,14 +13,14 @@ use MichalSpacekCz\ShouldNotHappenException;
 class PasswordsSorting
 {
 
-	private const COMPANY_A_Z = 'a-z';
-	private const COMPANY_Z_A = 'z-a';
-	private const RATING_A_F = 'rating-a-f';
-	private const RATING_F_A = 'rating-f-a';
-	private const NEWEST_DISCLOSURES_FIRST = 'newest-disclosures-first';
-	private const NEWEST_DISCLOSURES_LAST = 'newest-disclosures-last';
-	private const NEWLY_ADDED_FIRST = 'newly-added-first';
-	private const NEWLY_ADDED_LAST = 'newly-added-last';
+	private const string COMPANY_A_Z = 'a-z';
+	private const string COMPANY_Z_A = 'z-a';
+	private const string RATING_A_F = 'rating-a-f';
+	private const string RATING_F_A = 'rating-f-a';
+	private const string NEWEST_DISCLOSURES_FIRST = 'newest-disclosures-first';
+	private const string NEWEST_DISCLOSURES_LAST = 'newest-disclosures-last';
+	private const string NEWLY_ADDED_FIRST = 'newly-added-first';
+	private const string NEWLY_ADDED_LAST = 'newly-added-last';
 
 	/** @var array<string, string> */
 	private array $sorting = [

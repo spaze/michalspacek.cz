@@ -9,9 +9,9 @@ use MichalSpacekCz\Http\Cookies\Cookies;
 readonly class Theme
 {
 
-	private const DARK = 'dark';
+	private const string DARK = 'dark';
 
-	private const LIGHT = 'bright';
+	private const string LIGHT = 'bright';
 
 
 	public function __construct(

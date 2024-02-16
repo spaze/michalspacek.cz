@@ -23,8 +23,8 @@ use Texy\Modifier;
 readonly class TexyPhraseHandler
 {
 
-	private const TRAINING_ACTION = 'Www:Trainings:training';
-	private const COMPANY_TRAINING_ACTION = 'Www:CompanyTrainings:training';
+	private const string TRAINING_ACTION = 'Www:Trainings:training';
+	private const string COMPANY_TRAINING_ACTION = 'Www:CompanyTrainings:training';
 
 
 	public function __construct(

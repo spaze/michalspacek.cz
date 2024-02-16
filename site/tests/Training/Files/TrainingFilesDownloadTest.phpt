@@ -24,8 +24,8 @@ require __DIR__ . '/../../bootstrap.php';
 class TrainingFilesDownloadTest extends TestCase
 {
 
-	private const APPLICATION_ID = 303;
-	private const TOKEN = 's0m370k3n';
+	private const int APPLICATION_ID = 303;
+	private const string TOKEN = 's0m370k3n';
 
 	private readonly UiPresenterMock $presenter;
 

@@ -22,7 +22,7 @@ use Tracy\Debugger;
 readonly class Technicolor implements UpcWiFiRouter
 {
 
-	private const PREFIXES = ['SAAP', 'SAPP', 'SBAP'];
+	private const array PREFIXES = ['SAAP', 'SAPP', 'SBAP'];
 
 
 	public function __construct(

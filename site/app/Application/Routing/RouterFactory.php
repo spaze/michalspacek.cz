@@ -13,17 +13,17 @@ use Nette\Routing\Router;
 class RouterFactory
 {
 
-	private const MODULE_ADMIN = 'Admin';
-	private const MODULE_API = 'Api';
-	private const MODULE_HEARTBLEED = 'Webleed';
-	private const MODULE_PULSE = 'Pulse';
-	private const MODULE_UPC = 'UpcKeys';
-	private const MODULE_WWW = 'Www';
+	private const string MODULE_ADMIN = 'Admin';
+	private const string MODULE_API = 'Api';
+	private const string MODULE_HEARTBLEED = 'Webleed';
+	private const string MODULE_PULSE = 'Pulse';
+	private const string MODULE_UPC = 'UpcKeys';
+	private const string MODULE_WWW = 'Www';
 
 	/**
 	 * Module names mapped to hostnames.
 	 */
-	private const HOSTS = [
+	private const array HOSTS = [
 		self::MODULE_ADMIN => 'admin',
 		self::MODULE_API => 'api',
 		self::MODULE_HEARTBLEED => 'heartbleed',
@@ -32,7 +32,7 @@ class RouterFactory
 		self::MODULE_WWW => 'www',
 	];
 
-	private const ROOT_ONLY = '';
+	private const string ROOT_ONLY = '';
 
 	/** @var array<string, array<string, array<string, string>>> */
 	private array $translatedPresenters = [];

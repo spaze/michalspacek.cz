@@ -12,7 +12,7 @@ use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
 class CertificateMonitor implements CliArgsProvider
 {
 
-	private const NO_IPV6 = '--no-ipv6';
+	private const string NO_IPV6 = '--no-ipv6';
 
 	private bool $hasErrors = false;
 
