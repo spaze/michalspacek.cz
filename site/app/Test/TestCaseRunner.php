@@ -14,8 +14,8 @@ use Tester\TestCase;
 class TestCaseRunner
 {
 
-	private const INCLUDE_SKIPPED_ENV_VAR_NAME = 'TEST_CASE_RUNNER_INCLUDE_SKIPPED';
-	private const INCLUDE_SKIPPED_ENV_VAR_VALUE = '1';
+	private const string INCLUDE_SKIPPED_ENV_VAR_NAME = 'TEST_CASE_RUNNER_INCLUDE_SKIPPED';
+	private const string INCLUDE_SKIPPED_ENV_VAR_VALUE = '1';
 
 
 	/**

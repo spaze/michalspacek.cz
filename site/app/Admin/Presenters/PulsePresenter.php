@@ -9,7 +9,7 @@ use MichalSpacekCz\Form\UiForm;
 class PulsePresenter extends BasePresenter
 {
 
-	private const NEW_DISCLOSURES = 3;
+	private const int NEW_DISCLOSURES = 3;
 
 
 	public function __construct(

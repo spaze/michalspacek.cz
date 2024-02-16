@@ -15,7 +15,7 @@ require __DIR__ . '/../../../bootstrap.php';
 class StorageAlgorithmTest extends TestCase
 {
 
-	private const ALGO = 'bcrypt';
+	private const string ALGO = 'bcrypt';
 
 
 	/**

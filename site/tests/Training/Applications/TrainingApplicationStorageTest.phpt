@@ -22,11 +22,11 @@ require __DIR__ . '/../../bootstrap.php';
 class TrainingApplicationStorageTest extends TestCase
 {
 
-	private const STATUS_CREATED = 1;
-	private const STATUS_TENTATIVE = 2;
-	private const STATUS_SIGNED_UP = 4;
-	private const SOURCE_ID = 303;
-	private const INSERT_ID = 1337;
+	private const int STATUS_CREATED = 1;
+	private const int STATUS_TENTATIVE = 2;
+	private const int STATUS_SIGNED_UP = 4;
+	private const int SOURCE_ID = 303;
+	private const int INSERT_ID = 1337;
 
 
 	public function __construct(

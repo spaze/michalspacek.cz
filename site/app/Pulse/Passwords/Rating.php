@@ -9,25 +9,25 @@ use RuntimeException;
 class Rating
 {
 
-	private const SLOW_HASHES = [
+	private const array SLOW_HASHES = [
 		'argon2',
 		'bcrypt',
 		'pbkdf2',
 		'scrypt',
 	];
 
-	private const INSECURE = [
+	private const array INSECURE = [
 		'plaintext',
 		'encrypted',
 	];
 
-	private const VISIBLE_DISCLOSURES = [
+	private const array VISIBLE_DISCLOSURES = [
 		'docs',
 		'faq',
 		'signup-page',
 	];
 
-	private const INVISIBLE_DISCLOSURES = [
+	private const array INVISIBLE_DISCLOSURES = [
 		'blog',
 		'site-independent',
 		'facebook-independent',
@@ -42,7 +42,7 @@ class Rating
 		'comment',
 	];
 
-	private const RATING = [
+	private const array RATING = [
 		RatingGrade::A->name => 'Site uses a slow hashing function, this is disclosed "on-site", in the docs, FAQ, etc.',
 		RatingGrade::B->name => 'A slow hashing function is used but such info is "invisible", hidden in a blog post or a talk, or on social media.',
 		RatingGrade::C->name => 'Passwords hashed with an unsuitable function but at least they are salted and stretched with multiple iterations.',
@@ -51,7 +51,7 @@ class Rating
 		RatingGrade::F->name => 'Passwords stored in plaintext, in their original, readable form, or passwords encrypted instead of hashed.',
 	];
 
-	private const RECOMMENDATIONS = [
+	private const array RECOMMENDATIONS = [
 		RatingGrade::A->name => null,
 		RatingGrade::B->name => 'Publish storage and hashing info details "visibly":[link:Pulse:PasswordsStorages:Rating#on-site] (e.g. in the docs or FAQ), then let me know.',
 		RatingGrade::C->name => 'Start using "&quot;slow&quot; hashes":[link:Pulse:PasswordsStorages:Rating#slow-hashes], don\'t forget to "re-hash existing passwords":[blog:upgrading-existing-password-hashes], publish hashing info "visibly":[link:Pulse:PasswordsStorages:Rating#on-site], then let me know.',

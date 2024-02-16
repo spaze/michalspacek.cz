@@ -11,7 +11,7 @@ use Nette\Utils\FileSystem;
 class Makefile
 {
 
-	private const PHONY_TARGET = '.PHONY';
+	private const string PHONY_TARGET = '.PHONY';
 
 	/** @var array<string, list<int>> target => lines */
 	private array $targetDefinitions = [];

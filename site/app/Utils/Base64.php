@@ -6,8 +6,8 @@ namespace MichalSpacekCz\Utils;
 class Base64
 {
 
-	private const LAST_TWO_STANDARD = ['+', '/'];
-	private const LAST_TWO_URL_VARIANT = ['-', '_'];
+	private const array LAST_TWO_STANDARD = ['+', '/'];
+	private const array LAST_TWO_URL_VARIANT = ['-', '_'];
 
 
 	public static function urlEncode(string $string): string

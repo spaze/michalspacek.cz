@@ -13,13 +13,13 @@ use Nette\Utils\Strings;
 class WinterIsComing
 {
 
-	private const EMAILS = [
+	private const array EMAILS = [
 		'winter@example.com',
 		'sample@email.tst',
 		'arachni@email.gr',
 	];
 
-	private const HOSTS = [
+	private const array HOSTS = [
 		'burpcollaborator.net',
 		'mailrez.com',
 		'mailto.plus',
@@ -27,7 +27,7 @@ class WinterIsComing
 		'ssemarketing.net',
 	];
 
-	private const STREETS = [
+	private const array STREETS = [
 		'34 Watts road',
 	];
 

@@ -11,7 +11,7 @@ use Nette\Utils\Strings;
 readonly class CrLfUrlInjections
 {
 
-	private const COOKIE_NAME = 'crlfinjection';
+	private const string COOKIE_NAME = 'crlfinjection';
 
 
 	public function __construct(

@@ -12,7 +12,7 @@ class TrainingFilesStorage
 	/**
 	 * Files directory, does not end with a slash.
 	 */
-	private const FILES_DIR = __DIR__ . '/../../../files/trainings';
+	private const string FILES_DIR = __DIR__ . '/../../../files/trainings';
 
 
 	/**

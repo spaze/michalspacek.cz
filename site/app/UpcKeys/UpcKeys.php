@@ -9,9 +9,9 @@ use Nette\Utils\Strings;
 class UpcKeys
 {
 
-	private const SSID_VALID_PATTERN = '([Uu][Pp][Cc])[0-9]{7}';
+	private const string SSID_VALID_PATTERN = '([Uu][Pp][Cc])[0-9]{7}';
 
-	private const SSID_PLACEHOLDER = 'UPC1234567';
+	private const string SSID_PLACEHOLDER = 'UPC1234567';
 
 	/** @var array<class-string<UpcWiFiRouter>, UpcWiFiRouter> */
 	private array $routers = [];

@@ -13,7 +13,7 @@ use Nette\Utils\Json;
 readonly class TrainingDateFactory
 {
 
-	private const LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
+	private const int LAST_FREE_SEATS_THRESHOLD_DAYS = 7;
 
 
 	public function __construct(

@@ -22,9 +22,9 @@ use stdClass;
 readonly class CompanyRegisterRegisterUz implements CompanyRegister
 {
 
-	private const DAY_ONE = '1993-01-01';
+	private const string DAY_ONE = '1993-01-01';
 
-	private const COUNTRY_CODE = 'sk';
+	private const string COUNTRY_CODE = 'sk';
 
 
 	public function __construct(

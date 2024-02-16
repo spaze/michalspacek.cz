@@ -22,10 +22,10 @@ require __DIR__ . '/../../bootstrap.php';
 class TrainingFilesSessionSectionTest extends TestCase
 {
 
-	private const APPLICATION_ID = 303;
-	private const APPLICATION_ID_KEY = 'applicationId';
-	private const TOKEN = 'AToken';
-	private const TOKEN_KEY = 'token';
+	private const int APPLICATION_ID = 303;
+	private const string APPLICATION_ID_KEY = 'applicationId';
+	private const string TOKEN = 'AToken';
+	private const string TOKEN_KEY = 'token';
 
 	private TrainingFilesSessionSection $trainingFilesSessionSection;
 	private SessionSection $sessionSection;

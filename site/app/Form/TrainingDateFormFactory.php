@@ -15,10 +15,10 @@ use Nette\Forms\Controls\SubmitButton;
 readonly class TrainingDateFormFactory
 {
 
-	private const STANDARD = 'Standardní';
-	private const CUSTOM = 'Na zakázku';
-	private const REPLACED = 'Nahrazené';
-	private const DISCONTINUED = 'Ukončené';
+	private const string STANDARD = 'Standardní';
+	private const string CUSTOM = 'Na zakázku';
+	private const string REPLACED = 'Nahrazené';
+	private const string DISCONTINUED = 'Ukončené';
 
 
 	public function __construct(

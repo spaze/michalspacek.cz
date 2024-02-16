@@ -10,19 +10,19 @@ use RuntimeException;
 readonly class DateTimeFormatter
 {
 
-	private const DATE_DAY = 'day';
-	private const DATE_MONTH = 'month';
+	private const string DATE_DAY = 'day';
+	private const string DATE_MONTH = 'month';
 
-	private const NO_INTERVAL = 1;
-	private const INTERVAL = 2;
-	private const INTERVAL_BOUNDARY = 3;
-	private const INTERVAL_BOUNDARIES = 4;
+	private const int NO_INTERVAL = 1;
+	private const int INTERVAL = 2;
+	private const int INTERVAL_BOUNDARY = 3;
+	private const int INTERVAL_BOUNDARIES = 4;
 
-	private const INTERVAL_FORMAT_START = 1;
-	private const INTERVAL_FORMAT_SEPARATOR = 2;
-	private const INTERVAL_FORMAT_END = 3;
+	private const int INTERVAL_FORMAT_START = 1;
+	private const int INTERVAL_FORMAT_SEPARATOR = 2;
+	private const int INTERVAL_FORMAT_END = 3;
 
-	private const LOCAL_DATE_FORMAT = [
+	private const array LOCAL_DATE_FORMAT = [
 		'en_US' => [
 			self::DATE_DAY => [
 				self::NO_INTERVAL => 'MMMM d, y',
@@ -92,7 +92,7 @@ readonly class DateTimeFormatter
 		],
 	];
 
-	private const COMPARISON_FORMAT = [
+	private const array COMPARISON_FORMAT = [
 		self::DATE_DAY => [
 			self::NO_INTERVAL => 'Ymd',
 			self::INTERVAL => 'Ym',

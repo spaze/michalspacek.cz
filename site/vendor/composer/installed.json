@@ -3526,25 +3526,25 @@
         },
         {
             "name": "spaze/phpcs-phar",
-            "version": "3.8.1",
-            "version_normalized": "3.8.1.0",
+            "version": "3.9.0",
+            "version_normalized": "3.9.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpcs-phar.git",
-                "reference": "5ee407d53308a5b898c85d0ea85e4509303dff01"
+                "reference": "07c678e294c2cf5843da1d94f88669274f3a3f0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpcs-phar/zipball/5ee407d53308a5b898c85d0ea85e4509303dff01",
-                "reference": "5ee407d53308a5b898c85d0ea85e4509303dff01",
+                "url": "https://api.github.com/repos/spaze/phpcs-phar/zipball/07c678e294c2cf5843da1d94f88669274f3a3f0f",
+                "reference": "07c678e294c2cf5843da1d94f88669274f3a3f0f",
                 "shasum": ""
             },
             "replace": {
                 "dealerdirect/phpcodesniffer-composer-installer": "*",
-                "phpcsstandards/php_codesniffer": "3.8.1",
-                "squizlabs/php_codesniffer": "3.8.1"
+                "phpcsstandards/php_codesniffer": "3.9.0",
+                "squizlabs/php_codesniffer": "3.9.0"
             },
-            "time": "2024-01-31T02:17:10+00:00",
+            "time": "2024-02-16T16:22:48+00:00",
             "bin": [
                 "phpcbf",
                 "phpcs"
@@ -3568,7 +3568,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpcs-phar/issues",
-                "source": "https://github.com/spaze/phpcs-phar/tree/3.8.1"
+                "source": "https://github.com/spaze/phpcs-phar/tree/3.9.0"
             },
             "install-path": "../spaze/phpcs-phar"
         },

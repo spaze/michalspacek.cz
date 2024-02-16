@@ -25,8 +25,8 @@ require __DIR__ . '/../../bootstrap.php';
 class TrainingApplicationFormDataLoggerTest extends TestCase
 {
 
-	private const APPLICATION_ID = 10;
-	private const DATE_ID = 20;
+	private const int APPLICATION_ID = 10;
+	private const int DATE_ID = 20;
 
 
 	public function __construct(

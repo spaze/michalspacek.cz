@@ -17,8 +17,8 @@ use stdClass;
 readonly class VideoThumbnails
 {
 
-	private const VIDEO_THUMBNAIL_WIDTH = 320;
-	private const VIDEO_THUMBNAIL_HEIGHT = 180;
+	private const int VIDEO_THUMBNAIL_WIDTH = 320;
+	private const int VIDEO_THUMBNAIL_HEIGHT = 180;
 
 
 	public function __construct(

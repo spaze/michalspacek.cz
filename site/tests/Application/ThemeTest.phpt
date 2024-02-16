@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 class ThemeTest extends TestCase
 {
 
-	private const COOKIE = 'future';
+	private const string COOKIE = 'future';
 
 
 	public function __construct(

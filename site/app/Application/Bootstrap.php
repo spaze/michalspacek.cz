@@ -15,10 +15,10 @@ use Tester\Environment;
 class Bootstrap
 {
 
-	private const MODE_DEVELOPMENT = 'development';
-	private const SITE_DIR = __DIR__ . '/../..';
-	private const DEBUG = '--debug';
-	private const COLORS = '--colors';
+	private const string MODE_DEVELOPMENT = 'development';
+	private const string SITE_DIR = __DIR__ . '/../..';
+	private const string DEBUG = '--debug';
+	private const string COLORS = '--colors';
 
 
 	public static function boot(): Container

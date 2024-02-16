@@ -34,19 +34,19 @@ require __DIR__ . '/../../bootstrap.php';
 class TrainingApplicationFormSuccessTest extends TestCase
 {
 
-	private const DATE_ID = 1337;
-	private const APPLICATION_ID = 808;
-	private const TRAINING_ACTION = 'training-action';
-	private const NAME = 'Foo';
-	private const EMAIL = 'foo@example.com';
-	private const COMPANY = 'A-Team';
-	private const STREET = '21 Jump';
-	private const CITY = 'York';
-	private const ZIP = '13371';
-	private const COUNTRY = 'cz';
-	private const COMPANY_ID = '123';
-	private const COMPANY_TAX_ID = 'CZ123';
-	private const NOTE = 'book';
+	private const int DATE_ID = 1337;
+	private const int APPLICATION_ID = 808;
+	private const string TRAINING_ACTION = 'training-action';
+	private const string NAME = 'Foo';
+	private const string EMAIL = 'foo@example.com';
+	private const string COMPANY = 'A-Team';
+	private const string STREET = '21 Jump';
+	private const string CITY = 'York';
+	private const string ZIP = '13371';
+	private const string COUNTRY = 'cz';
+	private const string COMPANY_ID = '123';
+	private const string COMPANY_TAX_ID = 'CZ123';
+	private const string NOTE = 'book';
 
 
 	private ?string $onSuccessAction = null;
