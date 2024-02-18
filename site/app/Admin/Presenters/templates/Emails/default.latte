@@ -45,7 +45,7 @@
 			</td>
 			<td><small><code><span title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()}</span>{if $application->getNextStatus()} → {$application->getNextStatus()}{/if}</code></small></td>
 			<td>
-				{if in_array($application->getNextStatus(), [MichalSpacekCz\Training\Statuses\Statuses::STATUS_INVOICE_SENT, MichalSpacekCz\Training\Statuses\Statuses::STATUS_INVOICE_SENT_AFTER])}
+				{if in_array($application->getNextStatus(), [MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses::STATUS_INVOICE_SENT, MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses::STATUS_INVOICE_SENT_AFTER])}
 					{if $application->getPrice() && $application->getVatRate() && $application->getPriceVat()}
 						{input invoiceId}
 						{input invoice}
@@ -56,7 +56,7 @@
 				{/if}
 			</td>
 		</tr>
-		<tr n:if="$application->getNextStatus() == \MichalSpacekCz\Training\Statuses\Statuses::STATUS_MATERIALS_SENT">
+		<tr n:if="$application->getNextStatus() == \MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses::STATUS_MATERIALS_SENT">
 			<td></td>
 			<td></td>
 			<td colspan="5">{input feedbackRequest}</td>
@@ -68,7 +68,7 @@
 				<p>
 					Template: <code>{$application->getMailMessage()->getBasename()}</code><br>
 					Subject: <em>{$application->getMailMessage()->getSubject()}</em>
-					{if $application->getNextStatus() === \MichalSpacekCz\Training\Statuses\Statuses::STATUS_INVOICE_SENT || $application->getNextStatus() === \MichalSpacekCz\Training\Statuses\Statuses::STATUS_INVOICE_SENT_AFTER}
+					{if $application->getNextStatus() === \MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses::STATUS_INVOICE_SENT || $application->getNextStatus() === \MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses::STATUS_INVOICE_SENT_AFTER}
 						<br>{label cc /} {input cc}
 					{/if}
 				</p>

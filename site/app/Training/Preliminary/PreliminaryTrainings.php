@@ -7,8 +7,8 @@ use Contributte\Translation\Translator;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationFactory;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\UpcomingTrainingDates;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
@@ -48,7 +48,7 @@ readonly class PreliminaryTrainings
 				a.key_date IS NULL
 				AND s.status != ?
 				AND l.language = ?',
-			Statuses::STATUS_CANCELED,
+			TrainingApplicationStatuses::STATUS_CANCELED,
 			$this->translator->getDefaultLocale(),
 		);
 		foreach ($result as $row) {
@@ -116,7 +116,7 @@ readonly class PreliminaryTrainings
 				a.key_date IS NULL
 				AND s.status != ?
 				AND l.language = ?',
-			Statuses::STATUS_CANCELED,
+			TrainingApplicationStatuses::STATUS_CANCELED,
 			$this->translator->getDefaultLocale(),
 		);
 

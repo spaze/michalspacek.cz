@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training\Statuses;
+namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -10,10 +10,10 @@ use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 
-class TrainingStatusHistory
+class TrainingApplicationStatusHistory
 {
 
-	/** @var array<int, list<TrainingStatusHistoryItem>> */
+	/** @var array<int, list<TrainingApplicationStatusHistoryItem>> */
 	private array $statusHistory = [];
 
 
@@ -25,7 +25,7 @@ class TrainingStatusHistory
 
 
 	/**
-	 * @return list<TrainingStatusHistoryItem>
+	 * @return list<TrainingApplicationStatusHistoryItem>
 	 * @throws InvalidTimezoneException
 	 */
 	public function getStatusHistory(int $applicationId): array
@@ -46,7 +46,7 @@ class TrainingStatusHistory
 			);
 			$items = [];
 			foreach ($rows as $row) {
-				$items[] = new TrainingStatusHistoryItem($row->id, $row->statusId, $row->status, DateTimeImmutable::createFromMutable($row->statusTime)->setTimezone($this->dateTimeZoneFactory->get($row->statusTimeTimeZone)));
+				$items[] = new TrainingApplicationStatusHistoryItem($row->id, $row->statusId, $row->status, DateTimeImmutable::createFromMutable($row->statusTime)->setTimezone($this->dateTimeZoneFactory->get($row->statusTimeTimeZone)));
 			}
 			$this->statusHistory[$applicationId] = $items;
 		}

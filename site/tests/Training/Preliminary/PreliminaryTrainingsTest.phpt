@@ -73,7 +73,7 @@ class PreliminaryTrainingsTest extends TestCase
 				'name' => 'Training 2',
 			],
 		]);
-		$this->database->setFetchFieldDefaultResult(303); // For Statuses::getStatusId()
+		$this->database->setFetchFieldDefaultResult(303); // For ApplicationStatuses::getStatusId()
 		$this->database->addFetchAllResult([
 			[
 				'id' => 1,

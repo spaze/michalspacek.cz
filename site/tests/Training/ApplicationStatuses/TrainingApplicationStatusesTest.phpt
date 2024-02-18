@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training\Statuses;
+namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
@@ -15,12 +15,12 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class StatusesTest extends TestCase
+class TrainingApplicationStatusesTest extends TestCase
 {
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly Statuses $trainingStatuses,
+		private readonly TrainingApplicationStatuses $applicationStatuses,
 	) {
 	}
 
@@ -29,17 +29,17 @@ class StatusesTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
-		PrivateProperty::setValue($this->trainingStatuses, 'statusIds', []);
+		PrivateProperty::setValue($this->applicationStatuses, 'statusIds', []);
 	}
 
 
 	public function testGetStatusId(): void
 	{
 		$this->database->setFetchFieldDefaultResult(303);
-		Assert::same(303, $this->trainingStatuses->getStatusId(Statuses::STATUS_SIGNED_UP));
+		Assert::same(303, $this->applicationStatuses->getStatusId(TrainingApplicationStatuses::STATUS_SIGNED_UP));
 
 		$this->database->setFetchFieldDefaultResult('nah, it cached');
-		Assert::same(303, $this->trainingStatuses->getStatusId(Statuses::STATUS_SIGNED_UP));
+		Assert::same(303, $this->applicationStatuses->getStatusId(TrainingApplicationStatuses::STATUS_SIGNED_UP));
 	}
 
 
@@ -47,10 +47,10 @@ class StatusesTest extends TestCase
 	{
 		$this->database->setFetchFieldDefaultResult('donut');
 		Assert::exception(function (): void {
-			$this->trainingStatuses->getStatusId(Statuses::STATUS_SIGNED_UP);
+			$this->applicationStatuses->getStatusId(TrainingApplicationStatuses::STATUS_SIGNED_UP);
 		}, TrainingStatusIdNotIntException::class, "Training status 'SIGNED_UP' id is a string not an integer");
 	}
 
 }
 
-TestCaseRunner::run(StatusesTest::class);
+TestCaseRunner::run(TrainingApplicationStatusesTest::class);

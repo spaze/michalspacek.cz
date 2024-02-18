@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training\Statuses;
+namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use DateTimeImmutable;
 
-readonly class TrainingStatusHistoryItem
+readonly class TrainingApplicationStatusHistoryItem
 {
 
 	public function __construct(

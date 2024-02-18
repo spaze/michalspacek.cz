@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Prices;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\Random;
@@ -24,7 +24,7 @@ readonly class TrainingApplicationStorage
 
 	public function __construct(
 		private Explorer $database,
-		private Statuses $trainingStatuses,
+		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private TrainingApplicationSources $trainingApplicationSources,
 		private SymmetricKeyEncryption $emailEncryption,
 		private Prices $prices,
@@ -66,7 +66,7 @@ readonly class TrainingApplicationStorage
 			$note,
 			$date->getPrice(),
 			$date->getStudentDiscount(),
-			Statuses::STATUS_TENTATIVE,
+			TrainingApplicationStatuses::STATUS_TENTATIVE,
 			$this->trainingApplicationSources->resolveSource($note),
 		);
 	}
@@ -106,7 +106,7 @@ readonly class TrainingApplicationStorage
 			$note,
 			$date->getPrice(),
 			$date->getStudentDiscount(),
-			Statuses::STATUS_SIGNED_UP,
+			TrainingApplicationStatuses::STATUS_SIGNED_UP,
 			$this->trainingApplicationSources->resolveSource($note),
 		);
 	}
@@ -138,7 +138,7 @@ readonly class TrainingApplicationStorage
 			null,
 			null,
 			null,
-			Statuses::STATUS_TENTATIVE,
+			TrainingApplicationStatuses::STATUS_TENTATIVE,
 			$this->trainingApplicationSources->getDefaultSource(),
 		);
 	}
@@ -169,11 +169,11 @@ readonly class TrainingApplicationStorage
 		string $source,
 		?string $date = null,
 	): int {
-		if (!in_array($status, $this->trainingStatuses->getInitialStatuses())) {
+		if (!in_array($status, $this->trainingApplicationStatuses->getInitialStatuses())) {
 			throw new RuntimeException("Invalid initial status {$status}");
 		}
 
-		$statusId = $this->trainingStatuses->getStatusId(Statuses::STATUS_CREATED);
+		$statusId = $this->trainingApplicationStatuses->getStatusId(TrainingApplicationStatuses::STATUS_CREATED);
 		$datetime = new DateTime($date ?? '');
 
 		$customerPrice = $this->prices->resolvePriceDiscountVat($price, $studentDiscount, $status, $note ?? '');
@@ -203,7 +203,7 @@ readonly class TrainingApplicationStorage
 		if ($dateId === null) {
 			$data['key_training'] = $trainingId;
 		}
-		return $this->trainingStatuses->updateStatusCallbackReturnId(function () use ($data): int {
+		return $this->trainingApplicationStatuses->updateStatusCallbackReturnId(function () use ($data): int {
 			$this->insertData($data);
 			return (int)$this->database->getInsertId();
 		}, $status, $date);
@@ -246,9 +246,9 @@ readonly class TrainingApplicationStorage
 		string $companyTaxId,
 		string $note,
 	): void {
-		$this->trainingStatuses->updateStatusCallback(
+		$this->trainingApplicationStatuses->updateStatusCallback(
 			$applicationId,
-			Statuses::STATUS_SIGNED_UP,
+			TrainingApplicationStatuses::STATUS_SIGNED_UP,
 			null,
 			function () use (
 				$date,
@@ -264,7 +264,7 @@ readonly class TrainingApplicationStorage
 				$companyTaxId,
 				$note
 			): void {
-				$price = $this->prices->resolvePriceDiscountVat($date->getPrice(), $date->getStudentDiscount(), Statuses::STATUS_SIGNED_UP, $note);
+				$price = $this->prices->resolvePriceDiscountVat($date->getPrice(), $date->getStudentDiscount(), TrainingApplicationStatuses::STATUS_SIGNED_UP, $note);
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
 					[

@@ -7,8 +7,8 @@ use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Html;
@@ -32,7 +32,7 @@ class TrainingFilesSessionSectionTest extends TestCase
 
 
 	public function __construct(
-		private readonly Statuses $trainingStatuses,
+		private readonly TrainingApplicationStatuses $applicationStatuses,
 		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
 		private readonly TrainingFiles $trainingFiles,
 		Session $sessionHandler,
@@ -109,7 +109,7 @@ class TrainingFilesSessionSectionTest extends TestCase
 	private function buildApplication(): TrainingApplication
 	{
 		return new TrainingApplication(
-			$this->trainingStatuses,
+			$this->applicationStatuses,
 			$this->trainingMailMessageFactory,
 			$this->trainingFiles,
 			self::APPLICATION_ID,

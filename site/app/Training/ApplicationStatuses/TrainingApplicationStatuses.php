@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training\Statuses;
+namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use DateTime;
 use Exception;
@@ -11,7 +11,7 @@ use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 
-class Statuses
+class TrainingApplicationStatuses
 {
 
 	public const string STATUS_CREATED = 'CREATED'; // 1
@@ -47,7 +47,7 @@ class Statuses
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly TrainingStatusHistory $trainingStatusHistory,
+		private readonly TrainingApplicationStatusHistory $statusHistory,
 	) {
 	}
 
@@ -306,8 +306,8 @@ class Statuses
 	public function sendInvoiceAfter(int $applicationId): bool
 	{
 		return (
-			$this->trainingStatusHistory->historyContainsStatuses([self::STATUS_PAID_AFTER, self::STATUS_PRO_FORMA_INVOICE_SENT], $applicationId)
-			&& !$this->trainingStatusHistory->historyContainsStatuses([self::STATUS_INVOICE_SENT], $applicationId)
+			$this->statusHistory->historyContainsStatuses([self::STATUS_PAID_AFTER, self::STATUS_PRO_FORMA_INVOICE_SENT], $applicationId)
+			&& !$this->statusHistory->historyContainsStatuses([self::STATUS_INVOICE_SENT], $applicationId)
 		);
 	}
 

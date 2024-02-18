@@ -52,12 +52,12 @@ services:
 	- MichalSpacekCz\Form\TrainingApplicationFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory
 	- MichalSpacekCz\Form\TrainingApplicationPreliminaryFormFactory
+	- MichalSpacekCz\Form\TrainingApplicationStatusesFormFactory
 	- MichalSpacekCz\Form\TrainingDateFormFactory
 	- MichalSpacekCz\Form\TrainingFileFormFactory
 	- MichalSpacekCz\Form\TrainingInvoiceFormFactory
 	- MichalSpacekCz\Form\TrainingMailsOutboxFormFactory
 	- MichalSpacekCz\Form\TrainingReviewFormFactory
-	- MichalSpacekCz\Form\TrainingStatusesFormFactory
 	- MichalSpacekCz\Form\UnprotectedFormFactory
 	- MichalSpacekCz\Form\UpcKeysSsidFormFactory
 	- MichalSpacekCz\Formatter\TexyFormatter(cache: @texyFormatterPhpFilesAdapter, placeholders: typed(MichalSpacekCz\Formatter\TexyFormatterPlaceholder), allowedLongWords: %texyFormatter.allowed.longWords%, staticRoot: %domain.sharedStaticRoot%, imagesRoot: %domain.imagesRoot%, locationRoot: %domain.locationRoot%)
@@ -116,6 +116,8 @@ services:
 	- MichalSpacekCz\Training\Applications\TrainingApplicationFactory(emailEncryption: @emailEncryption)
 	- MichalSpacekCz\Training\Applications\TrainingApplicationSources
 	- MichalSpacekCz\Training\Applications\TrainingApplicationStorage(emailEncryption: @emailEncryption)
+	- MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses
+	- MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory
 	- MichalSpacekCz\Training\Company\CompanyTrainings
 	- MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory
 	- MichalSpacekCz\Training\DateList\UpcomingTrainingDatesListFactory
@@ -138,8 +140,6 @@ services:
 	- MichalSpacekCz\Training\Resolver\Vrana
 	- MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory
 	- MichalSpacekCz\Training\Reviews\TrainingReviews
-	- MichalSpacekCz\Training\Statuses\Statuses
-	- MichalSpacekCz\Training\Statuses\TrainingStatusHistory
 	- MichalSpacekCz\Training\TrainingLocales
 	- MichalSpacekCz\Training\Trainings\TrainingFactory
 	- MichalSpacekCz\Training\Trainings\Trainings

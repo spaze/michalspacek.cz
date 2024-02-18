@@ -6,7 +6,7 @@ namespace MichalSpacekCz\Training\Files;
 use DateTime;
 use DateTimeInterface;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
-use MichalSpacekCz\Training\Statuses\Statuses;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use Nette\Database\Explorer;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
@@ -16,7 +16,7 @@ readonly class TrainingFiles
 
 	public function __construct(
 		private Explorer $database,
-		private Statuses $trainingStatuses,
+		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private TrainingFileFactory $trainingFileFactory,
 		private TrainingFilesStorage $trainingFilesStorage,
 	) {
@@ -41,7 +41,7 @@ readonly class TrainingFiles
 				a.id_application = ?
 				AND s.status IN (?)',
 			$application->getId(),
-			$this->trainingStatuses->getAllowFilesStatuses(),
+			$this->trainingApplicationStatuses->getAllowFilesStatuses(),
 		);
 
 		$files = new TrainingFilesCollection();
@@ -74,7 +74,7 @@ readonly class TrainingFiles
 			$applicationId,
 			$token,
 			$filename,
-			$this->trainingStatuses->getAllowFilesStatuses(),
+			$this->trainingApplicationStatuses->getAllowFilesStatuses(),
 		);
 		return $row ? $this->trainingFileFactory->fromDatabaseRow($row) : null;
 	}

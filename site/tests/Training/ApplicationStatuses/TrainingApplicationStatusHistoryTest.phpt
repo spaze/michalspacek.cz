@@ -2,7 +2,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training\Statuses;
+namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use DateTime;
 use DateTimeInterface;
@@ -14,12 +14,12 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 
 /** @testCase */
-class TrainingStatusHistoryTest extends TestCase
+class TrainingApplicationStatusHistoryTest extends TestCase
 {
 
 	public function __construct(
 		private readonly Database $database,
-		private readonly TrainingStatusHistory $statusHistory,
+		private readonly TrainingApplicationStatusHistory $statusHistory,
 	) {
 	}
 
@@ -55,4 +55,4 @@ class TrainingStatusHistoryTest extends TestCase
 
 }
 
-TestCaseRunner::run(TrainingStatusHistoryTest::class);
+TestCaseRunner::run(TrainingApplicationStatusHistoryTest::class);

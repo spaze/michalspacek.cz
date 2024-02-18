@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Files\TrainingFilesCollection;
 use MichalSpacekCz\Training\Mails\MailMessageAdmin;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Utils\Html;
 
 class TrainingApplication
@@ -23,7 +23,7 @@ class TrainingApplication
 
 
 	public function __construct(
-		private readonly Statuses $trainingStatuses,
+		private readonly TrainingApplicationStatuses $trainingApplicationStatuses,
 		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
 		private readonly TrainingFiles $trainingFiles,
 		private readonly int $id,
@@ -382,7 +382,7 @@ class TrainingApplication
 	public function getChildrenStatuses(): array
 	{
 		if ($this->childrenStatuses === null) {
-			$this->childrenStatuses = $this->trainingStatuses->getChildrenStatusesForApplicationId($this->getStatus(), $this->getId());
+			$this->childrenStatuses = $this->trainingApplicationStatuses->getChildrenStatusesForApplicationId($this->getStatus(), $this->getId());
 		}
 		return $this->childrenStatuses;
 	}

@@ -6,14 +6,14 @@ namespace MichalSpacekCz\Training\Mails;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
-use MichalSpacekCz\Training\Statuses\Statuses;
-use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory;
 
 readonly class TrainingMailMessageFactory
 {
 
 	public function __construct(
-		private TrainingStatusHistory $trainingStatusHistory,
+		private TrainingApplicationStatusHistory $trainingApplicationStatusHistory,
 		private DateTimeFormatter $dateTimeFormatter,
 	) {
 	}
@@ -23,17 +23,17 @@ readonly class TrainingMailMessageFactory
 	{
 		$nextStatus = $application->getNextStatus();
 		switch ($nextStatus) {
-			case Statuses::STATUS_INVITED:
+			case TrainingApplicationStatuses::STATUS_INVITED:
 				return new MailMessageAdmin('invitation', 'Pozvánka na školení ' . $application->getTrainingName());
-			case Statuses::STATUS_MATERIALS_SENT:
+			case TrainingApplicationStatuses::STATUS_MATERIALS_SENT:
 				return new MailMessageAdmin($application->isFamiliar() ? 'materialsFamiliar' : 'materials', 'Materiály ze školení ' . $application->getTrainingName());
-			case Statuses::STATUS_INVOICE_SENT:
-				return $application->getStatus() === Statuses::STATUS_PRO_FORMA_INVOICE_SENT || $this->trainingStatusHistory->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId())
+			case TrainingApplicationStatuses::STATUS_INVOICE_SENT:
+				return $application->getStatus() === TrainingApplicationStatuses::STATUS_PRO_FORMA_INVOICE_SENT || $this->trainingApplicationStatusHistory->historyContainsStatuses([TrainingApplicationStatuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId())
 					? new MailMessageAdmin('invoiceAfterProforma', 'Faktura za školení ' . $application->getTrainingName())
 					: new MailMessageAdmin('invoice', 'Potvrzení registrace na školení ' . $application->getTrainingName() . ' a faktura');
-			case Statuses::STATUS_INVOICE_SENT_AFTER:
-				return new MailMessageAdmin($this->trainingStatusHistory->historyContainsStatuses([Statuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId()) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->getTrainingName());
-			case Statuses::STATUS_REMINDED:
+			case TrainingApplicationStatuses::STATUS_INVOICE_SENT_AFTER:
+				return new MailMessageAdmin($this->trainingApplicationStatusHistory->historyContainsStatuses([TrainingApplicationStatuses::STATUS_PRO_FORMA_INVOICE_SENT], $application->getId()) ? 'invoiceAfterProforma' : 'invoiceAfter', 'Faktura za školení ' . $application->getTrainingName());
+			case TrainingApplicationStatuses::STATUS_REMINDED:
 				$trainingStart = $application->getTrainingStart();
 				$trainingEnd = $application->getTrainingEnd();
 				if (!$trainingStart || !$trainingEnd) {
