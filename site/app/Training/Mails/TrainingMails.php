@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDates;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
@@ -88,62 +89,62 @@ readonly class TrainingMails
 		$applications = [];
 
 		foreach ($this->trainingPreliminaryApplications->getPreliminaryWithDateSet() as $application) {
-			$application->setNextStatus(TrainingApplicationStatuses::STATUS_INVITED);
+			$application->setNextStatus(TrainingApplicationStatus::Invited);
 			$applications[$application->getId()] = $application;
 		}
 
-		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatuses::STATUS_INVITED) as $status) {
+		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Invited) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				$dateId = $application->getDateId();
 				if ($dateId !== null && $this->trainingDates->get($dateId)->getStatus() === TrainingDateStatus::Confirmed) {
-					$application->setNextStatus(TrainingApplicationStatuses::STATUS_INVITED);
+					$application->setNextStatus(TrainingApplicationStatus::Invited);
 					$applications[$application->getId()] = $application;
 				}
 			}
 		}
 
-		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatuses::STATUS_MATERIALS_SENT) as $status) {
+		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::MaterialsSent) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if (
-					$status !== TrainingApplicationStatuses::STATUS_ATTENDED
+					$status !== TrainingApplicationStatus::Attended
 					|| !$this->trainingApplicationStatuses->sendInvoiceAfter($application->getId())
 				) {
-					$application->setNextStatus(TrainingApplicationStatuses::STATUS_MATERIALS_SENT);
+					$application->setNextStatus(TrainingApplicationStatus::MaterialsSent);
 					$applications[$application->getId()] = $application;
 				}
 			}
 		}
 
-		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatuses::STATUS_INVOICE_SENT) as $status) {
+		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::InvoiceSent) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				$application->setNextStatus(TrainingApplicationStatuses::STATUS_INVOICE_SENT);
+				$application->setNextStatus(TrainingApplicationStatus::InvoiceSent);
 				$applications[$application->getId()] = $application;
 			}
 		}
 
-		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatuses::STATUS_INVOICE_SENT_AFTER) as $status) {
+		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::InvoiceSentAfter) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
 				if (
-					$status !== TrainingApplicationStatuses::STATUS_ATTENDED
+					$status !== TrainingApplicationStatus::Attended
 					|| $this->trainingApplicationStatuses->sendInvoiceAfter($application->getId())
 				) {
-					$application->setNextStatus(TrainingApplicationStatuses::STATUS_INVOICE_SENT_AFTER);
+					$application->setNextStatus(TrainingApplicationStatus::InvoiceSentAfter);
 					$applications[$application->getId()] = $application;
 				}
 			}
 		}
 
-		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatuses::STATUS_REMINDED) as $status) {
+		foreach ($this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Reminded) as $status) {
 			foreach ($this->trainingApplications->getByStatus($status) as $application) {
-				if ($application->getStatus() === TrainingApplicationStatuses::STATUS_PRO_FORMA_INVOICE_SENT && $application->getPaid()) {
+				if ($application->getStatus() === TrainingApplicationStatus::ProFormaInvoiceSent && $application->getPaid()) {
 					continue;
 				}
 				$trainingStart = $application->getTrainingStart();
 				if (!$trainingStart) {
-					throw new ShouldNotHappenException(sprintf("Training application id '%s' with status '%s' should have a training start set", $application->getId(), $application->getStatus()));
+					throw new ShouldNotHappenException(sprintf("Training application id '%s' with status '%s' should have a training start set", $application->getId(), $application->getStatus()->value));
 				}
 				if ($trainingStart->diff(new DateTime('now'))->days <= self::REMINDER_DAYS) {
-					$application->setNextStatus(TrainingApplicationStatuses::STATUS_REMINDED);
+					$application->setNextStatus(TrainingApplicationStatus::Reminded);
 					$applications[$application->getId()] = $application;
 				}
 			}

@@ -8,6 +8,7 @@ use DateTime;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
@@ -120,7 +121,7 @@ class TrainingApplicationStorageTest extends TestCase
 				null,
 				null,
 				null,
-				'ATTENDED',
+				TrainingApplicationStatus::Attended,
 				'michal-spacek',
 			);
 		}, RuntimeException::class, "Invalid initial status ATTENDED");
@@ -145,7 +146,7 @@ class TrainingApplicationStorageTest extends TestCase
 			null,
 			null,
 			null,
-			'SIGNED_UP',
+			TrainingApplicationStatus::SignedUp,
 			'michal-spacek',
 		);
 		$this->assertInsertApplicationParams(
@@ -186,7 +187,7 @@ class TrainingApplicationStorageTest extends TestCase
 			'',
 			null,
 			null,
-			'SIGNED_UP',
+			TrainingApplicationStatus::SignedUp,
 			'michal-spacek',
 		);
 		$this->assertInsertApplicationParams(

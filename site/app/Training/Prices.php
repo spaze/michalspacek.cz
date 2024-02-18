@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training;
 
-use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 
 readonly class Prices
 {
@@ -20,9 +20,9 @@ readonly class Prices
 	}
 
 
-	public function resolvePriceDiscountVat(?Price $price, ?int $studentDiscount, string $status, string $note): Price
+	public function resolvePriceDiscountVat(?Price $price, ?int $studentDiscount, TrainingApplicationStatus $status, string $note): Price
 	{
-		$priceNotRequiredStatuses = [TrainingApplicationStatuses::STATUS_NON_PUBLIC_TRAINING, TrainingApplicationStatuses::STATUS_TENTATIVE];
+		$priceNotRequiredStatuses = [TrainingApplicationStatus::NonPublicTraining, TrainingApplicationStatus::Tentative];
 		if ($price === null || in_array($status, $priceNotRequiredStatuses, true)) {
 			return new Price(null, null, null);
 		}

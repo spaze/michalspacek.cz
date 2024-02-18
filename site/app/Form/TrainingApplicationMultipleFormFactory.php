@@ -43,7 +43,7 @@ readonly class TrainingApplicationMultipleFormFactory
 
 		$statuses = [];
 		foreach ($this->trainingApplicationStatuses->getInitialStatuses() as $status) {
-			$statuses[$status] = $status;
+			$statuses[$status->value] = $status->value;
 		}
 		$form->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte status')

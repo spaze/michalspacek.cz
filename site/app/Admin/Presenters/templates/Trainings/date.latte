@@ -36,7 +36,7 @@
 			<td><small>{$application->getEmail() ?? smazáno}</small></td>
 			<td><span n:tag-if="$application->getCompany() && ($application->getCompany()|length) > 40" title="{$application->getCompany()}">{$application->getCompany()|truncate:40}</span></td>
 			<td><small n:attr="title: $application->getNote() && ($application->getNote()|length) > 20 ? $application->getNote()">{$application->getNote()|truncate:20}</small></td>
-			<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()}</code></small></td>
+			<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()->value}</code></small></td>
 			<td><small>&raquo;</small></td>
 			<td>{input "applications-{$application->getId()}" class => status}</td>
 			<td>
@@ -62,8 +62,8 @@
 </div>
 <p>{label date /} {input date} {input submit id => submit}</p>
 <p>
-	<button class="preset" data-preset="{\MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses::STATUS_ATTENDED}" data-start="{$trainingStart}">Přednastavit <small><code>{\MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses::STATUS_ATTENDED}</code></small></button>
-	{capture $title}Tykat všem účastníkům ve stavu {foreach $attendedStatuses as $status}{$status}{sep}, {/sep}{/foreach}{/capture}
+	<button class="preset" data-preset="{\MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus::Attended->value}" data-start="{$trainingStart}">Přednastavit <small><code>{\MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus::Attended->value}</code></small></button>
+	{capture $title}Tykat všem účastníkům ve stavu {foreach $attendedStatuses as $status}{$status->value}{sep}, {/sep}{/foreach}{/capture}
 	{input familiar title => $title}
 </p>
 {/form statuses}
@@ -120,7 +120,7 @@
 	<div id="pridat-soubor-container" class="hidden">
 		<p>
 			Přidá soubor všem účastíkům školení ve stavu
-			{foreach $filesStatuses as $status}<small><code>{$status}</code></small>{sep}, {/sep}{/foreach}.
+			{foreach $filesStatuses as $status}<small><code>{$status->value}</code></small>{sep}, {/sep}{/foreach}.
 		</p>
 		{form file}
 		<p><strong>{label file /}</strong> {input file}</p>

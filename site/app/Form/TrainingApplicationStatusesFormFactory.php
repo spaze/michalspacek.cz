@@ -30,9 +30,13 @@ readonly class TrainingApplicationStatusesFormFactory
 		$form = $this->factory->create();
 		$container = $form->addContainer('applications');
 		foreach ($applications as $application) {
+			$statuses = [];
+			foreach ($application->getChildrenStatuses() as $status) {
+				$statuses[$status->value] = $status->value;
+			}
 			$select = $container->addSelect((string)$application->getId(), 'Status')
 				->setPrompt('- změnit na -')
-				->setItems($application->getChildrenStatuses(), false);
+				->setItems($statuses);
 			if (empty($application->getChildrenStatuses())) {
 				$select->setDisabled()
 					->setPrompt('nelze dále měnit');

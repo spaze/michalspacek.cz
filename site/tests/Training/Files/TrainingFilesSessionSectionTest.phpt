@@ -7,6 +7,7 @@ use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use Nette\Http\Session;
@@ -124,7 +125,7 @@ class TrainingFilesSessionSectionTest extends TestCase
 			null,
 			null,
 			null,
-			'ATTENDED',
+			TrainingApplicationStatus::Attended,
 			new DateTime(),
 			true,
 			false,

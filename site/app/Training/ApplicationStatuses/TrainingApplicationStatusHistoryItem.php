@@ -11,7 +11,7 @@ readonly class TrainingApplicationStatusHistoryItem
 	public function __construct(
 		private int $id,
 		private int $statusId,
-		private string $status,
+		private TrainingApplicationStatus $status,
 		private DateTimeImmutable $statusTime,
 	) {
 	}
@@ -29,7 +29,7 @@ readonly class TrainingApplicationStatusHistoryItem
 	}
 
 
-	public function getStatus(): string
+	public function getStatus(): TrainingApplicationStatus
 	{
 		return $this->status;
 	}

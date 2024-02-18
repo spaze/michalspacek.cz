@@ -6,6 +6,7 @@ namespace MichalSpacekCz\Training\Applications;
 use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
 use Nette\Database\Explorer;
@@ -29,12 +30,11 @@ class TrainingApplications
 
 
 	/**
-	 * @param string $status
 	 * @return list<TrainingApplication>
 	 * @throws SodiumException
 	 * @throws HaliteAlert
 	 */
-	public function getByStatus(string $status): array
+	public function getByStatus(TrainingApplicationStatus $status): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -93,7 +93,7 @@ class TrainingApplications
 				AND l.language = ?
 			ORDER BY
 				d.start, a.status_time',
-			$status,
+			$status->value,
 			$this->translator->getDefaultLocale(),
 		);
 
@@ -170,7 +170,7 @@ class TrainingApplications
 					AND s.status != ?
 					AND l.language = ?',
 				$dateId,
-				TrainingApplicationStatuses::STATUS_SPAM,
+				TrainingApplicationStatus::Spam,
 				$this->translator->getDefaultLocale(),
 			);
 			$applications = [];
@@ -407,8 +407,8 @@ class TrainingApplications
 
 	public function setAccessTokenUsed(TrainingApplication $application): void
 	{
-		if (in_array($application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatuses::STATUS_ACCESS_TOKEN_USED), true)) {
-			$this->trainingApplicationStatuses->updateStatus($application->getId(), TrainingApplicationStatuses::STATUS_ACCESS_TOKEN_USED);
+		if (in_array($application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::AccessTokenUsed), true)) {
+			$this->trainingApplicationStatuses->updateStatus($application->getId(), TrainingApplicationStatus::AccessTokenUsed);
 		}
 	}
 

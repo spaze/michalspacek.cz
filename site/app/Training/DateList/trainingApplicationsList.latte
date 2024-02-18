@@ -9,7 +9,7 @@
 		<td><small>{$application->getEmail() ?? smazáno}</small></td>
 		<td><span n:tag-if="$application->getCompany() && ($application->getCompany()|length) > 40" title="{$application->getCompany()}">{$application->getCompany()|truncate:40}</span></td>
 		<td><small n:attr="title: $application->getNote() && ($application->getNote()|length) > 20 ? $application->getNote()">{$application->getNote()|truncate:20}</small></td>
-		<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()}</code></small></td>
+		<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()->value}</code></small></td>
 		<td>
 			<small><code title="Zdroj {$application->getSourceName()}">{$application->getSourceNameInitials()}</code></small>
 			{capture $title}

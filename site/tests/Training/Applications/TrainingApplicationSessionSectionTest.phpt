@@ -7,6 +7,7 @@ namespace MichalSpacekCz\Training\Applications;
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
@@ -216,7 +217,7 @@ class TrainingApplicationSessionSectionTest extends TestCase
 			self::COMPANY_ID,
 			self::COMPANY_TAX_ID,
 			self::NOTE,
-			'ATTENDED',
+			TrainingApplicationStatus::Attended,
 			new DateTime(),
 			true,
 			false,

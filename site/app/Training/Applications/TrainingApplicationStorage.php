@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
@@ -66,7 +67,7 @@ readonly class TrainingApplicationStorage
 			$note,
 			$date->getPrice(),
 			$date->getStudentDiscount(),
-			TrainingApplicationStatuses::STATUS_TENTATIVE,
+			TrainingApplicationStatus::Tentative,
 			$this->trainingApplicationSources->resolveSource($note),
 		);
 	}
@@ -106,7 +107,7 @@ readonly class TrainingApplicationStorage
 			$note,
 			$date->getPrice(),
 			$date->getStudentDiscount(),
-			TrainingApplicationStatuses::STATUS_SIGNED_UP,
+			TrainingApplicationStatus::SignedUp,
 			$this->trainingApplicationSources->resolveSource($note),
 		);
 	}
@@ -138,7 +139,7 @@ readonly class TrainingApplicationStorage
 			null,
 			null,
 			null,
-			TrainingApplicationStatuses::STATUS_TENTATIVE,
+			TrainingApplicationStatus::Tentative,
 			$this->trainingApplicationSources->getDefaultSource(),
 		);
 	}
@@ -165,15 +166,15 @@ readonly class TrainingApplicationStorage
 		?string $note,
 		?Price $price,
 		?int $studentDiscount,
-		string $status,
+		TrainingApplicationStatus $status,
 		string $source,
 		?string $date = null,
 	): int {
 		if (!in_array($status, $this->trainingApplicationStatuses->getInitialStatuses())) {
-			throw new RuntimeException("Invalid initial status {$status}");
+			throw new RuntimeException("Invalid initial status {$status->value}");
 		}
 
-		$statusId = $this->trainingApplicationStatuses->getStatusId(TrainingApplicationStatuses::STATUS_CREATED);
+		$statusId = $this->trainingApplicationStatuses->getStatusId(TrainingApplicationStatus::Created);
 		$datetime = new DateTime($date ?? '');
 
 		$customerPrice = $this->prices->resolvePriceDiscountVat($price, $studentDiscount, $status, $note ?? '');
@@ -248,7 +249,7 @@ readonly class TrainingApplicationStorage
 	): void {
 		$this->trainingApplicationStatuses->updateStatusCallback(
 			$applicationId,
-			TrainingApplicationStatuses::STATUS_SIGNED_UP,
+			TrainingApplicationStatus::SignedUp,
 			null,
 			function () use (
 				$date,
@@ -264,7 +265,7 @@ readonly class TrainingApplicationStorage
 				$companyTaxId,
 				$note
 			): void {
-				$price = $this->prices->resolvePriceDiscountVat($date->getPrice(), $date->getStudentDiscount(), TrainingApplicationStatuses::STATUS_SIGNED_UP, $note);
+				$price = $this->prices->resolvePriceDiscountVat($date->getPrice(), $date->getStudentDiscount(), TrainingApplicationStatus::SignedUp, $note);
 				$this->database->query(
 					'UPDATE training_applications SET ? WHERE id_application = ?',
 					[

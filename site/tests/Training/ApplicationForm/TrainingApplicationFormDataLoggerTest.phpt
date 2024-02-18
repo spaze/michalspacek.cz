@@ -10,6 +10,7 @@ use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
@@ -108,7 +109,7 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 			null,
 			null,
 			null,
-			'ATTENDED',
+			TrainingApplicationStatus::Attended,
 			new DateTime(),
 			true,
 			false,

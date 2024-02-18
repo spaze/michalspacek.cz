@@ -36,10 +36,10 @@ class TrainingApplicationStatusesTest extends TestCase
 	public function testGetStatusId(): void
 	{
 		$this->database->setFetchFieldDefaultResult(303);
-		Assert::same(303, $this->applicationStatuses->getStatusId(TrainingApplicationStatuses::STATUS_SIGNED_UP));
+		Assert::same(303, $this->applicationStatuses->getStatusId(TrainingApplicationStatus::SignedUp));
 
 		$this->database->setFetchFieldDefaultResult('nah, it cached');
-		Assert::same(303, $this->applicationStatuses->getStatusId(TrainingApplicationStatuses::STATUS_SIGNED_UP));
+		Assert::same(303, $this->applicationStatuses->getStatusId(TrainingApplicationStatus::SignedUp));
 	}
 
 
@@ -47,7 +47,7 @@ class TrainingApplicationStatusesTest extends TestCase
 	{
 		$this->database->setFetchFieldDefaultResult('donut');
 		Assert::exception(function (): void {
-			$this->applicationStatuses->getStatusId(TrainingApplicationStatuses::STATUS_SIGNED_UP);
+			$this->applicationStatuses->getStatusId(TrainingApplicationStatus::SignedUp);
 		}, TrainingStatusIdNotIntException::class, "Training status 'SIGNED_UP' id is a string not an integer");
 	}
 

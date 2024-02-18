@@ -14,6 +14,7 @@ use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory;
 use MichalSpacekCz\Training\DateList\DateListOrder;
@@ -192,7 +193,7 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->sourceName = $this->application->getSourceName();
 		$this->template->companyId = $this->application->getCompanyId();
 		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getAllowFilesStatuses());
-		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatuses::STATUS_INVITED));
+		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Invited));
 		$this->template->accessToken = $this->application->getAccessToken();
 		$this->template->history = $this->trainingApplicationStatusHistory->getStatusHistory($param);
 	}

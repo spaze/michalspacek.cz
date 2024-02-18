@@ -44,7 +44,7 @@
 		<td>
 			<table class="condensed">
 				<tr class="row">
-					<td><code>{$status}</code></td>
+					<td><code>{$status->value}</code></td>
 					<td><small>{$statusTime}</small></td>
 					<td><small><a href="#historie" class="open-container">Historie</a></small></td>
 				</tr>
@@ -52,10 +52,10 @@
 				{formContainer statusHistoryDelete}
 				<tr n:foreach="$history as $record" class="row">
 					{var $statusTime = $record->getStatusTime()->format('Y-m-d H:i:s')}
-					<td><code>{$record->getStatus()}</code></td>
+					<td><code>{$record->getStatus()->value}</code></td>
 					<td><small>{$statusTime}</small><br></td>
 					<td class="center">
-						<button n:name="(string)$record->getId()" class="confirm-click" title="Odstranit status z historie" data-confirm="Odstranit status {$record->getStatus()} {$statusTime} z historie?">{icon times}</button>
+						<button n:name="(string)$record->getId()" class="confirm-click" title="Odstranit status z historie" data-confirm="Odstranit status {$record->getStatus()->value} {$statusTime} z historie?">{icon times}</button>
 					</td>
 				</tr>
 				{/formContainer}

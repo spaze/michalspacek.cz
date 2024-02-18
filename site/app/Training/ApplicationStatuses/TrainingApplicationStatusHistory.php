@@ -46,7 +46,12 @@ class TrainingApplicationStatusHistory
 			);
 			$items = [];
 			foreach ($rows as $row) {
-				$items[] = new TrainingApplicationStatusHistoryItem($row->id, $row->statusId, $row->status, DateTimeImmutable::createFromMutable($row->statusTime)->setTimezone($this->dateTimeZoneFactory->get($row->statusTimeTimeZone)));
+				$items[] = new TrainingApplicationStatusHistoryItem(
+					$row->id,
+					$row->statusId,
+					TrainingApplicationStatus::from($row->status),
+					DateTimeImmutable::createFromMutable($row->statusTime)->setTimezone($this->dateTimeZoneFactory->get($row->statusTimeTimeZone)),
+				);
 			}
 			$this->statusHistory[$applicationId] = $items;
 		}
@@ -55,7 +60,7 @@ class TrainingApplicationStatusHistory
 
 
 	/**
-	 * @param string[] $statuses
+	 * @param list<TrainingApplicationStatus> $statuses
 	 */
 	public function historyContainsStatuses(array $statuses, int $applicationId): bool
 	{

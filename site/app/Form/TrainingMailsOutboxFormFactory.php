@@ -7,6 +7,7 @@ use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Templating\TemplateFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
@@ -45,14 +46,14 @@ readonly class TrainingMailsOutboxFormFactory
 			$sendCheckboxTitle = [];
 			$filesCount = count($application->getFiles());
 			switch ($application->getNextStatus()) {
-				case TrainingApplicationStatuses::STATUS_INVITED:
+				case TrainingApplicationStatus::Invited:
 					$checked = (bool)$application->getDateId();
 					$disabled = !$checked;
 					if ($application->getDateId() === null) {
 						$sendCheckboxTitle['dateId'] = 'Není vybrán datum';
 					}
 					break;
-				case TrainingApplicationStatuses::STATUS_MATERIALS_SENT:
+				case TrainingApplicationStatus::MaterialsSent:
 					$uploadedAfterStart = $application->getFiles()->getNewestFile()?->getAdded() > $application->getTrainingStart();
 					$checked = $filesCount > 0 && $uploadedAfterStart;
 					$disabled = !$checked;
@@ -62,8 +63,8 @@ readonly class TrainingMailsOutboxFormFactory
 						$sendCheckboxTitle['files'] = 'Není nahrán žádný nový soubor (s časem nahrání po začátku školení)';
 					}
 					break;
-				case TrainingApplicationStatuses::STATUS_INVOICE_SENT:
-				case TrainingApplicationStatuses::STATUS_INVOICE_SENT_AFTER:
+				case TrainingApplicationStatus::InvoiceSent:
+				case TrainingApplicationStatus::InvoiceSentAfter:
 					$price = $application->getPrice();
 					if ($price === 0.0) {
 						$price = null;
@@ -88,7 +89,7 @@ readonly class TrainingMailsOutboxFormFactory
 						$sendCheckboxTitle['priceVat'] = 'Chybí cena s DPH';
 					}
 					break;
-				case TrainingApplicationStatuses::STATUS_REMINDED:
+				case TrainingApplicationStatus::Reminded:
 					if ($application->isRemote()) {
 						$checked = $filesCount > 0 && $application->getRemoteUrl() !== null;
 						$disabled = !$checked;
@@ -113,7 +114,7 @@ readonly class TrainingMailsOutboxFormFactory
 				->setHtmlAttribute('cols', 80)
 				->setHtmlAttribute('rows', 3);
 			switch ($application->getNextStatus()) {
-				case TrainingApplicationStatuses::STATUS_MATERIALS_SENT:
+				case TrainingApplicationStatus::MaterialsSent:
 					$feedbackRequestCheckbox = $applicationIdsContainer->addCheckbox('feedbackRequest', 'Požádat o zhodnocení')
 						->setDefaultValue($application->getFeedbackHref());
 					if ($application->getFeedbackHref() === null) {
@@ -121,8 +122,8 @@ readonly class TrainingMailsOutboxFormFactory
 							->setDisabled(true);
 					}
 					break;
-				case TrainingApplicationStatuses::STATUS_INVOICE_SENT:
-				case TrainingApplicationStatuses::STATUS_INVOICE_SENT_AFTER:
+				case TrainingApplicationStatus::InvoiceSent:
+				case TrainingApplicationStatus::InvoiceSentAfter:
 					$applicationIdsContainer->addText('invoiceId')
 						->setHtmlType('number')
 						->setHtmlAttribute('placeholder', 'Faktura č.')
@@ -162,19 +163,19 @@ readonly class TrainingMailsOutboxFormFactory
 				}
 				$template = $this->templateFactory->createTemplate($presenter);
 
-				if ($nextStatus === TrainingApplicationStatuses::STATUS_INVITED) {
+				if ($nextStatus === TrainingApplicationStatus::Invited) {
 					$this->trainingMails->sendInvitation($applications[$id], $template, $additional);
-					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatuses::STATUS_INVITED);
+					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatus::Invited);
 					$sent++;
 				}
 
-				if ($nextStatus === TrainingApplicationStatuses::STATUS_MATERIALS_SENT) {
+				if ($nextStatus === TrainingApplicationStatus::MaterialsSent) {
 					$this->trainingMails->sendMaterials($applications[$id], $template, $data->feedbackRequest ?? false, $additional);
-					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatuses::STATUS_MATERIALS_SENT);
+					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatus::MaterialsSent);
 					$sent++;
 				}
 
-				if (in_array($nextStatus, [TrainingApplicationStatuses::STATUS_INVOICE_SENT, TrainingApplicationStatuses::STATUS_INVOICE_SENT_AFTER])) {
+				if (in_array($nextStatus, [TrainingApplicationStatus::InvoiceSent, TrainingApplicationStatus::InvoiceSentAfter])) {
 					if ($data->invoice->isOk()) {
 						$this->trainingApplicationStorage->updateApplicationInvoiceData($id, $data->invoiceId);
 						$applications[$id]->setInvoiceId((int)$data->invoiceId);
@@ -184,9 +185,9 @@ readonly class TrainingMailsOutboxFormFactory
 					}
 				}
 
-				if ($nextStatus === TrainingApplicationStatuses::STATUS_REMINDED) {
+				if ($nextStatus === TrainingApplicationStatus::Reminded) {
 					$this->trainingMails->sendReminder($applications[$id], $template, $additional);
-					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatuses::STATUS_REMINDED);
+					$this->trainingApplicationStatuses->updateStatus($id, TrainingApplicationStatus::Reminded);
 					$sent++;
 				}
 			}

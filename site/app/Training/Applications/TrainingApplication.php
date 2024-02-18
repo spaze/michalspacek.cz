@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Applications;
 
 use DateTime;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Files\TrainingFilesCollection;
@@ -14,9 +15,9 @@ use Nette\Utils\Html;
 class TrainingApplication
 {
 
-	private ?string $nextStatus = null;
+	private ?TrainingApplicationStatus $nextStatus = null;
 
-	/** @var array<int, string>|null */
+	/** @var array<int, TrainingApplicationStatus>|null */
 	private ?array $childrenStatuses = null;
 
 	private ?TrainingFilesCollection $files = null;
@@ -38,7 +39,7 @@ class TrainingApplication
 		private readonly ?string $companyId,
 		private readonly ?string $companyTaxId,
 		private readonly ?string $note,
-		private readonly string $status,
+		private readonly TrainingApplicationStatus $status,
 		private readonly DateTime $statusTime,
 		private readonly bool $attended,
 		private readonly bool $discarded,
@@ -148,7 +149,7 @@ class TrainingApplication
 	}
 
 
-	public function getStatus(): string
+	public function getStatus(): TrainingApplicationStatus
 	{
 		return $this->status;
 	}
@@ -160,13 +161,13 @@ class TrainingApplication
 	}
 
 
-	public function getNextStatus(): ?string
+	public function getNextStatus(): ?TrainingApplicationStatus
 	{
 		return $this->nextStatus;
 	}
 
 
-	public function setNextStatus(?string $nextStatus): void
+	public function setNextStatus(?TrainingApplicationStatus $nextStatus): void
 	{
 		$this->nextStatus = $nextStatus;
 	}
@@ -377,7 +378,7 @@ class TrainingApplication
 
 
 	/**
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
 	public function getChildrenStatuses(): array
 	{
