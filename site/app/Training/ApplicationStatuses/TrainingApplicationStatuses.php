@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
@@ -212,9 +213,9 @@ class TrainingApplicationStatuses
 			'Changing status for application id: %d; old status: %s, old status time: %s; new status: %s, new status time: %s',
 			$applicationId,
 			$prevStatus->statusId,
-			$prevStatus->statusTime->format(DateTime::ATOM),
+			$prevStatus->statusTime->format(DateTimeInterface::ATOM),
 			$statusId,
-			$datetime->format(DateTime::ATOM),
+			$datetime->format(DateTimeInterface::ATOM),
 		));
 
 		$timeZone = $datetime->getTimezone()->getName();
