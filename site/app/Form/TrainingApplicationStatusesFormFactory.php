@@ -6,17 +6,17 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
-use MichalSpacekCz\Training\Statuses\Statuses;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use Nette\Utils\Html;
 
-readonly class TrainingStatusesFormFactory
+readonly class TrainingApplicationStatusesFormFactory
 {
 
 	public function __construct(
 		private FormFactory $factory,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private TrainingApplications $trainingApplications,
-		private Statuses $trainingStatuses,
+		private TrainingApplicationStatuses $trainingApplicationStatuses,
 	) {
 	}
 
@@ -30,9 +30,13 @@ readonly class TrainingStatusesFormFactory
 		$form = $this->factory->create();
 		$container = $form->addContainer('applications');
 		foreach ($applications as $application) {
+			$statuses = [];
+			foreach ($application->getChildrenStatuses() as $status) {
+				$statuses[$status->value] = $status->value;
+			}
 			$select = $container->addSelect((string)$application->getId(), 'Status')
 				->setPrompt('- změnit na -')
-				->setItems($application->getChildrenStatuses(), false);
+				->setItems($statuses);
 			if (empty($application->getChildrenStatuses())) {
 				$select->setDisabled()
 					->setPrompt('nelze dále měnit');
@@ -46,13 +50,13 @@ readonly class TrainingStatusesFormFactory
 			$values = $form->getFormValues();
 			foreach ($values->applications as $id => $status) {
 				if ($status) {
-					$this->trainingStatuses->updateStatus($id, $status, $values->date);
+					$this->trainingApplicationStatuses->updateStatus($id, $status, $values->date);
 				}
 			}
 			$onSuccess(null);
 		};
 		$submitFamiliar->onClick[] = function () use ($form, $onSuccess): void {
-			$attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
+			$attendedStatuses = $this->trainingApplicationStatuses->getAttendedStatuses();
 			$total = 0;
 			foreach (array_keys((array)$form->getUntrustedFormValues()->applications) as $id) {
 				$application = $this->trainingApplications->getApplicationById($id);

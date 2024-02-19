@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training\Statuses;
+namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use DateTime;
 use Exception;
@@ -11,43 +11,25 @@ use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 
-class Statuses
+class TrainingApplicationStatuses
 {
-
-	public const string STATUS_CREATED = 'CREATED'; // 1
-	public const string STATUS_TENTATIVE = 'TENTATIVE'; // 2
-	public const string STATUS_INVITED = 'INVITED'; // 3
-	public const string STATUS_SIGNED_UP = 'SIGNED_UP'; // 4
-	public const string STATUS_INVOICE_SENT = 'INVOICE_SENT'; // 5
-	public const string STATUS_NOTIFIED = 'NOTIFIED'; // 6
-	public const string STATUS_ATTENDED = 'ATTENDED'; // 7
-	public const string STATUS_MATERIALS_SENT = 'MATERIALS_SENT'; // 8
-	public const string STATUS_ACCESS_TOKEN_USED = 'ACCESS_TOKEN_USED'; // 9
-	public const string STATUS_CANCELED = 'CANCELED'; // 10
-	public const string STATUS_IMPORTED = 'IMPORTED'; // 13
-	public const string STATUS_NON_PUBLIC_TRAINING = 'NON_PUBLIC_TRAINING'; // 14
-	public const string STATUS_REMINDED = 'REMINDED'; // 15
-	public const string STATUS_PAID_AFTER = 'PAID_AFTER'; // 16
-	public const string STATUS_INVOICE_SENT_AFTER = 'INVOICE_SENT_AFTER'; // 17
-	public const string STATUS_PRO_FORMA_INVOICE_SENT = 'PRO_FORMA_INVOICE_SENT'; // 18
-	public const string STATUS_SPAM = 'SPAM'; // 19
 
 	/** @var array<string, int> */
 	private array $statusIds = [];
 
-	/** @var array<string, array<int, string>> */
+	/** @var array<string, array<int, TrainingApplicationStatus>> */
 	private array $childrenStatuses = [];
 
-	/** @var array<string, array<int, string>> */
+	/** @var array<string, array<int, TrainingApplicationStatus>> */
 	private array $parentStatuses = [];
 
-	/** @var array<string, array<int, string>> */
+	/** @var array<string, array<int, TrainingApplicationStatus>> */
 	private array $descendantStatuses = [];
 
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly TrainingStatusHistory $trainingStatusHistory,
+		private readonly TrainingApplicationStatusHistory $statusHistory,
 	) {
 	}
 
@@ -55,79 +37,79 @@ class Statuses
 	/**
 	 * @throws TrainingStatusIdNotIntException
 	 */
-	public function getStatusId(string $status): int
+	public function getStatusId(TrainingApplicationStatus $status): int
 	{
-		if (!isset($this->statusIds[$status])) {
+		if (!isset($this->statusIds[$status->value])) {
 			$statusId = $this->database->fetchField(
 				'SELECT id_status FROM training_application_status WHERE status = ?',
-				$status,
+				$status->value,
 			);
 			if (!is_int($statusId)) {
 				throw new TrainingStatusIdNotIntException($status, $statusId);
 			}
-			$this->statusIds[$status] = $statusId;
+			$this->statusIds[$status->value] = $statusId;
 		}
-		return $this->statusIds[$status];
+		return $this->statusIds[$status->value];
 	}
 
 
 	/**
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
 	public function getAttendedStatuses(): array
 	{
-		return [$this->getStatusId(self::STATUS_ATTENDED) => self::STATUS_ATTENDED] + $this->getDescendantStatuses(self::STATUS_ATTENDED);
+		return [$this->getStatusId(TrainingApplicationStatus::Attended) => TrainingApplicationStatus::Attended] + $this->getDescendantStatuses(TrainingApplicationStatus::Attended);
 	}
 
 
 	/**
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
 	public function getAllowFilesStatuses(): array
 	{
 		return [
-			$this->getStatusId(self::STATUS_INVOICE_SENT) => self::STATUS_INVOICE_SENT,
-			$this->getStatusId(self::STATUS_PRO_FORMA_INVOICE_SENT) => self::STATUS_PRO_FORMA_INVOICE_SENT,
-			$this->getStatusId(self::STATUS_REMINDED) => self::STATUS_REMINDED,
+			$this->getStatusId(TrainingApplicationStatus::InvoiceSent) => TrainingApplicationStatus::InvoiceSent,
+			$this->getStatusId(TrainingApplicationStatus::ProFormaInvoiceSent) => TrainingApplicationStatus::ProFormaInvoiceSent,
+			$this->getStatusId(TrainingApplicationStatus::Reminded) => TrainingApplicationStatus::Reminded,
 		] + $this->getAttendedStatuses();
 	}
 
 
 	/**
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
 	public function getDiscardedStatuses(): array
 	{
-		return $this->getCanceledStatus() + $this->getDescendantStatuses(self::STATUS_CANCELED);
+		return $this->getCanceledStatus() + $this->getDescendantStatuses(TrainingApplicationStatus::Canceled);
 	}
 
 
 	/**
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
 	public function getCanceledStatus(): array
 	{
-		return [$this->getStatusId(self::STATUS_CANCELED) => self::STATUS_CANCELED];
+		return [$this->getStatusId(TrainingApplicationStatus::Canceled) => TrainingApplicationStatus::Canceled];
 	}
 
 
 	/**
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
 	public function getInitialStatuses(): array
 	{
-		return $this->getChildrenStatuses(self::STATUS_CREATED);
+		return $this->getChildrenStatuses(TrainingApplicationStatus::Created);
 	}
 
 
 	/**
-	 * @param string $parent
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
-	public function getChildrenStatuses(string $parent): array
+	public function getChildrenStatuses(TrainingApplicationStatus $parent): array
 	{
-		if (!isset($this->childrenStatuses[$parent])) {
-			$this->childrenStatuses[$parent] = $this->database->fetchPairs(
+		if (!isset($this->childrenStatuses[$parent->value])) {
+			$this->childrenStatuses[$parent->value] = [];
+			$statuses = $this->database->fetchPairs(
 				'SELECT
 					st.id_status,
 					st.status
@@ -135,21 +117,23 @@ class Statuses
 					JOIN training_application_status sf ON sf.id_status = f.key_status_from
 					JOIN training_application_status st ON st.id_status = f.key_status_to
 				WHERE sf.status = ?',
-				$parent,
+				$parent->value,
 			);
+			foreach ($statuses as $status) {
+				$this->childrenStatuses[$parent->value][] = TrainingApplicationStatus::from($status);
+			}
 		}
-		return $this->childrenStatuses[$parent];
+		return $this->childrenStatuses[$parent->value];
 	}
 
 
 	/**
-	 * @param string $child
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
-	public function getParentStatuses(string $child): array
+	public function getParentStatuses(TrainingApplicationStatus $child): array
 	{
-		if (!isset($this->parentStatuses[$child])) {
-			$this->parentStatuses[$child] = $this->database->fetchPairs(
+		if (!isset($this->parentStatuses[$child->value])) {
+			$statuses = $this->database->fetchPairs(
 				'SELECT
 					sf.id_status,
 					sf.status
@@ -157,23 +141,24 @@ class Statuses
 					JOIN training_application_status sf ON sf.id_status = f.key_status_from
 					JOIN training_application_status st ON st.id_status = f.key_status_to
 				WHERE st.status = ?',
-				$child,
+				$child->value,
 			);
+			foreach ($statuses as $status) {
+				$this->parentStatuses[$child->value][] = TrainingApplicationStatus::from($status);
+			}
 		}
-		return $this->parentStatuses[$child];
+		return $this->parentStatuses[$child->value];
 	}
 
 
 	/**
-	 * @param string $parent
-	 * @param int $applicationId
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
-	public function getChildrenStatusesForApplicationId(string $parent, int $applicationId): array
+	public function getChildrenStatusesForApplicationId(TrainingApplicationStatus $parent, int $applicationId): array
 	{
 		$children = $this->getChildrenStatuses($parent);
-		if ($parent === self::STATUS_ATTENDED) {
-			$removeStatus = ($this->sendInvoiceAfter($applicationId) ? self::STATUS_MATERIALS_SENT : self::STATUS_INVOICE_SENT_AFTER);
+		if ($parent === TrainingApplicationStatus::Attended) {
+			$removeStatus = $this->sendInvoiceAfter($applicationId) ? TrainingApplicationStatus::MaterialsSent : TrainingApplicationStatus::InvoiceSentAfter;
 			unset($children[$this->getStatusId($removeStatus)]);
 		}
 		return $children;
@@ -181,19 +166,18 @@ class Statuses
 
 
 	/**
-	 * @param string $parent
-	 * @return array<int, string>
+	 * @return array<int, TrainingApplicationStatus>
 	 */
-	private function getDescendantStatuses(string $parent): array
+	private function getDescendantStatuses(TrainingApplicationStatus $parent): array
 	{
-		if (!isset($this->descendantStatuses[$parent])) {
+		if (!isset($this->descendantStatuses[$parent->value])) {
 			$statuses = $this->getChildrenStatuses($parent);
 			foreach ($statuses as $status) {
 				$statuses += $this->getDescendantStatuses($status);
 			}
-			$this->descendantStatuses[$parent] = $statuses;
+			$this->descendantStatuses[$parent->value] = $statuses;
 		}
-		return $this->descendantStatuses[$parent];
+		return $this->descendantStatuses[$parent->value];
 	}
 
 
@@ -201,12 +185,9 @@ class Statuses
 	 * Needs to be wrapped in transaction, not for public consumption,
 	 * use updateStatus(), updateStatusCallback() or updateStatusReturnCallback() instead.
 	 *
-	 * @param int $applicationId
-	 * @param string $status
-	 * @param string|null $date
 	 * @throws TrainingApplicationDoesNotExistException
 	 */
-	private function setStatus(int $applicationId, string $status, ?string $date): void
+	private function setStatus(int $applicationId, TrainingApplicationStatus $status, ?string $date): void
 	{
 		$statusId = $this->getStatusId($status);
 
@@ -259,7 +240,7 @@ class Statuses
 	}
 
 
-	public function updateStatus(int $applicationId, string $status, ?string $date = null): void
+	public function updateStatus(int $applicationId, TrainingApplicationStatus $status, ?string $date = null): void
 	{
 		$this->database->beginTransaction();
 		try {
@@ -275,7 +256,7 @@ class Statuses
 	 * @param callable(): int $callback
 	 * @throws CannotUpdateTrainingApplicationStatusException
 	 */
-	public function updateStatusCallbackReturnId(callable $callback, string $status, ?string $date): int
+	public function updateStatusCallbackReturnId(callable $callback, TrainingApplicationStatus $status, ?string $date): int
 	{
 		$this->database->beginTransaction();
 		try {
@@ -290,7 +271,7 @@ class Statuses
 	}
 
 
-	public function updateStatusCallback(int $applicationId, string $status, ?string $date, callable $callback): void
+	public function updateStatusCallback(int $applicationId, TrainingApplicationStatus $status, ?string $date, callable $callback): void
 	{
 		$this->database->beginTransaction();
 		try {
@@ -306,8 +287,8 @@ class Statuses
 	public function sendInvoiceAfter(int $applicationId): bool
 	{
 		return (
-			$this->trainingStatusHistory->historyContainsStatuses([self::STATUS_PAID_AFTER, self::STATUS_PRO_FORMA_INVOICE_SENT], $applicationId)
-			&& !$this->trainingStatusHistory->historyContainsStatuses([self::STATUS_INVOICE_SENT], $applicationId)
+			$this->statusHistory->historyContainsStatuses([TrainingApplicationStatus::PaidAfter, TrainingApplicationStatus::ProFormaInvoiceSent], $applicationId)
+			&& !$this->statusHistory->historyContainsStatuses([TrainingApplicationStatus::InvoiceSent], $applicationId)
 		);
 	}
 

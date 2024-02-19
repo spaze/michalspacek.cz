@@ -32,7 +32,7 @@
 			<td><small>{$iterator->getCounter()}.</small></td>
 			<td><small n:tag-if="$application->getName() === null"><a n:href="Trainings:application $application->getId()">{$application->getName() ?? smazáno}</a></small></td>
 			<td><small>{$application->getEmail() ?? smazáno}</small></td>
-			<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()}</code></small></td>
+			<td><small><code title="{$application->getStatusTime()|localeDay} {$application->getStatusTime()|date:'H:i:s'}">{$application->getStatus()->value}</code></small></td>
 		</tr>
 		{/foreach}
 	</tbody>

@@ -6,8 +6,8 @@ namespace MichalSpacekCz\Form;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Http\HttpInput;
 use MichalSpacekCz\Training\Applications\TrainingApplicationStorage;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
-use MichalSpacekCz\Training\Statuses\Statuses;
 
 readonly class TrainingApplicationMultipleFormFactory
 {
@@ -16,7 +16,7 @@ readonly class TrainingApplicationMultipleFormFactory
 		private FormFactory $factory,
 		private TrainingControlsFactory $trainingControlsFactory,
 		private TrainingApplicationStorage $trainingApplicationStorage,
-		private Statuses $trainingStatuses,
+		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private HttpInput $httpInput,
 	) {
 	}
@@ -42,8 +42,8 @@ readonly class TrainingApplicationMultipleFormFactory
 		$this->trainingControlsFactory->addStatusDate($form->addText('date', 'Datum:'), true);
 
 		$statuses = [];
-		foreach ($this->trainingStatuses->getInitialStatuses() as $status) {
-			$statuses[$status] = $status;
+		foreach ($this->trainingApplicationStatuses->getInitialStatuses() as $status) {
+			$statuses[$status->value] = $status->value;
 		}
 		$form->addSelect('status', 'Status:', $statuses)
 			->setRequired('Vyberte status')

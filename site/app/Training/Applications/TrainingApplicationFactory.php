@@ -4,10 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Applications;
 
 use MichalSpacekCz\Formatter\TexyFormatter;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
 use MichalSpacekCz\Training\Price;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Row;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
@@ -17,7 +18,7 @@ readonly class TrainingApplicationFactory
 {
 
 	public function __construct(
-		private Statuses $trainingStatuses,
+		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private TrainingMailMessageFactory $trainingMailMessageFactory,
 		private SymmetricKeyEncryption $emailEncryption,
 		private TexyFormatter $texyFormatter,
@@ -34,8 +35,9 @@ readonly class TrainingApplicationFactory
 	public function createFromDatabaseRow(Row $row): TrainingApplication
 	{
 		$price = new Price($row->price, $row->discount, $row->vatRate, $row->priceVat);
+		$status = TrainingApplicationStatus::from($row->status);
 		return new TrainingApplication(
-			$this->trainingStatuses,
+			$this->trainingApplicationStatuses,
 			$this->trainingMailMessageFactory,
 			$this->trainingFiles,
 			$row->id,
@@ -50,11 +52,11 @@ readonly class TrainingApplicationFactory
 			$row->companyId,
 			$row->companyTaxId,
 			$row->note,
-			$row->status,
+			$status,
 			$row->statusTime,
-			in_array($row->status, $this->trainingStatuses->getAttendedStatuses(), true),
-			in_array($row->status, $this->trainingStatuses->getDiscardedStatuses(), true),
-			in_array($row->status, $this->trainingStatuses->getAllowFilesStatuses(), true),
+			in_array($status, $this->trainingApplicationStatuses->getAttendedStatuses(), true),
+			in_array($status, $this->trainingApplicationStatuses->getDiscardedStatuses(), true),
+			in_array($status, $this->trainingApplicationStatuses->getAllowFilesStatuses(), true),
 			$row->dateId,
 			$row->trainingId,
 			$row->trainingAction,

@@ -8,9 +8,10 @@ use DateTime;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Dates\TrainingDateStatus;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Override;
 use RuntimeException;
 use Tester\Assert;
@@ -32,7 +33,7 @@ class TrainingApplicationStorageTest extends TestCase
 	public function __construct(
 		private readonly Database $database,
 		private readonly TrainingApplicationStorage $trainingApplicationStorage,
-		private readonly Statuses $trainingStatuses,
+		private readonly TrainingApplicationStatuses $applicationStatuses,
 	) {
 	}
 
@@ -40,16 +41,16 @@ class TrainingApplicationStorageTest extends TestCase
 	#[Override]
 	protected function setUp(): void
 	{
-		$this->database->setFetchPairsResult([ // For Statuses::getInitialStatuses()
+		$this->database->setFetchPairsResult([ // For ApplicationStatuses::getInitialStatuses()
 			self::STATUS_TENTATIVE => 'TENTATIVE',
 			4 => 'SIGNED_UP',
 			13 => 'IMPORTED',
 			14 => 'NON_PUBLIC_TRAINING',
 		]);
-		$this->database->addFetchFieldResult(self::STATUS_CREATED); // For Statuses::getStatusId() in TrainingApplicationStorage::insertApplication()
+		$this->database->addFetchFieldResult(self::STATUS_CREATED); // For ApplicationStatuses::getStatusId() in TrainingApplicationStorage::insertApplication()
 		$this->database->addFetchFieldResult(self::SOURCE_ID); // For TrainingApplicationSources::getSourceId in TrainingApplicationStorage::insertApplication()
 		$this->database->setInsertId((string)self::INSERT_ID);
-		$this->database->setFetchResult([ // For Statuses::setStatus() in Statuses::updateStatusCallbackReturnId()
+		$this->database->setFetchResult([ // For ApplicationStatuses::setStatus() in ApplicationStatuses::updateStatusCallbackReturnId()
 			'statusId' => self::STATUS_CREATED,
 			'statusTime' => new DateTime(),
 			'statusTimeTimeZone' => 'Europe/Prague',
@@ -61,13 +62,13 @@ class TrainingApplicationStorageTest extends TestCase
 	protected function tearDown(): void
 	{
 		$this->database->reset();
-		PrivateProperty::setValue($this->trainingStatuses, 'statusIds', []);
+		PrivateProperty::setValue($this->applicationStatuses, 'statusIds', []);
 	}
 
 
 	public function testAddInvitation(): void
 	{
-		$this->database->addFetchFieldResult(self::STATUS_TENTATIVE); // For Statuses::getStatusId() in Statuses::setStatus()
+		$this->database->addFetchFieldResult(self::STATUS_TENTATIVE); // For ApplicationStatuses::getStatusId() in ApplicationStatuses::setStatus()
 		$id = $this->trainingApplicationStorage->addInvitation(
 			$this->buildTrainingDate(),
 			'Name',
@@ -120,7 +121,7 @@ class TrainingApplicationStorageTest extends TestCase
 				null,
 				null,
 				null,
-				'ATTENDED',
+				TrainingApplicationStatus::Attended,
 				'michal-spacek',
 			);
 		}, RuntimeException::class, "Invalid initial status ATTENDED");
@@ -129,7 +130,7 @@ class TrainingApplicationStorageTest extends TestCase
 
 	public function testInsertApplicationNulls(): void
 	{
-		$this->database->addFetchFieldResult(self::STATUS_SIGNED_UP); // For Statuses::getStatusId() in Statuses::setStatus()
+		$this->database->addFetchFieldResult(self::STATUS_SIGNED_UP); // For ApplicationStatuses::getStatusId() in ApplicationStatuses::setStatus()
 		$this->trainingApplicationStorage->insertApplication(
 			12,
 			123,
@@ -145,7 +146,7 @@ class TrainingApplicationStorageTest extends TestCase
 			null,
 			null,
 			null,
-			'SIGNED_UP',
+			TrainingApplicationStatus::SignedUp,
 			'michal-spacek',
 		);
 		$this->assertInsertApplicationParams(
@@ -170,7 +171,7 @@ class TrainingApplicationStorageTest extends TestCase
 
 	public function testInsertApplicationEmptyStrings(): void
 	{
-		$this->database->addFetchFieldResult(self::STATUS_SIGNED_UP); // For Statuses::getStatusId() in Statuses::setStatus()
+		$this->database->addFetchFieldResult(self::STATUS_SIGNED_UP); // For ApplicationStatuses::getStatusId() in ApplicationStatuses::setStatus()
 		$this->trainingApplicationStorage->insertApplication(
 			12,
 			123,
@@ -186,7 +187,7 @@ class TrainingApplicationStorageTest extends TestCase
 			'',
 			null,
 			null,
-			'SIGNED_UP',
+			TrainingApplicationStatus::SignedUp,
 			'michal-spacek',
 		);
 		$this->assertInsertApplicationParams(

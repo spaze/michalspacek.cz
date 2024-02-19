@@ -6,8 +6,9 @@ namespace MichalSpacekCz\Training\Applications;
 use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
@@ -21,7 +22,7 @@ class TrainingApplications
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly Statuses $trainingStatuses,
+		private readonly TrainingApplicationStatuses $trainingApplicationStatuses,
 		private readonly TrainingApplicationFactory $trainingApplicationFactory,
 		private readonly Translator $translator,
 	) {
@@ -29,12 +30,11 @@ class TrainingApplications
 
 
 	/**
-	 * @param string $status
 	 * @return list<TrainingApplication>
 	 * @throws SodiumException
 	 * @throws HaliteAlert
 	 */
-	public function getByStatus(string $status): array
+	public function getByStatus(TrainingApplicationStatus $status): array
 	{
 		$result = $this->database->fetchAll(
 			'SELECT
@@ -93,7 +93,7 @@ class TrainingApplications
 				AND l.language = ?
 			ORDER BY
 				d.start, a.status_time',
-			$status,
+			$status->value,
 			$this->translator->getDefaultLocale(),
 		);
 
@@ -170,7 +170,7 @@ class TrainingApplications
 					AND s.status != ?
 					AND l.language = ?',
 				$dateId,
-				Statuses::STATUS_SPAM,
+				TrainingApplicationStatus::Spam,
 				$this->translator->getDefaultLocale(),
 			);
 			$applications = [];
@@ -190,7 +190,7 @@ class TrainingApplications
 	 */
 	public function getValidByDate(int $dateId): array
 	{
-		$discardedStatuses = $this->trainingStatuses->getDiscardedStatuses();
+		$discardedStatuses = $this->trainingApplicationStatuses->getDiscardedStatuses();
 		return array_values(array_filter($this->getByDate($dateId), function (TrainingApplication $value) use ($discardedStatuses): bool {
 			return !in_array($value->getStatus(), $discardedStatuses, true);
 		}));
@@ -221,7 +221,7 @@ class TrainingApplications
 				key_status NOT IN(?)
 				AND invoice_id IS NOT NULL
 				AND paid IS NULL',
-			array_keys($this->trainingStatuses->getDiscardedStatuses()),
+			array_keys($this->trainingApplicationStatuses->getDiscardedStatuses()),
 		);
 		if (!is_int($count)) {
 			throw new ShouldNotHappenException(sprintf("Count is a %s not an integer", get_debug_type($count)));
@@ -239,7 +239,7 @@ class TrainingApplications
 	 */
 	public function getCanceledPaidByDate(int $dateId): array
 	{
-		$canceledStatus = $this->trainingStatuses->getCanceledStatus();
+		$canceledStatus = $this->trainingApplicationStatuses->getCanceledStatus();
 		return array_values(array_filter($this->getByDate($dateId), function (TrainingApplication $value) use ($canceledStatus): bool {
 			return ($value->getPaid() && in_array($value->getStatus(), $canceledStatus));
 		}));
@@ -407,8 +407,8 @@ class TrainingApplications
 
 	public function setAccessTokenUsed(TrainingApplication $application): void
 	{
-		if (in_array($application->getStatus(), $this->trainingStatuses->getParentStatuses(Statuses::STATUS_ACCESS_TOKEN_USED), true)) {
-			$this->trainingStatuses->updateStatus($application->getId(), Statuses::STATUS_ACCESS_TOKEN_USED);
+		if (in_array($application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::AccessTokenUsed), true)) {
+			$this->trainingApplicationStatuses->updateStatus($application->getId(), TrainingApplicationStatus::AccessTokenUsed);
 		}
 	}
 

@@ -7,9 +7,9 @@ use Contributte\Translation\Translator;
 use DateTime;
 use DateTimeImmutable;
 use MichalSpacekCz\DateTime\DateTimeFormatter;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Exceptions\TrainingDateDoesNotExistException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotRemoteNoVenueException;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Database\Explorer;
 
 class TrainingDates
@@ -23,7 +23,7 @@ class TrainingDates
 
 	public function __construct(
 		private readonly Explorer $database,
-		private readonly Statuses $trainingStatuses,
+		private readonly TrainingApplicationStatuses $trainingApplicationStatuses,
 		private readonly DateTimeFormatter $dateTimeFormatter,
 		private readonly Translator $translator,
 		private readonly TrainingDateFactory $trainingDateFactory,
@@ -148,7 +148,7 @@ class TrainingDates
 				AND l.language = ?
 			ORDER BY
 				d.start',
-			array_keys($this->trainingStatuses->getDiscardedStatuses()),
+			array_keys($this->trainingApplicationStatuses->getDiscardedStatuses()),
 			$this->translator->getDefaultLocale(),
 		);
 

@@ -10,9 +10,10 @@ use MichalSpacekCz\Test\NullLogger;
 use MichalSpacekCz\Test\TestCaseRunner;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplicationSessionSection;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Files\TrainingFiles;
 use MichalSpacekCz\Training\Mails\TrainingMailMessageFactory;
-use MichalSpacekCz\Training\Statuses\Statuses;
 use Nette\Utils\Html;
 use Override;
 use stdClass;
@@ -33,7 +34,7 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 		private readonly TrainingApplicationFormDataLogger $formDataLogger,
 		private readonly NullLogger $logger,
 		private readonly NullSession $session,
-		private readonly Statuses $trainingStatuses,
+		private readonly TrainingApplicationStatuses $applicationStatuses,
 		private readonly TrainingMailMessageFactory $trainingMailMessageFactory,
 		private readonly TrainingFiles $trainingFiles,
 	) {
@@ -93,7 +94,7 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 	private function getApplication(): TrainingApplication
 	{
 		return new TrainingApplication(
-			$this->trainingStatuses,
+			$this->applicationStatuses,
 			$this->trainingMailMessageFactory,
 			$this->trainingFiles,
 			self::APPLICATION_ID,
@@ -108,7 +109,7 @@ class TrainingApplicationFormDataLoggerTest extends TestCase
 			null,
 			null,
 			null,
-			'ATTENDED',
+			TrainingApplicationStatus::Attended,
 			new DateTime(),
 			true,
 			false,

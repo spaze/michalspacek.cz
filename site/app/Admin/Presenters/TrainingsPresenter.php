@@ -8,12 +8,15 @@ use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Form\DeletePersonalDataFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationAdminFormFactory;
 use MichalSpacekCz\Form\TrainingApplicationMultipleFormFactory;
+use MichalSpacekCz\Form\TrainingApplicationStatusesFormFactory;
 use MichalSpacekCz\Form\TrainingFileFormFactory;
-use MichalSpacekCz\Form\TrainingStatusesFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\Applications\TrainingApplications;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
+use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatusHistory;
 use MichalSpacekCz\Training\DateList\DateListOrder;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsList;
 use MichalSpacekCz\Training\DateList\TrainingApplicationsListFactory;
@@ -30,8 +33,6 @@ use MichalSpacekCz\Training\Reviews\TrainingReview;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputs;
 use MichalSpacekCz\Training\Reviews\TrainingReviewInputsFactory;
 use MichalSpacekCz\Training\Reviews\TrainingReviews;
-use MichalSpacekCz\Training\Statuses\Statuses;
-use MichalSpacekCz\Training\Statuses\TrainingStatusHistory;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
@@ -60,8 +61,8 @@ class TrainingsPresenter extends BasePresenter
 		private readonly PreliminaryTrainings $trainingPreliminaryApplications,
 		private readonly TrainingDates $trainingDates,
 		private readonly UpcomingTrainingDates $upcomingTrainingDates,
-		private readonly Statuses $trainingStatuses,
-		private readonly TrainingStatusHistory $trainingStatusHistory,
+		private readonly TrainingApplicationStatuses $trainingApplicationStatuses,
+		private readonly TrainingApplicationStatusHistory $trainingApplicationStatusHistory,
 		private readonly Trainings $trainings,
 		private readonly TrainingReviews $trainingReviews,
 		private readonly DateTimeFormatter $dateTimeFormatter,
@@ -70,7 +71,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly TrainingApplicationMultipleFormFactory $trainingApplicationMultipleFormFactory,
 		private readonly TrainingFileFormFactory $trainingFileFormFactory,
 		private readonly TrainingDateInputsFactory $trainingDateInputsFactory,
-		private readonly TrainingStatusesFormFactory $trainingStatusesFormFactory,
+		private readonly TrainingApplicationStatusesFormFactory $trainingApplicationStatusesFormFactory,
 		private readonly TrainingApplicationsListFactory $trainingApplicationsListFactory,
 		private readonly TrainingReviewInputsFactory $trainingReviewInputsFactory,
 	) {
@@ -111,8 +112,8 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->note = $this->training->getNote();
 		$this->template->applications = $this->applications;
 		$this->template->validCount = $validCount;
-		$this->template->attendedStatuses = $this->trainingStatuses->getAttendedStatuses();
-		$this->template->filesStatuses = $this->trainingStatuses->getAllowFilesStatuses();
+		$this->template->attendedStatuses = $this->trainingApplicationStatuses->getAttendedStatuses();
+		$this->template->filesStatuses = $this->trainingApplicationStatuses->getAllowFilesStatuses();
 		$this->template->reviews = $this->trainingReviews->getReviewsByDateId($param);
 	}
 
@@ -124,7 +125,7 @@ class TrainingsPresenter extends BasePresenter
 		if ($dateId === null) {
 			throw new BadRequestException("The application id '{$param}' should have a training date set");
 		}
-		if (!in_array($application->getStatus(), $this->trainingStatuses->getAllowFilesStatuses(), true)) {
+		if (!in_array($application->getStatus(), $this->trainingApplicationStatuses->getAllowFilesStatuses(), true)) {
 			$this->redirect('date', $dateId);
 		}
 
@@ -191,10 +192,10 @@ class TrainingsPresenter extends BasePresenter
 		$this->template->trainingCity = $city;
 		$this->template->sourceName = $this->application->getSourceName();
 		$this->template->companyId = $this->application->getCompanyId();
-		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingStatuses->getAllowFilesStatuses());
-		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingStatuses->getParentStatuses(Statuses::STATUS_INVITED));
+		$this->template->allowFiles = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getAllowFilesStatuses());
+		$this->template->toBeInvited = in_array($this->application->getStatus(), $this->trainingApplicationStatuses->getParentStatuses(TrainingApplicationStatus::Invited));
 		$this->template->accessToken = $this->application->getAccessToken();
-		$this->template->history = $this->trainingStatusHistory->getStatusHistory($param);
+		$this->template->history = $this->trainingApplicationStatusHistory->getStatusHistory($param);
 	}
 
 
@@ -234,7 +235,7 @@ class TrainingsPresenter extends BasePresenter
 
 	protected function createComponentStatuses(): UiForm
 	{
-		return $this->trainingStatusesFormFactory->create(
+		return $this->trainingApplicationStatusesFormFactory->create(
 			function (?Html $message): never {
 				if ($message) {
 					$this->flashMessage($message);

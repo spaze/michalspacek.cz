@@ -1,17 +1,17 @@
 <?php
 declare(strict_types = 1);
 
-namespace MichalSpacekCz\Training\Statuses;
+namespace MichalSpacekCz\Training\ApplicationStatuses;
 
 use DateTimeImmutable;
 
-readonly class TrainingStatusHistoryItem
+readonly class TrainingApplicationStatusHistoryItem
 {
 
 	public function __construct(
 		private int $id,
 		private int $statusId,
-		private string $status,
+		private TrainingApplicationStatus $status,
 		private DateTimeImmutable $statusTime,
 	) {
 	}
@@ -29,7 +29,7 @@ readonly class TrainingStatusHistoryItem
 	}
 
 
-	public function getStatus(): string
+	public function getStatus(): TrainingApplicationStatus
 	{
 		return $this->status;
 	}
