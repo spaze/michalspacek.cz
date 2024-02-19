@@ -5,9 +5,6 @@ App.ready(document, function () {
 		if (container) {
 			container.classList.toggle('hidden');
 		}
-		if (container.dataset.display) {
-			container.style.display = container.dataset.display;
-		}
 	});
 
 	const FormFields = {};

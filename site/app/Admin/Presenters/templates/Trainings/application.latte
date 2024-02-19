@@ -48,7 +48,7 @@
 					<td><small>{$statusTime}</small></td>
 					<td><small><a href="#historie" class="open-container">Historie</a></small></td>
 				</tr>
-				<tbody id="historie-container" class="hidden" data-display="table-row-group">
+				<tbody id="historie-container" class="hidden">
 				{formContainer statusHistoryDelete}
 				<tr n:foreach="$history as $record" class="row">
 					{var $statusTime = $record->getStatusTime()->format('Y-m-d H:i:s')}
