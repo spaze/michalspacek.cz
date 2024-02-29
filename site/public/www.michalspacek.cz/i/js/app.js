@@ -44,3 +44,14 @@ App.clone = function (element) {
 	}
 	return cloned;
 }
+App.nextElementSiblings = function (element, selector) {
+	const elements = [];
+	let sibling = element.nextElementSibling;
+	while (sibling) {
+		if (sibling.matches(selector)) {
+			elements.push(sibling);
+		}
+		sibling = sibling.nextElementSibling;
+	}
+	return elements;
+}
