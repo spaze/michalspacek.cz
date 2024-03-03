@@ -25,7 +25,7 @@ class Bootstrap
 	{
 		return self::createConfigurator(
 			ServerEnv::tryGetString('ENVIRONMENT') === self::MODE_DEVELOPMENT,
-			self::SITE_DIR . '/config/extra-' . ServerEnv::tryGetString('SERVER_NAME') . '.neon',
+			self::SITE_DIR . '/config/extra-' . ServerEnv::getString('SERVER_NAME') . '.neon',
 		)->createContainer();
 	}
 
