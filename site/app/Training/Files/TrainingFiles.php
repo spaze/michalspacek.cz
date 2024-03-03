@@ -81,7 +81,7 @@ readonly class TrainingFiles
 
 
 	/**
-	 * @param int[] $applicationIds
+	 * @param list<int> $applicationIds
 	 */
 	public function addFile(DateTimeInterface $start, FileUpload $file, array $applicationIds): string
 	{

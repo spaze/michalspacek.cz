@@ -19,7 +19,7 @@ readonly class TrainingFileFormFactory
 
 	/**
 	 * @param callable(Html|string, string): void $onSuccess
-	 * @param array<int, int> $applicationIdsAllowedFiles
+	 * @param list<int> $applicationIdsAllowedFiles
 	 */
 	public function create(callable $onSuccess, DateTimeInterface $trainingStart, array $applicationIdsAllowedFiles): UiForm
 	{
