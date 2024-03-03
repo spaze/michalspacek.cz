@@ -52,6 +52,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         array (
             'MichalSpacekCz\\' => 15,
         ),
+        'J' => 
+        array (
+            'JetBrains\\PhpStorm\\' => 19,
+        ),
         'E' => 
         array (
             'Efabrica\\PHPStanLatte\\' => 22,
@@ -179,6 +183,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'MichalSpacekCz\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+        'JetBrains\\PhpStorm\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jetbrains/phpstorm-attributes/src',
         ),
         'Efabrica\\PHPStanLatte\\' => 
         array (
