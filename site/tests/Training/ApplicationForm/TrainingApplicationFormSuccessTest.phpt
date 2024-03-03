@@ -159,7 +159,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 
 	public function testSuccessUpdateApplication(): void
 	{
-		$this->sessionSectionSet('application', [
+		$this->sessionSectionParentSet->invoke($this->sessionSection, 'application', [
 			self::TRAINING_ACTION => ['dateId' => self::DATE_ID, 'id' => self::APPLICATION_ID],
 			'foo' => 'bar',
 		]);
@@ -276,12 +276,6 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	private function sessionSectionGet(string $name): mixed
 	{
 		return $this->sessionSectionParentGet->invoke($this->sessionSection, $name);
-	}
-
-
-	private function sessionSectionSet(string $name, mixed $value): void
-	{
-		$this->sessionSectionParentSet->invoke($this->sessionSection, $name, $value);
 	}
 
 }
