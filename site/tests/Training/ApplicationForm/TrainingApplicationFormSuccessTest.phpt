@@ -273,9 +273,17 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	}
 
 
-	private function sessionSectionGet(string $name): mixed
+	/**
+	 * @return string|int|array<mixed>
+	 */
+	private function sessionSectionGet(string $name): string|int|array
 	{
-		return $this->sessionSectionParentGet->invoke($this->sessionSection, $name);
+		$result = $this->sessionSectionParentGet->invoke($this->sessionSection, $name);
+		if (!is_string($result) && !is_int($result) && !is_array($result)) {
+			throw new ShouldNotHappenException(sprintf('Session data type is %s, but should be string|int|array', get_debug_type($result)));
+		} else {
+			return $result;
+		}
 	}
 
 }
