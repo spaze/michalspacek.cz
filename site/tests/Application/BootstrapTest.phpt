@@ -24,10 +24,11 @@ class BootstrapTest extends TestCase
 
 	public function __construct()
 	{
-		if (Debugger::$logDirectory === null) {
+		$logDirectory = Debugger::$logDirectory;
+		if ($logDirectory === null) {
 			throw new ShouldNotHappenException('Call Nette\Bootstrap\Configurator::enableTracy() first, possibly in MichalSpacekCz\Application\Bootstrap::createConfigurator()');
 		}
-		$this->exceptionLog = Debugger::$logDirectory . '/' . ILogger::EXCEPTION . '.log';
+		$this->exceptionLog = $logDirectory . '/' . ILogger::EXCEPTION . '.log';
 		if (file_exists($this->exceptionLog)) {
 			$this->tempLog = $this->exceptionLog . '.' . uniqid(more_entropy: true);
 			rename($this->exceptionLog, $this->tempLog);

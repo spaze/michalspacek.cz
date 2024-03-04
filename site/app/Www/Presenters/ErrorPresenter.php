@@ -9,6 +9,7 @@ use MichalSpacekCz\Application\Exceptions\NoOriginalRequestException;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\EasterEgg\FourOhFourButFound;
+use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IResponse;
@@ -102,7 +103,11 @@ class ErrorPresenter extends BaseErrorPresenter
 	protected function getLocaleLinkAction(): string
 	{
 		$requestParam = $this->appRequest->getOriginalRequest($this->getRequest());
-		return $requestParam->getPresenterName() . ':' . $requestParam->getParameter(self::ActionKey);
+		$action = $requestParam->getParameter(self::ActionKey);
+		if (!is_string($action)) {
+			throw new ShouldNotHappenException(sprintf('Action should be a string, %s provided', get_debug_type($action)));
+		}
+		return $requestParam->getPresenterName() . ':' . $action;
 	}
 
 
