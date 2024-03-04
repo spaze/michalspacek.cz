@@ -25,7 +25,7 @@ class Bootstrap
 	{
 		return self::createConfigurator(
 			ServerEnv::tryGetString('ENVIRONMENT') === self::MODE_DEVELOPMENT,
-			self::SITE_DIR . '/config/extra-' . ServerEnv::tryGetString('SERVER_NAME') . '.neon',
+			self::SITE_DIR . '/config/extra-' . ServerEnv::getString('SERVER_NAME') . '.neon',
 		)->createContainer();
 	}
 
@@ -112,12 +112,13 @@ class Bootstrap
 		$args[] = self::DEBUG;
 		$args[] = self::COLORS;
 		$cliArgsParser = new Parser("\n " . implode("\n ", $args));
+		$cliArgsError = null;
 		try {
 			$cliArgsParsed = $cliArgsParser->parse();
 		} catch (Exception $e) {
 			$cliArgsError = $e->getMessage();
 		}
-		return new CliArgs($cliArgsParsed ?? [], $cliArgsError ?? null);
+		return new CliArgs($cliArgsParsed ?? [], $cliArgsError);
 	}
 
 }

@@ -6,9 +6,9 @@ namespace MichalSpacekCz\Training\ApplicationStatuses;
 use DateTime;
 use DateTimeInterface;
 use Exception;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
-use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Nette\Database\Explorer;
 use Tracy\Debugger;
 
@@ -30,25 +30,19 @@ class TrainingApplicationStatuses
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private readonly TrainingApplicationStatusHistory $statusHistory,
 	) {
 	}
 
 
-	/**
-	 * @throws TrainingStatusIdNotIntException
-	 */
 	public function getStatusId(TrainingApplicationStatus $status): int
 	{
 		if (!isset($this->statusIds[$status->value])) {
-			$statusId = $this->database->fetchField(
+			$this->statusIds[$status->value] = $this->typedDatabase->fetchFieldInt(
 				'SELECT id_status FROM training_application_status WHERE status = ?',
 				$status->value,
 			);
-			if (!is_int($statusId)) {
-				throw new TrainingStatusIdNotIntException($status, $statusId);
-			}
-			$this->statusIds[$status->value] = $statusId;
 		}
 		return $this->statusIds[$status->value];
 	}
@@ -110,7 +104,7 @@ class TrainingApplicationStatuses
 	{
 		if (!isset($this->childrenStatuses[$parent->value])) {
 			$this->childrenStatuses[$parent->value] = [];
-			$statuses = $this->database->fetchPairs(
+			$statuses = $this->typedDatabase->fetchPairsIntString(
 				'SELECT
 					st.id_status,
 					st.status
@@ -134,7 +128,7 @@ class TrainingApplicationStatuses
 	public function getParentStatuses(TrainingApplicationStatus $child): array
 	{
 		if (!isset($this->parentStatuses[$child->value])) {
-			$statuses = $this->database->fetchPairs(
+			$statuses = $this->typedDatabase->fetchPairsIntString(
 				'SELECT
 					sf.id_status,
 					sf.status

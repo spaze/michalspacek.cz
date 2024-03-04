@@ -29,6 +29,7 @@
 	</universalObjectCrates>
 	<stubs>
 		<file name="stubs/Nette/Application/UI/Component.phpstub"/>
+		<file name="stubs/Nette/CommandLine/Parser.phpstub"/>
 		<file name="stubs/Nette/DI/Container.phpstub"/>
 	</stubs>
 	<issueHandlers>

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords\Disclosures;
 
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
@@ -70,11 +69,6 @@ class PasswordHashingDisclosuresTest extends TestCase
 	{
 		$this->database->setFetchFieldDefaultResult(null);
 		Assert::null($this->disclosures->getDisclosureId('https://example.com/', 'https://archive.example.com/'));
-
-		$this->database->setFetchFieldDefaultResult('foo');
-		Assert::exception(function (): void {
-			$this->disclosures->getDisclosureId('https://example.com/', 'https://archive.example.com/');
-		}, ShouldNotHappenException::class);
 
 		$this->database->setFetchFieldDefaultResult(123);
 		Assert::same(123, $this->disclosures->getDisclosureId('https://example.com/', 'https://archive.example.com/'));

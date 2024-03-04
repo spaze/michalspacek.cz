@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords\Disclosures;
 
 use DateTime;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Pulse\Passwords\Rating;
-use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 
 readonly class PasswordHashingDisclosures
@@ -13,6 +13,7 @@ readonly class PasswordHashingDisclosures
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private Rating $rating,
 	) {
 	}
@@ -37,7 +38,7 @@ readonly class PasswordHashingDisclosures
 	 */
 	public function getVisibleDisclosures(): array
 	{
-		return $this->database->fetchPairs(
+		return $this->typedDatabase->fetchPairsStringString(
 			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
 			$this->rating->getVisibleDisclosures(),
 		);
@@ -49,7 +50,7 @@ readonly class PasswordHashingDisclosures
 	 */
 	public function getInvisibleDisclosures(): array
 	{
-		return $this->database->fetchPairs(
+		return $this->typedDatabase->fetchPairsStringString(
 			'SELECT alias, type FROM password_disclosure_types WHERE alias IN (?) ORDER BY type',
 			$this->rating->getInvisibleDisclosures(),
 		);
@@ -58,11 +59,9 @@ readonly class PasswordHashingDisclosures
 
 	public function getDisclosureId(string $url, string $archive): ?int
 	{
-		$id = $this->database->fetchField('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
-		if (!$id) {
+		$id = $this->typedDatabase->fetchFieldIntNullable('SELECT id FROM password_disclosures WHERE url = ? AND archive = ?', $url, $archive);
+		if ($id === null) {
 			return null;
-		} elseif (!is_int($id)) {
-			throw new ShouldNotHappenException(sprintf("Disclosure id for URL '%s' and archive '%s' is a %s not an integer", $url, $archive, get_debug_type($id)));
 		}
 		return $id;
 	}

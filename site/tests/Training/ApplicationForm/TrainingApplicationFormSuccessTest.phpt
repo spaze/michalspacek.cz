@@ -159,7 +159,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 
 	public function testSuccessUpdateApplication(): void
 	{
-		$this->sessionSectionSet('application', [
+		$this->sessionSectionParentSet->invoke($this->sessionSection, 'application', [
 			self::TRAINING_ACTION => ['dateId' => self::DATE_ID, 'id' => self::APPLICATION_ID],
 			'foo' => 'bar',
 		]);
@@ -273,15 +273,17 @@ class TrainingApplicationFormSuccessTest extends TestCase
 	}
 
 
-	private function sessionSectionGet(string $name): mixed
+	/**
+	 * @return string|int|array<mixed>
+	 */
+	private function sessionSectionGet(string $name): string|int|array
 	{
-		return $this->sessionSectionParentGet->invoke($this->sessionSection, $name);
-	}
-
-
-	private function sessionSectionSet(string $name, mixed $value): void
-	{
-		$this->sessionSectionParentSet->invoke($this->sessionSection, $name, $value);
+		$result = $this->sessionSectionParentGet->invoke($this->sessionSection, $name);
+		if (!is_string($result) && !is_int($result) && !is_array($result)) {
+			throw new ShouldNotHappenException(sprintf('Session data type is %s, but should be string|int|array', get_debug_type($result)));
+		} else {
+			return $result;
+		}
 	}
 
 }

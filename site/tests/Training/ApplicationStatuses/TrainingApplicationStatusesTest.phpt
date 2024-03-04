@@ -7,7 +7,6 @@ namespace MichalSpacekCz\Training\ApplicationStatuses;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
-use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -40,15 +39,6 @@ class TrainingApplicationStatusesTest extends TestCase
 
 		$this->database->setFetchFieldDefaultResult('nah, it cached');
 		Assert::same(303, $this->applicationStatuses->getStatusId(TrainingApplicationStatus::SignedUp));
-	}
-
-
-	public function testGetStatusIdNotInt(): void
-	{
-		$this->database->setFetchFieldDefaultResult('donut');
-		Assert::exception(function (): void {
-			$this->applicationStatuses->getStatusId(TrainingApplicationStatus::SignedUp);
-		}, TrainingStatusIdNotIntException::class, "Training status 'SIGNED_UP' id is a string not an integer");
 	}
 
 }

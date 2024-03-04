@@ -3,27 +3,24 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Http;
 
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Http\Exceptions\HttpRedirectDestinationUrlMalformedException;
-use MichalSpacekCz\ShouldNotHappenException;
-use Nette\Database\Explorer;
 use Nette\Http\UrlScript;
 
 readonly class Redirections
 {
 
 	public function __construct(
-		private Explorer $database,
+		private TypedDatabase $database,
 	) {
 	}
 
 
 	public function getDestination(UrlScript $sourceUrl): ?string
 	{
-		$destination = $this->database->fetchField('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath());
-		if (!$destination) {
+		$destination = $this->database->fetchFieldStringNullable('SELECT destination FROM redirections WHERE source = ?', $sourceUrl->getPath());
+		if ($destination === null) {
 			return null;
-		} elseif (!is_string($destination)) {
-			throw new ShouldNotHappenException(sprintf("Redirect destination for '%s' is a %s not a string", $sourceUrl->getPath(), get_debug_type($destination)));
 		}
 		$destinationUrl = parse_url($destination);
 		if ($destinationUrl === false) {

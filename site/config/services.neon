@@ -25,6 +25,7 @@ services:
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz
 	- MichalSpacekCz\Css\CriticalCssFactory
+	- MichalSpacekCz\Database\TypedDatabase
 	- MichalSpacekCz\DateTime\DateTime
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
@@ -83,15 +84,15 @@ services:
 	talkVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @talkMediaResources)
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
-	- MichalSpacekCz\Pulse\Companies(@database.pulse.context)
-	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.context)
-	- MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures(@database.pulse.context)
-	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.context)
+	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer)
+	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.explorer)
+	- MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures(@database.pulse.explorer)
+	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.explorer)
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithmAttributesFactory
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory
-	- MichalSpacekCz\Pulse\Sites(@database.pulse.context)
+	- MichalSpacekCz\Pulse\Sites(@database.pulse.explorer)
 	- MichalSpacekCz\Tags\Tags
 	- MichalSpacekCz\Talks\Slides\TalkSlides
 	- MichalSpacekCz\Talks\TalkFactory(videoFactory: @talkVideoFactory)
@@ -145,8 +146,8 @@ services:
 	- MichalSpacekCz\Training\Trainings\Trainings
 	- MichalSpacekCz\Training\Venues\TrainingVenues
 	- MichalSpacekCz\Twitter\TwitterCards
-	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.context, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%)
-	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.context)
+	- MichalSpacekCz\UpcKeys\Technicolor(@database.upcKeys.explorer, apiUrl: %awsLambda.upcKeys.url%, apiKey: %awsLambda.upcKeys.apiKey%)
+	- MichalSpacekCz\UpcKeys\Ubee(@database.upcKeys.explorer)
 	- MichalSpacekCz\UpcKeys\UpcKeys(routers: [@MichalSpacekCz\UpcKeys\Technicolor, @MichalSpacekCz\UpcKeys\Ubee])
 	- MichalSpacekCz\User\Manager(passwordEncryption: @passwordEncryption, permanentLoginInterval: %permanentLogin.interval%)
 	- MichalSpacekCz\Utils\Strings

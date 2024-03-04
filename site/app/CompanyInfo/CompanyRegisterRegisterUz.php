@@ -60,7 +60,7 @@ readonly class CompanyRegisterRegisterUz implements CompanyRegister
 			IResponse::S200_OK,
 			'OK',
 			$unit->ico,
-			(isset($unit->dic) ? strtoupper(self::COUNTRY_CODE) . $unit->dic : ''),
+			isset($unit->dic) && is_string($unit->dic) ? strtoupper(self::COUNTRY_CODE) . $unit->dic : '',
 			$unit->nazovUJ,
 			$unit->ulica,
 			$unit->mesto,

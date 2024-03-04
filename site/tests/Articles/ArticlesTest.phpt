@@ -4,15 +4,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Articles;
 
-use DateTime;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostFactory;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\NoOpTranslator;
 use MichalSpacekCz\Test\TestCaseRunner;
+use Nette\Utils\DateTime;
 use Override;
 use Tester\Assert;
 use Tester\TestCase;
@@ -28,6 +28,7 @@ class ArticlesTest extends TestCase
 
 	public function __construct(
 		private readonly Database $database,
+		TypedDatabase $typedDatabase,
 		private readonly NoOpTranslator $translator,
 		TexyFormatter $texyFormatter,
 		BlogPostFactory $blogPostFactory,
@@ -35,6 +36,7 @@ class ArticlesTest extends TestCase
 	) {
 		$this->articles = new Articles(
 			$this->database,
+			$typedDatabase,
 			$texyFormatter,
 			$blogPostFactory,
 			$tags,
@@ -164,17 +166,9 @@ class ArticlesTest extends TestCase
 		$this->database->setFetchFieldDefaultResult(null);
 		Assert::null($this->articles->getNearestPublishDate());
 
-		$this->database->setFetchFieldDefaultResult(false);
-		Assert::null($this->articles->getNearestPublishDate());
-
-		$nearest = new DateTime('+3 days');
+		$nearest = new \Nette\Utils\DateTime('+3 days');
 		$this->database->setFetchFieldDefaultResult($nearest);
 		Assert::same($nearest, $this->articles->getNearestPublishDate());
-
-		Assert::exception(function (): void {
-			$this->database->setFetchFieldDefaultResult('\o/');
-			$this->articles->getNearestPublishDate();
-		}, ShouldNotHappenException::class, 'Nearest published date is a string not a DateTime object');
 	}
 
 
@@ -183,17 +177,9 @@ class ArticlesTest extends TestCase
 		$this->database->setFetchFieldDefaultResult(null);
 		Assert::null($this->articles->getNearestPublishDateByTags(['foo']));
 
-		$this->database->setFetchFieldDefaultResult(false);
-		Assert::null($this->articles->getNearestPublishDateByTags(['foo']));
-
 		$nearest = new DateTime('+3 days');
 		$this->database->setFetchFieldDefaultResult($nearest);
 		Assert::same($nearest, $this->articles->getNearestPublishDateByTags(['foo']));
-
-		Assert::exception(function (): void {
-			$this->database->setFetchFieldDefaultResult('\o/');
-			$this->articles->getNearestPublishDateByTags(['foo']);
-		}, ShouldNotHappenException::class, 'Nearest published date is a string not a DateTime object');
 	}
 
 

@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Pulse\Passwords;
 
 use DateTime;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Pulse\Companies;
 use MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms;
 use MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistry;
 use MichalSpacekCz\Pulse\Passwords\Storage\StorageRegistryFactory;
 use MichalSpacekCz\Pulse\Sites;
-use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Database\Explorer;
 use Nette\Utils\ArrayHash;
 
@@ -19,6 +19,7 @@ readonly class Passwords
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private Companies $companies,
 		private Sites $sites,
 		private PasswordsSorting $sorting,
@@ -241,7 +242,7 @@ readonly class Passwords
 	 */
 	private function getStorageId(int $companyId, int $algoId, string $siteId, string $from, bool $fromConfirmed, ?string $attributes, ?string $note): ?int
 	{
-		$result = $this->database->fetchField(
+		$result = $this->typedDatabase->fetchFieldIntNullable(
 			'SELECT id FROM password_storages WHERE ?',
 			[
 				'key_companies' => ($siteId === Sites::ALL ? $companyId : null),
@@ -254,10 +255,8 @@ readonly class Passwords
 			],
 		);
 
-		if (!$result) {
+		if ($result === null) {
 			return null;
-		} elseif (!is_int($result)) {
-			throw new ShouldNotHappenException(sprintf("Storage id for company id '%s' and site id '%s' is a %s not an integer", $companyId, $algoId, get_debug_type($result)));
 		}
 		return $result;
 	}

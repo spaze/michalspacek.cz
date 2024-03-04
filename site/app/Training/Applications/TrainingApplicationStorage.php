@@ -8,7 +8,6 @@ use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Dates\TrainingDate;
 use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusException;
-use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use MichalSpacekCz\Training\Price;
 use MichalSpacekCz\Training\Prices;
 use Nette\Database\Explorer;
@@ -35,7 +34,6 @@ readonly class TrainingApplicationStorage
 
 	/**
 	 * @throws CannotUpdateTrainingApplicationStatusException
-	 * @throws TrainingStatusIdNotIntException
 	 * @throws SodiumException
 	 * @throws HaliteAlert
 	 */
@@ -75,7 +73,6 @@ readonly class TrainingApplicationStorage
 
 	/**
 	 * @throws CannotUpdateTrainingApplicationStatusException
-	 * @throws TrainingStatusIdNotIntException
 	 * @throws SodiumException
 	 * @throws HaliteAlert
 	 */
@@ -118,7 +115,6 @@ readonly class TrainingApplicationStorage
 	 *
 	 * @return int application id
 	 * @throws CannotUpdateTrainingApplicationStatusException
-	 * @throws TrainingStatusIdNotIntException
 	 * @throws SodiumException
 	 * @throws HaliteAlert
 	 */
@@ -147,7 +143,6 @@ readonly class TrainingApplicationStorage
 
 	/**
 	 * @throws CannotUpdateTrainingApplicationStatusException
-	 * @throws TrainingStatusIdNotIntException
 	 * @throws SodiumException
 	 * @throws HaliteAlert
 	 */

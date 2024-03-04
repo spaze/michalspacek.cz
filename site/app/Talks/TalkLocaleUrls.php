@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Talks;
 
-use Nette\Database\Explorer;
+use MichalSpacekCz\Database\TypedDatabase;
 
 readonly class TalkLocaleUrls
 {
 
 	public function __construct(
-		private Explorer $database,
+		private TypedDatabase $database,
 	) {
 	}
 
@@ -22,7 +22,7 @@ readonly class TalkLocaleUrls
 		if ($talk->getTranslationGroupId() === null) {
 			return [];
 		}
-		return $this->database->fetchPairs(
+		return $this->database->fetchPairsStringString(
 			'SELECT l.locale, t.action FROM talks t JOIN locales l ON t.key_locale = l.id_locale WHERE t.key_translation_group = ?',
 			$talk->getTranslationGroupId(),
 		);

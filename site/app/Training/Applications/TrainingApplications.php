@@ -5,7 +5,7 @@ namespace MichalSpacekCz\Training\Applications;
 
 use Contributte\Translation\Translator;
 use DateTime;
-use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatus;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use MichalSpacekCz\Training\Exceptions\TrainingApplicationDoesNotExistException;
@@ -22,6 +22,7 @@ class TrainingApplications
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private readonly TrainingApplicationStatuses $trainingApplicationStatuses,
 		private readonly TrainingApplicationFactory $trainingApplicationFactory,
 		private readonly Translator $translator,
@@ -212,7 +213,7 @@ class TrainingApplications
 
 	public function getValidUnpaidCount(): int
 	{
-		$count = $this->database->fetchField(
+		return $this->typedDatabase->fetchFieldInt(
 			'SELECT
 				COUNT(1)
 			FROM
@@ -223,10 +224,6 @@ class TrainingApplications
 				AND paid IS NULL',
 			array_keys($this->trainingApplicationStatuses->getDiscardedStatuses()),
 		);
-		if (!is_int($count)) {
-			throw new ShouldNotHappenException(sprintf("Count is a %s not an integer", get_debug_type($count)));
-		}
-		return $count;
 	}
 
 

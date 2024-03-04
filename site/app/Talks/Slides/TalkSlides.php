@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Talks\Slides;
 
 use MichalSpacekCz\Application\WindowsSubsystemForLinux;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Media\Exceptions\MissingContentTypeException;
 use MichalSpacekCz\Media\Resources\TalkMediaResources;
 use MichalSpacekCz\Media\SupportedImageFileFormats;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\DuplicatedSlideException;
 use MichalSpacekCz\Talks\Exceptions\SlideImageUploadFailedException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
@@ -39,6 +39,7 @@ class TalkSlides
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly TalkMediaResources $talkMediaResources,
 		private readonly SupportedImageFileFormats $supportedImageFileFormats,
@@ -57,15 +58,13 @@ class TalkSlides
 		if ($slide === null) {
 			return null;
 		}
-		$slideNo = $this->database->fetchField('SELECT number FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
-		if (!$slideNo) {
+		$slideNo = $this->typedDatabase->fetchFieldIntNullable('SELECT number FROM talk_slides WHERE key_talk = ? AND alias = ?', $talkId, $slide);
+		if ($slideNo === null) {
 			if (ctype_digit($slide)) {
 				$slideNo = (int)$slide; // To keep deprecated but already existing numerical links (/talk-title/123) working
 			} else {
 				throw new TalkSlideDoesNotExistException($talkId, $slide);
 			}
-		} elseif (!is_int($slideNo)) {
-			throw new ShouldNotHappenException(sprintf("Slide number for slide '%s' of '%s' is a %s not an integer", $slide, $talkId, get_debug_type($slideNo)));
 		}
 		return $slideNo;
 	}

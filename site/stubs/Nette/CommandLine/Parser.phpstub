@@ -1,0 +1,16 @@
+<?php
+declare(strict_types = 1);
+
+namespace Nette\CommandLine;
+
+class Parser
+{
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	public function parse(?array $args = null): array
+	{
+	}
+
+}

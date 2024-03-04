@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '3b74388fb0b085f18077ed24694bf651905bfc7c',
+        'reference' => 'd2374f02ac03fc0fcca2988698933edbdf5285f7',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -63,6 +63,15 @@
             'replaced' => array(
                 0 => '*',
             ),
+        ),
+        'jetbrains/phpstorm-attributes' => array(
+            'pretty_version' => '1.0',
+            'version' => '1.0.0.0',
+            'reference' => 'a7a83ae5df4dd3c0875484483de19de8edf60a9f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../jetbrains/phpstorm-attributes',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'latte/latte' => array(
             'pretty_version' => 'v3.0.13',
@@ -456,7 +465,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '3b74388fb0b085f18077ed24694bf651905bfc7c',
+            'reference' => 'd2374f02ac03fc0fcca2988698933edbdf5285f7',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
