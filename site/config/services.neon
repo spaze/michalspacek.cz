@@ -25,6 +25,7 @@ services:
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz
 	- MichalSpacekCz\Css\CriticalCssFactory
+	- MichalSpacekCz\Database\TypedDatabase
 	- MichalSpacekCz\DateTime\DateTime
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())

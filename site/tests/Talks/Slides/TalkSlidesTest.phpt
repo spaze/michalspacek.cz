@@ -6,7 +6,6 @@ namespace MichalSpacekCz\Talks\Slides;
 
 use DateTime;
 use MichalSpacekCz\Media\Video;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Talks\Exceptions\TalkSlideDoesNotExistException;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Test\Database\Database;
@@ -45,11 +44,6 @@ class TalkSlidesTest extends TestCase
 
 		$this->database->setFetchFieldDefaultResult(808);
 		Assert::same(808, $this->talkSlides->getSlideNo(1, 'yo'));
-
-		$this->database->setFetchFieldDefaultResult('808');
-		Assert::exception(function (): void {
-			$this->talkSlides->getSlideNo(1, 'yo');
-		}, ShouldNotHappenException::class, "Slide number for slide 'yo' of '1' is a string not an integer");
 	}
 
 

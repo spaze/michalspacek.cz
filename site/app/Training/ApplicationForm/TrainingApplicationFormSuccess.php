@@ -14,7 +14,6 @@ use MichalSpacekCz\Training\Exceptions\CannotUpdateTrainingApplicationStatusExce
 use MichalSpacekCz\Training\Exceptions\SpammyApplicationException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotAvailableException;
 use MichalSpacekCz\Training\Exceptions\TrainingDateNotUpcomingException;
-use MichalSpacekCz\Training\Exceptions\TrainingStatusIdNotIntException;
 use MichalSpacekCz\Training\Mails\TrainingMails;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\UI\Presenter;
@@ -45,7 +44,6 @@ readonly class TrainingApplicationFormSuccess
 	 * @param array<int, TrainingDate> $dates
 	 * @throws HaliteAlert
 	 * @throws SodiumException
-	 * @throws TrainingStatusIdNotIntException
 	 * @throws WrongTemplateClassException
 	 */
 	public function success(

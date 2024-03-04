@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training\Trainings;
 
 use Contributte\Translation\Translator;
-use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Training\Exceptions\TrainingDoesNotExistException;
 use Nette\Database\Explorer;
 
@@ -17,6 +17,7 @@ class Trainings
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private readonly Translator $translator,
 		private readonly TrainingFactory $trainingFactory,
 	) {
@@ -220,9 +221,9 @@ class Trainings
 	 */
 	public function getCooperations(): array
 	{
-		return $this->database->fetchPairs(
+		return $this->typedDatabase->fetchPairsIntString(
 			'SELECT
-				c.id_cooperation AS id,
+				c.id_cooperation,
 				c.name
 			FROM training_cooperations c
 			ORDER BY
@@ -233,7 +234,7 @@ class Trainings
 
 	public function getActionById(int $id): string
 	{
-		$action = $this->database->fetchField(
+		return $this->typedDatabase->fetchFieldString(
 			'SELECT
 				a.action
 			FROM trainings t
@@ -246,10 +247,6 @@ class Trainings
 			$id,
 			$this->translator->getDefaultLocale(),
 		);
-		if (!is_string($action)) {
-			throw new ShouldNotHappenException(sprintf("Action for id '%s' is a %s not a string", $id, get_debug_type($action)));
-		}
-		return $action;
 	}
 
 

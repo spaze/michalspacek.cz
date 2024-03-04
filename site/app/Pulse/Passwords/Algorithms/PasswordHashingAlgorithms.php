@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Pulse\Passwords\Algorithms;
 
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Pulse\Passwords\Rating;
 use Nette\Database\Explorer;
 
@@ -11,6 +12,7 @@ readonly class PasswordHashingAlgorithms
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private Rating $rating,
 	) {
 	}
@@ -60,7 +62,7 @@ readonly class PasswordHashingAlgorithms
 	 */
 	public function getSlowHashes(): array
 	{
-		return $this->database->fetchPairs(
+		return $this->typedDatabase->fetchPairsStringString(
 			'SELECT alias, algo FROM password_algos WHERE alias IN (?) ORDER BY algo',
 			$this->rating->getSlowHashes(),
 		);

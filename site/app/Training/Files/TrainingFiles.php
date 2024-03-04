@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Training\Files;
 
 use DateTime;
 use DateTimeInterface;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Training\Applications\TrainingApplication;
 use MichalSpacekCz\Training\ApplicationStatuses\TrainingApplicationStatuses;
 use Nette\Database\Explorer;
@@ -16,6 +17,7 @@ readonly class TrainingFiles
 
 	public function __construct(
 		private Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private TrainingApplicationStatuses $trainingApplicationStatuses,
 		private TrainingFileFactory $trainingFileFactory,
 		private TrainingFilesStorage $trainingFilesStorage,
@@ -132,7 +134,7 @@ readonly class TrainingFiles
 			$dateIds,
 		);
 
-		foreach ($this->database->fetchPairs('SELECT start FROM training_dates WHERE id_date IN (?)', $dateIds) as $date) {
+		foreach ($this->typedDatabase->fetchPairsListDateTime('SELECT start FROM training_dates WHERE id_date IN (?)', $dateIds) as $date) {
 			FileSystem::delete($this->trainingFilesStorage->getFilesDir($date));
 		}
 	}

@@ -3,16 +3,15 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Applications;
 
-use MichalSpacekCz\ShouldNotHappenException;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Training\Resolver\Vrana;
-use Nette\Database\Explorer;
 use Nette\Utils\Strings;
 
 readonly class TrainingApplicationSources
 {
 
 	public function __construct(
-		private Explorer $database,
+		private TypedDatabase $database,
 		private Vrana $vranaResolver,
 	) {
 	}
@@ -23,7 +22,7 @@ readonly class TrainingApplicationSources
 	 */
 	public function getAll(): array
 	{
-		return $this->database->fetchPairs(
+		return $this->database->fetchPairsStringString(
 			'SELECT
 				alias,
 				name
@@ -35,11 +34,7 @@ readonly class TrainingApplicationSources
 
 	public function getSourceId(string $source): int
 	{
-		$id = $this->database->fetchField('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
-		if (!is_int($id)) {
-			throw new ShouldNotHappenException(sprintf("Source id for source '%s' is a %s not an integer", $source, get_debug_type($id)));
-		}
-		return $id;
+		return $this->database->fetchFieldInt('SELECT id_source FROM training_application_sources WHERE alias = ?', $source);
 	}
 
 

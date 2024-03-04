@@ -34,7 +34,7 @@ class Database extends Explorer
 
 	private int $fetchFieldResultsPosition = 0;
 
-	/** @var array<int|string, string> */
+	/** @var array<int|string, string|int|DateTimeInterface> */
 	private array $fetchPairsResult = [];
 
 	/** @var list<Row> */
@@ -186,7 +186,7 @@ class Database extends Explorer
 
 
 	/**
-	 * @param array<int|string, string> $fetchPairsResult
+	 * @param array<int|string, string|int|DateTimeInterface> $fetchPairsResult
 	 */
 	public function setFetchPairsResult(array $fetchPairsResult): void
 	{
@@ -197,7 +197,7 @@ class Database extends Explorer
 	/**
 	 * @param literal-string $sql
 	 * @param string ...$params
-	 * @return array<int|string, string>
+	 * @return array<int|string, string|int|DateTimeInterface>
 	 */
 	#[Override]
 	public function fetchPairs(string $sql, ...$params): array

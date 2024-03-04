@@ -8,9 +8,9 @@ use Contributte\Translation\Translator;
 use DateTime;
 use MichalSpacekCz\Articles\Blog\BlogPost;
 use MichalSpacekCz\Articles\Blog\BlogPostFactory;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Formatter\TexyFormatter;
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Tags\Tags;
 use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
 use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
@@ -24,6 +24,7 @@ class Articles
 
 	public function __construct(
 		private readonly Explorer $database,
+		private readonly TypedDatabase $typedDatabase,
 		private readonly TexyFormatter $texyFormatter,
 		private readonly BlogPostFactory $blogPostFactory,
 		private readonly Tags $tags,
@@ -235,11 +236,9 @@ class Articles
 			ORDER BY date
 			LIMIT 1';
 		$now = new DateTime();
-		$result = $this->database->fetchField($query, $now, $now, $this->translator->getDefaultLocale());
+		$result = $this->typedDatabase->fetchFieldDateTimeNullable($query, $now, $now, $this->translator->getDefaultLocale());
 		if (!$result) {
 			return null;
-		} elseif (!$result instanceof DateTime) {
-			throw new ShouldNotHappenException(sprintf("Nearest published date is a %s not a DateTime object", get_debug_type($result)));
 		}
 		return $result;
 	}
@@ -260,11 +259,9 @@ class Articles
 				AND l.locale = ?
 			ORDER BY bp.published
 			LIMIT 1';
-		$result = $this->database->fetchField($query, $this->tags->serialize($tags), new DateTime(), $this->translator->getDefaultLocale());
+		$result = $this->typedDatabase->fetchFieldDateTimeNullable($query, $this->tags->serialize($tags), new DateTime(), $this->translator->getDefaultLocale());
 		if (!$result) {
 			return null;
-		} elseif (!$result instanceof DateTime) {
-			throw new ShouldNotHappenException(sprintf("Nearest published date is a %s not a DateTime object", get_debug_type($result)));
 		}
 		return $result;
 	}

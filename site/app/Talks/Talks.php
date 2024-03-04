@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Talks;
 
 use DateTime;
 use Exception;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Formatter\TexyFormatter;
 use MichalSpacekCz\Media\Exceptions\ContentTypeException;
 use MichalSpacekCz\Talks\Exceptions\TalkDateTimeException;
@@ -17,6 +18,7 @@ readonly class Talks
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private TexyFormatter $texyFormatter,
 		private TalkFactory $talkFactory,
 	) {
@@ -79,7 +81,7 @@ readonly class Talks
 	 */
 	public function getApproxCount(): int
 	{
-		$count = $this->database->fetchField('SELECT COUNT(*) FROM talks WHERE date <= NOW()');
+		$count = $this->typedDatabase->fetchFieldInt('SELECT COUNT(*) FROM talks WHERE date <= NOW()');
 		return (int)($count / 10) * 10;
 	}
 

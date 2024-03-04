@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Training;
 
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
-use Nette\Database\Explorer;
+use MichalSpacekCz\Database\TypedDatabase;
 
 readonly class TrainingLocales
 {
 
 	public function __construct(
-		private Explorer $database,
+		private TypedDatabase $database,
 		private LocaleLinkGenerator $localeLinkGenerator,
 	) {
 	}
@@ -24,7 +24,7 @@ readonly class TrainingLocales
 	 */
 	public function getLocaleActions(string $action): array
 	{
-		return $this->database->fetchPairs(
+		return $this->database->fetchPairsStringString(
 			'SELECT
 				l.language,
 				a.action

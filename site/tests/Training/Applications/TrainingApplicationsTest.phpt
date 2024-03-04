@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Training\Applications;
 
-use MichalSpacekCz\ShouldNotHappenException;
 use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
@@ -26,11 +25,6 @@ class TrainingApplicationsTest extends TestCase
 	{
 		$this->database->setFetchFieldDefaultResult(909);
 		Assert::same(909, $this->trainingApplications->getValidUnpaidCount());
-
-		$this->database->setFetchFieldDefaultResult('\o/');
-		Assert::exception(function (): void {
-			$this->trainingApplications->getValidUnpaidCount();
-		}, ShouldNotHappenException::class, 'Count is a string not an integer');
 	}
 
 }

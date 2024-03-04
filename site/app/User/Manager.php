@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User;
 
 use DateTimeInterface;
 use Exception;
+use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
 use MichalSpacekCz\User\Exceptions\IdentityException;
@@ -44,6 +45,7 @@ readonly class Manager implements Authenticator
 
 	public function __construct(
 		private Explorer $database,
+		private TypedDatabase $typedDatabase,
 		private IRequest $httpRequest,
 		private Cookies $cookies,
 		private Passwords $passwords,
@@ -172,7 +174,7 @@ readonly class Manager implements Authenticator
 
 	public function isForbidden(): bool
 	{
-		$forbidden = $this->database->fetchField(
+		$forbidden = $this->typedDatabase->fetchFieldIntNullable(
 			'SELECT
 				1
 			FROM
