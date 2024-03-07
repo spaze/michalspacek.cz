@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'd2374f02ac03fc0fcca2988698933edbdf5285f7',
+        'reference' => '0be0f905cbb9e8f49d6f0715eff0dad1414c2a3f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -137,9 +137,9 @@
             'dev_requirement' => false,
         ),
         'nette/di' => array(
-            'pretty_version' => 'v3.2.0',
-            'version' => '3.2.0.0',
-            'reference' => '8140289e32e1b2bf2d8b5986bd92124b87fe6b2f',
+            'pretty_version' => 'v3.2.1',
+            'version' => '3.2.1.0',
+            'reference' => 'ee04330374b61c9cbff03f817def97c531769708',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/di',
             'aliases' => array(),
@@ -332,9 +332,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.10.59',
-            'version' => '1.10.59.0',
-            'reference' => 'e607609388d3a6d418a50a49f7940e8086798281',
+            'pretty_version' => '1.10.60',
+            'version' => '1.10.60.0',
+            'reference' => '95dcea7d6c628a3f2f56d091d8a0219485a86bbe',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -409,7 +409,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '8f1e484da92817191c75c9b00108f13fb62fd741',
+            'reference' => 'b011d993ca68a5c59d746b276756051550bbe026',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
@@ -465,7 +465,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd2374f02ac03fc0fcca2988698933edbdf5285f7',
+            'reference' => '0be0f905cbb9e8f49d6f0715eff0dad1414c2a3f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
