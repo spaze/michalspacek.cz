@@ -28,6 +28,7 @@ class TestCaseRunner
 		try {
 			$method = new ReflectionMethod($test, '__construct');
 			$container = Bootstrap::bootTest();
+			Environment::setup();
 			foreach ($method->getParameters() as $parameter) {
 				$type = Type::fromReflection($parameter);
 				$paramIdent = "Parameter #{$parameter->getPosition()} \${$parameter->getName()}";
