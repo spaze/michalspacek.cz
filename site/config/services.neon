@@ -25,7 +25,10 @@ services:
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterAres
 	- MichalSpacekCz\CompanyInfo\CompanyRegisterRegisterUz
 	- MichalSpacekCz\Css\CriticalCssFactory
-	- MichalSpacekCz\Database\TypedDatabase
+	typedDatabase.default:
+		create: MichalSpacekCz\Database\TypedDatabase
+		autowired: MichalSpacekCz\Database\TypedDatabase
+	typedDatabase.pulse: MichalSpacekCz\Database\TypedDatabase(@database.pulse.explorer)
 	- MichalSpacekCz\DateTime\DateTime
 	- MichalSpacekCz\DateTime\DateTimeFactory
 	- MichalSpacekCz\DateTime\DateTimeFormatter(@translation.translator::getDefaultLocale())
@@ -85,9 +88,9 @@ services:
 	interviewVideoThumbnails: MichalSpacekCz\Media\VideoThumbnails(mediaResources: @interviewMediaResources)
 	- MichalSpacekCz\Net\DnsResolver
 	- MichalSpacekCz\Pulse\Companies(@database.pulse.explorer)
-	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.explorer)
-	- MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures(@database.pulse.explorer)
-	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.explorer)
+	- MichalSpacekCz\Pulse\Passwords\Algorithms\PasswordHashingAlgorithms(@database.pulse.explorer, @typedDatabase.pulse)
+	- MichalSpacekCz\Pulse\Passwords\Disclosures\PasswordHashingDisclosures(@database.pulse.explorer, @typedDatabase.pulse)
+	- MichalSpacekCz\Pulse\Passwords\Passwords(@database.pulse.explorer, @typedDatabase.pulse)
 	- MichalSpacekCz\Pulse\Passwords\PasswordsSorting
 	- MichalSpacekCz\Pulse\Passwords\Rating
 	- MichalSpacekCz\Pulse\Passwords\Storage\StorageAlgorithmAttributesFactory
