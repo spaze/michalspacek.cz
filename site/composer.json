@@ -44,6 +44,7 @@
 		"spaze/sri-macros": "^2.0",
 		"spaze/svg-icons-latte": "^1.0",
 		"symfony/cache": "^7.0",
+		"symfony/cache-contracts": "^3.4",
 		"texy/texy": "^3.1.7",
 		"tracy/tracy": "^2.9.4"
 	},

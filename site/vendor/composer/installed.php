@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '6cc9a5a5d960324d0fc28515ea562dd795f2dead',
+        'reference' => '8602fb6abc381842b8acc08b1a41df3a4bf7e19d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -474,7 +474,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '6cc9a5a5d960324d0fc28515ea562dd795f2dead',
+            'reference' => '8602fb6abc381842b8acc08b1a41df3a4bf7e19d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
