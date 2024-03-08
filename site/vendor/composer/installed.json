@@ -3177,6 +3177,71 @@
             "install-path": null
         },
         {
+            "name": "shipmonk/composer-dependency-analyser",
+            "version": "1.3.1",
+            "version_normalized": "1.3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shipmonk-rnd/composer-dependency-analyser.git",
+                "reference": "b67036e64429bcddbbb65ba218f031d58ffda02e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shipmonk-rnd/composer-dependency-analyser/zipball/b67036e64429bcddbbb65ba218f031d58ffda02e",
+                "reference": "b67036e64429bcddbbb65ba218f031d58ffda02e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "editorconfig-checker/editorconfig-checker": "^10.3.0",
+                "ergebnis/composer-normalize": "^2.19",
+                "phpstan/phpstan": "^1.10.30",
+                "phpstan/phpstan-phpunit": "^1.1.1",
+                "phpstan/phpstan-strict-rules": "^1.2.3",
+                "phpunit/phpunit": "^8.5.28 || ^9.5.20",
+                "shipmonk/name-collision-detector": "^2.0.0",
+                "slevomat/coding-standard": "^8.0.1"
+            },
+            "time": "2024-03-05T20:19:03+00:00",
+            "bin": [
+                "bin/composer-dependency-analyser"
+            ],
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "ShipMonk\\ComposerDependencyAnalyser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Fast detection of composer dependency issues (dead dependencies, shadow dependencies, misplaced dependencies)",
+            "keywords": [
+                "analyser",
+                "composer",
+                "composer dependency",
+                "dead code",
+                "dead dependency",
+                "detector",
+                "dev",
+                "misplaced dependency",
+                "shadow dependency",
+                "static analysis",
+                "unused code",
+                "unused dependency"
+            ],
+            "support": {
+                "issues": "https://github.com/shipmonk-rnd/composer-dependency-analyser/issues",
+                "source": "https://github.com/shipmonk-rnd/composer-dependency-analyser/tree/1.3.1"
+            },
+            "install-path": "../shipmonk/composer-dependency-analyser"
+        },
+        {
             "name": "slevomat/coding-standard",
             "version": "8.14.1",
             "version_normalized": "8.14.1.0",
@@ -4800,6 +4865,7 @@
         "phpstan/phpstan-nette",
         "psalm/phar",
         "roave/security-advisories",
+        "shipmonk/composer-dependency-analyser",
         "slevomat/coding-standard",
         "spaze/coding-standard",
         "spaze/phpcs-phar",

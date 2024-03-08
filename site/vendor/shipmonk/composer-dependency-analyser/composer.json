@@ -1,0 +1,77 @@
+{
+    "name": "shipmonk/composer-dependency-analyser",
+    "description": "Fast detection of composer dependency issues (dead dependencies, shadow dependencies, misplaced dependencies)",
+    "license": [
+        "MIT"
+    ],
+    "keywords": [
+        "dev",
+        "static analysis",
+        "composer",
+        "detector",
+        "analyser",
+        "composer dependency",
+        "unused dependency",
+        "dead dependency",
+        "shadow dependency",
+        "misplaced dependency",
+        "dead code",
+        "unused code"
+    ],
+    "require": {
+        "php": "^7.2 || ^8.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "editorconfig-checker/editorconfig-checker": "^10.3.0",
+        "ergebnis/composer-normalize": "^2.19",
+        "phpstan/phpstan": "^1.10.30",
+        "phpstan/phpstan-phpunit": "^1.1.1",
+        "phpstan/phpstan-strict-rules": "^1.2.3",
+        "phpunit/phpunit": "^8.5.28 || ^9.5.20",
+        "shipmonk/name-collision-detector": "^2.0.0",
+        "slevomat/coding-standard": "^8.0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "ShipMonk\\ComposerDependencyAnalyser\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ShipMonk\\ComposerDependencyAnalyser\\": "tests/"
+        },
+        "classmap": [
+            "tests/data/autoloaded/"
+        ]
+    },
+    "bin": [
+        "bin/composer-dependency-analyser"
+    ],
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false,
+            "ergebnis/composer-normalize": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "check": [
+            "@check:composer",
+            "@check:ec",
+            "@check:cs",
+            "@check:types",
+            "@check:tests",
+            "@check:self",
+            "@check:collisions"
+        ],
+        "check:collisions": "detect-collisions src tests",
+        "check:composer": "composer normalize --dry-run --no-check-lock --no-update-lock",
+        "check:cs": "phpcs",
+        "check:ec": "ec src tests",
+        "check:self": "bin/composer-dependency-analyser",
+        "check:tests": "phpunit -vvv tests",
+        "check:types": "phpstan analyse -vvv --ansi",
+        "fix:cs": "phpcbf"
+    }
+}

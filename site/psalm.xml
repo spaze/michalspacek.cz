@@ -11,10 +11,10 @@
 	maxStringLength="2600"
 >
 	<projectFiles>
-		<directory name="app" />
-		<directory name="public" />
-		<directory name="tests" />
+		<directory name="." />
 		<ignoreFiles>
+			<directory name="bin" />
+			<directory name="temp" />
 			<directory name="vendor" />
 		</ignoreFiles>
 	</projectFiles>

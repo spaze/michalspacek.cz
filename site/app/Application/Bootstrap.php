@@ -10,7 +10,6 @@ use Nette\Bootstrap\Configurator;
 use Nette\CommandLine\Parser;
 use Nette\DI\Container;
 use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
-use Tester\Environment;
 
 class Bootstrap
 {
@@ -56,9 +55,7 @@ class Bootstrap
 		$configurator->addStaticParameters([
 			'wwwDir' => self::SITE_DIR . '/tests',
 		]);
-		$container = $configurator->createContainer();
-		Environment::setup();
-		return $container;
+		return $configurator->createContainer();
 	}
 
 

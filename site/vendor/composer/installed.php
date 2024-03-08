@@ -3,7 +3,7 @@
         'name' => 'spaze/michalspacek.cz',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '0be0f905cbb9e8f49d6f0715eff0dad1414c2a3f',
+        'reference' => '5a36d6fae1e7aa50a78124f28eaf69486d05ef34',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -417,6 +417,15 @@
             ),
             'dev_requirement' => true,
         ),
+        'shipmonk/composer-dependency-analyser' => array(
+            'pretty_version' => '1.3.1',
+            'version' => '1.3.1.0',
+            'reference' => 'b67036e64429bcddbbb65ba218f031d58ffda02e',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../shipmonk/composer-dependency-analyser',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'slevomat/coding-standard' => array(
             'pretty_version' => '8.14.1',
             'version' => '8.14.1.0',
@@ -465,7 +474,7 @@
         'spaze/michalspacek.cz' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0be0f905cbb9e8f49d6f0715eff0dad1414c2a3f',
+            'reference' => '5a36d6fae1e7aa50a78124f28eaf69486d05ef34',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

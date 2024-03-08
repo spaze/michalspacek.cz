@@ -34,6 +34,7 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
             'Spaze\\ContentSecurityPolicy\\' => 28,
             'Spaze\\CodingStandard\\' => 21,
             'SlevomatCodingStandard\\' => 23,
+            'ShipMonk\\ComposerDependencyAnalyser\\' => 36,
         ),
         'P' => 
         array (
@@ -138,6 +139,10 @@ class ComposerStaticInit247de957f14f643f393d210a332dd05b
         'SlevomatCodingStandard\\' => 
         array (
             0 => __DIR__ . '/..' . '/slevomat/coding-standard/SlevomatCodingStandard',
+        ),
+        'ShipMonk\\ComposerDependencyAnalyser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/shipmonk/composer-dependency-analyser/src',
         ),
         'Psr\\Log\\' => 
         array (

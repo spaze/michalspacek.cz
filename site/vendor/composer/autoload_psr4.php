@@ -24,6 +24,7 @@ return array(
     'Spaze\\ContentSecurityPolicy\\' => array($vendorDir . '/spaze/csp-config/src'),
     'Spaze\\CodingStandard\\' => array($vendorDir . '/spaze/coding-standard/src'),
     'SlevomatCodingStandard\\' => array($vendorDir . '/slevomat/coding-standard/SlevomatCodingStandard'),
+    'ShipMonk\\ComposerDependencyAnalyser\\' => array($vendorDir . '/shipmonk/composer-dependency-analyser/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
