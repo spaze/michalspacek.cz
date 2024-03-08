@@ -211,3 +211,17 @@ jobs:
           coverage: none
           php-version: ${{ matrix.php-version }}
       - run: make --directory=site psalm
+
+  composer-dependency-analyser:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.3"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          php-version: ${{ matrix.php-version }}
+      - run: make --directory=site composer-dependency-analyser

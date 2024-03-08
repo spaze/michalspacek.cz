@@ -1,6 +1,6 @@
-.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester tester-include-skipped gitleaks
+.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester tester-include-skipped gitleaks composer-dependency-analyser
 
-test: audit check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor
+test: audit check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor composer-dependency-analyser
 
 audit:
 	composer audit
@@ -53,3 +53,6 @@ tester-include-skipped:
 
 gitleaks:
 	gitleaks detect --verbose --source $(realpath ..)
+
+composer-dependency-analyser:
+	vendor/bin/composer-dependency-analyser --verbose
