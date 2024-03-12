@@ -56,6 +56,7 @@ label:
 	before: Before
 	developer: "A **developer** and a **trainer**, Zend Certified Engineer"
 	reporturideveloper: "A **Report URI developer**"
+	shoptethead: "**Head of Security** in **Shoptet**"
 	speaker: "A **speaker**"
 	webtop100juror: "**WebTop100** juror a guarantor"
 	skyper: "A **Skyper** based in Prague, Czech Republic"
@@ -168,8 +169,15 @@ who:
 		4: "During those 5 years we've \"processed more than a trillion JSON and XML reports\":[%s], doing even more than 5k reports/sec."
 		5: "I've tried adding enough tests, introduced static analysis with PHPStan and that allowed us to upgrade to PHP 8.0 even on Friday, \"Friday 13th\":[%s]."
 		6: "We knew what we were doing, we've started publishing \"penetration tests reports in full\":[%s]."
-		7: "Shortly before the end of my mission, I've removed 125352 lines of code related to payments, replaced them with just 1443 new lines and \"all the Stripe things\":[%s]."
+		7: "Shortly before the end of my tenure, I've removed 125352 lines of code related to payments, replaced them with just 1443 new lines and \"all the Stripe things\":[%s]."
 		8: "Stripe folks then made sure we \"will not forget\":[%s]."
+	shoptethead:
+		1: "Starting January 2023, I'm the security team in \"Shoptet\":[%s], the Central European Shopify alternative. It's a technical role, mostly."
+		2: "I've known Shoptet since at least 2012, I know many Shoptet people, present or past, and I love e-commerce, \"in my own way\":[%s], so the decision wasn't that difficult."
+		3: "My Shoptet security team is the smallest and the largest at the same time - because everyone is my team member, some just don't know it yet. It would be very boring without them, and I couldn't do it without them either."
+		4: "We run tens of thousands eshops so there's a chance to influcence and motivate quite a large part of the market, and to royally mess it up, too. I've always loved it, both ways."
+		5: "My mission is to do it like I've always done, be transparent and don't require passwords to be changed every 91.5 days."
+		6: "Yes, we've already rolled out \"1Password\":[%s] company-wide, why are you asking?"
 	speaker:
 		1: "I've been speaking at more than %d conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
 		2: "Check the list of all my \"Talks\":[%s]."

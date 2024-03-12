@@ -56,6 +56,7 @@ label:
 	before: Byl jsem
 	developer: "**Vývojář** a **školitel**, Zend Certified Engineer"
 	reporturideveloper: "**Vývojář** nástroje **Report URI**"
+	shoptethead: "**Head of Security** v **Shoptetu**"
 	speaker: "**Přednášející**"
 	webtop100juror: "Porotce a garant v soutěži **WebTop100**"
 	skyper: "Zaměstnanec v pražské kanceláři **Skype**"
@@ -170,6 +171,13 @@ who:
 		6: "Uměli jsme to udělat dobře a bezpečně, \"výsledky penetračních testů\":[%s] jsme dokonce celé zveřejňovali."
 		7: "Před koncem mojí mise jsem odstranil 125352 řádků kódu, které se nějak týkaly plateb, a nahradili jsme je jen 1443 nových řádků a \"kompletním řešením od Stripe\":[%s]."
 		8: "Ze Stripe se pak \"postarali\":[%s], abychom na to nezapomněli."
+	shoptethead:
+		1: "Od ledna 2023 pracuju v \"Shoptetu\":[%s] jako //ten sekuriťák//, role je to převážně technická."
+		2: "Shoptetu si všímám nejméně od roku 2012, znám i uznávám dost lidí, kteří v Shoptetu jsou nebo jím prošli, a e-commerce \"mám svým způsobem moc rád\":[%s], takže jsem se nerozhodoval zas tak dlouho."
+		3: "Můj tým je v Shoptetu nejmenší a zároveň největší - protože do něj počítám úplně každýho ve firmě, akorát to teda všichni ještě asi neví. Bez nich bych se nudil a bez nich bych to sám ani nezvládl."
+		4: "Provozujeme desítky tisíc e-shopů a tak je tu šance ovlivnit a motivovat docela velkou část trhu i šance to docela kardinálně podělat, což mě vždycky bavilo. Obojí."
+		5: "Mým cílem je to dělat podobně jako dříve, transparentně a bez nucené změny hesel každých 91,5 dní."
+		6: "Ano, \"1Password\":[%s] v celé firmě jsme už zavedli, proč se ptáte?"
 	webtop100juror:
 		1: "Osm let počínaje rokem 2011 jsem byl porotcem a od roku 2014 i odborným garantem pro oblast technické řešení a bezpečnost ve \"WebTop100\":[%s], největší soutěži firemních webů a digitálních řešení v ČR."
 		2: "O zkušenostech s hodnocením a o výsledcích jsem napsal několik \"článků\":[%s]."
