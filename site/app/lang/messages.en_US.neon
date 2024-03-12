@@ -165,6 +165,11 @@ who:
 		1: "\"I joined Report URI\":[blog:adding-features-and-deleting-code-or-how-i-joined-report-uri], a real-time security reporting tool, in 2017."
 		2: "Founded by \"Scott Helme\":[%s] (runs \"Security Headers\":[%s], too), later joined by \"Troy Hunt\":[%s] of \"Have I Been Pwned?\":[%s] fame."
 		3: "Both Scott and Troy are award-winning security researchers and bloggers."
+		4: "During those 5 years we've \"processed more than a trillion JSON and XML reports\":[%s], doing even more than 5k reports/sec."
+		5: "I've tried adding enough tests, introduced static analysis with PHPStan and that allowed us to upgrade to PHP 8.0 even on Friday, \"Friday 13th\":[%s]."
+		6: "We knew what we were doing, we've started publishing \"penetration tests reports in full\":[%s]."
+		7: "Shortly before the end of my mission, I've removed 125352 lines of code related to payments, replaced them with just 1443 new lines and \"all the Stripe things\":[%s]."
+		8: "Stripe folks then made sure we \"will not forget\":[%s]."
 	speaker:
 		1: "I've been speaking at more than %d conferences and events, including \"WebExpo Conference\":[%s] in Prague, Czech Republic and \"Passwords conference\":[%s] in Las Vegas, USA, both multiple times."
 		2: "Check the list of all my \"Talks\":[%s]."
