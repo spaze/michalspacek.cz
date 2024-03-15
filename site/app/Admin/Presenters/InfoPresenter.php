@@ -3,14 +3,14 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Admin\Presenters;
 
+use MichalSpacekCz\Application\SanitizedPhpInfo;
 use Nette\Utils\Html;
-use Spaze\PhpInfo\PhpInfo;
 
 class InfoPresenter extends BasePresenter
 {
 
 	public function __construct(
-		private readonly PhpInfo $phpInfo,
+		private readonly SanitizedPhpInfo $phpInfo,
 	) {
 		parent::__construct();
 	}
