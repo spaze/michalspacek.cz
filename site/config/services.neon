@@ -8,6 +8,7 @@ services:
 	- MichalSpacekCz\Application\Locale\Locales
 	- MichalSpacekCz\Application\Routing\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\Routing\RouterFactory::createRouter
+	- MichalSpacekCz\Application\SanitizedPhpInfo
 	- MichalSpacekCz\Application\Theme
 	- MichalSpacekCz\Application\WebApplication(fqdn: %domain.fqdn%)
 	- MichalSpacekCz\Application\WindowsSubsystemForLinux
