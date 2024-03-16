@@ -3699,12 +3699,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpinfo.git",
-                "reference": "e1b22185fc24264f943d9cbbd9a50b31db7d8728"
+                "reference": "5e8137dc67da697fab6463b94931805ff2a182db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/e1b22185fc24264f943d9cbbd9a50b31db7d8728",
-                "reference": "e1b22185fc24264f943d9cbbd9a50b31db7d8728",
+                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/5e8137dc67da697fab6463b94931805ff2a182db",
+                "reference": "5e8137dc67da697fab6463b94931805ff2a182db",
                 "shasum": ""
             },
             "require": {
@@ -3717,7 +3717,7 @@
                 "phpstan/phpstan": "^1.9",
                 "spaze/coding-standard": "^1.3"
             },
-            "time": "2024-03-15T01:36:52+00:00",
+            "time": "2024-03-16T03:11:57+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
