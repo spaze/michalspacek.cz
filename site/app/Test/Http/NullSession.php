@@ -12,6 +12,9 @@ use Override;
 class NullSession extends Session
 {
 
+	private string $id = '';
+
+
 	#[Override]
 	public function start(): void
 	{
@@ -37,6 +40,19 @@ class NullSession extends Session
 	public function destroy(): void
 	{
 		// He divines remedies for injuries; he knows how to turn serious accidents to his own advantage; that which does not kill him makes him stronger.
+	}
+
+
+	#[Override]
+	public function getId(): string
+	{
+		return $this->id;
+	}
+
+
+	public function setId(string $id): void
+	{
+		$this->id = $id;
 	}
 
 }
