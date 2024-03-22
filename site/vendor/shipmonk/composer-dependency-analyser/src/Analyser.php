@@ -21,8 +21,6 @@ use function array_diff;
 use function array_filter;
 use function array_key_exists;
 use function array_keys;
-use function array_pop;
-use function end;
 use function explode;
 use function file_get_contents;
 use function get_declared_classes;
@@ -30,12 +28,8 @@ use function get_declared_interfaces;
 use function get_declared_traits;
 use function get_defined_constants;
 use function get_defined_functions;
-use function implode;
 use function in_array;
 use function is_file;
-use function ksort;
-use function preg_split;
-use function sort;
 use function str_replace;
 use function strlen;
 use function strpos;
@@ -124,6 +118,8 @@ class Analyser
         $usedPackages = [];
         $prodPackagesUsedInProdPath = [];
 
+        $usages = [];
+
         $ignoreList = $this->config->getIgnoreList();
 
         foreach ($this->getUniqueFilePathsToScan() as $filePath => $isDevFilePath) {
@@ -179,6 +175,10 @@ class Analyser
                 }
 
                 $usedPackages[$packageName] = true;
+
+                foreach ($lineNumbers as $lineNumber) {
+                    $usages[$packageName][$usedSymbol][] = new SymbolUsage($filePath, $lineNumber);
+                }
             }
         }
 
@@ -235,15 +235,10 @@ class Analyser
             }
         }
 
-        ksort($classmapErrors);
-        ksort($shadowErrors);
-        ksort($devInProdErrors);
-        sort($prodOnlyInDevErrors);
-        sort($unusedErrors);
-
         return new AnalysisResult(
             $scannedFilesCount,
             $this->stopwatch->stop(),
+            $usages,
             $classmapErrors,
             $shadowErrors,
             $devInProdErrors,
@@ -408,33 +403,7 @@ class Analyser
             $filePath = substr($filePath, strlen($pharPrefix));
         }
 
-        return $this->doNormalizePath($filePath);
-    }
-
-    /**
-     * Based on Nette\Utils\FileSystem::normalizePath
-     *
-     * @license https://github.com/nette/utils/blob/v4.0.4/license.md
-     */
-    private function doNormalizePath(string $path): string
-    {
-        /** @var list<string> $parts */
-        $parts = $path === ''
-            ? []
-            : preg_split('~[/\\\\]+~', $path);
-        $result = [];
-
-        foreach ($parts as $part) {
-            if ($part === '..' && $result !== [] && end($result) !== '..' && end($result) !== '') {
-                array_pop($result);
-            } elseif ($part !== '.') {
-                $result[] = $part;
-            }
-        }
-
-        return $result === ['']
-            ? DIRECTORY_SEPARATOR
-            : implode(DIRECTORY_SEPARATOR, $result);
+        return Path::normalize($filePath);
     }
 
     /**

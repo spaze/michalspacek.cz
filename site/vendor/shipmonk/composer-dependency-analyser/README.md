@@ -1,19 +1,21 @@
 # Composer dependency analyser
 
-This package aims to detect composer dependency issues in your project.
+- 💪 **Powerful:** Detects unused, shadow and misplaced composer dependencies
+- ⚡ **Performant:** Scans 15 000 files in 2s!
+- ⚙️ **Configurable:** Fine-grained ignores via PHP config
+- 🕸️ **Lightweight:** No composer dependencies
+- 🍰 **Easy-to-use:** No config needed for first try
+- ✨ **Compatible:** PHP 7.2 - 8.3
 
-It detects **shadowed composer dependencies** and **unused composer dependencies** similar to other tools, but **MUCH faster**:
+## Comparison:
 
 | Project                                   | Dead<br/>dependency | Shadow<br/>dependency  | Misplaced<br/>in `require` | Misplaced<br/> in `require-dev` | Time*      |
 |-------------------------------------------|---------------------|------------------------|--------------------------|-------------------------------|------------|
-| maglnet/composer-require-checker          | ❌                   | ✅                     | ❌                         |  ❌                             | 124 secs   |
-| icanhazstring/composer-unused             | ✅                   | ❌                     | ❌                         |  ❌                             | 72 secs    |
-| **shipmonk/composer-dependency-analyser** | ✅                   | ✅                     | ✅                         |  ✅                             | **2 secs** |
+| maglnet/<br/>**composer-require-checker**          | ❌                   | ✅                     | ❌                         |  ❌                             | 124 secs   |
+| icanhazstring/<br/>**composer-unused**             | ✅                   | ❌                     | ❌                         |  ❌                             | 72 secs    |
+| shipmonk/<br/>**composer-dependency-analyser** | ✅                   | ✅                     | ✅                         |  ✅                             | **2 secs** |
 
-<sup><sub>\*Time measured on codebase with ~13 000 files</sub></sup>
-
-
-This means you can safely add this tool to CI without wasting resources.
+<sup><sub>\*Time measured on codebase with ~15 000 files</sub></sup>
 
 ## Installation:
 
@@ -46,8 +48,6 @@ Found unused dependencies!
 (scanned 13970 files in 2.297 s)
 ```
 
-You can add `--verbose` to see more example classes & usages.
-
 ## Detected issues:
 This tool reads your `composer.json` and scans all paths listed in `autoload` & `autoload-dev` sections while analysing:
 
@@ -55,34 +55,42 @@ This tool reads your `composer.json` and scans all paths listed in `autoload` & 
   - Those are dependencies of your dependencies, which are not listed in `composer.json`
   - Your code can break when your direct dependency gets updated to newer version which does not require that shadowed dependency anymore
   - You should list all those packages within your dependencies
-  - Ignorable by `--ignore-shadow-deps` or more granularly by `--config`
 
 ### Unused dependencies
   - Any non-dev dependency is expected to have at least single usage within the scanned paths
   - To avoid false positives here, you might need to adjust scanned paths or ignore some packages by `--config`
-  - Ignorable by `--ignore-unused-deps` or more granularly by `--config`
 
 ### Dev dependencies in production code
   - For libraries, this is risky as your users might not have those installed
   - For applications, it can break once you run it with `composer install --no-dev`
   - You should move those from `require-dev` to `require`
-  - Ignorable by `--ignore-dev-in-prod-deps` or more granularly by `--config`
 
 ### Prod dependencies used only in dev paths
   - For libraries, this miscategorization can lead to uselessly required dependencies for your users
   - You should move those from `require` to `require-dev`
-  - Ignorable by `--ignore-prod-only-in-dev-deps` or more granularly by `--config`
 
 ### Unknown classes
   - Any class that cannot be autoloaded gets reported as we cannot say if that one is shadowed or not
-  - Ignorable by `--ignore-unknown-classes` or more granularly by `--config`
 
-It is expected to run this tool in root of your project, where the `composer.json` is located.
-If you want to run it elsewhere, you can use `--composer-json=path/to/composer.json` option.
+
+## Cli options:
+- `--composer-json path/to/composer.json` for custom path to composer.json
+- `--dump-usages symfony/console` to show usages of certain package(s), `*` placeholder is supported
+- `--config path/to/config.php` for custom path to config file
+- `--help` display usage & cli options
+- `--verbose` to see more example classes & usages
+- `--show-all-usages` to see all usages
+- `--ignore-unknown-classes` to globally ignore unknown classes
+- `--ignore-shadow-deps` to globally ignore shadow dependencies
+- `--ignore-unused-deps` to globally ignore unused dependencies
+- `--ignore-dev-in-prod-deps` to globally ignore dev dependencies in prod code
+- `--ignore-prod-only-in-dev-deps` to globally ignore prod dependencies used only in dev paths
+
 
 ## Configuration:
-You can provide custom path to config file by `--config=path/to/config.php` where the config file is PHP file returning `ShipMonk\ComposerDependencyAnalyser\Config\Configuration` object.
-It gets loaded automatically if it is located in cwd as `composer-dependency-analyser.php`.
+When a file named `composer-dependency-analyser.php` is located in cwd, it gets loaded automatically.
+The file must return `ShipMonk\ComposerDependencyAnalyser\Config\Configuration` object.
+You can use custom path and filename via `--config` cli option.
 Here is example of what you can do:
 
 ```php
@@ -192,3 +200,4 @@ Despite those limitations, our experience is that this composer-dependency-analy
 ## Supported PHP versions
 - Runtime requires PHP 7.2 - 8.3
 - Scanned codebase should use PHP >= 5.3
+  - This can be done by pointing `--composer-json` to codebase located elsewhere
