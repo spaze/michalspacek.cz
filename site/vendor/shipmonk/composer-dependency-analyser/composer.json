@@ -20,12 +20,13 @@
     ],
     "require": {
         "php": "^7.2 || ^8.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-tokenizer": "*"
     },
     "require-dev": {
         "editorconfig-checker/editorconfig-checker": "^10.3.0",
         "ergebnis/composer-normalize": "^2.19",
-        "phpstan/phpstan": "^1.10.30",
+        "phpstan/phpstan": "^1.10.63",
         "phpstan/phpstan-phpunit": "^1.1.1",
         "phpstan/phpstan-strict-rules": "^1.2.3",
         "phpunit/phpunit": "^8.5.28 || ^9.5.20",
