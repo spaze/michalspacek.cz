@@ -52,7 +52,7 @@ class Database extends Explorer
 		$this->queriesArrayParams = [];
 		$this->fetchResult = [];
 		$this->fetchPairsResult = [];
-		$this->fetchFieldDefaultResult = [];
+		$this->fetchFieldDefaultResult = null;
 		$this->fetchFieldResults = [];
 		$this->fetchFieldResultsPosition = 0;
 		$this->fetchAllDefaultResult = [];
