@@ -41,7 +41,7 @@ class TrainingApplicationStorageTest extends TestCase
 	#[Override]
 	protected function setUp(): void
 	{
-		$this->database->setFetchPairsResult([ // For ApplicationStatuses::getInitialStatuses()
+		$this->database->setFetchPairsDefaultResult([ // For ApplicationStatuses::getInitialStatuses()
 			self::STATUS_TENTATIVE => 'TENTATIVE',
 			4 => 'SIGNED_UP',
 			13 => 'IMPORTED',

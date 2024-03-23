@@ -47,7 +47,7 @@ class PasswordHashingDisclosuresTest extends TestCase
 
 	public function testGetVisibleDisclosures(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			'alias1' => 'type1',
 			'alias2' => 'type2',
 		]);
@@ -57,7 +57,7 @@ class PasswordHashingDisclosuresTest extends TestCase
 
 	public function testGetInvisibleDisclosures(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			'alias1' => 'type1',
 			'alias2' => 'type2',
 		]);

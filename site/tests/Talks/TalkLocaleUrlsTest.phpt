@@ -27,7 +27,7 @@ class TalkLocaleUrlsTest extends TestCase
 	public function testGet(): void
 	{
 		$expected = ['cs_CZ' => 'foobar'];
-		$this->database->setFetchPairsResult($expected);
+		$this->database->setFetchPairsDefaultResult($expected);
 		Assert::same([], $this->talkLocaleUrls->get($this->buildTalk(null)));
 		Assert::same($expected, $this->talkLocaleUrls->get($this->buildTalk(1337)));
 	}

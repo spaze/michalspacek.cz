@@ -109,7 +109,7 @@ class TrainingApplicationFormSuccessTest extends TestCase
 		$this->onSuccessAction = null;
 		$this->onErrorMessage = null;
 
-		$this->database->setFetchPairsResult([ // For Statuses::getInitialStatuses()
+		$this->database->setFetchPairsDefaultResult([ // For Statuses::getInitialStatuses()
 			4 => 'SIGNED_UP',
 		]);
 		$this->database->addFetchFieldResult(1); // For Statuses::getStatusId() in TrainingApplicationStorage::insertApplication()

@@ -35,7 +35,12 @@ class Database extends Explorer
 	private int $fetchFieldResultsPosition = 0;
 
 	/** @var array<int|string, string|int|DateTimeInterface> */
-	private array $fetchPairsResult = [];
+	private array $fetchPairsDefaultResult = [];
+
+	/** @var list<array<int|string, string|int|DateTimeInterface>> */
+	private array $fetchPairsResults = [];
+
+	private int $fetchPairsResultsPosition = 0;
 
 	/** @var list<Row> */
 	private array $fetchAllDefaultResult = [];
@@ -51,7 +56,9 @@ class Database extends Explorer
 		$this->queriesScalarParams = [];
 		$this->queriesArrayParams = [];
 		$this->fetchResult = [];
-		$this->fetchPairsResult = [];
+		$this->fetchPairsDefaultResult = [];
+		$this->fetchPairsResults = [];
+		$this->fetchPairsResultsPosition = 0;
 		$this->fetchFieldDefaultResult = null;
 		$this->fetchFieldResults = [];
 		$this->fetchFieldResultsPosition = 0;
@@ -186,11 +193,20 @@ class Database extends Explorer
 
 
 	/**
+	 * @param array<int|string, string|int|DateTimeInterface> $fetchPairsDefaultResult
+	 */
+	public function setFetchPairsDefaultResult(array $fetchPairsDefaultResult): void
+	{
+		$this->fetchPairsDefaultResult = $fetchPairsDefaultResult;
+	}
+
+
+	/**
 	 * @param array<int|string, string|int|DateTimeInterface> $fetchPairsResult
 	 */
-	public function setFetchPairsResult(array $fetchPairsResult): void
+	public function addFetchPairsResult(array $fetchPairsResult): void
 	{
-		$this->fetchPairsResult = $fetchPairsResult;
+		$this->fetchPairsResults[] = $fetchPairsResult;
 	}
 
 
@@ -202,7 +218,7 @@ class Database extends Explorer
 	#[Override]
 	public function fetchPairs(string $sql, ...$params): array
 	{
-		return $this->fetchPairsResult;
+		return $this->fetchPairsResults[$this->fetchPairsResultsPosition++] ?? $this->fetchPairsDefaultResult;
 	}
 
 

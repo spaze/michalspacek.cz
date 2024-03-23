@@ -101,7 +101,7 @@ class TexyFormatterTest extends TestCase
 				'note' => 'Note 2',
 			],
 		]);
-		$database->setFetchPairsResult([
+		$database->setFetchPairsDefaultResult([
 			'cs_CZ' => 'bezpecnost-php-aplikaci',
 			'en_US' => 'php-application-security',
 		]);

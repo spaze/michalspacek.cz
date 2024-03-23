@@ -25,7 +25,7 @@ class TrainingLocalesTest extends TestCase
 	{
 		Assert::same(['*' => ['param' => 'value']], $this->trainingLocales->getLocaleLinkParams(null, ['param' => 'value']));
 
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			'cs_CZ' => 'fů',
 			'en_US' => 'foo',
 		]);

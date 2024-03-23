@@ -29,7 +29,7 @@ class TrainingApplicationFactoryTest extends TestCase
 	protected function setUp(): void
 	{
 		$this->database->setFetchFieldDefaultResult(303);
-		$this->database->setFetchPairsResult([]);
+		$this->database->setFetchPairsDefaultResult([]);
 	}
 
 

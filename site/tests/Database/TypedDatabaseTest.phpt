@@ -35,7 +35,7 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchPairsStringString(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			'foo' => 'bar',
 			'waldo' => 'quux',
 			'xyzzy' => 'fred',
@@ -49,7 +49,7 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchPairsStringStringInvalidTypeKey(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			3 => 'foo',
 		]);
 		Assert::exception(function (): void {
@@ -60,7 +60,7 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchPairsStringStringInvalidTypeValue(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			'foo' => 3,
 		]);
 		Assert::exception(function (): void {
@@ -71,7 +71,7 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchPairsIntString(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			1 => 'bar',
 			3 => 'quux',
 			5 => 'fred',
@@ -85,7 +85,7 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchPairsIntStringInvalidTypeKey(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			'foo' => 'foo',
 		]);
 		Assert::exception(function (): void {
@@ -96,7 +96,7 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchPairsIntStringInvalidTypeValue(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			303 => 808,
 		]);
 		Assert::exception(function (): void {
@@ -107,7 +107,7 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchPairsListDateTime(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			1 => new NetteDateTime('2023-01-01 10:20:30'),
 			3 => new NetteDateTime('2023-01-03 10:20:30'),
 			5 => new NetteDateTime('2023-01-05 10:20:30'),
@@ -122,7 +122,7 @@ class TypedDatabaseTest extends TestCase
 
 	public function testFetchPairsListDateTimeInvalidType(): void
 	{
-		$this->database->setFetchPairsResult([
+		$this->database->setFetchPairsDefaultResult([
 			1 => new NetteDateTime('2023-01-01 10:20:30'),
 			3 => 'foo',
 		]);
