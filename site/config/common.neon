@@ -85,7 +85,7 @@ subresourceIntegrity:
 		encryption: /i/js/encryption.js
 		admin: /i/js/admin.js
 		upckeys: /i/js/upckeys.js
-		openpgp: /i/js/openpgp.min.js
+		openpgp: ../../node_modules/openpgp/dist/openpgp.min.js
 		pulse: /i/js/pulse.js
 		remove-fbclid: /i/js/remove-fbclid.js
 		rating: /i/css/rating.css
