@@ -114,8 +114,8 @@ class TrainingApplicationStatuses
 				WHERE sf.status = ?',
 				$parent->value,
 			);
-			foreach ($statuses as $status) {
-				$this->childrenStatuses[$parent->value][] = TrainingApplicationStatus::from($status);
+			foreach ($statuses as $id => $status) {
+				$this->childrenStatuses[$parent->value][$id] = TrainingApplicationStatus::from($status);
 			}
 		}
 		return $this->childrenStatuses[$parent->value];

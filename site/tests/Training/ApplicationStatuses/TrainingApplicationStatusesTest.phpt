@@ -41,6 +41,21 @@ class TrainingApplicationStatusesTest extends TestCase
 		Assert::same(303, $this->applicationStatuses->getStatusId(TrainingApplicationStatus::SignedUp));
 	}
 
+
+	public function testGetDiscardedStatuses(): void
+	{
+		$this->database->addFetchFieldResult(10);
+		$this->database->addFetchPairsResult([
+			11 => 'REFUNDED',
+			12 => 'CREDIT',
+		]);
+		$discardedStatuses = $this->applicationStatuses->getDiscardedStatuses();
+		Assert::same([10, 11, 12], array_keys($discardedStatuses));
+		Assert::same(TrainingApplicationStatus::Canceled, $discardedStatuses[10]);
+		Assert::same(TrainingApplicationStatus::Refunded, $discardedStatuses[11]);
+		Assert::same(TrainingApplicationStatus::Credit, $discardedStatuses[12]);
+	}
+
 }
 
 TestCaseRunner::run(TrainingApplicationStatusesTest::class);
