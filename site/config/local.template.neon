@@ -6,13 +6,16 @@ mail:
 	host: localhost
 	port: 25
 
-contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them
+contentSecurityPolicy: # list values here are added to the existing list values, they do not replace them, except for require-trusted-types-for
 	policies:
+		*.*:
+			require-trusted-types-for:
 		www.*.*:
 			img-src:
 				- 'data:'
 			style-src:
 				- "'unsafe-inline'"
+			require-trusted-types-for:
 		admin.*.*:
 			script-src:
 				-"'self'"
@@ -27,6 +30,7 @@ contentSecurityPolicy: # list values here are added to the existing list values,
 				- "'self'"
 			style-src:
 				- "'unsafe-inline'"
+			require-trusted-types-for:
 		webleed.*.*:
 			script-src:
 				-"'self'"
