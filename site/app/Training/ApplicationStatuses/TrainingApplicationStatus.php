@@ -16,8 +16,8 @@ enum TrainingApplicationStatus: string
 	case MaterialsSent = 'MATERIALS_SENT'; // 8
 	case AccessTokenUsed = 'ACCESS_TOKEN_USED'; // 9
 	case Canceled = 'CANCELED'; // 10
-	case Refunded = 'REFUNDED'; // 10
-	case Credit = 'CREDIT'; // 10
+	case Refunded = 'REFUNDED'; // 11
+	case Credit = 'CREDIT'; // 12
 	case Imported = 'IMPORTED'; // 13
 	case NonPublicTraining = 'NON_PUBLIC_TRAINING'; // 14
 	case Reminded = 'REMINDED'; // 15
