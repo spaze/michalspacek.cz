@@ -3699,17 +3699,17 @@
         },
         {
             "name": "spaze/phpinfo",
-            "version": "v1.1.0",
-            "version_normalized": "1.1.0.0",
+            "version": "v1.1.1",
+            "version_normalized": "1.1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpinfo.git",
-                "reference": "5e8137dc67da697fab6463b94931805ff2a182db"
+                "reference": "a8db03663903c942f46ad6b395e31c7752620455"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/5e8137dc67da697fab6463b94931805ff2a182db",
-                "reference": "5e8137dc67da697fab6463b94931805ff2a182db",
+                "url": "https://api.github.com/repos/spaze/phpinfo/zipball/a8db03663903c942f46ad6b395e31c7752620455",
+                "reference": "a8db03663903c942f46ad6b395e31c7752620455",
                 "shasum": ""
             },
             "require": {
@@ -3722,7 +3722,7 @@
                 "phpstan/phpstan": "^1.9",
                 "spaze/coding-standard": "^1.3"
             },
-            "time": "2024-03-16T03:11:57+00:00",
+            "time": "2024-03-24T23:29:12+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3748,7 +3748,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpinfo/issues",
-                "source": "https://github.com/spaze/phpinfo/tree/v1.1.0"
+                "source": "https://github.com/spaze/phpinfo/tree/v1.1.1"
             },
             "install-path": "../spaze/phpinfo"
         },
