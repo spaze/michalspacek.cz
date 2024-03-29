@@ -22,9 +22,8 @@ class BlogPostRoute extends Route
 		private readonly BlogPostLoader $blogPostLoader,
 		string $mask,
 		array $metadata = [],
-		int $flags = 0,
 	) {
-		parent::__construct($mask, $metadata, $flags);
+		parent::__construct($mask, $metadata);
 	}
 
 
