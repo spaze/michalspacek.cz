@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Test\Http;
 
+use DateTimeInterface;
 use Nette\Http\IResponse;
 use Override;
 
@@ -142,8 +143,16 @@ class Response implements IResponse
 
 
 	#[Override]
-	public function setCookie(string $name, string $value, $expire, string $path = null, string $domain = null, bool $secure = null, bool $httpOnly = null, string $sameSite = null): self
-	{
+	public function setCookie(
+		string $name,
+		string $value,
+		string|int|DateTimeInterface|null $expire,
+		string $path = null,
+		string $domain = null,
+		bool $secure = null,
+		bool $httpOnly = null,
+		string $sameSite = null,
+	): self {
 		$this->cookies[$name][] = new Cookie(
 			$name,
 			$value,
