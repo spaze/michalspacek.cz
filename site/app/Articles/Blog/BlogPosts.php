@@ -9,6 +9,8 @@ use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostWithoutIdException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
 use MichalSpacekCz\Tags\Tags;
+use MichalSpacekCz\Utils\Exceptions\JsonItemNotStringException;
+use MichalSpacekCz\Utils\Exceptions\JsonItemsNotArrayException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Caching\Cache;
@@ -41,6 +43,8 @@ readonly class BlogPosts
 	 * @throws InvalidLinkException
 	 * @throws InvalidTimezoneException
 	 * @throws JsonException
+	 * @throws JsonItemNotStringException
+	 * @throws JsonItemsNotArrayException
 	 * @throws BlogPostDoesNotExistException
 	 */
 	public function get(string $post, ?string $previewKey = null): BlogPost
@@ -58,6 +62,8 @@ readonly class BlogPosts
 	 * @throws InvalidLinkException
 	 * @throws InvalidTimezoneException
 	 * @throws JsonException
+	 * @throws JsonItemNotStringException
+	 * @throws JsonItemsNotArrayException
 	 * @throws BlogPostDoesNotExistException
 	 */
 	public function getById(int $id): BlogPost
@@ -106,6 +112,8 @@ readonly class BlogPosts
 	 * @throws InvalidLinkException
 	 * @throws InvalidTimezoneException
 	 * @throws JsonException
+	 * @throws JsonItemNotStringException
+	 * @throws JsonItemsNotArrayException
 	 */
 	public function getAll(): array
 	{
@@ -143,9 +151,6 @@ readonly class BlogPosts
 	}
 
 
-	/**
-	 * @throws JsonException
-	 */
 	public function add(BlogPost $post): void
 	{
 		$this->database->beginTransaction();
@@ -185,7 +190,6 @@ readonly class BlogPosts
 
 	/**
 	 * @param list<string> $previousSlugTags
-	 * @throws JsonException
 	 * @throws BlogPostWithoutIdException
 	 */
 	public function update(BlogPost $post, ?string $editSummary, array $previousSlugTags): void
