@@ -146,8 +146,7 @@ readonly class PostFormFactory
 					$this->blogPosts->update($newPost, empty($values->editSummary) ? null : $values->editSummary, $post->getSlugTags());
 					$onSuccessEdit($newPost);
 				} else {
-					$this->blogPosts->add($newPost);
-					$onSuccessAdd($newPost);
+					$onSuccessAdd($this->blogPosts->add($newPost));
 				}
 			} catch (UniqueConstraintViolationException) {
 				$slug = $form->getComponent('slug');

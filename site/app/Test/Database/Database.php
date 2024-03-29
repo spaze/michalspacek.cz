@@ -81,6 +81,12 @@ class Database extends Explorer
 	}
 
 
+	#[Override]
+	public function rollBack(): void
+	{
+	}
+
+
 	public function setInsertId(string $insertId): void
 	{
 		$this->insertId = $insertId;

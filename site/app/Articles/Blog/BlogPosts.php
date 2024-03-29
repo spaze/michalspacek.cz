@@ -151,7 +151,7 @@ readonly class BlogPosts
 	}
 
 
-	public function add(BlogPost $post): void
+	public function add(BlogPost $post): BlogPost
 	{
 		$this->database->beginTransaction();
 		try {
@@ -182,8 +182,10 @@ readonly class BlogPosts
 			$post = $post->withId((int)$this->database->getInsertId());
 			$this->exportsCache->clean([Cache::Tags => array_merge([self::class], $post->getSlugTags())]);
 			$this->database->commit();
-		} catch (Exception) {
+			return $post;
+		} catch (Exception $e) {
 			$this->database->rollBack();
+			throw $e;
 		}
 	}
 
