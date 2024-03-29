@@ -904,22 +904,22 @@
         },
         {
             "name": "nette/http",
-            "version": "v3.2.4",
-            "version_normalized": "3.2.4.0",
+            "version": "v3.3.0",
+            "version_normalized": "3.3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/http.git",
-                "reference": "d7cc833ee186d5139cde5aab43b39ee7aedd6f22"
+                "reference": "c779293fb79e6d2a16d474cd19dce866615f3b9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/http/zipball/d7cc833ee186d5139cde5aab43b39ee7aedd6f22",
-                "reference": "d7cc833ee186d5139cde5aab43b39ee7aedd6f22",
+                "url": "https://api.github.com/repos/nette/http/zipball/c779293fb79e6d2a16d474cd19dce866615f3b9c",
+                "reference": "c779293fb79e6d2a16d474cd19dce866615f3b9c",
                 "shasum": ""
             },
             "require": {
-                "nette/utils": "^3.2.1 || ~4.0.0",
-                "php": "7.2 - 8.3"
+                "nette/utils": "^4.0.4",
+                "php": "8.1 - 8.3"
             },
             "conflict": {
                 "nette/di": "<3.0.3",
@@ -938,11 +938,11 @@
                 "ext-intl": "to support punycode by Nette\\Http\\Url",
                 "ext-session": "to use Nette\\Http\\Session"
             },
-            "time": "2024-01-30T18:13:43+00:00",
+            "time": "2024-01-30T18:16:20+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "installation-source": "dist",
@@ -982,7 +982,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/http/issues",
-                "source": "https://github.com/nette/http/tree/v3.2.4"
+                "source": "https://github.com/nette/http/tree/v3.3.0"
             },
             "install-path": "../nette/http"
         },

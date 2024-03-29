@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "15ec8fbf2b67cf7823a241b99b72e591",
+    "content-hash": "77c5bd29bb6b5e047bb86f8a8e2743c4",
     "packages": [
         {
             "name": "contributte/translation",
@@ -774,21 +774,21 @@
         },
         {
             "name": "nette/http",
-            "version": "v3.2.4",
+            "version": "v3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/http.git",
-                "reference": "d7cc833ee186d5139cde5aab43b39ee7aedd6f22"
+                "reference": "c779293fb79e6d2a16d474cd19dce866615f3b9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/http/zipball/d7cc833ee186d5139cde5aab43b39ee7aedd6f22",
-                "reference": "d7cc833ee186d5139cde5aab43b39ee7aedd6f22",
+                "url": "https://api.github.com/repos/nette/http/zipball/c779293fb79e6d2a16d474cd19dce866615f3b9c",
+                "reference": "c779293fb79e6d2a16d474cd19dce866615f3b9c",
                 "shasum": ""
             },
             "require": {
-                "nette/utils": "^3.2.1 || ~4.0.0",
-                "php": "7.2 - 8.3"
+                "nette/utils": "^4.0.4",
+                "php": "8.1 - 8.3"
             },
             "conflict": {
                 "nette/di": "<3.0.3",
@@ -810,7 +810,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -849,9 +849,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/http/issues",
-                "source": "https://github.com/nette/http/tree/v3.2.4"
+                "source": "https://github.com/nette/http/tree/v3.3.0"
             },
-            "time": "2024-01-30T18:13:43+00:00"
+            "time": "2024-01-30T18:16:20+00:00"
         },
         {
             "name": "nette/mail",
