@@ -10,8 +10,8 @@ use Nette\Neon\Neon;
 class DiServices
 {
 
-	/** @var array<non-empty-string, non-empty-lowercase-string> */
-	private array $configFiles = [
+	/** @var array<string, non-empty-lowercase-string> */
+	protected static array $configFiles = [
 		__DIR__ . '/../../config/services.neon' => 'services',
 		__DIR__ . '/../../config/extensions.neon' => 'extensions',
 	];
@@ -20,10 +20,10 @@ class DiServices
 	/**
 	 * @return list<class-string>
 	 */
-	public function getAllClasses(): array
+	public static function getAllClasses(): array
 	{
 		$allServices = [];
-		foreach ($this->configFiles as $file => $section) {
+		foreach (self::$configFiles as $file => $section) {
 			$decoded = Neon::decodeFile($file);
 			if (!is_array($decoded)) {
 				throw new DiServicesConfigInvalidException($file, null, 'not an array');
@@ -39,7 +39,7 @@ class DiServices
 				return is_string($value) || is_array($value) || $value instanceof Entity;
 			});
 			foreach ($services as $service) {
-				$classString = $this->getString($service, $file, $section);
+				$classString = self::getString($service, $file, $section);
 				if (str_starts_with($classString, '@')) {
 					continue;
 				}
@@ -57,7 +57,7 @@ class DiServices
 	/**
 	 * @param string|Entity|array<array-key, mixed> $item
 	 */
-	private function getString(string|Entity|array $item, string $file, string $section): string
+	private static function getString(string|Entity|array $item, string $file, string $section): string
 	{
 		if (is_string($item)) {
 			return $item;
