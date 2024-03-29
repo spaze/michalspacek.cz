@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Articles\Blog;
 
 use DateTime;
+use Exception;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostDoesNotExistException;
 use MichalSpacekCz\Articles\Blog\Exceptions\BlogPostWithoutIdException;
 use MichalSpacekCz\DateTime\Exceptions\InvalidTimezoneException;
@@ -12,7 +13,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Caching\Cache;
 use Nette\Database\Explorer;
-use Nette\Neon\Exception;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
