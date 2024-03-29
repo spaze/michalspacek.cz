@@ -88,6 +88,7 @@
 			<errorLevel type="suppress">
 				<referencedProperty name="Nette\Application\UI\Presenter::$invalidLinkMode" />
 				<referencedProperty name="Nette\Application\UI\Control::$snippetMode" />
+				<referencedProperty name="Nette\Forms\Form::$httpRequest" /> <!-- Marked as @internal -->
 			</errorLevel>
 		</PropertyNotSetInConstructor>
 		<UnsafeInstantiation>
