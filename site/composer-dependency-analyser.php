@@ -16,5 +16,5 @@ return (new Configuration())
 	->ignoreErrorsOnPackage('latte/latte', [ErrorType::UNUSED_DEPENDENCY])
 
 	// TestCaseRunner is used only in tests
-	->ignoreErrorsOnPackageAndPath('nette/tester', __DIR__ . '/app/Test/TestCaseRunner.php', [ErrorType::DEV_DEPENDENCY_IN_PROD]);
+	->ignoreErrorsOnPackageAndPath('nette/tester', __DIR__ . '/app/Test/TestCaseRunner.php', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 ;

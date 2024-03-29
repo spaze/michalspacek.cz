@@ -85,7 +85,6 @@ class DiServicesTest extends TestCase
 				$diServices::getAllClasses();
 			}, DiServicesConfigInvalidException::class, "{$configFile}{$exceptionMessage}");
 		}
-//		Assert::fail('e');
 	}
 
 }
