@@ -1,17 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-use MichalSpacekCz\Application\Bootstrap;
-use MichalSpacekCz\Application\Cli\NoCliArgs;
 use MichalSpacekCz\DependencyInjection\DiServices;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
-$allClasses = Bootstrap::bootCli(NoCliArgs::class)->getByType(DiServices::class)->getAllClasses();
-
 return (new Configuration())
 	// Add classes from services.neon and extensions.neon
-	->addForceUsedSymbols($allClasses)
+	->addForceUsedSymbols(DiServices::getAllClasses())
 
 	// Attributes used for development only
 	->ignoreErrorsOnPackage('jetbrains/phpstorm-attributes', [ErrorType::DEV_DEPENDENCY_IN_PROD])
@@ -20,5 +16,5 @@ return (new Configuration())
 	->ignoreErrorsOnPackage('latte/latte', [ErrorType::UNUSED_DEPENDENCY])
 
 	// TestCaseRunner is used only in tests
-	->ignoreErrorsOnPackageAndPath('nette/tester', __DIR__ . '/app/Test/TestCaseRunner.php', [ErrorType::DEV_DEPENDENCY_IN_PROD]);
+	->ignoreErrorsOnPackageAndPath('nette/tester', __DIR__ . '/app/Test/TestCaseRunner.php', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 ;

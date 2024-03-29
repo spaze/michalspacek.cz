@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\DependencyInjection;
 
 use MichalSpacekCz\DependencyInjection\Exceptions\DiServicesConfigInvalidException;
-use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
 use Tester\Assert;
 use Tester\FileMock;
@@ -16,16 +15,10 @@ require __DIR__ . '/../bootstrap.php';
 class DiServicesTest extends TestCase
 {
 
-	public function __construct(
-		private readonly DiServices $diServices,
-	) {
-	}
-
-
 	public function testGetAllServices(): void
 	{
 		Assert::noError(function (): void {
-			$this->diServices->getAllClasses();
+			DiServices::getAllClasses();
 		});
 	}
 
@@ -71,20 +64,27 @@ class DiServicesTest extends TestCase
 	/** @dataProvider getConfigFile */
 	public function testGetAllServicesNotClassStrings(string $config, ?string $exceptionMessage): void
 	{
-		$diServices = clone $this->diServices;
-
 		$configFile = FileMock::create($config, 'neon');
-		PrivateProperty::setValue($diServices, 'configFiles', [$configFile => 'bar']);
+		$diServices = new class ([$configFile => 'bar']) extends DiServices {
+
+			/**
+			 * @param array<string, non-empty-lowercase-string> $configFiles
+			 */
+			public function __construct(array $configFiles)
+			{
+				self::$configFiles = $configFiles;
+			}
+
+		};
 		if ($exceptionMessage === null) {
 			Assert::noError(function () use ($diServices): void {
-				$diServices->getAllClasses();
+				$diServices::getAllClasses();
 			});
 		} else {
 			Assert::exception(function () use ($diServices): void {
-				$diServices->getAllClasses();
+				$diServices::getAllClasses();
 			}, DiServicesConfigInvalidException::class, "{$configFile}{$exceptionMessage}");
 		}
-//		Assert::fail('e');
 	}
 
 }
