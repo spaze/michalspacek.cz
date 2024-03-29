@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Www\Presenters;
 
+use DateTimeInterface;
 use MichalSpacekCz\Application\Locale\LocaleLink;
 use MichalSpacekCz\Application\Locale\LocaleLinkGenerator;
 use MichalSpacekCz\Application\Theme;
@@ -162,7 +163,7 @@ abstract class BasePresenter extends Presenter
 
 
 	#[Override]
-	public function lastModified($lastModified, string $etag = null, string $expire = null): void
+	public function lastModified(string|int|DateTimeInterface|null $lastModified, string $etag = null, string $expire = null): void
 	{
 		$compression = ini_get('zlib.output_compression');
 		ini_set('zlib.output_compression', false);
