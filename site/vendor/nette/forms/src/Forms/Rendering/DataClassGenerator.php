@@ -19,19 +19,15 @@ use Nette\Forms\Form;
  */
 final class DataClassGenerator
 {
-	/** @var string */
-	public $classNameSuffix = 'FormData';
-
-	/** @var bool */
-	public $propertyPromotion = false;
-
-	/** @var bool */
-	public $useSmartObject = true;
+	public string $classNameSuffix = 'FormData';
+	public bool $propertyPromotion = false;
+	public bool $useSmartObject = true;
 
 
 	/** @deprecated use Nette\Latte\Blueprint::dataClass() */
 	public function generateCode(Form $form, ?string $baseName = null): string
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use ' . Blueprint::class . '::dataClass()', E_USER_DEPRECATED);
 		return (new Blueprint)->generateDataClass($form, $this->propertyPromotion, $baseName);
 	}
 }
