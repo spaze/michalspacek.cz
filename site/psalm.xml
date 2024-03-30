@@ -9,6 +9,7 @@
 	findUnusedCode="true"
 	findUnusedPsalmSuppress="true"
 	maxStringLength="2600"
+	errorBaseline="psalm-baseline.xml"
 >
 	<projectFiles>
 		<directory name="." />
@@ -51,6 +52,12 @@
 				<file name="public/www.michalspacek.cz/app.php" /> <!-- Can't require maintenance.php but https://github.com/vimeo/psalm/issues/3886 -->
 			</errorLevel>
 		</MissingFile>
+		<MixedArgument>
+			<errorLevel type="suppress">
+				<referencedFunction name="/^Nette\\Forms\\Controls\\.*::addRule/" /> <!-- https://github.com/vimeo/psalm/issues/10870 -->
+				<referencedFunction name="/^Nette\\Forms\\Rules::addRule/" /> <!-- https://github.com/vimeo/psalm/issues/10870 -->
+			</errorLevel>
+		</MixedArgument>
 		<PossiblyUnusedMethod>
 			<errorLevel type="suppress">
 				<referencedMethod name="/.*::__construct$/" /> <!-- All services -->
