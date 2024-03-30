@@ -37,6 +37,7 @@ parameters:
 		-
 			message: '#^Cannot access constant#'
 			paths:
+				- vendor/nette/forms/src/Forms/Controls/DateTimeControl.php # https://github.com/nette/forms/pull/325
 				- vendor/symfony/cache/Adapter/DoctrineDbalAdapter.php
 				- vendor/symfony/cache/DependencyInjection/CachePoolPass.php
 				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
