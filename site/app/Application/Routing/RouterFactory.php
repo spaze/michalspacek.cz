@@ -5,6 +5,7 @@ namespace MichalSpacekCz\Application\Routing;
 
 use Contributte\Translation\Translator;
 use MichalSpacekCz\Articles\Blog\BlogPostLoader;
+use MichalSpacekCz\EasterEgg\NetteCve202015227;
 use Nette\Application\Routers\Route as ApplicationRoute;
 use Nette\Application\Routers\RouteList;
 use Nette\Routing\Route;
@@ -58,6 +59,7 @@ class RouterFactory
 	public function __construct(
 		private readonly BlogPostLoader $blogPostLoader,
 		private readonly Translator $translator,
+		private readonly NetteCve202015227 $netteCve202015227,
 		private readonly array $supportedLocales,
 		private readonly array $rootDomainMapping,
 		private readonly array $translatedRoutes,
@@ -107,7 +109,7 @@ class RouterFactory
 			$this->localeRouters[$locale] = new RouteList();
 		}
 
-		$router->withModule('EasterEgg')->addRoute('/nette.micro', 'Nette:micro');
+		$this->netteCve202015227->addRoute($router);
 
 		$this->initRouterLists($router, self::MODULE_ADMIN, [
 			new RouterFactoryRoute('.well-known[/<action>]', 'WellKnown', 'default'),
