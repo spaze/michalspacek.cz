@@ -41,7 +41,6 @@ parameters:
 				- vendor/symfony/cache/DependencyInjection/CachePoolPass.php
 				- vendor/symfony/cache/Traits/AbstractAdapterTrait.php
 				# Contains Latte 2 symbols
-				- vendor/nette/application/src/Bridges/ApplicationDI/LatteExtension.php
 				- vendor/nette/application/src/Bridges/ApplicationLatte/UIMacros.php
 				- vendor/nette/forms/src/Bridges/FormsLatte/FormMacros.php
 		-
