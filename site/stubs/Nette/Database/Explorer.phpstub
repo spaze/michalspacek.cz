@@ -1,0 +1,54 @@
+<?php
+declare(strict_types = 1);
+
+namespace Nette\Database;
+
+class Explorer
+{
+
+	/**
+	 * @param literal-string $sql
+	 * @psalm-param string $sql
+	 */
+	public function query(string $sql, ...$params): ResultSet
+	{
+	}
+
+
+	/**
+	 * @param literal-string $sql
+	 * @psalm-param string $sql
+	 */
+	public function fetch(string $sql, ...$params): ?Row
+	{
+	}
+
+
+	/**
+	 * @param literal-string $sql
+	 * @psalm-param string $sql
+	 */
+	public function fetchField(string $sql, ...$params): mixed
+	{
+	}
+
+
+	/**
+	 * @param literal-string $sql
+	 * @psalm-param string $sql
+	 */
+	public function fetchPairs(string $sql, ...$params): array
+	{
+	}
+
+
+	/**
+	 * @param literal-string $sql
+	 * @psalm-param string $sql
+	 * @return array<array-key, Row>
+	 */
+	public function fetchAll(string $sql, ...$params): array
+	{
+	}
+
+}

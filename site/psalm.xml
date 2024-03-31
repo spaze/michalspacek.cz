@@ -9,6 +9,7 @@
 	findUnusedCode="true"
 	findUnusedPsalmSuppress="true"
 	maxStringLength="2600"
+	errorBaseline="psalm-baseline.xml"
 >
 	<projectFiles>
 		<directory name="." />
@@ -30,6 +31,7 @@
 	<stubs>
 		<file name="stubs/Nette/Application/UI/Component.phpstub"/>
 		<file name="stubs/Nette/CommandLine/Parser.phpstub"/>
+		<file name="stubs/Nette/Database/Explorer.phpstub"/>
 		<file name="stubs/Nette/DI/Container.phpstub"/>
 	</stubs>
 	<issueHandlers>
@@ -50,6 +52,12 @@
 				<file name="public/www.michalspacek.cz/app.php" /> <!-- Can't require maintenance.php but https://github.com/vimeo/psalm/issues/3886 -->
 			</errorLevel>
 		</MissingFile>
+		<MixedArgument>
+			<errorLevel type="suppress">
+				<referencedFunction name="/^Nette\\Forms\\Controls\\.*::addRule/" /> <!-- https://github.com/vimeo/psalm/issues/10870 -->
+				<referencedFunction name="/^Nette\\Forms\\Rules::addRule/" /> <!-- https://github.com/vimeo/psalm/issues/10870 -->
+			</errorLevel>
+		</MixedArgument>
 		<PossiblyUnusedMethod>
 			<errorLevel type="suppress">
 				<referencedMethod name="/.*::__construct$/" /> <!-- All services -->
@@ -88,6 +96,7 @@
 			<errorLevel type="suppress">
 				<referencedProperty name="Nette\Application\UI\Presenter::$invalidLinkMode" />
 				<referencedProperty name="Nette\Application\UI\Control::$snippetMode" />
+				<referencedProperty name="Nette\Forms\Form::$httpRequest" /> <!-- Marked as @internal -->
 			</errorLevel>
 		</PropertyNotSetInConstructor>
 		<UnsafeInstantiation>

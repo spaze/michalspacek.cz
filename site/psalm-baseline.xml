@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4">
+  <file src="app/Articles/Articles.php">
+    <MixedArgument>
+      <code><![CDATA[$result->slugTags]]></code>
+      <code><![CDATA[$result->tags]]></code>
+      <code><![CDATA[$row->href]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->leadTexy]]></code>
+      <code><![CDATA[$row->published]]></code>
+      <code><![CDATA[$row->slugTags]]></code>
+      <code><![CDATA[$row->sourceHref]]></code>
+      <code><![CDATA[$row->sourceName]]></code>
+      <code><![CDATA[$row->tags]]></code>
+      <code><![CDATA[$row->titleTexy]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Articles/Blog/BlogPostEdits.php">
+    <MixedArgument>
+      <code><![CDATA[$editedAt]]></code>
+      <code><![CDATA[$row->editedAtTimezone]]></code>
+      <code><![CDATA[$row->summaryTexy]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Articles/Blog/BlogPostFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->allowedTags]]></code>
+      <code><![CDATA[$row->cspSnippets]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->leadTexy]]></code>
+      <code><![CDATA[$row->locale]]></code>
+      <code><![CDATA[$row->localeId]]></code>
+      <code><![CDATA[$row->ogImage]]></code>
+      <code><![CDATA[$row->originallyTexy]]></code>
+      <code><![CDATA[$row->previewKey]]></code>
+      <code><![CDATA[$row->published]]></code>
+      <code><![CDATA[$row->recommended]]></code>
+      <code><![CDATA[$row->slug]]></code>
+      <code><![CDATA[$row->slugTags]]></code>
+      <code><![CDATA[$row->tags]]></code>
+      <code><![CDATA[$row->textTexy]]></code>
+      <code><![CDATA[$row->titleTexy]]></code>
+      <code><![CDATA[$row->translationGroupId]]></code>
+      <code><![CDATA[$row->twitterCard]]></code>
+      <code><![CDATA[$row->twitterCardId]]></code>
+      <code><![CDATA[$row->twitterCardTitle]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Articles/Blog/BlogPostLocaleUrls.php">
+    <MixedArgument>
+      <code><![CDATA[$row->locale]]></code>
+      <code><![CDATA[$row->previewKey]]></code>
+      <code><![CDATA[$row->published]]></code>
+      <code><![CDATA[$row->slug]]></code>
+      <code><![CDATA[$row->slugTags]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/CompanyInfo/CompanyRegisterRegisterUz.php">
+    <MixedArgument>
+      <code><![CDATA[$unit->ico]]></code>
+      <code><![CDATA[$unit->mesto]]></code>
+      <code><![CDATA[$unit->nazovUJ]]></code>
+      <code><![CDATA[$unit->psc]]></code>
+      <code><![CDATA[$unit->ulica]]></code>
+      <code><![CDATA[$units->id]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/EasterEgg/CrLfUrlInjections.php">
+    <MixedArgument>
+      <code><![CDATA[$match[1]]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/EasterEgg/WinterIsComing.php">
+    <MixedArgument>
+      <code><![CDATA[$input->getValue()]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/ChangePasswordFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->newPassword]]></code>
+      <code><![CDATA[$values->password]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/InterviewFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->action]]></code>
+      <code><![CDATA[$values->action]]></code>
+      <code><![CDATA[$values->audioEmbed]]></code>
+      <code><![CDATA[$values->audioEmbed]]></code>
+      <code><![CDATA[$values->audioHref]]></code>
+      <code><![CDATA[$values->audioHref]]></code>
+      <code><![CDATA[$values->date]]></code>
+      <code><![CDATA[$values->date]]></code>
+      <code><![CDATA[$values->description]]></code>
+      <code><![CDATA[$values->description]]></code>
+      <code><![CDATA[$values->href]]></code>
+      <code><![CDATA[$values->href]]></code>
+      <code><![CDATA[$values->sourceHref]]></code>
+      <code><![CDATA[$values->sourceHref]]></code>
+      <code><![CDATA[$values->sourceName]]></code>
+      <code><![CDATA[$values->sourceName]]></code>
+      <code><![CDATA[$values->title]]></code>
+      <code><![CDATA[$values->title]]></code>
+      <code><![CDATA[$values->videoEmbed]]></code>
+      <code><![CDATA[$values->videoEmbed]]></code>
+      <code><![CDATA[$values->videoHref]]></code>
+      <code><![CDATA[$values->videoHref]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/PostFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->allowedTags]]></code>
+      <code><![CDATA[$values->cspSnippets]]></code>
+      <code><![CDATA[$values->lead === '' ? null : $values->lead]]></code>
+      <code><![CDATA[$values->locale]]></code>
+      <code><![CDATA[$values->locale]]></code>
+      <code><![CDATA[$values->ogImage === '' ? null : $values->ogImage]]></code>
+      <code><![CDATA[$values->omitExports]]></code>
+      <code><![CDATA[$values->originally === '' ? null : $values->originally]]></code>
+      <code><![CDATA[$values->previewKey === '' ? null : $values->previewKey]]></code>
+      <code><![CDATA[$values->published]]></code>
+      <code><![CDATA[$values->recommended]]></code>
+      <code><![CDATA[$values->slug]]></code>
+      <code><![CDATA[$values->tags]]></code>
+      <code><![CDATA[$values->text]]></code>
+      <code><![CDATA[$values->title]]></code>
+      <code><![CDATA[$values->translationGroup === '' ? null : $values->translationGroup]]></code>
+      <code><![CDATA[$values->twitterCard]]></code>
+      <code><![CDATA[empty($values->editSummary) ? null : $values->editSummary]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/Pulse/PasswordsStorageAlgorithmFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->algo->new->algo]]></code>
+      <code><![CDATA[$values->company->id]]></code>
+      <code><![CDATA[$values->company->new->name]]></code>
+      <code><![CDATA[$values->site->new->url]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/SignInFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->password]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TalkFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->action]]></code>
+      <code><![CDATA[$values->action]]></code>
+      <code><![CDATA[$values->date]]></code>
+      <code><![CDATA[$values->date]]></code>
+      <code><![CDATA[$values->description]]></code>
+      <code><![CDATA[$values->description]]></code>
+      <code><![CDATA[$values->event]]></code>
+      <code><![CDATA[$values->event]]></code>
+      <code><![CDATA[$values->eventHref]]></code>
+      <code><![CDATA[$values->eventHref]]></code>
+      <code><![CDATA[$values->favorite]]></code>
+      <code><![CDATA[$values->favorite]]></code>
+      <code><![CDATA[$values->filenamesTalk]]></code>
+      <code><![CDATA[$values->filenamesTalk]]></code>
+      <code><![CDATA[$values->href]]></code>
+      <code><![CDATA[$values->href]]></code>
+      <code><![CDATA[$values->locale]]></code>
+      <code><![CDATA[$values->locale]]></code>
+      <code><![CDATA[$values->ogImage]]></code>
+      <code><![CDATA[$values->ogImage]]></code>
+      <code><![CDATA[$values->publishSlides]]></code>
+      <code><![CDATA[$values->publishSlides]]></code>
+      <code><![CDATA[$values->slidesEmbed]]></code>
+      <code><![CDATA[$values->slidesEmbed]]></code>
+      <code><![CDATA[$values->slidesHref]]></code>
+      <code><![CDATA[$values->slidesHref]]></code>
+      <code><![CDATA[$values->slidesNote]]></code>
+      <code><![CDATA[$values->slidesNote]]></code>
+      <code><![CDATA[$values->slidesTalk]]></code>
+      <code><![CDATA[$values->slidesTalk]]></code>
+      <code><![CDATA[$values->supersededBy]]></code>
+      <code><![CDATA[$values->supersededBy]]></code>
+      <code><![CDATA[$values->title]]></code>
+      <code><![CDATA[$values->title]]></code>
+      <code><![CDATA[$values->transcript]]></code>
+      <code><![CDATA[$values->transcript]]></code>
+      <code><![CDATA[$values->translationGroup]]></code>
+      <code><![CDATA[$values->translationGroup]]></code>
+      <code><![CDATA[$values->videoEmbed]]></code>
+      <code><![CDATA[$values->videoEmbed]]></code>
+      <code><![CDATA[$values->videoHref]]></code>
+      <code><![CDATA[$values->videoHref]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TalkSlidesFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->deleteReplaced]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingApplicationAdminFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$dateId]]></code>
+      <code><![CDATA[$values->citySet ? $values->city : null]]></code>
+      <code><![CDATA[$values->companyIdSet ? $values->companyId : null]]></code>
+      <code><![CDATA[$values->companySet ? $values->company : null]]></code>
+      <code><![CDATA[$values->companyTaxIdSet ? $values->companyTaxId : null]]></code>
+      <code><![CDATA[$values->countrySet ? $values->country : null]]></code>
+      <code><![CDATA[$values->discount]]></code>
+      <code><![CDATA[$values->emailSet ? $values->email : null]]></code>
+      <code><![CDATA[$values->familiar]]></code>
+      <code><![CDATA[$values->invoiceId]]></code>
+      <code><![CDATA[$values->nameSet ? $values->name : null]]></code>
+      <code><![CDATA[$values->noteSet ? $values->note : null]]></code>
+      <code><![CDATA[$values->paid]]></code>
+      <code><![CDATA[$values->source]]></code>
+      <code><![CDATA[$values->streetSet ? $values->street : null]]></code>
+      <code><![CDATA[$values->vatRate]]></code>
+      <code><![CDATA[$values->zipSet ? $values->zip : null]]></code>
+      <code><![CDATA[trim($values->vatRate) !== '' ? $values->vatRate / 100 : null]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingApplicationMultipleFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$application->city]]></code>
+      <code><![CDATA[$application->company]]></code>
+      <code><![CDATA[$application->companyId]]></code>
+      <code><![CDATA[$application->companyTaxId]]></code>
+      <code><![CDATA[$application->email]]></code>
+      <code><![CDATA[$application->name]]></code>
+      <code><![CDATA[$application->note]]></code>
+      <code><![CDATA[$application->street]]></code>
+      <code><![CDATA[$application->zip]]></code>
+      <code><![CDATA[$values->country]]></code>
+      <code><![CDATA[$values->date]]></code>
+      <code><![CDATA[$values->source]]></code>
+      <code><![CDATA[$values->status]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingApplicationPreliminaryFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->email]]></code>
+      <code><![CDATA[$values->name]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingApplicationStatusesFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$status]]></code>
+      <code><![CDATA[$values->date]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingDateFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->cooperation]]></code>
+      <code><![CDATA[$values->cooperation]]></code>
+      <code><![CDATA[$values->end]]></code>
+      <code><![CDATA[$values->end]]></code>
+      <code><![CDATA[$values->feedbackHref]]></code>
+      <code><![CDATA[$values->feedbackHref]]></code>
+      <code><![CDATA[$values->label]]></code>
+      <code><![CDATA[$values->label]]></code>
+      <code><![CDATA[$values->note]]></code>
+      <code><![CDATA[$values->note]]></code>
+      <code><![CDATA[$values->public]]></code>
+      <code><![CDATA[$values->public]]></code>
+      <code><![CDATA[$values->remote]]></code>
+      <code><![CDATA[$values->remote]]></code>
+      <code><![CDATA[$values->remoteNotes]]></code>
+      <code><![CDATA[$values->remoteNotes]]></code>
+      <code><![CDATA[$values->remoteUrl]]></code>
+      <code><![CDATA[$values->remoteUrl]]></code>
+      <code><![CDATA[$values->start]]></code>
+      <code><![CDATA[$values->start]]></code>
+      <code><![CDATA[$values->status]]></code>
+      <code><![CDATA[$values->status]]></code>
+      <code><![CDATA[$values->training]]></code>
+      <code><![CDATA[$values->training]]></code>
+      <code><![CDATA[$values->training]]></code>
+      <code><![CDATA[$values->venue]]></code>
+      <code><![CDATA[$values->venue]]></code>
+      <code><![CDATA[$values->videoHref]]></code>
+      <code><![CDATA[$values->videoHref]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingFileFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->file]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingInvoiceFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->invoice]]></code>
+      <code><![CDATA[$values->paid]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingMailsOutboxFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$data->additional]]></code>
+      <code><![CDATA[$data->cc ?: null]]></code>
+      <code><![CDATA[$data->feedbackRequest ?? false]]></code>
+      <code><![CDATA[$data->invoice]]></code>
+      <code><![CDATA[$data->invoiceId]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/TrainingReviewFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->company]]></code>
+      <code><![CDATA[$values->company]]></code>
+      <code><![CDATA[$values->hidden]]></code>
+      <code><![CDATA[$values->hidden]]></code>
+      <code><![CDATA[$values->href ?: null]]></code>
+      <code><![CDATA[$values->href ?: null]]></code>
+      <code><![CDATA[$values->jobTitle ?: null]]></code>
+      <code><![CDATA[$values->jobTitle ?: null]]></code>
+      <code><![CDATA[$values->name]]></code>
+      <code><![CDATA[$values->name]]></code>
+      <code><![CDATA[$values->note ?: null]]></code>
+      <code><![CDATA[$values->note ?: null]]></code>
+      <code><![CDATA[$values->ranking ?: null]]></code>
+      <code><![CDATA[$values->ranking ?: null]]></code>
+      <code><![CDATA[$values->review]]></code>
+      <code><![CDATA[$values->review]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Form/UpcKeysSsidFormFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$values->ssid]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Formatter/TexyFormatter.php">
+    <MixedArgument>
+      <code><![CDATA[$matches[2]]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Formatter/TexyPhraseHandler.php">
+    <MixedArgument>
+      <code><![CDATA[$action]]></code>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$texy::CONTENT_TEXTUAL]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Http/Client/HttpClient.php">
+    <MixedArgument>
+      <code><![CDATA[$options['ssl']['peer_certificate'] ?? null]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Interviews/Interviews.php">
+    <MixedArgument>
+      <code><![CDATA[$row->action]]></code>
+      <code><![CDATA[$row->audioEmbed]]></code>
+      <code><![CDATA[$row->audioHref]]></code>
+      <code><![CDATA[$row->date]]></code>
+      <code><![CDATA[$row->description]]></code>
+      <code><![CDATA[$row->description]]></code>
+      <code><![CDATA[$row->href]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->sourceHref]]></code>
+      <code><![CDATA[$row->sourceName]]></code>
+      <code><![CDATA[$row->title]]></code>
+      <code><![CDATA[$row->videoEmbed]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Media/VideoFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->videoHref]]></code>
+      <code><![CDATA[$row->videoHref]]></code>
+      <code><![CDATA[$row->videoThumbnail]]></code>
+      <code><![CDATA[$row->videoThumbnail]]></code>
+      <code><![CDATA[$row->videoThumbnailAlternative]]></code>
+      <code><![CDATA[$row->videoThumbnailAlternative]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Media/VideoThumbnails.php">
+    <MixedArgument>
+      <code><![CDATA[$values->videoThumbnail]]></code>
+      <code><![CDATA[$values->videoThumbnail]]></code>
+      <code><![CDATA[$values->videoThumbnailAlternative]]></code>
+      <code><![CDATA[$values->videoThumbnailAlternative]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Net/DnsResolver.php">
+    <MixedArgument>
+      <code><![CDATA[$record]]></code>
+      <code><![CDATA[$record]]></code>
+      <code><![CDATA[$record]]></code>
+      <code><![CDATA[$record]]></code>
+      <code><![CDATA[$record]]></code>
+      <code><![CDATA[$record]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Pulse/Companies.php">
+    <MixedArgument>
+      <code><![CDATA[$row->alias]]></code>
+      <code><![CDATA[$row->alias]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->name]]></code>
+      <code><![CDATA[$row->name]]></code>
+      <code><![CDATA[$row->sortName]]></code>
+      <code><![CDATA[$row->sortName]]></code>
+      <code><![CDATA[$row->tradeName]]></code>
+      <code><![CDATA[$row->tradeName]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Pulse/Passwords/Algorithms/PasswordHashingAlgorithms.php">
+    <MixedArgument>
+      <code><![CDATA[$row->algo]]></code>
+      <code><![CDATA[$row->algo]]></code>
+      <code><![CDATA[$row->alias]]></code>
+      <code><![CDATA[$row->alias]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->id]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Pulse/Passwords/Disclosures/PasswordHashingDisclosures.php">
+    <MixedArgument>
+      <code><![CDATA[$row->alias]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->type]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Pulse/Passwords/Passwords.php">
+    <MixedArgument>
+      <code><![CDATA[$disclosure->archive]]></code>
+      <code><![CDATA[$disclosure->disclosureType]]></code>
+      <code><![CDATA[$disclosure->note]]></code>
+      <code><![CDATA[$disclosure->published]]></code>
+      <code><![CDATA[$disclosure->url]]></code>
+      <code><![CDATA[$newAlgo->algoName]]></code>
+      <code><![CDATA[$newAlgo->alias]]></code>
+      <code><![CDATA[$newAlgo->salted]]></code>
+      <code><![CDATA[$newAlgo->stretched]]></code>
+      <code><![CDATA[$newCompany->alias]]></code>
+      <code><![CDATA[$newCompany->dba]]></code>
+      <code><![CDATA[$newCompany->name]]></code>
+      <code><![CDATA[$newSite->alias]]></code>
+      <code><![CDATA[$newSite->sharedWith]]></code>
+      <code><![CDATA[$newSite->url]]></code>
+      <code><![CDATA[$values->algo->attributes]]></code>
+      <code><![CDATA[$values->algo->from]]></code>
+      <code><![CDATA[$values->algo->fromConfirmed]]></code>
+      <code><![CDATA[$values->algo->note]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Pulse/Passwords/PasswordsSorting.php">
+    <MixedArgument>
+      <code><![CDATA[$sorter]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Pulse/Passwords/Storage/StorageRegistryFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->algoAlias]]></code>
+      <code><![CDATA[$row->algoId]]></code>
+      <code><![CDATA[$row->algoName]]></code>
+      <code><![CDATA[$row->attributes]]></code>
+      <code><![CDATA[$row->companyAlias]]></code>
+      <code><![CDATA[$row->companyId]]></code>
+      <code><![CDATA[$row->companyName]]></code>
+      <code><![CDATA[$row->disclosureAdded]]></code>
+      <code><![CDATA[$row->disclosureArchive]]></code>
+      <code><![CDATA[$row->disclosureId]]></code>
+      <code><![CDATA[$row->disclosureNote]]></code>
+      <code><![CDATA[$row->disclosurePublished]]></code>
+      <code><![CDATA[$row->disclosureType]]></code>
+      <code><![CDATA[$row->disclosureTypeAlias]]></code>
+      <code><![CDATA[$row->disclosureUrl]]></code>
+      <code><![CDATA[$row->from]]></code>
+      <code><![CDATA[$row->note]]></code>
+      <code><![CDATA[$row->sharedWith]]></code>
+      <code><![CDATA[$row->siteAlias]]></code>
+      <code><![CDATA[$row->siteId]]></code>
+      <code><![CDATA[$row->siteUrl]]></code>
+      <code><![CDATA[$row->sortName]]></code>
+      <code><![CDATA[$row->tradeName]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Pulse/Sites.php">
+    <MixedArgument>
+      <code><![CDATA[$row->alias]]></code>
+      <code><![CDATA[$row->alias]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->url]]></code>
+      <code><![CDATA[$row->url]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Talks/Slides/TalkSlides.php">
+    <MixedArgument>
+      <code><![CDATA[$filename]]></code>
+      <code><![CDATA[$filename]]></code>
+      <code><![CDATA[$filenameAlternative]]></code>
+      <code><![CDATA[$filenameAlternative]]></code>
+      <code><![CDATA[$replace ?? $slide->filename ?? '']]></code>
+      <code><![CDATA[$replaceAlternative ?? $slide->filenameAlternative ?? '']]></code>
+      <code><![CDATA[$row->alias]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->number]]></code>
+      <code><![CDATA[$row->speakerNotesTexy]]></code>
+      <code><![CDATA[$row->title]]></code>
+      <code><![CDATA[$slide->alias]]></code>
+      <code><![CDATA[$slide->number]]></code>
+      <code><![CDATA[$slide->number]]></code>
+      <code><![CDATA[$slide->replace]]></code>
+      <code><![CDATA[$slide->replace]]></code>
+      <code><![CDATA[$slide->replaceAlternative]]></code>
+      <code><![CDATA[$slide->replaceAlternative]]></code>
+      <code><![CDATA[$slide->speakerNotes]]></code>
+      <code><![CDATA[$slide->title]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Talks/TalkFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->action]]></code>
+      <code><![CDATA[$row->date]]></code>
+      <code><![CDATA[$row->description]]></code>
+      <code><![CDATA[$row->description]]></code>
+      <code><![CDATA[$row->duration]]></code>
+      <code><![CDATA[$row->event]]></code>
+      <code><![CDATA[$row->eventHref]]></code>
+      <code><![CDATA[$row->favorite]]></code>
+      <code><![CDATA[$row->filenamesTalkId]]></code>
+      <code><![CDATA[$row->href]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->locale]]></code>
+      <code><![CDATA[$row->localeId]]></code>
+      <code><![CDATA[$row->ogImage]]></code>
+      <code><![CDATA[$row->slidesEmbed]]></code>
+      <code><![CDATA[$row->slidesHref]]></code>
+      <code><![CDATA[$row->slidesNote]]></code>
+      <code><![CDATA[$row->slidesNote]]></code>
+      <code><![CDATA[$row->slidesTalkId]]></code>
+      <code><![CDATA[$row->supersededByAction]]></code>
+      <code><![CDATA[$row->supersededById]]></code>
+      <code><![CDATA[$row->supersededByTitle]]></code>
+      <code><![CDATA[$row->title]]></code>
+      <code><![CDATA[$row->transcript]]></code>
+      <code><![CDATA[$row->transcript]]></code>
+      <code><![CDATA[$row->translationGroupId]]></code>
+      <code><![CDATA[$row->videoEmbed]]></code>
+      <code><![CDATA[$url ?? null]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Talks/Talks.php">
+    <MixedArgument>
+      <code><![CDATA[$row['favorite']]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Tls/CertificateFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->cn]]></code>
+      <code><![CDATA[$row->ext]]></code>
+      <code><![CDATA[$row->notAfter]]></code>
+      <code><![CDATA[$row->notAfterTimezone]]></code>
+      <code><![CDATA[$row->notBefore]]></code>
+      <code><![CDATA[$row->notBeforeTimezone]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Tls/CertificateGatherer.php">
+    <MixedArgument>
+      <code><![CDATA[$ipAddress]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/ApplicationForm/TrainingApplicationFormSpam.php">
+    <MixedArgument>
+      <code><![CDATA[$values->company ?? self::FIELD_MISSING_VALUE]]></code>
+      <code><![CDATA[$values->companyId ?? self::FIELD_MISSING_VALUE]]></code>
+      <code><![CDATA[$values->companyTaxId ?? self::FIELD_MISSING_VALUE]]></code>
+      <code><![CDATA[$values->name ?? self::FIELD_MISSING_VALUE]]></code>
+      <code><![CDATA[$values->note ?? '']]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/ApplicationForm/TrainingApplicationFormSuccess.php">
+    <MixedArgument>
+      <code><![CDATA[$values->city]]></code>
+      <code><![CDATA[$values->city]]></code>
+      <code><![CDATA[$values->city]]></code>
+      <code><![CDATA[$values->company]]></code>
+      <code><![CDATA[$values->company]]></code>
+      <code><![CDATA[$values->company]]></code>
+      <code><![CDATA[$values->companyId]]></code>
+      <code><![CDATA[$values->companyId]]></code>
+      <code><![CDATA[$values->companyId]]></code>
+      <code><![CDATA[$values->companyTaxId]]></code>
+      <code><![CDATA[$values->companyTaxId]]></code>
+      <code><![CDATA[$values->companyTaxId]]></code>
+      <code><![CDATA[$values->country]]></code>
+      <code><![CDATA[$values->country]]></code>
+      <code><![CDATA[$values->country]]></code>
+      <code><![CDATA[$values->email]]></code>
+      <code><![CDATA[$values->email]]></code>
+      <code><![CDATA[$values->email]]></code>
+      <code><![CDATA[$values->name]]></code>
+      <code><![CDATA[$values->name]]></code>
+      <code><![CDATA[$values->name]]></code>
+      <code><![CDATA[$values->note]]></code>
+      <code><![CDATA[$values->note]]></code>
+      <code><![CDATA[$values->note]]></code>
+      <code><![CDATA[$values->street]]></code>
+      <code><![CDATA[$values->street]]></code>
+      <code><![CDATA[$values->street]]></code>
+      <code><![CDATA[$values->trainingId]]></code>
+      <code><![CDATA[$values->zip]]></code>
+      <code><![CDATA[$values->zip]]></code>
+      <code><![CDATA[$values->zip]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/ApplicationStatuses/TrainingApplicationStatusHistory.php">
+    <MixedArgument>
+      <code><![CDATA[$result->statusId]]></code>
+      <code><![CDATA[$result->statusTime->format(DateTimeInterface::ATOM)]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->status]]></code>
+      <code><![CDATA[$row->statusId]]></code>
+      <code><![CDATA[$row->statusTime]]></code>
+      <code><![CDATA[$row->statusTimeTimeZone]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/ApplicationStatuses/TrainingApplicationStatuses.php">
+    <MixedArgument>
+      <code><![CDATA[$prevStatus->statusId]]></code>
+      <code><![CDATA[$prevStatus->statusTime->format(DateTimeInterface::ATOM)]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Applications/TrainingApplicationFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->accessToken]]></code>
+      <code><![CDATA[$row->city]]></code>
+      <code><![CDATA[$row->company]]></code>
+      <code><![CDATA[$row->companyId]]></code>
+      <code><![CDATA[$row->companyTaxId]]></code>
+      <code><![CDATA[$row->country]]></code>
+      <code><![CDATA[$row->dateId]]></code>
+      <code><![CDATA[$row->discount]]></code>
+      <code><![CDATA[$row->email]]></code>
+      <code><![CDATA[$row->feedbackHref]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->invoiceId]]></code>
+      <code><![CDATA[$row->name]]></code>
+      <code><![CDATA[$row->note]]></code>
+      <code><![CDATA[$row->paid]]></code>
+      <code><![CDATA[$row->price]]></code>
+      <code><![CDATA[$row->priceVat]]></code>
+      <code><![CDATA[$row->remoteNotes]]></code>
+      <code><![CDATA[$row->remoteUrl]]></code>
+      <code><![CDATA[$row->sourceAlias]]></code>
+      <code><![CDATA[$row->sourceName]]></code>
+      <code><![CDATA[$row->sourceName]]></code>
+      <code><![CDATA[$row->status]]></code>
+      <code><![CDATA[$row->statusTime]]></code>
+      <code><![CDATA[$row->street]]></code>
+      <code><![CDATA[$row->trainingAction]]></code>
+      <code><![CDATA[$row->trainingEnd]]></code>
+      <code><![CDATA[$row->trainingId]]></code>
+      <code><![CDATA[$row->trainingName]]></code>
+      <code><![CDATA[$row->trainingStart]]></code>
+      <code><![CDATA[$row->vatRate]]></code>
+      <code><![CDATA[$row->venueAction]]></code>
+      <code><![CDATA[$row->venueAddress]]></code>
+      <code><![CDATA[$row->venueCity]]></code>
+      <code><![CDATA[$row->venueName]]></code>
+      <code><![CDATA[$row->venueNameExtended]]></code>
+      <code><![CDATA[$row->videoHref]]></code>
+      <code><![CDATA[$row->zip]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Applications/TrainingApplicationSources.php">
+    <MixedArgument>
+      <code><![CDATA[current($matches)]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Company/CompanyTrainings.php">
+    <MixedArgument>
+      <code><![CDATA[$alternativeDurationPriceText ?? null]]></code>
+      <code><![CDATA[$row->action]]></code>
+      <code><![CDATA[$row->alternativeDuration]]></code>
+      <code><![CDATA[$row->alternativeDurationPrice]]></code>
+      <code><![CDATA[$row->alternativeDurationPrice]]></code>
+      <code><![CDATA[$row->alternativeDurationPriceText]]></code>
+      <code><![CDATA[$row->audience]]></code>
+      <code><![CDATA[$row->capacity]]></code>
+      <code><![CDATA[$row->content]]></code>
+      <code><![CDATA[$row->description]]></code>
+      <code><![CDATA[$row->discontinuedId]]></code>
+      <code><![CDATA[$row->duration]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->materials]]></code>
+      <code><![CDATA[$row->name]]></code>
+      <code><![CDATA[$row->prerequisites]]></code>
+      <code><![CDATA[$row->price]]></code>
+      <code><![CDATA[$row->studentDiscount]]></code>
+      <code><![CDATA[$row->successorId]]></code>
+      <code><![CDATA[$row->upsell]]></code>
+      <code><![CDATA[$training->name]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Dates/TrainingDateFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->action]]></code>
+      <code><![CDATA[$row->cooperationDescription]]></code>
+      <code><![CDATA[$row->cooperationId]]></code>
+      <code><![CDATA[$row->dateId]]></code>
+      <code><![CDATA[$row->end]]></code>
+      <code><![CDATA[$row->feedbackHref]]></code>
+      <code><![CDATA[$row->labelJson]]></code>
+      <code><![CDATA[$row->labelJson]]></code>
+      <code><![CDATA[$row->labelJson ? Json::decode($row->labelJson)->{$this->translator->getDefaultLocale()} : null]]></code>
+      <code><![CDATA[$row->note]]></code>
+      <code><![CDATA[$row->price]]></code>
+      <code><![CDATA[$row->remoteNotes]]></code>
+      <code><![CDATA[$row->remoteUrl]]></code>
+      <code><![CDATA[$row->start]]></code>
+      <code><![CDATA[$row->status]]></code>
+      <code><![CDATA[$row->studentDiscount]]></code>
+      <code><![CDATA[$row->trainingId]]></code>
+      <code><![CDATA[$row->venueAction]]></code>
+      <code><![CDATA[$row->venueAddress]]></code>
+      <code><![CDATA[$row->venueCity]]></code>
+      <code><![CDATA[$row->venueDescription]]></code>
+      <code><![CDATA[$row->venueHref]]></code>
+      <code><![CDATA[$row->venueId]]></code>
+      <code><![CDATA[$row->venueName]]></code>
+      <code><![CDATA[$row->venueNameExtended]]></code>
+      <code><![CDATA[$row->videoHref]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Dates/TrainingDateStatuses.php">
+    <MixedArgument>
+      <code><![CDATA[$row->status]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Discontinued/DiscontinuedTrainings.php">
+    <MixedArgument>
+      <code><![CDATA[$row->description]]></code>
+      <code><![CDATA[$row->href]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Files/TrainingFileFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->added]]></code>
+      <code><![CDATA[$row->fileId]]></code>
+      <code><![CDATA[$row->fileName]]></code>
+      <code><![CDATA[$row->start]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Preliminary/PreliminaryTrainings.php">
+    <MixedArgument>
+      <code><![CDATA[$row->action]]></code>
+      <code><![CDATA[$row->idTraining]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Reviews/TrainingReviews.php">
+    <MixedArgument>
+      <code><![CDATA[$row->company]]></code>
+      <code><![CDATA[$row->dateId]]></code>
+      <code><![CDATA[$row->href]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->jobTitle]]></code>
+      <code><![CDATA[$row->name]]></code>
+      <code><![CDATA[$row->note]]></code>
+      <code><![CDATA[$row->ranking]]></code>
+      <code><![CDATA[$row->review]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Trainings/TrainingFactory.php">
+    <MixedArgument>
+      <code><![CDATA[$row->action]]></code>
+      <code><![CDATA[$row->audience]]></code>
+      <code><![CDATA[$row->capacity]]></code>
+      <code><![CDATA[$row->content]]></code>
+      <code><![CDATA[$row->description]]></code>
+      <code><![CDATA[$row->discontinuedId]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->materials]]></code>
+      <code><![CDATA[$row->name]]></code>
+      <code><![CDATA[$row->prerequisites]]></code>
+      <code><![CDATA[$row->price]]></code>
+      <code><![CDATA[$row->studentDiscount]]></code>
+      <code><![CDATA[$row->successorId]]></code>
+      <code><![CDATA[$row->upsell]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Training/Venues/TrainingVenues.php">
+    <MixedArgument>
+      <code><![CDATA[$row->action]]></code>
+      <code><![CDATA[$row->address]]></code>
+      <code><![CDATA[$row->city]]></code>
+      <code><![CDATA[$row->descriptionTexy]]></code>
+      <code><![CDATA[$row->descriptionTexy]]></code>
+      <code><![CDATA[$row->entrance]]></code>
+      <code><![CDATA[$row->entranceNavigation]]></code>
+      <code><![CDATA[$row->href]]></code>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->name]]></code>
+      <code><![CDATA[$row->nameExtended]]></code>
+      <code><![CDATA[$row->parkingTexy]]></code>
+      <code><![CDATA[$row->parkingTexy]]></code>
+      <code><![CDATA[$row->publicTransportTexy]]></code>
+      <code><![CDATA[$row->publicTransportTexy]]></code>
+      <code><![CDATA[$row->streetview]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/Twitter/TwitterCards.php">
+    <MixedArgument>
+      <code><![CDATA[$row->card]]></code>
+      <code><![CDATA[$row->card]]></code>
+      <code><![CDATA[$row->cardId]]></code>
+      <code><![CDATA[$row->cardId]]></code>
+      <code><![CDATA[$row->title]]></code>
+      <code><![CDATA[$row->title]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/UpcKeys/Presenters/HomepagePresenter.php">
+    <MixedArgument>
+      <code><![CDATA[$error ?? null]]></code>
+      <code><![CDATA[$keys ?? []]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/UpcKeys/Technicolor.php">
+    <MixedArgument>
+      <code><![CDATA[$row->key]]></code>
+      <code><![CDATA[$row->serial]]></code>
+      <code><![CDATA[$row->type]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/UpcKeys/Ubee.php">
+    <MixedArgument>
+      <code><![CDATA[$row->mac]]></code>
+    </MixedArgument>
+  </file>
+  <file src="app/User/Manager.php">
+    <MixedArgument>
+      <code><![CDATA[$row->id]]></code>
+      <code><![CDATA[$row->token]]></code>
+      <code><![CDATA[$row->userId]]></code>
+      <code><![CDATA[$row->username]]></code>
+      <code><![CDATA[$user->userId]]></code>
+    </MixedArgument>
+  </file>
+  <file src="tests/Feed/ExportsTest.phpt">
+    <MixedArgument>
+      <code><![CDATA[$xml->entry]]></code>
+      <code><![CDATA[$xml->entry]]></code>
+      <code><![CDATA[$xml->entry[0]]]></code>
+      <code><![CDATA[$xml->entry[0]]]></code>
+      <code><![CDATA[$xml->entry[0]]]></code>
+      <code><![CDATA[$xml->entry[1]]]></code>
+      <code><![CDATA[$xml->entry[1]]]></code>
+      <code><![CDATA[$xml->entry[1]]]></code>
+    </MixedArgument>
+  </file>
+</files>

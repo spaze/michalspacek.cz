@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\EasterEgg;
 
-use DateTimeImmutable;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\Utils\Strings;
@@ -33,8 +32,8 @@ readonly class CrLfUrlInjections
 			$this->httpResponse->setCookie(
 				self::COOKIE_NAME,
 				$match[1],
-				new DateTimeImmutable('-3 years 1 month 3 days 3 hours 7 minutes'),
-				'/expired=3years/1month/3days/3hours/7minutes/ago',
+				time() - 31337 * 1337,
+				'/expired=31337*1337seconds/(1.3years)/ago',
 			);
 		}
 		$this->httpResponse->setCode(IResponse::S204_NoContent, 'U WOT M8');

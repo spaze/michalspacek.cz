@@ -5,6 +5,8 @@ namespace MichalSpacekCz\EasterEgg;
 
 use MichalSpacekCz\Test\TestCaseRunner;
 use Nette\Application\BadRequestException;
+use Nette\Application\Routers\Route;
+use Nette\Application\Routers\RouteList;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -83,6 +85,25 @@ class NetteCve202015227Test extends TestCase
 		$rce = $this->cve202015227->rce('shell_exec', ['cmd' => $cmd]);
 		Assert::same($view, $rce->view);
 		Assert::same($command, $rce->command);
+	}
+
+
+	public function testAddRoute(): void
+	{
+		$routeList = new RouteList();
+		$this->cve202015227->addRoute($routeList);
+		$routeLists = $routeList->getRouters();
+		if (!isset($routeLists[0]) || !$routeLists[0] instanceof RouteList) {
+			Assert::fail('There should be at least one RouteList');
+		} else {
+			Assert::same('EasterEgg:', $routeLists[0]->getModule());
+			$routers = $routeLists[0]->getRouters();
+			if (!isset($routers[0]) || !$routers[0] instanceof Route) {
+				Assert::fail('There should be at least one Route in the RouteList');
+			} else {
+				Assert::same(['presenter' => 'Nette', 'action' => 'micro'], $routers[0]->getDefaults());
+			}
+		}
 	}
 
 

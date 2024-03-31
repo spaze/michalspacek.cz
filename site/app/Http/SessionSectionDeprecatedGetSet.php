@@ -24,9 +24,10 @@ trait SessionSectionDeprecatedGetSet
 	 * @deprecated Add get<Property>() method instead
 	 */
 	#[Override]
-	public function get(string $name): void
+	public function get(string $name): mixed
 	{
 		trigger_error('Add get<Property>() method instead', E_USER_DEPRECATED);
+		return null;
 	}
 
 

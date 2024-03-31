@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Http;
 
 use Nette;
+use Nette\Utils\Image;
 
 
 /**
@@ -32,26 +33,13 @@ final class FileUpload
 	/** @deprecated */
 	public const IMAGE_MIME_TYPES = ['image/gif', 'image/png', 'image/jpeg', 'image/webp'];
 
-	/** @var string */
-	private $name;
-
-	/** @var string|null */
-	private $fullPath;
-
-	/** @var string|false|null */
-	private $type;
-
-	/** @var string|false|null */
-	private $extension;
-
-	/** @var int */
-	private $size;
-
-	/** @var string */
-	private $tmpName;
-
-	/** @var int */
-	private $error;
+	private string $name;
+	private string|null $fullPath;
+	private string|false|null $type = null;
+	private string|false|null $extension = null;
+	private int $size;
+	private string $tmpName;
+	private int $error;
 
 
 	public function __construct(?array $value)
@@ -97,7 +85,7 @@ final class FileUpload
 	 */
 	public function getSanitizedName(): string
 	{
-		$name = Nette\Utils\Strings::webalize($this->name, '.', false);
+		$name = Nette\Utils\Strings::webalize($this->name, '.', lower: false);
 		$name = str_replace(['-.', '.-'], '.', $name);
 		$name = trim($name, '.-');
 		$name = $name === '' ? 'unknown' : $name;
@@ -129,8 +117,8 @@ final class FileUpload
 	 */
 	public function getContentType(): ?string
 	{
-		if ($this->isOk() && $this->type === null) {
-			$this->type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $this->tmpName);
+		if ($this->isOk()) {
+			$this->type ??= finfo_file(finfo_open(FILEINFO_MIME_TYPE), $this->tmpName);
 		}
 
 		return $this->type ?: null;
@@ -215,9 +203,8 @@ final class FileUpload
 
 	/**
 	 * Moves an uploaded file to a new location. If the destination file already exists, it will be overwritten.
-	 * @return static
 	 */
-	public function move(string $dest)
+	public function move(string $dest): static
 	{
 		$dir = dirname($dest);
 		Nette\Utils\FileSystem::createDir($dir);
@@ -227,9 +214,9 @@ final class FileUpload
 			[$this->tmpName, $dest],
 			function (string $message) use ($dest): void {
 				throw new Nette\InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'. $message");
-			}
+			},
 		);
-		@chmod($dest, 0666); // @ - possible low permission to chmod
+		@chmod($dest, 0o666); // @ - possible low permission to chmod
 		$this->tmpName = $dest;
 		return $this;
 	}
@@ -241,15 +228,8 @@ final class FileUpload
 	 */
 	public function isImage(): bool
 	{
-		$flag = imagetypes();
-		$types = array_filter([
-			$flag & IMG_GIF ? 'image/gif' : null,
-			$flag & IMG_JPG ? 'image/jpeg' : null,
-			$flag & IMG_PNG ? 'image/png' : null,
-			$flag & IMG_WEBP ? 'image/webp' : null,
-			$flag & 256 ? 'image/avif' : null, // IMG_AVIF
-		]);
-		return in_array($this->getContentType(), $types, true);
+		$types = array_map(fn($type) => Image::typeToMimeType($type), Image::getSupportedTypes());
+		return in_array($this->getContentType(), $types, strict: true);
 	}
 
 
@@ -257,9 +237,9 @@ final class FileUpload
 	 * Converts uploaded image to Nette\Utils\Image object.
 	 * @throws Nette\Utils\ImageException  If the upload was not successful or is not a valid image
 	 */
-	public function toImage(): Nette\Utils\Image
+	public function toImage(): Image
 	{
-		return Nette\Utils\Image::fromFile($this->tmpName);
+		return Image::fromFile($this->tmpName);
 	}
 
 

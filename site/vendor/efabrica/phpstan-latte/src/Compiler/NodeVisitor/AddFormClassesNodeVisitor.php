@@ -235,6 +235,9 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
         return null;
     }
 
+    /**
+     * @return Node|Node[]|null
+     */
     public function leaveNode(Node $node)
     {
         foreach ($this->errorControlNodes as $errorControlNode) {
@@ -507,7 +510,7 @@ final class AddFormClassesNodeVisitor extends NodeVisitorAbstract implements For
                 ->setReturnType('?Nette\Forms\ControlGroup');
 
             $getGroupComment = $this->createGetGroupConditionalReturnTypeComment($controlHolder->getGroups());
-            $getGroupMethod->setDocComment('/** ' . $getGroupComment . ' */');
+            $getGroupMethod->setDocComment('/** @param int|string $name' . "\n" . $getGroupComment . ' */');
             $methods[] = $getGroupMethod;
         }
 

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\EasterEgg;
 
 use Nette\Application\BadRequestException;
+use Nette\Application\Routers\RouteList;
 
 /**
  * Nette CVE-2020-15227, here to easter-egg some bots
@@ -82,6 +83,12 @@ class NetteCve202015227
 	{
 		/** @noinspection PhpUnhandledExceptionInspection We should have a good enough random source */
 		return (string)random_int(1337, 3133731337);
+	}
+
+
+	public function addRoute(RouteList $router): void
+	{
+		$router->withModule('EasterEgg')->addRoute('/nette.micro', ['presenter' => 'Nette', 'action' => 'micro']);
 	}
 
 }

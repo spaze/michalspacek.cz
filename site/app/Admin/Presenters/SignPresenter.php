@@ -7,6 +7,7 @@ use MichalSpacekCz\Form\SignInFormFactory;
 use MichalSpacekCz\Form\UiForm;
 use MichalSpacekCz\User\Manager;
 use MichalSpacekCz\Www\Presenters\BasePresenter;
+use Nette\Http\Session;
 use Nette\Security\User;
 
 class SignPresenter extends BasePresenter
@@ -20,6 +21,7 @@ class SignPresenter extends BasePresenter
 		private readonly Manager $authenticator,
 		private readonly SignInFormFactory $signInFormFactory,
 		private readonly User $user,
+		private readonly Session $sessionHandler,
 	) {
 		parent::__construct();
 	}
@@ -47,7 +49,7 @@ class SignPresenter extends BasePresenter
 			$this->forward('Honeypot:signIn');
 		}
 
-		$this->getSession()->start();
+		$this->sessionHandler->start();
 		$token = $this->authenticator->verifyPermanentLogin();
 		if ($token !== null) {
 			$this->user->login($this->authenticator->getIdentity($token->getUserId(), $token->getUsername()));

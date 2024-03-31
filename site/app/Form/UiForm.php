@@ -32,12 +32,11 @@ class UiForm extends Form
 
 
 	/**
-	 * @param string|object|null $returnType
 	 * @return object|array<string, mixed>
 	 * @deprecated Use getFormValues() instead
 	 */
 	#[Override]
-	public function getValues($returnType = null, ?array $controls = null): object|array
+	public function getValues(string|object|bool|null $returnType = null, ?array $controls = null): object|array
 	{
 		if (func_num_args() === 0) {
 			trigger_error('Use getFormValues() instead', E_USER_DEPRECATED);

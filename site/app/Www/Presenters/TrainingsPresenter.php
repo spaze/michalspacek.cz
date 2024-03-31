@@ -28,6 +28,7 @@ use MichalSpacekCz\Training\Trainings\Training;
 use MichalSpacekCz\Training\Trainings\Trainings;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
+use Nette\Http\Session;
 use Override;
 use ParagonIE\Halite\Alerts\HaliteAlert;
 use SodiumException;
@@ -59,6 +60,7 @@ class TrainingsPresenter extends BasePresenter
 		private readonly CompanyInfo $companyInfo,
 		private readonly TrainingFilesDownload $trainingFilesDownload,
 		private readonly Translator $translator,
+		private readonly Session $sessionHandler,
 	) {
 		parent::__construct();
 	}
@@ -95,8 +97,7 @@ class TrainingsPresenter extends BasePresenter
 
 		$this->dates = $this->trainingDates->getDates($training->getId());
 
-		$session = $this->getSession();
-		$session->start(); // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
+		$this->sessionHandler->start(); // in createComponentApplication() it's too late as the session cookie cannot be set because the output is already sent
 
 		$this->template->pageTitle = $this->texyFormatter->translate('messages.title.training', [$training->getName()->render()]);
 		$this->template->training = $training;
@@ -315,7 +316,7 @@ class TrainingsPresenter extends BasePresenter
 
 	private function getTrainingSessionSection(): TrainingApplicationSessionSection
 	{
-		$session = $this->getSession()->getSection('training', TrainingApplicationSessionSection::class);
+		$session = $this->sessionHandler->getSection('training', TrainingApplicationSessionSection::class);
 		if (!$session instanceof TrainingApplicationSessionSection) {
 			throw new ShouldNotHappenException(sprintf('Session section type is %s, but should be %s', get_debug_type($session), TrainingApplicationSessionSection::class));
 		}

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nette\Forms;
 
+use Nette\Utils\Html;
+
 
 /**
  * Generates blueprints for forms.
@@ -43,9 +45,8 @@ final class Blueprint
 		$blueprint->printBegin();
 		$blueprint->printHeader('Form Data Class ' . $form->getName());
 		$blueprint->printCode($blueprint->generateDataClass($form), 'php');
-		if (PHP_VERSION_ID >= 80000) {
-			$blueprint->printCode($blueprint->generateDataClass($form, true), 'php');
-		}
+		$blueprint->printCode($blueprint->generateDataClass($form, true), 'php');
+		$bp->printEnd();
 		$blueprint->printEnd();
 		if ($exit) {
 			exit;
@@ -98,7 +99,7 @@ final class Blueprint
 				public $inner;
 
 
-				public function getLabel($caption = null)
+				public function getLabel(string|\Stringable|null $caption = null): Html|string|null
 				{
 					return $this->inner->getLabel()
 						? '{label ' . $this->inner->lookupPath(Form::class) . '/}'
@@ -106,7 +107,7 @@ final class Blueprint
 				}
 
 
-				public function getControl()
+				public function getControl(): Html|string
 				{
 					return '{input ' . $this->inner->lookupPath(Form::class) . '}';
 				}
@@ -118,7 +119,7 @@ final class Blueprint
 				}
 
 
-				public function getOption($key)
+				public function getOption(mixed $key): mixed
 				{
 					return $key === 'rendered'
 						? parent::getOption($key)
@@ -172,10 +173,10 @@ final class Blueprint
 	public function generateDataClass(
 		Container $container,
 		?bool $propertyPromotion = false,
-		?string $baseName = null
+		?string $baseName = null,
 	): string
 	{
-		$baseName = $baseName ?? preg_replace('~Form$~', '', ucwords((string) $container->getName()));
+		$baseName ??= preg_replace('~Form$~', '', ucwords((string) $container->getName()));
 		$nextCode = '';
 		$props = [];
 		foreach ($container->getComponents() as $name => $input) {
