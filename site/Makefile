@@ -1,6 +1,6 @@
-.PHONY: test audit cs-fix check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester tester-include-skipped gitleaks composer-dependency-analyser
+.PHONY: test audit cs-fix check-file-patterns check-makefile check-application-mapping lint-php lint-latte lint-neon lint-xml lint-xml-auto-install phpcs phpstan phpstan-latte-templates phpstan-vendor psalm tester tester-include-skipped gitleaks composer-dependency-analyser
 
-test: audit check-file-patterns check-makefile lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor composer-dependency-analyser
+test: audit check-file-patterns check-makefile check-application-mapping lint-php lint-latte lint-neon lint-xml phpcs phpstan tester psalm phpstan-vendor composer-dependency-analyser
 
 audit:
 	composer audit
@@ -13,6 +13,9 @@ check-file-patterns:
 
 check-makefile:
 	bin/check-makefile.php
+
+check-application-mapping:
+	bin/check-application-mapping.php
 
 lint-php:
 	vendor/php-parallel-lint/php-parallel-lint/parallel-lint --colors -e php,phtml,phpt,phpstub app/ public/ stubs/ tests/

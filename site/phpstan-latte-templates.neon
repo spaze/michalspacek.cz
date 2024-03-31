@@ -6,7 +6,8 @@ parameters:
 	latte:
 		strictMode: true
 		engineBootstrap: app/PhpStan/latteEngine.php
-		presenterFactoryBootstrap: app/PhpStan/presenterFactory.php
+		applicationMapping: # Copy of mapping from common.neon
+			*: MichalSpacekCz\*\Presenters\*Presenter
 		features:
 			transformDynamicFormControlNamesToString: true
 	ignoreErrors:

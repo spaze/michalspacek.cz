@@ -6,6 +6,9 @@ services:
 	- MichalSpacekCz\Application\Error
 	localeLinkGenerator: MichalSpacekCz\Application\Locale\LocaleLinkGenerator(languages: %locales.languages%)
 	- MichalSpacekCz\Application\Locale\Locales
+	- MichalSpacekCz\Application\MappingCheck\ApplicationMappingCheck
+	- MichalSpacekCz\Application\MappingCheck\Files\ApplicationMappingCheckCommonNeon(%siteDir%/config/common.neon)
+	- MichalSpacekCz\Application\MappingCheck\Files\ApplicationMappingCheckPhpStanLatteNeon(%siteDir%/phpstan-latte-templates.neon)
 	- MichalSpacekCz\Application\Routing\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\Routing\RouterFactory::createRouter
 	- MichalSpacekCz\Application\SanitizedPhpInfo
