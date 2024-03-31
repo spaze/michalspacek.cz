@@ -34,7 +34,7 @@ class TalkInputs extends UiControl
 		return $this->talkFormFactory->create(
 			function (Html $message): never {
 				$this->flashMessage($message);
-				$this->getPresenter()->redirect('Talks:');
+				$this->getPresenter()->redirect(':Admin:Talks:');
 			},
 			$this->talk,
 		);

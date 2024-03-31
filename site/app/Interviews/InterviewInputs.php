@@ -33,7 +33,7 @@ class InterviewInputs extends UiControl
 		return $this->interviewFormFactory->create(
 			function (): never {
 				$this->flashMessage($this->interview ? 'Rozhovor upraven' : 'Rozhovor přidán');
-				$this->getPresenter()->redirect('Interviews:');
+				$this->getPresenter()->redirect(':Admin:Interviews:');
 			},
 			$this->interview,
 		);
