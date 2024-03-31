@@ -285,6 +285,65 @@
             "install-path": "../latte/latte"
         },
         {
+            "name": "metisfw/phpstan-nette-links",
+            "version": "v0.2",
+            "version_normalized": "0.2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MetisFW/phpstan-nette-links.git",
+                "reference": "f06db43c326475e753c8f8b3e1dbf539a27022f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MetisFW/phpstan-nette-links/zipball/f06db43c326475e753c8f8b3e1dbf539a27022f4",
+                "reference": "f06db43c326475e753c8f8b3e1dbf539a27022f4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0",
+                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan-nette": "^1.2.9"
+            },
+            "require-dev": {
+                "nette/application": "^3.0",
+                "nette/di": "^2.3.0 || ^3.0.0",
+                "nette/forms": "^3.0",
+                "nette/utils": "^2.3.0 || ^3.0.0",
+                "nikic/php-parser": "^4.13.2",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan-php-parser": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpstan/phpstan-strict-rules": "^1.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "time": "2023-11-15T12:05:17+00:00",
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon",
+                        "rules.neon"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "PHPStanNetteLinks\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Nette Framework link checking extension for PHPStan",
+            "support": {
+                "issues": "https://github.com/MetisFW/phpstan-nette-links/issues",
+                "source": "https://github.com/MetisFW/phpstan-nette-links/tree/v0.2"
+            },
+            "install-path": "../metisfw/phpstan-nette-links"
+        },
+        {
             "name": "nette/application",
             "version": "v3.2.1",
             "version_normalized": "3.2.1.0",
@@ -4869,6 +4928,7 @@
     "dev-package-names": [
         "efabrica/phpstan-latte",
         "jetbrains/phpstorm-attributes",
+        "metisfw/phpstan-nette-links",
         "nette/tester",
         "php-parallel-lint/php-console-highlighter",
         "php-parallel-lint/php-parallel-lint",

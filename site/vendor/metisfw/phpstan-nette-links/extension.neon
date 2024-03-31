@@ -1,0 +1,24 @@
+parameters:
+	netteLinks:
+		containerLoader: null
+		applicationMapping: []
+
+parametersSchema:
+	netteLinks: structure([
+		containerLoader: schema(string(), nullable())
+		applicationMapping: arrayOf(anyOf(string(), listOf(string())))
+	])
+
+services:
+	netteContainerResolver:
+		class: PHPStanNetteLinks\Nette\ContainerResolver
+		arguments:
+			- %netteLinks.containerLoader%
+
+	nettePresenterResolver:
+		class: PHPStanNetteLinks\Nette\PresenterResolver
+		arguments:
+			- %netteLinks.applicationMapping%
+
+	-
+		class: PHPStanNetteLinks\Nette\LinkChecker

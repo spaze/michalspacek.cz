@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77c5bd29bb6b5e047bb86f8a8e2743c4",
+    "content-hash": "081141013a8152346b0be57f45d21aa8",
     "packages": [
         {
             "name": "contributte/translation",
@@ -3178,6 +3178,62 @@
                 "source": "https://github.com/JetBrains/phpstorm-attributes/tree/1.0"
             },
             "time": "2020-11-17T11:09:47+00:00"
+        },
+        {
+            "name": "metisfw/phpstan-nette-links",
+            "version": "v0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MetisFW/phpstan-nette-links.git",
+                "reference": "f06db43c326475e753c8f8b3e1dbf539a27022f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MetisFW/phpstan-nette-links/zipball/f06db43c326475e753c8f8b3e1dbf539a27022f4",
+                "reference": "f06db43c326475e753c8f8b3e1dbf539a27022f4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0",
+                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan-nette": "^1.2.9"
+            },
+            "require-dev": {
+                "nette/application": "^3.0",
+                "nette/di": "^2.3.0 || ^3.0.0",
+                "nette/forms": "^3.0",
+                "nette/utils": "^2.3.0 || ^3.0.0",
+                "nikic/php-parser": "^4.13.2",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan-php-parser": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpstan/phpstan-strict-rules": "^1.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon",
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStanNetteLinks\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Nette Framework link checking extension for PHPStan",
+            "support": {
+                "issues": "https://github.com/MetisFW/phpstan-nette-links/issues",
+                "source": "https://github.com/MetisFW/phpstan-nette-links/tree/v0.2"
+            },
+            "time": "2023-11-15T12:05:17+00:00"
         },
         {
             "name": "nette/tester",
