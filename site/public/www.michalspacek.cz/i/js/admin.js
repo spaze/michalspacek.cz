@@ -323,6 +323,14 @@ App.ready(document, function () {
 			button.value = button.dataset.originalValue;
 		};
 		App.onLoad('#preview-frame', resetCaption);
+		const observer = new MutationObserver(function(){
+			if (document.getElementsByClassName('netteFormsModal').length !== 0){
+				resetCaption();
+			}
+		});
+		observer.observe(document.body, {
+			childList: true,
+		});
 		setTimeout(resetCaption, 5000);
 	});
 });
