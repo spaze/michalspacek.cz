@@ -28,7 +28,7 @@ class TrainingDateInputs extends UiControl
 	{
 		return $this->trainingDateFormFactory->create(
 			function (): never {
-				$this->getPresenter()->redirect('Trainings:');
+				$this->getPresenter()->redirect(':Admin:Trainings:');
 			},
 			function (int $dateId): never {
 				$this->flashMessage('Termín upraven');

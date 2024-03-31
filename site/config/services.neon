@@ -9,6 +9,7 @@ services:
 	- MichalSpacekCz\Application\MappingCheck\ApplicationMappingCheck
 	- MichalSpacekCz\Application\MappingCheck\Files\ApplicationMappingCheckCommonNeon(%siteDir%/config/common.neon)
 	- MichalSpacekCz\Application\MappingCheck\Files\ApplicationMappingCheckPhpStanLatteNeon(%siteDir%/phpstan-latte-templates.neon)
+	- MichalSpacekCz\Application\MappingCheck\Files\ApplicationMappingCheckPhpStanNetteLinksNeon(%siteDir%/phpstan.neon)
 	- MichalSpacekCz\Application\Routing\RouterFactory(supportedLocales: %locales.supported%, rootDomainMapping: %locales.rootDomainMapping%, translatedRoutes: %translatedRoutes.presenters%)
 	- @MichalSpacekCz\Application\Routing\RouterFactory::createRouter
 	- MichalSpacekCz\Application\SanitizedPhpInfo

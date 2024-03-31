@@ -1,0 +1,51 @@
+{
+	"name": "metisfw/phpstan-nette-links",
+	"type": "phpstan-extension",
+	"description": "Nette Framework link checking extension for PHPStan",
+	"license": [
+		"MIT"
+	],
+	"require": {
+		"php": "^7.2 || ^8.0",
+		"phpstan/phpstan": "^1.10",
+		"phpstan/phpstan-nette": "^1.2.9"
+	},
+	"require-dev": {
+		"nette/application": "^3.0",
+		"nette/di": "^2.3.0 || ^3.0.0",
+		"nette/forms": "^3.0",
+		"nette/utils": "^2.3.0 || ^3.0.0",
+		"nikic/php-parser": "^4.13.2",
+		"php-parallel-lint/php-parallel-lint": "^1.2",
+		"phpstan/phpstan-php-parser": "^1.1",
+		"phpstan/phpstan-phpunit": "^1.0",
+		"phpstan/phpstan-strict-rules": "^1.0",
+		"phpunit/phpunit": "^9.5"
+	},
+	"config": {
+		"platform": {
+			"php": "7.4.6"
+		},
+		"sort-packages": true
+	},
+	"extra": {
+		"phpstan": {
+			"includes": [
+				"extension.neon",
+				"rules.neon"
+			]
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"PHPStanNetteLinks\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"classmap": [
+			"tests/"
+		]
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}

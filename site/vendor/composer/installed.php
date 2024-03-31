@@ -82,6 +82,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'metisfw/phpstan-nette-links' => array(
+            'pretty_version' => 'v0.2',
+            'version' => '0.2.0.0',
+            'reference' => 'f06db43c326475e753c8f8b3e1dbf539a27022f4',
+            'type' => 'phpstan-extension',
+            'install_path' => __DIR__ . '/../metisfw/phpstan-nette-links',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'nette/application' => array(
             'pretty_version' => 'v3.2.1',
             'version' => '3.2.1.0',

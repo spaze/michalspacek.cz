@@ -84,7 +84,7 @@ abstract class BasePresenter extends Presenter
 		parent::startup();
 		$this->httpResponse->addHeader('Vary', 'Cookie');
 		if ($this->authenticator->isForbidden()) {
-			$this->forward('Forbidden:');
+			$this->forward(':Www:Forbidden:');
 		}
 	}
 

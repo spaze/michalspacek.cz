@@ -43,7 +43,7 @@ abstract class BasePresenter extends WwwBasePresenter
 		parent::startup();
 		if (!$this->user->isLoggedIn()) {
 			$params = ($this->haveBacklink ? ['backlink' => $this->storeRequest()] : []);
-			$this->redirect('Sign:in', $params);
+			$this->redirect(':Admin:Sign:in', $params);
 		}
 		$this->sessionHandler->onBeforeDataWrite[] = function (): void {
 			$identity = $this->user->getIdentity();
