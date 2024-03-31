@@ -125,8 +125,10 @@ readonly class PostFormFactory
 		$form->addCheckbox('omitExports', 'Vynechat z RSS');
 
 		$submitButton = $form->addSubmit('submit', 'Přidat');
-		$form->addSubmit('preview', $this->translator->translate('messages.label.preview'))
+		$caption = $this->translator->translate('messages.label.preview');
+		$form->addSubmit('preview', $caption)
 			->setHtmlAttribute('data-loading-value', 'Moment…')
+			->setHtmlAttribute('data-original-value', $caption)
 			->onClick[] = function () use ($form, $post, $template, $sendTemplate): void {
 				$newPost = $this->buildPost($form->getFormValues(), $post?->getId());
 				$this->blogPostPreview->sendPreview($newPost, $template, $sendTemplate);

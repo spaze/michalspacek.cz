@@ -318,10 +318,11 @@ App.ready(document, function () {
 	App.onClick('#preview-button', function () {
 		document.querySelector('#preview').classList.remove('hidden');
 		const button = this;
-		const originalValue = button.value;
 		button.value = button.dataset.loadingValue;
-		App.onLoad('#preview-frame', function () {
-			button.value = originalValue;
-		});
+		const resetCaption = function () {
+			button.value = button.dataset.originalValue;
+		};
+		App.onLoad('#preview-frame', resetCaption);
+		setTimeout(resetCaption, 5000);
 	});
 });
