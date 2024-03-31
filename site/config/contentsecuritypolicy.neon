@@ -24,6 +24,7 @@ contentSecurityPolicy:
 				- "'report-sample'"
 			style-src:
 				- "'nonce'"
+				- "'sha256-I7m+VqBh+S5t75VVGkOHq12SfWTlXYaAeJSSaMfaqkc='"
 				- %domain.contentSecurityPolicySelf%
 				- "'report-sample'"
 			frame-ancestors: "'none'"
