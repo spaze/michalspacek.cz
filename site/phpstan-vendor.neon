@@ -33,6 +33,7 @@ parameters:
 			# Throws "No error to ignore is reported on line", which can't be ignored, probably because only custom ruleset is used
 			- vendor/contributte/translation/src/DI/TranslationExtension.php
 			- vendor/contributte/translation/src/Latte/Macros.php
+			- vendor/metisfw/phpstan-nette-links/src/Nette/PresenterResolver.php
 	ignoreErrors:
 		-
 			message: '#^Cannot access constant#'

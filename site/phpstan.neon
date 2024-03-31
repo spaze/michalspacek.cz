@@ -10,6 +10,9 @@ parameters:
 		- phpt
 	level: max
 	checkMissingOverrideMethodAttribute: true
+	netteLinks:
+		applicationMapping: # Copy of mapping from common.neon
+			*: MichalSpacekCz\*\Presenters\*Presenter
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
@@ -17,3 +20,5 @@ includes:
 	- vendor/phpstan/phpstan-nette/rules.neon
 	- disallowed-calls.neon
 	- vendor/phpstan/phpstan-deprecation-rules/rules.neon
+	- vendor/metisfw/phpstan-nette-links/extension.neon
+	- vendor/metisfw/phpstan-nette-links/rules.neon
