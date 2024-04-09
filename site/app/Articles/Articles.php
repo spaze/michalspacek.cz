@@ -68,6 +68,8 @@ class Articles
 				null AS omitExports
 			FROM articles a
 				JOIN article_sources s ON a.key_article_source = s.id_article_source
+			WHERE
+				a.key_replaced_with_blog_post IS NULL
 			UNION ALL
 				SELECT
 					bp.id_blog_post,
