@@ -53,7 +53,7 @@ class SelectBox extends ChoiceControl
 
 
 	/**
-	 * Returns first prompt item?
+	 * Returns first prompt item.
 	 */
 	public function getPrompt(): string|Stringable|false
 	{
@@ -90,18 +90,29 @@ class SelectBox extends ChoiceControl
 
 	public function getControl(): Nette\Utils\Html
 	{
-		$items = $this->prompt === false ? [] : ['' => $this->translate($this->prompt)];
+		$items = [];
 		foreach ($this->options as $key => $value) {
 			$items[is_array($value) ? $this->translate($key) : $key] = $this->translate($value);
 		}
 
-		return Nette\Forms\Helpers::createSelectBox(
-			$items,
-			[
-				'disabled:' => is_array($this->disabled) ? $this->disabled : null,
-			] + $this->optionAttributes,
-			$this->value,
-		)->addAttributes(parent::getControl()->attrs);
+		$attrs = $this->optionAttributes;
+		$attrs['disabled:'] = is_array($this->disabled) ? $this->disabled : [];
+
+		$selected = $this->value;
+		if ($this->prompt !== false) {
+			$promptKey = '';
+			while (isset($items[$promptKey])) {
+				$promptKey .= "\x1";
+			}
+			$items = [$promptKey => $this->translate($this->prompt)] + $items;
+			if ($this->isRequired()) {
+				$attrs['hidden:'][$promptKey] = $attrs['disabled:'][$promptKey] = true;
+				$selected ??= $promptKey; // disabled & selected for Safari, hidden for other browsers
+			}
+		}
+
+		return Nette\Forms\Helpers::createSelectBox($items, $attrs, $selected)
+			->addAttributes(parent::getControl()->attrs);
 	}
 
 
