@@ -50,6 +50,7 @@ services:
 	translation.translator: MichalSpacekCz\Test\NoOpTranslator(availableLocales: [cs_CZ, en_US], defaultLocale: cs_CZ)
 	tracy.logger: MichalSpacekCz\Test\NullLogger
 	- MichalSpacekCz\Test\TestCaseRunner
+	trainingFilesStorage: MichalSpacekCz\Test\Training\TrainingFilesNullStorage
 	cache.storage: Nette\Caching\Storages\DevNullStorage
 	netteHttpResponse:  # Needed for User\Manager because https://github.com/nette/http/issues/200
 		create: Nette\Http\Response

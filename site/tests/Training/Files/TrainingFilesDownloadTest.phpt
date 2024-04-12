@@ -11,6 +11,7 @@ use MichalSpacekCz\Test\Database\Database;
 use MichalSpacekCz\Test\Http\NullSession;
 use MichalSpacekCz\Test\PrivateProperty;
 use MichalSpacekCz\Test\TestCaseRunner;
+use MichalSpacekCz\Test\Training\TrainingFilesNullStorage;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\RedirectResponse;
@@ -35,6 +36,7 @@ class TrainingFilesDownloadTest extends TestCase
 		private readonly ApplicationPresenter $applicationPresenter,
 		private readonly Database $database,
 		private readonly NullSession $session,
+		private readonly TrainingFilesNullStorage $storage,
 		Application $application,
 	) {
 		$this->presenter = new UiPresenterMock();
@@ -94,6 +96,37 @@ class TrainingFilesDownloadTest extends TestCase
 		}, BadRequestException::class, 'Unknown application id, missing or invalid token');
 	}
 
+
+	public function testGetFileResponseNoFile(): void
+	{
+		$sessionSection = $this->session->getSection('training');
+		$sessionSection->set('applicationId', self::APPLICATION_ID);
+		$sessionSection->set('token', self::TOKEN);
+		Assert::exception(function (): void {
+			$this->trainingFilesDownload->getFileResponse('foo');
+		}, BadRequestException::class, 'No file foo for application id ' . self::APPLICATION_ID);
+	}
+
+
+	public function testGetFileResponse(): void
+	{
+		$sessionSection = $this->session->getSection('training');
+		$sessionSection->set('applicationId', self::APPLICATION_ID);
+		$sessionSection->set('token', self::TOKEN);
+		$filename = basename(__FILE__);
+		$filesDir = __DIR__ . '/';
+		$this->database->setFetchResult([
+			'added' => new DateTime(),
+			'fileId' => 1337,
+			'fileName' => $filename,
+			'start' => new DateTime('2020-10-20 20:30:40'),
+		]);
+		$this->storage->setFilesDir($filesDir);
+		$response = $this->trainingFilesDownload->getFileResponse('foo');
+		Assert::same($filesDir . $filename, $response->getFile());
+		Assert::same($filename, $response->getName());
+		Assert::same('text/x-php', $response->getContentType());
+	}
 
 
 	private function setApplicationFetchResult(): void

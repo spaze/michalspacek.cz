@@ -15,9 +15,12 @@ require __DIR__ . '/../../bootstrap.php';
 class TrainingFilesStorageTest extends TestCase
 {
 
-	public function __construct(
-		private readonly TrainingFilesStorage $trainingFilesStorage,
-	) {
+	private readonly TrainingFilesStorage $trainingFilesStorage;
+
+
+	public function __construct()
+	{
+		$this->trainingFilesStorage = new TrainingFilesStorage();
 	}
 
 
