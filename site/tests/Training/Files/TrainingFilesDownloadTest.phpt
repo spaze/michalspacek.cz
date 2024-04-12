@@ -87,6 +87,15 @@ class TrainingFilesDownloadTest extends TestCase
 	}
 
 
+	public function testGetFileResponseNoSessionData(): void
+	{
+		Assert::exception(function (): void {
+			$this->trainingFilesDownload->getFileResponse('foo');
+		}, BadRequestException::class, 'Unknown application id, missing or invalid token');
+	}
+
+
+
 	private function setApplicationFetchResult(): void
 	{
 		$this->database->setFetchResult([
