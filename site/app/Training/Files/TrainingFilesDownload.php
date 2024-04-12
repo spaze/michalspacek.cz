@@ -62,11 +62,11 @@ readonly class TrainingFilesDownload
 	public function getFileResponse(string $filename): FileResponse
 	{
 		$session = $this->getSessionSection();
-		$applicationId = $session->getApplicationId();
-		if (!$applicationId) {
+		if (!$session->isComplete()) {
 			throw new BadRequestException('Unknown application id, missing or invalid token');
 		}
 
+		$applicationId = $session->getApplicationId();
 		$file = $this->trainingFiles->getFile($applicationId, $session->getToken(), $filename);
 		if (!$file) {
 			throw new BadRequestException(sprintf('No file %s for application id %s', $filename, $applicationId));

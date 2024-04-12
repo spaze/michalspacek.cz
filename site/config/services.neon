@@ -140,7 +140,7 @@ services:
 	- MichalSpacekCz\Training\Files\TrainingFileFactory
 	- MichalSpacekCz\Training\Files\TrainingFiles
 	- MichalSpacekCz\Training\Files\TrainingFilesDownload
-	- MichalSpacekCz\Training\Files\TrainingFilesStorage
+	trainingFilesStorage: MichalSpacekCz\Training\Files\TrainingFilesStorage
 	- MichalSpacekCz\Training\FreeSeats
 	- MichalSpacekCz\Training\Mails\TrainingMailMessageFactory
 	- MichalSpacekCz\Training\Mails\TrainingMails(emailFrom: 'Michal Špaček <mail@michalspacek.cz>', phoneNumber: %contact.phoneNumber%)
