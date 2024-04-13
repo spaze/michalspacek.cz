@@ -173,13 +173,33 @@ readonly class PostFormFactory
 	 */
 	private function buildPost(stdClass $values, ?int $postId): BlogPost
 	{
+		$title = $values->title;
+		if (!is_string($title)) {
+			throw new ShouldNotHappenException("Title should be a string, but it's a " . get_debug_type($title));
+		}
+		$slug = $values->slug;
+		if (!is_string($slug)) {
+			throw new ShouldNotHappenException("Slug should be a string, but it's a " . get_debug_type($slug));
+		}
+		$twitterCard = $values->twitterCard;
+		if (!is_string($twitterCard)) {
+			throw new ShouldNotHappenException("Twitter card should be a string, but it's a " . get_debug_type($twitterCard));
+		}
+		$cspSnippets = $values->cspSnippets;
+		if (!is_array($cspSnippets) || !array_is_list($cspSnippets)) {
+			throw new ShouldNotHappenException("CSP snippets should be a list<string>, but it's a " . get_debug_type($cspSnippets));
+		}
+		$allowedTagsGroups = $values->allowedTags;
+		if (!is_array($allowedTagsGroups) || !array_is_list($allowedTagsGroups)) {
+			throw new ShouldNotHappenException("Allowed tags groups should be a list<string>, but it's a " . get_debug_type($allowedTagsGroups));
+		}
 		return $this->blogPostFactory->create(
 			$postId,
-			$values->slug === '' ? Strings::webalize($values->title) : $values->slug,
+			$slug === '' ? Strings::webalize($title) : $slug,
 			$values->locale,
 			$this->locales->getLocaleById($values->locale),
 			$values->translationGroup === '' ? null : $values->translationGroup,
-			$values->title,
+			$title,
 			$values->lead === '' ? null : $values->lead,
 			$values->text,
 			$values->published === '' ? null : new DateTime($values->published),
@@ -189,10 +209,10 @@ readonly class PostFormFactory
 			$values->tags === '' ? [] : $this->tags->toArray($values->tags),
 			$values->tags === '' ? [] : $this->tags->toSlugArray($values->tags),
 			$values->recommended ? $this->recommendedLinks->getFromJson($values->recommended) : [],
-			$values->twitterCard === '' ? null : $this->twitterCards->getCard($values->twitterCard),
-			$values->cspSnippets,
-			$values->allowedTags,
-			$values->omitExports,
+			$twitterCard === '' ? null : $this->twitterCards->getCard($twitterCard),
+			$cspSnippets,
+			$allowedTagsGroups,
+			(bool)$values->omitExports,
 		);
 	}
 
