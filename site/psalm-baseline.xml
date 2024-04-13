@@ -109,23 +109,17 @@
   </file>
   <file src="app/Form/PostFormFactory.php">
     <MixedArgument>
-      <code><![CDATA[$values->allowedTags]]></code>
-      <code><![CDATA[$values->cspSnippets]]></code>
       <code><![CDATA[$values->lead === '' ? null : $values->lead]]></code>
       <code><![CDATA[$values->locale]]></code>
       <code><![CDATA[$values->locale]]></code>
       <code><![CDATA[$values->ogImage === '' ? null : $values->ogImage]]></code>
-      <code><![CDATA[$values->omitExports]]></code>
       <code><![CDATA[$values->originally === '' ? null : $values->originally]]></code>
       <code><![CDATA[$values->previewKey === '' ? null : $values->previewKey]]></code>
       <code><![CDATA[$values->published]]></code>
       <code><![CDATA[$values->recommended]]></code>
-      <code><![CDATA[$values->slug]]></code>
       <code><![CDATA[$values->tags]]></code>
       <code><![CDATA[$values->text]]></code>
-      <code><![CDATA[$values->title]]></code>
       <code><![CDATA[$values->translationGroup === '' ? null : $values->translationGroup]]></code>
-      <code><![CDATA[$values->twitterCard]]></code>
       <code><![CDATA[empty($values->editSummary) ? null : $values->editSummary]]></code>
     </MixedArgument>
   </file>
