@@ -27,6 +27,7 @@ use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nette\Utils\Random;
+use Nette\Utils\Strings;
 use Spaze\ContentSecurityPolicy\CspConfig;
 use stdClass;
 
@@ -62,7 +63,6 @@ readonly class PostFormFactory
 			->setRequired('Zadejte prosím titulek')
 			->addRule($form::MinLength, 'Titulek musí mít alespoň %d znaky', 3);
 		$form->addText('slug', 'Slug:')
-			->setRequired('Zadejte prosím slug')
 			->addRule($form::MinLength, 'Slug musí mít alespoň %d znaky', 3);
 		$this->addPublishedDate($form->addText('published', 'Vydáno:'))
 			->setDefaultValue(date('Y-m-d') . ' HH:MM');
@@ -175,7 +175,7 @@ readonly class PostFormFactory
 	{
 		return $this->blogPostFactory->create(
 			$postId,
-			$values->slug,
+			$values->slug === '' ? Strings::webalize($values->title) : $values->slug,
 			$values->locale,
 			$this->locales->getLocaleById($values->locale),
 			$values->translationGroup === '' ? null : $values->translationGroup,
