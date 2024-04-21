@@ -4,10 +4,11 @@ declare(strict_types = 1);
 namespace MichalSpacekCz\Application\Locale;
 
 use Contributte\Translation\Translator;
+use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Application\Routing\RouterFactory;
 use MichalSpacekCz\ShouldNotHappenException;
 use Nette\Application\IPresenterFactory;
-use Nette\Application\LinkGenerator;
+use Nette\Application\LinkGenerator as NetteLinkGenerator;
 use Nette\Application\Routers\RouteList;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\IRequest;
@@ -52,12 +53,12 @@ class LocaleLinkGenerator
 					throw new ShouldNotHappenException(sprintf("The presenter should be a '%s' but it's a %s", RouteList::class, get_debug_type($router)));
 				}
 				if (count($router->getRouters())) {
-					$linkGenerator = new LinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
+					$linkGenerator = new NetteLinkGenerator($router, $this->httpRequest->getUrl(), $this->presenterFactory);
 					$links[$locale] = new LocaleLink(
 						$locale,
 						$this->languages[$locale]['code'],
 						$this->languages[$locale]['name'],
-						$linkGenerator->link($destination, $this->getParams($params, $locale)),
+						$this->linkGenerator->link($destination, $this->getParams($params, $locale), $linkGenerator),
 					);
 				}
 			}

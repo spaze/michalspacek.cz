@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\User\Manager;
-use Nette\Application\LinkGenerator;
 use Nette\Http\Session;
 use Nette\Security\User;
 use Nette\Utils\Html;

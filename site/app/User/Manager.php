@@ -5,6 +5,7 @@ namespace MichalSpacekCz\User;
 
 use DateTimeInterface;
 use Exception;
+use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Database\TypedDatabase;
 use MichalSpacekCz\Http\Cookies\CookieName;
 use MichalSpacekCz\Http\Cookies\Cookies;
@@ -13,7 +14,6 @@ use MichalSpacekCz\User\Exceptions\IdentityIdNotIntException;
 use MichalSpacekCz\User\Exceptions\IdentityNotSimpleIdentityException;
 use MichalSpacekCz\User\Exceptions\IdentityUsernameNotStringException;
 use MichalSpacekCz\User\Exceptions\IdentityWithoutUsernameException;
-use Nette\Application\LinkGenerator;
 use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Http\IRequest;

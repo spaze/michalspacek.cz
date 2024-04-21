@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace MichalSpacekCz\Form;
 
+use MichalSpacekCz\Application\LinkGenerator;
 use MichalSpacekCz\Application\Locale\Locales;
 use MichalSpacekCz\Form\Controls\TrainingControlsFactory;
 use MichalSpacekCz\Media\VideoThumbnails;
 use MichalSpacekCz\Talks\Talk;
 use MichalSpacekCz\Talks\Talks;
-use Nette\Application\LinkGenerator;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
